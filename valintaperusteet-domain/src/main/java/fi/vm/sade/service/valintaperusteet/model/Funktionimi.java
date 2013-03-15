@@ -1,0 +1,35 @@
+package fi.vm.sade.service.valintaperusteet.model;
+
+/**
+ * User: kwuoti
+ * Date: 18.1.2013
+ * Time: 9.12
+ */
+public enum Funktionimi {
+    LUKUARVO(Funktiotyyppi.LUKUARVOFUNKTIO), TOTUUSARVO(Funktiotyyppi.TOTUUSARVOFUNKTIO),
+    SUMMA(Funktiotyyppi.LUKUARVOFUNKTIO), MAKSIMI(Funktiotyyppi.LUKUARVOFUNKTIO), MINIMI(Funktiotyyppi.LUKUARVOFUNKTIO),
+    TULO(Funktiotyyppi.LUKUARVOFUNKTIO), KESKIARVO(Funktiotyyppi.LUKUARVOFUNKTIO),
+    MEDIAANI(Funktiotyyppi.LUKUARVOFUNKTIO),KESKIARVONPARASTA(Funktiotyyppi.LUKUARVOFUNKTIO),
+    SUMMANPARASTA(Funktiotyyppi.LUKUARVOFUNKTIO), NMAKSIMI(Funktiotyyppi.LUKUARVOFUNKTIO),
+    NMINIMI(Funktiotyyppi.LUKUARVOFUNKTIO), JA(Funktiotyyppi.TOTUUSARVOFUNKTIO), TAI(Funktiotyyppi.TOTUUSARVOFUNKTIO),
+    HAELUKUARVO(Funktiotyyppi.LUKUARVOFUNKTIO), HAETOTUUSARVO(Funktiotyyppi.TOTUUSARVOFUNKTIO),
+    HAEMERKKIJONOJAKONVERTOILUKUARVOKSI(Funktiotyyppi.LUKUARVOFUNKTIO),
+    HAEMERKKIJONOJAKONVERTOITOTUUSARVOKSI(Funktiotyyppi.TOTUUSARVOFUNKTIO), NEGAATIO(Funktiotyyppi.LUKUARVOFUNKTIO),
+    OSAMAARA(Funktiotyyppi.LUKUARVOFUNKTIO), JOS(Funktiotyyppi.LUKUARVOFUNKTIO),
+    SUUREMPI(Funktiotyyppi.TOTUUSARVOFUNKTIO), PIENEMPI(Funktiotyyppi.TOTUUSARVOFUNKTIO),
+    SUUREMPITAIYHTASUURI(Funktiotyyppi.TOTUUSARVOFUNKTIO), PIENEMPITAIYHTASUURI(Funktiotyyppi.TOTUUSARVOFUNKTIO),
+    YHTASUURI(Funktiotyyppi.TOTUUSARVOFUNKTIO), EI(Funktiotyyppi.TOTUUSARVOFUNKTIO), TYHJA(Funktiotyyppi.EI_VALIDI),
+    NIMETTYTOTUUSARVO(Funktiotyyppi.TOTUUSARVOFUNKTIO), NIMETTYLUKUARVO(Funktiotyyppi.LUKUARVOFUNKTIO),
+    KONVERTOILUKUARVO(Funktiotyyppi.LUKUARVOFUNKTIO), HAKUTOIVE(Funktiotyyppi.TOTUUSARVOFUNKTIO),
+    DEMOGRAFIA(Funktiotyyppi.TOTUUSARVOFUNKTIO);
+
+    private Funktiotyyppi tyyppi;
+
+    Funktionimi(Funktiotyyppi tyyppi) {
+        this.tyyppi = tyyppi;
+    }
+
+    public Funktiotyyppi getTyyppi() {
+        return this.tyyppi;
+    }
+}

@@ -1,0 +1,126 @@
+﻿<h3>Valintaryhmän muokkaus</h3>
+
+
+<div class="tabs">
+	<a href="#/valintaryhma/{{model.valintaryhma.oid}}/" class="tab current"><span>Valintaryhmän perustiedot</span></a>
+	<a ng-show="model.valintaryhma.oid" href="#/valintaryhma/{{model.valintaryhma.oid}}/sisaltyvat/" class="tab"><span>Sisältyvät hakukohteet/valintaryhmät</span></a>
+	<a ng-show="model.valintaryhma.oid" href="#/valintaryhma/{{model.valintaryhma.oid}}/laskentakaava" class="tab"><span>Laskentakaavat</span></a>
+</div>
+<div class="tabsheets">
+
+<form name="form" ng-submit="submit()">
+	<div class="form-row">
+		<label class="form-row-label" for="">OID</label>
+		<div class="form-row-content">
+			<span class="nofield">{{model.valintaryhma.oid}}</span>
+	        <!--	<input type="text" ng-model="valintaryhma.oid" disabled />
+	           <input type="text" name="" id="" ng-model="valintaryhma.oid" />     -->
+		</div>
+		<div class="clear"></div>
+	</div>
+		
+	<div class="form-row">
+		<label class="form-row-label" for="">Valintaryhmän nimi</label>
+
+		<div class="form-row-content width-60">
+			<input class="width-60" type="text" name="" id="" ng-model="model.valintaryhma.nimi" required/>
+			  <!--
+	        <br/>
+			<div><small>Valintaryhmän nimeen liittyvä ohjeteksti.</small></div>
+		       -->
+	    </div>
+		<div class="clear"></div>
+	</div>
+
+	<!--
+	<div class="form-row">
+		<label class="form-row-label" for="">Haut, joissa valintaryhmää käytetään</label>
+
+		<div class="form-row-content">
+			<div class="field-container-twinselect">
+				<select multiple size="7">
+					<option>Vaihto</option>
+					<option>Ehto</option>
+				</select>
+				<div class="buttons">
+					<span class="button small">&lt;</span>
+					<span class="button small">&gt;</span>
+				</div>
+				<select multiple size="7">
+					<option>Vaihto</option>
+					<option>Ehto</option>
+				</select>
+			</div>
+		</div>
+		<div class="clear"></div>
+	</div>
+	-->
+	<!--
+	<div class="form-row">
+		<div class="form-row-label">Valinnan vaiheet</div>
+
+		<div class="form-row-content">
+			<a href="#/hakukohde/{{hakukohde.oid}}/lisaaSisaltyvaValinnanvaihe">Lisää valinnan vaihe</a>
+			<ul>
+				<li>esivalinta</li>
+				<li>varsinainen valinta</li>
+				<li>varsinainen valinta</li>
+			</ul>
+		</div>
+		<div class="clear"></div>
+	</div>
+
+
+	-->
+
+
+	<div ng-show="model.valinnanvaiheet" class="form-row width-100">
+        <div class="form-row-label">Valinnan vaiheet</div>
+        <div  class="form-row-content width-60">
+        	
+            <table class="virkailija-table-1 width-60">
+                <thead>
+                    <tr>
+                        <th>Aktiivinen</th>
+                        <th>Nimi</th>
+                        <th>Periytyy</th>
+                        <th>Poista</th>
+                    </tr>
+                 </thead>
+                 <tbody ui-sortable ng-model="model.valinnanvaiheet">
+                    <tr ng-repeat="data in model.valinnanvaiheet">
+                        <td><input type="checkbox" ng-model="data.aktiivinen" /></td>
+                        <td>
+                            <a ng-class="{true:'', false:'line-through'}[data.aktiivinen]" href="#/valintaryhma/{{model.valintaryhma.oid}}/valinnanvaihe/{{data.oid}}">{{data.nimi}}</a>
+                        </td>
+                        <td>{{data.inheritance}}</td>
+                        <td class="align-center">
+                            <span ng-hide="data.inheritance" class="btn remove" ng-click="model.removeValinnanvaihe(data)"></span>
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+        </div>
+        <div class="clear"></div>
+        
+		
+
+    </div>
+    <div ng-show="model.valintaryhma.oid" class="form-row">
+    	<div class="form-row-label">&nbsp;</div>
+        <div class="form-row-content width-60">
+        	<span class="button small" ng-click="lisaaValinnanVaihe()">Lisää valinnanvaihe</span>
+		</div>
+    </div>
+    <div class="clear"></div>
+
+    <button ng-disabled="!form.$valid" class="button small primary" type="submit">Tallenna</button>
+	<button class="float-left margin-right-1 button small" ng-click="cancel()">Peruuta</button>
+	
+
+</form>
+
+
+</div>

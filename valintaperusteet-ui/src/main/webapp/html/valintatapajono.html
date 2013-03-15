@@ -1,0 +1,131 @@
+﻿<h3>Jonon muokkaus</h3>
+
+<form name="form" ng-submit="submit()">
+    <div class="form-row">
+        <label class="form-row-label" for="nimi">Jonon nimi</label>
+
+        <div class="form-row-content">
+            <input type="text" name="nimi" id="nimi" ng-model="model.valintatapajono.nimi" required />
+            <!--
+            <div><small>Jonon nimeen liittyvä ohjeteksti.</small></div>
+            -->
+        </div>
+        <div class="clear"></div>
+    </div>
+
+    <div class="form-row">
+        <label class="form-row-label" for="kuvaus">Kuvaus</label>
+
+        <div class="form-row-content">
+            <textarea name="kuvaus" id="kuvaus" ng-model="model.valintatapajono.kuvaus" />
+            <!--
+            <div><small>Jonon kuvaukseen liittyvä ohjeteksti.</small></div>
+            -->
+        </div>
+        <div class="clear"></div>
+    </div>
+
+    <div class="form-row">
+
+        <label class="form-row-label" for="kuvaus">Aloituspaikat</label>
+        <div class="form-row-content">
+            <input type="number" min="0" name="aloituspaikat" ng-model="model.valintatapajono.aloituspaikat" required>
+            <!--
+            <div><small>ohjeteksti.</small></div>
+            -->
+        </div>
+
+        <div class="clear"></div>
+
+        <label class="form-row-label" for="kuvaus">Siiretään sijoitteluun</label>
+        <div class="form-row-content">
+            <div class="field-container-checkbox">
+                <input type="checkbox" name="siirretaanSijoitteluun" ng-model="model.valintatapajono.siirretaanSijoitteluun" >
+                <label>&#8302;</label>
+            </div>
+            <!--
+            <div><small>ohjeteksti.</small></div>
+            -->
+        </div>
+
+        <div class="clear"></div>
+
+        <div class="form-row-label">Tasasijasääntö</div>
+        <div class="form-row-content">
+            <div class="field-container-radio">
+                <input type="radio" name="tps" ng-model="model.valintatapajono.tasapistesaanto" id="tps1"
+                       value="YLITAYTTO" required/>
+                <label for="tps1">Ylitäyttö</label>
+            </div>
+            <div class="field-container-radio">
+                <input type="radio" name="tps" ng-model="model.valintatapajono.tasapistesaanto" id="tps2" value="ALITAYTTO" required/>
+                <label for="tps2">Alitäyttö</label>
+            </div>
+            <div class="field-container-radio">
+                <input type="radio" name="tps" ng-model="model.valintatapajono.tasapistesaanto" id="tps3" value="ARVONTA" required/>
+                <label for="tps3">Arvonta</label>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+
+
+
+    <div class="form-row">
+        <div class="form-row-label">Jonon muodostumiskriteerit</div>
+        <div class="form-row-content" ng-show="model.valintatapajono.oid" >
+
+            <table class="virkailija-table-1 margin-bottom-2" ng-show="model.jarjestyskriteerit">
+                <thead>
+                    <tr>
+                        <th>Aktiivinen</th>
+                        <th>Nimi</th>
+                        <th>Metatiedot</th>
+                        <th>Peritty</th>
+                        <th>Poista</th>
+                    </tr>
+                </thead>
+                <tbody ui-sortable class="margin-top-2" ng-model="model.jarjestyskriteerit">
+                    <tr ng-repeat="data in model.jarjestyskriteerit">
+                        <td><input type="checkbox" ng-model="data.aktiivinen" /></td>
+                        <td>
+                            <a ng-class="{true:'', false:'line-through'}[data.aktiivinen]" ng-click="modifyKriteeri(data.oid)" >{{data.nimi}}</a>
+                        </td>
+                        <td>{{data.metatiedot}}</td>
+                        <td>{{data.inheritance}}</td>
+                        <td><span ng-show="!data.inheritance" class="btn remove" ng-click="remove(data.oid)">X</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            <span class="button small" ng-click="addKriteeri()">Lisää kriteeri</span>
+        <!--<div><small>Jonojen muodostuskriteereihin liittyvä ohjeteksti.</small></div>-->
+        </div>
+        <span ng-show="!model.valintatapajono.oid">Tallenna jono lisätäksesi kriteeri.</span>
+    </div>
+
+    <!--
+    <div class="form-row">
+        <label class="form-row-label" for="">Varasijoille olevien käsittely</label>
+
+        <div class="form-row-content">
+            <div class="field-container-radio">
+                <input type="radio" name="vsk" ng-model="valintatapajono.varasijakasittely" id="vsk1" value="" />
+                <label for="vsk1">Otetaan kaikki</label><br/>
+            </div>
+            <div class="field-container-radio">
+                <input type="radio" name="vsk" ng-model="valintatapajono.varasijakasittely" id="vsk2" value="" />
+                <label for="vsk2">Otetaan enintään</label>
+                <input type="text" name="vskr" ng-model="valintatapajono.varasijakasittelyraja"  id="vsk2r" value="" size="3" />
+            </div>
+            <div><small>Varasijojen käsittelyyn liittyvä ohjeteksti.</small></div>
+        </div>
+        <div class="clear"></div>
+    </div>
+     -->
+
+    <div class="clear"></div>
+    
+    <button ng-disabled="!form.$valid" class="button small primary"type="submit">Tallenna</button>
+    <button class="button small float-left margin-right-1" ng-click="cancel()">Takaisin</button>
+    <div class="clear"></div>
+</form>

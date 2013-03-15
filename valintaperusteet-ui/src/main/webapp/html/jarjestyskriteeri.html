@@ -1,0 +1,44 @@
+﻿<h3>Järjestyskriteerin muokkaus</h3>
+
+<form name="form" ng-submit="submit()">
+    <div class="form-row">
+        <label class="form-row-label" for="metatiedot">Metatiedot</label>
+
+        <div class="form-row-content">
+            <input type="text" name="metatiedot" id="metatiedot" ng-model="model.jarjestyskriteeri.metatiedot" required />
+            <!--
+            <div><small>Jonon nimeen liittyvä ohjeteksti.</small></div>
+            -->
+        </div>
+        <div class="clear"></div>
+    </div>
+
+    <div class="form-row" ng-model="model.laskentakaavat" >
+
+        <div class="form-row-label">Laskentakaava</div>
+        <div class="form-row-content">
+
+            <div ng-repeat="data in model.laskentakaavat" class="field-container-radio">
+                <label>
+                    <input type="radio" name="laskentakaava" value="{{data.id}}"
+                           ng-model="model.jarjestyskriteeri.laskentakaava_id" required />
+
+                    <span ng-bind="data.nimi"></span>(<span ng-bind="data.id"></span>)
+                </label>
+            </div>
+
+        </div>
+        <div class="clear"></div>
+    </div>
+
+    <button ng-disabled="!form.$valid" class="button small primary" type="submit">
+        <div ng-show="!model.jarjestyskriteeri.oid">
+            Lisää
+        </div>
+        <div ng-show="model.jarjestyskriteeri.oid" >
+            Muokkaa
+        </div>
+    </button>
+
+    <button class="button small float-left margin-right-2" ng-click="cancel()">Takaisin</button>
+</form>

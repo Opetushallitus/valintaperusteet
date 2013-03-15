@@ -1,0 +1,117 @@
+﻿<h3>Hakukohteen muokkaus</h3>
+
+<!--
+<div class="tabs">
+	<a href="#/hakukohde/{{hakukohdeOid}}/" class="tab current"><span>Hakukohteen perustiedot</span></a>
+	<a href="#/hakukohde/{{hakukohdeOid}}/laskentakaava" class="tab"><span>Laskentakaavat</span></a>
+</div>
+-->
+
+<div class="tabsheets">
+<form name="form" ng-submit="submit()">
+    <div class="form-row">
+        <label class="form-row-label" for="oid">OID</label>
+
+        <div class="form-row-content">
+            <!--{{model.hakukohde.oid}}-->
+            <input class="width-60" type="text" name="oid" ng-model="model.hakukohde.oid" required />
+
+        </div>
+        <div class="clear"></div>
+    </div>
+
+    <div class="form-row" ng-show="model.parentValintaryhma.nimi">
+        <div class="form-row-label">Valintaryhmä</div>
+
+        <div class="form-row-content">
+            <!--{{model.hakukohde.oid}}-->
+            {{model.parentValintaryhma.nimi}}
+            <!--
+            <input type="text" ng-model="hakukohde.oid" disabled />
+            -->
+        </div>
+        <div class="clear"></div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-row-label">Kuuluu sijoitteluun</div>
+        <div class="form-row-content">
+            {{model.hakukohde.kuuluuSijoitteluun}}
+        </div>
+        <div class="clear"></div>
+    </div>
+
+    <div class="form-row">
+        <label class="form-row-label" for="">Hakukohteen nimi</label>
+
+        <div class="form-row-content width-60">
+            <input  class="width-60" type="text" name="nimi" ng-model="model.hakukohde.nimi" required />
+            <!--
+            <br/>
+            <small>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla cursus quam nec risus scelerisque rhoncus. Donec vitae dolor eu tortor pretium dictum. Suspendisse lobortis magna id ipsum facilisis dapibus.</small>
+            -->
+        </div>
+        <div class="clear"></div>
+    </div>
+
+    <!--
+    <div class="form-row">
+        <label class="form-row-label" for="">Haut, joissa hakukohdetta käytetään</label>
+
+        <div class="form-row-content">
+            <select multiple size="7">
+                <option>Vaihto</option>
+                <option>Ehto</option>
+            </select>
+
+            <br/>
+            <small>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+             Nulla cursus quam nec risus scelerisque rhoncus. Donec vitae dolor eu tortor pretium dictum. S
+             uspendisse lobortis magna id ipsum facilisis dapibus.</small>
+
+        </div>
+        <div class="clear"></div>
+    </div>
+    -->
+
+    <div class="form-row width-100"  >
+        <div class="form-row-label">Valinnan vaiheet</div>
+        <div class="form-row-content width-60">
+            <table ng-show="model.valinnanvaiheet" class="virkailija-table-1 margin-bottom-2 width-60">
+                <thead>
+                    <tr>
+                        <th>Aktiivinen</th>
+                        <th>Nimi
+                            <a href="#/hakukohde/{{hakukohdeOid}}/valinnanvaihe/new">
+                                {{data.nimi}}
+                            </a>
+                        </th>
+                        <th>Periytyy</th>
+                        <th>Poista</th>
+                    </tr>
+                 </thead>
+                 <tbody ui-sortable ng-model="model.valinnanvaiheet">
+                    <tr ng-repeat="data in model.valinnanvaiheet">
+                        <td><input type="checkbox" ng-model="data.aktiivinen" /></td>
+                        <td>
+                            <a ng-class="{true:'', false:'line-through'}[data.aktiivinen]" href="#/hakukohde/{{hakukohdeOid}}/valinnanvaihe/{{data.oid}}">{{data.nimi}}</a>
+                        </td>
+                        <td>{{data.inheritance}}</td>
+                        <td class="align-center">
+                            <span ng-show="!data.inheritance" class="btn remove" ng-click="model.remove(data)"></span>
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+            <span ng-show="model.hakukohde.oid" class="button small" ng-click="lisaaValinnanVaihe()">Lisää valinnanvaihe</span>
+       </div>
+        <div class="clear"></div>
+    </div>
+
+    
+    <button ng-disabled="!form.$valid" class="button small primary" type="submit">Tallenna</button>
+    <button class="float-left margin-right-1 button small" ng-click="cancel()">Peruuta</button>
+</form>
+</div>

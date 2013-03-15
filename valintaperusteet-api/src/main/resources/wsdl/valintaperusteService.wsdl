@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="valintaperusteService"
+                  targetNamespace="http://valintaperusteet.service.sade.vm.fi"
+                  xmlns:tns="http://valintaperusteet.service.sade.vm.fi"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:valintaperusteet="http://valintaperusteet.service.sade.vm.fi/messages"
+        >
+
+    <wsdl:types>
+        <xsd:schema targetNamespace="http://valintaperusteet.service.sade.vm.fi">
+            <xsd:import namespace="http://valintaperusteet.service.sade.vm.fi/messages" schemaLocation="valintaperusteService.xsd" />
+        </xsd:schema>
+    </wsdl:types>
+
+    <wsdl:message name="haeValintaperusteet">
+        <wsdl:part name="parameters" element="valintaperusteet:haeValintaperusteet"/>
+    </wsdl:message>
+
+    <wsdl:message name="haeValintaperusteetVastaus">
+        <wsdl:part name="parameters" element="valintaperusteet:haeValintaperusteetVastaus" />
+    </wsdl:message>
+
+    <wsdl:message name="haeValintatapajonotSijoittelulle">
+        <wsdl:part name="parameters" element="valintaperusteet:haeValintatapajonotSijoittelulle"/>
+    </wsdl:message>
+
+    <wsdl:message name="haeValintatapajonotSijoittelulleVastaus">
+        <wsdl:part name="parameters" element="valintaperusteet:haeValintatapajonotSijoittelulleVastaus" />
+    </wsdl:message>
+
+    <wsdl:message name="genericFault">
+        <wsdl:part name="fault" type="valintaperusteet:GenericFault" />
+    </wsdl:message>
+
+   <!--
+    <wsdl:message name="haePaasykokeet">
+    	<wsdl:part name="parameters" element="valintaperusteet:haePaasykokeet"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="haePaasykokeetVastaus">
+    	<wsdl:part name="parameters" element="valintaperusteet:haePaasykokeetVastaus"></wsdl:part>
+    </wsdl:message>
+   -->
+
+    <wsdl:portType name="ValintaperusteService">
+        <wsdl:documentation>Palvelurajapinta, jolla voidaan hakea valintaperusteita.</wsdl:documentation>
+        <wsdl:operation name="haeValintaperusteet">
+            <wsdl:documentation>TODO: document me.</wsdl:documentation>
+            <wsdl:input message="tns:haeValintaperusteet" />
+            <wsdl:output message="tns:haeValintaperusteetVastaus" />
+            <wsdl:fault message="tns:genericFault" name="genericFault"/>
+        </wsdl:operation>
+
+        <wsdl:operation name="haeValintatapajonotSijoittelulle">
+            <wsdl:documentation>Palauttaa hakukohdekohtaiset, sijoiteltavissa olevat valintatapajonot</wsdl:documentation>
+            <wsdl:input message="tns:haeValintatapajonotSijoittelulle" />
+            <wsdl:output message="tns:haeValintatapajonotSijoittelulleVastaus" />
+            <wsdl:fault message="tns:genericFault" name="genericFault"/>
+        </wsdl:operation>
+
+        <!--
+        <wsdl:operation name="haePaasykokeet">
+            <wsdl:documentation>TODO: document me.</wsdl:documentation>
+            <wsdl:input message="tns:haePaasykokeet" />
+            <wsdl:output message="tns:haePaasykokeetVastaus" />
+            <wsdl:fault message="tns:genericFault" name="genericFault"/>
+        </wsdl:operation>
+        -->
+    </wsdl:portType>
+
+    <wsdl:binding name="ValintaPerusteServiceSoapBinding" type="tns:ValintaperusteService">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="haeValintaperusteet">
+            <soap:operation soapAction="" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="genericFault">
+                <soap:fault name="genericFault" use="literal" />
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:service name="ValintaperusteService">
+        <wsdl:port name="ValintaperusteServicePort" binding="tns:ValintaPerusteServiceSoapBinding">
+            <soap:address location="http://localhost:8181/cxf/valintaperusteService" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

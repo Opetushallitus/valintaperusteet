@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema elementFormDefault="unqualified"
+           targetNamespace="http://valintaperusteet.service.sade.vm.fi/messages" version="1.0"
+           xmlns:tns="http://valintaperusteet.service.sade.vm.fi/messages"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:valintaperusteet="http://valintaperusteet.service.sade.vm.fi/schema"
+        >
+
+    <xs:import namespace="http://valintaperusteet.service.sade.vm.fi/schema" schemaLocation="valintaperusteet.xsd"/>
+
+    <xs:element name="haeValintaperusteet" type="tns:HaeValintaperusteetTyyppi"/>
+    <xs:element name="haeValintaperusteetVastaus" type="tns:HaeValintaperusteetVastausTyyppi"/>
+    <xs:element name="haeValintatapajonotSijoittelulle" type="tns:HaeValintatapajonotSijoittelulleTyyppi"/>
+    <xs:element name="haeValintatapajonotSijoittelulleVastaus" type="tns:HaeValintatapajonotSijoittelulleVastausTyyppi"/>
+
+    <xs:complexType name="HaeValintaperusteetTyyppi">
+        <xs:sequence>
+            <xs:element name="hakuparametrit" type="tns:HakuparametritTyyppi" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="HaeValintaperusteetVastausTyyppi">
+        <xs:sequence>
+            <xs:element name="valintaPerusteet" type="valintaperusteet:ValintaperusteetTyyppi" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="HakuparametritTyyppi">
+        <xs:sequence>
+            <xs:element name="hakukohdeOid" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="valinnanVaiheJarjestysluku" type="xs:int" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="HaeValintatapajonotSijoittelulleTyyppi">
+        <xs:sequence>
+            <xs:element name="hakukohdeOid" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="HaeValintatapajonotSijoittelulleVastausTyyppi">
+        <xs:sequence>
+            <xs:element name="valintatapajonot" type="valintaperusteet:ValintatapajonoTyyppi" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="GenericFault">
+        <xs:sequence>
+            <xs:element name="errorCode" type="xs:string"/>
+            <xs:element name="explanation" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+     <!--
+    <xs:element name="haePaasykokeet" type="tns:HaePaasykokeetTyyppi"/>
+    <xs:element name="haePaasykokeetVastaus" type="tns:HaePaasykokeetVastausTyyppi"/>
+
+    <xs:complexType name="HaePaasykokeetVastausTyyppi">
+    	<xs:sequence>
+    		<xs:element name="hakukohde"
+    			type="tns:PaasykoeHakukohdeTyyppi" maxOccurs="unbounded"
+    			minOccurs="0">
+    		</xs:element>
+    	</xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="HaePaasykokeetTyyppi">
+    	<xs:sequence>
+    		<xs:element name="hakukohdeOid" type="xs:string"></xs:element>
+    	</xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="PaasykoeHakukohdeTyyppi">
+    	<xs:sequence>
+    		<xs:element name="hakukohdeOid" type="xs:string"></xs:element>
+    		<xs:element name="tunniste" type="xs:string" maxOccurs="unbounded" minOccurs="1"></xs:element>
+    	</xs:sequence>
+    </xs:complexType>
+    -->
+</xs:schema>

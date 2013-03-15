@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+        version="1.0"
+        elementFormDefault="unqualified"
+        targetNamespace="http://valintaperusteet.service.sade.vm.fi/schema"
+        xmlns:tns="http://valintaperusteet.service.sade.vm.fi/schema"
+        xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        >
+
+    <xs:complexType name="ValintaperusteetTyyppi">
+        <xs:annotation>
+            <xs:documentation>
+                1 hakukohteen, 1 valinnanvaiheen tiedot valintalaskentaa varten.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="valintatapajonot" type="tns:ValintatapajonoJarjestyskriteereillaTyyppi" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="hakukohdeOid" type="xs:string" use="required"/>
+        <xs:attribute name="valinnanVaiheOid" type="xs:string" use="required"/>
+        <xs:attribute name="valinnanVaiheJarjestysluku" type="xs:int" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="JarjestyskriteeriTyyppi">
+        <xs:sequence>
+        	<xs:element name="prioriteetti" type="xs:int" minOccurs="1"	maxOccurs="1" />
+        	<xs:element name="funktiokutsu"	type="tns:FunktiokutsuTyyppi" minOccurs="1" maxOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="FunktiokutsuTyyppi">
+        <xs:sequence>
+            <xs:element name="oid" minOccurs="1" maxOccurs="1" />
+        	<xs:element name="funktionimi" type="xs:string" minOccurs="1" maxOccurs="1" />
+        	<xs:element name="arvokonvertteriparametrit"	type="tns:ArvokonvertteriparametriTyyppi" minOccurs="0"	maxOccurs="unbounded" />
+            <xs:element name="arvovalikonvertteriparametrit" type="tns:ArvovalikonvertteriparametriTyyppi" minOccurs="0" maxOccurs="unbounded" />
+        	<xs:element name="syoteparametrit" type="tns:SyoteparametriTyyppi" minOccurs="0" maxOccurs="unbounded" />
+        	<xs:element name="funktioargumentit" type="tns:FunktioargumenttiTyyppi" minOccurs="0" maxOccurs="unbounded" />
+        	<xs:element name="valintaperusteviite" type="tns:ValintaperusteviiteTyyppi" maxOccurs="1" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="KonvertteriparametriTyyppi">
+        <xs:sequence>
+            <xs:element name="paluuarvo" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="hylkaysperuste" type="xs:boolean" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ArvokonvertteriparametriTyyppi">
+        <xs:complexContent>
+            <xs:extension base="tns:KonvertteriparametriTyyppi">
+                <xs:sequence>
+                    <xs:element name="arvo" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="ArvovalikonvertteriparametriTyyppi">
+        <xs:complexContent>
+            <xs:extension base="tns:KonvertteriparametriTyyppi">
+                <xs:sequence>
+                    <xs:element name="minimiarvo" type="xs:double" minOccurs="1" maxOccurs="1"/>
+                    <xs:element name="maksimiarvo" type="xs:double" minOccurs="1" maxOccurs="1"/>
+                    <xs:element name="palautaHaettuArvo" type="xs:boolean" minOccurs="1" maxOccurs="1"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="SyoteparametriTyyppi">
+        <xs:sequence>
+            <xs:element name="avain" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="arvo" type="xs:string" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="FunktioargumenttiTyyppi">
+        <xs:sequence>
+            <xs:element name="indeksi" type="xs:int" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="funktiokutsu" type="tns:FunktiokutsuTyyppi" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ValintatapajonoTyyppi">
+        <xs:attribute name="nimi" type="xs:string" use="required"/>
+        <xs:attribute name="kuvaus" type="xs:string" use="optional"/>
+        <xs:attribute name="siirretaanSijoitteluun" type="xs:boolean" use="required"/>
+        <xs:attribute name="oid" type="xs:string" use="required"/>
+        <xs:attribute name="prioriteetti" type="xs:int" use="required"/>
+        <xs:attribute name="aloituspaikat" type="xs:int" use="required"/>
+        <xs:attribute name="tasasijasaanto" type="tns:TasasijasaantoTyyppi" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="ValintatapajonoJarjestyskriteereillaTyyppi">
+        <xs:complexContent>
+            <xs:extension base="tns:ValintatapajonoTyyppi">
+                <xs:sequence>
+                    <xs:element name="jarjestyskriteerit" type="tns:JarjestyskriteeriTyyppi" minOccurs="1" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:simpleType name="TasasijasaantoTyyppi">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="ARVONTA"/>
+            <xs:enumeration value="YLITAYTTO"/>
+            <xs:enumeration value="ALITAYTTO"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="SaantoTyyppi">
+        <xs:sequence>
+            <xs:element name="parametri" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="nimi" type="xs:string" use="required"/>
+        <xs:attribute name="tyyppi" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="ValintaperusteviiteTyyppi">
+    	<xs:sequence>
+    		<xs:element name="onPakollinen" type="xs:boolean"></xs:element>
+    		<xs:element name="tunniste" type="xs:string"></xs:element>
+    	</xs:sequence>
+    </xs:complexType>
+</xs:schema> 
