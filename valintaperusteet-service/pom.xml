@@ -5,8 +5,9 @@
 
 	<parent>
 		<groupId>fi.vm.sade.valintaperusteet</groupId>
-		<artifactId>valintaperusteet</artifactId>
+		<artifactId>valintaperusteetbuild</artifactId>
 		<version>1.0-SNAPSHOT</version>
+		<relativePath>..</relativePath>
 	</parent>
 
 	<groupId>fi.vm.sade.valintaperusteet</groupId>
