@@ -24,23 +24,33 @@
 	</repositories>
 
 	<dependencies>
-		<dependency>
-			<groupId>fi.vm.sade.valintaperusteet</groupId>
-			<artifactId>valintaperusteet-domain</artifactId>
-			<version>${project.version}</version>
-		</dependency>
 
-		<dependency>
-			<groupId>fi.vm.sade.valintaperusteet</groupId>
-			<artifactId>valintaperusteet-laskenta</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+        <!--Internal -->
+        <dependency>
+            <groupId>fi.vm.sade.valintaperusteet</groupId>
+            <artifactId>valintaperusteet-domain</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>fi.vm.sade.valintaperusteet</groupId>
+            <artifactId>valintaperusteet-laskenta</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>fi.vm.sade.valintaperusteet</groupId>
+            <artifactId>valintaperusteet-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
-		<dependency>
-			<groupId>fi.vm.sade.valintaperusteet</groupId>
-			<artifactId>valintaperusteet-api</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+        <!-- SADE -->
+        <dependency>
+            <groupId>fi.vm.sade.generic</groupId>
+            <artifactId>generic-common</artifactId>
+        </dependency>
+
+
+
+        <!--External -->
 		<dependency>
 			<groupId>com.mysema.querydsl</groupId>
 			<artifactId>querydsl-jpa</artifactId>
@@ -130,6 +140,8 @@
 			<version>1.9.1</version>
 			<scope>test</scope>
 		</dependency>
+
+        <!-- LOG -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -142,15 +154,64 @@
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-web</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-orm</artifactId>
-		</dependency>
-		<dependency>
+
+
+        <!--Hibernate & related -->
+        <dependency>
+            <groupId>postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>1.0.0.GA</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-ehcache</artifactId>
+        </dependency>
+
+
+        <!-- Spring -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+        </dependency>
+
+        <!-- CXF -->
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-transports-http</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-frontend-jaxws</artifactId>
+        </dependency>
+
+
+         <!-- TEST -->
+        <dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
 			<scope>test</scope>
@@ -170,30 +231,11 @@
 			<artifactId>dbunit-support</artifactId>
 			<scope>test</scope>
 		</dependency>
-
-        <dependency>
-            <groupId>fi.vm.sade.generic</groupId>
-            <artifactId>generic-common</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>fi.vm.sade.generic</groupId>
-            <artifactId>dependencies-service</artifactId>
-            <version>${project.version}</version>
-            <type>pom</type>
-        </dependency>
-
-		<dependency>
-			<groupId>postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-		</dependency>
-
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>
 			<scope>test</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>com.sun.jersey.jersey-test-framework</groupId>
 			<artifactId>jersey-test-framework-grizzly2</artifactId>
@@ -201,79 +243,64 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- CXF -->
-		<dependency>
-			<groupId>org.apache.cxf</groupId>
-			<artifactId>cxf-rt-transports-http</artifactId>
-			<scope>runtime</scope>
-		</dependency>
 
-		<dependency>
-			<groupId>org.apache.cxf</groupId>
-			<artifactId>cxf-api</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.cxf</groupId>
-			<artifactId>cxf-rt-frontend-jaxws</artifactId>
-		</dependency>
 	</dependencies>
 
 	<build>
 		<finalName>${project.artifactId}</finalName>
 		<plugins>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>hibernate3-maven-plugin</artifactId>
-				<version>2.2</version>
-				<dependencies>
-					<dependency>
-						<groupId>org.hibernate</groupId>
-						<artifactId>hibernate-core</artifactId>
-						<version>3.6.0.Final</version>
-					</dependency>
-					<dependency>
-						<groupId>org.hibernate</groupId>
-						<artifactId>hibernate-entitymanager</artifactId>
-						<version>3.6.0.Final</version>
-					</dependency>
-					<dependency>
-						<groupId>javax.validation</groupId>
-						<artifactId>validation-api</artifactId>
-						<version>1.0.0.GA</version>
-					</dependency>
-					<dependency>
-						<groupId>org.hibernate</groupId>
-						<artifactId>hibernate-validator</artifactId>
-						<version>4.2.0.Final</version>
-					</dependency>
-				</dependencies>
-				<executions>
-					<execution>
-                        <phase>clean</phase>
-						<goals>
-							<goal>hbm2ddl</goal>
-						</goals>
-						<configuration>
-							<components>
-								<component>
-									<name>hbm2ddl</name>
-									<implementation>jpaconfiguration</implementation>
-								</component>
-							</components>
-							<componentProperties>
-								<dialect>org.hibernate.dialect.PostgreSQL82Dialect</dialect>
-								<persistenceunit>valintaperusteet</persistenceunit>
-								<outputfilename>schema.ddl</outputfilename>
-								<drop>false</drop>
-								<create>true</create>
-								<export>false</export>
-								<format>true</format>
-							</componentProperties>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+          <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>hibernate3-maven-plugin</artifactId>
+              <version>2.2</version>
+              <dependencies>
+                  <dependency>
+                      <groupId>org.hibernate</groupId>
+                      <artifactId>hibernate-core</artifactId>
+                      <version>3.6.0.Final</version>
+                  </dependency>
+                  <dependency>
+                      <groupId>org.hibernate</groupId>
+                      <artifactId>hibernate-entitymanager</artifactId>
+                      <version>3.6.0.Final</version>
+                  </dependency>
+                  <dependency>
+                      <groupId>javax.validation</groupId>
+                      <artifactId>validation-api</artifactId>
+                      <version>1.0.0.GA</version>
+                  </dependency>
+                  <dependency>
+                      <groupId>org.hibernate</groupId>
+                      <artifactId>hibernate-validator</artifactId>
+                      <version>4.2.0.Final</version>
+                  </dependency>
+              </dependencies>
+              <executions>
+                  <execution>
+                      <phase>clean</phase>
+                      <goals>
+                          <goal>hbm2ddl</goal>
+                      </goals>
+                      <configuration>
+                          <components>
+                              <component>
+                                  <name>hbm2ddl</name>
+                                  <implementation>jpaconfiguration</implementation>
+                              </component>
+                          </components>
+                          <componentProperties>
+                              <dialect>org.hibernate.dialect.PostgreSQL82Dialect</dialect>
+                              <persistenceunit>valintaperusteet</persistenceunit>
+                              <outputfilename>schema.ddl</outputfilename>
+                              <drop>false</drop>
+                              <create>true</create>
+                              <export>false</export>
+                              <format>true</format>
+                          </componentProperties>
+                      </configuration>
+                  </execution>
+              </executions>
+          </plugin>
+      </plugins>
+  </build>
 </project>
