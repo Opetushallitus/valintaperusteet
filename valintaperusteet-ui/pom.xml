@@ -7,7 +7,7 @@
     <parent>
         <groupId>fi.vm.sade.valintaperusteet</groupId>
         <artifactId>valintaperusteetbuild</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>4.0-SNAPSHOT</version>
 		<relativePath>..</relativePath>
     </parent>
 
@@ -128,7 +128,7 @@
                         <artifactId>maven-jetty-plugin</artifactId>
                         <configuration>
                             <!--
-                            <webApp> ${basedir}/valintaperusteet-ui/target/valintaperusteet-ui-1.0-SNAPSHOT</webApp>  -->
+                            <webApp> ${basedir}/valintaperusteet-ui/target/valintaperusteet-ui-4.0-SNAPSHOT</webApp>  -->
                             <contextHandlers>
                                 <contextHandler implementation="org.mortbay.jetty.webapp.WebAppContext">
                                     <war>${basedir}/../valintaperusteet-service/target/valintaperusteet-service.war</war>
@@ -155,7 +155,7 @@
                         <artifactId>maven-jetty-plugin</artifactId>
                         <configuration>
                             <!--
-                            <webApp> ${basedir}/valintaperusteet-ui/target/valintaperusteet-ui-1.0-SNAPSHOT</webApp>  -->
+                            <webApp> ${basedir}/valintaperusteet-ui/target/valintaperusteet-ui-4.0-SNAPSHOT</webApp>  -->
                             <contextHandlers>
                                 <contextHandler implementation="org.mortbay.jetty.webapp.WebAppContext">
                                     <war>${basedir}/../valintaperusteet-service/target/valintaperusteet-service.war</war>
