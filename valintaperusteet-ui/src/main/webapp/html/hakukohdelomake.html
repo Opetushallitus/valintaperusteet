@@ -89,6 +89,7 @@
                         </th>
                         <th>Periytyy</th>
                         <th>Poista</th>
+                        <th>Tyyppi</th>
                     </tr>
                  </thead>
                  <tbody ui-sortable ng-model="model.valinnanvaiheet">
@@ -101,11 +102,13 @@
                         <td class="align-center">
                             <span ng-show="!data.inheritance" class="btn remove" ng-click="model.remove(data)"></span>
                         </td>
+                        <td></td>
                     </tr>
                 </tbody>
 
             </table>
             <span ng-show="model.hakukohde.oid" class="button small" ng-click="lisaaValinnanVaihe()">Lisää valinnanvaihe</span>
+            <span class="button small" ng-click="lisaaPaasykoeValinnanVaihe()">Lisää pääsykoevalinnanvaihe</span>
        </div>
         <div class="clear"></div>
     </div>

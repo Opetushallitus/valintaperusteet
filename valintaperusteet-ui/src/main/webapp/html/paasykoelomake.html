@@ -1,0 +1,28 @@
+<h3>Pääsykoevalinnanvaiheen muokkaus</h3>
+
+<form name="form" ng-submit="submit()">
+
+<div class="form-row">
+
+    <label class="form-row-label">Tunniste</label>
+    <div class="form-row-content">
+        <input name="tunniste" ng-model="model.paasykoe.id" />
+    </div>
+    <div class="clear"></div>
+
+	<label class="form-row-label" for="nimi">Nimi</label>
+	<div class="form-row-content">
+        <input name="nimi" ng-model="model.valinnanvaihe.nimi" required/>
+    </div>
+	<div class="clear"></div>
+
+    <label class="form-row-label" for="kuvaus">Kuvaus</label>
+    <div class="form-row-content">
+        <textarea name="kuvaus"  ng-model="model.valinnanvaihe.kuvaus" />
+    </div>
+</div>
+<div class="clear"></div>
+
+<button ng-disabled="!form.$valid" class="button small primary" type="submit">Tallenna</button>
+<button class="button small float-left margin-right-1" ng-click="cancel()">Takaisin</button>
+</form>

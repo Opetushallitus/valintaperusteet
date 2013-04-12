@@ -85,11 +85,12 @@
                         <th>Nimi</th>
                         <th>Periytyy</th>
                         <th>Poista</th>
+                        <th>Tyyppi</th>
                     </tr>
                  </thead>
                  <tbody ui-sortable ng-model="model.valinnanvaiheet">
                     <tr ng-repeat="data in model.valinnanvaiheet">
-                        <td><input type="checkbox" ng-model="data.aktiivinen" /></td>
+                        <td class="align-center"><input type="checkbox" ng-model="data.aktiivinen" /></td>
                         <td>
                             <a ng-class="{true:'', false:'line-through'}[data.aktiivinen]" href="#/valintaryhma/{{model.valintaryhma.oid}}/valinnanvaihe/{{data.oid}}">{{data.nimi}}</a>
                         </td>
@@ -97,6 +98,7 @@
                         <td class="align-center">
                             <span ng-hide="data.inheritance" class="btn remove" ng-click="model.removeValinnanvaihe(data)"></span>
                         </td>
+                        <td class="align-center"></td>
                     </tr>
                 </tbody>
 
@@ -112,6 +114,7 @@
     	<div class="form-row-label">&nbsp;</div>
         <div class="form-row-content width-60">
         	<span class="button small" ng-click="lisaaValinnanVaihe()">Lisää valinnanvaihe</span>
+        	<span class="button small" ng-click="lisaaPaasykoeValinnanVaihe()">Lisää pääsykoevalinnanvaihe</span>
 		</div>
     </div>
     <div class="clear"></div>

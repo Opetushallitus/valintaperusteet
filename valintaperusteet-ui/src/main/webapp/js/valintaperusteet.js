@@ -20,7 +20,13 @@ app.config(function($routeProvider) {
         when('/valintaryhma/:id/valinnanvaihe/:valinnanvaiheOid/valintatapajono/:valintatapajonoOid', {controller: ValintaryhmaValintatapajonoController, templateUrl:TEMPLATE_URL_BASE + 'valintatapajono.html'}).
         when('/valintaryhma/:id/valinnanvaihe/:valinnanvaiheOid/valintatapajono/:valintatapajonoOid/jarjestyskriteeri/:jarjestyskriteeriOid', {controller:JarjestyskriteeriController, templateUrl:TEMPLATE_URL_BASE + 'jarjestyskriteeri.html'}).
 
-		    // edit hakukohde
+        //paasykoevalinnanvaihe
+        when('/valintaryhma/:id/paasykoevalinnanvaihe/:paasykoevalinnanvaiheOid', {controller: PaasykoeValinnanvaiheController, templateUrl:TEMPLATE_URL_BASE + 'paasykoevalinnanvaihelomake.html'}).
+        when('/valintaryhma/:id/paasykoevalinnanvaihe/:paasykoevalinnanvaiheOid/paasykoe/:id', {controller: PaasykoeController, templateUrl:TEMPLATE_URL_BASE + 'paasykoelomake.html'}).
+        when('/hakukohde/:hakukohdeOid/paasykoevalinnanvaihe/:paasykoevalinnanvaiheOid', {controller: PaasykoeValinnanvaiheController, templateUrl:TEMPLATE_URL_BASE + 'paasykoevalinnanvaihelomake.html'}).
+        when('/hakukohde/:hakukohdeOid/paasykoevalinnanvaihe/:paasykoevalinnanvaiheOid/paasykoe/:id', {controller: PaasykoeController, templateUrl:TEMPLATE_URL_BASE + 'paasykoelomake.html'}).
+		    
+        // edit hakukohde
         when('/hakukohde/:hakukohdeOid', {controller:HakukohdeController, templateUrl:TEMPLATE_URL_BASE + 'hakukohdelomake.html'}).
 //        when('/hakukohde/:hakukohdeOid/valinnanvaihe', {controller:HakukohdeController, templateUrl:TEMPLATE_URL_BASE + 'hakukohdelomake.html'}).
         when('/valintaryhma/:valintaryhmaOid/lisaaSisaltyvaHakukohde', {controller: HakukohdeCreatorController, templateUrl:TEMPLATE_URL_BASE + 'hakukohdelomake.html'}).
@@ -149,7 +155,20 @@ return $resource(SERVICE_URL_BASE + "resources/valinnanvaihe/:oid/kuuluuSijoitte
   });
 });
 
+//PaasykoeValinnanvaihe
+/* otetaan käyttöön kun restit on kunnossa
+app.factory('PaasykoeValinnanvaihe', function($resource) {
+  
+});
+*/
 
+
+//Paasykoe
+/* otetaan käyttöön kun restit on kunnossa
+app.factory('Paasykoe, function($resource) {
+  
+});
+*/
 
 
 //Valintatapajono

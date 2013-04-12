@@ -1,0 +1,50 @@
+<h3>Pääsykoevalinnanvaiheen muokkaus</h3>
+
+<form name="form" ng-submit="submit()">
+
+<div class="form-row">
+	<label class="form-row-label" for="nimi">Nimi</label>
+	<div class="form-row-content">
+        <input name="nimi" ng-model="model.paasykovalinnanvaihe.nimi" required/>
+    </div>
+
+	<div class="clear"></div>
+
+    <label class="form-row-label" for="kuvaus">Kuvaus</label>
+    <div class="form-row-content">
+        <textarea name="kuvaus"  ng-model="model.paasykoevalinnanvaihe.kuvaus" />
+    </div>
+</div>
+
+<div class="form-row" ng-show="model.paasykoevalinnanvaihe.oid">
+
+    <div class="form-row-label">Valintatapajonot</div>
+    
+    <div class="form-row-content">
+        <table class="virkailija-table-1 margin-bottom-2" ng-show="model.paasykokeet">
+            <thead>    
+                <tr>
+                    <th>Nimi</th>
+                    <th>Kuvaus</th>
+                    <th>Tunniste</th>
+                </tr>  
+            </thead>
+            <tbody ng-model="model.paasykokeet" class="margin-top-2">
+                <tr ng-repeat="paasykoe in model.paasykokeet">
+                    <td><input type="checkbox" ng-model="paasykoe.aktiivinen" /></td>
+                    <td>
+                        <a ng-class="{true:'', false:'line-through'}[paasykoe.aktiivinen]" ng-click="modifypaasykoe(paasykoe.oid)" >{{paasykoe.nimi}}</a>
+                    </td>
+                    <td>{{paasykoe.inheritance}}</td>
+                </tr>
+            </tbody>    
+        </table>
+        
+    </div>
+</div>
+<div class="clear"></div>
+<span class="button small" ng-click="addPaasykoe()">Lisää pääsykoe</span>
+
+<button ng-disabled="!form.$valid" class="button small primary" type="submit">Tallenna</button>
+<button class="button small float-left margin-right-1" ng-click="cancel()">Takaisin</button>
+</form>
