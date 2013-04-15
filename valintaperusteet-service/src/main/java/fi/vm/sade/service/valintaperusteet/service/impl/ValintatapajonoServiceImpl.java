@@ -3,6 +3,7 @@ package fi.vm.sade.service.valintaperusteet.service.impl;
 import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
 import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
+import fi.vm.sade.service.valintaperusteet.model.ValinnanVaiheTyyppi;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import fi.vm.sade.service.valintaperusteet.service.JarjestyskriteeriService;
 import fi.vm.sade.service.valintaperusteet.service.OidService;
@@ -10,6 +11,7 @@ import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
 import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintatapajonoEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintatapajonoOidListaOnTyhjaException;
+import fi.vm.sade.service.valintaperusteet.service.exception.ValintatapajonoaEiVoiLisataException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintatapajonoaEiVoiPoistaaException;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 import fi.vm.sade.service.valintaperusteet.util.ValintatapajonoKopioija;
@@ -85,6 +87,10 @@ public class ValintatapajonoServiceImpl extends AbstractCRUDServiceImpl<Valintat
     public Valintatapajono lisaaValintatapajonoValinnanVaiheelle(String valinnanVaiheOid, Valintatapajono jono,
                                                                  String edellinenValintatapajonoOid) {
         ValinnanVaihe valinnanVaihe = valinnanVaiheService.readByOid(valinnanVaiheOid);
+        if (!ValinnanVaiheTyyppi.TAVALLINEN.equals(valinnanVaihe.getValinnanVaiheTyyppi())) {
+            throw new ValintatapajonoaEiVoiLisataException("Valintatapajonoa ei voi lisätä valinnan vaiheelle, jonka " +
+                    "tyyppi on " + valinnanVaihe.getValinnanVaiheTyyppi().name());
+        }
 
         Valintatapajono edellinenValintatapajono = null;
         if (StringUtils.isNotBlank(edellinenValintatapajonoOid)) {

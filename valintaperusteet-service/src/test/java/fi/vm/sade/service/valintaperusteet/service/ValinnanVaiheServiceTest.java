@@ -7,6 +7,7 @@ import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
+import fi.vm.sade.service.valintaperusteet.model.ValinnanVaiheTyyppi;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -189,6 +190,7 @@ public class ValinnanVaiheServiceTest {
         uusiValinnanVaihe.setAktiivinen(true);
         uusiValinnanVaihe.setKuvaus("uusi kuvaus");
         uusiValinnanVaihe.setNimi("uusi nimi");
+        uusiValinnanVaihe.setValinnanVaiheTyyppi(ValinnanVaiheTyyppi.TAVALLINEN);
 
         final ValinnanVaihe lisatty = valinnanVaiheService.lisaaValinnanVaiheValintaryhmalle(parentOid, uusiValinnanVaihe, edellinenValinnanVaiheOid);
 
@@ -328,6 +330,7 @@ public class ValinnanVaiheServiceTest {
         uusiVaihe.setAktiivinen(true);
         uusiVaihe.setKuvaus("uusi kuvaus");
         uusiVaihe.setNimi("uusi nimi");
+        uusiVaihe.setValinnanVaiheTyyppi(ValinnanVaiheTyyppi.TAVALLINEN);
 
         // Uuden valinnan vaiheen pitäisi siirtyä listauksen viimeiseksi, jos edellisen oidia ei ole annettu
         ValinnanVaihe lisatty = valinnanVaiheService.lisaaValinnanVaiheValintaryhmalle(valintaryhmaOid, uusiVaihe, null);
@@ -360,6 +363,7 @@ public class ValinnanVaiheServiceTest {
         uusiVaihe.setAktiivinen(true);
         uusiVaihe.setKuvaus("uusi kuvaus");
         uusiVaihe.setNimi("uusi nimi");
+        uusiVaihe.setValinnanVaiheTyyppi(ValinnanVaiheTyyppi.TAVALLINEN);
 
         ValinnanVaihe lisatty = valinnanVaiheService.lisaaValinnanVaiheValintaryhmalle(valintaryhmaOid, uusiVaihe, null);
 
@@ -399,6 +403,7 @@ public class ValinnanVaiheServiceTest {
         uusiVaihe.setAktiivinen(true);
         uusiVaihe.setKuvaus("uusi kuvaus");
         uusiVaihe.setNimi("uusi nimi");
+        uusiVaihe.setValinnanVaiheTyyppi(ValinnanVaiheTyyppi.TAVALLINEN);
 
         ValinnanVaihe lisatty = valinnanVaiheService.lisaaValinnanVaiheValintaryhmalle("3301", uusiVaihe, null);
 
@@ -644,6 +649,7 @@ public class ValinnanVaiheServiceTest {
         valinnanVaihe.setAktiivinen(uusiAktiivinen);
         valinnanVaihe.setNimi(uusiNimi);
         valinnanVaihe.setKuvaus(uusiKuvaus);
+        valinnanVaihe.setValinnanVaiheTyyppi(ValinnanVaiheTyyppi.TAVALLINEN);
 
         ValinnanVaihe paivitetty = valinnanVaiheService.update(valinnanVaiheOid, valinnanVaihe);
         {

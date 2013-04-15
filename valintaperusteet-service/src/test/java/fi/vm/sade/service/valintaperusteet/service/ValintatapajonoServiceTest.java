@@ -6,7 +6,9 @@ import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
 import fi.vm.sade.service.valintaperusteet.model.Tasapistesaanto;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
+import fi.vm.sade.service.valintaperusteet.model.ValinnanVaiheTyyppi;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
+import fi.vm.sade.service.valintaperusteet.service.exception.ValintatapajonoaEiVoiLisataException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -401,6 +403,23 @@ public class ValintatapajonoServiceTest {
             assertTrue(uusiAloituspaikat.equals(jono30L.getAloituspaikat()));
             assertEquals(0, valintatapajonoDAO.haeKopiot(jono30L.getOid()).size());
         }
+    }
+
+    @Test(expected = ValintatapajonoaEiVoiLisataException.class)
+    public void testLisaaValintatapajonoValintakoeValinnanVaiheelle() {
+        final String valinnanVaiheOid = "82";
+        ValinnanVaihe valinnanVaihe = valinnanVaiheDAO.readByOid(valinnanVaiheOid);
+        assertEquals(ValinnanVaiheTyyppi.VALINTAKOE, valinnanVaihe.getValinnanVaiheTyyppi());
+
+        Valintatapajono jono = new Valintatapajono();
+        jono.setAktiivinen(true);
+        jono.setAloituspaikat(10);
+        jono.setKuvaus("kuvaus");
+        jono.setNimi("nimi");
+        jono.setSiirretaanSijoitteluun(false);
+        jono.setTasapistesaanto(Tasapistesaanto.ARVONTA);
+
+        valintatapajonoService.lisaaValintatapajonoValinnanVaiheelle(valinnanVaiheOid, jono, null);
     }
 
 

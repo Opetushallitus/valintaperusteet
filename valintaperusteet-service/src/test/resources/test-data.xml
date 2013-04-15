@@ -208,6 +208,9 @@
 
     <valintaryhma id="33" version="0" oid="oid33" nimi="Valintaryhma 33" hakuOid="hakuoid1" />
 
+    <valintaryhma id="34" version="0" oid="oid34" nimi="Valintaryhma 34" hakuOid="hakuoid1" />
+
+
     <hakukohde_viite id="1" version="0" hakuoid="hakuoid1" oid="oid1" nimi="haku1" valintaryhma_id="1" />
     <hakukohde_viite id="2" version="0" hakuoid="hakuoid1" oid="oid2" nimi="haku2" valintaryhma_id="1" />
     <hakukohde_viite id="3" version="0" hakuoid="hakuoid1" oid="oid3" nimi="haku3" valintaryhma_id="[NULL]" />
@@ -220,112 +223,114 @@
 
     <hakukohde_viite id="9" version="0" hakuoid="hakuoid1" oid="oid9" nimi="haku9" valintaryhma_id="20" />
 
-    <valinnan_vaihe id="1" version="0" valintaryhma_id="1" hakukohde_viite_id="[NULL]" oid="1" nimi="valinnanvaihe1" kuvaus="kuvaus1" aktiivinen="true" />
-    <valinnan_vaihe id="2" version="0" valintaryhma_id="[NULL]" hakukohde_viite_id="[NULL]" oid="2" edellinen_valinnan_vaihe_id="1" nimi="valinnanvaihe2" kuvaus="kuvaus2" aktiivinen="true"/>
-    <valinnan_vaihe id="3" version="0" valintaryhma_id="[NULL]" hakukohde_viite_id="[NULL]" oid="3" edellinen_valinnan_vaihe_id="2" nimi="valinnanvaihe3" kuvaus="kuvaus3" aktiivinen="true"/>
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="1" version="0" valintaryhma_id="1" hakukohde_viite_id="[NULL]" oid="1" nimi="valinnanvaihe1" kuvaus="kuvaus1" aktiivinen="true" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="2" version="0" valintaryhma_id="[NULL]" hakukohde_viite_id="[NULL]" oid="2" edellinen_valinnan_vaihe_id="1" nimi="valinnanvaihe2" kuvaus="kuvaus2" aktiivinen="true"/>
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="3" version="0" valintaryhma_id="[NULL]" hakukohde_viite_id="[NULL]" oid="3" edellinen_valinnan_vaihe_id="2" nimi="valinnanvaihe3" kuvaus="kuvaus3" aktiivinen="true"/>
 
-    <valinnan_vaihe id="4" version="0" valintaryhma_id="[NULL]" hakukohde_viite_id="6" oid="4" nimi="haku 6 valinnanvaihe 1" kuvaus="kuvaus1" aktiivinen="true"/>
-    <valinnan_vaihe id="5" version="0" valintaryhma_id="[NULL]" hakukohde_viite_id="6" oid="5" edellinen_valinnan_vaihe_id="4" nimi="haku 6 valinnanvaihe 2" kuvaus="kuvaus2" aktiivinen="true"/>
-    <valinnan_vaihe id="6" version="0" valintaryhma_id="[NULL]" hakukohde_viite_id="6" oid="6" edellinen_valinnan_vaihe_id="5" nimi="haku 6 valinnanvaihe 3" kuvaus="kuvaus3" aktiivinen="true"/>
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="4" version="0" valintaryhma_id="[NULL]" hakukohde_viite_id="6" oid="4" nimi="haku 6 valinnanvaihe 1" kuvaus="kuvaus1" aktiivinen="true"/>
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="5" version="0" valintaryhma_id="[NULL]" hakukohde_viite_id="6" oid="5" edellinen_valinnan_vaihe_id="4" nimi="haku 6 valinnanvaihe 2" kuvaus="kuvaus2" aktiivinen="true"/>
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="6" version="0" valintaryhma_id="[NULL]" hakukohde_viite_id="6" oid="6" edellinen_valinnan_vaihe_id="5" nimi="haku 6 valinnanvaihe 3" kuvaus="kuvaus3" aktiivinen="true"/>
 
-    <valinnan_vaihe id="7" version="0" valintaryhma_id="[NULL]" hakukohde_viite_id="2" oid="7" nimi="haku 2 valinnanvaihe 1" kuvaus="kuvaus1" aktiivinen="true"/>
-    <valinnan_vaihe id="8" version="0" valintaryhma_id="[NULL]" hakukohde_viite_id="2" oid="8" edellinen_valinnan_vaihe_id="7" nimi="haku 2 valinnanvaihe 2" kuvaus="kuvaus2" aktiivinen="true"/>
-    <valinnan_vaihe id="9" version="0" valintaryhma_id="[NULL]" hakukohde_viite_id="2" oid="9" edellinen_valinnan_vaihe_id="8" nimi="haku 2 valinnanvaihe 3" kuvaus="kuvaus3" aktiivinen="true"/>
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="7" version="0" valintaryhma_id="[NULL]" hakukohde_viite_id="2" oid="7" nimi="haku 2 valinnanvaihe 1" kuvaus="kuvaus1" aktiivinen="true"/>
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="8" version="0" valintaryhma_id="[NULL]" hakukohde_viite_id="2" oid="8" edellinen_valinnan_vaihe_id="7" nimi="haku 2 valinnanvaihe 2" kuvaus="kuvaus2" aktiivinen="true"/>
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="9" version="0" valintaryhma_id="[NULL]" hakukohde_viite_id="2" oid="9" edellinen_valinnan_vaihe_id="8" nimi="haku 2 valinnanvaihe 3" kuvaus="kuvaus3" aktiivinen="true"/>
 
-    <valinnan_vaihe id="10" version="0" valintaryhma_id="6" oid="10" nimi="valintaryhma 6 valinnan vaihe 1" kuvaus="kuvaus" aktiivinen="true" />
-    <valinnan_vaihe id="11" version="0" valintaryhma_id="6" oid="11" nimi="valintaryhma 6 valinnan vaihe 2" edellinen_valinnan_vaihe_id="10" kuvaus="kuvaus" aktiivinen="true" />
-    <valinnan_vaihe id="12" version="0" valintaryhma_id="6" oid="12" nimi="valintaryhma 6 valinnan vaihe 3" edellinen_valinnan_vaihe_id="11" kuvaus="kuvaus" aktiivinen="true" />
-    <valinnan_vaihe id="13" version="0" valintaryhma_id="6" oid="13" nimi="valintaryhma 6 valinnan vaihe 4" edellinen_valinnan_vaihe_id="12" kuvaus="kuvaus" aktiivinen="true" />
-    <valinnan_vaihe id="14" version="0" valintaryhma_id="6" oid="14" nimi="valintaryhma 6 valinnan vaihe 5" edellinen_valinnan_vaihe_id="13" kuvaus="kuvaus" aktiivinen="true" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="10" version="0" valintaryhma_id="6" oid="10" nimi="valintaryhma 6 valinnan vaihe 1" kuvaus="kuvaus" aktiivinen="true" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="11" version="0" valintaryhma_id="6" oid="11" nimi="valintaryhma 6 valinnan vaihe 2" edellinen_valinnan_vaihe_id="10" kuvaus="kuvaus" aktiivinen="true" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="12" version="0" valintaryhma_id="6" oid="12" nimi="valintaryhma 6 valinnan vaihe 3" edellinen_valinnan_vaihe_id="11" kuvaus="kuvaus" aktiivinen="true" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="13" version="0" valintaryhma_id="6" oid="13" nimi="valintaryhma 6 valinnan vaihe 4" edellinen_valinnan_vaihe_id="12" kuvaus="kuvaus" aktiivinen="true" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="14" version="0" valintaryhma_id="6" oid="14" nimi="valintaryhma 6 valinnan vaihe 5" edellinen_valinnan_vaihe_id="13" kuvaus="kuvaus" aktiivinen="true" />
 
-    <valinnan_vaihe id="17" version="0" valintaryhma_id="7" oid="15" nimi="valintaryhma 7 valinnan vaihe 1" kuvaus="kuvaus" aktiivinen="true" />
-    <valinnan_vaihe id="15" version="0" valintaryhma_id="7" oid="16" nimi="valintaryhma 7 valinnan vaihe 2" edellinen_valinnan_vaihe_id="17" kuvaus="kuvaus" aktiivinen="true" />
-    <valinnan_vaihe id="18" version="0" valintaryhma_id="7" oid="17" nimi="valintaryhma 7 valinnan vaihe 3" edellinen_valinnan_vaihe_id="15" kuvaus="kuvaus" aktiivinen="true" />
-    <valinnan_vaihe id="19" version="0" valintaryhma_id="7" oid="18" nimi="valintaryhma 7 valinnan vaihe 4" edellinen_valinnan_vaihe_id="18" kuvaus="kuvaus" aktiivinen="true" />
-    <valinnan_vaihe id="16" version="0" valintaryhma_id="7" oid="19" nimi="valintaryhma 7 valinnan vaihe 5" edellinen_valinnan_vaihe_id="19" kuvaus="kuvaus" aktiivinen="true" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="17" version="0" valintaryhma_id="7" oid="15" nimi="valintaryhma 7 valinnan vaihe 1" kuvaus="kuvaus" aktiivinen="true" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="15" version="0" valintaryhma_id="7" oid="16" nimi="valintaryhma 7 valinnan vaihe 2" edellinen_valinnan_vaihe_id="17" kuvaus="kuvaus" aktiivinen="true" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="18" version="0" valintaryhma_id="7" oid="17" nimi="valintaryhma 7 valinnan vaihe 3" edellinen_valinnan_vaihe_id="15" kuvaus="kuvaus" aktiivinen="true" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="19" version="0" valintaryhma_id="7" oid="18" nimi="valintaryhma 7 valinnan vaihe 4" edellinen_valinnan_vaihe_id="18" kuvaus="kuvaus" aktiivinen="true" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="16" version="0" valintaryhma_id="7" oid="19" nimi="valintaryhma 7 valinnan vaihe 5" edellinen_valinnan_vaihe_id="19" kuvaus="kuvaus" aktiivinen="true" />
 
-    <valinnan_vaihe id="20" version="0" valintaryhma_id="8" oid="20" nimi="valintaryhma 8 valinnan vaihe 1" kuvaus="kuvaus" aktiivinen="true" />
-    <valinnan_vaihe id="21" version="0" valintaryhma_id="8" oid="21" nimi="valintaryhma 8 valinnan vaihe 2" edellinen_valinnan_vaihe_id="20" kuvaus="kuvaus" aktiivinen="true" />
-    <valinnan_vaihe id="22" version="0" valintaryhma_id="8" oid="22" nimi="valintaryhma 8 valinnan vaihe 3" edellinen_valinnan_vaihe_id="21" kuvaus="kuvaus" aktiivinen="true" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="20" version="0" valintaryhma_id="8" oid="20" nimi="valintaryhma 8 valinnan vaihe 1" kuvaus="kuvaus" aktiivinen="true" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="21" version="0" valintaryhma_id="8" oid="21" nimi="valintaryhma 8 valinnan vaihe 2" edellinen_valinnan_vaihe_id="20" kuvaus="kuvaus" aktiivinen="true" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="22" version="0" valintaryhma_id="8" oid="22" nimi="valintaryhma 8 valinnan vaihe 3" edellinen_valinnan_vaihe_id="21" kuvaus="kuvaus" aktiivinen="true" />
 
-    <valinnan_vaihe id="32" version="0" valintaryhma_id="11" oid="32" nimi="valintaryhma 11 valinnan vaihe 1(c)" kuvaus="kuvaus" aktiivinen="true" master_valinnan_vaihe_id="20"/>
-    <valinnan_vaihe id="33" version="0" valintaryhma_id="11" oid="33" nimi="valintaryhma 11 valinnan vaihe 2(c)" edellinen_valinnan_vaihe_id="32" kuvaus="kuvaus" aktiivinen="true" master_valinnan_vaihe_id="21" />
-    <valinnan_vaihe id="34" version="0" valintaryhma_id="11" oid="34" nimi="valintaryhma 11 valinnan vaihe 3(c)" edellinen_valinnan_vaihe_id="33" kuvaus="kuvaus" aktiivinen="true" master_valinnan_vaihe_id="22" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="32" version="0" valintaryhma_id="11" oid="32" nimi="valintaryhma 11 valinnan vaihe 1(c)" kuvaus="kuvaus" aktiivinen="true" master_valinnan_vaihe_id="20"/>
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="33" version="0" valintaryhma_id="11" oid="33" nimi="valintaryhma 11 valinnan vaihe 2(c)" edellinen_valinnan_vaihe_id="32" kuvaus="kuvaus" aktiivinen="true" master_valinnan_vaihe_id="21" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="34" version="0" valintaryhma_id="11" oid="34" nimi="valintaryhma 11 valinnan vaihe 3(c)" edellinen_valinnan_vaihe_id="33" kuvaus="kuvaus" aktiivinen="true" master_valinnan_vaihe_id="22" />
 
-    <valinnan_vaihe id="23" version="0" valintaryhma_id="9" oid="23" nimi="valintaryhma 9 valinnan vaihe 1(c)" kuvaus="kuvaus" aktiivinen="true" master_valinnan_vaihe_id="20" />
-    <valinnan_vaihe id="24" version="0" valintaryhma_id="9" oid="24" nimi="valintaryhma 9 valinnan vaihe 2(c)" edellinen_valinnan_vaihe_id="23" kuvaus="kuvaus" aktiivinen="true" master_valinnan_vaihe_id="21" />
-    <valinnan_vaihe id="25" version="0" valintaryhma_id="9" oid="25" nimi="valintaryhma 9 valinnan vaihe 4" edellinen_valinnan_vaihe_id="24" kuvaus="kuvaus" aktiivinen="true" />
-    <valinnan_vaihe id="26" version="0" valintaryhma_id="9" oid="26" nimi="valintaryhma 9 valinnan vaihe 3(c)" edellinen_valinnan_vaihe_id="25" kuvaus="kuvaus" aktiivinen="true" master_valinnan_vaihe_id="22" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="23" version="0" valintaryhma_id="9" oid="23" nimi="valintaryhma 9 valinnan vaihe 1(c)" kuvaus="kuvaus" aktiivinen="true" master_valinnan_vaihe_id="20" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="24" version="0" valintaryhma_id="9" oid="24" nimi="valintaryhma 9 valinnan vaihe 2(c)" edellinen_valinnan_vaihe_id="23" kuvaus="kuvaus" aktiivinen="true" master_valinnan_vaihe_id="21" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="25" version="0" valintaryhma_id="9" oid="25" nimi="valintaryhma 9 valinnan vaihe 4" edellinen_valinnan_vaihe_id="24" kuvaus="kuvaus" aktiivinen="true" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="26" version="0" valintaryhma_id="9" oid="26" nimi="valintaryhma 9 valinnan vaihe 3(c)" edellinen_valinnan_vaihe_id="25" kuvaus="kuvaus" aktiivinen="true" master_valinnan_vaihe_id="22" />
 
-    <valinnan_vaihe id="27" version="0" valintaryhma_id="10" oid="27" nimi="valintaryhma 10 valinnan vaihe 3(c)" kuvaus="kuvaus" aktiivinen="true" master_valinnan_vaihe_id="26" />
-    <valinnan_vaihe id="28" version="0" valintaryhma_id="10" oid="28" nimi="valintaryhma 10 valinnan vaihe 4(c)" edellinen_valinnan_vaihe_id="27" kuvaus="kuvaus" aktiivinen="true" master_valinnan_vaihe_id="25" />
-    <valinnan_vaihe id="29" version="0" valintaryhma_id="10" oid="29" nimi="valintaryhma 10 valinnan vaihe 1(c)" edellinen_valinnan_vaihe_id="28" kuvaus="kuvaus" aktiivinen="true" master_valinnan_vaihe_id="23" />
-    <valinnan_vaihe id="30" version="0" valintaryhma_id="10" oid="30" nimi="valintaryhma 10 valinnan vaihe 5" edellinen_valinnan_vaihe_id="29" kuvaus="kuvaus" aktiivinen="true" />
-    <valinnan_vaihe id="31" version="0" valintaryhma_id="10" oid="31" nimi="valintaryhma 10 valinnan vaihe 2(c)" edellinen_valinnan_vaihe_id="30" kuvaus="kuvaus" aktiivinen="true" master_valinnan_vaihe_id="24" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="27" version="0" valintaryhma_id="10" oid="27" nimi="valintaryhma 10 valinnan vaihe 3(c)" kuvaus="kuvaus" aktiivinen="true" master_valinnan_vaihe_id="26" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="28" version="0" valintaryhma_id="10" oid="28" nimi="valintaryhma 10 valinnan vaihe 4(c)" edellinen_valinnan_vaihe_id="27" kuvaus="kuvaus" aktiivinen="true" master_valinnan_vaihe_id="25" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="29" version="0" valintaryhma_id="10" oid="29" nimi="valintaryhma 10 valinnan vaihe 1(c)" edellinen_valinnan_vaihe_id="28" kuvaus="kuvaus" aktiivinen="true" master_valinnan_vaihe_id="23" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="30" version="0" valintaryhma_id="10" oid="30" nimi="valintaryhma 10 valinnan vaihe 5" edellinen_valinnan_vaihe_id="29" kuvaus="kuvaus" aktiivinen="true" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="31" version="0" valintaryhma_id="10" oid="31" nimi="valintaryhma 10 valinnan vaihe 2(c)" edellinen_valinnan_vaihe_id="30" kuvaus="kuvaus" aktiivinen="true" master_valinnan_vaihe_id="24" />
 
-    <valinnan_vaihe id="35" version="0" hakukohde_viite_id="7" oid="35" nimi="hakukohde 7 valinnan vaihe 2(c)" kuvaus="kuvaus" aktiivinen="true" master_valinnan_vaihe_id="21" />
-    <valinnan_vaihe id="36" version="0" hakukohde_viite_id="7" oid="36" nimi="hakukohde 7 valinnan vaihe 1(c)" edellinen_valinnan_vaihe_id="35" kuvaus="kuvaus" aktiivinen="true" master_valinnan_vaihe_id="20" />
-    <valinnan_vaihe id="37" version="0" hakukohde_viite_id="7" oid="37" nimi="hakukohde 7 valinnan vaihe 3(c)" edellinen_valinnan_vaihe_id="36" kuvaus="kuvaus" aktiivinen="true" master_valinnan_vaihe_id="22" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="35" version="0" hakukohde_viite_id="7" oid="35" nimi="hakukohde 7 valinnan vaihe 2(c)" kuvaus="kuvaus" aktiivinen="true" master_valinnan_vaihe_id="21" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="36" version="0" hakukohde_viite_id="7" oid="36" nimi="hakukohde 7 valinnan vaihe 1(c)" edellinen_valinnan_vaihe_id="35" kuvaus="kuvaus" aktiivinen="true" master_valinnan_vaihe_id="20" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="37" version="0" hakukohde_viite_id="7" oid="37" nimi="hakukohde 7 valinnan vaihe 3(c)" edellinen_valinnan_vaihe_id="36" kuvaus="kuvaus" aktiivinen="true" master_valinnan_vaihe_id="22" />
 
-    <valinnan_vaihe id="38" version="0" hakukohde_viite_id="8" oid="38" nimi="hakukohde 8 valinnan vaihe 1(c)" kuvaus="kuvaus" aktiivinen="true" master_valinnan_vaihe_id="23" />
-    <valinnan_vaihe id="39" version="0" hakukohde_viite_id="8" oid="39" nimi="hakukohde 8 valinnan vaihe 2(c)" edellinen_valinnan_vaihe_id="38" kuvaus="kuvaus" aktiivinen="true" master_valinnan_vaihe_id="24" />
-    <valinnan_vaihe id="40" version="0" hakukohde_viite_id="8" oid="40" nimi="hakukohde 8 valinnan vaihe 4(c)" edellinen_valinnan_vaihe_id="39" kuvaus="kuvaus" aktiivinen="true" master_valinnan_vaihe_id="25" />
-    <valinnan_vaihe id="41" version="0" hakukohde_viite_id="8" oid="41" nimi="hakukohde 8 valinnan vaihe 3(c)" edellinen_valinnan_vaihe_id="40" kuvaus="kuvaus" aktiivinen="true" master_valinnan_vaihe_id="26" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="38" version="0" hakukohde_viite_id="8" oid="38" nimi="hakukohde 8 valinnan vaihe 1(c)" kuvaus="kuvaus" aktiivinen="true" master_valinnan_vaihe_id="23" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="39" version="0" hakukohde_viite_id="8" oid="39" nimi="hakukohde 8 valinnan vaihe 2(c)" edellinen_valinnan_vaihe_id="38" kuvaus="kuvaus" aktiivinen="true" master_valinnan_vaihe_id="24" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="40" version="0" hakukohde_viite_id="8" oid="40" nimi="hakukohde 8 valinnan vaihe 4(c)" edellinen_valinnan_vaihe_id="39" kuvaus="kuvaus" aktiivinen="true" master_valinnan_vaihe_id="25" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="41" version="0" hakukohde_viite_id="8" oid="41" nimi="hakukohde 8 valinnan vaihe 3(c)" edellinen_valinnan_vaihe_id="40" kuvaus="kuvaus" aktiivinen="true" master_valinnan_vaihe_id="26" />
 
-    <valinnan_vaihe id="42" version="0" valintaryhma_id="12" oid="42" nimi="valintaryhma 12 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus" />
-    <valinnan_vaihe id="43" version="0" valintaryhma_id="12" oid="43" nimi="valintaryhma 12 valinnan vaihe 2" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="42" />
-    <valinnan_vaihe id="44" version="0" valintaryhma_id="12" oid="44" nimi="valintaryhma 12 valinnan vaihe 3" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="43" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="42" version="0" valintaryhma_id="12" oid="42" nimi="valintaryhma 12 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="43" version="0" valintaryhma_id="12" oid="43" nimi="valintaryhma 12 valinnan vaihe 2" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="42" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="44" version="0" valintaryhma_id="12" oid="44" nimi="valintaryhma 12 valinnan vaihe 3" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="43" />
 
-    <valinnan_vaihe id="45" version="0" valintaryhma_id="14" oid="45" nimi="valintaryhma 14 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus" />
-    <valinnan_vaihe id="46" version="0" valintaryhma_id="15" oid="46" nimi="valintaryhma 15 valinnan vaihe 1(c)" aktiivinen="true" kuvaus="kuvaus" master_valinnan_vaihe_id="45" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="45" version="0" valintaryhma_id="14" oid="45" nimi="valintaryhma 14 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="46" version="0" valintaryhma_id="15" oid="46" nimi="valintaryhma 15 valinnan vaihe 1(c)" aktiivinen="true" kuvaus="kuvaus" master_valinnan_vaihe_id="45" />
 
-    <valinnan_vaihe id="47" version="0" valintaryhma_id="16" oid="47" nimi="valintaryhma 16 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="47" version="0" valintaryhma_id="16" oid="47" nimi="valintaryhma 16 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus" />
 
-    <valinnan_vaihe id="48" version="0" valintaryhma_id="17" oid="48" nimi="valintaryhma 17 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="48" version="0" valintaryhma_id="17" oid="48" nimi="valintaryhma 17 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus" />
 
-    <valinnan_vaihe id="49" version="0" valintaryhma_id="18" oid="49" nimi="valintaryhma 18 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus" />
-    <valinnan_vaihe id="50" version="0" valintaryhma_id="18" oid="50" nimi="valintaryhma 18 valinnan vaihe 2" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="49" />
-    <valinnan_vaihe id="51" version="0" valintaryhma_id="18" oid="51" nimi="valintaryhma 18 valinnan vaihe 3" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="50" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="49" version="0" valintaryhma_id="18" oid="49" nimi="valintaryhma 18 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="50" version="0" valintaryhma_id="18" oid="50" nimi="valintaryhma 18 valinnan vaihe 2" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="49" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="51" version="0" valintaryhma_id="18" oid="51" nimi="valintaryhma 18 valinnan vaihe 3" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="50" />
 
-    <valinnan_vaihe id="52" version="0" valintaryhma_id="19" oid="52" nimi="valintaryhma 19 valinnan vaihe 1(c)" aktiivinen="true" kuvaus="kuvaus" master_valinnan_vaihe_id="49" />
-    <valinnan_vaihe id="53" version="0" valintaryhma_id="19" oid="53" nimi="valintaryhma 19 valinnan vaihe 2(c)" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="52" master_valinnan_vaihe_id="50" />
-    <valinnan_vaihe id="54" version="0" valintaryhma_id="19" oid="54" nimi="valintaryhma 19 valinnan vaihe 4" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="53" />
-    <valinnan_vaihe id="55" version="0" valintaryhma_id="19" oid="55" nimi="valintaryhma 19 valinnan vaihe 3(c)" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="54" master_valinnan_vaihe_id="51" />
-
-
-    <valinnan_vaihe id="56" version="0" valintaryhma_id="20" oid="56" nimi="valintaryhma 20 valinnan vaihe 5" aktiivinen="true" kuvaus="kuvaus" />
-    <valinnan_vaihe id="57" version="0" valintaryhma_id="20" oid="57" nimi="valintaryhma 20 valinnan vaihe 6" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="56" />
-    <valinnan_vaihe id="58" version="0" valintaryhma_id="20" oid="58" nimi="valintaryhma 20 valinnan vaihe 2(c)" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="57" master_valinnan_vaihe_id="53" />
-    <valinnan_vaihe id="59" version="0" valintaryhma_id="20" oid="59" nimi="valintaryhma 20 valinnan vaihe 4(c)" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="58" master_valinnan_vaihe_id="54" />
-    <valinnan_vaihe id="60" version="0" valintaryhma_id="20" oid="60" nimi="valintaryhma 20 valinnan vaihe 1(c)" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="59" master_valinnan_vaihe_id="52" />
-    <valinnan_vaihe id="61" version="0" valintaryhma_id="20" oid="61" nimi="valintaryhma 20 valinnan vaihe 3(c)" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="60" master_valinnan_vaihe_id="55" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="52" version="0" valintaryhma_id="19" oid="52" nimi="valintaryhma 19 valinnan vaihe 1(c)" aktiivinen="true" kuvaus="kuvaus" master_valinnan_vaihe_id="49" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="53" version="0" valintaryhma_id="19" oid="53" nimi="valintaryhma 19 valinnan vaihe 2(c)" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="52" master_valinnan_vaihe_id="50" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="54" version="0" valintaryhma_id="19" oid="54" nimi="valintaryhma 19 valinnan vaihe 4" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="53" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="55" version="0" valintaryhma_id="19" oid="55" nimi="valintaryhma 19 valinnan vaihe 3(c)" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="54" master_valinnan_vaihe_id="51" />
 
 
-    <valinnan_vaihe id="62" version="0" hakukohde_viite_id="9" oid="62" nimi="hakukohde 9 valinnan vaihe 5(c)" aktiivinen="true" kuvaus="kuvaus" master_valinnan_vaihe_id="56" />
-    <valinnan_vaihe id="63" version="0" hakukohde_viite_id="9" oid="63" nimi="hakukohde 9 valinnan vaihe 6(c)" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="62" master_valinnan_vaihe_id="57" />
-    <valinnan_vaihe id="64" version="0" hakukohde_viite_id="9" oid="64" nimi="hakukohde 9 valinnan vaihe 2(c)" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="63" master_valinnan_vaihe_id="58" />
-    <valinnan_vaihe id="65" version="0" hakukohde_viite_id="9" oid="65" nimi="hakukohde 9 valinnan vaihe 4(c)" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="64" master_valinnan_vaihe_id="59" />
-    <valinnan_vaihe id="66" version="0" hakukohde_viite_id="9" oid="66" nimi="hakukohde 9 valinnan vaihe 1(c)" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="65" master_valinnan_vaihe_id="60" />
-    <valinnan_vaihe id="67" version="0" hakukohde_viite_id="9" oid="67" nimi="hakukohde 9 valinnan vaihe 3(c)" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="66" master_valinnan_vaihe_id="61" />
-
-    <valinnan_vaihe id="68" version="0" valintaryhma_id="21" oid="68" nimi="valintaryhma 21 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus" />
-    <valinnan_vaihe id="69" version="0" valintaryhma_id="22" oid="69" nimi="valintaryhma 22 valinnan vaihe 1(c)" aktiivinen="true" kuvaus="kuvaus" master_valinnan_vaihe_id="68" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="56" version="0" valintaryhma_id="20" oid="56" nimi="valintaryhma 20 valinnan vaihe 5" aktiivinen="true" kuvaus="kuvaus" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="57" version="0" valintaryhma_id="20" oid="57" nimi="valintaryhma 20 valinnan vaihe 6" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="56" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="58" version="0" valintaryhma_id="20" oid="58" nimi="valintaryhma 20 valinnan vaihe 2(c)" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="57" master_valinnan_vaihe_id="53" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="59" version="0" valintaryhma_id="20" oid="59" nimi="valintaryhma 20 valinnan vaihe 4(c)" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="58" master_valinnan_vaihe_id="54" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="60" version="0" valintaryhma_id="20" oid="60" nimi="valintaryhma 20 valinnan vaihe 1(c)" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="59" master_valinnan_vaihe_id="52" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="61" version="0" valintaryhma_id="20" oid="61" nimi="valintaryhma 20 valinnan vaihe 3(c)" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="60" master_valinnan_vaihe_id="55" />
 
 
-    <valinnan_vaihe id="70" version="0" valintaryhma_id="23" oid="70" nimi="valintaryhma 23 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus" />
-    <valinnan_vaihe id="71" version="0" valintaryhma_id="24" oid="71" nimi="valintaryhma 24 valinnan vaihe 1(c)" aktiivinen="true" kuvaus="kuvaus" master_valinnan_vaihe_id="70" />
-    <valinnan_vaihe id="72" version="0" valintaryhma_id="25" oid="72" nimi="valintaryhma 25 valinnan vaihe 1(c)" aktiivinen="false" kuvaus="kuvaus" master_valinnan_vaihe_id="71" />
-    <valinnan_vaihe id="73" version="0" valintaryhma_id="26" oid="73" nimi="valintaryhma 26 valinnan vaihe 1(c)" aktiivinen="false" kuvaus="kuvaus" master_valinnan_vaihe_id="72" />
-    <valinnan_vaihe id="74" version="0" valintaryhma_id="27" oid="74" nimi="valintaryhma 27 valinnan vaihe 1(c)" aktiivinen="true" kuvaus="kuvaus" master_valinnan_vaihe_id="71" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="62" version="0" hakukohde_viite_id="9" oid="62" nimi="hakukohde 9 valinnan vaihe 5(c)" aktiivinen="true" kuvaus="kuvaus" master_valinnan_vaihe_id="56" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="63" version="0" hakukohde_viite_id="9" oid="63" nimi="hakukohde 9 valinnan vaihe 6(c)" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="62" master_valinnan_vaihe_id="57" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="64" version="0" hakukohde_viite_id="9" oid="64" nimi="hakukohde 9 valinnan vaihe 2(c)" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="63" master_valinnan_vaihe_id="58" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="65" version="0" hakukohde_viite_id="9" oid="65" nimi="hakukohde 9 valinnan vaihe 4(c)" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="64" master_valinnan_vaihe_id="59" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="66" version="0" hakukohde_viite_id="9" oid="66" nimi="hakukohde 9 valinnan vaihe 1(c)" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="65" master_valinnan_vaihe_id="60" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="67" version="0" hakukohde_viite_id="9" oid="67" nimi="hakukohde 9 valinnan vaihe 3(c)" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="66" master_valinnan_vaihe_id="61" />
 
-    <valinnan_vaihe id="75" version="0" valintaryhma_id="28" oid="75" nimi="valintaryhma 28 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus" />
-    <valinnan_vaihe id="76" version="0" valintaryhma_id="29" oid="76" nimi="valintaryhma 29 valinnan vaihe 1(c)" aktiivinen="true" kuvaus="kuvaus" master_valinnan_vaihe_id="75" />
-    <valinnan_vaihe id="77" version="0" valintaryhma_id="30" oid="77" nimi="valintaryhma 30 valinnan vaihe 1(c)" aktiivinen="true" kuvaus="kuvaus" master_valinnan_vaihe_id="76" />
-    <valinnan_vaihe id="78" version="0" valintaryhma_id="31" oid="78" nimi="valintaryhma 31 valinnan vaihe 1(c)" aktiivinen="true" kuvaus="kuvaus" master_valinnan_vaihe_id="77" />
-    <valinnan_vaihe id="79" version="0" valintaryhma_id="32" oid="79" nimi="valintaryhma 32 valinnan vaihe 1(c)" aktiivinen="true" kuvaus="kuvaus" master_valinnan_vaihe_id="76" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="68" version="0" valintaryhma_id="21" oid="68" nimi="valintaryhma 21 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="69" version="0" valintaryhma_id="22" oid="69" nimi="valintaryhma 22 valinnan vaihe 1(c)" aktiivinen="true" kuvaus="kuvaus" master_valinnan_vaihe_id="68" />
 
-    <valinnan_vaihe id="80" version="0" valintaryhma_id="33" oid="80" nimi="valintaryhma 33 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus" />
-    <valinnan_vaihe id="81" version="0" valintaryhma_id="33" oid="81" nimi="valintaryhma 33 valinnan vaihe 2" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="80" />
+
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="70" version="0" valintaryhma_id="23" oid="70" nimi="valintaryhma 23 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="71" version="0" valintaryhma_id="24" oid="71" nimi="valintaryhma 24 valinnan vaihe 1(c)" aktiivinen="true" kuvaus="kuvaus" master_valinnan_vaihe_id="70" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="72" version="0" valintaryhma_id="25" oid="72" nimi="valintaryhma 25 valinnan vaihe 1(c)" aktiivinen="false" kuvaus="kuvaus" master_valinnan_vaihe_id="71" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="73" version="0" valintaryhma_id="26" oid="73" nimi="valintaryhma 26 valinnan vaihe 1(c)" aktiivinen="false" kuvaus="kuvaus" master_valinnan_vaihe_id="72" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="74" version="0" valintaryhma_id="27" oid="74" nimi="valintaryhma 27 valinnan vaihe 1(c)" aktiivinen="true" kuvaus="kuvaus" master_valinnan_vaihe_id="71" />
+
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="75" version="0" valintaryhma_id="28" oid="75" nimi="valintaryhma 28 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="76" version="0" valintaryhma_id="29" oid="76" nimi="valintaryhma 29 valinnan vaihe 1(c)" aktiivinen="true" kuvaus="kuvaus" master_valinnan_vaihe_id="75" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="77" version="0" valintaryhma_id="30" oid="77" nimi="valintaryhma 30 valinnan vaihe 1(c)" aktiivinen="true" kuvaus="kuvaus" master_valinnan_vaihe_id="76" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="78" version="0" valintaryhma_id="31" oid="78" nimi="valintaryhma 31 valinnan vaihe 1(c)" aktiivinen="true" kuvaus="kuvaus" master_valinnan_vaihe_id="77" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="79" version="0" valintaryhma_id="32" oid="79" nimi="valintaryhma 32 valinnan vaihe 1(c)" aktiivinen="true" kuvaus="kuvaus" master_valinnan_vaihe_id="76" />
+
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="80" version="0" valintaryhma_id="33" oid="80" nimi="valintaryhma 33 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="81" version="0" valintaryhma_id="33" oid="81" nimi="valintaryhma 33 valinnan vaihe 2" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="80" />
+
+    <valinnan_vaihe valinnan_vaihe_tyyppi="VALINTAKOE" id="82" version="0" valintaryhma_id="34" oid="82" nimi="valintaryhma 34 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus" />
 
     <valintatapajono id="1" version="1" oid="1" aloituspaikat="10" nimi="jono1" kuvaus="kuvaus" tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="1" aktiivinen="true"/>
     <valintatapajono id="2" version="1" oid="2" edellinen_valintatapajono_id="1" aloituspaikat="10" nimi="jono2" kuvaus="kuvaus" tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="1" aktiivinen="true"/>
@@ -401,9 +406,9 @@
 
     <hakukohde_viite id="3001" version="0" hakuoid="hakuoid1" oid="3001" nimi="Hakukohde" valintaryhma_id="3001" />
 
-    <valinnan_vaihe id="3001" version="0" valintaryhma_id="3001" hakukohde_viite_id="[NULL]" master_valinnan_vaihe_id="[NULL]" oid="3001" nimi="VR1 Vaihe1" kuvaus="kuvaus1" aktiivinen="true" />
-    <valinnan_vaihe id="3002" version="0" valintaryhma_id="3002" hakukohde_viite_id="[NULL]" master_valinnan_vaihe_id="3001" oid="3002" nimi="VR2 Vaihe1(c)" kuvaus="kuvaus1" aktiivinen="true" />
-    <valinnan_vaihe id="3003" version="0" valintaryhma_id="[NULL]" hakukohde_viite_id="3001" master_valinnan_vaihe_id="3002" oid="3003" nimi="VR2 HAKU1 Vaihe1(c)" kuvaus="kuvaus1" aktiivinen="true" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="3001" version="0" valintaryhma_id="3001" hakukohde_viite_id="[NULL]" master_valinnan_vaihe_id="[NULL]" oid="3001" nimi="VR1 Vaihe1" kuvaus="kuvaus1" aktiivinen="true" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="3002" version="0" valintaryhma_id="3002" hakukohde_viite_id="[NULL]" master_valinnan_vaihe_id="3001" oid="3002" nimi="VR2 Vaihe1(c)" kuvaus="kuvaus1" aktiivinen="true" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="3003" version="0" valintaryhma_id="[NULL]" hakukohde_viite_id="3001" master_valinnan_vaihe_id="3002" oid="3003" nimi="VR2 HAKU1 Vaihe1(c)" kuvaus="kuvaus1" aktiivinen="true" />
 
     <valintatapajono id="3001" version="0" aktiivinen="true" aloituspaikat="20" nimi="VR1 VAIHE1 JONO1" oid="3001"
                      siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3001"/>
@@ -418,9 +423,9 @@
 
     <hakukohde_viite id="3101" version="0" hakuoid="hakuoid1" oid="3101" nimi="Hakukohde" valintaryhma_id="3101" />
 
-    <valinnan_vaihe id="3101" version="0" valintaryhma_id="3101" hakukohde_viite_id="[NULL]" master_valinnan_vaihe_id="[NULL]" oid="3101" nimi="VR1 Vaihe1" kuvaus="kuvaus1" aktiivinen="true" />
-    <valinnan_vaihe id="3102" version="0" valintaryhma_id="3102" hakukohde_viite_id="[NULL]" master_valinnan_vaihe_id="3101" oid="3102" nimi="VR2 Vaihe1(c)" kuvaus="kuvaus1" aktiivinen="true" />
-    <valinnan_vaihe id="3103" version="0" valintaryhma_id="[NULL]" hakukohde_viite_id="3101" master_valinnan_vaihe_id="3102" oid="3103" nimi="VR2 HAKU1 Vaihe1(c)" kuvaus="kuvaus1" aktiivinen="true" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="3101" version="0" valintaryhma_id="3101" hakukohde_viite_id="[NULL]" master_valinnan_vaihe_id="[NULL]" oid="3101" nimi="VR1 Vaihe1" kuvaus="kuvaus1" aktiivinen="true" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="3102" version="0" valintaryhma_id="3102" hakukohde_viite_id="[NULL]" master_valinnan_vaihe_id="3101" oid="3102" nimi="VR2 Vaihe1(c)" kuvaus="kuvaus1" aktiivinen="true" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="3103" version="0" valintaryhma_id="[NULL]" hakukohde_viite_id="3101" master_valinnan_vaihe_id="3102" oid="3103" nimi="VR2 HAKU1 Vaihe1(c)" kuvaus="kuvaus1" aktiivinen="true" />
 
     <valintatapajono id="3101" version="0" aktiivinen="true" aloituspaikat="20" nimi="VR1 VAIHE1 JONO1" oid="3101"
                      siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3101"/>
@@ -462,9 +467,9 @@
 
     <hakukohde_viite id="3201" version="0" hakuoid="hakuoid1" oid="3201" nimi="Hakukohde" valintaryhma_id="3201" />
 
-    <valinnan_vaihe id="3201" version="0" valintaryhma_id="3201" hakukohde_viite_id="[NULL]" master_valinnan_vaihe_id="[NULL]" oid="3201" nimi="VR1 Vaihe1" kuvaus="kuvaus1" aktiivinen="true" />
-    <valinnan_vaihe id="3202" version="0" valintaryhma_id="3202" hakukohde_viite_id="[NULL]" master_valinnan_vaihe_id="3201" oid="3202" nimi="VR2 Vaihe1(c)" kuvaus="kuvaus1" aktiivinen="true" />
-    <valinnan_vaihe id="3203" version="0" valintaryhma_id="[NULL]" hakukohde_viite_id="3201" master_valinnan_vaihe_id="3202" oid="3203" nimi="VR2 HAKU1 Vaihe1(c)" kuvaus="kuvaus1" aktiivinen="true" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="3201" version="0" valintaryhma_id="3201" hakukohde_viite_id="[NULL]" master_valinnan_vaihe_id="[NULL]" oid="3201" nimi="VR1 Vaihe1" kuvaus="kuvaus1" aktiivinen="true" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="3202" version="0" valintaryhma_id="3202" hakukohde_viite_id="[NULL]" master_valinnan_vaihe_id="3201" oid="3202" nimi="VR2 Vaihe1(c)" kuvaus="kuvaus1" aktiivinen="true" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="3203" version="0" valintaryhma_id="[NULL]" hakukohde_viite_id="3201" master_valinnan_vaihe_id="3202" oid="3203" nimi="VR2 HAKU1 Vaihe1(c)" kuvaus="kuvaus1" aktiivinen="true" />
 
     <valintatapajono id="3201" version="0" aktiivinen="true" aloituspaikat="20" nimi="VR1 VAIHE1 JONO1" oid="3201"
                      siirretaan_sijoitteluun="true" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3201"/>
@@ -506,14 +511,14 @@
 
     <hakukohde_viite id="3301" version="0" hakuoid="hakuoid1" oid="3301" nimi="Hakukohde" valintaryhma_id="3301" />
 
-    <valinnan_vaihe id="3301" version="0" valintaryhma_id="[NULL]" hakukohde_viite_id="3301"
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="3301" version="0" valintaryhma_id="[NULL]" hakukohde_viite_id="3301"
                     master_valinnan_vaihe_id="[NULL]" oid="3301" nimi="Hakukohde Vaihe1" kuvaus="kuvaus1" aktiivinen="true" />
-    <valinnan_vaihe id="3302" version="0" valintaryhma_id="3302" hakukohde_viite_id="[NULL]"
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="3302" version="0" valintaryhma_id="3302" hakukohde_viite_id="[NULL]"
                     master_valinnan_vaihe_id="[NULL]" oid="3302" nimi="VR2 Vaihe1" kuvaus="kuvaus1" aktiivinen="true" />
     
     <!-- kuuluu sijoitteluun -->
     <hakukohde_viite id="3401" version="0" hakuoid="hakuoid1" oid="3401" nimi="Hakukohde"  />
-    <valinnan_vaihe id="3401" version="0" valintaryhma_id="[NULL]" hakukohde_viite_id="3401"
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="3401" version="0" valintaryhma_id="[NULL]" hakukohde_viite_id="3401"
                     master_valinnan_vaihe_id="[NULL]" oid="3401" nimi="Hakukohde Vaihe1" kuvaus="kuvaus1" aktiivinen="true" />
     <valintatapajono id="3401" version="0" aktiivinen="true" aloituspaikat="20" nimi="VR1 VAIHE1 JONO1" oid="3401"
                      siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3401"/>
@@ -523,19 +528,19 @@
                      siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3401"/>
     
     <hakukohde_viite id="3501" version="0" hakuoid="hakuoid1" oid="3501" nimi="Hakukohde"  />
-    <valinnan_vaihe id="3501" version="0" valintaryhma_id="[NULL]" hakukohde_viite_id="3501"
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="3501" version="0" valintaryhma_id="[NULL]" hakukohde_viite_id="3501"
                     master_valinnan_vaihe_id="[NULL]" oid="3501" nimi="Hakukohde Vaihe1" kuvaus="kuvaus1" aktiivinen="true" />
     <valintatapajono id="3501" version="0" aktiivinen="false" aloituspaikat="20" nimi="VR1 VAIHE1 JONO1" oid="3501"
                      siirretaan_sijoitteluun="true" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3501"/>
    
     <hakukohde_viite id="3601" version="0" hakuoid="hakuoid1" oid="3601" nimi="Hakukohde"  />
-    <valinnan_vaihe id="3601" version="0" valintaryhma_id="[NULL]" hakukohde_viite_id="3601"
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="3601" version="0" valintaryhma_id="[NULL]" hakukohde_viite_id="3601"
                     master_valinnan_vaihe_id="[NULL]" oid="3601" nimi="Hakukohde Vaihe1" kuvaus="kuvaus1" aktiivinen="true" />
     <valintatapajono id="3601" version="0" aktiivinen="true" aloituspaikat="20" nimi="VR1 VAIHE1 JONO1" oid="3601"
                      siirretaan_sijoitteluun="true" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3601"/>
  
     <hakukohde_viite id="3701" version="0" hakuoid="hakuoid1" oid="3701" nimi="Hakukohde"  />
-    <valinnan_vaihe id="3701" version="0" valintaryhma_id="[NULL]" hakukohde_viite_id="3701"
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="3701" version="0" valintaryhma_id="[NULL]" hakukohde_viite_id="3701"
                     master_valinnan_vaihe_id="[NULL]" oid="3701" nimi="Hakukohde Vaihe1" kuvaus="kuvaus1" aktiivinen="false" />    
     <valintatapajono id="3701" version="0" aktiivinen="true" aloituspaikat="20" nimi="VR1 VAIHE1 JONO1" oid="3701"
                      siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3701"/>

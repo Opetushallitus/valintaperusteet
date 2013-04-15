@@ -18,6 +18,8 @@ public class ValinnanVaiheKopioija implements Kopioija<ValinnanVaihe> {
 
     @Override
     public void kopioiTiedot(ValinnanVaihe from, ValinnanVaihe to) {
+        to.setValinnanVaiheTyyppi(from.getValinnanVaiheTyyppi());
+
         if (from.getAktiivinen() != null) {
             to.setAktiivinen(from.getAktiivinen());
         }

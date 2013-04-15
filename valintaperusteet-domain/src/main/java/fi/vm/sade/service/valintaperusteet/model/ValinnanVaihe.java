@@ -5,6 +5,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonView;
 
 import javax.persistence.*;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -54,6 +55,11 @@ public class ValinnanVaihe extends BaseEntity implements LinkitettavaJaKopioitav
     @JoinColumn(name = "hakukohde_viite_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private HakukohdeViite hakukohdeViite;
+
+    @JsonView(JsonViews.Basic.class)
+    @Column(name="valinnan_vaihe_tyyppi", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ValinnanVaiheTyyppi valinnanVaiheTyyppi;
 
     public ValinnanVaihe getEdellinenValinnanVaihe() {
         return edellinenValinnanVaihe;
@@ -112,7 +118,7 @@ public class ValinnanVaihe extends BaseEntity implements LinkitettavaJaKopioitav
     }
 
     public Set<Valintatapajono> getJonot() {
-        return jonot;
+        return Collections.unmodifiableSet(jonot);
     }
 
     public Valintaryhma getValintaryhma() {
@@ -137,6 +143,14 @@ public class ValinnanVaihe extends BaseEntity implements LinkitettavaJaKopioitav
 
     public void setOid(String oid) {
         this.oid = oid;
+    }
+
+    public ValinnanVaiheTyyppi getValinnanVaiheTyyppi() {
+        return valinnanVaiheTyyppi;
+    }
+
+    public void setValinnanVaiheTyyppi(ValinnanVaiheTyyppi valinnanVaiheTyyppi) {
+        this.valinnanVaiheTyyppi = valinnanVaiheTyyppi;
     }
 
     @Transient
@@ -195,6 +209,10 @@ public class ValinnanVaihe extends BaseEntity implements LinkitettavaJaKopioitav
     }
 
     public void addJono(Valintatapajono jono) {
+        if(ValinnanVaiheTyyppi.VALINTAKOE.equals(valinnanVaiheTyyppi)) {
+            throw new UnsupportedOperationException("Valintatapajonon voi lisätä vain tavalliselle valinnan vaiheelle");
+        }
+
         jono.setValinnanVaihe(this);
         this.jonot.add(jono);
     }

@@ -4,10 +4,7 @@ import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
-import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
-import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
-import fi.vm.sade.service.valintaperusteet.model.JsonViews;
-import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
+import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.util.TestUtil;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jettison.json.JSONObject;
@@ -182,6 +179,7 @@ public class HakukohdeResourceTest {
 
         valinnanVaihe.setNimi("uusi");
         valinnanVaihe.setAktiivinen(true);
+        valinnanVaihe.setValinnanVaiheTyyppi(ValinnanVaiheTyyppi.TAVALLINEN);
 
         Response response = hakukohdeResource.insertValinnanvaihe("oid1", null, valinnanVaihe);
         assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
@@ -190,6 +188,7 @@ public class HakukohdeResourceTest {
         valinnanVaihe = new ValinnanVaihe();
         valinnanVaihe.setNimi("uusi");
         valinnanVaihe.setAktiivinen(true);
+        valinnanVaihe.setValinnanVaiheTyyppi(ValinnanVaiheTyyppi.TAVALLINEN);
 
         response = hakukohdeResource.insertValinnanvaihe("oid1", vv.getOid(), valinnanVaihe);
         assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());

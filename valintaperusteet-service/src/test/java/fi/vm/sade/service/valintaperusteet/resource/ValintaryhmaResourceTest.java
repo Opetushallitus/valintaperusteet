@@ -6,6 +6,7 @@ import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
+import fi.vm.sade.service.valintaperusteet.model.ValinnanVaiheTyyppi;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import junit.framework.Assert;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -116,6 +117,7 @@ public class ValintaryhmaResourceTest {
 
         valinnanVaihe.setNimi("uusi");
         valinnanVaihe.setAktiivinen(true);
+        valinnanVaihe.setValinnanVaiheTyyppi(ValinnanVaiheTyyppi.TAVALLINEN);
 
         Response response = valintaryhmaResource.insertValinnanvaihe("oid1", null, valinnanVaihe);
         assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
@@ -124,6 +126,7 @@ public class ValintaryhmaResourceTest {
         valinnanVaihe = new ValinnanVaihe();
         valinnanVaihe.setNimi("uusi");
         valinnanVaihe.setAktiivinen(true);
+        valinnanVaihe.setValinnanVaiheTyyppi(ValinnanVaiheTyyppi.TAVALLINEN);
 
         response = valintaryhmaResource.insertValinnanvaihe("oid1", vv.getOid(), valinnanVaihe);
         assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
