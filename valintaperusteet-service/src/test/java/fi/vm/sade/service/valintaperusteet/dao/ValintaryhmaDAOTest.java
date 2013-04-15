@@ -16,7 +16,6 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.SortedSet;
 
 /**
  * User: bleed
@@ -38,7 +37,7 @@ public class ValintaryhmaDAOTest {
     @Test
     public void testFindValintaryhmaByNullParentOid() throws Exception {
         List<Valintaryhma> valintaryhmas = valintaryhmaDAO.findChildrenByParentOid(null);
-        Assert.assertEquals(18, valintaryhmas.size());
+        Assert.assertEquals(19, valintaryhmas.size());
     }
 
     @Test
