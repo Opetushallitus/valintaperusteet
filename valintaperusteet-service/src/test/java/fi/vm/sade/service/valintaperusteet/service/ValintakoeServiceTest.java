@@ -2,6 +2,7 @@ package fi.vm.sade.service.valintaperusteet.service;
 
 import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
+import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaiheTyyppi;
 import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
@@ -49,8 +50,10 @@ public class ValintakoeServiceTest {
 
         assertEquals(before, valintakoeService.findValintakoeByValinnanVaihe(valinnanVaiheOid).size());
 
-        Valintakoe valintakoe = new Valintakoe();
+        final Long laskentakaavaId = 101L;
+        ValintakoeDTO valintakoe = new ValintakoeDTO();
         valintakoe.setTunniste("tunniste");
+        valintakoe.setLaskentakaavaId(laskentakaavaId);
 
         Valintakoe lisatty = valintakoeService.lisaaValintakoeValinnanVaiheelle(valinnanVaiheOid, valintakoe);
         assertTrue(StringUtils.isNotBlank(lisatty.getOid()));
@@ -66,8 +69,10 @@ public class ValintakoeServiceTest {
         ValinnanVaihe vaihe = valinnanVaiheService.readByOid(valinnanVaiheOid);
         assertEquals(ValinnanVaiheTyyppi.TAVALLINEN, vaihe.getValinnanVaiheTyyppi());
 
-        Valintakoe valintakoe = new Valintakoe();
+        final Long laskentakaavaId = 101L;
+        ValintakoeDTO valintakoe = new ValintakoeDTO();
         valintakoe.setTunniste("tunniste");
+        valintakoe.setLaskentakaavaId(laskentakaavaId);
 
         valintakoeService.lisaaValintakoeValinnanVaiheelle(valinnanVaiheOid, valintakoe);
     }

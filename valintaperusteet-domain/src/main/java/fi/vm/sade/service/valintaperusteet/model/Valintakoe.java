@@ -22,8 +22,8 @@ public class Valintakoe extends BaseEntity {
     @Column(name = "tunniste", nullable = false)
     private String tunniste;
 
-    @JoinColumn(name = "laskentakaava_id")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "laskentakaava_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Laskentakaava laskentakaava;
 
     @JoinColumn(name = "valinnan_vaihe_id", nullable = false)
