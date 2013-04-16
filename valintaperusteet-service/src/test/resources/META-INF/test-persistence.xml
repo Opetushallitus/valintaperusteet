@@ -19,6 +19,7 @@
         <class>fi.vm.sade.service.valintaperusteet.model.Syoteparametri</class>
         <class>fi.vm.sade.service.valintaperusteet.model.Tulos</class>
         <class>fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe</class>
+        <class>fi.vm.sade.service.valintaperusteet.model.Valintakoe</class>
         <class>fi.vm.sade.service.valintaperusteet.model.ValintaperusteViite</class>
         <class>fi.vm.sade.service.valintaperusteet.model.Valintaryhma</class>
         <shared-cache-mode>NONE</shared-cache-mode>

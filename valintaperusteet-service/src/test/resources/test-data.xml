@@ -210,6 +210,7 @@
 
     <valintaryhma id="34" version="0" oid="oid34" nimi="Valintaryhma 34" hakuOid="hakuoid1" />
 
+    <valintaryhma id="35" version="0" oid="oid35" nimi="Valintaryhma 35" hakuOid="hakuoid1" />
 
     <hakukohde_viite id="1" version="0" hakuoid="hakuoid1" oid="oid1" nimi="haku1" valintaryhma_id="1" />
     <hakukohde_viite id="2" version="0" hakuoid="hakuoid1" oid="oid2" nimi="haku2" valintaryhma_id="1" />
@@ -331,6 +332,14 @@
     <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="81" version="0" valintaryhma_id="33" oid="81" nimi="valintaryhma 33 valinnan vaihe 2" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="80" />
 
     <valinnan_vaihe valinnan_vaihe_tyyppi="VALINTAKOE" id="82" version="0" valintaryhma_id="34" oid="82" nimi="valintaryhma 34 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus" />
+
+    <valinnan_vaihe valinnan_vaihe_tyyppi="VALINTAKOE" id="83" version="0" valintaryhma_id="35" oid="83" nimi="valintaryhma 35 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="84" version="0" valintaryhma_id="35" oid="84" nimi="valintaryhma 35 valinnan vaihe 2" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="83"/>
+
+
+    <valintakoe id="1" version="0" oid="oid1" tunniste="valintakoetunniste1" valinnan_vaihe_id="83" />
+    <valintakoe id="2" version="0" oid="oid2" tunniste="valintakoetunniste2" valinnan_vaihe_id="83" />
+    <valintakoe id="3" version="0" oid="oid3" tunniste="valintakoetunniste3" valinnan_vaihe_id="83" />
 
     <valintatapajono id="1" version="1" oid="1" aloituspaikat="10" nimi="jono1" kuvaus="kuvaus" tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="1" aktiivinen="true"/>
     <valintatapajono id="2" version="1" oid="2" edellinen_valintatapajono_id="1" aloituspaikat="10" nimi="jono2" kuvaus="kuvaus" tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="1" aktiivinen="true"/>

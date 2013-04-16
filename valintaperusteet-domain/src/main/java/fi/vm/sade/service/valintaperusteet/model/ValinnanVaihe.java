@@ -48,6 +48,9 @@ public class ValinnanVaihe extends BaseEntity implements LinkitettavaJaKopioitav
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "valinnanVaihe")
     private Set<Valintatapajono> jonot = new HashSet<Valintatapajono>();
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "valinnanVaihe")
+    private Set<Valintakoe> valintakokeet = new HashSet<Valintakoe>();
+
     @JoinColumn(name = "valintaryhma_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Valintaryhma valintaryhma;
@@ -57,7 +60,7 @@ public class ValinnanVaihe extends BaseEntity implements LinkitettavaJaKopioitav
     private HakukohdeViite hakukohdeViite;
 
     @JsonView(JsonViews.Basic.class)
-    @Column(name="valinnan_vaihe_tyyppi", nullable = false)
+    @Column(name = "valinnan_vaihe_tyyppi", nullable = false)
     @Enumerated(EnumType.STRING)
     private ValinnanVaiheTyyppi valinnanVaiheTyyppi;
 
@@ -119,6 +122,14 @@ public class ValinnanVaihe extends BaseEntity implements LinkitettavaJaKopioitav
 
     public Set<Valintatapajono> getJonot() {
         return Collections.unmodifiableSet(jonot);
+    }
+
+    public Set<Valintakoe> getValintakokeet() {
+        return Collections.unmodifiableSet(valintakokeet);
+    }
+
+    public void setValintakokeet(Set<Valintakoe> valintakokeet) {
+        this.valintakokeet = valintakokeet;
     }
 
     public Valintaryhma getValintaryhma() {
@@ -209,11 +220,22 @@ public class ValinnanVaihe extends BaseEntity implements LinkitettavaJaKopioitav
     }
 
     public void addJono(Valintatapajono jono) {
-        if(ValinnanVaiheTyyppi.VALINTAKOE.equals(valinnanVaiheTyyppi)) {
+        if (!ValinnanVaiheTyyppi.TAVALLINEN.equals(valinnanVaiheTyyppi)) {
             throw new UnsupportedOperationException("Valintatapajonon voi lisätä vain tavalliselle valinnan vaiheelle");
         }
 
         jono.setValinnanVaihe(this);
         this.jonot.add(jono);
     }
+
+    public void addValintakoe(Valintakoe koe) {
+        if (!ValinnanVaiheTyyppi.VALINTAKOE.equals(valinnanVaiheTyyppi)) {
+            throw new UnsupportedOperationException("Valintakokeita voi lisätä vain valintakoevalinnanvaiheelle");
+        }
+
+        koe.setValinnanVaihe(this);
+        this.valintakokeet.add(koe);
+    }
+
+
 }

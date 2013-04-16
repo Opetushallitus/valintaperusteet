@@ -19,7 +19,15 @@
         <xs:attribute name="hakukohdeOid" type="xs:string" use="required"/>
         <xs:attribute name="valinnanVaiheOid" type="xs:string" use="required"/>
         <xs:attribute name="valinnanVaiheJarjestysluku" type="xs:int" use="required"/>
+        <xs:attribute name="valinnanVaiheTyyppi" type="tns:ValinnanVaiheTyyppiTyyppi" use="required" />
     </xs:complexType>
+
+    <xs:simpleType name="ValinnanVaiheTyyppiTyyppi">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="TAVALLINEN"/>
+            <xs:enumeration value="VALINTAKOE"/>
+        </xs:restriction>
+    </xs:simpleType>
 
     <xs:complexType name="JarjestyskriteeriTyyppi">
         <xs:sequence>

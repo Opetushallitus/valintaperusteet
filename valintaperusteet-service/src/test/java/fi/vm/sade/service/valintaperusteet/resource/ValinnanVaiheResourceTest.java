@@ -3,10 +3,7 @@ package fi.vm.sade.service.valintaperusteet.resource;
 import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
-import fi.vm.sade.service.valintaperusteet.model.JsonViews;
-import fi.vm.sade.service.valintaperusteet.model.Tasapistesaanto;
-import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
-import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
+import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaihettaEiVoiPoistaaException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -93,6 +90,18 @@ public class ValinnanVaiheResourceTest {
         jono = newJono();
         insert = vaiheResource.addJonoToValinnanVaihe("1", jono);
         assertEquals(201, insert.getStatus());
+    }
+
+    @Test
+    public void testInsertValintakoe() {
+        final String valinnanVaiheOid ="83";
+
+        Valintakoe koe = new Valintakoe();
+        koe.setTunniste("tunniste");
+
+        Response response = vaiheResource.addValintakoeToValinnanVaihe(valinnanVaiheOid, koe);
+        assertEquals(201, response.getStatus());
+
     }
 
     @Test

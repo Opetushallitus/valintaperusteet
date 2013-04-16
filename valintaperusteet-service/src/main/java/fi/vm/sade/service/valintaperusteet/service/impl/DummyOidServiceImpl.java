@@ -40,4 +40,9 @@ public class DummyOidServiceImpl implements OidService {
     public String haeJarjestyskriteeriOid() {
         return generoiOid();
     }
+
+    @Override
+    public String haeValintakoeOid() {
+        return generoiOid();
+    }
 }

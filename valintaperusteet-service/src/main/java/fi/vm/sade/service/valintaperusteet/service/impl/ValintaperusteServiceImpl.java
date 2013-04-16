@@ -106,6 +106,8 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
         valintaperusteetTyyppi.setHakukohdeOid(hakukohdeOid);
         valintaperusteetTyyppi.setValinnanVaiheJarjestysluku(valinnanvaiheJarjestysluku);
         valintaperusteetTyyppi.setValinnanVaiheOid(valinnanVaihe.getOid());
+        valintaperusteetTyyppi.setValinnanVaiheTyyppi(
+                ValinnanVaiheTyyppiTyyppi.valueOf(valinnanVaihe.getValinnanVaiheTyyppi().name()));
 
         valintaperusteetTyyppi.getValintatapajonot().addAll(convertJonot(valinnanVaihe));
 

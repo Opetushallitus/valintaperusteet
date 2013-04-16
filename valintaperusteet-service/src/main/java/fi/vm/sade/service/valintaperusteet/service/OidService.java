@@ -10,4 +10,6 @@ public interface OidService {
     String haeValintaryhmaOid();
     String haeValintatapajonoOid();
     String haeJarjestyskriteeriOid();
+    String haeValintakoeOid();
+
 }

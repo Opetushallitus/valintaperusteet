@@ -2,8 +2,10 @@ package fi.vm.sade.service.valintaperusteet.resource;
 
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
+import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
+import fi.vm.sade.service.valintaperusteet.service.ValintakoeService;
 import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
 import org.codehaus.jackson.map.annotate.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,9 @@ public class ValinnanVaiheResource {
     ValintatapajonoService jonoService;
 
     @Autowired
+    ValintakoeService valintakoeService;
+
+    @Autowired
     ValinnanVaiheService valinnanVaiheService;
 
     @GET
@@ -49,6 +54,14 @@ public class ValinnanVaiheResource {
         return jonoService.findJonoByValinnanvaihe(oid);
     }
 
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @JsonView(JsonViews.Basic.class)
+    @Path("{oid}/valintakoe")
+    public List<Valintakoe> listValintakokeet(@PathParam("oid") String oid) {
+        return valintakoeService.findValintakoeByValinnanVaihe(oid);
+    }
+
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -58,6 +71,20 @@ public class ValinnanVaiheResource {
         try {
             jono = jonoService.lisaaValintatapajonoValinnanVaiheelle(parentOid, jono, null);
             return Response.status(Response.Status.CREATED).entity(jono).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @JsonView({JsonViews.Basic.class})
+    @Path("{parentOid}/valintakoe")
+    public Response addValintakoeToValinnanVaihe(@PathParam("parentOid") String parentOid, Valintakoe koe) {
+        try {
+            koe = valintakoeService.lisaaValintakoeValinnanVaiheelle(parentOid, koe);
+            return Response.status(Response.Status.CREATED).entity(koe).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
