@@ -5,7 +5,6 @@ import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.kaava.Funktiokuvaaja;
 import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
 import fi.vm.sade.service.valintaperusteet.model.*;
-import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +19,6 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
 import javax.ws.rs.core.Response;
-import java.io.IOException;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
@@ -131,7 +129,7 @@ public class LaskentakaavaResourceTest {
     public void testFindAll() {
         List<Laskentakaava> kaavat = laskentakaavaResource.kaavat(false, null, null);
 
-        assertEquals(13, kaavat.size());
+        assertEquals(14, kaavat.size());
     }
 
     @Test

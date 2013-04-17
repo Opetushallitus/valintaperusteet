@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
+import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
@@ -81,10 +82,10 @@ public class ValinnanVaiheResource {
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Path("{parentOid}/valintakoe")
-    public Response addValintakoeToValinnanVaihe(@PathParam("parentOid") String parentOid, Valintakoe koe) {
+    public Response addValintakoeToValinnanVaihe(@PathParam("parentOid") String parentOid, ValintakoeDTO koe) {
         try {
-            koe = valintakoeService.lisaaValintakoeValinnanVaiheelle(parentOid, koe);
-            return Response.status(Response.Status.CREATED).entity(koe).build();
+            Valintakoe vk = valintakoeService.lisaaValintakoeValinnanVaiheelle(parentOid, koe);
+            return Response.status(Response.Status.CREATED).entity(vk).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }

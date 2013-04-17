@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
+import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
 import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
 
 import java.util.List;
@@ -14,5 +15,5 @@ public interface ValintakoeService extends CRUDService<Valintakoe, Long, String>
 
     List<Valintakoe> findValintakoeByValinnanVaihe(String oid);
 
-    Valintakoe lisaaValintakoeValinnanVaiheelle(String valinnanVaiheOid, Valintakoe koe);
+    Valintakoe lisaaValintakoeValinnanVaiheelle(String valinnanVaiheOid, ValintakoeDTO koe);
 }

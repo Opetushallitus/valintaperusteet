@@ -3,7 +3,11 @@ package fi.vm.sade.service.valintaperusteet.resource;
 import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
-import fi.vm.sade.service.valintaperusteet.model.*;
+import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
+import fi.vm.sade.service.valintaperusteet.model.JsonViews;
+import fi.vm.sade.service.valintaperusteet.model.Tasapistesaanto;
+import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
+import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaihettaEiVoiPoistaaException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -94,12 +98,14 @@ public class ValinnanVaiheResourceTest {
 
     @Test
     public void testInsertValintakoe() {
-        final String valinnanVaiheOid ="83";
+        final String valinnanVaiheOid = "83";
+        final Long laskentakaavaId = 101L;
 
-        Valintakoe koe = new Valintakoe();
-        koe.setTunniste("tunniste");
+        ValintakoeDTO valintakoe = new ValintakoeDTO();
+        valintakoe.setTunniste("tunniste");
+        valintakoe.setLaskentakaavaId(laskentakaavaId);
 
-        Response response = vaiheResource.addValintakoeToValinnanVaihe(valinnanVaiheOid, koe);
+        Response response = vaiheResource.addValintakoeToValinnanVaihe(valinnanVaiheOid, valintakoe);
         assertEquals(201, response.getStatus());
 
     }
@@ -133,7 +139,7 @@ public class ValinnanVaiheResourceTest {
         try {
             ValinnanVaihe read1 = vaiheResource.read("79");
             assertNull(read1);
-        } catch(ValinnanVaiheEiOleOlemassaException e) {
+        } catch (ValinnanVaiheEiOleOlemassaException e) {
 
         }
     }
@@ -182,7 +188,6 @@ public class ValinnanVaiheResourceTest {
         jono.setAktiivinen(true);
         return jono;
     }
-
 
 
     @Test
