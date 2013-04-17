@@ -50,7 +50,7 @@ app.factory('ValintaryhmaValinnanvaiheModel', function(Valinnanvaihe, Valintatap
                     nimi: model.valinnanvaihe.nimi,
                     kuvaus: model.valinnanvaihe.kuvaus,
                     aktiivinen: true,
-                    tyyppi: "TAVALLINEN"
+                    valinnanVaiheTyyppi: "TAVALLINEN"
                 }
                 NewValintaryhmaValinnanvaihe.put({valintaryhmaOid: parentValintaryhmaOid}, valinnanvaihe, function(result){
                     model.valinnanvaihe = result;
@@ -136,7 +136,7 @@ app.factory('ValintaryhmaValintakoeValinnanvaiheModel', function(NewValintaryhma
                     nimi: model.valintakoevalinnanvaihe.nimi,
                     kuvaus: model.valintakoevalinnanvaihe.kuvaus,
                     aktiivinen: true,
-                    tyyppi: "VALINTAKOE"
+                    valinnanVaiheTyyppi: "VALINTAKOE"
                 }
 
                 console.log(parentValintaryhmaOid);
