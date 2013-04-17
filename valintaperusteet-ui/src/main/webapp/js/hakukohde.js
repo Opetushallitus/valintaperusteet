@@ -91,8 +91,9 @@ function HakukohdeController($scope, $location, $routeParams, HakukohdeModel) {
         $location.path("/hakukohde/" + $scope.hakukohdeOid + "/valinnanvaihe/");
     }
     $scope.lisaaPaasykoeValinnanVaihe = function() {
-        $location.path("/hakukohde/" + $scope.hakukohdeOid + "/paasykoevalinnanvaihe/");
+        $location.path("/hakukohde/" + $scope.hakukohdeOid + "/valintakoevalinnanvaihe/");
     }
+
 }
 
 function HakukohdeLaskentakaavaController($scope, $location, $routeParams, Laskentakaava) {

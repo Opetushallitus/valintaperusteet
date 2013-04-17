@@ -81,8 +81,8 @@ function valintaryhmaController($scope, $location, $routeParams, ValintaryhmaMod
         $location.path("/valintaryhma/" + $scope.valintaryhmaOid + "/valinnanvaihe/");
     }
 
-    $scope.lisaaPaasykoeValinnanVaihe = function() {
-        $location.path("/valintaryhma/" + $scope.valintaryhmaOid + "/paasykoevalinnanvaihe/");
+    $scope.lisaaValintakoeValinnanVaihe = function() {
+        $location.path("/valintaryhma/" + $scope.valintaryhmaOid + "/valintakoevalinnanvaihe/");
     }
 
     $scope.toValintaryhmaForm = function() {
