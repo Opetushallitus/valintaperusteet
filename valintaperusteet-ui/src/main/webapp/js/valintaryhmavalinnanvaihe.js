@@ -148,7 +148,7 @@ app.factory('ValintaryhmaValintakoeValinnanvaiheModel', function(Valinnanvaihe, 
                     valinnanVaiheTyyppi: "VALINTAKOE"
                 }
 
-                NewValintaryhmaValinnanvaiheinnanvaihe.put({valintaryhmaOid: parentValintaryhmaOid}, valintakoevalinnanvaihe, function(result){
+                NewValintaryhmaValinnanvaihe.put({valintaryhmaOid: parentValintaryhmaOid}, valintakoevalinnanvaihe, function(result){
                     model.valintakoevalinnanvaihe = result;
                     valinnanvaiheet.push(result);
                 });
