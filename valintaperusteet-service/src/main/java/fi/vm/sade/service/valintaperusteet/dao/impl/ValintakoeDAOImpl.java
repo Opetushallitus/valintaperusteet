@@ -19,6 +19,9 @@ import java.util.List;
  */
 @Repository
 public class ValintakoeDAOImpl extends AbstractJpaDAOImpl<Valintakoe, Long> implements ValintakoeDAO {
+
+
+
     @Override
     public List<Valintakoe> findByValinnanVaihe(String valinnanVaiheOid) {
         QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
@@ -29,6 +32,14 @@ public class ValintakoeDAOImpl extends AbstractJpaDAOImpl<Valintakoe, Long> impl
                 .where(valinnanVaihe.oid.eq(valinnanVaiheOid))
                 .distinct()
                 .list(valintakoe);
+    }
+
+    @Override
+    public Valintakoe readByOid(String oid) {
+        QValintakoe valintakoe = QValintakoe.valintakoe;
+        return from(valintakoe)
+                .where(valintakoe.oid.eq(oid))
+                .singleResult(valintakoe);
     }
 
     protected JPAQuery from(EntityPath<?>... o) {

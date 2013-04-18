@@ -11,5 +11,10 @@ import java.util.List;
  * Time: 16.14
  */
 public interface ValintakoeDAO extends JpaDAO<Valintakoe, Long> {
+
     List<Valintakoe> findByValinnanVaihe(String valinnanVaiheOid);
+
+    Valintakoe readByOid(String oid);
+
+
 }

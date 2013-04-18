@@ -30,8 +30,8 @@ public class Valintakoe extends BaseEntity {
     @JsonView(JsonViews.Basic.class)
     private String kuvaus;
 
-    @JoinColumn(name = "laskentakaava_id", nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "laskentakaava_id", nullable = true)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
     private Laskentakaava laskentakaava;
 
     @JoinColumn(name = "valinnan_vaihe_id", nullable = false)
