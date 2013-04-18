@@ -1,4 +1,4 @@
-<h3>Valintakoevalinnanvaiheen muokkaus</h3>
+<h3>Valintakokeen muokkaus</h3>
 
 <form name="form" ng-submit="submit()">
 
@@ -6,19 +6,19 @@
 
     <label class="form-row-label">Tunniste</label>
     <div class="form-row-content">
-        <input name="tunniste" ng-model="model.valintakoe.id" />
+        <input name="tunniste" ng-model="model.valintakoe.tunniste" required/>
     </div>
     <div class="clear"></div>
 
 	<label class="form-row-label" for="nimi">Nimi</label>
 	<div class="form-row-content">
-        <input name="nimi" ng-model="model.valinnanvaihe.nimi" required/>
+        <input name="nimi" ng-model="model.valintakoe.nimi" required/>
     </div>
 	<div class="clear"></div>
 
     <label class="form-row-label" for="kuvaus">Kuvaus</label>
     <div class="form-row-content">
-        <textarea name="kuvaus"  ng-model="model.valinnanvaihe.kuvaus" />
+        <textarea name="kuvaus"  ng-model="model.valintakoe.kuvaus" />
     </div>
 </div>
 <div class="clear"></div>
