@@ -22,6 +22,14 @@ public class Valintakoe extends BaseEntity {
     @Column(name = "tunniste", nullable = false)
     private String tunniste;
 
+    @Column(name = "nimi", nullable = false)
+    @JsonView(JsonViews.Basic.class)
+    private String nimi;
+
+    @Column(name = "kuvaus")
+    @JsonView(JsonViews.Basic.class)
+    private String kuvaus;
+
     @JoinColumn(name = "laskentakaava_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Laskentakaava laskentakaava;
@@ -44,6 +52,22 @@ public class Valintakoe extends BaseEntity {
 
     public void setTunniste(String tunniste) {
         this.tunniste = tunniste;
+    }
+
+    public String getNimi() {
+        return nimi;
+    }
+
+    public void setNimi(String nimi) {
+        this.nimi = nimi;
+    }
+
+    public String getKuvaus() {
+        return kuvaus;
+    }
+
+    public void setKuvaus(String kuvaus) {
+        this.kuvaus = kuvaus;
     }
 
     public Laskentakaava getLaskentakaava() {
