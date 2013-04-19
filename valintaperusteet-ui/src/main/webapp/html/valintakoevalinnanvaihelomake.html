@@ -27,6 +27,7 @@
                     <th>Tunniste</th>
                     <th>Nimi</th>
                     <th>Kuvaus</th>
+                    <th>Poista</th>
                 </tr>  
             </thead>
             <tbody ng-model="model.valintakokeet" class="margin-top-2">
@@ -34,6 +35,7 @@
                     <td>{{valintakoe.tunniste}}</td>
                     <td><a ng-click="modifyvalintakoe(valintakoe.oid)" >{{valintakoe.nimi}}</a></td>
                     <td>{{valintakoe.kuvaus}}</td>
+                    <td><span class="btn remove" ng-click="model.removeValintakoe(valintakoe)"></span></td>
                 </tr>
             </tbody>    
         </table>

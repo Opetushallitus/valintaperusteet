@@ -104,7 +104,7 @@ function valintaryhmaValinnanvaiheController($scope, $location, $routeParams, Va
 
 
 
-app.factory('ValintaryhmaValintakoeValinnanvaiheModel', function(Valinnanvaihe, Valintakoe, NewValintaryhmaValinnanvaihe) {
+app.factory('ValintaryhmaValintakoeValinnanvaiheModel', function(Valinnanvaihe, ValinnanvaiheValintakoe, NewValintaryhmaValinnanvaihe, Valintakoe) {
     var model = new function() {
         
         this.valintakoevalinnanvaihe = {};
@@ -119,7 +119,7 @@ app.factory('ValintaryhmaValintakoeValinnanvaiheModel', function(Valinnanvaihe, 
                     model.valintakoevalinnanvaihe = result;
                 });
 
-                Valintakoe.get({valinnanvaiheOid: oid}, {}, function(result) {
+                ValinnanvaiheValintakoe.get({valinnanvaiheOid: oid}, {}, function(result) {
                     model.valintakokeet = result;
                 });
             }
@@ -151,7 +151,16 @@ app.factory('ValintaryhmaValintakoeValinnanvaiheModel', function(Valinnanvaihe, 
             }
         }
 
-        
+        this.removeValintakoe = function(valintakoe) {
+            console.log(model.valintakokeet);
+            Valintakoe.remove({valintakoeOid: valintakoe.oid}, function(result){
+                for(i in model.valintakokeet) {
+                    if(valintakoe.oid === model.valintakokeet[i].oid) {
+                        model.valintakokeet.splice(i,1);
+                    }
+                }
+            });
+        }
 
     }
 
@@ -169,8 +178,8 @@ function ValintaryhmaValintakoeValinnanvaiheController($scope, $location, $route
         $scope.model.persist($scope.valintaryhmaOid, ValintaryhmaModel.valinnanvaiheet);
     }
 
-    $scope.modifyvalintakoe = function() {
-        $location.path("/valintaryhma/" + $scope.valintaryhmaOid + "/valintakoevalinnanvaihe/" + $scope.model.valintakoevalinnanvaihe.oid + "/valintakoe/");
+    $scope.modifyvalintakoe = function(valintakoeOid) {
+        $location.path("/valintaryhma/" + $scope.valintaryhmaOid + "/valintakoevalinnanvaihe/" + $scope.model.valintakoevalinnanvaihe.oid + "/valintakoe/" + valintakoeOid);
     }
 
     $scope.addValintakoe = function() {

@@ -155,10 +155,7 @@ return $resource(SERVICE_URL_BASE + "resources/valinnanvaihe/:oid/kuuluuSijoitte
   });
 });
 
-
-
-//ValintakoeValinnanvaihe
-app.factory('Valintakoe', function($resource) {
+app.factory('ValinnanvaiheValintakoe', function($resource) {
   return $resource(SERVICE_URL_BASE + "resources/valinnanvaihe/:valinnanvaiheOid/valintakoe", {valinnanvaiheOid: "@valinnanvaiheOid"}, {
     insert: {method: "PUT"},
     get: {method: "GET", isArray: true}
@@ -166,6 +163,14 @@ app.factory('Valintakoe', function($resource) {
 });
 
 
+//Valintakoe
+app.factory('Valintakoe', function($resource) {
+  return $resource(SERVICE_URL_BASE + "resources/valintakoe/:valintakoeOid", {valintakoeOid: "@valintakoeOid"}, {
+    get: {method: "GET"},
+    update: {method: "POST"},
+    delete: {method: "DELETE"}
+  });
+});
 
 
 //Valintatapajono

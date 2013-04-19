@@ -9,6 +9,8 @@ function ValinnanVaiheController($scope, $location, $routeParams, HakukohdeValin
     $scope.model.refreshIfNeeded($scope.valinnanvaiheOid);
 
     $scope.submit = function() {
+        console.log($scope.hakukohdeOid);
+        console.log(HakukohdeModel.valinnanvaiheet);
         $scope.model.persistValinnanvaihe($scope.hakukohdeOid, HakukohdeModel.valinnanvaiheet);
     }
 
@@ -68,8 +70,15 @@ app.factory('HakukohdeValinnanVaiheModel', function(Valinnanvaihe, Valintatapajo
 
         this.persistValinnanvaihe = function(hakukohdeParentOid, valinnanvaiheet) {
             if(!model.valinnanvaihe.oid) {
-                model.valinnanvaihe.aktiivinen = true;
-                HakukohdeValinnanvaihe.insert({"parentOid": hakukohdeParentOid}, model.valinnanvaihe, function(result) {
+
+                var valinnanvaihe = {
+                    nimi: model.valinnanvaihe.nimi,
+                    kuvaus: model.valinnanvaihe.kuvaus,
+                    aktiivinen: true,
+                    valinnanVaiheTyyppi: "TAVALLINEN"
+                }
+
+                HakukohdeValinnanvaihe.insert({"parentOid": hakukohdeParentOid}, valinnanvaihe, function(result) {
                     model.valinnanvaihe = result;
                     valinnanvaiheet.push(result);
                 });
@@ -112,7 +121,7 @@ app.factory('HakukohdeValinnanVaiheModel', function(Valinnanvaihe, Valintatapajo
 
 
 
-app.factory('HakukohdeValintakoeValinnanvaiheModel', function(HakukohdeValinnanvaihe, Valinnanvaihe) {
+app.factory('HakukohdeValintakoeValinnanvaiheModel', function($q,HakukohdeValinnanvaihe, Valinnanvaihe, ValinnanvaiheValintakoe, Valintakoe) {
     
     var model = new function() {
         this.valintakoevalinnanvaihe = {}
@@ -127,12 +136,10 @@ app.factory('HakukohdeValintakoeValinnanvaiheModel', function(HakukohdeValinnanv
                 Valinnanvaihe.get({oid: oid}, function(result) {
                     model.valintakoevalinnanvaihe = result;
                 });
-            }
-        }
 
-        this.refreshIfNeeded = function(oid) {
-            if(oid !== this.valintakoevalinnanvaihe.oid) {
-                model.refresh(oid);
+                ValinnanvaiheValintakoe.get({valinnanvaiheOid: oid}, {}, function(result) {
+                    model.valintakokeet = result;
+                });
             }
         }
 
@@ -163,7 +170,16 @@ app.factory('HakukohdeValintakoeValinnanvaiheModel', function(HakukohdeValinnanv
             }
         }
 
+        this.removeValintakoe = function(valintakoe) {
 
+            Valintakoe.remove({valintakoeOid: valintakoe.oid}, function(result){
+                for(i in model.valintakokeet) {
+                    if(valintakoe.oid === model.valintakokeet[i].oid) {
+                        model.valintakokeet.splice(i,1);
+                    }
+                }
+            });
+        }
 
     }
 
@@ -176,7 +192,7 @@ function HakukohdeValintakoeValinnanvaiheController($scope, $location, $routePar
     $scope.hakukohdeOid = $routeParams.hakukohdeOid;
     $scope.HakukohdeValintakoeValinnanvaiheOid = $routeParams.valintakoevalinnanvaiheOid;
     $scope.model = HakukohdeValintakoeValinnanvaiheModel;
-    $scope.model.refreshIfNeeded($scope.HakukohdeValintakoeValinnanvaiheOid);
+    $scope.model.refresh($scope.HakukohdeValintakoeValinnanvaiheOid);
 
     $scope.submit = function() {
         $scope.model.persist($scope.hakukohdeOid, HakukohdeModel.valinnanvaiheet);
@@ -186,8 +202,12 @@ function HakukohdeValintakoeValinnanvaiheController($scope, $location, $routePar
         $location.path("/hakukohde/" + $scope.hakukohdeOid);
     }
 
+     $scope.modifyvalintakoe = function(valintakoeOid) {
+        $location.path("/hakukohde/" + $scope.hakukohdeOid + "/valintakoevalinnanvaihe/" + $scope.model.valintakoevalinnanvaihe.oid + "/valintakoe/" + valintakoeOid);
+    }
+
     $scope.addValintakoe = function() {
-        $location.path("/hakukohde/" + $scope.valintaryhmaOid + "/valintakoevalinnanvaihe/" + $scope.HakukohdeValintakoeValinnanvaiheOid + "/valintakoe/");
+        $location.path("/hakukohde/" + $scope.hakukohdeOid + "/valintakoevalinnanvaihe/" + $scope.model.valintakoevalinnanvaihe.oid + "/valintakoe/");
     }
 
 }
