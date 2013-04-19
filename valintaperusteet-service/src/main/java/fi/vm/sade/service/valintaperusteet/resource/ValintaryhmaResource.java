@@ -1,5 +1,25 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import org.codehaus.jackson.map.annotate.JsonView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
@@ -7,24 +27,10 @@ import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import fi.vm.sade.service.valintaperusteet.service.HakukohdeService;
 import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
 import fi.vm.sade.service.valintaperusteet.service.ValintaryhmaService;
-import org.codehaus.jackson.map.annotate.JsonView;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
- * User: kkammone
- * Date: 10.1.2013
- * Time: 12:01
- * To change this template use File | Settings | File Templates.
+ * Created with IntelliJ IDEA. User: kkammone Date: 10.1.2013 Time: 12:01 To
+ * change this template use File | Settings | File Templates.
  */
 @Component
 @Path("/valintaryhma")
@@ -33,10 +39,8 @@ public class ValintaryhmaResource {
     @Autowired
     private ValintaryhmaService valintaryhmaService;
 
-
     @Autowired
     private ValinnanVaiheService valinnanVaiheService;
-
 
     @Autowired
     private HakukohdeService hakukohdeService;
@@ -46,7 +50,7 @@ public class ValintaryhmaResource {
     @GET
     @Path("{oid}")
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
+    @JsonView({ JsonViews.Basic.class })
     public Valintaryhma queryFull(@PathParam("oid") String oid) {
         return valintaryhmaService.readByOid(oid);
     }
@@ -80,7 +84,7 @@ public class ValintaryhmaResource {
     @GET
     @Path("{oid}/lapsi")
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
+    @JsonView({ JsonViews.Basic.class })
     public List<Valintaryhma> queryChildren(@PathParam("oid") String oid) {
         return valintaryhmaService.findValintaryhmasByParentOid(oid);
     }
@@ -88,7 +92,7 @@ public class ValintaryhmaResource {
     @GET
     @Path("{oid}/hakukohde")
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
+    @JsonView({ JsonViews.Basic.class })
     public List<HakukohdeViite> childHakukohdes(@PathParam("oid") String oid) {
         return hakukohdeService.findByValintaryhmaOid(oid);
     }
@@ -101,12 +105,11 @@ public class ValintaryhmaResource {
         return valinnanVaiheService.findByValintaryhma(oid);
     }
 
-
     @PUT
     @Path("{parentOid}/lapsi")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
+    @JsonView({ JsonViews.Basic.class })
     public Response insertChild(@PathParam("parentOid") String parentOid, Valintaryhma valintaryhma) {
         try {
             valintaryhma = valintaryhmaService.insert(valintaryhma, parentOid);
@@ -119,7 +122,7 @@ public class ValintaryhmaResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
+    @JsonView({ JsonViews.Basic.class })
     public Response insert(Valintaryhma valintaryhma) {
         try {
             valintaryhmaService.insert(valintaryhma);
@@ -134,7 +137,7 @@ public class ValintaryhmaResource {
     @Path("{oid}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
+    @JsonView({ JsonViews.Basic.class })
     public Response update(@PathParam("oid") String oid, Valintaryhma valintaryhma) {
         valintaryhmaService.update(oid, valintaryhma);
         return Response.status(Response.Status.ACCEPTED).build();
@@ -144,16 +147,15 @@ public class ValintaryhmaResource {
     @Path("{valintaryhmaOid}/valinnanvaihe")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
+    @JsonView({ JsonViews.Basic.class })
     public Response insertValinnanvaihe(@PathParam("valintaryhmaOid") String valintaryhamOid,
-                                        @QueryParam("edellinenValinnanVaiheOid") String edellinenValinnanVaiheOid,
-                                        ValinnanVaihe valinnanVaihe) {
+            @QueryParam("edellinenValinnanVaiheOid") String edellinenValinnanVaiheOid, ValinnanVaihe valinnanVaihe) {
         try {
-            valinnanVaiheService.lisaaValinnanVaiheValintaryhmalle(valintaryhamOid,
-                    valinnanVaihe,
+            valinnanVaiheService.lisaaValinnanVaiheValintaryhmalle(valintaryhamOid, valinnanVaihe,
                     edellinenValinnanVaiheOid);
             return Response.status(Response.Status.CREATED).entity(valinnanVaihe).build();
         } catch (Exception e) {
+            e.printStackTrace();
             LOGGER.error("Error creating valinnanvaihe.", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }

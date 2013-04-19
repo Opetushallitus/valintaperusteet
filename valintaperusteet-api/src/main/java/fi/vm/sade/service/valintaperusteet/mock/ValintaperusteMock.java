@@ -3,7 +3,10 @@ package fi.vm.sade.service.valintaperusteet.mock;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.jws.WebMethod;
 import javax.jws.WebParam;
+import javax.xml.ws.RequestWrapper;
+import javax.xml.ws.ResponseWrapper;
 
 import fi.vm.sade.service.valintaperusteet.GenericFault;
 import fi.vm.sade.service.valintaperusteet.ValintaperusteService;
@@ -104,9 +107,19 @@ public class ValintaperusteMock implements ValintaperusteService {
         return kutsu;
     }
 
-  //  @Override
-  //  public List<PaasykoeHakukohdeTyyppi> haePaasykokeet(
- //           @WebParam(name = "hakukohdeOid", targetNamespace = "") String hakukohdeOid) throws GenericFault {
- //       return null;
-   // }
+    @Override
+    @RequestWrapper(localName = "tuoHakukohteet", targetNamespace = "http://valintaperusteet.service.sade.vm.fi/messages", className = "fi.vm.sade.service.valintaperusteet.messages.TuoHakukohteetTyyppi")
+    @WebMethod
+    @ResponseWrapper(localName = "tuoHakukohteetVastaus", targetNamespace = "http://valintaperusteet.service.sade.vm.fi/messages", className = "fi.vm.sade.service.valintaperusteet.messages.TuoHakukohteetVastausTyyppi")
+    public void tuoHakukohteet(@WebParam(name = "hakukohdeOid", targetNamespace = "") List<String> hakukohdeOid)
+            throws GenericFault {
+        // TODO Auto-generated method stub
+
+    }
+    // @Override
+    // public List<PaasykoeHakukohdeTyyppi> haePaasykokeet(
+    // @WebParam(name = "hakukohdeOid", targetNamespace = "") String
+    // hakukohdeOid) throws GenericFault {
+    // return null;
+    // }
 }

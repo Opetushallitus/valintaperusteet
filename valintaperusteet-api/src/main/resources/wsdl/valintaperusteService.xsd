@@ -12,6 +12,9 @@
     <xs:element name="haeValintaperusteetVastaus" type="tns:HaeValintaperusteetVastausTyyppi"/>
     <xs:element name="haeValintatapajonotSijoittelulle" type="tns:HaeValintatapajonotSijoittelulleTyyppi"/>
     <xs:element name="haeValintatapajonotSijoittelulleVastaus" type="tns:HaeValintatapajonotSijoittelulleVastausTyyppi"/>
+    <xs:element name="tuoHakukohteet" type="tns:TuoHakukohteetTyyppi"/>
+    <xs:element name="tuoHakukohteetVastaus" type="tns:TuoHakukohteetVastausTyyppi"/>
+
 
     <xs:complexType name="HaeValintaperusteetTyyppi">
         <xs:sequence>
@@ -32,6 +35,14 @@
         </xs:sequence>
     </xs:complexType>
 
+	<xs:complexType name="TuoHakukohteetTyyppi">
+        <xs:sequence>
+            <xs:element name="hakukohdeOid" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+	<xs:complexType name="TuoHakukohteetVastausTyyppi">
+    </xs:complexType>
+    
     <xs:complexType name="HaeValintatapajonotSijoittelulleTyyppi">
         <xs:sequence>
             <xs:element name="hakukohdeOid" type="xs:string"/>
