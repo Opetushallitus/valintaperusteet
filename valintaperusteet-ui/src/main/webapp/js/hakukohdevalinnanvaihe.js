@@ -112,7 +112,7 @@ app.factory('HakukohdeValinnanVaiheModel', function(Valinnanvaihe, Valintatapajo
 
 
 
-app.factory('HakukohdeValintakoeValinnanvaiheModel', function(/*HakukohdeValintakoeValinnanvaihe, HakukohdeValintakoe*/) {
+app.factory('HakukohdeValintakoeValinnanvaiheModel', function(HakukohdeValinnanvaihe, Valinnanvaihe) {
     
     var model = new function() {
         this.valintakoevalinnanvaihe = {}
@@ -155,8 +155,8 @@ app.factory('HakukohdeValintakoeValinnanvaiheModel', function(/*HakukohdeValinta
                     valinnanVaiheTyyppi: "VALINTAKOE"
                 }
 
-                HakukohdeValinnanvaihe.insert({"parentOid": hakukohdeParentOid}, model.valinnanvaihe, function(result) {
-                    model.valinnanvaihe = result;
+                HakukohdeValinnanvaihe.insert({"parentOid": parentHakukohdeOid}, valintakoevalinnanvaihe, function(result) {
+                    model.valintakoevalinnanvaihe = result;
                     valinnanvaiheet.push(result);
                 });
 
@@ -173,7 +173,7 @@ app.factory('HakukohdeValintakoeValinnanvaiheModel', function(/*HakukohdeValinta
 
 
 function HakukohdeValintakoeValinnanvaiheController($scope, $location, $routeParams, HakukohdeValintakoeValinnanvaiheModel, HakukohdeModel) {
-    $scope.valintaryhmaOid = $routeParams.id;
+    $scope.hakukohdeOid = $routeParams.hakukohdeOid;
     $scope.HakukohdeValintakoeValinnanvaiheOid = $routeParams.valintakoevalinnanvaiheOid;
     $scope.model = HakukohdeValintakoeValinnanvaiheModel;
     $scope.model.refreshIfNeeded($scope.HakukohdeValintakoeValinnanvaiheOid);
@@ -183,11 +183,11 @@ function HakukohdeValintakoeValinnanvaiheController($scope, $location, $routePar
     }
 
     $scope.cancel = function() {
-        $location.path("/valintaryhma/" + $scope.valintaryhmaOid);
+        $location.path("/hakukohde/" + $scope.hakukohdeOid);
     }
 
     $scope.addValintakoe = function() {
-        $location.path("/valintaryhma/" + $scope.valintaryhmaOid + "/valintakoevalinnanvaihe/" + /*$scope.model.valinnanvaihe.oid + / */ "/valintakoe/");
+        $location.path("/hakukohde/" + $scope.valintaryhmaOid + "/valintakoevalinnanvaihe/" + $scope.HakukohdeValintakoeValinnanvaiheOid + "/valintakoe/");
     }
 
 }

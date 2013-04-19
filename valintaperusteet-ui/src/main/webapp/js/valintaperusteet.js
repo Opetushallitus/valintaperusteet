@@ -22,9 +22,9 @@ app.config(function($routeProvider) {
 
         //valintakoevalinnanvaihe
         when('/valintaryhma/:id/valintakoevalinnanvaihe/:valintakoevalinnanvaiheOid', {controller: ValintaryhmaValintakoeValinnanvaiheController, templateUrl:TEMPLATE_URL_BASE + 'valintakoevalinnanvaihelomake.html'}).
-        when('/valintaryhma/:id/valintakoevalinnanvaihe/:valintakoevalinnanvaiheOid/valintakoe/:valintakoeOid', {controller: ValintakoeController, templateUrl:TEMPLATE_URL_BASE + 'valintakoelomake.html'}).
+        when('/valintaryhma/:id/valintakoevalinnanvaihe/:valintakoevalinnanvaiheOid/valintakoe/:valintakoeOid', {controller: ValintaryhmaValintakoeController, templateUrl:TEMPLATE_URL_BASE + 'valintakoelomake.html'}).
         when('/hakukohde/:hakukohdeOid/valintakoevalinnanvaihe/:valintakoevalinnanvaiheOid', {controller: HakukohdeValintakoeValinnanvaiheController, templateUrl:TEMPLATE_URL_BASE + 'valintakoevalinnanvaihelomake.html'}).
-        when('/hakukohde/:hakukohdeOid/valintakoevalinnanvaihe/:valintakoevalinnanvaiheOid/valintakoe/:id', {controller: ValintakoeController, templateUrl:TEMPLATE_URL_BASE + 'valintakoelomake.html'}).
+        when('/hakukohde/:hakukohdeOid/valintakoevalinnanvaihe/:valintakoevalinnanvaiheOid/valintakoe/:id', {controller: HakukohdeValintakoeController, templateUrl:TEMPLATE_URL_BASE + 'valintakoelomake.html'}).
 		    
         // edit hakukohde
         when('/hakukohde/:hakukohdeOid', {controller:HakukohdeController, templateUrl:TEMPLATE_URL_BASE + 'hakukohdelomake.html'}).
@@ -160,7 +160,8 @@ return $resource(SERVICE_URL_BASE + "resources/valinnanvaihe/:oid/kuuluuSijoitte
 //ValintakoeValinnanvaihe
 app.factory('Valintakoe', function($resource) {
   return $resource(SERVICE_URL_BASE + "resources/valinnanvaihe/:valinnanvaiheOid/valintakoe", {valinnanvaiheOid: "@valinnanvaiheOid"}, {
-    insert: {method: "PUT"}
+    insert: {method: "PUT"},
+    get: {method: "GET", isArray: true}
   });
 });
 

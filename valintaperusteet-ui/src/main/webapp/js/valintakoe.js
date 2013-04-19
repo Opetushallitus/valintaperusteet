@@ -1,4 +1,4 @@
-app.factory('ValintakoeModel', function(Valintakoe) {
+app.factory('ValintakoeModel', function($q, Valintakoe) {
 
 	var model = new function() {
 		this.valintakoe = {};
@@ -18,8 +18,11 @@ app.factory('ValintakoeModel', function(Valintakoe) {
 		}
 
 		this.persistValintakoe = function(parentValintakoeValinnanvaiheOid, valintakokeet) {
+			var deferred = $q.defer();
 			if(model.valintakoe.oid) {
 				console.log("should be updating valintakoe, no implementations yet");
+
+				deferred.resolve();
 			} else {
 				var valintakoe = {
 					tunniste: model.valintakoe.tunniste,
@@ -34,8 +37,10 @@ app.factory('ValintakoeModel', function(Valintakoe) {
 							valintakokeet[index] = result;
 						}
 					}
+					deferred.resolve();
 				});
 			}
+			return deferred.promise;
 		}
 
 		this.getParentGroupType = function(path) {
@@ -57,19 +62,35 @@ app.factory('ValintakoeModel', function(Valintakoe) {
 
 });
 
-function ValintakoeController($scope, $location, $routeParams, ValintakoeModel, ValintaryhmaValintakoeValinnanvaiheModel, HakukohdeValintakoeValinnanvaiheModel) {
-	$scope.parentGroupOid = $routeParams.id; //valintaryhmaOid or hakukohdeOid
+function ValintaryhmaValintakoeController($scope, $location, $routeParams, ValintakoeModel, ValintaryhmaValintakoeValinnanvaiheModel, HakukohdeValintakoeValinnanvaiheModel) {
+	$scope.parentGroupOid = $routeParams.id; 
 	$scope.valintakoeValinnanvaiheOid = $routeParams.valintakoevalinnanvaiheOid;
 	$scope.valintakoeOid = $routeParams.valintakoeOid;
 	$scope.model = ValintakoeModel;
 	$scope.model.refreshIfNeeded($scope.valintakoeOid);
 
 	$scope.submit = function() {
-		if($scope.model.getParentGroupType($location.$$path) === "valintaryhma") {
-			$scope.model.persistValintakoe($scope.valintakoeValinnanvaiheOid, ValintaryhmaValintakoeValinnanvaiheModel.valintakokeet);
-		} else {
-			$scope.model.persistValintakoe($scope.valintakoeValinnanvaiheOid, HakukohdeValintakoeValinnanvaiheModel.valintakokeet);
-		}
+		var promise = $scope.model.persistValintakoe($scope.valintakoeValinnanvaiheOid, ValintaryhmaValintakoeValinnanvaiheModel.valintakokeet);
+		promise.then(function(){
+			$location.path("/" + $scope.model.getParentGroupType($location.$$path) + "/" + $scope.parentGroupOid + "/valintakoevalinnanvaihe/" + $scope.valintakoeValinnanvaiheOid);	
+		});
+		
+	}
+
+	$scope.cancel = function () {
+		$location.path("/" + $scope.model.getParentGroupType($location.$$path) + "/" + $scope.parentGroupOid + "/valintakoevalinnanvaihe/" + $scope.valintakoeValinnanvaiheOid );
+	}
+}
+
+function HakukohdeValintakoeController($scope, $location, $routeParams, ValintakoeModel, ValintaryhmaValintakoeValinnanvaiheModel, HakukohdeValintakoeValinnanvaiheModel) {
+	$scope.parentGroupOid = $routeParams.id; 
+	$scope.valintakoeValinnanvaiheOid = $routeParams.valintakoevalinnanvaiheOid;
+	$scope.valintakoeOid = $routeParams.valintakoeOid;
+	$scope.model = ValintakoeModel;
+	$scope.model.refreshIfNeeded($scope.valintakoeOid);
+
+	$scope.submit = function() {
+		$scope.model.persistValintakoe($scope.valintakoeValinnanvaiheOid, HakukohdeValintakoeValinnanvaiheModel.valintakokeet);
 		$location.path("/" + $scope.model.getParentGroupType($location.$$path) + "/" + $scope.parentGroupOid + "/valintakoevalinnanvaihe/" + $scope.valintakoeValinnanvaiheOid);
 	}
 

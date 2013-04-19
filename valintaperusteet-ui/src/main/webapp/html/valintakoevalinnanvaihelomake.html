@@ -24,18 +24,16 @@
         <table class="virkailija-table-1 margin-bottom-2" ng-show="model.valintakokeet">
             <thead>    
                 <tr>
+                    <th>Tunniste</th>
                     <th>Nimi</th>
                     <th>Kuvaus</th>
-                    <th>Tunniste</th>
                 </tr>  
             </thead>
             <tbody ng-model="model.valintakokeet" class="margin-top-2">
                 <tr ng-repeat="valintakoe in model.valintakokeet">
-                    <td><input type="checkbox" ng-model="valintakoe.aktiivinen" /></td>
-                    <td>
-                        <a ng-class="{true:'', false:'line-through'}[valintakoe.aktiivinen]" ng-click="modifyvalintakoe(valintakoe.oid)" >{{valintakoe.nimi}}</a>
-                    </td>
-                    <td>{{valintakoe.inheritance}}</td>
+                    <td>{{valintakoe.tunniste}}</td>
+                    <td><a ng-click="modifyvalintakoe(valintakoe.oid)" >{{valintakoe.nimi}}</a></td>
+                    <td>{{valintakoe.kuvaus}}</td>
                 </tr>
             </tbody>    
         </table>

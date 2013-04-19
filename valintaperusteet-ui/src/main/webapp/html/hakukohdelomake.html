@@ -96,7 +96,7 @@
                     <tr ng-repeat="data in model.valinnanvaiheet">
                         <td><input type="checkbox" ng-model="data.aktiivinen" /></td>
                         <td class="align-center">
-                            <a ng-class="{true:'', false:'line-through'}[data.aktiivinen]" href="#/hakukohde/{{hakukohdeOid}}/valinnanvaihe/{{data.oid}}">{{data.nimi}}</a>
+                            <a ng-class="{true:'', false:'line-through'}[data.aktiivinen]" href="#/hakukohde/{{hakukohdeOid}}/{{model.getValinnanvaiheType(data)}}/{{data.oid}}">{{data.nimi}}</a>
                         </td>
                         <td class="align-center">{{data.inheritance}}</td>
                         <td class="align-center">{{data.valinnanVaiheTyyppi}}</td>
