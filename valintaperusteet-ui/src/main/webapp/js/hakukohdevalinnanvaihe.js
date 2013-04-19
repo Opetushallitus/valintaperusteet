@@ -69,17 +69,10 @@ app.factory('HakukohdeValinnanVaiheModel', function(Valinnanvaihe, Valintatapajo
         this.persistValinnanvaihe = function(hakukohdeParentOid, valinnanvaiheet) {
             if(!model.valinnanvaihe.oid) {
                 model.valinnanvaihe.aktiivinen = true;
-                HakukohdeValinnanvaihe.insert(
-                    {
-                        "parentOid": hakukohdeParentOid,
-                        "tyyppi": "TAVALLINEN"
-                    }, 
-                    model.valinnanvaihe, 
-                    function(result) {
-                        model.valinnanvaihe = result;
-                        valinnanvaiheet.push(result);
-                    }
-                );
+                HakukohdeValinnanvaihe.insert({"parentOid": hakukohdeParentOid}, model.valinnanvaihe, function(result) {
+                    model.valinnanvaihe = result;
+                    valinnanvaiheet.push(result);
+                });
             } else {
                 Valinnanvaihe.post(model.valinnanvaihe, function(result) {
                     model.valinnanvaihe = result;
@@ -119,7 +112,7 @@ app.factory('HakukohdeValinnanVaiheModel', function(Valinnanvaihe, Valintatapajo
 
 
 
-app.factory('HakukohdeValintakoeValinnanvaiheModel', function(/*HakukohdeValintakoeValinnanvaihe, HakukohdeValintakoe*/) {
+app.factory('HakukohdeValintakoeValinnanvaiheModel', function(HakukohdeValinnanvaihe, Valinnanvaihe) {
     
     var model = new function() {
         this.valintakoevalinnanvaihe = {}
@@ -131,21 +124,42 @@ app.factory('HakukohdeValintakoeValinnanvaiheModel', function(/*HakukohdeValinta
                 model.valintakokeet = [];
             } else {
 
-                /*
-                ValintakoeValinnanvaihe.get({oid: oid}, function(result) {
+                Valinnanvaihe.get({oid: oid}, function(result) {
                     model.valintakoevalinnanvaihe = result;
                 });
-
-                Valintakoe.get({oid: oid}, function(result) {
-                    model.valintakoe = result;
-                });
-                */
             }
         }
 
         this.refreshIfNeeded = function(oid) {
             if(oid !== this.valintakoevalinnanvaihe.oid) {
                 model.refresh(oid);
+            }
+        }
+
+        this.persist = function(parentHakukohdeOid, valinnanvaiheet) {
+            if(model.valintakoevalinnanvaihe.oid) {
+                Valinnanvaihe.post(model.valintakoevalinnanvaihe, function(result) {
+                    var i;
+                    //update valinnanvaihe in ValintaryhmaModel
+                    for(i in valinnanvaiheet) {
+                        if(result.oid === valinnanvaiheet[i].oid) {
+                            valinnanvaiheet[i] = result;
+                        }
+                    }
+                });
+            } else {
+                var valintakoevalinnanvaihe = {
+                    nimi: model.valintakoevalinnanvaihe.nimi,
+                    kuvaus: model.valintakoevalinnanvaihe.kuvaus,
+                    aktiivinen: true,
+                    valinnanVaiheTyyppi: "VALINTAKOE"
+                }
+
+                HakukohdeValinnanvaihe.insert({"parentOid": parentHakukohdeOid}, valintakoevalinnanvaihe, function(result) {
+                    model.valintakoevalinnanvaihe = result;
+                    valinnanvaiheet.push(result);
+                });
+
             }
         }
 
@@ -158,17 +172,22 @@ app.factory('HakukohdeValintakoeValinnanvaiheModel', function(/*HakukohdeValinta
 });
 
 
-function HakukohdeValintakoeValinnanvaiheController($scope, $location, $routeParams, HakukohdeValintakoeValinnanvaiheModel) {
-    $scope.valintaryhmaOid = $routeParams.id;
-    $scope.model = HakukohdeValintakoeValinnanvaiheModel; 
-    //$scope.model.refresh();
+function HakukohdeValintakoeValinnanvaiheController($scope, $location, $routeParams, HakukohdeValintakoeValinnanvaiheModel, HakukohdeModel) {
+    $scope.hakukohdeOid = $routeParams.hakukohdeOid;
+    $scope.HakukohdeValintakoeValinnanvaiheOid = $routeParams.valintakoevalinnanvaiheOid;
+    $scope.model = HakukohdeValintakoeValinnanvaiheModel;
+    $scope.model.refreshIfNeeded($scope.HakukohdeValintakoeValinnanvaiheOid);
+
+    $scope.submit = function() {
+        $scope.model.persist($scope.hakukohdeOid, HakukohdeModel.valinnanvaiheet);
+    }
 
     $scope.cancel = function() {
-        $location.path("/valintaryhma/" + $scope.valintaryhmaOid);
+        $location.path("/hakukohde/" + $scope.hakukohdeOid);
     }
 
     $scope.addValintakoe = function() {
-        $location.path("/valintaryhma/" + $scope.valintaryhmaOid + "/valintakoevalinnanvaihe/" + /*$scope.model.valinnanvaihe.oid + / */ "/valintakoe/");
+        $location.path("/hakukohde/" + $scope.valintaryhmaOid + "/valintakoevalinnanvaihe/" + $scope.HakukohdeValintakoeValinnanvaiheOid + "/valintakoe/");
     }
 
 }

@@ -59,6 +59,16 @@ app.factory('ValintaryhmaModel', function(Valintaryhma, ChildValintaryhmas, Chil
             return oids;
         }
 
+        this.getValinnanvaiheType = function(valinnanvaihe) {
+            var type;
+            if(valinnanvaihe.valinnanVaiheTyyppi === "TAVALLINEN") {
+                type = "valinnanvaihe";
+            } else {
+                type = "valintakoevalinnanvaihe";
+            }
+            return type;
+        }
+
     }
 
     return model;

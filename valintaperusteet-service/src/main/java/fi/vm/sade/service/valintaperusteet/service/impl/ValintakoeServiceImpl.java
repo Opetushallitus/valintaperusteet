@@ -45,8 +45,12 @@ public class ValintakoeServiceImpl extends AbstractCRUDServiceImpl<Valintakoe, L
     }
 
     @Override
-    public Valintakoe update(String s, Valintakoe entity) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public Valintakoe update(String oid, Valintakoe valintakoe) {
+        Valintakoe entity = valintakoeDAO.readByOid(oid);
+        entity.setKuvaus(valintakoe.getKuvaus());
+        entity.setNimi(valintakoe.getNimi());
+        entity.setTunniste(valintakoe.getTunniste());
+        return entity;
     }
 
     @Override
@@ -55,8 +59,13 @@ public class ValintakoeServiceImpl extends AbstractCRUDServiceImpl<Valintakoe, L
     }
 
     @Override
+    public void deleteByOid(String oid) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
     public Valintakoe readByOid(String oid) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return valintakoeDAO.readByOid(oid);
     }
 
     @Override
@@ -72,24 +81,27 @@ public class ValintakoeServiceImpl extends AbstractCRUDServiceImpl<Valintakoe, L
                     "tyyppi on " + valinnanVaihe.getValinnanVaiheTyyppi().name());
         }
 
-        Laskentakaava laskentakaava = laskentakaavaDAO.getLaskentakaava(koe.getLaskentakaavaId());
-        if (laskentakaava == null) {
-            throw new LaskentakaavaEiOleOlemassaException("Laskentakaavaa (" + koe.getLaskentakaavaId() + ") ei ole " +
-                    "olemassa", koe.getLaskentakaavaId());
-        } else if (!Funktiotyyppi.TOTUUSARVOFUNKTIO.equals(laskentakaava.getTyyppi())) {
-            throw new VaaranTyyppinenLaskentakaavaException("Valintakokeen laskentakaavan tulee olla tyyppiä " +
-                    Funktiotyyppi.TOTUUSARVOFUNKTIO.name());
-        } else if (laskentakaava.getOnLuonnos()) {
-            throw new ValintakokeeseenLiitettavaLaskentakaavaOnLuonnosException("Valintakokeeseen liitettävä " +
-                    "laskentakaava on LUONNOS-tilassa");
-        }
-
         Valintakoe valintakoe = new Valintakoe();
         valintakoe.setOid(oidService.haeValintakoeOid());
         valintakoe.setTunniste(koe.getTunniste());
+        valintakoe.setNimi(koe.getNimi());
+        valintakoe.setKuvaus(koe.getKuvaus());
         valintakoe.setValinnanVaihe(valinnanVaihe);
-        valintakoe.setLaskentakaava(laskentakaava);
 
+        if(koe.getLaskentakaavaId() != null) {
+            Laskentakaava laskentakaava = laskentakaavaDAO.getLaskentakaava(koe.getLaskentakaavaId());
+            if (laskentakaava == null) {
+                throw new LaskentakaavaEiOleOlemassaException("Laskentakaavaa (" + koe.getLaskentakaavaId() + ") ei ole " +
+                        "olemassa", koe.getLaskentakaavaId());
+            } else if (!Funktiotyyppi.TOTUUSARVOFUNKTIO.equals(laskentakaava.getTyyppi())) {
+                throw new VaaranTyyppinenLaskentakaavaException("Valintakokeen laskentakaavan tulee olla tyyppiä " +
+                        Funktiotyyppi.TOTUUSARVOFUNKTIO.name());
+            } else if (laskentakaava.getOnLuonnos()) {
+                throw new ValintakokeeseenLiitettavaLaskentakaavaOnLuonnosException("Valintakokeeseen liitettävä " +
+                        "laskentakaava on LUONNOS-tilassa");
+            }
+            valintakoe.setLaskentakaava(laskentakaava);
+        }
         Valintakoe lisatty = valintakoeDAO.insert(valintakoe);
         return lisatty;
     }

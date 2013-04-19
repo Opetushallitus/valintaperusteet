@@ -55,6 +55,16 @@ app.factory('HakukohdeModel', function(Hakukohde, Valintaryhma, HakukohdeValinna
             });
         };
 
+        this.getValinnanvaiheType = function(valinnanvaihe) {
+            var type;
+            if(valinnanvaihe.valinnanVaiheTyyppi === "TAVALLINEN") {
+                type = "valinnanvaihe";
+            } else {
+                type = "valintakoevalinnanvaihe";
+            }
+            return type;
+        }
+
     };
 
     function getValinnanvaiheOids() {
@@ -90,7 +100,7 @@ function HakukohdeController($scope, $location, $routeParams, HakukohdeModel) {
     $scope.lisaaValinnanVaihe = function() {
         $location.path("/hakukohde/" + $scope.hakukohdeOid + "/valinnanvaihe/");
     }
-    $scope.lisaaPaasykoeValinnanVaihe = function() {
+    $scope.lisaaValintakoeValinnanVaihe = function() {
         $location.path("/hakukohde/" + $scope.hakukohdeOid + "/valintakoevalinnanvaihe/");
     }
 
