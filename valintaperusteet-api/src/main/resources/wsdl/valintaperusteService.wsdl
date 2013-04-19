@@ -30,6 +30,13 @@
         <wsdl:part name="parameters" element="valintaperusteet:haeValintatapajonotSijoittelulleVastaus" />
     </wsdl:message>
 
+	<wsdl:message name="tuoHakukohteet">
+        <wsdl:part name="parameters" element="valintaperusteet:tuoHakukohteet"/>
+    </wsdl:message>
+	<wsdl:message name="tuoHakukohteetVastaus">
+        <wsdl:part name="parameters" element="valintaperusteet:tuoHakukohteetVastaus"/>
+    </wsdl:message>
+    
     <wsdl:message name="genericFault">
         <wsdl:part name="fault" type="valintaperusteet:GenericFault" />
     </wsdl:message>
@@ -58,7 +65,13 @@
             <wsdl:output message="tns:haeValintatapajonotSijoittelulleVastaus" />
             <wsdl:fault message="tns:genericFault" name="genericFault"/>
         </wsdl:operation>
-
+        
+		<wsdl:operation name="tuoHakukohteet">
+            <wsdl:documentation>Tuo hakukohteet sisäiseen käsittelyyn.</wsdl:documentation>
+            <wsdl:input message="tns:tuoHakukohteet" />
+            <wsdl:output message="tns:tuoHakukohteetVastaus" />
+            <wsdl:fault message="tns:genericFault" name="genericFault"/>
+        </wsdl:operation>
         <!--
         <wsdl:operation name="haePaasykokeet">
             <wsdl:documentation>TODO: document me.</wsdl:documentation>
