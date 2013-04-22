@@ -7,10 +7,7 @@ import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.OidService;
 import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
 import fi.vm.sade.service.valintaperusteet.service.ValintakoeService;
-import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaEiOleOlemassaException;
-import fi.vm.sade.service.valintaperusteet.service.exception.VaaranTyyppinenLaskentakaavaException;
-import fi.vm.sade.service.valintaperusteet.service.exception.ValintakoettaEiVoiLisataException;
-import fi.vm.sade.service.valintaperusteet.service.exception.ValintakokeeseenLiitettavaLaskentakaavaOnLuonnosException;
+import fi.vm.sade.service.valintaperusteet.service.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,7 +43,7 @@ public class ValintakoeServiceImpl extends AbstractCRUDServiceImpl<Valintakoe, L
 
     @Override
     public Valintakoe update(String oid, Valintakoe valintakoe) {
-        Valintakoe entity = valintakoeDAO.readByOid(oid);
+        Valintakoe entity = haeValintakoeOidilla(oid);
         entity.setKuvaus(valintakoe.getKuvaus());
         entity.setNimi(valintakoe.getNimi());
         entity.setTunniste(valintakoe.getTunniste());
@@ -60,12 +57,22 @@ public class ValintakoeServiceImpl extends AbstractCRUDServiceImpl<Valintakoe, L
 
     @Override
     public void deleteByOid(String oid) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        Valintakoe valintakoe = haeValintakoeOidilla(oid);
+        valintakoeDAO.remove(valintakoe);
     }
 
     @Override
     public Valintakoe readByOid(String oid) {
-        return valintakoeDAO.readByOid(oid);
+        return haeValintakoeOidilla(oid);
+    }
+
+    private Valintakoe haeValintakoeOidilla(String oid) {
+        Valintakoe valintakoe = valintakoeDAO.readByOid(oid);
+        if(valintakoe == null) {
+            throw new ValintakoettaEiOleOlemassaException("Valintakoetta (oid " + oid + ") ei ole olemassa");
+        }
+
+        return valintakoe;
     }
 
     @Override
