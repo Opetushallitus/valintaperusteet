@@ -20,8 +20,8 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static junit.framework.Assert.assertNull;
+import static org.junit.Assert.*;
 
 /**
  * User: kwuoti
@@ -83,6 +83,32 @@ public class ValintakoeResourceTest {
         assertEquals(koe.getTunniste(), saved.getTunniste());
         assertEquals(koe.getLaskentakaavaId(), saved.getLaskentakaavaId());
 
+    }
+
+    @Test
+    public void testUpdateSetLaskentakaavaNull() {
+        final String oid = "oid1";
+        Valintakoe saved = valintakoeResource.readByOid(oid);
+
+        ValintakoeDTO koe = new ValintakoeDTO();
+        koe.setKuvaus("uusi kuvaus");
+        koe.setNimi("uusi nimi");
+        koe.setTunniste("uusi tunniste");
+        koe.setLaskentakaavaId(null);
+
+        assertFalse(saved.getNimi().equals(koe.getNimi()));
+        assertFalse(saved.getKuvaus().equals(koe.getKuvaus()));
+        assertFalse(saved.getTunniste().equals(koe.getTunniste()));
+        assertNotNull(saved.getLaskentakaavaId());
+
+        valintakoeResource.update(oid, koe);
+
+        saved = valintakoeResource.readByOid(oid);
+
+        assertEquals(koe.getKuvaus(), saved.getKuvaus());
+        assertEquals(koe.getNimi(), saved.getNimi());
+        assertEquals(koe.getTunniste(), saved.getTunniste());
+        assertNull(saved.getLaskentakaavaId());
     }
 
 }
