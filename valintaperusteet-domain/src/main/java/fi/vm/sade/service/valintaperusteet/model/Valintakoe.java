@@ -92,7 +92,7 @@ public class Valintakoe extends BaseEntity {
         return laskentakaava == null;
     }
 
-    @JsonProperty("laskentakaava_id")
+    @JsonProperty("laskentakaavaId")
     @JsonView(JsonViews.Basic.class)
     @Transient
     public Long getLaskentakaavaId() {
