@@ -6,6 +6,7 @@ import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaiheTyyppi;
 import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
+import fi.vm.sade.service.valintaperusteet.service.exception.ValintakoettaEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintakoettaEiVoiLisataException;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
@@ -18,8 +19,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * User: kwuoti
@@ -52,6 +52,7 @@ public class ValintakoeServiceTest {
 
         final Long laskentakaavaId = 101L;
         ValintakoeDTO valintakoe = new ValintakoeDTO();
+        valintakoe.setNimi("nimi");
         valintakoe.setTunniste("tunniste");
         valintakoe.setLaskentakaavaId(laskentakaavaId);
 
@@ -75,5 +76,17 @@ public class ValintakoeServiceTest {
         valintakoe.setLaskentakaavaId(laskentakaavaId);
 
         valintakoeService.lisaaValintakoeValinnanVaiheelle(valinnanVaiheOid, valintakoe);
+    }
+
+    @Test(expected = ValintakoettaEiOleOlemassaException.class)
+    public void testDelete() {
+        final String oid = "oid1";
+
+        Valintakoe valintakoe = valintakoeService.readByOid(oid);
+        assertNotNull(valintakoe);
+
+        valintakoeService.deleteByOid(oid);
+
+        valintakoeService.readByOid(oid);
     }
 }

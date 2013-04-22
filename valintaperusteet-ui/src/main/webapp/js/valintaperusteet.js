@@ -22,9 +22,9 @@ app.config(function($routeProvider) {
 
         //valintakoevalinnanvaihe
         when('/valintaryhma/:id/valintakoevalinnanvaihe/:valintakoevalinnanvaiheOid', {controller: ValintaryhmaValintakoeValinnanvaiheController, templateUrl:TEMPLATE_URL_BASE + 'valintakoevalinnanvaihelomake.html'}).
-        when('/valintaryhma/:id/valintakoevalinnanvaihe/:valintakoevalinnanvaiheOid/valintakoe/:id', {controller: ValintakoeController, templateUrl:TEMPLATE_URL_BASE + 'valintakoelomake.html'}).
+        when('/valintaryhma/:id/valintakoevalinnanvaihe/:valintakoevalinnanvaiheOid/valintakoe/:valintakoeOid', {controller: ValintaryhmaValintakoeController, templateUrl:TEMPLATE_URL_BASE + 'valintakoelomake.html'}).
         when('/hakukohde/:hakukohdeOid/valintakoevalinnanvaihe/:valintakoevalinnanvaiheOid', {controller: HakukohdeValintakoeValinnanvaiheController, templateUrl:TEMPLATE_URL_BASE + 'valintakoevalinnanvaihelomake.html'}).
-        when('/hakukohde/:hakukohdeOid/valintakoevalinnanvaihe/:valintakoevalinnanvaiheOid/valintakoe/:id', {controller: ValintakoeController, templateUrl:TEMPLATE_URL_BASE + 'valintakoelomake.html'}).
+        when('/hakukohde/:hakukohdeOid/valintakoevalinnanvaihe/:valintakoevalinnanvaiheOid/valintakoe/:id', {controller: HakukohdeValintakoeController, templateUrl:TEMPLATE_URL_BASE + 'valintakoelomake.html'}).
 		    
         // edit hakukohde
         when('/hakukohde/:hakukohdeOid', {controller:HakukohdeController, templateUrl:TEMPLATE_URL_BASE + 'hakukohdelomake.html'}).
@@ -155,16 +155,22 @@ return $resource(SERVICE_URL_BASE + "resources/valinnanvaihe/:oid/kuuluuSijoitte
   });
 });
 
-
-/*
-//ValintakoeValinnanvaihe
-app.factory('NewValintakoeValinnanvaihe', function($resource) {
-  return $resource(SERVICE_URL_BASE + "resources/valinnanvaihe/:valintaryhmaOid/valintakoe/addValintakoeToValinnanVaihe", {valintaryhmaOid: "@valintaryhmaOid"}, {
-    put: {method: "PUT"}
+app.factory('ValinnanvaiheValintakoe', function($resource) {
+  return $resource(SERVICE_URL_BASE + "resources/valinnanvaihe/:valinnanvaiheOid/valintakoe", {valinnanvaiheOid: "@valinnanvaiheOid"}, {
+    insert: {method: "PUT"},
+    get: {method: "GET", isArray: true}
   });
 });
-*/
 
+
+//Valintakoe
+app.factory('Valintakoe', function($resource) {
+  return $resource(SERVICE_URL_BASE + "resources/valintakoe/:valintakoeOid", {valintakoeOid: "@valintakoeOid"}, {
+    get: {method: "GET"},
+    update: {method: "POST"},
+    delete: {method: "DELETE"}
+  });
+});
 
 
 //Valintatapajono

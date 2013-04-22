@@ -88,21 +88,22 @@
                             </a>
                         </th>
                         <th>Periytyy</th>
-                        <th>Poista</th>
                         <th>Tyyppi</th>
+                        <th>Poista</th>
                     </tr>
                  </thead>
                  <tbody ui-sortable ng-model="model.valinnanvaiheet">
                     <tr ng-repeat="data in model.valinnanvaiheet">
                         <td><input type="checkbox" ng-model="data.aktiivinen" /></td>
-                        <td>
-                            <a ng-class="{true:'', false:'line-through'}[data.aktiivinen]" href="#/hakukohde/{{hakukohdeOid}}/valinnanvaihe/{{data.oid}}">{{data.nimi}}</a>
+                        <td class="align-center">
+                            <a ng-class="{true:'', false:'line-through'}[data.aktiivinen]" href="#/hakukohde/{{hakukohdeOid}}/{{model.getValinnanvaiheType(data)}}/{{data.oid}}">{{data.nimi}}</a>
                         </td>
-                        <td>{{data.inheritance}}</td>
+                        <td class="align-center">{{data.inheritance}}</td>
+                        <td class="align-center">{{data.valinnanVaiheTyyppi}}</td>
                         <td class="align-center">
                             <span ng-show="!data.inheritance" class="btn remove" ng-click="model.remove(data)"></span>
                         </td>
-                        <td></td>
+                        
                     </tr>
                 </tbody>
 

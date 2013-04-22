@@ -30,6 +30,7 @@ app.factory('ValintaryhmaValinnanvaiheModel', function(Valinnanvaihe, Valintatap
                 
                 Valinnanvaihe.post(model.valinnanvaihe, function(result) {
                     var i;
+                    //update valinnanvaihe in ValintaryhmaModel
                     for(i in valinnanvaiheet) {
                         if(result.oid === valinnanvaiheet[i].oid) {
                             valinnanvaiheet[i] = result;
@@ -103,25 +104,28 @@ function valintaryhmaValinnanvaiheController($scope, $location, $routeParams, Va
 
 
 
-app.factory('ValintaryhmaValintakoeValinnanvaiheModel', function(NewValintaryhmaValinnanvaihe) {
+app.factory('ValintaryhmaValintakoeValinnanvaiheModel', function(Valinnanvaihe, ValinnanvaiheValintakoe, NewValintaryhmaValinnanvaihe, Valintakoe) {
     var model = new function() {
         
         this.valintakoevalinnanvaihe = {};
         this.valintakokeet = [];
 
         this.refresh = function(oid) {
-            model.valintakoevalinnanvaihe = {};
-            model.valintakokeet = [];
-        }
+            if(!oid) {
+                model.valintakoevalinnanvaihe = {};
+                model.valintakokeet = [];
+            } else {
+                Valinnanvaihe.get({oid: oid}, function(result) {
+                    model.valintakoevalinnanvaihe = result;
+                });
 
-        this.refreshIfNeeded = function(oid) {
-
-            if(!oid || oid !== model.valintakoevalinnanvaihe.oid) {
-                model.refresh(oid);
+                ValinnanvaiheValintakoe.get({valinnanvaiheOid: oid}, {}, function(result) {
+                    model.valintakokeet = result;
+                });
             }
         }
 
-        this.persistValintaryhmaValintakoevalinnanvaihe = function(parentValintaryhmaOid, valinnanvaiheet) {
+        this.persist = function(parentValintaryhmaOid, valinnanvaiheet) {
             if(model.valintakoevalinnanvaihe.oid) {
                 Valinnanvaihe.post(model.valintakoevalinnanvaihe, function(result) {
                     var i;
@@ -132,6 +136,7 @@ app.factory('ValintaryhmaValintakoeValinnanvaiheModel', function(NewValintaryhma
                     }
                 });
             } else {
+               
                 var valintakoevalinnanvaihe = {
                     nimi: model.valintakoevalinnanvaihe.nimi,
                     kuvaus: model.valintakoevalinnanvaihe.kuvaus,
@@ -139,8 +144,6 @@ app.factory('ValintaryhmaValintakoeValinnanvaiheModel', function(NewValintaryhma
                     valinnanVaiheTyyppi: "VALINTAKOE"
                 }
 
-                console.log(parentValintaryhmaOid);
-                console.log(valinnanvaiheet);
                 NewValintaryhmaValinnanvaihe.put({valintaryhmaOid: parentValintaryhmaOid}, valintakoevalinnanvaihe, function(result){
                     model.valintakoevalinnanvaihe = result;
                     valinnanvaiheet.push(result);
@@ -148,7 +151,15 @@ app.factory('ValintaryhmaValintakoeValinnanvaiheModel', function(NewValintaryhma
             }
         }
 
-        
+        this.removeValintakoe = function(valintakoe) {
+            Valintakoe.remove({valintakoeOid: valintakoe.oid}, function(result){
+                for(i in model.valintakokeet) {
+                    if(valintakoe.oid === model.valintakokeet[i].oid) {
+                        model.valintakokeet.splice(i,1);
+                    }
+                }
+            });
+        }
 
     }
 
@@ -159,16 +170,19 @@ function ValintaryhmaValintakoeValinnanvaiheController($scope, $location, $route
     $scope.valintaryhmaOid = $routeParams.id;
     $scope.ValintaryhmaValintakoeValinnanvaiheOid = $routeParams.valintakoevalinnanvaiheOid;
     $scope.model = ValintaryhmaValintakoeValinnanvaiheModel;
-    $scope.model.refreshIfNeeded($scope.ValintaryhmaValintakoeValinnanvaiheOid);
-
-    console.log(ValintaryhmaModel);
+    $scope.model.refresh($scope.ValintaryhmaValintakoeValinnanvaiheOid);
+    
 
     $scope.submit = function() {
-        $scope.model.persistValintaryhmaValintakoevalinnanvaihe($scope.valintaryhmaOid, ValintaryhmaModel.valinnanvaiheet);
+        $scope.model.persist($scope.valintaryhmaOid, ValintaryhmaModel.valinnanvaiheet);
+    }
+
+    $scope.modifyvalintakoe = function(valintakoeOid) {
+        $location.path("/valintaryhma/" + $scope.valintaryhmaOid + "/valintakoevalinnanvaihe/" + $scope.model.valintakoevalinnanvaihe.oid + "/valintakoe/" + valintakoeOid);
     }
 
     $scope.addValintakoe = function() {
-        $location.path("/valintaryhma/" + $scope.valintaryhmaOid + "/valintakoevalinnanvaihe/" + /*$scope.model.valinnanvaihe.oid + / */ "/valintakoe/");
+        $location.path("/valintaryhma/" + $scope.valintaryhmaOid + "/valintakoevalinnanvaihe/" + $scope.model.valintakoevalinnanvaihe.oid + "/valintakoe/");
     }
 
     $scope.cancel = function() {

@@ -9,6 +9,8 @@ import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
 import fi.vm.sade.service.valintaperusteet.service.ValintakoeService;
 import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
 import org.codehaus.jackson.map.annotate.JsonView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -38,6 +40,8 @@ public class ValinnanVaiheResource {
 
     @Autowired
     ValinnanVaiheService valinnanVaiheService;
+
+    protected final static Logger LOGGER = LoggerFactory.getLogger(ValinnanVaiheResource.class);
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -73,6 +77,7 @@ public class ValinnanVaiheResource {
             jono = jonoService.lisaaValintatapajonoValinnanVaiheelle(parentOid, jono, null);
             return Response.status(Response.Status.CREATED).entity(jono).build();
         } catch (Exception e) {
+            LOGGER.error("error in addJonoToValinnanVaihe", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -83,12 +88,15 @@ public class ValinnanVaiheResource {
     @JsonView({JsonViews.Basic.class})
     @Path("{parentOid}/valintakoe")
     public Response addValintakoeToValinnanVaihe(@PathParam("parentOid") String parentOid, ValintakoeDTO koe) {
-        try {
-            Valintakoe vk = valintakoeService.lisaaValintakoeValinnanVaiheelle(parentOid, koe);
+       try {
+           Valintakoe vk = valintakoeService.lisaaValintakoeValinnanVaiheelle(parentOid, koe);
             return Response.status(Response.Status.CREATED).entity(vk).build();
         } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+          e.printStackTrace();
+           LOGGER.error("error in addValintakoeToValinnanVaihe", e);
+           return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
+
     }
 
     @POST

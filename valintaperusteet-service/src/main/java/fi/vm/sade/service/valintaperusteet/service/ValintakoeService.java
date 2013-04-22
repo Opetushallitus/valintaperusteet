@@ -11,6 +11,9 @@ import java.util.List;
  * Time: 16.05
  */
 public interface ValintakoeService extends CRUDService<Valintakoe, Long, String> {
+
+   void deleteByOid (String oid);
+
     Valintakoe readByOid(String oid);
 
     List<Valintakoe> findValintakoeByValinnanVaihe(String oid);
