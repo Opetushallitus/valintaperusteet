@@ -92,8 +92,7 @@ public class ValintakoeServiceImpl extends AbstractCRUDServiceImpl<Valintakoe, L
         valintakoe.setValinnanVaihe(valinnanVaihe);
 
         if (koe.getLaskentakaavaId() != null) {
-            Laskentakaava laskentakaava = haeLaskentakaavaValintakokeelle(koe.getLaskentakaavaId());
-            valintakoe.setLaskentakaava(laskentakaava);
+            valintakoe.setLaskentakaava(haeLaskentakaavaValintakokeelle(koe.getLaskentakaavaId()));
         }
         Valintakoe lisatty = valintakoeDAO.insert(valintakoe);
         return lisatty;
@@ -121,7 +120,12 @@ public class ValintakoeServiceImpl extends AbstractCRUDServiceImpl<Valintakoe, L
         entity.setKuvaus(valintakoe.getKuvaus());
         entity.setNimi(valintakoe.getNimi());
         entity.setTunniste(valintakoe.getTunniste());
-        entity.setLaskentakaava(haeLaskentakaavaValintakokeelle(valintakoe.getLaskentakaavaId()));
+
+        if (valintakoe.getLaskentakaavaId() != null) {
+            entity.setLaskentakaava(haeLaskentakaavaValintakokeelle(valintakoe.getLaskentakaavaId()));
+        } else {
+            entity.setLaskentakaava(null);
+        }
         return entity;
     }
 }
