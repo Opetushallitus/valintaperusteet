@@ -4,10 +4,7 @@ import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
-import fi.vm.sade.service.valintaperusteet.model.JsonViews;
-import fi.vm.sade.service.valintaperusteet.model.Tasapistesaanto;
-import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
-import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
+import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaihettaEiVoiPoistaaException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -205,6 +202,16 @@ public class ValinnanVaiheResourceTest {
 
         oid = vaiheResource.kuuluuSijoitteluun("3701").get("sijoitteluun");
         assertEquals(false, oid);
+    }
+
+    @Test
+    public void testListValintakokeet() throws IOException {
+        final String valintaryhmaOid= "83";
+
+        List<Valintakoe> kokeet= vaiheResource.listValintakokeet(valintaryhmaOid);
+        assertEquals(4, kokeet.size());
+        String json = mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(kokeet);
+        System.out.println("JSON:" + json);
     }
 
 }

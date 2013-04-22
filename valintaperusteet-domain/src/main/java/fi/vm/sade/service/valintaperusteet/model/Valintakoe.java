@@ -96,6 +96,6 @@ public class Valintakoe extends BaseEntity {
     @JsonView(JsonViews.Basic.class)
     @Transient
     public Long getLaskentakaavaId() {
-        return laskentakaava.getId();
+        return laskentakaava != null ? laskentakaava.getId() : null;
     }
 }

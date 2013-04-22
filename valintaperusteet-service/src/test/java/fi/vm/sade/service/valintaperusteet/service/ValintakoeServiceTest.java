@@ -43,7 +43,7 @@ public class ValintakoeServiceTest {
     @Test
     public void testLisaaValintakoeValinnanVaiheelle() {
         final String valinnanVaiheOid = "83";
-        final int before = 3;
+        final int before = 4;
 
         ValinnanVaihe vaihe = valinnanVaiheService.readByOid(valinnanVaiheOid);
         assertEquals(ValinnanVaiheTyyppi.VALINTAKOE, vaihe.getValinnanVaiheTyyppi());

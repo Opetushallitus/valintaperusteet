@@ -42,7 +42,7 @@ public class ValintakoeDAOTest {
         final String valinnanVaiheOid = "83";
 
         List<Valintakoe> valintakokeet = valintakoeDAO.findByValinnanVaihe(valinnanVaiheOid);
-        assertEquals(3, valintakokeet.size());
+        assertEquals(4, valintakokeet.size());
 
         Collections.sort(valintakokeet, new Comparator<Valintakoe>() {
             @Override
@@ -55,5 +55,7 @@ public class ValintakoeDAOTest {
         assertEquals("oid1", valintakokeet.get(0).getOid());
         assertEquals("oid2", valintakokeet.get(1).getOid());
         assertEquals("oid3", valintakokeet.get(2).getOid());
+        assertEquals("oid4", valintakokeet.get(3).getOid());
+
     }
 }
