@@ -341,6 +341,7 @@
 
     <valinnan_vaihe valinnan_vaihe_tyyppi="VALINTAKOE" id="83" version="0" valintaryhma_id="35" oid="83" nimi="valintaryhma 35 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus" />
     <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="84" version="0" valintaryhma_id="35" oid="84" nimi="valintaryhma 35 valinnan vaihe 2" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="83"/>
+    <valinnan_vaihe valinnan_vaihe_tyyppi="VALINTAKOE" id="85" version="0" valintaryhma_id="35" oid="85" nimi="valintaryhma 35 valinnan vaihe 3" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="84" />
 
 
     <valintakoe id="1" version="0" oid="oid1" tunniste="valintakoetunniste1" nimi="valintakoe1" kuvaus="kuvaus1" valinnan_vaihe_id="83" laskentakaava_id="101"/>

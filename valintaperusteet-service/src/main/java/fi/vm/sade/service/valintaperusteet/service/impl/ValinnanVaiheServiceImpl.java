@@ -1,10 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
-import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
-import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
-import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
-import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
+import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.*;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
@@ -43,6 +40,9 @@ public class ValinnanVaiheServiceImpl extends AbstractCRUDServiceImpl<ValinnanVa
 
     @Autowired
     private ValintatapajonoService valintatapajonoService;
+
+    @Autowired
+    private ValintakoeService valintakoeService;
 
     private static ValinnanVaiheKopioija kopioija = new ValinnanVaiheKopioija();
 
@@ -229,6 +229,10 @@ public class ValinnanVaiheServiceImpl extends AbstractCRUDServiceImpl<ValinnanVa
 
         for (Valintatapajono valintatapajono : valinnanVaihe.getJonot()) {
             valintatapajonoService.delete(valintatapajono);
+        }
+
+        for(Valintakoe valintakoe: valinnanVaihe.getValintakokeet()) {
+            valintakoeService.delete(valintakoe);
         }
 
         valinnanVaiheDAO.remove(valinnanVaihe);

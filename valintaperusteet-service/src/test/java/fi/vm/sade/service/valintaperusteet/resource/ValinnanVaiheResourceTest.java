@@ -211,7 +211,12 @@ public class ValinnanVaiheResourceTest {
         List<Valintakoe> kokeet= vaiheResource.listValintakokeet(valintaryhmaOid);
         assertEquals(4, kokeet.size());
         String json = mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(kokeet);
-        System.out.println("JSON:" + json);
     }
 
+    @Test
+    public void testListValintakokeetShouldBeEmpty() {
+        final String valinnanVaiheOid = "85";
+        List<Valintakoe> kokeet = vaiheResource.listValintakokeet(valinnanVaiheOid);
+        assertEquals(0, kokeet.size());
+    }
 }

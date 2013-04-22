@@ -81,6 +81,16 @@ public class ValinnanVaiheServiceTest {
     }
 
     @Test
+    public void testDeleteValintakoeValinnanVaihe() {
+        final String valinnanVaiheOid = "83";
+
+        ValinnanVaihe valinnanVaihe = valinnanVaiheService.readByOid(valinnanVaiheOid);
+        assertEquals(ValinnanVaiheTyyppi.VALINTAKOE, valinnanVaihe.getValinnanVaiheTyyppi());
+
+        valinnanVaiheService.deleteByOid(valinnanVaiheOid);
+    }
+
+    @Test
     public void testLisaaValinnanVaiheValintaryhmalle() {
         final String parentOid = "oid8";
 
