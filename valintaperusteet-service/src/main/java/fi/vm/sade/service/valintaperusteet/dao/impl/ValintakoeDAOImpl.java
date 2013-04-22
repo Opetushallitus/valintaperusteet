@@ -28,7 +28,7 @@ public class ValintakoeDAOImpl extends AbstractJpaDAOImpl<Valintakoe, Long> impl
         QValintakoe valintakoe = QValintakoe.valintakoe;
 
         return from(valinnanVaihe)
-                .leftJoin(valinnanVaihe.valintakokeet, valintakoe)
+                .innerJoin(valinnanVaihe.valintakokeet, valintakoe)
                 .leftJoin(valintakoe.laskentakaava).fetch()
                 .where(valinnanVaihe.oid.eq(valinnanVaiheOid))
                 .distinct()

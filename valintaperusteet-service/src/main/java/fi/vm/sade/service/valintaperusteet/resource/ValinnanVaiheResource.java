@@ -133,4 +133,6 @@ public class ValinnanVaiheResource {
         map.put("sijoitteluun", valinnanVaiheService.kuuluuSijoitteluun(oid));
         return map;
     }
+
+
 }
