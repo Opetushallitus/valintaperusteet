@@ -202,7 +202,7 @@ function HakukohdeValintakoeValinnanvaiheController($scope, $location, $routePar
         $location.path("/hakukohde/" + $scope.hakukohdeOid);
     }
 
-     $scope.modifyvalintakoe = function(valintakoeOid) {
+    $scope.modifyvalintakoe = function(valintakoeOid) {
         $location.path("/hakukohde/" + $scope.hakukohdeOid + "/valintakoevalinnanvaihe/" + $scope.model.valintakoevalinnanvaihe.oid + "/valintakoe/" + valintakoeOid);
     }
 
