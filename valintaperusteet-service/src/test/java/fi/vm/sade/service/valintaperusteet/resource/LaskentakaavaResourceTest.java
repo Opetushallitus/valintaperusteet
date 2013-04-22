@@ -22,14 +22,15 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
 
 /**
  * User: kwuoti Date: 28.1.2013 Time: 13.04
  */
 @ContextConfiguration(locations = "classpath:test-context.xml")
-@TestExecutionListeners(listeners = { JTACleanInsertTestExecutionListener.class,
+@TestExecutionListeners(listeners = {JTACleanInsertTestExecutionListener.class,
         DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
-        TransactionalTestExecutionListener.class })
+        TransactionalTestExecutionListener.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data.xml")
 public class LaskentakaavaResourceTest {
@@ -69,7 +70,7 @@ public class LaskentakaavaResourceTest {
         for (int i = 0; i < args.length; ++i) {
             FunktionArgumentti f = args[i];
             Funktioargumentti arg = new Funktioargumentti();
-            if(f instanceof Funktiokutsu) {
+            if (f instanceof Funktiokutsu) {
                 arg.setFunktiokutsuChild((Funktiokutsu) f);
             } else if (f instanceof Laskentakaava) {
                 arg.setLaskentakaavaChild((Laskentakaava) f);
@@ -130,6 +131,10 @@ public class LaskentakaavaResourceTest {
         List<Laskentakaava> kaavat = laskentakaavaResource.kaavat(false, null, null);
 
         assertEquals(14, kaavat.size());
+
+        for (Laskentakaava lk : kaavat) {
+            assertFalse(lk.getOnLuonnos());
+        }
     }
 
     @Test
@@ -158,4 +163,15 @@ public class LaskentakaavaResourceTest {
         mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(response1.getEntity());
     }
 
+
+    @Test
+    public void testGetTotuusarvokaava() {
+        List<Laskentakaava> kaavat = laskentakaavaResource.kaavat(false, null, Funktiotyyppi.TOTUUSARVOFUNKTIO);
+        assertEquals(1, kaavat.size());
+
+        for (Laskentakaava kaava : kaavat) {
+            assertEquals(Funktiotyyppi.TOTUUSARVOFUNKTIO, kaava.getTyyppi());
+            assertFalse(kaava.getOnLuonnos());
+        }
+    }
 }
