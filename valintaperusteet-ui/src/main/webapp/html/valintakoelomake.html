@@ -27,11 +27,16 @@
 
     <div class="form-row-label">Laskentakaava</div>
     <div class="form-row-content">
+        <label>
+            <input type="radio" name="laskentakaava" value=""
+                 ng-model="model.valintakoe.laskentakaavaId" />
+            <span>Aina pakollinen</span>
 
+        </label>
         <div ng-repeat="data in model.laskentakaavat" class="field-container-radio">
             <label>
                 <input type="radio" name="laskentakaava" value="{{data.id}}"
-                       ng-model="model.jarjestyskriteeri.laskentakaava_id" required />
+                       ng-model="model.valintakoe.laskentakaavaId" />
 
                 <span ng-bind="data.nimi"></span>(<span ng-bind="data.id"></span>)
             </label>

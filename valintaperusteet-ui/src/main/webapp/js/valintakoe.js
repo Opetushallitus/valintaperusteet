@@ -7,10 +7,17 @@ app.factory('ValintakoeModel', function($q, Valintakoe, ValinnanvaiheValintakoe,
 		this.refresh = function(oid) {
 			if(!oid) {
 				model.valintakoe = {};
-				model.laskentakaavat = [];
+				model.valintakoe.laskentakaavaId = "";
+				Laskentakaava.list({tyyppi: "TOTUUSARVOFUNKTIO"},function(result) {
+                	model.laskentakaavat = result;
+                });
 			} else {
 				Valintakoe.get({valintakoeOid: oid}, function(result) {
+					
 					model.valintakoe = result;
+					if(result.laskentakaavaId == null) {
+						model.valintakoe.laskentakaavaId = "";
+					}
 				});
 				
 				Laskentakaava.list({tyyppi: "TOTUUSARVOFUNKTIO"},function(result) {
@@ -29,15 +36,21 @@ app.factory('ValintakoeModel', function($q, Valintakoe, ValinnanvaiheValintakoe,
 		this.persistValintakoe = function(parentValintakoeValinnanvaiheOid, valintakokeet) {
 			var deferred = $q.defer();
 			if(model.valintakoe.oid) {
+				model.valintakoe.laskentakaavaId = getlaskentakaavaId();
 				Valintakoe.update({valintakoeOid: model.valintakoe.oid}, model.valintakoe, function(result) {
 					deferred.resolve();
 				});	
+
 				
 			} else {
+				
+				var laskentakaavaId = getlaskentakaavaId();
+				console.log(laskentakaavaId);
 				var valintakoe = {
 					tunniste: model.valintakoe.tunniste,
 					nimi: model.valintakoe.nimi,
-					kuvaus: model.valintakoe.kuvaus
+					kuvaus: model.valintakoe.kuvaus,
+					laskentakaavaId: laskentakaavaId
 				}
 
 				ValinnanvaiheValintakoe.insert({valinnanvaiheOid: parentValintakoeValinnanvaiheOid},valintakoe, function(result) {
@@ -64,6 +77,16 @@ app.factory('ValintakoeModel', function($q, Valintakoe, ValinnanvaiheValintakoe,
 			}
 
 			return type;
+		}
+
+		function getlaskentakaavaId() {
+			var laskentakaavaId;
+			if(!model.valintakoe.laskentakaavaId || model.valintakoe.laskentakaavaId === "") {
+				laskentakaavaId = null;
+			} else {
+				laskentakaavaId = model.valintakoe.laskentakaavaId;
+			}
+			return laskentakaavaId;
 		}
 		
 	}	
