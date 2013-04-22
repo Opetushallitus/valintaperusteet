@@ -152,7 +152,6 @@ app.factory('ValintaryhmaValintakoeValinnanvaiheModel', function(Valinnanvaihe, 
         }
 
         this.removeValintakoe = function(valintakoe) {
-            console.log(model.valintakokeet);
             Valintakoe.remove({valintakoeOid: valintakoe.oid}, function(result){
                 for(i in model.valintakokeet) {
                     if(valintakoe.oid === model.valintakokeet[i].oid) {

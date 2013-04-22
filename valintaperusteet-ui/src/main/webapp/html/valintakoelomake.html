@@ -21,6 +21,26 @@
         <textarea name="kuvaus"  ng-model="model.valintakoe.kuvaus" />
     </div>
 </div>
+
+
+<div class="form-row" ng-model="model.laskentakaavat" >
+
+    <div class="form-row-label">Laskentakaava</div>
+    <div class="form-row-content">
+
+        <div ng-repeat="data in model.laskentakaavat" class="field-container-radio">
+            <label>
+                <input type="radio" name="laskentakaava" value="{{data.id}}"
+                       ng-model="model.jarjestyskriteeri.laskentakaava_id" required />
+
+                <span ng-bind="data.nimi"></span>(<span ng-bind="data.id"></span>)
+            </label>
+        </div>
+
+    </div>
+    <div class="clear"></div>
+</div>
+
 <div class="clear"></div>
 
 <button ng-disabled="!form.$valid" class="button small primary" type="submit">Tallenna</button>

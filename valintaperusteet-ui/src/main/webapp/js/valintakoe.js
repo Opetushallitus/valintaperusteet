@@ -1,15 +1,22 @@
-app.factory('ValintakoeModel', function($q, Valintakoe, ValinnanvaiheValintakoe) {
+app.factory('ValintakoeModel', function($q, Valintakoe, ValinnanvaiheValintakoe, Laskentakaava) {
 
 	var model = new function() {
 		this.valintakoe = {};
+		this.laskentakaavat = [];
 
 		this.refresh = function(oid) {
 			if(!oid) {
 				model.valintakoe = {};
+				model.laskentakaavat = [];
 			} else {
 				Valintakoe.get({valintakoeOid: oid}, function(result) {
 					model.valintakoe = result;
 				});
+				
+				Laskentakaava.list({tyyppi: "TOTUUSARVOFUNKTIO"},function(result) {
+                	model.laskentakaavat = result;
+                });
+
 			}
 		}
 
@@ -68,10 +75,9 @@ app.factory('ValintakoeModel', function($q, Valintakoe, ValinnanvaiheValintakoe)
 function ValintaryhmaValintakoeController($scope, $location, $routeParams, ValintakoeModel, ValintaryhmaValintakoeValinnanvaiheModel, HakukohdeValintakoeValinnanvaiheModel) {
 	$scope.parentGroupOid = $routeParams.id; 
 	$scope.valintakoeValinnanvaiheOid = $routeParams.valintakoevalinnanvaiheOid;
-	$scope.valintakoeOid = $routeParams.id;
+	$scope.valintakoeOid = $routeParams.valintakoeOid;
 	$scope.model = ValintakoeModel;
 	$scope.model.refreshIfNeeded($scope.valintakoeOid);
-
 
 	$scope.submit = function() {
 		var promise = $scope.model.persistValintakoe($scope.valintakoeValinnanvaiheOid, ValintaryhmaValintakoeValinnanvaiheModel.valintakokeet);
