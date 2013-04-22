@@ -52,6 +52,7 @@ public class ValintakoeServiceTest {
 
         final Long laskentakaavaId = 101L;
         ValintakoeDTO valintakoe = new ValintakoeDTO();
+        valintakoe.setNimi("nimi");
         valintakoe.setTunniste("tunniste");
         valintakoe.setLaskentakaavaId(laskentakaavaId);
 

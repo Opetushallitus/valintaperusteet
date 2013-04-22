@@ -103,6 +103,7 @@ public class ValinnanVaiheResourceTest {
 
         ValintakoeDTO valintakoe = new ValintakoeDTO();
         valintakoe.setTunniste("tunniste");
+        valintakoe.setNimi("nimi");
         valintakoe.setLaskentakaavaId(laskentakaavaId);
 
         Response response = vaiheResource.addValintakoeToValinnanVaihe(valinnanVaiheOid, valintakoe);
