@@ -19,4 +19,6 @@ public interface ValintakoeService extends CRUDService<Valintakoe, Long, String>
     List<Valintakoe> findValintakoeByValinnanVaihe(String oid);
 
     Valintakoe lisaaValintakoeValinnanVaiheelle(String valinnanVaiheOid, ValintakoeDTO koe);
+
+    Valintakoe update(String oid, ValintakoeDTO valintakoe);
 }

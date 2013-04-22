@@ -130,7 +130,7 @@ public class LaskentakaavaResourceTest {
     public void testFindAll() {
         List<Laskentakaava> kaavat = laskentakaavaResource.kaavat(false, null, null);
 
-        assertEquals(14, kaavat.size());
+        assertEquals(15, kaavat.size());
 
         for (Laskentakaava lk : kaavat) {
             assertFalse(lk.getOnLuonnos());
@@ -167,7 +167,7 @@ public class LaskentakaavaResourceTest {
     @Test
     public void testGetTotuusarvokaava() {
         List<Laskentakaava> kaavat = laskentakaavaResource.kaavat(false, null, Funktiotyyppi.TOTUUSARVOFUNKTIO);
-        assertEquals(1, kaavat.size());
+        assertEquals(2, kaavat.size());
 
         for (Laskentakaava kaava : kaavat) {
             assertEquals(Funktiotyyppi.TOTUUSARVOFUNKTIO, kaava.getTyyppi());

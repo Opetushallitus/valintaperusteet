@@ -38,6 +38,7 @@ public class ValintakoeDAOImpl extends AbstractJpaDAOImpl<Valintakoe, Long> impl
     public Valintakoe readByOid(String oid) {
         QValintakoe valintakoe = QValintakoe.valintakoe;
         return from(valintakoe)
+                .leftJoin(valintakoe.laskentakaava).fetch()
                 .where(valintakoe.oid.eq(oid))
                 .singleResult(valintakoe);
     }

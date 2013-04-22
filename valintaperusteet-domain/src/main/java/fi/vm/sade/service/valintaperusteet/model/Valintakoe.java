@@ -1,6 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
 import fi.vm.sade.generic.model.BaseEntity;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonView;
 
 import javax.persistence.*;
@@ -84,5 +85,17 @@ public class Valintakoe extends BaseEntity {
 
     public void setValinnanVaihe(ValinnanVaihe valinnanVaihe) {
         this.valinnanVaihe = valinnanVaihe;
+    }
+
+    @Transient
+    public boolean ainaPakollinen() {
+        return laskentakaava == null;
+    }
+
+    @JsonProperty("laskentakaava_id")
+    @JsonView(JsonViews.Basic.class)
+    @Transient
+    public Long getLaskentakaavaId() {
+        return laskentakaava.getId();
     }
 }

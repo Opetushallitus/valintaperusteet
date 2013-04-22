@@ -42,17 +42,13 @@ public class ValintakoeServiceImpl extends AbstractCRUDServiceImpl<Valintakoe, L
     }
 
     @Override
-    public Valintakoe update(String oid, Valintakoe valintakoe) {
-        Valintakoe entity = haeValintakoeOidilla(oid);
-        entity.setKuvaus(valintakoe.getKuvaus());
-        entity.setNimi(valintakoe.getNimi());
-        entity.setTunniste(valintakoe.getTunniste());
-        return entity;
+    public Valintakoe update(String s, Valintakoe entity) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Valintakoe insert(Valintakoe entity) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -68,7 +64,7 @@ public class ValintakoeServiceImpl extends AbstractCRUDServiceImpl<Valintakoe, L
 
     private Valintakoe haeValintakoeOidilla(String oid) {
         Valintakoe valintakoe = valintakoeDAO.readByOid(oid);
-        if(valintakoe == null) {
+        if (valintakoe == null) {
             throw new ValintakoettaEiOleOlemassaException("Valintakoetta (oid " + oid + ") ei ole olemassa");
         }
 
@@ -95,21 +91,37 @@ public class ValintakoeServiceImpl extends AbstractCRUDServiceImpl<Valintakoe, L
         valintakoe.setKuvaus(koe.getKuvaus());
         valintakoe.setValinnanVaihe(valinnanVaihe);
 
-        if(koe.getLaskentakaavaId() != null) {
-            Laskentakaava laskentakaava = laskentakaavaDAO.getLaskentakaava(koe.getLaskentakaavaId());
-            if (laskentakaava == null) {
-                throw new LaskentakaavaEiOleOlemassaException("Laskentakaavaa (" + koe.getLaskentakaavaId() + ") ei ole " +
-                        "olemassa", koe.getLaskentakaavaId());
-            } else if (!Funktiotyyppi.TOTUUSARVOFUNKTIO.equals(laskentakaava.getTyyppi())) {
-                throw new VaaranTyyppinenLaskentakaavaException("Valintakokeen laskentakaavan tulee olla tyyppiä " +
-                        Funktiotyyppi.TOTUUSARVOFUNKTIO.name());
-            } else if (laskentakaava.getOnLuonnos()) {
-                throw new ValintakokeeseenLiitettavaLaskentakaavaOnLuonnosException("Valintakokeeseen liitettävä " +
-                        "laskentakaava on LUONNOS-tilassa");
-            }
+        if (koe.getLaskentakaavaId() != null) {
+            Laskentakaava laskentakaava = haeLaskentakaavaValintakokeelle(koe.getLaskentakaavaId());
             valintakoe.setLaskentakaava(laskentakaava);
         }
         Valintakoe lisatty = valintakoeDAO.insert(valintakoe);
         return lisatty;
+    }
+
+    private Laskentakaava haeLaskentakaavaValintakokeelle(Long laskentakaavaId) {
+        Laskentakaava laskentakaava = laskentakaavaDAO.getLaskentakaava(laskentakaavaId);
+        if (laskentakaava == null) {
+            throw new LaskentakaavaEiOleOlemassaException("Laskentakaavaa (" + laskentakaavaId + ") ei ole " +
+                    "olemassa", laskentakaavaId);
+        } else if (!Funktiotyyppi.TOTUUSARVOFUNKTIO.equals(laskentakaava.getTyyppi())) {
+            throw new VaaranTyyppinenLaskentakaavaException("Valintakokeen laskentakaavan tulee olla tyyppiä " +
+                    Funktiotyyppi.TOTUUSARVOFUNKTIO.name());
+        } else if (laskentakaava.getOnLuonnos()) {
+            throw new ValintakokeeseenLiitettavaLaskentakaavaOnLuonnosException("Valintakokeeseen liitettävä " +
+                    "laskentakaava on LUONNOS-tilassa");
+        }
+
+        return laskentakaava;
+    }
+
+    @Override
+    public Valintakoe update(String oid, ValintakoeDTO valintakoe) {
+        Valintakoe entity = haeValintakoeOidilla(oid);
+        entity.setKuvaus(valintakoe.getKuvaus());
+        entity.setNimi(valintakoe.getNimi());
+        entity.setTunniste(valintakoe.getTunniste());
+        entity.setLaskentakaava(haeLaskentakaavaValintakokeelle(valintakoe.getLaskentakaavaId()));
+        return entity;
     }
 }

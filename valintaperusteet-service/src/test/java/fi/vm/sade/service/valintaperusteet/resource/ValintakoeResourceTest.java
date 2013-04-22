@@ -3,6 +3,7 @@ package fi.vm.sade.service.valintaperusteet.resource;
 import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
+import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
 import fi.vm.sade.service.valintaperusteet.util.TestUtil;
@@ -18,6 +19,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 /**
  * User: kwuoti
@@ -50,6 +54,35 @@ public class ValintakoeResourceTest {
         final String oid = "oid1";
         Valintakoe valintakoe = valintakoeResource.readByOid(oid);
         testUtil.lazyCheck(JsonViews.Basic.class, valintakoe);
+    }
+
+    @Test
+    public void testUpdate() {
+        final String oid = "oid1";
+        final Long laskentakaavaId = 102L;
+
+        Valintakoe saved = valintakoeResource.readByOid(oid);
+
+        ValintakoeDTO koe = new ValintakoeDTO();
+        koe.setKuvaus("uusi kuvaus");
+        koe.setNimi("uusi nimi");
+        koe.setTunniste("uusi tunniste");
+        koe.setLaskentakaavaId(laskentakaavaId);
+
+        assertFalse(saved.getNimi().equals(koe.getNimi()));
+        assertFalse(saved.getKuvaus().equals(koe.getKuvaus()));
+        assertFalse(saved.getTunniste().equals(koe.getTunniste()));
+        assertFalse(saved.getLaskentakaavaId().equals(koe.getLaskentakaavaId()));
+
+        valintakoeResource.update(oid, koe);
+
+        saved = valintakoeResource.readByOid(oid);
+
+        assertEquals(koe.getKuvaus(), saved.getKuvaus());
+        assertEquals(koe.getNimi(), saved.getNimi());
+        assertEquals(koe.getTunniste(), saved.getTunniste());
+        assertEquals(koe.getLaskentakaavaId(), saved.getLaskentakaavaId());
+
     }
 
 }
