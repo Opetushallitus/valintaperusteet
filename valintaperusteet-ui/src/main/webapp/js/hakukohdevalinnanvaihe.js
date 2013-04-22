@@ -210,6 +210,8 @@ function HakukohdeValintakoeValinnanvaiheController($scope, $location, $routePar
         $location.path("/hakukohde/" + $scope.hakukohdeOid + "/valintakoevalinnanvaihe/" + $scope.model.valintakoevalinnanvaihe.oid + "/valintakoe/");
     }
 
+
+
 }
 
 

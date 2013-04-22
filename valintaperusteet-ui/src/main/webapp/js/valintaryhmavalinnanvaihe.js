@@ -122,6 +122,7 @@ app.factory('ValintaryhmaValintakoeValinnanvaiheModel', function(Valinnanvaihe, 
                 ValinnanvaiheValintakoe.get({valinnanvaiheOid: oid}, {}, function(result) {
                     model.valintakokeet = result;
                 });
+
             }
         }
 

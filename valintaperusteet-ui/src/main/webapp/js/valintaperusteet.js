@@ -158,7 +158,8 @@ return $resource(SERVICE_URL_BASE + "resources/valinnanvaihe/:oid/kuuluuSijoitte
 app.factory('ValinnanvaiheValintakoe', function($resource) {
   return $resource(SERVICE_URL_BASE + "resources/valinnanvaihe/:valinnanvaiheOid/valintakoe", {valinnanvaiheOid: "@valinnanvaiheOid"}, {
     insert: {method: "PUT"},
-    get: {method: "GET", isArray: true}
+    get: {method: "GET", isArray: true},
+    remove: {method: "REMOVE"}
   });
 });
 

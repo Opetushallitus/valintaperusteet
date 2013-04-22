@@ -45,7 +45,6 @@ app.factory('ValintakoeModel', function($q, Valintakoe, ValinnanvaiheValintakoe,
 			} else {
 				
 				var laskentakaavaId = getlaskentakaavaId();
-				console.log(laskentakaavaId);
 				var valintakoe = {
 					tunniste: model.valintakoe.tunniste,
 					nimi: model.valintakoe.nimi,
