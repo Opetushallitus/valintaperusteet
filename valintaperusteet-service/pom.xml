@@ -16,6 +16,10 @@
 	<name>Valintaperusteet :: Service</name>
 	<packaging>war</packaging>
 
+    <properties>
+        <skipDbDiagramGenerate>false</skipDbDiagramGenerate>
+    </properties>
+
 	<repositories>
 		<repository>
 			<id>repo.codahale.com</id>
