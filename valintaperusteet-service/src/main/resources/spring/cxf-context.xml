@@ -14,8 +14,6 @@
 
     <bean id="valintaperusteServiceImpl" class="fi.vm.sade.service.valintaperusteet.service.impl.ValintaperusteServiceImpl" />
 
-    <jaxws:endpoint id="valintaperusteService"  address="/ws"
-                    implementor="#valintaperusteServiceImpl"
-                     >
-    </jaxws:endpoint>
+    <jaxws:endpoint id="valintaperusteService" address="/ws" implementor="#valintaperusteServiceImpl"/>
+
 </beans>

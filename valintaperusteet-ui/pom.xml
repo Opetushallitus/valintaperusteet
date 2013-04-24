@@ -75,7 +75,21 @@
                         <groupId>org.mortbay.jetty</groupId>
                         <artifactId>maven-jetty-plugin</artifactId>
                         <configuration>
+
+
+
                               <!--
+
+
+
+
+
+
+
+
+
+
+
                             <webApp>${basedir}/valintalaskenta/valintalaskenta-ui/target/valintalaskenta-ui.war</webApp>
                               -->
                             <contextPath>/valintaperusteet-ui</contextPath>
@@ -89,15 +103,17 @@
                                 </contextHandler>
 
                                 <!-- valintaperusteet -->
-                                <contextHandler implementation="org.mortbay.jetty.webapp.WebAppContext">
+                                <contextHandler implementation="org.mortbay.jetty.webapp.WebAppContext" >
                                     <war>${basedir}/../valintaperusteet-service/target/valintaperusteet-service.war</war>
                                     <contextPath>/valintaperusteet-service</contextPath>
+
                                 </contextHandler>
 
                                 <!--valintalaskenta ja sen tulokset -->
                                 <contextHandler implementation="org.mortbay.jetty.webapp.WebAppContext">
                                     <war>${basedir}/../../valintalaskenta/valintalaskenta-laskenta-service/target/valintalaskenta-laskenta-service.war</war>
                                     <contextPath>/valintalaskenta-laskenta-service</contextPath>
+
                                 </contextHandler>
 
                                 <!--kayttoliittymat -->
