@@ -25,6 +25,9 @@ import java.util.List;
 public class ValintaperusteServiceImpl implements ValintaperusteService {
 
     @Autowired
+    private HakukohdeService hakukohdeService;
+
+    @Autowired
     private ValintatapajonoDAO valintatapajonoDAO;
 
     @Autowired
@@ -69,6 +72,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
 
         for (HakuparametritTyyppi param : hakuparametrit) {
             List<ValinnanVaihe> valinnanVaiheList = new ArrayList<ValinnanVaihe>();
+            HakukohdeViite hakukohde = hakukohdeService.readByOid(param.getHakukohdeOid());
 
             for (ValinnanVaihe valinnanVaihe : valinnanVaiheService.findByHakukohde(param.getHakukohdeOid())) {
                 if (valinnanVaihe.getAktiivinen()) {
@@ -83,7 +87,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
                 }
 
                 ValintaperusteetTyyppi valinnanVaihe = convertValintaperusteet(valinnanVaiheList.get(jarjestysluku),
-                        param.getHakukohdeOid(), jarjestysluku);
+                        param.getHakukohdeOid(), hakukohde.getHakuoid(), jarjestysluku);
                 if (valinnanVaihe != null) {
                     list.add(valinnanVaihe);
                 }
@@ -91,7 +95,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
             } else {
                 for (int i = 0; i < valinnanVaiheList.size(); i++) {
                     ValintaperusteetTyyppi valinnanVaihe = convertValintaperusteet(valinnanVaiheList.get(i),
-                            param.getHakukohdeOid(), i);
+                            param.getHakukohdeOid(), hakukohde.getHakuoid(), i);
                     if (valinnanVaihe != null) {
                         list.add(valinnanVaihe);
                     }
@@ -103,9 +107,11 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
     }
 
     private ValintaperusteetTyyppi convertValintaperusteet(ValinnanVaihe valinnanVaihe, String hakukohdeOid,
-                                                           int valinnanvaiheJarjestysluku) {
+                                                           String hakuOid, int valinnanvaiheJarjestysluku) {
+
         ValintaperusteetTyyppi valintaperusteetTyyppi = new ValintaperusteetTyyppi();
         valintaperusteetTyyppi.setHakukohdeOid(hakukohdeOid);
+        valintaperusteetTyyppi.setHakuOid(hakuOid);
 
         ValinnanVaiheTyyppi vv = null;
         switch (valinnanVaihe.getValinnanVaiheTyyppi()) {
