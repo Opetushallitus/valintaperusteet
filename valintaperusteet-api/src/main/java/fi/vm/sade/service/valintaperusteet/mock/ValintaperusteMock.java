@@ -1,24 +1,16 @@
 package fi.vm.sade.service.valintaperusteet.mock;
 
-import java.util.ArrayList;
-import java.util.List;
+import fi.vm.sade.service.valintaperusteet.GenericFault;
+import fi.vm.sade.service.valintaperusteet.ValintaperusteService;
+import fi.vm.sade.service.valintaperusteet.messages.HakuparametritTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.*;
 
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.xml.ws.RequestWrapper;
 import javax.xml.ws.ResponseWrapper;
-
-import fi.vm.sade.service.valintaperusteet.GenericFault;
-import fi.vm.sade.service.valintaperusteet.ValintaperusteService;
-import fi.vm.sade.service.valintaperusteet.messages.HakuparametritTyyppi;
-import fi.vm.sade.service.valintaperusteet.schema.FunktioargumenttiTyyppi;
-import fi.vm.sade.service.valintaperusteet.schema.FunktiokutsuTyyppi;
-import fi.vm.sade.service.valintaperusteet.schema.JarjestyskriteeriTyyppi;
-import fi.vm.sade.service.valintaperusteet.schema.SyoteparametriTyyppi;
-import fi.vm.sade.service.valintaperusteet.schema.TasasijasaantoTyyppi;
-import fi.vm.sade.service.valintaperusteet.schema.ValintaperusteetTyyppi;
-import fi.vm.sade.service.valintaperusteet.schema.ValintatapajonoJarjestyskriteereillaTyyppi;
-import fi.vm.sade.service.valintaperusteet.schema.ValintatapajonoTyyppi;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Eetu Blomqvist
@@ -40,9 +32,9 @@ public class ValintaperusteMock implements ValintaperusteService {
         for (HakuparametritTyyppi param : hakuparametrit) {
             ValintaperusteetTyyppi vp = new ValintaperusteetTyyppi();
             vp.setHakukohdeOid(param.getHakukohdeOid());
-            vp.setValinnanVaiheJarjestysluku(param.getValinnanVaiheJarjestysluku());
-            vp.getValintatapajonot().addAll(createValintatapajonot(3));
-
+            TavallinenValinnanVaiheTyyppi vv = new TavallinenValinnanVaiheTyyppi();
+            vv.setValinnanVaiheJarjestysluku(param.getValinnanVaiheJarjestysluku());
+            vv.getValintatapajono().addAll(createValintatapajonot(3));
             list.add(vp);
         }
         return list;

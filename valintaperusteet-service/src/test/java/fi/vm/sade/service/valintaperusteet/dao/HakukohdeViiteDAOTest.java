@@ -33,7 +33,7 @@ public class HakukohdeViiteDAOTest {
     @Test
     public void testFindAll() {
         List<HakukohdeViite> hakukohdeViites = hakukohdeViiteDAO.findAll();
-        assertEquals(17, hakukohdeViites.size());
+        assertEquals(18, hakukohdeViites.size());
     }
 
 }

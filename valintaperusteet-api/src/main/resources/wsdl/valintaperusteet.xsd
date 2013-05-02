@@ -14,12 +14,47 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="valintatapajonot" type="tns:ValintatapajonoJarjestyskriteereillaTyyppi" minOccurs="1" maxOccurs="unbounded"/>
+            <xs:element name="valinnanVaihe" type="tns:ValinnanVaiheTyyppi" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
         <xs:attribute name="hakukohdeOid" type="xs:string" use="required"/>
+    </xs:complexType>
+
+
+    <xs:complexType name="ValinnanVaiheTyyppi" abstract="true">
         <xs:attribute name="valinnanVaiheOid" type="xs:string" use="required"/>
         <xs:attribute name="valinnanVaiheJarjestysluku" type="xs:int" use="required"/>
-        <xs:attribute name="valinnanVaiheTyyppi" type="tns:ValinnanVaiheTyyppiTyyppi" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="TavallinenValinnanVaiheTyyppi">
+        <xs:complexContent>
+            <xs:extension base="tns:ValinnanVaiheTyyppi">
+                <xs:sequence>
+                    <xs:element name="valintatapajono" type="tns:ValintatapajonoJarjestyskriteereillaTyyppi"
+                                minOccurs="1" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="ValintakoeValinnanVaiheTyyppi">
+        <xs:complexContent>
+            <xs:extension base="tns:ValinnanVaiheTyyppi">
+                <xs:sequence>
+                    <xs:element name="valintakoe" type="tns:ValintakoeTyyppi"
+                                minOccurs="1" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="ValintakoeTyyppi">
+        <xs:sequence>
+            <xs:element name="funktiokutsu" type="tns:FunktiokutsuTyyppi" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+        <xs:attribute name="oid" type="xs:string" use="required"/>
+        <xs:attribute name="nimi" type="xs:string" use="required"/>
+        <xs:attribute name="tunniste" type="xs:string" use="required"/>
+        <xs:attribute name="kuvaus" type="xs:string" use="optional"/>
     </xs:complexType>
 
     <xs:simpleType name="ValinnanVaiheTyyppiTyyppi">
@@ -31,20 +66,23 @@
 
     <xs:complexType name="JarjestyskriteeriTyyppi">
         <xs:sequence>
-        	<xs:element name="prioriteetti" type="xs:int" minOccurs="1"	maxOccurs="1" />
-        	<xs:element name="funktiokutsu"	type="tns:FunktiokutsuTyyppi" minOccurs="1" maxOccurs="1" />
+            <xs:element name="prioriteetti" type="xs:int" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="funktiokutsu" type="tns:FunktiokutsuTyyppi" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="FunktiokutsuTyyppi">
         <xs:sequence>
-            <xs:element name="oid" minOccurs="1" maxOccurs="1" />
-        	<xs:element name="funktionimi" type="xs:string" minOccurs="1" maxOccurs="1" />
-        	<xs:element name="arvokonvertteriparametrit"	type="tns:ArvokonvertteriparametriTyyppi" minOccurs="0"	maxOccurs="unbounded" />
-            <xs:element name="arvovalikonvertteriparametrit" type="tns:ArvovalikonvertteriparametriTyyppi" minOccurs="0" maxOccurs="unbounded" />
-        	<xs:element name="syoteparametrit" type="tns:SyoteparametriTyyppi" minOccurs="0" maxOccurs="unbounded" />
-        	<xs:element name="funktioargumentit" type="tns:FunktioargumenttiTyyppi" minOccurs="0" maxOccurs="unbounded" />
-        	<xs:element name="valintaperusteviite" type="tns:ValintaperusteviiteTyyppi" maxOccurs="1" minOccurs="0"/>
+            <xs:element name="oid" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="funktionimi" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="arvokonvertteriparametrit" type="tns:ArvokonvertteriparametriTyyppi" minOccurs="0"
+                        maxOccurs="unbounded"/>
+            <xs:element name="arvovalikonvertteriparametrit" type="tns:ArvovalikonvertteriparametriTyyppi" minOccurs="0"
+                        maxOccurs="unbounded"/>
+            <xs:element name="syoteparametrit" type="tns:SyoteparametriTyyppi" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="funktioargumentit" type="tns:FunktioargumenttiTyyppi" minOccurs="0"
+                        maxOccurs="unbounded"/>
+            <xs:element name="valintaperusteviite" type="tns:ValintaperusteviiteTyyppi" maxOccurs="1" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -105,7 +143,8 @@
         <xs:complexContent>
             <xs:extension base="tns:ValintatapajonoTyyppi">
                 <xs:sequence>
-                    <xs:element name="jarjestyskriteerit" type="tns:JarjestyskriteeriTyyppi" minOccurs="1" maxOccurs="unbounded"/>
+                    <xs:element name="jarjestyskriteerit" type="tns:JarjestyskriteeriTyyppi" minOccurs="1"
+                                maxOccurs="unbounded"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
@@ -128,9 +167,9 @@
     </xs:complexType>
 
     <xs:complexType name="ValintaperusteviiteTyyppi">
-    	<xs:sequence>
-    		<xs:element name="onPakollinen" type="xs:boolean"></xs:element>
-    		<xs:element name="tunniste" type="xs:string"></xs:element>
-    	</xs:sequence>
+        <xs:sequence>
+            <xs:element name="onPakollinen" type="xs:boolean"></xs:element>
+            <xs:element name="tunniste" type="xs:string"></xs:element>
+        </xs:sequence>
     </xs:complexType>
 </xs:schema> 

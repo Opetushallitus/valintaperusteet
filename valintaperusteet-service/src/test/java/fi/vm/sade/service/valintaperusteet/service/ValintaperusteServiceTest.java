@@ -4,6 +4,9 @@ import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.ValintaperusteService;
 import fi.vm.sade.service.valintaperusteet.messages.HakuparametritTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.TavallinenValinnanVaiheTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.ValintakoeTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.ValintakoeValinnanVaiheTyyppi;
 import fi.vm.sade.service.valintaperusteet.schema.ValintaperusteetTyyppi;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakuparametritOnTyhjaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheJarjestyslukuOutOfBoundsException;
@@ -21,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 
 /**
  * User: kwuoti Date: 22.1.2013 Time: 15.40
@@ -51,11 +55,11 @@ public class ValintaperusteServiceTest {
         List<ValintaperusteetTyyppi> valintaperusteetTyyppis = valintaperusteService.haeValintaperusteet(params);
 
         assertEquals(3, valintaperusteetTyyppis.size());
-        assertEquals(1, valintaperusteetTyyppis.get(1).getValinnanVaiheJarjestysluku());
+        assertEquals(1, valintaperusteetTyyppis.get(1).getValinnanVaihe().getValinnanVaiheJarjestysluku());
 
-        assertEquals(3, valintaperusteetTyyppis.get(0).getValintatapajonot().get(0).getJarjestyskriteerit().size());
-        assertEquals(1, valintaperusteetTyyppis.get(0).getValintatapajonot().get(1).getPrioriteetti());
-        assertEquals(1, valintaperusteetTyyppis.get(0).getValintatapajonot().get(0).getJarjestyskriteerit().get(1).getPrioriteetti());
+        assertEquals(3, ((TavallinenValinnanVaiheTyyppi) valintaperusteetTyyppis.get(0).getValinnanVaihe()).getValintatapajono().get(0).getJarjestyskriteerit().size());
+        assertEquals(1, ((TavallinenValinnanVaiheTyyppi)valintaperusteetTyyppis.get(0).getValinnanVaihe()).getValintatapajono().get(1).getPrioriteetti());
+        assertEquals(1, ((TavallinenValinnanVaiheTyyppi)valintaperusteetTyyppis.get(0).getValinnanVaihe()).getValintatapajono().get(0).getJarjestyskriteerit().get(1).getPrioriteetti());
     }
 
     @Test
@@ -117,5 +121,28 @@ public class ValintaperusteServiceTest {
         hakuparametritTyyppi.setHakukohdeOid(oid);
         hakuparametritTyyppi.setValinnanVaiheJarjestysluku(jl);
         return hakuparametritTyyppi;
+    }
+
+    @Test
+    public void testHaeValintakoeValintaperusteet() {
+        List<HakuparametritTyyppi> params = new ArrayList<HakuparametritTyyppi>();
+        params.add(getHakuparametritTyyppi("oid10", null));
+
+        List<ValintaperusteetTyyppi> valintaperusteetTyyppis = valintaperusteService.haeValintaperusteet(params);
+        assertEquals(1, valintaperusteetTyyppis.size());
+
+        ValintakoeValinnanVaiheTyyppi vv = (ValintakoeValinnanVaiheTyyppi)
+                valintaperusteetTyyppis.get(0).getValinnanVaihe();
+
+        assertNotNull(vv.getValinnanVaiheJarjestysluku());
+        assertNotNull(vv.getValinnanVaiheOid());
+        assertEquals(1, vv.getValintakoe().size());
+
+        ValintakoeTyyppi vk = vv.getValintakoe().get(0);
+        assertNotNull(vk.getFunktiokutsu());
+        assertNotNull(vk.getKuvaus());
+        assertNotNull(vk.getNimi());
+        assertNotNull(vk.getOid());
+        assertNotNull(vk.getTunniste());
     }
 }

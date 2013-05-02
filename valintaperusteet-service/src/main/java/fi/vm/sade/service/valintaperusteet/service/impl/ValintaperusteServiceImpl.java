@@ -1,36 +1,22 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.jws.WebParam;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import fi.vm.sade.generic.service.conversion.SadeConversionService;
 import fi.vm.sade.service.valintaperusteet.GenericFault;
 import fi.vm.sade.service.valintaperusteet.ValintaperusteService;
 import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
 import fi.vm.sade.service.valintaperusteet.messages.HakuparametritTyyppi;
-import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
-import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
-import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
-import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
-import fi.vm.sade.service.valintaperusteet.schema.FunktiokutsuTyyppi;
-import fi.vm.sade.service.valintaperusteet.schema.JarjestyskriteeriTyyppi;
-import fi.vm.sade.service.valintaperusteet.schema.TasasijasaantoTyyppi;
-import fi.vm.sade.service.valintaperusteet.schema.ValinnanVaiheTyyppiTyyppi;
-import fi.vm.sade.service.valintaperusteet.schema.ValintaperusteetTyyppi;
-import fi.vm.sade.service.valintaperusteet.schema.ValintatapajonoJarjestyskriteereillaTyyppi;
-import fi.vm.sade.service.valintaperusteet.schema.ValintatapajonoTyyppi;
-import fi.vm.sade.service.valintaperusteet.service.JarjestyskriteeriService;
-import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
-import fi.vm.sade.service.valintaperusteet.service.PaasykoeTunnisteetService;
-import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
-import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
+import fi.vm.sade.service.valintaperusteet.model.*;
+import fi.vm.sade.service.valintaperusteet.schema.*;
+import fi.vm.sade.service.valintaperusteet.schema.ValinnanVaiheTyyppi;
+import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakuparametritOnTyhjaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheJarjestyslukuOutOfBoundsException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.jws.WebParam;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * User: kwuoti Date: 22.1.2013 Time: 15.00
@@ -58,6 +44,10 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
 
     @Autowired
     private LaskentakaavaService laskentakaavaService;
+
+    @Autowired
+    private ValintakoeService valintakoeService;
+
 
     @Override
     public List<ValintatapajonoTyyppi> haeValintatapajonotSijoittelulle(
@@ -113,17 +103,57 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
     }
 
     private ValintaperusteetTyyppi convertValintaperusteet(ValinnanVaihe valinnanVaihe, String hakukohdeOid,
-            int valinnanvaiheJarjestysluku) {
+                                                           int valinnanvaiheJarjestysluku) {
         ValintaperusteetTyyppi valintaperusteetTyyppi = new ValintaperusteetTyyppi();
         valintaperusteetTyyppi.setHakukohdeOid(hakukohdeOid);
-        valintaperusteetTyyppi.setValinnanVaiheJarjestysluku(valinnanvaiheJarjestysluku);
-        valintaperusteetTyyppi.setValinnanVaiheOid(valinnanVaihe.getOid());
-        valintaperusteetTyyppi.setValinnanVaiheTyyppi(ValinnanVaiheTyyppiTyyppi.valueOf(valinnanVaihe
-                .getValinnanVaiheTyyppi().name()));
 
-        valintaperusteetTyyppi.getValintatapajonot().addAll(convertJonot(valinnanVaihe));
+        ValinnanVaiheTyyppi vv = null;
+        switch (valinnanVaihe.getValinnanVaiheTyyppi()) {
+
+            case TAVALLINEN:
+                TavallinenValinnanVaiheTyyppi tavallinen = new TavallinenValinnanVaiheTyyppi();
+                tavallinen.getValintatapajono().addAll(convertJonot(valinnanVaihe));
+
+                vv = tavallinen;
+                break;
+            case VALINTAKOE:
+                ValintakoeValinnanVaiheTyyppi valintakoe = new ValintakoeValinnanVaiheTyyppi();
+                valintakoe.getValintakoe().addAll(convertValintakokeet(valinnanVaihe));
+                vv = valintakoe;
+                break;
+        }
+
+        vv.setValinnanVaiheJarjestysluku(valinnanvaiheJarjestysluku);
+        vv.setValinnanVaiheOid(valinnanVaihe.getOid());
+        valintaperusteetTyyppi.setValinnanVaihe(vv);
 
         return valintaperusteetTyyppi;
+    }
+
+    private List<ValintakoeTyyppi> convertValintakokeet(ValinnanVaihe valinnanVaihe) {
+        List<Valintakoe> valintakokeet = valintakoeService.findValintakoeByValinnanVaihe(valinnanVaihe.getOid());
+        List<ValintakoeTyyppi> valintakoetyypit = new ArrayList<ValintakoeTyyppi>();
+
+        for (Valintakoe koe : valintakokeet) {
+            ValintakoeTyyppi tyyppi = new ValintakoeTyyppi();
+            tyyppi.setKuvaus(koe.getKuvaus());
+            tyyppi.setNimi(koe.getNimi());
+            tyyppi.setOid(koe.getOid());
+            tyyppi.setTunniste(koe.getTunniste());
+
+
+            Laskentakaava laskentakaava = laskentakaavaService.haeLaskettavaKaava(koe.getLaskentakaava()
+                    .getId());
+            FunktiokutsuTyyppi convert = conversionService.convert(laskentakaava.getFunktiokutsu(),
+                    FunktiokutsuTyyppi.class);
+
+            tyyppi.setFunktiokutsu(convert);
+
+            valintakoetyypit.add(tyyppi);
+        }
+
+
+        return valintakoetyypit;
     }
 
     private List<ValintatapajonoJarjestyskriteereillaTyyppi> convertJonot(ValinnanVaihe valinnanVaihe) {
