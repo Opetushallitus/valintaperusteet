@@ -1,0 +1,1673 @@
+package fi.vm.sade.kaava
+
+import org.scalatest.FunSuite
+import fi.vm.sade.service.valintaperusteet.model.Funktionimi
+import fi.vm.sade.kaava.LaskentaTestUtil._
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskin
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.{Hylattytila, HylattyMetatieto, Tila, Hyvaksyttavissatila}
+
+/**
+ * User: kwuoti
+ * Date: 4.2.2013
+ * Time: 14.13
+ */
+class LaskentaIntegraatioTest extends FunSuite {
+
+  val luku25 = Funktiokutsu(
+    nimi = Funktionimi.LUKUARVO,
+    syoteparametrit = List(
+      Syoteparametri("luku", "25.0")))
+
+  val luku50 = Funktiokutsu(
+    nimi = Funktionimi.LUKUARVO,
+    syoteparametrit = List(
+      Syoteparametri("luku", "50.0")))
+
+  val luku45 = Funktiokutsu(
+    nimi = Funktionimi.LUKUARVO,
+    syoteparametrit = List(
+      Syoteparametri("luku", "45.0")))
+
+  val luku100 = Funktiokutsu(
+    nimi = Funktionimi.LUKUARVO,
+    syoteparametrit = List(
+      Syoteparametri("luku", "100.0")))
+
+  val luku0 = Funktiokutsu(
+    nimi = Funktionimi.LUKUARVO,
+    syoteparametrit = List(
+      Syoteparametri("luku", "0.0")))
+
+  val totuusarvoTrue = Funktiokutsu(
+    nimi = Funktionimi.TOTUUSARVO,
+    syoteparametrit = List(
+      Syoteparametri("totuusarvo", "true")))
+
+  val totuusarvoFalse = Funktiokutsu(
+    nimi = Funktionimi.TOTUUSARVO,
+    syoteparametrit = List(
+      Syoteparametri("totuusarvo", "false")))
+
+  val summa = Funktiokutsu(
+    nimi = Funktionimi.SUMMA,
+    funktioargumentit = List(
+      luku25,
+      luku50,
+      luku45))
+
+  val konvertoiLukuarvoLukuarvoksi = Funktiokutsu(
+    nimi = Funktionimi.KONVERTOILUKUARVO,
+    funktioargumentit = List(luku25),
+    arvokonvertterit = List(
+      Arvokonvertteriparametri(
+        paluuarvo = "1.0",
+        arvo = "10.0",
+        hylkaysperuste = false
+      ),
+      Arvokonvertteriparametri(
+        paluuarvo = "2.0",
+        arvo = "15.0",
+        hylkaysperuste = false
+      ),
+      Arvokonvertteriparametri(
+        paluuarvo = "3.0",
+        arvo = "20.0",
+        hylkaysperuste = false
+      ),
+      Arvokonvertteriparametri(
+        paluuarvo = "4.0",
+        arvo = "25.0",
+        hylkaysperuste = false
+      ),
+      Arvokonvertteriparametri(
+        paluuarvo = "5.0",
+        arvo = "30.0",
+        hylkaysperuste = false
+      )
+    )
+  )
+
+  val maksimi = Funktiokutsu(
+    nimi = Funktionimi.MAKSIMI,
+    funktioargumentit = List(
+      luku25,
+      luku50,
+      luku45))
+
+  val minimi = Funktiokutsu(
+    nimi = Funktionimi.MINIMI,
+    funktioargumentit = List(
+      luku25,
+      luku50,
+      luku45))
+
+  val tulo = Funktiokutsu(
+    nimi = Funktionimi.TULO,
+    funktioargumentit = List(
+      luku25,
+      luku50,
+      luku45))
+
+  val konvertoiLukuarvovaliLukuarvoksi = Funktiokutsu(
+    nimi = Funktionimi.KONVERTOILUKUARVO,
+    funktioargumentit = List(luku25),
+    arvovalikonvertterit = List(
+      Arvovalikonvertteriparametri(
+        paluuarvo = "1.0",
+        min = 0.0,
+        max = 10.0,
+        palautaHaettuArvo = false,
+        hylkaysperuste = false
+      ),
+      Arvovalikonvertteriparametri(
+        paluuarvo = "3.0",
+        min = 10.0,
+        max = 20.0,
+        palautaHaettuArvo = false,
+        hylkaysperuste = false
+      ),
+      Arvovalikonvertteriparametri(
+        paluuarvo = "3.0",
+        min = 20.0,
+        max = 30.0,
+        palautaHaettuArvo = false,
+        hylkaysperuste = false
+      ),
+      Arvovalikonvertteriparametri(
+        paluuarvo = "4.0",
+        min = 30.0,
+        max = 40.0,
+        palautaHaettuArvo = false,
+        hylkaysperuste = false
+      )
+    )
+  )
+
+
+  val keskiarvo = Funktiokutsu(
+    nimi = Funktionimi.KESKIARVO,
+    funktioargumentit = List(
+      luku25,
+      luku50,
+      luku45))
+
+  val mediaaniParillinenMaara = Funktiokutsu(
+    nimi = Funktionimi.MEDIAANI,
+    funktioargumentit = List(
+      luku25,
+      luku100,
+      luku50,
+      luku45))
+
+  val mediaaniParitonMaara = Funktiokutsu(
+    nimi = Funktionimi.MEDIAANI,
+    funktioargumentit = List(
+      luku25,
+      luku100,
+      luku45))
+
+  val keskiarvoNParasta = Funktiokutsu(
+    nimi = Funktionimi.KESKIARVONPARASTA,
+    syoteparametrit = List(
+      Syoteparametri(
+        avain = "n",
+        arvo = "2")),
+    funktioargumentit = List(
+      luku25,
+      luku100,
+      luku45,
+      luku50))
+
+  val summaNParasta = Funktiokutsu(
+    nimi = Funktionimi.SUMMANPARASTA,
+    syoteparametrit = List(
+      Syoteparametri(
+        avain = "n",
+        arvo = "3")),
+    funktioargumentit = List(
+      luku25,
+      luku100,
+      luku45,
+      luku50))
+
+  val nMaksimi = Funktiokutsu(
+    nimi = Funktionimi.NMAKSIMI,
+    syoteparametrit = List(
+      Syoteparametri(
+        avain = "n",
+        arvo = "3")),
+    funktioargumentit = List(
+      luku25,
+      luku100,
+      luku45,
+      luku50))
+
+  val nMinimi = Funktiokutsu(
+    nimi = Funktionimi.NMINIMI,
+    syoteparametrit = List(
+      Syoteparametri(
+        avain = "n",
+        arvo = "3")),
+    funktioargumentit = List(
+      luku25,
+      luku100,
+      luku45,
+      luku50))
+
+  val osamaara = Funktiokutsu(
+    nimi = Funktionimi.OSAMAARA,
+    funktioargumentit = List(
+      luku100,
+      luku50))
+
+  val osamaaraByZero = Funktiokutsu(
+    nimi = Funktionimi.OSAMAARA,
+    funktioargumentit = List(
+      luku100,
+      luku0))
+
+  val suurempiTrue = Funktiokutsu(
+    nimi = Funktionimi.SUUREMPI,
+    funktioargumentit = List(
+      luku100,
+      luku50))
+
+  val suurempiFalse = Funktiokutsu(
+    nimi = Funktionimi.SUUREMPI,
+    funktioargumentit = List(
+      luku25,
+      luku50))
+
+  val suurempiTaiYhtasuuriTrue = Funktiokutsu(
+    nimi = Funktionimi.SUUREMPITAIYHTASUURI,
+    funktioargumentit = List(
+      luku25,
+      luku25))
+
+  val suurempiTaiYhtasuuriFalse = Funktiokutsu(
+    nimi = Funktionimi.SUUREMPITAIYHTASUURI,
+    funktioargumentit = List(
+      luku0,
+      luku25))
+
+  val pienempiTrue = Funktiokutsu(
+    nimi = Funktionimi.PIENEMPI,
+    funktioargumentit = List(
+      luku0,
+      luku25))
+
+  val pienempiFalse = Funktiokutsu(
+    nimi = Funktionimi.PIENEMPI,
+    funktioargumentit = List(
+      luku50,
+      luku25))
+
+  val pienempiTaiYhtasuuriTrue = Funktiokutsu(
+    nimi = Funktionimi.PIENEMPITAIYHTASUURI,
+    funktioargumentit = List(
+      luku25,
+      luku25))
+
+  val pienempiTaiYhtasuuriFalse = Funktiokutsu(
+    nimi = Funktionimi.PIENEMPITAIYHTASUURI,
+    funktioargumentit = List(
+      luku100,
+      luku50))
+
+  val yhtasuuriTrue = Funktiokutsu(
+    nimi = Funktionimi.YHTASUURI,
+    funktioargumentit = List(
+      luku25,
+      luku25))
+
+  val yhtasuuriFalse = Funktiokutsu(
+    nimi = Funktionimi.YHTASUURI,
+    funktioargumentit = List(
+      luku25,
+      luku0))
+
+  val ei = Funktiokutsu(
+    nimi = Funktionimi.EI,
+    funktioargumentit = List(
+      totuusarvoFalse))
+
+  val nimettyTotuusarvo = Funktiokutsu(
+    nimi = Funktionimi.NIMETTYTOTUUSARVO,
+    syoteparametrit = List(
+      Syoteparametri(
+        avain = "nimi",
+        arvo = "tässä on true arvo")),
+    funktioargumentit = List(
+      totuusarvoTrue))
+
+  val nimettyLukuarvo = Funktiokutsu(
+    nimi = Funktionimi.NIMETTYLUKUARVO,
+    syoteparametrit = List(
+      Syoteparametri(
+        avain = "nimi",
+        arvo = "tässä on lukuarvo 25")),
+    funktioargumentit = List(
+      luku25))
+
+  val haeLukuarvo = Funktiokutsu(
+    nimi = Funktionimi.HAELUKUARVO,
+    valintaperustetunniste = ValintaperusteViite(
+      onPakollinen = false,
+      tunniste = "tunniste"
+    )
+  )
+
+  val haeTotuusarvo = Funktiokutsu(
+    nimi = Funktionimi.HAETOTUUSARVO,
+    valintaperustetunniste = ValintaperusteViite(
+      onPakollinen = false,
+      tunniste = "tunniste"
+    )
+  )
+
+  val hakukohde = "123"
+  val tyhjaHakemus = Hakemus("", Nil, Map[String, String]())
+
+  def assertTilaHyvaksyttavissa(tila: Tila): Unit = {
+    assert(tila match {
+      case _: Hyvaksyttavissatila => true
+      case _ => false
+    })
+  }
+
+  test("lukuarvo") {
+    val funktiokutsu = luku25
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+
+    Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(tulos.get == 25.0)
+    assertTilaHyvaksyttavissa(tila)
+
+  }
+
+  test("totuusarvo") {
+    val funktiokutsu = totuusarvoTrue
+
+    val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(tulos.get)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("summa") {
+    val funktiokutsu = summa;
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(tulos.get == 120.0)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("lukuarvolukuarvoksi") {
+    val funktiokutsu = konvertoiLukuarvoLukuarvoksi
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(tulos.get == 4.0)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("maksimi") {
+    val funktiokutsu = maksimi
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(tulos.get == 50.0)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("minimi") {
+    val funktiokutsu = minimi
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(tulos.get == 25.0)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("tulo") {
+    val funktiokutsu = tulo
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(tulos.get == 56250.0)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("konvertoiLukuarvovaliLukuarvoksi") {
+    val funktiokutsu = konvertoiLukuarvovaliLukuarvoksi
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(tulos.get == 3.0)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("keskiarvo") {
+    val funktiokutsu = keskiarvo
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(tulos.get == 40.0)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("mediaaniParillinen") {
+    val funktiokutsu = mediaaniParillinenMaara
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(tulos.get == 47.5)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("mediaaniPariton") {
+    val funktiokutsu = mediaaniParitonMaara
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(tulos.get == 45.0)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("keskiarvoNParasta") {
+    val funktiokutsu = keskiarvoNParasta
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(tulos.get == 75.0)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("summaNParasta") {
+    val funktiokutsu = summaNParasta
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(tulos.get == 195.0)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("nMaksimi") {
+    val funktiokutsu = nMaksimi
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(tulos.get == 45.0)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("nMinimi") {
+    val funktiokutsu = nMinimi
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(tulos.get == 50.0)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("ja") {
+    val lista = List(
+      Funktiokutsu(
+        nimi = Funktionimi.JA,
+        funktioargumentit = List(
+          totuusarvoTrue,
+          totuusarvoFalse)),
+      Funktiokutsu(
+        nimi = Funktionimi.JA,
+        funktioargumentit = List(
+          totuusarvoFalse,
+          totuusarvoTrue)),
+      Funktiokutsu(
+        nimi = Funktionimi.JA,
+        funktioargumentit = List(
+          totuusarvoTrue,
+          totuusarvoTrue)),
+      Funktiokutsu(
+        nimi = Funktionimi.JA,
+        funktioargumentit = List(
+          totuusarvoFalse,
+          totuusarvoFalse)))
+
+    val laskut = lista.map(Laskentadomainkonvertteri.muodostaTotuusarvolasku(_))
+    val tulokset = laskut.map(Laskin.laske(hakukohde, tyhjaHakemus, _))
+    assert(!tulokset(0)._1.get)
+    assert(!tulokset(1)._1.get)
+    assert(tulokset(2)._1.get)
+    assert(!tulokset(3)._1.get)
+
+    tulokset.foreach(t => assertTilaHyvaksyttavissa(t._2))
+  }
+
+  test("tai") {
+    val lista = List(
+      Funktiokutsu(
+        nimi = Funktionimi.TAI,
+        funktioargumentit = List(
+          totuusarvoTrue,
+          totuusarvoFalse)),
+      Funktiokutsu(
+        nimi = Funktionimi.TAI,
+        funktioargumentit = List(
+          totuusarvoFalse,
+          totuusarvoTrue)),
+      Funktiokutsu(
+        nimi = Funktionimi.TAI,
+        funktioargumentit = List(
+          totuusarvoTrue,
+          totuusarvoTrue)),
+      Funktiokutsu(
+        nimi = Funktionimi.TAI,
+        funktioargumentit = List(
+          totuusarvoFalse,
+          totuusarvoFalse)))
+
+    val laskut = lista.map(Laskentadomainkonvertteri.muodostaTotuusarvolasku(_))
+    val tulokset = laskut.map(Laskin.laske(hakukohde, tyhjaHakemus, _))
+    assert(tulokset(0)._1.get)
+    assert(tulokset(1)._1.get)
+    assert(tulokset(2)._1.get)
+    assert(!tulokset(3)._1.get)
+
+    tulokset.foreach(t => assertTilaHyvaksyttavissa(t._2))
+  }
+
+  test("negaatio") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.NEGAATIO,
+      funktioargumentit = List(luku25))
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(tulos.get == -25.0)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("osamaara") {
+    val funktiokutsu = osamaara
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(tulos.get == 2.0)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("osamaara div by zero") {
+    val funktiokutsu = osamaaraByZero
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    intercept[RuntimeException] {
+      Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    }
+  }
+
+  test("jos true") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.JOS,
+      funktioargumentit = List(
+        totuusarvoTrue,
+        luku100,
+        luku50))
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(tulos.get == 100.0)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("jos false") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.JOS,
+      funktioargumentit = List(
+        totuusarvoFalse,
+        luku100,
+        luku50))
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(tulos.get == 50.0)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("suurempi true") {
+    val funktiokutsu = suurempiTrue
+    val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(tulos.get)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("suurempi false") {
+    val funktiokutsu = suurempiFalse
+    val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(!tulos.get)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("suurempiTaiYhtasuuri true") {
+    val funktiokutsu = suurempiTaiYhtasuuriTrue
+    val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(tulos.get)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("suurempiTaiYhtasuuri false") {
+    val funktiokutsu = suurempiTaiYhtasuuriFalse
+    val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(!tulos.get)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("pienempi true") {
+    val funktiokutsu = pienempiTrue
+    val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(tulos.get)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("pienempi false") {
+    val funktiokutsu = pienempiFalse
+    val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(!tulos.get)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("pienempiTaiYhtasuuri true") {
+    val funktiokutsu = pienempiTaiYhtasuuriTrue
+    val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(tulos.get)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+
+  test("pienempiTaiYhtasuuri false") {
+    val funktiokutsu = pienempiTaiYhtasuuriFalse
+    val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(!tulos.get)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("yhtasuuri true") {
+    val funktiokutsu = yhtasuuriTrue
+    val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(tulos.get)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("yhtasuuri false") {
+    val funktiokutsu = yhtasuuriFalse
+    val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(!tulos.get)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("ei") {
+    val funktiokutsu = ei
+    val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(tulos.get)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("tyhja") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.TYHJA)
+    intercept[RuntimeException] {
+      Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
+    }
+  }
+
+  test("nimettyTotuusarvo") {
+    val funktiokutsu = nimettyTotuusarvo
+    val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(tulos.get)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("nimettyLukuarvo") {
+    val funktiokutsu = nimettyLukuarvo
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(tulos.get == 25.0)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  def assertTilaHylatty(tila: Tila, hylattymeta: HylattyMetatieto.Hylattymetatietotyyppi): Unit = {
+    assert(tila match {
+      case h: Hylattytila => hylattymeta == h.getMetatieto.getMetatietotyyppi
+      case _ => false
+    })
+  }
+
+  test("haeLukuarvo molemmilla konvertereilla") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HAELUKUARVO,
+      arvokonvertterit = List(
+        Arvokonvertteriparametri(
+          paluuarvo = "5.0",
+          arvo = "25.0",
+          hylkaysperuste = false
+        )
+      ),
+      arvovalikonvertterit = List(
+        Arvovalikonvertteriparametri(
+          paluuarvo = "10.0",
+          min = 20.0,
+          max = 30.0,
+          palautaHaettuArvo = false,
+          hylkaysperuste = false
+        )
+      ),
+      valintaperustetunniste = ValintaperusteViite(
+        onPakollinen = true,
+        tunniste = "joku_tunniste"
+      )
+    )
+
+    val hakemus = Hakemus("", Nil, Map("joku_tunniste" -> "25.0"))
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
+    assert(tulos.get == 5.0)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("haeLukuarvo arvokonvertterilla") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HAELUKUARVO,
+      arvokonvertterit = List(
+        Arvokonvertteriparametri(
+          paluuarvo = "5.0",
+          arvo = "25.0",
+          hylkaysperuste = false
+        )
+      ),
+      valintaperustetunniste = ValintaperusteViite(
+        onPakollinen = true,
+        tunniste = "joku_tunniste"
+      )
+    )
+    val hakemus = Hakemus("", Nil, Map("joku_tunniste" -> "25.0"))
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
+    assert(tulos.get == 5.0)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("haeLukuarvo arvovalikonvertterilla") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HAELUKUARVO,
+      arvovalikonvertterit = List(
+        Arvovalikonvertteriparametri(
+          paluuarvo = "10.0",
+          min = 20.0,
+          max = 30.0,
+          palautaHaettuArvo = false,
+          hylkaysperuste = false
+        )
+      ),
+      valintaperustetunniste = ValintaperusteViite(
+        onPakollinen = true,
+        tunniste = "joku_tunniste"
+      )
+    )
+    val hakemus = Hakemus("", Nil, Map("joku_tunniste" -> "25.0"))
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
+    assert(tulos.get == 10.0)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("haeTotuusarvo") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HAETOTUUSARVO,
+      valintaperustetunniste = ValintaperusteViite(
+        onPakollinen = true,
+        tunniste = "joku_tunniste"
+      )
+    )
+
+    val hakemus = Hakemus("", Nil, Map("joku_tunniste" -> "true"))
+
+    val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
+    assert(tulos.get)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("haeTotuusarvo konvertterilla") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HAETOTUUSARVO,
+      valintaperustetunniste = ValintaperusteViite(
+        onPakollinen = true,
+        tunniste = "joku_tunniste"
+      ),
+      arvokonvertterit = List(
+        Arvokonvertteriparametri(
+          paluuarvo = "true",
+          arvo = "false",
+          hylkaysperuste = false
+        )
+      )
+    )
+
+    val hakemus = Hakemus("", Nil, Map("joku_tunniste" -> "false"))
+
+    val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
+    assert(tulos.get)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("haeTotuusarvo hylkaa konvertterilla") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HAETOTUUSARVO,
+      valintaperustetunniste = ValintaperusteViite(
+        onPakollinen = true,
+        tunniste = "joku_tunniste"
+      ),
+      arvokonvertterit = List(
+        Arvokonvertteriparametri(
+          paluuarvo = "true",
+          arvo = "false",
+          hylkaysperuste = true
+        )
+      )
+    )
+    val hakemus = Hakemus("", Nil, Map("joku_tunniste" -> "false"))
+
+    val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
+    assert(tulos.get)
+    assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.ARVOKONVERTTERIHYLKAYS)
+  }
+
+  test("haeMerkkijono") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HAEMERKKIJONOJAKONVERTOILUKUARVOKSI,
+      valintaperustetunniste = ValintaperusteViite(
+        onPakollinen = true,
+        tunniste = "joku_tunniste"
+      ),
+      arvokonvertterit = List(
+        Arvokonvertteriparametri(
+          paluuarvo = "10.0",
+          arvo = "puuppa",
+          hylkaysperuste = false
+        )
+      )
+    )
+
+    val hakemus = Hakemus("", Nil, Map("joku_tunniste" -> "puuppa"))
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
+    assert(tulos.get == 10.0)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("konvertoilukuarvo hylkaa arvolla") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.KONVERTOILUKUARVO,
+      funktioargumentit = List(
+        luku25
+      ),
+      arvokonvertterit = List(
+        Arvokonvertteriparametri(
+          paluuarvo = "5.0",
+          arvo = "25.0",
+          hylkaysperuste = true
+        ),
+        Arvokonvertteriparametri(
+          paluuarvo = "10.0",
+          arvo = "50.0",
+          hylkaysperuste = false
+        )
+      )
+    )
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(tulos.get == 5.0)
+    assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.ARVOKONVERTTERIHYLKAYS)
+  }
+
+  test("konvertoilukuarvo hylkaa arvovalilla") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.KONVERTOILUKUARVO,
+      funktioargumentit = List(
+        luku25
+      ),
+      arvovalikonvertterit = List(
+        Arvovalikonvertteriparametri(
+          paluuarvo = "5.0",
+          min = 10.0,
+          max = 30.0,
+          palautaHaettuArvo = false,
+          hylkaysperuste = true
+        ),
+        Arvovalikonvertteriparametri(
+          paluuarvo = "10.0",
+          min = 30.0,
+          max = 50.0,
+          palautaHaettuArvo = false,
+          hylkaysperuste = false
+        )
+      )
+    )
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(tulos.get == 5.0)
+    assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.ARVOVALIKONVERTTERIHYLKAYS)
+  }
+
+  def assertTulosTyhja(tulos: Option[_]): Boolean = {
+    tulos match {
+      case None => true
+      case _ => false
+    }
+  }
+
+  test("haeLukuarvo hylkaa kun arvoa ei ole") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HAELUKUARVO,
+      valintaperustetunniste = ValintaperusteViite(
+        onPakollinen = true,
+        tunniste = "joku_tunniste")
+    )
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assertTulosTyhja(tulos)
+    assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.PAKOLLINEN_VALINTAPERUSTE_HYLKAYS)
+  }
+
+  test("haeLukuarvo hylkaa arvolla") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HAELUKUARVO,
+      valintaperustetunniste = ValintaperusteViite(
+        onPakollinen = true,
+        tunniste = "joku_tunniste"),
+      arvokonvertterit = List(
+        Arvokonvertteriparametri(
+          paluuarvo = "5.0",
+          arvo = "10.0",
+          hylkaysperuste = true
+        ),
+        Arvokonvertteriparametri(
+          paluuarvo = "15.0",
+          arvo = "5.0",
+          hylkaysperuste = false
+        )
+      )
+    )
+    val hakemus = Hakemus("", Nil, Map("joku_tunniste" -> "10.0"))
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
+    assert(tulos.get == 5.0)
+    assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.ARVOKONVERTTERIHYLKAYS)
+  }
+
+  test("haeLukuarvo hylkaa arvovalilla") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HAELUKUARVO,
+      valintaperustetunniste = ValintaperusteViite(
+        onPakollinen = true,
+        tunniste = "joku_tunniste"),
+      arvovalikonvertterit = List(
+        Arvovalikonvertteriparametri(
+          palautaHaettuArvo = true,
+          min = 0.0,
+          max = 10.0,
+          hylkaysperuste = true
+        ),
+        Arvovalikonvertteriparametri(
+          palautaHaettuArvo = false,
+          paluuarvo = "20.0",
+          min = 10.0,
+          max = 20.0,
+          hylkaysperuste = false
+        )
+      )
+    )
+
+    val hakemus = Hakemus("", Nil, Map("joku_tunniste" -> "6.0"))
+
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
+    assert(tulos.get == 6.0)
+    assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.ARVOVALIKONVERTTERIHYLKAYS)
+  }
+
+  test("haeLukuarvo ei konvertoi arvoa jota ei ole") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HAELUKUARVO,
+      valintaperustetunniste = ValintaperusteViite(
+        onPakollinen = true,
+        tunniste = "joku_tunniste"),
+      arvokonvertterit = List(
+        Arvokonvertteriparametri(
+          paluuarvo = "5.0",
+          arvo = "0.0",
+          hylkaysperuste = false
+        )
+      ))
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assertTulosTyhja(tulos)
+    assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.PAKOLLINEN_VALINTAPERUSTE_HYLKAYS)
+  }
+
+  test("haeMerkkijono hylkaa kun arvoa ei ole") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HAEMERKKIJONOJAKONVERTOILUKUARVOKSI,
+      valintaperustetunniste = ValintaperusteViite(
+        onPakollinen = true,
+        tunniste = "joku_tunniste"),
+      arvokonvertterit = List(
+        Arvokonvertteriparametri(
+          paluuarvo = "10.0",
+          arvo = "puuppa",
+          hylkaysperuste = false
+        )
+      )
+    )
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assertTulosTyhja(tulos)
+    assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.PAKOLLINEN_VALINTAPERUSTE_HYLKAYS)
+  }
+
+  test("haeMerkkijono hylkaa arvolla") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HAEMERKKIJONOJAKONVERTOILUKUARVOKSI,
+      valintaperustetunniste = ValintaperusteViite(
+        onPakollinen = true,
+        tunniste = "joku_tunniste"),
+      arvokonvertterit = List(
+        Arvokonvertteriparametri(
+          paluuarvo = "10.0",
+          arvo = "puuppa",
+          hylkaysperuste = true
+        )
+      )
+    )
+    val hakemus = Hakemus("", Nil, Map("joku_tunniste" -> "puuppa"))
+
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
+    assert(tulos.get == 10.0)
+    assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.ARVOKONVERTTERIHYLKAYS)
+  }
+
+  test("haeTotuusarvo hylkaa kun arvoa ei ole") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HAETOTUUSARVO,
+      valintaperustetunniste = ValintaperusteViite(
+        onPakollinen = true,
+        tunniste = "joku_tunniste"
+      )
+    )
+
+    val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assertTulosTyhja(tulos)
+    assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.PAKOLLINEN_VALINTAPERUSTE_HYLKAYS)
+  }
+
+  test("Keskiarvo, osa tyhjia arvoja") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.KESKIARVO,
+      funktioargumentit = List(
+        luku100,
+        luku50,
+        haeLukuarvo
+      )
+    )
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(tulos.get == 75.0)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("Keskiarvo, kaikki tyhjia arvoja") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.KESKIARVO,
+      funktioargumentit = List(
+        haeLukuarvo,
+        haeLukuarvo,
+        haeLukuarvo
+      )
+    )
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assertTulosTyhja(tulos)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("Summa, osa tyhjia arvoja") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.SUMMA,
+      funktioargumentit = List(
+        luku100,
+        luku50,
+        haeLukuarvo
+      )
+    )
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(tulos.get == 150.0)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("Summa, kaikki tyhjia arvoja") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.SUMMA,
+      funktioargumentit = List(
+        haeLukuarvo,
+        haeLukuarvo,
+        haeLukuarvo
+      )
+    )
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assertTulosTyhja(tulos)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("KeskiarvoNParasta, osa tyhjia arvoja") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.KESKIARVONPARASTA,
+      funktioargumentit = List(
+        luku100,
+        luku50,
+        haeLukuarvo,
+        haeLukuarvo
+      ),
+      syoteparametrit = List(
+        Syoteparametri(
+          avain = "n",
+          arvo = "3"
+        )
+      )
+    )
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(tulos.get == 75.0)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("KeskiarvoNParasta, kaikki tyhjiaarvoja") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.KESKIARVONPARASTA,
+      funktioargumentit = List(
+        haeLukuarvo,
+        haeLukuarvo,
+        haeLukuarvo,
+        haeLukuarvo
+      ),
+      syoteparametrit = List(
+        Syoteparametri(
+          avain = "n",
+          arvo = "3"
+        )
+      )
+    )
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assertTulosTyhja(tulos)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("NMinimi, osa tyhjia arvoja") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.NMINIMI,
+      funktioargumentit = List(
+        luku100,
+        luku50,
+        haeLukuarvo,
+        haeLukuarvo
+      ),
+      syoteparametrit = List(
+        Syoteparametri(
+          avain = "n",
+          arvo = "3"
+        )
+      )
+    )
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(tulos.get == 100.0)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("NMinimi, kaikki tyhjia arvoja") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.NMINIMI,
+      funktioargumentit = List(
+        haeLukuarvo,
+        haeLukuarvo,
+        haeLukuarvo,
+        haeLukuarvo
+      ),
+      syoteparametrit = List(
+        Syoteparametri(
+          avain = "n",
+          arvo = "3"
+        )
+      )
+    )
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assertTulosTyhja(tulos)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("NMaksimi, osa tyhjia arvoja") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.NMAKSIMI,
+      funktioargumentit = List(
+        luku100,
+        luku50,
+        haeLukuarvo,
+        haeLukuarvo
+      ),
+      syoteparametrit = List(
+        Syoteparametri(
+          avain = "n",
+          arvo = "3"
+        )
+      )
+    )
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(tulos.get == 50.0)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("NMaksimi, kaikki tyhjia arvoja") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.NMAKSIMI,
+      funktioargumentit = List(
+        haeLukuarvo,
+        haeLukuarvo,
+        haeLukuarvo,
+        haeLukuarvo
+      ),
+      syoteparametrit = List(
+        Syoteparametri(
+          avain = "n",
+          arvo = "3"
+        )
+      )
+    )
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assertTulosTyhja(tulos)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+
+  test("SummaNParasta, osa tyhjia arvoja") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.SUMMANPARASTA,
+      funktioargumentit = List(
+        luku100,
+        luku50,
+        haeLukuarvo,
+        haeLukuarvo
+      ),
+      syoteparametrit = List(
+        Syoteparametri(
+          avain = "n",
+          arvo = "3"
+        )
+      )
+    )
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(tulos.get == 150.0)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("SummaNParasta, kaikki tyhjia arvoja") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.SUMMANPARASTA,
+      funktioargumentit = List(
+        haeLukuarvo,
+        haeLukuarvo,
+        haeLukuarvo,
+        haeLukuarvo
+      ),
+      syoteparametrit = List(
+        Syoteparametri(
+          avain = "n",
+          arvo = "3"
+        )
+      )
+    )
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assertTulosTyhja(tulos)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("Jos, ehto tyhja") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.JOS,
+      funktioargumentit = List(
+        haeTotuusarvo,
+        luku25,
+        luku100
+      )
+    )
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assertTulosTyhja(tulos)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("Konvertoilukuarvo, tyhja syote") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.KONVERTOILUKUARVO,
+      funktioargumentit = List(
+        haeLukuarvo
+      ),
+      arvokonvertterit = List(
+        Arvokonvertteriparametri(
+          paluuarvo = "5.0",
+          arvo = "25.0",
+          hylkaysperuste = true
+        ),
+        Arvokonvertteriparametri(
+          paluuarvo = "10.0",
+          arvo = "50.0",
+          hylkaysperuste = false
+        )
+      )
+    )
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assertTulosTyhja(tulos)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("Ja, osa tyhjia arvoja") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.JA,
+      funktioargumentit = List(
+        haeTotuusarvo,
+        totuusarvoTrue
+      )
+    )
+
+    val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assertTulosTyhja(tulos)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("Tai, osa tyhjia arvoja") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.TAI,
+      funktioargumentit = List(
+        haeTotuusarvo,
+        totuusarvoTrue
+      )
+    )
+
+    val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assertTulosTyhja(tulos)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("Ei, tyhja arvo") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.EI,
+      funktioargumentit = List(
+        haeTotuusarvo
+      )
+    )
+
+    val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assertTulosTyhja(tulos)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("Suurempi kuin, eka tyhja arvo") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.SUUREMPI,
+      funktioargumentit = List(
+        haeLukuarvo,
+        luku50)
+    )
+
+    val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assertTulosTyhja(tulos)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("Suurempi kuin, toka tyhja arvo") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.SUUREMPI,
+      funktioargumentit = List(
+        luku50,
+        haeLukuarvo)
+    )
+
+    val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assertTulosTyhja(tulos)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("Negaatio, tyhja arvo") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.NEGAATIO,
+      funktioargumentit = List(
+        haeLukuarvo
+      )
+    )
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assertTulosTyhja(tulos)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("Hakutoive, true") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HAKUTOIVE,
+      syoteparametrit = List(
+        Syoteparametri(
+          avain = "n",
+          arvo = "2"
+        )
+      )
+    )
+
+    val hakukohde = "oid1"
+    val hakemus = Hakemus("", List("oid2", "oid1", "oid3"), Map[String, String]())
+
+    val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
+    assert(tulos.get)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("Hakutoive, false") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HAKUTOIVE,
+      syoteparametrit = List(
+        Syoteparametri(
+          avain = "n",
+          arvo = "3"
+        )
+      )
+    )
+
+    val hakukohde = "oid1"
+    val hakemus = Hakemus("", List("oid2", "oid1", "oid3"), Map[String, String]())
+
+    val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
+    assert(!tulos.get)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("Hakutoive, ei tarpeeksi hakutoiveita") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HAKUTOIVE,
+      syoteparametrit = List(
+        Syoteparametri(
+          avain = "n",
+          arvo = "5"
+        )
+      )
+    )
+
+    val hakukohde = "oid1"
+    val hakemus = Hakemus("", List("oid2", "oid1", "oid3"), Map[String, String]())
+
+    val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
+    assert(!tulos.get)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("Iso kaava") {
+    val haeArvo1 = Funktiokutsu(
+      nimi = Funktionimi.HAELUKUARVO,
+      valintaperustetunniste = ValintaperusteViite(
+        onPakollinen = true,
+        tunniste = "lukuarvotunniste1"
+      )
+    )
+
+    val haeArvo2 = Funktiokutsu(
+      nimi = Funktionimi.HAELUKUARVO,
+      valintaperustetunniste = ValintaperusteViite(
+        onPakollinen = false,
+        tunniste = "lukuarvotunniste2"
+      ),
+      arvokonvertterit = List(
+        Arvokonvertteriparametri(
+          paluuarvo = "100.0",
+          arvo = "10.0",
+          hylkaysperuste = true
+        )
+      )
+    )
+
+    val lukuarvo = Funktiokutsu(
+      nimi = Funktionimi.LUKUARVO,
+      syoteparametrit = List(
+        Syoteparametri(
+          avain = "luku",
+          arvo = "50.0"
+        )
+      )
+    )
+
+    val summa = Funktiokutsu(
+      nimi = Funktionimi.SUMMA,
+      funktioargumentit = List(
+        haeArvo1,
+        haeArvo2,
+        lukuarvo
+      )
+    )
+
+    val hakemus = Hakemus("", Nil, Map("lukuarvotunniste2" -> "10.0"))
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(summa)
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
+    assert(tulos.get == 150.0)
+    assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.PAKOLLINEN_VALINTAPERUSTE_HYLKAYS)
+  }
+
+  test("haeLukuarvo, oletusarvo") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HAELUKUARVO,
+      valintaperustetunniste = ValintaperusteViite(
+        tunniste = "joku_tunniste",
+        onPakollinen = false
+      ),
+      syoteparametrit = List(
+        Syoteparametri(avain = "oletusarvo", arvo = "100.0")
+      )
+    )
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(tulos.get == 100.0)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("haeTotuusarvo, oletusarvo") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HAETOTUUSARVO,
+      valintaperustetunniste = ValintaperusteViite(
+        tunniste = "joku_tunniste",
+        onPakollinen = true
+      ),
+      syoteparametrit = List(
+        Syoteparametri(avain = "oletusarvo", arvo = "true")
+      )
+    )
+
+    val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(tulos.get == true)
+    assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.PAKOLLINEN_VALINTAPERUSTE_HYLKAYS)
+  }
+
+  test("haeMerkkijonoJaKonvertoiLukuarvoksi, oletusarvo") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HAEMERKKIJONOJAKONVERTOILUKUARVOKSI,
+      valintaperustetunniste = ValintaperusteViite(
+        tunniste = "joku_tunniste",
+        onPakollinen = false
+      ),
+      syoteparametrit = List(
+        Syoteparametri(avain = "oletusarvo", arvo = "50.0")
+      ),
+      arvokonvertterit = List(
+        Arvokonvertteriparametri(
+          paluuarvo = "66.0",
+          arvo = "L",
+          hylkaysperuste = false
+        )
+      )
+    )
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(tulos.get == 50.0)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("haeMerkkijonoJaKonvertoiTotuusarvoksi") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HAEMERKKIJONOJAKONVERTOITOTUUSARVOKSI,
+      valintaperustetunniste = ValintaperusteViite(
+        tunniste = "jokin_tunniste",
+        onPakollinen = false
+      ),
+      arvokonvertterit = List(
+        Arvokonvertteriparametri(
+          paluuarvo = "false",
+          arvo = "helsinki",
+          hylkaysperuste = false
+        ),
+        Arvokonvertteriparametri(
+          paluuarvo = "true",
+          arvo = "turku",
+          hylkaysperuste = true
+        ),
+        Arvokonvertteriparametri(
+          paluuarvo = "false",
+          arvo = "tampere",
+          hylkaysperuste = false
+        )
+      )
+    )
+
+    val hakemus = Hakemus("", Nil, Map("jokin_tunniste" -> "turku"))
+    val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
+    assert(tulos.get)
+    assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.ARVOKONVERTTERIHYLKAYS)
+
+    val hakemus2 = Hakemus("", Nil, Map("jokin_tunniste" -> "tampere"))
+    val (tulos2, tila2) = Laskin.laske(hakukohde, hakemus2, lasku)
+    assert(!tulos2.get)
+    assertTilaHyvaksyttavissa(tila2)
+  }
+}

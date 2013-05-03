@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+    ">
+
+    <context:annotation-config/>
+    <context:component-scan
+            base-package="fi.vm.sade.service.valintaperusteet.service.impl"/>
+
+    <bean id="arvokonvertteriparametriToArvokonvertteriparametriTyyppi"
+          class="fi.vm.sade.service.valintaperusteet.service.impl.conversion.ArvokonvertteriparametriToArvokonvertteriparametriTyyppi"/>
+    <bean id="arvovalikonvertteriparametriToArvovalikonvertteriparametriTyyppi"
+          class="fi.vm.sade.service.valintaperusteet.service.impl.conversion.ArvovalikonvertteriparametriToArvovalikonvertteriparametriTyyppi"/>
+    <bean id="funktioargumenttiToFunktioargumenttiTyyppi"
+          class="fi.vm.sade.service.valintaperusteet.service.impl.conversion.FunktioargumenttiToFunktioargumenttiTyyppi"/>
+    <bean id="funktiokutsuToFunktiokutsuTyyppi"
+          class="fi.vm.sade.service.valintaperusteet.service.impl.conversion.FunktiokutsuToFunktiokutsuTyyppi"/>
+    <bean id="jonoToValintatapajonoTyyppi"
+          class="fi.vm.sade.service.valintaperusteet.service.impl.conversion.JonoToValintatapajonoTyyppi"/>
+    <bean id="syoteparametriToSyoteparametriTyyppi"
+          class="fi.vm.sade.service.valintaperusteet.service.impl.conversion.SyoteparametriToSyoteparametriTyyppi"/>
+    <bean id="valintaperusteViiteToValintaperusteViiteTyyppi"
+          class="fi.vm.sade.service.valintaperusteet.service.impl.conversion.ValintaperusteViiteToValintaperusteViiteTyyppi"/>
+
+    <bean id="conversionService"
+          class="fi.vm.sade.generic.service.conversion.SadeConversionServiceFactoryBean">
+        <property name="converters">
+            <list>
+                <ref bean="arvokonvertteriparametriToArvokonvertteriparametriTyyppi"/>
+                <ref bean="arvovalikonvertteriparametriToArvovalikonvertteriparametriTyyppi"/>
+                <ref bean="funktioargumenttiToFunktioargumenttiTyyppi"/>
+                <ref bean="funktiokutsuToFunktiokutsuTyyppi"/>
+                <ref bean="jonoToValintatapajonoTyyppi"/>
+                <ref bean="syoteparametriToSyoteparametriTyyppi"/>
+                <ref bean="valintaperusteViiteToValintaperusteViiteTyyppi"/>
+            </list>
+        </property>
+    </bean>
+</beans>
