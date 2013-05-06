@@ -212,6 +212,13 @@
             <artifactId>cxf-rt-frontend-jaxws</artifactId>
         </dependency>
 
+        <!-- flyway -->
+        <dependency>
+            <groupId>com.googlecode.flyway</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>2.0.2</version>
+        </dependency>
+
 
         <!-- TEST -->
         <dependency>
@@ -355,7 +362,7 @@
                                 <schema>public</schema>
                             </schemas>
                             <driver>org.postgresql.Driver</driver>
-                            <url>jdbc:postgresql://127.0.0.1:5432/valintaperusteet</url>
+                            <url>jdbc:postgresql://taulu.hard.ware.fi:5432/valintaperusteet</url>
                         </configuration>
                     </plugin>
                 </plugins>
