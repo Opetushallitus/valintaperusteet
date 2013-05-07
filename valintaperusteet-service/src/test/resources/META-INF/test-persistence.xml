@@ -13,6 +13,7 @@
         <class>fi.vm.sade.service.valintaperusteet.model.Valintatapajono</class>
         <class>fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri</class>
         <class>fi.vm.sade.service.valintaperusteet.model.Konvertteriparametri</class>
+        <class>fi.vm.sade.service.valintaperusteet.model.Hakukohdekoodi</class>
         <class>fi.vm.sade.service.valintaperusteet.model.Arvokonvertteriparametri</class>
         <class>fi.vm.sade.service.valintaperusteet.model.Arvovalikonvertteriparametri</class>
         <class>fi.vm.sade.service.valintaperusteet.model.Laskentakaava</class>
