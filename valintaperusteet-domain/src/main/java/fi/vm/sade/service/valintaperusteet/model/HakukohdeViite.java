@@ -20,6 +20,7 @@ import java.util.Set;
 public class HakukohdeViite extends BaseEntity {
 
     @Column(name="hakuoid", nullable = false)
+    @JsonView(JsonViews.Basic.class)
     private String hakuoid;
 
     @JsonView(JsonViews.Basic.class)
