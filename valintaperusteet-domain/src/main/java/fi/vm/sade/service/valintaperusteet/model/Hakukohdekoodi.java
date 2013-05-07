@@ -1,6 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
 import fi.vm.sade.generic.model.BaseEntity;
+import org.codehaus.jackson.map.annotate.JsonView;
 
 import javax.persistence.*;
 
@@ -13,18 +14,23 @@ import javax.persistence.*;
 @Table(name = "hakukohdekoodi")
 public class Hakukohdekoodi extends BaseEntity {
 
+    @JsonView(JsonViews.Basic.class)
     @Column(name = "uri", nullable = false)
     private String uri;
 
+    @JsonView(JsonViews.Basic.class)
     @Column(name = "arvo", nullable = false)
     private String arvo;
 
+    @JsonView(JsonViews.Basic.class)
     @Column(name = "nimi_fi")
     private String nimiFi;
 
+    @JsonView(JsonViews.Basic.class)
     @Column(name = "nimi_sv")
     private String nimiSv;
 
+    @JsonView(JsonViews.Basic.class)
     @Column(name = "nimi_en")
     private String nimiEn;
 

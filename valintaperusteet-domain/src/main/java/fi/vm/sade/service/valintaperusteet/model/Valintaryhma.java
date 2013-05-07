@@ -47,6 +47,7 @@ public class Valintaryhma extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "valintaryhma")
     private Set<Laskentakaava> laskentakaava = new HashSet<Laskentakaava>();
 
+    @JsonView({JsonViews.Basic.class})
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "valintaryhma")
     private Set<Hakukohdekoodi> hakukohdekoodit;
 

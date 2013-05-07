@@ -40,6 +40,7 @@ public class HakukohdeViite extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "hakukohde")
     private Set<Laskentakaava> laskentakaava = new HashSet<Laskentakaava>();
 
+    @JsonView(JsonViews.Basic.class)
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "hakukohde")
     private Hakukohdekoodi hakukohdekoodi;
 
