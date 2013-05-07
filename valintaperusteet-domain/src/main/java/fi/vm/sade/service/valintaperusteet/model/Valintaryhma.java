@@ -47,6 +47,9 @@ public class Valintaryhma extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "valintaryhma")
     private Set<Laskentakaava> laskentakaava = new HashSet<Laskentakaava>();
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "valintaryhma")
+    private Set<Hakukohdekoodi> hakukohdekoodit;
+
     public String getNimi() {
         return nimi;
     }
@@ -68,7 +71,7 @@ public class Valintaryhma extends BaseEntity {
     }
 
     public Set<Valintaryhma> getAlavalintaryhmat() {
-        if(alavalintaryhmat == null) {
+        if (alavalintaryhmat == null) {
             alavalintaryhmat = new HashSet<Valintaryhma>();
         }
         return alavalintaryhmat;
@@ -127,5 +130,13 @@ public class Valintaryhma extends BaseEntity {
 
     public void setLaskentakaava(Set<Laskentakaava> laskentakaava) {
         this.laskentakaava = laskentakaava;
+    }
+
+    public Set<Hakukohdekoodi> getHakukohdekoodit() {
+        return hakukohdekoodit;
+    }
+
+    public void setHakukohdekoodit(Set<Hakukohdekoodi> hakukohdekoodit) {
+        this.hakukohdekoodit = hakukohdekoodit;
     }
 }

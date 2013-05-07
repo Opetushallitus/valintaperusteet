@@ -39,6 +39,9 @@ public class HakukohdeViite extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "hakukohde")
     private Set<Laskentakaava> laskentakaava = new HashSet<Laskentakaava>();
 
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "hakukohde")
+    private Hakukohdekoodi hakukohdekoodi;
+
     public String getHakuoid() {
         return hakuoid;
     }
@@ -97,5 +100,13 @@ public class HakukohdeViite extends BaseEntity {
     public void addValinnanVaihe(ValinnanVaihe valinnanVaihe) {
         valinnanVaihe.setHakukohdeViite(this);
         this.getValinnanvaiheet().add(valinnanVaihe);
+    }
+
+    public Hakukohdekoodi getHakukohdekoodi() {
+        return hakukohdekoodi;
+    }
+
+    public void setHakukohdekoodi(Hakukohdekoodi hakukohdekoodi) {
+        this.hakukohdekoodi = hakukohdekoodi;
     }
 }
