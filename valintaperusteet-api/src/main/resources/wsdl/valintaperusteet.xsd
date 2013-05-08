@@ -173,4 +173,22 @@
             <xs:element name="tunniste" type="xs:string"></xs:element>
         </xs:sequence>
     </xs:complexType>
+
+    <xs:complexType name="HakukohdeImportTyyppi">
+        <xs:sequence>
+            <xs:element name="hakukohdekoodi" type="tns:HakukohdekoodiTyyppi" minOccurs="1" maxOccurs="1" />
+        </xs:sequence>
+        <xs:attribute name="hakuOid" type="xs:string" use="required"/>
+        <xs:attribute name="hakukohdeOid" type="xs:string" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="TuoHakukohdeVastausTyyppi">
+    </xs:complexType>
+
+    <xs:complexType name="HakukohdekoodiTyyppi">
+        <xs:attribute name="koodiUri" type="xs:string" use="required"/>
+        <xs:attribute name="arvo" type="xs:string" use="required" />
+        <xs:attribute name="nimiFi" type="xs:string" use="optional" />
+        <xs:attribute name="nimiSv" type="xs:string" use="optional" />
+        <xs:attribute name="nimiEn" type="xs:string" use="optional" />
+    </xs:complexType>
 </xs:schema> 

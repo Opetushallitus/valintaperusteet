@@ -51,6 +51,8 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
     @Autowired
     private ValintakoeService valintakoeService;
 
+    @Autowired
+    private HakukohdeImportService hakukohdeImportService;
 
     @Override
     public List<ValintatapajonoTyyppi> haeValintatapajonotSijoittelulle(
@@ -218,9 +220,8 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
         return jarjestyskriteerit;
     }
 
-    public void tuoHakukohteet(List<String> hakukohdeOid) throws GenericFault {
-        // TODO:
-        throw new RuntimeException(
-                "Tämä operaatio on generoitu valintalaskentakoostepalvelua varten! Toteutusyksityiskohdat on vielä avoimena.");
+    @Override
+    public void tuoHakukohde(@WebParam(name = "hakukohde", targetNamespace = "") HakukohdeImportTyyppi hakukohde) throws GenericFault {
+        hakukohdeImportService.tuoHakukohde(hakukohde);
     }
 }

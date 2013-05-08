@@ -217,6 +217,11 @@
     <valintaryhma id="34" version="0" oid="oid34" nimi="Valintaryhma 34" hakuOid="hakuoid1" />
 
     <valintaryhma id="35" version="0" oid="oid35" nimi="Valintaryhma 35" hakuOid="hakuoid1" />
+    <valintaryhma id="36" version="0" oid="oid36" nimi="Valintaryhma 36" hakuOid="hakuoid1" />
+    <valintaryhma id="37" version="0" oid="oid37" nimi="Valintaryhma 37" hakuOid="hakuoid1" />
+
+    <hakukohdekoodi id="1" version="0" uri="hakukohdekoodiuri1" arvo="koodiarvo1" nimi_fi="hakukohdekoodi1" nimi_sv="hakukohdekoodi1" nimi_en="hakukohdekoodi1" valintaryhma_id="36" hakukohde_id="11"/>
+    <hakukohdekoodi id="2" version="0" uri="hakukohdekoodiuri2" arvo="koodiarvo2" nimi_fi="hakukohdekoodi2" nimi_sv="hakukohdekoodi2" nimi_en="hakukohdekoodi2" valintaryhma_id="37" />
 
     <hakukohde_viite id="1" version="0" hakuoid="hakuoid1" oid="oid1" nimi="haku1" valintaryhma_id="1" />
     <hakukohde_viite id="2" version="0" hakuoid="hakuoid1" oid="oid2" nimi="haku2" valintaryhma_id="1" />
@@ -230,7 +235,7 @@
 
     <hakukohde_viite id="9" version="0" hakuoid="hakuoid1" oid="oid9" nimi="haku9" valintaryhma_id="20" />
     <hakukohde_viite id="10" version="0" hakuoid="hakuoid1" oid="oid10" nimi="haku10" valintaryhma_id="[NULL]" />
-
+    <hakukohde_viite id="11" version="0" hakuoid="hakuoid1" oid="oid11" nimi="haku11" valintaryhma_id="36" />
 
     <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="1" version="0" valintaryhma_id="1" hakukohde_viite_id="[NULL]" oid="1" nimi="valinnanvaihe1" kuvaus="kuvaus1" aktiivinen="true" />
     <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="2" version="0" valintaryhma_id="[NULL]" hakukohde_viite_id="[NULL]" oid="2" edellinen_valinnan_vaihe_id="1" nimi="valinnanvaihe2" kuvaus="kuvaus2" aktiivinen="true"/>

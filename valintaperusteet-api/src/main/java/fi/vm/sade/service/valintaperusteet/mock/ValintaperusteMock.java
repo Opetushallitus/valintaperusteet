@@ -5,10 +5,7 @@ import fi.vm.sade.service.valintaperusteet.ValintaperusteService;
 import fi.vm.sade.service.valintaperusteet.messages.HakuparametritTyyppi;
 import fi.vm.sade.service.valintaperusteet.schema.*;
 
-import javax.jws.WebMethod;
 import javax.jws.WebParam;
-import javax.xml.ws.RequestWrapper;
-import javax.xml.ws.ResponseWrapper;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,10 +14,15 @@ import java.util.List;
  */
 public class ValintaperusteMock implements ValintaperusteService {
 
+
     @Override
-    public List<ValintatapajonoTyyppi> haeValintatapajonotSijoittelulle(
-            @WebParam(name = "hakukohdeOid", targetNamespace = "") String hakukohdeOid) throws GenericFault {
-        return new ArrayList<ValintatapajonoTyyppi>(createValintatapajonot(3));
+    public void tuoHakukohde(@WebParam(name = "hakukohde", targetNamespace = "") HakukohdeImportTyyppi hakukohde) throws GenericFault {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public List<ValintatapajonoTyyppi> haeValintatapajonotSijoittelulle(@WebParam(name = "hakukohdeOid", targetNamespace = "") String hakukohdeOid) throws GenericFault {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
@@ -98,20 +100,4 @@ public class ValintaperusteMock implements ValintaperusteService {
 
         return kutsu;
     }
-
-    @Override
-    @RequestWrapper(localName = "tuoHakukohteet", targetNamespace = "http://valintaperusteet.service.sade.vm.fi/messages", className = "fi.vm.sade.service.valintaperusteet.messages.TuoHakukohteetTyyppi")
-    @WebMethod
-    @ResponseWrapper(localName = "tuoHakukohteetVastaus", targetNamespace = "http://valintaperusteet.service.sade.vm.fi/messages", className = "fi.vm.sade.service.valintaperusteet.messages.TuoHakukohteetVastausTyyppi")
-    public void tuoHakukohteet(@WebParam(name = "hakukohdeOid", targetNamespace = "") List<String> hakukohdeOid)
-            throws GenericFault {
-        // TODO Auto-generated method stub
-
-    }
-    // @Override
-    // public List<PaasykoeHakukohdeTyyppi> haePaasykokeet(
-    // @WebParam(name = "hakukohdeOid", targetNamespace = "") String
-    // hakukohdeOid) throws GenericFault {
-    // return null;
-    // }
 }

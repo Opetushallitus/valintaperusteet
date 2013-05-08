@@ -104,4 +104,16 @@ public class HakukohdeServiceTest {
             assertEquals(1, uusiVaihe2jonot.size());
         }
     }
+
+    @Test
+    public void testInsertIlmanValintaryhmaa() {
+        HakukohdeViite uusiHakukohde = new HakukohdeViite();
+        uusiHakukohde.setNimi("Uusi hakukohde");
+        uusiHakukohde.setOid("oid1234567");
+        uusiHakukohde.setHakuoid("uusihakuoid");
+
+        HakukohdeViite lisatty = hakukohdeService.insert(uusiHakukohde, null);
+        assertNotNull(hakukohdeService.readByOid(lisatty.getOid()));
+
+    }
 }

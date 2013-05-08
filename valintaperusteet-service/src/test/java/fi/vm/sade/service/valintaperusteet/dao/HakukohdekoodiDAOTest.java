@@ -2,7 +2,7 @@ package fi.vm.sade.service.valintaperusteet.dao;
 
 import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
-import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
+import fi.vm.sade.service.valintaperusteet.model.Hakukohdekoodi;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,26 +14,38 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
-import static junit.framework.Assert.assertEquals;
-
+/**
+ * User: wuoti
+ * Date: 8.5.2013
+ * Time: 14.14
+ */
 @ContextConfiguration(locations = "classpath:test-context.xml")
-@TestExecutionListeners(listeners = {JTACleanInsertTestExecutionListener.class,
+@TestExecutionListeners(listeners = {
         DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
-        TransactionalTestExecutionListener.class})
+        TransactionalTestExecutionListener.class, JTACleanInsertTestExecutionListener.class })
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
 @DataSetLocation("classpath:test-data.xml")
-public class HakukohdeViiteDAOTest {
+public class HakukohdekoodiDAOTest {
 
     @Autowired
-    private HakukohdeViiteDAO hakukohdeViiteDAO;
+    private HakukohdekoodiDAO hakukohdekoodiDAO;
 
     @Test
-    public void testFindAll() {
-        List<HakukohdeViite> hakukohdeViites = hakukohdeViiteDAO.findAll();
-        assertEquals(19, hakukohdeViites.size());
-    }
+    public void testFindByKoodiUri() {
+        final String koodiUri = "hakukohdekoodiuri1";
+        Hakukohdekoodi koodi = hakukohdekoodiDAO.findByKoodiUri(koodiUri);
 
+        final String valintaryhmaOid = "oid36";
+        final String hakukohdeOid = "oid11";
+
+        assertEquals(koodiUri, koodi.getUri());
+        assertEquals(koodi.getValintaryhma().getOid(), valintaryhmaOid);
+        assertEquals(koodi.getHakukohde().getOid(), hakukohdeOid);
+
+        assertNull(hakukohdekoodiDAO.findByKoodiUri("not-exists"));
+    }
 }

@@ -77,7 +77,7 @@ public class HakukohdeServiceImpl extends AbstractCRUDServiceImpl<HakukohdeViite
 
     private HakukohdeViite haeHakukohdeViite(String oid) {
         HakukohdeViite hakukohdeViite = hakukohdeViiteDAO.readByOid(oid);
-        if(hakukohdeViite == null) {
+        if (hakukohdeViite == null) {
             throw new HakukohdeViiteEiOleOlemassaException("Hakukohde (" + oid + ") ei ole olemassa.", oid);
         }
 
@@ -126,10 +126,16 @@ public class HakukohdeServiceImpl extends AbstractCRUDServiceImpl<HakukohdeViite
 
     @Override
     public HakukohdeViite insert(HakukohdeViite hakukohde, String valintaryhmaOid) {
-        Valintaryhma valintaryhma = valintaryhmaService.readByOid(valintaryhmaOid);
-        hakukohde.setValintaryhma(valintaryhma);
-        HakukohdeViite lisatty = hakukohdeViiteDAO.insert(hakukohde);
-        valinnanVaiheService.kopioiValinnanVaiheetParentilta(lisatty, valintaryhma);
+        HakukohdeViite lisatty = null;
+
+        if (StringUtils.isNotBlank(valintaryhmaOid)) {
+            Valintaryhma valintaryhma = valintaryhmaService.readByOid(valintaryhmaOid);
+            hakukohde.setValintaryhma(valintaryhma);
+            lisatty = hakukohdeViiteDAO.insert(hakukohde);
+            valinnanVaiheService.kopioiValinnanVaiheetParentilta(lisatty, valintaryhma);
+        } else {
+            lisatty = hakukohdeViiteDAO.insert(hakukohde);
+        }
 
         return lisatty;
     }
