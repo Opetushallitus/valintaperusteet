@@ -73,6 +73,8 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
             koodi = new Hakukohdekoodi();
             convertKoodi(koodiTyyppi, koodi);
             koodi = hakukohdekoodiDAO.insert(koodi);
+        } else {
+            convertKoodi(koodiTyyppi, koodi);
         }
 
         if (hakukohde == null) {
@@ -126,6 +128,10 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
                         vv.setHakukohdeViite(uusiHakukohde);
                     }
                 }
+            } else {
+                // Synkataan nimi ja koodi
+                hakukohde.setNimi(importData.getNimi());
+                koodi.setHakukohde(hakukohde);
             }
         }
     }

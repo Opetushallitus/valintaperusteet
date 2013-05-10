@@ -240,6 +240,8 @@
     <hakukohdekoodi id="4" version="0" uri="hakukohdekoodiuri4" arvo="koodiarvo4" nimi_fi="hakukohdekoodi4" nimi_sv="hakukohdekoodi4" nimi_en="hakukohdekoodi4" valintaryhma_id="41" />
     <hakukohdekoodi id="5" version="0" uri="hakukohdekoodiuri5" arvo="koodiarvo5" nimi_fi="hakukohdekoodi5" nimi_sv="hakukohdekoodi5" nimi_en="hakukohdekoodi5" />
 
+    <hakukohdekoodi id="6" version="0" uri="hakukohdekoodiuri6" arvo="koodiarvo6" nimi_fi="hakukohdekoodi6" nimi_sv="hakukohdekoodi6" nimi_en="hakukohdekoodi6" valintaryhma_id="40" />
+
 
     <hakukohde_viite id="1" version="0" hakuoid="hakuoid1" oid="oid1" nimi="haku1" valintaryhma_id="1" />
     <hakukohde_viite id="2" version="0" hakuoid="hakuoid1" oid="oid2" nimi="haku2" valintaryhma_id="1" />

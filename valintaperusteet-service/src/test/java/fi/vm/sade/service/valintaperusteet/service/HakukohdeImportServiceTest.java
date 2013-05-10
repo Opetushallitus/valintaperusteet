@@ -222,4 +222,54 @@ public class HakukohdeImportServiceTest {
             assertTrue(vaiheet.get(1).getId().equals(98L) && vaiheet.get(1).getMasterValinnanVaihe() == null);
         }
     }
+
+    @Test
+    public void testHakukohdeSynkassa() {
+        // Testaa, että hakukohteelle ei tehdä mitään, jos se on jo valmiiksi oikean valintaryhmän alla
+        final String valintaryhmaOidAluksi = "oid40";
+
+        final String hakuOid = "hakuoid1";
+        final String hakukohdeOid = "oid14";
+        final String hakukohdekoodiUri = "hakukohdekoodiuri6";
+        {
+            Hakukohdekoodi koodi = hakukohdekoodiDAO.findByKoodiUri(hakukohdekoodiUri);
+            assertEquals(valintaryhmaOidAluksi, koodi.getValintaryhma().getOid());
+            assertNull(koodi.getHakukohde());
+
+            List<HakukohdeViite> hakukohteet = hakukohdeService.findByValintaryhmaOid(valintaryhmaOidAluksi);
+            assertEquals(1, hakukohteet.size());
+            HakukohdeViite hakukohde = hakukohteet.get(0);
+            assertEquals(hakukohdeOid, hakukohde.getOid());
+            assertFalse(hakukohdeOid.equals(hakukohde.getNimi()));
+
+            List<ValinnanVaihe> vaiheet = valinnanVaiheService.findByHakukohde(hakukohdeOid);
+            assertEquals(4, vaiheet.size());
+            assertTrue(vaiheet.get(0).getId().equals(95L) && vaiheet.get(0).getMasterValinnanVaihe().getId().equals(94L));
+            assertTrue(vaiheet.get(1).getId().equals(96L) && vaiheet.get(1).getMasterValinnanVaihe() == null);
+            assertTrue(vaiheet.get(2).getId().equals(97L) && vaiheet.get(2).getMasterValinnanVaihe().getId().equals(93L));
+            assertTrue(vaiheet.get(3).getId().equals(98L) && vaiheet.get(3).getMasterValinnanVaihe() == null);
+        }
+
+        HakukohdeImportTyyppi importData = luoHakukohdeImportTyyppi(hakukohdeOid, hakuOid, hakukohdekoodiUri);
+        hakukohdeImportService.tuoHakukohde(importData);
+
+        {
+            Hakukohdekoodi koodi = hakukohdekoodiDAO.findByKoodiUri(hakukohdekoodiUri);
+            assertEquals(valintaryhmaOidAluksi, koodi.getValintaryhma().getOid());
+            assertEquals(hakukohdeOid, koodi.getHakukohde().getOid());
+
+            List<HakukohdeViite> hakukohteet = hakukohdeService.findByValintaryhmaOid(valintaryhmaOidAluksi);
+            assertEquals(1, hakukohteet.size());
+            HakukohdeViite hakukohde = hakukohteet.get(0);
+            assertEquals(hakukohdeOid, hakukohde.getOid());
+            assertEquals(hakukohdeOid, hakukohde.getNimi());
+
+            List<ValinnanVaihe> vaiheet = valinnanVaiheService.findByHakukohde(hakukohdeOid);
+            assertEquals(4, vaiheet.size());
+            assertTrue(vaiheet.get(0).getId().equals(95L) && vaiheet.get(0).getMasterValinnanVaihe().getId().equals(94L));
+            assertTrue(vaiheet.get(1).getId().equals(96L) && vaiheet.get(1).getMasterValinnanVaihe() == null);
+            assertTrue(vaiheet.get(2).getId().equals(97L) && vaiheet.get(2).getMasterValinnanVaihe().getId().equals(93L));
+            assertTrue(vaiheet.get(3).getId().equals(98L) && vaiheet.get(3).getMasterValinnanVaihe() == null);
+        }
+    }
 }
