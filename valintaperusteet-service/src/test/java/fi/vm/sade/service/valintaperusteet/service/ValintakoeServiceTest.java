@@ -4,11 +4,8 @@ import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
-import fi.vm.sade.service.valintaperusteet.model.ValinnanVaiheTyyppi;
 import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintakoettaEiOleOlemassaException;
-import fi.vm.sade.service.valintaperusteet.service.exception.ValintakoettaEiVoiLisataException;
-import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +15,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -40,53 +41,129 @@ public class ValintakoeServiceTest {
     @Autowired
     private ValinnanVaiheService valinnanVaiheService;
 
+
     @Test
     public void testLisaaValintakoeValinnanVaiheelle() {
-        final String valinnanVaiheOid = "83";
-        final int before = 4;
+        final String valinnanVaiheOid = "91";
+        final String kopioValinnanVaiheOid = "92";
 
-        ValinnanVaihe vaihe = valinnanVaiheService.readByOid(valinnanVaiheOid);
-        assertEquals(ValinnanVaiheTyyppi.VALINTAKOE, vaihe.getValinnanVaiheTyyppi());
+        {
+            ValinnanVaihe vrValinnanVaihe = valinnanVaiheService.readByOid(valinnanVaiheOid);
+            List<Valintakoe> vrValinnanVaihekokeet = valintakoeService.findValintakoeByValinnanVaihe(valinnanVaiheOid);
+            assertEquals(1, vrValinnanVaihekokeet.size());
 
-        assertEquals(before, valintakoeService.findValintakoeByValinnanVaihe(valinnanVaiheOid).size());
+            ValinnanVaihe hkValinnanVaihe = valinnanVaiheService.readByOid(kopioValinnanVaiheOid);
+            assertEquals(vrValinnanVaihe.getOid(), hkValinnanVaihe.getMaster().getOid());
+            List<Valintakoe> hkValinnanVaiheKokeet = valintakoeService.findValintakoeByValinnanVaihe(hkValinnanVaihe.getOid());
+            assertEquals(1, hkValinnanVaiheKokeet.size());
+            assertEquals(vrValinnanVaihekokeet.get(0).getOid(), hkValinnanVaiheKokeet.get(0).getMaster().getOid());
+        }
 
-        final Long laskentakaavaId = 101L;
-        ValintakoeDTO valintakoe = new ValintakoeDTO();
-        valintakoe.setNimi("nimi");
-        valintakoe.setTunniste("tunniste");
-        valintakoe.setLaskentakaavaId(laskentakaavaId);
-
-        Valintakoe lisatty = valintakoeService.lisaaValintakoeValinnanVaiheelle(valinnanVaiheOid, valintakoe);
-        assertTrue(StringUtils.isNotBlank(lisatty.getOid()));
-
-        final int after = before + 1;
-        assertEquals(after, valintakoeService.findValintakoeByValinnanVaihe(valinnanVaiheOid).size());
-    }
-
-    @Test(expected = ValintakoettaEiVoiLisataException.class)
-    public void testLisaaValintakoeTavalliselleValinnanVaiheelle() {
-        final String valinnanVaiheOid = "84";
-
-        ValinnanVaihe vaihe = valinnanVaiheService.readByOid(valinnanVaiheOid);
-        assertEquals(ValinnanVaiheTyyppi.TAVALLINEN, vaihe.getValinnanVaiheTyyppi());
-
-        final Long laskentakaavaId = 101L;
-        ValintakoeDTO valintakoe = new ValintakoeDTO();
-        valintakoe.setTunniste("tunniste");
-        valintakoe.setLaskentakaavaId(laskentakaavaId);
+        final ValintakoeDTO valintakoe = new ValintakoeDTO();
+        valintakoe.setAktiivinen(true);
+        valintakoe.setKuvaus("uusikuvaus");
+        valintakoe.setLaskentakaavaId(101L);
+        valintakoe.setNimi("uusinimi");
+        valintakoe.setTunniste("uusitunniste");
 
         valintakoeService.lisaaValintakoeValinnanVaiheelle(valinnanVaiheOid, valintakoe);
+
+        {
+            Comparator<Valintakoe> valintakoeComparator = new Comparator<Valintakoe>() {
+                @Override
+                public int compare(Valintakoe o1, Valintakoe o2) {
+                    return o1.getId().compareTo(o2.getId());
+                }
+            };
+
+            ValinnanVaihe vrValinnanVaihe = valinnanVaiheService.readByOid(valinnanVaiheOid);
+            List<Valintakoe> vrValinnanVaihekokeet = valintakoeService.findValintakoeByValinnanVaihe(valinnanVaiheOid);
+            Collections.sort(vrValinnanVaihekokeet, valintakoeComparator);
+            assertEquals(2, vrValinnanVaihekokeet.size());
+
+            ValinnanVaihe hkValinnanVaihe = valinnanVaiheService.readByOid(kopioValinnanVaiheOid);
+            assertEquals(vrValinnanVaihe.getOid(), hkValinnanVaihe.getMaster().getOid());
+            List<Valintakoe> hkValinnanVaiheKokeet = valintakoeService.findValintakoeByValinnanVaihe(hkValinnanVaihe.getOid());
+            Collections.sort(hkValinnanVaiheKokeet, valintakoeComparator);
+            assertEquals(2, hkValinnanVaiheKokeet.size());
+
+            assertEquals(vrValinnanVaihekokeet.get(0).getOid(), hkValinnanVaiheKokeet.get(0).getMaster().getOid());
+            assertEquals(vrValinnanVaihekokeet.get(1).getOid(), hkValinnanVaiheKokeet.get(1).getMaster().getOid());
+
+            assertEquals(vrValinnanVaihekokeet.get(1).getAktiivinen(), valintakoe.getAktiivinen());
+            assertEquals(vrValinnanVaihekokeet.get(1).getKuvaus(), valintakoe.getKuvaus());
+            assertEquals(vrValinnanVaihekokeet.get(1).getNimi(), valintakoe.getNimi());
+            assertEquals(vrValinnanVaihekokeet.get(1).getTunniste(), valintakoe.getTunniste());
+            assertEquals(vrValinnanVaihekokeet.get(1).getLaskentakaava().getId(), valintakoe.getLaskentakaavaId());
+
+            assertEquals(hkValinnanVaiheKokeet.get(1).getAktiivinen(), valintakoe.getAktiivinen());
+            assertEquals(hkValinnanVaiheKokeet.get(1).getKuvaus(), valintakoe.getKuvaus());
+            assertEquals(hkValinnanVaiheKokeet.get(1).getNimi(), valintakoe.getNimi());
+            assertEquals(hkValinnanVaiheKokeet.get(1).getTunniste(), valintakoe.getTunniste());
+            assertEquals(hkValinnanVaiheKokeet.get(1).getLaskentakaava().getId(), valintakoe.getLaskentakaavaId());
+        }
     }
 
-    @Test(expected = ValintakoettaEiOleOlemassaException.class)
-    public void testDelete() {
-        final String oid = "oid1";
+    @Test
+    public void testDeleteByOid() {
+        final String valintakoeOid = "oid8";
+        final String kopioValintakoeOid = "oid9";
 
-        Valintakoe valintakoe = valintakoeService.readByOid(oid);
-        assertNotNull(valintakoe);
+        valintakoeService.readByOid(valintakoeOid);
+        Valintakoe kopio = valintakoeService.readByOid(kopioValintakoeOid);
+        assertEquals(valintakoeOid, kopio.getMasterValintakoe().getOid());
 
-        valintakoeService.deleteByOid(oid);
+        valintakoeService.deleteByOid(valintakoeOid);
 
-        valintakoeService.readByOid(oid);
+        boolean caughtOne = false;
+        try {
+            valintakoeService.readByOid(valintakoeOid);
+        } catch (ValintakoettaEiOleOlemassaException e) {
+            caughtOne = true;
+        }
+        assertTrue(caughtOne);
+
+        try {
+            valintakoeService.readByOid(kopioValintakoeOid);
+        } catch (ValintakoettaEiOleOlemassaException e) {
+            caughtOne = true;
+        }
+
+        assertTrue(caughtOne);
+    }
+
+    @Test
+    public void testUpdate() {
+        final String valintakoeOid = "oid8";
+
+        ValintakoeDTO update = new ValintakoeDTO();
+        update.setAktiivinen(false);
+        update.setKuvaus("kuvausta");
+        update.setLaskentakaavaId(102L);
+        update.setNimi("nimeäminen");
+        update.setTunniste("uustunniste");
+
+        Valintakoe managed = valintakoeService.readByOid(valintakoeOid);
+        assertFalse(managed.getAktiivinen().equals(update.getAktiivinen()));
+        assertFalse(managed.getKuvaus().equals(update.getKuvaus()));
+        assertFalse(managed.getNimi().equals(update.getNimi()));
+        assertFalse(managed.getTunniste().equals(update.getTunniste()));
+        assertFalse(managed.getLaskentakaava().getId().equals(update.getLaskentakaavaId()));
+
+        valintakoeService.update(valintakoeOid, update);
+
+        managed = valintakoeService.readByOid(valintakoeOid);
+        assertEquals(update.getAktiivinen(), managed.getAktiivinen());
+        assertEquals(update.getKuvaus(), managed.getKuvaus());
+        assertEquals(update.getNimi(), managed.getNimi());
+        assertEquals(update.getTunniste(), managed.getTunniste());
+        assertEquals(update.getLaskentakaavaId(), managed.getLaskentakaava().getId());
+
+        Valintakoe  kopio = valintakoeService.readByOid("oid9");
+        assertEquals(update.getAktiivinen(), kopio.getAktiivinen());
+        assertEquals(update.getKuvaus(), kopio.getKuvaus());
+        assertEquals(update.getNimi(), kopio.getNimi());
+        assertEquals(update.getTunniste(), kopio.getTunniste());
+        assertEquals(update.getLaskentakaavaId(), kopio.getLaskentakaava().getId());
     }
 }

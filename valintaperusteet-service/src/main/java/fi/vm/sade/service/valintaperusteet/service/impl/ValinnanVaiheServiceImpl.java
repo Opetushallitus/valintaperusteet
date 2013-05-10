@@ -61,7 +61,7 @@ public class ValinnanVaiheServiceImpl extends AbstractCRUDServiceImpl<ValinnanVa
 
     @Override
     public ValinnanVaihe insert(ValinnanVaihe entity) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        throw new UnsupportedOperationException("not supported");
     }
 
     @Override
@@ -217,12 +217,17 @@ public class ValinnanVaiheServiceImpl extends AbstractCRUDServiceImpl<ValinnanVa
         removeValinnanvaihe(valinnanVaihe);
     }
 
+    @Override
+    public void delete(ValinnanVaihe valinnanVaihe) {
+        removeValinnanvaihe(valinnanVaihe);
+    }
+
     private void removeValinnanvaihe(ValinnanVaihe valinnanVaihe) {
         for (ValinnanVaihe vaihe : valinnanVaihe.getKopioValinnanVaiheet()) {
             removeValinnanvaihe(vaihe);
         }
 
-        if(valinnanVaihe.getSeuraava() != null) {
+        if (valinnanVaihe.getSeuraava() != null) {
             ValinnanVaihe seuraava = valinnanVaihe.getSeuraava();
             seuraava.setEdellinen(valinnanVaihe.getEdellinen());
         }
@@ -231,7 +236,7 @@ public class ValinnanVaiheServiceImpl extends AbstractCRUDServiceImpl<ValinnanVa
             valintatapajonoService.delete(valintatapajono);
         }
 
-        for(Valintakoe valintakoe: valinnanVaihe.getValintakokeet()) {
+        for (Valintakoe valintakoe : valinnanVaihe.getValintakokeet()) {
             valintakoeService.delete(valintakoe);
         }
 
@@ -350,6 +355,7 @@ public class ValinnanVaiheServiceImpl extends AbstractCRUDServiceImpl<ValinnanVa
         }
         ValinnanVaihe lisatty = valinnanVaiheDAO.insert(kopio);
         valintatapajonoService.kopioiValintatapajonotMasterValinnanVaiheeltaKopiolle(lisatty, master);
+        valintakoeService.kopioiValintakokeetMasterValinnanVaiheeltaKopiolle(lisatty, master);
 
         return lisatty;
     }
@@ -362,7 +368,7 @@ public class ValinnanVaiheServiceImpl extends AbstractCRUDServiceImpl<ValinnanVa
 
     @Override
     public void kopioiValinnanVaiheetParentilta(HakukohdeViite hakukohde, Valintaryhma parentValintaryhma) {
-        if(parentValintaryhma != null) {
+        if (parentValintaryhma != null) {
             ValinnanVaihe vv = valinnanVaiheDAO.haeValintaryhmanViimeinenValinnanVaihe(parentValintaryhma.getOid());
             kopioiValinnanVaiheetRekursiivisesti(hakukohde, vv);
         }

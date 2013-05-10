@@ -14,8 +14,7 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 /**
  * User: wuoti
@@ -47,5 +46,14 @@ public class HakukohdekoodiDAOTest {
         assertEquals(koodi.getHakukohde().getOid(), hakukohdeOid);
 
         assertNull(hakukohdekoodiDAO.findByKoodiUri("not-exists"));
+    }
+
+    @Test
+    public void testFindByHakukohdeOid() {
+        final String hakukohdeOid = "oid12";
+        Hakukohdekoodi hakukohdekoodi = hakukohdekoodiDAO.findByHakukohdeOid(hakukohdeOid);
+        assertNotNull(hakukohdekoodi);
+        assertEquals(hakukohdeOid, hakukohdekoodi.getHakukohde().getOid());
+        assertNull(hakukohdekoodiDAO.findByHakukohdeOid("not exists"));
     }
 }

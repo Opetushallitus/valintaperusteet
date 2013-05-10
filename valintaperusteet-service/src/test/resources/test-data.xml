@@ -167,6 +167,9 @@
     <laskentakaava id="407" version="0" nimi="kaava407" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO" funktiokutsu_id="7" />
     <laskentakaava id="408" version="0" nimi="kaava408" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO" funktiokutsu_id="8" />
     <laskentakaava id="409" version="0" nimi="kaava409" on_luonnos="true" tyyppi="LUKUARVOFUNKTIO" funktiokutsu_id="9" />
+
+    <laskentakaava id="410" version="0" nimi="kaava410" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO" funktiokutsu_id="8" />
+
     <!--
         Ensimmäisen valintaryhmän luonti on siirretty ensimmäiseksi, koska taulu pitää luoda ensimmäisenä.
         Ärsyttävä DBUnitin ominaisuus, jossa datan luonti/poistojärjestys määräytyy ensimmäisen tagin
@@ -220,8 +223,15 @@
     <valintaryhma id="36" version="0" oid="oid36" nimi="Valintaryhma 36" hakuOid="hakuoid1" />
     <valintaryhma id="37" version="0" oid="oid37" nimi="Valintaryhma 37" hakuOid="hakuoid1" />
 
+    <valintaryhma id="38" version="0" oid="oid38" nimi="Valintaryhma 38" hakuOid="hakuoid1" />
+
+    <valintaryhma id="39" version="0" oid="oid39" nimi="Valintaryhma 39" hakuOid="hakuoid1" />
+
     <hakukohdekoodi id="1" version="0" uri="hakukohdekoodiuri1" arvo="koodiarvo1" nimi_fi="hakukohdekoodi1" nimi_sv="hakukohdekoodi1" nimi_en="hakukohdekoodi1" valintaryhma_id="36" hakukohde_id="11"/>
     <hakukohdekoodi id="2" version="0" uri="hakukohdekoodiuri2" arvo="koodiarvo2" nimi_fi="hakukohdekoodi2" nimi_sv="hakukohdekoodi2" nimi_en="hakukohdekoodi2" valintaryhma_id="37" />
+
+    <hakukohdekoodi id="3" version="0" uri="hakukohdekoodiuri3" arvo="koodiarvo3" nimi_fi="hakukohdekoodi3" nimi_sv="hakukohdekoodi3" nimi_en="hakukohdekoodi3" valintaryhma_id="38" hakukohde_id="12" />
+
 
     <hakukohde_viite id="1" version="0" hakuoid="hakuoid1" oid="oid1" nimi="haku1" valintaryhma_id="1" />
     <hakukohde_viite id="2" version="0" hakuoid="hakuoid1" oid="oid2" nimi="haku2" valintaryhma_id="1" />
@@ -236,6 +246,9 @@
     <hakukohde_viite id="9" version="0" hakuoid="hakuoid1" oid="oid9" nimi="haku9" valintaryhma_id="20" />
     <hakukohde_viite id="10" version="0" hakuoid="hakuoid1" oid="oid10" nimi="haku10" valintaryhma_id="[NULL]" />
     <hakukohde_viite id="11" version="0" hakuoid="hakuoid1" oid="oid11" nimi="haku11" valintaryhma_id="36" />
+
+    <hakukohde_viite id="12" version="0" hakuoid="hakuoid1" oid="oid12" nimi="haku12" valintaryhma_id="38" />
+    <hakukohde_viite id="13" version="0" hakuoid="hakuoid1" oid="oid13" nimi="haku13" valintaryhma_id="39" />
 
     <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="1" version="0" valintaryhma_id="1" hakukohde_viite_id="[NULL]" oid="1" nimi="valinnanvaihe1" kuvaus="kuvaus1" aktiivinen="true" />
     <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="2" version="0" valintaryhma_id="[NULL]" hakukohde_viite_id="[NULL]" oid="2" edellinen_valinnan_vaihe_id="1" nimi="valinnanvaihe2" kuvaus="kuvaus2" aktiivinen="true"/>
@@ -352,12 +365,27 @@
 
     <valinnan_vaihe valinnan_vaihe_tyyppi="VALINTAKOE" id="86" version="0" hakukohde_viite_id="10" oid="86" nimi="hakukohde 10 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus" />
 
-    <valintakoe id="1" version="0" oid="oid1" tunniste="valintakoetunniste1" nimi="valintakoe1" kuvaus="kuvaus1" valinnan_vaihe_id="83" laskentakaava_id="101"/>
-    <valintakoe id="2" version="0" oid="oid2" tunniste="valintakoetunniste2" nimi="valintakoe2" kuvaus="kuvaus2" valinnan_vaihe_id="83" laskentakaava_id="101"/>
-    <valintakoe id="3" version="0" oid="oid3" tunniste="valintakoetunniste3" nimi="valintakoe3" kuvaus="kuvaus3" valinnan_vaihe_id="83" laskentakaava_id="101"/>
-    <valintakoe id="4" version="0" oid="oid4" tunniste="valintakoetunniste4" nimi="valintakoe4" kuvaus="kuvaus4" valinnan_vaihe_id="83" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="87" version="0" valintaryhma_id="38" oid="87" nimi="valintaryhma 38 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="VALINTAKOE" id="88" version="0" valintaryhma_id="38" oid="88" nimi="valintaryhma 38 valinnan vaihe 2" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="87" />
 
-    <valintakoe id="5" version="0" oid="oid5" tunniste="valintakoetunniste5" nimi="valintakoe5" kuvaus="kuvaus5" valinnan_vaihe_id="86" laskentakaava_id="101"/>
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="89" version="0" hakukohde_viite_id="12" oid="89" nimi="hakukohde 12 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus" master_valinnan_vaihe_id="87" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="VALINTAKOE" id="90" version="0" hakukohde_viite_id="12" oid="90" nimi="hakukohde 12 valinnan vaihe 2" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="89" master_valinnan_vaihe_id="88" />
+
+    <valinnan_vaihe valinnan_vaihe_tyyppi="VALINTAKOE" id="91" version="0" valintaryhma_id="39" oid="91" nimi="valintaryhma 39 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus" />
+    <valinnan_vaihe valinnan_vaihe_tyyppi="VALINTAKOE" id="92" version="0" hakukohde_viite_id="13" oid="92" nimi="hakukohde 13 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus" master_valinnan_vaihe_id="91" />
+
+    <valintakoe id="1" version="0" oid="oid1" tunniste="valintakoetunniste1" nimi="valintakoe1" kuvaus="kuvaus1" aktiivinen="true" valinnan_vaihe_id="83" laskentakaava_id="101" master_valintakoe_id="[NULL]"/>
+    <valintakoe id="2" version="0" oid="oid2" tunniste="valintakoetunniste2" nimi="valintakoe2" kuvaus="kuvaus2" aktiivinen="true" valinnan_vaihe_id="83" laskentakaava_id="101"/>
+    <valintakoe id="3" version="0" oid="oid3" tunniste="valintakoetunniste3" nimi="valintakoe3" kuvaus="kuvaus3" aktiivinen="true" valinnan_vaihe_id="83" laskentakaava_id="101"/>
+    <valintakoe id="4" version="0" oid="oid4" tunniste="valintakoetunniste4" nimi="valintakoe4" kuvaus="kuvaus4" aktiivinen="true" valinnan_vaihe_id="83" />
+
+    <valintakoe id="5" version="0" oid="oid5" tunniste="valintakoetunniste5" nimi="valintakoe5" kuvaus="kuvaus5" aktiivinen="true" valinnan_vaihe_id="86" laskentakaava_id="101"/>
+
+    <valintakoe id="6" version="0" oid="oid6" tunniste="valintakoetunniste6" nimi="valintakoe6" kuvaus="kuvaus6" aktiivinen="true" valinnan_vaihe_id="88" laskentakaava_id="101"/>
+    <valintakoe id="7" version="0" oid="oid7" tunniste="valintakoetunniste6" nimi="valintakoe6" kuvaus="kuvaus6" aktiivinen="true" valinnan_vaihe_id="90" laskentakaava_id="101" master_valintakoe_id="6" />
+
+    <valintakoe id="8" version="0" oid="oid8" tunniste="valintakoetunniste8" nimi="valintakoe8" kuvaus="kuvaus8" aktiivinen="true" valinnan_vaihe_id="91" laskentakaava_id="101"/>
+    <valintakoe id="9" version="0" oid="oid9" tunniste="valintakoetunniste8" nimi="valintakoe8" kuvaus="kuvaus8" aktiivinen="true" valinnan_vaihe_id="92" laskentakaava_id="101" master_valintakoe_id="8"/>
 
     <valintatapajono id="1" version="1" oid="1" aloituspaikat="10" nimi="jono1" kuvaus="kuvaus" tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="1" aktiivinen="true"/>
     <valintatapajono id="2" version="1" oid="2" edellinen_valintatapajono_id="1" aloituspaikat="10" nimi="jono2" kuvaus="kuvaus" tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="1" aktiivinen="true"/>
@@ -415,6 +443,11 @@
     <valintatapajono id="1058" version="1" oid="1058" aloituspaikat="10" nimi="valintaryhma 17 valinnan vaihe 1 jono 2" kuvaus="kuvaus" tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="48" aktiivinen="true" edellinen_valintatapajono_id="1057" />
     <valintatapajono id="1059" version="1" oid="1059" aloituspaikat="10" nimi="valintaryhma 17 valinnan vaihe 1 jono 3" kuvaus="kuvaus" tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="48" aktiivinen="true" edellinen_valintatapajono_id="1058" />
 
+    <valintatapajono id="1060" version="1" oid="1060" aloituspaikat="10" nimi="valintaryhma 38 valinnan vaihe 1 jono 1" kuvaus="kuvaus" tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="87" aktiivinen="true" />
+    <valintatapajono id="1061" version="1" oid="1061" aloituspaikat="10" nimi="hakukohde 12 valinnan vaihe 1 jono 1" kuvaus="kuvaus" tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="89" aktiivinen="true" master_valintatapajono_id="1060" />
+
+
+
     <laskentakaava id="1" version="0" nimi="kaava1" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO" funktiokutsu_id="1" />
     <laskentakaava id="2" version="0" nimi="kaava2" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO" funktiokutsu_id="2" />
     <laskentakaava id="3" version="0" nimi="kaava3" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO" funktiokutsu_id="3" />
@@ -426,6 +459,11 @@
 
     <jarjestyskriteeri id="8" version="1" oid="8" valintatapajono_id="17" laskentakaava_id="405" metatiedot="metatiedot" aktiivinen="true"/>
     <jarjestyskriteeri id="9" version="1" oid="9" valintatapajono_id="17" laskentakaava_id="406" metatiedot="metatiedot" aktiivinen="true" edellinen_jarjestyskriteeri_id="8"/>
+
+    <jarjestyskriteeri id="12" version="1" oid="12" valintatapajono_id="1060" laskentakaava_id="410" metatiedot="metatiedot" aktiivinen="true"/>
+    <jarjestyskriteeri id="13" version="1" oid="13" valintatapajono_id="1061" laskentakaava_id="410" metatiedot="metatiedot" aktiivinen="true" master_jarjestyskriteeri_id="12"/>
+
+
 
     <!-- lisaaJarjestyskriteeriTyhjalleValintatapajonolle -->
     <valintaryhma id="3001" version="0" oid="3001" nimi="Valintaryhma 1" hakuOid="hakuoid1" parent_id="[NULL]" />

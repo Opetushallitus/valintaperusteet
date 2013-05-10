@@ -21,7 +21,6 @@ import java.util.List;
 public class ValintakoeDAOImpl extends AbstractJpaDAOImpl<Valintakoe, Long> implements ValintakoeDAO {
 
 
-
     @Override
     public List<Valintakoe> findByValinnanVaihe(String valinnanVaiheOid) {
         QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
@@ -30,6 +29,7 @@ public class ValintakoeDAOImpl extends AbstractJpaDAOImpl<Valintakoe, Long> impl
         return from(valinnanVaihe)
                 .innerJoin(valinnanVaihe.valintakokeet, valintakoe)
                 .leftJoin(valintakoe.laskentakaava).fetch()
+                .leftJoin(valintakoe.masterValintakoe).fetch()
                 .where(valinnanVaihe.oid.eq(valinnanVaiheOid))
                 .distinct()
                 .list(valintakoe);
@@ -40,6 +40,7 @@ public class ValintakoeDAOImpl extends AbstractJpaDAOImpl<Valintakoe, Long> impl
         QValintakoe valintakoe = QValintakoe.valintakoe;
         return from(valintakoe)
                 .leftJoin(valintakoe.laskentakaava).fetch()
+                .leftJoin(valintakoe.masterValintakoe).fetch()
                 .where(valintakoe.oid.eq(oid))
                 .singleResult(valintakoe);
     }

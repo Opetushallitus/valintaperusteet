@@ -11,6 +11,7 @@ public class ValintakoeDTO {
     private Long laskentakaavaId;
     private String nimi;
     private String kuvaus;
+    private Boolean aktiivinen;
 
     public String getTunniste() {
         return tunniste;
@@ -42,5 +43,13 @@ public class ValintakoeDTO {
 
     public void setNimi(String nimi) {
         this.nimi = nimi;
+    }
+
+    public Boolean getAktiivinen() {
+        return aktiivinen;
+    }
+
+    public void setAktiivinen(Boolean aktiivinen) {
+        this.aktiivinen = aktiivinen;
     }
 }

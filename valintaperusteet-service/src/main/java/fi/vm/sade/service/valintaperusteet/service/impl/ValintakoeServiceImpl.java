@@ -8,6 +8,9 @@ import fi.vm.sade.service.valintaperusteet.service.OidService;
 import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
 import fi.vm.sade.service.valintaperusteet.service.ValintakoeService;
 import fi.vm.sade.service.valintaperusteet.service.exception.*;
+import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
+import fi.vm.sade.service.valintaperusteet.util.ValintakoeKopioija;
+import fi.vm.sade.service.valintaperusteet.util.ValintakoeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +38,8 @@ public class ValintakoeServiceImpl extends AbstractCRUDServiceImpl<Valintakoe, L
     @Autowired
     private OidService oidService;
 
+    private static ValintakoeKopioija kopioija = new ValintakoeKopioija();
+
     @Autowired
     public ValintakoeServiceImpl(ValintakoeDAO dao) {
         super(dao);
@@ -43,7 +48,7 @@ public class ValintakoeServiceImpl extends AbstractCRUDServiceImpl<Valintakoe, L
 
     @Override
     public Valintakoe update(String s, Valintakoe entity) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("not supported");
     }
 
     @Override
@@ -54,6 +59,18 @@ public class ValintakoeServiceImpl extends AbstractCRUDServiceImpl<Valintakoe, L
     @Override
     public void deleteByOid(String oid) {
         Valintakoe valintakoe = haeValintakoeOidilla(oid);
+        if (valintakoe.getMaster() != null) {
+            throw new ValintakoettaEiVoiPoistaaException("Valintakoe on peritty.");
+        }
+
+        removeValintakoe(valintakoe);
+    }
+
+    private void removeValintakoe(Valintakoe valintakoe) {
+        for (Valintakoe koe : valintakoe.getKopiot()) {
+            removeValintakoe(koe);
+        }
+
         valintakoeDAO.remove(valintakoe);
     }
 
@@ -90,12 +107,30 @@ public class ValintakoeServiceImpl extends AbstractCRUDServiceImpl<Valintakoe, L
         valintakoe.setNimi(koe.getNimi());
         valintakoe.setKuvaus(koe.getKuvaus());
         valintakoe.setValinnanVaihe(valinnanVaihe);
+        valintakoe.setAktiivinen(koe.getAktiivinen());
 
         if (koe.getLaskentakaavaId() != null) {
             valintakoe.setLaskentakaava(haeLaskentakaavaValintakokeelle(koe.getLaskentakaavaId()));
         }
         Valintakoe lisatty = valintakoeDAO.insert(valintakoe);
+        for (ValinnanVaihe kopio : valinnanVaihe.getKopiot()) {
+            lisaaValinnanVaiheelleKopioMasterValintakokeesta(kopio, lisatty);
+        }
+
         return lisatty;
+    }
+
+    private void lisaaValinnanVaiheelleKopioMasterValintakokeesta(ValinnanVaihe valinnanVaihe,
+                                                                  Valintakoe masterValintakoe) {
+        Valintakoe kopio = ValintakoeUtil.teeKopioMasterista(masterValintakoe);
+        kopio.setValinnanVaihe(valinnanVaihe);
+        kopio.setOid(oidService.haeValintakoeOid());
+
+        Valintakoe lisatty = valintakoeDAO.insert(kopio);
+
+        for (ValinnanVaihe vaihekopio : valinnanVaihe.getKopioValinnanVaiheet()) {
+            lisaaValinnanVaiheelleKopioMasterValintakokeesta(vaihekopio, lisatty);
+        }
     }
 
     private Laskentakaava haeLaskentakaavaValintakokeelle(Long laskentakaavaId) {
@@ -116,16 +151,34 @@ public class ValintakoeServiceImpl extends AbstractCRUDServiceImpl<Valintakoe, L
 
     @Override
     public Valintakoe update(String oid, ValintakoeDTO valintakoe) {
-        Valintakoe entity = haeValintakoeOidilla(oid);
-        entity.setKuvaus(valintakoe.getKuvaus());
-        entity.setNimi(valintakoe.getNimi());
-        entity.setTunniste(valintakoe.getTunniste());
+        Valintakoe incoming = new Valintakoe();
+        incoming.setAktiivinen(valintakoe.getAktiivinen());
+        incoming.setKuvaus(valintakoe.getKuvaus());
+        incoming.setNimi(valintakoe.getNimi());
+        incoming.setTunniste(valintakoe.getTunniste());
 
-        if (valintakoe.getLaskentakaavaId() != null) {
-            entity.setLaskentakaava(haeLaskentakaavaValintakokeelle(valintakoe.getLaskentakaavaId()));
+        Valintakoe managedObject = haeValintakoeOidilla(oid);
+        Long laskentakaavaOid = valintakoe.getLaskentakaavaId();
+
+        if (laskentakaavaOid != null) {
+            Laskentakaava laskentakaava = haeLaskentakaavaValintakokeelle(laskentakaavaOid);
+            incoming.setLaskentakaava(laskentakaava);
         } else {
-            entity.setLaskentakaava(null);
+            incoming.setLaskentakaava(null);
         }
-        return entity;
+
+        return LinkitettavaJaKopioitavaUtil.paivita(managedObject, incoming, kopioija);
+    }
+
+    @Override
+    public void kopioiValintakokeetMasterValinnanVaiheeltaKopiolle(ValinnanVaihe valinnanVaihe, ValinnanVaihe masterValinnanVaihe) {
+        List<Valintakoe> kokeet = valintakoeDAO.findByValinnanVaihe(masterValinnanVaihe.getOid());
+        for (Valintakoe master : kokeet) {
+            Valintakoe kopio = ValintakoeUtil.teeKopioMasterista(master);
+            kopio.setOid(oidService.haeValintakoeOid());
+            valinnanVaihe.addValintakoe(kopio);
+
+            valintakoeDAO.insert(kopio);
+        }
     }
 }

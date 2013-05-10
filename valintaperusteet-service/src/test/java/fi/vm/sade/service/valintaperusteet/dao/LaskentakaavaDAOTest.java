@@ -118,7 +118,7 @@ public class LaskentakaavaDAOTest {
     @Test
     public void testLaskentakaavatRootLevel() {
         List<Laskentakaava> kaavas = laskentakaavaDAO.findKaavas(true, null, null);
-        assertEquals(16, kaavas.size());
+        assertEquals(17, kaavas.size());
     }
 
     @Test
@@ -130,7 +130,7 @@ public class LaskentakaavaDAOTest {
     @Test
     public void testLaskentakaavatByTyyppi() {
         List<Laskentakaava> kaavas = laskentakaavaDAO.findKaavas(true, null, Funktiotyyppi.LUKUARVOFUNKTIO);
-        assertEquals(14, kaavas.size());
+        assertEquals(15, kaavas.size());
         kaavas = laskentakaavaDAO.findKaavas(true, null, Funktiotyyppi.TOTUUSARVOFUNKTIO);
         assertEquals(2, kaavas.size());
     }

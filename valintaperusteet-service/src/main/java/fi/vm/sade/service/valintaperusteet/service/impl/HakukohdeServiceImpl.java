@@ -1,9 +1,11 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
+import fi.vm.sade.service.valintaperusteet.dao.HakukohdekoodiDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
+import fi.vm.sade.service.valintaperusteet.model.Hakukohdekoodi;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import fi.vm.sade.service.valintaperusteet.service.HakukohdeService;
@@ -41,6 +43,9 @@ public class HakukohdeServiceImpl extends AbstractCRUDServiceImpl<HakukohdeViite
 
     @Autowired
     private ValinnanVaiheDAO valinnanVaiheDAO;
+
+    @Autowired
+    private HakukohdekoodiDAO hakukohdekoodiDAO;
 
     @Autowired
     public HakukohdeServiceImpl(HakukohdeViiteDAO dao) {
@@ -151,4 +156,19 @@ public class HakukohdeServiceImpl extends AbstractCRUDServiceImpl<HakukohdeViite
     }
 
 
+    @Override
+    public void deleteByOid(String oid) {
+        HakukohdeViite hakukohde = haeHakukohdeViite(oid);
+
+        List<ValinnanVaihe> vaiheet = valinnanVaiheService.findByHakukohde(hakukohde.getOid());
+        for(ValinnanVaihe vv : vaiheet) {
+            valinnanVaiheService.delete(vv);
+        }
+
+        Hakukohdekoodi koodi = hakukohdekoodiDAO.findByHakukohdeOid(oid);
+        if(koodi != null) {
+            koodi.setHakukohde(null);
+        }
+        hakukohdeViiteDAO.remove(hakukohde);
+    }
 }

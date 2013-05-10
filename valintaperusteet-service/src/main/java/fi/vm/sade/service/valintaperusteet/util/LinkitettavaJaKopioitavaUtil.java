@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.util;
 
+import fi.vm.sade.service.valintaperusteet.model.Kopioitava;
 import fi.vm.sade.service.valintaperusteet.model.Linkitettava;
 import fi.vm.sade.service.valintaperusteet.model.LinkitettavaJaKopioitava;
 
@@ -163,10 +164,10 @@ public abstract class LinkitettavaJaKopioitavaUtil {
         return jarjestetty;
     }
 
-    private static <T extends LinkitettavaJaKopioitava> void paivitaKopio(T t,
-                                                                          T alkuperainenMaster,
-                                                                          T paivitettyMaster,
-                                                                          Kopioija<T> kopioija) {
+    private static <T extends Kopioitava> void paivitaKopio(T t,
+                                                            T alkuperainenMaster,
+                                                            T paivitettyMaster,
+                                                            Kopioija<T> kopioija) {
         // Otetaan talteen alkuperäinen ja päivitetään tiedot kantaobjektiin masterilta
         T alkuperainen = kopioija.luoKlooni(t);
         kopioija.kopioiTiedotMasteriltaKopiolle(alkuperainenMaster, paivitettyMaster, t);
@@ -178,7 +179,7 @@ public abstract class LinkitettavaJaKopioitavaUtil {
         }
     }
 
-    public static <T extends LinkitettavaJaKopioitava> T paivita(T managed, T incoming, Kopioija<T> kopioija) {
+    public static <T extends Kopioitava> T paivita(T managed, T incoming, Kopioija<T> kopioija) {
         // Otetaan talteen alkuperainen
         T alkuperainen = kopioija.luoKlooni(managed);
 

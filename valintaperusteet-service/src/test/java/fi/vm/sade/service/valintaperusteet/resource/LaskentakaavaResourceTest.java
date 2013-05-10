@@ -130,7 +130,7 @@ public class LaskentakaavaResourceTest {
     public void testFindAll() {
         List<Laskentakaava> kaavat = laskentakaavaResource.kaavat(false, null, null);
 
-        assertEquals(15, kaavat.size());
+        assertEquals(16, kaavat.size());
 
         for (Laskentakaava lk : kaavat) {
             assertFalse(lk.getOnLuonnos());

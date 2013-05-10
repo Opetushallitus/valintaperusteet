@@ -19,15 +19,15 @@ import java.util.Set;
 @Table(name = "hakukohde_viite")
 public class HakukohdeViite extends BaseEntity {
 
-    @Column(name="hakuoid", nullable = false)
+    @Column(name = "hakuoid", nullable = false)
     @JsonView(JsonViews.Basic.class)
     private String hakuoid;
 
     @JsonView(JsonViews.Basic.class)
-    @Column(name="oid",unique = true, nullable = false)
+    @Column(name = "oid", unique = true, nullable = false)
     private String oid;
 
-    @Column(name="nimi")
+    @Column(name = "nimi")
     @JsonView(JsonViews.Basic.class)
     private String nimi;
 
@@ -41,7 +41,7 @@ public class HakukohdeViite extends BaseEntity {
     private Set<Laskentakaava> laskentakaava = new HashSet<Laskentakaava>();
 
     @JsonView(JsonViews.Basic.class)
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "hakukohde")
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST}, mappedBy = "hakukohde")
     private Hakukohdekoodi hakukohdekoodi;
 
     public String getHakuoid() {

@@ -5,6 +5,7 @@ import com.mysema.query.types.EntityPath;
 import fi.vm.sade.generic.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdekoodiDAO;
 import fi.vm.sade.service.valintaperusteet.model.Hakukohdekoodi;
+import fi.vm.sade.service.valintaperusteet.model.QHakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.QHakukohdekoodi;
 import org.springframework.stereotype.Repository;
 
@@ -29,6 +30,19 @@ public class HakukohdekoodiDAOImpl extends AbstractJpaDAOImpl<Hakukohdekoodi, Lo
                 .leftJoin(koodi.valintaryhma).fetch()
                 .where(koodi.uri.eq(koodiUri))
                 .singleResult(koodi);
+    }
+
+    @Override
+    public Hakukohdekoodi findByHakukohdeOid(String hakukohdeOid) {
+        QHakukohdeViite hakukohde = QHakukohdeViite.hakukohdeViite;
+        QHakukohdekoodi hakukohdekoodi = QHakukohdekoodi.hakukohdekoodi;
+
+        return from(hakukohde)
+                .innerJoin(hakukohde.hakukohdekoodi, hakukohdekoodi)
+                .leftJoin(hakukohdekoodi.hakukohde).fetch()
+                .leftJoin(hakukohdekoodi.valintaryhma).fetch()
+                .where(hakukohde.oid.eq(hakukohdeOid))
+                .singleResult(hakukohdekoodi);
     }
 
 }

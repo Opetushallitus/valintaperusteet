@@ -2,12 +2,14 @@ package fi.vm.sade.service.valintaperusteet.service;
 
 import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
+import fi.vm.sade.service.valintaperusteet.dao.HakukohdekoodiDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
+import fi.vm.sade.service.valintaperusteet.service.exception.HakukohdeViiteEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
@@ -48,6 +50,9 @@ public class HakukohdeServiceTest {
 
     @Autowired
     private HakukohdeService hakukohdeService;
+
+    @Autowired
+    private HakukohdekoodiDAO hakukohdekoodiDAO;
 
     @Test
     public void testInsert() {
@@ -115,5 +120,18 @@ public class HakukohdeServiceTest {
         HakukohdeViite lisatty = hakukohdeService.insert(uusiHakukohde, null);
         assertNotNull(hakukohdeService.readByOid(lisatty.getOid()));
 
+    }
+
+    @Test(expected = HakukohdeViiteEiOleOlemassaException.class)
+    public void testDeleteByOid() {
+        final String hakukohdeOid = "oid12";
+        hakukohdeService.readByOid(hakukohdeOid);
+
+        List<ValinnanVaihe> vaiheet = valinnanVaiheDAO.findByHakukohde(hakukohdeOid);
+        assertEquals(2, valinnanVaiheDAO.findByHakukohde(hakukohdeOid).size());
+        assertNotNull(hakukohdekoodiDAO.findByHakukohdeOid(hakukohdeOid));
+        hakukohdeService.deleteByOid(hakukohdeOid);
+
+        hakukohdeService.readByOid(hakukohdeOid);
     }
 }

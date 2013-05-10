@@ -1,6 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
+import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
 
 import java.util.List;
@@ -21,4 +22,6 @@ public interface ValintakoeService extends CRUDService<Valintakoe, Long, String>
     Valintakoe lisaaValintakoeValinnanVaiheelle(String valinnanVaiheOid, ValintakoeDTO koe);
 
     Valintakoe update(String oid, ValintakoeDTO valintakoe);
+
+    void kopioiValintakokeetMasterValinnanVaiheeltaKopiolle(ValinnanVaihe valinnanVaihe, ValinnanVaihe masterValinnanVaihe);
 }

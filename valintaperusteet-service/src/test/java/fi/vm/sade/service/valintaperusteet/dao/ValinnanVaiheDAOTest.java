@@ -64,4 +64,11 @@ public class ValinnanVaiheDAOTest {
         assertEquals(valinnanVaihe.getMaster().getId().longValue(), 20L);
     }
 
+    @Test
+    public void testFindByHakukohde() {
+        final String hakukohdeOid = "oid12";
+        List<ValinnanVaihe> vaiheet = valinnanVaiheDAO.findByHakukohde(hakukohdeOid);
+        assertEquals(2, vaiheet.size());
+    }
+
 }

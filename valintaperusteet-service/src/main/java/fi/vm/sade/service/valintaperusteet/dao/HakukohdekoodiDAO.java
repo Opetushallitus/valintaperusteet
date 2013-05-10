@@ -10,4 +10,6 @@ import fi.vm.sade.service.valintaperusteet.model.Hakukohdekoodi;
  */
 public interface HakukohdekoodiDAO extends JpaDAO<Hakukohdekoodi, Long> {
     Hakukohdekoodi findByKoodiUri(String koodiUri);
+
+    Hakukohdekoodi findByHakukohdeOid(String hakukohdeOid);
 }

@@ -29,4 +29,6 @@ public interface HakukohdeService  extends CRUDService<HakukohdeViite, Long, Str
     HakukohdeViite insert(HakukohdeViite hakukohde, String valintaryhmaOid);
 
     boolean kuuluuSijoitteluun(String oid);
+
+    void deleteByOid(String oid);
 }
