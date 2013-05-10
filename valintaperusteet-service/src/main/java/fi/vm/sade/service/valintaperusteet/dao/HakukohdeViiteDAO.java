@@ -21,4 +21,6 @@ public interface HakukohdeViiteDAO extends JpaDAO<HakukohdeViite, Long> {
     List<HakukohdeViite> findByValintaryhmaOid(String oid);
 
     boolean kuuluuSijoitteluun(String oid);
+
+    void flush();
 }

@@ -6,6 +6,7 @@ import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdekoodiDAO;
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.Hakukohdekoodi;
+import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.schema.HakukohdeImportTyyppi;
 import fi.vm.sade.service.valintaperusteet.schema.HakukohdekoodiTyyppi;
 import org.junit.Test;
@@ -43,6 +44,13 @@ public class HakukohdeImportServiceTest {
 
     @Autowired
     private HakukohdeImportService hakukohdeImportService;
+
+    @Autowired
+    private ValinnanVaiheService valinnanVaiheService;
+
+    @Autowired
+    private HakukohdeService hakukohdeService;
+
 
     private HakukohdeImportTyyppi luoHakukohdeImportTyyppi(String hakukohdeOid, String hakuOid, String koodiUri) {
         HakukohdeImportTyyppi imp = new HakukohdeImportTyyppi();
@@ -111,7 +119,107 @@ public class HakukohdeImportServiceTest {
         List<HakukohdeViite> hakukohteetByValintaryhma = hakukohdeViiteDAO.findByValintaryhmaOid(valintaryhmaOid);
         assertEquals(1, hakukohteetByValintaryhma.size());
         assertEquals(hakukohde, hakukohteetByValintaryhma.get(0));
+    }
+
+    @Test
+    public void testImportHakukohdeUnderNewValintaryhma() {
+        // Oletetaan että kannassa on hakukohde, joka on valintaryhmän alla mutta hakukohde pitäisi synkata toisen
+        // valintaryhmän alle. Toisin sanoen hakukohteen määrittävä hakukohdekoodi viittaa eri valintaryhmään kuin mihin
+        // hakukohde on tällä hetkellä määritelty.
+
+        final String valintaryhmaOidAluksi = "oid40";
+        final String valintaryhmaOidLopuksi = "oid41";
+
+        final String hakuOid = "hakuoid1";
+        final String hakukohdeOid = "oid14";
+        final String hakukohdekoodiUri = "hakukohdekoodiuri4";
+        {
+            Hakukohdekoodi koodi = hakukohdekoodiDAO.findByKoodiUri(hakukohdekoodiUri);
+            assertEquals(valintaryhmaOidLopuksi, koodi.getValintaryhma().getOid());
+            assertNull(koodi.getHakukohde());
+
+            List<HakukohdeViite> hakukohteet = hakukohdeService.findByValintaryhmaOid(valintaryhmaOidAluksi);
+            assertEquals(1, hakukohteet.size());
+            assertEquals(hakukohdeOid, hakukohteet.get(0).getOid());
+
+            assertEquals(0, hakukohdeService.findByValintaryhmaOid(valintaryhmaOidLopuksi).size());
+
+            List<ValinnanVaihe> vaiheet = valinnanVaiheService.findByHakukohde(hakukohdeOid);
+            assertEquals(4, vaiheet.size());
+            assertTrue(vaiheet.get(0).getId().equals(95L) && vaiheet.get(0).getMasterValinnanVaihe().getId().equals(94L));
+            assertTrue(vaiheet.get(1).getId().equals(96L) && vaiheet.get(1).getMasterValinnanVaihe() == null);
+            assertTrue(vaiheet.get(2).getId().equals(97L) && vaiheet.get(2).getMasterValinnanVaihe().getId().equals(93L));
+            assertTrue(vaiheet.get(3).getId().equals(98L) && vaiheet.get(3).getMasterValinnanVaihe() == null);
+        }
+
+        HakukohdeImportTyyppi importData = luoHakukohdeImportTyyppi(hakukohdeOid, hakuOid, hakukohdekoodiUri);
+        hakukohdeImportService.tuoHakukohde(importData);
+
+        {
+            Hakukohdekoodi koodi = hakukohdekoodiDAO.findByKoodiUri(hakukohdekoodiUri);
+            assertEquals(valintaryhmaOidLopuksi, koodi.getValintaryhma().getOid());
+            assertEquals(hakukohdeOid, koodi.getHakukohde().getOid());
+
+            assertEquals(0, hakukohdeService.findByValintaryhmaOid(valintaryhmaOidAluksi).size());
+            List<HakukohdeViite> hakukohteet = hakukohdeService.findByValintaryhmaOid(valintaryhmaOidLopuksi);
+            assertEquals(1, hakukohteet.size());
+            assertEquals(hakukohdeOid, hakukohteet.get(0).getOid());
+
+            // Hakukohteelle suoraan määriteltyjen valinnanvaiheiden tulisi tulla periytyvien valinnan vaiheiden
+            // jälkeen.
+            List<ValinnanVaihe> vaiheet = valinnanVaiheService.findByHakukohde(hakukohdeOid);
+            assertEquals(3, vaiheet.size());
+            assertTrue(vaiheet.get(0).getMasterValinnanVaihe().getId().equals(99L));
+            assertTrue(vaiheet.get(1).getId().equals(96L) && vaiheet.get(1).getMasterValinnanVaihe() == null);
+            assertTrue(vaiheet.get(2).getId().equals(98L) && vaiheet.get(2).getMasterValinnanVaihe() == null);
+        }
+    }
 
 
+    @Test
+    public void testImportHakukohdeOutsideValintaryhma() {
+        // Oletetaan että kannassa on hakukohde, joka on valintaryhmän alla mutta synkkaus siirtää hakukohteen
+        // pois valintaryhmästä
+
+        final String valintaryhmaOidAluksi = "oid40";
+
+        final String hakuOid = "hakuoid1";
+        final String hakukohdeOid = "oid14";
+        final String hakukohdekoodiUri = "hakukohdekoodiuri5";
+        {
+            Hakukohdekoodi koodi = hakukohdekoodiDAO.findByKoodiUri(hakukohdekoodiUri);
+            assertNull(koodi.getValintaryhma());
+            assertNull(koodi.getHakukohde());
+
+            List<HakukohdeViite> hakukohteet = hakukohdeService.findByValintaryhmaOid(valintaryhmaOidAluksi);
+            assertEquals(1, hakukohteet.size());
+            assertEquals(hakukohdeOid, hakukohteet.get(0).getOid());
+
+            List<ValinnanVaihe> vaiheet = valinnanVaiheService.findByHakukohde(hakukohdeOid);
+            assertEquals(4, vaiheet.size());
+            assertTrue(vaiheet.get(0).getId().equals(95L) && vaiheet.get(0).getMasterValinnanVaihe().getId().equals(94L));
+            assertTrue(vaiheet.get(1).getId().equals(96L) && vaiheet.get(1).getMasterValinnanVaihe() == null);
+            assertTrue(vaiheet.get(2).getId().equals(97L) && vaiheet.get(2).getMasterValinnanVaihe().getId().equals(93L));
+            assertTrue(vaiheet.get(3).getId().equals(98L) && vaiheet.get(3).getMasterValinnanVaihe() == null);
+        }
+
+        HakukohdeImportTyyppi importData = luoHakukohdeImportTyyppi(hakukohdeOid, hakuOid, hakukohdekoodiUri);
+        hakukohdeImportService.tuoHakukohde(importData);
+
+        {
+            Hakukohdekoodi koodi = hakukohdekoodiDAO.findByKoodiUri(hakukohdekoodiUri);
+            assertNull(koodi.getValintaryhma());
+            assertEquals(hakukohdeOid, koodi.getHakukohde().getOid());
+
+            assertEquals(0, hakukohdeService.findByValintaryhmaOid(valintaryhmaOidAluksi).size());
+            HakukohdeViite hakukohde = hakukohdeService.readByOid(hakukohdeOid);
+
+            assertNull(hakukohde.getValintaryhma());
+
+            List<ValinnanVaihe> vaiheet = valinnanVaiheService.findByHakukohde(hakukohdeOid);
+            assertEquals(2, vaiheet.size());
+            assertTrue(vaiheet.get(0).getId().equals(96L) && vaiheet.get(0).getMasterValinnanVaihe() == null);
+            assertTrue(vaiheet.get(1).getId().equals(98L) && vaiheet.get(1).getMasterValinnanVaihe() == null);
+        }
     }
 }

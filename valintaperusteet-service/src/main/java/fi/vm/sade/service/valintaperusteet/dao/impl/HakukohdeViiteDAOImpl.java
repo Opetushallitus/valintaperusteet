@@ -1,19 +1,13 @@
 package fi.vm.sade.service.valintaperusteet.dao.impl;
 
-import java.util.List;
-
-import org.springframework.stereotype.Repository;
-
 import com.mysema.query.jpa.impl.JPAQuery;
 import com.mysema.query.types.EntityPath;
-
 import fi.vm.sade.generic.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
-import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
-import fi.vm.sade.service.valintaperusteet.model.QHakukohdeViite;
-import fi.vm.sade.service.valintaperusteet.model.QValinnanVaihe;
-import fi.vm.sade.service.valintaperusteet.model.QValintaryhma;
-import fi.vm.sade.service.valintaperusteet.model.QValintatapajono;
+import fi.vm.sade.service.valintaperusteet.model.*;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * User: tommiha Date: 1/17/13 Time: 12:51 PM
@@ -75,5 +69,10 @@ public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Lo
                         jono.aktiivinen.eq(true),
                         jono.siirretaanSijoitteluun.eq(true)
                 ).exists();
+    }
+
+    @Override
+    public void flush() {
+        getEntityManager().flush();
     }
 }

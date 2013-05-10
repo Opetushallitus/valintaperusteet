@@ -168,7 +168,11 @@ public class HakukohdeServiceImpl extends AbstractCRUDServiceImpl<HakukohdeViite
         Hakukohdekoodi koodi = hakukohdekoodiDAO.findByHakukohdeOid(oid);
         if(koodi != null) {
             koodi.setHakukohde(null);
+            hakukohde.setHakukohdekoodi(null);
         }
         hakukohdeViiteDAO.remove(hakukohde);
+
+        // Hakukohteiden tuonti saattaa feilata ilman flushausta, jos hakukohde siirretään uuden valintaryhmän alle
+        hakukohdeViiteDAO.flush();
     }
 }

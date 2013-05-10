@@ -127,11 +127,10 @@ public class HakukohdeServiceTest {
         final String hakukohdeOid = "oid12";
         hakukohdeService.readByOid(hakukohdeOid);
 
-        List<ValinnanVaihe> vaiheet = valinnanVaiheDAO.findByHakukohde(hakukohdeOid);
         assertEquals(2, valinnanVaiheDAO.findByHakukohde(hakukohdeOid).size());
         assertNotNull(hakukohdekoodiDAO.findByHakukohdeOid(hakukohdeOid));
         hakukohdeService.deleteByOid(hakukohdeOid);
-
         hakukohdeService.readByOid(hakukohdeOid);
+
     }
 }

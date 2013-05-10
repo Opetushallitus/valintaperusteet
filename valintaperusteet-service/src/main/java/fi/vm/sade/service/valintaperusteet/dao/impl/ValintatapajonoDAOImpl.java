@@ -1,20 +1,14 @@
 package fi.vm.sade.service.valintaperusteet.dao.impl;
 
-import java.util.List;
-
-import org.springframework.stereotype.Repository;
-
 import com.mysema.query.jpa.impl.JPAQuery;
 import com.mysema.query.jpa.impl.JPASubQuery;
 import com.mysema.query.types.EntityPath;
-
 import fi.vm.sade.generic.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
-import fi.vm.sade.service.valintaperusteet.model.QHakijaryhma;
-import fi.vm.sade.service.valintaperusteet.model.QHakukohdeViite;
-import fi.vm.sade.service.valintaperusteet.model.QValinnanVaihe;
-import fi.vm.sade.service.valintaperusteet.model.QValintatapajono;
-import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
+import fi.vm.sade.service.valintaperusteet.model.*;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * User: tommiha Date: 1/17/13 Time: 12:51 PM
@@ -98,11 +92,7 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
 
     @Override
     public Valintatapajono insert(Valintatapajono entity) {
-        Valintatapajono insert = super.insert(entity);// To change body of
-                                                      // overridden methods use
-                                                      // File | Settings | File
-                                                      // Templates.
-
+        Valintatapajono insert = super.insert(entity);
         return insert;
     }
 }
