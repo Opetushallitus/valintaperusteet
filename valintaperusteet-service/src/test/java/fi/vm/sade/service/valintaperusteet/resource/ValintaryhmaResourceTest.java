@@ -173,7 +173,9 @@ public class ValintaryhmaResourceTest {
 
         valintaryhmaResource.updateHakukohdekoodi("oid1", oid1);
 
+        oid1 = valintaryhmaResource.queryFull("oid1").getHakukohdekoodit();
 
+        assertEquals(10, oid1.size());
 
     }
 }
