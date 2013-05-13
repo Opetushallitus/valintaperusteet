@@ -11,6 +11,7 @@ import fi.vm.sade.service.valintaperusteet.schema.ValinnanVaiheTyyppi;
 import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakuparametritOnTyhjaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheJarjestyslukuOutOfBoundsException;
+import fi.vm.sade.service.valintaperusteet.service.impl.util.ValintaperusteServiceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,6 +54,9 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
 
     @Autowired
     private HakukohdeImportService hakukohdeImportService;
+
+
+
 
     @Override
     public List<ValintatapajonoTyyppi> haeValintatapajonotSijoittelulle(
@@ -149,13 +153,17 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
             tyyppi.setOid(koe.getOid());
             tyyppi.setTunniste(koe.getTunniste());
 
-
-            Laskentakaava laskentakaava = laskentakaavaService.haeLaskettavaKaava(koe.getLaskentakaava()
-                    .getId());
-            FunktiokutsuTyyppi convert = conversionService.convert(laskentakaava.getFunktiokutsu(),
-                    FunktiokutsuTyyppi.class);
-
-            tyyppi.setFunktiokutsu(convert);
+            FunktiokutsuTyyppi converted = null;
+            if (koe.ainaPakollinen()) {
+                converted = conversionService.convert(ValintaperusteServiceUtil.getAinaPakollinenFunktiokutsu(),
+                        FunktiokutsuTyyppi.class);
+            } else {
+                Laskentakaava laskentakaava = laskentakaavaService.haeLaskettavaKaava(koe.getLaskentakaava()
+                        .getId());
+                converted = conversionService.convert(laskentakaava.getFunktiokutsu(),
+                        FunktiokutsuTyyppi.class);
+            }
+            tyyppi.setFunktiokutsu(converted);
 
             valintakoetyypit.add(tyyppi);
         }
