@@ -56,8 +56,6 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
     private HakukohdeImportService hakukohdeImportService;
 
 
-
-
     @Override
     public List<ValintatapajonoTyyppi> haeValintatapajonotSijoittelulle(
             @WebParam(name = "hakukohdeOid", targetNamespace = "") String hakukohdeOid) throws GenericFault {
@@ -147,25 +145,27 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
         List<ValintakoeTyyppi> valintakoetyypit = new ArrayList<ValintakoeTyyppi>();
 
         for (Valintakoe koe : valintakokeet) {
-            ValintakoeTyyppi tyyppi = new ValintakoeTyyppi();
-            tyyppi.setKuvaus(koe.getKuvaus());
-            tyyppi.setNimi(koe.getNimi());
-            tyyppi.setOid(koe.getOid());
-            tyyppi.setTunniste(koe.getTunniste());
+            if (koe.getAktiivinen()) {
+                ValintakoeTyyppi tyyppi = new ValintakoeTyyppi();
+                tyyppi.setKuvaus(koe.getKuvaus());
+                tyyppi.setNimi(koe.getNimi());
+                tyyppi.setOid(koe.getOid());
+                tyyppi.setTunniste(koe.getTunniste());
 
-            FunktiokutsuTyyppi converted = null;
-            if (koe.ainaPakollinen()) {
-                converted = conversionService.convert(ValintaperusteServiceUtil.getAinaPakollinenFunktiokutsu(),
-                        FunktiokutsuTyyppi.class);
-            } else {
-                Laskentakaava laskentakaava = laskentakaavaService.haeLaskettavaKaava(koe.getLaskentakaava()
-                        .getId());
-                converted = conversionService.convert(laskentakaava.getFunktiokutsu(),
-                        FunktiokutsuTyyppi.class);
+                FunktiokutsuTyyppi converted = null;
+                if (koe.ainaPakollinen()) {
+                    converted = conversionService.convert(ValintaperusteServiceUtil.getAinaPakollinenFunktiokutsu(),
+                            FunktiokutsuTyyppi.class);
+                } else {
+                    Laskentakaava laskentakaava = laskentakaavaService.haeLaskettavaKaava(koe.getLaskentakaava()
+                            .getId());
+                    converted = conversionService.convert(laskentakaava.getFunktiokutsu(),
+                            FunktiokutsuTyyppi.class);
+                }
+                tyyppi.setFunktiokutsu(converted);
+
+                valintakoetyypit.add(tyyppi);
             }
-            tyyppi.setFunktiokutsu(converted);
-
-            valintakoetyypit.add(tyyppi);
         }
 
 
