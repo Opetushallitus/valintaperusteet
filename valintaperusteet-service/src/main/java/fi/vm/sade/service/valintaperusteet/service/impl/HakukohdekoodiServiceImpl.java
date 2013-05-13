@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -31,13 +32,25 @@ public class HakukohdekoodiServiceImpl implements HakukohdekoodiService {
     @Override
     public Valintaryhma updateHakukohdekoodit(String valintaryhmaOid, Set<Hakukohdekoodi> hakukohdekoodit) {
         Valintaryhma valintaryhma = valintaryhmaDAO.readByOid(valintaryhmaOid);
+        Set<Long> ids = new HashSet<Long>();
+        for(Hakukohdekoodi uudet : hakukohdekoodit) {
+            if(uudet.getId() != null) {
+                ids.add(uudet.getId());
+            }
+        }
         for(Hakukohdekoodi koodi : valintaryhma.getHakukohdekoodit()) {
-            hakukohdekoodiDAO.remove(koodi);
+            if(!ids.contains(koodi.getId())) {
+                hakukohdekoodiDAO.remove(koodi);
+            }
         }
 
         for(Hakukohdekoodi koodi : hakukohdekoodit) {
-            koodi.setValintaryhma(valintaryhma);
-            hakukohdekoodiDAO.insert(koodi);
+            if(koodi.getId() == null) {
+                koodi.setValintaryhma(valintaryhma);
+                hakukohdekoodiDAO.insert(koodi);
+            } else {
+                hakukohdekoodiDAO.update(koodi);
+            }
         }
 
         return valintaryhma;
