@@ -44,7 +44,9 @@ public class ValintakoeKopioija implements Kopioija<Valintakoe> {
             kopio.setAktiivinen(paivitettyMaster.getAktiivinen());
         }
 
-        if (kopio.getLaskentakaava().equals(alkuperainenMaster.getLaskentakaava())) {
+        if ((kopio.getLaskentakaava() == null && alkuperainenMaster.getLaskentakaava() == null) ||
+                (kopio.getLaskentakaava() != null && alkuperainenMaster.getLaskentakaava() != null &&
+                        kopio.getLaskentakaava().equals(alkuperainenMaster.getLaskentakaava()))) {
             kopio.setLaskentakaava(paivitettyMaster.getLaskentakaava());
         }
 
