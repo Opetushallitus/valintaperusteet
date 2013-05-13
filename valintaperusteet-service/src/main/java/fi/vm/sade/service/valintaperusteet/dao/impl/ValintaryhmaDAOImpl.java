@@ -42,7 +42,9 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long> 
         QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
 
         return from(valintaryhma).leftJoin(valintaryhma.alavalintaryhmat).fetch()
-                .leftJoin(valintaryhma.hakukohdeViitteet).fetch().where(valintaryhma.oid.eq(oid))
+                .leftJoin(valintaryhma.hakukohdeViitteet).fetch()
+                .leftJoin(valintaryhma.hakukohdekoodit).fetch()
+                .where(valintaryhma.oid.eq(oid))
                 .singleResult(valintaryhma);
     }
 
