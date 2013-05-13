@@ -164,11 +164,11 @@ public class ValintaryhmaResource {
     }
 
     @POST
-    @Path("{hakukohdeOid}/hakukohdekoodi")
+    @Path("{valintaryhmaOid}/hakukohdekoodi")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
-    public Response updateHakukohdekoodi(@PathParam("hakukohdeOid") String valintaryhamOid,
+    public Response updateHakukohdekoodi(@PathParam("valintaryhmaOid") String valintaryhamOid,
                                         Set<Hakukohdekoodi> hakukohdekoodit) {
         try {
             Valintaryhma valintaryhma = hakukohdekoodiService.updateValintaryhmaHakukohdekoodit(valintaryhamOid, hakukohdekoodit);

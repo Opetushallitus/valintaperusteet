@@ -170,11 +170,11 @@ public class HakukohdeResource {
     }
 
     @PUT
-    @Path("{valintaryhmaOid}/hakukohdekoodi")
+    @Path("{hakukohdeOid}/hakukohdekoodi")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({ JsonViews.Basic.class })
-    public Response insertHakukohdekoodi(@PathParam("valintaryhmaOid") String hakukohdeOid,
+    public Response insertHakukohdekoodi(@PathParam("hakukohdeOid") String hakukohdeOid,
                                          Hakukohdekoodi hakukohdekoodi) {
         try {
             hakukohdekoodiService.lisaaHakukohdekoodiHakukohde(hakukohdeOid, hakukohdekoodi);
