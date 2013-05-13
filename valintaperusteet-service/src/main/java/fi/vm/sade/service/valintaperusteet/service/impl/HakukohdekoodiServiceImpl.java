@@ -1,7 +1,9 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
+import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdekoodiDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
+import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.Hakukohdekoodi;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import fi.vm.sade.service.valintaperusteet.service.HakukohdekoodiService;
@@ -29,8 +31,11 @@ public class HakukohdekoodiServiceImpl implements HakukohdekoodiService {
     @Autowired
     HakukohdekoodiDAO hakukohdekoodiDAO;
 
+    @Autowired
+    HakukohdeViiteDAO hakukohdeViiteDAO;
+
     @Override
-    public Valintaryhma updateHakukohdekoodit(String valintaryhmaOid, Set<Hakukohdekoodi> hakukohdekoodit) {
+    public Valintaryhma updateValintaryhmaHakukohdekoodit(String valintaryhmaOid, Set<Hakukohdekoodi> hakukohdekoodit) {
         Valintaryhma valintaryhma = valintaryhmaDAO.readByOid(valintaryhmaOid);
         Set<Long> ids = new HashSet<Long>();
         for(Hakukohdekoodi uudet : hakukohdekoodit) {
@@ -61,6 +66,31 @@ public class HakukohdekoodiServiceImpl implements HakukohdekoodiService {
         Valintaryhma valintaryhma = valintaryhmaDAO.readByOid(valintaryhmaOid);
         hakukohdekoodi.setValintaryhma(valintaryhma);
         hakukohdekoodiDAO.insert(hakukohdekoodi);
+    }
 
+    @Override
+    public void lisaaHakukohdekoodiHakukohde(String hakukohdeOid, Hakukohdekoodi hakukohdekoodi) {
+        HakukohdeViite hakukohdeViite = hakukohdeViiteDAO.readByOid(hakukohdeOid);
+        hakukohdekoodi.setHakukohde(hakukohdeViite);
+        hakukohdekoodiDAO.insert(hakukohdekoodi);
+    }
+
+    @Override
+    public Hakukohdekoodi updateHakukohdeHakukohdekoodi(String hakukohdeOid, Hakukohdekoodi hakukohdekoodi) {
+        HakukohdeViite hakukohdeViite = hakukohdeViiteDAO.readByOid(hakukohdeOid);
+
+        // ID:t ei kyllä tule restin läpi, joten tämä on vähän turhaa.
+        if(hakukohdeViite.getHakukohdekoodi() != null && !hakukohdeViite.getHakukohdekoodi().getId().equals(hakukohdekoodi.getId())) {
+            hakukohdekoodiDAO.remove(hakukohdeViite.getHakukohdekoodi());
+        }
+
+        if(hakukohdekoodi.getId() == null) {
+            hakukohdekoodi.setHakukohde(hakukohdeViite);
+            hakukohdekoodi = hakukohdekoodiDAO.insert(hakukohdekoodi);
+        } else {
+            hakukohdekoodiDAO.update(hakukohdekoodi);
+        }
+
+        return hakukohdekoodi;
     }
 }

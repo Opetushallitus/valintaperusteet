@@ -168,10 +168,10 @@ public class ValintaryhmaResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
-    public Response updateHakukohdekoodi(@PathParam("hakukohdeOid") String hakukohdeOid,
+    public Response updateHakukohdekoodi(@PathParam("hakukohdeOid") String valintaryhamOid,
                                         Set<Hakukohdekoodi> hakukohdekoodit) {
         try {
-            Valintaryhma valintaryhma = hakukohdekoodiService.updateHakukohdekoodit(hakukohdeOid, hakukohdekoodit);
+            Valintaryhma valintaryhma = hakukohdekoodiService.updateValintaryhmaHakukohdekoodit(valintaryhamOid, hakukohdekoodit);
             return Response.status(Response.Status.CREATED).entity(valintaryhma).build();
         } catch (Exception e) {
             e.printStackTrace();

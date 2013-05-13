@@ -152,24 +152,38 @@ public class HakukohdeResource {
         }
     }
 
-//    @POST
-//    @Path("{hakukohdeOid}/hakukohdekoodi")
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    @Produces(MediaType.APPLICATION_JSON)
-//    @JsonView({JsonViews.Basic.class})
-//    public Response updateHakukohdekoodi(@PathParam("hakukohdeOid") String hakukohdeOid,
-//                                        List<Hakukohdekoodi> hakukohdekoodit) {
-//        try {
-//            valinnanVaihe.setOid(oidService.haeValinnanVaiheOid());
-//            valinnanVaiheService.lisaaValinnanVaiheHakukohteelle(hakukohdeOid,
-//                    valinnanVaihe,
-//                    edellinenValinnanVaiheOid);
-//            return Response.status(Response.Status.CREATED).entity(valinnanVaihe).build();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            LOGGER.error("Error creating valinnanvaihe.", e);
-//            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-//        }
-//    }
+    @POST
+    @Path("{hakukohdeOid}/hakukohdekoodi")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @JsonView({JsonViews.Basic.class})
+    public Response updateHakukohdekoodi(@PathParam("hakukohdeOid") String hakukohdeOid,
+                                         Hakukohdekoodi hakukohdekoodi) {
+        try {
+            hakukohdekoodi = hakukohdekoodiService.updateHakukohdeHakukohdekoodi(hakukohdeOid, hakukohdekoodi);
+            return Response.status(Response.Status.CREATED).entity(hakukohdekoodi).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("Error updating hakukohdekoodit.", e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PUT
+    @Path("{valintaryhmaOid}/hakukohdekoodi")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @JsonView({ JsonViews.Basic.class })
+    public Response insertHakukohdekoodi(@PathParam("valintaryhmaOid") String hakukohdeOid,
+                                         Hakukohdekoodi hakukohdekoodi) {
+        try {
+            hakukohdekoodiService.lisaaHakukohdekoodiHakukohde(hakukohdeOid, hakukohdekoodi);
+            return Response.status(Response.Status.CREATED).entity(hakukohdekoodi).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("Error creating valinnanvaihe.", e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
 }

@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created with IntelliJ IDEA.
@@ -209,5 +210,33 @@ public class HakukohdeResourceTest {
 
         oid = hakukohdeResource.kuuluuSijoitteluun("3701").get("sijoitteluun");
         assertEquals(false, oid);
+    }
+
+    @Test
+    public void testInsertAndUpdateHakukohdekoodi() {
+        final String URI = "uri";
+        final String ARVO = "arvo";
+        Hakukohdekoodi hakukohdekoodi = new Hakukohdekoodi();
+        hakukohdekoodi.setUri(URI);
+        hakukohdekoodi.setArvo(ARVO);
+        Response response = hakukohdeResource.insertHakukohdekoodi("oid1", hakukohdekoodi);
+        assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
+
+        HakukohdeViite oid1 = hakukohdeResource.queryFull("oid1");
+        Hakukohdekoodi hakukohdekoodi1 = oid1.getHakukohdekoodi();
+        assertEquals(ARVO, hakukohdekoodi1.getArvo());
+        assertEquals(URI, hakukohdekoodi1.getUri());
+
+        // update
+        final String URI2 ="uri2";
+
+        hakukohdekoodi.setUri(URI2);
+
+        response = hakukohdeResource.updateHakukohdekoodi("oid1", hakukohdekoodi);
+        assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
+
+        oid1 = hakukohdeResource.queryFull("oid1");
+        assertEquals(ARVO, oid1.getHakukohdekoodi().getArvo());
+        assertEquals(URI2, oid1.getHakukohdekoodi().getUri());
     }
 }
