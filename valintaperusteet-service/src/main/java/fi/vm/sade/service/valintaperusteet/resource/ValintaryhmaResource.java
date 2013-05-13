@@ -2,6 +2,7 @@ package fi.vm.sade.service.valintaperusteet.resource;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -14,16 +15,14 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import fi.vm.sade.service.valintaperusteet.model.*;
+import fi.vm.sade.service.valintaperusteet.service.HakukohdekoodiService;
 import org.codehaus.jackson.map.annotate.JsonView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
-import fi.vm.sade.service.valintaperusteet.model.JsonViews;
-import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
-import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import fi.vm.sade.service.valintaperusteet.service.HakukohdeService;
 import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
 import fi.vm.sade.service.valintaperusteet.service.ValintaryhmaService;
@@ -44,6 +43,9 @@ public class ValintaryhmaResource {
 
     @Autowired
     private HakukohdeService hakukohdeService;
+
+    @Autowired
+    private HakukohdekoodiService hakukohdekoodiService;
 
     protected final static Logger LOGGER = LoggerFactory.getLogger(ValintaryhmaResource.class);
 
@@ -161,4 +163,37 @@ public class ValintaryhmaResource {
         }
     }
 
+    @POST
+    @Path("{hakukohdeOid}/hakukohdekoodi")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @JsonView({JsonViews.Basic.class})
+    public Response updateHakukohdekoodi(@PathParam("hakukohdeOid") String hakukohdeOid,
+                                        Set<Hakukohdekoodi> hakukohdekoodit) {
+        try {
+            Valintaryhma valintaryhma = hakukohdekoodiService.updateHakukohdekoodit(hakukohdeOid, hakukohdekoodit);
+            return Response.status(Response.Status.CREATED).entity(valintaryhma).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("Error updating hakukohdekoodit.", e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PUT
+    @Path("{valintaryhmaOid}/hakukohdekoodi")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @JsonView({ JsonViews.Basic.class })
+    public Response insertHakukohdekoodi(@PathParam("valintaryhmaOid") String valintaryhamOid,
+                                        Hakukohdekoodi hakukohdekoodi) {
+        try {
+            hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(valintaryhamOid, hakukohdekoodi);
+            return Response.status(Response.Status.CREATED).entity(hakukohdekoodi).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("Error creating valinnanvaihe.", e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }

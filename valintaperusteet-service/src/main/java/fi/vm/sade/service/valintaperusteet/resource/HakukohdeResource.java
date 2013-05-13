@@ -1,10 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
 import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
-import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
-import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
-import fi.vm.sade.service.valintaperusteet.model.JsonViews;
-import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
+import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.*;
 import org.codehaus.jackson.map.annotate.JsonView;
 import org.codehaus.jettison.json.JSONObject;
@@ -35,6 +32,9 @@ public class HakukohdeResource {
 
     @Autowired
     HakukohdeService hakukohdeService;
+
+    @Autowired
+    HakukohdekoodiService hakukohdekoodiService;
 
     @Autowired
     ValinnanVaiheService valinnanVaiheService;
@@ -151,5 +151,25 @@ public class HakukohdeResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+//    @POST
+//    @Path("{hakukohdeOid}/hakukohdekoodi")
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @JsonView({JsonViews.Basic.class})
+//    public Response updateHakukohdekoodi(@PathParam("hakukohdeOid") String hakukohdeOid,
+//                                        List<Hakukohdekoodi> hakukohdekoodit) {
+//        try {
+//            valinnanVaihe.setOid(oidService.haeValinnanVaiheOid());
+//            valinnanVaiheService.lisaaValinnanVaiheHakukohteelle(hakukohdeOid,
+//                    valinnanVaihe,
+//                    edellinenValinnanVaiheOid);
+//            return Response.status(Response.Status.CREATED).entity(valinnanVaihe).build();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            LOGGER.error("Error creating valinnanvaihe.", e);
+//            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+//        }
+//    }
 
 }

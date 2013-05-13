@@ -215,6 +215,7 @@ public class ValinnanVaiheServiceImpl extends AbstractCRUDServiceImpl<ValinnanVa
     @Override
     public void deleteByOid(String oid, boolean skipInheritedCheck) {
         ValinnanVaihe valinnanVaihe = haeVaiheOidilla(oid);
+
         if (!skipInheritedCheck && valinnanVaihe.getMasterValinnanVaihe() != null) {
             throw new ValinnanVaihettaEiVoiPoistaaException("Valinnan vaihe on peritty.");
         }

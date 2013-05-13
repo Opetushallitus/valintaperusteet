@@ -12,7 +12,7 @@ import java.util.List;
  * Time: 12:02
  * To change this template use File | Settings | File Templates.
  */
-public interface HakukohdeService  extends CRUDService<HakukohdeViite, Long, String> {
+public interface HakukohdeService extends CRUDService<HakukohdeViite, Long, String> {
 
     List<HakukohdeViite> findAll();
 

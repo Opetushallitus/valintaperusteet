@@ -4,10 +4,7 @@ import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
-import fi.vm.sade.service.valintaperusteet.model.JsonViews;
-import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
-import fi.vm.sade.service.valintaperusteet.model.ValinnanVaiheTyyppi;
-import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
+import fi.vm.sade.service.valintaperusteet.model.*;
 import junit.framework.Assert;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
@@ -25,8 +22,10 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * User: tommiha
@@ -130,6 +129,51 @@ public class ValintaryhmaResourceTest {
 
         response = valintaryhmaResource.insertValinnanvaihe("oid1", vv.getOid(), valinnanVaihe);
         assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
+
+    }
+
+    @Test
+    public void testInsertHakukohdekoodi() {
+        final String URI = "uri";
+        final String ARVO = "arvo";
+        Hakukohdekoodi hakukohdekoodi = new Hakukohdekoodi();
+        hakukohdekoodi.setUri(URI);
+        hakukohdekoodi.setArvo(ARVO);
+        Response response = valintaryhmaResource.insertHakukohdekoodi("oid1", hakukohdekoodi);
+        assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
+
+        Valintaryhma oid1 = valintaryhmaResource.queryFull("oid1");
+        boolean found = false;
+        for(Hakukohdekoodi hkk : oid1.getHakukohdekoodit()) {
+             if(hkk.getArvo().equals(ARVO) && hkk.getUri().equals(URI)) {
+                 found = true;
+                 break;
+             }
+        }
+        assertTrue(found);
+
+    }
+    @Test
+    public void testUpdateHakukohdekoodi() {
+        final String URI = "uri";
+        final String ARVO = "arvo";
+        Hakukohdekoodi hakukohdekoodi = new Hakukohdekoodi();
+        hakukohdekoodi.setUri(URI);
+        hakukohdekoodi.setArvo(ARVO);
+        Response response = valintaryhmaResource.insertHakukohdekoodi("oid1", hakukohdekoodi);
+        assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
+
+        Set<Hakukohdekoodi> oid1 = valintaryhmaResource.queryFull("oid1").getHakukohdekoodit();
+        for(int i = 0; i < 9 ; i++) {
+            Hakukohdekoodi koodi = new Hakukohdekoodi();
+            koodi.setUri("uri" + i);
+            koodi.setArvo("arvo" + i);
+            oid1.add(koodi);
+        }
+
+        valintaryhmaResource.updateHakukohdekoodi("oid1", oid1);
+
+
 
     }
 }
