@@ -34,7 +34,7 @@ public class Hakukohdekoodi extends BaseEntity {
     @Column(name = "nimi_en")
     private String nimiEn;
 
-    @JoinColumn(name = "hakukohde_id", nullable = true)
+    @JoinColumn(name = "hakukohde_id", nullable = true, unique = true)
     @OneToOne(fetch = FetchType.LAZY, optional = true)
     private HakukohdeViite hakukohde;
 
