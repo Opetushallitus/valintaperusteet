@@ -15,6 +15,27 @@ import java.util.List;
  */
 public class GenericHelper {
 
+    public static final String aidinkieliJaKirjallisuus = "AI";
+    public static final String historia = "HI";
+    public static final String yhteiskuntaoppi = "YH";
+    public static final String matematiikka = "MA";
+    public static final String fysiikka = "FY";
+    public static final String kemia = "KE";
+    public static final String biologia = "BI";
+    public static final String kuvataide = "KU";
+    public static final String musiikki = "MU";
+    public static final String maantieto = "GE";
+    public static final String kasityo = "KS";
+    public static final String kotitalous = "KO";
+    public static final String liikunta = "LI";
+    public static final String terveystieto = "TE";
+    public static final String uskonto = "US";
+    public static final String a1Kieli = "A1";
+    public static final String a2Kieli = "A2";
+    public static final String b1Kieli = "B1";
+    public static final String b2Kieli = "B2";
+    public static final String b3Kieli = "B3";
+
     private GenericHelper() {
     }
 

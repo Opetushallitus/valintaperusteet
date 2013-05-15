@@ -1,9 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.service.impl.generator;
 
-import fi.vm.sade.service.valintaperusteet.model.Arvovalikonvertteriparametri;
-import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
-import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
-import fi.vm.sade.service.valintaperusteet.model.Valintaperustelahde;
+import fi.vm.sade.service.valintaperusteet.model.*;
 import scala.actors.threadpool.Arrays;
 
 /**
@@ -62,5 +59,35 @@ public class PkJaYoPohjaiset {
 
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
                 jos, "Ilman koulutuspaikkaa -pisteytys, 2 aste, pk ja yo");
+    }
+
+    public static Laskentakaava luoYleinenKoulumenestysLaskentakaava(Laskentakaava laskentakaava, String nimi) {
+        Funktiokutsu konvertteri = new Funktiokutsu();
+        konvertteri.setFunktionimi(Funktionimi.KONVERTOILUKUARVO);
+        Funktioargumentti funk = new Funktioargumentti();
+        funk.setLaskentakaavaChild(laskentakaava);
+        funk.setIndeksi(1);
+
+        konvertteri.getFunktioargumentit().add(funk);
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(5.50, 5.75, 1));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(5.75, 6.00, 2));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(6.00, 6.25, 3));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(6.25, 6.50, 4));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(6.50, 6.75, 5));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(6.75, 7.00, 6));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(7.00, 7.25, 7));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(7.25, 7.50, 8));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(7.50, 7.75, 9));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(7.75, 8.00, 10));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(8.00, 8.25, 11));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(8.25, 8.50, 12));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(8.50, 8.75, 13));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(8.75, 9.00, 14));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(9.00, 9.25, 15));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(9.25, 10.1, 16));
+
+        Laskentakaava palautettavaLaskentakaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(konvertteri,
+                nimi);
+        return palautettavaLaskentakaava;
     }
 }
