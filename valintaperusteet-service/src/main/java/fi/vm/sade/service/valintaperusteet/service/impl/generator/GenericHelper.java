@@ -29,7 +29,7 @@ public class GenericHelper {
     public static final String kotitalous = "KO";
     public static final String liikunta = "LI";
     public static final String terveystieto = "TE";
-    public static final String uskonto = "US";
+    public static final String uskonto = "KT";
     public static final String a1Kieli = "A1";
     public static final String a2Kieli = "A2";
     public static final String b1Kieli = "B1";
@@ -310,6 +310,14 @@ public class GenericHelper {
         Funktiokutsu f = new Funktiokutsu();
         f.setFunktionimi(Funktionimi.JA);
         f.getFunktioargumentit().addAll(luoFunktioargumentit(args));
+        return f;
+    }
+
+    public static Funktiokutsu luoSumma(FunktionArgumentti... args) {
+        Funktiokutsu f = new Funktiokutsu();
+        f.setFunktionimi(Funktionimi.SUMMA);
+        f.getFunktioargumentit().addAll(luoFunktioargumentit(args));
+
         return f;
     }
 }

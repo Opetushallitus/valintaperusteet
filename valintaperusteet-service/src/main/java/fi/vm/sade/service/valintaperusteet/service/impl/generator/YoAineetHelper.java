@@ -13,6 +13,9 @@ public class YoAineetHelper {
 
     public final static String LK_ETULIITE = "LK_";
 
+    public static final String filosofia = "FI";
+    public static final String psykologia = "PS";
+
     public static Laskentakaava luoYOAine(String aineTunnus, String nimi) {
         Funktiokutsu aine = GenericHelper.luoHaeLukuarvo(
                 GenericHelper.luoValintaperusteViite(LK_ETULIITE + aineTunnus, true, false,

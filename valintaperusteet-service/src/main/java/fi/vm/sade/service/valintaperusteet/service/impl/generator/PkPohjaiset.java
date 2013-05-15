@@ -102,4 +102,18 @@ public class PkPohjaiset {
 
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(jos, "Pohjakoulutuspisteytys, 2 aste, pk");
     }
+
+    public static Laskentakaava luoToisenAsteenPeruskoulupohjainenPeruskaava(
+            Laskentakaava painotettavatKeskiarvotLaskentakaava, Laskentakaava yleinenkoulumenestyspisteytysmalli,
+            Laskentakaava pohjakoulutuspisteytysmalli, Laskentakaava ilmanKoulutuspaikkaaPisteytysmalli,
+            Laskentakaava hakutoivejarjestyspisteytysmalli, Laskentakaava tyokokemuspisteytysmalli,
+            Laskentakaava sukupuolipisteytysmalli) {
+
+        Funktiokutsu summa = GenericHelper.luoSumma(painotettavatKeskiarvotLaskentakaava,
+                yleinenkoulumenestyspisteytysmalli, pohjakoulutuspisteytysmalli, ilmanKoulutuspaikkaaPisteytysmalli,
+                hakutoivejarjestyspisteytysmalli, tyokokemuspisteytysmalli, sukupuolipisteytysmalli);
+
+        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(summa,
+                "2. asteen peruskoulupohjainen peruskaava");
+    }
 }
