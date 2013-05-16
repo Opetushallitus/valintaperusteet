@@ -5,7 +5,6 @@ import fi.vm.sade.service.valintaperusteet.dao.HakukohdekoodiDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
-import fi.vm.sade.service.valintaperusteet.model.Hakukohdekoodi;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import fi.vm.sade.service.valintaperusteet.service.HakukohdeService;
@@ -161,15 +160,10 @@ public class HakukohdeServiceImpl extends AbstractCRUDServiceImpl<HakukohdeViite
         HakukohdeViite hakukohde = haeHakukohdeViite(oid);
 
         List<ValinnanVaihe> vaiheet = valinnanVaiheService.findByHakukohde(hakukohde.getOid());
-        for(ValinnanVaihe vv : vaiheet) {
+        for (ValinnanVaihe vv : vaiheet) {
             valinnanVaiheService.delete(vv);
         }
 
-        Hakukohdekoodi koodi = hakukohdekoodiDAO.findByHakukohdeOid(oid);
-        if(koodi != null) {
-            koodi.setHakukohde(null);
-            hakukohde.setHakukohdekoodi(null);
-        }
         hakukohdeViiteDAO.remove(hakukohde);
 
         // Hakukohteiden tuonti saattaa feilata ilman flushausta, jos hakukohde siirretään uuden valintaryhmän alle

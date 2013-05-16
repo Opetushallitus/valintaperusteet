@@ -231,16 +231,27 @@
 
     <valintaryhma id="41" version="0" oid="oid41" nimi="Valintaryhma 41" hakuOid="hakuoid1" />
 
+    <valintaryhma id="42" version="0" oid="oid42" nimi="Valintaryhma 42" hakuOid="hakuoid1" />
 
-    <hakukohdekoodi id="1" version="0" uri="hakukohdekoodiuri1" arvo="koodiarvo1" nimi_fi="hakukohdekoodi1" nimi_sv="hakukohdekoodi1" nimi_en="hakukohdekoodi1" valintaryhma_id="36" hakukohde_id="11"/>
+    <valintaryhma id="43" version="0" oid="oid43" nimi="Valintaryhma 43" hakuOid="hakuoid1" />
+
+    <hakukohdekoodi id="1" version="0" uri="hakukohdekoodiuri1" arvo="koodiarvo1" nimi_fi="hakukohdekoodi1" nimi_sv="hakukohdekoodi1" nimi_en="hakukohdekoodi1" valintaryhma_id="36" />
     <hakukohdekoodi id="2" version="0" uri="hakukohdekoodiuri2" arvo="koodiarvo2" nimi_fi="hakukohdekoodi2" nimi_sv="hakukohdekoodi2" nimi_en="hakukohdekoodi2" valintaryhma_id="37" />
 
-    <hakukohdekoodi id="3" version="0" uri="hakukohdekoodiuri3" arvo="koodiarvo3" nimi_fi="hakukohdekoodi3" nimi_sv="hakukohdekoodi3" nimi_en="hakukohdekoodi3" valintaryhma_id="38" hakukohde_id="12" />
+    <hakukohdekoodi id="3" version="0" uri="hakukohdekoodiuri3" arvo="koodiarvo3" nimi_fi="hakukohdekoodi3" nimi_sv="hakukohdekoodi3" nimi_en="hakukohdekoodi3" valintaryhma_id="38" />
 
     <hakukohdekoodi id="4" version="0" uri="hakukohdekoodiuri4" arvo="koodiarvo4" nimi_fi="hakukohdekoodi4" nimi_sv="hakukohdekoodi4" nimi_en="hakukohdekoodi4" valintaryhma_id="41" />
     <hakukohdekoodi id="5" version="0" uri="hakukohdekoodiuri5" arvo="koodiarvo5" nimi_fi="hakukohdekoodi5" nimi_sv="hakukohdekoodi5" nimi_en="hakukohdekoodi5" />
 
     <hakukohdekoodi id="6" version="0" uri="hakukohdekoodiuri6" arvo="koodiarvo6" nimi_fi="hakukohdekoodi6" nimi_sv="hakukohdekoodi6" nimi_en="hakukohdekoodi6" valintaryhma_id="40" />
+
+    <hakukohdekoodi id="7" version="0" uri="hakukohdekoodiuri7" arvo="koodiarvo7" nimi_fi="hakukohdekoodi7" nimi_sv="hakukohdekoodi7" nimi_en="hakukohdekoodi7" valintaryhma_id="42" />
+
+    <hakukohdekoodi id="8" version="0" uri="hakukohdekoodiuri8" arvo="koodiarvo8" nimi_fi="hakukohdekoodi8" nimi_sv="hakukohdekoodi8" nimi_en="hakukohdekoodi8" />
+
+    <hakukohdekoodi id="9" version="0" uri="hakukohdekoodiuri9" arvo="koodiarvo9" nimi_fi="hakukohdekoodi9" nimi_sv="hakukohdekoodi9" nimi_en="hakukohdekoodi9" />
+
+    <hakukohdekoodi id="10" version="0" uri="hakukohdekoodiuri10" arvo="koodiarvo10" nimi_fi="hakukohdekoodi10" nimi_sv="hakukohdekoodi10" nimi_en="hakukohdekoodi10" />
 
 
     <hakukohde_viite id="1" version="0" hakuoid="hakuoid1" oid="oid1" nimi="haku1" valintaryhma_id="1" />
@@ -255,12 +266,16 @@
 
     <hakukohde_viite id="9" version="0" hakuoid="hakuoid1" oid="oid9" nimi="haku9" valintaryhma_id="20" />
     <hakukohde_viite id="10" version="0" hakuoid="hakuoid1" oid="oid10" nimi="haku10" valintaryhma_id="[NULL]" />
-    <hakukohde_viite id="11" version="0" hakuoid="hakuoid1" oid="oid11" nimi="haku11" valintaryhma_id="36" />
+    <hakukohde_viite id="11" version="0" hakuoid="hakuoid1" oid="oid11" nimi="haku11" valintaryhma_id="36" hakukohdekoodi_id="1" />
 
-    <hakukohde_viite id="12" version="0" hakuoid="hakuoid1" oid="oid12" nimi="haku12" valintaryhma_id="38" />
+    <hakukohde_viite id="12" version="0" hakuoid="hakuoid1" oid="oid12" nimi="haku12" valintaryhma_id="38" hakukohdekoodi_id="3" />
     <hakukohde_viite id="13" version="0" hakuoid="hakuoid1" oid="oid13" nimi="haku13" valintaryhma_id="39" />
 
     <hakukohde_viite id="14" version="0" hakuoid="hakuoid1" oid="oid14" nimi="haku14" valintaryhma_id="40" />
+
+    <hakukohde_viite id="15" version="0" hakuoid="hakuoid1" oid="oid15" nimi="haku15" />
+
+    <hakukohde_viite id="16" version="0" hakuoid="hakuoid1" oid="oid16" nimi="haku15" hakukohdekoodi_id="9" />
 
     <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="1" version="0" valintaryhma_id="1" hakukohde_viite_id="[NULL]" oid="1" nimi="valinnanvaihe1" kuvaus="kuvaus1" aktiivinen="true" />
     <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="2" version="0" valintaryhma_id="[NULL]" hakukohde_viite_id="[NULL]" oid="2" edellinen_valinnan_vaihe_id="1" nimi="valinnanvaihe2" kuvaus="kuvaus2" aktiivinen="true"/>

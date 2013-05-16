@@ -65,7 +65,7 @@ public class ValintaryhmaResourceTest {
     @Test
     public void testSearch() throws Exception {
         List<Valintaryhma> valintaryhmas = valintaryhmaResource.search(true, null);
-        Assert.assertEquals(26, valintaryhmas.size());
+        Assert.assertEquals(28, valintaryhmas.size());
         Assert.assertEquals(new Long(1L), valintaryhmas.get(0).getId());
 
         mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(valintaryhmas);

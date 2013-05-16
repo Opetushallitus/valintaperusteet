@@ -4,6 +4,8 @@ import fi.vm.sade.generic.model.BaseEntity;
 import org.codehaus.jackson.map.annotate.JsonView;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * User: wuoti
@@ -34,9 +36,9 @@ public class Hakukohdekoodi extends BaseEntity {
     @Column(name = "nimi_en")
     private String nimiEn;
 
-    @JoinColumn(name = "hakukohde_id", nullable = true, unique = true)
-    @OneToOne(fetch = FetchType.LAZY, optional = true)
-    private HakukohdeViite hakukohde;
+    @JsonView(JsonViews.Basic.class)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "hakukohdekoodi")
+    private Set<HakukohdeViite> hakukohteet = new HashSet<HakukohdeViite>();
 
     @JoinColumn(name = "valintaryhma_id", nullable = true)
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
@@ -82,19 +84,24 @@ public class Hakukohdekoodi extends BaseEntity {
         this.nimiEn = nimiEn;
     }
 
-    public HakukohdeViite getHakukohde() {
-        return hakukohde;
-    }
-
-    public void setHakukohde(HakukohdeViite hakukohde) {
-        this.hakukohde = hakukohde;
-    }
-
     public Valintaryhma getValintaryhma() {
         return valintaryhma;
     }
 
     public void setValintaryhma(Valintaryhma valintaryhma) {
         this.valintaryhma = valintaryhma;
+    }
+
+    public Set<HakukohdeViite> getHakukohteet() {
+        return hakukohteet;
+    }
+
+    public void setHakukohteet(Set<HakukohdeViite> hakukohteet) {
+        this.hakukohteet = hakukohteet;
+    }
+
+    public void addHakukohde(HakukohdeViite hakukohdeViite) {
+        this.hakukohteet.add(hakukohdeViite);
+        hakukohdeViite.setHakukohdekoodi(this);
     }
 }

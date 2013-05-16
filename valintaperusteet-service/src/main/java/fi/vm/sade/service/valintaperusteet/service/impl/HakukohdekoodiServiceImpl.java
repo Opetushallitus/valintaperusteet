@@ -1,17 +1,20 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
-import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdekoodiDAO;
-import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.Hakukohdekoodi;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
+import fi.vm.sade.service.valintaperusteet.service.HakukohdeService;
 import fi.vm.sade.service.valintaperusteet.service.HakukohdekoodiService;
+import fi.vm.sade.service.valintaperusteet.service.ValintaryhmaService;
+import fi.vm.sade.service.valintaperusteet.service.exception.HakukohdekoodiOnLiitettyToiseenValintaryhmaanException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -26,36 +29,41 @@ import java.util.Set;
 public class HakukohdekoodiServiceImpl implements HakukohdekoodiService {
 
     @Autowired
-    ValintaryhmaDAO valintaryhmaDAO;
+    private HakukohdekoodiDAO hakukohdekoodiDAO;
 
     @Autowired
-    HakukohdekoodiDAO hakukohdekoodiDAO;
+    private ValintaryhmaService valintaryhmaService;
 
     @Autowired
-    HakukohdeViiteDAO hakukohdeViiteDAO;
+    private HakukohdeService hakukohdeService;
+
 
     @Override
     public Valintaryhma updateValintaryhmaHakukohdekoodit(String valintaryhmaOid, Set<Hakukohdekoodi> hakukohdekoodit) {
-        Valintaryhma valintaryhma = valintaryhmaDAO.readByOid(valintaryhmaOid);
-        Set<Long> ids = new HashSet<Long>();
-        for(Hakukohdekoodi uudet : hakukohdekoodit) {
-            if(uudet.getId() != null) {
-                ids.add(uudet.getId());
-            }
-        }
-        for(Hakukohdekoodi koodi : valintaryhma.getHakukohdekoodit()) {
-            if(!ids.contains(koodi.getId())) {
-                hakukohdekoodiDAO.remove(koodi);
-            }
+        Valintaryhma valintaryhma = valintaryhmaService.readByOid(valintaryhmaOid);
+        Map<String, Hakukohdekoodi> uris = new HashMap<String, Hakukohdekoodi>();
+
+        for (Hakukohdekoodi hakukohdekoodi : hakukohdekoodit) {
+            uris.put(hakukohdekoodi.getUri(), hakukohdekoodi);
         }
 
-        for(Hakukohdekoodi koodi : hakukohdekoodit) {
-            if(koodi.getId() == null) {
-                koodi.setValintaryhma(valintaryhma);
-                hakukohdekoodiDAO.insert(koodi);
-            } else {
-                hakukohdekoodiDAO.update(koodi);
+        List<Hakukohdekoodi> managedKoodis =
+                hakukohdekoodiDAO.findByUris(uris.keySet().toArray(new String[uris.size()]));
+
+        for (Hakukohdekoodi managedKoodi : managedKoodis) {
+            uris.remove(managedKoodi.getUri());
+
+            if (managedKoodi.getValintaryhma() != null && !valintaryhma.equals(managedKoodi.getValintaryhma())) {
+                throw new HakukohdekoodiOnLiitettyToiseenValintaryhmaanException("Hakukohdekoodi URI "
+                        + managedKoodi.getUri() + " on jo liitetty valintaryhmään OID "
+                        + managedKoodi.getValintaryhma().getOid());
             }
+            managedKoodi.setValintaryhma(valintaryhma);
+        }
+
+        for(Hakukohdekoodi uusiKoodi : uris.values()) {
+            Hakukohdekoodi lisatty = hakukohdekoodiDAO.insert(uusiKoodi);
+            lisatty.setValintaryhma(valintaryhma);
         }
 
         return valintaryhma;
@@ -63,34 +71,41 @@ public class HakukohdekoodiServiceImpl implements HakukohdekoodiService {
 
     @Override
     public void lisaaHakukohdekoodiValintaryhmalle(String valintaryhmaOid, Hakukohdekoodi hakukohdekoodi) {
-        Valintaryhma valintaryhma = valintaryhmaDAO.readByOid(valintaryhmaOid);
-        hakukohdekoodi.setValintaryhma(valintaryhma);
-        hakukohdekoodiDAO.insert(hakukohdekoodi);
+        Valintaryhma valintaryhma = valintaryhmaService.readByOid(valintaryhmaOid);
+
+        Hakukohdekoodi haettu = hakukohdekoodiDAO.findByKoodiUri(hakukohdekoodi.getUri());
+        if (haettu != null) {
+            if (haettu.getValintaryhma() != null && !valintaryhma.equals(haettu.getValintaryhma())) {
+                throw new HakukohdekoodiOnLiitettyToiseenValintaryhmaanException("Hakukohdekoodi URI "
+                        + haettu.getUri() + " on jo liitetty valintaryhmään OID " + haettu.getValintaryhma().getOid());
+            }
+
+            haettu.setValintaryhma(valintaryhma);
+        } else {
+            haettu = hakukohdekoodiDAO.insert(hakukohdekoodi);
+            haettu.setValintaryhma(valintaryhma);
+        }
     }
 
     @Override
-    public void lisaaHakukohdekoodiHakukohde(String hakukohdeOid, Hakukohdekoodi hakukohdekoodi) {
-        HakukohdeViite hakukohdeViite = hakukohdeViiteDAO.readByOid(hakukohdeOid);
-        hakukohdekoodi.setHakukohde(hakukohdeViite);
-        hakukohdekoodiDAO.insert(hakukohdekoodi);
+    public Hakukohdekoodi lisaaHakukohdekoodiHakukohde(String hakukohdeOid, Hakukohdekoodi hakukohdekoodi) {
+        HakukohdeViite hakukohdeViite = hakukohdeService.readByOid(hakukohdeOid);
+
+        Hakukohdekoodi haettu = hakukohdekoodiDAO.findByKoodiUri(hakukohdekoodi.getUri());
+
+        if (haettu == null) {
+            haettu = hakukohdekoodiDAO.insert(hakukohdekoodi);
+        }
+
+        if (!haettu.getHakukohteet().contains(hakukohdeViite)) {
+            haettu.addHakukohde(hakukohdeViite);
+        }
+
+        return haettu;
     }
 
     @Override
     public Hakukohdekoodi updateHakukohdeHakukohdekoodi(String hakukohdeOid, Hakukohdekoodi hakukohdekoodi) {
-        HakukohdeViite hakukohdeViite = hakukohdeViiteDAO.readByOid(hakukohdeOid);
-
-        // ID:t ei kyllä tule restin läpi, joten tämä on vähän turhaa.
-        if(hakukohdeViite.getHakukohdekoodi() != null && !hakukohdeViite.getHakukohdekoodi().getId().equals(hakukohdekoodi.getId())) {
-            hakukohdekoodiDAO.remove(hakukohdeViite.getHakukohdekoodi());
-        }
-
-        if(hakukohdekoodi.getId() == null) {
-            hakukohdekoodi.setHakukohde(hakukohdeViite);
-            hakukohdekoodi = hakukohdekoodiDAO.insert(hakukohdekoodi);
-        } else {
-            hakukohdekoodiDAO.update(hakukohdekoodi);
-        }
-
-        return hakukohdekoodi;
+        return lisaaHakukohdekoodiHakukohde(hakukohdeOid, hakukohdekoodi);
     }
 }

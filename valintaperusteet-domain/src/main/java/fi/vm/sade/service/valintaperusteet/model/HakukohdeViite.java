@@ -9,11 +9,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Created with IntelliJ IDEA.
  * User: kkammone
  * Date: 11.1.2013
  * Time: 14:05
- * To change this template use File | Settings | File Templates.
  */
 @Entity
 @Table(name = "hakukohde_viite")
@@ -41,7 +39,8 @@ public class HakukohdeViite extends BaseEntity {
     private Set<Laskentakaava> laskentakaava = new HashSet<Laskentakaava>();
 
     @JsonView(JsonViews.Basic.class)
-    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST}, mappedBy = "hakukohde")
+    @JoinColumn(name = "hakukohdekoodi_id", nullable = true)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Hakukohdekoodi hakukohdekoodi;
 
     public String getHakuoid() {

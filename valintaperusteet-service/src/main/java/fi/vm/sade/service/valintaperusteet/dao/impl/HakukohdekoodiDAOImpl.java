@@ -9,6 +9,8 @@ import fi.vm.sade.service.valintaperusteet.model.QHakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.QHakukohdekoodi;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * User: wuoti
  * Date: 8.5.2013
@@ -26,7 +28,7 @@ public class HakukohdekoodiDAOImpl extends AbstractJpaDAOImpl<Hakukohdekoodi, Lo
         QHakukohdekoodi koodi = QHakukohdekoodi.hakukohdekoodi;
 
         return from(koodi)
-                .leftJoin(koodi.hakukohde).fetch()
+                .leftJoin(koodi.hakukohteet).fetch()
                 .leftJoin(koodi.valintaryhma).fetch()
                 .where(koodi.uri.eq(koodiUri))
                 .singleResult(koodi);
@@ -39,10 +41,33 @@ public class HakukohdekoodiDAOImpl extends AbstractJpaDAOImpl<Hakukohdekoodi, Lo
 
         return from(hakukohde)
                 .innerJoin(hakukohde.hakukohdekoodi, hakukohdekoodi)
-                .leftJoin(hakukohdekoodi.hakukohde).fetch()
+                .leftJoin(hakukohdekoodi.hakukohteet).fetch()
                 .leftJoin(hakukohdekoodi.valintaryhma).fetch()
                 .where(hakukohde.oid.eq(hakukohdeOid))
                 .singleResult(hakukohdekoodi);
     }
+
+    @Override
+    public Hakukohdekoodi findByHakukohdeOidAndKoodiUri(String hakukohdeOid, String koodiUri) {
+        QHakukohdekoodi koodi = QHakukohdekoodi.hakukohdekoodi;
+        QHakukohdeViite hakukohde = QHakukohdeViite.hakukohdeViite;
+
+        return from(koodi)
+                .innerJoin(koodi.hakukohteet, hakukohde).fetch()
+                .leftJoin(koodi.valintaryhma).fetch()
+                .where(koodi.uri.eq(koodiUri).and(hakukohde.oid.eq(hakukohdeOid)))
+                .singleResult(koodi);
+    }
+
+    @Override
+    public List<Hakukohdekoodi> findByUris(String... koodiUris) {
+        QHakukohdekoodi koodi = QHakukohdekoodi.hakukohdekoodi;
+
+        return from(koodi)
+                .leftJoin(koodi.valintaryhma).fetch()
+                .where(koodi.uri.in(koodiUris))
+                .list(koodi);
+    }
+
 
 }

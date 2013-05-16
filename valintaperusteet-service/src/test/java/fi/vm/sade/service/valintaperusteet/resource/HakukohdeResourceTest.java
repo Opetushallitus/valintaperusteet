@@ -27,14 +27,11 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
- * Created with IntelliJ IDEA.
  * User: jukais
  * Date: 16.1.2013
  * Time: 14.15
- * To change this template use File | Settings | File Templates.
  */
 @ContextConfiguration(locations = "classpath:test-context.xml")
 @TestExecutionListeners(listeners = {JTACleanInsertTestExecutionListener.class,
@@ -68,14 +65,14 @@ public class HakukohdeResourceTest {
     @Test
     public void testFindAll() throws Exception {
         List<HakukohdeViite> hakukohdeViites = hakukohdeResource.query(false);
-        assertEquals(22, hakukohdeViites.size());
+        assertEquals(24, hakukohdeViites.size());
         testUtil.lazyCheck(JsonViews.Basic.class, hakukohdeViites);
     }
 
     @Test
     public void testFindRoot() throws Exception {
         List<HakukohdeViite> hakukohdeViites = hakukohdeResource.query(true);
-        assertEquals(9, hakukohdeViites.size());
+        assertEquals(11, hakukohdeViites.size());
         testUtil.lazyCheck(JsonViews.Basic.class, hakukohdeViites);
     }
 
@@ -140,14 +137,14 @@ public class HakukohdeResourceTest {
         hakukohdeResource.update(hkv.getOid(), fromJson);
 
         hkv = hakukohdeResource.queryFull("oid1");
-        assertEquals("muokattu" , hkv.getNimi());
+        assertEquals("muokattu", hkv.getNimi());
         testUtil.lazyCheck(JsonViews.Basic.class, hkv);
     }
 
     @Test
     public void testValinnanVaihesForHakukohde() throws Exception {
         List<ValinnanVaihe> valinnanVaihes = hakukohdeResource.valinnanVaihesForHakukohde("oid6");
-        assertEquals(3 , valinnanVaihes.size());
+        assertEquals(3, valinnanVaihes.size());
         testUtil.lazyCheck(JsonViews.Basic.class, valinnanVaihes);
 
     }
@@ -173,7 +170,6 @@ public class HakukohdeResourceTest {
     }
 
 
-
     @Test
     public void testInsertValinnanVaihe() throws Exception {
         ValinnanVaihe valinnanVaihe = new ValinnanVaihe();
@@ -184,7 +180,7 @@ public class HakukohdeResourceTest {
 
         Response response = hakukohdeResource.insertValinnanvaihe("oid1", null, valinnanVaihe);
         assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
-        ValinnanVaihe vv = (ValinnanVaihe)response.getEntity();
+        ValinnanVaihe vv = (ValinnanVaihe) response.getEntity();
 
         valinnanVaihe = new ValinnanVaihe();
         valinnanVaihe.setNimi("uusi");
@@ -228,11 +224,13 @@ public class HakukohdeResourceTest {
         assertEquals(URI, hakukohdekoodi1.getUri());
 
         // update
-        final String URI2 ="uri2";
+        final String URI2 = "uri2";
 
-        hakukohdekoodi.setUri(URI2);
+        Hakukohdekoodi uusikoodi = new Hakukohdekoodi();
+        uusikoodi.setUri(URI2);
+        uusikoodi.setArvo(ARVO);
 
-        response = hakukohdeResource.updateHakukohdekoodi("oid1", hakukohdekoodi);
+        response = hakukohdeResource.updateHakukohdekoodi("oid1", uusikoodi);
         assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
 
         oid1 = hakukohdeResource.queryFull("oid1");

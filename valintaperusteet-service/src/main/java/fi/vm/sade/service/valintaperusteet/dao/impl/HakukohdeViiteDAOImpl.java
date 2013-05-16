@@ -23,7 +23,9 @@ public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Lo
     public List<HakukohdeViite> findRoot() {
         QHakukohdeViite hakukohdeViite = QHakukohdeViite.hakukohdeViite;
         QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
-        return from(hakukohdeViite).leftJoin(hakukohdeViite.valintaryhma, valintaryhma).fetch()
+        return from(hakukohdeViite)
+                .leftJoin(hakukohdeViite.valintaryhma, valintaryhma).fetch()
+                .leftJoin(hakukohdeViite.hakukohdekoodi).fetch()
                 .where(valintaryhma.isNull())
                 .list(hakukohdeViite);
     }
@@ -34,6 +36,7 @@ public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Lo
         QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
         return from(hakukohdeViite)
                 .leftJoin(hakukohdeViite.valintaryhma, valintaryhma).fetch()
+                .leftJoin(hakukohdeViite.hakukohdekoodi).fetch()
                 .list(hakukohdeViite);
     }
 
@@ -43,6 +46,7 @@ public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Lo
         QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
         return from(hakukohdeViite)
                 .leftJoin(hakukohdeViite.valintaryhma, valintaryhma).fetch()
+                .leftJoin(hakukohdeViite.hakukohdekoodi).fetch()
                 .where(hakukohdeViite.oid.eq(oid))
                 .singleResult(hakukohdeViite);
     }
@@ -51,7 +55,8 @@ public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Lo
     public List<HakukohdeViite> findByValintaryhmaOid(String oid) {
         QHakukohdeViite hakukohdeViite = QHakukohdeViite.hakukohdeViite;
         QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
-        return from(hakukohdeViite).leftJoin(hakukohdeViite.valintaryhma, valintaryhma).fetch()
+        return from(hakukohdeViite)
+                .leftJoin(hakukohdeViite.valintaryhma, valintaryhma).fetch()
                 .where(valintaryhma.oid.eq(oid)).list(hakukohdeViite);
     }
 

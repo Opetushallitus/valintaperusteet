@@ -82,7 +82,7 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
 
             final String valintaryhmaOid = koodi.getValintaryhma() != null ? koodi.getValintaryhma().getOid() : null;
             hakukohde = hakukohdeService.insert(hakukohde, valintaryhmaOid);
-            koodi.setHakukohde(hakukohde);
+            koodi.addHakukohde(hakukohde);
         } else {
 
             Valintaryhma koodiValintaryhma = koodi.getValintaryhma();
@@ -112,26 +112,26 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
                 HakukohdeViite lisatty = hakukohdeService.insert(uusiHakukohde,
                         koodiValintaryhma != null ? koodiValintaryhma.getOid() : null);
                 lisatty.setHakukohdekoodi(koodi);
-                koodi.setHakukohde(uusiHakukohde);
+                koodi.addHakukohde(hakukohde);
 
                 ValinnanVaihe viimeinenValinnanVaihe =
                         valinnanVaiheDAO.haeHakukohteenViimeinenValinnanVaihe(importData.getHakukohdeOid());
 
-                if(!valinnanVaiheet.isEmpty()) {
+                if (!valinnanVaiheet.isEmpty()) {
                     valinnanVaiheet.get(0).setEdellinen(viimeinenValinnanVaihe);
-                    if(viimeinenValinnanVaihe != null) {
+                    if (viimeinenValinnanVaihe != null) {
                         viimeinenValinnanVaihe.setSeuraava(valinnanVaiheet.get(0));
                     }
 
                     // Asetetaan hakukohteen omat valinnan vaiheet viittaamaan taas uuteen hakukohteeseen
-                    for(ValinnanVaihe vv : valinnanVaiheet) {
+                    for (ValinnanVaihe vv : valinnanVaiheet) {
                         vv.setHakukohdeViite(uusiHakukohde);
                     }
                 }
             } else {
                 // Synkataan nimi ja koodi
                 hakukohde.setNimi(importData.getNimi());
-                koodi.setHakukohde(hakukohde);
+                koodi.addHakukohde(hakukohde);
             }
         }
     }

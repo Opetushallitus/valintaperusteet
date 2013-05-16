@@ -24,7 +24,7 @@ import static org.junit.Assert.*;
 @ContextConfiguration(locations = "classpath:test-context.xml")
 @TestExecutionListeners(listeners = {
         DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
-        TransactionalTestExecutionListener.class, JTACleanInsertTestExecutionListener.class })
+        TransactionalTestExecutionListener.class, JTACleanInsertTestExecutionListener.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
 @DataSetLocation("classpath:test-data.xml")
@@ -42,8 +42,8 @@ public class HakukohdekoodiDAOTest {
         final String hakukohdeOid = "oid11";
 
         assertEquals(koodiUri, koodi.getUri());
-        assertEquals(koodi.getValintaryhma().getOid(), valintaryhmaOid);
-        assertEquals(koodi.getHakukohde().getOid(), hakukohdeOid);
+        assertEquals(valintaryhmaOid, koodi.getValintaryhma().getOid());
+        assertEquals(hakukohdeOid, koodi.getHakukohteet().iterator().next().getOid());
 
         assertNull(hakukohdekoodiDAO.findByKoodiUri("not-exists"));
     }
@@ -53,7 +53,7 @@ public class HakukohdekoodiDAOTest {
         final String hakukohdeOid = "oid12";
         Hakukohdekoodi hakukohdekoodi = hakukohdekoodiDAO.findByHakukohdeOid(hakukohdeOid);
         assertNotNull(hakukohdekoodi);
-        assertEquals(hakukohdeOid, hakukohdekoodi.getHakukohde().getOid());
+        assertEquals(hakukohdeOid, hakukohdekoodi.getHakukohteet().iterator().next().getOid());
         assertNull(hakukohdekoodiDAO.findByHakukohdeOid("not exists"));
     }
 }
