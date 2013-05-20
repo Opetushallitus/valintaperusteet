@@ -12,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -43,12 +40,25 @@ public class HakukohdekoodiServiceImpl implements HakukohdekoodiService {
         Valintaryhma valintaryhma = valintaryhmaService.readByOid(valintaryhmaOid);
         Map<String, Hakukohdekoodi> uris = new HashMap<String, Hakukohdekoodi>();
 
+        if(hakukohdekoodit == null) {
+            hakukohdekoodit = new HashSet<Hakukohdekoodi>();
+        }
+
         for (Hakukohdekoodi hakukohdekoodi : hakukohdekoodit) {
             uris.put(hakukohdekoodi.getUri(), hakukohdekoodi);
         }
 
+        Set<String> uriSet = uris.keySet();
+
+        for (Hakukohdekoodi koodi : valintaryhma.getHakukohdekoodit()) {
+            if(!uriSet.contains(koodi.getUri())) {
+                koodi.setValintaryhma(null);
+            }
+        }
+
+
         List<Hakukohdekoodi> managedKoodis =
-                hakukohdekoodiDAO.findByUris(uris.keySet().toArray(new String[uris.size()]));
+                hakukohdekoodiDAO.findByUris(uriSet.toArray(new String[uris.size()]));
 
         for (Hakukohdekoodi managedKoodi : managedKoodis) {
             uris.remove(managedKoodi.getUri());

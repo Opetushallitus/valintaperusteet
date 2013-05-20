@@ -178,4 +178,25 @@ public class ValintaryhmaResourceTest {
         assertEquals(10, oid1.size());
 
     }
+
+    @Test
+    public void testRemoveAllHakukohdekoodi() {
+        final String URI = "uri";
+        final String ARVO = "arvo";
+        Hakukohdekoodi hakukohdekoodi = new Hakukohdekoodi();
+        hakukohdekoodi.setUri(URI);
+        hakukohdekoodi.setArvo(ARVO);
+        Response response = valintaryhmaResource.insertHakukohdekoodi("oid1", hakukohdekoodi);
+        assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
+
+        Set<Hakukohdekoodi> oid1 = null;
+
+        response = valintaryhmaResource.updateHakukohdekoodi("oid1", oid1);
+        assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
+
+        oid1 = valintaryhmaResource.queryFull("oid1").getHakukohdekoodit();
+
+        assertEquals(0, oid1.size());
+
+    }
 }

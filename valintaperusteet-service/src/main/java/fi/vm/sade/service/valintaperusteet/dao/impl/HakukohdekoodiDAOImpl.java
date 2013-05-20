@@ -9,6 +9,7 @@ import fi.vm.sade.service.valintaperusteet.model.QHakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.QHakukohdekoodi;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -61,6 +62,9 @@ public class HakukohdekoodiDAOImpl extends AbstractJpaDAOImpl<Hakukohdekoodi, Lo
 
     @Override
     public List<Hakukohdekoodi> findByUris(String... koodiUris) {
+        if(koodiUris == null || koodiUris.length == 0) {
+            return new ArrayList<Hakukohdekoodi>();
+        }
         QHakukohdekoodi koodi = QHakukohdekoodi.hakukohdekoodi;
 
         return from(koodi)
