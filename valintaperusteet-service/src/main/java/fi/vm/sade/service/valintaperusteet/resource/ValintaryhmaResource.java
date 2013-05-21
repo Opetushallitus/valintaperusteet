@@ -157,6 +157,7 @@ public class ValintaryhmaResource {
                     edellinenValinnanVaiheOid);
             return Response.status(Response.Status.CREATED).entity(valinnanVaihe).build();
         } catch (Exception e) {
+            e.printStackTrace();
             LOGGER.error("Error creating valinnanvaihe.", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
@@ -170,9 +171,10 @@ public class ValintaryhmaResource {
     public Response updateHakukohdekoodi(@PathParam("valintaryhmaOid") String valintaryhamOid,
                                         Set<Hakukohdekoodi> hakukohdekoodit) {
         try {
-            Valintaryhma valintaryhma = hakukohdekoodiService.updateValintaryhmaHakukohdekoodit(valintaryhamOid, hakukohdekoodit);
-            return Response.status(Response.Status.ACCEPTED).entity(valintaryhma).build();
+            hakukohdekoodiService.updateValintaryhmaHakukohdekoodit(valintaryhamOid, hakukohdekoodit);
+            return Response.status(Response.Status.ACCEPTED).entity(hakukohdekoodit).build();
         } catch (Exception e) {
+            e.printStackTrace();
             LOGGER.error("Error updating hakukohdekoodit.", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
@@ -189,6 +191,7 @@ public class ValintaryhmaResource {
             hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(valintaryhamOid, hakukohdekoodi);
             return Response.status(Response.Status.CREATED).entity(hakukohdekoodi).build();
         } catch (Exception e) {
+            e.printStackTrace();
             LOGGER.error("Error creating valinnanvaihe.", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }

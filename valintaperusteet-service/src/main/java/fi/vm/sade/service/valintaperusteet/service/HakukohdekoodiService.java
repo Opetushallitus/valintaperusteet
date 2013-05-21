@@ -14,7 +14,7 @@ import java.util.Set;
  */
 public interface HakukohdekoodiService {
 
-    Valintaryhma updateValintaryhmaHakukohdekoodit(String valintaryhmaOid, Set<Hakukohdekoodi> hakukohdekoodit);
+    void updateValintaryhmaHakukohdekoodit(String valintaryhmaOid, Set<Hakukohdekoodi> hakukohdekoodit);
 
     void lisaaHakukohdekoodiValintaryhmalle(String valintaryhmaOid, Hakukohdekoodi hakukohdekoodi);
 

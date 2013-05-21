@@ -36,7 +36,7 @@ public class HakukohdekoodiServiceImpl implements HakukohdekoodiService {
 
 
     @Override
-    public Valintaryhma updateValintaryhmaHakukohdekoodit(String valintaryhmaOid, Set<Hakukohdekoodi> hakukohdekoodit) {
+    public void updateValintaryhmaHakukohdekoodit(String valintaryhmaOid, Set<Hakukohdekoodi> hakukohdekoodit) {
         Valintaryhma valintaryhma = valintaryhmaService.readByOid(valintaryhmaOid);
         Map<String, Hakukohdekoodi> uris = new HashMap<String, Hakukohdekoodi>();
 
@@ -75,8 +75,6 @@ public class HakukohdekoodiServiceImpl implements HakukohdekoodiService {
             Hakukohdekoodi lisatty = hakukohdekoodiDAO.insert(uusiKoodi);
             lisatty.setValintaryhma(valintaryhma);
         }
-
-        return valintaryhma;
     }
 
     @Override

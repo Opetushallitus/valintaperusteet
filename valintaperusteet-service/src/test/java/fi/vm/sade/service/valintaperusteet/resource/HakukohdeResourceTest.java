@@ -231,7 +231,7 @@ public class HakukohdeResourceTest {
         uusikoodi.setArvo(ARVO);
 
         response = hakukohdeResource.updateHakukohdekoodi("oid1", uusikoodi);
-        assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
+        assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
 
         oid1 = hakukohdeResource.queryFull("oid1");
         assertEquals(ARVO, oid1.getHakukohdekoodi().getArvo());
