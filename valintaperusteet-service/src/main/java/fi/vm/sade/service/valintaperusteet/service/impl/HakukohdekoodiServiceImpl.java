@@ -87,7 +87,10 @@ public class HakukohdekoodiServiceImpl implements HakukohdekoodiService {
                 throw new HakukohdekoodiOnLiitettyToiseenValintaryhmaanException("Hakukohdekoodi URI "
                         + haettu.getUri() + " on jo liitetty valintaryhmään OID " + haettu.getValintaryhma().getOid());
             }
-
+            haettu.setArvo(hakukohdekoodi.getArvo());
+            haettu.setNimiEn(hakukohdekoodi.getNimiEn());
+            haettu.setNimiFi(hakukohdekoodi.getNimiFi());
+            haettu.setNimiSv(hakukohdekoodi.getNimiSv());
             haettu.setValintaryhma(valintaryhma);
         } else {
             haettu = hakukohdekoodiDAO.insert(hakukohdekoodi);
@@ -104,6 +107,11 @@ public class HakukohdekoodiServiceImpl implements HakukohdekoodiService {
         if (haettu == null) {
             haettu = hakukohdekoodiDAO.insert(hakukohdekoodi);
         }
+
+        haettu.setArvo(hakukohdekoodi.getArvo());
+        haettu.setNimiEn(hakukohdekoodi.getNimiEn());
+        haettu.setNimiFi(hakukohdekoodi.getNimiFi());
+        haettu.setNimiSv(hakukohdekoodi.getNimiSv());
 
         if (!haettu.getHakukohteet().contains(hakukohdeViite)) {
             haettu.addHakukohde(hakukohdeViite);

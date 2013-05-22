@@ -25,7 +25,7 @@ import java.util.Map;
  * To change this template use File | Settings | File Templates.
  */
 @Component
-@Path("/hakukohde")
+@Path("hakukohde")
 public class HakukohdeResource {
 
     protected final static Logger LOGGER = LoggerFactory.getLogger(ValintaryhmaResource.class);
@@ -69,6 +69,7 @@ public class HakukohdeResource {
     }
 
     @PUT
+    @Path("uusi")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
