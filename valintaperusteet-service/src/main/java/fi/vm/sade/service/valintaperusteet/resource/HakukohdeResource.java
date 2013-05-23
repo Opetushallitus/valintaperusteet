@@ -69,7 +69,6 @@ public class HakukohdeResource {
     }
 
     @PUT
-    @Path("uusi")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})

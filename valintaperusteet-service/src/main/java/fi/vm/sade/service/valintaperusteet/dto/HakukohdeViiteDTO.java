@@ -1,5 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
+import fi.vm.sade.service.valintaperusteet.model.JsonViews;
+import org.codehaus.jackson.map.annotate.JsonView;
+
 import java.util.Set;
 
 /**
@@ -11,10 +14,15 @@ import java.util.Set;
  */
 public class HakukohdeViiteDTO {
 
+    @JsonView(JsonViews.Basic.class)
     private String nimi;
+    @JsonView(JsonViews.Basic.class)
     private String hakuoid;
+    @JsonView(JsonViews.Basic.class)
     private String oid;
+    @JsonView(JsonViews.Basic.class)
     private String valintaryhmaOid;
+    @JsonView(JsonViews.Basic.class)
     private Set<String> valinnanvaiheetOids;
 
     public String getNimi() {

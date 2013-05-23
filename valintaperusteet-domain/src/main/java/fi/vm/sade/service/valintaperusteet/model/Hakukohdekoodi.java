@@ -36,7 +36,6 @@ public class Hakukohdekoodi extends BaseEntity {
     @Column(name = "nimi_en")
     private String nimiEn;
 
-    @JsonView(JsonViews.Basic.class)
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "hakukohdekoodi")
     private Set<HakukohdeViite> hakukohteet = new HashSet<HakukohdeViite>();
 

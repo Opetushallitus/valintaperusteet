@@ -8,6 +8,7 @@ import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import fi.vm.sade.service.valintaperusteet.service.HakukohdeService;
+import fi.vm.sade.service.valintaperusteet.service.OidService;
 import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
 import fi.vm.sade.service.valintaperusteet.service.ValintaryhmaService;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakukohdeViiteEiOleOlemassaException;
@@ -45,6 +46,9 @@ public class HakukohdeServiceImpl extends AbstractCRUDServiceImpl<HakukohdeViite
 
     @Autowired
     private HakukohdekoodiDAO hakukohdekoodiDAO;
+
+    @Autowired
+    private OidService oidService;
 
     @Autowired
     public HakukohdeServiceImpl(HakukohdeViiteDAO dao) {
@@ -125,6 +129,10 @@ public class HakukohdeServiceImpl extends AbstractCRUDServiceImpl<HakukohdeViite
     public HakukohdeViite update(String oid, HakukohdeViite incoming) {
         HakukohdeViite managedObject = haeHakukohdeViite(oid);
         managedObject.setNimi(incoming.getNimi());
+        if(managedObject.getValintaryhma() == null && incoming.getValintaryhma() != null) {
+            Valintaryhma valintaryhma = valintaryhmaService.readByOid(incoming.getValintaryhma().getOid());
+            managedObject.setValintaryhma(valintaryhma);
+        }
         return managedObject;
     }
 
