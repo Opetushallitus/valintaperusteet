@@ -18,7 +18,7 @@ public class YoAineetHelper {
 
     public static Laskentakaava luoYOAine(String aineTunnus, String nimi) {
         Funktiokutsu aine = GenericHelper.luoHaeLukuarvo(
-                GenericHelper.luoValintaperusteViite(LK_ETULIITE + aineTunnus, true, false,
+                GenericHelper.luoValintaperusteViite(LK_ETULIITE + aineTunnus, false, false,
                         Valintaperustelahde.HAETTAVA_ARVO));
 
         Laskentakaava laskentakaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(aine, nimi);

@@ -10,9 +10,8 @@ import scala.actors.threadpool.Arrays;
  */
 public class PkJaYoPohjaiset {
 
-    public static final String tyokokemuskuukaudet = "tyokokemuskuukaudet";
-    public static final String sukupuoli = "sukupuoli";
-    public static final String koulutuspaikkaAmmatillisenTutkintoon = "koulutuspaikkaAmmatillisenTutkintoon";
+    public static final String tyokokemuskuukaudet = "TYOKOKEMUSKUUKAUDET";
+    public static final String sukupuoli = "SUKUPUOLI";
 
     public static Laskentakaava luoHakutoivejarjestyspisteteytysmalli() {
         Funktiokutsu pisteet = GenericHelper.luoLukuarvo(2.0);
@@ -46,19 +45,6 @@ public class PkJaYoPohjaiset {
 
         Funktiokutsu jos = GenericHelper.luoJosFunktio(ehto, thenHaara, elseHaara);
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(jos, "Sukupuolipisteytys, 2 aste, pk ja yo");
-    }
-
-    public static Laskentakaava ilmanKoulutuspaikkaaPisteytysmalli() {
-        Funktiokutsu thenHaara = GenericHelper.luoLukuarvo(8.0);
-        Funktiokutsu elseHaara = GenericHelper.luoLukuarvo(0.0);
-        Funktiokutsu ehto = GenericHelper.luoEi(GenericHelper.luoHaeTotuusarvo(
-                GenericHelper.luoValintaperusteViite(koulutuspaikkaAmmatillisenTutkintoon, false, false,
-                        Valintaperustelahde.HAETTAVA_ARVO)));
-
-        Funktiokutsu jos = GenericHelper.luoJosFunktio(ehto, thenHaara, elseHaara);
-
-        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
-                jos, "Ilman koulutuspaikkaa -pisteytys, 2 aste, pk ja yo");
     }
 
     public static Laskentakaava luoYleinenKoulumenestysLaskentakaava(Laskentakaava laskentakaava, String nimi) {

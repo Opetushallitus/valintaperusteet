@@ -10,11 +10,11 @@ import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
  */
 public class YoPohjaiset {
     public static Laskentakaava luoToisenAsteenYlioppilaspohjainenPeruskaava(
-            Laskentakaava ilmanKoulutuspaikkaaPisteytysmalli, Laskentakaava hakutoivejarjestyspisteytysmalli,
+            Laskentakaava hakutoivejarjestyspisteytysmalli,
             Laskentakaava tyokokemuspisteytysmalli, Laskentakaava sukupuolipisteytysmalli,
             Laskentakaava yleinenkoulumenestyspisteytysmalli) {
-        Funktiokutsu summa = GenericHelper.luoSumma(ilmanKoulutuspaikkaaPisteytysmalli,
-                hakutoivejarjestyspisteytysmalli, tyokokemuspisteytysmalli, sukupuolipisteytysmalli,
+        Funktiokutsu summa = GenericHelper.luoSumma(hakutoivejarjestyspisteytysmalli, tyokokemuspisteytysmalli,
+                sukupuolipisteytysmalli,
                 yleinenkoulumenestyspisteytysmalli);
 
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(summa,

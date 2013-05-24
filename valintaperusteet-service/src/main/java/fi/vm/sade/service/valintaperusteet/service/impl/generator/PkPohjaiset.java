@@ -18,12 +18,14 @@ public class PkPohjaiset {
     }
 
     // Lisäpistekoulutus
-    public static final String kymppiluokka = "suorittanut1";
-    public static final String vammaistenValmentavaJaKuntouttavaOpetusJaOhjaus = "suorittanut2";
-    public static final String maahanmuuttajienAmmatilliseenPeruskoulutukseenValmistavaKoulutus = "suorittanut3";
-    public static final String talouskoulu = "suorittanut4";
-    public static final String ammattistartti = "suorittanut15";
-    public static final String kansanopistonLukuvuodenMittainenLinjaAmmatilliseenPeruskoulutukseen = "suorittanut6";
+    public static final String kymppiluokka = "LISAKOULUTUS_KYMPPI";
+    public static final String vammaistenValmentavaJaKuntouttavaOpetusJaOhjaus = "LISAKOULUTUS_VAMMAISTEN";
+    public static final String maahanmuuttajienAmmatilliseenPeruskoulutukseenValmistavaKoulutus = "LISAKOULUTUS_MAAHANMUUTTO";
+    public static final String talouskoulu = "LISAKOULUTUS_TALOUS";
+    public static final String ammattistartti = "LISAKOULUTUS_AMMATTISTARTTI";
+    public static final String kansanopistonLukuvuodenMittainenLinjaAmmatilliseenPeruskoulutukseen = "LISAKOULUTUS_KANSANOPISTO";
+    public static final String ilmanNykyistaKoulutuspaikkaa = "ILMAN2ASTEENOPISKELUOIKEUTTA";
+
 
     public static final String[] lisapistekoulutus = {
             kymppiluokka, vammaistenValmentavaJaKuntouttavaOpetusJaOhjaus,
@@ -31,7 +33,7 @@ public class PkPohjaiset {
             kansanopistonLukuvuodenMittainenLinjaAmmatilliseenPeruskoulutukseen};
 
     // Pohjakoulutus
-    public static final String pohjakoulutusAvain = "millatutkinnolla";
+    public static final String pohjakoulutusAvain = "POHJAKOULUTUS";
 
     public static final String perusopetuksenOppimaara = "tutkinto1";
     public static final String perusopetuksenErityisopetuksenOsittainYksilollistettyOppimaara = "tutkinto2";
@@ -52,7 +54,7 @@ public class PkPohjaiset {
     };
 
     // Onko todistuksen saantivuosi sama kuin hakuvuosi
-    public static final String todistuksenSaantivuosi = "paattotodistusvuosi_peruskoulu";
+    public static final String todistuksenSaantivuosi = "PK_PAATTOTODISTUSVUOSI";
 
     public static final int kuluvaVuosi = 2013;
 
@@ -115,5 +117,18 @@ public class PkPohjaiset {
 
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(summa,
                 "2. asteen peruskoulupohjainen peruskaava");
+    }
+
+    public static Laskentakaava ilmanKoulutuspaikkaaPisteytysmalli() {
+        Funktiokutsu thenHaara = GenericHelper.luoLukuarvo(8.0);
+        Funktiokutsu elseHaara = GenericHelper.luoLukuarvo(0.0);
+        Funktiokutsu ehto = GenericHelper.luoHaeTotuusarvo(
+                GenericHelper.luoValintaperusteViite(ilmanNykyistaKoulutuspaikkaa, false, false,
+                        Valintaperustelahde.HAETTAVA_ARVO));
+
+        Funktiokutsu jos = GenericHelper.luoJosFunktio(ehto, thenHaara, elseHaara);
+
+        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
+                jos, "Ilman koulutuspaikkaa -pisteytys, 2 aste, pk");
     }
 }

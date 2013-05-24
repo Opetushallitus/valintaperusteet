@@ -13,20 +13,20 @@ public class PkAineetHelper {
     private PkAineetHelper() {
     }
 
-    public static final String PK_Valinnainen1 = "2";
-    public static final String PK_Valinnainen2 = "3";
+    public static final String PK_Valinnainen1 = "_VAL1";
+    public static final String PK_Valinnainen2 = "_VAL2";
     public static final String PK_etuliite = "PK_";
 
     public static Laskentakaava luoPKAine(String aineTunnus, String nimi) {
         Funktiokutsu aine = GenericHelper.luoHaeLukuarvo(
-                GenericHelper.luoValintaperusteViite(PK_etuliite + aineTunnus, true, false,
-                Valintaperustelahde.HAETTAVA_ARVO));
+                GenericHelper.luoValintaperusteViite(PK_etuliite + aineTunnus, false, false,
+                        Valintaperustelahde.HAETTAVA_ARVO));
         Funktiokutsu aineValinnainen1 = GenericHelper.luoHaeLukuarvo(
                 GenericHelper.luoValintaperusteViite(PK_etuliite + aineTunnus + PK_Valinnainen1,
-                true, false, Valintaperustelahde.HAETTAVA_ARVO));
+                        false, false, Valintaperustelahde.HAETTAVA_ARVO));
         Funktiokutsu aineValinnainen2 = GenericHelper.luoHaeLukuarvo(
                 GenericHelper.luoValintaperusteViite(PK_etuliite + aineTunnus + PK_Valinnainen2,
-                true, false, Valintaperustelahde.HAETTAVA_ARVO));
+                        false, false, Valintaperustelahde.HAETTAVA_ARVO));
 
         Funktiokutsu valinnainenKeskiarvo = GenericHelper.luoKeskiarvo(aineValinnainen1, aineValinnainen2);
         Funktiokutsu keskiarvo = GenericHelper.luoKeskiarvo(aine, valinnainenKeskiarvo);

@@ -30,11 +30,29 @@ public class GenericHelper {
     public static final String liikunta = "LI";
     public static final String terveystieto = "TE";
     public static final String uskonto = "KT";
-    public static final String a1Kieli = "A1";
-    public static final String a2Kieli = "A2";
+
+    // A1-kieliä voi olla kolme
+    public static final String a11Kieli = "A1_1";
+    public static final String a12Kieli = "A1_2";
+    public static final String a13Kieli = "A1_3";
+
+    // A2-kieliä voi olla kolme
+    public static final String a21Kieli = "A2_1";
+    public static final String a22Kieli = "A2_2";
+    public static final String a23Kieli = "A2_3";
+
+    // B1-kieliä voi olla yksi
     public static final String b1Kieli = "B1";
-    public static final String b2Kieli = "B2";
-    public static final String b3Kieli = "B3";
+
+    // B2-kieliä voi olla kolme
+    public static final String b21Kieli = "B2_1";
+    public static final String b22Kieli = "B2_2";
+    public static final String b23Kieli = "B2_3";
+
+    // B3-kieliä voi olla kolme
+    public static final String b31Kieli = "B3_1";
+    public static final String b32Kieli = "B3_2";
+    public static final String b33Kieli = "B3_3";
 
     private GenericHelper() {
     }
@@ -197,7 +215,7 @@ public class GenericHelper {
     }
 
     public static Arvovalikonvertteriparametri luoArvovalikonvertteriparametri(double min, double max,
-                                                                              double paluuarvo) {
+                                                                               double paluuarvo) {
         Arvovalikonvertteriparametri a = new Arvovalikonvertteriparametri();
         a.setMaxValue(max);
         a.setMinValue(min);
@@ -208,7 +226,7 @@ public class GenericHelper {
     }
 
     public static Arvokonvertteriparametri luoArvokonvertteriparametri(String arvo, String paluuarvo,
-                                                                      boolean hylkaysperuste) {
+                                                                       boolean hylkaysperuste) {
         Arvokonvertteriparametri a = new Arvokonvertteriparametri();
         a.setArvo(arvo);
         a.setPaluuarvo(paluuarvo);

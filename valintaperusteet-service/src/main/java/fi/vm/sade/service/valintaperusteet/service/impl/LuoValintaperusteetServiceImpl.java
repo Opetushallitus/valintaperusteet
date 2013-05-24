@@ -47,23 +47,34 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         Laskentakaava pk_liikunta = laskentakaavaService.insert(PkAineetHelper.luoPKAine(GenericHelper.liikunta, "Liikunta, PK päättötodistus, mukaanlukien valinnaiset"));
         Laskentakaava pk_terveystieto = laskentakaavaService.insert(PkAineetHelper.luoPKAine(GenericHelper.terveystieto, "Terveystieto, PK päättötodistus, mukaanlukien valinnaiset"));
         Laskentakaava pk_uskonto = laskentakaavaService.insert(PkAineetHelper.luoPKAine(GenericHelper.uskonto, "Uskonto tai elämänkatsomustieto, PK päättötodistus, mukaanlukien valinnaiset"));
-        Laskentakaava pk_a1Kieli = laskentakaavaService.insert(PkAineetHelper.luoPKAine(GenericHelper.a1Kieli, "A1-Kieli, PK päättötodistus, mukaanlukien valinnaiset"));
-        Laskentakaava pk_a2Kieli = laskentakaavaService.insert(PkAineetHelper.luoPKAine(GenericHelper.a2Kieli, "A2-Kieli, PK päättötodistus, mukaanlukien valinnaiset"));
+        Laskentakaava pk_a11Kieli = laskentakaavaService.insert(PkAineetHelper.luoPKAine(GenericHelper.a11Kieli, "1. A1-Kieli, PK päättötodistus, mukaanlukien valinnaiset"));
+        Laskentakaava pk_a12Kieli = laskentakaavaService.insert(PkAineetHelper.luoPKAine(GenericHelper.a12Kieli, "2. A1-Kieli, PK päättötodistus, mukaanlukien valinnaiset"));
+        Laskentakaava pk_a13Kieli = laskentakaavaService.insert(PkAineetHelper.luoPKAine(GenericHelper.a13Kieli, "3. A1-Kieli, PK päättötodistus, mukaanlukien valinnaiset"));
+        Laskentakaava pk_a21Kieli = laskentakaavaService.insert(PkAineetHelper.luoPKAine(GenericHelper.a21Kieli, "1. A2-Kieli, PK päättötodistus, mukaanlukien valinnaiset"));
+        Laskentakaava pk_a22Kieli = laskentakaavaService.insert(PkAineetHelper.luoPKAine(GenericHelper.a22Kieli, "2. A2-Kieli, PK päättötodistus, mukaanlukien valinnaiset"));
+        Laskentakaava pk_a23Kieli = laskentakaavaService.insert(PkAineetHelper.luoPKAine(GenericHelper.a23Kieli, "3. A2-Kieli, PK päättötodistus, mukaanlukien valinnaiset"));
         Laskentakaava pk_b1Kieli = laskentakaavaService.insert(PkAineetHelper.luoPKAine(GenericHelper.b1Kieli, "B1-Kieli, PK päättötodistus, mukaanlukien valinnaiset"));
-        Laskentakaava pk_b2Kieli = laskentakaavaService.insert(PkAineetHelper.luoPKAine(GenericHelper.b2Kieli, "B2-Kieli, PK päättötodistus, mukaanlukien valinnaiset"));
-        Laskentakaava pk_b3Kieli = laskentakaavaService.insert(PkAineetHelper.luoPKAine(GenericHelper.b3Kieli, "B3-Kieli, PK päättötodistus, mukaanlukien valinnaiset"));
+        Laskentakaava pk_b21Kieli = laskentakaavaService.insert(PkAineetHelper.luoPKAine(GenericHelper.b21Kieli, "1. B2-Kieli, PK päättötodistus, mukaanlukien valinnaiset"));
+        Laskentakaava pk_b22Kieli = laskentakaavaService.insert(PkAineetHelper.luoPKAine(GenericHelper.b22Kieli, "2. B2-Kieli, PK päättötodistus, mukaanlukien valinnaiset"));
+        Laskentakaava pk_b23Kieli = laskentakaavaService.insert(PkAineetHelper.luoPKAine(GenericHelper.b23Kieli, "3. B2-Kieli, PK päättötodistus, mukaanlukien valinnaiset"));
+        Laskentakaava pk_b31Kieli = laskentakaavaService.insert(PkAineetHelper.luoPKAine(GenericHelper.b31Kieli, "1. B3-Kieli, PK päättötodistus, mukaanlukien valinnaiset"));
+        Laskentakaava pk_b32Kieli = laskentakaavaService.insert(PkAineetHelper.luoPKAine(GenericHelper.b32Kieli, "2. B3-Kieli, PK päättötodistus, mukaanlukien valinnaiset"));
+        Laskentakaava pk_b33Kieli = laskentakaavaService.insert(PkAineetHelper.luoPKAine(GenericHelper.b33Kieli, "3. B3-Kieli, PK päättötodistus, mukaanlukien valinnaiset"));
+
 
         //pisteytysmalli
         Laskentakaava pk_painotettavatKeskiarvotLaskentakaava =
                 laskentakaavaService.insert(PkAineetHelper.luoPainotettavatKeskiarvotLaskentakaava(pk_kuvataide, pk_musiikki, pk_kasityo, pk_kotitalous, pk_liikunta));
 
-        Laskentakaava pkPohjainenLukuaineidenKeskiarvo = laskentakaavaService.insert(PkAineetHelper.luoPKPohjaisenKoulutuksenLukuaineidenKeskiarvo(pk_ai, pk_historia, pk_yhteiskuntaoppi, pk_matematiikka, pk_fysiikka, pk_kemia, pk_biologia,
-                pk_kuvataide, pk_musiikki, pk_maantieto, pk_kasityo, pk_kotitalous, pk_liikunta, pk_terveystieto, pk_uskonto, pk_a1Kieli, pk_a2Kieli, pk_b1Kieli, pk_b2Kieli, pk_b3Kieli));
+        Laskentakaava pkPohjainenLukuaineidenKeskiarvo = laskentakaavaService.insert(PkAineetHelper.luoPKPohjaisenKoulutuksenLukuaineidenKeskiarvo(pk_ai, pk_historia, pk_yhteiskuntaoppi,
+                pk_matematiikka, pk_fysiikka, pk_kemia, pk_biologia, pk_kuvataide, pk_musiikki, pk_maantieto, pk_kasityo, pk_kotitalous, pk_liikunta, pk_terveystieto,
+                pk_uskonto, pk_a11Kieli, pk_a12Kieli, pk_a13Kieli, pk_a21Kieli, pk_a22Kieli, pk_a23Kieli, pk_b1Kieli, pk_b21Kieli, pk_b22Kieli, pk_b23Kieli, pk_b31Kieli,
+                pk_b32Kieli, pk_b33Kieli));
 
         //pisteytysmalli
         Laskentakaava pk_yleinenkoulumenestyspisteytysmalli = laskentakaavaService.insert(PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(pkPohjainenLukuaineidenKeskiarvo, "Yleinen koulumenestys pisteytysmalli, PK"));
-        Laskentakaava pohjakoulutuspisteytysmalli = laskentakaavaService.insert(PkPohjaiset.luoPohjakoulutuspisteytysmalli());
-        Laskentakaava ilmanKoulutuspaikkaaPisteytysmalli = laskentakaavaService.insert(PkJaYoPohjaiset.ilmanKoulutuspaikkaaPisteytysmalli());
+        Laskentakaava pk_pohjakoulutuspisteytysmalli = laskentakaavaService.insert(PkPohjaiset.luoPohjakoulutuspisteytysmalli());
+        Laskentakaava pk_ilmanKoulutuspaikkaaPisteytysmalli = laskentakaavaService.insert(PkPohjaiset.ilmanKoulutuspaikkaaPisteytysmalli());
         Laskentakaava hakutoivejarjestyspisteytysmalli = laskentakaavaService.insert(PkJaYoPohjaiset.luoHakutoivejarjestyspisteteytysmalli());
         Laskentakaava tyokokemuspisteytysmalli = laskentakaavaService.insert(PkJaYoPohjaiset.luoTyokokemuspisteytysmalli());
         Laskentakaava sukupuolipisteytysmalli = laskentakaavaService.insert(PkJaYoPohjaiset.luoSukupuolipisteytysmalli());
@@ -71,7 +82,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
         // Pk koostava iso kaava
         Laskentakaava toisenAsteenPeruskoulupohjainenPeruskaava = laskentakaavaService.insert(PkPohjaiset.luoToisenAsteenPeruskoulupohjainenPeruskaava(pk_painotettavatKeskiarvotLaskentakaava,
-                pk_yleinenkoulumenestyspisteytysmalli, pohjakoulutuspisteytysmalli, ilmanKoulutuspaikkaaPisteytysmalli, hakutoivejarjestyspisteytysmalli, tyokokemuspisteytysmalli,
+                pk_yleinenkoulumenestyspisteytysmalli, pk_pohjakoulutuspisteytysmalli, pk_ilmanKoulutuspaikkaaPisteytysmalli, hakutoivejarjestyspisteytysmalli, tyokokemuspisteytysmalli,
                 sukupuolipisteytysmalli));
 
         Laskentakaava lk_ai = laskentakaavaService.insert(YoAineetHelper.luoYOAine(GenericHelper.aidinkieliJaKirjallisuus, "Äidinkieli ja kirjallisuus, LK päättötodistus"));
@@ -89,20 +100,30 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         Laskentakaava lk_liikunta = laskentakaavaService.insert(YoAineetHelper.luoYOAine(GenericHelper.liikunta, "Liikunta, LK päättötodistus"));
         Laskentakaava lk_terveystieto = laskentakaavaService.insert(YoAineetHelper.luoYOAine(GenericHelper.terveystieto, "Terveystieto, LK päättötodistus"));
         Laskentakaava lk_uskonto = laskentakaavaService.insert(YoAineetHelper.luoYOAine(GenericHelper.uskonto, "Uskonto tai elämänkatsomustieto, LK päättötodistus"));
-        Laskentakaava lk_a1Kieli = laskentakaavaService.insert(YoAineetHelper.luoYOAine(GenericHelper.a1Kieli, "A1-Kieli, LK päättötodistus"));
-        Laskentakaava lk_a2Kieli = laskentakaavaService.insert(YoAineetHelper.luoYOAine(GenericHelper.a2Kieli, "A2-Kieli, LK päättötodistus"));
+        Laskentakaava lk_a11Kieli = laskentakaavaService.insert(YoAineetHelper.luoYOAine(GenericHelper.a11Kieli, "1. A1-Kieli, LK päättötodistus"));
+        Laskentakaava lk_a12Kieli = laskentakaavaService.insert(YoAineetHelper.luoYOAine(GenericHelper.a12Kieli, "2. A1-Kieli, LK päättötodistus"));
+        Laskentakaava lk_a13Kieli = laskentakaavaService.insert(YoAineetHelper.luoYOAine(GenericHelper.a13Kieli, "3. A1-Kieli, LK päättötodistus"));
+        Laskentakaava lk_a21Kieli = laskentakaavaService.insert(YoAineetHelper.luoYOAine(GenericHelper.a21Kieli, "1. A2-Kieli, LK päättötodistus"));
+        Laskentakaava lk_a22Kieli = laskentakaavaService.insert(YoAineetHelper.luoYOAine(GenericHelper.a22Kieli, "2. A2-Kieli, LK päättötodistus"));
+        Laskentakaava lk_a23Kieli = laskentakaavaService.insert(YoAineetHelper.luoYOAine(GenericHelper.a23Kieli, "3. A2-Kieli, LK päättötodistus"));
         Laskentakaava lk_b1Kieli = laskentakaavaService.insert(YoAineetHelper.luoYOAine(GenericHelper.b1Kieli, "B1-Kieli, LK päättötodistus"));
-        Laskentakaava lk_b2Kieli = laskentakaavaService.insert(YoAineetHelper.luoYOAine(GenericHelper.b2Kieli, "B2-Kieli, LK päättötodistus"));
-        Laskentakaava lk_b3Kieli = laskentakaavaService.insert(YoAineetHelper.luoYOAine(GenericHelper.b3Kieli, "B3-Kieli, LK päättötodistus"));
+        Laskentakaava lk_b21Kieli = laskentakaavaService.insert(YoAineetHelper.luoYOAine(GenericHelper.b21Kieli, "1. B2-Kieli, LK päättötodistus"));
+        Laskentakaava lk_b22Kieli = laskentakaavaService.insert(YoAineetHelper.luoYOAine(GenericHelper.b22Kieli, "2. B2-Kieli, LK päättötodistus"));
+        Laskentakaava lk_b23Kieli = laskentakaavaService.insert(YoAineetHelper.luoYOAine(GenericHelper.b23Kieli, "3. B2-Kieli, LK päättötodistus"));
+        Laskentakaava lk_b31Kieli = laskentakaavaService.insert(YoAineetHelper.luoYOAine(GenericHelper.b31Kieli, "1. B3-Kieli, LK päättötodistus"));
+        Laskentakaava lk_b32Kieli = laskentakaavaService.insert(YoAineetHelper.luoYOAine(GenericHelper.b32Kieli, "2. B3-Kieli, LK päättötodistus"));
+        Laskentakaava lk_b33Kieli = laskentakaavaService.insert(YoAineetHelper.luoYOAine(GenericHelper.b33Kieli, "3. B3-Kieli, LK päättötodistus"));
 
-        Laskentakaava lk_paattotodistuksenkeskiarvo = laskentakaavaService.insert(YoAineetHelper.luoYOPohjaisenKoulutuksenPaattotodistuksenKeskiarvo(lk_ai, lk_historia, lk_yhteiskuntaoppi, lk_matematiikka, lk_fysiikka,
-                lk_kemia, lk_biologia, lk_kuvataide, lk_musiikki, lk_maantieto, lk_filosofia, lk_psykologia, lk_liikunta, lk_terveystieto, lk_uskonto, lk_terveystieto, lk_a1Kieli, lk_a2Kieli,
-                lk_b1Kieli, lk_b2Kieli, lk_b3Kieli));
+
+        Laskentakaava lk_paattotodistuksenkeskiarvo = laskentakaavaService.insert(YoAineetHelper.luoYOPohjaisenKoulutuksenPaattotodistuksenKeskiarvo(lk_ai, lk_historia,
+                lk_yhteiskuntaoppi, lk_matematiikka, lk_fysiikka, lk_kemia, lk_biologia, lk_kuvataide, lk_musiikki, lk_maantieto, lk_filosofia, lk_psykologia, lk_liikunta,
+                lk_terveystieto, lk_uskonto, lk_terveystieto, lk_a11Kieli, lk_a12Kieli, lk_a13Kieli, lk_a21Kieli, lk_a22Kieli, lk_a23Kieli, lk_b1Kieli, lk_b21Kieli, lk_b22Kieli,
+                lk_b23Kieli, lk_b31Kieli, lk_b32Kieli, lk_b33Kieli));
 
         Laskentakaava lk_yleinenkoulumenestyspisteytysmalli = laskentakaavaService.insert(PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(lk_paattotodistuksenkeskiarvo, "Yleinen koulumenestys pisteytysmalli, LK"));
 
         // Yo koostava iso kaava
-        Laskentakaava toisenAsteenYlioppilaspohjainenPeruskaava = laskentakaavaService.insert(YoPohjaiset.luoToisenAsteenYlioppilaspohjainenPeruskaava(ilmanKoulutuspaikkaaPisteytysmalli, hakutoivejarjestyspisteytysmalli,
+        Laskentakaava toisenAsteenYlioppilaspohjainenPeruskaava = laskentakaavaService.insert(YoPohjaiset.luoToisenAsteenYlioppilaspohjainenPeruskaava(hakutoivejarjestyspisteytysmalli,
                 tyokokemuspisteytysmalli, sukupuolipisteytysmalli, lk_yleinenkoulumenestyspisteytysmalli));
     }
 }
