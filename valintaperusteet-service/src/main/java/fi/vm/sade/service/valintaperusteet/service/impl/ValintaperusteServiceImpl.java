@@ -131,6 +131,10 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
                 valintakoe.getValintakoe().addAll(convertValintakokeet(valinnanVaihe));
                 vv = valintakoe;
                 break;
+
+            default:
+                throw new UnsupportedOperationException("Virheellinen valinnan vaiheen tyyppi. Ei " +
+                        "pystytä käsittelemään");
         }
 
         vv.setValinnanVaiheJarjestysluku(valinnanvaiheJarjestysluku);
