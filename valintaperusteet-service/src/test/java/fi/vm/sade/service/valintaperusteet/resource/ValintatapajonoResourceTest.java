@@ -61,7 +61,7 @@ public class ValintatapajonoResourceTest {
         resource.update(jono.getOid(), jono);
 
         jono = resource.readByOid("1");
-        assertEquals("muokattu" , jono.getNimi());
+        assertEquals("muokattu", jono.getNimi());
         testUtil.lazyCheck(JsonViews.Basic.class, jono);
     }
 
@@ -69,7 +69,7 @@ public class ValintatapajonoResourceTest {
     public void testFindAll() throws Exception {
         List<Valintatapajono> jonos = resource.findAll();
 
-        assertEquals(66, jonos.size());
+        assertEquals(68, jonos.size());
         testUtil.lazyCheck(JsonViews.Basic.class, jonos);
     }
 
@@ -102,7 +102,7 @@ public class ValintatapajonoResourceTest {
         try {
             valintatapajono = resource.readByOid("30");
             assertNull(valintatapajono);
-        } catch(ValintatapajonoEiOleOlemassaException e) {
+        } catch (ValintatapajonoEiOleOlemassaException e) {
 
         }
 
@@ -125,7 +125,7 @@ public class ValintatapajonoResourceTest {
 
         assertEquals(Response.Status.ACCEPTED.getStatusCode(), insert.getStatus());
 
-        Jarjestyskriteeri entity = (Jarjestyskriteeri)insert.getEntity();
+        Jarjestyskriteeri entity = (Jarjestyskriteeri) insert.getEntity();
 
         testUtil.lazyCheck(JsonViews.Basic.class, entity, true);
 

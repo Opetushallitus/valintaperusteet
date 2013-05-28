@@ -62,14 +62,14 @@ public class FunktiokutsuDAOImpl extends AbstractJpaDAOImpl<Funktiokutsu, Long> 
                                         .distinct()
                                         .list(lk.funktiokutsu.id)
                         )
-                        .and(
-                                fk.id.notIn(
-                                        subQuery().from(arg)
-                                                .leftJoin(arg.funktiokutsuChild)
-                                                .distinct()
-                                                .list(arg.funktiokutsuChild.id)
+                                .and(
+                                        fk.id.notIn(
+                                                subQuery().from(arg)
+                                                        .leftJoin(arg.funktiokutsuChild)
+                                                        .distinct()
+                                                        .list(arg.funktiokutsuChild.id)
+                                        )
                                 )
-                        )
                 )
                 .distinct().list(fk);
         return orphans;
@@ -102,6 +102,31 @@ public class FunktiokutsuDAOImpl extends AbstractJpaDAOImpl<Funktiokutsu, Long> 
         for (Funktiokutsu child : children) {
             deleteRecursively(child);
         }
+    }
+
+    @Override
+    public List<Funktiokutsu> findFunktiokutsuByHakukohdeOids(List<String> hakukohdeOids) {
+        QHakukohdeViite hakukohde = QHakukohdeViite.hakukohdeViite;
+        QValinnanVaihe vaihe = QValinnanVaihe.valinnanVaihe;
+        QValintatapajono jono = QValintatapajono.valintatapajono;
+        QJarjestyskriteeri kriteeri = QJarjestyskriteeri.jarjestyskriteeri;
+        QLaskentakaava kaava = QLaskentakaava.laskentakaava;
+        QFunktiokutsu funktiokutsu = QFunktiokutsu.funktiokutsu;
+
+        return from(hakukohde)
+                .innerJoin(hakukohde.valinnanvaiheet, vaihe)
+                .innerJoin(vaihe.jonot, jono)
+                .innerJoin(jono.jarjestyskriteerit, kriteeri)
+                .innerJoin(kriteeri.laskentakaava, kaava)
+                .innerJoin(kaava.funktiokutsu, funktiokutsu)
+                .leftJoin(funktiokutsu.arvokonvertteriparametrit).fetch()
+                .leftJoin(funktiokutsu.arvovalikonvertteriparametrit).fetch()
+                .leftJoin(funktiokutsu.funktioargumentit).fetch()
+                .leftJoin(funktiokutsu.syoteparametrit).fetch()
+                .leftJoin(funktiokutsu.valintaperuste).fetch()
+                .where(hakukohde.oid.in(hakukohdeOids))
+                .distinct()
+                .list(funktiokutsu);
     }
 
     @Override

@@ -5,6 +5,7 @@ import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.generic.dao.GenericDAO;
 import fi.vm.sade.kaava.Funktiokuvaaja;
 import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -463,5 +464,29 @@ public class LaskentakaavaServiceTest {
 
         assertEquals(Funktiotyyppi.LUKUARVOFUNKTIO, laskentakaava509L.getTyyppi());
         assertEquals(Funktionimi.LUKUARVO, luku511L.getFunktionimi());
+    }
+
+    @Test
+    public void testFindAvaimetForHakukohdes() {
+        final List<String> oids = Arrays.asList("oid17");
+        List<ValintaperusteDTO> valintaperusteet = laskentakaavaService.findAvaimetForHakukohdes(oids);
+        assertEquals(2, valintaperusteet.size());
+
+        Collections.sort(valintaperusteet, new Comparator<ValintaperusteDTO>() {
+            @Override
+            public int compare(ValintaperusteDTO o1, ValintaperusteDTO o2) {
+                return o1.getTunniste().compareTo(o2.getTunniste());
+            }
+        });
+
+        assertEquals("valintaperuste1", valintaperusteet.get(0).getTunniste());
+        assertEquals("valintaperuste2", valintaperusteet.get(1).getTunniste());
+
+        assertEquals(5, valintaperusteet.get(0).getArvot().size());
+        assertNull(valintaperusteet.get(0).getMax());
+        assertNull(valintaperusteet.get(0).getMin());
+        assertEquals(0.0, valintaperusteet.get(1).getMin().doubleValue());
+        assertEquals(30.0, valintaperusteet.get(1).getMax().doubleValue());
+        assertNull(valintaperusteet.get(1).getArvot());
     }
 }

@@ -15,11 +15,11 @@ import javax.persistence.Table;
 @Table(name = "arvovalikonvertteriparametri")
 public class Arvovalikonvertteriparametri extends Konvertteriparametri {
     @JsonView(JsonViews.Basic.class)
-    @Column(name = "minvalue")
+    @Column(name = "minvalue", nullable = false)
     private Double minValue;
 
     @JsonView(JsonViews.Basic.class)
-    @Column(name = "maxvalue")
+    @Column(name = "maxvalue", nullable = false)
     private Double maxValue;
 
     @JsonView(JsonViews.Basic.class)

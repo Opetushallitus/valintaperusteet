@@ -1,28 +1,22 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
-import com.mysema.query.Tuple;
 import fi.vm.sade.generic.dao.GenericDAO;
-import fi.vm.sade.kaava.Funktiokuvaaja;
 import fi.vm.sade.kaava.Laskentakaavavalidaattori;
 import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.dao.LaskentakaavaDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
 import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaEiValidiException;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import scala.Option;
-import scala.Tuple2;
 
-import java.util.List;
-import java.util.logging.Level;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -118,36 +112,36 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     }
 
     private void asetaNullitOletusarvoiksi(Funktiokutsu fk) {
-        for(Arvokonvertteriparametri p : fk.getArvokonvertteriparametrit()) {
-            if(p.getHylkaysperuste() == null) {
+        for (Arvokonvertteriparametri p : fk.getArvokonvertteriparametrit()) {
+            if (p.getHylkaysperuste() == null) {
                 p.setHylkaysperuste(false);
             }
         }
 
-        for(Arvovalikonvertteriparametri p: fk.getArvovalikonvertteriparametrit()) {
-            if(p.getPalautaHaettuArvo() == null) {
+        for (Arvovalikonvertteriparametri p : fk.getArvovalikonvertteriparametrit()) {
+            if (p.getPalautaHaettuArvo() == null) {
                 p.setPalautaHaettuArvo(false);
             }
 
-            if(p.getHylkaysperuste() == null) {
+            if (p.getHylkaysperuste() == null) {
                 p.setHylkaysperuste(false);
             }
         }
 
-        if(fk.getValintaperuste() != null) {
+        if (fk.getValintaperuste() != null) {
             ValintaperusteViite vp = fk.getValintaperuste();
 
-            if(vp.getOnPaasykoe() == null) {
+            if (vp.getOnPaasykoe() == null) {
                 vp.setOnPaasykoe(false);
             }
 
-            if(vp.getOnPakollinen() == null) {
+            if (vp.getOnPakollinen() == null) {
                 vp.setOnPakollinen(false);
             }
         }
 
-        for(Funktioargumentti arg :  fk.getFunktioargumentit()) {
-            if(arg.getFunktiokutsuChild() != null) {
+        for (Funktioargumentti arg : fk.getFunktioargumentit()) {
+            if (arg.getFunktiokutsuChild() != null) {
                 asetaNullitOletusarvoiksi(arg.getFunktiokutsuChild());
             }
         }
@@ -225,11 +219,11 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             managed.getSyoteparametrit().add(newParam);
         }
 
-        if(incoming.getValintaperuste() != null) {
+        if (incoming.getValintaperuste() != null) {
             ValintaperusteViite newVp = incoming.getValintaperuste();
 
             ValintaperusteViite vp = null;
-            if(managed.getValintaperuste() != null) {
+            if (managed.getValintaperuste() != null) {
                 vp = managed.getValintaperuste();
             } else {
                 vp = new ValintaperusteViite();
@@ -241,11 +235,11 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             vp.setOnPakollinen(newVp.getOnPakollinen());
             vp.setTunniste(newVp.getTunniste());
 
-            if(managed.getValintaperuste() == null) {
+            if (managed.getValintaperuste() == null) {
                 vp.setFunktiokutsu(managed);
                 managed.setValintaperuste(vp);
             }
-        } else if(managed.getValintaperuste() != null) {
+        } else if (managed.getValintaperuste() != null) {
             genericDAO.remove(managed.getValintaperuste());
         }
 
@@ -290,72 +284,72 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     }
 
     @Override
-    public JSONObject findAvaimetForHakukohdes(List<String> oids) {
-        if (oids == null || (oids.size() == 0)) {
-            List<HakukohdeViite> all = hakukohdeViiteDAO.findAll();
-            for (HakukohdeViite hakukohdeViite : all) {
-                oids.add(hakukohdeViite.getOid());
+    public List<ValintaperusteDTO> findAvaimetForHakukohdes(List<String> oids) {
+        List<Funktiokutsu> funktiokutsut = funktiokutsuDAO.findFunktiokutsuByHakukohdeOids(oids);
+
+        Map<String, ValintaperusteDTO> valintaperusteet = new HashMap<String, ValintaperusteDTO>();
+
+        for (Funktiokutsu kutsu : funktiokutsut) {
+            haeValintaperusteetRekursiivisesti(kutsu, valintaperusteet);
+        }
+
+        return new ArrayList<ValintaperusteDTO>(valintaperusteet.values());
+    }
+
+    private void haeValintaperusteetRekursiivisesti(Funktiokutsu funktiokutsu,
+                                                    Map<String, ValintaperusteDTO> valintaperusteet) {
+        if (funktiokutsu.getValintaperuste() != null) {
+            ValintaperusteDTO valintaperuste = new ValintaperusteDTO();
+            valintaperuste.setFunktiotyyppi(funktiokutsu.getFunktionimi().getTyyppi());
+            valintaperuste.setTunniste(funktiokutsu.getValintaperuste().getTunniste());
+            valintaperuste.setKuvaus(funktiokutsu.getValintaperuste().getKuvaus());
+            valintaperuste.setLahde(funktiokutsu.getValintaperuste().getLahde());
+            valintaperuste.setOnPakollinen(funktiokutsu.getValintaperuste().getOnPakollinen());
+
+            if (funktiokutsu.getArvokonvertteriparametrit() != null &&
+                    funktiokutsu.getArvokonvertteriparametrit().size() > 0) {
+                List<String> arvot = new ArrayList<String>();
+
+                for (Arvokonvertteriparametri ap : funktiokutsu.getArvokonvertteriparametrit()) {
+                    arvot.add(ap.getArvo());
+                }
+
+                valintaperuste.setArvot(arvot);
+            } else if (funktiokutsu.getArvovalikonvertteriparametrit() != null &&
+                    funktiokutsu.getArvovalikonvertteriparametrit().size() > 0) {
+                List<Arvovalikonvertteriparametri> arvovalikonvertterit =
+                        new ArrayList<Arvovalikonvertteriparametri>(funktiokutsu.getArvovalikonvertteriparametrit());
+
+                Collections.sort(arvovalikonvertterit, new Comparator<Arvovalikonvertteriparametri>() {
+                    @Override
+                    public int compare(Arvovalikonvertteriparametri o1, Arvovalikonvertteriparametri o2) {
+                        return o1.getMinValue().compareTo(o2.getMinValue());
+                    }
+                });
+
+                Double min = arvovalikonvertterit.get(0).getMinValue();
+                Double max = arvovalikonvertterit.get(arvovalikonvertterit.size() - 1).getMaxValue();
+
+                valintaperuste.setMin(min);
+                valintaperuste.setMax(max);
+            }
+
+            valintaperusteet.put(valintaperuste.getTunniste(), valintaperuste);
+        }
+
+        for (Funktioargumentti arg : funktiokutsu.getFunktioargumentit()) {
+            if (arg.getFunktiokutsuChild() != null) {
+                haeValintaperusteetRekursiivisesti(funktiokutsuDAO.getFunktiokutsu(arg.getFunktiokutsuChild().getId()), valintaperusteet);
+            } else if (arg.getLaskentakaavaChild() != null) {
+                haeValintaperusteetRekursiivisesti(laskentakaavaDAO.getLaskentakaava(arg.getLaskentakaavaChild().getId()).getFunktiokutsu(), valintaperusteet);
             }
         }
-
-        List<Tuple> tuples = laskentakaavaDAO.findLaskentakaavatByHakukohde(oids);
-        if (tuples == null) {
-            return null;
-        }
-        JSONObject hakukohteet = new JSONObject();
-
-        for (Tuple tuple : tuples) {
-            try {
-                findValintaperustetunnisteet(hakukohteet, tuple.get(QHakukohdeViite.hakukohdeViite.oid),
-                        tuple.get(QValinnanVaihe.valinnanVaihe.oid), tuple.get(QLaskentakaava.laskentakaava)
-                        .getFunktiokutsu());
-            } catch (JSONException e) {
-                LOGGER.log(Level.WARNING, "Error in constructing JSONObject", e);
-            }
-        }
-
-        return hakukohteet;
     }
 
     @Override
     @Transactional(readOnly = true)
     public Laskentakaava validoi(Laskentakaava laskentakaava) {
         return Laskentakaavavalidaattori.validoiMallinnettuKaava(laskentakaava);
-    }
-
-    private void findValintaperustetunnisteet(JSONObject hakukohteet, final String hakukohdeOid,
-                                              final String valinnanVaiheOid, final Funktiokutsu funktiokutsu) throws JSONException {
-
-        ValintaperusteViite vp = funktiokutsu.getValintaperuste();
-        JSONObject valinnanvaiheet = hakukohteet.optJSONObject(hakukohdeOid);
-        if (valinnanvaiheet == null) {
-            valinnanvaiheet = new JSONObject();
-        }
-
-        JSONObject avaimet = valinnanvaiheet.optJSONObject(valinnanVaiheOid);
-        if (avaimet == null) {
-            avaimet = new JSONObject();
-        }
-
-        Tuple2<Funktionimi, Funktiokuvaaja.Funktiokuvaus> funktiokuvaus;
-        Option<Funktiokuvaaja.Valintaperusteparametrikuvaus> valintaperusteparametri;
-
-        funktiokuvaus = Funktiokuvaaja.annaFunktiokuvaus(funktiokutsu.getFunktionimi());
-        valintaperusteparametri = funktiokuvaus._2().valintaperusteparametri();
-
-        if (!valintaperusteparametri.isEmpty()) {
-            Funktiokuvaaja.Valintaperusteparametrikuvaus kuvaus = valintaperusteparametri.get();
-            String tyyppi = kuvaus.tyyppi().toString();
-
-            hakukohteet.put(hakukohdeOid, valinnanvaiheet);
-            valinnanvaiheet.put(valinnanVaiheOid, avaimet);
-            avaimet.put(vp.getTunniste(), tyyppi);
-        }
-
-
-        for (Funktioargumentti funktioargumentti : funktiokutsu.getFunktioargumentit()) {
-            findValintaperustetunnisteet(hakukohteet, hakukohdeOid, valinnanVaiheOid, funktioargumentti.getFunktiokutsuChild());
-        }
     }
 
     @Override

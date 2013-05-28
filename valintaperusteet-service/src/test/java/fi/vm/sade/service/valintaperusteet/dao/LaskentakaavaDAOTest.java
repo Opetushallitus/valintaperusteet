@@ -28,7 +28,7 @@ import static junit.framework.Assert.assertFalse;
 @ContextConfiguration(locations = "classpath:test-context.xml")
 @TestExecutionListeners(listeners = {
         DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
-        TransactionalTestExecutionListener.class, JTACleanInsertTestExecutionListener.class })
+        TransactionalTestExecutionListener.class, JTACleanInsertTestExecutionListener.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
 @DataSetLocation("classpath:test-data.xml")
@@ -118,7 +118,7 @@ public class LaskentakaavaDAOTest {
     @Test
     public void testLaskentakaavatRootLevel() {
         List<Laskentakaava> kaavas = laskentakaavaDAO.findKaavas(true, null, null);
-        assertEquals(17, kaavas.size());
+        assertEquals(20, kaavas.size());
     }
 
     @Test
@@ -130,9 +130,8 @@ public class LaskentakaavaDAOTest {
     @Test
     public void testLaskentakaavatByTyyppi() {
         List<Laskentakaava> kaavas = laskentakaavaDAO.findKaavas(true, null, Funktiotyyppi.LUKUARVOFUNKTIO);
-        assertEquals(15, kaavas.size());
+        assertEquals(18, kaavas.size());
         kaavas = laskentakaavaDAO.findKaavas(true, null, Funktiotyyppi.TOTUUSARVOFUNKTIO);
         assertEquals(2, kaavas.size());
     }
-
 }

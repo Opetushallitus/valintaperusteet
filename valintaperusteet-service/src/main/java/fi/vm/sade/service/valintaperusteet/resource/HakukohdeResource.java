@@ -1,10 +1,10 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
 import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.*;
 import org.codehaus.jackson.map.annotate.JsonView;
-import org.codehaus.jettison.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -127,7 +127,8 @@ public class HakukohdeResource {
     @Path("/avaimet")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public JSONObject findAvaimet(List<String> oids) {
+    @JsonView({JsonViews.Basic.class})
+    public List<ValintaperusteDTO> findAvaimet(List<String> oids) {
         return laskentakaavaService.findAvaimetForHakukohdes(oids);
     }
 
@@ -171,7 +172,7 @@ public class HakukohdeResource {
     @Path("{hakukohdeOid}/hakukohdekoodi")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({ JsonViews.Basic.class })
+    @JsonView({JsonViews.Basic.class})
     public Response insertHakukohdekoodi(@PathParam("hakukohdeOid") String hakukohdeOid,
                                          Hakukohdekoodi hakukohdekoodi) {
         try {

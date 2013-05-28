@@ -2,12 +2,13 @@ package fi.vm.sade.service.valintaperusteet.resource;
 
 import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
+import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.util.TestUtil;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jettison.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +22,7 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -44,6 +45,9 @@ public class HakukohdeResourceTest {
     private HakukohdeResource hakukohdeResource = new HakukohdeResource();
     private TestUtil testUtil = new TestUtil(HakukohdeResourceTest.class);
 
+    private ObjectMapper mapper = new ObjectMapperProvider().getContext(HakukohdeResource.class);
+
+
     @Autowired
     private ApplicationContext applicationContext;
 
@@ -65,14 +69,14 @@ public class HakukohdeResourceTest {
     @Test
     public void testFindAll() throws Exception {
         List<HakukohdeViite> hakukohdeViites = hakukohdeResource.query(false);
-        assertEquals(24, hakukohdeViites.size());
+        assertEquals(25, hakukohdeViites.size());
         testUtil.lazyCheck(JsonViews.Basic.class, hakukohdeViites);
     }
 
     @Test
     public void testFindRoot() throws Exception {
         List<HakukohdeViite> hakukohdeViites = hakukohdeResource.query(true);
-        assertEquals(11, hakukohdeViites.size());
+        assertEquals(12, hakukohdeViites.size());
         testUtil.lazyCheck(JsonViews.Basic.class, hakukohdeViites);
     }
 
@@ -158,15 +162,12 @@ public class HakukohdeResourceTest {
 
     @Test
     public void testFindAvaimet() throws Exception {
-        ArrayList<String> oids = new ArrayList<String>();
+        final List<String> oids = Arrays.asList("oid17");
 
-        JSONObject avaimet = hakukohdeResource.findAvaimet(oids);
-        oids.add("oid1");
-        oids.add("oid2");
-        oids.add("oid6");
-        avaimet = hakukohdeResource.findAvaimet(oids);
-        System.out.println(avaimet.toString());
-        assertEquals(2, avaimet.length());
+        List<ValintaperusteDTO> valintaperusteet = hakukohdeResource.findAvaimet(oids);
+        assertEquals(2, valintaperusteet.size());
+
+        mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(valintaperusteet);
     }
 
 
