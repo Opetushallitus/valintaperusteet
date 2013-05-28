@@ -133,8 +133,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
                 break;
 
             default:
-                throw new UnsupportedOperationException("Virheellinen valinnan vaiheen tyyppi. Ei " +
-                        "pystytä käsittelemään");
+                throw new UnsupportedOperationException("Virheellinen valinnan vaiheen tyyppi. Ei pystytä käsittelemään");
         }
 
         vv.setValinnanVaiheJarjestysluku(valinnanvaiheJarjestysluku);
