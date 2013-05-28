@@ -32,7 +32,8 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
     @Override
     public void luo() {
-        Laskentakaava pk_ai = laskentakaavaService.insert(PkAineetHelper.luoPKAine(GenericHelper.aidinkieliJaKirjallisuus, "Äidinkieli ja Kirjallisuus, PK päättötodistus, mukaanlukien valinnaiset"));
+        Laskentakaava pk_ai1 = laskentakaavaService.insert(PkAineetHelper.luoPKAine(GenericHelper.aidinkieliJaKirjallisuus1, "Äidinkieli ja Kirjallisuus 1., PK päättötodistus, mukaanlukien valinnaiset"));
+        Laskentakaava pk_ai2 = laskentakaavaService.insert(PkAineetHelper.luoPKAine(GenericHelper.aidinkieliJaKirjallisuus2, "Äidinkieli ja Kirjallisuus 2., PK päättötodistus, mukaanlukien valinnaiset"));
         Laskentakaava pk_historia = laskentakaavaService.insert(PkAineetHelper.luoPKAine(GenericHelper.historia, "Historia, PK päättötodistus, mukaanlukien valinnaiset"));
         Laskentakaava pk_yhteiskuntaoppi = laskentakaavaService.insert(PkAineetHelper.luoPKAine(GenericHelper.yhteiskuntaoppi, "Yhteiskuntaoppi, PK päättötodistus, mukaanlukien valinnaiset"));
         Laskentakaava pk_matematiikka = laskentakaavaService.insert(PkAineetHelper.luoPKAine(GenericHelper.matematiikka, "Matematiikka, PK päättötodistus, mukaanlukien valinnaiset"));
@@ -66,7 +67,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         Laskentakaava pk_painotettavatKeskiarvotLaskentakaava =
                 laskentakaavaService.insert(PkAineetHelper.luoPainotettavatKeskiarvotLaskentakaava(pk_kuvataide, pk_musiikki, pk_kasityo, pk_kotitalous, pk_liikunta));
 
-        Laskentakaava pkPohjainenLukuaineidenKeskiarvo = laskentakaavaService.insert(PkAineetHelper.luoPKPohjaisenKoulutuksenLukuaineidenKeskiarvo(pk_ai, pk_historia, pk_yhteiskuntaoppi,
+        Laskentakaava pkPohjainenLukuaineidenKeskiarvo = laskentakaavaService.insert(PkAineetHelper.luoPKPohjaisenKoulutuksenLukuaineidenKeskiarvo(pk_ai1, pk_ai2, pk_historia, pk_yhteiskuntaoppi,
                 pk_matematiikka, pk_fysiikka, pk_kemia, pk_biologia, pk_kuvataide, pk_musiikki, pk_maantieto, pk_kasityo, pk_kotitalous, pk_liikunta, pk_terveystieto,
                 pk_uskonto, pk_a11Kieli, pk_a12Kieli, pk_a13Kieli, pk_a21Kieli, pk_a22Kieli, pk_a23Kieli, pk_b1Kieli, pk_b21Kieli, pk_b22Kieli, pk_b23Kieli, pk_b31Kieli,
                 pk_b32Kieli, pk_b33Kieli));
@@ -85,7 +86,8 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                 pk_yleinenkoulumenestyspisteytysmalli, pk_pohjakoulutuspisteytysmalli, pk_ilmanKoulutuspaikkaaPisteytysmalli, hakutoivejarjestyspisteytysmalli, tyokokemuspisteytysmalli,
                 sukupuolipisteytysmalli));
 
-        Laskentakaava lk_ai = laskentakaavaService.insert(YoAineetHelper.luoYOAine(GenericHelper.aidinkieliJaKirjallisuus, "Äidinkieli ja kirjallisuus, LK päättötodistus"));
+        Laskentakaava lk_ai1 = laskentakaavaService.insert(YoAineetHelper.luoYOAine(GenericHelper.aidinkieliJaKirjallisuus1, "Äidinkieli ja kirjallisuus 1., LK päättötodistus"));
+        Laskentakaava lk_ai2 = laskentakaavaService.insert(YoAineetHelper.luoYOAine(GenericHelper.aidinkieliJaKirjallisuus2, "Äidinkieli ja kirjallisuus 2., LK päättötodistus"));
         Laskentakaava lk_historia = laskentakaavaService.insert(YoAineetHelper.luoYOAine(GenericHelper.historia, "Historia, LK päättötodistus"));
         Laskentakaava lk_yhteiskuntaoppi = laskentakaavaService.insert(YoAineetHelper.luoYOAine(GenericHelper.yhteiskuntaoppi, "Yhteiskuntaoppi, LK päättötodistus"));
         Laskentakaava lk_matematiikka = laskentakaavaService.insert(YoAineetHelper.luoYOAine(GenericHelper.matematiikka, "Matematiikka, LK päättötodistus"));
@@ -115,7 +117,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         Laskentakaava lk_b33Kieli = laskentakaavaService.insert(YoAineetHelper.luoYOAine(GenericHelper.b33Kieli, "3. B3-Kieli, LK päättötodistus"));
 
 
-        Laskentakaava lk_paattotodistuksenkeskiarvo = laskentakaavaService.insert(YoAineetHelper.luoYOPohjaisenKoulutuksenPaattotodistuksenKeskiarvo(lk_ai, lk_historia,
+        Laskentakaava lk_paattotodistuksenkeskiarvo = laskentakaavaService.insert(YoAineetHelper.luoYOPohjaisenKoulutuksenPaattotodistuksenKeskiarvo(lk_ai1,lk_ai2, lk_historia,
                 lk_yhteiskuntaoppi, lk_matematiikka, lk_fysiikka, lk_kemia, lk_biologia, lk_kuvataide, lk_musiikki, lk_maantieto, lk_filosofia, lk_psykologia, lk_liikunta,
                 lk_terveystieto, lk_uskonto, lk_terveystieto, lk_a11Kieli, lk_a12Kieli, lk_a13Kieli, lk_a21Kieli, lk_a22Kieli, lk_a23Kieli, lk_b1Kieli, lk_b21Kieli, lk_b22Kieli,
                 lk_b23Kieli, lk_b31Kieli, lk_b32Kieli, lk_b33Kieli));

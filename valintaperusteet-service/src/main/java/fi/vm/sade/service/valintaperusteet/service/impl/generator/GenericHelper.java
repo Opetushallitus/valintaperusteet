@@ -15,7 +15,9 @@ import java.util.List;
  */
 public class GenericHelper {
 
-    public static final String aidinkieliJaKirjallisuus = "AI";
+    public static final String aidinkieliJaKirjallisuus1 = "AI_1";
+    public static final String aidinkieliJaKirjallisuus2 = "AI_2";
+
     public static final String historia = "HI";
     public static final String yhteiskuntaoppi = "YH";
     public static final String matematiikka = "MA";
@@ -42,7 +44,7 @@ public class GenericHelper {
     public static final String a23Kieli = "A2_3";
 
     // B1-kieliä voi olla yksi
-    public static final String b1Kieli = "B1";
+    public static final String b1Kieli = "B1_1";
 
     // B2-kieliä voi olla kolme
     public static final String b21Kieli = "B2_1";
