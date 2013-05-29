@@ -65,7 +65,8 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
         lisaaHakukohdekoodit(peruskouluVr, lukioVr);
 
-        Laskentakaava pk_ai = asetaValintaryhmaJaTallennaKantaan(PkAineetHelper.luoPKAine(GenericHelper.aidinkieliJaKirjallisuus, "Äidinkieli ja Kirjallisuus, PK päättötodistus, mukaanlukien valinnaiset"), peruskouluVr);
+        Laskentakaava pk_ai1 = asetaValintaryhmaJaTallennaKantaan(PkAineetHelper.luoPKAine(GenericHelper.aidinkieliJaKirjallisuus1, "1. Äidinkieli ja Kirjallisuus, PK päättötodistus, mukaanlukien valinnaiset"), peruskouluVr);
+        Laskentakaava pk_ai2 = asetaValintaryhmaJaTallennaKantaan(PkAineetHelper.luoPKAine(GenericHelper.aidinkieliJaKirjallisuus2, "2. Äidinkieli ja Kirjallisuus 2., PK päättötodistus, mukaanlukien valinnaiset"), peruskouluVr);
         Laskentakaava pk_historia = asetaValintaryhmaJaTallennaKantaan(PkAineetHelper.luoPKAine(GenericHelper.historia, "Historia, PK päättötodistus, mukaanlukien valinnaiset"), peruskouluVr);
         Laskentakaava pk_yhteiskuntaoppi = asetaValintaryhmaJaTallennaKantaan(PkAineetHelper.luoPKAine(GenericHelper.yhteiskuntaoppi, "Yhteiskuntaoppi, PK päättötodistus, mukaanlukien valinnaiset"), peruskouluVr);
         Laskentakaava pk_matematiikka = asetaValintaryhmaJaTallennaKantaan(PkAineetHelper.luoPKAine(GenericHelper.matematiikka, "Matematiikka, PK päättötodistus, mukaanlukien valinnaiset"), peruskouluVr);
@@ -98,7 +99,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         //pisteytysmalli
         Laskentakaava pk_painotettavatKeskiarvotLaskentakaava = asetaValintaryhmaJaTallennaKantaan(PkAineetHelper.luoPainotettavatKeskiarvotLaskentakaava(pk_kuvataide, pk_musiikki, pk_kasityo, pk_kotitalous, pk_liikunta), peruskouluVr);
 
-        Laskentakaava pkPohjainenLukuaineidenKeskiarvo = asetaValintaryhmaJaTallennaKantaan(PkAineetHelper.luoPKPohjaisenKoulutuksenLukuaineidenKeskiarvo(pk_ai, pk_historia, pk_yhteiskuntaoppi,
+        Laskentakaava pkPohjainenLukuaineidenKeskiarvo = asetaValintaryhmaJaTallennaKantaan(PkAineetHelper.luoPKPohjaisenKoulutuksenLukuaineidenKeskiarvo(pk_ai1, pk_ai2, pk_historia, pk_yhteiskuntaoppi,
                 pk_matematiikka, pk_fysiikka, pk_kemia, pk_biologia, pk_kuvataide, pk_musiikki, pk_maantieto, pk_kasityo, pk_kotitalous, pk_liikunta, pk_terveystieto,
                 pk_uskonto, pk_a11Kieli, pk_a12Kieli, pk_a13Kieli, pk_a21Kieli, pk_a22Kieli, pk_a23Kieli, pk_b1Kieli, pk_b21Kieli, pk_b22Kieli, pk_b23Kieli, pk_b31Kieli,
                 pk_b32Kieli, pk_b33Kieli), peruskouluVr);
@@ -117,7 +118,9 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                 pk_yleinenkoulumenestyspisteytysmalli, pk_pohjakoulutuspisteytysmalli, pk_ilmanKoulutuspaikkaaPisteytysmalli, hakutoivejarjestyspisteytysmalli, tyokokemuspisteytysmalli,
                 sukupuolipisteytysmalli), peruskouluVr);
 
-        Laskentakaava lk_ai = asetaValintaryhmaJaTallennaKantaan(YoAineetHelper.luoYOAine(GenericHelper.aidinkieliJaKirjallisuus, "Äidinkieli ja kirjallisuus, LK päättötodistus"), lukioVr);
+        Laskentakaava lk_ai1 = asetaValintaryhmaJaTallennaKantaan(YoAineetHelper.luoYOAine(GenericHelper.aidinkieliJaKirjallisuus1, "1. Äidinkieli ja kirjallisuus, LK päättötodistus"), lukioVr);
+        Laskentakaava lk_ai2 = asetaValintaryhmaJaTallennaKantaan(YoAineetHelper.luoYOAine(GenericHelper.aidinkieliJaKirjallisuus2, "2. Äidinkieli ja kirjallisuus, LK päättötodistus"), lukioVr);
+
         Laskentakaava lk_historia = asetaValintaryhmaJaTallennaKantaan(YoAineetHelper.luoYOAine(GenericHelper.historia, "Historia, LK päättötodistus"), lukioVr);
         Laskentakaava lk_yhteiskuntaoppi = asetaValintaryhmaJaTallennaKantaan(YoAineetHelper.luoYOAine(GenericHelper.yhteiskuntaoppi, "Yhteiskuntaoppi, LK päättötodistus"), lukioVr);
         Laskentakaava lk_matematiikka = asetaValintaryhmaJaTallennaKantaan(YoAineetHelper.luoYOAine(GenericHelper.matematiikka, "Matematiikka, LK päättötodistus"), lukioVr);
@@ -147,7 +150,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         Laskentakaava lk_b33Kieli = asetaValintaryhmaJaTallennaKantaan(YoAineetHelper.luoYOAine(GenericHelper.b33Kieli, "3. B3-Kieli, LK päättötodistus"), lukioVr);
 
 
-        Laskentakaava lk_paattotodistuksenkeskiarvo = asetaValintaryhmaJaTallennaKantaan(YoAineetHelper.luoYOPohjaisenKoulutuksenPaattotodistuksenKeskiarvo(lk_ai, lk_historia,
+        Laskentakaava lk_paattotodistuksenkeskiarvo = asetaValintaryhmaJaTallennaKantaan(YoAineetHelper.luoYOPohjaisenKoulutuksenPaattotodistuksenKeskiarvo(lk_ai1, lk_ai2, lk_historia,
                 lk_yhteiskuntaoppi, lk_matematiikka, lk_fysiikka, lk_kemia, lk_biologia, lk_kuvataide, lk_musiikki, lk_maantieto, lk_filosofia, lk_psykologia, lk_liikunta,
                 lk_terveystieto, lk_uskonto, lk_terveystieto, lk_a11Kieli, lk_a12Kieli, lk_a13Kieli, lk_a21Kieli, lk_a22Kieli, lk_a23Kieli, lk_b1Kieli, lk_b21Kieli, lk_b22Kieli,
                 lk_b23Kieli, lk_b31Kieli, lk_b32Kieli, lk_b33Kieli), lukioVr);
