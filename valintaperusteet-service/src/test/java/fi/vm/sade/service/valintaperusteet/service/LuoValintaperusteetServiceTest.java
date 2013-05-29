@@ -12,6 +12,8 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
+import java.io.IOException;
+
 /**
  * User: kwuoti
  * Date: 5.3.2013
@@ -30,7 +32,7 @@ public class LuoValintaperusteetServiceTest {
 
 
     @Test
-    public void testLuo() {
+    public void testLuo() throws IOException {
         luoValintaperusteetService.luo();
     }
 }

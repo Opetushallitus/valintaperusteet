@@ -1,12 +1,23 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
+import fi.vm.sade.service.valintaperusteet.model.Hakukohdekoodi;
 import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
-import fi.vm.sade.service.valintaperusteet.service.*;
+import fi.vm.sade.service.valintaperusteet.service.HakukohdekoodiService;
+import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
+import fi.vm.sade.service.valintaperusteet.service.LuoValintaperusteetService;
+import fi.vm.sade.service.valintaperusteet.service.ValintaryhmaService;
 import fi.vm.sade.service.valintaperusteet.service.impl.generator.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ResourceLoaderAware;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,24 +28,26 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Component
 @Transactional
-public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetService {
+public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetService, ResourceLoaderAware {
 
     @Autowired
     private LaskentakaavaService laskentakaavaService;
 
     @Autowired
-    private ValinnanVaiheService valinnanVaiheService;
-
-    @Autowired
     private ValintaryhmaService valintaryhmaService;
 
     @Autowired
-    private ValintatapajonoService valintatapajonoService;
+    private HakukohdekoodiService hakukohdekoodiService;
+
+
+    private ResourceLoader resourceLoader;
 
     private static final String HAKU_OID = "toisenAsteenSyksynYhteishaku";
 
+    private static final String CSV_DELIMITER = ";";
+
     @Override
-    public void luo() {
+    public void luo() throws IOException {
         Valintaryhma ammatillinenKoulutusVr = new Valintaryhma();
         ammatillinenKoulutusVr.setNimi("Ammatillinen koulutus");
         ammatillinenKoulutusVr.setHakuOid(HAKU_OID);
@@ -49,6 +62,8 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         lukioVr.setNimi("LK");
         lukioVr.setHakuOid(HAKU_OID);
         lukioVr = valintaryhmaService.insert(lukioVr, ammatillinenKoulutusVr.getOid());
+
+        lisaaHakukohdekoodit(peruskouluVr, lukioVr);
 
         Laskentakaava pk_ai = asetaValintaryhmaJaTallennaKantaan(PkAineetHelper.luoPKAine(GenericHelper.aidinkieliJaKirjallisuus, "Äidinkieli ja Kirjallisuus, PK päättötodistus, mukaanlukien valinnaiset"), peruskouluVr);
         Laskentakaava pk_historia = asetaValintaryhmaJaTallennaKantaan(PkAineetHelper.luoPKAine(GenericHelper.historia, "Historia, PK päättötodistus, mukaanlukien valinnaiset"), peruskouluVr);
@@ -144,8 +159,54 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                 tyokokemuspisteytysmalli, sukupuolipisteytysmalli, lk_yleinenkoulumenestyspisteytysmalli), lukioVr);
     }
 
+    private void lisaaHakukohdekoodit(Valintaryhma peruskouluVr, Valintaryhma lukioVr) throws IOException {
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new InputStreamReader(resourceLoader.getResource("classpath:hakukohdekoodit/hakukohdekoodit.csv").getInputStream(), Charset.forName("UTF-8")));
+
+            // Luetaan otsikkorivi pois
+            String line = reader.readLine();
+            while ((line = reader.readLine()) != null) {
+                String[] splitted = line.split(CSV_DELIMITER);
+                String arvo = splitted[0];
+                String uri = splitted[1];
+                String nimi = splitted[2].replace("\"", "");
+
+                Hakukohdekoodi koodi = new Hakukohdekoodi();
+                koodi.setArvo(arvo);
+                koodi.setUri(uri);
+                koodi.setNimiFi(nimi);
+                koodi.setNimiSv(nimi);
+                koodi.setNimiEn(nimi);
+
+                Valintaryhma valintaryhma = new Valintaryhma();
+                valintaryhma.setHakuOid(HAKU_OID);
+                valintaryhma.setNimi(nimi);
+
+                if (nimi.contains(", pk")) {
+                    valintaryhma = valintaryhmaService.insert(valintaryhma, peruskouluVr.getOid());
+                } else {
+                    valintaryhma = valintaryhmaService.insert(valintaryhma, lukioVr.getOid());
+                }
+
+                hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(valintaryhma.getOid(), koodi);
+            }
+        } finally {
+            if (reader != null) {
+                reader.close();
+            }
+
+        }
+    }
+
+
     private Laskentakaava asetaValintaryhmaJaTallennaKantaan(Laskentakaava kaava, Valintaryhma valintaryhma) {
         kaava.setValintaryhma(valintaryhma);
         return laskentakaavaService.insert(kaava);
+    }
+
+    @Override
+    public void setResourceLoader(ResourceLoader resourceLoader) {
+        this.resourceLoader = resourceLoader;
     }
 }
