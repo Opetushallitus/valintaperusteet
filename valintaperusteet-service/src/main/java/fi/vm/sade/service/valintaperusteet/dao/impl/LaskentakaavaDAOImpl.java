@@ -22,9 +22,12 @@ public class LaskentakaavaDAOImpl extends AbstractJpaDAOImpl<Laskentakaava, Long
         QLaskentakaava lk = QLaskentakaava.laskentakaava;
         QFunktiokutsu fk = QFunktiokutsu.funktiokutsu;
 
-        Laskentakaava laskentakaava = from(lk).leftJoin(lk.funktiokutsu, fk).fetch()
-                .leftJoin(fk.arvokonvertteriparametrit).fetch().leftJoin(fk.arvovalikonvertteriparametrit).fetch()
-                .leftJoin(fk.syoteparametrit).fetch().leftJoin(fk.funktioargumentit).fetch()
+        Laskentakaava laskentakaava = from(lk)
+                .leftJoin(lk.funktiokutsu, fk).fetch()
+                .leftJoin(fk.arvokonvertteriparametrit).fetch()
+                .leftJoin(fk.arvovalikonvertteriparametrit).fetch()
+                .leftJoin(fk.syoteparametrit).fetch()
+                .leftJoin(fk.funktioargumentit).fetch()
                 .leftJoin(fk.valintaperuste).fetch().where(lk.id.eq(id)).distinct().singleResult(lk);
 
         return laskentakaava;
@@ -52,14 +55,14 @@ public class LaskentakaavaDAOImpl extends AbstractJpaDAOImpl<Laskentakaava, Long
 
         JPAQuery query = from(lk);
 
-        if(!all) {
+        if (!all) {
             query.where(lk.onLuonnos.isFalse());
         }
 
         query.where(valintaryhmaOid != null ?
                 lk.valintaryhma.oid.eq(valintaryhmaOid) : lk.valintaryhma.isNull());
 
-        if(tyyppi != null) {
+        if (tyyppi != null) {
             query.where(lk.tyyppi.eq(tyyppi));
         }
 

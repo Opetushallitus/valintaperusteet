@@ -1,9 +1,9 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
+import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
 import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
 import fi.vm.sade.service.valintaperusteet.model.Funktiotyyppi;
 import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
-import org.codehaus.jettison.json.JSONObject;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface LaskentakaavaService extends CRUDService<Laskentakaava, Long, String> {
 
-    JSONObject findAvaimetForHakukohdes(List<String> oids);
+    List<ValintaperusteDTO> findAvaimetForHakukohdes(List<String> oids);
 
     Laskentakaava validoi(Laskentakaava laskentakaava);
 
@@ -24,6 +24,7 @@ public interface LaskentakaavaService extends CRUDService<Laskentakaava, Long, S
 
     /**
      * Päivittää ainostaan laskentakaavan metadatan. Paluuarvossa EI tule funktiokutsuja.
+     *
      * @param laskentakaava
      * @return
      */
