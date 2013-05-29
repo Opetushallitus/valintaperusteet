@@ -1,5 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
+import java.io.IOException;
+
 /**
  * Created with IntelliJ IDEA.
  * User: kkammone
@@ -9,6 +11,6 @@ package fi.vm.sade.service.valintaperusteet.service;
  */
 public interface LuoValintaperusteetService {
 
-    void luo();
+    void luo() throws IOException;
 
 }

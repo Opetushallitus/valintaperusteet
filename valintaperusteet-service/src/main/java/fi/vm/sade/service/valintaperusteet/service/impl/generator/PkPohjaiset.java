@@ -24,7 +24,7 @@ public class PkPohjaiset {
     public static final String talouskoulu = "LISAKOULUTUS_TALOUS";
     public static final String ammattistartti = "LISAKOULUTUS_AMMATTISTARTTI";
     public static final String kansanopistonLukuvuodenMittainenLinjaAmmatilliseenPeruskoulutukseen = "LISAKOULUTUS_KANSANOPISTO";
-    public static final String ilmanNykyistaKoulutuspaikkaa = "ILMAN2ASTEENOPISKELUOIKEUTTA";
+    public static final String koulutuspaikkaAmmatilliseenTutkintoon = "KOULUTUSPAIKKA_AMMATILLISEEN_TUTKINTOON";
 
 
     public static final String[] lisapistekoulutus = {
@@ -35,13 +35,14 @@ public class PkPohjaiset {
     // Pohjakoulutus
     public static final String pohjakoulutusAvain = "POHJAKOULUTUS";
 
-    public static final String perusopetuksenOppimaara = "tutkinto1";
-    public static final String perusopetuksenErityisopetuksenOsittainYksilollistettyOppimaara = "tutkinto2";
-    public static final String perusopetuksenErityisopetuksenYksilollistettyOppimaaraOpetusJarjestettyToimintaalueittain = "tutkinto3";
-    public static final String perusopetuksenPaaosinTaiKokonaanYksilollistettyOppimaara = "tutkinto4";
-    public static final String oppivelvollisuudenSuorittaminenKeskeytynyt = "tutkinto4";
-    public static final String lukionPaattotodistus = "tutkinto5";
-    public static final String ulkomaillaSuoritettuKoulutus = "tutkinto6";
+
+    public static final String ulkomaillaSuoritettuKoulutus = "0";
+    public static final String perusopetuksenOppimaara = "1";
+    public static final String perusopetuksenErityisopetuksenOsittainYksilollistettyOppimaara = "2";
+    public static final String perusopetuksenErityisopetuksenYksilollistettyOppimaaraOpetusJarjestettyToimintaalueittain = "3";
+    public static final String perusopetuksenPaaosinTaiKokonaanYksilollistettyOppimaara = "6";
+    public static final String oppivelvollisuudenSuorittaminenKeskeytynyt = "7";
+    public static final String lukionPaattotodistus = "9";
 
     public static final String[] pohjakoulutusPeruskoulutus = {
             perusopetuksenOppimaara,
@@ -122,9 +123,9 @@ public class PkPohjaiset {
     public static Laskentakaava ilmanKoulutuspaikkaaPisteytysmalli() {
         Funktiokutsu thenHaara = GenericHelper.luoLukuarvo(8.0);
         Funktiokutsu elseHaara = GenericHelper.luoLukuarvo(0.0);
-        Funktiokutsu ehto = GenericHelper.luoHaeTotuusarvo(
-                GenericHelper.luoValintaperusteViite(ilmanNykyistaKoulutuspaikkaa, false, false,
-                        Valintaperustelahde.HAETTAVA_ARVO));
+        Funktiokutsu ehto = GenericHelper.luoEi(GenericHelper.luoHaeTotuusarvo(
+                GenericHelper.luoValintaperusteViite(koulutuspaikkaAmmatilliseenTutkintoon, false, false,
+                        Valintaperustelahde.HAETTAVA_ARVO)));
 
         Funktiokutsu jos = GenericHelper.luoJosFunktio(ehto, thenHaara, elseHaara);
 
