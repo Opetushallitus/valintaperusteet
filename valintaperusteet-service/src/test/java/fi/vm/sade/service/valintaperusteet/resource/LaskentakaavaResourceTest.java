@@ -128,7 +128,7 @@ public class LaskentakaavaResourceTest {
 
     @Test
     public void testFindAll() {
-        List<Laskentakaava> kaavat = laskentakaavaResource.kaavat(false, null, null);
+        List<Laskentakaava> kaavat = laskentakaavaResource.kaavat(false, null, null, null);
 
         assertEquals(19, kaavat.size());
 
@@ -166,7 +166,7 @@ public class LaskentakaavaResourceTest {
 
     @Test
     public void testGetTotuusarvokaava() {
-        List<Laskentakaava> kaavat = laskentakaavaResource.kaavat(false, null, Funktiotyyppi.TOTUUSARVOFUNKTIO);
+        List<Laskentakaava> kaavat = laskentakaavaResource.kaavat(false, null, null, Funktiotyyppi.TOTUUSARVOFUNKTIO);
         assertEquals(2, kaavat.size());
 
         for (Laskentakaava kaava : kaavat) {

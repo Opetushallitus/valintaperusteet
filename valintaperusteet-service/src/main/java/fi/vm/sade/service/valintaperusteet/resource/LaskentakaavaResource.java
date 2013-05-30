@@ -61,8 +61,9 @@ public class LaskentakaavaResource {
     public List<Laskentakaava> kaavat(
             @DefaultValue("false") @QueryParam("myosLuonnos") Boolean all,
             @QueryParam("valintaryhma") String valintaryhmaOid,
+            @QueryParam("hakukohde") String hakukohdeOid,
             @QueryParam("tyyppi") Funktiotyyppi tyyppi) {
-        return laskentakaavaService.findKaavas(all, valintaryhmaOid, tyyppi);
+        return laskentakaavaService.findKaavas(all, valintaryhmaOid, hakukohdeOid, tyyppi);
     }
 
     @GET

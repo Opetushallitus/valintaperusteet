@@ -117,21 +117,27 @@ public class LaskentakaavaDAOTest {
 
     @Test
     public void testLaskentakaavatRootLevel() {
-        List<Laskentakaava> kaavas = laskentakaavaDAO.findKaavas(true, null, null);
+        List<Laskentakaava> kaavas = laskentakaavaDAO.findKaavas(true, null, null, null);
         assertEquals(20, kaavas.size());
     }
 
     @Test
     public void testLaskentakaavatForValintaryhma() {
-        List<Laskentakaava> kaavas = laskentakaavaDAO.findKaavas(true, "oid1", null);
+        List<Laskentakaava> kaavas = laskentakaavaDAO.findKaavas(true, "oid1", null, null);
         assertEquals(3, kaavas.size());
     }
 
     @Test
+    public void testLaskentakaavatForHakukohde() {
+        List<Laskentakaava> kaavas = laskentakaavaDAO.findKaavas(true, null, "oid1", null);
+        assertEquals(1, kaavas.size());
+    }
+
+    @Test
     public void testLaskentakaavatByTyyppi() {
-        List<Laskentakaava> kaavas = laskentakaavaDAO.findKaavas(true, null, Funktiotyyppi.LUKUARVOFUNKTIO);
+        List<Laskentakaava> kaavas = laskentakaavaDAO.findKaavas(true, null, null, Funktiotyyppi.LUKUARVOFUNKTIO);
         assertEquals(18, kaavas.size());
-        kaavas = laskentakaavaDAO.findKaavas(true, null, Funktiotyyppi.TOTUUSARVOFUNKTIO);
+        kaavas = laskentakaavaDAO.findKaavas(true, null, null, Funktiotyyppi.TOTUUSARVOFUNKTIO);
         assertEquals(2, kaavas.size());
     }
 }

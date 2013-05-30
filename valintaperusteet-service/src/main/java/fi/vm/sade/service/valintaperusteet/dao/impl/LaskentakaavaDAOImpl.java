@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.dao.impl;
 
+import com.mysema.query.BooleanBuilder;
 import com.mysema.query.Tuple;
 import com.mysema.query.jpa.impl.JPAQuery;
 import com.mysema.query.types.EntityPath;
@@ -50,23 +51,27 @@ public class LaskentakaavaDAOImpl extends AbstractJpaDAOImpl<Laskentakaava, Long
     }
 
     @Override
-    public List<Laskentakaava> findKaavas(boolean all, String valintaryhmaOid, Funktiotyyppi tyyppi) {
+    public List<Laskentakaava> findKaavas(boolean all, String valintaryhmaOid, String hakukohdeOid, Funktiotyyppi tyyppi) {
         QLaskentakaava lk = QLaskentakaava.laskentakaava;
 
         JPAQuery query = from(lk);
 
+        BooleanBuilder builder = new BooleanBuilder();
         if (!all) {
-            query.where(lk.onLuonnos.isFalse());
+            builder.and(lk.onLuonnos.isFalse());
         }
 
-        query.where(valintaryhmaOid != null ?
+
+        builder.and(valintaryhmaOid != null ?
                 lk.valintaryhma.oid.eq(valintaryhmaOid) : lk.valintaryhma.isNull());
+        builder.and(hakukohdeOid != null ?
+                lk.hakukohde.oid.eq(hakukohdeOid) : lk.hakukohde.isNull());
 
         if (tyyppi != null) {
-            query.where(lk.tyyppi.eq(tyyppi));
+            builder.and(lk.tyyppi.eq(tyyppi));
         }
 
-        return query.list(lk);
+        return query.where(builder).list(lk);
     }
 
     protected JPAQuery from(EntityPath<?>... o) {

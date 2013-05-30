@@ -20,7 +20,7 @@ public interface LaskentakaavaService extends CRUDService<Laskentakaava, Long, S
 
     boolean onkoKaavaValidi(Laskentakaava laskentakaava);
 
-    List<Laskentakaava> findKaavas(boolean all, String valintaryhmaOid, Funktiotyyppi tyyppi);
+    List<Laskentakaava> findKaavas(boolean all, String valintaryhmaOid, String hakukohdeOid, Funktiotyyppi tyyppi);
 
     /**
      * Päivittää ainostaan laskentakaavan metadatan. Paluuarvossa EI tule funktiokutsuja.

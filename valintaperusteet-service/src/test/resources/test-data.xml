@@ -1121,4 +1121,7 @@
     <laskentakaava id="413" version="0" nimi="kaava413" on_luonnos="true" tyyppi="LUKUARVOFUNKTIO" funktiokutsu_id="413"
                    valintaryhmaviite="1"/>
 
+    <laskentakaava id="999" version="0" nimi="kaava999" on_luonnos="true" tyyppi="LUKUARVOFUNKTIO" funktiokutsu_id="413"
+                   hakukohdeviite="1"/>
+
 </dataset>

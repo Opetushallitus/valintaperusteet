@@ -360,8 +360,8 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Laskentakaava> findKaavas(boolean all, String valintaryhmaOid, Funktiotyyppi tyyppi) {
-        return laskentakaavaDAO.findKaavas(all, valintaryhmaOid, tyyppi);
+    public List<Laskentakaava> findKaavas(boolean all, String valintaryhmaOid, String hakukohdeOid, Funktiotyyppi tyyppi) {
+        return laskentakaavaDAO.findKaavas(all, valintaryhmaOid, hakukohdeOid, tyyppi);
     }
 
     @Override

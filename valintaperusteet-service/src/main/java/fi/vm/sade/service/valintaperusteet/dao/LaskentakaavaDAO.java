@@ -22,6 +22,6 @@ public interface LaskentakaavaDAO extends JpaDAO<Laskentakaava, Long> {
      * @return tuple, missä on hakukohde_viite_oid, valinnanvaihe_oid ja funktiokutsu
      */
     List<Tuple> findLaskentakaavatByHakukohde(List<String> oids);
-    List<Laskentakaava> findKaavas(boolean all, String valintaryhmaOid, Funktiotyyppi tyyppi);
+    List<Laskentakaava> findKaavas(boolean all, String valintaryhmaOid, String hakukohdeOid, Funktiotyyppi tyyppi);
 
 }
