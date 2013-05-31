@@ -43,7 +43,7 @@ public class ValinnanVaihe extends BaseEntity implements LinkitettavaJaKopioitav
     private ValinnanVaihe masterValinnanVaihe;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "masterValinnanVaihe")
-    private Set<ValinnanVaihe> kopioValinnanVaiheet;
+    private Set<ValinnanVaihe> kopioValinnanVaiheet = new HashSet<ValinnanVaihe>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "valinnanVaihe")
     private Set<Valintatapajono> jonot = new HashSet<Valintatapajono>();

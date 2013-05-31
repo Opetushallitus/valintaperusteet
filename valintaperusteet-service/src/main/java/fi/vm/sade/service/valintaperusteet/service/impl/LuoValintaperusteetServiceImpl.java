@@ -1,12 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
-import fi.vm.sade.service.valintaperusteet.model.Hakukohdekoodi;
-import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
-import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
-import fi.vm.sade.service.valintaperusteet.service.HakukohdekoodiService;
-import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
-import fi.vm.sade.service.valintaperusteet.service.LuoValintaperusteetService;
-import fi.vm.sade.service.valintaperusteet.service.ValintaryhmaService;
+import fi.vm.sade.service.valintaperusteet.model.*;
+import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.impl.generator.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ResourceLoaderAware;
@@ -39,6 +34,11 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
     @Autowired
     private HakukohdekoodiService hakukohdekoodiService;
 
+    @Autowired
+    private ValinnanVaiheService valinnanVaiheService;
+
+    @Autowired
+    private ValintatapajonoService valintatapajonoService;
 
     private ResourceLoader resourceLoader;
 
@@ -62,9 +62,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         lukioVr.setNimi("LK");
         lukioVr.setHakuOid(HAKU_OID);
         lukioVr = valintaryhmaService.insert(lukioVr, ammatillinenKoulutusVr.getOid());
-
-        lisaaHakukohdekoodit(peruskouluVr, lukioVr);
-
+        
         Laskentakaava pk_ai1 = asetaValintaryhmaJaTallennaKantaan(PkAineetHelper.luoPKAine(GenericHelper.aidinkieliJaKirjallisuus1, "1. Äidinkieli ja Kirjallisuus, PK päättötodistus, mukaanlukien valinnaiset"), peruskouluVr);
         Laskentakaava pk_ai2 = asetaValintaryhmaJaTallennaKantaan(PkAineetHelper.luoPKAine(GenericHelper.aidinkieliJaKirjallisuus2, "2. Äidinkieli ja Kirjallisuus 2., PK päättötodistus, mukaanlukien valinnaiset"), peruskouluVr);
         Laskentakaava pk_historia = asetaValintaryhmaJaTallennaKantaan(PkAineetHelper.luoPKAine(GenericHelper.historia, "Historia, PK päättötodistus, mukaanlukien valinnaiset"), peruskouluVr);
@@ -160,9 +158,11 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         // Yo koostava iso kaava
         Laskentakaava toisenAsteenYlioppilaspohjainenPeruskaava = asetaValintaryhmaJaTallennaKantaan(YoPohjaiset.luoToisenAsteenYlioppilaspohjainenPeruskaava(hakutoivejarjestyspisteytysmalli,
                 tyokokemuspisteytysmalli, sukupuolipisteytysmalli, lk_yleinenkoulumenestyspisteytysmalli), lukioVr);
+
+        lisaaHakukohdekoodit(peruskouluVr, lukioVr, toisenAsteenPeruskoulupohjainenPeruskaava, toisenAsteenYlioppilaspohjainenPeruskaava);
     }
 
-    private void lisaaHakukohdekoodit(Valintaryhma peruskouluVr, Valintaryhma lukioVr) throws IOException {
+    private void lisaaHakukohdekoodit(Valintaryhma peruskouluVr, Valintaryhma lukioVr, Laskentakaava toisenAsteenPeruskoulupohjainenPeruskaava, Laskentakaava toisenAsteenYlioppilaspohjainenPeruskaava) throws IOException {
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new InputStreamReader(resourceLoader.getResource("classpath:hakukohdekoodit/hakukohdekoodit.csv").getInputStream(), Charset.forName("UTF-8")));
@@ -193,6 +193,34 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                 }
 
                 hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(valintaryhma.getOid(), koodi);
+
+                ValinnanVaihe valinnanVaihe = new ValinnanVaihe();
+                valinnanVaihe.setAktiivinen(true);
+                valinnanVaihe.setKuvaus("generoitu");
+                valinnanVaihe.setNimi("Generoitu valinnanvaihe");
+                valinnanVaihe.setValinnanVaiheTyyppi(ValinnanVaiheTyyppi.TAVALLINEN);
+
+                valinnanVaihe = valinnanVaiheService.lisaaValinnanVaiheValintaryhmalle(valintaryhma.getOid(), valinnanVaihe,
+                        null);
+
+                Valintatapajono jono = new Valintatapajono();
+
+                jono.setAktiivinen(true);
+                jono.setAloituspaikat(20);
+                jono.setKuvaus("generoitu");
+                jono.setNimi("Generoitu valintatapajono");
+                jono.setTasapistesaanto(Tasapistesaanto.ARVONTA);
+                jono.setSiirretaanSijoitteluun(true);
+
+                valintatapajonoService.lisaaValintatapajonoValinnanVaiheelle(valinnanVaihe.getOid(), jono, null);
+
+                if (nimi.contains(", pk")) {
+                    insertKoe("Pääsykokeelliset", nimi, valintaryhma, toisenAsteenPeruskoulupohjainenPeruskaava);
+                    insertEiKoetta("Pääsykokeettomat", nimi, valintaryhma, toisenAsteenPeruskoulupohjainenPeruskaava);
+                } else {
+                    insertKoe("Pääsykokeelliset", nimi, valintaryhma, toisenAsteenYlioppilaspohjainenPeruskaava);
+                    insertEiKoetta("Pääsykokeettomat", nimi, valintaryhma, toisenAsteenYlioppilaspohjainenPeruskaava);
+                }
             }
         } finally {
             if (reader != null) {
@@ -200,6 +228,32 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
             }
 
         }
+    }
+
+    private void insertKoe(String koeNimi, String hakukohdeNimi, Valintaryhma valintaryhma, Laskentakaava peruskaava) {
+        Valintaryhma koe = new Valintaryhma();
+        koe.setNimi(koeNimi);
+        koe.setHakuOid(HAKU_OID);
+        koe = valintaryhmaService.insert(koe, valintaryhma.getOid());
+
+        ValintaperusteViite valintaperusteViite = GenericHelper.luoValintaperusteViite(hakukohdeNimi, true, true, Valintaperustelahde.HAETTAVA_ARVO);
+        Funktiokutsu valintakoe = GenericHelper.luoHaeLukuarvo(valintaperusteViite);
+
+        Funktiokutsu funktiokutsu = GenericHelper.luoSumma(valintakoe, peruskaava);
+        Laskentakaava laskentakaava = GenericHelper.luoLaskentakaava(funktiokutsu, hakukohdeNimi + " - " + koe.getNimi());
+        asetaValintaryhmaJaTallennaKantaan(laskentakaava, koe);
+    }
+
+    private void insertEiKoetta(String koeNimi, String hakukohdeNimi, Valintaryhma valintaryhma, Laskentakaava peruskaava) {
+        Valintaryhma koe = new Valintaryhma();
+        koe.setNimi(koeNimi);
+        koe.setHakuOid(HAKU_OID);
+        koe = valintaryhmaService.insert(koe, valintaryhma.getOid());
+
+        // FIXME: tähän joku funktioviittaus
+        Funktiokutsu funktiokutsu = GenericHelper.luoSumma(peruskaava);
+        Laskentakaava laskentakaava = GenericHelper.luoLaskentakaava(funktiokutsu, hakukohdeNimi + " - " + koe.getNimi());
+        asetaValintaryhmaJaTallennaKantaan(laskentakaava, koe);
     }
 
 
