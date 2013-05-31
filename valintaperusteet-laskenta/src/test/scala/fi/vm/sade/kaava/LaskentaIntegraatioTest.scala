@@ -3,8 +3,10 @@ package fi.vm.sade.kaava
 import org.scalatest.FunSuite
 import fi.vm.sade.service.valintaperusteet.model.Funktionimi
 import fi.vm.sade.kaava.LaskentaTestUtil._
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskin
+import fi.vm.sade.service.valintaperusteet.laskenta.{Esiprosessori, Laskin}
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.{Hylattytila, HylattyMetatieto, Tila, Hyvaksyttavissatila}
+import scala.collection.JavaConversions._
+import fi.vm.sade.kaava.LaskentaTestUtil.Hakemus
 
 /**
  * User: kwuoti
@@ -367,7 +369,10 @@ class LaskentaIntegraatioTest extends FunSuite {
   test("lukuarvolukuarvoksi") {
     val funktiokutsu = konvertoiLukuarvoLukuarvoksi
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
-    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    val hakemus = tyhjaHakemus
+    val prosessoituHakemus = Esiprosessori.esiprosessoi("1", List(hakemus), hakemus, lasku)
+
+    val (tulos, tila) = Laskin.laske(hakukohde, prosessoituHakemus, lasku)
     assert(tulos.get == 4.0)
     assertTilaHyvaksyttavissa(tila)
   }
@@ -399,7 +404,10 @@ class LaskentaIntegraatioTest extends FunSuite {
   test("konvertoiLukuarvovaliLukuarvoksi") {
     val funktiokutsu = konvertoiLukuarvovaliLukuarvoksi
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
-    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    val hakemus = tyhjaHakemus
+    val prosessoituHakemus = Esiprosessori.esiprosessoi("1", List(hakemus), hakemus, lasku)
+
+    val (tulos, tila) = Laskin.laske(hakukohde, prosessoituHakemus, lasku)
     assert(tulos.get == 3.0)
     assertTilaHyvaksyttavissa(tila)
   }
@@ -1669,5 +1677,41 @@ class LaskentaIntegraatioTest extends FunSuite {
     val (tulos2, tila2) = Laskin.laske(hakukohde, hakemus2, lasku)
     assert(!tulos2.get)
     assertTilaHyvaksyttavissa(tila2)
+  }
+
+  test("demografia") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.DEMOGRAFIA,
+      syoteparametrit = List(
+        Syoteparametri("tunniste", "sukupuoli"),
+        Syoteparametri("prosenttiosuus", "33.0")
+      )
+    )
+
+    val hakukohdeOid = "1"
+    val hakemukset = List(
+      Hakemus("1", List("1", "2", "3"), Map("sukupuoli" -> "mies")),
+      Hakemus("2", List("1", "2", "3"), Map("sukupuoli" -> "mies")),
+      Hakemus("3", List("1", "2", "3"), Map("sukupuoli" -> "mies")),
+      Hakemus("4", List("1", "2", "3"), Map("sukupuoli" -> "nainen"))
+    )
+
+
+    val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
+    Esiprosessori.esiprosessoi(hakukohdeOid, asJavaCollection(hakemukset), hakemukset.head, lasku)
+
+    val prosessoidutHakemukset = hakemukset.map(h => Esiprosessori.esiprosessoi(hakukohdeOid,
+      seqAsJavaList(hakemukset), h, lasku))
+
+    val tulokset = prosessoidutHakemukset.map(h => Laskin.laske(hakukohdeOid, h, lasku))
+    assert(!tulokset(0)._1.get)
+    assertTilaHyvaksyttavissa(tulokset(0)._2)
+    assert(!tulokset(1)._1.get)
+    assertTilaHyvaksyttavissa(tulokset(1)._2)
+    assert(!tulokset(2)._1.get)
+    assertTilaHyvaksyttavissa(tulokset(2)._2)
+    assert(tulokset(3)._1.get)
+    assertTilaHyvaksyttavissa(tulokset(3)._2)
+
   }
 }

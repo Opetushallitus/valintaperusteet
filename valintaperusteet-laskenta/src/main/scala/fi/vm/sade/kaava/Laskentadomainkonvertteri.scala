@@ -259,6 +259,13 @@ object Laskentadomainkonvertteri {
         Hakutoive(parametriToInteger(nParam), oid)
       }
 
+      case Funktionimi.DEMOGRAFIA => {
+        val tunniste = getParametri("tunniste", funktiokutsu.getSyoteparametrit).getArvo
+        val prosenttiosuus = getParametri("prosenttiosuus", funktiokutsu.getSyoteparametrit)
+
+        Demografia(oid, tunniste, parametriToDouble(prosenttiosuus))
+      }
+
       case _ => sys.error("Could not calculate funktio " + funktiokutsu.getFunktionimi.name())
     }
   }

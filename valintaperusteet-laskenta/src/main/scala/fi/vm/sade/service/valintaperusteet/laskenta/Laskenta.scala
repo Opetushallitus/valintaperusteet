@@ -55,18 +55,6 @@ object Laskenta {
     val hylkaysperuste: Boolean
   }
 
-  case class Arvokonversio[S, T](arvo: S, paluuarvo: T, hylkaysperuste: Boolean) extends Konversio
-
-  case class Lukuarvovalikonversio(min: Double, max: Double, paluuarvo: Double,
-                                   palautaHaettuArvo: Boolean, hylkaysperuste: Boolean) extends Konversio
-
-  case class KonvertoiLukuarvo(konvertteri: Konvertteri[Double, Double], f: Lukuarvofunktio, oid: String = "")
-    extends KonvertoivaFunktio[Double, Double] with Lukuarvofunktio
-
-  abstract case class KoostavaFunktio[T](fs: Seq[Funktio[_]]) extends Funktio[T] {
-    require(fs.size > 0, "Number of function arguments must be greater than zero")
-  }
-
   trait YksiParametrinenFunktio[T] extends Funktio[T] {
     val f: Funktio[_]
   }
@@ -76,6 +64,18 @@ object Laskenta {
   trait KaksiParametrinenFunktio[T] extends Funktio[T] {
     val f1: Funktio[_]
     val f2: Funktio[_]
+  }
+
+  case class Arvokonversio[S, T](arvo: S, paluuarvo: T, hylkaysperuste: Boolean) extends Konversio
+
+  case class Lukuarvovalikonversio(min: Double, max: Double, paluuarvo: Double,
+                                   palautaHaettuArvo: Boolean, hylkaysperuste: Boolean) extends Konversio
+
+  case class KonvertoiLukuarvo(konvertteri: Konvertteri[Double, Double], f: Lukuarvofunktio, oid: String = "")
+    extends KonvertoivaFunktio[Double, Double] with Lukuarvofunktio with YksiParametrinenFunktio[Double]
+
+  abstract case class KoostavaFunktio[T](fs: Seq[Funktio[_]]) extends Funktio[T] {
+    require(fs.size > 0, "Number of function arguments must be greater than zero")
   }
 
   abstract case class NParasta(n: Int, override val fs: Seq[Funktio[Double]])
