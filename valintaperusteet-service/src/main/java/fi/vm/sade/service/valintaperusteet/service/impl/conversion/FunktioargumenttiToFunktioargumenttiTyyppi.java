@@ -1,6 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.service.impl.conversion;
 
 import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti;
+import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
 import fi.vm.sade.service.valintaperusteet.schema.FunktioargumenttiTyyppi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
@@ -23,7 +24,14 @@ public class FunktioargumenttiToFunktioargumenttiTyyppi implements Converter<Fun
 
         tyyppi.setIndeksi(funktioargumentti.getIndeksi());
 
-        tyyppi.setFunktiokutsu(funktiokutsuToFunktiokutsuTyyppi.convert(funktioargumentti.getFunktiokutsuChild()));
+        Funktiokutsu funktiokutsu = null;
+        if (funktioargumentti.getLaskentakaavaChild() != null) {
+            funktiokutsu = funktioargumentti.getLaajennettuKaava();
+        } else {
+            funktiokutsu = funktioargumentti.getFunktiokutsuChild();
+        }
+
+        tyyppi.setFunktiokutsu(funktiokutsuToFunktiokutsuTyyppi.convert(funktiokutsu));
 
         return tyyppi;
     }
