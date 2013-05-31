@@ -14,48 +14,6 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class GenericHelper {
-
-    public static final String aidinkieliJaKirjallisuus1 = "AI_1";
-    public static final String aidinkieliJaKirjallisuus2 = "AI_2";
-
-    public static final String historia = "HI";
-    public static final String yhteiskuntaoppi = "YH";
-    public static final String matematiikka = "MA";
-    public static final String fysiikka = "FY";
-    public static final String kemia = "KE";
-    public static final String biologia = "BI";
-    public static final String kuvataide = "KU";
-    public static final String musiikki = "MU";
-    public static final String maantieto = "GE";
-    public static final String kasityo = "KS";
-    public static final String kotitalous = "KO";
-    public static final String liikunta = "LI";
-    public static final String terveystieto = "TE";
-    public static final String uskonto = "KT";
-
-    // A1-kieliä voi olla kolme
-    public static final String a11Kieli = "A1_1";
-    public static final String a12Kieli = "A1_2";
-    public static final String a13Kieli = "A1_3";
-
-    // A2-kieliä voi olla kolme
-    public static final String a21Kieli = "A2_1";
-    public static final String a22Kieli = "A2_2";
-    public static final String a23Kieli = "A2_3";
-
-    // B1-kieliä voi olla yksi
-    public static final String b1Kieli = "B1_1";
-
-    // B2-kieliä voi olla kolme
-    public static final String b21Kieli = "B2_1";
-    public static final String b22Kieli = "B2_2";
-    public static final String b23Kieli = "B2_3";
-
-    // B3-kieliä voi olla kolme
-    public static final String b31Kieli = "B3_1";
-    public static final String b32Kieli = "B3_2";
-    public static final String b33Kieli = "B3_3";
-
     private GenericHelper() {
     }
 
