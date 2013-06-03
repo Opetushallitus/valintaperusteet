@@ -1,12 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
-import fi.vm.sade.service.valintaperusteet.model.Hakukohdekoodi;
-import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
-import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
-import fi.vm.sade.service.valintaperusteet.service.HakukohdekoodiService;
-import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
-import fi.vm.sade.service.valintaperusteet.service.LuoValintaperusteetService;
-import fi.vm.sade.service.valintaperusteet.service.ValintaryhmaService;
+import fi.vm.sade.service.valintaperusteet.model.*;
+import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.impl.generator.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ResourceLoaderAware;
@@ -197,7 +192,6 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         koe.setHakuOid(HAKU_OID);
         koe = valintaryhmaService.insert(koe, valintaryhma.getOid());
 
-        // FIXME: tähän joku funktioviittaus
         Funktiokutsu funktiokutsu = GenericHelper.luoSumma(peruskaava);
         Laskentakaava laskentakaava = GenericHelper.luoLaskentakaava(funktiokutsu, hakukohdeNimi + " - " + koe.getNimi());
         asetaValintaryhmaJaTallennaKantaan(laskentakaava, koe);
