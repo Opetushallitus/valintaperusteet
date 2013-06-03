@@ -132,4 +132,75 @@ public class PkPohjaiset {
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
                 jos, "Ilman koulutuspaikkaa -pisteytys, 2 aste, pk");
     }
+
+    public static Laskentakaava luoPainotettavatKeskiarvotLaskentakaava(PkAineet pkAineet) {
+
+        Laskentakaava[] args = new Laskentakaava[]{
+                pkAineet.getLaskentakaava(Aineet.kuvataide),
+                pkAineet.getLaskentakaava(Aineet.musiikki),
+                pkAineet.getLaskentakaava(PkAineet.kasityo),
+                pkAineet.getLaskentakaava(PkAineet.kotitalous),
+                pkAineet.getLaskentakaava(Aineet.liikunta)};
+
+        Funktiokutsu kolmeParasta = GenericHelper.nParastaKeskiarvo(3, args);
+
+        Funktiokutsu konvertteri = new Funktiokutsu();
+        konvertteri.setFunktionimi(Funktionimi.KONVERTOILUKUARVO);
+
+        Funktioargumentti funk = new Funktioargumentti();
+        funk.setFunktiokutsuChild(kolmeParasta);
+        funk.setIndeksi(1);
+
+        konvertteri.getFunktioargumentit().add(funk);
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(6.0, 6.5, 1));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(6.5, 7.0, 2));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(7.0, 7.5, 3));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(7.5, 8.0, 4));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(8.0, 8.5, 5));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(8.5, 9.0, 6));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(9.0, 9.5, 7));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(9.5, 10.1, 8));
+
+        Laskentakaava laskentakaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(konvertteri,
+                "Painotettavat arvosanat pisteytysmalli, PK");
+        return laskentakaava;
+    }
+
+    public static Laskentakaava luoPKPohjaisenKoulutuksenLukuaineidenKeskiarvo(PkAineet pkAineet) {
+        Laskentakaava[] args = new Laskentakaava[]{
+                pkAineet.getLaskentakaava(Aineet.aidinkieliJaKirjallisuus1),
+                pkAineet.getLaskentakaava(Aineet.aidinkieliJaKirjallisuus2),
+                pkAineet.getLaskentakaava(Aineet.historia),
+                pkAineet.getLaskentakaava(Aineet.yhteiskuntaoppi),
+                pkAineet.getLaskentakaava(Aineet.matematiikka),
+                pkAineet.getLaskentakaava(Aineet.fysiikka),
+                pkAineet.getLaskentakaava(Aineet.kemia),
+                pkAineet.getLaskentakaava(Aineet.biologia),
+                pkAineet.getLaskentakaava(Aineet.kuvataide),
+                pkAineet.getLaskentakaava(Aineet.musiikki),
+                pkAineet.getLaskentakaava(Aineet.maantieto),
+                pkAineet.getLaskentakaava(PkAineet.kasityo),
+                pkAineet.getLaskentakaava(PkAineet.kotitalous),
+                pkAineet.getLaskentakaava(Aineet.liikunta),
+                pkAineet.getLaskentakaava(Aineet.terveystieto),
+                pkAineet.getLaskentakaava(Aineet.uskonto),
+                pkAineet.getLaskentakaava(Aineet.a11Kieli),
+                pkAineet.getLaskentakaava(Aineet.a12Kieli),
+                pkAineet.getLaskentakaava(Aineet.a13Kieli),
+                pkAineet.getLaskentakaava(Aineet.a21Kieli),
+                pkAineet.getLaskentakaava(Aineet.a22Kieli),
+                pkAineet.getLaskentakaava(Aineet.a23Kieli),
+                pkAineet.getLaskentakaava(Aineet.b1Kieli),
+                pkAineet.getLaskentakaava(Aineet.b21Kieli),
+                pkAineet.getLaskentakaava(Aineet.b22Kieli),
+                pkAineet.getLaskentakaava(Aineet.b23Kieli),
+                pkAineet.getLaskentakaava(Aineet.b31Kieli),
+                pkAineet.getLaskentakaava(Aineet.b32Kieli),
+                pkAineet.getLaskentakaava(Aineet.b33Kieli)};
+
+        Funktiokutsu keskiarvo = GenericHelper.luoKeskiarvo(args);
+        Laskentakaava laskentakaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(
+                keskiarvo, "Lukuaineiden keskiarvo, PK");
+        return laskentakaava;
+    }
 }
