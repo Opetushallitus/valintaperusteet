@@ -284,8 +284,9 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
           try {
             arvo.toDouble
           } catch {
-            case e: NumberFormatException => throw new RuntimeException("Arvoa " + arvo + " ei voida muuttaa " +
-              "Double-tyypiksi")
+            case e: NumberFormatException => Nil
+            //throw new RuntimeException("Arvoa " + arvo + " ei voida muuttaa " +
+            //  "Double-tyypiksi")
           }
         })
 
@@ -298,8 +299,8 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
             (oletusarvo, List(tila))
           }
 
-          case Some(arvo) => {
-            val tulos = (Some(arvo), new Hyvaksyttavissatila)
+          case arvo:Option[Double] => {
+            val tulos = (arvo, new Hyvaksyttavissatila)
             suoritaOptionalKonvertointi[Double](oid, tulos, konvertteri)
           }
         }
