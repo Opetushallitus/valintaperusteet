@@ -284,24 +284,31 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
           try {
             arvo.toDouble
           } catch {
-            case e: NumberFormatException => Nil
+            case e: NumberFormatException => None
             //throw new RuntimeException("Arvoa " + arvo + " ei voida muuttaa " +
             //  "Double-tyypiksi")
           }
         })
 
-        arvoOption match {
-          case None => {
-            val tila = if (valintaperusteviite.pakollinen) {
-              new Hylattytila(oid, "Pakollista arvoa (tunniste " + valintaperusteviite.tunniste + ") ei " +
-                "ole olemassa", new PakollinenValintaperusteHylkays(valintaperusteviite.tunniste))
-            } else new Hyvaksyttavissatila
-            (oletusarvo, List(tila))
-          }
+        def tyhjaarvo = {
+          val tila = if (valintaperusteviite.pakollinen) {
+            new Hylattytila(oid, "Pakollista arvoa (tunniste " + valintaperusteviite.tunniste + ") ei " +
+              "ole olemassa", new PakollinenValintaperusteHylkays(valintaperusteviite.tunniste))
+          } else new Hyvaksyttavissatila
+          (oletusarvo, List(tila))
+        }
 
-          case arvo:Option[Double] => {
-            val tulos = (arvo, new Hyvaksyttavissatila)
-            suoritaOptionalKonvertointi[Double](oid, tulos, konvertteri)
+        arvoOption match {
+          case None => tyhjaarvo
+          case temp : Option[_] => {
+            temp.get match {
+              case arvo: Double =>
+                val tulos = (temp.asInstanceOf[Option[Double]], new Hyvaksyttavissatila)
+                suoritaOptionalKonvertointi[Double](oid, tulos, konvertteri)
+              case _ =>
+                tyhjaarvo
+            }
+
           }
         }
       }
