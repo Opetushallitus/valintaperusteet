@@ -14,8 +14,8 @@
         version int8 not null,
         hylkaysperuste boolean not null,
         paluuarvo varchar(255),
-        maxvalue float8,
-        minvalue float8,
+        maxvalue float8 not null,
+        minvalue float8 not null,
         palauta_haettu_arvo boolean,
         funktiokutsu_id int8 not null,
         primary key (id)
@@ -61,6 +61,19 @@
         hakuoid varchar(255) not null,
         nimi varchar(255),
         oid varchar(255) not null unique,
+        hakukohdekoodi_id int8,
+        valintaryhma_id int8,
+        primary key (id)
+    );
+
+    create table hakukohdekoodi (
+        id int8 not null unique,
+        version int8 not null,
+        arvo varchar(255) not null,
+        nimi_en varchar(255),
+        nimi_fi varchar(255),
+        nimi_sv varchar(255),
+        uri varchar(255) not null,
         valintaryhma_id int8,
         primary key (id)
     );
@@ -118,11 +131,13 @@
     create table valintakoe (
         id int8 not null unique,
         version int8 not null,
+        aktiivinen boolean not null,
         kuvaus varchar(255),
         nimi varchar(255) not null,
         oid varchar(255) not null unique,
         tunniste varchar(255) not null,
         laskentakaava_id int8,
+        master_valintakoe_id int8,
         valinnan_vaihe_id int8 not null,
         primary key (id)
     );
@@ -211,6 +226,16 @@
         foreign key (valintaryhma_id)
         references valintaryhma;
 
+    alter table hakukohde_viite
+        add constraint FKC9F42B4AE47B5939
+        foreign key (hakukohdekoodi_id)
+        references hakukohdekoodi;
+
+    alter table hakukohdekoodi
+        add constraint FK59BE65CE748BF879
+        foreign key (valintaryhma_id)
+        references valintaryhma;
+
     alter table jarjestyskriteeri
         add constraint FK331D107A91E6F3FB
         foreign key (valintatapajono_id)
@@ -275,6 +300,11 @@
         add constraint FKF7AE1AE7D086ABB
         foreign key (laskentakaava_id)
         references laskentakaava;
+
+    alter table valintakoe
+        add constraint FKF7AE1AE57A46D9C
+        foreign key (master_valintakoe_id)
+        references valintakoe;
 
     alter table valintakoe
         add constraint FKF7AE1AEDAF09910

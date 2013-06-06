@@ -1,1 +1,0 @@
-alter table hakukohdekoodi add unique (hakukohde_id);
