@@ -62,9 +62,24 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
         return hakukohde;
     }
 
+
+    /**
+     * Poista koodistourista versio jos lasna
+     *
+     * @param koodi
+     */
+    public void sanitizeKoodiUri(HakukohdekoodiTyyppi koodi) {
+        if(koodi != null && koodi.getKoodiUri() != null && !koodi.getKoodiUri().isEmpty()) {
+            String koodiuri = koodi.getKoodiUri();
+            String[] uris = koodiuri.split("#");
+            koodi.setKoodiUri(uris[0]);
+        }
+    }
+
     @Override
     public void tuoHakukohde(HakukohdeImportTyyppi importData) {
         HakukohdekoodiTyyppi koodiTyyppi = importData.getHakukohdekoodi();
+        sanitizeKoodiUri(koodiTyyppi);
 
         HakukohdeViite hakukohde = hakukohdeViiteDAO.readByOid(importData.getHakukohdeOid());
         Hakukohdekoodi koodi = hakukohdekoodiDAO.findByKoodiUri(koodiTyyppi.getKoodiUri());
