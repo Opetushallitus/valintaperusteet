@@ -84,6 +84,9 @@ public class HakukohdeImportServiceTest {
         k1.setKoodiUri("http://koodinur3#1#5");
         serviceImpl.sanitizeKoodiUri(k1);
         Assert.assertEquals("http://koodinur3", k1.getKoodiUri());
+        k1.setKoodiUri(null);
+        serviceImpl.sanitizeKoodiUri(k1);
+        Assert.assertNull(k1.getKoodiUri());
     }
 
     @Test
