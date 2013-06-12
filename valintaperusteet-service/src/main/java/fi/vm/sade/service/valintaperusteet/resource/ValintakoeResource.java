@@ -6,11 +6,17 @@ import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
 import fi.vm.sade.service.valintaperusteet.service.ValintakoeService;
 import org.codehaus.jackson.map.annotate.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE;
 
 /**
  * User: kwuoti
@@ -18,7 +24,8 @@ import javax.ws.rs.core.Response;
  * Time: 16.04
  */
 @Component
-@Path("/valintakoe")
+@Path("valintakoe")
+@PreAuthorize("isAuthenticated()")
 public class ValintakoeResource {
 
     @Autowired
@@ -28,6 +35,7 @@ public class ValintakoeResource {
     @Path("{oid}")
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
+    @Secured({READ, UPDATE, CRUD})
     public Valintakoe readByOid(@PathParam("oid") String oid) {
         return valintakoeService.readByOid(oid);
     }
@@ -38,6 +46,7 @@ public class ValintakoeResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
+    @Secured({UPDATE, CRUD})
     public Response update(@PathParam("oid") String oid, ValintakoeDTO valintakoe) {
         Valintakoe update = valintakoeService.update(oid, valintakoe);
 
@@ -46,6 +55,7 @@ public class ValintakoeResource {
 
     @DELETE
     @Path("{oid}")
+    @Secured({CRUD})
     public Response delete(@PathParam("oid") String oid) {
         valintakoeService.deleteByOid(oid);
         return Response.status(Response.Status.ACCEPTED).build();

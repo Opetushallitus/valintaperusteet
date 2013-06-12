@@ -11,12 +11,18 @@ import org.codehaus.jackson.map.annotate.JsonView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
+
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE;
 
 
 /**
@@ -25,7 +31,8 @@ import java.util.List;
  * Time: 13.54
  */
 @Component
-@Path("/laskentakaava")
+@Path("laskentakaava")
+@PreAuthorize("isAuthenticated()")
 public class LaskentakaavaResource {
 
     @Autowired
@@ -34,15 +41,17 @@ public class LaskentakaavaResource {
     private final static Logger LOGGER = LoggerFactory.getLogger(LaskentakaavaResource.class);
 
     @GET
-    @Path("/funktiokuvaus")
+    @Path("funktiokuvaus")
     @Produces(MediaType.APPLICATION_JSON)
+    @Secured({READ, UPDATE, CRUD})
     public String funktiokuvaukset() {
         return Funktiokuvaaja.annaFunktiokuvauksetAsJson();
     }
 
     @GET
-    @Path("/funktiokuvaus/{nimi}")
+    @Path("funktiokuvaus/{nimi}")
     @Produces(MediaType.APPLICATION_JSON)
+    @Secured({READ, UPDATE, CRUD})
     public String funktiokuvaus(@PathParam("nimi") String nimi) {
         return Funktiokuvaaja.annaFunktiokuvausAsJson(nimi);
     }
@@ -51,6 +60,7 @@ public class LaskentakaavaResource {
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView(JsonViews.Basic.class)
+    @Secured({READ, UPDATE, CRUD})
     public Laskentakaava kaava(@PathParam("id") Long id) {
         return laskentakaavaService.haeMallinnettuKaava(id);
     }
@@ -58,6 +68,7 @@ public class LaskentakaavaResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView(JsonViews.Laskentakaava.class)
+    @Secured({READ, UPDATE, CRUD})
     public List<Laskentakaava> kaavat(
             @DefaultValue("false") @QueryParam("myosLuonnos") Boolean all,
             @QueryParam("valintaryhma") String valintaryhmaOid,
@@ -69,14 +80,16 @@ public class LaskentakaavaResource {
     @GET
     @Path("{id}/laske")
     @Produces(MediaType.APPLICATION_JSON)
+    @Secured({READ, UPDATE, CRUD})
     public String laske(@PathParam("id") Long id) {
         return "";// laskentakaavaService.laske(id);
     }
 
     @POST
-    @Path("/validoi")
+    @Path("validoi")
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView(JsonViews.Basic.class)
+    @Secured({READ, UPDATE, CRUD})
     public Laskentakaava validoi(Laskentakaava laskentakaava) {
         return laskentakaavaService.validoi(laskentakaava);
     }
@@ -86,6 +99,7 @@ public class LaskentakaavaResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
+    @Secured({UPDATE, CRUD})
     public Response update(@PathParam("id") Long id, @QueryParam("metadata") @DefaultValue("false") Boolean metadata, Laskentakaava laskentakaava) {
         try {
             Laskentakaava updated = null;
@@ -109,6 +123,7 @@ public class LaskentakaavaResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView(JsonViews.Laskentakaava.class)
+    @Secured({CRUD})
     public Response insert(Laskentakaava laskentakaava) {
 
         try {

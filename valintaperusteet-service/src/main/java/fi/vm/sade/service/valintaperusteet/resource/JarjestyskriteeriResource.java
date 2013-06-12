@@ -7,12 +7,18 @@ import fi.vm.sade.service.valintaperusteet.service.JarjestyskriteeriService;
 import org.codehaus.jackson.map.annotate.JsonView;
 import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
+
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE;
 
 /**
  * Created with IntelliJ IDEA.
@@ -23,6 +29,7 @@ import java.util.List;
  */
 @Component
 @Path("jarjestyskriteeri")
+@PreAuthorize("isAuthenticated()")
 public class JarjestyskriteeriResource {
     @Autowired
     JarjestyskriteeriService jarjestyskriteeriService;
@@ -31,6 +38,7 @@ public class JarjestyskriteeriResource {
     @Path("{oid}")
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
+    @Secured({READ, UPDATE, CRUD})
     public Jarjestyskriteeri readByOid(@PathParam("oid") String oid) {
         return jarjestyskriteeriService.readByOid(oid);
     }
@@ -40,6 +48,7 @@ public class JarjestyskriteeriResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
+    @Secured({UPDATE, CRUD})
     public Response update(@PathParam("oid") String oid, JSONObject jk) {
         Jarjestyskriteeri jarjestyskriteeri = new Jarjestyskriteeri();
         jarjestyskriteeri.setOid(jk.optString("oid"));
@@ -58,6 +67,7 @@ public class JarjestyskriteeriResource {
 
     @DELETE
     @Path("{oid}")
+    @Secured({CRUD})
     public Response delete(@PathParam("oid") String oid) {
         jarjestyskriteeriService.deleteByOid(oid);
         return Response.status(Response.Status.ACCEPTED).build();
@@ -67,7 +77,8 @@ public class JarjestyskriteeriResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView(JsonViews.Basic.class)
-    @Path("/jarjesta")
+    @Path("jarjesta")
+    @Secured({UPDATE, CRUD})
     public List<Jarjestyskriteeri> jarjesta(List<String> oids) {
 
         return jarjestyskriteeriService.jarjestaKriteerit(oids);

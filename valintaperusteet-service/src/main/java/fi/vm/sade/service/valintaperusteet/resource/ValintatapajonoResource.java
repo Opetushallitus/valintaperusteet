@@ -9,6 +9,8 @@ import org.codehaus.jackson.map.annotate.JsonView;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
@@ -16,6 +18,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.List;
+
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE;
 
 /**
  * Created with IntelliJ IDEA.
@@ -25,7 +31,8 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @Component
-@Path("/valintatapajono")
+@Path("valintatapajono")
+@PreAuthorize("isAuthenticated()")
 public class ValintatapajonoResource {
 
     @Autowired
@@ -39,6 +46,7 @@ public class ValintatapajonoResource {
     @Path("{oid}")
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
+    @Secured({READ, UPDATE, CRUD})
     public Valintatapajono readByOid(@PathParam("oid") String oid) {
         return valintatapajonoService.readByOid(oid);
     }
@@ -47,6 +55,7 @@ public class ValintatapajonoResource {
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Path("{oid}/jarjestyskriteeri")
+    @Secured({READ, UPDATE, CRUD})
     public List<Jarjestyskriteeri> findJarjestyskriteeri(@PathParam("oid") String oid) {
         return jarjestyskriteeriService.findJarjestyskriteeriByJono(oid);
     }
@@ -54,6 +63,7 @@ public class ValintatapajonoResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
+    @Secured({READ, UPDATE, CRUD})
     public List<Valintatapajono> findAll() {
         return valintatapajonoService.findAll();
     }
@@ -63,6 +73,7 @@ public class ValintatapajonoResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
+    @Secured({UPDATE, CRUD})
     public Response update(@PathParam("oid") String oid, Valintatapajono jono) {
         Valintatapajono update = valintatapajonoService.update(oid, jono);
         return Response.status(Response.Status.ACCEPTED).entity(update).build();
@@ -73,6 +84,7 @@ public class ValintatapajonoResource {
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Path("{valintatapajonoOid}/jarjestyskriteeri")
+    @Secured({CRUD})
     public Response insertJarjestyskriteeri(@PathParam("valintatapajonoOid") String valintatapajonoOid,
                                             JSONObject jk) throws IOException, JSONException {
         Jarjestyskriteeri jarjestyskriteeri = new Jarjestyskriteeri();
@@ -91,7 +103,8 @@ public class ValintatapajonoResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView(JsonViews.Basic.class)
-    @Path("/jarjesta")
+    @Path("jarjesta")
+    @Secured({UPDATE, CRUD})
     public List<Valintatapajono> jarjesta(List<String> oids) {
 
         return valintatapajonoService.jarjestaValintatapajonot(oids);
@@ -99,6 +112,7 @@ public class ValintatapajonoResource {
 
     @DELETE
     @Path("{oid}")
+    @Secured({CRUD})
     public Response delete(@PathParam("oid") String oid) {
         valintatapajonoService.deleteByOid(oid);
         return Response.status(Response.Status.ACCEPTED).build();

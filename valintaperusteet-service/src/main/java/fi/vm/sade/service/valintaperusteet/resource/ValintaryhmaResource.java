@@ -21,18 +21,25 @@ import org.codehaus.jackson.map.annotate.JsonView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import fi.vm.sade.service.valintaperusteet.service.HakukohdeService;
 import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
 import fi.vm.sade.service.valintaperusteet.service.ValintaryhmaService;
 
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE;
+
 /**
  * Created with IntelliJ IDEA. User: kkammone Date: 10.1.2013 Time: 12:01 To
  * change this template use File | Settings | File Templates.
  */
 @Component
-@Path("/valintaryhma")
+@Path("valintaryhma")
+@PreAuthorize("isAuthenticated()")
 public class ValintaryhmaResource {
 
     @Autowired
@@ -53,6 +60,7 @@ public class ValintaryhmaResource {
     @Path("{oid}")
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({ JsonViews.Basic.class })
+    @Secured({READ, UPDATE, CRUD})
     public Valintaryhma queryFull(@PathParam("oid") String oid) {
         return valintaryhmaService.readByOid(oid);
     }
@@ -60,6 +68,7 @@ public class ValintaryhmaResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView(JsonViews.Basic.class)
+    @Secured({READ, UPDATE, CRUD})
     public List<Valintaryhma> search(@QueryParam("paataso") Boolean paataso, @QueryParam("parentsOf") String parentsOf) {
         List<Valintaryhma> valintaryhmas = new ArrayList<Valintaryhma>();
         if (Boolean.TRUE.equals(paataso)) {
@@ -75,6 +84,7 @@ public class ValintaryhmaResource {
     @Path("{oid}/parents")
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView(JsonViews.ParentHierarchy.class)
+    @Secured({READ, UPDATE, CRUD})
     public List<Valintaryhma> parentHierarchy(@PathParam("oid") String parentsOf) {
         List<Valintaryhma> valintaryhmas = new ArrayList<Valintaryhma>();
         if (parentsOf != null) {
@@ -87,6 +97,7 @@ public class ValintaryhmaResource {
     @Path("{oid}/lapsi")
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({ JsonViews.Basic.class })
+    @Secured({READ, UPDATE, CRUD})
     public List<Valintaryhma> queryChildren(@PathParam("oid") String oid) {
         return valintaryhmaService.findValintaryhmasByParentOid(oid);
     }
@@ -95,6 +106,7 @@ public class ValintaryhmaResource {
     @Path("{oid}/hakukohde")
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({ JsonViews.Basic.class })
+    @Secured({READ, UPDATE, CRUD})
     public List<HakukohdeViite> childHakukohdes(@PathParam("oid") String oid) {
         return hakukohdeService.findByValintaryhmaOid(oid);
     }
@@ -103,6 +115,7 @@ public class ValintaryhmaResource {
     @Path("{oid}/valinnanvaihe")
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView(JsonViews.Basic.class)
+    @Secured({READ, UPDATE, CRUD})
     public List<ValinnanVaihe> valinnanVaiheet(@PathParam("oid") String oid) {
         return valinnanVaiheService.findByValintaryhma(oid);
     }
@@ -112,6 +125,7 @@ public class ValintaryhmaResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({ JsonViews.Basic.class })
+    @Secured({CRUD})
     public Response insertChild(@PathParam("parentOid") String parentOid, Valintaryhma valintaryhma) {
         try {
             valintaryhma = valintaryhmaService.insert(valintaryhma, parentOid);
@@ -125,6 +139,7 @@ public class ValintaryhmaResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({ JsonViews.Basic.class })
+    @Secured({CRUD})
     public Response insert(Valintaryhma valintaryhma) {
         try {
             valintaryhmaService.insert(valintaryhma);
@@ -140,6 +155,7 @@ public class ValintaryhmaResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({ JsonViews.Basic.class })
+    @Secured({UPDATE, CRUD})
     public Response update(@PathParam("oid") String oid, Valintaryhma valintaryhma) {
         valintaryhmaService.update(oid, valintaryhma);
         return Response.status(Response.Status.ACCEPTED).build();
@@ -150,6 +166,7 @@ public class ValintaryhmaResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({ JsonViews.Basic.class })
+    @Secured({CRUD})
     public Response insertValinnanvaihe(@PathParam("valintaryhmaOid") String valintaryhamOid,
             @QueryParam("edellinenValinnanVaiheOid") String edellinenValinnanVaiheOid, ValinnanVaihe valinnanVaihe) {
         try {
@@ -168,6 +185,7 @@ public class ValintaryhmaResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
+    @Secured({UPDATE, CRUD})
     public Response updateHakukohdekoodi(@PathParam("valintaryhmaOid") String valintaryhamOid,
                                         Set<Hakukohdekoodi> hakukohdekoodit) {
         try {
@@ -185,6 +203,7 @@ public class ValintaryhmaResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({ JsonViews.Basic.class })
+    @Secured({CRUD})
     public Response insertHakukohdekoodi(@PathParam("valintaryhmaOid") String valintaryhamOid,
                                         Hakukohdekoodi hakukohdekoodi) {
         try {

@@ -8,6 +8,8 @@ import org.codehaus.jackson.map.annotate.JsonView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
@@ -16,6 +18,8 @@ import javax.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -26,6 +30,7 @@ import java.util.Map;
  */
 @Component
 @Path("hakukohde")
+@PreAuthorize("isAuthenticated()")
 public class HakukohdeResource {
 
     protected final static Logger LOGGER = LoggerFactory.getLogger(ValintaryhmaResource.class);
@@ -51,6 +56,7 @@ public class HakukohdeResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
+    @Secured({READ, UPDATE, CRUD})
     public List<HakukohdeViite> query(@QueryParam("paataso") @DefaultValue("false") boolean paataso) {
         if (paataso) {
             return hakukohdeService.findRoot();
@@ -64,6 +70,7 @@ public class HakukohdeResource {
     @Path("{oid}")
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
+    @Secured({READ, UPDATE, CRUD})
     public HakukohdeViite queryFull(@PathParam("oid") String oid) {
         return hakukohdeService.readByOid(oid);
     }
@@ -72,6 +79,7 @@ public class HakukohdeResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
+    @Secured({CRUD})
     public Response insert(HakukohdeViiteDTO hakukohdeViiteDTO) {
         try {
             HakukohdeViite hkv = hakukohdeService.insert(hakukohdeViiteDTO);
@@ -87,6 +95,7 @@ public class HakukohdeResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
+    @Secured({UPDATE, CRUD})
     public Response update(@PathParam("oid") String oid, HakukohdeViite hakukohdeViite) {
         try {
             HakukohdeViite hkv = hakukohdeService.update(oid, hakukohdeViite);
@@ -101,6 +110,7 @@ public class HakukohdeResource {
     @Path("{oid}/valinnanvaihe")
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
+    @Secured({READ, UPDATE, CRUD})
     public List<ValinnanVaihe> valinnanVaihesForHakukohde(@PathParam("oid") String oid) {
         return valinnanVaiheService.findByHakukohde(oid);
     }
@@ -109,6 +119,7 @@ public class HakukohdeResource {
     @Path("{oid}/kuuluuSijoitteluun")
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
+    @Secured({READ, UPDATE, CRUD})
     public Map<String, Boolean> kuuluuSijoitteluun(@PathParam("oid") String oid) {
         Map<String, Boolean> map = new HashMap<String, Boolean>();
         map.put("sijoitteluun", hakukohdeService.kuuluuSijoitteluun(oid));
@@ -119,15 +130,17 @@ public class HakukohdeResource {
     @Path("{oid}/laskentakaava")
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
+    @Secured({READ, UPDATE, CRUD})
     public List<Jarjestyskriteeri> findLaskentaKaavat(@PathParam("oid") String oid) {
         return jarjestyskriteeriService.findByHakukohde(oid);
     }
 
     @POST
-    @Path("/avaimet")
+    @Path("avaimet")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
+    @Secured({READ, UPDATE, CRUD})
     public List<ValintaperusteDTO> findAvaimet(List<String> oids) {
         return laskentakaavaService.findAvaimetForHakukohdes(oids);
     }
@@ -137,6 +150,7 @@ public class HakukohdeResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
+    @Secured({CRUD})
     public Response insertValinnanvaihe(@PathParam("hakukohdeOid") String hakukohdeOid,
                                         @QueryParam("edellinenValinnanVaiheOid") String edellinenValinnanVaiheOid,
                                         ValinnanVaihe valinnanVaihe) {
@@ -157,6 +171,7 @@ public class HakukohdeResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
+    @Secured({UPDATE, CRUD})
     public Response updateHakukohdekoodi(@PathParam("hakukohdeOid") String hakukohdeOid,
                                          Hakukohdekoodi hakukohdekoodi) {
         try {
@@ -173,6 +188,7 @@ public class HakukohdeResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
+    @Secured({CRUD})
     public Response insertHakukohdekoodi(@PathParam("hakukohdeOid") String hakukohdeOid,
                                          Hakukohdekoodi hakukohdekoodi) {
         try {
