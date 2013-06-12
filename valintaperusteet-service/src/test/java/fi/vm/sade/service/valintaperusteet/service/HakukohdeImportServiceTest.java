@@ -9,6 +9,8 @@ import fi.vm.sade.service.valintaperusteet.model.Hakukohdekoodi;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.schema.HakukohdeImportTyyppi;
 import fi.vm.sade.service.valintaperusteet.schema.HakukohdekoodiTyyppi;
+import fi.vm.sade.service.valintaperusteet.service.impl.HakukohdeImportServiceImpl;
+import junit.framework.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +69,24 @@ public class HakukohdeImportServiceTest {
 
         imp.setHakukohdekoodi(koodi);
         return imp;
+    }
+
+    @Test
+    public void testSanitizeKoodi() {
+        HakukohdeImportServiceImpl serviceImpl = new HakukohdeImportServiceImpl();
+        HakukohdekoodiTyyppi k1 = new HakukohdekoodiTyyppi();
+        k1.setKoodiUri("http://koodinuri");
+        serviceImpl.sanitizeKoodiUri(k1);
+        Assert.assertEquals("http://koodinuri", k1.getKoodiUri());
+        k1.setKoodiUri("http://koodinur2#1");
+        serviceImpl.sanitizeKoodiUri(k1);
+        Assert.assertEquals("http://koodinur2", k1.getKoodiUri());
+        k1.setKoodiUri("http://koodinur3#1#5");
+        serviceImpl.sanitizeKoodiUri(k1);
+        Assert.assertEquals("http://koodinur3", k1.getKoodiUri());
+        k1.setKoodiUri(null);
+        serviceImpl.sanitizeKoodiUri(k1);
+        Assert.assertNull(k1.getKoodiUri());
     }
 
     @Test

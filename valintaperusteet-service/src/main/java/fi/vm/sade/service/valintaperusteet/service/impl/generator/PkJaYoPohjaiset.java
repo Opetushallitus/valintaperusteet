@@ -28,10 +28,10 @@ public class PkJaYoPohjaiset {
     public static Laskentakaava luoTyokokemuspisteytysmalli() {
 
         Arvovalikonvertteriparametri[] konvs = {
-                GenericHelper.luoArvovalikonvertteriparametri(-Double.MIN_VALUE, 3.0, 0.0),
+                GenericHelper.luoArvovalikonvertteriparametri(-10000.0, 3.0, 0.0),
                 GenericHelper.luoArvovalikonvertteriparametri(3.0, 6.0, 1.0),
                 GenericHelper.luoArvovalikonvertteriparametri(6.0, 12.0, 2.0),
-                GenericHelper.luoArvovalikonvertteriparametri(12.0, Double.MAX_VALUE, 3.0)
+                GenericHelper.luoArvovalikonvertteriparametri(12.0, 10000.0, 3.0)
         };
 
         Funktiokutsu f = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(
