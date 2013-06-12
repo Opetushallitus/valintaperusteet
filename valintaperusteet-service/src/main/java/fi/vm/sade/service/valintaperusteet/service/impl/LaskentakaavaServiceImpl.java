@@ -263,7 +263,10 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
         }
         laskentakaava.setFunktiokutsu(updateFunktiokutsu(laskentakaava.getFunktiokutsu()));
 
-        if (laskentakaava.getValintaryhma() != null && laskentakaava.getValintaryhma().getOid() != null) {
+        if (laskentakaava.getHakukohde() != null && laskentakaava.getHakukohde().getOid() != null) {
+            HakukohdeViite hakukohde = hakukohdeViiteDAO.readByOid(laskentakaava.getHakukohde().getOid());
+            laskentakaava.setHakukohde(hakukohde);
+        } else if (laskentakaava.getValintaryhma() != null && laskentakaava.getValintaryhma().getOid() != null) {
             Valintaryhma valintaryhma = valintaryhmaDAO.readByOid(laskentakaava.getValintaryhma().getOid());
             laskentakaava.setValintaryhma(valintaryhma);
         }
