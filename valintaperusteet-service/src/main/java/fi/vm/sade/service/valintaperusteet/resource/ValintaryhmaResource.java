@@ -192,9 +192,8 @@ public class ValintaryhmaResource {
             hakukohdekoodiService.updateValintaryhmaHakukohdekoodit(valintaryhamOid, hakukohdekoodit);
             return Response.status(Response.Status.ACCEPTED).entity(hakukohdekoodit).build();
         } catch (Exception e) {
-            e.printStackTrace();
             LOGGER.error("Error updating hakukohdekoodit.", e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
 
@@ -210,9 +209,8 @@ public class ValintaryhmaResource {
             hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(valintaryhamOid, hakukohdekoodi);
             return Response.status(Response.Status.CREATED).entity(hakukohdekoodi).build();
         } catch (Exception e) {
-            e.printStackTrace();
             LOGGER.error("Error creating valinnanvaihe.", e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
 }
