@@ -185,6 +185,7 @@
             <xs:element name="hakukohteenKoulutusaste" type="xs:string" minOccurs="1" maxOccurs="1"/>
             <xs:element name="valinnanAloituspaikat" type="xs:int" minOccurs="1" maxOccurs="1"/>
             <xs:element name="opetuskielet" type="xs:string" minOccurs="1" maxOccurs="unbounded" />
+            <xs:element name="valintakoe" type="tns:HakukohteenValintakoeTyyppi" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
         <xs:attribute name="hakukohdeOid" type="xs:string" use="required"/>
     </xs:complexType>
@@ -204,4 +205,10 @@
         <xs:attribute name="text"  type="xs:string" use="required"/>
     </xs:complexType>
 
-</xs:schema> 
+    <xs:complexType name="HakukohteenValintakoeTyyppi">
+        <xs:sequence>
+            <xs:element name="tyyppiUri" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element name="oid" type="xs:string" minOccurs="1" maxOccurs="1"     />
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
