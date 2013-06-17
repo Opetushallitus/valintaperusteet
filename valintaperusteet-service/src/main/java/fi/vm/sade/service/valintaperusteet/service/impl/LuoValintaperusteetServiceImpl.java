@@ -148,7 +148,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                 Valintatapajono jono = new Valintatapajono();
 
                 jono.setAktiivinen(true);
-                jono.setAloituspaikat(20);
+                jono.setAloituspaikat(0);
                 jono.setKuvaus("generoitu");
                 jono.setNimi("Generoitu valintatapajono");
                 jono.setTasapistesaanto(Tasapistesaanto.ARVONTA);
