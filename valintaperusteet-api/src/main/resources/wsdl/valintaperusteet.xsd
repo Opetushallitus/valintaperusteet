@@ -177,10 +177,13 @@
     <xs:complexType name="HakukohdeImportTyyppi">
         <xs:sequence>
             <xs:element name="hakukohdekoodi" type="tns:HakukohdekoodiTyyppi" minOccurs="1" maxOccurs="1" />
+            <xs:element name="hakuOid" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element name="hakukohdeNimi" type="tns:MonikielinenTekstiTyyppi" minOccurs="1" maxOccurs="unbounded"/>
+            <xs:element name="tarjoajaNimi" type="tns:MonikielinenTekstiTyyppi" minOccurs="1" maxOccurs="unbounded"/>
+            <xs:element name="hakukohteenKoulutusaste" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="valinnanAloituspaikat" type="xs:int" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
-        <xs:attribute name="hakuOid" type="xs:string" use="required"/>
         <xs:attribute name="hakukohdeOid" type="xs:string" use="required"/>
-        <xs:attribute name="nimi" type="xs:string" use="required"/>
     </xs:complexType>
     <xs:complexType name="TuoHakukohdeVastausTyyppi">
     </xs:complexType>
@@ -192,4 +195,10 @@
         <xs:attribute name="nimiSv" type="xs:string" use="optional" />
         <xs:attribute name="nimiEn" type="xs:string" use="optional" />
     </xs:complexType>
+
+    <xs:complexType name="MonikielinenTekstiTyyppi">
+        <xs:attribute name="lang" type="xs:string" use="required"/>
+        <xs:attribute name="text"  type="xs:string" use="required"/>
+    </xs:complexType>
+
 </xs:schema> 

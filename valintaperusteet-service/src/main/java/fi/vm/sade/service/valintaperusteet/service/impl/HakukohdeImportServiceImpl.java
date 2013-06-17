@@ -56,7 +56,18 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
 
     private HakukohdeViite luoUusiHakukohde(HakukohdeImportTyyppi importData) {
         HakukohdeViite hakukohde = new HakukohdeViite();
-        hakukohde.setNimi(importData.getNimi());
+
+        //TODO FIX THIS CRAZY STUFF
+        String tarjoajanimi = "";
+        String hakukohdeNimi ="";
+        if(importData.getHakukohdeNimi().size() > 0 ) {
+            hakukohdeNimi = importData.getHakukohdeNimi().get(0).getText();
+        }
+        if(importData.getTarjoajaNimi().size() > 0 ) {
+            tarjoajanimi = importData.getTarjoajaNimi().get(0).getText();
+        }
+        hakukohde.setNimi(tarjoajanimi  + " " + hakukohdeNimi);
+
         hakukohde.setHakuoid(importData.getHakuOid());
         hakukohde.setOid(importData.getHakukohdeOid());
         return hakukohde;
@@ -145,7 +156,16 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
                 }
             } else {
                 // Synkataan nimi ja koodi
-                hakukohde.setNimi(importData.getNimi());
+                //TODO FIX THIS CRAZY STUFF
+                String tarjoajanimi = "";
+                String hakukohdeNimi ="";
+                if(importData.getHakukohdeNimi().size() > 0 ) {
+                    hakukohdeNimi = importData.getHakukohdeNimi().get(0).getText();
+                }
+                if(importData.getTarjoajaNimi().size() > 0 ) {
+                    tarjoajanimi = importData.getTarjoajaNimi().get(0).getText();
+                }
+                hakukohde.setNimi(tarjoajanimi  + " " + hakukohdeNimi);
                 koodi.addHakukohde(hakukohde);
             }
         }
