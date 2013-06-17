@@ -178,7 +178,7 @@
         <xs:sequence>
             <xs:element name="hakukohdekoodi" type="tns:HakukohdekoodiTyyppi" minOccurs="1" maxOccurs="1" />
             <xs:element name="hakuVuosi" type="xs:string" minOccurs="1" maxOccurs="1"/>
-            <xs:element name="hakuKausi" type="tns:MonikielinenTekstiTyyppi" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="hakuKausi" type="tns:MonikielinenTekstiTyyppi" minOccurs="1" maxOccurs="unbounded"/>
             <xs:element name="hakuOid" type="xs:string" minOccurs="1" maxOccurs="1" />
             <xs:element name="hakukohdeNimi" type="tns:MonikielinenTekstiTyyppi" minOccurs="1" maxOccurs="unbounded"/>
             <xs:element name="tarjoajaNimi" type="tns:MonikielinenTekstiTyyppi" minOccurs="1" maxOccurs="unbounded"/>
