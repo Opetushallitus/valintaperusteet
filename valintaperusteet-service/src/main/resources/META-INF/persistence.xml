@@ -13,8 +13,11 @@
         <class>fi.vm.sade.service.valintaperusteet.model.HakukohdeViite</class>
         <class>fi.vm.sade.service.valintaperusteet.model.Valintatapajono</class>
         <class>fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri</class>
+        <class>fi.vm.sade.service.valintaperusteet.model.Koodi</class>
         <class>fi.vm.sade.service.valintaperusteet.model.Konvertteriparametri</class>
         <class>fi.vm.sade.service.valintaperusteet.model.Hakukohdekoodi</class>
+        <class>fi.vm.sade.service.valintaperusteet.model.Valintakoekoodi</class>
+        <class>fi.vm.sade.service.valintaperusteet.model.Opetuskielikoodi</class>
         <class>fi.vm.sade.service.valintaperusteet.model.Arvokonvertteriparametri</class>
         <class>fi.vm.sade.service.valintaperusteet.model.Arvovalikonvertteriparametri</class>
         <class>fi.vm.sade.service.valintaperusteet.model.Laskentakaava</class>
@@ -28,11 +31,12 @@
 
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL82Dialect"/>
-            <property name="hibernate.jdbc.batch_size" value="20" />
-            <property name="hibernate.cache.use_second_level_cache" value="true" />
-            <property name="hibernate.cache.use_query_cache" value="true" />
-            <property name="hibernate.cache.region.factory_class" value="org.hibernate.cache.ehcache.EhCacheRegionFactory" />
-            <property name="hibernate.cache.default_cache_concurrency_strategy" value="nonstrict-read-write" />
+            <property name="hibernate.jdbc.batch_size" value="20"/>
+            <property name="hibernate.cache.use_second_level_cache" value="true"/>
+            <property name="hibernate.cache.use_query_cache" value="true"/>
+            <property name="hibernate.cache.region.factory_class"
+                      value="org.hibernate.cache.ehcache.EhCacheRegionFactory"/>
+            <property name="hibernate.cache.default_cache_concurrency_strategy" value="nonstrict-read-write"/>
         </properties>
     </persistence-unit>
 </persistence>

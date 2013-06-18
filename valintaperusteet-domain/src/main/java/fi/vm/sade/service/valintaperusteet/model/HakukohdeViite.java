@@ -43,6 +43,20 @@ public class HakukohdeViite extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Hakukohdekoodi hakukohdekoodi;
 
+    @JoinTable(name = "hakukohde_viite_opetuskielikoodi",
+            joinColumns = @JoinColumn(name = "hakukohde_viite_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME),
+            inverseJoinColumns = @JoinColumn(name = "opetuskielikoodi_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME))
+    @ManyToMany(fetch = FetchType.LAZY)
+    private Set<Opetuskielikoodi> opetuskielet;
+
+
+    @JoinTable(name = "hakukohde_viite_paasykoekoodi",
+            joinColumns = @JoinColumn(name = "hakukohde_viite_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME),
+            inverseJoinColumns = @JoinColumn(name = "paasykoekoodi_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME))
+    @ManyToMany(fetch = FetchType.LAZY)
+    private Set<Valintakoekoodi> valintakokeet;
+
+
     public String getHakuoid() {
         return hakuoid;
     }

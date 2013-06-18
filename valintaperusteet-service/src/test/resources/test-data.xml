@@ -305,33 +305,43 @@
 
     <valintaryhma id="43" version="0" oid="oid43" nimi="Valintaryhma 43" hakuOid="hakuoid1"/>
 
-    <hakukohdekoodi id="1" version="0" uri="hakukohdekoodiuri1" arvo="koodiarvo1" nimi_fi="hakukohdekoodi1"
-                    nimi_sv="hakukohdekoodi1" nimi_en="hakukohdekoodi1" valintaryhma_id="36"/>
-    <hakukohdekoodi id="2" version="0" uri="hakukohdekoodiuri2" arvo="koodiarvo2" nimi_fi="hakukohdekoodi2"
-                    nimi_sv="hakukohdekoodi2" nimi_en="hakukohdekoodi2" valintaryhma_id="37"/>
+    <koodi koodityyppi="hakukohdekoodi" id="1" version="0" uri="hakukohdekoodiuri1" arvo="koodiarvo1"
+           nimi_fi="hakukohdekoodi1"
+           nimi_sv="hakukohdekoodi1" nimi_en="hakukohdekoodi1" valintaryhma_id="36"/>
+    <koodi koodityyppi="hakukohdekoodi" id="2" version="0" uri="hakukohdekoodiuri2" arvo="koodiarvo2"
+           nimi_fi="hakukohdekoodi2"
+           nimi_sv="hakukohdekoodi2" nimi_en="hakukohdekoodi2" valintaryhma_id="37"/>
 
-    <hakukohdekoodi id="3" version="0" uri="hakukohdekoodiuri3" arvo="koodiarvo3" nimi_fi="hakukohdekoodi3"
-                    nimi_sv="hakukohdekoodi3" nimi_en="hakukohdekoodi3" valintaryhma_id="38"/>
+    <koodi koodityyppi="hakukohdekoodi" id="3" version="0" uri="hakukohdekoodiuri3" arvo="koodiarvo3"
+           nimi_fi="hakukohdekoodi3"
+           nimi_sv="hakukohdekoodi3" nimi_en="hakukohdekoodi3" valintaryhma_id="38"/>
 
-    <hakukohdekoodi id="4" version="0" uri="hakukohdekoodiuri4" arvo="koodiarvo4" nimi_fi="hakukohdekoodi4"
-                    nimi_sv="hakukohdekoodi4" nimi_en="hakukohdekoodi4" valintaryhma_id="41"/>
-    <hakukohdekoodi id="5" version="0" uri="hakukohdekoodiuri5" arvo="koodiarvo5" nimi_fi="hakukohdekoodi5"
-                    nimi_sv="hakukohdekoodi5" nimi_en="hakukohdekoodi5"/>
+    <koodi koodityyppi="hakukohdekoodi" id="4" version="0" uri="hakukohdekoodiuri4" arvo="koodiarvo4"
+           nimi_fi="hakukohdekoodi4"
+           nimi_sv="hakukohdekoodi4" nimi_en="hakukohdekoodi4" valintaryhma_id="41"/>
+    <koodi koodityyppi="hakukohdekoodi" id="5" version="0" uri="hakukohdekoodiuri5" arvo="koodiarvo5"
+           nimi_fi="hakukohdekoodi5"
+           nimi_sv="hakukohdekoodi5" nimi_en="hakukohdekoodi5"/>
 
-    <hakukohdekoodi id="6" version="0" uri="hakukohdekoodiuri6" arvo="koodiarvo6" nimi_fi="hakukohdekoodi6"
-                    nimi_sv="hakukohdekoodi6" nimi_en="hakukohdekoodi6" valintaryhma_id="40"/>
+    <koodi koodityyppi="hakukohdekoodi" id="6" version="0" uri="hakukohdekoodiuri6" arvo="koodiarvo6"
+           nimi_fi="hakukohdekoodi6"
+           nimi_sv="hakukohdekoodi6" nimi_en="hakukohdekoodi6" valintaryhma_id="40"/>
 
-    <hakukohdekoodi id="7" version="0" uri="hakukohdekoodiuri7" arvo="koodiarvo7" nimi_fi="hakukohdekoodi7"
-                    nimi_sv="hakukohdekoodi7" nimi_en="hakukohdekoodi7" valintaryhma_id="42"/>
+    <koodi koodityyppi="hakukohdekoodi" id="7" version="0" uri="hakukohdekoodiuri7" arvo="koodiarvo7"
+           nimi_fi="hakukohdekoodi7"
+           nimi_sv="hakukohdekoodi7" nimi_en="hakukohdekoodi7" valintaryhma_id="42"/>
 
-    <hakukohdekoodi id="8" version="0" uri="hakukohdekoodiuri8" arvo="koodiarvo8" nimi_fi="hakukohdekoodi8"
-                    nimi_sv="hakukohdekoodi8" nimi_en="hakukohdekoodi8"/>
+    <koodi koodityyppi="hakukohdekoodi" id="8" version="0" uri="hakukohdekoodiuri8" arvo="koodiarvo8"
+           nimi_fi="hakukohdekoodi8"
+           nimi_sv="hakukohdekoodi8" nimi_en="hakukohdekoodi8"/>
 
-    <hakukohdekoodi id="9" version="0" uri="hakukohdekoodiuri9" arvo="koodiarvo9" nimi_fi="hakukohdekoodi9"
-                    nimi_sv="hakukohdekoodi9" nimi_en="hakukohdekoodi9"/>
+    <koodi koodityyppi="hakukohdekoodi" id="9" version="0" uri="hakukohdekoodiuri9" arvo="koodiarvo9"
+           nimi_fi="hakukohdekoodi9"
+           nimi_sv="hakukohdekoodi9" nimi_en="hakukohdekoodi9"/>
 
-    <hakukohdekoodi id="10" version="0" uri="hakukohdekoodiuri10" arvo="koodiarvo10" nimi_fi="hakukohdekoodi10"
-                    nimi_sv="hakukohdekoodi10" nimi_en="hakukohdekoodi10"/>
+    <koodi koodityyppi="hakukohdekoodi" id="10" version="0" uri="hakukohdekoodiuri10" arvo="koodiarvo10"
+           nimi_fi="hakukohdekoodi10"
+           nimi_sv="hakukohdekoodi10" nimi_en="hakukohdekoodi10"/>
 
 
     <hakukohde_viite id="1" version="0" hakuoid="hakuoid1" oid="oid1" nimi="haku1" valintaryhma_id="1"/>
