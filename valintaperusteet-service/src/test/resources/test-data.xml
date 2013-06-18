@@ -343,6 +343,7 @@
            nimi_fi="hakukohdekoodi10"
            nimi_sv="hakukohdekoodi10" nimi_en="hakukohdekoodi10"/>
 
+    <koodi koodityyppi="opetuskielikoodi" id="11" version="0" uri="kieli_sv"/>
 
     <hakukohde_viite id="1" version="0" hakuoid="hakuoid1" oid="oid1" nimi="haku1" valintaryhma_id="1"/>
     <hakukohde_viite id="2" version="0" hakuoid="hakuoid1" oid="oid2" nimi="haku2" valintaryhma_id="1"/>
@@ -371,6 +372,7 @@
 
     <hakukohde_viite id="17" version="0" hakuoid="hakuoid1" oid="oid17" nimi="haku17"/>
 
+    <hakukohde_viite_opetuskielikoodi hakukohde_viite_id="17" opetuskielikoodi_id="11"/>
 
     <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="1" version="0" valintaryhma_id="1"
                     hakukohde_viite_id="[NULL]" oid="1" nimi="valinnanvaihe1" kuvaus="kuvaus1" aktiivinen="true"/>

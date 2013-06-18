@@ -54,15 +54,23 @@ public class HakukohdeImportServiceTest {
     @Autowired
     private HakukohdeService hakukohdeService;
 
+    private MonikielinenTekstiTyyppi luoMonikielinenTeksti(String teksti, HakukohdeImportServiceImpl.Kieli kieli) {
+        MonikielinenTekstiTyyppi t = new MonikielinenTekstiTyyppi();
+        t.setLang(kieli.getUri());
+        t.setText(teksti);
+        return t;
+    }
 
     private HakukohdeImportTyyppi luoHakukohdeImportTyyppi(String hakukohdeOid, String hakuOid, String koodiUri) {
         HakukohdeImportTyyppi imp = new HakukohdeImportTyyppi();
         imp.setHakukohdeOid(hakukohdeOid);
         imp.setHakuOid(hakuOid);
-        MonikielinenTekstiTyyppi m1 = new MonikielinenTekstiTyyppi();
-        m1.setLang("FI");
-        m1.setText(hakukohdeOid);
-        imp.getHakukohdeNimi().add(m1);
+        imp.getHakukohdeNimi().add(luoMonikielinenTeksti(hakukohdeOid + "-nimi", HakukohdeImportServiceImpl.Kieli.FI));
+        imp.getTarjoajaNimi().add(luoMonikielinenTeksti(hakukohdeOid + "-tarjoaja", HakukohdeImportServiceImpl.Kieli.FI));
+        imp.getHakuKausi().add(luoMonikielinenTeksti("Syksy", HakukohdeImportServiceImpl.Kieli.FI));
+        imp.setHakuVuosi("2013");
+
+        imp.getOpetuskielet().add(HakukohdeImportServiceImpl.Kieli.FI.getUri());
 
         HakukohdekoodiTyyppi koodi = new HakukohdekoodiTyyppi();
         koodi.setKoodiUri(koodiUri);
@@ -78,19 +86,18 @@ public class HakukohdeImportServiceTest {
     @Test
     public void testSanitizeKoodi() {
         HakukohdeImportServiceImpl serviceImpl = new HakukohdeImportServiceImpl();
-        HakukohdekoodiTyyppi k1 = new HakukohdekoodiTyyppi();
-        k1.setKoodiUri("http://koodinuri");
-        serviceImpl.sanitizeKoodiUri(k1);
-        Assert.assertEquals("http://koodinuri", k1.getKoodiUri());
-        k1.setKoodiUri("http://koodinur2#1");
-        serviceImpl.sanitizeKoodiUri(k1);
-        Assert.assertEquals("http://koodinur2", k1.getKoodiUri());
-        k1.setKoodiUri("http://koodinur3#1#5");
-        serviceImpl.sanitizeKoodiUri(k1);
-        Assert.assertEquals("http://koodinur3", k1.getKoodiUri());
-        k1.setKoodiUri(null);
-        serviceImpl.sanitizeKoodiUri(k1);
-        Assert.assertNull(k1.getKoodiUri());
+
+        final String uri1 = "http://koodinuri";
+        Assert.assertEquals(uri1, serviceImpl.sanitizeKoodiUri(uri1));
+
+        final String uri2 = "http://koodinur2#1";
+        final String uri2Expected = "http://koodinur2";
+        Assert.assertEquals(uri2Expected, serviceImpl.sanitizeKoodiUri(uri2));
+
+        final String uri3 = "http://koodinur3#1#5";
+        final String uri3Expected = "http://koodinur3";
+        Assert.assertEquals(uri3Expected, serviceImpl.sanitizeKoodiUri(uri3));
+        Assert.assertNull(null);
     }
 
     @Test
@@ -267,7 +274,7 @@ public class HakukohdeImportServiceTest {
             assertEquals(1, hakukohteet.size());
             HakukohdeViite hakukohde = hakukohteet.get(0);
             assertEquals(hakukohdeOid, hakukohde.getOid());
-          //  assertFalse(hakukohdeOid.equals(hakukohde.getNimi()));
+            //  assertFalse(hakukohdeOid.equals(hakukohde.getNimi()));
 
             List<ValinnanVaihe> vaiheet = valinnanVaiheService.findByHakukohde(hakukohdeOid);
             assertEquals(4, vaiheet.size());
@@ -289,7 +296,7 @@ public class HakukohdeImportServiceTest {
             assertEquals(1, hakukohteet.size());
             HakukohdeViite hakukohde = hakukohteet.get(0);
             assertEquals(hakukohdeOid, hakukohde.getOid());
-         //   assertEquals(hakukohdeOid, hakukohde.getNimi());
+            //   assertEquals(hakukohdeOid, hakukohde.getNimi());
 
             List<ValinnanVaihe> vaiheet = valinnanVaiheService.findByHakukohde(hakukohdeOid);
             assertEquals(4, vaiheet.size());
