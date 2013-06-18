@@ -47,14 +47,14 @@ public class HakukohdeViite extends BaseEntity {
             joinColumns = @JoinColumn(name = "hakukohde_viite_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME),
             inverseJoinColumns = @JoinColumn(name = "opetuskielikoodi_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME))
     @ManyToMany(fetch = FetchType.LAZY)
-    private Set<Opetuskielikoodi> opetuskielet;
+    private Set<Opetuskielikoodi> opetuskielet = new HashSet<Opetuskielikoodi>();
 
 
-    @JoinTable(name = "hakukohde_viite_paasykoekoodi",
+    @JoinTable(name = "hakukohde_viite_valintakoe",
             joinColumns = @JoinColumn(name = "hakukohde_viite_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME),
-            inverseJoinColumns = @JoinColumn(name = "paasykoekoodi_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME))
+            inverseJoinColumns = @JoinColumn(name = "valintakoe_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME))
     @ManyToMany(fetch = FetchType.LAZY)
-    private Set<Valintakoekoodi> valintakokeet;
+    private Set<Valintakoekoodi> valintakokeet = new HashSet<Valintakoekoodi>();
 
 
     public String getHakuoid() {
@@ -123,5 +123,21 @@ public class HakukohdeViite extends BaseEntity {
 
     public void setHakukohdekoodi(Hakukohdekoodi hakukohdekoodi) {
         this.hakukohdekoodi = hakukohdekoodi;
+    }
+
+    public Set<Opetuskielikoodi> getOpetuskielet() {
+        return opetuskielet;
+    }
+
+    public void setOpetuskielet(Set<Opetuskielikoodi> opetuskielet) {
+        this.opetuskielet = opetuskielet;
+    }
+
+    public Set<Valintakoekoodi> getValintakokeet() {
+        return valintakokeet;
+    }
+
+    public void setValintakokeet(Set<Valintakoekoodi> valintakokeet) {
+        this.valintakokeet = valintakokeet;
     }
 }
