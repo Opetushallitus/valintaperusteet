@@ -8,19 +8,19 @@ import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.schema.HakukohdeImportTyyppi;
 import fi.vm.sade.service.valintaperusteet.schema.HakukohdekoodiTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.HakukohteenValintakoeTyyppi;
 import fi.vm.sade.service.valintaperusteet.schema.MonikielinenTekstiTyyppi;
 import fi.vm.sade.service.valintaperusteet.service.HakukohdeImportService;
 import fi.vm.sade.service.valintaperusteet.service.HakukohdeService;
 import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * User: wuoti
@@ -30,6 +30,8 @@ import java.util.Set;
 @Service
 @Transactional
 public class HakukohdeImportServiceImpl implements HakukohdeImportService {
+    private static final Logger LOG = LoggerFactory.getLogger(HakukohdeImportServiceImpl.class);
+
     public final static String KIELI_FI_URI = "kieli_fi";
     public final static String KIELI_SV_URI = "kieli_sv";
     public final static String KIELI_EN_URI = "kieli_en";
@@ -147,11 +149,16 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
 
     @Override
     public void tuoHakukohde(HakukohdeImportTyyppi importData) {
+        LOG.info("Aloitetaan import hakukohteelle. Hakukohde OID: {}, hakukohdekoodi URI: {}",
+                importData.getHakukohdeOid(), importData.getHakukohdekoodi().getKoodiUri());
+
+        System.out.println("Hakukohde oid: " + importData.getHakukohdeOid());
         HakukohdekoodiTyyppi koodiTyyppi = importData.getHakukohdekoodi();
 
         HakukohdeViite hakukohde = hakukohdeViiteDAO.readByOid(importData.getHakukohdeOid());
-        Hakukohdekoodi koodi = hakukohdekoodiDAO.findByKoodiUri(koodiTyyppi.getKoodiUri());
+        Hakukohdekoodi koodi = hakukohdekoodiDAO.findByKoodiUri(sanitizeKoodiUri(koodiTyyppi.getKoodiUri()));
 
+        System.out.println(1);
         if (koodi == null) {
             koodi = new Hakukohdekoodi();
             convertKoodi(koodiTyyppi, koodi);
@@ -160,24 +167,27 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
             convertKoodi(koodiTyyppi, koodi);
         }
 
-
+        System.out.println(2);
         if (hakukohde == null) {
+            LOG.info("Hakukohdetta ei ole olemassa. Luodaan uusi hakukohde.");
             hakukohde = luoUusiHakukohde(importData);
 
             final String valintaryhmaOid = koodi.getValintaryhma() != null ? koodi.getValintaryhma().getOid() : null;
             hakukohde = hakukohdeService.insert(hakukohde, valintaryhmaOid);
             koodi.addHakukohde(hakukohde);
+            System.out.println(2.1);
         } else {
-
+            LOG.info("Hakukohde löytyi.");
             Valintaryhma koodiValintaryhma = koodi.getValintaryhma();
             Valintaryhma hakukohdeValintaryhma = hakukohde.getValintaryhma();
 
             // ^ on XOR-operaattori. Tsekataan, että sekä koodin että hakukohteen kautta navigoidut valintaryhmät ovat
             // samat.
+            System.out.println(2.2);
             if ((koodiValintaryhma != null ^ hakukohdeValintaryhma != null) ||
                     (koodiValintaryhma != null && hakukohdeValintaryhma != null
                             && !koodiValintaryhma.getOid().equals(hakukohdeValintaryhma.getOid()))) {
-
+                LOG.info("Hakukohde on väärän valintaryhmän alla. Synkronoidaan hakukohde oikean valintaryhmän alle");
                 poistaHakukohteenPeriytyvatValinnanVaiheet(importData.getHakukohdeOid());
                 List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheService.findByHakukohde(importData.getHakukohdeOid());
 
@@ -199,7 +209,7 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
 
                 ValinnanVaihe viimeinenValinnanVaihe =
                         valinnanVaiheDAO.haeHakukohteenViimeinenValinnanVaihe(importData.getHakukohdeOid());
-
+                System.out.println(2.3);
                 if (!valinnanVaiheet.isEmpty()) {
                     valinnanVaiheet.get(0).setEdellinen(viimeinenValinnanVaihe);
                     if (viimeinenValinnanVaihe != null) {
@@ -211,31 +221,83 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
                         vv.setHakukohdeViite(uusiHakukohde);
                     }
                 }
+                System.out.println(2.4);
             } else {
+                System.out.println(2.5);
+                LOG.info("Hakukohde on oikeassa valintaryhmässä. Synkronoidaan hakukohteen nimi ja koodi.");
                 // Synkataan nimi ja koodi
                 hakukohde.setNimi(generoiHakukohdeNimi(importData));
                 koodi.addHakukohde(hakukohde);
             }
+            System.out.println(2.6);
         }
+        System.out.println(3);
 
-        hakukohde.getOpetuskielet().addAll(haeTaiLisaaOpetuskielet(importData));
+        // Päivitetään opetuskielikoodit
+        hakukohde.setOpetuskielet(haeTaiLisaaOpetuskielikoodit(importData));
+        System.out.println(4);
+        // Päivitetään valintakoekoodit
+        hakukohde.setValintakokeet(haeTaiLisaaValintakoekoodit(importData));
+        System.out.println(5);
     }
 
-    private Set<Opetuskielikoodi> haeTaiLisaaOpetuskielet(HakukohdeImportTyyppi importData) {
-        Set<Opetuskielikoodi> opetuskielet = new HashSet<Opetuskielikoodi>();
+    private Set<Opetuskielikoodi> haeTaiLisaaOpetuskielikoodit(HakukohdeImportTyyppi importData) {
+        Set<Opetuskielikoodi> opetuskielikoodit = new HashSet<Opetuskielikoodi>();
 
         for (String uri : importData.getOpetuskielet()) {
-            List<Opetuskielikoodi> result = genericDAO.findBy(Opetuskielikoodi.class, "uri", sanitizeKoodiUri(uri));
-            if (result != null && result.size() > 0) {
-                opetuskielet.add(result.get(0));
-            } else {
-                Opetuskielikoodi opetuskielikoodi = new Opetuskielikoodi();
-                opetuskielikoodi.setUri(uri);
-                opetuskielet.add(genericDAO.insert(opetuskielikoodi));
+            Opetuskielikoodi koodi = haeTaiLisaaKoodi(Opetuskielikoodi.class, uri, new KoodiFactory<Opetuskielikoodi>() {
+                @Override
+                public Opetuskielikoodi newInstance() {
+                    return new Opetuskielikoodi();
+                }
+            });
+
+
+            if (koodi != null) {
+                opetuskielikoodit.add(koodi);
+            }
+        }
+        return opetuskielikoodit;
+    }
+
+    private List<Valintakoekoodi> haeTaiLisaaValintakoekoodit(HakukohdeImportTyyppi importData) {
+        List<Valintakoekoodi> koekoodit = new ArrayList<Valintakoekoodi>();
+
+        for (HakukohteenValintakoeTyyppi koe : importData.getValintakoe()) {
+            Valintakoekoodi koodi = haeTaiLisaaKoodi(Valintakoekoodi.class, koe.getTyyppiUri(), new KoodiFactory<Valintakoekoodi>() {
+                @Override
+                public Valintakoekoodi newInstance() {
+                    return new Valintakoekoodi();
+                }
+            });
+
+            if (koodi != null) {
+                koekoodit.add(koodi);
             }
         }
 
-        return opetuskielet;
+        return koekoodit;
+    }
+
+    private abstract class KoodiFactory<T extends Koodi> {
+        public abstract T newInstance();
+    }
+
+    private <T extends Koodi> T haeTaiLisaaKoodi(Class<T> clazz, String uri, KoodiFactory<T> factory) {
+        String sanitizedUri = sanitizeKoodiUri(uri);
+
+        if (StringUtils.isNotBlank(sanitizedUri)) {
+            List<T> result = genericDAO.findBy(clazz, "uri", sanitizedUri);
+            if (result != null && result.size() > 0) {
+                return result.get(0);
+            } else {
+                T t = factory.newInstance();
+                t.setUri(sanitizedUri);
+                return genericDAO.insert(t);
+            }
+        } else {
+            return null;
+        }
     }
 
     private void poistaHakukohteenPeriytyvatValinnanVaiheet(String hakukohdeOid) {
