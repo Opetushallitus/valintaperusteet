@@ -9,6 +9,7 @@ import fi.vm.sade.service.valintaperusteet.model.Hakukohdekoodi;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.schema.HakukohdeImportTyyppi;
 import fi.vm.sade.service.valintaperusteet.schema.HakukohdekoodiTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.HakukohteenValintakoeTyyppi;
 import fi.vm.sade.service.valintaperusteet.schema.MonikielinenTekstiTyyppi;
 import fi.vm.sade.service.valintaperusteet.service.impl.HakukohdeImportServiceImpl;
 import junit.framework.Assert;
@@ -69,6 +70,12 @@ public class HakukohdeImportServiceTest {
         imp.getTarjoajaNimi().add(luoMonikielinenTeksti(hakukohdeOid + "-tarjoaja", HakukohdeImportServiceImpl.Kieli.FI));
         imp.getHakuKausi().add(luoMonikielinenTeksti("Syksy", HakukohdeImportServiceImpl.Kieli.FI));
         imp.setHakuVuosi("2013");
+
+        HakukohteenValintakoeTyyppi koe = new HakukohteenValintakoeTyyppi();
+        koe.setOid("oid123");
+        koe.setTyyppiUri("valintakoeuri1");
+
+        imp.getValintakoe().add(koe);
 
         imp.getOpetuskielet().add(HakukohdeImportServiceImpl.Kieli.FI.getUri());
 

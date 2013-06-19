@@ -51,6 +51,14 @@ public class Valintaryhma extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "valintaryhma")
     private Set<Hakukohdekoodi> hakukohdekoodit;
 
+    @JsonView({JsonViews.Basic.class})
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "valintaryhma")
+    private Set<Valintakoekoodi> valintakoekoodit;
+
+    @JsonView({JsonViews.Basic.class})
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "valintaryhma")
+    private Set<Opetuskielikoodi> opetuskielikoodit;
+
     public String getNimi() {
         return nimi;
     }
@@ -139,5 +147,21 @@ public class Valintaryhma extends BaseEntity {
 
     public void setHakukohdekoodit(Set<Hakukohdekoodi> hakukohdekoodit) {
         this.hakukohdekoodit = hakukohdekoodit;
+    }
+
+    public Set<Valintakoekoodi> getValintakoekoodit() {
+        return valintakoekoodit;
+    }
+
+    public void setValintakoekoodit(Set<Valintakoekoodi> valintakoekoodit) {
+        this.valintakoekoodit = valintakoekoodit;
+    }
+
+    public Set<Opetuskielikoodi> getOpetuskielikoodit() {
+        return opetuskielikoodit;
+    }
+
+    public void setOpetuskielikoodit(Set<Opetuskielikoodi> opetuskielikoodit) {
+        this.opetuskielikoodit = opetuskielikoodit;
     }
 }

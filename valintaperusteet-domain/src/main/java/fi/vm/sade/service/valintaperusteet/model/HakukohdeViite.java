@@ -5,7 +5,9 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonView;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -45,16 +47,18 @@ public class HakukohdeViite extends BaseEntity {
 
     @JoinTable(name = "hakukohde_viite_opetuskielikoodi",
             joinColumns = @JoinColumn(name = "hakukohde_viite_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME),
-            inverseJoinColumns = @JoinColumn(name = "opetuskielikoodi_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME))
+            inverseJoinColumns = @JoinColumn(name = "opetuskielikoodi_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME),
+            uniqueConstraints = @UniqueConstraint(name = "UK_hakukohde_viite_opetuskielikoodi_001",
+                    columnNames = {"hakukohde_viite_id", "opetuskielikoodi_id"}))
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<Opetuskielikoodi> opetuskielet = new HashSet<Opetuskielikoodi>();
 
 
-    @JoinTable(name = "hakukohde_viite_valintakoe",
+    @JoinTable(name = "hakukohde_viite_valintakoekoodi",
             joinColumns = @JoinColumn(name = "hakukohde_viite_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME),
-            inverseJoinColumns = @JoinColumn(name = "valintakoe_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME))
+            inverseJoinColumns = @JoinColumn(name = "valintakoekoodi_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME))
     @ManyToMany(fetch = FetchType.LAZY)
-    private Set<Valintakoekoodi> valintakokeet = new HashSet<Valintakoekoodi>();
+    private List<Valintakoekoodi> valintakokeet = new ArrayList<Valintakoekoodi>();
 
 
     public String getHakuoid() {
@@ -133,11 +137,11 @@ public class HakukohdeViite extends BaseEntity {
         this.opetuskielet = opetuskielet;
     }
 
-    public Set<Valintakoekoodi> getValintakokeet() {
+    public List<Valintakoekoodi> getValintakokeet() {
         return valintakokeet;
     }
 
-    public void setValintakokeet(Set<Valintakoekoodi> valintakokeet) {
+    public void setValintakokeet(List<Valintakoekoodi> valintakokeet) {
         this.valintakokeet = valintakokeet;
     }
 }
