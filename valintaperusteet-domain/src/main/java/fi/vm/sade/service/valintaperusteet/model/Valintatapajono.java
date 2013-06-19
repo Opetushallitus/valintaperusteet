@@ -48,6 +48,10 @@ public class Valintatapajono extends BaseEntity implements LinkitettavaJaKopioit
     @Column(name = "aktiivinen", nullable = false)
     private Boolean aktiivinen;
 
+    @JsonView(JsonViews.Basic.class)
+    @Column(name = "eiVarasijatayttoa", nullable = false)
+    private Boolean eiVarasijatayttoa = false;
+
     @JoinColumn(name = "edellinen_valintatapajono_id")
     @OneToOne(fetch = FetchType.LAZY)
     private Valintatapajono edellinenValintatapajono;
@@ -266,5 +270,15 @@ public class Valintatapajono extends BaseEntity implements LinkitettavaJaKopioit
     public void addJarjestyskriteeri(Jarjestyskriteeri jarjestyskriteeri) {
         jarjestyskriteeri.setValintatapajono(this);
         this.jarjestyskriteerit.add(jarjestyskriteeri);
+    }
+
+
+
+    public Boolean getEiVarasijatayttoa() {
+        return eiVarasijatayttoa;
+    }
+
+    public void setEiVarasijatayttoa(Boolean eiVarasijatayttoa) {
+        this.eiVarasijatayttoa = eiVarasijatayttoa;
     }
 }
