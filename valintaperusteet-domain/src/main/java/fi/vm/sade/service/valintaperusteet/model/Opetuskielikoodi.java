@@ -1,7 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  * User: wuoti
@@ -9,6 +9,6 @@ import javax.persistence.Entity;
  * Time: 13.06
  */
 @Entity
-@DiscriminatorValue("opetuskielikoodi")
+@Table(name = "opetuskielikoodi")
 public class Opetuskielikoodi extends Koodi {
 }

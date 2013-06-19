@@ -10,14 +10,11 @@ import javax.persistence.*;
  * Date: 18.6.2013
  * Time: 13.41
  */
-@Entity
-@Inheritance
-@DiscriminatorColumn(name = "koodityyppi")
-@Table(name = "koodi")
+@MappedSuperclass
 public abstract class Koodi extends BaseEntity {
 
     @JsonView(JsonViews.Basic.class)
-    @Column(name = "uri", nullable = false)
+    @Column(name = "uri", nullable = false, unique = true)
     private String uri;
 
     @JsonView(JsonViews.Basic.class)
@@ -35,6 +32,18 @@ public abstract class Koodi extends BaseEntity {
     @JsonView(JsonViews.Basic.class)
     @Column(name = "arvo")
     private String arvo;
+
+    @JoinColumn(name = "valintaryhma_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    private Valintaryhma valintaryhma;
+
+    public Valintaryhma getValintaryhma() {
+        return valintaryhma;
+    }
+
+    public void setValintaryhma(Valintaryhma valintaryhma) {
+        this.valintaryhma = valintaryhma;
+    }
 
     public String getUri() {
         return uri;

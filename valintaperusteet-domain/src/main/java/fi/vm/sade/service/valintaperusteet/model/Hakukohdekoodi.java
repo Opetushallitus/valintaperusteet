@@ -1,6 +1,9 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -10,23 +13,10 @@ import java.util.Set;
  * Time: 12.55
  */
 @Entity
-@DiscriminatorValue("hakukohdekoodi")
+@Table(name = "hakukohdekoodi")
 public class Hakukohdekoodi extends Koodi {
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "hakukohdekoodi")
     private Set<HakukohdeViite> hakukohteet = new HashSet<HakukohdeViite>();
-
-    @JoinColumn(name = "valintaryhma_id")
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    private Valintaryhma valintaryhma;
-
-    public Valintaryhma getValintaryhma() {
-        return valintaryhma;
-    }
-
-    public void setValintaryhma(Valintaryhma valintaryhma) {
-        this.valintaryhma = valintaryhma;
-    }
 
     public Set<HakukohdeViite> getHakukohteet() {
         return hakukohteet;
@@ -40,4 +30,5 @@ public class Hakukohdekoodi extends Koodi {
         this.hakukohteet.add(hakukohdeViite);
         hakukohdeViite.setHakukohdekoodi(this);
     }
+
 }
