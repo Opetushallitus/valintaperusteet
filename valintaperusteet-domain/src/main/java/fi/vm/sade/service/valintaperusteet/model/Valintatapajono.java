@@ -273,7 +273,6 @@ public class Valintatapajono extends BaseEntity implements LinkitettavaJaKopioit
     }
 
 
-
     public Boolean getEiVarasijatayttoa() {
         return eiVarasijatayttoa;
     }
