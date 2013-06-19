@@ -49,7 +49,7 @@ public class Valintatapajono extends BaseEntity implements LinkitettavaJaKopioit
     private Boolean aktiivinen;
 
     @JsonView(JsonViews.Basic.class)
-    @Column(name = "eiVarasijatayttoa", nullable = false)
+    @Column(name = "ei_varasijatayttoa", nullable = false)
     private Boolean eiVarasijatayttoa = false;
 
     @JoinColumn(name = "edellinen_valintatapajono_id")
