@@ -12,9 +12,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD;
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ;
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -33,8 +31,9 @@ public class LuoValintaperusteetResource {
 
     @GET
     @Path("luo")
-    @Secured({CRUD})
+    @Secured({CRUD_OPH})
     public Response luo() {
+
         try {
             luoValintaperusteetService.luo();
             return Response.status(Response.Status.ACCEPTED).build();

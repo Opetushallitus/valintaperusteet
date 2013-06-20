@@ -31,7 +31,7 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.*;
 @Component
 @Path("hakukohde")
 @PreAuthorize("isAuthenticated()")
-public class HakukohdeResource {
+public class    HakukohdeResource {
 
     protected final static Logger LOGGER = LoggerFactory.getLogger(ValintaryhmaResource.class);
 

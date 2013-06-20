@@ -13,16 +13,23 @@ import fi.vm.sade.service.valintaperusteet.service.exception.HakuparametritOnTyh
 import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheJarjestyslukuOutOfBoundsException;
 import fi.vm.sade.service.valintaperusteet.service.impl.util.ValintaperusteServiceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import javax.jws.WebParam;
 import java.util.ArrayList;
 import java.util.List;
 
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE;
+
 /**
  * User: kwuoti Date: 22.1.2013 Time: 15.00
  */
 @Service
+@PreAuthorize("isAuthenticated()")
 public class ValintaperusteServiceImpl implements ValintaperusteService {
 
     @Autowired
@@ -57,6 +64,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
 
 
     @Override
+    @Secured({READ, UPDATE, CRUD})
     public List<ValintatapajonoTyyppi> haeValintatapajonotSijoittelulle(
             @WebParam(name = "hakukohdeOid", targetNamespace = "") String hakukohdeOid) throws GenericFault {
         List<Valintatapajono> jonot = valintatapajonoDAO.haeValintatapajonotSijoittelulle(hakukohdeOid);
@@ -65,6 +73,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
     }
 
     @Override
+    @Secured({READ, UPDATE, CRUD})
     public List<ValintaperusteetTyyppi> haeValintaperusteet(
             @WebParam(name = "hakuparametrit", targetNamespace = "") List<HakuparametritTyyppi> hakuparametrit)
             throws GenericFault {
@@ -232,6 +241,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
     }
 
     @Override
+    @Secured({CRUD})
     public void tuoHakukohde(@WebParam(name = "hakukohde", targetNamespace = "") HakukohdeImportTyyppi hakukohde) throws GenericFault {
         hakukohdeImportService.tuoHakukohde(hakukohde);
     }

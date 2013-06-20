@@ -1,9 +1,12 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
+import fi.vm.sade.authentication.business.service.Authorizer;
 import fi.vm.sade.service.valintaperusteet.model.*;
+import fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole;
 import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.impl.generator.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
@@ -39,6 +42,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
     @Autowired
     private ValintatapajonoService valintatapajonoService;
+
 
     private ResourceLoader resourceLoader;
 
