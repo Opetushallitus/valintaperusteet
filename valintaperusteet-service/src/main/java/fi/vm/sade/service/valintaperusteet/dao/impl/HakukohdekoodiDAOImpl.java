@@ -30,7 +30,7 @@ public class HakukohdekoodiDAOImpl extends AbstractJpaDAOImpl<Hakukohdekoodi, Lo
 
         return from(koodi)
                 .leftJoin(koodi.hakukohteet).fetch()
-                .leftJoin(koodi.valintaryhma).fetch()
+                .leftJoin(koodi.valintaryhmat).fetch()
                 .where(koodi.uri.eq(koodiUri))
                 .singleResult(koodi);
     }
@@ -43,7 +43,7 @@ public class HakukohdekoodiDAOImpl extends AbstractJpaDAOImpl<Hakukohdekoodi, Lo
         return from(hakukohde)
                 .innerJoin(hakukohde.hakukohdekoodi, hakukohdekoodi)
                 .leftJoin(hakukohdekoodi.hakukohteet).fetch()
-                .leftJoin(hakukohdekoodi.valintaryhma).fetch()
+                .leftJoin(hakukohdekoodi.valintaryhmat).fetch()
                 .where(hakukohde.oid.eq(hakukohdeOid))
                 .singleResult(hakukohdekoodi);
     }
@@ -55,20 +55,20 @@ public class HakukohdekoodiDAOImpl extends AbstractJpaDAOImpl<Hakukohdekoodi, Lo
 
         return from(koodi)
                 .innerJoin(koodi.hakukohteet, hakukohde).fetch()
-                .leftJoin(koodi.valintaryhma).fetch()
+                .leftJoin(koodi.valintaryhmat).fetch()
                 .where(koodi.uri.eq(koodiUri).and(hakukohde.oid.eq(hakukohdeOid)))
                 .singleResult(koodi);
     }
 
     @Override
     public List<Hakukohdekoodi> findByUris(String... koodiUris) {
-        if(koodiUris == null || koodiUris.length == 0) {
+        if (koodiUris == null || koodiUris.length == 0) {
             return new ArrayList<Hakukohdekoodi>();
         }
         QHakukohdekoodi koodi = QHakukohdekoodi.hakukohdekoodi;
 
         return from(koodi)
-                .leftJoin(koodi.valintaryhma).fetch()
+                .leftJoin(koodi.valintaryhmat).fetch()
                 .where(koodi.uri.in(koodiUris))
                 .list(koodi);
     }

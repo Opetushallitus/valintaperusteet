@@ -1,17 +1,16 @@
 package fi.vm.sade.service.valintaperusteet.dao.impl;
 
-import java.util.*;
-
-import org.springframework.stereotype.Repository;
-
 import com.mysema.query.jpa.impl.JPAQuery;
 import com.mysema.query.types.EntityPath;
 import com.mysema.query.types.expr.BooleanExpression;
-
 import fi.vm.sade.generic.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
-import fi.vm.sade.service.valintaperusteet.model.QValintaryhma;
-import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
+import fi.vm.sade.service.valintaperusteet.model.*;
+import org.springframework.stereotype.Repository;
+
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * User: tommiha Date: 1/17/13 Time: 12:51 PM
@@ -44,6 +43,8 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long> 
         return from(valintaryhma).leftJoin(valintaryhma.alavalintaryhmat).fetch()
                 .leftJoin(valintaryhma.hakukohdeViitteet).fetch()
                 .leftJoin(valintaryhma.hakukohdekoodit).fetch()
+                .leftJoin(valintaryhma.opetuskielikoodit).fetch()
+                .leftJoin(valintaryhma.valintakoekoodit).fetch()
                 .where(valintaryhma.oid.eq(oid))
                 .singleResult(valintaryhma);
     }
@@ -56,12 +57,32 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long> 
         String currentOid = childOid;
         do {
             parent = findParent(currentOid);
-            if(parent != null) {
+            if (parent != null) {
                 currentOid = parent.getOid();
                 set.add(parent);
             }
         } while (parent != null);
         return set;
+    }
+
+    @Override
+    public List<Valintaryhma> haeHakukohdekoodinOpetuskielikoodienJaValintakoekoodienMukaan(String hakukohdekoodiUri,
+                                                                                            Collection<String> opetuskielikoodiUrit,
+                                                                                            Collection<String> valintakoekoodiUrit) {
+        QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
+        QHakukohdekoodi hakukohdekoodi = QHakukohdekoodi.hakukohdekoodi;
+        QOpetuskielikoodi opetuskielikoodi = QOpetuskielikoodi.opetuskielikoodi;
+        QValintakoekoodi valintakoekoodi = QValintakoekoodi.valintakoekoodi;
+
+        return from(valintaryhma)
+                .join(valintaryhma.hakukohdekoodit, hakukohdekoodi).fetch()
+                .join(valintaryhma.opetuskielikoodit, opetuskielikoodi).fetch()
+                .join(valintaryhma.valintakoekoodit, valintakoekoodi).fetch()
+                .where(hakukohdekoodi.uri.eq(hakukohdekoodiUri),
+                        opetuskielikoodi.uri.in(opetuskielikoodiUrit),
+                        valintakoekoodi.uri.in(valintakoekoodiUrit))
+                .distinct()
+                .list(valintaryhma);
     }
 
     private Valintaryhma findParent(String oid) {
@@ -73,4 +94,5 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long> 
 
         return current.getYlavalintaryhma();
     }
+
 }

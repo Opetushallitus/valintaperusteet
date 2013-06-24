@@ -69,7 +69,7 @@ public class ValintatapajonoResourceTest {
     public void testFindAll() throws Exception {
         List<Valintatapajono> jonos = resource.findAll();
 
-        assertEquals(68, jonos.size());
+        assertEquals(69, jonos.size());
         testUtil.lazyCheck(JsonViews.Basic.class, jonos);
     }
 

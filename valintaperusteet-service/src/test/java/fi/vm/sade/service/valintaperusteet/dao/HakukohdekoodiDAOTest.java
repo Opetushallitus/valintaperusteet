@@ -42,7 +42,7 @@ public class HakukohdekoodiDAOTest {
         final String hakukohdeOid = "oid11";
 
         assertEquals(koodiUri, koodi.getUri());
-        assertEquals(valintaryhmaOid, koodi.getValintaryhma().getOid());
+        assertEquals(valintaryhmaOid, koodi.getValintaryhmat().iterator().next().getOid());
         assertEquals(hakukohdeOid, koodi.getHakukohteet().iterator().next().getOid());
 
         assertNull(hakukohdekoodiDAO.findByKoodiUri("not-exists"));

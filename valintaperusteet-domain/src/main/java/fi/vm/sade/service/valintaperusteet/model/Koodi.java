@@ -3,7 +3,8 @@ package fi.vm.sade.service.valintaperusteet.model;
 import fi.vm.sade.generic.model.BaseEntity;
 import org.codehaus.jackson.map.annotate.JsonView;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
 
 /**
  * User: wuoti
@@ -32,18 +33,6 @@ public abstract class Koodi extends BaseEntity {
     @JsonView(JsonViews.Basic.class)
     @Column(name = "arvo")
     private String arvo;
-
-    @JoinColumn(name = "valintaryhma_id")
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    private Valintaryhma valintaryhma;
-
-    public Valintaryhma getValintaryhma() {
-        return valintaryhma;
-    }
-
-    public void setValintaryhma(Valintaryhma valintaryhma) {
-        this.valintaryhma = valintaryhma;
-    }
 
     public String getUri() {
         return uri;
