@@ -7,7 +7,6 @@ import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import fi.vm.sade.service.valintaperusteet.service.HakukohdeService;
 import fi.vm.sade.service.valintaperusteet.service.HakukohdekoodiService;
 import fi.vm.sade.service.valintaperusteet.service.ValintaryhmaService;
-import fi.vm.sade.service.valintaperusteet.service.exception.HakukohdekoodiOnLiitettyToiseenValintaryhmaanException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,7 +39,7 @@ public class HakukohdekoodiServiceImpl implements HakukohdekoodiService {
         Valintaryhma valintaryhma = valintaryhmaService.readByOid(valintaryhmaOid);
         Map<String, Hakukohdekoodi> uris = new HashMap<String, Hakukohdekoodi>();
 
-        if(hakukohdekoodit == null) {
+        if (hakukohdekoodit == null) {
             hakukohdekoodit = new HashSet<Hakukohdekoodi>();
         }
 
@@ -49,31 +48,36 @@ public class HakukohdekoodiServiceImpl implements HakukohdekoodiService {
         }
 
         Set<String> uriSet = uris.keySet();
+        Set<Hakukohdekoodi> poistettavatKoodit = new HashSet<Hakukohdekoodi>();
 
+        // Haetaan koodit, jotka eivät ole enää liitetty tähän valintaryhmään
         for (Hakukohdekoodi koodi : valintaryhma.getHakukohdekoodit()) {
-            if(!uriSet.contains(koodi.getUri())) {
-                koodi.setValintaryhma(null);
+            if (!uriSet.contains(koodi.getUri())) {
+                poistettavatKoodit.add(koodi);
             }
         }
 
+        // Poistetaan liitokset tähän valintaryhmään
+        for (Hakukohdekoodi koodi : poistettavatKoodit) {
+            valintaryhma.getHakukohdekoodit().remove(koodi);
+            koodi.getValintaryhmat().remove(valintaryhma);
+        }
 
         List<Hakukohdekoodi> managedKoodis =
                 hakukohdekoodiDAO.findByUris(uriSet.toArray(new String[uris.size()]));
 
+        // Lisätään uudet liitokset hakukohdekoodien ja valintaryhmän välille
         for (Hakukohdekoodi managedKoodi : managedKoodis) {
             uris.remove(managedKoodi.getUri());
-
-            if (managedKoodi.getValintaryhma() != null && !valintaryhma.equals(managedKoodi.getValintaryhma())) {
-                throw new HakukohdekoodiOnLiitettyToiseenValintaryhmaanException("Hakukohdekoodi URI "
-                        + managedKoodi.getUri() + " on jo liitetty valintaryhmään OID "
-                        + managedKoodi.getValintaryhma().getOid());
-            }
-            managedKoodi.setValintaryhma(valintaryhma);
+            valintaryhma.getHakukohdekoodit().add(managedKoodi);
+            managedKoodi.getValintaryhmat().add(valintaryhma);
         }
 
-        for(Hakukohdekoodi uusiKoodi : uris.values()) {
+        // Lisätään vielä mahdolliset uudet hakukohdekoodit kantaan
+        for (Hakukohdekoodi uusiKoodi : uris.values()) {
             Hakukohdekoodi lisatty = hakukohdekoodiDAO.insert(uusiKoodi);
-            lisatty.setValintaryhma(valintaryhma);
+            valintaryhma.getHakukohdekoodit().add(lisatty);
+            lisatty.getValintaryhmat().add(valintaryhma);
         }
     }
 
@@ -83,19 +87,15 @@ public class HakukohdekoodiServiceImpl implements HakukohdekoodiService {
 
         Hakukohdekoodi haettu = hakukohdekoodiDAO.findByKoodiUri(hakukohdekoodi.getUri());
         if (haettu != null) {
-            if (haettu.getValintaryhma() != null && !valintaryhma.equals(haettu.getValintaryhma())) {
-                throw new HakukohdekoodiOnLiitettyToiseenValintaryhmaanException("Hakukohdekoodi URI "
-                        + haettu.getUri() + " on jo liitetty valintaryhmään OID " + haettu.getValintaryhma().getOid());
-            }
             haettu.setArvo(hakukohdekoodi.getArvo());
             haettu.setNimiEn(hakukohdekoodi.getNimiEn());
             haettu.setNimiFi(hakukohdekoodi.getNimiFi());
             haettu.setNimiSv(hakukohdekoodi.getNimiSv());
-            haettu.setValintaryhma(valintaryhma);
         } else {
             haettu = hakukohdekoodiDAO.insert(hakukohdekoodi);
-            haettu.setValintaryhma(valintaryhma);
         }
+        valintaryhma.getHakukohdekoodit().add(haettu);
+        haettu.getValintaryhmat().add(valintaryhma);
     }
 
     @Override

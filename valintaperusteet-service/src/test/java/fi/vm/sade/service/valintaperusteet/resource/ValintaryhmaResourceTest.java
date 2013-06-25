@@ -65,7 +65,7 @@ public class ValintaryhmaResourceTest {
     @Test
     public void testSearch() throws Exception {
         List<Valintaryhma> valintaryhmas = valintaryhmaResource.search(true, null);
-        Assert.assertEquals(28, valintaryhmas.size());
+        Assert.assertEquals(35, valintaryhmas.size());
         Assert.assertEquals(new Long(1L), valintaryhmas.get(0).getId());
 
         mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(valintaryhmas);
@@ -120,7 +120,7 @@ public class ValintaryhmaResourceTest {
 
         Response response = valintaryhmaResource.insertValinnanvaihe("oid1", null, valinnanVaihe);
         assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
-        ValinnanVaihe vv = (ValinnanVaihe)response.getEntity();
+        ValinnanVaihe vv = (ValinnanVaihe) response.getEntity();
 
         valinnanVaihe = new ValinnanVaihe();
         valinnanVaihe.setNimi("uusi");
@@ -144,15 +144,16 @@ public class ValintaryhmaResourceTest {
 
         Valintaryhma oid1 = valintaryhmaResource.queryFull("oid1");
         boolean found = false;
-        for(Hakukohdekoodi hkk : oid1.getHakukohdekoodit()) {
-             if(hkk.getArvo().equals(ARVO) && hkk.getUri().equals(URI)) {
-                 found = true;
-                 break;
-             }
+        for (Hakukohdekoodi hkk : oid1.getHakukohdekoodit()) {
+            if (hkk.getArvo().equals(ARVO) && hkk.getUri().equals(URI)) {
+                found = true;
+                break;
+            }
         }
         assertTrue(found);
 
     }
+
     @Test
     public void testUpdateHakukohdekoodi() {
         final String URI = "uri";
@@ -164,7 +165,7 @@ public class ValintaryhmaResourceTest {
         assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
 
         Set<Hakukohdekoodi> oid1 = valintaryhmaResource.queryFull("oid1").getHakukohdekoodit();
-        for(int i = 0; i < 9 ; i++) {
+        for (int i = 0; i < 9; i++) {
             Hakukohdekoodi koodi = new Hakukohdekoodi();
             koodi.setUri("uri" + i);
             koodi.setArvo("arvo" + i);

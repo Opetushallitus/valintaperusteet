@@ -4,7 +4,6 @@ import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdekoodiDAO;
 import fi.vm.sade.service.valintaperusteet.model.Hakukohdekoodi;
-import fi.vm.sade.service.valintaperusteet.service.exception.HakukohdekoodiOnLiitettyToiseenValintaryhmaanException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,17 +57,7 @@ public class HakukohdekoodiServiceTest {
         hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(valintaryhmaOid, koodi);
 
         Hakukohdekoodi haettu = hakukohdekoodiDAO.findByKoodiUri(hakukohdekoodiUri);
-        assertEquals(valintaryhmaOid, haettu.getValintaryhma().getOid());
-    }
-
-    @Test(expected = HakukohdekoodiOnLiitettyToiseenValintaryhmaanException.class)
-    public void testLisaaHakukohdekoodiJokaOnjoLiitettyValintaryhmaan() {
-        final String valintaryhmaOid = "oid43";
-        final String hakukohdekoodiUri = "hakukohdekoodiuri7";
-
-        Hakukohdekoodi koodi = luoHakukohdekoodi(hakukohdekoodiUri, hakukohdekoodiUri, hakukohdekoodiUri);
-
-        hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(valintaryhmaOid, koodi);
+        assertEquals(valintaryhmaOid, haettu.getValintaryhmat().iterator().next().getOid());
     }
 
     @Test

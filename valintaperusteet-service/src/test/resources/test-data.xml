@@ -305,31 +305,54 @@
 
     <valintaryhma id="43" version="0" oid="oid43" nimi="Valintaryhma 43" hakuOid="hakuoid1"/>
 
+    <valintaryhma id="44" version="0" oid="oid44" nimi="Valintaryhma 44" hakuOid="hakuoid1"/>
+
+    <valintaryhma id="45" version="0" oid="oid45" nimi="Valintaryhma 45" hakuOid="hakuoid1"/>
+
+    <valintaryhma id="46" version="0" oid="oid46" nimi="Valintaryhma 46" hakuOid="hakuoid1"/>
+
+    <valintaryhma id="47" version="0" oid="oid47" nimi="Valintaryhma 47" hakuOid="hakuoid1"/>
+
+    <valintaryhma id="48" version="0" oid="oid48" nimi="Valintaryhma 48" hakuOid="hakuoid1"/>
+
+    <valintaryhma id="49" version="0" oid="oid49" nimi="Valintaryhma 49" hakuOid="hakuoid1"/>
+
+    <valintaryhma id="50" version="0" oid="oid50" nimi="Valintaryhma 50" hakuOid="hakuoid1"/>
+
     <hakukohdekoodi id="1" version="0" uri="hakukohdekoodiuri1" arvo="koodiarvo1"
                     nimi_fi="hakukohdekoodi1"
-                    nimi_sv="hakukohdekoodi1" nimi_en="hakukohdekoodi1" valintaryhma_id="36"/>
+                    nimi_sv="hakukohdekoodi1" nimi_en="hakukohdekoodi1"/>
+    <valintaryhma_hakukohdekoodi valintaryhma_id="36" hakukohdekoodi_id="1"/>
+
     <hakukohdekoodi id="2" version="0" uri="hakukohdekoodiuri2" arvo="koodiarvo2"
                     nimi_fi="hakukohdekoodi2"
-                    nimi_sv="hakukohdekoodi2" nimi_en="hakukohdekoodi2" valintaryhma_id="37"/>
+                    nimi_sv="hakukohdekoodi2" nimi_en="hakukohdekoodi2"/>
+    <valintaryhma_hakukohdekoodi valintaryhma_id="37" hakukohdekoodi_id="2"/>
 
     <hakukohdekoodi id="3" version="0" uri="hakukohdekoodiuri3" arvo="koodiarvo3"
                     nimi_fi="hakukohdekoodi3"
-                    nimi_sv="hakukohdekoodi3" nimi_en="hakukohdekoodi3" valintaryhma_id="38"/>
+                    nimi_sv="hakukohdekoodi3" nimi_en="hakukohdekoodi3"/>
+    <valintaryhma_hakukohdekoodi valintaryhma_id="38" hakukohdekoodi_id="3"/>
 
     <hakukohdekoodi id="4" version="0" uri="hakukohdekoodiuri4" arvo="koodiarvo4"
                     nimi_fi="hakukohdekoodi4"
-                    nimi_sv="hakukohdekoodi4" nimi_en="hakukohdekoodi4" valintaryhma_id="41"/>
+                    nimi_sv="hakukohdekoodi4" nimi_en="hakukohdekoodi4"/>
+    <valintaryhma_hakukohdekoodi valintaryhma_id="41" hakukohdekoodi_id="4"/>
+
     <hakukohdekoodi id="5" version="0" uri="hakukohdekoodiuri5" arvo="koodiarvo5"
                     nimi_fi="hakukohdekoodi5"
                     nimi_sv="hakukohdekoodi5" nimi_en="hakukohdekoodi5"/>
 
     <hakukohdekoodi id="6" version="0" uri="hakukohdekoodiuri6" arvo="koodiarvo6"
                     nimi_fi="hakukohdekoodi6"
-                    nimi_sv="hakukohdekoodi6" nimi_en="hakukohdekoodi6" valintaryhma_id="40"/>
+                    nimi_sv="hakukohdekoodi6" nimi_en="hakukohdekoodi6"/>
+    <valintaryhma_hakukohdekoodi valintaryhma_id="40" hakukohdekoodi_id="6"/>
+
 
     <hakukohdekoodi id="7" version="0" uri="hakukohdekoodiuri7" arvo="koodiarvo7"
                     nimi_fi="hakukohdekoodi7"
-                    nimi_sv="hakukohdekoodi7" nimi_en="hakukohdekoodi7" valintaryhma_id="42"/>
+                    nimi_sv="hakukohdekoodi7" nimi_en="hakukohdekoodi7"/>
+    <valintaryhma_hakukohdekoodi valintaryhma_id="42" hakukohdekoodi_id="7"/>
 
     <hakukohdekoodi id="8" version="0" uri="hakukohdekoodiuri8" arvo="koodiarvo8"
                     nimi_fi="hakukohdekoodi8"
@@ -343,9 +366,62 @@
                     nimi_fi="hakukohdekoodi10"
                     nimi_sv="hakukohdekoodi10" nimi_en="hakukohdekoodi10"/>
 
+    <hakukohdekoodi id="11" version="0" uri="hakukohdekoodiuri11" arvo="koodiarvo11"
+                    nimi_fi="hakukohdekoodi11"/>
+    <valintaryhma_hakukohdekoodi valintaryhma_id="44" hakukohdekoodi_id="11"/>
+    <valintaryhma_hakukohdekoodi valintaryhma_id="45" hakukohdekoodi_id="11"/>
+
+    <hakukohdekoodi id="12" version="0" uri="hakukohdekoodiuri12" arvo="koodiarvo12"
+                    nimi_fi="hakukohdekoodi12"/>
+    <valintaryhma_hakukohdekoodi valintaryhma_id="46" hakukohdekoodi_id="12"/>
+    <valintaryhma_hakukohdekoodi valintaryhma_id="47" hakukohdekoodi_id="12"/>
+
+    <hakukohdekoodi id="13" version="0" uri="hakukohdekoodiuri13" arvo="koodiarvo13"
+                    nimi_fi="hakukohdekoodi13"/>
+    <valintaryhma_hakukohdekoodi valintaryhma_id="48" hakukohdekoodi_id="13"/>
+
+    <hakukohdekoodi id="14" version="0" uri="hakukohdekoodiuri14" arvo="koodiarvo14"
+                    nimi_fi="hakukohdekoodi14"/>
+    <valintaryhma_hakukohdekoodi valintaryhma_id="49" hakukohdekoodi_id="14"/>
+
+    <hakukohdekoodi id="15" version="0" uri="hakukohdekoodiuri15" arvo="koodiarvo15"
+                    nimi_fi="hakukohdekoodi15"/>
+    <valintaryhma_hakukohdekoodi valintaryhma_id="50" hakukohdekoodi_id="15"/>
+
+    <opetuskielikoodi id="10" version="0" uri="kieli_fi"/>
+    <valintaryhma_opetuskielikoodi valintaryhma_id="37" opetuskielikoodi_id="10"/>
+    <valintaryhma_opetuskielikoodi valintaryhma_id="40" opetuskielikoodi_id="10"/>
+    <valintaryhma_opetuskielikoodi valintaryhma_id="41" opetuskielikoodi_id="10"/>
+    <valintaryhma_opetuskielikoodi valintaryhma_id="46" opetuskielikoodi_id="10"/>
+    <valintaryhma_opetuskielikoodi valintaryhma_id="47" opetuskielikoodi_id="10"/>
+    <valintaryhma_opetuskielikoodi valintaryhma_id="48" opetuskielikoodi_id="10"/>
+    <valintaryhma_opetuskielikoodi valintaryhma_id="49" opetuskielikoodi_id="10"/>
+    <valintaryhma_opetuskielikoodi valintaryhma_id="50" opetuskielikoodi_id="10"/>
+
     <opetuskielikoodi id="11" version="0" uri="kieli_sv"/>
+    <valintaryhma_opetuskielikoodi valintaryhma_id="44" opetuskielikoodi_id="11"/>
+
+    <opetuskielikoodi id="12" version="0" uri="kieli_ru"/>
+    <valintaryhma_opetuskielikoodi valintaryhma_id="44" opetuskielikoodi_id="12"/>
+    <valintaryhma_opetuskielikoodi valintaryhma_id="45" opetuskielikoodi_id="12"/>
 
     <valintakoekoodi id="12" version="0" uri="koekoodi1"/>
+    <valintaryhma_valintakoekoodi valintaryhma_id="45" valintakoekoodi_id="12"/>
+
+    <valintakoekoodi id="13" version="0" uri="koekoodi2"/>
+    <valintaryhma_valintakoekoodi valintaryhma_id="44" valintakoekoodi_id="13"/>
+    <valintaryhma_valintakoekoodi valintaryhma_id="45" valintakoekoodi_id="13"/>
+
+    <valintakoekoodi id="14" version="0" uri="valintakoeuri1"/>
+    <valintaryhma_valintakoekoodi valintaryhma_id="37" valintakoekoodi_id="14"/>
+    <valintaryhma_valintakoekoodi valintaryhma_id="40" valintakoekoodi_id="14"/>
+    <valintaryhma_valintakoekoodi valintaryhma_id="41" valintakoekoodi_id="14"/>
+    <valintaryhma_valintakoekoodi valintaryhma_id="46" valintakoekoodi_id="14"/>
+    <valintaryhma_valintakoekoodi valintaryhma_id="47" valintakoekoodi_id="14"/>
+    <valintaryhma_valintakoekoodi valintaryhma_id="48" valintakoekoodi_id="14"/>
+    <valintaryhma_valintakoekoodi valintaryhma_id="49" valintakoekoodi_id="14"/>
+    <valintaryhma_valintakoekoodi valintaryhma_id="49" valintakoekoodi_id="14"/>
+
 
     <hakukohde_viite id="1" version="0" hakuoid="hakuoid1" oid="oid1" nimi="haku1" valintaryhma_id="1"/>
     <hakukohde_viite id="2" version="0" hakuoid="hakuoid1" oid="oid2" nimi="haku2" valintaryhma_id="1"/>
@@ -690,6 +766,9 @@
     <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="100" version="0" hakukohde_viite_id="17" oid="100"
                     nimi="hakukohde 17 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus"/>
 
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="101" version="0" oid="101" valintaryhma_id="48"
+                    nimi="valintaryhma 48 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus"/>
+
     <valintakoe id="1" version="0" oid="oid1" tunniste="valintakoetunniste1" nimi="valintakoe1" kuvaus="kuvaus1"
                 aktiivinen="true" valinnan_vaihe_id="83" laskentakaava_id="101" master_valintakoe_id="[NULL]"/>
     <valintakoe id="2" version="0" oid="oid2" tunniste="valintakoetunniste2" nimi="valintakoe2" kuvaus="kuvaus2"
@@ -724,7 +803,8 @@
                 aktiivinen="true" valinnan_vaihe_id="99" laskentakaava_id="101"/>
 
     <valintatapajono id="1" version="1" oid="1" aloituspaikat="10" nimi="jono1" kuvaus="kuvaus"
-                     tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="1" aktiivinen="true" ei_varasijatayttoa="false"/>
+                     tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="1" aktiivinen="true"
+                     ei_varasijatayttoa="false"/>
 
     <valintatapajono id="2" version="1" oid="2" edellinen_valintatapajono_id="1" aloituspaikat="10" nimi="jono2"
                      kuvaus="kuvaus" tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="1"
@@ -740,10 +820,11 @@
 
     <valintatapajono id="5" version="1" oid="5" edellinen_valintatapajono_id="4" aloituspaikat="10" nimi="jono5"
                      kuvaus="kuvaus" tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="1"
-                     aktiivinen="true" ei_varasijatayttoa="false"  />
+                     aktiivinen="true" ei_varasijatayttoa="false"/>
 
     <valintatapajono id="6" version="1" oid="6" aloituspaikat="10" nimi="haku 6 valinnanvaihe 1 jono1" kuvaus="kuvaus"
-                     tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="4" aktiivinen="true" ei_varasijatayttoa="false"/>
+                     tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="4" aktiivinen="true"
+                     ei_varasijatayttoa="false"/>
 
     <valintatapajono id="7" version="1" oid="7" edellinen_valintatapajono_id="6" aloituspaikat="10"
                      nimi="haku 6 valinnanvaihe 1 jono2" kuvaus="kuvaus" tasapistesaanto="ARVONTA"
@@ -754,18 +835,20 @@
                      siirretaan_sijoitteluun="true" valinnan_vaihe_id="4" aktiivinen="true" ei_varasijatayttoa="false"/>
 
     <valintatapajono id="9" version="1" oid="9" aloituspaikat="10" nimi="haku 6 valinnanvaihe 2 jono1" kuvaus="kuvaus"
-                     tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="5" aktiivinen="true" ei_varasijatayttoa="false"/>
+                     tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="5" aktiivinen="true"
+                     ei_varasijatayttoa="false"/>
 
     <valintatapajono id="10" version="1" oid="10" edellinen_valintatapajono_id="9" aloituspaikat="10"
                      nimi="haku 6 valinnanvaihe 2 jono2" kuvaus="kuvaus" tasapistesaanto="ARVONTA"
-                     siirretaan_sijoitteluun="true" valinnan_vaihe_id="5" aktiivinen="true" ei_varasijatayttoa="false" />
+                     siirretaan_sijoitteluun="true" valinnan_vaihe_id="5" aktiivinen="true" ei_varasijatayttoa="false"/>
 
     <valintatapajono id="11" version="1" oid="11" edellinen_valintatapajono_id="10" aloituspaikat="10"
                      nimi="haku 6 valinnanvaihe 2 jono3" kuvaus="kuvaus" tasapistesaanto="ARVONTA"
                      siirretaan_sijoitteluun="true" valinnan_vaihe_id="5" aktiivinen="true" ei_varasijatayttoa="false"/>
 
     <valintatapajono id="12" version="1" oid="12" aloituspaikat="10" nimi="haku 6 valinnanvaihe 3 jono1" kuvaus="kuvaus"
-                     tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="6" aktiivinen="true" ei_varasijatayttoa="false"/>
+                     tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="6" aktiivinen="true"
+                     ei_varasijatayttoa="false"/>
 
     <valintatapajono id="13" version="1" oid="13" edellinen_valintatapajono_id="12" aloituspaikat="10"
                      nimi="haku 6 valinnanvaihe 3 jono2" kuvaus="kuvaus" tasapistesaanto="ARVONTA"
@@ -776,7 +859,8 @@
                      siirretaan_sijoitteluun="true" valinnan_vaihe_id="6" aktiivinen="true" ei_varasijatayttoa="false"/>
 
     <valintatapajono id="15" version="1" oid="15" aloituspaikat="10" nimi="haku 2 valinnanvaihe 1 jono1" kuvaus="kuvaus"
-                     tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="7" aktiivinen="true" ei_varasijatayttoa="false"/>
+                     tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="7" aktiivinen="true"
+                     ei_varasijatayttoa="false"/>
 
     <valintatapajono id="16" version="1" oid="16" edellinen_valintatapajono_id="15" aloituspaikat="11"
                      nimi="haku 2 valinnanvaihe 2 jono1" kuvaus="kuvaus" tasapistesaanto="ARVONTA"
@@ -787,7 +871,8 @@
                      siirretaan_sijoitteluun="true" valinnan_vaihe_id="9" aktiivinen="true" ei_varasijatayttoa="false"/>
 
     <valintatapajono id="18" version="0" oid="18" aloituspaikat="18" nimi="vr 21 valinnanvaihe 1 jono 1" kuvaus="kuvaus"
-                     tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="68" aktiivinen="true" ei_varasijatayttoa="false"/>
+                     tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="68" aktiivinen="true"
+                     ei_varasijatayttoa="false"/>
 
     <valintatapajono id="19" version="0" oid="19" aloituspaikat="18" nimi="vr 21 valinnanvaihe 1 jono 2" kuvaus="kuvaus"
                      tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="68" aktiivinen="true"
@@ -798,15 +883,18 @@
                      edellinen_valintatapajono_id="19" ei_varasijatayttoa="false"/>
 
     <valintatapajono id="21" version="0" oid="21" aloituspaikat="18" nimi="vr 22 valinnanvaihe 1 jono 4" kuvaus="kuvaus"
-                     tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="69" aktiivinen="true" ei_varasijatayttoa="false"/>
+                     tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="69" aktiivinen="true"
+                     ei_varasijatayttoa="false"/>
 
     <valintatapajono id="22" version="0" oid="22" aloituspaikat="18" nimi="vr 22 valinnanvaihe 1 jono 1(c)"
                      kuvaus="kuvaus" tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="69"
-                     aktiivinen="true" edellinen_valintatapajono_id="21" master_valintatapajono_id="18" ei_varasijatayttoa="false"/>
+                     aktiivinen="true" edellinen_valintatapajono_id="21" master_valintatapajono_id="18"
+                     ei_varasijatayttoa="false"/>
 
     <valintatapajono id="23" version="0" oid="23" aloituspaikat="18" nimi="vr 22 valinnanvaihe 1 jono 3(c)"
                      kuvaus="kuvaus" tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="69"
-                     aktiivinen="true" edellinen_valintatapajono_id="22" master_valintatapajono_id="20" ei_varasijatayttoa="false"/>
+                     aktiivinen="true" edellinen_valintatapajono_id="22" master_valintatapajono_id="20"
+                     ei_varasijatayttoa="false"/>
 
     <valintatapajono id="24" version="0" oid="24" aloituspaikat="18" nimi="vr 22 valinnanvaihe 1 jono 5" kuvaus="kuvaus"
                      tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="69" aktiivinen="true"
@@ -814,10 +902,12 @@
 
     <valintatapajono id="25" version="0" oid="25" aloituspaikat="18" nimi="vr 22 valinnanvaihe 1 jono 2(c)"
                      kuvaus="kuvaus" tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="69"
-                     aktiivinen="true" edellinen_valintatapajono_id="24" master_valintatapajono_id="19" ei_varasijatayttoa="false"/>
+                     aktiivinen="true" edellinen_valintatapajono_id="24" master_valintatapajono_id="19"
+                     ei_varasijatayttoa="false"/>
 
     <valintatapajono id="26" version="0" oid="26" aloituspaikat="7" nimi="vr 28 valinnan vaihe 1 jono 1" kuvaus="kuvaus"
-                     tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="75" aktiivinen="true" ei_varasijatayttoa="false"/>
+                     tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="75" aktiivinen="true"
+                     ei_varasijatayttoa="false"/>
 
     <valintatapajono id="27" version="0" oid="27" aloituspaikat="7" nimi="vr 29 valinnan vaihe 1 jono 1(c)"
                      kuvaus="kuvaus" tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="76"
@@ -917,6 +1007,10 @@
                      kuvaus="kuvaus" tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="100"
                      aktiivinen="true" edellinen_valintatapajono_id="1065" ei_varasijatayttoa="false"/>
 
+    <valintatapajono id="1067" version="1" oid="1067" aloituspaikat="10" nimi="valintaryhma 48 valinnan vaihe 1 jono 1"
+                     kuvaus="kuvaus" tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="101"
+                     aktiivinen="true" ei_varasijatayttoa="false"/>
+
     <laskentakaava id="1" version="0" nimi="kaava1" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO" funktiokutsu_id="1"/>
     <laskentakaava id="2" version="0" nimi="kaava2" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO" funktiokutsu_id="2"/>
     <laskentakaava id="3" version="0" nimi="kaava3" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO" funktiokutsu_id="3"/>
@@ -971,7 +1065,8 @@
                     kuvaus="kuvaus1" aktiivinen="true"/>
 
     <valintatapajono id="3001" version="0" aktiivinen="true" aloituspaikat="20" nimi="VR1 VAIHE1 JONO1" oid="3001"
-                     siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3001" ei_varasijatayttoa="false"/>
+                     siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3001"
+                     ei_varasijatayttoa="false"/>
 
     <valintatapajono id="3002" version="0" aktiivinen="true" aloituspaikat="20" nimi="VR2 VAIHE1 JONO1(c)" oid="3002"
                      siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO" master_valintatapajono_id="3001"
@@ -999,7 +1094,8 @@
                     kuvaus="kuvaus1" aktiivinen="true"/>
 
     <valintatapajono id="3101" version="0" aktiivinen="true" aloituspaikat="20" nimi="VR1 VAIHE1 JONO1" oid="3101"
-                     siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3101" ei_varasijatayttoa="false"/>
+                     siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3101"
+                     ei_varasijatayttoa="false"/>
 
     <valintatapajono id="3102" version="0" aktiivinen="true" aloituspaikat="20" nimi="VR2 VAIHE1 JONO1(c)" oid="3102"
                      siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO" master_valintatapajono_id="3101"
@@ -1061,7 +1157,8 @@
                     kuvaus="kuvaus1" aktiivinen="true"/>
 
     <valintatapajono id="3201" version="0" aktiivinen="true" aloituspaikat="20" nimi="VR1 VAIHE1 JONO1" oid="3201"
-                     siirretaan_sijoitteluun="true" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3201" ei_varasijatayttoa="false"/>
+                     siirretaan_sijoitteluun="true" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3201"
+                     ei_varasijatayttoa="false"/>
 
     <valintatapajono id="3202" version="0" aktiivinen="true" aloituspaikat="20" nimi="VR2 VAIHE1 JONO1(c)" oid="3202"
                      siirretaan_sijoitteluun="true" tasapistesaanto="YLITAYTTO" master_valintatapajono_id="3201"
@@ -1127,13 +1224,16 @@
                     master_valinnan_vaihe_id="[NULL]" oid="3401" nimi="Hakukohde Vaihe1" kuvaus="kuvaus1"
                     aktiivinen="true"/>
     <valintatapajono id="3401" version="0" aktiivinen="true" aloituspaikat="20" nimi="VR1 VAIHE1 JONO1" oid="3401"
-                     siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3401" ei_varasijatayttoa="false"/>
+                     siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3401"
+                     ei_varasijatayttoa="false"/>
 
     <valintatapajono id="3402" version="0" aktiivinen="false" aloituspaikat="20" nimi="VR1 VAIHE1 JONO1" oid="3402"
-                     siirretaan_sijoitteluun="true" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3401" ei_varasijatayttoa="false"/>
+                     siirretaan_sijoitteluun="true" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3401"
+                     ei_varasijatayttoa="false"/>
 
     <valintatapajono id="3403" version="0" aktiivinen="false" aloituspaikat="20" nimi="VR1 VAIHE1 JONO1" oid="3403"
-                     siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3401" ei_varasijatayttoa="false"/>
+                     siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3401"
+                     ei_varasijatayttoa="false"/>
 
     <hakukohde_viite id="3501" version="0" hakuoid="hakuoid1" oid="3501" nimi="Hakukohde"/>
     <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="3501" version="0" valintaryhma_id="[NULL]"
@@ -1142,7 +1242,8 @@
                     aktiivinen="true"/>
 
     <valintatapajono id="3501" version="0" aktiivinen="false" aloituspaikat="20" nimi="VR1 VAIHE1 JONO1" oid="3501"
-                     siirretaan_sijoitteluun="true" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3501" ei_varasijatayttoa="false"/>
+                     siirretaan_sijoitteluun="true" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3501"
+                     ei_varasijatayttoa="false"/>
 
     <hakukohde_viite id="3601" version="0" hakuoid="hakuoid1" oid="3601" nimi="Hakukohde"/>
     <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="3601" version="0" valintaryhma_id="[NULL]"
@@ -1151,7 +1252,8 @@
                     aktiivinen="true"/>
 
     <valintatapajono id="3601" version="0" aktiivinen="true" aloituspaikat="20" nimi="VR1 VAIHE1 JONO1" oid="3601"
-                     siirretaan_sijoitteluun="true" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3601" ei_varasijatayttoa="false"/>
+                     siirretaan_sijoitteluun="true" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3601"
+                     ei_varasijatayttoa="false"/>
 
     <hakukohde_viite id="3701" version="0" hakuoid="hakuoid1" oid="3701" nimi="Hakukohde"/>
     <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="3701" version="0" valintaryhma_id="[NULL]"
@@ -1160,16 +1262,20 @@
                     aktiivinen="false"/>
 
     <valintatapajono id="3701" version="0" aktiivinen="true" aloituspaikat="20" nimi="VR1 VAIHE1 JONO1" oid="3701"
-                     siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3701" ei_varasijatayttoa="false"/>
+                     siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3701"
+                     ei_varasijatayttoa="false"/>
 
     <valintatapajono id="3702" version="0" aktiivinen="false" aloituspaikat="20" nimi="VR1 VAIHE1 JONO1" oid="3702"
-                     siirretaan_sijoitteluun="true" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3701" ei_varasijatayttoa="false"/>
+                     siirretaan_sijoitteluun="true" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3701"
+                     ei_varasijatayttoa="false"/>
 
     <valintatapajono id="3703" version="0" aktiivinen="false" aloituspaikat="20" nimi="VR1 VAIHE1 JONO1" oid="3703"
-                     siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3701" ei_varasijatayttoa="false"/>
+                     siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3701"
+                     ei_varasijatayttoa="false"/>
 
     <valintatapajono id="3704" version="0" aktiivinen="true" aloituspaikat="20" nimi="VR1 VAIHE1 JONO1" oid="3704"
-                     siirretaan_sijoitteluun="true" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3701" ei_varasijatayttoa="false"/>
+                     siirretaan_sijoitteluun="true" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3701"
+                     ei_varasijatayttoa="false"/>
 
     <!-- Valintaryhmään liitetyt laskentakaavat -testien objektit -->
     <funktiokutsu id="411" version="0" funktionimi="LUKUARVO"/>

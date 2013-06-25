@@ -3,8 +3,8 @@ package fi.vm.sade.service.valintaperusteet.dao;
 import fi.vm.sade.generic.dao.JpaDAO;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.SortedSet;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,9 +16,6 @@ import java.util.SortedSet;
 public interface ValintaryhmaDAO extends JpaDAO<Valintaryhma, Long> {
 
     /**
-     *
-     *
-     *
      * @param oid
      * @return
      */
@@ -33,4 +30,8 @@ public interface ValintaryhmaDAO extends JpaDAO<Valintaryhma, Long> {
      * @return
      */
     List<Valintaryhma> readHierarchy(String childOid);
+
+    List<Valintaryhma> haeHakukohdekoodinOpetuskielikoodienJaValintakoekoodienMukaan(String hakukohdekoodiUri,
+                                                                                     Collection<String> opetuskielikoodiUrit,
+                                                                                     Collection<String> valintakoekoodiUrit);
 }

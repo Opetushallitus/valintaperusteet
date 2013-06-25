@@ -1,12 +1,10 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
-import fi.vm.sade.authentication.business.service.Authorizer;
+import fi.vm.sade.service.valintaperusteet.dao.OpetuskielikoodiDAO;
 import fi.vm.sade.service.valintaperusteet.model.*;
-import fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole;
 import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.impl.generator.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
@@ -43,12 +41,38 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
     @Autowired
     private ValintatapajonoService valintatapajonoService;
 
+    @Autowired
+    private OpetuskielikoodiDAO opetuskielikoodiDAO;
+
+    @Autowired
+    private OpetuskielikoodiService opetuskielikoodiService;
+
+    @Autowired
+    private ValintakoekoodiService valintakoekoodiService;
 
     private ResourceLoader resourceLoader;
 
     private static final String HAKU_OID = "toisenAsteenSyksynYhteishaku";
 
     private static final String CSV_DELIMITER = ";";
+
+    public static final String KIELI_FI_URI = "kieli_fi";
+    public static final String KIELI_SV_URI = "kieli_sv";
+    public static final String KIELI_EN_URI = "kieli_en";
+
+    public static final String OLETUS_VALINTAKOEURI = "valintakokeentyyppi_1";
+
+    private enum Kielikoodi {
+        SUOMI("Suomi", KIELI_FI_URI), RUOTSI("Ruotsi", KIELI_SV_URI), ENGLANTI("Englanti", KIELI_EN_URI);
+
+        Kielikoodi(String nimi, String kieliUri) {
+            this.nimi = nimi;
+            this.kieliUri = kieliUri;
+        }
+
+        private String nimi;
+        private String kieliUri;
+    }
 
     @Override
     public void luo() throws IOException {
@@ -121,12 +145,12 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                 String uri = splitted[1];
                 String nimi = splitted[2].replace("\"", "");
 
-                Hakukohdekoodi koodi = new Hakukohdekoodi();
-                koodi.setArvo(arvo);
-                koodi.setUri(uri);
-                koodi.setNimiFi(nimi);
-                koodi.setNimiSv(nimi);
-                koodi.setNimiEn(nimi);
+                Hakukohdekoodi hakukohdekoodi = new Hakukohdekoodi();
+                hakukohdekoodi.setArvo(arvo);
+                hakukohdekoodi.setUri(uri);
+                hakukohdekoodi.setNimiFi(nimi);
+                hakukohdekoodi.setNimiSv(nimi);
+                hakukohdekoodi.setNimiEn(nimi);
 
                 Valintaryhma valintaryhma = new Valintaryhma();
                 valintaryhma.setHakuOid(HAKU_OID);
@@ -137,8 +161,6 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                 } else {
                     valintaryhma = valintaryhmaService.insert(valintaryhma, lukioVr.getOid());
                 }
-
-                hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(valintaryhma.getOid(), koodi);
 
                 ValinnanVaihe valinnanVaihe = new ValinnanVaihe();
                 valinnanVaihe.setAktiivinen(true);
@@ -160,12 +182,30 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
                 valintatapajonoService.lisaaValintatapajonoValinnanVaiheelle(valinnanVaihe.getOid(), jono, null);
 
-                if (nimi.contains(", pk")) {
-                    insertKoe("Pääsykokeelliset", nimi, valintaryhma, toisenAsteenPeruskoulupohjainenPeruskaava);
-                    insertEiKoetta("Pääsykokeettomat", nimi, valintaryhma, toisenAsteenPeruskoulupohjainenPeruskaava);
-                } else {
-                    insertKoe("Pääsykokeelliset", nimi, valintaryhma, toisenAsteenYlioppilaspohjainenPeruskaava);
-                    insertEiKoetta("Pääsykokeettomat", nimi, valintaryhma, toisenAsteenYlioppilaspohjainenPeruskaava);
+                for (Kielikoodi k : Kielikoodi.values()) {
+                    Opetuskielikoodi opetuskieli = opetuskielikoodiDAO.readByUri(k.kieliUri);
+                    if (opetuskieli == null) {
+                        opetuskieli = new Opetuskielikoodi();
+                        opetuskieli.setUri(k.kieliUri);
+                        opetuskieli.setNimiFi(k.nimi);
+                        opetuskieli.setNimiSv(k.nimi);
+                        opetuskieli.setNimiEn(k.nimi);
+                        opetuskieli = opetuskielikoodiDAO.insert(opetuskieli);
+                    }
+
+                    Valintaryhma kielivalintaryhma = new Valintaryhma();
+                    kielivalintaryhma.setNimi(k.nimi);
+                    kielivalintaryhma.setHakuOid(HAKU_OID);
+
+                    kielivalintaryhma = valintaryhmaService.insert(kielivalintaryhma, valintaryhma.getOid());
+
+                    if (nimi.contains(", pk")) {
+                        insertKoe("Pääsykokeelliset", nimi, kielivalintaryhma, toisenAsteenPeruskoulupohjainenPeruskaava, opetuskieli, hakukohdekoodi);
+                        insertEiKoetta("Pääsykokeettomat", nimi, kielivalintaryhma, toisenAsteenPeruskoulupohjainenPeruskaava, opetuskieli, hakukohdekoodi);
+                    } else {
+                        insertKoe("Pääsykokeelliset", nimi, kielivalintaryhma, toisenAsteenYlioppilaspohjainenPeruskaava, opetuskieli, hakukohdekoodi);
+                        insertEiKoetta("Pääsykokeettomat", nimi, kielivalintaryhma, toisenAsteenYlioppilaspohjainenPeruskaava, opetuskieli, hakukohdekoodi);
+                    }
                 }
             }
         } finally {
@@ -176,11 +216,19 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         }
     }
 
-    private void insertKoe(String koeNimi, String hakukohdeNimi, Valintaryhma valintaryhma, Laskentakaava peruskaava) {
+    private void insertKoe(String koeNimi, String hakukohdeNimi, Valintaryhma valintaryhma, Laskentakaava peruskaava,
+                           Opetuskielikoodi opetuskielikoodi, Hakukohdekoodi hakukohdekoodi) {
         Valintaryhma koe = new Valintaryhma();
         koe.setNimi(koeNimi);
         koe.setHakuOid(HAKU_OID);
         koe = valintaryhmaService.insert(koe, valintaryhma.getOid());
+
+        opetuskielikoodiService.lisaaOpetuskielikoodiValintaryhmalle(koe.getOid(), opetuskielikoodi);
+        hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(koe.getOid(), hakukohdekoodi);
+        Valintakoekoodi valintakoekoodi = new Valintakoekoodi();
+        valintakoekoodi.setUri(OLETUS_VALINTAKOEURI);
+
+        valintakoekoodiService.lisaaValintakoekoodiValintaryhmalle(koe.getOid(), valintakoekoodi);
 
         ValintaperusteViite valintaperusteViite = GenericHelper.luoValintaperusteViite(hakukohdeNimi, true, true, Valintaperustelahde.HAETTAVA_ARVO);
         Funktiokutsu valintakoe = GenericHelper.luoHaeLukuarvo(valintaperusteViite);
@@ -190,11 +238,15 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         asetaValintaryhmaJaTallennaKantaan(laskentakaava, koe);
     }
 
-    private void insertEiKoetta(String koeNimi, String hakukohdeNimi, Valintaryhma valintaryhma, Laskentakaava peruskaava) {
+    private void insertEiKoetta(String koeNimi, String hakukohdeNimi, Valintaryhma valintaryhma, Laskentakaava peruskaava
+            , Opetuskielikoodi opetuskielikoodi, Hakukohdekoodi hakukohdekoodi) {
         Valintaryhma koe = new Valintaryhma();
         koe.setNimi(koeNimi);
         koe.setHakuOid(HAKU_OID);
         koe = valintaryhmaService.insert(koe, valintaryhma.getOid());
+
+        opetuskielikoodiService.lisaaOpetuskielikoodiValintaryhmalle(koe.getOid(), opetuskielikoodi);
+        hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(koe.getOid(), hakukohdekoodi);
 
         Funktiokutsu funktiokutsu = GenericHelper.luoSumma(peruskaava);
         Laskentakaava laskentakaava = GenericHelper.luoLaskentakaava(funktiokutsu, hakukohdeNimi + " - " + koe.getNimi());

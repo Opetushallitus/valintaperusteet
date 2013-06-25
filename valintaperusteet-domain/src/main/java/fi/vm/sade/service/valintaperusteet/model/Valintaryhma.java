@@ -6,7 +6,9 @@ import org.codehaus.jackson.map.annotate.JsonView;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -48,16 +50,27 @@ public class Valintaryhma extends BaseEntity {
     private Set<Laskentakaava> laskentakaava = new HashSet<Laskentakaava>();
 
     @JsonView({JsonViews.Basic.class})
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "valintaryhma")
-    private Set<Hakukohdekoodi> hakukohdekoodit;
+    @JoinTable(name = "valintaryhma_hakukohdekoodi",
+            joinColumns = @JoinColumn(name = "valintaryhma_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME),
+            inverseJoinColumns = @JoinColumn(name = "hakukohdekoodi_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME),
+            uniqueConstraints = @UniqueConstraint(name = "UK_valintaryhma_hakukohdekoodi_001",
+                    columnNames = {"valintaryhma_id", "hakukohdekoodi_id"}))
+    @ManyToMany(fetch = FetchType.LAZY)
+    private Set<Hakukohdekoodi> hakukohdekoodit = new HashSet<Hakukohdekoodi>();
 
-    @JsonView({JsonViews.Basic.class})
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "valintaryhma")
-    private Set<Valintakoekoodi> valintakoekoodit;
+    @JoinTable(name = "valintaryhma_opetuskielikoodi",
+            joinColumns = @JoinColumn(name = "valintaryhma_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME),
+            inverseJoinColumns = @JoinColumn(name = "opetuskielikoodi_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME),
+            uniqueConstraints = @UniqueConstraint(name = "UK_valintaryhma_opetuskielikoodi_001",
+                    columnNames = {"valintaryhma_id", "opetuskielikoodi_id"}))
+    @ManyToMany(fetch = FetchType.LAZY)
+    private Set<Opetuskielikoodi> opetuskielikoodit = new HashSet<Opetuskielikoodi>();
 
-    @JsonView({JsonViews.Basic.class})
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "valintaryhma")
-    private Set<Opetuskielikoodi> opetuskielikoodit;
+    @JoinTable(name = "valintaryhma_valintakoekoodi",
+            joinColumns = @JoinColumn(name = "valintaryhma_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME),
+            inverseJoinColumns = @JoinColumn(name = "valintakoekoodi_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME))
+    @ManyToMany(fetch = FetchType.LAZY)
+    private List<Valintakoekoodi> valintakoekoodit = new ArrayList<Valintakoekoodi>();
 
     public String getNimi() {
         return nimi;
@@ -149,19 +162,19 @@ public class Valintaryhma extends BaseEntity {
         this.hakukohdekoodit = hakukohdekoodit;
     }
 
-    public Set<Valintakoekoodi> getValintakoekoodit() {
-        return valintakoekoodit;
-    }
-
-    public void setValintakoekoodit(Set<Valintakoekoodi> valintakoekoodit) {
-        this.valintakoekoodit = valintakoekoodit;
-    }
-
     public Set<Opetuskielikoodi> getOpetuskielikoodit() {
         return opetuskielikoodit;
     }
 
     public void setOpetuskielikoodit(Set<Opetuskielikoodi> opetuskielikoodit) {
         this.opetuskielikoodit = opetuskielikoodit;
+    }
+
+    public List<Valintakoekoodi> getValintakoekoodit() {
+        return valintakoekoodit;
+    }
+
+    public void setValintakoekoodit(List<Valintakoekoodi> valintakoekoodit) {
+        this.valintakoekoodit = valintakoekoodit;
     }
 }
