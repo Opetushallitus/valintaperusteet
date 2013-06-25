@@ -21,6 +21,8 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -65,7 +67,7 @@ public class ValintaryhmaResourceTest {
     @Test
     public void testSearch() throws Exception {
         List<Valintaryhma> valintaryhmas = valintaryhmaResource.search(true, null);
-        Assert.assertEquals(36, valintaryhmas.size());
+        Assert.assertEquals(37, valintaryhmas.size());
         Assert.assertEquals(new Long(1L), valintaryhmas.get(0).getId());
 
         mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(valintaryhmas);
@@ -199,5 +201,68 @@ public class ValintaryhmaResourceTest {
 
         assertEquals(0, oid1.size());
 
+    }
+
+    @Test
+    public void testLisaaOpetuskielikoodiValintaryhmalle() throws IOException {
+        final String kieliUri = "uusikieli";
+        final String valintaryhmaOid = "oid52";
+
+        Opetuskielikoodi opetuskielikoodi = new Opetuskielikoodi();
+        opetuskielikoodi.setUri(kieliUri);
+
+        String json = mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(opetuskielikoodi);
+        opetuskielikoodi = mapper.readValue(json, Opetuskielikoodi.class);
+
+        valintaryhmaResource.insertOpetuskielikoodi(valintaryhmaOid, opetuskielikoodi);
+    }
+
+    @Test
+    public void testPaivitaValintaryhmanOpetuskielet() throws IOException {
+        final String[] kieliUrit = new String[]{"uusikieli", "kieli_fi", "kieli_ru"};
+        final String valintaryhmaOid = "oid52";
+
+        Set<Opetuskielikoodi> kielet = new HashSet<Opetuskielikoodi>();
+        for (String uri : kieliUrit) {
+            Opetuskielikoodi koodi = new Opetuskielikoodi();
+            koodi.setUri(uri);
+            String json = mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(koodi);
+
+            kielet.add(mapper.readValue(json, Opetuskielikoodi.class));
+        }
+
+        valintaryhmaResource.updateOpetuskielikoodi(valintaryhmaOid, kielet);
+    }
+
+    @Test
+    public void testLisaaValintakoekoodiValintaryhmalle() throws IOException {
+        final String valintaryhmaOid = "oid52";
+        final String valintakoekoodiUri = "uusivalintakoekoodiuri";
+
+        Valintakoekoodi koodi = new Valintakoekoodi();
+        koodi.setUri(valintakoekoodiUri);
+
+        String json = mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(koodi);
+        koodi = mapper.readValue(json, Valintakoekoodi.class);
+
+        valintaryhmaResource.insertValintakoekoodi(valintaryhmaOid, koodi);
+    }
+
+    @Test
+    public void testPaivitaValintaryhmanValintakoekoodit() throws IOException {
+        final String[] koeUrit = new String[]{"uusivalintakoekoodi", "uusivalintakoekoodi",
+                "valintakoeuri1", "valintakoeuri2"};
+        final String valintaryhmaOid = "oid52";
+
+        List<Valintakoekoodi> kokeet = new ArrayList<Valintakoekoodi>();
+        for (String uri : koeUrit) {
+            Opetuskielikoodi koodi = new Opetuskielikoodi();
+            koodi.setUri(uri);
+            String json = mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(koodi);
+
+            kokeet.add(mapper.readValue(json, Valintakoekoodi.class));
+        }
+
+        valintaryhmaResource.updateValintakoekoodi(valintaryhmaOid, kokeet);
     }
 }

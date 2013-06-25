@@ -321,6 +321,8 @@
 
     <valintaryhma id="51" version="0" oid="oid51" nimi="Valintaryhma 51" hakuOid="hakuoid1"/>
 
+    <valintaryhma id="52" version="0" oid="oid52" nimi="Valintaryhma 52" hakuOid="hakuoid1"/>
+
     <hakukohdekoodi id="1" version="0" uri="hakukohdekoodiuri1" arvo="koodiarvo1"
                     nimi_fi="hakukohdekoodi1"
                     nimi_sv="hakukohdekoodi1" nimi_en="hakukohdekoodi1"/>

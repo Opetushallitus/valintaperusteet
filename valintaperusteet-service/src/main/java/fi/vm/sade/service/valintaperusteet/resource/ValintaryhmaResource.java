@@ -43,6 +43,9 @@ public class ValintaryhmaResource {
     @Autowired
     private OpetuskielikoodiService opetuskielikoodiService;
 
+    @Autowired
+    private ValintakoekoodiService valintakoekoodiService;
+
     protected final static Logger LOGGER = LoggerFactory.getLogger(ValintaryhmaResource.class);
 
     @GET
@@ -233,6 +236,40 @@ public class ValintaryhmaResource {
             return Response.status(Response.Status.CREATED).entity(opetuskielikoodi).build();
         } catch (Exception e) {
             LOGGER.error("Error inserting opetuskielikoodi.", e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
+
+    @POST
+    @Path("{valintaryhmaOid}/valintakoekoodi")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @JsonView(JsonViews.Basic.class)
+    @Secured(CRUD)
+    public Response updateValintakoekoodi(@PathParam("valintaryhmaOid") String valintaryhmaOid,
+                                          List<Valintakoekoodi> valintakoekoodit) {
+        try {
+            valintakoekoodiService.updateValintaryhmanValintakoekoodit(valintaryhmaOid, valintakoekoodit);
+            return Response.status(Response.Status.ACCEPTED).entity(valintakoekoodit).build();
+        } catch (Exception e) {
+            LOGGER.error("Error updating valintakoekoodit.", e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
+
+    @PUT
+    @Path("{valintaryhmaOid}/valintakoekoodi")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @JsonView({JsonViews.Basic.class})
+    @Secured({CRUD})
+    public Response insertValintakoekoodi(@PathParam("valintaryhmaOid") String valintaryhamOid,
+                                          Valintakoekoodi valintakoekoodi) {
+        try {
+            valintakoekoodiService.lisaaValintakoekoodiValintaryhmalle(valintaryhamOid, valintakoekoodi);
+            return Response.status(Response.Status.CREATED).entity(valintakoekoodi).build();
+        } catch (Exception e) {
+            LOGGER.error("Error inserting valintakoekoodi.", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
