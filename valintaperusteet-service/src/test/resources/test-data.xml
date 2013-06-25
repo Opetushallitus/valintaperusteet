@@ -319,6 +319,8 @@
 
     <valintaryhma id="50" version="0" oid="oid50" nimi="Valintaryhma 50" hakuOid="hakuoid1"/>
 
+    <valintaryhma id="51" version="0" oid="oid51" nimi="Valintaryhma 51" hakuOid="hakuoid1"/>
+
     <hakukohdekoodi id="1" version="0" uri="hakukohdekoodiuri1" arvo="koodiarvo1"
                     nimi_fi="hakukohdekoodi1"
                     nimi_sv="hakukohdekoodi1" nimi_en="hakukohdekoodi1"/>
@@ -388,6 +390,17 @@
                     nimi_fi="hakukohdekoodi15"/>
     <valintaryhma_hakukohdekoodi valintaryhma_id="50" hakukohdekoodi_id="15"/>
 
+    <hakukohdekoodi id="16" version="0" uri="hakukohdekoodiuri16" arvo="koodiarvo16"
+                    nimi_fi="hakukohdekoodi16"/>
+    <valintaryhma_hakukohdekoodi valintaryhma_id="51" hakukohdekoodi_id="16"/>
+
+    <hakukohdekoodi id="17" version="0" uri="hakukohdekoodiuri17" arvo="koodiarvo17"
+                    nimi_fi="hakukohdekoodi17"/>
+    <valintaryhma_hakukohdekoodi valintaryhma_id="51" hakukohdekoodi_id="17"/>
+
+    <hakukohdekoodi id="18" version="0" uri="hakukohdekoodiuri18" arvo="koodiarvo18"
+                    nimi_fi="hakukohdekoodi18"/>
+
     <opetuskielikoodi id="10" version="0" uri="kieli_fi"/>
     <valintaryhma_opetuskielikoodi valintaryhma_id="37" opetuskielikoodi_id="10"/>
     <valintaryhma_opetuskielikoodi valintaryhma_id="40" opetuskielikoodi_id="10"/>
@@ -397,9 +410,11 @@
     <valintaryhma_opetuskielikoodi valintaryhma_id="48" opetuskielikoodi_id="10"/>
     <valintaryhma_opetuskielikoodi valintaryhma_id="49" opetuskielikoodi_id="10"/>
     <valintaryhma_opetuskielikoodi valintaryhma_id="50" opetuskielikoodi_id="10"/>
+    <valintaryhma_opetuskielikoodi valintaryhma_id="51" opetuskielikoodi_id="10"/>
 
     <opetuskielikoodi id="11" version="0" uri="kieli_sv"/>
     <valintaryhma_opetuskielikoodi valintaryhma_id="44" opetuskielikoodi_id="11"/>
+    <valintaryhma_opetuskielikoodi valintaryhma_id="51" opetuskielikoodi_id="11"/>
 
     <opetuskielikoodi id="12" version="0" uri="kieli_ru"/>
     <valintaryhma_opetuskielikoodi valintaryhma_id="44" opetuskielikoodi_id="12"/>
@@ -421,6 +436,13 @@
     <valintaryhma_valintakoekoodi valintaryhma_id="48" valintakoekoodi_id="14"/>
     <valintaryhma_valintakoekoodi valintaryhma_id="49" valintakoekoodi_id="14"/>
     <valintaryhma_valintakoekoodi valintaryhma_id="49" valintakoekoodi_id="14"/>
+    <valintaryhma_valintakoekoodi valintaryhma_id="51" valintakoekoodi_id="14"/>
+
+    <valintakoekoodi id="15" version="0" uri="valintakoeuri2"/>
+    <valintaryhma_valintakoekoodi valintaryhma_id="51" valintakoekoodi_id="15"/>
+    <valintaryhma_valintakoekoodi valintaryhma_id="51" valintakoekoodi_id="15"/>
+
+    <valintakoekoodi id="16" version="0" uri="valintakoeuri3"/>
 
 
     <hakukohde_viite id="1" version="0" hakuoid="hakuoid1" oid="oid1" nimi="haku1" valintaryhma_id="1"/>

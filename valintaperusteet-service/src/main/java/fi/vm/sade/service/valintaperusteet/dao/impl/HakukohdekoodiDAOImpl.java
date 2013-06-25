@@ -25,7 +25,7 @@ public class HakukohdekoodiDAOImpl extends AbstractJpaDAOImpl<Hakukohdekoodi, Lo
     }
 
     @Override
-    public Hakukohdekoodi findByKoodiUri(String koodiUri) {
+    public Hakukohdekoodi readByUri(String koodiUri) {
         QHakukohdekoodi koodi = QHakukohdekoodi.hakukohdekoodi;
 
         return from(koodi)

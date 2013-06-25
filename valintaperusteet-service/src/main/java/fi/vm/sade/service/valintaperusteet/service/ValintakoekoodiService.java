@@ -2,6 +2,8 @@ package fi.vm.sade.service.valintaperusteet.service;
 
 import fi.vm.sade.service.valintaperusteet.model.Valintakoekoodi;
 
+import java.util.List;
+
 /**
  * User: wuoti
  * Date: 24.6.2013
@@ -10,4 +12,6 @@ import fi.vm.sade.service.valintaperusteet.model.Valintakoekoodi;
 public interface ValintakoekoodiService {
 
     void lisaaValintakoekoodiValintaryhmalle(String valintaryhmaOid, Valintakoekoodi valintakoekoodi);
+
+    void updateValintaryhmanValintakoekoodit(String valintaryhmaOid, List<Valintakoekoodi> valintakoekoodit);
 }

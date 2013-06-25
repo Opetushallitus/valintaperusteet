@@ -2,12 +2,14 @@ package fi.vm.sade.service.valintaperusteet.service.impl;
 
 import fi.vm.sade.service.valintaperusteet.dao.OpetuskielikoodiDAO;
 import fi.vm.sade.service.valintaperusteet.model.Opetuskielikoodi;
-import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import fi.vm.sade.service.valintaperusteet.service.OpetuskielikoodiService;
 import fi.vm.sade.service.valintaperusteet.service.ValintaryhmaService;
+import fi.vm.sade.service.valintaperusteet.service.impl.util.koodi.OpetuskielikoodiHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Set;
 
 /**
  * User: wuoti
@@ -26,19 +28,14 @@ public class OpetuskielikoodiServiceImpl implements OpetuskielikoodiService {
 
     @Override
     public void lisaaOpetuskielikoodiValintaryhmalle(String valintaryhmaOid, Opetuskielikoodi opetuskielikoodi) {
-        Valintaryhma valintaryhma = valintaryhmaService.readByOid(valintaryhmaOid);
+        new OpetuskielikoodiHandler(valintaryhmaService, opetuskielikoodiDAO)
+                .lisaaKoodiValintaryhmalle(valintaryhmaOid, opetuskielikoodi);
+    }
 
-        Opetuskielikoodi haettu = opetuskielikoodiDAO.readByUri(opetuskielikoodi.getUri());
-        if (haettu != null) {
-            haettu.setUri(opetuskielikoodi.getUri());
-            haettu.setNimiFi(opetuskielikoodi.getNimiFi());
-            haettu.setNimiSv(opetuskielikoodi.getNimiSv());
-            haettu.setNimiEn(opetuskielikoodi.getNimiEn());
-            haettu.setArvo(opetuskielikoodi.getArvo());
-        } else {
-            haettu = opetuskielikoodiDAO.insert(opetuskielikoodi);
-        }
-        valintaryhma.getOpetuskielikoodit().add(haettu);
+    @Override
+    public void updateValintaryhmaOpetuskielikoodit(String valintaryhmaOid, Set<Opetuskielikoodi> opetuskielikoodit) {
+        new OpetuskielikoodiHandler(valintaryhmaService, opetuskielikoodiDAO)
+                .paivitaValintaryhmanKoodit(valintaryhmaOid, opetuskielikoodit);
     }
 
 }

@@ -122,13 +122,13 @@ public class HakukohdeImportServiceTest {
         final String hakuOid = "uusiHakuOid";
         final String koodiUri = "uusihakukohdekoodiuri";
 
-        assertNull(hakukohdekoodiDAO.findByKoodiUri(koodiUri));
+        assertNull(hakukohdekoodiDAO.readByUri(koodiUri));
         assertNull(hakukohdeViiteDAO.readByOid(hakukohdeOid));
 
         HakukohdeImportTyyppi importData = luoHakukohdeImportTyyppi(hakukohdeOid, hakuOid, koodiUri);
         hakukohdeImportService.tuoHakukohde(importData);
 
-        Hakukohdekoodi koodi = hakukohdekoodiDAO.findByKoodiUri(koodiUri);
+        Hakukohdekoodi koodi = hakukohdekoodiDAO.readByUri(koodiUri);
         assertEquals(koodiUri, koodi.getUri());
 
         assertEquals(1, koodi.getHakukohteet().size());
@@ -146,7 +146,7 @@ public class HakukohdeImportServiceTest {
 
         final String valintaryhmaOid = "oid37";
 
-        Hakukohdekoodi koodi = hakukohdekoodiDAO.findByKoodiUri(koodiUri);
+        Hakukohdekoodi koodi = hakukohdekoodiDAO.readByUri(koodiUri);
         assertEquals(valintaryhmaOid, koodi.getValintaryhmat().iterator().next().getOid());
         assertEquals(0, koodi.getHakukohteet().size());
         assertNull(hakukohdeViiteDAO.readByOid(hakukohdeOid));
@@ -156,7 +156,7 @@ public class HakukohdeImportServiceTest {
         HakukohdeImportTyyppi importData = luoHakukohdeImportTyyppi(hakukohdeOid, hakuOid, koodiUri);
         hakukohdeImportService.tuoHakukohde(importData);
 
-        koodi = hakukohdekoodiDAO.findByKoodiUri(koodiUri);
+        koodi = hakukohdekoodiDAO.readByUri(koodiUri);
         assertEquals(1, koodi.getValintaryhmat().size());
         assertEquals(valintaryhmaOid, koodi.getValintaryhmat().iterator().next().getOid());
         assertEquals(1, koodi.getHakukohteet().size());
@@ -183,7 +183,7 @@ public class HakukohdeImportServiceTest {
         final String hakukohdeOid = "oid14";
         final String hakukohdekoodiUri = "hakukohdekoodiuri4";
         {
-            Hakukohdekoodi koodi = hakukohdekoodiDAO.findByKoodiUri(hakukohdekoodiUri);
+            Hakukohdekoodi koodi = hakukohdekoodiDAO.readByUri(hakukohdekoodiUri);
             assertEquals(valintaryhmaOidLopuksi, koodi.getValintaryhmat().iterator().next().getOid());
             assertEquals(0, koodi.getHakukohteet().size());
 
@@ -205,7 +205,7 @@ public class HakukohdeImportServiceTest {
         hakukohdeImportService.tuoHakukohde(importData);
 
         {
-            Hakukohdekoodi koodi = hakukohdekoodiDAO.findByKoodiUri(hakukohdekoodiUri);
+            Hakukohdekoodi koodi = hakukohdekoodiDAO.readByUri(hakukohdekoodiUri);
             assertEquals(valintaryhmaOidLopuksi, koodi.getValintaryhmat().iterator().next().getOid());
             assertEquals(1, koodi.getHakukohteet().size());
             assertEquals(hakukohdeOid, koodi.getHakukohteet().iterator().next().getOid());
@@ -237,7 +237,7 @@ public class HakukohdeImportServiceTest {
         final String hakukohdeOid = "oid14";
         final String hakukohdekoodiUri = "hakukohdekoodiuri5";
         {
-            Hakukohdekoodi koodi = hakukohdekoodiDAO.findByKoodiUri(hakukohdekoodiUri);
+            Hakukohdekoodi koodi = hakukohdekoodiDAO.readByUri(hakukohdekoodiUri);
             assertEquals(0, koodi.getValintaryhmat().size());
             assertEquals(0, koodi.getHakukohteet().size());
 
@@ -257,7 +257,7 @@ public class HakukohdeImportServiceTest {
         hakukohdeImportService.tuoHakukohde(importData);
 
         {
-            Hakukohdekoodi koodi = hakukohdekoodiDAO.findByKoodiUri(hakukohdekoodiUri);
+            Hakukohdekoodi koodi = hakukohdekoodiDAO.readByUri(hakukohdekoodiUri);
             assertEquals(0, koodi.getValintaryhmat().size());
             assertEquals(hakukohdeOid, koodi.getHakukohteet().iterator().next().getOid());
 
@@ -282,7 +282,7 @@ public class HakukohdeImportServiceTest {
         final String hakukohdeOid = "oid14";
         final String hakukohdekoodiUri = "hakukohdekoodiuri6";
         {
-            Hakukohdekoodi koodi = hakukohdekoodiDAO.findByKoodiUri(hakukohdekoodiUri);
+            Hakukohdekoodi koodi = hakukohdekoodiDAO.readByUri(hakukohdekoodiUri);
             assertEquals(valintaryhmaOidAluksi, koodi.getValintaryhmat().iterator().next().getOid());
             assertEquals(0, koodi.getHakukohteet().size());
 
@@ -304,7 +304,7 @@ public class HakukohdeImportServiceTest {
         hakukohdeImportService.tuoHakukohde(importData);
 
         {
-            Hakukohdekoodi koodi = hakukohdekoodiDAO.findByKoodiUri(hakukohdekoodiUri);
+            Hakukohdekoodi koodi = hakukohdekoodiDAO.readByUri(hakukohdekoodiUri);
             assertEquals(valintaryhmaOidAluksi, koodi.getValintaryhmat().iterator().next().getOid());
             assertEquals(hakukohdeOid, koodi.getHakukohteet().iterator().next().getOid());
 
@@ -337,7 +337,7 @@ public class HakukohdeImportServiceTest {
 
         {
             assertNull(hakukohdeViiteDAO.readByOid(hakukohdeOid));
-            Hakukohdekoodi koodi = hakukohdekoodiDAO.findByKoodiUri(hakukohdekoodiUri);
+            Hakukohdekoodi koodi = hakukohdekoodiDAO.readByUri(hakukohdekoodiUri);
             assertNotNull(koodi);
             assertEquals(2, koodi.getValintaryhmat().size());
             List<Valintaryhma> valintaryhmat = new ArrayList<Valintaryhma>(koodi.getValintaryhmat());
@@ -442,7 +442,7 @@ public class HakukohdeImportServiceTest {
         {
             assertNull(hakukohdeViiteDAO.readByOid(hakukohdeOid));
 
-            Hakukohdekoodi koodi = hakukohdekoodiDAO.findByKoodiUri(hakukohdekoodiUri);
+            Hakukohdekoodi koodi = hakukohdekoodiDAO.readByUri(hakukohdekoodiUri);
             assertNotNull(koodi);
             assertEquals(1, koodi.getValintaryhmat().size());
             assertEquals(valintaryhmaOid, koodi.getValintaryhmat().iterator().next().getOid());

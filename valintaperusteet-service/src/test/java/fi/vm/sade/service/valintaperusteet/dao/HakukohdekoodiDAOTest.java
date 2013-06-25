@@ -36,7 +36,7 @@ public class HakukohdekoodiDAOTest {
     @Test
     public void testFindByKoodiUri() {
         final String koodiUri = "hakukohdekoodiuri1";
-        Hakukohdekoodi koodi = hakukohdekoodiDAO.findByKoodiUri(koodiUri);
+        Hakukohdekoodi koodi = hakukohdekoodiDAO.readByUri(koodiUri);
 
         final String valintaryhmaOid = "oid36";
         final String hakukohdeOid = "oid11";
@@ -45,7 +45,7 @@ public class HakukohdekoodiDAOTest {
         assertEquals(valintaryhmaOid, koodi.getValintaryhmat().iterator().next().getOid());
         assertEquals(hakukohdeOid, koodi.getHakukohteet().iterator().next().getOid());
 
-        assertNull(hakukohdekoodiDAO.findByKoodiUri("not-exists"));
+        assertNull(hakukohdekoodiDAO.readByUri("not-exists"));
     }
 
     @Test

@@ -10,12 +10,12 @@ import java.util.List;
  * Date: 8.5.2013
  * Time: 13.59
  */
-public interface HakukohdekoodiDAO extends JpaDAO<Hakukohdekoodi, Long> {
-    Hakukohdekoodi findByKoodiUri(String koodiUri);
-
+public interface HakukohdekoodiDAO extends JpaDAO<Hakukohdekoodi, Long>, KoodiDAO<Hakukohdekoodi> {
     Hakukohdekoodi findByHakukohdeOid(String hakukohdeOid);
 
     Hakukohdekoodi findByHakukohdeOidAndKoodiUri(String hakukohdeOid, String koodiUri);
+
+    Hakukohdekoodi readByUri(String koodiUri);
 
     List<Hakukohdekoodi> findByUris(String... koodiUris);
 }

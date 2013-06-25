@@ -9,6 +9,7 @@ import fi.vm.sade.service.valintaperusteet.model.QValintaryhma;
 import fi.vm.sade.service.valintaperusteet.model.Valintakoekoodi;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,5 +41,17 @@ public class ValintakoekoodiDAOImpl extends AbstractJpaDAOImpl<Valintakoekoodi, 
         return from(valintakoekoodi)
                 .where(valintakoekoodi.uri.eq(uri))
                 .singleResult(valintakoekoodi);
+    }
+
+    @Override
+    public List<Valintakoekoodi> findByUris(String[] koodiUris) {
+        if (koodiUris == null || koodiUris.length == 0) {
+            return new ArrayList<Valintakoekoodi>();
+        }
+        QValintakoekoodi koodi = QValintakoekoodi.valintakoekoodi;
+
+        return from(koodi)
+                .where(koodi.uri.in(koodiUris))
+                .list(koodi);
     }
 }

@@ -249,7 +249,7 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
         HakukohdekoodiTyyppi hakukohdekoodiTyyppi = importData.getHakukohdekoodi();
 
         HakukohdeViite hakukohde = hakukohdeViiteDAO.readByOid(importData.getHakukohdeOid());
-        Hakukohdekoodi koodi = hakukohdekoodiDAO.findByKoodiUri(sanitizeKoodiUri(hakukohdekoodiTyyppi.getKoodiUri()));
+        Hakukohdekoodi koodi = hakukohdekoodiDAO.readByUri(sanitizeKoodiUri(hakukohdekoodiTyyppi.getKoodiUri()));
 
         if (koodi == null) {
             koodi = new Hakukohdekoodi();
