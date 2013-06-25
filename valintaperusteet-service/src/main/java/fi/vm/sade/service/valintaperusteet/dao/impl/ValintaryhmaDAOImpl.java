@@ -1,11 +1,14 @@
 package fi.vm.sade.service.valintaperusteet.dao.impl;
 
+import com.mysema.query.BooleanBuilder;
 import com.mysema.query.jpa.impl.JPAQuery;
 import com.mysema.query.types.EntityPath;
 import com.mysema.query.types.expr.BooleanExpression;
 import fi.vm.sade.generic.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.model.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
@@ -17,6 +20,8 @@ import java.util.List;
  */
 @Repository
 public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long> implements ValintaryhmaDAO {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ValintaryhmaDAOImpl.class);
 
     protected JPAQuery from(EntityPath<?>... o) {
         return new JPAQuery(getEntityManager()).from(o);
@@ -65,22 +70,34 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long> 
         return set;
     }
 
+
     @Override
     public List<Valintaryhma> haeHakukohdekoodinOpetuskielikoodienJaValintakoekoodienMukaan(String hakukohdekoodiUri,
                                                                                             Collection<String> opetuskielikoodiUrit,
                                                                                             Collection<String> valintakoekoodiUrit) {
+        LOG.info("hakukohdekoodi: {}, opetuskielikoodi: {}, valintakoekoodit: {}",
+                new Object[]{hakukohdekoodiUri, opetuskielikoodiUrit, valintakoekoodiUrit});
+
         QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
         QHakukohdekoodi hakukohdekoodi = QHakukohdekoodi.hakukohdekoodi;
         QOpetuskielikoodi opetuskielikoodi = QOpetuskielikoodi.opetuskielikoodi;
         QValintakoekoodi valintakoekoodi = QValintakoekoodi.valintakoekoodi;
 
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        booleanBuilder.and(hakukohdekoodi.uri.eq(hakukohdekoodiUri));
+        if (!opetuskielikoodiUrit.isEmpty()) {
+            booleanBuilder.and(opetuskielikoodi.uri.in(opetuskielikoodiUrit));
+        }
+
+        if (!valintakoekoodiUrit.isEmpty()) {
+            booleanBuilder.and(valintakoekoodi.uri.in(valintakoekoodiUrit));
+        }
+
         return from(valintaryhma)
                 .join(valintaryhma.hakukohdekoodit, hakukohdekoodi).fetch()
-                .join(valintaryhma.opetuskielikoodit, opetuskielikoodi).fetch()
-                .join(valintaryhma.valintakoekoodit, valintakoekoodi).fetch()
-                .where(hakukohdekoodi.uri.eq(hakukohdekoodiUri),
-                        opetuskielikoodi.uri.in(opetuskielikoodiUrit),
-                        valintakoekoodi.uri.in(valintakoekoodiUrit))
+                .leftJoin(valintaryhma.opetuskielikoodit, opetuskielikoodi).fetch()
+                .leftJoin(valintaryhma.valintakoekoodit, valintakoekoodi).fetch()
+                .where(booleanBuilder)
                 .distinct()
                 .list(valintaryhma);
     }

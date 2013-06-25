@@ -153,22 +153,28 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
     }
 
     private Valintaryhma selvitaValintaryhma(HakukohdeImportTyyppi importData) {
+        LOG.info("Yritetään selvittää hakukohteen {} valintaryhmä", importData.getHakukohdeOid());
+
         Set<String> opetuskieliUrit = new HashSet<String>();
         for (String opetuskieliUri : importData.getOpetuskielet()) {
-            opetuskieliUrit.add(sanitizeKoodiUri(opetuskieliUri));
+            String sanitizedUri = sanitizeKoodiUri(opetuskieliUri);
+            if (StringUtils.isNotBlank(sanitizedUri)) {
+                opetuskieliUrit.add(sanitizeKoodiUri(opetuskieliUri));
+            }
         }
 
         // Lasketaan valintakokeiden esiintymiset importtidatalle
         Map<String, Integer> valintakoekoodiUrit = new HashMap<String, Integer>();
         for (HakukohteenValintakoeTyyppi valintakoe : importData.getValintakoe()) {
             final String valintakoeUri = sanitizeKoodiUri(valintakoe.getTyyppiUri());
-            if (!valintakoekoodiUrit.containsKey(valintakoeUri)) {
-                valintakoekoodiUrit.put(valintakoeUri, 0);
+            if (StringUtils.isNotBlank(valintakoeUri)) {
+                if (!valintakoekoodiUrit.containsKey(valintakoeUri)) {
+                    valintakoekoodiUrit.put(valintakoeUri, 0);
+                }
+
+                Integer esiintymat = valintakoekoodiUrit.get(valintakoeUri) + 1;
+                valintakoekoodiUrit.put(valintakoeUri, esiintymat);
             }
-
-            Integer esiintymat = valintakoekoodiUrit.get(valintakoeUri) + 1;
-            valintakoekoodiUrit.put(valintakoeUri, esiintymat);
-
         }
 
         // Haetaan potentiaaliset valintaryhmät hakukohdekoodin, opetuskielikoodien ja valintakoekoodien mukaan
@@ -176,23 +182,23 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
                 sanitizeKoodiUri(importData.getHakukohdekoodi().getKoodiUri()), opetuskieliUrit,
                 valintakoekoodiUrit.keySet());
 
+        LOG.info("Potentiaalisia valintaryhmiä {} kpl", valintaryhmat.size());
 
         // Tarkistetaan valintaryhmät opetuskielikoodien osalta.
         Iterator<Valintaryhma> iterator = valintaryhmat.iterator();
         while (iterator.hasNext()) {
             Valintaryhma r = iterator.next();
-
             Set<String> valintaryhmanOpetuskielikoodiUrit = new HashSet<String>();
-            if (r.getOpetuskielikoodit().size() == opetuskieliUrit.size()) {
-                for (Opetuskielikoodi k : r.getOpetuskielikoodit()) {
-                    valintaryhmanOpetuskielikoodiUrit.add(k.getUri());
-                }
+            for (Opetuskielikoodi k : r.getOpetuskielikoodit()) {
+                valintaryhmanOpetuskielikoodiUrit.add(k.getUri());
             }
 
             if (!valintaryhmanOpetuskielikoodiUrit.containsAll(opetuskieliUrit)) {
                 iterator.remove();
             }
         }
+
+        LOG.info("Opetuskielikoodifilterin jälkeen potentiaalisia valintaryhmiä {} kpl", valintaryhmat.size());
 
         // Tarkistetaan valintaryhmät valintakoekoodien osalta.
         iterator = valintaryhmat.iterator();
@@ -202,23 +208,22 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
             Map<String, Integer> valintaryhmanValintakoekoodiUrit = new HashMap<String, Integer>();
             List<Valintakoekoodi> valintakoekoodit = valintakoekoodiDAO.findByValintaryhma(r.getOid());
 
-            if (importData.getValintakoe().size() == valintakoekoodit.size()) {
-
-                // Lasketaan valintakoekoodien esiintymät valintaryhmässä
-                for (Valintakoekoodi k : valintakoekoodit) {
-                    if (!valintaryhmanValintakoekoodiUrit.containsKey(k.getUri())) {
-                        valintaryhmanValintakoekoodiUrit.put(k.getUri(), 0);
-                    }
-
-                    Integer esiintymat = valintaryhmanValintakoekoodiUrit.get(k.getUri()) + 1;
-                    valintaryhmanValintakoekoodiUrit.put(k.getUri(), esiintymat);
+            // Lasketaan valintakoekoodien esiintymät valintaryhmässä
+            for (Valintakoekoodi k : valintakoekoodit) {
+                if (!valintaryhmanValintakoekoodiUrit.containsKey(k.getUri())) {
+                    valintaryhmanValintakoekoodiUrit.put(k.getUri(), 0);
                 }
+
+                Integer esiintymat = valintaryhmanValintakoekoodiUrit.get(k.getUri()) + 1;
+                valintaryhmanValintakoekoodiUrit.put(k.getUri(), esiintymat);
             }
 
             if (!valintakoekoodiUrit.equals(valintaryhmanValintakoekoodiUrit)) {
                 iterator.remove();
             }
         }
+
+        LOG.info("Valintakoekoodifilterin jälkeen potentiaalisia valintaryhmiä {} kpl", valintaryhmat.size());
 
         // Filtteroinnin jälkeen pitäisi jäljellä olla toivottavasti enää yksi valintaryhmä. Jos valintaryhmiä on
         // enemmän kuin yksi (eli valintaryhmien mallinnassa on ryssitty ja esim. sama hakukohdekoodi on usealla
@@ -227,6 +232,11 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
         Valintaryhma valintaryhma = null;
         if (valintaryhmat.size() == 1) {
             valintaryhma = valintaryhmat.get(0);
+            LOG.info("Hakukohteen tulisi olla valintaryhmän {} alla", valintaryhma.getOid());
+        } else {
+            LOG.info("Hakukohteelle ei pystytty määrittämään valintaryhmää. Potentiaalisia valintaryhmiä on {} kpl. " +
+                    "Hakukohde lisätään juureen.", valintaryhmat.size());
+
         }
 
         return valintaryhma;

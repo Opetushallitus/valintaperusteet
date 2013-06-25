@@ -91,13 +91,11 @@ public class HakukohdekoodiServiceImpl implements HakukohdekoodiService {
             haettu.setNimiEn(hakukohdekoodi.getNimiEn());
             haettu.setNimiFi(hakukohdekoodi.getNimiFi());
             haettu.setNimiSv(hakukohdekoodi.getNimiSv());
-            valintaryhma.getHakukohdekoodit().add(haettu);
-            haettu.getValintaryhmat().add(valintaryhma);
         } else {
             haettu = hakukohdekoodiDAO.insert(hakukohdekoodi);
-            valintaryhma.getHakukohdekoodit().add(haettu);
-            haettu.getValintaryhmat().add(valintaryhma);
         }
+        valintaryhma.getHakukohdekoodit().add(haettu);
+        haettu.getValintaryhmat().add(valintaryhma);
     }
 
     @Override

@@ -33,4 +33,12 @@ public class ValintakoekoodiDAOImpl extends AbstractJpaDAOImpl<Valintakoekoodi, 
                 .where(valintaryhma.oid.eq(valintaryhmaOid))
                 .list(valintakoekoodi);
     }
+
+    @Override
+    public Valintakoekoodi readByUri(String uri) {
+        QValintakoekoodi valintakoekoodi = QValintakoekoodi.valintakoekoodi;
+        return from(valintakoekoodi)
+                .where(valintakoekoodi.uri.eq(uri))
+                .singleResult(valintakoekoodi);
+    }
 }

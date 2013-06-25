@@ -12,4 +12,6 @@ import java.util.List;
  */
 public interface ValintakoekoodiDAO extends JpaDAO<Valintakoekoodi, Long> {
     List<Valintakoekoodi> findByValintaryhma(String valintaryhmaOid);
+
+    Valintakoekoodi readByUri(String uri);
 }

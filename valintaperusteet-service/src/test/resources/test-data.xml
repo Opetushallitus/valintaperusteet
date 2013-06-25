@@ -317,6 +317,7 @@
 
     <valintaryhma id="49" version="0" oid="oid49" nimi="Valintaryhma 49" hakuOid="hakuoid1"/>
 
+    <valintaryhma id="50" version="0" oid="oid50" nimi="Valintaryhma 50" hakuOid="hakuoid1"/>
 
     <hakukohdekoodi id="1" version="0" uri="hakukohdekoodiuri1" arvo="koodiarvo1"
                     nimi_fi="hakukohdekoodi1"
@@ -383,6 +384,10 @@
                     nimi_fi="hakukohdekoodi14"/>
     <valintaryhma_hakukohdekoodi valintaryhma_id="49" hakukohdekoodi_id="14"/>
 
+    <hakukohdekoodi id="15" version="0" uri="hakukohdekoodiuri15" arvo="koodiarvo15"
+                    nimi_fi="hakukohdekoodi15"/>
+    <valintaryhma_hakukohdekoodi valintaryhma_id="50" hakukohdekoodi_id="15"/>
+
     <opetuskielikoodi id="10" version="0" uri="kieli_fi"/>
     <valintaryhma_opetuskielikoodi valintaryhma_id="37" opetuskielikoodi_id="10"/>
     <valintaryhma_opetuskielikoodi valintaryhma_id="40" opetuskielikoodi_id="10"/>
@@ -391,6 +396,7 @@
     <valintaryhma_opetuskielikoodi valintaryhma_id="47" opetuskielikoodi_id="10"/>
     <valintaryhma_opetuskielikoodi valintaryhma_id="48" opetuskielikoodi_id="10"/>
     <valintaryhma_opetuskielikoodi valintaryhma_id="49" opetuskielikoodi_id="10"/>
+    <valintaryhma_opetuskielikoodi valintaryhma_id="50" opetuskielikoodi_id="10"/>
 
     <opetuskielikoodi id="11" version="0" uri="kieli_sv"/>
     <valintaryhma_opetuskielikoodi valintaryhma_id="44" opetuskielikoodi_id="11"/>

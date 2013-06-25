@@ -14,10 +14,7 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 
@@ -41,7 +38,7 @@ public class ValintaryhmaDAOTest {
     @Test
     public void testFindValintaryhmaByNullParentOid() throws Exception {
         List<Valintaryhma> valintaryhmas = valintaryhmaDAO.findChildrenByParentOid(null);
-        assertEquals(34, valintaryhmas.size());
+        assertEquals(35, valintaryhmas.size());
     }
 
     @Test
@@ -86,5 +83,17 @@ public class ValintaryhmaDAOTest {
 
         assertEquals(valintaryhmaOid1, valintaryhmat.get(0).getOid());
         assertEquals(valintaryhmaOid2, valintaryhmat.get(1).getOid());
+    }
+
+    @Test
+    public void testHaeHakukohdekoodinOpetuskielikoodienJaValintakoekoodienMukaan2() {
+        final String hakukohdekoodiUri = "hakukohdekoodiuri15";
+        final String opetuskieliUri = "kieli_fi";
+
+        List<Valintaryhma> valintaryhmat = valintaryhmaDAO.haeHakukohdekoodinOpetuskielikoodienJaValintakoekoodienMukaan(hakukohdekoodiUri,
+                Arrays.asList(opetuskieliUri), new ArrayList<String>());
+
+        assertEquals(1, valintaryhmat.size());
+        assertEquals("oid50", valintaryhmat.get(0).getOid());
     }
 }
