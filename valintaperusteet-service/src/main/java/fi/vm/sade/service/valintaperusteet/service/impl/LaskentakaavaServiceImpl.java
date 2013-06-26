@@ -381,6 +381,9 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             for (Funktioargumentti fa : laskentakaava.getFunktiokutsu().getFunktioargumentit()) {
                 if (fa.getFunktiokutsuChild() != null) {
                     haeFunktiokutsuRekursiivisesti(fa.getFunktiokutsuChild().getId(), laajennaAlakaavat);
+                } else if (laajennaAlakaavat && fa.getLaskentakaavaChild() != null) {
+                    fa.setLaajennettuKaava(haeFunktiokutsuRekursiivisesti(
+                            fa.getLaskentakaavaChild().getFunktiokutsu().getId(), laajennaAlakaavat));
                 } else {
                     laskentakaavaDAO.read(fa.getLaskentakaavaChild().getId());
                 }
