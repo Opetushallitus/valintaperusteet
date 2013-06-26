@@ -152,6 +152,7 @@ public class PkPohjaiset {
         funk.setIndeksi(1);
 
         konvertteri.getFunktioargumentit().add(funk);
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(0.0, 6.0, 0));
         konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(6.0, 6.5, 1));
         konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(6.5, 7.0, 2));
         konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(7.0, 7.5, 3));

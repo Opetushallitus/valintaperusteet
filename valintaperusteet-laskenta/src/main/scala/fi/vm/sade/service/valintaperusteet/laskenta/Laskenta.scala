@@ -18,7 +18,7 @@ object Laskenta {
     def konvertoi(funktiokutsuOid: String, arvo: S): (T, Tila) = {
       konversioMap.filter(arvo == _.arvo) match {
         case Nil => throw new RuntimeException("Arvo " + arvo + " ei täsmää yhteenkään konvertterille " +
-          "määritettyyn arvoon")
+          "määritettyyn arvoon, funktiokutsu OID: " + funktiokutsuOid)
         case head :: tail => {
           val paluuarvo = head.paluuarvo
           val tila = if (head.hylkaysperuste) {
@@ -36,7 +36,7 @@ object Laskenta {
     def konvertoi(funktiokutsuOid: String, arvo: Double): (Double, Tila) = {
       konversioMap.filter(konv => arvo >= konv.min && arvo < konv.max) match {
         case Nil => throw new RuntimeException("Arvo " + arvo + " ei täsmää yhteenkään konvertterille " +
-          "määritettyyn arvoväliin")
+          "määritettyyn arvoväliin, funktiokutsu OID: " + funktiokutsuOid)
         case head :: tail => {
           val paluuarvo = if (head.palautaHaettuArvo) arvo else head.paluuarvo
           val tila = if (head.hylkaysperuste) {
