@@ -13,7 +13,7 @@
 
     <groupId>fi.vm.sade.valintaperusteet</groupId>
     <artifactId>valintaperusteet-laskenta</artifactId>
-    <version>5.0-SNAPSHOT</version>
+    <version>5.0</version>
     <name>Valintaperusteet :: Laskenta</name>
     <packaging>jar</packaging>
 
