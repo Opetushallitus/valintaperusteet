@@ -29,7 +29,7 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPD
  * User: kwuoti Date: 22.1.2013 Time: 15.00
  */
 @Service
-@PreAuthorize("isAuthenticated()")
+//@PreAuthorize("isAuthenticated()")
 public class ValintaperusteServiceImpl implements ValintaperusteService {
 
     @Autowired
