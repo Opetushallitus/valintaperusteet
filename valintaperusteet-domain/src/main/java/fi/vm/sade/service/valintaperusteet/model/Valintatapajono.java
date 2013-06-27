@@ -68,7 +68,7 @@ public class Valintatapajono extends BaseEntity implements LinkitettavaJaKopioit
     private Valintatapajono masterValintatapajono;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "masterValintatapajono")
-    private Set<Valintatapajono> kopioValintatapajonot;
+    private Set<Valintatapajono> kopioValintatapajonot = new HashSet<Valintatapajono>();
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "hakijaryhma_jono", joinColumns = @JoinColumn(name = "jono_id",

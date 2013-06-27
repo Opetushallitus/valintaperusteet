@@ -6,12 +6,13 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonView;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 
 @Entity
 @Table(name = "jarjestyskriteeri")
-public class Jarjestyskriteeri extends BaseEntity implements LinkitettavaJaKopioitava<Jarjestyskriteeri, Set<Jarjestyskriteeri>>{
+public class Jarjestyskriteeri extends BaseEntity implements LinkitettavaJaKopioitava<Jarjestyskriteeri, Set<Jarjestyskriteeri>> {
 
     /**
      *
@@ -50,7 +51,7 @@ public class Jarjestyskriteeri extends BaseEntity implements LinkitettavaJaKopio
     private Jarjestyskriteeri master;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "master")
-    private Set<Jarjestyskriteeri> kopiot;
+    private Set<Jarjestyskriteeri> kopiot = new HashSet<Jarjestyskriteeri>();
 
     public Valintatapajono getValintatapajono() {
         return valintatapajono;

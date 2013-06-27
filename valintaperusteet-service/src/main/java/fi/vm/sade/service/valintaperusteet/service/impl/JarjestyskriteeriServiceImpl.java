@@ -98,12 +98,12 @@ public class JarjestyskriteeriServiceImpl extends AbstractCRUDServiceImpl<Jarjes
 
     @Override
     public Jarjestyskriteeri insert(Jarjestyskriteeri jarjestyskriteeri, String valintatapajono, Long laskentakaava) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        throw new UnsupportedOperationException("not supported");
     }
 
     @Override
     public Jarjestyskriteeri lisaaJarjestyskriteeriValintatapajonolle(String valintatapajonoOid, Jarjestyskriteeri jarjestyskriteeri,
-                                                                 String edellinenValintatapajonoOid, Long laskentakaavaOid) {
+                                                                      String edellinenValintatapajonoOid, Long laskentakaavaOid) {
 
         if (laskentakaavaOid != null) {
             Laskentakaava laskentakaava = laskentakaavaDAO.getLaskentakaava(laskentakaavaOid);
@@ -177,7 +177,6 @@ public class JarjestyskriteeriServiceImpl extends AbstractCRUDServiceImpl<Jarjes
         kopio.setMaster(master);
         return kopio;
     }
-
 
 
     @Override
@@ -257,7 +256,7 @@ public class JarjestyskriteeriServiceImpl extends AbstractCRUDServiceImpl<Jarjes
     }
 
     private Jarjestyskriteeri kopioiJarjestyskriteeritRekursiivisesti(Valintatapajono valintatapajono,
-                                                                    Jarjestyskriteeri master) {
+                                                                      Jarjestyskriteeri master) {
         if (master == null) {
             return null;
         }

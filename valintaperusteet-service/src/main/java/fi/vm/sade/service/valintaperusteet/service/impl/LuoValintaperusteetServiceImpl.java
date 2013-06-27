@@ -50,6 +50,9 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
     @Autowired
     private ValintakoekoodiService valintakoekoodiService;
 
+    @Autowired
+    private JarjestyskriteeriService jarjestyskriteeriService;
+
     private ResourceLoader resourceLoader;
 
     private static final String HAKU_OID = "toisenAsteenSyksynYhteishaku";
@@ -76,6 +79,18 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
     @Override
     public void luo() throws IOException {
+
+        for (Kielikoodi k : Kielikoodi.values()) {
+            Opetuskielikoodi opetuskieli = new Opetuskielikoodi();
+            opetuskieli.setUri(k.kieliUri);
+            opetuskieli.setNimiFi(k.nimi);
+            opetuskieli.setNimiSv(k.nimi);
+            opetuskieli.setNimiEn(k.nimi);
+
+            opetuskielikoodiDAO.insert(opetuskieli);
+        }
+
+
         PkAineet pkAineet = new PkAineet();
         YoAineet yoAineet = new YoAineet();
 
@@ -183,15 +198,12 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                 valintatapajonoService.lisaaValintatapajonoValinnanVaiheelle(valinnanVaihe.getOid(), jono, null);
 
                 for (Kielikoodi k : Kielikoodi.values()) {
-                    Opetuskielikoodi opetuskieli = opetuskielikoodiDAO.readByUri(k.kieliUri);
-                    if (opetuskieli == null) {
-                        opetuskieli = new Opetuskielikoodi();
-                        opetuskieli.setUri(k.kieliUri);
-                        opetuskieli.setNimiFi(k.nimi);
-                        opetuskieli.setNimiSv(k.nimi);
-                        opetuskieli.setNimiEn(k.nimi);
-                        opetuskieli = opetuskielikoodiDAO.insert(opetuskieli);
-                    }
+                    Opetuskielikoodi opetuskieli = new Opetuskielikoodi();
+                    opetuskieli.setUri(k.kieliUri);
+                    opetuskieli.setNimiFi(k.nimi);
+                    opetuskieli.setNimiSv(k.nimi);
+                    opetuskieli.setNimiEn(k.nimi);
+
 
                     Valintaryhma kielivalintaryhma = new Valintaryhma();
                     kielivalintaryhma.setNimi(k.nimi);
@@ -235,7 +247,15 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
         Funktiokutsu funktiokutsu = GenericHelper.luoSumma(valintakoe, peruskaava);
         Laskentakaava laskentakaava = GenericHelper.luoLaskentakaava(funktiokutsu, hakukohdeNimi + " - " + koe.getNimi());
-        asetaValintaryhmaJaTallennaKantaan(laskentakaava, koe);
+        laskentakaava = asetaValintaryhmaJaTallennaKantaan(laskentakaava, koe);
+
+        ValinnanVaihe vaihe = valinnanVaiheService.findByValintaryhma(koe.getOid()).get(0);
+        Valintatapajono jono = valintatapajonoService.findJonoByValinnanvaihe(vaihe.getOid()).get(0);
+
+        Jarjestyskriteeri kriteeri = new Jarjestyskriteeri();
+        kriteeri.setAktiivinen(true);
+        kriteeri.setMetatiedot(hakukohdeNimi + " - " + koe.getNimi());
+        jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(jono.getOid(), kriteeri, null, laskentakaava.getId());
     }
 
     private void insertEiKoetta(String koeNimi, String hakukohdeNimi, Valintaryhma valintaryhma, Laskentakaava peruskaava
@@ -250,7 +270,15 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
         Funktiokutsu funktiokutsu = GenericHelper.luoSumma(peruskaava);
         Laskentakaava laskentakaava = GenericHelper.luoLaskentakaava(funktiokutsu, hakukohdeNimi + " - " + koe.getNimi());
-        asetaValintaryhmaJaTallennaKantaan(laskentakaava, koe);
+        laskentakaava = asetaValintaryhmaJaTallennaKantaan(laskentakaava, koe);
+
+        ValinnanVaihe vaihe = valinnanVaiheService.findByValintaryhma(koe.getOid()).get(0);
+        Valintatapajono jono = valintatapajonoService.findJonoByValinnanvaihe(vaihe.getOid()).get(0);
+
+        Jarjestyskriteeri kriteeri = new Jarjestyskriteeri();
+        kriteeri.setAktiivinen(true);
+        kriteeri.setMetatiedot(hakukohdeNimi + " - " + koe.getNimi());
+        jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(jono.getOid(), kriteeri, null, laskentakaava.getId());
     }
 
 
