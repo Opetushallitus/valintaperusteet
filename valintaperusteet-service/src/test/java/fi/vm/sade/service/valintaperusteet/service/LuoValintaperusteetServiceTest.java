@@ -1,6 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
-import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
+import java.io.IOException;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,23 +12,20 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
-import java.io.IOException;
+import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 
 /**
- * User: kwuoti
- * Date: 5.3.2013
- * Time: 16.02
+ * User: kwuoti Date: 5.3.2013 Time: 16.02
  */
 @ContextConfiguration(locations = "classpath:test-context.xml")
-@TestExecutionListeners(listeners = {JTACleanInsertTestExecutionListener.class,
+@TestExecutionListeners(listeners = { JTACleanInsertTestExecutionListener.class,
         DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
-        TransactionalTestExecutionListener.class})
+        TransactionalTestExecutionListener.class })
 @RunWith(SpringJUnit4ClassRunner.class)
 public class LuoValintaperusteetServiceTest {
 
     @Autowired
     private LuoValintaperusteetService luoValintaperusteetService;
-
 
     @Test
     public void testLuo() throws IOException {
