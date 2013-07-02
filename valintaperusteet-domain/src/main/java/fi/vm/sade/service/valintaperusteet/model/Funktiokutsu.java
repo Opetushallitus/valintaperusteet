@@ -19,6 +19,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.codehaus.jackson.map.annotate.JsonView;
+import org.hibernate.annotations.Sort;
+import org.hibernate.annotations.SortType;
 
 import fi.vm.sade.generic.model.BaseEntity;
 
@@ -42,6 +44,7 @@ public class Funktiokutsu extends BaseEntity implements FunktionArgumentti {
 
     @JsonView(JsonViews.Basic.class)
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "funktiokutsu", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+    @Sort(type = SortType.NATURAL)
     private SortedSet<Arvovalikonvertteriparametri> arvovalikonvertteriparametrit = new TreeSet<Arvovalikonvertteriparametri>();
 
     @JsonView(JsonViews.Basic.class)
