@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.SortedSet;
 import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
@@ -15,12 +14,11 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.codehaus.jackson.map.annotate.JsonView;
-import org.hibernate.annotations.Sort;
-import org.hibernate.annotations.SortType;
 
 import fi.vm.sade.generic.model.BaseEntity;
 
@@ -44,8 +42,9 @@ public class Funktiokutsu extends BaseEntity implements FunktionArgumentti {
 
     @JsonView(JsonViews.Basic.class)
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "funktiokutsu", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
-    @Sort(type = SortType.NATURAL)
-    private SortedSet<Arvovalikonvertteriparametri> arvovalikonvertteriparametrit = new TreeSet<Arvovalikonvertteriparametri>();
+    // @Sort(type = SortType.NATURAL)
+    @OrderBy("minValue")
+    private Set<Arvovalikonvertteriparametri> arvovalikonvertteriparametrit = new TreeSet<Arvovalikonvertteriparametri>();
 
     @JsonView(JsonViews.Basic.class)
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "funktiokutsu", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
@@ -83,11 +82,11 @@ public class Funktiokutsu extends BaseEntity implements FunktionArgumentti {
         this.arvokonvertteriparametrit = arvokonvertteriparametrit;
     }
 
-    public SortedSet<Arvovalikonvertteriparametri> getArvovalikonvertteriparametrit() {
+    public Set<Arvovalikonvertteriparametri> getArvovalikonvertteriparametrit() {
         return arvovalikonvertteriparametrit;
     }
 
-    public void setArvovalikonvertteriparametrit(SortedSet<Arvovalikonvertteriparametri> arvovalikonvertteriparametrit) {
+    public void setArvovalikonvertteriparametrit(Set<Arvovalikonvertteriparametri> arvovalikonvertteriparametrit) {
         this.arvovalikonvertteriparametrit = arvovalikonvertteriparametrit;
     }
 

@@ -34,7 +34,7 @@ object Laskenta {
 
   case class Lukuarvovalikonvertteri(konversioMap: Seq[Lukuarvovalikonversio]) extends Konvertteri[Double, Double] {
     def konvertoi(funktiokutsuOid: String, arvo: Double): (Double, Tila) = {
-      konversioMap.filter(konv => arvo >= konv.min && arvo <= konv.max) match {
+      konversioMap.sortWith(_.min < _.min).filter(konv => arvo >= konv.min && arvo <= konv.max) match {
         case Nil => throw new RuntimeException("Arvo " + arvo + " ei täsmää yhteenkään konvertterille " +
           "määritettyyn arvoväliin, funktiokutsu OID: " + funktiokutsuOid)
         case head :: tail => {
