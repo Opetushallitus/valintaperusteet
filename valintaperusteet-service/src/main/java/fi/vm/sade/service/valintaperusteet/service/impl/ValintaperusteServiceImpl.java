@@ -64,7 +64,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
 
 
     @Override
-//    @Secured({READ, UPDATE, CRUD})
+    @Secured({READ, UPDATE, CRUD})
     public List<ValintatapajonoTyyppi> haeValintatapajonotSijoittelulle(
             @WebParam(name = "hakukohdeOid", targetNamespace = "") String hakukohdeOid) throws GenericFault {
         List<Valintatapajono> jonot = valintatapajonoDAO.haeValintatapajonotSijoittelulle(hakukohdeOid);
@@ -73,7 +73,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
     }
 
     @Override
-//    @Secured({READ, UPDATE, CRUD})
+    @Secured({READ, UPDATE, CRUD})
     public List<ValintaperusteetTyyppi> haeValintaperusteet(
             @WebParam(name = "hakuparametrit", targetNamespace = "") List<HakuparametritTyyppi> hakuparametrit)
             throws GenericFault {
@@ -241,7 +241,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
     }
 
     @Override
-//    @Secured({CRUD})
+    @Secured({CRUD})
     public void tuoHakukohde(@WebParam(name = "hakukohde", targetNamespace = "") HakukohdeImportTyyppi hakukohde) throws GenericFault {
         hakukohdeImportService.tuoHakukohde(hakukohde);
     }
