@@ -58,6 +58,7 @@ public class Valintaryhma extends BaseEntity {
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<Hakukohdekoodi> hakukohdekoodit = new HashSet<Hakukohdekoodi>();
 
+    @JsonView({JsonViews.Basic.class})
     @JoinTable(name = "valintaryhma_opetuskielikoodi",
             joinColumns = @JoinColumn(name = "valintaryhma_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME),
             inverseJoinColumns = @JoinColumn(name = "opetuskielikoodi_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME),
@@ -66,6 +67,7 @@ public class Valintaryhma extends BaseEntity {
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<Opetuskielikoodi> opetuskielikoodit = new HashSet<Opetuskielikoodi>();
 
+    @JsonView({JsonViews.Basic.class})
     @JoinTable(name = "valintaryhma_valintakoekoodi",
             joinColumns = @JoinColumn(name = "valintaryhma_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME),
             inverseJoinColumns = @JoinColumn(name = "valintakoekoodi_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME))
