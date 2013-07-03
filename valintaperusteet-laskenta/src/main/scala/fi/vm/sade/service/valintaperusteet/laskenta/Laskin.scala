@@ -24,23 +24,43 @@ object Laskin {
   def suoritaLasku(hakukohde: String,
     hakemus: Hakemus,
     laskettava: Lukuarvofunktio): Laskentatulos[java.lang.Double] = {
-    val (tulos, tila) = new Laskin(hakukohde, hakemus).laske(laskettava)
+    val logBuffer = new StringBuffer
+    logBuffer.append("LASKENTA HAKEMUKSELLE ").append(hakemus.oid).append("\r\n")
+    val (tulos, tila) = new Laskin(hakukohde, hakemus).laske(laskettava, 0, logBuffer)
     new Laskentatulos[java.lang.Double](tila, if (!tulos.isEmpty) Double.box(tulos.get) else null)
   }
 
   def suoritaLasku(hakukohde: String,
     hakemus: Hakemus,
     laskettava: Totuusarvofunktio): Laskentatulos[java.lang.Boolean] = {
-    val (tulos, tila) = new Laskin(hakukohde, hakemus).laske(laskettava)
+    val logBuffer = new StringBuffer
+    logBuffer.append("LASKENTA HAKEMUKSELLE ").append(hakemus.oid).append("\r\n")
+    val (tulos, tila) = new Laskin(hakukohde, hakemus).laske(laskettava, 0, logBuffer)
     new Laskentatulos[java.lang.Boolean](tila, if (!tulos.isEmpty) Boolean.box(tulos.get) else null)
   }
 
   def laske(hakukohde: String, hakemus: Hakemus, laskettava: Totuusarvofunktio): (Option[Boolean], Tila) = {
-    new Laskin(hakukohde, hakemus).laske(laskettava)
+    val logBuffer = new StringBuffer
+    logBuffer.append("LASKENTA HAKEMUKSELLE ").append(hakemus.oid).append("\r\n")
+    new Laskin(hakukohde, hakemus).laske(laskettava, 0, logBuffer)
   }
 
   def laske(hakukohde: String, hakemus: Hakemus, laskettava: Lukuarvofunktio): (Option[Double], Tila) = {
-    new Laskin(hakukohde, hakemus).laske(laskettava)
+    val logBuffer = new StringBuffer
+    logBuffer.append("LASKENTA HAKEMUKSELLE ").append(hakemus.oid).append("\r\n")
+    new Laskin(hakukohde, hakemus).laske(laskettava, 0, logBuffer)
+  }
+
+  private def log(b: StringBuffer, syvyys: Int, operaatio: String) = {
+    0.to(syvyys).foreach(a => { b.append("    "); })
+    b.append(operaatio).append(" ...\r\n")
+    //LOG.debug("{} {} ...", Array[Object](b, operaatio))
+  }
+  private def log(b: StringBuffer, syvyys: Int, operaatio: String, value: Object) = {
+    //val b = new StringBuffer
+    0.to(syvyys).foreach(a => { b.append("    "); })
+    b.append(operaatio).append(" == ").append(value).append("\r\n")
+    //LOG.debug("{} {} == {}", Array[Object](b, operaatio, value))
   }
 }
 
@@ -77,11 +97,11 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
     })
   }
 
-  def laske(laskettava: Totuusarvofunktio): (Option[Boolean], Tila) = {
+  def laske(laskettava: Totuusarvofunktio, depth: Int, logBuffer: StringBuffer): (Option[Boolean], Tila) = {
 
     def muodostaKoostettuTulos(fs: Seq[Totuusarvofunktio], trans: Seq[Boolean] => Boolean) = {
       val tulokset = fs.reverse.foldLeft((Nil, Nil): Tuple2[List[Boolean], List[Tila]])((lst, f) => {
-        val (tulos, tila) = laske(f)
+        val (tulos, tila) = laske(f, depth + 1, logBuffer)
         (if (!tulos.isEmpty) tulos.get :: lst._1 else lst._1, tila :: lst._2)
       })
 
@@ -90,14 +110,14 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
     }
 
     def muodostaYksittainenTulos(f: Totuusarvofunktio, trans: Boolean => Boolean) = {
-      val (tulos, tila) = laske(f)
+      val (tulos, tila) = laske(f, depth + 1, logBuffer)
       (tulos.map(trans(_)), List(tila))
     }
 
     def muodostaVertailunTulos(f1: Lukuarvofunktio, f2: Lukuarvofunktio,
       trans: (Double, Double) => Boolean) = {
-      val (tulos1, tila1) = laske(f1)
-      val (tulos2, tila2) = laske(f2)
+      val (tulos1, tila1) = laske(f1, depth + 1, logBuffer)
+      val (tulos2, tila2) = laske(f2, depth + 1, logBuffer)
 
       val tulos = for {
         t1 <- tulos1
@@ -108,15 +128,35 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
     }
 
     val (laskettuTulos, tilat): Tuple2[Option[Boolean], List[Tila]] = laskettava match {
-      case Ja(fs, oid) => muodostaKoostettuTulos(fs, lst => { val result = lst.forall(b => b); LOG.debug("JA {}", result); result })
-      case Tai(fs, oid) => muodostaKoostettuTulos(fs, lst => { val result = lst.exists(b => b); LOG.debug("TAI {}", result); result; })
-      case Ei(fk, oid) => muodostaYksittainenTulos(fk, b => { LOG.debug("EI {}", !b); !b })
-      case Totuusarvo(b, oid) => { LOG.debug("TOTUUSARVO {}", b); (Some(b), List(new Hyvaksyttavissatila)) }
-      case Suurempi(f1, f2, oid) => muodostaVertailunTulos(f1, f2, (d1, d2) => { LOG.debug("SUUREMPI {}", d1 > d2); d1 > d2 })
-      case SuurempiTaiYhtasuuri(f1, f2, oid) => muodostaVertailunTulos(f1, f2, (d1, d2) => { LOG.debug("SUUREMPI TAI YHTASUURI {}", d1 >= d2); d1 >= d2 })
-      case Pienempi(f1, f2, oid) => muodostaVertailunTulos(f1, f2, (d1, d2) => { LOG.debug("PIENEMPI {}", d1 < d2); d1 < d2 })
-      case PienempiTaiYhtasuuri(f1, f2, oid) => muodostaVertailunTulos(f1, f2, (d1, d2) => { LOG.debug("PIENEMPI TAI YHTASUURI {}", d1 <= d2); d1 <= d2 })
-      case Yhtasuuri(f1, f2, oid) => muodostaVertailunTulos(f1, f2, (d1, d2) => { LOG.debug("YHTASUURI {}", d1 == d2); d1 == d2 })
+      case Ja(fs, oid) => { log(logBuffer, depth, "JA"); val res = muodostaKoostettuTulos(fs, lst => lst.forall(b => b)); log(logBuffer, depth, "JA", res); res }
+      case Tai(fs, oid) => { log(logBuffer, depth, "TAI"); val res = muodostaKoostettuTulos(fs, lst => lst.exists(b => b)); log(logBuffer, depth, "TAI", res); res; }
+      case Ei(fk, oid) => { log(logBuffer, depth, "EI"); val res = muodostaYksittainenTulos(fk, b => !b); log(logBuffer, depth, "EI", res); res; }
+      case Totuusarvo(b, oid) => { log(logBuffer, depth, "TOTUUSARVO", Some(b)); (Some(b), List(new Hyvaksyttavissatila)) }
+      case Suurempi(f1, f2, oid) => { log(logBuffer, depth, "SUUREMPI"); val res = muodostaVertailunTulos(f1, f2, (d1, d2) => d1 > d2); log(logBuffer, depth, "SUUREMPI", res); res }
+      case SuurempiTaiYhtasuuri(f1, f2, oid) => {
+        log(logBuffer, depth, "SUUREMPI TAI YHTASUURI");
+        val res = muodostaVertailunTulos(f1, f2, (d1, d2) => d1 >= d2);
+        log(logBuffer, depth, "SUUREMPI TAI YHTASUURI", res);
+        res
+      }
+      case Pienempi(f1, f2, oid) => {
+        log(logBuffer, depth, "PIENEMPI");
+        val res = muodostaVertailunTulos(f1, f2, (d1, d2) => d1 < d2)
+        log(logBuffer, depth, "PIENEMPI", res);
+        res
+      }
+      case PienempiTaiYhtasuuri(f1, f2, oid) => {
+        log(logBuffer, depth, "PIENEMPI TAI YHTASUURI");
+        val res = muodostaVertailunTulos(f1, f2, (d1, d2) => d1 <= d2)
+        log(logBuffer, depth, "PIENEMPI TAI YHTASUURI");
+        res
+      }
+      case Yhtasuuri(f1, f2, oid) => {
+        log(logBuffer, depth, "YHTASUURI");
+        val res = muodostaVertailunTulos(f1, f2, (d1, d2) => d1 == d2)
+        log(logBuffer, depth, "YHTASUURI", res);
+        res
+      }
       case HaeTotuusarvo(konvertteri, oletusarvo, valintaperusteviite, oid) => {
         val valintaperuste = hakemus.kentat.get(valintaperusteviite.tunniste)
 
@@ -135,20 +175,30 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
               new Hylattytila(oid, "Pakollista arvoa (tunniste " + valintaperusteviite.tunniste
                 + ") ei " + "ole olemassa", new PakollinenValintaperusteHylkays(valintaperusteviite.tunniste))
             } else new Hyvaksyttavissatila
-            LOG.debug("HAE TOTUUSARVO OLETUSARVO({})", oletusarvo)
+            log(logBuffer, depth, "HAE TOTUUSARVO (oletusarvo)", oletusarvo);
             (oletusarvo, List(tila))
           }
           case Some(arvo) => {
             val tulos = (Some(arvo), new Hyvaksyttavissatila)
             val konvertoitu = suoritaOptionalKonvertointi[Boolean](oid, tulos, konvertteri)
-            LOG.debug("HAE TOTUUSARVO {}", konvertoitu._1)
+            log(logBuffer, depth, "HAE TOTUUSARVO", konvertoitu._1);
             konvertoitu
           }
         }
       }
-      case NimettyTotuusarvo(nimi, f, oid) => muodostaYksittainenTulos(f, b => { LOG.debug("NIMETTY TOTUUSARVO {}", b); b })
+      case NimettyTotuusarvo(nimi, f, oid) => {
+        log(logBuffer, depth, "NIMETTY TOTUUSARVO");
+        val res = muodostaYksittainenTulos(f, b => b)
+        log(logBuffer, depth, "NIMETTY TOTUUSARVO", res);
+        res
+      }
 
-      case Hakutoive(n, oid) => { val onko = Some(hakemus.onkoHakutoivePrioriteetilla(hakukohde, n)); LOG.debug("HAKUTOIVE {}", onko); (onko, List(new Hyvaksyttavissatila)) }
+      case Hakutoive(n, oid) => {
+        log(logBuffer, depth, "HAKUTOIVE ... oid ", oid);
+        val onko = Some(hakemus.onkoHakutoivePrioriteetilla(hakukohde, n)); LOG.debug("HAKUTOIVE {}", onko);
+        log(logBuffer, depth, "HAKUTOIVE", onko);
+        (onko, List(new Hyvaksyttavissatila))
+      }
 
       case d: Demografia => {
         val avain = Esiprosessori.prosessointiOid(hakukohde, hakemus, d)
@@ -162,7 +212,7 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
               "Boolean-tyypiksi")
           }
         })
-        LOG.debug("DEMOGRAFIA {}", arvoOption)
+        log(logBuffer, depth, "DEMOGRAFIA", arvoOption);
         (arvoOption, List(new Hyvaksyttavissatila))
       }
 
@@ -173,7 +223,7 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
           case Some(s) => {
             val tulos = (Some(s), new Hyvaksyttavissatila)
             val result = suoritaKonvertointi[String, Boolean](oid, tulos, konvertteri)
-            LOG.debug("HAE MERKKIJONO JA KONVERTOI TOTUUSARVOKSI {}", result._1)
+            log(logBuffer, depth, "HAE MERKKIJONO JA KONVERTOI TOTUUSARVOKSI", result);
             result
           }
           case None => {
@@ -181,7 +231,7 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
               new Hylattytila(oid, "Pakollista arvoa (tunniste " + valintaperusteviite.tunniste + ") ei " +
                 "ole olemassa", new PakollinenValintaperusteHylkays(valintaperusteviite.tunniste))
             } else new Hyvaksyttavissatila
-            LOG.debug("HAE MERKKIJONO JA KONVERTOI TOTUUSARVOKSI OLETUSARVO({})", oletusarvo)
+            log(logBuffer, depth, "HAE MERKKIJONO JA KONVERTOI TOTUUSARVOKSI (oletusarvo)", oletusarvo);
             (oletusarvo, List(tila))
           }
         }
@@ -195,23 +245,23 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
       case head :: tail => head
       case Nil => new Hyvaksyttavissatila
     }
-
+    LOG.debug("{}", logBuffer)
     (laskettuTulos, palautettavaTila)
   }
 
-  def laske(laskettava: Lukuarvofunktio): (Option[Double], Tila) = {
+  def laske(laskettava: Lukuarvofunktio, depth: Int, logBuffer: StringBuffer): (Option[Double], Tila) = {
     def summa(vals: Seq[Double]): Double = {
       vals.reduceLeft(_ + _)
     }
 
     def muodostaYksittainenTulos(f: Lukuarvofunktio, trans: Double => Double) = {
-      val (tulos, tila) = laske(f)
+      val (tulos, tila) = laske(f, depth + 1, logBuffer)
       (tulos.map(trans(_)), List(tila))
     }
 
     def muodostaKoostettuTulos(fs: Seq[Lukuarvofunktio], trans: Seq[Double] => Double) = {
       val tulokset = fs.reverse.foldLeft((Nil, Nil): Tuple2[List[Double], List[Tila]])((lst, f) => {
-        val (tulos, tila) = laske(f)
+        val (tulos, tila) = laske(f, depth + 1, logBuffer)
         (if (!tulos.isEmpty) tulos.get :: lst._1 else lst._1, tila :: lst._2)
       })
 
@@ -220,15 +270,33 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
     }
 
     val (laskettuTulos: Option[Double], tilat: Seq[Tila]) = laskettava match {
-      case Lukuarvo(d, oid) => { LOG.debug("LUKUARVO {}", d); (Some(d), List(new Hyvaksyttavissatila)) }
-      case Negaatio(n, oid) => { val neg = muodostaYksittainenTulos(n, d => -d); LOG.debug("NEGAATIO {}", neg._1); neg }
-      case Summa(fs, oid) => { val s = muodostaKoostettuTulos(fs, summa); LOG.debug("SUMMA {}", s._1); s }
+      case Lukuarvo(d, oid) => {
+        log(logBuffer, depth, "LUKUARVO", Some(d));
+        (Some(d), List(new Hyvaksyttavissatila))
+      }
+      case Negaatio(n, oid) => {
+        log(logBuffer, depth, "NEGAATIO");
+        val neg = muodostaYksittainenTulos(n, d => -d)
+        log(logBuffer, depth, "NEGAATIO", neg);
+        neg
+      }
+      case Summa(fs, oid) => {
+        log(logBuffer, depth, "SUMMA");
+        val s = muodostaKoostettuTulos(fs, summa)
+        log(logBuffer, depth, "SUMMA", s);
+        s
+      }
 
-      case SummaNParasta(n, fs, oid) => { val np = muodostaKoostettuTulos(fs, ds => summa(ds.sortWith(_ > _).take(n))); LOG.debug("SUMMA N PARASTA {}", np._1); np }
+      case SummaNParasta(n, fs, oid) => {
+        log(logBuffer, depth, "SUMMA N PARASTA");
+        val np = muodostaKoostettuTulos(fs, ds => summa(ds.sortWith(_ > _).take(n)))
+        log(logBuffer, depth, "SUMMA N PARASTA", np);
+        np
+      }
 
       case Osamaara(osoittaja, nimittaja, oid) => {
-        val (nimittajaArvo, nimittajaTila) = laske(nimittaja)
-        val (osoittajaArvo, osoittajaTila) = laske(osoittaja)
+        val (nimittajaArvo, nimittajaTila) = laske(nimittaja, depth + 1, logBuffer)
+        val (osoittajaArvo, osoittajaTila) = laske(osoittaja, depth + 1, logBuffer)
 
         val tulos = for {
           n <- nimittajaArvo
@@ -237,56 +305,89 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
           if (n == 0.0) throw new RuntimeException("Nimittäjä ei voi olla nolla")
           o / n
         }
-        LOG.debug("OSAMAARA {}", tulos)
+        log(logBuffer, depth, "OSAMAARA", tulos);
         (tulos, List(nimittajaTila, osoittajaTila))
       }
 
-      case Tulo(fs, oid) => { val tulo = muodostaKoostettuTulos(fs, ds => ds.reduceLeft(_ * _)); LOG.debug("TULO {}", tulo._1); tulo }
+      case Tulo(fs, oid) => {
+        log(logBuffer, depth, "TULO")
+        val tulo = muodostaKoostettuTulos(fs, ds => ds.reduceLeft(_ * _))
+        log(logBuffer, depth, "TULO", tulo)
+        tulo
+      }
 
-      case Keskiarvo(fs, oid) => { val kes = muodostaKoostettuTulos(fs, ds => summa(ds) / ds.size); LOG.debug("KESKIARVO {}", kes._1); kes }
+      case Keskiarvo(fs, oid) => {
+        log(logBuffer, depth, "KESKIARVO")
+        val kes = muodostaKoostettuTulos(fs, ds => summa(ds) / ds.size)
+        log(logBuffer, depth, "KESKIARVO", kes)
+        kes
+      }
 
       case KeskiarvoNParasta(n, fs, oid) => {
+        log(logBuffer, depth, "KESKIARVO N PARASTA")
         val kes = muodostaKoostettuTulos(fs, ds => {
           val kaytettavaN = scala.math.min(n, ds.size)
           summa(ds.sortWith(_ > _).take(kaytettavaN)) / kaytettavaN
         })
-        LOG.debug("KESKIARVO N PARASTA {}", kes._1)
+        log(logBuffer, depth, "KESKIARVO N PARASTA", kes)
         kes
       }
-      case Minimi(fs, oid) => { val m = muodostaKoostettuTulos(fs, ds => ds.min); LOG.debug("MINIMI {}", m._1); m }
+      case Minimi(fs, oid) => {
+        log(logBuffer, depth, "MINIMI")
+        val m = muodostaKoostettuTulos(fs, ds => ds.min)
+        log(logBuffer, depth, "MINIMI", m)
+        m
+      }
 
-      case Maksimi(fs, oid) => { val m = muodostaKoostettuTulos(fs, ds => ds.max); LOG.debug("MAKSIMI {}", m._1); m }
+      case Maksimi(fs, oid) => {
+        log(logBuffer, depth, "MAKSIMI")
+        val m = muodostaKoostettuTulos(fs, ds => ds.max)
+        log(logBuffer, depth, "MAKSIMI", m)
+        m
+      }
 
-      case NMinimi(ns, fs, oid) => { val nm = muodostaKoostettuTulos(fs, ds => ds.sortWith(_ < _)(scala.math.min(ns, ds.size) - 1)); LOG.debug("N MINIMI {}", nm._1); nm }
+      case NMinimi(ns, fs, oid) => {
+        log(logBuffer, depth, "N MINIMI")
+        val nm = muodostaKoostettuTulos(fs, ds => ds.sortWith(_ < _)(scala.math.min(ns, ds.size) - 1))
+        log(logBuffer, depth, "N MINIMI", nm)
+        nm
+      }
 
-      case NMaksimi(ns, fs, oid) => { val nm = muodostaKoostettuTulos(fs, ds => ds.sortWith(_ > _)(scala.math.min(ns, ds.size) - 1)); LOG.debug("N MAKSIMI {}", nm._1); nm }
+      case NMaksimi(ns, fs, oid) => {
+        log(logBuffer, depth, "N MAKSIMI")
+        val nm = muodostaKoostettuTulos(fs, ds => ds.sortWith(_ > _)(scala.math.min(ns, ds.size) - 1))
+        log(logBuffer, depth, "N MAKSIMI")
+        nm
+      }
 
       case Mediaani(fs, oid) => {
+        log(logBuffer, depth, "MEDIAANI")
         val med = muodostaKoostettuTulos(fs, ds => {
           val sorted = ds.sortWith(_ < _)
           if (sorted.size % 2 == 1) sorted(sorted.size / 2)
           else (sorted(sorted.size / 2) + (sorted(sorted.size / 2 - 1))) / 2.0
         })
-        LOG.debug("MEDIAANI {}", med._1)
+        log(logBuffer, depth, "MEDIAANI", med)
         med
       }
 
       case Jos(ehto, thenHaara, elseHaara, oid) => {
-        val laskettuEhto = laske(ehto)
-        val (thenTulos, thenTila) = laske(thenHaara)
-        val (elseTulos, elseTila) = laske(elseHaara)
+        log(logBuffer, depth, "JOS")
+        val laskettuEhto = laske(ehto, depth + 1, logBuffer)
+        val (thenTulos, thenTila) = laske(thenHaara, depth + 1, logBuffer)
+        val (elseTulos, elseTila) = laske(elseHaara, depth + 1, logBuffer)
 
         val j = ehdollinenTulos[Boolean, Double](laskettuEhto, (cond, tila) => {
           if (cond) (thenTulos, List(tila, thenTila)) else (elseTulos, List(tila, elseTila))
         })
-        LOG.debug("JOS {}", j._1)
+        log(logBuffer, depth, "JOS", j)
         j
       }
 
       case KonvertoiLukuarvo(konvertteri, f, oid) => {
-        val laskettuTulos = laske(f)
+        val laskettuTulos = laske(f, depth + 1, logBuffer)
         val konv = suoritaKonvertointi[Double, Double](oid, laskettuTulos, konvertteri)
-        LOG.debug("KONVERTOITULUKUARVO {}", konv._1)
+        log(logBuffer, depth, "KONVERTOITULUKUARVO", konv)
         konv
       }
 
@@ -324,7 +425,7 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
 
           }
         }
-        LOG.debug("HAE LUKUARVO {}", a._1)
+        log(logBuffer, depth, "HAE LUKUARVO", a)
         a
 
       }
@@ -344,10 +445,15 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
             (oletusarvo, List(tila))
           }
         }
-        LOG.debug("HAE MERKKIJONO JA KONVERTOI LUKUARVOKSI {}", a._1)
+        log(logBuffer, depth, "HAE MERKKIJONO JA KONVERTOI LUKUARVOKSI", a)
         a
       }
-      case NimettyLukuarvo(nimi, f, oid) => { val t = muodostaYksittainenTulos(f, d => d); LOG.debug("NIMETTY LUKUARVO {}", t._1); t }
+      case NimettyLukuarvo(nimi, f, oid) => {
+        log(logBuffer, depth, "NIMETTY LUKUARVO")
+        val t = muodostaYksittainenTulos(f, d => d)
+        log(logBuffer, depth, "NIMETTY LUKUARVO", t)
+        t
+      }
     }
 
     val palautettavaTila = tilat.filter(_ match {
@@ -357,7 +463,7 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
       case head :: tail => head
       case Nil => new Hyvaksyttavissatila
     }
-
+    LOG.debug("{}", logBuffer)
     (laskettuTulos, palautettavaTila)
   }
 }
