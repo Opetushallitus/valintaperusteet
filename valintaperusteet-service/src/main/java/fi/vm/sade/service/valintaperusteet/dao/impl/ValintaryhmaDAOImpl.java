@@ -37,8 +37,12 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long> 
         } else {
             eq = valintaryhma.ylavalintaryhma.oid.eq(id);
         }
-        return from(valintaryhma).leftJoin(valintaryhma.alavalintaryhmat).fetch()
-                .leftJoin(valintaryhma.hakukohdeViitteet).fetch().where(eq).distinct().list(valintaryhma);
+        return from(valintaryhma)
+                .leftJoin(valintaryhma.alavalintaryhmat).fetch()
+                .leftJoin(valintaryhma.hakukohdeViitteet).fetch()
+                .leftJoin(valintaryhma.hakukohdekoodit).fetch()
+                .leftJoin(valintaryhma.valintakoekoodit).fetch()
+                .where(eq).distinct().list(valintaryhma);
     }
 
     @Override
