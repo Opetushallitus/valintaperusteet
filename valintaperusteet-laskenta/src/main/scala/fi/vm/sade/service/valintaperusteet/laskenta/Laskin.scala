@@ -27,6 +27,7 @@ object Laskin {
     val logBuffer = new StringBuffer
     logBuffer.append("LASKENTA HAKEMUKSELLE ").append(hakemus.oid).append("\r\n")
     val (tulos, tila) = new Laskin(hakukohde, hakemus).laske(laskettava, 0, logBuffer)
+    LOG.debug("{}", logBuffer)
     new Laskentatulos[java.lang.Double](tila, if (!tulos.isEmpty) Double.box(tulos.get) else null)
   }
 
@@ -36,19 +37,24 @@ object Laskin {
     val logBuffer = new StringBuffer
     logBuffer.append("LASKENTA HAKEMUKSELLE ").append(hakemus.oid).append("\r\n")
     val (tulos, tila) = new Laskin(hakukohde, hakemus).laske(laskettava, 0, logBuffer)
+    LOG.debug("{}", logBuffer)
     new Laskentatulos[java.lang.Boolean](tila, if (!tulos.isEmpty) Boolean.box(tulos.get) else null)
   }
 
   def laske(hakukohde: String, hakemus: Hakemus, laskettava: Totuusarvofunktio): (Option[Boolean], Tila) = {
     val logBuffer = new StringBuffer
     logBuffer.append("LASKENTA HAKEMUKSELLE ").append(hakemus.oid).append("\r\n")
-    new Laskin(hakukohde, hakemus).laske(laskettava, 0, logBuffer)
+    val res = new Laskin(hakukohde, hakemus).laske(laskettava, 0, logBuffer)
+    LOG.debug("{}", logBuffer)
+    res
   }
 
   def laske(hakukohde: String, hakemus: Hakemus, laskettava: Lukuarvofunktio): (Option[Double], Tila) = {
     val logBuffer = new StringBuffer
     logBuffer.append("LASKENTA HAKEMUKSELLE ").append(hakemus.oid).append("\r\n")
-    new Laskin(hakukohde, hakemus).laske(laskettava, 0, logBuffer)
+    val res = new Laskin(hakukohde, hakemus).laske(laskettava, 0, logBuffer)
+    LOG.debug("{}", logBuffer)
+    res
   }
 
   private def log(b: StringBuffer, syvyys: Int, operaatio: String) = {
@@ -187,7 +193,7 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
         }
       }
       case NimettyTotuusarvo(nimi, f, oid) => {
-        log(logBuffer, depth, "NIMETTY TOTUUSARVO");
+        log(logBuffer, depth, "NIMETTY TOTUUSARVO ... nimi", nimi);
         val res = muodostaYksittainenTulos(f, b => b)
         log(logBuffer, depth, "NIMETTY TOTUUSARVO", res);
         res
@@ -245,7 +251,7 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
       case head :: tail => head
       case Nil => new Hyvaksyttavissatila
     }
-    LOG.debug("{}", logBuffer)
+    //LOG.debug("{}", logBuffer)
     (laskettuTulos, palautettavaTila)
   }
 
@@ -449,7 +455,7 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
         a
       }
       case NimettyLukuarvo(nimi, f, oid) => {
-        log(logBuffer, depth, "NIMETTY LUKUARVO")
+        log(logBuffer, depth, "NIMETTY LUKUARVO ... nimi", nimi)
         val t = muodostaYksittainenTulos(f, d => d)
         log(logBuffer, depth, "NIMETTY LUKUARVO", t)
         t
@@ -463,7 +469,7 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
       case head :: tail => head
       case Nil => new Hyvaksyttavissatila
     }
-    LOG.debug("{}", logBuffer)
+    //LOG.debug("{}", logBuffer)
     (laskettuTulos, palautettavaTila)
   }
 }
