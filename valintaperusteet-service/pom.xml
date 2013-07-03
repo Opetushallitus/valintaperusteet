@@ -6,13 +6,13 @@
     <parent>
         <groupId>fi.vm.sade.valintaperusteet</groupId>
         <artifactId>valintaperusteetbuild</artifactId>
-        <version>5.0.1</version>
+        <version>5.0.2</version>
         <relativePath>..</relativePath>
     </parent>
 
     <groupId>fi.vm.sade.valintaperusteet</groupId>
     <artifactId>valintaperusteet-service</artifactId>
-    <version>5.0.1</version>
+    <version>5.0.2</version>
     <name>Valintaperusteet :: Service</name>
     <packaging>war</packaging>
 
