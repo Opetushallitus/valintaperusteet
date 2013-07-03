@@ -25,36 +25,46 @@ object Laskin {
     hakemus: Hakemus,
     laskettava: Lukuarvofunktio): Laskentatulos[java.lang.Double] = {
     val logBuffer = new StringBuffer
-    logBuffer.append("LASKENTA HAKEMUKSELLE ").append(hakemus.oid).append("\r\n")
-    val (tulos, tila) = new Laskin(hakukohde, hakemus).laske(laskettava, 0, logBuffer)
-    LOG.debug("{}", logBuffer)
-    new Laskentatulos[java.lang.Double](tila, if (!tulos.isEmpty) Double.box(tulos.get) else null)
+    try {
+      logBuffer.append("LASKENTA HAKEMUKSELLE ").append(hakemus.oid).append("\r\n")
+      val (tulos, tila) = new Laskin(hakukohde, hakemus).laske(laskettava, 0, logBuffer)
+      new Laskentatulos[java.lang.Double](tila, if (!tulos.isEmpty) Double.box(tulos.get) else null)
+    } finally {
+      LOG.debug("{}", logBuffer)
+    }
   }
 
   def suoritaLasku(hakukohde: String,
     hakemus: Hakemus,
     laskettava: Totuusarvofunktio): Laskentatulos[java.lang.Boolean] = {
     val logBuffer = new StringBuffer
-    logBuffer.append("LASKENTA HAKEMUKSELLE ").append(hakemus.oid).append("\r\n")
-    val (tulos, tila) = new Laskin(hakukohde, hakemus).laske(laskettava, 0, logBuffer)
-    LOG.debug("{}", logBuffer)
-    new Laskentatulos[java.lang.Boolean](tila, if (!tulos.isEmpty) Boolean.box(tulos.get) else null)
+    try {
+      logBuffer.append("LASKENTA HAKEMUKSELLE ").append(hakemus.oid).append("\r\n")
+      val (tulos, tila) = new Laskin(hakukohde, hakemus).laske(laskettava, 0, logBuffer)
+      new Laskentatulos[java.lang.Boolean](tila, if (!tulos.isEmpty) Boolean.box(tulos.get) else null)
+    } finally { // logataan vaikka poikkeus lentäisi
+      LOG.debug("{}", logBuffer)
+    }
   }
 
   def laske(hakukohde: String, hakemus: Hakemus, laskettava: Totuusarvofunktio): (Option[Boolean], Tila) = {
     val logBuffer = new StringBuffer
-    logBuffer.append("LASKENTA HAKEMUKSELLE ").append(hakemus.oid).append("\r\n")
-    val res = new Laskin(hakukohde, hakemus).laske(laskettava, 0, logBuffer)
-    LOG.debug("{}", logBuffer)
-    res
+    try {
+      logBuffer.append("LASKENTA HAKEMUKSELLE ").append(hakemus.oid).append("\r\n")
+      new Laskin(hakukohde, hakemus).laske(laskettava, 0, logBuffer)
+    } finally {
+      LOG.debug("{}", logBuffer)
+    }
   }
 
   def laske(hakukohde: String, hakemus: Hakemus, laskettava: Lukuarvofunktio): (Option[Double], Tila) = {
     val logBuffer = new StringBuffer
-    logBuffer.append("LASKENTA HAKEMUKSELLE ").append(hakemus.oid).append("\r\n")
-    val res = new Laskin(hakukohde, hakemus).laske(laskettava, 0, logBuffer)
-    LOG.debug("{}", logBuffer)
-    res
+    try {
+      logBuffer.append("LASKENTA HAKEMUKSELLE ").append(hakemus.oid).append("\r\n")
+      new Laskin(hakukohde, hakemus).laske(laskettava, 0, logBuffer)
+    } finally {
+      LOG.debug("{}", logBuffer)
+    }
   }
 
   private def log(b: StringBuffer, syvyys: Int, operaatio: String) = {
@@ -391,6 +401,7 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
       }
 
       case KonvertoiLukuarvo(konvertteri, f, oid) => {
+        log(logBuffer, depth, "KONVERTOITULUKUARVO")
         val laskettuTulos = laske(f, depth + 1, logBuffer)
         val konv = suoritaKonvertointi[Double, Double](oid, laskettuTulos, konvertteri)
         log(logBuffer, depth, "KONVERTOITULUKUARVO", konv)
@@ -398,8 +409,9 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
       }
 
       case HaeLukuarvo(konvertteri, oletusarvo, valintaperusteviite, oid) => {
-        val valintaperuste = hakemus.kentat.get(valintaperusteviite.tunniste)
 
+        val valintaperuste = hakemus.kentat.get(valintaperusteviite.tunniste)
+        log(logBuffer, depth, "HAE LUKUARVO ... tunniste ja valintaperuste", (valintaperusteviite.tunniste, valintaperuste))
         val arvoOption = valintaperuste.map(arvo => {
           try {
             arvo.toDouble
