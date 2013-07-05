@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
+import com.mysema.query.NonUniqueResultException;
 import fi.vm.sade.service.valintaperusteet.dao.OpetuskielikoodiDAO;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.*;
@@ -87,7 +88,11 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
             opetuskieli.setNimiSv(k.nimi);
             opetuskieli.setNimiEn(k.nimi);
 
-            opetuskielikoodiDAO.insert(opetuskieli);
+            try {
+                opetuskielikoodiDAO.readByUri(k.kieliUri);
+            } catch (NonUniqueResultException e) {
+                opetuskielikoodiDAO.insert(opetuskieli);
+            }
         }
 
 

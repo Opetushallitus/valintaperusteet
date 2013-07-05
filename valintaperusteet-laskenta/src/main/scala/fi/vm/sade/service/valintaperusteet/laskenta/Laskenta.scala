@@ -34,7 +34,7 @@ object Laskenta {
 
   case class Lukuarvovalikonvertteri(konversioMap: Seq[Lukuarvovalikonversio]) extends Konvertteri[Double, Double] {
     def konvertoi(funktiokutsuOid: String, arvo: Double): (Double, Tila) = {
-      konversioMap.filter(konv => arvo >= konv.min && arvo < konv.max) match {
+      konversioMap.sortWith(_.min < _.min).filter(konv => arvo >= konv.min && arvo <= konv.max) match {
         case Nil => throw new RuntimeException("Arvo " + arvo + " ei täsmää yhteenkään konvertterille " +
           "määritettyyn arvoväliin, funktiokutsu OID: " + funktiokutsuOid)
         case head :: tail => {
@@ -69,7 +69,7 @@ object Laskenta {
   case class Arvokonversio[S, T](arvo: S, paluuarvo: T, hylkaysperuste: Boolean) extends Konversio
 
   case class Lukuarvovalikonversio(min: Double, max: Double, paluuarvo: Double,
-                                   palautaHaettuArvo: Boolean, hylkaysperuste: Boolean) extends Konversio
+    palautaHaettuArvo: Boolean, hylkaysperuste: Boolean) extends Konversio
 
   case class KonvertoiLukuarvo(konvertteri: Konvertteri[Double, Double], f: Lukuarvofunktio, oid: String = "")
     extends KonvertoivaFunktio[Double, Double] with Lukuarvofunktio with YksiParametrinenFunktio[Double]
@@ -194,25 +194,25 @@ object Laskenta {
   abstract case class HaeArvo[T](oletusarvo: Option[T], valintaperusteviite: Valintaperusteviite) extends Funktio[T]
 
   case class HaeMerkkijonoJaKonvertoiLukuarvoksi(konvertteri: Konvertteri[String, Double],
-                                                 override val oletusarvo: Option[Double],
-                                                 override val valintaperusteviite: Valintaperusteviite,
-                                                 oid: String = "")
+    override val oletusarvo: Option[Double],
+    override val valintaperusteviite: Valintaperusteviite,
+    oid: String = "")
     extends HaeArvo[Double](oletusarvo, valintaperusteviite) with Lukuarvofunktio with NollaParametrinenFunktio[Double]
 
   case class HaeMerkkijonoJaKonvertoiTotuusarvoksi(konvertteri: Konvertteri[String, Boolean],
-                                                   override val oletusarvo: Option[Boolean],
-                                                   override val valintaperusteviite: Valintaperusteviite,
-                                                   oid: String = "")
+    override val oletusarvo: Option[Boolean],
+    override val valintaperusteviite: Valintaperusteviite,
+    oid: String = "")
     extends HaeArvo[Boolean](oletusarvo, valintaperusteviite) with Totuusarvofunktio with NollaParametrinenFunktio[Boolean]
 
   case class HaeTotuusarvo(konvertteri: Option[Konvertteri[Boolean, Boolean]],
-                           override val oletusarvo: Option[Boolean],
-                           override val valintaperusteviite: Valintaperusteviite, oid: String = "")
+    override val oletusarvo: Option[Boolean],
+    override val valintaperusteviite: Valintaperusteviite, oid: String = "")
     extends HaeArvo[Boolean](oletusarvo, valintaperusteviite) with Totuusarvofunktio with NollaParametrinenFunktio[Boolean]
 
   case class HaeLukuarvo(konvertteri: Option[Konvertteri[Double, Double]],
-                         override val oletusarvo: Option[Double],
-                         override val valintaperusteviite: Valintaperusteviite, oid: String = "")
+    override val oletusarvo: Option[Double],
+    override val valintaperusteviite: Valintaperusteviite, oid: String = "")
     extends HaeArvo[Double](oletusarvo, valintaperusteviite) with Lukuarvofunktio with NollaParametrinenFunktio[Double]
 
   // Boolean-funktiot

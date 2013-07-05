@@ -13,8 +13,8 @@ import java.util.Map;
  */
 public abstract class Aineet {
 
-    public static final String aidinkieliJaKirjallisuus1 = "AI_1";
-    public static final String aidinkieliJaKirjallisuus2 = "AI_2";
+    public static final String aidinkieliJaKirjallisuus1 = "AI";
+    public static final String aidinkieliJaKirjallisuus2 = "AI2";
 
     public static final String historia = "HI";
     public static final String yhteiskuntaoppi = "YH";
@@ -30,27 +30,27 @@ public abstract class Aineet {
     public static final String uskonto = "KT";
 
     // A1-kieliä voi olla kolme
-    public static final String a11Kieli = "A1_1";
-    public static final String a12Kieli = "A1_2";
-    public static final String a13Kieli = "A1_3";
+    public static final String a11Kieli = "A1";
+    public static final String a12Kieli = "A12";
+    public static final String a13Kieli = "A13";
 
     // A2-kieliä voi olla kolme
-    public static final String a21Kieli = "A2_1";
-    public static final String a22Kieli = "A2_2";
-    public static final String a23Kieli = "A2_3";
+    public static final String a21Kieli = "A2";
+    public static final String a22Kieli = "A22";
+    public static final String a23Kieli = "A23";
 
     // B1-kieliä voi olla yksi
-    public static final String b1Kieli = "B1_1";
+    public static final String b1Kieli = "B1";
 
     // B2-kieliä voi olla kolme
-    public static final String b21Kieli = "B2_1";
-    public static final String b22Kieli = "B2_2";
-    public static final String b23Kieli = "B2_3";
+    public static final String b21Kieli = "B2";
+    public static final String b22Kieli = "B22";
+    public static final String b23Kieli = "B23";
 
     // B3-kieliä voi olla kolme
-    public static final String b31Kieli = "B3_1";
-    public static final String b32Kieli = "B3_2";
-    public static final String b33Kieli = "B3_3";
+    public static final String b31Kieli = "B3";
+    public static final String b32Kieli = "B32";
+    public static final String b33Kieli = "B33";
 
     private enum Aine {
         AI_1(aidinkieliJaKirjallisuus1, "1. Äidinkieli ja kirjallisuus"),

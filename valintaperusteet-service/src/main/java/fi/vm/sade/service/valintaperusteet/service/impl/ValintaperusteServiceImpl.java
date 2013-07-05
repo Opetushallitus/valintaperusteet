@@ -12,6 +12,8 @@ import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakuparametritOnTyhjaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheJarjestyslukuOutOfBoundsException;
 import fi.vm.sade.service.valintaperusteet.service.impl.util.ValintaperusteServiceUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,6 +33,8 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPD
 @Service
 //@PreAuthorize("isAuthenticated()")
 public class ValintaperusteServiceImpl implements ValintaperusteService {
+
+    private static final Logger logger = LoggerFactory.getLogger(ValintaperusteServiceImpl.class);
 
     @Autowired
     private HakukohdeService hakukohdeService;
@@ -243,6 +247,10 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
     @Override
     @Secured({CRUD})
     public void tuoHakukohde(@WebParam(name = "hakukohde", targetNamespace = "") HakukohdeImportTyyppi hakukohde) throws GenericFault {
-        hakukohdeImportService.tuoHakukohde(hakukohde);
+        try {
+            hakukohdeImportService.tuoHakukohde(hakukohde);
+        } catch (Exception e) {
+            logger.error("Hakukohteen tuominen epäonnistui.", e);
+        }
     }
 }
