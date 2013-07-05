@@ -24,6 +24,7 @@ object Laskin {
   def suoritaLasku(hakukohde: String,
     hakemus: Hakemus,
     laskettava: Lukuarvofunktio): Laskentatulos[java.lang.Double] = {
+    LOG.debug("Hakemuksen {} avaimet {}", Array[Object](hakemus.oid, hakemus.kentat))
     val logBuffer = new StringBuffer
     try {
       logBuffer.append("LASKENTA HAKEMUKSELLE ").append(hakemus.oid).append("\r\n")
@@ -37,6 +38,7 @@ object Laskin {
   def suoritaLasku(hakukohde: String,
     hakemus: Hakemus,
     laskettava: Totuusarvofunktio): Laskentatulos[java.lang.Boolean] = {
+    LOG.debug("Hakemuksen {} avaimet {}", Array[Object](hakemus.oid, hakemus.kentat))
     val logBuffer = new StringBuffer
     try {
       logBuffer.append("LASKENTA HAKEMUKSELLE ").append(hakemus.oid).append("\r\n")
@@ -48,6 +50,7 @@ object Laskin {
   }
 
   def laske(hakukohde: String, hakemus: Hakemus, laskettava: Totuusarvofunktio): (Option[Boolean], Tila) = {
+    LOG.debug("Hakemuksen {} avaimet {}", Array[Object](hakemus.oid, hakemus.kentat))
     val logBuffer = new StringBuffer
     try {
       logBuffer.append("LASKENTA HAKEMUKSELLE ").append(hakemus.oid).append("\r\n")
@@ -58,6 +61,7 @@ object Laskin {
   }
 
   def laske(hakukohde: String, hakemus: Hakemus, laskettava: Lukuarvofunktio): (Option[Double], Tila) = {
+    LOG.debug("Hakemuksen {} avaimet {}", Array[Object](hakemus.oid, hakemus.kentat))
     val logBuffer = new StringBuffer
     try {
       logBuffer.append("LASKENTA HAKEMUKSELLE ").append(hakemus.oid).append("\r\n")
