@@ -251,7 +251,7 @@ public class ValintaryhmaResourceTest {
     @Test
     public void testPaivitaValintaryhmanValintakoekoodit() throws IOException {
         final String[] koeUrit = new String[]{"uusivalintakoekoodi", "uusivalintakoekoodi",
-                "valintakoeuri1", "valintakoeuri2"};
+                "valintakoeuri1", "valintakoeuri1", "valintakoeuri2"};
         final String valintaryhmaOid = "oid52";
 
         List<Valintakoekoodi> kokeet = new ArrayList<Valintakoekoodi>();
@@ -263,6 +263,13 @@ public class ValintaryhmaResourceTest {
             kokeet.add(mapper.readValue(json, Valintakoekoodi.class));
         }
 
-        valintaryhmaResource.updateValintakoekoodi(valintaryhmaOid, kokeet);
+        valintaryhmaResource.updateValintakoekoodi(valintaryhmaOid, kokeet).getEntity();
+
+        Valintaryhma paivitetty =
+                mapper.readValue(mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(
+                        valintaryhmaResource.queryFull(valintaryhmaOid)), Valintaryhma.class);
+
+
+        assertEquals(koeUrit.length, paivitetty.getValintakoekoodit().size());
     }
 }

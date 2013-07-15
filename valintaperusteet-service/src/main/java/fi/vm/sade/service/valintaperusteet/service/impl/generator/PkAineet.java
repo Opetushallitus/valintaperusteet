@@ -46,15 +46,27 @@ public class PkAineet extends Aineet {
         }
     }
 
+    public static String pakollinen(String ainetunniste) {
+        return PK_etuliite + ainetunniste;
+    }
+
+    public static String valinnainen1(String ainetunniste) {
+        return PK_etuliite + ainetunniste + PK_Valinnainen1;
+    }
+
+    public static String valinnainen2(String ainetunniste) {
+        return PK_etuliite + ainetunniste + PK_Valinnainen2;
+    }
+
     private Laskentakaava luoPKAine(String ainetunniste, String kuvaus) {
         Funktiokutsu aine = GenericHelper.luoHaeLukuarvo(
-                GenericHelper.luoValintaperusteViite(PK_etuliite + ainetunniste, false, false,
+                GenericHelper.luoValintaperusteViite(pakollinen(ainetunniste), false, false,
                         Valintaperustelahde.HAETTAVA_ARVO));
         Funktiokutsu aineValinnainen1 = GenericHelper.luoHaeLukuarvo(
-                GenericHelper.luoValintaperusteViite(PK_etuliite + ainetunniste + PK_Valinnainen1,
+                GenericHelper.luoValintaperusteViite(valinnainen1(ainetunniste),
                         false, false, Valintaperustelahde.HAETTAVA_ARVO));
         Funktiokutsu aineValinnainen2 = GenericHelper.luoHaeLukuarvo(
-                GenericHelper.luoValintaperusteViite(PK_etuliite + ainetunniste + PK_Valinnainen2,
+                GenericHelper.luoValintaperusteViite(valinnainen2(ainetunniste),
                         false, false, Valintaperustelahde.HAETTAVA_ARVO));
 
         Funktiokutsu valinnainenKeskiarvo = GenericHelper.luoKeskiarvo(aineValinnainen1, aineValinnainen2);

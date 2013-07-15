@@ -44,9 +44,13 @@ public class YoAineet extends Aineet {
         }
     }
 
+    public static String pakollinen(String ainetunniste) {
+        return LK_ETULIITE + ainetunniste;
+    }
+
     public Laskentakaava luoYOAine(String ainetunniste, String ainekuvaus) {
         Funktiokutsu aine = GenericHelper.luoHaeLukuarvo(
-                GenericHelper.luoValintaperusteViite(LK_ETULIITE + ainetunniste, false, false,
+                GenericHelper.luoValintaperusteViite(pakollinen(ainetunniste), false, false,
                         Valintaperustelahde.HAETTAVA_ARVO));
 
         Laskentakaava laskentakaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(aine, ainekuvaus + LK_KUVAUSJALKILIITE);

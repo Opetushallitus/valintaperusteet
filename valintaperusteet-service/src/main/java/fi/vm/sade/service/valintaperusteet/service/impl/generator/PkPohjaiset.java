@@ -10,7 +10,6 @@ import java.util.List;
  * User: kkammone
  * Date: 4.3.2013
  * Time: 14:26
- * To change this template use File | Settings | File Templates.
  */
 public class PkPohjaiset {
 
@@ -72,13 +71,13 @@ public class PkPohjaiset {
         }
 
         Funktiokutsu pohjakoulutusOnPeruskoulutus = GenericHelper.luoHaeMerkkijonoJaKonvertoiTotuusarvoksi(
-                GenericHelper.luoValintaperusteViite(pohjakoulutusAvain, true, false, Valintaperustelahde.HAETTAVA_ARVO)
-                , konvs);
+                GenericHelper.luoValintaperusteViite(pohjakoulutusAvain, false, false, Valintaperustelahde.HAETTAVA_ARVO),
+                false, konvs);
         // <---
 
         // Todistuksen saantivuosi -->
         Funktiokutsu haeTodistuksenSaantivuosi = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(
-                todistuksenSaantivuosi, true, false, Valintaperustelahde.HAETTAVA_ARVO));
+                todistuksenSaantivuosi, false, false, Valintaperustelahde.HAETTAVA_ARVO), -1);
 
         Funktiokutsu todistuksenSaantivuosiOnSamaKuinKuluvavuosi = GenericHelper.luoYhtasuuri(
                 GenericHelper.luoLukuarvo(kuluvaVuosi), haeTodistuksenSaantivuosi);

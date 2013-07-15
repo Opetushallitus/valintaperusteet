@@ -13,7 +13,7 @@ public class PkJaYoPohjaiset {
     public static final String tyokokemuskuukaudet = "TYOKOKEMUSKUUKAUDET";
     public static final String sukupuoli = "SUKUPUOLI";
 
-    public static Laskentakaava luoHakutoivejarjestyspisteteytysmalli() {
+    public static Laskentakaava luoHakutoivejarjestyspisteytysmalli() {
         Funktiokutsu pisteet = GenericHelper.luoLukuarvo(2.0);
         Funktiokutsu nollaarvo = GenericHelper.luoLukuarvo(0.0);
         Funktiokutsu ensimmainenHakutoive = GenericHelper.luoEnsimmainenHakutoive();

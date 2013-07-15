@@ -36,7 +36,7 @@ object Esiprosessori {
     prosessoitava match {
       case f: Esiprosessoiva => {
         val samatArvotLkm: Int = hakemukset.filter(h => {
-           h.onkoHakutoivePrioriteetilla(hakukohde, 1) && h.kentat.get(f.tunniste) == prosessoituHakemus.kentat.get(f.tunniste)
+          h.onkoHakutoivePrioriteetilla(hakukohde, 1) && h.kentat.get(f.tunniste) == prosessoituHakemus.kentat.get(f.tunniste)
         }).size
 
         val vertailuarvo = samatArvotLkm.toDouble / hakemukset.size()
@@ -49,7 +49,7 @@ object Esiprosessori {
           prosessoituHakemus.kentat + (avain -> arvo.toString))
       }
 
-      case _ => kasiteltavaHakemus
+      case _ => prosessoituHakemus
     }
   }
 }
