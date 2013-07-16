@@ -4,6 +4,7 @@ import fi.vm.sade.service.valintaperusteet.model._
 import collection.JavaConversions._
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus
 import java.util.TreeSet
+import java.math.BigDecimal
 
 /**
  * User: kwuoti
@@ -72,7 +73,7 @@ object LaskentaTestUtil {
   }
 
   object Arvovalikonvertteriparametri {
-    def apply(paluuarvo: String = "", min: Double, max: Double, palautaHaettuArvo: java.lang.Boolean = false, hylkaysperuste: java.lang.Boolean) = {
+    def apply(paluuarvo: String = "", min: BigDecimal, max: BigDecimal, palautaHaettuArvo: java.lang.Boolean = false, hylkaysperuste: java.lang.Boolean) = {
       val konv = new Arvovalikonvertteriparametri
       konv.setMaxValue(max)
       konv.setMinValue(min)

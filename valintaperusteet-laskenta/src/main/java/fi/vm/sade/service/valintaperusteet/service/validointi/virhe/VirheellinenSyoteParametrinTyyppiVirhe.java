@@ -1,12 +1,11 @@
 package fi.vm.sade.service.valintaperusteet.service.validointi.virhe;
 
-import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import org.codehaus.jackson.map.annotate.JsonView;
 
+import fi.vm.sade.service.valintaperusteet.model.JsonViews;
+
 /**
- * User: kwuoti
- * Date: 30.1.2013
- * Time: 13.16
+ * User: kwuoti Date: 30.1.2013 Time: 13.16
  */
 public class VirheellinenSyoteParametrinTyyppiVirhe extends Validointivirhe {
 
@@ -21,7 +20,6 @@ public class VirheellinenSyoteParametrinTyyppiVirhe extends Validointivirhe {
 
     @JsonView(JsonViews.Basic.class)
     private String vaadittuTyyppi;
-
 
     public String getSyoteParametrinAvain() {
         return syoteParametrinAvain;

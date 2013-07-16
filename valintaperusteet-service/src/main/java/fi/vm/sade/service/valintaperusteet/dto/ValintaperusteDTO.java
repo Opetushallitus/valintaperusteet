@@ -1,41 +1,40 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
+import java.util.List;
+
+import org.codehaus.jackson.map.annotate.JsonView;
+
 import fi.vm.sade.service.valintaperusteet.model.Funktiotyyppi;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.model.Valintaperustelahde;
-import org.codehaus.jackson.map.annotate.JsonView;
-
-import java.util.List;
 
 /**
- * User: wuoti
- * Date: 28.5.2013
- * Time: 14.52
+ * User: wuoti Date: 28.5.2013 Time: 14.52
  */
 public class ValintaperusteDTO {
 
-    @JsonView({JsonViews.Basic.class})
+    @JsonView({ JsonViews.Basic.class })
     private String tunniste;
 
-    @JsonView({JsonViews.Basic.class})
+    @JsonView({ JsonViews.Basic.class })
     private String kuvaus;
 
-    @JsonView({JsonViews.Basic.class})
+    @JsonView({ JsonViews.Basic.class })
     private Funktiotyyppi funktiotyyppi;
 
-    @JsonView({JsonViews.Basic.class})
+    @JsonView({ JsonViews.Basic.class })
     private Valintaperustelahde lahde;
 
-    @JsonView({JsonViews.Basic.class})
+    @JsonView({ JsonViews.Basic.class })
     private boolean onPakollinen;
 
-    @JsonView({JsonViews.Basic.class})
-    private Double min;
+    @JsonView({ JsonViews.Basic.class })
+    private String min;
 
-    @JsonView({JsonViews.Basic.class})
-    private Double max;
+    @JsonView({ JsonViews.Basic.class })
+    private String max;
 
-    @JsonView({JsonViews.Basic.class})
+    @JsonView({ JsonViews.Basic.class })
     private List<String> arvot;
 
     public String getTunniste() {
@@ -78,19 +77,19 @@ public class ValintaperusteDTO {
         this.onPakollinen = onPakollinen;
     }
 
-    public Double getMin() {
+    public String getMin() {
         return min;
     }
 
-    public void setMin(Double min) {
+    public void setMin(String min) {
         this.min = min;
     }
 
-    public Double getMax() {
+    public String getMax() {
         return max;
     }
 
-    public void setMax(Double max) {
+    public void setMax(String max) {
         this.max = max;
     }
 

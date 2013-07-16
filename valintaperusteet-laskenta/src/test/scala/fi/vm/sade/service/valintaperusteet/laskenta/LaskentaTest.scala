@@ -1,5 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.laskenta
 
+import java.math.BigDecimal
+import math.BigDecimal._
+
 import api.Hakemus
 import org.scalatest._
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta._
@@ -15,76 +18,77 @@ import fi.vm.sade.kaava.LaskentaTestUtil.Hakemus
 class LaskentaTest extends FunSuite {
 
   val hakukohde = "123"
-  val tyhjaHakemus = Hakemus("",Nil, Map[String, String]())
+  val tyhjaHakemus = Hakemus("", Nil, Map[String, String]())
 
   test("Lukuarvo function returns its value") {
-    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, Lukuarvo(5.0))
-    assert(tulos.get == 5.0)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, Lukuarvo(new BigDecimal("5.0")))
+    assert(tulos.get.equals(new BigDecimal("5.0")))
   }
 
   test("Summa function sums two function values") {
-    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, Summa(Lukuarvo(5.0), Lukuarvo(6.0)))
-    assert(tulos.get == 11.0)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, Summa(Lukuarvo(new BigDecimal("5.0")), Lukuarvo(new BigDecimal("6.0"))))
+    assert(tulos.get.equals(new BigDecimal("11.0")))
   }
 
   test("KonvertoiLukuarvolukuarvoksi") {
-    val arvokonvertteri = Arvokonvertteri[Double, Double](List(Arvokonversio(1.0, 10.0, false),
-      Arvokonversio(2.0, 20.0, false), Arvokonversio(3.0, 30.0, false)))
-    val konvertoiLukuarvoLukuarvoksi = KonvertoiLukuarvo(arvokonvertteri, Lukuarvo(2.0))
+    val arvokonvertteri = Arvokonvertteri[BigDecimal, BigDecimal](List(Arvokonversio(BigDecimal.ONE, BigDecimal.TEN, false),
+      Arvokonversio(new BigDecimal("2.0"), new BigDecimal("20.0"), false), Arvokonversio(new BigDecimal("3.0"), new BigDecimal("30.0"), false)))
+    val konvertoiLukuarvoLukuarvoksi = KonvertoiLukuarvo(arvokonvertteri, Lukuarvo(new BigDecimal("2.0")))
 
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, konvertoiLukuarvoLukuarvoksi)
-    assert(tulos.get == 20.0)
+    assert(tulos.get.equals(new BigDecimal("20.0")))
   }
 
   test("KonvertoiLukuarvovaliLukuarvoksi") {
-    val konv = Lukuarvovalikonvertteri(List(Lukuarvovalikonversio(0.0, 10.0, 1.0, false, false),
-      Lukuarvovalikonversio(10.0, 20.0, 2.0, false, false), Lukuarvovalikonversio(20.0, 30.0, 3.0, false, false)))
-    val l = KonvertoiLukuarvo(konv, Lukuarvo(15.0))
+    val konv = Lukuarvovalikonvertteri(List(Lukuarvovalikonversio(BigDecimal.ONE, BigDecimal.TEN, BigDecimal.ONE, false, false),
+      Lukuarvovalikonversio(BigDecimal.TEN, new BigDecimal("20.0"), new BigDecimal("2.0"), false, false),
+      Lukuarvovalikonversio(new BigDecimal("20.0"), new BigDecimal("30.0"), new BigDecimal("3.0"), false, false)))
+    val l = KonvertoiLukuarvo(konv, Lukuarvo(new BigDecimal("15.0")))
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, l)
-    assert(tulos.get == 2.0)
+    assert(tulos.get.equals(new BigDecimal("2.0")))
   }
 
   test("SummaNParasta selects the n greatest values and calculates their sum") {
-    val luvut = List(Lukuarvo(5.0), Lukuarvo(6.0), Lukuarvo(2.0), Lukuarvo(1.0))
+    val luvut = List(Lukuarvo(new BigDecimal("5.0")), Lukuarvo(new BigDecimal("6.0")), Lukuarvo(new BigDecimal("2.0")), Lukuarvo(new BigDecimal("1.0")))
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, SummaNParasta(3, luvut: _*))
-    assert(tulos.get == 13.0)
+    assert(tulos.get.equals(new BigDecimal("13.0")))
   }
 
   test("NMinimi returns the nth lowest value") {
-    val luvut = List(Lukuarvo(5.0), Lukuarvo(6.0), Lukuarvo(2.0), Lukuarvo(1.0))
+    val luvut = List(Lukuarvo(new BigDecimal("5.0")), Lukuarvo(new BigDecimal("6.0")), Lukuarvo(new BigDecimal("2.0")), Lukuarvo(new BigDecimal("1.0")))
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, NMinimi(2, luvut: _*))
-    assert(tulos.get == 2.0)
+    assert(tulos.get.equals(new BigDecimal("2.0")))
   }
 
   test("NMaksimi returns the nth greatest value") {
-    val luvut = List(Lukuarvo(5.0), Lukuarvo(6.0), Lukuarvo(2.0), Lukuarvo(1.0))
+    val luvut = List(Lukuarvo(new BigDecimal("5.0")), Lukuarvo(new BigDecimal("6.0")), Lukuarvo(new BigDecimal("2.0")), Lukuarvo(new BigDecimal("1.0")))
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, NMaksimi(2, luvut: _*))
-    assert(tulos.get == 5.0)
+    assert(tulos.get.equals(new BigDecimal("5.0")))
   }
 
   test("Mediaani returns the middle value of a sequence") {
 
-    val luvut = List(Lukuarvo(5.0), Lukuarvo(6.0), Lukuarvo(2.0), Lukuarvo(1.0))
+    val luvut = List(Lukuarvo(new BigDecimal("5.0")), Lukuarvo(new BigDecimal("6.0")), Lukuarvo(new BigDecimal("2.0")), Lukuarvo(new BigDecimal("1.0")))
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, Mediaani(luvut))
     // Parillisesta listasta lasketaan keskimmäisten lukujen keskiarvo
-    assert(tulos.get == 3.5)
+    assert(tulos.get.equals(new BigDecimal("3.5")))
 
-    val luvut2 = Lukuarvo(10.0) :: luvut
+    val luvut2 = Lukuarvo(new BigDecimal("10.0")) :: luvut
     // Parittomasta listasta palautetaan keskimmäinen luku
 
     val (tulos2, tila2) = Laskin.laske(hakukohde, tyhjaHakemus, Mediaani(luvut2))
-    assert(tulos2.get == 5.0)
+    assert(tulos2.get.equals(new BigDecimal("5.0")))
   }
 
   test("Jos") {
-    val ehto = Suurempi(Lukuarvo(5.0), Lukuarvo(10.0))
-    val ifHaara = Lukuarvo(100.0)
-    val elseHaara = Lukuarvo(500.0)
+    val ehto = Suurempi(Lukuarvo(new BigDecimal("5.0")), Lukuarvo(new BigDecimal("10.0")))
+    val ifHaara = Lukuarvo(new BigDecimal("100.0"))
+    val elseHaara = Lukuarvo(new BigDecimal("500.0"))
 
     val ifLause = Jos(ehto, ifHaara, elseHaara)
 
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, ifLause)
-    assert(tulos.get == 500.0)
+    assert(tulos.get.equals(new BigDecimal("500.0")))
 
   }
 
@@ -99,15 +103,15 @@ class LaskentaTest extends FunSuite {
   }
 
   test("HaeLukuarvo") {
-    val hakemus = Hakemus("",Nil, Map("paattotodistus_ka" -> "8.7"))
+    val hakemus = Hakemus("", Nil, Map("paattotodistus_ka" -> "8.7"))
 
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus,
       HaeLukuarvo(None, None, Valintaperusteviite("paattotodistus_ka", false)))
-    assert(tulos.get == 8.7)
+    assert(tulos.get.compareTo(new BigDecimal("8.7")) == 0)
   }
 
   test("HaeTotuusarvo") {
-    val hakemus = Hakemus("",Nil, Map("onYlioppilas" -> "true"))
+    val hakemus = Hakemus("", Nil, Map("onYlioppilas" -> "true"))
 
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus,
       HaeTotuusarvo(None, None, Valintaperusteviite("onYlioppilas", false)))
@@ -115,13 +119,13 @@ class LaskentaTest extends FunSuite {
   }
 
   test("HaeMerkkijonoJaKonvertoiLukuarvoksi") {
-    val hakemus = Hakemus("",Nil, Map("AI_yo" -> "L"))
+    val hakemus = Hakemus("", Nil, Map("AI_yo" -> "L"))
 
-    val konv = Arvokonvertteri[String, Double](List(Arvokonversio("puuppa", 20.0, false),
-      Arvokonversio("L", 10.0, false)))
+    val konv = Arvokonvertteri[String, BigDecimal](List(Arvokonversio("puuppa", new BigDecimal("20.0"), false),
+      Arvokonversio("L", new BigDecimal("10.0"), false)))
     val f = HaeMerkkijonoJaKonvertoiLukuarvoksi(konv, None, Valintaperusteviite("AI_yo", false))
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, f)
-    assert(tulos.get == 10.0)
+    assert(tulos.get.equals(new BigDecimal("10.0")))
   }
 
   test("Demografia") {
@@ -137,12 +141,11 @@ class LaskentaTest extends FunSuite {
         Map("sukupuoli" -> "mies")),
       Hakemus("hakemusoid4",
         List("hakutoiveoid1", "hakutoiveoid2", "hakutoiveoid3"),
-        Map("sukupuoli" -> "nainen"))
-    )
+        Map("sukupuoli" -> "nainen")))
 
     val hakukohde = "hakutoiveoid1"
 
-    val funktio = Demografia("funktioid1", "sukupuoli", 33.0)
+    val funktio = Demografia("funktioid1", "sukupuoli", new BigDecimal("33.0"))
     val prosessoidutHakemukset = hakemukset.map(h => Esiprosessori.esiprosessoi(hakukohde, seqAsJavaList(hakemukset), h, funktio))
 
     def check(hakemus: Hakemus) = {

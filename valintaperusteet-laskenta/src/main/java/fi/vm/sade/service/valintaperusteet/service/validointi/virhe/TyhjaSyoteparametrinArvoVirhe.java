@@ -1,14 +1,13 @@
 package fi.vm.sade.service.valintaperusteet.service.validointi.virhe;
 
-import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import org.codehaus.jackson.map.annotate.JsonView;
 
+import fi.vm.sade.service.valintaperusteet.model.JsonViews;
+
 /**
- * User: kwuoti
- * Date: 8.2.2013
- * Time: 16.33
+ * User: kwuoti Date: 8.2.2013 Time: 16.33
  */
-public class TyhjaSyoteparametrinArvoVirhe extends  Validointivirhe {
+public class TyhjaSyoteparametrinArvoVirhe extends Validointivirhe {
 
     @JsonView(JsonViews.Basic.class)
     private String avain;

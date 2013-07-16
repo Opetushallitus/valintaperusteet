@@ -1,3 +1,5 @@
 package fi.vm.sade.service.valintaperusteet.laskenta
 
-trait Lukuarvofunktio extends Funktio[Double]
+import java.math.BigDecimal
+
+trait Lukuarvofunktio extends Funktio[BigDecimal]

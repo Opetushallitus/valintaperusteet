@@ -1,5 +1,17 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import fi.vm.sade.generic.dao.GenericDAO;
 import fi.vm.sade.kaava.Laskentakaavavalidaattori;
 import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
@@ -7,17 +19,20 @@ import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.dao.LaskentakaavaDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
-import fi.vm.sade.service.valintaperusteet.model.*;
+import fi.vm.sade.service.valintaperusteet.model.Arvokonvertteriparametri;
+import fi.vm.sade.service.valintaperusteet.model.Arvovalikonvertteriparametri;
+import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti;
+import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
+import fi.vm.sade.service.valintaperusteet.model.Funktiotyyppi;
+import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
+import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
+import fi.vm.sade.service.valintaperusteet.model.Syoteparametri;
+import fi.vm.sade.service.valintaperusteet.model.ValintaperusteViite;
+import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
 import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaEiValidiException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.*;
-import java.util.logging.Logger;
 
 /**
  * User: kwuoti Date: 21.1.2013 Time: 9.34
@@ -94,7 +109,6 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     @Override
     public Laskentakaava update(String oid, Laskentakaava incoming) {
         asetaNullitOletusarvoiksi(incoming.getFunktiokutsu());
-
 
         if (incoming.getId() == null) {
             return insert(incoming);
@@ -238,7 +252,6 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             genericDAO.remove(managed.getValintaperuste());
         }
 
-
         if (managed.getId() == null) {
             funktiokutsuDAO.insert(managed);
         }
@@ -252,7 +265,8 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
 
         if (laskentakaava.getId() != null) {
             return update(laskentakaava.getId().toString(), laskentakaava);
-        } else if (!laskentakaava.getOnLuonnos() && !Laskentakaavavalidaattori.onkoMallinnettuKaavaValidi(laskentakaava)) {
+        } else if (!laskentakaava.getOnLuonnos()
+                && !Laskentakaavavalidaattori.onkoMallinnettuKaavaValidi(laskentakaava)) {
             throw new LaskentakaavaEiValidiException("Laskentakaava ei ole validi",
                     Laskentakaavavalidaattori.validoiMallinnettuKaava(laskentakaava));
         }
@@ -295,7 +309,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     }
 
     private void haeValintaperusteetRekursiivisesti(Funktiokutsu funktiokutsu,
-                                                    Map<String, ValintaperusteDTO> valintaperusteet) {
+            Map<String, ValintaperusteDTO> valintaperusteet) {
         if (funktiokutsu.getValintaperuste() != null) {
             ValintaperusteDTO valintaperuste = new ValintaperusteDTO();
             valintaperuste.setFunktiotyyppi(funktiokutsu.getFunktionimi().getTyyppi());
@@ -304,8 +318,8 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             valintaperuste.setLahde(funktiokutsu.getValintaperuste().getLahde());
             valintaperuste.setOnPakollinen(funktiokutsu.getValintaperuste().getOnPakollinen());
 
-            if (funktiokutsu.getArvokonvertteriparametrit() != null &&
-                    funktiokutsu.getArvokonvertteriparametrit().size() > 0) {
+            if (funktiokutsu.getArvokonvertteriparametrit() != null
+                    && funktiokutsu.getArvokonvertteriparametrit().size() > 0) {
                 List<String> arvot = new ArrayList<String>();
 
                 for (Arvokonvertteriparametri ap : funktiokutsu.getArvokonvertteriparametrit()) {
@@ -313,10 +327,10 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
                 }
 
                 valintaperuste.setArvot(arvot);
-            } else if (funktiokutsu.getArvovalikonvertteriparametrit() != null &&
-                    funktiokutsu.getArvovalikonvertteriparametrit().size() > 0) {
-                List<Arvovalikonvertteriparametri> arvovalikonvertterit =
-                        new ArrayList<Arvovalikonvertteriparametri>(funktiokutsu.getArvovalikonvertteriparametrit());
+            } else if (funktiokutsu.getArvovalikonvertteriparametrit() != null
+                    && funktiokutsu.getArvovalikonvertteriparametrit().size() > 0) {
+                List<Arvovalikonvertteriparametri> arvovalikonvertterit = new ArrayList<Arvovalikonvertteriparametri>(
+                        funktiokutsu.getArvovalikonvertteriparametrit());
 
                 Collections.sort(arvovalikonvertterit, new Comparator<Arvovalikonvertteriparametri>() {
                     @Override
@@ -325,8 +339,8 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
                     }
                 });
 
-                Double min = arvovalikonvertterit.get(0).getMinValue();
-                Double max = arvovalikonvertterit.get(arvovalikonvertterit.size() - 1).getMaxValue();
+                String min = arvovalikonvertterit.get(0).getMinValue().toString();
+                String max = arvovalikonvertterit.get(arvovalikonvertterit.size() - 1).getMaxValue().toString();
 
                 valintaperuste.setMin(min);
                 valintaperuste.setMax(max);
@@ -337,9 +351,12 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
 
         for (Funktioargumentti arg : funktiokutsu.getFunktioargumentit()) {
             if (arg.getFunktiokutsuChild() != null) {
-                haeValintaperusteetRekursiivisesti(funktiokutsuDAO.getFunktiokutsu(arg.getFunktiokutsuChild().getId()), valintaperusteet);
+                haeValintaperusteetRekursiivisesti(funktiokutsuDAO.getFunktiokutsu(arg.getFunktiokutsuChild().getId()),
+                        valintaperusteet);
             } else if (arg.getLaskentakaavaChild() != null) {
-                haeValintaperusteetRekursiivisesti(laskentakaavaDAO.getLaskentakaava(arg.getLaskentakaavaChild().getId()).getFunktiokutsu(), valintaperusteet);
+                haeValintaperusteetRekursiivisesti(
+                        laskentakaavaDAO.getLaskentakaava(arg.getLaskentakaavaChild().getId()).getFunktiokutsu(),
+                        valintaperusteet);
             }
         }
     }
@@ -377,8 +394,8 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
                 if (fa.getFunktiokutsuChild() != null) {
                     haeFunktiokutsuRekursiivisesti(fa.getFunktiokutsuChild().getId(), laajennaAlakaavat);
                 } else if (laajennaAlakaavat && fa.getLaskentakaavaChild() != null) {
-                    fa.setLaajennettuKaava(haeFunktiokutsuRekursiivisesti(
-                            fa.getLaskentakaavaChild().getFunktiokutsu().getId(), laajennaAlakaavat));
+                    fa.setLaajennettuKaava(haeFunktiokutsuRekursiivisesti(fa.getLaskentakaavaChild().getFunktiokutsu()
+                            .getId(), laajennaAlakaavat));
                 } else {
                     laskentakaavaDAO.read(fa.getLaskentakaavaChild().getId());
                 }

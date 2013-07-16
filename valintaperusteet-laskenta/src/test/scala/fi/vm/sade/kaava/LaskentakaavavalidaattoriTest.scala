@@ -2,9 +2,10 @@ package fi.vm.sade.kaava
 
 import org.scalatest.FunSuite
 import fi.vm.sade.kaava.LaskentaTestUtil._
-import fi.vm.sade.service.valintaperusteet.model.{Funktioargumentti, Funktionimi}
+import fi.vm.sade.service.valintaperusteet.model.{ Funktioargumentti, Funktionimi }
 import fi.vm.sade.kaava.LaskentaTestUtil.Funktiokutsu
-import fi.vm.sade.service.valintaperusteet.service.validointi.virhe.{Validointivirhe, Virhetyyppi}
+import java.math.BigDecimal
+import fi.vm.sade.service.valintaperusteet.service.validointi.virhe.{ Validointivirhe, Virhetyyppi }
 import java.util
 
 /**
@@ -14,61 +15,45 @@ import java.util
  */
 class LaskentakaavavalidaattoriTest extends FunSuite {
 
-
   val validiLukuarvo1 = Funktiokutsu(
     nimi = Funktionimi.LUKUARVO,
     syoteparametrit = List(
       Syoteparametri(
         avain = "luku",
-        arvo = "-123.0"
-      )
-    )
-  )
+        arvo = "-123.0")))
 
   val validiLukuarvo2 = Funktiokutsu(
     nimi = Funktionimi.LUKUARVO,
     syoteparametrit = List(
       Syoteparametri(
         avain = "luku",
-        arvo = "100.0"
-      )
-    )
-  )
+        arvo = "100.0")))
 
   val validiTotuusarvo1 = Funktiokutsu(
     nimi = Funktionimi.TOTUUSARVO,
     syoteparametrit = List(
       Syoteparametri(
         avain = "totuusarvo",
-        arvo = "false"
-      )
-    )
-  )
+        arvo = "false")))
 
   val validiTotuusarvo2 = Funktiokutsu(
     nimi = Funktionimi.TOTUUSARVO,
     syoteparametrit = List(
       Syoteparametri(
         avain = "totuusarvo",
-        arvo = "true"
-      )
-    )
-  )
+        arvo = "true")))
 
   val validiSumma = Funktiokutsu(
     nimi = Funktionimi.SUMMA,
-    funktioargumentit = List(validiLukuarvo1, validiLukuarvo2)
-  )
+    funktioargumentit = List(validiLukuarvo1, validiLukuarvo2))
 
   val validiJa = Funktiokutsu(
     nimi = Funktionimi.JA,
-    funktioargumentit = List(validiTotuusarvo1, validiTotuusarvo2)
-  )
+    funktioargumentit = List(validiTotuusarvo1, validiTotuusarvo2))
 
   val validiJos = Funktiokutsu(
     nimi = Funktionimi.JOS,
-    funktioargumentit = List(validiTotuusarvo1, validiLukuarvo1, validiLukuarvo2)
-  )
+    funktioargumentit = List(validiTotuusarvo1, validiLukuarvo1, validiLukuarvo2))
 
   val validKonvertoiLukuarvovaliLukuarvoksi = Funktiokutsu(
     nimi = Funktionimi.KONVERTOILUKUARVO,
@@ -76,39 +61,31 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
     arvovalikonvertterit = List(
       Arvovalikonvertteriparametri(
         paluuarvo = "40",
-        min = 20.0,
-        max = 101.0,
+        min = new BigDecimal("20.0"),
+        max = new BigDecimal("101.0"),
         hylkaysperuste = false,
-        palautaHaettuArvo = false
-      ),
+        palautaHaettuArvo = false),
       Arvovalikonvertteriparametri(
         paluuarvo = "50.0",
-        min = 101.0,
-        max = 350.0,
+        min = new BigDecimal("101.0"),
+        max = new BigDecimal("350.0"),
         hylkaysperuste = false,
-        palautaHaettuArvo = false
-      )
-    )
-  )
+        palautaHaettuArvo = false)))
 
   val validKonvertoiLukuarvovaliLukuarvoksi2 = Funktiokutsu(
     nimi = Funktionimi.KONVERTOILUKUARVO,
     funktioargumentit = List(validiLukuarvo2),
     arvovalikonvertterit = List(
       Arvovalikonvertteriparametri(
-        min = 20.0,
-        max = 101.0,
+        min = new BigDecimal("20.0"),
+        max = new BigDecimal("101.0"),
         hylkaysperuste = false,
-        palautaHaettuArvo = true
-      ),
+        palautaHaettuArvo = true),
       Arvovalikonvertteriparametri(
-        min = 101.0,
-        max = 350.0,
+        min = new BigDecimal("101.0"),
+        max = new BigDecimal("350.0"),
         hylkaysperuste = false,
-        palautaHaettuArvo = true
-      )
-    )
-  )
+        palautaHaettuArvo = true)))
 
   val validKonvertoiLukuarvoLukuarvoksi = Funktiokutsu(
     nimi = Funktionimi.KONVERTOILUKUARVO,
@@ -117,21 +94,15 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
       Arvokonvertteriparametri(
         paluuarvo = "5.0",
         arvo = "100.0",
-        hylkaysperuste = false
-
-      ),
+        hylkaysperuste = false),
       Arvokonvertteriparametri(
         paluuarvo = "10.0",
         arvo = "200.0",
-        hylkaysperuste = false
-      )
-    )
-  )
+        hylkaysperuste = false)))
 
   test("Lukuarvo without input parameters") {
     val funktiokutsu = Funktiokutsu(
-      nimi = Funktionimi.LUKUARVO
-    )
+      nimi = Funktionimi.LUKUARVO)
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(1 == validationMessages.size)
@@ -145,10 +116,7 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
       syoteparametrit = List(
         Syoteparametri(
           avain = "puuppa",
-          arvo = "123.0"
-        )
-      )
-    )
+          arvo = "123.0")))
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(1 == validationMessages.size)
@@ -162,10 +130,7 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
       syoteparametrit = List(
         Syoteparametri(
           avain = "luku",
-          arvo = "merkkijono"
-        )
-      )
-    )
+          arvo = "merkkijono")))
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(1 == validationMessages.size)
@@ -180,8 +145,7 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
 
   test("Summa with zero arguments") {
     val funktiokutsu = Funktiokutsu(
-      nimi = Funktionimi.SUMMA
-    )
+      nimi = Funktionimi.SUMMA)
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(1 == validationMessages.size)
@@ -192,8 +156,7 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
   test("Summa with incompatible arguments") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.SUMMA,
-      funktioargumentit = List(validiLukuarvo1, validiTotuusarvo1)
-    )
+      funktioargumentit = List(validiLukuarvo1, validiTotuusarvo1))
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(1 == validationMessages.size)
@@ -214,10 +177,7 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
       syoteparametrit = List(
         Syoteparametri(
           avain = "plop",
-          arvo = "false"
-        )
-      )
-    )
+          arvo = "false")))
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(1 == validationMessages.size)
@@ -231,10 +191,7 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
       syoteparametrit = List(
         Syoteparametri(
           avain = "totuusarvo",
-          arvo = "tosi"
-        )
-      )
-    )
+          arvo = "tosi")))
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(1 == validationMessages.size)
@@ -251,8 +208,7 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
   test("Ja with incompatible arguments") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.JA,
-      funktioargumentit = List(validiTotuusarvo1, validiLukuarvo2)
-    )
+      funktioargumentit = List(validiTotuusarvo1, validiLukuarvo2))
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(1 == validationMessages.size)
     assert(Virhetyyppi.VIRHEELLINEN_FUNKTIOARGUMENTIN_TYYPPI ==
@@ -269,8 +225,7 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
   test("Jos without required arguments") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.JOS,
-      funktioargumentit = List(validiTotuusarvo1, validiLukuarvo1)
-    )
+      funktioargumentit = List(validiTotuusarvo1, validiLukuarvo1))
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(1 == validationMessages.size)
@@ -281,8 +236,7 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
   test("Jos with incompatible arguments") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.JOS,
-      funktioargumentit = List(validiTotuusarvo1, validiLukuarvo1, validiTotuusarvo2)
-    )
+      funktioargumentit = List(validiTotuusarvo1, validiLukuarvo1, validiTotuusarvo2))
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(1 == validationMessages.size)
@@ -304,20 +258,16 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
       arvovalikonvertterit = List(
         Arvovalikonvertteriparametri(
           paluuarvo = "kolmesataa",
-          min = 20.0,
-          max = 300.0,
+          min = new BigDecimal("20.0"),
+          max = new BigDecimal("300.0"),
           hylkaysperuste = false,
-          palautaHaettuArvo = false
-        ),
+          palautaHaettuArvo = false),
         Arvovalikonvertteriparametri(
           paluuarvo = "50.0",
-          min = 300.0,
-          max = 350.0,
+          min = new BigDecimal("300.0"),
+          max = new BigDecimal("350.0"),
           hylkaysperuste = false,
-          palautaHaettuArvo = false
-        )
-      )
-    )
+          palautaHaettuArvo = false)))
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(1 == validationMessages.size)
@@ -332,20 +282,16 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
       arvovalikonvertterit = List(
         Arvovalikonvertteriparametri(
           paluuarvo = "40",
-          min = 5.0,
-          max = 19.9,
+          min = new BigDecimal("5.0"),
+          max = new BigDecimal("19.9"),
           hylkaysperuste = false,
-          palautaHaettuArvo = false
-        ),
+          palautaHaettuArvo = false),
         Arvovalikonvertteriparametri(
           paluuarvo = "50.0",
-          min = 19.9,
-          max = 15.0,
+          min = new BigDecimal("19.9"),
+          max = new BigDecimal("15.0"),
           hylkaysperuste = false,
-          palautaHaettuArvo = false
-        )
-      )
-    )
+          palautaHaettuArvo = false)))
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(1 == validationMessages.size)
@@ -356,8 +302,7 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
   test("KonvertoiLukuarvo without konvertteri") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.KONVERTOILUKUARVO,
-      funktioargumentit = List(validiLukuarvo2)
-    )
+      funktioargumentit = List(validiLukuarvo2))
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(1 == validationMessages.size)
@@ -387,15 +332,11 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
         Arvokonvertteriparametri(
           paluuarvo = "40",
           arvo = "kymmenen",
-          hylkaysperuste = false
-        ),
+          hylkaysperuste = false),
         Arvokonvertteriparametri(
           paluuarvo = "50.0",
           arvo = "100.0",
-          hylkaysperuste = false
-        )
-      )
-    )
+          hylkaysperuste = false)))
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(1 == validationMessages.size)
@@ -411,15 +352,11 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
         Arvokonvertteriparametri(
           paluuarvo = "",
           arvo = "",
-          hylkaysperuste = false
-        ),
+          hylkaysperuste = false),
         Arvokonvertteriparametri(
           paluuarvo = "50",
           arvo = "",
-          hylkaysperuste = false
-        )
-      )
-    )
+          hylkaysperuste = false)))
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(3 == validationMessages.size)
@@ -437,8 +374,7 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
       nimi = Funktionimi.HAETOTUUSARVO,
       valintaperustetunniste = ValintaperusteViite(
         onPakollinen = true,
-        tunniste = "onYlioppilas")
-    )
+        tunniste = "onYlioppilas"))
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(0 == validationMessages.size)
@@ -449,8 +385,7 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
       nimi = Funktionimi.HAELUKUARVO,
       valintaperustetunniste = ValintaperusteViite(
         onPakollinen = true,
-        tunniste = "paasykoepisteet")
-    )
+        tunniste = "paasykoepisteet"))
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(0 == validationMessages.size)
@@ -464,9 +399,7 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
         tunniste = "paasykoepisteet"),
       arvokonvertterit = List(
         Arvokonvertteriparametri("10.0", "23.0", false),
-        Arvokonvertteriparametri("5.0", "13.0", false)
-      )
-    )
+        Arvokonvertteriparametri("5.0", "13.0", false)))
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(0 == validationMessages.size)
@@ -480,20 +413,16 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
         tunniste = "paasykoepisteet"),
       arvovalikonvertterit = List(
         Arvovalikonvertteriparametri(
-          min = 0.0,
-          max = 10.0,
+          min = new BigDecimal("0.0"),
+          max = new BigDecimal("10.0"),
           palautaHaettuArvo = true,
-          hylkaysperuste = true
-        ),
+          hylkaysperuste = true),
         Arvovalikonvertteriparametri(
-          min = 10.0,
-          max = 20.0,
+          min = new BigDecimal("10.0"),
+          max = new BigDecimal("20.0"),
           paluuarvo = "100.0",
           palautaHaettuArvo = false,
-          hylkaysperuste = false
-        )
-      )
-    )
+          hylkaysperuste = false)))
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(0 == validationMessages.size)
@@ -506,9 +435,7 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
         onPakollinen = true,
         tunniste = "paasykoepisteet"),
       syoteparametrit = List(
-        Syoteparametri(avain = "oletusarvo", arvo = "kuuppa")
-      )
-    )
+        Syoteparametri(avain = "oletusarvo", arvo = "kuuppa")))
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(1 == validationMessages.size)
@@ -523,9 +450,7 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
         onPakollinen = true,
         tunniste = "paasykoepisteet"),
       syoteparametrit = List(
-        Syoteparametri(avain = "oletusarvo", arvo = "10.0")
-      )
-    )
+        Syoteparametri(avain = "oletusarvo", arvo = "10.0")))
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(0 == validationMessages.size)
@@ -538,9 +463,7 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
         onPakollinen = true,
         tunniste = "onYlioppilas"),
       syoteparametrit = List(
-        Syoteparametri(avain = "oletusarvo", arvo = "tosi")
-      )
-    )
+        Syoteparametri(avain = "oletusarvo", arvo = "tosi")))
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(1 == validationMessages.size)
@@ -555,9 +478,7 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
         onPakollinen = true,
         tunniste = "onYlioppilas"),
       syoteparametrit = List(
-        Syoteparametri(avain = "oletusarvo", arvo = "true")
-      )
-    )
+        Syoteparametri(avain = "oletusarvo", arvo = "true")))
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(0 == validationMessages.size)
@@ -570,16 +491,12 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
         onPakollinen = true,
         tunniste = "onYlioppilas"),
       syoteparametrit = List(
-        Syoteparametri(avain = "oletusarvo", arvo = "kymmenen")
-      ),
+        Syoteparametri(avain = "oletusarvo", arvo = "kymmenen")),
       arvokonvertterit = List(
         Arvokonvertteriparametri(
           paluuarvo = "10.0",
           arvo = "L",
-          hylkaysperuste = false
-        )
-      )
-    )
+          hylkaysperuste = false)))
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(1 == validationMessages.size)
@@ -594,16 +511,12 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
         onPakollinen = true,
         tunniste = "onYlioppilas"),
       syoteparametrit = List(
-        Syoteparametri(avain = "oletusarvo", arvo = "5.0")
-      ),
+        Syoteparametri(avain = "oletusarvo", arvo = "5.0")),
       arvokonvertterit = List(
         Arvokonvertteriparametri(
           paluuarvo = "10.0",
           arvo = "L",
-          hylkaysperuste = false
-        )
-      )
-    )
+          hylkaysperuste = false)))
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(0 == validationMessages.size)
@@ -616,9 +529,7 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
         onPakollinen = true,
         tunniste = "onYlioppilas"),
       syoteparametrit = List(
-        Syoteparametri(avain = "oletusarvo", arvo = "5.0")
-      )
-    )
+        Syoteparametri(avain = "oletusarvo", arvo = "5.0")))
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(1 == validationMessages.size)
@@ -633,16 +544,12 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
         onPakollinen = true,
         tunniste = "joku_tunniste"),
       syoteparametrit = List(
-        Syoteparametri(avain = "oletusarvo", arvo = "puuppa")
-      ),
+        Syoteparametri(avain = "oletusarvo", arvo = "puuppa")),
       arvokonvertterit = List(
         Arvokonvertteriparametri(
           paluuarvo = "true",
           arvo = "L",
-          hylkaysperuste = false
-        )
-      )
-    )
+          hylkaysperuste = false)))
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(1 == validationMessages.size)
@@ -655,19 +562,14 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
       nimi = Funktionimi.HAEMERKKIJONOJAKONVERTOITOTUUSARVOKSI,
       valintaperustetunniste = ValintaperusteViite(
         onPakollinen = true,
-        tunniste = "joku_tunniste"
-      ),
+        tunniste = "joku_tunniste"),
       syoteparametrit = List(
-        Syoteparametri(avain = "oletusarvo", arvo = "true")
-      ),
+        Syoteparametri(avain = "oletusarvo", arvo = "true")),
       arvokonvertterit = List(
         Arvokonvertteriparametri(
           paluuarvo = "true",
           arvo = "L",
-          hylkaysperuste = false
-        )
-      )
-    )
+          hylkaysperuste = false)))
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(0 == validationMessages.size)
@@ -678,19 +580,15 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
       nimi = Funktionimi.HAEMERKKIJONOJAKONVERTOITOTUUSARVOKSI,
       valintaperustetunniste = ValintaperusteViite(
         onPakollinen = true,
-        tunniste = "joku_tunniste"
-      ),
+        tunniste = "joku_tunniste"),
       syoteparametrit = List(
-        Syoteparametri(avain = "oletusarvo", arvo = "true")
-      )
-    )
+        Syoteparametri(avain = "oletusarvo", arvo = "true")))
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(1 == validationMessages.size)
     assert(Virhetyyppi.EI_KONVERTTERIPARAMETREJA_MAARITELTY ==
       validationMessages.get(0).asInstanceOf[Validointivirhe].getVirhetyyppi)
   }
-
 
   test("Summa with invalid lukuarvo") {
     val funktiokutsu = Funktiokutsu(
@@ -701,21 +599,13 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
           syoteparametrit = List(
             Syoteparametri(
               avain = "luku",
-              arvo = "100.0"
-            )
-          )
-        ),
+              arvo = "100.0"))),
         Funktiokutsu(
           nimi = Funktionimi.LUKUARVO,
           syoteparametrit = List(
             Syoteparametri(
               avain = "luku",
-              arvo = "kolmekymmenta"
-            )
-          )
-        )
-      )
-    )
+              arvo = "kolmekymmenta")))))
 
     val validoitu = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu)
     val isValid = Laskentakaavavalidaattori.onkoLaskettavaKaavaValidi(funktiokutsu)
@@ -729,23 +619,17 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
         Arvokonvertteriparametri(
           paluuarvo = "5.0",
           arvo = "10.0",
-          hylkaysperuste = true
-        )
-      ),
+          hylkaysperuste = true)),
       arvovalikonvertterit = List(
         Arvovalikonvertteriparametri(
           paluuarvo = "20.0",
-          min = 0.0,
-          max = 100.0,
+          min = new BigDecimal("0.0"),
+          max = new BigDecimal("100.0"),
           palautaHaettuArvo = false,
-          hylkaysperuste = true
-        )
-      ),
+          hylkaysperuste = true)),
       valintaperustetunniste = ValintaperusteViite(
         onPakollinen = true,
-        tunniste = "joku_tunniste"
-      )
-    )
+        tunniste = "joku_tunniste"))
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(0 == validationMessages.size)
@@ -763,15 +647,9 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
             syoteparametrit = List(
               Syoteparametri(
                 avain = "luku",
-                arvo = "5.0"
-              )
-            )
-          ),
+                arvo = "5.0"))),
           nimi = "laskentakaava",
-          onLuonnos = false
-        )
-      )
-    )
+          onLuonnos = false)))
 
     val validationMessages1 = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(1 == validationMessages1.size())
@@ -781,7 +659,6 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
     val validationMessages2 = Laskentakaavavalidaattori.validoiMallinnettuKaava(funktiokutsu).getValidointivirheet
     assert(0 == validationMessages2.size())
   }
-
 
   test("Funktiokutsu with draft laskentakaava argument") {
     val funktiokutsu = Funktiokutsu(
@@ -795,15 +672,9 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
             syoteparametrit = List(
               Syoteparametri(
                 avain = "luku",
-                arvo = "5.0"
-              )
-            )
-          ),
+                arvo = "5.0"))),
           nimi = "laskentakaava",
-          onLuonnos = true
-        )
-      )
-    )
+          onLuonnos = true)))
 
     val validationMessages1 = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(1 == validationMessages1.size())
@@ -818,8 +689,7 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
 
   test("Funktiokutsu with argument null values") {
     val funktiokutsu = Funktiokutsu(
-      nimi = Funktionimi.SUMMA
-    )
+      nimi = Funktionimi.SUMMA)
 
     val fargs = new util.HashSet[Funktioargumentti]()
     val fa1 = new Funktioargumentti
@@ -857,12 +727,9 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
       nimi = Funktionimi.KESKIARVONPARASTA,
       funktioargumentit = List(
         validiLukuarvo1,
-        validiLukuarvo2
-      ),
+        validiLukuarvo2),
       syoteparametrit = List(
-        Syoteparametri(avain = "n", arvo = "0")
-      )
-    )
+        Syoteparametri(avain = "n", arvo = "0")))
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(1 == validationMessages.size())
@@ -874,12 +741,9 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
       nimi = Funktionimi.KESKIARVONPARASTA,
       funktioargumentit = List(
         validiLukuarvo1,
-        validiLukuarvo2
-      ),
+        validiLukuarvo2),
       syoteparametrit = List(
-        Syoteparametri(avain = "n", arvo = "3")
-      )
-    )
+        Syoteparametri(avain = "n", arvo = "3")))
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(1 == validationMessages.size())
@@ -892,9 +756,7 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
       nimi = Funktionimi.DEMOGRAFIA,
       syoteparametrit = List(
         Syoteparametri(avain = "prosenttiosuus", arvo = "110.0"),
-        Syoteparametri(avain = "tunniste", arvo = "sukupuoli")
-      )
-    )
+        Syoteparametri(avain = "tunniste", arvo = "sukupuoli")))
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(1 == validationMessages.size())

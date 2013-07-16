@@ -1,5 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -16,14 +18,14 @@ public class Arvovalikonvertteriparametri extends Konvertteriparametri implement
 
     @Override
     public int compareTo(Arvovalikonvertteriparametri o) {
-        double thisVal = minValue;
-        double anotherVal = o.minValue;
-        double thisMax = maxValue;
-        double anotherMax = o.maxValue;
-        if (thisVal < anotherVal || thisMax < anotherMax) {
+        BigDecimal thisVal = minValue;
+        BigDecimal anotherVal = o.minValue;
+        BigDecimal thisMax = maxValue;
+        BigDecimal anotherMax = o.maxValue;
+        if (thisVal.compareTo(anotherVal) == -1 || thisMax.compareTo(anotherMax) == -1) {
             return -1;
         } else {
-            if (thisVal > anotherVal || thisMax > anotherMax) {
+            if (thisVal.compareTo(anotherVal) == 1 || thisMax.compareTo(anotherMax) == 1) {
                 return 1;
             }
         }
@@ -49,30 +51,30 @@ public class Arvovalikonvertteriparametri extends Konvertteriparametri implement
     }
 
     @JsonView(JsonViews.Basic.class)
-    @Column(name = "minvalue", nullable = false)
-    private Double minValue;
+    @Column(precision = 17, scale = 4, name = "minvalue", nullable = false)
+    private BigDecimal minValue;
 
     @JsonView(JsonViews.Basic.class)
-    @Column(name = "maxvalue", nullable = false)
-    private Double maxValue;
+    @Column(precision = 17, scale = 4, name = "maxvalue", nullable = false)
+    private BigDecimal maxValue;
 
     @JsonView(JsonViews.Basic.class)
     @Column(name = "palauta_haettu_arvo")
     private Boolean palautaHaettuArvo;
 
-    public Double getMinValue() {
+    public BigDecimal getMinValue() {
         return minValue;
     }
 
-    public void setMinValue(Double minValue) {
+    public void setMinValue(BigDecimal minValue) {
         this.minValue = minValue;
     }
 
-    public Double getMaxValue() {
+    public BigDecimal getMaxValue() {
         return maxValue;
     }
 
-    public void setMaxValue(Double maxValue) {
+    public void setMaxValue(BigDecimal maxValue) {
         this.maxValue = maxValue;
     }
 

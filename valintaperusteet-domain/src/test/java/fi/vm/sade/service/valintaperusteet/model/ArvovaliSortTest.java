@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
@@ -22,15 +23,15 @@ public class ArvovaliSortTest {
 
         {
             Arvovalikonvertteriparametri a0 = new Arvovalikonvertteriparametri();
-            a0.setMinValue(-10000D);
-            a0.setMaxValue(3D);
+            a0.setMinValue(new BigDecimal("-10000.0"));
+            a0.setMaxValue(new BigDecimal("3.0"));
             s.add(a0);
             l.add(a0);
         }
         {
             Arvovalikonvertteriparametri a0 = new Arvovalikonvertteriparametri();
-            a0.setMinValue(3D);
-            a0.setMaxValue(6D);
+            a0.setMinValue(new BigDecimal("3.0"));
+            a0.setMaxValue(new BigDecimal("6.0"));
             s.add(a0);
             l.add(a0);
         }

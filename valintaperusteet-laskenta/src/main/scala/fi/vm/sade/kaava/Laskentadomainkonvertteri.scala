@@ -4,6 +4,8 @@ import fi.vm.sade.service.valintaperusteet.model._
 import fi.vm.sade.service.valintaperusteet.laskenta._
 import Laskenta._
 import org.apache.commons.lang.StringUtils
+import java.math.BigDecimal
+import math.BigDecimal._
 
 /**
  * User: kwuoti
@@ -21,11 +23,11 @@ object Laskentadomainkonvertteri {
     }
   }
 
-  private def parametriToDouble(param: Syoteparametri) = {
+  private def parametriToBigDecimal(param: Syoteparametri) = {
     try {
-      param.getArvo.toDouble
+      new BigDecimal(param.getArvo)
     } catch {
-      case e => sys.error("Could not interpret parameter " + param.getAvain + " value " + param.getArvo + " as double")
+      case e => sys.error("Could not interpret parameter " + param.getAvain + " value " + param.getArvo + " as big decimal")
     }
   }
 
@@ -86,19 +88,20 @@ object Laskentadomainkonvertteri {
       case Funktionimi.HAELUKUARVO => {
         val konvertteri = if (!funktiokutsu.getArvokonvertteriparametrit.isEmpty) {
           val konversioMap = funktiokutsu.getArvokonvertteriparametrit.map(konv =>
-            Arvokonversio[Double, Double](konv.getArvo.toDouble, konv.getPaluuarvo.toDouble,
+            Arvokonversio[BigDecimal, BigDecimal](new BigDecimal(konv.getArvo), new BigDecimal(konv.getPaluuarvo),
               konv.getHylkaysperuste)).toList
 
-          Some(Arvokonvertteri[Double, Double](konversioMap))
+          Some(Arvokonvertteri[BigDecimal, BigDecimal](konversioMap))
         } else if (!funktiokutsu.getArvovalikonvertteriparametrit.isEmpty) {
           val konversioMap = funktiokutsu.getArvovalikonvertteriparametrit.map(konv => {
             val paluuarvo = if (StringUtils.isNotBlank(konv.getPaluuarvo)) {
-              konv.getPaluuarvo.toDouble
+              new BigDecimal(konv.getPaluuarvo)
             } else {
-              0.0
+              new BigDecimal("0.0")
             }
-
-            Lukuarvovalikonversio(konv.getMinValue, konv.getMaxValue, paluuarvo,
+            val min: BigDecimal = konv.getMinValue()
+            val max: BigDecimal = konv.getMaxValue()
+            Lukuarvovalikonversio(min, max, paluuarvo,
               konv.getPalautaHaettuArvo, konv.getHylkaysperuste)
           }).toList
 
@@ -106,7 +109,7 @@ object Laskentadomainkonvertteri {
         } else None
 
         val oletusarvo = funktiokutsu.getSyoteparametrit.find(_.getAvain == "oletusarvo")
-          .map(p => parametriToDouble(p))
+          .map(p => parametriToBigDecimal(p))
 
         val valintaperusteviite = Valintaperusteviite(funktiokutsu.getValintaperuste.getTunniste,
           funktiokutsu.getValintaperuste.getOnPakollinen)
@@ -114,20 +117,19 @@ object Laskentadomainkonvertteri {
       }
       case Funktionimi.HAEMERKKIJONOJAKONVERTOILUKUARVOKSI => {
         val konversioMap = funktiokutsu.getArvokonvertteriparametrit.map(konv =>
-          Arvokonversio[String, Double](konv.getArvo, konv.getPaluuarvo.toDouble, konv.getHylkaysperuste)).toList
+          Arvokonversio[String, BigDecimal](konv.getArvo, new BigDecimal(konv.getPaluuarvo), konv.getHylkaysperuste)).toList
 
         val oletusarvo = funktiokutsu.getSyoteparametrit.find(_.getAvain == "oletusarvo")
-          .map(p => parametriToDouble(p))
+          .map(p => parametriToBigDecimal(p))
 
         val valintaperusteviite = Valintaperusteviite(funktiokutsu.getValintaperuste.getTunniste,
           funktiokutsu.getValintaperuste.getOnPakollinen)
 
         HaeMerkkijonoJaKonvertoiLukuarvoksi(
-          Arvokonvertteri[String, Double](konversioMap),
+          Arvokonvertteri[String, BigDecimal](konversioMap),
           oletusarvo,
           valintaperusteviite,
-          oid
-        )
+          oid)
       }
 
       case Funktionimi.HAEMERKKIJONOJAKONVERTOITOTUUSARVOKSI => {
@@ -144,8 +146,7 @@ object Laskentadomainkonvertteri {
           Arvokonvertteri[String, Boolean](konversioMap),
           oletusarvo,
           valintaperusteviite,
-          oid
-        )
+          oid)
       }
 
       case Funktionimi.HAETOTUUSARVO => {
@@ -179,18 +180,18 @@ object Laskentadomainkonvertteri {
       }
       case Funktionimi.LUKUARVO => {
         val lukuParam = getParametri(funktiokuvaus.syoteparametrit.head.avain, funktiokutsu.getSyoteparametrit)
-        Lukuarvo(parametriToDouble(lukuParam), oid)
+        Lukuarvo(parametriToBigDecimal(lukuParam), oid)
       }
       case Funktionimi.KONVERTOILUKUARVO => {
         val konvertteri = if (!funktiokutsu.getArvokonvertteriparametrit.isEmpty) {
           val konversioMap = funktiokutsu.getArvokonvertteriparametrit.map(konv =>
-            Arvokonversio[Double, Double](konv.getArvo.toDouble, konv.getPaluuarvo.toDouble,
+            Arvokonversio[BigDecimal, BigDecimal](new BigDecimal(konv.getArvo), new BigDecimal(konv.getPaluuarvo),
               konv.getHylkaysperuste)).toList
 
-          Arvokonvertteri[Double, Double](konversioMap)
+          Arvokonvertteri[BigDecimal, BigDecimal](konversioMap)
         } else {
           val konversioMap = funktiokutsu.getArvovalikonvertteriparametrit.map(konv =>
-            Lukuarvovalikonversio(konv.getMinValue, konv.getMaxValue, konv.getPaluuarvo.toDouble,
+            Lukuarvovalikonversio(konv.getMinValue, konv.getMaxValue, new BigDecimal(konv.getPaluuarvo),
               konv.getPalautaHaettuArvo, konv.getHylkaysperuste)).toList
 
           Lukuarvovalikonvertteri(konversioMap)
@@ -224,8 +225,7 @@ object Laskentadomainkonvertteri {
         oid)
       case Funktionimi.PIENEMPI => Pienempi(
         muunnaLukuarvofunktioksi(lasketutArgumentit(0)),
-        muunnaLukuarvofunktioksi(lasketutArgumentit(1))
-        , oid)
+        muunnaLukuarvofunktioksi(lasketutArgumentit(1)), oid)
       case Funktionimi.PIENEMPITAIYHTASUURI => PienempiTaiYhtasuuri(
         muunnaLukuarvofunktioksi(lasketutArgumentit(0)),
         muunnaLukuarvofunktioksi(lasketutArgumentit(1)),
@@ -263,7 +263,7 @@ object Laskentadomainkonvertteri {
         val tunniste = getParametri("tunniste", funktiokutsu.getSyoteparametrit).getArvo
         val prosenttiosuus = getParametri("prosenttiosuus", funktiokutsu.getSyoteparametrit)
 
-        Demografia(oid, tunniste, parametriToDouble(prosenttiosuus))
+        Demografia(oid, tunniste, parametriToBigDecimal(prosenttiosuus))
       }
 
       case _ => sys.error("Could not calculate funktio " + funktiokutsu.getFunktionimi.name())

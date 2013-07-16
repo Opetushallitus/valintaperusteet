@@ -1,12 +1,19 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
-import fi.vm.sade.dbunit.annotation.DataSetLocation;
-import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
-import fi.vm.sade.generic.dao.GenericDAO;
-import fi.vm.sade.kaava.Funktiokuvaaja;
-import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
-import fi.vm.sade.service.valintaperusteet.model.*;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.assertTrue;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,17 +24,28 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
-import java.util.*;
-
-import static junit.framework.Assert.*;
+import fi.vm.sade.dbunit.annotation.DataSetLocation;
+import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
+import fi.vm.sade.generic.dao.GenericDAO;
+import fi.vm.sade.kaava.Funktiokuvaaja;
+import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
+import fi.vm.sade.service.valintaperusteet.model.Arvokonvertteriparametri;
+import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti;
+import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
+import fi.vm.sade.service.valintaperusteet.model.Funktionimi;
+import fi.vm.sade.service.valintaperusteet.model.Funktiotyyppi;
+import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
+import fi.vm.sade.service.valintaperusteet.model.Syoteparametri;
+import fi.vm.sade.service.valintaperusteet.model.ValintaperusteViite;
 
 /**
  * User: kwuoti Date: 21.1.2013 Time: 9.42
  */
 @ContextConfiguration(locations = "classpath:test-context.xml")
-@TestExecutionListeners(listeners = {JTACleanInsertTestExecutionListener.class,
+@TestExecutionListeners(listeners = { JTACleanInsertTestExecutionListener.class,
         DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
-        TransactionalTestExecutionListener.class})
+        TransactionalTestExecutionListener.class })
 @RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data.xml")
 public class LaskentakaavaServiceTest {
@@ -485,8 +503,8 @@ public class LaskentakaavaServiceTest {
         assertEquals(5, valintaperusteet.get(0).getArvot().size());
         assertNull(valintaperusteet.get(0).getMax());
         assertNull(valintaperusteet.get(0).getMin());
-        assertEquals(0.0, valintaperusteet.get(1).getMin().doubleValue());
-        assertEquals(30.0, valintaperusteet.get(1).getMax().doubleValue());
+        assertEquals(new BigDecimal("0.0"), new BigDecimal(valintaperusteet.get(1).getMin()));
+        assertEquals(new BigDecimal("30.0"), new BigDecimal(valintaperusteet.get(1).getMax()));
         assertNull(valintaperusteet.get(1).getArvot());
     }
 }

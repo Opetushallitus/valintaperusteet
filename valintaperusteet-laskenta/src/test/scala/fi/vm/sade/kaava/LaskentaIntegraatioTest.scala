@@ -3,10 +3,11 @@ package fi.vm.sade.kaava
 import org.scalatest.FunSuite
 import fi.vm.sade.service.valintaperusteet.model.Funktionimi
 import fi.vm.sade.kaava.LaskentaTestUtil._
-import fi.vm.sade.service.valintaperusteet.laskenta.{Esiprosessori, Laskin}
-import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.{Hylattytila, HylattyMetatieto, Tila, Hyvaksyttavissatila}
+import fi.vm.sade.service.valintaperusteet.laskenta.{ Esiprosessori, Laskin }
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.{ Hylattytila, HylattyMetatieto, Tila, Hyvaksyttavissatila }
 import scala.collection.JavaConversions._
 import fi.vm.sade.kaava.LaskentaTestUtil.Hakemus
+import java.math.BigDecimal
 
 /**
  * User: kwuoti
@@ -64,30 +65,23 @@ class LaskentaIntegraatioTest extends FunSuite {
       Arvokonvertteriparametri(
         paluuarvo = "1.0",
         arvo = "10.0",
-        hylkaysperuste = false
-      ),
+        hylkaysperuste = false),
       Arvokonvertteriparametri(
         paluuarvo = "2.0",
         arvo = "15.0",
-        hylkaysperuste = false
-      ),
+        hylkaysperuste = false),
       Arvokonvertteriparametri(
         paluuarvo = "3.0",
         arvo = "20.0",
-        hylkaysperuste = false
-      ),
+        hylkaysperuste = false),
       Arvokonvertteriparametri(
         paluuarvo = "4.0",
         arvo = "25.0",
-        hylkaysperuste = false
-      ),
+        hylkaysperuste = false),
       Arvokonvertteriparametri(
         paluuarvo = "5.0",
         arvo = "30.0",
-        hylkaysperuste = false
-      )
-    )
-  )
+        hylkaysperuste = false)))
 
   val maksimi = Funktiokutsu(
     nimi = Funktionimi.MAKSIMI,
@@ -116,35 +110,28 @@ class LaskentaIntegraatioTest extends FunSuite {
     arvovalikonvertterit = List(
       Arvovalikonvertteriparametri(
         paluuarvo = "1.0",
-        min = 0.0,
-        max = 10.0,
+        min = new BigDecimal("0.0"),
+        max = new BigDecimal("10.0"),
         palautaHaettuArvo = false,
-        hylkaysperuste = false
-      ),
+        hylkaysperuste = false),
       Arvovalikonvertteriparametri(
         paluuarvo = "3.0",
-        min = 10.0,
-        max = 20.0,
+        min = new BigDecimal("10.0"),
+        max = new BigDecimal("20.0"),
         palautaHaettuArvo = false,
-        hylkaysperuste = false
-      ),
+        hylkaysperuste = false),
       Arvovalikonvertteriparametri(
         paluuarvo = "3.0",
-        min = 20.0,
-        max = 30.0,
+        min = new BigDecimal("20.0"),
+        max = new BigDecimal("30.0"),
         palautaHaettuArvo = false,
-        hylkaysperuste = false
-      ),
+        hylkaysperuste = false),
       Arvovalikonvertteriparametri(
         paluuarvo = "4.0",
-        min = 30.0,
-        max = 40.0,
+        min = new BigDecimal("30.0"),
+        max = new BigDecimal("40.0"),
         palautaHaettuArvo = false,
-        hylkaysperuste = false
-      )
-    )
-  )
-
+        hylkaysperuste = false)))
 
   val keskiarvo = Funktiokutsu(
     nimi = Funktionimi.KESKIARVO,
@@ -315,17 +302,13 @@ class LaskentaIntegraatioTest extends FunSuite {
     nimi = Funktionimi.HAELUKUARVO,
     valintaperustetunniste = ValintaperusteViite(
       onPakollinen = false,
-      tunniste = "tunniste"
-    )
-  )
+      tunniste = "tunniste"))
 
   val haeTotuusarvo = Funktiokutsu(
     nimi = Funktionimi.HAETOTUUSARVO,
     valintaperustetunniste = ValintaperusteViite(
       onPakollinen = false,
-      tunniste = "tunniste"
-    )
-  )
+      tunniste = "tunniste"))
 
   val hakukohde = "123"
   val tyhjaHakemus = Hakemus("", Nil, Map[String, String]())
@@ -344,7 +327,7 @@ class LaskentaIntegraatioTest extends FunSuite {
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
 
     Laskin.laske(hakukohde, tyhjaHakemus, lasku)
-    assert(tulos.get == 25.0)
+    assert(tulos.get.compareTo(new BigDecimal("25.0")) == 0)
     assertTilaHyvaksyttavissa(tila)
 
   }
@@ -362,7 +345,7 @@ class LaskentaIntegraatioTest extends FunSuite {
     val funktiokutsu = summa;
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
-    assert(tulos.get == 120.0)
+    assert(tulos.get.compareTo(new BigDecimal("120.0")) == 0)
     assertTilaHyvaksyttavissa(tila)
   }
 
@@ -373,7 +356,7 @@ class LaskentaIntegraatioTest extends FunSuite {
     val prosessoituHakemus = Esiprosessori.esiprosessoi("1", List(hakemus), hakemus, lasku)
 
     val (tulos, tila) = Laskin.laske(hakukohde, prosessoituHakemus, lasku)
-    assert(tulos.get == 4.0)
+    assert(tulos.get.compareTo(new BigDecimal("4.0")) == 0)
     assertTilaHyvaksyttavissa(tila)
   }
 
@@ -381,7 +364,7 @@ class LaskentaIntegraatioTest extends FunSuite {
     val funktiokutsu = maksimi
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
-    assert(tulos.get == 50.0)
+    assert(tulos.get.compareTo(new BigDecimal("50.0")) == 0)
     assertTilaHyvaksyttavissa(tila)
   }
 
@@ -389,7 +372,7 @@ class LaskentaIntegraatioTest extends FunSuite {
     val funktiokutsu = minimi
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
-    assert(tulos.get == 25.0)
+    assert(tulos.get.compareTo(new BigDecimal("25.0")) == 0)
     assertTilaHyvaksyttavissa(tila)
   }
 
@@ -397,7 +380,7 @@ class LaskentaIntegraatioTest extends FunSuite {
     val funktiokutsu = tulo
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
-    assert(tulos.get == 56250.0)
+    assert(tulos.get.compareTo(new BigDecimal("56250.0")) == 0)
     assertTilaHyvaksyttavissa(tila)
   }
 
@@ -408,7 +391,7 @@ class LaskentaIntegraatioTest extends FunSuite {
     val prosessoituHakemus = Esiprosessori.esiprosessoi("1", List(hakemus), hakemus, lasku)
 
     val (tulos, tila) = Laskin.laske(hakukohde, prosessoituHakemus, lasku)
-    assert(tulos.get == 3.0)
+    assert(tulos.get.compareTo(new BigDecimal("3.0")) == 0)
     assertTilaHyvaksyttavissa(tila)
   }
 
@@ -416,7 +399,7 @@ class LaskentaIntegraatioTest extends FunSuite {
     val funktiokutsu = keskiarvo
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
-    assert(tulos.get == 40.0)
+    assert(tulos.get.compareTo(new BigDecimal("40.0")) == 0)
     assertTilaHyvaksyttavissa(tila)
   }
 
@@ -424,7 +407,7 @@ class LaskentaIntegraatioTest extends FunSuite {
     val funktiokutsu = mediaaniParillinenMaara
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
-    assert(tulos.get == 47.5)
+    assert(tulos.get.compareTo(new BigDecimal("47.5")) == 0)
     assertTilaHyvaksyttavissa(tila)
   }
 
@@ -432,7 +415,7 @@ class LaskentaIntegraatioTest extends FunSuite {
     val funktiokutsu = mediaaniParitonMaara
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
-    assert(tulos.get == 45.0)
+    assert(tulos.get.compareTo(new BigDecimal("45.0")) == 0)
     assertTilaHyvaksyttavissa(tila)
   }
 
@@ -440,7 +423,7 @@ class LaskentaIntegraatioTest extends FunSuite {
     val funktiokutsu = keskiarvoNParasta
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
-    assert(tulos.get == 75.0)
+    assert(tulos.get.compareTo(new BigDecimal("75.0")) == 0)
     assertTilaHyvaksyttavissa(tila)
   }
 
@@ -448,7 +431,7 @@ class LaskentaIntegraatioTest extends FunSuite {
     val funktiokutsu = summaNParasta
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
-    assert(tulos.get == 195.0)
+    assert(tulos.get.compareTo(new BigDecimal("195.0")) == 0)
     assertTilaHyvaksyttavissa(tila)
   }
 
@@ -456,7 +439,7 @@ class LaskentaIntegraatioTest extends FunSuite {
     val funktiokutsu = nMaksimi
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
-    assert(tulos.get == 45.0)
+    assert(tulos.get.compareTo(new BigDecimal("45.0")) == 0)
     assertTilaHyvaksyttavissa(tila)
   }
 
@@ -464,7 +447,7 @@ class LaskentaIntegraatioTest extends FunSuite {
     val funktiokutsu = nMinimi
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
-    assert(tulos.get == 50.0)
+    assert(tulos.get.compareTo(new BigDecimal("50.0")) == 0)
     assertTilaHyvaksyttavissa(tila)
   }
 
@@ -540,7 +523,7 @@ class LaskentaIntegraatioTest extends FunSuite {
       funktioargumentit = List(luku25))
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
-    assert(tulos.get == -25.0)
+    assert(tulos.get.compareTo(new BigDecimal("-25.0")) == 0)
     assertTilaHyvaksyttavissa(tila)
   }
 
@@ -548,7 +531,7 @@ class LaskentaIntegraatioTest extends FunSuite {
     val funktiokutsu = osamaara
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
-    assert(tulos.get == 2.0)
+    assert(tulos.get.compareTo(new BigDecimal("2.0")) == 0)
     assertTilaHyvaksyttavissa(tila)
   }
 
@@ -570,7 +553,7 @@ class LaskentaIntegraatioTest extends FunSuite {
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
-    assert(tulos.get == 100.0)
+    assert(tulos.get.compareTo(new BigDecimal("100.0")) == 0)
     assertTilaHyvaksyttavissa(tila)
   }
 
@@ -584,7 +567,7 @@ class LaskentaIntegraatioTest extends FunSuite {
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
-    assert(tulos.get == 50.0)
+    assert(tulos.get.compareTo(new BigDecimal("50.0")) == 0)
     assertTilaHyvaksyttavissa(tila)
   }
 
@@ -644,7 +627,6 @@ class LaskentaIntegraatioTest extends FunSuite {
     assertTilaHyvaksyttavissa(tila)
   }
 
-
   test("pienempiTaiYhtasuuri false") {
     val funktiokutsu = pienempiTaiYhtasuuriFalse
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
@@ -697,7 +679,7 @@ class LaskentaIntegraatioTest extends FunSuite {
     val funktiokutsu = nimettyLukuarvo
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
-    assert(tulos.get == 25.0)
+    assert(tulos.get.compareTo(new BigDecimal("25.0")) == 0)
     assertTilaHyvaksyttavissa(tila)
   }
 
@@ -715,29 +697,23 @@ class LaskentaIntegraatioTest extends FunSuite {
         Arvokonvertteriparametri(
           paluuarvo = "5.0",
           arvo = "25.0",
-          hylkaysperuste = false
-        )
-      ),
+          hylkaysperuste = false)),
       arvovalikonvertterit = List(
         Arvovalikonvertteriparametri(
           paluuarvo = "10.0",
-          min = 20.0,
-          max = 30.0,
+          min = new BigDecimal("20.0"),
+          max = new BigDecimal("30.0"),
           palautaHaettuArvo = false,
-          hylkaysperuste = false
-        )
-      ),
+          hylkaysperuste = false)),
       valintaperustetunniste = ValintaperusteViite(
         onPakollinen = true,
-        tunniste = "joku_tunniste"
-      )
-    )
+        tunniste = "joku_tunniste"))
 
     val hakemus = Hakemus("", Nil, Map("joku_tunniste" -> "25.0"))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
-    assert(tulos.get == 5.0)
+    assert(tulos.get.compareTo(new BigDecimal("5.0")) == 0)
     assertTilaHyvaksyttavissa(tila)
   }
 
@@ -748,19 +724,15 @@ class LaskentaIntegraatioTest extends FunSuite {
         Arvokonvertteriparametri(
           paluuarvo = "5.0",
           arvo = "25.0",
-          hylkaysperuste = false
-        )
-      ),
+          hylkaysperuste = false)),
       valintaperustetunniste = ValintaperusteViite(
         onPakollinen = true,
-        tunniste = "joku_tunniste"
-      )
-    )
+        tunniste = "joku_tunniste"))
     val hakemus = Hakemus("", Nil, Map("joku_tunniste" -> "25.0"))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
-    assert(tulos.get == 5.0)
+    assert(tulos.get.compareTo(new BigDecimal("5.0")) == 0)
     assertTilaHyvaksyttavissa(tila)
   }
 
@@ -770,22 +742,18 @@ class LaskentaIntegraatioTest extends FunSuite {
       arvovalikonvertterit = List(
         Arvovalikonvertteriparametri(
           paluuarvo = "10.0",
-          min = 20.0,
-          max = 30.0,
+          min = new BigDecimal("20.0"),
+          max = new BigDecimal("30.0"),
           palautaHaettuArvo = false,
-          hylkaysperuste = false
-        )
-      ),
+          hylkaysperuste = false)),
       valintaperustetunniste = ValintaperusteViite(
         onPakollinen = true,
-        tunniste = "joku_tunniste"
-      )
-    )
+        tunniste = "joku_tunniste"))
     val hakemus = Hakemus("", Nil, Map("joku_tunniste" -> "25.0"))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
-    assert(tulos.get == 10.0)
+    assert(tulos.get.compareTo(new BigDecimal("10.0")) == 0)
     assertTilaHyvaksyttavissa(tila)
   }
 
@@ -794,9 +762,7 @@ class LaskentaIntegraatioTest extends FunSuite {
       nimi = Funktionimi.HAETOTUUSARVO,
       valintaperustetunniste = ValintaperusteViite(
         onPakollinen = true,
-        tunniste = "joku_tunniste"
-      )
-    )
+        tunniste = "joku_tunniste"))
 
     val hakemus = Hakemus("", Nil, Map("joku_tunniste" -> "true"))
 
@@ -811,16 +777,12 @@ class LaskentaIntegraatioTest extends FunSuite {
       nimi = Funktionimi.HAETOTUUSARVO,
       valintaperustetunniste = ValintaperusteViite(
         onPakollinen = true,
-        tunniste = "joku_tunniste"
-      ),
+        tunniste = "joku_tunniste"),
       arvokonvertterit = List(
         Arvokonvertteriparametri(
           paluuarvo = "true",
           arvo = "false",
-          hylkaysperuste = false
-        )
-      )
-    )
+          hylkaysperuste = false)))
 
     val hakemus = Hakemus("", Nil, Map("joku_tunniste" -> "false"))
 
@@ -835,16 +797,12 @@ class LaskentaIntegraatioTest extends FunSuite {
       nimi = Funktionimi.HAETOTUUSARVO,
       valintaperustetunniste = ValintaperusteViite(
         onPakollinen = true,
-        tunniste = "joku_tunniste"
-      ),
+        tunniste = "joku_tunniste"),
       arvokonvertterit = List(
         Arvokonvertteriparametri(
           paluuarvo = "true",
           arvo = "false",
-          hylkaysperuste = true
-        )
-      )
-    )
+          hylkaysperuste = true)))
     val hakemus = Hakemus("", Nil, Map("joku_tunniste" -> "false"))
 
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
@@ -858,22 +816,18 @@ class LaskentaIntegraatioTest extends FunSuite {
       nimi = Funktionimi.HAEMERKKIJONOJAKONVERTOILUKUARVOKSI,
       valintaperustetunniste = ValintaperusteViite(
         onPakollinen = true,
-        tunniste = "joku_tunniste"
-      ),
+        tunniste = "joku_tunniste"),
       arvokonvertterit = List(
         Arvokonvertteriparametri(
           paluuarvo = "10.0",
           arvo = "puuppa",
-          hylkaysperuste = false
-        )
-      )
-    )
+          hylkaysperuste = false)))
 
     val hakemus = Hakemus("", Nil, Map("joku_tunniste" -> "puuppa"))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
-    assert(tulos.get == 10.0)
+    assert(tulos.get.compareTo(new BigDecimal("10.0")) == 0)
     assertTilaHyvaksyttavissa(tila)
   }
 
@@ -881,25 +835,20 @@ class LaskentaIntegraatioTest extends FunSuite {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.KONVERTOILUKUARVO,
       funktioargumentit = List(
-        luku25
-      ),
+        luku25),
       arvokonvertterit = List(
         Arvokonvertteriparametri(
           paluuarvo = "5.0",
           arvo = "25.0",
-          hylkaysperuste = true
-        ),
+          hylkaysperuste = true),
         Arvokonvertteriparametri(
           paluuarvo = "10.0",
           arvo = "50.0",
-          hylkaysperuste = false
-        )
-      )
-    )
+          hylkaysperuste = false)))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
-    assert(tulos.get == 5.0)
+    assert(tulos.get.equals(new BigDecimal("5.0")))
     assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.ARVOKONVERTTERIHYLKAYS)
   }
 
@@ -907,29 +856,24 @@ class LaskentaIntegraatioTest extends FunSuite {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.KONVERTOILUKUARVO,
       funktioargumentit = List(
-        luku25
-      ),
+        luku25),
       arvovalikonvertterit = List(
         Arvovalikonvertteriparametri(
           paluuarvo = "5.0",
-          min = 10.0,
-          max = 30.0,
+          min = new BigDecimal("10.0"),
+          max = new BigDecimal("30.0"),
           palautaHaettuArvo = false,
-          hylkaysperuste = true
-        ),
+          hylkaysperuste = true),
         Arvovalikonvertteriparametri(
           paluuarvo = "10.0",
-          min = 30.0,
-          max = 50.0,
+          min = new BigDecimal("30.0"),
+          max = new BigDecimal("50.0"),
           palautaHaettuArvo = false,
-          hylkaysperuste = false
-        )
-      )
-    )
+          hylkaysperuste = false)))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
-    assert(tulos.get == 5.0)
+    assert(tulos.get.equals(new BigDecimal("5.0")))
     assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.ARVOVALIKONVERTTERIHYLKAYS)
   }
 
@@ -945,8 +889,7 @@ class LaskentaIntegraatioTest extends FunSuite {
       nimi = Funktionimi.HAELUKUARVO,
       valintaperustetunniste = ValintaperusteViite(
         onPakollinen = true,
-        tunniste = "joku_tunniste")
-    )
+        tunniste = "joku_tunniste"))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -964,20 +907,16 @@ class LaskentaIntegraatioTest extends FunSuite {
         Arvokonvertteriparametri(
           paluuarvo = "5.0",
           arvo = "10.0",
-          hylkaysperuste = true
-        ),
+          hylkaysperuste = true),
         Arvokonvertteriparametri(
           paluuarvo = "15.0",
           arvo = "5.0",
-          hylkaysperuste = false
-        )
-      )
-    )
+          hylkaysperuste = false)))
     val hakemus = Hakemus("", Nil, Map("joku_tunniste" -> "10.0"))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
-    assert(tulos.get == 5.0)
+    assert(tulos.get.equals(new BigDecimal("5.0")))
     assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.ARVOKONVERTTERIHYLKAYS)
   }
 
@@ -990,26 +929,21 @@ class LaskentaIntegraatioTest extends FunSuite {
       arvovalikonvertterit = List(
         Arvovalikonvertteriparametri(
           palautaHaettuArvo = true,
-          min = 0.0,
-          max = 10.0,
-          hylkaysperuste = true
-        ),
+          min = new BigDecimal("0.0"),
+          max = new BigDecimal("10.0"),
+          hylkaysperuste = true),
         Arvovalikonvertteriparametri(
           palautaHaettuArvo = false,
           paluuarvo = "20.0",
-          min = 10.0,
-          max = 20.0,
-          hylkaysperuste = false
-        )
-      )
-    )
+          min = new BigDecimal("10.0"),
+          max = new BigDecimal("20.0"),
+          hylkaysperuste = false)))
 
     val hakemus = Hakemus("", Nil, Map("joku_tunniste" -> "6.0"))
 
-
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
-    assert(tulos.get == 6.0)
+    assert(tulos.get.equals(new BigDecimal("6.0")))
     assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.ARVOVALIKONVERTTERIHYLKAYS)
   }
 
@@ -1023,9 +957,7 @@ class LaskentaIntegraatioTest extends FunSuite {
         Arvokonvertteriparametri(
           paluuarvo = "5.0",
           arvo = "0.0",
-          hylkaysperuste = false
-        )
-      ))
+          hylkaysperuste = false)))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -1043,10 +975,7 @@ class LaskentaIntegraatioTest extends FunSuite {
         Arvokonvertteriparametri(
           paluuarvo = "10.0",
           arvo = "puuppa",
-          hylkaysperuste = false
-        )
-      )
-    )
+          hylkaysperuste = false)))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -1064,16 +993,12 @@ class LaskentaIntegraatioTest extends FunSuite {
         Arvokonvertteriparametri(
           paluuarvo = "10.0",
           arvo = "puuppa",
-          hylkaysperuste = true
-        )
-      )
-    )
+          hylkaysperuste = true)))
     val hakemus = Hakemus("", Nil, Map("joku_tunniste" -> "puuppa"))
-
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
-    assert(tulos.get == 10.0)
+    assert(tulos.get.equals(new BigDecimal("10.0")))
     assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.ARVOKONVERTTERIHYLKAYS)
   }
 
@@ -1082,9 +1007,7 @@ class LaskentaIntegraatioTest extends FunSuite {
       nimi = Funktionimi.HAETOTUUSARVO,
       valintaperustetunniste = ValintaperusteViite(
         onPakollinen = true,
-        tunniste = "joku_tunniste"
-      )
-    )
+        tunniste = "joku_tunniste"))
 
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -1098,13 +1021,11 @@ class LaskentaIntegraatioTest extends FunSuite {
       funktioargumentit = List(
         luku100,
         luku50,
-        haeLukuarvo
-      )
-    )
+        haeLukuarvo))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
-    assert(tulos.get == 75.0)
+    assert(tulos.get.equals(new BigDecimal("75.0")))
     assertTilaHyvaksyttavissa(tila)
   }
 
@@ -1114,9 +1035,7 @@ class LaskentaIntegraatioTest extends FunSuite {
       funktioargumentit = List(
         haeLukuarvo,
         haeLukuarvo,
-        haeLukuarvo
-      )
-    )
+        haeLukuarvo))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -1130,13 +1049,11 @@ class LaskentaIntegraatioTest extends FunSuite {
       funktioargumentit = List(
         luku100,
         luku50,
-        haeLukuarvo
-      )
-    )
+        haeLukuarvo))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
-    assert(tulos.get == 150.0)
+    assert(tulos.get.equals(new BigDecimal("150.0")))
     assertTilaHyvaksyttavissa(tila)
   }
 
@@ -1146,9 +1063,7 @@ class LaskentaIntegraatioTest extends FunSuite {
       funktioargumentit = List(
         haeLukuarvo,
         haeLukuarvo,
-        haeLukuarvo
-      )
-    )
+        haeLukuarvo))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -1163,19 +1078,15 @@ class LaskentaIntegraatioTest extends FunSuite {
         luku100,
         luku50,
         haeLukuarvo,
-        haeLukuarvo
-      ),
+        haeLukuarvo),
       syoteparametrit = List(
         Syoteparametri(
           avain = "n",
-          arvo = "3"
-        )
-      )
-    )
+          arvo = "3")))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
-    assert(tulos.get == 75.0)
+    assert(tulos.get.equals(new BigDecimal("75.0")))
     assertTilaHyvaksyttavissa(tila)
   }
 
@@ -1186,15 +1097,11 @@ class LaskentaIntegraatioTest extends FunSuite {
         haeLukuarvo,
         haeLukuarvo,
         haeLukuarvo,
-        haeLukuarvo
-      ),
+        haeLukuarvo),
       syoteparametrit = List(
         Syoteparametri(
           avain = "n",
-          arvo = "3"
-        )
-      )
-    )
+          arvo = "3")))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -1209,19 +1116,15 @@ class LaskentaIntegraatioTest extends FunSuite {
         luku100,
         luku50,
         haeLukuarvo,
-        haeLukuarvo
-      ),
+        haeLukuarvo),
       syoteparametrit = List(
         Syoteparametri(
           avain = "n",
-          arvo = "3"
-        )
-      )
-    )
+          arvo = "3")))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
-    assert(tulos.get == 100.0)
+    assert(tulos.get.equals(new BigDecimal("100.0")))
     assertTilaHyvaksyttavissa(tila)
   }
 
@@ -1232,15 +1135,11 @@ class LaskentaIntegraatioTest extends FunSuite {
         haeLukuarvo,
         haeLukuarvo,
         haeLukuarvo,
-        haeLukuarvo
-      ),
+        haeLukuarvo),
       syoteparametrit = List(
         Syoteparametri(
           avain = "n",
-          arvo = "3"
-        )
-      )
-    )
+          arvo = "3")))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -1255,19 +1154,15 @@ class LaskentaIntegraatioTest extends FunSuite {
         luku100,
         luku50,
         haeLukuarvo,
-        haeLukuarvo
-      ),
+        haeLukuarvo),
       syoteparametrit = List(
         Syoteparametri(
           avain = "n",
-          arvo = "3"
-        )
-      )
-    )
+          arvo = "3")))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
-    assert(tulos.get == 50.0)
+    assert(tulos.get.equals(new BigDecimal("50.0")))
     assertTilaHyvaksyttavissa(tila)
   }
 
@@ -1278,22 +1173,17 @@ class LaskentaIntegraatioTest extends FunSuite {
         haeLukuarvo,
         haeLukuarvo,
         haeLukuarvo,
-        haeLukuarvo
-      ),
+        haeLukuarvo),
       syoteparametrit = List(
         Syoteparametri(
           avain = "n",
-          arvo = "3"
-        )
-      )
-    )
+          arvo = "3")))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
     assertTulosTyhja(tulos)
     assertTilaHyvaksyttavissa(tila)
   }
-
 
   test("SummaNParasta, osa tyhjia arvoja") {
     val funktiokutsu = Funktiokutsu(
@@ -1302,19 +1192,15 @@ class LaskentaIntegraatioTest extends FunSuite {
         luku100,
         luku50,
         haeLukuarvo,
-        haeLukuarvo
-      ),
+        haeLukuarvo),
       syoteparametrit = List(
         Syoteparametri(
           avain = "n",
-          arvo = "3"
-        )
-      )
-    )
+          arvo = "3")))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
-    assert(tulos.get == 150.0)
+    assert(tulos.get.equals(new BigDecimal("150.0")))
     assertTilaHyvaksyttavissa(tila)
   }
 
@@ -1325,15 +1211,11 @@ class LaskentaIntegraatioTest extends FunSuite {
         haeLukuarvo,
         haeLukuarvo,
         haeLukuarvo,
-        haeLukuarvo
-      ),
+        haeLukuarvo),
       syoteparametrit = List(
         Syoteparametri(
           avain = "n",
-          arvo = "3"
-        )
-      )
-    )
+          arvo = "3")))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -1347,9 +1229,7 @@ class LaskentaIntegraatioTest extends FunSuite {
       funktioargumentit = List(
         haeTotuusarvo,
         luku25,
-        luku100
-      )
-    )
+        luku100))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -1361,21 +1241,16 @@ class LaskentaIntegraatioTest extends FunSuite {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.KONVERTOILUKUARVO,
       funktioargumentit = List(
-        haeLukuarvo
-      ),
+        haeLukuarvo),
       arvokonvertterit = List(
         Arvokonvertteriparametri(
           paluuarvo = "5.0",
           arvo = "25.0",
-          hylkaysperuste = true
-        ),
+          hylkaysperuste = true),
         Arvokonvertteriparametri(
           paluuarvo = "10.0",
           arvo = "50.0",
-          hylkaysperuste = false
-        )
-      )
-    )
+          hylkaysperuste = false)))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -1388,9 +1263,7 @@ class LaskentaIntegraatioTest extends FunSuite {
       nimi = Funktionimi.JA,
       funktioargumentit = List(
         haeTotuusarvo,
-        totuusarvoTrue
-      )
-    )
+        totuusarvoTrue))
 
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -1403,9 +1276,7 @@ class LaskentaIntegraatioTest extends FunSuite {
       nimi = Funktionimi.TAI,
       funktioargumentit = List(
         haeTotuusarvo,
-        totuusarvoTrue
-      )
-    )
+        totuusarvoTrue))
 
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -1417,9 +1288,7 @@ class LaskentaIntegraatioTest extends FunSuite {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.EI,
       funktioargumentit = List(
-        haeTotuusarvo
-      )
-    )
+        haeTotuusarvo))
 
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -1432,8 +1301,7 @@ class LaskentaIntegraatioTest extends FunSuite {
       nimi = Funktionimi.SUUREMPI,
       funktioargumentit = List(
         haeLukuarvo,
-        luku50)
-    )
+        luku50))
 
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -1446,8 +1314,7 @@ class LaskentaIntegraatioTest extends FunSuite {
       nimi = Funktionimi.SUUREMPI,
       funktioargumentit = List(
         luku50,
-        haeLukuarvo)
-    )
+        haeLukuarvo))
 
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -1459,9 +1326,7 @@ class LaskentaIntegraatioTest extends FunSuite {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.NEGAATIO,
       funktioargumentit = List(
-        haeLukuarvo
-      )
-    )
+        haeLukuarvo))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -1475,10 +1340,7 @@ class LaskentaIntegraatioTest extends FunSuite {
       syoteparametrit = List(
         Syoteparametri(
           avain = "n",
-          arvo = "2"
-        )
-      )
-    )
+          arvo = "2")))
 
     val hakukohde = "oid1"
     val hakemus = Hakemus("", List("oid2", "oid1", "oid3"), Map[String, String]())
@@ -1495,10 +1357,7 @@ class LaskentaIntegraatioTest extends FunSuite {
       syoteparametrit = List(
         Syoteparametri(
           avain = "n",
-          arvo = "3"
-        )
-      )
-    )
+          arvo = "3")))
 
     val hakukohde = "oid1"
     val hakemus = Hakemus("", List("oid2", "oid1", "oid3"), Map[String, String]())
@@ -1515,10 +1374,7 @@ class LaskentaIntegraatioTest extends FunSuite {
       syoteparametrit = List(
         Syoteparametri(
           avain = "n",
-          arvo = "5"
-        )
-      )
-    )
+          arvo = "5")))
 
     val hakukohde = "oid1"
     val hakemus = Hakemus("", List("oid2", "oid1", "oid3"), Map[String, String]())
@@ -1534,49 +1390,38 @@ class LaskentaIntegraatioTest extends FunSuite {
       nimi = Funktionimi.HAELUKUARVO,
       valintaperustetunniste = ValintaperusteViite(
         onPakollinen = true,
-        tunniste = "lukuarvotunniste1"
-      )
-    )
+        tunniste = "lukuarvotunniste1"))
 
     val haeArvo2 = Funktiokutsu(
       nimi = Funktionimi.HAELUKUARVO,
       valintaperustetunniste = ValintaperusteViite(
         onPakollinen = false,
-        tunniste = "lukuarvotunniste2"
-      ),
+        tunniste = "lukuarvotunniste2"),
       arvokonvertterit = List(
         Arvokonvertteriparametri(
           paluuarvo = "100.0",
           arvo = "10.0",
-          hylkaysperuste = true
-        )
-      )
-    )
+          hylkaysperuste = true)))
 
     val lukuarvo = Funktiokutsu(
       nimi = Funktionimi.LUKUARVO,
       syoteparametrit = List(
         Syoteparametri(
           avain = "luku",
-          arvo = "50.0"
-        )
-      )
-    )
+          arvo = "50.0")))
 
     val summa = Funktiokutsu(
       nimi = Funktionimi.SUMMA,
       funktioargumentit = List(
         haeArvo1,
         haeArvo2,
-        lukuarvo
-      )
-    )
+        lukuarvo))
 
     val hakemus = Hakemus("", Nil, Map("lukuarvotunniste2" -> "10.0"))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(summa)
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
-    assert(tulos.get == 150.0)
+    assert(tulos.get.equals(new BigDecimal("150.0")))
     assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.PAKOLLINEN_VALINTAPERUSTE_HYLKAYS)
   }
 
@@ -1585,16 +1430,13 @@ class LaskentaIntegraatioTest extends FunSuite {
       nimi = Funktionimi.HAELUKUARVO,
       valintaperustetunniste = ValintaperusteViite(
         tunniste = "joku_tunniste",
-        onPakollinen = false
-      ),
+        onPakollinen = false),
       syoteparametrit = List(
-        Syoteparametri(avain = "oletusarvo", arvo = "100.0")
-      )
-    )
+        Syoteparametri(avain = "oletusarvo", arvo = "100.0")))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
-    assert(tulos.get == 100.0)
+    assert(tulos.get.equals(new BigDecimal("100.0")))
     assertTilaHyvaksyttavissa(tila)
   }
 
@@ -1603,12 +1445,9 @@ class LaskentaIntegraatioTest extends FunSuite {
       nimi = Funktionimi.HAETOTUUSARVO,
       valintaperustetunniste = ValintaperusteViite(
         tunniste = "joku_tunniste",
-        onPakollinen = true
-      ),
+        onPakollinen = true),
       syoteparametrit = List(
-        Syoteparametri(avain = "oletusarvo", arvo = "true")
-      )
-    )
+        Syoteparametri(avain = "oletusarvo", arvo = "true")))
 
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -1621,23 +1460,18 @@ class LaskentaIntegraatioTest extends FunSuite {
       nimi = Funktionimi.HAEMERKKIJONOJAKONVERTOILUKUARVOKSI,
       valintaperustetunniste = ValintaperusteViite(
         tunniste = "joku_tunniste",
-        onPakollinen = false
-      ),
+        onPakollinen = false),
       syoteparametrit = List(
-        Syoteparametri(avain = "oletusarvo", arvo = "50.0")
-      ),
+        Syoteparametri(avain = "oletusarvo", arvo = "50.0")),
       arvokonvertterit = List(
         Arvokonvertteriparametri(
           paluuarvo = "66.0",
           arvo = "L",
-          hylkaysperuste = false
-        )
-      )
-    )
+          hylkaysperuste = false)))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
-    assert(tulos.get == 50.0)
+    assert(tulos.get.equals(new BigDecimal("50.0")))
     assertTilaHyvaksyttavissa(tila)
   }
 
@@ -1646,26 +1480,20 @@ class LaskentaIntegraatioTest extends FunSuite {
       nimi = Funktionimi.HAEMERKKIJONOJAKONVERTOITOTUUSARVOKSI,
       valintaperustetunniste = ValintaperusteViite(
         tunniste = "jokin_tunniste",
-        onPakollinen = false
-      ),
+        onPakollinen = false),
       arvokonvertterit = List(
         Arvokonvertteriparametri(
           paluuarvo = "false",
           arvo = "helsinki",
-          hylkaysperuste = false
-        ),
+          hylkaysperuste = false),
         Arvokonvertteriparametri(
           paluuarvo = "true",
           arvo = "turku",
-          hylkaysperuste = true
-        ),
+          hylkaysperuste = true),
         Arvokonvertteriparametri(
           paluuarvo = "false",
           arvo = "tampere",
-          hylkaysperuste = false
-        )
-      )
-    )
+          hylkaysperuste = false)))
 
     val hakemus = Hakemus("", Nil, Map("jokin_tunniste" -> "turku"))
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
@@ -1684,18 +1512,14 @@ class LaskentaIntegraatioTest extends FunSuite {
       nimi = Funktionimi.DEMOGRAFIA,
       syoteparametrit = List(
         Syoteparametri("tunniste", "sukupuoli"),
-        Syoteparametri("prosenttiosuus", "33.0")
-      )
-    )
+        Syoteparametri("prosenttiosuus", "33.0")))
 
     val hakukohdeOid = "1"
     val hakemukset = List(
       Hakemus("1", List("1", "2", "3"), Map("sukupuoli" -> "mies")),
       Hakemus("2", List("1", "2", "3"), Map("sukupuoli" -> "mies")),
       Hakemus("3", List("1", "2", "3"), Map("sukupuoli" -> "mies")),
-      Hakemus("4", List("1", "2", "3"), Map("sukupuoli" -> "nainen"))
-    )
-
+      Hakemus("4", List("1", "2", "3"), Map("sukupuoli" -> "nainen")))
 
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
     Esiprosessori.esiprosessoi(hakukohdeOid, asJavaCollection(hakemukset), hakemukset.head, lasku)

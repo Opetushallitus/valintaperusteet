@@ -1,31 +1,31 @@
 package fi.vm.sade.service.valintaperusteet.laskenta.api.tila;
 
+import java.math.BigDecimal;
+
 /**
- * User: kwuoti
- * Date: 25.2.2013
- * Time: 8.28
+ * User: kwuoti Date: 25.2.2013 Time: 8.28
  */
 public class Arvovalikonvertterihylkays extends HylattyMetatieto {
-    public Arvovalikonvertterihylkays(double arvo, double arvovaliMin, double arvovaliMax) {
+    public Arvovalikonvertterihylkays(BigDecimal arvo, BigDecimal arvovaliMin, BigDecimal arvovaliMax) {
         super(Hylattymetatietotyyppi.ARVOVALIKONVERTTERIHYLKAYS);
         this.arvo = arvo;
         this.arvovaliMin = arvovaliMin;
         this.arvovaliMax = arvovaliMax;
     }
 
-    private double arvo;
-    private double arvovaliMin;
-    private double arvovaliMax;
+    private BigDecimal arvo;
+    private BigDecimal arvovaliMin;
+    private BigDecimal arvovaliMax;
 
-    public double getArvo() {
+    public BigDecimal getArvo() {
         return arvo;
     }
 
-    public double getArvovaliMin() {
-        return arvovaliMin;
+    public BigDecimal getArvovaliMax() {
+        return arvovaliMax;
     }
 
-    public double getArvovaliMax() {
-        return arvovaliMax;
+    public BigDecimal getArvovaliMin() {
+        return arvovaliMin;
     }
 }
