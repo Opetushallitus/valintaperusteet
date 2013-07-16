@@ -1025,7 +1025,7 @@ class LaskentaIntegraatioTest extends FunSuite {
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
-    assert(tulos.get.equals(new BigDecimal("75.0")))
+    assert(tulos.get.compareTo(new BigDecimal("75.0")) == 0)
     assertTilaHyvaksyttavissa(tila)
   }
 
@@ -1053,7 +1053,7 @@ class LaskentaIntegraatioTest extends FunSuite {
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
-    assert(tulos.get.equals(new BigDecimal("150.0")))
+    assert(tulos.get.compareTo(new BigDecimal("150.0")) == 0)
     assertTilaHyvaksyttavissa(tila)
   }
 
@@ -1086,7 +1086,7 @@ class LaskentaIntegraatioTest extends FunSuite {
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
-    assert(tulos.get.equals(new BigDecimal("75.0")))
+    assert(tulos.get.compareTo(new BigDecimal("75.0")) == 0)
     assertTilaHyvaksyttavissa(tila)
   }
 
@@ -1124,7 +1124,7 @@ class LaskentaIntegraatioTest extends FunSuite {
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
-    assert(tulos.get.equals(new BigDecimal("100.0")))
+    assert(tulos.get.compareTo(new BigDecimal("100.0")) == 0)
     assertTilaHyvaksyttavissa(tila)
   }
 

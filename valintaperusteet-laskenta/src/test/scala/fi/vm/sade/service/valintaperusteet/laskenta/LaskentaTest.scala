@@ -71,13 +71,13 @@ class LaskentaTest extends FunSuite {
     val luvut = List(Lukuarvo(new BigDecimal("5.0")), Lukuarvo(new BigDecimal("6.0")), Lukuarvo(new BigDecimal("2.0")), Lukuarvo(new BigDecimal("1.0")))
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, Mediaani(luvut))
     // Parillisesta listasta lasketaan keskimmäisten lukujen keskiarvo
-    assert(tulos.get.equals(new BigDecimal("3.5")))
+    assert(tulos.get.compareTo(new BigDecimal("3.5")) == 0)
 
     val luvut2 = Lukuarvo(new BigDecimal("10.0")) :: luvut
     // Parittomasta listasta palautetaan keskimmäinen luku
 
     val (tulos2, tila2) = Laskin.laske(hakukohde, tyhjaHakemus, Mediaani(luvut2))
-    assert(tulos2.get.equals(new BigDecimal("5.0")))
+    assert(tulos2.get.compareTo(new BigDecimal("5.0")) == 0)
   }
 
   test("Jos") {

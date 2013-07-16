@@ -69,14 +69,14 @@ public class HakukohdeResourceTest {
     @Test
     public void testFindAll() throws Exception {
         List<HakukohdeViite> hakukohdeViites = hakukohdeResource.query(false);
-        assertEquals(25, hakukohdeViites.size());
+        assertEquals(27, hakukohdeViites.size());
         testUtil.lazyCheck(JsonViews.Basic.class, hakukohdeViites);
     }
 
     @Test
     public void testFindRoot() throws Exception {
         List<HakukohdeViite> hakukohdeViites = hakukohdeResource.query(true);
-        assertEquals(12, hakukohdeViites.size());
+        assertEquals(13, hakukohdeViites.size());
         testUtil.lazyCheck(JsonViews.Basic.class, hakukohdeViites);
     }
 
@@ -237,5 +237,17 @@ public class HakukohdeResourceTest {
         oid1 = hakukohdeResource.queryFull("oid1");
         assertEquals(ARVO, oid1.getHakukohdekoodi().getArvo());
         assertEquals(URI2, oid1.getHakukohdekoodi().getUri());
+    }
+
+    @Test
+    public void testSiirraHakukohdeValintaryhmaan() {
+        final String valintaryhmaOid = "oid54";
+        final String hakukohdeOid = "oid18";
+
+        Response response = hakukohdeResource.siirraHakukohdeValintaryhmaan(hakukohdeOid, valintaryhmaOid);
+        assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
+
+        HakukohdeViite hakukohde = (HakukohdeViite) response.getEntity();
+        assertEquals(hakukohde.getValintaryhma().getOid(), valintaryhmaOid);
     }
 }

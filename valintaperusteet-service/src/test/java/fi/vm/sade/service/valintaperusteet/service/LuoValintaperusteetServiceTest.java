@@ -1,15 +1,14 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
-import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
-import fi.vm.sade.kaava.Laskentadomainkonvertteri;
-import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus;
-import fi.vm.sade.service.valintaperusteet.laskenta.api.LaskentaService;
-import fi.vm.sade.service.valintaperusteet.laskenta.api.Laskentatulos;
-import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Tila;
-import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti;
-import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
-import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
-import fi.vm.sade.service.valintaperusteet.service.impl.generator.*;
+import static org.junit.Assert.assertEquals;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,23 +19,31 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
+
 import scala.actors.threadpool.Arrays;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
+import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
+import fi.vm.sade.kaava.Laskentadomainkonvertteri;
+import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus;
+import fi.vm.sade.service.valintaperusteet.laskenta.api.LaskentaService;
+import fi.vm.sade.service.valintaperusteet.laskenta.api.Laskentatulos;
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Tila;
+import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti;
+import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
+import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
+import fi.vm.sade.service.valintaperusteet.service.impl.generator.Aineet;
+import fi.vm.sade.service.valintaperusteet.service.impl.generator.PkAineet;
+import fi.vm.sade.service.valintaperusteet.service.impl.generator.PkJaYoPohjaiset;
+import fi.vm.sade.service.valintaperusteet.service.impl.generator.PkPohjaiset;
+import fi.vm.sade.service.valintaperusteet.service.impl.generator.YoAineet;
+import fi.vm.sade.service.valintaperusteet.service.impl.generator.YoPohjaiset;
 
 /**
  * User: kwuoti Date: 5.3.2013 Time: 16.02
  */
 @ContextConfiguration(locations = "classpath:test-context.xml")
-@TestExecutionListeners(listeners = {JTACleanInsertTestExecutionListener.class,
+@TestExecutionListeners(listeners = { JTACleanInsertTestExecutionListener.class,
         DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
-        TransactionalTestExecutionListener.class})
+        TransactionalTestExecutionListener.class })
 @RunWith(SpringJUnit4ClassRunner.class)
 public class LuoValintaperusteetServiceTest {
 
@@ -51,7 +58,6 @@ public class LuoValintaperusteetServiceTest {
     public void testLuo() throws IOException {
         luoValintaperusteetService.luo();
     }
-
 
     private PkAineet pkAineet = new PkAineet();
     private YoAineet yoAineet = new YoAineet();
@@ -96,7 +102,8 @@ public class LuoValintaperusteetServiceTest {
         return map;
     }
 
-    private Map<String, Object> pakollinenPkAineJaValinnaiset(String aine, Object pakollinenArvo, Object val1Arvo, Object val2Arvo) {
+    private Map<String, Object> pakollinenPkAineJaValinnaiset(String aine, Object pakollinenArvo, Object val1Arvo,
+            Object val2Arvo) {
         Map<String, Object> map = newMap();
         map.putAll(pakollinenPkAine(aine, pakollinenArvo));
         map.put(PkAineet.valinnainen1(aine), val1Arvo);
@@ -149,50 +156,36 @@ public class LuoValintaperusteetServiceTest {
     }
 
     private Map<String, Object> luoPkAineet() {
-        return yhdistaMapit(
-                pakollinenPkAineJaValinnaiset(Aineet.aidinkieliJaKirjallisuus1, 5.0, 7.0, 6.0), // 5.75
+        return yhdistaMapit(pakollinenPkAineJaValinnaiset(Aineet.aidinkieliJaKirjallisuus1, 5.0, 7.0, 6.0), // 5.75
                 pakollinenPkAineJaValinnaiset(Aineet.aidinkieliJaKirjallisuus2, 8.0, 9.0, 8.0), // 8.25
-                pakollinenPkAine(Aineet.historia, 7.0),                                         // 7.0
-                pakollinenPkAine(Aineet.yhteiskuntaoppi, 8.0),                                  // 8.0
-                pakollinenPkAine(Aineet.matematiikka, 7.0),                                     // 7.0
-                pakollinenPkAineJaValinnaiset(Aineet.fysiikka, 8.0, 9.0, 9.0),                  // 8.5
-                pakollinenPkAine(Aineet.kemia, 7.0),                                            // 7.0
-                pakollinenPkAine(Aineet.biologia, 5.0),                                         // 5.0
-                pakollinenPkAine(Aineet.kuvataide, 8.0),                                        // 8.0
-                pakollinenPkAineJaValinnaiset(PkAineet.musiikki, 9.0, 9.0, 10.0),               // 9.25
-                pakollinenPkAine(Aineet.maantieto, 7.0),                                        // 7.0
-                pakollinenPkAineJaValinnaiset(PkAineet.kasityo, 7.0, 7.0, 8.0),                 // 7.25
-                pakollinenPkAine(PkAineet.kotitalous, 6.0),                                     // 6.0
-                pakollinenPkAine(Aineet.liikunta, 8.0),                                         // 8.0
-                pakollinenPkAine(Aineet.terveystieto, 9.0),                                     // 9.0
-                pakollinenPkAine(Aineet.uskonto, 5.0),                                          // 5.0
-                pakollinenPkAine(Aineet.a11Kieli, 10.0),                                        // 10.0
-                pakollinenPkAine(Aineet.b1Kieli, 8.0),                                          // 8.0
-                pakollinenPkAine(Aineet.b31Kieli, 7.0)                                          // 7.0
+                pakollinenPkAine(Aineet.historia, 7.0), // 7.0
+                pakollinenPkAine(Aineet.yhteiskuntaoppi, 8.0), // 8.0
+                pakollinenPkAine(Aineet.matematiikka, 7.0), // 7.0
+                pakollinenPkAineJaValinnaiset(Aineet.fysiikka, 8.0, 9.0, 9.0), // 8.5
+                pakollinenPkAine(Aineet.kemia, 7.0), // 7.0
+                pakollinenPkAine(Aineet.biologia, 5.0), // 5.0
+                pakollinenPkAine(Aineet.kuvataide, 8.0), // 8.0
+                pakollinenPkAineJaValinnaiset(PkAineet.musiikki, 9.0, 9.0, 10.0), // 9.25
+                pakollinenPkAine(Aineet.maantieto, 7.0), // 7.0
+                pakollinenPkAineJaValinnaiset(PkAineet.kasityo, 7.0, 7.0, 8.0), // 7.25
+                pakollinenPkAine(PkAineet.kotitalous, 6.0), // 6.0
+                pakollinenPkAine(Aineet.liikunta, 8.0), // 8.0
+                pakollinenPkAine(Aineet.terveystieto, 9.0), // 9.0
+                pakollinenPkAine(Aineet.uskonto, 5.0), // 5.0
+                pakollinenPkAine(Aineet.a11Kieli, 10.0), // 10.0
+                pakollinenPkAine(Aineet.b1Kieli, 8.0), // 8.0
+                pakollinenPkAine(Aineet.b31Kieli, 7.0) // 7.0
         );
     }
 
     private Map<String, Object> luoLkAineet() {
-        return yhdistaMapit(
-                lkAine(Aineet.aidinkieliJaKirjallisuus1, 7.0),
-                lkAine(Aineet.aidinkieliJaKirjallisuus2, 8.0),
-                lkAine(Aineet.historia, 9.0),
-                lkAine(Aineet.yhteiskuntaoppi, 6.0),
-                lkAine(Aineet.matematiikka, 7.0),
-                lkAine(Aineet.fysiikka, 7.0),
-                lkAine(Aineet.kemia, 6.0),
-                lkAine(Aineet.biologia, 9.0),
-                lkAine(Aineet.kuvataide, 10.0),
-                lkAine(Aineet.musiikki, 5.0),
-                lkAine(Aineet.maantieto, 7.0),
-                lkAine(YoAineet.filosofia, 9.0),
-                lkAine(Aineet.liikunta, 8.0),
-                lkAine(Aineet.terveystieto, 5.0),
-                lkAine(Aineet.uskonto, 9.0),
-                lkAine(Aineet.a11Kieli, 10.0),
-                lkAine(Aineet.b1Kieli, 7.0),
-                lkAine(Aineet.b31Kieli, 6.0)
-        );
+        return yhdistaMapit(lkAine(Aineet.aidinkieliJaKirjallisuus1, 7.0),
+                lkAine(Aineet.aidinkieliJaKirjallisuus2, 8.0), lkAine(Aineet.historia, 9.0),
+                lkAine(Aineet.yhteiskuntaoppi, 6.0), lkAine(Aineet.matematiikka, 7.0), lkAine(Aineet.fysiikka, 7.0),
+                lkAine(Aineet.kemia, 6.0), lkAine(Aineet.biologia, 9.0), lkAine(Aineet.kuvataide, 10.0),
+                lkAine(Aineet.musiikki, 5.0), lkAine(Aineet.maantieto, 7.0), lkAine(YoAineet.filosofia, 9.0),
+                lkAine(Aineet.liikunta, 8.0), lkAine(Aineet.terveystieto, 5.0), lkAine(Aineet.uskonto, 9.0),
+                lkAine(Aineet.a11Kieli, 10.0), lkAine(Aineet.b1Kieli, 7.0), lkAine(Aineet.b31Kieli, 6.0));
     }
 
     private Hakemus luoPerushakemus() {
@@ -201,27 +194,26 @@ public class LuoValintaperusteetServiceTest {
         return hakemus;
     }
 
-
     @Test
     public void testPkPainotettavatKeskiarvot() {
         Hakemus hakemus = luoPerushakemus();
 
-        // Musiikki:     9.25
+        // Musiikki: 9.25
         // Kuvaamataito: 8.0
-        // Käsityö:      7.25
-        // Kotitalous:   6.0
-        // Liikunta:     8.0
+        // Käsityö: 7.25
+        // Kotitalous: 6.0
+        // Liikunta: 8.0
 
         // Kolmen parhaan keskiarvo: (9.25 + 8.0 + 7.25) / 3 = 8.16667
         // Asettuu välille 8.0 - 8.5 ===> 5 pistettä
-        final double odotettuTulos = 5.0;
+        final BigDecimal odotettuTulos = new BigDecimal("5.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkPohjaiset.luoPainotettavatKeskiarvotLaskentakaava(pkAineet));
 
-        Laskentatulos<Double> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemus, hakemukset(hakemus),
-                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemus, hakemukset(hakemus),
+                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()), new StringBuffer());
 
-        assertEquals(odotettuTulos, tulos.getTulos(), 0.001);
+        assertEquals(odotettuTulos, tulos.getTulos());
         assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
     }
 
@@ -231,14 +223,14 @@ public class LuoValintaperusteetServiceTest {
 
         // Kaikkien aineiden keskiarvo: 7.421
 
-        final double odotettuTulos = 7.421;
+        final BigDecimal odotettuTulos = new BigDecimal("7.4211");
 
         Laskentakaava kaava = laajennaAlakaavat(PkPohjaiset.luoPKPohjaisenKoulutuksenLukuaineidenKeskiarvo(pkAineet));
 
-        Laskentatulos<Double> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemus, hakemukset(hakemus),
-                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemus, hakemukset(hakemus),
+                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()), new StringBuffer());
 
-        assertEquals(odotettuTulos, tulos.getTulos(), 0.001);
+        assertEquals(odotettuTulos, tulos.getTulos());
         assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
     }
 
@@ -249,16 +241,15 @@ public class LuoValintaperusteetServiceTest {
         // Kaikkien aineiden keskiarvo: 7.421
         // Asettuu välille 7.25 - 7.50 ==> 8 pistettä
 
-
-        final double odotettuTulos = 8.0;
+        final BigDecimal odotettuTulos = new BigDecimal("8.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(
                 PkPohjaiset.luoPKPohjaisenKoulutuksenLukuaineidenKeskiarvo(pkAineet), "nimi"));
 
-        Laskentatulos<Double> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemus, hakemukset(hakemus),
-                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemus, hakemukset(hakemus),
+                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()), new StringBuffer());
 
-        assertEquals(odotettuTulos, tulos.getTulos(), 0.001);
+        assertEquals(odotettuTulos, tulos.getTulos());
         assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
     }
 
@@ -266,32 +257,29 @@ public class LuoValintaperusteetServiceTest {
     public void testPkPohjakoulutusPisteytysmalliPohjakoulutusOnPerusopetus() {
         Hakemus hakemus = hakemus(yhdistaMapit(
                 valintaperuste(PkPohjaiset.pohjakoulutusAvain, PkPohjaiset.perusopetuksenOppimaara),
-                valintaperuste(PkPohjaiset.todistuksenSaantivuosi, PkPohjaiset.kuluvaVuosi)
-        ));
+                valintaperuste(PkPohjaiset.todistuksenSaantivuosi, PkPohjaiset.kuluvaVuosi)));
 
-        final double odotettuTulos = 6.0;
+        final BigDecimal odotettuTulos = new BigDecimal("6.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkPohjaiset.luoPohjakoulutuspisteytysmalli());
-        Laskentatulos<Double> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemus, hakemukset(hakemus),
-                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemus, hakemukset(hakemus),
+                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()), new StringBuffer());
 
-        assertEquals(odotettuTulos, tulos.getTulos(), 0.001);
+        assertEquals(odotettuTulos, tulos.getTulos());
         assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
     }
 
     @Test
     public void testPkPohjakoulutusPisteytysmalliLisapistekoulutusSuoritettu() {
-        Hakemus hakemus = hakemus(yhdistaMapit(
-                valintaperuste(PkPohjaiset.kymppiluokka, Boolean.TRUE.toString())
-        ));
+        Hakemus hakemus = hakemus(yhdistaMapit(valintaperuste(PkPohjaiset.kymppiluokka, Boolean.TRUE.toString())));
 
-        final double odotettuTulos = 6.0;
+        final BigDecimal odotettuTulos = new BigDecimal("6.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkPohjaiset.luoPohjakoulutuspisteytysmalli());
-        Laskentatulos<Double> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemus, hakemukset(hakemus),
-                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemus, hakemukset(hakemus),
+                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()), new StringBuffer());
 
-        assertEquals(odotettuTulos, tulos.getTulos(), 0.001);
+        assertEquals(odotettuTulos, tulos.getTulos());
         assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
     }
 
@@ -299,282 +287,260 @@ public class LuoValintaperusteetServiceTest {
     public void testPkPohjakoulutusPisteytysmalliPohjakoulutusMuu() {
         Hakemus hakemus = hakemus(yhdistaMapit(
                 valintaperuste(PkPohjaiset.pohjakoulutusAvain, PkPohjaiset.lukionPaattotodistus),
-                valintaperuste(PkPohjaiset.todistuksenSaantivuosi, PkPohjaiset.kuluvaVuosi)
-        ));
+                valintaperuste(PkPohjaiset.todistuksenSaantivuosi, PkPohjaiset.kuluvaVuosi)));
 
-        final double odotettuTulos = 0.0;
+        final BigDecimal odotettuTulos = new BigDecimal("0.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkPohjaiset.luoPohjakoulutuspisteytysmalli());
-        Laskentatulos<Double> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemus, hakemukset(hakemus),
-                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemus, hakemukset(hakemus),
+                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()), new StringBuffer());
 
-        assertEquals(odotettuTulos, tulos.getTulos(), 0.001);
+        assertEquals(odotettuTulos, tulos.getTulos());
         assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
     }
 
     @Test
     public void testIlmanKoulutuspaikkaaPisteytysmalliOnKoulutuspaikka() {
-        Hakemus hakemus = hakemus(yhdistaMapit(
-                valintaperuste(PkPohjaiset.koulutuspaikkaAmmatilliseenTutkintoon, Boolean.TRUE.toString())
-        ));
+        Hakemus hakemus = hakemus(yhdistaMapit(valintaperuste(PkPohjaiset.koulutuspaikkaAmmatilliseenTutkintoon,
+                Boolean.TRUE.toString())));
 
-        final double odotettuTulos = 0.0;
+        final BigDecimal odotettuTulos = new BigDecimal("0.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkPohjaiset.ilmanKoulutuspaikkaaPisteytysmalli());
-        Laskentatulos<Double> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemus, hakemukset(hakemus),
-                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemus, hakemukset(hakemus),
+                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()), new StringBuffer());
 
-        assertEquals(odotettuTulos, tulos.getTulos(), 0.001);
+        assertEquals(odotettuTulos, tulos.getTulos());
         assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
     }
 
     @Test
     public void testIlmanKoulutuspaikkaaPisteytysmalliEiOleKoulutuspaikkaa() {
-        Hakemus hakemus = hakemus(yhdistaMapit(
-                valintaperuste(PkPohjaiset.koulutuspaikkaAmmatilliseenTutkintoon, Boolean.FALSE.toString())
-        ));
+        Hakemus hakemus = hakemus(yhdistaMapit(valintaperuste(PkPohjaiset.koulutuspaikkaAmmatilliseenTutkintoon,
+                Boolean.FALSE.toString())));
 
-        final double odotettuTulos = 8.0;
+        final BigDecimal odotettuTulos = new BigDecimal("8.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkPohjaiset.ilmanKoulutuspaikkaaPisteytysmalli());
-        Laskentatulos<Double> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemus, hakemukset(hakemus),
-                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemus, hakemukset(hakemus),
+                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()), new StringBuffer());
 
-        assertEquals(odotettuTulos, tulos.getTulos(), 0.001);
+        assertEquals(odotettuTulos, tulos.getTulos());
         assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
     }
 
     @Test
     public void testHakutoivejarjestysPisteytysmalliEnsisijainenHakutoive() {
         Hakemus hakemus = luoPerushakemus();
-        final double odotettuTulos = 2.0;
+        final BigDecimal odotettuTulos = new BigDecimal("2.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoHakutoivejarjestyspisteytysmalli());
-        Laskentatulos<Double> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemus, hakemukset(hakemus),
-                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemus, hakemukset(hakemus),
+                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()), new StringBuffer());
 
-        assertEquals(odotettuTulos, tulos.getTulos(), 0.001);
+        assertEquals(odotettuTulos, tulos.getTulos());
         assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
     }
 
     @Test
     public void testHakutoivejarjestysPisteytysmalliToissijainenHakutoive() {
         Hakemus hakemus = luoPerushakemus();
-        final double odotettuTulos = 0.0;
+        final BigDecimal odotettuTulos = new BigDecimal("0.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoHakutoivejarjestyspisteytysmalli());
-        Laskentatulos<Double> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID2, hakemus, hakemukset(hakemus),
-                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID2, hakemus, hakemukset(hakemus),
+                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()), new StringBuffer());
 
-        assertEquals(odotettuTulos, tulos.getTulos(), 0.001);
+        assertEquals(odotettuTulos, tulos.getTulos());
         assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
     }
 
     @Test
     public void testTyokokemusPisteytysmalliAlleKolme() {
-        Hakemus hakemus = hakemus(yhdistaMapit(
-                valintaperuste(PkJaYoPohjaiset.tyokokemuskuukaudet, 2.0)
-        ));
+        Hakemus hakemus = hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.tyokokemuskuukaudet, 2.0)));
 
-        final double odotettuTulos = 0.0;
+        final BigDecimal odotettuTulos = new BigDecimal("0.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoTyokokemuspisteytysmalli());
-        Laskentatulos<Double> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemus, hakemukset(hakemus),
-                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemus, hakemukset(hakemus),
+                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()), new StringBuffer());
 
-        assertEquals(odotettuTulos, tulos.getTulos(), 0.001);
+        assertEquals(odotettuTulos, tulos.getTulos());
         assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
     }
 
     @Test
     public void testTyokokemusPisteytysmalliKolme() {
-        Hakemus hakemus = hakemus(yhdistaMapit(
-                valintaperuste(PkJaYoPohjaiset.tyokokemuskuukaudet, 3.0)
-        ));
+        Hakemus hakemus = hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.tyokokemuskuukaudet, 3.0)));
 
-        final double odotettuTulos = 1.0;
+        final BigDecimal odotettuTulos = new BigDecimal("1.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoTyokokemuspisteytysmalli());
-        Laskentatulos<Double> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemus, hakemukset(hakemus),
-                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemus, hakemukset(hakemus),
+                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()), new StringBuffer());
 
-        assertEquals(odotettuTulos, tulos.getTulos(), 0.001);
+        assertEquals(odotettuTulos, tulos.getTulos());
         assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
     }
 
     @Test
     public void testTyokokemusPisteytysmalliKuusi() {
-        Hakemus hakemus = hakemus(yhdistaMapit(
-                valintaperuste(PkJaYoPohjaiset.tyokokemuskuukaudet, 6.0)
-        ));
+        Hakemus hakemus = hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.tyokokemuskuukaudet, 6.0)));
 
-        final double odotettuTulos = 2.0;
+        final BigDecimal odotettuTulos = new BigDecimal("2.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoTyokokemuspisteytysmalli());
-        Laskentatulos<Double> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemus, hakemukset(hakemus),
-                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemus, hakemukset(hakemus),
+                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()), new StringBuffer());
 
-        assertEquals(odotettuTulos, tulos.getTulos(), 0.001);
+        assertEquals(odotettuTulos, tulos.getTulos());
         assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
     }
 
     @Test
     public void testTyokokemusPisteytysmalliKaksitoista() {
-        Hakemus hakemus = hakemus(yhdistaMapit(
-                valintaperuste(PkJaYoPohjaiset.tyokokemuskuukaudet, 12.0)
-        ));
+        Hakemus hakemus = hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.tyokokemuskuukaudet, 12.0)));
 
-        final double odotettuTulos = 3.0;
+        final BigDecimal odotettuTulos = new BigDecimal("3.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoTyokokemuspisteytysmalli());
-        Laskentatulos<Double> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemus, hakemukset(hakemus),
-                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemus, hakemukset(hakemus),
+                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()), new StringBuffer());
 
-        assertEquals(odotettuTulos, tulos.getTulos(), 0.001);
+        assertEquals(odotettuTulos, tulos.getTulos());
         assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
     }
 
     @Test
     public void testSukupuolipisteytysmalliAlle30Prosenttia() {
-        Hakemus[] hakemukset = new Hakemus[]{
-                hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "m"))),
+        Hakemus[] hakemukset = new Hakemus[] { hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "m"))),
                 hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "n"))),
                 hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "n"))),
-                hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "n")))
-        };
+                hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "n"))) };
 
-        final double odotettuTulos = 2.0;
+        final BigDecimal odotettuTulos = new BigDecimal("2.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoSukupuolipisteytysmalli());
 
-        Laskentatulos<Double> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemukset[0], Arrays.asList(hakemukset),
-                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemukset[0],
+                Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()),
+                new StringBuffer());
 
-        assertEquals(odotettuTulos, tulos.getTulos(), 0.001);
+        assertEquals(odotettuTulos, tulos.getTulos());
         assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
     }
 
     @Test
     public void testSukupuolipisteytysmalliYli30Prosenttia() {
-        Hakemus[] hakemukset = new Hakemus[]{
-                hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "m"))),
+        Hakemus[] hakemukset = new Hakemus[] { hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "m"))),
                 hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "m"))),
                 hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "n"))),
-                hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "n")))
-        };
+                hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "n"))) };
 
-        final double odotettuTulos = 0.0;
+        final BigDecimal odotettuTulos = new BigDecimal("0.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoSukupuolipisteytysmalli());
 
-        Laskentatulos<Double> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemukset[0], Arrays.asList(hakemukset),
-                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemukset[0],
+                Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()),
+                new StringBuffer());
 
-        assertEquals(odotettuTulos, tulos.getTulos(), 0.001);
+        assertEquals(odotettuTulos, tulos.getTulos());
         assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
     }
 
     @Test
     public void testToisenAsteenPeruskoulupohjainenPeruskaava() {
-        Hakemus[] hakemukset = new Hakemus[]{
+        Hakemus[] hakemukset = new Hakemus[] {
                 hakemus(yhdistaMapit(
                         luoPkAineet(),
-                        valintaperuste(PkPohjaiset.pohjakoulutusAvain, PkPohjaiset.perusopetuksenErityisopetuksenOsittainYksilollistettyOppimaara),
+                        valintaperuste(PkPohjaiset.pohjakoulutusAvain,
+                                PkPohjaiset.perusopetuksenErityisopetuksenOsittainYksilollistettyOppimaara),
                         valintaperuste(PkPohjaiset.todistuksenSaantivuosi, PkPohjaiset.kuluvaVuosi),
                         valintaperuste(PkPohjaiset.koulutuspaikkaAmmatilliseenTutkintoon, Boolean.FALSE.toString()),
                         valintaperuste(PkJaYoPohjaiset.tyokokemuskuukaudet, 7),
-                        valintaperuste(PkJaYoPohjaiset.sukupuoli, "m")
-                )),
+                        valintaperuste(PkJaYoPohjaiset.sukupuoli, "m"))),
                 hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "m"))),
                 hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "m"))),
                 hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "n"))),
-                hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "n"))),
-        };
+                hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "n"))), };
 
-        final double odotettuTulos = 31.0;
+        final BigDecimal odotettuTulos = new BigDecimal("31.0");
 
-        Laskentakaava kaava = laajennaAlakaavat(
-                PkPohjaiset.luoToisenAsteenPeruskoulupohjainenPeruskaava(PkPohjaiset.luoPainotettavatKeskiarvotLaskentakaava(pkAineet),
-                        PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(PkPohjaiset.luoPKPohjaisenKoulutuksenLukuaineidenKeskiarvo(pkAineet), "nimi"),
-                        PkPohjaiset.luoPohjakoulutuspisteytysmalli(),
-                        PkPohjaiset.ilmanKoulutuspaikkaaPisteytysmalli(),
-                        PkJaYoPohjaiset.luoHakutoivejarjestyspisteytysmalli(),
-                        PkJaYoPohjaiset.luoTyokokemuspisteytysmalli(),
-                        PkJaYoPohjaiset.luoSukupuolipisteytysmalli()));
-        Laskentatulos<Double> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemukset[0], Arrays.asList(hakemukset),
-                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
+        Laskentakaava kaava = laajennaAlakaavat(PkPohjaiset.luoToisenAsteenPeruskoulupohjainenPeruskaava(
+                PkPohjaiset.luoPainotettavatKeskiarvotLaskentakaava(pkAineet),
+                PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(
+                        PkPohjaiset.luoPKPohjaisenKoulutuksenLukuaineidenKeskiarvo(pkAineet), "nimi"),
+                PkPohjaiset.luoPohjakoulutuspisteytysmalli(), PkPohjaiset.ilmanKoulutuspaikkaaPisteytysmalli(),
+                PkJaYoPohjaiset.luoHakutoivejarjestyspisteytysmalli(), PkJaYoPohjaiset.luoTyokokemuspisteytysmalli(),
+                PkJaYoPohjaiset.luoSukupuolipisteytysmalli()));
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemukset[0],
+                Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()),
+                new StringBuffer());
 
-        assertEquals(odotettuTulos, tulos.getTulos(), 0.001);
+        assertEquals(odotettuTulos, tulos.getTulos());
         assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
     }
 
-
     @Test
     public void testLkPaattotodistuksenKeskiarvo() {
-        Hakemus hakemus = hakemus(yhdistaMapit(
-                luoLkAineet()
-        ));
+        Hakemus hakemus = hakemus(yhdistaMapit(luoLkAineet()));
 
         // Kaikkien aineiden keskiarvo: 7.5
-        final double odotettuTulos = 7.5;
+        final BigDecimal odotettuTulos = new BigDecimal("7.5");
 
-        Laskentakaava kaava = laajennaAlakaavat(YoPohjaiset.luoYOPohjaisenKoulutuksenPaattotodistuksenKeskiarvo(yoAineet));
+        Laskentakaava kaava = laajennaAlakaavat(YoPohjaiset
+                .luoYOPohjaisenKoulutuksenPaattotodistuksenKeskiarvo(yoAineet));
 
-        Laskentatulos<Double> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemus, hakemukset(hakemus),
-                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemus, hakemukset(hakemus),
+                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()), new StringBuffer());
 
-        assertEquals(odotettuTulos, tulos.getTulos(), 0.001);
+        assertEquals(odotettuTulos.compareTo(tulos.getTulos()), 0);
         assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
     }
 
     @Test
     public void testLkYleinenKoulumenestyspisteytysmalli() {
-        Hakemus hakemus = hakemus(yhdistaMapit(
-                luoLkAineet()
-        ));
+        Hakemus hakemus = hakemus(yhdistaMapit(luoLkAineet()));
 
         // Kaikkien aineiden keskiarvo: 7.5
         // Asettuu arvovälille 7.5 - 7.75
 
-        final double odotettuTulos = 9.0;
+        final BigDecimal odotettuTulos = new BigDecimal("9.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(
                 YoPohjaiset.luoYOPohjaisenKoulutuksenPaattotodistuksenKeskiarvo(yoAineet), "nimi"));
 
-        Laskentatulos<Double> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemus, hakemukset(hakemus),
-                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemus, hakemukset(hakemus),
+                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()), new StringBuffer());
 
-        assertEquals(odotettuTulos, tulos.getTulos(), 0.001);
+        assertEquals(odotettuTulos, tulos.getTulos());
         assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
     }
 
     @Test
     public void testToisenAsteenYlioppilaspohjainenPeruskaava() {
-        Hakemus[] hakemukset = new Hakemus[]{
-                hakemus(yhdistaMapit(
-                        luoLkAineet(),
-                        valintaperuste(PkJaYoPohjaiset.tyokokemuskuukaudet, 7),
-                        valintaperuste(PkJaYoPohjaiset.sukupuoli, "m")
-                )),
+        Hakemus[] hakemukset = new Hakemus[] {
+                hakemus(yhdistaMapit(luoLkAineet(), valintaperuste(PkJaYoPohjaiset.tyokokemuskuukaudet, 7),
+                        valintaperuste(PkJaYoPohjaiset.sukupuoli, "m"))),
                 hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "m"))),
                 hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "m"))),
                 hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "n"))),
-                hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "n"))),
-        };
+                hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "n"))), };
 
-        final double odotettuTulos = 13.0;
+        final BigDecimal odotettuTulos = new BigDecimal("13.0");
 
-        Laskentakaava kaava = laajennaAlakaavat(
-                YoPohjaiset.luoToisenAsteenYlioppilaspohjainenPeruskaava(
-                        PkJaYoPohjaiset.luoHakutoivejarjestyspisteytysmalli(),
-                        PkJaYoPohjaiset.luoTyokokemuspisteytysmalli(),
-                        PkJaYoPohjaiset.luoSukupuolipisteytysmalli(),
-                        PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(
-                                YoPohjaiset.luoYOPohjaisenKoulutuksenPaattotodistuksenKeskiarvo(yoAineet), "nimi")));
-        Laskentatulos<Double> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemukset[0], Arrays.asList(hakemukset),
-                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
+        Laskentakaava kaava = laajennaAlakaavat(YoPohjaiset.luoToisenAsteenYlioppilaspohjainenPeruskaava(
+                PkJaYoPohjaiset.luoHakutoivejarjestyspisteytysmalli(),
+                PkJaYoPohjaiset.luoTyokokemuspisteytysmalli(),
+                PkJaYoPohjaiset.luoSukupuolipisteytysmalli(),
+                PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(
+                        YoPohjaiset.luoYOPohjaisenKoulutuksenPaattotodistuksenKeskiarvo(yoAineet), "nimi")));
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemukset[0],
+                Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()),
+                new StringBuffer());
 
-        assertEquals(odotettuTulos, tulos.getTulos(), 0.001);
+        assertEquals(odotettuTulos, tulos.getTulos());
         assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
     }
 }

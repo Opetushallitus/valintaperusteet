@@ -4,6 +4,7 @@ import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
+import fi.vm.sade.service.valintaperusteet.model.Hakukohdekoodi;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import fi.vm.sade.service.valintaperusteet.service.HakukohdeService;
@@ -172,5 +173,82 @@ public class HakukohdeServiceImpl extends AbstractCRUDServiceImpl<HakukohdeViite
 
         // Hakukohteiden tuonti saattaa feilata ilman flushausta, jos hakukohde siirretään uuden valintaryhmän alle
         hakukohdeViiteDAO.flush();
+    }
+
+    private HakukohdeViite luoKopio(HakukohdeViite hakukohdeViite) {
+        HakukohdeViite kopio = new HakukohdeViite();
+        kopio.setHakuoid(hakukohdeViite.getHakuoid());
+        kopio.setOid(hakukohdeViite.getOid());
+        kopio.setNimi(hakukohdeViite.getNimi());
+        return kopio;
+    }
+
+    @Override
+    public HakukohdeViite siirraHakukohdeValintaryhmaan(String hakukohdeOid, String valintaryhmaOid) {
+        HakukohdeViite hakukohdeViite = haeHakukohdeViite(hakukohdeOid);
+
+        Valintaryhma valintaryhma = null;
+        if (StringUtils.isNotBlank(valintaryhmaOid)) {
+            valintaryhma = valintaryhmaService.readByOid(valintaryhmaOid);
+        }
+
+        if ((valintaryhma != null ^ hakukohdeViite.getValintaryhma() != null) ||
+                (valintaryhma != null && hakukohdeViite.getValintaryhma() != null
+                        && !valintaryhma.getOid().equals(hakukohdeViite.getValintaryhma().getOid()))) {
+
+            poistaHakukohteenPeriytyvatValinnanVaiheet(hakukohdeOid);
+            List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheService.findByHakukohde(hakukohdeOid);
+
+            // Käydään läpi kaikki ei-periytyvät valinnan vaiheet ja asetetaan hakukohdeviittaus tilapäisesti
+            // nulliksi
+            for (ValinnanVaihe vv : valinnanVaiheet) {
+                vv.setHakukohdeViite(null);
+            }
+
+            // Poistetaan vanha hakukohde
+            deleteByOid(hakukohdeOid);
+
+            // Luodaan uusi hakukohde
+            HakukohdeViite uusiHakukohde = luoKopio(hakukohdeViite);
+            HakukohdeViite lisatty = insert(uusiHakukohde,
+                    valintaryhma != null ? valintaryhma.getOid() : null);
+
+            if (hakukohdeViite.getHakukohdekoodi() != null) {
+                Hakukohdekoodi koodi = hakukohdeViite.getHakukohdekoodi();
+                lisatty.setHakukohdekoodi(koodi);
+                koodi.addHakukohde(lisatty);
+            }
+
+            lisatty.getOpetuskielet().addAll(hakukohdeViite.getOpetuskielet());
+            lisatty.getValintakokeet().addAll(hakukohdeViite.getValintakokeet());
+
+            ValinnanVaihe viimeinenValinnanVaihe =
+                    valinnanVaiheDAO.haeHakukohteenViimeinenValinnanVaihe(hakukohdeOid);
+            if (!valinnanVaiheet.isEmpty()) {
+                valinnanVaiheet.get(0).setEdellinen(viimeinenValinnanVaihe);
+                if (viimeinenValinnanVaihe != null) {
+                    viimeinenValinnanVaihe.setSeuraava(valinnanVaiheet.get(0));
+                }
+
+                // Asetetaan hakukohteen omat valinnan vaiheet viittaamaan taas uuteen hakukohteeseen
+                for (ValinnanVaihe vv : valinnanVaiheet) {
+                    vv.setHakukohdeViite(uusiHakukohde);
+                }
+            }
+
+            return lisatty;
+        } else {
+            return hakukohdeViite;
+        }
+    }
+
+    private void poistaHakukohteenPeriytyvatValinnanVaiheet(String hakukohdeOid) {
+        List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheService.findByHakukohde(hakukohdeOid);
+        // Poistetaan kaikki periytyvät valinnan vaiheet
+        for (ValinnanVaihe vv : valinnanVaiheet) {
+            if (vv.getMasterValinnanVaihe() != null) {
+                valinnanVaiheService.deleteByOid(vv.getOid(), true);
+            }
+        }
     }
 }

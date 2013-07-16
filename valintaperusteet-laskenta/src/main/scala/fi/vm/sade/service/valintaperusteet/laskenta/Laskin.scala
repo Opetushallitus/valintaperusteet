@@ -20,6 +20,7 @@ import Laskin._
 import scala.collection.mutable.ListBuffer
 import com.codahale.jerkson.Json
 import java.math.BigDecimal
+import java.math.RoundingMode
 
 object Laskin {
   val LOG = LoggerFactory.getLogger(classOf[Laskin])
@@ -296,7 +297,7 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
           o <- osoittajaArvo
         } yield {
           if (n.compareTo(BigDecimal.ZERO) == 0) throw new RuntimeException("Nimittäjä ei voi olla nolla")
-          o.divide(n)
+          o.divide(n, 4, RoundingMode.HALF_UP)
         }
         (tulos, List(nimittajaTila, osoittajaTila), Historia("Osamäärä", tulos, Some(List(historia1, historia2)), None))
       }
@@ -307,14 +308,14 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
       }
 
       case Keskiarvo(fs, oid) => {
-        val (tulos, tilat, h) = muodostaKoostettuTulos(fs, ds => summa(ds).divide(new BigDecimal(ds.size)))
+        val (tulos, tilat, h) = muodostaKoostettuTulos(fs, ds => summa(ds).divide(new BigDecimal(ds.size), 4, RoundingMode.HALF_UP))
         (tulos, tilat, Historia("Keskiarvo", tulos, h.historiat, None))
       }
 
       case KeskiarvoNParasta(n, fs, oid) => {
         val (tulos, tilat, h) = muodostaKoostettuTulos(fs, ds => {
           val kaytettavaN = scala.math.min(n, ds.size)
-          summa(ds.sortWith(_.compareTo(_) == 1).take(kaytettavaN)).divide(new BigDecimal(kaytettavaN))
+          summa(ds.sortWith(_.compareTo(_) == 1).take(kaytettavaN)).divide(new BigDecimal(kaytettavaN), 4, RoundingMode.HALF_UP)
         })
         (tulos, tilat, Historia("Keskiarvo N-parasta", tulos, h.historiat, Some(Map("n" -> Some(n)))))
       }
@@ -342,7 +343,7 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
         val (tulos, tilat, h) = muodostaKoostettuTulos(fs, ds => {
           val sorted = ds.sortWith(_.compareTo(_) == -1)
           if (sorted.size % 2 == 1) sorted(sorted.size / 2)
-          else (sorted(sorted.size / 2).add(sorted(sorted.size / 2 - 1))).divide(new BigDecimal("2.0"))
+          else (sorted(sorted.size / 2).add(sorted(sorted.size / 2 - 1))).divide(new BigDecimal("2.0"), 4, RoundingMode.HALF_UP)
         })
         (tulos, tilat, Historia("Mediaani", tulos, h.historiat, None))
       }
