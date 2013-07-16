@@ -436,7 +436,6 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAETOTUUSARVO,
       valintaperustetunniste = ValintaperusteViite(
-        onPaasykoe = false,
         onPakollinen = true,
         tunniste = "onYlioppilas")
     )
@@ -449,7 +448,6 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAELUKUARVO,
       valintaperustetunniste = ValintaperusteViite(
-        onPaasykoe = false,
         onPakollinen = true,
         tunniste = "paasykoepisteet")
     )
@@ -462,7 +460,6 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAELUKUARVO,
       valintaperustetunniste = ValintaperusteViite(
-        onPaasykoe = false,
         onPakollinen = true,
         tunniste = "paasykoepisteet"),
       arvokonvertterit = List(
@@ -479,7 +476,6 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAELUKUARVO,
       valintaperustetunniste = ValintaperusteViite(
-        onPaasykoe = false,
         onPakollinen = true,
         tunniste = "paasykoepisteet"),
       arvovalikonvertterit = List(
@@ -507,7 +503,6 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAELUKUARVO,
       valintaperustetunniste = ValintaperusteViite(
-        onPaasykoe = false,
         onPakollinen = true,
         tunniste = "paasykoepisteet"),
       syoteparametrit = List(
@@ -525,7 +520,6 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAELUKUARVO,
       valintaperustetunniste = ValintaperusteViite(
-        onPaasykoe = false,
         onPakollinen = true,
         tunniste = "paasykoepisteet"),
       syoteparametrit = List(
@@ -541,7 +535,6 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAETOTUUSARVO,
       valintaperustetunniste = ValintaperusteViite(
-        onPaasykoe = false,
         onPakollinen = true,
         tunniste = "onYlioppilas"),
       syoteparametrit = List(
@@ -559,7 +552,6 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAETOTUUSARVO,
       valintaperustetunniste = ValintaperusteViite(
-        onPaasykoe = false,
         onPakollinen = true,
         tunniste = "onYlioppilas"),
       syoteparametrit = List(
@@ -575,7 +567,6 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAEMERKKIJONOJAKONVERTOILUKUARVOKSI,
       valintaperustetunniste = ValintaperusteViite(
-        onPaasykoe = false,
         onPakollinen = true,
         tunniste = "onYlioppilas"),
       syoteparametrit = List(
@@ -600,7 +591,6 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAEMERKKIJONOJAKONVERTOILUKUARVOKSI,
       valintaperustetunniste = ValintaperusteViite(
-        onPaasykoe = false,
         onPakollinen = true,
         tunniste = "onYlioppilas"),
       syoteparametrit = List(
@@ -623,7 +613,6 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAEMERKKIJONOJAKONVERTOILUKUARVOKSI,
       valintaperustetunniste = ValintaperusteViite(
-        onPaasykoe = false,
         onPakollinen = true,
         tunniste = "onYlioppilas"),
       syoteparametrit = List(
@@ -641,7 +630,6 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAEMERKKIJONOJAKONVERTOITOTUUSARVOKSI,
       valintaperustetunniste = ValintaperusteViite(
-        onPaasykoe = false,
         onPakollinen = true,
         tunniste = "joku_tunniste"),
       syoteparametrit = List(
@@ -666,7 +654,6 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAEMERKKIJONOJAKONVERTOITOTUUSARVOKSI,
       valintaperustetunniste = ValintaperusteViite(
-        onPaasykoe = false,
         onPakollinen = true,
         tunniste = "joku_tunniste"
       ),
@@ -690,7 +677,6 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAEMERKKIJONOJAKONVERTOITOTUUSARVOKSI,
       valintaperustetunniste = ValintaperusteViite(
-        onPaasykoe = false,
         onPakollinen = true,
         tunniste = "joku_tunniste"
       ),
@@ -756,7 +742,6 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
         )
       ),
       valintaperustetunniste = ValintaperusteViite(
-        onPaasykoe = false,
         onPakollinen = true,
         tunniste = "joku_tunniste"
       )

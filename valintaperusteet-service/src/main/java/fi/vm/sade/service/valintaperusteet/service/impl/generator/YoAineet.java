@@ -50,7 +50,7 @@ public class YoAineet extends Aineet {
 
     public Laskentakaava luoYOAine(String ainetunniste, String ainekuvaus) {
         Funktiokutsu aine = GenericHelper.luoHaeLukuarvo(
-                GenericHelper.luoValintaperusteViite(pakollinen(ainetunniste), false, false,
+                GenericHelper.luoValintaperusteViite(pakollinen(ainetunniste), false,
                         Valintaperustelahde.HAETTAVA_ARVO));
 
         Laskentakaava laskentakaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(aine, ainekuvaus + LK_KUVAUSJALKILIITE);

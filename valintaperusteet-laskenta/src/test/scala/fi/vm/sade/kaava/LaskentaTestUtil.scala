@@ -28,9 +28,9 @@ object LaskentaTestUtil {
 
   object Funktiokutsu {
     def apply(nimi: Funktionimi, funktioargumentit: Seq[FunktionArgumentti] = Nil, syoteparametrit: Seq[Syoteparametri] = Nil,
-      arvokonvertterit: Seq[Arvokonvertteriparametri] = Nil,
-      arvovalikonvertterit: Seq[Arvovalikonvertteriparametri] = Nil,
-      valintaperustetunniste: ValintaperusteViite = null) = {
+              arvokonvertterit: Seq[Arvokonvertteriparametri] = Nil,
+              arvovalikonvertterit: Seq[Arvovalikonvertteriparametri] = Nil,
+              valintaperustetunniste: ValintaperusteViite = null) = {
       val funktiokutsu = new Funktiokutsu
       funktiokutsu.setFunktionimi(nimi)
 
@@ -85,12 +85,11 @@ object LaskentaTestUtil {
   }
 
   object ValintaperusteViite {
-    def apply(onPaasykoe: java.lang.Boolean = false, onPakollinen: java.lang.Boolean, tunniste: String) = {
+    def apply(onPakollinen: java.lang.Boolean, tunniste: String) = {
       val viite = new ValintaperusteViite
       viite.setKuvaus("")
       viite.setLahde(Valintaperustelahde.SYOTETTAVA_ARVO)
       viite.setOnPakollinen(onPakollinen)
-      viite.setOnPaasykoe(onPaasykoe)
       viite.setTunniste(tunniste)
 
       viite

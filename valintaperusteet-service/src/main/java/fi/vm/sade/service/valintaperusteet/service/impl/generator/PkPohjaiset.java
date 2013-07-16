@@ -71,13 +71,13 @@ public class PkPohjaiset {
         }
 
         Funktiokutsu pohjakoulutusOnPeruskoulutus = GenericHelper.luoHaeMerkkijonoJaKonvertoiTotuusarvoksi(
-                GenericHelper.luoValintaperusteViite(pohjakoulutusAvain, false, false, Valintaperustelahde.HAETTAVA_ARVO),
+                GenericHelper.luoValintaperusteViite(pohjakoulutusAvain, false, Valintaperustelahde.HAETTAVA_ARVO),
                 false, konvs);
         // <---
 
         // Todistuksen saantivuosi -->
         Funktiokutsu haeTodistuksenSaantivuosi = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(
-                todistuksenSaantivuosi, false, false, Valintaperustelahde.HAETTAVA_ARVO), -1);
+                todistuksenSaantivuosi, false, Valintaperustelahde.HAETTAVA_ARVO), -1);
 
         Funktiokutsu todistuksenSaantivuosiOnSamaKuinKuluvavuosi = GenericHelper.luoYhtasuuri(
                 GenericHelper.luoLukuarvo(kuluvaVuosi), haeTodistuksenSaantivuosi);
@@ -91,7 +91,7 @@ public class PkPohjaiset {
         // Lisäpistekoulutus -->
         for (String tunniste : lisapistekoulutus) {
             args.add(GenericHelper.luoHaeTotuusarvo(GenericHelper.luoValintaperusteViite(
-                    tunniste, false, false, Valintaperustelahde.HAETTAVA_ARVO), false));
+                    tunniste, false, Valintaperustelahde.HAETTAVA_ARVO), false));
         }
         // <---
 
@@ -123,7 +123,7 @@ public class PkPohjaiset {
         Funktiokutsu thenHaara = GenericHelper.luoLukuarvo(8.0);
         Funktiokutsu elseHaara = GenericHelper.luoLukuarvo(0.0);
         Funktiokutsu ehto = GenericHelper.luoEi(GenericHelper.luoHaeTotuusarvo(
-                GenericHelper.luoValintaperusteViite(koulutuspaikkaAmmatilliseenTutkintoon, false, false,
+                GenericHelper.luoValintaperusteViite(koulutuspaikkaAmmatilliseenTutkintoon, false,
                         Valintaperustelahde.HAETTAVA_ARVO)));
 
         Funktiokutsu jos = GenericHelper.luoJosFunktio(ehto, thenHaara, elseHaara);

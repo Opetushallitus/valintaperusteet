@@ -35,7 +35,7 @@ public class PkJaYoPohjaiset {
         };
 
         Funktiokutsu f = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(
-                tyokokemuskuukaudet, false, false, Valintaperustelahde.HAETTAVA_ARVO), 0, Arrays.asList(konvs));
+                tyokokemuskuukaudet, false, Valintaperustelahde.HAETTAVA_ARVO), 0, Arrays.asList(konvs));
 
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(f, "Työkokemuspisteytys, 2 aste, pk ja yo");
     }

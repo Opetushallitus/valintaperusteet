@@ -60,14 +60,14 @@ public class PkAineet extends Aineet {
 
     private Laskentakaava luoPKAine(String ainetunniste, String kuvaus) {
         Funktiokutsu aine = GenericHelper.luoHaeLukuarvo(
-                GenericHelper.luoValintaperusteViite(pakollinen(ainetunniste), false, false,
+                GenericHelper.luoValintaperusteViite(pakollinen(ainetunniste), false,
                         Valintaperustelahde.HAETTAVA_ARVO));
         Funktiokutsu aineValinnainen1 = GenericHelper.luoHaeLukuarvo(
                 GenericHelper.luoValintaperusteViite(valinnainen1(ainetunniste),
-                        false, false, Valintaperustelahde.HAETTAVA_ARVO));
+                        false, Valintaperustelahde.HAETTAVA_ARVO));
         Funktiokutsu aineValinnainen2 = GenericHelper.luoHaeLukuarvo(
                 GenericHelper.luoValintaperusteViite(valinnainen2(ainetunniste),
-                        false, false, Valintaperustelahde.HAETTAVA_ARVO));
+                        false, Valintaperustelahde.HAETTAVA_ARVO));
 
         Funktiokutsu valinnainenKeskiarvo = GenericHelper.luoKeskiarvo(aineValinnainen1, aineValinnainen2);
         Funktiokutsu keskiarvo = GenericHelper.luoKeskiarvo(aine, valinnainenKeskiarvo);

@@ -131,10 +131,6 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
         if (fk.getValintaperuste() != null) {
             ValintaperusteViite vp = fk.getValintaperuste();
 
-            if (vp.getOnPaasykoe() == null) {
-                vp.setOnPaasykoe(false);
-            }
-
             if (vp.getOnPakollinen() == null) {
                 vp.setOnPakollinen(false);
             }
@@ -231,7 +227,6 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
 
             vp.setKuvaus(newVp.getKuvaus());
             vp.setLahde(newVp.getLahde());
-            vp.setOnPaasykoe(newVp.getOnPaasykoe());
             vp.setOnPakollinen(newVp.getOnPakollinen());
             vp.setTunniste(newVp.getTunniste());
 

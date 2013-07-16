@@ -247,7 +247,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
         valintakoekoodiService.lisaaValintakoekoodiValintaryhmalle(koe.getOid(), valintakoekoodi);
 
-        ValintaperusteViite valintaperusteViite = GenericHelper.luoValintaperusteViite(hakukohdeNimi, true, true, Valintaperustelahde.HAETTAVA_ARVO);
+        ValintaperusteViite valintaperusteViite = GenericHelper.luoValintaperusteViite(hakukohdeNimi, true, Valintaperustelahde.HAETTAVA_ARVO);
         Funktiokutsu valintakoe = GenericHelper.luoHaeLukuarvo(valintaperusteViite);
 
         Funktiokutsu funktiokutsu = GenericHelper.luoSumma(valintakoe, peruskaava);

@@ -6,7 +6,7 @@ import org.codehaus.jackson.map.annotate.JsonView;
 
 import javax.persistence.*;
 
-@Table(name="valintaperuste_viite")
+@Table(name = "valintaperuste_viite")
 @Entity
 public class ValintaperusteViite extends BaseEntity {
 
@@ -33,12 +33,8 @@ public class ValintaperusteViite extends BaseEntity {
     private Funktiokutsu funktiokutsu;
 
     @JsonView(JsonViews.Basic.class)
-    @Column(name="on_pakollinen", nullable = false)
+    @Column(name = "on_pakollinen", nullable = false)
     private Boolean onPakollinen;
-
-    @JsonView(JsonViews.Basic.class)
-    @Column(name="on_paasykoe", nullable = false)
-    private Boolean onPaasykoe;
 
     public String getTunniste() {
         return tunniste;
@@ -78,13 +74,5 @@ public class ValintaperusteViite extends BaseEntity {
 
     public void setOnPakollinen(Boolean onPakollinen) {
         this.onPakollinen = onPakollinen;
-    }
-
-    public Boolean getOnPaasykoe() {
-        return onPaasykoe;
-    }
-
-    public void setOnPaasykoe(Boolean onPaasykoe) {
-        this.onPaasykoe = onPaasykoe;
     }
 }

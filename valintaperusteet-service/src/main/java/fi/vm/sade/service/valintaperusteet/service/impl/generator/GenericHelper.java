@@ -67,16 +67,15 @@ public class GenericHelper {
         return funktiokutsu;
     }
 
-    public static ValintaperusteViite luoValintaperusteViite(String tunniste, boolean onPakollinen, boolean onPaasykoe, Valintaperustelahde lahde) {
-        return luoValintaperusteViite(tunniste, onPakollinen, onPaasykoe, lahde, "");
+    public static ValintaperusteViite luoValintaperusteViite(String tunniste, boolean onPakollinen, Valintaperustelahde lahde) {
+        return luoValintaperusteViite(tunniste, onPakollinen, lahde, "");
     }
 
-    public static ValintaperusteViite luoValintaperusteViite(String tunniste, boolean onPakollinen, boolean onPaasykoe,
+    public static ValintaperusteViite luoValintaperusteViite(String tunniste, boolean onPakollinen,
                                                              Valintaperustelahde lahde, String kuvaus) {
         ValintaperusteViite vp = new ValintaperusteViite();
         vp.setTunniste(tunniste);
         vp.setOnPakollinen(onPakollinen);
-        vp.setOnPaasykoe(onPaasykoe);
         vp.setLahde(lahde);
         vp.setKuvaus(kuvaus);
         return vp;
