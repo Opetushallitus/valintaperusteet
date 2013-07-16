@@ -31,7 +31,7 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.*;
 @Component
 @Path("hakukohde")
 @PreAuthorize("isAuthenticated()")
-public class    HakukohdeResource {
+public class HakukohdeResource {
 
     protected final static Logger LOGGER = LoggerFactory.getLogger(ValintaryhmaResource.class);
 
@@ -196,6 +196,23 @@ public class    HakukohdeResource {
             return Response.status(Response.Status.CREATED).entity(hakukohdekoodi).build();
         } catch (Exception e) {
             LOGGER.error("Error creating valinnanvaihe.", e);
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+    }
+
+    @POST
+    @Path("{hakukohdeOid}/siirra")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @JsonView({JsonViews.Basic.class})
+    @Secured({CRUD})
+    public Response siirraHakukohdeValintaryhmaan(@PathParam("hakukohdeOid") String hakukohdeOid,
+                                                  String valintaryhmaOid) {
+        try {
+            HakukohdeViite hakukohde = hakukohdeService.siirraHakukohdeValintaryhmaan(hakukohdeOid, valintaryhmaOid);
+            return Response.status(Response.Status.ACCEPTED).entity(hakukohde).build();
+        } catch (Exception e) {
+            LOGGER.error("Error moving hakukohde to new valintaryhma.", e);
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }

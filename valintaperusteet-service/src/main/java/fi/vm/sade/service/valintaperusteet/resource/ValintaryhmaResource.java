@@ -178,10 +178,10 @@ public class ValintaryhmaResource {
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({UPDATE, CRUD})
-    public Response updateHakukohdekoodi(@PathParam("valintaryhmaOid") String valintaryhamOid,
+    public Response updateHakukohdekoodi(@PathParam("valintaryhmaOid") String valintaryhmaOid,
                                          Set<Hakukohdekoodi> hakukohdekoodit) {
         try {
-            hakukohdekoodiService.updateValintaryhmaHakukohdekoodit(valintaryhamOid, hakukohdekoodit);
+            hakukohdekoodiService.updateValintaryhmaHakukohdekoodit(valintaryhmaOid, hakukohdekoodit);
             return Response.status(Response.Status.ACCEPTED).entity(hakukohdekoodit).build();
         } catch (Exception e) {
             LOGGER.error("Error updating hakukohdekoodit.", e);

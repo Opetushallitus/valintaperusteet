@@ -238,4 +238,16 @@ public class HakukohdeResourceTest {
         assertEquals(ARVO, oid1.getHakukohdekoodi().getArvo());
         assertEquals(URI2, oid1.getHakukohdekoodi().getUri());
     }
+
+    @Test
+    public void testSiirraHakukohdeValintaryhmaan() {
+        final String valintaryhmaOid = "oid54";
+        final String hakukohdeOid = "oid18";
+
+        Response response = hakukohdeResource.siirraHakukohdeValintaryhmaan(hakukohdeOid, valintaryhmaOid);
+        assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
+
+        HakukohdeViite hakukohde = (HakukohdeViite) response.getEntity();
+        assertEquals(hakukohde.getValintaryhma().getOid(), valintaryhmaOid);
+    }
 }
