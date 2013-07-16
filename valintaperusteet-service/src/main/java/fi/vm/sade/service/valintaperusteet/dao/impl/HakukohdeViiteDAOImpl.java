@@ -48,6 +48,7 @@ public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Lo
                 .leftJoin(hakukohdeViite.valintaryhma, valintaryhma).fetch()
                 .leftJoin(hakukohdeViite.hakukohdekoodi).fetch()
                 .leftJoin(hakukohdeViite.opetuskielet).fetch()
+                .leftJoin(hakukohdeViite.valintakokeet).fetch()
                 .where(hakukohdeViite.oid.eq(oid))
                 .singleResult(hakukohdeViite);
     }

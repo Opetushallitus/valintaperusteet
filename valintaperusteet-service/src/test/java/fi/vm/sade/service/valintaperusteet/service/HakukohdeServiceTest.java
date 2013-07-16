@@ -133,4 +133,205 @@ public class HakukohdeServiceTest {
         hakukohdeService.readByOid(hakukohdeOid);
 
     }
+
+    @Test
+    public void testSiirraHakukohdeToiseenValintaryhmaan() {
+        final String hakukohdeOid = "oid18";
+        final String valintaryhmaOidEnnen = "oid53";
+        final String valintaryhmaOidLopuksi = "oid54";
+
+        final String hakukohdekoodiUri = "hakukohdekoodiuri19";
+        final String opetuskielikoodiUri = "kieli_fi";
+        final String valintakoekoodiUri = "valintakoeuri1";
+        {
+            HakukohdeViite hakukohde = hakukohdeService.readByOid(hakukohdeOid);
+            assertEquals(valintaryhmaOidEnnen, hakukohde.getValintaryhma().getOid());
+
+            List<ValinnanVaihe> vaiheet = LinkitettavaJaKopioitavaUtil.jarjesta(valinnanVaiheDAO.findByHakukohde(hakukohdeOid));
+            assertEquals(2, vaiheet.size());
+            assertEquals("104", vaiheet.get(0).getOid());
+            assertEquals("105", vaiheet.get(1).getOid());
+            assertNotNull(vaiheet.get(0).getMasterValinnanVaihe());
+            assertNull(vaiheet.get(1).getMasterValinnanVaihe());
+
+            assertEquals(hakukohdekoodiUri, hakukohde.getHakukohdekoodi().getUri());
+
+            assertEquals(1, hakukohde.getOpetuskielet().size());
+            assertEquals(opetuskielikoodiUri, hakukohde.getOpetuskielet().iterator().next().getUri());
+
+            assertEquals(1, hakukohde.getValintakokeet().size());
+            assertEquals(valintakoekoodiUri, hakukohde.getValintakokeet().iterator().next().getUri());
+        }
+
+        hakukohdeService.siirraHakukohdeValintaryhmaan(hakukohdeOid, valintaryhmaOidLopuksi);
+
+        {
+            HakukohdeViite hakukohde = hakukohdeService.readByOid(hakukohdeOid);
+            assertEquals(valintaryhmaOidLopuksi, hakukohde.getValintaryhma().getOid());
+
+            List<ValinnanVaihe> vaiheet = LinkitettavaJaKopioitavaUtil.jarjesta(valinnanVaiheDAO.findByHakukohde(hakukohdeOid));
+            assertEquals(2, vaiheet.size());
+            assertNotNull(vaiheet.get(0).getMasterValinnanVaihe());
+            assertEquals("103", vaiheet.get(0).getMasterValinnanVaihe().getOid());
+            assertEquals("105", vaiheet.get(1).getOid());
+            assertNull(vaiheet.get(1).getMasterValinnanVaihe());
+
+            assertEquals(hakukohdekoodiUri, hakukohde.getHakukohdekoodi().getUri());
+
+            assertEquals(1, hakukohde.getOpetuskielet().size());
+            assertEquals(opetuskielikoodiUri, hakukohde.getOpetuskielet().iterator().next().getUri());
+
+            assertEquals(1, hakukohde.getValintakokeet().size());
+            assertEquals(valintakoekoodiUri, hakukohde.getValintakokeet().iterator().next().getUri());
+        }
+    }
+
+    @Test
+    public void testSiirraHakukohdeValintaryhmaan() {
+        final String hakukohdeOid = "oid19";
+        final String valintaryhmaOidLopuksi = "oid54";
+
+        final String hakukohdekoodiUri = "hakukohdekoodiuri20";
+        final String opetuskielikoodiUri = "kieli_fi";
+        final String valintakoekoodiUri = "valintakoeuri1";
+        {
+            HakukohdeViite hakukohde = hakukohdeService.readByOid(hakukohdeOid);
+            assertNull(hakukohde.getValintaryhma());
+
+            List<ValinnanVaihe> vaiheet = LinkitettavaJaKopioitavaUtil.jarjesta(valinnanVaiheDAO.findByHakukohde(hakukohdeOid));
+            assertEquals(1, vaiheet.size());
+            assertEquals("106", vaiheet.get(0).getOid());
+            assertNull(vaiheet.get(0).getMasterValinnanVaihe());
+
+            assertEquals(hakukohdekoodiUri, hakukohde.getHakukohdekoodi().getUri());
+
+            assertEquals(1, hakukohde.getOpetuskielet().size());
+            assertEquals(opetuskielikoodiUri, hakukohde.getOpetuskielet().iterator().next().getUri());
+
+            assertEquals(1, hakukohde.getValintakokeet().size());
+            assertEquals(valintakoekoodiUri, hakukohde.getValintakokeet().iterator().next().getUri());
+        }
+
+        hakukohdeService.siirraHakukohdeValintaryhmaan(hakukohdeOid, valintaryhmaOidLopuksi);
+
+        {
+            HakukohdeViite hakukohde = hakukohdeService.readByOid(hakukohdeOid);
+            assertEquals(valintaryhmaOidLopuksi, hakukohde.getValintaryhma().getOid());
+
+            List<ValinnanVaihe> vaiheet = LinkitettavaJaKopioitavaUtil.jarjesta(valinnanVaiheDAO.findByHakukohde(hakukohdeOid));
+            assertEquals(2, vaiheet.size());
+            assertNotNull(vaiheet.get(0).getMasterValinnanVaihe());
+            assertEquals("103", vaiheet.get(0).getMasterValinnanVaihe().getOid());
+            assertEquals("106", vaiheet.get(1).getOid());
+            assertNull(vaiheet.get(1).getMasterValinnanVaihe());
+
+            assertEquals(hakukohdekoodiUri, hakukohde.getHakukohdekoodi().getUri());
+
+            assertEquals(1, hakukohde.getOpetuskielet().size());
+            assertEquals(opetuskielikoodiUri, hakukohde.getOpetuskielet().iterator().next().getUri());
+
+            assertEquals(1, hakukohde.getValintakokeet().size());
+            assertEquals(valintakoekoodiUri, hakukohde.getValintakokeet().iterator().next().getUri());
+        }
+    }
+
+    @Test
+    public void testSiirraHakukohdePoisValintaryhmasta() {
+        final String hakukohdeOid = "oid18";
+        final String valintaryhmaOidEnnen = "oid53";
+
+        final String hakukohdekoodiUri = "hakukohdekoodiuri19";
+        final String opetuskielikoodiUri = "kieli_fi";
+        final String valintakoekoodiUri = "valintakoeuri1";
+        {
+            HakukohdeViite hakukohde = hakukohdeService.readByOid(hakukohdeOid);
+            assertEquals(valintaryhmaOidEnnen, hakukohde.getValintaryhma().getOid());
+
+            List<ValinnanVaihe> vaiheet = LinkitettavaJaKopioitavaUtil.jarjesta(valinnanVaiheDAO.findByHakukohde(hakukohdeOid));
+            assertEquals(2, vaiheet.size());
+            assertEquals("104", vaiheet.get(0).getOid());
+            assertEquals("105", vaiheet.get(1).getOid());
+            assertNotNull(vaiheet.get(0).getMasterValinnanVaihe());
+            assertNull(vaiheet.get(1).getMasterValinnanVaihe());
+
+            assertEquals(hakukohdekoodiUri, hakukohde.getHakukohdekoodi().getUri());
+
+            assertEquals(1, hakukohde.getOpetuskielet().size());
+            assertEquals(opetuskielikoodiUri, hakukohde.getOpetuskielet().iterator().next().getUri());
+
+            assertEquals(1, hakukohde.getValintakokeet().size());
+            assertEquals(valintakoekoodiUri, hakukohde.getValintakokeet().iterator().next().getUri());
+        }
+
+        hakukohdeService.siirraHakukohdeValintaryhmaan(hakukohdeOid, null);
+
+        {
+            HakukohdeViite hakukohde = hakukohdeService.readByOid(hakukohdeOid);
+            assertNull(hakukohde.getValintaryhma());
+
+            List<ValinnanVaihe> vaiheet = LinkitettavaJaKopioitavaUtil.jarjesta(valinnanVaiheDAO.findByHakukohde(hakukohdeOid));
+            assertEquals(1, vaiheet.size());
+            assertEquals("105", vaiheet.get(0).getOid());
+            assertNull(vaiheet.get(0).getMasterValinnanVaihe());
+
+            assertEquals(hakukohdekoodiUri, hakukohde.getHakukohdekoodi().getUri());
+
+            assertEquals(1, hakukohde.getOpetuskielet().size());
+            assertEquals(opetuskielikoodiUri, hakukohde.getOpetuskielet().iterator().next().getUri());
+
+            assertEquals(1, hakukohde.getValintakokeet().size());
+            assertEquals(valintakoekoodiUri, hakukohde.getValintakokeet().iterator().next().getUri());
+        }
+    }
+
+    @Test
+    public void testSiirraHakukohdeSamaanValintaryhmaan() {
+        final String hakukohdeOid = "oid18";
+        final String valintaryhmaOid = "oid53";
+
+        final String hakukohdekoodiUri = "hakukohdekoodiuri19";
+        final String opetuskielikoodiUri = "kieli_fi";
+        final String valintakoekoodiUri = "valintakoeuri1";
+        {
+            HakukohdeViite hakukohde = hakukohdeService.readByOid(hakukohdeOid);
+            assertEquals(valintaryhmaOid, hakukohde.getValintaryhma().getOid());
+
+            List<ValinnanVaihe> vaiheet = LinkitettavaJaKopioitavaUtil.jarjesta(valinnanVaiheDAO.findByHakukohde(hakukohdeOid));
+            assertEquals(2, vaiheet.size());
+            assertEquals("104", vaiheet.get(0).getOid());
+            assertEquals("105", vaiheet.get(1).getOid());
+            assertNotNull(vaiheet.get(0).getMasterValinnanVaihe());
+            assertNull(vaiheet.get(1).getMasterValinnanVaihe());
+
+            assertEquals(hakukohdekoodiUri, hakukohde.getHakukohdekoodi().getUri());
+
+            assertEquals(1, hakukohde.getOpetuskielet().size());
+            assertEquals(opetuskielikoodiUri, hakukohde.getOpetuskielet().iterator().next().getUri());
+
+            assertEquals(1, hakukohde.getValintakokeet().size());
+            assertEquals(valintakoekoodiUri, hakukohde.getValintakokeet().iterator().next().getUri());
+        }
+
+        hakukohdeService.siirraHakukohdeValintaryhmaan(hakukohdeOid, valintaryhmaOid);
+
+        {
+            HakukohdeViite hakukohde = hakukohdeService.readByOid(hakukohdeOid);
+            assertEquals(valintaryhmaOid, hakukohde.getValintaryhma().getOid());
+
+            List<ValinnanVaihe> vaiheet = LinkitettavaJaKopioitavaUtil.jarjesta(valinnanVaiheDAO.findByHakukohde(hakukohdeOid));
+            assertEquals(2, vaiheet.size());
+            assertEquals("104", vaiheet.get(0).getOid());
+            assertEquals("105", vaiheet.get(1).getOid());
+            assertNotNull(vaiheet.get(0).getMasterValinnanVaihe());
+            assertNull(vaiheet.get(1).getMasterValinnanVaihe());
+
+            assertEquals(hakukohdekoodiUri, hakukohde.getHakukohdekoodi().getUri());
+
+            assertEquals(1, hakukohde.getOpetuskielet().size());
+            assertEquals(opetuskielikoodiUri, hakukohde.getOpetuskielet().iterator().next().getUri());
+
+            assertEquals(1, hakukohde.getValintakokeet().size());
+            assertEquals(valintakoekoodiUri, hakukohde.getValintakokeet().iterator().next().getUri());
+        }
+    }
 }

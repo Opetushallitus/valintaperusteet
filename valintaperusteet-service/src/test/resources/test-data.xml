@@ -323,6 +323,11 @@
 
     <valintaryhma id="52" version="0" oid="oid52" nimi="Valintaryhma 52" hakuOid="hakuoid1"/>
 
+    <valintaryhma id="53" version="0" oid="oid53" nimi="Valintaryhma 53" hakuOid="hakuoid1"/>
+
+    <valintaryhma id="54" version="0" oid="oid54" nimi="Valintaryhma 54" hakuOid="hakuoid1"/>
+
+
     <hakukohdekoodi id="1" version="0" uri="hakukohdekoodiuri1" arvo="koodiarvo1"
                     nimi_fi="hakukohdekoodi1"
                     nimi_sv="hakukohdekoodi1" nimi_en="hakukohdekoodi1"/>
@@ -403,6 +408,12 @@
     <hakukohdekoodi id="18" version="0" uri="hakukohdekoodiuri18" arvo="koodiarvo18"
                     nimi_fi="hakukohdekoodi18"/>
 
+    <hakukohdekoodi id="19" version="0" uri="hakukohdekoodiuri19" arvo="koodiarvo19"
+                    nimi_fi="hakukohdekoodi19"/>
+
+    <hakukohdekoodi id="20" version="0" uri="hakukohdekoodiuri20" arvo="koodiarvo20"
+                    nimi_fi="hakukohdekoodi20"/>
+
     <opetuskielikoodi id="10" version="0" uri="kieli_fi"/>
     <valintaryhma_opetuskielikoodi valintaryhma_id="37" opetuskielikoodi_id="10"/>
     <valintaryhma_opetuskielikoodi valintaryhma_id="40" opetuskielikoodi_id="10"/>
@@ -413,6 +424,8 @@
     <valintaryhma_opetuskielikoodi valintaryhma_id="49" opetuskielikoodi_id="10"/>
     <valintaryhma_opetuskielikoodi valintaryhma_id="50" opetuskielikoodi_id="10"/>
     <valintaryhma_opetuskielikoodi valintaryhma_id="51" opetuskielikoodi_id="10"/>
+    <hakukohde_viite_opetuskielikoodi hakukohde_viite_id="18" opetuskielikoodi_id="10"/>
+    <hakukohde_viite_opetuskielikoodi hakukohde_viite_id="19" opetuskielikoodi_id="10"/>
 
     <opetuskielikoodi id="11" version="0" uri="kieli_sv"/>
     <valintaryhma_opetuskielikoodi valintaryhma_id="44" opetuskielikoodi_id="11"/>
@@ -439,6 +452,8 @@
     <valintaryhma_valintakoekoodi valintaryhma_id="49" valintakoekoodi_id="14"/>
     <valintaryhma_valintakoekoodi valintaryhma_id="49" valintakoekoodi_id="14"/>
     <valintaryhma_valintakoekoodi valintaryhma_id="51" valintakoekoodi_id="14"/>
+    <hakukohde_viite_valintakoekoodi hakukohde_viite_id="18" valintakoekoodi_id="14"/>
+    <hakukohde_viite_valintakoekoodi hakukohde_viite_id="19" valintakoekoodi_id="14"/>
 
     <valintakoekoodi id="15" version="0" uri="valintakoeuri2"/>
     <valintaryhma_valintakoekoodi valintaryhma_id="51" valintakoekoodi_id="15"/>
@@ -473,6 +488,11 @@
     <hakukohde_viite id="16" version="0" hakuoid="hakuoid1" oid="oid16" nimi="haku15" hakukohdekoodi_id="9"/>
 
     <hakukohde_viite id="17" version="0" hakuoid="hakuoid1" oid="oid17" nimi="haku17"/>
+
+    <hakukohde_viite id="18" version="0" hakuoid="hakuoid1" oid="oid18" nimi="haku18" valintaryhma_id="53"
+                     hakukohdekoodi_id="19"/>
+
+    <hakukohde_viite id="19" version="0" hakuoid="hakuoid1" oid="oid19" nimi="haku19" hakukohdekoodi_id="20"/>
 
     <hakukohde_viite_opetuskielikoodi hakukohde_viite_id="17" opetuskielikoodi_id="11"/>
     <hakukohde_viite_valintakoekoodi hakukohde_viite_id="17" valintakoekoodi_id="12"/>
@@ -792,6 +812,23 @@
 
     <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="101" version="0" oid="101" valintaryhma_id="48"
                     nimi="valintaryhma 48 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus"/>
+
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="102" version="0" oid="102" valintaryhma_id="53"
+                    nimi="valintaryhma 53 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus"/>
+
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="103" version="0" oid="103" valintaryhma_id="54"
+                    nimi="valintaryhma 54 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus"/>
+
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="104" version="0" oid="104" hakukohde_viite_id="18"
+                    nimi="hakukohde 18 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus"
+                    master_valinnan_vaihe_id="102"/>
+
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="105" version="0" oid="105" hakukohde_viite_id="18"
+                    nimi="hakukohde 18 valinnan vaihe 2" aktiivinen="true" kuvaus="kuvaus"
+                    edellinen_valinnan_vaihe_id="104"/>
+
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="106" version="0" oid="106" hakukohde_viite_id="19"
+                    nimi="hakukohde 19 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus"/>
 
     <valintakoe id="1" version="0" oid="oid1" tunniste="valintakoetunniste1" nimi="valintakoe1" kuvaus="kuvaus1"
                 aktiivinen="true" valinnan_vaihe_id="83" laskentakaava_id="101" master_valintakoe_id="[NULL]"/>

@@ -138,14 +138,10 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
         return nimi;
     }
 
-    private HakukohdeViite luoUusiHakukohde(HakukohdeImportTyyppi importData) {
-        HakukohdeViite hakukohde = new HakukohdeViite();
-
-        hakukohde.setNimi(generoiHakukohdeNimi(importData));
-        hakukohde.setHakuoid(importData.getHakuOid());
-        hakukohde.setOid(importData.getHakukohdeOid());
-
-        return hakukohde;
+    private void kopioiTiedot(HakukohdeImportTyyppi from, HakukohdeViite to) {
+        to.setNimi(generoiHakukohdeNimi(from));
+        to.setHakuoid(from.getHakuOid());
+        to.setOid(from.getHakukohdeOid());
     }
 
     public String sanitizeKoodiUri(String uri) {
@@ -263,7 +259,8 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
 
         if (hakukohde == null) {
             LOG.info("Hakukohdetta ei ole olemassa. Luodaan uusi hakukohde.");
-            hakukohde = luoUusiHakukohde(importData);
+            hakukohde = new HakukohdeViite();
+            kopioiTiedot(importData, hakukohde);
             hakukohde = hakukohdeService.insert(hakukohde, valintaryhma != null ? valintaryhma.getOid() : null);
             koodi.addHakukohde(hakukohde);
         } else {
@@ -276,38 +273,13 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
                     (valintaryhma != null && hakukohdeValintaryhma != null
                             && !valintaryhma.getOid().equals(hakukohdeValintaryhma.getOid()))) {
                 LOG.info("Hakukohde on väärän valintaryhmän alla. Synkronoidaan hakukohde oikean valintaryhmän alle");
-                poistaHakukohteenPeriytyvatValinnanVaiheet(importData.getHakukohdeOid());
-                List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheService.findByHakukohde(importData.getHakukohdeOid());
 
-                // Käydään läpi kaikki ei-periytyvät valinnan vaiheet ja asetetaan hakukohdeviittaus tilapäisesti
-                // nulliksi
-                for (ValinnanVaihe vv : valinnanVaiheet) {
-                    vv.setHakukohdeViite(null);
-                }
+                String valintaryhmaOid = valintaryhma != null ? valintaryhma.getOid() : null;
+                hakukohde = hakukohdeService.siirraHakukohdeValintaryhmaan(importData.getHakukohdeOid(), valintaryhmaOid);
+                kopioiTiedot(importData, hakukohde);
+                hakukohde.setHakukohdekoodi(koodi);
+                koodi.addHakukohde(hakukohde);
 
-                // Poistetaan vanha hakukohde
-                hakukohdeService.deleteByOid(importData.getHakukohdeOid());
-
-                // Luodaan uusi hakukohde
-                HakukohdeViite uusiHakukohde = luoUusiHakukohde(importData);
-                HakukohdeViite lisatty = hakukohdeService.insert(uusiHakukohde,
-                        valintaryhma != null ? valintaryhma.getOid() : null);
-                lisatty.setHakukohdekoodi(koodi);
-                koodi.addHakukohde(lisatty);
-
-                ValinnanVaihe viimeinenValinnanVaihe =
-                        valinnanVaiheDAO.haeHakukohteenViimeinenValinnanVaihe(importData.getHakukohdeOid());
-                if (!valinnanVaiheet.isEmpty()) {
-                    valinnanVaiheet.get(0).setEdellinen(viimeinenValinnanVaihe);
-                    if (viimeinenValinnanVaihe != null) {
-                        viimeinenValinnanVaihe.setSeuraava(valinnanVaiheet.get(0));
-                    }
-
-                    // Asetetaan hakukohteen omat valinnan vaiheet viittaamaan taas uuteen hakukohteeseen
-                    for (ValinnanVaihe vv : valinnanVaiheet) {
-                        vv.setHakukohdeViite(uusiHakukohde);
-                    }
-                }
             } else {
                 LOG.info("Hakukohde on oikeassa valintaryhmässä. Synkronoidaan hakukohteen nimi ja koodi.");
                 // Synkataan nimi ja koodi
