@@ -35,7 +35,7 @@ object Laskenta {
 
   case class Lukuarvovalikonvertteri(konversioMap: Seq[Lukuarvovalikonversio]) extends Konvertteri[BigDecimal, BigDecimal] {
     def konvertoi(funktiokutsuOid: String, arvo: BigDecimal): (BigDecimal, Tila) = {
-      konversioMap.sortWith((a, b) => a.min.compareTo(b.min) == -1).filter(konv => arvo.compareTo(konv.min) != -1 && arvo.compareTo(konv.max) != 1) match {
+      konversioMap.sortWith((a, b) => a.min.compareTo(b.min) == -1).filter(konv => arvo.compareTo(konv.min) != -1 && arvo.compareTo(konv.max) == -1) match {
         case Nil => throw new RuntimeException("Arvo " + arvo + " ei täsmää yhteenkään konvertterille " +
           "määritettyyn arvoväliin, funktiokutsu OID: " + funktiokutsuOid)
         case head :: tail => {
