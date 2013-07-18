@@ -2,10 +2,10 @@ package fi.vm.sade.kaava
 
 import org.scalatest.FunSuite
 import fi.vm.sade.kaava.LaskentaTestUtil._
-import fi.vm.sade.service.valintaperusteet.model.{ Funktioargumentti, Funktionimi }
+import fi.vm.sade.service.valintaperusteet.model.{Funktioargumentti, Funktionimi}
 import fi.vm.sade.kaava.LaskentaTestUtil.Funktiokutsu
 import java.math.BigDecimal
-import fi.vm.sade.service.valintaperusteet.service.validointi.virhe.{ Validointivirhe, Virhetyyppi }
+import fi.vm.sade.service.valintaperusteet.service.validointi.virhe.{Validointivirhe, Virhetyyppi}
 import java.util
 
 /**
@@ -28,6 +28,13 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
       Syoteparametri(
         avain = "luku",
         arvo = "100.0")))
+
+  val validiLukuarvo3 = Funktiokutsu(
+    nimi = Funktionimi.LUKUARVO,
+    syoteparametrit = List(
+      Syoteparametri(
+        avain = "luku",
+        arvo = "3.335")))
 
   val validiTotuusarvo1 = Funktiokutsu(
     nimi = Funktionimi.TOTUUSARVO,
@@ -761,6 +768,20 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(1 == validationMessages.size())
     assert(Virhetyyppi.PROSENTTIOSUUS_EPAVALIDI ==
+      validationMessages.get(0).asInstanceOf[Validointivirhe].getVirhetyyppi)
+  }
+
+  test("Pyoristys with invalid precision value") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.PYORISTYS,
+      funktioargumentit = List(validiLukuarvo1),
+      syoteparametrit = List(
+        Syoteparametri(avain = "tarkkuus", arvo = "-1"))
+    )
+
+    val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
+    assert(1 == validationMessages.size())
+    assert(Virhetyyppi.TARKKUUS_PIENEMPI_KUIN_NOLLA ==
       validationMessages.get(0).asInstanceOf[Validointivirhe].getVirhetyyppi)
   }
 }

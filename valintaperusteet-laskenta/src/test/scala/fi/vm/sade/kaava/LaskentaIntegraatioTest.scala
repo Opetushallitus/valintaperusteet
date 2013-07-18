@@ -3,8 +3,8 @@ package fi.vm.sade.kaava
 import org.scalatest.FunSuite
 import fi.vm.sade.service.valintaperusteet.model.Funktionimi
 import fi.vm.sade.kaava.LaskentaTestUtil._
-import fi.vm.sade.service.valintaperusteet.laskenta.{ Esiprosessori, Laskin }
-import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.{ Hylattytila, HylattyMetatieto, Tila, Hyvaksyttavissatila }
+import fi.vm.sade.service.valintaperusteet.laskenta.{Esiprosessori, Laskin}
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.{Hylattytila, HylattyMetatieto, Tila, Hyvaksyttavissatila}
 import scala.collection.JavaConversions._
 import fi.vm.sade.kaava.LaskentaTestUtil.Hakemus
 import java.math.BigDecimal
@@ -40,6 +40,12 @@ class LaskentaIntegraatioTest extends FunSuite {
     nimi = Funktionimi.LUKUARVO,
     syoteparametrit = List(
       Syoteparametri("luku", "0.0")))
+
+
+  val luku3_335 = Funktiokutsu(
+    nimi = Funktionimi.LUKUARVO,
+    syoteparametrit = List(
+      Syoteparametri("luku", "3.335")))
 
   val totuusarvoTrue = Funktiokutsu(
     nimi = Funktionimi.TOTUUSARVO,
@@ -1537,5 +1543,31 @@ class LaskentaIntegraatioTest extends FunSuite {
     assert(tulokset(3)._1.get)
     assertTilaHyvaksyttavissa(tulokset(3)._2)
 
+  }
+
+  test("pyoristys up") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.PYORISTYS,
+      funktioargumentit = List(luku3_335),
+      syoteparametrit = List(
+        Syoteparametri(avain = "tarkkuus", arvo = "2")))
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(tulos.get.equals(new BigDecimal("3.34")))
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("pyoristys down") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.PYORISTYS,
+      funktioargumentit = List(luku3_335),
+      syoteparametrit = List(
+        Syoteparametri(avain = "tarkkuus", arvo = "1")))
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(tulos.get.equals(new BigDecimal("3.3")))
+    assertTilaHyvaksyttavissa(tila)
   }
 }

@@ -4,7 +4,7 @@ import fi.vm.sade.service.valintaperusteet.model._
 import fi.vm.sade.service.valintaperusteet.laskenta._
 import Laskenta._
 import org.apache.commons.lang.StringUtils
-import java.math.{ BigDecimal => BigDec }
+import java.math.{BigDecimal => BigDec}
 import scala.math.BigDecimal._
 
 /**
@@ -230,6 +230,12 @@ object Laskentadomainkonvertteri {
         muunnaLukuarvofunktioksi(lasketutArgumentit(0)),
         muunnaLukuarvofunktioksi(lasketutArgumentit(1)),
         oid)
+      case Funktionimi.PYORISTYS =>
+        val tarkkuus = getParametri("tarkkuus", funktiokutsu.getSyoteparametrit)
+        Pyoristys(
+          parametriToInteger(tarkkuus),
+          muunnaLukuarvofunktioksi(lasketutArgumentit(0)),
+          oid)
       case Funktionimi.SUMMA => Summa(lasketutArgumentit.map(muunnaLukuarvofunktioksi(_)), oid)
       case Funktionimi.SUMMANPARASTA => {
         val nParam = getParametri(funktiokuvaus.syoteparametrit.head.avain, funktiokutsu.getSyoteparametrit)

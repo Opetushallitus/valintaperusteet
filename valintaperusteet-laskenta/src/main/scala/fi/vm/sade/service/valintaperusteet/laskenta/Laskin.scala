@@ -2,7 +2,7 @@ package fi.vm.sade.service.valintaperusteet.laskenta
 
 import api._
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta._
-import java.util.{ Map => JMap }
+import java.util.{Map => JMap}
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Totuusarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Suurempi
 import scala.Some
@@ -14,12 +14,11 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.SuurempiTaiYhtasuur
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeTotuusarvo
 import scala.Tuple2
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Ei
-import tila.{ Tila, PakollinenValintaperusteHylkays, Hyvaksyttavissatila, Hylattytila }
+import tila.{Tila, PakollinenValintaperusteHylkays, Hyvaksyttavissatila, Hylattytila}
 import org.slf4j.LoggerFactory
-import Laskin._
 import scala.collection.mutable.ListBuffer
 import com.codahale.jerkson.Json
-import java.math.{ BigDecimal => BigDec }
+import java.math.{BigDecimal => BigDec}
 import java.math.RoundingMode
 import scala.math.BigDecimal._
 
@@ -27,8 +26,8 @@ object Laskin {
   val LOG = LoggerFactory.getLogger(classOf[Laskin])
 
   def suoritaLasku(hakukohde: String,
-    hakemus: Hakemus,
-    laskettava: Lukuarvofunktio, historiaBuffer: StringBuffer): Laskentatulos[BigDec] = {
+                   hakemus: Hakemus,
+                   laskettava: Lukuarvofunktio, historiaBuffer: StringBuffer): Laskentatulos[BigDec] = {
 
     val (tulos, tila, historia) = new Laskin(hakukohde, hakemus).laske(laskettava)
 
@@ -37,8 +36,8 @@ object Laskin {
   }
 
   def suoritaLasku(hakukohde: String,
-    hakemus: Hakemus,
-    laskettava: Totuusarvofunktio, historiaBuffer: StringBuffer): Laskentatulos[java.lang.Boolean] = {
+                   hakemus: Hakemus,
+                   laskettava: Totuusarvofunktio, historiaBuffer: StringBuffer): Laskentatulos[java.lang.Boolean] = {
     val (tulos, tila, historia) = new Laskin(hakukohde, hakemus).laske(laskettava)
 
     historiaBuffer.append(Json.generate(wrap(hakemus, historia)))
@@ -76,8 +75,8 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
   }
 
   private def suoritaKonvertointi[S, T](oid: String,
-    tulos: Tuple2[Option[S], Tila],
-    konvertteri: Konvertteri[S, T]) = {
+                                        tulos: Tuple2[Option[S], Tila],
+                                        konvertteri: Konvertteri[S, T]) = {
     ehdollinenTulos[S, T](tulos, (t, tila) => {
       val (konvertoituTulos, konvertoituTila) = konvertteri.konvertoi(oid, t)
       (Some(konvertoituTulos), List(tila, konvertoituTila))
@@ -85,8 +84,8 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
   }
 
   private def suoritaOptionalKonvertointi[T](oid: String,
-    tulos: Tuple2[Option[T], Tila],
-    konvertteri: Option[Konvertteri[T, T]]) = {
+                                             tulos: Tuple2[Option[T], Tila],
+                                             konvertteri: Option[Konvertteri[T, T]]) = {
     ehdollinenTulos[T, T](tulos, (t, tila) => {
       konvertteri match {
         case Some(konv) => {
@@ -117,7 +116,7 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
     }
 
     def muodostaVertailunTulos(f1: Lukuarvofunktio, f2: Lukuarvofunktio,
-      trans: (BigDecimal, BigDecimal) => Boolean) = {
+                               trans: (BigDecimal, BigDecimal) => Boolean) = {
       val (tulos1, tila1, historia1) = laske(f1)
       val (tulos2, tila2, historia2) = laske(f2)
       val tulos = for {
@@ -439,6 +438,11 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
       case NimettyLukuarvo(nimi, f, oid) => {
         val (tulos, tilat, h) = muodostaYksittainenTulos(f, d => d)
         (tulos, tilat, Historia("Nimetty lukuarvo", tulos, tilat, Some(List(h)), Some(Map("nimi" -> Some(nimi)))))
+      }
+
+      case Pyoristys(tarkkuus, f, oid) => {
+        val (tulos, tilat, h) = muodostaYksittainenTulos(f, d => d.setScale(tarkkuus, BigDecimal.RoundingMode.HALF_UP))
+        (tulos, tilat, Historia("Pyöristys", tulos, tilat, Some(List(h)), Some(Map("tarkkuus" -> Some(tarkkuus)))))
       }
     }
 

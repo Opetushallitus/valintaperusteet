@@ -1,10 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.laskenta
 
-import fi.vm.sade.service.valintaperusteet.laskenta.api._
 import org.apache.commons.lang.StringUtils
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
-import java.math.{ BigDecimal => BigDec }
-import scala.math.BigDecimal._
+import java.math.{BigDecimal => BigDec}
 
 /**
  *
@@ -71,7 +69,7 @@ object Laskenta {
   case class Arvokonversio[S, T](arvo: S, paluuarvo: T, hylkaysperuste: Boolean) extends Konversio
 
   case class Lukuarvovalikonversio(min: BigDecimal, max: BigDecimal, paluuarvo: BigDecimal,
-    palautaHaettuArvo: Boolean, hylkaysperuste: Boolean) extends Konversio
+                                   palautaHaettuArvo: Boolean, hylkaysperuste: Boolean) extends Konversio
 
   case class KonvertoiLukuarvo(konvertteri: Konvertteri[BigDecimal, BigDecimal], f: Lukuarvofunktio, oid: String = "")
     extends KonvertoivaFunktio[BigDecimal, BigDecimal] with Lukuarvofunktio with YksiParametrinenFunktio[BigDecimal]
@@ -93,6 +91,10 @@ object Laskenta {
   case class Lukuarvo(d: BigDecimal, oid: String = "") extends Lukuarvofunktio with NollaParametrinenFunktio[BigDecimal]
 
   case class Negaatio(f: Lukuarvofunktio, oid: String = "") extends Lukuarvofunktio with YksiParametrinenFunktio[BigDecimal]
+
+  case class Pyoristys(tarkkuus: Int, f: Lukuarvofunktio, oid: String = "") extends Lukuarvofunktio with YksiParametrinenFunktio[BigDecimal] {
+    require(tarkkuus >= 0, "Parameter tarkkuus must be zero or greater")
+  }
 
   case class Summa(override val fs: Seq[Lukuarvofunktio], oid: String = "")
     extends KoostavaFunktio[BigDecimal](fs) with Lukuarvofunktio
@@ -196,25 +198,25 @@ object Laskenta {
   abstract case class HaeArvo[T](oletusarvo: Option[T], valintaperusteviite: Valintaperusteviite) extends Funktio[T]
 
   case class HaeMerkkijonoJaKonvertoiLukuarvoksi(konvertteri: Konvertteri[String, BigDecimal],
-    override val oletusarvo: Option[BigDecimal],
-    override val valintaperusteviite: Valintaperusteviite,
-    oid: String = "")
+                                                 override val oletusarvo: Option[BigDecimal],
+                                                 override val valintaperusteviite: Valintaperusteviite,
+                                                 oid: String = "")
     extends HaeArvo[BigDecimal](oletusarvo, valintaperusteviite) with Lukuarvofunktio with NollaParametrinenFunktio[BigDecimal]
 
   case class HaeMerkkijonoJaKonvertoiTotuusarvoksi(konvertteri: Konvertteri[String, Boolean],
-    override val oletusarvo: Option[Boolean],
-    override val valintaperusteviite: Valintaperusteviite,
-    oid: String = "")
+                                                   override val oletusarvo: Option[Boolean],
+                                                   override val valintaperusteviite: Valintaperusteviite,
+                                                   oid: String = "")
     extends HaeArvo[Boolean](oletusarvo, valintaperusteviite) with Totuusarvofunktio with NollaParametrinenFunktio[Boolean]
 
   case class HaeTotuusarvo(konvertteri: Option[Konvertteri[Boolean, Boolean]],
-    override val oletusarvo: Option[Boolean],
-    override val valintaperusteviite: Valintaperusteviite, oid: String = "")
+                           override val oletusarvo: Option[Boolean],
+                           override val valintaperusteviite: Valintaperusteviite, oid: String = "")
     extends HaeArvo[Boolean](oletusarvo, valintaperusteviite) with Totuusarvofunktio with NollaParametrinenFunktio[Boolean]
 
   case class HaeLukuarvo(konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]],
-    override val oletusarvo: Option[BigDecimal],
-    override val valintaperusteviite: Valintaperusteviite, oid: String = "")
+                         override val oletusarvo: Option[BigDecimal],
+                         override val valintaperusteviite: Valintaperusteviite, oid: String = "")
     extends HaeArvo[BigDecimal](oletusarvo, valintaperusteviite) with Lukuarvofunktio with NollaParametrinenFunktio[BigDecimal]
 
   // Boolean-funktiot

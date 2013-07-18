@@ -58,7 +58,7 @@ object Funktiokuvaaja {
   }
 
   case class Konvertterikuvaus(pakollinen: Boolean,
-                              konvertteriTyypit: Map[Konvertterinimi.Konvertterinimi, KonvertteriTyyppi])
+                               konvertteriTyypit: Map[Konvertterinimi.Konvertterinimi, KonvertteriTyyppi])
 
   case class Valintaperusteparametrikuvaus(nimi: String, tyyppi: Syoteparametrityyppi)
 
@@ -284,6 +284,12 @@ object Funktiokuvaaja {
       tyyppi = Funktiotyyppi.TOTUUSARVOFUNKTIO,
       funktioargumentit = List(Funktioargumenttikuvaus("vasenOperandi", Funktiotyyppi.LUKUARVOFUNKTIO),
         Funktioargumenttikuvaus("oikeaOperandi", Funktiotyyppi.LUKUARVOFUNKTIO))
+    ),
+
+    Funktionimi.PYORISTYS -> Funktiokuvaus(
+      tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
+      funktioargumentit = List(Funktioargumenttikuvaus("f", Funktiotyyppi.LUKUARVOFUNKTIO)),
+      syoteparametrit = List(Syoteparametrikuvaus("tarkkuus", Syoteparametrityyppi.KOKONAISLUKU))
     ),
     Funktionimi.SUMMA -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
