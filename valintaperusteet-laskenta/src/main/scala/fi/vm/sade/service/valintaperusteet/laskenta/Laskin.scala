@@ -19,20 +19,21 @@ import org.slf4j.LoggerFactory
 import Laskin._
 import scala.collection.mutable.ListBuffer
 import com.codahale.jerkson.Json
-import java.math.BigDecimal
+import java.math.{ BigDecimal => BigDec }
 import java.math.RoundingMode
+import scala.math.BigDecimal._
 
 object Laskin {
   val LOG = LoggerFactory.getLogger(classOf[Laskin])
 
   def suoritaLasku(hakukohde: String,
     hakemus: Hakemus,
-    laskettava: Lukuarvofunktio, historiaBuffer: StringBuffer): Laskentatulos[java.math.BigDecimal] = {
+    laskettava: Lukuarvofunktio, historiaBuffer: StringBuffer): Laskentatulos[BigDec] = {
 
     val (tulos, tila, historia) = new Laskin(hakukohde, hakemus).laske(laskettava)
 
     historiaBuffer.append(Json.generate(wrap(hakemus, historia)))
-    new Laskentatulos[java.math.BigDecimal](tila, tulos.getOrElse(null))
+    if (tulos.isEmpty) new Laskentatulos[BigDec](tila, null) else new Laskentatulos[BigDec](tila, tulos.get.underlying)
   }
 
   def suoritaLasku(hakukohde: String,
@@ -50,10 +51,10 @@ object Laskin {
     (tulos, tila)
   }
 
-  def laske(hakukohde: String, hakemus: Hakemus, laskettava: Lukuarvofunktio): (Option[java.math.BigDecimal], Tila) = {
+  def laske(hakukohde: String, hakemus: Hakemus, laskettava: Lukuarvofunktio): (Option[BigDec], Tila) = {
     val (tulos, tila, historia) = new Laskin(hakukohde, hakemus).laske(laskettava)
     LOG.debug("{}", Json.generate(wrap(hakemus, historia)))
-    (tulos, tila)
+    (Some(if (tulos.isEmpty) null else tulos.get.underlying), tila)
   }
 
   def wrap(hakemus: Hakemus, historia: Historia) = {
@@ -144,23 +145,23 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
         (Some(b), List(new Hyvaksyttavissatila), Historia("Totuusarvo", Some(b), None, None))
       }
       case Suurempi(f1, f2, oid) => {
-        val (tulos, tilat, h) = muodostaVertailunTulos(f1, f2, (d1, d2) => d1.compareTo(d2) == 1)
+        val (tulos, tilat, h) = muodostaVertailunTulos(f1, f2, (d1, d2) => d1 > d2)
         (tulos, tilat, Historia("Suurempi", tulos, Some(List(h)), None))
       }
       case SuurempiTaiYhtasuuri(f1, f2, oid) => {
-        val (tulos, tilat, h) = muodostaVertailunTulos(f1, f2, (d1, d2) => d1.compareTo(d2) != -1);
+        val (tulos, tilat, h) = muodostaVertailunTulos(f1, f2, (d1, d2) => d1 >= d2);
         (tulos, tilat, Historia("Suurempi tai yhtäsuuri", tulos, Some(List(h)), None))
       }
       case Pienempi(f1, f2, oid) => {
-        val (tulos, tilat, h) = muodostaVertailunTulos(f1, f2, (d1, d2) => d1.compareTo(d2) == -1)
+        val (tulos, tilat, h) = muodostaVertailunTulos(f1, f2, (d1, d2) => d1 < d2)
         (tulos, tilat, Historia("Pienempi", tulos, Some(List(h)), None))
       }
       case PienempiTaiYhtasuuri(f1, f2, oid) => {
-        val (tulos, tilat, h) = muodostaVertailunTulos(f1, f2, (d1, d2) => d1.compareTo(d2) != 1)
+        val (tulos, tilat, h) = muodostaVertailunTulos(f1, f2, (d1, d2) => d1 <= d2)
         (tulos, tilat, Historia("Pienempi tai yhtäsuuri", tulos, Some(List(h)), None))
       }
       case Yhtasuuri(f1, f2, oid) => {
-        val (tulos, tilat, h) = muodostaVertailunTulos(f1, f2, (d1, d2) => d1.compareTo(d2) == 0)
+        val (tulos, tilat, h) = muodostaVertailunTulos(f1, f2, (d1, d2) => d1 == d2)
         (tulos, tilat, Historia("Yhtäsuuri", tulos, Some(List(h)), None))
       }
       case HaeTotuusarvo(konvertteri, oletusarvo, valintaperusteviite, oid) => {
@@ -251,15 +252,15 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
   def laske(laskettava: Lukuarvofunktio): (Option[BigDecimal], Tila, Historia) = {
 
     def summa(vals: Seq[BigDecimal]): BigDecimal = {
-      vals.reduceLeft(_.add(_))
+      vals.reduceLeft(_ + _)
     }
 
-    def muodostaYksittainenTulos(f: Lukuarvofunktio, trans: BigDecimal => BigDecimal) = {
+    def muodostaYksittainenTulos(f: Lukuarvofunktio, trans: BigDecimal => BigDecimal): (Option[BigDecimal], List[Tila], Historia) = {
       val (tulos, tila, historia) = laske(f)
       (tulos.map(trans(_)), List(tila), historia)
     }
 
-    def muodostaKoostettuTulos(fs: Seq[Lukuarvofunktio], trans: Seq[BigDecimal] => BigDecimal) = {
+    def muodostaKoostettuTulos(fs: Seq[Lukuarvofunktio], trans: Seq[BigDecimal] => BigDecimal): (Option[BigDecimal], List[Tila], Historia) = {
       val tulokset = fs.reverse.foldLeft((Nil, Nil, ListBuffer()): Tuple3[List[BigDecimal], List[Tila], ListBuffer[Historia]])((lst, f) => {
         val (tulos, tila, historia) = laske(f)
         lst._3 += historia
@@ -275,7 +276,7 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
         (Some(d), List(new Hyvaksyttavissatila), Historia("Lukuarvo", Some(d), None, None))
       }
       case Negaatio(n, oid) => {
-        val (tulos, tilat, h) = muodostaYksittainenTulos(n, d => d.negate())
+        val (tulos, tilat, h) = muodostaYksittainenTulos(n, d => -d)
         (tulos, tilat, Historia("Negaaatio", tulos, Some(List(h)), None))
       }
       case Summa(fs, oid) => {
@@ -284,7 +285,7 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
       }
 
       case SummaNParasta(n, fs, oid) => {
-        val (tulos, tilat, h) = muodostaKoostettuTulos(fs, ds => summa(ds.sortWith(_.compareTo(_) == 1).take(n)))
+        val (tulos, tilat, h) = muodostaKoostettuTulos(fs, ds => summa(ds.sortWith(_ > _).take(n)))
         (tulos, tilat, Historia("Summa N-parasta", tulos, h.historiat, Some(Map("n" -> Some(n)))))
       }
 
@@ -296,26 +297,26 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
           n <- nimittajaArvo
           o <- osoittajaArvo
         } yield {
-          if (n.compareTo(BigDecimal.ZERO) == 0) throw new RuntimeException("Nimittäjä ei voi olla nolla")
-          o.divide(n, 4, RoundingMode.HALF_UP)
+          if (n == 0.0) throw new RuntimeException("Nimittäjä ei voi olla nolla")
+          BigDecimal(o.underlying.divide(n.underlying, 4, RoundingMode.HALF_UP))
         }
         (tulos, List(nimittajaTila, osoittajaTila), Historia("Osamäärä", tulos, Some(List(historia1, historia2)), None))
       }
 
       case Tulo(fs, oid) => {
-        val (tulos, tilat, h) = muodostaKoostettuTulos(fs, ds => ds.reduceLeft(_.multiply(_)))
+        val (tulos, tilat, h) = muodostaKoostettuTulos(fs, ds => ds.reduceLeft(_ * _))
         (tulos, tilat, Historia("Tulo", tulos, h.historiat, None))
       }
 
       case Keskiarvo(fs, oid) => {
-        val (tulos, tilat, h) = muodostaKoostettuTulos(fs, ds => summa(ds).divide(new BigDecimal(ds.size), 4, RoundingMode.HALF_UP))
+        val (tulos, tilat, h) = muodostaKoostettuTulos(fs, ds => BigDecimal(summa(ds).underlying.divide(BigDecimal(ds.size).underlying, 4, RoundingMode.HALF_UP)))
         (tulos, tilat, Historia("Keskiarvo", tulos, h.historiat, None))
       }
 
       case KeskiarvoNParasta(n, fs, oid) => {
         val (tulos, tilat, h) = muodostaKoostettuTulos(fs, ds => {
           val kaytettavaN = scala.math.min(n, ds.size)
-          summa(ds.sortWith(_.compareTo(_) == 1).take(kaytettavaN)).divide(new BigDecimal(kaytettavaN), 4, RoundingMode.HALF_UP)
+          BigDecimal(summa(ds.sortWith(_ > _).take(kaytettavaN)).underlying.divide(BigDecimal(kaytettavaN).underlying, 4, RoundingMode.HALF_UP))
         })
         (tulos, tilat, Historia("Keskiarvo N-parasta", tulos, h.historiat, Some(Map("n" -> Some(n)))))
       }
@@ -330,20 +331,20 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
       }
 
       case NMinimi(ns, fs, oid) => {
-        val (tulos, tilat, h) = muodostaKoostettuTulos(fs, ds => ds.sortWith(_.compareTo(_) == -1)(scala.math.min(ns, ds.size) - 1))
+        val (tulos, tilat, h) = muodostaKoostettuTulos(fs, ds => ds.sortWith(_ < _)(scala.math.min(ns, ds.size) - 1))
         (tulos, tilat, Historia("N-minimi", tulos, h.historiat, Some(Map("ns" -> Some(ns)))))
       }
 
       case NMaksimi(ns, fs, oid) => {
-        val (tulos, tilat, h) = muodostaKoostettuTulos(fs, ds => ds.sortWith(_.compareTo(_) == 1)(scala.math.min(ns, ds.size) - 1))
+        val (tulos, tilat, h) = muodostaKoostettuTulos(fs, ds => ds.sortWith(_ > _)(scala.math.min(ns, ds.size) - 1))
         (tulos, tilat, Historia("N-maksimi", tulos, h.historiat, Some(Map("ns" -> Some(ns)))))
       }
 
       case Mediaani(fs, oid) => {
         val (tulos, tilat, h) = muodostaKoostettuTulos(fs, ds => {
-          val sorted = ds.sortWith(_.compareTo(_) == -1)
+          val sorted = ds.sortWith(_ < _)
           if (sorted.size % 2 == 1) sorted(sorted.size / 2)
-          else (sorted(sorted.size / 2).add(sorted(sorted.size / 2 - 1))).divide(new BigDecimal("2.0"), 4, RoundingMode.HALF_UP)
+          else BigDecimal((sorted(sorted.size / 2) + sorted(sorted.size / 2 - 1)).underlying.divide(BigDecimal("2.0").underlying, 4, RoundingMode.HALF_UP))
         })
         (tulos, tilat, Historia("Mediaani", tulos, h.historiat, None))
       }
@@ -362,6 +363,7 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
       case KonvertoiLukuarvo(konvertteri, f, oid) => {
         val (tulos, tila, h) = laske(f)
         val (tulos2, tilat2) = suoritaKonvertointi[BigDecimal, BigDecimal](oid, (tulos, tila), konvertteri)
+
         (tulos2, tilat2, Historia("Konvertoitulukuarvo", tulos2, Some(List(h)), None))
       }
 
@@ -370,7 +372,7 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
         val valintaperuste = hakemus.kentat.get(valintaperusteviite.tunniste)
         val arvoOption = valintaperuste.map(arvo => {
           try {
-            new BigDecimal(arvo)
+            BigDecimal(arvo)
           } catch {
             case e: NumberFormatException => None
             //throw new RuntimeException("Arvoa " + arvo + " ei voida muuttaa " +
@@ -394,8 +396,9 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
           case temp: Option[_] => {
             temp.get match {
               case arvo: BigDecimal => {
-                val valitulos = (temp.asInstanceOf[Option[BigDecimal]], new Hyvaksyttavissatila)
-                val (tulos, tila) = suoritaOptionalKonvertointi[BigDecimal](oid, valitulos, konvertteri)
+                val (valitulos, valitila) = (temp.asInstanceOf[Option[BigDecimal]], new Hyvaksyttavissatila)
+
+                val (tulos, tila) = suoritaOptionalKonvertointi[BigDecimal](oid, (if (valitulos.isEmpty) None else Some(valitulos.get.underlying), valitila), konvertteri)
                 val (oletustulos, oletustila) = tyhjaarvo
                 (tulos, tila, Historia("Hae lukuarvo (oletusarvo)", tulos, None, Some(Map("oletusarvo" -> oletustulos))))
               }
@@ -415,7 +418,6 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
           case Some(s) => {
             val valitulos = (Some(s), new Hyvaksyttavissatila)
             val (tulos, tila) = suoritaKonvertointi[String, BigDecimal](oid, valitulos, konvertteri)
-
             (tulos, tila, Historia("Hae merkkijono ja konvertoi lukuarvoksi", tulos, None, Some(Map("oletusarvo" -> oletusarvo))))
           }
           case None => {

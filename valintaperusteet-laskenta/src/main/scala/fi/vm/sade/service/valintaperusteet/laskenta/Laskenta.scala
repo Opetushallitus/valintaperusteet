@@ -3,7 +3,8 @@ package fi.vm.sade.service.valintaperusteet.laskenta
 import fi.vm.sade.service.valintaperusteet.laskenta.api._
 import org.apache.commons.lang.StringUtils
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
-import java.math.BigDecimal
+import java.math.{ BigDecimal => BigDec }
+import scala.math.BigDecimal._
 
 /**
  *
@@ -35,7 +36,7 @@ object Laskenta {
 
   case class Lukuarvovalikonvertteri(konversioMap: Seq[Lukuarvovalikonversio]) extends Konvertteri[BigDecimal, BigDecimal] {
     def konvertoi(funktiokutsuOid: String, arvo: BigDecimal): (BigDecimal, Tila) = {
-      konversioMap.sortWith((a, b) => a.min.compareTo(b.min) == -1).filter(konv => arvo.compareTo(konv.min) != -1 && arvo.compareTo(konv.max) == -1) match {
+      konversioMap.sortWith((a, b) => a.min < b.min).filter(konv => arvo >= konv.min && arvo < konv.max) match {
         case Nil => throw new RuntimeException("Arvo " + arvo + " ei täsmää yhteenkään konvertterille " +
           "määritettyyn arvoväliin, funktiokutsu OID: " + funktiokutsuOid)
         case head :: tail => {
@@ -43,7 +44,7 @@ object Laskenta {
           val tila = if (head.hylkaysperuste) {
             new Hylattytila(funktiokutsuOid, "Arvoväli " + head.min + "-" + head.max + " on määritelty " +
               "konvertterissa hylkäysperusteeksi. Konvertoitava arvo " + arvo + ".",
-              new Arvovalikonvertterihylkays(arvo, head.min, head.max))
+              new Arvovalikonvertterihylkays(arvo.underlying, head.min.underlying, head.max.underlying))
           } else new Hyvaksyttavissatila
 
           (paluuarvo, tila)

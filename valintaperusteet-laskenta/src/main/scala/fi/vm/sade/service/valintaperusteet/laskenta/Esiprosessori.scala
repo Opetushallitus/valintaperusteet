@@ -5,7 +5,8 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta._
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Jos
 import scala.collection.JavaConversions._
 import org.slf4j.LoggerFactory
-import java.math.BigDecimal
+import java.math.{ BigDecimal => BigDec }
+import scala.math.BigDecimal._
 import java.math.RoundingMode
 
 /**
@@ -50,8 +51,8 @@ object Esiprosessori {
           val samatArvotLkm: Int = hakemukset.filter(h => {
             h.onkoHakutoivePrioriteetilla(hakukohde, 1) && h.kentat.get(f.tunniste) == prosessoituHakemus.kentat.get(f.tunniste)
           }).size
-          val vertailuarvo = new BigDecimal(samatArvotLkm).divide(new BigDecimal(ensisijaisetHakijat), 4, RoundingMode.HALF_UP) //hakemukset.size()
-          val arvo = (vertailuarvo.compareTo(f.prosenttiosuus.divide(new BigDecimal("100.0"), 4, RoundingMode.HALF_UP)) != 1).toString
+          val vertailuarvo = BigDecimal(samatArvotLkm).underlying.divide(BigDecimal(ensisijaisetHakijat).underlying, 4, RoundingMode.HALF_UP) //hakemukset.size()
+          val arvo = (vertailuarvo.compareTo(f.prosenttiosuus.underlying.divide(BigDecimal("100.0").underlying, 4, RoundingMode.HALF_UP)) != 1).toString
           LOG.debug("Hakemus {} {}bonuspisteet {}", Array[Object](prosessoituHakemus.oid, f.tunniste, arvo))
           new Hakemus(prosessoituHakemus.oid,
             prosessoituHakemus.hakutoiveet,

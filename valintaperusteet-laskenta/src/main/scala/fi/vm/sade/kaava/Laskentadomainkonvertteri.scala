@@ -4,8 +4,8 @@ import fi.vm.sade.service.valintaperusteet.model._
 import fi.vm.sade.service.valintaperusteet.laskenta._
 import Laskenta._
 import org.apache.commons.lang.StringUtils
-import java.math.BigDecimal
-import math.BigDecimal._
+import java.math.{ BigDecimal => BigDec }
+import scala.math.BigDecimal._
 
 /**
  * User: kwuoti
@@ -25,7 +25,7 @@ object Laskentadomainkonvertteri {
 
   private def parametriToBigDecimal(param: Syoteparametri) = {
     try {
-      new BigDecimal(param.getArvo)
+      BigDecimal(param.getArvo)
     } catch {
       case e => sys.error("Could not interpret parameter " + param.getAvain + " value " + param.getArvo + " as big decimal")
     }
@@ -88,16 +88,16 @@ object Laskentadomainkonvertteri {
       case Funktionimi.HAELUKUARVO => {
         val konvertteri = if (!funktiokutsu.getArvokonvertteriparametrit.isEmpty) {
           val konversioMap = funktiokutsu.getArvokonvertteriparametrit.map(konv =>
-            Arvokonversio[BigDecimal, BigDecimal](new BigDecimal(konv.getArvo), new BigDecimal(konv.getPaluuarvo),
+            Arvokonversio[BigDecimal, BigDecimal](BigDecimal(konv.getArvo), BigDecimal(konv.getPaluuarvo),
               konv.getHylkaysperuste)).toList
 
           Some(Arvokonvertteri[BigDecimal, BigDecimal](konversioMap))
         } else if (!funktiokutsu.getArvovalikonvertteriparametrit.isEmpty) {
           val konversioMap = funktiokutsu.getArvovalikonvertteriparametrit.map(konv => {
             val paluuarvo = if (StringUtils.isNotBlank(konv.getPaluuarvo)) {
-              new BigDecimal(konv.getPaluuarvo)
+              BigDecimal(konv.getPaluuarvo)
             } else {
-              new BigDecimal("0.0")
+              BigDecimal("0.0")
             }
             val min: BigDecimal = konv.getMinValue()
             val max: BigDecimal = konv.getMaxValue()
@@ -117,7 +117,7 @@ object Laskentadomainkonvertteri {
       }
       case Funktionimi.HAEMERKKIJONOJAKONVERTOILUKUARVOKSI => {
         val konversioMap = funktiokutsu.getArvokonvertteriparametrit.map(konv =>
-          Arvokonversio[String, BigDecimal](konv.getArvo, new BigDecimal(konv.getPaluuarvo), konv.getHylkaysperuste)).toList
+          Arvokonversio[String, BigDecimal](konv.getArvo, BigDecimal(konv.getPaluuarvo), konv.getHylkaysperuste)).toList
 
         val oletusarvo = funktiokutsu.getSyoteparametrit.find(_.getAvain == "oletusarvo")
           .map(p => parametriToBigDecimal(p))
@@ -185,13 +185,13 @@ object Laskentadomainkonvertteri {
       case Funktionimi.KONVERTOILUKUARVO => {
         val konvertteri = if (!funktiokutsu.getArvokonvertteriparametrit.isEmpty) {
           val konversioMap = funktiokutsu.getArvokonvertteriparametrit.map(konv =>
-            Arvokonversio[BigDecimal, BigDecimal](new BigDecimal(konv.getArvo), new BigDecimal(konv.getPaluuarvo),
+            Arvokonversio[BigDecimal, BigDecimal](BigDecimal(konv.getArvo), BigDecimal(konv.getPaluuarvo),
               konv.getHylkaysperuste)).toList
 
           Arvokonvertteri[BigDecimal, BigDecimal](konversioMap)
         } else {
           val konversioMap = funktiokutsu.getArvovalikonvertteriparametrit.map(konv =>
-            Lukuarvovalikonversio(konv.getMinValue, konv.getMaxValue, new BigDecimal(konv.getPaluuarvo),
+            Lukuarvovalikonversio(konv.getMinValue, konv.getMaxValue, BigDecimal(konv.getPaluuarvo),
               konv.getPalautaHaettuArvo, konv.getHylkaysperuste)).toList
 
           Lukuarvovalikonvertteri(konversioMap)
