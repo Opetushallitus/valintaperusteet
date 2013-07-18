@@ -433,7 +433,7 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
       }
       case NimettyLukuarvo(nimi, f, oid) => {
         val (tulos, tilat, h) = muodostaYksittainenTulos(f, d => d)
-        (tulos, tilat, Historia("Hae merkkijono ja konvertoi lukuarvoksi (oletusarvo)", tulos, Some(List(h)), Some(Map("nimi" -> Some(nimi)))))
+        (tulos, tilat, Historia("Nimetty lukuarvo", tulos, Some(List(h)), Some(Map("nimi" -> Some(nimi)))))
       }
     }
 
