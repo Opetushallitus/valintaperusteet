@@ -10,7 +10,7 @@ class HistoriaTest extends FunSuite {
     val FUNKTIO1 = "DEMOGRAFIA"
     val FUNKTIO2 = "SUMMA"
 
-    val historia = new Historia(FUNKTIO1, Some(16), Some(List(new Historia(FUNKTIO2, Some(true), None, None))), None);
+    val historia = new Historia(FUNKTIO1, Some(16), List(), Some(List(new Historia(FUNKTIO2, Some(true), List(), None, None))), None);
 
     val muunnos = Json.parse[Historia](Json.generate(historia))
 
