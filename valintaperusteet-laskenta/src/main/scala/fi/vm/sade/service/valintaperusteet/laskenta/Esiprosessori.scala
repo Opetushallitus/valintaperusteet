@@ -5,8 +5,7 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta._
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Jos
 import scala.collection.JavaConversions._
 import org.slf4j.LoggerFactory
-import java.math.{ BigDecimal => BigDec }
-import scala.math.BigDecimal._
+import java.math.{BigDecimal => BigDec}
 import java.math.RoundingMode
 
 /**
@@ -22,7 +21,7 @@ object Esiprosessori {
   }
 
   def esiprosessoi(hakukohde: String, hakemukset: java.util.Collection[Hakemus], kasiteltavaHakemus: Hakemus,
-    prosessoitava: Funktio[_]): Hakemus = {
+                   prosessoitava: Funktio[_]): Hakemus = {
     val prosessoituHakemus = prosessoitava match {
       case _: NollaParametrinenFunktio[_] => kasiteltavaHakemus
       case f: YksiParametrinenFunktio[_] => esiprosessoi(hakukohde, hakemukset, kasiteltavaHakemus, f.f)
@@ -40,17 +39,19 @@ object Esiprosessori {
 
     prosessoitava match {
       case f: Esiprosessoiva => {
-        val ensisijaisetHakijat = hakemukset.filter(_.onkoHakutoivePrioriteetilla(hakukohde, 1)).size
+        val ensisijaisetHakijat = hakemukset.count(_.onkoHakutoivePrioriteetilla(hakukohde, 1))
         val avain = prosessointiOid(hakukohde, prosessoituHakemus, f)
-        if (ensisijaisetHakijat == 0) { // ei ensisijaisia hakijoita
+        if (ensisijaisetHakijat == 0) {
+          // ei ensisijaisia hakijoita
           LOG.debug("Ei ensisijaisia hakijoita joten kellekään ei anneta bonusta!")
           new Hakemus(prosessoituHakemus.oid,
             prosessoituHakemus.hakutoiveet,
             prosessoituHakemus.kentat + (avain -> false.toString))
         } else {
-          val samatArvotLkm: Int = hakemukset.filter(h => {
+          val samatArvotLkm: Int = hakemukset.count(h => {
             h.onkoHakutoivePrioriteetilla(hakukohde, 1) && h.kentat.get(f.tunniste) == prosessoituHakemus.kentat.get(f.tunniste)
-          }).size
+          })
+
           val vertailuarvo = BigDecimal(samatArvotLkm).underlying.divide(BigDecimal(ensisijaisetHakijat).underlying, 4, RoundingMode.HALF_UP) //hakemukset.size()
           val arvo = (vertailuarvo.compareTo(f.prosenttiosuus.underlying.divide(BigDecimal("100.0").underlying, 4, RoundingMode.HALF_UP)) != 1).toString
           LOG.debug("Hakemus {} {}bonuspisteet {}", Array[Object](prosessoituHakemus.oid, f.tunniste, arvo))
