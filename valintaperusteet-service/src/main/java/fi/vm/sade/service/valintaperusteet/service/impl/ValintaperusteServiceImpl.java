@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import fi.vm.sade.generic.service.conversion.SadeConversionService;
@@ -99,17 +98,10 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
     }
 
     @Override
-    // @Secured({ READ, UPDATE, CRUD })
+    @Secured({ READ, UPDATE, CRUD })
     public List<ValintaperusteetTyyppi> haeValintaperusteet(
             @WebParam(name = "hakuparametrit", targetNamespace = "") List<HakuparametritTyyppi> hakuparametrit)
             throws GenericFault {
-        try {
-            LOG.error("AUTHIT {}", new Object[] { SecurityContextHolder.getContext().getAuthentication()
-                    .getAuthorities().toArray() });
-        } catch (Exception e) {
-            LOG.error("NO AUTHS!");
-        }
-
         List<ValintaperusteetTyyppi> list = new ArrayList<ValintaperusteetTyyppi>();
 
         if (hakuparametrit == null) {
