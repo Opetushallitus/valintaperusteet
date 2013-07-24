@@ -1,40 +1,63 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.jws.WebParam;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+
 import fi.vm.sade.generic.service.conversion.SadeConversionService;
 import fi.vm.sade.service.valintaperusteet.GenericFault;
 import fi.vm.sade.service.valintaperusteet.ValintaperusteService;
 import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
 import fi.vm.sade.service.valintaperusteet.messages.HakuparametritTyyppi;
-import fi.vm.sade.service.valintaperusteet.model.*;
-import fi.vm.sade.service.valintaperusteet.schema.*;
+import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
+import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
+import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
+import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
+import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
+import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
+import fi.vm.sade.service.valintaperusteet.schema.FunktiokutsuTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.HakukohdeImportTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.JarjestyskriteeriTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.TasasijasaantoTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.TavallinenValinnanVaiheTyyppi;
 import fi.vm.sade.service.valintaperusteet.schema.ValinnanVaiheTyyppi;
-import fi.vm.sade.service.valintaperusteet.service.*;
+import fi.vm.sade.service.valintaperusteet.schema.ValintakoeTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.ValintakoeValinnanVaiheTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.ValintaperusteetTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.ValintatapajonoJarjestyskriteereillaTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.ValintatapajonoTyyppi;
+import fi.vm.sade.service.valintaperusteet.service.HakukohdeImportService;
+import fi.vm.sade.service.valintaperusteet.service.HakukohdeService;
+import fi.vm.sade.service.valintaperusteet.service.JarjestyskriteeriService;
+import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
+import fi.vm.sade.service.valintaperusteet.service.PaasykoeTunnisteetService;
+import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
+import fi.vm.sade.service.valintaperusteet.service.ValintakoeService;
+import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakuparametritOnTyhjaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheJarjestyslukuOutOfBoundsException;
 import fi.vm.sade.service.valintaperusteet.service.impl.util.ValintaperusteServiceUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Service;
-
-import javax.jws.WebParam;
-import java.util.ArrayList;
-import java.util.List;
-
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD;
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ;
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE;
 
 /**
  * User: kwuoti Date: 22.1.2013 Time: 15.00
  */
 @Service
-//@PreAuthorize("isAuthenticated()")
+// @PreAuthorize("isAuthenticated()")
 public class ValintaperusteServiceImpl implements ValintaperusteService {
 
-    private static final Logger logger = LoggerFactory.getLogger(ValintaperusteServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ValintaperusteServiceImpl.class);
 
     @Autowired
     private HakukohdeService hakukohdeService;
@@ -66,9 +89,8 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
     @Autowired
     private HakukohdeImportService hakukohdeImportService;
 
-
     @Override
-    @Secured({READ, UPDATE, CRUD})
+    @Secured({ READ, UPDATE, CRUD })
     public List<ValintatapajonoTyyppi> haeValintatapajonotSijoittelulle(
             @WebParam(name = "hakukohdeOid", targetNamespace = "") String hakukohdeOid) throws GenericFault {
         List<Valintatapajono> jonot = valintatapajonoDAO.haeValintatapajonotSijoittelulle(hakukohdeOid);
@@ -77,10 +99,17 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
     }
 
     @Override
-    @Secured({READ, UPDATE, CRUD})
+    // @Secured({ READ, UPDATE, CRUD })
     public List<ValintaperusteetTyyppi> haeValintaperusteet(
             @WebParam(name = "hakuparametrit", targetNamespace = "") List<HakuparametritTyyppi> hakuparametrit)
             throws GenericFault {
+        try {
+            LOG.error("AUTHIT {}", new Object[] { SecurityContextHolder.getContext().getAuthentication()
+                    .getAuthorities().toArray() });
+        } catch (Exception e) {
+            LOG.error("NO AUTHS!");
+        }
+
         List<ValintaperusteetTyyppi> list = new ArrayList<ValintaperusteetTyyppi>();
 
         if (hakuparametrit == null) {
@@ -124,7 +153,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
     }
 
     private ValintaperusteetTyyppi convertValintaperusteet(ValinnanVaihe valinnanVaihe, String hakukohdeOid,
-                                                           String hakuOid, int valinnanvaiheJarjestysluku) {
+            String hakuOid, int valinnanvaiheJarjestysluku) {
 
         ValintaperusteetTyyppi valintaperusteetTyyppi = new ValintaperusteetTyyppi();
         valintaperusteetTyyppi.setHakukohdeOid(hakukohdeOid);
@@ -133,20 +162,20 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
         ValinnanVaiheTyyppi vv = null;
         switch (valinnanVaihe.getValinnanVaiheTyyppi()) {
 
-            case TAVALLINEN:
-                TavallinenValinnanVaiheTyyppi tavallinen = new TavallinenValinnanVaiheTyyppi();
-                tavallinen.getValintatapajono().addAll(convertJonot(valinnanVaihe));
+        case TAVALLINEN:
+            TavallinenValinnanVaiheTyyppi tavallinen = new TavallinenValinnanVaiheTyyppi();
+            tavallinen.getValintatapajono().addAll(convertJonot(valinnanVaihe));
 
-                vv = tavallinen;
-                break;
-            case VALINTAKOE:
-                ValintakoeValinnanVaiheTyyppi valintakoe = new ValintakoeValinnanVaiheTyyppi();
-                valintakoe.getValintakoe().addAll(convertValintakokeet(valinnanVaihe));
-                vv = valintakoe;
-                break;
+            vv = tavallinen;
+            break;
+        case VALINTAKOE:
+            ValintakoeValinnanVaiheTyyppi valintakoe = new ValintakoeValinnanVaiheTyyppi();
+            valintakoe.getValintakoe().addAll(convertValintakokeet(valinnanVaihe));
+            vv = valintakoe;
+            break;
 
-            default:
-                throw new UnsupportedOperationException("Virheellinen valinnan vaiheen tyyppi. Ei pystytä käsittelemään");
+        default:
+            throw new UnsupportedOperationException("Virheellinen valinnan vaiheen tyyppi. Ei pystytä käsittelemään");
         }
 
         vv.setValinnanVaiheJarjestysluku(valinnanvaiheJarjestysluku);
@@ -175,15 +204,13 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
                 } else {
                     Laskentakaava laskentakaava = laskentakaavaService.haeLaskettavaKaava(koe.getLaskentakaava()
                             .getId());
-                    converted = conversionService.convert(laskentakaava.getFunktiokutsu(),
-                            FunktiokutsuTyyppi.class);
+                    converted = conversionService.convert(laskentakaava.getFunktiokutsu(), FunktiokutsuTyyppi.class);
                 }
                 tyyppi.setFunktiokutsu(converted);
 
                 valintakoetyypit.add(tyyppi);
             }
         }
-
 
         return valintakoetyypit;
     }
@@ -245,12 +272,13 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
     }
 
     @Override
-    @Secured({CRUD})
-    public void tuoHakukohde(@WebParam(name = "hakukohde", targetNamespace = "") HakukohdeImportTyyppi hakukohde) throws GenericFault {
+    @Secured({ CRUD })
+    public void tuoHakukohde(@WebParam(name = "hakukohde", targetNamespace = "") HakukohdeImportTyyppi hakukohde)
+            throws GenericFault {
         try {
             hakukohdeImportService.tuoHakukohde(hakukohde);
         } catch (Exception e) {
-            logger.error("Hakukohteen tuominen epäonnistui.", e);
+            LOG.error("Hakukohteen tuominen epäonnistui.", e);
         }
     }
 }
