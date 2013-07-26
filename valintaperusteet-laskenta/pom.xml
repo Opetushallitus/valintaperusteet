@@ -24,7 +24,7 @@
         </repository>
     </repositories>
     <dependencies>
-    <dependency>
+        <dependency>
             <groupId>fi.vm.sade.valintaperusteet</groupId>
             <artifactId>valintaperusteet-domain</artifactId>
             <version>${project.version}</version>
