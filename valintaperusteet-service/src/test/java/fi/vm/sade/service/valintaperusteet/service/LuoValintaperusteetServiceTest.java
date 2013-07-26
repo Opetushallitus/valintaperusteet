@@ -1,14 +1,15 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
+import fi.vm.sade.kaava.Laskentadomainkonvertteri;
+import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus;
+import fi.vm.sade.service.valintaperusteet.laskenta.api.LaskentaService;
+import fi.vm.sade.service.valintaperusteet.laskenta.api.Laskentatulos;
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Tila;
+import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti;
+import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
+import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
+import fi.vm.sade.service.valintaperusteet.service.impl.generator.*;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,31 +20,24 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
-
 import scala.actors.threadpool.Arrays;
-import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
-import fi.vm.sade.kaava.Laskentadomainkonvertteri;
-import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus;
-import fi.vm.sade.service.valintaperusteet.laskenta.api.LaskentaService;
-import fi.vm.sade.service.valintaperusteet.laskenta.api.Laskentatulos;
-import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Tila;
-import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti;
-import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
-import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
-import fi.vm.sade.service.valintaperusteet.service.impl.generator.Aineet;
-import fi.vm.sade.service.valintaperusteet.service.impl.generator.PkAineet;
-import fi.vm.sade.service.valintaperusteet.service.impl.generator.PkJaYoPohjaiset;
-import fi.vm.sade.service.valintaperusteet.service.impl.generator.PkPohjaiset;
-import fi.vm.sade.service.valintaperusteet.service.impl.generator.YoAineet;
-import fi.vm.sade.service.valintaperusteet.service.impl.generator.YoPohjaiset;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * User: kwuoti Date: 5.3.2013 Time: 16.02
  */
 @ContextConfiguration(locations = "classpath:test-context.xml")
-@TestExecutionListeners(listeners = { JTACleanInsertTestExecutionListener.class,
+@TestExecutionListeners(listeners = {JTACleanInsertTestExecutionListener.class,
         DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
-        TransactionalTestExecutionListener.class })
+        TransactionalTestExecutionListener.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class LuoValintaperusteetServiceTest {
 
@@ -103,7 +97,7 @@ public class LuoValintaperusteetServiceTest {
     }
 
     private Map<String, Object> pakollinenPkAineJaValinnaiset(String aine, Object pakollinenArvo, Object val1Arvo,
-            Object val2Arvo) {
+                                                              Object val2Arvo) {
         Map<String, Object> map = newMap();
         map.putAll(pakollinenPkAine(aine, pakollinenArvo));
         map.put(PkAineet.valinnainen1(aine), val1Arvo);
@@ -226,6 +220,43 @@ public class LuoValintaperusteetServiceTest {
         final BigDecimal odotettuTulos = new BigDecimal("7.4211");
 
         Laskentakaava kaava = laajennaAlakaavat(PkPohjaiset.luoPKPohjaisenKoulutuksenLukuaineidenKeskiarvo(pkAineet));
+
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemus, hakemukset(hakemus),
+                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()), new StringBuffer());
+
+        assertEquals(odotettuTulos, tulos.getTulos());
+        assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
+    }
+
+    public Laskentakaava luoVakiokaava(BigDecimal arvo) {
+        Funktiokutsu funktiokutsu = GenericHelper.luoLukuarvo(arvo.doubleValue());
+        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(funktiokutsu, "vakio");
+    }
+
+    @Test
+    public void testPkYleinenKoulumenestysPisteytysmalliRajaarvoMin() {
+        Hakemus hakemus = luoPerushakemus();
+
+        final BigDecimal odotettuTulos = new BigDecimal("7.0");
+
+        Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(
+                luoVakiokaava(new BigDecimal(7.0)), "nimi"));
+
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemus, hakemukset(hakemus),
+                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()), new StringBuffer());
+
+        assertEquals(odotettuTulos, tulos.getTulos());
+        assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
+    }
+
+    @Test
+    public void testPkYleinenKoulumenestysPisteytysmalliRajaarvoMax() {
+        Hakemus hakemus = luoPerushakemus();
+
+        final BigDecimal odotettuTulos = new BigDecimal("8.0");
+
+        Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(
+                luoVakiokaava(new BigDecimal(7.25)), "nimi"));
 
         Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemus, hakemukset(hakemus),
                 Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()), new StringBuffer());
@@ -384,8 +415,36 @@ public class LuoValintaperusteetServiceTest {
     }
 
     @Test
+    public void testTyokokemusPisteytysmalliViisi() {
+        Hakemus hakemus = hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.tyokokemuskuukaudet, 5.0)));
+
+        final BigDecimal odotettuTulos = new BigDecimal("1.0");
+
+        Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoTyokokemuspisteytysmalli());
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemus, hakemukset(hakemus),
+                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()), new StringBuffer());
+
+        assertEquals(odotettuTulos, tulos.getTulos());
+        assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
+    }
+
+    @Test
     public void testTyokokemusPisteytysmalliKuusi() {
         Hakemus hakemus = hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.tyokokemuskuukaudet, 6.0)));
+
+        final BigDecimal odotettuTulos = new BigDecimal("2.0");
+
+        Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoTyokokemuspisteytysmalli());
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemus, hakemukset(hakemus),
+                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()), new StringBuffer());
+
+        assertEquals(odotettuTulos, tulos.getTulos());
+        assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
+    }
+
+    @Test
+    public void testTyokokemusPisteytysmalliYksitoista() {
+        Hakemus hakemus = hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.tyokokemuskuukaudet, 11.0)));
 
         final BigDecimal odotettuTulos = new BigDecimal("2.0");
 
@@ -413,10 +472,10 @@ public class LuoValintaperusteetServiceTest {
 
     @Test
     public void testSukupuolipisteytysmalliAlle30Prosenttia() {
-        Hakemus[] hakemukset = new Hakemus[] { hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "m"))),
+        Hakemus[] hakemukset = new Hakemus[]{hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "m"))),
                 hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "n"))),
                 hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "n"))),
-                hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "n"))) };
+                hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "n")))};
 
         final BigDecimal odotettuTulos = new BigDecimal("2.0");
 
@@ -432,10 +491,10 @@ public class LuoValintaperusteetServiceTest {
 
     @Test
     public void testSukupuolipisteytysmalliYli30Prosenttia() {
-        Hakemus[] hakemukset = new Hakemus[] { hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "m"))),
+        Hakemus[] hakemukset = new Hakemus[]{hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "m"))),
                 hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "m"))),
                 hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "n"))),
-                hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "n"))) };
+                hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "n")))};
 
         final BigDecimal odotettuTulos = new BigDecimal("0.0");
 
@@ -451,7 +510,7 @@ public class LuoValintaperusteetServiceTest {
 
     @Test
     public void testToisenAsteenPeruskoulupohjainenPeruskaava() {
-        Hakemus[] hakemukset = new Hakemus[] {
+        Hakemus[] hakemukset = new Hakemus[]{
                 hakemus(yhdistaMapit(
                         luoPkAineet(),
                         valintaperuste(PkPohjaiset.pohjakoulutusAvain,
@@ -463,7 +522,7 @@ public class LuoValintaperusteetServiceTest {
                 hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "m"))),
                 hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "m"))),
                 hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "n"))),
-                hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "n"))), };
+                hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "n"))),};
 
         final BigDecimal odotettuTulos = new BigDecimal("31.0");
 
@@ -520,13 +579,13 @@ public class LuoValintaperusteetServiceTest {
 
     @Test
     public void testToisenAsteenYlioppilaspohjainenPeruskaava() {
-        Hakemus[] hakemukset = new Hakemus[] {
+        Hakemus[] hakemukset = new Hakemus[]{
                 hakemus(yhdistaMapit(luoLkAineet(), valintaperuste(PkJaYoPohjaiset.tyokokemuskuukaudet, 7),
                         valintaperuste(PkJaYoPohjaiset.sukupuoli, "m"))),
                 hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "m"))),
                 hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "m"))),
                 hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "n"))),
-                hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "n"))), };
+                hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "n"))),};
 
         final BigDecimal odotettuTulos = new BigDecimal("13.0");
 
