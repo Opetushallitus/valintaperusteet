@@ -62,12 +62,11 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
     public static final String KIELI_FI_URI = "kieli_fi";
     public static final String KIELI_SV_URI = "kieli_sv";
-    public static final String KIELI_EN_URI = "kieli_en";
 
     public static final String OLETUS_VALINTAKOEURI = "valintakokeentyyppi_1";
 
     private enum Kielikoodi {
-        SUOMI("Suomi", KIELI_FI_URI), RUOTSI("Ruotsi", KIELI_SV_URI), ENGLANTI("Englanti", KIELI_EN_URI);
+        SUOMI("Suomi", KIELI_FI_URI), RUOTSI("Ruotsi", KIELI_SV_URI);
 
         Kielikoodi(String nimi, String kieliUri) {
             this.nimi = nimi;
@@ -290,7 +289,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
             if (i == 1) {
                 Jarjestyskriteeri jk = new Jarjestyskriteeri();
                 jk.setAktiivinen(true);
-                kriteeri.setMetatiedot(valintakoekaava.getNimi());
+                jk.setMetatiedot(valintakoekaava.getNimi());
                 jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(jono.getOid(), jk, null, valintakoekaava.getId());
             }
 
