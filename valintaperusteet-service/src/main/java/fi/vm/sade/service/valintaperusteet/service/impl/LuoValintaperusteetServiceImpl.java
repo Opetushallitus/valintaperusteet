@@ -148,11 +148,32 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         Laskentakaava toisenAsteenYlioppilaspohjainenPeruskaava = asetaValintaryhmaJaTallennaKantaan(YoPohjaiset.luoToisenAsteenYlioppilaspohjainenPeruskaava(hakutoivejarjestyspisteytysmalli,
                 tyokokemuspisteytysmalli, sukupuolipisteytysmalli, lk_yleinenkoulumenestyspisteytysmalli), lukioVr);
 
-        lisaaHakukohdekoodit(peruskouluVr, lukioVr, toisenAsteenPeruskoulupohjainenPeruskaava, toisenAsteenYlioppilaspohjainenPeruskaava);
+        //        Tasasijakriteerit on
+        //
+        //        pk-pohjaiseen ammatilliseen:
+        //
+        //        1.       Hakutoivejärjestys (eli jos on vaikka 1.sijainen ja 2. sijainen hakija samoilla pisteillä, valitaan se 1. sijainen hakija)
+        //        2.       Mahd. pääsy- ja soveltuvuuskokeen pistemäärä
+        //        3.       Yleinen koulumenestys (eli se sama kaava josta saa pisteet, kaikkien aineiden keskiarvo)
+        //        4.       painotettavat arvosanat (tästäkin olemassa kaava)
+        //        5.       arvonta
+
+        //yo-pohjaisessa samat kriteerit paitsi kohta 4 jää pois kun yo -pohjaisessa ei ole noita painotettavia
+        //arvosanoja.
+
+
+        Laskentakaava[] pkTasasijakriteerit = new Laskentakaava[]{hakutoivejarjestyspisteytysmalli, pk_yleinenkoulumenestyspisteytysmalli, pk_painotettavatKeskiarvotLaskentakaava};
+        Laskentakaava[] lkTasasijakriteerit = new Laskentakaava[]{hakutoivejarjestyspisteytysmalli, lk_yleinenkoulumenestyspisteytysmalli};
+
+        lisaaHakukohdekoodit(peruskouluVr, lukioVr, toisenAsteenPeruskoulupohjainenPeruskaava, toisenAsteenYlioppilaspohjainenPeruskaava, pkTasasijakriteerit, lkTasasijakriteerit);
     }
 
 
-    private void lisaaHakukohdekoodit(Valintaryhma peruskouluVr, Valintaryhma lukioVr, Laskentakaava toisenAsteenPeruskoulupohjainenPeruskaava, Laskentakaava toisenAsteenYlioppilaspohjainenPeruskaava) throws IOException {
+    private void lisaaHakukohdekoodit(Valintaryhma peruskouluVr, Valintaryhma lukioVr,
+                                      Laskentakaava toisenAsteenPeruskoulupohjainenPeruskaava,
+                                      Laskentakaava toisenAsteenYlioppilaspohjainenPeruskaava,
+                                      Laskentakaava[] pkTasasijakriteerit,
+                                      Laskentakaava[] lkTasasijakriteerit) throws IOException {
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new InputStreamReader(resourceLoader.getResource("classpath:hakukohdekoodit/hakukohdekoodit.csv").getInputStream(), Charset.forName("UTF-8")));
@@ -217,11 +238,11 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                     kielivalintaryhma = valintaryhmaService.insert(kielivalintaryhma, valintaryhma.getOid());
 
                     if (nimi.contains(", pk")) {
-                        insertKoe("Pääsykokeelliset", nimi, kielivalintaryhma, toisenAsteenPeruskoulupohjainenPeruskaava, opetuskieli, hakukohdekoodi);
-                        insertEiKoetta("Pääsykokeettomat", nimi, kielivalintaryhma, toisenAsteenPeruskoulupohjainenPeruskaava, opetuskieli, hakukohdekoodi);
+                        insertKoe("Pääsykokeelliset", nimi, kielivalintaryhma, toisenAsteenPeruskoulupohjainenPeruskaava, pkTasasijakriteerit, opetuskieli, hakukohdekoodi);
+                        insertEiKoetta("Pääsykokeettomat", nimi, kielivalintaryhma, toisenAsteenPeruskoulupohjainenPeruskaava, pkTasasijakriteerit, opetuskieli, hakukohdekoodi);
                     } else {
-                        insertKoe("Pääsykokeelliset", nimi, kielivalintaryhma, toisenAsteenYlioppilaspohjainenPeruskaava, opetuskieli, hakukohdekoodi);
-                        insertEiKoetta("Pääsykokeettomat", nimi, kielivalintaryhma, toisenAsteenYlioppilaspohjainenPeruskaava, opetuskieli, hakukohdekoodi);
+                        insertKoe("Pääsykokeelliset", nimi, kielivalintaryhma, toisenAsteenYlioppilaspohjainenPeruskaava, lkTasasijakriteerit, opetuskieli, hakukohdekoodi);
+                        insertEiKoetta("Pääsykokeettomat", nimi, kielivalintaryhma, toisenAsteenYlioppilaspohjainenPeruskaava, lkTasasijakriteerit, opetuskieli, hakukohdekoodi);
                     }
                 }
             }
@@ -234,7 +255,8 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
     }
 
     private void insertKoe(String koeNimi, String hakukohdeNimi, Valintaryhma valintaryhma, Laskentakaava peruskaava,
-                           Opetuskielikoodi opetuskielikoodi, Hakukohdekoodi hakukohdekoodi) {
+                           Laskentakaava[] tasasijakriteerit, Opetuskielikoodi opetuskielikoodi,
+                           Hakukohdekoodi hakukohdekoodi) {
         Valintaryhma koe = new Valintaryhma();
         koe.setNimi(koeNimi);
         koe.setHakuOid(HAKU_OID);
@@ -247,10 +269,12 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
         valintakoekoodiService.lisaaValintakoekoodiValintaryhmalle(koe.getOid(), valintakoekoodi);
 
-        ValintaperusteViite valintaperusteViite = GenericHelper.luoValintaperusteViite(hakukohdeNimi, true, Valintaperustelahde.HAETTAVA_ARVO);
-        Funktiokutsu valintakoe = GenericHelper.luoHaeLukuarvo(valintaperusteViite);
+        Laskentakaava valintakoekaava = GenericHelper.luoLaskentakaava(GenericHelper.luoHaeLukuarvo(
+                GenericHelper.luoValintaperusteViite(hakukohdeNimi, true, Valintaperustelahde.HAETTAVA_ARVO)),
+                "Valintakokeen pistemäärä - " + hakukohdeNimi + " - " + koe.getNimi());
+        valintakoekaava = asetaValintaryhmaJaTallennaKantaan(valintakoekaava, valintaryhma);
 
-        Funktiokutsu funktiokutsu = GenericHelper.luoSumma(valintakoe, peruskaava);
+        Funktiokutsu funktiokutsu = GenericHelper.luoSumma(valintakoekaava, peruskaava);
         Laskentakaava laskentakaava = GenericHelper.luoLaskentakaava(funktiokutsu, hakukohdeNimi + " - " + koe.getNimi());
         laskentakaava = asetaValintaryhmaJaTallennaKantaan(laskentakaava, koe);
 
@@ -261,10 +285,26 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         kriteeri.setAktiivinen(true);
         kriteeri.setMetatiedot(hakukohdeNimi + " - " + koe.getNimi());
         jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(jono.getOid(), kriteeri, null, laskentakaava.getId());
+
+        for (int i = 0; i < tasasijakriteerit.length; ++i) {
+            if (i == 1) {
+                Jarjestyskriteeri jk = new Jarjestyskriteeri();
+                jk.setAktiivinen(true);
+                kriteeri.setMetatiedot(valintakoekaava.getNimi());
+                jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(jono.getOid(), jk, null, valintakoekaava.getId());
+            }
+
+            Laskentakaava kaava = tasasijakriteerit[i];
+            Jarjestyskriteeri jk = new Jarjestyskriteeri();
+            jk.setAktiivinen(true);
+            jk.setMetatiedot(kaava.getNimi());
+            jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(jono.getOid(), jk, null, kaava.getId());
+        }
     }
 
-    private void insertEiKoetta(String koeNimi, String hakukohdeNimi, Valintaryhma valintaryhma, Laskentakaava peruskaava
-            , Opetuskielikoodi opetuskielikoodi, Hakukohdekoodi hakukohdekoodi) {
+    private void insertEiKoetta(String koeNimi, String hakukohdeNimi, Valintaryhma valintaryhma,
+                                Laskentakaava peruskaava, Laskentakaava[] tasasijakriteerit,
+                                Opetuskielikoodi opetuskielikoodi, Hakukohdekoodi hakukohdekoodi) {
         Valintaryhma koe = new Valintaryhma();
         koe.setNimi(koeNimi);
         koe.setHakuOid(HAKU_OID);
@@ -284,6 +324,14 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         kriteeri.setAktiivinen(true);
         kriteeri.setMetatiedot(hakukohdeNimi + " - " + koe.getNimi());
         jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(jono.getOid(), kriteeri, null, laskentakaava.getId());
+
+        for (int i = 0; i < tasasijakriteerit.length; ++i) {
+            Laskentakaava kaava = tasasijakriteerit[i];
+            Jarjestyskriteeri jk = new Jarjestyskriteeri();
+            jk.setAktiivinen(true);
+            jk.setMetatiedot(kaava.getNimi());
+            jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(jono.getOid(), jk, null, kaava.getId());
+        }
     }
 
 
