@@ -4,6 +4,7 @@ import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
 import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
 import fi.vm.sade.service.valintaperusteet.model.Funktiotyyppi;
 import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
+import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuMuodostaaSilmukanException;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public interface LaskentakaavaService extends CRUDService<Laskentakaava, Long, S
 
     Laskentakaava validoi(Laskentakaava laskentakaava);
 
-    Funktiokutsu haeMallinnettuFunktiokutsu(Long id);
+    Funktiokutsu haeMallinnettuFunktiokutsu(Long id) throws FunktiokutsuMuodostaaSilmukanException;
 
     boolean onkoKaavaValidi(Laskentakaava laskentakaava);
 

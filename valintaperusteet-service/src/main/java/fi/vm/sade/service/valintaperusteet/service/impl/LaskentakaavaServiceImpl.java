@@ -1,17 +1,5 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import fi.vm.sade.generic.dao.GenericDAO;
 import fi.vm.sade.kaava.Laskentakaavavalidaattori;
 import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
@@ -19,20 +7,15 @@ import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.dao.LaskentakaavaDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
-import fi.vm.sade.service.valintaperusteet.model.Arvokonvertteriparametri;
-import fi.vm.sade.service.valintaperusteet.model.Arvovalikonvertteriparametri;
-import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti;
-import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
-import fi.vm.sade.service.valintaperusteet.model.Funktiotyyppi;
-import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
-import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
-import fi.vm.sade.service.valintaperusteet.model.Syoteparametri;
-import fi.vm.sade.service.valintaperusteet.model.ValintaperusteViite;
-import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
+import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
-import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuEiOleOlemassaException;
-import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaEiOleOlemassaException;
-import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaEiValidiException;
+import fi.vm.sade.service.valintaperusteet.service.exception.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * User: kwuoti Date: 21.1.2013 Time: 9.34
@@ -59,7 +42,8 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     private ValintaryhmaDAO valintaryhmaDAO;
 
     @Transactional(readOnly = true)
-    private Funktiokutsu haeFunktiokutsuRekursiivisesti(Long id, boolean laajennaAlakaavat) {
+    private Funktiokutsu haeFunktiokutsuRekursiivisesti(Long id, boolean laajennaAlakaavat, Set<Long> laskentakaavaIds)
+            throws FunktiokutsuMuodostaaSilmukanException {
 
         Funktiokutsu funktiokutsu = funktiokutsuDAO.getFunktiokutsu(id);
         if (funktiokutsu == null) {
@@ -68,10 +52,17 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
 
         for (Funktioargumentti fa : funktiokutsu.getFunktioargumentit()) {
             if (fa.getFunktiokutsuChild() != null) {
-                haeFunktiokutsuRekursiivisesti(fa.getFunktiokutsuChild().getId(), laajennaAlakaavat);
+                haeFunktiokutsuRekursiivisesti(fa.getFunktiokutsuChild().getId(), laajennaAlakaavat, laskentakaavaIds);
             } else if (laajennaAlakaavat && fa.getLaskentakaavaChild() != null) {
+                if (laskentakaavaIds.contains(fa.getLaskentakaavaChild().getId())) {
+                    throw new FunktiokutsuMuodostaaSilmukanException("Funktiokutsu " + id + " muodostaa silmukan " +
+                            "laskentakaavaan " + fa.getLaskentakaavaChild().getId(), id,
+                            fa.getLaskentakaavaChild().getId());
+                }
+                laskentakaavaIds.add(fa.getLaskentakaavaChild().getId());
+
                 Funktiokutsu fk = haeFunktiokutsuRekursiivisesti(fa.getLaskentakaavaChild().getFunktiokutsu().getId(),
-                        laajennaAlakaavat);
+                        laajennaAlakaavat, laskentakaavaIds);
                 fa.setLaajennettuKaava(fk);
             }
         }
@@ -81,8 +72,8 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
 
     @Override
     @Transactional(readOnly = true)
-    public Funktiokutsu haeMallinnettuFunktiokutsu(Long id) {
-        return haeFunktiokutsuRekursiivisesti(id, false);
+    public Funktiokutsu haeMallinnettuFunktiokutsu(Long id) throws FunktiokutsuMuodostaaSilmukanException {
+        return haeFunktiokutsuRekursiivisesti(id, false, new HashSet<Long>());
     }
 
     private Laskentakaava haeLaskentakaava(Long id) {
@@ -309,7 +300,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     }
 
     private void haeValintaperusteetRekursiivisesti(Funktiokutsu funktiokutsu,
-            Map<String, ValintaperusteDTO> valintaperusteet) {
+                                                    Map<String, ValintaperusteDTO> valintaperusteet) {
         if (funktiokutsu.getValintaperuste() != null) {
             ValintaperusteDTO valintaperuste = new ValintaperusteDTO();
             valintaperuste.setFunktiotyyppi(funktiokutsu.getFunktionimi().getTyyppi());
@@ -388,27 +379,26 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     }
 
     private Laskentakaava haeKokoLaskentakaava(Long id, boolean laajennaAlakaavat) {
-        Laskentakaava laskentakaava = haeLaskentakaava(id);
-        if (laskentakaava != null) {
-            for (Funktioargumentti fa : laskentakaava.getFunktiokutsu().getFunktioargumentit()) {
-                if (fa.getFunktiokutsuChild() != null) {
-                    haeFunktiokutsuRekursiivisesti(fa.getFunktiokutsuChild().getId(), laajennaAlakaavat);
-                } else if (laajennaAlakaavat && fa.getLaskentakaavaChild() != null) {
-                    fa.setLaajennettuKaava(haeFunktiokutsuRekursiivisesti(fa.getLaskentakaavaChild().getFunktiokutsu()
-                            .getId(), laajennaAlakaavat));
-                } else {
-                    laskentakaavaDAO.read(fa.getLaskentakaavaChild().getId());
-                }
-            }
-        }
+        try {
+            Laskentakaava laskentakaava = haeLaskentakaava(id);
+            if (laskentakaava != null) {
+                Set<Long> laskentakaavaIds = new HashSet<Long>();
+                laskentakaavaIds.add(laskentakaava.getId());
 
-        return laskentakaava;
+                haeFunktiokutsuRekursiivisesti(laskentakaava.getFunktiokutsu().getId(), laajennaAlakaavat, laskentakaavaIds);
+            }
+
+            return laskentakaava;
+        } catch (FunktiokutsuMuodostaaSilmukanException e) {
+            throw new LaskentakaavaMuodostaaSilmukanException("Laskentakaava " + id + " muodostaa silmukan " +
+                    "laskentakaavaan " + e.getLaskentakaavaId() + " funktiokutsun " + e.getFunktiokutsuId() + " kautta",
+                    e, id, e.getFunktiokutsuId(), e.getLaskentakaavaId());
+        }
     }
 
     @Override
     @Transactional(readOnly = true)
     public Laskentakaava haeLaskettavaKaava(Long id) {
-
         return haeKokoLaskentakaava(id, true);
     }
 }

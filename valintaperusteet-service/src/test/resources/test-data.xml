@@ -240,6 +240,20 @@
     <laskentakaava id="410" version="0" nimi="kaava410" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO"
                    funktiokutsu_id="8"/>
 
+    <funktiokutsu id="700" version="0" funktionimi="SUMMA"/>
+    <funktioargumentti id="700" version="0" funktiokutsuparent_id="700" funktiokutsuchild_id="1" indeksi="1"/>
+    <funktioargumentti id="701" version="0" funktiokutsuparent_id="700" funktiokutsuchild_id="2" indeksi="2"/>
+
+    <laskentakaava id="414" version="0" funktiokutsu_id="700" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO"
+                   nimi="summakaava414"/>
+
+    <funktiokutsu id="701" version="0" funktionimi="SUMMA"/>
+    <funktioargumentti id="702" version="0" funktiokutsuparent_id="701" funktiokutsuchild_id="1" indeksi="1"/>
+    <funktioargumentti id="703" version="0" funktiokutsuparent_id="701" laskentakaavachild_id="414" indeksi="2"/>
+
+    <laskentakaava id="415" version="0" funktiokutsu_id="701" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO"
+                   nimi="summakaava415"/>
+
     <!--
         Ensimmäisen valintaryhmän luonti on siirretty ensimmäiseksi, koska taulu pitää luoda ensimmäisenä.
         Ärsyttävä DBUnitin ominaisuus, jossa datan luonti/poistojärjestys määräytyy ensimmäisen tagin
