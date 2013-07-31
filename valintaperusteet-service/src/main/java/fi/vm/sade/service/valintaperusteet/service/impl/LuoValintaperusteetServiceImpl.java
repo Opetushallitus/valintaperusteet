@@ -268,13 +268,13 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
         valintakoekoodiService.lisaaValintakoekoodiValintaryhmalle(koe.getOid(), valintakoekoodi);
 
-        Laskentakaava valintakoekaava = GenericHelper.luoLaskentakaava(GenericHelper.luoHaeLukuarvo(
+        Laskentakaava valintakoekaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(GenericHelper.luoHaeLukuarvo(
                 GenericHelper.luoValintaperusteViite(hakukohdeNimi, true, Valintaperustelahde.HAETTAVA_ARVO)),
                 "Valintakokeen pistemäärä - " + hakukohdeNimi + " - " + koe.getNimi());
         valintakoekaava = asetaValintaryhmaJaTallennaKantaan(valintakoekaava, valintaryhma);
 
         Funktiokutsu funktiokutsu = GenericHelper.luoSumma(valintakoekaava, peruskaava);
-        Laskentakaava laskentakaava = GenericHelper.luoLaskentakaava(funktiokutsu, hakukohdeNimi + " - " + koe.getNimi());
+        Laskentakaava laskentakaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(funktiokutsu, hakukohdeNimi + " - " + koe.getNimi());
         laskentakaava = asetaValintaryhmaJaTallennaKantaan(laskentakaava, koe);
 
         ValinnanVaihe vaihe = valinnanVaiheService.findByValintaryhma(koe.getOid()).get(0);
@@ -313,7 +313,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(koe.getOid(), hakukohdekoodi);
 
         Funktiokutsu funktiokutsu = GenericHelper.luoSumma(peruskaava);
-        Laskentakaava laskentakaava = GenericHelper.luoLaskentakaava(funktiokutsu, hakukohdeNimi + " - " + koe.getNimi());
+        Laskentakaava laskentakaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(funktiokutsu, hakukohdeNimi + " - " + koe.getNimi());
         laskentakaava = asetaValintaryhmaJaTallennaKantaan(laskentakaava, koe);
 
         ValinnanVaihe vaihe = valinnanVaiheService.findByValintaryhma(koe.getOid()).get(0);
