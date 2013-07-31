@@ -60,6 +60,8 @@ public class LuoValintaperusteetServiceTest {
     private static final String HAKUKOHDE_OID1 = "1.2.246.562.5.10095_02_186_0632";
     private static final String HAKUKOHDE_OID2 = "1.2.246.562.5.01403_01_186_1027";
     private static final String HAKUKOHDE_OID3 = "1.2.246.562.5.01787_01_406_1042";
+    private static final String HAKUKOHDE_OID4 = "1.2.246.562.5.01787_01_406_1043";
+    private static final String HAKUKOHDE_OID5 = "1.2.246.562.5.01787_01_406_1044";
 
     private static final Map<Integer, String> hakutoiveet;
 
@@ -68,7 +70,8 @@ public class LuoValintaperusteetServiceTest {
         hakutoiveet.put(1, HAKUKOHDE_OID1);
         hakutoiveet.put(2, HAKUKOHDE_OID2);
         hakutoiveet.put(3, HAKUKOHDE_OID3);
-
+        hakutoiveet.put(4, HAKUKOHDE_OID4);
+        hakutoiveet.put(5, HAKUKOHDE_OID5);
     }
 
     private Map<String, Object> newMap() {
@@ -598,6 +601,84 @@ public class LuoValintaperusteetServiceTest {
         Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemukset[0],
                 Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()),
                 new StringBuffer());
+
+        assertEquals(odotettuTulos, tulos.getTulos());
+        assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
+    }
+
+    @Test
+    public void testHakutoivejarjestystasapistekaavaEnsimmainen() {
+        Hakemus hakemus = luoPerushakemus();
+        final BigDecimal odotettuTulos = new BigDecimal("5.0");
+
+        Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoHakutoivejarjestysTasapistekaava());
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemus, hakemukset(hakemus),
+                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()), new StringBuffer());
+
+        assertEquals(odotettuTulos, tulos.getTulos());
+        assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
+    }
+
+    @Test
+    public void testHakutoivejarjestystasapistekaavaToinen() {
+        Hakemus hakemus = luoPerushakemus();
+        final BigDecimal odotettuTulos = new BigDecimal("4.0");
+
+        Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoHakutoivejarjestysTasapistekaava());
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID2, hakemus, hakemukset(hakemus),
+                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()), new StringBuffer());
+
+        assertEquals(odotettuTulos, tulos.getTulos());
+        assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
+    }
+
+    @Test
+    public void testHakutoivejarjestystasapistekaavaKolmas() {
+        Hakemus hakemus = luoPerushakemus();
+        final BigDecimal odotettuTulos = new BigDecimal("3.0");
+
+        Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoHakutoivejarjestysTasapistekaava());
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID3, hakemus, hakemukset(hakemus),
+                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()), new StringBuffer());
+
+        assertEquals(odotettuTulos, tulos.getTulos());
+        assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
+    }
+
+    @Test
+    public void testHakutoivejarjestystasapistekaavaNeljas() {
+        Hakemus hakemus = luoPerushakemus();
+        final BigDecimal odotettuTulos = new BigDecimal("2.0");
+
+        Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoHakutoivejarjestysTasapistekaava());
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID4, hakemus, hakemukset(hakemus),
+                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()), new StringBuffer());
+
+        assertEquals(odotettuTulos, tulos.getTulos());
+        assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
+    }
+
+    @Test
+    public void testHakutoivejarjestystasapistekaavaViides() {
+        Hakemus hakemus = luoPerushakemus();
+        final BigDecimal odotettuTulos = new BigDecimal("1.0");
+
+        Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoHakutoivejarjestysTasapistekaava());
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID5, hakemus, hakemukset(hakemus),
+                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()), new StringBuffer());
+
+        assertEquals(odotettuTulos, tulos.getTulos());
+        assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
+    }
+
+    @Test
+    public void testHakutoivejarjestystasapistekaavaEiHakenut() {
+        Hakemus hakemus = luoPerushakemus();
+        final BigDecimal odotettuTulos = new BigDecimal("0.0");
+
+        Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoHakutoivejarjestysTasapistekaava());
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku("ei-olemassa", hakemus, hakemukset(hakemus),
+                Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()), new StringBuffer());
 
         assertEquals(odotettuTulos, tulos.getTulos());
         assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());

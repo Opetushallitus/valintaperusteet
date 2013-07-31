@@ -160,9 +160,10 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         //yo-pohjaisessa samat kriteerit paitsi kohta 4 jää pois kun yo -pohjaisessa ei ole noita painotettavia
         //arvosanoja.
 
+        Laskentakaava hakutoivejarjestystasapistekaava = asetaValintaryhmaJaTallennaKantaan(PkJaYoPohjaiset.luoHakutoivejarjestysTasapistekaava(), ammatillinenKoulutusVr);
 
-        Laskentakaava[] pkTasasijakriteerit = new Laskentakaava[]{hakutoivejarjestyspisteytysmalli, pk_yleinenkoulumenestyspisteytysmalli, pk_painotettavatKeskiarvotLaskentakaava};
-        Laskentakaava[] lkTasasijakriteerit = new Laskentakaava[]{hakutoivejarjestyspisteytysmalli, lk_yleinenkoulumenestyspisteytysmalli};
+        Laskentakaava[] pkTasasijakriteerit = new Laskentakaava[]{hakutoivejarjestystasapistekaava, pk_yleinenkoulumenestyspisteytysmalli, pk_painotettavatKeskiarvotLaskentakaava};
+        Laskentakaava[] lkTasasijakriteerit = new Laskentakaava[]{hakutoivejarjestystasapistekaava, lk_yleinenkoulumenestyspisteytysmalli};
 
         lisaaHakukohdekoodit(peruskouluVr, lukioVr, toisenAsteenPeruskoulupohjainenPeruskaava, toisenAsteenYlioppilaspohjainenPeruskaava, pkTasasijakriteerit, lkTasasijakriteerit);
     }

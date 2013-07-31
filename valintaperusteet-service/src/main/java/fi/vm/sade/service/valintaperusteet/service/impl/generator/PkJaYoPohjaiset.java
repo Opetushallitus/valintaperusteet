@@ -15,6 +15,7 @@ public class PkJaYoPohjaiset {
 
     public static final String tyokokemuskuukaudet = "TYOKOKEMUSKUUKAUDET";
     public static final String sukupuoli = "SUKUPUOLI";
+    public static final int HAKUTOIVEIDEN_LKM = 5;
 
     public static Laskentakaava luoHakutoivejarjestyspisteytysmalli() {
         Funktiokutsu pisteet = GenericHelper.luoLukuarvo(2.0);
@@ -90,5 +91,22 @@ public class PkJaYoPohjaiset {
         konvs.add(GenericHelper.luoArvovalikonvertteriparametri(1.0, 10.0, false));
 
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(GenericHelper.luoHaeLukuarvo(valintaperuste, konvs), nimi);
+    }
+
+    public static Laskentakaava luoHakutoivejarjestysTasapistekaava() {
+        Funktiokutsu nolla = GenericHelper.luoLukuarvo(0.0);
+        List<Funktiokutsu> summattavat = new ArrayList<Funktiokutsu>();
+        int hakutoive = 1;
+        for (int i = HAKUTOIVEIDEN_LKM; i > 0; --i) {
+            Funktiokutsu pistemaara = GenericHelper.luoLukuarvo(i);
+
+            summattavat.add(GenericHelper.luoJosFunktio(GenericHelper.luoNsHakutoive(hakutoive), pistemaara, nolla));
+            ++hakutoive;
+        }
+
+        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
+                GenericHelper.luoSumma(summattavat.toArray(new FunktionArgumentti[summattavat.size()])),
+                "Hakutoivejärjestystasapistetilanne, 2 aste, pk ja yo");
+
     }
 }

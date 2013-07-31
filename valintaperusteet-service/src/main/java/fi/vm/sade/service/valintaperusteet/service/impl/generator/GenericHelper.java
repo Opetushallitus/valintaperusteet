@@ -108,6 +108,17 @@ public class GenericHelper {
         return hakutoive;
     }
 
+    public static Funktiokutsu luoNsHakutoive(int n) {
+        Funktiokutsu hakutoive = new Funktiokutsu();
+        hakutoive.setFunktionimi(Funktionimi.HAKUTOIVE);
+        Syoteparametri a = new Syoteparametri();
+        a.setAvain("n");
+        a.setArvo(String.valueOf(n));
+        hakutoive.getSyoteparametrit().add(a);
+        return hakutoive;
+    }
+
+
     public static Funktiokutsu luoJosFunktio(Funktiokutsu ehto, Funktiokutsu totta, Funktiokutsu vale) {
         Funktiokutsu f = new Funktiokutsu();
         f.setFunktionimi(Funktionimi.JOS);
