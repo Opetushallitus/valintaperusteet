@@ -538,17 +538,15 @@ public class LaskentakaavaServiceTest {
 
         alakaava.getFunktiokutsu().getFunktioargumentit().add(arg);
 
-        laskentakaavaService.update(alakaavaId.toString(), alakaava);
-
         boolean caught = false;
         try {
-            laskentakaavaService.haeLaskettavaKaava(ylakaavaId);
+            laskentakaavaService.update(alakaavaId.toString(), alakaava);
         } catch (LaskentakaavaMuodostaaSilmukanException e) {
             caught = true;
 
-            assertEquals(e.getFunktiokutsuId().longValue(), 700L);
-            assertEquals(e.getParentLaskentakaavaId(), ylakaavaId);
-            assertEquals(e.getViitattuLaskentakaavaId(), ylakaavaId);
+            assertEquals(e.getFunktiokutsuId().longValue(), 701L);
+            assertEquals(e.getParentLaskentakaavaId(), alakaavaId);
+            assertEquals(e.getViitattuLaskentakaavaId(), alakaavaId);
         }
 
         assertTrue(caught);

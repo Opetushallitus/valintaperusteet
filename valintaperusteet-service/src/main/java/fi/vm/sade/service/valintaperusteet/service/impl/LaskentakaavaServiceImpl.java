@@ -57,12 +57,13 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
                 if (laskentakaavaIds.contains(fa.getLaskentakaavaChild().getId())) {
                     throw new FunktiokutsuMuodostaaSilmukanException("Funktiokutsu " + id + " muodostaa silmukan " +
                             "laskentakaavaan " + fa.getLaskentakaavaChild().getId(), id,
-                            fa.getLaskentakaavaChild().getId());
+                            funktiokutsu.getFunktionimi(), fa.getLaskentakaavaChild().getId());
                 }
-                laskentakaavaIds.add(fa.getLaskentakaavaChild().getId());
+                Set<Long> newLaskentakaavaIds = new HashSet<Long>(laskentakaavaIds);
+                newLaskentakaavaIds.add(fa.getLaskentakaavaChild().getId());
 
                 Funktiokutsu fk = haeFunktiokutsuRekursiivisesti(fa.getLaskentakaavaChild().getFunktiokutsu().getId(),
-                        laajennaAlakaavat, laskentakaavaIds);
+                        laajennaAlakaavat, newLaskentakaavaIds);
                 fa.setLaajennettuKaava(fk);
             }
         }
@@ -99,21 +100,34 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
 
     @Override
     public Laskentakaava update(String oid, Laskentakaava incoming) {
-        asetaNullitOletusarvoiksi(incoming.getFunktiokutsu());
+        try {
+            asetaNullitOletusarvoiksi(incoming.getFunktiokutsu());
 
-        if (incoming.getId() == null) {
-            return insert(incoming);
-        } else if (!incoming.getOnLuonnos() && !Laskentakaavavalidaattori.onkoMallinnettuKaavaValidi(incoming)) {
-            throw new LaskentakaavaEiValidiException("Laskentakaava ei ole validi",
-                    Laskentakaavavalidaattori.validoiMallinnettuKaava(incoming));
+            if (incoming.getId() == null) {
+                return insert(incoming);
+            }
+
+            Laskentakaava managed = haeLaskentakaava(incoming.getId());
+            Set<Long> laskentakaavaIds = new HashSet<Long>();
+            laskentakaavaIds.add(managed.getId());
+
+            managed.setOnLuonnos(incoming.getOnLuonnos());
+            managed.setFunktiokutsu(updateFunktiokutsu(incoming.getFunktiokutsu(), laskentakaavaIds));
+
+            if (!incoming.getOnLuonnos() && !Laskentakaavavalidaattori.onkoMallinnettuKaavaValidi(managed)) {
+                throw new LaskentakaavaEiValidiException("Laskentakaava ei ole validi",
+                        Laskentakaavavalidaattori.validoiMallinnettuKaava(incoming));
+            }
+
+            funktiokutsuDAO.deleteOrphans();
+
+            return managed;
+        } catch (FunktiokutsuMuodostaaSilmukanException e) {
+            throw new LaskentakaavaMuodostaaSilmukanException("Laskentakaava " + incoming.getId() + " muodostaa silmukan " +
+                    "laskentakaavaan " + e.getLaskentakaavaId() + " funktiokutsun "
+                    + (e.getFunktiokutsuId() != null ? e.getFunktiokutsuId() : e.getFunktionimi()) + " kautta",
+                    e, incoming.getId(), e.getFunktiokutsuId(), e.getLaskentakaavaId());
         }
-
-        Laskentakaava managed = haeLaskentakaava(incoming.getId());
-        managed.setOnLuonnos(incoming.getOnLuonnos());
-        managed.setFunktiokutsu(updateFunktiokutsu(incoming.getFunktiokutsu()));
-        funktiokutsuDAO.deleteOrphans();
-
-        return managed;
     }
 
     private void asetaNullitOletusarvoiksi(Funktiokutsu fk) {
@@ -148,7 +162,12 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
         }
     }
 
-    private Funktiokutsu updateFunktiokutsu(Funktiokutsu incoming) {
+    private Funktiokutsu updateFunktiokutsu(Funktiokutsu incoming) throws FunktiokutsuMuodostaaSilmukanException {
+        return updateFunktiokutsu(incoming, new HashSet<Long>());
+    }
+
+    private Funktiokutsu updateFunktiokutsu(Funktiokutsu incoming, Set<Long> laskentakaavaIds)
+            throws FunktiokutsuMuodostaaSilmukanException {
         Funktiokutsu managed = null;
         if (incoming.getId() != null) {
             managed = funktiokutsuDAO.read(incoming.getId());
@@ -184,9 +203,20 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             newArg.setParent(managed);
 
             if (arg.getFunktiokutsuChild() != null) {
-                newArg.setFunktiokutsuChild(updateFunktiokutsu(arg.getFunktiokutsuChild()));
+                newArg.setFunktiokutsuChild(updateFunktiokutsu(arg.getFunktiokutsuChild(), laskentakaavaIds));
             } else {
-                newArg.setLaskentakaavaChild(laskentakaavaDAO.read(arg.getLaskentakaavaChild().getId()));
+                Long laskentakaavaId = arg.getLaskentakaavaChild().getId();
+                if (laskentakaavaIds.contains(laskentakaavaId)) {
+                    throw new FunktiokutsuMuodostaaSilmukanException("Funktiokutsu " +
+                            (managed.getId() != null ? managed.getId() : managed.getFunktionimi().name()) +
+                            " muodostaa silmukan " + "laskentakaavaan " + laskentakaavaId, managed.getId(),
+                            managed.getFunktionimi(), laskentakaavaId);
+                }
+
+                Set<Long> newLaskentakaavaIds = new HashSet<Long>(laskentakaavaIds);
+                newLaskentakaavaIds.add(laskentakaavaId);
+
+                newArg.setLaskentakaavaChild(haeKokoLaskentakaava(laskentakaavaId, true, newLaskentakaavaIds));
             }
             newArg.setIndeksi(arg.getIndeksi());
             managed.getFunktioargumentit().add(newArg);
@@ -252,26 +282,33 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
 
     @Override
     public Laskentakaava insert(Laskentakaava laskentakaava) {
-        asetaNullitOletusarvoiksi(laskentakaava.getFunktiokutsu());
+        try {
+            asetaNullitOletusarvoiksi(laskentakaava.getFunktiokutsu());
 
-        if (laskentakaava.getId() != null) {
-            return update(laskentakaava.getId().toString(), laskentakaava);
-        } else if (!laskentakaava.getOnLuonnos()
-                && !Laskentakaavavalidaattori.onkoMallinnettuKaavaValidi(laskentakaava)) {
-            throw new LaskentakaavaEiValidiException("Laskentakaava ei ole validi",
-                    Laskentakaavavalidaattori.validoiMallinnettuKaava(laskentakaava));
+            if (laskentakaava.getId() != null) {
+                return update(laskentakaava.getId().toString(), laskentakaava);
+            } else if (!laskentakaava.getOnLuonnos()
+                    && !Laskentakaavavalidaattori.onkoMallinnettuKaavaValidi(laskentakaava)) {
+                throw new LaskentakaavaEiValidiException("Laskentakaava ei ole validi",
+                        Laskentakaavavalidaattori.validoiMallinnettuKaava(laskentakaava));
+            }
+            laskentakaava.setFunktiokutsu(updateFunktiokutsu(laskentakaava.getFunktiokutsu()));
+
+            if (laskentakaava.getHakukohde() != null && laskentakaava.getHakukohde().getOid() != null) {
+                HakukohdeViite hakukohde = hakukohdeViiteDAO.readByOid(laskentakaava.getHakukohde().getOid());
+                laskentakaava.setHakukohde(hakukohde);
+            } else if (laskentakaava.getValintaryhma() != null && laskentakaava.getValintaryhma().getOid() != null) {
+                Valintaryhma valintaryhma = valintaryhmaDAO.readByOid(laskentakaava.getValintaryhma().getOid());
+                laskentakaava.setValintaryhma(valintaryhma);
+            }
+
+            return laskentakaavaDAO.insert(laskentakaava);
+        } catch (FunktiokutsuMuodostaaSilmukanException e) {
+            throw new LaskentakaavaMuodostaaSilmukanException("Laskentakaava  muodostaa silmukan " +
+                    "laskentakaavaan " + e.getLaskentakaavaId() + " funktiokutsun "
+                    + (e.getFunktiokutsuId() != null ? e.getFunktiokutsuId() : e.getFunktionimi()) + " kautta",
+                    e, null, e.getFunktiokutsuId(), e.getLaskentakaavaId());
         }
-        laskentakaava.setFunktiokutsu(updateFunktiokutsu(laskentakaava.getFunktiokutsu()));
-
-        if (laskentakaava.getHakukohde() != null && laskentakaava.getHakukohde().getOid() != null) {
-            HakukohdeViite hakukohde = hakukohdeViiteDAO.readByOid(laskentakaava.getHakukohde().getOid());
-            laskentakaava.setHakukohde(hakukohde);
-        } else if (laskentakaava.getValintaryhma() != null && laskentakaava.getValintaryhma().getOid() != null) {
-            Valintaryhma valintaryhma = valintaryhmaDAO.readByOid(laskentakaava.getValintaryhma().getOid());
-            laskentakaava.setValintaryhma(valintaryhma);
-        }
-
-        return laskentakaavaDAO.insert(laskentakaava);
     }
 
     @Override
@@ -355,7 +392,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     @Override
     @Transactional(readOnly = true)
     public Laskentakaava validoi(Laskentakaava laskentakaava) {
-        return Laskentakaavavalidaattori.validoiMallinnettuKaava(laskentakaava);
+        return Laskentakaavavalidaattori.validoiMallinnettuKaava(laajennaAlakaavat(laskentakaava));
     }
 
     @Override
@@ -378,20 +415,42 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
         return managed;
     }
 
+    private Laskentakaava laajennaAlakaavat(Laskentakaava laskentakaava) {
+        laajennaAlakaavat(laskentakaava.getFunktiokutsu());
+        return laskentakaava;
+    }
+
+    private void laajennaAlakaavat(Funktiokutsu funktiokutsu) {
+        if (funktiokutsu != null && funktiokutsu.getFunktioargumentit() != null) {
+            for (Funktioargumentti arg : funktiokutsu.getFunktioargumentit()) {
+                if (arg.getFunktiokutsuChild() != null) {
+                    laajennaAlakaavat(arg.getFunktiokutsuChild());
+                } else if (arg.getLaskentakaavaChild() != null && arg.getLaskentakaavaChild().getId() != null) {
+                    arg.setLaskentakaavaChild(haeLaskentakaava(arg.getLaskentakaavaChild().getId()));
+                }
+            }
+        }
+    }
+
+    private Laskentakaava haeKokoLaskentakaava(Long id, boolean laajennaAlakaavat, Set<Long> laskentakaavaIds)
+            throws FunktiokutsuMuodostaaSilmukanException {
+        Laskentakaava laskentakaava = haeLaskentakaava(id);
+        if (laskentakaava != null) {
+            laskentakaavaIds.add(laskentakaava.getId());
+            haeFunktiokutsuRekursiivisesti(laskentakaava.getFunktiokutsu().getId(), laajennaAlakaavat,
+                    laskentakaavaIds);
+        }
+
+        return laskentakaava;
+    }
+
     private Laskentakaava haeKokoLaskentakaava(Long id, boolean laajennaAlakaavat) {
         try {
-            Laskentakaava laskentakaava = haeLaskentakaava(id);
-            if (laskentakaava != null) {
-                Set<Long> laskentakaavaIds = new HashSet<Long>();
-                laskentakaavaIds.add(laskentakaava.getId());
-
-                haeFunktiokutsuRekursiivisesti(laskentakaava.getFunktiokutsu().getId(), laajennaAlakaavat, laskentakaavaIds);
-            }
-
-            return laskentakaava;
+            return haeKokoLaskentakaava(id, laajennaAlakaavat, new HashSet<Long>());
         } catch (FunktiokutsuMuodostaaSilmukanException e) {
             throw new LaskentakaavaMuodostaaSilmukanException("Laskentakaava " + id + " muodostaa silmukan " +
-                    "laskentakaavaan " + e.getLaskentakaavaId() + " funktiokutsun " + e.getFunktiokutsuId() + " kautta",
+                    "laskentakaavaan " + e.getLaskentakaavaId() + " funktiokutsun "
+                    + (e.getFunktiokutsuId() != null ? e.getFunktiokutsuId() : e.getFunktionimi()) + " kautta",
                     e, id, e.getFunktiokutsuId(), e.getLaskentakaavaId());
         }
     }
