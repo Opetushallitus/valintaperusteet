@@ -343,6 +343,9 @@
 
     <valintaryhma id="55" version="0" oid="oid55" nimi="Valintaryhma 55" hakuOid="hakuoid1"/>
 
+    <valintaryhma id="56" version="0" oid="oid56" nimi="Valintaryhma 56" hakuOid="hakuoid1"/>
+
+
     <hakukohdekoodi id="1" version="0" uri="hakukohdekoodiuri1" arvo="koodiarvo1"
                     nimi_fi="hakukohdekoodi1"
                     nimi_sv="hakukohdekoodi1" nimi_en="hakukohdekoodi1"/>
@@ -854,6 +857,9 @@
     <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="106" version="0" oid="106" hakukohde_viite_id="19"
                     nimi="hakukohde 19 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus"/>
 
+    <valinnan_vaihe valinnan_vaihe_tyyppi="VALINTAKOE" id="107" version="0" oid="107" valintaryhma_id="56"
+                    nimi="valintaryhma 56 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus"/>
+
     <valintakoe id="1" version="0" oid="oid1" tunniste="valintakoetunniste1" nimi="valintakoe1" kuvaus="kuvaus1"
                 aktiivinen="true" valinnan_vaihe_id="83" laskentakaava_id="101" master_valintakoe_id="[NULL]"/>
     <valintakoe id="2" version="0" oid="oid2" tunniste="valintakoetunniste2" nimi="valintakoe2" kuvaus="kuvaus2"
@@ -886,6 +892,9 @@
 
     <valintakoe id="13" version="0" oid="oid13" tunniste="valintakoetunniste13" nimi="valintakoe13" kuvaus="kuvaus13"
                 aktiivinen="true" valinnan_vaihe_id="99" laskentakaava_id="101"/>
+
+    <valintakoe id="14" version="0" oid="oid14" tunniste="valintakoetunniste14" nimi="valintakoe14" kuvaus="kuvaus14"
+                aktiivinen="true" valinnan_vaihe_id="107" laskentakaava_id="101"/>
 
     <valintatapajono id="1" version="1" oid="1" aloituspaikat="10" nimi="jono1" kuvaus="kuvaus"
                      tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="1" aktiivinen="true"

@@ -3,11 +3,10 @@ package fi.vm.sade.service.valintaperusteet.service;
 import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
+import fi.vm.sade.service.valintaperusteet.dao.ValintakoeDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
-import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
-import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
-import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
+import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
@@ -50,6 +49,9 @@ public class ValintaryhmaServiceTest {
 
     @Autowired
     private ValintatapajonoDAO valintatapajonoDAO;
+
+    @Autowired
+    private ValintakoeDAO valintakoeDAO;
 
     @Test
     public void testInsertChild() {
@@ -124,6 +126,45 @@ public class ValintaryhmaServiceTest {
 
             assertEquals(2, uusiVaihe1jonot.size());
             assertEquals(1, uusiVaihe2jonot.size());
+        }
+    }
+
+    @Test
+    public void testKopioiValintakokeetUudenAlavalintaryhmanValinnanVaiheelle() {
+        final String parentValintaryhmaOid = "oid56";
+        final String valinnanVaiheOid = "107";
+        final String valintakoeOid = "oid14";
+
+        {
+            Valintaryhma valintaryhma = valintaryhmaService.readByOid(parentValintaryhmaOid);
+            List<ValinnanVaihe> vaiheet = valinnanVaiheDAO.findByValintaryhma(parentValintaryhmaOid);
+            assertEquals(1, vaiheet.size());
+
+            ValinnanVaihe vaihe = vaiheet.get(0);
+            assertEquals(ValinnanVaiheTyyppi.VALINTAKOE, vaihe.getValinnanVaiheTyyppi());
+            assertEquals(valinnanVaiheOid, vaihe.getOid());
+
+            List<Valintakoe> kokeet = valintakoeDAO.findByValinnanVaihe(vaihe.getOid());
+            assertEquals(1, kokeet.size());
+            assertEquals(valintakoeOid, kokeet.get(0).getOid());
+        }
+
+        Valintaryhma child = new Valintaryhma();
+        child.setHakuOid("hakuoid1");
+        child.setNimi("uusi alavalintaryhma");
+        child = valintaryhmaService.insert(child, parentValintaryhmaOid);
+
+        {
+            List<ValinnanVaihe> vaiheet = valinnanVaiheDAO.findByValintaryhma(child.getOid());
+            assertEquals(1, vaiheet.size());
+
+            ValinnanVaihe vaihe = vaiheet.get(0);
+            assertEquals(ValinnanVaiheTyyppi.VALINTAKOE, vaihe.getValinnanVaiheTyyppi());
+            assertEquals(valinnanVaiheOid, vaihe.getMasterValinnanVaihe().getOid());
+
+            List<Valintakoe> kokeet = valintakoeDAO.findByValinnanVaihe(vaihe.getOid());
+            assertEquals(1, kokeet.size());
+            assertEquals(valintakoeOid, kokeet.get(0).getMasterValintakoe().getOid());
         }
     }
 }

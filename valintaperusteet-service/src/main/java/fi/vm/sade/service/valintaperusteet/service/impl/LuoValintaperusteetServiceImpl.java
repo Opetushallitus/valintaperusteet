@@ -2,6 +2,7 @@ package fi.vm.sade.service.valintaperusteet.service.impl;
 
 import com.mysema.query.NonUniqueResultException;
 import fi.vm.sade.service.valintaperusteet.dao.OpetuskielikoodiDAO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.impl.generator.*;
@@ -15,6 +16,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -53,6 +55,9 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
     @Autowired
     private JarjestyskriteeriService jarjestyskriteeriService;
+
+    @Autowired
+    private ValintakoeService valintakoeService;
 
     private ResourceLoader resourceLoader;
 
@@ -203,6 +208,24 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                     valintaryhma = valintaryhmaService.insert(valintaryhma, lukioVr.getOid());
                 }
 
+                ValinnanVaihe valintakoevaihe = new ValinnanVaihe();
+                valintakoevaihe.setNimi("Generoitu valintakoevalinnanvaihe");
+                valintakoevaihe.setAktiivinen(false);
+                valintakoevaihe.setKuvaus("Generoitu valintakoevalinnanvaihe");
+                valintakoevaihe.setValinnanVaiheTyyppi(ValinnanVaiheTyyppi.VALINTAKOE);
+                valintakoevaihe = valinnanVaiheService.lisaaValinnanVaiheValintaryhmalle(valintaryhma.getOid(), valintakoevaihe, null);
+
+                String valintakoetunniste = nimi + " - valintakoe";
+                ValintakoeDTO valintakoe = new ValintakoeDTO();
+                valintakoe.setAktiivinen(true);
+                valintakoe.setKuvaus(valintakoetunniste);
+                valintakoe.setTunniste(valintakoetunniste);
+                valintakoe.setNimi(valintakoetunniste);
+
+                // Valintakoe on aina pakollinen (eli null)
+                valintakoe.setLaskentakaavaId(null);
+                valintakoeService.lisaaValintakoeValinnanVaiheelle(valintakoevaihe.getOid(), valintakoe);
+
                 ValinnanVaihe valinnanVaihe = new ValinnanVaihe();
                 valinnanVaihe.setAktiivinen(true);
                 valinnanVaihe.setKuvaus("generoitu");
@@ -257,7 +280,6 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                     kielivalintaryhma.setHakuOid(HAKU_OID);
 
                     kielivalintaryhma = valintaryhmaService.insert(kielivalintaryhma, valintaryhma.getOid());
-
                     insertKoe(kielivalintaryhma, peruskaavaJaValintakoekaava, valintakoekaava, tasasijakriteerit,
                             opetuskieli, hakukohdekoodi);
                     insertEiKoetta(kielivalintaryhma, peruskaava, tasasijakriteerit, opetuskieli, hakukohdekoodi);
@@ -271,23 +293,32 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         }
     }
 
-    private void insertKoe(Valintaryhma kielivalintaryhma, Laskentakaava peruskaavaJaValintakoekaava,
-                           Laskentakaava valintakoekaava, Laskentakaava[] tasasijakriteerit,
-                           Opetuskielikoodi opetuskielikoodi, Hakukohdekoodi hakukohdekoodi) {
-        Valintaryhma koe = new Valintaryhma();
-        koe.setNimi("Pääsykokeelliset");
-        koe.setHakuOid(HAKU_OID);
-        koe = valintaryhmaService.insert(koe, kielivalintaryhma.getOid());
+    private void insertKoe(Valintaryhma kielivalintaryhma,
+                           Laskentakaava peruskaavaJaValintakoekaava, Laskentakaava valintakoekaava,
+                           Laskentakaava[] tasasijakriteerit, Opetuskielikoodi opetuskielikoodi,
+                           Hakukohdekoodi hakukohdekoodi) {
+        Valintaryhma koevalintaryhma = new Valintaryhma();
+        koevalintaryhma.setNimi("Pääsykokeelliset");
+        koevalintaryhma.setHakuOid(HAKU_OID);
+        koevalintaryhma = valintaryhmaService.insert(koevalintaryhma, kielivalintaryhma.getOid());
 
-        opetuskielikoodiService.lisaaOpetuskielikoodiValintaryhmalle(koe.getOid(), opetuskielikoodi);
-        hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(koe.getOid(), hakukohdekoodi);
+        // Aktivoidaan valintakoevalinnanvaihe
+        List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheService.findByValintaryhma(koevalintaryhma.getOid());
+        ValinnanVaihe valintakoevaihe = valinnanVaiheet.get(0);
+        assert (valintakoevaihe.getValinnanVaiheTyyppi() == ValinnanVaiheTyyppi.VALINTAKOE);
+        valintakoevaihe.setAktiivinen(true);
+        valinnanVaiheService.update(valintakoevaihe.getOid(), valintakoevaihe);
+
+        opetuskielikoodiService.lisaaOpetuskielikoodiValintaryhmalle(koevalintaryhma.getOid(), opetuskielikoodi);
+        hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(koevalintaryhma.getOid(), hakukohdekoodi);
         Valintakoekoodi valintakoekoodi = new Valintakoekoodi();
         valintakoekoodi.setUri(OLETUS_VALINTAKOEURI);
 
-        valintakoekoodiService.lisaaValintakoekoodiValintaryhmalle(koe.getOid(), valintakoekoodi);
+        valintakoekoodiService.lisaaValintakoekoodiValintaryhmalle(koevalintaryhma.getOid(), valintakoekoodi);
 
-        ValinnanVaihe vaihe = valinnanVaiheService.findByValintaryhma(koe.getOid()).get(0);
-        Valintatapajono jono = valintatapajonoService.findJonoByValinnanvaihe(vaihe.getOid()).get(0);
+        ValinnanVaihe tavallinenVaihe = valinnanVaiheet.get(1);
+        assert (tavallinenVaihe.getValinnanVaiheTyyppi() == ValinnanVaiheTyyppi.TAVALLINEN);
+        Valintatapajono jono = valintatapajonoService.findJonoByValinnanvaihe(tavallinenVaihe.getOid()).get(0);
 
         Jarjestyskriteeri kriteeri = new Jarjestyskriteeri();
         kriteeri.setAktiivinen(true);
@@ -322,7 +353,8 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         opetuskielikoodiService.lisaaOpetuskielikoodiValintaryhmalle(koe.getOid(), opetuskielikoodi);
         hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(koe.getOid(), hakukohdekoodi);
 
-        ValinnanVaihe vaihe = valinnanVaiheService.findByValintaryhma(koe.getOid()).get(0);
+        ValinnanVaihe vaihe = valinnanVaiheService.findByValintaryhma(koe.getOid()).get(1);
+        assert (vaihe.getValinnanVaiheTyyppi() == ValinnanVaiheTyyppi.TAVALLINEN);
         Valintatapajono jono = valintatapajonoService.findJonoByValinnanvaihe(vaihe.getOid()).get(0);
 
         Jarjestyskriteeri kriteeri = new Jarjestyskriteeri();
