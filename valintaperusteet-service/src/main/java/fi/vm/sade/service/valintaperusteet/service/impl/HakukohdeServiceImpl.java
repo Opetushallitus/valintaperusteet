@@ -184,7 +184,8 @@ public class HakukohdeServiceImpl extends AbstractCRUDServiceImpl<HakukohdeViite
     }
 
     @Override
-    public HakukohdeViite siirraHakukohdeValintaryhmaan(String hakukohdeOid, String valintaryhmaOid) {
+    public HakukohdeViite siirraHakukohdeValintaryhmaan(String hakukohdeOid, String valintaryhmaOid,
+                                                        boolean siirretaanManuaalisesti) {
         HakukohdeViite hakukohdeViite = haeHakukohdeViite(hakukohdeOid);
 
         Valintaryhma valintaryhma = null;
@@ -212,6 +213,7 @@ public class HakukohdeServiceImpl extends AbstractCRUDServiceImpl<HakukohdeViite
             HakukohdeViite uusiHakukohde = luoKopio(hakukohdeViite);
             HakukohdeViite lisatty = insert(uusiHakukohde,
                     valintaryhma != null ? valintaryhma.getOid() : null);
+            lisatty.setManuaalisestiSiirretty(siirretaanManuaalisesti);
 
             if (hakukohdeViite.getHakukohdekoodi() != null) {
                 Hakukohdekoodi koodi = hakukohdeViite.getHakukohdekoodi();
@@ -238,6 +240,7 @@ public class HakukohdeServiceImpl extends AbstractCRUDServiceImpl<HakukohdeViite
 
             return lisatty;
         } else {
+            hakukohdeViite.setManuaalisestiSiirretty(siirretaanManuaalisesti);
             return hakukohdeViite;
         }
     }

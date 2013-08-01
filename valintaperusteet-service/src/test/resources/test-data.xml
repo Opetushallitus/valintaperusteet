@@ -341,6 +341,7 @@
 
     <valintaryhma id="54" version="0" oid="oid54" nimi="Valintaryhma 54" hakuOid="hakuoid1"/>
 
+    <valintaryhma id="55" version="0" oid="oid55" nimi="Valintaryhma 55" hakuOid="hakuoid1"/>
 
     <hakukohdekoodi id="1" version="0" uri="hakukohdekoodiuri1" arvo="koodiarvo1"
                     nimi_fi="hakukohdekoodi1"
@@ -428,6 +429,10 @@
     <hakukohdekoodi id="20" version="0" uri="hakukohdekoodiuri20" arvo="koodiarvo20"
                     nimi_fi="hakukohdekoodi20"/>
 
+    <hakukohdekoodi id="21" version="0" uri="hakukohdekoodiuri21" arvo="koodiarvo21"
+                    nimi_fi="hakukohdekoodi21"/>
+    <valintaryhma_hakukohdekoodi valintaryhma_id="55" hakukohdekoodi_id="21"/>
+
     <opetuskielikoodi id="10" version="0" uri="kieli_fi"/>
     <valintaryhma_opetuskielikoodi valintaryhma_id="37" opetuskielikoodi_id="10"/>
     <valintaryhma_opetuskielikoodi valintaryhma_id="40" opetuskielikoodi_id="10"/>
@@ -438,6 +443,7 @@
     <valintaryhma_opetuskielikoodi valintaryhma_id="49" opetuskielikoodi_id="10"/>
     <valintaryhma_opetuskielikoodi valintaryhma_id="50" opetuskielikoodi_id="10"/>
     <valintaryhma_opetuskielikoodi valintaryhma_id="51" opetuskielikoodi_id="10"/>
+    <valintaryhma_opetuskielikoodi valintaryhma_id="55" opetuskielikoodi_id="10"/>
     <hakukohde_viite_opetuskielikoodi hakukohde_viite_id="18" opetuskielikoodi_id="10"/>
     <hakukohde_viite_opetuskielikoodi hakukohde_viite_id="19" opetuskielikoodi_id="10"/>
 
@@ -466,6 +472,7 @@
     <valintaryhma_valintakoekoodi valintaryhma_id="49" valintakoekoodi_id="14"/>
     <valintaryhma_valintakoekoodi valintaryhma_id="49" valintakoekoodi_id="14"/>
     <valintaryhma_valintakoekoodi valintaryhma_id="51" valintakoekoodi_id="14"/>
+    <valintaryhma_valintakoekoodi valintaryhma_id="55" valintakoekoodi_id="14"/>
     <hakukohde_viite_valintakoekoodi hakukohde_viite_id="18" valintakoekoodi_id="14"/>
     <hakukohde_viite_valintakoekoodi hakukohde_viite_id="19" valintakoekoodi_id="14"/>
 
@@ -476,7 +483,8 @@
     <valintakoekoodi id="16" version="0" uri="valintakoeuri3"/>
 
 
-    <hakukohde_viite id="1" version="0" hakuoid="hakuoid1" oid="oid1" nimi="haku1" valintaryhma_id="1"/>
+    <hakukohde_viite id="1" version="0" hakuoid="hakuoid1" oid="oid1" nimi="haku1" valintaryhma_id="1"
+                     manuaalisesti_siirretty="[NULL]"/>
     <hakukohde_viite id="2" version="0" hakuoid="hakuoid1" oid="oid2" nimi="haku2" valintaryhma_id="1"/>
     <hakukohde_viite id="3" version="0" hakuoid="hakuoid1" oid="oid3" nimi="haku3" valintaryhma_id="[NULL]"/>
     <hakukohde_viite id="4" version="0" hakuoid="hakuoid1" oid="oid4" nimi="haku4" valintaryhma_id="[NULL]"/>
@@ -511,6 +519,8 @@
     <hakukohde_viite_opetuskielikoodi hakukohde_viite_id="17" opetuskielikoodi_id="11"/>
     <hakukohde_viite_valintakoekoodi hakukohde_viite_id="17" valintakoekoodi_id="12"/>
 
+    <hakukohde_viite id="20" version="0" hakuoid="hakuoid1" oid="oid20" nimi="haku20" hakukohdekoodi_id="21"
+                     manuaalisesti_siirretty="true"/>
 
     <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="1" version="0" valintaryhma_id="1"
                     hakukohde_viite_id="[NULL]" oid="1" nimi="valinnanvaihe1" kuvaus="kuvaus1" aktiivinen="true"/>
