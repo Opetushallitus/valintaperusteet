@@ -219,6 +219,11 @@ object Laskenta {
                          override val valintaperusteviite: Valintaperusteviite, oid: String = "")
     extends HaeArvo[BigDecimal](oletusarvo, valintaperusteviite) with Lukuarvofunktio with NollaParametrinenFunktio[BigDecimal]
 
+  case class HaeMerkkijonoJaVertaaYhtasuuruus(override val oletusarvo: Option[Boolean],
+                                              override val valintaperusteviite: Valintaperusteviite,
+                                              vertailtava: String, oid: String = "")
+    extends HaeArvo[Boolean](oletusarvo, valintaperusteviite) with Totuusarvofunktio with NollaParametrinenFunktio[Boolean]
+
   // Boolean-funktiot
   case class Ja(override val fs: Seq[Totuusarvofunktio], oid: String = "")
     extends KoostavaFunktio[Boolean](fs) with Totuusarvofunktio

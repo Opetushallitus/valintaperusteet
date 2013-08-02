@@ -61,18 +61,14 @@ public class PkPohjaiset {
     public static Laskentakaava luoPohjakoulutuspisteytysmalli() {
 
         // Pohjakoulutus -->
-        List<Arvokonvertteriparametri> konvs = new ArrayList<Arvokonvertteriparametri>();
+        List<Funktiokutsu> vertailut = new ArrayList<Funktiokutsu>();
         for (String arvo : pohjakoulutusPeruskoulutus) {
-            konvs.add(GenericHelper.luoArvokonvertteriparametri(arvo, Boolean.TRUE.toString(), false));
+            vertailut.add(GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(
+                    GenericHelper.luoValintaperusteViite(pohjakoulutusAvain, false, Valintaperustelahde.HAETTAVA_ARVO),
+                    arvo, false));
         }
 
-        for (String arvo : pohjakoulutusMuut) {
-            konvs.add(GenericHelper.luoArvokonvertteriparametri(arvo, Boolean.FALSE.toString(), false));
-        }
-
-        Funktiokutsu pohjakoulutusOnPeruskoulutus = GenericHelper.luoHaeMerkkijonoJaKonvertoiTotuusarvoksi(
-                GenericHelper.luoValintaperusteViite(pohjakoulutusAvain, false, Valintaperustelahde.HAETTAVA_ARVO),
-                false, konvs);
+        Funktiokutsu pohjakoulutusOnPeruskoulutus = GenericHelper.luoTai(vertailut.toArray(new FunktionArgumentti[vertailut.size()]));
         // <---
 
         // Todistuksen saantivuosi -->

@@ -149,6 +149,17 @@ object Laskentadomainkonvertteri {
           oid)
       }
 
+      case Funktionimi.HAEMERKKIJONOJAVERTAAYHTASUURUUS => {
+        val oletusarvo = funktiokutsu.getSyoteparametrit.find(_.getAvain == "oletusarvo")
+          .map(p => parametriToBoolean(p))
+
+        val vertailtava = getParametri("vertailtava", funktiokutsu.getSyoteparametrit).getArvo
+        val valintaperusteviite = Valintaperusteviite(funktiokutsu.getValintaperuste.getTunniste,
+          funktiokutsu.getValintaperuste.getOnPakollinen)
+
+        HaeMerkkijonoJaVertaaYhtasuuruus(oletusarvo, valintaperusteviite, vertailtava, oid)
+      }
+
       case Funktionimi.HAETOTUUSARVO => {
         val konvertteri = if (!funktiokutsu.getArvokonvertteriparametrit.isEmpty) {
           val konversioMap = funktiokutsu.getArvokonvertteriparametrit.map(konv => {

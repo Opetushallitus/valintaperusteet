@@ -310,4 +310,20 @@ public class GenericHelper {
 
         return f;
     }
+
+    public static Funktiokutsu luoHaeMerkkijonoJaVertaaYhtasuuruus(ValintaperusteViite vp, String vertailtava,
+                                                                   boolean oletusarvo) {
+        Funktiokutsu f = luoHaeMerkkijonoJaVertaaYhtasuuruus(vp, vertailtava);
+        f.getSyoteparametrit().add(luoSyoteparametri("oletusarvo", String.valueOf(oletusarvo)));
+
+        return f;
+    }
+
+    public static Funktiokutsu luoHaeMerkkijonoJaVertaaYhtasuuruus(ValintaperusteViite vp, String vertailtava) {
+        Funktiokutsu f = new Funktiokutsu();
+        f.setFunktionimi(Funktionimi.HAEMERKKIJONOJAVERTAAYHTASUURUUS);
+        f.setValintaperuste(vp);
+        f.getSyoteparametrit().add(luoSyoteparametri("vertailtava", vertailtava));
+        return f;
+    }
 }

@@ -4,7 +4,7 @@ import org.scalatest.FunSuite
 import fi.vm.sade.service.valintaperusteet.model.Funktionimi
 import fi.vm.sade.kaava.LaskentaTestUtil._
 import fi.vm.sade.service.valintaperusteet.laskenta.{Esiprosessori, Laskin}
-import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.{Hylattytila, HylattyMetatieto, Tila, Hyvaksyttavissatila}
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
 import scala.collection.JavaConversions._
 import fi.vm.sade.kaava.LaskentaTestUtil.Hakemus
 import java.math.BigDecimal
@@ -1569,5 +1569,71 @@ class LaskentaIntegraatioTest extends FunSuite {
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
     assert(tulos.get.equals(new BigDecimal("3.3")))
     assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("hae merkkijono ja vertaa yhtasuuruus") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HAEMERKKIJONOJAVERTAAYHTASUURUUS,
+      valintaperustetunniste = ValintaperusteViite(
+        tunniste = "aidinkieli",
+        onPakollinen = true),
+      syoteparametrit = List(
+        Syoteparametri(
+          avain = "vertailtava",
+          arvo = "FI")
+      ))
+
+    val hakemus = Hakemus("", Nil, Map("aidinkieli" -> "FI"))
+    val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
+    assert(tulos.get)
+    assertTilaHyvaksyttavissa(tila)
+
+    val hakemus2 = Hakemus("", Nil, Map("aidinkieli" -> "SV"))
+    val (tulos2, tila2) = Laskin.laske(hakukohde, hakemus2, lasku)
+    assert(!tulos2.get)
+    assertTilaHyvaksyttavissa(tila2)
+  }
+
+  test("hae merkkijono ja vertaa yhtasuuruus pakollinen") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HAEMERKKIJONOJAVERTAAYHTASUURUUS,
+      valintaperustetunniste = ValintaperusteViite(
+        tunniste = "aidinkieli",
+        onPakollinen = true),
+      syoteparametrit = List(
+        Syoteparametri(
+          avain = "vertailtava",
+          arvo = "FI")
+      ))
+
+    val hakemus = tyhjaHakemus
+    val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
+    assertTulosTyhja(tulos)
+    assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.PAKOLLINEN_VALINTAPERUSTE_HYLKAYS)
+  }
+
+  test("hae merkkijono ja vertaa yhtasuuruus oletusarvo") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HAEMERKKIJONOJAVERTAAYHTASUURUUS,
+      valintaperustetunniste = ValintaperusteViite(
+        tunniste = "aidinkieli",
+        onPakollinen = true),
+      syoteparametrit = List(
+        Syoteparametri(
+          avain = "vertailtava",
+          arvo = "FI"),
+        Syoteparametri(
+          avain = "oletusarvo",
+          arvo = "false"
+        )
+      ))
+
+    val hakemus = tyhjaHakemus
+    val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
+    assert(!tulos.get)
+    assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.PAKOLLINEN_VALINTAPERUSTE_HYLKAYS)
   }
 }

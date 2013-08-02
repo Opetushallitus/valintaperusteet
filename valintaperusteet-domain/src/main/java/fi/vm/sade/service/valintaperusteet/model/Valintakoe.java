@@ -5,6 +5,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonView;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -49,7 +50,7 @@ public class Valintakoe extends BaseEntity implements Kopioitava<Valintakoe, Set
     private Valintakoe masterValintakoe;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "masterValintakoe")
-    private Set<Valintakoe> kopioValintakokeet;
+    private Set<Valintakoe> kopioValintakokeet = new HashSet<Valintakoe>();
 
     public String getOid() {
         return oid;

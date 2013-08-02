@@ -239,6 +239,27 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
           }
         }
       }
+
+      case HaeMerkkijonoJaVertaaYhtasuuruus(oletusarvo, valintaperusteviite, vertailtava, oid) => {
+        val valintaperuste = hakemus.kentat.get(valintaperusteviite.tunniste)
+
+        valintaperuste match {
+          case Some(s) => {
+            val tulos = Some(s == vertailtava)
+            val tilat = List(new Hyvaksyttavissatila)
+            (tulos, tilat, Historia("Hae merkkijono ja vertaa yhtasuuruus", tulos, tilat, None, Some(Map("oletusarvo" -> oletusarvo))))
+          }
+
+          case None => {
+            val tila = if (valintaperusteviite.pakollinen) {
+              new Hylattytila(oid, "Pakollista arvoa (tunniste " + valintaperusteviite.tunniste + ") ei " +
+                "ole olemassa", new PakollinenValintaperusteHylkays(valintaperusteviite.tunniste))
+            } else new Hyvaksyttavissatila
+            val tilat = List(tila)
+            (oletusarvo, tilat, Historia("Hae merkkijono ja vertaa yhtasuuruus (oletusarvo)", oletusarvo, tilat, None, Some(Map("oletusarvo" -> oletusarvo))))
+          }
+        }
+      }
     }
 
     val palautettavaTila = tilat.filter(_ match {

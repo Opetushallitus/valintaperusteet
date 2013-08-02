@@ -16,7 +16,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -70,16 +72,30 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
     public static final String OLETUS_VALINTAKOEURI = "valintakokeentyyppi_1";
 
-    private enum Kielikoodi {
-        SUOMI("Suomi", KIELI_FI_URI), RUOTSI("Ruotsi", KIELI_SV_URI);
+    public enum Kielikoodi {
+        SUOMI("Suomi", KIELI_FI_URI, "FI"), RUOTSI("Ruotsi", KIELI_SV_URI, "SV");
 
-        Kielikoodi(String nimi, String kieliUri) {
+        Kielikoodi(String nimi, String kieliUri, String kieliarvo) {
             this.nimi = nimi;
             this.kieliUri = kieliUri;
+            this.kieliarvo = kieliarvo;
         }
 
         private String nimi;
         private String kieliUri;
+        private String kieliarvo;
+
+        public String getNimi() {
+            return nimi;
+        }
+
+        public String getKieliUri() {
+            return kieliUri;
+        }
+
+        public String getKieliarvo() {
+            return kieliarvo;
+        }
     }
 
     @Override
@@ -107,6 +123,33 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         ammatillinenKoulutusVr.setNimi("Ammatillinen koulutus");
         ammatillinenKoulutusVr.setHakuOid(HAKU_OID);
         ammatillinenKoulutusVr = valintaryhmaService.insert(ammatillinenKoulutusVr);
+
+        ValinnanVaihe kielikoevalinnanVaihe = new ValinnanVaihe();
+        kielikoevalinnanVaihe.setAktiivinen(true);
+        kielikoevalinnanVaihe.setNimi("Kielikokeen pakollisuus");
+        kielikoevalinnanVaihe.setKuvaus("Kielikokeen pakollisuus");
+        kielikoevalinnanVaihe.setValinnanVaiheTyyppi(ValinnanVaiheTyyppi.VALINTAKOE);
+        kielikoevalinnanVaihe = valinnanVaiheService.lisaaValinnanVaiheValintaryhmalle(ammatillinenKoulutusVr.getOid(), kielikoevalinnanVaihe, null);
+
+        Map<Kielikoodi, Laskentakaava> kielikokeidenLaskentakaavat = new HashMap<Kielikoodi, Laskentakaava>();
+        for (Kielikoodi k : Kielikoodi.values()) {
+            kielikokeidenLaskentakaavat.put(k,
+                    asetaValintaryhmaJaTallennaKantaan(PkJaYoPohjaiset.luoKielikokeenPakollisuudenLaskentakaava(k),
+                            ammatillinenKoulutusVr));
+        }
+
+        for (Kielikoodi k : Kielikoodi.values()) {
+            final String kielikoeNimi = k.nimi + " - Kielikoe";
+            ValintakoeDTO kielikoe = new ValintakoeDTO();
+            kielikoe.setAktiivinen(false);
+            kielikoe.setKuvaus(kielikoeNimi);
+            kielikoe.setNimi(kielikoeNimi);
+            kielikoe.setTunniste(k.kieliUri);
+            kielikoe.setLaskentakaavaId(kielikokeidenLaskentakaavat.get(k).getId());
+
+            valintakoeService.lisaaValintakoeValinnanVaiheelle(kielikoevalinnanVaihe.getOid(), kielikoe);
+
+        }
 
         Valintaryhma peruskouluVr = new Valintaryhma();
         peruskouluVr.setNimi("PK");
@@ -280,6 +323,31 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                     kielivalintaryhma.setHakuOid(HAKU_OID);
 
                     kielivalintaryhma = valintaryhmaService.insert(kielivalintaryhma, valintaryhma.getOid());
+                    List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheService.findByValintaryhma(kielivalintaryhma.getOid());
+                    ValinnanVaihe kielikoeValinnanvaihe = valinnanVaiheet.get(0);
+                    assert (kielikoeValinnanvaihe.getNimi().equals("Kielikokeen pakollisuus"));
+
+                    List<Valintakoe> valintakokeet = valintakoeService.findValintakoeByValinnanVaihe(kielikoeValinnanvaihe.getOid());
+
+                    boolean loydetty = false;
+                    for (Valintakoe koe : valintakokeet) {
+                        if (koe.getTunniste().equals(k.getKieliUri())) {
+                            ValintakoeDTO dto = new ValintakoeDTO();
+                            dto.setKuvaus(koe.getKuvaus());
+                            dto.setLaskentakaavaId(koe.getLaskentakaavaId());
+                            dto.setNimi(koe.getNimi());
+                            dto.setTunniste(koe.getTunniste());
+                            dto.setAktiivinen(true);
+
+                            valintakoeService.update(koe.getOid(), dto);
+
+                            loydetty = true;
+                            break;
+                        }
+                    }
+
+                    assert (loydetty);
+
                     insertKoe(kielivalintaryhma, peruskaavaJaValintakoekaava, valintakoekaava, tasasijakriteerit,
                             opetuskieli, hakukohdekoodi);
                     insertEiKoetta(kielivalintaryhma, peruskaava, tasasijakriteerit, opetuskieli, hakukohdekoodi);
@@ -304,7 +372,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
         // Aktivoidaan valintakoevalinnanvaihe
         List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheService.findByValintaryhma(koevalintaryhma.getOid());
-        ValinnanVaihe valintakoevaihe = valinnanVaiheet.get(0);
+        ValinnanVaihe valintakoevaihe = valinnanVaiheet.get(1);
         assert (valintakoevaihe.getValinnanVaiheTyyppi() == ValinnanVaiheTyyppi.VALINTAKOE);
         valintakoevaihe.setAktiivinen(true);
         valinnanVaiheService.update(valintakoevaihe.getOid(), valintakoevaihe);
@@ -316,7 +384,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
         valintakoekoodiService.lisaaValintakoekoodiValintaryhmalle(koevalintaryhma.getOid(), valintakoekoodi);
 
-        ValinnanVaihe tavallinenVaihe = valinnanVaiheet.get(1);
+        ValinnanVaihe tavallinenVaihe = valinnanVaiheet.get(2);
         assert (tavallinenVaihe.getValinnanVaiheTyyppi() == ValinnanVaiheTyyppi.TAVALLINEN);
         Valintatapajono jono = valintatapajonoService.findJonoByValinnanvaihe(tavallinenVaihe.getOid()).get(0);
 
@@ -353,7 +421,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         opetuskielikoodiService.lisaaOpetuskielikoodiValintaryhmalle(koe.getOid(), opetuskielikoodi);
         hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(koe.getOid(), hakukohdekoodi);
 
-        ValinnanVaihe vaihe = valinnanVaiheService.findByValintaryhma(koe.getOid()).get(1);
+        ValinnanVaihe vaihe = valinnanVaiheService.findByValintaryhma(koe.getOid()).get(2);
         assert (vaihe.getValinnanVaiheTyyppi() == ValinnanVaiheTyyppi.TAVALLINEN);
         Valintatapajono jono = valintatapajonoService.findJonoByValinnanvaihe(vaihe.getOid()).get(0);
 
