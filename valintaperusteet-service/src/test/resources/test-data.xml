@@ -525,6 +525,8 @@
     <hakukohde_viite id="20" version="0" hakuoid="hakuoid1" oid="oid20" nimi="haku20" hakukohdekoodi_id="21"
                      manuaalisesti_siirretty="true"/>
 
+    <hakukohde_viite id="21" version="0" hakuoid="hakuoid1" oid="oid21" nimi="haku21" manuaalisesti_siirretty="false"/>
+
     <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="1" version="0" valintaryhma_id="1"
                     hakukohde_viite_id="[NULL]" oid="1" nimi="valinnanvaihe1" kuvaus="kuvaus1" aktiivinen="true"/>
     <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="2" version="0" valintaryhma_id="[NULL]"
@@ -859,6 +861,17 @@
 
     <valinnan_vaihe valinnan_vaihe_tyyppi="VALINTAKOE" id="107" version="0" oid="107" valintaryhma_id="56"
                     nimi="valintaryhma 56 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus"/>
+
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="108" version="0" oid="108" hakukohde_viite_id="21"
+                    nimi="hakukohde 21 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus"/>
+
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="109" version="0" oid="109" hakukohde_viite_id="21"
+                    nimi="hakukohde 21 valinnan vaihe 2" aktiivinen="false" kuvaus="kuvaus"
+                    edellinen_valinnan_vaihe_id="108"/>
+
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="110" version="0" oid="110" hakukohde_viite_id="21"
+                    nimi="hakukohde 21 valinnan vaihe 3" aktiivinen="true" kuvaus="kuvaus"
+                    edellinen_valinnan_vaihe_id="109"/>
 
     <valintakoe id="1" version="0" oid="oid1" tunniste="valintakoetunniste1" nimi="valintakoe1" kuvaus="kuvaus1"
                 aktiivinen="true" valinnan_vaihe_id="83" laskentakaava_id="101" master_valintakoe_id="[NULL]"/>

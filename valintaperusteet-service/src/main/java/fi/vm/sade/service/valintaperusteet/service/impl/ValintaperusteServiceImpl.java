@@ -10,6 +10,7 @@ import fi.vm.sade.service.valintaperusteet.schema.*;
 import fi.vm.sade.service.valintaperusteet.schema.ValinnanVaiheTyyppi;
 import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakuparametritOnTyhjaException;
+import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheEpaaktiivinenException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheJarjestyslukuOutOfBoundsException;
 import fi.vm.sade.service.valintaperusteet.service.impl.util.ValintaperusteServiceUtil;
 import org.slf4j.Logger;
@@ -88,22 +89,18 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
             HakukohdeViite hakukohde = hakukohdeService.readByOid(param.getHakukohdeOid());
             Integer jarjestysluku = param.getValinnanVaiheJarjestysluku();
 
-            Integer indeksi = jarjestysluku;
-
-            for (ValinnanVaihe valinnanVaihe : valinnanVaiheService.findByHakukohde(param.getHakukohdeOid())) {
-                if (valinnanVaihe.getAktiivinen()) {
-                    valinnanVaiheList.add(valinnanVaihe);
-                } else if (indeksi != null) {
-                    --indeksi;
-                }
-            }
+            valinnanVaiheList = valinnanVaiheService.findByHakukohde(param.getHakukohdeOid());
 
             if (jarjestysluku != null) {
-                if (jarjestysluku < 0 || indeksi >= valinnanVaiheList.size()) {
+                if (jarjestysluku < 0 || jarjestysluku >= valinnanVaiheList.size()) {
                     throw new ValinnanVaiheJarjestyslukuOutOfBoundsException("Jarjestysluku " + jarjestysluku + " on epäkelpo.");
+                } else if (!valinnanVaiheList.get(jarjestysluku).getAktiivinen()) {
+                    throw new ValinnanVaiheEpaaktiivinenException("Valinnan vaihe (oid "
+                            + valinnanVaiheList.get(jarjestysluku).getOid() + ", järjestysluku "
+                            + jarjestysluku + ") ei ole aktiivinen");
                 }
 
-                ValintaperusteetTyyppi valinnanVaihe = convertValintaperusteet(valinnanVaiheList.get(indeksi),
+                ValintaperusteetTyyppi valinnanVaihe = convertValintaperusteet(valinnanVaiheList.get(jarjestysluku),
                         param.getHakukohdeOid(), hakukohde.getHakuoid(), jarjestysluku);
                 if (valinnanVaihe != null) {
                     list.add(valinnanVaihe);
@@ -111,10 +108,12 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
 
             } else {
                 for (int i = 0; i < valinnanVaiheList.size(); i++) {
-                    ValintaperusteetTyyppi valinnanVaihe = convertValintaperusteet(valinnanVaiheList.get(i),
-                            param.getHakukohdeOid(), hakukohde.getHakuoid(), i);
-                    if (valinnanVaihe != null) {
-                        list.add(valinnanVaihe);
+                    if (valinnanVaiheList.get(i).getAktiivinen()) {
+                        ValintaperusteetTyyppi valinnanVaihe = convertValintaperusteet(valinnanVaiheList.get(i),
+                                param.getHakukohdeOid(), hakukohde.getHakuoid(), i);
+                        if (valinnanVaihe != null) {
+                            list.add(valinnanVaihe);
+                        }
                     }
                 }
             }
