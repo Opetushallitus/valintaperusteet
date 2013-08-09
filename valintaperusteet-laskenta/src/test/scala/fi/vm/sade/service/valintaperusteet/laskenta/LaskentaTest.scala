@@ -8,6 +8,26 @@ import org.scalatest._
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta._
 import scala.collection.JavaConversions._
 import fi.vm.sade.kaava.LaskentaTestUtil.Hakemus
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.{Hylattytila, HylattyMetatieto, Hyvaksyttavissatila, Tila}
+import scala._
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.KonvertoiLukuarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Totuusarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeLukuarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonvertteri
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Suurempi
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.SyotettavaValintaperuste
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonvertteri
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonversio
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeTotuusarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Jos
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Demografia
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaKonvertoiLukuarvoksi
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Valintaperusteviite
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonversio
+import fi.vm.sade.kaava.LaskentaTestUtil.assertTilaHylatty
+import fi.vm.sade.kaava.LaskentaTestUtil.assertTilaHyvaksyttavissa
+import fi.vm.sade.kaava.LaskentaTestUtil.assertTulosTyhja
 
 /**
  *
@@ -238,6 +258,35 @@ class LaskentaTest extends FunSuite {
     intercept[RuntimeException] {
       Laskin.laske(hakukohde, tyhjaHakemus, f)
     }
+  }
+
+  test("Syotettava valintaperuste, osallistumistieto puuttuu") {
+    val hakemus = Hakemus("", Nil, Map("valintakoe" -> "8.7"))
+
+    intercept[RuntimeException] {
+      Laskin.laske(hakukohde, hakemus,
+        HaeLukuarvo(None, None, SyotettavaValintaperuste("valintakoe", true, "valintakoe-OSALLISTUMINEN")))
+    }
+  }
+
+  test("Syotettava valintaperuste, osallistumistieto false") {
+    val hakemus = Hakemus("", Nil, Map("valintakoe" -> "8.7", "valintakoe-OSALLISTUMINEN" -> "false"))
+
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemus,
+      HaeLukuarvo(None, None, SyotettavaValintaperuste("valintakoe", true, "valintakoe-OSALLISTUMINEN")))
+
+    assertTulosTyhja(tulos)
+    assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.EI_OSALLISTUNUT_HYLKAYS)
+  }
+
+  test("Syotettava valintaperuste, osallistumistieto true") {
+    val hakemus = Hakemus("", Nil, Map("valintakoe" -> "8.7", "valintakoe-OSALLISTUMINEN" -> "true"))
+
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemus,
+      HaeLukuarvo(None, None, SyotettavaValintaperuste("valintakoe", true, "valintakoe-OSALLISTUMINEN")))
+
+    assert(BigDecimal(tulos.get) == BigDecimal("8.7"))
+    assertTilaHyvaksyttavissa(tila)
   }
 
 }

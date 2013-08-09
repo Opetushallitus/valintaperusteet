@@ -15,6 +15,8 @@ public class ValintaperusteViite extends BaseEntity {
      */
     private static final long serialVersionUID = 1L;
 
+    public final static String OSALLISTUMINEN_POSTFIX = "-OSALLISTUMINEN";
+
     @JsonView(JsonViews.Basic.class)
     @Column(name = "tunniste", nullable = false)
     private String tunniste;
@@ -74,5 +76,21 @@ public class ValintaperusteViite extends BaseEntity {
 
     public void setOnPakollinen(Boolean onPakollinen) {
         this.onPakollinen = onPakollinen;
+    }
+
+    @Transient
+    @JsonView(JsonViews.Basic.class)
+    public String getOsallistuminenTunniste() {
+        String osallistuminenTunniste = null;
+
+        switch (lahde) {
+            case SYOTETTAVA_ARVO:
+                osallistuminenTunniste = tunniste + OSALLISTUMINEN_POSTFIX;
+                break;
+            default:
+                break;
+        }
+
+        return osallistuminenTunniste;
     }
 }

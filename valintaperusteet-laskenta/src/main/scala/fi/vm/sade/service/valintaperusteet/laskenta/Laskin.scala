@@ -3,24 +3,39 @@ package fi.vm.sade.service.valintaperusteet.laskenta
 import api._
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta._
 import java.util.{Map => JMap}
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Totuusarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Suurempi
-import scala.Some
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Yhtasuuri
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.PienempiTaiYhtasuuri
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Pienempi
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.NimettyTotuusarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.SuurempiTaiYhtasuuri
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeTotuusarvo
-import scala.Tuple2
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Ei
-import tila.{Tila, PakollinenValintaperusteHylkays, Hyvaksyttavissatila, Hylattytila}
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
 import org.slf4j.LoggerFactory
 import scala.collection.mutable.ListBuffer
 import com.codahale.jerkson.Json
 import java.math.{BigDecimal => BigDec}
 import java.math.RoundingMode
-import scala.math.BigDecimal._
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.KonvertoiLukuarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Negaatio
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Totuusarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Osamaara
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Pyoristys
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Suurempi
+import scala.Some
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Yhtasuuri
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Jos
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.PienempiTaiYhtasuuri
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaKonvertoiTotuusarvoksi
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Demografia
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaKonvertoiLukuarvoksi
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Pienempi
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.NimettyTotuusarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeLukuarvo
+import scala.Tuple3
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.NimettyLukuarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.SyotettavaValintaperuste
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.SuurempiTaiYhtasuuri
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeTotuusarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaVertaaYhtasuuruus
+import scala.Tuple2
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Ei
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Hakutoive
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Valintaperusteviite
 
 object Laskin {
   val LOG = LoggerFactory.getLogger(classOf[Laskin])
@@ -53,7 +68,7 @@ object Laskin {
   def laske(hakukohde: String, hakemus: Hakemus, laskettava: Lukuarvofunktio): (Option[BigDec], Tila) = {
     val (tulos, tila, historia) = new Laskin(hakukohde, hakemus).laske(laskettava)
     LOG.debug("{}", Json.generate(wrap(hakemus, historia)))
-    (Some(if (tulos.isEmpty) null else tulos.get.underlying), tila)
+    (if (tulos.isEmpty) None else Some(tulos.get.underlying), tila)
   }
 
   def wrap(hakemus: Hakemus, historia: Historia) = {
@@ -97,16 +112,79 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
     })
   }
 
+  private def haeValintaperuste[T](oid: String, valintaperusteviite: Valintaperusteviite, hakemus: Hakemus,
+                                   konv: (String => Tuple2[Option[T], List[Tila]]),
+                                   oletusarvo: Option[T]): Tuple2[Option[T], List[Tila]] = {
+    def haeValintaperusteenArvoHakemukselta = {
+      hakemus.kentat.get(valintaperusteviite.tunniste) match {
+        case Some(s) if (!s.trim.isEmpty) => konv(s)
+        case _ => {
+          val tila = if (valintaperusteviite.pakollinen) {
+            new Hylattytila(oid, "Pakollista arvoa (tunniste " + valintaperusteviite.tunniste + ") ei " +
+              "ole olemassa", new PakollinenValintaperusteHylkays(valintaperusteviite.tunniste))
+          } else new Hyvaksyttavissatila
+          (oletusarvo, List(tila))
+        }
+      }
+    }
+
+    // Jos kyseessä on syötettävä valintaperuste, pitää ensin tsekata osallistumistieto
+    valintaperusteviite match {
+      case SyotettavaValintaperuste(tunniste, pakollinen, osallistuminenTunniste) => {
+        val osallistui = hakemus.kentat.get(osallistuminenTunniste).map(osallistuiArvo => {
+          try {
+            osallistuiArvo.toBoolean
+          } catch {
+            case e: NumberFormatException => throw new RuntimeException("Arvoa " + osallistuiArvo + " ei voida muuttaa " +
+              "Boolean tyypiksi (tunniste " + osallistuminenTunniste + ")")
+          }
+        })
+
+        // Jos valintaperusteelle on merkitty arvo "ei osallistunut", palautetaan hylätty-tila, jos kyseessä on
+        // pakollinen tieto
+        if (!osallistui.getOrElse(throw new RuntimeException("Osallistumistietoa valintaperusteelle tunnisteella " +
+          tunniste + " ei ole olemassa (tunniste " + osallistuminenTunniste + ")")) && pakollinen) {
+          (None, List(new Hylattytila(oid, "Pakollisen syötettävän kentän arvo on 'Ei osallistunut' (tunniste "
+            + tunniste + ")", new EiOsallistunutHylkays(tunniste))))
+        } else haeValintaperusteenArvoHakemukselta
+      }
+
+      case _ => haeValintaperusteenArvoHakemukselta
+    }
+  }
+
+  private def string2boolean(s: String, tunniste: String): Boolean = {
+    try {
+      s.toBoolean
+    } catch {
+      case e: NumberFormatException => throw new RuntimeException("Arvoa " + s + " ei voida muuttaa " +
+        "Boolean-tyyppiseksi (tunniste " + tunniste + ")")
+    }
+  }
+
+  private def string2bigDecimal(s: String, tunniste: String): BigDecimal = {
+    try {
+      BigDecimal(s)
+    } catch {
+      case e: NumberFormatException => throw new RuntimeException("Arvoa " + s + " ei voida muuttaa " +
+        "BigDecimal-tyyppiseksi (tunniste " + tunniste + ")")
+    }
+  }
+
+
   def laske(laskettava: Totuusarvofunktio): (Option[Boolean], Tila, Historia) = {
 
     def muodostaKoostettuTulos(fs: Seq[Totuusarvofunktio], trans: Seq[Boolean] => Boolean) = {
-      val (tulokset, tilat, historiat) = fs.reverse.foldLeft((Nil, Nil, ListBuffer()): Tuple3[List[Boolean], List[Tila], ListBuffer[Historia]])((lst, f) => {
+      val (tulokset, tilat, historiat) = fs.reverse.foldLeft((Nil, Nil, ListBuffer()): Tuple3[List[Option[Boolean]], List[Tila], ListBuffer[Historia]])((lst, f) => {
         val (tulos, tila, historia) = laske(f)
         lst._3 += historia
-        (if (!tulos.isEmpty) tulos.get :: lst._1 else lst._1, tila :: lst._2, lst._3)
+        (tulos :: lst._1, tila :: lst._2, lst._3)
       })
 
-      val totuusarvo = if (tulokset.isEmpty) None else Some(trans(tulokset))
+      val (tyhjat, eiTyhjat) = tulokset.partition(_.isEmpty)
+
+      // jos yksikin laskennasta saaduista arvoista on tyhjä, koko funktion laskenta palauttaa tyhjän
+      val totuusarvo = if (!tyhjat.isEmpty) None else Some(trans(eiTyhjat.map(_.get)))
       (totuusarvo, tilat, Historia("Koostettu tulos", totuusarvo, tilat, Some(historiat.toList), None))
     }
 
@@ -165,32 +243,10 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
         (tulos, tilat, Historia("Yhtäsuuri", tulos, tilat, Some(List(h)), None))
       }
       case HaeTotuusarvo(konvertteri, oletusarvo, valintaperusteviite, oid) => {
-        val valintaperuste = hakemus.kentat.get(valintaperusteviite.tunniste)
-
-        val arvoOption = valintaperuste.map(arvo => {
-          try {
-            arvo.toBoolean
-          } catch {
-            case e: NumberFormatException => throw new RuntimeException("Arvoa " + arvo + " ei voida muuttaa " +
-              "Boolean-tyypiksi")
-          }
-        })
-
-        arvoOption match {
-          case None => {
-            val tila = if (valintaperusteviite.pakollinen) {
-              new Hylattytila(oid, "Pakollista arvoa (tunniste " + valintaperusteviite.tunniste
-                + ") ei " + "ole olemassa", new PakollinenValintaperusteHylkays(valintaperusteviite.tunniste))
-            } else new Hyvaksyttavissatila
-            val tilat = List(tila)
-            (oletusarvo, tilat, Historia("Hae totuusarvo (oletusarvo)", oletusarvo, tilat, None, Some(Map("oletusarvo" -> oletusarvo, "tunniste" -> Some(valintaperusteviite.tunniste)))))
-          }
-          case Some(arvo) => {
-            val valitulos = (Some(arvo), new Hyvaksyttavissatila)
-            val (tulos, tila) = suoritaOptionalKonvertointi[Boolean](oid, valitulos, konvertteri)
-            (tulos, tila, Historia("Hae totuusarvo", tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo, "tunniste" -> Some(valintaperusteviite.tunniste)))))
-          }
-        }
+        val (tulos, tila) = haeValintaperuste[Boolean](oid, valintaperusteviite, hakemus,
+          (s => suoritaOptionalKonvertointi[Boolean](oid, (Some(string2boolean(s, valintaperusteviite.tunniste)), new Hyvaksyttavissatila),
+            konvertteri)), oletusarvo)
+        (tulos, tila, Historia("Hae totuusarvo", tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
       }
       case NimettyTotuusarvo(nimi, f, oid) => {
         val (tulos, tilat, h) = muodostaYksittainenTulos(f, b => b)
@@ -220,45 +276,15 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
       }
 
       case HaeMerkkijonoJaKonvertoiTotuusarvoksi(konvertteri, oletusarvo, valintaperusteviite, oid) => {
-        val valintaperuste = hakemus.kentat.get(valintaperusteviite.tunniste)
-
-        valintaperuste match {
-          case Some(s) => {
-            val valitulos = (Some(s), new Hyvaksyttavissatila)
-            val (tulos, tila) = suoritaKonvertointi[String, Boolean](oid, valitulos, konvertteri)
-            (tulos, tila, Historia("Hae merkkijono ja konvertoi totuusarvoksi", tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
-
-          }
-          case None => {
-            val tila = if (valintaperusteviite.pakollinen) {
-              new Hylattytila(oid, "Pakollista arvoa (tunniste " + valintaperusteviite.tunniste + ") ei " +
-                "ole olemassa", new PakollinenValintaperusteHylkays(valintaperusteviite.tunniste))
-            } else new Hyvaksyttavissatila
-            val tilat = List(tila)
-            (oletusarvo, tilat, Historia("Hae merkkijono ja konvertoi totuusarvoksi (oletusarvo)", oletusarvo, tilat, None, Some(Map("oletusarvo" -> oletusarvo))))
-          }
-        }
+        val (tulos, tila) = haeValintaperuste[Boolean](oid, valintaperusteviite, hakemus,
+          (s => suoritaKonvertointi[String, Boolean](oid, (Some(s), new Hyvaksyttavissatila), konvertteri)), oletusarvo)
+        (tulos, tila, Historia("Hae merkkijono ja konvertoi totuusarvoksi", tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
       }
 
       case HaeMerkkijonoJaVertaaYhtasuuruus(oletusarvo, valintaperusteviite, vertailtava, oid) => {
-        val valintaperuste = hakemus.kentat.get(valintaperusteviite.tunniste)
-
-        valintaperuste match {
-          case Some(s) => {
-            val tulos = Some(s == vertailtava)
-            val tilat = List(new Hyvaksyttavissatila)
-            (tulos, tilat, Historia("Hae merkkijono ja vertaa yhtasuuruus", tulos, tilat, None, Some(Map("oletusarvo" -> oletusarvo))))
-          }
-
-          case None => {
-            val tila = if (valintaperusteviite.pakollinen) {
-              new Hylattytila(oid, "Pakollista arvoa (tunniste " + valintaperusteviite.tunniste + ") ei " +
-                "ole olemassa", new PakollinenValintaperusteHylkays(valintaperusteviite.tunniste))
-            } else new Hyvaksyttavissatila
-            val tilat = List(tila)
-            (oletusarvo, tilat, Historia("Hae merkkijono ja vertaa yhtasuuruus (oletusarvo)", oletusarvo, tilat, None, Some(Map("oletusarvo" -> oletusarvo))))
-          }
-        }
+        val (tulos, tila) = haeValintaperuste[Boolean](oid, valintaperusteviite, hakemus,
+          (s => (Some(s == vertailtava), List(new Hyvaksyttavissatila))), oletusarvo)
+        (tulos, tila, Historia("Hae merkkijono ja vertaa yhtasuuruus", tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
       }
     }
 
@@ -394,67 +420,56 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
       }
 
       case HaeLukuarvo(konvertteri, oletusarvo, valintaperusteviite, oid) => {
-
-        val valintaperuste = hakemus.kentat.get(valintaperusteviite.tunniste)
-        val arvoOption = valintaperuste.map(arvo => {
-          try {
-            BigDecimal(arvo)
-          } catch {
-            case e: NumberFormatException => None
-            //throw new RuntimeException("Arvoa " + arvo + " ei voida muuttaa " +
-            //  "BigDecimal-tyypiksi")
-          }
-        })
-
-        def tyhjaarvo = {
-          val tila = if (valintaperusteviite.pakollinen) {
-            new Hylattytila(oid, "Pakollista arvoa (tunniste " + valintaperusteviite.tunniste + ") ei " +
-              "ole olemassa", new PakollinenValintaperusteHylkays(valintaperusteviite.tunniste))
-          } else new Hyvaksyttavissatila
-          (oletusarvo, List(tila))
-        }
-
-        arvoOption match {
-          case None => {
-            val (oletustulos, oletustila) = tyhjaarvo
-            (oletustulos, oletustila, Historia("Hae lukuarvo (oletusarvo)", oletustulos, oletustila, None, Some(Map("oletusarvo" -> oletustulos))))
-          }
-          case temp: Option[_] => {
-            temp.get match {
-              case arvo: BigDecimal => {
-                val (valitulos, valitila) = (temp.asInstanceOf[Option[BigDecimal]], new Hyvaksyttavissatila)
-
-                val (tulos, tila) = suoritaOptionalKonvertointi[BigDecimal](oid, (if (valitulos.isEmpty) None else Some(valitulos.get.underlying), valitila), konvertteri)
-                val (oletustulos, oletustila) = tyhjaarvo
-                (tulos, tila, Historia("Hae lukuarvo (oletusarvo)", tulos, tila, None, Some(Map("oletusarvo" -> oletustulos))))
-              }
-              case _ => {
-                val (oletustulos, oletustila) = tyhjaarvo
-                (oletustulos, oletustila, Historia("Hae lukuarvo (oletusarvo)", oletustulos, oletustila, None, Some(Map("oletusarvo" -> oletustulos))))
-              }
-            }
-
-          }
-        }
+        val (tulos, tila) = haeValintaperuste[BigDecimal](oid, valintaperusteviite, hakemus,
+          (s => suoritaOptionalKonvertointi[BigDecimal](oid, (Some(string2bigDecimal(s, valintaperusteviite.tunniste)), new Hyvaksyttavissatila),
+            konvertteri)), oletusarvo)
+        (tulos, tila, Historia("Hae Lukuarvo", tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
+        //
+        //        val valintaperuste = hakemus.kentat.get(valintaperusteviite.tunniste)
+        //        val arvoOption = valintaperuste.map(arvo => {
+        //          try {
+        //            BigDecimal(arvo)
+        //          } catch {
+        //            case e: NumberFormatException => None
+        //            //throw new RuntimeException("Arvoa " + arvo + " ei voida muuttaa " +
+        //            //  "BigDecimal-tyypiksi")
+        //          }
+        //        })
+        //
+        //        def tyhjaarvo = {
+        //          val tila = if (valintaperusteviite.pakollinen) {
+        //            new Hylattytila(oid, "Pakollista arvoa (tunniste " + valintaperusteviite.tunniste + ") ei " +
+        //              "ole olemassa", new PakollinenValintaperusteHylkays(valintaperusteviite.tunniste))
+        //          } else new Hyvaksyttavissatila
+        //          (oletusarvo, List(tila))
+        //        }
+        //
+        //        arvoOption match {
+        //          case None => {
+        //            val (oletustulos, oletustila) = tyhjaarvo
+        //            (oletustulos, oletustila, Historia("Hae lukuarvo (oletusarvo)", oletustulos, oletustila, None, Some(Map("oletusarvo" -> oletustulos))))
+        //          }
+        //          case temp: Option[_] => {
+        //            temp.get match {
+        //              case arvo: BigDecimal => {
+        //                val (valitulos, valitila) = (temp.asInstanceOf[Option[BigDecimal]], new Hyvaksyttavissatila)
+        //
+        //                val (tulos, tila) = suoritaOptionalKonvertointi[BigDecimal](oid, (if (valitulos.isEmpty) None else Some(valitulos.get.underlying), valitila), konvertteri)
+        //                val (oletustulos, oletustila) = tyhjaarvo
+        //                (tulos, tila, Historia("Hae lukuarvo (oletusarvo)", tulos, tila, None, Some(Map("oletusarvo" -> oletustulos))))
+        //              }
+        //              case _ => {
+        //                val (oletustulos, oletustila) = tyhjaarvo
+        //                (oletustulos, oletustila, Historia("Hae lukuarvo (oletusarvo)", oletustulos, oletustila, None, Some(Map("oletusarvo" -> oletustulos))))
+        //              }
+        //            }
+        //          }
+        //        }
       }
       case HaeMerkkijonoJaKonvertoiLukuarvoksi(konvertteri, oletusarvo, valintaperusteviite, oid) => {
-        val valintaperuste = hakemus.kentat.get(valintaperusteviite.tunniste)
-
-        valintaperuste match {
-          case Some(s) => {
-            val valitulos = (Some(s), new Hyvaksyttavissatila)
-            val (tulos, tila) = suoritaKonvertointi[String, BigDecimal](oid, valitulos, konvertteri)
-            (tulos, tila, Historia("Hae merkkijono ja konvertoi lukuarvoksi", tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
-          }
-          case None => {
-            val tila = if (valintaperusteviite.pakollinen) {
-              new Hylattytila(oid, "Pakollista arvoa (tunniste " + valintaperusteviite.tunniste + ") ei " +
-                "ole olemassa", new PakollinenValintaperusteHylkays(valintaperusteviite.tunniste))
-            } else new Hyvaksyttavissatila
-            val tilat = List(tila)
-            (oletusarvo, tilat, Historia("Hae merkkijono ja konvertoi lukuarvoksi (oletusarvo)", oletusarvo, tilat, None, Some(Map("oletusarvo" -> oletusarvo))))
-          }
-        }
+        val (tulos, tila) = haeValintaperuste[BigDecimal](oid, valintaperusteviite, hakemus,
+          (s => suoritaKonvertointi[String, BigDecimal](oid, (Some(s), new Hyvaksyttavissatila), konvertteri)), oletusarvo)
+        (tulos, tila, Historia("Hae merkkijono ja konvertoi lukuarvoksi", tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
       }
       case NimettyLukuarvo(nimi, f, oid) => {
         val (tulos, tilat, h) = muodostaYksittainenTulos(f, d => d)

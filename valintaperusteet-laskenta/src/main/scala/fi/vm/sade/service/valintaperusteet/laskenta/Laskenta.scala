@@ -14,6 +14,9 @@ object Laskenta {
 
   case class Valintaperusteviite(tunniste: String, pakollinen: Boolean)
 
+  case class SyotettavaValintaperuste(override val tunniste: String, override val pakollinen: Boolean,
+                                      osallistuminenTunniste: String) extends Valintaperusteviite(tunniste, pakollinen)
+
   case class Arvokonvertteri[S, T](konversioMap: Seq[Arvokonversio[S, T]]) extends Konvertteri[S, T] {
     def konvertoi(funktiokutsuOid: String, arvo: S): (T, Tila) = {
       konversioMap.filter(arvo == _.arvo) match {
