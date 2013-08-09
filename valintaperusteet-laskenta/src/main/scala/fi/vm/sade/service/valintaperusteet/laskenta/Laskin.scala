@@ -131,21 +131,27 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
     // Jos kyseessä on syötettävä valintaperuste, pitää ensin tsekata osallistumistieto
     valintaperusteviite match {
       case SyotettavaValintaperuste(tunniste, pakollinen, osallistuminenTunniste) => {
-        val osallistui = hakemus.kentat.get(osallistuminenTunniste).map(osallistuiArvo => {
-          try {
-            osallistuiArvo.toBoolean
-          } catch {
-            case e: NumberFormatException => throw new RuntimeException("Arvoa " + osallistuiArvo + " ei voida muuttaa " +
-              "Boolean tyypiksi (tunniste " + osallistuminenTunniste + ")")
+        val osallistuminen = hakemus.kentat.get(osallistuminenTunniste) match {
+          case Some(osallistuiArvo) => {
+            try {
+              Osallistuminen.valueOf(osallistuiArvo)
+            } catch {
+              case e: IllegalArgumentException => throw new RuntimeException("Osallistumistietoa " + osallistuiArvo
+                + " ei pystytty tulkitsemaan (tunniste " + osallistuminenTunniste + ")")
+            }
           }
-        })
+          case None => Osallistuminen.MERKITSEMATTA
+        }
 
-        // Jos valintaperusteelle on merkitty arvo "ei osallistunut", palautetaan hylätty-tila, jos kyseessä on
-        // pakollinen tieto
-        if (!osallistui.getOrElse(throw new RuntimeException("Osallistumistietoa valintaperusteelle tunnisteella " +
-          tunniste + " ei ole olemassa (tunniste " + osallistuminenTunniste + ")")) && pakollinen) {
-          (None, List(new Hylattytila(oid, "Pakollisen syötettävän kentän arvo on 'Ei osallistunut' (tunniste "
+        // Jos valintaperusteelle on merkitty arvo "ei osallistunut" tai sitä ei ole merkitty, palautetaan hylätty-tila,
+        // jos kyseessä on pakollinen tieto
+
+        if (pakollinen && Osallistuminen.EI_OSALLISTUNUT == osallistuminen) {
+          (None, List(new Hylattytila(oid, "Pakollisen syötettävän kentän arvo on '" + osallistuminen.name() + "' (tunniste "
             + tunniste + ")", new EiOsallistunutHylkays(tunniste))))
+        } else if (pakollinen && Osallistuminen.MERKITSEMATTA == osallistuminen) {
+          (None, List(new Hylattytila(oid, "Pakollisen syötettävän kentän arvo on merkitsemättä (tunniste "
+            + tunniste + ")", new SyotettavaArvoMerkitsemattaHylkays(tunniste))))
         } else haeValintaperusteenArvoHakemukselta
       }
 

@@ -8,6 +8,7 @@ import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
 import scala.collection.JavaConversions._
 import fi.vm.sade.kaava.LaskentaTestUtil.Hakemus
 import java.math.BigDecimal
+import fi.vm.sade.service.valintaperusteet.laskenta.api.Osallistuminen
 
 /**
  * User: kwuoti
@@ -1629,9 +1630,10 @@ class LaskentaIntegraatioTest extends FunSuite {
     val hakemus = Hakemus("", Nil, Map("tunniste" -> "10.0"))
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
 
-    intercept[RuntimeException] {
-      Laskin.laske(hakukohde, hakemus, lasku)
-    }
+
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
+    assertTulosTyhja(tulos)
+    assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.SYOTETTAVA_ARVO_MERKITSEMATTA)
   }
 
   test("syotettava arvo, osallistuminen false") {
@@ -1646,7 +1648,8 @@ class LaskentaIntegraatioTest extends FunSuite {
       valintaperustetunniste = valintaperuste
     )
 
-    val hakemus = Hakemus("", Nil, Map("tunniste" -> "10.0", valintaperuste.getOsallistuminenTunniste -> "false"))
+    val hakemus = Hakemus("", Nil, Map("tunniste" -> "10.0",
+      valintaperuste.getOsallistuminenTunniste -> Osallistuminen.EI_OSALLISTUNUT.name))
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
 
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
@@ -1666,7 +1669,8 @@ class LaskentaIntegraatioTest extends FunSuite {
       valintaperustetunniste = valintaperuste
     )
 
-    val hakemus = Hakemus("", Nil, Map("tunniste" -> "10.0", valintaperuste.getOsallistuminenTunniste -> "true"))
+    val hakemus = Hakemus("", Nil, Map("tunniste" -> "10.0",
+      valintaperuste.getOsallistuminenTunniste -> Osallistuminen.OSALLISTUI.name))
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
 
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)

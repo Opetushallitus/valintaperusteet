@@ -3,12 +3,12 @@ package fi.vm.sade.service.valintaperusteet.laskenta
 import java.math.{BigDecimal => BigDec}
 import scala.math.BigDecimal._
 
-import api.Hakemus
+import fi.vm.sade.service.valintaperusteet.laskenta.api.{Osallistuminen, Hakemus}
 import org.scalatest._
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta._
 import scala.collection.JavaConversions._
 import fi.vm.sade.kaava.LaskentaTestUtil.Hakemus
-import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.{Hylattytila, HylattyMetatieto, Hyvaksyttavissatila, Tila}
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.HylattyMetatieto
 import scala._
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.KonvertoiLukuarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Totuusarvo
@@ -263,14 +263,16 @@ class LaskentaTest extends FunSuite {
   test("Syotettava valintaperuste, osallistumistieto puuttuu") {
     val hakemus = Hakemus("", Nil, Map("valintakoe" -> "8.7"))
 
-    intercept[RuntimeException] {
-      Laskin.laske(hakukohde, hakemus,
-        HaeLukuarvo(None, None, SyotettavaValintaperuste("valintakoe", true, "valintakoe-OSALLISTUMINEN")))
-    }
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemus,
+      HaeLukuarvo(None, None, SyotettavaValintaperuste("valintakoe", true, "valintakoe-OSALLISTUMINEN")))
+
+    assertTulosTyhja(tulos)
+    assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.SYOTETTAVA_ARVO_MERKITSEMATTA)
   }
 
-  test("Syotettava valintaperuste, osallistumistieto false") {
-    val hakemus = Hakemus("", Nil, Map("valintakoe" -> "8.7", "valintakoe-OSALLISTUMINEN" -> "false"))
+  test("Syotettava valintaperuste, osallistumistieto EI_OSALLISTUNUT") {
+    val hakemus = Hakemus("", Nil, Map("valintakoe" -> "8.7",
+      "valintakoe-OSALLISTUMINEN" -> Osallistuminen.EI_OSALLISTUNUT.name))
 
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus,
       HaeLukuarvo(None, None, SyotettavaValintaperuste("valintakoe", true, "valintakoe-OSALLISTUMINEN")))
@@ -279,14 +281,25 @@ class LaskentaTest extends FunSuite {
     assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.EI_OSALLISTUNUT_HYLKAYS)
   }
 
-  test("Syotettava valintaperuste, osallistumistieto true") {
-    val hakemus = Hakemus("", Nil, Map("valintakoe" -> "8.7", "valintakoe-OSALLISTUMINEN" -> "true"))
+  test("Syotettava valintaperuste, osallistumistieto OSALLISTUI") {
+    val hakemus = Hakemus("", Nil, Map("valintakoe" -> "8.7",
+      "valintakoe-OSALLISTUMINEN" -> Osallistuminen.OSALLISTUI.name))
 
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus,
       HaeLukuarvo(None, None, SyotettavaValintaperuste("valintakoe", true, "valintakoe-OSALLISTUMINEN")))
 
     assert(BigDecimal(tulos.get) == BigDecimal("8.7"))
     assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("Syotettava valintaperuste, osallistumistietoa ei voida tulkita") {
+    val hakemus = Hakemus("", Nil, Map("valintakoe" -> "8.7",
+      "valintakoe-OSALLISTUMINEN" -> "ehkaosallistui"))
+
+    intercept[RuntimeException] {
+      Laskin.laske(hakukohde, hakemus,
+        HaeLukuarvo(None, None, SyotettavaValintaperuste("valintakoe", true, "valintakoe-OSALLISTUMINEN")))
+    }
   }
 
 }
