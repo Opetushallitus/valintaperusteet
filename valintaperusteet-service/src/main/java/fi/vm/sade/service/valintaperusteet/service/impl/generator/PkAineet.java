@@ -20,7 +20,7 @@ public class PkAineet extends Aineet {
     public static final String kotitalous = "KO";
     public static final String kasityo = "KS";
 
-    public static final String PK_OPPIAINE_TEMPLATE = PK_etuliite + "_%s_OPPIAINE";
+    public static final String PK_OPPIAINE_TEMPLATE = PK_etuliite + "%s_OPPIAINE";
 
     private enum PkAine {
         KO(kotitalous, "Kotitalous"),

@@ -349,7 +349,7 @@ public class PkJaYoPohjaiset {
      * suullisen ja kirjallisen taidon tutkinnon vähintään taitotasolla tyydyttävä
      */
     public static Funktiokutsu luoKielikoekriteeri7(final LuoValintaperusteetServiceImpl.Kielikoodi k) {
-        Funktiokutsu yleinenKielitutktintoSuoritettu = GenericHelper.luoHaeTotuusarvo(
+        Funktiokutsu yleinenKielitutkintoSuoritettu = GenericHelper.luoHaeTotuusarvo(
                 GenericHelper.luoValintaperusteViite(yleinenKielitutkintoPrefix + k.getKieliarvo(), false,
                         Valintaperustelahde.HAETTAVA_ARVO), false);
 
@@ -357,6 +357,6 @@ public class PkJaYoPohjaiset {
                 GenericHelper.luoValintaperusteViite(valtionhallinnonKielitutkintoPrefix + k.getKieliarvo(), false,
                         Valintaperustelahde.HAETTAVA_ARVO), false);
 
-        return GenericHelper.luoTai(yleinenKielitutktintoSuoritettu, valtionhallinnonKielitutkintoSuoritettu);
+        return GenericHelper.luoTai(yleinenKielitutkintoSuoritettu, valtionhallinnonKielitutkintoSuoritettu);
     }
 }

@@ -17,7 +17,7 @@ public class YoAineet extends Aineet {
     public static final String psykologia = "PS";
     public static final String LK_ETULIITE = "LK_";
     public static final String LK_KUVAUSJALKILIITE = ", LK päättötodistus";
-    public static final String LK_OPPIAINE_TEMPLATE = LK_ETULIITE + "_%s_OPPIANE";
+    public static final String LK_OPPIAINE_TEMPLATE = LK_ETULIITE + "%s_OPPIAINE";
 
     private enum YoAine {
         FI(filosofia, "Filosofia"),
