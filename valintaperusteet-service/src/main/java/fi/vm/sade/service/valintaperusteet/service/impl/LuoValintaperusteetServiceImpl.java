@@ -73,7 +73,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
     public static final String OLETUS_VALINTAKOEURI = "valintakokeentyyppi_1";
 
     public enum Kielikoodi {
-        SUOMI("Suomi", KIELI_FI_URI, "FI"), RUOTSI("Ruotsi", KIELI_SV_URI, "SV");
+        SUOMI("Suomi", KIELI_FI_URI, "fi"), RUOTSI("Ruotsi", KIELI_SV_URI, "sv");
 
         Kielikoodi(String nimi, String kieliUri, String kieliarvo) {
             this.nimi = nimi;

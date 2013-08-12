@@ -326,4 +326,11 @@ public class GenericHelper {
         f.getSyoteparametrit().add(luoSyoteparametri("vertailtava", vertailtava));
         return f;
     }
+
+    public static Funktiokutsu luoSuurempiTaiYhtasuuriKuin(FunktionArgumentti f1, FunktionArgumentti f2) {
+        Funktiokutsu f = new Funktiokutsu();
+        f.setFunktionimi(Funktionimi.SUUREMPITAIYHTASUURI);
+        f.getFunktioargumentit().addAll(luoFunktioargumentit(f1, f2));
+        return f;
+    }
 }

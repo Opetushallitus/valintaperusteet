@@ -289,7 +289,7 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
 
       case HaeMerkkijonoJaVertaaYhtasuuruus(oletusarvo, valintaperusteviite, vertailtava, oid) => {
         val (tulos, tila) = haeValintaperuste[Boolean](oid, valintaperusteviite, hakemus,
-          (s => (Some(s == vertailtava), List(new Hyvaksyttavissatila))), oletusarvo)
+          (s => (Some(s.trim.equalsIgnoreCase(vertailtava.trim)), List(new Hyvaksyttavissatila))), oletusarvo)
         (tulos, tila, Historia("Hae merkkijono ja vertaa yhtasuuruus", tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
       }
     }
