@@ -397,9 +397,9 @@ public class HakukohdeImportServiceTest {
             assertNotNull(valintaryhma);
 
             List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheService.findByValintaryhma(valintaryhmaOid);
-            assertEquals(1, valinnanVaiheet.size());
+            assertEquals(2, valinnanVaiheet.size());
 
-            ValinnanVaihe vaihe = valinnanVaiheet.get(0);
+            ValinnanVaihe vaihe = valinnanVaiheet.get(1);
             assertEquals(ValinnanVaiheTyyppi.TAVALLINEN, vaihe.getValinnanVaiheTyyppi());
             assertNull(vaihe.getMasterValinnanVaihe());
 
@@ -422,9 +422,9 @@ public class HakukohdeImportServiceTest {
             assertFalse(hakukohde.getManuaalisestiSiirretty());
 
             List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheService.findByHakukohde(hakukohdeOid);
-            assertEquals(1, valinnanVaiheet.size());
+            assertEquals(2, valinnanVaiheet.size());
 
-            ValinnanVaihe vaihe = valinnanVaiheet.get(0);
+            ValinnanVaihe vaihe = valinnanVaiheet.get(1);
             assertEquals(ValinnanVaiheTyyppi.TAVALLINEN, vaihe.getValinnanVaiheTyyppi());
             assertNotNull(vaihe.getMasterValinnanVaihe());
 

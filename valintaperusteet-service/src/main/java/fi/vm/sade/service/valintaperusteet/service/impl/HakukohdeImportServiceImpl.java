@@ -310,14 +310,14 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
     }
 
     private void paivitaAloituspaikkojenLkm(final HakukohdeViite hakukohde, final int valinnanAloituspaikat) {
-        // Jos hakukohteella on ainoastaan yksi periytyvä, tavallinen valinnan vaihe ja jossa yksi periytyvä
-        // valintatapajono, päivitetään jonolle aloituspaikkojen lukumäärä
+        // Jos hakukohteella on tasan kaksi valinnan vaihetta, joista jälkimmäinen on tavallinen, periytyvä valinnan
+        // vaihe ja jossa on yksi periytyvä valintatapajono, päivitetään jonolle aloituspaikkojen lukumäärä
 
         List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheService.findByHakukohde(hakukohde.getOid());
-        if (valinnanVaiheet.size() == 1
-                && ValinnanVaiheTyyppi.TAVALLINEN.equals(valinnanVaiheet.get(0).getValinnanVaiheTyyppi())
-                && valinnanVaiheet.get(0).getMasterValinnanVaihe() != null) {
-            ValinnanVaihe vaihe = valinnanVaiheet.get(0);
+        if (valinnanVaiheet.size() == 2
+                && ValinnanVaiheTyyppi.TAVALLINEN.equals(valinnanVaiheet.get(1).getValinnanVaiheTyyppi())
+                && valinnanVaiheet.get(1).getMasterValinnanVaihe() != null) {
+            ValinnanVaihe vaihe = valinnanVaiheet.get(1);
             List<Valintatapajono> jonot = valintatapajonoService.findJonoByValinnanvaihe(vaihe.getOid());
             if (jonot.size() == 1 && jonot.get(0).getMasterValintatapajono() != null) {
                 Valintatapajono jono = jonot.get(0);

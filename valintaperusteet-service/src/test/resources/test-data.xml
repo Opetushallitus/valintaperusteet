@@ -839,9 +839,6 @@
     <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="100" version="0" hakukohde_viite_id="17" oid="100"
                     nimi="hakukohde 17 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus"/>
 
-    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="101" version="0" oid="101" valintaryhma_id="48"
-                    nimi="valintaryhma 48 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus"/>
-
     <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="102" version="0" oid="102" valintaryhma_id="53"
                     nimi="valintaryhma 53 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus"/>
 
@@ -872,6 +869,12 @@
     <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="110" version="0" oid="110" hakukohde_viite_id="21"
                     nimi="hakukohde 21 valinnan vaihe 3" aktiivinen="true" kuvaus="kuvaus"
                     edellinen_valinnan_vaihe_id="109"/>
+
+    <valinnan_vaihe valinnan_vaihe_tyyppi="VALINTAKOE" id="111" version="0" oid="111" valintaryhma_id="48"
+                    nimi="valintaryhma 48 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus"/>
+
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="112" version="0" oid="112" valintaryhma_id="48"
+                    nimi="valintaryhma 48 valinnan vaihe 2" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="111"/>
 
     <valintakoe id="1" version="0" oid="oid1" tunniste="valintakoetunniste1" nimi="valintakoe1" kuvaus="kuvaus1"
                 aktiivinen="true" valinnan_vaihe_id="83" laskentakaava_id="101" master_valintakoe_id="[NULL]"/>
@@ -1114,8 +1117,8 @@
                      kuvaus="kuvaus" tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="100"
                      aktiivinen="true" edellinen_valintatapajono_id="1065" ei_varasijatayttoa="false"/>
 
-    <valintatapajono id="1067" version="1" oid="1067" aloituspaikat="10" nimi="valintaryhma 48 valinnan vaihe 1 jono 1"
-                     kuvaus="kuvaus" tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="101"
+    <valintatapajono id="1067" version="1" oid="1067" aloituspaikat="10" nimi="valintaryhma 48 valinnan vaihe 2 jono 1"
+                     kuvaus="kuvaus" tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="112"
                      aktiivinen="true" ei_varasijatayttoa="false"/>
 
     <laskentakaava id="1" version="0" nimi="kaava1" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO" funktiokutsu_id="1"/>

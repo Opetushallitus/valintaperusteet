@@ -270,8 +270,8 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
                 ValinnanVaihe valinnanVaihe = new ValinnanVaihe();
                 valinnanVaihe.setAktiivinen(true);
-                valinnanVaihe.setKuvaus("generoitu");
-                valinnanVaihe.setNimi("Generoitu valinnanvaihe");
+                valinnanVaihe.setKuvaus("Varsinainen valinnanvaihe");
+                valinnanVaihe.setNimi("Varsinainen valinnanvaihe");
                 valinnanVaihe.setValinnanVaiheTyyppi(ValinnanVaiheTyyppi.TAVALLINEN);
 
                 valinnanVaihe = valinnanVaiheService.lisaaValinnanVaiheValintaryhmalle(valintaryhma.getOid(), valinnanVaihe,
@@ -281,8 +281,8 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
                 jono.setAktiivinen(true);
                 jono.setAloituspaikat(0);
-                jono.setKuvaus("generoitu");
-                jono.setNimi("Generoitu valintatapajono");
+                jono.setKuvaus("Varsinaisen valinnanvaiheen valintatapajono");
+                jono.setNimi("Varsinaisen valinnanvaiheen valintatapajono");
                 jono.setTasapistesaanto(Tasapistesaanto.ARVONTA);
                 jono.setSiirretaanSijoitteluun(true);
 
