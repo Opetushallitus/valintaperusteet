@@ -36,7 +36,7 @@ public class ValintaperusteDTO {
     @JsonView({JsonViews.Basic.class})
     private List<String> arvot;
 
-    @JsonView
+    @JsonView({JsonViews.Basic.class})
     private String osallistuminenTunniste;
 
     public String getTunniste() {
