@@ -345,6 +345,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             valintaperuste.setKuvaus(funktiokutsu.getValintaperuste().getKuvaus());
             valintaperuste.setLahde(funktiokutsu.getValintaperuste().getLahde());
             valintaperuste.setOnPakollinen(funktiokutsu.getValintaperuste().getOnPakollinen());
+            valintaperuste.setOsallistuminenTunniste(funktiokutsu.getValintaperuste().getOsallistuminenTunniste());
 
             if (funktiokutsu.getArvokonvertteriparametrit() != null
                     && funktiokutsu.getArvokonvertteriparametrit().size() > 0) {
