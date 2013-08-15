@@ -26,8 +26,11 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Valintaperusteviite
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonversio
 import fi.vm.sade.kaava.LaskentaTestUtil.assertTilaHylatty
+import fi.vm.sade.kaava.LaskentaTestUtil.assertTilaVirhe
 import fi.vm.sade.kaava.LaskentaTestUtil.assertTilaHyvaksyttavissa
 import fi.vm.sade.kaava.LaskentaTestUtil.assertTulosTyhja
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.VirheMetatieto.VirheMetatietotyyppi
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.HylattyMetatieto.Hylattymetatietotyyppi
 
 /**
  *
@@ -255,9 +258,10 @@ class LaskentaTest extends FunSuite {
           )
         )
       ))
-    intercept[RuntimeException] {
-      Laskin.laske(hakukohde, tyhjaHakemus, f)
-    }
+
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, f)
+    assertTulosTyhja(tulos)
+    assertTilaVirhe(tila, VirheMetatietotyyppi.ARVOVALIKONVERTOINTI_VIRHE)
   }
 
   test("Syotettava valintaperuste, osallistumistieto puuttuu") {
@@ -296,10 +300,63 @@ class LaskentaTest extends FunSuite {
     val hakemus = Hakemus("", Nil, Map("valintakoe" -> "8.7",
       "valintakoe-OSALLISTUMINEN" -> "ehkaosallistui"))
 
-    intercept[RuntimeException] {
-      Laskin.laske(hakukohde, hakemus,
-        HaeLukuarvo(None, None, SyotettavaValintaperuste("valintakoe", true, "valintakoe-OSALLISTUMINEN")))
-    }
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemus,
+      HaeLukuarvo(None, None, SyotettavaValintaperuste("valintakoe", true, "valintakoe-OSALLISTUMINEN")))
+
+    assertTulosTyhja(tulos)
+    assertTilaVirhe(tila, VirheMetatietotyyppi.OSALLISTUSMISTIETOA_EI_VOIDA_TULKITA)
+  }
+
+  test("Virhetila on ensisijainen muihin nahden") {
+    val hylkaavaHaeLukuarvo = new HaeLukuarvo(
+      konvertteri = None,
+      oletusarvo = Some(BigDecimal("10.0")),
+      valintaperusteviite = Valintaperusteviite(
+        tunniste = "hylkaavaLukuarvo",
+        pakollinen = true
+      )
+    )
+
+    val hyvaksyttavissaHaeLukuarvo = new HaeLukuarvo(
+      konvertteri = None,
+      oletusarvo = None,
+      valintaperusteviite = Valintaperusteviite(
+        tunniste = "hyvaksyttavissaLukuarvo",
+        pakollinen = true
+      )
+    )
+
+    val epavalidiLukuarvo = new HaeLukuarvo(
+      konvertteri = None,
+      oletusarvo = Some(BigDecimal("1000.0")),
+      valintaperusteviite = Valintaperusteviite(
+        tunniste = "epavalidiLukuarvo",
+        pakollinen = true
+      )
+    )
+
+    val hakemus = Hakemus("", Nil,
+      Map(
+        "hyvaksyttavissaLukuarvo" -> "100.0",
+        "epavalidiLukuarvo" -> "satatuhatta")
+    )
+
+    val (tulos1, tila1) = Laskin.laske(hakukohde, hakemus, hylkaavaHaeLukuarvo)
+    assert(BigDecimal(tulos1.get) == BigDecimal("10.0"))
+    assertTilaHylatty(tila1, Hylattymetatietotyyppi.PAKOLLINEN_VALINTAPERUSTE_HYLKAYS)
+
+    val (tulos2, tila2) = Laskin.laske(hakukohde, hakemus, hyvaksyttavissaHaeLukuarvo)
+    assert(BigDecimal(tulos2.get) == BigDecimal("100.0"))
+    assertTilaHyvaksyttavissa(tila2)
+
+    val (tulos3, tila3) = Laskin.laske(hakukohde, hakemus, epavalidiLukuarvo)
+    assertTulosTyhja(tulos3)
+    assertTilaVirhe(tila3, VirheMetatietotyyppi.VALINTAPERUSTETTA_EI_VOIDA_TULKITA_LUKUARVOKSI)
+
+    val summa = Summa(hylkaavaHaeLukuarvo, hyvaksyttavissaHaeLukuarvo, epavalidiLukuarvo)
+    val (summatulos, summatila) = Laskin.laske(hakukohde, hakemus, summa)
+    assert(BigDecimal(summatulos.get) == BigDecimal("110.0"))
+    assertTilaVirhe(summatila, VirheMetatietotyyppi.VALINTAPERUSTETTA_EI_VOIDA_TULKITA_LUKUARVOKSI)
   }
 
 }

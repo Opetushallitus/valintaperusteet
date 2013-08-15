@@ -18,37 +18,37 @@ object Laskenta {
                                       osallistuminenTunniste: String) extends Valintaperusteviite(tunniste, pakollinen)
 
   case class Arvokonvertteri[S, T](konversioMap: Seq[Arvokonversio[S, T]]) extends Konvertteri[S, T] {
-    def konvertoi(funktiokutsuOid: String, arvo: S): (T, Tila) = {
+    def konvertoi(arvo: S): (Option[T], Tila) = {
       konversioMap.filter(arvo == _.arvo) match {
-        case Nil => throw new RuntimeException("Arvo " + arvo + " ei täsmää yhteenkään konvertterille " +
-          "määritettyyn arvoon, funktiokutsu OID: " + funktiokutsuOid)
+        case Nil => (None, new Virhetila("Arvo " + arvo + " ei täsmää yhteenkään konvertterille "
+          + "määritettyyn arvoon", new ArvokonvertointiVirhe(arvo.toString)))
         case head :: tail => {
           val paluuarvo = head.paluuarvo
           val tila = if (head.hylkaysperuste) {
-            new Hylattytila(funktiokutsuOid, "Arvo " + arvo + " on määritelty konvertterissa hylkäysperusteeksi",
+            new Hylattytila("Arvo " + arvo + " on määritelty konvertterissa hylkäysperusteeksi",
               new Arvokonvertterihylkays(arvo.toString))
           } else new Hyvaksyttavissatila
 
-          (paluuarvo, tila)
+          (Some(paluuarvo), tila)
         }
       }
     }
   }
 
   case class Lukuarvovalikonvertteri(konversioMap: Seq[Lukuarvovalikonversio]) extends Konvertteri[BigDecimal, BigDecimal] {
-    def konvertoi(funktiokutsuOid: String, arvo: BigDecimal): (BigDecimal, Tila) = {
+    def konvertoi(arvo: BigDecimal): (Option[BigDecimal], Tila) = {
       konversioMap.sortWith((a, b) => a.max > b.max).filter(konv => arvo >= konv.min && arvo <= konv.max) match {
-        case Nil => throw new RuntimeException("Arvo " + arvo + " ei täsmää yhteenkään konvertterille " +
-          "määritettyyn arvoväliin, funktiokutsu OID: " + funktiokutsuOid)
+        case Nil => (None, new Virhetila("Arvo " + arvo + " ei täsmää yhteenkään konvertterille " +
+          "määritettyyn arvoväliin", new ArvovalikonvertointiVirhe(arvo.underlying)))
         case head :: tail => {
           val paluuarvo = if (head.palautaHaettuArvo) arvo else head.paluuarvo
           val tila = if (head.hylkaysperuste) {
-            new Hylattytila(funktiokutsuOid, "Arvoväli " + head.min + "-" + head.max + " on määritelty " +
+            new Hylattytila("Arvoväli " + head.min + "-" + head.max + " on määritelty " +
               "konvertterissa hylkäysperusteeksi. Konvertoitava arvo " + arvo + ".",
               new Arvovalikonvertterihylkays(arvo.underlying, head.min.underlying, head.max.underlying))
           } else new Hyvaksyttavissatila
 
-          (paluuarvo, tila)
+          (Some(paluuarvo), tila)
         }
       }
     }

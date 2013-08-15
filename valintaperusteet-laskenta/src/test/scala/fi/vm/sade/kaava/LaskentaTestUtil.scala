@@ -5,7 +5,7 @@ import collection.JavaConversions._
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus
 import java.util.TreeSet
 import java.math.BigDecimal
-import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.{Hylattytila, HylattyMetatieto, Hyvaksyttavissatila, Tila}
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
 
 /**
  * User: kwuoti
@@ -31,6 +31,13 @@ object LaskentaTestUtil {
   def assertTilaHylatty(tila: Tila, hylattymeta: HylattyMetatieto.Hylattymetatietotyyppi): Unit = {
     assert(tila match {
       case h: Hylattytila => hylattymeta == h.getMetatieto.getMetatietotyyppi
+      case _ => false
+    })
+  }
+
+  def assertTilaVirhe(tila: Tila, virhemeta: VirheMetatieto.VirheMetatietotyyppi): Unit = {
+    assert(tila match {
+      case v: Virhetila => virhemeta == v.getMetatieto.getMetatietotyyppi
       case _ => false
     })
   }
