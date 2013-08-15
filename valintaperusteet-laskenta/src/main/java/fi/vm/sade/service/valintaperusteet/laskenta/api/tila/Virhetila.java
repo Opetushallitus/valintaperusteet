@@ -3,25 +3,24 @@ package fi.vm.sade.service.valintaperusteet.laskenta.api.tila;
 /**
  * User: kwuoti
  * Date: 25.2.2013
- * Time: 7.47
+ * Time: 8.11
  */
-public class Hylattytila extends Tila {
+public class Virhetila extends Tila {
 
-    public Hylattytila(String kuvaus, HylattyMetatieto metatieto) {
-        super(Tilatyyppi.HYLATTY);
+    public Virhetila(String kuvaus, VirheMetatieto metatieto) {
+        super(Tilatyyppi.VIRHE);
         this.kuvaus = kuvaus;
         this.metatieto = metatieto;
     }
 
     private String kuvaus;
-
-    private HylattyMetatieto metatieto;
+    private VirheMetatieto metatieto;
 
     public String getKuvaus() {
         return kuvaus;
     }
 
-    public HylattyMetatieto getMetatieto() {
+    public VirheMetatieto getMetatieto() {
         return metatieto;
     }
 }

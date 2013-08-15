@@ -9,6 +9,7 @@ import scala.collection.JavaConversions._
 import fi.vm.sade.kaava.LaskentaTestUtil.Hakemus
 import java.math.BigDecimal
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Osallistuminen
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.VirheMetatieto.VirheMetatietotyyppi
 
 /**
  * User: kwuoti
@@ -538,9 +539,10 @@ class LaskentaIntegraatioTest extends FunSuite {
   test("osamaara div by zero") {
     val funktiokutsu = osamaaraByZero
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
-    intercept[RuntimeException] {
-      Laskin.laske(hakukohde, tyhjaHakemus, lasku)
-    }
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+
+    assertTulosTyhja(tulos)
+    assertTilaVirhe(tila, VirheMetatieto.VirheMetatietotyyppi.JAKO_NOLLALLA)
   }
 
   test("jos true") {
@@ -1754,5 +1756,39 @@ class LaskentaIntegraatioTest extends FunSuite {
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
     assert(!tulos.get)
     assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.PAKOLLINEN_VALINTAPERUSTE_HYLKAYS)
+  }
+
+  test("hae totuusarvo, epavalidi arvo") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HAETOTUUSARVO,
+      valintaperustetunniste = ValintaperusteViite(
+        tunniste = "tunniste",
+        onPakollinen = true
+      )
+    )
+
+    val hakemus = Hakemus("", Nil, Map("tunniste" -> "puuppa"))
+    val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
+
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
+    assertTulosTyhja(tulos)
+    assertTilaVirhe(tila, VirheMetatietotyyppi.VALINTAPERUSTETTA_EI_VOIDA_TULKITA_TOTUUSARVOKSI)
+  }
+
+  test("hae lukuarvo, epavalidi arvo") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HAELUKUARVO,
+      valintaperustetunniste = ValintaperusteViite(
+        tunniste = "tunniste",
+        onPakollinen = true
+      )
+    )
+
+    val hakemus = Hakemus("", Nil, Map("tunniste" -> "puuppa"))
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
+    assertTulosTyhja(tulos)
+    assertTilaVirhe(tila, VirheMetatietotyyppi.VALINTAPERUSTETTA_EI_VOIDA_TULKITA_LUKUARVOKSI)
   }
 }
