@@ -339,9 +339,11 @@ public class ValinnanVaiheServiceImpl extends AbstractCRUDServiceImpl<ValinnanVa
                 master.getEdellinenValinnanVaihe());
         if (edellinen != null) {
             kopio.setEdellinenValinnanVaihe(edellinen);
+            edellinen.setSeuraavaValinnanVaihe(kopio);
         }
         ValinnanVaihe lisatty = valinnanVaiheDAO.insert(kopio);
         valintatapajonoService.kopioiValintatapajonotMasterValinnanVaiheeltaKopiolle(lisatty, master);
+        valintakoeService.kopioiValintakokeetMasterValinnanVaiheeltaKopiolle(lisatty, master);
 
         return lisatty;
     }
@@ -358,6 +360,7 @@ public class ValinnanVaiheServiceImpl extends AbstractCRUDServiceImpl<ValinnanVa
                 master.getEdellinenValinnanVaihe());
         if (edellinen != null) {
             kopio.setEdellinenValinnanVaihe(edellinen);
+            edellinen.setSeuraavaValinnanVaihe(kopio);
         }
         ValinnanVaihe lisatty = valinnanVaiheDAO.insert(kopio);
         valintatapajonoService.kopioiValintatapajonotMasterValinnanVaiheeltaKopiolle(lisatty, master);

@@ -32,5 +32,6 @@ public interface HakukohdeService extends CRUDService<HakukohdeViite, Long, Stri
 
     void deleteByOid(String oid);
 
-    HakukohdeViite siirraHakukohdeValintaryhmaan(String hakukohdeOid, String valintaryhmaOid);
+    HakukohdeViite siirraHakukohdeValintaryhmaan(String hakukohdeOid, String valintaryhmaOid,
+                                                 boolean siirretaanManuaalisesti);
 }

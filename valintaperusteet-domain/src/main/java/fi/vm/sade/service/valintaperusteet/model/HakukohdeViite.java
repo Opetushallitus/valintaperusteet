@@ -31,6 +31,9 @@ public class HakukohdeViite extends BaseEntity {
     @JsonView(JsonViews.Basic.class)
     private String nimi;
 
+    @Column(name = "manuaalisesti_siirretty")
+    private Boolean manuaalisestiSiirretty = false;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     private Valintaryhma valintaryhma;
 
@@ -83,6 +86,14 @@ public class HakukohdeViite extends BaseEntity {
 
     public void setNimi(String nimi) {
         this.nimi = nimi;
+    }
+
+    public Boolean getManuaalisestiSiirretty() {
+        return manuaalisestiSiirretty;
+    }
+
+    public void setManuaalisestiSiirretty(Boolean manuaalisestiSiirretty) {
+        this.manuaalisestiSiirretty = manuaalisestiSiirretty;
     }
 
     public Valintaryhma getValintaryhma() {

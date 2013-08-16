@@ -268,6 +268,7 @@ public class JarjestyskriteeriServiceImpl extends AbstractCRUDServiceImpl<Jarjes
                 master.getEdellinen());
         if (edellinen != null) {
             kopio.setEdellinen(edellinen);
+            edellinen.setSeuraava(kopio);
         }
 
         return jarjestyskriteeriDAO.insert(kopio);

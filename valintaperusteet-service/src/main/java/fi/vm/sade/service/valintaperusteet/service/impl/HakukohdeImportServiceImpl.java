@@ -268,14 +268,21 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
             Valintaryhma hakukohdeValintaryhma = hakukohde.getValintaryhma();
 
             // ^ on XOR-operaattori. Tsekataan, että sekä koodin että hakukohteen kautta navigoidut valintaryhmät ovat
-            // samat.
+            // samat ja että hakukohdetta ei ole manuaalisesti siirretty valintaryhmään.
             if ((valintaryhma != null ^ hakukohdeValintaryhma != null) ||
                     (valintaryhma != null && hakukohdeValintaryhma != null
                             && !valintaryhma.getOid().equals(hakukohdeValintaryhma.getOid()))) {
-                LOG.info("Hakukohde on väärän valintaryhmän alla. Synkronoidaan hakukohde oikean valintaryhmän alle");
 
-                String valintaryhmaOid = valintaryhma != null ? valintaryhma.getOid() : null;
-                hakukohde = hakukohdeService.siirraHakukohdeValintaryhmaan(importData.getHakukohdeOid(), valintaryhmaOid);
+                if (hakukohde.getManuaalisestiSiirretty() != null && hakukohde.getManuaalisestiSiirretty()) {
+                    LOG.info("Hakukohde on väärän valintaryhmän alla, mutta se on siirretty manuaalisesti. " +
+                            "Synkronointia ei suoriteta");
+
+                } else {
+                    LOG.info("Hakukohde on väärän valintaryhmän alla. Synkronoidaan hakukohde oikean valintaryhmän alle");
+                    String valintaryhmaOid = valintaryhma != null ? valintaryhma.getOid() : null;
+                    hakukohde =
+                            hakukohdeService.siirraHakukohdeValintaryhmaan(importData.getHakukohdeOid(), valintaryhmaOid, false);
+                }
                 kopioiTiedot(importData, hakukohde);
                 hakukohde.setHakukohdekoodi(koodi);
                 koodi.addHakukohde(hakukohde);
@@ -284,6 +291,11 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
                 LOG.info("Hakukohde on oikeassa valintaryhmässä. Synkronoidaan hakukohteen nimi ja koodi.");
                 // Synkataan nimi ja koodi
                 hakukohde.setNimi(generoiHakukohdeNimi(importData));
+
+                if (hakukohde.getManuaalisestiSiirretty() == null) {
+                    hakukohde.setManuaalisestiSiirretty(false);
+                }
+
                 koodi.addHakukohde(hakukohde);
             }
         }
@@ -298,14 +310,14 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
     }
 
     private void paivitaAloituspaikkojenLkm(final HakukohdeViite hakukohde, final int valinnanAloituspaikat) {
-        // Jos hakukohteella on ainoastaan yksi periytyvä, tavallinen valinnan vaihe ja jossa yksi periytyvä
-        // valintatapajono, päivitetään jonolle aloituspaikkojen lukumäärä
+        // Jos hakukohteella on tasan kaksi valinnan vaihetta, joista jälkimmäinen on tavallinen, periytyvä valinnan
+        // vaihe ja jossa on yksi periytyvä valintatapajono, päivitetään jonolle aloituspaikkojen lukumäärä
 
         List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheService.findByHakukohde(hakukohde.getOid());
-        if (valinnanVaiheet.size() == 1
-                && ValinnanVaiheTyyppi.TAVALLINEN.equals(valinnanVaiheet.get(0).getValinnanVaiheTyyppi())
-                && valinnanVaiheet.get(0).getMasterValinnanVaihe() != null) {
-            ValinnanVaihe vaihe = valinnanVaiheet.get(0);
+        if (valinnanVaiheet.size() == 2
+                && ValinnanVaiheTyyppi.TAVALLINEN.equals(valinnanVaiheet.get(1).getValinnanVaiheTyyppi())
+                && valinnanVaiheet.get(1).getMasterValinnanVaihe() != null) {
+            ValinnanVaihe vaihe = valinnanVaiheet.get(1);
             List<Valintatapajono> jonot = valintatapajonoService.findJonoByValinnanvaihe(vaihe.getOid());
             if (jonot.size() == 1 && jonot.get(0).getMasterValintatapajono() != null) {
                 Valintatapajono jono = jonot.get(0);

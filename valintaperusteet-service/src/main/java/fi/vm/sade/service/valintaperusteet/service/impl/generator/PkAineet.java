@@ -20,6 +20,8 @@ public class PkAineet extends Aineet {
     public static final String kotitalous = "KO";
     public static final String kasityo = "KS";
 
+    public static final String PK_OPPIAINE_TEMPLATE = PK_etuliite + "%s_OPPIAINE";
+
     private enum PkAine {
         KO(kotitalous, "Kotitalous"),
         KS(kasityo, "Käsityö");
@@ -74,5 +76,9 @@ public class PkAineet extends Aineet {
 
         Laskentakaava laskentakaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(keskiarvo, kuvaus + PK_kuvausjalkiliite);
         return laskentakaava;
+    }
+
+    public static String oppiaine(String ainetunniste) {
+        return String.format(PK_OPPIAINE_TEMPLATE, ainetunniste);
     }
 }

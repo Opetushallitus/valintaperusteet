@@ -1,19 +1,14 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertTrue;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
-
+import fi.vm.sade.dbunit.annotation.DataSetLocation;
+import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
+import fi.vm.sade.generic.dao.GenericDAO;
+import fi.vm.sade.kaava.Funktiokuvaaja;
+import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
+import fi.vm.sade.service.valintaperusteet.model.*;
+import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuMuodostaaSilmukanException;
+import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaMuodostaaSilmukanException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,28 +19,18 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
-import fi.vm.sade.dbunit.annotation.DataSetLocation;
-import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
-import fi.vm.sade.generic.dao.GenericDAO;
-import fi.vm.sade.kaava.Funktiokuvaaja;
-import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
-import fi.vm.sade.service.valintaperusteet.model.Arvokonvertteriparametri;
-import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti;
-import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
-import fi.vm.sade.service.valintaperusteet.model.Funktionimi;
-import fi.vm.sade.service.valintaperusteet.model.Funktiotyyppi;
-import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
-import fi.vm.sade.service.valintaperusteet.model.Syoteparametri;
-import fi.vm.sade.service.valintaperusteet.model.ValintaperusteViite;
+import java.math.BigDecimal;
+import java.util.*;
+
+import static junit.framework.Assert.*;
 
 /**
  * User: kwuoti Date: 21.1.2013 Time: 9.42
  */
 @ContextConfiguration(locations = "classpath:test-context.xml")
-@TestExecutionListeners(listeners = { JTACleanInsertTestExecutionListener.class,
+@TestExecutionListeners(listeners = {JTACleanInsertTestExecutionListener.class,
         DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
-        TransactionalTestExecutionListener.class })
+        TransactionalTestExecutionListener.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data.xml")
 public class LaskentakaavaServiceTest {
@@ -188,7 +173,7 @@ public class LaskentakaavaServiceTest {
     }
 
     @Test
-    public void insertPartlyNew() {
+    public void insertPartlyNew() throws FunktiokutsuMuodostaaSilmukanException {
         final Long subFunktiokutsuId = 201L;
 
         Funktiokutsu funktiokutsu = laskentakaavaService.haeMallinnettuFunktiokutsu(subFunktiokutsuId);
@@ -410,7 +395,7 @@ public class LaskentakaavaServiceTest {
     }
 
     @Test
-    public void testHaeLaskettavaKaava() {
+    public void testHaeLaskettavaKaava() throws FunktiokutsuMuodostaaSilmukanException {
 
         final Long tulo = 512L;
         {
@@ -506,5 +491,64 @@ public class LaskentakaavaServiceTest {
         assertEquals(new BigDecimal("0.0"), new BigDecimal(valintaperusteet.get(1).getMin()));
         assertEquals(new BigDecimal("30.0"), new BigDecimal(valintaperusteet.get(1).getMax()));
         assertNull(valintaperusteet.get(1).getArvot());
+    }
+
+    @Test
+    public void testItseensaViittaavaKaava() {
+        // Kaava 415 viittaa kaavaan 414. Asetetaan kaava 414 viittaamaan takaisin kaavaan 415, jolloin saadaan
+        // silmukka muodostettua.
+
+        final Long alakaavaId = 414L;
+        final Long ylakaavaId = 415L;
+
+        {
+            Laskentakaava ylakaava = laskentakaavaService.haeLaskettavaKaava(ylakaavaId);
+            assertEquals(Funktionimi.SUMMA, ylakaava.getFunktiokutsu().getFunktionimi());
+
+            Funktiokutsu ylaFunktiokutsu = ylakaava.getFunktiokutsu();
+            assertEquals(2, ylaFunktiokutsu.getFunktioargumentit().size());
+
+            List<Funktioargumentti> ylafunktioArgs = argsSorted(ylaFunktiokutsu.getFunktioargumentit());
+            assertNotNull(ylafunktioArgs.get(1).getLaskentakaavaChild());
+            assertEquals(alakaavaId, ylafunktioArgs.get(1).getLaskentakaavaChild().getId());
+
+        }
+        {
+            Laskentakaava alakaava = laskentakaavaService.haeLaskettavaKaava(alakaavaId);
+            assertEquals(Funktionimi.SUMMA, alakaava.getFunktiokutsu().getFunktionimi());
+
+            Funktiokutsu alaFunktiokutsu = alakaava.getFunktiokutsu();
+            assertEquals(2, alaFunktiokutsu.getFunktioargumentit().size());
+
+            List<Funktioargumentti> alafunktioArgs = argsSorted(alaFunktiokutsu.getFunktioargumentit());
+            assertNull(alafunktioArgs.get(0).getLaskentakaavaChild());
+            assertNull(alafunktioArgs.get(1).getLaskentakaavaChild());
+        }
+
+        Laskentakaava alakaava = laskentakaavaService.haeLaskettavaKaava(alakaavaId);
+
+        Laskentakaava laskentakaavaViite = new Laskentakaava();
+        laskentakaavaViite.setId(ylakaavaId);
+        laskentakaavaViite.setTyyppi(Funktiotyyppi.LUKUARVOFUNKTIO);
+        laskentakaavaViite.setOnLuonnos(false);
+
+        Funktioargumentti arg = new Funktioargumentti();
+        arg.setIndeksi(3);
+        arg.setLaskentakaavaChild(laskentakaavaViite);
+
+        alakaava.getFunktiokutsu().getFunktioargumentit().add(arg);
+
+        boolean caught = false;
+        try {
+            laskentakaavaService.update(alakaavaId.toString(), alakaava);
+        } catch (LaskentakaavaMuodostaaSilmukanException e) {
+            caught = true;
+
+            assertEquals(e.getFunktiokutsuId().longValue(), 701L);
+            assertEquals(e.getParentLaskentakaavaId(), alakaavaId);
+            assertEquals(e.getViitattuLaskentakaavaId(), alakaavaId);
+        }
+
+        assertTrue(caught);
     }
 }

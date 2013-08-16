@@ -784,4 +784,58 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
     assert(Virhetyyppi.TARKKUUS_PIENEMPI_KUIN_NOLLA ==
       validationMessages.get(0).asInstanceOf[Validointivirhe].getVirhetyyppi)
   }
+
+  test("Hae merkkijono ja vertaa yhtasuuruus, vertailtava puuttuu") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HAEMERKKIJONOJAVERTAAYHTASUURUUS,
+      valintaperustetunniste = ValintaperusteViite(
+        onPakollinen = true,
+        tunniste = "aidinkieli"
+      ),
+      syoteparametrit = List(
+        Syoteparametri(avain = "oletusarvo", arvo = "false")
+      )
+    )
+
+    val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
+    assert(1 == validationMessages.size())
+    assert(Virhetyyppi.SYOTEPARAMETRI_PUUTTUU ==
+      validationMessages.get(0).asInstanceOf[Validointivirhe].getVirhetyyppi)
+  }
+
+  test("Hae merkkijono ja vertaa yhtasuuruus, validi") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HAEMERKKIJONOJAVERTAAYHTASUURUUS,
+      valintaperustetunniste = ValintaperusteViite(
+        onPakollinen = true,
+        tunniste = "aidinkieli"
+      ),
+      syoteparametrit = List(
+        Syoteparametri(avain = "oletusarvo", arvo = "false"),
+        Syoteparametri(avain = "vertailtava", arvo = "FI")
+      )
+    )
+
+    val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
+    assert(0 == validationMessages.size())
+  }
+
+  test("Hae merkkijono ja vertaa yhtasuuruus, virheellinen oletusarvo") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HAEMERKKIJONOJAVERTAAYHTASUURUUS,
+      valintaperustetunniste = ValintaperusteViite(
+        onPakollinen = true,
+        tunniste = "aidinkieli"
+      ),
+      syoteparametrit = List(
+        Syoteparametri(avain = "oletusarvo", arvo = "puuppa"),
+        Syoteparametri(avain = "vertailtava", arvo = "FI")
+      )
+    )
+
+    val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
+    assert(1 == validationMessages.size())
+    assert(Virhetyyppi.VIRHEELLINEN_SYOTEPARAMETRIN_TYYPPI ==
+      validationMessages.get(0).asInstanceOf[Validointivirhe].getVirhetyyppi)
+  }
 }

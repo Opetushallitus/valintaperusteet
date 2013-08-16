@@ -1,41 +1,43 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
-import java.util.List;
-
-import org.codehaus.jackson.map.annotate.JsonView;
-
 import fi.vm.sade.service.valintaperusteet.model.Funktiotyyppi;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.model.Valintaperustelahde;
+import org.codehaus.jackson.map.annotate.JsonView;
+
+import java.util.List;
 
 /**
  * User: wuoti Date: 28.5.2013 Time: 14.52
  */
 public class ValintaperusteDTO {
 
-    @JsonView({ JsonViews.Basic.class })
+    @JsonView({JsonViews.Basic.class})
     private String tunniste;
 
-    @JsonView({ JsonViews.Basic.class })
+    @JsonView({JsonViews.Basic.class})
     private String kuvaus;
 
-    @JsonView({ JsonViews.Basic.class })
+    @JsonView({JsonViews.Basic.class})
     private Funktiotyyppi funktiotyyppi;
 
-    @JsonView({ JsonViews.Basic.class })
+    @JsonView({JsonViews.Basic.class})
     private Valintaperustelahde lahde;
 
-    @JsonView({ JsonViews.Basic.class })
+    @JsonView({JsonViews.Basic.class})
     private boolean onPakollinen;
 
-    @JsonView({ JsonViews.Basic.class })
+    @JsonView({JsonViews.Basic.class})
     private String min;
 
-    @JsonView({ JsonViews.Basic.class })
+    @JsonView({JsonViews.Basic.class})
     private String max;
 
-    @JsonView({ JsonViews.Basic.class })
+    @JsonView({JsonViews.Basic.class})
     private List<String> arvot;
+
+    @JsonView({JsonViews.Basic.class})
+    private String osallistuminenTunniste;
 
     public String getTunniste() {
         return tunniste;
@@ -99,5 +101,13 @@ public class ValintaperusteDTO {
 
     public void setArvot(List<String> arvot) {
         this.arvot = arvot;
+    }
+
+    public String getOsallistuminenTunniste() {
+        return osallistuminenTunniste;
+    }
+
+    public void setOsallistuminenTunniste(String osallistuminenTunniste) {
+        this.osallistuminenTunniste = osallistuminenTunniste;
     }
 }

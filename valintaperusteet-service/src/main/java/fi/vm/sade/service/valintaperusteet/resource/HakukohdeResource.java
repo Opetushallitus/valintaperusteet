@@ -209,7 +209,8 @@ public class HakukohdeResource {
     public Response siirraHakukohdeValintaryhmaan(@PathParam("hakukohdeOid") String hakukohdeOid,
                                                   String valintaryhmaOid) {
         try {
-            HakukohdeViite hakukohde = hakukohdeService.siirraHakukohdeValintaryhmaan(hakukohdeOid, valintaryhmaOid);
+            HakukohdeViite hakukohde = hakukohdeService.
+                    siirraHakukohdeValintaryhmaan(hakukohdeOid, valintaryhmaOid, true);
             return Response.status(Response.Status.ACCEPTED).entity(hakukohde).build();
         } catch (Exception e) {
             LOGGER.error("Error moving hakukohde to new valintaryhma.", e);

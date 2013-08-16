@@ -9,6 +9,7 @@ import fi.vm.sade.service.valintaperusteet.schema.ValintakoeTyyppi;
 import fi.vm.sade.service.valintaperusteet.schema.ValintakoeValinnanVaiheTyyppi;
 import fi.vm.sade.service.valintaperusteet.schema.ValintaperusteetTyyppi;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakuparametritOnTyhjaException;
+import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheEpaaktiivinenException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheJarjestyslukuOutOfBoundsException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,8 +59,8 @@ public class ValintaperusteServiceTest {
         assertEquals(1, valintaperusteetTyyppis.get(1).getValinnanVaihe().getValinnanVaiheJarjestysluku());
 
         assertEquals(3, ((TavallinenValinnanVaiheTyyppi) valintaperusteetTyyppis.get(0).getValinnanVaihe()).getValintatapajono().get(0).getJarjestyskriteerit().size());
-        assertEquals(1, ((TavallinenValinnanVaiheTyyppi)valintaperusteetTyyppis.get(0).getValinnanVaihe()).getValintatapajono().get(1).getPrioriteetti());
-        assertEquals(1, ((TavallinenValinnanVaiheTyyppi)valintaperusteetTyyppis.get(0).getValinnanVaihe()).getValintatapajono().get(0).getJarjestyskriteerit().get(1).getPrioriteetti());
+        assertEquals(1, ((TavallinenValinnanVaiheTyyppi) valintaperusteetTyyppis.get(0).getValinnanVaihe()).getValintatapajono().get(1).getPrioriteetti());
+        assertEquals(1, ((TavallinenValinnanVaiheTyyppi) valintaperusteetTyyppis.get(0).getValinnanVaihe()).getValintatapajono().get(0).getJarjestyskriteerit().get(1).getPrioriteetti());
     }
 
     @Test
@@ -144,5 +145,34 @@ public class ValintaperusteServiceTest {
         assertNotNull(vk.getNimi());
         assertNotNull(vk.getOid());
         assertNotNull(vk.getTunniste());
+    }
+
+    @Test(expected = ValinnanVaiheEpaaktiivinenException.class)
+    public void testHaeValintaperusteetMukanaEpaaktiivisiaVaiheita() {
+        List<HakuparametritTyyppi> params = new ArrayList<HakuparametritTyyppi>();
+        params.add(getHakuparametritTyyppi("oid21", 0));
+        List<ValintaperusteetTyyppi> vps = valintaperusteService.haeValintaperusteet(params);
+        assertEquals(1, vps.size());
+        assertEquals("108", vps.get(0).getValinnanVaihe().getValinnanVaiheOid());
+
+        params = new ArrayList<HakuparametritTyyppi>();
+        params.add(getHakuparametritTyyppi("oid21", 2));
+        vps = valintaperusteService.haeValintaperusteet(params);
+        assertEquals(1, vps.size());
+        assertEquals("110", vps.get(0).getValinnanVaihe().getValinnanVaiheOid());
+
+        params = new ArrayList<HakuparametritTyyppi>();
+        params.add(getHakuparametritTyyppi("oid21", 1));
+        valintaperusteService.haeValintaperusteet(params);
+    }
+
+    @Test
+    public void testHaeKaikkiValintaperusteetMukanaEpaaktiivisiaVaiheita() {
+        List<HakuparametritTyyppi> params = new ArrayList<HakuparametritTyyppi>();
+        params.add(getHakuparametritTyyppi("oid21", null));
+        List<ValintaperusteetTyyppi> vps = valintaperusteService.haeValintaperusteet(params);
+        assertEquals(2, vps.size());
+        assertEquals("108", vps.get(0).getValinnanVaihe().getValinnanVaiheOid());
+        assertEquals("110", vps.get(1).getValinnanVaihe().getValinnanVaiheOid());
     }
 }

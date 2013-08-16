@@ -163,6 +163,7 @@ public class HakukohdeImportServiceTest {
 
         HakukohdeViite koodiHakukohde = koodi.getHakukohteet().iterator().next();
         HakukohdeViite hakukohde = hakukohdeViiteDAO.readByOid(hakukohdeOid);
+        assertFalse(hakukohde.getManuaalisestiSiirretty());
         assertEquals(koodiHakukohde, hakukohde);
 
         List<HakukohdeViite> hakukohteetByValintaryhma = hakukohdeViiteDAO.findByValintaryhmaOid(valintaryhmaOid);
@@ -190,6 +191,7 @@ public class HakukohdeImportServiceTest {
             List<HakukohdeViite> hakukohteet = hakukohdeService.findByValintaryhmaOid(valintaryhmaOidAluksi);
             assertEquals(1, hakukohteet.size());
             assertEquals(hakukohdeOid, hakukohteet.get(0).getOid());
+            assertNull(hakukohteet.get(0).getManuaalisestiSiirretty());
 
             assertEquals(0, hakukohdeService.findByValintaryhmaOid(valintaryhmaOidLopuksi).size());
 
@@ -214,6 +216,8 @@ public class HakukohdeImportServiceTest {
             List<HakukohdeViite> hakukohteet = hakukohdeService.findByValintaryhmaOid(valintaryhmaOidLopuksi);
             assertEquals(1, hakukohteet.size());
             assertEquals(hakukohdeOid, hakukohteet.get(0).getOid());
+            assertFalse(hakukohteet.get(0).getManuaalisestiSiirretty());
+
 
             // Hakukohteelle suoraan määriteltyjen valinnanvaiheiden tulisi tulla periytyvien valinnan vaiheiden
             // jälkeen.
@@ -244,6 +248,7 @@ public class HakukohdeImportServiceTest {
             List<HakukohdeViite> hakukohteet = hakukohdeService.findByValintaryhmaOid(valintaryhmaOidAluksi);
             assertEquals(1, hakukohteet.size());
             assertEquals(hakukohdeOid, hakukohteet.get(0).getOid());
+            assertNull(hakukohteet.get(0).getManuaalisestiSiirretty());
 
             List<ValinnanVaihe> vaiheet = valinnanVaiheService.findByHakukohde(hakukohdeOid);
             assertEquals(4, vaiheet.size());
@@ -263,6 +268,7 @@ public class HakukohdeImportServiceTest {
 
             assertEquals(0, hakukohdeService.findByValintaryhmaOid(valintaryhmaOidAluksi).size());
             HakukohdeViite hakukohde = hakukohdeService.readByOid(hakukohdeOid);
+            assertFalse(hakukohde.getManuaalisestiSiirretty());
 
             assertNull(hakukohde.getValintaryhma());
 
@@ -290,7 +296,7 @@ public class HakukohdeImportServiceTest {
             assertEquals(1, hakukohteet.size());
             HakukohdeViite hakukohde = hakukohteet.get(0);
             assertEquals(hakukohdeOid, hakukohde.getOid());
-            //  assertFalse(hakukohdeOid.equals(hakukohde.getNimi()));
+            assertNull(hakukohde.getManuaalisestiSiirretty());
 
             List<ValinnanVaihe> vaiheet = valinnanVaiheService.findByHakukohde(hakukohdeOid);
             assertEquals(4, vaiheet.size());
@@ -312,6 +318,7 @@ public class HakukohdeImportServiceTest {
             assertEquals(1, hakukohteet.size());
             HakukohdeViite hakukohde = hakukohteet.get(0);
             assertEquals(hakukohdeOid, hakukohde.getOid());
+            assertFalse(hakukohde.getManuaalisestiSiirretty());
 
             List<ValinnanVaihe> vaiheet = valinnanVaiheService.findByHakukohde(hakukohdeOid);
             assertEquals(4, vaiheet.size());
@@ -369,6 +376,7 @@ public class HakukohdeImportServiceTest {
 
         {
             HakukohdeViite hakukohde = hakukohdeViiteDAO.readByOid(hakukohdeOid);
+            assertFalse(hakukohde.getManuaalisestiSiirretty());
             assertNotNull(hakukohde);
             assertNull(hakukohde.getValintaryhma());
         }
@@ -389,9 +397,9 @@ public class HakukohdeImportServiceTest {
             assertNotNull(valintaryhma);
 
             List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheService.findByValintaryhma(valintaryhmaOid);
-            assertEquals(1, valinnanVaiheet.size());
+            assertEquals(2, valinnanVaiheet.size());
 
-            ValinnanVaihe vaihe = valinnanVaiheet.get(0);
+            ValinnanVaihe vaihe = valinnanVaiheet.get(1);
             assertEquals(ValinnanVaiheTyyppi.TAVALLINEN, vaihe.getValinnanVaiheTyyppi());
             assertNull(vaihe.getMasterValinnanVaihe());
 
@@ -411,11 +419,12 @@ public class HakukohdeImportServiceTest {
         {
             HakukohdeViite hakukohde = hakukohdeViiteDAO.readByOid(hakukohdeOid);
             assertNotNull(hakukohde);
+            assertFalse(hakukohde.getManuaalisestiSiirretty());
 
             List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheService.findByHakukohde(hakukohdeOid);
-            assertEquals(1, valinnanVaiheet.size());
+            assertEquals(2, valinnanVaiheet.size());
 
-            ValinnanVaihe vaihe = valinnanVaiheet.get(0);
+            ValinnanVaihe vaihe = valinnanVaiheet.get(1);
             assertEquals(ValinnanVaiheTyyppi.TAVALLINEN, vaihe.getValinnanVaiheTyyppi());
             assertNotNull(vaihe.getMasterValinnanVaihe());
 
@@ -467,8 +476,50 @@ public class HakukohdeImportServiceTest {
 
         {
             HakukohdeViite hakukohde = hakukohdeViiteDAO.readByOid(hakukohdeOid);
+            assertFalse(hakukohde.getManuaalisestiSiirretty());
             assertNotNull(hakukohde);
             assertNull(hakukohde.getValintaryhma());
+        }
+    }
+
+    @Test
+    public void testManuaalisestiSiirrettyHakukohde() {
+        // Testaa, että hakukohteelle ei tehdä mitään, jos se on siirretty manuaalisesti
+        final String valintaryhmaOid = "oid55";
+
+        final String hakuOid = "hakuoid1";
+        final String hakukohdeOid = "oid20";
+        final String hakukohdekoodiUri = "hakukohdekoodiuri21";
+        {
+            Hakukohdekoodi koodi = hakukohdekoodiDAO.readByUri(hakukohdekoodiUri);
+            assertEquals(valintaryhmaOid, koodi.getValintaryhmat().iterator().next().getOid());
+            assertEquals(1, koodi.getHakukohteet().size());
+            assertEquals(koodi.getHakukohteet().iterator().next().getOid(), hakukohdeOid);
+
+            HakukohdeViite hakukohde = hakukohdeService.readByOid(hakukohdeOid);
+            assertEquals(hakukohdeOid, hakukohde.getOid());
+            assertNull(hakukohde.getValintaryhma());
+            assertTrue(hakukohde.getManuaalisestiSiirretty());
+
+            List<HakukohdeViite> hakukohteet = hakukohdeService.findByValintaryhmaOid(valintaryhmaOid);
+            assertEquals(0, hakukohteet.size());
+        }
+
+        HakukohdeImportTyyppi importData = luoHakukohdeImportTyyppi(hakukohdeOid, hakuOid, hakukohdekoodiUri);
+        hakukohdeImportService.tuoHakukohde(importData);
+
+        {
+            Hakukohdekoodi koodi = hakukohdekoodiDAO.readByUri(hakukohdekoodiUri);
+            assertEquals(valintaryhmaOid, koodi.getValintaryhmat().iterator().next().getOid());
+            assertEquals(1, koodi.getHakukohteet().size());
+
+            HakukohdeViite hakukohde = hakukohdeService.readByOid(hakukohdeOid);
+            assertEquals(hakukohdeOid, hakukohde.getOid());
+            assertNull(hakukohde.getValintaryhma());
+            assertTrue(hakukohde.getManuaalisestiSiirretty());
+
+            List<HakukohdeViite> hakukohteet = hakukohdeService.findByValintaryhmaOid(valintaryhmaOid);
+            assertEquals(0, hakukohteet.size());
         }
     }
 }

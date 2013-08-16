@@ -9,11 +9,13 @@ public abstract class HylattyMetatieto {
     public static enum Hylattymetatietotyyppi {
         ARVOKONVERTTERIHYLKAYS(Arvokonvertterihylkays.class),
         ARVOVALIKONVERTTERIHYLKAYS(Arvovalikonvertterihylkays.class),
-        PAKOLLINEN_VALINTAPERUSTE_HYLKAYS(PakollinenValintaperusteHylkays.class);
+        PAKOLLINEN_VALINTAPERUSTE_HYLKAYS(PakollinenValintaperusteHylkays.class),
+        EI_OSALLISTUNUT_HYLKAYS(EiOsallistunutHylkays.class),
+        SYOTETTAVA_ARVO_MERKITSEMATTA(SyotettavaArvoMerkitsemattaHylkays.class);
 
         private Class<? extends HylattyMetatieto> tyyppi;
 
-        Hylattymetatietotyyppi(Class<? extends  HylattyMetatieto> tyyppi) {
+        Hylattymetatietotyyppi(Class<? extends HylattyMetatieto> tyyppi) {
             this.tyyppi = tyyppi;
         }
     }

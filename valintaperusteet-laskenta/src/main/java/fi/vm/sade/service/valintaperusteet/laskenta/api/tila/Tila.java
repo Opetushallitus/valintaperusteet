@@ -5,7 +5,7 @@ package fi.vm.sade.service.valintaperusteet.laskenta.api.tila;
  */
 public abstract class Tila {
     public static enum Tilatyyppi {
-        HYLATTY(Hylattytila.class), HYVAKSYTTAVISSA(Hyvaksyttavissatila.class);
+        HYLATTY(Hylattytila.class), HYVAKSYTTAVISSA(Hyvaksyttavissatila.class), VIRHE(Virhetila.class);
 
         private Class<? extends Tila> tyyppi;
 

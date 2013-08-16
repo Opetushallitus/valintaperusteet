@@ -22,13 +22,15 @@ public class LaskentakaavaDAOImpl extends AbstractJpaDAOImpl<Laskentakaava, Long
     public Laskentakaava getLaskentakaava(Long id) {
         QLaskentakaava lk = QLaskentakaava.laskentakaava;
         QFunktiokutsu fk = QFunktiokutsu.funktiokutsu;
+        QFunktioargumentti fa = QFunktioargumentti.funktioargumentti;
 
         Laskentakaava laskentakaava = from(lk)
                 .leftJoin(lk.funktiokutsu, fk).fetch()
                 .leftJoin(fk.arvokonvertteriparametrit).fetch()
                 .leftJoin(fk.arvovalikonvertteriparametrit).fetch()
                 .leftJoin(fk.syoteparametrit).fetch()
-                .leftJoin(fk.funktioargumentit).fetch()
+                .leftJoin(fk.funktioargumentit, fa).fetch()
+                .leftJoin(fa.laskentakaavaChild).fetch()
                 .leftJoin(fk.valintaperuste).fetch().where(lk.id.eq(id)).distinct().singleResult(lk);
 
         return laskentakaava;

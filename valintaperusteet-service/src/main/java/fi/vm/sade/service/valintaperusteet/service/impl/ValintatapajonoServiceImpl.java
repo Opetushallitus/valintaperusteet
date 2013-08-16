@@ -197,6 +197,7 @@ public class ValintatapajonoServiceImpl extends AbstractCRUDServiceImpl<Valintat
                 master.getEdellinenValintatapajono());
         if (edellinen != null) {
             kopio.setEdellinenValintatapajono(edellinen);
+            edellinen.setSeuraava(kopio);
         }
 
         Valintatapajono lisatty = valintatapajonoDAO.insert(kopio);
