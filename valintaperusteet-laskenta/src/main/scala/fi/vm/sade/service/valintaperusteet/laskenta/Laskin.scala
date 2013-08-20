@@ -302,16 +302,6 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
           (s => (Some(s.trim.equalsIgnoreCase(vertailtava.trim)), List(new Hyvaksyttavissatila))), oletusarvo)
         (tulos, tila, Historia("Hae merkkijono ja vertaa yhtasuuruus", tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
       }
-
-      case Hylkaa(f, oid) => {
-        val (tulos, tilat, h) = muodostaYksittainenTulos(f, b => b)
-
-        val tila = tulos.map(b => if (b) new Hylattytila("Hylätty hylkäämisfunktiolla", new HylkaaFunktionSuorittamaHylkays) else new Hyvaksyttavissatila)
-          .getOrElse(new Virhetila("Hylkäämisfunktion syöte on tyhjä. Hylkäystä ei voida tulkita.", new HylkaamistaEiVoidaTulkita))
-
-        val kaikkiTilat = tila :: tilat
-        (tulos, kaikkiTilat, Historia("Hylkää", tulos, kaikkiTilat, Some(List(h)), None))
-      }
     }
 
     val palautettavaTila = tilat.filter(_ match {
@@ -475,6 +465,14 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
       case Pyoristys(tarkkuus, f, oid) => {
         val (tulos, tilat, h) = muodostaYksittainenTulos(f, d => d.setScale(tarkkuus, BigDecimal.RoundingMode.HALF_UP))
         (tulos, tilat, Historia("Pyöristys", tulos, tilat, Some(List(h)), Some(Map("tarkkuus" -> Some(tarkkuus)))))
+      }
+      case Hylkaa(f, oid) => {
+        val (tulos, tila1, h) = laske(f)
+
+        val tila2 = tulos.map(b => if (b) new Hylattytila("Hylätty hylkäämisfunktiolla", new HylkaaFunktionSuorittamaHylkays) else new Hyvaksyttavissatila)
+          .getOrElse(new Virhetila("Hylkäämisfunktion syöte on tyhjä. Hylkäystä ei voida tulkita.", new HylkaamistaEiVoidaTulkita))
+        val tilat = List(tila1, tila2)
+        (None, tilat, Historia("Hylkää", None, tilat, Some(List(h)), None))
       }
     }
 

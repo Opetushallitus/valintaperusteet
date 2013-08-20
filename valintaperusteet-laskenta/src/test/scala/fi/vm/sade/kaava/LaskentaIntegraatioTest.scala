@@ -1798,9 +1798,9 @@ class LaskentaIntegraatioTest extends FunSuite {
       funktioargumentit = List(totuusarvoTrue)
     )
 
-    val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
-    assert(tulos.get)
+    assertTulosTyhja(tulos)
     assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.HYLKAA_FUNKTION_SUORITTAMA_HYLKAYS)
   }
 
@@ -1810,9 +1810,9 @@ class LaskentaIntegraatioTest extends FunSuite {
       funktioargumentit = List(totuusarvoFalse)
     )
 
-    val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
-    assert(!tulos.get)
+    assertTulosTyhja(tulos)
     assertTilaHyvaksyttavissa(tila)
   }
 
@@ -1827,7 +1827,7 @@ class LaskentaIntegraatioTest extends FunSuite {
     assertTulosTyhja(tulos1)
     assertTilaHyvaksyttavissa(tila1)
 
-    val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
     assertTulosTyhja(tulos)
     assertTilaVirhe(tila, VirheMetatietotyyppi.HYLKAAMISTA_EI_VOIDA_TULKITA)

@@ -280,7 +280,7 @@ object Laskenta {
   }
 
   case class Hylkaa(f: Totuusarvofunktio, oid: String = "")
-    extends Totuusarvofunktio with YksiParametrinenFunktio[Boolean]
+    extends Lukuarvofunktio with YksiParametrinenFunktio[BigDecimal]
 
   trait Esiprosessoiva extends Totuusarvofunktio {
     val tunniste: String

@@ -209,7 +209,7 @@ object Funktiokuvaaja {
         Syoteparametrikuvaus("n", Syoteparametrityyppi.KOKONAISLUKU))
     ),
     Funktionimi.HYLKAA -> Funktiokuvaus(
-      tyyppi = Funktiotyyppi.TOTUUSARVOFUNKTIO,
+      tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
       funktioargumentit = List(
         Funktioargumenttikuvaus("f", Funktiotyyppi.TOTUUSARVOFUNKTIO, Kardinaliteetti.YKSI)
       )
