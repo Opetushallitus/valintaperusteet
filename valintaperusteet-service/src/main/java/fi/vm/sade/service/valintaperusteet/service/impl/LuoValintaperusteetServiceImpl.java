@@ -72,6 +72,8 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
     public static final String OLETUS_VALINTAKOEURI = "valintakokeentyyppi_1";
 
+    public static final String KIELIKOE_PREFIX = "kielikoe_";
+
     public enum Kielikoodi {
         SUOMI("Suomi", KIELI_FI_URI, "fi"), RUOTSI("Ruotsi", KIELI_SV_URI, "sv");
 
@@ -79,11 +81,14 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
             this.nimi = nimi;
             this.kieliUri = kieliUri;
             this.kieliarvo = kieliarvo;
+            this.kielikoetunniste = KIELIKOE_PREFIX + kieliarvo;
         }
 
         private String nimi;
         private String kieliUri;
         private String kieliarvo;
+        private String kielikoetunniste;
+
 
         public String getNimi() {
             return nimi;
@@ -95,6 +100,10 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
         public String getKieliarvo() {
             return kieliarvo;
+        }
+
+        public String getKielikoetunniste() {
+            return kielikoetunniste;
         }
     }
 
@@ -139,16 +148,15 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         }
 
         for (Kielikoodi k : Kielikoodi.values()) {
-            final String kielikoeNimi = k.nimi + " - Kielikoe";
+            final String kielikoeNimi = k.getNimi() + " - Kielikoe";
             ValintakoeDTO kielikoe = new ValintakoeDTO();
             kielikoe.setAktiivinen(false);
             kielikoe.setKuvaus(kielikoeNimi);
             kielikoe.setNimi(kielikoeNimi);
-            kielikoe.setTunniste(k.kieliUri);
+            kielikoe.setTunniste(k.getKielikoetunniste());
             kielikoe.setLaskentakaavaId(kielikokeidenLaskentakaavat.get(k).getId());
 
             valintakoeService.lisaaValintakoeValinnanVaiheelle(kielikoevalinnanVaihe.getOid(), kielikoe);
-
         }
 
         Valintaryhma peruskouluVr = new Valintaryhma();
@@ -213,13 +221,26 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         Laskentakaava[] pkTasasijakriteerit = new Laskentakaava[]{hakutoivejarjestystasapistekaava, pk_yleinenkoulumenestyspisteytysmalli, pk_painotettavatKeskiarvotLaskentakaava};
         Laskentakaava[] lkTasasijakriteerit = new Laskentakaava[]{hakutoivejarjestystasapistekaava, lk_yleinenkoulumenestyspisteytysmalli};
 
-        lisaaHakukohdekoodit(peruskouluVr, lukioVr, toisenAsteenPeruskoulupohjainenPeruskaava, toisenAsteenYlioppilaspohjainenPeruskaava, pkTasasijakriteerit, lkTasasijakriteerit);
+        Map<Kielikoodi, Laskentakaava> toisenAsteenPeruskoulupohjaisetPeruskaavat = new HashMap<Kielikoodi, Laskentakaava>();
+        Map<Kielikoodi, Laskentakaava> toisenAsteenYlioppilaspohjaisetPeruskaavat = new HashMap<Kielikoodi, Laskentakaava>();
+        for (Kielikoodi k : Kielikoodi.values()) {
+            Laskentakaava kielikoekaava = kielikokeidenLaskentakaavat.get(k);
+            toisenAsteenPeruskoulupohjaisetPeruskaavat.put(k, asetaValintaryhmaJaTallennaKantaan(
+                    PkJaYoPohjaiset.luoYhdistettyPeruskaavaJaKielikoekaava(
+                            toisenAsteenPeruskoulupohjainenPeruskaava, kielikoekaava), peruskouluVr));
+
+            toisenAsteenYlioppilaspohjaisetPeruskaavat.put(k, asetaValintaryhmaJaTallennaKantaan(
+                    PkJaYoPohjaiset.luoYhdistettyPeruskaavaJaKielikoekaava(
+                            toisenAsteenYlioppilaspohjainenPeruskaava, kielikoekaava), peruskouluVr));
+        }
+
+        lisaaHakukohdekoodit(peruskouluVr, lukioVr, toisenAsteenPeruskoulupohjaisetPeruskaavat, toisenAsteenYlioppilaspohjaisetPeruskaavat, pkTasasijakriteerit, lkTasasijakriteerit);
     }
 
 
     private void lisaaHakukohdekoodit(Valintaryhma peruskouluVr, Valintaryhma lukioVr,
-                                      Laskentakaava toisenAsteenPeruskoulupohjainenPeruskaava,
-                                      Laskentakaava toisenAsteenYlioppilaspohjainenPeruskaava,
+                                      Map<Kielikoodi, Laskentakaava> pkPeruskaavat,
+                                      Map<Kielikoodi, Laskentakaava> lkPeruskaavat,
                                       Laskentakaava[] pkTasasijakriteerit,
                                       Laskentakaava[] lkTasasijakriteerit) throws IOException {
         BufferedReader reader = null;
@@ -257,7 +278,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                 valintakoevaihe.setKuvaus("Kielikokeen pakollisuus ja pääsykoe");
                 valintakoevaihe = valinnanVaiheService.update(valintakoevaihe.getOid(), valintakoevaihe);
 
-                String valintakoetunniste = nimi + " - pääsykoe";
+                String valintakoetunniste = nimi + ", pääsykoe";
                 ValintakoeDTO valintakoe = new ValintakoeDTO();
                 valintakoe.setAktiivinen(false);
                 valintakoe.setKuvaus(valintakoetunniste);
@@ -288,27 +309,20 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
                 valintatapajonoService.lisaaValintatapajonoValinnanVaiheelle(valinnanVaihe.getOid(), jono, null);
 
-                String valintakoekaavaNimi = nimi + ", pääsykoe";
+
                 Laskentakaava valintakoekaava = asetaValintaryhmaJaTallennaKantaan(
-                        PkJaYoPohjaiset.luoValintakoekaava(valintakoekaavaNimi), valintaryhma);
+                        PkJaYoPohjaiset.luoValintakoekaava(valintakoetunniste), valintaryhma);
 
-
-                Laskentakaava peruskaava = null;
+                Map<Kielikoodi, Laskentakaava> peruskaavat = null;
                 Laskentakaava[] tasasijakriteerit = null;
 
                 if (nimi.contains(", pk")) {
-                    peruskaava = toisenAsteenPeruskoulupohjainenPeruskaava;
+                    peruskaavat = pkPeruskaavat;
                     tasasijakriteerit = pkTasasijakriteerit;
                 } else {
-                    peruskaava = toisenAsteenYlioppilaspohjainenPeruskaava;
+                    peruskaavat = lkPeruskaavat;
                     tasasijakriteerit = lkTasasijakriteerit;
                 }
-
-                Funktiokutsu funktiokutsu = GenericHelper.luoSumma(peruskaava, valintakoekaava);
-                Laskentakaava peruskaavaJaValintakoekaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(funktiokutsu,
-                        peruskaava.getNimi() + " + " + valintakoekaavaNimi);
-
-                peruskaavaJaValintakoekaava = asetaValintaryhmaJaTallennaKantaan(peruskaavaJaValintakoekaava, valintaryhma);
 
                 for (Kielikoodi k : Kielikoodi.values()) {
                     Opetuskielikoodi opetuskieli = new Opetuskielikoodi();
@@ -328,9 +342,13 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
                     List<Valintakoe> valintakokeet = valintakoeService.findValintakoeByValinnanVaihe(kielikoeValinnanvaihe.getOid());
 
+                    Laskentakaava peruskaava = peruskaavat.get(k);
+                    Laskentakaava peruskaavaJaValintakoekaava = asetaValintaryhmaJaTallennaKantaan(
+                            PkJaYoPohjaiset.luoYhdistettyPeruskaavaJaValintakoekaava(peruskaava, valintakoekaava), kielivalintaryhma);
+
                     boolean loydetty = false;
                     for (Valintakoe koe : valintakokeet) {
-                        if (koe.getTunniste().equals(k.getKieliUri())) {
+                        if (koe.getTunniste().equals(k.getKielikoetunniste())) {
                             ValintakoeDTO dto = new ValintakoeDTO();
                             dto.setKuvaus(koe.getKuvaus());
                             dto.setLaskentakaavaId(koe.getLaskentakaavaId());
