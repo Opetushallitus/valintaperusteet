@@ -231,7 +231,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
             toisenAsteenYlioppilaspohjaisetPeruskaavat.put(k, asetaValintaryhmaJaTallennaKantaan(
                     PkJaYoPohjaiset.luoYhdistettyPeruskaavaJaKielikoekaava(
-                            toisenAsteenYlioppilaspohjainenPeruskaava, kielikoekaava), peruskouluVr));
+                            toisenAsteenYlioppilaspohjainenPeruskaava, kielikoekaava), lukioVr));
         }
 
         lisaaHakukohdekoodit(peruskouluVr, lukioVr, toisenAsteenPeruskoulupohjaisetPeruskaavat, toisenAsteenYlioppilaspohjaisetPeruskaavat, pkTasasijakriteerit, lkTasasijakriteerit);

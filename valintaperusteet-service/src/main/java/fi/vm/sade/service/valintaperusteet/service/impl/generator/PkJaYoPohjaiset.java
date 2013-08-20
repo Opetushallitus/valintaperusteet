@@ -367,6 +367,6 @@ public class PkJaYoPohjaiset {
 
     public static Laskentakaava luoYhdistettyPeruskaavaJaValintakoekaava(Laskentakaava peruskaava, Laskentakaava valintakoekaava) {
         Funktiokutsu yhdistetty = GenericHelper.luoSumma(peruskaava, valintakoekaava);
-        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(yhdistetty, peruskaava + " + " + valintakoekaava.getNimi());
+        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(yhdistetty, peruskaava.getNimi() + " + " + valintakoekaava.getNimi());
     }
 }
