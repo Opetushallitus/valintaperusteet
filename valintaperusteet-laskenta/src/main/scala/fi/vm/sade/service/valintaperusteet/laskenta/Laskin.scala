@@ -302,6 +302,16 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
           (s => (Some(s.trim.equalsIgnoreCase(vertailtava.trim)), List(new Hyvaksyttavissatila))), oletusarvo)
         (tulos, tila, Historia("Hae merkkijono ja vertaa yhtasuuruus", tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
       }
+
+      case Hylkaa(f, oid) => {
+        val (tulos, tilat, h) = muodostaYksittainenTulos(f, b => b)
+
+        val tila = tulos.map(b => if (b) new Hylattytila("Hylätty hylkäämisfunktiolla", new HylkaaFunktionSuorittamaHylkays) else new Hyvaksyttavissatila)
+          .getOrElse(new Virhetila("Hylkäämisfunktion syöte on tyhjä. Hylkäystä ei voida tulkita.", new HylkaamistaEiVoidaTulkita))
+
+        val kaikkiTilat = tila :: tilat
+        (tulos, kaikkiTilat, Historia("Hylkää", tulos, kaikkiTilat, Some(List(h)), None))
+      }
     }
 
     val palautettavaTila = tilat.filter(_ match {

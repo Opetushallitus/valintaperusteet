@@ -279,6 +279,9 @@ object Laskenta {
     require(n > 0, "n must be greater than zero")
   }
 
+  case class Hylkaa(f: Totuusarvofunktio, oid: String = "")
+    extends Totuusarvofunktio with YksiParametrinenFunktio[Boolean]
+
   trait Esiprosessoiva extends Totuusarvofunktio {
     val tunniste: String
     val prosenttiosuus: BigDecimal

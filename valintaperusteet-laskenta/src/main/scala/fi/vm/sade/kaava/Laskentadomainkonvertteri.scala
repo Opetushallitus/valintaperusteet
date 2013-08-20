@@ -182,6 +182,9 @@ object Laskentadomainkonvertteri {
 
         HaeTotuusarvo(konvertteri, oletusarvo, valintaperusteviite, oid)
       }
+      case Funktionimi.HYLKAA => {
+        Hylkaa(muunnaTotuusarvofunktioksi(lasketutArgumentit(0)), oid)
+      }
       case Funktionimi.JA => Ja(lasketutArgumentit.map(muunnaTotuusarvofunktioksi(_)), oid)
       case Funktionimi.JOS => Jos(
         muunnaTotuusarvofunktioksi(lasketutArgumentit(0)),

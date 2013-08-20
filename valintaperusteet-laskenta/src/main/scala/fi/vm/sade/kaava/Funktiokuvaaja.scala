@@ -208,6 +208,12 @@ object Funktiokuvaaja {
       syoteparametrit = List(
         Syoteparametrikuvaus("n", Syoteparametrityyppi.KOKONAISLUKU))
     ),
+    Funktionimi.HYLKAA -> Funktiokuvaus(
+      tyyppi = Funktiotyyppi.TOTUUSARVOFUNKTIO,
+      funktioargumentit = List(
+        Funktioargumenttikuvaus("f", Funktiotyyppi.TOTUUSARVOFUNKTIO, Kardinaliteetti.YKSI)
+      )
+    ),
     Funktionimi.JA -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.TOTUUSARVOFUNKTIO,
       funktioargumentit = List(Funktioargumenttikuvaus("args", Funktiotyyppi.TOTUUSARVOFUNKTIO, Kardinaliteetti.N))
