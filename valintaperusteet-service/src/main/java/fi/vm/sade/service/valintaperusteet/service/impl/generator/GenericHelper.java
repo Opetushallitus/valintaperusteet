@@ -333,4 +333,11 @@ public class GenericHelper {
         f.getFunktioargumentit().addAll(luoFunktioargumentit(f1, f2));
         return f;
     }
+
+    public static Funktiokutsu luoHylkaa(FunktionArgumentti arg) {
+        Funktiokutsu f = new Funktiokutsu();
+        f.setFunktionimi(Funktionimi.HYLKAA);
+        f.getFunktioargumentit().addAll(luoFunktioargumentit(arg));
+        return f;
+    }
 }

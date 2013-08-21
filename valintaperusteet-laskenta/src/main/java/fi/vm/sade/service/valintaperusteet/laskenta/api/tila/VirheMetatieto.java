@@ -13,7 +13,8 @@ public abstract class VirheMetatieto {
         VALINTAPERUSTETTA_EI_VOIDA_TULKITA_LUKUARVOKSI(ValintaperustettaEiVoidaTulkitaLukuarvoksiVirhe.class),
         ARVOKONVERTOINTI_VIRHE(ArvokonvertointiVirhe.class),
         ARVOVALIKONVERTOINTI_VIRHE(ArvovalikonvertointiVirhe.class),
-        JAKO_NOLLALLA(JakoNollallaVirhe.class);
+        JAKO_NOLLALLA(JakoNollallaVirhe.class),
+        HYLKAAMISTA_EI_VOIDA_TULKITA(HylkaamistaEiVoidaTulkita.class);
 
         VirheMetatietotyyppi(Class<? extends VirheMetatieto> tyyppi) {
             this.tyyppi = tyyppi;

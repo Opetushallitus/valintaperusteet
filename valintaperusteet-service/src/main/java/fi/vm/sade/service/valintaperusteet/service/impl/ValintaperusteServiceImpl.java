@@ -85,11 +85,10 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
         }
 
         for (HakuparametritTyyppi param : hakuparametrit) {
-            List<ValinnanVaihe> valinnanVaiheList = new ArrayList<ValinnanVaihe>();
             HakukohdeViite hakukohde = hakukohdeService.readByOid(param.getHakukohdeOid());
             Integer jarjestysluku = param.getValinnanVaiheJarjestysluku();
 
-            valinnanVaiheList = valinnanVaiheService.findByHakukohde(param.getHakukohdeOid());
+            List<ValinnanVaihe> valinnanVaiheList = valinnanVaiheService.findByHakukohde(param.getHakukohdeOid());
 
             if (jarjestysluku != null) {
                 if (jarjestysluku < 0 || jarjestysluku >= valinnanVaiheList.size()) {

@@ -1791,4 +1791,45 @@ class LaskentaIntegraatioTest extends FunSuite {
     assertTulosTyhja(tulos)
     assertTilaVirhe(tila, VirheMetatietotyyppi.VALINTAPERUSTETTA_EI_VOIDA_TULKITA_LUKUARVOKSI)
   }
+
+  test("hylkaa, syote true") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HYLKAA,
+      funktioargumentit = List(totuusarvoTrue)
+    )
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assertTulosTyhja(tulos)
+    assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.HYLKAA_FUNKTION_SUORITTAMA_HYLKAYS)
+  }
+
+  test("hylkaa, syote false") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HYLKAA,
+      funktioargumentit = List(totuusarvoFalse)
+    )
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assertTulosTyhja(tulos)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("hylkaa, syote tyhja") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HYLKAA,
+      funktioargumentit = List(haeTotuusarvo)
+    )
+
+    val lasku1 = Laskentadomainkonvertteri.muodostaTotuusarvolasku(haeTotuusarvo)
+    val (tulos1, tila1) = Laskin.laske(hakukohde, tyhjaHakemus, lasku1)
+    assertTulosTyhja(tulos1)
+    assertTilaHyvaksyttavissa(tila1)
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assertTulosTyhja(tulos)
+    assertTilaVirhe(tila, VirheMetatietotyyppi.HYLKAAMISTA_EI_VOIDA_TULKITA)
+  }
 }

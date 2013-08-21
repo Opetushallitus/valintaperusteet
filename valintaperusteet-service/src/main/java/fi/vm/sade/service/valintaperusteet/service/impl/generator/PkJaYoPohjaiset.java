@@ -19,8 +19,6 @@ public class PkJaYoPohjaiset {
     public static final int HAKUTOIVEIDEN_LKM = 5;
     public static final String aidinkieli = "aidinkieli";
 
-    public static final String kielikoePrefix = "kielikoe_";
-
     public static final String yleinenKielitutkintoPrefix = "yleinen_kielitutkinto_";
     public static final String valtionhallinnonKielitutkintoPrefix = "valtionhallinnon_kielitutkinto_";
 
@@ -154,7 +152,7 @@ public class PkJaYoPohjaiset {
 
     public static Funktiokutsu luoKielikoeSuoritettuFunktiokutsu(LuoValintaperusteetServiceImpl.Kielikoodi k) {
         Funktiokutsu kielikoeSuoritettu = GenericHelper.luoHaeTotuusarvo(GenericHelper.luoValintaperusteViite(
-                kielikoePrefix + k.getKieliarvo(), false, Valintaperustelahde.HAETTAVA_ARVO), false);
+                k.getKielikoetunniste(), false, Valintaperustelahde.SYOTETTAVA_ARVO), false);
 
         return kielikoeSuoritettu;
     }
@@ -358,5 +356,17 @@ public class PkJaYoPohjaiset {
                         Valintaperustelahde.HAETTAVA_ARVO), false);
 
         return GenericHelper.luoTai(yleinenKielitutkintoSuoritettu, valtionhallinnonKielitutkintoSuoritettu);
+    }
+
+    public static Laskentakaava luoYhdistettyPeruskaavaJaKielikoekaava(Laskentakaava peruskaava, Laskentakaava kielikoekaava) {
+        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
+                GenericHelper.luoSumma(peruskaava,
+                        GenericHelper.luoHylkaa(kielikoekaava)),
+                peruskaava.getNimi() + " + " + kielikoekaava.getNimi());
+    }
+
+    public static Laskentakaava luoYhdistettyPeruskaavaJaValintakoekaava(Laskentakaava peruskaava, Laskentakaava valintakoekaava) {
+        Funktiokutsu yhdistetty = GenericHelper.luoSumma(peruskaava, valintakoekaava);
+        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(yhdistetty, peruskaava.getNimi() + " + " + valintakoekaava.getNimi());
     }
 }
