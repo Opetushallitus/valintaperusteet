@@ -13,9 +13,7 @@ import org.springframework.stereotype.Component;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.*;
 
@@ -270,7 +268,9 @@ public class ValintaryhmaResource {
             return Response.status(Response.Status.CREATED).entity(valintakoekoodi).build();
         } catch (Exception e) {
             LOGGER.error("Error inserting valintakoekoodi.", e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+            Map error = new HashMap();
+            error.put("message", e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error).build();
         }
     }
 }
