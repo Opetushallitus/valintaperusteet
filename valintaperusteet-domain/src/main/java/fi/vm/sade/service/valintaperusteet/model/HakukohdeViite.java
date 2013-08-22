@@ -27,6 +27,10 @@ public class HakukohdeViite extends BaseEntity {
     @Column(name = "oid", unique = true, nullable = false)
     private String oid;
 
+    @JsonView(JsonViews.Basic.class)
+    @Column(name = "tarjoajaOid")
+    private String tarjoajaOid;
+
     @Column(name = "nimi")
     @JsonView(JsonViews.Basic.class)
     private String nimi;
@@ -62,7 +66,6 @@ public class HakukohdeViite extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "valintakoekoodi_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME))
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Valintakoekoodi> valintakokeet = new ArrayList<Valintakoekoodi>();
-
 
     public String getHakuoid() {
         return hakuoid;
@@ -154,5 +157,13 @@ public class HakukohdeViite extends BaseEntity {
 
     public void setValintakokeet(List<Valintakoekoodi> valintakokeet) {
         this.valintakokeet = valintakokeet;
+    }
+
+    public String getTarjoajaOid() {
+        return tarjoajaOid;
+    }
+
+    public void setTarjoajaOid(String tarjoajaOid) {
+        this.tarjoajaOid = tarjoajaOid;
     }
 }

@@ -100,7 +100,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
                 }
 
                 ValintaperusteetTyyppi valinnanVaihe = convertValintaperusteet(valinnanVaiheList.get(jarjestysluku),
-                        param.getHakukohdeOid(), hakukohde.getHakuoid(), jarjestysluku);
+                        param.getHakukohdeOid(), hakukohde.getHakuoid(), hakukohde.getTarjoajaOid(), jarjestysluku);
                 if (valinnanVaihe != null) {
                     list.add(valinnanVaihe);
                 }
@@ -109,7 +109,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
                 for (int i = 0; i < valinnanVaiheList.size(); i++) {
                     if (valinnanVaiheList.get(i).getAktiivinen()) {
                         ValintaperusteetTyyppi valinnanVaihe = convertValintaperusteet(valinnanVaiheList.get(i),
-                                param.getHakukohdeOid(), hakukohde.getHakuoid(), i);
+                                param.getHakukohdeOid(), hakukohde.getHakuoid(), hakukohde.getTarjoajaOid(), i);
                         if (valinnanVaihe != null) {
                             list.add(valinnanVaihe);
                         }
@@ -122,11 +122,12 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
     }
 
     private ValintaperusteetTyyppi convertValintaperusteet(ValinnanVaihe valinnanVaihe, String hakukohdeOid,
-                                                           String hakuOid, int valinnanvaiheJarjestysluku) {
+                                                           String hakuOid, String tarjoajaOid, int valinnanvaiheJarjestysluku) {
 
         ValintaperusteetTyyppi valintaperusteetTyyppi = new ValintaperusteetTyyppi();
         valintaperusteetTyyppi.setHakukohdeOid(hakukohdeOid);
         valintaperusteetTyyppi.setHakuOid(hakuOid);
+        valintaperusteetTyyppi.setTarjoajaOid(tarjoajaOid);
 
         ValinnanVaiheTyyppi vv = null;
         switch (valinnanVaihe.getValinnanVaiheTyyppi()) {
