@@ -271,7 +271,7 @@ class LaskentaTest extends FunSuite {
       HaeLukuarvo(None, None, SyotettavaValintaperuste("valintakoe", true, "valintakoe-OSALLISTUMINEN")))
 
     assertTulosTyhja(tulos)
-    assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.SYOTETTAVA_ARVO_MERKITSEMATTA)
+    assertTilaVirhe(tila, VirheMetatietotyyppi.SYOTETTAVA_ARVO_MERKITSEMATTA)
   }
 
   test("Syotettava valintaperuste, osallistumistieto EI_OSALLISTUNUT") {

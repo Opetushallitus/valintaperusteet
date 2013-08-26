@@ -11,7 +11,6 @@ public abstract class HylattyMetatieto {
         ARVOVALIKONVERTTERIHYLKAYS(Arvovalikonvertterihylkays.class),
         PAKOLLINEN_VALINTAPERUSTE_HYLKAYS(PakollinenValintaperusteHylkays.class),
         EI_OSALLISTUNUT_HYLKAYS(EiOsallistunutHylkays.class),
-        SYOTETTAVA_ARVO_MERKITSEMATTA(SyotettavaArvoMerkitsemattaHylkays.class),
         HYLKAA_FUNKTION_SUORITTAMA_HYLKAYS(HylkaaFunktionSuorittamaHylkays.class);
 
         private Class<? extends HylattyMetatieto> tyyppi;

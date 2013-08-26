@@ -159,8 +159,8 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
           (None, List(osallistumistila, new Hylattytila("Pakollisen syötettävän kentän arvo on '" + osallistuminen.name() + "' (tunniste "
             + tunniste + ")", new EiOsallistunutHylkays(tunniste))))
         } else if (pakollinen && Osallistuminen.MERKITSEMATTA == osallistuminen) {
-          (None, List(osallistumistila, new Hylattytila("Pakollisen syötettävän kentän arvo on merkitsemättä (tunniste "
-            + tunniste + ")", new SyotettavaArvoMerkitsemattaHylkays(tunniste))))
+          (None, List(osallistumistila, new Virhetila("Pakollisen syötettävän kentän arvo on merkitsemättä (tunniste "
+            + tunniste + ")", new SyotettavaArvoMerkitsemattaVirhe(tunniste))))
         } else {
           val (arvo, tilat) = haeValintaperusteenArvoHakemukselta
           (arvo, osallistumistila :: tilat)
