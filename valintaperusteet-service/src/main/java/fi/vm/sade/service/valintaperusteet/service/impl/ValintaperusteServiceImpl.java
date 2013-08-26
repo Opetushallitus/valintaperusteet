@@ -9,6 +9,7 @@ import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.schema.*;
 import fi.vm.sade.service.valintaperusteet.schema.ValinnanVaiheTyyppi;
 import fi.vm.sade.service.valintaperusteet.service.*;
+import fi.vm.sade.service.valintaperusteet.service.exception.HakukohdeViiteEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakuparametritOnTyhjaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheEpaaktiivinenException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheJarjestyslukuOutOfBoundsException;
@@ -85,7 +86,14 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
         }
 
         for (HakuparametritTyyppi param : hakuparametrit) {
-            HakukohdeViite hakukohde = hakukohdeService.readByOid(param.getHakukohdeOid());
+            HakukohdeViite hakukohde = null;
+            try {
+                hakukohde = hakukohdeService.readByOid(param.getHakukohdeOid());
+            } catch (HakukohdeViiteEiOleOlemassaException e) {
+                LOG.warn("Hakukohdetta {} ei ole olemassa. Jätetään hakukohde huomioimatta.", param.getHakukohdeOid());
+                continue;
+            }
+
             Integer jarjestysluku = param.getValinnanVaiheJarjestysluku();
 
             List<ValinnanVaihe> valinnanVaiheList = valinnanVaiheService.findByHakukohde(param.getHakukohdeOid());
