@@ -100,7 +100,8 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
 
             if (jarjestysluku != null) {
                 if (jarjestysluku < 0 || jarjestysluku >= valinnanVaiheList.size()) {
-                    throw new ValinnanVaiheJarjestyslukuOutOfBoundsException("Jarjestysluku " + jarjestysluku + " on epäkelpo.");
+                    throw new ValinnanVaiheJarjestyslukuOutOfBoundsException("Hakukohteen " + param.getHakukohdeOid()
+                            + " valinnan vaiheen jarjestysluku " + jarjestysluku + " on epäkelpo.");
                 } else if (!valinnanVaiheList.get(jarjestysluku).getAktiivinen()) {
                     throw new ValinnanVaiheEpaaktiivinenException("Valinnan vaihe (oid "
                             + valinnanVaiheList.get(jarjestysluku).getOid() + ", järjestysluku "
