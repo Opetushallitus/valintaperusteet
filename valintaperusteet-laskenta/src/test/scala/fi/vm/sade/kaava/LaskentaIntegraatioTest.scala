@@ -1635,7 +1635,7 @@ class LaskentaIntegraatioTest extends FunSuite {
 
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
     assertTulosTyhja(tulos)
-    assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.SYOTETTAVA_ARVO_MERKITSEMATTA)
+    assertTilaVirhe(tila, VirheMetatietotyyppi.SYOTETTAVA_ARVO_MERKITSEMATTA)
   }
 
   test("syotettava arvo, osallistuminen false") {

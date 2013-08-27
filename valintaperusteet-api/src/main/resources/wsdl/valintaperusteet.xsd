@@ -17,6 +17,7 @@
             <xs:element name="valinnanVaihe" type="tns:ValinnanVaiheTyyppi" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
         <xs:attribute name="hakuOid" type="xs:string" use="required"/>
+        <xs:attribute name="tarjoajaOid" type="xs:string" use="required"/>
         <xs:attribute name="hakukohdeOid" type="xs:string" use="required"/>
     </xs:complexType>
 
@@ -187,6 +188,7 @@
             <xs:element name="hakuVuosi" type="xs:string" minOccurs="1" maxOccurs="1"/>
             <xs:element name="hakuKausi" type="tns:MonikielinenTekstiTyyppi" minOccurs="1" maxOccurs="unbounded"/>
             <xs:element name="hakuOid" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="tarjoajaOid" type="xs:string" minOccurs="1" maxOccurs="1"/>
             <xs:element name="hakukohdeNimi" type="tns:MonikielinenTekstiTyyppi" minOccurs="1" maxOccurs="unbounded"/>
             <xs:element name="tarjoajaNimi" type="tns:MonikielinenTekstiTyyppi" minOccurs="1" maxOccurs="unbounded"/>
             <xs:element name="hakukohteenKoulutusaste" type="xs:string" minOccurs="1" maxOccurs="1"/>

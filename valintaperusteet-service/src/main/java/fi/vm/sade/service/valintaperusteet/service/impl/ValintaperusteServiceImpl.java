@@ -9,6 +9,7 @@ import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.schema.*;
 import fi.vm.sade.service.valintaperusteet.schema.ValinnanVaiheTyyppi;
 import fi.vm.sade.service.valintaperusteet.service.*;
+import fi.vm.sade.service.valintaperusteet.service.exception.HakukohdeViiteEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakuparametritOnTyhjaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheEpaaktiivinenException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheJarjestyslukuOutOfBoundsException;
@@ -85,14 +86,22 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
         }
 
         for (HakuparametritTyyppi param : hakuparametrit) {
-            HakukohdeViite hakukohde = hakukohdeService.readByOid(param.getHakukohdeOid());
+            HakukohdeViite hakukohde = null;
+            try {
+                hakukohde = hakukohdeService.readByOid(param.getHakukohdeOid());
+            } catch (HakukohdeViiteEiOleOlemassaException e) {
+                LOG.warn("Hakukohdetta {} ei ole olemassa. Jätetään hakukohde huomioimatta.", param.getHakukohdeOid());
+                continue;
+            }
+
             Integer jarjestysluku = param.getValinnanVaiheJarjestysluku();
 
             List<ValinnanVaihe> valinnanVaiheList = valinnanVaiheService.findByHakukohde(param.getHakukohdeOid());
 
             if (jarjestysluku != null) {
                 if (jarjestysluku < 0 || jarjestysluku >= valinnanVaiheList.size()) {
-                    throw new ValinnanVaiheJarjestyslukuOutOfBoundsException("Jarjestysluku " + jarjestysluku + " on epäkelpo.");
+                    throw new ValinnanVaiheJarjestyslukuOutOfBoundsException("Hakukohteen " + param.getHakukohdeOid()
+                            + " valinnan vaiheen jarjestysluku " + jarjestysluku + " on epäkelpo.");
                 } else if (!valinnanVaiheList.get(jarjestysluku).getAktiivinen()) {
                     throw new ValinnanVaiheEpaaktiivinenException("Valinnan vaihe (oid "
                             + valinnanVaiheList.get(jarjestysluku).getOid() + ", järjestysluku "
@@ -100,7 +109,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
                 }
 
                 ValintaperusteetTyyppi valinnanVaihe = convertValintaperusteet(valinnanVaiheList.get(jarjestysluku),
-                        param.getHakukohdeOid(), hakukohde.getHakuoid(), jarjestysluku);
+                        param.getHakukohdeOid(), hakukohde.getHakuoid(), hakukohde.getTarjoajaOid(), jarjestysluku);
                 if (valinnanVaihe != null) {
                     list.add(valinnanVaihe);
                 }
@@ -109,7 +118,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
                 for (int i = 0; i < valinnanVaiheList.size(); i++) {
                     if (valinnanVaiheList.get(i).getAktiivinen()) {
                         ValintaperusteetTyyppi valinnanVaihe = convertValintaperusteet(valinnanVaiheList.get(i),
-                                param.getHakukohdeOid(), hakukohde.getHakuoid(), i);
+                                param.getHakukohdeOid(), hakukohde.getHakuoid(), hakukohde.getTarjoajaOid(), i);
                         if (valinnanVaihe != null) {
                             list.add(valinnanVaihe);
                         }
@@ -122,11 +131,12 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
     }
 
     private ValintaperusteetTyyppi convertValintaperusteet(ValinnanVaihe valinnanVaihe, String hakukohdeOid,
-                                                           String hakuOid, int valinnanvaiheJarjestysluku) {
+                                                           String hakuOid, String tarjoajaOid, int valinnanvaiheJarjestysluku) {
 
         ValintaperusteetTyyppi valintaperusteetTyyppi = new ValintaperusteetTyyppi();
         valintaperusteetTyyppi.setHakukohdeOid(hakukohdeOid);
         valintaperusteetTyyppi.setHakuOid(hakuOid);
+        valintaperusteetTyyppi.setTarjoajaOid(tarjoajaOid);
 
         ValinnanVaiheTyyppi vv = null;
         switch (valinnanVaihe.getValinnanVaiheTyyppi()) {

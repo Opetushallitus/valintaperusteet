@@ -142,6 +142,7 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
         to.setNimi(generoiHakukohdeNimi(from));
         to.setHakuoid(from.getHakuOid());
         to.setOid(from.getHakukohdeOid());
+        to.setTarjoajaOid(from.getTarjoajaOid());
     }
 
     public String sanitizeKoodiUri(String uri) {
@@ -291,7 +292,7 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
                 LOG.info("Hakukohde on oikeassa valintaryhmässä. Synkronoidaan hakukohteen nimi ja koodi.");
                 // Synkataan nimi ja koodi
                 hakukohde.setNimi(generoiHakukohdeNimi(importData));
-
+                hakukohde.setTarjoajaOid(importData.getTarjoajaOid());
                 if (hakukohde.getManuaalisestiSiirretty() == null) {
                     hakukohde.setManuaalisestiSiirretty(false);
                 }

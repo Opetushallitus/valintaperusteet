@@ -175,4 +175,12 @@ public class ValintaperusteServiceTest {
         assertEquals("108", vps.get(0).getValinnanVaihe().getValinnanVaiheOid());
         assertEquals("110", vps.get(1).getValinnanVaihe().getValinnanVaiheOid());
     }
+
+    @Test
+    public void testHakukohdettaEiOleOlemassa() {
+        List<HakuparametritTyyppi> params = new ArrayList<HakuparametritTyyppi>();
+        params.add(getHakuparametritTyyppi("ei-ole-olemassa", 1));
+
+        assertEquals(0, valintaperusteService.haeValintaperusteet(params).size());
+    }
 }
