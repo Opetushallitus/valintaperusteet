@@ -17,6 +17,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "hakukohde_viite")
+@Cacheable(true)
 public class HakukohdeViite extends BaseEntity {
 
     @Column(name = "hakuoid", nullable = false)

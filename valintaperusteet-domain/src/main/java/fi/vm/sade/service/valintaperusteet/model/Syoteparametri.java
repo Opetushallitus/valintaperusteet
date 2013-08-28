@@ -12,6 +12,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name="syoteparametri")
+@Cacheable(true)
 public class Syoteparametri extends BaseEntity {
 
 

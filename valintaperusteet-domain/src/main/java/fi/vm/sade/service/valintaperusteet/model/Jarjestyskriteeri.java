@@ -12,6 +12,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "jarjestyskriteeri")
+@Cacheable(true)
 public class Jarjestyskriteeri extends BaseEntity implements LinkitettavaJaKopioitava<Jarjestyskriteeri, Set<Jarjestyskriteeri>> {
 
     /**

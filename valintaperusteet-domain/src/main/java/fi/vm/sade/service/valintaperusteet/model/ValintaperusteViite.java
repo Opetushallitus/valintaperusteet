@@ -8,6 +8,7 @@ import javax.persistence.*;
 
 @Table(name = "valintaperuste_viite")
 @Entity
+@Cacheable(true)
 public class ValintaperusteViite extends BaseEntity {
 
     /**

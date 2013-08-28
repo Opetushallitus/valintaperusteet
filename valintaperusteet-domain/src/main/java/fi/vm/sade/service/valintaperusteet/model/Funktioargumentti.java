@@ -13,6 +13,7 @@ import javax.validation.constraints.Min;
  */
 @Entity
 @Table(name = "funktioargumentti")
+@Cacheable(true)
 public class Funktioargumentti extends BaseEntity {
 
     @JoinColumn(name = "funktiokutsuparent_id", nullable = false)
