@@ -6,17 +6,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 import org.codehaus.jackson.map.annotate.JsonView;
 
@@ -24,6 +14,7 @@ import fi.vm.sade.generic.model.BaseEntity;
 
 @Entity
 @Table(name = "funktiokutsu")
+@Cacheable(true)
 public class Funktiokutsu extends BaseEntity implements FunktionArgumentti {
 
     /**

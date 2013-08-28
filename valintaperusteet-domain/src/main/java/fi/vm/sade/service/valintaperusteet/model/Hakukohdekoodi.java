@@ -11,6 +11,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "hakukohdekoodi")
+@Cacheable(true)
 public class Hakukohdekoodi extends Koodi {
 
     @ManyToMany(mappedBy = "hakukohdekoodit")

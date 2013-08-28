@@ -2,6 +2,7 @@ package fi.vm.sade.service.valintaperusteet.model;
 
 import java.math.BigDecimal;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -13,6 +14,7 @@ import org.codehaus.jackson.map.annotate.JsonView;
  */
 @Entity
 @Table(name = "arvovalikonvertteriparametri")
+@Cacheable(true)
 public class Arvovalikonvertteriparametri extends Konvertteriparametri implements
         Comparable<Arvovalikonvertteriparametri> {
 

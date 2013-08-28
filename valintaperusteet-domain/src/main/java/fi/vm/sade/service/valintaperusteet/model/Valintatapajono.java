@@ -12,6 +12,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "valintatapajono")
+@Cacheable(true)
 public class Valintatapajono extends BaseEntity implements LinkitettavaJaKopioitava<Valintatapajono, Set<Valintatapajono>> {
 
     /**

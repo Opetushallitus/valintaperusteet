@@ -14,6 +14,7 @@ import java.util.Set;
 @Entity
 @Table(name = "valintaryhma")
 @XmlRootElement
+@Cacheable(true)
 public class Valintaryhma extends BaseEntity {
 
     private static final long serialVersionUID = 1L;

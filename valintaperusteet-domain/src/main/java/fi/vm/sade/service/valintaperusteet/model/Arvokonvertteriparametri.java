@@ -2,6 +2,7 @@ package fi.vm.sade.service.valintaperusteet.model;
 
 import org.codehaus.jackson.map.annotate.JsonView;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -13,6 +14,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "arvokonvertteriparametri")
+@Cacheable(true)
 public class Arvokonvertteriparametri extends Konvertteriparametri {
     @JsonView(JsonViews.Basic.class)
     @Column(name = "arvo")

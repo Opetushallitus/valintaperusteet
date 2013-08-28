@@ -14,6 +14,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name="laskentakaava")
+@Cacheable(true)
 public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
     @JsonView({JsonViews.Basic.class, JsonViews.Laskentakaava.class})
     @Column(name = "on_luonnos", nullable = false)

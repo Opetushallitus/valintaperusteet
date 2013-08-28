@@ -15,6 +15,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "valintakoe")
+@Cacheable(true)
 public class Valintakoe extends BaseEntity implements Kopioitava<Valintakoe, Set<Valintakoe>> {
 
     @JsonView(JsonViews.Basic.class)

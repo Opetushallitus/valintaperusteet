@@ -10,6 +10,7 @@ import org.codehaus.jackson.map.annotate.JsonView;
 
 @Entity
 @Table(name = "hakijaryhma")
+@Cacheable(true)
 public class Hakijaryhma extends BaseEntity {
 
     /**
