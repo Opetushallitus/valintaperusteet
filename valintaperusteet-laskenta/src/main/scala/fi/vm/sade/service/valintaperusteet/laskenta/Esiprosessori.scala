@@ -57,7 +57,7 @@ object Esiprosessori {
           if (ensisijaisistaHakijoistaErilaisetTunnisteet.toSet.size > 2) {
             LOG.error("Liikaa vaihtoehtoja tunnisteelle, {}: {}", Array[Object](tunniste, ensisijaisistaHakijoistaErilaisetTunnisteet.toSet));
           }
-          val omaTunniste = prosessoituHakemus.kentat.getOrElse(tunniste, null);
+          val omaTunniste = prosessoituHakemus.kentat.map(h => h._1.toLowerCase() -> h._2).getOrElse(tunniste, null);
           if (omaTunniste == null) {
             LOG.error("Hakemuksella {}: Ei ole {}", Array[Object](prosessoituHakemus.oid, tunniste));
             new Hakemus(prosessoituHakemus.oid, prosessoituHakemus.hakutoiveet, prosessoituHakemus.kentat + (avain -> false.toString));
