@@ -52,19 +52,24 @@ object Esiprosessori {
           val ensisijaisistaHakijoistaErilaisetTunnisteet = hakemukset.filter(h => h.onkoHakutoivePrioriteetilla(hakukohde, 1)).map(h => h.kentat.get(f.tunniste).getOrElse(null))
 
           if (ensisijaisistaHakijoistaErilaisetTunnisteet.toSet.size > 2) {
-            LOG.error("Hakemukselle {}: {} on liikaa! {}", Array[Object](prosessoituHakemus.oid, f.tunniste, ensisijaisistaHakijoistaErilaisetTunnisteet.toSet));
+            LOG.error("Liikaa vaihtoehtoja tunnisteelle, {}: {}", Array[Object](f.tunniste, ensisijaisistaHakijoistaErilaisetTunnisteet.toSet));
           }
           val omaTunniste = prosessoituHakemus.kentat.getOrElse(f.tunniste, null);
-          val samatArvotLkm: Int = ensisijaisistaHakijoistaErilaisetTunnisteet.count(_.equals(omaTunniste))
+          if (omaTunniste == null) {
+            LOG.error("Hakemuksella {}: Ei ole {}", Array[Object](prosessoituHakemus.oid, f.tunniste));
+            new Hakemus(prosessoituHakemus.oid, prosessoituHakemus.hakutoiveet, prosessoituHakemus.kentat + (avain -> false.toString));
+          } else {
+            val samatArvotLkm: Int = ensisijaisistaHakijoistaErilaisetTunnisteet.count(omaTunniste.equals(_))
 
-          val vertailuarvo = BigDecimal(samatArvotLkm).underlying.divide(BigDecimal(ensisijaisetHakijat).underlying, 4, RoundingMode.HALF_UP) //hakemukset.size()
-          val arvo = (vertailuarvo.compareTo(f.prosenttiosuus.underlying.divide(BigDecimal("100.0").underlying, 4, RoundingMode.HALF_UP)) != 1).toString
+            val vertailuarvo = BigDecimal(samatArvotLkm).underlying.divide(BigDecimal(ensisijaisetHakijat).underlying, 4, RoundingMode.HALF_UP) //hakemukset.size()
+            val arvo = (vertailuarvo.compareTo(f.prosenttiosuus.underlying.divide(BigDecimal("100.0").underlying, 4, RoundingMode.HALF_UP)) != 1).toString
+            LOG.debug("Samoja arvoja on {} ja vertailuarvo on {} ja arvo on {}", Array[Object](samatArvotLkm.toString(), vertailuarvo, arvo));
+            LOG.debug("Hakemus {} {}bonuspisteet {}", Array[Object](prosessoituHakemus.oid, f.tunniste, arvo))
+            new Hakemus(prosessoituHakemus.oid,
+              prosessoituHakemus.hakutoiveet,
+              prosessoituHakemus.kentat + (avain -> arvo))
+          }
 
-          LOG.debug("Samoja arvoja on {} ja vertailuarvo on {} ja arvo on {}", Array[Object](samatArvotLkm.toString(), vertailuarvo, arvo));
-          LOG.debug("Hakemus {} {}bonuspisteet {}", Array[Object](prosessoituHakemus.oid, f.tunniste, arvo))
-          new Hakemus(prosessoituHakemus.oid,
-            prosessoituHakemus.hakutoiveet,
-            prosessoituHakemus.kentat + (avain -> arvo))
         }
       }
 

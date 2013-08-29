@@ -1,9 +1,9 @@
 package fi.vm.sade.service.valintaperusteet.laskenta
 
-import java.math.{BigDecimal => BigDec}
+import java.math.{ BigDecimal => BigDec }
 import scala.math.BigDecimal._
 
-import fi.vm.sade.service.valintaperusteet.laskenta.api.{Osallistuminen, Hakemus}
+import fi.vm.sade.service.valintaperusteet.laskenta.api.{ Osallistuminen, Hakemus }
 import org.scalatest._
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta._
 import scala.collection.JavaConversions._
@@ -164,7 +164,10 @@ class LaskentaTest extends FunSuite {
         Map("sukupuoli" -> "mies")),
       Hakemus("hakemusoid4",
         List("hakutoiveoid1", "hakutoiveoid2", "hakutoiveoid3"),
-        Map("sukupuoli" -> "nainen")))
+        Map("sukupuoli" -> "nainen")),
+      Hakemus("hakemusoid5",
+        List("hakutoiveoid1", "hakutoiveoid2", "hakutoiveoid3"),
+        Map()))
 
     val hakukohde = "hakutoiveoid1"
 
@@ -180,6 +183,7 @@ class LaskentaTest extends FunSuite {
     assert(!check(prosessoidutHakemukset(1)))
     assert(!check(prosessoidutHakemukset(2)))
     assert(check(prosessoidutHakemukset(3)))
+    assert(!check(prosessoidutHakemukset(4)))
   }
 
   test("Konvertoilukuarvovalilukuarvoksi aarirajat") {
@@ -194,24 +198,19 @@ class LaskentaTest extends FunSuite {
               max = BigDecimal("5.0"),
               palautaHaettuArvo = false,
               paluuarvo = BigDecimal("1.0"),
-              hylkaysperuste = false
-            ),
+              hylkaysperuste = false),
             Lukuarvovalikonversio(
               min = BigDecimal("5.0"),
               max = BigDecimal("8.0"),
               palautaHaettuArvo = false,
               paluuarvo = BigDecimal("2.0"),
-              hylkaysperuste = false
-            ),
+              hylkaysperuste = false),
             Lukuarvovalikonversio(
               min = BigDecimal("8.0"),
               max = BigDecimal("10.0"),
               palautaHaettuArvo = false,
               paluuarvo = BigDecimal("3.0"),
-              hylkaysperuste = false
-            )
-          )
-        ))
+              hylkaysperuste = false))))
     }
 
     val konvertoiNolla = luoFunktio(Lukuarvo(BigDecimal("0.0")))
@@ -240,24 +239,19 @@ class LaskentaTest extends FunSuite {
             max = BigDecimal("5.0"),
             palautaHaettuArvo = false,
             paluuarvo = BigDecimal("1.0"),
-            hylkaysperuste = false
-          ),
+            hylkaysperuste = false),
           Lukuarvovalikonversio(
             min = BigDecimal("5.0"),
             max = BigDecimal("8.0"),
             palautaHaettuArvo = false,
             paluuarvo = BigDecimal("2.0"),
-            hylkaysperuste = false
-          ),
+            hylkaysperuste = false),
           Lukuarvovalikonversio(
             min = BigDecimal("8.0"),
             max = BigDecimal("10.0"),
             palautaHaettuArvo = false,
             paluuarvo = BigDecimal("3.0"),
-            hylkaysperuste = false
-          )
-        )
-      ))
+            hylkaysperuste = false))))
 
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, f)
     assertTulosTyhja(tulos)
@@ -313,33 +307,26 @@ class LaskentaTest extends FunSuite {
       oletusarvo = Some(BigDecimal("10.0")),
       valintaperusteviite = Valintaperusteviite(
         tunniste = "hylkaavaLukuarvo",
-        pakollinen = true
-      )
-    )
+        pakollinen = true))
 
     val hyvaksyttavissaHaeLukuarvo = new HaeLukuarvo(
       konvertteri = None,
       oletusarvo = None,
       valintaperusteviite = Valintaperusteviite(
         tunniste = "hyvaksyttavissaLukuarvo",
-        pakollinen = true
-      )
-    )
+        pakollinen = true))
 
     val epavalidiLukuarvo = new HaeLukuarvo(
       konvertteri = None,
       oletusarvo = Some(BigDecimal("1000.0")),
       valintaperusteviite = Valintaperusteviite(
         tunniste = "epavalidiLukuarvo",
-        pakollinen = true
-      )
-    )
+        pakollinen = true))
 
     val hakemus = Hakemus("", Nil,
       Map(
         "hyvaksyttavissaLukuarvo" -> "100.0",
-        "epavalidiLukuarvo" -> "satatuhatta")
-    )
+        "epavalidiLukuarvo" -> "satatuhatta"))
 
     val (tulos1, tila1) = Laskin.laske(hakukohde, hakemus, hylkaavaHaeLukuarvo)
     assert(BigDecimal(tulos1.get) == BigDecimal("10.0"))
