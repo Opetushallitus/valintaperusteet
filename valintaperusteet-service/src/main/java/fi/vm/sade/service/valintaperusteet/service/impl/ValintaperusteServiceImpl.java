@@ -84,7 +84,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
         if (hakuparametrit == null) {
             throw new HakuparametritOnTyhjaException("Hakuparametrit oli tyhjä.");
         }
-
+        Long start = System.currentTimeMillis();
         for (HakuparametritTyyppi param : hakuparametrit) {
             HakukohdeViite hakukohde = null;
             try {
@@ -96,8 +96,12 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
 
             Integer jarjestysluku = param.getValinnanVaiheJarjestysluku();
 
+            Long startFind = System.currentTimeMillis();
             List<ValinnanVaihe> valinnanVaiheList = valinnanVaiheService.findByHakukohde(param.getHakukohdeOid());
-
+            if(LOG.isInfoEnabled()) {
+                LOG.info("findByHakukohde: " + (System.currentTimeMillis() - startFind));
+            }
+            Long startConvert = System.currentTimeMillis();
             if (jarjestysluku != null) {
                 if (jarjestysluku < 0 || jarjestysluku >= valinnanVaiheList.size()) {
                     throw new ValinnanVaiheJarjestyslukuOutOfBoundsException("Hakukohteen " + param.getHakukohdeOid()
@@ -125,8 +129,13 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
                     }
                 }
             }
+            if(LOG.isInfoEnabled()) {
+                LOG.info("Convert: " + (System.currentTimeMillis() - startConvert));
+            }
         }
-
+        if(LOG.isInfoEnabled()) {
+            LOG.info("haeValintaperusteet: " + (System.currentTimeMillis() - start));
+        }
         return list;
     }
 
@@ -237,8 +246,14 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
             JarjestyskriteeriTyyppi jarjestyskriteeriTyyppi = new JarjestyskriteeriTyyppi();
             jarjestyskriteeriTyyppi.setPrioriteetti(prioriteetti);
 
+
+            Long start = System.currentTimeMillis();
             Laskentakaava laskentakaava = laskentakaavaService.haeLaskettavaKaava(jarjestyskriteeri.getLaskentakaava()
                     .getId());
+            if(LOG.isInfoEnabled()) {
+                LOG.info("haeLaskettavaKaava: " + jarjestyskriteeri.getLaskentakaava()
+                    .getId() + ":" +(System.currentTimeMillis() - start));
+            }
             FunktiokutsuTyyppi convert = conversionService.convert(laskentakaava.getFunktiokutsu(),
                     FunktiokutsuTyyppi.class);
 

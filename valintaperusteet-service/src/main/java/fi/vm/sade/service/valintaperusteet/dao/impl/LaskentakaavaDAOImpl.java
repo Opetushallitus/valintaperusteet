@@ -2,12 +2,15 @@ package fi.vm.sade.service.valintaperusteet.dao.impl;
 
 import com.mysema.query.BooleanBuilder;
 import com.mysema.query.Tuple;
+import com.mysema.query.jpa.hibernate.HibernateQuery;
 import com.mysema.query.jpa.impl.JPAQuery;
 import com.mysema.query.types.EntityPath;
 import com.mysema.query.types.QTuple;
 import fi.vm.sade.generic.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.LaskentakaavaDAO;
 import fi.vm.sade.service.valintaperusteet.model.*;
+import org.hibernate.Hibernate;
+import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -24,7 +27,7 @@ public class LaskentakaavaDAOImpl extends AbstractJpaDAOImpl<Laskentakaava, Long
         QFunktiokutsu fk = QFunktiokutsu.funktiokutsu;
         QFunktioargumentti fa = QFunktioargumentti.funktioargumentti;
 
-        Laskentakaava laskentakaava = from(lk)
+        Laskentakaava laskentakaava = from(lk).setCacheable(true)
                 .leftJoin(lk.funktiokutsu, fk).fetch()
                 .leftJoin(fk.arvokonvertteriparametrit).fetch()
                 .leftJoin(fk.arvovalikonvertteriparametrit).fetch()
@@ -47,7 +50,8 @@ public class LaskentakaavaDAOImpl extends AbstractJpaDAOImpl<Laskentakaava, Long
         QValinnanVaihe vv = QValinnanVaihe.valinnanVaihe;
         QHakukohdeViite hkv1 = QHakukohdeViite.hakukohdeViite;
 
-        return from(lk).leftJoin(lk.jarjestyskriteerit, jk).leftJoin(jk.valintatapajono, vtj)
+        return from(lk).setCacheable(true)
+                .leftJoin(lk.jarjestyskriteerit, jk).leftJoin(jk.valintatapajono, vtj)
                 .leftJoin(vtj.valinnanVaihe, vv).leftJoin(vv.hakukohdeViite, hkv1).where(hkv1.oid.in(oids)).distinct()
                 .list(new QTuple(hkv1.oid, vv.oid, lk));
     }
@@ -56,8 +60,8 @@ public class LaskentakaavaDAOImpl extends AbstractJpaDAOImpl<Laskentakaava, Long
     public List<Laskentakaava> findKaavas(boolean all, String valintaryhmaOid, String hakukohdeOid, Funktiotyyppi tyyppi) {
         QLaskentakaava lk = QLaskentakaava.laskentakaava;
 
-        JPAQuery query = from(lk);
-
+        HibernateQuery query = from(lk);
+        query.setCacheable(true);
         BooleanBuilder builder = new BooleanBuilder();
         if (!all) {
             builder.and(lk.onLuonnos.isFalse());
@@ -76,8 +80,9 @@ public class LaskentakaavaDAOImpl extends AbstractJpaDAOImpl<Laskentakaava, Long
         return query.where(builder).list(lk);
     }
 
-    protected JPAQuery from(EntityPath<?>... o) {
-        return new JPAQuery(getEntityManager()).from(o);
+    protected HibernateQuery from(EntityPath<?>... o) {
+        Session unwrap = getEntityManager().unwrap(Session.class);
+        return new HibernateQuery(unwrap).from(o);
     }
 
 }
