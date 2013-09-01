@@ -44,7 +44,7 @@ object Esiprosessori {
         val avain = prosessointiOid(hakukohde, prosessoituHakemus, f)
         if (ensisijaisetHakijat == 0) {
           // ei ensisijaisia hakijoita
-          LOG.debug("Ei ensisijaisia hakijoita joten kellekään ei anneta bonusta!")
+          //LOG.debug("Ei ensisijaisia hakijoita joten kellekään ei anneta bonusta!")
           new Hakemus(prosessoituHakemus.oid,
             prosessoituHakemus.hakutoiveet,
             prosessoituHakemus.kentat + (avain -> false.toString))
@@ -66,8 +66,8 @@ object Esiprosessori {
 
             val vertailuarvo = BigDecimal(samatArvotLkm).underlying.divide(BigDecimal(ensisijaisetHakijat).underlying, 4, RoundingMode.HALF_UP) //hakemukset.size()
             val arvo = (vertailuarvo.compareTo(f.prosenttiosuus.underlying.divide(BigDecimal("100.0").underlying, 4, RoundingMode.HALF_UP)) != 1).toString
-            LOG.debug("Samoja arvoja on {} ja vertailuarvo on {} ja arvo on {}", Array[Object](samatArvotLkm.toString(), vertailuarvo, arvo));
-            LOG.debug("Hakemus {} {}bonuspisteet {}", Array[Object](prosessoituHakemus.oid, tunniste, arvo))
+           // LOG.debug("Samoja arvoja on {} ja vertailuarvo on {} ja arvo on {}", Array[Object](samatArvotLkm.toString(), vertailuarvo, arvo));
+           // LOG.debug("Hakemus {} {}bonuspisteet {}", Array[Object](prosessoituHakemus.oid, tunniste, arvo))
             new Hakemus(prosessoituHakemus.oid,
               prosessoituHakemus.hakutoiveet,
               prosessoituHakemus.kentat + (avain -> arvo))
