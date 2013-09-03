@@ -10,6 +10,7 @@ import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
 import fi.vm.sade.service.valintaperusteet.service.exception.*;
+import fi.vm.sade.service.valintaperusteet.service.impl.util.LaskentakaavaCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -456,9 +457,17 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
         }
     }
 
+    @Autowired
+    private LaskentakaavaCache laskentakaavaCache;
+
     @Override
     @Transactional(readOnly = true)
     public Laskentakaava haeLaskettavaKaava(Long id) {
-        return haeKokoLaskentakaava(id, true);
+        Laskentakaava laskentakaava = laskentakaavaCache.get(id);
+        if(laskentakaava == null) {
+            laskentakaava = haeKokoLaskentakaava(id, true);
+            laskentakaavaCache.addLaskentakaava(laskentakaava,id);
+        }
+        return laskentakaava;
     }
 }
