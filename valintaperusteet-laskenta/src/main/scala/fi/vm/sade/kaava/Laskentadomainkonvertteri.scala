@@ -6,6 +6,7 @@ import Laskenta._
 import org.apache.commons.lang.StringUtils
 import java.math.{BigDecimal => BigDec}
 import scala.math.BigDecimal._
+import fi.vm.sade.service.valintaperusteet.service.validointi.virhe.LaskentakaavaEiOleValidiException
 
 /**
  * User: kwuoti
@@ -82,7 +83,7 @@ object Laskentadomainkonvertteri {
 
   private def muodostaLasku(funktiokutsu: Funktiokutsu): Funktio[_] = {
     if (!Laskentakaavavalidaattori.onkoLaskettavaKaavaValidi(funktiokutsu)) {
-      throw new RuntimeException("Funktiokutsu ei ole validi")
+      throw new LaskentakaavaEiOleValidiException("Funktiokutsu ei ole validi")
     }
 
     val jarjestetytArgumentit: List[Funktioargumentti] = LaskentaUtil.jarjestaFunktioargumentit(funktiokutsu.getFunktioargumentit)
