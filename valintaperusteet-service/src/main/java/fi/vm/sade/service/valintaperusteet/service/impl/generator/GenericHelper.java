@@ -243,7 +243,7 @@ public class GenericHelper {
         return funktiokutsu;
     }
 
-    public static Funktiokutsu luoEi(Funktiokutsu arg) {
+    public static Funktiokutsu luoEi(FunktionArgumentti arg) {
         Funktiokutsu ei = new Funktiokutsu();
         ei.setFunktionimi(Funktionimi.EI);
         ei.getFunktioargumentit().addAll(luoFunktioargumentit(arg));
@@ -296,7 +296,7 @@ public class GenericHelper {
         return f;
     }
 
-    public static Funktiokutsu luoJa(Funktiokutsu... args) {
+    public static Funktiokutsu luoJa(FunktionArgumentti... args) {
         Funktiokutsu f = new Funktiokutsu();
         f.setFunktionimi(Funktionimi.JA);
         f.getFunktioargumentit().addAll(luoFunktioargumentit(args));

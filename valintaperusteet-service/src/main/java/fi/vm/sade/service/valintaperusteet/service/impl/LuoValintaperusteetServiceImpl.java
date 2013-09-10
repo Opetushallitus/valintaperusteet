@@ -140,10 +140,13 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         kielikoevalinnanVaihe.setValinnanVaiheTyyppi(ValinnanVaiheTyyppi.VALINTAKOE);
         kielikoevalinnanVaihe = valinnanVaiheService.lisaaValinnanVaiheValintaryhmalle(ammatillinenKoulutusVr.getOid(), kielikoevalinnanVaihe, null);
 
+        Laskentakaava ulkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt = asetaValintaryhmaJaTallennaKantaan(PkJaYoPohjaiset.luoUlkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt(), ammatillinenKoulutusVr);
+        Laskentakaava eiUlkomaillaSuoritettuaKoulutustaEikaOppivelvollisuusKeskeytynyt = asetaValintaryhmaJaTallennaKantaan(PkJaYoPohjaiset.eiUlkomaillaSuoritettuaKoulutustaEikaOppivelvollisuusKeskeytynyt(ulkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt), ammatillinenKoulutusVr);
+
         Map<Kielikoodi, Laskentakaava> kielikokeidenLaskentakaavat = new HashMap<Kielikoodi, Laskentakaava>();
         for (Kielikoodi k : Kielikoodi.values()) {
             kielikokeidenLaskentakaavat.put(k,
-                    asetaValintaryhmaJaTallennaKantaan(PkJaYoPohjaiset.luoKielikokeenPakollisuudenLaskentakaava(k),
+                    asetaValintaryhmaJaTallennaKantaan(PkJaYoPohjaiset.luoKielikokeenPakollisuudenLaskentakaava(k, eiUlkomaillaSuoritettuaKoulutustaEikaOppivelvollisuusKeskeytynyt),
                             ammatillinenKoulutusVr));
         }
 
@@ -173,6 +176,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
             asetaValintaryhmaJaTallennaKantaan(kaava, peruskouluVr);
         }
 
+
         //pisteytysmalli
         Laskentakaava pk_painotettavatKeskiarvotLaskentakaava = asetaValintaryhmaJaTallennaKantaan(PkPohjaiset.luoPainotettavatKeskiarvotLaskentakaava(pkAineet), peruskouluVr);
         Laskentakaava pkPohjainenLukuaineidenKeskiarvo = asetaValintaryhmaJaTallennaKantaan(PkPohjaiset.luoPKPohjaisenKoulutuksenLukuaineidenKeskiarvo(pkAineet), peruskouluVr);
@@ -189,19 +193,18 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         // Pk koostava iso kaava
         Laskentakaava toisenAsteenPeruskoulupohjainenPeruskaava = asetaValintaryhmaJaTallennaKantaan(PkPohjaiset.luoToisenAsteenPeruskoulupohjainenPeruskaava(pk_painotettavatKeskiarvotLaskentakaava,
                 pk_yleinenkoulumenestyspisteytysmalli, pk_pohjakoulutuspisteytysmalli, pk_ilmanKoulutuspaikkaaPisteytysmalli, hakutoivejarjestyspisteytysmalli, tyokokemuspisteytysmalli,
-                sukupuolipisteytysmalli), peruskouluVr);
+                sukupuolipisteytysmalli, ulkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt), peruskouluVr);
 
         for (Laskentakaava kaava : yoAineet.getLaskentakaavat()) {
             asetaValintaryhmaJaTallennaKantaan(kaava, lukioVr);
         }
 
         Laskentakaava lk_paattotodistuksenkeskiarvo = asetaValintaryhmaJaTallennaKantaan(YoPohjaiset.luoYOPohjaisenKoulutuksenPaattotodistuksenKeskiarvo(yoAineet), lukioVr);
-
         Laskentakaava lk_yleinenkoulumenestyspisteytysmalli = asetaValintaryhmaJaTallennaKantaan(PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(lk_paattotodistuksenkeskiarvo, "Yleinen koulumenestys pisteytysmalli, LK"), lukioVr);
 
         // Yo koostava iso kaava
         Laskentakaava toisenAsteenYlioppilaspohjainenPeruskaava = asetaValintaryhmaJaTallennaKantaan(YoPohjaiset.luoToisenAsteenYlioppilaspohjainenPeruskaava(hakutoivejarjestyspisteytysmalli,
-                tyokokemuspisteytysmalli, sukupuolipisteytysmalli, lk_yleinenkoulumenestyspisteytysmalli), lukioVr);
+                tyokokemuspisteytysmalli, sukupuolipisteytysmalli, lk_yleinenkoulumenestyspisteytysmalli, ulkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt), lukioVr);
 
         //        Tasasijakriteerit on
         //
@@ -234,7 +237,8 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                             toisenAsteenYlioppilaspohjainenPeruskaava, kielikoekaava), lukioVr));
         }
 
-        lisaaHakukohdekoodit(peruskouluVr, lukioVr, toisenAsteenPeruskoulupohjaisetPeruskaavat, toisenAsteenYlioppilaspohjaisetPeruskaavat, pkTasasijakriteerit, lkTasasijakriteerit);
+        lisaaHakukohdekoodit(peruskouluVr, lukioVr, toisenAsteenPeruskoulupohjaisetPeruskaavat, toisenAsteenYlioppilaspohjaisetPeruskaavat, pkTasasijakriteerit, lkTasasijakriteerit,
+                eiUlkomaillaSuoritettuaKoulutustaEikaOppivelvollisuusKeskeytynyt);
     }
 
 
@@ -242,7 +246,8 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                                       Map<Kielikoodi, Laskentakaava> pkPeruskaavat,
                                       Map<Kielikoodi, Laskentakaava> lkPeruskaavat,
                                       Laskentakaava[] pkTasasijakriteerit,
-                                      Laskentakaava[] lkTasasijakriteerit) throws IOException {
+                                      Laskentakaava[] lkTasasijakriteerit,
+                                      Laskentakaava eiUlkomaillaSuoritettuKoulutus) throws IOException {
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new InputStreamReader(resourceLoader.getResource("classpath:hakukohdekoodit/hakukohdekoodit.csv").getInputStream(), Charset.forName("UTF-8")));
@@ -285,8 +290,9 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                 valintakoe.setTunniste(valintakoetunniste);
                 valintakoe.setNimi(valintakoetunniste);
 
-                // Valintakoe on aina pakollinen (eli null)
-                valintakoe.setLaskentakaavaId(PkJaYoPohjaiset.luoValintaJaKielikokeenKorvaavuuskaava());
+                // Valintakoe on pakollinen niille, joilla ei ole ulkomailla suoritettua koulutusta tai
+                // joiden oppivelvollisuuden suorittaminen ei ole keskeytynyt
+                valintakoe.setLaskentakaavaId(eiUlkomaillaSuoritettuKoulutus.getId());
                 valintakoeService.lisaaValintakoeValinnanVaiheelle(valintakoevaihe.getOid(), valintakoe);
 
                 ValinnanVaihe valinnanVaihe = new ValinnanVaihe();

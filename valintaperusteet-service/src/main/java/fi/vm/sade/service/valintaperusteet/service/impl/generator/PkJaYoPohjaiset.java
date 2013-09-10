@@ -122,7 +122,8 @@ public class PkJaYoPohjaiset {
 
     }
 
-    public static Laskentakaava luoKielikokeenPakollisuudenLaskentakaava(LuoValintaperusteetServiceImpl.Kielikoodi k) {
+    public static Laskentakaava luoKielikokeenPakollisuudenLaskentakaava(LuoValintaperusteetServiceImpl.Kielikoodi k,
+                                                                         Laskentakaava eiUlkomaillaSuoritettuKoulutus) {
         // Kaava palauttaa true, jos hakijan pitää osallistua kielikokeeseen, muutoin false.
 
         Funktiokutsu[] args = {
@@ -138,7 +139,7 @@ public class PkJaYoPohjaiset {
         };
 
 
-        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(GenericHelper.luoEi(GenericHelper.luoTai(args)),
+        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(GenericHelper.luoJa(GenericHelper.luoEi(GenericHelper.luoTai(args)), eiUlkomaillaSuoritettuKoulutus),
                 "Kielikokeen pakollisuus - " + k.getNimi() + ", 2 aste, pk ja yo"
         );
     }
@@ -368,5 +369,31 @@ public class PkJaYoPohjaiset {
     public static Laskentakaava luoYhdistettyPeruskaavaJaValintakoekaava(Laskentakaava peruskaava, Laskentakaava valintakoekaava) {
         Funktiokutsu yhdistetty = GenericHelper.luoSumma(peruskaava, valintakoekaava);
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(yhdistetty, peruskaava.getNimi() + " + " + valintakoekaava.getNimi());
+    }
+
+    /**
+     * Ulkomailla suoritetulla pohjakoulutuksella tai oppivelvollisuuden suorittamisen keskeyttäneitä hakijoita
+     * ei kutsuta valinta-/kielikokeeseen.
+     */
+    public static Laskentakaava luoUlkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt() {
+        Funktiokutsu ulkomaillaSuoritettuKoulutus = GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(
+                GenericHelper.luoValintaperusteViite(PkPohjaiset.pohjakoulutusAvain, false, Valintaperustelahde.HAETTAVA_ARVO),
+                PkPohjaiset.ulkomaillaSuoritettuKoulutus, Boolean.FALSE);
+
+        Funktiokutsu oppivelvollisuudenSuorittaminenKeskeytynyt = GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(
+                GenericHelper.luoValintaperusteViite(PkPohjaiset.pohjakoulutusAvain, false, Valintaperustelahde.HAETTAVA_ARVO),
+                PkPohjaiset.oppivelvollisuudenSuorittaminenKeskeytynyt, Boolean.FALSE);
+
+        Funktiokutsu tai = GenericHelper.luoTai(ulkomaillaSuoritettuKoulutus, oppivelvollisuudenSuorittaminenKeskeytynyt);
+
+        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(tai, "Ulkomailla suoritettu koulutus tai " +
+                "oppivelvollisuuden suorittaminen keskeytynyt");
+    }
+
+    public static Laskentakaava eiUlkomaillaSuoritettuaKoulutustaEikaOppivelvollisuusKeskeytynyt(
+            Laskentakaava ulkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt) {
+        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
+                GenericHelper.luoEi(ulkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt),
+                "Ei ulkomailla suoritettua koulutusta eikä oppivelvollisuuden suorittaminen keskeytynyt");
     }
 }

@@ -540,7 +540,7 @@ public class LuoValintaperusteetServiceTest {
                         PkPohjaiset.luoPKPohjaisenKoulutuksenLukuaineidenKeskiarvo(pkAineet), "nimi"),
                 PkPohjaiset.luoPohjakoulutuspisteytysmalli(), PkPohjaiset.ilmanKoulutuspaikkaaPisteytysmalli(),
                 PkJaYoPohjaiset.luoHakutoivejarjestyspisteytysmalli(), PkJaYoPohjaiset.luoTyokokemuspisteytysmalli(),
-                PkJaYoPohjaiset.luoSukupuolipisteytysmalli()));
+                PkJaYoPohjaiset.luoSukupuolipisteytysmalli(), PkJaYoPohjaiset.luoUlkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt()));
         Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemukset[0],
                 Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()),
                 new StringBuffer());
@@ -602,7 +602,8 @@ public class LuoValintaperusteetServiceTest {
                 PkJaYoPohjaiset.luoTyokokemuspisteytysmalli(),
                 PkJaYoPohjaiset.luoSukupuolipisteytysmalli(),
                 PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(
-                        YoPohjaiset.luoYOPohjaisenKoulutuksenPaattotodistuksenKeskiarvo(yoAineet), "nimi")));
+                        YoPohjaiset.luoYOPohjaisenKoulutuksenPaattotodistuksenKeskiarvo(yoAineet), "nimi"),
+                PkJaYoPohjaiset.luoUlkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt()));
         Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemukset[0],
                 Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()),
                 new StringBuffer());
@@ -1096,15 +1097,17 @@ public class LuoValintaperusteetServiceTest {
 
         final BigDecimal odotettuTulos = new BigDecimal("31.0");
 
+        Laskentakaava ulkomaillaSuoritettuKoulutus = PkJaYoPohjaiset.luoUlkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt();
         Laskentakaava peruskaava = PkPohjaiset.luoToisenAsteenPeruskoulupohjainenPeruskaava(
                 PkPohjaiset.luoPainotettavatKeskiarvotLaskentakaava(pkAineet),
                 PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(
                         PkPohjaiset.luoPKPohjaisenKoulutuksenLukuaineidenKeskiarvo(pkAineet), "nimi"),
                 PkPohjaiset.luoPohjakoulutuspisteytysmalli(), PkPohjaiset.ilmanKoulutuspaikkaaPisteytysmalli(),
                 PkJaYoPohjaiset.luoHakutoivejarjestyspisteytysmalli(), PkJaYoPohjaiset.luoTyokokemuspisteytysmalli(),
-                PkJaYoPohjaiset.luoSukupuolipisteytysmalli());
+                PkJaYoPohjaiset.luoSukupuolipisteytysmalli(),
+                ulkomaillaSuoritettuKoulutus);
         Laskentakaava kielikoekaava = PkJaYoPohjaiset.luoKielikokeenPakollisuudenLaskentakaava(
-                LuoValintaperusteetServiceImpl.Kielikoodi.SUOMI);
+                LuoValintaperusteetServiceImpl.Kielikoodi.SUOMI, PkJaYoPohjaiset.eiUlkomaillaSuoritettuaKoulutustaEikaOppivelvollisuusKeskeytynyt(ulkomaillaSuoritettuKoulutus));
 
         Laskentakaava yhdistetty = laajennaAlakaavat(PkJaYoPohjaiset.luoYhdistettyPeruskaavaJaKielikoekaava(peruskaava, kielikoekaava));
 
@@ -1137,15 +1140,17 @@ public class LuoValintaperusteetServiceTest {
 
         final BigDecimal odotettuTulos = new BigDecimal("31.0");
 
+        Laskentakaava ulkomaillaSuoritettuKoulutus = PkJaYoPohjaiset.luoUlkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt();
         Laskentakaava peruskaava = PkPohjaiset.luoToisenAsteenPeruskoulupohjainenPeruskaava(
                 PkPohjaiset.luoPainotettavatKeskiarvotLaskentakaava(pkAineet),
                 PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(
                         PkPohjaiset.luoPKPohjaisenKoulutuksenLukuaineidenKeskiarvo(pkAineet), "nimi"),
                 PkPohjaiset.luoPohjakoulutuspisteytysmalli(), PkPohjaiset.ilmanKoulutuspaikkaaPisteytysmalli(),
                 PkJaYoPohjaiset.luoHakutoivejarjestyspisteytysmalli(), PkJaYoPohjaiset.luoTyokokemuspisteytysmalli(),
-                PkJaYoPohjaiset.luoSukupuolipisteytysmalli());
+                PkJaYoPohjaiset.luoSukupuolipisteytysmalli(), ulkomaillaSuoritettuKoulutus);
         Laskentakaava kielikoekaava = PkJaYoPohjaiset.luoKielikokeenPakollisuudenLaskentakaava(
-                LuoValintaperusteetServiceImpl.Kielikoodi.SUOMI);
+                LuoValintaperusteetServiceImpl.Kielikoodi.SUOMI,
+                PkJaYoPohjaiset.eiUlkomaillaSuoritettuaKoulutustaEikaOppivelvollisuusKeskeytynyt(ulkomaillaSuoritettuKoulutus));
 
         Laskentakaava yhdistetty = laajennaAlakaavat(PkJaYoPohjaiset.luoYhdistettyPeruskaavaJaKielikoekaava(peruskaava, kielikoekaava));
 
@@ -1170,12 +1175,11 @@ public class LuoValintaperusteetServiceTest {
                 Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()), new StringBuffer());
 
         assertEquals(odotettuTulos, tulos.getTulos());
-        assertEquals(Tila.Tilatyyppi.HYLATTY, tulos.getTila().getTilatyyppi());
-        assertEquals(HylattyMetatieto.Hylattymetatietotyyppi.ARVOKONVERTTERIHYLKAYS, ((Hylattytila) tulos.getTila()).getMetatieto().getMetatietotyyppi());
+        assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
     }
 
     @Test
-    public void testOppivelvollisuudenSuorittaminenKeskeytynyt() {
+    public void testPohjakoulutusOnOppivelvollisuudenSuorittaminenKeskeytynyt() {
         Hakemus hakemus = hakemus(yhdistaMapit(
                 valintaperuste(PkPohjaiset.pohjakoulutusAvain, PkPohjaiset.oppivelvollisuudenSuorittaminenKeskeytynyt),
                 valintaperuste(PkPohjaiset.todistuksenSaantivuosi, PkPohjaiset.kuluvaVuosi)));
@@ -1187,7 +1191,261 @@ public class LuoValintaperusteetServiceTest {
                 Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()), new StringBuffer());
 
         assertEquals(odotettuTulos, tulos.getTulos());
+        assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
+    }
+
+    @Test
+    public void testUlkomaillaSuoritettuKoulutus() {
+        Hakemus hakemus = hakemus(yhdistaMapit(
+                valintaperuste(PkPohjaiset.pohjakoulutusAvain, PkPohjaiset.ulkomaillaSuoritettuKoulutus)));
+
+        Laskentakaava kaava = PkJaYoPohjaiset.luoUlkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt();
+        Laskentatulos<Boolean> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemus,
+                Laskentadomainkonvertteri.muodostaTotuusarvolasku(kaava.getFunktiokutsu()), new StringBuffer());
+
+        assertTrue(tulos.getTulos());
+        assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
+    }
+
+    @Test
+    public void testOppivelvollisuudenSuorittaminenKeskeytynyt() {
+        Hakemus hakemus = hakemus(yhdistaMapit(
+                valintaperuste(PkPohjaiset.pohjakoulutusAvain, PkPohjaiset.oppivelvollisuudenSuorittaminenKeskeytynyt)));
+
+        Laskentakaava kaava = PkJaYoPohjaiset.luoUlkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt();
+        Laskentatulos<Boolean> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemus,
+                Laskentadomainkonvertteri.muodostaTotuusarvolasku(kaava.getFunktiokutsu()), new StringBuffer());
+
+        assertTrue(tulos.getTulos());
+        assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
+    }
+
+    @Test
+    public void testPeruskoulupohjakoulutus() {
+        Hakemus hakemus = hakemus(yhdistaMapit(
+                valintaperuste(PkPohjaiset.pohjakoulutusAvain, PkPohjaiset.perusopetuksenOppimaara)));
+
+        Laskentakaava kaava = PkJaYoPohjaiset.luoUlkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt();
+        Laskentatulos<Boolean> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemus,
+                Laskentadomainkonvertteri.muodostaTotuusarvolasku(kaava.getFunktiokutsu()), new StringBuffer());
+
+        assertFalse(tulos.getTulos());
+        assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
+    }
+
+    @Test
+    public void testUlkomaillaSuoritetullaKoulutuksellaHylataanPkPeruskaava() {
+        Hakemus[] hakemukset = new Hakemus[]{
+                hakemus(yhdistaMapit(
+                        valintaperuste(PkPohjaiset.pohjakoulutusAvain, PkPohjaiset.ulkomaillaSuoritettuKoulutus),
+                        valintaperuste("kielikoe_fi", Boolean.TRUE.toString()))),
+                hakemus(yhdistaMapit(
+                        valintaperuste(PkPohjaiset.pohjakoulutusAvain, PkPohjaiset.perusopetuksenOppimaara),
+                        valintaperuste("kielikoe_fi", Boolean.TRUE.toString())))
+        };
+
+        final BigDecimal odotettuTulos = new BigDecimal("2.0");
+
+        Laskentakaava ulkomaillaSuoritettuKoulutus = PkJaYoPohjaiset.luoUlkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt();
+        Laskentakaava peruskaava = PkPohjaiset.luoToisenAsteenPeruskoulupohjainenPeruskaava(
+                PkPohjaiset.luoPainotettavatKeskiarvotLaskentakaava(pkAineet),
+                PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(
+                        PkPohjaiset.luoPKPohjaisenKoulutuksenLukuaineidenKeskiarvo(pkAineet), "nimi"),
+                PkPohjaiset.luoPohjakoulutuspisteytysmalli(), PkPohjaiset.ilmanKoulutuspaikkaaPisteytysmalli(),
+                PkJaYoPohjaiset.luoHakutoivejarjestyspisteytysmalli(), PkJaYoPohjaiset.luoTyokokemuspisteytysmalli(),
+                PkJaYoPohjaiset.luoSukupuolipisteytysmalli(),
+                ulkomaillaSuoritettuKoulutus);
+
+        Laskentakaava kielikoekaava = PkJaYoPohjaiset.luoKielikokeenPakollisuudenLaskentakaava(
+                LuoValintaperusteetServiceImpl.Kielikoodi.SUOMI, PkJaYoPohjaiset.eiUlkomaillaSuoritettuaKoulutustaEikaOppivelvollisuusKeskeytynyt(ulkomaillaSuoritettuKoulutus));
+
+        Laskentakaava yhdistetty = laajennaAlakaavat(PkJaYoPohjaiset.luoYhdistettyPeruskaavaJaKielikoekaava(peruskaava, kielikoekaava));
+
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemukset[0],
+                Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaLukuarvolasku(yhdistetty.getFunktiokutsu()),
+                new StringBuffer());
+
+        assertEquals(odotettuTulos, tulos.getTulos());
         assertEquals(Tila.Tilatyyppi.HYLATTY, tulos.getTila().getTilatyyppi());
-        assertEquals(HylattyMetatieto.Hylattymetatietotyyppi.ARVOKONVERTTERIHYLKAYS, ((Hylattytila) tulos.getTila()).getMetatieto().getMetatietotyyppi());
+        assertEquals(HylattyMetatieto.Hylattymetatietotyyppi.HYLKAA_FUNKTION_SUORITTAMA_HYLKAYS, ((Hylattytila) tulos.getTila()).getMetatieto().getMetatietotyyppi());
+
+        Laskentatulos<BigDecimal> tulos2 = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemukset[1],
+                Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaLukuarvolasku(yhdistetty.getFunktiokutsu()),
+                new StringBuffer());
+
+        assertEquals(odotettuTulos, tulos2.getTulos());
+        assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos2.getTila().getTilatyyppi());
+    }
+
+    @Test
+    public void testOppivelvollisuudenSuorittaminenKeskeytynytHylataanPkPeruskaava() {
+        Hakemus[] hakemukset = new Hakemus[]{
+                hakemus(yhdistaMapit(
+                        valintaperuste(PkPohjaiset.pohjakoulutusAvain, PkPohjaiset.oppivelvollisuudenSuorittaminenKeskeytynyt),
+                        valintaperuste("kielikoe_fi", Boolean.TRUE.toString()))),
+                hakemus(yhdistaMapit(
+                        valintaperuste(PkPohjaiset.pohjakoulutusAvain, PkPohjaiset.perusopetuksenOppimaara),
+                        valintaperuste("kielikoe_fi", Boolean.TRUE.toString())))
+        };
+
+        final BigDecimal odotettuTulos = new BigDecimal("2.0");
+
+        Laskentakaava ulkomaillaSuoritettuKoulutus = PkJaYoPohjaiset.luoUlkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt();
+        Laskentakaava peruskaava = PkPohjaiset.luoToisenAsteenPeruskoulupohjainenPeruskaava(
+                PkPohjaiset.luoPainotettavatKeskiarvotLaskentakaava(pkAineet),
+                PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(
+                        PkPohjaiset.luoPKPohjaisenKoulutuksenLukuaineidenKeskiarvo(pkAineet), "nimi"),
+                PkPohjaiset.luoPohjakoulutuspisteytysmalli(), PkPohjaiset.ilmanKoulutuspaikkaaPisteytysmalli(),
+                PkJaYoPohjaiset.luoHakutoivejarjestyspisteytysmalli(), PkJaYoPohjaiset.luoTyokokemuspisteytysmalli(),
+                PkJaYoPohjaiset.luoSukupuolipisteytysmalli(),
+                ulkomaillaSuoritettuKoulutus);
+
+        Laskentakaava kielikoekaava = PkJaYoPohjaiset.luoKielikokeenPakollisuudenLaskentakaava(
+                LuoValintaperusteetServiceImpl.Kielikoodi.SUOMI, PkJaYoPohjaiset.eiUlkomaillaSuoritettuaKoulutustaEikaOppivelvollisuusKeskeytynyt(ulkomaillaSuoritettuKoulutus));
+
+        Laskentakaava yhdistetty = laajennaAlakaavat(PkJaYoPohjaiset.luoYhdistettyPeruskaavaJaKielikoekaava(peruskaava, kielikoekaava));
+
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemukset[0],
+                Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaLukuarvolasku(yhdistetty.getFunktiokutsu()),
+                new StringBuffer());
+
+        assertEquals(odotettuTulos, tulos.getTulos());
+        assertEquals(Tila.Tilatyyppi.HYLATTY, tulos.getTila().getTilatyyppi());
+        assertEquals(HylattyMetatieto.Hylattymetatietotyyppi.HYLKAA_FUNKTION_SUORITTAMA_HYLKAYS, ((Hylattytila) tulos.getTila()).getMetatieto().getMetatietotyyppi());
+
+        Laskentatulos<BigDecimal> tulos2 = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemukset[1],
+                Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaLukuarvolasku(yhdistetty.getFunktiokutsu()),
+                new StringBuffer());
+
+        assertEquals(odotettuTulos, tulos2.getTulos());
+        assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos2.getTila().getTilatyyppi());
+    }
+
+    @Test
+    public void testUlkomaillaSuoritettuKoulutusHylataanLkPeruskaava() {
+        Hakemus[] hakemukset = new Hakemus[]{
+                hakemus(yhdistaMapit(
+                        valintaperuste(PkPohjaiset.pohjakoulutusAvain, PkPohjaiset.ulkomaillaSuoritettuKoulutus),
+                        valintaperuste("kielikoe_fi", Boolean.TRUE.toString()))),
+                hakemus(yhdistaMapit(
+                        valintaperuste(PkPohjaiset.pohjakoulutusAvain, PkPohjaiset.lukionPaattotodistus),
+                        valintaperuste("kielikoe_fi", Boolean.TRUE.toString())))
+        };
+
+        final BigDecimal odotettuTulos = new BigDecimal("2.0");
+
+        Laskentakaava kaava = laajennaAlakaavat(YoPohjaiset.luoToisenAsteenYlioppilaspohjainenPeruskaava(
+                PkJaYoPohjaiset.luoHakutoivejarjestyspisteytysmalli(),
+                PkJaYoPohjaiset.luoTyokokemuspisteytysmalli(),
+                PkJaYoPohjaiset.luoSukupuolipisteytysmalli(),
+                PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(
+                        YoPohjaiset.luoYOPohjaisenKoulutuksenPaattotodistuksenKeskiarvo(yoAineet), "nimi"),
+                PkJaYoPohjaiset.luoUlkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt()));
+
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemukset[0],
+                Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()),
+                new StringBuffer());
+
+        assertEquals(odotettuTulos, tulos.getTulos());
+        assertEquals(Tila.Tilatyyppi.HYLATTY, tulos.getTila().getTilatyyppi());
+        assertEquals(HylattyMetatieto.Hylattymetatietotyyppi.HYLKAA_FUNKTION_SUORITTAMA_HYLKAYS, ((Hylattytila) tulos.getTila()).getMetatieto().getMetatietotyyppi());
+
+        Laskentatulos<BigDecimal> tulos2 = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemukset[1],
+                Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()),
+                new StringBuffer());
+
+        assertEquals(odotettuTulos, tulos2.getTulos());
+        assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos2.getTila().getTilatyyppi());
+    }
+
+    @Test
+    public void testOppivelvollisuudenSuorittaminenKeskeytynytHylataanLkPeruskaava() {
+        Hakemus[] hakemukset = new Hakemus[]{
+                hakemus(yhdistaMapit(
+                        valintaperuste(PkPohjaiset.pohjakoulutusAvain, PkPohjaiset.oppivelvollisuudenSuorittaminenKeskeytynyt),
+                        valintaperuste("kielikoe_fi", Boolean.TRUE.toString()))),
+                hakemus(yhdistaMapit(
+                        valintaperuste(PkPohjaiset.pohjakoulutusAvain, PkPohjaiset.lukionPaattotodistus),
+                        valintaperuste("kielikoe_fi", Boolean.TRUE.toString())))
+        };
+
+        final BigDecimal odotettuTulos = new BigDecimal("2.0");
+
+        Laskentakaava kaava = laajennaAlakaavat(YoPohjaiset.luoToisenAsteenYlioppilaspohjainenPeruskaava(
+                PkJaYoPohjaiset.luoHakutoivejarjestyspisteytysmalli(),
+                PkJaYoPohjaiset.luoTyokokemuspisteytysmalli(),
+                PkJaYoPohjaiset.luoSukupuolipisteytysmalli(),
+                PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(
+                        YoPohjaiset.luoYOPohjaisenKoulutuksenPaattotodistuksenKeskiarvo(yoAineet), "nimi"),
+                PkJaYoPohjaiset.luoUlkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt()));
+
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemukset[0],
+                Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()),
+                new StringBuffer());
+
+        assertEquals(odotettuTulos, tulos.getTulos());
+        assertEquals(Tila.Tilatyyppi.HYLATTY, tulos.getTila().getTilatyyppi());
+        assertEquals(HylattyMetatieto.Hylattymetatietotyyppi.HYLKAA_FUNKTION_SUORITTAMA_HYLKAYS, ((Hylattytila) tulos.getTila()).getMetatieto().getMetatietotyyppi());
+
+        Laskentatulos<BigDecimal> tulos2 = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemukset[1],
+                Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()),
+                new StringBuffer());
+
+        assertEquals(odotettuTulos, tulos2.getTulos());
+        assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos2.getTila().getTilatyyppi());
+    }
+
+    @Test
+    public void testUlkomaillaSuoritettuKoulutusEiOsallistuKielikokeeseen() {
+        Hakemus[] hakemukset = new Hakemus[]{
+                hakemus(yhdistaMapit(
+                        valintaperuste(PkPohjaiset.pohjakoulutusAvain, PkPohjaiset.ulkomaillaSuoritettuKoulutus))),
+                hakemus(yhdistaMapit(
+                        valintaperuste(PkPohjaiset.pohjakoulutusAvain, PkPohjaiset.perusopetuksenOppimaara)))
+        };
+
+        Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoKielikokeenPakollisuudenLaskentakaava(
+                LuoValintaperusteetServiceImpl.Kielikoodi.SUOMI,
+                PkJaYoPohjaiset.eiUlkomaillaSuoritettuaKoulutustaEikaOppivelvollisuusKeskeytynyt(
+                        PkJaYoPohjaiset.luoUlkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt())));
+
+        Laskentatulos<Boolean> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemukset[0],
+                Laskentadomainkonvertteri.muodostaTotuusarvolasku(kaava.getFunktiokutsu()), new StringBuffer());
+
+        assertFalse(tulos.getTulos());
+        assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
+
+        Laskentatulos<Boolean> tulos2 = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemukset[1],
+                Laskentadomainkonvertteri.muodostaTotuusarvolasku(kaava.getFunktiokutsu()), new StringBuffer());
+
+        assertTrue(tulos2.getTulos());
+        assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos2.getTila().getTilatyyppi());
+    }
+
+    @Test
+    public void testOppivelvollisuudenSuorittaminenKeskeytynytEiOsallistuKielikokeeseen() {
+        Hakemus[] hakemukset = new Hakemus[]{
+                hakemus(yhdistaMapit(
+                        valintaperuste(PkPohjaiset.pohjakoulutusAvain, PkPohjaiset.oppivelvollisuudenSuorittaminenKeskeytynyt))),
+                hakemus(yhdistaMapit(
+                        valintaperuste(PkPohjaiset.pohjakoulutusAvain, PkPohjaiset.perusopetuksenOppimaara)))
+        };
+
+        Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoKielikokeenPakollisuudenLaskentakaava(
+                LuoValintaperusteetServiceImpl.Kielikoodi.SUOMI,
+                PkJaYoPohjaiset.eiUlkomaillaSuoritettuaKoulutustaEikaOppivelvollisuusKeskeytynyt(
+                        PkJaYoPohjaiset.luoUlkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt())));
+
+        Laskentatulos<Boolean> tulos = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemukset[0],
+                Laskentadomainkonvertteri.muodostaTotuusarvolasku(kaava.getFunktiokutsu()), new StringBuffer());
+
+        assertFalse(tulos.getTulos());
+        assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
+
+        Laskentatulos<Boolean> tulos2 = laskentaService.suoritaLasku(HAKUKOHDE_OID1, hakemukset[1],
+                Laskentadomainkonvertteri.muodostaTotuusarvolasku(kaava.getFunktiokutsu()), new StringBuffer());
+
+        assertTrue(tulos2.getTulos());
+        assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos2.getTila().getTilatyyppi());
     }
 }

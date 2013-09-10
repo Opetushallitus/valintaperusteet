@@ -60,24 +60,16 @@ public class PkPohjaiset {
 
     public static Laskentakaava luoPohjakoulutuspisteytysmalli() {
 
+
         // Pohjakoulutus -->
-        List<Arvokonvertteriparametri> konvs = new ArrayList<Arvokonvertteriparametri>();
+
+        List<Funktiokutsu> vertailut = new ArrayList<Funktiokutsu>();
         for (String arvo : pohjakoulutusPeruskoulutus) {
-            konvs.add(GenericHelper.luoArvokonvertteriparametri(arvo, Boolean.TRUE.toString(), false));
+            vertailut.add(GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(GenericHelper.luoValintaperusteViite(pohjakoulutusAvain, false, Valintaperustelahde.HAETTAVA_ARVO), arvo, false));
         }
 
-        for (String arvo : pohjakoulutusMuut) {
-            boolean hylkaysperuste = false;
-            if (oppivelvollisuudenSuorittaminenKeskeytynyt.equals(arvo) || ulkomaillaSuoritettuKoulutus.equals(arvo)) {
-                hylkaysperuste = true;
-            }
+        Funktiokutsu pohjakoulutusOnPeruskoulutus = GenericHelper.luoTai(vertailut.toArray(new FunktionArgumentti[vertailut.size()]));
 
-            konvs.add(GenericHelper.luoArvokonvertteriparametri(arvo, Boolean.FALSE.toString(), hylkaysperuste));
-        }
-
-        Funktiokutsu pohjakoulutusOnPeruskoulutus = GenericHelper.luoHaeMerkkijonoJaKonvertoiTotuusarvoksi(
-                GenericHelper.luoValintaperusteViite(pohjakoulutusAvain, false, Valintaperustelahde.HAETTAVA_ARVO), false, konvs
-        );
         // <---
 
         // Todistuksen saantivuosi -->
@@ -114,11 +106,12 @@ public class PkPohjaiset {
             Laskentakaava painotettavatKeskiarvotLaskentakaava, Laskentakaava yleinenkoulumenestyspisteytysmalli,
             Laskentakaava pohjakoulutuspisteytysmalli, Laskentakaava ilmanKoulutuspaikkaaPisteytysmalli,
             Laskentakaava hakutoivejarjestyspisteytysmalli, Laskentakaava tyokokemuspisteytysmalli,
-            Laskentakaava sukupuolipisteytysmalli) {
+            Laskentakaava sukupuolipisteytysmalli, Laskentakaava ulkomaillaSuoritettuKoulutus) {
 
         Funktiokutsu summa = GenericHelper.luoSumma(painotettavatKeskiarvotLaskentakaava,
                 yleinenkoulumenestyspisteytysmalli, pohjakoulutuspisteytysmalli, ilmanKoulutuspaikkaaPisteytysmalli,
-                hakutoivejarjestyspisteytysmalli, tyokokemuspisteytysmalli, sukupuolipisteytysmalli);
+                hakutoivejarjestyspisteytysmalli, tyokokemuspisteytysmalli, sukupuolipisteytysmalli,
+                GenericHelper.luoHylkaa(ulkomaillaSuoritettuKoulutus));
 
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(summa,
                 "2. asteen peruskoulupohjainen peruskaava");
@@ -207,30 +200,5 @@ public class PkPohjaiset {
         Laskentakaava laskentakaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(
                 keskiarvo, "Lukuaineiden keskiarvo, PK");
         return laskentakaava;
-    }
-
-    /**
-     * Ulkomailla suoritetulla pohjakoulutuksella tai oppivelvollisuuden suorittamisen keskeyttäneitä hakijoita
-     * ei kutsuta valinta-/kielikokeeseen.
-     *
-     * @return
-     */
-    public static Laskentakaava luoUlkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt() {
-        Funktiokutsu ulkomaillaSuoritettuKoulutus = GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(
-                GenericHelper.luoValintaperusteViite(pohjakoulutusAvain, false, Valintaperustelahde.HAETTAVA_ARVO),
-                PkPohjaiset.ulkomaillaSuoritettuKoulutus, Boolean.FALSE);
-
-        Funktiokutsu oppivelvollisuudenSuorittaminenKeskeytynyt = GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(
-                GenericHelper.luoValintaperusteViite(pohjakoulutusAvain, false, Valintaperustelahde.HAETTAVA_ARVO),
-                PkPohjaiset.oppivelvollisuudenSuorittaminenKeskeytynyt, Boolean.FALSE);
-
-        Funktiokutsu tai = GenericHelper.luoTai(ulkomaillaSuoritettuKoulutus, oppivelvollisuudenSuorittaminenKeskeytynyt);
-
-        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(tai, "Ulkomailla suoritettu koulutus tai " +
-                "oppivelvollisuuden suorittaminen keskeytynyt");
-    }
-
-    public static Laskentakaava eiUlkomaillaSuoritettuaKoulutustaEikaOppivelvollisuusKeskeytynyt() {
-        return GenericHelper.luoLaskentakaavaJaNimettyFunktio()
     }
 }
