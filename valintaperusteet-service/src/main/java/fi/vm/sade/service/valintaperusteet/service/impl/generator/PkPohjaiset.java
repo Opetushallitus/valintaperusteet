@@ -208,4 +208,29 @@ public class PkPohjaiset {
                 keskiarvo, "Lukuaineiden keskiarvo, PK");
         return laskentakaava;
     }
+
+    /**
+     * Ulkomailla suoritetulla pohjakoulutuksella tai oppivelvollisuuden suorittamisen keskeyttäneitä hakijoita
+     * ei kutsuta valinta-/kielikokeeseen.
+     *
+     * @return
+     */
+    public static Laskentakaava luoUlkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt() {
+        Funktiokutsu ulkomaillaSuoritettuKoulutus = GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(
+                GenericHelper.luoValintaperusteViite(pohjakoulutusAvain, false, Valintaperustelahde.HAETTAVA_ARVO),
+                PkPohjaiset.ulkomaillaSuoritettuKoulutus, Boolean.FALSE);
+
+        Funktiokutsu oppivelvollisuudenSuorittaminenKeskeytynyt = GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(
+                GenericHelper.luoValintaperusteViite(pohjakoulutusAvain, false, Valintaperustelahde.HAETTAVA_ARVO),
+                PkPohjaiset.oppivelvollisuudenSuorittaminenKeskeytynyt, Boolean.FALSE);
+
+        Funktiokutsu tai = GenericHelper.luoTai(ulkomaillaSuoritettuKoulutus, oppivelvollisuudenSuorittaminenKeskeytynyt);
+
+        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(tai, "Ulkomailla suoritettu koulutus tai " +
+                "oppivelvollisuuden suorittaminen keskeytynyt");
+    }
+
+    public static Laskentakaava eiUlkomaillaSuoritettuaKoulutustaEikaOppivelvollisuusKeskeytynyt() {
+        return GenericHelper.luoLaskentakaavaJaNimettyFunktio()
+    }
 }

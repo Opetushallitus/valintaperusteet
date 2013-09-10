@@ -286,7 +286,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                 valintakoe.setNimi(valintakoetunniste);
 
                 // Valintakoe on aina pakollinen (eli null)
-                valintakoe.setLaskentakaavaId(null);
+                valintakoe.setLaskentakaavaId(PkJaYoPohjaiset.luoValintaJaKielikokeenKorvaavuuskaava());
                 valintakoeService.lisaaValintakoeValinnanVaiheelle(valintakoevaihe.getOid(), valintakoe);
 
                 ValinnanVaihe valinnanVaihe = new ValinnanVaihe();
