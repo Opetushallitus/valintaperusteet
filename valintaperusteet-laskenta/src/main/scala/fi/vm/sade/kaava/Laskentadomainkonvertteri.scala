@@ -184,7 +184,8 @@ object Laskentadomainkonvertteri {
         HaeTotuusarvo(konvertteri, oletusarvo, valintaperusteviite, oid)
       }
       case Funktionimi.HYLKAA => {
-        Hylkaa(muunnaTotuusarvofunktioksi(lasketutArgumentit(0)), oid)
+        val hylkaysperustekuvaus = funktiokutsu.getSyoteparametrit.find(_.getAvain == "hylkaysperustekuvaus").map(_.getArvo)
+        Hylkaa(muunnaTotuusarvofunktioksi(lasketutArgumentit(0)), hylkaysperustekuvaus, oid)
       }
       case Funktionimi.JA => Ja(lasketutArgumentit.map(muunnaTotuusarvofunktioksi(_)), oid)
       case Funktionimi.JOS => Jos(

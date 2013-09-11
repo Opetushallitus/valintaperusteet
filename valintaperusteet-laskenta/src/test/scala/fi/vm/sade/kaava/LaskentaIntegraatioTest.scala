@@ -1832,4 +1832,19 @@ class LaskentaIntegraatioTest extends FunSuite {
     assertTulosTyhja(tulos)
     assertTilaVirhe(tila, VirheMetatietotyyppi.HYLKAAMISTA_EI_VOIDA_TULKITA)
   }
+
+  test("hylkaa, kuvaus syotetty") {
+    val hylkaysperustekuvaus = "huono juttu"
+
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HYLKAA,
+      funktioargumentit = List(totuusarvoTrue),
+      syoteparametrit = List(Syoteparametri(avain = "hylkaysperustekuvaus", arvo = hylkaysperustekuvaus))
+    )
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assertTulosTyhja(tulos)
+    assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.HYLKAA_FUNKTION_SUORITTAMA_HYLKAYS, Some(hylkaysperustekuvaus))
+  }
 }

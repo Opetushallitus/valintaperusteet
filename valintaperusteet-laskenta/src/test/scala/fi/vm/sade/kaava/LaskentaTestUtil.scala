@@ -28,9 +28,9 @@ object LaskentaTestUtil {
     })
   }
 
-  def assertTilaHylatty(tila: Tila, hylattymeta: HylattyMetatieto.Hylattymetatietotyyppi): Unit = {
+  def assertTilaHylatty(tila: Tila, hylattymeta: HylattyMetatieto.Hylattymetatietotyyppi, kuvaus: Option[String] = None): Unit = {
     assert(tila match {
-      case h: Hylattytila => hylattymeta == h.getMetatieto.getMetatietotyyppi
+      case h: Hylattytila => hylattymeta == h.getMetatieto.getMetatietotyyppi && (kuvaus.isEmpty || kuvaus.get == h.getKuvaus)
       case _ => false
     })
   }

@@ -111,7 +111,7 @@ public class PkPohjaiset {
         Funktiokutsu summa = GenericHelper.luoSumma(painotettavatKeskiarvotLaskentakaava,
                 yleinenkoulumenestyspisteytysmalli, pohjakoulutuspisteytysmalli, ilmanKoulutuspaikkaaPisteytysmalli,
                 hakutoivejarjestyspisteytysmalli, tyokokemuspisteytysmalli, sukupuolipisteytysmalli,
-                GenericHelper.luoHylkaa(ulkomaillaSuoritettuKoulutus));
+                GenericHelper.luoHylkaa(ulkomaillaSuoritettuKoulutus, "Oppivelvollisuuden suorittaminen on keskeytynyt tai pohjakoulutus on ulkomailla suoritettu koulutus"));
 
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(summa,
                 "2. asteen peruskoulupohjainen peruskaava");

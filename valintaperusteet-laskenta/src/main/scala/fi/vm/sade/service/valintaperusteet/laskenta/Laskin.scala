@@ -466,10 +466,12 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
         val (tulos, tilat, h) = muodostaYksittainenTulos(f, d => d.setScale(tarkkuus, BigDecimal.RoundingMode.HALF_UP))
         (tulos, tilat, Historia("Pyöristys", tulos, tilat, Some(List(h)), Some(Map("tarkkuus" -> Some(tarkkuus)))))
       }
-      case Hylkaa(f, oid) => {
+      case Hylkaa(f, hylkaysperustekuvaus, oid) => {
         val (tulos, tila1, h) = laske(f)
 
-        val tila2 = tulos.map(b => if (b) new Hylattytila("Hylätty hylkäämisfunktiolla", new HylkaaFunktionSuorittamaHylkays) else new Hyvaksyttavissatila)
+        val tila2 = tulos.map(b => if (b) new Hylattytila(hylkaysperustekuvaus.getOrElse("Hylätty hylkäämisfunktiolla"),
+          new HylkaaFunktionSuorittamaHylkays)
+        else new Hyvaksyttavissatila)
           .getOrElse(new Virhetila("Hylkäämisfunktion syöte on tyhjä. Hylkäystä ei voida tulkita.", new HylkaamistaEiVoidaTulkita))
         val tilat = List(tila1, tila2)
         (None, tilat, Historia("Hylkää", None, tilat, Some(List(h)), None))

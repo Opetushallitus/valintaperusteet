@@ -334,10 +334,11 @@ public class GenericHelper {
         return f;
     }
 
-    public static Funktiokutsu luoHylkaa(FunktionArgumentti arg) {
+    public static Funktiokutsu luoHylkaa(FunktionArgumentti arg, String hylkaysperustekuvaus) {
         Funktiokutsu f = new Funktiokutsu();
         f.setFunktionimi(Funktionimi.HYLKAA);
         f.getFunktioargumentit().addAll(luoFunktioargumentit(arg));
+        f.getSyoteparametrit().add(luoSyoteparametri("hylkaysperustekuvaus", hylkaysperustekuvaus));
         return f;
     }
 }

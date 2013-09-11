@@ -362,7 +362,7 @@ public class PkJaYoPohjaiset {
     public static Laskentakaava luoYhdistettyPeruskaavaJaKielikoekaava(Laskentakaava peruskaava, Laskentakaava kielikoekaava) {
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
                 GenericHelper.luoSumma(peruskaava,
-                        GenericHelper.luoHylkaa(kielikoekaava)),
+                        GenericHelper.luoHylkaa(kielikoekaava, "Kielikoetta ei suoritettu tai kielikokeen korvaavuusehto ei täyttynyt")),
                 peruskaava.getNimi() + " + " + kielikoekaava.getNimi());
     }
 

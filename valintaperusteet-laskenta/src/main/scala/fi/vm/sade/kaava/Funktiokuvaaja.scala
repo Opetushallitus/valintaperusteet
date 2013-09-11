@@ -212,7 +212,8 @@ object Funktiokuvaaja {
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
       funktioargumentit = List(
         Funktioargumenttikuvaus("f", Funktiotyyppi.TOTUUSARVOFUNKTIO, Kardinaliteetti.YKSI)
-      )
+      ),
+      syoteparametrit = List(Syoteparametrikuvaus(avain = "hylkaysperustekuvaus", tyyppi = Syoteparametrityyppi.MERKKIJONO, pakollinen = false))
     ),
     Funktionimi.JA -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.TOTUUSARVOFUNKTIO,
