@@ -268,7 +268,7 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
         } else {
             LOG.info("Hakukohde löytyi.");
             Valintaryhma hakukohdeValintaryhma = hakukohde.getValintaryhma();
-
+            kopioiTiedot(importData, hakukohde);
             // ^ on XOR-operaattori. Tsekataan, että sekä koodin että hakukohteen kautta navigoidut valintaryhmät ovat
             // samat ja että hakukohdetta ei ole manuaalisesti siirretty valintaryhmään.
             if ((valintaryhma != null ^ hakukohdeValintaryhma != null) ||
@@ -285,7 +285,7 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
                     hakukohde =
                             hakukohdeService.siirraHakukohdeValintaryhmaan(importData.getHakukohdeOid(), valintaryhmaOid, false);
                 }
-                kopioiTiedot(importData, hakukohde);
+
                 hakukohde.setHakukohdekoodi(koodi);
                 koodi.addHakukohde(hakukohde);
 
