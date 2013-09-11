@@ -36,6 +36,10 @@ public class HakukohdeViite extends BaseEntity {
     @JsonView(JsonViews.Basic.class)
     private String nimi;
 
+    @Column(name = "tila")
+    @JsonView(JsonViews.Basic.class)
+    private String tila;
+
     @Column(name = "manuaalisesti_siirretty")
     private Boolean manuaalisestiSiirretty = false;
 
@@ -166,5 +170,13 @@ public class HakukohdeViite extends BaseEntity {
 
     public void setTarjoajaOid(String tarjoajaOid) {
         this.tarjoajaOid = tarjoajaOid;
+    }
+
+    public String getTila() {
+        return tila;
+    }
+
+    public void setTila(String tila) {
+        this.tila = tila;
     }
 }

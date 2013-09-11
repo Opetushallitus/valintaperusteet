@@ -143,6 +143,7 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
         to.setHakuoid(from.getHakuOid());
         to.setOid(from.getHakukohdeOid());
         to.setTarjoajaOid(from.getTarjoajaOid());
+        to.setTila(from.getTila());
     }
 
     public String sanitizeKoodiUri(String uri) {
