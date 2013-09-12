@@ -10,6 +10,7 @@
         <class>fi.vm.sade.service.valintaperusteet.model.Funktioargumentti</class>
         <class>fi.vm.sade.service.valintaperusteet.model.Hakijaryhma</class>
         <class>fi.vm.sade.service.valintaperusteet.model.HakukohdeViite</class>
+        <class>fi.vm.sade.service.valintaperusteet.model.HakukohteenValintaperuste</class>
         <class>fi.vm.sade.service.valintaperusteet.model.Valintatapajono</class>
         <class>fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri</class>
         <class>fi.vm.sade.service.valintaperusteet.model.Koodi</class>

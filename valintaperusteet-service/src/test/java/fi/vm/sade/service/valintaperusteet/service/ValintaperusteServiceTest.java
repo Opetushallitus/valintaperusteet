@@ -4,10 +4,7 @@ import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.ValintaperusteService;
 import fi.vm.sade.service.valintaperusteet.messages.HakuparametritTyyppi;
-import fi.vm.sade.service.valintaperusteet.schema.TavallinenValinnanVaiheTyyppi;
-import fi.vm.sade.service.valintaperusteet.schema.ValintakoeTyyppi;
-import fi.vm.sade.service.valintaperusteet.schema.ValintakoeValinnanVaiheTyyppi;
-import fi.vm.sade.service.valintaperusteet.schema.ValintaperusteetTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakuparametritOnTyhjaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheEpaaktiivinenException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheJarjestyslukuOutOfBoundsException;
@@ -20,12 +17,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
+import scala.actors.threadpool.Arrays;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.*;
 
 /**
  * User: kwuoti Date: 22.1.2013 Time: 15.40
@@ -53,11 +52,20 @@ public class ValintaperusteServiceTest {
         List<HakuparametritTyyppi> params = new ArrayList<HakuparametritTyyppi>();
         params.add(getHakuparametritTyyppi("oid6", null));
 
+        Set<String> tunnisteet = new HashSet<String>(Arrays.asList(new String[]{"tunniste1", "tunniste2", "tunniste3", "tunniste4"}));
+
         List<ValintaperusteetTyyppi> valintaperusteetTyyppis = valintaperusteService.haeValintaperusteet(params);
 
         assertEquals(3, valintaperusteetTyyppis.size());
-        assertEquals(1, valintaperusteetTyyppis.get(1).getValinnanVaihe().getValinnanVaiheJarjestysluku());
+        for (ValintaperusteetTyyppi vp : valintaperusteetTyyppis) {
+            assertEquals(tunnisteet.size(), vp.getHakukohteenValintaperuste().size());
+            for (HakukohteenValintaperusteTyyppi hkvpt : vp.getHakukohteenValintaperuste()) {
+                assertTrue(tunnisteet.contains(hkvpt.getTunniste()));
+                assertNotNull(hkvpt.getArvo());
+            }
+        }
 
+        assertEquals(1, valintaperusteetTyyppis.get(1).getValinnanVaihe().getValinnanVaiheJarjestysluku());
         assertEquals(3, ((TavallinenValinnanVaiheTyyppi) valintaperusteetTyyppis.get(0).getValinnanVaihe()).getValintatapajono().get(0).getJarjestyskriteerit().size());
         assertEquals(1, ((TavallinenValinnanVaiheTyyppi) valintaperusteetTyyppis.get(0).getValinnanVaihe()).getValintatapajono().get(1).getPrioriteetti());
         assertEquals(1, ((TavallinenValinnanVaiheTyyppi) valintaperusteetTyyppis.get(0).getValinnanVaihe()).getValintatapajono().get(0).getJarjestyskriteerit().get(1).getPrioriteetti());

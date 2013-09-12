@@ -98,7 +98,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
 
             Long startFind = System.currentTimeMillis();
             List<ValinnanVaihe> valinnanVaiheList = valinnanVaiheService.findByHakukohde(param.getHakukohdeOid());
-            if(LOG.isInfoEnabled()) {
+            if (LOG.isInfoEnabled()) {
                 LOG.info("findByHakukohde: " + (System.currentTimeMillis() - startFind));
             }
             Long startConvert = System.currentTimeMillis();
@@ -113,7 +113,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
                 }
 
                 ValintaperusteetTyyppi valinnanVaihe = convertValintaperusteet(valinnanVaiheList.get(jarjestysluku),
-                        param.getHakukohdeOid(), hakukohde.getHakuoid(), hakukohde.getTarjoajaOid(), jarjestysluku);
+                        hakukohde, jarjestysluku);
                 if (valinnanVaihe != null) {
                     list.add(valinnanVaihe);
                 }
@@ -122,30 +122,29 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
                 for (int i = 0; i < valinnanVaiheList.size(); i++) {
                     if (valinnanVaiheList.get(i).getAktiivinen()) {
                         ValintaperusteetTyyppi valinnanVaihe = convertValintaperusteet(valinnanVaiheList.get(i),
-                                param.getHakukohdeOid(), hakukohde.getHakuoid(), hakukohde.getTarjoajaOid(), i);
+                                hakukohde, i);
                         if (valinnanVaihe != null) {
                             list.add(valinnanVaihe);
                         }
                     }
                 }
             }
-            if(LOG.isInfoEnabled()) {
+            if (LOG.isInfoEnabled()) {
                 LOG.info("Convert: " + (System.currentTimeMillis() - startConvert));
             }
         }
-        if(LOG.isInfoEnabled()) {
+        if (LOG.isInfoEnabled()) {
             LOG.info("haeValintaperusteet: " + (System.currentTimeMillis() - start));
         }
         return list;
     }
 
-    private ValintaperusteetTyyppi convertValintaperusteet(ValinnanVaihe valinnanVaihe, String hakukohdeOid,
-                                                           String hakuOid, String tarjoajaOid, int valinnanvaiheJarjestysluku) {
+    private ValintaperusteetTyyppi convertValintaperusteet(ValinnanVaihe valinnanVaihe, HakukohdeViite hakukohde, int valinnanvaiheJarjestysluku) {
 
         ValintaperusteetTyyppi valintaperusteetTyyppi = new ValintaperusteetTyyppi();
-        valintaperusteetTyyppi.setHakukohdeOid(hakukohdeOid);
-        valintaperusteetTyyppi.setHakuOid(hakuOid);
-        valintaperusteetTyyppi.setTarjoajaOid(tarjoajaOid);
+        valintaperusteetTyyppi.setHakukohdeOid(hakukohde.getOid());
+        valintaperusteetTyyppi.setHakuOid(hakukohde.getHakuoid());
+        valintaperusteetTyyppi.setTarjoajaOid(hakukohde.getTarjoajaOid());
 
         ValinnanVaiheTyyppi vv = null;
         switch (valinnanVaihe.getValinnanVaiheTyyppi()) {
@@ -169,6 +168,13 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
         vv.setValinnanVaiheJarjestysluku(valinnanvaiheJarjestysluku);
         vv.setValinnanVaiheOid(valinnanVaihe.getOid());
         valintaperusteetTyyppi.setValinnanVaihe(vv);
+
+        for (HakukohteenValintaperuste vp : hakukohde.getHakukohteenValintaperusteet().values()) {
+            HakukohteenValintaperusteTyyppi vpt = new HakukohteenValintaperusteTyyppi();
+            vpt.setTunniste(vp.getTunniste());
+            vpt.setArvo(vp.getArvo());
+            valintaperusteetTyyppi.getHakukohteenValintaperuste().add(vpt);
+        }
 
         return valintaperusteetTyyppi;
     }
@@ -250,9 +256,9 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
             Long start = System.currentTimeMillis();
             Laskentakaava laskentakaava = laskentakaavaService.haeLaskettavaKaava(jarjestyskriteeri.getLaskentakaava()
                     .getId());
-            if(LOG.isInfoEnabled()) {
+            if (LOG.isInfoEnabled()) {
                 LOG.info("haeLaskettavaKaava: " + jarjestyskriteeri.getLaskentakaava()
-                    .getId() + ":" +(System.currentTimeMillis() - start));
+                        .getId() + ":" + (System.currentTimeMillis() - start));
             }
             FunktiokutsuTyyppi convert = conversionService.convert(laskentakaava.getFunktiokutsu(),
                     FunktiokutsuTyyppi.class);

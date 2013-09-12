@@ -527,6 +527,18 @@
 
     <hakukohde_viite id="21" version="0" hakuoid="hakuoid1" oid="oid21" nimi="haku21" manuaalisesti_siirretty="false"/>
 
+    <hakukohde_viite id="22" version="0" hakuoid="hakuoid1" oid="oid22" nimi="haku22" manuaalisesti_siirretty="false"/>
+
+    <hakukohteen_valintaperuste id="1" version="0" tunniste="tunniste1" arvo="arvo1" hakukohde_viite_id="22"/>
+    <hakukohteen_valintaperuste id="2" version="0" tunniste="tunniste2" arvo="arvo2" hakukohde_viite_id="22"/>
+    <hakukohteen_valintaperuste id="3" version="0" tunniste="tunniste3" arvo="arvo3" hakukohde_viite_id="22"/>
+    <hakukohteen_valintaperuste id="4" version="0" tunniste="tunniste4" arvo="arvo4" hakukohde_viite_id="22"/>
+
+    <hakukohteen_valintaperuste id="5" version="0" tunniste="tunniste1" arvo="arvo1" hakukohde_viite_id="6"/>
+    <hakukohteen_valintaperuste id="6" version="0" tunniste="tunniste2" arvo="arvo2" hakukohde_viite_id="6"/>
+    <hakukohteen_valintaperuste id="7" version="0" tunniste="tunniste3" arvo="arvo3" hakukohde_viite_id="6"/>
+    <hakukohteen_valintaperuste id="8" version="0" tunniste="tunniste4" arvo="arvo4" hakukohde_viite_id="6"/>
+
     <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="1" version="0" valintaryhma_id="1"
                     hakukohde_viite_id="[NULL]" oid="1" nimi="valinnanvaihe1" kuvaus="kuvaus1" aktiivinen="true"/>
     <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="2" version="0" valintaryhma_id="[NULL]"
@@ -874,7 +886,8 @@
                     nimi="valintaryhma 48 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus"/>
 
     <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="112" version="0" oid="112" valintaryhma_id="48"
-                    nimi="valintaryhma 48 valinnan vaihe 2" aktiivinen="true" kuvaus="kuvaus" edellinen_valinnan_vaihe_id="111"/>
+                    nimi="valintaryhma 48 valinnan vaihe 2" aktiivinen="true" kuvaus="kuvaus"
+                    edellinen_valinnan_vaihe_id="111"/>
 
     <valintakoe id="1" version="0" oid="oid1" tunniste="valintakoetunniste1" nimi="valintakoe1" kuvaus="kuvaus1"
                 aktiivinen="true" valinnan_vaihe_id="83" laskentakaava_id="101" master_valintakoe_id="[NULL]"/>

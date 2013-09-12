@@ -5,10 +5,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonView;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * User: kkammone
@@ -71,6 +68,11 @@ public class HakukohdeViite extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "valintakoekoodi_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME))
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Valintakoekoodi> valintakokeet = new ArrayList<Valintakoekoodi>();
+
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "hakukohde")
+    @MapKeyColumn(name = "tunniste")
+    private Map<String, HakukohteenValintaperuste> hakukohteenValintaperusteet;
 
     public String getHakuoid() {
         return hakuoid;
@@ -178,5 +180,13 @@ public class HakukohdeViite extends BaseEntity {
 
     public void setTila(String tila) {
         this.tila = tila;
+    }
+
+    public Map<String, HakukohteenValintaperuste> getHakukohteenValintaperusteet() {
+        return hakukohteenValintaperusteet;
+    }
+
+    public void setHakukohteenValintaperusteet(Map<String, HakukohteenValintaperuste> hakukohteenValintaperusteet) {
+        this.hakukohteenValintaperusteet = hakukohteenValintaperusteet;
     }
 }
