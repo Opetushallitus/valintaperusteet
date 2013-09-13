@@ -181,6 +181,7 @@
         <xs:restriction base="xs:string">
             <xs:enumeration value="HAETTAVA_ARVO"/>
             <xs:enumeration value="SYOTETTAVA_ARVO"/>
+            <xs:enumeration value="HAKUKOHTEEN_ARVO"/>
         </xs:restriction>
     </xs:simpleType>
 

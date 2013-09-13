@@ -8,8 +8,9 @@ import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
 import scala.collection.JavaConversions._
 import fi.vm.sade.kaava.LaskentaTestUtil.Hakemus
 import java.math.BigDecimal
-import fi.vm.sade.service.valintaperusteet.laskenta.api.Osallistuminen
+import fi.vm.sade.service.valintaperusteet.laskenta.api.{Hakukohde, Osallistuminen}
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.VirheMetatieto.VirheMetatietotyyppi
+import java.util
 
 /**
  * User: kwuoti
@@ -318,7 +319,7 @@ class LaskentaIntegraatioTest extends FunSuite {
       onPakollinen = false,
       tunniste = "tunniste"))
 
-  val hakukohde = "123"
+  val hakukohde = new Hakukohde("123", new util.HashMap[String, String])
   val tyhjaHakemus = Hakemus("", Nil, Map[String, String]())
 
   test("lukuarvo") {
@@ -354,7 +355,7 @@ class LaskentaIntegraatioTest extends FunSuite {
     val funktiokutsu = konvertoiLukuarvoLukuarvoksi
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val hakemus = tyhjaHakemus
-    val prosessoituHakemus = Esiprosessori.esiprosessoi("1", List(hakemus), hakemus, lasku)
+    val prosessoituHakemus = Esiprosessori.esiprosessoi(new Hakukohde("1", new util.HashMap[String, String]), List(hakemus), hakemus, lasku)
 
     val (tulos, tila) = Laskin.laske(hakukohde, prosessoituHakemus, lasku)
     assert(tulos.get.compareTo(new BigDecimal("4.0")) == 0)
@@ -389,7 +390,7 @@ class LaskentaIntegraatioTest extends FunSuite {
     val funktiokutsu = konvertoiLukuarvovaliLukuarvoksi
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val hakemus = tyhjaHakemus
-    val prosessoituHakemus = Esiprosessori.esiprosessoi("1", List(hakemus), hakemus, lasku)
+    val prosessoituHakemus = Esiprosessori.esiprosessoi(new Hakukohde("1", new util.HashMap[String, String]), List(hakemus), hakemus, lasku)
 
     val (tulos, tila) = Laskin.laske(hakukohde, prosessoituHakemus, lasku)
     assert(tulos.get.compareTo(new BigDecimal("3.0")) == 0)
@@ -1330,7 +1331,7 @@ class LaskentaIntegraatioTest extends FunSuite {
           avain = "n",
           arvo = "2")))
 
-    val hakukohde = "oid1"
+    val hakukohde = new Hakukohde("oid1", new util.HashMap[String, String])
     val hakemus = Hakemus("", List("oid2", "oid1", "oid3"), Map[String, String]())
 
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
@@ -1347,7 +1348,7 @@ class LaskentaIntegraatioTest extends FunSuite {
           avain = "n",
           arvo = "3")))
 
-    val hakukohde = "oid1"
+    val hakukohde = new Hakukohde("oid1", new util.HashMap[String, String])
     val hakemus = Hakemus("", List("oid2", "oid1", "oid3"), Map[String, String]())
 
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
@@ -1364,7 +1365,7 @@ class LaskentaIntegraatioTest extends FunSuite {
           avain = "n",
           arvo = "5")))
 
-    val hakukohde = "oid1"
+    val hakukohde = new Hakukohde("oid1", new util.HashMap[String, String])
     val hakemus = Hakemus("", List("oid2", "oid1", "oid3"), Map[String, String]())
 
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
@@ -1502,7 +1503,8 @@ class LaskentaIntegraatioTest extends FunSuite {
         Syoteparametri("tunniste", "sukupuoli"),
         Syoteparametri("prosenttiosuus", "33.0")))
 
-    val hakukohdeOid = "1"
+    val hakukohde = new Hakukohde("1", new util.HashMap[String, String])
+
     val hakemukset = List(
       Hakemus("1", List("1", "2", "3"), Map("sukupuoli" -> "mies")),
       Hakemus("2", List("1", "2", "3"), Map("sukupuoli" -> "mies")),
@@ -1510,12 +1512,12 @@ class LaskentaIntegraatioTest extends FunSuite {
       Hakemus("4", List("1", "2", "3"), Map("sukupuoli" -> "nainen")))
 
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
-    Esiprosessori.esiprosessoi(hakukohdeOid, asJavaCollection(hakemukset), hakemukset.head, lasku)
+    Esiprosessori.esiprosessoi(hakukohde, asJavaCollection(hakemukset), hakemukset.head, lasku)
 
-    val prosessoidutHakemukset = hakemukset.map(h => Esiprosessori.esiprosessoi(hakukohdeOid,
+    val prosessoidutHakemukset = hakemukset.map(h => Esiprosessori.esiprosessoi(hakukohde,
       seqAsJavaList(hakemukset), h, lasku))
 
-    val tulokset = prosessoidutHakemukset.map(h => Laskin.laske(hakukohdeOid, h, lasku))
+    val tulokset = prosessoidutHakemukset.map(h => Laskin.laske(hakukohde, h, lasku))
     assert(!tulokset(0)._1.get)
     assertTilaHyvaksyttavissa(tulokset(0)._2)
     assert(!tulokset(1)._1.get)

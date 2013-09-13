@@ -40,7 +40,7 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Valintaperusteviite
 object Laskin {
   val LOG = LoggerFactory.getLogger(classOf[Laskin])
 
-  def suoritaLasku(hakukohde: String,
+  def suoritaLasku(hakukohde: Hakukohde,
                    hakemus: Hakemus,
                    laskettava: Lukuarvofunktio, historiaBuffer: StringBuffer): Laskentatulos[BigDec] = {
 
@@ -50,7 +50,7 @@ object Laskin {
     if (tulos.isEmpty) new Laskentatulos[BigDec](tila, null) else new Laskentatulos[BigDec](tila, tulos.get.underlying)
   }
 
-  def suoritaLasku(hakukohde: String,
+  def suoritaLasku(hakukohde: Hakukohde,
                    hakemus: Hakemus,
                    laskettava: Totuusarvofunktio, historiaBuffer: StringBuffer): Laskentatulos[java.lang.Boolean] = {
     val (tulos, tila, historia) = new Laskin(hakukohde, hakemus).laske(laskettava)
@@ -59,13 +59,13 @@ object Laskin {
     new Laskentatulos[java.lang.Boolean](tila, if (!tulos.isEmpty) Boolean.box(tulos.get) else null)
   }
 
-  def laske(hakukohde: String, hakemus: Hakemus, laskettava: Totuusarvofunktio): (Option[Boolean], Tila) = {
+  def laske(hakukohde: Hakukohde, hakemus: Hakemus, laskettava: Totuusarvofunktio): (Option[Boolean], Tila) = {
     val (tulos, tila, historia) = new Laskin(hakukohde, hakemus).laske(laskettava)
     LOG.debug("{}", Json.generate(wrap(hakemus, historia)))
     (tulos, tila)
   }
 
-  def laske(hakukohde: String, hakemus: Hakemus, laskettava: Lukuarvofunktio): (Option[BigDec], Tila) = {
+  def laske(hakukohde: Hakukohde, hakemus: Hakemus, laskettava: Lukuarvofunktio): (Option[BigDec], Tila) = {
     val (tulos, tila, historia) = new Laskin(hakukohde, hakemus).laske(laskettava)
     LOG.debug("{}", Json.generate(wrap(hakemus, historia)))
     (if (tulos.isEmpty) None else Some(tulos.get.underlying), tila)
@@ -79,7 +79,7 @@ object Laskin {
   }
 }
 
-class Laskin(hakukohde: String, hakemus: Hakemus) {
+class Laskin(hakukohde: Hakukohde, hakemus: Hakemus) {
 
   private def ehdollinenTulos[A, B](tulos: (Option[A], Tila), f: (A, Tila) => Tuple2[Option[B], List[Tila]]): Tuple2[Option[B], List[Tila]] = {
     val (alkupTulos, alkupTila) = tulos
@@ -274,13 +274,13 @@ class Laskin(hakukohde: String, hakemus: Hakemus) {
       }
 
       case Hakutoive(n, oid) => {
-        val onko = Some(hakemus.onkoHakutoivePrioriteetilla(hakukohde, n));
+        val onko = Some(hakemus.onkoHakutoivePrioriteetilla(hakukohde.hakukohdeOid, n));
         val tilat = List(new Hyvaksyttavissatila)
         (onko, tilat, Historia("Hakutoive", onko, tilat, None, Some(Map("prioriteetti" -> Some(n)))))
       }
 
       case d: Demografia => {
-        val avain = Esiprosessori.prosessointiOid(hakukohde, hakemus, d)
+        val avain = Esiprosessori.prosessointiOid(hakukohde.hakukohdeOid, hakemus, d)
         val (arvo, tila) = haeValintaperuste(avain, true, hakemus)
 
         val (demografia, t) = arvo match {

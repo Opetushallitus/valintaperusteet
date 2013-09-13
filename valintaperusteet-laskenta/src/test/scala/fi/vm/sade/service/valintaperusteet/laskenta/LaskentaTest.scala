@@ -1,9 +1,9 @@
 package fi.vm.sade.service.valintaperusteet.laskenta
 
-import java.math.{ BigDecimal => BigDec }
+import java.math.{BigDecimal => BigDec}
 import scala.math.BigDecimal._
 
-import fi.vm.sade.service.valintaperusteet.laskenta.api.{ Osallistuminen, Hakemus }
+import fi.vm.sade.service.valintaperusteet.laskenta.api.{Hakukohde, Osallistuminen, Hakemus}
 import org.scalatest._
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta._
 import scala.collection.JavaConversions._
@@ -31,6 +31,7 @@ import fi.vm.sade.kaava.LaskentaTestUtil.assertTilaHyvaksyttavissa
 import fi.vm.sade.kaava.LaskentaTestUtil.assertTulosTyhja
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.VirheMetatieto.VirheMetatietotyyppi
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.HylattyMetatieto.Hylattymetatietotyyppi
+import java.util
 
 /**
  *
@@ -40,7 +41,7 @@ import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.HylattyMetatieto.Hy
  */
 class LaskentaTest extends FunSuite {
 
-  val hakukohde = "123"
+  val hakukohde = new Hakukohde("123", new util.HashMap[String, String])
   val tyhjaHakemus = Hakemus("", Nil, Map[String, String]())
 
   test("Lukuarvo function returns its value") {
@@ -169,13 +170,13 @@ class LaskentaTest extends FunSuite {
         List("hakutoiveoid1", "hakutoiveoid2", "hakutoiveoid3"),
         Map()))
 
-    val hakukohde = "hakutoiveoid1"
+    val hakukohde = new Hakukohde("hakutoiveoid1", new util.HashMap[String, String])
 
     val funktio = Demografia("funktioid1", "sukupuoli", BigDecimal("33.0"))
     val prosessoidutHakemukset = hakemukset.map(h => Esiprosessori.esiprosessoi(hakukohde, seqAsJavaList(hakemukset), h, funktio))
 
     def check(hakemus: Hakemus) = {
-      val avain = Esiprosessori.prosessointiOid(hakukohde, hakemus, funktio)
+      val avain = Esiprosessori.prosessointiOid(hakukohde.hakukohdeOid, hakemus, funktio)
       hakemus.kentat(avain).toBoolean
     }
 
