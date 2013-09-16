@@ -1849,4 +1849,32 @@ class LaskentaIntegraatioTest extends FunSuite {
     assertTulosTyhja(tulos)
     assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.HYLKAA_FUNKTION_SUORITTAMA_HYLKAYS, Some(hylkaysperustekuvaus))
   }
+
+  test("hae hakukohteen valintaperuste") {
+    val tunniste = "valintaperustetunniste"
+
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HAELUKUARVO,
+      valintaperustetunniste = ValintaperusteViite(false, tunniste, Valintaperustelahde.HAKUKOHTEEN_ARVO)
+    )
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(new Hakukohde("hakukohdeOid", Map(tunniste -> "100.0")), tyhjaHakemus, lasku)
+    assert(tulos.get.equals(new BigDecimal("100.0")))
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("hae hakukohteen valintaperuste, tunnistetta ei ole olemassa") {
+    val tunniste = "valintaperustetunniste"
+
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HAELUKUARVO,
+      valintaperustetunniste = ValintaperusteViite(false, tunniste, Valintaperustelahde.HAKUKOHTEEN_ARVO)
+    )
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(new Hakukohde("hakukohdeOid", Map("toinen tunniste" -> "100.0")), tyhjaHakemus, lasku)
+    assertTulosTyhja(tulos)
+    assertTilaVirhe(tila, VirheMetatietotyyppi.HAKUKOHTEEN_VALINTAPERUSTE_MAARITTELEMATTA_VIRHE)
+  }
 }

@@ -3,6 +3,7 @@ package fi.vm.sade.kaava
 import fi.vm.sade.service.valintaperusteet.model._
 import fi.vm.sade.service.valintaperusteet.laskenta._
 import Laskenta._
+import Laskenta.{HakukohteenValintaperuste => HkValintaperuste}
 import org.apache.commons.lang.StringUtils
 import java.math.{BigDecimal => BigDec}
 import scala.math.BigDecimal._
@@ -72,10 +73,11 @@ object Laskentadomainkonvertteri {
     muunnaTotuusarvofunktioksi(lasku)
   }
 
-  private def luoValintaperusteviite(valintaperuste: ValintaperusteViite): Valintaperusteviite = {
+  private def luoValintaperusteviite(valintaperuste: ValintaperusteViite): Valintaperuste = {
     valintaperuste.getLahde match {
-      case Valintaperustelahde.HAETTAVA_ARVO => Valintaperusteviite(valintaperuste.getTunniste,
+      case Valintaperustelahde.HAETTAVA_ARVO => HakemuksenValintaperuste(valintaperuste.getTunniste,
         valintaperuste.getOnPakollinen)
+      case Valintaperustelahde.HAKUKOHTEEN_ARVO => HkValintaperuste(valintaperuste.getTunniste)
       case Valintaperustelahde.SYOTETTAVA_ARVO => SyotettavaValintaperuste(valintaperuste.getTunniste,
         valintaperuste.getOnPakollinen, valintaperuste.getOsallistuminenTunniste)
     }

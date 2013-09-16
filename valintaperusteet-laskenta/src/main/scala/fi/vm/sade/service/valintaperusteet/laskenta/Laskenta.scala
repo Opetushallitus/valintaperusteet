@@ -12,10 +12,16 @@ import java.math.{BigDecimal => BigDec}
  */
 object Laskenta {
 
-  case class Valintaperusteviite(tunniste: String, pakollinen: Boolean)
+  trait Valintaperuste {
+    val tunniste: String
+  }
 
-  case class SyotettavaValintaperuste(override val tunniste: String, override val pakollinen: Boolean,
-                                      osallistuminenTunniste: String) extends Valintaperusteviite(tunniste, pakollinen)
+  case class HakemuksenValintaperuste(override val tunniste: String, val pakollinen: Boolean) extends Valintaperuste
+
+  case class SyotettavaValintaperuste(override val tunniste: String, val pakollinen: Boolean,
+                                      osallistuminenTunniste: String) extends Valintaperuste
+
+  case class HakukohteenValintaperuste(override val tunniste: String) extends Valintaperuste
 
   case class Arvokonvertteri[S, T](konversioMap: Seq[Arvokonversio[S, T]]) extends Konvertteri[S, T] {
     def konvertoi(arvo: S): (Option[T], Tila) = {
@@ -198,32 +204,32 @@ object Laskenta {
   case class Jos(ehto: Totuusarvofunktio, ifHaara: Lukuarvofunktio, elseHaara: Lukuarvofunktio, oid: String = "")
     extends Lukuarvofunktio
 
-  abstract case class HaeArvo[T](oletusarvo: Option[T], valintaperusteviite: Valintaperusteviite) extends Funktio[T]
+  abstract case class HaeArvo[T](oletusarvo: Option[T], valintaperusteviite: Valintaperuste) extends Funktio[T]
 
   case class HaeMerkkijonoJaKonvertoiLukuarvoksi(konvertteri: Konvertteri[String, BigDecimal],
                                                  override val oletusarvo: Option[BigDecimal],
-                                                 override val valintaperusteviite: Valintaperusteviite,
+                                                 override val valintaperusteviite: Valintaperuste,
                                                  oid: String = "")
     extends HaeArvo[BigDecimal](oletusarvo, valintaperusteviite) with Lukuarvofunktio with NollaParametrinenFunktio[BigDecimal]
 
   case class HaeMerkkijonoJaKonvertoiTotuusarvoksi(konvertteri: Konvertteri[String, Boolean],
                                                    override val oletusarvo: Option[Boolean],
-                                                   override val valintaperusteviite: Valintaperusteviite,
+                                                   override val valintaperusteviite: Valintaperuste,
                                                    oid: String = "")
     extends HaeArvo[Boolean](oletusarvo, valintaperusteviite) with Totuusarvofunktio with NollaParametrinenFunktio[Boolean]
 
   case class HaeTotuusarvo(konvertteri: Option[Konvertteri[Boolean, Boolean]],
                            override val oletusarvo: Option[Boolean],
-                           override val valintaperusteviite: Valintaperusteviite, oid: String = "")
+                           override val valintaperusteviite: Valintaperuste, oid: String = "")
     extends HaeArvo[Boolean](oletusarvo, valintaperusteviite) with Totuusarvofunktio with NollaParametrinenFunktio[Boolean]
 
   case class HaeLukuarvo(konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]],
                          override val oletusarvo: Option[BigDecimal],
-                         override val valintaperusteviite: Valintaperusteviite, oid: String = "")
+                         override val valintaperusteviite: Valintaperuste, oid: String = "")
     extends HaeArvo[BigDecimal](oletusarvo, valintaperusteviite) with Lukuarvofunktio with NollaParametrinenFunktio[BigDecimal]
 
   case class HaeMerkkijonoJaVertaaYhtasuuruus(override val oletusarvo: Option[Boolean],
-                                              override val valintaperusteviite: Valintaperusteviite,
+                                              override val valintaperusteviite: Valintaperuste,
                                               vertailtava: String, oid: String = "")
     extends HaeArvo[Boolean](oletusarvo, valintaperusteviite) with Totuusarvofunktio with NollaParametrinenFunktio[Boolean]
 

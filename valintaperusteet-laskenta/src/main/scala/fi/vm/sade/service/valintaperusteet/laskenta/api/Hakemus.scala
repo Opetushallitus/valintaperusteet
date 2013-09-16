@@ -8,8 +8,8 @@ import scala.collection.JavaConversions._
  * Time: 9.53
  */
 class Hakemus(val oid: String,
-  val hakutoiveet: java.util.Map[java.lang.Integer, String],
-  private val jkentat: java.util.Map[String, String]) {
+              val hakutoiveet: java.util.Map[java.lang.Integer, String],
+              jkentat: java.util.Map[String, String]) {
 
   val kentat: scala.collection.immutable.Map[String, String] = jkentat.toMap
 

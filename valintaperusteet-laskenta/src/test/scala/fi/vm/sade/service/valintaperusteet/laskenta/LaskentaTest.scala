@@ -23,7 +23,7 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Jos
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Demografia
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaKonvertoiLukuarvoksi
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Valintaperusteviite
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakemuksenValintaperuste
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonversio
 import fi.vm.sade.kaava.LaskentaTestUtil.assertTilaHylatty
 import fi.vm.sade.kaava.LaskentaTestUtil.assertTilaVirhe
@@ -130,7 +130,7 @@ class LaskentaTest extends FunSuite {
     val hakemus = Hakemus("", Nil, Map("paattotodistus_ka" -> "8.7"))
 
     val (tulos, _) = Laskin.laske(hakukohde, hakemus,
-      HaeLukuarvo(None, None, Valintaperusteviite("paattotodistus_ka", false)))
+      HaeLukuarvo(None, None, HakemuksenValintaperuste("paattotodistus_ka", false)))
     assert(BigDecimal(tulos.get) == BigDecimal("8.7"))
   }
 
@@ -138,7 +138,7 @@ class LaskentaTest extends FunSuite {
     val hakemus = Hakemus("", Nil, Map("onYlioppilas" -> "true"))
 
     val (tulos, _) = Laskin.laske(hakukohde, hakemus,
-      HaeTotuusarvo(None, None, Valintaperusteviite("onYlioppilas", false)))
+      HaeTotuusarvo(None, None, HakemuksenValintaperuste("onYlioppilas", false)))
     assert(tulos.get)
   }
 
@@ -147,7 +147,7 @@ class LaskentaTest extends FunSuite {
 
     val konv = Arvokonvertteri[String, BigDecimal](List(Arvokonversio("puuppa", BigDecimal("20.0"), false),
       Arvokonversio("L", BigDecimal(10.0), false)))
-    val f = HaeMerkkijonoJaKonvertoiLukuarvoksi(konv, None, Valintaperusteviite("AI_yo", false))
+    val f = HaeMerkkijonoJaKonvertoiLukuarvoksi(konv, None, HakemuksenValintaperuste("AI_yo", false))
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, f)
     assert(BigDecimal(tulos.get) == BigDecimal("10.0"))
   }
@@ -306,21 +306,21 @@ class LaskentaTest extends FunSuite {
     val hylkaavaHaeLukuarvo = new HaeLukuarvo(
       konvertteri = None,
       oletusarvo = Some(BigDecimal("10.0")),
-      valintaperusteviite = Valintaperusteviite(
+      valintaperusteviite = HakemuksenValintaperuste(
         tunniste = "hylkaavaLukuarvo",
         pakollinen = true))
 
     val hyvaksyttavissaHaeLukuarvo = new HaeLukuarvo(
       konvertteri = None,
       oletusarvo = None,
-      valintaperusteviite = Valintaperusteviite(
+      valintaperusteviite = HakemuksenValintaperuste(
         tunniste = "hyvaksyttavissaLukuarvo",
         pakollinen = true))
 
     val epavalidiLukuarvo = new HaeLukuarvo(
       konvertteri = None,
       oletusarvo = Some(BigDecimal("1000.0")),
-      valintaperusteviite = Valintaperusteviite(
+      valintaperusteviite = HakemuksenValintaperuste(
         tunniste = "epavalidiLukuarvo",
         pakollinen = true))
 
@@ -347,4 +347,33 @@ class LaskentaTest extends FunSuite {
     assertTilaVirhe(summatila, VirheMetatietotyyppi.VALINTAPERUSTETTA_EI_VOIDA_TULKITA_LUKUARVOKSI)
   }
 
+  test("hae hakukohteen valintaperuste") {
+    val tunniste = "hakukohteenvalintaperustetunniste"
+
+    val funktio = HaeLukuarvo(
+      konvertteri = None,
+      oletusarvo = None,
+      valintaperusteviite = HakukohteenValintaperuste(tunniste))
+
+    val hakukohde = new Hakukohde("hakukohdeoid", Map(tunniste -> "100.0"))
+
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, funktio)
+    assert(BigDecimal(tulos.get) == BigDecimal("100.0"))
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("hae hakukohteen valintaperuste, tunnistetta ei loydy") {
+    val tunniste = "hakukohteenvalintaperustetunniste"
+
+    val funktio = HaeLukuarvo(
+      konvertteri = None,
+      oletusarvo = None,
+      valintaperusteviite = HakukohteenValintaperuste(tunniste))
+
+    val hakukohde = new Hakukohde("hakukohdeoid", Map("toinen tunniste" -> "100.0"))
+
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, funktio)
+    assertTulosTyhja(tulos)
+    assertTilaVirhe(tila, VirheMetatietotyyppi.HAKUKOHTEEN_VALINTAPERUSTE_MAARITTELEMATTA_VIRHE)
+  }
 }

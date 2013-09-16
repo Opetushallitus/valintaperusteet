@@ -32,10 +32,10 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.SyotettavaValintape
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.SuurempiTaiYhtasuuri
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeTotuusarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaVertaaYhtasuuruus
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakukohteenValintaperuste
 import scala.Tuple2
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Ei
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Hakutoive
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Valintaperusteviite
 
 object Laskin {
   val LOG = LoggerFactory.getLogger(classOf[Laskin])
@@ -124,11 +124,11 @@ class Laskin(hakukohde: Hakukohde, hakemus: Hakemus) {
     }
   }
 
-  private def haeValintaperuste[T](valintaperusteviite: Valintaperusteviite, hakemus: Hakemus,
+  private def haeValintaperuste[T](valintaperusteviite: Valintaperuste, hakemus: Hakemus,
                                    konv: (String => Tuple2[Option[T], List[Tila]]),
                                    oletusarvo: Option[T]): Tuple2[Option[T], List[Tila]] = {
-    def haeValintaperusteenArvoHakemukselta = {
-      val (valintaperuste, tila) = haeValintaperuste(valintaperusteviite.tunniste, valintaperusteviite.pakollinen, hakemus)
+    def haeValintaperusteenArvoHakemukselta(tunniste: String, pakollinen: Boolean) = {
+      val (valintaperuste, tila) = haeValintaperuste(tunniste, pakollinen, hakemus)
 
       valintaperuste match {
         case Some(s) => konv(s)
@@ -162,12 +162,18 @@ class Laskin(hakukohde: Hakukohde, hakemus: Hakemus) {
           (None, List(osallistumistila, new Virhetila("Pakollisen syötettävän kentän arvo on merkitsemättä (tunniste "
             + tunniste + ")", new SyotettavaArvoMerkitsemattaVirhe(tunniste))))
         } else {
-          val (arvo, tilat) = haeValintaperusteenArvoHakemukselta
+          val (arvo, tilat) = haeValintaperusteenArvoHakemukselta(tunniste, pakollinen)
           (arvo, osallistumistila :: tilat)
         }
       }
-
-      case _ => haeValintaperusteenArvoHakemukselta
+      case HakemuksenValintaperuste(tunniste, pakollinen) => haeValintaperusteenArvoHakemukselta(tunniste, pakollinen)
+      case HakukohteenValintaperuste(tunniste) => {
+        hakukohde.valintaperusteet.get(tunniste).map(konv(_)) match {
+          case Some(vp) => vp
+          case None => (None, List(new Virhetila("Hakukohteen valintaperustetta " + tunniste + " ei ole määritelty",
+            new HakukohteenValintaperusteMaarittelemattaVirhe(tunniste))))
+        }
+      }
     }
   }
 

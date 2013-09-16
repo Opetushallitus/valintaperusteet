@@ -15,7 +15,8 @@ public abstract class VirheMetatieto {
         ARVOVALIKONVERTOINTI_VIRHE(ArvovalikonvertointiVirhe.class),
         JAKO_NOLLALLA(JakoNollallaVirhe.class),
         HYLKAAMISTA_EI_VOIDA_TULKITA(HylkaamistaEiVoidaTulkita.class),
-        SYOTETTAVA_ARVO_MERKITSEMATTA(SyotettavaArvoMerkitsemattaVirhe.class);
+        SYOTETTAVA_ARVO_MERKITSEMATTA(SyotettavaArvoMerkitsemattaVirhe.class),
+        HAKUKOHTEEN_VALINTAPERUSTE_MAARITTELEMATTA_VIRHE(HakukohteenValintaperusteMaarittelemattaVirhe.class);
 
         VirheMetatietotyyppi(Class<? extends VirheMetatieto> tyyppi) {
             this.tyyppi = tyyppi;
