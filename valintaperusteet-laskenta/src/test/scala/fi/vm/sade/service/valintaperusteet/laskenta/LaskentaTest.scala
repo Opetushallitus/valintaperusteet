@@ -44,6 +44,7 @@ class LaskentaTest extends FunSuite {
   val hakukohde = new Hakukohde("123", new util.HashMap[String, String])
   val tyhjaHakemus = Hakemus("", Nil, Map[String, String]())
 
+
   test("Lukuarvo function returns its value") {
     val (tulos, _) = Laskin.laske(hakukohde, tyhjaHakemus, Lukuarvo(BigDecimal("5.0")))
     assert(BigDecimal(tulos.get) == BigDecimal("5.0"))
@@ -375,5 +376,109 @@ class LaskentaTest extends FunSuite {
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, funktio)
     assertTulosTyhja(tulos)
     assertTilaVirhe(tila, VirheMetatietotyyppi.HAKUKOHTEEN_VALINTAPERUSTE_MAARITTELEMATTA_VIRHE)
+  }
+
+  test("syotettavat arvot") {
+    val funktio = Summa(
+      HaeLukuarvo(
+        konvertteri = None,
+        oletusarvo = Some(BigDecimal("5.0")),
+        valintaperusteviite = new SyotettavaValintaperuste(
+          tunniste = "tunniste1",
+          pakollinen = false,
+          osallistuminenTunniste = "tunniste1-OSALLISTUMINEN"
+        )
+      ),
+      Summa(
+        HaeMerkkijonoJaKonvertoiLukuarvoksi(
+          konvertteri = Arvokonvertteri[String, BigDecimal](
+            konversioMap = List(Arvokonversio[String, BigDecimal](arvo = "konvertoitava1", paluuarvo = BigDecimal("20.0"), hylkaysperuste = false))
+          ),
+          oletusarvo = None,
+          valintaperusteviite = SyotettavaValintaperuste(
+            tunniste = "tunniste2",
+            pakollinen = false,
+            osallistuminenTunniste = "tunniste2-OSALLISTUMINEN"
+          )),
+        HaeLukuarvo(
+          konvertteri = None,
+          oletusarvo = None,
+          valintaperusteviite = HakemuksenValintaperuste(
+            tunniste = "tunniste3",
+            pakollinen = false
+          )
+        ),
+        Jos(
+          ehto = HaeMerkkijonoJaVertaaYhtasuuruus(
+            oletusarvo = None,
+            valintaperusteviite = SyotettavaValintaperuste(
+              tunniste = "tunniste4",
+              pakollinen = true,
+              osallistuminenTunniste = "tunniste4-OSALLISTUMINEN"
+            ), vertailtava = "vertailtava4"
+          ),
+          ifHaara = Lukuarvo(BigDecimal("100.0")),
+          elseHaara = Lukuarvo(BigDecimal("200.0"))
+        )
+      ),
+      HaeLukuarvo(
+        konvertteri = None,
+        oletusarvo = Some(BigDecimal("1.0")),
+        valintaperusteviite = new SyotettavaValintaperuste(
+          tunniste = "tunniste5",
+          pakollinen = false,
+          osallistuminenTunniste = "tunniste5-OSALLISTUMINEN"
+        )
+      ),
+      HaeLukuarvo(
+        konvertteri = None,
+        oletusarvo = Some(BigDecimal("3.0")),
+        valintaperusteviite = new SyotettavaValintaperuste(
+          tunniste = "tunniste6",
+          pakollinen = true,
+          osallistuminenTunniste = "tunniste6-OSALLISTUMINEN"
+        )
+      )
+    )
+
+    val hakemus = Hakemus("hakemusOid", List[String](), Map("tunniste1-OSALLISTUMINEN" -> Osallistuminen.OSALLISTUI.name(),
+      "tunniste2" -> "konvertoitava1", "tunniste2-OSALLISTUMINEN" -> Osallistuminen.OSALLISTUI.name(),
+      "tunniste3" -> "50.0", "tunniste4" -> "vertailtava-ei-sama", "tunniste4-OSALLISTUMINEN" -> Osallistuminen.OSALLISTUI.name(),
+      "tunniste5-OSALLISTUMINEN" -> Osallistuminen.EI_OSALLISTUNUT.name()))
+
+    val tulos = Laskin.suoritaLasku(new Hakukohde("hakukohdeOid", Map[String, String]()), hakemus, funktio)
+    assert(tulos.getTulos.equals(BigDecimal("276.0").underlying()))
+    assertTilaVirhe(tulos.getTila, VirheMetatietotyyppi.SYOTETTAVA_ARVO_MERKITSEMATTA)
+    assert(tulos.getSyotetytArvot.size == 5)
+
+    assert(tulos.getSyotetytArvot.contains("tunniste1"))
+    val arvo1 = tulos.getSyotetytArvot.get("tunniste1")
+    assert(Option(arvo1.getArvo).isEmpty)
+    assert(BigDecimal(arvo1.getLaskennallinenArvo).equals(BigDecimal("5.0")))
+    assert(arvo1.getOsallistuminen.equals(Osallistuminen.OSALLISTUI))
+
+    assert(tulos.getSyotetytArvot.contains("tunniste2"))
+    val arvo2 = tulos.getSyotetytArvot.get("tunniste2")
+    assert(arvo2.getArvo.equals("konvertoitava1"))
+    assert(BigDecimal(arvo2.getLaskennallinenArvo).equals(BigDecimal("20.0")))
+    assert(arvo2.getOsallistuminen.equals(Osallistuminen.OSALLISTUI))
+
+    assert(tulos.getSyotetytArvot.contains("tunniste4"))
+    val arvo4 = tulos.getSyotetytArvot.get("tunniste4")
+    assert(arvo4.getArvo.equals("vertailtava-ei-sama"))
+    assert(!arvo4.getLaskennallinenArvo.toBoolean)
+    assert(arvo4.getOsallistuminen.equals(Osallistuminen.OSALLISTUI))
+
+    assert(tulos.getSyotetytArvot.contains("tunniste5"))
+    val arvo5 = tulos.getSyotetytArvot.get("tunniste5")
+    assert(Option(arvo5.getArvo).isEmpty)
+    assert(BigDecimal(arvo5.getLaskennallinenArvo).equals(BigDecimal("1.0")))
+    assert(arvo5.getOsallistuminen.equals(Osallistuminen.EI_OSALLISTUNUT))
+
+    assert(tulos.getSyotetytArvot.contains("tunniste6"))
+    val arvo6 = tulos.getSyotetytArvot.get("tunniste6")
+    assert(Option(arvo6.getArvo).isEmpty)
+    assert(Option(arvo6.getLaskennallinenArvo).isEmpty)
+    assert(arvo6.getOsallistuminen.equals(Osallistuminen.MERKITSEMATTA))
   }
 }

@@ -46,7 +46,8 @@ object Laskin {
   val LOG = LoggerFactory.getLogger(classOf[Laskin])
 
   private def wrapSyotetyArvot(sa: Map[String, SyotettyArvo]): Map[String, SArvo] = {
-    sa.map(e => (e._1 -> new SArvo(e._1, if (e._2.arvo.isEmpty) null else e._2.arvo.get, if (e._2.laskennallinenArvo.isEmpty) null else e._2.laskennallinenArvo.get)))
+    sa.map(e => (e._1 -> new SArvo(e._1, if (e._2.arvo.isEmpty) null else e._2.arvo.get,
+      if (e._2.laskennallinenArvo.isEmpty) null else e._2.laskennallinenArvo.get, e._2.osallistuminen)))
   }
 
   def suoritaLasku(hakukohde: Hakukohde,
@@ -93,7 +94,8 @@ object Laskin {
 
 private case class Tulos[T](tulos: Option[T], tila: Tila, historia: Historia)
 
-private case class SyotettyArvo(val tunniste: String, val arvo: Option[String], val laskennallinenArvo: Option[String])
+private case class SyotettyArvo(val tunniste: String, val arvo: Option[String],
+                                val laskennallinenArvo: Option[String], val osallistuminen: Osallistuminen)
 
 private class Laskin(hakukohde: Hakukohde, hakemus: Hakemus) {
 
@@ -159,18 +161,16 @@ private class Laskin(hakukohde: Hakukohde, hakemus: Hakemus) {
   private def haeValintaperuste[T](valintaperusteviite: Valintaperuste, hakemus: Hakemus,
                                    konv: (String => Tuple2[Option[T], List[Tila]]),
                                    oletusarvo: Option[T]): Tuple2[Option[T], List[Tila]] = {
-    def haeValintaperusteenArvoHakemukselta(tunniste: String, pakollinen: Boolean, syotettava: Boolean) = {
+    def haeValintaperusteenArvoHakemukselta(tunniste: String, pakollinen: Boolean) = {
       val (valintaperuste, tila) = haeValintaperuste(tunniste, pakollinen, hakemus)
 
       valintaperuste match {
         case Some(s) => {
           val (konvertoituArvo, tilat) = konv(s)
-          if (syotettava) syotetytArvot(tunniste) = SyotettyArvo(tunniste, valintaperuste, konvertoituArvo.map(_.toString))
-          (konvertoituArvo, tilat)
+          (valintaperuste, konvertoituArvo, tilat)
         }
         case None => {
-          if (syotettava) syotetytArvot(tunniste) = SyotettyArvo(tunniste, valintaperuste, oletusarvo.map(_.toString))
-          (oletusarvo, List(tila))
+          (valintaperuste, oletusarvo, List(tila))
         }
       }
     }
@@ -194,18 +194,24 @@ private class Laskin(hakukohde: Hakukohde, hakemus: Hakemus) {
         // Jos valintaperusteelle on merkitty arvo "ei osallistunut" tai sitä ei ole merkitty, palautetaan hylätty-tila,
         // jos kyseessä on pakollinen tieto
 
-        if (pakollinen && Osallistuminen.EI_OSALLISTUNUT == osallistuminen) {
-          (None, List(osallistumistila, new Hylattytila("Pakollisen syötettävän kentän arvo on '" + osallistuminen.name() + "' (tunniste "
+        val (arvo, konvertoitu, tilat) = if (pakollinen && Osallistuminen.EI_OSALLISTUNUT == osallistuminen)
+          (None, None, List(osallistumistila, new Hylattytila("Pakollisen syötettävän kentän arvo on '" + osallistuminen.name() + "' (tunniste "
             + tunniste + ")", new EiOsallistunutHylkays(tunniste))))
-        } else if (pakollinen && Osallistuminen.MERKITSEMATTA == osallistuminen) {
-          (None, List(osallistumistila, new Virhetila("Pakollisen syötettävän kentän arvo on merkitsemättä (tunniste "
+        else if (pakollinen && Osallistuminen.MERKITSEMATTA == osallistuminen)
+          (None, None, List(osallistumistila, new Virhetila("Pakollisen syötettävän kentän arvo on merkitsemättä (tunniste "
             + tunniste + ")", new SyotettavaArvoMerkitsemattaVirhe(tunniste))))
-        } else {
-          val (arvo, tilat) = haeValintaperusteenArvoHakemukselta(tunniste, pakollinen, true)
-          (arvo, osallistumistila :: tilat)
+        else {
+          val (arvo, konvertoitu, tilat) = haeValintaperusteenArvoHakemukselta(tunniste, pakollinen)
+          (arvo, konvertoitu, osallistumistila :: tilat)
         }
+
+        syotetytArvot(tunniste) = SyotettyArvo(tunniste, arvo, konvertoitu.map(_.toString), osallistuminen)
+        (konvertoitu, tilat)
       }
-      case HakemuksenValintaperuste(tunniste, pakollinen) => haeValintaperusteenArvoHakemukselta(tunniste, pakollinen, false)
+      case HakemuksenValintaperuste(tunniste, pakollinen) => {
+        val (_, konvertoitu, tilat) = haeValintaperusteenArvoHakemukselta(tunniste, pakollinen)
+        (konvertoitu, tilat)
+      }
       case HakukohteenValintaperuste(tunniste) => {
         hakukohde.valintaperusteet.get(tunniste).filter(!_.trim.isEmpty).map(konv(_)).getOrElse(
           if (!oletusarvo.isEmpty) (oletusarvo, List(new Hyvaksyttavissatila))
