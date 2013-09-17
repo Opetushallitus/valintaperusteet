@@ -44,31 +44,41 @@ object Laskin {
                    hakemus: Hakemus,
                    laskettava: Lukuarvofunktio, historiaBuffer: StringBuffer): Laskentatulos[BigDec] = {
 
-    val (tulos, tila, historia) = new Laskin(hakukohde, hakemus).laske(laskettava)
-
-    historiaBuffer.append(Json.generate(wrap(hakemus, historia)))
-    if (tulos.isEmpty) new Laskentatulos[BigDec](tila, null) else new Laskentatulos[BigDec](tila, tulos.get.underlying)
+    new Laskin(hakukohde, hakemus).laske(laskettava) match {
+      case Tulos(tulos, tila, historia) => {
+        historiaBuffer.append(Json.generate(wrap(hakemus, historia)))
+        if (tulos.isEmpty) new Laskentatulos[BigDec](tila, null, historiaBuffer) else new Laskentatulos[BigDec](tila, tulos.get.underlying, historiaBuffer)
+      }
+    }
   }
 
   def suoritaLasku(hakukohde: Hakukohde,
                    hakemus: Hakemus,
                    laskettava: Totuusarvofunktio, historiaBuffer: StringBuffer): Laskentatulos[java.lang.Boolean] = {
-    val (tulos, tila, historia) = new Laskin(hakukohde, hakemus).laske(laskettava)
-
-    historiaBuffer.append(Json.generate(wrap(hakemus, historia)))
-    new Laskentatulos[java.lang.Boolean](tila, if (!tulos.isEmpty) Boolean.box(tulos.get) else null)
+    new Laskin(hakukohde, hakemus).laske(laskettava) match {
+      case Tulos(tulos, tila, historia) => {
+        historiaBuffer.append(Json.generate(wrap(hakemus, historia)))
+        new Laskentatulos[java.lang.Boolean](tila, if (!tulos.isEmpty) Boolean.box(tulos.get) else null, historiaBuffer)
+      }
+    }
   }
 
   def laske(hakukohde: Hakukohde, hakemus: Hakemus, laskettava: Totuusarvofunktio): (Option[Boolean], Tila) = {
-    val (tulos, tila, historia) = new Laskin(hakukohde, hakemus).laske(laskettava)
-    LOG.debug("{}", Json.generate(wrap(hakemus, historia)))
-    (tulos, tila)
+    new Laskin(hakukohde, hakemus).laske(laskettava) match {
+      case Tulos(tulos, tila, historia) => {
+        LOG.debug("{}", Json.generate(wrap(hakemus, historia)))
+        (tulos, tila)
+      }
+    }
   }
 
   def laske(hakukohde: Hakukohde, hakemus: Hakemus, laskettava: Lukuarvofunktio): (Option[BigDec], Tila) = {
-    val (tulos, tila, historia) = new Laskin(hakukohde, hakemus).laske(laskettava)
-    LOG.debug("{}", Json.generate(wrap(hakemus, historia)))
-    (if (tulos.isEmpty) None else Some(tulos.get.underlying), tila)
+    new Laskin(hakukohde, hakemus).laske(laskettava) match {
+      case Tulos(tulos, tila, historia) => {
+        LOG.debug("{}", Json.generate(wrap(hakemus, historia)))
+        (if (tulos.isEmpty) None else Some(tulos.get.underlying), tila)
+      }
+    }
   }
 
   def wrap(hakemus: Hakemus, historia: Historia) = {
@@ -78,6 +88,8 @@ object Laskin {
     Historia(name, historia.tulos, historia.tilat, Some(List(historia)), Some(v))
   }
 }
+
+case class Tulos[T](tulos: Option[T], tila: Tila, historia: Historia)
 
 class Laskin(hakukohde: Hakukohde, hakemus: Hakemus) {
 
@@ -168,14 +180,16 @@ class Laskin(hakukohde: Hakukohde, hakemus: Hakemus) {
       }
       case HakemuksenValintaperuste(tunniste, pakollinen) => haeValintaperusteenArvoHakemukselta(tunniste, pakollinen)
       case HakukohteenValintaperuste(tunniste) => {
-        hakukohde.valintaperusteet.get(tunniste).map(konv(_)) match {
-          case Some(vp) => vp
-          case None => (None, List(new Virhetila("Hakukohteen valintaperustetta " + tunniste + " ei ole määritelty",
-            new HakukohteenValintaperusteMaarittelemattaVirhe(tunniste))))
-        }
+        hakukohde.valintaperusteet.get(tunniste).filter(!_.trim.isEmpty).map(konv(_)).getOrElse(
+          if (!oletusarvo.isEmpty) (oletusarvo, List(new Hyvaksyttavissatila))
+          else {
+            (None, List(new Virhetila("Hakukohteen valintaperustetta " + tunniste + " ei ole määritelty",
+              new HakukohteenValintaperusteMaarittelemattaVirhe(tunniste))))
+          })
       }
     }
   }
+
 
   private def string2boolean(s: String, tunniste: String, oletustila: Tila = new Hyvaksyttavissatila): (Option[Boolean], Tila) = {
     try {
@@ -198,13 +212,16 @@ class Laskin(hakukohde: Hakukohde, hakemus: Hakemus) {
   }
 
 
-  def laske(laskettava: Totuusarvofunktio): (Option[Boolean], Tila, Historia) = {
+  def laske(laskettava: Totuusarvofunktio): Tulos[Boolean] = {
 
     def muodostaKoostettuTulos(fs: Seq[Totuusarvofunktio], trans: Seq[Boolean] => Boolean) = {
       val (tulokset, tilat, historiat) = fs.reverse.foldLeft((Nil, Nil, ListBuffer()): Tuple3[List[Option[Boolean]], List[Tila], ListBuffer[Historia]])((lst, f) => {
-        val (tulos, tila, historia) = laske(f)
-        lst._3 += historia
-        (tulos :: lst._1, tila :: lst._2, lst._3)
+        laske(f) match {
+          case Tulos(tulos, tila, historia) => {
+            lst._3 += historia
+            (tulos :: lst._1, tila :: lst._2, lst._3)
+          }
+        }
       })
 
       val (tyhjat, eiTyhjat) = tulokset.partition(_.isEmpty)
@@ -215,20 +232,21 @@ class Laskin(hakukohde: Hakukohde, hakemus: Hakemus) {
     }
 
     def muodostaYksittainenTulos(f: Totuusarvofunktio, trans: Boolean => Boolean) = {
-      val (tulos, tila, historia) = laske(f)
-      (tulos.map(trans(_)), List(tila), historia)
+      laske(f) match {
+        case Tulos(tulos, tila, historia) => (tulos.map(trans(_)), List(tila), historia)
+      }
     }
 
     def muodostaVertailunTulos(f1: Lukuarvofunktio, f2: Lukuarvofunktio,
                                trans: (BigDecimal, BigDecimal) => Boolean) = {
-      val (tulos1, tila1, historia1) = laske(f1)
-      val (tulos2, tila2, historia2) = laske(f2)
+      val tulos1 = laske(f1)
+      val tulos2 = laske(f2)
       val tulos = for {
-        t1 <- tulos1
-        t2 <- tulos2
+        t1 <- tulos1.tulos
+        t2 <- tulos2.tulos
       } yield trans(t1, t2)
-      val tilat = List(tila1, tila2)
-      (tulos, tilat, Historia("Vertailuntulos", tulos, tilat, Some(List(historia1, historia2)), None))
+      val tilat = List(tulos1.tila, tulos2.tila)
+      (tulos, tilat, Historia("Vertailuntulos", tulos, tilat, Some(List(tulos1.historia, tulos2.historia)), None))
     }
 
     val (laskettuTulos, tilat, hist): Tuple3[Option[Boolean], List[Tila], Historia] = laskettava match {
@@ -324,23 +342,27 @@ class Laskin(hakukohde: Hakukohde, hakemus: Hakemus) {
       }
     }
 
-    (laskettuTulos, palautettavaTila, hist)
+    Tulos(laskettuTulos, palautettavaTila, hist)
   }
 
-  def laske(laskettava: Lukuarvofunktio): (Option[BigDecimal], Tila, Historia) = {
+  def laske(laskettava: Lukuarvofunktio): Tulos[BigDecimal] = {
 
     def summa(vals: Seq[BigDecimal]): BigDecimal = vals.reduceLeft(_ + _)
 
     def muodostaYksittainenTulos(f: Lukuarvofunktio, trans: BigDecimal => BigDecimal): (Option[BigDecimal], List[Tila], Historia) = {
-      val (tulos, tila, historia) = laske(f)
-      (tulos.map(trans(_)), List(tila), historia)
+      laske(f) match {
+        case Tulos(tulos, tila, historia) => (tulos.map(trans(_)), List(tila), historia)
+      }
     }
 
     def muodostaKoostettuTulos(fs: Seq[Lukuarvofunktio], trans: Seq[BigDecimal] => BigDecimal): (Option[BigDecimal], List[Tila], Historia) = {
       val tulokset = fs.reverse.foldLeft((Nil, Nil, ListBuffer()): Tuple3[List[BigDecimal], List[Tila], ListBuffer[Historia]])((lst, f) => {
-        val (tulos, tila, historia) = laske(f)
-        lst._3 += historia
-        (if (!tulos.isEmpty) tulos.get :: lst._1 else lst._1, tila :: lst._2, lst._3)
+        laske(f) match {
+          case Tulos(tulos, tila, historia) => {
+            lst._3 += historia
+            (if (!tulos.isEmpty) tulos.get :: lst._1 else lst._1, tila :: lst._2, lst._3)
+          }
+        }
       })
 
       val lukuarvo = if (tulokset._1.isEmpty) None else Some(trans(tulokset._1))
@@ -367,12 +389,12 @@ class Laskin(hakukohde: Hakukohde, hakemus: Hakemus) {
       }
 
       case Osamaara(osoittaja, nimittaja, oid) => {
-        val (nimittajaArvo, nimittajaTila, historia1) = laske(nimittaja)
-        val (osoittajaArvo, osoittajaTila, historia2) = laske(osoittaja)
+        val nimittajaTulos = laske(nimittaja)
+        val osoittajaTulos = laske(osoittaja)
 
         val (arvo, laskentatilat) = (for {
-          n <- nimittajaArvo
-          o <- osoittajaArvo
+          n <- nimittajaTulos.tulos
+          o <- osoittajaTulos.tulos
         } yield {
           if (n == 0.0) (None, new Virhetila("Jako nollalla", new JakoNollallaVirhe))
           else {
@@ -383,9 +405,9 @@ class Laskin(hakukohde: Hakukohde, hakemus: Hakemus) {
           case None => (None, List())
         }
 
-        val tilat = osoittajaTila :: nimittajaTila :: laskentatilat
+        val tilat = osoittajaTulos.tila :: nimittajaTulos.tila :: laskentatilat
 
-        (arvo, tilat, Historia("Osamäärä", arvo, tilat, Some(List(historia1, historia2)), None))
+        (arvo, tilat, Historia("Osamäärä", arvo, tilat, Some(List(osoittajaTulos.historia, nimittajaTulos.historia)), None))
       }
 
       case Tulo(fs, oid) => {
@@ -435,21 +457,24 @@ class Laskin(hakukohde: Hakukohde, hakemus: Hakemus) {
       }
 
       case Jos(ehto, thenHaara, elseHaara, oid) => {
-        val (ehtoTulos, ehtoTila, historia0) = laske(ehto)
-        val (thenTulos, thenTila, historia1) = laske(thenHaara)
-        val (elseTulos, elseTila, historia2) = laske(elseHaara)
+        val ehtoTulos = laske(ehto)
+        val thenTulos = laske(thenHaara)
+        val elseTulos = laske(elseHaara)
         //historiat :+ historia1 :+ historia2
-        val (tulos, tilat) = ehdollinenTulos[Boolean, BigDecimal]((ehtoTulos, ehtoTila), (cond, tila) => {
-          if (cond) (thenTulos, List(tila, thenTila)) else (elseTulos, List(tila, elseTila))
+        val (tulos, tilat) = ehdollinenTulos[Boolean, BigDecimal]((ehtoTulos.tulos, ehtoTulos.tila), (cond, tila) => {
+          if (cond) (thenTulos.tulos, List(tila, thenTulos.tila)) else (elseTulos.tulos, List(tila, elseTulos.tila))
         })
-        (tulos, tilat, Historia("Jos", tulos, tilat, Some(List(historia0, historia1, historia2)), None))
+        (tulos, tilat, Historia("Jos", tulos, tilat, Some(List(ehtoTulos.historia, thenTulos.historia, elseTulos.historia)), None))
       }
 
       case KonvertoiLukuarvo(konvertteri, f, oid) => {
-        val (tulos, tila, h) = laske(f)
-        val (tulos2, tilat2) = suoritaKonvertointi[BigDecimal, BigDecimal]((tulos, tila), konvertteri)
+        laske(f) match {
+          case Tulos(tulos, tila, historia) => {
+            val (tulos2, tilat2) = suoritaKonvertointi[BigDecimal, BigDecimal]((tulos, tila), konvertteri)
+            (tulos2, tilat2, Historia("Konvertoitulukuarvo", tulos2, tilat2, Some(List(historia)), None))
+          }
+        }
 
-        (tulos2, tilat2, Historia("Konvertoitulukuarvo", tulos2, tilat2, Some(List(h)), None))
       }
 
       case HaeLukuarvo(konvertteri, oletusarvo, valintaperusteviite, oid) => {
@@ -473,14 +498,16 @@ class Laskin(hakukohde: Hakukohde, hakemus: Hakemus) {
         (tulos, tilat, Historia("Pyöristys", tulos, tilat, Some(List(h)), Some(Map("tarkkuus" -> Some(tarkkuus)))))
       }
       case Hylkaa(f, hylkaysperustekuvaus, oid) => {
-        val (tulos, tila1, h) = laske(f)
-
-        val tila2 = tulos.map(b => if (b) new Hylattytila(hylkaysperustekuvaus.getOrElse("Hylätty hylkäämisfunktiolla"),
-          new HylkaaFunktionSuorittamaHylkays)
-        else new Hyvaksyttavissatila)
-          .getOrElse(new Virhetila("Hylkäämisfunktion syöte on tyhjä. Hylkäystä ei voida tulkita.", new HylkaamistaEiVoidaTulkita))
-        val tilat = List(tila1, tila2)
-        (None, tilat, Historia("Hylkää", None, tilat, Some(List(h)), None))
+        laske(f) match {
+          case Tulos(tulos, tila, historia) => {
+            val tila2 = tulos.map(b => if (b) new Hylattytila(hylkaysperustekuvaus.getOrElse("Hylätty hylkäämisfunktiolla"),
+              new HylkaaFunktionSuorittamaHylkays)
+            else new Hyvaksyttavissatila)
+              .getOrElse(new Virhetila("Hylkäämisfunktion syöte on tyhjä. Hylkäystä ei voida tulkita.", new HylkaamistaEiVoidaTulkita))
+            val tilat = List(tila, tila2)
+            (None, tilat, Historia("Hylkää", None, tilat, Some(List(historia)), None))
+          }
+        }
       }
     }
 
@@ -499,7 +526,7 @@ class Laskin(hakukohde: Hakukohde, hakemus: Hakemus) {
       }
     }
 
-    (laskettuTulos, palautettavaTila, historia)
+    Tulos(laskettuTulos, palautettavaTila, historia)
   }
 }
 

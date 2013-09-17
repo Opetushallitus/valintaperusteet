@@ -9,27 +9,26 @@ import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Tila;
  */
 public class Laskentatulos<T> {
 
-    public Laskentatulos(Tila tila, T tulos) {
+
+    public Laskentatulos(Tila tila, T tulos, StringBuffer historia) {
         this.tila = tila;
         this.tulos = tulos;
+        this.historia = historia;
     }
 
     private Tila tila;
     private T tulos;
+    private StringBuffer historia;
 
     public Tila getTila() {
         return tila;
-    }
-
-    public void setTila(Tila tila) {
-        this.tila = tila;
     }
 
     public T getTulos() {
         return tulos;
     }
 
-    public void setTulos(T tulos) {
-        this.tulos = tulos;
+    public StringBuffer getHistoria() {
+        return historia;
     }
 }
