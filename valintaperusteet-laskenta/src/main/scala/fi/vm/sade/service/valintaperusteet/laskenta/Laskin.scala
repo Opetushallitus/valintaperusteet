@@ -1,12 +1,15 @@
 package fi.vm.sade.service.valintaperusteet.laskenta
 
-import api._
+import api.Hakukohde
+import api.Hakemus
+import api.Laskentatulos
+import api.Osallistuminen
+import api.{SyotettyArvo => SArvo}
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta._
 import java.util.{Map => JMap}
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
 import org.slf4j.LoggerFactory
 import scala.collection.mutable.ListBuffer
-import com.codahale.jerkson.Json
 import java.math.{BigDecimal => BigDec}
 import java.math.RoundingMode
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.KonvertoiLukuarvo
@@ -36,52 +39,51 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakukohteenValintap
 import scala.Tuple2
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Ei
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Hakutoive
+import java.lang
+import scala.collection.JavaConversions._
 
 object Laskin {
   val LOG = LoggerFactory.getLogger(classOf[Laskin])
 
+  private def wrapSyotetyArvot(sa: Map[String, SyotettyArvo]): Map[String, SArvo] = {
+    sa.map(e => (e._1 -> new SArvo(e._1, if (e._2.arvo.isEmpty) null else e._2.arvo.get, if (e._2.laskennallinenArvo.isEmpty) null else e._2.laskennallinenArvo.get)))
+  }
+
   def suoritaLasku(hakukohde: Hakukohde,
                    hakemus: Hakemus,
-                   laskettava: Lukuarvofunktio, historiaBuffer: StringBuffer): Laskentatulos[BigDec] = {
-
-    new Laskin(hakukohde, hakemus).laske(laskettava) match {
+                   laskettava: Lukuarvofunktio): Laskentatulos[BigDec] = {
+    val laskin = new Laskin(hakukohde, hakemus)
+    laskin.laske(laskettava) match {
       case Tulos(tulos, tila, historia) => {
-        historiaBuffer.append(Json.generate(wrap(hakemus, historia)))
-        if (tulos.isEmpty) new Laskentatulos[BigDec](tila, null, historiaBuffer) else new Laskentatulos[BigDec](tila, tulos.get.underlying, historiaBuffer)
+        new Laskentatulos[BigDec](tila, if (tulos.isEmpty) null else tulos.get.underlying
+          , new StringBuffer().append(wrapHistoria(hakemus, historia)), wrapSyotetyArvot(laskin.getSyotetytArvot))
       }
     }
   }
 
   def suoritaLasku(hakukohde: Hakukohde,
                    hakemus: Hakemus,
-                   laskettava: Totuusarvofunktio, historiaBuffer: StringBuffer): Laskentatulos[java.lang.Boolean] = {
-    new Laskin(hakukohde, hakemus).laske(laskettava) match {
+                   laskettava: Totuusarvofunktio): Laskentatulos[java.lang.Boolean] = {
+    val laskin = new Laskin(hakukohde, hakemus)
+    laskin.laske(laskettava) match {
       case Tulos(tulos, tila, historia) => {
-        historiaBuffer.append(Json.generate(wrap(hakemus, historia)))
-        new Laskentatulos[java.lang.Boolean](tila, if (!tulos.isEmpty) Boolean.box(tulos.get) else null, historiaBuffer)
+        new Laskentatulos[lang.Boolean](tila, if (tulos.isEmpty) null else Boolean.box(tulos.get)
+          , new StringBuffer().append(wrapHistoria(hakemus, historia)), wrapSyotetyArvot(laskin.getSyotetytArvot))
       }
     }
   }
 
   def laske(hakukohde: Hakukohde, hakemus: Hakemus, laskettava: Totuusarvofunktio): (Option[Boolean], Tila) = {
-    new Laskin(hakukohde, hakemus).laske(laskettava) match {
-      case Tulos(tulos, tila, historia) => {
-        LOG.debug("{}", Json.generate(wrap(hakemus, historia)))
-        (tulos, tila)
-      }
-    }
+    val tulos = new Laskin(hakukohde, hakemus).laskeTotuusarvo(laskettava)
+    (tulos.tulos, tulos.tila)
   }
 
   def laske(hakukohde: Hakukohde, hakemus: Hakemus, laskettava: Lukuarvofunktio): (Option[BigDec], Tila) = {
-    new Laskin(hakukohde, hakemus).laske(laskettava) match {
-      case Tulos(tulos, tila, historia) => {
-        LOG.debug("{}", Json.generate(wrap(hakemus, historia)))
-        (if (tulos.isEmpty) None else Some(tulos.get.underlying), tila)
-      }
-    }
+    val tulos = new Laskin(hakukohde, hakemus).laskeLukuarvo(laskettava)
+    (tulos.tulos.map(_.underlying()), tulos.tila)
   }
 
-  def wrap(hakemus: Hakemus, historia: Historia) = {
+  private def wrapHistoria(hakemus: Hakemus, historia: Historia) = {
     val v: Map[String, Option[Any]] = hakemus.kentat.map(f => (f._1 -> Some(f._2)))
 
     val name = new StringBuffer().append("Laskenta hakemukselle (").append(hakemus.oid).append(")").toString
@@ -89,9 +91,27 @@ object Laskin {
   }
 }
 
-case class Tulos[T](tulos: Option[T], tila: Tila, historia: Historia)
+private case class Tulos[T](tulos: Option[T], tila: Tila, historia: Historia)
 
-class Laskin(hakukohde: Hakukohde, hakemus: Hakemus) {
+private case class SyotettyArvo(val tunniste: String, val arvo: Option[String], val laskennallinenArvo: Option[String])
+
+private class Laskin(hakukohde: Hakukohde, hakemus: Hakemus) {
+
+
+  private val syotetytArvot: scala.collection.mutable.Map[String, SyotettyArvo] = scala.collection.mutable.Map[String, SyotettyArvo]()
+
+  def getSyotetytArvot = scala.collection.immutable.Map[String, SyotettyArvo](syotetytArvot.toList: _*)
+
+  def laske(laskettava: Lukuarvofunktio) = {
+    syotetytArvot.clear
+    laskeLukuarvo(laskettava)
+  }
+
+
+  def laske(laskettava: Totuusarvofunktio) = {
+    syotetytArvot.clear
+    laskeTotuusarvo(laskettava)
+  }
 
   private def ehdollinenTulos[A, B](tulos: (Option[A], Tila), f: (A, Tila) => Tuple2[Option[B], List[Tila]]): Tuple2[Option[B], List[Tila]] = {
     val (alkupTulos, alkupTila) = tulos
@@ -139,12 +159,19 @@ class Laskin(hakukohde: Hakukohde, hakemus: Hakemus) {
   private def haeValintaperuste[T](valintaperusteviite: Valintaperuste, hakemus: Hakemus,
                                    konv: (String => Tuple2[Option[T], List[Tila]]),
                                    oletusarvo: Option[T]): Tuple2[Option[T], List[Tila]] = {
-    def haeValintaperusteenArvoHakemukselta(tunniste: String, pakollinen: Boolean) = {
+    def haeValintaperusteenArvoHakemukselta(tunniste: String, pakollinen: Boolean, syotettava: Boolean) = {
       val (valintaperuste, tila) = haeValintaperuste(tunniste, pakollinen, hakemus)
 
       valintaperuste match {
-        case Some(s) => konv(s)
-        case None => (oletusarvo, List(tila))
+        case Some(s) => {
+          val (konvertoituArvo, tilat) = konv(s)
+          if (syotettava) syotetytArvot(tunniste) = SyotettyArvo(tunniste, valintaperuste, konvertoituArvo.map(_.toString))
+          (konvertoituArvo, tilat)
+        }
+        case None => {
+          if (syotettava) syotetytArvot(tunniste) = SyotettyArvo(tunniste, valintaperuste, oletusarvo.map(_.toString))
+          (oletusarvo, List(tila))
+        }
       }
     }
 
@@ -174,11 +201,11 @@ class Laskin(hakukohde: Hakukohde, hakemus: Hakemus) {
           (None, List(osallistumistila, new Virhetila("Pakollisen syötettävän kentän arvo on merkitsemättä (tunniste "
             + tunniste + ")", new SyotettavaArvoMerkitsemattaVirhe(tunniste))))
         } else {
-          val (arvo, tilat) = haeValintaperusteenArvoHakemukselta(tunniste, pakollinen)
+          val (arvo, tilat) = haeValintaperusteenArvoHakemukselta(tunniste, pakollinen, true)
           (arvo, osallistumistila :: tilat)
         }
       }
-      case HakemuksenValintaperuste(tunniste, pakollinen) => haeValintaperusteenArvoHakemukselta(tunniste, pakollinen)
+      case HakemuksenValintaperuste(tunniste, pakollinen) => haeValintaperusteenArvoHakemukselta(tunniste, pakollinen, false)
       case HakukohteenValintaperuste(tunniste) => {
         hakukohde.valintaperusteet.get(tunniste).filter(!_.trim.isEmpty).map(konv(_)).getOrElse(
           if (!oletusarvo.isEmpty) (oletusarvo, List(new Hyvaksyttavissatila))
@@ -212,11 +239,11 @@ class Laskin(hakukohde: Hakukohde, hakemus: Hakemus) {
   }
 
 
-  def laske(laskettava: Totuusarvofunktio): Tulos[Boolean] = {
+  private def laskeTotuusarvo(laskettava: Totuusarvofunktio): Tulos[Boolean] = {
 
     def muodostaKoostettuTulos(fs: Seq[Totuusarvofunktio], trans: Seq[Boolean] => Boolean) = {
       val (tulokset, tilat, historiat) = fs.reverse.foldLeft((Nil, Nil, ListBuffer()): Tuple3[List[Option[Boolean]], List[Tila], ListBuffer[Historia]])((lst, f) => {
-        laske(f) match {
+        laskeTotuusarvo(f) match {
           case Tulos(tulos, tila, historia) => {
             lst._3 += historia
             (tulos :: lst._1, tila :: lst._2, lst._3)
@@ -232,15 +259,15 @@ class Laskin(hakukohde: Hakukohde, hakemus: Hakemus) {
     }
 
     def muodostaYksittainenTulos(f: Totuusarvofunktio, trans: Boolean => Boolean) = {
-      laske(f) match {
+      laskeTotuusarvo(f) match {
         case Tulos(tulos, tila, historia) => (tulos.map(trans(_)), List(tila), historia)
       }
     }
 
     def muodostaVertailunTulos(f1: Lukuarvofunktio, f2: Lukuarvofunktio,
                                trans: (BigDecimal, BigDecimal) => Boolean) = {
-      val tulos1 = laske(f1)
-      val tulos2 = laske(f2)
+      val tulos1 = laskeLukuarvo(f1)
+      val tulos2 = laskeLukuarvo(f2)
       val tulos = for {
         t1 <- tulos1.tulos
         t2 <- tulos2.tulos
@@ -345,19 +372,19 @@ class Laskin(hakukohde: Hakukohde, hakemus: Hakemus) {
     Tulos(laskettuTulos, palautettavaTila, hist)
   }
 
-  def laske(laskettava: Lukuarvofunktio): Tulos[BigDecimal] = {
+  private def laskeLukuarvo(laskettava: Lukuarvofunktio): Tulos[BigDecimal] = {
 
     def summa(vals: Seq[BigDecimal]): BigDecimal = vals.reduceLeft(_ + _)
 
     def muodostaYksittainenTulos(f: Lukuarvofunktio, trans: BigDecimal => BigDecimal): (Option[BigDecimal], List[Tila], Historia) = {
-      laske(f) match {
+      laskeLukuarvo(f) match {
         case Tulos(tulos, tila, historia) => (tulos.map(trans(_)), List(tila), historia)
       }
     }
 
     def muodostaKoostettuTulos(fs: Seq[Lukuarvofunktio], trans: Seq[BigDecimal] => BigDecimal): (Option[BigDecimal], List[Tila], Historia) = {
       val tulokset = fs.reverse.foldLeft((Nil, Nil, ListBuffer()): Tuple3[List[BigDecimal], List[Tila], ListBuffer[Historia]])((lst, f) => {
-        laske(f) match {
+        laskeLukuarvo(f) match {
           case Tulos(tulos, tila, historia) => {
             lst._3 += historia
             (if (!tulos.isEmpty) tulos.get :: lst._1 else lst._1, tila :: lst._2, lst._3)
@@ -389,8 +416,8 @@ class Laskin(hakukohde: Hakukohde, hakemus: Hakemus) {
       }
 
       case Osamaara(osoittaja, nimittaja, oid) => {
-        val nimittajaTulos = laske(nimittaja)
-        val osoittajaTulos = laske(osoittaja)
+        val nimittajaTulos = laskeLukuarvo(nimittaja)
+        val osoittajaTulos = laskeLukuarvo(osoittaja)
 
         val (arvo, laskentatilat) = (for {
           n <- nimittajaTulos.tulos
@@ -457,9 +484,9 @@ class Laskin(hakukohde: Hakukohde, hakemus: Hakemus) {
       }
 
       case Jos(ehto, thenHaara, elseHaara, oid) => {
-        val ehtoTulos = laske(ehto)
-        val thenTulos = laske(thenHaara)
-        val elseTulos = laske(elseHaara)
+        val ehtoTulos = laskeTotuusarvo(ehto)
+        val thenTulos = laskeLukuarvo(thenHaara)
+        val elseTulos = laskeLukuarvo(elseHaara)
         //historiat :+ historia1 :+ historia2
         val (tulos, tilat) = ehdollinenTulos[Boolean, BigDecimal]((ehtoTulos.tulos, ehtoTulos.tila), (cond, tila) => {
           if (cond) (thenTulos.tulos, List(tila, thenTulos.tila)) else (elseTulos.tulos, List(tila, elseTulos.tila))
@@ -468,7 +495,7 @@ class Laskin(hakukohde: Hakukohde, hakemus: Hakemus) {
       }
 
       case KonvertoiLukuarvo(konvertteri, f, oid) => {
-        laske(f) match {
+        laskeLukuarvo(f) match {
           case Tulos(tulos, tila, historia) => {
             val (tulos2, tilat2) = suoritaKonvertointi[BigDecimal, BigDecimal]((tulos, tila), konvertteri)
             (tulos2, tilat2, Historia("Konvertoitulukuarvo", tulos2, tilat2, Some(List(historia)), None))
@@ -498,7 +525,7 @@ class Laskin(hakukohde: Hakukohde, hakemus: Hakemus) {
         (tulos, tilat, Historia("Pyöristys", tulos, tilat, Some(List(h)), Some(Map("tarkkuus" -> Some(tarkkuus)))))
       }
       case Hylkaa(f, hylkaysperustekuvaus, oid) => {
-        laske(f) match {
+        laskeTotuusarvo(f) match {
           case Tulos(tulos, tila, historia) => {
             val tila2 = tulos.map(b => if (b) new Hylattytila(hylkaysperustekuvaus.getOrElse("Hylätty hylkäämisfunktiolla"),
               new HylkaaFunktionSuorittamaHylkays)

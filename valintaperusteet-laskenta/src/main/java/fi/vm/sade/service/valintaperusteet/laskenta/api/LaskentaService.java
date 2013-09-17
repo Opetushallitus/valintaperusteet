@@ -9,8 +9,7 @@ import java.util.Collection;
 public interface LaskentaService {
 
     public Laskentatulos<BigDecimal> suoritaLasku(Hakukohde hakukohde, Hakemus hakemus,
-                                                  Collection<Hakemus> kaikkiHakemukset, Lukuarvofunktio laskettava, StringBuffer historia);
+                                                  Collection<Hakemus> kaikkiHakemukset, Lukuarvofunktio laskettava);
 
-    public Laskentatulos<Boolean> suoritaLasku(Hakukohde hakukohde, Hakemus hakemus, Totuusarvofunktio laskettava,
-                                               StringBuffer historia);
+    public Laskentatulos<Boolean> suoritaLasku(Hakukohde hakukohde, Hakemus hakemus, Totuusarvofunktio laskettava);
 }

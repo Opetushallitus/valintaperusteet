@@ -14,14 +14,13 @@ import java.util.Collection;
 public class LaskentaServiceImpl implements LaskentaService {
 
     public Laskentatulos<BigDecimal> suoritaLasku(Hakukohde hakukohde, Hakemus hakemus,
-                                                  Collection<Hakemus> kaikkiHakemukset, Lukuarvofunktio laskettava, StringBuffer historia) {
+                                                  Collection<Hakemus> kaikkiHakemukset, Lukuarvofunktio laskettava) {
         Hakemus prosessoituHakemus = Esiprosessori.esiprosessoi(hakukohde, kaikkiHakemukset, hakemus, laskettava);
-        return Laskin.suoritaLasku(hakukohde, prosessoituHakemus, laskettava, historia);
+        return Laskin.suoritaLasku(hakukohde, prosessoituHakemus, laskettava);
     }
 
-    public Laskentatulos<Boolean> suoritaLasku(Hakukohde hakukohde, Hakemus hakemus, Totuusarvofunktio laskettava,
-                                               StringBuffer historia) {
-        return Laskin.suoritaLasku(hakukohde, hakemus, laskettava, historia);
+    public Laskentatulos<Boolean> suoritaLasku(Hakukohde hakukohde, Hakemus hakemus, Totuusarvofunktio laskettava) {
+        return Laskin.suoritaLasku(hakukohde, hakemus, laskettava);
     }
 
 }
