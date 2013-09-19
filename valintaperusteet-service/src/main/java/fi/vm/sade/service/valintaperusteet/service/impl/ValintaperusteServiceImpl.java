@@ -85,7 +85,12 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
             throw new HakuparametritOnTyhjaException("Hakuparametrit oli tyhjä.");
         }
         Long start = System.currentTimeMillis();
+        LOG.info("Hakuparametrien lkm {}", hakuparametrit.size());
+
         for (HakuparametritTyyppi param : hakuparametrit) {
+            LOG.info("Haetaan hakukohteen {}, valinnanvaihe {} valintaperusteet",
+                    new Object[]{param.getHakukohdeOid(), param.getValinnanVaiheJarjestysluku()});
+
             HakukohdeViite hakukohde = null;
             try {
                 hakukohde = hakukohdeService.readByOid(param.getHakukohdeOid());
@@ -136,6 +141,8 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
         if (LOG.isInfoEnabled()) {
             LOG.info("haeValintaperusteet: " + (System.currentTimeMillis() - start));
         }
+
+        LOG.info("Haettu {} kpl valintaperusteita", list.size());
         return list;
     }
 
