@@ -460,14 +460,41 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     @Autowired
     private LaskentakaavaCache laskentakaavaCache;
 
+    private void validoiFunktiokutsuMoodiaVasten(final Funktiokutsu funktiokutsu, final Laskentamoodi laskentamoodi) {
+        if (funktiokutsu != null) {
+            if (!funktiokutsu.getFunktionimi().getLaskentamoodit().contains(laskentamoodi)) {
+                switch (laskentamoodi) {
+                    case VALINTALASKENTA:
+                        throw new FunktiokutsuaEiVoidaKayttaaValintalaskennassaException("Funktiokutsua " +
+                                funktiokutsu.getFunktionimi().name() + ", id " + funktiokutsu.getId() +
+                                " ei voida käyttää valintalaskennassa.", funktiokutsu.getId(), funktiokutsu.getFunktionimi());
+                    case VALINTAKOELASKENTA:
+                        throw new FunktiokutsuaEiVoidaKayttaaValintakoelaskennassaException("Funktiokutsua " +
+                                funktiokutsu.getFunktionimi().name() + ", id " + funktiokutsu.getId() +
+                                " ei voida käyttää valintakoelaskennassa.", funktiokutsu.getId(), funktiokutsu.getFunktionimi());
+                }
+            }
+
+            for (Funktioargumentti arg : funktiokutsu.getFunktioargumentit()) {
+                if (arg.getFunktiokutsuChild() != null) {
+                    validoiFunktiokutsuMoodiaVasten(arg.getFunktiokutsuChild(), laskentamoodi);
+                } else if (arg.getLaskentakaavaChild() != null) {
+                    validoiFunktiokutsuMoodiaVasten(arg.getLaskentakaavaChild().getFunktiokutsu(), laskentamoodi);
+                }
+            }
+        }
+    }
+
     @Override
     @Transactional(readOnly = true)
-    public Laskentakaava haeLaskettavaKaava(Long id) {
+    public Laskentakaava haeLaskettavaKaava(final Long id, final Laskentamoodi laskentamoodi) {
         Laskentakaava laskentakaava = laskentakaavaCache.get(id);
-        if(laskentakaava == null) {
+        if (laskentakaava == null) {
             laskentakaava = haeKokoLaskentakaava(id, true);
-            laskentakaavaCache.addLaskentakaava(laskentakaava,id);
+            laskentakaavaCache.addLaskentakaava(laskentakaava, id);
         }
+        validoiFunktiokutsuMoodiaVasten(laskentakaava.getFunktiokutsu(), laskentamoodi);
+
         return laskentakaava;
     }
 }

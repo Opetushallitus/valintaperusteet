@@ -254,6 +254,35 @@
     <laskentakaava id="415" version="0" funktiokutsu_id="701" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO"
                    nimi="summakaava415"/>
 
+    <funktiokutsu id="702" version="0" funktionimi="DEMOGRAFIA"/>
+    <syoteparametri id="704" version="0" avain="tunniste" arvo="puuppa" funktiokutsu_id="702"/>
+    <syoteparametri id="705" version="0" avain="prosenttiosuus" arvo="30.0" funktiokutsu_id="702"/>
+
+    <funktiokutsu id="703" version="0" funktionimi="LUKUARVO"/>
+    <syoteparametri id="706" version="0" avain="luku" arvo="10.0" funktiokutsu_id="703"/>
+
+    <funktiokutsu id="704" version="0" funktionimi="LUKUARVO"/>
+    <syoteparametri id="707" version="0" avain="luku" arvo="20.0" funktiokutsu_id="704"/>
+
+    <funktiokutsu id="705" version="0" funktionimi="JOS"/>
+    <funktioargumentti id="704" version="0" funktiokutsuparent_id="705" funktiokutsuchild_id="702" indeksi="1"/>
+    <funktioargumentti id="705" version="0" funktiokutsuparent_id="705" funktiokutsuchild_id="703" indeksi="2"/>
+    <funktioargumentti id="706" version="0" funktiokutsuparent_id="705" funktiokutsuchild_id="704" indeksi="3"/>
+
+    <laskentakaava id="416" version="0" funktiokutsu_id="705" nimi="puuppa" on_luonnos="false"
+                   tyyppi="LUKUARVOFUNKTIO"/>
+
+    <funktiokutsu id="706" version="0" funktionimi="LUKUARVO"/>
+    <syoteparametri id="708" version="0" avain="luku" arvo="15.0" funktiokutsu_id="706"/>
+
+    <funktiokutsu id="707" version="0" funktionimi="SUUREMPI"/>
+    <funktioargumentti id="707" version="0" funktiokutsuparent_id="707" laskentakaavachild_id="416" indeksi="1"/>
+    <funktioargumentti id="708" version="0" funktiokutsuparent_id="707" funktiokutsuchild_id="706" indeksi="2"/>
+
+    <laskentakaava id="417" version="0" funktiokutsu_id="707" nimi="puuppa2" on_luonnos="false"
+                   tyyppi="TOTUUSARVOFUNKTIO"/>
+
+
     <!--
         Ensimmäisen valintaryhmän luonti on siirretty ensimmäiseksi, koska taulu pitää luoda ensimmäisenä.
         Ärsyttävä DBUnitin ominaisuus, jossa datan luonti/poistojärjestys määräytyy ensimmäisen tagin
@@ -345,6 +374,7 @@
 
     <valintaryhma id="56" version="0" oid="oid56" nimi="Valintaryhma 56" hakuOid="hakuoid1"/>
 
+    <valintaryhma id="57" version="0" oid="oid57" nimi="Valintaryhma 57" hakuOid="hakuoid1"/>
 
     <hakukohdekoodi id="1" version="0" uri="hakukohdekoodiuri1" arvo="koodiarvo1"
                     nimi_fi="hakukohdekoodi1"
@@ -889,6 +919,9 @@
                     nimi="valintaryhma 48 valinnan vaihe 2" aktiivinen="true" kuvaus="kuvaus"
                     edellinen_valinnan_vaihe_id="111"/>
 
+    <valinnan_vaihe valinnan_vaihe_tyyppi="VALINTAKOE" id="113" version="0" oid="113" valintaryhma_id="57"
+                    nimi="valintaryhma 57 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus"/>
+
     <valintakoe id="1" version="0" oid="oid1" tunniste="valintakoetunniste1" nimi="valintakoe1" kuvaus="kuvaus1"
                 aktiivinen="true" valinnan_vaihe_id="83" laskentakaava_id="101" master_valintakoe_id="[NULL]"/>
     <valintakoe id="2" version="0" oid="oid2" tunniste="valintakoetunniste2" nimi="valintakoe2" kuvaus="kuvaus2"
@@ -924,6 +957,9 @@
 
     <valintakoe id="14" version="0" oid="oid14" tunniste="valintakoetunniste14" nimi="valintakoe14" kuvaus="kuvaus14"
                 aktiivinen="true" valinnan_vaihe_id="107" laskentakaava_id="101"/>
+
+    <valintakoe id="15" version="0" oid="oid15" tunniste="valintakoetunniste15" nimi="valintakoe16" kuvaus="kuvaus15"
+                aktiivinen="true" valinnan_vaihe_id="113"/>
 
     <valintatapajono id="1" version="1" oid="1" aloituspaikat="10" nimi="jono1" kuvaus="kuvaus"
                      tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="1" aktiivinen="true"

@@ -2,9 +2,7 @@ package fi.vm.sade.service.valintaperusteet.service.impl;
 
 import fi.vm.sade.service.valintaperusteet.dao.JarjestyskriteeriDAO;
 import fi.vm.sade.service.valintaperusteet.dao.LaskentakaavaDAO;
-import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
-import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
-import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
+import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.JarjestyskriteeriService;
 import fi.vm.sade.service.valintaperusteet.service.OidService;
 import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
@@ -58,6 +56,39 @@ public class JarjestyskriteeriServiceImpl extends AbstractCRUDServiceImpl<Jarjes
         return jarjestyskriteeri;
     }
 
+    private void validoiFunktiokutsuJarjestyskriteeriaVarten(Funktiokutsu funktiokutsu) {
+        if (funktiokutsu != null) {
+            if (!funktiokutsu.getFunktionimi().getLaskentamoodit().contains(Laskentamoodi.VALINTALASKENTA)) {
+                throw new FunktiokutsuaEiVoidaKayttaaValintalaskennassaException("Funktiokutsua " +
+                        funktiokutsu.getFunktionimi().name() + ", id " + funktiokutsu.getId() +
+                        " ei voida käyttää valintalaskennassa.", funktiokutsu.getId(), funktiokutsu.getFunktionimi());
+            }
+
+            for (Funktioargumentti arg : funktiokutsu.getFunktioargumentit()) {
+                if (arg.getFunktiokutsuChild() != null) {
+                    validoiFunktiokutsuJarjestyskriteeriaVarten(arg.getFunktiokutsuChild());
+                } else if (arg.getLaskentakaavaChild() != null) {
+                    validoiFunktiokutsuJarjestyskriteeriaVarten(arg.getLaskentakaavaChild().getFunktiokutsu());
+                }
+            }
+        }
+    }
+
+    private void validoiLaskentakaavaJarjestyskriteeriaVarten(Laskentakaava laskentakaava) {
+        if (laskentakaava == null) {
+            throw new LaskentakaavaEiOleOlemassaException("Laskentakaavaa (" + laskentakaava.getId() + ") ei ole " +
+                    "olemassa", laskentakaava.getId());
+        } else if (!Funktiotyyppi.LUKUARVOFUNKTIO.equals(laskentakaava.getTyyppi())) {
+            throw new VaaranTyyppinenLaskentakaavaException("Järjestyskriteerin laskentakaavan tulee olla tyyppiä " +
+                    Funktiotyyppi.LUKUARVOFUNKTIO.name());
+        } else if (laskentakaava.getOnLuonnos()) {
+            throw new JarjestyskriteeriinLiitettavaLaskentakaavaOnLuonnosException("Luonnos-tilassa olevaa" +
+                    " laskentakaavaa ei voi liittää " + "valintatapajonoon", laskentakaava.getId());
+        }
+
+        validoiFunktiokutsuJarjestyskriteeriaVarten(laskentakaava.getFunktiokutsu());
+    }
+
     @Override
     public Jarjestyskriteeri update(String oid, Jarjestyskriteeri incoming) {
         Jarjestyskriteeri managedObject = haeJarjestyskriteeri(oid);
@@ -65,13 +96,7 @@ public class JarjestyskriteeriServiceImpl extends AbstractCRUDServiceImpl<Jarjes
         Long laskentakaavaOid = incoming.getLaskentakaava().getId();
         if (laskentakaavaOid != null) {
             Laskentakaava laskentakaava = laskentakaavaDAO.getLaskentakaava(laskentakaavaOid);
-            if (laskentakaava == null) {
-                throw new LaskentakaavaEiOleOlemassaException("Laskentakaavaa (" + laskentakaavaOid + ") ei ole " +
-                        "olemassa", laskentakaavaOid);
-            } else if (laskentakaava.getOnLuonnos()) {
-                throw new JarjestyskriteeriinLiitettavaLaskentakaavaOnLuonnosException("Luonnos-tilassa olevaa" +
-                        " laskentakaavaa ei voi liittää " + "valintatapajonoon", laskentakaavaOid);
-            }
+            validoiLaskentakaavaJarjestyskriteeriaVarten(laskentakaava);
             incoming.setLaskentakaava(laskentakaava);
         } else {
             throw new LaskentakaavaOidTyhjaException("LaskentakaavaOid oli tyhjä.");
@@ -82,7 +107,7 @@ public class JarjestyskriteeriServiceImpl extends AbstractCRUDServiceImpl<Jarjes
 
     @Override
     public Jarjestyskriteeri insert(Jarjestyskriteeri entity) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        throw new UnsupportedOperationException("not supported");
     }
 
     @Override
@@ -107,14 +132,8 @@ public class JarjestyskriteeriServiceImpl extends AbstractCRUDServiceImpl<Jarjes
 
         if (laskentakaavaOid != null) {
             Laskentakaava laskentakaava = laskentakaavaDAO.getLaskentakaava(laskentakaavaOid);
-            if (laskentakaava == null) {
-                throw new LaskentakaavaEiOleOlemassaException("Laskentakaavaa (" + laskentakaavaOid + ") ei ole " +
-                        "olemassa", laskentakaavaOid);
-            } else if (laskentakaava.getOnLuonnos()) {
-                throw new JarjestyskriteeriinLiitettavaLaskentakaavaOnLuonnosException("Luonnos-tilassa olevaa" +
-                        " laskentakaavaa ei voi liittää " + "valintatapajonoon", laskentakaavaOid);
-            }
-            jarjestyskriteeri.setLaskentakaava(laskentakaavaDAO.getLaskentakaava(laskentakaavaOid));
+            validoiLaskentakaavaJarjestyskriteeriaVarten(laskentakaava);
+            jarjestyskriteeri.setLaskentakaava(laskentakaava);
         } else {
             throw new LaskentakaavaOidTyhjaException("LaskentakaavaOid oli tyhjä.");
         }

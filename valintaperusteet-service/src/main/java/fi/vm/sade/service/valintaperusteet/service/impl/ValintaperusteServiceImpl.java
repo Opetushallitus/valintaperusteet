@@ -204,7 +204,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
                             FunktiokutsuTyyppi.class);
                 } else {
                     Laskentakaava laskentakaava = laskentakaavaService.haeLaskettavaKaava(koe.getLaskentakaava()
-                            .getId());
+                            .getId(), Laskentamoodi.VALINTAKOELASKENTA);
                     converted = conversionService.convert(laskentakaava.getFunktiokutsu(), FunktiokutsuTyyppi.class);
                 }
                 tyyppi.setFunktiokutsu(converted);
@@ -262,7 +262,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
 
             Long start = System.currentTimeMillis();
             Laskentakaava laskentakaava = laskentakaavaService.haeLaskettavaKaava(jarjestyskriteeri.getLaskentakaava()
-                    .getId());
+                    .getId(), Laskentamoodi.VALINTALASKENTA);
             if (LOG.isInfoEnabled()) {
                 LOG.info("haeLaskettavaKaava: " + jarjestyskriteeri.getLaskentakaava()
                         .getId() + ":" + (System.currentTimeMillis() - start));

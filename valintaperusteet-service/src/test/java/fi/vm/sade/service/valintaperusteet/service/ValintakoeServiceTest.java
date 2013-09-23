@@ -5,6 +5,7 @@ import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
+import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuaEiVoidaKayttaaValintakoelaskennassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintakoettaEiOleOlemassaException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -159,11 +160,25 @@ public class ValintakoeServiceTest {
         assertEquals(update.getTunniste(), managed.getTunniste());
         assertEquals(update.getLaskentakaavaId(), managed.getLaskentakaava().getId());
 
-        Valintakoe  kopio = valintakoeService.readByOid("oid9");
+        Valintakoe kopio = valintakoeService.readByOid("oid9");
         assertEquals(update.getAktiivinen(), kopio.getAktiivinen());
         assertEquals(update.getKuvaus(), kopio.getKuvaus());
         assertEquals(update.getNimi(), kopio.getNimi());
         assertEquals(update.getTunniste(), kopio.getTunniste());
         assertEquals(update.getLaskentakaavaId(), kopio.getLaskentakaava().getId());
+    }
+
+    @Test(expected = FunktiokutsuaEiVoidaKayttaaValintakoelaskennassaException.class)
+    public void testUpdateInvalidLaskentakaava() {
+        final String valintakoeOid = "oid15";
+
+        ValintakoeDTO update = new ValintakoeDTO();
+        update.setAktiivinen(false);
+        update.setKuvaus("kuvausta");
+        update.setLaskentakaavaId(417L);
+        update.setNimi("nimeäminen");
+        update.setTunniste("uustunniste");
+
+        valintakoeService.update(valintakoeOid, update);
     }
 }

@@ -8,6 +8,7 @@ import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuMuodostaaSilmukanException;
+import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuaEiVoidaKayttaaValintakoelaskennassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaMuodostaaSilmukanException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -415,7 +416,7 @@ public class LaskentakaavaServiceTest {
         {
             final Long laskentakaavaId = 510L;
 
-            Laskentakaava laskentakaava = laskentakaavaService.haeLaskettavaKaava(laskentakaavaId);
+            Laskentakaava laskentakaava = laskentakaavaService.haeLaskettavaKaava(laskentakaavaId, Laskentamoodi.VALINTALASKENTA);
             Funktiokutsu nimetty513L = laskentakaava.getFunktiokutsu();
 
             assertEquals(Funktionimi.NIMETTYLUKUARVO, nimetty513L.getFunktionimi());
@@ -451,7 +452,7 @@ public class LaskentakaavaServiceTest {
     public void haeMallinnettuLaskentakaava() {
         final Long laskentakaavaId = 510L;
 
-        Laskentakaava laskentakaava = laskentakaavaService.haeLaskettavaKaava(laskentakaavaId);
+        Laskentakaava laskentakaava = laskentakaavaService.haeLaskettavaKaava(laskentakaavaId, Laskentamoodi.VALINTALASKENTA);
         Funktiokutsu nimetty513L = laskentakaava.getFunktiokutsu();
 
         assertEquals(Funktionimi.NIMETTYLUKUARVO, nimetty513L.getFunktionimi());
@@ -502,7 +503,7 @@ public class LaskentakaavaServiceTest {
         final Long ylakaavaId = 415L;
 
         {
-            Laskentakaava ylakaava = laskentakaavaService.haeLaskettavaKaava(ylakaavaId);
+            Laskentakaava ylakaava = laskentakaavaService.haeLaskettavaKaava(ylakaavaId, Laskentamoodi.VALINTALASKENTA);
             assertEquals(Funktionimi.SUMMA, ylakaava.getFunktiokutsu().getFunktionimi());
 
             Funktiokutsu ylaFunktiokutsu = ylakaava.getFunktiokutsu();
@@ -514,7 +515,7 @@ public class LaskentakaavaServiceTest {
 
         }
         {
-            Laskentakaava alakaava = laskentakaavaService.haeLaskettavaKaava(alakaavaId);
+            Laskentakaava alakaava = laskentakaavaService.haeLaskettavaKaava(alakaavaId, Laskentamoodi.VALINTALASKENTA);
             assertEquals(Funktionimi.SUMMA, alakaava.getFunktiokutsu().getFunktionimi());
 
             Funktiokutsu alaFunktiokutsu = alakaava.getFunktiokutsu();
@@ -525,7 +526,7 @@ public class LaskentakaavaServiceTest {
             assertNull(alafunktioArgs.get(1).getLaskentakaavaChild());
         }
 
-        Laskentakaava alakaava = laskentakaavaService.haeLaskettavaKaava(alakaavaId);
+        Laskentakaava alakaava = laskentakaavaService.haeLaskettavaKaava(alakaavaId, Laskentamoodi.VALINTALASKENTA);
 
         Laskentakaava laskentakaavaViite = new Laskentakaava();
         laskentakaavaViite.setId(ylakaavaId);
@@ -550,5 +551,11 @@ public class LaskentakaavaServiceTest {
         }
 
         assertTrue(caught);
+    }
+
+    @Test(expected = FunktiokutsuaEiVoidaKayttaaValintakoelaskennassaException.class)
+    public void testHaeLaskettavaKaavaVaarallaMoodilla() {
+        final Long laskentakaavaId = 417L;
+        laskentakaavaService.haeLaskettavaKaava(laskentakaavaId, Laskentamoodi.VALINTAKOELASKENTA);
     }
 }

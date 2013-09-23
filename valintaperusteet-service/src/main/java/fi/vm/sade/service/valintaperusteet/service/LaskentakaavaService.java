@@ -4,6 +4,7 @@ import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
 import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
 import fi.vm.sade.service.valintaperusteet.model.Funktiotyyppi;
 import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
+import fi.vm.sade.service.valintaperusteet.model.Laskentamoodi;
 import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuMuodostaaSilmukanException;
 
 import java.util.List;
@@ -31,7 +32,7 @@ public interface LaskentakaavaService extends CRUDService<Laskentakaava, Long, S
      */
     Laskentakaava updateMetadata(Laskentakaava laskentakaava);
 
-    Laskentakaava haeLaskettavaKaava(Long id);
+    Laskentakaava haeLaskettavaKaava(Long id, Laskentamoodi laskentamoodi);
 
     Laskentakaava haeMallinnettuKaava(Long id);
 }

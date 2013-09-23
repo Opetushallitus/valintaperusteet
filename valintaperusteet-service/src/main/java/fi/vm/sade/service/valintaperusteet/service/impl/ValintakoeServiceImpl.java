@@ -4,6 +4,7 @@ import fi.vm.sade.service.valintaperusteet.dao.LaskentakaavaDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintakoeDAO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
 import fi.vm.sade.service.valintaperusteet.model.*;
+import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
 import fi.vm.sade.service.valintaperusteet.service.OidService;
 import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
 import fi.vm.sade.service.valintaperusteet.service.ValintakoeService;
@@ -37,6 +38,9 @@ public class ValintakoeServiceImpl extends AbstractCRUDServiceImpl<Valintakoe, L
 
     @Autowired
     private OidService oidService;
+
+    @Autowired
+    private LaskentakaavaService laskentakaavaService;
 
     private static ValintakoeKopioija kopioija = new ValintakoeKopioija();
 
@@ -133,6 +137,24 @@ public class ValintakoeServiceImpl extends AbstractCRUDServiceImpl<Valintakoe, L
         }
     }
 
+    private void validoiFunktiokutsuValintakoettaVarten(Funktiokutsu funktiokutsu) {
+        if (funktiokutsu != null) {
+            if (!funktiokutsu.getFunktionimi().getLaskentamoodit().contains(Laskentamoodi.VALINTAKOELASKENTA)) {
+                throw new FunktiokutsuaEiVoidaKayttaaValintakoelaskennassaException("Funktiokutsua " +
+                        funktiokutsu.getFunktionimi().name() + ", id " + funktiokutsu.getId() +
+                        " ei voida käyttää valintakoelaskennassa.", funktiokutsu.getId(), funktiokutsu.getFunktionimi());
+            }
+
+            for (Funktioargumentti arg : funktiokutsu.getFunktioargumentit()) {
+                if (arg.getFunktiokutsuChild() != null) {
+                    validoiFunktiokutsuValintakoettaVarten(arg.getFunktiokutsuChild());
+                } else if (arg.getLaskentakaavaChild() != null) {
+                    validoiFunktiokutsuValintakoettaVarten(arg.getLaskentakaavaChild().getFunktiokutsu());
+                }
+            }
+        }
+    }
+
     private Laskentakaava haeLaskentakaavaValintakokeelle(Long laskentakaavaId) {
         Laskentakaava laskentakaava = laskentakaavaDAO.getLaskentakaava(laskentakaavaId);
         if (laskentakaava == null) {
@@ -145,6 +167,8 @@ public class ValintakoeServiceImpl extends AbstractCRUDServiceImpl<Valintakoe, L
             throw new ValintakokeeseenLiitettavaLaskentakaavaOnLuonnosException("Valintakokeeseen liitettävä " +
                     "laskentakaava on LUONNOS-tilassa");
         }
+
+        validoiFunktiokutsuValintakoettaVarten(laskentakaava.getFunktiokutsu());
 
         return laskentakaava;
     }
