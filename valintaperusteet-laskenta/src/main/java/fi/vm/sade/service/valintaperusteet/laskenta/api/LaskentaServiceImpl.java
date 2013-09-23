@@ -1,6 +1,5 @@
 package fi.vm.sade.service.valintaperusteet.laskenta.api;
 
-import fi.vm.sade.service.valintaperusteet.laskenta.Esiprosessori;
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskin;
 import fi.vm.sade.service.valintaperusteet.laskenta.Lukuarvofunktio;
 import fi.vm.sade.service.valintaperusteet.laskenta.Totuusarvofunktio;
@@ -13,14 +12,13 @@ import java.util.Collection;
  */
 public class LaskentaServiceImpl implements LaskentaService {
 
-    public Laskentatulos<BigDecimal> suoritaLasku(Hakukohde hakukohde, Hakemus hakemus,
-                                                  Collection<Hakemus> kaikkiHakemukset, Lukuarvofunktio laskettava) {
-        Hakemus prosessoituHakemus = Esiprosessori.esiprosessoi(hakukohde, kaikkiHakemukset, hakemus, laskettava);
-        return Laskin.suoritaLasku(hakukohde, prosessoituHakemus, laskettava);
+    public Laskentatulos<BigDecimal> suoritaValintalaskenta(Hakukohde hakukohde, Hakemus hakemus,
+                                                            Collection<Hakemus> kaikkiHakemukset, Lukuarvofunktio laskettava) {
+        return Laskin.suoritaValintalaskenta(hakukohde, hakemus, kaikkiHakemukset, laskettava);
     }
 
-    public Laskentatulos<Boolean> suoritaLasku(Hakukohde hakukohde, Hakemus hakemus, Totuusarvofunktio laskettava) {
-        return Laskin.suoritaLasku(hakukohde, hakemus, laskettava);
+    public Laskentatulos<Boolean> suoritaValintakoelaskenta(Hakukohde hakukohde, Hakemus hakemus, Totuusarvofunktio laskettava) {
+        return Laskin.suoritaValintakoelaskenta(hakukohde, hakemus, laskettava);
     }
 
 }

@@ -3,14 +3,15 @@ package fi.vm.sade.kaava
 import org.scalatest.FunSuite
 import fi.vm.sade.service.valintaperusteet.model.{Valintaperustelahde, Funktionimi}
 import fi.vm.sade.kaava.LaskentaTestUtil._
-import fi.vm.sade.service.valintaperusteet.laskenta.{Esiprosessori, Laskin}
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskin
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
 import scala.collection.JavaConversions._
 import fi.vm.sade.kaava.LaskentaTestUtil.Hakemus
 import java.math.BigDecimal
-import fi.vm.sade.service.valintaperusteet.laskenta.api.{Hakukohde, Osallistuminen}
+import fi.vm.sade.service.valintaperusteet.laskenta.api.{Laskentatulos, Hakukohde, Osallistuminen}
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.VirheMetatieto.VirheMetatietotyyppi
 import java.util
+import java.lang.Boolean
 
 /**
  * User: kwuoti
@@ -355,9 +356,8 @@ class LaskentaIntegraatioTest extends FunSuite {
     val funktiokutsu = konvertoiLukuarvoLukuarvoksi
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val hakemus = tyhjaHakemus
-    val prosessoituHakemus = Esiprosessori.esiprosessoi(new Hakukohde("1", new util.HashMap[String, String]), List(hakemus), hakemus, lasku)
 
-    val (tulos, tila) = Laskin.laske(hakukohde, prosessoituHakemus, lasku)
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
     assert(tulos.get.compareTo(new BigDecimal("4.0")) == 0)
     assertTilaHyvaksyttavissa(tila)
   }
@@ -390,9 +390,8 @@ class LaskentaIntegraatioTest extends FunSuite {
     val funktiokutsu = konvertoiLukuarvovaliLukuarvoksi
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val hakemus = tyhjaHakemus
-    val prosessoituHakemus = Esiprosessori.esiprosessoi(new Hakukohde("1", new util.HashMap[String, String]), List(hakemus), hakemus, lasku)
 
-    val (tulos, tila) = Laskin.laske(hakukohde, prosessoituHakemus, lasku)
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
     assert(tulos.get.compareTo(new BigDecimal("3.0")) == 0)
     assertTilaHyvaksyttavissa(tila)
   }
@@ -1512,21 +1511,31 @@ class LaskentaIntegraatioTest extends FunSuite {
       Hakemus("4", List("1", "2", "3"), Map("sukupuoli" -> "nainen")))
 
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
-    Esiprosessori.esiprosessoi(hakukohde, asJavaCollection(hakemukset), hakemukset.head, lasku)
 
-    val prosessoidutHakemukset = hakemukset.map(h => Esiprosessori.esiprosessoi(hakukohde,
-      seqAsJavaList(hakemukset), h, lasku))
+    val tulokset: List[Laskentatulos[Boolean]] = hakemukset.map(h => Laskin.suoritaValintalaskenta(hakukohde, h, hakemukset, lasku))
 
-    val tulokset = prosessoidutHakemukset.map(h => Laskin.laske(hakukohde, h, lasku))
-    assert(!tulokset(0)._1.get)
-    assertTilaHyvaksyttavissa(tulokset(0)._2)
-    assert(!tulokset(1)._1.get)
-    assertTilaHyvaksyttavissa(tulokset(1)._2)
-    assert(!tulokset(2)._1.get)
-    assertTilaHyvaksyttavissa(tulokset(2)._2)
-    assert(tulokset(3)._1.get)
-    assertTilaHyvaksyttavissa(tulokset(3)._2)
+    for (i <- 0 until tulokset.size) {
+      val tulos = tulokset(i)
+      if (i < 3) assert(!tulos.getTulos) else assert(tulos.getTulos)
+      assertTilaHyvaksyttavissa(tulos.getTila)
+    }
+  }
 
+  test("demografia vaaralla moodilla") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.DEMOGRAFIA,
+      syoteparametrit = List(
+        Syoteparametri("tunniste", "sukupuoli"),
+        Syoteparametri("prosenttiosuus", "33.0")))
+
+    val hakukohde = new Hakukohde("1", new util.HashMap[String, String])
+
+    val hakemus = Hakemus("1", List("1", "2", "3"), Map("sukupuoli" -> "mies"))
+    val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
+
+    val tulos = Laskin.suoritaValintakoelaskenta(hakukohde, hakemus, lasku)
+    assertTulosTyhja(Option(tulos.getTulos))
+    assertTilaVirhe(tulos.getTila, VirheMetatietotyyppi.VIRHEELLINEN_LASKENTAMOODI)
   }
 
   test("pyoristys up") {

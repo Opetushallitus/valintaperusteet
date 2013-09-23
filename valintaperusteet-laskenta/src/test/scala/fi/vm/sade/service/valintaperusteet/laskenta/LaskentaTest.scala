@@ -174,18 +174,14 @@ class LaskentaTest extends FunSuite {
     val hakukohde = new Hakukohde("hakutoiveoid1", new util.HashMap[String, String])
 
     val funktio = Demografia("funktioid1", "sukupuoli", BigDecimal("33.0"))
-    val prosessoidutHakemukset = hakemukset.map(h => Esiprosessori.esiprosessoi(hakukohde, seqAsJavaList(hakemukset), h, funktio))
 
-    def check(hakemus: Hakemus) = {
-      val avain = Esiprosessori.prosessointiOid(hakukohde.hakukohdeOid, hakemus, funktio)
-      hakemus.kentat(avain).toBoolean
-    }
+    val tulokset = hakemukset.map(h => Laskin.suoritaValintalaskenta(hakukohde, h, hakemukset, funktio))
 
-    assert(!check(prosessoidutHakemukset(0)))
-    assert(!check(prosessoidutHakemukset(1)))
-    assert(!check(prosessoidutHakemukset(2)))
-    assert(check(prosessoidutHakemukset(3)))
-    assert(!check(prosessoidutHakemukset(4)))
+    assert(!tulokset(0).getTulos)
+    assert(!tulokset(1).getTulos)
+    assert(!tulokset(2).getTulos)
+    assert(tulokset(3).getTulos)
+    assert(tulokset(4).getTulos)
   }
 
   test("Konvertoilukuarvovalilukuarvoksi aarirajat") {
@@ -446,7 +442,7 @@ class LaskentaTest extends FunSuite {
       "tunniste3" -> "50.0", "tunniste4" -> "vertailtava-ei-sama", "tunniste4-OSALLISTUMINEN" -> Osallistuminen.OSALLISTUI.name(),
       "tunniste5-OSALLISTUMINEN" -> Osallistuminen.EI_OSALLISTUNUT.name()))
 
-    val tulos = Laskin.suoritaLasku(new Hakukohde("hakukohdeOid", Map[String, String]()), hakemus, funktio)
+    val tulos = Laskin.suoritaValintalaskenta(new Hakukohde("hakukohdeOid", Map[String, String]()), hakemus, List[Hakemus](), funktio)
     assert(tulos.getTulos.equals(BigDecimal("276.0").underlying()))
     assertTilaVirhe(tulos.getTila, VirheMetatietotyyppi.SYOTETTAVA_ARVO_MERKITSEMATTA)
     assert(tulos.getSyotetytArvot.size == 5)

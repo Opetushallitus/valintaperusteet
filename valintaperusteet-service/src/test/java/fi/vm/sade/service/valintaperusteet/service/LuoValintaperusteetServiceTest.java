@@ -223,7 +223,7 @@ public class LuoValintaperusteetServiceTest {
 
         Laskentakaava kaava = laajennaAlakaavat(PkPohjaiset.luoPainotettavatKeskiarvotLaskentakaava(pkAineet));
 
-        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, hakemus, hakemukset(hakemus),
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemus, hakemukset(hakemus),
                 Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos.getTulos());
@@ -240,7 +240,7 @@ public class LuoValintaperusteetServiceTest {
 
         Laskentakaava kaava = laajennaAlakaavat(PkPohjaiset.luoPKPohjaisenKoulutuksenLukuaineidenKeskiarvo(pkAineet));
 
-        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, hakemus, hakemukset(hakemus),
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemus, hakemukset(hakemus),
                 Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos.getTulos());
@@ -261,7 +261,7 @@ public class LuoValintaperusteetServiceTest {
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(
                 luoVakiokaava(new BigDecimal(7.0)), "nimi"));
 
-        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, hakemus, hakemukset(hakemus),
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemus, hakemukset(hakemus),
                 Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos.getTulos());
@@ -277,7 +277,7 @@ public class LuoValintaperusteetServiceTest {
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(
                 luoVakiokaava(new BigDecimal(7.25)), "nimi"));
 
-        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, hakemus, hakemukset(hakemus),
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemus, hakemukset(hakemus),
                 Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos.getTulos());
@@ -296,7 +296,7 @@ public class LuoValintaperusteetServiceTest {
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(
                 PkPohjaiset.luoPKPohjaisenKoulutuksenLukuaineidenKeskiarvo(pkAineet), "nimi"));
 
-        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, hakemus, hakemukset(hakemus),
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemus, hakemukset(hakemus),
                 Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos.getTulos());
@@ -312,7 +312,7 @@ public class LuoValintaperusteetServiceTest {
         final BigDecimal odotettuTulos = new BigDecimal("6.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkPohjaiset.luoPohjakoulutuspisteytysmalli());
-        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, hakemus, hakemukset(hakemus),
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemus, hakemukset(hakemus),
                 Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos.getTulos());
@@ -326,7 +326,7 @@ public class LuoValintaperusteetServiceTest {
         final BigDecimal odotettuTulos = new BigDecimal("6.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkPohjaiset.luoPohjakoulutuspisteytysmalli());
-        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, hakemus, hakemukset(hakemus),
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemus, hakemukset(hakemus),
                 Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos.getTulos());
@@ -342,7 +342,7 @@ public class LuoValintaperusteetServiceTest {
         final BigDecimal odotettuTulos = new BigDecimal("0.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkPohjaiset.luoPohjakoulutuspisteytysmalli());
-        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, hakemus, hakemukset(hakemus),
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemus, hakemukset(hakemus),
                 Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos.getTulos());
@@ -357,7 +357,7 @@ public class LuoValintaperusteetServiceTest {
         final BigDecimal odotettuTulos = new BigDecimal("0.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkPohjaiset.ilmanKoulutuspaikkaaPisteytysmalli());
-        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, hakemus, hakemukset(hakemus),
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemus, hakemukset(hakemus),
                 Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos.getTulos());
@@ -372,7 +372,7 @@ public class LuoValintaperusteetServiceTest {
         final BigDecimal odotettuTulos = new BigDecimal("8.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkPohjaiset.ilmanKoulutuspaikkaaPisteytysmalli());
-        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, hakemus, hakemukset(hakemus),
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemus, hakemukset(hakemus),
                 Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos.getTulos());
@@ -385,7 +385,7 @@ public class LuoValintaperusteetServiceTest {
         final BigDecimal odotettuTulos = new BigDecimal("2.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoHakutoivejarjestyspisteytysmalli());
-        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, hakemus, hakemukset(hakemus),
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemus, hakemukset(hakemus),
                 Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos.getTulos());
@@ -398,7 +398,7 @@ public class LuoValintaperusteetServiceTest {
         final BigDecimal odotettuTulos = new BigDecimal("0.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoHakutoivejarjestyspisteytysmalli());
-        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE2, hakemus, hakemukset(hakemus),
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE2, hakemus, hakemukset(hakemus),
                 Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos.getTulos());
@@ -412,7 +412,7 @@ public class LuoValintaperusteetServiceTest {
         final BigDecimal odotettuTulos = new BigDecimal("0.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoTyokokemuspisteytysmalli());
-        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, hakemus, hakemukset(hakemus),
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemus, hakemukset(hakemus),
                 Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos.getTulos());
@@ -426,7 +426,7 @@ public class LuoValintaperusteetServiceTest {
         final BigDecimal odotettuTulos = new BigDecimal("1.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoTyokokemuspisteytysmalli());
-        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, hakemus, hakemukset(hakemus),
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemus, hakemukset(hakemus),
                 Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos.getTulos());
@@ -440,7 +440,7 @@ public class LuoValintaperusteetServiceTest {
         final BigDecimal odotettuTulos = new BigDecimal("1.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoTyokokemuspisteytysmalli());
-        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, hakemus, hakemukset(hakemus),
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemus, hakemukset(hakemus),
                 Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos.getTulos());
@@ -454,7 +454,7 @@ public class LuoValintaperusteetServiceTest {
         final BigDecimal odotettuTulos = new BigDecimal("2.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoTyokokemuspisteytysmalli());
-        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, hakemus, hakemukset(hakemus),
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemus, hakemukset(hakemus),
                 Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos.getTulos());
@@ -468,7 +468,7 @@ public class LuoValintaperusteetServiceTest {
         final BigDecimal odotettuTulos = new BigDecimal("2.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoTyokokemuspisteytysmalli());
-        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, hakemus, hakemukset(hakemus),
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemus, hakemukset(hakemus),
                 Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos.getTulos());
@@ -482,7 +482,7 @@ public class LuoValintaperusteetServiceTest {
         final BigDecimal odotettuTulos = new BigDecimal("3.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoTyokokemuspisteytysmalli());
-        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, hakemus, hakemukset(hakemus),
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemus, hakemukset(hakemus),
                 Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos.getTulos());
@@ -500,7 +500,7 @@ public class LuoValintaperusteetServiceTest {
 
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoSukupuolipisteytysmalli());
 
-        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, hakemukset[0],
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemukset[0],
                 Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos.getTulos());
@@ -518,7 +518,7 @@ public class LuoValintaperusteetServiceTest {
 
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoSukupuolipisteytysmalli());
 
-        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, hakemukset[0],
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemukset[0],
                 Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos.getTulos());
@@ -550,7 +550,7 @@ public class LuoValintaperusteetServiceTest {
                 PkPohjaiset.luoPohjakoulutuspisteytysmalli(), PkPohjaiset.ilmanKoulutuspaikkaaPisteytysmalli(),
                 PkJaYoPohjaiset.luoHakutoivejarjestyspisteytysmalli(), PkJaYoPohjaiset.luoTyokokemuspisteytysmalli(),
                 PkJaYoPohjaiset.luoSukupuolipisteytysmalli(), PkJaYoPohjaiset.luoUlkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt()));
-        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, hakemukset[0],
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemukset[0],
                 Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos.getTulos());
@@ -567,7 +567,7 @@ public class LuoValintaperusteetServiceTest {
         Laskentakaava kaava = laajennaAlakaavat(YoPohjaiset
                 .luoYOPohjaisenKoulutuksenPaattotodistuksenKeskiarvo(yoAineet));
 
-        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, hakemus, hakemukset(hakemus),
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemus, hakemukset(hakemus),
                 Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
 
         assertEquals(odotettuTulos.compareTo(tulos.getTulos()), 0);
@@ -586,7 +586,7 @@ public class LuoValintaperusteetServiceTest {
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(
                 YoPohjaiset.luoYOPohjaisenKoulutuksenPaattotodistuksenKeskiarvo(yoAineet), "nimi"));
 
-        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, hakemus, hakemukset(hakemus),
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemus, hakemukset(hakemus),
                 Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos.getTulos());
@@ -612,7 +612,7 @@ public class LuoValintaperusteetServiceTest {
                 PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(
                         YoPohjaiset.luoYOPohjaisenKoulutuksenPaattotodistuksenKeskiarvo(yoAineet), "nimi"),
                 PkJaYoPohjaiset.luoUlkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt()));
-        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, hakemukset[0],
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemukset[0],
                 Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos.getTulos());
@@ -625,7 +625,7 @@ public class LuoValintaperusteetServiceTest {
         final BigDecimal odotettuTulos = new BigDecimal("5.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoHakutoivejarjestysTasapistekaava());
-        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, hakemus, hakemukset(hakemus),
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemus, hakemukset(hakemus),
                 Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos.getTulos());
@@ -638,7 +638,7 @@ public class LuoValintaperusteetServiceTest {
         final BigDecimal odotettuTulos = new BigDecimal("4.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoHakutoivejarjestysTasapistekaava());
-        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE2, hakemus, hakemukset(hakemus),
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE2, hakemus, hakemukset(hakemus),
                 Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos.getTulos());
@@ -651,7 +651,7 @@ public class LuoValintaperusteetServiceTest {
         final BigDecimal odotettuTulos = new BigDecimal("3.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoHakutoivejarjestysTasapistekaava());
-        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE3, hakemus, hakemukset(hakemus),
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE3, hakemus, hakemukset(hakemus),
                 Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos.getTulos());
@@ -664,7 +664,7 @@ public class LuoValintaperusteetServiceTest {
         final BigDecimal odotettuTulos = new BigDecimal("2.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoHakutoivejarjestysTasapistekaava());
-        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE4, hakemus, hakemukset(hakemus),
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE4, hakemus, hakemukset(hakemus),
                 Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos.getTulos());
@@ -677,7 +677,7 @@ public class LuoValintaperusteetServiceTest {
         final BigDecimal odotettuTulos = new BigDecimal("1.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoHakutoivejarjestysTasapistekaava());
-        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE5, hakemus, hakemukset(hakemus),
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE5, hakemus, hakemukset(hakemus),
                 Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos.getTulos());
@@ -690,7 +690,7 @@ public class LuoValintaperusteetServiceTest {
         final BigDecimal odotettuTulos = new BigDecimal("0.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoHakutoivejarjestysTasapistekaava());
-        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(new Hakukohde("ei-olemassa", new HashMap<String, String>()), hakemus, hakemukset(hakemus),
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(new Hakukohde("ei-olemassa", new HashMap<String, String>()), hakemus, hakemukset(hakemus),
                 Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos.getTulos());
@@ -710,14 +710,14 @@ public class LuoValintaperusteetServiceTest {
 
         Funktiokutsu kaava = PkJaYoPohjaiset.luoAidinkieliOnOpetuskieliFunktiokutsu(LuoValintaperusteetServiceImpl.Kielikoodi.SUOMI);
         for (Hakemus h : odotettuTulosFalse) {
-            Laskentatulos<Boolean> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, h,
+            Laskentatulos<Boolean> tulos = laskentaService.suoritaValintakoelaskenta(HAKUKOHDE1, h,
                     Laskentadomainkonvertteri.muodostaTotuusarvolasku(kaava));
             assertFalse(tulos.getTulos());
             assertEquals(Hyvaksyttavissatila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
         }
 
         for (Hakemus h : odotettuTulosTrue) {
-            Laskentatulos<Boolean> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, h,
+            Laskentatulos<Boolean> tulos = laskentaService.suoritaValintakoelaskenta(HAKUKOHDE1, h,
                     Laskentadomainkonvertteri.muodostaTotuusarvolasku(kaava));
 
             assertTrue(tulos.getTulos());
@@ -738,14 +738,14 @@ public class LuoValintaperusteetServiceTest {
 
         Funktiokutsu kaava = PkJaYoPohjaiset.luoAidinkieliOnOpetuskieliFunktiokutsu(LuoValintaperusteetServiceImpl.Kielikoodi.RUOTSI);
         for (Hakemus h : odotettuTulosFalse) {
-            Laskentatulos<Boolean> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, h,
+            Laskentatulos<Boolean> tulos = laskentaService.suoritaValintakoelaskenta(HAKUKOHDE1, h,
                     Laskentadomainkonvertteri.muodostaTotuusarvolasku(kaava));
             assertFalse(tulos.getTulos());
             assertEquals(Hyvaksyttavissatila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
         }
 
         for (Hakemus h : odotettuTulosTrue) {
-            Laskentatulos<Boolean> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, h,
+            Laskentatulos<Boolean> tulos = laskentaService.suoritaValintakoelaskenta(HAKUKOHDE1, h,
                     Laskentadomainkonvertteri.muodostaTotuusarvolasku(kaava));
 
             assertTrue(tulos.getTulos());
@@ -767,14 +767,14 @@ public class LuoValintaperusteetServiceTest {
         Funktiokutsu kaava = PkJaYoPohjaiset.luoKielikoeSuoritettuFunktiokutsu(LuoValintaperusteetServiceImpl.Kielikoodi.SUOMI);
 
         for (Hakemus h : odotettuTulosFalse) {
-            Laskentatulos<Boolean> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, h,
+            Laskentatulos<Boolean> tulos = laskentaService.suoritaValintakoelaskenta(HAKUKOHDE1, h,
                     Laskentadomainkonvertteri.muodostaTotuusarvolasku(kaava));
             assertFalse(tulos.getTulos());
             assertEquals(Hyvaksyttavissatila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
         }
 
         for (Hakemus h : odotettuTulosTrue) {
-            Laskentatulos<Boolean> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, h,
+            Laskentatulos<Boolean> tulos = laskentaService.suoritaValintakoelaskenta(HAKUKOHDE1, h,
                     Laskentadomainkonvertteri.muodostaTotuusarvolasku(kaava));
 
             assertTrue(tulos.getTulos());
@@ -794,14 +794,14 @@ public class LuoValintaperusteetServiceTest {
 
         Funktiokutsu kaava = PkJaYoPohjaiset.luoKielikoekriteeri1(LuoValintaperusteetServiceImpl.Kielikoodi.SUOMI);
         for (Hakemus h : odotettuTulosFalse) {
-            Laskentatulos<Boolean> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, h,
+            Laskentatulos<Boolean> tulos = laskentaService.suoritaValintakoelaskenta(HAKUKOHDE1, h,
                     Laskentadomainkonvertteri.muodostaTotuusarvolasku(kaava));
             assertFalse(tulos.getTulos());
             assertEquals(Hyvaksyttavissatila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
         }
 
         for (Hakemus h : odotettuTulosTrue) {
-            Laskentatulos<Boolean> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, h,
+            Laskentatulos<Boolean> tulos = laskentaService.suoritaValintakoelaskenta(HAKUKOHDE1, h,
                     Laskentadomainkonvertteri.muodostaTotuusarvolasku(kaava));
 
             assertTrue(tulos.getTulos());
@@ -838,14 +838,14 @@ public class LuoValintaperusteetServiceTest {
             };
 
             for (Hakemus h : odotettuTulosFalse) {
-                Laskentatulos<Boolean> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, h,
+                Laskentatulos<Boolean> tulos = laskentaService.suoritaValintakoelaskenta(HAKUKOHDE1, h,
                         Laskentadomainkonvertteri.muodostaTotuusarvolasku(kaava));
                 assertFalse(tulos.getTulos());
                 assertEquals(Hyvaksyttavissatila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
             }
 
             for (Hakemus h : odotettuTulosTrue) {
-                Laskentatulos<Boolean> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, h,
+                Laskentatulos<Boolean> tulos = laskentaService.suoritaValintakoelaskenta(HAKUKOHDE1, h,
                         Laskentadomainkonvertteri.muodostaTotuusarvolasku(kaava));
 
                 assertTrue(tulos.getTulos());
@@ -881,14 +881,14 @@ public class LuoValintaperusteetServiceTest {
         Funktiokutsu kaava = PkJaYoPohjaiset.luoKielikoekriteeri3(LuoValintaperusteetServiceImpl.Kielikoodi.SUOMI);
 
         for (Hakemus h : odotettuTulosFalse) {
-            Laskentatulos<Boolean> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, h,
+            Laskentatulos<Boolean> tulos = laskentaService.suoritaValintakoelaskenta(HAKUKOHDE1, h,
                     Laskentadomainkonvertteri.muodostaTotuusarvolasku(kaava));
             assertFalse(tulos.getTulos());
             assertEquals(Hyvaksyttavissatila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
         }
 
         for (Hakemus h : odotettuTulosTrue) {
-            Laskentatulos<Boolean> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, h,
+            Laskentatulos<Boolean> tulos = laskentaService.suoritaValintakoelaskenta(HAKUKOHDE1, h,
                     Laskentadomainkonvertteri.muodostaTotuusarvolasku(kaava));
 
             assertTrue(tulos.getTulos());
@@ -903,9 +903,9 @@ public class LuoValintaperusteetServiceTest {
         Hakemus tyhjaHakemus = hakemus(new HashMap<String, Object>());
 
         Funktiokutsu kaava = PkJaYoPohjaiset.luoKielikoekriteeri4(LuoValintaperusteetServiceImpl.Kielikoodi.SUOMI);
-        Laskentatulos<Boolean> fiTulos = laskentaService.suoritaLasku(HAKUKOHDE1, fiHakemus,
+        Laskentatulos<Boolean> fiTulos = laskentaService.suoritaValintakoelaskenta(HAKUKOHDE1, fiHakemus,
                 Laskentadomainkonvertteri.muodostaTotuusarvolasku(kaava));
-        Laskentatulos<Boolean> tyhjaTulos = laskentaService.suoritaLasku(HAKUKOHDE1, tyhjaHakemus,
+        Laskentatulos<Boolean> tyhjaTulos = laskentaService.suoritaValintakoelaskenta(HAKUKOHDE1, tyhjaHakemus,
                 Laskentadomainkonvertteri.muodostaTotuusarvolasku(kaava));
 
         assertTrue(fiTulos.getTulos());
@@ -987,14 +987,14 @@ public class LuoValintaperusteetServiceTest {
         Funktiokutsu kaava = PkJaYoPohjaiset.luoKielikoekriteeri5(LuoValintaperusteetServiceImpl.Kielikoodi.SUOMI);
 
         for (Hakemus h : odotettuTulosFalse) {
-            Laskentatulos<Boolean> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, h,
+            Laskentatulos<Boolean> tulos = laskentaService.suoritaValintakoelaskenta(HAKUKOHDE1, h,
                     Laskentadomainkonvertteri.muodostaTotuusarvolasku(kaava));
             assertFalse(tulos.getTulos());
             assertEquals(Hyvaksyttavissatila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
         }
 
         for (Hakemus h : odotettuTulosTrue) {
-            Laskentatulos<Boolean> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, h,
+            Laskentatulos<Boolean> tulos = laskentaService.suoritaValintakoelaskenta(HAKUKOHDE1, h,
                     Laskentadomainkonvertteri.muodostaTotuusarvolasku(kaava));
 
             assertTrue(tulos.getTulos());
@@ -1032,14 +1032,14 @@ public class LuoValintaperusteetServiceTest {
             };
 
             for (Hakemus h : odotettuTulosFalse) {
-                Laskentatulos<Boolean> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, h,
+                Laskentatulos<Boolean> tulos = laskentaService.suoritaValintakoelaskenta(HAKUKOHDE1, h,
                         Laskentadomainkonvertteri.muodostaTotuusarvolasku(kaava));
                 assertFalse(tulos.getTulos());
                 assertEquals(Hyvaksyttavissatila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
             }
 
             for (Hakemus h : odotettuTulosTrue) {
-                Laskentatulos<Boolean> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, h,
+                Laskentatulos<Boolean> tulos = laskentaService.suoritaValintakoelaskenta(HAKUKOHDE1, h,
                         Laskentadomainkonvertteri.muodostaTotuusarvolasku(kaava));
 
                 assertTrue(tulos.getTulos());
@@ -1070,14 +1070,14 @@ public class LuoValintaperusteetServiceTest {
 
         Funktiokutsu kaava = PkJaYoPohjaiset.luoKielikoekriteeri7(LuoValintaperusteetServiceImpl.Kielikoodi.SUOMI);
         for (Hakemus h : odotettuTulosFalse) {
-            Laskentatulos<Boolean> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, h,
+            Laskentatulos<Boolean> tulos = laskentaService.suoritaValintakoelaskenta(HAKUKOHDE1, h,
                     Laskentadomainkonvertteri.muodostaTotuusarvolasku(kaava));
             assertFalse(tulos.getTulos());
             assertEquals(Hyvaksyttavissatila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
         }
 
         for (Hakemus h : odotettuTulosTrue) {
-            Laskentatulos<Boolean> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, h,
+            Laskentatulos<Boolean> tulos = laskentaService.suoritaValintakoelaskenta(HAKUKOHDE1, h,
                     Laskentadomainkonvertteri.muodostaTotuusarvolasku(kaava));
 
             assertTrue(tulos.getTulos());
@@ -1118,7 +1118,7 @@ public class LuoValintaperusteetServiceTest {
 
         Laskentakaava yhdistetty = laajennaAlakaavat(PkJaYoPohjaiset.luoYhdistettyPeruskaavaJaKielikoekaava(peruskaava, kielikoekaava));
 
-        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, hakemukset[0],
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemukset[0],
                 Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaLukuarvolasku(yhdistetty.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos.getTulos());
@@ -1160,7 +1160,7 @@ public class LuoValintaperusteetServiceTest {
 
         Laskentakaava yhdistetty = laajennaAlakaavat(PkJaYoPohjaiset.luoYhdistettyPeruskaavaJaKielikoekaava(peruskaava, kielikoekaava));
 
-        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, hakemukset[0],
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemukset[0],
                 Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaLukuarvolasku(yhdistetty.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos.getTulos());
@@ -1176,7 +1176,7 @@ public class LuoValintaperusteetServiceTest {
         final BigDecimal odotettuTulos = new BigDecimal("0.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkPohjaiset.luoPohjakoulutuspisteytysmalli());
-        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, hakemus, hakemukset(hakemus),
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemus, hakemukset(hakemus),
                 Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos.getTulos());
@@ -1192,7 +1192,7 @@ public class LuoValintaperusteetServiceTest {
         final BigDecimal odotettuTulos = new BigDecimal("0.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkPohjaiset.luoPohjakoulutuspisteytysmalli());
-        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, hakemus, hakemukset(hakemus),
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemus, hakemukset(hakemus),
                 Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos.getTulos());
@@ -1205,7 +1205,7 @@ public class LuoValintaperusteetServiceTest {
                 valintaperuste(PkPohjaiset.pohjakoulutusAvain, PkPohjaiset.ulkomaillaSuoritettuKoulutus)));
 
         Laskentakaava kaava = PkJaYoPohjaiset.luoUlkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt();
-        Laskentatulos<Boolean> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, hakemus,
+        Laskentatulos<Boolean> tulos = laskentaService.suoritaValintakoelaskenta(HAKUKOHDE1, hakemus,
                 Laskentadomainkonvertteri.muodostaTotuusarvolasku(kaava.getFunktiokutsu()));
 
         assertTrue(tulos.getTulos());
@@ -1218,7 +1218,7 @@ public class LuoValintaperusteetServiceTest {
                 valintaperuste(PkPohjaiset.pohjakoulutusAvain, PkPohjaiset.oppivelvollisuudenSuorittaminenKeskeytynyt)));
 
         Laskentakaava kaava = PkJaYoPohjaiset.luoUlkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt();
-        Laskentatulos<Boolean> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, hakemus,
+        Laskentatulos<Boolean> tulos = laskentaService.suoritaValintakoelaskenta(HAKUKOHDE1, hakemus,
                 Laskentadomainkonvertteri.muodostaTotuusarvolasku(kaava.getFunktiokutsu()));
 
         assertTrue(tulos.getTulos());
@@ -1231,7 +1231,7 @@ public class LuoValintaperusteetServiceTest {
                 valintaperuste(PkPohjaiset.pohjakoulutusAvain, PkPohjaiset.perusopetuksenOppimaara)));
 
         Laskentakaava kaava = PkJaYoPohjaiset.luoUlkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt();
-        Laskentatulos<Boolean> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, hakemus,
+        Laskentatulos<Boolean> tulos = laskentaService.suoritaValintakoelaskenta(HAKUKOHDE1, hakemus,
                 Laskentadomainkonvertteri.muodostaTotuusarvolasku(kaava.getFunktiokutsu()));
 
         assertFalse(tulos.getTulos());
@@ -1266,7 +1266,7 @@ public class LuoValintaperusteetServiceTest {
 
         Laskentakaava yhdistetty = laajennaAlakaavat(PkJaYoPohjaiset.luoYhdistettyPeruskaavaJaKielikoekaava(peruskaava, kielikoekaava));
 
-        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, hakemukset[0],
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemukset[0],
                 Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaLukuarvolasku(yhdistetty.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos.getTulos());
@@ -1274,7 +1274,7 @@ public class LuoValintaperusteetServiceTest {
         assertEquals(HylattyMetatieto.Hylattymetatietotyyppi.HYLKAA_FUNKTION_SUORITTAMA_HYLKAYS, ((Hylattytila) tulos.getTila()).getMetatieto().getMetatietotyyppi());
         assertEquals("Oppivelvollisuuden suorittaminen on keskeytynyt tai pohjakoulutus on ulkomailla suoritettu koulutus", ((Hylattytila) tulos.getTila()).getKuvaus());
 
-        Laskentatulos<BigDecimal> tulos2 = laskentaService.suoritaLasku(HAKUKOHDE1, hakemukset[1],
+        Laskentatulos<BigDecimal> tulos2 = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemukset[1],
                 Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaLukuarvolasku(yhdistetty.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos2.getTulos());
@@ -1309,7 +1309,7 @@ public class LuoValintaperusteetServiceTest {
 
         Laskentakaava yhdistetty = laajennaAlakaavat(PkJaYoPohjaiset.luoYhdistettyPeruskaavaJaKielikoekaava(peruskaava, kielikoekaava));
 
-        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, hakemukset[0],
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemukset[0],
                 Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaLukuarvolasku(yhdistetty.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos.getTulos());
@@ -1317,7 +1317,7 @@ public class LuoValintaperusteetServiceTest {
         assertEquals(HylattyMetatieto.Hylattymetatietotyyppi.HYLKAA_FUNKTION_SUORITTAMA_HYLKAYS, ((Hylattytila) tulos.getTila()).getMetatieto().getMetatietotyyppi());
         assertEquals("Oppivelvollisuuden suorittaminen on keskeytynyt tai pohjakoulutus on ulkomailla suoritettu koulutus", ((Hylattytila) tulos.getTila()).getKuvaus());
 
-        Laskentatulos<BigDecimal> tulos2 = laskentaService.suoritaLasku(HAKUKOHDE1, hakemukset[1],
+        Laskentatulos<BigDecimal> tulos2 = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemukset[1],
                 Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaLukuarvolasku(yhdistetty.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos2.getTulos());
@@ -1348,7 +1348,7 @@ public class LuoValintaperusteetServiceTest {
                         YoPohjaiset.luoYOPohjaisenKoulutuksenPaattotodistuksenKeskiarvo(yoAineet), "nimi"),
                 ulkomaillaSuoritettuKoulutus), PkJaYoPohjaiset.luoKielikokeenPakollisuudenLaskentakaava(LuoValintaperusteetServiceImpl.Kielikoodi.SUOMI, eiUlkomaillaSuoritettuKoulutus)));
 
-        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, hakemukset[0],
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemukset[0],
                 Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos.getTulos());
@@ -1356,7 +1356,7 @@ public class LuoValintaperusteetServiceTest {
         assertEquals(HylattyMetatieto.Hylattymetatietotyyppi.HYLKAA_FUNKTION_SUORITTAMA_HYLKAYS, ((Hylattytila) tulos.getTila()).getMetatieto().getMetatietotyyppi());
         assertEquals("Oppivelvollisuuden suorittaminen on keskeytynyt tai pohjakoulutus on ulkomailla suoritettu koulutus", ((Hylattytila) tulos.getTila()).getKuvaus());
 
-        Laskentatulos<BigDecimal> tulos2 = laskentaService.suoritaLasku(HAKUKOHDE1, hakemukset[1],
+        Laskentatulos<BigDecimal> tulos2 = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemukset[1],
                 Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos2.getTulos());
@@ -1387,7 +1387,7 @@ public class LuoValintaperusteetServiceTest {
                         YoPohjaiset.luoYOPohjaisenKoulutuksenPaattotodistuksenKeskiarvo(yoAineet), "nimi"),
                 ulkomaillaSuoritettuKoulutus), PkJaYoPohjaiset.luoKielikokeenPakollisuudenLaskentakaava(LuoValintaperusteetServiceImpl.Kielikoodi.SUOMI, eiUlkomaillaSuoritettuKoulutus)));
 
-        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, hakemukset[0],
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemukset[0],
                 Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos.getTulos());
@@ -1395,7 +1395,7 @@ public class LuoValintaperusteetServiceTest {
         assertEquals(HylattyMetatieto.Hylattymetatietotyyppi.HYLKAA_FUNKTION_SUORITTAMA_HYLKAYS, ((Hylattytila) tulos.getTila()).getMetatieto().getMetatietotyyppi());
         assertEquals("Oppivelvollisuuden suorittaminen on keskeytynyt tai pohjakoulutus on ulkomailla suoritettu koulutus", ((Hylattytila) tulos.getTila()).getKuvaus());
 
-        Laskentatulos<BigDecimal> tulos2 = laskentaService.suoritaLasku(HAKUKOHDE1, hakemukset[1],
+        Laskentatulos<BigDecimal> tulos2 = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemukset[1],
                 Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos2.getTulos());
@@ -1426,7 +1426,7 @@ public class LuoValintaperusteetServiceTest {
                         YoPohjaiset.luoYOPohjaisenKoulutuksenPaattotodistuksenKeskiarvo(yoAineet), "nimi"),
                 ulkomaillaSuoritettuKoulutus), PkJaYoPohjaiset.luoKielikokeenPakollisuudenLaskentakaava(LuoValintaperusteetServiceImpl.Kielikoodi.SUOMI, eiUlkomaillaSuoritettuKoulutus)));
 
-        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, hakemukset[0],
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemukset[0],
                 Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos.getTulos());
@@ -1434,7 +1434,7 @@ public class LuoValintaperusteetServiceTest {
         assertEquals(HylattyMetatieto.Hylattymetatietotyyppi.HYLKAA_FUNKTION_SUORITTAMA_HYLKAYS, ((Hylattytila) tulos.getTila()).getMetatieto().getMetatietotyyppi());
         assertEquals("Kielikoetta ei suoritettu tai kielikokeen korvaavuusehto ei täyttynyt", ((Hylattytila) tulos.getTila()).getKuvaus());
 
-        Laskentatulos<BigDecimal> tulos2 = laskentaService.suoritaLasku(HAKUKOHDE1, hakemukset[1],
+        Laskentatulos<BigDecimal> tulos2 = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemukset[1],
                 Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos2.getTulos());
@@ -1469,7 +1469,7 @@ public class LuoValintaperusteetServiceTest {
 
         Laskentakaava yhdistetty = laajennaAlakaavat(PkJaYoPohjaiset.luoYhdistettyPeruskaavaJaKielikoekaava(peruskaava, kielikoekaava));
 
-        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, hakemukset[0],
+        Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemukset[0],
                 Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaLukuarvolasku(yhdistetty.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos.getTulos());
@@ -1477,7 +1477,7 @@ public class LuoValintaperusteetServiceTest {
         assertEquals(HylattyMetatieto.Hylattymetatietotyyppi.HYLKAA_FUNKTION_SUORITTAMA_HYLKAYS, ((Hylattytila) tulos.getTila()).getMetatieto().getMetatietotyyppi());
         assertEquals("Kielikoetta ei suoritettu tai kielikokeen korvaavuusehto ei täyttynyt", ((Hylattytila) tulos.getTila()).getKuvaus());
 
-        Laskentatulos<BigDecimal> tulos2 = laskentaService.suoritaLasku(HAKUKOHDE1, hakemukset[1],
+        Laskentatulos<BigDecimal> tulos2 = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemukset[1],
                 Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaLukuarvolasku(yhdistetty.getFunktiokutsu()));
 
         assertEquals(odotettuTulos, tulos2.getTulos());
@@ -1498,13 +1498,13 @@ public class LuoValintaperusteetServiceTest {
                 PkJaYoPohjaiset.eiUlkomaillaSuoritettuaKoulutustaEikaOppivelvollisuusKeskeytynyt(
                         PkJaYoPohjaiset.luoUlkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt())));
 
-        Laskentatulos<Boolean> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, hakemukset[0],
+        Laskentatulos<Boolean> tulos = laskentaService.suoritaValintakoelaskenta(HAKUKOHDE1, hakemukset[0],
                 Laskentadomainkonvertteri.muodostaTotuusarvolasku(kaava.getFunktiokutsu()));
 
         assertFalse(tulos.getTulos());
         assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
 
-        Laskentatulos<Boolean> tulos2 = laskentaService.suoritaLasku(HAKUKOHDE1, hakemukset[1],
+        Laskentatulos<Boolean> tulos2 = laskentaService.suoritaValintakoelaskenta(HAKUKOHDE1, hakemukset[1],
                 Laskentadomainkonvertteri.muodostaTotuusarvolasku(kaava.getFunktiokutsu()));
 
         assertTrue(tulos2.getTulos());
@@ -1525,13 +1525,13 @@ public class LuoValintaperusteetServiceTest {
                 PkJaYoPohjaiset.eiUlkomaillaSuoritettuaKoulutustaEikaOppivelvollisuusKeskeytynyt(
                         PkJaYoPohjaiset.luoUlkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt())));
 
-        Laskentatulos<Boolean> tulos = laskentaService.suoritaLasku(HAKUKOHDE1, hakemukset[0],
+        Laskentatulos<Boolean> tulos = laskentaService.suoritaValintakoelaskenta(HAKUKOHDE1, hakemukset[0],
                 Laskentadomainkonvertteri.muodostaTotuusarvolasku(kaava.getFunktiokutsu()));
 
         assertFalse(tulos.getTulos());
         assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
 
-        Laskentatulos<Boolean> tulos2 = laskentaService.suoritaLasku(HAKUKOHDE1, hakemukset[1],
+        Laskentatulos<Boolean> tulos2 = laskentaService.suoritaValintakoelaskenta(HAKUKOHDE1, hakemukset[1],
                 Laskentadomainkonvertteri.muodostaTotuusarvolasku(kaava.getFunktiokutsu()));
 
         assertTrue(tulos2.getTulos());

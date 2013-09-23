@@ -64,24 +64,13 @@ object Laskenta {
     val hylkaysperuste: Boolean
   }
 
-  trait YksiParametrinenFunktio[T] extends Funktio[T] {
-    val f: Funktio[_]
-  }
-
-  trait NollaParametrinenFunktio[T] extends Funktio[T]
-
-  trait KaksiParametrinenFunktio[T] extends Funktio[T] {
-    val f1: Funktio[_]
-    val f2: Funktio[_]
-  }
-
   case class Arvokonversio[S, T](arvo: S, paluuarvo: T, hylkaysperuste: Boolean) extends Konversio
 
   case class Lukuarvovalikonversio(min: BigDecimal, max: BigDecimal, paluuarvo: BigDecimal,
                                    palautaHaettuArvo: Boolean, hylkaysperuste: Boolean) extends Konversio
 
   case class KonvertoiLukuarvo(konvertteri: Konvertteri[BigDecimal, BigDecimal], f: Lukuarvofunktio, oid: String = "")
-    extends KonvertoivaFunktio[BigDecimal, BigDecimal] with Lukuarvofunktio with YksiParametrinenFunktio[BigDecimal]
+    extends KonvertoivaFunktio[BigDecimal, BigDecimal] with Lukuarvofunktio
 
   abstract case class KoostavaFunktio[T](fs: Seq[Funktio[_]]) extends Funktio[T] {
     require(fs.size > 0, "Number of function arguments must be greater than zero")
@@ -97,11 +86,11 @@ object Laskenta {
     require(ns <= fs.size, "Parameter ns can't be greater than the number of function arguments")
   }
 
-  case class Lukuarvo(d: BigDecimal, oid: String = "") extends Lukuarvofunktio with NollaParametrinenFunktio[BigDecimal]
+  case class Lukuarvo(d: BigDecimal, oid: String = "") extends Lukuarvofunktio
 
-  case class Negaatio(f: Lukuarvofunktio, oid: String = "") extends Lukuarvofunktio with YksiParametrinenFunktio[BigDecimal]
+  case class Negaatio(f: Lukuarvofunktio, oid: String = "") extends Lukuarvofunktio
 
-  case class Pyoristys(tarkkuus: Int, f: Lukuarvofunktio, oid: String = "") extends Lukuarvofunktio with YksiParametrinenFunktio[BigDecimal] {
+  case class Pyoristys(tarkkuus: Int, f: Lukuarvofunktio, oid: String = "") extends Lukuarvofunktio {
     require(tarkkuus >= 0, "Parameter tarkkuus must be zero or greater")
   }
 
@@ -151,7 +140,7 @@ object Laskenta {
   }
 
   case class Osamaara(osoittaja: Lukuarvofunktio, nimittaja: Lukuarvofunktio, oid: String = "")
-    extends Funktio[BigDecimal] with Lukuarvofunktio with KaksiParametrinenFunktio[BigDecimal] {
+    extends Funktio[BigDecimal] with Lukuarvofunktio {
     val f1 = osoittaja
     val f2 = nimittaja
   }
@@ -210,28 +199,28 @@ object Laskenta {
                                                  override val oletusarvo: Option[BigDecimal],
                                                  override val valintaperusteviite: Valintaperuste,
                                                  oid: String = "")
-    extends HaeArvo[BigDecimal](oletusarvo, valintaperusteviite) with Lukuarvofunktio with NollaParametrinenFunktio[BigDecimal]
+    extends HaeArvo[BigDecimal](oletusarvo, valintaperusteviite) with Lukuarvofunktio
 
   case class HaeMerkkijonoJaKonvertoiTotuusarvoksi(konvertteri: Konvertteri[String, Boolean],
                                                    override val oletusarvo: Option[Boolean],
                                                    override val valintaperusteviite: Valintaperuste,
                                                    oid: String = "")
-    extends HaeArvo[Boolean](oletusarvo, valintaperusteviite) with Totuusarvofunktio with NollaParametrinenFunktio[Boolean]
+    extends HaeArvo[Boolean](oletusarvo, valintaperusteviite) with Totuusarvofunktio
 
   case class HaeTotuusarvo(konvertteri: Option[Konvertteri[Boolean, Boolean]],
                            override val oletusarvo: Option[Boolean],
                            override val valintaperusteviite: Valintaperuste, oid: String = "")
-    extends HaeArvo[Boolean](oletusarvo, valintaperusteviite) with Totuusarvofunktio with NollaParametrinenFunktio[Boolean]
+    extends HaeArvo[Boolean](oletusarvo, valintaperusteviite) with Totuusarvofunktio
 
   case class HaeLukuarvo(konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]],
                          override val oletusarvo: Option[BigDecimal],
                          override val valintaperusteviite: Valintaperuste, oid: String = "")
-    extends HaeArvo[BigDecimal](oletusarvo, valintaperusteviite) with Lukuarvofunktio with NollaParametrinenFunktio[BigDecimal]
+    extends HaeArvo[BigDecimal](oletusarvo, valintaperusteviite) with Lukuarvofunktio
 
   case class HaeMerkkijonoJaVertaaYhtasuuruus(override val oletusarvo: Option[Boolean],
                                               override val valintaperusteviite: Valintaperuste,
                                               vertailtava: String, oid: String = "")
-    extends HaeArvo[Boolean](oletusarvo, valintaperusteviite) with Totuusarvofunktio with NollaParametrinenFunktio[Boolean]
+    extends HaeArvo[Boolean](oletusarvo, valintaperusteviite) with Totuusarvofunktio
 
   // Boolean-funktiot
   case class Ja(override val fs: Seq[Totuusarvofunktio], oid: String = "")
@@ -252,48 +241,43 @@ object Laskenta {
     }
   }
 
-  case class Ei(f: Totuusarvofunktio, oid: String = "") extends Totuusarvofunktio with YksiParametrinenFunktio[Boolean]
+  case class Ei(f: Totuusarvofunktio, oid: String = "") extends Totuusarvofunktio
 
   case class Suurempi(f1: Lukuarvofunktio, f2: Lukuarvofunktio, oid: String = "")
-    extends Totuusarvofunktio with KaksiParametrinenFunktio[Boolean]
+    extends Totuusarvofunktio
 
   case class SuurempiTaiYhtasuuri(f1: Lukuarvofunktio, f2: Lukuarvofunktio, oid: String = "")
-    extends Totuusarvofunktio with KaksiParametrinenFunktio[Boolean]
+    extends Totuusarvofunktio
 
   case class Pienempi(f1: Lukuarvofunktio, f2: Lukuarvofunktio, oid: String = "")
-    extends Totuusarvofunktio with KaksiParametrinenFunktio[Boolean]
+    extends Totuusarvofunktio
 
   case class PienempiTaiYhtasuuri(f1: Lukuarvofunktio, f2: Lukuarvofunktio, oid: String = "")
-    extends Totuusarvofunktio with KaksiParametrinenFunktio[Boolean]
+    extends Totuusarvofunktio
 
   case class Yhtasuuri(f1: Lukuarvofunktio, f2: Lukuarvofunktio, oid: String = "")
-    extends Totuusarvofunktio with KaksiParametrinenFunktio[Boolean]
+    extends Totuusarvofunktio
 
-  case class Totuusarvo(b: Boolean, oid: String = "") extends Totuusarvofunktio with NollaParametrinenFunktio[Boolean]
+  case class Totuusarvo(b: Boolean, oid: String = "") extends Totuusarvofunktio
 
   abstract case class Nimetty[T](nimi: String, f: Funktio[T]) extends Funktio[T] {
     require(StringUtils.isNotBlank(nimi), "Nimi cannot be null or empty")
   }
 
   case class NimettyTotuusarvo(override val nimi: String, override val f: Totuusarvofunktio, oid: String = "")
-    extends Nimetty(nimi, f) with Totuusarvofunktio with YksiParametrinenFunktio[Boolean]
+    extends Nimetty(nimi, f) with Totuusarvofunktio
 
   case class NimettyLukuarvo(override val nimi: String, override val f: Lukuarvofunktio, oid: String = "")
-    extends Nimetty(nimi, f) with Lukuarvofunktio with YksiParametrinenFunktio[BigDecimal]
+    extends Nimetty(nimi, f) with Lukuarvofunktio
 
-  case class Hakutoive(n: Int, oid: String = "") extends Totuusarvofunktio with NollaParametrinenFunktio[Boolean] {
+  case class Hakutoive(n: Int, oid: String = "") extends Totuusarvofunktio {
     require(n > 0, "n must be greater than zero")
   }
 
   case class Hylkaa(f: Totuusarvofunktio, hylkaysperustekuvaus: Option[String] = None, oid: String = "")
-    extends Lukuarvofunktio with YksiParametrinenFunktio[BigDecimal]
+    extends Lukuarvofunktio
 
-  trait Esiprosessoiva extends Totuusarvofunktio {
-    val tunniste: String
-    val prosenttiosuus: BigDecimal
-  }
 
-  case class Demografia(oid: String, tunniste: String, prosenttiosuus: BigDecimal)
-    extends Esiprosessoiva with NollaParametrinenFunktio[Boolean]
+  case class Demografia(oid: String, tunniste: String, prosenttiosuus: BigDecimal) extends Totuusarvofunktio
 
 }

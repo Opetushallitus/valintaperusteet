@@ -8,8 +8,8 @@ import java.util.Collection;
 
 public interface LaskentaService {
 
-    public Laskentatulos<BigDecimal> suoritaLasku(Hakukohde hakukohde, Hakemus hakemus,
-                                                  Collection<Hakemus> kaikkiHakemukset, Lukuarvofunktio laskettava);
+    public Laskentatulos<BigDecimal> suoritaValintalaskenta(Hakukohde hakukohde, Hakemus hakemus,
+                                                            Collection<Hakemus> kaikkiHakemukset, Lukuarvofunktio laskettava);
 
-    public Laskentatulos<Boolean> suoritaLasku(Hakukohde hakukohde, Hakemus hakemus, Totuusarvofunktio laskettava);
+    public Laskentatulos<Boolean> suoritaValintakoelaskenta(Hakukohde hakukohde, Hakemus hakemus, Totuusarvofunktio laskettava);
 }

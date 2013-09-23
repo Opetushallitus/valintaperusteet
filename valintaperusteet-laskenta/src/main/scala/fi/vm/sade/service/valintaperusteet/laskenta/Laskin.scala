@@ -51,9 +51,35 @@ object Laskin {
       if (e._2.laskennallinenArvo.isEmpty) null else e._2.laskennallinenArvo.get, e._2.osallistuminen)))
   }
 
-  def suoritaLasku(hakukohde: Hakukohde,
-                   hakemus: Hakemus,
-                   laskettava: Lukuarvofunktio): Laskentatulos[BigDec] = {
+  def suoritaValintalaskenta(hakukohde: Hakukohde,
+                             hakemus: Hakemus,
+                             kaikkiHakemukset: java.util.Collection[Hakemus],
+                             laskettava: Lukuarvofunktio): Laskentatulos[BigDec] = {
+    val laskin = new Laskin(hakukohde, hakemus, kaikkiHakemukset.toSet)
+    laskin.laske(laskettava) match {
+      case Tulos(tulos, tila, historia) => {
+        new Laskentatulos[BigDec](tila, if (tulos.isEmpty) null else tulos.get.underlying
+          , new StringBuffer().append(Json.generate(wrapHistoria(hakemus, historia))), wrapSyotetyArvot(laskin.getSyotetytArvot))
+      }
+    }
+  }
+
+  def suoritaValintalaskenta(hakukohde: Hakukohde,
+                             hakemus: Hakemus,
+                             kaikkiHakemukset: java.util.Collection[Hakemus],
+                             laskettava: Totuusarvofunktio): Laskentatulos[lang.Boolean] = {
+    val laskin = new Laskin(hakukohde, hakemus, kaikkiHakemukset.toSet)
+    laskin.laske(laskettava) match {
+      case Tulos(tulos, tila, historia) => {
+        new Laskentatulos[lang.Boolean](tila, if (tulos.isEmpty) null else Boolean.box(tulos.get)
+          , new StringBuffer().append(Json.generate(wrapHistoria(hakemus, historia))), wrapSyotetyArvot(laskin.getSyotetytArvot))
+      }
+    }
+  }
+
+  def suoritaValintakoelaskenta(hakukohde: Hakukohde,
+                                hakemus: Hakemus,
+                                laskettava: Lukuarvofunktio): Laskentatulos[BigDec] = {
     val laskin = new Laskin(hakukohde, hakemus)
     laskin.laske(laskettava) match {
       case Tulos(tulos, tila, historia) => {
@@ -63,9 +89,9 @@ object Laskin {
     }
   }
 
-  def suoritaLasku(hakukohde: Hakukohde,
-                   hakemus: Hakemus,
-                   laskettava: Totuusarvofunktio): Laskentatulos[java.lang.Boolean] = {
+  def suoritaValintakoelaskenta(hakukohde: Hakukohde,
+                                hakemus: Hakemus,
+                                laskettava: Totuusarvofunktio): Laskentatulos[java.lang.Boolean] = {
     val laskin = new Laskin(hakukohde, hakemus)
     laskin.laske(laskettava) match {
       case Tulos(tulos, tila, historia) => {
@@ -98,8 +124,26 @@ private case class Tulos[T](tulos: Option[T], tila: Tila, historia: Historia)
 private case class SyotettyArvo(val tunniste: String, val arvo: Option[String],
                                 val laskennallinenArvo: Option[String], val osallistuminen: Osallistuminen)
 
-private class Laskin(hakukohde: Hakukohde, hakemus: Hakemus) {
+private object Laskentamoodi extends Enumeration {
+  type Laskentamoodi = Value
 
+  val VALINTALASKENTA = Value("VALINTALASKENTA")
+  val VALINTAKOELASKENTA = Value("VALINTAKOELASKENTA")
+
+}
+
+private class Laskin private(private val hakukohde: Hakukohde,
+                             private val hakemus: Hakemus,
+                             private val kaikkiHakemukset: Set[Hakemus],
+                             private val laskentamoodi: Laskentamoodi.Laskentamoodi) {
+
+  def this(hakukohde: Hakukohde, hakemus: Hakemus) {
+    this(hakukohde, hakemus, Set(), Laskentamoodi.VALINTAKOELASKENTA)
+  }
+
+  def this(hakukohde: Hakukohde, hakemus: Hakemus, kaikkiHakemukset: Set[Hakemus]) {
+    this(hakukohde, hakemus, kaikkiHakemukset, Laskentamoodi.VALINTALASKENTA)
+  }
 
   private val syotetytArvot: scala.collection.mutable.Map[String, SyotettyArvo] = scala.collection.mutable.Map[String, SyotettyArvo]()
 
@@ -337,16 +381,28 @@ private class Laskin(hakukohde: Hakukohde, hakemus: Hakemus) {
         (onko, tilat, Historia("Hakutoive", onko, tilat, None, Some(Map("prioriteetti" -> Some(n)))))
       }
 
-      case d: Demografia => {
-        val avain = Esiprosessori.prosessointiOid(hakukohde.hakukohdeOid, hakemus, d)
-        val (arvo, tila) = haeValintaperuste(avain, true, hakemus)
+      case Demografia(oid, tunniste, prosenttiosuus) => {
+        if (laskentamoodi != Laskentamoodi.VALINTALASKENTA) {
+          (None, List(new Virhetila("Demografia-funktiota ei voida suorittaa laskentamoodissa "
+            + laskentamoodi.toString, new VirheellinenLaskentamoodiVirhe("Demografia", laskentamoodi.toString))),
+            Historia("Demografia", None, List(), None, None))
+        } else {
+          val ensisijaisetHakijat = kaikkiHakemukset.count(_.onkoHakutoivePrioriteetilla(hakukohde.hakukohdeOid, 1))
 
-        val (demografia, t) = arvo match {
-          case Some(s) => string2boolean(s, avain, tila)
-          case None => (None, tila)
+          val omaArvo = hakemus.kentat.map(e => (e._1.toLowerCase -> e._2)).get(tunniste.toLowerCase)
+          val tulos = Some(if (ensisijaisetHakijat == 0) false
+          else {
+            val samojenArvojenLkm = kaikkiHakemukset.count(h => h.onkoHakutoivePrioriteetilla(hakukohde.hakukohdeOid, 1) &&
+              h.kentat.map(e => (e._1.toLowerCase -> e._2)).get(tunniste.toLowerCase) == omaArvo)
+
+
+            val vertailuarvo = BigDecimal(samojenArvojenLkm).underlying.divide(BigDecimal(ensisijaisetHakijat).underlying, 4, RoundingMode.HALF_UP)
+            vertailuarvo.compareTo(prosenttiosuus.underlying.divide(BigDecimal("100.0").underlying, 4, RoundingMode.HALF_UP)) != 1
+          })
+
+          val tila = new Hyvaksyttavissatila
+          (tulos, List(tila), Historia("Demografia", tulos, List(tila), None, Some(Map("avain" -> Some(tunniste), "valintaperuste" -> omaArvo))))
         }
-
-        (demografia, List(t), Historia("Demografia", demografia, List(t), None, Some(Map("avain" -> Some(avain), "valintaperuste" -> arvo))))
       }
 
       case HaeMerkkijonoJaKonvertoiTotuusarvoksi(konvertteri, oletusarvo, valintaperusteviite, oid) => {
