@@ -41,6 +41,7 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Ei
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Hakutoive
 import java.lang
 import scala.collection.JavaConversions._
+import com.codahale.jerkson.Json
 
 object Laskin {
   val LOG = LoggerFactory.getLogger(classOf[Laskin])
@@ -57,7 +58,7 @@ object Laskin {
     laskin.laske(laskettava) match {
       case Tulos(tulos, tila, historia) => {
         new Laskentatulos[BigDec](tila, if (tulos.isEmpty) null else tulos.get.underlying
-          , new StringBuffer().append(wrapHistoria(hakemus, historia)), wrapSyotetyArvot(laskin.getSyotetytArvot))
+          , new StringBuffer().append(Json.generate(wrapHistoria(hakemus, historia))), wrapSyotetyArvot(laskin.getSyotetytArvot))
       }
     }
   }
@@ -69,7 +70,7 @@ object Laskin {
     laskin.laske(laskettava) match {
       case Tulos(tulos, tila, historia) => {
         new Laskentatulos[lang.Boolean](tila, if (tulos.isEmpty) null else Boolean.box(tulos.get)
-          , new StringBuffer().append(wrapHistoria(hakemus, historia)), wrapSyotetyArvot(laskin.getSyotetytArvot))
+          , new StringBuffer().append(Json.generate(wrapHistoria(hakemus, historia))), wrapSyotetyArvot(laskin.getSyotetytArvot))
       }
     }
   }
