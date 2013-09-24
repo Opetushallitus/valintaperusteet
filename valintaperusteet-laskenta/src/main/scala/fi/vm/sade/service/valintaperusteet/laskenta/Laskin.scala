@@ -599,7 +599,66 @@ private class Laskin private(private val hakukohde: Hakukohde,
           }
         }
       }
-      case Skaalaus(oid, skaalattava, kohdeskaala, lahdeskaala) => (BigDecimal("500.0"), new Hyvaksyttavissatila)
+      case Skaalaus(oid, skaalattava, (kohdeMin, kohdeMax), lahdeskaala) => {
+        if (laskentamoodi != Laskentamoodi.VALINTALASKENTA) {
+          (None, List(new Virhetila("Skaalaus-funktiota ei voida suorittaa laskentamoodissa "
+            + laskentamoodi.toString, new VirheellinenLaskentamoodiVirhe("Demografia", laskentamoodi.toString))),
+            Historia("Skaalaus", None, List(), None, None))
+        } else {
+          val tulos = laske(skaalattava)
+
+          def skaalaa(skaalattavaArvo: BigDecimal,
+                      kohdeskaalaMin: BigDecimal,
+                      kohdeskaalaMax: BigDecimal,
+                      lahdeskaalaMin: BigDecimal,
+                      lahdeskaalaMax: BigDecimal) = {
+            val lahdeRange = lahdeskaalaMax - lahdeskaalaMin
+            val kohdeRange = kohdeskaalaMax - kohdeskaalaMin
+            (((skaalattavaArvo - lahdeskaalaMin) * kohdeRange) / lahdeRange) + kohdeskaalaMin
+          }
+
+          val (skaalauksenTulos, tila) = tulos.tulos match {
+            case Some(skaalattavaArvo) => {
+              lahdeskaala match {
+                case Some((lahdeMin, lahdeMax)) => {
+                  val tila = if (lahdeMin > skaalattavaArvo || lahdeMax < skaalattavaArvo) {
+                    new Virhetila("Arvo " + skaalattavaArvo.toString + " ei ole arvovälillä " + lahdeMin.toString + " - " + lahdeMax.toString,
+                      new SkaalattavaArvoEiOleLahdeskaalassaVirhe(skaalattavaArvo.underlying, lahdeMin.underlying, lahdeMax.underlying))
+                  } else new Hyvaksyttavissatila
+
+                  val skaalattuArvo = skaalaa(skaalattavaArvo, kohdeMin, kohdeMax, lahdeMin, lahdeMax)
+                  (Some(skaalattuArvo), tila)
+                }
+                case None => {
+
+                  val tulokset = kaikkiHakemukset.map(h => {
+                    Option(Laskin.suoritaValintalaskenta(hakukohde, h, kaikkiHakemukset, skaalattava).getTulos)
+                  }).filter(!_.isEmpty).map(_.get)
+
+                  tulokset match {
+                    case _ if tulokset.size < 2 => (None, new Virhetila("Skaalauksen lähdeskaalaa ei voida määrittää laskennallisesti. " +
+                      "Tuloksia on vähemmän kuin 2 kpl.", new SkaalauksenLahdeskaalaaEiVoidaMaarittaaVirhe))
+                    case _ => {
+                      val lahdeSkaalaMin: BigDecimal = tulokset.min
+                      val lahdeSkaalaMax: BigDecimal = tulokset.max
+
+                      if (lahdeSkaalaMin >= lahdeSkaalaMax) (None, new Virhetila("Skaalauksen lähdeskaalaa ei voida määrittää laskennallisesti. " +
+                        "Lähdeskaalan laskettu minimi on " + lahdeSkaalaMin + " ja maksimi " + lahdeSkaalaMax, new SkaalauksenLahdeskaalaaEiVoidaMaarittaaVirhe))
+                      else {
+                        (Some(skaalaa(skaalattavaArvo, kohdeMin, kohdeMax, lahdeSkaalaMin, lahdeSkaalaMax)), new Hyvaksyttavissatila)
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            case None => (None, new Hyvaksyttavissatila)
+          }
+
+          val tilat = List(tila, tulos.tila)
+          (skaalauksenTulos, tilat, Historia("Skaalaus", skaalauksenTulos, tilat, Some(List(tulos.historia)), None))
+        }
+      }
     }
 
 

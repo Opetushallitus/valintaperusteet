@@ -477,4 +477,33 @@ class LaskentaTest extends FunSuite {
     assert(Option(arvo6.getLaskennallinenArvo).isEmpty)
     assert(arvo6.getOsallistuminen.equals(Osallistuminen.MERKITSEMATTA))
   }
+
+
+  test("skaalaus, lahdeskaalaa ei annettu") {
+    val funktiokutsu = Skaalaus(
+      skaalattava = HaeLukuarvo(konvertteri = None,
+        oletusarvo = None,
+        valintaperusteviite = HakemuksenValintaperuste(tunniste = "tunniste1", pakollinen = true)),
+      kohdeskaala = (BigDecimal("-1.0"), BigDecimal("2.0")),
+      lahdeskaala = None)
+
+    val hakukohde = new Hakukohde("hakukohdeOid1", Map[String, String]())
+
+    val hakemukset = List(
+      Hakemus("hakemusOid1", List("hakukohdeOid1"), Map("tunniste1" -> "0.0")),
+      Hakemus("hakemusOid2", List("hakukohdeOid2"), Map("tunniste1" -> "1000.0")),
+      Hakemus("hakemusOid3", List("hakukohdeOid3"), Map("tunniste1" -> "2000.0")),
+      Hakemus("hakemusOid4", List("hakukohdeOid4"), Map("tunniste1" -> "3000.0"))
+    )
+
+    val tulokset = hakemukset.map(h => {
+      Laskin.suoritaValintalaskenta(hakukohde, h, hakemukset, funktiokutsu)
+    })
+
+    assert(tulokset.size == 4)
+    assert(tulokset(0).getTulos.equals(BigDecimal("-1.0").underlying))
+    assert(tulokset(1).getTulos.equals(BigDecimal("0.0").underlying))
+    assert(tulokset(2).getTulos.equals(BigDecimal("1.0").underlying))
+    assert(tulokset(3).getTulos.equals(BigDecimal("2.0").underlying))
+  }
 }

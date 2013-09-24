@@ -278,9 +278,13 @@ object Laskenta {
     extends Lukuarvofunktio
 
 
-  case class Demografia(oid: String, tunniste: String, prosenttiosuus: BigDecimal) extends Totuusarvofunktio
+  case class Demografia(oid: String = "", tunniste: String, prosenttiosuus: BigDecimal) extends Totuusarvofunktio
 
-  case class Skaalaus(oid: String, skaalattava: Lukuarvofunktio, kohdeskaala: Pair[BigDecimal, BigDecimal],
-                      lahdeskaala: Option[Pair[BigDecimal, BigDecimal]]) extends Lukuarvofunktio
+  case class Skaalaus(oid: String = "", skaalattava: Lukuarvofunktio, kohdeskaala: Pair[BigDecimal, BigDecimal],
+                      lahdeskaala: Option[Pair[BigDecimal, BigDecimal]]) extends Lukuarvofunktio {
+    require(kohdeskaala._1 < kohdeskaala._2, "Kohdeskaalan minimin pitää olla pienempi kuin maksimi")
+    require(lahdeskaala.isEmpty || lahdeskaala.get._1 < lahdeskaala.get._2, "Lähdeskaalan minimin pitää olla " +
+      "pienempi kuin maksimi")
+  }
 
 }
