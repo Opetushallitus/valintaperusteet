@@ -838,4 +838,89 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
     assert(Virhetyyppi.VIRHEELLINEN_SYOTEPARAMETRIN_TYYPPI ==
       validationMessages.get(0).asInstanceOf[Validointivirhe].getVirhetyyppi)
   }
+
+  test("Skaalaus") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.SKAALAUS,
+      funktioargumentit = List(validiLukuarvo1),
+      syoteparametrit = List(
+        Syoteparametri(avain = "kohdeskaalaMin", arvo = "0.0"),
+        Syoteparametri(avain = "kohdeskaalaMax", arvo = "75.0"),
+        Syoteparametri(avain = "kaytaLaskennallistaLahdeskaalaa", arvo = "true")
+      )
+    )
+
+    val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
+    assert(validationMessages.isEmpty)
+  }
+
+  test("Skaalaus, kohdeskaala virheellinen") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.SKAALAUS,
+      funktioargumentit = List(validiLukuarvo1),
+      syoteparametrit = List(
+        Syoteparametri(avain = "kohdeskaalaMin", arvo = "100.0"),
+        Syoteparametri(avain = "kohdeskaalaMax", arvo = "75.0"),
+        Syoteparametri(avain = "kaytaLaskennallistaLahdeskaalaa", arvo = "true")
+      )
+    )
+
+    val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
+    assert(validationMessages.size == 1)
+    assert(Virhetyyppi.KOHDESKAALA_VIRHEELLINEN ==
+      validationMessages.get(0).asInstanceOf[Validointivirhe].getVirhetyyppi)
+  }
+
+  test("Skaalaus, lahdeskaalaa ei annettu") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.SKAALAUS,
+      funktioargumentit = List(validiLukuarvo1),
+      syoteparametrit = List(
+        Syoteparametri(avain = "kohdeskaalaMin", arvo = "0.0"),
+        Syoteparametri(avain = "kohdeskaalaMax", arvo = "75.0"),
+        Syoteparametri(avain = "kaytaLaskennallistaLahdeskaalaa", arvo = "false")
+      )
+    )
+
+    val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
+    assert(validationMessages.size == 1)
+    assert(Virhetyyppi.LAHDESKAALAA_EI_OLE_MAARITELTY ==
+      validationMessages.get(0).asInstanceOf[Validointivirhe].getVirhetyyppi)
+  }
+
+  test("Skaalaus, lahdeskaala annettu") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.SKAALAUS,
+      funktioargumentit = List(validiLukuarvo1),
+      syoteparametrit = List(
+        Syoteparametri(avain = "kohdeskaalaMin", arvo = "0.0"),
+        Syoteparametri(avain = "kohdeskaalaMax", arvo = "75.0"),
+        Syoteparametri(avain = "lahdeskaalaMin", arvo = "-120.0"),
+        Syoteparametri(avain = "lahdeskaalaMax", arvo = "300.0"),
+        Syoteparametri(avain = "kaytaLaskennallistaLahdeskaalaa", arvo = "false")
+      )
+    )
+
+    val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
+    assert(validationMessages.isEmpty)
+  }
+
+  test("Skaalaus, lahdeskaala virheellinen") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.SKAALAUS,
+      funktioargumentit = List(validiLukuarvo1),
+      syoteparametrit = List(
+        Syoteparametri(avain = "kohdeskaalaMin", arvo = "0.0"),
+        Syoteparametri(avain = "kohdeskaalaMax", arvo = "75.0"),
+        Syoteparametri(avain = "lahdeskaalaMin", arvo = "590.0"),
+        Syoteparametri(avain = "lahdeskaalaMax", arvo = "300.0"),
+        Syoteparametri(avain = "kaytaLaskennallistaLahdeskaalaa", arvo = "false")
+      )
+    )
+
+    val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
+    assert(validationMessages.size == 1)
+    assert(Virhetyyppi.LAHDESKAALA_VIRHEELLINEN ==
+      validationMessages.get(0).asInstanceOf[Validointivirhe].getVirhetyyppi)
+  }
 }

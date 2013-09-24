@@ -45,7 +45,8 @@ public enum Funktionimi {
     DEMOGRAFIA(Funktiotyyppi.TOTUUSARVOFUNKTIO, Laskentamoodi.VALINTALASKENTA),
     PYORISTYS(Funktiotyyppi.LUKUARVOFUNKTIO, Laskentamoodi.VALINTAKOELASKENTA, Laskentamoodi.VALINTALASKENTA),
     HAEMERKKIJONOJAVERTAAYHTASUURUUS(Funktiotyyppi.TOTUUSARVOFUNKTIO, Laskentamoodi.VALINTAKOELASKENTA, Laskentamoodi.VALINTALASKENTA),
-    HYLKAA(Funktiotyyppi.LUKUARVOFUNKTIO, Laskentamoodi.VALINTAKOELASKENTA, Laskentamoodi.VALINTALASKENTA);
+    HYLKAA(Funktiotyyppi.LUKUARVOFUNKTIO, Laskentamoodi.VALINTAKOELASKENTA, Laskentamoodi.VALINTALASKENTA),
+    SKAALAUS(Funktiotyyppi.LUKUARVOFUNKTIO, Laskentamoodi.VALINTALASKENTA);
 
     private Funktiotyyppi tyyppi;
     private Set<Laskentamoodi> laskentamoodit;

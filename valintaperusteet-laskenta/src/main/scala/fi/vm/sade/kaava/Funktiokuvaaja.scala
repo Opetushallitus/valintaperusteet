@@ -306,6 +306,17 @@ object Funktiokuvaaja {
       funktioargumentit = List(Funktioargumenttikuvaus("f", Funktiotyyppi.LUKUARVOFUNKTIO)),
       syoteparametrit = List(Syoteparametrikuvaus("tarkkuus", Syoteparametrityyppi.KOKONAISLUKU))
     ),
+    Funktionimi.SKAALAUS -> Funktiokuvaus(
+      tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
+      funktioargumentit = List(Funktioargumenttikuvaus("f", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.YKSI)),
+      syoteparametrit = List(
+        Syoteparametrikuvaus("kohdeskaalaMin", Syoteparametrityyppi.DESIMAALILUKU, pakollinen = true),
+        Syoteparametrikuvaus("kohdeskaalaMax", Syoteparametrityyppi.DESIMAALILUKU, pakollinen = true),
+        Syoteparametrikuvaus("lahdeskaalaMin", Syoteparametrityyppi.DESIMAALILUKU, pakollinen = false),
+        Syoteparametrikuvaus("lahdeskaalaMax", Syoteparametrityyppi.DESIMAALILUKU, pakollinen = false),
+        Syoteparametrikuvaus("kaytaLaskennallistaLahdeskaalaa", Syoteparametrityyppi.TOTUUSARVO, pakollinen = true)
+      )
+    ),
     Funktionimi.SUMMA -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
       funktioargumentit = List(Funktioargumenttikuvaus("args", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.N))

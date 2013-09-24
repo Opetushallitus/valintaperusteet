@@ -356,21 +356,21 @@ object Laskentakaavavalidaattori {
     }
   }
 
-  def tarkistaFunktiokohtaisetRajoitteet(funktiokutsu: Funktiokutsu) = {
-    def tarkistaN: Option[Validointivirhe] = {
+  def tarkistaFunktiokohtaisetRajoitteet(funktiokutsu: Funktiokutsu): List[Validointivirhe] = {
+    def tarkistaN: List[Validointivirhe] = {
       funktiokutsu.getSyoteparametrit.filter(_.getAvain == "n").toList match {
         case head :: tail if (tryConvertString(head.getArvo, _.toInt)) => {
           val n = head.getArvo.toInt
 
           if (n < 1) {
-            Some(new NPienempiKuinYksiVirhe("Syöteparametri n ei voi olla pienempi kuin yksi. " +
+            List(new NPienempiKuinYksiVirhe("Syöteparametri n ei voi olla pienempi kuin yksi. " +
               "Annettu arvo: " + n, n))
           } else if (n > funktiokutsu.getFunktioargumentit.size()) {
-            Some(new NSuurempiKuinFunktioargumenttienLkmVirhe("Syöteparametri n ei voi olla " +
+            List(new NSuurempiKuinFunktioargumenttienLkmVirhe("Syöteparametri n ei voi olla " +
               "suurempi kuin annettujen funktioargumenttien lukumäärä. Annettu arvo: " + n, n))
-          } else None
+          } else Nil
         }
-        case _ => None
+        case _ => Nil
       }
     }
 
@@ -384,11 +384,11 @@ object Laskentakaavavalidaattori {
           case head :: tail if (tryConvertString(head.getArvo, new BigDecimal(_))) => {
             val prosenttiosuus = new BigDecimal(head.getArvo)
             if (prosenttiosuus.compareTo(BigDecimal.ZERO) != 1 || prosenttiosuus.compareTo(new BigDecimal("100.0")) == 1) {
-              Some(new ProsenttiosuusEpavalidiVirhe("Prosenttiosuuden pitää olla välillä 0.0 - 100.0. Annettu " +
+              List(new ProsenttiosuusEpavalidiVirhe("Prosenttiosuuden pitää olla välillä 0.0 - 100.0. Annettu " +
                 "arvo: " + prosenttiosuus, prosenttiosuus))
-            } else None
+            } else Nil
           }
-          case _ => None
+          case _ => Nil
         }
       }
       case Funktionimi.PYORISTYS => {
@@ -396,14 +396,55 @@ object Laskentakaavavalidaattori {
           case Some(p) if (tryConvertString(p.getArvo, _.toInt)) => {
             val tarkkuus = p.getArvo.toInt
             if (tarkkuus < 0) {
-              Some(new TarkkuusPienempiKuinNollaVirhe("Tarkkuuden pitää olla suurempi kuin nolla. Annettu arvo: "
+              List(new TarkkuusPienempiKuinNollaVirhe("Tarkkuuden pitää olla suurempi kuin nolla. Annettu arvo: "
                 + tarkkuus, tarkkuus))
-            } else None
+            } else Nil
           }
-          case _ => None
+          case _ => Nil
         }
       }
-      case _ => None
+
+      case Funktionimi.SKAALAUS => {
+        funktiokutsu.getSyoteparametrit.filter(_.getAvain == "kaytaLaskennallistaLahdeskaalaa").toList match {
+          case head :: tail if (tryConvertString(head.getArvo, _.toBoolean)) => {
+            val kaytaLaskennallistaLahdeskaalaa = head.getArvo.toBoolean
+
+
+            val kohdeskaalaMin = funktiokutsu.getSyoteparametrit.find(_.getAvain == "kohdeskaalaMin").map(sa => {
+              if (tryConvertString(sa.getArvo, new BigDecimal(_))) Some(new BigDecimal(sa.getArvo)) else None
+            })
+
+            val kohdeskaalaMax = funktiokutsu.getSyoteparametrit.find(_.getAvain == "kohdeskaalaMax").map(sa => {
+              if (tryConvertString(sa.getArvo, new BigDecimal(_))) Some(new BigDecimal(sa.getArvo)) else None
+            })
+
+            val virheet = List[Validointivirhe]()
+            ((if (!kohdeskaalaMin.isEmpty && !kohdeskaalaMin.get.isEmpty
+              && !kohdeskaalaMax.isEmpty && !kohdeskaalaMax.get.isEmpty
+              && kohdeskaalaMin.get.get.compareTo(kohdeskaalaMax.get.get) > 0) {
+              Some(new KohdeskaalaVirheellinenVirhe("Kohdeskaalan minimin pitää olla pienempi kuin maksimi"))
+            } else None) ++ (if (!kaytaLaskennallistaLahdeskaalaa) {
+              val lahdeskaalaMin = funktiokutsu.getSyoteparametrit.find(_.getAvain == "lahdeskaalaMin").map(sa => {
+                if (tryConvertString(sa.getArvo, new BigDecimal(_))) Some(new BigDecimal(sa.getArvo)) else None
+              })
+
+              val lahdeskaalaMax = funktiokutsu.getSyoteparametrit.find(_.getAvain == "lahdeskaalaMax").map(sa => {
+                if (tryConvertString(sa.getArvo, new BigDecimal(_))) Some(new BigDecimal(sa.getArvo)) else None
+              })
+
+              if (lahdeskaalaMin.isEmpty || lahdeskaalaMax.isEmpty) {
+                Some(new SkaalauksenLahdeskaalaaEiOleMaariteltyVirhe("Skaalauksen lähdeskaalaa ei ole määritelty"))
+              } else if (!lahdeskaalaMin.isEmpty && !lahdeskaalaMin.get.isEmpty
+                && !lahdeskaalaMax.isEmpty && !lahdeskaalaMax.get.isEmpty
+                && lahdeskaalaMin.get.get.compareTo(lahdeskaalaMax.get.get) > 0) {
+                Some(new LahdeskaalaVirheellinenVirhe("Lähdeskaalan minimin pitää olla pienempi kuin maksimi"))
+              } else None
+            } else None) ++ virheet).toList
+          }
+          case _ => Nil
+        }
+      }
+      case _ => Nil
     }
   }
 

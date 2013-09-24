@@ -280,4 +280,7 @@ object Laskenta {
 
   case class Demografia(oid: String, tunniste: String, prosenttiosuus: BigDecimal) extends Totuusarvofunktio
 
+  case class Skaalaus(oid: String, skaalattava: Lukuarvofunktio, kohdeskaala: Pair[BigDecimal, BigDecimal],
+                      lahdeskaala: Option[Pair[BigDecimal, BigDecimal]]) extends Lukuarvofunktio
+
 }

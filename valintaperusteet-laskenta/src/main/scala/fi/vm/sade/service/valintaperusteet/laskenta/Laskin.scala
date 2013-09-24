@@ -599,6 +599,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
           }
         }
       }
+      case Skaalaus(oid, skaalattava, kohdeskaala, lahdeskaala) => (BigDecimal("500.0"), new Hyvaksyttavissatila)
     }
 
 
