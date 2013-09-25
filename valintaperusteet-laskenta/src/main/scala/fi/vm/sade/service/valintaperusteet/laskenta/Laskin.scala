@@ -621,32 +621,29 @@ private class Laskin private(private val hakukohde: Hakukohde,
             case Some(skaalattavaArvo) => {
               lahdeskaala match {
                 case Some((lahdeMin, lahdeMax)) => {
-                  val tila = if (lahdeMin > skaalattavaArvo || lahdeMax < skaalattavaArvo) {
-                    new Virhetila("Arvo " + skaalattavaArvo.toString + " ei ole arvovälillä " + lahdeMin.toString + " - " + lahdeMax.toString,
-                      new SkaalattavaArvoEiOleLahdeskaalassaVirhe(skaalattavaArvo.underlying, lahdeMin.underlying, lahdeMax.underlying))
-                  } else new Hyvaksyttavissatila
+                  if (lahdeMin > skaalattavaArvo || lahdeMax < skaalattavaArvo) {
+                    (None, new Virhetila("Arvo " + skaalattavaArvo.toString + " ei ole arvovälillä " + lahdeMin.toString + " - " + lahdeMax.toString,
+                      new SkaalattavaArvoEiOleLahdeskaalassaVirhe(skaalattavaArvo.underlying, lahdeMin.underlying, lahdeMax.underlying)))
+                  } else {
 
-                  val skaalattuArvo = skaalaa(skaalattavaArvo, kohdeMin, kohdeMax, lahdeMin, lahdeMax)
-                  (Some(skaalattuArvo), tila)
+                    val skaalattuArvo = skaalaa(skaalattavaArvo, kohdeMin, kohdeMax, lahdeMin, lahdeMax)
+                    (Some(skaalattuArvo), new Hyvaksyttavissatila)
+                  }
                 }
                 case None => {
-
                   val tulokset = kaikkiHakemukset.map(h => {
                     Option(Laskin.suoritaValintalaskenta(hakukohde, h, kaikkiHakemukset, skaalattava).getTulos)
                   }).filter(!_.isEmpty).map(_.get)
 
                   tulokset match {
                     case _ if tulokset.size < 2 => (None, new Virhetila("Skaalauksen lähdeskaalaa ei voida määrittää laskennallisesti. " +
-                      "Tuloksia on vähemmän kuin 2 kpl.", new SkaalauksenLahdeskaalaaEiVoidaMaarittaaVirhe))
+                      "Tuloksia on vähemmän kuin 2 kpl tai kaikki tulokset ovat samoja.", new TuloksiaLiianVahanLahdeskaalanMaarittamiseenVirhe))
                     case _ => {
                       val lahdeSkaalaMin: BigDecimal = tulokset.min
                       val lahdeSkaalaMax: BigDecimal = tulokset.max
 
-                      if (lahdeSkaalaMin >= lahdeSkaalaMax) (None, new Virhetila("Skaalauksen lähdeskaalaa ei voida määrittää laskennallisesti. " +
-                        "Lähdeskaalan laskettu minimi on " + lahdeSkaalaMin + " ja maksimi " + lahdeSkaalaMax, new SkaalauksenLahdeskaalaaEiVoidaMaarittaaVirhe))
-                      else {
-                        (Some(skaalaa(skaalattavaArvo, kohdeMin, kohdeMax, lahdeSkaalaMin, lahdeSkaalaMax)), new Hyvaksyttavissatila)
-                      }
+                      // Koska tulokset ovat setissä, tiedetään, että min ja max eivät koskaan voi olla yhtäsuuret
+                      (Some(skaalaa(skaalattavaArvo, kohdeMin, kohdeMax, lahdeSkaalaMin, lahdeSkaalaMax)), new Hyvaksyttavissatila)
                     }
                   }
                 }

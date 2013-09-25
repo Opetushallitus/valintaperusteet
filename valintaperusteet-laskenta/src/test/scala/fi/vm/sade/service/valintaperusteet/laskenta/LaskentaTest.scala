@@ -3,35 +3,37 @@ package fi.vm.sade.service.valintaperusteet.laskenta
 import java.math.{BigDecimal => BigDec}
 import scala.math.BigDecimal._
 
-import fi.vm.sade.service.valintaperusteet.laskenta.api.{Hakukohde, Osallistuminen, Hakemus}
+import fi.vm.sade.service.valintaperusteet.laskenta.api.{Hakukohde, Osallistuminen}
 import org.scalatest._
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta._
 import scala.collection.JavaConversions._
-import fi.vm.sade.kaava.LaskentaTestUtil.Hakemus
+import fi.vm.sade.kaava.LaskentaTestUtil._
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.HylattyMetatieto
 import scala._
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.KonvertoiLukuarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Totuusarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeLukuarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonvertteri
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Suurempi
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.SyotettavaValintaperuste
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonvertteri
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonversio
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeTotuusarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Jos
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Demografia
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaKonvertoiLukuarvoksi
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakemuksenValintaperuste
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonversio
-import fi.vm.sade.kaava.LaskentaTestUtil.assertTilaHylatty
-import fi.vm.sade.kaava.LaskentaTestUtil.assertTilaVirhe
-import fi.vm.sade.kaava.LaskentaTestUtil.assertTilaHyvaksyttavissa
-import fi.vm.sade.kaava.LaskentaTestUtil.assertTulosTyhja
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.VirheMetatieto.VirheMetatietotyyppi
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.HylattyMetatieto.Hylattymetatietotyyppi
 import java.util
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.KonvertoiLukuarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Totuusarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus
+import fi.vm.sade.kaava.LaskentaTestUtil.Hakemus
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonvertteri
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Suurempi
+import scala.Some
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonversio
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Jos
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Demografia
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakukohteenValintaperuste
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaKonvertoiLukuarvoksi
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonversio
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakemuksenValintaperuste
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeLukuarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Skaalaus
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.SyotettavaValintaperuste
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonvertteri
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeTotuusarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaVertaaYhtasuuruus
 
 /**
  *
@@ -504,5 +506,96 @@ class LaskentaTest extends FunSuite {
     assert(tulokset(1).getTulos.equals(BigDecimal("0.0").underlying))
     assert(tulokset(2).getTulos.equals(BigDecimal("1.0").underlying))
     assert(tulokset(3).getTulos.equals(BigDecimal("2.0").underlying))
+  }
+
+  test("skaalaus, lahdeskaalaa annettu") {
+    val funktiokutsu = Skaalaus(
+      skaalattava = HaeLukuarvo(konvertteri = None,
+        oletusarvo = None,
+        valintaperusteviite = HakemuksenValintaperuste(tunniste = "tunniste1", pakollinen = true)),
+      kohdeskaala = (BigDecimal("-1.0"), BigDecimal("2.0")),
+      lahdeskaala = Some((BigDecimal("-1000.0"), BigDecimal("9000.0"))))
+
+
+    val hakemukset = List(
+      Hakemus("hakemusOid1", List(), Map("tunniste1" -> "0.0")),
+      Hakemus("hakemusOid2", List(), Map("tunniste1" -> "1000.0")),
+      Hakemus("hakemusOid3", List(), Map("tunniste1" -> "2000.0")),
+      Hakemus("hakemusOid4", List(), Map("tunniste1" -> "3000.0"))
+    )
+
+    val tulokset = hakemukset.map(h => {
+      Laskin.suoritaValintalaskenta(hakukohde, h, hakemukset, funktiokutsu)
+    })
+
+    assert(tulokset.size == 4)
+    assert(tulokset(0).getTulos.equals(BigDecimal("-0.7").underlying))
+    assert(tulokset(1).getTulos.equals(BigDecimal("-0.4").underlying))
+    assert(tulokset(2).getTulos.equals(BigDecimal("-0.1").underlying))
+    assert(tulokset(3).getTulos.equals(BigDecimal("0.2").underlying))
+  }
+
+  test("skaalaus, hakemuksia liian vahan") {
+    val funktiokutsu = Skaalaus(
+      skaalattava = HaeLukuarvo(konvertteri = None,
+        oletusarvo = None,
+        valintaperusteviite = HakemuksenValintaperuste(tunniste = "tunniste1", pakollinen = true)),
+      kohdeskaala = (BigDecimal("-1.0"), BigDecimal("2.0")),
+      lahdeskaala = None)
+
+
+    val hakemukset = List(
+      Hakemus("hakemusOid1", List(), Map("tunniste1" -> "0.0"))
+    )
+
+    val tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemukset(0), hakemukset, funktiokutsu)
+    assert(Option(tulos.getTulos).isEmpty)
+    assertTilaVirhe(tulos.getTila, VirheMetatietotyyppi.TULOKSIA_LIIAN_VAHAN_LAHDESKAALAN_MAARITTAMISEEN)
+  }
+
+  test("skaalaus, lahdeskaalaa ei voida maarittaa") {
+    val funktiokutsu = Skaalaus(
+      skaalattava = HaeLukuarvo(konvertteri = None,
+        oletusarvo = None,
+        valintaperusteviite = HakemuksenValintaperuste(tunniste = "tunniste1", pakollinen = true)),
+      kohdeskaala = (BigDecimal("-1.0"), BigDecimal("2.0")),
+      lahdeskaala = None)
+
+
+    val hakemukset = List(
+      Hakemus("hakemusOid1", List(), Map("tunniste1" -> "10.0")),
+      Hakemus("hakemusOid2", List(), Map("tunniste1" -> "10.0"))
+    )
+
+    val tulokset = hakemukset.map(h => Laskin.suoritaValintalaskenta(hakukohde, h, hakemukset, funktiokutsu))
+    assert(tulokset.size == 2)
+    tulokset.foreach {
+      t =>
+        assert(Option(t.getTulos).isEmpty)
+        assertTilaVirhe(t.getTila, VirheMetatietotyyppi.TULOKSIA_LIIAN_VAHAN_LAHDESKAALAN_MAARITTAMISEEN)
+    }
+  }
+
+  test("skaalaus, skaalattava arvo ei ole lahdeskaalassa") {
+    val funktiokutsu = Skaalaus(
+      skaalattava = HaeLukuarvo(konvertteri = None,
+        oletusarvo = None,
+        valintaperusteviite = HakemuksenValintaperuste(tunniste = "tunniste1", pakollinen = true)),
+      kohdeskaala = (BigDecimal("-1.0"), BigDecimal("2.0")),
+      lahdeskaala = Some((BigDecimal("-125.0"), BigDecimal("375.0"))))
+
+
+    val hakemukset = List(
+      Hakemus("hakemusOid1", List(), Map("tunniste1" -> "375.1")),
+      Hakemus("hakemusOid2", List(), Map("tunniste1" -> "-125.0001"))
+    )
+
+    val tulokset = hakemukset.map(h => Laskin.suoritaValintalaskenta(hakukohde, h, hakemukset, funktiokutsu))
+    assert(tulokset.size == 2)
+    tulokset.foreach {
+      t =>
+        assert(Option(t.getTulos).isEmpty)
+        assertTilaVirhe(t.getTila, VirheMetatietotyyppi.SKAALATTAVA_ARVO_EI_OLE_LAHDESKAALASSA)
+    }
   }
 }

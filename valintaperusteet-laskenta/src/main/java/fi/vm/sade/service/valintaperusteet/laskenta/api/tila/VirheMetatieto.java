@@ -19,7 +19,7 @@ public abstract class VirheMetatieto {
         HAKUKOHTEEN_VALINTAPERUSTE_MAARITTELEMATTA_VIRHE(HakukohteenValintaperusteMaarittelemattaVirhe.class),
         VIRHEELLINEN_LASKENTAMOODI(VirheellinenLaskentamoodiVirhe.class),
         SKAALATTAVA_ARVO_EI_OLE_LAHDESKAALASSA(SkaalattavaArvoEiOleLahdeskaalassaVirhe.class),
-        SKAALAUKSEN_LAHDESKAALAA_EI_VOIDA_MAARITTAA(SkaalauksenLahdeskaalaaEiVoidaMaarittaaVirhe.class);
+        TULOKSIA_LIIAN_VAHAN_LAHDESKAALAN_MAARITTAMISEEN(TuloksiaLiianVahanLahdeskaalanMaarittamiseenVirhe.class);
 
         VirheMetatietotyyppi(Class<? extends VirheMetatieto> tyyppi) {
             this.tyyppi = tyyppi;
