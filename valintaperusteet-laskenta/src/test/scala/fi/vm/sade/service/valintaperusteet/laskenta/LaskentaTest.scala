@@ -654,4 +654,37 @@ class LaskentaTest extends FunSuite {
     assert(tulokset(2).getTulos.equals(BigDecimal("10.0").underlying))
     assertTilaHyvaksyttavissa(tulokset(2).getTila)
   }
+
+  test("demografia, ei ensisijaisia hakijoita") {
+    val funktiokutsu = Demografia(
+      tunniste = "tunniste1",
+      prosenttiosuus = BigDecimal("33.0")
+    )
+
+    val hakemukset = List(
+      Hakemus("hakemusoid1",
+        List("hakutoiveoid1", "hakutoiveoid2", "hakutoiveoid3"),
+        Map("tunniste1" -> "arvo")),
+      Hakemus("hakemusoid2",
+        List("hakutoiveoid1", "hakutoiveoid2", "hakutoiveoid3"),
+        Map("tunniste1" -> "arvo")),
+      Hakemus("hakemusoid3",
+        List("hakutoiveoid1", "hakutoiveoid2", "hakutoiveoid3"),
+        Map("tunniste1" -> "arvo")),
+      Hakemus("hakemusoid4",
+        List("hakutoiveoid1", "hakutoiveoid2", "hakutoiveoid3"),
+        Map("tunniste1" -> "arvo")),
+      Hakemus("hakemusoid5",
+        List("hakutoiveoid1", "hakutoiveoid2", "hakutoiveoid3"),
+        Map()))
+
+    val hakukohde = new Hakukohde("ei-kenellakaan", new util.HashMap[String, String])
+    val tulokset = hakemukset.map(h => Laskin.suoritaValintalaskenta(hakukohde, h, hakemukset, funktiokutsu))
+
+    assert(!tulokset(0).getTulos)
+    assert(!tulokset(1).getTulos)
+    assert(!tulokset(2).getTulos)
+    assert(!tulokset(3).getTulos)
+    assert(!tulokset(4).getTulos)
+  }
 }
