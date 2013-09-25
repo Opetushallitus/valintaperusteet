@@ -503,9 +503,16 @@ class LaskentaTest extends FunSuite {
 
     assert(tulokset.size == 4)
     assert(tulokset(0).getTulos.equals(BigDecimal("-1.0").underlying))
+    assertTilaHyvaksyttavissa(tulokset(0).getTila)
+
     assert(tulokset(1).getTulos.equals(BigDecimal("0.0").underlying))
+    assertTilaHyvaksyttavissa(tulokset(1).getTila)
+
     assert(tulokset(2).getTulos.equals(BigDecimal("1.0").underlying))
+    assertTilaHyvaksyttavissa(tulokset(2).getTila)
+
     assert(tulokset(3).getTulos.equals(BigDecimal("2.0").underlying))
+    assertTilaHyvaksyttavissa(tulokset(3).getTila)
   }
 
   test("skaalaus, lahdeskaalaa annettu") {
@@ -530,9 +537,16 @@ class LaskentaTest extends FunSuite {
 
     assert(tulokset.size == 4)
     assert(tulokset(0).getTulos.equals(BigDecimal("-0.7").underlying))
+    assertTilaHyvaksyttavissa(tulokset(0).getTila)
+
     assert(tulokset(1).getTulos.equals(BigDecimal("-0.4").underlying))
+    assertTilaHyvaksyttavissa(tulokset(1).getTila)
+
     assert(tulokset(2).getTulos.equals(BigDecimal("-0.1").underlying))
+    assertTilaHyvaksyttavissa(tulokset(2).getTila)
+
     assert(tulokset(3).getTulos.equals(BigDecimal("0.2").underlying))
+    assertTilaHyvaksyttavissa(tulokset(3).getTila)
   }
 
   test("skaalaus, hakemuksia liian vahan") {
@@ -597,5 +611,47 @@ class LaskentaTest extends FunSuite {
         assert(Option(t.getTulos).isEmpty)
         assertTilaVirhe(t.getTila, VirheMetatietotyyppi.SKAALATTAVA_ARVO_EI_OLE_LAHDESKAALASSA)
     }
+  }
+
+  test("skaalaus useampaan kertaan") {
+    val funktiokutsu = Skaalaus(
+      skaalattava = Summa(
+        fs = List(
+          Lukuarvo(BigDecimal("100.0")),
+          Skaalaus(
+            skaalattava = HaeLukuarvo(
+              konvertteri = None,
+              oletusarvo = None,
+              valintaperusteviite = HakemuksenValintaperuste(
+                tunniste = "tunniste1",
+                pakollinen = true
+              )
+            ),
+            kohdeskaala = (BigDecimal("-50"), BigDecimal("50.0")),
+            lahdeskaala = None
+          )
+        )
+      ),
+      kohdeskaala = (BigDecimal("4.0"), BigDecimal("10.0")),
+      lahdeskaala = None
+    )
+
+    val hakemukset = List(
+      Hakemus("hakemusOid1", List(), Map("tunniste1" -> "100.0")),
+      Hakemus("hakemusOid2", List(), Map("tunniste1" -> "300.0")),
+      Hakemus("hakemusOid3", List(), Map("tunniste1" -> "500.0"))
+    )
+
+    val tulokset = hakemukset.map(h => Laskin.suoritaValintalaskenta(hakukohde, h, hakemukset, funktiokutsu))
+    assert(tulokset.size == 3)
+
+    assert(tulokset(0).getTulos.equals(BigDecimal("4.0").underlying))
+    assertTilaHyvaksyttavissa(tulokset(0).getTila)
+
+    assert(tulokset(1).getTulos.equals(BigDecimal("7.0").underlying))
+    assertTilaHyvaksyttavissa(tulokset(1).getTila)
+
+    assert(tulokset(2).getTulos.equals(BigDecimal("10.0").underlying))
+    assertTilaHyvaksyttavissa(tulokset(2).getTila)
   }
 }

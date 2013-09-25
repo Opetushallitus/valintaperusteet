@@ -1886,4 +1886,100 @@ class LaskentaIntegraatioTest extends FunSuite {
     assertTulosTyhja(tulos)
     assertTilaVirhe(tila, VirheMetatietotyyppi.HAKUKOHTEEN_VALINTAPERUSTE_MAARITTELEMATTA_VIRHE)
   }
+
+  test("skaalaus, lahdeskaalaa ei annettu") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.SKAALAUS,
+      funktioargumentit = List(
+        Funktiokutsu(
+          nimi = Funktionimi.HAELUKUARVO,
+          valintaperustetunniste = ValintaperusteViite(
+            tunniste = "tunniste1",
+            onPakollinen = false,
+            lahde = Valintaperustelahde.HAETTAVA_ARVO
+          )
+        )
+      ),
+      syoteparametrit = List(
+        Syoteparametri(avain = "kohdeskaalaMin", arvo = "-25.0"),
+        Syoteparametri(avain = "kohdeskaalaMax", arvo = "50.0"),
+        Syoteparametri(avain = "kaytaLaskennallistaLahdeskaalaa", arvo = "true")
+      )
+    )
+
+    val hakemukset = List(
+      Hakemus("hakemusOid1", List[String](), Map("tunniste1" -> "-1000.0")),
+      Hakemus("hakemusOid2", List[String](), Map("tunniste1" -> "-500.0")),
+      Hakemus("hakemusOid3", List[String](), Map("tunniste1" -> "0.0")),
+      Hakemus("hakemusOid4", List[String](), Map("tunniste1" -> "500.0"))
+    )
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val tulokset = hakemukset.map {
+      h =>
+        Laskin.suoritaValintalaskenta(hakukohde, h, asJavaCollection(hakemukset), lasku)
+    }
+
+    assert(tulokset.size == 4)
+    assert(tulokset(0).getTulos.equals(new BigDecimal("-25.0")))
+    assertTilaHyvaksyttavissa(tulokset(0).getTila)
+
+    assert(tulokset(1).getTulos.equals(new BigDecimal("0.0")))
+    assertTilaHyvaksyttavissa(tulokset(1).getTila)
+
+    assert(tulokset(2).getTulos.equals(new BigDecimal("25.0")))
+    assertTilaHyvaksyttavissa(tulokset(2).getTila)
+
+    assert(tulokset(3).getTulos.equals(new BigDecimal("50.0")))
+    assertTilaHyvaksyttavissa(tulokset(3).getTila)
+  }
+
+  test("skaalaus, lahdeskaalaa annettu") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.SKAALAUS,
+      funktioargumentit = List(
+        Funktiokutsu(
+          nimi = Funktionimi.HAELUKUARVO,
+          valintaperustetunniste = ValintaperusteViite(
+            tunniste = "tunniste1",
+            onPakollinen = false,
+            lahde = Valintaperustelahde.HAETTAVA_ARVO
+          )
+        )
+      ),
+      syoteparametrit = List(
+        Syoteparametri(avain = "kohdeskaalaMin", arvo = "-100.0"),
+        Syoteparametri(avain = "kohdeskaalaMax", arvo = "100.0"),
+        Syoteparametri(avain = "lahdeskaalaMin", arvo = "-1000.0"),
+        Syoteparametri(avain = "lahdeskaalaMax", arvo = "1000.0"),
+        Syoteparametri(avain = "kaytaLaskennallistaLahdeskaalaa", arvo = "false")
+      )
+    )
+
+    val hakemukset = List(
+      Hakemus("hakemusOid1", List[String](), Map("tunniste1" -> "-750.0")),
+      Hakemus("hakemusOid2", List[String](), Map("tunniste1" -> "-250.0")),
+      Hakemus("hakemusOid3", List[String](), Map("tunniste1" -> "250.0")),
+      Hakemus("hakemusOid4", List[String](), Map("tunniste1" -> "750.0"))
+    )
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val tulokset = hakemukset.map {
+      h =>
+        Laskin.suoritaValintalaskenta(hakukohde, h, asJavaCollection(hakemukset), lasku)
+    }
+
+    assert(tulokset.size == 4)
+    assert(tulokset(0).getTulos.equals(new BigDecimal("-75.0")))
+    assertTilaHyvaksyttavissa(tulokset(0).getTila)
+
+    assert(tulokset(1).getTulos.equals(new BigDecimal("-25.0")))
+    assertTilaHyvaksyttavissa(tulokset(1).getTila)
+
+    assert(tulokset(2).getTulos.equals(new BigDecimal("25.0")))
+    assertTilaHyvaksyttavissa(tulokset(2).getTila)
+
+    assert(tulokset(3).getTulos.equals(new BigDecimal("75.0")))
+    assertTilaHyvaksyttavissa(tulokset(3).getTila)
+  }
 }

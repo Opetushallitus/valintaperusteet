@@ -260,12 +260,12 @@ object Laskentadomainkonvertteri {
           oid)
       case Funktionimi.SKAALAUS => {
         val kohdeskaalaMin = parametriToBigDecimal(getParametri("kohdeskaalaMin", funktiokutsu.getSyoteparametrit))
-        val kohdeskaalaMax = parametriToBigDecimal(getParametri("kohdeskaalaMin", funktiokutsu.getSyoteparametrit))
+        val kohdeskaalaMax = parametriToBigDecimal(getParametri("kohdeskaalaMax", funktiokutsu.getSyoteparametrit))
 
         val kaytaLaskennallistaLahdeskaalaa = parametriToBoolean(getParametri("kaytaLaskennallistaLahdeskaalaa",
           funktiokutsu.getSyoteparametrit))
 
-        val lahdeskaala = if (kaytaLaskennallistaLahdeskaalaa) {
+        val lahdeskaala = if (!kaytaLaskennallistaLahdeskaalaa) {
           val lahdeskaalaMin = parametriToBigDecimal(getParametri("lahdeskaalaMin", funktiokutsu.getSyoteparametrit))
           val lahdeskaalaMax = parametriToBigDecimal(getParametri("lahdeskaalaMax", funktiokutsu.getSyoteparametrit))
           Some(Pair(lahdeskaalaMin, lahdeskaalaMax))
