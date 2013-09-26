@@ -186,11 +186,11 @@
         </dependency>
 
         <!-- javamelody-core -->
-        <dependency>
-            <groupId>net.bull.javamelody</groupId>
-            <artifactId>javamelody-core</artifactId>
-            <version>1.45.0</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>net.bull.javamelody</groupId>-->
+            <!--<artifactId>javamelody-core</artifactId>-->
+            <!--<version>1.45.0</version>-->
+        <!--</dependency>-->
 
 
 
