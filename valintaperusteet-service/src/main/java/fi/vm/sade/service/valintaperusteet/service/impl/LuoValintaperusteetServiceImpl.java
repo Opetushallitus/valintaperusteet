@@ -20,16 +20,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
- * Created with IntelliJ IDEA.
  * User: kkammone
  * Date: 25.2.2013
  * Time: 12:57
- * To change this template use File | Settings | File Templates.
  */
 @Component
 public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetService, ResourceLoaderAware {
@@ -81,6 +77,24 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
     public static final String PAASY_JA_SOVELTUVUUSKOE = "valintakokeentyyppi_1";
 
     public static final String KIELIKOE_PREFIX = "kielikoe_";
+
+    public static final Set<String> poikkeavatValintaryhmat = new HashSet<String>(Arrays.asList(new String[]{
+            "hakukohteet_354", // Lasiala, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_383", // Lasiala, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_483", // Sisustustekstiilit, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_485", // Sisustustekstiilit, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_538", // Tekstiiliala, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_550", // Tekstiiliala, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_551", // Vaatetusala, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_565", // Vaatetusala, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_452", // Audiovisuaalisen viestinnän perustutkinto, pk
+            "hakukohteet_511", // Audiovisuaalisen viestinnän perustutkinto, yo
+            "hakukohteet_610", // Äänituotanto, pk (Audiovisuaalisen viestinnän perustutkinto)
+            "hakukohteet_611", // Äänituotanto, yo (Audiovisuaalisen viestinnän perustutkinto)
+            "hakukohteet_497", // Kuvallisen ilmaisun perustutkinto, pk
+            "hakukohteet_523", // Kuvallisen ilmaisun perustutkinto, yo
+            "hakukohteet_126", // Liikunnanohjauksen perustutkinto, yo
+    }));
 
     public enum Kielikoodi {
         SUOMI("Suomi", KIELI_FI_URI, "fi"), RUOTSI("Ruotsi", KIELI_SV_URI, "sv");
@@ -211,13 +225,13 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
         //pisteytysmalli
         Laskentakaava pk_painotettavatKeskiarvotLaskentakaava = asetaValintaryhmaJaTallennaKantaan(PkPohjaiset.luoPainotettavatKeskiarvotLaskentakaava(pkAineet), peruskouluVr);
-        Laskentakaava pkPohjainenLukuaineidenKeskiarvo = asetaValintaryhmaJaTallennaKantaan(PkPohjaiset.luoPKPohjaisenKoulutuksenLukuaineidenKeskiarvo(pkAineet), peruskouluVr);
+        Laskentakaava pkPohjainenKaikkienAineidenKeskiarvo = asetaValintaryhmaJaTallennaKantaan(PkPohjaiset.luoPKPohjaisenKoulutuksenKaikkienAineidenKeskiarvo(pkAineet), peruskouluVr);
 
         transactionManager.commit(tx);
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
         //pisteytysmalli
-        Laskentakaava pk_yleinenkoulumenestyspisteytysmalli = asetaValintaryhmaJaTallennaKantaan(PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(pkPohjainenLukuaineidenKeskiarvo, "Yleinen koulumenestys pisteytysmalli, PK"), peruskouluVr);
+        Laskentakaava pk_yleinenkoulumenestyspisteytysmalli = asetaValintaryhmaJaTallennaKantaan(PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(pkPohjainenKaikkienAineidenKeskiarvo, "Yleinen koulumenestys pisteytysmalli, PK"), peruskouluVr);
         Laskentakaava pk_pohjakoulutuspisteytysmalli = asetaValintaryhmaJaTallennaKantaan(PkPohjaiset.luoPohjakoulutuspisteytysmalli(), peruskouluVr);
         Laskentakaava pk_ilmanKoulutuspaikkaaPisteytysmalli = asetaValintaryhmaJaTallennaKantaan(PkPohjaiset.ilmanKoulutuspaikkaaPisteytysmalli(), peruskouluVr);
         Laskentakaava hakutoivejarjestyspisteytysmalli = asetaValintaryhmaJaTallennaKantaan(PkJaYoPohjaiset.luoHakutoivejarjestyspisteytysmalli(), ammatillinenKoulutusVr);
@@ -322,6 +336,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                 hakukohdekoodi.setNimiFi(nimi);
                 hakukohdekoodi.setNimiSv(nimi);
                 hakukohdekoodi.setNimiEn(nimi);
+
 
                 Valintaryhma valintaryhma = new Valintaryhma();
                 valintaryhma.setHakuOid(HAKU_OID);

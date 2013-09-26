@@ -164,7 +164,7 @@ public class PkPohjaiset {
         return laskentakaava;
     }
 
-    public static Laskentakaava luoPKPohjaisenKoulutuksenLukuaineidenKeskiarvo(PkAineet pkAineet) {
+    public static Laskentakaava luoPKPohjaisenKoulutuksenKaikkienAineidenKeskiarvo(PkAineet pkAineet) {
         Laskentakaava[] args = new Laskentakaava[]{
                 pkAineet.getLaskentakaava(Aineet.aidinkieliJaKirjallisuus1),
                 pkAineet.getLaskentakaava(Aineet.aidinkieliJaKirjallisuus2),
@@ -198,7 +198,7 @@ public class PkPohjaiset {
 
         Funktiokutsu keskiarvo = GenericHelper.luoKeskiarvo(args);
         Laskentakaava laskentakaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(
-                keskiarvo, "Lukuaineiden keskiarvo, PK");
+                keskiarvo, "Kaikkien aineiden keskiarvo, PK");
         return laskentakaava;
     }
 }
