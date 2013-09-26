@@ -396,4 +396,14 @@ public class PkJaYoPohjaiset {
                 GenericHelper.luoEi(ulkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt),
                 "Ei ulkomailla suoritettua koulutusta eikä oppivelvollisuuden suorittaminen keskeytynyt");
     }
+
+    public static Laskentakaava luoPoikkeavanValintaryhmanLaskentakaava(Laskentakaava valintakoekaava, Laskentakaava kielikoekaava, Laskentakaava ulkomaillaSuoritettuKoulutus) {
+        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(GenericHelper.luoSumma(valintakoekaava,
+                GenericHelper.luoHylkaa(kielikoekaava,
+                        "Kielikoetta ei suoritettu tai kielikokeen korvaavuusehto ei täyttynyt"),
+                GenericHelper.luoHylkaa(ulkomaillaSuoritettuKoulutus,
+                        "Ulkomailla suoritettu koulutus tai oppivelvollisuuden suorittaminen keskeytynyt")),
+                valintakoekaava.getNimi() + " + hylkäysperusteet (*)");
+
+    }
 }

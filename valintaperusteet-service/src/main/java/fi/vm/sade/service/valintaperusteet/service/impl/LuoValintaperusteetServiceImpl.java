@@ -302,7 +302,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         }
 
         lisaaHakukohdekoodit(peruskouluVr, lukioVr, toisenAsteenPeruskoulupohjaisetPeruskaavat, toisenAsteenYlioppilaspohjaisetPeruskaavat, pkTasasijakriteerit, lkTasasijakriteerit,
-                eiUlkomaillaSuoritettuaKoulutustaEikaOppivelvollisuusKeskeytynyt);
+                ulkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt, eiUlkomaillaSuoritettuaKoulutustaEikaOppivelvollisuusKeskeytynyt, kielikokeidenLaskentakaavat);
 
         long endTime = System.currentTimeMillis();
         long timeTaken = (endTime - beginTime) / 1000L / 60L;
@@ -317,7 +317,9 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                                       Map<Kielikoodi, Laskentakaava> lkPeruskaavat,
                                       Laskentakaava[] pkTasasijakriteerit,
                                       Laskentakaava[] lkTasasijakriteerit,
-                                      Laskentakaava eiUlkomaillaSuoritettuKoulutus) throws IOException {
+                                      Laskentakaava ulkomaillaSuoritettuKoulutus,
+                                      Laskentakaava eiUlkomaillaSuoritettuKoulutus,
+                                      Map<Kielikoodi, Laskentakaava> kielikokeidenLaskentakaavat) throws IOException {
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new InputStreamReader(resourceLoader.getResource("classpath:hakukohdekoodit/hakukohdekoodit.csv").getInputStream(), Charset.forName("UTF-8")));
@@ -442,9 +444,17 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
                     List<Valintakoe> valintakokeet = valintakoeService.findValintakoeByValinnanVaihe(kielikoeValinnanvaihe.getOid());
 
+                    Laskentakaava ensisijainenJarjestyskriteeri = null;
+
                     Laskentakaava peruskaava = peruskaavat.get(k);
-                    Laskentakaava peruskaavaJaValintakoekaava = asetaValintaryhmaJaTallennaKantaan(
-                            PkJaYoPohjaiset.luoYhdistettyPeruskaavaJaValintakoekaava(peruskaava, valintakoekaava), kielivalintaryhma);
+                    if (poikkeavatValintaryhmat.contains(hakukohdekoodi.getUri())) {
+                        ensisijainenJarjestyskriteeri = asetaValintaryhmaJaTallennaKantaan(
+                                PkJaYoPohjaiset.luoPoikkeavanValintaryhmanLaskentakaava(
+                                        valintakoekaava, kielikokeidenLaskentakaavat.get(k), ulkomaillaSuoritettuKoulutus), kielivalintaryhma);
+                    } else {
+                        ensisijainenJarjestyskriteeri = asetaValintaryhmaJaTallennaKantaan(
+                                PkJaYoPohjaiset.luoYhdistettyPeruskaavaJaValintakoekaava(peruskaava, valintakoekaava), kielivalintaryhma);
+                    }
                     transactionManager.commit(tx);
 
                     tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
@@ -468,7 +478,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                     assert (loydetty);
                     transactionManager.commit(tx);
 
-                    insertKoe(kielivalintaryhma, valintakoetunniste, peruskaavaJaValintakoekaava, valintakoekaava, tasasijakriteerit,
+                    insertKoe(kielivalintaryhma, valintakoetunniste, ensisijainenJarjestyskriteeri, valintakoekaava, tasasijakriteerit,
                             opetuskieli, hakukohdekoodi);
                     insertEiKoetta(kielivalintaryhma, peruskaava, tasasijakriteerit, opetuskieli, hakukohdekoodi);
                 }
