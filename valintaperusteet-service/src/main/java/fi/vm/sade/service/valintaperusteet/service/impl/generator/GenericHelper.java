@@ -341,4 +341,38 @@ public class GenericHelper {
         f.getSyoteparametrit().add(luoSyoteparametri("hylkaysperustekuvaus", hylkaysperustekuvaus));
         return f;
     }
+
+    public static class Painotus {
+        private final FunktionArgumentti painokerroin;
+        private final FunktionArgumentti painotettava;
+
+        public Painotus(FunktionArgumentti painokerroin, FunktionArgumentti painotettava) {
+            this.painokerroin = painokerroin;
+            this.painotettava = painotettava;
+        }
+
+        public FunktionArgumentti getPainokerroin() {
+            return painokerroin;
+        }
+
+        public FunktionArgumentti getPainotettava() {
+            return painotettava;
+        }
+    }
+
+    public static Funktiokutsu luoPainotettuKeskiarvo(Painotus... painotukset) {
+        Funktiokutsu fk = new Funktiokutsu();
+        fk.setFunktionimi(Funktionimi.PAINOTETTUKESKIARVO);
+
+        FunktionArgumentti[] args = new FunktionArgumentti[painotukset.length * 2];
+        int i = 0;
+        for (Painotus p : painotukset) {
+            args[i] = p.getPainokerroin();
+            args[i + 1] = p.getPainotettava();
+            i += 2;
+        }
+
+        fk.getFunktioargumentit().addAll(luoFunktioargumentit(args));
+        return fk;
+    }
 }

@@ -352,7 +352,7 @@ class LaskentaTest extends FunSuite {
     val funktio = HaeLukuarvo(
       konvertteri = None,
       oletusarvo = None,
-      valintaperusteviite = HakukohteenValintaperuste(tunniste))
+      valintaperusteviite = HakukohteenValintaperuste(tunniste, false))
 
     val hakukohde = new Hakukohde("hakukohdeoid", Map(tunniste -> "100.0"))
 
@@ -361,19 +361,34 @@ class LaskentaTest extends FunSuite {
     assertTilaHyvaksyttavissa(tila)
   }
 
-  test("hae hakukohteen valintaperuste, tunnistetta ei loydy") {
+  test("hae hakukohteen valintaperuste, pakollinen, tunnistetta ei loydy") {
     val tunniste = "hakukohteenvalintaperustetunniste"
 
     val funktio = HaeLukuarvo(
       konvertteri = None,
       oletusarvo = None,
-      valintaperusteviite = HakukohteenValintaperuste(tunniste))
+      valintaperusteviite = HakukohteenValintaperuste(tunniste, true))
 
     val hakukohde = new Hakukohde("hakukohdeoid", Map("toinen tunniste" -> "100.0"))
 
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, funktio)
     assertTulosTyhja(tulos)
     assertTilaVirhe(tila, VirheMetatietotyyppi.HAKUKOHTEEN_VALINTAPERUSTE_MAARITTELEMATTA_VIRHE)
+  }
+
+  test("hae hakukohteen valintaperuste, ei pakollinen, tunnistetta ei loydy") {
+    val tunniste = "hakukohteenvalintaperustetunniste"
+
+    val funktio = HaeLukuarvo(
+      konvertteri = None,
+      oletusarvo = None,
+      valintaperusteviite = HakukohteenValintaperuste(tunniste, false))
+
+    val hakukohde = new Hakukohde("hakukohdeoid", Map("toinen tunniste" -> "100.0"))
+
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, funktio)
+    assertTulosTyhja(tulos)
+    assertTilaHyvaksyttavissa(tila)
   }
 
   test("syotettavat arvot") {
