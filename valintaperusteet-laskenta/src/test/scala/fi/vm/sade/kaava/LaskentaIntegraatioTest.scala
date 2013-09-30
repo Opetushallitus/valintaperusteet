@@ -1884,7 +1884,7 @@ class LaskentaIntegraatioTest extends FunSuite {
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(new Hakukohde("hakukohdeOid", Map("toinen tunniste" -> "100.0")), tyhjaHakemus, lasku)
     assertTulosTyhja(tulos)
-    assertTilaVirhe(tila, VirheMetatietotyyppi.HAKUKOHTEEN_VALINTAPERUSTE_MAARITTELEMATTA_VIRHE)
+    assertTilaHyvaksyttavissa(tila)
   }
 
   test("skaalaus, lahdeskaalaa ei annettu") {
