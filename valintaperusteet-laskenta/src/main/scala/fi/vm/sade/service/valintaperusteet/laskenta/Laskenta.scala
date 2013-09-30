@@ -287,4 +287,8 @@ object Laskenta {
       "pienempi kuin maksimi")
   }
 
+  case class PainotettuKeskiarvo(oid: String = "", fs: Seq[Pair[Lukuarvofunktio, Lukuarvofunktio]]) extends Lukuarvofunktio {
+    require(fs.size > 0, "Parametreja pitää olla vähintään yksi")
+  }
+
 }

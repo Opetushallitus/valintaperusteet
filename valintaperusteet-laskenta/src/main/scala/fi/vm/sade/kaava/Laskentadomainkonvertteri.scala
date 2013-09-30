@@ -245,6 +245,16 @@ object Laskentadomainkonvertteri {
         muunnaLukuarvofunktioksi(lasketutArgumentit(0)),
         muunnaLukuarvofunktioksi(lasketutArgumentit(1)),
         oid)
+      case Funktionimi.PAINOTETTUKESKIARVO => {
+        def muodostaParit(fs: Seq[Funktio[_]], accu: List[Pair[Lukuarvofunktio, Lukuarvofunktio]]): List[Pair[Lukuarvofunktio, Lukuarvofunktio]] = {
+          fs match {
+            case first :: second :: rest => muodostaParit(rest, Pair(muunnaLukuarvofunktioksi(first), muunnaLukuarvofunktioksi(second)) :: accu)
+            case _ => accu
+          }
+        }
+
+        PainotettuKeskiarvo(oid, muodostaParit(lasketutArgumentit, Nil))
+      }
       case Funktionimi.PIENEMPI => Pienempi(
         muunnaLukuarvofunktioksi(lasketutArgumentit(0)),
         muunnaLukuarvofunktioksi(lasketutArgumentit(1)), oid)

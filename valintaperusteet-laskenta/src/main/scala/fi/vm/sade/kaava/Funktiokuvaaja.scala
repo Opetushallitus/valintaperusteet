@@ -38,6 +38,7 @@ object Funktiokuvaaja {
 
     val YKSI = Value("YKSI")
     val N = Value("N")
+    val LISTA_PAREJA = Value("LISTA PAREJA")
   }
 
   import Funktiotyyppi._
@@ -290,6 +291,10 @@ object Funktiokuvaaja {
       funktioargumentit = List(Funktioargumenttikuvaus("osoittaja", Funktiotyyppi.LUKUARVOFUNKTIO),
         Funktioargumenttikuvaus("nimittaja", Funktiotyyppi.LUKUARVOFUNKTIO))
     ),
+    Funktionimi.PAINOTETTUKESKIARVO -> Funktiokuvaus(
+      tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
+      funktioargumentit = List(Funktioargumenttikuvaus("args", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.LISTA_PAREJA))
+    ),
     Funktionimi.PIENEMPI -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.TOTUUSARVOFUNKTIO,
       funktioargumentit = List(Funktioargumenttikuvaus("vasenOperandi", Funktiotyyppi.LUKUARVOFUNKTIO),
@@ -397,6 +402,7 @@ object Funktiokuvaaja {
     kardinaliteetti match {
       case Kardinaliteetti.N => "n"
       case Kardinaliteetti.YKSI => "1"
+      case Kardinaliteetti.LISTA_PAREJA => "lista_pareja"
     }
   }
 

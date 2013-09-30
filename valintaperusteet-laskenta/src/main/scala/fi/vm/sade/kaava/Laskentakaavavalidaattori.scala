@@ -147,6 +147,14 @@ object Laskentakaavavalidaattori {
               + ". Vaadittu: ainakin yksi, annettu: " + annetutArgumentit.size,
             ">=1", annetutArgumentit.size))
         } else funktiokutsu.getFunktioargumentit.foldLeft(List[Validointivirhe]())((l, a) => validoiFunktioargumentti(arg, a, l))
+      } else if (vaaditutArgumentit.size == 1 && vaaditutArgumentit(0).kardinaliteetti == Kardinaliteetti.LISTA_PAREJA) {
+        val arg = vaaditutArgumentit(0)
+        if (annetutArgumentit.size == 0 || annetutArgumentit.size % 2 != 0) {
+          List(new VaaraMaaraFunktioargumenttejaVirhe(
+            "Väärä määrä funktioargumentteja funktiolle " + nimi
+              + ". Vaadittu: parillinen määrä, annettu: " + annetutArgumentit.size,
+            "parillinen määrä", annetutArgumentit.size))
+        } else funktiokutsu.getFunktioargumentit.foldLeft(List[Validointivirhe]())((l, a) => validoiFunktioargumentti(arg, a, l))
       } else {
         if (vaaditutArgumentit.size != annetutArgumentit.size) {
           List(new VaaraMaaraFunktioargumenttejaVirhe(
@@ -444,6 +452,7 @@ object Laskentakaavavalidaattori {
           case _ => Nil
         }
       }
+
       case _ => Nil
     }
   }

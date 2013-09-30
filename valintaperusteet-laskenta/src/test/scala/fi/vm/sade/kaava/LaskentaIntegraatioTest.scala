@@ -1982,4 +1982,53 @@ class LaskentaIntegraatioTest extends FunSuite {
     assert(tulokset(3).getTulos.equals(new BigDecimal("75.0")))
     assertTilaHyvaksyttavissa(tulokset(3).getTila)
   }
+
+  test("painotettu keskiarvo") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.PAINOTETTUKESKIARVO,
+      funktioargumentit = List(
+        Funktiokutsu(// Painokerroin 1
+          nimi = Funktionimi.LUKUARVO,
+          syoteparametrit = List(
+            Syoteparametri(
+              avain = "luku",
+              arvo = "2.0"
+            )
+          )
+        ),
+        Funktiokutsu(// Painotettava 1
+          nimi = Funktionimi.LUKUARVO,
+          syoteparametrit = List(
+            Syoteparametri(
+              avain = "luku",
+              arvo = "10.0"
+            )
+          )
+        ),
+        Funktiokutsu(// Painokerroin 2
+          nimi = Funktionimi.LUKUARVO,
+          syoteparametrit = List(
+            Syoteparametri(
+              avain = "luku",
+              arvo = "1.5"
+            )
+          )
+        ),
+        Funktiokutsu(// Painotettava 2
+          nimi = Funktionimi.LUKUARVO,
+          syoteparametrit = List(
+            Syoteparametri(
+              avain = "luku",
+              arvo = "30.0"
+            )
+          )
+        )
+      )
+    )
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val tulos = Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, List(), lasku)
+    assert(tulos.getTulos.compareTo(new BigDecimal("32.5")) == 0)
+    assertTilaHyvaksyttavissa(tulos.getTila)
+  }
 }

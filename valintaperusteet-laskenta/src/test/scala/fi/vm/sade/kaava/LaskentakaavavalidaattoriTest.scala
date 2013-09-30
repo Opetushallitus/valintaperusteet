@@ -923,4 +923,53 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
     assert(Virhetyyppi.LAHDESKAALA_VIRHEELLINEN ==
       validationMessages.get(0).asInstanceOf[Validointivirhe].getVirhetyyppi)
   }
+
+  test("painotettu keskiarvo, liian vahan argumentteja") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.PAINOTETTUKESKIARVO,
+      funktioargumentit = List(
+        Funktiokutsu(// Painokerroin 1
+          nimi = Funktionimi.LUKUARVO,
+          syoteparametrit = List(
+            Syoteparametri(
+              avain = "luku",
+              arvo = "2.0"
+            )
+          )
+        ),
+        Funktiokutsu(// Painotettava 1
+          nimi = Funktionimi.LUKUARVO,
+          syoteparametrit = List(
+            Syoteparametri(
+              avain = "luku",
+              arvo = "10.0"
+            )
+          )
+        ),
+        Funktiokutsu(// Painokerroin 2
+          nimi = Funktionimi.LUKUARVO,
+          syoteparametrit = List(
+            Syoteparametri(
+              avain = "luku",
+              arvo = "1.5"
+            )
+          )
+        )
+      )
+    )
+
+    val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
+    assert(validationMessages.size == 1)
+    assert(Virhetyyppi.VAARA_MAARA_FUNKTIOARGUMENTTEJA == validationMessages.get(0).asInstanceOf[Validointivirhe].getVirhetyyppi)
+  }
+
+  test("painotettu keskiarvo, ei argumentteja") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.PAINOTETTUKESKIARVO
+    )
+
+    val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
+    assert(validationMessages.size == 1)
+    assert(Virhetyyppi.VAARA_MAARA_FUNKTIOARGUMENTTEJA == validationMessages.get(0).asInstanceOf[Validointivirhe].getVirhetyyppi)
+  }
 }

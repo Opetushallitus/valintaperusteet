@@ -656,6 +656,22 @@ private class Laskin private(private val hakukohde: Hakukohde,
           (skaalauksenTulos, tilat, Historia("Skaalaus", skaalauksenTulos, tilat, Some(List(tulos.historia)), None))
         }
       }
+
+      case PainotettuKeskiarvo(oid, fs) => {
+        val tulokset = fs.map(p => Pair(laskeLukuarvo(p._1), laskeLukuarvo(p._2)))
+        val (tilat, historiat) = tulokset.reverse.foldLeft(Pair(List[Tila](), List[Historia]()))((lst, t) => Pair(t._1.tila :: t._2.tila :: lst._1, t._1.historia :: t._2.historia :: lst._2))
+
+        val painotetutArvot = for {t <- tulokset
+                                   painotus <- t._1.tulos
+                                   arvo <- t._2.tulos
+        } yield painotus * arvo
+
+        val painotettuKeskiarvo = if (!painotetutArvot.isEmpty) {
+          Some(BigDecimal(summa(painotetutArvot).underlying.divide(BigDecimal(painotetutArvot.size).underlying, 4, RoundingMode.HALF_UP)))
+        } else None
+
+        (painotettuKeskiarvo, tilat, Historia("Painotettu keskiarvo", painotettuKeskiarvo, tilat, Some(historiat), None))
+      }
     }
 
 

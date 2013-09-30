@@ -687,4 +687,137 @@ class LaskentaTest extends FunSuite {
     assert(!tulokset(3).getTulos)
     assert(!tulokset(4).getTulos)
   }
+
+  test("painotettu keskiarvo") {
+    val funktiokutsu = PainotettuKeskiarvo(
+      fs = List(
+        Pair(
+          Lukuarvo(BigDecimal("1.50")),
+          Lukuarvo(BigDecimal("30.0"))
+        ),
+        Pair(
+          Lukuarvo(BigDecimal("0.50")),
+          Lukuarvo(BigDecimal("100.0"))
+        )
+      )
+    )
+
+    val tulos = Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, List(), funktiokutsu)
+    assert(tulos.getTulos.compareTo(BigDecimal("47.5").underlying) == 0)
+    assertTilaHyvaksyttavissa(tulos.getTila)
+  }
+
+  test("painotettu keskiarvo, tyhja painotettava") {
+    val funktiokutsu = PainotettuKeskiarvo(
+      fs = List(
+        Pair(
+          Lukuarvo(BigDecimal("1.50")),
+          Lukuarvo(BigDecimal("30.0"))
+        ),
+        Pair(
+          Lukuarvo(BigDecimal("0.50")),
+          HaeLukuarvo(
+            konvertteri = None,
+            oletusarvo = None,
+            valintaperusteviite =
+              HakemuksenValintaperuste(
+                tunniste = "tunniste1",
+                pakollinen = false)
+          )
+        )
+      )
+    )
+
+    val tulos = Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, List(), funktiokutsu)
+    assert(tulos.getTulos.compareTo(BigDecimal("45.0").underlying) == 0)
+    assertTilaHyvaksyttavissa(tulos.getTila)
+  }
+
+  test("painotettu keskiarvo, tyhja painotuskerroin") {
+    val funktiokutsu = PainotettuKeskiarvo(
+      fs = List(
+        Pair(
+          Lukuarvo(BigDecimal("1.50")),
+          Lukuarvo(BigDecimal("30.0"))
+        ),
+        Pair(
+          HaeLukuarvo(
+            konvertteri = None,
+            oletusarvo = None,
+            valintaperusteviite =
+              HakemuksenValintaperuste(
+                tunniste = "tunniste1",
+                pakollinen = false)
+          ),
+          Lukuarvo(BigDecimal("0.50"))
+        )
+      )
+    )
+
+    val tulos = Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, List(), funktiokutsu)
+    assert(tulos.getTulos.compareTo(BigDecimal("45.0").underlying) == 0)
+    assertTilaHyvaksyttavissa(tulos.getTila)
+  }
+
+  test("painotettu keskiarvo, tyhja painotettava ja tyhja painotuskerroin") {
+    val funktiokutsu = PainotettuKeskiarvo(
+      fs = List(
+        Pair(
+          Lukuarvo(BigDecimal("1.50")),
+          Lukuarvo(BigDecimal("30.0"))
+        ),
+        Pair(
+          HaeLukuarvo(
+            konvertteri = None,
+            oletusarvo = None,
+            valintaperusteviite =
+              HakemuksenValintaperuste(
+                tunniste = "tunniste1",
+                pakollinen = false)
+          ),
+          HaeLukuarvo(
+            konvertteri = None,
+            oletusarvo = None,
+            valintaperusteviite =
+              HakemuksenValintaperuste(
+                tunniste = "tunniste2",
+                pakollinen = false)
+          )
+        )
+      )
+    )
+
+    val tulos = Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, List(), funktiokutsu)
+    assert(tulos.getTulos.compareTo(BigDecimal("45.0").underlying) == 0)
+    assertTilaHyvaksyttavissa(tulos.getTila)
+  }
+
+  test("painotettu keskiarvo, tyhja paluuarvo") {
+    val funktiokutsu = PainotettuKeskiarvo(
+      fs = List(
+        Pair(
+          HaeLukuarvo(
+            konvertteri = None,
+            oletusarvo = None,
+            valintaperusteviite =
+              HakemuksenValintaperuste(
+                tunniste = "tunniste1",
+                pakollinen = false)
+          ),
+          HaeLukuarvo(
+            konvertteri = None,
+            oletusarvo = None,
+            valintaperusteviite =
+              HakemuksenValintaperuste(
+                tunniste = "tunniste2",
+                pakollinen = false)
+          )
+        )
+      )
+    )
+
+    val tulos = Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, List(), funktiokutsu)
+    assert(Option(tulos.getTulos).isEmpty)
+    assertTilaHyvaksyttavissa(tulos.getTila)
+  }
 }
