@@ -138,12 +138,12 @@ public class LukionValintaperusteetTest {
         ));
 
         Hakukohde hakukohde = new Hakukohde(HAKUKOHDE_OID1, yhdistaMapit(
-                valintaperuste(LukionValintaperusteet.AIDINKIELI_JA_KIRJALLISUUS1 + "-painokerroin", "1.5"),
-                valintaperuste(LukionValintaperusteet.B1KIELI + "-painokerroin", "1.5"),
-                valintaperuste(LukionValintaperusteet.A11KIELI + "-painokerroin", "1.5")
+                valintaperuste(LukionValintaperusteet.AIDINKIELI_JA_KIRJALLISUUS1 + LukionValintaperusteet.PAINOKERROIN_POSTFIX, "1.5"),
+                valintaperuste(LukionValintaperusteet.B1KIELI + LukionValintaperusteet.PAINOKERROIN_POSTFIX, "1.5"),
+                valintaperuste(LukionValintaperusteet.A11KIELI + LukionValintaperusteet.PAINOKERROIN_POSTFIX, "1.5")
         ));
 
-        Lukuarvofunktio lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(laajennaAlakaavat(LukionValintaperusteet.painotettavatArvosanat()).getFunktiokutsu());
+        Lukuarvofunktio lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(laajennaAlakaavat(LukionValintaperusteet.painotettuLukuaineidenKeskiarvo()).getFunktiokutsu());
         Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(hakukohde, hakemus, new ArrayList<Hakemus>(), lasku);
 
         assertTrue(new BigDecimal(8.0).compareTo(tulos.getTulos()) == 0);
@@ -170,11 +170,11 @@ public class LukionValintaperusteetTest {
         ));
 
         Hakukohde hakukohde = new Hakukohde(HAKUKOHDE_OID1, yhdistaMapit(
-                valintaperuste(LukionValintaperusteet.LIIKUNTA + "-painokerroin", "2.0"),
-                valintaperuste(LukionValintaperusteet.KUVATAIDE + "-painokerroin", "2.5")
+                valintaperuste(LukionValintaperusteet.LIIKUNTA + LukionValintaperusteet.PAINOKERROIN_POSTFIX, "2.0"),
+                valintaperuste(LukionValintaperusteet.KUVATAIDE + LukionValintaperusteet.PAINOKERROIN_POSTFIX, "2.5")
         ));
 
-        Lukuarvofunktio lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(laajennaAlakaavat(LukionValintaperusteet.painotettavatArvosanat()).getFunktiokutsu());
+        Lukuarvofunktio lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(laajennaAlakaavat(LukionValintaperusteet.painotettuLukuaineidenKeskiarvo()).getFunktiokutsu());
         Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(hakukohde, hakemus, new ArrayList<Hakemus>(), lasku);
 
         assertTrue(new BigDecimal(9.0).compareTo(tulos.getTulos()) == 0);

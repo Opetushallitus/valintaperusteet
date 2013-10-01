@@ -14,6 +14,8 @@ import java.util.List;
  * Time: 14.55
  */
 public class LukionValintaperusteet {
+    public static final String PAINOKERROIN_POSTFIX = "-painokerroin";
+
     public static final String AIDINKIELI_JA_KIRJALLISUUS1 = "AI";
     public static final String AIDINKIELI_JA_KIRJALLISUUS2 = "AI2";
 
@@ -92,24 +94,24 @@ public class LukionValintaperusteet {
     };
 
 
-    public static Laskentakaava painotettavatArvosanat() {
+    public static Laskentakaava painotettuLukuaineidenKeskiarvo() {
         List<GenericHelper.Painotus> painotukset = new ArrayList<GenericHelper.Painotus>();
         for (String aine : LUKUAINEET) {
             Funktiokutsu arvo = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(aine, false, Valintaperustelahde.HAETTAVA_ARVO));
-            Funktiokutsu painokerroin = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(aine + "-painokerroin", false, Valintaperustelahde.HAKUKOHTEEN_ARVO), 1.0);
+            Funktiokutsu painokerroin = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(aine + PAINOKERROIN_POSTFIX, false, Valintaperustelahde.HAKUKOHTEEN_ARVO), 1.0);
 
             painotukset.add(new GenericHelper.Painotus(painokerroin, arvo));
         }
 
         for (String aine : TAITO_JA_TAIDEAINEET) {
             Funktiokutsu arvo = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(aine, false, Valintaperustelahde.HAETTAVA_ARVO));
-            Funktiokutsu painokerroin = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(aine + "-painokerroin", false, Valintaperustelahde.HAKUKOHTEEN_ARVO));
+            Funktiokutsu painokerroin = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(aine + PAINOKERROIN_POSTFIX, false, Valintaperustelahde.HAKUKOHTEEN_ARVO));
 
             painotukset.add(new GenericHelper.Painotus(painokerroin, arvo));
         }
 
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
                 GenericHelper.luoPainotettuKeskiarvo(painotukset.toArray(new GenericHelper.Painotus[painotukset.size()])),
-                "Lukion valintaperusteet, painotettavat arvosanat");
+                "Lukion valintaperusteet, painotettu keskiarvo");
     }
 }
