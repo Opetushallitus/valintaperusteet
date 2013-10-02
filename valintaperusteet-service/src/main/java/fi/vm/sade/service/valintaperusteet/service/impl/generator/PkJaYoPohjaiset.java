@@ -105,6 +105,14 @@ public class PkJaYoPohjaiset {
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(GenericHelper.luoHaeLukuarvo(valintaperuste, konvs), nimi);
     }
 
+    public static Laskentakaava luoLisapistekaava(String nimi) {
+        ValintaperusteViite valintaperuste = GenericHelper.luoValintaperusteViite(nimi, true, Valintaperustelahde.SYOTETTAVA_ARVO);
+        List<Arvovalikonvertteriparametri> konvs = new ArrayList<Arvovalikonvertteriparametri>();
+        konvs.add(GenericHelper.luoArvovalikonvertteriparametri(0.0, 3.0, false));
+
+        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(GenericHelper.luoHaeLukuarvo(valintaperuste, konvs), nimi);
+    }
+
     public static Laskentakaava luoHakutoivejarjestysTasapistekaava() {
         Funktiokutsu nolla = GenericHelper.luoLukuarvo(0.0);
         List<Funktiokutsu> summattavat = new ArrayList<Funktiokutsu>();
@@ -366,10 +374,16 @@ public class PkJaYoPohjaiset {
                 peruskaava.getNimi() + " + " + kielikoekaava.getNimi());
     }
 
+    public static Laskentakaava luoYhdistettyPeruskaavaJaLisapistekaava(Laskentakaava peruskaava, Laskentakaava lisapistekaava) {
+        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
+                GenericHelper.luoSumma(peruskaava, lisapistekaava), peruskaava.getNimi() + " + " + lisapistekaava.getNimi());
+    }
+
     public static Laskentakaava luoYhdistettyPeruskaavaJaValintakoekaava(Laskentakaava peruskaava, Laskentakaava valintakoekaava) {
         Funktiokutsu yhdistetty = GenericHelper.luoSumma(peruskaava, valintakoekaava);
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(yhdistetty, peruskaava.getNimi() + " + " + valintakoekaava.getNimi());
     }
+
 
     /**
      * Ulkomailla suoritetulla pohjakoulutuksella tai oppivelvollisuuden suorittamisen keskeyttäneitä hakijoita
