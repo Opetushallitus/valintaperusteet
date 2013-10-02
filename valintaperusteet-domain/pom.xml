@@ -51,7 +51,14 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 		</dependency>
-
+<!-- Commons-Logging on loggaus jarjestelma siina missa SLF4J 
+        jos halutaan logitus SLF4J:lla niin taytyy kayttaa JCL-OVER-SLF4J:ta 
+        eli java commons logging over slf4j !!! -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-core-asl</artifactId>
