@@ -180,4 +180,8 @@ public class Valintaryhma extends BaseEntity {
     public void setValintakoekoodit(List<Valintakoekoodi> valintakoekoodit) {
         this.valintakoekoodit = valintakoekoodit;
     }
+
+    public void setHakijaryhmat(Set<Hakijaryhma> hakijaryhmat) {
+        this.hakijaryhmat = hakijaryhmat;
+    }
 }

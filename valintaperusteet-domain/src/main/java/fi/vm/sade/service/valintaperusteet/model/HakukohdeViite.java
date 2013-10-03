@@ -46,6 +46,9 @@ public class HakukohdeViite extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "hakukohdeViite")
     private Set<ValinnanVaihe> valinnanvaiheet = new HashSet<ValinnanVaihe>();
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "hakukohdeViite")
+    private Set<Hakijaryhma> hakijaryhmat = new HashSet<Hakijaryhma>();
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "hakukohde")
     private Set<Laskentakaava> laskentakaava = new HashSet<Laskentakaava>();
 
@@ -188,5 +191,13 @@ public class HakukohdeViite extends BaseEntity {
 
     public void setHakukohteenValintaperusteet(Map<String, HakukohteenValintaperuste> hakukohteenValintaperusteet) {
         this.hakukohteenValintaperusteet = hakukohteenValintaperusteet;
+    }
+
+    public Set<Hakijaryhma> getHakijaryhmat() {
+        return hakijaryhmat;
+    }
+
+    public void setHakijaryhmat(Set<Hakijaryhma> hakijaryhmat) {
+        this.hakijaryhmat = hakijaryhmat;
     }
 }

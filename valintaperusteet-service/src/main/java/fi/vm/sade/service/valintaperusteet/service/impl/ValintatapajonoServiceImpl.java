@@ -1,14 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
 import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
-import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
-import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
-import fi.vm.sade.service.valintaperusteet.model.ValinnanVaiheTyyppi;
-import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
-import fi.vm.sade.service.valintaperusteet.service.JarjestyskriteeriService;
-import fi.vm.sade.service.valintaperusteet.service.OidService;
-import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
-import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
+import fi.vm.sade.service.valintaperusteet.model.*;
+import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintatapajonoEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintatapajonoOidListaOnTyhjaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintatapajonoaEiVoiLisataException;
@@ -47,6 +41,9 @@ public class ValintatapajonoServiceImpl extends AbstractCRUDServiceImpl<Valintat
 
     @Autowired
     private JarjestyskriteeriService jarjestyskriteeriService;
+
+    @Autowired
+    private HakijaryhmaService hakijaryhmaService;
 
     private static ValintatapajonoKopioija kopioija = new ValintatapajonoKopioija();
 
@@ -140,6 +137,11 @@ public class ValintatapajonoServiceImpl extends AbstractCRUDServiceImpl<Valintat
         for (Jarjestyskriteeri jarjestyskriteeri : valintatapajono.getJarjestyskriteerit()) {
             jarjestyskriteeriService.delete(jarjestyskriteeri);
         }
+
+        for (Hakijaryhma hakijaryhma : valintatapajono.getHakijaryhmat()) {
+            hakijaryhmaService.delete(hakijaryhma);
+        }
+
 
         valintatapajonoDAO.remove(valintatapajono);
     }

@@ -31,18 +31,24 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
     public ValinnanVaihe readByOid(String oid) {
         QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
 
-        return from(valinnanVaihe).leftJoin(valinnanVaihe.masterValinnanVaihe).fetch()
-                .leftJoin(valinnanVaihe.valintaryhma).fetch().leftJoin(valinnanVaihe.hakukohdeViite).fetch()
-                .where(valinnanVaihe.oid.eq(oid)).singleResult(valinnanVaihe);
+        return from(valinnanVaihe)
+                .leftJoin(valinnanVaihe.masterValinnanVaihe).fetch()
+                .leftJoin(valinnanVaihe.valintaryhma).fetch()
+                .leftJoin(valinnanVaihe.hakukohdeViite).fetch()
+                .where(valinnanVaihe.oid.eq(oid))
+                .singleResult(valinnanVaihe);
     }
 
     @Override
     public List<ValinnanVaihe> haeKopiot(String oid) {
         QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
 
-        return from(valinnanVaihe).leftJoin(valinnanVaihe.masterValinnanVaihe).fetch()
-                .leftJoin(valinnanVaihe.valintaryhma).fetch().leftJoin(valinnanVaihe.hakukohdeViite).fetch()
-                .where(valinnanVaihe.masterValinnanVaihe.oid.eq(oid)).list(valinnanVaihe);
+        return from(valinnanVaihe)
+                .leftJoin(valinnanVaihe.masterValinnanVaihe).fetch()
+                .leftJoin(valinnanVaihe.valintaryhma).fetch()
+                .leftJoin(valinnanVaihe.hakukohdeViite).fetch()
+                .where(valinnanVaihe.masterValinnanVaihe.oid.eq(oid))
+                .list(valinnanVaihe);
     }
 
     @Override
@@ -60,8 +66,12 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
         ValinnanVaihe lastValinnanVaihe = from(hakukohde)
                 .leftJoin(hakukohde.valinnanvaiheet, vv)
                 .where(vv.id.notIn(
-                        subQuery().from(vv).where(vv.edellinenValinnanVaihe.isNotNull())
-                                .list(vv.edellinenValinnanVaihe.id)).and(hakukohde.oid.eq(hakukohdeOid)))
+                    subQuery()
+                            .from(vv)
+                            .where(vv.edellinenValinnanVaihe.isNotNull())
+                            .list(vv.edellinenValinnanVaihe.id)
+                )
+                .and(hakukohde.oid.eq(hakukohdeOid)))
                 .singleResult(vv);
 
         return lastValinnanVaihe;
@@ -72,8 +82,12 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
         QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
         QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
 
-        return new HashSet<String>(from(valintaryhma).leftJoin(valintaryhma.valinnanvaiheet, valinnanVaihe)
-                .where(valintaryhma.oid.eq(valintaryhmaOid)).list(valinnanVaihe.oid));
+        return new HashSet<String>(
+                from(valintaryhma)
+                    .leftJoin(valintaryhma.valinnanvaiheet, valinnanVaihe)
+                .where(valintaryhma.oid.eq(valintaryhmaOid))
+                .list(valinnanVaihe.oid)
+        );
     }
 
     @Override
@@ -81,8 +95,12 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
         QHakukohdeViite hakukohde = QHakukohdeViite.hakukohdeViite;
         QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
 
-        return new HashSet<String>(from(hakukohde).leftJoin(hakukohde.valinnanvaiheet, valinnanVaihe)
-                .where(hakukohde.oid.eq(hakukohdeOid)).list(valinnanVaihe.oid));
+        return new HashSet<String>(
+                from(hakukohde)
+                    .leftJoin(hakukohde.valinnanvaiheet, valinnanVaihe)
+                .where(hakukohde.oid.eq(hakukohdeOid))
+                .list(valinnanVaihe.oid)
+        );
     }
 
     @Override
@@ -93,8 +111,13 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
         ValinnanVaihe lastValinnanVaihe = from(valintaryhma)
                 .leftJoin(valintaryhma.valinnanvaiheet, vv)
                 .where(vv.id.notIn(
-                        subQuery().from(vv).where(vv.edellinenValinnanVaihe.isNotNull())
-                                .list(vv.edellinenValinnanVaihe.id)).and(valintaryhma.oid.eq(oid))).singleResult(vv);
+                        subQuery()
+                                .from(vv)
+                                .where(vv.edellinenValinnanVaihe.isNotNull())
+                                .list(vv.edellinenValinnanVaihe.id)
+                )
+                .and(valintaryhma.oid.eq(oid)))
+                .singleResult(vv);
 
         return lastValinnanVaihe;
     }
@@ -129,6 +152,7 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
     public boolean kuuluuSijoitteluun(String oid) {
         QValinnanVaihe vv = QValinnanVaihe.valinnanVaihe;
         QValintatapajono jono = QValintatapajono.valintatapajono;
+
         return from(jono)
                 .leftJoin(jono.valinnanVaihe, vv)
                 .where( vv.oid.eq(oid),
