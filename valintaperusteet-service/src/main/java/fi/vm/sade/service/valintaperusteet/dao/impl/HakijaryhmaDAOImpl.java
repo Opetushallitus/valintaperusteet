@@ -6,6 +6,7 @@ import com.mysema.query.types.EntityPath;
 import fi.vm.sade.generic.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.model.*;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ import java.util.List;
  * Time: 15.15
  * To change this template use File | Settings | File Templates.
  */
+@Repository
 public class HakijaryhmaDAOImpl extends AbstractJpaDAOImpl<Hakijaryhma, Long> implements HakijaryhmaDAO {
     protected JPAQuery from(EntityPath<?>... o) {
         return new JPAQuery(getEntityManager()).from(o);

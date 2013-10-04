@@ -34,9 +34,11 @@ public class Hakijaryhma extends BaseEntity implements LinkitettavaJaKopioitava<
     @ManyToMany(mappedBy = "hakijaryhmat", fetch = FetchType.LAZY)
     private Set<Valintatapajono> jonot = new HashSet<Valintatapajono>();
 
+    @JoinColumn(name = "valintaryhma_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Valintaryhma valintaryhma;
 
+    @JoinColumn(name = "hakukohde_viite_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private HakukohdeViite hakukohdeViite;
 

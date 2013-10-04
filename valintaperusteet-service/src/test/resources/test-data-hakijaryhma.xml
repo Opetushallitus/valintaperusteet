@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+
+    <hakijaryhma id="1" version="0" oid="1" nimi="hr1" kuvaus="hr1" kiintio="10" valintaryhma_id="1" laskentakaava_id="101" aktiivinen="true" edellinen_hakijaryhma_id="[NULL]" />
+    <hakijaryhma id="3" version="0" oid="3" nimi="hr3" kuvaus="hr3" kiintio="30" valintaryhma_id="1" laskentakaava_id="101" aktiivinen="true" edellinen_hakijaryhma_id="1" />
+    <hakijaryhma id="5" version="0" oid="5" nimi="hr5" kuvaus="hr5" kiintio="50" valintaryhma_id="1" laskentakaava_id="101" aktiivinen="true" edellinen_hakijaryhma_id="3" />
+
+    <hakijaryhma id="2" version="0" oid="2" nimi="hr2" kuvaus="hr2" kiintio="20" hakukohde_viite_id="1" laskentakaava_id="101" aktiivinen="true" edellinen_hakijaryhma_id="[NULL]" />
+    <hakijaryhma id="4" version="0" oid="4" nimi="hr4" kuvaus="hr4" kiintio="40" hakukohde_viite_id="1" laskentakaava_id="101" aktiivinen="true" edellinen_hakijaryhma_id="2" />
+    <hakijaryhma id="6" version="0" oid="6" nimi="hr6" kuvaus="hr6" kiintio="60" hakukohde_viite_id="1" laskentakaava_id="101" aktiivinen="true" edellinen_hakijaryhma_id="4" />
+
+
+    <valintaryhma id="1" version="0" oid="1" nimi="Valintaryhma 1" hakuOid="hakuoid1" parent_id="[NULL]"/>
+    <hakukohde_viite id="1" version="0" hakuoid="hakuoid1" oid="1" nimi="haku1" valintaryhma_id="1"
+                     manuaalisesti_siirretty="[NULL]"/>
+
+    <funktiokutsu id="102" version="0" funktionimi="TOTUUSARVO"/>
+    <syoteparametri id="102" version="0" avain="totuusarvo" arvo="true" funktiokutsu_id="102"/>
+
+    <laskentakaava id="101" version="0" on_luonnos="false" tyyppi="TOTUUSARVOFUNKTIO" nimi="kaava101"
+                   funktiokutsu_id="102"/>
+
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="1" version="0" valintaryhma_id="1"
+                    hakukohde_viite_id="[NULL]" oid="1" nimi="valinnanvaihe1" kuvaus="kuvaus1" aktiivinen="true"/>
+
+    <valintatapajono id="1" version="1" oid="1" aloituspaikat="10" nimi="jono1" kuvaus="kuvaus"
+                     tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="1" aktiivinen="true"
+                     ei_varasijatayttoa="false"/>
+
+    <valintatapajono id="2" version="1" oid="2" aloituspaikat="10" nimi="jono2" kuvaus="kuvaus"
+                     tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="1" aktiivinen="true"
+                     ei_varasijatayttoa="false"/>
+
+    <hakijaryhma_jono jono_id="1" hakijaryhma_id="1"/>
+    <hakijaryhma_jono jono_id="1" hakijaryhma_id="3"/>
+    <hakijaryhma_jono jono_id="1" hakijaryhma_id="5"/>
+
+    <hakijaryhma_jono jono_id="2" hakijaryhma_id="1"/>
+    <hakijaryhma_jono jono_id="2" hakijaryhma_id="3"/>
+</dataset>

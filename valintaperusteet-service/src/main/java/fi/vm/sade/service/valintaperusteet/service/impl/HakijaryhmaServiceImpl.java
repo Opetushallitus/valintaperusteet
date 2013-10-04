@@ -7,6 +7,8 @@ import fi.vm.sade.service.valintaperusteet.service.exception.*;
 import fi.vm.sade.service.valintaperusteet.util.HakijaryhmaKopioija;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -19,6 +21,8 @@ import java.util.List;
  * Time: 16.23
  * To change this template use File | Settings | File Templates.
  */
+@Service
+@Transactional
 public class HakijaryhmaServiceImpl extends AbstractCRUDServiceImpl<Hakijaryhma, Long, String> implements HakijaryhmaService {
 
     @Autowired
@@ -45,6 +49,7 @@ public class HakijaryhmaServiceImpl extends AbstractCRUDServiceImpl<Hakijaryhma,
 
     private Hakijaryhma haeHakijaryhma(String oid) {
         Hakijaryhma hakijaryhma = hakijaryhmaDAO.readByOid(oid);
+
         if (hakijaryhma == null) {
             throw new HakijaryhmaEiOleOlemassaException("Hakijaryhma (" + oid + ") ei ole olemassa", oid);
         }
