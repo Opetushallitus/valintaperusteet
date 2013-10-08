@@ -73,7 +73,7 @@ object Laskentakaavavalidaattori {
   private def tarkistaParametrit(funktiokutsu: Funktiokutsu): List[Validointivirhe] = {
     val funktiokuvaus = Funktiokuvaaja.annaFunktiokuvaus(funktiokutsu.getFunktionimi)._2
 
-    val annetutParametrit = funktiokutsu.getSyoteparametrit.toList
+    val annetutParametrit = funktiokutsu.getSyoteparametrit.filter(!_.getArvo.isEmpty).toList
     val vaaditutParametrit = funktiokuvaus.syoteparametrit
 
     val (pakolliset, eiPakolliset) = vaaditutParametrit.partition(_.pakollinen)

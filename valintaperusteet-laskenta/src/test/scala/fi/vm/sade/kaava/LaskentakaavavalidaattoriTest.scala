@@ -2,7 +2,7 @@ package fi.vm.sade.kaava
 
 import org.scalatest.FunSuite
 import fi.vm.sade.kaava.LaskentaTestUtil._
-import fi.vm.sade.service.valintaperusteet.model.{Funktioargumentti, Funktionimi}
+import fi.vm.sade.service.valintaperusteet.model.{Valintaperustelahde, Funktioargumentti, Funktionimi}
 import fi.vm.sade.kaava.LaskentaTestUtil.Funktiokutsu
 import java.math.BigDecimal
 import fi.vm.sade.service.valintaperusteet.service.validointi.virhe.{Validointivirhe, Virhetyyppi}
@@ -971,5 +971,19 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(validationMessages.size == 1)
     assert(Virhetyyppi.VAARA_MAARA_FUNKTIOARGUMENTTEJA == validationMessages.get(0).asInstanceOf[Validointivirhe].getVirhetyyppi)
+  }
+
+  test("syoteparametrin arvo tyhja") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HAELUKUARVO,
+      valintaperustetunniste = ValintaperusteViite(
+        onPakollinen = true,
+        tunniste = "tunniste1",
+        lahde = Valintaperustelahde.HAETTAVA_ARVO),
+      syoteparametrit = List(Syoteparametri(avain = "oletusarvo", ""))
+    )
+
+    val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
+    assert(validationMessages.size == 0)
   }
 }
