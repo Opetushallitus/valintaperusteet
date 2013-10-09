@@ -79,6 +79,11 @@ public class HakijaryhmaServiceImpl extends AbstractCRUDServiceImpl<Hakijaryhma,
     }
 
     @Override
+    public List<Hakijaryhma> findByValintaryhma(String oid) {
+        return hakijaryhmaDAO.findByValintaryhma(oid);
+    }
+
+    @Override
     public Hakijaryhma readByOid(String oid) {
         return haeHakijaryhma(oid);
     }

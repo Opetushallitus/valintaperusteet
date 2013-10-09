@@ -12,6 +12,8 @@ public interface HakijaryhmaService extends CRUDService<Hakijaryhma, Long, Strin
 
     List<Hakijaryhma> findByHakukohde(String oid);
 
+    List<Hakijaryhma> findByValintaryhma(String oid);
+
     Hakijaryhma readByOid(String oid);
 
     void liitaHakijaryhmaValintatapajonolle(String valintatapajonoOid, String hakijaryhmaOid);
@@ -19,8 +21,6 @@ public interface HakijaryhmaService extends CRUDService<Hakijaryhma, Long, Strin
     Hakijaryhma lisaaHakijaryhmaValintaryhmalle(String valintaryhmaOid, Hakijaryhma hakijaryhma);
 
     Hakijaryhma lisaaHakijaryhmaHakukohteelle(String hakukohdeOid, Hakijaryhma hakijaryhma);
-
-//    void kopioiHakijaryhmatMasterValintatapajonoltaKopiolle(Valintatapajono lisatty, Valintatapajono master);
 
     List<Hakijaryhma> jarjestaHakijaryhmat(List<String> oids);
 }
