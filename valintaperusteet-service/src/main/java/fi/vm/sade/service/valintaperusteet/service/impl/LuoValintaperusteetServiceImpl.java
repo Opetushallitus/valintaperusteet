@@ -379,19 +379,6 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                 transactionManager.commit(tx);
                 tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
-                String lisapistetunniste = nimi + ", lisäpiste";
-                ValintakoeDTO lisapiste = new ValintakoeDTO();
-                lisapiste.setAktiivinen(false);
-                lisapiste.setKuvaus(lisapistetunniste);
-                lisapiste.setTunniste(lisapistetunniste);
-                lisapiste.setNimi(lisapistetunniste);
-
-                lisapiste.setLaskentakaavaId(null);
-                valintakoeService.lisaaValintakoeValinnanVaiheelle(valintakoevaihe.getOid(), lisapiste);
-
-                transactionManager.commit(tx);
-                tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
-
                 ValinnanVaihe valinnanVaihe = new ValinnanVaihe();
                 valinnanVaihe.setAktiivinen(true);
                 valinnanVaihe.setKuvaus("Varsinainen valinnanvaihe");
@@ -420,11 +407,6 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
                 Laskentakaava valintakoekaava = asetaValintaryhmaJaTallennaKantaan(
                         PkJaYoPohjaiset.luoValintakoekaava(valintakoetunniste), valintaryhma);
-
-                transactionManager.commit(tx);
-                tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
-
-                Laskentakaava lisapistekaava = asetaValintaryhmaJaTallennaKantaan(PkJaYoPohjaiset.luoLisapistekaava(lisapistetunniste), valintaryhma);
 
                 transactionManager.commit(tx);
 
@@ -465,10 +447,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                     Laskentakaava ensisijainenJarjestyskriteeri = null;
 
                     Laskentakaava peruskaava = peruskaavat.get(k);
-                    Laskentakaava yhdistettyPeruskaavaJaLisapistekaava =
-                            asetaValintaryhmaJaTallennaKantaan(PkJaYoPohjaiset.luoYhdistettyPeruskaavaJaLisapistekaava(peruskaava, lisapistekaava), kielivalintaryhma);
 
-                    Laskentakaava yhdistettyPeruskaavaValintakoekaavaJaLisapistekaava = null;
                     if (poikkeavatValintaryhmat.contains(hakukohdekoodi.getUri())) {
                         ensisijainenJarjestyskriteeri = asetaValintaryhmaJaTallennaKantaan(
                                 PkJaYoPohjaiset.luoPoikkeavanValintaryhmanLaskentakaava(
@@ -476,8 +455,6 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                     } else {
                         ensisijainenJarjestyskriteeri = asetaValintaryhmaJaTallennaKantaan(
                                 PkJaYoPohjaiset.luoYhdistettyPeruskaavaJaValintakoekaava(peruskaava, valintakoekaava), kielivalintaryhma);
-
-                        yhdistettyPeruskaavaValintakoekaavaJaLisapistekaava = asetaValintaryhmaJaTallennaKantaan(PkJaYoPohjaiset.luoYhdistettyPeruskaavaJaLisapistekaava(ensisijainenJarjestyskriteeri, lisapistekaava), kielivalintaryhma);
                     }
                     transactionManager.commit(tx);
 
@@ -503,8 +480,8 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                     transactionManager.commit(tx);
 
                     insertKoe(kielivalintaryhma, valintakoetunniste, ensisijainenJarjestyskriteeri, valintakoekaava, tasasijakriteerit,
-                            opetuskieli, hakukohdekoodi, yhdistettyPeruskaavaValintakoekaavaJaLisapistekaava);
-                    insertEiKoetta(kielivalintaryhma, peruskaava, tasasijakriteerit, opetuskieli, hakukohdekoodi, yhdistettyPeruskaavaJaLisapistekaava);
+                            opetuskieli, hakukohdekoodi);
+                    insertEiKoetta(kielivalintaryhma, peruskaava, tasasijakriteerit, opetuskieli, hakukohdekoodi);
                 }
             }
         } finally {
@@ -518,7 +495,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
     private void insertKoe(Valintaryhma kielivalintaryhma, String valintakoetunniste,
                            Laskentakaava peruskaavaJaValintakoekaava, Laskentakaava valintakoekaava,
                            Laskentakaava[] tasasijakriteerit, Opetuskielikoodi opetuskielikoodi,
-                           Hakukohdekoodi hakukohdekoodi, Laskentakaava yhdistettyPeruskaavaValintakoekaavaJaLisapistekaava) {
+                           Hakukohdekoodi hakukohdekoodi) {
         TransactionStatus tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
         Valintaryhma koevalintaryhma = new Valintaryhma();
@@ -599,21 +576,11 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         }
 
         transactionManager.commit(tx);
-
-        if (yhdistettyPeruskaavaValintakoekaavaJaLisapistekaava != null) {
-            tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
-            Jarjestyskriteeri jk = new Jarjestyskriteeri();
-            jk.setAktiivinen(false);
-            jk.setMetatiedot(yhdistettyPeruskaavaValintakoekaavaJaLisapistekaava.getNimi());
-            jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(jono.getOid(), jk, null, yhdistettyPeruskaavaValintakoekaavaJaLisapistekaava.getId());
-            transactionManager.commit(tx);
-        }
-
     }
 
     private void insertEiKoetta(Valintaryhma kielivalintaryhma, Laskentakaava peruskaava,
                                 Laskentakaava[] tasasijakriteerit, Opetuskielikoodi opetuskielikoodi,
-                                Hakukohdekoodi hakukohdekoodi, Laskentakaava yhdistettyPeruskaavaJaLisapistekaava) {
+                                Hakukohdekoodi hakukohdekoodi) {
         TransactionStatus tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
         Valintaryhma koe = new Valintaryhma();
@@ -649,13 +616,6 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
             jk.setMetatiedot(kaava.getNimi());
             jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(jono.getOid(), jk, null, kaava.getId());
         }
-        transactionManager.commit(tx);
-
-        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
-        Jarjestyskriteeri jk = new Jarjestyskriteeri();
-        jk.setAktiivinen(false);
-        jk.setMetatiedot(yhdistettyPeruskaavaJaLisapistekaava.getNimi());
-        jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(jono.getOid(), jk, null, yhdistettyPeruskaavaJaLisapistekaava.getId());
         transactionManager.commit(tx);
     }
 
