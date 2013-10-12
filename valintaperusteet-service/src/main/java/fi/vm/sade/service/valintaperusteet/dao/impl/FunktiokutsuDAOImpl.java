@@ -124,7 +124,10 @@ public class FunktiokutsuDAOImpl extends AbstractJpaDAOImpl<Funktiokutsu, Long> 
                 .leftJoin(funktiokutsu.funktioargumentit).fetch()
                 .leftJoin(funktiokutsu.syoteparametrit).fetch()
                 .leftJoin(funktiokutsu.valintaperuste).fetch()
-                .where(hakukohde.oid.in(hakukohdeOids))
+                .where(hakukohde.oid.in(hakukohdeOids)
+                        .and(vaihe.aktiivinen.isTrue())
+                        .and(jono.aktiivinen.isTrue())
+                        .and(kriteeri.aktiivinen.isTrue()))
                 .distinct()
                 .list(funktiokutsu);
     }
