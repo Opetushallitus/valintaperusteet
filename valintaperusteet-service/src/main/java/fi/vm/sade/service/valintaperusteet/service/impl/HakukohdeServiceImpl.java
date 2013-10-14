@@ -181,6 +181,7 @@ public class HakukohdeServiceImpl extends AbstractCRUDServiceImpl<HakukohdeViite
         kopio.setOid(hakukohdeViite.getOid());
         kopio.setNimi(hakukohdeViite.getNimi());
         kopio.setTila(hakukohdeViite.getTila());
+        kopio.setTarjoajaOid(hakukohdeViite.getTarjoajaOid());
         return kopio;
     }
 
