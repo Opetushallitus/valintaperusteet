@@ -39,6 +39,12 @@ public class ValintaperusteViite extends BaseEntity {
     @Column(name = "on_pakollinen", nullable = false)
     private Boolean onPakollinen;
 
+    // Jos valintaperusteen lähde on hakukohde, voidaan epäsuoralla viittauksella hakea
+    // hakukohteelta tunniste, jolla viitataan hakemuksen arvoon
+    @JsonView(JsonViews.Basic.class)
+    @Column(name = "epasuora_viittaus", nullable = true)
+    private Boolean epasuoraViittaus;
+
     public String getTunniste() {
         return tunniste;
     }
@@ -77,6 +83,14 @@ public class ValintaperusteViite extends BaseEntity {
 
     public void setOnPakollinen(Boolean onPakollinen) {
         this.onPakollinen = onPakollinen;
+    }
+
+    public Boolean getEpasuoraViittaus() {
+        return epasuoraViittaus;
+    }
+
+    public void setEpasuoraViittaus(boolean epasuoraViittaus) {
+        this.epasuoraViittaus = epasuoraViittaus;
     }
 
     @Transient

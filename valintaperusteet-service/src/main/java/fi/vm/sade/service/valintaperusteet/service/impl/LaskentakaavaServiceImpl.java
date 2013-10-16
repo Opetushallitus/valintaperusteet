@@ -154,6 +154,10 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             if (vp.getOnPakollinen() == null) {
                 vp.setOnPakollinen(false);
             }
+
+            if (vp.getEpasuoraViittaus() == null) {
+                vp.setEpasuoraViittaus(false);
+            }
         }
 
         for (Funktioargumentti arg : fk.getFunktioargumentit()) {
