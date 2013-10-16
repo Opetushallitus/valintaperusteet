@@ -117,12 +117,14 @@ object LaskentaTestUtil {
   object ValintaperusteViite {
     def apply(onPakollinen: java.lang.Boolean,
               tunniste: String,
-              lahde: Valintaperustelahde = Valintaperustelahde.HAETTAVA_ARVO) = {
+              lahde: Valintaperustelahde = Valintaperustelahde.HAETTAVA_ARVO,
+              epasuoraViittaus: Boolean = false) = {
       val viite = new ValintaperusteViite
       viite.setKuvaus("")
       viite.setLahde(lahde)
       viite.setOnPakollinen(onPakollinen)
       viite.setTunniste(tunniste)
+      viite.setEpasuoraViittaus(epasuoraViittaus)
 
       viite
     }

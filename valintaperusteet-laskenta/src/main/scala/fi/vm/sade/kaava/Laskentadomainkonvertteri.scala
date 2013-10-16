@@ -77,7 +77,8 @@ object Laskentadomainkonvertteri {
     valintaperuste.getLahde match {
       case Valintaperustelahde.HAETTAVA_ARVO => HakemuksenValintaperuste(valintaperuste.getTunniste,
         valintaperuste.getOnPakollinen)
-      case Valintaperustelahde.HAKUKOHTEEN_ARVO => HkValintaperuste(valintaperuste.getTunniste, valintaperuste.getOnPakollinen)
+      case Valintaperustelahde.HAKUKOHTEEN_ARVO =>
+        HkValintaperuste(valintaperuste.getTunniste, valintaperuste.getOnPakollinen, Option(valintaperuste.getEpasuoraViittaus).map(Boolean2boolean(_)).getOrElse(false))
       case Valintaperustelahde.SYOTETTAVA_ARVO => SyotettavaValintaperuste(valintaperuste.getTunniste,
         valintaperuste.getOnPakollinen, valintaperuste.getOsallistuminenTunniste)
     }
