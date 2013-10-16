@@ -6,12 +6,12 @@ import fi.vm.sade.kaava.LaskentaTestUtil._
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskin
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
 import scala.collection.JavaConversions._
-import fi.vm.sade.kaava.LaskentaTestUtil.Hakemus
 import java.math.BigDecimal
-import fi.vm.sade.service.valintaperusteet.laskenta.api.{Laskentatulos, Hakukohde, Osallistuminen}
+import fi.vm.sade.service.valintaperusteet.laskenta.api.{Hakemus, Laskentatulos, Hakukohde, Osallistuminen}
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.VirheMetatieto.VirheMetatietotyyppi
 import java.util
 import java.lang.Boolean
+import fi.vm.sade.kaava.LaskentaTestUtil.Hakemus
 
 /**
  * User: kwuoti
@@ -2029,6 +2029,21 @@ class LaskentaIntegraatioTest extends FunSuite {
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val tulos = Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, List(), lasku)
     assert(tulos.getTulos.compareTo(new BigDecimal("32.5")) == 0)
+    assertTilaHyvaksyttavissa(tulos.getTila)
+  }
+
+  test("hae hakukohteen valintaperuste, epasuora viittaus") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HAELUKUARVO,
+      valintaperustetunniste = ValintaperusteViite(false, "hakukohteenTunniste", Valintaperustelahde.HAKUKOHTEEN_ARVO, true)
+    )
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val hakukohde = new Hakukohde("hakukohdeOid", Map("hakukohteenTunniste" -> "hakemuksenTunniste"))
+    val hakemus = new Hakemus("oid", Map[java.lang.Integer, String](), Map("hakemuksenTunniste" -> "100.0"))
+
+    val tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemus, List(hakemus), lasku)
+    assert(tulos.getTulos.compareTo(new BigDecimal("100.0")) == 0)
     assertTilaHyvaksyttavissa(tulos.getTila)
   }
 }

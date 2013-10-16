@@ -257,16 +257,24 @@ private class Laskin private(private val hakukohde: Hakukohde,
         val (_, konvertoitu, tilat) = haeValintaperusteenArvoHakemukselta(tunniste, pakollinen)
         (konvertoitu, tilat)
       }
-      case HakukohteenValintaperuste(tunniste, pakollinen) => {
-        hakukohde.valintaperusteet.get(tunniste).filter(!_.trim.isEmpty).map(konv(_)).getOrElse {
-          val tila = if (pakollinen) new Virhetila("Hakukohteen valintaperustetta " + tunniste + " ei ole määritelty",
-            new HakukohteenValintaperusteMaarittelemattaVirhe(tunniste))
-          else new Hyvaksyttavissatila
+      case HakukohteenValintaperuste(tunniste, pakollinen, epasuoraViittaus) => {
+        hakukohde.valintaperusteet.get(tunniste).filter(!_.trim.isEmpty) match {
+          case Some(arvo) => {
+            if (epasuoraViittaus) {
+              val (_, konvertoitu, tilat) = haeValintaperusteenArvoHakemukselta(arvo, pakollinen)
+              (konvertoitu, tilat)
+            } else konv(arvo)
+          }
+          case None => {
+            val tila = if (epasuoraViittaus || pakollinen) new Virhetila("Hakukohteen valintaperustetta " + tunniste + " ei ole määritelty",
+              new HakukohteenValintaperusteMaarittelemattaVirhe(tunniste))
+            else new Hyvaksyttavissatila
 
-          val arvo = if (!oletusarvo.isEmpty) oletusarvo
-          else None
+            val arvo = if (!oletusarvo.isEmpty) oletusarvo
+            else None
 
-          (arvo, List(tila))
+            (arvo, List(tila))
+          }
         }
       }
     }
