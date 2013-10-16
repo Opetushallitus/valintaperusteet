@@ -138,11 +138,6 @@ public class ValintatapajonoServiceImpl extends AbstractCRUDServiceImpl<Valintat
             jarjestyskriteeriService.delete(jarjestyskriteeri);
         }
 
-        for (Hakijaryhma hakijaryhma : valintatapajono.getHakijaryhmat()) {
-            hakijaryhmaService.delete(hakijaryhma);
-        }
-
-
         valintatapajonoDAO.remove(valintatapajono);
     }
 
@@ -204,6 +199,7 @@ public class ValintatapajonoServiceImpl extends AbstractCRUDServiceImpl<Valintat
 
         Valintatapajono lisatty = valintatapajonoDAO.insert(kopio);
         jarjestyskriteeriService.kopioiJarjestyskriteeritMasterValintatapajonoltaKopiolle(lisatty, master);
+
         return lisatty;
     }
 

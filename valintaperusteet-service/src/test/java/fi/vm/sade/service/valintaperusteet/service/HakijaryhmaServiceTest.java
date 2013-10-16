@@ -86,6 +86,22 @@ public class HakijaryhmaServiceTest {
         assertNull(hakijaryhma);
 
     }
+
+    @Test
+    public void testLisaaHakijaryhmaValintaryhmalle() {
+        {
+            // valintaryhma id 1
+            //      valinnanvaihe id 1
+            //          valintatapajono id 1
+            //              hakijaryhma 1
+            //              hakijaryhma 3
+            //              hakijaryhma 5
+            //          valintatapajono id 2
+            //              hakijaryhma 1
+            //              hakijaryhma 3
+
+        }
+    }
 //
 //    @Test
 //    public void testLisaaValinnanVaiheValintaryhmalle() {

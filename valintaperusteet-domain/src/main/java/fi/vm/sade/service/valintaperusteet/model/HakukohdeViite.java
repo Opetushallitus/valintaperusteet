@@ -200,4 +200,9 @@ public class HakukohdeViite extends BaseEntity {
     public void setHakijaryhmat(Set<Hakijaryhma> hakijaryhmat) {
         this.hakijaryhmat = hakijaryhmat;
     }
+
+    public void addHakijaryhma(Hakijaryhma kopio) {
+        kopio.setHakukohdeViite(this);
+        this.getHakijaryhmat().add(kopio);
+    }
 }

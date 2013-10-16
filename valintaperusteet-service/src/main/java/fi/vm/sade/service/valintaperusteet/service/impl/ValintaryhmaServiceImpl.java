@@ -3,6 +3,7 @@ package fi.vm.sade.service.valintaperusteet.service.impl;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
+import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaService;
 import fi.vm.sade.service.valintaperusteet.service.OidService;
 import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
 import fi.vm.sade.service.valintaperusteet.service.ValintaryhmaService;
@@ -29,6 +30,9 @@ public class ValintaryhmaServiceImpl extends AbstractCRUDServiceImpl<Valintaryhm
 
     @Autowired
     private ValinnanVaiheService valinnanVaiheService;
+
+    @Autowired
+    private HakijaryhmaService hakijaryhmaService;
 
     @Autowired
     private ValinnanVaiheDAO valinnanVaiheDAO;
@@ -67,6 +71,7 @@ public class ValintaryhmaServiceImpl extends AbstractCRUDServiceImpl<Valintaryhm
         valintaryhma.setYlavalintaryhma(parent);
         Valintaryhma inserted = valintaryhmaDAO.insert(valintaryhma);
         valinnanVaiheService.kopioiValinnanVaiheetParentilta(inserted, parent);
+        hakijaryhmaService.kopioiHakijaryhmatParentilta(inserted, parent);
         return inserted;
     }
 

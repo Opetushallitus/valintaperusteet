@@ -5,7 +5,9 @@ import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.*;
 import fi.vm.sade.service.valintaperusteet.util.HakijaryhmaKopioija;
+import fi.vm.sade.service.valintaperusteet.util.HakijaryhmaUtil;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
+import fi.vm.sade.service.valintaperusteet.util.ValinnanVaiheUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,6 +42,9 @@ public class HakijaryhmaServiceImpl extends AbstractCRUDServiceImpl<Hakijaryhma,
     @Autowired
     private ValintatapajonoService valintapajonoService;
 
+    @Autowired
+    private LaskentakaavaService laskentakaavaService;
+
     private static HakijaryhmaKopioija kopioija = new HakijaryhmaKopioija();
 
     @Autowired
@@ -58,10 +63,10 @@ public class HakijaryhmaServiceImpl extends AbstractCRUDServiceImpl<Hakijaryhma,
     }
 
     @Override
-    public void deleteByOid(String oid) {
+    public void deleteByOid(String oid, boolean skipInheritedCheck) {
         Hakijaryhma hakijaryhma = haeHakijaryhma(oid);
 
-        if (hakijaryhma.getMaster() != null) {
+        if (!skipInheritedCheck && hakijaryhma.getMaster() != null) {
             throw new HakijaryhmaaEiVoiPoistaaException("hakijaryhma on peritty.");
         }
 
@@ -111,6 +116,8 @@ public class HakijaryhmaServiceImpl extends AbstractCRUDServiceImpl<Hakijaryhma,
 
         hakijaryhma.setOid(oidService.haeHakijaryhmaOid());
         hakijaryhma.setValintaryhma(valintaryhma);
+
+        hakijaryhma.setLaskentakaava(laskentakaavaService.haeMallinnettuKaava(hakijaryhma.getLaskentakaavaId()));
 
         hakijaryhma.setEdellinen(edellinenHakijaryhma);
         Hakijaryhma lisatty = hakijaryhmaDAO.insert(hakijaryhma);
@@ -186,6 +193,8 @@ public class HakijaryhmaServiceImpl extends AbstractCRUDServiceImpl<Hakijaryhma,
         hakijaryhma.setOid(oidService.haeHakijaryhmaOid());
         hakijaryhma.setHakukohdeViite(hakukohde);
 
+        hakijaryhma.setLaskentakaava(laskentakaavaService.haeMallinnettuKaava(hakijaryhma.getLaskentakaavaId()));
+
         hakijaryhma.setEdellinen(edellinenHakijaryhma);
         Hakijaryhma lisatty = hakijaryhmaDAO.insert(hakijaryhma);
 
@@ -207,6 +216,56 @@ public class HakijaryhmaServiceImpl extends AbstractCRUDServiceImpl<Hakijaryhma,
         } else {
             return jarjestaHakijaryhmat(hakijaryhma.getHakukohdeViite(), oids);
         }
+    }
+
+    @Override
+    public void kopioiHakijaryhmatParentilta(Valintaryhma inserted, Valintaryhma parent) {
+        Hakijaryhma hakijaryhma = hakijaryhmaDAO.haeValintaryhmanViimeinenHakijaryhma(parent.getOid());
+        kopioiHakijaryhmatRekursiivisesti(inserted, hakijaryhma);
+    }
+
+    @Override
+    public void kopioiHakijaryhmatParentilta(HakukohdeViite inserted, Valintaryhma parent) {
+        Hakijaryhma hakijaryhma = hakijaryhmaDAO.haeValintaryhmanViimeinenHakijaryhma(parent.getOid());
+        kopioiHakijaryhmatRekursiivisesti(inserted, hakijaryhma);
+    }
+
+    private Hakijaryhma kopioiHakijaryhmatRekursiivisesti(Valintaryhma valintaryhma, Hakijaryhma master) {
+        if (master == null) {
+            return null;
+        }
+
+        Hakijaryhma kopio = HakijaryhmaUtil.teeKopioMasterista(master);
+        kopio.setOid(oidService.haeHakijaryhmaOid());
+        valintaryhma.addHakijaryhma(kopio);
+        Hakijaryhma edellinen = kopioiHakijaryhmatRekursiivisesti(valintaryhma,
+                master.getEdellinen());
+        if (edellinen != null) {
+            kopio.setEdellinen(edellinen);
+            edellinen.setSeuraava(kopio);
+        }
+        Hakijaryhma lisatty = hakijaryhmaDAO.insert(kopio);
+
+        return lisatty;
+    }
+
+    private Hakijaryhma kopioiHakijaryhmatRekursiivisesti(HakukohdeViite hakukohde, Hakijaryhma master) {
+        if (master == null) {
+            return null;
+        }
+
+        Hakijaryhma kopio = HakijaryhmaUtil.teeKopioMasterista(master);
+        kopio.setOid(oidService.haeHakijaryhmaOid());
+        hakukohde.addHakijaryhma(kopio);
+        Hakijaryhma edellinen = kopioiHakijaryhmatRekursiivisesti(hakukohde,
+                master.getEdellinen());
+        if (edellinen != null) {
+            kopio.setEdellinen(edellinen);
+            edellinen.setSeuraava(kopio);
+        }
+        Hakijaryhma lisatty = hakijaryhmaDAO.insert(kopio);
+
+        return lisatty;
     }
 
     private List<Hakijaryhma> jarjestaHakijaryhmat(HakukohdeViite hakukohde, List<String> oids) {

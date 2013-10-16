@@ -25,6 +25,8 @@ public class HakijaryhmaKopioija implements Kopioija<Hakijaryhma> {
 
         to.setKiintio(from.getKiintio());
 
+        to.setLaskentakaava(from.getLaskentakaava());
+
         if (StringUtils.isNotBlank(from.getKuvaus())) {
             to.setKuvaus(from.getKuvaus());
         }
@@ -47,5 +49,6 @@ public class HakijaryhmaKopioija implements Kopioija<Hakijaryhma> {
 
         kopio.setKuvaus(paivitettyMaster.getKuvaus());
         kopio.setNimi(paivitettyMaster.getNimi());
+        kopio.setLaskentakaava(paivitettyMaster.getLaskentakaava());
     }
 }

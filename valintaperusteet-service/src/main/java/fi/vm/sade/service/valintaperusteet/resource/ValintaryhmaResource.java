@@ -44,6 +44,12 @@ public class ValintaryhmaResource {
     @Autowired
     private ValintakoekoodiService valintakoekoodiService;
 
+    @Autowired
+    private HakijaryhmaService hakijaryhmaService;
+
+    @Autowired
+    private OidService oidService;
+
     protected final static Logger LOGGER = LoggerFactory.getLogger(ValintaryhmaResource.class);
 
     @GET
@@ -167,6 +173,29 @@ public class ValintaryhmaResource {
             e.printStackTrace();
             LOGGER.error("Error creating valinnanvaihe.", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+
+
+    @PUT
+    @Path("{valintaryhmaOid}/hakijaryhma")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @JsonView({JsonViews.Basic.class})
+    @Secured({CRUD})
+    public Response insertHakijaryhma(@PathParam("valintaryhmaOid") String valintaryhamOid,
+                                      Hakijaryhma hakijaryhma) {
+        try {
+            hakijaryhma.setOid(oidService.haeHakijaryhmaOid());
+
+            hakijaryhma = hakijaryhmaService.lisaaHakijaryhmaValintaryhmalle(
+                    valintaryhamOid,
+                    hakijaryhma);
+            return Response.status(Response.Status.CREATED).entity(hakijaryhma).build();
+        } catch (Exception e) {
+            LOGGER.error("Error creating hakijaryhma.", e);
+            return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }
 

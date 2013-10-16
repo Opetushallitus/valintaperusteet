@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface HakijaryhmaService extends CRUDService<Hakijaryhma, Long, String> {
 
-    void deleteByOid(String oid);
+    void deleteByOid(String oid, boolean skipInheritedCheck);
 
     List<Hakijaryhma> findHakijaryhmaByJono(String oid);
 
@@ -23,4 +23,7 @@ public interface HakijaryhmaService extends CRUDService<Hakijaryhma, Long, Strin
     Hakijaryhma lisaaHakijaryhmaHakukohteelle(String hakukohdeOid, Hakijaryhma hakijaryhma);
 
     List<Hakijaryhma> jarjestaHakijaryhmat(List<String> oids);
+
+    void kopioiHakijaryhmatParentilta(Valintaryhma inserted, Valintaryhma parent);
+    void kopioiHakijaryhmatParentilta(HakukohdeViite inserted, Valintaryhma parent);
 }

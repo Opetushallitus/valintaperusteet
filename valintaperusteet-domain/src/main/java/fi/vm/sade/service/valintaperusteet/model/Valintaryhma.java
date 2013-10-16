@@ -149,6 +149,11 @@ public class Valintaryhma extends BaseEntity {
         this.getValinnanvaiheet().add(valinnanVaihe);
     }
 
+    public void addHakijaryhma(Hakijaryhma hakijaryhma) {
+        hakijaryhma.setValintaryhma(this);
+        this.getHakijaryhmat().add(hakijaryhma);
+    }
+
     public Set<Laskentakaava> getLaskentakaava() {
         return laskentakaava;
     }

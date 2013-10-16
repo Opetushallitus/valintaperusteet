@@ -4,6 +4,7 @@ import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.*;
+import fi.vm.sade.service.valintaperusteet.service.impl.ValinnanVaiheServiceImpl;
 import org.codehaus.jackson.map.annotate.JsonView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +52,13 @@ public class HakukohdeResource {
     LaskentakaavaService laskentakaavaService;
 
     @Autowired
+    private HakijaryhmaService hakijaryhmaService;
+
+    @Autowired
     private OidService oidService;
+
+    public HakukohdeResource() {
+    }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -162,6 +169,26 @@ public class HakukohdeResource {
             return Response.status(Response.Status.CREATED).entity(valinnanVaihe).build();
         } catch (Exception e) {
             LOGGER.error("Error creating valinnanvaihe.", e);
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+    }
+
+    @PUT
+    @Path("{hakukohdeOid}/hakijaryhma")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @JsonView({JsonViews.Basic.class})
+    @Secured({CRUD})
+    public Response insertHakijaryhma(@PathParam("hakukohdeOid") String hakukohdeOid,
+                                        Hakijaryhma hakijaryhma) {
+        try {
+            hakijaryhma.setOid(oidService.haeHakijaryhmaOid());
+
+            hakijaryhma = hakijaryhmaService.lisaaHakijaryhmaHakukohteelle(hakukohdeOid,
+                    hakijaryhma);
+            return Response.status(Response.Status.CREATED).entity(hakijaryhma).build();
+        } catch (Exception e) {
+            LOGGER.error("Error creating hakijaryhma.", e);
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }

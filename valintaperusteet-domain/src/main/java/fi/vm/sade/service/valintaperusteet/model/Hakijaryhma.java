@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.persistence.*;
 
 import fi.vm.sade.generic.model.BaseEntity;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonView;
 
 @Entity
@@ -174,5 +175,27 @@ public class Hakijaryhma extends BaseEntity implements LinkitettavaJaKopioitava<
     @Override
     public void setKopiot(Set<Hakijaryhma> kopiot) {
         this.kopiot = kopiot;
+    }
+
+    @JsonProperty(value = "inheritance")
+    @JsonView(JsonViews.Basic.class)
+    @Transient
+    private Boolean getInheritance() {
+        return getMaster() != null;
+    }
+
+    @JsonProperty("laskentakaava_id")
+    @JsonView(JsonViews.Basic.class)
+    @Transient
+    public Long getLaskentakaavaId() {
+        return laskentakaava.getId();
+    }
+
+    @JsonProperty("laskentakaava_id")
+    @JsonView(JsonViews.Basic.class)
+    @Transient
+    public void setLaskentakaavaId(Long id) {
+        laskentakaava = new Laskentakaava();
+        laskentakaava.setId(id);
     }
 }

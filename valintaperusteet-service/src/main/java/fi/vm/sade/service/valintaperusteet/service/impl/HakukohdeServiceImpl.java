@@ -3,14 +3,8 @@ package fi.vm.sade.service.valintaperusteet.service.impl;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
-import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
-import fi.vm.sade.service.valintaperusteet.model.Hakukohdekoodi;
-import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
-import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
-import fi.vm.sade.service.valintaperusteet.service.HakukohdeService;
-import fi.vm.sade.service.valintaperusteet.service.OidService;
-import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
-import fi.vm.sade.service.valintaperusteet.service.ValintaryhmaService;
+import fi.vm.sade.service.valintaperusteet.model.*;
+import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakukohdeViiteEiOleOlemassaException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +37,9 @@ public class HakukohdeServiceImpl extends AbstractCRUDServiceImpl<HakukohdeViite
 
     @Autowired
     private ValinnanVaiheDAO valinnanVaiheDAO;
+
+    @Autowired
+    private HakijaryhmaService hakijaryhmaService;
 
     @Autowired
     private OidService oidService;
@@ -142,6 +139,7 @@ public class HakukohdeServiceImpl extends AbstractCRUDServiceImpl<HakukohdeViite
             hakukohde.setValintaryhma(valintaryhma);
             lisatty = hakukohdeViiteDAO.insert(hakukohde);
             valinnanVaiheService.kopioiValinnanVaiheetParentilta(lisatty, valintaryhma);
+            hakijaryhmaService.kopioiHakijaryhmatParentilta(lisatty, valintaryhma);
         } else {
             lisatty = hakukohdeViiteDAO.insert(hakukohde);
         }
@@ -197,7 +195,7 @@ public class HakukohdeServiceImpl extends AbstractCRUDServiceImpl<HakukohdeViite
                 (valintaryhma != null && hakukohdeViite.getValintaryhma() != null
                         && !valintaryhma.getOid().equals(hakukohdeViite.getValintaryhma().getOid()))) {
 
-            poistaHakukohteenPeriytyvatValinnanVaiheet(hakukohdeOid);
+            poistaHakukohteenPeriytyvatValinnanVaiheetJaHakijaryhmat(hakukohdeOid);
             List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheService.findByHakukohde(hakukohdeOid);
 
             // Käydään läpi kaikki ei-periytyvät valinnan vaiheet ja asetetaan hakukohdeviittaus tilapäisesti
@@ -211,8 +209,10 @@ public class HakukohdeServiceImpl extends AbstractCRUDServiceImpl<HakukohdeViite
 
             // Luodaan uusi hakukohde
             HakukohdeViite uusiHakukohde = luoKopio(hakukohdeViite);
+
             HakukohdeViite lisatty = insert(uusiHakukohde,
                     valintaryhma != null ? valintaryhma.getOid() : null);
+
             lisatty.setManuaalisestiSiirretty(siirretaanManuaalisesti);
 
             if (hakukohdeViite.getHakukohdekoodi() != null) {
@@ -226,8 +226,10 @@ public class HakukohdeServiceImpl extends AbstractCRUDServiceImpl<HakukohdeViite
 
             ValinnanVaihe viimeinenValinnanVaihe =
                     valinnanVaiheDAO.haeHakukohteenViimeinenValinnanVaihe(hakukohdeOid);
+
             if (!valinnanVaiheet.isEmpty()) {
                 valinnanVaiheet.get(0).setEdellinen(viimeinenValinnanVaihe);
+
                 if (viimeinenValinnanVaihe != null) {
                     viimeinenValinnanVaihe.setSeuraava(valinnanVaiheet.get(0));
                 }
@@ -245,7 +247,7 @@ public class HakukohdeServiceImpl extends AbstractCRUDServiceImpl<HakukohdeViite
         }
     }
 
-    private void poistaHakukohteenPeriytyvatValinnanVaiheet(String hakukohdeOid) {
+    private void poistaHakukohteenPeriytyvatValinnanVaiheetJaHakijaryhmat(String hakukohdeOid) {
         List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheService.findByHakukohde(hakukohdeOid);
         // Poistetaan kaikki periytyvät valinnan vaiheet
         for (ValinnanVaihe vv : valinnanVaiheet) {
@@ -253,5 +255,13 @@ public class HakukohdeServiceImpl extends AbstractCRUDServiceImpl<HakukohdeViite
                 valinnanVaiheService.deleteByOid(vv.getOid(), true);
             }
         }
+
+        List<Hakijaryhma> byHakukohde = hakijaryhmaService.findByHakukohde(hakukohdeOid);
+        for (Hakijaryhma hakijaryhma : byHakukohde) {
+            if(hakijaryhma.getMaster() != null) {
+                hakijaryhmaService.deleteByOid(hakijaryhma.getOid(), true);
+            }
+        }
+
     }
 }
