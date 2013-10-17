@@ -13,5 +13,5 @@ import java.util.List;
  */
 public interface PuuService {
 
-    List<ValintaperustePuuDTO> search(String hakuOid, List<String> tila, String oid);
+    List<ValintaperustePuuDTO> search(String hakuOid, List<String> tila, String searchString);
 }

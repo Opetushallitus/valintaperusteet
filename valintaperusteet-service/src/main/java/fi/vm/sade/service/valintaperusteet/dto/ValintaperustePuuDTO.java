@@ -15,8 +15,6 @@ import java.util.Set;
  */
 public class ValintaperustePuuDTO {
 
-    @JsonView(JsonViews.Basic.class)
-    private String hakuOid;
 
     @JsonView(JsonViews.Basic.class)
     private ValintaperustePuuDTO ylavalintaryhma;
@@ -28,7 +26,7 @@ public class ValintaperustePuuDTO {
     private Set<ValintaperustePuuDTO> hakukohdeViitteet = new HashSet<ValintaperustePuuDTO>();
 
     @JsonView(JsonViews.Basic.class)
-    private String hakuoid;
+    private String hakuOid;
 
     @JsonView(JsonViews.Basic.class)
     private String oid;
@@ -78,13 +76,7 @@ public class ValintaperustePuuDTO {
         this.hakukohdeViitteet = hakukohdeViitteet;
     }
 
-    public String getHakuoid() {
-        return hakuoid;
-    }
 
-    public void setHakuoid(String hakuoid) {
-        this.hakuoid = hakuoid;
-    }
 
     public String getOid() {
         return oid;

@@ -81,6 +81,7 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long> 
         if(hakuOid!=null && !hakuOid.isEmpty()) {
             a.where(valintaryhma.hakuOid.eq(hakuOid));
         }
+        a.leftJoin(valintaryhma.alavalintaryhmat).fetch();
         return  a.list(valintaryhma);
     }
 
