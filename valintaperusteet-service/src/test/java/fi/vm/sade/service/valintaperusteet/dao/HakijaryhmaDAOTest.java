@@ -41,8 +41,8 @@ public class HakijaryhmaDAOTest {
 
     @Test
     public void testReadByOid() {
-        final String HAKIJARYHMA_NIMI = "hr1";
-        final String HAKIJARYHMA_OID = "1";
+        final String HAKIJARYHMA_NIMI = "hakijaryhma1";
+        final String HAKIJARYHMA_OID = "13819272933902809864870091301782";
 
         Hakijaryhma hakijaryhma = hakijaryhmaDAO.readByOid(HAKIJARYHMA_OID);
         assertEquals(HAKIJARYHMA_NIMI, hakijaryhma.getNimi() );
@@ -50,8 +50,8 @@ public class HakijaryhmaDAOTest {
 
     @Test
     public void testFindByValintaryhma() {
-        final String VALINTARYHMA_OID = "1";
-        final String HAKIJARYHMA_OID = "1";
+        final String VALINTARYHMA_OID = "1381743139706-2693498799461467830";
+        final String HAKIJARYHMA_OID = "13819272933902809864870091301782";
 
         List<Hakijaryhma> byValintaryhma = hakijaryhmaDAO.findByValintaryhma(VALINTARYHMA_OID);
 
@@ -61,17 +61,16 @@ public class HakijaryhmaDAOTest {
     @Test
     public void testFindByHakukohde() {
         final String HAKUKOHDE_OID = "1";
-        final String HAKIJARYHMA_OID = "2";
 
         List<Hakijaryhma> byHakukohde = hakijaryhmaDAO.findByHakukohde(HAKUKOHDE_OID);
 
-        assertEquals(HAKIJARYHMA_OID, byHakukohde.get(0).getOid());
+        assertEquals(3, byHakukohde.size());
     }
 
     @Test
     public void testHaeHakukohteenViimeinenHakijaryhma() {
         final String HAKUKOHDE_OID = "1";
-        final String HAKIJARYHMA_OID = "6";
+        final String HAKIJARYHMA_OID = "13819276508298702905770965193967";
 
         Hakijaryhma byHakukohde = hakijaryhmaDAO.haeHakukohteenViimeinenHakijaryhma(HAKUKOHDE_OID);
 
@@ -80,8 +79,8 @@ public class HakijaryhmaDAOTest {
 
     @Test
     public void testHaeValintaryhmanViimeinenHakijaryhma() {
-        final String VALINTARYHMA_OID = "1";
-        final String HAKIJARYHMA_OID = "5";
+        final String VALINTARYHMA_OID = "1381743139706-2693498799461467830";
+        final String HAKIJARYHMA_OID = "1381929536619-162478418672529850";
 
         Hakijaryhma byValintaryhma = hakijaryhmaDAO.haeValintaryhmanViimeinenHakijaryhma(VALINTARYHMA_OID);
 
@@ -90,10 +89,10 @@ public class HakijaryhmaDAOTest {
 
     @Test
     public void testHaeValintatapajonolla() {
-        final String VALINTATAPAJONO_OID_1 = "1";
-        final String VALINTATAPAJONO_OID_2 = "2";
+        final String VALINTATAPAJONO_OID_1 = "1381744037373-4242685733786926927";
+        final String VALINTATAPAJONO_OID_2 = "13817440373886813568836676069139";
 
-        final int LIST_SIZE_1 = 3;
+        final int LIST_SIZE_1 = 1;
         final int LIST_SIZE_2 = 2;
 
         List<Hakijaryhma> byValintatapajono = hakijaryhmaDAO.findByValintatapajono(VALINTATAPAJONO_OID_1);

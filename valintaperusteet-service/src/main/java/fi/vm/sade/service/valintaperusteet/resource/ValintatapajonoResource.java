@@ -1,13 +1,17 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
+import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
 import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
+import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaService;
 import fi.vm.sade.service.valintaperusteet.service.JarjestyskriteeriService;
 import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
 import org.codehaus.jackson.map.annotate.JsonView;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,7 +21,9 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD;
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ;
@@ -34,9 +40,13 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPD
 @Path("valintatapajono")
 @PreAuthorize("isAuthenticated()")
 public class ValintatapajonoResource {
+    protected final static Logger LOGGER = LoggerFactory.getLogger(ValintatapajonoResource.class);
 
     @Autowired
     ValintatapajonoService valintatapajonoService;
+
+    @Autowired
+    HakijaryhmaService hakijaryhmaService;
 
     @Autowired
     JarjestyskriteeriService jarjestyskriteeriService;
@@ -58,6 +68,42 @@ public class ValintatapajonoResource {
     @Secured({READ, UPDATE, CRUD})
     public List<Jarjestyskriteeri> findJarjestyskriteeri(@PathParam("oid") String oid) {
         return jarjestyskriteeriService.findJarjestyskriteeriByJono(oid);
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @JsonView({JsonViews.Basic.class})
+    @Path("{valintatapajonoOid}/hakijaryhma")
+    @Secured({READ, UPDATE, CRUD})
+    public Response liitaHakijaryhma(@PathParam("valintatapajonoOid") String valintatapajonoOid) {
+        try {
+            List<Hakijaryhma> hakijaryhmaByJono = hakijaryhmaService.findHakijaryhmaByJono(valintatapajonoOid);
+            return Response.status(Response.Status.ACCEPTED).entity(hakijaryhmaByJono).build();
+        } catch (Exception e) {
+            LOGGER.error("Error fetching hakijaryhma.", e);
+            Map map = new HashMap();
+            map.put("error", e.getMessage());
+            return Response.status(Response.Status.BAD_REQUEST).entity(map).build();
+        }
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @JsonView({JsonViews.Basic.class})
+    @Path("{valintatapajonoOid}/hakijaryhma/{hakijaryhmaOid}")
+    @Secured({READ, UPDATE, CRUD})
+    public Response liitaHakijaryhma(@PathParam("valintatapajonoOid") String valintatapajonoOid,
+                                      @PathParam("hakijaryhmaOid") String hakijaryhmaOid) {
+        try {
+            hakijaryhmaService.liitaHakijaryhmaValintatapajonolle(valintatapajonoOid, hakijaryhmaOid);
+            return Response.status(Response.Status.ACCEPTED).build();
+        } catch (Exception e) {
+            LOGGER.error("Error linking hakijaryhma.", e);
+            Map map = new HashMap();
+            map.put("error", e.getMessage());
+            return Response.status(Response.Status.BAD_REQUEST).entity(map).build();
+        }
     }
 
     @GET

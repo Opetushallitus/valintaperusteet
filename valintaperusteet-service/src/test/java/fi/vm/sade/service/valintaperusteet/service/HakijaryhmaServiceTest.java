@@ -80,7 +80,7 @@ public class HakijaryhmaServiceTest {
         Hakijaryhma hakijaryhma = hakijaryhmaService.readByOid(oid);
         assertNotNull(hakijaryhma);
 
-        hakijaryhmaService.deleteByOid(oid);
+        hakijaryhmaService.deleteByOid(oid, true);
 
         hakijaryhma = hakijaryhmaService.readByOid(oid);
         assertNull(hakijaryhma);

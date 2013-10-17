@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-
+<?xml version="1.0" encoding="UTF-8"?>
 <dataset>
     <funktioargumentti id="15" version="0" indeksi="1" funktiokutsuchild_id="12" funktiokutsuparent_id="9"/>
 
@@ -9,6 +8,8 @@
     <hakijaryhma id="24" version="0" aktiivinen="true" kiintio="10" kuvaus="kuvaus" nimi="hakijaryhma1" oid="13819272933902809864870091301782" laskentakaava_id="11" valintaryhma_id="1"/>
     <hakijaryhma id="25" version="0" aktiivinen="true" kiintio="10" kuvaus="kuvaus" nimi="hakijaryhma1" oid="1381927296296612284604441854752" hakukohde_viite_id="2" laskentakaava_id="11"/>
     <hakijaryhma id="26" version="0" aktiivinen="true" kiintio="10" kuvaus="kuvaus" nimi="hakijaryhma2" oid="13819276508298702905770965193967" edellinen_hakijaryhma_id="25" hakukohde_viite_id="2" laskentakaava_id="11"/>
+    <hakijaryhma id="27" version="0" aktiivinen="true" kiintio="5" kuvaus="viimeinen" nimi="hakijaryhma3" oid="1381929536619-162478418672529850" edellinen_hakijaryhma_id="24" laskentakaava_id="11" valintaryhma_id="1"/>
+    <hakijaryhma id="28" version="0" aktiivinen="true" kiintio="5" kuvaus="viimeinen" nimi="hakijaryhma3" oid="1381929540027-5885847630185712489" hakukohde_viite_id="2" laskentakaava_id="11"/>
 
     <hakukohde_viite id="2" version="0" hakuoid="1" nimi="hakukohde" oid="1" valintaryhma_id="1" manuaalisesti_siirretty="false"/>
 
@@ -24,8 +25,14 @@
 
     <valintaryhma id="1" version="0" hakuoid="1" nimi="valintaryhma" oid="1381743139706-2693498799461467830"/>
 
-    <valintatapajono id="7" version="0" aktiivinen="true" aloituspaikat="20" nimi="jono2" oid="1381744143445-5751657297529695036" siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO" edellinen_valintatapajono_id="5" valinnan_vaihe_id="3" ei_varasijatayttoa="false"/>
+    <valintatapajono id="5" version="1" aktiivinen="true" aloituspaikat="20" nimi="jono1" oid="1381744037373-4242685733786926927" siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO" edellinen_valintatapajono_id="[NULL]" valinnan_vaihe_id="3" ei_varasijatayttoa="false"/>
+    <valintatapajono id="6" version="1" aktiivinen="true" aloituspaikat="20" nimi="jono1" oid="13817440373886813568836676069139" siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO" master_valintatapajono_id="5" valinnan_vaihe_id="4" edellinen_valintatapajono_id="[NULL]" ei_varasijatayttoa="false"/>
+    <valintatapajono id="7" version="0" aktiivinen="true" aloituspaikat="20" nimi="jono2" oid="1381744143445-5751657297529695036" siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO" master_valintatapajono_id="[NULL]" edellinen_valintatapajono_id="5" valinnan_vaihe_id="3" ei_varasijatayttoa="false"/>
     <valintatapajono id="8" version="0" aktiivinen="true" aloituspaikat="20" nimi="jono2" oid="1381744143450-6586426596779606344" siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO" edellinen_valintatapajono_id="6" master_valintatapajono_id="7" valinnan_vaihe_id="4" ei_varasijatayttoa="false"/>
-    <valintatapajono id="5" version="1" aktiivinen="true" aloituspaikat="20" nimi="jono1" oid="1381744037373-4242685733786926927" siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3" ei_varasijatayttoa="false"/>
-    <valintatapajono id="6" version="1" aktiivinen="true" aloituspaikat="20" nimi="jono1" oid="13817440373886813568836676069139" siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO" master_valintatapajono_id="5" valinnan_vaihe_id="4" ei_varasijatayttoa="false"/>
+
+    <hakijaryhma_jono jono_id="5" hakijaryhma_id="24"/>
+    <hakijaryhma_jono jono_id="6" hakijaryhma_id="24"/>
+    <hakijaryhma_jono jono_id="6" hakijaryhma_id="25"/>
+
 </dataset>
+
