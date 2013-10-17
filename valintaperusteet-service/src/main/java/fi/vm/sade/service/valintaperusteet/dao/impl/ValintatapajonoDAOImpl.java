@@ -38,21 +38,30 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
     public List<Valintatapajono> findAll() {
         QValintatapajono jono = QValintatapajono.valintatapajono;
         QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
-        QHakijaryhma hakijaryhma = QHakijaryhma.hakijaryhma;
+        QHakijaryhmaValintatapajono hakijaryhmaValintatapajono = QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
 
-        return from(jono).leftJoin(jono.valinnanVaihe, valinnanVaihe).fetch().leftJoin(jono.hakijaryhmat, hakijaryhma)
-                .fetch().leftJoin(valinnanVaihe.valintaryhma).distinct().list(jono);
+        return from(jono)
+                .leftJoin(jono.valinnanVaihe, valinnanVaihe).fetch()
+                .leftJoin(jono.hakijaryhmat, hakijaryhmaValintatapajono).fetch()
+                .leftJoin(hakijaryhmaValintatapajono.hakijaryhma).fetch()
+                .leftJoin(valinnanVaihe.valintaryhma)
+                .distinct().list(jono);
     }
 
     @Override
     public Valintatapajono readByOid(String oid) {
         QValintatapajono jono = QValintatapajono.valintatapajono;
         QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
-        QHakijaryhma hakijaryhma = QHakijaryhma.hakijaryhma;
+        QHakijaryhmaValintatapajono hakijaryhmaValintatapajono = QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
 
-        return from(jono).where(jono.oid.eq(oid)).leftJoin(jono.valinnanVaihe, valinnanVaihe).fetch()
-                .leftJoin(jono.masterValintatapajono).fetch().leftJoin(jono.edellinenValintatapajono).fetch()
-                .leftJoin(jono.hakijaryhmat, hakijaryhma).fetch().leftJoin(valinnanVaihe.valintaryhma)
+        return from(jono)
+                .where(jono.oid.eq(oid))
+                .leftJoin(jono.valinnanVaihe, valinnanVaihe).fetch()
+                .leftJoin(jono.masterValintatapajono).fetch()
+                .leftJoin(jono.edellinenValintatapajono).fetch()
+                .leftJoin(jono.hakijaryhmat, hakijaryhmaValintatapajono).fetch()
+                .leftJoin(hakijaryhmaValintatapajono.hakijaryhma).fetch()
+                .leftJoin(valinnanVaihe.valintaryhma)
                 .singleResult(jono);
     }
 

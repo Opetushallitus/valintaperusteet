@@ -32,8 +32,8 @@ public class Hakijaryhma extends BaseEntity implements LinkitettavaJaKopioitava<
     @JsonView(JsonViews.Basic.class)
     private int kiintio;
 
-    @ManyToMany(mappedBy = "hakijaryhmat", fetch = FetchType.LAZY)
-    private Set<Valintatapajono> jonot = new HashSet<Valintatapajono>();
+    @OneToMany(mappedBy = "hakijaryhma", fetch = FetchType.LAZY)
+    private Set<HakijaryhmaValintatapajono> jonot = new HashSet<HakijaryhmaValintatapajono>();
 
     @JoinColumn(name = "valintaryhma_id")
     @ManyToOne(fetch = FetchType.LAZY)
@@ -97,11 +97,11 @@ public class Hakijaryhma extends BaseEntity implements LinkitettavaJaKopioitava<
         this.kiintio = kiintio;
     }
 
-    public Set<Valintatapajono> getJonot() {
+    public Set<HakijaryhmaValintatapajono> getJonot() {
         return jonot;
     }
 
-    public void setJonot(Set<Valintatapajono> jonot) {
+    public void setJonot(Set<HakijaryhmaValintatapajono> jonot) {
         this.jonot = jonot;
     }
 

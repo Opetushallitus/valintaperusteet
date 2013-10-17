@@ -101,10 +101,12 @@ public class HakijaryhmaServiceImpl extends AbstractCRUDServiceImpl<Hakijaryhma,
         }
         Hakijaryhma hakijaryhma = haeHakijaryhma(hakijaryhmaOid);
 
-        valintatapajono.getHakijaryhmat().add(hakijaryhma);
-        for (Valintatapajono kopio : valintatapajono.getKopiot()) {
-            kopio.getHakijaryhmat().add(hakijaryhma);
-        }
+        HakijaryhmaValintatapajono link = new HakijaryhmaValintatapajono();
+
+        link.setHakijaryhma(hakijaryhma);
+        link.setValintatapajono(valintatapajono);
+
+        valintatapajono.getHakijaryhmat().add(link);
     }
 
     @Override

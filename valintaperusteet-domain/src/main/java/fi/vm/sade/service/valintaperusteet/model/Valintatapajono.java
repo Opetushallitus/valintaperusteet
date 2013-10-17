@@ -71,11 +71,8 @@ public class Valintatapajono extends BaseEntity implements LinkitettavaJaKopioit
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "masterValintatapajono")
     private Set<Valintatapajono> kopioValintatapajonot = new HashSet<Valintatapajono>();
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "hakijaryhma_jono", joinColumns = @JoinColumn(name = "jono_id",
-            referencedColumnName = BaseEntity.ID_COLUMN_NAME), inverseJoinColumns = @JoinColumn(name = "hakijaryhma_id",
-            referencedColumnName = BaseEntity.ID_COLUMN_NAME))
-    private Set<Hakijaryhma> hakijaryhmat = new HashSet<Hakijaryhma>();
+    @OneToMany(mappedBy = "valintatapajono", fetch = FetchType.LAZY)
+    private Set<HakijaryhmaValintatapajono> hakijaryhmat = new HashSet<HakijaryhmaValintatapajono>();
 
     @OneToMany(mappedBy = "valintatapajono", cascade = CascadeType.REMOVE)
     private Set<Jarjestyskriteeri> jarjestyskriteerit = new HashSet<Jarjestyskriteeri>();
@@ -168,7 +165,7 @@ public class Valintatapajono extends BaseEntity implements LinkitettavaJaKopioit
         this.valinnanVaihe = valinnanVaihe;
     }
 
-    public Set<Hakijaryhma> getHakijaryhmat() {
+    public Set<HakijaryhmaValintatapajono> getHakijaryhmat() {
         return hakijaryhmat;
     }
 
@@ -196,11 +193,11 @@ public class Valintatapajono extends BaseEntity implements LinkitettavaJaKopioit
 
     @JsonProperty("hakijaryhmat")
     @JsonView(JsonViews.Basic.class)
-    public List<Long> getHakijaryhmaId() {
-        List<Long> hakijaryhmaIds = new ArrayList<Long>();
+    public List<String> getHakijaryhmaId() {
+        List<String> hakijaryhmaIds = new ArrayList<String>();
         if (hakijaryhmat != null) {
-            for (Hakijaryhma hakijaryhma : hakijaryhmat) {
-                hakijaryhmaIds.add(hakijaryhma.getId());
+            for (HakijaryhmaValintatapajono hakijaryhma : hakijaryhmat) {
+                hakijaryhmaIds.add(hakijaryhma.getHakijaryhma().getOid());
             }
         }
         return hakijaryhmaIds;
