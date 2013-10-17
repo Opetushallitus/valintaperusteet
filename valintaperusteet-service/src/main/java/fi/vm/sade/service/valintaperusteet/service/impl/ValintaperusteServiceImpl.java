@@ -44,8 +44,8 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
     @Autowired
     private SadeConversionService conversionService;
 
-    @Autowired
-    private PaasykoeTunnisteetService tunnisteService;
+    //@Autowired
+   // private PaasykoeTunnisteetService tunnisteService;
 
     @Autowired
     private ValinnanVaiheService valinnanVaiheService;

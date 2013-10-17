@@ -46,6 +46,26 @@ public class ValintaryhmaResource {
 
     protected final static Logger LOGGER = LoggerFactory.getLogger(ValintaryhmaResource.class);
 
+
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @JsonView(JsonViews.Basic.class)
+    @Secured({READ, UPDATE, CRUD})
+    public List<Valintaryhma> search(@QueryParam("paataso") Boolean paataso,
+                                     @QueryParam("parentsOf") String parentsOf
+
+
+    ) {
+        List<Valintaryhma> valintaryhmas = new ArrayList<Valintaryhma>();
+        if (Boolean.TRUE.equals(paataso)) {
+            valintaryhmas.addAll(valintaryhmaService.findValintaryhmasByParentOid(null));
+        }    if (parentsOf != null) {
+            valintaryhmas.addAll(valintaryhmaService.findParentHierarchyFromOid(parentsOf));
+        }
+        return valintaryhmas;
+    }
+
     @GET
     @Path("{oid}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -53,21 +73,6 @@ public class ValintaryhmaResource {
     @Secured({READ, UPDATE, CRUD})
     public Valintaryhma queryFull(@PathParam("oid") String oid) {
         return valintaryhmaService.readByOid(oid);
-    }
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @JsonView(JsonViews.Basic.class)
-    @Secured({READ, UPDATE, CRUD})
-    public List<Valintaryhma> search(@QueryParam("paataso") Boolean paataso, @QueryParam("parentsOf") String parentsOf) {
-        List<Valintaryhma> valintaryhmas = new ArrayList<Valintaryhma>();
-        if (Boolean.TRUE.equals(paataso)) {
-            valintaryhmas.addAll(valintaryhmaService.findValintaryhmasByParentOid(null));
-        }
-        if (parentsOf != null) {
-            valintaryhmas.addAll(valintaryhmaService.findParentHierarchyFromOid(parentsOf));
-        }
-        return valintaryhmas;
     }
 
     @GET

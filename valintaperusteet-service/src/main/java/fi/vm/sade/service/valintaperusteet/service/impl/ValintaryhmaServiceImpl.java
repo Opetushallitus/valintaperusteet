@@ -2,6 +2,7 @@ package fi.vm.sade.service.valintaperusteet.service.impl;
 
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintaperustePuuDTO;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import fi.vm.sade.service.valintaperusteet.service.OidService;
 import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -73,6 +75,24 @@ public class ValintaryhmaServiceImpl extends AbstractCRUDServiceImpl<Valintaryhm
     @Override
     public List<Valintaryhma> findParentHierarchyFromOid(String oid) {
         return valintaryhmaDAO.readHierarchy(oid);
+    }
+
+    @Override
+    public List<ValintaperustePuuDTO> search(String hakuOid, List<String> tila, String oid) {
+        //fetch whole tree in a single query, is at least now faster than individually querying
+        List<Valintaryhma>  list = valintaryhmaDAO.findAllByHakuoid(oid);
+
+        //parse parents
+        List<Valintaryhma>  parents = new ArrayList<Valintaryhma>();
+        for(Valintaryhma valintaryhma : parents) {
+            if(valintaryhma.getYlavalintaryhma() == null) {
+                parents.add(valintaryhma);
+            }
+        }
+
+        return null;
+
+
     }
 
     @Override

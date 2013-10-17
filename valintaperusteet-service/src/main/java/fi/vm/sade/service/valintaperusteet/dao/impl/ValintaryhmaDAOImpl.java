@@ -74,6 +74,16 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long> 
         return set;
     }
 
+    @Override
+    public List<Valintaryhma> findAllByHakuoid(String hakuOid) {
+        QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
+        JPAQuery a = from(valintaryhma);
+        if(hakuOid!=null && !hakuOid.isEmpty()) {
+            a.where(valintaryhma.hakuOid.eq(hakuOid));
+        }
+        return  a.list(valintaryhma);
+    }
+
 
     @Override
     public List<Valintaryhma> haeHakukohdekoodinOpetuskielikoodienJaValintakoekoodienMukaan(String hakukohdekoodiUri,

@@ -28,7 +28,7 @@ public class Valintaryhma extends BaseEntity {
     private String nimi;
 
     @Column(name = "hakuOid", nullable = false)
-    @JsonView({JsonViews.Basic.class, JsonViews.ParentHierarchy.class})
+    //@JsonView({JsonViews.Basic.class, JsonViews.ParentHierarchy.class})
     private String hakuOid;
 
     @JoinColumn(name = "parent_id")
