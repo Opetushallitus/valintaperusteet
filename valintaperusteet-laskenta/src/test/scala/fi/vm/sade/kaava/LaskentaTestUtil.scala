@@ -74,7 +74,7 @@ object LaskentaTestUtil {
       funktiokutsu.setSyoteparametrit(setAsJavaSet(syoteparametrit.toSet))
       funktiokutsu.setArvokonvertteriparametrit(setAsJavaSet(arvokonvertterit.toSet))
       funktiokutsu.setArvovalikonvertteriparametrit(new TreeSet[Arvovalikonvertteriparametri](arvovalikonvertterit.toSet))
-      funktiokutsu.setValintaperuste(valintaperustetunniste)
+      Option(valintaperustetunniste).foreach(funktiokutsu.getValintaperusteviitteet.add(_))
 
       funktiokutsu
     }
@@ -118,13 +118,15 @@ object LaskentaTestUtil {
     def apply(onPakollinen: java.lang.Boolean,
               tunniste: String,
               lahde: Valintaperustelahde = Valintaperustelahde.HAETTAVA_ARVO,
-              epasuoraViittaus: Boolean = false) = {
+              epasuoraViittaus: Boolean = false,
+              indeksi: Int = 1) = {
       val viite = new ValintaperusteViite
       viite.setKuvaus("")
       viite.setLahde(lahde)
       viite.setOnPakollinen(onPakollinen)
       viite.setTunniste(tunniste)
       viite.setEpasuoraViittaus(epasuoraViittaus)
+      viite.setIndeksi(indeksi)
 
       viite
     }

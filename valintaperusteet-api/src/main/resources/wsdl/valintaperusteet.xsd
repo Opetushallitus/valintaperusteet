@@ -86,7 +86,8 @@
             <xs:element name="syoteparametrit" type="tns:SyoteparametriTyyppi" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element name="funktioargumentit" type="tns:FunktioargumenttiTyyppi" minOccurs="0"
                         maxOccurs="unbounded"/>
-            <xs:element name="valintaperusteviite" type="tns:ValintaperusteviiteTyyppi" maxOccurs="1" minOccurs="0"/>
+            <xs:element name="valintaperusteviite" type="tns:ValintaperusteviiteTyyppi" maxOccurs="unbounded"
+                        minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -175,6 +176,8 @@
         <xs:attribute name="onPakollinen" use="required" type="xs:boolean"/>
         <xs:attribute name="tunniste" use="required" type="xs:string"/>
         <xs:attribute name="lahde" use="required" type="tns:ValintaperustelahdeTyyppi"/>
+        <xs:attribute name="indeksi" use="required" type="xs:int"/>
+        <xs:attribute name="epasuoraViittaus" use="optional" type="xs:boolean"/>
     </xs:complexType>
 
     <xs:simpleType name="ValintaperustelahdeTyyppi">
