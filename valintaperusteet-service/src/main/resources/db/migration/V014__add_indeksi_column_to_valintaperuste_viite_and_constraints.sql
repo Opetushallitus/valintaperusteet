@@ -1,4 +1,4 @@
-    alter table valintaperuste_viite add column indeksi int8;
+    alter table valintaperuste_viite add column indeksi int4;
     update valintaperuste_viite set indeksi = 1;
 
     alter table valintaperuste_viite alter column indeksi set not null;
