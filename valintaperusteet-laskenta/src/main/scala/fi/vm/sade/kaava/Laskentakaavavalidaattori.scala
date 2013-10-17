@@ -183,17 +183,18 @@ object Laskentakaavavalidaattori {
 
     funktiokuvaus.valintaperusteparametri match {
       case None => {
-        if (funktiokutsu.getValintaperuste != null) {
+        if (funktiokutsu.getValintaperusteviitteet.size > 0) {
           Some(new Validointivirhe(Virhetyyppi.FUNKTIOKUTSU_EI_OTA_VALINTAPERUSTEPARAMETRIA,
             "Funktio " + nimi + " ei ota valintaperusteparametreja"))
         } else None
       }
 
       case Some(param) => {
-        if (funktiokutsu.getValintaperuste == null) {
+
+        if (funktiokutsu.getValintaperusteviitteet.size == 0) {
           Some(new Validointivirhe(Virhetyyppi.VALINTAPERUSTEPARAMETRI_PUUTTUUU,
             "Valintaperusteparametri puuttuu funktiolle " + nimi))
-        } else if (StringUtils.isBlank(funktiokutsu.getValintaperuste.getTunniste)) {
+        } else if (StringUtils.isBlank(funktiokutsu.getValintaperusteviitteet.head.getTunniste)) {
           Some(new Validointivirhe(Virhetyyppi.VALINTAPERUSTEPARAMETRIN_TUNNISTE_PUUTTUU, "Valintaperusteparametrin tunniste puuttuu " +
             "funktiolle " + nimi))
         } else None

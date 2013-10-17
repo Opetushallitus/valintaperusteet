@@ -14,7 +14,7 @@ import javax.validation.constraints.Min;
 @Entity
 @Table(name = "funktioargumentti")
 @Cacheable(true)
-public class Funktioargumentti extends BaseEntity {
+public class Funktioargumentti extends BaseEntity implements Comparable<Funktioargumentti> {
 
     @JoinColumn(name = "funktiokutsuparent_id", nullable = false)
     @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
@@ -76,5 +76,10 @@ public class Funktioargumentti extends BaseEntity {
 
     public void setLaajennettuKaava(Funktiokutsu laajennettuKaava) {
         this.laajennettuKaava = laajennettuKaava;
+    }
+
+    @Override
+    public int compareTo(Funktioargumentti o) {
+        return indeksi - o.indeksi;
     }
 }

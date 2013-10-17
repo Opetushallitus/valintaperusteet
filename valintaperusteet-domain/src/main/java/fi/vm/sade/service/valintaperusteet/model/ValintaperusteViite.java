@@ -6,10 +6,10 @@ import org.codehaus.jackson.map.annotate.JsonView;
 
 import javax.persistence.*;
 
-@Table(name = "valintaperuste_viite")
+@Table(name = "valintaperuste_viite", uniqueConstraints = @UniqueConstraint(name = "UK_valintaperuste_viite_001", columnNames = {"funktiokutsu_id", "indeksi"}))
 @Entity
 @Cacheable(true)
-public class ValintaperusteViite extends BaseEntity {
+public class ValintaperusteViite extends BaseEntity implements Comparable<ValintaperusteViite> {
 
     /**
      *
@@ -32,7 +32,7 @@ public class ValintaperusteViite extends BaseEntity {
     private Valintaperustelahde lahde;
 
     @JoinColumn(name = "funktiokutsu_id", nullable = false)
-    @OneToOne(optional = false)
+    @ManyToOne(optional = false)
     private Funktiokutsu funktiokutsu;
 
     @JsonView(JsonViews.Basic.class)
@@ -44,6 +44,10 @@ public class ValintaperusteViite extends BaseEntity {
     @JsonView(JsonViews.Basic.class)
     @Column(name = "epasuora_viittaus", nullable = true)
     private Boolean epasuoraViittaus;
+
+    @JsonView(JsonViews.Basic.class)
+    @Column(name = "indeksi", nullable = false)
+    private Integer indeksi;
 
     public String getTunniste() {
         return tunniste;
@@ -93,6 +97,14 @@ public class ValintaperusteViite extends BaseEntity {
         this.epasuoraViittaus = epasuoraViittaus;
     }
 
+    public Integer getIndeksi() {
+        return indeksi;
+    }
+
+    public void setIndeksi(Integer indeksi) {
+        this.indeksi = indeksi;
+    }
+
     @Transient
     @JsonView(JsonViews.Basic.class)
     public String getOsallistuminenTunniste() {
@@ -107,5 +119,10 @@ public class ValintaperusteViite extends BaseEntity {
         }
 
         return osallistuminenTunniste;
+    }
+
+    @Override
+    public int compareTo(ValintaperusteViite o) {
+        return indeksi - o.indeksi;
     }
 }
