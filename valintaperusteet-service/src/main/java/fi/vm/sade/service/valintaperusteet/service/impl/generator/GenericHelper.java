@@ -81,7 +81,7 @@ public class GenericHelper {
     public static Funktiokutsu luoHaeLukuarvo(ValintaperusteViite vp) {
         Funktiokutsu funktiokutsu = new Funktiokutsu();
         funktiokutsu.setFunktionimi(Funktionimi.HAELUKUARVO);
-        funktiokutsu.setValintaperuste(vp);
+        funktiokutsu.getValintaperusteviitteet().add(vp);
         return funktiokutsu;
     }
 
@@ -214,7 +214,7 @@ public class GenericHelper {
         Funktiokutsu funktiokutsu = new Funktiokutsu();
         funktiokutsu.setFunktionimi(Funktionimi.HAEMERKKIJONOJAKONVERTOILUKUARVOKSI);
         funktiokutsu.getArvokonvertteriparametrit().addAll(arvokonvertterit);
-        funktiokutsu.setValintaperuste(vp);
+        funktiokutsu.getValintaperusteviitteet().add(vp);
 
         return funktiokutsu;
     }
@@ -231,7 +231,7 @@ public class GenericHelper {
     public static Funktiokutsu luoHaeTotuusarvo(ValintaperusteViite vp) {
         Funktiokutsu funktiokutsu = new Funktiokutsu();
         funktiokutsu.setFunktionimi(Funktionimi.HAETOTUUSARVO);
-        funktiokutsu.setValintaperuste(vp);
+        funktiokutsu.getValintaperusteviitteet().add(vp);
 
         return funktiokutsu;
     }
@@ -284,7 +284,7 @@ public class GenericHelper {
                                                                         Collection<Arvokonvertteriparametri> konvs) {
         Funktiokutsu funktiokutsu = new Funktiokutsu();
         funktiokutsu.setFunktionimi(Funktionimi.HAEMERKKIJONOJAKONVERTOITOTUUSARVOKSI);
-        funktiokutsu.setValintaperuste(vp);
+        funktiokutsu.getValintaperusteviitteet().add(vp);
         funktiokutsu.getArvokonvertteriparametrit().addAll(konvs);
         return funktiokutsu;
     }
@@ -322,7 +322,7 @@ public class GenericHelper {
     public static Funktiokutsu luoHaeMerkkijonoJaVertaaYhtasuuruus(ValintaperusteViite vp, String vertailtava) {
         Funktiokutsu f = new Funktiokutsu();
         f.setFunktionimi(Funktionimi.HAEMERKKIJONOJAVERTAAYHTASUURUUS);
-        f.setValintaperuste(vp);
+        f.getValintaperusteviitteet().add(vp);
         f.getSyoteparametrit().add(luoSyoteparametri("vertailtava", vertailtava));
         return f;
     }

@@ -2,7 +2,6 @@ package fi.vm.sade.service.valintaperusteet.dao;
 
 import fi.vm.sade.generic.dao.JpaDAO;
 import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
-import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
 
 import java.util.List;
 
@@ -21,4 +20,6 @@ public interface FunktiokutsuDAO extends JpaDAO<Funktiokutsu, Long> {
     void deleteOrphans();
 
     List<Funktiokutsu> findFunktiokutsuByHakukohdeOids(List<String> hakukohdeOids);
+
+    void flush();
 }

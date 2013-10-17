@@ -52,11 +52,10 @@ public class FunktiokutsuToFunktiokutsuTyyppi implements Converter<Funktiokutsu,
             tyyppi.getSyoteparametrit().add(convert);
         }
 
-        if (funktiokutsu.getValintaperuste() != null) {
-            ValintaperusteviiteTyyppi convert = valintaperusteViiteToValintaperusteViiteTyyppi.convert(funktiokutsu.getValintaperuste());
-            tyyppi.setValintaperusteviite(convert);
+        for (ValintaperusteViite vp : funktiokutsu.getValintaperusteviitteet()) {
+            ValintaperusteviiteTyyppi convert = valintaperusteViiteToValintaperusteViiteTyyppi.convert(vp);
+            tyyppi.getValintaperusteviite().add(convert);
         }
-
 
         return tyyppi;
     }

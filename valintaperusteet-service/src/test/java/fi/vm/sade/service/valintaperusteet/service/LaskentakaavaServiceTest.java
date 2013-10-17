@@ -114,8 +114,8 @@ public class LaskentakaavaServiceTest {
         assertEquals(0, luku1L.getFunktioargumentit().size());
         assertEquals(0, luku2L.getFunktioargumentit().size());
         assertEquals(0, haeLukuarvo405L.getFunktioargumentit().size());
-        assertNotNull(haeLukuarvo405L.getValintaperuste());
-        ValintaperusteViite haeLukuarvo405LValintaperuste = haeLukuarvo405L.getValintaperuste();
+        assertEquals(1, haeLukuarvo405L.getValintaperusteviitteet().size());
+        ValintaperusteViite haeLukuarvo405LValintaperuste = haeLukuarvo405L.getValintaperusteviitteet().iterator().next();
         assertEquals("aidinkieli", haeLukuarvo405LValintaperuste.getTunniste());
 
         assertEquals(0, luku3L.getFunktioargumentit().size());

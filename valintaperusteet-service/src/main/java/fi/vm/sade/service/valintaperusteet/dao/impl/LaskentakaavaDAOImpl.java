@@ -31,7 +31,7 @@ public class LaskentakaavaDAOImpl extends AbstractJpaDAOImpl<Laskentakaava, Long
                 .leftJoin(fk.syoteparametrit)
                 .leftJoin(fk.funktioargumentit, fa)
                 .leftJoin(fa.laskentakaavaChild)
-                .leftJoin(fk.valintaperuste).where(lk.id.eq(id)).distinct().singleResult(lk);
+                .leftJoin(fk.valintaperusteviitteet).where(lk.id.eq(id)).distinct().singleResult(lk);
 
         return laskentakaava;
     }
