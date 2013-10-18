@@ -107,6 +107,7 @@ public class HakijaryhmaServiceImpl extends AbstractCRUDServiceImpl<Hakijaryhma,
         link.setValintatapajono(valintatapajono);
 
         valintatapajono.getHakijaryhmat().add(link);
+
     }
 
     @Override

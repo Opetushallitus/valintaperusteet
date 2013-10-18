@@ -47,10 +47,6 @@ public class Hakijaryhma extends BaseEntity implements LinkitettavaJaKopioitava<
     @ManyToOne(optional = false)
     private Laskentakaava laskentakaava;
 
-    @Column(name = "aktiivinen", nullable = false)
-    @JsonView(JsonViews.Basic.class)
-    private Boolean aktiivinen;
-
     @JoinColumn(name = "edellinen_hakijaryhma_id")
     @OneToOne(fetch = FetchType.LAZY)
     private Hakijaryhma edellinen;
@@ -127,14 +123,6 @@ public class Hakijaryhma extends BaseEntity implements LinkitettavaJaKopioitava<
 
     public void setLaskentakaava(Laskentakaava laskentakaava) {
         this.laskentakaava = laskentakaava;
-    }
-
-    public Boolean getAktiivinen() {
-        return aktiivinen;
-    }
-
-    public void setAktiivinen(Boolean aktiivinen) {
-        this.aktiivinen = aktiivinen;
     }
 
     @Override

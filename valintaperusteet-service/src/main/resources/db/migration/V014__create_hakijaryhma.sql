@@ -1,7 +1,6 @@
 create table hakijaryhma (
     id int8 not null unique,
     version int8 not null,
-    aktiivinen boolean not null,
     kiintio int4,
     kuvaus varchar(255),
     nimi varchar(255),
