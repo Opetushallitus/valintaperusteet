@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,7 +23,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @Service
-//@Transactional .. do not change this, otherwise you risk lazy init stuff
+//@Transactional .. do not change this, otherwise you risk doing lazy loading here
 public class PuuServiceImpl implements PuuService {
 
     @Autowired
@@ -36,30 +38,45 @@ public class PuuServiceImpl implements PuuService {
     public List<ValintaperustePuuDTO> search(String hakuOid, List<String> tila, String searchString) {
         //fetch whole tree in a single query, is at least now faster than individually querying
 
-        List<Valintaryhma>  list = valintaryhmaDAO.findAllByHakuoid(hakuOid);
+        List<Valintaryhma>  valintaryhmaList = valintaryhmaDAO.findAllByHakuoid(hakuOid);
         List<HakukohdeViite> hakukohdeList = hakukohdeViiteDAO.search(hakuOid,tila,searchString);
 
-        List<ValintaperustePuuDTO> dtoList = new ArrayList<ValintaperustePuuDTO>();
-
+        List<ValintaperustePuuDTO> parentList = new ArrayList<ValintaperustePuuDTO>();
+        Map<Long, ValintaperustePuuDTO> dtoMap = new HashMap<Long, ValintaperustePuuDTO>();
 
         //parse parents
         List<Valintaryhma>  parents = new ArrayList<Valintaryhma>();
-        for(Valintaryhma valintaryhma : parents) {
-            if(valintaryhma.getYlavalintaryhma() == null) {
+        for(Valintaryhma valintaryhma : valintaryhmaList) {
+            if(valintaryhma.getYlavalintaryhma() == null ) {
                 parents.add(valintaryhma);
             }
         }
-        for(Valintaryhma valintaryhma : list) {
-            dtoList.add(convert(valintaryhma));
+        for(Valintaryhma valintaryhma : parents) {
+            ValintaperustePuuDTO dto = convert(valintaryhma);
+            parentList.add(dto);
+            dtoMap.put(valintaryhma.getId(), dto);
         }
         for(HakukohdeViite hakukohdeViite : hakukohdeList) {
-            dtoList.add(convert(hakukohdeViite));
+            attach(hakukohdeViite, dtoMap, parentList);
         }
 
 
 
-        return dtoList;
+        return parentList;
     }
+
+    private void attach(HakukohdeViite viite, Map<Long, ValintaperustePuuDTO> map, List<ValintaperustePuuDTO> list) {
+        ValintaperustePuuDTO dto = convert(viite);
+        if(viite.getValintaryhma() == null) {
+            list.add(dto);
+        } else {
+
+
+        }
+
+
+    }
+
 
     private ValintaperustePuuDTO convert(HakukohdeViite viite) {
         ValintaperustePuuDTO dto = new ValintaperustePuuDTO();
