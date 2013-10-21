@@ -70,11 +70,9 @@ public class PuuServiceImpl implements PuuService {
         if(viite.getValintaryhma() == null) {
             list.add(dto);
         } else {
-
-
+            ValintaperustePuuDTO a =  map.get(viite.getValintaryhma().getId());
+            a.getHakukohdeViitteet().add(dto);
         }
-
-
     }
 
 
