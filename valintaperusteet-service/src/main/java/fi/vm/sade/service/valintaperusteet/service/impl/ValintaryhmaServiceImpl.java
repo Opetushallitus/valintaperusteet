@@ -77,23 +77,7 @@ public class ValintaryhmaServiceImpl extends AbstractCRUDServiceImpl<Valintaryhm
         return valintaryhmaDAO.readHierarchy(oid);
     }
 
-    @Override
-    public List<ValintaperustePuuDTO> search(String hakuOid, List<String> tila, String oid) {
-        //fetch whole tree in a single query, is at least now faster than individually querying
-        List<Valintaryhma>  list = valintaryhmaDAO.findAllByHakuoid(oid);
 
-        //parse parents
-        List<Valintaryhma>  parents = new ArrayList<Valintaryhma>();
-        for(Valintaryhma valintaryhma : parents) {
-            if(valintaryhma.getYlavalintaryhma() == null) {
-                parents.add(valintaryhma);
-            }
-        }
-
-        return null;
-
-
-    }
 
     @Override
     public Valintaryhma update(String oid, Valintaryhma incoming) {

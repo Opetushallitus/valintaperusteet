@@ -1,6 +1,5 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
-import fi.vm.sade.service.valintaperusteet.dto.ValintaperustePuuDTO;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 
 import java.util.List;
@@ -21,5 +20,5 @@ public interface ValintaryhmaService extends CRUDService<Valintaryhma, Long, Str
 
     List<Valintaryhma> findParentHierarchyFromOid(String oid);
 
-    List<ValintaperustePuuDTO> search(String hakuOid, List<String> tila, String oid);
+
 }
