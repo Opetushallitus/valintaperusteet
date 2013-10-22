@@ -46,12 +46,6 @@ public class PuuResource {
             @QueryParam("q") String searchString,
             @QueryParam("hakuOid") String hakuOid,
             @QueryParam("tila") List<String> tila) {
-
-        System.out.println("WTF IS THIS SHIT");
-
-        //above stuff is outdated, remove at some point
         return puuService.search(hakuOid, tila, searchString);
-
-
     }
 }

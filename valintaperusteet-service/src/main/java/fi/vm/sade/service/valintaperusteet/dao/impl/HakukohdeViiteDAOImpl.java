@@ -90,8 +90,7 @@ public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Lo
     public List<HakukohdeViite> search(String hakuOid, List<String> tila, String searchString){
         QHakukohdeViite hakukohdeViite = QHakukohdeViite.hakukohdeViite;
 
-
-        JPAQuery a = from(hakukohdeViite);
+        JPAQuery a = from(hakukohdeViite).leftJoin(hakukohdeViite.valintaryhma).fetch();
 
         BooleanExpression b =null;
         if(hakuOid != null && !hakuOid.isEmpty()) {

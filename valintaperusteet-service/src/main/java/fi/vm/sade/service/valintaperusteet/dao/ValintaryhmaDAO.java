@@ -31,7 +31,7 @@ public interface ValintaryhmaDAO extends JpaDAO<Valintaryhma, Long> {
      */
     List<Valintaryhma> readHierarchy(String childOid);
 
-    List<Valintaryhma> findAllByHakuoid(String hakuOid);
+    List<Valintaryhma> findAllFetchAlavalintaryhmat();
 
     List<Valintaryhma> haeHakukohdekoodinOpetuskielikoodienJaValintakoekoodienMukaan(String hakukohdekoodiUri,
                                                                                      Collection<String> opetuskielikoodiUrit,

@@ -38,7 +38,7 @@ public class PuuServiceImpl implements PuuService {
     public List<ValintaperustePuuDTO> search(String hakuOid, List<String> tila, String searchString) {
         //fetch whole tree in a single query, is at least now faster than individually querying
 
-        List<Valintaryhma>  valintaryhmaList = valintaryhmaDAO.findAllByHakuoid(hakuOid);
+        List<Valintaryhma>  valintaryhmaList = valintaryhmaDAO.findAllFetchAlavalintaryhmat();
         List<HakukohdeViite> hakukohdeList = hakukohdeViiteDAO.search(hakuOid,tila,searchString);
 
         List<ValintaperustePuuDTO> parentList = new ArrayList<ValintaperustePuuDTO>();
@@ -52,9 +52,8 @@ public class PuuServiceImpl implements PuuService {
             }
         }
         for(Valintaryhma valintaryhma : parents) {
-            ValintaperustePuuDTO dto = convert(valintaryhma);
+            ValintaperustePuuDTO dto = convert(valintaryhma, dtoMap);
             parentList.add(dto);
-            dtoMap.put(valintaryhma.getId(), dto);
         }
         for(HakukohdeViite hakukohdeViite : hakukohdeList) {
             attach(hakukohdeViite, dtoMap, parentList);
@@ -81,20 +80,22 @@ public class PuuServiceImpl implements PuuService {
         dto.setTyyppi(ValintaperustePuuTyyppi.HAKUKOHDE);
         dto.setHakuOid(viite.getHakuoid());
         dto.setOid(viite.getOid());
+        dto.setNimi(viite.getNimi());
         dto.setTarjoajaOid(viite.getTarjoajaOid());
         dto.setTila(viite.getTila());
 
         return dto;
     }
 
-    private ValintaperustePuuDTO convert(Valintaryhma valintaryhma) {
+    private ValintaperustePuuDTO convert(Valintaryhma valintaryhma, Map<Long, ValintaperustePuuDTO> dtoMap) {
         ValintaperustePuuDTO valintaperustePuuDTO = new ValintaperustePuuDTO();
+        dtoMap.put(valintaryhma.getId(), valintaperustePuuDTO);
         valintaperustePuuDTO.setNimi(valintaryhma.getNimi());
         valintaperustePuuDTO.setTyyppi(ValintaperustePuuTyyppi.VALINTARYHMA);
         valintaperustePuuDTO.setOid(valintaryhma.getOid());
 
         for(Valintaryhma valintaryhma1: valintaryhma.getAlavalintaryhmat()){
-            valintaperustePuuDTO.getAlavalintaryhmat().add(convert(valintaryhma1));
+            valintaperustePuuDTO.getAlavalintaryhmat().add(convert(valintaryhma1,dtoMap));
         }
 
 
