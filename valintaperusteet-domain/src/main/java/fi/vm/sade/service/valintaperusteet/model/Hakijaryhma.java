@@ -20,7 +20,7 @@ public class Hakijaryhma extends BaseEntity implements LinkitettavaJaKopioitava<
     @JsonView(JsonViews.Basic.class)
     private String oid;
 
-    @Column
+    @Column(nullable = false)
     @JsonView(JsonViews.Basic.class)
     private String nimi;
 
@@ -28,7 +28,7 @@ public class Hakijaryhma extends BaseEntity implements LinkitettavaJaKopioitava<
     @JsonView(JsonViews.Basic.class)
     private String kuvaus;
 
-    @Column
+    @Column(nullable = false)
     @JsonView(JsonViews.Basic.class)
     private int kiintio;
 

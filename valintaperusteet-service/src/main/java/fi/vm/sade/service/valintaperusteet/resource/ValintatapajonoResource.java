@@ -70,23 +70,6 @@ public class ValintatapajonoResource {
         return jarjestyskriteeriService.findJarjestyskriteeriByJono(oid);
     }
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
-    @Path("{valintatapajonoOid}/hakijaryhma")
-    @Secured({READ, UPDATE, CRUD})
-    public Response liitaHakijaryhma(@PathParam("valintatapajonoOid") String valintatapajonoOid) {
-        try {
-            List<Hakijaryhma> hakijaryhmaByJono = hakijaryhmaService.findHakijaryhmaByJono(valintatapajonoOid);
-            return Response.status(Response.Status.ACCEPTED).entity(hakijaryhmaByJono).build();
-        } catch (Exception e) {
-            LOGGER.error("Error fetching hakijaryhma.", e);
-            Map map = new HashMap();
-            map.put("error", e.getMessage());
-            return Response.status(Response.Status.BAD_REQUEST).entity(map).build();
-        }
-    }
-
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -104,6 +87,15 @@ public class ValintatapajonoResource {
             map.put("error", e.getMessage());
             return Response.status(Response.Status.BAD_REQUEST).entity(map).build();
         }
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("{valintatapajonoOid}/hakijaryhma")
+    @JsonView({JsonViews.Basic.class})
+    @Secured({READ, UPDATE, CRUD})
+    public List<Hakijaryhma> hakijaryhmat(@PathParam("valintatapajonoOid") String valintatapajonoOid) {
+        return hakijaryhmaService.findHakijaryhmaByJono(valintatapajonoOid);
     }
 
     @GET

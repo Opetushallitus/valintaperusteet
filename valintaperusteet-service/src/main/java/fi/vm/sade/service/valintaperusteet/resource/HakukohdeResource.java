@@ -134,6 +134,15 @@ public class HakukohdeResource {
     }
 
     @GET
+    @Path("{oid}/hakijaryhma")
+    @Produces(MediaType.APPLICATION_JSON)
+    @JsonView({JsonViews.Basic.class})
+    @Secured({READ, UPDATE, CRUD})
+    public List<Hakijaryhma> hakijaryhmat(@PathParam("oid") String oid) {
+        return hakijaryhmaService.findByHakukohde(oid);
+    }
+
+    @GET
     @Path("{oid}/laskentakaava")
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})

@@ -77,6 +77,15 @@ public class ValintaryhmaResource {
     }
 
     @GET
+    @Path("{oid}/hakijaryhma")
+    @Produces(MediaType.APPLICATION_JSON)
+    @JsonView({JsonViews.Basic.class})
+    @Secured({READ, UPDATE, CRUD})
+    public List<Hakijaryhma> hakijaryhmat(@PathParam("oid") String oid) {
+        return hakijaryhmaService.findByValintaryhma(oid);
+    }
+
+    @GET
     @Path("{oid}/parents")
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView(JsonViews.ParentHierarchy.class)
