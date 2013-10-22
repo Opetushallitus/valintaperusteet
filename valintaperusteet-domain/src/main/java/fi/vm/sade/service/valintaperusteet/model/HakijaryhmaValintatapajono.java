@@ -32,14 +32,14 @@ public class HakijaryhmaValintatapajono extends BaseEntity implements Linkitetta
     @JsonView(JsonViews.Basic.class)
     private Boolean aktiivinen;
 
-    @JoinColumn(name = "edellinen_hakijaryhma_id")
+    @JoinColumn(name = "edellinen_hakijaryhma_jono_id")
     @OneToOne(fetch = FetchType.LAZY)
     private HakijaryhmaValintatapajono edellinen;
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "edellinen")
     private HakijaryhmaValintatapajono seuraava;
 
-    @JoinColumn(name = "master_hakijaryhma_id")
+    @JoinColumn(name = "master_hakijaryhma_jono_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private HakijaryhmaValintatapajono master;
 

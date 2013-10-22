@@ -27,10 +27,16 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
     public List<Valintatapajono> findByValinnanVaihe(String oid) {
         QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
         QValintatapajono jono = QValintatapajono.valintatapajono;
+        QHakijaryhmaValintatapajono hv = QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
 
-        return from(valinnanVaihe).leftJoin(valinnanVaihe.jonot, jono).leftJoin(valinnanVaihe.valintaryhma)
-                .leftJoin(jono.edellinenValintatapajono).fetch().leftJoin(jono.masterValintatapajono).fetch()
-                .leftJoin(jono.hakijaryhmat).fetch().leftJoin(jono.valinnanVaihe).fetch().distinct()
+        return from(valinnanVaihe).leftJoin(valinnanVaihe.jonot, jono)
+                .leftJoin(valinnanVaihe.valintaryhma)
+                .leftJoin(jono.edellinenValintatapajono).fetch()
+                .leftJoin(jono.masterValintatapajono).fetch()
+                .leftJoin(jono.hakijaryhmat, hv).fetch()
+                .leftJoin(hv.hakijaryhma).fetch()
+                .leftJoin(jono.valinnanVaihe).fetch()
+                .distinct()
                 .where(valinnanVaihe.oid.eq(oid)).list(jono);
     }
 

@@ -144,7 +144,7 @@ public class ValintatapajonoServiceImpl extends AbstractCRUDServiceImpl<Valintat
     private Valintatapajono haeValintatapajono(String oid) {
         Valintatapajono valintatapajono = valintatapajonoDAO.readByOid(oid);
         if (valintatapajono == null) {
-            throw new ValintatapajonoEiOleOlemassaException("Valintatapajono (" + oid + ") ei oe olemassa", oid);
+            throw new ValintatapajonoEiOleOlemassaException("Valintatapajono (" + oid + ") ei ole olemassa", oid);
         }
 
         return valintatapajono;

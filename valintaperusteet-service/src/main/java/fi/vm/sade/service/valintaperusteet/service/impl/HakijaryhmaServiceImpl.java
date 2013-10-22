@@ -1,13 +1,13 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
 import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaDAO;
+import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaValintatapajonoDAO;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.*;
 import fi.vm.sade.service.valintaperusteet.util.HakijaryhmaKopioija;
 import fi.vm.sade.service.valintaperusteet.util.HakijaryhmaUtil;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
-import fi.vm.sade.service.valintaperusteet.util.ValinnanVaiheUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +29,9 @@ public class HakijaryhmaServiceImpl extends AbstractCRUDServiceImpl<Hakijaryhma,
 
     @Autowired
     private HakijaryhmaDAO hakijaryhmaDAO;
+
+    @Autowired
+    private HakijaryhmaValintatapajonoDAO hakijaryhmaValintatapajonoDAO;
 
     @Autowired
     private OidService oidService;
@@ -95,18 +98,87 @@ public class HakijaryhmaServiceImpl extends AbstractCRUDServiceImpl<Hakijaryhma,
 
     @Override
     public void liitaHakijaryhmaValintatapajonolle(String valintatapajonoOid, String hakijaryhmaOid) {
+        if(hakijaryhmaValintatapajonoDAO.readByOid(hakijaryhmaOid + "_" + valintatapajonoOid) != null) {
+            throw new HakijaryhmaValintatapajonoOnJoOlemassaException("HakijaryhmaValintatapajono (" + hakijaryhmaOid + "_" + valintatapajonoOid + ") on jo olemassa");
+        }
         Valintatapajono valintatapajono = valintapajonoService.readByOid(valintatapajonoOid);
         if (valintatapajono == null) {
             throw new ValintatapajonoEiOleOlemassaException("Valintatpajono (" + valintatapajonoOid + ") ei ole olemassa");
         }
         Hakijaryhma hakijaryhma = haeHakijaryhma(hakijaryhmaOid);
 
-        HakijaryhmaValintatapajono link = new HakijaryhmaValintatapajono();
 
-        link.setHakijaryhma(hakijaryhma);
-        link.setValintatapajono(valintatapajono);
+        // Tarkistetaan kuuluuko hakijaryhma valintatapajonon hakukohteelle tai valintaryhmaan.
+        HakukohdeViite hakukohdeViite = valintatapajono.getValinnanVaihe().getHakukohdeViite();
+        Valintaryhma valintaryhma = valintatapajono.getValinnanVaihe().getValintaryhma();
 
-        valintatapajono.getHakijaryhmat().add(link);
+        boolean hakijaryhmaFound = false;
+        if(hakukohdeViite != null) {
+            for (Hakijaryhma hr : hakukohdeViite.getHakijaryhmat()) {
+                if(hakijaryhma.getOid().equals(hr.getOid())) {
+                    hakijaryhmaFound = true;
+                    break;
+                }
+            }
+        } else if(valintaryhma != null) {
+            for (Hakijaryhma hr : valintaryhma.getHakijaryhmat()) {
+                if(hakijaryhma.getOid().equals(hr.getOid())) {
+                    hakijaryhmaFound = true;
+                    break;
+                }
+            }
+        }
+
+        if(!hakijaryhmaFound) {
+            throw new HakijaryhmaEiKuuluValintatapajonolleException("");
+        }
+
+        HakijaryhmaValintatapajono master = new HakijaryhmaValintatapajono();
+
+        master.setHakijaryhma(hakijaryhma);
+        master.setValintatapajono(valintatapajono);
+        master.setOid(hakijaryhma.getOid() + "_" + valintatapajono.getOid());
+        master.setAktiivinen(true);
+        master = hakijaryhmaValintatapajonoDAO.insert(master);
+
+        //valintatapajono.getHakijaryhmat().add(link);
+
+        for (Valintatapajono kopio : valintatapajono.getKopiot()) {
+
+            HakukohdeViite kopioHakukohdeViite = kopio.getValinnanVaihe().getHakukohdeViite();
+            Valintaryhma kopioValintaryhma = kopio.getValinnanVaihe().getValintaryhma();
+
+            if(kopioHakukohdeViite == null && kopioValintaryhma == null) {
+                throw new ValinnanvaiheellaEiOleHakukohdettaTaiValintaryhmaaException("");
+            }
+
+            HakijaryhmaValintatapajono kopioLink = new HakijaryhmaValintatapajono();
+
+            for (Hakijaryhma hrKopio : hakijaryhma.getKopiot()) {
+
+                if(kopioValintaryhma != null && hrKopio.getValintaryhma() != null
+                        && hrKopio.getValintaryhma().getOid().equals(kopioValintaryhma.getOid())) {
+                    kopioLink.setHakijaryhma(hrKopio);
+                } else if(kopioHakukohdeViite != null && hrKopio.getHakukohdeViite() != null
+                        && hrKopio.getHakukohdeViite().getOid().equals(kopioHakukohdeViite.getOid())) {
+                    kopioLink.setHakijaryhma(hrKopio);
+                }
+
+            }
+
+            if(kopioLink.getHakijaryhma() == null) {
+                throw new HakijaryhmanKopiotaEiLoytynytException("");
+            }
+
+            kopioLink.setValintatapajono(kopio);
+            kopioLink.setOid(kopioLink.getHakijaryhma().getOid() + "_" + kopio.getOid());
+            kopioLink.setAktiivinen(true);
+            kopioLink.setMaster(master);
+            kopioLink = hakijaryhmaValintatapajonoDAO.insert(kopioLink);
+
+            //kopio.getHakijaryhmat().add(kopioLink);
+        }
+
 
     }
 
@@ -118,7 +190,6 @@ public class HakijaryhmaServiceImpl extends AbstractCRUDServiceImpl<Hakijaryhma,
         }
 
         Hakijaryhma edellinenHakijaryhma = hakijaryhmaDAO.haeValintaryhmanViimeinenHakijaryhma(valintaryhmaOid);
-
 
         hakijaryhma.setOid(oidService.haeHakijaryhmaOid());
         hakijaryhma.setValintaryhma(valintaryhma);
@@ -157,7 +228,7 @@ public class HakijaryhmaServiceImpl extends AbstractCRUDServiceImpl<Hakijaryhma,
     private void lisaaHakukohteelleKopioMasterHakijaryhmasta(HakukohdeViite hakukohde,
                                                                 Hakijaryhma masterHakijaryhma,
                                                                 Hakijaryhma edellinenMasterHakijaryhma) {
-        Hakijaryhma kopio = kopioija.luoKlooni(masterHakijaryhma);
+        Hakijaryhma kopio = HakijaryhmaUtil.teeKopioMasterista(masterHakijaryhma);
         kopio.setHakukohdeViite(hakukohde);
         kopio.setOid(oidService.haeHakijaryhmaOid());
         List<Hakijaryhma> vaiheet = LinkitettavaJaKopioitavaUtil.jarjesta(
@@ -170,7 +241,7 @@ public class HakijaryhmaServiceImpl extends AbstractCRUDServiceImpl<Hakijaryhma,
                                                                   Hakijaryhma masterHakijaryhma,
                                                                   Hakijaryhma edellinenMasterHakijaryhma) {
 
-        Hakijaryhma kopio = kopioija.luoKlooni(masterHakijaryhma);
+        Hakijaryhma kopio = HakijaryhmaUtil.teeKopioMasterista(masterHakijaryhma);
         kopio.setValintaryhma(valintaryhma);
         kopio.setOid(oidService.haeHakijaryhmaOid());
         List<Hakijaryhma> vaiheet = LinkitettavaJaKopioitavaUtil.jarjesta(

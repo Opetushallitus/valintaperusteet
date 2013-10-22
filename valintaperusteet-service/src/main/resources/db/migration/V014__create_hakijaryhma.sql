@@ -18,9 +18,9 @@ create table hakijaryhma_jono (
     version int8 not null,
     aktiivinen boolean not null,
     oid varchar(255) not null unique,
-    edellinen_hakijaryhma_id int8,
+    edellinen_hakijaryhma_jono_id int8,
     hakijaryhma_id int8 not null,
-    master_hakijaryhma_id int8,
+    master_hakijaryhma_jono_id int8,
     valintatapajono_id int8 not null,
     primary key (id)
 );
@@ -57,12 +57,12 @@ alter table hakijaryhma_jono
 
 alter table hakijaryhma_jono
     add constraint FKC68D817E47B53B5F
-    foreign key (master_hakijaryhma_id)
+    foreign key (master_hakijaryhma_jono_id)
     references hakijaryhma_jono;
 
 alter table hakijaryhma_jono
     add constraint FKC68D817E7F75C24D
-    foreign key (edellinen_hakijaryhma_id)
+    foreign key (edellinen_hakijaryhma_jono_id)
     references hakijaryhma_jono;
 
 alter table hakijaryhma_jono

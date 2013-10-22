@@ -46,7 +46,7 @@ public class HakijaryhmaDAOImpl extends AbstractJpaDAOImpl<Hakijaryhma, Long> im
     public List<Hakijaryhma> findByValintatapajono(String oid) {
         QHakijaryhma hakijaryhma = QHakijaryhma.hakijaryhma;
 
-        return from(hakijaryhma).where(hakijaryhma.jonot.any().oid.eq(oid))
+        return from(hakijaryhma).where(hakijaryhma.jonot.any().valintatapajono.oid.eq(oid))
                 .leftJoin(hakijaryhma.jonot).fetch()
                 .leftJoin(hakijaryhma.master).fetch()
                 .leftJoin(hakijaryhma.edellinen).fetch()

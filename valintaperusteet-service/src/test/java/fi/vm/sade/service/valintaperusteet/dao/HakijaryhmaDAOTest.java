@@ -2,9 +2,6 @@ package fi.vm.sade.service.valintaperusteet.dao;
 
 import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
-import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti;
-import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
-import fi.vm.sade.service.valintaperusteet.model.Funktionimi;
 import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,8 +38,8 @@ public class HakijaryhmaDAOTest {
 
     @Test
     public void testReadByOid() {
-        final String HAKIJARYHMA_NIMI = "hakijaryhma1";
-        final String HAKIJARYHMA_OID = "13819272933902809864870091301782";
+        final String HAKIJARYHMA_NIMI = "hakijaryhma 1";
+        final String HAKIJARYHMA_OID = "hr1";
 
         Hakijaryhma hakijaryhma = hakijaryhmaDAO.readByOid(HAKIJARYHMA_OID);
         assertEquals(HAKIJARYHMA_NIMI, hakijaryhma.getNimi() );
@@ -50,8 +47,8 @@ public class HakijaryhmaDAOTest {
 
     @Test
     public void testFindByValintaryhma() {
-        final String VALINTARYHMA_OID = "1381743139706-2693498799461467830";
-        final String HAKIJARYHMA_OID = "13819272933902809864870091301782";
+        final String VALINTARYHMA_OID = "vr1";
+        final String HAKIJARYHMA_OID = "hr1";
 
         List<Hakijaryhma> byValintaryhma = hakijaryhmaDAO.findByValintaryhma(VALINTARYHMA_OID);
 
@@ -70,7 +67,7 @@ public class HakijaryhmaDAOTest {
     @Test
     public void testHaeHakukohteenViimeinenHakijaryhma() {
         final String HAKUKOHDE_OID = "1";
-        final String HAKIJARYHMA_OID = "13819276508298702905770965193967";
+        final String HAKIJARYHMA_OID = "hr4";
 
         Hakijaryhma byHakukohde = hakijaryhmaDAO.haeHakukohteenViimeinenHakijaryhma(HAKUKOHDE_OID);
 
@@ -79,8 +76,8 @@ public class HakijaryhmaDAOTest {
 
     @Test
     public void testHaeValintaryhmanViimeinenHakijaryhma() {
-        final String VALINTARYHMA_OID = "1381743139706-2693498799461467830";
-        final String HAKIJARYHMA_OID = "1381929536619-162478418672529850";
+        final String VALINTARYHMA_OID = "vr1";
+        final String HAKIJARYHMA_OID = "hr1";
 
         Hakijaryhma byValintaryhma = hakijaryhmaDAO.haeValintaryhmanViimeinenHakijaryhma(VALINTARYHMA_OID);
 
@@ -89,17 +86,32 @@ public class HakijaryhmaDAOTest {
 
     @Test
     public void testHaeValintatapajonolla() {
-        final String VALINTATAPAJONO_OID_1 = "1381744037373-4242685733786926927";
-        final String VALINTATAPAJONO_OID_2 = "13817440373886813568836676069139";
+        final String VALINTATAPAJONO_OID_1 = "vtj1";
+        final String VALINTATAPAJONO_OID_2 = "vtj2";
+        final String VALINTATAPAJONO_OID_3 = "vtj3";
+        final String VALINTATAPAJONO_OID_4 = "vtj4";
+        final String VALINTATAPAJONO_OID_5 = "vtj5";
 
-        final int LIST_SIZE_1 = 1;
-        final int LIST_SIZE_2 = 2;
+        final int LIST_SIZE_1 = 0;
+        final int LIST_SIZE_2 = 0;
+        final int LIST_SIZE_3 = 1;
+        final int LIST_SIZE_4 = 2;
+        final int LIST_SIZE_5 = 1;
 
-        List<Hakijaryhma> byValintatapajono = hakijaryhmaDAO.findByValintatapajono(VALINTATAPAJONO_OID_1);
-        assertEquals(LIST_SIZE_1, byValintatapajono.size());
 
-        byValintatapajono = hakijaryhmaDAO.findByValintatapajono(VALINTATAPAJONO_OID_2);
-        assertEquals(LIST_SIZE_2, byValintatapajono.size());
+        haeJono(VALINTATAPAJONO_OID_1, LIST_SIZE_1);
+        haeJono(VALINTATAPAJONO_OID_2, LIST_SIZE_2);
+        haeJono(VALINTATAPAJONO_OID_3, LIST_SIZE_3);
+        haeJono(VALINTATAPAJONO_OID_4, LIST_SIZE_4);
+        haeJono(VALINTATAPAJONO_OID_5, LIST_SIZE_5);
+
+
     }
+
+    private void haeJono(String valintatapajonoOid, int listSize) {
+        List<Hakijaryhma> byValintatapajono = hakijaryhmaDAO.findByValintatapajono(valintatapajonoOid);
+        assertEquals(listSize, byValintatapajono.size());
+    }
+
 
 }

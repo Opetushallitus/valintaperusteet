@@ -19,9 +19,6 @@ public class HakijaryhmaKopioija implements Kopioija<Hakijaryhma> {
 
     @Override
     public void kopioiTiedot(Hakijaryhma from, Hakijaryhma to) {
-        if (from.getAktiivinen() != null) {
-            to.setAktiivinen(from.getAktiivinen());
-        }
 
         to.setKiintio(from.getKiintio());
 
@@ -39,9 +36,6 @@ public class HakijaryhmaKopioija implements Kopioija<Hakijaryhma> {
     @Override
     public void kopioiTiedotMasteriltaKopiolle(Hakijaryhma alkuperainenMaster,
                                                Hakijaryhma paivitettyMaster, Hakijaryhma kopio) {
-        if (kopio.getAktiivinen().equals(alkuperainenMaster.getAktiivinen())) {
-            kopio.setAktiivinen(paivitettyMaster.getAktiivinen());
-        }
 
         if (kopio.getKiintio() == alkuperainenMaster.getKiintio()) {
             kopio.setKiintio(paivitettyMaster.getKiintio());

@@ -74,6 +74,7 @@ public class HakukohdeServiceImpl extends AbstractCRUDServiceImpl<HakukohdeViite
         HakukohdeViite hkv = convertDTO(hakukohdeViiteDTO);
         HakukohdeViite insert = hakukohdeViiteDAO.insert(hkv);
         valinnanVaiheService.kopioiValinnanVaiheetParentilta(insert, hkv.getValintaryhma());
+        hakijaryhmaService.kopioiHakijaryhmatParentilta(insert,hkv.getValintaryhma());
         return insert;
     }
 

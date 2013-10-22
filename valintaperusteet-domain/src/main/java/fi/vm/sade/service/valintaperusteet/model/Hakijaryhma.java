@@ -32,7 +32,7 @@ public class Hakijaryhma extends BaseEntity implements LinkitettavaJaKopioitava<
     @JsonView(JsonViews.Basic.class)
     private int kiintio;
 
-    @OneToMany(mappedBy = "hakijaryhma", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "hakijaryhma", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Set<HakijaryhmaValintatapajono> jonot = new HashSet<HakijaryhmaValintatapajono>();
 
     @JoinColumn(name = "valintaryhma_id")
