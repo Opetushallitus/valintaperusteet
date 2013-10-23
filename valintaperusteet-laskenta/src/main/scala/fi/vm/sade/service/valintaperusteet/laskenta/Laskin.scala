@@ -428,6 +428,15 @@ private class Laskin private(private val hakukohde: Hakukohde,
           (s => (Some(s.trim.equalsIgnoreCase(vertailtava.trim)), List(new Hyvaksyttavissatila))), oletusarvo)
         (tulos, tila, Historia("Hae merkkijono ja vertaa yhtasuuruus", tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
       }
+
+      case Valintaperusteyhtasuuruus(oid, (valintaperusteviite1, valintaperusteviite2)) => {
+        val (arvo1, tilat1) = haeValintaperuste[String](valintaperusteviite1, hakemus, (s => (Some(s.trim), List(new Hyvaksyttavissatila))), None)
+        val (arvo2, tilat2) = haeValintaperuste[String](valintaperusteviite2, hakemus, (s => (Some(s.trim), List(new Hyvaksyttavissatila))), None)
+
+        val tulos = Some(arvo1 == arvo2)
+        val tilat = tilat1 ::: tilat2
+        (tulos, tilat, Historia("Valintaperusteyhtasuuruus", tulos, tilat, None, Some(Map("tunniste1" -> arvo1, "tunniste2" -> arvo2))))
+      }
     }
 
     val palautettavaTila = tilat.filter(_ match {

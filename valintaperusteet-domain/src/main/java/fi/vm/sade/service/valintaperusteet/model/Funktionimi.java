@@ -47,7 +47,8 @@ public enum Funktionimi {
     HAEMERKKIJONOJAVERTAAYHTASUURUUS(Funktiotyyppi.TOTUUSARVOFUNKTIO, Laskentamoodi.VALINTAKOELASKENTA, Laskentamoodi.VALINTALASKENTA),
     HYLKAA(Funktiotyyppi.LUKUARVOFUNKTIO, Laskentamoodi.VALINTAKOELASKENTA, Laskentamoodi.VALINTALASKENTA),
     SKAALAUS(Funktiotyyppi.LUKUARVOFUNKTIO, Laskentamoodi.VALINTALASKENTA),
-    PAINOTETTUKESKIARVO(Funktiotyyppi.LUKUARVOFUNKTIO, Laskentamoodi.VALINTALASKENTA, Laskentamoodi.VALINTAKOELASKENTA);
+    PAINOTETTUKESKIARVO(Funktiotyyppi.LUKUARVOFUNKTIO, Laskentamoodi.VALINTALASKENTA, Laskentamoodi.VALINTAKOELASKENTA),
+    VALINTAPERUSTEYHTASUURUUS(Funktiotyyppi.TOTUUSARVOFUNKTIO, Laskentamoodi.VALINTALASKENTA, Laskentamoodi.VALINTAKOELASKENTA);
 
     private Funktiotyyppi tyyppi;
     private Set<Laskentamoodi> laskentamoodit;

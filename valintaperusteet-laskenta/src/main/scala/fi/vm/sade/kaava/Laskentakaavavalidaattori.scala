@@ -177,27 +177,29 @@ object Laskentakaavavalidaattori {
     }
   }
 
-  private def tarkistaValintaperusteparametrit(funktiokutsu: Funktiokutsu): Option[Validointivirhe] = {
+  private def tarkistaValintaperusteparametrit(funktiokutsu: Funktiokutsu): List[Validointivirhe] = {
     val funktiokuvaus = Funktiokuvaaja.annaFunktiokuvaus(funktiokutsu.getFunktionimi)._2
     val nimi = funktiokutsu.getFunktionimi.name()
 
     funktiokuvaus.valintaperusteparametri match {
-      case None => {
+      case Nil => {
         if (funktiokutsu.getValintaperusteviitteet.size > 0) {
-          Some(new Validointivirhe(Virhetyyppi.FUNKTIOKUTSU_EI_OTA_VALINTAPERUSTEPARAMETRIA,
+          List(new Validointivirhe(Virhetyyppi.FUNKTIOKUTSU_EI_OTA_VALINTAPERUSTEPARAMETRIA,
             "Funktio " + nimi + " ei ota valintaperusteparametreja"))
-        } else None
+        } else Nil
       }
 
-      case Some(param) => {
-
-        if (funktiokutsu.getValintaperusteviitteet.size == 0) {
-          Some(new Validointivirhe(Virhetyyppi.VALINTAPERUSTEPARAMETRI_PUUTTUUU,
+      case lista => {
+        if (lista.size != funktiokutsu.getValintaperusteviitteet.size) {
+          List(new Validointivirhe(Virhetyyppi.VALINTAPERUSTEPARAMETRI_PUUTTUUU,
             "Valintaperusteparametri puuttuu funktiolle " + nimi))
-        } else if (StringUtils.isBlank(funktiokutsu.getValintaperusteviitteet.head.getTunniste)) {
-          Some(new Validointivirhe(Virhetyyppi.VALINTAPERUSTEPARAMETRIN_TUNNISTE_PUUTTUU, "Valintaperusteparametrin tunniste puuttuu " +
-            "funktiolle " + nimi))
-        } else None
+        } else {
+          funktiokutsu.getValintaperusteviitteet.foldLeft(List[Validointivirhe]())((l, vp) => {
+            if (StringUtils.isBlank(vp.getTunniste))
+              new ValintaperusteparametrinTunnistePuuttuuVirhe("Valintaperusteparametrin tunniste puuttuu funktiolle " + nimi, vp.getIndeksi) :: l
+            else l
+          })
+        }
       }
     }
   }
