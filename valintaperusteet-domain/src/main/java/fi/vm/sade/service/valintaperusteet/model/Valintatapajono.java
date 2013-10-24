@@ -193,7 +193,7 @@ public class Valintatapajono extends BaseEntity implements LinkitettavaJaKopioit
 
     @JsonProperty("hakijaryhmat")
     @JsonView(JsonViews.Basic.class)
-    public List<String> getHakijaryhmaId() {
+    public List<String> getHakijaryhmaIds() {
         List<String> hakijaryhmaIds = new ArrayList<String>();
         if (hakijaryhmat != null) {
             for (HakijaryhmaValintatapajono hakijaryhma : hakijaryhmat) {
@@ -203,11 +203,10 @@ public class Valintatapajono extends BaseEntity implements LinkitettavaJaKopioit
         return hakijaryhmaIds;
     }
 
-    @JsonProperty("lapsihakijaryhma")
+    @JsonProperty("hakijaryhmat")
     @JsonView(JsonViews.Basic.class)
-    @Transient
-    public Boolean lapsihakijaryhma() {
-        return hakijaryhmat.size() > 0 ? true : false;
+    public void setHakijaryhmaIds(List<String> ids) {
+
     }
 
     @Transient

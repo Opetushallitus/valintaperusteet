@@ -1451,4 +1451,6 @@
     <laskentakaava id="999" version="0" nimi="kaava999" on_luonnos="true" tyyppi="LUKUARVOFUNKTIO" funktiokutsu_id="413"
                    hakukohdeviite="1"/>
 
+    <hakijaryhma_jono />
+    <hakijaryhma />
 </dataset>

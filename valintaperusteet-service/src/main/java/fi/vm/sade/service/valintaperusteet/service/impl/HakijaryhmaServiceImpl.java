@@ -297,12 +297,18 @@ public class HakijaryhmaServiceImpl extends AbstractCRUDServiceImpl<Hakijaryhma,
 
     @Override
     public void kopioiHakijaryhmatParentilta(Valintaryhma inserted, Valintaryhma parent) {
+        if(parent == null) {
+            return;
+        }
         Hakijaryhma hakijaryhma = hakijaryhmaDAO.haeValintaryhmanViimeinenHakijaryhma(parent.getOid());
         kopioiHakijaryhmatRekursiivisesti(inserted, hakijaryhma);
     }
 
     @Override
     public void kopioiHakijaryhmatParentilta(HakukohdeViite inserted, Valintaryhma parent) {
+        if(parent == null) {
+            return;
+        }
         Hakijaryhma hakijaryhma = hakijaryhmaDAO.haeValintaryhmanViimeinenHakijaryhma(parent.getOid());
         kopioiHakijaryhmatRekursiivisesti(inserted, hakijaryhma);
     }

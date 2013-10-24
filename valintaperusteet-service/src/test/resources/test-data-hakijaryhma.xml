@@ -49,4 +49,17 @@
                          master_valintatapajono_id="5" valinnan_vaihe_id="40" ei_varasijatayttoa="false"/>
         <valintatapajono id="42" version="0" aktiivinen="true" aloituspaikat="10" kuvaus="" nimi="jono 2" oid="vtj7" siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO"
                          edellinen_valintatapajono_id="41" master_valintatapajono_id="7" valinnan_vaihe_id="40" ei_varasijatayttoa="false"/>
+
+        <jarjestyskriteeri />
+        <valintakoe />
+        <hakukohteen_valintaperuste />
+        <hakukohde_viite_opetuskielikoodi />
+        <opetuskielikoodi />
+        <valintaryhma_opetuskielikoodi />
+        <valintakoekoodi />
+        <valintaryhma_valintakoekoodi />
+        <hakukohde_viite_valintakoekoodi />
+        <valintaryhma_hakukohdekoodi />
+        <arvokonvertteriparametri />
+        <arvovalikonvertteriparametri />
     </dataset>

@@ -294,10 +294,7 @@ public class HakijaryhmaServiceTest {
 
         }
 
-        assertEquals(0, hakijaryhmaService.findHakijaryhmaByJono("vtj6").size());
-        hakijaryhmaService.liitaHakijaryhmaValintatapajonolle("vtj6", "hr5");
         assertEquals(1, hakijaryhmaService.findHakijaryhmaByJono("vtj6").size());
-
         assertEquals(0, hakijaryhmaService.findHakijaryhmaByJono("vtj4").size());
         assertEquals(1, hakijaryhmaDAO.readByOid("hr2").getJonot().size());
 

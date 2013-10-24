@@ -19,11 +19,6 @@ import java.util.*;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
 
-/**
- * User: kwuoti
- * Date: 18.1.2013
- * Time: 10.04
- */
 @ContextConfiguration(locations = "classpath:test-context.xml")
 @TestExecutionListeners(listeners = {JTACleanInsertTestExecutionListener.class,
         DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
@@ -92,10 +87,10 @@ public class HakijaryhmaDAOTest {
         final String VALINTATAPAJONO_OID_4 = "vtj4";
         final String VALINTATAPAJONO_OID_5 = "vtj5";
 
-        final int LIST_SIZE_1 = 0;
-        final int LIST_SIZE_2 = 0;
-        final int LIST_SIZE_3 = 1;
-        final int LIST_SIZE_4 = 2;
+        final int LIST_SIZE_1 = 1;
+        final int LIST_SIZE_2 = 2;
+        final int LIST_SIZE_3 = 0;
+        final int LIST_SIZE_4 = 0;
         final int LIST_SIZE_5 = 1;
 
 
