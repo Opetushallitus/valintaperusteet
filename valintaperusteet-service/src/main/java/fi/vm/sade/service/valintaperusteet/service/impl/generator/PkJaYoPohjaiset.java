@@ -29,6 +29,9 @@ public class PkJaYoPohjaiset {
     public static final String saamenkielisillePostfix = "_SE";
     public static final String viittomakielisillePostfix = "_VK";
 
+
+    public static final String kielikoetunniste = "kielikoetunniste";
+
     public static Laskentakaava luoHakutoivejarjestyspisteytysmalli() {
         Funktiokutsu pisteet = GenericHelper.luoLukuarvo(2.0);
         Funktiokutsu nollaarvo = GenericHelper.luoLukuarvo(0.0);
@@ -157,6 +160,11 @@ public class PkJaYoPohjaiset {
                 GenericHelper.luoValintaperusteViite(aidinkieli, false, Valintaperustelahde.HAETTAVA_ARVO),
                 k.getKieliarvo(), false);
         return aidinkielivertailu;
+    }
+
+    public static Funktiokutsu luoKielikoeSuoritettuFunktiokutsu() {
+        return GenericHelper.luoHaeTotuusarvo(
+                GenericHelper.luoValintaperusteViite(kielikoetunniste, false, Valintaperustelahde.HAKUKOHTEEN_ARVO, "Kielikokeen tunniste", true), false);
     }
 
     public static Funktiokutsu luoKielikoeSuoritettuFunktiokutsu(LuoValintaperusteetServiceImpl.Kielikoodi k) {

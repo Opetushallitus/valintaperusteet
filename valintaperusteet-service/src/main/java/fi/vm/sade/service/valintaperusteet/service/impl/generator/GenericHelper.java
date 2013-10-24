@@ -70,11 +70,19 @@ public class GenericHelper {
 
     public static ValintaperusteViite luoValintaperusteViite(String tunniste, boolean onPakollinen,
                                                              Valintaperustelahde lahde, String kuvaus) {
+        return luoValintaperusteViite(tunniste, onPakollinen, lahde, kuvaus, false);
+    }
+
+    public static ValintaperusteViite luoValintaperusteViite(String tunniste, boolean onPakollinen,
+                                                             Valintaperustelahde lahde, String kuvaus,
+                                                             boolean epasuoraViittaus) {
         ValintaperusteViite vp = new ValintaperusteViite();
         vp.setTunniste(tunniste);
         vp.setOnPakollinen(onPakollinen);
         vp.setLahde(lahde);
         vp.setKuvaus(kuvaus);
+        vp.setEpasuoraViittaus(epasuoraViittaus);
+        vp.setIndeksi(1);
         return vp;
     }
 
@@ -373,6 +381,17 @@ public class GenericHelper {
         }
 
         fk.getFunktioargumentit().addAll(luoFunktioargumentit(args));
+        return fk;
+    }
+
+    public static Funktiokutsu luoValintaperusteyhtasuuruus(ValintaperusteViite vp1, ValintaperusteViite vp2) {
+        Funktiokutsu fk = new Funktiokutsu();
+        fk.setFunktionimi(Funktionimi.VALINTAPERUSTEYHTASUURUUS);
+
+        vp1.setIndeksi(1);
+        vp2.setIndeksi(2);
+        fk.getValintaperusteviitteet().add(vp1);
+        fk.getValintaperusteviitteet().add(vp2);
         return fk;
     }
 }
