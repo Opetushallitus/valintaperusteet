@@ -414,6 +414,7 @@ public class HakijaryhmaServiceImpl extends AbstractCRUDServiceImpl<Hakijaryhma,
     @Override
     public Hakijaryhma update(String oid, Hakijaryhma entity) {
         Hakijaryhma managedObject = haeHakijaryhma(oid);
+        entity.setLaskentakaava(laskentakaavaService.haeMallinnettuKaava(entity.getLaskentakaavaId()));
         return LinkitettavaJaKopioitavaUtil.paivita(managedObject, entity, kopioija);
     }
 
