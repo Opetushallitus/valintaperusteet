@@ -156,6 +156,25 @@ public class PkJaYoPohjaiset {
         );
     }
 
+    public static Laskentakaava luoKielikokeenPakollisuudenLaskentakaava(Laskentakaava eiUlkomaillaSuoritettuKoulutus) {
+
+        Funktiokutsu[] args = {
+                luoKielikoeSuoritettuFunktiokutsu(),
+                luoAidinkieliOnOpetuskieliFunktiokutsu(),
+                luoKielikoekriteeri1Funktiokutsu(),
+                luoKielikoekriteeri2Funktiokutsu(),
+                luoKielikoekriteeri3Funktiokutsu(),
+                luoKielikoekriteeri4Funktiokutsu(),
+                luoKielikoekriteeri5Funktiokutsu(),
+                luoKielikoekriteeri6Funktiokutsu(),
+                luoKielikoekriteeri7Funktiokutsu()
+        };
+
+        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(GenericHelper.luoJa(GenericHelper.luoEi(GenericHelper.luoTai(args)), eiUlkomaillaSuoritettuKoulutus),
+                "Kielikokeen pakollisuus - 2 aste, pk ja yo"
+        );
+    }
+
     public static Funktiokutsu luoAidinkieliOnOpetuskieliFunktiokutsu(LuoValintaperusteetServiceImpl.Kielikoodi k) {
         Funktiokutsu aidinkielivertailu = GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(
                 GenericHelper.luoValintaperusteViite(aidinkieli, false, Valintaperustelahde.HAETTAVA_ARVO),
@@ -239,7 +258,7 @@ public class PkJaYoPohjaiset {
         return GenericHelper.luoTai(args.toArray(new FunktionArgumentti[args.size()]));
     }
 
-    public static Funktiokutsu luoKielikoekriteeri2() {
+    public static Funktiokutsu luoKielikoekriteeri2Funktiokutsu() {
         final Funktiokutsu seitseman = GenericHelper.luoLukuarvo(7.0);
         class KriteeriGen {
 
@@ -307,7 +326,7 @@ public class PkJaYoPohjaiset {
                 gen.luoKriteeri(Aineet.aidinkieliJaKirjallisuus2));
     }
 
-    public static Funktiokutsu luoKielikoekriteeri3() {
+    public static Funktiokutsu luoKielikoekriteeri3Funktiokutsu() {
 
         final Funktiokutsu seitseman = GenericHelper.luoLukuarvo(7.0);
         final String fi = "fi";
@@ -350,7 +369,7 @@ public class PkJaYoPohjaiset {
                 k.getKieliarvo(), false);
     }
 
-    public static Funktiokutsu luoKielikoekriteeri4() {
+    public static Funktiokutsu luoKielikoekriteeri4Funktiokutsu() {
         return GenericHelper.luoValintaperusteyhtasuuruus(
                 GenericHelper.luoValintaperusteViite(opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO, "Opetuskieli", false),
                 GenericHelper.luoValintaperusteViite(lukionOppimaaranKieli, false, Valintaperustelahde.HAETTAVA_ARVO, "Lukion oppimäärän suorituskieli"));
@@ -406,7 +425,7 @@ public class PkJaYoPohjaiset {
 
     }
 
-    public static Funktiokutsu luoKielikoekriteeri5() {
+    public static Funktiokutsu luoKielikoekriteeri5Funktiokutsu() {
 
         final Funktiokutsu viisi = GenericHelper.luoLukuarvo(5.0);
         final String fi = "fi";
@@ -513,7 +532,7 @@ public class PkJaYoPohjaiset {
         return GenericHelper.luoTai(args.toArray(new FunktionArgumentti[args.size()]));
     }
 
-    public static Funktiokutsu luoKielikoekriteeri6() {
+    public static Funktiokutsu luoKielikoekriteeri6Funktiokutsu() {
 
         final Funktiokutsu viisi = GenericHelper.luoLukuarvo(5.0);
 
@@ -570,7 +589,7 @@ public class PkJaYoPohjaiset {
         return GenericHelper.luoTai(yleinenKielitutkintoSuoritettu, valtionhallinnonKielitutkintoSuoritettu);
     }
 
-    public static Funktiokutsu luoKielikoekriteeri7() {
+    public static Funktiokutsu luoKielikoekriteeri7Funktiokutsu() {
         final String fi = "fi";
         final String sv = "sv";
 

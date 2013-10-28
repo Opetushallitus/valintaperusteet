@@ -1881,7 +1881,7 @@ public class LuoValintaperusteetServiceTest {
                     Aineet.a23Kieli
             };
 
-            Funktiokutsu kaava = PkJaYoPohjaiset.luoKielikoekriteeri2();
+            Funktiokutsu kaava = PkJaYoPohjaiset.luoKielikoekriteeri2Funktiokutsu();
             final Hakukohde hakukohde = new Hakukohde(HAKUKOHDE_OID1, yhdistaMapit(
                     valintaperuste(PkJaYoPohjaiset.opetuskieli, kieli)
             ));
@@ -1945,7 +1945,7 @@ public class LuoValintaperusteetServiceTest {
                     )),
                     hakemus(new HashMap<String, String>())
             };
-            Funktiokutsu kaava = PkJaYoPohjaiset.luoKielikoekriteeri3();
+            Funktiokutsu kaava = PkJaYoPohjaiset.luoKielikoekriteeri3Funktiokutsu();
             final Hakukohde hakukohde = new Hakukohde(HAKUKOHDE_OID1, yhdistaMapit(
                     valintaperuste(PkJaYoPohjaiset.opetuskieli, kieli)
             ));
@@ -1974,7 +1974,7 @@ public class LuoValintaperusteetServiceTest {
                     valintaperuste("lukion_kieli", kieli)));
             Hakemus tyhjaHakemus = hakemus(new HashMap<String, String>());
 
-            Funktiokutsu kaava = PkJaYoPohjaiset.luoKielikoekriteeri4();
+            Funktiokutsu kaava = PkJaYoPohjaiset.luoKielikoekriteeri4Funktiokutsu();
             final Hakukohde hakukohde = new Hakukohde(HAKUKOHDE_OID1, yhdistaMapit(
                     valintaperuste(PkJaYoPohjaiset.opetuskieli, kieli)
             ));
@@ -2063,7 +2063,7 @@ public class LuoValintaperusteetServiceTest {
                     ))
             };
 
-            Funktiokutsu kaava = PkJaYoPohjaiset.luoKielikoekriteeri5();
+            Funktiokutsu kaava = PkJaYoPohjaiset.luoKielikoekriteeri5Funktiokutsu();
             final Hakukohde hakukohde = new Hakukohde(HAKUKOHDE_OID1, yhdistaMapit(
                     valintaperuste(PkJaYoPohjaiset.opetuskieli, kieli)
             ));
@@ -2099,7 +2099,7 @@ public class LuoValintaperusteetServiceTest {
         };
 
         for (String kieli : KIELET) {
-            Funktiokutsu kaava = PkJaYoPohjaiset.luoKielikoekriteeri6();
+            Funktiokutsu kaava = PkJaYoPohjaiset.luoKielikoekriteeri6Funktiokutsu();
             final Hakukohde hakukohde = new Hakukohde(HAKUKOHDE_OID1, yhdistaMapit(
                     valintaperuste(PkJaYoPohjaiset.opetuskieli, kieli)
             ));
@@ -2161,7 +2161,7 @@ public class LuoValintaperusteetServiceTest {
                     hakemus(new HashMap<String, String>())
             };
 
-            Funktiokutsu kaava = PkJaYoPohjaiset.luoKielikoekriteeri7();
+            Funktiokutsu kaava = PkJaYoPohjaiset.luoKielikoekriteeri7Funktiokutsu();
             final Hakukohde hakukohde = new Hakukohde(HAKUKOHDE_OID1, yhdistaMapit(
                     valintaperuste(PkJaYoPohjaiset.opetuskieli, kieli)
             ));
