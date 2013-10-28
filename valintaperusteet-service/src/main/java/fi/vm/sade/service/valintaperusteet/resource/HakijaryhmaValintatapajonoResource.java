@@ -44,7 +44,6 @@ public class HakijaryhmaValintatapajonoResource {
     HakijaryhmaValintatapajonoService hakijaryhmaValintatapajonoService;
 
     @DELETE
-    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Path("{oid}")
