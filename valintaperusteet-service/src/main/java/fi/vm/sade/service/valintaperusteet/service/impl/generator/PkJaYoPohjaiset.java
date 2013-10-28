@@ -29,6 +29,10 @@ public class PkJaYoPohjaiset {
     public static final String saamenkielisillePostfix = "_SE";
     public static final String viittomakielisillePostfix = "_VK";
 
+
+    public static final String kielikoetunniste = "kielikoetunniste";
+    public static final String opetuskieli = "opetuskieli";
+
     public static Laskentakaava luoHakutoivejarjestyspisteytysmalli() {
         Funktiokutsu pisteet = GenericHelper.luoLukuarvo(2.0);
         Funktiokutsu nollaarvo = GenericHelper.luoLukuarvo(0.0);
@@ -159,6 +163,17 @@ public class PkJaYoPohjaiset {
         return aidinkielivertailu;
     }
 
+    public static Funktiokutsu luoAidinkieliOnOpetuskieliFunktiokutsu() {
+        return GenericHelper.luoValintaperusteyhtasuuruus(
+                GenericHelper.luoValintaperusteViite(opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO, "Opetuskieli", false),
+                GenericHelper.luoValintaperusteViite(aidinkieli, false, Valintaperustelahde.HAETTAVA_ARVO, "Äidinkieli"));
+    }
+
+    public static Funktiokutsu luoKielikoeSuoritettuFunktiokutsu() {
+        return GenericHelper.luoHaeTotuusarvo(
+                GenericHelper.luoValintaperusteViite(kielikoetunniste, false, Valintaperustelahde.HAKUKOHTEEN_ARVO, "Kielikokeen tunniste", true), false);
+    }
+
     public static Funktiokutsu luoKielikoeSuoritettuFunktiokutsu(LuoValintaperusteetServiceImpl.Kielikoodi k) {
         Funktiokutsu kielikoeSuoritettu = GenericHelper.luoHaeTotuusarvo(GenericHelper.luoValintaperusteViite(
                 k.getKielikoetunniste(), false, Valintaperustelahde.SYOTETTAVA_ARVO), false);
@@ -175,6 +190,12 @@ public class PkJaYoPohjaiset {
                 perustopetuksenKieli, false, Valintaperustelahde.HAETTAVA_ARVO), k.getKieliarvo(), false);
     }
 
+    public static Funktiokutsu luoKielikoekriteeri1Funktiokutsu() {
+        return GenericHelper.luoValintaperusteyhtasuuruus(
+                GenericHelper.luoValintaperusteViite(opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO, "Opetuskieli", false),
+                GenericHelper.luoValintaperusteViite(perustopetuksenKieli, false, Valintaperustelahde.HAETTAVA_ARVO, "Perusopetuksen kieli"));
+    }
+
     /**
      * 2) Hakija on suorittanut vähintään arvosanalla 7 perusopetuksen toisen kotimaisen A-kielen oppimäärän, joka on
      * vastaanottavan oppilaitoksen opetuskieli
@@ -188,6 +209,44 @@ public class PkJaYoPohjaiset {
                 Funktiokutsu oppiaineOnOpetuskieli = GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(
                         GenericHelper.luoValintaperusteViite(PkAineet.oppiaine(ainetunniste), false,
                                 Valintaperustelahde.HAETTAVA_ARVO), k.getKieliarvo(), false);
+
+                Funktiokutsu arvosana = GenericHelper.luoHaeLukuarvo(
+                        GenericHelper.luoValintaperusteViite(PkAineet.pakollinen(ainetunniste), false,
+                                Valintaperustelahde.HAETTAVA_ARVO), 0.0);
+
+                Funktiokutsu arvosanaSuurempiKuin7 = GenericHelper.luoSuurempiTaiYhtasuuriKuin(arvosana, seitseman);
+
+                return GenericHelper.luoJa(oppiaineOnOpetuskieli, arvosanaSuurempiKuin7);
+            }
+        }
+
+        // Tarkastellaan A1- ja A2-kieliä
+        final String[] aineet = {
+                Aineet.a11Kieli,
+                Aineet.a12Kieli,
+                Aineet.a13Kieli,
+                Aineet.a21Kieli,
+                Aineet.a22Kieli,
+                Aineet.a23Kieli
+        };
+
+        List<Funktiokutsu> args = new ArrayList<Funktiokutsu>();
+        KriteeriGen gen = new KriteeriGen();
+        for (String aine : aineet) {
+            args.add(gen.luoKriteeri(aine));
+        }
+
+        return GenericHelper.luoTai(args.toArray(new FunktionArgumentti[args.size()]));
+    }
+
+    public static Funktiokutsu luoKielikoekriteeri2() {
+        final Funktiokutsu seitseman = GenericHelper.luoLukuarvo(7.0);
+        class KriteeriGen {
+
+            public Funktiokutsu luoKriteeri(final String ainetunniste) {
+                Funktiokutsu oppiaineOnOpetuskieli = GenericHelper.luoValintaperusteyhtasuuruus(
+                        GenericHelper.luoValintaperusteViite(opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO, "Opetuskieli", false),
+                        GenericHelper.luoValintaperusteViite(PkAineet.oppiaine(ainetunniste), false, Valintaperustelahde.HAETTAVA_ARVO, ainetunniste + " oppiaine"));
 
                 Funktiokutsu arvosana = GenericHelper.luoHaeLukuarvo(
                         GenericHelper.luoValintaperusteViite(PkAineet.pakollinen(ainetunniste), false,
@@ -248,6 +307,40 @@ public class PkJaYoPohjaiset {
                 gen.luoKriteeri(Aineet.aidinkieliJaKirjallisuus2));
     }
 
+    public static Funktiokutsu luoKielikoekriteeri3() {
+
+        final Funktiokutsu seitseman = GenericHelper.luoLukuarvo(7.0);
+        final String fi = "fi";
+        final String sv = "sv";
+
+        class KriteeriGen {
+            public Funktiokutsu luoKriteeri(final String ainetunniste) {
+                Funktiokutsu aidinkieliOnFiTaiSvToisenaKielena = GenericHelper.luoTai(
+                        GenericHelper.luoJa(
+                                GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(GenericHelper.luoValintaperusteViite(opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO, "Opetuskieli", false), fi),
+                                GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(GenericHelper.luoValintaperusteViite(PkAineet.oppiaine(ainetunniste), false, Valintaperustelahde.HAETTAVA_ARVO, ainetunniste + " oppiaine"),
+                                        fi + toisenaKielenaPostfix, false)),
+                        GenericHelper.luoJa(
+                                GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(GenericHelper.luoValintaperusteViite(opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO, "Opetuskieli", false), sv),
+                                GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(GenericHelper.luoValintaperusteViite(PkAineet.oppiaine(ainetunniste), false, Valintaperustelahde.HAETTAVA_ARVO, ainetunniste + " oppiaine"),
+                                        sv + toisenaKielenaPostfix, false)));
+
+                Funktiokutsu arvosanaAi = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(
+                        PkAineet.pakollinen(ainetunniste), false, Valintaperustelahde.HAETTAVA_ARVO), 0);
+
+                Funktiokutsu arvosanaSuurempiKuin7 = GenericHelper.luoSuurempiTaiYhtasuuriKuin(arvosanaAi, seitseman);
+
+                return GenericHelper.luoJa(aidinkieliOnFiTaiSvToisenaKielena, arvosanaSuurempiKuin7);
+            }
+        }
+
+        KriteeriGen gen = new KriteeriGen();
+
+        return GenericHelper.luoTai(
+                gen.luoKriteeri(Aineet.aidinkieliJaKirjallisuus1),
+                gen.luoKriteeri(Aineet.aidinkieliJaKirjallisuus2));
+    }
+
     /**
      * 4) Hakija on suorittanut lukion oppimäärän ylioppilastutkinnon vastaanottavan oppilaitoksen opetuskielellä
      */
@@ -255,6 +348,12 @@ public class PkJaYoPohjaiset {
         return GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(
                 GenericHelper.luoValintaperusteViite(lukionOppimaaranKieli, false, Valintaperustelahde.HAETTAVA_ARVO),
                 k.getKieliarvo(), false);
+    }
+
+    public static Funktiokutsu luoKielikoekriteeri4() {
+        return GenericHelper.luoValintaperusteyhtasuuruus(
+                GenericHelper.luoValintaperusteViite(opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO, "Opetuskieli", false),
+                GenericHelper.luoValintaperusteViite(lukionOppimaaranKieli, false, Valintaperustelahde.HAETTAVA_ARVO, "Lukion oppimäärän suorituskieli"));
     }
 
     /**
@@ -297,6 +396,70 @@ public class PkJaYoPohjaiset {
                 return GenericHelper.luoJa(
                         GenericHelper.luoTai(aidinkielena, toisenaKielena, saamenkielisille, viittomakielisille),
                         suurempiKuinViisi);
+            }
+        }
+
+        KriteeriGen gen = new KriteeriGen();
+        return GenericHelper.luoTai(
+                gen.luoKriteeri(Aineet.aidinkieliJaKirjallisuus1),
+                gen.luoKriteeri(Aineet.aidinkieliJaKirjallisuus2));
+
+    }
+
+    public static Funktiokutsu luoKielikoekriteeri5() {
+
+        final Funktiokutsu viisi = GenericHelper.luoLukuarvo(5.0);
+        final String fi = "fi";
+        final String sv = "sv";
+
+        class KriteeriGen {
+            public Funktiokutsu luoKriteeri(final String ainetunniste) {
+                Funktiokutsu opetuskieli = GenericHelper.luoTai(
+                        GenericHelper.luoJa(
+                                GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(
+                                        GenericHelper.luoValintaperusteViite(PkJaYoPohjaiset.opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO, "Opetuskieli", false), fi, false),
+                                GenericHelper.luoTai(
+                                        GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(
+                                                GenericHelper.luoValintaperusteViite(YoAineet.oppiaine(ainetunniste), false,
+                                                        Valintaperustelahde.HAETTAVA_ARVO), fi, false),
+                                        GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(
+                                                GenericHelper.luoValintaperusteViite(YoAineet.oppiaine(ainetunniste), false,
+                                                        Valintaperustelahde.HAETTAVA_ARVO), fi + toisenaKielenaPostfix, false),
+                                        GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(
+                                                GenericHelper.luoValintaperusteViite(YoAineet.oppiaine(ainetunniste), false,
+                                                        Valintaperustelahde.HAETTAVA_ARVO), fi + saamenkielisillePostfix, false),
+                                        GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(
+                                                GenericHelper.luoValintaperusteViite(YoAineet.oppiaine(ainetunniste), false,
+                                                        Valintaperustelahde.HAETTAVA_ARVO), fi + viittomakielisillePostfix, false)
+                                )
+                        ),
+                        GenericHelper.luoJa(
+                                GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(
+                                        GenericHelper.luoValintaperusteViite(PkJaYoPohjaiset.opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO, "Opetuskieli", false), sv, false),
+                                GenericHelper.luoTai(
+                                        GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(
+                                                GenericHelper.luoValintaperusteViite(YoAineet.oppiaine(ainetunniste), false,
+                                                        Valintaperustelahde.HAETTAVA_ARVO), sv, false),
+                                        GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(
+                                                GenericHelper.luoValintaperusteViite(YoAineet.oppiaine(ainetunniste), false,
+                                                        Valintaperustelahde.HAETTAVA_ARVO), sv + toisenaKielenaPostfix, false),
+                                        GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(
+                                                GenericHelper.luoValintaperusteViite(YoAineet.oppiaine(ainetunniste), false,
+                                                        Valintaperustelahde.HAETTAVA_ARVO), sv + saamenkielisillePostfix, false),
+                                        GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(
+                                                GenericHelper.luoValintaperusteViite(YoAineet.oppiaine(ainetunniste), false,
+                                                        Valintaperustelahde.HAETTAVA_ARVO), sv + viittomakielisillePostfix, false)
+                                )
+                        )
+                );
+
+                Funktiokutsu arvosanaSuurempiKuinViisi = GenericHelper.luoSuurempiTaiYhtasuuriKuin(GenericHelper.luoHaeLukuarvo(
+                        GenericHelper.luoValintaperusteViite(YoAineet.pakollinen(ainetunniste), false,
+                                Valintaperustelahde.HAETTAVA_ARVO), 0.0), viisi);
+
+                return GenericHelper.luoJa(
+                        opetuskieli,
+                        arvosanaSuurempiKuinViisi);
             }
         }
 
@@ -350,6 +513,46 @@ public class PkJaYoPohjaiset {
         return GenericHelper.luoTai(args.toArray(new FunktionArgumentti[args.size()]));
     }
 
+    public static Funktiokutsu luoKielikoekriteeri6() {
+
+        final Funktiokutsu viisi = GenericHelper.luoLukuarvo(5.0);
+
+        class KriteeriGen {
+            public Funktiokutsu luoKriteeri(final String ainetunniste) {
+                Funktiokutsu oppiaineOnOpetuskieli = GenericHelper.luoValintaperusteyhtasuuruus(
+                        GenericHelper.luoValintaperusteViite(opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO, "Opetuskieli", false),
+                        GenericHelper.luoValintaperusteViite(YoAineet.oppiaine(ainetunniste), false, Valintaperustelahde.HAETTAVA_ARVO, ainetunniste + " oppiaine")
+                );
+
+                Funktiokutsu arvosana = GenericHelper.luoHaeLukuarvo(
+                        GenericHelper.luoValintaperusteViite(YoAineet.pakollinen(ainetunniste), false,
+                                Valintaperustelahde.HAETTAVA_ARVO), 0.0);
+
+                Funktiokutsu arvosanaSuurempiKuin5 = GenericHelper.luoSuurempiTaiYhtasuuriKuin(arvosana, viisi);
+
+                return GenericHelper.luoJa(oppiaineOnOpetuskieli, arvosanaSuurempiKuin5);
+            }
+        }
+
+        final String[] aineet = {
+                Aineet.a11Kieli,
+                Aineet.a12Kieli,
+                Aineet.a13Kieli,
+                Aineet.a21Kieli,
+                Aineet.a22Kieli,
+                Aineet.a23Kieli,
+                Aineet.b1Kieli
+        };
+
+        List<Funktiokutsu> args = new ArrayList<Funktiokutsu>();
+        KriteeriGen gen = new KriteeriGen();
+        for (String aine : aineet) {
+            args.add(gen.luoKriteeri(aine));
+        }
+
+        return GenericHelper.luoTai(args.toArray(new FunktionArgumentti[args.size()]));
+    }
+
     /**
      * 7) Hakija on suorittanut yleisten kielitutkintojen suomen tai ruotsin kielen tutkinnon kaikki osakokeet
      * vähintään taitotasolla 3 tai hakija on suorittanut valtionhallinnon kielitutkintojen suomen tai ruotsin kielen
@@ -365,6 +568,38 @@ public class PkJaYoPohjaiset {
                         Valintaperustelahde.HAETTAVA_ARVO), false);
 
         return GenericHelper.luoTai(yleinenKielitutkintoSuoritettu, valtionhallinnonKielitutkintoSuoritettu);
+    }
+
+    public static Funktiokutsu luoKielikoekriteeri7() {
+        final String fi = "fi";
+        final String sv = "sv";
+
+        return GenericHelper.luoTai(
+                GenericHelper.luoJa(
+                        GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(
+                                GenericHelper.luoValintaperusteViite(PkJaYoPohjaiset.opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO, "Opetuskieli", false), fi, false),
+                        GenericHelper.luoTai(
+                                GenericHelper.luoHaeTotuusarvo(
+                                        GenericHelper.luoValintaperusteViite(yleinenKielitutkintoPrefix + fi, false,
+                                                Valintaperustelahde.HAETTAVA_ARVO), false),
+                                GenericHelper.luoHaeTotuusarvo(
+                                        GenericHelper.luoValintaperusteViite(valtionhallinnonKielitutkintoPrefix + fi, false,
+                                                Valintaperustelahde.HAETTAVA_ARVO), false)
+                        )
+                ),
+                GenericHelper.luoJa(
+                        GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(
+                                GenericHelper.luoValintaperusteViite(PkJaYoPohjaiset.opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO, "Opetuskieli", false), sv, false),
+                        GenericHelper.luoTai(
+                                GenericHelper.luoHaeTotuusarvo(
+                                        GenericHelper.luoValintaperusteViite(yleinenKielitutkintoPrefix + sv, false,
+                                                Valintaperustelahde.HAETTAVA_ARVO), false),
+                                GenericHelper.luoHaeTotuusarvo(
+                                        GenericHelper.luoValintaperusteViite(valtionhallinnonKielitutkintoPrefix + sv, false,
+                                                Valintaperustelahde.HAETTAVA_ARVO), false)
+                        )
+                )
+        );
     }
 
     public static Laskentakaava luoYhdistettyPeruskaavaJaKielikoekaava(Laskentakaava peruskaava, Laskentakaava kielikoekaava) {

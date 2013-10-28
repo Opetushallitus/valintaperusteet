@@ -291,4 +291,7 @@ object Laskenta {
     require(fs.size > 0, "Parametreja pitää olla vähintään yksi")
   }
 
+  case class Valintaperusteyhtasuuruus(oid: String = "",
+                                       valintaperusteet: Pair[Valintaperuste, Valintaperuste]) extends Totuusarvofunktio
+
 }

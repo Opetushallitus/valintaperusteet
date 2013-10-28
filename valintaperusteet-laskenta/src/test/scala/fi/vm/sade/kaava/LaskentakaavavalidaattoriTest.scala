@@ -379,9 +379,9 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
   test("Valid haeTotuusarvo") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAETOTUUSARVO,
-      valintaperustetunniste = ValintaperusteViite(
+      valintaperustetunniste = List(ValintaperusteViite(
         onPakollinen = true,
-        tunniste = "onYlioppilas"))
+        tunniste = "onYlioppilas")))
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(0 == validationMessages.size)
@@ -390,9 +390,9 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
   test("Valid haeLukuarvo without konvertteri") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAELUKUARVO,
-      valintaperustetunniste = ValintaperusteViite(
+      valintaperustetunniste = List(ValintaperusteViite(
         onPakollinen = true,
-        tunniste = "paasykoepisteet"))
+        tunniste = "paasykoepisteet")))
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(0 == validationMessages.size)
@@ -401,9 +401,9 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
   test("Valid haeLukuarvo with arvokonvertteri") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAELUKUARVO,
-      valintaperustetunniste = ValintaperusteViite(
+      valintaperustetunniste = List(ValintaperusteViite(
         onPakollinen = true,
-        tunniste = "paasykoepisteet"),
+        tunniste = "paasykoepisteet")),
       arvokonvertterit = List(
         Arvokonvertteriparametri("10.0", "23.0", false),
         Arvokonvertteriparametri("5.0", "13.0", false)))
@@ -415,9 +415,9 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
   test("Valid haeLukuarvo with arvovalikonvertteri") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAELUKUARVO,
-      valintaperustetunniste = ValintaperusteViite(
+      valintaperustetunniste = List(ValintaperusteViite(
         onPakollinen = true,
-        tunniste = "paasykoepisteet"),
+        tunniste = "paasykoepisteet")),
       arvovalikonvertterit = List(
         Arvovalikonvertteriparametri(
           min = new BigDecimal("0.0"),
@@ -438,9 +438,9 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
   test("HaeLukuarvo with invalid oletusarvo") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAELUKUARVO,
-      valintaperustetunniste = ValintaperusteViite(
+      valintaperustetunniste = List(ValintaperusteViite(
         onPakollinen = true,
-        tunniste = "paasykoepisteet"),
+        tunniste = "paasykoepisteet")),
       syoteparametrit = List(
         Syoteparametri(avain = "oletusarvo", arvo = "kuuppa")))
 
@@ -453,9 +453,9 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
   test("HaeLukuarvo with valid oletusarvo") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAELUKUARVO,
-      valintaperustetunniste = ValintaperusteViite(
+      valintaperustetunniste = List(ValintaperusteViite(
         onPakollinen = true,
-        tunniste = "paasykoepisteet"),
+        tunniste = "paasykoepisteet")),
       syoteparametrit = List(
         Syoteparametri(avain = "oletusarvo", arvo = "10.0")))
 
@@ -466,9 +466,9 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
   test("HaeTotuusarvo with invalid oletusarvo") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAETOTUUSARVO,
-      valintaperustetunniste = ValintaperusteViite(
+      valintaperustetunniste = List(ValintaperusteViite(
         onPakollinen = true,
-        tunniste = "onYlioppilas"),
+        tunniste = "onYlioppilas")),
       syoteparametrit = List(
         Syoteparametri(avain = "oletusarvo", arvo = "tosi")))
 
@@ -481,9 +481,9 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
   test("HaeTotuusarvo with valid oletusarvo") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAETOTUUSARVO,
-      valintaperustetunniste = ValintaperusteViite(
+      valintaperustetunniste = List(ValintaperusteViite(
         onPakollinen = true,
-        tunniste = "onYlioppilas"),
+        tunniste = "onYlioppilas")),
       syoteparametrit = List(
         Syoteparametri(avain = "oletusarvo", arvo = "true")))
 
@@ -494,9 +494,9 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
   test("HaeMerkkijonoJaKonvertoiLukuarvoksi with invalid oletusarvo") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAEMERKKIJONOJAKONVERTOILUKUARVOKSI,
-      valintaperustetunniste = ValintaperusteViite(
+      valintaperustetunniste = List(ValintaperusteViite(
         onPakollinen = true,
-        tunniste = "onYlioppilas"),
+        tunniste = "onYlioppilas")),
       syoteparametrit = List(
         Syoteparametri(avain = "oletusarvo", arvo = "kymmenen")),
       arvokonvertterit = List(
@@ -514,9 +514,9 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
   test("HaeMerkkijonoJaKonvertoiLukuarvoksi with valid oletusarvo") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAEMERKKIJONOJAKONVERTOILUKUARVOKSI,
-      valintaperustetunniste = ValintaperusteViite(
+      valintaperustetunniste = List(ValintaperusteViite(
         onPakollinen = true,
-        tunniste = "onYlioppilas"),
+        tunniste = "onYlioppilas")),
       syoteparametrit = List(
         Syoteparametri(avain = "oletusarvo", arvo = "5.0")),
       arvokonvertterit = List(
@@ -532,9 +532,9 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
   test("HaeMerkkijonoJaKonvertoiLukuarvoksi without konvertteri") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAEMERKKIJONOJAKONVERTOILUKUARVOKSI,
-      valintaperustetunniste = ValintaperusteViite(
+      valintaperustetunniste = List(ValintaperusteViite(
         onPakollinen = true,
-        tunniste = "onYlioppilas"),
+        tunniste = "onYlioppilas")),
       syoteparametrit = List(
         Syoteparametri(avain = "oletusarvo", arvo = "5.0")))
 
@@ -547,9 +547,9 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
   test("HaeMerkkijonoJaKonvertoiTotuusarvoksi with invalid oletusarvo") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAEMERKKIJONOJAKONVERTOITOTUUSARVOKSI,
-      valintaperustetunniste = ValintaperusteViite(
+      valintaperustetunniste = List(ValintaperusteViite(
         onPakollinen = true,
-        tunniste = "joku_tunniste"),
+        tunniste = "joku_tunniste")),
       syoteparametrit = List(
         Syoteparametri(avain = "oletusarvo", arvo = "puuppa")),
       arvokonvertterit = List(
@@ -567,9 +567,9 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
   test("HaeMerkkijonoJaKonvertoiTotuusarvoksi with valid oletusarvo") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAEMERKKIJONOJAKONVERTOITOTUUSARVOKSI,
-      valintaperustetunniste = ValintaperusteViite(
+      valintaperustetunniste = List(ValintaperusteViite(
         onPakollinen = true,
-        tunniste = "joku_tunniste"),
+        tunniste = "joku_tunniste")),
       syoteparametrit = List(
         Syoteparametri(avain = "oletusarvo", arvo = "true")),
       arvokonvertterit = List(
@@ -585,9 +585,9 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
   test("HaeMerkkijonoJaKonvertoiTotuusarvoksi without konvertteri") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAEMERKKIJONOJAKONVERTOITOTUUSARVOKSI,
-      valintaperustetunniste = ValintaperusteViite(
+      valintaperustetunniste = List(ValintaperusteViite(
         onPakollinen = true,
-        tunniste = "joku_tunniste"),
+        tunniste = "joku_tunniste")),
       syoteparametrit = List(
         Syoteparametri(avain = "oletusarvo", arvo = "true")))
 
@@ -634,9 +634,9 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
           max = new BigDecimal("100.0"),
           palautaHaettuArvo = false,
           hylkaysperuste = true)),
-      valintaperustetunniste = ValintaperusteViite(
+      valintaperustetunniste = List(ValintaperusteViite(
         onPakollinen = true,
-        tunniste = "joku_tunniste"))
+        tunniste = "joku_tunniste")))
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(0 == validationMessages.size)
@@ -788,10 +788,10 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
   test("Hae merkkijono ja vertaa yhtasuuruus, vertailtava puuttuu") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAEMERKKIJONOJAVERTAAYHTASUURUUS,
-      valintaperustetunniste = ValintaperusteViite(
+      valintaperustetunniste = List(ValintaperusteViite(
         onPakollinen = true,
         tunniste = "aidinkieli"
-      ),
+      )),
       syoteparametrit = List(
         Syoteparametri(avain = "oletusarvo", arvo = "false")
       )
@@ -806,10 +806,10 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
   test("Hae merkkijono ja vertaa yhtasuuruus, validi") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAEMERKKIJONOJAVERTAAYHTASUURUUS,
-      valintaperustetunniste = ValintaperusteViite(
+      valintaperustetunniste = List(ValintaperusteViite(
         onPakollinen = true,
         tunniste = "aidinkieli"
-      ),
+      )),
       syoteparametrit = List(
         Syoteparametri(avain = "oletusarvo", arvo = "false"),
         Syoteparametri(avain = "vertailtava", arvo = "FI")
@@ -823,10 +823,11 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
   test("Hae merkkijono ja vertaa yhtasuuruus, virheellinen oletusarvo") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAEMERKKIJONOJAVERTAAYHTASUURUUS,
-      valintaperustetunniste = ValintaperusteViite(
-        onPakollinen = true,
-        tunniste = "aidinkieli"
-      ),
+      valintaperustetunniste = List(
+        ValintaperusteViite(
+          onPakollinen = true,
+          tunniste = "aidinkieli"
+        )),
       syoteparametrit = List(
         Syoteparametri(avain = "oletusarvo", arvo = "puuppa"),
         Syoteparametri(avain = "vertailtava", arvo = "FI")
@@ -976,11 +977,47 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
   test("syoteparametrin arvo tyhja") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAELUKUARVO,
-      valintaperustetunniste = ValintaperusteViite(
-        onPakollinen = true,
-        tunniste = "tunniste1",
-        lahde = Valintaperustelahde.HAETTAVA_ARVO),
+      valintaperustetunniste = List(
+        ValintaperusteViite(
+          onPakollinen = true,
+          tunniste = "tunniste1",
+          lahde = Valintaperustelahde.HAETTAVA_ARVO)),
       syoteparametrit = List(Syoteparametri(avain = "oletusarvo", ""))
+    )
+
+    val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
+    assert(validationMessages.size == 0)
+  }
+
+  test("valintaperusteyhtasuuruus, yksi valintaperusteviite") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.VALINTAPERUSTEYHTASUURUUS,
+      valintaperustetunniste = List(
+        ValintaperusteViite(
+          onPakollinen = true,
+          tunniste = "tunniste1",
+          lahde = Valintaperustelahde.HAETTAVA_ARVO)
+      )
+    )
+
+    val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
+    assert(validationMessages.size == 1)
+    assert(Virhetyyppi.VALINTAPERUSTEPARAMETRI_PUUTTUUU == validationMessages.get(0).asInstanceOf[Validointivirhe].getVirhetyyppi)
+  }
+
+  test("validi valintaperusteyhtasuuruus") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.VALINTAPERUSTEYHTASUURUUS,
+      valintaperustetunniste = List(
+        ValintaperusteViite(
+          onPakollinen = true,
+          tunniste = "tunniste1",
+          lahde = Valintaperustelahde.HAETTAVA_ARVO),
+        ValintaperusteViite(
+          onPakollinen = true,
+          tunniste = "tunniste2",
+          lahde = Valintaperustelahde.HAETTAVA_ARVO)
+      )
     )
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet

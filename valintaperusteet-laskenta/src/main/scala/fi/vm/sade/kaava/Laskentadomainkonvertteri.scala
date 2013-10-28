@@ -96,8 +96,7 @@ object Laskentadomainkonvertteri {
 
     val oid = if (funktiokutsu.getId != null) funktiokutsu.getId.toString else ""
 
-    val valintaperusteviitteet = funktiokutsu.getValintaperusteviitteet.map(luoValintaperusteviite(_))
-
+    val valintaperusteviitteet = funktiokutsu.getValintaperusteviitteet.toList.sortWith(_.getIndeksi < _.getIndeksi).map(luoValintaperusteviite(_))
 
     funktiokutsu.getFunktionimi match {
       case Funktionimi.EI => Ei(muunnaTotuusarvofunktioksi(lasketutArgumentit.head))
@@ -313,6 +312,10 @@ object Laskentadomainkonvertteri {
         val prosenttiosuus = getParametri("prosenttiosuus", funktiokutsu.getSyoteparametrit)
 
         Demografia(oid, tunniste, parametriToBigDecimal(prosenttiosuus))
+      }
+
+      case Funktionimi.VALINTAPERUSTEYHTASUURUUS => {
+        Valintaperusteyhtasuuruus(oid, Pair(valintaperusteviitteet(0), valintaperusteviitteet(1)))
       }
 
       case _ => sys.error("Could not calculate funktio " + funktiokutsu.getFunktionimi.name())
