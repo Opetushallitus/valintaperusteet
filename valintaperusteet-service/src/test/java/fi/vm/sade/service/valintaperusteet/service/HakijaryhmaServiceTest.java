@@ -7,6 +7,7 @@ import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
 import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
+import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaEiKuuluValintatapajonolleException;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaEiOleOlemassaException;
@@ -47,6 +48,8 @@ public class HakijaryhmaServiceTest {
     private ValintaryhmaDAO valintaryhmaDAO;
     @Autowired
     private HakijaryhmaService hakijaryhmaService;
+    @Autowired
+    private HakijaryhmaValintatapajonoService hakijaryhmaValintatapajonoService;
     @Autowired
     private HakukohdeService hakukohdeService;
     @Autowired
@@ -294,15 +297,15 @@ public class HakijaryhmaServiceTest {
 
         }
 
-        assertEquals(1, hakijaryhmaService.findHakijaryhmaByJono("vtj6").size());
-        assertEquals(0, hakijaryhmaService.findHakijaryhmaByJono("vtj4").size());
+        assertEquals(1, hakijaryhmaValintatapajonoService.findHakijaryhmaByJono("vtj6").size());
+        assertEquals(0, hakijaryhmaValintatapajonoService.findHakijaryhmaByJono("vtj4").size());
         assertEquals(1, hakijaryhmaDAO.readByOid("hr2").getJonot().size());
 
         hakijaryhmaService.liitaHakijaryhmaValintatapajonolle("vtj4", "hr2");
         hakijaryhmaService.liitaHakijaryhmaValintatapajonolle("vtj4", "hr3");
         hakijaryhmaService.liitaHakijaryhmaValintatapajonolle("vtj4", "hr4");
 
-        List<Hakijaryhma> vtj4 = hakijaryhmaService.findHakijaryhmaByJono("vtj4");
+        List<HakijaryhmaValintatapajono> vtj4 = hakijaryhmaValintatapajonoService.findHakijaryhmaByJono("vtj4");
         assertEquals(3, vtj4.size());
         assertEquals(2, hakijaryhmaDAO.readByOid("hr2").getJonot().size());
 

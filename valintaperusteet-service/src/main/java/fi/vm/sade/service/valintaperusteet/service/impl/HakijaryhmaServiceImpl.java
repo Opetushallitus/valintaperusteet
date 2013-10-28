@@ -77,11 +77,6 @@ public class HakijaryhmaServiceImpl extends AbstractCRUDServiceImpl<Hakijaryhma,
     }
 
     @Override
-    public List<Hakijaryhma> findHakijaryhmaByJono(String oid) {
-        return hakijaryhmaDAO.findByValintatapajono(oid);
-    }
-
-    @Override
     public List<Hakijaryhma> findByHakukohde(String oid) {
         return hakijaryhmaDAO.findByHakukohde(oid);
     }
@@ -442,6 +437,19 @@ public class HakijaryhmaServiceImpl extends AbstractCRUDServiceImpl<Hakijaryhma,
         }
 
         hakijaryhmaDAO.remove(entity);
+    }
+
+    public void deleteHakijaryhmaValintatajono(HakijaryhmaValintatapajono entity) {
+        for (HakijaryhmaValintatapajono hakijaryhma : entity.getKopiot()) {
+            deleteHakijaryhmaValintatajono(hakijaryhma);
+        }
+
+        if (entity.getSeuraava() != null) {
+            HakijaryhmaValintatapajono seuraava = entity.getSeuraava();
+            seuraava.setEdellinen(entity.getEdellinen());
+        }
+
+        hakijaryhmaValintatapajonoDAO.remove(entity);
     }
 
     @Override

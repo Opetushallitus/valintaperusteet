@@ -1,10 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
-import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
-import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
-import fi.vm.sade.service.valintaperusteet.model.JsonViews;
-import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
+import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaService;
+import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaValintatapajonoService;
 import fi.vm.sade.service.valintaperusteet.service.JarjestyskriteeriService;
 import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
 import org.codehaus.jackson.map.annotate.JsonView;
@@ -47,6 +45,9 @@ public class ValintatapajonoResource {
 
     @Autowired
     HakijaryhmaService hakijaryhmaService;
+
+    @Autowired
+    HakijaryhmaValintatapajonoService hakijaryhmaValintatapajonoService;
 
     @Autowired
     JarjestyskriteeriService jarjestyskriteeriService;
@@ -94,8 +95,8 @@ public class ValintatapajonoResource {
     @Path("{valintatapajonoOid}/hakijaryhma")
     @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
-    public List<Hakijaryhma> hakijaryhmat(@PathParam("valintatapajonoOid") String valintatapajonoOid) {
-        return hakijaryhmaService.findHakijaryhmaByJono(valintatapajonoOid);
+    public List<HakijaryhmaValintatapajono> hakijaryhmat(@PathParam("valintatapajonoOid") String valintatapajonoOid) {
+        return hakijaryhmaValintatapajonoService.findHakijaryhmaByJono(valintatapajonoOid);
     }
 
     @GET

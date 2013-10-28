@@ -16,4 +16,6 @@ import java.util.List;
  */
 public interface HakijaryhmaValintatapajonoDAO extends JpaDAO<HakijaryhmaValintatapajono, Long> {
     HakijaryhmaValintatapajono readByOid(String oid);
+
+    List<HakijaryhmaValintatapajono> findByValintatapajono(String oid);
 }

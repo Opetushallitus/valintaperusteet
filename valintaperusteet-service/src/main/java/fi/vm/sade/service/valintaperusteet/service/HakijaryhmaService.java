@@ -8,8 +8,6 @@ public interface HakijaryhmaService extends CRUDService<Hakijaryhma, Long, Strin
 
     void deleteByOid(String oid, boolean skipInheritedCheck);
 
-    List<Hakijaryhma> findHakijaryhmaByJono(String oid);
-
     List<Hakijaryhma> findByHakukohde(String oid);
 
     List<Hakijaryhma> findByValintaryhma(String oid);
@@ -26,4 +24,5 @@ public interface HakijaryhmaService extends CRUDService<Hakijaryhma, Long, Strin
 
     void kopioiHakijaryhmatParentilta(Valintaryhma inserted, Valintaryhma parent);
     void kopioiHakijaryhmatParentilta(HakukohdeViite inserted, Valintaryhma parent);
+
 }

@@ -22,6 +22,7 @@ public class HakijaryhmaValintatapajono extends BaseEntity implements Linkitetta
 
     @JoinColumn(name = "hakijaryhma_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonView(JsonViews.Basic.class)
     private Hakijaryhma hakijaryhma;
 
     @JoinColumn(name = "valintatapajono_id", nullable = false)

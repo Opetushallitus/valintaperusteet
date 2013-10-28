@@ -6,8 +6,11 @@ import com.mysema.query.types.EntityPath;
 import fi.vm.sade.generic.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaValintatapajonoDAO;
 import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
+import fi.vm.sade.service.valintaperusteet.model.QHakijaryhma;
 import fi.vm.sade.service.valintaperusteet.model.QHakijaryhmaValintatapajono;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -32,6 +35,20 @@ public class HakijaryhmaValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Hakija
 
         return from(hv)
                 .where(hv.oid.eq(oid))
+                .leftJoin(hv.hakijaryhma).fetch()
+                .leftJoin(hv.master).fetch()
+                .leftJoin(hv.edellinen).fetch()
                 .singleResult(hv);
+    }
+
+    @Override
+    public List<HakijaryhmaValintatapajono> findByValintatapajono(String oid) {
+        QHakijaryhmaValintatapajono hakijaryhmaValintatapajono = QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
+
+        return from(hakijaryhmaValintatapajono).where(hakijaryhmaValintatapajono.valintatapajono.oid.eq(oid))
+                .leftJoin(hakijaryhmaValintatapajono.hakijaryhma).fetch()
+                .leftJoin(hakijaryhmaValintatapajono.master).fetch()
+                .leftJoin(hakijaryhmaValintatapajono.edellinen).fetch()
+                .listDistinct(hakijaryhmaValintatapajono);
     }
 }
