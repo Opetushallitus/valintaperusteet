@@ -148,12 +148,18 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             }
         }
 
-        if (fk.getValintaperuste() != null) {
-            ValintaperusteViite vp = fk.getValintaperuste();
-
+        for (ValintaperusteViite vp : fk.getValintaperusteviitteet()) {
             if (vp.getOnPakollinen() == null) {
                 vp.setOnPakollinen(false);
             }
+
+            if (vp.getEpasuoraViittaus() == null) {
+                vp.setEpasuoraViittaus(false);
+            }
+        }
+
+        if (fk.getValintaperusteviitteet().size() == 1) {
+            fk.getValintaperusteviitteet().iterator().next().setIndeksi(1);
         }
 
         for (Funktioargumentti arg : fk.getFunktioargumentit()) {
@@ -189,10 +195,17 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
                 genericDAO.remove(p);
             }
 
+            for (ValintaperusteViite vp : managed.getValintaperusteviitteet()) {
+                genericDAO.remove(vp);
+            }
+
             managed.getFunktioargumentit().clear();
             managed.getArvokonvertteriparametrit().clear();
             managed.getArvovalikonvertteriparametrit().clear();
             managed.getSyoteparametrit().clear();
+            managed.getValintaperusteviitteet().clear();
+            funktiokutsuDAO.flush();
+
         } else {
             managed = new Funktiokutsu();
         }
@@ -251,27 +264,16 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             managed.getSyoteparametrit().add(newParam);
         }
 
-        if (incoming.getValintaperuste() != null) {
-            ValintaperusteViite newVp = incoming.getValintaperuste();
-
-            ValintaperusteViite vp = null;
-            if (managed.getValintaperuste() != null) {
-                vp = managed.getValintaperuste();
-            } else {
-                vp = new ValintaperusteViite();
-            }
-
-            vp.setKuvaus(newVp.getKuvaus());
-            vp.setLahde(newVp.getLahde());
-            vp.setOnPakollinen(newVp.getOnPakollinen());
-            vp.setTunniste(newVp.getTunniste());
-
-            if (managed.getValintaperuste() == null) {
-                vp.setFunktiokutsu(managed);
-                managed.setValintaperuste(vp);
-            }
-        } else if (managed.getValintaperuste() != null) {
-            genericDAO.remove(managed.getValintaperuste());
+        for (ValintaperusteViite vp : incoming.getValintaperusteviitteet()) {
+            ValintaperusteViite newVp = new ValintaperusteViite();
+            newVp.setEpasuoraViittaus(vp.getEpasuoraViittaus());
+            newVp.setIndeksi(vp.getIndeksi() + 1);
+            newVp.setKuvaus(vp.getKuvaus());
+            newVp.setLahde(vp.getLahde());
+            newVp.setOnPakollinen(vp.getOnPakollinen());
+            newVp.setTunniste(vp.getTunniste());
+            newVp.setFunktiokutsu(managed);
+            managed.getValintaperusteviitteet().add(newVp);
         }
 
         if (managed.getId() == null) {
@@ -339,14 +341,14 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
 
     private void haeValintaperusteetRekursiivisesti(Funktiokutsu funktiokutsu,
                                                     Map<String, ValintaperusteDTO> valintaperusteet) {
-        if (funktiokutsu.getValintaperuste() != null) {
+        for (ValintaperusteViite vp : funktiokutsu.getValintaperusteviitteet()) {
             ValintaperusteDTO valintaperuste = new ValintaperusteDTO();
             valintaperuste.setFunktiotyyppi(funktiokutsu.getFunktionimi().getTyyppi());
-            valintaperuste.setTunniste(funktiokutsu.getValintaperuste().getTunniste());
-            valintaperuste.setKuvaus(funktiokutsu.getValintaperuste().getKuvaus());
-            valintaperuste.setLahde(funktiokutsu.getValintaperuste().getLahde());
-            valintaperuste.setOnPakollinen(funktiokutsu.getValintaperuste().getOnPakollinen());
-            valintaperuste.setOsallistuminenTunniste(funktiokutsu.getValintaperuste().getOsallistuminenTunniste());
+            valintaperuste.setTunniste(vp.getTunniste());
+            valintaperuste.setKuvaus(vp.getKuvaus());
+            valintaperuste.setLahde(vp.getLahde());
+            valintaperuste.setOnPakollinen(vp.getOnPakollinen());
+            valintaperuste.setOsallistuminenTunniste(vp.getOsallistuminenTunniste());
 
             if (funktiokutsu.getArvokonvertteriparametrit() != null
                     && funktiokutsu.getArvokonvertteriparametrit().size() > 0) {

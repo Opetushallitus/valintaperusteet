@@ -352,7 +352,7 @@ class LaskentaTest extends FunSuite {
     val funktio = HaeLukuarvo(
       konvertteri = None,
       oletusarvo = None,
-      valintaperusteviite = HakukohteenValintaperuste(tunniste, false))
+      valintaperusteviite = HakukohteenValintaperuste(tunniste, false, false))
 
     val hakukohde = new Hakukohde("hakukohdeoid", Map(tunniste -> "100.0"))
 
@@ -367,7 +367,7 @@ class LaskentaTest extends FunSuite {
     val funktio = HaeLukuarvo(
       konvertteri = None,
       oletusarvo = None,
-      valintaperusteviite = HakukohteenValintaperuste(tunniste, true))
+      valintaperusteviite = HakukohteenValintaperuste(tunniste, true, false))
 
     val hakukohde = new Hakukohde("hakukohdeoid", Map("toinen tunniste" -> "100.0"))
 
@@ -382,7 +382,7 @@ class LaskentaTest extends FunSuite {
     val funktio = HaeLukuarvo(
       konvertteri = None,
       oletusarvo = None,
-      valintaperusteviite = HakukohteenValintaperuste(tunniste, false))
+      valintaperusteviite = HakukohteenValintaperuste(tunniste, false, false))
 
     val hakukohde = new Hakukohde("hakukohdeoid", Map("toinen tunniste" -> "100.0"))
 
@@ -834,5 +834,169 @@ class LaskentaTest extends FunSuite {
     val tulos = Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, List(), funktiokutsu)
     assert(Option(tulos.getTulos).isEmpty)
     assertTilaHyvaksyttavissa(tulos.getTila)
+  }
+
+  test("epasuora viittaus hakemuksen arvoon") {
+    val funktiokutsu = HaeLukuarvo(
+      konvertteri = None,
+      oletusarvo = None,
+      valintaperusteviite = HakukohteenValintaperuste(
+        tunniste = "hakukohteentunniste",
+        pakollinen = true,
+        epasuoraViittaus = true
+      )
+    )
+
+    val hakukohde = new Hakukohde("oid1", Map("hakukohteentunniste" -> "hakemuksentunniste"))
+    val hakemus = new Hakemus("oid1", Map[java.lang.Integer, String](), Map("hakemuksentunniste" -> "100.0"))
+
+    val tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemus, List(hakemus), funktiokutsu)
+    assert(tulos.getTulos.compareTo(BigDecimal("100.0").underlying) == 0)
+    assertTilaHyvaksyttavissa(tulos.getTila)
+  }
+
+  test("epasuora viittaus hakemuksen arvoon, oletusarvo") {
+    val funktiokutsu = HaeLukuarvo(
+      konvertteri = None,
+      oletusarvo = Some(BigDecimal("100.0")),
+      valintaperusteviite = HakukohteenValintaperuste(
+        tunniste = "hakukohteentunniste",
+        pakollinen = true,
+        epasuoraViittaus = true
+      )
+    )
+
+    val hakukohde = new Hakukohde("oid1", Map("hakukohteentunniste" -> "hakemuksentunniste"))
+    val hakemus = new Hakemus("oid1", Map[java.lang.Integer, String](), Map[String, String]())
+
+    val tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemus, List(hakemus), funktiokutsu)
+    assert(tulos.getTulos.compareTo(BigDecimal("100.0").underlying) == 0)
+    assertTilaHylatty(tulos.getTila, Hylattymetatietotyyppi.PAKOLLINEN_VALINTAPERUSTE_HYLKAYS)
+  }
+
+  test("epasuora viittaus hakemuksen arvoon, oletusarvo, hakukohteen arvo puuttuu") {
+    val funktiokutsu = HaeLukuarvo(
+      konvertteri = None,
+      oletusarvo = Some(BigDecimal("100.0")),
+      valintaperusteviite = HakukohteenValintaperuste(
+        tunniste = "hakukohteentunniste",
+        pakollinen = true,
+        epasuoraViittaus = true
+      )
+    )
+
+    val hakukohde = new Hakukohde("oid1", Map[String, String]())
+    val hakemus = new Hakemus("oid1", Map[java.lang.Integer, String](), Map("hakemuksentunniste" -> "500.0"))
+
+    val tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemus, List(hakemus), funktiokutsu)
+    assert(tulos.getTulos.compareTo(BigDecimal("100.0").underlying) == 0)
+    assertTilaVirhe(tulos.getTila, VirheMetatietotyyppi.HAKUKOHTEEN_VALINTAPERUSTE_MAARITTELEMATTA_VIRHE)
+  }
+
+  test("epasuora viittaus hakemuksen arvoon, ei oletusarvoa, ei pakollinen") {
+    val funktiokutsu = HaeLukuarvo(
+      konvertteri = None,
+      oletusarvo = None,
+      valintaperusteviite = HakukohteenValintaperuste(
+        tunniste = "hakukohteentunniste",
+        pakollinen = false,
+        epasuoraViittaus = true
+      )
+    )
+
+    val hakukohde = new Hakukohde("oid1", Map("hakukohteentunniste" -> "hakemuksentunniste"))
+    val hakemus = new Hakemus("oid1", Map[java.lang.Integer, String](), Map[String, String]())
+
+    val tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemus, List(hakemus), funktiokutsu)
+    assert(Option(tulos.getTulos).isEmpty)
+    assertTilaHyvaksyttavissa(tulos.getTila)
+  }
+
+  test("valintaperusteyhtasuuruus palauttaa true jos arvot ovat yhtasuuret") {
+    val funktiokutsu = Valintaperusteyhtasuuruus(
+      oid = "",
+      valintaperusteet = Pair(
+        HakukohteenValintaperuste(
+          tunniste = "hakukohteentunniste",
+          pakollinen = true,
+          epasuoraViittaus = false
+        ),
+        HakemuksenValintaperuste(
+          tunniste = "hakemuksentunniste",
+          pakollinen = true))
+    )
+
+    val hakukohde = new Hakukohde("oid1", Map("hakukohteentunniste" -> "arvo"))
+    val hakemus = new Hakemus("oid1", Map[java.lang.Integer, String](), Map("hakemuksentunniste" -> "arvo"))
+
+    val tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemus, List(hakemus), funktiokutsu)
+    assert(tulos.getTulos)
+    assertTilaHyvaksyttavissa(tulos.getTila)
+  }
+
+  test("valintaperusteyhtasuuruus palauttaa false jos arvot ovat erisuuret") {
+    val funktiokutsu = Valintaperusteyhtasuuruus(
+      oid = "",
+      valintaperusteet = Pair(
+        HakukohteenValintaperuste(
+          tunniste = "hakukohteentunniste",
+          pakollinen = true,
+          epasuoraViittaus = false
+        ),
+        HakemuksenValintaperuste(
+          tunniste = "hakemuksentunniste",
+          pakollinen = true))
+    )
+
+    val hakukohde = new Hakukohde("oid1", Map("hakukohteentunniste" -> "hakukohteenarvo"))
+    val hakemus = new Hakemus("oid1", Map[java.lang.Integer, String](), Map("hakemuksentunniste" -> "hakemuksenarvo"))
+
+    val tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemus, List(hakemus), funktiokutsu)
+    assert(!tulos.getTulos)
+    assertTilaHyvaksyttavissa(tulos.getTila)
+  }
+
+  test("valintaperusteyhtasuuruus, molemmat arvot tyhjia") {
+    val funktiokutsu = Valintaperusteyhtasuuruus(
+      oid = "",
+      valintaperusteet = Pair(
+        HakukohteenValintaperuste(
+          tunniste = "hakukohteentunniste",
+          pakollinen = false,
+          epasuoraViittaus = false
+        ),
+        HakemuksenValintaperuste(
+          tunniste = "hakemuksentunniste",
+          pakollinen = false))
+    )
+
+    val hakukohde = new Hakukohde("oid1", Map[String, String]())
+    val hakemus = new Hakemus("oid1", Map[java.lang.Integer, String](), Map[String, String]())
+
+    val tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemus, List(hakemus), funktiokutsu)
+    assert(tulos.getTulos)
+    assertTilaHyvaksyttavissa(tulos.getTila)
+  }
+
+  test("valintaperusteyhtasuuruus, molemmat arvot tyhjia, toinen pakollinen") {
+    val funktiokutsu = Valintaperusteyhtasuuruus(
+      oid = "",
+      valintaperusteet = Pair(
+        HakukohteenValintaperuste(
+          tunniste = "hakukohteentunniste",
+          pakollinen = false,
+          epasuoraViittaus = false
+        ),
+        HakemuksenValintaperuste(
+          tunniste = "hakemuksentunniste",
+          pakollinen = true))
+    )
+
+    val hakukohde = new Hakukohde("oid1", Map[String, String]())
+    val hakemus = new Hakemus("oid1", Map[java.lang.Integer, String](), Map[String, String]())
+
+    val tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemus, List(hakemus), funktiokutsu)
+    assert(tulos.getTulos)
+    assertTilaHylatty(tulos.getTila, Hylattymetatietotyyppi.PAKOLLINEN_VALINTAPERUSTE_HYLKAYS)
   }
 }

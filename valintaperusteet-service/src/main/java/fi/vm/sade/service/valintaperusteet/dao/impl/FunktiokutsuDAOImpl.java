@@ -34,7 +34,7 @@ public class FunktiokutsuDAOImpl extends AbstractJpaDAOImpl<Funktiokutsu, Long> 
                 .leftJoin(fk.arvovalikonvertteriparametrit).fetch()
                 .leftJoin(fk.funktioargumentit, fa).fetch()
                 .leftJoin(fa.laskentakaavaChild).fetch()
-                .leftJoin(fk.valintaperuste).fetch()
+                .leftJoin(fk.valintaperusteviitteet).fetch()
                 .where(fk.id.eq(id)).distinct().singleResult(fk);
     }
 
@@ -53,7 +53,7 @@ public class FunktiokutsuDAOImpl extends AbstractJpaDAOImpl<Funktiokutsu, Long> 
                 .fetch()
                 .leftJoin(fk.funktioargumentit)
                 .fetch()
-                .leftJoin(fk.valintaperuste)
+                .leftJoin(fk.valintaperusteviitteet)
                 .fetch()
                 .where(
                         fk.id.notIn(
@@ -123,10 +123,18 @@ public class FunktiokutsuDAOImpl extends AbstractJpaDAOImpl<Funktiokutsu, Long> 
                 .leftJoin(funktiokutsu.arvovalikonvertteriparametrit).fetch()
                 .leftJoin(funktiokutsu.funktioargumentit).fetch()
                 .leftJoin(funktiokutsu.syoteparametrit).fetch()
-                .leftJoin(funktiokutsu.valintaperuste).fetch()
-                .where(hakukohde.oid.in(hakukohdeOids))
+                .leftJoin(funktiokutsu.valintaperusteviitteet).fetch()
+                .where(hakukohde.oid.in(hakukohdeOids)
+                        .and(vaihe.aktiivinen.isTrue())
+                        .and(jono.aktiivinen.isTrue())
+                        .and(kriteeri.aktiivinen.isTrue()))
                 .distinct()
                 .list(funktiokutsu);
+    }
+
+    @Override
+    public void flush() {
+        getEntityManager().flush();
     }
 
     @Override

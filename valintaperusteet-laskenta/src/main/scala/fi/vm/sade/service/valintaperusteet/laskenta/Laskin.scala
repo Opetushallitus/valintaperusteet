@@ -257,16 +257,24 @@ private class Laskin private(private val hakukohde: Hakukohde,
         val (_, konvertoitu, tilat) = haeValintaperusteenArvoHakemukselta(tunniste, pakollinen)
         (konvertoitu, tilat)
       }
-      case HakukohteenValintaperuste(tunniste, pakollinen) => {
-        hakukohde.valintaperusteet.get(tunniste).filter(!_.trim.isEmpty).map(konv(_)).getOrElse {
-          val tila = if (pakollinen) new Virhetila("Hakukohteen valintaperustetta " + tunniste + " ei ole määritelty",
-            new HakukohteenValintaperusteMaarittelemattaVirhe(tunniste))
-          else new Hyvaksyttavissatila
+      case HakukohteenValintaperuste(tunniste, pakollinen, epasuoraViittaus) => {
+        hakukohde.valintaperusteet.get(tunniste).filter(!_.trim.isEmpty) match {
+          case Some(arvo) => {
+            if (epasuoraViittaus) {
+              val (_, konvertoitu, tilat) = haeValintaperusteenArvoHakemukselta(arvo, pakollinen)
+              (konvertoitu, tilat)
+            } else konv(arvo)
+          }
+          case None => {
+            val tila = if (epasuoraViittaus || pakollinen) new Virhetila("Hakukohteen valintaperustetta " + tunniste + " ei ole määritelty",
+              new HakukohteenValintaperusteMaarittelemattaVirhe(tunniste))
+            else new Hyvaksyttavissatila
 
-          val arvo = if (!oletusarvo.isEmpty) oletusarvo
-          else None
+            val arvo = if (!oletusarvo.isEmpty) oletusarvo
+            else None
 
-          (arvo, List(tila))
+            (arvo, List(tila))
+          }
         }
       }
     }
@@ -419,6 +427,15 @@ private class Laskin private(private val hakukohde: Hakukohde,
         val (tulos, tila) = haeValintaperuste[Boolean](valintaperusteviite, hakemus,
           (s => (Some(s.trim.equalsIgnoreCase(vertailtava.trim)), List(new Hyvaksyttavissatila))), oletusarvo)
         (tulos, tila, Historia("Hae merkkijono ja vertaa yhtasuuruus", tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
+      }
+
+      case Valintaperusteyhtasuuruus(oid, (valintaperusteviite1, valintaperusteviite2)) => {
+        val (arvo1, tilat1) = haeValintaperuste[String](valintaperusteviite1, hakemus, (s => (Some(s.trim), List(new Hyvaksyttavissatila))), None)
+        val (arvo2, tilat2) = haeValintaperuste[String](valintaperusteviite2, hakemus, (s => (Some(s.trim), List(new Hyvaksyttavissatila))), None)
+
+        val tulos = Some(arvo1 == arvo2)
+        val tilat = tilat1 ::: tilat2
+        (tulos, tilat, Historia("Valintaperusteyhtasuuruus", tulos, tilat, None, Some(Map("tunniste1" -> arvo1, "tunniste2" -> arvo2))))
       }
     }
 

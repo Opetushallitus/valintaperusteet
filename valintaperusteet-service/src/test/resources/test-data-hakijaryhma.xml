@@ -30,7 +30,7 @@
         <valinnan_vaihe id="4" version="0" aktiivinen="true" nimi="valinnanvaihe 1" oid="vv2" valinnan_vaihe_tyyppi="TAVALLINEN" hakukohde_viite_id="2" master_valinnan_vaihe_id="3"/>
         <valinnan_vaihe id="40" version="2" aktiivinen="true" nimi="valinnanvaihe 1" oid="vv3" valinnan_vaihe_tyyppi="TAVALLINEN" master_valinnan_vaihe_id="3" valintaryhma_id="39"/>
 
-        <valintaperuste_viite id="14" version="0" lahde="HAETTAVA_ARVO" on_pakollinen="false" tunniste="id" funktiokutsu_id="12"/>
+        <valintaperuste_viite id="14" version="0" lahde="HAETTAVA_ARVO" on_pakollinen="false" tunniste="id" funktiokutsu_id="12" indeksi="1" kuvaus="kuvaus"/>
 
         <valintaryhma id="1" version="0" hakuoid="1" nimi="valintaryhma1" oid="vr1"/>
         <valintaryhma id="39" version="2" hakuoid="1" nimi="valintaryhma2" oid="vr2" parent_id="1"/>

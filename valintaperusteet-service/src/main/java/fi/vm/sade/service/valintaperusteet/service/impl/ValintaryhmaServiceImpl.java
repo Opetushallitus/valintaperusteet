@@ -2,6 +2,7 @@ package fi.vm.sade.service.valintaperusteet.service.impl;
 
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintaperustePuuDTO;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaService;
 import fi.vm.sade.service.valintaperusteet.service.OidService;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -79,6 +81,8 @@ public class ValintaryhmaServiceImpl extends AbstractCRUDServiceImpl<Valintaryhm
     public List<Valintaryhma> findParentHierarchyFromOid(String oid) {
         return valintaryhmaDAO.readHierarchy(oid);
     }
+
+
 
     @Override
     public Valintaryhma update(String oid, Valintaryhma incoming) {

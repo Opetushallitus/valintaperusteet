@@ -23,4 +23,6 @@ public interface HakukohdeViiteDAO extends JpaDAO<HakukohdeViite, Long> {
     boolean kuuluuSijoitteluun(String oid);
 
     void flush();
+
+    List<HakukohdeViite> search(String hakuOid, List<String> tila, String searchString);
 }

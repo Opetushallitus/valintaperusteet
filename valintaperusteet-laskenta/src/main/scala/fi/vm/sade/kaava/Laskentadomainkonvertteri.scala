@@ -77,7 +77,8 @@ object Laskentadomainkonvertteri {
     valintaperuste.getLahde match {
       case Valintaperustelahde.HAETTAVA_ARVO => HakemuksenValintaperuste(valintaperuste.getTunniste,
         valintaperuste.getOnPakollinen)
-      case Valintaperustelahde.HAKUKOHTEEN_ARVO => HkValintaperuste(valintaperuste.getTunniste, valintaperuste.getOnPakollinen)
+      case Valintaperustelahde.HAKUKOHTEEN_ARVO =>
+        HkValintaperuste(valintaperuste.getTunniste, valintaperuste.getOnPakollinen, Option(valintaperuste.getEpasuoraViittaus).map(Boolean2boolean(_)).getOrElse(false))
       case Valintaperustelahde.SYOTETTAVA_ARVO => SyotettavaValintaperuste(valintaperuste.getTunniste,
         valintaperuste.getOnPakollinen, valintaperuste.getOsallistuminenTunniste)
     }
@@ -94,6 +95,8 @@ object Laskentadomainkonvertteri {
     val funktiokuvaus = Funktiokuvaaja.annaFunktiokuvaus(funktiokutsu.getFunktionimi)._2
 
     val oid = if (funktiokutsu.getId != null) funktiokutsu.getId.toString else ""
+
+    val valintaperusteviitteet = funktiokutsu.getValintaperusteviitteet.toList.sortWith(_.getIndeksi < _.getIndeksi).map(luoValintaperusteviite(_))
 
     funktiokutsu.getFunktionimi match {
       case Funktionimi.EI => Ei(muunnaTotuusarvofunktioksi(lasketutArgumentit.head))
@@ -123,8 +126,7 @@ object Laskentadomainkonvertteri {
         val oletusarvo = funktiokutsu.getSyoteparametrit.find(_.getAvain == "oletusarvo")
           .map(p => parametriToBigDecimal(p))
 
-        val valintaperusteviite = luoValintaperusteviite(funktiokutsu.getValintaperuste)
-        HaeLukuarvo(konvertteri, oletusarvo, valintaperusteviite, oid)
+        HaeLukuarvo(konvertteri, oletusarvo, valintaperusteviitteet.head, oid)
       }
       case Funktionimi.HAEMERKKIJONOJAKONVERTOILUKUARVOKSI => {
         val konversioMap = funktiokutsu.getArvokonvertteriparametrit.map(konv =>
@@ -133,12 +135,10 @@ object Laskentadomainkonvertteri {
         val oletusarvo = funktiokutsu.getSyoteparametrit.find(_.getAvain == "oletusarvo")
           .map(p => parametriToBigDecimal(p))
 
-        val valintaperusteviite = luoValintaperusteviite(funktiokutsu.getValintaperuste)
-
         HaeMerkkijonoJaKonvertoiLukuarvoksi(
           Arvokonvertteri[String, BigDecimal](konversioMap),
           oletusarvo,
-          valintaperusteviite,
+          valintaperusteviitteet.head,
           oid)
       }
 
@@ -149,12 +149,10 @@ object Laskentadomainkonvertteri {
         val oletusarvo = funktiokutsu.getSyoteparametrit.find(_.getAvain == "oletusarvo")
           .map(p => parametriToBoolean(p))
 
-        val valintaperusteviite = luoValintaperusteviite(funktiokutsu.getValintaperuste)
-
         HaeMerkkijonoJaKonvertoiTotuusarvoksi(
           Arvokonvertteri[String, Boolean](konversioMap),
           oletusarvo,
-          valintaperusteviite,
+          valintaperusteviitteet.head,
           oid)
       }
 
@@ -163,9 +161,8 @@ object Laskentadomainkonvertteri {
           .map(p => parametriToBoolean(p))
 
         val vertailtava = getParametri("vertailtava", funktiokutsu.getSyoteparametrit).getArvo
-        val valintaperusteviite = luoValintaperusteviite(funktiokutsu.getValintaperuste)
 
-        HaeMerkkijonoJaVertaaYhtasuuruus(oletusarvo, valintaperusteviite, vertailtava, oid)
+        HaeMerkkijonoJaVertaaYhtasuuruus(oletusarvo, valintaperusteviitteet.head, vertailtava, oid)
       }
 
       case Funktionimi.HAETOTUUSARVO => {
@@ -181,9 +178,7 @@ object Laskentadomainkonvertteri {
         val oletusarvo = funktiokutsu.getSyoteparametrit.find(_.getAvain == "oletusarvo")
           .map(p => parametriToBoolean(p))
 
-        val valintaperusteviite = luoValintaperusteviite(funktiokutsu.getValintaperuste)
-
-        HaeTotuusarvo(konvertteri, oletusarvo, valintaperusteviite, oid)
+        HaeTotuusarvo(konvertteri, oletusarvo, valintaperusteviitteet.head, oid)
       }
       case Funktionimi.HYLKAA => {
         val hylkaysperustekuvaus = funktiokutsu.getSyoteparametrit.find(_.getAvain == "hylkaysperustekuvaus").map(_.getArvo)
@@ -317,6 +312,10 @@ object Laskentadomainkonvertteri {
         val prosenttiosuus = getParametri("prosenttiosuus", funktiokutsu.getSyoteparametrit)
 
         Demografia(oid, tunniste, parametriToBigDecimal(prosenttiosuus))
+      }
+
+      case Funktionimi.VALINTAPERUSTEYHTASUURUUS => {
+        Valintaperusteyhtasuuruus(oid, Pair(valintaperusteviitteet(0), valintaperusteviitteet(1)))
       }
 
       case _ => sys.error("Could not calculate funktio " + funktiokutsu.getFunktionimi.name())

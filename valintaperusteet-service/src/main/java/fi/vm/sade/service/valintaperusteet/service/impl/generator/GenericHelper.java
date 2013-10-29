@@ -70,18 +70,26 @@ public class GenericHelper {
 
     public static ValintaperusteViite luoValintaperusteViite(String tunniste, boolean onPakollinen,
                                                              Valintaperustelahde lahde, String kuvaus) {
+        return luoValintaperusteViite(tunniste, onPakollinen, lahde, kuvaus, false);
+    }
+
+    public static ValintaperusteViite luoValintaperusteViite(String tunniste, boolean onPakollinen,
+                                                             Valintaperustelahde lahde, String kuvaus,
+                                                             boolean epasuoraViittaus) {
         ValintaperusteViite vp = new ValintaperusteViite();
         vp.setTunniste(tunniste);
         vp.setOnPakollinen(onPakollinen);
         vp.setLahde(lahde);
         vp.setKuvaus(kuvaus);
+        vp.setEpasuoraViittaus(epasuoraViittaus);
+        vp.setIndeksi(1);
         return vp;
     }
 
     public static Funktiokutsu luoHaeLukuarvo(ValintaperusteViite vp) {
         Funktiokutsu funktiokutsu = new Funktiokutsu();
         funktiokutsu.setFunktionimi(Funktionimi.HAELUKUARVO);
-        funktiokutsu.setValintaperuste(vp);
+        funktiokutsu.getValintaperusteviitteet().add(vp);
         return funktiokutsu;
     }
 
@@ -214,7 +222,7 @@ public class GenericHelper {
         Funktiokutsu funktiokutsu = new Funktiokutsu();
         funktiokutsu.setFunktionimi(Funktionimi.HAEMERKKIJONOJAKONVERTOILUKUARVOKSI);
         funktiokutsu.getArvokonvertteriparametrit().addAll(arvokonvertterit);
-        funktiokutsu.setValintaperuste(vp);
+        funktiokutsu.getValintaperusteviitteet().add(vp);
 
         return funktiokutsu;
     }
@@ -231,7 +239,7 @@ public class GenericHelper {
     public static Funktiokutsu luoHaeTotuusarvo(ValintaperusteViite vp) {
         Funktiokutsu funktiokutsu = new Funktiokutsu();
         funktiokutsu.setFunktionimi(Funktionimi.HAETOTUUSARVO);
-        funktiokutsu.setValintaperuste(vp);
+        funktiokutsu.getValintaperusteviitteet().add(vp);
 
         return funktiokutsu;
     }
@@ -284,7 +292,7 @@ public class GenericHelper {
                                                                         Collection<Arvokonvertteriparametri> konvs) {
         Funktiokutsu funktiokutsu = new Funktiokutsu();
         funktiokutsu.setFunktionimi(Funktionimi.HAEMERKKIJONOJAKONVERTOITOTUUSARVOKSI);
-        funktiokutsu.setValintaperuste(vp);
+        funktiokutsu.getValintaperusteviitteet().add(vp);
         funktiokutsu.getArvokonvertteriparametrit().addAll(konvs);
         return funktiokutsu;
     }
@@ -322,7 +330,7 @@ public class GenericHelper {
     public static Funktiokutsu luoHaeMerkkijonoJaVertaaYhtasuuruus(ValintaperusteViite vp, String vertailtava) {
         Funktiokutsu f = new Funktiokutsu();
         f.setFunktionimi(Funktionimi.HAEMERKKIJONOJAVERTAAYHTASUURUUS);
-        f.setValintaperuste(vp);
+        f.getValintaperusteviitteet().add(vp);
         f.getSyoteparametrit().add(luoSyoteparametri("vertailtava", vertailtava));
         return f;
     }
@@ -373,6 +381,17 @@ public class GenericHelper {
         }
 
         fk.getFunktioargumentit().addAll(luoFunktioargumentit(args));
+        return fk;
+    }
+
+    public static Funktiokutsu luoValintaperusteyhtasuuruus(ValintaperusteViite vp1, ValintaperusteViite vp2) {
+        Funktiokutsu fk = new Funktiokutsu();
+        fk.setFunktionimi(Funktionimi.VALINTAPERUSTEYHTASUURUUS);
+
+        vp1.setIndeksi(1);
+        vp2.setIndeksi(2);
+        fk.getValintaperusteviitteet().add(vp1);
+        fk.getValintaperusteviitteet().add(vp2);
         return fk;
     }
 }

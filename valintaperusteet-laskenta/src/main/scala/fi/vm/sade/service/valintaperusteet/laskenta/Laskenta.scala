@@ -21,7 +21,7 @@ object Laskenta {
   case class SyotettavaValintaperuste(override val tunniste: String, val pakollinen: Boolean,
                                       osallistuminenTunniste: String) extends Valintaperuste
 
-  case class HakukohteenValintaperuste(override val tunniste: String, val pakollinen: Boolean) extends Valintaperuste
+  case class HakukohteenValintaperuste(override val tunniste: String, val pakollinen: Boolean, val epasuoraViittaus: Boolean) extends Valintaperuste
 
   case class Arvokonvertteri[S, T](konversioMap: Seq[Arvokonversio[S, T]]) extends Konvertteri[S, T] {
     def konvertoi(arvo: S): (Option[T], Tila) = {
@@ -290,5 +290,8 @@ object Laskenta {
   case class PainotettuKeskiarvo(oid: String = "", fs: Seq[Pair[Lukuarvofunktio, Lukuarvofunktio]]) extends Lukuarvofunktio {
     require(fs.size > 0, "Parametreja pitää olla vähintään yksi")
   }
+
+  case class Valintaperusteyhtasuuruus(oid: String = "",
+                                       valintaperusteet: Pair[Valintaperuste, Valintaperuste]) extends Totuusarvofunktio
 
 }

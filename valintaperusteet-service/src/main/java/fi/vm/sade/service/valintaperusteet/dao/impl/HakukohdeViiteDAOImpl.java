@@ -5,6 +5,7 @@ import com.mysema.query.types.EntityPath;
 import fi.vm.sade.generic.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.model.*;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -83,5 +84,24 @@ public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Lo
     @Override
     public void flush() {
         getEntityManager().flush();
+    }
+
+    @Override
+    public List<HakukohdeViite> search(String hakuOid, List<String> tila, String searchString){
+        QHakukohdeViite hakukohdeViite = QHakukohdeViite.hakukohdeViite;
+        JPAQuery a = from(hakukohdeViite).leftJoin(hakukohdeViite.valintaryhma).fetch();
+
+        if(StringUtils.isNotBlank(hakuOid)) {
+            a.where(hakukohdeViite.hakuoid.eq(hakuOid));
+        }
+        if(tila != null && tila.size() > 0) {
+            a.where(hakukohdeViite.tila.in(tila));
+        }
+        if(StringUtils.isNotBlank(searchString)) {
+            a.where(hakukohdeViite.nimi.containsIgnoreCase(searchString));
+        }
+
+        return  a.list(hakukohdeViite);
+
     }
 }

@@ -19,4 +19,6 @@ public interface ValintaryhmaService extends CRUDService<Valintaryhma, Long, Str
     Valintaryhma insert(Valintaryhma valintaryhma, String parentOid);
 
     List<Valintaryhma> findParentHierarchyFromOid(String oid);
+
+
 }

@@ -60,7 +60,7 @@ object LaskentaTestUtil {
     def apply(nimi: Funktionimi, funktioargumentit: Seq[FunktionArgumentti] = Nil, syoteparametrit: Seq[Syoteparametri] = Nil,
               arvokonvertterit: Seq[Arvokonvertteriparametri] = Nil,
               arvovalikonvertterit: Seq[Arvovalikonvertteriparametri] = Nil,
-              valintaperustetunniste: ValintaperusteViite = null) = {
+              valintaperustetunniste: Seq[ValintaperusteViite] = Nil) = {
       val funktiokutsu = new Funktiokutsu
       funktiokutsu.setFunktionimi(nimi)
 
@@ -74,7 +74,7 @@ object LaskentaTestUtil {
       funktiokutsu.setSyoteparametrit(setAsJavaSet(syoteparametrit.toSet))
       funktiokutsu.setArvokonvertteriparametrit(setAsJavaSet(arvokonvertterit.toSet))
       funktiokutsu.setArvovalikonvertteriparametrit(new TreeSet[Arvovalikonvertteriparametri](arvovalikonvertterit.toSet))
-      funktiokutsu.setValintaperuste(valintaperustetunniste)
+      funktiokutsu.setValintaperusteviitteet(setAsJavaSet(valintaperustetunniste.toSet))
 
       funktiokutsu
     }
@@ -117,12 +117,16 @@ object LaskentaTestUtil {
   object ValintaperusteViite {
     def apply(onPakollinen: java.lang.Boolean,
               tunniste: String,
-              lahde: Valintaperustelahde = Valintaperustelahde.HAETTAVA_ARVO) = {
+              lahde: Valintaperustelahde = Valintaperustelahde.HAETTAVA_ARVO,
+              epasuoraViittaus: Boolean = false,
+              indeksi: Int = 1) = {
       val viite = new ValintaperusteViite
       viite.setKuvaus("")
       viite.setLahde(lahde)
       viite.setOnPakollinen(onPakollinen)
       viite.setTunniste(tunniste)
+      viite.setEpasuoraViittaus(epasuoraViittaus)
+      viite.setIndeksi(indeksi)
 
       viite
     }
