@@ -78,12 +78,14 @@ public class HakijaryhmaServiceImpl extends AbstractCRUDServiceImpl<Hakijaryhma,
 
     @Override
     public List<Hakijaryhma> findByHakukohde(String oid) {
-        return hakijaryhmaDAO.findByHakukohde(oid);
+        List<Hakijaryhma> byHakukohde = hakijaryhmaDAO.findByHakukohde(oid);
+        return LinkitettavaJaKopioitavaUtil.jarjesta(byHakukohde);
     }
 
     @Override
     public List<Hakijaryhma> findByValintaryhma(String oid) {
-        return hakijaryhmaDAO.findByValintaryhma(oid);
+        List<Hakijaryhma> byValintaryhma = hakijaryhmaDAO.findByValintaryhma(oid);
+        return LinkitettavaJaKopioitavaUtil.jarjesta(byValintaryhma);
     }
 
     @Override

@@ -23,6 +23,8 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static junit.framework.Assert.*;
@@ -65,23 +67,6 @@ public class HakijaryhmaServiceTest {
 
         assertEquals(1, hakijaryhmas.size());
     }
-
-//    private List<Valintaryhma> jarjestaValintaryhmatIdnMukaan(List<Valintaryhma> vr) {
-//        class ValintaryhmaComparator implements Comparator<Valintaryhma> {
-//            @Override
-//            public int compare(Valintaryhma o1, Valintaryhma o2) {
-//                return o1.getId().compareTo(o2.getId());
-//            }
-//        }
-//
-//        Collections.sort(vr, new ValintaryhmaComparator());
-//        return vr;
-//    }
-//
-//    private boolean valinnanVaiheetOvatKopioita(ValinnanVaihe vv1, ValinnanVaihe vv2) {
-//        return vv1.getNimi().equals(vv2.getNimi()) && vv1.getAktiivinen().equals(vv2.getAktiivinen())
-//                && vv1.getKuvaus().equals(vv2.getKuvaus());
-//    }
 
     @Test
     public void testDelete() {
@@ -315,5 +300,39 @@ public class HakijaryhmaServiceTest {
         } catch (HakijaryhmaEiKuuluValintatapajonolleException e) {
 
         }
+    }
+
+    @Test
+    public void testJarjesta() {
+        {
+            // hr2
+            // hr3
+            // hr4
+        }
+
+        List<Hakijaryhma> byHakukohde = hakijaryhmaService.findByHakukohde("1");
+        assertEquals(3 , byHakukohde.size());
+        assertEquals("hr2", byHakukohde.get(0).getOid());
+        assertEquals("hr3", byHakukohde.get(1).getOid());
+        assertEquals("hr4", byHakukohde.get(2).getOid());
+
+
+        {
+            // hr4
+            // hr2
+            // hr3
+        }
+
+
+        List<Hakijaryhma> hakijaryhmas = hakijaryhmaService.jarjestaHakijaryhmat(Arrays.asList(new String[]{"hr4", "hr2", "hr3"}));
+        assertEquals(3, hakijaryhmas.size());
+
+        byHakukohde = hakijaryhmaService.findByHakukohde("1");
+        assertEquals(3 , byHakukohde.size());
+        assertEquals("hr4", byHakukohde.get(0).getOid());
+        assertEquals("hr2", byHakukohde.get(1).getOid());
+        assertEquals("hr3", byHakukohde.get(2).getOid());
+
+
     }
 }
