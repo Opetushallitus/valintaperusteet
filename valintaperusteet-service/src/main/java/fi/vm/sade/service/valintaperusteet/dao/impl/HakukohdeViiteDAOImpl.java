@@ -96,6 +96,8 @@ public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Lo
         if(hakuOid != null && !hakuOid.isEmpty()) {
             b= hakukohdeViite.hakuoid.eq(hakuOid);
         }
+
+
         if(tila != null && tila.size() > 0) {
             if( b== null) {
                 b = hakukohdeViite.tila.in(tila);
