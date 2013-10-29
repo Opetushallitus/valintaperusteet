@@ -2,10 +2,10 @@ package fi.vm.sade.service.valintaperusteet.dao.impl;
 
 import com.mysema.query.jpa.impl.JPAQuery;
 import com.mysema.query.types.EntityPath;
-import com.mysema.query.types.expr.BooleanExpression;
 import fi.vm.sade.generic.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.model.*;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -89,33 +89,19 @@ public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Lo
     @Override
     public List<HakukohdeViite> search(String hakuOid, List<String> tila, String searchString){
         QHakukohdeViite hakukohdeViite = QHakukohdeViite.hakukohdeViite;
-
         JPAQuery a = from(hakukohdeViite).leftJoin(hakukohdeViite.valintaryhma).fetch();
 
-        BooleanExpression b =null;
-        if(hakuOid != null && !hakuOid.isEmpty()) {
-            b= hakukohdeViite.hakuoid.eq(hakuOid);
+        if(StringUtils.isNotBlank(hakuOid)) {
+            a.where(hakukohdeViite.hakuoid.eq(hakuOid));
         }
-
-
         if(tila != null && tila.size() > 0) {
-            if( b== null) {
-                b = hakukohdeViite.tila.in(tila);
-            } else {
-                b.or(hakukohdeViite.tila.in(tila));
-            }
+            a.where(hakukohdeViite.tila.in(tila));
         }
-        if(searchString != null && !searchString.isEmpty()) {
-            if(b==null) {
-                b=hakukohdeViite.nimi.contains(searchString);
-            }   else {
-                b.or(hakukohdeViite.nimi.contains(searchString));
-            }
+        if(StringUtils.isNotBlank(searchString)) {
+            a.where(hakukohdeViite.nimi.containsIgnoreCase(searchString));
         }
-        if(b== null ) {
-            return  a.list(hakukohdeViite);
-        }    else {
-            return  a.where(b).list(hakukohdeViite);
-        }
+
+        return  a.list(hakukohdeViite);
+
     }
 }
