@@ -1,7 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.service.impl.generator;
 
 import fi.vm.sade.service.valintaperusteet.model.*;
-import fi.vm.sade.service.valintaperusteet.service.impl.LuoValintaperusteetServiceImpl;
 import scala.actors.threadpool.Arrays;
 
 import java.util.ArrayList;
@@ -134,30 +133,7 @@ public class PkJaYoPohjaiset {
 
     }
 
-    public static Laskentakaava luoKielikokeenPakollisuudenLaskentakaava(LuoValintaperusteetServiceImpl.Kielikoodi k,
-                                                                         Laskentakaava eiUlkomaillaSuoritettuKoulutus) {
-        // Kaava palauttaa true, jos hakijan pitää osallistua kielikokeeseen, muutoin false.
-
-        Funktiokutsu[] args = {
-                luoKielikoeSuoritettuFunktiokutsu(k),
-                luoAidinkieliOnOpetuskieliFunktiokutsu(k),
-                luoKielikoekriteeri1(k),
-                luoKielikoekriteeri2(k),
-                luoKielikoekriteeri3(k),
-                luoKielikoekriteeri4(k),
-                luoKielikoekriteeri5(k),
-                luoKielikoekriteeri6(k),
-                luoKielikoekriteeri7(k),
-        };
-
-
-        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(GenericHelper.luoJa(GenericHelper.luoEi(GenericHelper.luoTai(args)), eiUlkomaillaSuoritettuKoulutus),
-                "Kielikokeen pakollisuus - " + k.getNimi() + ", 2 aste, pk ja yo"
-        );
-    }
-
     public static Laskentakaava luoKielikokeenPakollisuudenLaskentakaava(Laskentakaava eiUlkomaillaSuoritettuKoulutus) {
-
         Funktiokutsu[] args = {
                 luoKielikoeSuoritettuFunktiokutsu(),
                 luoAidinkieliOnOpetuskieliFunktiokutsu(),
@@ -175,13 +151,6 @@ public class PkJaYoPohjaiset {
         );
     }
 
-    public static Funktiokutsu luoAidinkieliOnOpetuskieliFunktiokutsu(LuoValintaperusteetServiceImpl.Kielikoodi k) {
-        Funktiokutsu aidinkielivertailu = GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(
-                GenericHelper.luoValintaperusteViite(aidinkieli, false, Valintaperustelahde.HAETTAVA_ARVO),
-                k.getKieliarvo(), false);
-        return aidinkielivertailu;
-    }
-
     public static Funktiokutsu luoAidinkieliOnOpetuskieliFunktiokutsu() {
         return GenericHelper.luoValintaperusteyhtasuuruus(
                 GenericHelper.luoValintaperusteViite(opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO, "Opetuskieli", false),
@@ -193,22 +162,10 @@ public class PkJaYoPohjaiset {
                 GenericHelper.luoValintaperusteViite(kielikoetunniste, false, Valintaperustelahde.HAKUKOHTEEN_ARVO, "Kielikokeen tunniste", true), false);
     }
 
-    public static Funktiokutsu luoKielikoeSuoritettuFunktiokutsu(LuoValintaperusteetServiceImpl.Kielikoodi k) {
-        Funktiokutsu kielikoeSuoritettu = GenericHelper.luoHaeTotuusarvo(GenericHelper.luoValintaperusteViite(
-                k.getKielikoetunniste(), false, Valintaperustelahde.SYOTETTAVA_ARVO), false);
-
-        return kielikoeSuoritettu;
-    }
-
     /**
      * 1) Hakijalla on perusopetuksen päästötodistus joka suoritettu vastaanottavan oppilaitoksen opetuskielellä
      * (suomi, ruotsi tai saame)
      */
-    public static Funktiokutsu luoKielikoekriteeri1(LuoValintaperusteetServiceImpl.Kielikoodi k) {
-        return GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(GenericHelper.luoValintaperusteViite(
-                perustopetuksenKieli, false, Valintaperustelahde.HAETTAVA_ARVO), k.getKieliarvo(), false);
-    }
-
     public static Funktiokutsu luoKielikoekriteeri1Funktiokutsu() {
         return GenericHelper.luoValintaperusteyhtasuuruus(
                 GenericHelper.luoValintaperusteViite(opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO, "Opetuskieli", false),
@@ -219,45 +176,6 @@ public class PkJaYoPohjaiset {
      * 2) Hakija on suorittanut vähintään arvosanalla 7 perusopetuksen toisen kotimaisen A-kielen oppimäärän, joka on
      * vastaanottavan oppilaitoksen opetuskieli
      */
-    public static Funktiokutsu luoKielikoekriteeri2(final LuoValintaperusteetServiceImpl.Kielikoodi k) {
-
-        final Funktiokutsu seitseman = GenericHelper.luoLukuarvo(7.0);
-        class KriteeriGen {
-
-            public Funktiokutsu luoKriteeri(final String ainetunniste) {
-                Funktiokutsu oppiaineOnOpetuskieli = GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(
-                        GenericHelper.luoValintaperusteViite(PkAineet.oppiaine(ainetunniste), false,
-                                Valintaperustelahde.HAETTAVA_ARVO), k.getKieliarvo(), false);
-
-                Funktiokutsu arvosana = GenericHelper.luoHaeLukuarvo(
-                        GenericHelper.luoValintaperusteViite(PkAineet.pakollinen(ainetunniste), false,
-                                Valintaperustelahde.HAETTAVA_ARVO), 0.0);
-
-                Funktiokutsu arvosanaSuurempiKuin7 = GenericHelper.luoSuurempiTaiYhtasuuriKuin(arvosana, seitseman);
-
-                return GenericHelper.luoJa(oppiaineOnOpetuskieli, arvosanaSuurempiKuin7);
-            }
-        }
-
-        // Tarkastellaan A1- ja A2-kieliä
-        final String[] aineet = {
-                Aineet.a11Kieli,
-                Aineet.a12Kieli,
-                Aineet.a13Kieli,
-                Aineet.a21Kieli,
-                Aineet.a22Kieli,
-                Aineet.a23Kieli
-        };
-
-        List<Funktiokutsu> args = new ArrayList<Funktiokutsu>();
-        KriteeriGen gen = new KriteeriGen();
-        for (String aine : aineet) {
-            args.add(gen.luoKriteeri(aine));
-        }
-
-        return GenericHelper.luoTai(args.toArray(new FunktionArgumentti[args.size()]));
-    }
-
     public static Funktiokutsu luoKielikoekriteeri2Funktiokutsu() {
         final Funktiokutsu seitseman = GenericHelper.luoLukuarvo(7.0);
         class KriteeriGen {
@@ -300,32 +218,6 @@ public class PkJaYoPohjaiset {
      * 3) Hakija on suorittanut vähintään arvosanalla 7 perusopetuksen suomi tai ruotsi toisena kielenä oppimäärän
      * kielessä, joka on vastaanottavan oppilaitoksen opetuskieli
      */
-    public static Funktiokutsu luoKielikoekriteeri3(final LuoValintaperusteetServiceImpl.Kielikoodi k) {
-
-        final Funktiokutsu seitseman = GenericHelper.luoLukuarvo(7.0);
-
-        class KriteeriGen {
-            public Funktiokutsu luoKriteeri(final String ainetunniste) {
-                Funktiokutsu aidinkieliOnFiTaiSvToisenaKielena = GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(
-                        GenericHelper.luoValintaperusteViite(PkAineet.oppiaine(ainetunniste), false,
-                                Valintaperustelahde.HAETTAVA_ARVO), k.getKieliarvo() + toisenaKielenaPostfix, false);
-
-                Funktiokutsu arvosanaAi = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(
-                        PkAineet.pakollinen(ainetunniste), false, Valintaperustelahde.HAETTAVA_ARVO), 0);
-
-                Funktiokutsu arvosanaSuurempiKuin7 = GenericHelper.luoSuurempiTaiYhtasuuriKuin(arvosanaAi, seitseman);
-
-                return GenericHelper.luoJa(aidinkieliOnFiTaiSvToisenaKielena, arvosanaSuurempiKuin7);
-            }
-        }
-
-        KriteeriGen gen = new KriteeriGen();
-
-        return GenericHelper.luoTai(
-                gen.luoKriteeri(Aineet.aidinkieliJaKirjallisuus1),
-                gen.luoKriteeri(Aineet.aidinkieliJaKirjallisuus2));
-    }
-
     public static Funktiokutsu luoKielikoekriteeri3Funktiokutsu() {
 
         final Funktiokutsu seitseman = GenericHelper.luoLukuarvo(7.0);
@@ -363,12 +255,6 @@ public class PkJaYoPohjaiset {
     /**
      * 4) Hakija on suorittanut lukion oppimäärän ylioppilastutkinnon vastaanottavan oppilaitoksen opetuskielellä
      */
-    public static Funktiokutsu luoKielikoekriteeri4(LuoValintaperusteetServiceImpl.Kielikoodi k) {
-        return GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(
-                GenericHelper.luoValintaperusteViite(lukionOppimaaranKieli, false, Valintaperustelahde.HAETTAVA_ARVO),
-                k.getKieliarvo(), false);
-    }
-
     public static Funktiokutsu luoKielikoekriteeri4Funktiokutsu() {
         return GenericHelper.luoValintaperusteyhtasuuruus(
                 GenericHelper.luoValintaperusteViite(opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO, "Opetuskieli", false),
@@ -387,44 +273,6 @@ public class PkJaYoPohjaiset {
      * ruotsi viittomakielisille
      * joka on vastaanottavan oppilaitoksen opetuskieli
      */
-    public static Funktiokutsu luoKielikoekriteeri5(final LuoValintaperusteetServiceImpl.Kielikoodi k) {
-
-        final Funktiokutsu viisi = GenericHelper.luoLukuarvo(5.0);
-
-        class KriteeriGen {
-            public Funktiokutsu luoKriteeri(final String ainetunniste) {
-                Funktiokutsu aidinkielena = GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(
-                        GenericHelper.luoValintaperusteViite(YoAineet.oppiaine(ainetunniste), false,
-                                Valintaperustelahde.HAETTAVA_ARVO), k.getKieliarvo(), false);
-                Funktiokutsu toisenaKielena = GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(
-                        GenericHelper.luoValintaperusteViite(YoAineet.oppiaine(ainetunniste), false,
-                                Valintaperustelahde.HAETTAVA_ARVO), k.getKieliarvo() + toisenaKielenaPostfix, false);
-                Funktiokutsu saamenkielisille = GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(
-                        GenericHelper.luoValintaperusteViite(YoAineet.oppiaine(ainetunniste), false,
-                                Valintaperustelahde.HAETTAVA_ARVO), k.getKieliarvo() + saamenkielisillePostfix, false);
-                Funktiokutsu viittomakielisille = GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(
-                        GenericHelper.luoValintaperusteViite(YoAineet.oppiaine(ainetunniste), false,
-                                Valintaperustelahde.HAETTAVA_ARVO), k.getKieliarvo() + viittomakielisillePostfix, false);
-
-                Funktiokutsu arvosana = GenericHelper.luoHaeLukuarvo(
-                        GenericHelper.luoValintaperusteViite(YoAineet.pakollinen(ainetunniste), false,
-                                Valintaperustelahde.HAETTAVA_ARVO), 0.0);
-
-                Funktiokutsu suurempiKuinViisi = GenericHelper.luoSuurempiTaiYhtasuuriKuin(arvosana, viisi);
-
-                return GenericHelper.luoJa(
-                        GenericHelper.luoTai(aidinkielena, toisenaKielena, saamenkielisille, viittomakielisille),
-                        suurempiKuinViisi);
-            }
-        }
-
-        KriteeriGen gen = new KriteeriGen();
-        return GenericHelper.luoTai(
-                gen.luoKriteeri(Aineet.aidinkieliJaKirjallisuus1),
-                gen.luoKriteeri(Aineet.aidinkieliJaKirjallisuus2));
-
-    }
-
     public static Funktiokutsu luoKielikoekriteeri5Funktiokutsu() {
 
         final Funktiokutsu viisi = GenericHelper.luoLukuarvo(5.0);
@@ -493,45 +341,6 @@ public class PkJaYoPohjaiset {
      * 6) Hakija on suorittanut lukiokoulutuksen toisen kotimaisen kielen koko oppimäärän  joka on vastaanottavan
      * oppilaitoksen opetuskieli
      */
-    public static Funktiokutsu luoKielikoekriteeri6(final LuoValintaperusteetServiceImpl.Kielikoodi k) {
-
-        final Funktiokutsu viisi = GenericHelper.luoLukuarvo(5.0);
-
-        class KriteeriGen {
-            public Funktiokutsu luoKriteeri(final String ainetunniste) {
-                Funktiokutsu oppiaineOnOpetuskieli = GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(
-                        GenericHelper.luoValintaperusteViite(YoAineet.oppiaine(ainetunniste), false,
-                                Valintaperustelahde.HAETTAVA_ARVO), k.getKieliarvo(), false);
-
-                Funktiokutsu arvosana = GenericHelper.luoHaeLukuarvo(
-                        GenericHelper.luoValintaperusteViite(YoAineet.pakollinen(ainetunniste), false,
-                                Valintaperustelahde.HAETTAVA_ARVO), 0.0);
-
-                Funktiokutsu arvosanaSuurempiKuin5 = GenericHelper.luoSuurempiTaiYhtasuuriKuin(arvosana, viisi);
-
-                return GenericHelper.luoJa(oppiaineOnOpetuskieli, arvosanaSuurempiKuin5);
-            }
-        }
-
-        final String[] aineet = {
-                Aineet.a11Kieli,
-                Aineet.a12Kieli,
-                Aineet.a13Kieli,
-                Aineet.a21Kieli,
-                Aineet.a22Kieli,
-                Aineet.a23Kieli,
-                Aineet.b1Kieli
-        };
-
-        List<Funktiokutsu> args = new ArrayList<Funktiokutsu>();
-        KriteeriGen gen = new KriteeriGen();
-        for (String aine : aineet) {
-            args.add(gen.luoKriteeri(aine));
-        }
-
-        return GenericHelper.luoTai(args.toArray(new FunktionArgumentti[args.size()]));
-    }
-
     public static Funktiokutsu luoKielikoekriteeri6Funktiokutsu() {
 
         final Funktiokutsu viisi = GenericHelper.luoLukuarvo(5.0);
@@ -577,18 +386,6 @@ public class PkJaYoPohjaiset {
      * vähintään taitotasolla 3 tai hakija on suorittanut valtionhallinnon kielitutkintojen suomen tai ruotsin kielen
      * suullisen ja kirjallisen taidon tutkinnon vähintään taitotasolla tyydyttävä
      */
-    public static Funktiokutsu luoKielikoekriteeri7(final LuoValintaperusteetServiceImpl.Kielikoodi k) {
-        Funktiokutsu yleinenKielitutkintoSuoritettu = GenericHelper.luoHaeTotuusarvo(
-                GenericHelper.luoValintaperusteViite(yleinenKielitutkintoPrefix + k.getKieliarvo(), false,
-                        Valintaperustelahde.HAETTAVA_ARVO), false);
-
-        Funktiokutsu valtionhallinnonKielitutkintoSuoritettu = GenericHelper.luoHaeTotuusarvo(
-                GenericHelper.luoValintaperusteViite(valtionhallinnonKielitutkintoPrefix + k.getKieliarvo(), false,
-                        Valintaperustelahde.HAETTAVA_ARVO), false);
-
-        return GenericHelper.luoTai(yleinenKielitutkintoSuoritettu, valtionhallinnonKielitutkintoSuoritettu);
-    }
-
     public static Funktiokutsu luoKielikoekriteeri7Funktiokutsu() {
         final String fi = "fi";
         final String sv = "sv";

@@ -91,39 +91,6 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
             "hakukohteet_126", // Liikunnanohjauksen perustutkinto, yo
     }));
 
-    public enum Kielikoodi {
-        SUOMI("Suomi", KIELI_FI_URI, "fi"), RUOTSI("Ruotsi", KIELI_SV_URI, "sv");
-
-        Kielikoodi(String nimi, String kieliUri, String kieliarvo) {
-            this.nimi = nimi;
-            this.kieliUri = kieliUri;
-            this.kieliarvo = kieliarvo;
-            this.kielikoetunniste = KIELIKOE_PREFIX + kieliarvo;
-        }
-
-        private String nimi;
-        private String kieliUri;
-        private String kieliarvo;
-        private String kielikoetunniste;
-
-
-        public String getNimi() {
-            return nimi;
-        }
-
-        public String getKieliUri() {
-            return kieliUri;
-        }
-
-        public String getKieliarvo() {
-            return kieliarvo;
-        }
-
-        public String getKielikoetunniste() {
-            return kielikoetunniste;
-        }
-    }
-
     @Override
     public void luo() throws IOException {
         long beginTime = System.currentTimeMillis();

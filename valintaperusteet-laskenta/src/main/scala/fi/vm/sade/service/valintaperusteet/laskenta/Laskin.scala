@@ -430,8 +430,8 @@ private class Laskin private(private val hakukohde: Hakukohde,
       }
 
       case Valintaperusteyhtasuuruus(oid, (valintaperusteviite1, valintaperusteviite2)) => {
-        val (arvo1, tilat1) = haeValintaperuste[String](valintaperusteviite1, hakemus, (s => (Some(s.trim), List(new Hyvaksyttavissatila))), None)
-        val (arvo2, tilat2) = haeValintaperuste[String](valintaperusteviite2, hakemus, (s => (Some(s.trim), List(new Hyvaksyttavissatila))), None)
+        val (arvo1, tilat1) = haeValintaperuste[String](valintaperusteviite1, hakemus, (s => (Some(s.trim.toLowerCase), List(new Hyvaksyttavissatila))), None)
+        val (arvo2, tilat2) = haeValintaperuste[String](valintaperusteviite2, hakemus, (s => (Some(s.trim.toLowerCase), List(new Hyvaksyttavissatila))), None)
 
         val tulos = Some(arvo1 == arvo2)
         val tilat = tilat1 ::: tilat2
