@@ -6,7 +6,10 @@ import com.mysema.query.types.EntityPath;
 import com.mysema.query.types.expr.BooleanExpression;
 import fi.vm.sade.generic.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
-import fi.vm.sade.service.valintaperusteet.model.*;
+import fi.vm.sade.service.valintaperusteet.model.QHakukohdekoodi;
+import fi.vm.sade.service.valintaperusteet.model.QValintakoekoodi;
+import fi.vm.sade.service.valintaperusteet.model.QValintaryhma;
+import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -52,7 +55,6 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long> 
         return from(valintaryhma).leftJoin(valintaryhma.alavalintaryhmat).fetch()
                 .leftJoin(valintaryhma.hakukohdeViitteet).fetch()
                 .leftJoin(valintaryhma.hakukohdekoodit).fetch()
-                .leftJoin(valintaryhma.opetuskielikoodit).fetch()
                 .leftJoin(valintaryhma.valintakoekoodit).fetch()
                 .where(valintaryhma.oid.eq(oid))
                 .singleResult(valintaryhma);
@@ -80,29 +82,24 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long> 
         JPAQuery a = from(valintaryhma).distinct();
         //if(hakuOid!=null && !hakuOid.isEmpty()) {
         //    a.where(valintaryhma.hakuOid.eq(hakuOid));
-      //  }
+        //  }
         a.leftJoin(valintaryhma.alavalintaryhmat).fetch();
-        return  a.list(valintaryhma);
+        return a.list(valintaryhma);
     }
 
 
     @Override
-    public List<Valintaryhma> haeHakukohdekoodinOpetuskielikoodienJaValintakoekoodienMukaan(String hakukohdekoodiUri,
-                                                                                            Collection<String> opetuskielikoodiUrit,
-                                                                                            Collection<String> valintakoekoodiUrit) {
-        LOG.info("hakukohdekoodi: {}, opetuskielikoodi: {}, valintakoekoodit: {}",
-                new Object[]{hakukohdekoodiUri, opetuskielikoodiUrit, valintakoekoodiUrit});
+    public List<Valintaryhma> haeHakukohdekoodinJaValintakoekoodienMukaan(String hakukohdekoodiUri,
+                                                                          Collection<String> valintakoekoodiUrit) {
+        LOG.info("hakukohdekoodi: {}, valintakoekoodit: {}",
+                new Object[]{hakukohdekoodiUri, valintakoekoodiUrit});
 
         QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
         QHakukohdekoodi hakukohdekoodi = QHakukohdekoodi.hakukohdekoodi;
-        QOpetuskielikoodi opetuskielikoodi = QOpetuskielikoodi.opetuskielikoodi;
         QValintakoekoodi valintakoekoodi = QValintakoekoodi.valintakoekoodi;
 
         BooleanBuilder booleanBuilder = new BooleanBuilder();
         booleanBuilder.and(hakukohdekoodi.uri.eq(hakukohdekoodiUri));
-        if (!opetuskielikoodiUrit.isEmpty()) {
-            booleanBuilder.and(opetuskielikoodi.uri.in(opetuskielikoodiUrit));
-        }
 
         if (!valintakoekoodiUrit.isEmpty()) {
             booleanBuilder.and(valintakoekoodi.uri.in(valintakoekoodiUrit));
@@ -110,7 +107,6 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long> 
 
         return from(valintaryhma)
                 .join(valintaryhma.hakukohdekoodit, hakukohdekoodi).fetch()
-                .leftJoin(valintaryhma.opetuskielikoodit, opetuskielikoodi).fetch()
                 .leftJoin(valintaryhma.valintakoekoodit, valintakoekoodi).fetch()
                 .where(booleanBuilder)
                 .distinct()

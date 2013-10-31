@@ -223,7 +223,6 @@ public class HakukohdeServiceImpl extends AbstractCRUDServiceImpl<HakukohdeViite
                 koodi.addHakukohde(lisatty);
             }
 
-            lisatty.getOpetuskielet().addAll(hakukohdeViite.getOpetuskielet());
             lisatty.getValintakokeet().addAll(hakukohdeViite.getValintakokeet());
 
             ValinnanVaihe viimeinenValinnanVaihe =

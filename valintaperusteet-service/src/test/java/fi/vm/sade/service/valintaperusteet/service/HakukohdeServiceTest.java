@@ -157,9 +157,6 @@ public class HakukohdeServiceTest {
 
             assertEquals(hakukohdekoodiUri, hakukohde.getHakukohdekoodi().getUri());
 
-            assertEquals(1, hakukohde.getOpetuskielet().size());
-            assertEquals(opetuskielikoodiUri, hakukohde.getOpetuskielet().iterator().next().getUri());
-
             assertEquals(1, hakukohde.getValintakokeet().size());
             assertEquals(valintakoekoodiUri, hakukohde.getValintakokeet().iterator().next().getUri());
         }
@@ -179,9 +176,6 @@ public class HakukohdeServiceTest {
             assertNull(vaiheet.get(1).getMasterValinnanVaihe());
 
             assertEquals(hakukohdekoodiUri, hakukohde.getHakukohdekoodi().getUri());
-
-            assertEquals(1, hakukohde.getOpetuskielet().size());
-            assertEquals(opetuskielikoodiUri, hakukohde.getOpetuskielet().iterator().next().getUri());
 
             assertEquals(1, hakukohde.getValintakokeet().size());
             assertEquals(valintakoekoodiUri, hakukohde.getValintakokeet().iterator().next().getUri());
@@ -208,9 +202,6 @@ public class HakukohdeServiceTest {
 
             assertEquals(hakukohdekoodiUri, hakukohde.getHakukohdekoodi().getUri());
 
-            assertEquals(1, hakukohde.getOpetuskielet().size());
-            assertEquals(opetuskielikoodiUri, hakukohde.getOpetuskielet().iterator().next().getUri());
-
             assertEquals(1, hakukohde.getValintakokeet().size());
             assertEquals(valintakoekoodiUri, hakukohde.getValintakokeet().iterator().next().getUri());
         }
@@ -230,9 +221,6 @@ public class HakukohdeServiceTest {
             assertNull(vaiheet.get(1).getMasterValinnanVaihe());
 
             assertEquals(hakukohdekoodiUri, hakukohde.getHakukohdekoodi().getUri());
-
-            assertEquals(1, hakukohde.getOpetuskielet().size());
-            assertEquals(opetuskielikoodiUri, hakukohde.getOpetuskielet().iterator().next().getUri());
 
             assertEquals(1, hakukohde.getValintakokeet().size());
             assertEquals(valintakoekoodiUri, hakukohde.getValintakokeet().iterator().next().getUri());
@@ -261,9 +249,6 @@ public class HakukohdeServiceTest {
 
             assertEquals(hakukohdekoodiUri, hakukohde.getHakukohdekoodi().getUri());
 
-            assertEquals(1, hakukohde.getOpetuskielet().size());
-            assertEquals(opetuskielikoodiUri, hakukohde.getOpetuskielet().iterator().next().getUri());
-
             assertEquals(1, hakukohde.getValintakokeet().size());
             assertEquals(valintakoekoodiUri, hakukohde.getValintakokeet().iterator().next().getUri());
         }
@@ -281,9 +266,6 @@ public class HakukohdeServiceTest {
             assertNull(vaiheet.get(0).getMasterValinnanVaihe());
 
             assertEquals(hakukohdekoodiUri, hakukohde.getHakukohdekoodi().getUri());
-
-            assertEquals(1, hakukohde.getOpetuskielet().size());
-            assertEquals(opetuskielikoodiUri, hakukohde.getOpetuskielet().iterator().next().getUri());
 
             assertEquals(1, hakukohde.getValintakokeet().size());
             assertEquals(valintakoekoodiUri, hakukohde.getValintakokeet().iterator().next().getUri());
@@ -312,9 +294,6 @@ public class HakukohdeServiceTest {
 
             assertEquals(hakukohdekoodiUri, hakukohde.getHakukohdekoodi().getUri());
 
-            assertEquals(1, hakukohde.getOpetuskielet().size());
-            assertEquals(opetuskielikoodiUri, hakukohde.getOpetuskielet().iterator().next().getUri());
-
             assertEquals(1, hakukohde.getValintakokeet().size());
             assertEquals(valintakoekoodiUri, hakukohde.getValintakokeet().iterator().next().getUri());
         }
@@ -334,9 +313,6 @@ public class HakukohdeServiceTest {
             assertNull(vaiheet.get(1).getMasterValinnanVaihe());
 
             assertEquals(hakukohdekoodiUri, hakukohde.getHakukohdekoodi().getUri());
-
-            assertEquals(1, hakukohde.getOpetuskielet().size());
-            assertEquals(opetuskielikoodiUri, hakukohde.getOpetuskielet().iterator().next().getUri());
 
             assertEquals(1, hakukohde.getValintakokeet().size());
             assertEquals(valintakoekoodiUri, hakukohde.getValintakokeet().iterator().next().getUri());

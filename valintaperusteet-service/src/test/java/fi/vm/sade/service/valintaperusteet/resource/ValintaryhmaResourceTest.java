@@ -22,7 +22,6 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -203,36 +202,6 @@ public class ValintaryhmaResourceTest {
 
     }
 
-    @Test
-    public void testLisaaOpetuskielikoodiValintaryhmalle() throws IOException {
-        final String kieliUri = "uusikieli";
-        final String valintaryhmaOid = "oid52";
-
-        Opetuskielikoodi opetuskielikoodi = new Opetuskielikoodi();
-        opetuskielikoodi.setUri(kieliUri);
-
-        String json = mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(opetuskielikoodi);
-        opetuskielikoodi = mapper.readValue(json, Opetuskielikoodi.class);
-
-        valintaryhmaResource.insertOpetuskielikoodi(valintaryhmaOid, opetuskielikoodi);
-    }
-
-    @Test
-    public void testPaivitaValintaryhmanOpetuskielet() throws IOException {
-        final String[] kieliUrit = new String[]{"uusikieli", "kieli_fi", "kieli_ru"};
-        final String valintaryhmaOid = "oid52";
-
-        Set<Opetuskielikoodi> kielet = new HashSet<Opetuskielikoodi>();
-        for (String uri : kieliUrit) {
-            Opetuskielikoodi koodi = new Opetuskielikoodi();
-            koodi.setUri(uri);
-            String json = mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(koodi);
-
-            kielet.add(mapper.readValue(json, Opetuskielikoodi.class));
-        }
-
-        valintaryhmaResource.updateOpetuskielikoodi(valintaryhmaOid, kielet);
-    }
 
     @Test
     public void testLisaaValintakoekoodiValintaryhmalle() throws IOException {
@@ -256,7 +225,7 @@ public class ValintaryhmaResourceTest {
 
         List<Valintakoekoodi> kokeet = new ArrayList<Valintakoekoodi>();
         for (String uri : koeUrit) {
-            Opetuskielikoodi koodi = new Opetuskielikoodi();
+            Valintakoekoodi koodi = new Valintakoekoodi();
             koodi.setUri(uri);
             String json = mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(koodi);
 

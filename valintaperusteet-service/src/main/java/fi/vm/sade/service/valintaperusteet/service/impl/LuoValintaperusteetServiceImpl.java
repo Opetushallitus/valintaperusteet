@@ -1,6 +1,5 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
-import fi.vm.sade.service.valintaperusteet.dao.OpetuskielikoodiDAO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.*;
@@ -48,12 +47,6 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
     @Autowired
     private ValintatapajonoService valintatapajonoService;
-
-    @Autowired
-    private OpetuskielikoodiDAO opetuskielikoodiDAO;
-
-    @Autowired
-    private OpetuskielikoodiService opetuskielikoodiService;
 
     @Autowired
     private ValintakoekoodiService valintakoekoodiService;

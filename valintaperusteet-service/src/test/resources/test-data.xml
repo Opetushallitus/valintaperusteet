@@ -466,28 +466,6 @@
                     nimi_fi="hakukohdekoodi21"/>
     <valintaryhma_hakukohdekoodi valintaryhma_id="55" hakukohdekoodi_id="21"/>
 
-    <opetuskielikoodi id="10" version="0" uri="kieli_fi"/>
-    <valintaryhma_opetuskielikoodi valintaryhma_id="37" opetuskielikoodi_id="10"/>
-    <valintaryhma_opetuskielikoodi valintaryhma_id="40" opetuskielikoodi_id="10"/>
-    <valintaryhma_opetuskielikoodi valintaryhma_id="41" opetuskielikoodi_id="10"/>
-    <valintaryhma_opetuskielikoodi valintaryhma_id="46" opetuskielikoodi_id="10"/>
-    <valintaryhma_opetuskielikoodi valintaryhma_id="47" opetuskielikoodi_id="10"/>
-    <valintaryhma_opetuskielikoodi valintaryhma_id="48" opetuskielikoodi_id="10"/>
-    <valintaryhma_opetuskielikoodi valintaryhma_id="49" opetuskielikoodi_id="10"/>
-    <valintaryhma_opetuskielikoodi valintaryhma_id="50" opetuskielikoodi_id="10"/>
-    <valintaryhma_opetuskielikoodi valintaryhma_id="51" opetuskielikoodi_id="10"/>
-    <valintaryhma_opetuskielikoodi valintaryhma_id="55" opetuskielikoodi_id="10"/>
-    <hakukohde_viite_opetuskielikoodi hakukohde_viite_id="18" opetuskielikoodi_id="10"/>
-    <hakukohde_viite_opetuskielikoodi hakukohde_viite_id="19" opetuskielikoodi_id="10"/>
-
-    <opetuskielikoodi id="11" version="0" uri="kieli_sv"/>
-    <valintaryhma_opetuskielikoodi valintaryhma_id="44" opetuskielikoodi_id="11"/>
-    <valintaryhma_opetuskielikoodi valintaryhma_id="51" opetuskielikoodi_id="11"/>
-
-    <opetuskielikoodi id="12" version="0" uri="kieli_ru"/>
-    <valintaryhma_opetuskielikoodi valintaryhma_id="44" opetuskielikoodi_id="12"/>
-    <valintaryhma_opetuskielikoodi valintaryhma_id="45" opetuskielikoodi_id="12"/>
-
     <valintakoekoodi id="12" version="0" uri="koekoodi1"/>
     <valintaryhma_valintakoekoodi valintaryhma_id="45" valintakoekoodi_id="12"/>
 
@@ -549,7 +527,6 @@
 
     <hakukohde_viite id="19" version="0" hakuoid="hakuoid1" oid="oid19" nimi="haku19" hakukohdekoodi_id="20"/>
 
-    <hakukohde_viite_opetuskielikoodi hakukohde_viite_id="17" opetuskielikoodi_id="11"/>
     <hakukohde_viite_valintakoekoodi hakukohde_viite_id="17" valintakoekoodi_id="12"/>
 
     <hakukohde_viite id="20" version="0" hakuoid="hakuoid1" oid="oid20" nimi="haku20" hakukohdekoodi_id="21"

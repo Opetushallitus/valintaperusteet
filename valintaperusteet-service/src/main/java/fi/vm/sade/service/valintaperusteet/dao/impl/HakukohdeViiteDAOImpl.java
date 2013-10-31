@@ -48,7 +48,6 @@ public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Lo
         return from(hakukohdeViite)
                 .leftJoin(hakukohdeViite.valintaryhma, valintaryhma).fetch()
                 .leftJoin(hakukohdeViite.hakukohdekoodi).fetch()
-                .leftJoin(hakukohdeViite.opetuskielet).fetch()
                 .leftJoin(hakukohdeViite.valintakokeet).fetch()
                 .leftJoin(hakukohdeViite.hakukohteenValintaperusteet).fetch()
                 .where(hakukohdeViite.oid.eq(oid))
@@ -87,21 +86,21 @@ public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Lo
     }
 
     @Override
-    public List<HakukohdeViite> search(String hakuOid, List<String> tila, String searchString){
+    public List<HakukohdeViite> search(String hakuOid, List<String> tila, String searchString) {
         QHakukohdeViite hakukohdeViite = QHakukohdeViite.hakukohdeViite;
         JPAQuery a = from(hakukohdeViite).leftJoin(hakukohdeViite.valintaryhma).fetch();
 
-        if(StringUtils.isNotBlank(hakuOid)) {
+        if (StringUtils.isNotBlank(hakuOid)) {
             a.where(hakukohdeViite.hakuoid.eq(hakuOid));
         }
-        if(tila != null && tila.size() > 0) {
+        if (tila != null && tila.size() > 0) {
             a.where(hakukohdeViite.tila.in(tila));
         }
-        if(StringUtils.isNotBlank(searchString)) {
+        if (StringUtils.isNotBlank(searchString)) {
             a.where(hakukohdeViite.nimi.containsIgnoreCase(searchString));
         }
 
-        return  a.list(hakukohdeViite);
+        return a.list(hakukohdeViite);
 
     }
 }

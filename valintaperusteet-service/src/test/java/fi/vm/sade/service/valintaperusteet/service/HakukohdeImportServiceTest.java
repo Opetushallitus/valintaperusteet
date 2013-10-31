@@ -85,9 +85,6 @@ public class HakukohdeImportServiceTest {
         koe.setTyyppiUri(OLETUS_VALINTAKOEURI);
 
         imp.getValintakoe().add(koe);
-
-        imp.getOpetuskielet().add(HakukohdeImportServiceImpl.Kieli.FI.getUri());
-
         HakukohdekoodiTyyppi koodi = new HakukohdekoodiTyyppi();
         koodi.setKoodiUri(koodiUri);
         koodi.setArvo(koodiUri);
@@ -360,10 +357,10 @@ public class HakukohdeImportServiceTest {
 
             Valintaryhma valintaryhma1 = valintaryhmaService.readByOid(valintaryhmaOid1);
             Valintaryhma valintaryhma2 = valintaryhmaService.readByOid(valintaryhmaOid2);
-            assertTrue(valintaryhma1.getOpetuskielikoodit().size() == 1
-                    && HakukohdeImportServiceImpl.Kieli.FI.getUri().equals(valintaryhma1.getOpetuskielikoodit().iterator().next().getUri()));
-            assertTrue(valintaryhma2.getOpetuskielikoodit().size() == 1
-                    && HakukohdeImportServiceImpl.Kieli.FI.getUri().equals(valintaryhma2.getOpetuskielikoodit().iterator().next().getUri()));
+//            assertTrue(valintaryhma1.getOpetuskielikoodit().size() == 1
+//                    && HakukohdeImportServiceImpl.Kieli.FI.getUri().equals(valintaryhma1.getOpetuskielikoodit().iterator().next().getUri()));
+//            assertTrue(valintaryhma2.getOpetuskielikoodit().size() == 1
+//                    && HakukohdeImportServiceImpl.Kieli.FI.getUri().equals(valintaryhma2.getOpetuskielikoodit().iterator().next().getUri()));
 
             assertTrue(valintaryhma1.getValintakoekoodit().size() == 1
                     && OLETUS_VALINTAKOEURI.equals(valintaryhma1.getValintakoekoodit().iterator().next().getUri()));
@@ -457,8 +454,8 @@ public class HakukohdeImportServiceTest {
             assertEquals(valintaryhmaOid, koodi.getValintaryhmat().iterator().next().getOid());
 
             Valintaryhma valintaryhma1 = valintaryhmaService.readByOid(valintaryhmaOid);
-            assertTrue(valintaryhma1.getOpetuskielikoodit().size() == 1
-                    && HakukohdeImportServiceImpl.Kieli.FI.getUri().equals(valintaryhma1.getOpetuskielikoodit().iterator().next().getUri()));
+//            assertTrue(valintaryhma1.getOpetuskielikoodit().size() == 1
+//                    && HakukohdeImportServiceImpl.Kieli.FI.getUri().equals(valintaryhma1.getOpetuskielikoodit().iterator().next().getUri()));
 
             List<Valintakoekoodi> valintakoekoodit = valintaryhma1.getValintakoekoodit();
             assertEquals(2, valintakoekoodit.size());
