@@ -396,6 +396,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     @Override
     @Transactional(readOnly = true)
     public Laskentakaava validoi(Laskentakaava laskentakaava) {
+        asetaNullitOletusarvoiksi(laskentakaava.getFunktiokutsu());
         return Laskentakaavavalidaattori.validoiMallinnettuKaava(laajennaAlakaavat(laskentakaava));
     }
 
