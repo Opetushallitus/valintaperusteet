@@ -64,13 +64,11 @@ public class ValintaryhmaDAOTest {
         final String valintaryhmaOid1 = "oid44";
         final String valintaryhmaOid2 = "oid45";
 
-        final String[] opetuskieliUrit = new String[]{"kieli_ru", "kieli_fi"};
         final String[] valintakoekoodiUrit = new String[]{"koekoodi2"};
         final String hakukohdekoodiUri = "hakukohdekoodiuri11";
 
         List<Valintaryhma> valintaryhmat =
-                valintaryhmaDAO.haeHakukohdekoodinOpetuskielikoodienJaValintakoekoodienMukaan(hakukohdekoodiUri,
-                        Arrays.asList(opetuskieliUrit), Arrays.asList(valintakoekoodiUrit));
+                valintaryhmaDAO.haeHakukohdekoodinJaValintakoekoodienMukaan(hakukohdekoodiUri, Arrays.asList(valintakoekoodiUrit));
 
         assertEquals(2, valintaryhmat.size());
 
@@ -88,10 +86,9 @@ public class ValintaryhmaDAOTest {
     @Test
     public void testHaeHakukohdekoodinOpetuskielikoodienJaValintakoekoodienMukaan2() {
         final String hakukohdekoodiUri = "hakukohdekoodiuri15";
-        final String opetuskieliUri = "kieli_fi";
 
-        List<Valintaryhma> valintaryhmat = valintaryhmaDAO.haeHakukohdekoodinOpetuskielikoodienJaValintakoekoodienMukaan(hakukohdekoodiUri,
-                Arrays.asList(opetuskieliUri), new ArrayList<String>());
+        List<Valintaryhma> valintaryhmat = valintaryhmaDAO.haeHakukohdekoodinJaValintakoekoodienMukaan(hakukohdekoodiUri,
+                new ArrayList<String>());
 
         assertEquals(1, valintaryhmat.size());
         assertEquals("oid50", valintaryhmat.get(0).getOid());

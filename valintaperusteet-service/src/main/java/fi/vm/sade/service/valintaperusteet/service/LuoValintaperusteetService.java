@@ -12,5 +12,4 @@ import java.io.IOException;
 public interface LuoValintaperusteetService {
 
     void luo() throws IOException;
-
 }

@@ -153,14 +153,6 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
     private Valintaryhma selvitaValintaryhma(HakukohdeImportTyyppi importData) {
         LOG.info("Yritetään selvittää hakukohteen {} valintaryhmä", importData.getHakukohdeOid());
 
-        Set<String> opetuskieliUrit = new HashSet<String>();
-        for (String opetuskieliUri : importData.getOpetuskielet()) {
-            String sanitizedUri = sanitizeKoodiUri(opetuskieliUri);
-            if (StringUtils.isNotBlank(sanitizedUri)) {
-                opetuskieliUrit.add(sanitizeKoodiUri(opetuskieliUri));
-            }
-        }
-
         // Lasketaan valintakokeiden esiintymiset importtidatalle
         Map<String, Integer> valintakoekoodiUrit = new HashMap<String, Integer>();
         for (HakukohteenValintakoeTyyppi valintakoe : importData.getValintakoe()) {
@@ -176,30 +168,15 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
         }
 
         // Haetaan potentiaaliset valintaryhmät hakukohdekoodin, opetuskielikoodien ja valintakoekoodien mukaan
-        List<Valintaryhma> valintaryhmat = valintaryhmaDAO.haeHakukohdekoodinOpetuskielikoodienJaValintakoekoodienMukaan(
-                sanitizeKoodiUri(importData.getHakukohdekoodi().getKoodiUri()), opetuskieliUrit,
+        List<Valintaryhma> valintaryhmat = valintaryhmaDAO.haeHakukohdekoodinJaValintakoekoodienMukaan(
+                sanitizeKoodiUri(importData.getHakukohdekoodi().getKoodiUri()),
                 valintakoekoodiUrit.keySet());
 
         LOG.info("Potentiaalisia valintaryhmiä {} kpl", valintaryhmat.size());
 
-        // Tarkistetaan valintaryhmät opetuskielikoodien osalta.
-        Iterator<Valintaryhma> iterator = valintaryhmat.iterator();
-        while (iterator.hasNext()) {
-            Valintaryhma r = iterator.next();
-            Set<String> valintaryhmanOpetuskielikoodiUrit = new HashSet<String>();
-            for (Opetuskielikoodi k : r.getOpetuskielikoodit()) {
-                valintaryhmanOpetuskielikoodiUrit.add(k.getUri());
-            }
-
-            if (!valintaryhmanOpetuskielikoodiUrit.containsAll(opetuskieliUrit)) {
-                iterator.remove();
-            }
-        }
-
-        LOG.info("Opetuskielikoodifilterin jälkeen potentiaalisia valintaryhmiä {} kpl", valintaryhmat.size());
-
         // Tarkistetaan valintaryhmät valintakoekoodien osalta.
-        iterator = valintaryhmat.iterator();
+        Iterator<Valintaryhma> iterator = valintaryhmat.iterator();
+
         while (iterator.hasNext()) {
             Valintaryhma r = iterator.next();
 
@@ -302,8 +279,6 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
             }
         }
 
-        // Päivitetään opetuskielikoodit
-        hakukohde.setOpetuskielet(haeTaiLisaaOpetuskielikoodit(importData));
         // Päivitetään valintakoekoodit
         hakukohde.setValintakokeet(haeTaiLisaaValintakoekoodit(importData));
 
@@ -326,27 +301,6 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
                 jono.setAloituspaikat(valinnanAloituspaikat);
             }
         }
-    }
-
-
-    private Set<Opetuskielikoodi> haeTaiLisaaOpetuskielikoodit(HakukohdeImportTyyppi importData) {
-        Set<Opetuskielikoodi> opetuskielikoodit = new HashSet<Opetuskielikoodi>();
-
-        for (String uri : importData.getOpetuskielet()) {
-            Opetuskielikoodi koodi = haeTaiLisaaKoodi(Opetuskielikoodi.class, uri,
-                    new KoodiFactory<Opetuskielikoodi>() {
-                        @Override
-                        public Opetuskielikoodi newInstance() {
-                            return new Opetuskielikoodi();
-                        }
-                    });
-
-
-            if (koodi != null) {
-                opetuskielikoodit.add(koodi);
-            }
-        }
-        return opetuskielikoodit;
     }
 
     private List<Valintakoekoodi> haeTaiLisaaValintakoekoodit(HakukohdeImportTyyppi importData) {
@@ -388,16 +342,6 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
             }
         } else {
             return null;
-        }
-    }
-
-    private void poistaHakukohteenPeriytyvatValinnanVaiheet(String hakukohdeOid) {
-        List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheService.findByHakukohde(hakukohdeOid);
-        // Poistetaan kaikki periytyvät valinnan vaiheet
-        for (ValinnanVaihe vv : valinnanVaiheet) {
-            if (vv.getMasterValinnanVaihe() != null) {
-                valinnanVaiheService.deleteByOid(vv.getOid(), true);
-            }
         }
     }
 }

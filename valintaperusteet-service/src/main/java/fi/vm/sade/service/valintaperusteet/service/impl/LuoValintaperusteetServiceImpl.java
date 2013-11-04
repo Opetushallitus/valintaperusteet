@@ -1,7 +1,5 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
-import com.mysema.query.NonUniqueResultException;
-import fi.vm.sade.service.valintaperusteet.dao.OpetuskielikoodiDAO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.*;
@@ -20,7 +18,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * User: kkammone
@@ -46,12 +47,6 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
     @Autowired
     private ValintatapajonoService valintatapajonoService;
-
-    @Autowired
-    private OpetuskielikoodiDAO opetuskielikoodiDAO;
-
-    @Autowired
-    private OpetuskielikoodiService opetuskielikoodiService;
 
     @Autowired
     private ValintakoekoodiService valintakoekoodiService;
@@ -96,57 +91,11 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
             "hakukohteet_126", // Liikunnanohjauksen perustutkinto, yo
     }));
 
-    public enum Kielikoodi {
-        SUOMI("Suomi", KIELI_FI_URI, "fi"), RUOTSI("Ruotsi", KIELI_SV_URI, "sv");
-
-        Kielikoodi(String nimi, String kieliUri, String kieliarvo) {
-            this.nimi = nimi;
-            this.kieliUri = kieliUri;
-            this.kieliarvo = kieliarvo;
-            this.kielikoetunniste = KIELIKOE_PREFIX + kieliarvo;
-        }
-
-        private String nimi;
-        private String kieliUri;
-        private String kieliarvo;
-        private String kielikoetunniste;
-
-
-        public String getNimi() {
-            return nimi;
-        }
-
-        public String getKieliUri() {
-            return kieliUri;
-        }
-
-        public String getKieliarvo() {
-            return kieliarvo;
-        }
-
-        public String getKielikoetunniste() {
-            return kielikoetunniste;
-        }
-    }
-
     @Override
     public void luo() throws IOException {
         long beginTime = System.currentTimeMillis();
 
         TransactionStatus tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
-        for (Kielikoodi k : Kielikoodi.values()) {
-            Opetuskielikoodi opetuskieli = new Opetuskielikoodi();
-            opetuskieli.setUri(k.kieliUri);
-            opetuskieli.setNimiFi(k.nimi);
-            opetuskieli.setNimiSv(k.nimi);
-            opetuskieli.setNimiEn(k.nimi);
-
-            try {
-                opetuskielikoodiDAO.readByUri(k.kieliUri);
-            } catch (NonUniqueResultException e) {
-                opetuskielikoodiDAO.insert(opetuskieli);
-            }
-        }
         transactionManager.commit(tx);
 
         PkAineet pkAineet = new PkAineet();
@@ -175,27 +124,22 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         transactionManager.commit(tx);
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
-        Map<Kielikoodi, Laskentakaava> kielikokeidenLaskentakaavat = new HashMap<Kielikoodi, Laskentakaava>();
-        for (Kielikoodi k : Kielikoodi.values()) {
-            kielikokeidenLaskentakaavat.put(k,
-                    asetaValintaryhmaJaTallennaKantaan(PkJaYoPohjaiset.luoKielikokeenPakollisuudenLaskentakaava(k, eiUlkomaillaSuoritettuaKoulutustaEikaOppivelvollisuusKeskeytynyt),
-                            ammatillinenKoulutusVr));
-        }
+        Laskentakaava kielikokeenLaskentakaava = asetaValintaryhmaJaTallennaKantaan(PkJaYoPohjaiset.luoKielikokeenPakollisuudenLaskentakaava(eiUlkomaillaSuoritettuaKoulutustaEikaOppivelvollisuusKeskeytynyt),
+                ammatillinenKoulutusVr);
 
         transactionManager.commit(tx);
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
-        for (Kielikoodi k : Kielikoodi.values()) {
-            final String kielikoeNimi = k.getNimi() + " - Kielikoe";
-            ValintakoeDTO kielikoe = new ValintakoeDTO();
-            kielikoe.setAktiivinen(false);
-            kielikoe.setKuvaus(kielikoeNimi);
-            kielikoe.setNimi(kielikoeNimi);
-            kielikoe.setTunniste(k.getKielikoetunniste());
-            kielikoe.setLaskentakaavaId(kielikokeidenLaskentakaavat.get(k).getId());
 
-            valintakoeService.lisaaValintakoeValinnanVaiheelle(kielikoevalinnanVaihe.getOid(), kielikoe);
-        }
+        final String kielikoeNimi = "Kielikoe";
+        ValintakoeDTO kielikoe = new ValintakoeDTO();
+        kielikoe.setAktiivinen(false);
+        kielikoe.setKuvaus(kielikoeNimi);
+        kielikoe.setNimi(kielikoeNimi);
+        kielikoe.setTunniste(PkJaYoPohjaiset.kielikoetunniste);
+        kielikoe.setLaskentakaavaId(kielikokeenLaskentakaava.getId());
+
+        valintakoeService.lisaaValintakoeValinnanVaiheelle(kielikoevalinnanVaihe.getOid(), kielikoe);
 
         transactionManager.commit(tx);
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
@@ -286,40 +230,31 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         Laskentakaava[] pkTasasijakriteerit = new Laskentakaava[]{hakutoivejarjestystasapistekaava, pk_yleinenkoulumenestyspisteytysmalli, pk_painotettavatKeskiarvotLaskentakaava};
         Laskentakaava[] lkTasasijakriteerit = new Laskentakaava[]{hakutoivejarjestystasapistekaava, lk_yleinenkoulumenestyspisteytysmalli};
 
-        Map<Kielikoodi, Laskentakaava> toisenAsteenPeruskoulupohjaisetPeruskaavat = new HashMap<Kielikoodi, Laskentakaava>();
-        Map<Kielikoodi, Laskentakaava> toisenAsteenYlioppilaspohjaisetPeruskaavat = new HashMap<Kielikoodi, Laskentakaava>();
-        for (Kielikoodi k : Kielikoodi.values()) {
-            tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
-            Laskentakaava kielikoekaava = kielikokeidenLaskentakaavat.get(k);
-            toisenAsteenPeruskoulupohjaisetPeruskaavat.put(k, asetaValintaryhmaJaTallennaKantaan(
-                    PkJaYoPohjaiset.luoYhdistettyPeruskaavaJaKielikoekaava(
-                            toisenAsteenPeruskoulupohjainenPeruskaava, kielikoekaava), peruskouluVr));
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+        Laskentakaava pkYhdistettyPeruskaavaJaKielikoekaava = asetaValintaryhmaJaTallennaKantaan(PkJaYoPohjaiset.luoYhdistettyPeruskaavaJaKielikoekaava(
+                toisenAsteenPeruskoulupohjainenPeruskaava, kielikokeenLaskentakaava), peruskouluVr);
 
-            toisenAsteenYlioppilaspohjaisetPeruskaavat.put(k, asetaValintaryhmaJaTallennaKantaan(
-                    PkJaYoPohjaiset.luoYhdistettyPeruskaavaJaKielikoekaava(
-                            toisenAsteenYlioppilaspohjainenPeruskaava, kielikoekaava), lukioVr));
-            transactionManager.commit(tx);
-        }
+        Laskentakaava lkYhdistettyPeruskaavaJaKielikoekaava = asetaValintaryhmaJaTallennaKantaan(PkJaYoPohjaiset.luoYhdistettyPeruskaavaJaKielikoekaava(
+                toisenAsteenYlioppilaspohjainenPeruskaava, kielikokeenLaskentakaava), peruskouluVr);
+        transactionManager.commit(tx);
 
-        lisaaHakukohdekoodit(peruskouluVr, lukioVr, toisenAsteenPeruskoulupohjaisetPeruskaavat, toisenAsteenYlioppilaspohjaisetPeruskaavat, pkTasasijakriteerit, lkTasasijakriteerit,
-                ulkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt, eiUlkomaillaSuoritettuaKoulutustaEikaOppivelvollisuusKeskeytynyt, kielikokeidenLaskentakaavat);
+        lisaaHakukohdekoodit(peruskouluVr, lukioVr, pkYhdistettyPeruskaavaJaKielikoekaava, lkYhdistettyPeruskaavaJaKielikoekaava, pkTasasijakriteerit, lkTasasijakriteerit,
+                ulkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt, eiUlkomaillaSuoritettuaKoulutustaEikaOppivelvollisuusKeskeytynyt, kielikokeenLaskentakaava);
 
         long endTime = System.currentTimeMillis();
         long timeTaken = (endTime - beginTime) / 1000L / 60L;
 
         LOG.info("Valintaperusteet generoitu. Aikaa generointiin kului: {} min", timeTaken);
-
     }
 
-
     private void lisaaHakukohdekoodit(Valintaryhma peruskouluVr, Valintaryhma lukioVr,
-                                      Map<Kielikoodi, Laskentakaava> pkPeruskaavat,
-                                      Map<Kielikoodi, Laskentakaava> lkPeruskaavat,
+                                      Laskentakaava pkPeruskaava,
+                                      Laskentakaava lkPeruskaava,
                                       Laskentakaava[] pkTasasijakriteerit,
                                       Laskentakaava[] lkTasasijakriteerit,
                                       Laskentakaava ulkomaillaSuoritettuKoulutus,
                                       Laskentakaava eiUlkomaillaSuoritettuKoulutus,
-                                      Map<Kielikoodi, Laskentakaava> kielikokeidenLaskentakaavat) throws IOException {
+                                      Laskentakaava kielikoeLaskentakaava) throws IOException {
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new InputStreamReader(resourceLoader.getResource("classpath:hakukohdekoodit/hakukohdekoodit.csv").getInputStream(), Charset.forName("UTF-8")));
@@ -410,79 +345,30 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
                 transactionManager.commit(tx);
 
-                Map<Kielikoodi, Laskentakaava> peruskaavat = null;
+                Laskentakaava peruskaava = null;
                 Laskentakaava[] tasasijakriteerit = null;
 
                 if (nimi.contains(", pk")) {
-                    peruskaavat = pkPeruskaavat;
+                    peruskaava = pkPeruskaava;
                     tasasijakriteerit = pkTasasijakriteerit;
                 } else {
-                    peruskaavat = lkPeruskaavat;
+                    peruskaava = lkPeruskaava;
                     tasasijakriteerit = lkTasasijakriteerit;
                 }
 
-                for (Kielikoodi k : Kielikoodi.values()) {
-                    tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
-                    Opetuskielikoodi opetuskieli = new Opetuskielikoodi();
-                    opetuskieli.setUri(k.kieliUri);
-                    opetuskieli.setNimiFi(k.nimi);
-                    opetuskieli.setNimiSv(k.nimi);
-                    opetuskieli.setNimiEn(k.nimi);
-
-                    Valintaryhma kielivalintaryhma = new Valintaryhma();
-                    kielivalintaryhma.setNimi(k.nimi);
-                    kielivalintaryhma.setHakuOid(HAKU_OID);
-
-                    kielivalintaryhma = valintaryhmaService.insert(kielivalintaryhma, valintaryhma.getOid());
-
-                    transactionManager.commit(tx);
-                    tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
-
-                    List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheService.findByValintaryhma(kielivalintaryhma.getOid());
-                    ValinnanVaihe kielikoeValinnanvaihe = valinnanVaiheet.get(0);
-                    assert (kielikoeValinnanvaihe.getNimi().contains("Kielikokeen pakollisuus"));
-
-                    List<Valintakoe> valintakokeet = valintakoeService.findValintakoeByValinnanVaihe(kielikoeValinnanvaihe.getOid());
-
-                    Laskentakaava ensisijainenJarjestyskriteeri = null;
-
-                    Laskentakaava peruskaava = peruskaavat.get(k);
-
-                    if (poikkeavatValintaryhmat.contains(hakukohdekoodi.getUri())) {
-                        ensisijainenJarjestyskriteeri = asetaValintaryhmaJaTallennaKantaan(
-                                PkJaYoPohjaiset.luoPoikkeavanValintaryhmanLaskentakaava(
-                                        valintakoekaava, kielikokeidenLaskentakaavat.get(k), ulkomaillaSuoritettuKoulutus), kielivalintaryhma);
-                    } else {
-                        ensisijainenJarjestyskriteeri = asetaValintaryhmaJaTallennaKantaan(
-                                PkJaYoPohjaiset.luoYhdistettyPeruskaavaJaValintakoekaava(peruskaava, valintakoekaava), kielivalintaryhma);
-                    }
-                    transactionManager.commit(tx);
-
-                    tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
-                    boolean loydetty = false;
-                    for (Valintakoe koe : valintakokeet) {
-                        if (koe.getTunniste().equals(k.getKielikoetunniste())) {
-                            ValintakoeDTO dto = new ValintakoeDTO();
-                            dto.setKuvaus(koe.getKuvaus());
-                            dto.setLaskentakaavaId(koe.getLaskentakaavaId());
-                            dto.setNimi(koe.getNimi());
-                            dto.setTunniste(koe.getTunniste());
-                            dto.setAktiivinen(true);
-
-                            valintakoeService.update(koe.getOid(), dto);
-
-                            loydetty = true;
-                            break;
-                        }
-                    }
-
-                    assert (loydetty);
-                    transactionManager.commit(tx);
-
-                    insertKoe(kielivalintaryhma, valintakoetunniste, ensisijainenJarjestyskriteeri, valintakoekaava, tasasijakriteerit,
-                            opetuskieli, hakukohdekoodi);
-                    insertEiKoetta(kielivalintaryhma, peruskaava, tasasijakriteerit, opetuskieli, hakukohdekoodi);
+                tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+                Laskentakaava ensisijainenJarjestyskriteeri = null;
+                if (poikkeavatValintaryhmat.contains(hakukohdekoodi.getUri())) {
+                    ensisijainenJarjestyskriteeri = PkJaYoPohjaiset.luoPoikkeavanValintaryhmanLaskentakaava(
+                            valintakoekaava, kielikoeLaskentakaava, ulkomaillaSuoritettuKoulutus);
+                } else {
+                    ensisijainenJarjestyskriteeri = PkJaYoPohjaiset.luoYhdistettyPeruskaavaJaValintakoekaava(peruskaava, valintakoekaava);
                 }
+
+                transactionManager.commit(tx);
+                insertKoe(valintaryhma, valintakoetunniste, ensisijainenJarjestyskriteeri, valintakoekaava, tasasijakriteerit, hakukohdekoodi);
+                insertEiKoetta(valintaryhma, peruskaava, tasasijakriteerit, hakukohdekoodi);
+
             }
         } finally {
             if (reader != null) {
@@ -492,16 +378,21 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         }
     }
 
-    private void insertKoe(Valintaryhma kielivalintaryhma, String valintakoetunniste,
-                           Laskentakaava peruskaavaJaValintakoekaava, Laskentakaava valintakoekaava,
-                           Laskentakaava[] tasasijakriteerit, Opetuskielikoodi opetuskielikoodi,
-                           Hakukohdekoodi hakukohdekoodi) {
+    private void insertKoe(Valintaryhma valintaryhma, String valintakoetunniste, Laskentakaava peruskaavaJaValintakoekaava, Laskentakaava valintakoekaava,
+                           Laskentakaava[] tasasijakriteerit, Hakukohdekoodi hakukohdekoodi) {
         TransactionStatus tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
         Valintaryhma koevalintaryhma = new Valintaryhma();
         koevalintaryhma.setNimi("Pääsykokeelliset");
         koevalintaryhma.setHakuOid(HAKU_OID);
-        koevalintaryhma = valintaryhmaService.insert(koevalintaryhma, kielivalintaryhma.getOid());
+        koevalintaryhma = valintaryhmaService.insert(koevalintaryhma, valintaryhma.getOid());
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
+        hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(koevalintaryhma.getOid(), hakukohdekoodi);
+        peruskaavaJaValintakoekaava.setValintaryhma(koevalintaryhma);
+        peruskaavaJaValintakoekaava = laskentakaavaService.insert(peruskaavaJaValintakoekaava);
 
         transactionManager.commit(tx);
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
@@ -536,20 +427,20 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         transactionManager.commit(tx);
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
-        opetuskielikoodiService.lisaaOpetuskielikoodiValintaryhmalle(koevalintaryhma.getOid(), opetuskielikoodi);
-        hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(koevalintaryhma.getOid(), hakukohdekoodi);
-
-        transactionManager.commit(tx);
-        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
-
         Valintakoekoodi valintakoekoodi = new Valintakoekoodi();
         valintakoekoodi.setUri(PAASY_JA_SOVELTUVUUSKOE);
 
         valintakoekoodiService.lisaaValintakoekoodiValintaryhmalle(koevalintaryhma.getOid(), valintakoekoodi);
 
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
         ValinnanVaihe tavallinenVaihe = valinnanVaiheet.get(1);
         assert (tavallinenVaihe.getValinnanVaiheTyyppi().equals(ValinnanVaiheTyyppi.TAVALLINEN));
         Valintatapajono jono = valintatapajonoService.findJonoByValinnanvaihe(tavallinenVaihe.getOid()).get(0);
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
         Jarjestyskriteeri kriteeri = new Jarjestyskriteeri();
         kriteeri.setAktiivinen(true);
@@ -578,20 +469,18 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         transactionManager.commit(tx);
     }
 
-    private void insertEiKoetta(Valintaryhma kielivalintaryhma, Laskentakaava peruskaava,
-                                Laskentakaava[] tasasijakriteerit, Opetuskielikoodi opetuskielikoodi,
-                                Hakukohdekoodi hakukohdekoodi) {
+    private void insertEiKoetta(Valintaryhma valintaryhma, Laskentakaava peruskaava,
+                                Laskentakaava[] tasasijakriteerit, Hakukohdekoodi hakukohdekoodi) {
         TransactionStatus tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
         Valintaryhma koe = new Valintaryhma();
         koe.setNimi("Pääsykokeettomat");
         koe.setHakuOid(HAKU_OID);
-        koe = valintaryhmaService.insert(koe, kielivalintaryhma.getOid());
+        koe = valintaryhmaService.insert(koe, valintaryhma.getOid());
 
         transactionManager.commit(tx);
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
-        opetuskielikoodiService.lisaaOpetuskielikoodiValintaryhmalle(koe.getOid(), opetuskielikoodi);
         hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(koe.getOid(), hakukohdekoodi);
 
         transactionManager.commit(tx);

@@ -39,9 +39,6 @@ public class ValintaryhmaResource {
     private HakukohdekoodiService hakukohdekoodiService;
 
     @Autowired
-    private OpetuskielikoodiService opetuskielikoodiService;
-
-    @Autowired
     private ValintakoekoodiService valintakoekoodiService;
 
     @Autowired
@@ -51,7 +48,6 @@ public class ValintaryhmaResource {
     private OidService oidService;
 
     protected final static Logger LOGGER = LoggerFactory.getLogger(ValintaryhmaResource.class);
-
 
 
     @GET
@@ -66,7 +62,8 @@ public class ValintaryhmaResource {
         List<Valintaryhma> valintaryhmas = new ArrayList<Valintaryhma>();
         if (Boolean.TRUE.equals(paataso)) {
             valintaryhmas.addAll(valintaryhmaService.findValintaryhmasByParentOid(null));
-        }    if (parentsOf != null) {
+        }
+        if (parentsOf != null) {
             valintaryhmas.addAll(valintaryhmaService.findParentHierarchyFromOid(parentsOf));
         }
         return valintaryhmas;
@@ -243,40 +240,6 @@ public class ValintaryhmaResource {
             return Response.status(Response.Status.CREATED).entity(hakukohdekoodi).build();
         } catch (Exception e) {
             LOGGER.error("Error inserting hakukohdekoodi.", e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
-        }
-    }
-
-    @POST
-    @Path("{valintaryhmaOid}/opetuskielikoodi")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @JsonView(JsonViews.Basic.class)
-    @Secured(CRUD)
-    public Response updateOpetuskielikoodi(@PathParam("valintaryhmaOid") String valintaryhmaOid,
-                                           Set<Opetuskielikoodi> opetuskielikoodit) {
-        try {
-            opetuskielikoodiService.updateValintaryhmaOpetuskielikoodit(valintaryhmaOid, opetuskielikoodit);
-            return Response.status(Response.Status.ACCEPTED).entity(opetuskielikoodit).build();
-        } catch (Exception e) {
-            LOGGER.error("Error updating opetuskielikoodit.", e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
-        }
-    }
-
-    @PUT
-    @Path("{valintaryhmaOid}/opetuskielikoodi")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
-    @Secured({CRUD})
-    public Response insertOpetuskielikoodi(@PathParam("valintaryhmaOid") String valintaryhamOid,
-                                           Opetuskielikoodi opetuskielikoodi) {
-        try {
-            opetuskielikoodiService.lisaaOpetuskielikoodiValintaryhmalle(valintaryhamOid, opetuskielikoodi);
-            return Response.status(Response.Status.CREATED).entity(opetuskielikoodi).build();
-        } catch (Exception e) {
-            LOGGER.error("Error inserting opetuskielikoodi.", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }

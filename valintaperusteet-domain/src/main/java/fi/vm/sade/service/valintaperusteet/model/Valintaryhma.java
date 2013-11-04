@@ -60,15 +60,6 @@ public class Valintaryhma extends BaseEntity {
     private Set<Hakukohdekoodi> hakukohdekoodit = new HashSet<Hakukohdekoodi>();
 
     @JsonView({JsonViews.Basic.class})
-    @JoinTable(name = "valintaryhma_opetuskielikoodi",
-            joinColumns = @JoinColumn(name = "valintaryhma_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME),
-            inverseJoinColumns = @JoinColumn(name = "opetuskielikoodi_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME),
-            uniqueConstraints = @UniqueConstraint(name = "UK_valintaryhma_opetuskielikoodi_001",
-                    columnNames = {"valintaryhma_id", "opetuskielikoodi_id"}))
-    @ManyToMany(fetch = FetchType.LAZY)
-    private Set<Opetuskielikoodi> opetuskielikoodit = new HashSet<Opetuskielikoodi>();
-
-    @JsonView({JsonViews.Basic.class})
     @JoinTable(name = "valintaryhma_valintakoekoodi",
             joinColumns = @JoinColumn(name = "valintaryhma_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME),
             inverseJoinColumns = @JoinColumn(name = "valintakoekoodi_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME))
@@ -168,14 +159,6 @@ public class Valintaryhma extends BaseEntity {
 
     public void setHakukohdekoodit(Set<Hakukohdekoodi> hakukohdekoodit) {
         this.hakukohdekoodit = hakukohdekoodit;
-    }
-
-    public Set<Opetuskielikoodi> getOpetuskielikoodit() {
-        return opetuskielikoodit;
-    }
-
-    public void setOpetuskielikoodit(Set<Opetuskielikoodi> opetuskielikoodit) {
-        this.opetuskielikoodit = opetuskielikoodit;
     }
 
     public List<Valintakoekoodi> getValintakoekoodit() {

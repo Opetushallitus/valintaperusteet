@@ -1,0 +1,3 @@
+drop table hakukohde_viite_opetuskielikoodi;
+drop table valintaryhma_opetuskielikoodi;
+drop table opetuskielikoodi;
