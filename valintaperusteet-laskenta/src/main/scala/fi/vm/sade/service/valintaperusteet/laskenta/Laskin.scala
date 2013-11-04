@@ -682,14 +682,19 @@ private class Laskin private(private val hakukohde: Hakukohde,
         val tulokset = fs.map(p => Pair(laskeLukuarvo(p._1), laskeLukuarvo(p._2)))
         val (tilat, historiat) = tulokset.reverse.foldLeft(Pair(List[Tila](), List[Historia]()))((lst, t) => Pair(t._1.tila :: t._2.tila :: lst._1, t._1.historia :: t._2.historia :: lst._2))
 
-        val painotetutArvot = for {t <- tulokset
-                                   painotus <- t._1.tulos
-                                   arvo <- t._2.tulos
-        } yield painotus * arvo
+        val painokertointenSumma = tulokset.foldLeft(BigDecimal("0.0")) {
+          (s, a) =>
+            val painokerroin = a._1.tulos
+            val painotettava = a._2.tulos
 
-        val painotettuKeskiarvo = if (!painotetutArvot.isEmpty) {
-          Some(BigDecimal(summa(painotetutArvot).underlying.divide(BigDecimal(painotetutArvot.size).underlying, 4, RoundingMode.HALF_UP)))
-        } else None
+            s + (painokerroin match {
+              case Some(pk) if (painotettava.isEmpty && pk > BigDecimal("1.0")) => pk - BigDecimal("1.0")
+              case Some(pk) => pk
+              case _ => BigDecimal("1.0")
+            })
+        }
+        val painotettuSumma = tulokset.foldLeft(BigDecimal("0.0"))((s, a) => s + a._1.tulos.getOrElse(BigDecimal("1.0")) * a._2.tulos.getOrElse(BigDecimal("0.0")))
+        val painotettuKeskiarvo = Some(BigDecimal(painotettuSumma.underlying.divide(painokertointenSumma.underlying, 4, RoundingMode.HALF_UP)))
 
         (painotettuKeskiarvo, tilat, Historia("Painotettu keskiarvo", painotettuKeskiarvo, tilat, Some(historiat), None))
       }

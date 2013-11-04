@@ -707,18 +707,18 @@ class LaskentaTest extends FunSuite {
     val funktiokutsu = PainotettuKeskiarvo(
       fs = List(
         Pair(
-          Lukuarvo(BigDecimal("1.50")),
+          Lukuarvo(BigDecimal("3.00")),
           Lukuarvo(BigDecimal("30.0"))
         ),
         Pair(
-          Lukuarvo(BigDecimal("0.50")),
+          Lukuarvo(BigDecimal("2.00")),
           Lukuarvo(BigDecimal("100.0"))
         )
       )
     )
 
     val tulos = Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, List(), funktiokutsu)
-    assert(tulos.getTulos.compareTo(BigDecimal("47.5").underlying) == 0)
+    assert(tulos.getTulos.compareTo(BigDecimal("58.0").underlying) == 0)
     assertTilaHyvaksyttavissa(tulos.getTila)
   }
 
@@ -730,7 +730,7 @@ class LaskentaTest extends FunSuite {
           Lukuarvo(BigDecimal("30.0"))
         ),
         Pair(
-          Lukuarvo(BigDecimal("0.50")),
+          Lukuarvo(BigDecimal("2.50")),
           HaeLukuarvo(
             konvertteri = None,
             oletusarvo = None,
@@ -744,7 +744,7 @@ class LaskentaTest extends FunSuite {
     )
 
     val tulos = Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, List(), funktiokutsu)
-    assert(tulos.getTulos.compareTo(BigDecimal("45.0").underlying) == 0)
+    assert(tulos.getTulos.compareTo(BigDecimal("15.0").underlying) == 0)
     assertTilaHyvaksyttavissa(tulos.getTila)
   }
 
@@ -764,13 +764,13 @@ class LaskentaTest extends FunSuite {
                 tunniste = "tunniste1",
                 pakollinen = false)
           ),
-          Lukuarvo(BigDecimal("0.50"))
+          Lukuarvo(BigDecimal("60.0"))
         )
       )
     )
 
     val tulos = Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, List(), funktiokutsu)
-    assert(tulos.getTulos.compareTo(BigDecimal("45.0").underlying) == 0)
+    assert(tulos.getTulos.compareTo(BigDecimal("42.0").underlying) == 0)
     assertTilaHyvaksyttavissa(tulos.getTila)
   }
 
@@ -803,7 +803,7 @@ class LaskentaTest extends FunSuite {
     )
 
     val tulos = Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, List(), funktiokutsu)
-    assert(tulos.getTulos.compareTo(BigDecimal("45.0").underlying) == 0)
+    assert(tulos.getTulos.compareTo(BigDecimal("18.0").underlying) == 0)
     assertTilaHyvaksyttavissa(tulos.getTila)
   }
 
@@ -832,7 +832,7 @@ class LaskentaTest extends FunSuite {
     )
 
     val tulos = Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, List(), funktiokutsu)
-    assert(Option(tulos.getTulos).isEmpty)
+    assert(tulos.getTulos.compareTo(BigDecimal("0.0").underlying) == 0)
     assertTilaHyvaksyttavissa(tulos.getTila)
   }
 

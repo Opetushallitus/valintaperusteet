@@ -2028,7 +2028,7 @@ class LaskentaIntegraatioTest extends FunSuite {
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val tulos = Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, List(), lasku)
-    assert(tulos.getTulos.compareTo(new BigDecimal("32.5")) == 0)
+    assert(tulos.getTulos.compareTo(new BigDecimal("18.5714")) == 0)
     assertTilaHyvaksyttavissa(tulos.getTila)
   }
 
