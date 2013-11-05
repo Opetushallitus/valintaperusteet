@@ -803,7 +803,7 @@ class LaskentaTest extends FunSuite {
     )
 
     val tulos = Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, List(), funktiokutsu)
-    assert(tulos.getTulos.compareTo(BigDecimal("18.0").underlying) == 0)
+    assert(tulos.getTulos.compareTo(BigDecimal("30.0").underlying) == 0)
     assertTilaHyvaksyttavissa(tulos.getTila)
   }
 
@@ -832,7 +832,7 @@ class LaskentaTest extends FunSuite {
     )
 
     val tulos = Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, List(), funktiokutsu)
-    assert(tulos.getTulos.compareTo(BigDecimal("0.0").underlying) == 0)
+    assert(Option(tulos.getTulos).isEmpty)
     assertTilaHyvaksyttavissa(tulos.getTila)
   }
 

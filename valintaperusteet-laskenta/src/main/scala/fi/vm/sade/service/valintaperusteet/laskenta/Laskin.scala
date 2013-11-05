@@ -687,14 +687,17 @@ private class Laskin private(private val hakukohde: Hakukohde,
             val painokerroin = a._1.tulos
             val painotettava = a._2.tulos
 
-            s + (painokerroin match {
-              case Some(pk) if (painotettava.isEmpty && pk > BigDecimal("1.0")) => pk - BigDecimal("1.0")
-              case Some(pk) => pk
-              case _ => BigDecimal("1.0")
+            s + (painotettava match {
+              case Some(p) if(painokerroin.isEmpty) => BigDecimal("1.0")
+              case Some(p) => painokerroin.get
+              case None if(painokerroin.isEmpty) => BigDecimal("0.0")
+              case None => painokerroin.get - BigDecimal("1.0")
             })
         }
+
         val painotettuSumma = tulokset.foldLeft(BigDecimal("0.0"))((s, a) => s + a._1.tulos.getOrElse(BigDecimal("1.0")) * a._2.tulos.getOrElse(BigDecimal("0.0")))
-        val painotettuKeskiarvo = Some(BigDecimal(painotettuSumma.underlying.divide(painokertointenSumma.underlying, 4, RoundingMode.HALF_UP)))
+
+        val painotettuKeskiarvo = if(painokertointenSumma.intValue() == 0) None else Some(BigDecimal(painotettuSumma.underlying.divide(painokertointenSumma.underlying, 4, RoundingMode.HALF_UP)))
 
         (painotettuKeskiarvo, tilat, Historia("Painotettu keskiarvo", painotettuKeskiarvo, tilat, Some(historiat), None))
       }
