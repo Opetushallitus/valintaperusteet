@@ -6,9 +6,7 @@ import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
-import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
-import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
-import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
+import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaEiKuuluValintatapajonolleException;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaValintatapajonoOnJoOlemassaException;
@@ -23,7 +21,6 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -54,6 +51,10 @@ public class HakijaryhmaServiceTest {
     private HakijaryhmaValintatapajonoService hakijaryhmaValintatapajonoService;
     @Autowired
     private HakukohdeService hakukohdeService;
+    @Autowired
+    private ValinnanVaiheService valinnanvaiheService;
+    @Autowired
+    private ValintatapajonoService valintatapajonoService;
     @Autowired
     private ValintaryhmaService valintaryhmaService;
     @Autowired
@@ -300,6 +301,47 @@ public class HakijaryhmaServiceTest {
         } catch (HakijaryhmaEiKuuluValintatapajonolleException e) {
 
         }
+    }
+
+    @Test
+    public void testHakijaryhmaValintatapajonoPeriytyminen() {
+        // Poistetaan vanhat liitokset
+        hakijaryhmaValintatapajonoService.deleteByOid("hr1_vtj1", true);
+        hakijaryhmaValintatapajonoService.deleteByOid("hr3_vtj5", true);
+        hakijaryhmaValintatapajonoService.deleteByOid("hr4_vtj2", true);
+        hakijaryhmaValintatapajonoService.deleteByOid("hr5_vtj6", true);
+
+        HakukohdeViite viite = new HakukohdeViite();
+        viite.setHakuoid("temp");
+        viite.setOid("temp");
+        viite.setNimi("temp");
+        hakukohdeService.insert(viite, "vr2");
+
+        for (ValinnanVaihe valinnanVaihe : valinnanvaiheService.findByHakukohde("temp")) {
+            List<Valintatapajono> jonoByValinnanvaihe = valintatapajonoService.findJonoByValinnanvaihe(valinnanVaihe.getOid());
+            assertEquals(0, jonoByValinnanvaihe.get(0).getHakijaryhmat().size());
+            assertEquals(0, jonoByValinnanvaihe.get(1).getHakijaryhmat().size());
+        }
+
+        assertEquals(0, hakijaryhmaValintatapajonoService.findHakijaryhmaByJono("vtj1").size());
+        assertEquals(0, hakijaryhmaValintatapajonoService.findHakijaryhmaByJono("vtj2").size());
+        assertEquals(0, hakijaryhmaValintatapajonoService.findHakijaryhmaByJono("vtj7").size());
+
+
+        hakijaryhmaService.liitaHakijaryhmaValintatapajonolle("vtj1", "hr1");
+        hakijaryhmaService.liitaHakijaryhmaValintatapajonolle("vtj7", "hr5");
+
+
+        assertEquals(1, hakijaryhmaValintatapajonoService.findHakijaryhmaByJono("vtj1").size());
+        assertEquals(1, hakijaryhmaValintatapajonoService.findHakijaryhmaByJono("vtj2").size());
+        assertEquals(1, hakijaryhmaValintatapajonoService.findHakijaryhmaByJono("vtj7").size());
+
+        for (ValinnanVaihe valinnanVaihe : valinnanvaiheService.findByHakukohde("temp")) {
+            List<Valintatapajono> jonoByValinnanvaihe = valintatapajonoService.findJonoByValinnanvaihe(valinnanVaihe.getOid());
+            assertEquals(1, jonoByValinnanvaihe.get(0).getHakijaryhmat().size());
+            assertEquals(1, jonoByValinnanvaihe.get(1).getHakijaryhmat().size());
+        }
+
     }
 
     @Test
