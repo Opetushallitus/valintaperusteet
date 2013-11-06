@@ -5,7 +5,8 @@ import fi.vm.sade.service.valintaperusteet.laskenta._
 import Laskenta._
 import Laskenta.{HakukohteenValintaperuste => HkValintaperuste}
 import org.apache.commons.lang.StringUtils
-import java.math.{BigDecimal => BigDec}
+import java.math.{BigDecimal => JBigDecimal}
+import java.util.{Set => JSet}
 import scala.math.BigDecimal._
 import fi.vm.sade.service.valintaperusteet.service.validointi.virhe.LaskentakaavaEiOleValidiException
 
@@ -18,7 +19,7 @@ object Laskentadomainkonvertteri {
 
   import scala.collection.JavaConversions._
 
-  private def getParametri(avain: String, params: java.util.Set[Syoteparametri]): Syoteparametri = {
+  private def getParametri(avain: String, params: JSet[Syoteparametri]): Syoteparametri = {
     params.filter(_.getAvain == avain).toList match {
       case Nil => sys.error("Could not find parameter matching the key " + avain)
       case head :: tail => head
@@ -183,6 +184,14 @@ object Laskentadomainkonvertteri {
       case Funktionimi.HYLKAA => {
         val hylkaysperustekuvaus = funktiokutsu.getSyoteparametrit.find(_.getAvain == "hylkaysperustekuvaus").map(_.getArvo)
         Hylkaa(muunnaTotuusarvofunktioksi(lasketutArgumentit(0)), hylkaysperustekuvaus, oid)
+      }
+      case Funktionimi.HYLKAAARVOVALILLA => {
+        val hylkaysperustekuvaus = funktiokutsu.getSyoteparametrit.find(_.getAvain == "hylkaysperustekuvaus").map(_.getArvo)
+        val min = parametriToBigDecimal(getParametri("arvovaliMin", funktiokutsu.getSyoteparametrit))
+        val max = parametriToBigDecimal(getParametri("arvovaliMax", funktiokutsu.getSyoteparametrit))
+
+        HylkaaArvovalilla(muunnaLukuarvofunktioksi(lasketutArgumentit(0)), hylkaysperustekuvaus, oid, Pair(min, max))
+
       }
       case Funktionimi.JA => Ja(lasketutArgumentit.map(muunnaTotuusarvofunktioksi(_)), oid)
       case Funktionimi.JOS => Jos(

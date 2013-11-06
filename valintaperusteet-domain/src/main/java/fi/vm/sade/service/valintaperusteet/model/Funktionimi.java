@@ -46,9 +46,11 @@ public enum Funktionimi {
     PYORISTYS(Funktiotyyppi.LUKUARVOFUNKTIO, Laskentamoodi.VALINTAKOELASKENTA, Laskentamoodi.VALINTALASKENTA),
     HAEMERKKIJONOJAVERTAAYHTASUURUUS(Funktiotyyppi.TOTUUSARVOFUNKTIO, Laskentamoodi.VALINTAKOELASKENTA, Laskentamoodi.VALINTALASKENTA),
     HYLKAA(Funktiotyyppi.LUKUARVOFUNKTIO, Laskentamoodi.VALINTAKOELASKENTA, Laskentamoodi.VALINTALASKENTA),
+    HYLKAAARVOVALILLA(Funktiotyyppi.LUKUARVOFUNKTIO, Laskentamoodi.VALINTALASKENTA, Laskentamoodi.VALINTAKOELASKENTA),
     SKAALAUS(Funktiotyyppi.LUKUARVOFUNKTIO, Laskentamoodi.VALINTALASKENTA),
     PAINOTETTUKESKIARVO(Funktiotyyppi.LUKUARVOFUNKTIO, Laskentamoodi.VALINTALASKENTA, Laskentamoodi.VALINTAKOELASKENTA),
     VALINTAPERUSTEYHTASUURUUS(Funktiotyyppi.TOTUUSARVOFUNKTIO, Laskentamoodi.VALINTALASKENTA, Laskentamoodi.VALINTAKOELASKENTA);
+
 
     private Funktiotyyppi tyyppi;
     private Set<Laskentamoodi> laskentamoodit;

@@ -19,7 +19,6 @@ import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus
 import fi.vm.sade.kaava.LaskentaTestUtil.Hakemus
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonvertteri
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Suurempi
-import scala.Some
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonversio
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Jos
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Demografia
@@ -27,6 +26,91 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakukohteenValintap
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaKonvertoiLukuarvoksi
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonversio
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakemuksenValintaperuste
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeLukuarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Skaalaus
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.SyotettavaValintaperuste
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonvertteri
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeTotuusarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaVertaaYhtasuuruus
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.KonvertoiLukuarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Totuusarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonvertteri
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Suurempi
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonversio
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Jos
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Demografia
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakukohteenValintaperuste
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaKonvertoiLukuarvoksi
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.PainotettuKeskiarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonversio
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Valintaperusteyhtasuuruus
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HylkaaArvovalilla
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakemuksenValintaperuste
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeLukuarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Skaalaus
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.SyotettavaValintaperuste
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonvertteri
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeTotuusarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaVertaaYhtasuuruus
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.KonvertoiLukuarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Totuusarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonvertteri
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Suurempi
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonversio
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Jos
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Demografia
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakukohteenValintaperuste
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaKonvertoiLukuarvoksi
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.PainotettuKeskiarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonversio
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Valintaperusteyhtasuuruus
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HylkaaArvovalilla
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakemuksenValintaperuste
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeLukuarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Skaalaus
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.SyotettavaValintaperuste
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonvertteri
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeTotuusarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaVertaaYhtasuuruus
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.KonvertoiLukuarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Totuusarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonvertteri
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Suurempi
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonversio
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Jos
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Demografia
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakukohteenValintaperuste
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaKonvertoiLukuarvoksi
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.PainotettuKeskiarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonversio
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Valintaperusteyhtasuuruus
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HylkaaArvovalilla
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakemuksenValintaperuste
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeLukuarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Skaalaus
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.SyotettavaValintaperuste
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonvertteri
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeTotuusarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaVertaaYhtasuuruus
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.KonvertoiLukuarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Totuusarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonvertteri
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Suurempi
+import scala.Some
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonversio
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Jos
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Demografia
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakukohteenValintaperuste
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaKonvertoiLukuarvoksi
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.PainotettuKeskiarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonversio
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Valintaperusteyhtasuuruus
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HylkaaArvovalilla
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakemuksenValintaperuste
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeLukuarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Skaalaus
@@ -744,7 +828,7 @@ class LaskentaTest extends FunSuite {
     )
 
     val tulos = Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, List(), funktiokutsu)
-    assert(tulos.getTulos.compareTo(BigDecimal("15.0").underlying) == 0)
+    assert(tulos.getTulos.compareTo(BigDecimal("30.0").underlying) == 0)
     assertTilaHyvaksyttavissa(tulos.getTila)
   }
 
@@ -998,5 +1082,55 @@ class LaskentaTest extends FunSuite {
     val tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemus, List(hakemus), funktiokutsu)
     assert(tulos.getTulos)
     assertTilaHylatty(tulos.getTila, Hylattymetatietotyyppi.PAKOLLINEN_VALINTAPERUSTE_HYLKAYS)
+  }
+
+  test("hylkää arvovälillä") {
+
+    val arvovali = Pair(BigDecimal("6.0"), BigDecimal("9.0"))
+
+    val alla = HylkaaArvovalilla(
+      f = Lukuarvo(BigDecimal("5.0")),
+      arvovali = arvovali
+    )
+
+    val alarajalla = HylkaaArvovalilla(
+      f = Lukuarvo(BigDecimal("6.0")),
+      arvovali = arvovali
+    )
+
+    val valissa = HylkaaArvovalilla(
+      f = Lukuarvo(BigDecimal("8.0")),
+      arvovali = arvovali
+    )
+
+    val ylarajalla = HylkaaArvovalilla(
+      f = Lukuarvo(BigDecimal("9.0")),
+      arvovali = arvovali
+    )
+
+    val yli = HylkaaArvovalilla(
+      f = Lukuarvo(BigDecimal("10.0")),
+      arvovali = arvovali
+    )
+
+    val (allaTulos, allaTila) = Laskin.laske(hakukohde, tyhjaHakemus, alla)
+    assert(BigDecimal(allaTulos.get) == BigDecimal("5.0"))
+    assertTilaHyvaksyttavissa(allaTila)
+
+    val (alarajallaTulos, alarajallaTila) = Laskin.laske(hakukohde, tyhjaHakemus, alarajalla)
+    assert(BigDecimal(alarajallaTulos.get) == BigDecimal("6.0"))
+    assertTilaHylatty(alarajallaTila, Hylattymetatietotyyppi.HYLKAA_FUNKTION_SUORITTAMA_HYLKAYS)
+
+    val (valissaTulos, valissaTila) = Laskin.laske(hakukohde, tyhjaHakemus, valissa)
+    assert(BigDecimal(valissaTulos.get) == BigDecimal("8.0"))
+    assertTilaHylatty(valissaTila, Hylattymetatietotyyppi.HYLKAA_FUNKTION_SUORITTAMA_HYLKAYS)
+
+    val (ylarajallaTulos, ylarajallaTila) = Laskin.laske(hakukohde, tyhjaHakemus, ylarajalla)
+    assert(BigDecimal(ylarajallaTulos.get) == BigDecimal("9.0"))
+    assertTilaHyvaksyttavissa(ylarajallaTila)
+
+    val (yliTulos, yliTila) = Laskin.laske(hakukohde, tyhjaHakemus, yli)
+    assert(BigDecimal(yliTulos.get) == BigDecimal("10.0"))
+    assertTilaHyvaksyttavissa(yliTila)
   }
 }

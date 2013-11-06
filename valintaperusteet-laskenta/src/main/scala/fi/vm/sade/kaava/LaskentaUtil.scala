@@ -1,6 +1,7 @@
 package fi.vm.sade.kaava
 
 import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti
+import java.util.{Set => JSet}
 
 /**
  * User: kwuoti
@@ -10,7 +11,7 @@ import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti
 object LaskentaUtil {
   import scala.collection.JavaConversions._
 
-  def jarjestaFunktioargumentit(args: java.util.Set[Funktioargumentti]): List[Funktioargumentti] = {
+  def jarjestaFunktioargumentit(args: JSet[Funktioargumentti]): List[Funktioargumentti] = {
     args.toList.sortWith(_.getIndeksi < _.getIndeksi)
   }
 }

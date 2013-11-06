@@ -214,6 +214,17 @@ object Funktiokuvaaja {
       ),
       syoteparametrit = List(Syoteparametrikuvaus(avain = "hylkaysperustekuvaus", tyyppi = Syoteparametrityyppi.MERKKIJONO, pakollinen = false))
     ),
+    Funktionimi.HYLKAAARVOVALILLA -> Funktiokuvaus(
+      tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
+      funktioargumentit = List(
+        Funktioargumenttikuvaus("f", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.YKSI)
+      ),
+      syoteparametrit = List(
+        Syoteparametrikuvaus(avain = "hylkaysperustekuvaus", tyyppi = Syoteparametrityyppi.MERKKIJONO, pakollinen = false),
+        Syoteparametrikuvaus("arvovaliMin", Syoteparametrityyppi.DESIMAALILUKU, pakollinen = true),
+        Syoteparametrikuvaus("arvovaliMax", Syoteparametrityyppi.DESIMAALILUKU, pakollinen = true)
+      )
+    ),
     Funktionimi.JA -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.TOTUUSARVOFUNKTIO,
       funktioargumentit = List(Funktioargumenttikuvaus("args", Funktiotyyppi.TOTUUSARVOFUNKTIO, Kardinaliteetti.N))

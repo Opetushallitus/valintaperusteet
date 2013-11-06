@@ -7,10 +7,12 @@ import api.Osallistuminen
 import api.{SyotettyArvo => SArvo}
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta._
 import java.util.{Map => JMap}
+import java.util.{Collection => JCollection}
+import java.lang.{Boolean => JBoolean}
+import java.math.{BigDecimal => JBigDecimal}
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
 import org.slf4j.LoggerFactory
 import scala.collection.mutable.ListBuffer
-import java.math.{BigDecimal => BigDec}
 import java.math.RoundingMode
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.KonvertoiLukuarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Negaatio
@@ -46,59 +48,71 @@ import com.codahale.jerkson.Json
 object Laskin {
   val LOG = LoggerFactory.getLogger(classOf[Laskin])
 
-  private def wrapSyotetyArvot(sa: Map[String, SyotettyArvo]): Map[String, SArvo] = {
+  private def wrapSyotetytArvot(sa: Map[String, SyotettyArvo]): Map[String, SArvo] = {
     sa.map(e => (e._1 -> new SArvo(e._1, if (e._2.arvo.isEmpty) null else e._2.arvo.get,
       if (e._2.laskennallinenArvo.isEmpty) null else e._2.laskennallinenArvo.get, e._2.osallistuminen)))
   }
 
-  def suoritaValintalaskenta(hakukohde: Hakukohde,
+  protected def suoritaValintalaskentaLukuarvofunktiolla(hakukohde: Hakukohde,
                              hakemus: Hakemus,
-                             kaikkiHakemukset: java.util.Collection[Hakemus],
-                             laskettava: Lukuarvofunktio): Laskentatulos[BigDec] = {
-    val laskin = new Laskin(hakukohde, hakemus, kaikkiHakemukset.toSet)
+                             kaikkiHakemukset: Option[JCollection[Hakemus]],
+                             laskettava: Lukuarvofunktio): Laskentatulos[JBigDecimal] = {
+
+    val laskin = if(kaikkiHakemukset.isDefined) new Laskin(hakukohde, hakemus, kaikkiHakemukset.get.toSet) else new Laskin(hakukohde, hakemus)
+
     laskin.laske(laskettava) match {
       case Tulos(tulos, tila, historia) => {
-        new Laskentatulos[BigDec](tila, if (tulos.isEmpty) null else tulos.get.underlying
-          , new StringBuffer().append(Json.generate(wrapHistoria(hakemus, historia))), wrapSyotetyArvot(laskin.getSyotetytArvot))
+        new Laskentatulos[JBigDecimal](tila, if (tulos.isEmpty) null else tulos.get.underlying
+          , new StringBuffer().append(Json.generate(wrapHistoria(hakemus, historia))), wrapSyotetytArvot(laskin.getSyotetytArvot))
+      }
+    }
+
+  }
+
+  protected def suoritaValintalaskentaTotuusarvofunktiolla(hakukohde: Hakukohde,
+                             hakemus: Hakemus,
+                             kaikkiHakemukset: Option[JCollection[Hakemus]],
+                             laskettava: Totuusarvofunktio): Laskentatulos[JBoolean] = {
+
+    val laskin = if(kaikkiHakemukset.isDefined) new Laskin(hakukohde, hakemus, kaikkiHakemukset.get.toSet) else new Laskin(hakukohde, hakemus)
+
+    laskin.laske(laskettava) match {
+      case Tulos(tulos, tila, historia) => {
+        new Laskentatulos[JBoolean](tila, if (tulos.isEmpty) null else Boolean.box(tulos.get)
+          , new StringBuffer().append(Json.generate(wrapHistoria(hakemus, historia))), wrapSyotetytArvot(laskin.getSyotetytArvot))
       }
     }
   }
 
   def suoritaValintalaskenta(hakukohde: Hakukohde,
                              hakemus: Hakemus,
+                             kaikkiHakemukset: JCollection[Hakemus],
+                             laskettava: Lukuarvofunktio): Laskentatulos[JBigDecimal] = {
+
+    suoritaValintalaskentaLukuarvofunktiolla(hakukohde, hakemus, Some(kaikkiHakemukset), laskettava)
+
+  }
+
+  def suoritaValintalaskenta(hakukohde: Hakukohde,
+                             hakemus: Hakemus,
                              kaikkiHakemukset: java.util.Collection[Hakemus],
-                             laskettava: Totuusarvofunktio): Laskentatulos[lang.Boolean] = {
-    val laskin = new Laskin(hakukohde, hakemus, kaikkiHakemukset.toSet)
-    laskin.laske(laskettava) match {
-      case Tulos(tulos, tila, historia) => {
-        new Laskentatulos[lang.Boolean](tila, if (tulos.isEmpty) null else Boolean.box(tulos.get)
-          , new StringBuffer().append(Json.generate(wrapHistoria(hakemus, historia))), wrapSyotetyArvot(laskin.getSyotetytArvot))
-      }
-    }
+                             laskettava: Totuusarvofunktio): Laskentatulos[JBoolean] = {
+
+    suoritaValintalaskentaTotuusarvofunktiolla(hakukohde, hakemus, Some(kaikkiHakemukset), laskettava)
+
   }
 
   def suoritaValintakoelaskenta(hakukohde: Hakukohde,
                                 hakemus: Hakemus,
-                                laskettava: Lukuarvofunktio): Laskentatulos[BigDec] = {
-    val laskin = new Laskin(hakukohde, hakemus)
-    laskin.laske(laskettava) match {
-      case Tulos(tulos, tila, historia) => {
-        new Laskentatulos[BigDec](tila, if (tulos.isEmpty) null else tulos.get.underlying
-          , new StringBuffer().append(Json.generate(wrapHistoria(hakemus, historia))), wrapSyotetyArvot(laskin.getSyotetytArvot))
-      }
-    }
+                                laskettava: Lukuarvofunktio): Laskentatulos[JBigDecimal] = {
+
+    suoritaValintalaskentaLukuarvofunktiolla(hakukohde, hakemus, None, laskettava)
   }
 
   def suoritaValintakoelaskenta(hakukohde: Hakukohde,
                                 hakemus: Hakemus,
-                                laskettava: Totuusarvofunktio): Laskentatulos[java.lang.Boolean] = {
-    val laskin = new Laskin(hakukohde, hakemus)
-    laskin.laske(laskettava) match {
-      case Tulos(tulos, tila, historia) => {
-        new Laskentatulos[lang.Boolean](tila, if (tulos.isEmpty) null else Boolean.box(tulos.get)
-          , new StringBuffer().append(Json.generate(wrapHistoria(hakemus, historia))), wrapSyotetyArvot(laskin.getSyotetytArvot))
-      }
-    }
+                                laskettava: Totuusarvofunktio): Laskentatulos[JBoolean] = {
+    suoritaValintalaskentaTotuusarvofunktiolla(hakukohde, hakemus, None, laskettava)
   }
 
   def laske(hakukohde: Hakukohde, hakemus: Hakemus, laskettava: Totuusarvofunktio): (Option[Boolean], Tila) = {
@@ -106,7 +120,7 @@ object Laskin {
     (tulos.tulos, tulos.tila)
   }
 
-  def laske(hakukohde: Hakukohde, hakemus: Hakemus, laskettava: Lukuarvofunktio): (Option[BigDec], Tila) = {
+  def laske(hakukohde: Hakukohde, hakemus: Hakemus, laskettava: Lukuarvofunktio): (Option[JBigDecimal], Tila) = {
     val tulos = new Laskin(hakukohde, hakemus).laskeLukuarvo(laskettava)
     (tulos.tulos.map(_.underlying()), tulos.tila)
   }
@@ -199,6 +213,22 @@ private class Laskin private(private val hakukohde: Hakukohde,
         } else new Hyvaksyttavissatila
 
         (None, tila)
+      }
+    }
+  }
+
+  private def palautettavaTila(tilat: Seq[Tila]): Tila = {
+    tilat.filter(_ match {
+      case _: Virhetila => true
+      case _ => false
+    }) match {
+      case head :: tail => head
+      case Nil => tilat.filter(_ match {
+        case _: Hylattytila => true
+        case _ => false
+      }) match {
+        case head :: tail => head
+        case Nil => new Hyvaksyttavissatila
       }
     }
   }
@@ -439,21 +469,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
       }
     }
 
-    val palautettavaTila = tilat.filter(_ match {
-      case _: Virhetila => true
-      case _ => false
-    }) match {
-      case head :: tail => head
-      case Nil => tilat.filter(_ match {
-        case _: Hylattytila => true
-        case _ => false
-      }) match {
-        case head :: tail => head
-        case Nil => new Hyvaksyttavissatila
-      }
-    }
-
-    Tulos(laskettuTulos, palautettavaTila, hist)
+    Tulos(laskettuTulos, palautettavaTila(tilat), hist)
   }
 
   private def laskeLukuarvo(laskettava: Lukuarvofunktio): Tulos[BigDecimal] = {
@@ -596,7 +612,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
       }
       case HaeMerkkijonoJaKonvertoiLukuarvoksi(konvertteri, oletusarvo, valintaperusteviite, oid) => {
         val (tulos, tila) = haeValintaperuste[BigDecimal](valintaperusteviite, hakemus,
-          (s => suoritaKonvertointi[String, BigDecimal]((Some(s), new Hyvaksyttavissatila), konvertteri)), oletusarvo)
+          s => suoritaKonvertointi[String, BigDecimal]((Some(s), new Hyvaksyttavissatila), konvertteri), oletusarvo)
         (tulos, tila, Historia("Hae merkkijono ja konvertoi lukuarvoksi", tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
       }
       case NimettyLukuarvo(nimi, f, oid) => {
@@ -619,6 +635,23 @@ private class Laskin private(private val hakukohde: Hakukohde,
             (None, tilat, Historia("Hylkää", None, tilat, Some(List(historia)), None))
           }
         }
+      }
+      case HylkaaArvovalilla(f, hylkaysperustekuvaus, oid, (min,max)) => {
+
+        def onArvovalilla(arvo: BigDecimal) = {
+          if(arvo >= min && arvo < max) true else false
+        }
+
+        laske(f) match {
+          case Tulos(tulos, tila, historia) => {
+            val arvovaliTila = tulos.map(arvo => if(onArvovalilla(arvo)) new Hylattytila(hylkaysperustekuvaus.getOrElse("Hylätty hylkäämisfunktiolla"),
+              new HylkaaFunktionSuorittamaHylkays) else new Hyvaksyttavissatila)
+              .getOrElse(new Virhetila("Hylkäämisfunktion syöte on tyhjä. Hylkäystä ei voida tulkita.", new HylkaamistaEiVoidaTulkita))
+            val tilat = List(tila, arvovaliTila)
+            (tulos, tilat, Historia("Hylkää Arvovälillä", tulos, tilat, Some(List(historia)), None))
+          }
+        }
+
       }
       case Skaalaus(oid, skaalattava, (kohdeMin, kohdeMax), lahdeskaala) => {
         if (laskentamoodi != Laskentamoodi.VALINTALASKENTA) {
@@ -653,7 +686,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
                 }
                 case None => {
                   val tulokset = kaikkiHakemukset.map(h => {
-                    Option(Laskin.suoritaValintalaskenta(hakukohde, h, kaikkiHakemukset, skaalattava).getTulos)
+                    Option( Laskin.suoritaValintalaskenta(hakukohde, h, kaikkiHakemukset, skaalattava).getTulos)
                   }).filter(!_.isEmpty).map(_.get)
 
                   tulokset match {
@@ -690,8 +723,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
             s + (painotettava match {
               case Some(p) if(painokerroin.isEmpty) => BigDecimal("1.0")
               case Some(p) => painokerroin.get
-              case None if(painokerroin.isEmpty) => BigDecimal("0.0")
-              case None => painokerroin.get - BigDecimal("1.0")
+              case None => BigDecimal("0.0")
             })
         }
 
@@ -703,22 +735,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
       }
     }
 
-
-    val palautettavaTila = tilat.filter(_ match {
-      case _: Virhetila => true
-      case _ => false
-    }) match {
-      case head :: tail => head
-      case Nil => tilat.filter(_ match {
-        case _: Hylattytila => true
-        case _ => false
-      }) match {
-        case head :: tail => head
-        case Nil => new Hyvaksyttavissatila
-      }
-    }
-
-    Tulos(laskettuTulos, palautettavaTila, historia)
+    Tulos(laskettuTulos, palautettavaTila(tilat), historia)
   }
 }
 

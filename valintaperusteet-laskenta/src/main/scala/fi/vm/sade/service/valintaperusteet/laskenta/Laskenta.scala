@@ -294,4 +294,9 @@ object Laskenta {
   case class Valintaperusteyhtasuuruus(oid: String = "",
                                        valintaperusteet: Pair[Valintaperuste, Valintaperuste]) extends Totuusarvofunktio
 
+  case class HylkaaArvovalilla(f: Lukuarvofunktio, hylkaysperustekuvaus: Option[String] = None, oid: String = "", arvovali: Pair[BigDecimal, BigDecimal])
+    extends Lukuarvofunktio {
+    require(arvovali._1 < arvovali._2, "Arvovälin minimin pitää olla pienempi kuin maksimi")
+  }
+
 }
