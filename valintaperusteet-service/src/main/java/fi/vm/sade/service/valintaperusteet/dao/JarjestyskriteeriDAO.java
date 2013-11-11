@@ -1,9 +1,9 @@
 package fi.vm.sade.service.valintaperusteet.dao;
 
-import java.util.List;
-
 import fi.vm.sade.generic.dao.JpaDAO;
 import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
+
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA. User: jukais Date: 15.1.2013 Time: 17.20 To

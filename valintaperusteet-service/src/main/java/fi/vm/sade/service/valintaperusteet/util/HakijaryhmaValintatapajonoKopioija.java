@@ -1,8 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.util;
 
-import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
 import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
-import org.apache.commons.lang.StringUtils;
 
 /**
  * User: kwuoti

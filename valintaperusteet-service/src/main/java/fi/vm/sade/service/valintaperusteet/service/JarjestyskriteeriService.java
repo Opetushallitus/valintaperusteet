@@ -1,9 +1,9 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
-import java.util.List;
-
 import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
+
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA. User: jukais Date: 17.1.2013 Time: 14.43 To

@@ -132,7 +132,7 @@ object LaskentaTestUtil {
     }
   }
 
-  object Hakemus {
+  object TestHakemus {
     def apply(oid: String, hakutoiveet: List[String], kentat: Map[String, String]) = {
       val hakutoiveetMap: Map[java.lang.Integer, String] = (for {
         prio <- 1 to hakutoiveet.size

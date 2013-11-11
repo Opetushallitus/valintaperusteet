@@ -11,6 +11,10 @@ public class EiOsallistunutHylkays extends HylattyMetatieto {
         this.valintaperustetunniste = valintaperustetunniste;
     }
 
+    public EiOsallistunutHylkays() {
+        super(Hylattymetatietotyyppi.EI_OSALLISTUNUT_HYLKAYS);
+    }
+
     private String valintaperustetunniste;
 
     public String getValintaperustetunniste() {

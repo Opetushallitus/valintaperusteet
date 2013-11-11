@@ -1,6 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
-import fi.vm.sade.service.valintaperusteet.model.*;
+import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
+import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
+import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 
 import java.util.List;
 

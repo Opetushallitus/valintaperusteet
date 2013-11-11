@@ -1,13 +1,12 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.*;
-
 import fi.vm.sade.generic.model.BaseEntity;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonView;
+
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "hakijaryhma")

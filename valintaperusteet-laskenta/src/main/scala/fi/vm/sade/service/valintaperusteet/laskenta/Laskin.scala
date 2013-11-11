@@ -6,7 +6,6 @@ import api.Laskentatulos
 import api.Osallistuminen
 import api.{SyotettyArvo => SArvo}
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta._
-import java.util.{Map => JMap}
 import java.util.{Collection => JCollection}
 import java.lang.{Boolean => JBoolean}
 import java.math.{BigDecimal => JBigDecimal}
@@ -41,9 +40,22 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakukohteenValintap
 import scala.Tuple2
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Ei
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Hakutoive
-import java.lang
 import scala.collection.JavaConversions._
-import com.codahale.jerkson.Json
+import play.api.libs.json._
+import fi.vm.sade.service.valintaperusteet.laskenta.JsonFormats._
+
+private case class Tulos[T](tulos: Option[T], tila: Tila, historia: Historia)
+
+private case class SyotettyArvo(val tunniste: String, val arvo: Option[String],
+                                val laskennallinenArvo: Option[String], val osallistuminen: Osallistuminen)
+
+private object Laskentamoodi extends Enumeration {
+  type Laskentamoodi = Value
+
+  val VALINTALASKENTA = Value("VALINTALASKENTA")
+  val VALINTAKOELASKENTA = Value("VALINTAKOELASKENTA")
+
+}
 
 object Laskin {
   val LOG = LoggerFactory.getLogger(classOf[Laskin])
@@ -63,7 +75,7 @@ object Laskin {
     laskin.laske(laskettava) match {
       case Tulos(tulos, tila, historia) => {
         new Laskentatulos[JBigDecimal](tila, if (tulos.isEmpty) null else tulos.get.underlying
-          , new StringBuffer().append(Json.generate(wrapHistoria(hakemus, historia))), wrapSyotetytArvot(laskin.getSyotetytArvot))
+          , new StringBuffer().append(Json.toJson(wrapHistoria(hakemus, historia))), wrapSyotetytArvot(laskin.getSyotetytArvot))
       }
     }
 
@@ -79,7 +91,7 @@ object Laskin {
     laskin.laske(laskettava) match {
       case Tulos(tulos, tila, historia) => {
         new Laskentatulos[JBoolean](tila, if (tulos.isEmpty) null else Boolean.box(tulos.get)
-          , new StringBuffer().append(Json.generate(wrapHistoria(hakemus, historia))), wrapSyotetytArvot(laskin.getSyotetytArvot))
+          , new StringBuffer().append(Json.toJson(wrapHistoria(hakemus, historia))), wrapSyotetytArvot(laskin.getSyotetytArvot))
       }
     }
   }
@@ -90,7 +102,6 @@ object Laskin {
                              laskettava: Lukuarvofunktio): Laskentatulos[JBigDecimal] = {
 
     suoritaValintalaskentaLukuarvofunktiolla(hakukohde, hakemus, Some(kaikkiHakemukset), laskettava)
-
   }
 
   def suoritaValintalaskenta(hakukohde: Hakukohde,
@@ -128,28 +139,15 @@ object Laskin {
   private def wrapHistoria(hakemus: Hakemus, historia: Historia) = {
     val v: Map[String, Option[Any]] = hakemus.kentat.map(f => (f._1 -> Some(f._2)))
 
-    val name = new StringBuffer().append("Laskenta hakemukselle (").append(hakemus.oid).append(")").toString
+    val name = new StringBuffer().append(s"Laskenta hakemukselle (${hakemus.oid})").toString
     Historia(name, historia.tulos, historia.tilat, Some(List(historia)), Some(v))
   }
-}
-
-private case class Tulos[T](tulos: Option[T], tila: Tila, historia: Historia)
-
-private case class SyotettyArvo(val tunniste: String, val arvo: Option[String],
-                                val laskennallinenArvo: Option[String], val osallistuminen: Osallistuminen)
-
-private object Laskentamoodi extends Enumeration {
-  type Laskentamoodi = Value
-
-  val VALINTALASKENTA = Value("VALINTALASKENTA")
-  val VALINTAKOELASKENTA = Value("VALINTAKOELASKENTA")
-
 }
 
 private class Laskin private(private val hakukohde: Hakukohde,
                              private val hakemus: Hakemus,
                              private val kaikkiHakemukset: Set[Hakemus],
-                             private val laskentamoodi: Laskentamoodi.Laskentamoodi) {
+                             private val laskentamoodi: Laskentamoodi.Laskentamoodi) extends LaskinFunktiot {
 
   def this(hakukohde: Hakukohde, hakemus: Hakemus) {
     this(hakukohde, hakemus, Set(), Laskentamoodi.VALINTAKOELASKENTA)
@@ -161,7 +159,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
 
   private val syotetytArvot: scala.collection.mutable.Map[String, SyotettyArvo] = scala.collection.mutable.Map[String, SyotettyArvo]()
 
-  def getSyotetytArvot = scala.collection.immutable.Map[String, SyotettyArvo](syotetytArvot.toList: _*)
+  def getSyotetytArvot = Map[String, SyotettyArvo](syotetytArvot.toList: _*)
 
   def laske(laskettava: Lukuarvofunktio) = {
     syotetytArvot.clear
@@ -172,65 +170,6 @@ private class Laskin private(private val hakukohde: Hakukohde,
   def laske(laskettava: Totuusarvofunktio) = {
     syotetytArvot.clear
     laskeTotuusarvo(laskettava)
-  }
-
-  private def ehdollinenTulos[A, B](tulos: (Option[A], Tila), f: (A, Tila) => Tuple2[Option[B], List[Tila]]): Tuple2[Option[B], List[Tila]] = {
-    val (alkupTulos, alkupTila) = tulos
-    alkupTulos match {
-      case Some(t) => f(t, alkupTila)
-      case None => (None, List(alkupTila))
-    }
-  }
-
-  private def suoritaKonvertointi[S, T](tulos: Tuple2[Option[S], Tila],
-                                        konvertteri: Konvertteri[S, T]) = {
-    ehdollinenTulos[S, T](tulos, (t, tila) => {
-      val (konvertoituTulos, konvertoituTila) = konvertteri.konvertoi(t)
-      (konvertoituTulos, List(tila, konvertoituTila))
-    })
-  }
-
-  private def suoritaOptionalKonvertointi[T](tulos: Tuple2[Option[T], Tila],
-                                             konvertteri: Option[Konvertteri[T, T]]) = {
-    ehdollinenTulos[T, T](tulos, (t, tila) => {
-      konvertteri match {
-        case Some(konv) => {
-          val (konvertoituTulos, konvertoituTila) = konv.konvertoi(t)
-          (konvertoituTulos, List(tila, konvertoituTila))
-        }
-        case None => (Some(t), List(tila))
-      }
-    })
-  }
-
-  private def haeValintaperuste(tunniste: String, pakollinen: Boolean, hakemus: Hakemus): (Option[String], Tila) = {
-    hakemus.kentat.get(tunniste) match {
-      case Some(s) if (!s.trim.isEmpty) => (Some(s), new Hyvaksyttavissatila)
-      case _ => {
-        val tila = if (pakollinen) {
-          new Hylattytila("Pakollista arvoa (tunniste " + tunniste + ") ei " +
-            "ole olemassa", new PakollinenValintaperusteHylkays(tunniste))
-        } else new Hyvaksyttavissatila
-
-        (None, tila)
-      }
-    }
-  }
-
-  private def palautettavaTila(tilat: Seq[Tila]): Tila = {
-    tilat.filter(_ match {
-      case _: Virhetila => true
-      case _ => false
-    }) match {
-      case head :: tail => head
-      case Nil => tilat.filter(_ match {
-        case _: Hylattytila => true
-        case _ => false
-      }) match {
-        case head :: tail => head
-        case Nil => new Hyvaksyttavissatila
-      }
-    }
   }
 
   private def haeValintaperuste[T](valintaperusteviite: Valintaperuste, hakemus: Hakemus,
@@ -258,9 +197,9 @@ private class Laskin private(private val hakukohde: Hakukohde,
             try {
               (Osallistuminen.valueOf(osallistuiArvo), new Hyvaksyttavissatila)
             } catch {
-              case e: IllegalArgumentException => (Osallistuminen.MERKITSEMATTA, new Virhetila("Osallistumistietoa "
-                + osallistuiArvo + " ei pystytty tulkitsemaan (tunniste " + osallistuminenTunniste + ")",
-                new OsallistumistietoaEiVoidaTulkitaVirhe(osallistuminenTunniste)))
+              case e: IllegalArgumentException => (Osallistuminen.MERKITSEMATTA,
+                new Virhetila(s"Osallistumistietoa $osallistuiArvo ei pystytty tulkitsemaan (tunniste $osallistuminenTunniste)",
+                  new OsallistumistietoaEiVoidaTulkitaVirhe(osallistuminenTunniste)))
             }
           }
           case None => (Osallistuminen.MERKITSEMATTA, new Hyvaksyttavissatila)
@@ -270,11 +209,12 @@ private class Laskin private(private val hakukohde: Hakukohde,
         // jos kyseessä on pakollinen tieto
 
         val (arvo, konvertoitu, tilat) = if (pakollinen && Osallistuminen.EI_OSALLISTUNUT == osallistuminen)
-          (None, None, List(osallistumistila, new Hylattytila("Pakollisen syötettävän kentän arvo on '" + osallistuminen.name() + "' (tunniste "
-            + tunniste + ")", new EiOsallistunutHylkays(tunniste))))
+          (None, None, List(osallistumistila,
+            new Hylattytila(s"Pakollisen syötettävän kentän arvo on '${osallistuminen.name()}' (tunniste $tunniste)",
+            new EiOsallistunutHylkays(tunniste))))
         else if (pakollinen && Osallistuminen.MERKITSEMATTA == osallistuminen)
-          (None, None, List(osallistumistila, new Virhetila("Pakollisen syötettävän kentän arvo on merkitsemättä (tunniste "
-            + tunniste + ")", new SyotettavaArvoMerkitsemattaVirhe(tunniste))))
+          (None, None, List(osallistumistila, new Virhetila(s"Pakollisen syötettävän kentän arvo on merkitsemättä (tunniste $tunniste)",
+          new SyotettavaArvoMerkitsemattaVirhe(tunniste))))
         else {
           val (arvo, konvertoitu, tilat) = haeValintaperusteenArvoHakemukselta(tunniste, pakollinen)
           (arvo, konvertoitu, osallistumistila :: tilat)
@@ -296,7 +236,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
             } else konv(arvo)
           }
           case None => {
-            val tila = if (epasuoraViittaus || pakollinen) new Virhetila("Hakukohteen valintaperustetta " + tunniste + " ei ole määritelty",
+            val tila = if (epasuoraViittaus || pakollinen) new Virhetila(s"Hakukohteen valintaperustetta $tunniste ei ole määritelty",
               new HakukohteenValintaperusteMaarittelemattaVirhe(tunniste))
             else new Hyvaksyttavissatila
 
@@ -309,28 +249,6 @@ private class Laskin private(private val hakukohde: Hakukohde,
       }
     }
   }
-
-
-  private def string2boolean(s: String, tunniste: String, oletustila: Tila = new Hyvaksyttavissatila): (Option[Boolean], Tila) = {
-    try {
-      (Some(s.toBoolean), oletustila)
-    } catch {
-      case e: NumberFormatException => (None, new Virhetila("Arvoa " + s + " ei voida muuttaa "
-        + "Boolean-tyyppiseksi (tunniste " + tunniste + ")",
-        new ValintaperustettaEiVoidaTulkitaTotuusarvoksiVirhe(tunniste)))
-    }
-  }
-
-  private def string2bigDecimal(s: String, tunniste: String, oletustila: Tila = new Hyvaksyttavissatila): (Option[BigDecimal], Tila) = {
-    try {
-      (Some(BigDecimal(s)), oletustila)
-    } catch {
-      case e: NumberFormatException => (None, new Virhetila("Arvoa " + s + " ei voida muuttaa "
-        + "BigDecimal-tyyppiseksi (tunniste " + tunniste + ")",
-        new ValintaperustettaEiVoidaTulkitaLukuarvoksiVirhe(tunniste)))
-    }
-  }
-
 
   private def laskeTotuusarvo(laskettava: Totuusarvofunktio): Tulos[Boolean] = {
 
@@ -425,9 +343,8 @@ private class Laskin private(private val hakukohde: Hakukohde,
 
       case Demografia(oid, tunniste, prosenttiosuus) => {
         if (laskentamoodi != Laskentamoodi.VALINTALASKENTA) {
-          (None, List(new Virhetila("Demografia-funktiota ei voida suorittaa laskentamoodissa "
-            + laskentamoodi.toString, new VirheellinenLaskentamoodiVirhe("Demografia", laskentamoodi.toString))),
-            Historia("Demografia", None, List(), None, None))
+          val moodi = laskentamoodi.toString
+          moodiVirhe(s"Demografia-funktiota ei voida suorittaa laskentamoodissa $moodi", "Demografia", moodi)
         } else {
           val ensisijaisetHakijat = kaikkiHakemukset.count(_.onkoHakutoivePrioriteetilla(hakukohde.hakukohdeOid, 1))
 
@@ -450,12 +367,12 @@ private class Laskin private(private val hakukohde: Hakukohde,
       case HaeMerkkijonoJaKonvertoiTotuusarvoksi(konvertteri, oletusarvo, valintaperusteviite, oid) => {
         val (tulos, tila) = haeValintaperuste[Boolean](valintaperusteviite, hakemus,
           (s => suoritaKonvertointi[String, Boolean]((Some(s), new Hyvaksyttavissatila), konvertteri)), oletusarvo)
-        (tulos, tila, Historia("Hae merkkijono ja konvertoi totuusarvoksi", tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
+        (tulos, tila, Historia("Hae merkkijono ja vertaa yhtasuuruus", tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
       }
 
       case HaeMerkkijonoJaVertaaYhtasuuruus(oletusarvo, valintaperusteviite, vertailtava, oid) => {
         val (tulos, tila) = haeValintaperuste[Boolean](valintaperusteviite, hakemus,
-          (s => (Some(s.trim.equalsIgnoreCase(vertailtava.trim)), List(new Hyvaksyttavissatila))), oletusarvo)
+          (s => (Some(vertailtava.trim.equalsIgnoreCase(s.trim)), List(new Hyvaksyttavissatila))), oletusarvo)
         (tulos, tila, Historia("Hae merkkijono ja vertaa yhtasuuruus", tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
       }
 
@@ -480,6 +397,13 @@ private class Laskin private(private val hakukohde: Hakukohde,
       laskeLukuarvo(f) match {
         case Tulos(tulos, tila, historia) => (tulos.map(trans(_)), List(tila), historia)
       }
+    }
+
+    def onArvovalilla(arvo: BigDecimal, arvovali : (BigDecimal, BigDecimal), alarajaMukaan: Boolean, ylarajaMukaan: Boolean) = (alarajaMukaan, ylarajaMukaan) match {
+      case (true, true) => if(arvo >= arvovali._1 && arvo <= arvovali._2) true else false
+      case (true, false) => if(arvo >= arvovali._1 && arvo < arvovali._2) true else false
+      case (false, true) => if(arvo > arvovali._1 && arvo <= arvovali._2) true else false
+      case (false, false) => if(arvo > arvovali._1 && arvo < arvovali._2) true else false
     }
 
     def muodostaKoostettuTulos(fs: Seq[Lukuarvofunktio], trans: Seq[BigDecimal] => BigDecimal): (Option[BigDecimal], List[Tila], Historia) = {
@@ -523,7 +447,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
           n <- nimittajaTulos.tulos
           o <- osoittajaTulos.tulos
         } yield {
-          if (n == 0.0) (None, new Virhetila("Jako nollalla", new JakoNollallaVirhe))
+          if (n.intValue() == 0) (None, new Virhetila("Jako nollalla", new JakoNollallaVirhe))
           else {
             (Some(BigDecimal(o.underlying.divide(n.underlying, 4, RoundingMode.HALF_UP))), new Hyvaksyttavissatila)
           }
@@ -638,13 +562,9 @@ private class Laskin private(private val hakukohde: Hakukohde,
       }
       case HylkaaArvovalilla(f, hylkaysperustekuvaus, oid, (min,max)) => {
 
-        def onArvovalilla(arvo: BigDecimal) = {
-          if(arvo >= min && arvo < max) true else false
-        }
-
         laske(f) match {
           case Tulos(tulos, tila, historia) => {
-            val arvovaliTila = tulos.map(arvo => if(onArvovalilla(arvo)) new Hylattytila(hylkaysperustekuvaus.getOrElse("Hylätty hylkäämisfunktiolla"),
+            val arvovaliTila = tulos.map(arvo => if(onArvovalilla(arvo, (min,max), true, false)) new Hylattytila(hylkaysperustekuvaus.getOrElse("Hylätty hylkäämisfunktiolla"),
               new HylkaaFunktionSuorittamaHylkays) else new Hyvaksyttavissatila)
               .getOrElse(new Virhetila("Hylkäämisfunktion syöte on tyhjä. Hylkäystä ei voida tulkita.", new HylkaamistaEiVoidaTulkita))
             val tilat = List(tila, arvovaliTila)
@@ -655,32 +575,28 @@ private class Laskin private(private val hakukohde: Hakukohde,
       }
       case Skaalaus(oid, skaalattava, (kohdeMin, kohdeMax), lahdeskaala) => {
         if (laskentamoodi != Laskentamoodi.VALINTALASKENTA) {
-          (None, List(new Virhetila("Skaalaus-funktiota ei voida suorittaa laskentamoodissa "
-            + laskentamoodi.toString, new VirheellinenLaskentamoodiVirhe("Demografia", laskentamoodi.toString))),
-            Historia("Skaalaus", None, List(), None, None))
+          val moodi = laskentamoodi.toString
+          moodiVirhe(s"Skaalaus-funktiota ei voida suorittaa laskentamoodissa $moodi", "Skaalaus", moodi)
         } else {
           val tulos = laske(skaalattava)
 
           def skaalaa(skaalattavaArvo: BigDecimal,
-                      kohdeskaalaMin: BigDecimal,
-                      kohdeskaalaMax: BigDecimal,
-                      lahdeskaalaMin: BigDecimal,
-                      lahdeskaalaMax: BigDecimal) = {
-            val lahdeRange = lahdeskaalaMax - lahdeskaalaMin
-            val kohdeRange = kohdeskaalaMax - kohdeskaalaMin
-            (((skaalattavaArvo - lahdeskaalaMin) * kohdeRange) / lahdeRange) + kohdeskaalaMin
+                      kohdeskaala: (BigDecimal, BigDecimal),
+                      lahdeskaala: (BigDecimal, BigDecimal)) = {
+            val lahdeRange = lahdeskaala._2 - lahdeskaala._1
+            val kohdeRange = kohdeskaala._2 - kohdeskaala._1
+            (((skaalattavaArvo - lahdeskaala._1) * kohdeRange) / lahdeRange) + kohdeskaala._1
           }
 
           val (skaalauksenTulos, tila) = tulos.tulos match {
             case Some(skaalattavaArvo) => {
               lahdeskaala match {
                 case Some((lahdeMin, lahdeMax)) => {
-                  if (lahdeMin > skaalattavaArvo || lahdeMax < skaalattavaArvo) {
-                    (None, new Virhetila("Arvo " + skaalattavaArvo.toString + " ei ole arvovälillä " + lahdeMin.toString + " - " + lahdeMax.toString,
+                  if (!onArvovalilla(skaalattavaArvo, (lahdeMin, lahdeMax), false, false)) {
+                    (None, new Virhetila(s"Arvo ${skaalattavaArvo.toString} ei ole arvovälillä ${lahdeMin.toString} - ${lahdeMax.toString}",
                       new SkaalattavaArvoEiOleLahdeskaalassaVirhe(skaalattavaArvo.underlying, lahdeMin.underlying, lahdeMax.underlying)))
                   } else {
-
-                    val skaalattuArvo = skaalaa(skaalattavaArvo, kohdeMin, kohdeMax, lahdeMin, lahdeMax)
+                    val skaalattuArvo = skaalaa(skaalattavaArvo, (kohdeMin, kohdeMax), (lahdeMin, lahdeMax))
                     (Some(skaalattuArvo), new Hyvaksyttavissatila)
                   }
                 }
@@ -697,7 +613,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
                       val lahdeSkaalaMax: BigDecimal = tulokset.max
 
                       // Koska tulokset ovat setissä, tiedetään, että min ja max eivät koskaan voi olla yhtäsuuret
-                      (Some(skaalaa(skaalattavaArvo, kohdeMin, kohdeMax, lahdeSkaalaMin, lahdeSkaalaMax)), new Hyvaksyttavissatila)
+                      (Some(skaalaa(skaalattavaArvo, (kohdeMin, kohdeMax), (lahdeSkaalaMin, lahdeSkaalaMax))), new Hyvaksyttavissatila)
                     }
                   }
                 }

@@ -1,9 +1,9 @@
 package fi.vm.sade.service.valintaperusteet.service.impl.generator;
 
 import fi.vm.sade.service.valintaperusteet.model.*;
-import scala.actors.threadpool.Arrays;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**

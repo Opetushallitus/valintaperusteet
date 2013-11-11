@@ -19,6 +19,5 @@ class FunktiokuvausTest extends FunSuite {
   test("annaFunktiokuvauksetAsJson") {
     val json = Funktiokuvaaja.annaFunktiokuvauksetAsJson
     assert(!json.isEmpty)
-    //    println(json)
   }
 }

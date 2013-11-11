@@ -1,7 +1,5 @@
 package fi.vm.sade.service.valintaperusteet.roles;
 
-import org.springframework.beans.factory.annotation.Value;
-
 /**
  * Created with IntelliJ IDEA.
  * User: jukais

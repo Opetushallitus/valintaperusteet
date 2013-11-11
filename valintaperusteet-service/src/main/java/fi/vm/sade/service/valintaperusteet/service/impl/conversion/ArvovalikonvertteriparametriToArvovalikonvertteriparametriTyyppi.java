@@ -1,9 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.service.impl.conversion;
 
-import org.springframework.core.convert.converter.Converter;
-
 import fi.vm.sade.service.valintaperusteet.model.Arvovalikonvertteriparametri;
 import fi.vm.sade.service.valintaperusteet.schema.ArvovalikonvertteriparametriTyyppi;
+import org.springframework.core.convert.converter.Converter;
 
 /**
  * Created with IntelliJ IDEA. User: jukais Date: 7.3.2013 Time: 13.45 To change

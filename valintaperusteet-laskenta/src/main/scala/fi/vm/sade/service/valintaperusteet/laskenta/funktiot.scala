@@ -1,7 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.laskenta
 
 import scala.math.BigDecimal
-import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Tila
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,12 +17,3 @@ trait Funktio[T] {
 trait Lukuarvofunktio extends Funktio[BigDecimal]
 
 trait Totuusarvofunktio extends Funktio[Boolean]
-
-trait Konvertteri[S, T] {
-  def konvertoi(arvo: S): (Option[T], Tila)
-}
-
-trait KonvertoivaFunktio[S, T] extends Funktio[T] {
-  val f: Funktio[S]
-  val konvertteri: Konvertteri[S, T]
-}

@@ -14,4 +14,8 @@ public class ArvovalikonvertointiVirhe extends VirheMetatieto {
         super(VirheMetatietotyyppi.ARVOVALIKONVERTOINTI_VIRHE);
         this.konvertoitavaArvo = konvertoitavaArvo;
     }
+
+    public ArvovalikonvertointiVirhe() {
+        super(VirheMetatietotyyppi.ARVOVALIKONVERTOINTI_VIRHE);
+    }
 }

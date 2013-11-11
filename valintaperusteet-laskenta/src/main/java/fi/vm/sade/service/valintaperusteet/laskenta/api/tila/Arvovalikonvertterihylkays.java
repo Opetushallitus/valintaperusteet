@@ -13,6 +13,10 @@ public class Arvovalikonvertterihylkays extends HylattyMetatieto {
         this.arvovaliMax = arvovaliMax;
     }
 
+    public Arvovalikonvertterihylkays() {
+        super(Hylattymetatietotyyppi.ARVOVALIKONVERTTERIHYLKAYS);
+    }
+
     private BigDecimal arvo;
     private BigDecimal arvovaliMin;
     private BigDecimal arvovaliMax;

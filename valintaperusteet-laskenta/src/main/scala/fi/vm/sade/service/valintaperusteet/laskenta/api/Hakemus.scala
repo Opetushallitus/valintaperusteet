@@ -19,3 +19,13 @@ class Hakemus(val oid: String,
     hakutoiveet.containsKey(prioriteetti) && hakutoiveet.get(prioriteetti) == hakukohde
   }
 }
+
+object Hakemus {
+  def apply(oid: String, hakutoiveet: JMap[JInteger, String], jkentat: JMap[String, String]): Hakemus = {
+    return new Hakemus(oid, hakutoiveet, jkentat)
+  }
+
+  def unapply(h: Hakemus): Option[(String, JMap[JInteger, String], JMap[String, String])] = {
+    return Some((h.oid, h.hakutoiveet, mapAsJavaMap(h.kentat)))
+  }
+}

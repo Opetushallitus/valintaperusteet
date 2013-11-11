@@ -17,6 +17,11 @@ public class VirheellinenLaskentamoodiVirhe extends VirheMetatieto {
 
     }
 
+    public VirheellinenLaskentamoodiVirhe() {
+        super(VirheMetatietotyyppi.VIRHEELLINEN_LASKENTAMOODI);
+
+    }
+
     public String getFunktio() {
         return funktio;
     }

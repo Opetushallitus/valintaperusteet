@@ -11,7 +11,7 @@ import fi.vm.sade.service.valintaperusteet.laskenta.api.{Hakemus, Laskentatulos,
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.VirheMetatieto.VirheMetatietotyyppi
 import java.util
 import java.lang.Boolean
-import fi.vm.sade.kaava.LaskentaTestUtil.Hakemus
+import fi.vm.sade.kaava.LaskentaTestUtil.TestHakemus
 
 /**
  * User: kwuoti
@@ -321,7 +321,7 @@ class LaskentaIntegraatioTest extends FunSuite {
       tunniste = "tunniste")))
 
   val hakukohde = new Hakukohde("123", new util.HashMap[String, String])
-  val tyhjaHakemus = Hakemus("", Nil, Map[String, String]())
+  val tyhjaHakemus = TestHakemus("", Nil, Map[String, String]())
 
   test("lukuarvo") {
     val funktiokutsu = luku25
@@ -704,7 +704,7 @@ class LaskentaIntegraatioTest extends FunSuite {
         onPakollinen = true,
         tunniste = "joku_tunniste")))
 
-    val hakemus = Hakemus("", Nil, Map("joku_tunniste" -> "25.0"))
+    val hakemus = TestHakemus("", Nil, Map("joku_tunniste" -> "25.0"))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
@@ -723,7 +723,7 @@ class LaskentaIntegraatioTest extends FunSuite {
       valintaperustetunniste = List(ValintaperusteViite(
         onPakollinen = true,
         tunniste = "joku_tunniste")))
-    val hakemus = Hakemus("", Nil, Map("joku_tunniste" -> "25.0"))
+    val hakemus = TestHakemus("", Nil, Map("joku_tunniste" -> "25.0"))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
@@ -744,7 +744,7 @@ class LaskentaIntegraatioTest extends FunSuite {
       valintaperustetunniste = List(ValintaperusteViite(
         onPakollinen = true,
         tunniste = "joku_tunniste")))
-    val hakemus = Hakemus("", Nil, Map("joku_tunniste" -> "25.0"))
+    val hakemus = TestHakemus("", Nil, Map("joku_tunniste" -> "25.0"))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
@@ -759,7 +759,7 @@ class LaskentaIntegraatioTest extends FunSuite {
         onPakollinen = true,
         tunniste = "joku_tunniste")))
 
-    val hakemus = Hakemus("", Nil, Map("joku_tunniste" -> "true"))
+    val hakemus = TestHakemus("", Nil, Map("joku_tunniste" -> "true"))
 
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
@@ -779,7 +779,7 @@ class LaskentaIntegraatioTest extends FunSuite {
           arvo = "false",
           hylkaysperuste = false)))
 
-    val hakemus = Hakemus("", Nil, Map("joku_tunniste" -> "false"))
+    val hakemus = TestHakemus("", Nil, Map("joku_tunniste" -> "false"))
 
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
@@ -798,7 +798,7 @@ class LaskentaIntegraatioTest extends FunSuite {
           paluuarvo = "true",
           arvo = "false",
           hylkaysperuste = true)))
-    val hakemus = Hakemus("", Nil, Map("joku_tunniste" -> "false"))
+    val hakemus = TestHakemus("", Nil, Map("joku_tunniste" -> "false"))
 
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
@@ -818,7 +818,7 @@ class LaskentaIntegraatioTest extends FunSuite {
           arvo = "puuppa",
           hylkaysperuste = false)))
 
-    val hakemus = Hakemus("", Nil, Map("joku_tunniste" -> "puuppa"))
+    val hakemus = TestHakemus("", Nil, Map("joku_tunniste" -> "puuppa"))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
@@ -900,7 +900,7 @@ class LaskentaIntegraatioTest extends FunSuite {
           paluuarvo = "15.0",
           arvo = "5.0",
           hylkaysperuste = false)))
-    val hakemus = Hakemus("", Nil, Map("joku_tunniste" -> "10.0"))
+    val hakemus = TestHakemus("", Nil, Map("joku_tunniste" -> "10.0"))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
@@ -927,7 +927,7 @@ class LaskentaIntegraatioTest extends FunSuite {
           max = new BigDecimal("20.0"),
           hylkaysperuste = false)))
 
-    val hakemus = Hakemus("", Nil, Map("joku_tunniste" -> "6.0"))
+    val hakemus = TestHakemus("", Nil, Map("joku_tunniste" -> "6.0"))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
@@ -982,7 +982,7 @@ class LaskentaIntegraatioTest extends FunSuite {
           paluuarvo = "10.0",
           arvo = "puuppa",
           hylkaysperuste = true)))
-    val hakemus = Hakemus("", Nil, Map("joku_tunniste" -> "puuppa"))
+    val hakemus = TestHakemus("", Nil, Map("joku_tunniste" -> "puuppa"))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
@@ -1331,7 +1331,7 @@ class LaskentaIntegraatioTest extends FunSuite {
           arvo = "2")))
 
     val hakukohde = new Hakukohde("oid1", new util.HashMap[String, String])
-    val hakemus = Hakemus("", List("oid2", "oid1", "oid3"), Map[String, String]())
+    val hakemus = TestHakemus("", List("oid2", "oid1", "oid3"), Map[String, String]())
 
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
@@ -1348,7 +1348,7 @@ class LaskentaIntegraatioTest extends FunSuite {
           arvo = "3")))
 
     val hakukohde = new Hakukohde("oid1", new util.HashMap[String, String])
-    val hakemus = Hakemus("", List("oid2", "oid1", "oid3"), Map[String, String]())
+    val hakemus = TestHakemus("", List("oid2", "oid1", "oid3"), Map[String, String]())
 
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
@@ -1365,7 +1365,7 @@ class LaskentaIntegraatioTest extends FunSuite {
           arvo = "5")))
 
     val hakukohde = new Hakukohde("oid1", new util.HashMap[String, String])
-    val hakemus = Hakemus("", List("oid2", "oid1", "oid3"), Map[String, String]())
+    val hakemus = TestHakemus("", List("oid2", "oid1", "oid3"), Map[String, String]())
 
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
@@ -1405,7 +1405,7 @@ class LaskentaIntegraatioTest extends FunSuite {
         haeArvo2,
         lukuarvo))
 
-    val hakemus = Hakemus("", Nil, Map("lukuarvotunniste2" -> "10.0"))
+    val hakemus = TestHakemus("", Nil, Map("lukuarvotunniste2" -> "10.0"))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(summa)
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
@@ -1483,13 +1483,13 @@ class LaskentaIntegraatioTest extends FunSuite {
           arvo = "tampere",
           hylkaysperuste = false)))
 
-    val hakemus = Hakemus("", Nil, Map("jokin_tunniste" -> "turku"))
+    val hakemus = TestHakemus("", Nil, Map("jokin_tunniste" -> "turku"))
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
     assert(tulos.get)
     assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.ARVOKONVERTTERIHYLKAYS)
 
-    val hakemus2 = Hakemus("", Nil, Map("jokin_tunniste" -> "tampere"))
+    val hakemus2 = TestHakemus("", Nil, Map("jokin_tunniste" -> "tampere"))
     val (tulos2, tila2) = Laskin.laske(hakukohde, hakemus2, lasku)
     assert(!tulos2.get)
     assertTilaHyvaksyttavissa(tila2)
@@ -1505,10 +1505,10 @@ class LaskentaIntegraatioTest extends FunSuite {
     val hakukohde = new Hakukohde("1", new util.HashMap[String, String])
 
     val hakemukset = List(
-      Hakemus("1", List("1", "2", "3"), Map("sukupuoli" -> "mies")),
-      Hakemus("2", List("1", "2", "3"), Map("sukupuoli" -> "mies")),
-      Hakemus("3", List("1", "2", "3"), Map("sukupuoli" -> "mies")),
-      Hakemus("4", List("1", "2", "3"), Map("sukupuoli" -> "nainen")))
+      TestHakemus("1", List("1", "2", "3"), Map("sukupuoli" -> "mies")),
+      TestHakemus("2", List("1", "2", "3"), Map("sukupuoli" -> "mies")),
+      TestHakemus("3", List("1", "2", "3"), Map("sukupuoli" -> "mies")),
+      TestHakemus("4", List("1", "2", "3"), Map("sukupuoli" -> "nainen")))
 
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
 
@@ -1530,7 +1530,7 @@ class LaskentaIntegraatioTest extends FunSuite {
 
     val hakukohde = new Hakukohde("1", new util.HashMap[String, String])
 
-    val hakemus = Hakemus("1", List("1", "2", "3"), Map("sukupuoli" -> "mies"))
+    val hakemus = TestHakemus("1", List("1", "2", "3"), Map("sukupuoli" -> "mies"))
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
 
     val tulos = Laskin.suoritaValintakoelaskenta(hakukohde, hakemus, lasku)
@@ -1576,13 +1576,13 @@ class LaskentaIntegraatioTest extends FunSuite {
           arvo = "FI")
       ))
 
-    val hakemus = Hakemus("", Nil, Map("aidinkieli" -> "FI"))
+    val hakemus = TestHakemus("", Nil, Map("aidinkieli" -> "FI"))
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
     assert(tulos.get)
     assertTilaHyvaksyttavissa(tila)
 
-    val hakemus2 = Hakemus("", Nil, Map("aidinkieli" -> "SV"))
+    val hakemus2 = TestHakemus("", Nil, Map("aidinkieli" -> "SV"))
     val (tulos2, tila2) = Laskin.laske(hakukohde, hakemus2, lasku)
     assert(!tulos2.get)
     assertTilaHyvaksyttavissa(tila2)
@@ -1640,7 +1640,7 @@ class LaskentaIntegraatioTest extends FunSuite {
       ))
     )
 
-    val hakemus = Hakemus("", Nil, Map("tunniste" -> "10.0"))
+    val hakemus = TestHakemus("", Nil, Map("tunniste" -> "10.0"))
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
 
 
@@ -1661,7 +1661,7 @@ class LaskentaIntegraatioTest extends FunSuite {
       valintaperustetunniste = List(valintaperuste)
     )
 
-    val hakemus = Hakemus("", Nil, Map("tunniste" -> "10.0",
+    val hakemus = TestHakemus("", Nil, Map("tunniste" -> "10.0",
       valintaperuste.getOsallistuminenTunniste -> Osallistuminen.EI_OSALLISTUNUT.name))
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
 
@@ -1682,7 +1682,7 @@ class LaskentaIntegraatioTest extends FunSuite {
       valintaperustetunniste = List(valintaperuste)
     )
 
-    val hakemus = Hakemus("", Nil, Map("tunniste" -> "10.0",
+    val hakemus = TestHakemus("", Nil, Map("tunniste" -> "10.0",
       valintaperuste.getOsallistuminenTunniste -> Osallistuminen.OSALLISTUI.name))
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
 
@@ -1700,7 +1700,7 @@ class LaskentaIntegraatioTest extends FunSuite {
       ))
     )
 
-    val hakemus = Hakemus("", Nil, Map("tunniste" -> ""))
+    val hakemus = TestHakemus("", Nil, Map("tunniste" -> ""))
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
 
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
@@ -1722,7 +1722,7 @@ class LaskentaIntegraatioTest extends FunSuite {
       )
     )
 
-    val hakemus = Hakemus("", Nil, Map("tunniste" -> ""))
+    val hakemus = TestHakemus("", Nil, Map("tunniste" -> ""))
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
 
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
@@ -1739,7 +1739,7 @@ class LaskentaIntegraatioTest extends FunSuite {
       ))
     )
 
-    val hakemus = Hakemus("", Nil, Map("tunniste" -> ""))
+    val hakemus = TestHakemus("", Nil, Map("tunniste" -> ""))
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
 
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
@@ -1761,7 +1761,7 @@ class LaskentaIntegraatioTest extends FunSuite {
       )
     )
 
-    val hakemus = Hakemus("", Nil, Map("tunniste" -> ""))
+    val hakemus = TestHakemus("", Nil, Map("tunniste" -> ""))
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
 
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
@@ -1778,7 +1778,7 @@ class LaskentaIntegraatioTest extends FunSuite {
       ))
     )
 
-    val hakemus = Hakemus("", Nil, Map("tunniste" -> "puuppa"))
+    val hakemus = TestHakemus("", Nil, Map("tunniste" -> "puuppa"))
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
 
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
@@ -1795,7 +1795,7 @@ class LaskentaIntegraatioTest extends FunSuite {
       ))
     )
 
-    val hakemus = Hakemus("", Nil, Map("tunniste" -> "puuppa"))
+    val hakemus = TestHakemus("", Nil, Map("tunniste" -> "puuppa"))
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
 
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
@@ -1908,10 +1908,10 @@ class LaskentaIntegraatioTest extends FunSuite {
     )
 
     val hakemukset = List(
-      Hakemus("hakemusOid1", List[String](), Map("tunniste1" -> "-1000.0")),
-      Hakemus("hakemusOid2", List[String](), Map("tunniste1" -> "-500.0")),
-      Hakemus("hakemusOid3", List[String](), Map("tunniste1" -> "0.0")),
-      Hakemus("hakemusOid4", List[String](), Map("tunniste1" -> "500.0"))
+      TestHakemus("hakemusOid1", List[String](), Map("tunniste1" -> "-1000.0")),
+      TestHakemus("hakemusOid2", List[String](), Map("tunniste1" -> "-500.0")),
+      TestHakemus("hakemusOid3", List[String](), Map("tunniste1" -> "0.0")),
+      TestHakemus("hakemusOid4", List[String](), Map("tunniste1" -> "500.0"))
     )
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
@@ -1957,10 +1957,10 @@ class LaskentaIntegraatioTest extends FunSuite {
     )
 
     val hakemukset = List(
-      Hakemus("hakemusOid1", List[String](), Map("tunniste1" -> "-750.0")),
-      Hakemus("hakemusOid2", List[String](), Map("tunniste1" -> "-250.0")),
-      Hakemus("hakemusOid3", List[String](), Map("tunniste1" -> "250.0")),
-      Hakemus("hakemusOid4", List[String](), Map("tunniste1" -> "750.0"))
+      TestHakemus("hakemusOid1", List[String](), Map("tunniste1" -> "-750.0")),
+      TestHakemus("hakemusOid2", List[String](), Map("tunniste1" -> "-250.0")),
+      TestHakemus("hakemusOid3", List[String](), Map("tunniste1" -> "250.0")),
+      TestHakemus("hakemusOid4", List[String](), Map("tunniste1" -> "750.0"))
     )
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)

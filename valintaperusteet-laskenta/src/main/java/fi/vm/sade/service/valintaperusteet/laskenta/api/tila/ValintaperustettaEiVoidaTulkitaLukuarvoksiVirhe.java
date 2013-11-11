@@ -9,4 +9,8 @@ public class ValintaperustettaEiVoidaTulkitaLukuarvoksiVirhe extends Valintaperu
     public ValintaperustettaEiVoidaTulkitaLukuarvoksiVirhe(String valintaperustetunniste) {
         super(VirheMetatietotyyppi.VALINTAPERUSTETTA_EI_VOIDA_TULKITA_LUKUARVOKSI, valintaperustetunniste);
     }
+
+    public ValintaperustettaEiVoidaTulkitaLukuarvoksiVirhe() {
+        super(VirheMetatietotyyppi.VALINTAPERUSTETTA_EI_VOIDA_TULKITA_LUKUARVOKSI, "");
+    }
 }

@@ -9,4 +9,8 @@ public class ValintaperustettaEiVoidaTulkitaTotuusarvoksiVirhe extends Valintape
     public ValintaperustettaEiVoidaTulkitaTotuusarvoksiVirhe(String valintaperustetunniste) {
         super(VirheMetatietotyyppi.VALINTAPERUSTETTA_EI_VOIDA_TULKITA_TOTUUSARVOKSI, valintaperustetunniste);
     }
+
+    public ValintaperustettaEiVoidaTulkitaTotuusarvoksiVirhe() {
+        super(VirheMetatietotyyppi.VALINTAPERUSTETTA_EI_VOIDA_TULKITA_TOTUUSARVOKSI, "");
+    }
 }

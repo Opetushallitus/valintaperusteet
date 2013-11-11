@@ -13,89 +13,8 @@ import scala._
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.VirheMetatieto.VirheMetatietotyyppi
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.HylattyMetatieto.Hylattymetatietotyyppi
 import java.util
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.KonvertoiLukuarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Totuusarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus
-import fi.vm.sade.kaava.LaskentaTestUtil.Hakemus
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonvertteri
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Suurempi
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonversio
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Jos
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Demografia
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakukohteenValintaperuste
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaKonvertoiLukuarvoksi
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonversio
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakemuksenValintaperuste
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeLukuarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Skaalaus
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.SyotettavaValintaperuste
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonvertteri
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeTotuusarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaVertaaYhtasuuruus
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.KonvertoiLukuarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Totuusarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonvertteri
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Suurempi
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonversio
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Jos
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Demografia
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakukohteenValintaperuste
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaKonvertoiLukuarvoksi
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.PainotettuKeskiarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonversio
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Valintaperusteyhtasuuruus
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HylkaaArvovalilla
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakemuksenValintaperuste
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeLukuarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Skaalaus
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.SyotettavaValintaperuste
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonvertteri
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeTotuusarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaVertaaYhtasuuruus
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.KonvertoiLukuarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Totuusarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonvertteri
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Suurempi
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonversio
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Jos
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Demografia
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakukohteenValintaperuste
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaKonvertoiLukuarvoksi
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.PainotettuKeskiarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonversio
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Valintaperusteyhtasuuruus
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HylkaaArvovalilla
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakemuksenValintaperuste
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeLukuarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Skaalaus
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.SyotettavaValintaperuste
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonvertteri
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeTotuusarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaVertaaYhtasuuruus
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.KonvertoiLukuarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Totuusarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonvertteri
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Suurempi
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonversio
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Jos
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Demografia
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakukohteenValintaperuste
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaKonvertoiLukuarvoksi
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.PainotettuKeskiarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonversio
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Valintaperusteyhtasuuruus
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HylkaaArvovalilla
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakemuksenValintaperuste
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeLukuarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Skaalaus
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.SyotettavaValintaperuste
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonvertteri
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeTotuusarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaVertaaYhtasuuruus
+import fi.vm.sade.kaava.LaskentaTestUtil.TestHakemus
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.KonvertoiLukuarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Totuusarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonvertteri
@@ -128,7 +47,7 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaVert
 class LaskentaTest extends FunSuite {
 
   val hakukohde = new Hakukohde("123", new util.HashMap[String, String])
-  val tyhjaHakemus = Hakemus("", Nil, Map[String, String]())
+  val tyhjaHakemus = TestHakemus("", Nil, Map[String, String]())
 
 
   test("Lukuarvo function returns its value") {
@@ -214,7 +133,7 @@ class LaskentaTest extends FunSuite {
   }
 
   test("HaeLukuarvo") {
-    val hakemus = Hakemus("", Nil, Map("paattotodistus_ka" -> "8.7"))
+    val hakemus = TestHakemus("", Nil, Map("paattotodistus_ka" -> "8.7"))
 
     val (tulos, _) = Laskin.laske(hakukohde, hakemus,
       HaeLukuarvo(None, None, HakemuksenValintaperuste("paattotodistus_ka", false)))
@@ -222,7 +141,7 @@ class LaskentaTest extends FunSuite {
   }
 
   test("HaeTotuusarvo") {
-    val hakemus = Hakemus("", Nil, Map("onYlioppilas" -> "true"))
+    val hakemus = TestHakemus("", Nil, Map("onYlioppilas" -> "true"))
 
     val (tulos, _) = Laskin.laske(hakukohde, hakemus,
       HaeTotuusarvo(None, None, HakemuksenValintaperuste("onYlioppilas", false)))
@@ -230,7 +149,7 @@ class LaskentaTest extends FunSuite {
   }
 
   test("HaeMerkkijonoJaKonvertoiLukuarvoksi") {
-    val hakemus = Hakemus("", Nil, Map("AI_yo" -> "L"))
+    val hakemus = TestHakemus("", Nil, Map("AI_yo" -> "L"))
 
     val konv = Arvokonvertteri[String, BigDecimal](List(Arvokonversio("puuppa", BigDecimal("20.0"), false),
       Arvokonversio("L", BigDecimal(10.0), false)))
@@ -241,19 +160,19 @@ class LaskentaTest extends FunSuite {
 
   test("Demografia") {
     val hakemukset = List(
-      Hakemus("hakemusoid1",
+      TestHakemus("hakemusoid1",
         List("hakutoiveoid1", "hakutoiveoid2", "hakutoiveoid3"),
         Map("SUKUpuoli" -> "mies")),
-      Hakemus("hakemusoid2",
+      TestHakemus("hakemusoid2",
         List("hakutoiveoid1", "hakutoiveoid2", "hakutoiveoid3"),
         Map("SUKUPUOLI" -> "mies")),
-      Hakemus("hakemusoid3",
+      TestHakemus("hakemusoid3",
         List("hakutoiveoid1", "hakutoiveoid2", "hakutoiveoid3"),
         Map("Sukupuoli" -> "mies")),
-      Hakemus("hakemusoid4",
+      TestHakemus("hakemusoid4",
         List("hakutoiveoid1", "hakutoiveoid2", "hakutoiveoid3"),
         Map("sukupuoli" -> "nainen")),
-      Hakemus("hakemusoid5",
+      TestHakemus("hakemusoid5",
         List("hakutoiveoid1", "hakutoiveoid2", "hakutoiveoid3"),
         Map()))
 
@@ -343,7 +262,7 @@ class LaskentaTest extends FunSuite {
   }
 
   test("Syotettava valintaperuste, osallistumistieto puuttuu") {
-    val hakemus = Hakemus("", Nil, Map("valintakoe" -> "8.7"))
+    val hakemus = TestHakemus("", Nil, Map("valintakoe" -> "8.7"))
 
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus,
       HaeLukuarvo(None, None, SyotettavaValintaperuste("valintakoe", true, "valintakoe-OSALLISTUMINEN")))
@@ -353,7 +272,7 @@ class LaskentaTest extends FunSuite {
   }
 
   test("Syotettava valintaperuste, osallistumistieto EI_OSALLISTUNUT") {
-    val hakemus = Hakemus("", Nil, Map("valintakoe" -> "8.7",
+    val hakemus = TestHakemus("", Nil, Map("valintakoe" -> "8.7",
       "valintakoe-OSALLISTUMINEN" -> Osallistuminen.EI_OSALLISTUNUT.name))
 
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus,
@@ -364,7 +283,7 @@ class LaskentaTest extends FunSuite {
   }
 
   test("Syotettava valintaperuste, osallistumistieto OSALLISTUI") {
-    val hakemus = Hakemus("", Nil, Map("valintakoe" -> "8.7",
+    val hakemus = TestHakemus("", Nil, Map("valintakoe" -> "8.7",
       "valintakoe-OSALLISTUMINEN" -> Osallistuminen.OSALLISTUI.name))
 
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus,
@@ -375,7 +294,7 @@ class LaskentaTest extends FunSuite {
   }
 
   test("Syotettava valintaperuste, osallistumistietoa ei voida tulkita") {
-    val hakemus = Hakemus("", Nil, Map("valintakoe" -> "8.7",
+    val hakemus = TestHakemus("", Nil, Map("valintakoe" -> "8.7",
       "valintakoe-OSALLISTUMINEN" -> "ehkaosallistui"))
 
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus,
@@ -407,7 +326,7 @@ class LaskentaTest extends FunSuite {
         tunniste = "epavalidiLukuarvo",
         pakollinen = true))
 
-    val hakemus = Hakemus("", Nil,
+    val hakemus = TestHakemus("", Nil,
       Map(
         "hyvaksyttavissaLukuarvo" -> "100.0",
         "epavalidiLukuarvo" -> "satatuhatta"))
@@ -538,7 +457,7 @@ class LaskentaTest extends FunSuite {
       )
     )
 
-    val hakemus = Hakemus("hakemusOid", List[String](), Map("tunniste1-OSALLISTUMINEN" -> Osallistuminen.OSALLISTUI.name(),
+    val hakemus = TestHakemus("hakemusOid", List[String](), Map("tunniste1-OSALLISTUMINEN" -> Osallistuminen.OSALLISTUI.name(),
       "tunniste2" -> "konvertoitava1", "tunniste2-OSALLISTUMINEN" -> Osallistuminen.OSALLISTUI.name(),
       "tunniste3" -> "50.0", "tunniste4" -> "vertailtava-ei-sama", "tunniste4-OSALLISTUMINEN" -> Osallistuminen.OSALLISTUI.name(),
       "tunniste5-OSALLISTUMINEN" -> Osallistuminen.EI_OSALLISTUNUT.name()))
@@ -590,10 +509,10 @@ class LaskentaTest extends FunSuite {
 
 
     val hakemukset = List(
-      Hakemus("hakemusOid1", List(), Map("tunniste1" -> "0.0")),
-      Hakemus("hakemusOid2", List(), Map("tunniste1" -> "1000.0")),
-      Hakemus("hakemusOid3", List(), Map("tunniste1" -> "2000.0")),
-      Hakemus("hakemusOid4", List(), Map("tunniste1" -> "3000.0"))
+      TestHakemus("hakemusOid1", List(), Map("tunniste1" -> "0.0")),
+      TestHakemus("hakemusOid2", List(), Map("tunniste1" -> "1000.0")),
+      TestHakemus("hakemusOid3", List(), Map("tunniste1" -> "2000.0")),
+      TestHakemus("hakemusOid4", List(), Map("tunniste1" -> "3000.0"))
     )
 
     val tulokset = hakemukset.map(h => {
@@ -624,10 +543,10 @@ class LaskentaTest extends FunSuite {
 
 
     val hakemukset = List(
-      Hakemus("hakemusOid1", List(), Map("tunniste1" -> "0.0")),
-      Hakemus("hakemusOid2", List(), Map("tunniste1" -> "1000.0")),
-      Hakemus("hakemusOid3", List(), Map("tunniste1" -> "2000.0")),
-      Hakemus("hakemusOid4", List(), Map("tunniste1" -> "3000.0"))
+      TestHakemus("hakemusOid1", List(), Map("tunniste1" -> "0.0")),
+      TestHakemus("hakemusOid2", List(), Map("tunniste1" -> "1000.0")),
+      TestHakemus("hakemusOid3", List(), Map("tunniste1" -> "2000.0")),
+      TestHakemus("hakemusOid4", List(), Map("tunniste1" -> "3000.0"))
     )
 
     val tulokset = hakemukset.map(h => {
@@ -658,7 +577,7 @@ class LaskentaTest extends FunSuite {
 
 
     val hakemukset = List(
-      Hakemus("hakemusOid1", List(), Map("tunniste1" -> "0.0"))
+      TestHakemus("hakemusOid1", List(), Map("tunniste1" -> "0.0"))
     )
 
     val tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemukset(0), hakemukset, funktiokutsu)
@@ -676,8 +595,8 @@ class LaskentaTest extends FunSuite {
 
 
     val hakemukset = List(
-      Hakemus("hakemusOid1", List(), Map("tunniste1" -> "10.0")),
-      Hakemus("hakemusOid2", List(), Map("tunniste1" -> "10.0"))
+      TestHakemus("hakemusOid1", List(), Map("tunniste1" -> "10.0")),
+      TestHakemus("hakemusOid2", List(), Map("tunniste1" -> "10.0"))
     )
 
     val tulokset = hakemukset.map(h => Laskin.suoritaValintalaskenta(hakukohde, h, hakemukset, funktiokutsu))
@@ -699,8 +618,8 @@ class LaskentaTest extends FunSuite {
 
 
     val hakemukset = List(
-      Hakemus("hakemusOid1", List(), Map("tunniste1" -> "375.1")),
-      Hakemus("hakemusOid2", List(), Map("tunniste1" -> "-125.0001"))
+      TestHakemus("hakemusOid1", List(), Map("tunniste1" -> "375.1")),
+      TestHakemus("hakemusOid2", List(), Map("tunniste1" -> "-125.0001"))
     )
 
     val tulokset = hakemukset.map(h => Laskin.suoritaValintalaskenta(hakukohde, h, hakemukset, funktiokutsu))
@@ -736,9 +655,9 @@ class LaskentaTest extends FunSuite {
     )
 
     val hakemukset = List(
-      Hakemus("hakemusOid1", List(), Map("tunniste1" -> "100.0")),
-      Hakemus("hakemusOid2", List(), Map("tunniste1" -> "300.0")),
-      Hakemus("hakemusOid3", List(), Map("tunniste1" -> "500.0"))
+      TestHakemus("hakemusOid1", List(), Map("tunniste1" -> "100.0")),
+      TestHakemus("hakemusOid2", List(), Map("tunniste1" -> "300.0")),
+      TestHakemus("hakemusOid3", List(), Map("tunniste1" -> "500.0"))
     )
 
     val tulokset = hakemukset.map(h => Laskin.suoritaValintalaskenta(hakukohde, h, hakemukset, funktiokutsu))
@@ -761,19 +680,19 @@ class LaskentaTest extends FunSuite {
     )
 
     val hakemukset = List(
-      Hakemus("hakemusoid1",
+      TestHakemus("hakemusoid1",
         List("hakutoiveoid1", "hakutoiveoid2", "hakutoiveoid3"),
         Map("tunniste1" -> "arvo")),
-      Hakemus("hakemusoid2",
+      TestHakemus("hakemusoid2",
         List("hakutoiveoid1", "hakutoiveoid2", "hakutoiveoid3"),
         Map("tunniste1" -> "arvo")),
-      Hakemus("hakemusoid3",
+      TestHakemus("hakemusoid3",
         List("hakutoiveoid1", "hakutoiveoid2", "hakutoiveoid3"),
         Map("tunniste1" -> "arvo")),
-      Hakemus("hakemusoid4",
+      TestHakemus("hakemusoid4",
         List("hakutoiveoid1", "hakutoiveoid2", "hakutoiveoid3"),
         Map("tunniste1" -> "arvo")),
-      Hakemus("hakemusoid5",
+      TestHakemus("hakemusoid5",
         List("hakutoiveoid1", "hakutoiveoid2", "hakutoiveoid3"),
         Map()))
 

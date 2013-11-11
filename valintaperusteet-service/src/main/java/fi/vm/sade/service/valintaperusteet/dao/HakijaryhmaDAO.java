@@ -2,10 +2,7 @@ package fi.vm.sade.service.valintaperusteet.dao;
 
 import fi.vm.sade.generic.dao.JpaDAO;
 import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
-import fi.vm.sade.service.valintaperusteet.model.Linkitettava;
-import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 
-import java.util.Collection;
 import java.util.List;
 
 /**

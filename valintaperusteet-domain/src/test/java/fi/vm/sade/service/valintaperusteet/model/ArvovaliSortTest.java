@@ -1,13 +1,13 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
-import org.junit.Assert;
-import org.junit.Test;
 
 /**
  * 

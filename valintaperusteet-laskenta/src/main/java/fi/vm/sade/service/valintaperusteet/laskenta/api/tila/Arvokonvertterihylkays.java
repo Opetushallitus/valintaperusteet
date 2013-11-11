@@ -12,6 +12,10 @@ public class Arvokonvertterihylkays extends HylattyMetatieto {
         this.arvo = arvo;
     }
 
+    public Arvokonvertterihylkays() {
+        super(Hylattymetatietotyyppi.ARVOKONVERTTERIHYLKAYS);
+    }
+
     private String arvo;
 
     public String getArvo() {

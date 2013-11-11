@@ -1,10 +1,9 @@
 package fi.vm.sade.service.valintaperusteet.service.validointi.virhe;
 
-import java.math.BigDecimal;
-
+import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import org.codehaus.jackson.map.annotate.JsonView;
 
-import fi.vm.sade.service.valintaperusteet.model.JsonViews;
+import java.math.BigDecimal;
 
 /**
  * User: kwuoti Date: 5.3.2013 Time: 9.09

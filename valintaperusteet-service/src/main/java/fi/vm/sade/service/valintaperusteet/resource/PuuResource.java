@@ -2,7 +2,7 @@ package fi.vm.sade.service.valintaperusteet.resource;
 
 import fi.vm.sade.service.valintaperusteet.dto.ValintaperustePuuDTO;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
-import fi.vm.sade.service.valintaperusteet.service.*;
+import fi.vm.sade.service.valintaperusteet.service.PuuService;
 import org.codehaus.jackson.map.annotate.JsonView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

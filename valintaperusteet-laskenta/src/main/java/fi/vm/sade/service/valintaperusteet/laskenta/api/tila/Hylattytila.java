@@ -7,6 +7,10 @@ package fi.vm.sade.service.valintaperusteet.laskenta.api.tila;
  */
 public class Hylattytila extends Tila {
 
+    public Hylattytila() {
+        super(Tilatyyppi.HYLATTY);
+    }
+
     public Hylattytila(String kuvaus, HylattyMetatieto metatieto) {
         super(Tilatyyppi.HYLATTY);
         this.kuvaus = kuvaus;

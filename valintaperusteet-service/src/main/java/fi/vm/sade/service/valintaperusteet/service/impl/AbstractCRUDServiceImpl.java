@@ -3,12 +3,11 @@
  */
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
+import fi.vm.sade.generic.dao.JpaDAO;
 import fi.vm.sade.service.valintaperusteet.service.CRUDService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
-
-import fi.vm.sade.generic.dao.JpaDAO;
 
 /**
  * @author tommiha

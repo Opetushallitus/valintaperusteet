@@ -13,6 +13,10 @@ public class Virhetila extends Tila {
         this.metatieto = metatieto;
     }
 
+    public Virhetila() {
+        super(Tilatyyppi.VIRHE);
+    }
+
     private String kuvaus;
     private VirheMetatieto metatieto;
 

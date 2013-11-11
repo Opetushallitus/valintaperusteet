@@ -1,10 +1,26 @@
 package fi.vm.sade.service.valintaperusteet.laskenta.api.tila;
 
+import org.codehaus.jackson.annotate.JsonSubTypes;
+import org.codehaus.jackson.annotate.JsonTypeInfo;
+
 /**
  * User: kwuoti
  * Date: 25.2.2013
  * Time: 8.07
  */
+
+@JsonTypeInfo(
+    use = JsonTypeInfo.Id.NAME,
+    include = JsonTypeInfo.As.PROPERTY,
+    property = "type"
+)
+@JsonSubTypes({
+    @JsonSubTypes.Type(value = Arvokonvertterihylkays.class, name = "Arvokonvertterihylkays"),
+    @JsonSubTypes.Type(value = Arvovalikonvertterihylkays.class, name = "Arvovalikonvertterihylkays"),
+    @JsonSubTypes.Type(value = PakollinenValintaperusteHylkays.class, name = "PakollinenValintaperusteHylkays"),
+    @JsonSubTypes.Type(value = EiOsallistunutHylkays.class, name = "EiOsallistunutHylkays"),
+    @JsonSubTypes.Type(value = HylkaaFunktionSuorittamaHylkays.class, name = "HylkaaFunktionSuorittamaHylkays"),
+})
 public abstract class HylattyMetatieto {
     public static enum Hylattymetatietotyyppi {
         ARVOKONVERTTERIHYLKAYS(Arvokonvertterihylkays.class),

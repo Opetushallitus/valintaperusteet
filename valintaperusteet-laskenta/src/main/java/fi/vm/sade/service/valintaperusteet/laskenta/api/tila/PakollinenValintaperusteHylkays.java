@@ -11,6 +11,10 @@ public class PakollinenValintaperusteHylkays extends HylattyMetatieto {
         this.valintaperustetunniste = valintaperustetunniste;
     }
 
+    public PakollinenValintaperusteHylkays() {
+        super(Hylattymetatietotyyppi.PAKOLLINEN_VALINTAPERUSTE_HYLKAYS);
+    }
+
     private String valintaperustetunniste;
 
     public String getValintaperustetunniste() {

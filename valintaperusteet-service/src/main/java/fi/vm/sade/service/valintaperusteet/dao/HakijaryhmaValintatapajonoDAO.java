@@ -1,9 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.dao;
 
 import fi.vm.sade.generic.dao.JpaDAO;
-import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
 import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 

@@ -6,10 +6,8 @@ import org.codehaus.jackson.map.JsonSerializer;
 import org.codehaus.jackson.map.SerializerProvider;
 import org.hibernate.Hibernate;
 import org.hibernate.collection.internal.PersistentSet;
-import org.hibernate.collection.spi.PersistentCollection;
 
 import java.io.IOException;
-import java.util.Collection;
 
 /**
  * User: bleed

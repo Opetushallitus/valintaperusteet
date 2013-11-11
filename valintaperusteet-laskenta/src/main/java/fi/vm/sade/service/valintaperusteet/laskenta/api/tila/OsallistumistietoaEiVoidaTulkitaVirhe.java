@@ -9,4 +9,8 @@ public class OsallistumistietoaEiVoidaTulkitaVirhe extends ValintaperusteVirheel
     public OsallistumistietoaEiVoidaTulkitaVirhe(String valintaperustetunniste) {
         super(VirheMetatietotyyppi.OSALLISTUSMISTIETOA_EI_VOIDA_TULKITA, valintaperustetunniste);
     }
+
+    public OsallistumistietoaEiVoidaTulkitaVirhe() {
+        super(VirheMetatietotyyppi.OSALLISTUSMISTIETOA_EI_VOIDA_TULKITA, "");
+    }
 }

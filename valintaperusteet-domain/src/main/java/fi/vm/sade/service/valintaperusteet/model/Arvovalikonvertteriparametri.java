@@ -1,13 +1,12 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
-import java.math.BigDecimal;
+import org.codehaus.jackson.map.annotate.JsonView;
 
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
-import org.codehaus.jackson.map.annotate.JsonView;
+import java.math.BigDecimal;
 
 /**
  * User: kwuoti Date: 21.2.2013 Time: 9.20

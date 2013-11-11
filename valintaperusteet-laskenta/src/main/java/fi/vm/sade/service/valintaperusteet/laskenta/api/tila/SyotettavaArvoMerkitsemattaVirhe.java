@@ -11,6 +11,10 @@ public class SyotettavaArvoMerkitsemattaVirhe extends VirheMetatieto {
         this.valintaperustetunniste = valintaperustetunniste;
     }
 
+    public SyotettavaArvoMerkitsemattaVirhe() {
+        super(VirheMetatietotyyppi.SYOTETTAVA_ARVO_MERKITSEMATTA);
+    }
+
     private String valintaperustetunniste;
 
     public String getValintaperustetunniste() {

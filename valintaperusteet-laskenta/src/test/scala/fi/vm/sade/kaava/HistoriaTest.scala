@@ -1,8 +1,12 @@
 package fi.vm.sade.kaava
 
 import org.scalatest.FunSuite
-import com.codahale.jerkson.Json
+
+import fi.vm.sade.service.valintaperusteet.laskenta.JsonFormats._
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
+import scala.Some
 import fi.vm.sade.service.valintaperusteet.laskenta.Historia
+
 
 class HistoriaTest extends FunSuite {
 
@@ -10,9 +14,11 @@ class HistoriaTest extends FunSuite {
     val FUNKTIO1 = "DEMOGRAFIA"
     val FUNKTIO2 = "SUMMA"
 
-    val historia = new Historia(FUNKTIO1, Some(16), List(), Some(List(new Historia(FUNKTIO2, Some(true), List(), None, None))), None);
+    val historia = new Historia(FUNKTIO1, Some(16), List(new Hyvaksyttavissatila, new Virhetila("virhe", new OsallistumistietoaEiVoidaTulkitaVirhe("virhe")), new Hylattytila("hylky", new Arvokonvertterihylkays("hylky"))), Some(List(new Historia(FUNKTIO2, Some(true), List(), None, None))), None);
 
-    val muunnos = Json.parse[Historia](Json.generate(historia))
+    val historiaAsJson = historiaWrites.writes(historia)
+    val historiaFromJson = historiaReads.reads(historiaAsJson)
+    val muunnos = historiaFromJson.get
 
     assert(muunnos.funktio.equals(FUNKTIO1))
     assert(muunnos.historiat.nonEmpty)

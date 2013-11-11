@@ -1,8 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.service.validointi.virhe;
 
-import org.codehaus.jackson.map.annotate.JsonView;
-
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
+import org.codehaus.jackson.map.annotate.JsonView;
 
 /**
  * User: kwuoti Date: 8.2.2013 Time: 16.33

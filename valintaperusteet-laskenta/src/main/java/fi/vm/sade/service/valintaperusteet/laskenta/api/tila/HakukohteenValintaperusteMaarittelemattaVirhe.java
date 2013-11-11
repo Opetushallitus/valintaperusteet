@@ -11,6 +11,10 @@ public class HakukohteenValintaperusteMaarittelemattaVirhe extends VirheMetatiet
         this.valintaperustetunniste = valintaperustetunniste;
     }
 
+    public HakukohteenValintaperusteMaarittelemattaVirhe() {
+        super(VirheMetatietotyyppi.HAKUKOHTEEN_VALINTAPERUSTE_MAARITTELEMATTA_VIRHE);
+    }
+
     private String valintaperustetunniste;
 
     public String getValintaperustetunniste() {

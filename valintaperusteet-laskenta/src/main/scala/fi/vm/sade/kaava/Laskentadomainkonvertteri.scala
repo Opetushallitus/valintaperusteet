@@ -21,7 +21,7 @@ object Laskentadomainkonvertteri {
 
   private def getParametri(avain: String, params: JSet[Syoteparametri]): Syoteparametri = {
     params.filter(_.getAvain == avain).toList match {
-      case Nil => sys.error("Could not find parameter matching the key " + avain)
+      case Nil => sys.error(s"Could not find parameter matching the key $avain")
       case head :: tail => head
     }
   }
@@ -30,7 +30,7 @@ object Laskentadomainkonvertteri {
     try {
       BigDecimal(param.getArvo)
     } catch {
-      case e => sys.error("Could not interpret parameter " + param.getAvain + " value " + param.getArvo + " as big decimal")
+      case e: Throwable => sys.error(s"Could not interpret parameter ${param.getAvain} value ${param.getArvo} as big decimal")
     }
   }
 
@@ -38,7 +38,7 @@ object Laskentadomainkonvertteri {
     try {
       param.getArvo.toInt
     } catch {
-      case e => sys.error("Could not interpret parameter " + param.getAvain + " value " + param.getArvo + " as integer")
+      case e: Throwable => sys.error(s"Could not interpret parameter ${param.getAvain} value ${param.getArvo} as integer")
     }
   }
 
@@ -46,7 +46,7 @@ object Laskentadomainkonvertteri {
     try {
       param.getArvo.toBoolean
     } catch {
-      case e => sys.error("Could not interpret parameter " + param.getAvain + " value " + param.getArvo + " as boolean")
+      case e: Throwable => sys.error(s"Could not interpret parameter ${param.getAvain} value ${param.getArvo} as boolean")
     }
   }
 
@@ -327,7 +327,7 @@ object Laskentadomainkonvertteri {
         Valintaperusteyhtasuuruus(oid, Pair(valintaperusteviitteet(0), valintaperusteviitteet(1)))
       }
 
-      case _ => sys.error("Could not calculate funktio " + funktiokutsu.getFunktionimi.name())
+      case _ => sys.error(s"Could not calculate funktio ${funktiokutsu.getFunktionimi.name()}")
     }
   }
 

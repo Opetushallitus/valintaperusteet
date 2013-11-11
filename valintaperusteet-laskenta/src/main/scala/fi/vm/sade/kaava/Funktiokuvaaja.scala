@@ -1,7 +1,7 @@
 package fi.vm.sade.kaava
 
 import fi.vm.sade.service.valintaperusteet.model.Funktionimi
-import com.codahale.jerkson.Json
+import play.api.libs.json.Json
 
 /**
  * User: kwuoti
@@ -76,7 +76,9 @@ object Funktiokuvaaja {
                            konvertteri: Option[Konvertterikuvaus] = None)
 
   def annaFunktiokuvauksetAsJson = {
-    Json.generate(funktiokuvaukset.map(annaFunktiokuvausAsJson(_)))
+    //funktiokuvaukset.map(annaFunktiokuvausAsJson(_))
+    val jsonKuvaukset = funktiokuvaukset.foldLeft(Json.obj())(_ ++ annaFunktiokuvausAsJson(_))
+    Json.stringify(jsonKuvaukset)
   }
 
   def annaFunktiokuvaukset = {
@@ -86,7 +88,7 @@ object Funktiokuvaaja {
 
   def annaFunktiokuvaus(nimi: String): (Funktionimi, Funktiokuvaus) = {
     Funktionimi.values().filter(_.name() == nimi.toUpperCase()).toList match {
-      case Nil => throw new RuntimeException("No funktio with name " + nimi.toUpperCase())
+      case Nil => throw new RuntimeException(s"No funktio with name ${nimi.toUpperCase()}")
       case head :: tail => {
         annaFunktiokuvaus(head)
       }
@@ -97,40 +99,41 @@ object Funktiokuvaaja {
     if (funktiokuvaukset.contains(nimi)) {
       (nimi, funktiokuvaukset(nimi))
     } else {
-      throw new RuntimeException("No funktiokuvaus defined for funktio " + nimi.name())
+      throw new RuntimeException(s"No funktiokuvaus defined for funktio ${nimi.name()}")
     }
   }
 
   def annaFunktiokuvausAsJson(nimi: String): String = {
-    Json.generate(annaFunktiokuvausAsJson(annaFunktiokuvaus(nimi)))
+    val temp = Json.stringify(annaFunktiokuvausAsJson(annaFunktiokuvaus(nimi)))
+    println(temp)
+    Json.stringify(annaFunktiokuvausAsJson(annaFunktiokuvaus(nimi)))
   }
 
   private def annaFunktiokuvausAsJson(kutsu: (Funktionimi, Funktiokuvaus)) = {
 
     val fk = kutsu._2
 
-    val argumentit = if (fk.funktioargumentit.isEmpty) Nil
-    else Seq("funktioargumentit" ->
+    val argumentit = if (fk.funktioargumentit.isEmpty) Json.obj()
+    else Json.obj("funktioargumentit" ->
       fk.funktioargumentit.map(funktioargumenttiAsJson(_)))
 
-    val parametrit = if (fk.syoteparametrit.isEmpty) Nil
-    else Seq("syoteparametrit" ->
+    val parametrit = if (fk.syoteparametrit.isEmpty) Json.obj()
+    else Json.obj("syoteparametrit" ->
       fk.syoteparametrit.map(funktioparametriAsJson(_)))
 
-    val valintaperuste = if (fk.valintaperusteparametri.isEmpty) Nil
-    else Seq("valintaperuste" -> fk.valintaperusteparametri.map(valintaperusteparametriAsJson(_)))
+    val valintaperuste = if (fk.valintaperusteparametri.isEmpty) Json.obj()
+    else Json.obj("valintaperuste" -> fk.valintaperusteparametri.map(valintaperusteparametriAsJson(_)))
 
     val konvertteri = fk.konvertteri match {
-      case Some(konv) => Seq("konvertteri" -> konvertterikuvausAsJson(konv))
-      case None => Nil
+      case Some(konv) => Json.obj("konvertteri" -> konvertterikuvausAsJson(konv))
+      case None => Json.obj()
     }
 
 
-    val seq = Seq(
+    Json.obj(
       "nimi" -> kutsu._1.name(),
       "tyyppi" -> fk.tyyppi.toString) ++ argumentit ++ parametrit ++ valintaperuste ++ konvertteri
 
-    Map(seq: _*)
   }
 
   private val funktiokuvaukset = Map(
@@ -377,41 +380,33 @@ object Funktiokuvaaja {
   )
 
   private def konvertteriTyyppiAsJson(tyyppi: KonvertteriTyyppi) = {
-    val seq = tyyppi match {
+    tyyppi match {
       case Arvokonvertterikuvaus(arvotyyppi) => {
-        Seq("tyyppi" -> tyyppi.nimi.toString, "arvotyyppi" -> arvotyyppi.toString)
+        Json.obj("tyyppi" -> tyyppi.nimi.toString, "arvotyyppi" -> arvotyyppi.toString)
       }
-      case _ => Seq("tyyppi" -> tyyppi.nimi.toString)
+      case _ => Json.obj("tyyppi" -> tyyppi.nimi.toString)
     }
-
-    Map(seq: _*)
   }
 
   private def konvertterikuvausAsJson(konvertterikuvaus: Konvertterikuvaus) = {
 
-    val seq = Seq("pakollinen" -> konvertterikuvaus.pakollinen,
+    Json.obj("pakollinen" -> konvertterikuvaus.pakollinen,
       "konvertteriTyypit" -> konvertterikuvaus.konvertteriTyypit.map(t => konvertteriTyyppiAsJson(t._2)))
-
-    Map(seq: _*)
   }
 
   private def valintaperusteparametriAsJson(vp: Valintaperusteparametrikuvaus) = {
-    val seq = Seq(
+    Json.obj(
       "nimi" -> vp.nimi,
       "tyyppi" -> vp.tyyppi.toString)
-
-    Map(seq: _*)
   }
 
 
   private def funktioparametriAsJson(par: Syoteparametrikuvaus) = {
-    val seq = Seq(
+    Json.obj(
       "avain" -> par.avain,
       "tyyppi" -> par.tyyppi.toString,
       "pakollinen" -> par.pakollinen.toString
     )
-
-    Map(seq: _*)
   }
 
   private def kardinaliteettiAsJson(kardinaliteetti: Kardinaliteetti): String = {
@@ -423,12 +418,10 @@ object Funktiokuvaaja {
   }
 
   private def funktioargumenttiAsJson(arg: Funktioargumenttikuvaus) = {
-    val seq = Seq(
+    Json.obj(
       "nimi" -> arg.nimi,
       "tyyppi" -> arg.tyyppi.toString,
       "kardinaliteetti" -> kardinaliteettiAsJson(arg.kardinaliteetti)
     )
-
-    Map(seq: _*)
   }
 }

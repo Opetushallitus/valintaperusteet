@@ -1,7 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
 import fi.vm.sade.service.valintaperusteet.model.Hakukohdekoodi;
-import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 
 import java.util.Set;
 

@@ -12,7 +12,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.*;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD_OPH;
 
 /**
  * Created with IntelliJ IDEA.

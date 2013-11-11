@@ -1,10 +1,9 @@
 package fi.vm.sade.service.valintaperusteet.service.impl.conversion;
 
-import org.springframework.core.convert.converter.Converter;
-
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import fi.vm.sade.service.valintaperusteet.schema.TasasijasaantoTyyppi;
 import fi.vm.sade.service.valintaperusteet.schema.ValintatapajonoTyyppi;
+import org.springframework.core.convert.converter.Converter;
 
 /**
  * User: kwuoti Date: 22.1.2013 Time: 15.28

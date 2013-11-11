@@ -6,7 +6,6 @@ import com.mysema.query.types.EntityPath;
 import fi.vm.sade.generic.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaValintatapajonoDAO;
 import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
-import fi.vm.sade.service.valintaperusteet.model.QHakijaryhma;
 import fi.vm.sade.service.valintaperusteet.model.QHakijaryhmaValintatapajono;
 import org.springframework.stereotype.Repository;
 

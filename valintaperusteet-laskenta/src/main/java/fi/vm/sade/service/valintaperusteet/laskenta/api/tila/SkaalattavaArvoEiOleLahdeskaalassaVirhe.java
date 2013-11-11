@@ -24,6 +24,10 @@ public class SkaalattavaArvoEiOleLahdeskaalassaVirhe extends VirheMetatieto {
         this.lahdeskaalaMax = lahdeskaalaMax;
     }
 
+    public SkaalattavaArvoEiOleLahdeskaalassaVirhe() {
+        super(VirheMetatietotyyppi.SKAALATTAVA_ARVO_EI_OLE_LAHDESKAALASSA);
+    }
+
     public BigDecimal getSkaalattavaArvo() {
         return skaalattavaArvo;
     }
