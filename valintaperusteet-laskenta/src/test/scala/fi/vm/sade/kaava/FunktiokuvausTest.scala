@@ -13,7 +13,6 @@ class FunktiokuvausTest extends FunSuite {
   test("annaFunktiokuvaukset") {
     val kuvaukset = Funktiokuvaaja.annaFunktiokuvaukset
     assert(kuvaukset.size > 0)
-    //    println(kuvaukset)
   }
 
   test("annaFunktiokuvauksetAsJson") {

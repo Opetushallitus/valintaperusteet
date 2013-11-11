@@ -104,8 +104,6 @@ object Funktiokuvaaja {
   }
 
   def annaFunktiokuvausAsJson(nimi: String): String = {
-    val temp = Json.stringify(annaFunktiokuvausAsJson(annaFunktiokuvaus(nimi)))
-    println(temp)
     Json.stringify(annaFunktiokuvausAsJson(annaFunktiokuvaus(nimi)))
   }
 
