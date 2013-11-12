@@ -122,7 +122,7 @@ object Laskentakaavavalidaattori {
               s"""Funktion $nimi funktioargumentti on väärää tyyppiä.
               Vaadittu: ${vaadittuArgumentti.tyyppi.toString}, annettu: ${argumentti.getLaskentakaavaChild.getTyyppi.name()}""",
               argumentti.getIndeksi,
-              vaadittuArgumentti.tyyppi.toString, argumentti.getFunktiokutsuChild.getFunktionimi.getTyyppi.name()) :: accum
+              vaadittuArgumentti.tyyppi.toString, argumentti.getLaskentakaavaChild.getTyyppi.name()) :: accum
           } else accum
 
           if (argumentti.getLaskentakaavaChild.getOnLuonnos) {
