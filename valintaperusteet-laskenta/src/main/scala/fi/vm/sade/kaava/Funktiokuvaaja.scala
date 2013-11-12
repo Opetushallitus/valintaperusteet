@@ -1,7 +1,9 @@
 package fi.vm.sade.kaava
 
 import fi.vm.sade.service.valintaperusteet.model.Funktionimi
-import play.api.libs.json.Json
+import play.api.libs.json.{JsArray, Json}
+import scala.Predef._
+import scala.Some
 
 /**
  * User: kwuoti
@@ -77,8 +79,12 @@ object Funktiokuvaaja {
 
   def annaFunktiokuvauksetAsJson = {
     //funktiokuvaukset.map(annaFunktiokuvausAsJson(_))
-    val jsonKuvaukset = funktiokuvaukset.foldLeft(Json.obj())(_ ++ annaFunktiokuvausAsJson(_))
-    Json.stringify(jsonKuvaukset)
+
+    val jsonKuvaukset = funktiokuvaukset.map(annaFunktiokuvausAsJson(_))
+
+    val jsonKuvauksetArray = jsonKuvaukset.foldLeft(JsArray())(_ ++ Json.arr(_))
+
+    Json.stringify(jsonKuvauksetArray)
   }
 
   def annaFunktiokuvaukset = {
