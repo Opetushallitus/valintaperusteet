@@ -158,7 +158,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
     this(hakukohde, hakemus, kaikkiHakemukset, Laskentamoodi.VALINTALASKENTA)
   }
 
-  private val syotetytArvot: scala.collection.mutable.Map[String, SyotettyArvo] = scala.collection.mutable.Map[String, SyotettyArvo]()
+  val syotetytArvot: scala.collection.mutable.Map[String, SyotettyArvo] = scala.collection.mutable.Map[String, SyotettyArvo]()
 
   def getSyotetytArvot = Map[String, SyotettyArvo](syotetytArvot.toList: _*)
 
@@ -212,10 +212,10 @@ private class Laskin private(private val hakukohde: Hakukohde,
         val (arvo, konvertoitu, tilat) = if (pakollinen && Osallistuminen.EI_OSALLISTUNUT == osallistuminen)
           (None, None, List(osallistumistila,
             new Hylattytila(s"Pakollisen syötettävän kentän arvo on '${osallistuminen.name()}' (tunniste $tunniste)",
-            new EiOsallistunutHylkays(tunniste))))
+              new EiOsallistunutHylkays(tunniste))))
         else if (pakollinen && Osallistuminen.MERKITSEMATTA == osallistuminen)
           (None, None, List(osallistumistila, new Virhetila(s"Pakollisen syötettävän kentän arvo on merkitsemättä (tunniste $tunniste)",
-          new SyotettavaArvoMerkitsemattaVirhe(tunniste))))
+            new SyotettavaArvoMerkitsemattaVirhe(tunniste))))
         else {
           val (arvo, konvertoitu, tilat) = haeValintaperusteenArvoHakemukselta(tunniste, pakollinen)
           (arvo, konvertoitu, osallistumistila :: tilat)
@@ -524,8 +524,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
           case Tulos(tulos, tila, historia) => {
             konvertteri match {
               case l: Lukuarvovalikonvertteri => {
-                val konversiot = konversioToLukuarvovalikonversio(l.konversioMap,hakemus.kentat, hakukohde.valintaperusteet)
-                val (tulos2, tilat2) = suoritaKonvertointi[BigDecimal, BigDecimal]((tulos, tila), Lukuarvovalikonvertteri(konversiot))
+                val (tulos2, tilat2) = konversioToLukuarvovalikonversio((tulos, tila), l.konversioMap,hakemus, hakukohde)
                 (tulos2, tilat2, Historia("Konvertoitulukuarvo", tulos2, tilat2, Some(List(historia)), None))
               }
               case _ => {
