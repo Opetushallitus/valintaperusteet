@@ -3,6 +3,9 @@ package fi.vm.sade.service.valintaperusteet.laskenta
 import org.apache.commons.lang.StringUtils
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
 import java.math.{BigDecimal => BigDec}
+import fi.vm.sade.service.valintaperusteet.laskenta.api.{Hakemus, Hakukohde}
+import scala._
+import scala.Some
 
 /**
  *
@@ -50,9 +53,15 @@ object Laskenta {
     }
   }
 
-  case class Lukuarvovalikonvertteri(konversioMap: Seq[Lukuarvovalikonversio]) extends Konvertteri[BigDecimal, BigDecimal] {
+  case class Lukuarvovalikonvertteri(konversioMap: Seq[Konversio]) extends Konvertteri[BigDecimal, BigDecimal] {
+
     def konvertoi(arvo: BigDecimal): (Option[BigDecimal], Tila) = {
-      konversioMap.sortWith((a, b) => a.max > b.max).filter(konv => arvo >= konv.min && arvo <= konv.max) match {
+
+      val konversiot = konversioMap.map(konv => konv.asInstanceOf[Lukuarvovalikonversio])
+
+      konversiot.sortWith((a, b) => a.max > b.max)
+      .filter(konv =>arvo >= konv.min && arvo <= konv.max
+      ) match {
         case Nil => (None, new Virhetila("Arvo $arvo ei täsmää yhteenkään konvertterille määritettyyn arvoväliin",
           new ArvovalikonvertointiVirhe(arvo.underlying)))
         case head :: tail => {
@@ -76,6 +85,9 @@ object Laskenta {
 
   case class Lukuarvovalikonversio(min: BigDecimal, max: BigDecimal, paluuarvo: BigDecimal,
                                    palautaHaettuArvo: Boolean, hylkaysperuste: Boolean) extends Konversio
+
+  case class LukuarvovalikonversioMerkkijonoilla(min: String, max: String, paluuarvo: String,
+                                   palautaHaettuArvo: String, hylkaysperuste: Boolean) extends Konversio
 
   case class KonvertoiLukuarvo(konvertteri: Konvertteri[BigDecimal, BigDecimal], f: Lukuarvofunktio, oid: String = "")
     extends KonvertoivaFunktio[BigDecimal, BigDecimal] with Lukuarvofunktio

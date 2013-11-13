@@ -9,6 +9,41 @@ import java.math.{BigDecimal => JBigDecimal}
 import java.util.{Set => JSet}
 import scala.math.BigDecimal._
 import fi.vm.sade.service.valintaperusteet.service.validointi.virhe.LaskentakaavaEiOleValidiException
+import scala._
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.KonvertoiLukuarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Negaatio
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Totuusarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Osamaara
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Pyoristys
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonvertteri
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Suurempi
+import scala.Some
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonversio
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Yhtasuuri
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Jos
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.PienempiTaiYhtasuuri
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaKonvertoiTotuusarvoksi
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Demografia
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaKonvertoiLukuarvoksi
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.PainotettuKeskiarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Pienempi
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonversio
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Valintaperusteyhtasuuruus
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HylkaaArvovalilla
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakemuksenValintaperuste
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.NimettyTotuusarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeLukuarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.NimettyLukuarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Skaalaus
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.SyotettavaValintaperuste
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonvertteri
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeTotuusarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.SuurempiTaiYhtasuuri
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Hylkaa
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaVertaaYhtasuuruus
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Ei
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Hakutoive
 
 /**
  * User: kwuoti

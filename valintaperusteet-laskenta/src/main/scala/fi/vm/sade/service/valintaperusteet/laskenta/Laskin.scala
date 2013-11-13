@@ -132,6 +132,7 @@ object Laskin {
   }
 
   def laske(hakukohde: Hakukohde, hakemus: Hakemus, laskettava: Lukuarvofunktio): (Option[JBigDecimal], Tila) = {
+
     val tulos = new Laskin(hakukohde, hakemus).laskeLukuarvo(laskettava)
     (tulos.tulos.map(_.underlying()), tulos.tila)
   }
@@ -521,8 +522,18 @@ private class Laskin private(private val hakukohde: Hakukohde,
       case KonvertoiLukuarvo(konvertteri, f, oid) => {
         laskeLukuarvo(f) match {
           case Tulos(tulos, tila, historia) => {
-            val (tulos2, tilat2) = suoritaKonvertointi[BigDecimal, BigDecimal]((tulos, tila), konvertteri)
-            (tulos2, tilat2, Historia("Konvertoitulukuarvo", tulos2, tilat2, Some(List(historia)), None))
+            konvertteri match {
+              case l: Lukuarvovalikonvertteri => {
+                val konversiot = konversioToLukuarvovalikonversio(l.konversioMap,hakemus.kentat, hakukohde.valintaperusteet)
+                val (tulos2, tilat2) = suoritaKonvertointi[BigDecimal, BigDecimal]((tulos, tila), Lukuarvovalikonvertteri(konversiot))
+                (tulos2, tilat2, Historia("Konvertoitulukuarvo", tulos2, tilat2, Some(List(historia)), None))
+              }
+              case _ => {
+                val (tulos2, tilat2) = suoritaKonvertointi[BigDecimal, BigDecimal]((tulos, tila), konvertteri)
+                (tulos2, tilat2, Historia("Konvertoitulukuarvo", tulos2, tilat2, Some(List(historia)), None))
+              }
+            }
+
           }
         }
 

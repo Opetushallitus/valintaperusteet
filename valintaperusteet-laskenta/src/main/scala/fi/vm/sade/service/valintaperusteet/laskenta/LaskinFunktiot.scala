@@ -2,9 +2,10 @@ package fi.vm.sade.service.valintaperusteet.laskenta
 
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus
-import scala.Tuple2
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta._
 import scala.Some
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Konvertteri
+import scala.Tuple2
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonversio
 
 /**
  * Created with IntelliJ IDEA.
@@ -25,10 +26,13 @@ trait LaskinFunktiot {
 
   protected def suoritaKonvertointi[S, T](tulos: Tuple2[Option[S], Tila],
                                         konvertteri: Konvertteri[S, T]) = {
+
     ehdollinenTulos[S, T](tulos, (t, tila) => {
       val (konvertoituTulos, konvertoituTila) = konvertteri.konvertoi(t)
       (konvertoituTulos, List(tila, konvertoituTila))
     })
+
+
   }
 
   protected def suoritaOptionalKonvertointi[T](tulos: Tuple2[Option[T], Tila],
@@ -95,6 +99,112 @@ trait LaskinFunktiot {
       case e: Throwable => (None, new Virhetila(s"Arvoa $s ei voida muuttaa BigDecimal-tyyppiseksi (tunniste $tunniste)",
         new ValintaperustettaEiVoidaTulkitaLukuarvoksiVirhe(tunniste)))
     }
+  }
+
+  def haeBooleanHakukohteelta(tunniste: String, hakukohde: Map[String, String]) = {
+    hakukohde.get(tunniste) match {
+      case Some(arvo) => {
+        try {
+          arvo.toBoolean
+        } catch {
+          case e: Throwable => false
+        }
+      }
+      case None => false
+    }
+  }
+
+  def haeBigDecimalHakukohteelta(tunniste: String, hakukohde: Map[String, String]) = {
+    hakukohde.get(tunniste) match {
+      case Some(arvo) => {
+        try {
+          BigDecimal(arvo)
+        } catch {
+          case e: IllegalArgumentException => BigDecimal("0.0")
+        }
+      }
+      case None => BigDecimal("0.0")
+    }
+  }
+
+  def haeBooleanHakemukselta(tunniste: String, hakemus: Map[String, String]) = {
+    hakemus.get(tunniste) match {
+      case Some(arvo) => {
+        try {
+          arvo.toBoolean
+        } catch {
+          case e: Throwable => false
+        }
+      }
+      case None => false
+    }
+  }
+
+  def haeBigDecimalHakemukselta(tunniste: String, hakemus: Map[String, String]) = {
+    hakemus.get(tunniste) match {
+      case Some(arvo) => {
+        try {
+          BigDecimal(arvo)
+        } catch {
+          case e: IllegalArgumentException => BigDecimal("0.0")
+        }
+      }
+      case None => BigDecimal("0.0")
+    }
+  }
+
+  def konversioToLukuarvovalikonversio(konversiot: Seq[Konversio], hakemus: Map[String, String], hakukohde: Map[String, String]): Seq[Lukuarvovalikonversio] = {
+    val pattern = """\{\{([A-Za-z]+)\.([A-Za-z]+)\}\}""".r
+    def getLukuarvovaliKonversio(k: Konversio) = {
+      k match {
+        case l: LukuarvovalikonversioMerkkijonoilla => {
+          val min = l.min match {
+            case pattern(source, identifier) => {
+              source match {
+                case "hakemus" => haeBigDecimalHakemukselta(identifier, hakemus)
+                case "hakukohde" => haeBigDecimalHakukohteelta(identifier, hakukohde)
+                case _ => BigDecimal("0.0")
+              }
+            }
+            case s: String => BigDecimal(s)
+          }
+          val max = l.max match {
+            case pattern(source, identifier) => {
+              source match {
+                case "hakemus" => haeBigDecimalHakemukselta(identifier, hakemus)
+                case "hakukohde" => haeBigDecimalHakukohteelta(identifier, hakukohde)
+                case _ => BigDecimal("0.0")
+              }
+            }
+            case s: String => BigDecimal(s)
+          }
+          val paluuarvo = l.paluuarvo match {
+            case pattern(source, identifier) => {
+              source match {
+                case "hakemus" => haeBigDecimalHakemukselta(identifier, hakemus)
+                case "hakukohde" => haeBigDecimalHakukohteelta(identifier, hakukohde)
+                case _ => BigDecimal("0.0")
+              }
+            }
+            case s: String => BigDecimal(s)
+          }
+          val palautaHaettuArvo = l.palautaHaettuArvo match {
+            case pattern(source, identifier) => {
+              source match {
+                case "hakemus" => haeBooleanHakemukselta(identifier, hakemus)
+                case "hakukohde" => haeBooleanHakukohteelta(identifier, hakukohde)
+                case _ => false
+              }
+            }
+            case s: String => s.toBoolean
+          }
+          Lukuarvovalikonversio(min, max, paluuarvo, palautaHaettuArvo, l.hylkaysperuste)
+        }
+        case lk => lk.asInstanceOf[Lukuarvovalikonversio]
+      }
+    }
+    konversiot.map(konv => getLukuarvovaliKonversio(konv))
+
   }
 
 }

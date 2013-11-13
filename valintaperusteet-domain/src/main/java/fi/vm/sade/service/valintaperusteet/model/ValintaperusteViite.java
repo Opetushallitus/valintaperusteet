@@ -112,7 +112,9 @@ public class ValintaperusteViite extends BaseEntity implements Comparable<Valint
 
         switch (lahde) {
             case SYOTETTAVA_ARVO:
-                osallistuminenTunniste = tunniste + OSALLISTUMINEN_POSTFIX;
+                if(tunniste != null) {
+                    osallistuminenTunniste = tunniste + OSALLISTUMINEN_POSTFIX;
+                }
                 break;
             default:
                 break;
