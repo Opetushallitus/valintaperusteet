@@ -182,23 +182,23 @@ trait LaskinFunktiot {
             }
             case s: String => string2boolean(s, "")
           }
-          (min, max, paluuarvo, palautaHaettuArvo)
+          (min, max, paluuarvo, palautaHaettuArvo, l.hylkaysperuste)
         }
         case lk: Lukuarvovalikonversio => {
          val tila = new Hyvaksyttavissatila
 
-         ((Some(lk.min), tila),(Some(lk.max), tila),(Some(lk.paluuarvo), tila),(Some(lk.palautaHaettuArvo), tila))
+         ((Some(lk.min), tila),(Some(lk.max), tila),(Some(lk.paluuarvo), tila),(Some(lk.palautaHaettuArvo), tila), lk.hylkaysperuste)
         }
         case _ => {
           val tila = new Virhetila(s"Konversioita ei voitu muuttaa Arvovalikonversioiksi",new ArvokonvertointiVirhe())
-          ((None,tila),(None,tila),(None,tila),(None,tila))
+          ((None,tila),(None,tila),(None,tila),(None,tila), false)
         }
       }
 
       tilat match {
         case ((Some(min: BigDecimal), t1: Hyvaksyttavissatila), (Some(max: BigDecimal), t2: Hyvaksyttavissatila),
-        (Some(p: BigDecimal), t3: Hyvaksyttavissatila), (Some(ph: Boolean), t4: Hyvaksyttavissatila)) => {
-          Some(Lukuarvovalikonversio(min, max, p, ph, false))
+        (Some(p: BigDecimal), t3: Hyvaksyttavissatila), (Some(ph: Boolean), t4: Hyvaksyttavissatila), hylkaysperuste: Boolean) => {
+          Some(Lukuarvovalikonversio(min, max, p, ph, hylkaysperuste))
         }
         case _ => None
       }
