@@ -4,11 +4,11 @@ import fi.vm.sade.service.valintaperusteet.model._
 import fi.vm.sade.service.valintaperusteet.laskenta._
 import Laskenta._
 import Laskenta.{HakukohteenValintaperuste => HkValintaperuste}
+import Laskenta.{HakukohteenSyotettavaValintaperuste => HksValintaperuste}
 import org.apache.commons.lang.StringUtils
 import java.math.{BigDecimal => JBigDecimal}
 import java.util.{Set => JSet}
 import scala.math.BigDecimal._
-import fi.vm.sade.service.valintaperusteet.service.validointi.virhe.LaskentakaavaEiOleValidiException
 import scala._
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.KonvertoiLukuarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Negaatio
@@ -44,6 +44,7 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Hylkaa
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaVertaaYhtasuuruus
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Ei
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Hakutoive
+import fi.vm.sade.service.valintaperusteet.service.validointi.virhe.LaskentakaavaEiOleValidiException
 
 /**
  * User: kwuoti
@@ -115,6 +116,8 @@ object Laskentadomainkonvertteri {
         valintaperuste.getOnPakollinen)
       case Valintaperustelahde.HAKUKOHTEEN_ARVO =>
         HkValintaperuste(valintaperuste.getTunniste, valintaperuste.getOnPakollinen, Option(valintaperuste.getEpasuoraViittaus).map(Boolean2boolean(_)).getOrElse(false))
+      case Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO =>
+        HksValintaperuste(valintaperuste.getTunniste, valintaperuste.getOnPakollinen, Option(valintaperuste.getEpasuoraViittaus).map(Boolean2boolean(_)).getOrElse(false), ValintaperusteViite.OSALLISTUMINEN_POSTFIX)
       case Valintaperustelahde.SYOTETTAVA_ARVO => SyotettavaValintaperuste(valintaperuste.getTunniste,
         valintaperuste.getOnPakollinen, valintaperuste.getOsallistuminenTunniste)
     }
@@ -222,8 +225,8 @@ object Laskentadomainkonvertteri {
       }
       case Funktionimi.HYLKAAARVOVALILLA => {
         val hylkaysperustekuvaus = funktiokutsu.getSyoteparametrit.find(_.getAvain == "hylkaysperustekuvaus").map(_.getArvo)
-        val min = parametriToBigDecimal(getParametri("arvovaliMin", funktiokutsu.getSyoteparametrit))
-        val max = parametriToBigDecimal(getParametri("arvovaliMax", funktiokutsu.getSyoteparametrit))
+        val min = getParametri("arvovaliMin", funktiokutsu.getSyoteparametrit).getArvo
+        val max = getParametri("arvovaliMax", funktiokutsu.getSyoteparametrit).getArvo
 
         HylkaaArvovalilla(muunnaLukuarvofunktioksi(lasketutArgumentit(0)), hylkaysperustekuvaus, oid, Pair(min, max))
 

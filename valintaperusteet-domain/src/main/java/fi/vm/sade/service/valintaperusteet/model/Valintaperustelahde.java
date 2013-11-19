@@ -6,5 +6,5 @@ package fi.vm.sade.service.valintaperusteet.model;
  * Time: 8.50
  */
 public enum Valintaperustelahde {
-    HAETTAVA_ARVO, SYOTETTAVA_ARVO, HAKUKOHTEEN_ARVO
+    HAETTAVA_ARVO, SYOTETTAVA_ARVO, HAKUKOHTEEN_ARVO, HAKUKOHTEEN_SYOTETTAVA_ARVO
 }

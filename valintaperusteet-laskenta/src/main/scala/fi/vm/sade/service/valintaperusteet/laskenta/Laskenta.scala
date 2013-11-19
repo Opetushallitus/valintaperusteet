@@ -6,6 +6,8 @@ import java.math.{BigDecimal => BigDec}
 import fi.vm.sade.service.valintaperusteet.laskenta.api.{Hakemus, Hakukohde}
 import scala._
 import scala.Some
+import scala.reflect.runtime.universe._
+import scala.reflect.ClassTag
 
 /**
  *
@@ -26,6 +28,8 @@ object Laskenta {
 
   case class HakukohteenValintaperuste(tunniste: String, pakollinen: Boolean, epasuoraViittaus: Boolean) extends Valintaperuste
 
+  case class HakukohteenSyotettavaValintaperuste(tunniste: String, pakollinen: Boolean, epasuoraViittaus: Boolean, osallistuminenTunniste: String) extends Valintaperuste
+
   trait Konvertteri[S, T] {
     def konvertoi(arvo: S): (Option[T], Tila)
   }
@@ -35,9 +39,12 @@ object Laskenta {
     val konvertteri: Konvertteri[S, T]
   }
 
-  case class Arvokonvertteri[S, T](konversioMap: Seq[Arvokonversio[S, T]]) extends Konvertteri[S, T] {
+  case class Arvokonvertteri[S, T](konversioMap: Seq[Konversio]) extends Konvertteri[S, T] {
+
     def konvertoi(arvo: S): (Option[T], Tila) = {
-      konversioMap.filter(arvo == _.arvo) match {
+      val konversiot = konversioMap.map(konv => konv.asInstanceOf[Arvokonversio[S,T]])
+
+      konversiot.filter(arvo == _.arvo) match {
         case Nil => (None, new Virhetila(s"Arvo $arvo ei täsmää yhteenkään konvertterille määritettyyn arvoon",
           new ArvokonvertointiVirhe(arvo.toString)))
         case head :: tail => {
@@ -77,11 +84,11 @@ object Laskenta {
     }
   }
 
-  sealed trait Konversio {
-    val hylkaysperuste: Boolean
-  }
+  sealed trait Konversio
 
   case class Arvokonversio[S, T](arvo: S, paluuarvo: T, hylkaysperuste: Boolean) extends Konversio
+
+  case class ArvokonversioMerkkijonoilla[S, T](arvo: String, paluuarvo: T, hylkaysperuste: String) extends Konversio
 
   case class Lukuarvovalikonversio(min: BigDecimal, max: BigDecimal, paluuarvo: BigDecimal,
                                    palautaHaettuArvo: Boolean, hylkaysperuste: Boolean) extends Konversio
@@ -347,9 +354,9 @@ object Laskenta {
   case class Valintaperusteyhtasuuruus(oid: String = "",
                                        valintaperusteet: Pair[Valintaperuste, Valintaperuste]) extends Totuusarvofunktio
 
-  case class HylkaaArvovalilla(f: Lukuarvofunktio, hylkaysperustekuvaus: Option[String] = None, oid: String = "", arvovali: Pair[BigDecimal, BigDecimal])
+  case class HylkaaArvovalilla(f: Lukuarvofunktio, hylkaysperustekuvaus: Option[String] = None, oid: String = "", arvovali: Pair[String, String])
     extends Lukuarvofunktio {
-    require(arvovali._1 < arvovali._2, "Arvovälin minimin pitää olla pienempi kuin maksimi")
+    //require(arvovali._1 < arvovali._2, "Arvovälin minimin pitää olla pienempi kuin maksimi")
   }
 
 }

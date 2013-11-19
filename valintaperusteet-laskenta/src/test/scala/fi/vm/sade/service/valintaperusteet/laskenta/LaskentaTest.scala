@@ -53,11 +53,17 @@ class LaskentaTest extends FunSuite {
     put("maksimi", "20")
     put("paluuArvo", "2")
     put("palautaHaettuArvo", "false")
+    put("yksi", "1")
+    put("kymmenen", "10")
+    put("pakollinen", "false")
+    put("puuppa", "puuppa")
   }};
 
   val hakukohdeMustache = new Hakukohde("1234", mustacheMap)
 
   val tyhjaHakemus = TestHakemus("", Nil, Map[String, String]())
+
+  val hakemusMustache = TestHakemus("", Nil, mustacheMap.toMap)
 
   test("Lukuarvo function returns its value") {
     val (tulos, _) = Laskin.laske(hakukohde, tyhjaHakemus, Lukuarvo(BigDecimal("5.0")))
@@ -75,6 +81,17 @@ class LaskentaTest extends FunSuite {
     val konvertoiLukuarvoLukuarvoksi = KonvertoiLukuarvo(arvokonvertteri, Lukuarvo(2))
 
     val (tulos, _) = Laskin.laske(hakukohde, tyhjaHakemus, konvertoiLukuarvoLukuarvoksi)
+    assert(BigDecimal(tulos.get) == BigDecimal("20.0"))
+  }
+
+  test("KonvertoiLukuarvolukuarvoksi Mustache-notaatio") {
+    val arvokonvertteri = Arvokonvertteri[BigDecimal, BigDecimal](List(
+      ArvokonversioMerkkijonoilla[BigDecimal, BigDecimal]("{{hakukohde.yksi}}", BigDecimal("10.0"), "{{hakemus.pakollinen}}"),
+      Arvokonversio(BigDecimal("2.0"), BigDecimal("20.0"), false),
+      Arvokonversio(3, 30, false)))
+    val konvertoiLukuarvoLukuarvoksi = KonvertoiLukuarvo(arvokonvertteri, Lukuarvo(2))
+
+    val (tulos, _) = Laskin.laske(hakukohdeMustache, hakemusMustache, konvertoiLukuarvoLukuarvoksi)
     assert(BigDecimal(tulos.get) == BigDecimal("20.0"))
   }
 
@@ -182,6 +199,16 @@ class LaskentaTest extends FunSuite {
       Arvokonversio("L", BigDecimal(10.0), false)))
     val f = HaeMerkkijonoJaKonvertoiLukuarvoksi(konv, None, HakemuksenValintaperuste("AI_yo", false))
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, f)
+    assert(BigDecimal(tulos.get) == BigDecimal("10.0"))
+  }
+
+  test("HaeMerkkijonoJaKonvertoiLukuarvoksi Mustache-notaatio") {
+    val hakemus = TestHakemus("", Nil, Map("AI_yo" -> "L", "totuus-arvo" -> "false"))
+
+    val konv = Arvokonvertteri[String, BigDecimal](List(ArvokonversioMerkkijonoilla("{{hakukohde.puuppa}}", BigDecimal("20.0"), "{{hakemus.totuus-arvo}}"),
+      ArvokonversioMerkkijonoilla("{{hakemus.AI_yo}}", BigDecimal(10.0), "false")))
+    val f = HaeMerkkijonoJaKonvertoiLukuarvoksi(konv, None, HakemuksenValintaperuste("AI_yo", false))
+    val (tulos, tila) = Laskin.laske(hakukohdeMustache, hakemus, f)
     assert(BigDecimal(tulos.get) == BigDecimal("10.0"))
   }
 
@@ -1032,7 +1059,7 @@ class LaskentaTest extends FunSuite {
 
   test("hylkää arvovälillä") {
 
-    val arvovali = Pair(BigDecimal("6.0"), BigDecimal("9.0"))
+    val arvovali = Pair("6.0", "9.0")
 
     val alla = HylkaaArvovalilla(
       f = Lukuarvo(BigDecimal("5.0")),

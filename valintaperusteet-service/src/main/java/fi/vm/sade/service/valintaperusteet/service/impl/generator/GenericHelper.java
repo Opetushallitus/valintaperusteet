@@ -350,6 +350,16 @@ public class GenericHelper {
         return f;
     }
 
+    public static Funktiokutsu luoHylkaaArvovalilla(FunktionArgumentti arg, String hylkaysperustekuvaus, String min, String max) {
+        Funktiokutsu f = new Funktiokutsu();
+        f.setFunktionimi(Funktionimi.HYLKAAARVOVALILLA);
+        f.getFunktioargumentit().addAll(luoFunktioargumentit(arg));
+        f.getSyoteparametrit().add(luoSyoteparametri("hylkaysperustekuvaus", hylkaysperustekuvaus));
+        f.getSyoteparametrit().add(luoSyoteparametri("arvovaliMin", min));
+        f.getSyoteparametrit().add(luoSyoteparametri("arvovaliMax", max));
+        return f;
+    }
+
     public static class Painotus {
         private final FunktionArgumentti painokerroin;
         private final FunktionArgumentti painotettava;

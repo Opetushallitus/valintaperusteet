@@ -228,8 +228,8 @@ object Funktiokuvaaja {
       ),
       syoteparametrit = List(
         Syoteparametrikuvaus(avain = "hylkaysperustekuvaus", tyyppi = Syoteparametrityyppi.MERKKIJONO, pakollinen = false),
-        Syoteparametrikuvaus("arvovaliMin", Syoteparametrityyppi.DESIMAALILUKU, pakollinen = true),
-        Syoteparametrikuvaus("arvovaliMax", Syoteparametrityyppi.DESIMAALILUKU, pakollinen = true)
+        Syoteparametrikuvaus("arvovaliMin", Syoteparametrityyppi.MERKKIJONO, pakollinen = true),
+        Syoteparametrikuvaus("arvovaliMax", Syoteparametrityyppi.MERKKIJONO, pakollinen = true)
       )
     ),
     Funktionimi.JA -> Funktiokuvaus(

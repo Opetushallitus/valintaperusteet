@@ -4,6 +4,7 @@ import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.impl.generator.*;
+import fi.vm.sade.service.valintaperusteet.service.impl.lukio.LukionValintaperusteet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +71,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
     public static final String KIELI_SV_URI = "kieli_sv";
 
     public static final String PAASY_JA_SOVELTUVUUSKOE = "valintakokeentyyppi_1";
+    public static final String LISAPISTE = "valintakokeentyyppi_5";
 
     public static final String KIELIKOE_PREFIX = "kielikoe_";
 
@@ -91,8 +93,23 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
             "hakukohteet_126", // Liikunnanohjauksen perustutkinto, yo
     }));
 
+    private final String PAASYKOE_TUNNISTE = "paasykoeTulos";
+    private final String LISANAYTTO_TUNNISTE = "lisanayttoTulos";
+
     @Override
     public void luo() throws IOException {
+        long beginTime = System.currentTimeMillis();
+
+        //luoAmmatillinenKoulutus();
+        luoLukioKoulutus();
+
+        long endTime = System.currentTimeMillis();
+        long timeTaken = (endTime - beginTime) / 1000L / 60L;
+
+        LOG.info("Valintaperusteet generoitu. Aikaa generointiin kului: {} min", timeTaken);
+    }
+
+    public void luoAmmatillinenKoulutus() throws IOException {
         long beginTime = System.currentTimeMillis();
 
         TransactionStatus tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
@@ -244,7 +261,293 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         long endTime = System.currentTimeMillis();
         long timeTaken = (endTime - beginTime) / 1000L / 60L;
 
-        LOG.info("Valintaperusteet generoitu. Aikaa generointiin kului: {} min", timeTaken);
+        LOG.info("Valintaperusteet ammatilliseen koulutukseen generoitu. Aikaa generointiin kului: {} min", timeTaken);
+    }
+
+    public void luoLukioKoulutus() throws IOException {
+        long beginTime = System.currentTimeMillis();
+
+        TransactionStatus tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+        transactionManager.commit(tx);
+
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+        Valintaryhma lukioKoulutusVr = new Valintaryhma();
+        lukioKoulutusVr.setNimi("lukiokoulutus");
+        lukioKoulutusVr.setHakuOid(HAKU_OID);
+        lukioKoulutusVr = valintaryhmaService.insert(lukioKoulutusVr);
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
+        Laskentakaava painotettuKeskiarvo = asetaValintaryhmaJaTallennaKantaan(LukionValintaperusteet.painotettuLukuaineidenKeskiarvo(), lukioKoulutusVr);
+        Laskentakaava paasykoe = asetaValintaryhmaJaTallennaKantaan(LukionValintaperusteet.paasykoeLukuarvo(PAASYKOE_TUNNISTE), lukioKoulutusVr);
+        Laskentakaava lisanaytto = asetaValintaryhmaJaTallennaKantaan(LukionValintaperusteet.lisanayttoLukuarvo(LISANAYTTO_TUNNISTE), lukioKoulutusVr);
+        Laskentakaava paasykoeJaLisanaytto = asetaValintaryhmaJaTallennaKantaan(LukionValintaperusteet.paasykoeJaLisanaytto(paasykoe, lisanaytto), lukioKoulutusVr);
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
+        ValinnanVaihe paasykoeValinnanVaihe = new ValinnanVaihe();
+        paasykoeValinnanVaihe.setAktiivinen(false);
+        paasykoeValinnanVaihe.setNimi("Pääsykokeen ja/tai lisäpisteen pakollisuus");
+        paasykoeValinnanVaihe.setKuvaus("Pääsykokeen ja/tai lisäpisteen pakollisuus");
+        paasykoeValinnanVaihe.setValinnanVaiheTyyppi(ValinnanVaiheTyyppi.VALINTAKOE);
+        paasykoeValinnanVaihe = valinnanVaiheService.lisaaValinnanVaiheValintaryhmalle(lukioKoulutusVr.getOid(), paasykoeValinnanVaihe, null);
+
+        ValintakoeDTO valintakoePaasykoe = new ValintakoeDTO();
+        valintakoePaasykoe.setNimi("Pääsykoe");
+        valintakoePaasykoe.setKuvaus("Pääsykoe");
+        valintakoePaasykoe.setAktiivinen(false);
+        valintakoePaasykoe.setTunniste("{{hakukohde. " + PAASYKOE_TUNNISTE + "}}");
+
+        valintakoeService.lisaaValintakoeValinnanVaiheelle(paasykoeValinnanVaihe.getOid(), valintakoePaasykoe);
+
+        ValintakoeDTO valintakoeLisanaytto = new ValintakoeDTO();
+        valintakoeLisanaytto.setNimi("Lisäpiste");
+        valintakoeLisanaytto.setKuvaus("Lisäpiste");
+        valintakoeLisanaytto.setAktiivinen(false);
+        valintakoeLisanaytto.setTunniste("{{hakukohde. " + LISANAYTTO_TUNNISTE + "}}");
+
+        valintakoeService.lisaaValintakoeValinnanVaiheelle(paasykoeValinnanVaihe.getOid(), valintakoeLisanaytto);
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
+        ValinnanVaihe valinnanVaihe = new ValinnanVaihe();
+        valinnanVaihe.setAktiivinen(true);
+        valinnanVaihe.setKuvaus("Varsinainen valinnanvaihe");
+        valinnanVaihe.setNimi("Varsinainen valinnanvaihe");
+        valinnanVaihe.setValinnanVaiheTyyppi(ValinnanVaiheTyyppi.TAVALLINEN);
+
+        valinnanVaihe = valinnanVaiheService.lisaaValinnanVaiheValintaryhmalle(lukioKoulutusVr.getOid(), valinnanVaihe,
+                paasykoeValinnanVaihe.getOid());
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
+        Valintatapajono jono = new Valintatapajono();
+
+        jono.setAktiivinen(true);
+        jono.setAloituspaikat(0);
+        jono.setKuvaus("Varsinaisen valinnanvaiheen valintatapajono");
+        jono.setNimi("Varsinaisen valinnanvaiheen valintatapajono");
+        jono.setTasapistesaanto(Tasapistesaanto.ARVONTA);
+        jono.setSiirretaanSijoitteluun(true);
+
+        valintatapajonoService.lisaaValintatapajonoValinnanVaiheelle(valinnanVaihe.getOid(), jono, null);
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
+        Valintakoekoodi paasykoeKoodi = new Valintakoekoodi();
+        paasykoeKoodi.setUri(PAASY_JA_SOVELTUVUUSKOE);
+
+        Valintakoekoodi lisanayttoKoodi = new Valintakoekoodi();
+        lisanayttoKoodi.setUri(LISAPISTE);
+
+        Valintaryhma painotettuKeskiarvoVr = new Valintaryhma();
+        painotettuKeskiarvoVr.setNimi("Painotettu keskiarvo");
+        painotettuKeskiarvoVr.setHakuOid(HAKU_OID);
+        painotettuKeskiarvoVr = valintaryhmaService.insert(painotettuKeskiarvoVr, lukioKoulutusVr.getOid());
+
+        Laskentakaava laskentakaavaPainotettuKeskiarvo = asetaValintaryhmaJaTallennaKantaan(LukionValintaperusteet.painotettuLukuaineidenKeskiarvo(), painotettuKeskiarvoVr);
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
+        ValinnanVaihe valinnanVaihe1 = valinnanVaiheService.findByValintaryhma(painotettuKeskiarvoVr.getOid()).get(1);
+        Valintatapajono valintatapajono = valintatapajonoService.findJonoByValinnanvaihe(valinnanVaihe1.getOid()).get(0);
+        Jarjestyskriteeri jk = new Jarjestyskriteeri();
+        jk.setAktiivinen(true);
+        jk.setLaskentakaava(laskentakaavaPainotettuKeskiarvo);
+        jk.setMetatiedot(laskentakaavaPainotettuKeskiarvo.getNimi());
+        jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(valintatapajono.getOid(), jk, null, laskentakaavaPainotettuKeskiarvo.getId());
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
+
+        Valintaryhma painotettuKeskiarvoJaPaasykoeVr = new Valintaryhma();
+        painotettuKeskiarvoJaPaasykoeVr.setNimi("Painotettu keskiarvo ja paasykoe");
+        painotettuKeskiarvoJaPaasykoeVr.setHakuOid(HAKU_OID);
+        painotettuKeskiarvoJaPaasykoeVr = valintaryhmaService.insert(painotettuKeskiarvoJaPaasykoeVr, lukioKoulutusVr.getOid());
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
+        valintakoekoodiService.lisaaValintakoekoodiValintaryhmalle(painotettuKeskiarvoJaPaasykoeVr.getOid(), paasykoeKoodi);
+
+        Laskentakaava laskentakaavapainotettuKeskiarvoJaPaasykoe = asetaValintaryhmaJaTallennaKantaan(LukionValintaperusteet.painotettuLukuaineidenKeskiarvoJaPaasykoe(painotettuKeskiarvo, paasykoe), painotettuKeskiarvoJaPaasykoeVr);
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
+        valinnanVaihe1 = valinnanVaiheService.findByValintaryhma(painotettuKeskiarvoJaPaasykoeVr.getOid()).get(1);
+        valintatapajono = valintatapajonoService.findJonoByValinnanvaihe(valinnanVaihe1.getOid()).get(0);
+        jk = new Jarjestyskriteeri();
+        jk.setAktiivinen(true);
+        jk.setLaskentakaava(laskentakaavapainotettuKeskiarvoJaPaasykoe);
+        jk.setMetatiedot(laskentakaavapainotettuKeskiarvoJaPaasykoe.getNimi());
+        jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(valintatapajono.getOid(), jk, null, laskentakaavapainotettuKeskiarvoJaPaasykoe.getId());
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
+        ValinnanVaihe valinnanVaihe0 = valinnanVaiheService.findByValintaryhma(painotettuKeskiarvoJaPaasykoeVr.getOid()).get(0);
+        valinnanVaihe0.setAktiivinen(true);
+        valinnanVaiheService.update(valinnanVaihe0.getOid(), valinnanVaihe0);
+        List<Valintakoe> valintakokeet = valintakoeService.findValintakoeByValinnanVaihe(valinnanVaihe0.getOid());
+        Valintakoe koe0 = valintakokeet.get(0);
+        koe0.setAktiivinen(true);
+        ValintakoeDTO dto = new ValintakoeDTO();
+        dto.setAktiivinen(true);
+        dto.setNimi(koe0.getNimi());
+        dto.setKuvaus(koe0.getKuvaus());
+        dto.setTunniste(koe0.getTunniste());
+        dto.setLaskentakaavaId(koe0.getLaskentakaavaId());
+        valintakoeService.update(koe0.getOid(), dto);
+
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
+        Valintaryhma painotettuKeskiarvoJaLisanayttoVr = new Valintaryhma();
+        painotettuKeskiarvoJaLisanayttoVr.setNimi("Painotettu keskiarvo ja lisänäyttö");
+        painotettuKeskiarvoJaLisanayttoVr.setHakuOid(HAKU_OID);
+        painotettuKeskiarvoJaLisanayttoVr = valintaryhmaService.insert(painotettuKeskiarvoJaLisanayttoVr, lukioKoulutusVr.getOid());
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
+        valintakoekoodiService.lisaaValintakoekoodiValintaryhmalle(painotettuKeskiarvoJaLisanayttoVr.getOid(), lisanayttoKoodi);
+
+        Laskentakaava laskentakaavapainotettuKeskiarvoJaLisanaytto = asetaValintaryhmaJaTallennaKantaan(LukionValintaperusteet.painotettuLukuaineidenKeskiarvoJaLisanaytto(painotettuKeskiarvo, lisanaytto), painotettuKeskiarvoJaLisanayttoVr);
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
+        valinnanVaihe1 = valinnanVaiheService.findByValintaryhma(painotettuKeskiarvoJaLisanayttoVr.getOid()).get(1);
+        valintatapajono = valintatapajonoService.findJonoByValinnanvaihe(valinnanVaihe1.getOid()).get(0);
+        jk = new Jarjestyskriteeri();
+        jk.setAktiivinen(true);
+        jk.setLaskentakaava(laskentakaavapainotettuKeskiarvoJaLisanaytto);
+        jk.setMetatiedot(laskentakaavapainotettuKeskiarvoJaLisanaytto.getNimi());
+        jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(valintatapajono.getOid(), jk, null, laskentakaavapainotettuKeskiarvoJaLisanaytto.getId());
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
+        valinnanVaihe0 = valinnanVaiheService.findByValintaryhma(painotettuKeskiarvoJaLisanayttoVr.getOid()).get(0);
+        valinnanVaihe0.setAktiivinen(true);
+        valinnanVaiheService.update(valinnanVaihe0.getOid(), valinnanVaihe0);
+        valintakokeet = valintakoeService.findValintakoeByValinnanVaihe(valinnanVaihe0.getOid());
+        Valintakoe koe1 = valintakokeet.get(1);
+        koe1.setAktiivinen(true);
+        dto = new ValintakoeDTO();
+        dto.setAktiivinen(true);
+        dto.setNimi(koe1.getNimi());
+        dto.setKuvaus(koe1.getKuvaus());
+        dto.setTunniste(koe1.getTunniste());
+        dto.setLaskentakaavaId(koe1.getLaskentakaavaId());
+        valintakoeService.update(koe1.getOid(), dto);
+
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
+        Valintaryhma painotettuKeskiarvoJaPaasykoeJaLisanayttoVr = new Valintaryhma();
+        painotettuKeskiarvoJaPaasykoeJaLisanayttoVr.setNimi("Painotettu keskiarvo, pääsykoe ja lisänäyttö");
+        painotettuKeskiarvoJaPaasykoeJaLisanayttoVr.setHakuOid(HAKU_OID);
+        painotettuKeskiarvoJaPaasykoeJaLisanayttoVr = valintaryhmaService.insert(painotettuKeskiarvoJaPaasykoeJaLisanayttoVr, lukioKoulutusVr.getOid());
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
+        valintakoekoodiService.lisaaValintakoekoodiValintaryhmalle(painotettuKeskiarvoJaPaasykoeJaLisanayttoVr.getOid(), lisanayttoKoodi);
+        valintakoekoodiService.lisaaValintakoekoodiValintaryhmalle(painotettuKeskiarvoJaPaasykoeJaLisanayttoVr.getOid(), paasykoeKoodi);
+
+        Laskentakaava laskentakaavapainotettuKeskiarvoJaPaasykoeJaLisanaytto = asetaValintaryhmaJaTallennaKantaan(laskentakaavapainotettuKeskiarvoJaPaasykoe, painotettuKeskiarvoJaPaasykoeJaLisanayttoVr);
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
+        valinnanVaihe1 = valinnanVaiheService.findByValintaryhma(painotettuKeskiarvoJaPaasykoeJaLisanayttoVr.getOid()).get(1);
+        valintatapajono = valintatapajonoService.findJonoByValinnanvaihe(valinnanVaihe1.getOid()).get(0);
+        jk = new Jarjestyskriteeri();
+        jk.setAktiivinen(true);
+        jk.setLaskentakaava(laskentakaavapainotettuKeskiarvoJaPaasykoeJaLisanaytto);
+        jk.setMetatiedot(laskentakaavapainotettuKeskiarvoJaPaasykoeJaLisanaytto.getNimi());
+        jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(valintatapajono.getOid(), jk, null, laskentakaavapainotettuKeskiarvoJaPaasykoeJaLisanaytto.getId());
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
+        valinnanVaihe0 = valinnanVaiheService.findByValintaryhma(painotettuKeskiarvoJaPaasykoeJaLisanayttoVr.getOid()).get(0);
+        valinnanVaihe0.setAktiivinen(true);
+        valinnanVaiheService.update(valinnanVaihe0.getOid(), valinnanVaihe0);
+        valintakokeet = valintakoeService.findValintakoeByValinnanVaihe(valinnanVaihe0.getOid());
+
+        koe0 = valintakokeet.get(0);
+        koe0.setAktiivinen(true);
+        dto = new ValintakoeDTO();
+        dto.setAktiivinen(true);
+        dto.setNimi(koe0.getNimi());
+        dto.setKuvaus(koe0.getKuvaus());
+        dto.setTunniste(koe0.getTunniste());
+        dto.setLaskentakaavaId(koe0.getLaskentakaavaId());
+        valintakoeService.update(koe0.getOid(), dto);
+
+        koe1 = valintakokeet.get(1);
+        koe1.setAktiivinen(true);
+        dto = new ValintakoeDTO();
+        dto.setAktiivinen(true);
+        dto.setNimi(koe1.getNimi());
+        dto.setKuvaus(koe1.getKuvaus());
+        dto.setTunniste(koe1.getTunniste());
+        dto.setLaskentakaavaId(koe1.getLaskentakaavaId());
+        valintakoeService.update(koe1.getOid(), dto);
+
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new InputStreamReader(resourceLoader.getResource("classpath:hakukohdekoodit/lukiohakukohdekoodit.csv").getInputStream(), Charset.forName("UTF-8")));
+            // Luetaan otsikkorivi pois
+            String line = reader.readLine();
+            while ((line = reader.readLine()) != null) {
+                String[] splitted = line.split(CSV_DELIMITER);
+                String arvo = splitted[0];
+                String uri = "hakukohteet_" + splitted[0];
+                String nimiFi = splitted[1].replace("\"", "");
+                String nimiSv = splitted[2].replace("\"", "");
+
+                Hakukohdekoodi hakukohdekoodi = new Hakukohdekoodi();
+                hakukohdekoodi.setArvo(arvo);
+                hakukohdekoodi.setUri(uri);
+                hakukohdekoodi.setNimiFi(nimiFi);
+                hakukohdekoodi.setNimiSv(nimiSv);
+                hakukohdekoodi.setNimiEn(nimiFi);
+
+                hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(painotettuKeskiarvoVr.getOid(), hakukohdekoodi);
+                hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(painotettuKeskiarvoJaLisanayttoVr.getOid(), hakukohdekoodi);
+                hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(painotettuKeskiarvoJaPaasykoeVr.getOid(), hakukohdekoodi);
+                hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(painotettuKeskiarvoJaPaasykoeJaLisanayttoVr.getOid(), hakukohdekoodi);
+
+                transactionManager.commit(tx);
+                tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+            }
+        } finally {
+            if (reader != null) {
+                reader.close();
+            }
+
+        }
+
+        long endTime = System.currentTimeMillis();
+        long timeTaken = (endTime - beginTime) / 1000L / 60L;
+
+        LOG.info("Valintaperusteet lukiokoulutukseen generoitu. Aikaa generointiin kului: {} min", timeTaken);
     }
 
     private void lisaaHakukohdekoodit(Valintaryhma peruskouluVr, Valintaryhma lukioVr,

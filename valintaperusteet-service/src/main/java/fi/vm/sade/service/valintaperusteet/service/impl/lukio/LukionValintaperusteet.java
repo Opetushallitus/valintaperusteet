@@ -93,8 +93,41 @@ public class LukionValintaperusteet {
             KUVATAIDE
     };
 
+    public static Laskentakaava painotettuLukuaineidenKeskiarvoJaPaasykoe(Laskentakaava ka, Laskentakaava paasykoe) {
+
+        Funktiokutsu summa = GenericHelper.luoSumma(ka, paasykoe);
+
+        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
+                summa,
+                "Lukion valintaperusteet, painotettu keskiarvo ja pääsykoe");
+
+    }
+
+    public static Laskentakaava painotettuLukuaineidenKeskiarvoJaLisanaytto(Laskentakaava ka, Laskentakaava lisanaytto) {
+        Funktiokutsu summa = GenericHelper.luoSumma(ka, lisanaytto);
+
+        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
+                summa,
+                "Lukion valintaperusteet, painotettu keskiarvo ja lisänäyttö");
+
+    }
+
+    public static Laskentakaava painotettuLukuaineidenKeskiarvoJaPaasykoeJaLisanaytto(Laskentakaava ka, Laskentakaava paasykoeJaLisanaytto) {
+
+        Funktiokutsu summa = GenericHelper.luoSumma(ka, paasykoeJaLisanaytto);
+
+        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
+                summa,
+                "Lukion valintaperusteet, painotettu keskiarvo, pääsykoe ja lisänäyttö");
+
+    }
+
 
     public static Laskentakaava painotettuLukuaineidenKeskiarvo() {
+
+        String minimi = "{{hakukohde.painotettuKeskiarvoHylkaysMin}}";
+        String maksimi = "{{hakukohde.painotettuKeskiarvoHylkaysMax}}";
+
         List<GenericHelper.Painotus> painotukset = new ArrayList<GenericHelper.Painotus>();
         for (String aine : LUKUAINEET) {
             Funktiokutsu arvo = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(aine, false, Valintaperustelahde.HAETTAVA_ARVO));
@@ -110,8 +143,50 @@ public class LukionValintaperusteet {
             painotukset.add(new GenericHelper.Painotus(painokerroin, arvo));
         }
 
+        Funktiokutsu painotuksetFunktio = GenericHelper.luoPainotettuKeskiarvo(painotukset.toArray(new GenericHelper.Painotus[painotukset.size()]));
+
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
-                GenericHelper.luoPainotettuKeskiarvo(painotukset.toArray(new GenericHelper.Painotus[painotukset.size()])),
+                GenericHelper.luoHylkaaArvovalilla(painotuksetFunktio, "Painotettu keskiarvo hylätty", minimi, maksimi),
                 "Lukion valintaperusteet, painotettu keskiarvo");
     }
+
+    public static Laskentakaava paasykoeJaLisanaytto(Laskentakaava paasykoe, Laskentakaava lisanaytto) {
+
+        Funktiokutsu summa = GenericHelper.luoSumma(paasykoe, lisanaytto);
+
+        String minimi = "{{hakukohde.paasykoeJaLisanayttoHylkaysMin}}";
+        String maksimi = "{{hakukohde.paasykoeJaLisanayttoHylkaysMax}}";
+
+        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
+                GenericHelper.luoHylkaaArvovalilla(summa, "Pääsykokeen ja lisänäytön summa ei ole tarpeeksi suuri", minimi, maksimi),
+                "Lukion valintaperusteet, pääsykoe ja lisänäyttö");
+
+    }
+
+    public static Laskentakaava paasykoeLukuarvo(String paasykoeTunniste) {
+
+        String minimi = "{{hakukohde.paasykoeHylkaysMin}}";
+        String maksimi = "{{hakukohde.paasykoeHylkaysMax}}";
+
+        Funktiokutsu funktiokutsu = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(paasykoeTunniste, true, Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO, "", true));
+
+        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
+                GenericHelper.luoHylkaaArvovalilla(funktiokutsu, "Pääsykoetulos hylätty", minimi, maksimi),
+                "Lukion valintaperusteet, pääsykoe");
+
+    }
+
+    public static Laskentakaava lisanayttoLukuarvo(String lisanayttoTunniste) {
+
+        String minimi = "{{hakukohde.lisanayttoHylkaysMin}}";
+        String maksimi = "{{hakukohde.lisanayttoHylkaysMax}}";
+
+        Funktiokutsu funktiokutsu = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(lisanayttoTunniste, true, Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO, "", true));
+
+        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
+                GenericHelper.luoHylkaaArvovalilla(funktiokutsu, "Pääsykoetulos hylätty", minimi, maksimi),
+                "Lukion valintaperusteet, lisänäyttö");
+
+    }
+
 }

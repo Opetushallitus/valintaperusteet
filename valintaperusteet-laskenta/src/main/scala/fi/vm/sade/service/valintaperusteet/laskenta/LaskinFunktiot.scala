@@ -6,6 +6,7 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta._
 import scala.Some
 import scala.Tuple2
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonversio
+import scala.util.Try
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,6 +16,8 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonvers
  * To change this template use File | Settings | File Templates.
  */
 trait LaskinFunktiot {
+
+  val pattern = """\{\{([A-Za-z0–9\-_]+)\.([A-Za-z0–9\-_]+)\}\}""".r
 
   protected def ehdollinenTulos[A, B](tulos: (Option[A], Tila), f: (A, Tila) => Tuple2[Option[B], List[Tila]]): Tuple2[Option[B], List[Tila]] = {
     val (alkupTulos, alkupTila) = tulos
@@ -62,21 +65,64 @@ trait LaskinFunktiot {
     }
   }
 
-  protected def haeValintaperusteHakemukselta(tunniste: String, oletusarvo:Option[String], hakemus: Hakemus): Option[String] = {
+  protected def haeValintaperusteHakemukselta(tunniste: String, hakemus: Hakemus): Option[Any] = {
     hakemus.kentat.get(tunniste) match {
-      case Some(s) if (!s.trim.isEmpty) => Some(s)
-      case None => if (!oletusarvo.isEmpty) oletusarvo else None
+      case Some(s) if (!s.trim.isEmpty) => {
+        val result = Try(s.toBoolean).getOrElse(
+          Try(BigDecimal(s)).getOrElse(s)
+        )
+        Some(result)
+      }
+      case _ =>  None
     }
   }
 
-  protected def haeValintaperusteHakukohteelta(tunniste: String, oletusarvo:Option[String], hakukohde: Hakukohde): Option[String] = {
+  protected def haeValintaperusteHakukohteelta(tunniste: String, hakukohde: Hakukohde): Option[Any] = {
     hakukohde.valintaperusteet.get(tunniste) match {
-      case Some(s) if (!s.trim.isEmpty) => Some(s)
-      case None => if (!oletusarvo.isEmpty) oletusarvo else None
+      case Some(s) if (!s.trim.isEmpty) => {
+        val result = Try(s.toBoolean).getOrElse(
+          Try(BigDecimal(s)).getOrElse(s)
+        )
+        Some(result)
+      }
+      case _ => None
     }
   }
 
+  protected def haeValintaperuste(tunniste: String): Option[Any] = {
+    val result = Try(tunniste.toBoolean).getOrElse(
+      Try(BigDecimal(tunniste)).getOrElse(tunniste)
+    )
+    Some(result)
+  }
 
+  protected def haeArvovali(tunnisteet: (String,String), hakukohde: Hakukohde, hakemus: Hakemus): Option[(BigDecimal, BigDecimal)] = {
+    val min = tunnisteet._1 match {
+      case pattern(source, identifier) => {
+        source match {
+          case "hakemus" => haeValintaperusteHakemukselta(identifier, hakemus)
+          case "hakukohde" => haeValintaperusteHakukohteelta(identifier, hakukohde)
+          case _ => None
+        }
+      }
+      case s: String => haeValintaperuste(s)
+    }
+    val max = tunnisteet._2 match {
+      case pattern(source, identifier) => {
+        source match {
+          case "hakemus" => haeValintaperusteHakemukselta(identifier, hakemus)
+          case "hakukohde" => haeValintaperusteHakukohteelta(identifier, hakukohde)
+          case _ => None
+        }
+      }
+      case s: String => haeValintaperuste(s)
+    }
+
+    (min, max) match {
+      case (Some(minimi: BigDecimal), Some(maksimi: BigDecimal)) => Some((minimi, maksimi))
+      case _ => None
+    }
+  }
 
   protected def palautettavaTila(tilat: Seq[Tila]): Tila = {
     tilat.filter(_ match {
@@ -117,29 +163,7 @@ trait LaskinFunktiot {
     }
   }
 
-  def konversioToLukuarvovalikonversio[S, T](tulos: Tuple2[Option[S], Tila], konversiot: Seq[Konversio], hakemus: Hakemus, hakukohde: Hakukohde): (Option[BigDecimal], List[Tila]) = {
-    val pattern = """\{\{([A-Za-z]+)\.([A-Za-z]+)\}\}""".r
-
-    def haeTilaHakemukselta(tunniste: String, oletusarvo: Option[String], lukuarvo: Boolean) = {
-      val peruste = haeValintaperusteHakemukselta(tunniste, None, hakemus)
-      if(peruste.isEmpty) {
-        (None, new Hylattytila(s"Pakollista arvoa (tunniste $tunniste) ei ole olemassa",
-          new PakollinenValintaperusteHylkays(tunniste)))
-      } else {
-        if(lukuarvo) string2bigDecimal(peruste.get, tunniste) else string2boolean(peruste.get, tunniste)
-
-      }
-    }
-
-    def haeTilaHakukohteelta(tunniste: String, oletusarvo: Option[String], lukuarvo: Boolean) = {
-      val peruste = haeValintaperusteHakukohteelta(tunniste, None, hakukohde)
-      if(peruste.isEmpty) {
-        (None, new Virhetila(s"Hakukohteen valintaperustetta $tunniste ei ole määritelty",
-          new HakukohteenValintaperusteMaarittelemattaVirhe(tunniste)))
-      } else {
-        if(lukuarvo) string2bigDecimal(peruste.get, tunniste) else string2boolean(peruste.get, tunniste)
-      }
-    }
+  def konversioToLukuarvovalikonversio[S, T](konversiot: Seq[Konversio], hakemus: Hakemus, hakukohde: Hakukohde): (Option[Lukuarvovalikonvertteri], List[Tila]) = {
 
     def getLukuarvovaliKonversio(k: Konversio) = {
       val tilat = k match {
@@ -147,57 +171,56 @@ trait LaskinFunktiot {
           val min = l.min match {
             case pattern(source, identifier) => {
               source match {
-                case "hakemus" => haeTilaHakemukselta(identifier, None, true)
-                case "hakukohde" => haeTilaHakukohteelta(identifier, None, true)
-                // Tarttis toteuttaa uus virhe
-                //case _ => VIRHE
+                case "hakemus" => haeValintaperusteHakemukselta(identifier, hakemus)
+                case "hakukohde" => haeValintaperusteHakukohteelta(identifier, hakukohde)
+                case _ => None
               }
             }
-            case s: String => string2bigDecimal(s, "")
+            case s: String => haeValintaperuste(s)
           }
           val max = l.max match {
             case pattern(source, identifier) => {
               source match {
-                case "hakemus" => haeTilaHakemukselta(identifier, None,true)
-                case "hakukohde" => haeTilaHakukohteelta(identifier, None, true)
+                case "hakemus" => haeValintaperusteHakemukselta(identifier, hakemus)
+                case "hakukohde" => haeValintaperusteHakukohteelta(identifier, hakukohde)
+                case _ => None
               }
             }
-            case s: String => string2bigDecimal(s, "")
+            case s: String => haeValintaperuste(s)
           }
           val paluuarvo = l.paluuarvo match {
             case pattern(source, identifier) => {
               source match {
-                case "hakemus" => haeTilaHakemukselta(identifier, None, true)
-                case "hakukohde" => haeTilaHakukohteelta(identifier, None, true)
+                case "hakemus" => haeValintaperusteHakemukselta(identifier, hakemus)
+                case "hakukohde" => haeValintaperusteHakukohteelta(identifier, hakukohde)
+                case _ => None
               }
             }
-            case s: String => string2bigDecimal(s, "")
+            case s: String => haeValintaperuste(s)
           }
           val palautaHaettuArvo = l.palautaHaettuArvo match {
             case pattern(source, identifier) => {
               source match {
-                case "hakemus" => haeTilaHakemukselta(identifier, None, false)
-                case "hakukohde" => haeTilaHakukohteelta(identifier, None, false)
+                case "hakemus" => haeValintaperusteHakemukselta(identifier, hakemus)
+                case "hakukohde" => haeValintaperusteHakukohteelta(identifier, hakukohde)
+                case _ => None
               }
             }
-            case s: String => string2boolean(s, "")
+            case s: String => haeValintaperuste(s)
           }
           (min, max, paluuarvo, palautaHaettuArvo, l.hylkaysperuste)
         }
         case lk: Lukuarvovalikonversio => {
-         val tila = new Hyvaksyttavissatila
 
-         ((Some(lk.min), tila),(Some(lk.max), tila),(Some(lk.paluuarvo), tila),(Some(lk.palautaHaettuArvo), tila), lk.hylkaysperuste)
+         (Some(lk.min),Some(lk.max),Some(lk.paluuarvo),Some(lk.palautaHaettuArvo), lk.hylkaysperuste)
         }
         case _ => {
-          val tila = new Virhetila(s"Konversioita ei voitu muuttaa Arvovalikonversioiksi",new ArvokonvertointiVirhe())
-          ((None,tila),(None,tila),(None,tila),(None,tila), false)
+          (None,None,None,None,false)
         }
       }
 
       tilat match {
-        case ((Some(min: BigDecimal), t1: Hyvaksyttavissatila), (Some(max: BigDecimal), t2: Hyvaksyttavissatila),
-        (Some(p: BigDecimal), t3: Hyvaksyttavissatila), (Some(ph: Boolean), t4: Hyvaksyttavissatila), hylkaysperuste: Boolean) => {
+        case (Some(min: BigDecimal), Some(max: BigDecimal),Some(p: BigDecimal), Some(ph: Boolean), hylkaysperuste: Boolean) => {
           Some(Lukuarvovalikonversio(min, max, p, ph, hylkaysperuste))
         }
         case _ => None
@@ -211,10 +234,64 @@ trait LaskinFunktiot {
       (None, List(new Virhetila(s"Konversioita ei voitu muuttaa Arvovalikonversioiksi",new ArvokonvertointiVirhe())))
     } else {
       val konvertteri = Lukuarvovalikonvertteri(konvertoidut.map(k => k.get))
-      ehdollinenTulos[S, BigDecimal](tulos, (t, tila) => {
-        val (konvertoituTulos, konvertoituTila) = konvertteri.konvertoi(t.asInstanceOf[BigDecimal])
-        (konvertoituTulos, List(tila, konvertoituTila))
-      })
+      (Some(konvertteri), List(new Hyvaksyttavissatila))
+    }
+
+
+  }
+
+  def konversioToArvokonversio[S, T](konversiot: Seq[Konversio], hakemus: Hakemus, hakukohde: Hakukohde): (Option[Arvokonvertteri[S,T]], List[Tila]) = {
+
+    def getArvoKonversio(k: Konversio) = {
+      val tilat = k match {
+        case a: ArvokonversioMerkkijonoilla[S,T] => {
+          val arvo = a.arvo match {
+            case pattern(source, identifier) => {
+              source match {
+                case "hakemus" => haeValintaperusteHakemukselta(identifier, hakemus)
+                case "hakukohde" => haeValintaperusteHakukohteelta(identifier, hakukohde)
+                case _ => None
+              }
+            }
+            case s: String => haeValintaperuste(s)
+          }
+          val hylkaysperuste = a.hylkaysperuste match {
+            case pattern(source, identifier) => {
+              source match {
+                case "hakemus" => haeValintaperusteHakemukselta(identifier, hakemus)
+                case "hakukohde" => haeValintaperusteHakukohteelta(identifier, hakukohde)
+              }
+            }
+            case s: String => haeValintaperuste(s)
+          }
+
+          (arvo, Some(a.paluuarvo), hylkaysperuste)
+        }
+        case ak: Arvokonversio[_,_] => {
+
+          (Some(ak.arvo),Some(ak.paluuarvo),Some(ak.hylkaysperuste))
+        }
+        case _ => {
+          (None,None,None)
+        }
+      }
+
+      tilat match {
+        case (Some(arvo: Any), Some(paluuarvo: Any), Some(h: Boolean)) => {
+          Some(Arvokonversio(arvo, paluuarvo, h))
+        }
+        case _ => None
+      }
+
+    }
+
+    val konvertoidut = konversiot.map(konv => getArvoKonversio(konv))
+
+    if(konvertoidut.contains(None)) {
+      (None, List(new Virhetila(s"Konversioita ei voitu muuttaa Arvokonversioiksi",new ArvokonvertointiVirhe())))
+    } else {
+      val konvertteri = Arvokonvertteri[S,T](konvertoidut.map(k => k.get))
+      (Some(konvertteri), List(new Hyvaksyttavissatila))
     }
 
 
