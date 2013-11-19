@@ -94,13 +94,14 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
     }));
 
     private final String PAASYKOE_TUNNISTE = "paasykoeTulos";
+    private final String KIELIKOE_TUNNISTE = "kielikoeTulos";
     private final String LISANAYTTO_TUNNISTE = "lisanayttoTulos";
 
     @Override
     public void luo() throws IOException {
         long beginTime = System.currentTimeMillis();
 
-        //luoAmmatillinenKoulutus();
+        luoAmmatillinenKoulutus();
         luoLukioKoulutus();
 
         long endTime = System.currentTimeMillis();
@@ -162,7 +163,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
         Valintaryhma peruskouluVr = new Valintaryhma();
-        peruskouluVr.setNimi("PK");
+        peruskouluVr.setNimi("Peruskoulupohjaiset");
         peruskouluVr.setHakuOid(HAKU_OID);
         peruskouluVr = valintaryhmaService.insert(peruskouluVr, ammatillinenKoulutusVr.getOid());
 
@@ -170,7 +171,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
         Valintaryhma lukioVr = new Valintaryhma();
-        lukioVr.setNimi("LK");
+        lukioVr.setNimi("Lukiopohjaiset");
         lukioVr.setHakuOid(HAKU_OID);
         lukioVr = valintaryhmaService.insert(lukioVr, ammatillinenKoulutusVr.getOid());
 
@@ -272,7 +273,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
         Valintaryhma lukioKoulutusVr = new Valintaryhma();
-        lukioKoulutusVr.setNimi("lukiokoulutus");
+        lukioKoulutusVr.setNimi("Lukiokoulutus");
         lukioKoulutusVr.setHakuOid(HAKU_OID);
         lukioKoulutusVr = valintaryhmaService.insert(lukioKoulutusVr);
         transactionManager.commit(tx);
@@ -560,21 +561,22 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                                       Laskentakaava kielikoeLaskentakaava) throws IOException {
         BufferedReader reader = null;
         try {
-            reader = new BufferedReader(new InputStreamReader(resourceLoader.getResource("classpath:hakukohdekoodit/hakukohdekoodit.csv").getInputStream(), Charset.forName("UTF-8")));
+            reader = new BufferedReader(new InputStreamReader(resourceLoader.getResource("classpath:hakukohdekoodit/ammatillinenkoulutushakukohdekoodit.csv").getInputStream(), Charset.forName("UTF-8")));
 
             // Luetaan otsikkorivi pois
             String line = reader.readLine();
             while ((line = reader.readLine()) != null) {
                 String[] splitted = line.split(CSV_DELIMITER);
                 String arvo = splitted[0];
-                String uri = splitted[1];
-                String nimi = splitted[2].replace("\"", "");
+                String uri = "hakukohteet_" + arvo;
+                String nimi = splitted[1].replace("\"", "");
+                String nimiSV = splitted[2].replace("\"", "");
 
                 Hakukohdekoodi hakukohdekoodi = new Hakukohdekoodi();
                 hakukohdekoodi.setArvo(arvo);
                 hakukohdekoodi.setUri(uri);
                 hakukohdekoodi.setNimiFi(nimi);
-                hakukohdekoodi.setNimiSv(nimi);
+                hakukohdekoodi.setNimiSv(nimiSV);
                 hakukohdekoodi.setNimiEn(nimi);
 
 
@@ -686,7 +688,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         TransactionStatus tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
         Valintaryhma koevalintaryhma = new Valintaryhma();
-        koevalintaryhma.setNimi("Pääsykokeelliset");
+        koevalintaryhma.setNimi("Peruskaava ja pääsykoe");
         koevalintaryhma.setHakuOid(HAKU_OID);
         koevalintaryhma = valintaryhmaService.insert(koevalintaryhma, valintaryhma.getOid());
 
@@ -777,7 +779,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         TransactionStatus tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
         Valintaryhma koe = new Valintaryhma();
-        koe.setNimi("Pääsykokeettomat");
+        koe.setNimi("Peruskaava");
         koe.setHakuOid(HAKU_OID);
         koe = valintaryhmaService.insert(koe, valintaryhma.getOid());
 
