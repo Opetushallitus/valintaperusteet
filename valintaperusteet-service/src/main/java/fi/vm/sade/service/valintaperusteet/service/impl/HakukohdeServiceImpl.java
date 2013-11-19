@@ -92,6 +92,8 @@ public class HakukohdeServiceImpl extends AbstractCRUDServiceImpl<HakukohdeViite
         hkv.setNimi(hakukohdeViiteDTO.getNimi());
         hkv.setOid(hakukohdeViiteDTO.getOid());
         hkv.setHakuoid(hakukohdeViiteDTO.getHakuoid());
+        hkv.setTila(hakukohdeViiteDTO.getTila());
+        hkv.setTarjoajaOid(hakukohdeViiteDTO.getTarjoajaOid());
 
         String valintaryhmaOid = hakukohdeViiteDTO.getValintaryhmaOid();
 
@@ -116,6 +118,7 @@ public class HakukohdeServiceImpl extends AbstractCRUDServiceImpl<HakukohdeViite
         managedObject.setNimi(hkv.getNimi());
         managedObject.setValinnanvaiheet(hkv.getValinnanvaiheet());
         managedObject.setValintaryhma(hkv.getValintaryhma());
+        managedObject.setTila(hkv.getTila());
 
         return managedObject;
     }

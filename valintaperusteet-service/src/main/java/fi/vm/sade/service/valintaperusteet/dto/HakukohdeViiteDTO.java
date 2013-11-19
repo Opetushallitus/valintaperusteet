@@ -23,7 +23,11 @@ public class HakukohdeViiteDTO {
     @JsonView(JsonViews.Basic.class)
     private String valintaryhmaOid;
     @JsonView(JsonViews.Basic.class)
+    private String tarjoajaOid;
+    @JsonView(JsonViews.Basic.class)
     private Set<String> valinnanvaiheetOids;
+    @JsonView(JsonViews.Basic.class)
+    private String tila;
 
     public String getNimi() {
         return nimi;
@@ -63,5 +67,21 @@ public class HakukohdeViiteDTO {
 
     public void setValinnanvaiheetOids(Set<String> valinnanvaiheetOids) {
         this.valinnanvaiheetOids = valinnanvaiheetOids;
+    }
+
+    public String getTila() {
+        return tila;
+    }
+
+    public void setTila(String tila) {
+        this.tila = tila;
+    }
+
+    public String getTarjoajaOid() {
+        return tarjoajaOid;
+    }
+
+    public void setTarjoajaOid(String tarjoajaOid) {
+        this.tarjoajaOid = tarjoajaOid;
     }
 }

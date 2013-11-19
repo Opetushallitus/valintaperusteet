@@ -71,7 +71,7 @@ public class Valintatapajono extends BaseEntity implements LinkitettavaJaKopioit
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "masterValintatapajono")
     private Set<Valintatapajono> kopioValintatapajonot = new HashSet<Valintatapajono>();
 
-    @OneToMany(mappedBy = "valintatapajono", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "valintatapajono", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Set<HakijaryhmaValintatapajono> hakijaryhmat = new HashSet<HakijaryhmaValintatapajono>();
 
     @OneToMany(mappedBy = "valintatapajono", cascade = CascadeType.REMOVE)
