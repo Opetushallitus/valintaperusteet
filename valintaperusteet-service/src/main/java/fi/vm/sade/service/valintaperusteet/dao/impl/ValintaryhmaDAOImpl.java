@@ -52,12 +52,20 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long> 
     public Valintaryhma readByOid(String oid) {
         QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
 
-        return from(valintaryhma).leftJoin(valintaryhma.alavalintaryhmat).fetch()
+        Valintaryhma vr = from(valintaryhma).leftJoin(valintaryhma.alavalintaryhmat).fetch()
                 .leftJoin(valintaryhma.hakukohdeViitteet).fetch()
                 .leftJoin(valintaryhma.hakukohdekoodit).fetch()
-                .leftJoin(valintaryhma.valintakoekoodit).fetch()
-                .where(valintaryhma.oid.eq(oid)).distinct()
+                .where(valintaryhma.oid.eq(oid))
                 .singleResult(valintaryhma);
+
+
+        if (vr != null) {
+            // Initialisoidaan valintakoekoodien haku
+            vr.getValintakoekoodit().size();
+        }
+
+        return vr;
+
     }
 
     @Override

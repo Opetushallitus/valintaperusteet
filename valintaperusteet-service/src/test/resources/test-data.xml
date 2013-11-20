@@ -376,6 +376,9 @@
 
     <valintaryhma id="57" version="0" oid="oid57" nimi="Valintaryhma 57" hakuOid="hakuoid1"/>
 
+    <valintaryhma id="58" version="0" oid="oid58" nimi="Valintaryhma 57" hakuOid="hakuoid1"/>
+
+
     <hakukohdekoodi id="1" version="0" uri="hakukohdekoodiuri1" arvo="koodiarvo1"
                     nimi_fi="hakukohdekoodi1"
                     nimi_sv="hakukohdekoodi1" nimi_en="hakukohdekoodi1"/>
@@ -466,6 +469,15 @@
                     nimi_fi="hakukohdekoodi21"/>
     <valintaryhma_hakukohdekoodi valintaryhma_id="55" hakukohdekoodi_id="21"/>
 
+    <hakukohdekoodi id="22" version="0" uri="hakukohdekoodiuri22" arvo="koodiarvo22"
+                    nimi_fi="hakukohdekoodi22"/>
+    <valintaryhma_hakukohdekoodi valintaryhma_id="58" hakukohdekoodi_id="22"/>
+
+    <hakukohdekoodi id="23" version="0" uri="hakukohdekoodiuri23" arvo="koodiarvo23"
+                    nimi_fi="hakukohdekoodi23"/>
+    <valintaryhma_hakukohdekoodi valintaryhma_id="58" hakukohdekoodi_id="23"/>
+
+
     <valintakoekoodi id="12" version="0" uri="koekoodi1"/>
     <valintaryhma_valintakoekoodi valintaryhma_id="45" valintakoekoodi_id="12"/>
 
@@ -492,6 +504,9 @@
     <valintaryhma_valintakoekoodi valintaryhma_id="51" valintakoekoodi_id="15"/>
 
     <valintakoekoodi id="16" version="0" uri="valintakoeuri3"/>
+
+    <valintakoekoodi id="17" version="0" uri="valintakoeuri4"/>
+    <valintaryhma_valintakoekoodi valintaryhma_id="58" valintakoekoodi_id="17"/>
 
 
     <hakukohde_viite id="1" version="0" hakuoid="hakuoid1" oid="oid1" nimi="haku1" valintaryhma_id="1"
@@ -1428,6 +1443,6 @@
     <laskentakaava id="999" version="0" nimi="kaava999" on_luonnos="true" tyyppi="LUKUARVOFUNKTIO" funktiokutsu_id="413"
                    hakukohdeviite="1"/>
 
-    <hakijaryhma_jono />
-    <hakijaryhma />
+    <hakijaryhma_jono/>
+    <hakijaryhma/>
 </dataset>
