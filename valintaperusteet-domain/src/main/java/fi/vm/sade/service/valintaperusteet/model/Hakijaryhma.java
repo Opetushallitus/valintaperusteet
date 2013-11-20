@@ -5,7 +5,9 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonView;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -184,5 +186,23 @@ public class Hakijaryhma extends BaseEntity implements LinkitettavaJaKopioitava<
     public void setLaskentakaavaId(Long id) {
         laskentakaava = new Laskentakaava();
         laskentakaava.setId(id);
+    }
+
+    @JsonProperty("valintatapajonot")
+    @JsonView(JsonViews.Basic.class)
+    public List<String> getValintatapajonoIds() {
+        List<String> valintatapajonoIds = new ArrayList<String>();
+        if (jonot != null) {
+            for (HakijaryhmaValintatapajono hakijaryhma : jonot) {
+                valintatapajonoIds.add(hakijaryhma.getHakijaryhma().getOid());
+            }
+        }
+        return valintatapajonoIds;
+    }
+
+    @JsonProperty("valintatapajonot")
+    @JsonView(JsonViews.Basic.class)
+    public void setValintatapajonoIds(List<String> ids) {
+
     }
 }

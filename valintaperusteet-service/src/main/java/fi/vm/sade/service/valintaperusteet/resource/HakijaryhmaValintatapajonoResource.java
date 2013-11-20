@@ -70,4 +70,5 @@ public class HakijaryhmaValintatapajonoResource {
         HakijaryhmaValintatapajono update = hakijaryhmaValintatapajonoService.update(oid, jono);
         return Response.status(Response.Status.ACCEPTED).entity(update).build();
     }
+
 }

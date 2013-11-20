@@ -27,6 +27,7 @@ public class HakijaryhmaValintatapajono extends BaseEntity implements Linkitetta
 
     @JoinColumn(name = "valintatapajono_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonView(JsonViews.Basic.class)
     private Valintatapajono valintatapajono;
 
     @Column(name = "aktiivinen", nullable = false)

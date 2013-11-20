@@ -5,8 +5,7 @@ import com.mysema.query.jpa.impl.JPASubQuery;
 import com.mysema.query.types.EntityPath;
 import fi.vm.sade.generic.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaValintatapajonoDAO;
-import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
-import fi.vm.sade.service.valintaperusteet.model.QHakijaryhmaValintatapajono;
+import fi.vm.sade.service.valintaperusteet.model.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -32,9 +31,16 @@ public class HakijaryhmaValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Hakija
     public HakijaryhmaValintatapajono readByOid(String oid) {
         QHakijaryhmaValintatapajono hv = QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
 
+        QHakijaryhma h = QHakijaryhma.hakijaryhma;
+        QValintatapajono v = QValintatapajono.valintatapajono;
+
         return from(hv)
                 .where(hv.oid.eq(oid))
-                .leftJoin(hv.hakijaryhma).fetch()
+                .leftJoin(hv.hakijaryhma, h).fetch()
+                .leftJoin(h.jonot).fetch()
+                .leftJoin(hv.valintatapajono, v).fetch()
+                .leftJoin(v.hakijaryhmat).fetch()
+                .leftJoin(v.valinnanVaihe).fetch()
                 .leftJoin(hv.master).fetch()
                 .leftJoin(hv.edellinen).fetch()
                 .singleResult(hv);
@@ -42,12 +48,37 @@ public class HakijaryhmaValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Hakija
 
     @Override
     public List<HakijaryhmaValintatapajono> findByValintatapajono(String oid) {
-        QHakijaryhmaValintatapajono hakijaryhmaValintatapajono = QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
+        QHakijaryhmaValintatapajono hv = QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
 
-        return from(hakijaryhmaValintatapajono).where(hakijaryhmaValintatapajono.valintatapajono.oid.eq(oid))
-                .leftJoin(hakijaryhmaValintatapajono.hakijaryhma).fetch()
-                .leftJoin(hakijaryhmaValintatapajono.master).fetch()
-                .leftJoin(hakijaryhmaValintatapajono.edellinen).fetch()
-                .listDistinct(hakijaryhmaValintatapajono);
+        QHakijaryhma h = QHakijaryhma.hakijaryhma;
+        QValintatapajono v = QValintatapajono.valintatapajono;
+
+        return from(hv).where(hv.valintatapajono.oid.eq(oid))
+                .leftJoin(hv.hakijaryhma, h).fetch()
+                .leftJoin(h.jonot).fetch()
+                .leftJoin(hv.valintatapajono, v).fetch()
+                .leftJoin(v.hakijaryhmat).fetch()
+                .leftJoin(v.valinnanVaihe).fetch()
+                .leftJoin(hv.master).fetch()
+                .leftJoin(hv.edellinen).fetch()
+                .listDistinct(hv);
+    }
+
+    @Override
+    public List<HakijaryhmaValintatapajono> findByHakijaryhma(String hakijaryhmaOid) {
+        QHakijaryhmaValintatapajono hv = QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
+
+        QHakijaryhma h = QHakijaryhma.hakijaryhma;
+        QValintatapajono v = QValintatapajono.valintatapajono;
+
+        return from(hv).where(hv.hakijaryhma.oid.eq(hakijaryhmaOid))
+                .leftJoin(hv.hakijaryhma, h).fetch()
+                .leftJoin(h.jonot).fetch()
+                .leftJoin(hv.valintatapajono, v).fetch()
+                .leftJoin(v.hakijaryhmat).fetch()
+                .leftJoin(v.valinnanVaihe).fetch()
+                .leftJoin(hv.master).fetch()
+                .leftJoin(hv.edellinen).fetch()
+                .listDistinct(hv);
     }
 }
