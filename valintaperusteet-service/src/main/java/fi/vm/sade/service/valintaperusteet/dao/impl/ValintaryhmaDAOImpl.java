@@ -56,7 +56,7 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long> 
                 .leftJoin(valintaryhma.hakukohdeViitteet).fetch()
                 .leftJoin(valintaryhma.hakukohdekoodit).fetch()
                 .leftJoin(valintaryhma.valintakoekoodit).fetch()
-                .where(valintaryhma.oid.eq(oid))
+                .where(valintaryhma.oid.eq(oid)).distinct()
                 .singleResult(valintaryhma);
     }
 
