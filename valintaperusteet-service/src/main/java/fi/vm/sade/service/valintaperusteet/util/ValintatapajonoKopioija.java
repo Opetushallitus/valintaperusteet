@@ -45,6 +45,17 @@ public class ValintatapajonoKopioija implements Kopioija<Valintatapajono> {
         if (from.getTasapistesaanto() != null) {
             to.setTasapistesaanto(from.getTasapistesaanto());
         }
+
+        // VT-657
+        if(from.getVarasijaTayttoPaivat() != null) {
+            to.setVarasijaTayttoPaivat(from.getVarasijaTayttoPaivat());
+        }
+        if(from.getPoissaOlevaTaytto() != null) {
+            to.setPoissaOlevaTaytto(from.getPoissaOlevaTaytto());
+        }
+        if(from.getVarasijat() != null) {
+            to.setVarasijat(from.getVarasijat());
+        }
     }
 
     @Override
@@ -68,6 +79,17 @@ public class ValintatapajonoKopioija implements Kopioija<Valintatapajono> {
 
         if (kopio.getTasapistesaanto().equals(alkuperainenMaster.getTasapistesaanto())) {
             kopio.setTasapistesaanto(paivitettyMaster.getTasapistesaanto());
+        }
+
+        // VT-657
+        if (kopio.getVarasijaTayttoPaivat().equals(alkuperainenMaster.getVarasijaTayttoPaivat())) {
+            kopio.setVarasijaTayttoPaivat(paivitettyMaster.getVarasijaTayttoPaivat());
+        }
+        if (kopio.getPoissaOlevaTaytto().equals(alkuperainenMaster.getPoissaOlevaTaytto())) {
+            kopio.setPoissaOlevaTaytto(paivitettyMaster.getPoissaOlevaTaytto());
+        }
+        if (kopio.getVarasijat().equals(alkuperainenMaster.getVarasijat())) {
+            kopio.setVarasijat(paivitettyMaster.getVarasijat());
         }
 
         kopio.setKuvaus(paivitettyMaster.getKuvaus());

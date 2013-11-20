@@ -53,6 +53,18 @@ public class Valintatapajono extends BaseEntity implements LinkitettavaJaKopioit
     @Column(name = "ei_varasijatayttoa", nullable = false)
     private Boolean eiVarasijatayttoa = false;
 
+    @Column(name = "varasijat", nullable = false)
+    @JsonView(JsonViews.Basic.class)
+    private Integer varasijat = 0;
+
+    @Column(name = "varasija_taytto_paivat", nullable = false)
+    @JsonView(JsonViews.Basic.class)
+    private Integer varasijaTayttoPaivat = 0;
+
+    @JsonView(JsonViews.Basic.class)
+    @Column(name = "poissa_oleva_taytto", nullable = false)
+    private Boolean poissaOlevaTaytto = false;
+
     @JoinColumn(name = "edellinen_valintatapajono_id")
     @OneToOne(fetch = FetchType.LAZY)
     private Valintatapajono edellinenValintatapajono;
@@ -183,6 +195,30 @@ public class Valintatapajono extends BaseEntity implements LinkitettavaJaKopioit
 
     public void setOid(String oid) {
         this.oid = oid;
+    }
+
+    public Integer getVarasijat() {
+        return varasijat;
+    }
+
+    public void setVarasijat(Integer varasijat) {
+        this.varasijat = varasijat;
+    }
+
+    public Integer getVarasijaTayttoPaivat() {
+        return varasijaTayttoPaivat;
+    }
+
+    public void setVarasijaTayttoPaivat(Integer varasijaTayttoPaivat) {
+        this.varasijaTayttoPaivat = varasijaTayttoPaivat;
+    }
+
+    public Boolean getPoissaOlevaTaytto() {
+        return poissaOlevaTaytto;
+    }
+
+    public void setPoissaOlevaTaytto(Boolean poissaOlevaTaytto) {
+        this.poissaOlevaTaytto = poissaOlevaTaytto;
     }
 
     @JsonProperty("valinnan_vaihe")
