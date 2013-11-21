@@ -223,8 +223,9 @@ public class Valintatapajono extends BaseEntity implements LinkitettavaJaKopioit
 
     @JsonProperty("valinnan_vaihe")
     @JsonView(JsonViews.Basic.class)
-    public Long getValinnanVaiheId() {
-        return valinnanVaihe.getId();
+    public String getValinnanVaiheId() {
+        // Kai oidi olisi parempi palauttaa kuin id
+        return valinnanVaihe.getOid();
     }
 
     @JsonProperty("hakijaryhmat")
