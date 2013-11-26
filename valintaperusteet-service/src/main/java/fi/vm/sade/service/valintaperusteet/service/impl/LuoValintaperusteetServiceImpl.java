@@ -436,7 +436,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
 
         Valintaryhma painotettuKeskiarvoJaPaasykoeVr = new Valintaryhma();
-        painotettuKeskiarvoJaPaasykoeVr.setNimi("Painotettu keskiarvo ja paasykoe");
+        painotettuKeskiarvoJaPaasykoeVr.setNimi("Painotettu keskiarvo ja pääsykoe");
         painotettuKeskiarvoJaPaasykoeVr.setHakuOid(HAKU_OID);
         painotettuKeskiarvoJaPaasykoeVr = valintaryhmaService.insert(painotettuKeskiarvoJaPaasykoeVr, lukioKoulutusVr.getOid());
 

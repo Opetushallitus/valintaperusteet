@@ -143,6 +143,18 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             }
         }
 
+        for(Arvokonvertteriparametri a : fk.getArvokonvertteriparametrit()) {
+            if(a.getHylkaysperuste() == null) {
+                a.setHylkaysperuste("false");
+            }
+        }
+
+        for(Arvovalikonvertteriparametri a : fk.getArvovalikonvertteriparametrit()) {
+            if(a.getPalautaHaettuArvo() == null) {
+                a.setPalautaHaettuArvo("false");
+            }
+        }
+
         if (fk.getValintaperusteviitteet().size() == 1) {
             fk.getValintaperusteviitteet().iterator().next().setIndeksi(1);
         }
@@ -347,13 +359,6 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
                     && funktiokutsu.getArvovalikonvertteriparametrit().size() > 0) {
                 List<Arvovalikonvertteriparametri> arvovalikonvertterit = new ArrayList<Arvovalikonvertteriparametri>(
                         funktiokutsu.getArvovalikonvertteriparametrit());
-
-                Collections.sort(arvovalikonvertterit, new Comparator<Arvovalikonvertteriparametri>() {
-                    @Override
-                    public int compare(Arvovalikonvertteriparametri o1, Arvovalikonvertteriparametri o2) {
-                        return o1.getMinValue().compareTo(o2.getMinValue());
-                    }
-                });
 
                 String min = arvovalikonvertterit.get(0).getMinValue().toString();
                 String max = arvovalikonvertterit.get(arvovalikonvertterit.size() - 1).getMaxValue().toString();
