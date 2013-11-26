@@ -73,6 +73,11 @@ public class HakijaryhmaValintatapajonoServiceImpl extends AbstractCRUDServiceIm
         return haeHakijaryhmaValintatapajono(oid);
     }
 
+    @Override
+    public List<HakijaryhmaValintatapajono> findByHakijaryhma(String hakijaryhmaOid) {
+        return hakijaryhmaValintatapajonoDAO.findByHakijaryhma(hakijaryhmaOid);
+    }
+
 
     @Override
     public void deleteByOid(String oid, boolean skipInheritedCheck) {

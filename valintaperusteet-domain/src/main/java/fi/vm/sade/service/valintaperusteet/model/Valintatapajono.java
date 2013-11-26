@@ -53,6 +53,18 @@ public class Valintatapajono extends BaseEntity implements LinkitettavaJaKopioit
     @Column(name = "ei_varasijatayttoa", nullable = false)
     private Boolean eiVarasijatayttoa = false;
 
+    @Column(name = "varasijat", nullable = false)
+    @JsonView(JsonViews.Basic.class)
+    private Integer varasijat = 0;
+
+    @Column(name = "varasija_taytto_paivat", nullable = false)
+    @JsonView(JsonViews.Basic.class)
+    private Integer varasijaTayttoPaivat = 0;
+
+    @JsonView(JsonViews.Basic.class)
+    @Column(name = "poissa_oleva_taytto", nullable = false)
+    private Boolean poissaOlevaTaytto = false;
+
     @JoinColumn(name = "edellinen_valintatapajono_id")
     @OneToOne(fetch = FetchType.LAZY)
     private Valintatapajono edellinenValintatapajono;
@@ -71,7 +83,7 @@ public class Valintatapajono extends BaseEntity implements LinkitettavaJaKopioit
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "masterValintatapajono")
     private Set<Valintatapajono> kopioValintatapajonot = new HashSet<Valintatapajono>();
 
-    @OneToMany(mappedBy = "valintatapajono", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "valintatapajono", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Set<HakijaryhmaValintatapajono> hakijaryhmat = new HashSet<HakijaryhmaValintatapajono>();
 
     @OneToMany(mappedBy = "valintatapajono", cascade = CascadeType.REMOVE)
@@ -185,10 +197,35 @@ public class Valintatapajono extends BaseEntity implements LinkitettavaJaKopioit
         this.oid = oid;
     }
 
+    public Integer getVarasijat() {
+        return varasijat;
+    }
+
+    public void setVarasijat(Integer varasijat) {
+        this.varasijat = varasijat;
+    }
+
+    public Integer getVarasijaTayttoPaivat() {
+        return varasijaTayttoPaivat;
+    }
+
+    public void setVarasijaTayttoPaivat(Integer varasijaTayttoPaivat) {
+        this.varasijaTayttoPaivat = varasijaTayttoPaivat;
+    }
+
+    public Boolean getPoissaOlevaTaytto() {
+        return poissaOlevaTaytto;
+    }
+
+    public void setPoissaOlevaTaytto(Boolean poissaOlevaTaytto) {
+        this.poissaOlevaTaytto = poissaOlevaTaytto;
+    }
+
     @JsonProperty("valinnan_vaihe")
     @JsonView(JsonViews.Basic.class)
-    public Long getValinnanVaiheId() {
-        return valinnanVaihe.getId();
+    public String getValinnanVaiheId() {
+        // Kai oidi olisi parempi palauttaa kuin id
+        return valinnanVaihe.getOid();
     }
 
     @JsonProperty("hakijaryhmat")

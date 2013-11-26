@@ -16,6 +16,12 @@ public abstract class ValintatapajonoUtil {
         kopio.setNimi(master.getNimi());
         kopio.setSiirretaanSijoitteluun(master.getSiirretaanSijoitteluun());
         kopio.setTasapistesaanto(master.getTasapistesaanto());
+
+        // VT-657
+        kopio.setVarasijaTayttoPaivat(master.getVarasijaTayttoPaivat());
+        kopio.setPoissaOlevaTaytto(master.getPoissaOlevaTaytto());
+        kopio.setVarasijat(master.getVarasijat());
+
         kopio.setMasterValintatapajono(master);
         return kopio;
     }

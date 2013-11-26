@@ -12,4 +12,5 @@ public interface HakijaryhmaValintatapajonoService extends CRUDService<Hakijaryh
 
     HakijaryhmaValintatapajono readByOid(String oid);
 
+    List<HakijaryhmaValintatapajono> findByHakijaryhma(String hakijaryhmaOid);
 }

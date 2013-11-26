@@ -1,8 +1,10 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
 import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
+import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaService;
+import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaValintatapajonoService;
 import fi.vm.sade.service.valintaperusteet.service.ValintakoeService;
 import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
 import org.codehaus.jackson.map.annotate.JsonView;
@@ -41,6 +43,9 @@ public class HakijaryhmaResource {
     @Autowired
     HakijaryhmaService hakijaryhmaService;
 
+    @Autowired
+    HakijaryhmaValintatapajonoService hakijaryhmaValintatapajonoService;
+
     protected final static Logger LOGGER = LoggerFactory.getLogger(HakijaryhmaResource.class);
 
     @GET
@@ -50,6 +55,15 @@ public class HakijaryhmaResource {
     @Secured({READ, UPDATE, CRUD})
     public Hakijaryhma read(@PathParam("oid") String oid) {
         return hakijaryhmaService.readByOid(oid);
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("{hakijaryhmaOid}/valintatapajono")
+    @JsonView({JsonViews.Basic.class})
+    @Secured({READ, UPDATE, CRUD})
+    public List<HakijaryhmaValintatapajono> valintatapajonot(@PathParam("hakijaryhmaOid") String hakijaryhmaOid) {
+        return hakijaryhmaValintatapajonoService.findByHakijaryhma(hakijaryhmaOid);
     }
 
     @POST
@@ -79,4 +93,6 @@ public class HakijaryhmaResource {
         hakijaryhmaService.deleteByOid(oid, false);
         return Response.status(Response.Status.ACCEPTED).build();
     }
+
+
 }

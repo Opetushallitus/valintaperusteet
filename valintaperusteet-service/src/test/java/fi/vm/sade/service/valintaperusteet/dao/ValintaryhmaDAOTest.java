@@ -38,7 +38,7 @@ public class ValintaryhmaDAOTest {
     @Test
     public void testFindValintaryhmaByNullParentOid() throws Exception {
         List<Valintaryhma> valintaryhmas = valintaryhmaDAO.findChildrenByParentOid(null);
-        assertEquals(42, valintaryhmas.size());
+        assertEquals(43, valintaryhmas.size());
     }
 
     @Test
@@ -92,5 +92,14 @@ public class ValintaryhmaDAOTest {
 
         assertEquals(1, valintaryhmat.size());
         assertEquals("oid50", valintaryhmat.get(0).getOid());
+    }
+
+    @Test
+    public void testHaeOidinMukaanHakukohdekooditJaValintakoekooditMukana() {
+        final String valintaryhmaOid = "oid58";
+
+        Valintaryhma valintaryhma = valintaryhmaDAO.readByOid(valintaryhmaOid);
+        assertEquals(1, valintaryhma.getValintakoekoodit().size());
+        assertEquals(2, valintaryhma.getHakukohdekoodit().size());
     }
 }

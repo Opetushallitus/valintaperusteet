@@ -4,7 +4,6 @@ import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdekoodiDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
-import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
@@ -40,9 +39,6 @@ import static junit.framework.Assert.*;
 public class HakukohdeServiceTest {
 
     @Autowired
-    private ValintaryhmaDAO valintaryhmaDAO;
-
-    @Autowired
     private ValintatapajonoDAO valintatapajonoDAO;
 
     @Autowired
@@ -54,11 +50,14 @@ public class HakukohdeServiceTest {
     @Autowired
     private HakukohdekoodiDAO hakukohdekoodiDAO;
 
+    @Autowired
+    private ValintaryhmaService valintaryhmaService;
+
     @Test
     public void testInsert() {
         final String parentOid = "oid33";
         {
-            assertNotNull(valintaryhmaDAO.readByOid(parentOid));
+            assertNotNull(valintaryhmaService.readByOid(parentOid));
             List<ValinnanVaihe> vr33Lvaiheet = LinkitettavaJaKopioitavaUtil.jarjesta(valinnanVaiheDAO.findByValintaryhma(parentOid));
 
             assertEquals(2, vr33Lvaiheet.size());
@@ -81,7 +80,7 @@ public class HakukohdeServiceTest {
         assertTrue(StringUtils.isNotBlank(lisatty.getOid()));
 
         {
-            assertNotNull(valintaryhmaDAO.readByOid(parentOid));
+            assertNotNull(valintaryhmaService.readByOid(parentOid));
             List<ValinnanVaihe> vr33Lvaiheet = LinkitettavaJaKopioitavaUtil.jarjesta(valinnanVaiheDAO.findByValintaryhma(parentOid));
 
             assertEquals(2, vr33Lvaiheet.size());

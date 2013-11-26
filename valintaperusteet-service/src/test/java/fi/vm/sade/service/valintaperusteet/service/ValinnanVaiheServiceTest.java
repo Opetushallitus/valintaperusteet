@@ -45,6 +45,9 @@ public class ValinnanVaiheServiceTest {
     private ValintaryhmaDAO valintaryhmaDAO;
 
     @Autowired
+    private ValintaryhmaService valintaryhmaService;
+
+    @Autowired
     private ValinnanVaiheService valinnanVaiheService;
 
     @Autowired
@@ -130,7 +133,7 @@ public class ValinnanVaiheServiceTest {
             //            - valinnan vaihe 2.3 (id 35)
             //            - valinnan vaihe 1.3 (id 36)
             //            - valinnan vaihe 3.3 (id 37)
-            Valintaryhma vr8L = valintaryhmaDAO.readByOid(parentOid);
+            Valintaryhma vr8L = valintaryhmaService.readByOid(parentOid);
             List<Valintaryhma> vr8Lalaryhmat = jarjestaValintaryhmatIdnMukaan(valintaryhmaDAO.findChildrenByParentOid(parentOid));
             assertEquals(2, vr8Lalaryhmat.size());
 
@@ -246,7 +249,7 @@ public class ValinnanVaiheServiceTest {
             //            - uusi vaihe     x.3
             //            - valinnan vaihe 3.3 (id 37)
 
-            Valintaryhma vr8L = valintaryhmaDAO.readByOid(parentOid);
+            Valintaryhma vr8L = valintaryhmaService.readByOid(parentOid);
             List<Valintaryhma> vr8Lalaryhmat = jarjestaValintaryhmatIdnMukaan(valintaryhmaDAO.findChildrenByParentOid(parentOid));
             assertEquals(2, vr8Lalaryhmat.size());
 
@@ -324,7 +327,7 @@ public class ValinnanVaiheServiceTest {
         final String valintaryhmaOid = "oid12";
 
         {
-            assertNotNull(valintaryhmaDAO.readByOid(valintaryhmaOid));
+            assertNotNull(valintaryhmaService.readByOid(valintaryhmaOid));
             assertEquals(0, valintaryhmaDAO.findChildrenByParentOid(valintaryhmaOid).size());
 
             List<ValinnanVaihe> vaiheet = valinnanVaiheService.findByValintaryhma(valintaryhmaOid);
@@ -346,7 +349,7 @@ public class ValinnanVaiheServiceTest {
         ValinnanVaihe lisatty = valinnanVaiheService.lisaaValinnanVaiheValintaryhmalle(valintaryhmaOid, uusiVaihe, null);
 
         {
-            assertNotNull(valintaryhmaDAO.readByOid(valintaryhmaOid));
+            assertNotNull(valintaryhmaService.readByOid(valintaryhmaOid));
             assertEquals(0, valintaryhmaDAO.findChildrenByParentOid(valintaryhmaOid).size());
 
             List<ValinnanVaihe> vaiheet = valinnanVaiheService.findByValintaryhma(valintaryhmaOid);
@@ -364,7 +367,7 @@ public class ValinnanVaiheServiceTest {
         final String valintaryhmaOid = "oid13";
 
         {
-            assertNotNull(valintaryhmaDAO.readByOid(valintaryhmaOid));
+            assertNotNull(valintaryhmaService.readByOid(valintaryhmaOid));
             assertEquals(0, valintaryhmaDAO.findChildrenByParentOid(valintaryhmaOid).size());
             assertEquals(0, valinnanVaiheService.findByValintaryhma(valintaryhmaOid).size());
         }
@@ -378,7 +381,7 @@ public class ValinnanVaiheServiceTest {
         ValinnanVaihe lisatty = valinnanVaiheService.lisaaValinnanVaiheValintaryhmalle(valintaryhmaOid, uusiVaihe, null);
 
         {
-            assertNotNull(valintaryhmaDAO.readByOid(valintaryhmaOid));
+            assertNotNull(valintaryhmaService.readByOid(valintaryhmaOid));
             assertEquals(0, valintaryhmaDAO.findChildrenByParentOid(valintaryhmaOid).size());
 
             List<ValinnanVaihe> vaiheet = valinnanVaiheService.findByValintaryhma(valintaryhmaOid);
@@ -394,8 +397,8 @@ public class ValinnanVaiheServiceTest {
             // VR1 3301
             //   VR2 3302 -> VV2 3302
             //     HK 3301 -> VV1 3301
-            assertNotNull(valintaryhmaDAO.readByOid("3301"));
-            assertNotNull(valintaryhmaDAO.readByOid("3302"));
+            assertNotNull(valintaryhmaService.readByOid("3301"));
+            assertNotNull(valintaryhmaService.readByOid("3302"));
             assertNotNull(hakukohdeViiteDAO.readByOid("3301"));
 
             assertEquals(1, valintaryhmaDAO.findChildrenByParentOid("3301").size());
@@ -424,8 +427,8 @@ public class ValinnanVaiheServiceTest {
             //     HK 3301 -> VV3(c)
             //                VV1 3301
 
-            assertNotNull(valintaryhmaDAO.readByOid("3301"));
-            assertNotNull(valintaryhmaDAO.readByOid("3302"));
+            assertNotNull(valintaryhmaService.readByOid("3301"));
+            assertNotNull(valintaryhmaService.readByOid("3302"));
             assertNotNull(hakukohdeViiteDAO.readByOid("3301"));
 
             assertEquals(1, valintaryhmaDAO.findChildrenByParentOid("3301").size());
@@ -472,7 +475,7 @@ public class ValinnanVaiheServiceTest {
             //                  - valinnan vaihe 3.1.1.1 (id 67)
 
 
-            assertNotNull(valintaryhmaDAO.readByOid(valintaryhmaOid));
+            assertNotNull(valintaryhmaService.readByOid(valintaryhmaOid));
             List<ValinnanVaihe> vr18Lvaiheet = valinnanVaiheService.findByValintaryhma(valintaryhmaOid);
             assertEquals(3, vr18Lvaiheet.size());
             assertTrue(vr18Lvaiheet.get(0).getId().longValue() == 49L && vr18Lvaiheet.get(0).getMasterValinnanVaihe() == null);
@@ -549,7 +552,7 @@ public class ValinnanVaiheServiceTest {
             //                  - valinnan vaihe 4.1.1   (id 65)
             //                  - valinnan vaihe 1.1.1.1 (id 66)
 
-            assertNotNull(valintaryhmaDAO.readByOid(valintaryhmaOid));
+            assertNotNull(valintaryhmaService.readByOid(valintaryhmaOid));
             List<ValinnanVaihe> vr18Lvaiheet = valinnanVaiheService.findByValintaryhma(valintaryhmaOid);
             assertEquals(3, vr18Lvaiheet.size());
             assertTrue(vr18Lvaiheet.get(0).getId().longValue() == 51L && vr18Lvaiheet.get(0).getMasterValinnanVaihe() == null);
