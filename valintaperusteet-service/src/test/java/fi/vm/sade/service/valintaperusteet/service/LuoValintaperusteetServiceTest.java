@@ -45,7 +45,7 @@ public class LuoValintaperusteetServiceTest {
     private LaskentaService laskentaService;
 
     @Test
-
+    @Ignore
     public void testLuo() throws IOException {
         luoValintaperusteetService.luo();
     }
