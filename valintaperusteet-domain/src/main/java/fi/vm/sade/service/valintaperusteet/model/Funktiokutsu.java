@@ -29,7 +29,7 @@ public class Funktiokutsu extends BaseEntity implements FunktionArgumentti {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "funktiokutsu", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     // @Sort(type = SortType.NATURAL)
     @OrderBy("minValue")
-    private Set<Arvovalikonvertteriparametri> arvovalikonvertteriparametrit = new TreeSet<Arvovalikonvertteriparametri>();
+    private Set<Arvovalikonvertteriparametri> arvovalikonvertteriparametrit = new HashSet<Arvovalikonvertteriparametri>();
 
     @JsonView(JsonViews.Basic.class)
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "funktiokutsu", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})

@@ -20,11 +20,23 @@ public class Arvokonvertteriparametri extends Konvertteriparametri {
     @Column(name = "arvo")
     private String arvo;
 
+    @JsonView(JsonViews.Basic.class)
+    @Column(name = "hylkaysperuste", nullable = false)
+    private String hylkaysperuste;
+
     public String getArvo() {
         return arvo;
     }
 
     public void setArvo(String arvo) {
         this.arvo = arvo;
+    }
+
+    public String getHylkaysperuste() {
+        return hylkaysperuste;
+    }
+
+    public void setHylkaysperuste(String hylkaysperuste) {
+        this.hylkaysperuste = hylkaysperuste;
     }
 }

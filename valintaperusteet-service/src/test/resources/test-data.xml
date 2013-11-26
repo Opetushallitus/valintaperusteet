@@ -86,21 +86,21 @@
     <funktiokutsu id="302" version="0" funktionimi="KONVERTOILUKUARVO"/>
     <funktioargumentti id="302" version="0" funktiokutsuparent_id="302" funktiokutsuchild_id="1" indeksi="1"/>
     <arvovalikonvertteriparametri id="305" version="0" minvalue="1.0" maxvalue="3.0" paluuarvo="50.0"
-                                  hylkaysperuste="false" palauta_haettu_arvo="false" funktiokutsu_id="302"/>
+                                  palauta_haettu_arvo="false" funktiokutsu_id="302"/>
     <arvovalikonvertteriparametri id="304" version="0" minvalue="3.0" maxvalue="5.0" paluuarvo="40.0"
-                                  hylkaysperuste="false" palauta_haettu_arvo="false" funktiokutsu_id="302"/>
+                                  palauta_haettu_arvo="false" funktiokutsu_id="302"/>
     <arvovalikonvertteriparametri id="306" version="0" minvalue="5.0" maxvalue="7.0" paluuarvo="60.0"
-                                  hylkaysperuste="false" palauta_haettu_arvo="false" funktiokutsu_id="302"/>
+                                  palauta_haettu_arvo="false" funktiokutsu_id="302"/>
 
     <funktiokutsu id="401" version="0" funktionimi="KONVERTOILUKUARVO"/>
     <funktioargumentti id="401" version="0" funktiokutsuparent_id="401" funktiokutsuchild_id="403" indeksi="1"/>
     <arvovalikonvertteriparametri id="401" version="0" minvalue="1.0" maxvalue="3.0" paluuarvo="50.0"
-                                  hylkaysperuste="false" palauta_haettu_arvo="false" funktiokutsu_id="401"/>
+                                  palauta_haettu_arvo="false" funktiokutsu_id="401"/>
 
     <funktiokutsu id="402" version="0" funktionimi="KONVERTOILUKUARVO"/>
     <funktioargumentti id="402" version="0" funktiokutsuparent_id="402" funktiokutsuchild_id="404" indeksi="1"/>
     <arvovalikonvertteriparametri id="402" version="0" minvalue="1.0" maxvalue="3.0" paluuarvo="50.0"
-                                  hylkaysperuste="false" palauta_haettu_arvo="false" funktiokutsu_id="402"/>
+                                  palauta_haettu_arvo="false" funktiokutsu_id="402"/>
 
     <funktiokutsu id="403" version="0" funktionimi="HAELUKUARVO"/>
     <valintaperuste_viite id="403" version="0" tunniste="t1" kuvaus="t1" lahde="SYOTETTAVA_ARVO" funktiokutsu_id="403"
@@ -201,11 +201,11 @@
     <valintaperuste_viite id="600" version="0" lahde="SYOTETTAVA_ARVO" tunniste="valintaperuste2" kuvaus="kuvaus"
                           on_pakollinen="true" funktiokutsu_id="600" indeksi="1"/>
     <arvovalikonvertteriparametri id="600" version="0" minvalue="0.0" maxvalue="10.0" palauta_haettu_arvo="false"
-                                  paluuarvo="1.0" hylkaysperuste="false" funktiokutsu_id="600"/>
+                                  paluuarvo="1.0" funktiokutsu_id="600"/>
     <arvovalikonvertteriparametri id="601" version="0" minvalue="10.0" maxvalue="20.0" palauta_haettu_arvo="false"
-                                  paluuarvo="2.0" hylkaysperuste="false" funktiokutsu_id="600"/>
+                                  paluuarvo="2.0" funktiokutsu_id="600"/>
     <arvovalikonvertteriparametri id="602" version="0" minvalue="20.0" maxvalue="30.0" palauta_haettu_arvo="false"
-                                  paluuarvo="3.0" hylkaysperuste="false" funktiokutsu_id="600"/>
+                                  paluuarvo="3.0" funktiokutsu_id="600"/>
 
     <laskentakaava id="520" version="0" nimi="kaava520" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO"
                    funktiokutsu_id="520"/>

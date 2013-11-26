@@ -18,7 +18,6 @@ public class ArvovalikonvertteriparametriToArvovalikonvertteriparametriTyyppi im
         tyyppi.setMaksimiarvo(arvovalikonvertteriparametri.getMaxValue().toString());
         tyyppi.setMinimiarvo(arvovalikonvertteriparametri.getMinValue().toString());
         tyyppi.setPalautaHaettuArvo(arvovalikonvertteriparametri.getPalautaHaettuArvo());
-        tyyppi.setHylkaysperuste(arvovalikonvertteriparametri.getHylkaysperuste());
         tyyppi.setPaluuarvo(arvovalikonvertteriparametri.getPaluuarvo());
 
         return tyyppi;

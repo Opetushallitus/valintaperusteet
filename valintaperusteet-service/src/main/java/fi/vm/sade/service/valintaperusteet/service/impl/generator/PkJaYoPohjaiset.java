@@ -47,10 +47,10 @@ public class PkJaYoPohjaiset {
     public static Laskentakaava luoTyokokemuspisteytysmalli() {
 
         Arvovalikonvertteriparametri[] konvs = {
-                GenericHelper.luoArvovalikonvertteriparametri(-10000.0, 3.0, 0.0, false),
-                GenericHelper.luoArvovalikonvertteriparametri(3.0, 6.0, 1.0, false),
-                GenericHelper.luoArvovalikonvertteriparametri(6.0, 12.0, 2.0, false),
-                GenericHelper.luoArvovalikonvertteriparametri(12.0, 10000.0, 3.0, false)
+                GenericHelper.luoArvovalikonvertteriparametri(-10000.0, 3.0, 0.0),
+                GenericHelper.luoArvovalikonvertteriparametri(3.0, 6.0, 1.0),
+                GenericHelper.luoArvovalikonvertteriparametri(6.0, 12.0, 2.0),
+                GenericHelper.luoArvovalikonvertteriparametri(12.0, 10000.0, 3.0)
         };
 
         Funktiokutsu f = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(
@@ -76,23 +76,23 @@ public class PkJaYoPohjaiset {
         funk.setIndeksi(1);
 
         konvertteri.getFunktioargumentit().add(funk);
-        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(0.0, 5.50, 0, false));
-        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(5.50, 5.75, 1, false));
-        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(5.75, 6.00, 2, false));
-        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(6.00, 6.25, 3, false));
-        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(6.25, 6.50, 4, false));
-        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(6.50, 6.75, 5, false));
-        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(6.75, 7.00, 6, false));
-        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(7.00, 7.25, 7, false));
-        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(7.25, 7.50, 8, false));
-        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(7.50, 7.75, 9, false));
-        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(7.75, 8.00, 10, false));
-        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(8.00, 8.25, 11, false));
-        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(8.25, 8.50, 12, false));
-        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(8.50, 8.75, 13, false));
-        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(8.75, 9.00, 14, false));
-        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(9.00, 9.25, 15, false));
-        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(9.25, 10.1, 16, false));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(0.0, 5.50, 0));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(5.50, 5.75, 1));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(5.75, 6.00, 2));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(6.00, 6.25, 3));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(6.25, 6.50, 4));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(6.50, 6.75, 5));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(6.75, 7.00, 6));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(7.00, 7.25, 7));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(7.25, 7.50, 8));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(7.50, 7.75, 9));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(7.75, 8.00, 10));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(8.00, 8.25, 11));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(8.25, 8.50, 12));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(8.50, 8.75, 13));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(8.75, 9.00, 14));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(9.00, 9.25, 15));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(9.25, 10.1, 16));
 
         Laskentakaava palautettavaLaskentakaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(konvertteri,
                 nimi);
@@ -101,17 +101,20 @@ public class PkJaYoPohjaiset {
 
     public static Laskentakaava luoValintakoekaava(String nimi) {
         ValintaperusteViite valintaperuste = GenericHelper.luoValintaperusteViite(nimi, true, Valintaperustelahde.SYOTETTAVA_ARVO);
-        List<Arvovalikonvertteriparametri> konvs = new ArrayList<Arvovalikonvertteriparametri>();
-        konvs.add(GenericHelper.luoArvovalikonvertteriparametri(0.0, 1.0, true));
-        konvs.add(GenericHelper.luoArvovalikonvertteriparametri(1.0, 10.0, false));
 
-        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(GenericHelper.luoHaeLukuarvo(valintaperuste, konvs), nimi);
+        List<Arvovalikonvertteriparametri> konvs = new ArrayList<Arvovalikonvertteriparametri>();
+
+        konvs.add(GenericHelper.luoArvovalikonvertteriparametri(0.0, 10.0));
+
+        Funktiokutsu funktiokutsu = GenericHelper.luoHaeLukuarvo(valintaperuste, konvs);
+
+        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(GenericHelper.luoHylkaaArvovalilla(funktiokutsu, "Valintakoetulos hylätty", "0.0", "1.0"), nimi);
     }
 
     public static Laskentakaava luoLisapistekaava(String nimi) {
         ValintaperusteViite valintaperuste = GenericHelper.luoValintaperusteViite(nimi, true, Valintaperustelahde.SYOTETTAVA_ARVO);
         List<Arvovalikonvertteriparametri> konvs = new ArrayList<Arvovalikonvertteriparametri>();
-        konvs.add(GenericHelper.luoArvovalikonvertteriparametri(0.0, 3.0, false));
+        konvs.add(GenericHelper.luoArvovalikonvertteriparametri(0.0, 3.0));
 
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(GenericHelper.luoHaeLukuarvo(valintaperuste, konvs), nimi);
     }
@@ -133,7 +136,7 @@ public class PkJaYoPohjaiset {
 
     }
 
-    public static Laskentakaava luoKielikokeenPakollisuudenLaskentakaava(Laskentakaava eiUlkomaillaSuoritettuKoulutus) {
+    public static Laskentakaava luoKielikokeenPakollisuudenLaskentakaava() {
         Funktiokutsu[] args = {
                 luoKielikoeSuoritettuFunktiokutsu(),
                 luoAidinkieliOnOpetuskieliFunktiokutsu(),
@@ -146,7 +149,7 @@ public class PkJaYoPohjaiset {
                 luoKielikoekriteeri7Funktiokutsu()
         };
 
-        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(GenericHelper.luoJa(GenericHelper.luoEi(GenericHelper.luoTai(args)), eiUlkomaillaSuoritettuKoulutus),
+        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(GenericHelper.luoEi(GenericHelper.luoTai(args)),
                 "Kielikokeen pakollisuus - 2 aste, pk ja yo"
         );
     }
@@ -451,23 +454,16 @@ public class PkJaYoPohjaiset {
 
         Funktiokutsu tai = GenericHelper.luoTai(ulkomaillaSuoritettuKoulutus, oppivelvollisuudenSuorittaminenKeskeytynyt);
 
-        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(tai, "Ulkomailla suoritettu koulutus tai " +
+        Funktiokutsu hylkaa = GenericHelper.luoHylkaa(tai, "Ulkomailla suoritettu koulutus tai oppivelvollisuuden keskeytyminen");
+
+        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(hylkaa, "Ulkomailla suoritettu koulutus tai " +
                 "oppivelvollisuuden suorittaminen keskeytynyt");
     }
 
-    public static Laskentakaava eiUlkomaillaSuoritettuaKoulutustaEikaOppivelvollisuusKeskeytynyt(
-            Laskentakaava ulkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt) {
-        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
-                GenericHelper.luoEi(ulkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt),
-                "Ei ulkomailla suoritettua koulutusta eikä oppivelvollisuuden suorittaminen keskeytynyt");
-    }
-
-    public static Laskentakaava luoPoikkeavanValintaryhmanLaskentakaava(Laskentakaava valintakoekaava, Laskentakaava kielikoekaava, Laskentakaava ulkomaillaSuoritettuKoulutus) {
+    public static Laskentakaava luoPoikkeavanValintaryhmanLaskentakaava(Laskentakaava valintakoekaava, Laskentakaava kielikoekaava) {
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(GenericHelper.luoSumma(valintakoekaava,
                 GenericHelper.luoHylkaa(kielikoekaava,
-                        "Kielikoetta ei suoritettu tai kielikokeen korvaavuusehto ei täyttynyt"),
-                GenericHelper.luoHylkaa(ulkomaillaSuoritettuKoulutus,
-                        "Ulkomailla suoritettu koulutus tai oppivelvollisuuden suorittaminen keskeytynyt")),
+                        "Kielikoetta ei suoritettu tai kielikokeen korvaavuusehto ei täyttynyt")),
                 valintakoekaava.getNimi() + " + hylkäysperusteet (*)");
 
     }

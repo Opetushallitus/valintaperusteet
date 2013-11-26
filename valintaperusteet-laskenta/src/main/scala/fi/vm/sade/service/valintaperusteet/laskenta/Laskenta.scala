@@ -73,10 +73,12 @@ object Laskenta {
           new ArvovalikonvertointiVirhe(arvo.underlying)))
         case head :: tail => {
           val paluuarvo = if (head.palautaHaettuArvo) arvo else head.paluuarvo
-          val tila = if (head.hylkaysperuste) {
-            new Hylattytila(s"Arvoväli ${head.min}-${head.max} on määritelty konvertterissa hylkäysperusteeksi. Konvertoitava arvo $arvo.",
-              new Arvovalikonvertterihylkays(arvo.underlying, head.min.underlying, head.max.underlying))
-          } else new Hyvaksyttavissatila
+//          val tila = if (head.hylkaysperuste) {
+//            new Hylattytila(s"Arvoväli ${head.min}-${head.max} on määritelty konvertterissa hylkäysperusteeksi. Konvertoitava arvo $arvo.",
+//              new Arvovalikonvertterihylkays(arvo.underlying, head.min.underlying, head.max.underlying))
+//          } else new Hyvaksyttavissatila
+
+          val tila = new Hyvaksyttavissatila
 
           (Some(paluuarvo), tila)
         }
@@ -91,10 +93,10 @@ object Laskenta {
   case class ArvokonversioMerkkijonoilla[S, T](arvo: String, paluuarvo: T, hylkaysperuste: String) extends Konversio
 
   case class Lukuarvovalikonversio(min: BigDecimal, max: BigDecimal, paluuarvo: BigDecimal,
-                                   palautaHaettuArvo: Boolean, hylkaysperuste: Boolean) extends Konversio
+                                   palautaHaettuArvo: Boolean) extends Konversio
 
   case class LukuarvovalikonversioMerkkijonoilla(min: String, max: String, paluuarvo: String,
-                                   palautaHaettuArvo: String, hylkaysperuste: Boolean) extends Konversio
+                                   palautaHaettuArvo: String) extends Konversio
 
   case class KonvertoiLukuarvo(konvertteri: Konvertteri[BigDecimal, BigDecimal], f: Lukuarvofunktio, oid: String = "")
     extends KonvertoivaFunktio[BigDecimal, BigDecimal] with Lukuarvofunktio

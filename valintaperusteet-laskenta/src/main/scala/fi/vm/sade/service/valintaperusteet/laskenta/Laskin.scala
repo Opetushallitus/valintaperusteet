@@ -345,9 +345,13 @@ private class Laskin private(private val hakukohde: Hakukohde,
         (tulos, tilat, Historia("Yhtäsuuri", tulos, tilat, Some(List(h)), None))
       }
       case HaeTotuusarvo(konvertteri, oletusarvo, valintaperusteviite, oid) => {
+        val (konv, virheet) = konvertteri match {
+          case Some(a: Arvokonvertteri[_,_]) => konversioToArvokonversio[Boolean, Boolean](a.konversioMap,hakemus, hakukohde)
+          case _ => (konvertteri, List())
+        }
         val (tulos, tila) = haeValintaperuste[Boolean](valintaperusteviite, hakemus,
           (s => suoritaOptionalKonvertointi[Boolean](string2boolean(s, valintaperusteviite.tunniste),
-            konvertteri)), oletusarvo)
+            konv)), oletusarvo)
         (tulos, tila, Historia("Hae totuusarvo", tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
       }
       case NimettyTotuusarvo(nimi, f, oid) => {
@@ -385,9 +389,24 @@ private class Laskin private(private val hakukohde: Hakukohde,
       }
 
       case HaeMerkkijonoJaKonvertoiTotuusarvoksi(konvertteri, oletusarvo, valintaperusteviite, oid) => {
-        val (tulos, tila) = haeValintaperuste[Boolean](valintaperusteviite, hakemus,
-          (s => suoritaKonvertointi[String, Boolean]((Some(s), new Hyvaksyttavissatila), konvertteri)), oletusarvo)
-        (tulos, tila, Historia("Hae merkkijono ja vertaa yhtasuuruus", tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
+        konvertteri match {
+          case a: Arvokonvertteri[_,_] => {
+            val (konv, virheet) = konversioToArvokonversio(a.konversioMap,hakemus, hakukohde)
+            if(konv.isEmpty) {
+              (None, virheet, Historia("Hae merkkijono ja konvertoi totuusarvoksi", None, virheet, None, None))
+            } else {
+              val (tulos, tila) = haeValintaperuste[Boolean](valintaperusteviite, hakemus,
+                s => suoritaKonvertointi[String, Boolean]((Some(s), new Hyvaksyttavissatila), konv.get.asInstanceOf[Arvokonvertteri[String,Boolean]]), oletusarvo)
+              (tulos, tila, Historia("Hae merkkijono ja konvertoi totuusarvoksi", tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
+            }
+
+          }
+          case _ => {
+            val (tulos, tila) = haeValintaperuste[Boolean](valintaperusteviite, hakemus,
+              s => suoritaKonvertointi[String, Boolean]((Some(s), new Hyvaksyttavissatila), konvertteri), oletusarvo)
+            (tulos, tila, Historia("Hae merkkijono ja konvertoi totuusarvoksi", tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
+          }
+        }
       }
 
       case HaeMerkkijonoJaVertaaYhtasuuruus(oletusarvo, valintaperusteviite, vertailtava, oid) => {
@@ -621,7 +640,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
             } else {
               val arvovaliTila = tulos.map(arvo => if(onArvovalilla(arvo, (arvovali.get._1,arvovali.get._2), true, false)) new Hylattytila(hylkaysperustekuvaus.getOrElse("Hylätty hylkäämisfunktiolla"),
                 new HylkaaFunktionSuorittamaHylkays) else new Hyvaksyttavissatila)
-                .getOrElse(new Virhetila("Hylkäämisfunktion syöte on tyhjä. Hylkäystä ei voida tulkita.", new HylkaamistaEiVoidaTulkita))
+                .getOrElse(new Hyvaksyttavissatila)
               val tilat = List(tila, arvovaliTila)
               (tulos, tilat, Historia("Hylkää Arvovälillä", tulos, tilat, Some(List(historia)), None))
             }

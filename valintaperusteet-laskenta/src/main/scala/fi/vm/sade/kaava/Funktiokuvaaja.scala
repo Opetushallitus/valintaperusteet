@@ -47,6 +47,7 @@ object Funktiokuvaaja {
   import Syoteparametrityyppi._
   import Kardinaliteetti._
   import Konvertterinimi._
+  import fi.vm.sade.service.valintaperusteet.laskenta.JsonFormats._
 
   trait KonvertteriTyyppi {
     val nimi: Konvertterinimi.Konvertterinimi
@@ -78,7 +79,6 @@ object Funktiokuvaaja {
                            konvertteri: Option[Konvertterikuvaus] = None)
 
   def annaFunktiokuvauksetAsJson = {
-    //funktiokuvaukset.map(annaFunktiokuvausAsJson(_))
 
     val jsonKuvaukset = funktiokuvaukset.map(annaFunktiokuvausAsJson(_))
 
@@ -119,17 +119,18 @@ object Funktiokuvaaja {
 
     val argumentit = if (fk.funktioargumentit.isEmpty) Json.obj()
     else Json.obj("funktioargumentit" ->
-      fk.funktioargumentit.map(funktioargumenttiAsJson(_)))
+      fk.funktioargumentit.map(Json.toJson(_)))
 
     val parametrit = if (fk.syoteparametrit.isEmpty) Json.obj()
     else Json.obj("syoteparametrit" ->
-      fk.syoteparametrit.map(funktioparametriAsJson(_)))
+      fk.syoteparametrit.map(Json.toJson(_)))
 
     val valintaperuste = if (fk.valintaperusteparametri.isEmpty) Json.obj()
-    else Json.obj("valintaperuste" -> fk.valintaperusteparametri.map(valintaperusteparametriAsJson(_)))
+    else Json.obj("valintaperuste" -> fk.valintaperusteparametri.map(Json.toJson(_)))
 
     val konvertteri = fk.konvertteri match {
-      case Some(konv) => Json.obj("konvertteri" -> konvertterikuvausAsJson(konv))
+      case Some(konv) => Json.obj("konvertteri" -> Json.toJson(konv))
+      //case Some(konv) => Json.obj("konvertteri" -> konvertterikuvausAsJson(konv))
       case None => Json.obj()
     }
 
@@ -382,50 +383,4 @@ object Funktiokuvaaja {
       )
     )
   )
-
-  private def konvertteriTyyppiAsJson(tyyppi: KonvertteriTyyppi) = {
-    tyyppi match {
-      case Arvokonvertterikuvaus(arvotyyppi) => {
-        Json.obj("tyyppi" -> tyyppi.nimi.toString, "arvotyyppi" -> arvotyyppi.toString)
-      }
-      case _ => Json.obj("tyyppi" -> tyyppi.nimi.toString)
-    }
-  }
-
-  private def konvertterikuvausAsJson(konvertterikuvaus: Konvertterikuvaus) = {
-
-    Json.obj("pakollinen" -> konvertterikuvaus.pakollinen,
-      "konvertteriTyypit" -> konvertterikuvaus.konvertteriTyypit.map(t => konvertteriTyyppiAsJson(t._2)))
-  }
-
-  private def valintaperusteparametriAsJson(vp: Valintaperusteparametrikuvaus) = {
-    Json.obj(
-      "nimi" -> vp.nimi,
-      "tyyppi" -> vp.tyyppi.toString)
-  }
-
-
-  private def funktioparametriAsJson(par: Syoteparametrikuvaus) = {
-    Json.obj(
-      "avain" -> par.avain,
-      "tyyppi" -> par.tyyppi.toString,
-      "pakollinen" -> par.pakollinen.toString
-    )
-  }
-
-  private def kardinaliteettiAsJson(kardinaliteetti: Kardinaliteetti): String = {
-    kardinaliteetti match {
-      case Kardinaliteetti.N => "n"
-      case Kardinaliteetti.YKSI => "1"
-      case Kardinaliteetti.LISTA_PAREJA => "lista_pareja"
-    }
-  }
-
-  private def funktioargumenttiAsJson(arg: Funktioargumenttikuvaus) = {
-    Json.obj(
-      "nimi" -> arg.nimi,
-      "tyyppi" -> arg.tyyppi.toString,
-      "kardinaliteetti" -> kardinaliteettiAsJson(arg.kardinaliteetti)
-    )
-  }
 }

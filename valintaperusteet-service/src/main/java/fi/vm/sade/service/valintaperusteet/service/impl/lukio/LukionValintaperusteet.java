@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.service.impl.lukio;
 
+import fi.vm.sade.service.valintaperusteet.model.Arvovalikonvertteriparametri;
 import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
 import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
 import fi.vm.sade.service.valintaperusteet.model.Valintaperustelahde;
@@ -125,8 +126,8 @@ public class LukionValintaperusteet {
 
     public static Laskentakaava painotettuLukuaineidenKeskiarvo() {
 
-        String minimi = "{{hakukohde.painotettuKeskiarvoHylkaysMin}}";
-        String maksimi = "{{hakukohde.painotettuKeskiarvoHylkaysMax}}";
+        String minimi = "{{hakukohde.painotettu_keskiarvo_hylkays_min}}";
+        String maksimi = "{{hakukohde.painotettu_keskiarvo_hylkays_max}}";
 
         List<GenericHelper.Painotus> painotukset = new ArrayList<GenericHelper.Painotus>();
         for (String aine : LUKUAINEET) {
@@ -154,8 +155,8 @@ public class LukionValintaperusteet {
 
         Funktiokutsu summa = GenericHelper.luoSumma(paasykoe, lisanaytto);
 
-        String minimi = "{{hakukohde.paasykoeJaLisanayttoHylkaysMin}}";
-        String maksimi = "{{hakukohde.paasykoeJaLisanayttoHylkaysMax}}";
+        String minimi = "{{hakukohde.paasykoe_ja_lisanaytto_hylkays_min}}";
+        String maksimi = "{{hakukohde.paasykoe_ja_lisanaytto_hylkays_max}}";
 
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
                 GenericHelper.luoHylkaaArvovalilla(summa, "Pääsykokeen ja lisänäytön summa ei ole tarpeeksi suuri", minimi, maksimi),
@@ -165,10 +166,15 @@ public class LukionValintaperusteet {
 
     public static Laskentakaava paasykoeLukuarvo(String paasykoeTunniste) {
 
-        String minimi = "{{hakukohde.paasykoeHylkaysMin}}";
-        String maksimi = "{{hakukohde.paasykoeHylkaysMax}}";
+        String minimi = "{{hakukohde.paasykoe_hylkays_min}}";
+        String maksimi = "{{hakukohde.paasykoe_hylkays_max}}";
+        String alaraja = "{{hakukohde.paasykoe_min}}";
+        String ylaraja = "{{hakukohde.paasykoe_max}}";
 
-        Funktiokutsu funktiokutsu = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(paasykoeTunniste, true, Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO, "", true));
+        List<Arvovalikonvertteriparametri> konvs = new ArrayList<Arvovalikonvertteriparametri>();
+        konvs.add(GenericHelper.luoArvovalikonvertteriparametri(alaraja, ylaraja));
+
+        Funktiokutsu funktiokutsu = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(paasykoeTunniste, true, Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO, "", true), konvs);
 
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
                 GenericHelper.luoHylkaaArvovalilla(funktiokutsu, "Pääsykoetulos hylätty", minimi, maksimi),
@@ -178,10 +184,15 @@ public class LukionValintaperusteet {
 
     public static Laskentakaava lisanayttoLukuarvo(String lisanayttoTunniste) {
 
-        String minimi = "{{hakukohde.lisanayttoHylkaysMin}}";
-        String maksimi = "{{hakukohde.lisanayttoHylkaysMax}}";
+        String minimi = "{{hakukohde.lisanaytto_hylkays_min}}";
+        String maksimi = "{{hakukohde.lisanaytto_hylkays_max}}";
+        String alaraja = "{{hakukohde.lisanaytto_min}}";
+        String ylaraja = "{{hakukohde.lisanaytto_max}}";
 
-        Funktiokutsu funktiokutsu = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(lisanayttoTunniste, true, Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO, "", true));
+        List<Arvovalikonvertteriparametri> konvs = new ArrayList<Arvovalikonvertteriparametri>();
+        konvs.add(GenericHelper.luoArvovalikonvertteriparametri(alaraja, ylaraja));
+
+        Funktiokutsu funktiokutsu = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(lisanayttoTunniste, true, Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO, "", true), konvs);
 
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
                 GenericHelper.luoHylkaaArvovalilla(funktiokutsu, "Pääsykoetulos hylätty", minimi, maksimi),

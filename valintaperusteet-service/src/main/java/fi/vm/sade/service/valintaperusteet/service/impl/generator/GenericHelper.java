@@ -188,22 +188,28 @@ public class GenericHelper {
         return luoLaskentakaava(nimetty, nimi);
     }
 
-    public static Arvovalikonvertteriparametri luoArvovalikonvertteriparametri(double min, double max, double paluuarvo, boolean hylkaysperuste) {
+    public static Arvovalikonvertteriparametri luoArvovalikonvertteriparametri(double min, double max, double paluuarvo) {
         Arvovalikonvertteriparametri a = new Arvovalikonvertteriparametri();
-        a.setMaxValue(new BigDecimal(max));
-        a.setMinValue(new BigDecimal(min));
-        a.setPalautaHaettuArvo(false);
-        a.setHylkaysperuste(hylkaysperuste);
+        a.setMaxValue(String.valueOf(max));
+        a.setMinValue(String.valueOf(min));
+        a.setPalautaHaettuArvo("false");
         a.setPaluuarvo(String.valueOf(paluuarvo));
         return a;
     }
 
-    public static Arvovalikonvertteriparametri luoArvovalikonvertteriparametri(double min, double max, boolean hylkaysperuste) {
+    public static Arvovalikonvertteriparametri luoArvovalikonvertteriparametri(double min, double max) {
         Arvovalikonvertteriparametri a = new Arvovalikonvertteriparametri();
-        a.setMaxValue(new BigDecimal(max));
-        a.setMinValue(new BigDecimal(min));
-        a.setPalautaHaettuArvo(true);
-        a.setHylkaysperuste(hylkaysperuste);
+        a.setMaxValue(String.valueOf(max));
+        a.setMinValue(String.valueOf(min));
+        a.setPalautaHaettuArvo("true");
+        return a;
+    }
+
+    public static Arvovalikonvertteriparametri luoArvovalikonvertteriparametri(String min, String max) {
+        Arvovalikonvertteriparametri a = new Arvovalikonvertteriparametri();
+        a.setMaxValue(max);
+        a.setMinValue(min);
+        a.setPalautaHaettuArvo("true");
         return a;
     }
 
@@ -212,7 +218,7 @@ public class GenericHelper {
         Arvokonvertteriparametri a = new Arvokonvertteriparametri();
         a.setArvo(arvo);
         a.setPaluuarvo(paluuarvo);
-        a.setHylkaysperuste(hylkaysperuste);
+        a.setHylkaysperuste(String.valueOf(hylkaysperuste));
 
         return a;
     }

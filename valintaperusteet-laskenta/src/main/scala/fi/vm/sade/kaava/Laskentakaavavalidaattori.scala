@@ -232,12 +232,13 @@ object Laskentakaavavalidaattori {
           List(new Validointivirhe(Virhetyyppi.EI_KONVERTTERIPARAMETREJA_MAARITELTY,
             s"Vaadittuja konvertteriparametreja ei ole määritelty funktiolle $nimi"))
         } else {
+
           def validoiKonvertteriparametri(indeksi: Int, konv: Konvertteriparametri): Option[Validointivirhe] = {
             val paluuarvoPuuttuu = konv match {
-              case av: Arvovalikonvertteriparametri => {
-                !av.getPalautaHaettuArvo && StringUtils.isBlank(av.getPaluuarvo)
+              case av: Arvokonvertteriparametri => {
+                StringUtils.isBlank(av.getPaluuarvo)
               }
-              case _ => StringUtils.isBlank(konv.getPaluuarvo)
+              case _ => false
             }
 
             if (paluuarvoPuuttuu) {
@@ -245,7 +246,7 @@ object Laskentakaavavalidaattori {
                 s"Konvertteriparametrin paluuarvo puuttuu funktiolle $nimi", indeksi))
             } else {
               val tarkistaPaluuarvonTyyppi = konv match {
-                case av: Arvovalikonvertteriparametri => !av.getPalautaHaettuArvo
+                case av: Arvovalikonvertteriparametri => false
                 case _ => true
               }
 
@@ -276,6 +277,7 @@ object Laskentakaavavalidaattori {
               } else None
             }
           }
+
 
           val arvokonvertterikuvaus = param.konvertteriTyypit(ARVOKONVERTTERI).asInstanceOf[Arvokonvertterikuvaus]
           def validoiArvokonvertteriparametritRekursiivisesti(indeksi: Int, konvs: List[Arvokonvertteriparametri],
@@ -312,55 +314,10 @@ object Laskentakaavavalidaattori {
             }
           }
 
-          def validoiArvovalikonvertteriparametrit(konvs: List[Arvovalikonvertteriparametri]): List[Validointivirhe] = {
-
-            def validoiArvovalikonvertteriparametritRekursiivisesti(indeksi: Int,
-                                                                    konvs: List[Arvovalikonvertteriparametri],
-                                                                    accum: List[Validointivirhe]): List[Validointivirhe] = {
-              konvs match {
-                case Nil => accum
-                case head :: tail => {
-                  val paluuarvovirhe = validoiKonvertteriparametri(indeksi, head)
-                  val arvovirhe = if (head.getMaxValue == null || head.getMinValue == null) {
-                    Some(new ArvovalikonvertterinMinMaxPuutteellinenVirhe(
-                      s"Funktion $nimi arvovälikonvertteriparametrin min- ja max-välit ovat puutteelliset", indeksi))
-                  } else if (head.getMaxValue.compareTo(head.getMinValue) == -1) {
-                    Some(new ArvovalikonvertterinMinimiSuurempiKuinMaksimiVirhe(
-                      "Arvovälikonvertteriparametrin minimiarvo ei voi olla suurempi kuin maksimiarvo", indeksi))
-                  } else None
-
-                  validoiArvovalikonvertteriparametritRekursiivisesti(indeksi + 1, tail, (arvovirhe ++ paluuarvovirhe ++ accum).toList)
-                }
-              }
-            }
-
-            def tarkistaMinimiJaMaksimi(edellinen: Option[Arvovalikonvertteriparametri],
-                                        seuraavat: List[Arvovalikonvertteriparametri],
-                                        accum: List[Validointivirhe]): List[Validointivirhe] = {
-              seuraavat match {
-                case head :: tail => {
-                  edellinen match {
-                    case Some(prev) => if (prev.getMaxValue != head.getMinValue) {
-                      new Validointivirhe(Virhetyyppi.ARVOVALIKONVERTTERIN_ARVOVALI_PUUTTEELLINEN,
-                        "Arvovälikonvertterien arvovälit ovat puutteelliset") :: accum
-                    } else {
-                      tarkistaMinimiJaMaksimi(Some(head), tail, accum)
-                    }
-                    case None => tarkistaMinimiJaMaksimi(Some(head), tail, accum)
-                  }
-                }
-                case Nil => accum
-              }
-            }
-            validoiArvovalikonvertteriparametritRekursiivisesti(0, konvs,
-              tarkistaMinimiJaMaksimi(None, konvs.sortWith((a, b) => a.getMinValue.compareTo(b.getMinValue) == -1), Nil))
-          }
-
           val annetutArvokonvertterit = funktiokutsu.getArvokonvertteriparametrit.toList
           val annetutArvovalikonvertterit = funktiokutsu.getArvovalikonvertteriparametrit.toList
 
-          validoiArvokonvertteriparametritRekursiivisesti(0, annetutArvokonvertterit.toList, Nil) :::
-            validoiArvovalikonvertteriparametrit(annetutArvovalikonvertterit)
+          validoiArvokonvertteriparametritRekursiivisesti(0, annetutArvokonvertterit.toList, Nil)
         }
       }
     }

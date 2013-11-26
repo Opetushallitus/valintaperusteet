@@ -8,6 +8,11 @@ import fi.vm.sade.service.valintaperusteet.model.JsonViews
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus
 import java.util.{Map => JMap}
 import java.lang.{Integer => JInteger}
+import fi.vm.sade.kaava.Funktiokuvaaja._
+import fi.vm.sade.kaava.Funktiokuvaaja.Konvertterinimi.Konvertterinimi
+import fi.vm.sade.kaava.Funktiokuvaaja.Konvertterinimi
+import play.api.libs.json._
+import scala.util.Try
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,8 +22,97 @@ import java.lang.{Integer => JInteger}
  * To change this template use File | Settings | File Templates.
  */
 object JsonFormats {
-  private var mapper: ObjectMapper = new ObjectMapper()
+  import JsonHelpers.enumFormat
 
+  // Enumit
+  implicit def funktiotyyppiFormat = enumFormat(Funktiotyyppi)
+  implicit def syoteparametrityyppiFormat = enumFormat(Syoteparametrityyppi)
+  implicit def konvertterinimiFormat = enumFormat(Konvertterinimi)
+
+  def kardinaliteettiReads[Kardinaliteetti <: Enumeration](enum: Kardinaliteetti): Reads[Kardinaliteetti#Value] = new Reads[Kardinaliteetti#Value] {
+    def reads(json: JsValue): JsResult[Kardinaliteetti#Value] = json match {
+      case JsString(s) => {
+        try {
+          s match {
+            case "n" => JsSuccess(enum.withName("N"))
+            case "1" => JsSuccess(enum.withName("YKSI"))
+            case _ => JsSuccess(enum.withName("LISTA_PAREJA"))
+          }
+
+        } catch {
+          case _: NoSuchElementException =>
+            JsError(s"Enumeration expected of type: '${enum.getClass}', but it does not contain '$s'")
+        }
+      }
+      case _ => JsError("String value expected")
+    }
+  }
+
+  def kardinaliteettiWrites[Kardinaliteetti <: Enumeration]: Writes[Kardinaliteetti#Value] = new Writes[Kardinaliteetti#Value] {
+    def writes(v: Kardinaliteetti#Value): JsValue = {
+      v.toString match {
+        case "N" => JsString("n")
+        case "YKSI" => JsString("1")
+        case _ => JsString("lista_pareja")
+      }
+    }
+  }
+
+  def kardinaliteettiFormatHelper[Kardinaliteetti <: Enumeration](enum: Kardinaliteetti): Format[Kardinaliteetti#Value] = {
+    Format(kardinaliteettiReads(enum), kardinaliteettiWrites)
+  }
+
+  implicit def kardinaliteettiFormat = kardinaliteettiFormatHelper(Kardinaliteetti)
+
+  // Perus case classit
+  //implicit def arvovalikonvertterikuvausFormat = Json.format[Arvovalikonvertterikuvaus]
+  implicit def arvokonvertterikuvausFormat = Json.format[Arvokonvertterikuvaus]
+  implicit def konvertterikuvausFormat = Json.format[Konvertterikuvaus]
+
+  implicit def valintaperusteparametrikuvausFormat = Json.format[Valintaperusteparametrikuvaus]
+  implicit def syoteparametrikuvausFormat = Json.format[Syoteparametrikuvaus]
+  implicit def funktioargumenttikuvausFormat = Json.format[Funktioargumenttikuvaus]
+  implicit def funktiokuvausFormat = Json.format[Funktiokuvaus]
+
+  // Map[Konvertterinimi, KonvertteriTyyppi]
+  implicit def mapWritesKonvertteriNimiKonvertteriKuvaus: Writes[Map[Konvertterinimi, KonvertteriTyyppi]] = {
+    new Writes[Map[Konvertterinimi, KonvertteriTyyppi]] {
+      def writes(map: Map[Konvertterinimi, KonvertteriTyyppi]): JsValue = {
+        val tyypit = map.map(t => {
+          t._2 match {
+            case Arvokonvertterikuvaus(arvotyyppi) => {
+              Json.obj("tyyppi" -> t._2.nimi.toString, "arvotyyppi" -> arvotyyppi.toString)
+            }
+            case _ => Json.obj("tyyppi" -> t._2.nimi.toString)
+          }
+        })
+        tyypit.foldLeft(JsArray())(_ ++ Json.arr(_))
+      }
+    }
+  }
+
+  implicit def mapReadsKonvertteriNimiKonvertteriKuvaus: Reads[Map[Konvertterinimi, KonvertteriTyyppi]] = new Reads[Map[Konvertterinimi, KonvertteriTyyppi]] {
+    def reads(json: JsValue): JsResult[Map[Konvertterinimi, KonvertteriTyyppi]] = {
+      val map = json.as[List[JsObject]].foldLeft(Map[Konvertterinimi, KonvertteriTyyppi](Konvertterinimi.withName("ARVOVALIKONVERTTERI") -> Arvovalikonvertterikuvaus))((s,a) => {
+        val tyyppi: JsValue = json \ "tyyppi"
+        tyyppi.as[String] match {
+          case "ARVOKONVERTTERI" => {
+            val arvotyyppi = (json \ "arvotyyppi").as[String]
+            s ++ Map[Konvertterinimi, KonvertteriTyyppi](Konvertterinimi.withName("ARVOKONVERTTERI") -> Arvokonvertterikuvaus(Syoteparametrityyppi.withName(arvotyyppi)))
+          }
+          case _ => {
+            s ++ Map[Konvertterinimi, KonvertteriTyyppi](Konvertterinimi.withName("ARVOVALIKONVERTTERI") -> Arvovalikonvertterikuvaus)
+          }
+        }
+      })
+      JsSuccess(map)
+    }
+  }
+
+
+  import JsonHelpers._
+
+  //Hakemus
   implicit def hakemusReads: Reads[Hakemus] = (
     (__ \ "oid").read[String] and
     (__ \ "hakutoiveet").read[JMap[JInteger, String]] and
@@ -31,6 +125,7 @@ object JsonFormats {
     (__ \ "jkentat").write[JMap[String, String]]
     )(unlift(Hakemus.unapply _))
 
+  //Histroia
   implicit def historiaReads: Reads[Historia] = (
     (__ \ "funktio").read[String] and
     (__ \ "tulos").readNullable[Any] and
@@ -47,6 +142,7 @@ object JsonFormats {
     (__ \ "avaimet").writeNullable[Map[String, Option[Any]]]
     )(unlift(Historia.unapply))
 
+  //Tila
   implicit def tilaReads: Reads[Tila] = new Reads[Tila] {
     def reads(json: JsValue): JsResult[Tila] = json match {
       case o: JsObject=> {
@@ -66,6 +162,35 @@ object JsonFormats {
       val json = mapper.writerWithView(classOf[JsonViews.Basic]).writeValueAsString(o);
       Json.parse(json)
     }
+  }
+
+
+
+}
+
+object JsonHelpers {
+  var mapper: ObjectMapper = new ObjectMapper()
+
+  def enumReads[E <: Enumeration](enum: E): Reads[E#Value] = new Reads[E#Value] {
+    def reads(json: JsValue): JsResult[E#Value] = json match {
+      case JsString(s) => {
+        try {
+          JsSuccess(enum.withName(s))
+        } catch {
+          case _: NoSuchElementException =>
+            JsError(s"Enumeration expected of type: '${enum.getClass}', but it does not contain '$s'")
+        }
+      }
+      case _ => JsError("String value expected")
+    }
+  }
+
+  implicit def enumWrites[E <: Enumeration]: Writes[E#Value] = new Writes[E#Value] {
+    def writes(v: E#Value): JsValue = JsString(v.toString)
+  }
+
+  implicit def enumFormat[E <: Enumeration](enum: E): Format[E#Value] = {
+    Format(enumReads(enum), enumWrites)
   }
 
   implicit def mapReadsIntString: Reads[JMap[JInteger, String]] =
@@ -122,11 +247,8 @@ object JsonFormats {
         case s: Double => JsNumber(s)
         case s: Long => JsNumber(s)
         case s: BigDecimal => JsNumber(s)
-        case _ => JsNull
+        //case _ => JsNull
+        case s => Try(Json.toJson(s)).getOrElse(JsString("No Json Formatter Found :("))
       }
     }
-
-
-
-
 }

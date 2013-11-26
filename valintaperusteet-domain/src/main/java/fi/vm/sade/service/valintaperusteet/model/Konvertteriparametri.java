@@ -16,9 +16,7 @@ public abstract class Konvertteriparametri extends BaseEntity {
     @Column(name = "paluuarvo")
     private String paluuarvo;
 
-    @JsonView(JsonViews.Basic.class)
-    @Column(name = "hylkaysperuste", nullable = false)
-    private Boolean hylkaysperuste;
+
 
     @JoinColumn(name = "funktiokutsu_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -30,14 +28,6 @@ public abstract class Konvertteriparametri extends BaseEntity {
 
     public void setPaluuarvo(String paluuarvo) {
         this.paluuarvo = paluuarvo;
-    }
-
-    public Boolean getHylkaysperuste() {
-        return hylkaysperuste;
-    }
-
-    public void setHylkaysperuste(Boolean hylkaysperuste) {
-        this.hylkaysperuste = hylkaysperuste;
     }
 
     public Funktiokutsu getFunktiokutsu() {

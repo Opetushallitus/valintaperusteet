@@ -132,21 +132,6 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     }
 
     private void asetaNullitOletusarvoiksi(Funktiokutsu fk) {
-        for (Arvokonvertteriparametri p : fk.getArvokonvertteriparametrit()) {
-            if (p.getHylkaysperuste() == null) {
-                p.setHylkaysperuste(false);
-            }
-        }
-
-        for (Arvovalikonvertteriparametri p : fk.getArvovalikonvertteriparametrit()) {
-            if (p.getPalautaHaettuArvo() == null) {
-                p.setPalautaHaettuArvo(false);
-            }
-
-            if (p.getHylkaysperuste() == null) {
-                p.setHylkaysperuste(false);
-            }
-        }
 
         for (ValintaperusteViite vp : fk.getValintaperusteviitteet()) {
             if (vp.getOnPakollinen() == null) {
@@ -250,7 +235,6 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             newParam.setMaxValue(k.getMaxValue());
             newParam.setMinValue(k.getMinValue());
             newParam.setPalautaHaettuArvo(k.getPalautaHaettuArvo());
-            newParam.setHylkaysperuste(k.getHylkaysperuste());
             newParam.setPaluuarvo(k.getPaluuarvo());
             newParam.setFunktiokutsu(managed);
             managed.getArvovalikonvertteriparametrit().add(newParam);

@@ -14,29 +14,8 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "arvovalikonvertteriparametri")
 @Cacheable(true)
-public class Arvovalikonvertteriparametri extends Konvertteriparametri implements
-        Comparable<Arvovalikonvertteriparametri> {
+public class Arvovalikonvertteriparametri extends Konvertteriparametri {
 
-    @Override
-    public int compareTo(Arvovalikonvertteriparametri o) {
-        BigDecimal thisVal = minValue;
-        BigDecimal anotherVal = o.minValue;
-        BigDecimal thisMax = maxValue;
-        BigDecimal anotherMax = o.maxValue;
-        if (thisVal.compareTo(anotherVal) == -1 || thisMax.compareTo(anotherMax) == -1) {
-            return -1;
-        } else {
-            if (thisVal.compareTo(anotherVal) == 1 || thisMax.compareTo(anotherMax) == 1) {
-                return 1;
-            }
-        }
-        return 0;
-    }
-
-    @Override
-    public int hashCode() {
-        return minValue.hashCode() * 31 + maxValue.hashCode();
-    }
 
     @Override
     public String toString() {
@@ -52,38 +31,39 @@ public class Arvovalikonvertteriparametri extends Konvertteriparametri implement
     }
 
     @JsonView(JsonViews.Basic.class)
-    @Column(precision = 17, scale = 4, name = "minvalue", nullable = false)
-    private BigDecimal minValue;
+    //@Column(precision = 17, scale = 4, name = "minvalue", nullable = false)
+    @Column(name = "minvalue", nullable = false)
+    private String minValue;
 
     @JsonView(JsonViews.Basic.class)
-    @Column(precision = 17, scale = 4, name = "maxvalue", nullable = false)
-    private BigDecimal maxValue;
+    @Column(name = "maxvalue", nullable = false)
+    private String maxValue;
 
     @JsonView(JsonViews.Basic.class)
     @Column(name = "palauta_haettu_arvo")
-    private Boolean palautaHaettuArvo;
+    private String palautaHaettuArvo;
 
-    public BigDecimal getMinValue() {
+    public String getMinValue() {
         return minValue;
     }
 
-    public void setMinValue(BigDecimal minValue) {
+    public void setMinValue(String minValue) {
         this.minValue = minValue;
     }
 
-    public BigDecimal getMaxValue() {
+    public String getMaxValue() {
         return maxValue;
     }
 
-    public void setMaxValue(BigDecimal maxValue) {
+    public void setMaxValue(String maxValue) {
         this.maxValue = maxValue;
     }
 
-    public Boolean getPalautaHaettuArvo() {
+    public String getPalautaHaettuArvo() {
         return palautaHaettuArvo;
     }
 
-    public void setPalautaHaettuArvo(Boolean palautaHaettuArvo) {
+    public void setPalautaHaettuArvo(String palautaHaettuArvo) {
         this.palautaHaettuArvo = palautaHaettuArvo;
     }
 

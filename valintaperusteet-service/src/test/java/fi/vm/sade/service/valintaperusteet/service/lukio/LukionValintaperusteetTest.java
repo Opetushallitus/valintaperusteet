@@ -65,16 +65,16 @@ public class LukionValintaperusteetTest {
     private static final Map<Integer, String> hakutoiveet;
 
     private static final Map mustacheMap = new HashMap<String, String>() {{
-        put("paasykoeHylkaysMin", "0");
-        put("paasykoeHylkaysMax", "2");
-        put("lisanayttoHylkaysMin", "0");
-        put("lisanayttoHylkaysMax", "2");
-        put("paasykoeJaLisanayttoHylkaysMin", "4");
-        put("paasykoeJaLisanayttoHylkaysMax", "6");
-        put("painotettuKeskiarvoHylkaysMin", "4");
-        put("painotettuKeskiarvoHylkaysMax", "7.5");
-        put("paasykoeTulos", "pk");
-        put("lisanayttoTulos", "l");
+        put("paasykoe_hylkays_min", "0");
+        put("paasykoe_hylkays_max", "2");
+        put("lisanaytto_hylkays_min", "0");
+        put("lisanaytto_hylkays_max", "2");
+        put("paasykoe_ja_lisanaytto_hylkays_min", "4");
+        put("paasykoe_ja_lisanaytto_hylkays_max", "6");
+        put("painotettu_keskiarvo_hylkays_min", "4");
+        put("painotettu_keskiarvo_hylkays_max", "7.5");
+        put("paasykoe_tulos", "pk");
+        put("lisanaytto_tulos", "l");
     }};
 
     static {
@@ -230,7 +230,7 @@ public class LukionValintaperusteetTest {
                 mustacheMap
         ));
 
-        Lukuarvofunktio lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(laajennaAlakaavat(LukionValintaperusteet.paasykoeLukuarvo("paasykoeTulos")).getFunktiokutsu());
+        Lukuarvofunktio lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(laajennaAlakaavat(LukionValintaperusteet.paasykoeLukuarvo("paasykoe_tulos")).getFunktiokutsu());
         Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(hakukohde, hakemus, new ArrayList<Hakemus>(), lasku);
 
         assertTrue(new BigDecimal("3.0").compareTo(tulos.getTulos()) == 0);
@@ -240,7 +240,7 @@ public class LukionValintaperusteetTest {
         assertTrue(new BigDecimal("1.5").compareTo(tulos.getTulos()) == 0);
         assertEquals(Tila.Tilatyyppi.HYLATTY, tulos.getTila().getTilatyyppi());
 
-        lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(laajennaAlakaavat(LukionValintaperusteet.lisanayttoLukuarvo("lisanayttoTulos")).getFunktiokutsu());
+        lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(laajennaAlakaavat(LukionValintaperusteet.lisanayttoLukuarvo("lisanaytto_tulos")).getFunktiokutsu());
         tulos = laskentaService.suoritaValintalaskenta(hakukohde, hakemusHylattyLisanaytto, new ArrayList<Hakemus>(), lasku);
 
         assertTrue(new BigDecimal("1.0").compareTo(tulos.getTulos()) == 0);
@@ -251,7 +251,7 @@ public class LukionValintaperusteetTest {
         assertTrue(new BigDecimal("3.0").compareTo(tulos.getTulos()) == 0);
         assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
 
-        lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(laajennaAlakaavat(LukionValintaperusteet.paasykoeJaLisanaytto(LukionValintaperusteet.paasykoeLukuarvo("paasykoeTulos"), LukionValintaperusteet.lisanayttoLukuarvo("lisanayttoTulos"))).getFunktiokutsu());
+        lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(laajennaAlakaavat(LukionValintaperusteet.paasykoeJaLisanaytto(LukionValintaperusteet.paasykoeLukuarvo("paasykoe_tulos"), LukionValintaperusteet.lisanayttoLukuarvo("lisanaytto_tulos"))).getFunktiokutsu());
         tulos = laskentaService.suoritaValintalaskenta(hakukohde, hakemus, new ArrayList<Hakemus>(), lasku);
 
         assertTrue(new BigDecimal("6.0").compareTo(tulos.getTulos()) == 0);

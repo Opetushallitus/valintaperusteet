@@ -73,7 +73,7 @@ object LaskentaTestUtil {
       funktiokutsu.setFunktioargumentit(setAsJavaSet(fargs.toSet))
       funktiokutsu.setSyoteparametrit(setAsJavaSet(syoteparametrit.toSet))
       funktiokutsu.setArvokonvertteriparametrit(setAsJavaSet(arvokonvertterit.toSet))
-      funktiokutsu.setArvovalikonvertteriparametrit(new TreeSet[Arvovalikonvertteriparametri](arvovalikonvertterit.toSet))
+      funktiokutsu.setArvovalikonvertteriparametrit(setAsJavaSet(arvovalikonvertterit.toSet))
       funktiokutsu.setValintaperusteviitteet(setAsJavaSet(valintaperustetunniste.toSet))
 
       funktiokutsu
@@ -91,7 +91,7 @@ object LaskentaTestUtil {
   }
 
   object Arvokonvertteriparametri {
-    def apply(paluuarvo: String, arvo: String, hylkaysperuste: java.lang.Boolean) = {
+    def apply(paluuarvo: String, arvo: String, hylkaysperuste: String) = {
       val konv = new Arvokonvertteriparametri
       konv.setArvo(arvo)
       konv.setHylkaysperuste(hylkaysperuste)
@@ -102,12 +102,11 @@ object LaskentaTestUtil {
   }
 
   object Arvovalikonvertteriparametri {
-    def apply(paluuarvo: String = "", min: BigDecimal, max: BigDecimal, palautaHaettuArvo: java.lang.Boolean = false, hylkaysperuste: java.lang.Boolean) = {
+    def apply(paluuarvo: String = "", min: String, max: String, palautaHaettuArvo: String = null) = {
       val konv = new Arvovalikonvertteriparametri
       konv.setMaxValue(max)
       konv.setMinValue(min)
       konv.setPaluuarvo(paluuarvo)
-      konv.setHylkaysperuste(hylkaysperuste)
       konv.setPalautaHaettuArvo(palautaHaettuArvo)
 
       konv

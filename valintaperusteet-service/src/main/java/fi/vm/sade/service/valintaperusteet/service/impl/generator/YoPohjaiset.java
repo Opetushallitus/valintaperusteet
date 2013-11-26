@@ -12,11 +12,10 @@ public class YoPohjaiset {
     public static Laskentakaava luoToisenAsteenYlioppilaspohjainenPeruskaava(
             Laskentakaava hakutoivejarjestyspisteytysmalli,
             Laskentakaava tyokokemuspisteytysmalli, Laskentakaava sukupuolipisteytysmalli,
-            Laskentakaava yleinenkoulumenestyspisteytysmalli, Laskentakaava ulkomaillaSuoritettuKoulutus) {
+            Laskentakaava yleinenkoulumenestyspisteytysmalli) {
         Funktiokutsu summa = GenericHelper.luoSumma(hakutoivejarjestyspisteytysmalli, tyokokemuspisteytysmalli,
                 sukupuolipisteytysmalli,
-                yleinenkoulumenestyspisteytysmalli,
-                GenericHelper.luoHylkaa(ulkomaillaSuoritettuKoulutus, "Oppivelvollisuuden suorittaminen on keskeytynyt tai pohjakoulutus on ulkomailla suoritettu koulutus"));
+                yleinenkoulumenestyspisteytysmalli);
 
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(summa,
                 "2. asteen ylioppilaspohjainen peruskaava");

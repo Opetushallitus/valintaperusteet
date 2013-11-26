@@ -208,11 +208,11 @@ trait LaskinFunktiot {
             }
             case s: String => haeValintaperuste(s)
           }
-          (min, max, paluuarvo, palautaHaettuArvo, l.hylkaysperuste)
+          (min, max, paluuarvo, palautaHaettuArvo)
         }
         case lk: Lukuarvovalikonversio => {
 
-         (Some(lk.min),Some(lk.max),Some(lk.paluuarvo),Some(lk.palautaHaettuArvo), lk.hylkaysperuste)
+         (Some(lk.min),Some(lk.max),Some(lk.paluuarvo),Some(lk.palautaHaettuArvo))
         }
         case _ => {
           (None,None,None,None,false)
@@ -220,8 +220,8 @@ trait LaskinFunktiot {
       }
 
       tilat match {
-        case (Some(min: BigDecimal), Some(max: BigDecimal),Some(p: BigDecimal), Some(ph: Boolean), hylkaysperuste: Boolean) => {
-          Some(Lukuarvovalikonversio(min, max, p, ph, hylkaysperuste))
+        case (Some(min: BigDecimal), Some(max: BigDecimal),Some(p: BigDecimal), Some(ph: Boolean)) => {
+          Some(Lukuarvovalikonversio(min, max, p, ph))
         }
         case _ => None
       }
