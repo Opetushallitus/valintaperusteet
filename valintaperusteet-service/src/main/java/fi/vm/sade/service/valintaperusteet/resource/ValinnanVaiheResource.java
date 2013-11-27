@@ -1,6 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
+import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
+import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
@@ -45,6 +47,9 @@ public class ValinnanVaiheResource {
 
     @Autowired
     ValinnanVaiheService valinnanVaiheService;
+
+    @Autowired
+    private ValintaperusteetModelMapper modelMapper;
 
     protected final static Logger LOGGER = LoggerFactory.getLogger(ValinnanVaiheResource.class);
 
@@ -98,12 +103,12 @@ public class ValinnanVaiheResource {
     @Path("{parentOid}/valintakoe")
     @Secured({UPDATE, CRUD})
     public Response addValintakoeToValinnanVaihe(@PathParam("parentOid") String parentOid, ValintakoeDTO koe) {
-       try {
-           Valintakoe vk = valintakoeService.lisaaValintakoeValinnanVaiheelle(parentOid, koe);
+        try {
+            Valintakoe vk = valintakoeService.lisaaValintakoeValinnanVaiheelle(parentOid, koe);
             return Response.status(Response.Status.CREATED).entity(vk).build();
         } catch (Exception e) {
-           LOGGER.error("error in addValintakoeToValinnanVaihe", e);
-           return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            LOGGER.error("error in addValintakoeToValinnanVaihe", e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
 
     }
@@ -124,8 +129,8 @@ public class ValinnanVaiheResource {
     @JsonView(JsonViews.Basic.class)
     @Path("jarjesta")
     @Secured({UPDATE, CRUD})
-    public List<ValinnanVaihe> jarjesta(List<String> oids) {
-        return valinnanVaiheService.jarjestaValinnanVaiheet(oids);
+    public List<ValinnanVaiheDTO> jarjesta(List<String> oids) {
+        return modelMapper.mapList(valinnanVaiheService.jarjestaValinnanVaiheet(oids), ValinnanVaiheDTO.class);
     }
 
     @DELETE

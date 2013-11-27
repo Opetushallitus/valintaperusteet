@@ -4,10 +4,7 @@ import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
-import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
-import fi.vm.sade.service.valintaperusteet.dto.KoodiDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
+import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.util.TestUtil;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -25,9 +22,7 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 
 import javax.ws.rs.core.Response;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 
@@ -92,7 +87,7 @@ public class HakukohdeResourceTest {
 
     @Test
     public void testInsert() throws Exception {
-        HakukohdeViiteDTO hakukohdeDTO = new HakukohdeViiteDTO();
+        HakukohdeViiteCreateDTO hakukohdeDTO = new HakukohdeViiteDTO();
         hakukohdeDTO.setNimi("Uusi valintaryhmä");
         hakukohdeDTO.setOid("uusi oid");
         hakukohdeDTO.setHakuoid("hakuoid");
@@ -145,7 +140,7 @@ public class HakukohdeResourceTest {
 
     @Test
     public void testValinnanVaihesForHakukohde() throws Exception {
-        List<ValinnanVaihe> valinnanVaihes = hakukohdeResource.valinnanVaihesForHakukohde("oid6");
+        List<ValinnanVaiheDTO> valinnanVaihes = hakukohdeResource.valinnanVaihesForHakukohde("oid6");
         assertEquals(3, valinnanVaihes.size());
         testUtil.lazyCheck(JsonViews.Basic.class, valinnanVaihes);
 

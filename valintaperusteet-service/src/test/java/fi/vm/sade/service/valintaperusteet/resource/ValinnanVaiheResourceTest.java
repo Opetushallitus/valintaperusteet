@@ -3,6 +3,7 @@ package fi.vm.sade.service.valintaperusteet.resource;
 import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
+import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheEiOleOlemassaException;
@@ -145,17 +146,17 @@ public class ValinnanVaiheResourceTest {
 
     @Test
     public void testJarjesta() {
-        List<ValinnanVaihe> valinnanVaiheList = hakuResource.valinnanVaihesForHakukohde("oid6");
+        List<ValinnanVaiheDTO> valinnanVaiheList = hakuResource.valinnanVaihesForHakukohde("oid6");
         List<String> oids = new ArrayList<String>();
 
-        for (ValinnanVaihe valinnanVaihe : valinnanVaiheList) {
+        for (ValinnanVaiheDTO valinnanVaihe : valinnanVaiheList) {
             oids.add(valinnanVaihe.getOid());
         }
 
         assertEquals("4", oids.get(0));
         assertEquals("6", oids.get(2));
         Collections.reverse(oids);
-        List<ValinnanVaihe> jarjesta = vaiheResource.jarjesta(oids);
+        List<ValinnanVaiheDTO> jarjesta = vaiheResource.jarjesta(oids);
         assertEquals("6", jarjesta.get(0).getOid());
         assertEquals("4", jarjesta.get(2).getOid());
         jarjesta = hakuResource.valinnanVaihesForHakukohde("oid6");
@@ -207,9 +208,9 @@ public class ValinnanVaiheResourceTest {
 
     @Test
     public void testListValintakokeet() throws IOException {
-        final String valintaryhmaOid= "83";
+        final String valintaryhmaOid = "83";
 
-        List<Valintakoe> kokeet= vaiheResource.listValintakokeet(valintaryhmaOid);
+        List<Valintakoe> kokeet = vaiheResource.listValintakokeet(valintaryhmaOid);
         assertEquals(4, kokeet.size());
         String json = mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(kokeet);
     }

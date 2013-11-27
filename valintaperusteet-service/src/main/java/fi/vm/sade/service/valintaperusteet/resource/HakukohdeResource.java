@@ -109,7 +109,7 @@ public class HakukohdeResource {
     @JsonView({JsonViews.Basic.class})
     @Secured({CRUD})
     @ApiOperation(value = "Lisää hakukohteen valintaryhmään (tai juureen, jos valintaryhmän OID:a ei ole annettu)")
-    public Response insert(HakukohdeViiteDTO hakukohdeViiteDTO, String valintaryhmaOid) {
+    public Response insert(HakukohdeViiteCreateDTO hakukohdeViiteDTO, String valintaryhmaOid) {
         try {
             HakukohdeViite hkv = hakukohdeService.insert(hakukohdeViiteDTO, valintaryhmaOid);
             return Response.status(Response.Status.CREATED).entity(hkv).build();
@@ -127,7 +127,9 @@ public class HakukohdeResource {
     @JsonView({JsonViews.Basic.class})
     @Secured({UPDATE, CRUD})
     @ApiOperation(value = "Päivittää hakukohdetta OID:n perusteella")
-    public Response update(@PathParam("oid") String oid, HakukohdeViiteCreateDTO hakukohdeViite) {
+    public Response update(
+            @ApiParam(value = "Päivitettävän hakukohteen OID") @PathParam("oid") String oid,
+            @ApiParam(value = "hakukohteen uudet tiedot", required = true) HakukohdeViiteCreateDTO hakukohdeViite) {
         try {
             HakukohdeViite hkv = hakukohdeService.update(oid, hakukohdeViite);
             return Response.status(Response.Status.ACCEPTED).entity(hkv).build();
