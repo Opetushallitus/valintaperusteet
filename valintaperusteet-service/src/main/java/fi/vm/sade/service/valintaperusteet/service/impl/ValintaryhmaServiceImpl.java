@@ -1,7 +1,9 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
+import fi.vm.sade.service.valintaperusteet.dao.OrganisaatioDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
+import fi.vm.sade.service.valintaperusteet.model.Organisaatio;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaService;
 import fi.vm.sade.service.valintaperusteet.service.OidService;
@@ -12,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -36,6 +40,9 @@ public class ValintaryhmaServiceImpl extends AbstractCRUDServiceImpl<Valintaryhm
 
     @Autowired
     private ValinnanVaiheDAO valinnanVaiheDAO;
+
+    @Autowired
+    private OrganisaatioDAO organisaatioDAO;
 
     @Autowired
     private OidService oidService;
@@ -69,6 +76,9 @@ public class ValintaryhmaServiceImpl extends AbstractCRUDServiceImpl<Valintaryhm
         valintaryhma.setOid(oidService.haeValintaryhmaOid());
         Valintaryhma parent = haeValintaryhma(parentOid);
         valintaryhma.setYlavalintaryhma(parent);
+
+        valintaryhma.setOrganisaatiot(getOrganisaatios(valintaryhma));
+
         Valintaryhma inserted = valintaryhmaDAO.insert(valintaryhma);
         valinnanVaiheService.kopioiValinnanVaiheetParentilta(inserted, parent);
         hakijaryhmaService.kopioiHakijaryhmatParentilta(inserted, parent);
@@ -86,12 +96,27 @@ public class ValintaryhmaServiceImpl extends AbstractCRUDServiceImpl<Valintaryhm
     public Valintaryhma update(String oid, Valintaryhma incoming) {
         Valintaryhma managedObject = haeValintaryhma(oid);
         managedObject.setNimi(incoming.getNimi());
+
+        managedObject.setOrganisaatiot(getOrganisaatios(incoming));
         return managedObject;
+    }
+
+    private Set<Organisaatio> getOrganisaatios(Valintaryhma incoming) {
+        Set<Organisaatio> organisaatiot = new HashSet<Organisaatio>();
+        for (Organisaatio organisaatio : incoming.getOrganisaatiot()) {
+            Organisaatio temp = organisaatioDAO.readByOid(organisaatio.getOid());
+            if(temp == null) {
+                temp = organisaatioDAO.insert(organisaatio);
+            }
+            organisaatiot.add(temp);
+        }
+        return organisaatiot;
     }
 
     @Override
     public Valintaryhma insert(Valintaryhma entity) {
         entity.setOid(oidService.haeValintaryhmaOid());
+        entity.setOrganisaatiot(getOrganisaatios(entity));
         return valintaryhmaDAO.insert(entity);
     }
 }

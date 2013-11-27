@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
+import fi.vm.sade.service.valintaperusteet.dto.ErrorDTO;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.*;
 import org.codehaus.jackson.map.annotate.JsonView;
@@ -56,8 +57,6 @@ public class ValintaryhmaResource {
     @Secured({READ, UPDATE, CRUD})
     public List<Valintaryhma> search(@QueryParam("paataso") Boolean paataso,
                                      @QueryParam("parentsOf") String parentsOf
-
-
     ) {
         List<Valintaryhma> valintaryhmas = new ArrayList<Valintaryhma>();
         if (Boolean.TRUE.equals(paataso)) {
@@ -153,7 +152,7 @@ public class ValintaryhmaResource {
             return Response.status(Response.Status.CREATED).entity(valintaryhma).build();
         } catch (Exception e) {
             LOGGER.error("Error creating valintaryhmä.", e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ErrorDTO(e.getMessage())).build();
         }
     }
 

@@ -45,6 +45,7 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long> 
                 .leftJoin(valintaryhma.hakukohdeViitteet).fetch()
                 .leftJoin(valintaryhma.hakukohdekoodit).fetch()
                 .leftJoin(valintaryhma.valintakoekoodit).fetch()
+                .leftJoin(valintaryhma.organisaatiot).fetch()
                 .where(eq).distinct().orderBy(valintaryhma.nimi.asc()).list(valintaryhma);
     }
 
@@ -55,6 +56,7 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long> 
         Valintaryhma vr = from(valintaryhma).leftJoin(valintaryhma.alavalintaryhmat).fetch()
                 .leftJoin(valintaryhma.hakukohdeViitteet).fetch()
                 .leftJoin(valintaryhma.hakukohdekoodit).fetch()
+                .leftJoin(valintaryhma.organisaatiot).fetch()
                 .where(valintaryhma.oid.eq(oid))
                 .singleResult(valintaryhma);
 

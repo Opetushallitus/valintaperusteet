@@ -122,7 +122,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
         Valintaryhma ammatillinenKoulutusVr = new Valintaryhma();
         ammatillinenKoulutusVr.setNimi("Ammatillinen koulutus");
-        ammatillinenKoulutusVr.setHakuOid(HAKU_OID);
+
         ammatillinenKoulutusVr = valintaryhmaService.insert(ammatillinenKoulutusVr);
 
         transactionManager.commit(tx);
@@ -199,7 +199,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
         Valintaryhma peruskouluVr = new Valintaryhma();
         peruskouluVr.setNimi("Peruskoulupohjaiset");
-        peruskouluVr.setHakuOid(HAKU_OID);
+
         peruskouluVr = valintaryhmaService.insert(peruskouluVr, ammatillinenKoulutusVr.getOid());
 
         transactionManager.commit(tx);
@@ -207,7 +207,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
         Valintaryhma lukioVr = new Valintaryhma();
         lukioVr.setNimi("Lukiopohjaiset");
-        lukioVr.setHakuOid(HAKU_OID);
+
         lukioVr = valintaryhmaService.insert(lukioVr, ammatillinenKoulutusVr.getOid());
 
         transactionManager.commit(tx);
@@ -308,7 +308,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
         Valintaryhma lukioKoulutusVr = new Valintaryhma();
         lukioKoulutusVr.setNimi("Lukiokoulutus");
-        lukioKoulutusVr.setHakuOid(HAKU_OID);
+
         lukioKoulutusVr = valintaryhmaService.insert(lukioKoulutusVr);
         transactionManager.commit(tx);
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
@@ -415,7 +415,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
         Valintaryhma painotettuKeskiarvoVr = new Valintaryhma();
         painotettuKeskiarvoVr.setNimi("Painotettu keskiarvo");
-        painotettuKeskiarvoVr.setHakuOid(HAKU_OID);
+
         painotettuKeskiarvoVr = valintaryhmaService.insert(painotettuKeskiarvoVr, lukioKoulutusVr.getOid());
 
         Laskentakaava laskentakaavaPainotettuKeskiarvo = asetaValintaryhmaJaTallennaKantaan(LukionValintaperusteet.painotettuLukuaineidenKeskiarvo(), painotettuKeskiarvoVr);
@@ -436,8 +436,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
 
         Valintaryhma painotettuKeskiarvoJaPaasykoeVr = new Valintaryhma();
-        painotettuKeskiarvoJaPaasykoeVr.setNimi("Painotettu keskiarvo ja pääsykoe");
-        painotettuKeskiarvoJaPaasykoeVr.setHakuOid(HAKU_OID);
+        painotettuKeskiarvoJaPaasykoeVr.setNimi("Painotettu keskiarvo ja paasykoe");
         painotettuKeskiarvoJaPaasykoeVr = valintaryhmaService.insert(painotettuKeskiarvoJaPaasykoeVr, lukioKoulutusVr.getOid());
 
         transactionManager.commit(tx);
@@ -481,7 +480,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
         Valintaryhma painotettuKeskiarvoJaLisanayttoVr = new Valintaryhma();
         painotettuKeskiarvoJaLisanayttoVr.setNimi("Painotettu keskiarvo ja lisänäyttö");
-        painotettuKeskiarvoJaLisanayttoVr.setHakuOid(HAKU_OID);
+
         painotettuKeskiarvoJaLisanayttoVr = valintaryhmaService.insert(painotettuKeskiarvoJaLisanayttoVr, lukioKoulutusVr.getOid());
 
         transactionManager.commit(tx);
@@ -525,7 +524,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
         Valintaryhma painotettuKeskiarvoJaPaasykoeJaLisanayttoVr = new Valintaryhma();
         painotettuKeskiarvoJaPaasykoeJaLisanayttoVr.setNimi("Painotettu keskiarvo, pääsykoe ja lisänäyttö");
-        painotettuKeskiarvoJaPaasykoeJaLisanayttoVr.setHakuOid(HAKU_OID);
+
         painotettuKeskiarvoJaPaasykoeJaLisanayttoVr = valintaryhmaService.insert(painotettuKeskiarvoJaPaasykoeJaLisanayttoVr, lukioKoulutusVr.getOid());
 
         transactionManager.commit(tx);
@@ -647,7 +646,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
 
                 Valintaryhma valintaryhma = new Valintaryhma();
-                valintaryhma.setHakuOid(HAKU_OID);
+
                 valintaryhma.setNimi(nimi);
 
                 TransactionStatus tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
@@ -755,7 +754,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
         Valintaryhma koevalintaryhma = new Valintaryhma();
         koevalintaryhma.setNimi("Peruskaava ja pääsykoe");
-        koevalintaryhma.setHakuOid(HAKU_OID);
+
         koevalintaryhma = valintaryhmaService.insert(koevalintaryhma, valintaryhma.getOid());
 
         transactionManager.commit(tx);
@@ -846,7 +845,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
         Valintaryhma koe = new Valintaryhma();
         koe.setNimi("Peruskaava");
-        koe.setHakuOid(HAKU_OID);
+
         koe = valintaryhmaService.insert(koe, valintaryhma.getOid());
 
         transactionManager.commit(tx);

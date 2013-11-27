@@ -27,6 +27,7 @@
         <class>fi.vm.sade.service.valintaperusteet.model.Valintakoe</class>
         <class>fi.vm.sade.service.valintaperusteet.model.ValintaperusteViite</class>
         <class>fi.vm.sade.service.valintaperusteet.model.Valintaryhma</class>
+        <class>fi.vm.sade.service.valintaperusteet.model.Organisaatio</class>
         <shared-cache-mode>NONE</shared-cache-mode>
 
         <properties>
