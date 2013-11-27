@@ -1,12 +1,13 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
+import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaDTO;
 import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 
 import java.util.List;
 
-public interface HakijaryhmaService extends CRUDService<Hakijaryhma, Long, String> {
+public interface HakijaryhmaService {
 
     void deleteByOid(String oid, boolean skipInheritedCheck);
 
@@ -25,6 +26,12 @@ public interface HakijaryhmaService extends CRUDService<Hakijaryhma, Long, Strin
     List<Hakijaryhma> jarjestaHakijaryhmat(List<String> oids);
 
     void kopioiHakijaryhmatParentilta(Valintaryhma inserted, Valintaryhma parent);
+
     void kopioiHakijaryhmatParentilta(HakukohdeViite inserted, Valintaryhma parent);
 
+    Hakijaryhma insert(Hakijaryhma entity);
+
+    void delete(Hakijaryhma entity);
+
+    Hakijaryhma update(String oid, HakijaryhmaDTO entity);
 }

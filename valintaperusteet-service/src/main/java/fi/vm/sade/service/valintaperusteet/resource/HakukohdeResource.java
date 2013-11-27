@@ -1,5 +1,9 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
 import fi.vm.sade.service.valintaperusteet.dto.ErrorDTO;
 import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
@@ -64,6 +68,11 @@ public class HakukohdeResource {
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
+    @ApiOperation(value = "Find pet by ID", notes = "More notes about this method", response = HakukohdeViite.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Invalid ID supplied"),
+            @ApiResponse(code = 404, message = "Pet not found")
+    })
     public List<HakukohdeViite> query(@QueryParam("paataso") @DefaultValue("false") boolean paataso) {
         if (paataso) {
             return hakukohdeService.findRoot();
@@ -119,6 +128,11 @@ public class HakukohdeResource {
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
+    @ApiOperation(value = "Find pet by ID", notes = "More notes about this method", response = ValinnanVaihe.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Invalid ID supplied"),
+            @ApiResponse(code = 404, message = "Pet not found")
+    })
     public List<ValinnanVaihe> valinnanVaihesForHakukohde(@PathParam("oid") String oid) {
         return valinnanVaiheService.findByHakukohde(oid);
     }
@@ -190,7 +204,7 @@ public class HakukohdeResource {
     @JsonView({JsonViews.Basic.class})
     @Secured({CRUD})
     public Response insertHakijaryhma(@PathParam("hakukohdeOid") String hakukohdeOid,
-                                        Hakijaryhma hakijaryhma) {
+                                      Hakijaryhma hakijaryhma) {
         try {
             hakijaryhma.setOid(oidService.haeHakijaryhmaOid());
 

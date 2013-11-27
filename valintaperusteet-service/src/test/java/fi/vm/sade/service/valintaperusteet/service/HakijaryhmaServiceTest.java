@@ -5,6 +5,7 @@ import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
+import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaDTO;
 import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaEiKuuluValintatapajonolleException;
@@ -256,7 +257,7 @@ public class HakijaryhmaServiceTest {
 
         valintaryhma = valintaryhmaService.insert(valintaryhma, "vr2");
         {
-            assertEquals(3, hakijaryhmaService.findByValintaryhma(valintaryhma.getOid()).size() );
+            assertEquals(3, hakijaryhmaService.findByValintaryhma(valintaryhma.getOid()).size());
         }
     }
 
@@ -265,21 +266,21 @@ public class HakijaryhmaServiceTest {
         try {
             hakijaryhmaService.liitaHakijaryhmaValintatapajonolle("vtj1", "asdasd");
             assertFalse(true);
-        } catch(HakijaryhmaEiOleOlemassaException e){
+        } catch (HakijaryhmaEiOleOlemassaException e) {
 
         }
 
         try {
             hakijaryhmaService.liitaHakijaryhmaValintatapajonolle("asdsas", "hr1");
             assertFalse(true);
-        } catch(ValintatapajonoEiOleOlemassaException e){
+        } catch (ValintatapajonoEiOleOlemassaException e) {
 
         }
 
         try {
             hakijaryhmaService.liitaHakijaryhmaValintatapajonolle("vtj1", "hr1");
             assertFalse(true);
-        } catch(HakijaryhmaValintatapajonoOnJoOlemassaException e){
+        } catch (HakijaryhmaValintatapajonoOnJoOlemassaException e) {
 
         }
 
@@ -353,7 +354,7 @@ public class HakijaryhmaServiceTest {
         }
 
         List<Hakijaryhma> byHakukohde = hakijaryhmaService.findByHakukohde("1");
-        assertEquals(3 , byHakukohde.size());
+        assertEquals(3, byHakukohde.size());
         assertEquals("hr2", byHakukohde.get(0).getOid());
         assertEquals("hr3", byHakukohde.get(1).getOid());
         assertEquals("hr4", byHakukohde.get(2).getOid());
@@ -370,7 +371,7 @@ public class HakijaryhmaServiceTest {
         assertEquals(3, hakijaryhmas.size());
 
         byHakukohde = hakijaryhmaService.findByHakukohde("1");
-        assertEquals(3 , byHakukohde.size());
+        assertEquals(3, byHakukohde.size());
         assertEquals("hr4", byHakukohde.get(0).getOid());
         assertEquals("hr2", byHakukohde.get(1).getOid());
         assertEquals("hr3", byHakukohde.get(2).getOid());
