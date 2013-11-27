@@ -1,10 +1,17 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
-import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
+import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaValintatapajonoDTO;
+import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaValintatapajonoService;
 import fi.vm.sade.service.valintaperusteet.service.ValintakoeService;
 import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
+import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaEiOleOlemassaException;
+import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaaEiVoiPoistaaException;
 import org.codehaus.jackson.map.annotate.JsonView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +38,7 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.*;
 @Component
 @Path("hakijaryhma_valintatapajono")
 @PreAuthorize("isAuthenticated()")
+@Api(value = "/hakijaryhma_valintatapajono", description = "Resurssi hakijaryhmien ja valintatapajonojen välisten liitosten käsittelyyn")
 public class HakijaryhmaValintatapajonoResource {
     protected final static Logger LOGGER = LoggerFactory.getLogger(ValintatapajonoResource.class);
 
@@ -43,15 +51,24 @@ public class HakijaryhmaValintatapajonoResource {
     @Autowired
     HakijaryhmaValintatapajonoService hakijaryhmaValintatapajonoService;
 
+    @Autowired
+    private ValintaperusteetModelMapper modelMapper;
+
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
-    @Path("{oid}")
+    @Path("/{oid}")
     @Secured({READ, UPDATE, CRUD})
+    @ApiOperation(value = "Poistaa hakijaryhmän ja valintatapajonon välisen liitoksen")
+    @ApiResponses(value = {
+            @ApiResponse(code = 403, message = "Liitosta ei voida poistaa, esim. se on peritty"),
+    })
     public Response poistaHakijaryhma(@PathParam("oid") String oid) {
         try {
             hakijaryhmaValintatapajonoService.deleteByOid(oid, false);
             return Response.status(Response.Status.OK).build();
+        } catch (HakijaryhmaaEiVoiPoistaaException e) {
+            throw new WebApplicationException(e, Response.Status.FORBIDDEN);
         } catch (Exception e) {
             LOGGER.error("Error removing hakijaryhma.", e);
             Map map = new HashMap();
@@ -61,14 +78,22 @@ public class HakijaryhmaValintatapajonoResource {
     }
 
     @POST
-    @Path("{oid}")
+    @Path("/{oid}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({UPDATE, CRUD})
-    public Response update(@PathParam("oid") String oid, HakijaryhmaValintatapajono jono) {
-        HakijaryhmaValintatapajono update = hakijaryhmaValintatapajonoService.update(oid, jono);
-        return Response.status(Response.Status.ACCEPTED).entity(update).build();
+    @ApiOperation(value = "Päivittää hakijaryhmän ja valintatapajonon välistä liitosta")
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "Liitosta ei ole olemassa"),
+    })
+    public Response update(@PathParam("oid") String oid, HakijaryhmaValintatapajonoDTO jono) {
+        try {
+            HakijaryhmaValintatapajonoDTO update = modelMapper.map(hakijaryhmaValintatapajonoService.update(oid, jono), HakijaryhmaValintatapajonoDTO.class);
+            return Response.status(Response.Status.ACCEPTED).entity(update).build();
+        } catch (HakijaryhmaEiOleOlemassaException e) {
+            throw new WebApplicationException(e, Response.Status.NOT_FOUND);
+        }
     }
 
 }

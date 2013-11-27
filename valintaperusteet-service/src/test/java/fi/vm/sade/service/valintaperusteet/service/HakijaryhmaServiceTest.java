@@ -244,9 +244,8 @@ public class HakijaryhmaServiceTest {
         hakukohde.setHakuoid("oid2");
         hakukohde.setNimi("");
         hakukohde.setOid("2");
-        hakukohde.setValintaryhmaOid("vr2");
 
-        hakukohdeService.insert(hakukohde);
+        hakukohdeService.insert(hakukohde, "vr2");
         {
             assertEquals(3, hakijaryhmaService.findByHakukohde("2").size());
         }
@@ -312,7 +311,7 @@ public class HakijaryhmaServiceTest {
         hakijaryhmaValintatapajonoService.deleteByOid("hr4_vtj2", true);
         hakijaryhmaValintatapajonoService.deleteByOid("hr5_vtj6", true);
 
-        HakukohdeViite viite = new HakukohdeViite();
+        HakukohdeViiteDTO viite = new HakukohdeViiteDTO();
         viite.setHakuoid("temp");
         viite.setOid("temp");
         viite.setNimi("temp");

@@ -2,7 +2,9 @@ package fi.vm.sade.service.valintaperusteet.service.impl;
 
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
+import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
+import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakukohdeViiteEiOleOlemassaException;
@@ -11,9 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -24,7 +24,7 @@ import java.util.Set;
  */
 @Service
 @Transactional
-public class HakukohdeServiceImpl extends AbstractCRUDServiceImpl<HakukohdeViite, Long, String> implements HakukohdeService {
+public class HakukohdeServiceImpl implements HakukohdeService {
 
     @Autowired
     private HakukohdeViiteDAO hakukohdeViiteDAO;
@@ -45,9 +45,8 @@ public class HakukohdeServiceImpl extends AbstractCRUDServiceImpl<HakukohdeViite
     private OidService oidService;
 
     @Autowired
-    public HakukohdeServiceImpl(HakukohdeViiteDAO dao) {
-        super(dao);
-    }
+    private ValintaperusteetModelMapper modelMapper;
+
 
     @Override
     public List<HakukohdeViite> findAll() {
@@ -69,15 +68,6 @@ public class HakukohdeServiceImpl extends AbstractCRUDServiceImpl<HakukohdeViite
         return hakukohdeViiteDAO.findByValintaryhmaOid(oid);
     }
 
-    @Override
-    public HakukohdeViite insert(HakukohdeViiteDTO hakukohdeViiteDTO) {
-        HakukohdeViite hkv = convertDTO(hakukohdeViiteDTO);
-        HakukohdeViite insert = hakukohdeViiteDAO.insert(hkv);
-        valinnanVaiheService.kopioiValinnanVaiheetParentilta(insert, hkv.getValintaryhma());
-        hakijaryhmaService.kopioiHakijaryhmatParentilta(insert,hkv.getValintaryhma());
-        return insert;
-    }
-
     private HakukohdeViite haeHakukohdeViite(String oid) {
         HakukohdeViite hakukohdeViite = hakukohdeViiteDAO.readByOid(oid);
         if (hakukohdeViite == null) {
@@ -87,65 +77,30 @@ public class HakukohdeServiceImpl extends AbstractCRUDServiceImpl<HakukohdeViite
         return hakukohdeViite;
     }
 
-    private HakukohdeViite convertDTO(HakukohdeViiteDTO hakukohdeViiteDTO) {
-        HakukohdeViite hkv = new HakukohdeViite();
-        hkv.setNimi(hakukohdeViiteDTO.getNimi());
-        hkv.setOid(hakukohdeViiteDTO.getOid());
-        hkv.setHakuoid(hakukohdeViiteDTO.getHakuoid());
-        hkv.setTila(hakukohdeViiteDTO.getTila());
-        hkv.setTarjoajaOid(hakukohdeViiteDTO.getTarjoajaOid());
-
-        String valintaryhmaOid = hakukohdeViiteDTO.getValintaryhmaOid();
-
-        Set<String> valinnanvaiheetOids = hakukohdeViiteDTO.getValinnanvaiheetOids();
-
-        if (StringUtils.isNotBlank(valintaryhmaOid)) {
-            Valintaryhma valintaryhma = valintaryhmaService.readByOid(valintaryhmaOid);
-            hkv.setValintaryhma(valintaryhma);
-        }
-        if (valinnanvaiheetOids != null && valinnanvaiheetOids.size() > 0) {
-            List<ValinnanVaihe> valinnanVaihes = valinnanVaiheDAO.readByOids(valinnanvaiheetOids);
-            hkv.setValinnanvaiheet(new HashSet<ValinnanVaihe>(valinnanVaihes));
-        }
-        return hkv;
-    }
-
     @Override
-    public HakukohdeViite update(String oid, HakukohdeViiteDTO incoming) throws Exception {
+    public HakukohdeViite update(String oid, HakukohdeViiteCreateDTO incoming) throws Exception {
         HakukohdeViite managedObject = haeHakukohdeViite(oid);
-        HakukohdeViite hkv = convertDTO(incoming);
 
-        managedObject.setNimi(hkv.getNimi());
-        managedObject.setValinnanvaiheet(hkv.getValinnanvaiheet());
-        managedObject.setValintaryhma(hkv.getValintaryhma());
-        managedObject.setTila(hkv.getTila());
-
-        return managedObject;
-    }
-
-    @Override
-    public HakukohdeViite update(String oid, HakukohdeViite incoming) {
-        HakukohdeViite managedObject = haeHakukohdeViite(oid);
         managedObject.setNimi(incoming.getNimi());
-        if (managedObject.getValintaryhma() == null && incoming.getValintaryhma() != null) {
-            Valintaryhma valintaryhma = valintaryhmaService.readByOid(incoming.getValintaryhma().getOid());
-            managedObject.setValintaryhma(valintaryhma);
-        }
+        managedObject.setHakuoid(incoming.getHakuoid());
+        managedObject.setTarjoajaOid(incoming.getTarjoajaOid());
+        managedObject.setTila(incoming.getTila());
+
         return managedObject;
     }
 
     @Override
-    public HakukohdeViite insert(HakukohdeViite hakukohde, String valintaryhmaOid) {
-        HakukohdeViite lisatty = null;
+    public HakukohdeViite insert(HakukohdeViiteCreateDTO hakukohde, String valintaryhmaOid) {
+        HakukohdeViite lisatty = modelMapper.map(hakukohde, HakukohdeViite.class);
 
         if (StringUtils.isNotBlank(valintaryhmaOid)) {
             Valintaryhma valintaryhma = valintaryhmaService.readByOid(valintaryhmaOid);
-            hakukohde.setValintaryhma(valintaryhma);
-            lisatty = hakukohdeViiteDAO.insert(hakukohde);
+            lisatty.setValintaryhma(valintaryhma);
+            lisatty = hakukohdeViiteDAO.insert(lisatty);
             valinnanVaiheService.kopioiValinnanVaiheetParentilta(lisatty, valintaryhma);
             hakijaryhmaService.kopioiHakijaryhmatParentilta(lisatty, valintaryhma);
         } else {
-            lisatty = hakukohdeViiteDAO.insert(hakukohde);
+            lisatty = hakukohdeViiteDAO.insert(lisatty);
         }
 
         return lisatty;
@@ -154,11 +109,6 @@ public class HakukohdeServiceImpl extends AbstractCRUDServiceImpl<HakukohdeViite
     @Override
     public boolean kuuluuSijoitteluun(String oid) {
         return hakukohdeViiteDAO.kuuluuSijoitteluun(oid);
-    }
-
-    @Override
-    public HakukohdeViite insert(HakukohdeViite entity) {
-        return hakukohdeViiteDAO.insert(entity);
     }
 
 
@@ -175,16 +125,6 @@ public class HakukohdeServiceImpl extends AbstractCRUDServiceImpl<HakukohdeViite
 
         // Hakukohteiden tuonti saattaa feilata ilman flushausta, jos hakukohde siirretään uuden valintaryhmän alle
         hakukohdeViiteDAO.flush();
-    }
-
-    private HakukohdeViite luoKopio(HakukohdeViite hakukohdeViite) {
-        HakukohdeViite kopio = new HakukohdeViite();
-        kopio.setHakuoid(hakukohdeViite.getHakuoid());
-        kopio.setOid(hakukohdeViite.getOid());
-        kopio.setNimi(hakukohdeViite.getNimi());
-        kopio.setTila(hakukohdeViite.getTila());
-        kopio.setTarjoajaOid(hakukohdeViite.getTarjoajaOid());
-        return kopio;
     }
 
     @Override
@@ -214,9 +154,7 @@ public class HakukohdeServiceImpl extends AbstractCRUDServiceImpl<HakukohdeViite
             deleteByOid(hakukohdeOid);
 
             // Luodaan uusi hakukohde
-            HakukohdeViite uusiHakukohde = luoKopio(hakukohdeViite);
-
-            HakukohdeViite lisatty = insert(uusiHakukohde,
+            HakukohdeViite lisatty = insert(modelMapper.map(hakukohdeViite, HakukohdeViiteCreateDTO.class),
                     valintaryhma != null ? valintaryhma.getOid() : null);
 
             lisatty.setManuaalisestiSiirretty(siirretaanManuaalisesti);
@@ -241,7 +179,7 @@ public class HakukohdeServiceImpl extends AbstractCRUDServiceImpl<HakukohdeViite
 
                 // Asetetaan hakukohteen omat valinnan vaiheet viittaamaan taas uuteen hakukohteeseen
                 for (ValinnanVaihe vv : valinnanVaiheet) {
-                    vv.setHakukohdeViite(uusiHakukohde);
+                    vv.setHakukohdeViite(lisatty);
                 }
             }
 
@@ -263,7 +201,7 @@ public class HakukohdeServiceImpl extends AbstractCRUDServiceImpl<HakukohdeViite
 
         List<Hakijaryhma> byHakukohde = hakijaryhmaService.findByHakukohde(hakukohdeOid);
         for (Hakijaryhma hakijaryhma : byHakukohde) {
-            if(hakijaryhma.getMaster() != null) {
+            if (hakijaryhma.getMaster() != null) {
                 hakijaryhmaService.deleteByOid(hakijaryhma.getOid(), true);
             }
         }

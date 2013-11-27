@@ -81,7 +81,7 @@ public class HakijaryhmaResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("{hakijaryhmaOid}/valintatapajono")
+    @Path("/{hakijaryhmaOid}/valintatapajono")
     @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
     @ApiOperation(value = "Hakee hakijaryhmän ja siihen liittyvät valintatapajonot OID:n perusteella", response = HakijaryhmaValintatapajonoDTO.class)
@@ -97,7 +97,7 @@ public class HakijaryhmaResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView(JsonViews.Basic.class)
-    @Path("{oid}")
+    @Path("/{oid}")
     @Secured({UPDATE, CRUD})
     @ApiOperation(value = "Päivittää hakijaryhmän", response = HakijaryhmaDTO.class)
     public HakijaryhmaDTO update(@PathParam("oid") String oid, HakijaryhmaDTO hakijaryhma) {
@@ -108,7 +108,7 @@ public class HakijaryhmaResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView(JsonViews.Basic.class)
-    @Path("jarjesta")
+    @Path("/jarjesta")
     @Secured({UPDATE, CRUD})
     @ApiOperation(value = "Järjestää hakijaryhmät parametrina annetun listan mukaan", response = HakijaryhmaDTO.class)
     @ApiResponses(value = {
@@ -123,7 +123,7 @@ public class HakijaryhmaResource {
     }
 
     @DELETE
-    @Path("{oid}")
+    @Path("/{oid}")
     @Secured({CRUD})
     @ApiOperation(value = "Poistaa hakijaryhmän OID:n perusteella")
     @ApiResponses(value = {

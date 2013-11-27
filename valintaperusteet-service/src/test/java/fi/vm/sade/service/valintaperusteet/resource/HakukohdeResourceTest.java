@@ -4,7 +4,9 @@ import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
+import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
+import fi.vm.sade.service.valintaperusteet.dto.KoodiDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.util.TestUtil;
@@ -61,21 +63,21 @@ public class HakukohdeResourceTest {
 
     @Test
     public void testFindByOid() throws Exception {
-        HakukohdeViite vroid1 = hakukohdeResource.queryFull("oid1");
+        HakukohdeViiteDTO vroid1 = hakukohdeResource.queryFull("oid1");
         assertEquals("haku1", vroid1.getNimi());
         testUtil.lazyCheck(JsonViews.Basic.class, vroid1);
     }
 
     @Test
     public void testFindAll() throws Exception {
-        List<HakukohdeViite> hakukohdeViites = hakukohdeResource.query(false);
+        List<HakukohdeViiteDTO> hakukohdeViites = hakukohdeResource.query(false);
         assertEquals(30, hakukohdeViites.size());
         testUtil.lazyCheck(JsonViews.Basic.class, hakukohdeViites);
     }
 
     @Test
     public void testFindRoot() throws Exception {
-        List<HakukohdeViite> hakukohdeViites = hakukohdeResource.query(true);
+        List<HakukohdeViiteDTO> hakukohdeViites = hakukohdeResource.query(true);
         assertEquals(16, hakukohdeViites.size());
         testUtil.lazyCheck(JsonViews.Basic.class, hakukohdeViites);
     }
@@ -83,7 +85,7 @@ public class HakukohdeResourceTest {
     @Test
     public void testInsertNull() throws Exception {
         HakukohdeViiteDTO valintaryhma = new HakukohdeViiteDTO();
-        Response insert = hakukohdeResource.insert(valintaryhma);
+        Response insert = hakukohdeResource.insert(valintaryhma, null);
         assertEquals(500, insert.getStatus());
 
     }
@@ -94,12 +96,8 @@ public class HakukohdeResourceTest {
         hakukohdeDTO.setNimi("Uusi valintaryhmä");
         hakukohdeDTO.setOid("uusi oid");
         hakukohdeDTO.setHakuoid("hakuoid");
-        hakukohdeDTO.setValintaryhmaOid("oid1");
 
-        Set<String> vvOids = new HashSet<String>();
-        vvOids.add("1");
-        hakukohdeDTO.setValinnanvaiheetOids(vvOids);
-        Response insert = hakukohdeResource.insert(hakukohdeDTO);
+        Response insert = hakukohdeResource.insert(hakukohdeDTO, "oid1");
         assertEquals(201, insert.getStatus());
 
         testUtil.lazyCheck(JsonViews.Basic.class, insert.getEntity());
@@ -112,7 +110,7 @@ public class HakukohdeResourceTest {
         hakukohdeDto.setOid("uusi oid");
         hakukohdeDto.setHakuoid("hakuoid");
 
-        Response insert = hakukohdeResource.insert(hakukohdeDto);
+        Response insert = hakukohdeResource.insert(hakukohdeDto, null);
         assertEquals(201, insert.getStatus());
 
         testUtil.lazyCheck(JsonViews.Basic.class, insert.getEntity());
@@ -120,23 +118,23 @@ public class HakukohdeResourceTest {
 
     @Test
     public void testInsertDuplicate() throws Exception {
-        HakukohdeViiteDTO valintaryhma = new HakukohdeViiteDTO();
-        valintaryhma.setNimi("Uusi valintaryhmä");
-        valintaryhma.setOid("oid1");
-        Response insert = hakukohdeResource.insert(valintaryhma);
+        HakukohdeViiteDTO hakukohde = new HakukohdeViiteDTO();
+        hakukohde.setNimi("Uusi valintaryhmä");
+        hakukohde.setOid("oid1");
+        Response insert = hakukohdeResource.insert(hakukohde, null);
         assertEquals(500, insert.getStatus());
         testUtil.lazyCheck(JsonViews.Basic.class, insert.getEntity());
     }
 
     @Test
     public void testUpdate() throws Exception {
-        HakukohdeViite hkv = hakukohdeResource.queryFull("oid1");
+        HakukohdeViiteDTO hkv = hakukohdeResource.queryFull("oid1");
         hkv.setNimi("muokattu");
 
         ObjectMapper mapper = testUtil.getObjectMapper();
 
         final String json = mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(hkv);
-        HakukohdeViite fromJson = mapper.readValue(json, HakukohdeViite.class);
+        HakukohdeViiteCreateDTO fromJson = mapper.readValue(json, HakukohdeViiteCreateDTO.class);
 
         hakukohdeResource.update(hkv.getOid(), fromJson);
 
@@ -219,8 +217,8 @@ public class HakukohdeResourceTest {
         Response response = hakukohdeResource.insertHakukohdekoodi("oid1", hakukohdekoodi);
         assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
 
-        HakukohdeViite oid1 = hakukohdeResource.queryFull("oid1");
-        Hakukohdekoodi hakukohdekoodi1 = oid1.getHakukohdekoodi();
+        HakukohdeViiteDTO oid1 = hakukohdeResource.queryFull("oid1");
+        KoodiDTO hakukohdekoodi1 = oid1.getHakukohdekoodi();
         assertEquals(ARVO, hakukohdekoodi1.getArvo());
         assertEquals(URI, hakukohdekoodi1.getUri());
 

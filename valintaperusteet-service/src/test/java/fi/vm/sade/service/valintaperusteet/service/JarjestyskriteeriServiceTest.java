@@ -459,13 +459,17 @@ public class JarjestyskriteeriServiceTest {
 
         try {
             assertNull(jarjestyskriteeriService.readByOid("3201"));
-        } catch (JarjestyskriteeriEiOleOlemassaException e ) {};
+        } catch (JarjestyskriteeriEiOleOlemassaException e) {
+        }
+        ;
 
         assertNotNull(jarjestyskriteeriService.readByOid("3212"));
 
         try {
             assertNull(jarjestyskriteeriService.readByOid("3201"));
-        } catch (JarjestyskriteeriEiOleOlemassaException e ) {};
+        } catch (JarjestyskriteeriEiOleOlemassaException e) {
+        }
+        ;
     }
 
     @Test
@@ -492,9 +496,8 @@ public class JarjestyskriteeriServiceTest {
         dto.setOid("oidii");
         dto.setNimi("Nimi");
         dto.setHakuoid("uushakuoidi");
-        dto.setValintaryhmaOid("3202");
 
-        HakukohdeViite insert = hakukohdeService.insert(dto);
+        HakukohdeViite insert = hakukohdeService.insert(dto, "3202");
 
         // Joo-o
         int size = insert.getValinnanvaiheet().iterator().next().getJonot().iterator().next().getJarjestyskriteerit().size();

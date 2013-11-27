@@ -2,6 +2,8 @@ package fi.vm.sade.service.valintaperusteet.service.impl;
 
 import fi.vm.sade.generic.dao.GenericDAO;
 import fi.vm.sade.service.valintaperusteet.dao.*;
+import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
+import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.schema.HakukohdeImportTyyppi;
 import fi.vm.sade.service.valintaperusteet.schema.HakukohdekoodiTyyppi;
@@ -15,6 +17,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -72,8 +75,12 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
     @Autowired
     private ValintakoekoodiDAO valintakoekoodiDAO;
 
+    @Qualifier("genericDAO")
     @Autowired
     private GenericDAO genericDAO;
+
+    @Autowired
+    private ValintaperusteetModelMapper modelMapper;
 
     protected void convertKoodi(HakukohdekoodiTyyppi from, Hakukohdekoodi to) {
         to.setArvo(from.getArvo());
@@ -240,7 +247,7 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
             LOG.info("Hakukohdetta ei ole olemassa. Luodaan uusi hakukohde.");
             hakukohde = new HakukohdeViite();
             kopioiTiedot(importData, hakukohde);
-            hakukohde = hakukohdeService.insert(hakukohde, valintaryhma != null ? valintaryhma.getOid() : null);
+            hakukohde = hakukohdeService.insert(modelMapper.map(hakukohde, HakukohdeViiteDTO.class), valintaryhma != null ? valintaryhma.getOid() : null);
             koodi.addHakukohde(hakukohde);
         } else {
             LOG.info("Hakukohde löytyi.");

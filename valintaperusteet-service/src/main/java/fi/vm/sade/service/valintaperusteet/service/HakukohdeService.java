@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
+import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 
@@ -12,7 +13,7 @@ import java.util.List;
  * Time: 12:02
  * To change this template use File | Settings | File Templates.
  */
-public interface HakukohdeService extends CRUDService<HakukohdeViite, Long, String> {
+public interface HakukohdeService {
 
     List<HakukohdeViite> findAll();
 
@@ -22,11 +23,7 @@ public interface HakukohdeService extends CRUDService<HakukohdeViite, Long, Stri
 
     List<HakukohdeViite> findByValintaryhmaOid(String oid);
 
-    HakukohdeViite insert(HakukohdeViiteDTO hakukohdeViite);
-
-    HakukohdeViite update(String oid, HakukohdeViiteDTO incoming) throws Exception;
-
-    HakukohdeViite insert(HakukohdeViite hakukohde, String valintaryhmaOid);
+    HakukohdeViite update(String oid, HakukohdeViiteCreateDTO incoming) throws Exception;
 
     boolean kuuluuSijoitteluun(String oid);
 
@@ -34,4 +31,6 @@ public interface HakukohdeService extends CRUDService<HakukohdeViite, Long, Stri
 
     HakukohdeViite siirraHakukohdeValintaryhmaan(String hakukohdeOid, String valintaryhmaOid,
                                                  boolean siirretaanManuaalisesti);
+
+    HakukohdeViite insert(HakukohdeViiteCreateDTO hakukohde, String valintaryhmaOid);
 }

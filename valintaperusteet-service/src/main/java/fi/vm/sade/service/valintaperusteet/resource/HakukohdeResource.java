@@ -1,14 +1,11 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiOperation;
-import com.wordnik.swagger.annotations.ApiResponse;
-import com.wordnik.swagger.annotations.ApiResponses;
-import fi.vm.sade.service.valintaperusteet.dto.ErrorDTO;
-import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
+import com.wordnik.swagger.annotations.*;
+import fi.vm.sade.service.valintaperusteet.dto.*;
+import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.*;
+import fi.vm.sade.service.valintaperusteet.service.exception.HakukohdeViiteEiOleOlemassaException;
 import org.codehaus.jackson.map.annotate.JsonView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +33,7 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.*;
 @Component
 @Path("hakukohde")
 @PreAuthorize("isAuthenticated()")
+@Api(value = "/hakukohde", description = "Resurssi hakukohteiden käsittelyyn")
 public class HakukohdeResource {
 
     protected final static Logger LOGGER = LoggerFactory.getLogger(ValintaryhmaResource.class);
@@ -61,6 +59,9 @@ public class HakukohdeResource {
     @Autowired
     private OidService oidService;
 
+    @Autowired
+    private ValintaperusteetModelMapper modelMapper;
+
     public HakukohdeResource() {
     }
 
@@ -68,17 +69,20 @@ public class HakukohdeResource {
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
-    @ApiOperation(value = "Find pet by ID", notes = "More notes about this method", response = HakukohdeViite.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "Invalid ID supplied"),
-            @ApiResponse(code = 404, message = "Pet not found")
-    })
-    public List<HakukohdeViite> query(@QueryParam("paataso") @DefaultValue("false") boolean paataso) {
+    @ApiOperation(value = "Hakee hakukohteita. Joko kaikki tai päätason hakukohteet.", response = HakukohdeViiteDTO.class)
+    public List<HakukohdeViiteDTO> query(@QueryParam("paataso")
+                                         @DefaultValue("false")
+                                         @ApiParam(name = "paataso", value = "Haetaanko päätason hakukohteet vai kaikki")
+                                         boolean paataso) {
+        List<HakukohdeViite> hakukohteet = null;
+
         if (paataso) {
-            return hakukohdeService.findRoot();
+            hakukohteet = hakukohdeService.findRoot();
         } else {
-            return hakukohdeService.findAll();
+            hakukohteet = hakukohdeService.findAll();
         }
+
+        return modelMapper.mapList(hakukohteet, HakukohdeViiteDTO.class);
     }
 
 
@@ -87,8 +91,16 @@ public class HakukohdeResource {
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
-    public HakukohdeViite queryFull(@PathParam("oid") String oid) {
-        return hakukohdeService.readByOid(oid);
+    @ApiOperation(value = "Hakee hakukohteen OID:n perusteella", response = HakukohdeViiteDTO.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "Hakukohdetta ei löydy"),
+    })
+    public HakukohdeViiteDTO queryFull(@PathParam("oid") String oid) {
+        try {
+            return modelMapper.map(hakukohdeService.readByOid(oid), HakukohdeViiteDTO.class);
+        } catch (HakukohdeViiteEiOleOlemassaException e) {
+            throw new WebApplicationException(e, Response.Status.NOT_FOUND);
+        }
     }
 
     @PUT
@@ -96,9 +108,10 @@ public class HakukohdeResource {
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({CRUD})
-    public Response insert(HakukohdeViiteDTO hakukohdeViiteDTO) {
+    @ApiOperation(value = "Lisää hakukohteen valintaryhmään (tai juureen, jos valintaryhmän OID:a ei ole annettu)")
+    public Response insert(HakukohdeViiteDTO hakukohdeViiteDTO, String valintaryhmaOid) {
         try {
-            HakukohdeViite hkv = hakukohdeService.insert(hakukohdeViiteDTO);
+            HakukohdeViite hkv = hakukohdeService.insert(hakukohdeViiteDTO, valintaryhmaOid);
             return Response.status(Response.Status.CREATED).entity(hkv).build();
         } catch (Exception e) {
             LOGGER.warn("Hakukohdetta ei saatu lisättyä. ", e);
@@ -113,7 +126,8 @@ public class HakukohdeResource {
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({UPDATE, CRUD})
-    public Response update(@PathParam("oid") String oid, HakukohdeViite hakukohdeViite) {
+    @ApiOperation(value = "Päivittää hakukohdetta OID:n perusteella")
+    public Response update(@PathParam("oid") String oid, HakukohdeViiteCreateDTO hakukohdeViite) {
         try {
             HakukohdeViite hkv = hakukohdeService.update(oid, hakukohdeViite);
             return Response.status(Response.Status.ACCEPTED).entity(hkv).build();
@@ -128,13 +142,9 @@ public class HakukohdeResource {
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
-    @ApiOperation(value = "Find pet by ID", notes = "More notes about this method", response = ValinnanVaihe.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "Invalid ID supplied"),
-            @ApiResponse(code = 404, message = "Pet not found")
-    })
-    public List<ValinnanVaihe> valinnanVaihesForHakukohde(@PathParam("oid") String oid) {
-        return valinnanVaiheService.findByHakukohde(oid);
+    @ApiOperation(value = "Hakee hakukohteen valinnan vaiheet OID:n perusteella", response = ValinnanVaiheDTO.class)
+    public List<ValinnanVaiheDTO> valinnanVaihesForHakukohde(@PathParam("oid") String oid) {
+        return modelMapper.mapList(valinnanVaiheService.findByHakukohde(oid), ValinnanVaiheDTO.class);
     }
 
     @GET

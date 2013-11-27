@@ -5,6 +5,7 @@ import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdekoodiDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
+import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
@@ -71,7 +72,7 @@ public class HakukohdeServiceTest {
             assertEquals(1, vaihe81Ljonot.size());
         }
 
-        HakukohdeViite uusiHakukohde = new HakukohdeViite();
+        HakukohdeViiteDTO uusiHakukohde = new HakukohdeViiteDTO();
         uusiHakukohde.setNimi("Uusi hakukohde");
         uusiHakukohde.setOid("oid1234567");
         uusiHakukohde.setHakuoid("uusihakuoid");
@@ -111,7 +112,7 @@ public class HakukohdeServiceTest {
 
     @Test
     public void testInsertIlmanValintaryhmaa() {
-        HakukohdeViite uusiHakukohde = new HakukohdeViite();
+        HakukohdeViiteDTO uusiHakukohde = new HakukohdeViiteDTO();
         uusiHakukohde.setNimi("Uusi hakukohde");
         uusiHakukohde.setOid("oid1234567");
         uusiHakukohde.setHakuoid("uusihakuoid");

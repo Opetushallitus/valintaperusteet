@@ -2,6 +2,8 @@ package fi.vm.sade.service.valintaperusteet.service.impl;
 
 import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaValintatapajonoDAO;
+import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaValintatapajonoDTO;
+import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
 import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaEiOleOlemassaException;
@@ -23,7 +25,7 @@ import java.util.List;
  */
 @Service
 @Transactional
-public class HakijaryhmaValintatapajonoServiceImpl extends AbstractCRUDServiceImpl<HakijaryhmaValintatapajono, Long, String> implements HakijaryhmaValintatapajonoService {
+public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValintatapajonoService {
 
     @Autowired
     private HakijaryhmaDAO hakijaryhmaDAO;
@@ -46,12 +48,10 @@ public class HakijaryhmaValintatapajonoServiceImpl extends AbstractCRUDServiceIm
     @Autowired
     private LaskentakaavaService laskentakaavaService;
 
-    private static HakijaryhmaValintatapajonoKopioija kopioija = new HakijaryhmaValintatapajonoKopioija();
-
     @Autowired
-    public HakijaryhmaValintatapajonoServiceImpl(HakijaryhmaValintatapajonoDAO dao) {
-        super(dao);
-    }
+    private ValintaperusteetModelMapper modelMapper;
+
+    private static HakijaryhmaValintatapajonoKopioija kopioija = new HakijaryhmaValintatapajonoKopioija();
 
     private HakijaryhmaValintatapajono haeHakijaryhmaValintatapajono(String oid) {
         HakijaryhmaValintatapajono hakijaryhma = hakijaryhmaValintatapajonoDAO.readByOid(oid);
@@ -95,8 +95,10 @@ public class HakijaryhmaValintatapajonoServiceImpl extends AbstractCRUDServiceIm
 
     // CRUD
     @Override
-    public HakijaryhmaValintatapajono update(String oid, HakijaryhmaValintatapajono entity) {
+    public HakijaryhmaValintatapajono update(String oid, HakijaryhmaValintatapajonoDTO dto) {
         HakijaryhmaValintatapajono managedObject = haeHakijaryhmaValintatapajono(oid);
+        HakijaryhmaValintatapajono entity = modelMapper.map(dto, HakijaryhmaValintatapajono.class);
+
         return LinkitettavaJaKopioitavaUtil.paivita(managedObject, entity, kopioija);
     }
 
@@ -106,7 +108,6 @@ public class HakijaryhmaValintatapajonoServiceImpl extends AbstractCRUDServiceIm
     }
 
     @Override
-
     public void delete(HakijaryhmaValintatapajono entity) {
         for (HakijaryhmaValintatapajono hakijaryhma : entity.getKopiot()) {
             delete(hakijaryhma);
@@ -118,10 +119,5 @@ public class HakijaryhmaValintatapajonoServiceImpl extends AbstractCRUDServiceIm
         }
 
         hakijaryhmaValintatapajonoDAO.remove(entity);
-    }
-
-    @Override
-    public void deleteById(Long aLong) {
-        throw new RuntimeException("not implemented");
     }
 }
