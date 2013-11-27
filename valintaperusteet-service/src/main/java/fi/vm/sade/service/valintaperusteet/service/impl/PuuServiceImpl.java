@@ -35,11 +35,10 @@ public class PuuServiceImpl implements PuuService {
 
 
     @Override
-    public List<ValintaperustePuuDTO> search(String hakuOid, List<String> tila, String searchString) {
+    public List<ValintaperustePuuDTO> search(String hakuOid, List<String> tila, String searchString, boolean hakukohteet) {
         //fetch whole tree in a single query, is at least now faster than individually querying
 
         List<Valintaryhma>  valintaryhmaList = valintaryhmaDAO.findAllFetchAlavalintaryhmat();
-        List<HakukohdeViite> hakukohdeList = hakukohdeViiteDAO.search(hakuOid,tila,searchString);
 
         List<ValintaperustePuuDTO> parentList = new ArrayList<ValintaperustePuuDTO>();
         Map<Long, ValintaperustePuuDTO> dtoMap = new HashMap<Long, ValintaperustePuuDTO>();
@@ -55,8 +54,12 @@ public class PuuServiceImpl implements PuuService {
             ValintaperustePuuDTO dto = convert(valintaryhma, dtoMap);
             parentList.add(dto);
         }
-        for(HakukohdeViite hakukohdeViite : hakukohdeList) {
-            attach(hakukohdeViite, dtoMap, parentList);
+        if(hakukohteet) {
+            List<HakukohdeViite> hakukohdeList = hakukohdeViiteDAO.search(hakuOid,tila,searchString);
+
+            for(HakukohdeViite hakukohdeViite : hakukohdeList) {
+                attach(hakukohdeViite, dtoMap, parentList);
+            }
         }
 
 
