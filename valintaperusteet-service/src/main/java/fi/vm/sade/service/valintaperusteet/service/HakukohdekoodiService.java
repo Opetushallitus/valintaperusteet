@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
+import fi.vm.sade.service.valintaperusteet.dto.KoodiDTO;
 import fi.vm.sade.service.valintaperusteet.model.Hakukohdekoodi;
 
 import java.util.Set;
@@ -17,7 +18,7 @@ public interface HakukohdekoodiService {
 
     void lisaaHakukohdekoodiValintaryhmalle(String valintaryhmaOid, Hakukohdekoodi hakukohdekoodi);
 
-    Hakukohdekoodi lisaaHakukohdekoodiHakukohde(String hakukohdeOid, Hakukohdekoodi hakukohdekoodi);
+    Hakukohdekoodi lisaaHakukohdekoodiHakukohde(String hakukohdeOid, KoodiDTO hakukohdekoodi);
 
-    Hakukohdekoodi updateHakukohdeHakukohdekoodi(String hakukohdeOid, Hakukohdekoodi hakukohdekoodi);
+    Hakukohdekoodi updateHakukohdeHakukohdekoodi(String hakukohdeOid, KoodiDTO hakukohdekoodi);
 }

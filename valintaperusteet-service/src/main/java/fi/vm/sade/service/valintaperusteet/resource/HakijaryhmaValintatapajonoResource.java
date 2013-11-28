@@ -1,10 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiOperation;
-import com.wordnik.swagger.annotations.ApiResponse;
-import com.wordnik.swagger.annotations.ApiResponses;
+import com.wordnik.swagger.annotations.*;
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaValintatapajonoDTO;
+import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaValintatapajonoUpdateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaValintatapajonoService;
@@ -63,7 +61,7 @@ public class HakijaryhmaValintatapajonoResource {
     @ApiResponses(value = {
             @ApiResponse(code = 403, message = "Liitosta ei voida poistaa, esim. se on peritty"),
     })
-    public Response poistaHakijaryhma(@PathParam("oid") String oid) {
+    public Response poistaHakijaryhma(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
         try {
             hakijaryhmaValintatapajonoService.deleteByOid(oid, false);
             return Response.status(Response.Status.OK).build();
@@ -87,7 +85,8 @@ public class HakijaryhmaValintatapajonoResource {
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "Liitosta ei ole olemassa"),
     })
-    public Response update(@PathParam("oid") String oid, HakijaryhmaValintatapajonoDTO jono) {
+    public Response update(@ApiParam(value = "Päivitettävän liitoksen OID", required = true) @PathParam("oid") String oid,
+                           @ApiParam(value = "Liitoksen uudet tiedot", required = true) HakijaryhmaValintatapajonoUpdateDTO jono) {
         try {
             HakijaryhmaValintatapajonoDTO update = modelMapper.map(hakijaryhmaValintatapajonoService.update(oid, jono), HakijaryhmaValintatapajonoDTO.class);
             return Response.status(Response.Status.ACCEPTED).entity(update).build();

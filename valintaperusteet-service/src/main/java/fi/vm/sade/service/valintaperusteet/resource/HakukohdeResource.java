@@ -3,7 +3,8 @@ package fi.vm.sade.service.valintaperusteet.resource;
 import com.wordnik.swagger.annotations.*;
 import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
-import fi.vm.sade.service.valintaperusteet.model.*;
+import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
+import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakukohdeViiteEiOleOlemassaException;
 import org.codehaus.jackson.map.annotate.JsonView;
@@ -95,7 +96,7 @@ public class HakukohdeResource {
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "Hakukohdetta ei löydy"),
     })
-    public HakukohdeViiteDTO queryFull(@PathParam("oid") String oid) {
+    public HakukohdeViiteDTO queryFull(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
         try {
             return modelMapper.map(hakukohdeService.readByOid(oid), HakukohdeViiteDTO.class);
         } catch (HakukohdeViiteEiOleOlemassaException e) {
@@ -109,9 +110,9 @@ public class HakukohdeResource {
     @JsonView({JsonViews.Basic.class})
     @Secured({CRUD})
     @ApiOperation(value = "Lisää hakukohteen valintaryhmään (tai juureen, jos valintaryhmän OID:a ei ole annettu)")
-    public Response insert(HakukohdeViiteCreateDTO hakukohdeViiteDTO, String valintaryhmaOid) {
+    public Response insert(@ApiParam(value = "Lisättävä hakukohde", required = true) HakukohdeViiteCreateDTO hakukohdeViiteDTO, @ApiParam("Valintaryhmän OID") String valintaryhmaOid) {
         try {
-            HakukohdeViite hkv = hakukohdeService.insert(hakukohdeViiteDTO, valintaryhmaOid);
+            HakukohdeViiteDTO hkv = modelMapper.map(hakukohdeService.insert(hakukohdeViiteDTO, valintaryhmaOid), HakukohdeViiteDTO.class);
             return Response.status(Response.Status.CREATED).entity(hkv).build();
         } catch (Exception e) {
             LOGGER.warn("Hakukohdetta ei saatu lisättyä. ", e);
@@ -128,10 +129,10 @@ public class HakukohdeResource {
     @Secured({UPDATE, CRUD})
     @ApiOperation(value = "Päivittää hakukohdetta OID:n perusteella")
     public Response update(
-            @ApiParam(value = "Päivitettävän hakukohteen OID") @PathParam("oid") String oid,
+            @ApiParam(value = "Päivitettävän hakukohteen OID", required = true) @PathParam("oid") String oid,
             @ApiParam(value = "hakukohteen uudet tiedot", required = true) HakukohdeViiteCreateDTO hakukohdeViite) {
         try {
-            HakukohdeViite hkv = hakukohdeService.update(oid, hakukohdeViite);
+            HakukohdeViiteDTO hkv = modelMapper.map(hakukohdeService.update(oid, hakukohdeViite), HakukohdeViiteDTO.class);
             return Response.status(Response.Status.ACCEPTED).entity(hkv).build();
         } catch (Exception e) {
             LOGGER.warn("Hakukohdetta ei saatu päivitettyä. ", e);
@@ -145,7 +146,7 @@ public class HakukohdeResource {
     @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
     @ApiOperation(value = "Hakee hakukohteen valinnan vaiheet OID:n perusteella", response = ValinnanVaiheDTO.class)
-    public List<ValinnanVaiheDTO> valinnanVaihesForHakukohde(@PathParam("oid") String oid) {
+    public List<ValinnanVaiheDTO> valinnanVaihesForHakukohde(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
         return modelMapper.mapList(valinnanVaiheService.findByHakukohde(oid), ValinnanVaiheDTO.class);
     }
 
@@ -154,7 +155,8 @@ public class HakukohdeResource {
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
-    public Map<String, Boolean> kuuluuSijoitteluun(@PathParam("oid") String oid) {
+    @ApiOperation(value = "Palauttaa tiedon, kuuluuko hakukohde sijoitteluun", response = Boolean.class)
+    public Map<String, Boolean> kuuluuSijoitteluun(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
         Map<String, Boolean> map = new HashMap<String, Boolean>();
         map.put("sijoitteluun", hakukohdeService.kuuluuSijoitteluun(oid));
         return map;
@@ -165,8 +167,9 @@ public class HakukohdeResource {
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
-    public List<Hakijaryhma> hakijaryhmat(@PathParam("oid") String oid) {
-        return hakijaryhmaService.findByHakukohde(oid);
+    @ApiOperation(value = "Hakee hakukohteen hakijaryhmät", response = HakijaryhmaDTO.class)
+    public List<HakijaryhmaDTO> hakijaryhmat(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
+        return modelMapper.mapList(hakijaryhmaService.findByHakukohde(oid), HakijaryhmaDTO.class);
     }
 
     @GET
@@ -174,8 +177,9 @@ public class HakukohdeResource {
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
-    public List<Jarjestyskriteeri> findLaskentaKaavat(@PathParam("oid") String oid) {
-        return jarjestyskriteeriService.findByHakukohde(oid);
+    @ApiOperation(value = "Hakee hakukohteen järjestyskriteerit", response = JarjestyskriteeriDTO.class)
+    public List<JarjestyskriteeriDTO> findLaskentaKaavat(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
+        return modelMapper.mapList(jarjestyskriteeriService.findByHakukohde(oid), JarjestyskriteeriDTO.class);
     }
 
     @POST
@@ -184,7 +188,8 @@ public class HakukohdeResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
-    public List<ValintaperusteDTO> findAvaimet(List<String> oids) {
+    @ApiOperation(value = "Hakee hakukohteen syötettävät tiedot", response = ValintaperusteDTO.class)
+    public List<ValintaperusteDTO> findAvaimet(@ApiParam(value = "Hakukohteiden OID:t", required = true) List<String> oids) {
         return laskentakaavaService.findAvaimetForHakukohdes(oids);
     }
 
@@ -194,15 +199,16 @@ public class HakukohdeResource {
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({CRUD})
-    public Response insertValinnanvaihe(@PathParam("hakukohdeOid") String hakukohdeOid,
-                                        @QueryParam("edellinenValinnanVaiheOid") String edellinenValinnanVaiheOid,
-                                        ValinnanVaihe valinnanVaihe) {
+    @ApiOperation(value = "Lisää valinnan vaiheen hakukohteelle")
+    @ApiResponses(@ApiResponse(code = 400, message = "Valinnan vaiheen lisääminen epäonnistui"))
+    public Response insertValinnanvaihe(@ApiParam(value = "Hakukohteen OID", required = true) @PathParam("hakukohdeOid") String hakukohdeOid,
+                                        @ApiParam(value = "Edellisen valinnan vaiheen OID (jos valinnan vaihe halutaa lisätä tietyn vaiheen jälkeen, muussa tapauksessa uusi vaihe lisätään viimeiseksi)") @QueryParam("edellinenValinnanVaiheOid") String edellinenValinnanVaiheOid,
+                                        @ApiParam(value = "Uusi valinnan vaihe", required = true) ValinnanVaiheCreateDTO valinnanVaihe) {
         try {
-            valinnanVaihe.setOid(oidService.haeValinnanVaiheOid());
-            valinnanVaiheService.lisaaValinnanVaiheHakukohteelle(hakukohdeOid,
+            ValinnanVaiheDTO lisatty = modelMapper.map(valinnanVaiheService.lisaaValinnanVaiheHakukohteelle(hakukohdeOid,
                     valinnanVaihe,
-                    edellinenValinnanVaiheOid);
-            return Response.status(Response.Status.CREATED).entity(valinnanVaihe).build();
+                    edellinenValinnanVaiheOid), ValinnanVaiheDTO.class);
+            return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (Exception e) {
             LOGGER.error("Error creating valinnanvaihe.", e);
             return Response.status(Response.Status.BAD_REQUEST).build();
@@ -215,14 +221,14 @@ public class HakukohdeResource {
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({CRUD})
-    public Response insertHakijaryhma(@PathParam("hakukohdeOid") String hakukohdeOid,
-                                      Hakijaryhma hakijaryhma) {
+    @ApiOperation(value = "Lisää hakijaryhmän hakukohteelle")
+    @ApiResponses(@ApiResponse(code = 400, message = "Hakijaryhmän lisääminen epäonnistui"))
+    public Response insertHakijaryhma(@ApiParam(value = "Hakukohteen OID", required = true) @PathParam("hakukohdeOid") String hakukohdeOid,
+                                      @ApiParam(value = "Lisättävä hakijaryhmä", required = true) HakijaryhmaCreateDTO hakijaryhma) {
         try {
-            hakijaryhma.setOid(oidService.haeHakijaryhmaOid());
-
-            hakijaryhma = hakijaryhmaService.lisaaHakijaryhmaHakukohteelle(hakukohdeOid,
-                    hakijaryhma);
-            return Response.status(Response.Status.CREATED).entity(hakijaryhma).build();
+            HakijaryhmaDTO lisatty = modelMapper.map(hakijaryhmaService.lisaaHakijaryhmaHakukohteelle(hakukohdeOid,
+                    hakijaryhma), HakijaryhmaDTO.class);
+            return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (Exception e) {
             LOGGER.error("Error creating hakijaryhma.", e);
             return Response.status(Response.Status.BAD_REQUEST).build();
@@ -235,11 +241,13 @@ public class HakukohdeResource {
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({UPDATE, CRUD})
-    public Response updateHakukohdekoodi(@PathParam("hakukohdeOid") String hakukohdeOid,
-                                         Hakukohdekoodi hakukohdekoodi) {
+    @ApiOperation(value = "Päivittää hakukohteen hakukohdekoodia")
+    @ApiResponses(@ApiResponse(code = 400, message = "Päivittäminen epäonnistui"))
+    public Response updateHakukohdekoodi(@ApiParam(value = "Hakukohde OID", required = true) @PathParam("hakukohdeOid") String hakukohdeOid,
+                                         @ApiParam(value = "Lisättävä hakukohdekoodi", required = true) KoodiDTO hakukohdekoodi) {
         try {
-            hakukohdekoodi = hakukohdekoodiService.updateHakukohdeHakukohdekoodi(hakukohdeOid, hakukohdekoodi);
-            return Response.status(Response.Status.ACCEPTED).entity(hakukohdekoodi).build();
+            KoodiDTO lisatty = modelMapper.map(hakukohdekoodiService.updateHakukohdeHakukohdekoodi(hakukohdeOid, hakukohdekoodi), KoodiDTO.class);
+            return Response.status(Response.Status.ACCEPTED).entity(lisatty).build();
         } catch (Exception e) {
             LOGGER.error("Error updating hakukohdekoodit.", e);
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
@@ -252,13 +260,15 @@ public class HakukohdeResource {
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({CRUD})
-    public Response insertHakukohdekoodi(@PathParam("hakukohdeOid") String hakukohdeOid,
-                                         Hakukohdekoodi hakukohdekoodi) {
+    @ApiOperation(value = "Lisää hakukohdekoodin hakukohteelle")
+    @ApiResponses(@ApiResponse(code = 400, message = "Lisääminen epäonnistui"))
+    public Response insertHakukohdekoodi(@ApiParam(value = "Hakukohde OID", required = true) @PathParam("hakukohdeOid") String hakukohdeOid,
+                                         @ApiParam(value = "Lisättävä hakukohdekoodi", required = true) KoodiDTO hakukohdekoodi) {
         try {
-            hakukohdekoodiService.lisaaHakukohdekoodiHakukohde(hakukohdeOid, hakukohdekoodi);
-            return Response.status(Response.Status.CREATED).entity(hakukohdekoodi).build();
+            KoodiDTO lisatty = modelMapper.map(hakukohdekoodiService.lisaaHakukohdekoodiHakukohde(hakukohdeOid, hakukohdekoodi), KoodiDTO.class);
+            return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (Exception e) {
-            LOGGER.error("Error creating valinnanvaihe.", e);
+            LOGGER.error("Error inserting hakukohdekoodi.", e);
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }
@@ -269,11 +279,13 @@ public class HakukohdeResource {
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({CRUD})
-    public Response siirraHakukohdeValintaryhmaan(@PathParam("hakukohdeOid") String hakukohdeOid,
-                                                  String valintaryhmaOid) {
+    @ApiOperation(value = "Siirtää hakukohteen uuteen valintaryhmään (tai juureen, jos valintaryhmää ei anneta)")
+    @ApiResponses(@ApiResponse(code = 400, message = "Siirtäminen epäonnistui"))
+    public Response siirraHakukohdeValintaryhmaan(@ApiParam(value = "Hakukohde OID", required = true) @PathParam("hakukohdeOid") String hakukohdeOid,
+                                                  @ApiParam(value = "Uuden valintaryhmän OID") String valintaryhmaOid) {
         try {
-            HakukohdeViite hakukohde = hakukohdeService.
-                    siirraHakukohdeValintaryhmaan(hakukohdeOid, valintaryhmaOid, true);
+            HakukohdeViiteDTO hakukohde = modelMapper.map(hakukohdeService.
+                    siirraHakukohdeValintaryhmaan(hakukohdeOid, valintaryhmaOid, true), HakukohdeViiteDTO.class);
             return Response.status(Response.Status.ACCEPTED).entity(hakukohde).build();
         } catch (Exception e) {
             LOGGER.error("Error moving hakukohde to new valintaryhma.", e);

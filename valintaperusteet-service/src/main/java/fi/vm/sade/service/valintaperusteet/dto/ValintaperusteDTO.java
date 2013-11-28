@@ -1,5 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 import fi.vm.sade.service.valintaperusteet.model.Funktiotyyppi;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.model.Valintaperustelahde;
@@ -10,32 +12,42 @@ import java.util.List;
 /**
  * User: wuoti Date: 28.5.2013 Time: 14.52
  */
+@ApiModel(value = "ValintaperusteDTO", description = "Valintaperuste")
 public class ValintaperusteDTO {
 
+    @ApiModelProperty(value = "Tunniste")
     @JsonView({JsonViews.Basic.class})
     private String tunniste;
 
+    @ApiModelProperty(value = "Kuvaus")
     @JsonView({JsonViews.Basic.class})
     private String kuvaus;
 
+    @ApiModelProperty(value = "Funktiotyyppi")
     @JsonView({JsonViews.Basic.class})
     private Funktiotyyppi funktiotyyppi;
 
+    @ApiModelProperty(value = "Valintaperusteen lähde")
     @JsonView({JsonViews.Basic.class})
     private Valintaperustelahde lahde;
 
+    @ApiModelProperty(value = "Onko valintaperuste pakollinen")
     @JsonView({JsonViews.Basic.class})
     private boolean onPakollinen;
 
+    @ApiModelProperty(value = "Arvovälin minimi")
     @JsonView({JsonViews.Basic.class})
     private String min;
 
+    @ApiModelProperty(value = "Arvovälin maksimi")
     @JsonView({JsonViews.Basic.class})
     private String max;
 
+    @ApiModelProperty(value = "Arvot")
     @JsonView({JsonViews.Basic.class})
     private List<String> arvot;
 
+    @ApiModelProperty(value = "Osallistumistunniste")
     @JsonView({JsonViews.Basic.class})
     private String osallistuminenTunniste;
 

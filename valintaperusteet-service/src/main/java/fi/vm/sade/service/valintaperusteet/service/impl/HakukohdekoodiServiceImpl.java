@@ -1,6 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdekoodiDAO;
+import fi.vm.sade.service.valintaperusteet.dto.KoodiDTO;
+import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.Hakukohdekoodi;
 import fi.vm.sade.service.valintaperusteet.service.HakukohdeService;
@@ -31,6 +33,9 @@ public class HakukohdekoodiServiceImpl implements HakukohdekoodiService {
     @Autowired
     private HakukohdeService hakukohdeService;
 
+    @Autowired
+    private ValintaperusteetModelMapper modelMapper;
+
 
     @Override
     public void updateValintaryhmaHakukohdekoodit(String valintaryhmaOid, Set<Hakukohdekoodi> hakukohdekoodit) {
@@ -45,13 +50,14 @@ public class HakukohdekoodiServiceImpl implements HakukohdekoodiService {
     }
 
     @Override
-    public Hakukohdekoodi lisaaHakukohdekoodiHakukohde(String hakukohdeOid, Hakukohdekoodi hakukohdekoodi) {
+    public Hakukohdekoodi lisaaHakukohdekoodiHakukohde(String hakukohdeOid, KoodiDTO hakukohdekoodi) {
         HakukohdeViite hakukohdeViite = hakukohdeService.readByOid(hakukohdeOid);
+
 
         Hakukohdekoodi haettu = hakukohdekoodiDAO.readByUri(hakukohdekoodi.getUri());
 
         if (haettu == null) {
-            haettu = hakukohdekoodiDAO.insert(hakukohdekoodi);
+            haettu = hakukohdekoodiDAO.insert(modelMapper.map(hakukohdekoodi, Hakukohdekoodi.class));
         }
 
         haettu.setArvo(hakukohdekoodi.getArvo());
@@ -67,7 +73,7 @@ public class HakukohdekoodiServiceImpl implements HakukohdekoodiService {
     }
 
     @Override
-    public Hakukohdekoodi updateHakukohdeHakukohdekoodi(String hakukohdeOid, Hakukohdekoodi hakukohdekoodi) {
+    public Hakukohdekoodi updateHakukohdeHakukohdekoodi(String hakukohdeOid, KoodiDTO hakukohdekoodi) {
         return lisaaHakukohdekoodiHakukohde(hakukohdeOid, hakukohdekoodi);
     }
 }

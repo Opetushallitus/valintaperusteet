@@ -1,6 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
-import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaDTO;
+import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
@@ -21,7 +21,7 @@ public interface HakijaryhmaService {
 
     Hakijaryhma lisaaHakijaryhmaValintaryhmalle(String valintaryhmaOid, Hakijaryhma hakijaryhma);
 
-    Hakijaryhma lisaaHakijaryhmaHakukohteelle(String hakukohdeOid, Hakijaryhma hakijaryhma);
+    Hakijaryhma lisaaHakijaryhmaHakukohteelle(String hakukohdeOid, HakijaryhmaCreateDTO hakijaryhma);
 
     List<Hakijaryhma> jarjestaHakijaryhmat(List<String> oids);
 
@@ -33,5 +33,5 @@ public interface HakijaryhmaService {
 
     void delete(Hakijaryhma entity);
 
-    Hakijaryhma update(String oid, HakijaryhmaDTO entity);
+    Hakijaryhma update(String oid, HakijaryhmaCreateDTO entity);
 }

@@ -2,7 +2,7 @@ package fi.vm.sade.service.valintaperusteet.service.impl;
 
 import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaValintatapajonoDAO;
-import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaDTO;
+import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.*;
@@ -36,9 +36,6 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
     private HakijaryhmaValintatapajonoDAO hakijaryhmaValintatapajonoDAO;
 
     @Autowired
-    private OidService oidService;
-
-    @Autowired
     private ValintaryhmaService valintaryhmaService;
 
     @Autowired
@@ -52,6 +49,9 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
 
     @Autowired
     private ValintaperusteetModelMapper modelMapper;
+
+    @Autowired
+    private OidService oidService;
 
     private static HakijaryhmaKopioija kopioija = new HakijaryhmaKopioija();
 
@@ -268,14 +268,16 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
     }
 
     @Override
-    public Hakijaryhma lisaaHakijaryhmaHakukohteelle(String hakukohdeOid, Hakijaryhma hakijaryhma) {
+    public Hakijaryhma lisaaHakijaryhmaHakukohteelle(String hakukohdeOid, HakijaryhmaCreateDTO dto) {
+        Hakijaryhma hakijaryhma = modelMapper.map(dto, Hakijaryhma.class);
         HakukohdeViite hakukohde = hakukohdeService.readByOid(hakukohdeOid);
         Hakijaryhma edellinenHakijaryhma = hakijaryhmaDAO.haeHakukohteenViimeinenHakijaryhma(hakukohdeOid);
+
 
         hakijaryhma.setOid(oidService.haeHakijaryhmaOid());
         hakijaryhma.setHakukohdeViite(hakukohde);
 
-        hakijaryhma.setLaskentakaava(laskentakaavaService.haeMallinnettuKaava(hakijaryhma.getLaskentakaavaId()));
+        hakijaryhma.setLaskentakaava(laskentakaavaService.haeMallinnettuKaava(dto.getLaskentakaavaId()));
 
         hakijaryhma.setEdellinen(edellinenHakijaryhma);
         Hakijaryhma lisatty = hakijaryhmaDAO.insert(hakijaryhma);
@@ -416,7 +418,7 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
     }
 
     @Override
-    public Hakijaryhma update(String oid, HakijaryhmaDTO dto) {
+    public Hakijaryhma update(String oid, HakijaryhmaCreateDTO dto) {
         Hakijaryhma managedObject = haeHakijaryhma(oid);
         Hakijaryhma entity = modelMapper.map(dto, Hakijaryhma.class);
 

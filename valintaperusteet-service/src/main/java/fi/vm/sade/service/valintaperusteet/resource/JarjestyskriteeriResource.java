@@ -1,11 +1,15 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
-import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
+import com.wordnik.swagger.annotations.*;
+import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriDTO;
+import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
-import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
 import fi.vm.sade.service.valintaperusteet.service.JarjestyskriteeriService;
+import fi.vm.sade.service.valintaperusteet.service.exception.JarjestyskriteeriEiOleOlemassaException;
+import fi.vm.sade.service.valintaperusteet.service.exception.JarjestyskriteeriaEiVoiPoistaaException;
+import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaOidTyhjaException;
 import org.codehaus.jackson.map.annotate.JsonView;
-import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,17 +32,29 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.*;
 @Component
 @Path("jarjestyskriteeri")
 @PreAuthorize("isAuthenticated()")
+@Api(value = "/jarjestyskriteeri", description = "Resurssi järjestyskriteerien käsittelyyn")
 public class JarjestyskriteeriResource {
     @Autowired
     JarjestyskriteeriService jarjestyskriteeriService;
+
+    @Autowired
+    private ValintaperusteetModelMapper modelMapper;
 
     @GET
     @Path("{oid}")
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
-    public Jarjestyskriteeri readByOid(@PathParam("oid") String oid) {
-        return jarjestyskriteeriService.readByOid(oid);
+    @ApiOperation(value = "Hakee järjestyskriteerin OID:n perusteella", response = JarjestyskriteeriDTO.class)
+    @ApiResponses(
+            @ApiResponse(code = 404, message = "Järjestyskriteeriä ei löydy")
+    )
+    public JarjestyskriteeriDTO readByOid(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
+        try {
+            return modelMapper.map(jarjestyskriteeriService.readByOid(oid), JarjestyskriteeriDTO.class);
+        } catch (JarjestyskriteeriEiOleOlemassaException e) {
+            throw new WebApplicationException(e, Response.Status.NOT_FOUND);
+        }
     }
 
     @POST
@@ -47,28 +63,33 @@ public class JarjestyskriteeriResource {
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({UPDATE, CRUD})
-    public Response update(@PathParam("oid") String oid, JSONObject jk) {
-        Jarjestyskriteeri jarjestyskriteeri = new Jarjestyskriteeri();
-        jarjestyskriteeri.setOid(jk.optString("oid"));
-        jarjestyskriteeri.setMetatiedot(jk.optString("metatiedot"));
-        jarjestyskriteeri.setAktiivinen(jk.optBoolean("aktiivinen"));
-
-        Laskentakaava laskentakaava = new Laskentakaava();
-        laskentakaava.setId(jk.optLong("laskentakaava_id"));
-
-        jarjestyskriteeri.setLaskentakaava(laskentakaava);
-
-        Jarjestyskriteeri update = jarjestyskriteeriService.update(oid, jarjestyskriteeri);
-
-        return Response.status(Response.Status.ACCEPTED).entity(update).build();
+    @ApiOperation(value = "Päivittää järjestyskriteeriä OID:n perusteella")
+    @ApiResponses(
+            @ApiResponse(code = 400, message = "Laskentakaavaa ei ole määritetty")
+    )
+    public Response update(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid, @ApiParam(value = "Järjestyskriteerin uudet tiedot", required = true) JarjestyskriteeriCreateDTO jk) {
+        try {
+            JarjestyskriteeriDTO update = modelMapper.map(jarjestyskriteeriService.update(oid, jk), JarjestyskriteeriDTO.class);
+            return Response.status(Response.Status.ACCEPTED).entity(update).build();
+        } catch (LaskentakaavaOidTyhjaException e) {
+            throw new WebApplicationException(e, Response.Status.BAD_REQUEST);
+        }
     }
 
     @DELETE
     @Path("{oid}")
     @Secured({CRUD})
-    public Response delete(@PathParam("oid") String oid) {
-        jarjestyskriteeriService.deleteByOid(oid);
-        return Response.status(Response.Status.ACCEPTED).build();
+    @ApiOperation(value = "Poistaa järjestyskriteerin OID:n perusteella")
+    @ApiResponses(
+            @ApiResponse(code = 403, message = "Järjestyskriteeriä ei voida poistaa, esim. se on peritty")
+    )
+    public Response delete(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
+        try {
+            jarjestyskriteeriService.deleteByOid(oid);
+            return Response.status(Response.Status.ACCEPTED).build();
+        } catch (JarjestyskriteeriaEiVoiPoistaaException e) {
+            throw new WebApplicationException(e, Response.Status.FORBIDDEN);
+        }
     }
 
     @POST
@@ -77,8 +98,8 @@ public class JarjestyskriteeriResource {
     @JsonView(JsonViews.Basic.class)
     @Path("jarjesta")
     @Secured({UPDATE, CRUD})
-    public List<Jarjestyskriteeri> jarjesta(List<String> oids) {
-
-        return jarjestyskriteeriService.jarjestaKriteerit(oids);
+    @ApiOperation(value = "Järjestää järjestyskriteerit annetun listan mukaiseen järjestykseen")
+    public List<JarjestyskriteeriDTO> jarjesta(@ApiParam(value = "Uusi järjestys", required = true) List<String> oids) {
+        return modelMapper.mapList(jarjestyskriteeriService.jarjestaKriteerit(oids), JarjestyskriteeriDTO.class);
     }
 }

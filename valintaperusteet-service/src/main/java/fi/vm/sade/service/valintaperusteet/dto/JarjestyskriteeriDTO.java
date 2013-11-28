@@ -7,18 +7,21 @@ import org.codehaus.jackson.map.annotate.JsonView;
 
 /**
  * User: wuoti
- * Date: 27.11.2013
- * Time: 18.00
+ * Date: 28.11.2013
+ * Time: 10.46
  */
-@ApiModel(value = "ValinnanVaiheDTO", description = "Valinnan vaihe")
-public class ValinnanVaiheDTO extends ValinnanVaiheCreateDTO {
-
+@ApiModel(value = "JarjestyskriteeriDTO", description = "Järjestyskriteeri")
+public class JarjestyskriteeriDTO extends JarjestyskriteeriCreateDTO {
     @ApiModelProperty(value = "OID", required = true)
     @JsonView(JsonViews.Basic.class)
     private String oid;
 
     @JsonView(JsonViews.Basic.class)
-    @ApiModelProperty(value = "Onko valinnan vaihe peritty")
+    @ApiModelProperty(value = "Valintatapajono OID")
+    private String valintatapajonoOid;
+
+    @ApiModelProperty(value = "Onko järjestyskriteeri peritty")
+    @JsonView(JsonViews.Basic.class)
     private Boolean inheritance;
 
     public String getOid() {
@@ -27,6 +30,15 @@ public class ValinnanVaiheDTO extends ValinnanVaiheCreateDTO {
 
     public void setOid(String oid) {
         this.oid = oid;
+    }
+
+
+    public String getValintatapajonoOid() {
+        return valintatapajonoOid;
+    }
+
+    public void setValintatapajonoOid(String valintatapajonoOid) {
+        this.valintatapajonoOid = valintatapajonoOid;
     }
 
     public Boolean getInheritance() {

@@ -1,6 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
+import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.*;
@@ -23,7 +25,7 @@ import java.util.List;
  */
 @Transactional
 @Service
-public class ValinnanVaiheServiceImpl extends AbstractCRUDServiceImpl<ValinnanVaihe, Long, String> implements ValinnanVaiheService {
+public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
 
 
     @Autowired
@@ -46,22 +48,16 @@ public class ValinnanVaiheServiceImpl extends AbstractCRUDServiceImpl<ValinnanVa
 
     private static ValinnanVaiheKopioija kopioija = new ValinnanVaiheKopioija();
 
-
     @Autowired
-    public ValinnanVaiheServiceImpl(ValinnanVaiheDAO dao) {
-        super(dao);
-        this.valinnanVaiheDAO = dao;
-    }
+    private ValintaperusteetModelMapper modelMapper;
+
 
     @Override
-    public ValinnanVaihe update(String oid, ValinnanVaihe entity) {
+    public ValinnanVaihe update(String oid, ValinnanVaiheCreateDTO dto) {
+        ValinnanVaihe entity = modelMapper.map(dto, ValinnanVaihe.class);
         ValinnanVaihe managed = haeVaiheOidilla(oid);
-        return LinkitettavaJaKopioitavaUtil.paivita(managed, entity, kopioija);
-    }
 
-    @Override
-    public ValinnanVaihe insert(ValinnanVaihe entity) {
-        throw new UnsupportedOperationException("not supported");
+        return LinkitettavaJaKopioitavaUtil.paivita(managed, entity, kopioija);
     }
 
     @Override
@@ -160,7 +156,7 @@ public class ValinnanVaiheServiceImpl extends AbstractCRUDServiceImpl<ValinnanVa
     }
 
     @Override
-    public ValinnanVaihe lisaaValinnanVaiheHakukohteelle(String hakukohdeOid, ValinnanVaihe valinnanVaihe,
+    public ValinnanVaihe lisaaValinnanVaiheHakukohteelle(String hakukohdeOid, ValinnanVaiheCreateDTO dto,
                                                          String edellinenValinnanVaiheOid) {
         HakukohdeViite hakukohde = hakukohdeService.readByOid(hakukohdeOid);
         ValinnanVaihe edellinenValinnanVaihe = null;
@@ -170,6 +166,7 @@ public class ValinnanVaiheServiceImpl extends AbstractCRUDServiceImpl<ValinnanVa
         } else {
             edellinenValinnanVaihe = valinnanVaiheDAO.haeHakukohteenViimeinenValinnanVaihe(hakukohdeOid);
         }
+        ValinnanVaihe valinnanVaihe = modelMapper.map(dto, ValinnanVaihe.class);
         valinnanVaihe.setOid(oidService.haeValinnanVaiheOid());
         valinnanVaihe.setHakukohdeViite(hakukohde);
 

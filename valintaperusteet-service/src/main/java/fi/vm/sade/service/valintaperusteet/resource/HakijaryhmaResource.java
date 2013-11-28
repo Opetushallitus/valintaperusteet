@@ -1,9 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiOperation;
-import com.wordnik.swagger.annotations.ApiResponse;
-import com.wordnik.swagger.annotations.ApiResponses;
+import com.wordnik.swagger.annotations.*;
+import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaDTO;
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
@@ -69,7 +67,7 @@ public class HakijaryhmaResource {
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "Hakijaryhmää ei löydy"),
     })
-    public HakijaryhmaDTO read(@PathParam("oid") String oid) {
+    public HakijaryhmaDTO read(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
         try {
             return modelMapper.map(hakijaryhmaService.readByOid(oid), HakijaryhmaDTO.class);
         } catch (HakijaryhmaEiOleOlemassaException e) {
@@ -85,7 +83,7 @@ public class HakijaryhmaResource {
     @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
     @ApiOperation(value = "Hakee hakijaryhmän ja siihen liittyvät valintatapajonot OID:n perusteella", response = HakijaryhmaValintatapajonoDTO.class)
-    public List<HakijaryhmaValintatapajonoDTO> valintatapajonot(@PathParam("hakijaryhmaOid") String hakijaryhmaOid) {
+    public List<HakijaryhmaValintatapajonoDTO> valintatapajonot(@ApiParam(value = "OID", required = true) @PathParam("hakijaryhmaOid") String hakijaryhmaOid) {
         try {
             return modelMapper.mapList(hakijaryhmaValintatapajonoService.findByHakijaryhma(hakijaryhmaOid), HakijaryhmaValintatapajonoDTO.class);
         } catch (Exception e) {
@@ -100,7 +98,8 @@ public class HakijaryhmaResource {
     @Path("/{oid}")
     @Secured({UPDATE, CRUD})
     @ApiOperation(value = "Päivittää hakijaryhmän", response = HakijaryhmaDTO.class)
-    public HakijaryhmaDTO update(@PathParam("oid") String oid, HakijaryhmaDTO hakijaryhma) {
+    public HakijaryhmaDTO update(@ApiParam(value = "Päivitettävän hakijaryhmän OID", required = true) @PathParam("oid") String oid,
+                                 @ApiParam(value = "Hakijaryhmän uudet tiedot", required = true) HakijaryhmaCreateDTO hakijaryhma) {
         return modelMapper.map(hakijaryhmaService.update(oid, hakijaryhma), HakijaryhmaDTO.class);
     }
 
@@ -114,7 +113,7 @@ public class HakijaryhmaResource {
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "OID-lista on tyhjä"),
     })
-    public List<HakijaryhmaDTO> jarjesta(List<String> oids) {
+    public List<HakijaryhmaDTO> jarjesta(@ApiParam(value = "Hakijaryhmien uusi järjestys", required = true) List<String> oids) {
         try {
             return modelMapper.mapList(hakijaryhmaService.jarjestaHakijaryhmat(oids), HakijaryhmaDTO.class);
         } catch (HakijaryhmaOidListaOnTyhjaException e) {
@@ -130,7 +129,7 @@ public class HakijaryhmaResource {
             @ApiResponse(code = 202, message = "Poisto onnistui"),
             @ApiResponse(code = 403, message = "Hakijaryhmää ei voida poistaa, esim. se on peritty")
     })
-    public Response delete(@PathParam("oid") String oid) {
+    public Response delete(@ApiParam(value = "Poistettavan hakijaryhmän OID", required = true) @PathParam("oid") String oid) {
         try {
             hakijaryhmaService.deleteByOid(oid, false);
             return Response.status(Response.Status.ACCEPTED).build();
