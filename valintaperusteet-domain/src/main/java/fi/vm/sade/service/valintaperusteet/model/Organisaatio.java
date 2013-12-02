@@ -27,12 +27,24 @@ public class Organisaatio extends BaseEntity {
     @Column(name = "oid", nullable = false, unique = true)
     private String oid;
 
+    @JsonView(JsonViews.Basic.class)
+    @Column(name = "parent_oid_path", nullable = false, unique = true)
+    private String parentOidPath;
+
     public String getOid() {
         return oid;
     }
 
     public void setOid(String oid) {
         this.oid = oid;
+    }
+
+    public String getParentOidPath() {
+        return parentOidPath;
+    }
+
+    public void setParentOidPath(String parentOidPath) {
+        this.parentOidPath = parentOidPath;
     }
 
     public Set<Valintaryhma> getValintaryhmat() {

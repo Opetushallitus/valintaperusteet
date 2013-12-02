@@ -89,12 +89,11 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long> 
     @Override
     public List<Valintaryhma> findAllFetchAlavalintaryhmat() {
         QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
-        JPAQuery a = from(valintaryhma).distinct();
-        //if(hakuOid!=null && !hakuOid.isEmpty()) {
-        //    a.where(valintaryhma.hakuOid.eq(hakuOid));
-        //  }
-        a.leftJoin(valintaryhma.alavalintaryhmat).fetch();
-        return a.list(valintaryhma);
+
+        return  from(valintaryhma)
+                .leftJoin(valintaryhma.alavalintaryhmat).fetch()
+                .leftJoin(valintaryhma.organisaatiot).fetch()
+                .distinct().list(valintaryhma);
     }
 
 
