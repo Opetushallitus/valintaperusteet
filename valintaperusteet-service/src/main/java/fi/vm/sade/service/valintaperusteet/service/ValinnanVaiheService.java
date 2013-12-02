@@ -17,7 +17,7 @@ public interface ValinnanVaiheService {
 
     List<ValinnanVaihe> findByValintaryhma(String oid);
 
-    ValinnanVaihe lisaaValinnanVaiheValintaryhmalle(String valintaryhmaOid, ValinnanVaihe valinnanVaihe,
+    ValinnanVaihe lisaaValinnanVaiheValintaryhmalle(String valintaryhmaOid, ValinnanVaiheCreateDTO valinnanVaihe,
                                                     String edellinenValinnanVaiheOid);
 
     ValinnanVaihe lisaaValinnanVaiheHakukohteelle(String hakukohdeOid, ValinnanVaiheCreateDTO valinnanVaihe,

@@ -2,6 +2,8 @@ package fi.vm.sade.service.valintaperusteet.service.impl;
 
 import fi.vm.sade.service.valintaperusteet.dao.LaskentakaavaDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintakoeDAO;
+import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintakoeCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
@@ -51,12 +53,12 @@ public class ValintakoeServiceImpl extends AbstractCRUDServiceImpl<Valintakoe, L
     }
 
     @Override
-    public Valintakoe update(String s, Valintakoe entity) {
+    public Valintakoe update(Long s, LaskentakaavaCreateDTO entity) {
         throw new UnsupportedOperationException("not supported");
     }
 
     @Override
-    public Valintakoe insert(Valintakoe entity) {
+    public Valintakoe insert(LaskentakaavaCreateDTO entity) {
         throw new UnsupportedOperationException();
     }
 
@@ -98,7 +100,7 @@ public class ValintakoeServiceImpl extends AbstractCRUDServiceImpl<Valintakoe, L
     }
 
     @Override
-    public Valintakoe lisaaValintakoeValinnanVaiheelle(String valinnanVaiheOid, ValintakoeDTO koe) {
+    public Valintakoe lisaaValintakoeValinnanVaiheelle(String valinnanVaiheOid, ValintakoeCreateDTO koe) {
         ValinnanVaihe valinnanVaihe = valinnanVaiheService.readByOid(valinnanVaiheOid);
         if (!ValinnanVaiheTyyppi.VALINTAKOE.equals(valinnanVaihe.getValinnanVaiheTyyppi())) {
             throw new ValintakoettaEiVoiLisataException("Valintakoetta ei voi lisätä valinnan vaiheelle, jonka " +

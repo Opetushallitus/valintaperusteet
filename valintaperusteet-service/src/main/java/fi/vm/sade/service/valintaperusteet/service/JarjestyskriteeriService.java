@@ -21,7 +21,7 @@ public interface JarjestyskriteeriService {
     Jarjestyskriteeri readByOid(String oid);
 
     Jarjestyskriteeri lisaaJarjestyskriteeriValintatapajonolle(String valintatapajonoOid,
-                                                               Jarjestyskriteeri jarjestyskriteeri, String edellinenValintatapajonoOid, Long laskentakaavaOid);
+                                                               JarjestyskriteeriCreateDTO jarjestyskriteeri, String edellinenValintatapajonoOid, Long laskentakaavaOid);
 
     List<Jarjestyskriteeri> jarjestaKriteerit(List<String> oids);
 

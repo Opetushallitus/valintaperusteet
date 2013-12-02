@@ -1,6 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
+import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
+import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.impl.generator.*;
@@ -60,6 +62,9 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
     @Autowired
     private JpaTransactionManager transactionManager;
+
+    @Autowired
+    private ValintaperusteetModelMapper modelMapper;
 
     private ResourceLoader resourceLoader;
 
@@ -462,7 +467,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
         ValinnanVaihe valinnanVaihe0 = valinnanVaiheService.findByValintaryhma(painotettuKeskiarvoJaPaasykoeVr.getOid()).get(1);
         valinnanVaihe0.setAktiivinen(true);
-        valinnanVaiheService.update(valinnanVaihe0.getOid(), valinnanVaihe0);
+        valinnanVaiheService.update(valinnanVaihe0.getOid(), modelMapper.map(valinnanVaihe0, ValinnanVaiheCreateDTO.class));
         List<Valintakoe> valintakokeet = valintakoeService.findValintakoeByValinnanVaihe(valinnanVaihe0.getOid());
         Valintakoe koe0 = valintakokeet.get(0);
         koe0.setAktiivinen(true);
@@ -506,7 +511,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
         valinnanVaihe0 = valinnanVaiheService.findByValintaryhma(painotettuKeskiarvoJaLisanayttoVr.getOid()).get(1);
         valinnanVaihe0.setAktiivinen(true);
-        valinnanVaiheService.update(valinnanVaihe0.getOid(), valinnanVaihe0);
+        valinnanVaiheService.update(valinnanVaihe0.getOid(), modelMapper.map(valinnanVaihe0, ValinnanVaiheCreateDTO.class));
         valintakokeet = valintakoeService.findValintakoeByValinnanVaihe(valinnanVaihe0.getOid());
         Valintakoe koe1 = valintakokeet.get(1);
         koe1.setAktiivinen(true);
@@ -551,7 +556,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
         valinnanVaihe0 = valinnanVaiheService.findByValintaryhma(painotettuKeskiarvoJaPaasykoeJaLisanayttoVr.getOid()).get(1);
         valinnanVaihe0.setAktiivinen(true);
-        valinnanVaiheService.update(valinnanVaihe0.getOid(), valinnanVaihe0);
+        valinnanVaiheService.update(valinnanVaihe0.getOid(), modelMapper.map(valinnanVaihe0, ValinnanVaiheCreateDTO.class));
         valintakokeet = valintakoeService.findValintakoeByValinnanVaihe(valinnanVaihe0.getOid());
 
         koe0 = valintakokeet.get(0);
@@ -664,7 +669,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                 assert (valintakoevaihe.getValinnanVaiheTyyppi().equals(ValinnanVaiheTyyppi.VALINTAKOE));
                 valintakoevaihe.setNimi("Kielikokeen pakollisuus ja pääsykoe");
                 valintakoevaihe.setKuvaus("Kielikokeen pakollisuus ja pääsykoe");
-                valintakoevaihe = valinnanVaiheService.update(valintakoevaihe.getOid(), valintakoevaihe);
+                valintakoevaihe = valinnanVaiheService.update(valintakoevaihe.getOid(), modelMapper.map(valintakoevaihe, ValinnanVaiheCreateDTO.class));
 
                 transactionManager.commit(tx);
                 tx = transactionManager.getTransaction(new DefaultTransactionDefinition());

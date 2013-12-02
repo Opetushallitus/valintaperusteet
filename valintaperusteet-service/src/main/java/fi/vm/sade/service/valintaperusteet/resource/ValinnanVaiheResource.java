@@ -1,15 +1,14 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
-import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
+import com.wordnik.swagger.annotations.*;
+import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
-import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
-import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
-import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
 import fi.vm.sade.service.valintaperusteet.service.ValintakoeService;
 import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
+import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheEiOleOlemassaException;
+import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaihettaEiVoiPoistaaException;
 import org.codehaus.jackson.map.annotate.JsonView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,15 +27,14 @@ import java.util.Map;
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.*;
 
 /**
- * Created with IntelliJ IDEA.
  * User: jukais
  * Date: 17.1.2013
  * Time: 14.42
- * To change this template use File | Settings | File Templates.
  */
 @Component
 @Path("valinnanvaihe")
 @PreAuthorize("isAuthenticated()")
+@Api(value = "/valinnanvaihe", description = "Resurssi valinnan vaiheiden käsittelyyn")
 public class ValinnanVaiheResource {
 
     @Autowired
@@ -58,8 +56,9 @@ public class ValinnanVaiheResource {
     @JsonView(JsonViews.Basic.class)
     @Path("{oid}")
     @Secured({READ, UPDATE, CRUD})
-    public ValinnanVaihe read(@PathParam("oid") String oid) {
-        return valinnanVaiheService.readByOid(oid);
+    @ApiOperation(value = "Hakee valinnan vaiheen OID:n perusteella", response = ValinnanVaiheDTO.class)
+    public ValinnanVaiheDTO read(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
+        return modelMapper.map(valinnanVaiheService.readByOid(oid), ValinnanVaiheDTO.class);
     }
 
     @GET
@@ -67,8 +66,9 @@ public class ValinnanVaiheResource {
     @JsonView({JsonViews.Basic.class})
     @Path("{oid}/valintatapajono")
     @Secured({READ, UPDATE, CRUD})
-    public List<Valintatapajono> listJonos(@PathParam("oid") String oid) {
-        return jonoService.findJonoByValinnanvaihe(oid);
+    @ApiOperation(value = "Hakee valinnan vaiheen valintatapajonot OID:n perusteella", response = ValintatapajonoDTO.class)
+    public List<ValintatapajonoDTO> listJonos(@ApiParam(value = "Valinnan vaiheen OID", required = true) @PathParam("oid") String oid) {
+        return modelMapper.mapList(jonoService.findJonoByValinnanvaihe(oid), ValintatapajonoDTO.class);
     }
 
     @GET
@@ -76,8 +76,9 @@ public class ValinnanVaiheResource {
     @JsonView(JsonViews.Basic.class)
     @Path("{oid}/valintakoe")
     @Secured({READ, UPDATE, CRUD})
-    public List<Valintakoe> listValintakokeet(@PathParam("oid") String oid) {
-        return valintakoeService.findValintakoeByValinnanVaihe(oid);
+    @ApiOperation(value = "Hakee valintakokeet valinnan vaiheen OID:n perusteella", response = ValintakoeDTO.class)
+    public List<ValintakoeDTO> listValintakokeet(@ApiParam(value = "Valinnan vaiheen OID", required = true) @PathParam("oid") String oid) {
+        return modelMapper.mapList(valintakoeService.findValintakoeByValinnanVaihe(oid), ValintakoeDTO.class);
     }
 
     @PUT
@@ -86,10 +87,12 @@ public class ValinnanVaiheResource {
     @JsonView({JsonViews.Basic.class})
     @Path("{parentOid}/valintatapajono")
     @Secured({UPDATE, CRUD})
-    public Response addJonoToValinnanVaihe(@PathParam("parentOid") String parentOid, Valintatapajono jono) {
+    @ApiOperation(value = "Lisää valintatapajonon valinnan vaiheelle")
+    public Response addJonoToValinnanVaihe(@ApiParam(value = "Valinnan vaiheen OID", required = true) @PathParam("parentOid") String parentOid,
+                                           @ApiParam(value = "Lisättävä valintatapajono", required = true) ValintatapajonoCreateDTO jono) {
         try {
-            jono = jonoService.lisaaValintatapajonoValinnanVaiheelle(parentOid, jono, null);
-            return Response.status(Response.Status.CREATED).entity(jono).build();
+            ValintatapajonoDTO inserted = modelMapper.map(jonoService.lisaaValintatapajonoValinnanVaiheelle(parentOid, jono, null), ValintatapajonoDTO.class);
+            return Response.status(Response.Status.CREATED).entity(inserted).build();
         } catch (Exception e) {
             LOGGER.error("error in addJonoToValinnanVaihe", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
@@ -102,9 +105,11 @@ public class ValinnanVaiheResource {
     @JsonView({JsonViews.Basic.class})
     @Path("{parentOid}/valintakoe")
     @Secured({UPDATE, CRUD})
-    public Response addValintakoeToValinnanVaihe(@PathParam("parentOid") String parentOid, ValintakoeDTO koe) {
+    @ApiOperation(value = "Lisää valintakokeen valinnan vaiheelle")
+    public Response addValintakoeToValinnanVaihe(@ApiParam(value = "Valinnan vaiheen OID", required = true) @PathParam("parentOid") String parentOid,
+                                                 @ApiParam(value = "Lisättävä valintakoe", required = true) ValintakoeCreateDTO koe) {
         try {
-            Valintakoe vk = valintakoeService.lisaaValintakoeValinnanVaiheelle(parentOid, koe);
+            ValintakoeDTO vk = modelMapper.map(valintakoeService.lisaaValintakoeValinnanVaiheelle(parentOid, koe), ValintakoeDTO.class);
             return Response.status(Response.Status.CREATED).entity(vk).build();
         } catch (Exception e) {
             LOGGER.error("error in addValintakoeToValinnanVaihe", e);
@@ -119,8 +124,10 @@ public class ValinnanVaiheResource {
     @JsonView(JsonViews.Basic.class)
     @Path("{oid}")
     @Secured({UPDATE, CRUD})
-    public ValinnanVaihe update(@PathParam("oid") String oid, ValinnanVaihe valinnanVaihe) {
-        return valinnanVaiheService.update(oid, valinnanVaihe);
+    @ApiOperation(value = "Päivittää valinnan vaihetta", response = ValinnanVaiheDTO.class)
+    public ValinnanVaiheDTO update(@ApiParam(value = "Päivitettävän valinnan vaiheen OID", required = true) @PathParam("oid") String oid,
+                                   @ApiParam(value = "Päivitettävän valinnan vaiheen uudet tiedot", required = true) ValinnanVaiheCreateDTO valinnanVaihe) {
+        return modelMapper.map(valinnanVaiheService.update(oid, valinnanVaihe), ValinnanVaiheDTO.class);
     }
 
     @POST
@@ -129,16 +136,28 @@ public class ValinnanVaiheResource {
     @JsonView(JsonViews.Basic.class)
     @Path("jarjesta")
     @Secured({UPDATE, CRUD})
-    public List<ValinnanVaiheDTO> jarjesta(List<String> oids) {
+    @ApiOperation(value = "Järjestää valinnan vaiheet parametrina annetun OID-listan mukaiseen järjestykseen", response = ValinnanVaiheDTO.class)
+    public List<ValinnanVaiheDTO> jarjesta(@ApiParam(value = "Valinnan vaiheiden uusi järjestys", required = true) List<String> oids) {
         return modelMapper.mapList(valinnanVaiheService.jarjestaValinnanVaiheet(oids), ValinnanVaiheDTO.class);
     }
 
     @DELETE
     @Path("{oid}")
     @Secured({CRUD})
-    public Response delete(@PathParam("oid") String oid) {
-        valinnanVaiheService.deleteByOid(oid);
-        return Response.status(Response.Status.ACCEPTED).build();
+    @ApiOperation(value = "Poistaa valinnan vaiheen OID:n perusteetlla")
+    @ApiResponses({
+            @ApiResponse(code = 404, message = "Valinnan vaihetta ei ole olemassa"),
+            @ApiResponse(code = 400, message = "Valinnan vaihetta ei voida poistaa, esim. se on peritty")
+    })
+    public Response delete(@ApiParam(value = "Valinnan vaiheen OID", required = true) @PathParam("oid") String oid) {
+        try {
+            valinnanVaiheService.deleteByOid(oid);
+            return Response.status(Response.Status.ACCEPTED).build();
+        } catch (ValinnanVaiheEiOleOlemassaException e) {
+            throw new WebApplicationException(e, Response.Status.NOT_FOUND);
+        } catch (ValinnanVaihettaEiVoiPoistaaException e) {
+            throw new WebApplicationException(e, Response.Status.BAD_REQUEST);
+        }
     }
 
     @GET
@@ -146,7 +165,8 @@ public class ValinnanVaiheResource {
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
-    public Map<String, Boolean> kuuluuSijoitteluun(@PathParam("oid") String oid) {
+    @ApiOperation(value = "Palauttaa tiedon siitä, kuuluuko valinnan vaihe sijoitteluun", response = Boolean.class)
+    public Map<String, Boolean> kuuluuSijoitteluun(@ApiParam(value = "Valinnan vaiheen OID", required = true) @PathParam("oid") String oid) {
         Map<String, Boolean> map = new HashMap<String, Boolean>();
         map.put("sijoitteluun", valinnanVaiheService.kuuluuSijoitteluun(oid));
         return map;

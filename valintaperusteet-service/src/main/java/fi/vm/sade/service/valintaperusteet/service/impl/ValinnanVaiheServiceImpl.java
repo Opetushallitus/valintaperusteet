@@ -120,7 +120,7 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
     }
 
     @Override
-    public ValinnanVaihe lisaaValinnanVaiheValintaryhmalle(String valintaryhmaOid, ValinnanVaihe valinnanVaihe,
+    public ValinnanVaihe lisaaValinnanVaiheValintaryhmalle(String valintaryhmaOid, ValinnanVaiheCreateDTO valinnanVaihe,
                                                            String edellinenValinnanVaiheOid) {
         Valintaryhma valintaryhma = valintaryhmaService.readByOid(valintaryhmaOid);
         if (valintaryhma == null) {

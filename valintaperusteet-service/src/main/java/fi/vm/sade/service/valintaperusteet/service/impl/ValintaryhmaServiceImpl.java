@@ -3,6 +3,7 @@ package fi.vm.sade.service.valintaperusteet.service.impl;
 import fi.vm.sade.service.valintaperusteet.dao.OrganisaatioDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.model.Organisaatio;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaService;
@@ -27,7 +28,7 @@ import java.util.Set;
  */
 @Service
 @Transactional
-public class ValintaryhmaServiceImpl extends AbstractCRUDServiceImpl<Valintaryhma, Long, String> implements ValintaryhmaService {
+public class ValintaryhmaServiceImpl implements ValintaryhmaService {
 
     @Autowired
     private ValintaryhmaDAO valintaryhmaDAO;
@@ -47,11 +48,6 @@ public class ValintaryhmaServiceImpl extends AbstractCRUDServiceImpl<Valintaryhm
     @Autowired
     private OidService oidService;
 
-    @Autowired
-    public ValintaryhmaServiceImpl(ValintaryhmaDAO dao) {
-        super(dao);
-    }
-
 
     public List<Valintaryhma> findValintaryhmasByParentOid(String id) {
         return valintaryhmaDAO.findChildrenByParentOid(id);
@@ -64,7 +60,7 @@ public class ValintaryhmaServiceImpl extends AbstractCRUDServiceImpl<Valintaryhm
 
     private Valintaryhma haeValintaryhma(String oid) {
         Valintaryhma valintaryhma = valintaryhmaDAO.readByOid(oid);
-        if(valintaryhma == null) {
+        if (valintaryhma == null) {
             throw new ValintaryhmaEiOleOlemassaException("Valintaryhma (" + oid + ") ei ole olemassa.", oid);
         }
 
@@ -72,7 +68,7 @@ public class ValintaryhmaServiceImpl extends AbstractCRUDServiceImpl<Valintaryhm
     }
 
     @Override
-    public Valintaryhma insert(Valintaryhma valintaryhma, String parentOid) {
+    public Valintaryhma insert(ValintaryhmaCreateDTO valintaryhma, String parentOid) {
         valintaryhma.setOid(oidService.haeValintaryhmaOid());
         Valintaryhma parent = haeValintaryhma(parentOid);
         valintaryhma.setYlavalintaryhma(parent);
@@ -91,9 +87,8 @@ public class ValintaryhmaServiceImpl extends AbstractCRUDServiceImpl<Valintaryhm
     }
 
 
-
     @Override
-    public Valintaryhma update(String oid, Valintaryhma incoming) {
+    public Valintaryhma update(String oid, ValintaryhmaCreateDTO incoming) {
         Valintaryhma managedObject = haeValintaryhma(oid);
         managedObject.setNimi(incoming.getNimi());
 
@@ -105,7 +100,7 @@ public class ValintaryhmaServiceImpl extends AbstractCRUDServiceImpl<Valintaryhm
         Set<Organisaatio> organisaatiot = new HashSet<Organisaatio>();
         for (Organisaatio organisaatio : incoming.getOrganisaatiot()) {
             Organisaatio temp = organisaatioDAO.readByOid(organisaatio.getOid());
-            if(temp == null) {
+            if (temp == null) {
                 temp = organisaatioDAO.insert(organisaatio);
             }
             organisaatiot.add(temp);
@@ -114,7 +109,7 @@ public class ValintaryhmaServiceImpl extends AbstractCRUDServiceImpl<Valintaryhm
     }
 
     @Override
-    public Valintaryhma insert(Valintaryhma entity) {
+    public Valintaryhma insert(ValintaryhmaCreateDTO entity) {
         entity.setOid(oidService.haeValintaryhmaOid());
         entity.setOrganisaatiot(getOrganisaatios(entity));
         return valintaryhmaDAO.insert(entity);

@@ -1,5 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaperustePuuDTO;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.service.PuuService;
@@ -28,6 +31,7 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.*;
 @Component
 @Path("puu")
 @PreAuthorize("isAuthenticated()")
+@Api(value = "/puu", description = "Resurssi valintaperustepuun hakemiseen")
 public class PuuResource {
 
     @Autowired
@@ -39,11 +43,12 @@ public class PuuResource {
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView(JsonViews.Basic.class)
     @Secured({READ, UPDATE, CRUD})
+    @ApiOperation(value = "Hakee valintaperustepuun annettujen parametrien perusteella", response = ValintaperustePuuDTO.class)
     public List<ValintaperustePuuDTO> search(
-            @QueryParam("q") String searchString,
-            @QueryParam("hakuOid") String hakuOid,
-            @QueryParam("tila") List<String> tila,
-            @QueryParam("hakukohteet") @DefaultValue("true") boolean hakukohteet) {
+            @ApiParam(value = "Hakulauseke") @QueryParam("q") String searchString,
+            @ApiParam(value = "Haun OID") @QueryParam("hakuOid") String hakuOid,
+            @ApiParam(value = "Tila") @QueryParam("tila") List<String> tila,
+            @ApiParam(value = "Hakukohteet") @QueryParam("hakukohteet") @DefaultValue("true") boolean hakukohteet) {
         return puuService.search(hakuOid, tila, searchString, hakukohteet);
     }
 }

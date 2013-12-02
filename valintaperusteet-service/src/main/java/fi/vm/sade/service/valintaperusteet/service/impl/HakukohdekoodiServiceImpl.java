@@ -38,13 +38,13 @@ public class HakukohdekoodiServiceImpl implements HakukohdekoodiService {
 
 
     @Override
-    public void updateValintaryhmaHakukohdekoodit(String valintaryhmaOid, Set<Hakukohdekoodi> hakukohdekoodit) {
+    public void updateValintaryhmaHakukohdekoodit(String valintaryhmaOid, Set<KoodiDTO> hakukohdekoodit) {
         new HakukohdekoodiHandler(valintaryhmaService, hakukohdekoodiDAO)
                 .paivitaValintaryhmanKoodit(valintaryhmaOid, hakukohdekoodit);
     }
 
     @Override
-    public void lisaaHakukohdekoodiValintaryhmalle(String valintaryhmaOid, Hakukohdekoodi hakukohdekoodi) {
+    public void lisaaHakukohdekoodiValintaryhmalle(String valintaryhmaOid, KoodiDTO hakukohdekoodi) {
         new HakukohdekoodiHandler(valintaryhmaService, hakukohdekoodiDAO)
                 .lisaaKoodiValintaryhmalle(valintaryhmaOid, hakukohdekoodi);
     }

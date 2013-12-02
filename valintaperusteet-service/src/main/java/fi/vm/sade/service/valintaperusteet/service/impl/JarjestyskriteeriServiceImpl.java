@@ -118,7 +118,7 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
     }
 
     @Override
-    public Jarjestyskriteeri lisaaJarjestyskriteeriValintatapajonolle(String valintatapajonoOid, Jarjestyskriteeri jarjestyskriteeri,
+    public Jarjestyskriteeri lisaaJarjestyskriteeriValintatapajonolle(String valintatapajonoOid, JarjestyskriteeriCreateDTO jarjestyskriteeri,
                                                                       String edellinenValintatapajonoOid, Long laskentakaavaOid) {
 
         if (laskentakaavaOid != null) {

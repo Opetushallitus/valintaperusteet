@@ -1,6 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
 import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
+import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoCreateDTO;
 import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaiheTyyppi;
@@ -84,7 +86,7 @@ public class ValintatapajonoServiceImpl extends AbstractCRUDServiceImpl<Valintat
     }
 
     @Override
-    public Valintatapajono lisaaValintatapajonoValinnanVaiheelle(String valinnanVaiheOid, Valintatapajono jono,
+    public Valintatapajono lisaaValintatapajonoValinnanVaiheelle(String valinnanVaiheOid, ValintatapajonoCreateDTO jono,
                                                                  String edellinenValintatapajonoOid) {
         ValinnanVaihe valinnanVaihe = valinnanVaiheService.readByOid(valinnanVaiheOid);
         if (!ValinnanVaiheTyyppi.TAVALLINEN.equals(valinnanVaihe.getValinnanVaiheTyyppi())) {
@@ -164,13 +166,13 @@ public class ValintatapajonoServiceImpl extends AbstractCRUDServiceImpl<Valintat
     }
 
     @Override
-    public Valintatapajono update(String oid, Valintatapajono incoming) {
+    public Valintatapajono update(Long oid, LaskentakaavaCreateDTO incoming) {
         Valintatapajono managedObject = haeValintatapajono(oid);
         return LinkitettavaJaKopioitavaUtil.paivita(managedObject, incoming, kopioija);
     }
 
     @Override
-    public Valintatapajono insert(Valintatapajono entity) {
+    public Valintatapajono insert(LaskentakaavaCreateDTO entity) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 

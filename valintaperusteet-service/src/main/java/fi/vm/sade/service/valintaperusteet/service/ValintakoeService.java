@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
+import fi.vm.sade.service.valintaperusteet.dto.ValintakoeCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
@@ -13,13 +14,13 @@ import java.util.List;
  */
 public interface ValintakoeService extends CRUDService<Valintakoe, Long, String> {
 
-   void deleteByOid (String oid);
+    void deleteByOid(String oid);
 
     Valintakoe readByOid(String oid);
 
     List<Valintakoe> findValintakoeByValinnanVaihe(String oid);
 
-    Valintakoe lisaaValintakoeValinnanVaiheelle(String valinnanVaiheOid, ValintakoeDTO koe);
+    Valintakoe lisaaValintakoeValinnanVaiheelle(String valinnanVaiheOid, ValintakoeCreateDTO koe);
 
     Valintakoe update(String oid, ValintakoeDTO valintakoe);
 
