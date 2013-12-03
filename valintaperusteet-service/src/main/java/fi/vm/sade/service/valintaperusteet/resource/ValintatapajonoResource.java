@@ -40,7 +40,7 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.*;
 @Component
 @Path("valintatapajono")
 @PreAuthorize("isAuthenticated()")
-@Api(value = "/valintaryhma", description = "Resurssi valintatapajonojen käsittelyyn")
+@Api(value = "/valintatapajono", description = "Resurssi valintatapajonojen käsittelyyn")
 public class ValintatapajonoResource {
     protected final static Logger LOGGER = LoggerFactory.getLogger(ValintatapajonoResource.class);
 
@@ -139,8 +139,8 @@ public class ValintatapajonoResource {
     @Secured({CRUD})
     @ApiOperation(value = "Lisää järjestyskriteerin valintatapajonolle")
     public Response insertJarjestyskriteeri(@ApiParam(value = "Valintatapajonon OID, jolle järjestyskriteeri lisätään", required = true) @PathParam("valintatapajonoOid") String valintatapajonoOid,
-                                            @ApiParam(value = "Lisättävä järjestyskriteeri", required = true) JarjestyskriteeriCreateDTO jk,
-                                            @ApiParam(value = "Järjestyskriteerin id", required = true) Long laskentakaavaId) throws IOException, JSONException {
+                                            JarjestyskriteeriCreateDTO jk,
+                                            Long laskentakaavaId) throws IOException, JSONException {
 
         JarjestyskriteeriDTO insert = modelMapper.map(jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(valintatapajonoOid,
                 jk,

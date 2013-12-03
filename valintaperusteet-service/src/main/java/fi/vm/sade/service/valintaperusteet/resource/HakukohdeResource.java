@@ -110,7 +110,7 @@ public class HakukohdeResource {
     @JsonView({JsonViews.Basic.class})
     @Secured({CRUD})
     @ApiOperation(value = "Lisää hakukohteen valintaryhmään (tai juureen, jos valintaryhmän OID:a ei ole annettu)")
-    public Response insert(@ApiParam(value = "Lisättävä hakukohde", required = true) HakukohdeViiteCreateDTO hakukohdeViiteDTO, @ApiParam("Valintaryhmän OID") String valintaryhmaOid) {
+    public Response insert(HakukohdeViiteCreateDTO hakukohdeViiteDTO, String valintaryhmaOid) {
         try {
             HakukohdeViiteDTO hkv = modelMapper.map(hakukohdeService.insert(hakukohdeViiteDTO, valintaryhmaOid), HakukohdeViiteDTO.class);
             return Response.status(Response.Status.CREATED).entity(hkv).build();

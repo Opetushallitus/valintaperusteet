@@ -133,7 +133,9 @@ public class LaskentakaavaResource {
     @JsonView(JsonViews.Laskentakaava.class)
     @Secured({CRUD})
     @ApiOperation(value = "Lisää uuden laskentakaavan")
-    public Response insert(@ApiParam(value = "Uusi laskentakaava") LaskentakaavaCreateDTO laskentakaava, String hakukohdeOid, String valintaryhmaOid) {
+    public Response insert(LaskentakaavaCreateDTO laskentakaava,
+                           String hakukohdeOid,
+                           String valintaryhmaOid) {
         LaskentakaavaDTO inserted = null;
 
         try {

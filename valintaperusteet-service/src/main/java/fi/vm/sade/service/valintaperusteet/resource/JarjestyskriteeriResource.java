@@ -68,8 +68,8 @@ public class JarjestyskriteeriResource {
             @ApiResponse(code = 400, message = "Laskentakaavaa ei ole määritetty")
     )
     public Response update(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid,
-                           @ApiParam(value = "Järjestyskriteerin uudet tiedot", required = true) JarjestyskriteeriCreateDTO jk,
-                           @ApiParam(value = "Laskentakaavan ID") Long laskentakaavaId) {
+                           JarjestyskriteeriCreateDTO jk,
+                           Long laskentakaavaId) {
         try {
             JarjestyskriteeriDTO update = modelMapper.map(jarjestyskriteeriService.update(oid, jk, laskentakaavaId), JarjestyskriteeriDTO.class);
             return Response.status(Response.Status.ACCEPTED).entity(update).build();
