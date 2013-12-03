@@ -3,6 +3,7 @@ package fi.vm.sade.service.valintaperusteet.service;
 import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdekoodiDAO;
+import fi.vm.sade.service.valintaperusteet.dto.KoodiDTO;
 import fi.vm.sade.service.valintaperusteet.model.Hakukohdekoodi;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import org.junit.Test;
@@ -42,8 +43,8 @@ public class HakukohdekoodiServiceTest {
     @Autowired
     private ValintaryhmaService valintaryhmaService;
 
-    private Hakukohdekoodi luoHakukohdekoodi(String uri, String arvo, String nimi) {
-        Hakukohdekoodi koodi = new Hakukohdekoodi();
+    private KoodiDTO luoHakukohdekoodi(String uri, String arvo, String nimi) {
+        KoodiDTO koodi = new KoodiDTO();
         koodi.setUri(uri);
         koodi.setArvo(arvo);
         koodi.setNimiFi(nimi);
@@ -58,7 +59,7 @@ public class HakukohdekoodiServiceTest {
         final String valintaryhmaOid = "oid43";
         final String hakukohdekoodiUri = "eiolevielaolemassa";
 
-        Hakukohdekoodi koodi = luoHakukohdekoodi(hakukohdekoodiUri, hakukohdekoodiUri, hakukohdekoodiUri);
+        KoodiDTO koodi = luoHakukohdekoodi(hakukohdekoodiUri, hakukohdekoodiUri, hakukohdekoodiUri);
 
         assertNull(hakukohdekoodiDAO.readByUri(hakukohdekoodiUri));
         hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(valintaryhmaOid, koodi);
@@ -93,7 +94,7 @@ public class HakukohdekoodiServiceTest {
         Valintaryhma valintaryhma = valintaryhmaService.readByOid(valintaryhmaOid);
         assertTrue(tarkastaEttaValintaryhmallaOnKaikkiHakukohdekoodit(valintaryhma, hakukohdekoodiUritAluksi));
 
-        Set<Hakukohdekoodi> paivitys = new HashSet<Hakukohdekoodi>();
+        Set<KoodiDTO> paivitys = new HashSet<KoodiDTO>();
 
         for (String uri : hakukohdekoodiUritLopuksi) {
             paivitys.add(luoHakukohdekoodi(uri, uri, uri));
@@ -110,7 +111,7 @@ public class HakukohdekoodiServiceTest {
         final String hakukohdeOid = "oid15";
         final String hakukohdekoodiUri = "eiolevielaolemassa";
 
-        Hakukohdekoodi koodi = luoHakukohdekoodi(hakukohdekoodiUri, hakukohdekoodiUri, hakukohdekoodiUri);
+        KoodiDTO koodi = luoHakukohdekoodi(hakukohdekoodiUri, hakukohdekoodiUri, hakukohdekoodiUri);
 
         assertNull(hakukohdekoodiDAO.readByUri(hakukohdekoodiUri));
         assertNull(hakukohdekoodiDAO.findByHakukohdeOid(hakukohdeOid));
@@ -126,7 +127,7 @@ public class HakukohdekoodiServiceTest {
         final String hakukohdeOid = "oid15";
         final String hakukohdekoodiUri = "hakukohdekoodiuri8";
 
-        Hakukohdekoodi koodi = luoHakukohdekoodi(hakukohdekoodiUri, hakukohdekoodiUri, hakukohdekoodiUri);
+        KoodiDTO koodi = luoHakukohdekoodi(hakukohdekoodiUri, hakukohdekoodiUri, hakukohdekoodiUri);
 
         Hakukohdekoodi haettu = hakukohdekoodiDAO.readByUri(hakukohdekoodiUri);
         assertNotNull(haettu);
@@ -144,7 +145,7 @@ public class HakukohdekoodiServiceTest {
         final String hakukohdeOid = "oid16";
         final String hakukohdekoodiUri = "hakukohdekoodiuri10";
 
-        Hakukohdekoodi koodi = luoHakukohdekoodi(hakukohdekoodiUri, hakukohdekoodiUri, hakukohdekoodiUri);
+        KoodiDTO koodi = luoHakukohdekoodi(hakukohdekoodiUri, hakukohdekoodiUri, hakukohdekoodiUri);
 
         assertNotNull(hakukohdekoodiDAO.readByUri(hakukohdekoodiUri));
         Hakukohdekoodi vanhaKoodi = hakukohdekoodiDAO.findByHakukohdeOid(hakukohdeOid);
@@ -165,7 +166,7 @@ public class HakukohdekoodiServiceTest {
         final String hakukohdeOid = "oid15";
         final String hakukohdekoodiUri = "eiolevielaolemassa";
 
-        Hakukohdekoodi koodi = luoHakukohdekoodi(hakukohdekoodiUri, hakukohdekoodiUri, hakukohdekoodiUri);
+        KoodiDTO koodi = luoHakukohdekoodi(hakukohdekoodiUri, hakukohdekoodiUri, hakukohdekoodiUri);
 
         assertNull(hakukohdekoodiDAO.readByUri(hakukohdekoodiUri));
         assertNull(hakukohdekoodiDAO.findByHakukohdeOid(hakukohdeOid));

@@ -3,6 +3,7 @@ package fi.vm.sade.service.valintaperusteet.service;
 import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.dao.ValintakoekoodiDAO;
+import fi.vm.sade.service.valintaperusteet.dto.KoodiDTO;
 import fi.vm.sade.service.valintaperusteet.model.Valintakoekoodi;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import org.junit.Test;
@@ -44,8 +45,8 @@ public class ValintakoekoodiServiceTest {
     @Autowired
     private ValintaryhmaService valintaryhmaService;
 
-    private Valintakoekoodi luoValintakoekoodi(String uri, String arvo, String nimi) {
-        Valintakoekoodi koodi = new Valintakoekoodi();
+    private KoodiDTO luoValintakoekoodi(String uri, String arvo, String nimi) {
+        KoodiDTO koodi = new KoodiDTO();
         koodi.setUri(uri);
         koodi.setArvo(arvo);
         koodi.setNimiFi(nimi);
@@ -63,7 +64,7 @@ public class ValintakoekoodiServiceTest {
         Valintaryhma valintaryhma = valintaryhmaService.readByOid(valintaryhmaOid);
         assertEquals(0, valintaryhma.getValintakoekoodit().size());
 
-        Valintakoekoodi koodi = luoValintakoekoodi(opetuskielikoodiUri, opetuskielikoodiUri, opetuskielikoodiUri);
+        KoodiDTO koodi = luoValintakoekoodi(opetuskielikoodiUri, opetuskielikoodiUri, opetuskielikoodiUri);
 
         assertNull(valintakoekoodiDAO.readByUri(opetuskielikoodiUri));
         valintakoekoodiService.lisaaValintakoekoodiValintaryhmalle(valintaryhmaOid, koodi);
@@ -81,7 +82,7 @@ public class ValintakoekoodiServiceTest {
         Valintaryhma valintaryhma = valintaryhmaService.readByOid(valintaryhmaOid);
         assertEquals(0, valintaryhma.getValintakoekoodit().size());
 
-        Valintakoekoodi koodi = luoValintakoekoodi(opetuskielikoodiUri, opetuskielikoodiUri, opetuskielikoodiUri);
+        KoodiDTO koodi = luoValintakoekoodi(opetuskielikoodiUri, opetuskielikoodiUri, opetuskielikoodiUri);
 
         assertNull(valintakoekoodiDAO.readByUri(opetuskielikoodiUri));
         valintakoekoodiService.lisaaValintakoekoodiValintaryhmalle(valintaryhmaOid, koodi);
@@ -166,7 +167,7 @@ public class ValintakoekoodiServiceTest {
         List<Valintakoekoodi> valintaryhmanValintakoekoodit = valintakoekoodiDAO.findByValintaryhma(valintaryhmaOid);
         assertTrue(tarkastaEttaValintaryhmallaOnKaikkiOpetuskielikoodit(valintaryhmanValintakoekoodit, valintakoekooditAluksi));
 
-        List<Valintakoekoodi> koodit = new ArrayList<Valintakoekoodi>();
+        List<KoodiDTO> koodit = new ArrayList<KoodiDTO>();
         for (Map.Entry<String, Integer> u : valintakoekooditLopuksi.entrySet()) {
             String uri = u.getKey();
             Integer lkm = u.getValue();

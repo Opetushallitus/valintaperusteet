@@ -5,6 +5,7 @@ import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
+import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheCreateDTO;
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaiheTyyppi;
@@ -199,7 +200,7 @@ public class ValinnanVaiheServiceTest {
 
         // Lisätään päätason valintaryhmään uusi valinnan vaihe vaiheen 1 jälkeen.
         final String edellinenValinnanVaiheOid = "20";
-        ValinnanVaihe uusiValinnanVaihe = new ValinnanVaihe();
+        ValinnanVaiheCreateDTO uusiValinnanVaihe = new ValinnanVaiheCreateDTO();
         uusiValinnanVaihe.setAktiivinen(true);
         uusiValinnanVaihe.setKuvaus("uusi kuvaus");
         uusiValinnanVaihe.setNimi("uusi nimi");
@@ -339,7 +340,7 @@ public class ValinnanVaiheServiceTest {
         }
 
 
-        ValinnanVaihe uusiVaihe = new ValinnanVaihe();
+        ValinnanVaiheCreateDTO uusiVaihe = new ValinnanVaiheCreateDTO();
         uusiVaihe.setAktiivinen(true);
         uusiVaihe.setKuvaus("uusi kuvaus");
         uusiVaihe.setNimi("uusi nimi");
@@ -372,7 +373,7 @@ public class ValinnanVaiheServiceTest {
             assertEquals(0, valinnanVaiheService.findByValintaryhma(valintaryhmaOid).size());
         }
 
-        ValinnanVaihe uusiVaihe = new ValinnanVaihe();
+        ValinnanVaiheCreateDTO uusiVaihe = new ValinnanVaiheCreateDTO();
         uusiVaihe.setAktiivinen(true);
         uusiVaihe.setKuvaus("uusi kuvaus");
         uusiVaihe.setNimi("uusi nimi");
@@ -412,7 +413,7 @@ public class ValinnanVaiheServiceTest {
 
         }
 
-        ValinnanVaihe uusiVaihe = new ValinnanVaihe();
+        ValinnanVaiheCreateDTO uusiVaihe = new ValinnanVaiheCreateDTO();
         uusiVaihe.setAktiivinen(true);
         uusiVaihe.setKuvaus("uusi kuvaus");
         uusiVaihe.setNimi("uusi nimi");
@@ -658,7 +659,7 @@ public class ValinnanVaiheServiceTest {
             assertEquals(0, valinnanVaiheDAO.haeKopiot(vaihe74L.getOid()).size());
         }
 
-        ValinnanVaihe valinnanVaihe = new ValinnanVaihe();
+        ValinnanVaiheCreateDTO valinnanVaihe = new ValinnanVaiheCreateDTO();
         valinnanVaihe.setAktiivinen(uusiAktiivinen);
         valinnanVaihe.setNimi(uusiNimi);
         valinnanVaihe.setKuvaus(uusiKuvaus);

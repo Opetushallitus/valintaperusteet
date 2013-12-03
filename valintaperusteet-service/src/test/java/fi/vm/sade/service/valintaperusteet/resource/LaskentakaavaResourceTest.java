@@ -4,7 +4,11 @@ import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.kaava.Funktiokuvaaja;
 import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
-import fi.vm.sade.service.valintaperusteet.model.*;
+import fi.vm.sade.service.valintaperusteet.dto.*;
+import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
+import fi.vm.sade.service.valintaperusteet.model.Funktionimi;
+import fi.vm.sade.service.valintaperusteet.model.Funktiotyyppi;
+import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,6 +43,9 @@ public class LaskentakaavaResourceTest {
     private ObjectMapper mapper = new ObjectMapperProvider().getContext(LaskentakaavaResource.class);
 
     @Autowired
+    private ValintaperusteetModelMapper modelMapper;
+
+    @Autowired
     private ApplicationContext applicationContext;
 
     @Before
@@ -46,15 +53,15 @@ public class LaskentakaavaResourceTest {
         applicationContext.getAutowireCapableBeanFactory().autowireBean(laskentakaavaResource);
     }
 
-    private Funktiokutsu createLukuarvo(String luku) {
+    private FunktiokutsuDTO createLukuarvo(String luku) {
         final Funktionimi nimi = Funktionimi.LUKUARVO;
 
         final Funktiokuvaaja.Funktiokuvaus funktiokuvaus = Funktiokuvaaja.annaFunktiokuvaus(nimi)._2();
 
-        Funktiokutsu funktiokutsu = new Funktiokutsu();
+        FunktiokutsuDTO funktiokutsu = new FunktiokutsuDTO();
         funktiokutsu.setFunktionimi(Funktionimi.LUKUARVO);
 
-        Syoteparametri syoteparametri = new Syoteparametri();
+        SyoteparametriDTO syoteparametri = new SyoteparametriDTO();
         syoteparametri.setAvain(funktiokuvaus.syoteparametrit().head().avain());
         syoteparametri.setArvo(luku);
 
@@ -63,18 +70,14 @@ public class LaskentakaavaResourceTest {
         return funktiokutsu;
     }
 
-    private Funktiokutsu createSumma(FunktionArgumentti... args) {
-        Funktiokutsu funktiokutsu = new Funktiokutsu();
+    private FunktiokutsuDTO createSumma(FunktiokutsuDTO... args) {
+        FunktiokutsuDTO funktiokutsu = new FunktiokutsuDTO();
         funktiokutsu.setFunktionimi(Funktionimi.SUMMA);
 
         for (int i = 0; i < args.length; ++i) {
-            FunktionArgumentti f = args[i];
-            Funktioargumentti arg = new Funktioargumentti();
-            if (f instanceof Funktiokutsu) {
-                arg.setFunktiokutsuChild((Funktiokutsu) f);
-            } else if (f instanceof Laskentakaava) {
-                arg.setLaskentakaavaChild((Laskentakaava) f);
-            }
+            FunktiokutsuDTO f = args[i];
+            FunktioargumenttiDTO arg = new FunktioargumenttiDTO();
+            arg.setFunktiokutsuChild(f);
             arg.setIndeksi(i + 1);
             funktiokutsu.getFunktioargumentit().add(arg);
         }
@@ -85,77 +88,72 @@ public class LaskentakaavaResourceTest {
     @Test
     public void testInsert() throws Exception {
 
-        Laskentakaava laskentakaava = new Laskentakaava();
+        LaskentakaavaCreateDTO laskentakaava = new LaskentakaavaCreateDTO();
         laskentakaava.setNimi("jokuhienonimi");
         laskentakaava.setOnLuonnos(false);
         laskentakaava.setFunktiokutsu(createSumma(createLukuarvo("5.0"), createLukuarvo("10.0"),
                 createLukuarvo("100.0")));
 
         final String json = mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(laskentakaava);
-        Laskentakaava fromJson = mapper.readValue(json, Laskentakaava.class);
-        assertEquals(Response.Status.CREATED.getStatusCode(), laskentakaavaResource.insert(fromJson).getStatus());
+        LaskentakaavaCreateDTO fromJson = mapper.readValue(json, LaskentakaavaCreateDTO.class);
+        assertEquals(Response.Status.CREATED.getStatusCode(), laskentakaavaResource.insert(fromJson, null, null).getStatus());
     }
 
     @Test
     public void testInsertInvalid() throws Exception {
 
-        Laskentakaava laskentakaava = new Laskentakaava();
+        LaskentakaavaCreateDTO laskentakaava = new LaskentakaavaCreateDTO();
         laskentakaava.setOnLuonnos(false);
         laskentakaava.setFunktiokutsu(createSumma(createLukuarvo("viisi"), createLukuarvo("10.0"),
                 createLukuarvo("100.0")));
 
         final String json = mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(laskentakaava);
-        Laskentakaava fromJson = mapper.readValue(json, Laskentakaava.class);
+        LaskentakaavaCreateDTO fromJson = mapper.readValue(json, LaskentakaavaCreateDTO.class);
 
-        Response response = laskentakaavaResource.insert(fromJson);
+        Response response = laskentakaavaResource.insert(fromJson, null, null);
 
         assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
     }
 
     @Test
     public void testValidoi() throws Exception {
-        Laskentakaava laskentakaava = new Laskentakaava();
+        LaskentakaavaDTO laskentakaava = new LaskentakaavaDTO();
         laskentakaava.setOnLuonnos(false);
         laskentakaava.setFunktiokutsu(createSumma(createLukuarvo("viisi"), createLukuarvo("10.0"),
                 createLukuarvo("100.0")));
 
         final String json = mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(laskentakaava);
-        Laskentakaava fromJson = mapper.readValue(json, Laskentakaava.class);
+        LaskentakaavaDTO fromJson = mapper.readValue(json, LaskentakaavaDTO.class);
 
-        Laskentakaava validoitu = laskentakaavaResource.validoi(fromJson);
+        LaskentakaavaDTO validoitu = laskentakaavaResource.validoi(fromJson);
         String validoituJson = mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(validoitu);
     }
 
     @Test
     public void testFindAll() {
-        List<Laskentakaava> kaavat = laskentakaavaResource.kaavat(false, null, null, null);
+        List<LaskentakaavaListDTO> kaavat = laskentakaavaResource.kaavat(false, null, null, null);
 
         assertEquals(23, kaavat.size());
 
-        for (Laskentakaava lk : kaavat) {
+        for (LaskentakaavaListDTO lk : kaavat) {
             assertFalse(lk.getOnLuonnos());
         }
     }
 
     @Test
     public void testUpdateWithLaskentakaava() throws Exception {
-        Laskentakaava kaava = laskentakaavaResource.kaava(206L);
-        Laskentakaava laskentakaava = new Laskentakaava();
+        LaskentakaavaDTO kaava = laskentakaavaResource.kaava(206L);
+        LaskentakaavaDTO laskentakaava = new LaskentakaavaDTO();
         laskentakaava.setNimi("Test");
         laskentakaava.setOnLuonnos(false);
         laskentakaava.setFunktiokutsu(createSumma(createLukuarvo("5")));
 
-        Response response = laskentakaavaResource.insert(laskentakaava);
+        Response response = laskentakaavaResource.insert(laskentakaava, null, null);
         System.out.println(response.getEntity());
 
-        Funktioargumentti funktioargumentti = new Funktioargumentti();
-        funktioargumentti.setLaskentakaavaChild(kaava);
+        FunktioargumenttiDTO funktioargumentti = new FunktioargumenttiDTO();
+        funktioargumentti.setLaskentakaavaChild(modelMapper.map(kaava, LaskentakaavaListDTO.class));
         funktioargumentti.setIndeksi(2);
-        funktioargumentti.setParent(laskentakaava
-                .getFunktiokutsu()
-                .getFunktioargumentit()
-                .toArray(new Funktioargumentti[0])[0]
-                .getFunktiokutsuChild());
         laskentakaava.getFunktiokutsu().getFunktioargumentit().add(funktioargumentti);
 
         Response response1 = laskentakaavaResource.update(laskentakaava.getId(), false, laskentakaava);
@@ -166,10 +164,10 @@ public class LaskentakaavaResourceTest {
 
     @Test
     public void testGetTotuusarvokaava() {
-        List<Laskentakaava> kaavat = laskentakaavaResource.kaavat(false, null, null, Funktiotyyppi.TOTUUSARVOFUNKTIO);
+        List<LaskentakaavaListDTO> kaavat = laskentakaavaResource.kaavat(false, null, null, Funktiotyyppi.TOTUUSARVOFUNKTIO);
         assertEquals(3, kaavat.size());
 
-        for (Laskentakaava kaava : kaavat) {
+        for (LaskentakaavaListDTO kaava : kaavat) {
             assertEquals(Funktiotyyppi.TOTUUSARVOFUNKTIO, kaava.getTyyppi());
             assertFalse(kaava.getOnLuonnos());
         }

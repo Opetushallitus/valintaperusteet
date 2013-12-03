@@ -17,11 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
  * User: jukais
  * Date: 1.10.2013
  * Time: 16.23
- * To change this template use File | Settings | File Templates.
  */
 @Service
 @Transactional

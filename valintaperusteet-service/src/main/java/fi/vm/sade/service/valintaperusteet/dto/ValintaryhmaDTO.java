@@ -2,9 +2,7 @@ package fi.vm.sade.service.valintaperusteet.dto;
 
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
-import fi.vm.sade.service.valintaperusteet.model.Hakukohdekoodi;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
-import fi.vm.sade.service.valintaperusteet.model.Valintakoekoodi;
 import org.codehaus.jackson.map.annotate.JsonView;
 
 import java.util.ArrayList;
@@ -18,7 +16,7 @@ import java.util.Set;
  * Time: 14.08
  */
 @ApiModel(value = "ValintaryhmaDTO", description = "Valintaryhmä")
-public class ValintaryhmaDTO {
+public class ValintaryhmaDTO extends ValintaryhmaCreateDTO {
 
     @ApiModelProperty(value = "OID", required = true)
     @JsonView({JsonViews.Basic.class, JsonViews.ParentHierarchy.class})
@@ -26,11 +24,11 @@ public class ValintaryhmaDTO {
 
     @ApiModelProperty(value = "Hakukohdekoodit")
     @JsonView({JsonViews.Basic.class})
-    private Set<Hakukohdekoodi> hakukohdekoodit = new HashSet<Hakukohdekoodi>();
+    private Set<KoodiDTO> hakukohdekoodit = new HashSet<KoodiDTO>();
 
     @ApiModelProperty(value = "Valintakoekoodit")
     @JsonView({JsonViews.Basic.class})
-    private List<Valintakoekoodi> valintakoekoodit = new ArrayList<Valintakoekoodi>();
+    private List<KoodiDTO> valintakoekoodit = new ArrayList<KoodiDTO>();
 
     @ApiModelProperty(value = "Onko valintaryhmällä lapsivalintaryhmiä")
     @JsonView({JsonViews.Basic.class})
@@ -48,19 +46,19 @@ public class ValintaryhmaDTO {
         this.oid = oid;
     }
 
-    public Set<Hakukohdekoodi> getHakukohdekoodit() {
+    public Set<KoodiDTO> getHakukohdekoodit() {
         return hakukohdekoodit;
     }
 
-    public void setHakukohdekoodit(Set<Hakukohdekoodi> hakukohdekoodit) {
+    public void setHakukohdekoodit(Set<KoodiDTO> hakukohdekoodit) {
         this.hakukohdekoodit = hakukohdekoodit;
     }
 
-    public List<Valintakoekoodi> getValintakoekoodit() {
+    public List<KoodiDTO> getValintakoekoodit() {
         return valintakoekoodit;
     }
 
-    public void setValintakoekoodit(List<Valintakoekoodi> valintakoekoodit) {
+    public void setValintakoekoodit(List<KoodiDTO> valintakoekoodit) {
         this.valintakoekoodit = valintakoekoodit;
     }
 

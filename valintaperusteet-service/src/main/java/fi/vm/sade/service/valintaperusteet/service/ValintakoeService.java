@@ -12,7 +12,7 @@ import java.util.List;
  * Date: 15.4.2013
  * Time: 16.05
  */
-public interface ValintakoeService extends CRUDService<Valintakoe, Long, String> {
+public interface ValintakoeService {
 
     void deleteByOid(String oid);
 

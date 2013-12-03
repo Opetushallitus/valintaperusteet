@@ -3,10 +3,11 @@ package fi.vm.sade.service.valintaperusteet.resource;
 import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.dao.JarjestyskriteeriDAO;
+import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriDTO;
 import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.util.TestUtil;
-import org.codehaus.jettison.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,7 +47,7 @@ public class JarjestyskriteeriResourceTest {
     private ApplicationContext applicationContext;
 
     @Autowired
-    JarjestyskriteeriDAO jarjestyskriteeriDAO;
+    private JarjestyskriteeriDAO jarjestyskriteeriDAO;
 
     @Before
     public void setUp() {
@@ -60,13 +61,11 @@ public class JarjestyskriteeriResourceTest {
 //        assertEquals(1, (int)jk.getPrioriteetti());
 //        jk.setPrioriteetti(100);
 
-        JSONObject object = new JSONObject();
-        object.put("oid", jk.getOid());
-        object.put("metatiedot", jk.getMetatiedot());
-        object.put("laskentakaava_id", jk.getLaskentakaava().getId());
-//        object.put("prioriteetti", jk.getPrioriteetti());
+        JarjestyskriteeriCreateDTO update = new JarjestyskriteeriCreateDTO();
+        update.setMetatiedot("metatiedot");
+        update.setLaskentakaavaId(jk.getLaskentakaavaId());
 
-        resource.update("1", object);
+        resource.update("1", update);
 
         jk = jarjestyskriteeriDAO.readByOid("1");
 //        assertEquals(100, (int)jk.getPrioriteetti());
@@ -87,7 +86,7 @@ public class JarjestyskriteeriResourceTest {
     @Test
     public void testJarjesta() throws Exception {
         String[] uusiJarjestys = {"3203", "3202", "3201"};
-        List<Jarjestyskriteeri> jarjestetty = resource.jarjesta(Arrays.asList(uusiJarjestys));
+        List<JarjestyskriteeriDTO> jarjestetty = resource.jarjesta(Arrays.asList(uusiJarjestys));
         testUtil.lazyCheck(JsonViews.Basic.class, jarjestetty);
     }
 

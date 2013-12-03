@@ -5,9 +5,14 @@ import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
-import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaDTO;
+import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
-import fi.vm.sade.service.valintaperusteet.model.*;
+import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaDTO;
+import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
+import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
+import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
+import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
+import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaEiKuuluValintatapajonolleException;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaValintatapajonoOnJoOlemassaException;
@@ -60,6 +65,9 @@ public class HakijaryhmaServiceTest {
     private ValintaryhmaService valintaryhmaService;
     @Autowired
     private HakijaryhmaDAO hakijaryhmaDAO;
+
+    @Autowired
+    private ValintaperusteetModelMapper modelMapper;
 
     @Test
     public void testFindByValintaryhma() {
@@ -127,7 +135,7 @@ public class HakijaryhmaServiceTest {
 
         }
 
-        Hakijaryhma hakijaryhma = new Hakijaryhma();
+        HakijaryhmaCreateDTO hakijaryhma = new HakijaryhmaCreateDTO();
         hakijaryhma.setKiintio(20);
         hakijaryhma.setKuvaus("");
         hakijaryhma.setLaskentakaavaId(11L);
@@ -139,7 +147,7 @@ public class HakijaryhmaServiceTest {
         assertEquals(2, hakijaryhmaService.findByValintaryhma("vr2").size());
         assertEquals(4, hakijaryhmaService.findByHakukohde("1").size());
 
-        hakijaryhma = new Hakijaryhma();
+        hakijaryhma = new HakijaryhmaCreateDTO();
         hakijaryhma.setKiintio(20);
         hakijaryhma.setKuvaus("");
         hakijaryhma.setLaskentakaavaId(11L);
@@ -198,7 +206,7 @@ public class HakijaryhmaServiceTest {
 
         }
 
-        Hakijaryhma hakijaryhma = new Hakijaryhma();
+        HakijaryhmaCreateDTO hakijaryhma = new HakijaryhmaCreateDTO();
         hakijaryhma.setKiintio(20);
         hakijaryhma.setKuvaus("");
         hakijaryhma.setLaskentakaavaId(11L);
@@ -212,7 +220,7 @@ public class HakijaryhmaServiceTest {
             assertEquals(4, hakijaryhmaService.findByHakukohde("1").size());
         }
 
-        hakijaryhma = new Hakijaryhma();
+        hakijaryhma = new HakijaryhmaCreateDTO();
         hakijaryhma.setKiintio(20);
         hakijaryhma.setKuvaus("");
         hakijaryhma.setLaskentakaavaId(11L);
@@ -226,7 +234,7 @@ public class HakijaryhmaServiceTest {
             assertEquals(5, hakijaryhmaService.findByHakukohde("1").size());
         }
 
-        hakijaryhma = new Hakijaryhma();
+        hakijaryhma = new HakijaryhmaCreateDTO();
         hakijaryhma.setKiintio(20);
         hakijaryhma.setKuvaus("");
         hakijaryhma.setLaskentakaavaId(11L);
@@ -250,11 +258,11 @@ public class HakijaryhmaServiceTest {
             assertEquals(3, hakijaryhmaService.findByHakukohde("2").size());
         }
 
-        Valintaryhma valintaryhma = new Valintaryhma();
+        ValintaryhmaDTO valintaryhma = new ValintaryhmaDTO();
         valintaryhma.setNimi("");
 
 
-        valintaryhma = valintaryhmaService.insert(valintaryhma, "vr2");
+        valintaryhma = modelMapper.map(valintaryhmaService.insert(valintaryhma, "vr2"), ValintaryhmaDTO.class);
         {
             assertEquals(3, hakijaryhmaService.findByValintaryhma(valintaryhma.getOid()).size());
         }

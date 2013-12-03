@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 /**
@@ -40,13 +41,13 @@ public class HakukohdekoodiServiceImpl implements HakukohdekoodiService {
     @Override
     public void updateValintaryhmaHakukohdekoodit(String valintaryhmaOid, Set<KoodiDTO> hakukohdekoodit) {
         new HakukohdekoodiHandler(valintaryhmaService, hakukohdekoodiDAO)
-                .paivitaValintaryhmanKoodit(valintaryhmaOid, hakukohdekoodit);
+                .paivitaValintaryhmanKoodit(valintaryhmaOid, modelMapper.mapList(new ArrayList<KoodiDTO>(hakukohdekoodit), Hakukohdekoodi.class));
     }
 
     @Override
     public void lisaaHakukohdekoodiValintaryhmalle(String valintaryhmaOid, KoodiDTO hakukohdekoodi) {
         new HakukohdekoodiHandler(valintaryhmaService, hakukohdekoodiDAO)
-                .lisaaKoodiValintaryhmalle(valintaryhmaOid, hakukohdekoodi);
+                .lisaaKoodiValintaryhmalle(valintaryhmaOid, modelMapper.map(hakukohdekoodi, Hakukohdekoodi.class));
     }
 
     @Override

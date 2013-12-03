@@ -30,4 +30,6 @@ public interface ValintatapajonoService {
     void kopioiValintatapajonotMasterValinnanVaiheeltaKopiolle(ValinnanVaihe valinnanVaihe, ValinnanVaihe masterValinnanVaihe);
 
     Valintatapajono update(String oid, ValintatapajonoCreateDTO jono);
+
+    void delete(Valintatapajono valintatapajono);
 }

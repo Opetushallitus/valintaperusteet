@@ -1,6 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
+import fi.vm.sade.service.valintaperusteet.dao.ValintakoeDAO;
 import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.*;
@@ -50,6 +51,9 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
 
     @Autowired
     private ValintaperusteetModelMapper modelMapper;
+
+    @Autowired
+    private ValintakoeDAO valintakoeDAO;
 
 
     @Override
@@ -120,7 +124,7 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
     }
 
     @Override
-    public ValinnanVaihe lisaaValinnanVaiheValintaryhmalle(String valintaryhmaOid, ValinnanVaiheCreateDTO valinnanVaihe,
+    public ValinnanVaihe lisaaValinnanVaiheValintaryhmalle(String valintaryhmaOid, ValinnanVaiheCreateDTO dto,
                                                            String edellinenValinnanVaiheOid) {
         Valintaryhma valintaryhma = valintaryhmaService.readByOid(valintaryhmaOid);
         if (valintaryhma == null) {
@@ -135,6 +139,7 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
             edellinenValinnanVaihe = valinnanVaiheDAO.haeValintaryhmanViimeinenValinnanVaihe(valintaryhmaOid);
         }
 
+        ValinnanVaihe valinnanVaihe = modelMapper.map(dto, ValinnanVaihe.class);
         valinnanVaihe.setOid(oidService.haeValinnanVaiheOid());
         valinnanVaihe.setValintaryhma(valintaryhma);
 
@@ -240,7 +245,7 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
         }
 
         for (Valintakoe valintakoe : valinnanVaihe.getValintakokeet()) {
-            valintakoeService.delete(valintakoe);
+            valintakoeDAO.remove(valintakoe);
         }
 
         valinnanVaiheDAO.remove(valinnanVaihe);

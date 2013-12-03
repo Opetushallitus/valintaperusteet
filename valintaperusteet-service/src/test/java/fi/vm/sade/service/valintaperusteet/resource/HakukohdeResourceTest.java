@@ -5,7 +5,9 @@ import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.dto.*;
-import fi.vm.sade.service.valintaperusteet.model.*;
+import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
+import fi.vm.sade.service.valintaperusteet.model.JsonViews;
+import fi.vm.sade.service.valintaperusteet.model.ValinnanVaiheTyyppi;
 import fi.vm.sade.service.valintaperusteet.util.TestUtil;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
@@ -148,7 +150,7 @@ public class HakukohdeResourceTest {
 
     @Test
     public void testFindLaskentakaavatByHakukohde() throws Exception {
-        List<Jarjestyskriteeri> laskentaKaavat = hakukohdeResource.findLaskentaKaavat("oid6");
+        List<JarjestyskriteeriDTO> laskentaKaavat = hakukohdeResource.findLaskentaKaavat("oid6");
         assertEquals(3, laskentaKaavat.size());
         testUtil.lazyCheck(JsonViews.Basic.class, laskentaKaavat);
     }
@@ -166,7 +168,7 @@ public class HakukohdeResourceTest {
 
     @Test
     public void testInsertValinnanVaihe() throws Exception {
-        ValinnanVaihe valinnanVaihe = new ValinnanVaihe();
+        ValinnanVaiheCreateDTO valinnanVaihe = new ValinnanVaiheCreateDTO();
 
         valinnanVaihe.setNimi("uusi");
         valinnanVaihe.setAktiivinen(true);
@@ -174,9 +176,9 @@ public class HakukohdeResourceTest {
 
         Response response = hakukohdeResource.insertValinnanvaihe("oid1", null, valinnanVaihe);
         assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
-        ValinnanVaihe vv = (ValinnanVaihe) response.getEntity();
+        ValinnanVaiheDTO vv = (ValinnanVaiheDTO) response.getEntity();
 
-        valinnanVaihe = new ValinnanVaihe();
+        valinnanVaihe = new ValinnanVaiheCreateDTO();
         valinnanVaihe.setNimi("uusi");
         valinnanVaihe.setAktiivinen(true);
         valinnanVaihe.setValinnanVaiheTyyppi(ValinnanVaiheTyyppi.TAVALLINEN);
@@ -206,7 +208,7 @@ public class HakukohdeResourceTest {
     public void testInsertAndUpdateHakukohdekoodi() {
         final String URI = "uri";
         final String ARVO = "arvo";
-        Hakukohdekoodi hakukohdekoodi = new Hakukohdekoodi();
+        KoodiDTO hakukohdekoodi = new KoodiDTO();
         hakukohdekoodi.setUri(URI);
         hakukohdekoodi.setArvo(ARVO);
         Response response = hakukohdeResource.insertHakukohdekoodi("oid1", hakukohdekoodi);
@@ -220,7 +222,7 @@ public class HakukohdeResourceTest {
         // update
         final String URI2 = "uri2";
 
-        Hakukohdekoodi uusikoodi = new Hakukohdekoodi();
+        KoodiDTO uusikoodi = new KoodiDTO();
         uusikoodi.setUri(URI2);
         uusikoodi.setArvo(ARVO);
 

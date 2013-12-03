@@ -2,7 +2,6 @@ package fi.vm.sade.service.valintaperusteet.service.impl;
 
 import fi.vm.sade.service.valintaperusteet.dao.LaskentakaavaDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintakoeDAO;
-import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
 import fi.vm.sade.service.valintaperusteet.model.*;
@@ -27,7 +26,7 @@ import java.util.List;
  */
 @Transactional
 @Service
-public class ValintakoeServiceImpl extends AbstractCRUDServiceImpl<Valintakoe, Long, String> implements ValintakoeService {
+public class ValintakoeServiceImpl implements ValintakoeService {
 
     @Autowired
     private ValintakoeDAO valintakoeDAO;
@@ -45,22 +44,6 @@ public class ValintakoeServiceImpl extends AbstractCRUDServiceImpl<Valintakoe, L
     private LaskentakaavaService laskentakaavaService;
 
     private static ValintakoeKopioija kopioija = new ValintakoeKopioija();
-
-    @Autowired
-    public ValintakoeServiceImpl(ValintakoeDAO dao) {
-        super(dao);
-        this.valintakoeDAO = dao;
-    }
-
-    @Override
-    public Valintakoe update(Long s, LaskentakaavaCreateDTO entity) {
-        throw new UnsupportedOperationException("not supported");
-    }
-
-    @Override
-    public Valintakoe insert(LaskentakaavaCreateDTO entity) {
-        throw new UnsupportedOperationException();
-    }
 
     @Override
     public void deleteByOid(String oid) {

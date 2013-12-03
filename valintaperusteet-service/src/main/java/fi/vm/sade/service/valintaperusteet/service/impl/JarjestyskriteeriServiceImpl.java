@@ -118,9 +118,10 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
     }
 
     @Override
-    public Jarjestyskriteeri lisaaJarjestyskriteeriValintatapajonolle(String valintatapajonoOid, JarjestyskriteeriCreateDTO jarjestyskriteeri,
+    public Jarjestyskriteeri lisaaJarjestyskriteeriValintatapajonolle(String valintatapajonoOid, JarjestyskriteeriCreateDTO dto,
                                                                       String edellinenValintatapajonoOid, Long laskentakaavaOid) {
 
+        Jarjestyskriteeri jarjestyskriteeri = modelMapper.map(dto, Jarjestyskriteeri.class);
         if (laskentakaavaOid != null) {
             Laskentakaava laskentakaava = laskentakaavaDAO.getLaskentakaava(laskentakaavaOid);
             validoiLaskentakaavaJarjestyskriteeriaVarten(laskentakaava);

@@ -19,11 +19,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
  * User: jukais
  * Date: 1.10.2013
  * Time: 16.23
- * To change this template use File | Settings | File Templates.
  */
 @Service
 @Transactional
@@ -188,14 +186,16 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
     }
 
     @Override
-    public Hakijaryhma lisaaHakijaryhmaValintaryhmalle(String valintaryhmaOid, HakijaryhmaCreateDTO hakijaryhma) {
+    public Hakijaryhma lisaaHakijaryhmaValintaryhmalle(String valintaryhmaOid, HakijaryhmaCreateDTO dto) {
         Valintaryhma valintaryhma = valintaryhmaService.readByOid(valintaryhmaOid);
         if (valintaryhma == null) {
             throw new ValintaryhmaEiOleOlemassaException("Valintaryhmää (" + valintaryhmaOid + ") ei ole olemassa");
         }
 
+
         Hakijaryhma edellinenHakijaryhma = hakijaryhmaDAO.haeValintaryhmanViimeinenHakijaryhma(valintaryhmaOid);
 
+        Hakijaryhma hakijaryhma = modelMapper.map(dto, Hakijaryhma.class);
         hakijaryhma.setOid(oidService.haeHakijaryhmaOid());
         hakijaryhma.setValintaryhma(valintaryhma);
 
