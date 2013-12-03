@@ -110,8 +110,7 @@ public class JarjestyskriteeriServiceTest {
         JarjestyskriteeriCreateDTO jk = new JarjestyskriteeriCreateDTO();
         jk.setAktiivinen(false);
         jk.setMetatiedot("Update");
-        jk.setLaskentakaavaId(laskentakaavaDAO.read(1L).getId());
-        jarjestyskriteeriService.update("3201", jk);
+        jarjestyskriteeriService.update("3201", jk, 1L);
 
         jarjestyskriteeri = jarjestyskriteeriService.readByOid("3201");
         assertEquals(false, jarjestyskriteeri.getAktiivinen().booleanValue());

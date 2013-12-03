@@ -41,7 +41,7 @@ public class HakukohdekoodiServiceImpl implements HakukohdekoodiService {
     @Override
     public void updateValintaryhmaHakukohdekoodit(String valintaryhmaOid, Set<KoodiDTO> hakukohdekoodit) {
         new HakukohdekoodiHandler(valintaryhmaService, hakukohdekoodiDAO)
-                .paivitaValintaryhmanKoodit(valintaryhmaOid, modelMapper.mapList(new ArrayList<KoodiDTO>(hakukohdekoodit), Hakukohdekoodi.class));
+                .paivitaValintaryhmanKoodit(valintaryhmaOid, hakukohdekoodit == null ? null : modelMapper.mapList(new ArrayList<KoodiDTO>(hakukohdekoodit), Hakukohdekoodi.class));
     }
 
     @Override

@@ -5,7 +5,6 @@ import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.dto.*;
-import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaiheTyyppi;
 import fi.vm.sade.service.valintaperusteet.util.TestUtil;
@@ -242,7 +241,7 @@ public class HakukohdeResourceTest {
         Response response = hakukohdeResource.siirraHakukohdeValintaryhmaan(hakukohdeOid, valintaryhmaOid);
         assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
 
-        HakukohdeViite hakukohde = (HakukohdeViite) response.getEntity();
-        assertEquals(hakukohde.getValintaryhma().getOid(), valintaryhmaOid);
+        HakukohdeViiteDTO hakukohde = (HakukohdeViiteDTO) response.getEntity();
+        assertEquals(valintaryhmaOid, hakukohde.getValintaryhmaOid());
     }
 }

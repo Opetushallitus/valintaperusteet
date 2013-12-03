@@ -24,6 +24,10 @@ public class JarjestyskriteeriDTO extends JarjestyskriteeriCreateDTO {
     @JsonView(JsonViews.Basic.class)
     private Boolean inheritance;
 
+    @JsonView(JsonViews.Basic.class)
+    @ApiModelProperty(value = "Laskentakaava ID", required = true)
+    private Long laskentakaavaId;
+
     public String getOid() {
         return oid;
     }
@@ -47,5 +51,13 @@ public class JarjestyskriteeriDTO extends JarjestyskriteeriCreateDTO {
 
     public void setInheritance(Boolean inheritance) {
         this.inheritance = inheritance;
+    }
+
+    public Long getLaskentakaavaId() {
+        return laskentakaavaId;
+    }
+
+    public void setLaskentakaavaId(Long laskentakaavaId) {
+        this.laskentakaavaId = laskentakaavaId;
     }
 }

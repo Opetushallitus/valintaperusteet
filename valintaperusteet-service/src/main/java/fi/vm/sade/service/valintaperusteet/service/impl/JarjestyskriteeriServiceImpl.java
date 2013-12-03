@@ -6,6 +6,7 @@ import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.JarjestyskriteeriService;
+import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
 import fi.vm.sade.service.valintaperusteet.service.OidService;
 import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
 import fi.vm.sade.service.valintaperusteet.service.exception.*;
@@ -41,6 +42,9 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
 
     @Autowired
     private OidService oidService;
+
+    @Autowired
+    private LaskentakaavaService laskentakaavaService;
 
     @Autowired
     private ValintaperusteetModelMapper modelMapper;
@@ -89,14 +93,13 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
     }
 
     @Override
-    public Jarjestyskriteeri update(String oid, JarjestyskriteeriCreateDTO dto) {
+    public Jarjestyskriteeri update(String oid, JarjestyskriteeriCreateDTO dto, Long laskentakaavaId) {
 
         Jarjestyskriteeri entity = modelMapper.map(dto, Jarjestyskriteeri.class);
         Jarjestyskriteeri managedObject = haeJarjestyskriteeri(oid);
 
-        Long laskentakaavaOid = dto.getLaskentakaavaId();
-        if (laskentakaavaOid != null) {
-            Laskentakaava laskentakaava = laskentakaavaDAO.getLaskentakaava(laskentakaavaOid);
+        if (laskentakaavaId != null) {
+            Laskentakaava laskentakaava = laskentakaavaService.haeMallinnettuKaava(laskentakaavaId);
             validoiLaskentakaavaJarjestyskriteeriaVarten(laskentakaava);
             entity.setLaskentakaava(laskentakaava);
         } else {

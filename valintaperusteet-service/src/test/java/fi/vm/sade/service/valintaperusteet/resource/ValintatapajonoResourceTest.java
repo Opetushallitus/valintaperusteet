@@ -3,6 +3,7 @@ package fi.vm.sade.service.valintaperusteet.resource;
 import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
@@ -118,14 +119,12 @@ public class ValintatapajonoResourceTest {
     public void testInsertJK() throws Exception {
         JarjestyskriteeriCreateDTO jk = new JarjestyskriteeriCreateDTO();
         jk.setMetatiedot("mt1");
-        jk.setLaskentakaavaId(1L);
         jk.setAktiivinen(true);
 
-        Response insert = resource.insertJarjestyskriteeri("1", jk, null);
-
+        Response insert = resource.insertJarjestyskriteeri("1", jk, 1L);
         assertEquals(Response.Status.ACCEPTED.getStatusCode(), insert.getStatus());
 
-        Jarjestyskriteeri entity = (Jarjestyskriteeri) insert.getEntity();
+        JarjestyskriteeriDTO entity = (JarjestyskriteeriDTO) insert.getEntity();
 
         testUtil.lazyCheck(JsonViews.Basic.class, entity, true);
 

@@ -101,22 +101,27 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
     }
 
     private Set<Organisaatio> getOrganisaatios(Set<String> oids) {
-        List<Organisaatio> organisaatios = organisaatioDAO.readByOidList(oids);
+        if (!oids.isEmpty()) {
 
-        Map<String, Organisaatio> organisaatiosByOids = new HashMap<String, Organisaatio>();
-        for (Organisaatio o : organisaatios) {
-            organisaatiosByOids.put(o.getOid(), o);
+            List<Organisaatio> organisaatios = organisaatioDAO.readByOidList(oids);
+
+            Map<String, Organisaatio> organisaatiosByOids = new HashMap<String, Organisaatio>();
+            for (Organisaatio o : organisaatios) {
+                organisaatiosByOids.put(o.getOid(), o);
+            }
+
+            oids.removeAll(organisaatiosByOids.keySet());
+            for (String oid : oids) {
+                Organisaatio o = new Organisaatio();
+                o.setOid(oid);
+                organisaatiosByOids.put(oid, organisaatioDAO.insert(o));
+            }
+
+
+            return new HashSet<Organisaatio>(organisaatiosByOids.values());
+        } else {
+            return Collections.EMPTY_SET;
         }
-
-        oids.removeAll(organisaatiosByOids.keySet());
-        for (String oid : oids) {
-            Organisaatio o = new Organisaatio();
-            o.setOid(oid);
-            organisaatiosByOids.put(oid, organisaatioDAO.insert(o));
-        }
-
-
-        return new HashSet<Organisaatio>(organisaatiosByOids.values());
     }
 
     @Override

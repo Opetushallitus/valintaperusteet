@@ -113,6 +113,7 @@ public class ValinnanVaiheResource {
             return Response.status(Response.Status.CREATED).entity(vk).build();
         } catch (Exception e) {
             LOGGER.error("error in addValintakoeToValinnanVaihe", e);
+            System.out.println(e.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
 

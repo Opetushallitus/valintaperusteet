@@ -9,7 +9,6 @@ import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.model.Tasapistesaanto;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheEiOleOlemassaException;
-import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaihettaEiVoiPoistaaException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.After;
 import org.junit.Before;
@@ -24,6 +23,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -118,14 +118,32 @@ public class ValinnanVaiheResourceTest {
         assertEquals(Response.Status.ACCEPTED.getStatusCode(), delete.getStatus());
     }
 
-    @Test(expected = ValinnanVaiheEiOleOlemassaException.class)
+    @Test
     public void testDeleteOidNotFound() {
-        vaiheResource.delete("");
+        boolean caughtOne = false;
+
+        try {
+            vaiheResource.delete("");
+        } catch (WebApplicationException e) {
+            caughtOne = true;
+            assertEquals(404, e.getResponse().getStatus());
+        }
+
+        assertTrue(caughtOne);
     }
 
-    @Test(expected = ValinnanVaihettaEiVoiPoistaaException.class)
+    @Test
     public void testDeleteInherited() {
-        vaiheResource.delete("32");
+        boolean caughtOne = false;
+
+        try {
+            vaiheResource.delete("32");
+        } catch (WebApplicationException e) {
+            caughtOne = true;
+            assertEquals(400, e.getResponse().getStatus());
+        }
+
+        assertTrue(caughtOne);
     }
 
     @Test

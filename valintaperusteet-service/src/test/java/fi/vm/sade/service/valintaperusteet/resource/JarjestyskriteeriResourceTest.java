@@ -63,9 +63,8 @@ public class JarjestyskriteeriResourceTest {
 
         JarjestyskriteeriCreateDTO update = new JarjestyskriteeriCreateDTO();
         update.setMetatiedot("metatiedot");
-        update.setLaskentakaavaId(jk.getLaskentakaavaId());
 
-        resource.update("1", update);
+        resource.update("1", update, jk.getLaskentakaavaId());
 
         jk = jarjestyskriteeriDAO.readByOid("1");
 //        assertEquals(100, (int)jk.getPrioriteetti());

@@ -11,7 +11,7 @@ import org.codehaus.jackson.map.annotate.JsonView;
  * Time: 9.54
  */
 @ApiModel(value = "FunktioargumenttiDTO", description = "Funktioargumentti")
-public class FunktioargumenttiDTO {
+public class FunktioargumenttiDTO implements Comparable<FunktioargumenttiDTO> {
 
     @JsonView(JsonViews.Basic.class)
     @ApiModelProperty(value = "Lapsifunktiokutsu")
@@ -47,5 +47,10 @@ public class FunktioargumenttiDTO {
 
     public void setIndeksi(Integer indeksi) {
         this.indeksi = indeksi;
+    }
+
+    @Override
+    public int compareTo(FunktioargumenttiDTO o) {
+        return indeksi - o.indeksi;
     }
 }

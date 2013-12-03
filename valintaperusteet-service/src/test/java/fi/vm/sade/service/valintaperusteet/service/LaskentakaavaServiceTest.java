@@ -177,30 +177,6 @@ public class LaskentakaavaServiceTest {
         }
     }
 
-    @Test
-    public void insertPartlyNew() throws FunktiokutsuMuodostaaSilmukanException {
-        final Long subFunktiokutsuId = 201L;
-
-        FunktiokutsuDTO funktiokutsu = modelMapper.map(laskentakaavaService.haeMallinnettuFunktiokutsu(subFunktiokutsuId), FunktiokutsuDTO.class);
-        LaskentakaavaDTO laskentakaava = new LaskentakaavaDTO();
-        laskentakaava.setNimi("kaava3423423");
-        laskentakaava.setOnLuonnos(false);
-        laskentakaava.setFunktiokutsu(createSumma(createLukuarvo(5.0), createLukuarvo(10.0), funktiokutsu));
-
-        Laskentakaava tallennettu = laskentakaavaService.insert(laskentakaava, null, null);
-        Laskentakaava haettu = laskentakaavaService.read(tallennettu.getId());
-        assertFalse(haettu.getOnLuonnos());
-        assertEquals(Funktionimi.SUMMA, haettu.getFunktiokutsu().getFunktionimi());
-        assertEquals(3, haettu.getFunktiokutsu().getFunktioargumentit().size());
-
-        List<Funktioargumentti> args = new ArrayList<Funktioargumentti>(haettu.getFunktiokutsu().getFunktioargumentit());
-        Collections.sort(args, comparator);
-
-        assertEquals(Funktionimi.LUKUARVO, args.get(0).getFunktiokutsuChild().getFunktionimi());
-        assertEquals(Funktionimi.LUKUARVO, args.get(1).getFunktiokutsuChild().getFunktionimi());
-        assertEquals(Funktionimi.SUMMA, args.get(2).getFunktiokutsuChild().getFunktionimi());
-    }
-
     private double luku(Funktiokutsu lukufunktio) {
         if (!Funktionimi.LUKUARVO.equals(lukufunktio.getFunktionimi()) || lukufunktio.getSyoteparametrit().size() != 1) {
             throw new RuntimeException("Illegal lukuarvo");

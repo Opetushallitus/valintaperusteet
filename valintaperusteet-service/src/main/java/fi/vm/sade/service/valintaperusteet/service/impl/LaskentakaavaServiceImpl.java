@@ -80,7 +80,8 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     @Override
     @Transactional(readOnly = true)
     public Funktiokutsu haeMallinnettuFunktiokutsu(Long id) throws FunktiokutsuMuodostaaSilmukanException {
-        return haeFunktiokutsuRekursiivisesti(id, false, new HashSet<Long>());
+        Funktiokutsu funktiokutsu = haeFunktiokutsuRekursiivisesti(id, false, new HashSet<Long>());
+        return funktiokutsu;
     }
 
     private Laskentakaava haeLaskentakaava(Long id) {

@@ -27,7 +27,7 @@ public interface JarjestyskriteeriService {
 
     void kopioiJarjestyskriteeritMasterValintatapajonoltaKopiolle(Valintatapajono lisatty, Valintatapajono master);
 
-    Jarjestyskriteeri update(String oid, JarjestyskriteeriCreateDTO incoming);
+    Jarjestyskriteeri update(String oid, JarjestyskriteeriCreateDTO incoming, Long laskentakaavaId);
 
     void delete(Jarjestyskriteeri jarjestyskriteeri);
 }

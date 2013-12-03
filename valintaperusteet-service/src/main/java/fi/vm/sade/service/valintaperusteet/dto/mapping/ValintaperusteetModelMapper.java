@@ -2,7 +2,11 @@ package fi.vm.sade.service.valintaperusteet.dto.mapping;
 
 
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaDTO;
+import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
 import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
+import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
+import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 
@@ -25,11 +29,22 @@ public class ValintaperusteetModelMapper extends ModelMapper {
                 map().setLaskentakaavaId(source.getLaskentakaavaId());
             }
         });
-
         this.addMappings(new PropertyMap<HakijaryhmaDTO, Hakijaryhma>() {
             @Override
             protected void configure() {
                 map().setLaskentakaavaId(source.getLaskentakaavaId());
+            }
+        });
+        this.addMappings(new PropertyMap<Valintakoe, ValintakoeDTO>() {
+            @Override
+            protected void configure() {
+                map().setLaskentakaavaId(source.getLaskentakaava().getId());
+            }
+        });
+        this.addMappings(new PropertyMap<Jarjestyskriteeri, JarjestyskriteeriDTO>() {
+            @Override
+            protected void configure() {
+                map().setLaskentakaavaId(source.getLaskentakaava().getId());
             }
         });
     }

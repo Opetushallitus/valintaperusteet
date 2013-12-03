@@ -21,10 +21,6 @@ public class JarjestyskriteeriCreateDTO {
     @ApiModelProperty(value = "Aktiivinen", required = true)
     private Boolean aktiivinen;
 
-    @JsonView(JsonViews.Basic.class)
-    @ApiModelProperty(value = "Laskentakaava ID", required = true)
-    private Long laskentakaavaId;
-
     public String getMetatiedot() {
         return metatiedot;
     }
@@ -39,13 +35,5 @@ public class JarjestyskriteeriCreateDTO {
 
     public void setAktiivinen(Boolean aktiivinen) {
         this.aktiivinen = aktiivinen;
-    }
-
-    public Long getLaskentakaavaId() {
-        return laskentakaavaId;
-    }
-
-    public void setLaskentakaavaId(Long laskentakaavaId) {
-        this.laskentakaavaId = laskentakaavaId;
     }
 }
