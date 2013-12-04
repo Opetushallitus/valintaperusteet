@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <dataset>
     <!-- Valintaryhmä pitää luoda ensimmäisenä -->
-    <valintaryhma id="1" version="0" oid="oid1" nimi="Valintaryhma 1" hakuOid="hakuoid1" parent_id="[NULL]"/>
+    <valintaryhma id="1" version="0" oid="oid1" nimi="Valintaryhma 1" parent_id="[NULL]"/>
 
     <funktiokutsu id="1" version="0" funktionimi="LUKUARVO"/>
     <syoteparametri id="1" version="0" avain="luku" arvo="5.0" funktiokutsu_id="1"/>
@@ -316,96 +316,96 @@
         Ensimmäisen valintaryhmän luonti on siirretty ensimmäiseksi, koska taulu pitää luoda ensimmäisenä.
         Ärsyttävä DBUnitin ominaisuus, jossa datan luonti/poistojärjestys määräytyy ensimmäisen tagin
         mukaan.-->
-    <valintaryhma id="2" version="0" oid="oid2" nimi="Valintaryhma 2" hakuOid="hakuoid1" parent_id="1"/>
-    <valintaryhma id="3" version="0" oid="oid3" nimi="Valintaryhma 3" hakuOid="hakuoid1" parent_id="1"/>
-    <valintaryhma id="4" version="0" oid="oid4" nimi="Valintaryhma 4" hakuOid="hakuoid1" parent_id="1"/>
-    <valintaryhma id="5" version="0" oid="oid5" nimi="Valintaryhma 5" hakuOid="hakuoid1" parent_id="1"/>
+    <valintaryhma id="2" version="0" oid="oid2" nimi="Valintaryhma 2"  parent_id="1"/>
+    <valintaryhma id="3" version="0" oid="oid3" nimi="Valintaryhma 3"  parent_id="1"/>
+    <valintaryhma id="4" version="0" oid="oid4" nimi="Valintaryhma 4"  parent_id="1"/>
+    <valintaryhma id="5" version="0" oid="oid5" nimi="Valintaryhma 5"  parent_id="1"/>
 
-    <valintaryhma id="6" version="0" oid="oid6" nimi="Valintaryhma 6" hakuOid="hakuoid1"/>
-    <valintaryhma id="7" version="0" oid="oid7" nimi="Valintaryhma 7" hakuOid="hakuoid1"/>
+    <valintaryhma id="6" version="0" oid="oid6" nimi="Valintaryhma 6" />
+    <valintaryhma id="7" version="0" oid="oid7" nimi="Valintaryhma 7" />
 
-    <valintaryhma id="8" version="0" oid="oid8" nimi="Valintaryhma 8" hakuOid="hakuoid1"/>
-    <valintaryhma id="9" version="0" oid="oid9" nimi="Valintaryhma 9" hakuOid="hakuoid1" parent_id="8"/>
-    <valintaryhma id="10" version="0" oid="oid10" nimi="Valintaryhma 10" hakuOid="hakuoid1" parent_id="9"/>
-    <valintaryhma id="11" version="0" oid="oid11" nimi="Valintaryhma 11" hakuOid="hakuoid1" parent_id="8"/>
+    <valintaryhma id="8" version="0" oid="oid8" nimi="Valintaryhma 8" />
+    <valintaryhma id="9" version="0" oid="oid9" nimi="Valintaryhma 9"  parent_id="8"/>
+    <valintaryhma id="10" version="0" oid="oid10" nimi="Valintaryhma 10"  parent_id="9"/>
+    <valintaryhma id="11" version="0" oid="oid11" nimi="Valintaryhma 11"  parent_id="8"/>
 
-    <valintaryhma id="12" version="0" oid="oid12" nimi="Valintaryhma 12" hakuOid="hakuoid1"/>
-    <valintaryhma id="13" version="0" oid="oid13" nimi="Valintaryhma 13" hakuOid="hakuoid1"/>
+    <valintaryhma id="12" version="0" oid="oid12" nimi="Valintaryhma 12" />
+    <valintaryhma id="13" version="0" oid="oid13" nimi="Valintaryhma 13" />
 
-    <valintaryhma id="14" version="0" oid="oid14" nimi="Valintaryhma 14" hakuOid="hakuoid1"/>
-    <valintaryhma id="15" version="0" oid="oid15" nimi="Valintaryhma 15" hakuOid="hakuoid1" parent_id="14"/>
+    <valintaryhma id="14" version="0" oid="oid14" nimi="Valintaryhma 14" />
+    <valintaryhma id="15" version="0" oid="oid15" nimi="Valintaryhma 15"  parent_id="14"/>
 
-    <valintaryhma id="16" version="0" oid="oid16" nimi="Valintaryhma 16" hakuOid="hakuoid1"/>
-    <valintaryhma id="17" version="0" oid="oid17" nimi="Valintaryhma 17" hakuOid="hakuoid1"/>
+    <valintaryhma id="16" version="0" oid="oid16" nimi="Valintaryhma 16" />
+    <valintaryhma id="17" version="0" oid="oid17" nimi="Valintaryhma 17" />
 
-    <valintaryhma id="18" version="0" oid="oid18" nimi="Valintaryhma 18" hakuOid="hakuoid1"/>
-    <valintaryhma id="19" version="0" oid="oid19" nimi="Valintaryhma 19" hakuOid="hakuoid1" parent_id="18"/>
-    <valintaryhma id="20" version="0" oid="oid20" nimi="Valintaryhma 20" hakuOid="hakuoid1" parent_id="19"/>
+    <valintaryhma id="18" version="0" oid="oid18" nimi="Valintaryhma 18" />
+    <valintaryhma id="19" version="0" oid="oid19" nimi="Valintaryhma 19"  parent_id="18"/>
+    <valintaryhma id="20" version="0" oid="oid20" nimi="Valintaryhma 20"  parent_id="19"/>
 
-    <valintaryhma id="21" version="0" oid="oid21" nimi="Valintaryhma 21" hakuOid="hakuoid1"/>
-    <valintaryhma id="22" version="0" oid="oid22" nimi="Valintaryhma 22" hakuOid="hakuoid1" parent_id="21"/>
+    <valintaryhma id="21" version="0" oid="oid21" nimi="Valintaryhma 21" />
+    <valintaryhma id="22" version="0" oid="oid22" nimi="Valintaryhma 22"  parent_id="21"/>
 
-    <valintaryhma id="23" version="0" oid="oid23" nimi="Valintaryhma 23" hakuOid="hakuoid1"/>
-    <valintaryhma id="24" version="0" oid="oid24" nimi="Valintaryhma 24" hakuOid="hakuoid1" parent_id="23"/>
-    <valintaryhma id="25" version="0" oid="oid25" nimi="Valintaryhma 25" hakuOid="hakuoid1" parent_id="24"/>
-    <valintaryhma id="26" version="0" oid="oid26" nimi="Valintaryhma 26" hakuOid="hakuoid1" parent_id="25"/>
-    <valintaryhma id="27" version="0" oid="oid27" nimi="Valintaryhma 27" hakuOid="hakuoid1" parent_id="24"/>
+    <valintaryhma id="23" version="0" oid="oid23" nimi="Valintaryhma 23" />
+    <valintaryhma id="24" version="0" oid="oid24" nimi="Valintaryhma 24"  parent_id="23"/>
+    <valintaryhma id="25" version="0" oid="oid25" nimi="Valintaryhma 25"  parent_id="24"/>
+    <valintaryhma id="26" version="0" oid="oid26" nimi="Valintaryhma 26"  parent_id="25"/>
+    <valintaryhma id="27" version="0" oid="oid27" nimi="Valintaryhma 27"  parent_id="24"/>
 
-    <valintaryhma id="28" version="0" oid="oid28" nimi="Valintaryhma 28" hakuOid="hakuoid1"/>
-    <valintaryhma id="29" version="0" oid="oid29" nimi="Valintaryhma 29" hakuOid="hakuoid1" parent_id="28"/>
-    <valintaryhma id="30" version="0" oid="oid30" nimi="Valintaryhma 30" hakuOid="hakuoid1" parent_id="29"/>
-    <valintaryhma id="31" version="0" oid="oid31" nimi="Valintaryhma 31" hakuOid="hakuoid1" parent_id="30"/>
-    <valintaryhma id="32" version="0" oid="oid32" nimi="Valintaryhma 32" hakuOid="hakuoid1" parent_id="29"/>
+    <valintaryhma id="28" version="0" oid="oid28" nimi="Valintaryhma 28" />
+    <valintaryhma id="29" version="0" oid="oid29" nimi="Valintaryhma 29"  parent_id="28"/>
+    <valintaryhma id="30" version="0" oid="oid30" nimi="Valintaryhma 30"  parent_id="29"/>
+    <valintaryhma id="31" version="0" oid="oid31" nimi="Valintaryhma 31"  parent_id="30"/>
+    <valintaryhma id="32" version="0" oid="oid32" nimi="Valintaryhma 32"  parent_id="29"/>
 
-    <valintaryhma id="33" version="0" oid="oid33" nimi="Valintaryhma 33" hakuOid="hakuoid1"/>
+    <valintaryhma id="33" version="0" oid="oid33" nimi="Valintaryhma 33" />
 
-    <valintaryhma id="34" version="0" oid="oid34" nimi="Valintaryhma 34" hakuOid="hakuoid1"/>
+    <valintaryhma id="34" version="0" oid="oid34" nimi="Valintaryhma 34" />
 
-    <valintaryhma id="35" version="0" oid="oid35" nimi="Valintaryhma 35" hakuOid="hakuoid1"/>
-    <valintaryhma id="36" version="0" oid="oid36" nimi="Valintaryhma 36" hakuOid="hakuoid1"/>
-    <valintaryhma id="37" version="0" oid="oid37" nimi="Valintaryhma 37" hakuOid="hakuoid1"/>
+    <valintaryhma id="35" version="0" oid="oid35" nimi="Valintaryhma 35" />
+    <valintaryhma id="36" version="0" oid="oid36" nimi="Valintaryhma 36" />
+    <valintaryhma id="37" version="0" oid="oid37" nimi="Valintaryhma 37" />
 
-    <valintaryhma id="38" version="0" oid="oid38" nimi="Valintaryhma 38" hakuOid="hakuoid1"/>
+    <valintaryhma id="38" version="0" oid="oid38" nimi="Valintaryhma 38" />
 
-    <valintaryhma id="39" version="0" oid="oid39" nimi="Valintaryhma 39" hakuOid="hakuoid1"/>
+    <valintaryhma id="39" version="0" oid="oid39" nimi="Valintaryhma 39" />
 
-    <valintaryhma id="40" version="0" oid="oid40" nimi="Valintaryhma 40" hakuOid="hakuoid1"/>
+    <valintaryhma id="40" version="0" oid="oid40" nimi="Valintaryhma 40" />
 
-    <valintaryhma id="41" version="0" oid="oid41" nimi="Valintaryhma 41" hakuOid="hakuoid1"/>
+    <valintaryhma id="41" version="0" oid="oid41" nimi="Valintaryhma 41" />
 
-    <valintaryhma id="42" version="0" oid="oid42" nimi="Valintaryhma 42" hakuOid="hakuoid1"/>
+    <valintaryhma id="42" version="0" oid="oid42" nimi="Valintaryhma 42" />
 
-    <valintaryhma id="43" version="0" oid="oid43" nimi="Valintaryhma 43" hakuOid="hakuoid1"/>
+    <valintaryhma id="43" version="0" oid="oid43" nimi="Valintaryhma 43" />
 
-    <valintaryhma id="44" version="0" oid="oid44" nimi="Valintaryhma 44" hakuOid="hakuoid1"/>
+    <valintaryhma id="44" version="0" oid="oid44" nimi="Valintaryhma 44" />
 
-    <valintaryhma id="45" version="0" oid="oid45" nimi="Valintaryhma 45" hakuOid="hakuoid1"/>
+    <valintaryhma id="45" version="0" oid="oid45" nimi="Valintaryhma 45" />
 
-    <valintaryhma id="46" version="0" oid="oid46" nimi="Valintaryhma 46" hakuOid="hakuoid1"/>
+    <valintaryhma id="46" version="0" oid="oid46" nimi="Valintaryhma 46" />
 
-    <valintaryhma id="47" version="0" oid="oid47" nimi="Valintaryhma 47" hakuOid="hakuoid1"/>
+    <valintaryhma id="47" version="0" oid="oid47" nimi="Valintaryhma 47" />
 
-    <valintaryhma id="48" version="0" oid="oid48" nimi="Valintaryhma 48" hakuOid="hakuoid1"/>
+    <valintaryhma id="48" version="0" oid="oid48" nimi="Valintaryhma 48" />
 
-    <valintaryhma id="49" version="0" oid="oid49" nimi="Valintaryhma 49" hakuOid="hakuoid1"/>
+    <valintaryhma id="49" version="0" oid="oid49" nimi="Valintaryhma 49" />
 
-    <valintaryhma id="50" version="0" oid="oid50" nimi="Valintaryhma 50" hakuOid="hakuoid1"/>
+    <valintaryhma id="50" version="0" oid="oid50" nimi="Valintaryhma 50" />
 
-    <valintaryhma id="51" version="0" oid="oid51" nimi="Valintaryhma 51" hakuOid="hakuoid1"/>
+    <valintaryhma id="51" version="0" oid="oid51" nimi="Valintaryhma 51" />
 
-    <valintaryhma id="52" version="0" oid="oid52" nimi="Valintaryhma 52" hakuOid="hakuoid1"/>
+    <valintaryhma id="52" version="0" oid="oid52" nimi="Valintaryhma 52" />
 
-    <valintaryhma id="53" version="0" oid="oid53" nimi="Valintaryhma 53" hakuOid="hakuoid1"/>
+    <valintaryhma id="53" version="0" oid="oid53" nimi="Valintaryhma 53" />
 
-    <valintaryhma id="54" version="0" oid="oid54" nimi="Valintaryhma 54" hakuOid="hakuoid1"/>
+    <valintaryhma id="54" version="0" oid="oid54" nimi="Valintaryhma 54" />
 
-    <valintaryhma id="55" version="0" oid="oid55" nimi="Valintaryhma 55" hakuOid="hakuoid1"/>
+    <valintaryhma id="55" version="0" oid="oid55" nimi="Valintaryhma 55" />
 
-    <valintaryhma id="56" version="0" oid="oid56" nimi="Valintaryhma 56" hakuOid="hakuoid1"/>
+    <valintaryhma id="56" version="0" oid="oid56" nimi="Valintaryhma 56" />
 
-    <valintaryhma id="57" version="0" oid="oid57" nimi="Valintaryhma 57" hakuOid="hakuoid1"/>
+    <valintaryhma id="57" version="0" oid="oid57" nimi="Valintaryhma 57" />
 
-    <valintaryhma id="58" version="0" oid="oid58" nimi="Valintaryhma 58" hakuOid="hakuoid1"/>
+    <valintaryhma id="58" version="0" oid="oid58" nimi="Valintaryhma 57" />
 
     <valintaryhma id="59" version="0" oid="oid59" nimi="Valintaryhma 59" hakuOid="hakuoid1"/>
 
@@ -1260,8 +1260,8 @@
                        metatiedot="metatiedot" aktiivinen="true"/>
 
     <!-- lisaaJarjestyskriteeriTyhjalleValintatapajonolle -->
-    <valintaryhma id="3001" version="0" oid="3001" nimi="Valintaryhma 1" hakuOid="hakuoid1" parent_id="[NULL]"/>
-    <valintaryhma id="3002" version="0" oid="3002" nimi="Valintaryhma 2" hakuOid="hakuoid1" parent_id="3001"/>
+    <valintaryhma id="3001" version="0" oid="3001" nimi="Valintaryhma 1"  parent_id="[NULL]"/>
+    <valintaryhma id="3002" version="0" oid="3002" nimi="Valintaryhma 2"  parent_id="3001"/>
 
     <hakukohde_viite id="3001" version="0" hakuoid="hakuoid1" oid="3001" nimi="Hakukohde" valintaryhma_id="3001"/>
 
@@ -1289,8 +1289,8 @@
                      valinnan_vaihe_id="3003" ei_varasijatayttoa="false"/>
 
     <!-- lisaaJarjestyskriteeriValintatapajonolle -->
-    <valintaryhma id="3101" version="0" oid="3101" nimi="Valintaryhma 1" hakuOid="hakuoid1" parent_id="[NULL]"/>
-    <valintaryhma id="3102" version="0" oid="3102" nimi="Valintaryhma 2" hakuOid="hakuoid1" parent_id="3101"/>
+    <valintaryhma id="3101" version="0" oid="3101" nimi="Valintaryhma 1"  parent_id="[NULL]"/>
+    <valintaryhma id="3102" version="0" oid="3102" nimi="Valintaryhma 2"  parent_id="3101"/>
 
     <hakukohde_viite id="3101" version="0" hakuoid="hakuoid1" oid="3101" nimi="Hakukohde" valintaryhma_id="3101"/>
 
@@ -1352,8 +1352,8 @@
                        aktiivinen="true" edellinen_jarjestyskriteeri_id="3108" master_jarjestyskriteeri_id="3106"/>
 
     <!-- jarjestaKriteerit -->
-    <valintaryhma id="3201" version="0" oid="3201" nimi="Valintaryhma 1" hakuOid="hakuoid1" parent_id="[NULL]"/>
-    <valintaryhma id="3202" version="0" oid="3202" nimi="Valintaryhma 2" hakuOid="hakuoid1" parent_id="3201"/>
+    <valintaryhma id="3201" version="0" oid="3201" nimi="Valintaryhma 1"  parent_id="[NULL]"/>
+    <valintaryhma id="3202" version="0" oid="3202" nimi="Valintaryhma 2"  parent_id="3201"/>
 
     <hakukohde_viite id="3201" version="0" hakuoid="hakuoid1" oid="3201" nimi="Hakukohde" valintaryhma_id="3201"/>
 
@@ -1415,8 +1415,8 @@
                        aktiivinen="true" edellinen_jarjestyskriteeri_id="3208" master_jarjestyskriteeri_id="3206"/>
 
     <!-- lisaa valinnanvaihe tyhjaan ylatasoon, mutta alatasolla onkin jo -->
-    <valintaryhma id="3301" version="0" oid="3301" nimi="Valintaryhma 1" hakuOid="hakuoid1" parent_id="[NULL]"/>
-    <valintaryhma id="3302" version="0" oid="3302" nimi="Valintaryhma 2" hakuOid="hakuoid1" parent_id="3301"/>
+    <valintaryhma id="3301" version="0" oid="3301" nimi="Valintaryhma 1"  parent_id="[NULL]"/>
+    <valintaryhma id="3302" version="0" oid="3302" nimi="Valintaryhma 2"  parent_id="3301"/>
 
     <hakukohde_viite id="3301" version="0" hakuoid="hakuoid1" oid="3301" nimi="Hakukohde" valintaryhma_id="3301"/>
 

@@ -61,7 +61,7 @@ public class ValintaryhmaServiceTest {
         Valintaryhma uusiValintaryhma = new Valintaryhma();
         uusiValintaryhma.setOid("uusi oid");
         uusiValintaryhma.setNimi("uusi valintaryhma");
-        uusiValintaryhma.setHakuOid("hakuoid");
+
 
         Valintaryhma lisatty = valintaryhmaService.insert(uusiValintaryhma, parentOid);
         List<ValinnanVaihe> valinnanVaiheet = LinkitettavaJaKopioitavaUtil.jarjesta(valinnanVaiheDAO.findByValintaryhma(lisatty.getOid()));
@@ -93,7 +93,7 @@ public class ValintaryhmaServiceTest {
         }
 
         Valintaryhma uusiValintaryhma = new Valintaryhma();
-        uusiValintaryhma.setHakuOid("hakuoid");
+
         uusiValintaryhma.setNimi("uusi nimi");
 
         Valintaryhma lisatty = valintaryhmaService.insert(uusiValintaryhma, parentOid);
@@ -150,7 +150,7 @@ public class ValintaryhmaServiceTest {
         }
 
         Valintaryhma child = new Valintaryhma();
-        child.setHakuOid("hakuoid1");
+
         child.setNimi("uusi alavalintaryhma");
         child = valintaryhmaService.insert(child, parentValintaryhmaOid);
 

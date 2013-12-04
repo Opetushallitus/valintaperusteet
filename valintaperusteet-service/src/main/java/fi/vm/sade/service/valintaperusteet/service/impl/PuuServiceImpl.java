@@ -2,9 +2,11 @@ package fi.vm.sade.service.valintaperusteet.service.impl;
 
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
+import fi.vm.sade.service.valintaperusteet.dto.OrganisaatioDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaperustePuuDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaperustePuuTyyppi;
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
+import fi.vm.sade.service.valintaperusteet.model.Organisaatio;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import fi.vm.sade.service.valintaperusteet.service.PuuService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE;
 
 /**
  * Created with IntelliJ IDEA.
@@ -35,11 +41,10 @@ public class PuuServiceImpl implements PuuService {
 
 
     @Override
-    public List<ValintaperustePuuDTO> search(String hakuOid, List<String> tila, String searchString) {
+    public List<ValintaperustePuuDTO> search(String hakuOid, List<String> tila, String searchString, boolean hakukohteet) {
         //fetch whole tree in a single query, is at least now faster than individually querying
 
         List<Valintaryhma>  valintaryhmaList = valintaryhmaDAO.findAllFetchAlavalintaryhmat();
-        List<HakukohdeViite> hakukohdeList = hakukohdeViiteDAO.search(hakuOid,tila,searchString);
 
         List<ValintaperustePuuDTO> parentList = new ArrayList<ValintaperustePuuDTO>();
         Map<Long, ValintaperustePuuDTO> dtoMap = new HashMap<Long, ValintaperustePuuDTO>();
@@ -55,8 +60,12 @@ public class PuuServiceImpl implements PuuService {
             ValintaperustePuuDTO dto = convert(valintaryhma, dtoMap);
             parentList.add(dto);
         }
-        for(HakukohdeViite hakukohdeViite : hakukohdeList) {
-            attach(hakukohdeViite, dtoMap, parentList);
+        if(hakukohteet) {
+            List<HakukohdeViite> hakukohdeList = hakukohdeViiteDAO.search(hakuOid,tila,searchString);
+
+            for(HakukohdeViite hakukohdeViite : hakukohdeList) {
+                attach(hakukohdeViite, dtoMap, parentList);
+            }
         }
 
 
@@ -93,6 +102,14 @@ public class PuuServiceImpl implements PuuService {
         valintaperustePuuDTO.setNimi(valintaryhma.getNimi());
         valintaperustePuuDTO.setTyyppi(ValintaperustePuuTyyppi.VALINTARYHMA);
         valintaperustePuuDTO.setOid(valintaryhma.getOid());
+
+        for (Organisaatio organisaatio : valintaryhma.getOrganisaatiot()) {
+            OrganisaatioDTO orgDTO = new OrganisaatioDTO();
+            orgDTO.setOid(organisaatio.getOid());
+            orgDTO.setParentOidPath(organisaatio.getParentOidPath());
+            valintaperustePuuDTO.getOrganisaatiot().add(orgDTO);
+        }
+
 
         for(Valintaryhma valintaryhma1: valintaryhma.getAlavalintaryhmat()){
             valintaperustePuuDTO.getAlavalintaryhmat().add(convert(valintaryhma1,dtoMap));

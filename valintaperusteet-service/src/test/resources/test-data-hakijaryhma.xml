@@ -32,8 +32,8 @@
 
         <valintaperuste_viite id="14" version="0" lahde="HAETTAVA_ARVO" on_pakollinen="false" tunniste="id" funktiokutsu_id="12" indeksi="1" kuvaus="kuvaus"/>
 
-        <valintaryhma id="1" version="0" hakuoid="1" nimi="valintaryhma1" oid="vr1"/>
-        <valintaryhma id="39" version="2" hakuoid="1" nimi="valintaryhma2" oid="vr2" parent_id="1"/>
+        <valintaryhma id="1" version="0" nimi="valintaryhma1" oid="vr1"/>
+        <valintaryhma id="39" version="2" nimi="valintaryhma2" oid="vr2" parent_id="1"/>
 
         <valintatapajono poissa_oleva_taytto="false" varasijat="0" varasija_taytto_paivat="0" id="5" version="3" aktiivinen="true" aloituspaikat="20" nimi="jono 1" oid="vtj1" siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO"
                          valinnan_vaihe_id="3" ei_varasijatayttoa="false"/>

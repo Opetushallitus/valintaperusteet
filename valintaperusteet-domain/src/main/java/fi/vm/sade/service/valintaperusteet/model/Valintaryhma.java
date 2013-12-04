@@ -27,10 +27,6 @@ public class Valintaryhma extends BaseEntity {
     @JsonView({JsonViews.Basic.class, JsonViews.ParentHierarchy.class})
     private String nimi;
 
-    @Column(name = "hakuOid", nullable = false)
-    //@JsonView({JsonViews.Basic.class, JsonViews.ParentHierarchy.class})
-    private String hakuOid;
-
     @JoinColumn(name = "parent_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Valintaryhma ylavalintaryhma;
@@ -66,12 +62,15 @@ public class Valintaryhma extends BaseEntity {
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Valintakoekoodi> valintakoekoodit = new ArrayList<Valintakoekoodi>();
 
+    @JsonView({JsonViews.Basic.class})
+    @JoinTable(name = "valintaryhma_organisaatio",
+            joinColumns = @JoinColumn(name = "valintaryhma_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME),
+            inverseJoinColumns = @JoinColumn(name = "organisaatio_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME))
+    @ManyToMany(fetch = FetchType.LAZY)
+    private Set<Organisaatio> organisaatiot = new HashSet<Organisaatio>();
+
     public String getNimi() {
         return nimi;
-    }
-
-    public String getHakuOid() {
-        return hakuOid;
     }
 
     public void setNimi(String nimi) {
@@ -107,10 +106,6 @@ public class Valintaryhma extends BaseEntity {
 
     public void setOid(String oid) {
         this.oid = oid;
-    }
-
-    public void setHakuOid(String hakuOid) {
-        this.hakuOid = hakuOid;
     }
 
     public Set<HakukohdeViite> getHakukohdeViitteet() {
@@ -171,5 +166,13 @@ public class Valintaryhma extends BaseEntity {
 
     public void setHakijaryhmat(Set<Hakijaryhma> hakijaryhmat) {
         this.hakijaryhmat = hakijaryhmat;
+    }
+
+    public Set<Organisaatio> getOrganisaatiot() {
+        return organisaatiot;
+    }
+
+    public void setOrganisaatiot(Set<Organisaatio> organisaatiot) {
+        this.organisaatiot = organisaatiot;
     }
 }

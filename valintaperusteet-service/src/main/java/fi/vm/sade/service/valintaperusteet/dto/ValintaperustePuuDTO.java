@@ -43,6 +43,8 @@ public class ValintaperustePuuDTO {
     @JsonView(JsonViews.Basic.class)
     private ValintaperustePuuTyyppi tyyppi;
 
+    @JsonView(JsonViews.Basic.class)
+    private Set<OrganisaatioDTO> organisaatiot = new HashSet<OrganisaatioDTO>();
 
     public String getHakuOid() {
         return hakuOid;
@@ -116,5 +118,13 @@ public class ValintaperustePuuDTO {
 
     public void setTyyppi(ValintaperustePuuTyyppi tyyppi) {
         this.tyyppi = tyyppi;
+    }
+
+    public Set<OrganisaatioDTO> getOrganisaatiot() {
+        return organisaatiot;
+    }
+
+    public void setOrganisaatiot(Set<OrganisaatioDTO> organisaatiot) {
+        this.organisaatiot = organisaatiot;
     }
 }

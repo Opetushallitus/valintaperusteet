@@ -252,7 +252,7 @@ public class HakijaryhmaServiceTest {
 
         Valintaryhma valintaryhma = new Valintaryhma();
         valintaryhma.setNimi("");
-        valintaryhma.setHakuOid("hakuoid");
+
 
         valintaryhma = valintaryhmaService.insert(valintaryhma, "vr2");
         {

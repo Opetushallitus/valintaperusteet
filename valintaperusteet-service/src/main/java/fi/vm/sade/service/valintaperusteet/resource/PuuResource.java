@@ -11,10 +11,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
@@ -45,7 +42,8 @@ public class PuuResource {
     public List<ValintaperustePuuDTO> search(
             @QueryParam("q") String searchString,
             @QueryParam("hakuOid") String hakuOid,
-            @QueryParam("tila") List<String> tila) {
-        return puuService.search(hakuOid, tila, searchString);
+            @QueryParam("tila") List<String> tila,
+            @QueryParam("hakukohteet") @DefaultValue("true") boolean hakukohteet) {
+        return puuService.search(hakuOid, tila, searchString, hakukohteet);
     }
 }

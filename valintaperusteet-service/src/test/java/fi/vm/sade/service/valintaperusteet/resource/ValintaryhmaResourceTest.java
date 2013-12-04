@@ -83,7 +83,7 @@ public class ValintaryhmaResourceTest {
     @Test
     public void testInsert() throws Exception {
         Valintaryhma valintaryhma = new Valintaryhma();
-        valintaryhma.setHakuOid("hakuOid");
+
         valintaryhma.setNimi("Uusi valintaryhmä");
         System.out.println(mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(valintaryhma));
         valintaryhmaResource.insert(valintaryhma);
@@ -94,7 +94,7 @@ public class ValintaryhmaResourceTest {
     @Test
     public void testInsertParent() throws Exception {
         Valintaryhma valintaryhma = new Valintaryhma();
-        valintaryhma.setHakuOid("hakuOid");
+
         valintaryhma.setNimi("Uusi valintaryhmä");
         System.out.println(mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(valintaryhma));
         valintaryhmaResource.insertChild("oid1", valintaryhma);

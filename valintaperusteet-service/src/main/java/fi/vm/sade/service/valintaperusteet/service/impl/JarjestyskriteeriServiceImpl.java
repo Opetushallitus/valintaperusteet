@@ -76,8 +76,7 @@ public class JarjestyskriteeriServiceImpl extends AbstractCRUDServiceImpl<Jarjes
 
     private void validoiLaskentakaavaJarjestyskriteeriaVarten(Laskentakaava laskentakaava) {
         if (laskentakaava == null) {
-            throw new LaskentakaavaEiOleOlemassaException("Laskentakaavaa (" + laskentakaava.getId() + ") ei ole " +
-                    "olemassa", laskentakaava.getId());
+            throw new LaskentakaavaEiOleOlemassaException("Laskentakaavaa ei ole olemassa", null);
         } else if (!Funktiotyyppi.LUKUARVOFUNKTIO.equals(laskentakaava.getTyyppi())) {
             throw new VaaranTyyppinenLaskentakaavaException("Järjestyskriteerin laskentakaavan tulee olla tyyppiä " +
                     Funktiotyyppi.LUKUARVOFUNKTIO.name());
