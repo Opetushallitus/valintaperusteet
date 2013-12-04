@@ -878,7 +878,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
 
     private Laskentakaava asetaValintaryhmaJaTallennaKantaan(Laskentakaava kaava, String valintaryhmaOid) {
-        return laskentakaavaService.insert(modelMapper.map(kaava, LaskentakaavaCreateDTO.class), null, valintaryhmaOid);
+        return laskentakaavaService.insert(kaava, null, valintaryhmaOid);
     }
 
     @Override

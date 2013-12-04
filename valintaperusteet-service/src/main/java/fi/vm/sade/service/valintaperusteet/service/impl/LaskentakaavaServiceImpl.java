@@ -6,7 +6,9 @@ import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.dao.LaskentakaavaDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
-import fi.vm.sade.service.valintaperusteet.dto.*;
+import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
@@ -108,8 +110,8 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     @Override
     public Laskentakaava update(Long id, LaskentakaavaCreateDTO incoming) {
         try {
-            asetaNullitOletusarvoiksi(incoming.getFunktiokutsu());
             Laskentakaava entity = modelMapper.map(incoming, Laskentakaava.class);
+            asetaNullitOletusarvoiksi(entity.getFunktiokutsu());
 
             Laskentakaava managed = haeLaskentakaava(id);
             Set<Long> laskentakaavaIds = new HashSet<Long>();
@@ -134,9 +136,9 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
         }
     }
 
-    private void asetaNullitOletusarvoiksi(FunktiokutsuDTO fk) {
+    private void asetaNullitOletusarvoiksi(Funktiokutsu fk) {
 
-        for (ValintaperusteViiteDTO vp : fk.getValintaperusteviitteet()) {
+        for (ValintaperusteViite vp : fk.getValintaperusteviitteet()) {
             if (vp.getOnPakollinen() == null) {
                 vp.setOnPakollinen(false);
             }
@@ -146,13 +148,13 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             }
         }
 
-        for (ArvokonvertteriparametriDTO a : fk.getArvokonvertteriparametrit()) {
+        for (Arvokonvertteriparametri a : fk.getArvokonvertteriparametrit()) {
             if (a.getHylkaysperuste() == null) {
                 a.setHylkaysperuste("false");
             }
         }
 
-        for (ArvovalikonvertteriparametriDTO a : fk.getArvovalikonvertteriparametrit()) {
+        for (Arvovalikonvertteriparametri a : fk.getArvovalikonvertteriparametrit()) {
             if (a.getPalautaHaettuArvo() == null) {
                 a.setPalautaHaettuArvo("false");
             }
@@ -162,7 +164,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             fk.getValintaperusteviitteet().iterator().next().setIndeksi(1);
         }
 
-        for (FunktioargumenttiDTO arg : fk.getFunktioargumentit()) {
+        for (Funktioargumentti arg : fk.getFunktioargumentit()) {
             if (arg.getFunktiokutsuChild() != null) {
                 asetaNullitOletusarvoiksi(arg.getFunktiokutsuChild());
             }
@@ -283,7 +285,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     }
 
     @Override
-    public Laskentakaava insert(LaskentakaavaCreateDTO laskentakaava, String hakukohdeOid, String valintaryhmaOid) {
+    public Laskentakaava insert(Laskentakaava laskentakaava, String hakukohdeOid, String valintaryhmaOid) {
         try {
             asetaNullitOletusarvoiksi(laskentakaava.getFunktiokutsu());
 
@@ -311,6 +313,11 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
                     + (e.getFunktiokutsuId() != null ? e.getFunktiokutsuId() : e.getFunktionimi()) + " kautta",
                     e, null, e.getFunktiokutsuId(), e.getLaskentakaavaId());
         }
+    }
+
+    @Override
+    public Laskentakaava insert(LaskentakaavaCreateDTO laskentakaava, String hakukohdeOid, String valintaryhmaOid) {
+        return insert(modelMapper.map(laskentakaava, Laskentakaava.class), hakukohdeOid, valintaryhmaOid);
     }
 
     @Override
@@ -375,9 +382,10 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
 
     @Override
     @Transactional(readOnly = true)
-    public Laskentakaava validoi(LaskentakaavaDTO laskentakaava) {
-        asetaNullitOletusarvoiksi(laskentakaava.getFunktiokutsu());
-        return Laskentakaavavalidaattori.validoiMallinnettuKaava(laajennaAlakaavat(modelMapper.map(laskentakaava, Laskentakaava.class)));
+    public Laskentakaava validoi(LaskentakaavaDTO dto) {
+        Laskentakaava kaava = modelMapper.map(dto, Laskentakaava.class);
+        asetaNullitOletusarvoiksi(kaava.getFunktiokutsu());
+        return Laskentakaavavalidaattori.validoiMallinnettuKaava(laajennaAlakaavat(kaava));
     }
 
     @Override

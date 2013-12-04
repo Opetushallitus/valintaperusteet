@@ -96,7 +96,7 @@ public class LaskentakaavaResourceTest {
 
         final String json = mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(laskentakaava);
         LaskentakaavaCreateDTO fromJson = mapper.readValue(json, LaskentakaavaCreateDTO.class);
-        assertEquals(Response.Status.CREATED.getStatusCode(), laskentakaavaResource.insert(fromJson, null, null).getStatus());
+        assertEquals(Response.Status.CREATED.getStatusCode(), laskentakaavaResource.insert(new LaskentakaavaInsertDTO(fromJson, null, null)).getStatus());
     }
 
     @Test
@@ -110,7 +110,8 @@ public class LaskentakaavaResourceTest {
         final String json = mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(laskentakaava);
         LaskentakaavaCreateDTO fromJson = mapper.readValue(json, LaskentakaavaCreateDTO.class);
 
-        Response response = laskentakaavaResource.insert(fromJson, null, null);
+
+        Response response = laskentakaavaResource.insert(new LaskentakaavaInsertDTO(fromJson, null, null));
 
         assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
     }
@@ -148,9 +149,10 @@ public class LaskentakaavaResourceTest {
         laskentakaava.setOnLuonnos(false);
         laskentakaava.setFunktiokutsu(createSumma(createLukuarvo("5")));
 
-        Response response = laskentakaavaResource.insert(laskentakaava, null, null);
-        System.out.println(response.getEntity());
+        LaskentakaavaInsertDTO insert = new LaskentakaavaInsertDTO();
+        insert.setLaskentakaava(laskentakaava);
 
+        Response response = laskentakaavaResource.insert(insert);
         FunktioargumenttiDTO funktioargumentti = new FunktioargumenttiDTO();
         funktioargumentti.setLaskentakaavaChild(modelMapper.map(kaava, LaskentakaavaListDTO.class));
         funktioargumentti.setIndeksi(2);

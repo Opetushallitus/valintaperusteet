@@ -3,10 +3,9 @@ package fi.vm.sade.service.valintaperusteet.resource;
 import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriCreateDTOJaLaskentakaava;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriDTO;
+import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriInsertDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
-import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintatapajonoEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.util.TestUtil;
@@ -77,7 +76,7 @@ public class ValintatapajonoResourceTest {
 
     @Test
     public void testJarjestykriteeri() throws Exception {
-        List<Jarjestyskriteeri> jarjestyskriteeri = resource.findJarjestyskriteeri("6");
+        List<JarjestyskriteeriDTO> jarjestyskriteeri = resource.findJarjestyskriteeri("6");
 
         testUtil.lazyCheck(JsonViews.Basic.class, jarjestyskriteeri, true);
         assertEquals(3, jarjestyskriteeri.size());
@@ -122,7 +121,7 @@ public class ValintatapajonoResourceTest {
         jk.setMetatiedot("mt1");
         jk.setAktiivinen(true);
 
-        JarjestyskriteeriCreateDTOJaLaskentakaava comb = new JarjestyskriteeriCreateDTOJaLaskentakaava();
+        JarjestyskriteeriInsertDTO comb = new JarjestyskriteeriInsertDTO();
         comb.setJarjestyskriteeri(jk);
         comb.setLaskentakaavaId(1L);
         Response insert = resource.insertJarjestyskriteeri("1", comb);

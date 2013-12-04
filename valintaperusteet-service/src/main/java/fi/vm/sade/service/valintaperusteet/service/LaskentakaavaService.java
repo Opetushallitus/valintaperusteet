@@ -46,4 +46,6 @@ public interface LaskentakaavaService {
 
     @Transactional(readOnly = true)
     Laskentakaava read(Long key);
+
+    Laskentakaava insert(Laskentakaava laskentakaava, String hakukohdeOid, String valintaryhmaOid);
 }

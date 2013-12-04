@@ -7,6 +7,7 @@ import com.wordnik.swagger.annotations.ApiParam;
 import fi.vm.sade.kaava.Funktiokuvaaja;
 import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaDTO;
+import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaInsertDTO;
 import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaListDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.Funktiotyyppi;
@@ -133,13 +134,12 @@ public class LaskentakaavaResource {
     @JsonView(JsonViews.Laskentakaava.class)
     @Secured({CRUD})
     @ApiOperation(value = "Lisää uuden laskentakaavan")
-    public Response insert(LaskentakaavaCreateDTO laskentakaava,
-                           String hakukohdeOid,
-                           String valintaryhmaOid) {
+    public Response insert(@ApiParam(value = "Lisättävä laskentakaava", required = true) LaskentakaavaInsertDTO laskentakaava) {
         LaskentakaavaDTO inserted = null;
 
         try {
-            inserted = modelMapper.map(laskentakaavaService.insert(laskentakaava, hakukohdeOid, valintaryhmaOid), LaskentakaavaDTO.class);
+            inserted = modelMapper.map(laskentakaavaService.insert(laskentakaava.getLaskentakaava(),
+                    laskentakaava.getHakukohdeOid(), laskentakaava.getValintaryhmaOid()), LaskentakaavaDTO.class);
             return Response.status(Response.Status.CREATED).entity(inserted).build();
         } catch (LaskentakaavaEiValidiException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(inserted).build();

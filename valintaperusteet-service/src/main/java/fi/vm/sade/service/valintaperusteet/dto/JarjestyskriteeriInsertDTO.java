@@ -10,8 +10,8 @@ import fi.vm.sade.service.valintaperusteet.model.JsonViews;
  * Date: 4.12.2013
  * Time: 10.40
  */
-@ApiModel(value = "JarjestyskriteeriCreateDTOJaLaskentakaava", description = "Jarjestyskriteeri ja laskentakaava")
-public class JarjestyskriteeriCreateDTOJaLaskentakaava {
+@ApiModel(value = "JarjestyskriteeriInsertDTO", description = "Jarjestyskriteeri ja laskentakaava")
+public class JarjestyskriteeriInsertDTO {
 
     @ApiModelProperty(value = "Järjestyskriteeri", required = true)
     @JsonView(JsonViews.Basic.class)
