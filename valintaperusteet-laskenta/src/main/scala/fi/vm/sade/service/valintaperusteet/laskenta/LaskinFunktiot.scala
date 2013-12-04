@@ -17,7 +17,7 @@ import scala.util.Try
  */
 trait LaskinFunktiot {
 
-  val pattern = """\{\{([A-Za-z0–9\-_]+)\.([A-Za-z0–9\-_]+)\}\}""".r
+  val pattern = """\{\{([A-Za-z\d\-_]+)\.([A-Za-z\d\-_]+)\}\}""".r
 
   protected def ehdollinenTulos[A, B](tulos: (Option[A], Tila), f: (A, Tila) => Tuple2[Option[B], List[Tila]]): Tuple2[Option[B], List[Tila]] = {
     val (alkupTulos, alkupTila) = tulos
@@ -94,6 +94,18 @@ trait LaskinFunktiot {
       Try(BigDecimal(tunniste)).getOrElse(tunniste)
     )
     Some(result)
+  }
+
+  protected def ehtoTayttyy(ehto: String, hakemus: Hakemus): Boolean = {
+    ehto match {
+      case pattern(avain, oletus) => {
+        haeValintaperusteHakemukselta(avain, hakemus) match {
+          case Some(arvo: String) => if(arvo.equals(oletus)) true else false
+          case _ => false
+        }
+      }
+      case _ => false
+    }
   }
 
   protected def haeArvovali(tunnisteet: (String,String), hakukohde: Hakukohde, hakemus: Hakemus): Option[(BigDecimal, BigDecimal)] = {

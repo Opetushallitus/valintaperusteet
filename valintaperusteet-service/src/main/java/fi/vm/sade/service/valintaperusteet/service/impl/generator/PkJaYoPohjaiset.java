@@ -29,7 +29,7 @@ public class PkJaYoPohjaiset {
     public static final String viittomakielisillePostfix = "_VK";
 
 
-    public static final String kielikoetunniste = "kielikoetunniste";
+    public static final String kielikoetunniste = "kielikoe_tunniste";
     public static final String opetuskieli = "opetuskieli";
 
     public static Laskentakaava luoHakutoivejarjestyspisteytysmalli() {

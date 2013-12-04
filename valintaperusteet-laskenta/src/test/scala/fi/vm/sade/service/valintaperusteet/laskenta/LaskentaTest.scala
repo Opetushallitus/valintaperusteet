@@ -57,7 +57,11 @@ class LaskentaTest extends FunSuite {
     put("kymmenen", "10")
     put("pakollinen", "false")
     put("puuppa", "puuppa")
-  }};
+    put("B22_EN_painokerroin", "2")
+    put("B22_oppiaine", "EN")
+    put("B22_arvosana", "8")
+    put("aA_-", "EN")
+  }}
 
   val hakukohdeMustache = new Hakukohde("1234", mustacheMap)
 
@@ -182,6 +186,22 @@ class LaskentaTest extends FunSuite {
     val (tulos, _) = Laskin.laske(hakukohde, hakemus,
       HaeLukuarvo(None, None, HakemuksenValintaperuste("paattotodistus_ka", false)))
     assert(BigDecimal(tulos.get) == BigDecimal("8.7"))
+  }
+
+  test("HaeLukuarvoEhdolla") {
+    val hakemus = hakemusMustache
+
+    val (tulos, _) = Laskin.laske(hakukohde, hakemus,
+      HaeLukuarvoEhdolla(None, None, HakemuksenValintaperuste("B22_arvosana", false),HakemuksenValintaperuste("{{B22_oppiaine.EN}}", false)))
+    assert(BigDecimal(tulos.get) == BigDecimal("8"))
+  }
+
+  test("HaeLukuarvoEhdolla - ehto ei täyty") {
+    val hakemus = hakemusMustache
+
+    val (tulos, _) = Laskin.laske(hakukohde, hakemus,
+      HaeLukuarvoEhdolla(None, None, HakemuksenValintaperuste("B22_arvosana", false),HakemuksenValintaperuste("{{B22_oppiaine.DE}}", false)))
+    assert(tulos.isEmpty)
   }
 
   test("HaeTotuusarvo") {

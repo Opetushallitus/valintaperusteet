@@ -273,6 +273,11 @@ object Laskenta {
                          valintaperusteviite: Valintaperuste, oid: String = "")
     extends HaeArvo[BigDecimal] with Lukuarvofunktio
 
+  case class HaeLukuarvoEhdolla(konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]],
+                         oletusarvo: Option[BigDecimal],
+                         valintaperusteviite: Valintaperuste, ehto: Valintaperuste, oid: String = "")
+    extends HaeArvo[BigDecimal] with Lukuarvofunktio
+
   case class HaeMerkkijonoJaVertaaYhtasuuruus(oletusarvo: Option[Boolean],
                                               valintaperusteviite: Valintaperuste,
                                               vertailtava: String, oid: String = "")

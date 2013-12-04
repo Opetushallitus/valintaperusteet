@@ -2,6 +2,7 @@ package fi.vm.sade.service.valintaperusteet.resource;
 
 import fi.vm.sade.service.valintaperusteet.dto.ErrorDTO;
 import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
+import fi.vm.sade.service.valintaperusteet.dto.HakukohteenValintaperusteAvaimetDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.*;
@@ -160,6 +161,16 @@ public class HakukohdeResource {
     @Secured({READ, UPDATE, CRUD})
     public List<ValintaperusteDTO> findAvaimet(List<String> oids) {
         return laskentakaavaService.findAvaimetForHakukohdes(oids);
+    }
+
+    @GET
+    @Path("{hakukohdeOid}/avaimet")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @JsonView({JsonViews.Basic.class})
+    @Secured({READ, UPDATE, CRUD})
+    public HakukohteenValintaperusteAvaimetDTO findHakukohteenAvaimet(@PathParam("hakukohdeOid") String hakukohdeOid) {
+        return laskentakaavaService.findHakukohteenAvaimet(hakukohdeOid);
     }
 
     @PUT

@@ -589,6 +589,25 @@ private class Laskin private(private val hakukohde: Hakukohde,
         (tulos, tila, Historia("Hae Lukuarvo", tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
 
       }
+
+      case HaeLukuarvoEhdolla(konvertteri, oletusarvo, valintaperusteviite, ehto, oid) => {
+        val tayttyy = ehtoTayttyy(ehto.tunniste, hakemus)
+
+        val (konv, virheet) = konvertteri match {
+          case Some(l: Lukuarvovalikonvertteri) => konversioToLukuarvovalikonversio(l.konversioMap,hakemus, hakukohde)
+          case Some(a: Arvokonvertteri[_,_]) => konversioToArvokonversio[BigDecimal, BigDecimal](a.konversioMap,hakemus, hakukohde)
+          case _ => (konvertteri, List())
+        }
+
+        val vp = if(tayttyy) valintaperusteviite else HakemuksenValintaperuste("", false)
+
+        val (tulos, tila) = haeValintaperuste[BigDecimal](vp, hakemus,
+          (s => suoritaOptionalKonvertointi[BigDecimal](string2bigDecimal(s, vp.tunniste),
+            konv)), oletusarvo)
+        (tulos, tila, Historia("Hae Lukuarvo Ehdolla", tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
+
+      }
+
       case HaeMerkkijonoJaKonvertoiLukuarvoksi(konvertteri, oletusarvo, valintaperusteviite, oid) => {
         konvertteri match {
           case a: Arvokonvertteri[_,_] => {

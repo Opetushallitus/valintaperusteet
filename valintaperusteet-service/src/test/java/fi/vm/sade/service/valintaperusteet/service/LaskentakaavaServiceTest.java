@@ -5,6 +5,7 @@ import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.generic.dao.GenericDAO;
 import fi.vm.sade.kaava.Funktiokuvaaja;
 import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
+import fi.vm.sade.service.valintaperusteet.dto.HakukohteenValintaperusteAvaimetDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuMuodostaaSilmukanException;
@@ -492,6 +493,18 @@ public class LaskentakaavaServiceTest {
         assertEquals(new BigDecimal("0.0"), new BigDecimal(valintaperusteet.get(1).getMin()));
         assertEquals(new BigDecimal("30.0"), new BigDecimal(valintaperusteet.get(1).getMax()));
         assertNull(valintaperusteet.get(1).getArvot());
+    }
+
+    @Test
+    public void testFindHakukohdeValintaperusteAvaimet() {
+        HakukohteenValintaperusteAvaimetDTO valintaperusteet = laskentakaavaService.findHakukohteenAvaimet("oid23");
+        assertEquals(2, valintaperusteet.getTunnisteet().size());
+        assertEquals(2, valintaperusteet.getArvot().size());
+        assertEquals(1, valintaperusteet.getHylkaysperusteet().size());
+        assertEquals(3, valintaperusteet.getMinimit().size());
+        assertEquals(2, valintaperusteet.getMaksimit().size());
+        assertEquals(1, valintaperusteet.getPalautaHaettutArvot().size());
+
     }
 
     @Test

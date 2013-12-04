@@ -283,6 +283,35 @@
                    tyyppi="TOTUUSARVOFUNKTIO"/>
 
 
+    <funktiokutsu id="708" version="0" funktionimi="KONVERTOILUKUARVO"/>
+    <valintaperuste_viite id="601" version="0" lahde="HAKUKOHTEEN_ARVO" tunniste="{{hakukohde.paasykoe_tunniste}}" kuvaus="kuvaus"
+                          on_pakollinen="true" funktiokutsu_id="708" indeksi="1"/>
+    <funktioargumentti id="709" version="0" funktiokutsuparent_id="708" funktiokutsuchild_id="1" indeksi="1"/>
+    <arvokonvertteriparametri id="519" version="0" paluuarvo="10.0" arvo="{{hakukohde.av1_arvo}}" hylkaysperuste="{{hakukohde.av1_hp}}"
+                              funktiokutsu_id="708"/>
+    <arvokonvertteriparametri id="520" version="0" paluuarvo="20.0" arvo="{{hakukohde.av2_arvo}}" hylkaysperuste="false"
+                              funktiokutsu_id="708"/>
+    <arvokonvertteriparametri id="521" version="0" paluuarvo="30.0" arvo="6.0" hylkaysperuste="true"
+                              funktiokutsu_id="708"/>
+
+    <laskentakaava id="418" version="0" funktiokutsu_id="708" nimi="jeppis" on_luonnos="false"
+                   tyyppi="LUKUARVOFUNKTIO"/>
+
+    <funktiokutsu id="709" version="0" funktionimi="KONVERTOILUKUARVO"/>
+    <funktioargumentti id="710" version="0" funktiokutsuparent_id="709" laskentakaavachild_id="418" indeksi="1"/>
+    <valintaperuste_viite id="602" version="0" lahde="HAKUKOHTEEN_SYOTETTAVA_ARVO" tunniste="{{hakukohde.paasykoe_tunniste}}" kuvaus="kuvaus"
+                          on_pakollinen="true" funktiokutsu_id="709" indeksi="1"/>
+    <arvovalikonvertteriparametri id="603" version="0" minvalue="{{hakukohde.paasykoe_min}}" maxvalue="3.0" paluuarvo="50.0"
+                                  palauta_haettu_arvo="{{hakukohde.avk1_pha}}" funktiokutsu_id="709"/>
+    <arvovalikonvertteriparametri id="604" version="0" minvalue="{{hakukohde.lisanaytto_min}}" maxvalue="{{hakukohde.lisanaytto_max}}" paluuarvo="40.0"
+                                  palauta_haettu_arvo="false" funktiokutsu_id="709"/>
+    <arvovalikonvertteriparametri id="605" version="0" minvalue="{{hakukohde.lisanaytto_hylkays_min}}" maxvalue="{{hakukohde.lisanaytto_hylkays_max}}" paluuarvo="60.0"
+                                  palauta_haettu_arvo="true" funktiokutsu_id="709"/>
+
+    <laskentakaava id="419" version="0" funktiokutsu_id="709" nimi="jeppis2" on_luonnos="false"
+                   tyyppi="TOTUUSARVOFUNKTIO"/>
+
+
     <!--
         Ensimmäisen valintaryhmän luonti on siirretty ensimmäiseksi, koska taulu pitää luoda ensimmäisenä.
         Ärsyttävä DBUnitin ominaisuus, jossa datan luonti/poistojärjestys määräytyy ensimmäisen tagin
@@ -376,7 +405,9 @@
 
     <valintaryhma id="57" version="0" oid="oid57" nimi="Valintaryhma 57" hakuOid="hakuoid1"/>
 
-    <valintaryhma id="58" version="0" oid="oid58" nimi="Valintaryhma 57" hakuOid="hakuoid1"/>
+    <valintaryhma id="58" version="0" oid="oid58" nimi="Valintaryhma 58" hakuOid="hakuoid1"/>
+
+    <valintaryhma id="59" version="0" oid="oid59" nimi="Valintaryhma 59" hakuOid="hakuoid1"/>
 
 
     <hakukohdekoodi id="1" version="0" uri="hakukohdekoodiuri1" arvo="koodiarvo1"
@@ -477,6 +508,10 @@
                     nimi_fi="hakukohdekoodi23"/>
     <valintaryhma_hakukohdekoodi valintaryhma_id="58" hakukohdekoodi_id="23"/>
 
+    <hakukohdekoodi id="24" version="0" uri="hakukohdekoodiuri24" arvo="koodiarvo24"
+                    nimi_fi="hakukohdekoodi24"/>
+    <valintaryhma_hakukohdekoodi valintaryhma_id="59" hakukohdekoodi_id="24"/>
+
 
     <valintakoekoodi id="12" version="0" uri="koekoodi1"/>
     <valintaryhma_valintakoekoodi valintaryhma_id="45" valintakoekoodi_id="12"/>
@@ -507,6 +542,9 @@
 
     <valintakoekoodi id="17" version="0" uri="valintakoeuri4"/>
     <valintaryhma_valintakoekoodi valintaryhma_id="58" valintakoekoodi_id="17"/>
+
+    <valintakoekoodi id="18" version="0" uri="valintakoeuri18"/>
+    <valintaryhma_valintakoekoodi valintaryhma_id="59" valintakoekoodi_id="18"/>
 
 
     <hakukohde_viite id="1" version="0" hakuoid="hakuoid1" oid="oid1" nimi="haku1" valintaryhma_id="1"
@@ -550,6 +588,10 @@
     <hakukohde_viite id="21" version="0" hakuoid="hakuoid1" oid="oid21" nimi="haku21" manuaalisesti_siirretty="false"/>
 
     <hakukohde_viite id="22" version="0" hakuoid="hakuoid1" oid="oid22" nimi="haku22" manuaalisesti_siirretty="false"/>
+
+    <hakukohde_viite id="23" version="0" hakuoid="hakuoid1" oid="oid23" nimi="haku23" valintaryhma_id="59"
+                     hakukohdekoodi_id="24"/>
+    <hakukohde_viite_valintakoekoodi hakukohde_viite_id="23" valintakoekoodi_id="18"/>
 
     <hakukohteen_valintaperuste id="1" version="0" tunniste="tunniste1" arvo="arvo1" hakukohde_viite_id="22"/>
     <hakukohteen_valintaperuste id="2" version="0" tunniste="tunniste2" arvo="arvo2" hakukohde_viite_id="22"/>
@@ -914,6 +956,15 @@
     <valinnan_vaihe valinnan_vaihe_tyyppi="VALINTAKOE" id="113" version="0" oid="113" valintaryhma_id="57"
                     nimi="valintaryhma 57 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus"/>
 
+
+    <valinnan_vaihe valinnan_vaihe_tyyppi="VALINTAKOE" id="114" version="0" oid="114" hakukohde_viite_id="23"
+                    nimi="hakukohde 24 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus"/>
+
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="115" version="0" oid="115" hakukohde_viite_id="23"
+                    nimi="hakukohde 24 valinnan vaihe 2" aktiivinen="true" kuvaus="kuvaus"
+                    edellinen_valinnan_vaihe_id="114"/>
+
+
     <valintakoe id="1" version="0" oid="oid1" tunniste="valintakoetunniste1" nimi="valintakoe1" kuvaus="kuvaus1"
                 aktiivinen="true" valinnan_vaihe_id="83" laskentakaava_id="101" master_valintakoe_id="[NULL]"/>
     <valintakoe id="2" version="0" oid="oid2" tunniste="valintakoetunniste2" nimi="valintakoe2" kuvaus="kuvaus2"
@@ -950,8 +1001,11 @@
     <valintakoe id="14" version="0" oid="oid14" tunniste="valintakoetunniste14" nimi="valintakoe14" kuvaus="kuvaus14"
                 aktiivinen="true" valinnan_vaihe_id="107" laskentakaava_id="101"/>
 
-    <valintakoe id="15" version="0" oid="oid15" tunniste="valintakoetunniste15" nimi="valintakoe16" kuvaus="kuvaus15"
+    <valintakoe id="15" version="0" oid="oid15" tunniste="valintakoetunniste15" nimi="valintakoe15" kuvaus="kuvaus15"
                 aktiivinen="true" valinnan_vaihe_id="113"/>
+
+    <valintakoe id="16" version="0" oid="oid16" tunniste="valintakoetunniste16" nimi="valintakoe16" kuvaus="kuvaus16"
+                aktiivinen="true" valinnan_vaihe_id="114"/>
 
     <valintatapajono poissa_oleva_taytto="false" varasijat="0" varasija_taytto_paivat="0" id="1" version="1" oid="1" aloituspaikat="10" nimi="jono1" kuvaus="kuvaus"
                      tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="1" aktiivinen="true"
@@ -1162,6 +1216,10 @@
                      kuvaus="kuvaus" tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="112"
                      aktiivinen="true" ei_varasijatayttoa="false"/>
 
+    <valintatapajono poissa_oleva_taytto="false" varasijat="0" varasija_taytto_paivat="0" id="1068" version="1" oid="1068" aloituspaikat="10" nimi="hakukohde 24 valinnan vaihe 2 jono 1"
+                     kuvaus="kuvaus" tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="115"
+                     aktiivinen="true" ei_varasijatayttoa="false"/>
+
     <laskentakaava id="1" version="0" nimi="kaava1" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO" funktiokutsu_id="1"/>
     <laskentakaava id="2" version="0" nimi="kaava2" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO" funktiokutsu_id="2"/>
     <laskentakaava id="3" version="0" nimi="kaava3" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO" funktiokutsu_id="3"/>
@@ -1197,6 +1255,8 @@
     <jarjestyskriteeri id="18" version="1" oid="18" valintatapajono_id="1065" laskentakaava_id="600"
                        metatiedot="metatiedot" aktiivinen="true" edellinen_jarjestyskriteeri_id="17"/>
     <jarjestyskriteeri id="19" version="1" oid="19" valintatapajono_id="1066" laskentakaava_id="600"
+                       metatiedot="metatiedot" aktiivinen="true"/>
+    <jarjestyskriteeri id="20" version="1" oid="20" valintatapajono_id="1068" laskentakaava_id="419"
                        metatiedot="metatiedot" aktiivinen="true"/>
 
     <!-- lisaaJarjestyskriteeriTyhjalleValintatapajonolle -->

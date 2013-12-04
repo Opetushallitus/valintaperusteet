@@ -93,6 +93,16 @@ public class GenericHelper {
         return funktiokutsu;
     }
 
+    public static Funktiokutsu luoHaeLukuarvoEhdolla(ValintaperusteViite vp, ValintaperusteViite ehto) {
+        Funktiokutsu funktiokutsu = new Funktiokutsu();
+        funktiokutsu.setFunktionimi(Funktionimi.HAELUKUARVOEHDOLLA);
+        vp.setIndeksi(1);
+        funktiokutsu.getValintaperusteviitteet().add(vp);
+        ehto.setIndeksi(2);
+        funktiokutsu.getValintaperusteviitteet().add(ehto);
+        return funktiokutsu;
+    }
+
     public static Syoteparametri luoSyoteparametri(String avain, String arvo) {
         Syoteparametri sp = new Syoteparametri();
         sp.setAvain(avain);

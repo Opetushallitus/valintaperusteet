@@ -3,10 +3,8 @@ package fi.vm.sade.service.valintaperusteet.service.impl;
 import fi.vm.sade.generic.dao.GenericDAO;
 import fi.vm.sade.service.valintaperusteet.dao.*;
 import fi.vm.sade.service.valintaperusteet.model.*;
-import fi.vm.sade.service.valintaperusteet.schema.HakukohdeImportTyyppi;
-import fi.vm.sade.service.valintaperusteet.schema.HakukohdekoodiTyyppi;
-import fi.vm.sade.service.valintaperusteet.schema.HakukohteenValintakoeTyyppi;
-import fi.vm.sade.service.valintaperusteet.schema.MonikielinenTekstiTyyppi;
+import fi.vm.sade.service.valintaperusteet.model.ValinnanVaiheTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.*;
 import fi.vm.sade.service.valintaperusteet.service.HakukohdeImportService;
 import fi.vm.sade.service.valintaperusteet.service.HakukohdeService;
 import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
@@ -282,6 +280,9 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
         // Päivitetään valintakoekoodit
         hakukohde.setValintakokeet(haeTaiLisaaValintakoekoodit(importData));
 
+        // Lisätään valinaperusteet
+        hakukohde.setHakukohteenValintaperusteet(lisaaValintaperusteet(importData));
+
         // Päivitetään aloituspaikkojen lukumäärä jos mahdollista
         paivitaAloituspaikkojenLkm(hakukohde, importData.getValinnanAloituspaikat());
     }
@@ -321,6 +322,18 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
         }
 
         return koekoodit;
+    }
+
+    private Map<String, HakukohteenValintaperuste> lisaaValintaperusteet(HakukohdeImportTyyppi importData) {
+        Map<String, HakukohteenValintaperuste> perusteet = new HashMap<String, HakukohteenValintaperuste>();
+        for (AvainArvoTyyppi avainArvo : importData.getValintaperuste()) {
+            HakukohteenValintaperuste peruste = new HakukohteenValintaperuste();
+            peruste.setTunniste(avainArvo.getAvain());
+            peruste.setArvo(avainArvo.getArvo());
+            peruste.setKuvaus(avainArvo.getAvain());
+            perusteet.put(avainArvo.getAvain(), peruste);
+        }
+        return perusteet;
     }
 
     private abstract class KoodiFactory<T extends Koodi> {

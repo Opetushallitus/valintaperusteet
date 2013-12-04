@@ -166,6 +166,22 @@ object Funktiokuvaaja {
             ARVOVALIKONVERTTERI -> Arvovalikonvertterikuvaus)
         ))
     ),
+    Funktionimi.HAELUKUARVOEHDOLLA -> Funktiokuvaus(
+      tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
+      syoteparametrit = List(
+        Syoteparametrikuvaus(avain = "oletusarvo", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = false)
+      ),
+      valintaperusteparametri = List(
+        Valintaperusteparametrikuvaus("tunniste", Syoteparametrityyppi.DESIMAALILUKU),
+        Valintaperusteparametrikuvaus("ehto", Syoteparametrityyppi.MERKKIJONO)
+      ),
+      konvertteri = Some(
+        Konvertterikuvaus(
+          pakollinen = false,
+          konvertteriTyypit = Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.DESIMAALILUKU),
+            ARVOVALIKONVERTTERI -> Arvovalikonvertterikuvaus)
+        ))
+    ),
     Funktionimi.HAEMERKKIJONOJAKONVERTOILUKUARVOKSI -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
       syoteparametrit = List(
