@@ -102,11 +102,11 @@ public class ValintaryhmaResource {
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView(JsonViews.ParentHierarchy.class)
     @Secured({READ, UPDATE, CRUD})
-    @ApiOperation(value = "Hakee valintaryhmän parent-valintaryhmät OID:n perusteella", response = ValintaryhmaDTO.class)
-    public List<ValintaryhmaDTO> parentHierarchy(@ApiParam(value = "OID", required = true) @PathParam("oid") String parentsOf) {
-        List<ValintaryhmaDTO> valintaryhmas = new ArrayList<ValintaryhmaDTO>();
+    @ApiOperation(value = "Hakee valintaryhmän parent-valintaryhmät OID:n perusteella", response = ValintaryhmaListDTO.class)
+    public List<ValintaryhmaListDTO> parentHierarchy(@ApiParam(value = "OID", required = true) @PathParam("oid") String parentsOf) {
+        List<ValintaryhmaListDTO> valintaryhmas = new ArrayList<ValintaryhmaListDTO>();
         if (parentsOf != null) {
-            valintaryhmas.addAll(modelMapper.mapList(valintaryhmaService.findParentHierarchyFromOid(parentsOf), ValintaryhmaDTO.class));
+            valintaryhmas.addAll(modelMapper.mapList(valintaryhmaService.findParentHierarchyFromOid(parentsOf), ValintaryhmaListDTO.class));
         }
         return valintaryhmas;
     }

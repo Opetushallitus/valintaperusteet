@@ -139,13 +139,12 @@ public class ValintatapajonoResource {
     @Secured({CRUD})
     @ApiOperation(value = "Lisää järjestyskriteerin valintatapajonolle")
     public Response insertJarjestyskriteeri(@ApiParam(value = "Valintatapajonon OID, jolle järjestyskriteeri lisätään", required = true) @PathParam("valintatapajonoOid") String valintatapajonoOid,
-                                            JarjestyskriteeriCreateDTO jk,
-                                            Long laskentakaavaId) throws IOException, JSONException {
+                                            @ApiParam(value = "Järjestyskriteeri ja laskentakaavaviite", required = true) JarjestyskriteeriCreateDTOJaLaskentakaava jk) throws IOException, JSONException {
 
         JarjestyskriteeriDTO insert = modelMapper.map(jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(valintatapajonoOid,
-                jk,
+                jk.getJarjestyskriteeri(),
                 null,
-                laskentakaavaId), JarjestyskriteeriDTO.class);
+                jk.getLaskentakaavaId()), JarjestyskriteeriDTO.class);
         return Response.status(Response.Status.ACCEPTED).entity(insert).build();
     }
 

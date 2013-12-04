@@ -1,7 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
 import com.wordnik.swagger.annotations.*;
-import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriCreateDTOJaLaskentakaava;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
@@ -68,10 +68,9 @@ public class JarjestyskriteeriResource {
             @ApiResponse(code = 400, message = "Laskentakaavaa ei ole määritetty")
     )
     public Response update(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid,
-                           JarjestyskriteeriCreateDTO jk,
-                           Long laskentakaavaId) {
+                           @ApiParam(value = "Järjestyskriteerin uudet tiedot ja laskentakaava", required = true) JarjestyskriteeriCreateDTOJaLaskentakaava jk) {
         try {
-            JarjestyskriteeriDTO update = modelMapper.map(jarjestyskriteeriService.update(oid, jk, laskentakaavaId), JarjestyskriteeriDTO.class);
+            JarjestyskriteeriDTO update = modelMapper.map(jarjestyskriteeriService.update(oid, jk.getJarjestyskriteeri(), jk.getLaskentakaavaId()), JarjestyskriteeriDTO.class);
             return Response.status(Response.Status.ACCEPTED).entity(update).build();
         } catch (LaskentakaavaOidTyhjaException e) {
             throw new WebApplicationException(e, Response.Status.BAD_REQUEST);

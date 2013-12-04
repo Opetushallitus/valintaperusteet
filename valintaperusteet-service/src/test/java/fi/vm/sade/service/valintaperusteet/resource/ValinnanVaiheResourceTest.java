@@ -66,7 +66,6 @@ public class ValinnanVaiheResourceTest {
     @Test
     public void testRead() throws IOException {
         ValinnanVaiheDTO vaihe = vaiheResource.read("1");
-
         mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(vaihe);
     }
 

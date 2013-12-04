@@ -4,6 +4,7 @@ import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.dao.JarjestyskriteeriDAO;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriCreateDTOJaLaskentakaava;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriDTO;
 import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
@@ -60,11 +61,13 @@ public class JarjestyskriteeriResourceTest {
 
 //        assertEquals(1, (int)jk.getPrioriteetti());
 //        jk.setPrioriteetti(100);
-
+        JarjestyskriteeriCreateDTOJaLaskentakaava comb = new JarjestyskriteeriCreateDTOJaLaskentakaava();
         JarjestyskriteeriCreateDTO update = new JarjestyskriteeriCreateDTO();
         update.setMetatiedot("metatiedot");
+        comb.setJarjestyskriteeri(update);
+        comb.setLaskentakaavaId(jk.getLaskentakaavaId());
 
-        resource.update("1", update, jk.getLaskentakaavaId());
+        resource.update("1", comb);
 
         jk = jarjestyskriteeriDAO.readByOid("1");
 //        assertEquals(100, (int)jk.getPrioriteetti());

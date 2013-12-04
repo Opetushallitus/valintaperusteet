@@ -2,6 +2,8 @@ package fi.vm.sade.service.valintaperusteet.dto;
 
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
+import fi.vm.sade.service.valintaperusteet.model.JsonViews;
+import org.codehaus.jackson.map.annotate.JsonView;
 
 /**
  * User: wuoti
@@ -11,6 +13,7 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "LaskentakaavaListDTO", description = "Laskentakaava")
 public class LaskentakaavaListDTO extends AbstractLaskentakaavaDTO {
 
+    @JsonView({JsonViews.Basic.class, JsonViews.Laskentakaava.class})
     @ApiModelProperty(value = "ID", required = true)
     private Long id;
 

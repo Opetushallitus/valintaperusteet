@@ -3,6 +3,7 @@ package fi.vm.sade.service.valintaperusteet.resource;
 import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriCreateDTOJaLaskentakaava;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
@@ -121,7 +122,10 @@ public class ValintatapajonoResourceTest {
         jk.setMetatiedot("mt1");
         jk.setAktiivinen(true);
 
-        Response insert = resource.insertJarjestyskriteeri("1", jk, 1L);
+        JarjestyskriteeriCreateDTOJaLaskentakaava comb = new JarjestyskriteeriCreateDTOJaLaskentakaava();
+        comb.setJarjestyskriteeri(jk);
+        comb.setLaskentakaavaId(1L);
+        Response insert = resource.insertJarjestyskriteeri("1", comb);
         assertEquals(Response.Status.ACCEPTED.getStatusCode(), insert.getStatus());
 
         JarjestyskriteeriDTO entity = (JarjestyskriteeriDTO) insert.getEntity();

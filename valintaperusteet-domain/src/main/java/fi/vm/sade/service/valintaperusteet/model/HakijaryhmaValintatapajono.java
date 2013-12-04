@@ -123,7 +123,7 @@ public class HakijaryhmaValintatapajono extends BaseEntity implements Linkitetta
     @JsonProperty(value = "inheritance")
     @JsonView(JsonViews.Basic.class)
     @Transient
-    private Boolean getInheritance() {
+    public Boolean getInheritance() {
         return getMaster() != null;
     }
 }

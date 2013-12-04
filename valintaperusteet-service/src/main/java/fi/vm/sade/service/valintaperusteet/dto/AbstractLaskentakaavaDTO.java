@@ -19,11 +19,11 @@ public abstract class AbstractLaskentakaavaDTO {
     private Boolean onLuonnos;
 
     @ApiModelProperty(value = "Nimi", required = true)
-    @JsonView(JsonViews.Basic.class)
+    @JsonView({JsonViews.Basic.class, JsonViews.Laskentakaava.class})
     private String nimi;
 
     @ApiModelProperty(value = "Kuvaus")
-    @JsonView(JsonViews.Basic.class)
+    @JsonView({JsonViews.Basic.class, JsonViews.Laskentakaava.class})
     private String kuvaus;
 
     @ApiModelProperty(value = "Laskentakaavan tyyppi", required = true)

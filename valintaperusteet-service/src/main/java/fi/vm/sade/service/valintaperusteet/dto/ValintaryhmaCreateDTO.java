@@ -14,22 +14,11 @@ import java.util.Set;
  * Time: 14.08
  */
 @ApiModel(value = "ValintaryhmaCreateDTO", description = "Valintaryhmä")
-public class ValintaryhmaCreateDTO {
-    @JsonView({JsonViews.Basic.class, JsonViews.ParentHierarchy.class})
-    @ApiModelProperty(value = "Nimi", required = true)
-    private String nimi;
+public class ValintaryhmaCreateDTO extends AbstractValintaryhmaDTO {
 
     @JsonView({JsonViews.Basic.class})
     @ApiModelProperty(value = "Organisaatiot")
     private Set<String> organisaatiot = new HashSet<String>();
-
-    public String getNimi() {
-        return nimi;
-    }
-
-    public void setNimi(String nimi) {
-        this.nimi = nimi;
-    }
 
     public Set<String> getOrganisaatiot() {
         return organisaatiot;
