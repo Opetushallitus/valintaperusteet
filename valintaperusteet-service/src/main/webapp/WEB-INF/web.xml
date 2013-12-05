@@ -54,7 +54,10 @@
         <servlet-name>Jersey REST Service</servlet-name>
         <url-pattern>/resources/*</url-pattern>
     </servlet-mapping>
-
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>/swagger/*</url-pattern>
+    </servlet-mapping>
     <servlet>
         <servlet-name>cxf</servlet-name>
         <servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
