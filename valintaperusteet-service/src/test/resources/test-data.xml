@@ -407,7 +407,7 @@
 
     <valintaryhma id="58" version="0" oid="oid58" nimi="Valintaryhma 57" />
 
-    <valintaryhma id="59" version="0" oid="oid59" nimi="Valintaryhma 59" hakuOid="hakuoid1"/>
+    <valintaryhma id="59" version="0" oid="oid59" nimi="Valintaryhma 59" />
 
 
     <hakukohdekoodi id="1" version="0" uri="hakukohdekoodiuri1" arvo="koodiarvo1"

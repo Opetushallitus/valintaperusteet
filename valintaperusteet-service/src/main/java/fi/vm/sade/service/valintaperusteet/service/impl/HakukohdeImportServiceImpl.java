@@ -71,6 +71,9 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
     private ValintakoekoodiDAO valintakoekoodiDAO;
 
     @Autowired
+    private HakukohteenValintaperusteDAO hakukohteenValintaperusteDAO;
+
+    @Autowired
     private GenericDAO genericDAO;
 
     protected void convertKoodi(HakukohdekoodiTyyppi from, Hakukohdekoodi to) {
@@ -281,7 +284,19 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
         hakukohde.setValintakokeet(haeTaiLisaaValintakoekoodit(importData));
 
         // Lisätään valinaperusteet
-        hakukohde.setHakukohteenValintaperusteet(lisaaValintaperusteet(importData));
+        if(hakukohde.getHakukohteenValintaperusteet() != null) {
+              List <HakukohteenValintaperuste> perusteet = hakukohteenValintaperusteDAO.haeHakukohteenValintaperusteet(hakukohde.getOid());
+              for(HakukohteenValintaperuste hv : perusteet) {
+                  hv.setHakukohde(null);
+                  hakukohteenValintaperusteDAO.remove(hv);
+              }
+              hakukohde.getHakukohteenValintaperusteet().clear();
+
+        }
+        genericDAO.flush();
+        hakukohde = hakukohdeViiteDAO.readByOid(importData.getHakukohdeOid());
+
+        hakukohde.setHakukohteenValintaperusteet(lisaaValintaperusteet(importData, hakukohde));
 
         // Päivitetään aloituspaikkojen lukumäärä jos mahdollista
         paivitaAloituspaikkojenLkm(hakukohde, importData.getValinnanAloituspaikat());
@@ -324,14 +339,15 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
         return koekoodit;
     }
 
-    private Map<String, HakukohteenValintaperuste> lisaaValintaperusteet(HakukohdeImportTyyppi importData) {
-        Map<String, HakukohteenValintaperuste> perusteet = new HashMap<String, HakukohteenValintaperuste>();
+    private Map<String,HakukohteenValintaperuste> lisaaValintaperusteet(HakukohdeImportTyyppi importData, HakukohdeViite hakukohde) {
+        Map<String,HakukohteenValintaperuste> perusteet = new HashMap<String,HakukohteenValintaperuste>();
         for (AvainArvoTyyppi avainArvo : importData.getValintaperuste()) {
             HakukohteenValintaperuste peruste = new HakukohteenValintaperuste();
             peruste.setTunniste(avainArvo.getAvain());
             peruste.setArvo(avainArvo.getArvo());
             peruste.setKuvaus(avainArvo.getAvain());
-            perusteet.put(avainArvo.getAvain(), peruste);
+            peruste.setHakukohde(hakukohde);
+            perusteet.put(peruste.getTunniste(),peruste);
         }
         return perusteet;
     }
