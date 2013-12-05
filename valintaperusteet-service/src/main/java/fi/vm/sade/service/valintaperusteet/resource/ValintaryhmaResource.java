@@ -78,7 +78,7 @@ public class ValintaryhmaResource {
     }
 
     @GET
-    @Path("{oid}")
+    @Path("/{oid}")
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
@@ -88,7 +88,7 @@ public class ValintaryhmaResource {
     }
 
     @GET
-    @Path("{oid}/hakijaryhma")
+    @Path("/{oid}/hakijaryhma")
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
@@ -98,7 +98,7 @@ public class ValintaryhmaResource {
     }
 
     @GET
-    @Path("{oid}/parents")
+    @Path("/{oid}/parents")
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView(JsonViews.ParentHierarchy.class)
     @Secured({READ, UPDATE, CRUD})
@@ -112,7 +112,7 @@ public class ValintaryhmaResource {
     }
 
     @GET
-    @Path("{oid}/lapsi")
+    @Path("/{oid}/lapsi")
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
@@ -122,7 +122,7 @@ public class ValintaryhmaResource {
     }
 
     @GET
-    @Path("{oid}/hakukohde")
+    @Path("/{oid}/hakukohde")
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
@@ -132,7 +132,7 @@ public class ValintaryhmaResource {
     }
 
     @GET
-    @Path("{oid}/valinnanvaihe")
+    @Path("/{oid}/valinnanvaihe")
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView(JsonViews.Basic.class)
     @Secured({READ, UPDATE, CRUD})
@@ -142,7 +142,7 @@ public class ValintaryhmaResource {
     }
 
     @PUT
-    @Path("{parentOid}/lapsi")
+    @Path("/{parentOid}/lapsi")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
@@ -175,7 +175,7 @@ public class ValintaryhmaResource {
     }
 
     @POST
-    @Path("{oid}")
+    @Path("/{oid}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
@@ -188,7 +188,7 @@ public class ValintaryhmaResource {
     }
 
     @PUT
-    @Path("{valintaryhmaOid}/valinnanvaihe")
+    @Path("/{valintaryhmaOid}/valinnanvaihe")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
@@ -210,7 +210,7 @@ public class ValintaryhmaResource {
 
 
     @PUT
-    @Path("{valintaryhmaOid}/hakijaryhma")
+    @Path("/{valintaryhmaOid}/hakijaryhma")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
@@ -228,7 +228,7 @@ public class ValintaryhmaResource {
     }
 
     @POST
-    @Path("{valintaryhmaOid}/hakukohdekoodi")
+    @Path("/{valintaryhmaOid}/hakukohdekoodi")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
@@ -246,7 +246,7 @@ public class ValintaryhmaResource {
     }
 
     @PUT
-    @Path("{valintaryhmaOid}/hakukohdekoodi")
+    @Path("/{valintaryhmaOid}/hakukohdekoodi")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
@@ -264,7 +264,7 @@ public class ValintaryhmaResource {
     }
 
     @POST
-    @Path("{valintaryhmaOid}/valintakoekoodi")
+    @Path("/{valintaryhmaOid}/valintakoekoodi")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView(JsonViews.Basic.class)
@@ -282,7 +282,7 @@ public class ValintaryhmaResource {
     }
 
     @PUT
-    @Path("{valintaryhmaOid}/valintakoekoodi")
+    @Path("/{valintaryhmaOid}/valintakoekoodi")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})

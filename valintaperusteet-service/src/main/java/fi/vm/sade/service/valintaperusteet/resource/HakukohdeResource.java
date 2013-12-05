@@ -88,7 +88,7 @@ public class HakukohdeResource {
 
 
     @GET
-    @Path("{oid}")
+    @Path("/{oid}")
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
@@ -122,7 +122,7 @@ public class HakukohdeResource {
     }
 
     @POST
-    @Path("{oid}")
+    @Path("/{oid}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
@@ -141,7 +141,7 @@ public class HakukohdeResource {
     }
 
     @GET
-    @Path("{oid}/valinnanvaihe")
+    @Path("/{oid}/valinnanvaihe")
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
@@ -151,7 +151,7 @@ public class HakukohdeResource {
     }
 
     @GET
-    @Path("{oid}/kuuluuSijoitteluun")
+    @Path("/{oid}/kuuluuSijoitteluun")
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
@@ -163,7 +163,7 @@ public class HakukohdeResource {
     }
 
     @GET
-    @Path("{oid}/hakijaryhma")
+    @Path("/{oid}/hakijaryhma")
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
@@ -173,7 +173,7 @@ public class HakukohdeResource {
     }
 
     @GET
-    @Path("{oid}/laskentakaava")
+    @Path("/{oid}/laskentakaava")
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
@@ -183,7 +183,7 @@ public class HakukohdeResource {
     }
 
     @POST
-    @Path("avaimet")
+    @Path("/avaimet")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
@@ -204,7 +204,7 @@ public class HakukohdeResource {
     }
 
     @PUT
-    @Path("{hakukohdeOid}/valinnanvaihe")
+    @Path("/{hakukohdeOid}/valinnanvaihe")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
@@ -226,7 +226,7 @@ public class HakukohdeResource {
     }
 
     @PUT
-    @Path("{hakukohdeOid}/hakijaryhma")
+    @Path("/{hakukohdeOid}/hakijaryhma")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
@@ -246,7 +246,7 @@ public class HakukohdeResource {
     }
 
     @POST
-    @Path("{hakukohdeOid}/hakukohdekoodi")
+    @Path("/{hakukohdeOid}/hakukohdekoodi")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
@@ -265,7 +265,7 @@ public class HakukohdeResource {
     }
 
     @PUT
-    @Path("{hakukohdeOid}/hakukohdekoodi")
+    @Path("/{hakukohdeOid}/hakukohdekoodi")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
@@ -284,7 +284,7 @@ public class HakukohdeResource {
     }
 
     @POST
-    @Path("{hakukohdeOid}/siirra")
+    @Path("/{hakukohdeOid}/siirra")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})

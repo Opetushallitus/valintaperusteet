@@ -50,7 +50,7 @@ public class LaskentakaavaResource {
     private final static Logger LOGGER = LoggerFactory.getLogger(LaskentakaavaResource.class);
 
     @GET
-    @Path("funktiokuvaus")
+    @Path("/funktiokuvaus")
     @Produces(MediaType.APPLICATION_JSON)
     @Secured({READ, UPDATE, CRUD})
     @ApiOperation(value = "Palauttaa funktiokuvaukset")
@@ -59,7 +59,7 @@ public class LaskentakaavaResource {
     }
 
     @GET
-    @Path("funktiokuvaus/{nimi}")
+    @Path("/funktiokuvaus/{nimi}")
     @ApiOperation(value = "Palauttaa parametrina annetun funktion kuvauksen")
     @Produces(MediaType.APPLICATION_JSON)
     @Secured({READ, UPDATE, CRUD})
@@ -68,7 +68,7 @@ public class LaskentakaavaResource {
     }
 
     @GET
-    @Path("{id}")
+    @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView(JsonViews.Basic.class)
     @Secured({READ, UPDATE, CRUD})
@@ -91,7 +91,7 @@ public class LaskentakaavaResource {
     }
 
     @POST
-    @Path("validoi")
+    @Path("/validoi")
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView(JsonViews.Basic.class)
     @Secured({READ, UPDATE, CRUD})
@@ -101,7 +101,7 @@ public class LaskentakaavaResource {
     }
 
     @POST
-    @Path("{id}")
+    @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
