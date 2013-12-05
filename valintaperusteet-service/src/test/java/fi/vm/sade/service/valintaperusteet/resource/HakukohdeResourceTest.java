@@ -81,7 +81,7 @@ public class HakukohdeResourceTest {
     @Test
     public void testInsertNull() throws Exception {
         HakukohdeViiteDTO valintaryhma = new HakukohdeViiteDTO();
-        Response insert = hakukohdeResource.insert(valintaryhma, null);
+        Response insert = hakukohdeResource.insert(new HakukohdeInsertDTO(valintaryhma, null));
         assertEquals(500, insert.getStatus());
 
     }
@@ -93,7 +93,7 @@ public class HakukohdeResourceTest {
         hakukohdeDTO.setOid("uusi oid");
         hakukohdeDTO.setHakuoid("hakuoid");
 
-        Response insert = hakukohdeResource.insert(hakukohdeDTO, "oid1");
+        Response insert = hakukohdeResource.insert(new HakukohdeInsertDTO(hakukohdeDTO, "oid1"));
         assertEquals(201, insert.getStatus());
 
         testUtil.lazyCheck(JsonViews.Basic.class, insert.getEntity());
@@ -106,7 +106,7 @@ public class HakukohdeResourceTest {
         hakukohdeDto.setOid("uusi oid");
         hakukohdeDto.setHakuoid("hakuoid");
 
-        Response insert = hakukohdeResource.insert(hakukohdeDto, null);
+        Response insert = hakukohdeResource.insert(new HakukohdeInsertDTO(hakukohdeDto, null));
         assertEquals(201, insert.getStatus());
 
         testUtil.lazyCheck(JsonViews.Basic.class, insert.getEntity());
@@ -117,7 +117,7 @@ public class HakukohdeResourceTest {
         HakukohdeViiteDTO hakukohde = new HakukohdeViiteDTO();
         hakukohde.setNimi("Uusi valintaryhmä");
         hakukohde.setOid("oid1");
-        Response insert = hakukohdeResource.insert(hakukohde, null);
+        Response insert = hakukohdeResource.insert(new HakukohdeInsertDTO(hakukohde, null));
         assertEquals(500, insert.getStatus());
         testUtil.lazyCheck(JsonViews.Basic.class, insert.getEntity());
     }
