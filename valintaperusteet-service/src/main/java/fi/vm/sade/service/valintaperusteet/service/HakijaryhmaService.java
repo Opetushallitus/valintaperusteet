@@ -1,12 +1,13 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
+import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 
 import java.util.List;
 
-public interface HakijaryhmaService extends CRUDService<Hakijaryhma, Long, String> {
+public interface HakijaryhmaService {
 
     void deleteByOid(String oid, boolean skipInheritedCheck);
 
@@ -18,13 +19,19 @@ public interface HakijaryhmaService extends CRUDService<Hakijaryhma, Long, Strin
 
     void liitaHakijaryhmaValintatapajonolle(String valintatapajonoOid, String hakijaryhmaOid);
 
-    Hakijaryhma lisaaHakijaryhmaValintaryhmalle(String valintaryhmaOid, Hakijaryhma hakijaryhma);
+    Hakijaryhma lisaaHakijaryhmaValintaryhmalle(String valintaryhmaOid, HakijaryhmaCreateDTO hakijaryhma);
 
-    Hakijaryhma lisaaHakijaryhmaHakukohteelle(String hakukohdeOid, Hakijaryhma hakijaryhma);
+    Hakijaryhma lisaaHakijaryhmaHakukohteelle(String hakukohdeOid, HakijaryhmaCreateDTO hakijaryhma);
 
     List<Hakijaryhma> jarjestaHakijaryhmat(List<String> oids);
 
     void kopioiHakijaryhmatParentilta(Valintaryhma inserted, Valintaryhma parent);
+
     void kopioiHakijaryhmatParentilta(HakukohdeViite inserted, Valintaryhma parent);
 
+    Hakijaryhma insert(Hakijaryhma entity);
+
+    void delete(Hakijaryhma entity);
+
+    Hakijaryhma update(String oid, HakijaryhmaCreateDTO entity);
 }

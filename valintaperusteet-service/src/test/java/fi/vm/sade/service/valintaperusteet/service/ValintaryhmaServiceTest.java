@@ -6,6 +6,7 @@ import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintakoeDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 import org.apache.commons.lang.StringUtils;
@@ -58,8 +59,7 @@ public class ValintaryhmaServiceTest {
         final String parentOid = "oid6";
         final int valinnanVaiheetLkm = 5;
 
-        Valintaryhma uusiValintaryhma = new Valintaryhma();
-        uusiValintaryhma.setOid("uusi oid");
+        ValintaryhmaCreateDTO uusiValintaryhma = new ValintaryhmaCreateDTO();
         uusiValintaryhma.setNimi("uusi valintaryhma");
 
 
@@ -92,7 +92,7 @@ public class ValintaryhmaServiceTest {
             assertEquals(1, vaihe81Ljonot.size());
         }
 
-        Valintaryhma uusiValintaryhma = new Valintaryhma();
+        ValintaryhmaCreateDTO uusiValintaryhma = new ValintaryhmaCreateDTO();
 
         uusiValintaryhma.setNimi("uusi nimi");
 
@@ -149,10 +149,10 @@ public class ValintaryhmaServiceTest {
             assertEquals(valintakoeOid, kokeet.get(0).getOid());
         }
 
-        Valintaryhma child = new Valintaryhma();
+        ValintaryhmaCreateDTO childCreate = new ValintaryhmaCreateDTO();
 
-        child.setNimi("uusi alavalintaryhma");
-        child = valintaryhmaService.insert(child, parentValintaryhmaOid);
+        childCreate.setNimi("uusi alavalintaryhma");
+        Valintaryhma child = valintaryhmaService.insert(childCreate, parentValintaryhmaOid);
 
         {
             List<ValinnanVaihe> vaiheet = valinnanVaiheDAO.findByValintaryhma(child.getOid());

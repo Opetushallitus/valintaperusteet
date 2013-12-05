@@ -4,6 +4,7 @@ import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoCreateDTO;
 import fi.vm.sade.service.valintaperusteet.model.Tasapistesaanto;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaiheTyyppi;
@@ -103,7 +104,7 @@ public class ValintatapajonoServiceTest {
 
         final String edellinenValintatapajonoOid = "1051";
 
-        Valintatapajono uusiJono = new Valintatapajono();
+        ValintatapajonoCreateDTO uusiJono = new ValintatapajonoCreateDTO();
         uusiJono.setAktiivinen(true);
         uusiJono.setAloituspaikat(15);
         uusiJono.setKuvaus("uusi kuvaus");
@@ -161,7 +162,7 @@ public class ValintatapajonoServiceTest {
             assertEquals(0, valintatapajonoService.findJonoByValinnanvaihe(valinnanVaiheOid).size());
         }
 
-        Valintatapajono uusiJono = new Valintatapajono();
+        ValintatapajonoCreateDTO uusiJono = new ValintatapajonoCreateDTO();
         uusiJono.setAktiivinen(true);
         uusiJono.setAloituspaikat(15);
         uusiJono.setKuvaus("uusi kuvaus");
@@ -191,7 +192,7 @@ public class ValintatapajonoServiceTest {
         }
 
 
-        Valintatapajono uusiJono = new Valintatapajono();
+        ValintatapajonoCreateDTO uusiJono = new ValintatapajonoCreateDTO();
         uusiJono.setAktiivinen(true);
         uusiJono.setAloituspaikat(15);
         uusiJono.setKuvaus("uusi kuvaus");
@@ -351,7 +352,7 @@ public class ValintatapajonoServiceTest {
             assertEquals(0, valintatapajonoDAO.haeKopiot(jono30L.getOid()).size());
         }
 
-        Valintatapajono paivitys = new Valintatapajono();
+        ValintatapajonoCreateDTO paivitys = new ValintatapajonoCreateDTO();
         paivitys.setAktiivinen(true);
         paivitys.setNimi(uusiNimi);
         paivitys.setKuvaus(uusiKuvaus);
@@ -411,7 +412,7 @@ public class ValintatapajonoServiceTest {
         ValinnanVaihe valinnanVaihe = valinnanVaiheDAO.readByOid(valinnanVaiheOid);
         assertEquals(ValinnanVaiheTyyppi.VALINTAKOE, valinnanVaihe.getValinnanVaiheTyyppi());
 
-        Valintatapajono jono = new Valintatapajono();
+        ValintatapajonoCreateDTO jono = new ValintatapajonoCreateDTO();
         jono.setAktiivinen(true);
         jono.setAloituspaikat(10);
         jono.setKuvaus("kuvaus");

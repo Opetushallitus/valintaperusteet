@@ -3,6 +3,8 @@ package fi.vm.sade.service.valintaperusteet.service.impl;
 import fi.vm.sade.service.valintaperusteet.dao.OrganisaatioDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.Organisaatio;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaService;
@@ -14,9 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -27,7 +27,7 @@ import java.util.Set;
  */
 @Service
 @Transactional
-public class ValintaryhmaServiceImpl extends AbstractCRUDServiceImpl<Valintaryhma, Long, String> implements ValintaryhmaService {
+public class ValintaryhmaServiceImpl implements ValintaryhmaService {
 
     @Autowired
     private ValintaryhmaDAO valintaryhmaDAO;
@@ -48,9 +48,7 @@ public class ValintaryhmaServiceImpl extends AbstractCRUDServiceImpl<Valintaryhm
     private OidService oidService;
 
     @Autowired
-    public ValintaryhmaServiceImpl(ValintaryhmaDAO dao) {
-        super(dao);
-    }
+    private ValintaperusteetModelMapper modelMapper;
 
 
     public List<Valintaryhma> findValintaryhmasByParentOid(String id) {
@@ -64,7 +62,7 @@ public class ValintaryhmaServiceImpl extends AbstractCRUDServiceImpl<Valintaryhm
 
     private Valintaryhma haeValintaryhma(String oid) {
         Valintaryhma valintaryhma = valintaryhmaDAO.readByOid(oid);
-        if(valintaryhma == null) {
+        if (valintaryhma == null) {
             throw new ValintaryhmaEiOleOlemassaException("Valintaryhma (" + oid + ") ei ole olemassa.", oid);
         }
 
@@ -72,12 +70,14 @@ public class ValintaryhmaServiceImpl extends AbstractCRUDServiceImpl<Valintaryhm
     }
 
     @Override
-    public Valintaryhma insert(Valintaryhma valintaryhma, String parentOid) {
+    public Valintaryhma insert(ValintaryhmaCreateDTO dto, String parentOid) {
+        Valintaryhma valintaryhma = modelMapper.map(dto, Valintaryhma.class);
+
         valintaryhma.setOid(oidService.haeValintaryhmaOid());
         Valintaryhma parent = haeValintaryhma(parentOid);
         valintaryhma.setYlavalintaryhma(parent);
 
-        valintaryhma.setOrganisaatiot(getOrganisaatios(valintaryhma));
+        valintaryhma.setOrganisaatiot(getOrganisaatios(dto.getOrganisaatiot()));
 
         Valintaryhma inserted = valintaryhmaDAO.insert(valintaryhma);
         valinnanVaiheService.kopioiValinnanVaiheetParentilta(inserted, parent);
@@ -91,32 +91,45 @@ public class ValintaryhmaServiceImpl extends AbstractCRUDServiceImpl<Valintaryhm
     }
 
 
-
     @Override
-    public Valintaryhma update(String oid, Valintaryhma incoming) {
+    public Valintaryhma update(String oid, ValintaryhmaCreateDTO incoming) {
         Valintaryhma managedObject = haeValintaryhma(oid);
         managedObject.setNimi(incoming.getNimi());
 
-        managedObject.setOrganisaatiot(getOrganisaatios(incoming));
+        managedObject.setOrganisaatiot(getOrganisaatios(incoming.getOrganisaatiot()));
         return managedObject;
     }
 
-    private Set<Organisaatio> getOrganisaatios(Valintaryhma incoming) {
-        Set<Organisaatio> organisaatiot = new HashSet<Organisaatio>();
-        for (Organisaatio organisaatio : incoming.getOrganisaatiot()) {
-            Organisaatio temp = organisaatioDAO.readByOid(organisaatio.getOid());
-            if(temp == null) {
-                temp = organisaatioDAO.insert(organisaatio);
+    private Set<Organisaatio> getOrganisaatios(Set<String> oids) {
+        if (!oids.isEmpty()) {
+
+            List<Organisaatio> organisaatios = organisaatioDAO.readByOidList(oids);
+
+            Map<String, Organisaatio> organisaatiosByOids = new HashMap<String, Organisaatio>();
+            for (Organisaatio o : organisaatios) {
+                organisaatiosByOids.put(o.getOid(), o);
             }
-            organisaatiot.add(temp);
+
+            oids.removeAll(organisaatiosByOids.keySet());
+            for (String oid : oids) {
+                Organisaatio o = new Organisaatio();
+                o.setOid(oid);
+                organisaatiosByOids.put(oid, organisaatioDAO.insert(o));
+            }
+
+
+            return new HashSet<Organisaatio>(organisaatiosByOids.values());
+        } else {
+            return Collections.EMPTY_SET;
         }
-        return organisaatiot;
     }
 
     @Override
-    public Valintaryhma insert(Valintaryhma entity) {
+    public Valintaryhma insert(ValintaryhmaCreateDTO dto) {
+        Valintaryhma entity = modelMapper.map(dto, Valintaryhma.class);
+
         entity.setOid(oidService.haeValintaryhmaOid());
-        entity.setOrganisaatiot(getOrganisaatios(entity));
+        entity.setOrganisaatiot(getOrganisaatios(dto.getOrganisaatiot()));
         return valintaryhmaDAO.insert(entity);
     }
 }

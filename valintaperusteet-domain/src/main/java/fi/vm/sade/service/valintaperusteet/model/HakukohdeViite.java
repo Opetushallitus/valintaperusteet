@@ -127,7 +127,7 @@ public class HakukohdeViite extends BaseEntity {
     @JsonProperty(value = "valintaryhma_id")
     @JsonView(JsonViews.Basic.class)
     @Transient
-    private String getValintaryhmaId() {
+    private String getValintaryhmaOid() {
         return valintaryhma != null ? valintaryhma.getOid() : "";
     }
 

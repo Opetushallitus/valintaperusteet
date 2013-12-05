@@ -3,10 +3,12 @@ package fi.vm.sade.service.valintaperusteet.resource;
 import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
+import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
-import fi.vm.sade.service.valintaperusteet.model.*;
+import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
+import fi.vm.sade.service.valintaperusteet.model.JsonViews;
+import fi.vm.sade.service.valintaperusteet.model.Tasapistesaanto;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheEiOleOlemassaException;
-import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaihettaEiVoiPoistaaException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.After;
 import org.junit.Before;
@@ -21,6 +23,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -62,29 +65,28 @@ public class ValinnanVaiheResourceTest {
 
     @Test
     public void testRead() throws IOException {
-        ValinnanVaihe vaihe = vaiheResource.read("1");
-
+        ValinnanVaiheDTO vaihe = vaiheResource.read("1");
         mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(vaihe);
     }
 
     @Test
     public void testQuery() throws IOException {
-        List<Valintatapajono> jonos = vaiheResource.listJonos("1");
+        List<ValintatapajonoDTO> jonos = vaiheResource.listJonos("1");
 
         mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(jonos);
     }
 
     @Test
     public void testUpdate() throws IOException {
-        ValinnanVaihe vaihe = vaiheResource.read("1");
+        ValinnanVaiheDTO vaihe = vaiheResource.read("1");
 
-        ValinnanVaihe vaihe1 = vaiheResource.update(vaihe.getOid(), vaihe);
+        ValinnanVaiheDTO vaihe1 = vaiheResource.update(vaihe.getOid(), vaihe);
         mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(vaihe1);
     }
 
     @Test
     public void testInsertValintatapajono() {
-        Valintatapajono jono = new Valintatapajono();
+        ValintatapajonoDTO jono = new ValintatapajonoDTO();
         Response insert = vaiheResource.addJonoToValinnanVaihe("1", jono);
         assertEquals(500, insert.getStatus());
 
@@ -115,20 +117,38 @@ public class ValinnanVaiheResourceTest {
         assertEquals(Response.Status.ACCEPTED.getStatusCode(), delete.getStatus());
     }
 
-    @Test(expected = ValinnanVaiheEiOleOlemassaException.class)
+    @Test
     public void testDeleteOidNotFound() {
-        vaiheResource.delete("");
+        boolean caughtOne = false;
+
+        try {
+            vaiheResource.delete("");
+        } catch (WebApplicationException e) {
+            caughtOne = true;
+            assertEquals(404, e.getResponse().getStatus());
+        }
+
+        assertTrue(caughtOne);
     }
 
-    @Test(expected = ValinnanVaihettaEiVoiPoistaaException.class)
+    @Test
     public void testDeleteInherited() {
-        vaiheResource.delete("32");
+        boolean caughtOne = false;
+
+        try {
+            vaiheResource.delete("32");
+        } catch (WebApplicationException e) {
+            caughtOne = true;
+            assertEquals(400, e.getResponse().getStatus());
+        }
+
+        assertTrue(caughtOne);
     }
 
     @Test
     public void testChildrenAreDeleted() {
 
-        ValinnanVaihe read = vaiheResource.read("79");
+        ValinnanVaiheDTO read = vaiheResource.read("79");
 
         assertNotNull(read);
         // objekti on peritty
@@ -136,7 +156,7 @@ public class ValinnanVaiheResourceTest {
         assertEquals(Response.Status.ACCEPTED.getStatusCode(), delete.getStatus());
 
         try {
-            ValinnanVaihe read1 = vaiheResource.read("79");
+            ValinnanVaiheDTO read1 = vaiheResource.read("79");
             assertNull(read1);
         } catch (ValinnanVaiheEiOleOlemassaException e) {
 
@@ -145,17 +165,17 @@ public class ValinnanVaiheResourceTest {
 
     @Test
     public void testJarjesta() {
-        List<ValinnanVaihe> valinnanVaiheList = hakuResource.valinnanVaihesForHakukohde("oid6");
+        List<ValinnanVaiheDTO> valinnanVaiheList = hakuResource.valinnanVaihesForHakukohde("oid6");
         List<String> oids = new ArrayList<String>();
 
-        for (ValinnanVaihe valinnanVaihe : valinnanVaiheList) {
+        for (ValinnanVaiheDTO valinnanVaihe : valinnanVaiheList) {
             oids.add(valinnanVaihe.getOid());
         }
 
         assertEquals("4", oids.get(0));
         assertEquals("6", oids.get(2));
         Collections.reverse(oids);
-        List<ValinnanVaihe> jarjesta = vaiheResource.jarjesta(oids);
+        List<ValinnanVaiheDTO> jarjesta = vaiheResource.jarjesta(oids);
         assertEquals("6", jarjesta.get(0).getOid());
         assertEquals("4", jarjesta.get(2).getOid());
         jarjesta = hakuResource.valinnanVaihesForHakukohde("oid6");
@@ -176,9 +196,8 @@ public class ValinnanVaiheResourceTest {
         vaiheResource.jarjesta(oids);
     }
 
-    private Valintatapajono newJono() {
-        Valintatapajono jono;
-        jono = new Valintatapajono();
+    private ValintatapajonoDTO newJono() {
+        ValintatapajonoDTO jono = new ValintatapajonoDTO();
         jono.setNimi("Uusi valintaryhmä");
         jono.setOid("oid123");
         jono.setAloituspaikat(1);
@@ -207,9 +226,9 @@ public class ValinnanVaiheResourceTest {
 
     @Test
     public void testListValintakokeet() throws IOException {
-        final String valintaryhmaOid= "83";
+        final String valintaryhmaOid = "83";
 
-        List<Valintakoe> kokeet= vaiheResource.listValintakokeet(valintaryhmaOid);
+        List<ValintakoeDTO> kokeet = vaiheResource.listValintakokeet(valintaryhmaOid);
         assertEquals(4, kokeet.size());
         String json = mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(kokeet);
     }
@@ -217,7 +236,7 @@ public class ValinnanVaiheResourceTest {
     @Test
     public void testListValintakokeetShouldBeEmpty() {
         final String valinnanVaiheOid = "85";
-        List<Valintakoe> kokeet = vaiheResource.listValintakokeet(valinnanVaiheOid);
+        List<ValintakoeDTO> kokeet = vaiheResource.listValintakokeet(valinnanVaiheOid);
         assertEquals(0, kokeet.size());
     }
 }

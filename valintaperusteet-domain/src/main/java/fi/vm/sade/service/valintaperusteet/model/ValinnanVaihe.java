@@ -192,7 +192,7 @@ public class ValinnanVaihe extends BaseEntity implements LinkitettavaJaKopioitav
     @JsonProperty(value = "inheritance")
     @JsonView(JsonViews.Basic.class)
     @Transient
-    private Boolean getInheritance() {
+    public Boolean getInheritance() {
         return getMasterValinnanVaihe() != null;
     }
 

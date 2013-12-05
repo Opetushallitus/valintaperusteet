@@ -5,7 +5,6 @@ import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
-import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
 import fi.vm.sade.service.valintaperusteet.util.TestUtil;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
@@ -52,7 +51,7 @@ public class ValintakoeResourceTest {
     @Test
     public void testReadByOid() throws Exception {
         final String oid = "oid1";
-        Valintakoe valintakoe = valintakoeResource.readByOid(oid);
+        ValintakoeDTO valintakoe = valintakoeResource.readByOid(oid);
         testUtil.lazyCheck(JsonViews.Basic.class, valintakoe);
     }
 
@@ -61,7 +60,7 @@ public class ValintakoeResourceTest {
         final String oid = "oid1";
         final Long laskentakaavaId = 102L;
 
-        Valintakoe saved = valintakoeResource.readByOid(oid);
+        ValintakoeDTO saved = valintakoeResource.readByOid(oid);
 
         ValintakoeDTO koe = new ValintakoeDTO();
         koe.setKuvaus("uusi kuvaus");
@@ -88,7 +87,7 @@ public class ValintakoeResourceTest {
     @Test
     public void testUpdateSetLaskentakaavaNull() {
         final String oid = "oid1";
-        Valintakoe saved = valintakoeResource.readByOid(oid);
+        ValintakoeDTO saved = valintakoeResource.readByOid(oid);
 
         ValintakoeDTO koe = new ValintakoeDTO();
         koe.setKuvaus("uusi kuvaus");

@@ -169,7 +169,7 @@ public class Hakijaryhma extends BaseEntity implements LinkitettavaJaKopioitava<
     @JsonProperty(value = "inheritance")
     @JsonView(JsonViews.Basic.class)
     @Transient
-    private Boolean getInheritance() {
+    public Boolean getInheritance() {
         return getMaster() != null;
     }
 

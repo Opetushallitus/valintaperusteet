@@ -4,7 +4,9 @@ import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
-import fi.vm.sade.service.valintaperusteet.model.*;
+import fi.vm.sade.service.valintaperusteet.dto.*;
+import fi.vm.sade.service.valintaperusteet.model.JsonViews;
+import fi.vm.sade.service.valintaperusteet.model.ValinnanVaiheTyyppi;
 import junit.framework.Assert;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
@@ -57,24 +59,24 @@ public class ValintaryhmaResourceTest {
 
     @Test
     public void testQueryFull() throws Exception {
-        Valintaryhma valintaryhma = valintaryhmaResource.queryFull("oid1");
-        Assert.assertEquals(new Long(1L), valintaryhma.getId());
+        ValintaryhmaDTO valintaryhma = valintaryhmaResource.queryFull("oid1");
+        Assert.assertEquals("oid1", valintaryhma.getOid());
 
         mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(valintaryhma);
     }
 
     @Test
     public void testSearch() throws Exception {
-        List<Valintaryhma> valintaryhmas = valintaryhmaResource.search(true, null);
+        List<ValintaryhmaDTO> valintaryhmas = valintaryhmaResource.search(true, null);
         Assert.assertEquals(44, valintaryhmas.size());
-        Assert.assertEquals(new Long(1L), valintaryhmas.get(0).getId());
+        Assert.assertEquals("oid1", valintaryhmas.get(0).getOid());
 
         mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(valintaryhmas);
     }
 
     @Test
     public void testQueryChildren() throws Exception {
-        List<Valintaryhma> valintaryhmas = valintaryhmaResource.queryChildren("oid1");
+        List<ValintaryhmaDTO> valintaryhmas = valintaryhmaResource.queryChildren("oid1");
         Assert.assertEquals(4, valintaryhmas.size());
 
         mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(valintaryhmas);
@@ -82,7 +84,7 @@ public class ValintaryhmaResourceTest {
 
     @Test
     public void testInsert() throws Exception {
-        Valintaryhma valintaryhma = new Valintaryhma();
+        ValintaryhmaCreateDTO valintaryhma = new ValintaryhmaCreateDTO();
 
         valintaryhma.setNimi("Uusi valintaryhmä");
         System.out.println(mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(valintaryhma));
@@ -93,7 +95,7 @@ public class ValintaryhmaResourceTest {
 
     @Test
     public void testInsertParent() throws Exception {
-        Valintaryhma valintaryhma = new Valintaryhma();
+        ValintaryhmaCreateDTO valintaryhma = new ValintaryhmaCreateDTO();
 
         valintaryhma.setNimi("Uusi valintaryhmä");
         System.out.println(mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(valintaryhma));
@@ -104,7 +106,7 @@ public class ValintaryhmaResourceTest {
 
     @Test
     public void testUpdate() throws Exception {
-        Valintaryhma valintaryhma1 = valintaryhmaResource.queryFull("oid1");
+        ValintaryhmaCreateDTO valintaryhma1 = valintaryhmaResource.queryFull("oid1");
         valintaryhma1.setNimi("Updated valintaryhmä");
         valintaryhmaResource.update("oid1", valintaryhma1);
 
@@ -113,7 +115,7 @@ public class ValintaryhmaResourceTest {
 
     @Test
     public void testInsertValinnanVaihe() throws IOException {
-        ValinnanVaihe valinnanVaihe = new ValinnanVaihe();
+        ValinnanVaiheCreateDTO valinnanVaihe = new ValinnanVaiheCreateDTO();
 
         valinnanVaihe.setNimi("uusi");
         valinnanVaihe.setAktiivinen(true);
@@ -121,9 +123,9 @@ public class ValintaryhmaResourceTest {
 
         Response response = valintaryhmaResource.insertValinnanvaihe("oid1", null, valinnanVaihe);
         assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
-        ValinnanVaihe vv = (ValinnanVaihe) response.getEntity();
+        ValinnanVaiheDTO vv = (ValinnanVaiheDTO) response.getEntity();
 
-        valinnanVaihe = new ValinnanVaihe();
+        valinnanVaihe = new ValinnanVaiheCreateDTO();
         valinnanVaihe.setNimi("uusi");
         valinnanVaihe.setAktiivinen(true);
         valinnanVaihe.setValinnanVaiheTyyppi(ValinnanVaiheTyyppi.TAVALLINEN);
@@ -137,15 +139,15 @@ public class ValintaryhmaResourceTest {
     public void testInsertHakukohdekoodi() {
         final String URI = "uri";
         final String ARVO = "arvo";
-        Hakukohdekoodi hakukohdekoodi = new Hakukohdekoodi();
+        KoodiDTO hakukohdekoodi = new KoodiDTO();
         hakukohdekoodi.setUri(URI);
         hakukohdekoodi.setArvo(ARVO);
         Response response = valintaryhmaResource.insertHakukohdekoodi("oid1", hakukohdekoodi);
         assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
 
-        Valintaryhma oid1 = valintaryhmaResource.queryFull("oid1");
+        ValintaryhmaDTO oid1 = valintaryhmaResource.queryFull("oid1");
         boolean found = false;
-        for (Hakukohdekoodi hkk : oid1.getHakukohdekoodit()) {
+        for (KoodiDTO hkk : oid1.getHakukohdekoodit()) {
             if (hkk.getArvo().equals(ARVO) && hkk.getUri().equals(URI)) {
                 found = true;
                 break;
@@ -159,15 +161,15 @@ public class ValintaryhmaResourceTest {
     public void testUpdateHakukohdekoodi() {
         final String URI = "uri";
         final String ARVO = "arvo";
-        Hakukohdekoodi hakukohdekoodi = new Hakukohdekoodi();
+        KoodiDTO hakukohdekoodi = new KoodiDTO();
         hakukohdekoodi.setUri(URI);
         hakukohdekoodi.setArvo(ARVO);
         Response response = valintaryhmaResource.insertHakukohdekoodi("oid1", hakukohdekoodi);
         assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
 
-        Set<Hakukohdekoodi> oid1 = valintaryhmaResource.queryFull("oid1").getHakukohdekoodit();
+        Set<KoodiDTO> oid1 = valintaryhmaResource.queryFull("oid1").getHakukohdekoodit();
         for (int i = 0; i < 9; i++) {
-            Hakukohdekoodi koodi = new Hakukohdekoodi();
+            KoodiDTO koodi = new KoodiDTO();
             koodi.setUri("uri" + i);
             koodi.setArvo("arvo" + i);
             oid1.add(koodi);
@@ -185,13 +187,13 @@ public class ValintaryhmaResourceTest {
     public void testRemoveAllHakukohdekoodi() {
         final String URI = "uri";
         final String ARVO = "arvo";
-        Hakukohdekoodi hakukohdekoodi = new Hakukohdekoodi();
+        KoodiDTO hakukohdekoodi = new KoodiDTO();
         hakukohdekoodi.setUri(URI);
         hakukohdekoodi.setArvo(ARVO);
         Response response = valintaryhmaResource.insertHakukohdekoodi("oid1", hakukohdekoodi);
         assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
 
-        Set<Hakukohdekoodi> oid1 = null;
+        Set<KoodiDTO> oid1 = null;
 
         response = valintaryhmaResource.updateHakukohdekoodi("oid1", oid1);
         assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
@@ -208,11 +210,11 @@ public class ValintaryhmaResourceTest {
         final String valintaryhmaOid = "oid52";
         final String valintakoekoodiUri = "uusivalintakoekoodiuri";
 
-        Valintakoekoodi koodi = new Valintakoekoodi();
+        KoodiDTO koodi = new KoodiDTO();
         koodi.setUri(valintakoekoodiUri);
 
         String json = mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(koodi);
-        koodi = mapper.readValue(json, Valintakoekoodi.class);
+        koodi = mapper.readValue(json, KoodiDTO.class);
 
         valintaryhmaResource.insertValintakoekoodi(valintaryhmaOid, koodi);
     }
@@ -223,20 +225,20 @@ public class ValintaryhmaResourceTest {
                 "valintakoeuri1", "valintakoeuri1", "valintakoeuri2"};
         final String valintaryhmaOid = "oid52";
 
-        List<Valintakoekoodi> kokeet = new ArrayList<Valintakoekoodi>();
+        List<KoodiDTO> kokeet = new ArrayList<KoodiDTO>();
         for (String uri : koeUrit) {
-            Valintakoekoodi koodi = new Valintakoekoodi();
+            KoodiDTO koodi = new KoodiDTO();
             koodi.setUri(uri);
             String json = mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(koodi);
 
-            kokeet.add(mapper.readValue(json, Valintakoekoodi.class));
+            kokeet.add(mapper.readValue(json, KoodiDTO.class));
         }
 
         valintaryhmaResource.updateValintakoekoodi(valintaryhmaOid, kokeet).getEntity();
 
-        Valintaryhma paivitetty =
+        ValintaryhmaDTO paivitetty =
                 mapper.readValue(mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(
-                        valintaryhmaResource.queryFull(valintaryhmaOid)), Valintaryhma.class);
+                        valintaryhmaResource.queryFull(valintaryhmaOid)), ValintaryhmaDTO.class);
 
 
         assertEquals(koeUrit.length, paivitetty.getValintakoekoodit().size());

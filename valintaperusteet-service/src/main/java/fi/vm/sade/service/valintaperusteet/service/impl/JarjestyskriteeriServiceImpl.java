@@ -2,8 +2,11 @@ package fi.vm.sade.service.valintaperusteet.service.impl;
 
 import fi.vm.sade.service.valintaperusteet.dao.JarjestyskriteeriDAO;
 import fi.vm.sade.service.valintaperusteet.dao.LaskentakaavaDAO;
+import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.JarjestyskriteeriService;
+import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
 import fi.vm.sade.service.valintaperusteet.service.OidService;
 import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
 import fi.vm.sade.service.valintaperusteet.service.exception.*;
@@ -27,7 +30,7 @@ import java.util.List;
  */
 @Service
 @Transactional
-public class JarjestyskriteeriServiceImpl extends AbstractCRUDServiceImpl<Jarjestyskriteeri, Long, String> implements JarjestyskriteeriService {
+public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
     @Autowired
     private ValintatapajonoService valintatapajonoService;
 
@@ -40,12 +43,13 @@ public class JarjestyskriteeriServiceImpl extends AbstractCRUDServiceImpl<Jarjes
     @Autowired
     private OidService oidService;
 
-    private static JarjestyskriteeriKopioija kopioija = new JarjestyskriteeriKopioija();
+    @Autowired
+    private LaskentakaavaService laskentakaavaService;
 
     @Autowired
-    public JarjestyskriteeriServiceImpl(JarjestyskriteeriDAO dao) {
-        super(dao);
-    }
+    private ValintaperusteetModelMapper modelMapper;
+
+    private static JarjestyskriteeriKopioija kopioija = new JarjestyskriteeriKopioija();
 
     private Jarjestyskriteeri haeJarjestyskriteeri(String oid) {
         Jarjestyskriteeri jarjestyskriteeri = jarjestyskriteeriDAO.readByOid(oid);
@@ -89,24 +93,20 @@ public class JarjestyskriteeriServiceImpl extends AbstractCRUDServiceImpl<Jarjes
     }
 
     @Override
-    public Jarjestyskriteeri update(String oid, Jarjestyskriteeri incoming) {
+    public Jarjestyskriteeri update(String oid, JarjestyskriteeriCreateDTO dto, Long laskentakaavaId) {
+
+        Jarjestyskriteeri entity = modelMapper.map(dto, Jarjestyskriteeri.class);
         Jarjestyskriteeri managedObject = haeJarjestyskriteeri(oid);
 
-        Long laskentakaavaOid = incoming.getLaskentakaava().getId();
-        if (laskentakaavaOid != null) {
-            Laskentakaava laskentakaava = laskentakaavaDAO.getLaskentakaava(laskentakaavaOid);
+        if (laskentakaavaId != null) {
+            Laskentakaava laskentakaava = laskentakaavaService.haeMallinnettuKaava(laskentakaavaId);
             validoiLaskentakaavaJarjestyskriteeriaVarten(laskentakaava);
-            incoming.setLaskentakaava(laskentakaava);
+            entity.setLaskentakaava(laskentakaava);
         } else {
             throw new LaskentakaavaOidTyhjaException("LaskentakaavaOid oli tyhjä.");
         }
 
-        return LinkitettavaJaKopioitavaUtil.paivita(managedObject, incoming, kopioija);
-    }
-
-    @Override
-    public Jarjestyskriteeri insert(Jarjestyskriteeri entity) {
-        throw new UnsupportedOperationException("not supported");
+        return LinkitettavaJaKopioitavaUtil.paivita(managedObject, entity, kopioija);
     }
 
     @Override
@@ -121,14 +121,10 @@ public class JarjestyskriteeriServiceImpl extends AbstractCRUDServiceImpl<Jarjes
     }
 
     @Override
-    public Jarjestyskriteeri insert(Jarjestyskriteeri jarjestyskriteeri, String valintatapajono, Long laskentakaava) {
-        throw new UnsupportedOperationException("not supported");
-    }
-
-    @Override
-    public Jarjestyskriteeri lisaaJarjestyskriteeriValintatapajonolle(String valintatapajonoOid, Jarjestyskriteeri jarjestyskriteeri,
+    public Jarjestyskriteeri lisaaJarjestyskriteeriValintatapajonolle(String valintatapajonoOid, JarjestyskriteeriCreateDTO dto,
                                                                       String edellinenValintatapajonoOid, Long laskentakaavaOid) {
 
+        Jarjestyskriteeri jarjestyskriteeri = modelMapper.map(dto, Jarjestyskriteeri.class);
         if (laskentakaavaOid != null) {
             Laskentakaava laskentakaava = laskentakaavaDAO.getLaskentakaava(laskentakaavaOid);
             validoiLaskentakaavaJarjestyskriteeriaVarten(laskentakaava);

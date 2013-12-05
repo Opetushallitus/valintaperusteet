@@ -1,6 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
 import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaiheTyyppi;
@@ -31,7 +33,7 @@ import java.util.List;
  */
 @Service
 @Transactional
-public class ValintatapajonoServiceImpl extends AbstractCRUDServiceImpl<Valintatapajono, Long, String> implements ValintatapajonoService {
+public class ValintatapajonoServiceImpl implements ValintatapajonoService {
 
     @Autowired
     private ValintatapajonoDAO valintatapajonoDAO;
@@ -51,9 +53,7 @@ public class ValintatapajonoServiceImpl extends AbstractCRUDServiceImpl<Valintat
     private static ValintatapajonoKopioija kopioija = new ValintatapajonoKopioija();
 
     @Autowired
-    public ValintatapajonoServiceImpl(ValintatapajonoDAO dao) {
-        super(dao);
-    }
+    private ValintaperusteetModelMapper modelMapper;
 
     @Override
     public List<Valintatapajono> findJonoByValinnanvaihe(String oid) {
@@ -84,7 +84,7 @@ public class ValintatapajonoServiceImpl extends AbstractCRUDServiceImpl<Valintat
     }
 
     @Override
-    public Valintatapajono lisaaValintatapajonoValinnanVaiheelle(String valinnanVaiheOid, Valintatapajono jono,
+    public Valintatapajono lisaaValintatapajonoValinnanVaiheelle(String valinnanVaiheOid, ValintatapajonoCreateDTO dto,
                                                                  String edellinenValintatapajonoOid) {
         ValinnanVaihe valinnanVaihe = valinnanVaiheService.readByOid(valinnanVaiheOid);
         if (!ValinnanVaiheTyyppi.TAVALLINEN.equals(valinnanVaihe.getValinnanVaiheTyyppi())) {
@@ -99,6 +99,7 @@ public class ValintatapajonoServiceImpl extends AbstractCRUDServiceImpl<Valintat
             edellinenValintatapajono = valintatapajonoDAO.haeValinnanVaiheenViimeinenValintatapajono(valinnanVaiheOid);
         }
 
+        Valintatapajono jono = modelMapper.map(dto, Valintatapajono.class);
 
         jono.setOid(oidService.haeValintatapajonoOid());
         jono.setValinnanVaihe(valinnanVaihe);
@@ -164,14 +165,9 @@ public class ValintatapajonoServiceImpl extends AbstractCRUDServiceImpl<Valintat
     }
 
     @Override
-    public Valintatapajono update(String oid, Valintatapajono incoming) {
+    public Valintatapajono update(String oid, ValintatapajonoCreateDTO dto) {
         Valintatapajono managedObject = haeValintatapajono(oid);
-        return LinkitettavaJaKopioitavaUtil.paivita(managedObject, incoming, kopioija);
-    }
-
-    @Override
-    public Valintatapajono insert(Valintatapajono entity) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return LinkitettavaJaKopioitavaUtil.paivita(managedObject, modelMapper.map(dto, Valintatapajono.class), kopioija);
     }
 
     @Override

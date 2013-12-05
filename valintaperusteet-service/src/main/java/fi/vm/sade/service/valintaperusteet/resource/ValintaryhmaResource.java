@@ -1,7 +1,11 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
-import fi.vm.sade.service.valintaperusteet.dto.ErrorDTO;
-import fi.vm.sade.service.valintaperusteet.model.*;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
+import fi.vm.sade.service.valintaperusteet.dto.*;
+import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
+import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.service.*;
 import org.codehaus.jackson.map.annotate.JsonView;
 import org.slf4j.Logger;
@@ -25,6 +29,7 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.*;
 @Component
 @Path("valintaryhma")
 @PreAuthorize("isAuthenticated()")
+@Api(value = "/valintaryhma", description = "Resurssi valintaryhmien käsittelyyn")
 public class ValintaryhmaResource {
 
     @Autowired
@@ -48,6 +53,9 @@ public class ValintaryhmaResource {
     @Autowired
     private OidService oidService;
 
+    @Autowired
+    private ValintaperusteetModelMapper modelMapper;
+
     protected final static Logger LOGGER = LoggerFactory.getLogger(ValintaryhmaResource.class);
 
 
@@ -55,15 +63,16 @@ public class ValintaryhmaResource {
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView(JsonViews.Basic.class)
     @Secured({READ, UPDATE, CRUD})
-    public List<Valintaryhma> search(@QueryParam("paataso") Boolean paataso,
-                                     @QueryParam("parentsOf") String parentsOf
+    @ApiOperation(value = "Hakee valintaryhmiä annettujen hakukriteerien perusteella", response = ValintaryhmaDTO.class)
+    public List<ValintaryhmaDTO> search(@ApiParam(value = "Haetaanko pääatason valintaryhmät") @QueryParam("paataso") Boolean paataso,
+                                        @ApiParam(value = "Parent-valintaryhmän OID, jonka lapsia haetaan") @QueryParam("parentsOf") String parentsOf
     ) {
-        List<Valintaryhma> valintaryhmas = new ArrayList<Valintaryhma>();
+        List<ValintaryhmaDTO> valintaryhmas = new ArrayList<ValintaryhmaDTO>();
         if (Boolean.TRUE.equals(paataso)) {
-            valintaryhmas.addAll(valintaryhmaService.findValintaryhmasByParentOid(null));
+            valintaryhmas.addAll(modelMapper.mapList(valintaryhmaService.findValintaryhmasByParentOid(null), ValintaryhmaDTO.class));
         }
         if (parentsOf != null) {
-            valintaryhmas.addAll(valintaryhmaService.findParentHierarchyFromOid(parentsOf));
+            valintaryhmas.addAll(modelMapper.mapList(valintaryhmaService.findParentHierarchyFromOid(parentsOf), ValintaryhmaDTO.class));
         }
         return valintaryhmas;
     }
@@ -73,8 +82,9 @@ public class ValintaryhmaResource {
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
-    public Valintaryhma queryFull(@PathParam("oid") String oid) {
-        return valintaryhmaService.readByOid(oid);
+    @ApiOperation(value = "Hakee valintaryhmän OID:n perusteella", response = ValintaryhmaDTO.class)
+    public ValintaryhmaDTO queryFull(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
+        return modelMapper.map(valintaryhmaService.readByOid(oid), ValintaryhmaDTO.class);
     }
 
     @GET
@@ -82,8 +92,9 @@ public class ValintaryhmaResource {
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
-    public List<Hakijaryhma> hakijaryhmat(@PathParam("oid") String oid) {
-        return hakijaryhmaService.findByValintaryhma(oid);
+    @ApiOperation(value = "Hakee hakijaryhmät valintaryhmän OID:n perusteella", response = HakijaryhmaDTO.class)
+    public List<HakijaryhmaDTO> hakijaryhmat(@ApiParam(value = "Valintaryhmän OID", required = true) @PathParam("oid") String oid) {
+        return modelMapper.mapList(hakijaryhmaService.findByValintaryhma(oid), HakijaryhmaDTO.class);
     }
 
     @GET
@@ -91,10 +102,11 @@ public class ValintaryhmaResource {
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView(JsonViews.ParentHierarchy.class)
     @Secured({READ, UPDATE, CRUD})
-    public List<Valintaryhma> parentHierarchy(@PathParam("oid") String parentsOf) {
-        List<Valintaryhma> valintaryhmas = new ArrayList<Valintaryhma>();
+    @ApiOperation(value = "Hakee valintaryhmän parent-valintaryhmät OID:n perusteella", response = ValintaryhmaListDTO.class)
+    public List<ValintaryhmaListDTO> parentHierarchy(@ApiParam(value = "OID", required = true) @PathParam("oid") String parentsOf) {
+        List<ValintaryhmaListDTO> valintaryhmas = new ArrayList<ValintaryhmaListDTO>();
         if (parentsOf != null) {
-            valintaryhmas.addAll(valintaryhmaService.findParentHierarchyFromOid(parentsOf));
+            valintaryhmas.addAll(modelMapper.mapList(valintaryhmaService.findParentHierarchyFromOid(parentsOf), ValintaryhmaListDTO.class));
         }
         return valintaryhmas;
     }
@@ -104,8 +116,9 @@ public class ValintaryhmaResource {
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
-    public List<Valintaryhma> queryChildren(@PathParam("oid") String oid) {
-        return valintaryhmaService.findValintaryhmasByParentOid(oid);
+    @ApiOperation(value = "Hakee valintaryhmän lapsivalintaryhmät OID:n perusteella", response = ValintaryhmaDTO.class)
+    public List<ValintaryhmaDTO> queryChildren(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
+        return modelMapper.mapList(valintaryhmaService.findValintaryhmasByParentOid(oid), ValintaryhmaDTO.class);
     }
 
     @GET
@@ -113,8 +126,9 @@ public class ValintaryhmaResource {
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
-    public List<HakukohdeViite> childHakukohdes(@PathParam("oid") String oid) {
-        return hakukohdeService.findByValintaryhmaOid(oid);
+    @ApiOperation(value = "Hakee valintaryhmän lapsihakukohteet OID:n perusteella", response = HakukohdeViiteDTO.class)
+    public List<HakukohdeViiteDTO> childHakukohdes(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
+        return modelMapper.mapList(hakukohdeService.findByValintaryhmaOid(oid), HakukohdeViiteDTO.class);
     }
 
     @GET
@@ -122,8 +136,9 @@ public class ValintaryhmaResource {
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView(JsonViews.Basic.class)
     @Secured({READ, UPDATE, CRUD})
-    public List<ValinnanVaihe> valinnanVaiheet(@PathParam("oid") String oid) {
-        return valinnanVaiheService.findByValintaryhma(oid);
+    @ApiOperation(value = "Hakee valinnan vaiheet valintaryhmän OID:n perusteella", response = ValinnanVaiheDTO.class)
+    public List<ValinnanVaiheDTO> valinnanVaiheet(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
+        return modelMapper.mapList(valinnanVaiheService.findByValintaryhma(oid), ValinnanVaiheDTO.class);
     }
 
     @PUT
@@ -132,10 +147,12 @@ public class ValintaryhmaResource {
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({CRUD})
-    public Response insertChild(@PathParam("parentOid") String parentOid, Valintaryhma valintaryhma) {
+    @ApiOperation(value = "Lisää lapsivalintaryhmän parametrina annetulle parent-valintaryhmälle")
+    public Response insertChild(@ApiParam(value = "Parent-valintaryhmän OID", required = true) @PathParam("parentOid") String parentOid,
+                                @ApiParam(value = "Lisättävä valintaryhmä", required = true) ValintaryhmaCreateDTO valintaryhma) {
         try {
-            valintaryhma = valintaryhmaService.insert(valintaryhma, parentOid);
-            return Response.status(Response.Status.CREATED).entity(valintaryhma).build();
+            ValintaryhmaDTO lisatty = modelMapper.map(valintaryhmaService.insert(valintaryhma, parentOid), ValintaryhmaDTO.class);
+            return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
@@ -146,10 +163,11 @@ public class ValintaryhmaResource {
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({CRUD})
-    public Response insert(Valintaryhma valintaryhma) {
+    @ApiOperation(value = "Lisää valintaryhmän")
+    public Response insert(@ApiParam(value = "Uusi valintaryhmä", required = true) ValintaryhmaCreateDTO valintaryhma) {
         try {
-            valintaryhmaService.insert(valintaryhma);
-            return Response.status(Response.Status.CREATED).entity(valintaryhma).build();
+            ValintaryhmaDTO lisatty = modelMapper.map(valintaryhmaService.insert(valintaryhma), ValintaryhmaDTO.class);
+            return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (Exception e) {
             LOGGER.error("Error creating valintaryhmä.", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ErrorDTO(e.getMessage())).build();
@@ -162,7 +180,9 @@ public class ValintaryhmaResource {
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({UPDATE, CRUD})
-    public Response update(@PathParam("oid") String oid, Valintaryhma valintaryhma) {
+    @ApiOperation(value = "Päivittää valintaryhmän")
+    public Response update(@ApiParam(value = "Päivitettävän valintaryhmän OID", required = true) @PathParam("oid") String oid,
+                           @ApiParam(value = "Päivitettävän valintaryhmän uudet tiedot") ValintaryhmaCreateDTO valintaryhma) {
         valintaryhmaService.update(oid, valintaryhma);
         return Response.status(Response.Status.ACCEPTED).build();
     }
@@ -173,12 +193,14 @@ public class ValintaryhmaResource {
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({CRUD})
-    public Response insertValinnanvaihe(@PathParam("valintaryhmaOid") String valintaryhamOid,
-                                        @QueryParam("edellinenValinnanVaiheOid") String edellinenValinnanVaiheOid, ValinnanVaihe valinnanVaihe) {
+    @ApiOperation(value = "Lisää valinnan vaiheen valintaryhmälle")
+    public Response insertValinnanvaihe(@ApiParam(value = "Valintaryhmän OID, jolla valinnan vaihe lisätään", required = true) @PathParam("valintaryhmaOid") String valintaryhmaOid,
+                                        @ApiParam(value = "Valinnan vaiheen OID, jonka jälkeen uusi valinnan vaihe lisätään") @QueryParam("edellinenValinnanVaiheOid") String edellinenValinnanVaiheOid,
+                                        @ApiParam(value = "Uusi valinnan vaihe", required = true) ValinnanVaiheCreateDTO valinnanVaihe) {
         try {
-            valinnanVaiheService.lisaaValinnanVaiheValintaryhmalle(valintaryhamOid, valinnanVaihe,
-                    edellinenValinnanVaiheOid);
-            return Response.status(Response.Status.CREATED).entity(valinnanVaihe).build();
+            ValinnanVaiheDTO lisatty = modelMapper.map(valinnanVaiheService.lisaaValinnanVaiheValintaryhmalle(valintaryhmaOid, valinnanVaihe,
+                    edellinenValinnanVaiheOid), ValinnanVaiheDTO.class);
+            return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (Exception e) {
             e.printStackTrace();
             LOGGER.error("Error creating valinnanvaihe.", e);
@@ -187,22 +209,18 @@ public class ValintaryhmaResource {
     }
 
 
-
     @PUT
     @Path("{valintaryhmaOid}/hakijaryhma")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({CRUD})
-    public Response insertHakijaryhma(@PathParam("valintaryhmaOid") String valintaryhamOid,
-                                      Hakijaryhma hakijaryhma) {
+    @ApiOperation(value = "Lisää hakijaryhmän valintaryhmälle")
+    public Response insertHakijaryhma(@ApiParam(value = "Valintaryhmän OID, jolle hakijaryhmä lisätään", required = true) @PathParam("valintaryhmaOid") String valintaryhamOid,
+                                      @ApiParam(value = "Lisättävä hakijaryhmä", required = true) HakijaryhmaCreateDTO hakijaryhma) {
         try {
-            hakijaryhma.setOid(oidService.haeHakijaryhmaOid());
-
-            hakijaryhma = hakijaryhmaService.lisaaHakijaryhmaValintaryhmalle(
-                    valintaryhamOid,
-                    hakijaryhma);
-            return Response.status(Response.Status.CREATED).entity(hakijaryhma).build();
+            HakijaryhmaDTO lisatty = modelMapper.map(hakijaryhmaService.lisaaHakijaryhmaValintaryhmalle(valintaryhamOid, hakijaryhma), HakijaryhmaDTO.class);
+            return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (Exception e) {
             LOGGER.error("Error creating hakijaryhma.", e);
             return Response.status(Response.Status.BAD_REQUEST).build();
@@ -215,8 +233,9 @@ public class ValintaryhmaResource {
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({UPDATE, CRUD})
-    public Response updateHakukohdekoodi(@PathParam("valintaryhmaOid") String valintaryhmaOid,
-                                         Set<Hakukohdekoodi> hakukohdekoodit) {
+    @ApiOperation(value = "Päivittää valintaryhmän hakukohdekoodeja")
+    public Response updateHakukohdekoodi(@ApiParam(value = "Valintaryhmän OID, jonka hakukohdekoodeja päivitetään", required = true) @PathParam("valintaryhmaOid") String valintaryhmaOid,
+                                         @ApiParam(value = "Uudet hakukohdekoodit", required = true) Set<KoodiDTO> hakukohdekoodit) {
         try {
             hakukohdekoodiService.updateValintaryhmaHakukohdekoodit(valintaryhmaOid, hakukohdekoodit);
             return Response.status(Response.Status.ACCEPTED).entity(hakukohdekoodit).build();
@@ -232,8 +251,9 @@ public class ValintaryhmaResource {
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({CRUD})
-    public Response insertHakukohdekoodi(@PathParam("valintaryhmaOid") String valintaryhamOid,
-                                         Hakukohdekoodi hakukohdekoodi) {
+    @ApiOperation(value = "Lisää hakukohdekoodin valintaryhmälle")
+    public Response insertHakukohdekoodi(@ApiParam(value = "Valintaryhmän OID, jolle hakukohdekoodi lisätään", required = true) @PathParam("valintaryhmaOid") String valintaryhamOid,
+                                         @ApiParam(value = "Lisättävä hakukohdekoodi", required = true) KoodiDTO hakukohdekoodi) {
         try {
             hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(valintaryhamOid, hakukohdekoodi);
             return Response.status(Response.Status.CREATED).entity(hakukohdekoodi).build();
@@ -249,8 +269,9 @@ public class ValintaryhmaResource {
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView(JsonViews.Basic.class)
     @Secured(CRUD)
-    public Response updateValintakoekoodi(@PathParam("valintaryhmaOid") String valintaryhmaOid,
-                                          List<Valintakoekoodi> valintakoekoodit) {
+    @ApiOperation(value = "Päivittää valintaryhmän valintakoekoodeja")
+    public Response updateValintakoekoodi(@ApiParam(value = "Valintaryhmän OID, jonka valintakoekoodeja päivitetään", required = true) @PathParam("valintaryhmaOid") String valintaryhmaOid,
+                                          @ApiParam(value = "Päivitettävät valintakoekoodit", required = true) List<KoodiDTO> valintakoekoodit) {
         try {
             valintakoekoodiService.updateValintaryhmanValintakoekoodit(valintaryhmaOid, valintakoekoodit);
             return Response.status(Response.Status.ACCEPTED).entity(valintakoekoodit).build();
@@ -266,8 +287,9 @@ public class ValintaryhmaResource {
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({CRUD})
-    public Response insertValintakoekoodi(@PathParam("valintaryhmaOid") String valintaryhamOid,
-                                          Valintakoekoodi valintakoekoodi) {
+    @ApiOperation(value = "Lisää valintakoekoodin valintaryhmälle")
+    public Response insertValintakoekoodi(@ApiParam(value = "Valintaryhmän OID, jolle valintakoekoodi lisätään", required = true) @PathParam("valintaryhmaOid") String valintaryhamOid,
+                                          @ApiParam(value = "Lisättävä valintakoekoodi", required = true) KoodiDTO valintakoekoodi) {
         try {
             valintakoekoodiService.lisaaValintakoekoodiValintaryhmalle(valintaryhamOid, valintakoekoodi);
             return Response.status(Response.Status.CREATED).entity(valintakoekoodi).build();

@@ -2,12 +2,13 @@ package fi.vm.sade.service.valintaperusteet.resource;
 
 import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
-import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
+import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriDTO;
+import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriInsertDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
-import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintatapajonoEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.util.TestUtil;
-import org.codehaus.jettison.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -56,7 +57,7 @@ public class ValintatapajonoResourceTest {
 
     @Test
     public void testUpdate() throws Exception {
-        Valintatapajono jono = resource.readByOid("1");
+        ValintatapajonoDTO jono = resource.readByOid("1");
         jono.setNimi("muokattu");
         resource.update(jono.getOid(), jono);
 
@@ -67,7 +68,7 @@ public class ValintatapajonoResourceTest {
 
     @Test
     public void testFindAll() throws Exception {
-        List<Valintatapajono> jonos = resource.findAll();
+        List<ValintatapajonoDTO> jonos = resource.findAll();
 
         assertEquals(70, jonos.size());
         testUtil.lazyCheck(JsonViews.Basic.class, jonos);
@@ -75,7 +76,7 @@ public class ValintatapajonoResourceTest {
 
     @Test
     public void testJarjestykriteeri() throws Exception {
-        List<Jarjestyskriteeri> jarjestyskriteeri = resource.findJarjestyskriteeri("6");
+        List<JarjestyskriteeriDTO> jarjestyskriteeri = resource.findJarjestyskriteeri("6");
 
         testUtil.lazyCheck(JsonViews.Basic.class, jarjestyskriteeri, true);
         assertEquals(3, jarjestyskriteeri.size());
@@ -95,7 +96,7 @@ public class ValintatapajonoResourceTest {
 
     @Test
     public void testChildrenAreDeleted() {
-        Valintatapajono valintatapajono = resource.readByOid("30");
+        ValintatapajonoDTO valintatapajono = resource.readByOid("30");
         assertNotNull(valintatapajono);
         // objekti on peritty
         resource.delete("26");
@@ -116,16 +117,17 @@ public class ValintatapajonoResourceTest {
 
     @Test
     public void testInsertJK() throws Exception {
+        JarjestyskriteeriCreateDTO jk = new JarjestyskriteeriCreateDTO();
+        jk.setMetatiedot("mt1");
+        jk.setAktiivinen(true);
 
-        JSONObject jk = new JSONObject();
-        jk.put("metatiedot", "mt1");
-        jk.put("laskentakaava_id", 1);
-        jk.put("aktiivinen", "true");
-        Response insert = resource.insertJarjestyskriteeri("1", jk);
-
+        JarjestyskriteeriInsertDTO comb = new JarjestyskriteeriInsertDTO();
+        comb.setJarjestyskriteeri(jk);
+        comb.setLaskentakaavaId(1L);
+        Response insert = resource.insertJarjestyskriteeri("1", comb);
         assertEquals(Response.Status.ACCEPTED.getStatusCode(), insert.getStatus());
 
-        Jarjestyskriteeri entity = (Jarjestyskriteeri) insert.getEntity();
+        JarjestyskriteeriDTO entity = (JarjestyskriteeriDTO) insert.getEntity();
 
         testUtil.lazyCheck(JsonViews.Basic.class, entity, true);
 
@@ -134,10 +136,10 @@ public class ValintatapajonoResourceTest {
 
     @Test
     public void testJarjesta() {
-        List<Valintatapajono> valintatapajonoList = vaiheResource.listJonos("1");
+        List<ValintatapajonoDTO> valintatapajonoList = vaiheResource.listJonos("1");
         List<String> oids = new ArrayList<String>();
 
-        for (Valintatapajono valintatapajono : valintatapajonoList) {
+        for (ValintatapajonoDTO valintatapajono : valintatapajonoList) {
             oids.add(valintatapajono.getOid());
         }
 
@@ -145,7 +147,7 @@ public class ValintatapajonoResourceTest {
         assertEquals("5", oids.get(4));
         Collections.reverse(oids);
 
-        List<Valintatapajono> jarjesta = resource.jarjesta(oids);
+        List<ValintatapajonoDTO> jarjesta = resource.jarjesta(oids);
         assertEquals("5", jarjesta.get(0).getOid());
         assertEquals("1", jarjesta.get(4).getOid());
 

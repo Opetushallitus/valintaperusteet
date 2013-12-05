@@ -1,16 +1,17 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
-import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
-import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
+import fi.vm.sade.service.valintaperusteet.dto.*;
+import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
-import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaService;
 import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaValintatapajonoService;
 import fi.vm.sade.service.valintaperusteet.service.JarjestyskriteeriService;
 import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
 import org.codehaus.jackson.map.annotate.JsonView;
 import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,7 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.*;
 @Component
 @Path("valintatapajono")
 @PreAuthorize("isAuthenticated()")
+@Api(value = "/valintatapajono", description = "Resurssi valintatapajonojen käsittelyyn")
 public class ValintatapajonoResource {
     protected final static Logger LOGGER = LoggerFactory.getLogger(ValintatapajonoResource.class);
 
@@ -53,14 +55,17 @@ public class ValintatapajonoResource {
     @Autowired
     JarjestyskriteeriService jarjestyskriteeriService;
 
+    @Autowired
+    private ValintaperusteetModelMapper modelMapper;
 
     @GET
     @Path("{oid}")
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
-    public Valintatapajono readByOid(@PathParam("oid") String oid) {
-        return valintatapajonoService.readByOid(oid);
+    @ApiOperation(value = "Hakee valintatapajonon OID:n perusteella", response = ValintatapajonoDTO.class)
+    public ValintatapajonoDTO readByOid(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
+        return modelMapper.map(valintatapajonoService.readByOid(oid), ValintatapajonoDTO.class);
     }
 
     @GET
@@ -68,8 +73,9 @@ public class ValintatapajonoResource {
     @JsonView({JsonViews.Basic.class})
     @Path("{oid}/jarjestyskriteeri")
     @Secured({READ, UPDATE, CRUD})
-    public List<Jarjestyskriteeri> findJarjestyskriteeri(@PathParam("oid") String oid) {
-        return jarjestyskriteeriService.findJarjestyskriteeriByJono(oid);
+    @ApiOperation(value = "Hakee järjestyskriteerit valintatapajonon OID:n perusteella", response = JarjestyskriteeriDTO.class)
+    public List<JarjestyskriteeriDTO> findJarjestyskriteeri(@ApiParam(value = "Valintatapajonon OID", required = true) @PathParam("oid") String oid) {
+        return modelMapper.mapList(jarjestyskriteeriService.findJarjestyskriteeriByJono(oid), JarjestyskriteeriDTO.class);
     }
 
     @POST
@@ -78,8 +84,9 @@ public class ValintatapajonoResource {
     @JsonView({JsonViews.Basic.class})
     @Path("{valintatapajonoOid}/hakijaryhma/{hakijaryhmaOid}")
     @Secured({READ, UPDATE, CRUD})
-    public Response liitaHakijaryhma(@PathParam("valintatapajonoOid") String valintatapajonoOid,
-                                      @PathParam("hakijaryhmaOid") String hakijaryhmaOid) {
+    @ApiOperation(value = "Liittää hakijaryhmän valintatapajonoon")
+    public Response liitaHakijaryhma(@ApiParam(value = "Valintatapajonon OID, jolle hakijaryhmä liitetään", required = true) @PathParam("valintatapajonoOid") String valintatapajonoOid,
+                                     @ApiParam(value = "Hakijaryhmän OID, joka valintatapajonoon liitetään", required = true) @PathParam("hakijaryhmaOid") String hakijaryhmaOid) {
         try {
             hakijaryhmaService.liitaHakijaryhmaValintatapajonolle(valintatapajonoOid, hakijaryhmaOid);
             return Response.status(Response.Status.ACCEPTED).build();
@@ -96,16 +103,18 @@ public class ValintatapajonoResource {
     @Path("{valintatapajonoOid}/hakijaryhma")
     @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
-    public List<HakijaryhmaValintatapajono> hakijaryhmat(@PathParam("valintatapajonoOid") String valintatapajonoOid) {
-        return hakijaryhmaValintatapajonoService.findHakijaryhmaByJono(valintatapajonoOid);
+    @ApiOperation(value = "Hakee valintatapajonoon liitetyt hakijaryhmät valintatapajonon OID:n perusteella")
+    public List<HakijaryhmaValintatapajonoDTO> hakijaryhmat(@ApiParam(value = "Valintatapajonon OID", required = true) @PathParam("valintatapajonoOid") String valintatapajonoOid) {
+        return modelMapper.mapList(hakijaryhmaValintatapajonoService.findHakijaryhmaByJono(valintatapajonoOid), HakijaryhmaValintatapajonoDTO.class);
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
-    public List<Valintatapajono> findAll() {
-        return valintatapajonoService.findAll();
+    @ApiOperation(value = "Hakee kaikki valintatapajonot", response = ValintatapajonoDTO.class)
+    public List<ValintatapajonoDTO> findAll() {
+        return modelMapper.mapList(valintatapajonoService.findAll(), ValintatapajonoDTO.class);
     }
 
     @POST
@@ -114,8 +123,10 @@ public class ValintatapajonoResource {
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({UPDATE, CRUD})
-    public Response update(@PathParam("oid") String oid, Valintatapajono jono) {
-        Valintatapajono update = valintatapajonoService.update(oid, jono);
+    @ApiOperation(value = "Päivittää valintatapajonoa")
+    public Response update(@ApiParam(value = "Päivitettävän valintatapajonon OID", required = true) @PathParam("oid") String oid,
+                           @ApiParam(value = "Päivitettävän valintatapajonon uudet tiedot", required = true) ValintatapajonoCreateDTO jono) {
+        ValintatapajonoDTO update = modelMapper.map(valintatapajonoService.update(oid, jono), ValintatapajonoDTO.class);
         return Response.status(Response.Status.ACCEPTED).entity(update).build();
     }
 
@@ -125,17 +136,14 @@ public class ValintatapajonoResource {
     @JsonView({JsonViews.Basic.class})
     @Path("{valintatapajonoOid}/jarjestyskriteeri")
     @Secured({CRUD})
-    public Response insertJarjestyskriteeri(@PathParam("valintatapajonoOid") String valintatapajonoOid,
-                                            JSONObject jk) throws IOException, JSONException {
-        Jarjestyskriteeri jarjestyskriteeri = new Jarjestyskriteeri();
-        jarjestyskriteeri.setMetatiedot(jk.optString("metatiedot"));
-        jarjestyskriteeri.setAktiivinen(jk.getBoolean("aktiivinen"));
-        Long laskentakaavaId = jk.optLong("laskentakaava_id");
+    @ApiOperation(value = "Lisää järjestyskriteerin valintatapajonolle")
+    public Response insertJarjestyskriteeri(@ApiParam(value = "Valintatapajonon OID, jolle järjestyskriteeri lisätään", required = true) @PathParam("valintatapajonoOid") String valintatapajonoOid,
+                                            @ApiParam(value = "Järjestyskriteeri ja laskentakaavaviite", required = true) JarjestyskriteeriInsertDTO jk) throws IOException, JSONException {
 
-        Jarjestyskriteeri insert = jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(valintatapajonoOid,
-                jarjestyskriteeri,
+        JarjestyskriteeriDTO insert = modelMapper.map(jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(valintatapajonoOid,
+                jk.getJarjestyskriteeri(),
                 null,
-                laskentakaavaId);
+                jk.getLaskentakaavaId()), JarjestyskriteeriDTO.class);
         return Response.status(Response.Status.ACCEPTED).entity(insert).build();
     }
 
@@ -145,15 +153,16 @@ public class ValintatapajonoResource {
     @JsonView(JsonViews.Basic.class)
     @Path("jarjesta")
     @Secured({UPDATE, CRUD})
-    public List<Valintatapajono> jarjesta(List<String> oids) {
-
-        return valintatapajonoService.jarjestaValintatapajonot(oids);
+    @ApiOperation(value = "Järjestää valintatapajonot annetun OID-listan mukaan", response = ValintatapajonoDTO.class)
+    public List<ValintatapajonoDTO> jarjesta(@ApiParam(value = "OID-lista jonka mukaiseen järjestykseen valintatapajonot järjestetään", required = true) List<String> oids) {
+        return modelMapper.mapList(valintatapajonoService.jarjestaValintatapajonot(oids), ValintatapajonoDTO.class);
     }
 
     @DELETE
     @Path("{oid}")
     @Secured({CRUD})
-    public Response delete(@PathParam("oid") String oid) {
+    @ApiOperation(value = "Poistaa valintatapajonon OID:n perusteella")
+    public Response delete(@ApiParam(value = "Poistettavan valintatapajonon OID", required = true) @PathParam("oid") String oid) {
         valintatapajonoService.deleteByOid(oid);
         return Response.status(Response.Status.ACCEPTED).build();
     }
