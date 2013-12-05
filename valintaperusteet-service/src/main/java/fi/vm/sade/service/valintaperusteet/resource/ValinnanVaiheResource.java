@@ -54,7 +54,7 @@ public class ValinnanVaiheResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView(JsonViews.Basic.class)
-    @Path("{oid}")
+    @Path("/{oid}")
     @Secured({READ, UPDATE, CRUD})
     @ApiOperation(value = "Hakee valinnan vaiheen OID:n perusteella", response = ValinnanVaiheDTO.class)
     public ValinnanVaiheDTO read(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
@@ -64,7 +64,7 @@ public class ValinnanVaiheResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
-    @Path("{oid}/valintatapajono")
+    @Path("/{oid}/valintatapajono")
     @Secured({READ, UPDATE, CRUD})
     @ApiOperation(value = "Hakee valinnan vaiheen valintatapajonot OID:n perusteella", response = ValintatapajonoDTO.class)
     public List<ValintatapajonoDTO> listJonos(@ApiParam(value = "Valinnan vaiheen OID", required = true) @PathParam("oid") String oid) {
@@ -74,7 +74,7 @@ public class ValinnanVaiheResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView(JsonViews.Basic.class)
-    @Path("{oid}/valintakoe")
+    @Path("/{oid}/valintakoe")
     @Secured({READ, UPDATE, CRUD})
     @ApiOperation(value = "Hakee valintakokeet valinnan vaiheen OID:n perusteella", response = ValintakoeDTO.class)
     public List<ValintakoeDTO> listValintakokeet(@ApiParam(value = "Valinnan vaiheen OID", required = true) @PathParam("oid") String oid) {
@@ -85,7 +85,7 @@ public class ValinnanVaiheResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
-    @Path("{parentOid}/valintatapajono")
+    @Path("/{parentOid}/valintatapajono")
     @Secured({UPDATE, CRUD})
     @ApiOperation(value = "Lisää valintatapajonon valinnan vaiheelle")
     public Response addJonoToValinnanVaihe(@ApiParam(value = "Valinnan vaiheen OID", required = true) @PathParam("parentOid") String parentOid,
@@ -103,7 +103,7 @@ public class ValinnanVaiheResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
-    @Path("{parentOid}/valintakoe")
+    @Path("/{parentOid}/valintakoe")
     @Secured({UPDATE, CRUD})
     @ApiOperation(value = "Lisää valintakokeen valinnan vaiheelle")
     public Response addValintakoeToValinnanVaihe(@ApiParam(value = "Valinnan vaiheen OID", required = true) @PathParam("parentOid") String parentOid,
@@ -123,7 +123,7 @@ public class ValinnanVaiheResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView(JsonViews.Basic.class)
-    @Path("{oid}")
+    @Path("/{oid}")
     @Secured({UPDATE, CRUD})
     @ApiOperation(value = "Päivittää valinnan vaihetta", response = ValinnanVaiheDTO.class)
     public ValinnanVaiheDTO update(@ApiParam(value = "Päivitettävän valinnan vaiheen OID", required = true) @PathParam("oid") String oid,
@@ -135,7 +135,7 @@ public class ValinnanVaiheResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView(JsonViews.Basic.class)
-    @Path("jarjesta")
+    @Path("/jarjesta")
     @Secured({UPDATE, CRUD})
     @ApiOperation(value = "Järjestää valinnan vaiheet parametrina annetun OID-listan mukaiseen järjestykseen", response = ValinnanVaiheDTO.class)
     public List<ValinnanVaiheDTO> jarjesta(@ApiParam(value = "Valinnan vaiheiden uusi järjestys", required = true) List<String> oids) {
@@ -143,7 +143,7 @@ public class ValinnanVaiheResource {
     }
 
     @DELETE
-    @Path("{oid}")
+    @Path("/{oid}")
     @Secured({CRUD})
     @ApiOperation(value = "Poistaa valinnan vaiheen OID:n perusteetlla")
     @ApiResponses({
@@ -162,7 +162,7 @@ public class ValinnanVaiheResource {
     }
 
     @GET
-    @Path("{oid}/kuuluuSijoitteluun")
+    @Path("/{oid}/kuuluuSijoitteluun")
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})

@@ -37,7 +37,7 @@ public class ValintakoeResource {
     private ValintaperusteetModelMapper modelMapper;
 
     @GET
-    @Path("{oid}")
+    @Path("/{oid}")
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
@@ -48,7 +48,7 @@ public class ValintakoeResource {
 
 
     @POST
-    @Path("{oid}")
+    @Path("/{oid}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
@@ -60,7 +60,7 @@ public class ValintakoeResource {
     }
 
     @DELETE
-    @Path("{oid}")
+    @Path("/{oid}")
     @Secured({CRUD})
     @ApiOperation(value = "Poistaa valintakokeen OID:n perusteella")
     public Response delete(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {

@@ -59,7 +59,7 @@ public class ValintatapajonoResource {
     private ValintaperusteetModelMapper modelMapper;
 
     @GET
-    @Path("{oid}")
+    @Path("/{oid}")
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
@@ -71,7 +71,7 @@ public class ValintatapajonoResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
-    @Path("{oid}/jarjestyskriteeri")
+    @Path("/{oid}/jarjestyskriteeri")
     @Secured({READ, UPDATE, CRUD})
     @ApiOperation(value = "Hakee järjestyskriteerit valintatapajonon OID:n perusteella", response = JarjestyskriteeriDTO.class)
     public List<JarjestyskriteeriDTO> findJarjestyskriteeri(@ApiParam(value = "Valintatapajonon OID", required = true) @PathParam("oid") String oid) {
@@ -82,7 +82,7 @@ public class ValintatapajonoResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
-    @Path("{valintatapajonoOid}/hakijaryhma/{hakijaryhmaOid}")
+    @Path("/{valintatapajonoOid}/hakijaryhma/{hakijaryhmaOid}")
     @Secured({READ, UPDATE, CRUD})
     @ApiOperation(value = "Liittää hakijaryhmän valintatapajonoon")
     public Response liitaHakijaryhma(@ApiParam(value = "Valintatapajonon OID, jolle hakijaryhmä liitetään", required = true) @PathParam("valintatapajonoOid") String valintatapajonoOid,
@@ -100,7 +100,7 @@ public class ValintatapajonoResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("{valintatapajonoOid}/hakijaryhma")
+    @Path("/{valintatapajonoOid}/hakijaryhma")
     @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
     @ApiOperation(value = "Hakee valintatapajonoon liitetyt hakijaryhmät valintatapajonon OID:n perusteella")
@@ -118,7 +118,7 @@ public class ValintatapajonoResource {
     }
 
     @POST
-    @Path("{oid}")
+    @Path("/{oid}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
@@ -134,7 +134,7 @@ public class ValintatapajonoResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView({JsonViews.Basic.class})
-    @Path("{valintatapajonoOid}/jarjestyskriteeri")
+    @Path("/{valintatapajonoOid}/jarjestyskriteeri")
     @Secured({CRUD})
     @ApiOperation(value = "Lisää järjestyskriteerin valintatapajonolle")
     public Response insertJarjestyskriteeri(@ApiParam(value = "Valintatapajonon OID, jolle järjestyskriteeri lisätään", required = true) @PathParam("valintatapajonoOid") String valintatapajonoOid,
@@ -151,7 +151,7 @@ public class ValintatapajonoResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView(JsonViews.Basic.class)
-    @Path("jarjesta")
+    @Path("/jarjesta")
     @Secured({UPDATE, CRUD})
     @ApiOperation(value = "Järjestää valintatapajonot annetun OID-listan mukaan", response = ValintatapajonoDTO.class)
     public List<ValintatapajonoDTO> jarjesta(@ApiParam(value = "OID-lista jonka mukaiseen järjestykseen valintatapajonot järjestetään", required = true) List<String> oids) {
@@ -159,7 +159,7 @@ public class ValintatapajonoResource {
     }
 
     @DELETE
-    @Path("{oid}")
+    @Path("/{oid}")
     @Secured({CRUD})
     @ApiOperation(value = "Poistaa valintatapajonon OID:n perusteella")
     public Response delete(@ApiParam(value = "Poistettavan valintatapajonon OID", required = true) @PathParam("oid") String oid) {

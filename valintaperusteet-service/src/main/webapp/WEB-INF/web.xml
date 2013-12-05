@@ -48,30 +48,12 @@
             <param-name>com.sun.jersey.spi.container.ContainerResponseFilters</param-name>
             <param-value>fi.vm.sade.generic.rest.CorsFilter</param-value>
         </init-param>
-        <init-param>
-            <param-name>com.sun.jersey.config.property.packages</param-name>
-            <param-value>fi.vm.sade.service.valintaperusteet.resource.;com.wordnik.swagger.jersey.listing</param-value>
-        </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
         <servlet-name>Jersey REST Service</servlet-name>
         <url-pattern>/resources/*</url-pattern>
     </servlet-mapping>
-
-    <servlet>
-        <servlet-name>JerseyJaxrsConfig</servlet-name>
-        <servlet-class>com.wordnik.swagger.jersey.config.JerseyJaxrsConfig</servlet-class>
-        <init-param>
-            <param-name>api.version</param-name>
-            <param-value>1.0.0</param-value>
-        </init-param>
-        <init-param>
-            <param-name>swagger.api.basepath</param-name>
-            <param-value>/resources/api</param-value>
-        </init-param>
-        <load-on-startup>2</load-on-startup>
-    </servlet>
 
     <servlet>
         <servlet-name>cxf</servlet-name>
