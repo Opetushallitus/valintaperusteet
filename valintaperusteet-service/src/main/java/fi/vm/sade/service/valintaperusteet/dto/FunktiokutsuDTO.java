@@ -36,7 +36,7 @@ public class FunktiokutsuDTO {
 
     @JsonView(JsonViews.Basic.class)
     @ApiModelProperty(value = "Funktioargumentit")
-    private Set<FunktioargumenttiDTO> funktioargumentit = new TreeSet<FunktioargumenttiDTO>();
+    private List<FunktioargumenttiDTO> funktioargumentit = new LinkedList<FunktioargumenttiDTO>();
 
     @JsonView(JsonViews.Basic.class)
     @ApiModelProperty(value = "Valintaperusteviitteet")
@@ -78,11 +78,11 @@ public class FunktiokutsuDTO {
         this.syoteparametrit = syoteparametrit;
     }
 
-    public Set<FunktioargumenttiDTO> getFunktioargumentit() {
+    public List<FunktioargumenttiDTO> getFunktioargumentit() {
         return funktioargumentit;
     }
 
-    public void setFunktioargumentit(Set<FunktioargumenttiDTO> funktioargumentit) {
+    public void setFunktioargumentit(List<FunktioargumenttiDTO> funktioargumentit) {
         this.funktioargumentit = funktioargumentit;
     }
 
