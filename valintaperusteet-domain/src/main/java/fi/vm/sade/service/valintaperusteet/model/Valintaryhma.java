@@ -20,11 +20,9 @@ public class Valintaryhma extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     @Column(name = "oid", nullable = false, unique = true)
-    @JsonView({JsonViews.Basic.class, JsonViews.ParentHierarchy.class})
     private String oid;
 
     @Column(name = "nimi", nullable = false)
-    @JsonView({JsonViews.Basic.class, JsonViews.ParentHierarchy.class})
     private String nimi;
 
     @JoinColumn(name = "parent_id")
@@ -46,7 +44,6 @@ public class Valintaryhma extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "valintaryhma")
     private Set<Laskentakaava> laskentakaava = new HashSet<Laskentakaava>();
 
-    @JsonView({JsonViews.Basic.class})
     @JoinTable(name = "valintaryhma_hakukohdekoodi",
             joinColumns = @JoinColumn(name = "valintaryhma_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME),
             inverseJoinColumns = @JoinColumn(name = "hakukohdekoodi_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME),
@@ -55,14 +52,12 @@ public class Valintaryhma extends BaseEntity {
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<Hakukohdekoodi> hakukohdekoodit = new HashSet<Hakukohdekoodi>();
 
-    @JsonView({JsonViews.Basic.class})
     @JoinTable(name = "valintaryhma_valintakoekoodi",
             joinColumns = @JoinColumn(name = "valintaryhma_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME),
             inverseJoinColumns = @JoinColumn(name = "valintakoekoodi_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME))
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Valintakoekoodi> valintakoekoodit = new ArrayList<Valintakoekoodi>();
 
-    @JsonView({JsonViews.Basic.class})
     @JoinTable(name = "valintaryhma_organisaatio",
             joinColumns = @JoinColumn(name = "valintaryhma_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME),
             inverseJoinColumns = @JoinColumn(name = "organisaatio_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME))
@@ -116,15 +111,11 @@ public class Valintaryhma extends BaseEntity {
         this.hakukohdeViitteet = hakukohdeViitteet;
     }
 
-    @JsonProperty(value = "lapsivalintaryhma")
-    @JsonView(JsonViews.Basic.class)
     @Transient
     public boolean lapsivalintaryhma() {
         return alavalintaryhmat.size() > 0 ? true : false;
     }
 
-    @JsonProperty(value = "lapsihakukohde")
-    @JsonView(JsonViews.Basic.class)
     @Transient
     public boolean lapsihakukohde() {
         return hakukohdeViitteet.size() > 0 ? true : false;

@@ -13,7 +13,6 @@ import org.codehaus.jackson.map.annotate.JsonView;
 @ApiModel(value = "ValintakoeDTO", description = "Valintakoe")
 public class ValintakoeDTO extends ValintakoeCreateDTO {
 
-    @JsonView(JsonViews.Basic.class)
     @ApiModelProperty(value = "OID", required = true)
     private String oid;
 

@@ -21,6 +21,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
+import javax.ws.rs.core.Response;
 import java.util.Arrays;
 import java.util.List;
 
@@ -67,12 +68,10 @@ public class JarjestyskriteeriResourceTest {
         comb.setJarjestyskriteeri(update);
         comb.setLaskentakaavaId(jk.getLaskentakaavaId());
 
-        resource.update("1", comb);
+        Response update1 = resource.update("1", comb);
+        JarjestyskriteeriDTO dto = (JarjestyskriteeriDTO)update1.getEntity();
+        assertEquals("metatiedot", dto.getMetatiedot());
 
-        jk = jarjestyskriteeriDAO.readByOid("1");
-//        assertEquals(100, (int)jk.getPrioriteetti());
-
-        testUtil.lazyCheck(JsonViews.Basic.class, jk);
     }
 
     @Test

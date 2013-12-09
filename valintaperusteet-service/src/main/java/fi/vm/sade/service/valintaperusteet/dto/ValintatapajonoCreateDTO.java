@@ -14,42 +14,32 @@ import org.codehaus.jackson.map.annotate.JsonView;
 @ApiModel(value = "ValintatapajonoCreateDTO", description = "Valintatapajono")
 public class ValintatapajonoCreateDTO {
     @ApiModelProperty(value = "Aloituspaikat", required = true)
-    @JsonView(JsonViews.Basic.class)
     private Integer aloituspaikat;
 
     @ApiModelProperty(value = "Nimi", required = true)
-    @JsonView(JsonViews.Basic.class)
     private String nimi;
 
     @ApiModelProperty(value = "Kuvaus")
-    @JsonView(JsonViews.Basic.class)
     private String kuvaus;
 
     @ApiModelProperty(value = "Siirretään sijoitteluun", required = true)
-    @JsonView(JsonViews.Basic.class)
     private Boolean siirretaanSijoitteluun = false;
 
     @ApiModelProperty(value = "Tasapistesääntö", required = true)
-    @JsonView(JsonViews.Basic.class)
     private Tasapistesaanto tasapistesaanto;
 
-    @JsonView(JsonViews.Basic.class)
     @ApiModelProperty(value = "Aktiivinen", required = true)
     private Boolean aktiivinen;
 
-    @JsonView(JsonViews.Basic.class)
     @ApiModelProperty(value = "Ei varasijatäyttöä", required = true)
     private Boolean eiVarasijatayttoa = false;
 
     @ApiModelProperty(value = "Varasijojen lkm", required = true)
-    @JsonView(JsonViews.Basic.class)
     private Integer varasijat = 0;
 
     @ApiModelProperty(value = "Kuinka monta päivää varasijoja täytetään", required = true)
-    @JsonView(JsonViews.Basic.class)
     private Integer varasijaTayttoPaivat = 0;
 
-    @JsonView(JsonViews.Basic.class)
     @ApiModelProperty(value = "Täytetäänkö poissaolevia", required = true)
     private Boolean poissaOlevaTaytto = false;
 

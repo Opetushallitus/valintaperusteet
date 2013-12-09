@@ -1,5 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import org.codehaus.jackson.map.annotate.JsonView;
 
@@ -13,37 +15,38 @@ import java.util.Set;
  * Time: 13:00
  * To change this template use File | Settings | File Templates.
  */
+
+@ApiModel(value = "ValintaperustePuuDTO", description = "Valintaperustepuu")
 public class ValintaperustePuuDTO {
 
-
-    @JsonView(JsonViews.Basic.class)
+    @ApiModelProperty(value = "Ylävalintaryhmä", required = true)
     private ValintaperustePuuDTO ylavalintaryhma;
 
-    @JsonView(JsonViews.Basic.class)
+    @ApiModelProperty(value = "Alavalintaryhmät", required = true)
     private Set<ValintaperustePuuDTO> alavalintaryhmat = new HashSet<ValintaperustePuuDTO>();
 
-    @JsonView(JsonViews.Basic.class)
+    @ApiModelProperty(value = "Hakukohdeviitteet", required = true)
     private Set<ValintaperustePuuDTO> hakukohdeViitteet = new HashSet<ValintaperustePuuDTO>();
 
-    @JsonView(JsonViews.Basic.class)
+    @ApiModelProperty(value = "Haku OID", required = true)
     private String hakuOid;
 
-    @JsonView(JsonViews.Basic.class)
+    @ApiModelProperty(value = "OID", required = true)
     private String oid;
 
-    @JsonView(JsonViews.Basic.class)
+    @ApiModelProperty(value = "Tarjoaja OID", required = true)
     private String tarjoajaOid;
 
-    @JsonView(JsonViews.Basic.class)
+    @ApiModelProperty(value = "Nimi", required = true)
     private String nimi;
 
-    @JsonView(JsonViews.Basic.class)
+    @ApiModelProperty(value = "Tila", required = true)
     private String tila;
 
-    @JsonView(JsonViews.Basic.class)
+    @ApiModelProperty(value = "Valintaperustepuun tyyppi", required = true)
     private ValintaperustePuuTyyppi tyyppi;
 
-    @JsonView(JsonViews.Basic.class)
+    @ApiModelProperty(value = "Organisaatiot", required = true)
     private Set<OrganisaatioDTO> organisaatiot = new HashSet<OrganisaatioDTO>();
 
     public String getHakuOid() {

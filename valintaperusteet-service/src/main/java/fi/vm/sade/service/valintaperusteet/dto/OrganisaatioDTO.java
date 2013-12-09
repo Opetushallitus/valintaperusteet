@@ -12,10 +12,8 @@ import org.codehaus.jackson.map.annotate.JsonView;
  */
 public class OrganisaatioDTO {
 
-    @JsonView(JsonViews.Basic.class)
     String oid;
 
-    @JsonView(JsonViews.Basic.class)
     String parentOidPath;
 
     public String getOid() {

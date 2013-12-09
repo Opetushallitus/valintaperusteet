@@ -14,23 +14,18 @@ import org.codehaus.jackson.map.annotate.JsonView;
 public class KoodiDTO {
 
     @ApiModelProperty(value = "URI", required = true)
-    @JsonView(JsonViews.Basic.class)
     private String uri;
 
     @ApiModelProperty(value = "Suomenkielinen nimi")
-    @JsonView(JsonViews.Basic.class)
     private String nimiFi;
 
     @ApiModelProperty(value = "Ruotsinkielinen nimi")
-    @JsonView(JsonViews.Basic.class)
     private String nimiSv;
 
     @ApiModelProperty(value = "Englanninkielinen nimi")
-    @JsonView(JsonViews.Basic.class)
     private String nimiEn;
 
     @ApiModelProperty(value = "Koodin arvo")
-    @JsonView(JsonViews.Basic.class)
     private String arvo;
 
     public String getUri() {

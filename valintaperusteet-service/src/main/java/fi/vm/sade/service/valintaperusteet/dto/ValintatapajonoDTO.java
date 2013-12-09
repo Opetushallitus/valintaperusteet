@@ -14,10 +14,8 @@ import org.codehaus.jackson.map.annotate.JsonView;
 public class ValintatapajonoDTO extends ValintatapajonoCreateDTO {
 
     @ApiModelProperty(value = "OID", required = true)
-    @JsonView(JsonViews.Basic.class)
     private String oid;
 
-    @JsonView(JsonViews.Basic.class)
     @ApiModelProperty(value = "Onko valintapajono peritty")
     private Boolean inheritance;
 

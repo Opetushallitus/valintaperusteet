@@ -16,37 +16,30 @@ public class Funktiokutsu extends BaseEntity implements FunktionArgumentti {
      */
     private static final long serialVersionUID = 1L;
 
-    @JsonView(JsonViews.Basic.class)
     @Enumerated(EnumType.STRING)
     @Column(name = "funktionimi", nullable = false)
     private Funktionimi funktionimi;
 
-    @JsonView(JsonViews.Basic.class)
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "funktiokutsu", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private Set<Arvokonvertteriparametri> arvokonvertteriparametrit = new HashSet<Arvokonvertteriparametri>();
 
-    @JsonView(JsonViews.Basic.class)
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "funktiokutsu", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     // @Sort(type = SortType.NATURAL)
     @OrderBy("minValue")
     private Set<Arvovalikonvertteriparametri> arvovalikonvertteriparametrit = new HashSet<Arvovalikonvertteriparametri>();
 
-    @JsonView(JsonViews.Basic.class)
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "funktiokutsu", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private Set<Syoteparametri> syoteparametrit = new HashSet<Syoteparametri>();
 
-    @JsonView(JsonViews.Basic.class)
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @OrderBy("indeksi")
     private Set<Funktioargumentti> funktioargumentit = new TreeSet<Funktioargumentti>();
 
-    @JsonView(JsonViews.Basic.class)
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "funktiokutsu", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @OrderBy("indeksi")
     private Set<ValintaperusteViite> valintaperusteviitteet = new TreeSet<ValintaperusteViite>();
 
     @Transient
-    @JsonView(JsonViews.Basic.class)
     private List<Abstraktivalidointivirhe> validointivirheet = new ArrayList<Abstraktivalidointivirhe>();
 
     public Funktionimi getFunktionimi() {
@@ -99,7 +92,6 @@ public class Funktiokutsu extends BaseEntity implements FunktionArgumentti {
     }
 
     @Override
-    @JsonView(JsonViews.Basic.class)
     public Long getId() {
         return super.getId();
     }

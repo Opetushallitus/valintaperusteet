@@ -20,17 +20,14 @@ public class Funktioargumentti extends BaseEntity implements Comparable<Funktioa
     @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
     private Funktiokutsu parent;
 
-    @JsonView(JsonViews.Basic.class)
     @JoinColumn(name = "funktiokutsuchild_id", nullable = true)
     @ManyToOne(cascade = CascadeType.PERSIST)
     private Funktiokutsu funktiokutsuChild;
 
-    @JsonView(JsonViews.Basic.class)
     @JoinColumn(name = "laskentakaavachild_id", nullable = true)
     @ManyToOne(cascade = CascadeType.PERSIST)
     private Laskentakaava laskentakaavaChild;
 
-    @JsonView(JsonViews.Basic.class)
     @Min(1)
     @Column(name = "indeksi", nullable = false)
     private Integer indeksi;

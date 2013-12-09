@@ -16,33 +16,27 @@ import java.util.Set;
 @Table(name="laskentakaava")
 @Cacheable(true)
 public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
-    @JsonView({JsonViews.Basic.class, JsonViews.Laskentakaava.class})
     @Column(name = "on_luonnos", nullable = false)
     private Boolean onLuonnos;
 
-    @JsonView(JsonViews.Basic.class)
     @Column(name = "nimi", nullable = false)
     private String nimi;
 
-    @JsonView(JsonViews.Basic.class)
     @Column(name = "kuvaus")
     private String kuvaus;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "valintaryhmaviite", nullable = true, unique = false)
-    @JsonView(JsonViews.Laskentakaava.class)
     private Valintaryhma valintaryhma;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hakukohdeviite", nullable = true, unique = false)
     private HakukohdeViite hakukohde;
 
-    @JsonView({JsonViews.Basic.class, JsonViews.Laskentakaava.class})
     @JoinColumn(name = "funktiokutsu_id", nullable = false, unique = false)
     @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
     private Funktiokutsu funktiokutsu;
 
-    @JsonView({JsonViews.Basic.class, JsonViews.Laskentakaava.class})
     @Column(name="tyyppi", nullable = false)
     @Enumerated(EnumType.STRING)
     private Funktiotyyppi tyyppi;
@@ -58,7 +52,6 @@ public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
         this.onLuonnos = onLuonnos;
     }
 
-    @JsonView({JsonViews.Basic.class, JsonViews.Laskentakaava.class})
     public String getNimi() {
         return nimi;
     }
@@ -67,7 +60,6 @@ public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
         this.nimi = nimi;
     }
 
-    @JsonView({JsonViews.Basic.class, JsonViews.Laskentakaava.class})
     public String getKuvaus() {
         return kuvaus;
     }
@@ -116,7 +108,6 @@ public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
         this.jarjestyskriteerit = jarjestyskriteerit;
     }
 
-    @JsonView({JsonViews.Basic.class, JsonViews.Laskentakaava.class})
     @Override
     public Long getId() {
         return super.getId();

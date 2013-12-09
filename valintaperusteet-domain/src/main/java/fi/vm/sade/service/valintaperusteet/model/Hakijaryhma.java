@@ -18,19 +18,15 @@ public class Hakijaryhma extends BaseEntity implements LinkitettavaJaKopioitava<
     private static final long serialVersionUID = 1L;
 
     @Column(name = "oid", nullable = false, unique = true)
-    @JsonView(JsonViews.Basic.class)
     private String oid;
 
     @Column(nullable = false)
-    @JsonView(JsonViews.Basic.class)
     private String nimi;
 
     @Column
-    @JsonView(JsonViews.Basic.class)
     private String kuvaus;
 
     @Column(nullable = false)
-    @JsonView(JsonViews.Basic.class)
     private int kiintio;
 
     @OneToMany(mappedBy = "hakijaryhma", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
@@ -166,30 +162,22 @@ public class Hakijaryhma extends BaseEntity implements LinkitettavaJaKopioitava<
         this.kopiot = kopiot;
     }
 
-    @JsonProperty(value = "inheritance")
-    @JsonView(JsonViews.Basic.class)
     @Transient
     public Boolean getInheritance() {
         return getMaster() != null;
     }
 
-    @JsonProperty("laskentakaava_id")
-    @JsonView(JsonViews.Basic.class)
     @Transient
     public Long getLaskentakaavaId() {
         return laskentakaava.getId();
     }
 
-    @JsonProperty("laskentakaava_id")
-    @JsonView(JsonViews.Basic.class)
     @Transient
     public void setLaskentakaavaId(Long id) {
         laskentakaava = new Laskentakaava();
         laskentakaava.setId(id);
     }
 
-    @JsonProperty("valintatapajonot")
-    @JsonView(JsonViews.Basic.class)
     public List<String> getValintatapajonoIds() {
         List<String> valintatapajonoIds = new ArrayList<String>();
         if (jonot != null) {
@@ -200,8 +188,6 @@ public class Hakijaryhma extends BaseEntity implements LinkitettavaJaKopioitava<
         return valintatapajonoIds;
     }
 
-    @JsonProperty("valintatapajonot")
-    @JsonView(JsonViews.Basic.class)
     public void setValintatapajonoIds(List<String> ids) {
 
     }

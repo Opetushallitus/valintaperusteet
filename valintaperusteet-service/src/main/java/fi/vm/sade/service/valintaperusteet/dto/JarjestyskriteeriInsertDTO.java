@@ -14,11 +14,9 @@ import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 public class JarjestyskriteeriInsertDTO {
 
     @ApiModelProperty(value = "Järjestyskriteeri", required = true)
-    @JsonView(JsonViews.Basic.class)
     private JarjestyskriteeriCreateDTO jarjestyskriteeri;
 
     @ApiModelProperty(value = "Laskentakaava ID", required = true)
-    @JsonView(JsonViews.Basic.class)
     private Long laskentakaavaId;
 
     public JarjestyskriteeriCreateDTO getJarjestyskriteeri() {

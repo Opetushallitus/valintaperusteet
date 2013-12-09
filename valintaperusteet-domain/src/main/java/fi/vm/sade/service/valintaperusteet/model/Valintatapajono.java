@@ -21,47 +21,36 @@ public class Valintatapajono extends BaseEntity implements LinkitettavaJaKopioit
     private static final long serialVersionUID = 1L;
 
     @Column(name = "oid", nullable = false, unique = true)
-    @JsonView(JsonViews.Basic.class)
     private String oid;
 
     @Column(name = "aloituspaikat", nullable = false)
-    @JsonView(JsonViews.Basic.class)
     private Integer aloituspaikat;
 
     @Column(name = "nimi", nullable = false)
-    @JsonView(JsonViews.Basic.class)
     private String nimi;
 
     @Column(name = "kuvaus")
-    @JsonView(JsonViews.Basic.class)
     private String kuvaus;
 
     @Column(name = "siirretaan_sijoitteluun", nullable = false)
-    @JsonView(JsonViews.Basic.class)
     private Boolean siirretaanSijoitteluun = false;
 
     @Column(name = "tasapistesaanto", nullable = false)
     @Enumerated(EnumType.STRING)
-    @JsonView(JsonViews.Basic.class)
     private Tasapistesaanto tasapistesaanto;
 
-    @JsonView(JsonViews.Basic.class)
     @Column(name = "aktiivinen", nullable = false)
     private Boolean aktiivinen;
 
-    @JsonView(JsonViews.Basic.class)
     @Column(name = "ei_varasijatayttoa", nullable = false)
     private Boolean eiVarasijatayttoa = false;
 
     @Column(name = "varasijat", nullable = false)
-    @JsonView(JsonViews.Basic.class)
     private Integer varasijat = 0;
 
     @Column(name = "varasija_taytto_paivat", nullable = false)
-    @JsonView(JsonViews.Basic.class)
     private Integer varasijaTayttoPaivat = 0;
 
-    @JsonView(JsonViews.Basic.class)
     @Column(name = "poissa_oleva_taytto", nullable = false)
     private Boolean poissaOlevaTaytto = false;
 
@@ -221,15 +210,11 @@ public class Valintatapajono extends BaseEntity implements LinkitettavaJaKopioit
         this.poissaOlevaTaytto = poissaOlevaTaytto;
     }
 
-    @JsonProperty("valinnan_vaihe")
-    @JsonView(JsonViews.Basic.class)
     public String getValinnanVaiheId() {
         // Kai oidi olisi parempi palauttaa kuin id
         return valinnanVaihe.getOid();
     }
 
-    @JsonProperty("hakijaryhmat")
-    @JsonView(JsonViews.Basic.class)
     public List<String> getHakijaryhmaIds() {
         List<String> hakijaryhmaIds = new ArrayList<String>();
         if (hakijaryhmat != null) {
@@ -240,8 +225,6 @@ public class Valintatapajono extends BaseEntity implements LinkitettavaJaKopioit
         return hakijaryhmaIds;
     }
 
-    @JsonProperty("hakijaryhmat")
-    @JsonView(JsonViews.Basic.class)
     public void setHakijaryhmaIds(List<String> ids) {
 
     }
@@ -294,8 +277,6 @@ public class Valintatapajono extends BaseEntity implements LinkitettavaJaKopioit
         return getKopioValintatapajonot();
     }
 
-    @JsonProperty(value = "inheritance")
-    @JsonView(JsonViews.Basic.class)
     @Transient
     public Boolean getInheritance() {
         return getMasterValintatapajono() != null;

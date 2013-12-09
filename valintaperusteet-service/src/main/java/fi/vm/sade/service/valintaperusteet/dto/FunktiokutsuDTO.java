@@ -18,32 +18,25 @@ import java.util.*;
 public class FunktiokutsuDTO {
 
 
-    @JsonView(JsonViews.Basic.class)
     @ApiModelProperty(value = "Funktion nimi", required = true)
     private Funktionimi funktionimi;
 
-    @JsonView(JsonViews.Basic.class)
     @ApiModelProperty(value = "Arvokonvertteriparametrit")
     private Set<ArvokonvertteriparametriDTO> arvokonvertteriparametrit = new HashSet<ArvokonvertteriparametriDTO>();
 
-    @JsonView(JsonViews.Basic.class)
     @ApiModelProperty(value = "Arvovälikonvertteriparametrit")
     private Set<ArvovalikonvertteriparametriDTO> arvovalikonvertteriparametrit = new HashSet<ArvovalikonvertteriparametriDTO>();
 
-    @JsonView(JsonViews.Basic.class)
     @ApiModelProperty(value = "Syöteparametrit")
     private Set<SyoteparametriDTO> syoteparametrit = new HashSet<SyoteparametriDTO>();
 
-    @JsonView(JsonViews.Basic.class)
     @ApiModelProperty(value = "Funktioargumentit")
     private List<FunktioargumenttiDTO> funktioargumentit = new LinkedList<FunktioargumenttiDTO>();
 
-    @JsonView(JsonViews.Basic.class)
     @ApiModelProperty(value = "Valintaperusteviitteet")
     private Set<ValintaperusteViiteDTO> valintaperusteviitteet = new TreeSet<ValintaperusteViiteDTO>();
 
     @ApiModelProperty(value = "Validointivirheet")
-    @JsonView(JsonViews.Basic.class)
     private List<Abstraktivalidointivirhe> validointivirheet = new ArrayList<Abstraktivalidointivirhe>();
 
     public Funktionimi getFunktionimi() {

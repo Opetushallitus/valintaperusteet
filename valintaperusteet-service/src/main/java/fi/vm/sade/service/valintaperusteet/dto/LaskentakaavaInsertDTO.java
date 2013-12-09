@@ -22,15 +22,12 @@ public class LaskentakaavaInsertDTO {
         this.valintaryhmaOid = valintaryhmaOid;
     }
 
-    @JsonView(JsonViews.Basic.class)
     @ApiModelProperty(value = "Laskentakaava", required = true)
     private LaskentakaavaCreateDTO laskentakaava;
 
-    @JsonView(JsonViews.Basic.class)
     @ApiModelProperty(value = "Hakukohde OID, jolle laskentakaava lisätään")
     private String hakukohdeOid;
 
-    @JsonView(JsonViews.Basic.class)
     @ApiModelProperty(value = "Valintaryhmä OID, jolle laskentakaava lisätään")
     private String valintaryhmaOid;
 

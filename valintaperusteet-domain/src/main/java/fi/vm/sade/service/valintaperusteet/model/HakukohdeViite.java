@@ -18,23 +18,18 @@ import java.util.*;
 public class HakukohdeViite extends BaseEntity {
 
     @Column(name = "hakuoid", nullable = false)
-    @JsonView(JsonViews.Basic.class)
     private String hakuoid;
 
-    @JsonView(JsonViews.Basic.class)
     @Column(name = "oid", unique = true, nullable = false)
     private String oid;
 
-    @JsonView(JsonViews.Basic.class)
     @Column(name = "tarjoajaOid")
     private String tarjoajaOid;
 
     @Column(name = "nimi")
-    @JsonView(JsonViews.Basic.class)
     private String nimi;
 
     @Column(name = "tila")
-    @JsonView(JsonViews.Basic.class)
     private String tila;
 
     @Column(name = "manuaalisesti_siirretty")
@@ -52,7 +47,6 @@ public class HakukohdeViite extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "hakukohde")
     private Set<Laskentakaava> laskentakaava = new HashSet<Laskentakaava>();
 
-    @JsonView(JsonViews.Basic.class)
     @JoinColumn(name = "hakukohdekoodi_id", nullable = true)
     @ManyToOne(fetch = FetchType.LAZY)
     private Hakukohdekoodi hakukohdekoodi;
@@ -124,8 +118,6 @@ public class HakukohdeViite extends BaseEntity {
         this.laskentakaava = laskentakaava;
     }
 
-    @JsonProperty(value = "valintaryhma_id")
-    @JsonView(JsonViews.Basic.class)
     @Transient
     private String getValintaryhmaOid() {
         return valintaryhma != null ? valintaryhma.getOid() : "";
