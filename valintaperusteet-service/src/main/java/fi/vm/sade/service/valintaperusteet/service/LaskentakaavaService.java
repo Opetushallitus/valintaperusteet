@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
+import fi.vm.sade.service.valintaperusteet.dto.HakukohteenValintaperusteAvaimetDTO;
 import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
@@ -18,6 +19,8 @@ import java.util.List;
 public interface LaskentakaavaService {
 
     List<ValintaperusteDTO> findAvaimetForHakukohdes(List<String> oids);
+
+    HakukohteenValintaperusteAvaimetDTO findHakukohteenAvaimet(String oid);
 
     Laskentakaava validoi(LaskentakaavaDTO laskentakaava);
 

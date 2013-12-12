@@ -58,7 +58,7 @@ public class HakukohdeViite extends BaseEntity {
     private List<Valintakoekoodi> valintakokeet = new ArrayList<Valintakoekoodi>();
 
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "hakukohde")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "hakukohde", cascade = CascadeType.ALL)
     @MapKeyColumn(name = "tunniste")
     private Map<String, HakukohteenValintaperuste> hakukohteenValintaperusteet;
 

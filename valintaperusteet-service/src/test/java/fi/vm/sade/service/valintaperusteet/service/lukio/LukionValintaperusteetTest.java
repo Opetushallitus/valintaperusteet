@@ -2,6 +2,7 @@ package fi.vm.sade.service.valintaperusteet.service.lukio;
 
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.kaava.Laskentadomainkonvertteri;
+import fi.vm.sade.kaava.Laskentakaavavalidaattori;
 import fi.vm.sade.service.valintaperusteet.laskenta.Lukuarvofunktio;
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus;
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakukohde;
@@ -61,6 +62,8 @@ public class LukionValintaperusteetTest {
     private static final String HAKUKOHDE_OID5 = "1.2.246.562.5.01787_01_406_1044";
     private static final Hakukohde HAKUKOHDE5 = new Hakukohde(HAKUKOHDE_OID5, new HashMap<String, String>());
 
+    private static final String OPPIAINE_POSTFIX = "_oppiaine";
+
 
     private static final Map<Integer, String> hakutoiveet;
 
@@ -73,8 +76,8 @@ public class LukionValintaperusteetTest {
         put("paasykoe_ja_lisanaytto_hylkays_max", "6");
         put("painotettu_keskiarvo_hylkays_min", "4");
         put("painotettu_keskiarvo_hylkays_max", "7.5");
-        put("paasykoe_tulos", "pk");
-        put("lisanaytto_tulos", "l");
+        put("paasykoe_tunniste", "pk");
+        put("lisanaytto_tunniste", "l");
     }};
 
     static {
@@ -138,7 +141,9 @@ public class LukionValintaperusteetTest {
         Hakemus hakemus = hakemus(yhdistaMapit(
                 valintaperuste(LukionValintaperusteet.AIDINKIELI_JA_KIRJALLISUUS1, "8.0"),
                 valintaperuste(LukionValintaperusteet.B1KIELI, "7.0"),
+                valintaperuste(LukionValintaperusteet.B1KIELI + OPPIAINE_POSTFIX, LukionValintaperusteet.SAKSA),
                 valintaperuste(LukionValintaperusteet.A11KIELI, "7.0"),
+                valintaperuste(LukionValintaperusteet.A11KIELI + OPPIAINE_POSTFIX, LukionValintaperusteet.LATVIA),
                 valintaperuste(LukionValintaperusteet.USKONTO, "6.0"),
                 valintaperuste(LukionValintaperusteet.HISTORIA, "7.0"),
                 valintaperuste(LukionValintaperusteet.YHTEISKUNTAOPPI, "8.0"),
@@ -152,8 +157,8 @@ public class LukionValintaperusteetTest {
 
         Hakukohde hakukohde = new Hakukohde(HAKUKOHDE_OID1, yhdistaMapit(
                 valintaperuste(LukionValintaperusteet.AIDINKIELI_JA_KIRJALLISUUS1 + LukionValintaperusteet.PAINOKERROIN_POSTFIX, "1.5"),
-                valintaperuste(LukionValintaperusteet.B1KIELI + LukionValintaperusteet.PAINOKERROIN_POSTFIX, "1.5"),
-                valintaperuste(LukionValintaperusteet.A11KIELI + LukionValintaperusteet.PAINOKERROIN_POSTFIX, "1.5"),
+                valintaperuste(LukionValintaperusteet.B1KIELI + "_" + LukionValintaperusteet.SAKSA + LukionValintaperusteet.PAINOKERROIN_POSTFIX, "1.5"),
+                valintaperuste(LukionValintaperusteet.A11KIELI + "_" + LukionValintaperusteet.LATVIA + LukionValintaperusteet.PAINOKERROIN_POSTFIX, "1.5"),
                 mustacheMap
         ));
 
@@ -169,7 +174,11 @@ public class LukionValintaperusteetTest {
         Hakemus hakemus = hakemus(yhdistaMapit(
                 valintaperuste(LukionValintaperusteet.AIDINKIELI_JA_KIRJALLISUUS1, "8.0"),
                 valintaperuste(LukionValintaperusteet.B1KIELI, "7.0"),
+                valintaperuste(LukionValintaperusteet.B1KIELI + OPPIAINE_POSTFIX, LukionValintaperusteet.SAKSA),
                 valintaperuste(LukionValintaperusteet.A11KIELI, "7.0"),
+                valintaperuste(LukionValintaperusteet.A11KIELI + OPPIAINE_POSTFIX, LukionValintaperusteet.LATVIA),
+                valintaperuste(LukionValintaperusteet.B21KIELI, "7.0"),
+                valintaperuste(LukionValintaperusteet.B21KIELI + OPPIAINE_POSTFIX, LukionValintaperusteet.RANSKA),
                 valintaperuste(LukionValintaperusteet.USKONTO, "6.0"),
                 valintaperuste(LukionValintaperusteet.HISTORIA, "7.0"),
                 valintaperuste(LukionValintaperusteet.YHTEISKUNTAOPPI, "8.0"),
@@ -184,6 +193,9 @@ public class LukionValintaperusteetTest {
         ));
 
         Hakukohde hakukohde = new Hakukohde(HAKUKOHDE_OID1, yhdistaMapit(
+                valintaperuste(LukionValintaperusteet.B1KIELI + "_" + LukionValintaperusteet.SAKSA + LukionValintaperusteet.PAINOKERROIN_POSTFIX, "1.0"),
+                valintaperuste(LukionValintaperusteet.A11KIELI + "_" + LukionValintaperusteet.LATVIA + LukionValintaperusteet.PAINOKERROIN_POSTFIX, "1.0"),
+                valintaperuste(LukionValintaperusteet.A11KIELI + "_" + LukionValintaperusteet.RANSKA + LukionValintaperusteet.PAINOKERROIN_POSTFIX, "5.0"),
                 valintaperuste(LukionValintaperusteet.LIIKUNTA + LukionValintaperusteet.PAINOKERROIN_POSTFIX, "2.0"),
                 valintaperuste(LukionValintaperusteet.KUVATAIDE + LukionValintaperusteet.PAINOKERROIN_POSTFIX, "2.5"),
                 mustacheMap
@@ -192,7 +204,7 @@ public class LukionValintaperusteetTest {
         Lukuarvofunktio lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(laajennaAlakaavat(LukionValintaperusteet.painotettuLukuaineidenKeskiarvo()).getFunktiokutsu());
         Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(hakukohde, hakemus, new ArrayList<Hakemus>(), lasku);
 
-        assertTrue(new BigDecimal("7.6364").compareTo(tulos.getTulos()) == 0);
+        assertTrue(new BigDecimal("7.6000").compareTo(tulos.getTulos()) == 0);
         assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
     }
 
@@ -230,7 +242,7 @@ public class LukionValintaperusteetTest {
                 mustacheMap
         ));
 
-        Lukuarvofunktio lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(laajennaAlakaavat(LukionValintaperusteet.paasykoeLukuarvo("paasykoe_tulos")).getFunktiokutsu());
+        Lukuarvofunktio lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(laajennaAlakaavat(LukionValintaperusteet.paasykoeLukuarvo("paasykoe_tunniste")).getFunktiokutsu());
         Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(hakukohde, hakemus, new ArrayList<Hakemus>(), lasku);
 
         assertTrue(new BigDecimal("3.0").compareTo(tulos.getTulos()) == 0);
@@ -240,7 +252,7 @@ public class LukionValintaperusteetTest {
         assertTrue(new BigDecimal("1.5").compareTo(tulos.getTulos()) == 0);
         assertEquals(Tila.Tilatyyppi.HYLATTY, tulos.getTila().getTilatyyppi());
 
-        lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(laajennaAlakaavat(LukionValintaperusteet.lisanayttoLukuarvo("lisanaytto_tulos")).getFunktiokutsu());
+        lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(laajennaAlakaavat(LukionValintaperusteet.lisanayttoLukuarvo("lisanaytto_tunniste")).getFunktiokutsu());
         tulos = laskentaService.suoritaValintalaskenta(hakukohde, hakemusHylattyLisanaytto, new ArrayList<Hakemus>(), lasku);
 
         assertTrue(new BigDecimal("1.0").compareTo(tulos.getTulos()) == 0);
@@ -251,7 +263,7 @@ public class LukionValintaperusteetTest {
         assertTrue(new BigDecimal("3.0").compareTo(tulos.getTulos()) == 0);
         assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
 
-        lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(laajennaAlakaavat(LukionValintaperusteet.paasykoeJaLisanaytto(LukionValintaperusteet.paasykoeLukuarvo("paasykoe_tulos"), LukionValintaperusteet.lisanayttoLukuarvo("lisanaytto_tulos"))).getFunktiokutsu());
+        lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(laajennaAlakaavat(LukionValintaperusteet.paasykoeJaLisanaytto(LukionValintaperusteet.paasykoeLukuarvo("paasykoe_tunniste"), LukionValintaperusteet.lisanayttoLukuarvo("lisanaytto_tunniste"))).getFunktiokutsu());
         tulos = laskentaService.suoritaValintalaskenta(hakukohde, hakemus, new ArrayList<Hakemus>(), lasku);
 
         assertTrue(new BigDecimal("6.0").compareTo(tulos.getTulos()) == 0);

@@ -485,6 +485,18 @@ public class LaskentakaavaServiceTest {
     }
 
     @Test
+    public void testFindHakukohdeValintaperusteAvaimet() {
+        HakukohteenValintaperusteAvaimetDTO valintaperusteet = laskentakaavaService.findHakukohteenAvaimet("oid23");
+        assertEquals(2, valintaperusteet.getTunnisteet().size());
+        assertEquals(2, valintaperusteet.getArvot().size());
+        assertEquals(1, valintaperusteet.getHylkaysperusteet().size());
+        assertEquals(3, valintaperusteet.getMinimit().size());
+        assertEquals(2, valintaperusteet.getMaksimit().size());
+        assertEquals(1, valintaperusteet.getPalautaHaettutArvot().size());
+
+    }
+
+    @Test
     public void testItseensaViittaavaKaava() {
         // Kaava 415 viittaa kaavaan 414. Asetetaan kaava 414 viittaamaan takaisin kaavaan 415, jolloin saadaan
         // silmukka muodostettua.

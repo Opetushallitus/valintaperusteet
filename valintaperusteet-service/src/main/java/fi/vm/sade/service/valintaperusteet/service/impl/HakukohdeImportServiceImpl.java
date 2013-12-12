@@ -5,10 +5,8 @@ import fi.vm.sade.service.valintaperusteet.dao.*;
 import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.*;
-import fi.vm.sade.service.valintaperusteet.schema.HakukohdeImportTyyppi;
-import fi.vm.sade.service.valintaperusteet.schema.HakukohdekoodiTyyppi;
-import fi.vm.sade.service.valintaperusteet.schema.HakukohteenValintakoeTyyppi;
-import fi.vm.sade.service.valintaperusteet.schema.MonikielinenTekstiTyyppi;
+import fi.vm.sade.service.valintaperusteet.model.ValinnanVaiheTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.*;
 import fi.vm.sade.service.valintaperusteet.service.HakukohdeImportService;
 import fi.vm.sade.service.valintaperusteet.service.HakukohdeService;
 import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
@@ -17,7 +15,6 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -75,7 +72,9 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
     @Autowired
     private ValintakoekoodiDAO valintakoekoodiDAO;
 
-    @Qualifier("genericDAO")
+    @Autowired
+    private HakukohteenValintaperusteDAO hakukohteenValintaperusteDAO;
+
     @Autowired
     private GenericDAO genericDAO;
 
@@ -289,6 +288,21 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
         // Päivitetään valintakoekoodit
         hakukohde.setValintakokeet(haeTaiLisaaValintakoekoodit(importData));
 
+        // Lisätään valinaperusteet
+        if(hakukohde.getHakukohteenValintaperusteet() != null) {
+              List <HakukohteenValintaperuste> perusteet = hakukohteenValintaperusteDAO.haeHakukohteenValintaperusteet(hakukohde.getOid());
+              for(HakukohteenValintaperuste hv : perusteet) {
+                  hv.setHakukohde(null);
+                  hakukohteenValintaperusteDAO.remove(hv);
+              }
+              hakukohde.getHakukohteenValintaperusteet().clear();
+
+        }
+        genericDAO.flush();
+        hakukohde = hakukohdeViiteDAO.readByOid(importData.getHakukohdeOid());
+
+        hakukohde.setHakukohteenValintaperusteet(lisaaValintaperusteet(importData, hakukohde));
+
         // Päivitetään aloituspaikkojen lukumäärä jos mahdollista
         paivitaAloituspaikkojenLkm(hakukohde, importData.getValinnanAloituspaikat());
     }
@@ -328,6 +342,19 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
         }
 
         return koekoodit;
+    }
+
+    private Map<String,HakukohteenValintaperuste> lisaaValintaperusteet(HakukohdeImportTyyppi importData, HakukohdeViite hakukohde) {
+        Map<String,HakukohteenValintaperuste> perusteet = new HashMap<String,HakukohteenValintaperuste>();
+        for (AvainArvoTyyppi avainArvo : importData.getValintaperuste()) {
+            HakukohteenValintaperuste peruste = new HakukohteenValintaperuste();
+            peruste.setTunniste(avainArvo.getAvain());
+            peruste.setArvo(avainArvo.getArvo());
+            peruste.setKuvaus(avainArvo.getAvain());
+            peruste.setHakukohde(hakukohde);
+            perusteet.put(peruste.getTunniste(),peruste);
+        }
+        return perusteet;
     }
 
     private abstract class KoodiFactory<T extends Koodi> {

@@ -5,10 +5,8 @@ import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdekoodiDAO;
 import fi.vm.sade.service.valintaperusteet.model.*;
-import fi.vm.sade.service.valintaperusteet.schema.HakukohdeImportTyyppi;
-import fi.vm.sade.service.valintaperusteet.schema.HakukohdekoodiTyyppi;
-import fi.vm.sade.service.valintaperusteet.schema.HakukohteenValintakoeTyyppi;
-import fi.vm.sade.service.valintaperusteet.schema.MonikielinenTekstiTyyppi;
+import fi.vm.sade.service.valintaperusteet.model.ValinnanVaiheTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.*;
 import fi.vm.sade.service.valintaperusteet.service.impl.HakukohdeImportServiceImpl;
 import junit.framework.Assert;
 import org.junit.Test;
@@ -517,6 +515,110 @@ public class HakukohdeImportServiceTest {
 
             List<HakukohdeViite> hakukohteet = hakukohdeService.findByValintaryhmaOid(valintaryhmaOid);
             assertEquals(0, hakukohteet.size());
+        }
+    }
+
+    @Test
+    public void testLisaaValintaPerusteet() {
+        final String valintaryhmaOid = "oid48";
+
+        final String hakuOid = "hakuoid1";
+        final String hakukohdeOid = "uusihakukohdeoid";
+        final String hakukohdekoodiUri = "hakukohdekoodiuri13";
+
+        final int aloituspaikat = 100;
+        {
+            assertNull(hakukohdeViiteDAO.readByOid(hakukohdeOid));
+            Valintaryhma valintaryhma = valintaryhmaService.readByOid(valintaryhmaOid);
+            assertNotNull(valintaryhma);
+
+            List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheService.findByValintaryhma(valintaryhmaOid);
+            assertEquals(2, valinnanVaiheet.size());
+
+            ValinnanVaihe vaihe = valinnanVaiheet.get(1);
+            assertEquals(ValinnanVaiheTyyppi.TAVALLINEN, vaihe.getValinnanVaiheTyyppi());
+            assertNull(vaihe.getMasterValinnanVaihe());
+
+            List<Valintatapajono> jonot = valintatapajonoService.findJonoByValinnanvaihe(vaihe.getOid());
+            assertEquals(1, jonot.size());
+
+            Valintatapajono jono = jonot.get(0);
+            assertNull(jono.getMasterValintatapajono());
+            assertFalse(aloituspaikat == jono.getAloituspaikat().intValue());
+
+        }
+
+        HakukohdeImportTyyppi importData = luoHakukohdeImportTyyppi(hakukohdeOid, hakuOid, hakukohdekoodiUri);
+        AvainArvoTyyppi avainArvo = new AvainArvoTyyppi();
+
+        avainArvo.setAvain("paasykoe_min");
+        avainArvo.setArvo("12.0");
+        importData.getValintaperuste().add(avainArvo);
+
+        avainArvo = new AvainArvoTyyppi();
+        avainArvo.setAvain("kielikoe_tunniste");
+        avainArvo.setArvo("tämä on kielikokeen tunniste");
+        importData.getValintaperuste().add(avainArvo);
+
+        avainArvo = new AvainArvoTyyppi();
+        avainArvo.setAvain("MU_painokerroin");
+        avainArvo.setArvo("15.0");
+        importData.getValintaperuste().add(avainArvo);
+
+        avainArvo = new AvainArvoTyyppi();
+        avainArvo.setAvain("A1_EN_painokerroin");
+        avainArvo.setArvo("35.0");
+        importData.getValintaperuste().add(avainArvo);
+
+        avainArvo = new AvainArvoTyyppi();
+        avainArvo.setAvain("B3_FR_painokerroin");
+        avainArvo.setArvo("43.0");
+        importData.getValintaperuste().add(avainArvo);
+
+        hakukohdeImportService.tuoHakukohde(importData);
+        {
+            HakukohdeViite hakukohde = hakukohdeViiteDAO.readByOid(hakukohdeOid);
+            assertNotNull(hakukohde);
+            assertFalse(hakukohde.getManuaalisestiSiirretty());
+
+            List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheService.findByHakukohde(hakukohdeOid);
+            assertEquals(2, valinnanVaiheet.size());
+
+            ValinnanVaihe vaihe = valinnanVaiheet.get(1);
+            assertEquals(ValinnanVaiheTyyppi.TAVALLINEN, vaihe.getValinnanVaiheTyyppi());
+            assertNotNull(vaihe.getMasterValinnanVaihe());
+
+            List<Valintatapajono> jonot = valintatapajonoService.findJonoByValinnanvaihe(vaihe.getOid());
+            assertEquals(1, jonot.size());
+
+            Valintatapajono jono = jonot.get(0);
+            assertNotNull(jono.getMasterValintatapajono());
+
+            assertEquals("12.0", hakukohde.getHakukohteenValintaperusteet().get("paasykoe_min").getArvo());
+            assertEquals("tämä on kielikokeen tunniste", hakukohde.getHakukohteenValintaperusteet().get("kielikoe_tunniste").getArvo());
+            assertEquals("15.0", hakukohde.getHakukohteenValintaperusteet().get("MU_painokerroin").getArvo());
+            assertEquals("35.0", hakukohde.getHakukohteenValintaperusteet().get("A1_EN_painokerroin").getArvo());
+            assertEquals("43.0", hakukohde.getHakukohteenValintaperusteet().get("B3_FR_painokerroin").getArvo());
+        }
+
+        avainArvo = new AvainArvoTyyppi();
+        avainArvo.setAvain("A1_EN_painokerroin");
+        avainArvo.setArvo("3.0");
+        importData.getValintaperuste().add(avainArvo);
+
+        avainArvo = new AvainArvoTyyppi();
+        avainArvo.setAvain("B3_FR_painokerroin");
+        avainArvo.setArvo("1.0");
+        importData.getValintaperuste().add(avainArvo);
+
+        hakukohdeImportService.tuoHakukohde(importData);
+
+        {
+            HakukohdeViite hakukohde = hakukohdeViiteDAO.readByOid(hakukohdeOid);
+            assertNotNull(hakukohde);
+
+            assertEquals("3.0", hakukohde.getHakukohteenValintaperusteet().get("A1_EN_painokerroin").getArvo());
+            assertEquals("1.0", hakukohde.getHakukohteenValintaperusteet().get("B3_FR_painokerroin").getArvo());
         }
     }
 }

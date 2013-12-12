@@ -75,6 +75,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
     public static final String KIELI_SV_URI = "kieli_sv";
 
     public static final String PAASY_JA_SOVELTUVUUSKOE = "valintakokeentyyppi_1";
+    public static final String LISANAYTTO = "valintakokeentyyppi_2";
     public static final String LISAPISTE = "valintakokeentyyppi_5";
 
     public static final String KIELIKOE_PREFIX = "kielikoe_";
@@ -97,9 +98,9 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
             "hakukohteet_126", // Liikunnanohjauksen perustutkinto, yo
     }));
 
-    private final String PAASYKOE_TUNNISTE = "paasykoe_tulos";
-    private final String KIELIKOE_TUNNISTE = "kielikoe_tulos";
-    private final String LISANAYTTO_TUNNISTE = "lisanaytto_tulos";
+    private final String PAASYKOE_TUNNISTE = "paasykoe_tunniste";
+    private final String KIELIKOE_TUNNISTE = "kielikoe_tunniste";
+    private final String LISANAYTTO_TUNNISTE = "lisanaytto_tunniste";
 
     @Override
     public void luo() throws IOException {
@@ -348,7 +349,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         esijono.setTasapistesaanto(Tasapistesaanto.ARVONTA);
         esijono.setSiirretaanSijoitteluun(false);
 
-        valintatapajonoService.lisaaValintatapajonoValinnanVaiheelle(esivalinnanVaihe.getOid(), esijono, null);
+        esijono = modelMapper.map(valintatapajonoService.lisaaValintatapajonoValinnanVaiheelle(esivalinnanVaihe.getOid(), esijono, null), ValintatapajonoDTO.class);
 
         JarjestyskriteeriDTO esijk = new JarjestyskriteeriDTO();
         esijk.setAktiivinen(true);
@@ -414,7 +415,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         paasykoeKoodi.setUri(PAASY_JA_SOVELTUVUUSKOE);
 
         KoodiDTO lisanayttoKoodi = new KoodiDTO();
-        lisanayttoKoodi.setUri(LISAPISTE);
+        lisanayttoKoodi.setUri(LISANAYTTO);
 
         ValintaryhmaDTO painotettuKeskiarvoVr = new ValintaryhmaDTO();
         painotettuKeskiarvoVr.setNimi("Painotettu keskiarvo");
@@ -533,7 +534,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         valintakoekoodiService.lisaaValintakoekoodiValintaryhmalle(painotettuKeskiarvoJaPaasykoeJaLisanayttoVr.getOid(), lisanayttoKoodi);
         valintakoekoodiService.lisaaValintakoekoodiValintaryhmalle(painotettuKeskiarvoJaPaasykoeJaLisanayttoVr.getOid(), paasykoeKoodi);
 
-        Laskentakaava laskentakaavapainotettuKeskiarvoJaPaasykoeJaLisanaytto = asetaValintaryhmaJaTallennaKantaan(laskentakaavapainotettuKeskiarvoJaPaasykoe, painotettuKeskiarvoJaPaasykoeJaLisanayttoVr.getOid());
+        Laskentakaava laskentakaavapainotettuKeskiarvoJaPaasykoeJaLisanaytto = asetaValintaryhmaJaTallennaKantaan(LukionValintaperusteet.painotettuLukuaineidenKeskiarvoJaPaasykoeJaLisanaytto(painotettuKeskiarvo, paasykoeJaLisanaytto), painotettuKeskiarvoJaPaasykoeJaLisanayttoVr.getOid());
 
         transactionManager.commit(tx);
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());

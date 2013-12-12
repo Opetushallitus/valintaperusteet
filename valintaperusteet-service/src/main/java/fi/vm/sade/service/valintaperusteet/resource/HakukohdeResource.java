@@ -193,6 +193,16 @@ public class HakukohdeResource {
         return laskentakaavaService.findAvaimetForHakukohdes(oids);
     }
 
+    @GET
+    @Path("{hakukohdeOid}/avaimet")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @JsonView({JsonViews.Basic.class})
+    @Secured({READ, UPDATE, CRUD})
+    public HakukohteenValintaperusteAvaimetDTO findHakukohteenAvaimet(@PathParam("hakukohdeOid") String hakukohdeOid) {
+        return laskentakaavaService.findHakukohteenAvaimet(hakukohdeOid);
+    }
+
     @PUT
     @Path("/{hakukohdeOid}/valinnanvaihe")
     @Consumes(MediaType.APPLICATION_JSON)
