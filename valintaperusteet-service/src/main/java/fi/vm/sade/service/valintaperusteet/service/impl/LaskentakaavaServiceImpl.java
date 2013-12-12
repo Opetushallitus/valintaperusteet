@@ -50,11 +50,15 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     @Autowired
     private ValintaperusteetModelMapper modelMapper;
 
+    private int rekursioCounter = 0;
+
     @Transactional(readOnly = true)
     private Funktiokutsu haeFunktiokutsuRekursiivisesti(Long id, boolean laajennaAlakaavat, Set<Long> laskentakaavaIds)
             throws FunktiokutsuMuodostaaSilmukanException {
+        rekursioCounter++;
 
         Funktiokutsu funktiokutsu = funktiokutsuDAO.getFunktiokutsu(id);
+
         if (funktiokutsu == null) {
             throw new FunktiokutsuEiOleOlemassaException("Funktiokutsu (" + id + ") ei ole olemassa", id);
         }
@@ -62,6 +66,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
         for (Funktioargumentti fa : funktiokutsu.getFunktioargumentit()) {
             if (fa.getFunktiokutsuChild() != null) {
                 haeFunktiokutsuRekursiivisesti(fa.getFunktiokutsuChild().getId(), laajennaAlakaavat, laskentakaavaIds);
+
             } else if (laajennaAlakaavat && fa.getLaskentakaavaChild() != null) {
                 if (laskentakaavaIds.contains(fa.getLaskentakaavaChild().getId())) {
                     throw new FunktiokutsuMuodostaaSilmukanException("Funktiokutsu " + id + " muodostaa silmukan " +
@@ -88,7 +93,11 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     }
 
     private Laskentakaava haeLaskentakaava(Long id) {
+        long beginTime = System.currentTimeMillis();
         Laskentakaava laskentakaava = laskentakaavaDAO.getLaskentakaava(id);
+        long endTime = System.currentTimeMillis();
+        long timeTaken = (endTime - beginTime) / 1000L;
+        LOGGER.info("Laskentakaavan hakemiseen DAOlta kului: "+timeTaken+" sekuntia");
         if (laskentakaava == null) {
             throw new LaskentakaavaEiOleOlemassaException("Laskentakaava (" + id + ") ei ole olemassa.", id);
         }
@@ -566,8 +575,14 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
         Laskentakaava laskentakaava = haeLaskentakaava(id);
         if (laskentakaava != null) {
             laskentakaavaIds.add(laskentakaava.getId());
+            rekursioCounter = 0;
+            long beginTime = System.currentTimeMillis();
             haeFunktiokutsuRekursiivisesti(laskentakaava.getFunktiokutsu().getId(), laajennaAlakaavat,
                     laskentakaavaIds);
+            long endTime = System.currentTimeMillis();
+            long timeTaken = (endTime - beginTime) / 1000L;
+            LOGGER.info("Hae funktio rekursiivisesti: "+timeTaken+" sekuntia");
+            LOGGER.info("Rekursiofunktiokutsujen määrä: "+rekursioCounter);
         }
 
         return laskentakaava;
@@ -575,7 +590,12 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
 
     private Laskentakaava haeKokoLaskentakaava(Long id, boolean laajennaAlakaavat) {
         try {
-            return haeKokoLaskentakaava(id, laajennaAlakaavat, new HashSet<Long>());
+            long beginTime = System.currentTimeMillis();
+            Laskentakaava kaava =  haeKokoLaskentakaava(id, laajennaAlakaavat, new HashSet<Long>());
+            long endTime = System.currentTimeMillis();
+            long timeTaken = (endTime - beginTime) / 1000L;
+            LOGGER.info("Koko Laskentakaavan hakemiseen kului: "+timeTaken+" sekuntia");
+            return kaava;
         } catch (FunktiokutsuMuodostaaSilmukanException e) {
             throw new LaskentakaavaMuodostaaSilmukanException("Laskentakaava " + id + " muodostaa silmukan " +
                     "laskentakaavaan " + e.getLaskentakaavaId() + " funktiokutsun "

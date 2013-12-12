@@ -78,14 +78,14 @@ public class LaskentakaavaResource {
         long beginTime = System.currentTimeMillis();
         Laskentakaava laskentakaava = laskentakaavaService.haeMallinnettuKaava(id);
         long endTime = System.currentTimeMillis();
-        long timeTaken = (endTime - beginTime) / 1000L / 60L;
-        LOGGER.info("Laskentakaavan hakemiseen kului: {} min", timeTaken);
+        long timeTaken = (endTime - beginTime) / 1000L;
+        LOGGER.info("Laskentakaavan hakemiseen kului: {} sekuntia", timeTaken);
 
         beginTime = System.currentTimeMillis();
         LaskentakaavaDTO kaava = modelMapper.map(laskentakaava, LaskentakaavaDTO.class);
         endTime = System.currentTimeMillis();
-        timeTaken = (endTime - beginTime) / 1000L / 60L;
-        LOGGER.info("Laskentakaava-LaskentakaavaDTO muunnokseen kului: {} min", timeTaken);
+        timeTaken = (endTime - beginTime) / 1000L;
+        LOGGER.info("Laskentakaava-LaskentakaavaDTO muunnokseen kului: {} sekuntia", timeTaken);
         return kaava;
     }
 
