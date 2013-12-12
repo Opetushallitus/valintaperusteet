@@ -12,6 +12,7 @@ import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaListDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.Funktiotyyppi;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
+import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
 import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaEiValidiException;
 import org.codehaus.jackson.map.annotate.JsonView;
@@ -74,7 +75,18 @@ public class LaskentakaavaResource {
     @Secured({READ, UPDATE, CRUD})
     @ApiOperation(value = "Hakee laskentakaavan ID:n perusteella", response = LaskentakaavaDTO.class)
     public LaskentakaavaDTO kaava(@ApiParam(value = "Laskentakaavan ID", required = true) @PathParam("id") Long id) {
-        return modelMapper.map(laskentakaavaService.haeMallinnettuKaava(id), LaskentakaavaDTO.class);
+        long beginTime = System.currentTimeMillis();
+        Laskentakaava laskentakaava = laskentakaavaService.haeMallinnettuKaava(id);
+        long endTime = System.currentTimeMillis();
+        long timeTaken = (endTime - beginTime) / 1000L / 60L;
+        LOGGER.info("Laskentakaavan hakemiseen kului: {} min", timeTaken);
+
+        beginTime = System.currentTimeMillis();
+        LaskentakaavaDTO kaava = modelMapper.map(laskentakaava, LaskentakaavaDTO.class);
+        endTime = System.currentTimeMillis();
+        timeTaken = (endTime - beginTime) / 1000L / 60L;
+        LOGGER.info("Laskentakaava-LaskentakaavaDTO muunnokseen kului: {} min", timeTaken);
+        return kaava;
     }
 
     @GET
