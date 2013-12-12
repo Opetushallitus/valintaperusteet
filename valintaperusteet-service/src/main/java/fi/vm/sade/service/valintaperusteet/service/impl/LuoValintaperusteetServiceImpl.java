@@ -349,7 +349,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         esijono.setTasapistesaanto(Tasapistesaanto.ARVONTA);
         esijono.setSiirretaanSijoitteluun(false);
 
-        valintatapajonoService.lisaaValintatapajonoValinnanVaiheelle(esivalinnanVaihe.getOid(), esijono, null);
+        esijono = modelMapper.map(valintatapajonoService.lisaaValintatapajonoValinnanVaiheelle(esivalinnanVaihe.getOid(), esijono, null), ValintatapajonoDTO.class);
 
         JarjestyskriteeriDTO esijk = new JarjestyskriteeriDTO();
         esijk.setAktiivinen(true);
@@ -534,7 +534,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         valintakoekoodiService.lisaaValintakoekoodiValintaryhmalle(painotettuKeskiarvoJaPaasykoeJaLisanayttoVr.getOid(), lisanayttoKoodi);
         valintakoekoodiService.lisaaValintakoekoodiValintaryhmalle(painotettuKeskiarvoJaPaasykoeJaLisanayttoVr.getOid(), paasykoeKoodi);
 
-        Laskentakaava laskentakaavapainotettuKeskiarvoJaPaasykoeJaLisanaytto = asetaValintaryhmaJaTallennaKantaan(laskentakaavapainotettuKeskiarvoJaPaasykoe, painotettuKeskiarvoJaPaasykoeJaLisanayttoVr.getOid());
+        Laskentakaava laskentakaavapainotettuKeskiarvoJaPaasykoeJaLisanaytto = asetaValintaryhmaJaTallennaKantaan(LukionValintaperusteet.painotettuLukuaineidenKeskiarvoJaPaasykoeJaLisanaytto(painotettuKeskiarvo, paasykoeJaLisanaytto), painotettuKeskiarvoJaPaasykoeJaLisanayttoVr.getOid());
 
         transactionManager.commit(tx);
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
