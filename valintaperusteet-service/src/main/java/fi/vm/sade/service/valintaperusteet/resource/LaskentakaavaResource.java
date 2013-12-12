@@ -145,6 +145,9 @@ public class LaskentakaavaResource {
             return Response.status(Response.Status.BAD_REQUEST).entity(inserted).build();
         } catch (Exception e) {
             LOGGER.error("Virhe tallennettaessa laskentakaavaa.", e);
+
+            System.out.print(e);
+
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }

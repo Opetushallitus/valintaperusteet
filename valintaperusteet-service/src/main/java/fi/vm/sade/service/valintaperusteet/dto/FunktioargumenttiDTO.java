@@ -13,30 +13,33 @@ import org.codehaus.jackson.map.annotate.JsonView;
 @ApiModel(value = "FunktioargumenttiDTO", description = "Funktioargumentti")
 public class FunktioargumenttiDTO implements Comparable<FunktioargumenttiDTO> {
 
-    @ApiModelProperty(value = "Lapsifunktiokutsu")
-    private FunktiokutsuDTO funktiokutsuChild;
-
-    @ApiModelProperty(value = "Lapsilaskentakaava")
-    private LaskentakaavaListDTO laskentakaavaChild;
+//    @ApiModelProperty(value = "Lapsifunktiokutsu")
+//    private FunktiokutsuDTO funktiokutsuChild;
+//
+//    @ApiModelProperty(value = "Lapsilaskentakaava")
+//    private LaskentakaavaListDTO laskentakaavaChild;
 
     @ApiModelProperty(value = "Indeksi", required = true)
     private Integer indeksi;
 
-    public FunktiokutsuDTO getFunktiokutsuChild() {
-        return funktiokutsuChild;
-    }
+    @ApiModelProperty(value = "Funktioargumentin lapsi (funktiokutsu tai laskentakaava)")
+    private FunktioargumentinLapsiDTO lapsi;
 
-    public void setFunktiokutsuChild(FunktiokutsuDTO funktiokutsuChild) {
-        this.funktiokutsuChild = funktiokutsuChild;
-    }
-
-    public LaskentakaavaListDTO getLaskentakaavaChild() {
-        return laskentakaavaChild;
-    }
-
-    public void setLaskentakaavaChild(LaskentakaavaListDTO laskentakaavaChild) {
-        this.laskentakaavaChild = laskentakaavaChild;
-    }
+//    public FunktiokutsuDTO getFunktiokutsuChild() {
+//        return funktiokutsuChild;
+//    }
+//
+//    public void setFunktiokutsuChild(FunktiokutsuDTO funktiokutsuChild) {
+//        this.funktiokutsuChild = funktiokutsuChild;
+//    }
+//
+//    public LaskentakaavaListDTO getLaskentakaavaChild() {
+//        return laskentakaavaChild;
+//    }
+//
+//    public void setLaskentakaavaChild(LaskentakaavaListDTO laskentakaavaChild) {
+//        this.laskentakaavaChild = laskentakaavaChild;
+//    }
 
     public Integer getIndeksi() {
         return indeksi;
@@ -44,6 +47,14 @@ public class FunktioargumenttiDTO implements Comparable<FunktioargumenttiDTO> {
 
     public void setIndeksi(Integer indeksi) {
         this.indeksi = indeksi;
+    }
+
+    public FunktioargumentinLapsiDTO getLapsi() {
+        return lapsi;
+    }
+
+    public void setLapsi(FunktioargumentinLapsiDTO lapsi) {
+        this.lapsi = lapsi;
     }
 
     @Override

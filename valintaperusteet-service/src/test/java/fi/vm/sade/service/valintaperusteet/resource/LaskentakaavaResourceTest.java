@@ -75,9 +75,10 @@ public class LaskentakaavaResourceTest {
         funktiokutsu.setFunktionimi(Funktionimi.SUMMA);
 
         for (int i = 0; i < args.length; ++i) {
-            FunktiokutsuDTO f = args[i];
+            FunktioargumentinLapsiDTO f = modelMapper.map(args[i], FunktioargumentinLapsiDTO.class);
             FunktioargumenttiDTO arg = new FunktioargumenttiDTO();
-            arg.setFunktiokutsuChild(f);
+            f.setLapsityyppi(FunktioargumentinLapsiDTO.FUNKTIOKUTSUTYYPPI);
+            arg.setLapsi(f);
             arg.setIndeksi(i + 1);
             funktiokutsu.getFunktioargumentit().add(arg);
         }
@@ -96,7 +97,8 @@ public class LaskentakaavaResourceTest {
 
         final String json = mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(laskentakaava);
         LaskentakaavaCreateDTO fromJson = mapper.readValue(json, LaskentakaavaCreateDTO.class);
-        assertEquals(Response.Status.CREATED.getStatusCode(), laskentakaavaResource.insert(new LaskentakaavaInsertDTO(fromJson, null, null)).getStatus());
+        Response response = laskentakaavaResource.insert(new LaskentakaavaInsertDTO(fromJson, null, null));
+        assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
     }
 
     @Test
@@ -154,7 +156,7 @@ public class LaskentakaavaResourceTest {
 
         Response response = laskentakaavaResource.insert(insert);
         FunktioargumenttiDTO funktioargumentti = new FunktioargumenttiDTO();
-        funktioargumentti.setLaskentakaavaChild(modelMapper.map(kaava, LaskentakaavaListDTO.class));
+        funktioargumentti.setLapsi(modelMapper.map(kaava, FunktioargumentinLapsiDTO.class));
         funktioargumentti.setIndeksi(2);
         laskentakaava.getFunktiokutsu().getFunktioargumentit().add(funktioargumentti);
 

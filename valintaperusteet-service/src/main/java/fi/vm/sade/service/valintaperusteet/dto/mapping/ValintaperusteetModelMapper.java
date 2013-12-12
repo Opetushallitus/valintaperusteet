@@ -6,6 +6,7 @@ import fi.vm.sade.service.valintaperusteet.model.*;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
+import org.modelmapper.convention.MatchingStrategies;
 import org.modelmapper.spi.MappingContext;
 
 import java.util.*;
@@ -45,6 +46,22 @@ public class ValintaperusteetModelMapper extends ModelMapper {
             }
         });
 
+
+        this.addMappings(new PropertyMap<Laskentakaava, FunktioargumentinLapsiDTO>() {
+            @Override
+            protected void configure() {
+                map().setLapsityyppi(FunktioargumentinLapsiDTO.LASKENTAKAAVATYYPPI);
+            }
+        });
+
+        this.addMappings(new PropertyMap<Funktiokutsu, FunktioargumentinLapsiDTO>() {
+            @Override
+            protected void configure() {
+                map().setLapsityyppi(FunktioargumentinLapsiDTO.FUNKTIOKUTSUTYYPPI);
+
+            }
+        });
+
         this.addMappings(new PropertyMap<Funktiokutsu, FunktiokutsuDTO>() {
             @Override
             protected void configure() {
@@ -52,8 +69,19 @@ public class ValintaperusteetModelMapper extends ModelMapper {
                     public List<FunktioargumenttiDTO> convert(MappingContext<Set<Funktioargumentti>, List<FunktioargumenttiDTO>> context) {
                         List<FunktioargumenttiDTO> result = new LinkedList<FunktioargumenttiDTO>();
                         for(Funktioargumentti arg : context.getSource()) {
-                           ModelMapper modelMapper = new ModelMapper();
-                           FunktioargumenttiDTO dto = modelMapper.map(arg, FunktioargumenttiDTO.class);
+                            FunktioargumenttiDTO dto = new FunktioargumenttiDTO();
+                            ModelMapper modelMapper = new ModelMapper();
+                            if(arg.getFunktiokutsuChild() != null) {
+                                FunktioargumentinLapsiDTO lapsi = asetaFunktioArgumenttiLapsetRekursiivisesti(arg.getFunktiokutsuChild());
+                                lapsi.setLapsityyppi(FunktioargumentinLapsiDTO.FUNKTIOKUTSUTYYPPI);
+                                dto.setLapsi(lapsi);
+                            }
+                            if(arg.getLaskentakaavaChild() != null) {
+                                FunktioargumentinLapsiDTO lapsi = modelMapper.map(arg.getLaskentakaavaChild(), FunktioargumentinLapsiDTO.class);
+                                lapsi.setLapsityyppi(FunktioargumentinLapsiDTO.LASKENTAKAAVATYYPPI);
+                                dto.setLapsi(lapsi);
+                            }
+                            dto.setIndeksi(arg.getIndeksi());
                             result.add(dto);
                         }
 
@@ -75,11 +103,20 @@ public class ValintaperusteetModelMapper extends ModelMapper {
                         for(int i = 0; i < context.getSource().size(); i++) {
                             FunktioargumenttiDTO arg = context.getSource().get(i);
                             arg.setIndeksi(i+1);
-                            if(arg.getFunktiokutsuChild() != null) {
-                                asetaIndeksitRekursiivisesti(arg.getFunktiokutsuChild());
-                            }
                             ModelMapper modelMapper = new ModelMapper();
-                            Funktioargumentti funktioargumentti = modelMapper.map(arg, Funktioargumentti.class);
+                            modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
+                            Funktioargumentti funktioargumentti = new Funktioargumentti();
+                            if(arg.getLapsi() != null && arg.getLapsi().getLapsityyppi().equals(FunktioargumentinLapsiDTO.FUNKTIOKUTSUTYYPPI)) {
+                                asetaIndeksitRekursiivisesti(arg.getLapsi());
+                                FunktiokutsuDTO dto = modelMapper.map(arg, FunktiokutsuDTO.class);
+                                funktioargumentti.setFunktiokutsuChild(convertFromDto(dto));
+                            }
+                            if(arg.getLapsi() != null && arg.getLapsi().getLapsityyppi().equals(FunktioargumentinLapsiDTO.LASKENTAKAAVATYYPPI)) {
+                                LaskentakaavaListDTO dto = modelMapper.map(arg, LaskentakaavaListDTO.class);
+                                funktioargumentti.setLaskentakaavaChild(convertFromDto(dto));
+                            }
+
+                            funktioargumentti.setIndeksi(arg.getIndeksi());
                             result.add(funktioargumentti);
                         }
                         return result;
@@ -93,17 +130,49 @@ public class ValintaperusteetModelMapper extends ModelMapper {
 
     }
 
-    public Funktiokutsu asetaIndeksitRekursiivisesti(FunktiokutsuDTO kutsu) {
+    public Funktiokutsu convertFromDto(FunktiokutsuDTO dto) {
+        return map(dto, Funktiokutsu.class);
+    }
+
+    public Laskentakaava convertFromDto(LaskentakaavaListDTO dto) {
+        return map(dto, Laskentakaava.class);
+    }
+
+    public FunktioargumentinLapsiDTO asetaFunktioArgumenttiLapsetRekursiivisesti(Funktiokutsu kutsu) {
+
+        FunktioargumentinLapsiDTO parent = map(kutsu, FunktioargumentinLapsiDTO.class);
+        List<FunktioargumenttiDTO> result = new LinkedList<FunktioargumenttiDTO>();
+        for(Funktioargumentti arg : kutsu.getFunktioargumentit()) {
+            FunktioargumenttiDTO dto = new FunktioargumenttiDTO();
+            dto.setIndeksi(arg.getIndeksi());
+            if(arg.getFunktiokutsuChild() != null) {
+                FunktioargumentinLapsiDTO lapsi = asetaFunktioArgumenttiLapsetRekursiivisesti(arg.getFunktiokutsuChild());
+                lapsi.setLapsityyppi(FunktioargumentinLapsiDTO.FUNKTIOKUTSUTYYPPI);
+                dto.setLapsi(lapsi);
+            }
+            if(arg.getLaskentakaavaChild() != null) {
+                FunktioargumentinLapsiDTO lapsi = map(arg.getLaskentakaavaChild(), FunktioargumentinLapsiDTO.class);
+                lapsi.setLapsityyppi(FunktioargumentinLapsiDTO.LASKENTAKAAVATYYPPI);
+                dto.setLapsi(lapsi);
+            }
+            result.add(dto);
+
+        }
+        parent.setFunktioargumentit(result);
+        parent.setLapsityyppi(FunktioargumentinLapsiDTO.FUNKTIOKUTSUTYYPPI);
+        return parent;
+    }
+
+    public Funktiokutsu asetaIndeksitRekursiivisesti(FunktioargumentinLapsiDTO kutsu) {
         for(int i = 0; i < kutsu.getFunktioargumentit().size(); i++) {
             FunktioargumenttiDTO arg = kutsu.getFunktioargumentit().get(i);
             arg.setIndeksi(i+1);
-            if (arg.getFunktiokutsuChild() != null) {
-                asetaIndeksitRekursiivisesti(arg.getFunktiokutsuChild());
+            if (arg.getLapsi() != null && arg.getLapsi().getLapsityyppi().equals(FunktioargumentinLapsiDTO.FUNKTIOKUTSUTYYPPI)) {
+                asetaIndeksitRekursiivisesti(arg.getLapsi());
             }
 
         }
-        ModelMapper modelMapper = new ModelMapper();
-        Funktiokutsu funktiokutsu = modelMapper.map(kutsu, Funktiokutsu.class);
+        Funktiokutsu funktiokutsu = map(kutsu, Funktiokutsu.class);
         return funktiokutsu;
     }
 

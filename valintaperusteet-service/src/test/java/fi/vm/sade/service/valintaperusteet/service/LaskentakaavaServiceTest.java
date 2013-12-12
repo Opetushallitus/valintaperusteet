@@ -131,28 +131,33 @@ public class LaskentakaavaServiceTest {
 
         final Funktiokuvaaja.Funktiokuvaus funktiokuvaus = Funktiokuvaaja.annaFunktiokuvaus(nimi)._2();
 
-        FunktiokutsuDTO funktiokutsu = new FunktiokutsuDTO();
+        Funktiokutsu funktiokutsu = new Funktiokutsu();
         funktiokutsu.setFunktionimi(Funktionimi.LUKUARVO);
 
-        SyoteparametriDTO syoteparametri = new SyoteparametriDTO();
+        Syoteparametri syoteparametri = new Syoteparametri();
         syoteparametri.setAvain(funktiokuvaus.syoteparametrit().head().avain());
         syoteparametri.setArvo(luku.toString());
 
         funktiokutsu.getSyoteparametrit().add(syoteparametri);
 
-        return funktiokutsu;
+        FunktiokutsuDTO dto = modelMapper.map(funktiokutsu, FunktiokutsuDTO.class);
+
+        return modelMapper.map(funktiokutsu, FunktiokutsuDTO.class);
     }
 
     private FunktiokutsuDTO createSumma(FunktiokutsuDTO... args) {
-        FunktiokutsuDTO funktiokutsu = new FunktiokutsuDTO();
-        funktiokutsu.setFunktionimi(Funktionimi.SUMMA);
+        Funktiokutsu kutsu = new Funktiokutsu();
+        kutsu.setFunktionimi(Funktionimi.SUMMA);
+
+        FunktiokutsuDTO funktiokutsu = modelMapper.map(kutsu, FunktiokutsuDTO.class);
 
         for (int i = 0; i < args.length; ++i) {
-            FunktiokutsuDTO f = args[i];
+            FunktioargumentinLapsiDTO f = modelMapper.map(args[i], FunktioargumentinLapsiDTO.class);
             FunktioargumenttiDTO arg = new FunktioargumenttiDTO();
-            arg.setFunktiokutsuChild(f);
+            arg.setLapsi(f);
             arg.setIndeksi(i + 1);
             funktiokutsu.getFunktioargumentit().add(arg);
+            f.setLapsityyppi(FunktioargumentinLapsiDTO.FUNKTIOKUTSUTYYPPI);
         }
 
         return funktiokutsu;
@@ -160,9 +165,11 @@ public class LaskentakaavaServiceTest {
 
     @Test
     public void testInsertNew() {
-        LaskentakaavaCreateDTO laskentakaava = new LaskentakaavaCreateDTO();
-        laskentakaava.setNimi("kaava3342");
-        laskentakaava.setOnLuonnos(false);
+
+        Laskentakaava kaava = new Laskentakaava();
+        kaava.setNimi("kaava3342");
+        kaava.setOnLuonnos(false);
+        LaskentakaavaCreateDTO laskentakaava = modelMapper.map(kaava, LaskentakaavaCreateDTO.class);
         laskentakaava.setFunktiokutsu(createSumma(createLukuarvo(5.0), createLukuarvo(10.0), createLukuarvo(100.0)));
 
         Laskentakaava tallennettu = laskentakaavaService.insert(laskentakaava, null, null);
@@ -305,7 +312,9 @@ public class LaskentakaavaServiceTest {
     private FunktiokutsuDTO nimettyFunktiokutsu(String nimi, FunktiokutsuDTO child) {
         FunktiokutsuDTO nimetty = new FunktiokutsuDTO();
         FunktioargumenttiDTO arg = new FunktioargumenttiDTO();
-        arg.setFunktiokutsuChild(child);
+        FunktioargumentinLapsiDTO lapsiDTO = modelMapper.map(child, FunktioargumentinLapsiDTO.class);
+        lapsiDTO.setLapsityyppi(FunktioargumentinLapsiDTO.FUNKTIOKUTSUTYYPPI);
+        arg.setLapsi(lapsiDTO);
         arg.setIndeksi(1);
         nimetty.getFunktioargumentit().add(arg);
 
@@ -334,7 +343,9 @@ public class LaskentakaavaServiceTest {
 
             FunktiokutsuDTO summa = createSumma(createLukuarvo(1.0), createLukuarvo(2.0));
             FunktioargumenttiDTO kaavaArg = new FunktioargumenttiDTO();
-            kaavaArg.setLaskentakaavaChild(tallennettuKaava);
+            FunktioargumentinLapsiDTO lapsiDTO = modelMapper.map(tallennettuKaava, FunktioargumentinLapsiDTO.class);
+            lapsiDTO.setLapsityyppi(FunktioargumentinLapsiDTO.LASKENTAKAAVATYYPPI);
+            kaavaArg.setLapsi(lapsiDTO);
             kaavaArg.setIndeksi(summa.getFunktioargumentit().size() + 1);
             summa.getFunktioargumentit().add(kaavaArg);
 
