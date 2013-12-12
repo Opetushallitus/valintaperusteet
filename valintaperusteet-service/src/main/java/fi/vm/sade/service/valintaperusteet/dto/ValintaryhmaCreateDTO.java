@@ -18,13 +18,13 @@ public class ValintaryhmaCreateDTO extends AbstractValintaryhmaDTO {
 
     @JsonView({JsonViews.Basic.class})
     @ApiModelProperty(value = "Organisaatiot")
-    private Set<String> organisaatiot = new HashSet<String>();
+    private Set<OrganisaatioDTO> organisaatiot = new HashSet<OrganisaatioDTO>();
 
-    public Set<String> getOrganisaatiot() {
+    public Set<OrganisaatioDTO> getOrganisaatiot() {
         return organisaatiot;
     }
 
-    public void setOrganisaatiot(Set<String> organisaatiot) {
+    public void setOrganisaatiot(Set<OrganisaatioDTO> organisaatiot) {
         this.organisaatiot = organisaatiot;
     }
 }
