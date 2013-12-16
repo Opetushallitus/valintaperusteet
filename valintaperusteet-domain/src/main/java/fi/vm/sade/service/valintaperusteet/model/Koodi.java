@@ -14,23 +14,18 @@ import javax.persistence.MappedSuperclass;
 @MappedSuperclass
 public abstract class Koodi extends BaseEntity {
 
-    @JsonView(JsonViews.Basic.class)
     @Column(name = "uri", nullable = false, unique = true)
     private String uri;
 
-    @JsonView(JsonViews.Basic.class)
     @Column(name = "nimi_fi")
     private String nimiFi;
 
-    @JsonView(JsonViews.Basic.class)
     @Column(name = "nimi_sv")
     private String nimiSv;
 
-    @JsonView(JsonViews.Basic.class)
     @Column(name = "nimi_en")
     private String nimiEn;
 
-    @JsonView(JsonViews.Basic.class)
     @Column(name = "arvo")
     private String arvo;
 

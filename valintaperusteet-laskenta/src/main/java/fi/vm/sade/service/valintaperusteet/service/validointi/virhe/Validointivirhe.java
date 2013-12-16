@@ -9,10 +9,8 @@ import org.codehaus.jackson.map.annotate.JsonView;
  */
 public class Validointivirhe extends Abstraktivalidointivirhe {
 
-    @JsonView(JsonViews.Basic.class)
     private Virhetyyppi virhetyyppi;
 
-    @JsonView(JsonViews.Basic.class)
     private String virheviesti;
 
     public Validointivirhe(Virhetyyppi virhetyyppi, String virheviesti) {

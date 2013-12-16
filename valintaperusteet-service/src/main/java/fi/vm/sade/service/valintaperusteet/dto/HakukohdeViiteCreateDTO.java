@@ -13,24 +13,19 @@ import org.codehaus.jackson.map.annotate.JsonView;
 @ApiModel(value = "HakukohdeViiteCreateDTO", description = "Hakukohteen lisääminen")
 public class HakukohdeViiteCreateDTO {
 
-    @JsonView(JsonViews.Basic.class)
     @ApiModelProperty(value = "Nimi")
     private String nimi;
 
-    @JsonView(JsonViews.Basic.class)
     @ApiModelProperty(value = "Haku OID", required = true)
     private String hakuoid;
 
-    @JsonView(JsonViews.Basic.class)
     @ApiModelProperty(value = "OID", required = true)
     private String oid;
 
     @ApiModelProperty(value = "Tarjoaja OID")
-    @JsonView(JsonViews.Basic.class)
     private String tarjoajaOid;
 
     @ApiModelProperty(value = "Tila")
-    @JsonView(JsonViews.Basic.class)
     private String tila;
 
 

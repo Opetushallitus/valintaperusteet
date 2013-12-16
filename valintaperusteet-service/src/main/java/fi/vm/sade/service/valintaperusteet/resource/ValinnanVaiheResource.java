@@ -53,7 +53,6 @@ public class ValinnanVaiheResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView(JsonViews.Basic.class)
     @Path("/{oid}")
     @Secured({READ, UPDATE, CRUD})
     @ApiOperation(value = "Hakee valinnan vaiheen OID:n perusteella", response = ValinnanVaiheDTO.class)
@@ -63,7 +62,6 @@ public class ValinnanVaiheResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
     @Path("/{oid}/valintatapajono")
     @Secured({READ, UPDATE, CRUD})
     @ApiOperation(value = "Hakee valinnan vaiheen valintatapajonot OID:n perusteella", response = ValintatapajonoDTO.class)
@@ -73,7 +71,6 @@ public class ValinnanVaiheResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView(JsonViews.Basic.class)
     @Path("/{oid}/valintakoe")
     @Secured({READ, UPDATE, CRUD})
     @ApiOperation(value = "Hakee valintakokeet valinnan vaiheen OID:n perusteella", response = ValintakoeDTO.class)
@@ -84,7 +81,6 @@ public class ValinnanVaiheResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
     @Path("/{parentOid}/valintatapajono")
     @Secured({UPDATE, CRUD})
     @ApiOperation(value = "Lisää valintatapajonon valinnan vaiheelle")
@@ -102,7 +98,6 @@ public class ValinnanVaiheResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
     @Path("/{parentOid}/valintakoe")
     @Secured({UPDATE, CRUD})
     @ApiOperation(value = "Lisää valintakokeen valinnan vaiheelle")
@@ -122,7 +117,6 @@ public class ValinnanVaiheResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView(JsonViews.Basic.class)
     @Path("/{oid}")
     @Secured({UPDATE, CRUD})
     @ApiOperation(value = "Päivittää valinnan vaihetta", response = ValinnanVaiheDTO.class)
@@ -134,7 +128,6 @@ public class ValinnanVaiheResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView(JsonViews.Basic.class)
     @Path("/jarjesta")
     @Secured({UPDATE, CRUD})
     @ApiOperation(value = "Järjestää valinnan vaiheet parametrina annetun OID-listan mukaiseen järjestykseen", response = ValinnanVaiheDTO.class)
@@ -164,7 +157,6 @@ public class ValinnanVaiheResource {
     @GET
     @Path("/{oid}/kuuluuSijoitteluun")
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
     @ApiOperation(value = "Palauttaa tiedon siitä, kuuluuko valinnan vaihe sijoitteluun", response = Boolean.class)
     public Map<String, Boolean> kuuluuSijoitteluun(@ApiParam(value = "Valinnan vaiheen OID", required = true) @PathParam("oid") String oid) {

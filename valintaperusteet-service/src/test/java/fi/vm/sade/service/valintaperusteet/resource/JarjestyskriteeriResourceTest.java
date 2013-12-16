@@ -6,6 +6,7 @@ import fi.vm.sade.service.valintaperusteet.dao.JarjestyskriteeriDAO;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriDTO;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriInsertDTO;
+import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.util.TestUtil;
@@ -50,6 +51,9 @@ public class JarjestyskriteeriResourceTest {
     @Autowired
     private JarjestyskriteeriDAO jarjestyskriteeriDAO;
 
+    @Autowired
+    private ValintaperusteetModelMapper modelMapper;
+
     @Before
     public void setUp() {
         applicationContext.getAutowireCapableBeanFactory().autowireBean(resource);
@@ -57,7 +61,7 @@ public class JarjestyskriteeriResourceTest {
 
     @Test
     public void testUpdate() throws Exception {
-        Jarjestyskriteeri jk = jarjestyskriteeriDAO.readByOid("1");
+        JarjestyskriteeriDTO jk = resource.readByOid("1");
 
 //        assertEquals(1, (int)jk.getPrioriteetti());
 //        jk.setPrioriteetti(100);
@@ -69,7 +73,7 @@ public class JarjestyskriteeriResourceTest {
 
         resource.update("1", comb);
 
-        jk = jarjestyskriteeriDAO.readByOid("1");
+        jk = resource.readByOid("1");
 //        assertEquals(100, (int)jk.getPrioriteetti());
 
         testUtil.lazyCheck(JsonViews.Basic.class, jk);

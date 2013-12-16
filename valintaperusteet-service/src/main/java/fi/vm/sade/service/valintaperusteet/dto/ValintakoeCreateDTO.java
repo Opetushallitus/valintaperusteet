@@ -13,23 +13,18 @@ import org.codehaus.jackson.map.annotate.JsonView;
 @ApiModel(value = "ValintakoeCreateDTO", description = "Valintakoe")
 public class ValintakoeCreateDTO {
 
-    @JsonView(JsonViews.Basic.class)
     @ApiModelProperty(value = "Tunniste", required = true)
     private String tunniste;
 
-    @JsonView(JsonViews.Basic.class)
     @ApiModelProperty(value = "Laskentakaava ID", required = true)
     private Long laskentakaavaId;
 
-    @JsonView(JsonViews.Basic.class)
     @ApiModelProperty(value = "Nimi", required = true)
     private String nimi;
 
-    @JsonView(JsonViews.Basic.class)
     @ApiModelProperty(value = "Kuvaus")
     private String kuvaus;
 
-    @JsonView(JsonViews.Basic.class)
     @ApiModelProperty(value = "Onko valintakoe aktiivinen", required = true)
     private Boolean aktiivinen;
 

@@ -47,8 +47,8 @@ public class ValintatapajonoKopioija implements Kopioija<Valintatapajono> {
         }
 
         // VT-657
-        if(from.getVarasijaTayttoPaivat() != null) {
-            to.setVarasijaTayttoPaivat(from.getVarasijaTayttoPaivat());
+        if(from.getVarasijanTayttojono() != null) {
+            to.setVarasijanTayttojono(from.getVarasijanTayttojono());
         }
         if(from.getPoissaOlevaTaytto() != null) {
             to.setPoissaOlevaTaytto(from.getPoissaOlevaTaytto());
@@ -56,6 +56,16 @@ public class ValintatapajonoKopioija implements Kopioija<Valintatapajono> {
         if(from.getVarasijat() != null) {
             to.setVarasijat(from.getVarasijat());
         }
+        if(from.getVarasijojaKaytetaanAlkaen() != null) {
+            to.setVarasijojaKaytetaanAlkaen(from.getVarasijojaKaytetaanAlkaen());
+        }
+        if(from.getVarasijojaTaytetaanAsti() != null) {
+            to.setVarasijojaTaytetaanAsti(from.getVarasijojaTaytetaanAsti());
+        }
+        if(from.getKaytetaanValintalaskentaa() != null) {
+            to.setKaytetaanValintalaskentaa(from.getKaytetaanValintalaskentaa());
+        }
+
     }
 
     @Override
@@ -82,14 +92,24 @@ public class ValintatapajonoKopioija implements Kopioija<Valintatapajono> {
         }
 
         // VT-657
-        if (kopio.getVarasijaTayttoPaivat().equals(alkuperainenMaster.getVarasijaTayttoPaivat())) {
-            kopio.setVarasijaTayttoPaivat(paivitettyMaster.getVarasijaTayttoPaivat());
-        }
+        // Pitää kopioida kopion kopio
+//        if (kopio.getVarasijanTayttojono().equals(alkuperainenMaster.getVarasijanTayttojono())) {
+//            kopio.setVarasijanTayttojono(paivitettyMaster.getVarasijanTayttojono());
+//        }
         if (kopio.getPoissaOlevaTaytto().equals(alkuperainenMaster.getPoissaOlevaTaytto())) {
             kopio.setPoissaOlevaTaytto(paivitettyMaster.getPoissaOlevaTaytto());
         }
         if (kopio.getVarasijat().equals(alkuperainenMaster.getVarasijat())) {
             kopio.setVarasijat(paivitettyMaster.getVarasijat());
+        }
+        if (kopio.getVarasijojaKaytetaanAlkaen() == null || kopio.getVarasijojaKaytetaanAlkaen().equals(alkuperainenMaster.getVarasijojaKaytetaanAlkaen())) {
+            kopio.setVarasijojaKaytetaanAlkaen(paivitettyMaster.getVarasijojaKaytetaanAlkaen());
+        }
+        if (kopio.getVarasijojaTaytetaanAsti() == null || kopio.getVarasijojaTaytetaanAsti().equals(alkuperainenMaster.getVarasijojaTaytetaanAsti())) {
+            kopio.setVarasijojaTaytetaanAsti(paivitettyMaster.getVarasijojaTaytetaanAsti());
+        }
+        if (kopio.getKaytetaanValintalaskentaa().equals(alkuperainenMaster.getKaytetaanValintalaskentaa())) {
+            kopio.setKaytetaanValintalaskentaa(paivitettyMaster.getKaytetaanValintalaskentaa());
         }
 
         kopio.setKuvaus(paivitettyMaster.getKuvaus());

@@ -39,7 +39,6 @@ public class ValintakoeResource {
     @GET
     @Path("/{oid}")
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
     @ApiOperation(value = "Hakee valintakokeen OID:n perusteella", response = ValintakoeDTO.class)
     public ValintakoeDTO readByOid(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
@@ -51,7 +50,6 @@ public class ValintakoeResource {
     @Path("/{oid}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
     @Secured({UPDATE, CRUD})
     @ApiOperation(value = "Päivittää valintakoetta")
     public Response update(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid, @ApiParam(value = "Valintakokeen uudet tiedot", required = true) ValintakoeDTO valintakoe) {

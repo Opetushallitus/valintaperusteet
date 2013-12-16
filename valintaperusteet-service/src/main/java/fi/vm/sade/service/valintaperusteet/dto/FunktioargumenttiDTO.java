@@ -13,15 +13,12 @@ import org.codehaus.jackson.map.annotate.JsonView;
 @ApiModel(value = "FunktioargumenttiDTO", description = "Funktioargumentti")
 public class FunktioargumenttiDTO implements Comparable<FunktioargumenttiDTO> {
 
-    @JsonView(JsonViews.Basic.class)
     @ApiModelProperty(value = "Lapsifunktiokutsu")
     private FunktiokutsuDTO funktiokutsuChild;
 
-    @JsonView(JsonViews.Basic.class)
     @ApiModelProperty(value = "Lapsilaskentakaava")
     private LaskentakaavaListDTO laskentakaavaChild;
 
-    @JsonView(JsonViews.Basic.class)
     @ApiModelProperty(value = "Indeksi", required = true)
     private Integer indeksi;
 

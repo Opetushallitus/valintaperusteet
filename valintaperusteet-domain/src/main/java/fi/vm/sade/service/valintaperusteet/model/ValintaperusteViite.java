@@ -18,15 +18,12 @@ public class ValintaperusteViite extends BaseEntity implements Comparable<Valint
 
     public final static String OSALLISTUMINEN_POSTFIX = "-OSALLISTUMINEN";
 
-    @JsonView(JsonViews.Basic.class)
     @Column(name = "tunniste", nullable = false)
     private String tunniste;
 
-    @JsonView(JsonViews.Basic.class)
     @Column(name = "kuvaus")
     private String kuvaus;
 
-    @JsonView(JsonViews.Basic.class)
     @Enumerated(EnumType.STRING)
     @Column(name = "lahde", nullable = false)
     private Valintaperustelahde lahde;
@@ -35,17 +32,14 @@ public class ValintaperusteViite extends BaseEntity implements Comparable<Valint
     @ManyToOne(optional = false)
     private Funktiokutsu funktiokutsu;
 
-    @JsonView(JsonViews.Basic.class)
     @Column(name = "on_pakollinen", nullable = false)
     private Boolean onPakollinen;
 
     // Jos valintaperusteen lähde on hakukohde, voidaan epäsuoralla viittauksella hakea
     // hakukohteelta tunniste, jolla viitataan hakemuksen arvoon
-    @JsonView(JsonViews.Basic.class)
     @Column(name = "epasuora_viittaus", nullable = true)
     private Boolean epasuoraViittaus;
 
-    @JsonView(JsonViews.Basic.class)
     @Column(name = "indeksi", nullable = false)
     private Integer indeksi;
 
@@ -106,7 +100,6 @@ public class ValintaperusteViite extends BaseEntity implements Comparable<Valint
     }
 
     @Transient
-    @JsonView(JsonViews.Basic.class)
     public String getOsallistuminenTunniste() {
         String osallistuminenTunniste = null;
 

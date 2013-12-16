@@ -14,10 +14,8 @@ import org.codehaus.jackson.map.annotate.JsonView;
 public class JarjestyskriteeriCreateDTO {
 
     @ApiModelProperty(value = "Metatiedot")
-    @JsonView(JsonViews.Basic.class)
     private String metatiedot;
 
-    @JsonView(JsonViews.Basic.class)
     @ApiModelProperty(value = "Aktiivinen", required = true)
     private Boolean aktiivinen;
 

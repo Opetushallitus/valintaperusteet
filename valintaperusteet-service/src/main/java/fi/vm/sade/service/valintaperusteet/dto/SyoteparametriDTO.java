@@ -14,11 +14,9 @@ import org.codehaus.jackson.map.annotate.JsonView;
 public class SyoteparametriDTO {
 
 
-    @JsonView(JsonViews.Basic.class)
     @ApiModelProperty(value = "Avain", required = true)
     private String avain;
 
-    @JsonView(JsonViews.Basic.class)
     @ApiModelProperty(value = "Arvo", required = true)
     private String arvo;
 

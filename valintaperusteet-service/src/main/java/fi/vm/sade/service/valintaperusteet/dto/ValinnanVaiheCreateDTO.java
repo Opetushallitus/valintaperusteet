@@ -15,18 +15,14 @@ import org.codehaus.jackson.map.annotate.JsonView;
 public class ValinnanVaiheCreateDTO {
 
     @ApiModelProperty(value = "Nimi", required = true)
-    @JsonView(JsonViews.Basic.class)
     private String nimi;
 
     @ApiModelProperty(value = "Kuvaus")
-    @JsonView(JsonViews.Basic.class)
     private String kuvaus;
 
     @ApiModelProperty(value = "Aktiivinen", required = true)
-    @JsonView(JsonViews.Basic.class)
     private Boolean aktiivinen;
 
-    @JsonView(JsonViews.Basic.class)
     @ApiModelProperty(value = "Valinnan vaiheen tyyppi", required = true)
     private ValinnanVaiheTyyppi valinnanVaiheTyyppi;
 

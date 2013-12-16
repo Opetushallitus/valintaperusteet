@@ -10,7 +10,6 @@ import org.codehaus.jackson.map.annotate.JsonView;
  */
 public class KonvertteriparametrinPaluuarvoPuuttuuVirhe extends Validointivirhe {
 
-    @JsonView(JsonViews.Basic.class)
     private int indeksi;
 
     public KonvertteriparametrinPaluuarvoPuuttuuVirhe(String virheviesti, int indeksi) {

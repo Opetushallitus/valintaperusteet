@@ -16,39 +16,30 @@ import java.util.List;
 public class ValintaperusteDTO {
 
     @ApiModelProperty(value = "Tunniste")
-    @JsonView({JsonViews.Basic.class})
     private String tunniste;
 
     @ApiModelProperty(value = "Kuvaus")
-    @JsonView({JsonViews.Basic.class})
     private String kuvaus;
 
     @ApiModelProperty(value = "Funktiotyyppi")
-    @JsonView({JsonViews.Basic.class})
     private Funktiotyyppi funktiotyyppi;
 
     @ApiModelProperty(value = "Valintaperusteen lähde")
-    @JsonView({JsonViews.Basic.class})
     private Valintaperustelahde lahde;
 
     @ApiModelProperty(value = "Onko valintaperuste pakollinen")
-    @JsonView({JsonViews.Basic.class})
     private boolean onPakollinen;
 
     @ApiModelProperty(value = "Arvovälin minimi")
-    @JsonView({JsonViews.Basic.class})
     private String min;
 
     @ApiModelProperty(value = "Arvovälin maksimi")
-    @JsonView({JsonViews.Basic.class})
     private String max;
 
     @ApiModelProperty(value = "Arvot")
-    @JsonView({JsonViews.Basic.class})
     private List<String> arvot;
 
     @ApiModelProperty(value = "Osallistumistunniste")
-    @JsonView({JsonViews.Basic.class})
     private String osallistuminenTunniste;
 
     public String getTunniste() {

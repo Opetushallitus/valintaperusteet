@@ -16,11 +16,9 @@ import javax.persistence.Table;
 @Table(name = "arvokonvertteriparametri")
 @Cacheable(true)
 public class Arvokonvertteriparametri extends Konvertteriparametri {
-    @JsonView(JsonViews.Basic.class)
     @Column(name = "arvo")
     private String arvo;
 
-    @JsonView(JsonViews.Basic.class)
     @Column(name = "hylkaysperuste", nullable = false)
     private String hylkaysperuste;
 
