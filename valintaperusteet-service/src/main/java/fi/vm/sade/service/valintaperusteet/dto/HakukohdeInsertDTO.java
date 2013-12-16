@@ -21,11 +21,9 @@ public class HakukohdeInsertDTO {
         this.valintaryhmaOid = valintaryhmaOid;
     }
 
-    @JsonView(JsonViews.Basic.class)
     @ApiModelProperty(value = "Lisättävä hakukohde", required = true)
     private HakukohdeViiteCreateDTO hakukohde;
 
-    @JsonView(JsonViews.Basic.class)
     @ApiModelProperty(value = "Valintaryhmä OID, johon hakukohde lisätään", required = true)
     private String valintaryhmaOid;
 

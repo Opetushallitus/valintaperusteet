@@ -13,18 +13,14 @@ import org.codehaus.jackson.map.annotate.JsonView;
 @ApiModel(value = "JarjestyskriteeriDTO", description = "Järjestyskriteeri")
 public class JarjestyskriteeriDTO extends JarjestyskriteeriCreateDTO {
     @ApiModelProperty(value = "OID", required = true)
-    @JsonView(JsonViews.Basic.class)
     private String oid;
 
-    @JsonView(JsonViews.Basic.class)
     @ApiModelProperty(value = "Valintatapajono OID")
     private String valintatapajonoOid;
 
     @ApiModelProperty(value = "Onko järjestyskriteeri peritty")
-    @JsonView(JsonViews.Basic.class)
     private Boolean inheritance;
 
-    @JsonView(JsonViews.Basic.class)
     @ApiModelProperty(value = "Laskentakaava ID", required = true)
     private Long laskentakaavaId;
 

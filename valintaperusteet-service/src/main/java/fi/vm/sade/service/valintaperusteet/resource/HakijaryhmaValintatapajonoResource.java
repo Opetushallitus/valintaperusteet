@@ -54,7 +54,6 @@ public class HakijaryhmaValintatapajonoResource {
 
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
     @Path("/{oid}")
     @Secured({READ, UPDATE, CRUD})
     @ApiOperation(value = "Poistaa hakijaryhmän ja valintatapajonon välisen liitoksen")
@@ -79,7 +78,6 @@ public class HakijaryhmaValintatapajonoResource {
     @Path("/{oid}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
     @Secured({UPDATE, CRUD})
     @ApiOperation(value = "Päivittää hakijaryhmän ja valintatapajonon välistä liitosta")
     @ApiResponses(value = {

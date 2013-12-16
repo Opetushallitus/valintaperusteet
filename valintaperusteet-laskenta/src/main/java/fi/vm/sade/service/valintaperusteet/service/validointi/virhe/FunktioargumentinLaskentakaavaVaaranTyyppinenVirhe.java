@@ -21,13 +21,10 @@ public class FunktioargumentinLaskentakaavaVaaranTyyppinenVirhe extends Validoin
         this.annettuTyyppi = annettuTyyppi;
     }
 
-    @JsonView(JsonViews.Basic.class)
     private int indeksi;
 
-    @JsonView(JsonViews.Basic.class)
     private Funktiotyyppi vaadittuTyyppi;
 
-    @JsonView(JsonViews.Basic.class)
     private Funktiotyyppi annettuTyyppi;
 
     public int getIndeksi() {

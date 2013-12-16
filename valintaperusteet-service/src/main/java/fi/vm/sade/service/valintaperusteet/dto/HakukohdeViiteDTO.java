@@ -14,11 +14,9 @@ import org.codehaus.jackson.map.annotate.JsonView;
 public class HakukohdeViiteDTO extends HakukohdeViiteCreateDTO {
 
     @ApiModelProperty(value = "Valintaryhmä OID")
-    @JsonView(JsonViews.Basic.class)
     private String valintaryhmaOid;
 
     @ApiModelProperty(value = "Hakukohdekoodi")
-    @JsonView(JsonViews.Basic.class)
     private KoodiDTO hakukohdekoodi;
 
 

@@ -13,7 +13,6 @@ import org.codehaus.jackson.map.annotate.JsonView;
 @ApiModel(value = "HakijaryhmaValintatapajonoDTO", description = "Hakijaryhmän liittyminen valintatapajonoon")
 public class HakijaryhmaValintatapajonoDTO extends HakijaryhmaValintatapajonoUpdateDTO {
     @ApiModelProperty(value = "OID", required = true)
-    @JsonView(JsonViews.Basic.class)
     private String oid;
 
     public String getOid() {

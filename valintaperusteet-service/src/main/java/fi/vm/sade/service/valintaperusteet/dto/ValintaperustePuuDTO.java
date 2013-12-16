@@ -16,34 +16,24 @@ import java.util.Set;
 public class ValintaperustePuuDTO {
 
 
-    @JsonView(JsonViews.Basic.class)
     private ValintaperustePuuDTO ylavalintaryhma;
 
-    @JsonView(JsonViews.Basic.class)
     private Set<ValintaperustePuuDTO> alavalintaryhmat = new HashSet<ValintaperustePuuDTO>();
 
-    @JsonView(JsonViews.Basic.class)
     private Set<ValintaperustePuuDTO> hakukohdeViitteet = new HashSet<ValintaperustePuuDTO>();
 
-    @JsonView(JsonViews.Basic.class)
     private String hakuOid;
 
-    @JsonView(JsonViews.Basic.class)
     private String oid;
 
-    @JsonView(JsonViews.Basic.class)
     private String tarjoajaOid;
 
-    @JsonView(JsonViews.Basic.class)
     private String nimi;
 
-    @JsonView(JsonViews.Basic.class)
     private String tila;
 
-    @JsonView(JsonViews.Basic.class)
     private ValintaperustePuuTyyppi tyyppi;
 
-    @JsonView(JsonViews.Basic.class)
     private Set<OrganisaatioDTO> organisaatiot = new HashSet<OrganisaatioDTO>();
 
     public String getHakuOid() {

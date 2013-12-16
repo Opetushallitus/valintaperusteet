@@ -11,7 +11,6 @@ import org.codehaus.jackson.map.annotate.JsonView;
 public class VirheellinenArvokonvertterinArvoTyyppiVirhe extends Validointivirhe {
 
 
-    @JsonView(JsonViews.Basic.class)
     private int indeksi;
 
     public VirheellinenArvokonvertterinArvoTyyppiVirhe(String virheviesti, int indeksi) {

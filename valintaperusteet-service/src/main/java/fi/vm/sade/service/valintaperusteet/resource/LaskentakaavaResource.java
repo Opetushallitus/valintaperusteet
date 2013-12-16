@@ -70,7 +70,6 @@ public class LaskentakaavaResource {
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView(JsonViews.Basic.class)
     @Secured({READ, UPDATE, CRUD})
     @ApiOperation(value = "Hakee laskentakaavan ID:n perusteella", response = LaskentakaavaDTO.class)
     public LaskentakaavaDTO kaava(@ApiParam(value = "Laskentakaavan ID", required = true) @PathParam("id") Long id) {
@@ -79,7 +78,6 @@ public class LaskentakaavaResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView(JsonViews.Laskentakaava.class)
     @Secured({READ, UPDATE, CRUD})
     @ApiOperation(value = "Hakee laskentakaavat annettujen hakuparametrien perusteella", response = LaskentakaavaListDTO.class)
     public List<LaskentakaavaListDTO> kaavat(
@@ -93,7 +91,6 @@ public class LaskentakaavaResource {
     @POST
     @Path("/validoi")
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView(JsonViews.Basic.class)
     @Secured({READ, UPDATE, CRUD})
     @ApiOperation(value = "Validoi parametrina annetun laskentakaavan", response = LaskentakaavaDTO.class)
     public LaskentakaavaDTO validoi(@ApiParam(value = "Validoitava laskentakaava", required = true) LaskentakaavaDTO laskentakaava) {
@@ -104,7 +101,6 @@ public class LaskentakaavaResource {
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
     @Secured({UPDATE, CRUD})
     @ApiOperation(value = "Päivittää laskentakaavan")
     public Response update(@ApiParam(value = "Päivitettävän laskentakaavan ID", required = true) @PathParam("id") Long id,
@@ -131,7 +127,6 @@ public class LaskentakaavaResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView(JsonViews.Laskentakaava.class)
     @Secured({CRUD})
     @ApiOperation(value = "Lisää uuden laskentakaavan")
     public Response insert(@ApiParam(value = "Lisättävä laskentakaava", required = true) LaskentakaavaInsertDTO laskentakaava) {

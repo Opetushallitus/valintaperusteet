@@ -10,13 +10,10 @@ import org.codehaus.jackson.map.annotate.JsonView;
  */
 public class VirheellinenFunktioargumentinTyyppiVirhe extends Validointivirhe {
 
-    @JsonView(JsonViews.Basic.class)
     private int indeksi;
 
-    @JsonView(JsonViews.Basic.class)
     private String vaadittuTyyppi;
 
-    @JsonView(JsonViews.Basic.class)
     private String annettuTyyppi;
 
     public VirheellinenFunktioargumentinTyyppiVirhe(String virheviesti, int indeksi, String vaadittuTyyppi, String annettuTyyppi) {

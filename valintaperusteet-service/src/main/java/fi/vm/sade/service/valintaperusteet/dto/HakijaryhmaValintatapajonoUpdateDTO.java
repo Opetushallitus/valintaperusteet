@@ -13,15 +13,12 @@ import org.codehaus.jackson.map.annotate.JsonView;
 @ApiModel(value = "HakijaryhmaValintatapajonoDTO", description = "Hakijaryhmän liittyminen valintatapajonoon")
 public class HakijaryhmaValintatapajonoUpdateDTO {
     @ApiModelProperty(value = "Hakijaryhmä", required = true)
-    @JsonView(JsonViews.Basic.class)
     private HakijaryhmaDTO hakijaryhma;
 
     @ApiModelProperty(value = "Valintatapajono", required = true)
-    @JsonView(JsonViews.Basic.class)
     private ValintatapajonoDTO valintatapajono;
 
     @ApiModelProperty(value = "Aktiivinen", required = true)
-    @JsonView(JsonViews.Basic.class)
     private Boolean aktiivinen;
 
     public HakijaryhmaDTO getHakijaryhma() {

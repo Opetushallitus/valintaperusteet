@@ -14,10 +14,8 @@ import org.codehaus.jackson.map.annotate.JsonView;
 public class ValinnanVaiheDTO extends ValinnanVaiheCreateDTO {
 
     @ApiModelProperty(value = "OID", required = true)
-    @JsonView(JsonViews.Basic.class)
     private String oid;
 
-    @JsonView(JsonViews.Basic.class)
     @ApiModelProperty(value = "Onko valinnan vaihe peritty")
     private Boolean inheritance;
 

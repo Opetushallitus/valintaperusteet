@@ -9,7 +9,6 @@ import org.codehaus.jackson.map.annotate.JsonView;
  * Time: 8.44
  */
 public class NSuurempiKuinFunktioargumenttienLkmVirhe extends Validointivirhe {
-    @JsonView(JsonViews.Basic.class)
     private int n;
 
     public NSuurempiKuinFunktioargumenttienLkmVirhe(String virheviesti, int n) {

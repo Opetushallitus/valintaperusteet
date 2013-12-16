@@ -11,7 +11,6 @@ import org.codehaus.jackson.map.annotate.JsonView;
  * To change this template use File | Settings | File Templates.
  */
 public class ErrorDTO {
-    @JsonView(JsonViews.Basic.class)
     private String message;
 
     public ErrorDTO(String message) {

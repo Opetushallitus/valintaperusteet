@@ -12,19 +12,15 @@ import org.codehaus.jackson.map.annotate.JsonView;
  */
 @ApiModel(value = "ArvovalikonvertteriparametriDTO", description = "Arvovälikonvertteriparametri")
 public class ArvovalikonvertteriparametriDTO {
-    @JsonView(JsonViews.Basic.class)
     @ApiModelProperty(value = "Paluuarvo")
     private String paluuarvo;
 
-    @JsonView(JsonViews.Basic.class)
     @ApiModelProperty(value = "Minimiarvo", required = true)
     private String minValue;
 
-    @JsonView(JsonViews.Basic.class)
     @ApiModelProperty(value = "Maksimiarvo", required = true)
     private String maxValue;
 
-    @JsonView(JsonViews.Basic.class)
     @ApiModelProperty(value = "Palautetaanko haettu arvo")
     private String palautaHaettuArvo;
 

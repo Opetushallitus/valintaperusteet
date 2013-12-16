@@ -10,7 +10,6 @@ import java.math.BigDecimal;
  */
 public class ProsenttiosuusEpavalidiVirhe extends Validointivirhe {
 
-    @JsonView(JsonViews.Basic.class)
     private BigDecimal prosenttiosuus;
 
     public ProsenttiosuusEpavalidiVirhe(String virheviesti, BigDecimal prosenttiosuus) {

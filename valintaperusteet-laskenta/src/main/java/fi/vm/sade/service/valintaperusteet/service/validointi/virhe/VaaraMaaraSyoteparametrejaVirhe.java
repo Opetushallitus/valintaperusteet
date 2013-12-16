@@ -16,10 +16,8 @@ public class VaaraMaaraSyoteparametrejaVirhe extends Validointivirhe {
         this.annettuParametriLkm = annettuParametriLkm;
     }
 
-    @JsonView(JsonViews.Basic.class)
     private int vaadittuParametriLkm;
 
-    @JsonView(JsonViews.Basic.class)
     private int annettuParametriLkm;
 
     public int getVaadittuParametriLkm() {

@@ -15,19 +15,15 @@ import org.codehaus.jackson.map.annotate.JsonView;
 public abstract class AbstractLaskentakaavaDTO {
 
     @ApiModelProperty(value = "Onko laskentakaava luonnos vai valmis", required = true)
-    @JsonView({JsonViews.Basic.class, JsonViews.Laskentakaava.class})
     private Boolean onLuonnos;
 
     @ApiModelProperty(value = "Nimi", required = true)
-    @JsonView({JsonViews.Basic.class, JsonViews.Laskentakaava.class})
     private String nimi;
 
     @ApiModelProperty(value = "Kuvaus")
-    @JsonView({JsonViews.Basic.class, JsonViews.Laskentakaava.class})
     private String kuvaus;
 
     @ApiModelProperty(value = "Laskentakaavan tyyppi", required = true)
-    @JsonView({JsonViews.Basic.class, JsonViews.Laskentakaava.class})
     private Funktiotyyppi tyyppi;
 
 

@@ -9,7 +9,6 @@ import org.codehaus.jackson.map.annotate.JsonView;
  * Time: 8.42
  */
 public class NPienempiKuinYksiVirhe extends Validointivirhe {
-    @JsonView(JsonViews.Basic.class)
     private int n;
 
     public NPienempiKuinYksiVirhe(String virheviesti, int n) {

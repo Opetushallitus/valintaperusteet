@@ -41,7 +41,6 @@ public class PuuResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView(JsonViews.Basic.class)
     @Secured({READ, UPDATE, CRUD})
     @ApiOperation(value = "Hakee valintaperustepuun annettujen parametrien perusteella", response = ValintaperustePuuDTO.class)
     public List<ValintaperustePuuDTO> search(

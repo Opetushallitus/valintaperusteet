@@ -16,7 +16,6 @@ public class FunktioargumenttiaEiMaariteltyVirhe extends Validointivirhe {
     }
 
 
-    @JsonView(JsonViews.Basic.class)
     private int indeksi;
 
 

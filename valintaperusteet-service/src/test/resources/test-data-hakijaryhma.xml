@@ -35,19 +35,19 @@
         <valintaryhma id="1" version="0" nimi="valintaryhma1" oid="vr1"/>
         <valintaryhma id="39" version="2" nimi="valintaryhma2" oid="vr2" parent_id="1"/>
 
-        <valintatapajono poissa_oleva_taytto="false" varasijat="0" varasija_taytto_paivat="0" id="5" version="3" aktiivinen="true" aloituspaikat="20" nimi="jono 1" oid="vtj1" siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO"
+        <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="5" version="3" aktiivinen="true" aloituspaikat="20" nimi="jono 1" oid="vtj1" siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO"
                          valinnan_vaihe_id="3" ei_varasijatayttoa="false"/>
-        <valintatapajono poissa_oleva_taytto="false" varasijat="0" varasija_taytto_paivat="0" id="6" version="1" aktiivinen="true" aloituspaikat="20" nimi="jono 1" oid="vtj2" siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO"
+        <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="6" version="1" aktiivinen="true" aloituspaikat="20" nimi="jono 1" oid="vtj2" siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO"
                          master_valintatapajono_id="5" valinnan_vaihe_id="4" ei_varasijatayttoa="false"/>
-        <valintatapajono poissa_oleva_taytto="false" varasijat="0" varasija_taytto_paivat="0" id="7" version="0" aktiivinen="true" aloituspaikat="10" kuvaus="" nimi="jono 2" oid="vtj3" siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO"
+        <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="7" version="0" aktiivinen="true" aloituspaikat="10" kuvaus="" nimi="jono 2" oid="vtj3" siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO"
                          edellinen_valintatapajono_id="5" valinnan_vaihe_id="3" ei_varasijatayttoa="false"/>
-        <valintatapajono poissa_oleva_taytto="false" varasijat="0" varasija_taytto_paivat="0" id="8" version="0" aktiivinen="true" aloituspaikat="10" kuvaus="" nimi="jono 2" oid="vtj4" siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO"
+        <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="8" version="0" aktiivinen="true" aloituspaikat="10" kuvaus="" nimi="jono 2" oid="vtj4" siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO"
                          edellinen_valintatapajono_id="6" master_valintatapajono_id="7" valinnan_vaihe_id="4" ei_varasijatayttoa="false"/>
-        <valintatapajono poissa_oleva_taytto="false" varasijat="0" varasija_taytto_paivat="0" id="35" version="0" aktiivinen="true" aloituspaikat="10" nimi="hakukohde jono" oid="vtj5" siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO"
+        <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="35" version="0" aktiivinen="true" aloituspaikat="10" nimi="hakukohde jono" oid="vtj5" siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO"
                          edellinen_valintatapajono_id="8" valinnan_vaihe_id="4" ei_varasijatayttoa="false"/>
-        <valintatapajono poissa_oleva_taytto="false" varasijat="0" varasija_taytto_paivat="0" id="41" version="0" aktiivinen="true" aloituspaikat="20" nimi="jono 1" oid="vtj6" siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO"
+        <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="41" version="0" aktiivinen="true" aloituspaikat="20" nimi="jono 1" oid="vtj6" siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO"
                          master_valintatapajono_id="5" valinnan_vaihe_id="40" ei_varasijatayttoa="false"/>
-        <valintatapajono poissa_oleva_taytto="false" varasijat="0" varasija_taytto_paivat="0" id="42" version="0" aktiivinen="true" aloituspaikat="10" kuvaus="" nimi="jono 2" oid="vtj7" siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO"
+        <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="42" version="0" aktiivinen="true" aloituspaikat="10" kuvaus="" nimi="jono 2" oid="vtj7" siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO"
                          edellinen_valintatapajono_id="41" master_valintatapajono_id="7" valinnan_vaihe_id="40" ei_varasijatayttoa="false"/>
 
         <jarjestyskriteeri />

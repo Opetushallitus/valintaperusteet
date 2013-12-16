@@ -61,7 +61,6 @@ public class ValintaryhmaResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView(JsonViews.Basic.class)
     @Secured({READ, UPDATE, CRUD})
     @ApiOperation(value = "Hakee valintaryhmiä annettujen hakukriteerien perusteella", response = ValintaryhmaDTO.class)
     public List<ValintaryhmaDTO> search(@ApiParam(value = "Haetaanko pääatason valintaryhmät") @QueryParam("paataso") Boolean paataso,
@@ -80,7 +79,6 @@ public class ValintaryhmaResource {
     @GET
     @Path("/{oid}")
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
     @ApiOperation(value = "Hakee valintaryhmän OID:n perusteella", response = ValintaryhmaDTO.class)
     public ValintaryhmaDTO queryFull(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
@@ -90,7 +88,6 @@ public class ValintaryhmaResource {
     @GET
     @Path("/{oid}/hakijaryhma")
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
     @ApiOperation(value = "Hakee hakijaryhmät valintaryhmän OID:n perusteella", response = HakijaryhmaDTO.class)
     public List<HakijaryhmaDTO> hakijaryhmat(@ApiParam(value = "Valintaryhmän OID", required = true) @PathParam("oid") String oid) {
@@ -100,7 +97,6 @@ public class ValintaryhmaResource {
     @GET
     @Path("/{oid}/parents")
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView(JsonViews.ParentHierarchy.class)
     @Secured({READ, UPDATE, CRUD})
     @ApiOperation(value = "Hakee valintaryhmän parent-valintaryhmät OID:n perusteella", response = ValintaryhmaListDTO.class)
     public List<ValintaryhmaListDTO> parentHierarchy(@ApiParam(value = "OID", required = true) @PathParam("oid") String parentsOf) {
@@ -114,7 +110,6 @@ public class ValintaryhmaResource {
     @GET
     @Path("/{oid}/lapsi")
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
     @ApiOperation(value = "Hakee valintaryhmän lapsivalintaryhmät OID:n perusteella", response = ValintaryhmaDTO.class)
     public List<ValintaryhmaDTO> queryChildren(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
@@ -124,7 +119,6 @@ public class ValintaryhmaResource {
     @GET
     @Path("/{oid}/hakukohde")
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
     @ApiOperation(value = "Hakee valintaryhmän lapsihakukohteet OID:n perusteella", response = HakukohdeViiteDTO.class)
     public List<HakukohdeViiteDTO> childHakukohdes(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
@@ -134,7 +128,6 @@ public class ValintaryhmaResource {
     @GET
     @Path("/{oid}/valinnanvaihe")
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView(JsonViews.Basic.class)
     @Secured({READ, UPDATE, CRUD})
     @ApiOperation(value = "Hakee valinnan vaiheet valintaryhmän OID:n perusteella", response = ValinnanVaiheDTO.class)
     public List<ValinnanVaiheDTO> valinnanVaiheet(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
@@ -145,7 +138,6 @@ public class ValintaryhmaResource {
     @Path("/{parentOid}/lapsi")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
     @Secured({CRUD})
     @ApiOperation(value = "Lisää lapsivalintaryhmän parametrina annetulle parent-valintaryhmälle")
     public Response insertChild(@ApiParam(value = "Parent-valintaryhmän OID", required = true) @PathParam("parentOid") String parentOid,
@@ -161,7 +153,6 @@ public class ValintaryhmaResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
     @Secured({CRUD})
     @ApiOperation(value = "Lisää valintaryhmän")
     public Response insert(@ApiParam(value = "Uusi valintaryhmä", required = true) ValintaryhmaCreateDTO valintaryhma) {
@@ -178,7 +169,6 @@ public class ValintaryhmaResource {
     @Path("/{oid}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
     @Secured({UPDATE, CRUD})
     @ApiOperation(value = "Päivittää valintaryhmän")
     public Response update(@ApiParam(value = "Päivitettävän valintaryhmän OID", required = true) @PathParam("oid") String oid,
@@ -191,7 +181,6 @@ public class ValintaryhmaResource {
     @Path("/{valintaryhmaOid}/valinnanvaihe")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
     @Secured({CRUD})
     @ApiOperation(value = "Lisää valinnan vaiheen valintaryhmälle")
     public Response insertValinnanvaihe(@ApiParam(value = "Valintaryhmän OID, jolla valinnan vaihe lisätään", required = true) @PathParam("valintaryhmaOid") String valintaryhmaOid,
@@ -213,7 +202,6 @@ public class ValintaryhmaResource {
     @Path("/{valintaryhmaOid}/hakijaryhma")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
     @Secured({CRUD})
     @ApiOperation(value = "Lisää hakijaryhmän valintaryhmälle")
     public Response insertHakijaryhma(@ApiParam(value = "Valintaryhmän OID, jolle hakijaryhmä lisätään", required = true) @PathParam("valintaryhmaOid") String valintaryhamOid,
@@ -231,7 +219,6 @@ public class ValintaryhmaResource {
     @Path("/{valintaryhmaOid}/hakukohdekoodi")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
     @Secured({UPDATE, CRUD})
     @ApiOperation(value = "Päivittää valintaryhmän hakukohdekoodeja")
     public Response updateHakukohdekoodi(@ApiParam(value = "Valintaryhmän OID, jonka hakukohdekoodeja päivitetään", required = true) @PathParam("valintaryhmaOid") String valintaryhmaOid,
@@ -249,7 +236,6 @@ public class ValintaryhmaResource {
     @Path("/{valintaryhmaOid}/hakukohdekoodi")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
     @Secured({CRUD})
     @ApiOperation(value = "Lisää hakukohdekoodin valintaryhmälle")
     public Response insertHakukohdekoodi(@ApiParam(value = "Valintaryhmän OID, jolle hakukohdekoodi lisätään", required = true) @PathParam("valintaryhmaOid") String valintaryhamOid,
@@ -267,7 +253,6 @@ public class ValintaryhmaResource {
     @Path("/{valintaryhmaOid}/valintakoekoodi")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView(JsonViews.Basic.class)
     @Secured(CRUD)
     @ApiOperation(value = "Päivittää valintaryhmän valintakoekoodeja")
     public Response updateValintakoekoodi(@ApiParam(value = "Valintaryhmän OID, jonka valintakoekoodeja päivitetään", required = true) @PathParam("valintaryhmaOid") String valintaryhmaOid,
@@ -285,7 +270,6 @@ public class ValintaryhmaResource {
     @Path("/{valintaryhmaOid}/valintakoekoodi")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
     @Secured({CRUD})
     @ApiOperation(value = "Lisää valintakoekoodin valintaryhmälle")
     public Response insertValintakoekoodi(@ApiParam(value = "Valintaryhmän OID, jolle valintakoekoodi lisätään", required = true) @PathParam("valintaryhmaOid") String valintaryhamOid,

@@ -14,10 +14,8 @@ public class VirheellinenSyoteParametrinTyyppiVirhe extends Validointivirhe {
         this.vaadittuTyyppi = vaadittuTyyppi;
     }
 
-    @JsonView(JsonViews.Basic.class)
     private String syoteParametrinAvain;
 
-    @JsonView(JsonViews.Basic.class)
     private String vaadittuTyyppi;
 
     public String getSyoteParametrinAvain() {
