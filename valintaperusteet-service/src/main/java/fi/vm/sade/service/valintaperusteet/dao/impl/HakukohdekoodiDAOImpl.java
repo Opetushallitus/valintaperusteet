@@ -29,8 +29,6 @@ public class HakukohdekoodiDAOImpl extends AbstractJpaDAOImpl<Hakukohdekoodi, Lo
         QHakukohdekoodi koodi = QHakukohdekoodi.hakukohdekoodi;
 
         return from(koodi)
-                .leftJoin(koodi.hakukohteet).fetch()
-                .leftJoin(koodi.valintaryhmat).fetch()
                 .where(koodi.uri.eq(koodiUri))
                 .singleResult(koodi);
     }
@@ -42,8 +40,6 @@ public class HakukohdekoodiDAOImpl extends AbstractJpaDAOImpl<Hakukohdekoodi, Lo
 
         return from(hakukohde)
                 .innerJoin(hakukohde.hakukohdekoodi, hakukohdekoodi)
-                .leftJoin(hakukohdekoodi.hakukohteet).fetch()
-                .leftJoin(hakukohdekoodi.valintaryhmat).fetch()
                 .where(hakukohde.oid.eq(hakukohdeOid))
                 .singleResult(hakukohdekoodi);
     }
@@ -54,8 +50,6 @@ public class HakukohdekoodiDAOImpl extends AbstractJpaDAOImpl<Hakukohdekoodi, Lo
         QHakukohdeViite hakukohde = QHakukohdeViite.hakukohdeViite;
 
         return from(koodi)
-                .innerJoin(koodi.hakukohteet, hakukohde).fetch()
-                .leftJoin(koodi.valintaryhmat).fetch()
                 .where(koodi.uri.eq(koodiUri).and(hakukohde.oid.eq(hakukohdeOid)))
                 .singleResult(koodi);
     }
@@ -68,7 +62,6 @@ public class HakukohdekoodiDAOImpl extends AbstractJpaDAOImpl<Hakukohdekoodi, Lo
         QHakukohdekoodi koodi = QHakukohdekoodi.hakukohdekoodi;
 
         return from(koodi)
-                .leftJoin(koodi.valintaryhmat).fetch()
                 .where(koodi.uri.in(koodiUris))
                 .list(koodi);
     }
