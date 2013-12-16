@@ -3,6 +3,7 @@ package fi.vm.sade.service.valintaperusteet.service.impl;
 import fi.vm.sade.service.valintaperusteet.dao.OrganisaatioDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
+import fi.vm.sade.service.valintaperusteet.dto.OrganisaatioDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.Organisaatio;
@@ -100,28 +101,18 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
         return managedObject;
     }
 
-    private Set<Organisaatio> getOrganisaatios(Set<String> oids) {
-        if (!oids.isEmpty()) {
+    private Set<Organisaatio> getOrganisaatios(Set<OrganisaatioDTO> incoming) {
+        Set<Organisaatio> organisaatiot = new HashSet<Organisaatio>();
+        for (OrganisaatioDTO organisaatio : incoming) {
+            Organisaatio temp = organisaatioDAO.readByOid(organisaatio.getOid());
 
-            List<Organisaatio> organisaatios = organisaatioDAO.readByOidList(oids);
-
-            Map<String, Organisaatio> organisaatiosByOids = new HashMap<String, Organisaatio>();
-            for (Organisaatio o : organisaatios) {
-                organisaatiosByOids.put(o.getOid(), o);
+            // TODO: OidPath pitäis varmaan päivittää joskus vanoille kanssa.
+            if(temp == null) {
+                temp = organisaatioDAO.insert(modelMapper.map(organisaatio, Organisaatio.class));
             }
-
-            oids.removeAll(organisaatiosByOids.keySet());
-            for (String oid : oids) {
-                Organisaatio o = new Organisaatio();
-                o.setOid(oid);
-                organisaatiosByOids.put(oid, organisaatioDAO.insert(o));
-            }
-
-
-            return new HashSet<Organisaatio>(organisaatiosByOids.values());
-        } else {
-            return Collections.EMPTY_SET;
+            organisaatiot.add(temp);
         }
+        return organisaatiot;
     }
 
     @Override
