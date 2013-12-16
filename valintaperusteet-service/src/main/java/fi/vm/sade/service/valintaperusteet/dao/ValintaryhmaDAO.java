@@ -35,4 +35,6 @@ public interface ValintaryhmaDAO extends JpaDAO<Valintaryhma, Long> {
 
     List<Valintaryhma> haeHakukohdekoodinJaValintakoekoodienMukaan(String hakukohdekoodiUri,
                                                                    Collection<String> valintakoekoodiUrit);
+
+    List<Valintaryhma> readByHakukohdekoodiUri(String koodiUri);
 }

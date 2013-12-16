@@ -2,8 +2,11 @@ package fi.vm.sade.service.valintaperusteet.service;
 
 import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
+import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdekoodiDAO;
+import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.dto.KoodiDTO;
+import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.Hakukohdekoodi;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import org.junit.Test;
@@ -17,6 +20,7 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.*;
@@ -43,6 +47,12 @@ public class HakukohdekoodiServiceTest {
     @Autowired
     private ValintaryhmaService valintaryhmaService;
 
+    @Autowired
+    private ValintaryhmaDAO valintaryhmaDAO;
+
+    @Autowired
+    private HakukohdeViiteDAO hakukohdeViiteDAO;
+
     private KoodiDTO luoHakukohdekoodi(String uri, String arvo, String nimi) {
         KoodiDTO koodi = new KoodiDTO();
         koodi.setUri(uri);
@@ -65,7 +75,9 @@ public class HakukohdekoodiServiceTest {
         hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(valintaryhmaOid, koodi);
 
         Hakukohdekoodi haettu = hakukohdekoodiDAO.readByUri(hakukohdekoodiUri);
-        assertEquals(valintaryhmaOid, haettu.getValintaryhmat().iterator().next().getOid());
+        List<Valintaryhma> valintaryhmas = valintaryhmaDAO.readByHakukohdekoodiUri(hakukohdekoodiUri);
+        assertEquals(1, valintaryhmas.size());
+        assertEquals(valintaryhmaOid, valintaryhmas.get(0).getOid());
     }
 
 
@@ -118,8 +130,10 @@ public class HakukohdekoodiServiceTest {
         hakukohdekoodiService.lisaaHakukohdekoodiHakukohde(hakukohdeOid, koodi);
 
         Hakukohdekoodi haettu = hakukohdekoodiDAO.readByUri(hakukohdekoodiUri);
-        assertEquals(1, haettu.getHakukohteet().size());
-        assertEquals(hakukohdeOid, haettu.getHakukohteet().iterator().next().getOid());
+
+        List<HakukohdeViite> hakukohdeViites = hakukohdeViiteDAO.readByHakukohdekoodiUri(hakukohdekoodiUri);
+        assertEquals(1, hakukohdeViites.size());
+        assertEquals(hakukohdeOid, hakukohdeViites.get(0).getOid());
     }
 
     @Test
@@ -131,13 +145,13 @@ public class HakukohdekoodiServiceTest {
 
         Hakukohdekoodi haettu = hakukohdekoodiDAO.readByUri(hakukohdekoodiUri);
         assertNotNull(haettu);
-        assertEquals(0, haettu.getHakukohteet().size());
+        assertEquals(0, hakukohdeViiteDAO.readByHakukohdekoodiUri(hakukohdekoodiUri).size());
 
         hakukohdekoodiService.lisaaHakukohdekoodiHakukohde(hakukohdeOid, koodi);
 
-        haettu = hakukohdekoodiDAO.readByUri(hakukohdekoodiUri);
-        assertEquals(1, haettu.getHakukohteet().size());
-        assertEquals(hakukohdeOid, haettu.getHakukohteet().iterator().next().getOid());
+        List<HakukohdeViite> hakukohdeViites = hakukohdeViiteDAO.readByHakukohdekoodiUri(hakukohdekoodiUri);
+        assertEquals(1, hakukohdeViites.size());
+        assertEquals(hakukohdeOid, hakukohdeViites.get(0).getOid());
     }
 
     @Test
@@ -154,11 +168,11 @@ public class HakukohdekoodiServiceTest {
 
         hakukohdekoodiService.updateHakukohdeHakukohdekoodi(hakukohdeOid, koodi);
 
-        Hakukohdekoodi haettu = hakukohdekoodiDAO.readByUri(hakukohdekoodiUri);
-        assertEquals(1, haettu.getHakukohteet().size());
-        assertEquals(hakukohdeOid, haettu.getHakukohteet().iterator().next().getOid());
+        List<HakukohdeViite> hakukohdeViites = hakukohdeViiteDAO.readByHakukohdekoodiUri(hakukohdekoodiUri);
+        assertEquals(1, hakukohdeViites.size());
+        assertEquals(hakukohdeOid, hakukohdeViites.get(0).getOid());
 
-        assertEquals(0, hakukohdekoodiDAO.readByUri(vanhaKoodi.getUri()).getHakukohteet().size());
+        assertEquals(0, hakukohdeViiteDAO.readByHakukohdekoodiUri(vanhaKoodi.getUri()).size());
     }
 
     @Test
@@ -172,9 +186,8 @@ public class HakukohdekoodiServiceTest {
         assertNull(hakukohdekoodiDAO.findByHakukohdeOid(hakukohdeOid));
         hakukohdekoodiService.updateHakukohdeHakukohdekoodi(hakukohdeOid, koodi);
 
-        Hakukohdekoodi haettu = hakukohdekoodiDAO.readByUri(hakukohdekoodiUri);
-        assertEquals(1, haettu.getHakukohteet().size());
-        assertEquals(hakukohdeOid, haettu.getHakukohteet().iterator().next().getOid());
+        List<HakukohdeViite> hakukohdeViites = hakukohdeViiteDAO.readByHakukohdekoodiUri(hakukohdekoodiUri);
+        assertEquals(1, hakukohdeViites.size());
+        assertEquals(hakukohdeOid, hakukohdeViites.get(0).getOid());
     }
-
 }

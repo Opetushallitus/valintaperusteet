@@ -103,4 +103,15 @@ public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Lo
         return a.list(hakukohdeViite);
 
     }
+
+    @Override
+    public List<HakukohdeViite> readByHakukohdekoodiUri(String koodiUri) {
+        QHakukohdekoodi koodi = QHakukohdekoodi.hakukohdekoodi;
+        QHakukohdeViite hk = QHakukohdeViite.hakukohdeViite;
+
+        return from(hk)
+                .innerJoin(hk.hakukohdekoodi, koodi)
+                .where(koodi.uri.eq(koodiUri))
+                .distinct().list(hk);
+    }
 }

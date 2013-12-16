@@ -3,7 +3,6 @@ package fi.vm.sade.service.valintaperusteet.service.impl;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.*;
@@ -162,7 +161,6 @@ public class HakukohdeServiceImpl implements HakukohdeService {
             if (hakukohdeViite.getHakukohdekoodi() != null) {
                 Hakukohdekoodi koodi = hakukohdeViite.getHakukohdekoodi();
                 lisatty.setHakukohdekoodi(koodi);
-                koodi.addHakukohde(lisatty);
             }
 
             lisatty.getValintakokeet().addAll(hakukohdeViite.getValintakokeet());

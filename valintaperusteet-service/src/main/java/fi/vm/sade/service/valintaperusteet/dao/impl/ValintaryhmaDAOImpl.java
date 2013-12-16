@@ -90,7 +90,7 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long> 
     public List<Valintaryhma> findAllFetchAlavalintaryhmat() {
         QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
 
-        return  from(valintaryhma)
+        return from(valintaryhma)
                 .leftJoin(valintaryhma.alavalintaryhmat).fetch()
                 .leftJoin(valintaryhma.organisaatiot).fetch()
                 .distinct().list(valintaryhma);
@@ -130,6 +130,18 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long> 
                 .singleResult(valintaryhma);
 
         return current.getYlavalintaryhma();
+    }
+
+    @Override
+    public List<Valintaryhma> readByHakukohdekoodiUri(String koodiUri) {
+        QHakukohdekoodi koodi = QHakukohdekoodi.hakukohdekoodi;
+        QValintaryhma vr = QValintaryhma.valintaryhma;
+
+        return from(vr)
+                .innerJoin(vr.hakukohdekoodit, koodi)
+                .where(koodi.uri.eq(koodiUri))
+                .distinct().list(vr);
+
     }
 
 }
