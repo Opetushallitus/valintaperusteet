@@ -247,8 +247,9 @@ object JsonHelpers {
         case s: Double => JsNumber(s)
         case s: Long => JsNumber(s)
         case s: BigDecimal => JsNumber(s)
-        //case _ => JsNull
-        case s => Try(Json.toJson(s)).getOrElse(JsString("No Json Formatter Found :("))
+        case null => JsNull
+        case None => JsNull
+        case s => Try(Json.toJson(s)).getOrElse(JsString(s"No json formatter found for ${s.toString}"))
       }
     }
 }
