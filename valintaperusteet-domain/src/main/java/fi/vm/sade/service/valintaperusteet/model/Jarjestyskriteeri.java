@@ -21,7 +21,6 @@ public class Jarjestyskriteeri extends BaseEntity implements LinkitettavaJaKopio
     private static final long serialVersionUID = 1L;
 
     @Column(name = "oid", nullable = false, unique = true)
-    @JsonView(JsonViews.Basic.class)
     private String oid;
 
     @JoinColumn(name = "valintatapajono_id", nullable = false)
@@ -33,10 +32,8 @@ public class Jarjestyskriteeri extends BaseEntity implements LinkitettavaJaKopio
     private Laskentakaava laskentakaava;
 
     @Column(name = "metatiedot")
-    @JsonView(JsonViews.Basic.class)
     private String metatiedot;
 
-    @JsonView(JsonViews.Basic.class)
     @Column(name = "aktiivinen", nullable = false)
     private Boolean aktiivinen;
 
@@ -87,21 +84,18 @@ public class Jarjestyskriteeri extends BaseEntity implements LinkitettavaJaKopio
     }
 
     @JsonProperty("laskentakaava_id")
-    @JsonView(JsonViews.Basic.class)
     @Transient
     public Long getLaskentakaavaId() {
         return laskentakaava.getId();
     }
 
     @JsonProperty("valintatapajono_oid")
-    @JsonView(JsonViews.Basic.class)
     @Transient
     public String getValintatapajonoId() {
         return valintatapajono.getOid();
     }
 
     @JsonProperty(value = "inheritance")
-    @JsonView(JsonViews.Basic.class)
     @Transient
     public Boolean getInheritance() {
         return getMaster() != null;

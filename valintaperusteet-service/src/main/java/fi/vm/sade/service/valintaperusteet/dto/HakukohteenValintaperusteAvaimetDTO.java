@@ -12,22 +12,16 @@ import java.util.List;
  */
 public class HakukohteenValintaperusteAvaimetDTO {
 
-    @JsonView({JsonViews.Basic.class})
     private List<String> tunnisteet;
 
-    @JsonView({JsonViews.Basic.class})
     private List<String> minimit;
 
-    @JsonView({JsonViews.Basic.class})
     private List<String> maksimit;
 
-    @JsonView({JsonViews.Basic.class})
     private List<String> palautaHaettutArvot;
 
-    @JsonView({JsonViews.Basic.class})
     private List<String> arvot;
 
-    @JsonView({JsonViews.Basic.class})
     private List<String> hylkaysperusteet;
 
     public List<String> getTunnisteet() {

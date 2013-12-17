@@ -12,7 +12,6 @@ import org.codehaus.jackson.map.annotate.JsonView;
  */
 @ApiModel(value = "AbstractValintaryhmaDTO", description = "Valintaryhmä")
 public abstract class AbstractValintaryhmaDTO {
-    @JsonView({JsonViews.Basic.class, JsonViews.ParentHierarchy.class})
     @ApiModelProperty(value = "Nimi", required = true)
     private String nimi;
 

@@ -8,7 +8,6 @@ import org.codehaus.jackson.map.annotate.JsonView;
  */
 public class TarkkuusPienempiKuinNollaVirhe extends Validointivirhe {
 
-    @JsonView(JsonViews.Basic.class)
     private int tarkkuus;
 
     public TarkkuusPienempiKuinNollaVirhe(String virheviesti, int tarkkuus) {

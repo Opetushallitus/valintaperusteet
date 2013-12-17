@@ -23,11 +23,9 @@ public class Organisaatio extends BaseEntity {
     @ManyToMany(mappedBy = "organisaatiot")
     private Set<Valintaryhma> valintaryhmat = new HashSet<Valintaryhma>();
 
-    @JsonView(JsonViews.Basic.class)
     @Column(name = "oid", nullable = false, unique = true)
     private String oid;
 
-    @JsonView(JsonViews.Basic.class)
     @Column(name = "parent_oid_path", nullable = false, unique = true)
     private String parentOidPath;
 

@@ -15,7 +15,6 @@ public class ArvovalikonvertterinMinMaxPuutteellinenVirhe extends Validointivirh
         this.indeksi = indeksi;
     }
 
-    @JsonView(JsonViews.Basic.class)
     private int indeksi;
 
     public int getIndeksi() {

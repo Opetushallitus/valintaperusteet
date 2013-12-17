@@ -14,7 +14,6 @@ public class ArvokonvertterinArvoPuuttuuVirhe extends Validointivirhe {
         this.indeksi = indeksi;
     }
 
-    @JsonView(JsonViews.Basic.class)
     private int indeksi;
 
     public int getIndeksi() {

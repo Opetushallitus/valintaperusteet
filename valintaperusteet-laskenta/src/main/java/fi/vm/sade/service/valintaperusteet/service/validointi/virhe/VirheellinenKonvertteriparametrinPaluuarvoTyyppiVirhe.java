@@ -15,10 +15,8 @@ public class VirheellinenKonvertteriparametrinPaluuarvoTyyppiVirhe extends Valid
         this.vaadittuTyyppi = vaadittuTyyppi;
     }
 
-    @JsonView(JsonViews.Basic.class)
     private int indeksi;
 
-    @JsonView(JsonViews.Basic.class)
     private String vaadittuTyyppi;
 
     public int getIndeksi() {

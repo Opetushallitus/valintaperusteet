@@ -16,22 +16,18 @@ public class HakijaryhmaValintatapajono extends BaseEntity implements Linkitetta
     private static final long serialVersionUID = 1L;
 
     @Column(name = "oid", nullable = false, unique = true)
-    @JsonView(JsonViews.Basic.class)
     private String oid;
 
 
     @JoinColumn(name = "hakijaryhma_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonView(JsonViews.Basic.class)
     private Hakijaryhma hakijaryhma;
 
     @JoinColumn(name = "valintatapajono_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonView(JsonViews.Basic.class)
     private Valintatapajono valintatapajono;
 
     @Column(name = "aktiivinen", nullable = false)
-    @JsonView(JsonViews.Basic.class)
     private Boolean aktiivinen;
 
     @JoinColumn(name = "edellinen_hakijaryhma_jono_id")
@@ -121,7 +117,6 @@ public class HakijaryhmaValintatapajono extends BaseEntity implements Linkitetta
     }
 
     @JsonProperty(value = "inheritance")
-    @JsonView(JsonViews.Basic.class)
     @Transient
     public Boolean getInheritance() {
         return getMaster() != null;

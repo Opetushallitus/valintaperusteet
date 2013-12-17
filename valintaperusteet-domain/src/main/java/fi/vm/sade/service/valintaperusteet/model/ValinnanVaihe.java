@@ -17,7 +17,6 @@ public class ValinnanVaihe extends BaseEntity implements LinkitettavaJaKopioitav
     private static final long serialVersionUID = 1L;
 
     @Column(name = "oid", nullable = false, unique = true)
-    @JsonView(JsonViews.Basic.class)
     private String oid;
 
     @JoinColumn(name = "edellinen_valinnan_vaihe_id")
@@ -27,15 +26,12 @@ public class ValinnanVaihe extends BaseEntity implements LinkitettavaJaKopioitav
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "edellinenValinnanVaihe")
     private ValinnanVaihe seuraavaValinnanVaihe;
 
-    @JsonView(JsonViews.Basic.class)
     @Column(name = "nimi", nullable = false)
     private String nimi;
 
-    @JsonView(JsonViews.Basic.class)
     @Column(name = "kuvaus")
     private String kuvaus;
 
-    @JsonView(JsonViews.Basic.class)
     @Column(name = "aktiivinen", nullable = false)
     private Boolean aktiivinen;
 
@@ -60,7 +56,6 @@ public class ValinnanVaihe extends BaseEntity implements LinkitettavaJaKopioitav
     @ManyToOne(fetch = FetchType.LAZY)
     private HakukohdeViite hakukohdeViite;
 
-    @JsonView(JsonViews.Basic.class)
     @Column(name = "valinnan_vaihe_tyyppi", nullable = false)
     @Enumerated(EnumType.STRING)
     private ValinnanVaiheTyyppi valinnanVaiheTyyppi;
@@ -190,7 +185,6 @@ public class ValinnanVaihe extends BaseEntity implements LinkitettavaJaKopioitav
     }
 
     @JsonProperty(value = "inheritance")
-    @JsonView(JsonViews.Basic.class)
     @Transient
     public Boolean getInheritance() {
         return getMasterValinnanVaihe() != null;

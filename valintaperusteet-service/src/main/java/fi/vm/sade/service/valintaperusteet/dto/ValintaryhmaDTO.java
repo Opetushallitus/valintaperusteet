@@ -19,23 +19,18 @@ import java.util.Set;
 public class ValintaryhmaDTO extends ValintaryhmaCreateDTO {
 
     @ApiModelProperty(value = "OID", required = true)
-    @JsonView({JsonViews.Basic.class, JsonViews.ParentHierarchy.class})
     private String oid;
 
     @ApiModelProperty(value = "Hakukohdekoodit")
-    @JsonView({JsonViews.Basic.class})
     private Set<KoodiDTO> hakukohdekoodit = new HashSet<KoodiDTO>();
 
     @ApiModelProperty(value = "Valintakoekoodit")
-    @JsonView({JsonViews.Basic.class})
     private List<KoodiDTO> valintakoekoodit = new ArrayList<KoodiDTO>();
 
     @ApiModelProperty(value = "Onko valintaryhmällä lapsivalintaryhmiä")
-    @JsonView({JsonViews.Basic.class})
     private Boolean lapsivalintaryhma;
 
     @ApiModelProperty(value = "Onko valintaryhmällä lapsihakukohteita")
-    @JsonView({JsonViews.Basic.class})
     private Boolean lapsihakukohde;
 
     public String getOid() {

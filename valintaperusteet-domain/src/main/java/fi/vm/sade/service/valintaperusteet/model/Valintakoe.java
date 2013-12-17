@@ -18,23 +18,18 @@ import java.util.Set;
 @Cacheable(true)
 public class Valintakoe extends BaseEntity implements Kopioitava<Valintakoe, Set<Valintakoe>> {
 
-    @JsonView(JsonViews.Basic.class)
     @Column(name = "oid", nullable = false, unique = true)
     private String oid;
 
-    @JsonView(JsonViews.Basic.class)
     @Column(name = "tunniste", nullable = false)
     private String tunniste;
 
     @Column(name = "nimi", nullable = false)
-    @JsonView(JsonViews.Basic.class)
     private String nimi;
 
     @Column(name = "kuvaus")
-    @JsonView(JsonViews.Basic.class)
     private String kuvaus;
 
-    @JsonView(JsonViews.Basic.class)
     @Column(name = "aktiivinen", nullable = false)
     private Boolean aktiivinen;
 
@@ -131,7 +126,6 @@ public class Valintakoe extends BaseEntity implements Kopioitava<Valintakoe, Set
     }
 
     @JsonProperty("laskentakaavaId")
-    @JsonView(JsonViews.Basic.class)
     @Transient
     public Long getLaskentakaavaId() {
         return laskentakaava != null ? laskentakaava.getId() : null;

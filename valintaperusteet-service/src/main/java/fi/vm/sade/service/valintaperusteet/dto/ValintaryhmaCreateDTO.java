@@ -16,7 +16,6 @@ import java.util.Set;
 @ApiModel(value = "ValintaryhmaCreateDTO", description = "Valintaryhmä")
 public class ValintaryhmaCreateDTO extends AbstractValintaryhmaDTO {
 
-    @JsonView({JsonViews.Basic.class})
     @ApiModelProperty(value = "Organisaatiot")
     private Set<OrganisaatioDTO> organisaatiot = new HashSet<OrganisaatioDTO>();
 

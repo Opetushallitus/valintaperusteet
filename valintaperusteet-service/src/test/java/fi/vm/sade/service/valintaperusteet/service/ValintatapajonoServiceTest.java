@@ -358,6 +358,7 @@ public class ValintatapajonoServiceTest {
         paivitys.setKuvaus(uusiKuvaus);
         paivitys.setAloituspaikat(uusiAloituspaikat);
         paivitys.setTasapistesaanto(uusiTasapistesaanto);
+        paivitys.setKaytetaanValintalaskentaa(true);
 
         Valintatapajono paivitetty = valintatapajonoService.update(valintatapajonoOid, paivitys);
         {

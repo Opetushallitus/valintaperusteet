@@ -30,16 +30,13 @@ public class Arvovalikonvertteriparametri extends Konvertteriparametri {
         return sb.toString();
     }
 
-    @JsonView(JsonViews.Basic.class)
     //@Column(precision = 17, scale = 4, name = "minvalue", nullable = false)
     @Column(name = "minvalue", nullable = false)
     private String minValue;
 
-    @JsonView(JsonViews.Basic.class)
     @Column(name = "maxvalue", nullable = false)
     private String maxValue;
 
-    @JsonView(JsonViews.Basic.class)
     @Column(name = "palauta_haettu_arvo")
     private String palautaHaettuArvo;
 

@@ -13,7 +13,6 @@ import org.codehaus.jackson.map.annotate.JsonView;
 @ApiModel(value = "LaskentakaavaDTO", description = "Laskentakaava")
 public class LaskentakaavaDTO extends LaskentakaavaCreateDTO {
 
-    @JsonView({JsonViews.Basic.class, JsonViews.Laskentakaava.class})
     @ApiModelProperty(value = "ID", required = true)
     private Long id;
 

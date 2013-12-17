@@ -16,11 +16,9 @@ import javax.persistence.*;
 public class Syoteparametri extends BaseEntity {
 
 
-    @JsonView(JsonViews.Basic.class)
     @Column(name="avain", nullable = false)
     private String avain;
 
-    @JsonView(JsonViews.Basic.class)
     @Column(name="arvo", nullable = false)
     private String arvo;
 

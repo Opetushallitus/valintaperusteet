@@ -12,7 +12,6 @@ import javax.persistence.*;
  */
 @MappedSuperclass
 public abstract class Konvertteriparametri extends BaseEntity {
-    @JsonView(JsonViews.Basic.class)
     @Column(name = "paluuarvo")
     private String paluuarvo;
 

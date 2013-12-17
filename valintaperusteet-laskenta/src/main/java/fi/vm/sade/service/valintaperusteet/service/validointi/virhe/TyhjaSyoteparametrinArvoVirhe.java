@@ -8,7 +8,6 @@ import org.codehaus.jackson.map.annotate.JsonView;
  */
 public class TyhjaSyoteparametrinArvoVirhe extends Validointivirhe {
 
-    @JsonView(JsonViews.Basic.class)
     private String avain;
 
     public TyhjaSyoteparametrinArvoVirhe(String virheviesti, String avain) {
