@@ -68,7 +68,6 @@ public class HakukohdeResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
     @ApiOperation(value = "Hakee hakukohteita. Joko kaikki tai päätason hakukohteet.", response = HakukohdeViiteDTO.class)
     public List<HakukohdeViiteDTO> query(@QueryParam("paataso")
@@ -90,7 +89,6 @@ public class HakukohdeResource {
     @GET
     @Path("/{oid}")
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
     @ApiOperation(value = "Hakee hakukohteen OID:n perusteella", response = HakukohdeViiteDTO.class)
     @ApiResponses(value = {
@@ -107,7 +105,6 @@ public class HakukohdeResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
     @Secured({CRUD})
     @ApiOperation(value = "Lisää hakukohteen valintaryhmään (tai juureen, jos valintaryhmän OID:a ei ole annettu)")
     public Response insert(@ApiParam(value = "Lisättävä hakukohde ja valintaryhmä", required = true) HakukohdeInsertDTO hakukohde) {
@@ -125,7 +122,6 @@ public class HakukohdeResource {
     @Path("/{oid}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
     @Secured({UPDATE, CRUD})
     @ApiOperation(value = "Päivittää hakukohdetta OID:n perusteella")
     public Response update(
@@ -143,7 +139,6 @@ public class HakukohdeResource {
     @GET
     @Path("/{oid}/valinnanvaihe")
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
     @ApiOperation(value = "Hakee hakukohteen valinnan vaiheet OID:n perusteella", response = ValinnanVaiheDTO.class)
     public List<ValinnanVaiheDTO> valinnanVaihesForHakukohde(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
@@ -153,7 +148,6 @@ public class HakukohdeResource {
     @GET
     @Path("/{oid}/kuuluuSijoitteluun")
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
     @ApiOperation(value = "Palauttaa tiedon, kuuluuko hakukohde sijoitteluun", response = Boolean.class)
     public Map<String, Boolean> kuuluuSijoitteluun(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
@@ -165,7 +159,6 @@ public class HakukohdeResource {
     @GET
     @Path("/{oid}/hakijaryhma")
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
     @ApiOperation(value = "Hakee hakukohteen hakijaryhmät", response = HakijaryhmaDTO.class)
     public List<HakijaryhmaDTO> hakijaryhmat(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
@@ -175,7 +168,6 @@ public class HakukohdeResource {
     @GET
     @Path("/{oid}/laskentakaava")
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
     @ApiOperation(value = "Hakee hakukohteen järjestyskriteerit", response = JarjestyskriteeriDTO.class)
     public List<JarjestyskriteeriDTO> findLaskentaKaavat(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
@@ -186,7 +178,6 @@ public class HakukohdeResource {
     @Path("/avaimet")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
     @ApiOperation(value = "Hakee hakukohteen syötettävät tiedot", response = ValintaperusteDTO.class)
     public List<ValintaperusteDTO> findAvaimet(@ApiParam(value = "Hakukohteiden OID:t", required = true) List<String> oids) {
@@ -197,7 +188,6 @@ public class HakukohdeResource {
     @Path("{hakukohdeOid}/avaimet")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
     @Secured({READ, UPDATE, CRUD})
     public HakukohteenValintaperusteAvaimetDTO findHakukohteenAvaimet(@PathParam("hakukohdeOid") String hakukohdeOid) {
         return laskentakaavaService.findHakukohteenAvaimet(hakukohdeOid);
@@ -207,7 +197,6 @@ public class HakukohdeResource {
     @Path("/{hakukohdeOid}/valinnanvaihe")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
     @Secured({CRUD})
     @ApiOperation(value = "Lisää valinnan vaiheen hakukohteelle")
     @ApiResponses(@ApiResponse(code = 400, message = "Valinnan vaiheen lisääminen epäonnistui"))
@@ -229,7 +218,6 @@ public class HakukohdeResource {
     @Path("/{hakukohdeOid}/hakijaryhma")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
     @Secured({CRUD})
     @ApiOperation(value = "Lisää hakijaryhmän hakukohteelle")
     @ApiResponses(@ApiResponse(code = 400, message = "Hakijaryhmän lisääminen epäonnistui"))
@@ -249,7 +237,6 @@ public class HakukohdeResource {
     @Path("/{hakukohdeOid}/hakukohdekoodi")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
     @Secured({UPDATE, CRUD})
     @ApiOperation(value = "Päivittää hakukohteen hakukohdekoodia")
     @ApiResponses(@ApiResponse(code = 400, message = "Päivittäminen epäonnistui"))
@@ -268,7 +255,6 @@ public class HakukohdeResource {
     @Path("/{hakukohdeOid}/hakukohdekoodi")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
     @Secured({CRUD})
     @ApiOperation(value = "Lisää hakukohdekoodin hakukohteelle")
     @ApiResponses(@ApiResponse(code = 400, message = "Lisääminen epäonnistui"))
@@ -287,7 +273,6 @@ public class HakukohdeResource {
     @Path("/{hakukohdeOid}/siirra")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @JsonView({JsonViews.Basic.class})
     @Secured({CRUD})
     @ApiOperation(value = "Siirtää hakukohteen uuteen valintaryhmään (tai juureen, jos valintaryhmää ei anneta)")
     @ApiResponses(@ApiResponse(code = 400, message = "Siirtäminen epäonnistui"))

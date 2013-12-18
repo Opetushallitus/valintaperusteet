@@ -6,6 +6,7 @@ import fi.vm.sade.service.valintaperusteet.dao.JarjestyskriteeriDAO;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriDTO;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriInsertDTO;
+import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.util.TestUtil;
@@ -21,7 +22,6 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
-import javax.ws.rs.core.Response;
 import java.util.Arrays;
 import java.util.List;
 
@@ -51,6 +51,9 @@ public class JarjestyskriteeriResourceTest {
     @Autowired
     private JarjestyskriteeriDAO jarjestyskriteeriDAO;
 
+    @Autowired
+    private ValintaperusteetModelMapper modelMapper;
+
     @Before
     public void setUp() {
         applicationContext.getAutowireCapableBeanFactory().autowireBean(resource);
@@ -58,7 +61,7 @@ public class JarjestyskriteeriResourceTest {
 
     @Test
     public void testUpdate() throws Exception {
-        Jarjestyskriteeri jk = jarjestyskriteeriDAO.readByOid("1");
+        JarjestyskriteeriDTO jk = resource.readByOid("1");
 
 //        assertEquals(1, (int)jk.getPrioriteetti());
 //        jk.setPrioriteetti(100);
@@ -68,10 +71,12 @@ public class JarjestyskriteeriResourceTest {
         comb.setJarjestyskriteeri(update);
         comb.setLaskentakaavaId(jk.getLaskentakaavaId());
 
-        Response update1 = resource.update("1", comb);
-        JarjestyskriteeriDTO dto = (JarjestyskriteeriDTO)update1.getEntity();
-        assertEquals("metatiedot", dto.getMetatiedot());
+        resource.update("1", comb);
 
+        jk = resource.readByOid("1");
+//        assertEquals(100, (int)jk.getPrioriteetti());
+
+        testUtil.lazyCheck(JsonViews.Basic.class, jk);
     }
 
     @Test

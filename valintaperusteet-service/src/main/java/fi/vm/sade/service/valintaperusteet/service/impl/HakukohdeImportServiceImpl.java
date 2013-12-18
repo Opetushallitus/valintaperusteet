@@ -247,7 +247,7 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
             hakukohde = new HakukohdeViite();
             kopioiTiedot(importData, hakukohde);
             hakukohde = hakukohdeService.insert(modelMapper.map(hakukohde, HakukohdeViiteDTO.class), valintaryhma != null ? valintaryhma.getOid() : null);
-            koodi.addHakukohde(hakukohde);
+            hakukohde.setHakukohdekoodi(koodi);
         } else {
             LOG.info("Hakukohde löytyi.");
             Valintaryhma hakukohdeValintaryhma = hakukohde.getValintaryhma();
@@ -270,7 +270,6 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
                 }
 
                 hakukohde.setHakukohdekoodi(koodi);
-                koodi.addHakukohde(hakukohde);
 
             } else {
                 LOG.info("Hakukohde on oikeassa valintaryhmässä. Synkronoidaan hakukohteen nimi ja koodi.");
@@ -281,7 +280,7 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
                     hakukohde.setManuaalisestiSiirretty(false);
                 }
 
-                koodi.addHakukohde(hakukohde);
+                hakukohde.setHakukohdekoodi(koodi);
             }
         }
 
@@ -289,13 +288,13 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
         hakukohde.setValintakokeet(haeTaiLisaaValintakoekoodit(importData));
 
         // Lisätään valinaperusteet
-        if(hakukohde.getHakukohteenValintaperusteet() != null) {
-              List <HakukohteenValintaperuste> perusteet = hakukohteenValintaperusteDAO.haeHakukohteenValintaperusteet(hakukohde.getOid());
-              for(HakukohteenValintaperuste hv : perusteet) {
-                  hv.setHakukohde(null);
-                  hakukohteenValintaperusteDAO.remove(hv);
-              }
-              hakukohde.getHakukohteenValintaperusteet().clear();
+        if (hakukohde.getHakukohteenValintaperusteet() != null) {
+            List<HakukohteenValintaperuste> perusteet = hakukohteenValintaperusteDAO.haeHakukohteenValintaperusteet(hakukohde.getOid());
+            for (HakukohteenValintaperuste hv : perusteet) {
+                hv.setHakukohde(null);
+                hakukohteenValintaperusteDAO.remove(hv);
+            }
+            hakukohde.getHakukohteenValintaperusteet().clear();
 
         }
         genericDAO.flush();
@@ -344,15 +343,15 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
         return koekoodit;
     }
 
-    private Map<String,HakukohteenValintaperuste> lisaaValintaperusteet(HakukohdeImportTyyppi importData, HakukohdeViite hakukohde) {
-        Map<String,HakukohteenValintaperuste> perusteet = new HashMap<String,HakukohteenValintaperuste>();
+    private Map<String, HakukohteenValintaperuste> lisaaValintaperusteet(HakukohdeImportTyyppi importData, HakukohdeViite hakukohde) {
+        Map<String, HakukohteenValintaperuste> perusteet = new HashMap<String, HakukohteenValintaperuste>();
         for (AvainArvoTyyppi avainArvo : importData.getValintaperuste()) {
             HakukohteenValintaperuste peruste = new HakukohteenValintaperuste();
             peruste.setTunniste(avainArvo.getAvain());
             peruste.setArvo(avainArvo.getArvo());
             peruste.setKuvaus(avainArvo.getAvain());
             peruste.setHakukohde(hakukohde);
-            perusteet.put(peruste.getTunniste(),peruste);
+            perusteet.put(peruste.getTunniste(), peruste);
         }
         return perusteet;
     }

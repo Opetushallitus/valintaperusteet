@@ -16,7 +16,6 @@ import javax.persistence.Table;
 @Table(name = "arvokonvertteriparametri")
 @Cacheable(true)
 public class Arvokonvertteriparametri extends Konvertteriparametri {
-
     @Column(name = "arvo")
     private String arvo;
 

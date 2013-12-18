@@ -111,11 +111,13 @@ public class Valintaryhma extends BaseEntity {
         this.hakukohdeViitteet = hakukohdeViitteet;
     }
 
+    @JsonProperty(value = "lapsivalintaryhma")
     @Transient
     public boolean lapsivalintaryhma() {
         return alavalintaryhmat.size() > 0 ? true : false;
     }
 
+    @JsonProperty(value = "lapsihakukohde")
     @Transient
     public boolean lapsihakukohde() {
         return hakukohdeViitteet.size() > 0 ? true : false;

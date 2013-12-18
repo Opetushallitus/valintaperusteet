@@ -1,7 +1,5 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
-import com.wordnik.swagger.annotations.ApiModel;
-import com.wordnik.swagger.annotations.ApiModelProperty;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import org.codehaus.jackson.map.annotate.JsonView;
 
@@ -15,38 +13,27 @@ import java.util.Set;
  * Time: 13:00
  * To change this template use File | Settings | File Templates.
  */
-
-@ApiModel(value = "ValintaperustePuuDTO", description = "Valintaperustepuu")
 public class ValintaperustePuuDTO {
 
-    @ApiModelProperty(value = "Ylävalintaryhmä", required = true)
+
     private ValintaperustePuuDTO ylavalintaryhma;
 
-    @ApiModelProperty(value = "Alavalintaryhmät", required = true)
     private Set<ValintaperustePuuDTO> alavalintaryhmat = new HashSet<ValintaperustePuuDTO>();
 
-    @ApiModelProperty(value = "Hakukohdeviitteet", required = true)
     private Set<ValintaperustePuuDTO> hakukohdeViitteet = new HashSet<ValintaperustePuuDTO>();
 
-    @ApiModelProperty(value = "Haku OID", required = true)
     private String hakuOid;
 
-    @ApiModelProperty(value = "OID", required = true)
     private String oid;
 
-    @ApiModelProperty(value = "Tarjoaja OID", required = true)
     private String tarjoajaOid;
 
-    @ApiModelProperty(value = "Nimi", required = true)
     private String nimi;
 
-    @ApiModelProperty(value = "Tila", required = true)
     private String tila;
 
-    @ApiModelProperty(value = "Valintaperustepuun tyyppi", required = true)
     private ValintaperustePuuTyyppi tyyppi;
 
-    @ApiModelProperty(value = "Organisaatiot", required = true)
     private Set<OrganisaatioDTO> organisaatiot = new HashSet<OrganisaatioDTO>();
 
     public String getHakuOid() {

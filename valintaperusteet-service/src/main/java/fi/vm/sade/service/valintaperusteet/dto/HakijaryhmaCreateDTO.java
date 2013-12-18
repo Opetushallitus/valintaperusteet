@@ -12,7 +12,6 @@ import org.codehaus.jackson.map.annotate.JsonView;
  */
 @ApiModel(value = "HakijaryhmaDTO", description = "Hakijaryhmä")
 public class HakijaryhmaCreateDTO {
-
     @ApiModelProperty(value = "Nimi", required = true)
     private String nimi;
 

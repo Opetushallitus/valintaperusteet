@@ -12,7 +12,6 @@ import org.codehaus.jackson.map.annotate.JsonView;
  */
 @ApiModel(value = "HakijaryhmaDTO", description = "Hakijaryhmä")
 public class HakijaryhmaDTO extends HakijaryhmaCreateDTO {
-
     @ApiModelProperty(value = "OID", required = true)
     private String oid;
 

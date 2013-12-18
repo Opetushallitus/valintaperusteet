@@ -125,6 +125,7 @@ public class Valintakoe extends BaseEntity implements Kopioitava<Valintakoe, Set
         return laskentakaava == null;
     }
 
+    @JsonProperty("laskentakaavaId")
     @Transient
     public Long getLaskentakaavaId() {
         return laskentakaava != null ? laskentakaava.getId() : null;

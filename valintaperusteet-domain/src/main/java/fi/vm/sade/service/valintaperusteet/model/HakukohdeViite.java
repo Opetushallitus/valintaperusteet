@@ -118,6 +118,7 @@ public class HakukohdeViite extends BaseEntity {
         this.laskentakaava = laskentakaava;
     }
 
+    @JsonProperty(value = "valintaryhma_id")
     @Transient
     private String getValintaryhmaOid() {
         return valintaryhma != null ? valintaryhma.getOid() : "";

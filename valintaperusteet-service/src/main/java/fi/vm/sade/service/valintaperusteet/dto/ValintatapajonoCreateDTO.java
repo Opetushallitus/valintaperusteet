@@ -6,6 +6,8 @@ import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.model.Tasapistesaanto;
 import org.codehaus.jackson.map.annotate.JsonView;
 
+import java.util.Date;
+
 /**
  * User: wuoti
  * Date: 27.11.2013
@@ -34,7 +36,7 @@ public class ValintatapajonoCreateDTO {
     @ApiModelProperty(value = "Ei varasijatäyttöä", required = true)
     private Boolean eiVarasijatayttoa = false;
 
-    @ApiModelProperty(value = "Varasijojen lkm", required = true)
+    @ApiModelProperty(value = "Varasijojen lkm. 0 == pois päältä", required = true)
     private Integer varasijat = 0;
 
     @ApiModelProperty(value = "Kuinka monta päivää varasijoja täytetään", required = true)
@@ -42,6 +44,15 @@ public class ValintatapajonoCreateDTO {
 
     @ApiModelProperty(value = "Täytetäänkö poissaolevia", required = true)
     private Boolean poissaOlevaTaytto = false;
+
+    @ApiModelProperty(value = "Varasijasääntöjä käytetään alkaen")
+    private Date varasijojaKaytetaanAlkaen;
+
+    @ApiModelProperty(value = "Varasijoja täytetään asti")
+    private Date varasijojaTaytetaanAsti;
+
+    @ApiModelProperty(value = "Käytetäänkö valintalaskentaa", required = true)
+    private Boolean kaytetaanValintalaskentaa = true;
 
     public Integer getAloituspaikat() {
         return aloituspaikat;
@@ -121,5 +132,29 @@ public class ValintatapajonoCreateDTO {
 
     public void setPoissaOlevaTaytto(Boolean poissaOlevaTaytto) {
         this.poissaOlevaTaytto = poissaOlevaTaytto;
+    }
+
+    public Date getVarasijojaKaytetaanAlkaen() {
+        return varasijojaKaytetaanAlkaen;
+    }
+
+    public void setVarasijojaKaytetaanAlkaen(Date varasijojaKaytetaanAlkaen) {
+        this.varasijojaKaytetaanAlkaen = varasijojaKaytetaanAlkaen;
+    }
+
+    public Date getVarasijojaTaytetaanAsti() {
+        return varasijojaTaytetaanAsti;
+    }
+
+    public void setVarasijojaTaytetaanAsti(Date varasijojaTaytetaanAsti) {
+        this.varasijojaTaytetaanAsti = varasijojaTaytetaanAsti;
+    }
+
+    public Boolean getKaytetaanValintalaskentaa() {
+        return kaytetaanValintalaskentaa;
+    }
+
+    public void setKaytetaanValintalaskentaa(Boolean kaytetaanValintalaskentaa) {
+        this.kaytetaanValintalaskentaa = kaytetaanValintalaskentaa;
     }
 }

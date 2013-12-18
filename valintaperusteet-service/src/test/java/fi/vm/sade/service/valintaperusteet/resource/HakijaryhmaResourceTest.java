@@ -63,7 +63,7 @@ public class HakijaryhmaResourceTest {
         jono.setSiirretaanSijoitteluun(true);
         jono.setTasapistesaanto(Tasapistesaanto.ARVONTA);
         jono.setVarasijat(10);
-        jono.setVarasijaTayttoPaivat(5);
+
         jono.setPoissaOlevaTaytto(true);
 
         hrjono.setAktiivinen(true);

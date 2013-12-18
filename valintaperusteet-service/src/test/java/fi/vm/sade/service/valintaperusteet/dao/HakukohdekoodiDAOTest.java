@@ -38,13 +38,7 @@ public class HakukohdekoodiDAOTest {
         final String koodiUri = "hakukohdekoodiuri1";
         Hakukohdekoodi koodi = hakukohdekoodiDAO.readByUri(koodiUri);
 
-        final String valintaryhmaOid = "oid36";
-        final String hakukohdeOid = "oid11";
-
         assertEquals(koodiUri, koodi.getUri());
-        assertEquals(valintaryhmaOid, koodi.getValintaryhmat().iterator().next().getOid());
-        assertEquals(hakukohdeOid, koodi.getHakukohteet().iterator().next().getOid());
-
         assertNull(hakukohdekoodiDAO.readByUri("not-exists"));
     }
 
@@ -53,7 +47,6 @@ public class HakukohdekoodiDAOTest {
         final String hakukohdeOid = "oid12";
         Hakukohdekoodi hakukohdekoodi = hakukohdekoodiDAO.findByHakukohdeOid(hakukohdeOid);
         assertNotNull(hakukohdekoodi);
-        assertEquals(hakukohdeOid, hakukohdekoodi.getHakukohteet().iterator().next().getOid());
         assertNull(hakukohdekoodiDAO.findByHakukohdeOid("not exists"));
     }
 }

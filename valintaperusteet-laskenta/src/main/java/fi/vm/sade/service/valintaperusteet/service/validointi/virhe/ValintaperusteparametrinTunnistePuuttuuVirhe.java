@@ -10,7 +10,6 @@ import org.codehaus.jackson.map.annotate.JsonView;
  */
 public class ValintaperusteparametrinTunnistePuuttuuVirhe extends Validointivirhe {
 
-    @JsonView(JsonViews.Basic.class)
     private int indeksi;
 
     public ValintaperusteparametrinTunnistePuuttuuVirhe(String virheviesti, int indeksi) {

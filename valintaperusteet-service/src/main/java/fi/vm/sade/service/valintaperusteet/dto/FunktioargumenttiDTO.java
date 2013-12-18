@@ -13,33 +13,14 @@ import org.codehaus.jackson.map.annotate.JsonView;
 @ApiModel(value = "FunktioargumenttiDTO", description = "Funktioargumentti")
 public class FunktioargumenttiDTO implements Comparable<FunktioargumenttiDTO> {
 
-//    @ApiModelProperty(value = "Lapsifunktiokutsu")
-//    private FunktiokutsuDTO funktiokutsuChild;
-//
-//    @ApiModelProperty(value = "Lapsilaskentakaava")
-//    private LaskentakaavaListDTO laskentakaavaChild;
-
-    @ApiModelProperty(value = "Indeksi", required = true)
-    private Integer indeksi;
 
     @ApiModelProperty(value = "Funktioargumentin lapsi (funktiokutsu tai laskentakaava)")
     private FunktioargumentinLapsiDTO lapsi;
 
-//    public FunktiokutsuDTO getFunktiokutsuChild() {
-//        return funktiokutsuChild;
-//    }
-//
-//    public void setFunktiokutsuChild(FunktiokutsuDTO funktiokutsuChild) {
-//        this.funktiokutsuChild = funktiokutsuChild;
-//    }
-//
-//    public LaskentakaavaListDTO getLaskentakaavaChild() {
-//        return laskentakaavaChild;
-//    }
-//
-//    public void setLaskentakaavaChild(LaskentakaavaListDTO laskentakaavaChild) {
-//        this.laskentakaavaChild = laskentakaavaChild;
-//    }
+
+    @ApiModelProperty(value = "Indeksi", required = true)
+    private Integer indeksi;
+
 
     public Integer getIndeksi() {
         return indeksi;
@@ -49,16 +30,16 @@ public class FunktioargumenttiDTO implements Comparable<FunktioargumenttiDTO> {
         this.indeksi = indeksi;
     }
 
+    @Override
+    public int compareTo(FunktioargumenttiDTO o) {
+        return indeksi - o.indeksi;
+    }
+
     public FunktioargumentinLapsiDTO getLapsi() {
         return lapsi;
     }
 
     public void setLapsi(FunktioargumentinLapsiDTO lapsi) {
         this.lapsi = lapsi;
-    }
-
-    @Override
-    public int compareTo(FunktioargumenttiDTO o) {
-        return indeksi - o.indeksi;
     }
 }

@@ -83,16 +83,19 @@ public class Jarjestyskriteeri extends BaseEntity implements LinkitettavaJaKopio
         this.oid = oid;
     }
 
+    @JsonProperty("laskentakaava_id")
     @Transient
     public Long getLaskentakaavaId() {
         return laskentakaava.getId();
     }
 
+    @JsonProperty("valintatapajono_oid")
     @Transient
     public String getValintatapajonoId() {
         return valintatapajono.getOid();
     }
 
+    @JsonProperty(value = "inheritance")
     @Transient
     public Boolean getInheritance() {
         return getMaster() != null;

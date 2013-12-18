@@ -116,6 +116,7 @@ public class HakijaryhmaValintatapajono extends BaseEntity implements Linkitetta
         this.kopiot = kopiot;
     }
 
+    @JsonProperty(value = "inheritance")
     @Transient
     public Boolean getInheritance() {
         return getMaster() != null;

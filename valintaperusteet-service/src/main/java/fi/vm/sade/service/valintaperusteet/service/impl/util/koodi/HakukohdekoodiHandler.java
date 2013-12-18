@@ -17,16 +17,11 @@ public class HakukohdekoodiHandler extends KoodiHandler<Hakukohdekoodi> {
 
     @Override
     protected void clearValintaryhmaKoodis(Valintaryhma valintaryhma) {
-        for (Hakukohdekoodi k : valintaryhma.getHakukohdekoodit()) {
-            k.getValintaryhmat().remove(valintaryhma);
-        }
-
         valintaryhma.getHakukohdekoodit().clear();
     }
 
     @Override
     protected void addKoodiToValintaryhma(Valintaryhma valintaryhma, Hakukohdekoodi koodi) {
         valintaryhma.getHakukohdekoodit().add(koodi);
-        koodi.getValintaryhmat().add(valintaryhma);
     }
 }

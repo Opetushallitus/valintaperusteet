@@ -5,10 +5,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonView;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "valintatapajono")
@@ -48,11 +45,21 @@ public class Valintatapajono extends BaseEntity implements LinkitettavaJaKopioit
     @Column(name = "varasijat", nullable = false)
     private Integer varasijat = 0;
 
-    @Column(name = "varasija_taytto_paivat", nullable = false)
-    private Integer varasijaTayttoPaivat = 0;
+    @Column(name = "varasijoja_kaytetaan_alkaen")
+    private Date varasijojaKaytetaanAlkaen;
 
-    @Column(name = "poissa_oleva_taytto", nullable = false)
+    @Column(name = "varasijoja_taytetaan_asti")
+    private Date varasijojaTaytetaanAsti;
+
+    @Column(name = "poissa_oleva_taytto")
     private Boolean poissaOlevaTaytto = false;
+
+    @Column(name = "kaytetaan_valintalaskentaa", nullable = false)
+    private Boolean kaytetaanValintalaskentaa = true;
+
+    @JoinColumn(name = "varasijan_tayttojono_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Valintatapajono varasijanTayttojono;
 
     @JoinColumn(name = "edellinen_valintatapajono_id")
     @OneToOne(fetch = FetchType.LAZY)
@@ -194,12 +201,36 @@ public class Valintatapajono extends BaseEntity implements LinkitettavaJaKopioit
         this.varasijat = varasijat;
     }
 
-    public Integer getVarasijaTayttoPaivat() {
-        return varasijaTayttoPaivat;
+    public Valintatapajono getVarasijanTayttojono() {
+        return varasijanTayttojono;
     }
 
-    public void setVarasijaTayttoPaivat(Integer varasijaTayttoPaivat) {
-        this.varasijaTayttoPaivat = varasijaTayttoPaivat;
+    public void setVarasijanTayttojono(Valintatapajono varasijanTayttojono) {
+        this.varasijanTayttojono = varasijanTayttojono;
+    }
+
+    public Date getVarasijojaKaytetaanAlkaen() {
+        return varasijojaKaytetaanAlkaen;
+    }
+
+    public void setVarasijojaKaytetaanAlkaen(Date varasijojaKaytetaanAlkaen) {
+        this.varasijojaKaytetaanAlkaen = varasijojaKaytetaanAlkaen;
+    }
+
+    public Date getVarasijojaTaytetaanAsti() {
+        return varasijojaTaytetaanAsti;
+    }
+
+    public void setVarasijojaTaytetaanAsti(Date varasijojaTaytetaanAsti) {
+        this.varasijojaTaytetaanAsti = varasijojaTaytetaanAsti;
+    }
+
+    public Boolean getKaytetaanValintalaskentaa() {
+        return kaytetaanValintalaskentaa;
+    }
+
+    public void setKaytetaanValintalaskentaa(Boolean kaytetaanValintalaskentaa) {
+        this.kaytetaanValintalaskentaa = kaytetaanValintalaskentaa;
     }
 
     public Boolean getPoissaOlevaTaytto() {
@@ -210,11 +241,13 @@ public class Valintatapajono extends BaseEntity implements LinkitettavaJaKopioit
         this.poissaOlevaTaytto = poissaOlevaTaytto;
     }
 
+    @JsonProperty("valinnan_vaihe")
     public String getValinnanVaiheId() {
         // Kai oidi olisi parempi palauttaa kuin id
         return valinnanVaihe.getOid();
     }
 
+    @JsonProperty("hakijaryhmat")
     public List<String> getHakijaryhmaIds() {
         List<String> hakijaryhmaIds = new ArrayList<String>();
         if (hakijaryhmat != null) {
@@ -225,6 +258,7 @@ public class Valintatapajono extends BaseEntity implements LinkitettavaJaKopioit
         return hakijaryhmaIds;
     }
 
+    @JsonProperty("hakijaryhmat")
     public void setHakijaryhmaIds(List<String> ids) {
 
     }
@@ -277,6 +311,7 @@ public class Valintatapajono extends BaseEntity implements LinkitettavaJaKopioit
         return getKopioValintatapajonot();
     }
 
+    @JsonProperty(value = "inheritance")
     @Transient
     public Boolean getInheritance() {
         return getMasterValintatapajono() != null;

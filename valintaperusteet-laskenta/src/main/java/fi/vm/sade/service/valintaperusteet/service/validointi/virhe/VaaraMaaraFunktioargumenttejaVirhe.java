@@ -10,10 +10,8 @@ import org.codehaus.jackson.map.annotate.JsonView;
  */
 public class VaaraMaaraFunktioargumenttejaVirhe extends Validointivirhe {
 
-    @JsonView(JsonViews.Basic.class)
     private String vaadittuLkm;
 
-    @JsonView(JsonViews.Basic.class)
     private int annettuLkm;
 
     public VaaraMaaraFunktioargumenttejaVirhe(String virheviesti, String vaadittuLkm, int annettuLkm) {

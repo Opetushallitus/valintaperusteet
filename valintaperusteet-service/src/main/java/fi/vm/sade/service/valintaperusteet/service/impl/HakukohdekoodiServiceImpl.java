@@ -65,10 +65,7 @@ public class HakukohdekoodiServiceImpl implements HakukohdekoodiService {
         haettu.setNimiEn(hakukohdekoodi.getNimiEn());
         haettu.setNimiFi(hakukohdekoodi.getNimiFi());
         haettu.setNimiSv(hakukohdekoodi.getNimiSv());
-
-        if (!haettu.getHakukohteet().contains(hakukohdeViite)) {
-            haettu.addHakukohde(hakukohdeViite);
-        }
+        hakukohdeViite.setHakukohdekoodi(haettu);
 
         return haettu;
     }

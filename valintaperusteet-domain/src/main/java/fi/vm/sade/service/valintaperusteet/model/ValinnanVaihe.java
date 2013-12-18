@@ -184,6 +184,7 @@ public class ValinnanVaihe extends BaseEntity implements LinkitettavaJaKopioitav
         setSeuraavaValinnanVaihe(seuraava);
     }
 
+    @JsonProperty(value = "inheritance")
     @Transient
     public Boolean getInheritance() {
         return getMasterValinnanVaihe() != null;

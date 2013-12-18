@@ -15,7 +15,6 @@ public class SyoteparametriPuuttuuVirhe extends Validointivirhe {
         this.puuttuvaParametriAvain = puuttuvaParametriAvain;
     }
 
-    @JsonView(JsonViews.Basic.class)
     private String puuttuvaParametriAvain;
 
     public String getPuuttuvaParametriAvain() {

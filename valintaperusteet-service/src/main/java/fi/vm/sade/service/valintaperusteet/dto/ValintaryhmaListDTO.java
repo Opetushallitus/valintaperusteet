@@ -12,7 +12,6 @@ import org.codehaus.jackson.map.annotate.JsonView;
  */
 @ApiModel(value = "ValintaryhmaListDTO", description = "Valintaryhmä")
 public class ValintaryhmaListDTO extends AbstractValintaryhmaDTO {
-
     @ApiModelProperty(value = "OID", required = true)
     private String oid;
 
