@@ -370,15 +370,15 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         valintakoePaasykoe.setNimi("Pääsykoe");
         valintakoePaasykoe.setKuvaus("Pääsykoe");
         valintakoePaasykoe.setAktiivinen(false);
-        valintakoePaasykoe.setTunniste("{{hakukohde. " + PAASYKOE_TUNNISTE + "}}");
+        valintakoePaasykoe.setTunniste("{{hakukohde." + PAASYKOE_TUNNISTE + "}}");
 
         valintakoeService.lisaaValintakoeValinnanVaiheelle(paasykoeValinnanVaihe.getOid(), valintakoePaasykoe);
 
         ValintakoeDTO valintakoeLisanaytto = new ValintakoeDTO();
-        valintakoeLisanaytto.setNimi("Lisäpiste");
-        valintakoeLisanaytto.setKuvaus("Lisäpiste");
+        valintakoeLisanaytto.setNimi("Lisänäyttö");
+        valintakoeLisanaytto.setKuvaus("Lisänäyttö");
         valintakoeLisanaytto.setAktiivinen(false);
-        valintakoeLisanaytto.setTunniste("{{hakukohde. " + LISANAYTTO_TUNNISTE + "}}");
+        valintakoeLisanaytto.setTunniste("{{hakukohde." + LISANAYTTO_TUNNISTE + "}}");
 
         valintakoeService.lisaaValintakoeValinnanVaiheelle(paasykoeValinnanVaihe.getOid(), valintakoeLisanaytto);
 
