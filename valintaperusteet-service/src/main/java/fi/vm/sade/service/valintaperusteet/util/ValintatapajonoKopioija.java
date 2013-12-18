@@ -56,12 +56,12 @@ public class ValintatapajonoKopioija implements Kopioija<Valintatapajono> {
         if(from.getVarasijat() != null) {
             to.setVarasijat(from.getVarasijat());
         }
-        if(from.getVarasijojaKaytetaanAlkaen() != null) {
-            to.setVarasijojaKaytetaanAlkaen(from.getVarasijojaKaytetaanAlkaen());
-        }
-        if(from.getVarasijojaTaytetaanAsti() != null) {
-            to.setVarasijojaTaytetaanAsti(from.getVarasijojaTaytetaanAsti());
-        }
+
+        to.setVarasijojaKaytetaanAlkaen(from.getVarasijojaKaytetaanAlkaen());
+
+
+        to.setVarasijojaTaytetaanAsti(from.getVarasijojaTaytetaanAsti());
+
         if(from.getKaytetaanValintalaskentaa() != null) {
             to.setKaytetaanValintalaskentaa(from.getKaytetaanValintalaskentaa());
         }
