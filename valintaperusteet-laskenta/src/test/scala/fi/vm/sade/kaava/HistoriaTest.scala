@@ -14,7 +14,7 @@ class HistoriaTest extends FunSuite {
     val FUNKTIO1 = "DEMOGRAFIA"
     val FUNKTIO2 = "SUMMA"
 
-    val historia = new Historia(FUNKTIO1, Some(16), List(new Hyvaksyttavissatila, new Virhetila("virhe", new OsallistumistietoaEiVoidaTulkitaVirhe("virhe")), new Hylattytila("hylky", new Arvokonvertterihylkays("hylky"))), Some(List(new Historia(FUNKTIO2, Some(true), List(), None, None))), None);
+    val historia = new Historia(FUNKTIO1, Some(16), List(new Hyvaksyttavissatila, new Virhetila("virhe", new OsallistumistietoaEiVoidaTulkitaVirhe("virhe")), new Hylattytila("hylky", new Arvokonvertterihylkays("hylky"))), Some(List(new Historia(FUNKTIO2, Some(true), List(), None, None))), None)
 
     val historiaAsJson = historiaWrites.writes(historia)
     val historiaFromJson = historiaReads.reads(historiaAsJson)
