@@ -159,7 +159,7 @@ object JsonFormats {
   }
   implicit def tilaWrites: Writes[Tila] = new Writes[Tila] {
     def writes(o: Tila): JsValue = {
-      val json = mapper.writerWithView(classOf[JsonViews.Basic]).writeValueAsString(o);
+      val json = mapper.writerWithView(classOf[JsonViews.Basic]).writeValueAsString(o)
       Json.parse(json)
     }
   }
@@ -249,7 +249,7 @@ object JsonHelpers {
         case s: BigDecimal => JsNumber(s)
         case null => JsNull
         case None => JsNull
-        case s => Try(Json.toJson(s)).getOrElse(JsString(s"No json formatter found for ${s.toString}"))
+        case s: Any => Try(Json.toJson(s)).getOrElse(JsString(s"No json formatter found for ${s.toString}"))
       }
     }
 }

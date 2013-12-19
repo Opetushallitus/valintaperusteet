@@ -62,7 +62,7 @@ public class LukionValintaperusteetTest {
     private static final String HAKUKOHDE_OID5 = "1.2.246.562.5.01787_01_406_1044";
     private static final Hakukohde HAKUKOHDE5 = new Hakukohde(HAKUKOHDE_OID5, new HashMap<String, String>());
 
-    private static final String OPPIAINE_POSTFIX = "_oppiaine";
+    private static final String OPPIAINE_POSTFIX = "_OPPIAINE";
 
 
     private static final Map<Integer, String> hakutoiveet;
@@ -139,20 +139,20 @@ public class LukionValintaperusteetTest {
     @Test
     public void testPainotettavatArvosanatKielienPainotus() {
         Hakemus hakemus = hakemus(yhdistaMapit(
-                valintaperuste(LukionValintaperusteet.AIDINKIELI_JA_KIRJALLISUUS1, "8.0"),
-                valintaperuste(LukionValintaperusteet.B1KIELI, "7.0"),
-                valintaperuste(LukionValintaperusteet.B1KIELI + OPPIAINE_POSTFIX, LukionValintaperusteet.SAKSA),
-                valintaperuste(LukionValintaperusteet.A11KIELI, "7.0"),
-                valintaperuste(LukionValintaperusteet.A11KIELI + OPPIAINE_POSTFIX, LukionValintaperusteet.LATVIA),
-                valintaperuste(LukionValintaperusteet.USKONTO, "6.0"),
-                valintaperuste(LukionValintaperusteet.HISTORIA, "7.0"),
-                valintaperuste(LukionValintaperusteet.YHTEISKUNTAOPPI, "8.0"),
-                valintaperuste(LukionValintaperusteet.MATEMATIIKKA, "8.0"),
-                valintaperuste(LukionValintaperusteet.FYSIIKKA, "7.0"),
-                valintaperuste(LukionValintaperusteet.KEMIA, "6.0"),
-                valintaperuste(LukionValintaperusteet.BIOLOGIA, "10.0"),
-                valintaperuste(LukionValintaperusteet.TERVEYSTIETO, "6.0"),
-                valintaperuste(LukionValintaperusteet.MAANTIETO, "5.0")
+                valintaperuste(LukionValintaperusteet.AINE_PREFIX+LukionValintaperusteet.AIDINKIELI_JA_KIRJALLISUUS1, "8.0"),
+                valintaperuste(LukionValintaperusteet.AINE_PREFIX+LukionValintaperusteet.B1KIELI, "7.0"),
+                valintaperuste(LukionValintaperusteet.AINE_PREFIX+LukionValintaperusteet.B1KIELI + OPPIAINE_POSTFIX, LukionValintaperusteet.SAKSA),
+                valintaperuste(LukionValintaperusteet.AINE_PREFIX+LukionValintaperusteet.A11KIELI, "7.0"),
+                valintaperuste(LukionValintaperusteet.AINE_PREFIX+LukionValintaperusteet.A11KIELI + OPPIAINE_POSTFIX, LukionValintaperusteet.LATVIA),
+                valintaperuste(LukionValintaperusteet.AINE_PREFIX+LukionValintaperusteet.USKONTO, "6.0"),
+                valintaperuste(LukionValintaperusteet.AINE_PREFIX+LukionValintaperusteet.HISTORIA, "7.0"),
+                valintaperuste(LukionValintaperusteet.AINE_PREFIX+LukionValintaperusteet.YHTEISKUNTAOPPI, "8.0"),
+                valintaperuste(LukionValintaperusteet.AINE_PREFIX+LukionValintaperusteet.MATEMATIIKKA, "8.0"),
+                valintaperuste(LukionValintaperusteet.AINE_PREFIX+LukionValintaperusteet.FYSIIKKA, "7.0"),
+                valintaperuste(LukionValintaperusteet.AINE_PREFIX+LukionValintaperusteet.KEMIA, "6.0"),
+                valintaperuste(LukionValintaperusteet.AINE_PREFIX+LukionValintaperusteet.BIOLOGIA, "10.0"),
+                valintaperuste(LukionValintaperusteet.AINE_PREFIX+LukionValintaperusteet.TERVEYSTIETO, "6.0"),
+                valintaperuste(LukionValintaperusteet.AINE_PREFIX+LukionValintaperusteet.MAANTIETO, "5.0")
         ));
 
         Hakukohde hakukohde = new Hakukohde(HAKUKOHDE_OID1, yhdistaMapit(
@@ -172,24 +172,24 @@ public class LukionValintaperusteetTest {
     @Test
     public void testPainotettavatArvosanatTaitoJaTaideaineidenPainotus() {
         Hakemus hakemus = hakemus(yhdistaMapit(
-                valintaperuste(LukionValintaperusteet.AIDINKIELI_JA_KIRJALLISUUS1, "8.0"),
-                valintaperuste(LukionValintaperusteet.B1KIELI, "7.0"),
-                valintaperuste(LukionValintaperusteet.B1KIELI + OPPIAINE_POSTFIX, LukionValintaperusteet.SAKSA),
-                valintaperuste(LukionValintaperusteet.A11KIELI, "7.0"),
-                valintaperuste(LukionValintaperusteet.A11KIELI + OPPIAINE_POSTFIX, LukionValintaperusteet.LATVIA),
-                valintaperuste(LukionValintaperusteet.B21KIELI, "7.0"),
-                valintaperuste(LukionValintaperusteet.B21KIELI + OPPIAINE_POSTFIX, LukionValintaperusteet.RANSKA),
-                valintaperuste(LukionValintaperusteet.USKONTO, "6.0"),
-                valintaperuste(LukionValintaperusteet.HISTORIA, "7.0"),
-                valintaperuste(LukionValintaperusteet.YHTEISKUNTAOPPI, "8.0"),
-                valintaperuste(LukionValintaperusteet.MATEMATIIKKA, "8.0"),
-                valintaperuste(LukionValintaperusteet.FYSIIKKA, "7.0"),
-                valintaperuste(LukionValintaperusteet.KEMIA, "6.0"),
-                valintaperuste(LukionValintaperusteet.BIOLOGIA, "10.0"),
-                valintaperuste(LukionValintaperusteet.TERVEYSTIETO, "6.0"),
-                valintaperuste(LukionValintaperusteet.MAANTIETO, "5.0"),
-                valintaperuste(LukionValintaperusteet.LIIKUNTA, "8.0"),
-                valintaperuste(LukionValintaperusteet.KUVATAIDE, "10.0")
+                valintaperuste(LukionValintaperusteet.AINE_PREFIX+LukionValintaperusteet.AIDINKIELI_JA_KIRJALLISUUS1, "8.0"),
+                valintaperuste(LukionValintaperusteet.AINE_PREFIX+LukionValintaperusteet.B1KIELI, "7.0"),
+                valintaperuste(LukionValintaperusteet.AINE_PREFIX+LukionValintaperusteet.B1KIELI + OPPIAINE_POSTFIX, LukionValintaperusteet.SAKSA),
+                valintaperuste(LukionValintaperusteet.AINE_PREFIX+LukionValintaperusteet.A11KIELI, "7.0"),
+                valintaperuste(LukionValintaperusteet.AINE_PREFIX+LukionValintaperusteet.A11KIELI + OPPIAINE_POSTFIX, LukionValintaperusteet.LATVIA),
+                valintaperuste(LukionValintaperusteet.AINE_PREFIX+LukionValintaperusteet.B21KIELI, "7.0"),
+                valintaperuste(LukionValintaperusteet.AINE_PREFIX+LukionValintaperusteet.B21KIELI + OPPIAINE_POSTFIX, LukionValintaperusteet.RANSKA),
+                valintaperuste(LukionValintaperusteet.AINE_PREFIX+LukionValintaperusteet.USKONTO, "6.0"),
+                valintaperuste(LukionValintaperusteet.AINE_PREFIX+LukionValintaperusteet.HISTORIA, "7.0"),
+                valintaperuste(LukionValintaperusteet.AINE_PREFIX+LukionValintaperusteet.YHTEISKUNTAOPPI, "8.0"),
+                valintaperuste(LukionValintaperusteet.AINE_PREFIX+LukionValintaperusteet.MATEMATIIKKA, "8.0"),
+                valintaperuste(LukionValintaperusteet.AINE_PREFIX+LukionValintaperusteet.FYSIIKKA, "7.0"),
+                valintaperuste(LukionValintaperusteet.AINE_PREFIX+LukionValintaperusteet.KEMIA, "6.0"),
+                valintaperuste(LukionValintaperusteet.AINE_PREFIX+LukionValintaperusteet.BIOLOGIA, "10.0"),
+                valintaperuste(LukionValintaperusteet.AINE_PREFIX+LukionValintaperusteet.TERVEYSTIETO, "6.0"),
+                valintaperuste(LukionValintaperusteet.AINE_PREFIX+LukionValintaperusteet.MAANTIETO, "5.0"),
+                valintaperuste(LukionValintaperusteet.AINE_PREFIX+LukionValintaperusteet.LIIKUNTA, "8.0"),
+                valintaperuste(LukionValintaperusteet.AINE_PREFIX+LukionValintaperusteet.KUVATAIDE, "10.0")
         ));
 
         Hakukohde hakukohde = new Hakukohde(HAKUKOHDE_OID1, yhdistaMapit(

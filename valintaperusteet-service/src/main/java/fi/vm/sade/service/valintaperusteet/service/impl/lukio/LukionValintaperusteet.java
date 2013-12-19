@@ -13,6 +13,7 @@ import java.util.List;
  */
 public class LukionValintaperusteet {
     public static final String PAINOKERROIN_POSTFIX = "_painokerroin";
+    public static final String AINE_PREFIX = "PK_";
 
     public static final String AIDINKIELI_JA_KIRJALLISUUS1 = "AI";
     public static final String AIDINKIELI_JA_KIRJALLISUUS2 = "AI2";
@@ -172,7 +173,7 @@ public class LukionValintaperusteet {
 
         List<GenericHelper.Painotus> painotukset = new ArrayList<GenericHelper.Painotus>();
         for (String aine : LUKUAINEET) {
-            Funktiokutsu arvo = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(aine, false, Valintaperustelahde.HAETTAVA_ARVO));
+            Funktiokutsu arvo = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(AINE_PREFIX+aine, false, Valintaperustelahde.HAETTAVA_ARVO));
             Funktiokutsu painokerroin = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(aine + PAINOKERROIN_POSTFIX, false, Valintaperustelahde.HAKUKOHTEEN_ARVO), 1.0);
 
             painotukset.add(new GenericHelper.Painotus(painokerroin, arvo));
@@ -180,9 +181,9 @@ public class LukionValintaperusteet {
 
         for (String aine : KIELET) {
             for(String koodi : KIELIKOODIT) {
-                String avain = "{{"+aine+"_oppiaine."+koodi+"}}";
+                String avain = "{{"+AINE_PREFIX+aine+"_OPPIAINE."+koodi+"}}";
                 ValintaperusteViite vp = GenericHelper.luoValintaperusteViite(avain, false, Valintaperustelahde.HAETTAVA_ARVO);
-                Funktiokutsu arvo = GenericHelper.luoHaeLukuarvoEhdolla(GenericHelper.luoValintaperusteViite(aine, false, Valintaperustelahde.HAETTAVA_ARVO),vp);
+                Funktiokutsu arvo = GenericHelper.luoHaeLukuarvoEhdolla(GenericHelper.luoValintaperusteViite(AINE_PREFIX+aine, false, Valintaperustelahde.HAETTAVA_ARVO),vp);
                 Funktiokutsu painokerroin = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(aine + "_" + koodi + PAINOKERROIN_POSTFIX, false, Valintaperustelahde.HAKUKOHTEEN_ARVO), 1.0);
 
                 painotukset.add(new GenericHelper.Painotus(painokerroin, arvo));
@@ -191,7 +192,7 @@ public class LukionValintaperusteet {
         }
 
         for (String aine : TAITO_JA_TAIDEAINEET) {
-            Funktiokutsu arvo = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(aine, false, Valintaperustelahde.HAETTAVA_ARVO));
+            Funktiokutsu arvo = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(AINE_PREFIX+aine, false, Valintaperustelahde.HAETTAVA_ARVO));
             Funktiokutsu painokerroin = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(aine + PAINOKERROIN_POSTFIX, false, Valintaperustelahde.HAKUKOHTEEN_ARVO));
 
             painotukset.add(new GenericHelper.Painotus(painokerroin, arvo));
