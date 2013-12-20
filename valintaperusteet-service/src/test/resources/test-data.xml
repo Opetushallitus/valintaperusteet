@@ -957,11 +957,15 @@
                     nimi="hakukohde 21 valinnan vaihe 3" aktiivinen="true" kuvaus="kuvaus"
                     edellinen_valinnan_vaihe_id="109"/>
 
-    <valinnan_vaihe valinnan_vaihe_tyyppi="VALINTAKOE" id="111" version="0" oid="111" valintaryhma_id="48"
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="116" version="0" oid="116" valintaryhma_id="48"
                     nimi="valintaryhma 48 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus"/>
 
-    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="112" version="0" oid="112" valintaryhma_id="48"
+    <valinnan_vaihe valinnan_vaihe_tyyppi="VALINTAKOE" id="111" version="0" oid="111" valintaryhma_id="48"
                     nimi="valintaryhma 48 valinnan vaihe 2" aktiivinen="true" kuvaus="kuvaus"
+                    edellinen_valinnan_vaihe_id="116"/>
+
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="112" version="0" oid="112" valintaryhma_id="48"
+                    nimi="valintaryhma 48 valinnan vaihe 3" aktiivinen="true" kuvaus="kuvaus"
                     edellinen_valinnan_vaihe_id="111"/>
 
     <valinnan_vaihe valinnan_vaihe_tyyppi="VALINTAKOE" id="113" version="0" oid="113" valintaryhma_id="57"
