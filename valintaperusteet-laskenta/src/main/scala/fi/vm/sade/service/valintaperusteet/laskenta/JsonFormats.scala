@@ -227,13 +227,11 @@ object JsonHelpers {
       }
     }
 
-  implicit def mapWritesStringOption: Writes[Map[String, Option[Any]]] =
-    new Writes[Map[String, Option[Any]]] {
-      def writes(map: Map[String, Option[Any]]): JsValue = {
-        val json = mapper.writerWithView(classOf[JsonViews.Basic]).writeValueAsString(map)
-        Json.parse(json)
-      }
+  implicit def mapWrites: Writes[Map[_,_]] =
+    new Writes[Map[_,_]] {
+      def writes(s: Map[_,_]): JsValue = s.foldLeft(Json.obj())((o, cur)=> o++Json.obj(cur._1.toString -> cur._2))
     }
+
 
   implicit def anyReads: Reads[Any] =
     new Reads[Any] {
@@ -249,7 +247,7 @@ object JsonHelpers {
 
   implicit def anyWrites: Writes[Any] =
     new Writes[Any] {
-      def writes(s: Any): JsValue = s match {
+      def writes(a: Any): JsValue = a match {
         case s: String => JsString(s)
         case s: Boolean => JsBoolean(s)
         case s: Int => JsNumber(s)
@@ -267,29 +265,13 @@ object JsonHelpers {
         case null => JsNull
         case None => JsNull
         case s: Map[_, _] => {
-          val json = s.foldLeft(Json.obj())((o, cur)=> o++Json.obj(cur._1.toString -> Json.toJson(cur._2)))
-          println(json)
-          json
+          s.foldLeft(Json.obj())((o, cur)=> o++Json.obj(cur._1.toString -> cur._2))
         }
         case s: Any => {
-          println(s.getClass)
-          Try(JsString(s.toString)).getOrElse(JsString(s"No json formatter found for ${s.toString}"))
+          JsString(s"No json formatter found for $s")
         }
+        case _ => JsNull
       }
     }
 
-  implicit def optionAnyWrites: Writes[Option[Any]] =
-    new Writes[Option[Any]] {
-      def writes(s: Option[Any]): JsValue = s match {
-        case Some(s: String) => JsString(s)
-        case Some(s: Boolean) => JsBoolean(s)
-        case Some(s: Int) => JsNumber(s)
-        case Some(s: Double) => JsNumber(s)
-        case Some(s: Long) => JsNumber(s)
-        case Some(s: BigDecimal) => JsNumber(s)
-        case null => JsNull
-        case None => JsNull
-        case Some(s: Any) => Try(Json.toJson(s)).getOrElse(JsString(s"No json formatter found for ${s.toString}"))
-      }
-    }
 }
