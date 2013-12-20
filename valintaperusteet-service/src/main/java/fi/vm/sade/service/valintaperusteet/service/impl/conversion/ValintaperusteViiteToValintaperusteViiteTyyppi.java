@@ -19,6 +19,7 @@ public class ValintaperusteViiteToValintaperusteViiteTyyppi implements Converter
         tyyppi.setOnPakollinen(valintaperusteViite.getOnPakollinen());
         tyyppi.setLahde(ValintaperustelahdeTyyppi.valueOf(valintaperusteViite.getLahde().name()));
         tyyppi.setIndeksi(valintaperusteViite.getIndeksi());
+        tyyppi.setEpasuoraViittaus(valintaperusteViite.getEpasuoraViittaus());
 
         return tyyppi;
     }
