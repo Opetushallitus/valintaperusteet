@@ -450,8 +450,7 @@ public class LaskentakaavaServiceTest {
 
     @Test
     public void testFindAvaimetForHakukohdes() {
-        final List<String> oids = Arrays.asList("oid17");
-        List<ValintaperusteDTO> valintaperusteet = laskentakaavaService.findAvaimetForHakukohdes(oids);
+        List<ValintaperusteDTO> valintaperusteet = laskentakaavaService.findAvaimetForHakukohde("oid17");
         assertEquals(2, valintaperusteet.size());
 
         Collections.sort(valintaperusteet, new Comparator<ValintaperusteDTO>() {
@@ -470,6 +469,8 @@ public class LaskentakaavaServiceTest {
         assertEquals(new BigDecimal("0.0"), new BigDecimal(valintaperusteet.get(1).getMin()));
         assertEquals(new BigDecimal("30.0"), new BigDecimal(valintaperusteet.get(1).getMax()));
         assertNull(valintaperusteet.get(1).getArvot());
+        assertEquals(Valintaperustelahde.SYOTETTAVA_ARVO, valintaperusteet.get(1).getLahde());
+
     }
 
     @Test

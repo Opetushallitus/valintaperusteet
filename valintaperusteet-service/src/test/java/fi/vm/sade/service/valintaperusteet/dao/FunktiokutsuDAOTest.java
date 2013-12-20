@@ -16,7 +16,10 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
@@ -127,8 +130,7 @@ public class FunktiokutsuDAOTest {
 
     @Test
     public void testFindFunktiokutsuByHakukohdeOids() {
-        final List<String> oids = Arrays.asList("oid17");
-        List<Funktiokutsu> kaavat = funktiokutsuDAO.findFunktiokutsuByHakukohdeOids(oids);
+        List<Funktiokutsu> kaavat = funktiokutsuDAO.findFunktiokutsuByHakukohdeOids("oid17");
         assertEquals(2, kaavat.size());
     }
 }

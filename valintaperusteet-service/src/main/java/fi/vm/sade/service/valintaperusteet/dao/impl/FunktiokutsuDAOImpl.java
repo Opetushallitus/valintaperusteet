@@ -105,7 +105,7 @@ public class FunktiokutsuDAOImpl extends AbstractJpaDAOImpl<Funktiokutsu, Long> 
     }
 
     @Override
-    public List<Funktiokutsu> findFunktiokutsuByHakukohdeOids(List<String> hakukohdeOids) {
+    public List<Funktiokutsu> findFunktiokutsuByHakukohdeOids(String hakukohdeOid) {
         QHakukohdeViite hakukohde = QHakukohdeViite.hakukohdeViite;
         QValinnanVaihe vaihe = QValinnanVaihe.valinnanVaihe;
         QValintatapajono jono = QValintatapajono.valintatapajono;
@@ -124,7 +124,7 @@ public class FunktiokutsuDAOImpl extends AbstractJpaDAOImpl<Funktiokutsu, Long> 
                 .leftJoin(funktiokutsu.funktioargumentit).fetch()
                 .leftJoin(funktiokutsu.syoteparametrit).fetch()
                 .leftJoin(funktiokutsu.valintaperusteviitteet).fetch()
-                .where(hakukohde.oid.in(hakukohdeOids)
+                .where(hakukohde.oid.eq(hakukohdeOid)
                         .and(vaihe.aktiivinen.isTrue())
                         .and(jono.aktiivinen.isTrue())
                         .and(kriteeri.aktiivinen.isTrue()))
