@@ -270,7 +270,6 @@ object JsonHelpers {
         case s: Any => {
           JsString(s"No json formatter found for $s")
         }
-        case _ => JsNull
       }
     }
 

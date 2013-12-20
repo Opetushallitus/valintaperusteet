@@ -73,7 +73,6 @@ public class LaskentakaavaServiceTest {
         Funktiokutsu maksimi204L = laskentakaava.getFunktiokutsu();
         assertEquals(Funktionimi.MAKSIMI, maksimi204L.getFunktionimi());
         assertEquals(2, maksimi204L.getFunktioargumentit().size());
-
         List<Funktioargumentti> maksimi204Largs = argsSorted(maksimi204L.getFunktioargumentit());
 
         Funktiokutsu summa203L = maksimi204Largs.get(0).getFunktiokutsuChild();

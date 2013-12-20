@@ -14,7 +14,8 @@ public class LaskentaServiceImpl implements LaskentaService {
 
     public Laskentatulos<BigDecimal> suoritaValintalaskenta(Hakukohde hakukohde, Hakemus hakemus,
                                                             Collection<Hakemus> kaikkiHakemukset, Lukuarvofunktio laskettava) {
-        return Laskin.suoritaValintalaskenta(hakukohde, hakemus, kaikkiHakemukset, laskettava);
+        Laskentatulos<BigDecimal> tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemus, kaikkiHakemukset, laskettava);
+        return tulos;
     }
 
     public Laskentatulos<Boolean> suoritaValintakoelaskenta(Hakukohde hakukohde, Hakemus hakemus, Totuusarvofunktio laskettava) {

@@ -73,7 +73,13 @@ public class LaskentakaavaResource {
     @Secured({READ, UPDATE, CRUD})
     @ApiOperation(value = "Hakee laskentakaavan ID:n perusteella", response = LaskentakaavaDTO.class)
     public LaskentakaavaDTO kaava(@ApiParam(value = "Laskentakaavan ID", required = true) @PathParam("id") Long id) {
-        return modelMapper.map(laskentakaavaService.haeMallinnettuKaava(id), LaskentakaavaDTO.class);
+        long beginTime = System.currentTimeMillis();
+        LaskentakaavaDTO mapped = modelMapper.map(laskentakaavaService.haeMallinnettuKaava(id), LaskentakaavaDTO.class);
+        long endTime = System.currentTimeMillis();
+        long timeTaken = (endTime - beginTime) / 1000L;
+        LOGGER.info("Laskentakaavan hakemiseen kului: "+timeTaken+" sekuntia");
+        return mapped;
+
     }
 
     @GET

@@ -14,6 +14,7 @@ import fi.vm.sade.service.valintaperusteet.service.exception.*;
 import fi.vm.sade.service.valintaperusteet.service.impl.util.LaskentakaavaCache;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,9 +53,29 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     @Autowired
     private ValintaperusteetModelMapper modelMapper;
 
+    @Autowired
+    private ApplicationContext applicationContext;
+
     @Transactional(readOnly = true)
-    private Funktiokutsu haeFunktiokutsuRekursiivisesti(Long id, boolean laajennaAlakaavat, Set<Long> laskentakaavaIds)
+    public Funktiokutsu haeFunktiokutsuRekursiivisesti(final Long id, final boolean laajennaAlakaavat, final Set<Long> laskentakaavaIds)
             throws FunktiokutsuMuodostaaSilmukanException {
+
+        // Pientä säätöä vielä Akkan kanssa
+
+//        ActorSystem system = ActorSystem.create("FunktiokutsuActorSystem");
+//        SpringExtProvider.get(system).initialize(applicationContext);
+//        ActorRef master = system.actorOf(SpringExtProvider.get(system).props("HaeFunktiokutusRekursiivisestiActor"), "master");
+//        Timeout timeout = new Timeout(Duration.create(50, "seconds"));
+//        Future<Object> future = Patterns.ask(master, new UusiRekursio(id, laajennaAlakaavat, laskentakaavaIds), timeout);
+//
+//        Funktiokutsu funktiokutsu = null;
+//        try {
+//            funktiokutsu = (Funktiokutsu) Await.result(future, timeout.duration());
+//        } catch (Exception e) {
+//            throw new FunktiokutsuEiOleOlemassaException("Funktiokutsu (" + id + ") ei ole olemassa", id);
+//        }
+//        return funktiokutsu;
+
 
         Funktiokutsu funktiokutsu = funktiokutsuDAO.getFunktiokutsu(id);
         if (funktiokutsu == null) {
@@ -80,12 +101,14 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
         }
 
         return funktiokutsu;
+
     }
 
     @Override
     @Transactional(readOnly = true)
     public Funktiokutsu haeMallinnettuFunktiokutsu(Long id) throws FunktiokutsuMuodostaaSilmukanException {
         Funktiokutsu funktiokutsu = haeFunktiokutsuRekursiivisesti(id, false, new HashSet<Long>());
+
         return funktiokutsu;
     }
 
@@ -610,6 +633,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             laskentakaavaIds.add(laskentakaava.getId());
             haeFunktiokutsuRekursiivisesti(laskentakaava.getFunktiokutsu().getId(), laajennaAlakaavat,
                     laskentakaavaIds);
+
         }
 
         return laskentakaava;

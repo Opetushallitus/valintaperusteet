@@ -466,16 +466,18 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         valinnanVaihe0.setAktiivinen(true);
         valinnanVaiheService.update(valinnanVaihe0.getOid(), modelMapper.map(valinnanVaihe0, ValinnanVaiheCreateDTO.class));
         List<Valintakoe> valintakokeet = valintakoeService.findValintakoeByValinnanVaihe(valinnanVaihe0.getOid());
-        Valintakoe koe0 = valintakokeet.get(0);
-        koe0.setAktiivinen(true);
-        ValintakoeDTO dto = new ValintakoeDTO();
-        dto.setAktiivinen(true);
-        dto.setNimi(koe0.getNimi());
-        dto.setKuvaus(koe0.getKuvaus());
-        dto.setTunniste(koe0.getTunniste());
-        dto.setLaskentakaavaId(koe0.getLaskentakaavaId());
-        valintakoeService.update(koe0.getOid(), dto);
-
+        for(Valintakoe k : valintakokeet) {
+            if(k.getTunniste().contains(PAASYKOE_TUNNISTE)) {
+                k.setAktiivinen(true);
+                ValintakoeDTO dto = new ValintakoeDTO();
+                dto.setAktiivinen(true);
+                dto.setNimi(k.getNimi());
+                dto.setKuvaus(k.getKuvaus());
+                dto.setTunniste(k.getTunniste());
+                dto.setLaskentakaavaId(k.getLaskentakaavaId());
+                valintakoeService.update(k.getOid(), dto);
+            }
+        }
 
         transactionManager.commit(tx);
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
@@ -509,15 +511,18 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         valinnanVaihe0.setAktiivinen(true);
         valinnanVaiheService.update(valinnanVaihe0.getOid(), modelMapper.map(valinnanVaihe0, ValinnanVaiheCreateDTO.class));
         valintakokeet = valintakoeService.findValintakoeByValinnanVaihe(valinnanVaihe0.getOid());
-        Valintakoe koe1 = valintakokeet.get(1);
-        koe1.setAktiivinen(true);
-        dto = new ValintakoeDTO();
-        dto.setAktiivinen(true);
-        dto.setNimi(koe1.getNimi());
-        dto.setKuvaus(koe1.getKuvaus());
-        dto.setTunniste(koe1.getTunniste());
-        dto.setLaskentakaavaId(koe1.getLaskentakaavaId());
-        valintakoeService.update(koe1.getOid(), dto);
+        for(Valintakoe k : valintakokeet) {
+            if(k.getTunniste().contains(LISANAYTTO_TUNNISTE)) {
+                k.setAktiivinen(true);
+                ValintakoeDTO dto = new ValintakoeDTO();
+                dto.setAktiivinen(true);
+                dto.setNimi(k.getNimi());
+                dto.setKuvaus(k.getKuvaus());
+                dto.setTunniste(k.getTunniste());
+                dto.setLaskentakaavaId(k.getLaskentakaavaId());
+                valintakoeService.update(k.getOid(), dto);
+            }
+        }
 
 
         transactionManager.commit(tx);
@@ -554,25 +559,16 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         valinnanVaiheService.update(valinnanVaihe0.getOid(), modelMapper.map(valinnanVaihe0, ValinnanVaiheCreateDTO.class));
         valintakokeet = valintakoeService.findValintakoeByValinnanVaihe(valinnanVaihe0.getOid());
 
-        koe0 = valintakokeet.get(0);
-        koe0.setAktiivinen(true);
-        dto = new ValintakoeDTO();
-        dto.setAktiivinen(true);
-        dto.setNimi(koe0.getNimi());
-        dto.setKuvaus(koe0.getKuvaus());
-        dto.setTunniste(koe0.getTunniste());
-        dto.setLaskentakaavaId(koe0.getLaskentakaavaId());
-        valintakoeService.update(koe0.getOid(), dto);
-
-        koe1 = valintakokeet.get(1);
-        koe1.setAktiivinen(true);
-        dto = new ValintakoeDTO();
-        dto.setAktiivinen(true);
-        dto.setNimi(koe1.getNimi());
-        dto.setKuvaus(koe1.getKuvaus());
-        dto.setTunniste(koe1.getTunniste());
-        dto.setLaskentakaavaId(koe1.getLaskentakaavaId());
-        valintakoeService.update(koe1.getOid(), dto);
+        for(Valintakoe k : valintakokeet) {
+            k.setAktiivinen(true);
+            ValintakoeDTO dto = new ValintakoeDTO();
+            dto.setAktiivinen(true);
+            dto.setNimi(k.getNimi());
+            dto.setKuvaus(k.getKuvaus());
+            dto.setTunniste(k.getTunniste());
+            dto.setLaskentakaavaId(k.getLaskentakaavaId());
+            valintakoeService.update(k.getOid(), dto);
+        }
 
 
         transactionManager.commit(tx);
