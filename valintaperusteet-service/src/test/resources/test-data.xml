@@ -198,8 +198,9 @@
 
 
     <funktiokutsu id="600" version="0" funktionimi="HAELUKUARVO"/>
-    <valintaperuste_viite id="600" version="0" lahde="SYOTETTAVA_ARVO" tunniste="valintaperuste2" kuvaus="kuvaus"
-                          on_pakollinen="true" funktiokutsu_id="600" indeksi="1"/>
+    <valintaperuste_viite id="600" version="0" lahde="HAKUKOHTEEN_SYOTETTAVA_ARVO" tunniste="hakukohteentunniste"
+                          kuvaus="kuvaus"
+                          on_pakollinen="true" epasuora_viittaus="true" funktiokutsu_id="600" indeksi="1"/>
     <arvovalikonvertteriparametri id="600" version="0" minvalue="0.0" maxvalue="10.0" palauta_haettu_arvo="false"
                                   paluuarvo="1.0" funktiokutsu_id="600"/>
     <arvovalikonvertteriparametri id="601" version="0" minvalue="10.0" maxvalue="20.0" palauta_haettu_arvo="false"
@@ -613,6 +614,10 @@
     <hakukohteen_valintaperuste id="10" version="0" tunniste="tunniste2" arvo="arvo2" hakukohde_viite_id="21"/>
     <hakukohteen_valintaperuste id="11" version="0" tunniste="tunniste3" arvo="arvo3" hakukohde_viite_id="21"/>
     <hakukohteen_valintaperuste id="12" version="0" tunniste="tunniste4" arvo="arvo4" hakukohde_viite_id="21"/>
+
+    <hakukohteen_valintaperuste id="13" version="0" tunniste="hakukohteentunniste" arvo="valintaperuste2"
+                                hakukohde_viite_id="17"/>
+
 
     <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="1" version="0" valintaryhma_id="1"
                     hakukohde_viite_id="[NULL]" oid="1" nimi="valinnanvaihe1" kuvaus="kuvaus1" aktiivinen="true"/>

@@ -18,7 +18,7 @@ import java.util.List;
  */
 public interface LaskentakaavaService {
 
-    List<ValintaperusteDTO> findAvaimetForHakukohdes(List<String> oids);
+    List<ValintaperusteDTO> findAvaimetForHakukohde(String hakukohdeOid);
 
     HakukohteenValintaperusteAvaimetDTO findHakukohteenAvaimet(String oid);
 

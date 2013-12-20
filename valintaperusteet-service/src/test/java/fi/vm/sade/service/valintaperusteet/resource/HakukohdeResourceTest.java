@@ -22,7 +22,6 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
 import javax.ws.rs.core.Response;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -156,9 +155,7 @@ public class HakukohdeResourceTest {
 
     @Test
     public void testFindAvaimet() throws Exception {
-        final List<String> oids = Arrays.asList("oid17");
-
-        List<ValintaperusteDTO> valintaperusteet = hakukohdeResource.findAvaimet(oids);
+        List<ValintaperusteDTO> valintaperusteet = hakukohdeResource.findAvaimet("oid17");
         assertEquals(2, valintaperusteet.size());
 
         mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(valintaperusteet);
