@@ -311,10 +311,10 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
         // vaihe ja jossa on yksi periytyvä valintatapajono, päivitetään jonolle aloituspaikkojen lukumäärä
 
         List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheService.findByHakukohde(hakukohde.getOid());
-        if (valinnanVaiheet.size() == 2
-                && ValinnanVaiheTyyppi.TAVALLINEN.equals(valinnanVaiheet.get(1).getValinnanVaiheTyyppi())
-                && valinnanVaiheet.get(1).getMasterValinnanVaihe() != null) {
-            ValinnanVaihe vaihe = valinnanVaiheet.get(1);
+        if (valinnanVaiheet.size() == 3
+                && ValinnanVaiheTyyppi.TAVALLINEN.equals(valinnanVaiheet.get(2).getValinnanVaiheTyyppi())
+                && valinnanVaiheet.get(2).getMasterValinnanVaihe() != null) {
+            ValinnanVaihe vaihe = valinnanVaiheet.get(2);
             List<Valintatapajono> jonot = valintatapajonoService.findJonoByValinnanvaihe(vaihe.getOid());
             if (jonot.size() == 1 && jonot.get(0).getMasterValintatapajono() != null) {
                 Valintatapajono jono = jonot.get(0);
