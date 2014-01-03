@@ -67,18 +67,10 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
     private ResourceLoader resourceLoader;
 
-    private static final String HAKU_OID = "toisenAsteenSyksynYhteishaku";
-
     private static final String CSV_DELIMITER = ";";
-
-    public static final String KIELI_FI_URI = "kieli_fi";
-    public static final String KIELI_SV_URI = "kieli_sv";
 
     public static final String PAASY_JA_SOVELTUVUUSKOE = "valintakokeentyyppi_1";
     public static final String LISANAYTTO = "valintakokeentyyppi_2";
-    public static final String LISAPISTE = "valintakokeentyyppi_5";
-
-    public static final String KIELIKOE_PREFIX = "kielikoe_";
 
     public static final Set<String> poikkeavatValintaryhmat = new HashSet<String>(Arrays.asList(new String[]{
             "hakukohteet_354", // Lasiala, pk (Käsi- ja taideteollisuusalan perustutkinto)
@@ -466,8 +458,8 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         valinnanVaihe0.setAktiivinen(true);
         valinnanVaiheService.update(valinnanVaihe0.getOid(), modelMapper.map(valinnanVaihe0, ValinnanVaiheCreateDTO.class));
         List<Valintakoe> valintakokeet = valintakoeService.findValintakoeByValinnanVaihe(valinnanVaihe0.getOid());
-        for(Valintakoe k : valintakokeet) {
-            if(k.getTunniste().contains(PAASYKOE_TUNNISTE)) {
+        for (Valintakoe k : valintakokeet) {
+            if (k.getTunniste().contains(PAASYKOE_TUNNISTE)) {
                 k.setAktiivinen(true);
                 ValintakoeDTO dto = new ValintakoeDTO();
                 dto.setAktiivinen(true);
@@ -511,8 +503,8 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         valinnanVaihe0.setAktiivinen(true);
         valinnanVaiheService.update(valinnanVaihe0.getOid(), modelMapper.map(valinnanVaihe0, ValinnanVaiheCreateDTO.class));
         valintakokeet = valintakoeService.findValintakoeByValinnanVaihe(valinnanVaihe0.getOid());
-        for(Valintakoe k : valintakokeet) {
-            if(k.getTunniste().contains(LISANAYTTO_TUNNISTE)) {
+        for (Valintakoe k : valintakokeet) {
+            if (k.getTunniste().contains(LISANAYTTO_TUNNISTE)) {
                 k.setAktiivinen(true);
                 ValintakoeDTO dto = new ValintakoeDTO();
                 dto.setAktiivinen(true);
@@ -559,7 +551,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         valinnanVaiheService.update(valinnanVaihe0.getOid(), modelMapper.map(valinnanVaihe0, ValinnanVaiheCreateDTO.class));
         valintakokeet = valintakoeService.findValintakoeByValinnanVaihe(valinnanVaihe0.getOid());
 
-        for(Valintakoe k : valintakokeet) {
+        for (Valintakoe k : valintakokeet) {
             k.setAktiivinen(true);
             ValintakoeDTO dto = new ValintakoeDTO();
             dto.setAktiivinen(true);
