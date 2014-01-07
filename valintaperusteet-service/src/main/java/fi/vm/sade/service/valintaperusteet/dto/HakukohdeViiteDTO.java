@@ -2,8 +2,7 @@ package fi.vm.sade.service.valintaperusteet.dto;
 
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
-import fi.vm.sade.service.valintaperusteet.model.JsonViews;
-import org.codehaus.jackson.map.annotate.JsonView;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
  * User: jukais
@@ -14,6 +13,7 @@ import org.codehaus.jackson.map.annotate.JsonView;
 public class HakukohdeViiteDTO extends HakukohdeViiteCreateDTO {
 
     @ApiModelProperty(value = "Valintaryhmä OID")
+    @JsonProperty(value = "valintaryhma_id")
     private String valintaryhmaOid;
 
     @ApiModelProperty(value = "Hakukohdekoodi")
