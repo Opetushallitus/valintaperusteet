@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
  * User: wuoti
