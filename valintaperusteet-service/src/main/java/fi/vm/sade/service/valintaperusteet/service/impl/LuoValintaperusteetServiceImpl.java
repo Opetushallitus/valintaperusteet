@@ -184,6 +184,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         final String kielikoeNimi = "Kielikoe";
         ValintakoeDTO kielikoe = new ValintakoeDTO();
         kielikoe.setAktiivinen(false);
+        kielikoe.setAktiivinen(true);
         kielikoe.setKuvaus(kielikoeNimi);
         kielikoe.setNimi(kielikoeNimi);
         kielikoe.setTunniste(PkJaYoPohjaiset.kielikoetunniste);
