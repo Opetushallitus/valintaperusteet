@@ -159,7 +159,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         esijk.setAktiivinen(true);
         esijk.setLaskentakaavaId(ulkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt.getId());
         esijk.setMetatiedot(ulkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt.getNimi());
-        esijk = modelMapper.map(jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(esijono.getOid(), esijk, null, ulkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt.getId()), JarjestyskriteeriDTO.class);
+        modelMapper.map(jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(esijono.getOid(), esijk, null, ulkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt.getId()), JarjestyskriteeriDTO.class);
 
         transactionManager.commit(tx);
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
