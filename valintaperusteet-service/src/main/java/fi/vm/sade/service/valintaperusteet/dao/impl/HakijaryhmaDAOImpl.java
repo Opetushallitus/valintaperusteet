@@ -30,7 +30,6 @@ public class HakijaryhmaDAOImpl extends AbstractJpaDAOImpl<Hakijaryhma, Long> im
     @Override
     public Hakijaryhma readByOid(String oid) {
         QHakijaryhma hakijaryhma = QHakijaryhma.hakijaryhma;
-        QValintatapajono jono = QValintatapajono.valintatapajono;
 
         return from(hakijaryhma).where(hakijaryhma.oid.eq(oid))
                 .leftJoin(hakijaryhma.jonot).fetch()
