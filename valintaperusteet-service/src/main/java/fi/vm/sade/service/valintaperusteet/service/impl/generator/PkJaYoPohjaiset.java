@@ -162,7 +162,7 @@ public class PkJaYoPohjaiset {
 
     public static Funktiokutsu luoKielikoeSuoritettuFunktiokutsu() {
         return GenericHelper.luoHaeTotuusarvo(
-                GenericHelper.luoValintaperusteViite(kielikoetunniste, false, Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO, "Kielikokeen tunniste", true), false);
+                GenericHelper.luoValintaperusteViite(kielikoetunniste, false, Valintaperustelahde.HAKUKOHTEEN_ARVO, "Kielikokeen tunniste", true), false);
     }
 
     /**
