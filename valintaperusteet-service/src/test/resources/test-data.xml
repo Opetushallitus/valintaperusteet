@@ -201,11 +201,13 @@
     <valintaperuste_viite id="600" version="0" lahde="HAKUKOHTEEN_SYOTETTAVA_ARVO" tunniste="hakukohteentunniste"
                           kuvaus="kuvaus"
                           on_pakollinen="true" epasuora_viittaus="true" funktiokutsu_id="600" indeksi="1"/>
-    <arvovalikonvertteriparametri id="600" version="0" minvalue="0.0" maxvalue="10.0" palauta_haettu_arvo="false"
+    <arvovalikonvertteriparametri id="600" version="0" minvalue="{{hakukohde.minimiarvo}}" maxvalue="10.0"
+                                  palauta_haettu_arvo="false"
                                   paluuarvo="1.0" funktiokutsu_id="600"/>
     <arvovalikonvertteriparametri id="601" version="0" minvalue="10.0" maxvalue="20.0" palauta_haettu_arvo="false"
                                   paluuarvo="2.0" funktiokutsu_id="600"/>
-    <arvovalikonvertteriparametri id="602" version="0" minvalue="20.0" maxvalue="30.0" palauta_haettu_arvo="false"
+    <arvovalikonvertteriparametri id="602" version="0" minvalue="20.0" maxvalue="{{hakukohde.maksimiarvo}}"
+                                  palauta_haettu_arvo="false"
                                   paluuarvo="3.0" funktiokutsu_id="600"/>
 
     <laskentakaava id="520" version="0" nimi="kaava520" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO"
@@ -618,6 +620,11 @@
     <hakukohteen_valintaperuste id="13" version="0" tunniste="hakukohteentunniste" arvo="valintaperuste2"
                                 hakukohde_viite_id="17"/>
 
+    <hakukohteen_valintaperuste id="14" version="0" tunniste="minimiarvo" arvo="0.0"
+                                hakukohde_viite_id="17"/>
+
+    <hakukohteen_valintaperuste id="15" version="0" tunniste="maksimiarvo" arvo="30.0"
+                                hakukohde_viite_id="17"/>
 
     <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="1" version="0" valintaryhma_id="1"
                     hakukohde_viite_id="[NULL]" oid="1" nimi="valinnanvaihe1" kuvaus="kuvaus1" aktiivinen="true"/>

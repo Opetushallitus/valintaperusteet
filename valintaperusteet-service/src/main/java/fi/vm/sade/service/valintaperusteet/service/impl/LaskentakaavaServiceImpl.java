@@ -18,6 +18,8 @@ import fi.vm.sade.service.valintaperusteet.service.exception.*;
 import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.UusiRekursio;
 import fi.vm.sade.service.valintaperusteet.service.impl.util.LaskentakaavaCache;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
@@ -26,10 +28,8 @@ import scala.concurrent.Await;
 import scala.concurrent.Future;
 import scala.concurrent.duration.Duration;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import java.math.BigDecimal;
 import java.util.*;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,7 +42,7 @@ import static fi.vm.sade.service.valintaperusteet.service.impl.actors.creators.S
 @Transactional
 public class LaskentakaavaServiceImpl implements LaskentakaavaService {
 
-    final static private Logger LOGGER = Logger.getLogger(LaskentakaavaService.class.getName());
+    final static private Logger LOGGER = LoggerFactory.getLogger(LaskentakaavaService.class.getName());
 
     @Autowired
     private GenericDAO genericDAO;
@@ -153,8 +153,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     @Override
     @Transactional
     public Laskentakaava read(Long key) {
-        Laskentakaava laskentakaava = haeMallinnettuKaava(key);
-        return laskentakaava;
+        return haeMallinnettuKaava(key);
     }
 
     @Override
@@ -371,11 +370,11 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     }
 
 
-    private Map<String, HakukohteenValintaperuste> hakukohteenValintaperusteetMap(List<HakukohteenValintaperuste> vps) {
-        Map<String, HakukohteenValintaperuste> map = new HashMap<String, HakukohteenValintaperuste>();
+    private Map<String, String> hakukohteenValintaperusteetMap(List<HakukohteenValintaperuste> vps) {
+        Map<String, String> map = new HashMap<String, String>();
 
         for (HakukohteenValintaperuste vp : vps) {
-            map.put(vp.getTunniste(), vp);
+            map.put(vp.getTunniste(), vp.getArvo());
         }
 
         return map;
@@ -384,7 +383,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     @Override
     public List<ValintaperusteDTO> findAvaimetForHakukohde(String hakukohdeOid) {
         List<Funktiokutsu> funktiokutsut = funktiokutsuDAO.findFunktiokutsuByHakukohdeOids(hakukohdeOid);
-        Map<String, HakukohteenValintaperuste> hakukohteenValintaperusteet = hakukohteenValintaperusteetMap(hakukohteenValintaperusteDAO.haeHakukohteenValintaperusteet(hakukohdeOid));
+        Map<String, String> hakukohteenValintaperusteet = hakukohteenValintaperusteetMap(hakukohteenValintaperusteDAO.haeHakukohteenValintaperusteet(hakukohdeOid));
 
         Map<String, ValintaperusteDTO> valintaperusteet = new HashMap<String, ValintaperusteDTO>();
 
@@ -419,46 +418,63 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
 
     private void haeValintaperusteetRekursiivisesti(Funktiokutsu funktiokutsu,
                                                     Map<String, ValintaperusteDTO> valintaperusteet,
-                                                    Map<String, HakukohteenValintaperuste> hakukohteenValintaperusteet) {
+                                                    Map<String, String> hakukohteenValintaperusteet) {
         for (ValintaperusteViite vp : funktiokutsu.getValintaperusteviitteet()) {
-            ValintaperusteDTO valintaperuste = new ValintaperusteDTO();
-            valintaperuste.setFunktiotyyppi(funktiokutsu.getFunktionimi().getTyyppi());
-            valintaperuste.setTunniste(vp.getTunniste());
-            valintaperuste.setKuvaus(vp.getKuvaus());
-            valintaperuste.setLahde(vp.getLahde());
-            valintaperuste.setOnPakollinen(vp.getOnPakollinen());
-            valintaperuste.setOsallistuminenTunniste(vp.getOsallistuminenTunniste());
+            if (Valintaperustelahde.SYOTETTAVA_ARVO.equals(vp.getLahde()) || Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO.equals(vp.getLahde())) {
 
-            if (vp.getEpasuoraViittaus() != null && vp.getEpasuoraViittaus() || Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO.equals(vp.getLahde())) {
-                if (Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO.equals(vp.getLahde())) {
-                    valintaperuste.setLahde(Valintaperustelahde.SYOTETTAVA_ARVO);
-                }
-                HakukohteenValintaperuste hakukohteenValintaperuste = hakukohteenValintaperusteet.get(vp.getTunniste());
-                valintaperuste.setTunniste(hakukohteenValintaperuste != null ? hakukohteenValintaperuste.getArvo() : null);
-            }
+                ValintaperusteDTO valintaperuste = new ValintaperusteDTO();
+                valintaperuste.setFunktiotyyppi(funktiokutsu.getFunktionimi().getTyyppi());
+                valintaperuste.setTunniste(vp.getTunniste());
+                valintaperuste.setKuvaus(vp.getKuvaus());
 
-            if (funktiokutsu.getArvokonvertteriparametrit() != null
-                    && funktiokutsu.getArvokonvertteriparametrit().size() > 0) {
-                List<String> arvot = new ArrayList<String>();
+                valintaperuste.setLahde(Valintaperustelahde.SYOTETTAVA_ARVO);
+                valintaperuste.setOnPakollinen(vp.getOnPakollinen());
+                valintaperuste.setOsallistuminenTunniste(vp.getOsallistuminenTunniste());
 
-                for (Arvokonvertteriparametri ap : funktiokutsu.getArvokonvertteriparametrit()) {
-                    arvot.add(ap.getArvo());
+                if (vp.getEpasuoraViittaus() != null && vp.getEpasuoraViittaus()) {
+                    valintaperuste.setTunniste(hakukohteenValintaperusteet.get(vp.getTunniste()));
                 }
 
-                valintaperuste.setArvot(arvot);
-            } else if (funktiokutsu.getArvovalikonvertteriparametrit() != null
-                    && funktiokutsu.getArvovalikonvertteriparametrit().size() > 0) {
-                List<Arvovalikonvertteriparametri> arvovalikonvertterit = new ArrayList<Arvovalikonvertteriparametri>(
-                        funktiokutsu.getArvovalikonvertteriparametrit());
+                if (funktiokutsu.getArvokonvertteriparametrit() != null
+                        && funktiokutsu.getArvokonvertteriparametrit().size() > 0) {
+                    List<String> arvot = new ArrayList<String>();
 
-                String min = arvovalikonvertterit.get(0).getMinValue().toString();
-                String max = arvovalikonvertterit.get(arvovalikonvertterit.size() - 1).getMaxValue().toString();
+                    for (Arvokonvertteriparametri ap : funktiokutsu.getArvokonvertteriparametrit()) {
+                        arvot.add(haeTunniste(ap.getArvo(), hakukohteenValintaperusteet));
+                    }
 
-                valintaperuste.setMin(min);
-                valintaperuste.setMax(max);
+                    valintaperuste.setArvot(arvot);
+                } else if (funktiokutsu.getArvovalikonvertteriparametrit() != null
+                        && funktiokutsu.getArvovalikonvertteriparametrit().size() > 0) {
+                    BigDecimal min = null;
+                    BigDecimal max = null;
+
+                    for (Arvovalikonvertteriparametri av : funktiokutsu.getArvovalikonvertteriparametrit()) {
+                        try {
+                            BigDecimal current = new BigDecimal(haeTunniste(av.getMinValue(), hakukohteenValintaperusteet));
+                            if (min == null || current.compareTo(min) < 0) {
+                                min = current;
+                            }
+                        } catch (NumberFormatException e) {
+                            LOGGER.error("Cannot convert min value {} to BigDecimal", av.getMaxValue());
+                        }
+
+                        try {
+                            BigDecimal current = new BigDecimal(haeTunniste(av.getMaxValue(), hakukohteenValintaperusteet));
+                            if (max == null || current.compareTo(max) > 0) {
+                                max = current;
+                            }
+                        } catch (NumberFormatException e) {
+                            LOGGER.error("Cannot convert max value {} to BigDecimal", av.getMaxValue());
+                        }
+                    }
+
+                    valintaperuste.setMin(min != null ? min.toString() : null);
+                    valintaperuste.setMax(max != null ? max.toString() : null);
+                }
+
+                valintaperusteet.put(valintaperuste.getTunniste(), valintaperuste);
             }
-
-            valintaperusteet.put(valintaperuste.getTunniste(), valintaperuste);
         }
 
         for (Funktioargumentti arg : funktiokutsu.getFunktioargumentit()) {
