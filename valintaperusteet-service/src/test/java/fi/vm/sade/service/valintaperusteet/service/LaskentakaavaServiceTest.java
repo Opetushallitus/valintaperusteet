@@ -20,6 +20,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -67,12 +68,17 @@ public class LaskentakaavaServiceTest {
     }
 
     @Test
-    public void testHaeKaava() {
+     public void testHaeKaava() {
         final Long id = 204L;
+        System.out.println("1");
         Laskentakaava laskentakaava = laskentakaavaService.read(id);
+        System.out.println("2");
         Funktiokutsu maksimi204L = laskentakaava.getFunktiokutsu();
+        System.out.println("3");
         assertEquals(Funktionimi.MAKSIMI, maksimi204L.getFunktionimi());
+        System.out.println("4");
         assertEquals(2, maksimi204L.getFunktioargumentit().size());
+        System.out.println("5");
         List<Funktioargumentti> maksimi204Largs = argsSorted(maksimi204L.getFunktioargumentit());
 
         Funktiokutsu summa203L = maksimi204Largs.get(0).getFunktiokutsuChild();

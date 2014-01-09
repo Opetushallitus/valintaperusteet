@@ -9,6 +9,7 @@
     ">
 
     <context:annotation-config/>
+
     <context:component-scan
             base-package="fi.vm.sade.service.valintaperusteet.service.impl"/>
 

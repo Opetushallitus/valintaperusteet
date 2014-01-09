@@ -15,6 +15,23 @@
     <context:annotation-config />
     <context:component-scan base-package="fi.vm.sade.service.valintaperusteet.dao.impl" />
 
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+          destroy-method="close">
+        <!-- Connection properties -->
+        <property name="driverClass" value="org.hsqldb.jdbcDriver" />
+        <property name="jdbcUrl" value="jdbc:hsqldb:mem:valintaperusteet" />
+        <property name="user" value="sa" />
+        <property name="password" value="" />
+        <!-- Pool properties -->
+        <property name="minPoolSize" value="2" />
+        <property name="maxPoolSize" value="20" />
+        <!--<property name="numHelperThreads" value="6" />-->
+        <property name="maxStatements" value="50" />
+        <property name="idleConnectionTestPeriod" value="3000" />
+        <!--<property name="unreturnedConnectionTimeout" value="3000" />-->
+        <property name="debugUnreturnedConnectionStackTraces" value="true" />
+    </bean>
+
     <!-- Add EntityManagerFactory (required by jta) support -->
     <bean id="emf" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="loadTimeWeaver">
@@ -26,6 +43,7 @@
             </map>
         </property>
         <property name="persistenceXmlLocation" value="classpath:META-INF/test-persistence.xml" />
+        <!--<property name="dataSource" ref="dataSource" />-->
     </bean>
     <!-- transaction manager -->
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
