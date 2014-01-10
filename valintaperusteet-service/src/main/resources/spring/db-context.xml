@@ -16,15 +16,6 @@
     <bean id="genericDAO" class="fi.vm.sade.generic.dao.GenericDAOImpl" />
     <context:component-scan base-package="fi.vm.sade.service.valintaperusteet.dao.impl" />
 
-    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
-          destroy-method="close">
-        <!-- Pool properties -->
-        <property name="minPoolSize" value="5" />
-        <property name="maxPoolSize" value="20" />
-        <property name="maxStatements" value="50" />
-        <property name="idleConnectionTestPeriod" value="3000" />
-    </bean>
-
     <!-- Add EntityManagerFactory (required by jta) support -->
     <bean id="emf" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" depends-on="flyway">
         <property name="loadTimeWeaver">
@@ -36,7 +27,6 @@
                 <entry key="hibernate.hbm2ddl.auto" value="${jpa.schemaUpdate}" />
             </map>
         </property>
-        <property name="dataSource" ref="dataSource" />
     </bean>
     <!-- transaction manager -->
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">

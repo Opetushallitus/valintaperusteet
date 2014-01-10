@@ -38,7 +38,6 @@
             <property name="hibernate.connection.url" value="jdbc:hsqldb:mem:valintaperusteet"/>
             <property name="hibernate.connection.username" value="sa"/>
             <property name="hibernate.connection.password" value=""/>
-
         </properties>
     </persistence-unit>
 </persistence>

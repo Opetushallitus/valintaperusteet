@@ -15,21 +15,28 @@
     <context:annotation-config />
     <context:component-scan base-package="fi.vm.sade.service.valintaperusteet.dao.impl" />
 
-    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
-          destroy-method="close">
-        <!-- Connection properties -->
+    <!-- Spring bean configuration. Tell Spring to bounce off BoneCP -->
+    <bean id="dataSource"
+          class="org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy">
+        <property name="targetDataSource">
+            <ref local="mainDataSource" />
+        </property>
+    </bean>
+
+    <!-- BoneCP configuration -->
+    <bean id="mainDataSource" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
         <property name="driverClass" value="org.hsqldb.jdbcDriver" />
         <property name="jdbcUrl" value="jdbc:hsqldb:mem:valintaperusteet" />
-        <property name="user" value="sa" />
-        <property name="password" value="" />
-        <!-- Pool properties -->
-        <property name="minPoolSize" value="2" />
-        <property name="maxPoolSize" value="20" />
-        <!--<property name="numHelperThreads" value="6" />-->
-        <property name="maxStatements" value="50" />
-        <property name="idleConnectionTestPeriod" value="3000" />
-        <!--<property name="unreturnedConnectionTimeout" value="3000" />-->
-        <property name="debugUnreturnedConnectionStackTraces" value="true" />
+        <property name="username" value="sa"/>
+        <property name="password" value=""/>
+        <property name="idleConnectionTestPeriod" value="60"/>
+        <property name="idleMaxAge" value="240"/>
+        <property name="maxConnectionsPerPartition" value="60"/>
+        <property name="minConnectionsPerPartition" value="20"/>
+        <property name="partitionCount" value="3"/>
+        <property name="acquireIncrement" value="10"/>
+        <property name="statementsCacheSize" value="50"/>
+        <property name="releaseHelperThreads" value="3"/>
     </bean>
 
     <!-- Add EntityManagerFactory (required by jta) support -->
@@ -37,13 +44,18 @@
         <property name="loadTimeWeaver">
             <bean class="org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver" />
         </property>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                <property name="databasePlatform" value="org.hibernate.dialect.HSQLDialect" />
+            </bean>
+        </property>
         <property name="jpaPropertyMap">
             <map>
                 <entry key="hibernate.show_sql" value="true" />
             </map>
         </property>
         <property name="persistenceXmlLocation" value="classpath:META-INF/test-persistence.xml" />
-        <!--<property name="dataSource" ref="dataSource" />-->
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <!-- transaction manager -->
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
