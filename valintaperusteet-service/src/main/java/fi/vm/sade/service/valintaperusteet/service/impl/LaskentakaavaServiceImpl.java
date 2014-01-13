@@ -68,14 +68,13 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     @Autowired
     private ApplicationContext applicationContext;
 
-    private final ActorSystem system = ActorSystem.create("actorSystem");
-
 
     @Transactional(readOnly = true)
     public Funktiokutsu haeFunktiokutsuRekursiivisesti(final Long id, final boolean laajennaAlakaavat, final Set<Long> laskentakaavaIds)
             throws FunktiokutsuMuodostaaSilmukanException {
 
         // Akka toteutus
+        ActorSystem system = ActorSystem.create("actorSystem");
         SpringExtProvider.get(system).initialize(applicationContext);
         Timeout timeout = new Timeout(Duration.create(30, "seconds"));
 
@@ -86,10 +85,10 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
 
         try {
             Funktiokutsu funktiokutsu = (Funktiokutsu)Await.result(future, timeout.duration());
-            system.stop(master);
+            system.shutdown();
             return funktiokutsu;
         } catch (Exception e) {
-            system.stop(master);
+            system.shutdown();
             if (e instanceof FunktiokutsuMuodostaaSilmukanException) {
                 FunktiokutsuMuodostaaSilmukanException exp = (FunktiokutsuMuodostaaSilmukanException)e;
                 throw new FunktiokutsuMuodostaaSilmukanException(exp.getMessage(), exp.getFunktiokutsuId(), exp.getFunktionimi(),exp.getLaskentakaavaId());

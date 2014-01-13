@@ -95,6 +95,7 @@ public class HaeFunktiokutsuRekursiivisestiActorBean extends UntypedActor {
                 } else {
                     actorParent.tell(original, getSelf());
                 }
+                getContext().stop(self());
             }
         } else if(message instanceof UusiRekursio) {
             actorParent = sender();
@@ -149,6 +150,7 @@ public class HaeFunktiokutsuRekursiivisestiActorBean extends UntypedActor {
                 }
                 actorParent.tell(new Status.Failure(ex), ActorRef.noSender());
             }
+            getContext().stop(self());
         } else {
             unhandled(message);
             getContext().stop(getSelf());
