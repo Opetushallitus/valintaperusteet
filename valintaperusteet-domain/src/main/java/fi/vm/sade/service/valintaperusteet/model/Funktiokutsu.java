@@ -31,7 +31,7 @@ public class Funktiokutsu extends BaseEntity implements FunktionArgumentti {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "funktiokutsu", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private Set<Syoteparametri> syoteparametrit = new HashSet<Syoteparametri>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     @OrderBy("indeksi")
     private Set<Funktioargumentti> funktioargumentit = new TreeSet<Funktioargumentti>();
 

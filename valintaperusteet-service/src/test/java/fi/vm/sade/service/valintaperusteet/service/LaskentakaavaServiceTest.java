@@ -11,6 +11,7 @@ import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuMuodostaaSilmukanException;
 import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuaEiVoidaKayttaaValintakoelaskennassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaMuodostaaSilmukanException;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,8 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.*;
 
 import static junit.framework.Assert.*;
@@ -49,6 +52,8 @@ public class LaskentakaavaServiceTest {
     @Autowired
     private ValintaperusteetModelMapper modelMapper;
 
+
+
     private final static FunktioArgumenttiComparator comparator = new FunktioArgumenttiComparator();
 
     private static class FunktioArgumenttiComparator implements Comparator<Funktioargumentti> {
@@ -66,8 +71,22 @@ public class LaskentakaavaServiceTest {
         return args;
     }
 
+    @Before
+    public void initialize() {
+        try {
+            Class.forName("org.hsqldb.jdbcDriver");
+            Connection conn = DriverManager.
+                getConnection("jdbc:hsqldb:mem:valintaperusteet", "sa", "");
+            conn.createStatement().executeUpdate("SET DATABASE TRANSACTION CONTROL MVCC");
+            conn.commit();
+            conn.close();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     @Test
-    public void testHaeKaava() {
+     public void testHaeKaava() {
         final Long id = 204L;
         Laskentakaava laskentakaava = laskentakaavaService.read(id);
         Funktiokutsu maksimi204L = laskentakaava.getFunktiokutsu();
@@ -268,7 +287,8 @@ public class LaskentakaavaServiceTest {
             assertNotNull(funktiokutsuDAO.getFunktiokutsu(506L));
             assertNotNull(funktiokutsuDAO.getFunktiokutsu(7L));
             assertNotNull(funktiokutsuDAO.getFunktiokutsu(8L));
-            paivitetty = laskentakaavaService.update(laskentakaava.getId(), modelMapper.map(laskentakaava, LaskentakaavaCreateDTO.class));
+            LaskentakaavaCreateDTO dto = modelMapper.map(laskentakaava, LaskentakaavaCreateDTO.class);
+            paivitetty = laskentakaavaService.update(laskentakaava.getId(), dto);
             assertNull(funktiokutsuDAO.getFunktiokutsu(502L));
             assertNull(funktiokutsuDAO.getFunktiokutsu(506L));
             assertNotNull(funktiokutsuDAO.getFunktiokutsu(7L));
