@@ -94,7 +94,6 @@ public class HaeFunktiokutsuRekursiivisestiActorBean extends UntypedActor {
                     par.tell(original, getSelf());
                 } else {
                     actorParent.tell(original, getSelf());
-                    getContext().stop(getSelf());
                 }
             }
         } else if(message instanceof UusiRekursio) {
@@ -137,7 +136,6 @@ public class HaeFunktiokutsuRekursiivisestiActorBean extends UntypedActor {
             }
 
         } else if(message instanceof Exception) {
-            ((Exception) message).printStackTrace();
             ActorRef par = getContext().parent();
             if(par.equals(actorParent)) {
                 par.tell(message, ActorRef.noSender());
@@ -150,7 +148,6 @@ public class HaeFunktiokutsuRekursiivisestiActorBean extends UntypedActor {
                     ex = new FunktiokutsuEiOleOlemassaException("Funktiokutsu (" + id + ") ei ole olemassa", id);
                 }
                 actorParent.tell(new Status.Failure(ex), ActorRef.noSender());
-                getContext().stop(getSelf());
             }
         } else {
             unhandled(message);

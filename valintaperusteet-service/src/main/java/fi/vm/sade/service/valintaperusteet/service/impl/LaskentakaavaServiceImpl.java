@@ -75,55 +75,55 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     public Funktiokutsu haeFunktiokutsuRekursiivisesti(final Long id, final boolean laajennaAlakaavat, final Set<Long> laskentakaavaIds)
             throws FunktiokutsuMuodostaaSilmukanException {
 
-        // Pientä säätöä vielä Akkan kanssa
-//        SpringExtProvider.get(system).initialize(applicationContext);
-//        Timeout timeout = new Timeout(Duration.create(30, "seconds"));
-//
-//        ActorRef master = system.actorOf(SpringExtProvider.get(system).props("HaeFunktiokutsuRekursiivisestiActorBean"), UUID.randomUUID().toString());
-//
-//
-//        Future<Object> future = Patterns.ask(master, new UusiRekursio(id, laajennaAlakaavat, laskentakaavaIds), timeout);
-//
-//        try {
-//            Funktiokutsu funktiokutsu = (Funktiokutsu)Await.result(future, timeout.duration());
-//            system.stop(master);
-//            return funktiokutsu;
-//        } catch (Exception e) {
-//            system.stop(master);
-//            if (e instanceof FunktiokutsuMuodostaaSilmukanException) {
-//                FunktiokutsuMuodostaaSilmukanException exp = (FunktiokutsuMuodostaaSilmukanException)e;
-//                throw new FunktiokutsuMuodostaaSilmukanException(exp.getMessage(), exp.getFunktiokutsuId(), exp.getFunktionimi(),exp.getLaskentakaavaId());
-//            } else {
-//                throw new FunktiokutsuEiOleOlemassaException("Funktiokutsu (" + id + ") ei ole olemassa", id);
-//            }
-//
-//        }
+        // Akka toteutus
+        SpringExtProvider.get(system).initialize(applicationContext);
+        Timeout timeout = new Timeout(Duration.create(30, "seconds"));
+
+        ActorRef master = system.actorOf(SpringExtProvider.get(system).props("HaeFunktiokutsuRekursiivisestiActorBean"), UUID.randomUUID().toString());
 
 
-        Funktiokutsu funktiokutsu = funktiokutsuDAO.getFunktiokutsu(id);
-        if (funktiokutsu == null) {
-            throw new FunktiokutsuEiOleOlemassaException("Funktiokutsu (" + id + ") ei ole olemassa", id);
-        }
+        Future<Object> future = Patterns.ask(master, new UusiRekursio(id, laajennaAlakaavat, laskentakaavaIds), timeout);
 
-        for (Funktioargumentti fa : funktiokutsu.getFunktioargumentit()) {
-            if (fa.getFunktiokutsuChild() != null) {
-                haeFunktiokutsuRekursiivisesti(fa.getFunktiokutsuChild().getId(), laajennaAlakaavat, laskentakaavaIds);
-            } else if (laajennaAlakaavat && fa.getLaskentakaavaChild() != null) {
-                if (laskentakaavaIds.contains(fa.getLaskentakaavaChild().getId())) {
-                    throw new FunktiokutsuMuodostaaSilmukanException("Funktiokutsu " + id + " muodostaa silmukan " +
-                            "laskentakaavaan " + fa.getLaskentakaavaChild().getId(), id,
-                            funktiokutsu.getFunktionimi(), fa.getLaskentakaavaChild().getId());
-                }
-                Set<Long> newLaskentakaavaIds = new HashSet<Long>(laskentakaavaIds);
-                newLaskentakaavaIds.add(fa.getLaskentakaavaChild().getId());
-
-                Funktiokutsu fk = haeFunktiokutsuRekursiivisesti(fa.getLaskentakaavaChild().getFunktiokutsu().getId(),
-                        laajennaAlakaavat, newLaskentakaavaIds);
-                fa.setLaajennettuKaava(fk);
+        try {
+            Funktiokutsu funktiokutsu = (Funktiokutsu)Await.result(future, timeout.duration());
+            system.stop(master);
+            return funktiokutsu;
+        } catch (Exception e) {
+            system.stop(master);
+            if (e instanceof FunktiokutsuMuodostaaSilmukanException) {
+                FunktiokutsuMuodostaaSilmukanException exp = (FunktiokutsuMuodostaaSilmukanException)e;
+                throw new FunktiokutsuMuodostaaSilmukanException(exp.getMessage(), exp.getFunktiokutsuId(), exp.getFunktionimi(),exp.getLaskentakaavaId());
+            } else {
+                throw new FunktiokutsuEiOleOlemassaException("Funktiokutsu (" + id + ") ei ole olemassa", id);
             }
+
         }
 
-        return funktiokutsu;
+
+//        Funktiokutsu funktiokutsu = funktiokutsuDAO.getFunktiokutsu(id);
+//        if (funktiokutsu == null) {
+//            throw new FunktiokutsuEiOleOlemassaException("Funktiokutsu (" + id + ") ei ole olemassa", id);
+//        }
+//
+//        for (Funktioargumentti fa : funktiokutsu.getFunktioargumentit()) {
+//            if (fa.getFunktiokutsuChild() != null) {
+//                haeFunktiokutsuRekursiivisesti(fa.getFunktiokutsuChild().getId(), laajennaAlakaavat, laskentakaavaIds);
+//            } else if (laajennaAlakaavat && fa.getLaskentakaavaChild() != null) {
+//                if (laskentakaavaIds.contains(fa.getLaskentakaavaChild().getId())) {
+//                    throw new FunktiokutsuMuodostaaSilmukanException("Funktiokutsu " + id + " muodostaa silmukan " +
+//                            "laskentakaavaan " + fa.getLaskentakaavaChild().getId(), id,
+//                            funktiokutsu.getFunktionimi(), fa.getLaskentakaavaChild().getId());
+//                }
+//                Set<Long> newLaskentakaavaIds = new HashSet<Long>(laskentakaavaIds);
+//                newLaskentakaavaIds.add(fa.getLaskentakaavaChild().getId());
+//
+//                Funktiokutsu fk = haeFunktiokutsuRekursiivisesti(fa.getLaskentakaavaChild().getFunktiokutsu().getId(),
+//                        laajennaAlakaavat, newLaskentakaavaIds);
+//                fa.setLaajennettuKaava(fk);
+//            }
+//        }
+//
+//        return funktiokutsu;
 
     }
 

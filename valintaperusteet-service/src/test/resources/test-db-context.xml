@@ -29,10 +29,10 @@
         <property name="jdbcUrl" value="jdbc:hsqldb:mem:valintaperusteet" />
         <property name="username" value="sa"/>
         <property name="password" value=""/>
-        <property name="idleConnectionTestPeriod" value="60"/>
-        <property name="idleMaxAge" value="240"/>
-        <property name="maxConnectionsPerPartition" value="60"/>
-        <property name="minConnectionsPerPartition" value="20"/>
+        <property name="idleConnectionTestPeriod" value="3000"/>
+        <property name="idleMaxAge" value="3000"/>
+        <property name="maxConnectionsPerPartition" value="100"/>
+        <property name="minConnectionsPerPartition" value="2"/>
         <property name="partitionCount" value="3"/>
         <property name="acquireIncrement" value="10"/>
         <property name="statementsCacheSize" value="50"/>
@@ -43,11 +43,6 @@
     <bean id="emf" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="loadTimeWeaver">
             <bean class="org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver" />
-        </property>
-        <property name="jpaVendorAdapter">
-            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
-                <property name="databasePlatform" value="org.hibernate.dialect.HSQLDialect" />
-            </bean>
         </property>
         <property name="jpaPropertyMap">
             <map>
