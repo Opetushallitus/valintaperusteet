@@ -2056,16 +2056,16 @@ class LaskentaIntegraatioTest extends FunSuite {
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val tulos = Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, List(), lasku)
 
-    assert(tulos.getTulokset.contains("painotettu"))
-    val painotettu = tulos.getTulokset.get("painotettu")
+    assert(tulos.getFunktioTulokset.contains("painotettu"))
+    val painotettu = tulos.getFunktioTulokset.get("painotettu")
     assert(painotettu.getArvo.equals("18.5714"))
 
-    assert(tulos.getTulokset.contains("tunniste1"))
-    val tunniste1 = tulos.getTulokset.get("tunniste1")
+    assert(tulos.getFunktioTulokset.contains("tunniste1"))
+    val tunniste1 = tulos.getFunktioTulokset.get("tunniste1")
     assert(tunniste1.getArvo.equals("10.0"))
 
-    assert(tulos.getTulokset.contains("tunniste2"))
-    val tunniste2 = tulos.getTulokset.get("tunniste2")
+    assert(tulos.getFunktioTulokset.contains("tunniste2"))
+    val tunniste2 = tulos.getFunktioTulokset.get("tunniste2")
     assert(tunniste2.getArvo.equals("30.0"))
 
     val lista =
@@ -2094,12 +2094,12 @@ class LaskentaIntegraatioTest extends FunSuite {
     val laskut = Laskentadomainkonvertteri.muodostaTotuusarvolasku(lista)
     val tulokset = Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, List(), laskut)
 
-    assert(tulokset.getTulokset.contains("totuusarvoTrue"))
-    val totuusarvoTrue = tulokset.getTulokset.get("totuusarvoTrue")
+    assert(tulokset.getFunktioTulokset.contains("totuusarvoTrue"))
+    val totuusarvoTrue = tulokset.getFunktioTulokset.get("totuusarvoTrue")
     assert(totuusarvoTrue.getArvo.equals("true"))
 
-    assert(tulokset.getTulokset.contains("totuusarvoFalse"))
-    val totuusarvoFalse = tulokset.getTulokset.get("totuusarvoFalse")
+    assert(tulokset.getFunktioTulokset.contains("totuusarvoFalse"))
+    val totuusarvoFalse = tulokset.getFunktioTulokset.get("totuusarvoFalse")
     assert(totuusarvoFalse.getArvo.equals("false"))
 
   }
