@@ -20,6 +20,21 @@ public class Funktiokutsu extends BaseEntity implements FunktionArgumentti {
     @Column(name = "funktionimi", nullable = false)
     private Funktionimi funktionimi;
 
+    @Column(name = "tulos_tunniste")
+    private String tulosTunniste;
+
+    @Column(name = "tulos_teksti_fi")
+    private String tulosTekstiFi;
+
+    @Column(name = "tulos_teksti_sv")
+    private String tulosTekstiSv;
+
+    @Column(name = "tulos_teksti_en")
+    private String tulosTekstiEn;
+
+    @Column(name = "tallenna_tulos", nullable = false)
+    private Boolean tallennaTulos = false;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "funktiokutsu", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private Set<Arvokonvertteriparametri> arvokonvertteriparametrit = new HashSet<Arvokonvertteriparametri>();
 
@@ -102,5 +117,49 @@ public class Funktiokutsu extends BaseEntity implements FunktionArgumentti {
 
     public void setValidointivirheet(List<Abstraktivalidointivirhe> validointivirheet) {
         this.validointivirheet = validointivirheet;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public String getTulosTunniste() {
+        return tulosTunniste;
+    }
+
+    public void setTulosTunniste(String tulosTunniste) {
+        this.tulosTunniste = tulosTunniste;
+    }
+
+    public String getTulosTekstiFi() {
+        return tulosTekstiFi;
+    }
+
+    public void setTulosTekstiFi(String tulosTekstiFi) {
+        this.tulosTekstiFi = tulosTekstiFi;
+    }
+
+    public String getTulosTekstiSv() {
+        return tulosTekstiSv;
+    }
+
+    public void setTulosTekstiSv(String tulosTekstiSv) {
+        this.tulosTekstiSv = tulosTekstiSv;
+    }
+
+    public String getTulosTekstiEn() {
+        return tulosTekstiEn;
+    }
+
+    public void setTulosTekstiEn(String tulosTekstiEn) {
+        this.tulosTekstiEn = tulosTekstiEn;
+    }
+
+    public Boolean getTallennaTulos() {
+        return tallennaTulos;
+    }
+
+    public void setTallennaTulos(Boolean tallennaTulos) {
+        this.tallennaTulos = tallennaTulos;
     }
 }

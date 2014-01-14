@@ -66,6 +66,9 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     private ValintaperusteetModelMapper modelMapper;
 
     @Autowired
+    private LaskentakaavaCache laskentakaavaCache;
+
+    @Autowired
     private ApplicationContext applicationContext;
 
 
@@ -157,6 +160,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
 
     @Override
     public Laskentakaava update(Long id, LaskentakaavaCreateDTO incoming) {
+        laskentakaavaCache.clear();
         try {
             Laskentakaava entity = modelMapper.map(incoming, Laskentakaava.class);
             asetaNullitOletusarvoiksi(entity.getFunktiokutsu());
@@ -261,6 +265,12 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
         }
 
         managed.setFunktionimi(incoming.getFunktionimi());
+        managed.setTallennaTulos(incoming.getTallennaTulos());
+        managed.setTulosTunniste(incoming.getTulosTunniste());
+        managed.setTulosTekstiEn(incoming.getTulosTekstiEn());
+        managed.setTulosTekstiFi(incoming.getTulosTekstiFi());
+        managed.setTulosTekstiSv(incoming.getTulosTekstiSv());
+
 
         for (Funktioargumentti arg : incoming.getFunktioargumentit()) {
             Funktioargumentti newArg = new Funktioargumentti();
@@ -334,7 +344,8 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     }
 
     @Override
-    public Laskentakaava insert(Laskentakaava laskentakaava, String hakukohdeOid, String valintaryhmaOid) {
+    public Laskentakaava    insert(Laskentakaava laskentakaava, String hakukohdeOid, String valintaryhmaOid) {
+        laskentakaavaCache.clear();
         try {
             asetaNullitOletusarvoiksi(laskentakaava.getFunktiokutsu());
 
@@ -642,6 +653,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
 
     @Override
     public Laskentakaava updateMetadata(Long id, LaskentakaavaCreateDTO laskentakaava) {
+        laskentakaavaCache.clear();
         Laskentakaava managed = laskentakaavaDAO.read(id);
         managed.setKuvaus(laskentakaava.getKuvaus());
         managed.setNimi(laskentakaava.getNimi());
@@ -703,9 +715,6 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
                     e, id, e.getFunktiokutsuId(), e.getLaskentakaavaId());
         }
     }
-
-    @Autowired
-    private LaskentakaavaCache laskentakaavaCache;
 
     private void validoiFunktiokutsuMoodiaVasten(final Funktiokutsu funktiokutsu, final Laskentamoodi laskentamoodi) {
         if (funktiokutsu != null) {

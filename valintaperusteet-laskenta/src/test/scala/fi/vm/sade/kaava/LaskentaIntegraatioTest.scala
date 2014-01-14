@@ -2003,4 +2003,105 @@ class LaskentaIntegraatioTest extends FunSuite {
     )
 
   }
+
+  test("tallennaTulos") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.PAINOTETTUKESKIARVO,
+      funktioargumentit = List(
+        Funktiokutsu(// Painokerroin 1
+          nimi = Funktionimi.LUKUARVO,
+          syoteparametrit = List(
+            Syoteparametri(
+              avain = "luku",
+              arvo = "2.0"
+            )
+          )
+        ),
+        Funktiokutsu(// Painotettava 1
+          nimi = Funktionimi.LUKUARVO,
+          syoteparametrit = List(
+            Syoteparametri(
+              avain = "luku",
+              arvo = "10.0"
+            )
+          ),
+          tulosTunniste = "tunniste1",
+          tallennaTulos = true
+        ),
+        Funktiokutsu(// Painokerroin 2
+          nimi = Funktionimi.LUKUARVO,
+          syoteparametrit = List(
+            Syoteparametri(
+              avain = "luku",
+              arvo = "1.5"
+            )
+          )
+        ),
+        Funktiokutsu(// Painotettava 2
+          nimi = Funktionimi.LUKUARVO,
+          syoteparametrit = List(
+            Syoteparametri(
+              avain = "luku",
+              arvo = "30.0"
+            )
+          ),
+          tulosTunniste = "tunniste2",
+          tallennaTulos = true
+        )
+      ),
+      tulosTunniste = "painotettu",
+      tallennaTulos = true
+    )
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val tulos = Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, List(), lasku)
+
+    assert(tulos.getTulokset.contains("painotettu"))
+    val painotettu = tulos.getTulokset.get("painotettu")
+    assert(painotettu.getArvo.equals("18.5714"))
+
+    assert(tulos.getTulokset.contains("tunniste1"))
+    val tunniste1 = tulos.getTulokset.get("tunniste1")
+    assert(tunniste1.getArvo.equals("10.0"))
+
+    assert(tulos.getTulokset.contains("tunniste2"))
+    val tunniste2 = tulos.getTulokset.get("tunniste2")
+    assert(tunniste2.getArvo.equals("30.0"))
+
+    val lista =
+      Funktiokutsu(
+        nimi = Funktionimi.JA,
+        funktioargumentit = List(
+          Funktiokutsu(
+            nimi = Funktionimi.TOTUUSARVO,
+            tulosTunniste = "totuusarvoFalse",
+            tallennaTulos = true,
+            syoteparametrit = List(
+              Syoteparametri("totuusarvo", "false")
+            )
+          ),
+          Funktiokutsu(
+            nimi = Funktionimi.TOTUUSARVO,
+            tulosTunniste = "totuusarvoTrue",
+            tallennaTulos = true,
+            syoteparametrit = List(
+              Syoteparametri("totuusarvo", "true")
+            )
+          )
+        )
+      )
+
+    val laskut = Laskentadomainkonvertteri.muodostaTotuusarvolasku(lista)
+    val tulokset = Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, List(), laskut)
+
+    assert(tulokset.getTulokset.contains("totuusarvoTrue"))
+    val totuusarvoTrue = tulokset.getTulokset.get("totuusarvoTrue")
+    assert(totuusarvoTrue.getArvo.equals("true"))
+
+    assert(tulokset.getTulokset.contains("totuusarvoFalse"))
+    val totuusarvoFalse = tulokset.getTulokset.get("totuusarvoFalse")
+    assert(totuusarvoFalse.getArvo.equals("false"))
+
+  }
+
 }

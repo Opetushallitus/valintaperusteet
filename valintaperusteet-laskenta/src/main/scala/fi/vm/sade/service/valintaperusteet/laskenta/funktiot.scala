@@ -12,6 +12,7 @@ import scala.math.BigDecimal
 
 trait Funktio[T] {
   val oid: String
+  val tulosTunniste: String
 }
 
 trait Lukuarvofunktio extends Funktio[BigDecimal]

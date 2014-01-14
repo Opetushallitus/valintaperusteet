@@ -1,39 +1,39 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <dataset>
     <!-- Valintaryhmä pitää luoda ensimmäisenä -->
-    <valintaryhma id="1" version="0" oid="oid1" nimi="Valintaryhma 1" parent_id="[NULL]"/>
+    <valintaryhma id="1" version="0" oid="oid1" nimi="Valintaryhma 1" parent_id="[NULL]" />
 
-    <funktiokutsu id="1" version="0" funktionimi="LUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="1" version="0" funktionimi="LUKUARVO"/>
     <syoteparametri id="1" version="0" avain="luku" arvo="5.0" funktiokutsu_id="1"/>
 
-    <funktiokutsu id="2" version="0" funktionimi="LUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="2" version="0" funktionimi="LUKUARVO"/>
     <syoteparametri id="2" version="0" avain="luku" arvo="10.0" funktiokutsu_id="2"/>
 
-    <funktiokutsu id="3" version="0" funktionimi="LUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="3" version="0" funktionimi="LUKUARVO"/>
     <syoteparametri id="3" version="0" avain="luku" arvo="25.0" funktiokutsu_id="3"/>
 
-    <funktiokutsu id="4" version="0" funktionimi="LUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="4" version="0" funktionimi="LUKUARVO"/>
     <syoteparametri id="4" version="0" avain="luku" arvo="2.0" funktiokutsu_id="4"/>
 
-    <funktiokutsu id="5" version="0" funktionimi="LUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="5" version="0" funktionimi="LUKUARVO"/>
     <syoteparametri id="5" version="0" avain="luku" arvo="50.0" funktiokutsu_id="5"/>
 
-    <funktiokutsu id="6" version="0" funktionimi="LUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="6" version="0" funktionimi="LUKUARVO"/>
     <syoteparametri id="6" version="0" avain="luku" arvo="100.0" funktiokutsu_id="6"/>
 
-    <funktiokutsu id="7" version="0" funktionimi="LUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="7" version="0" funktionimi="LUKUARVO"/>
     <syoteparametri id="7" version="0" avain="luku" arvo="7.0" funktiokutsu_id="7"/>
 
-    <funktiokutsu id="8" version="0" funktionimi="LUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="8" version="0" funktionimi="LUKUARVO"/>
     <syoteparametri id="8" version="0" avain="luku" arvo="8.0" funktiokutsu_id="8"/>
 
-    <funktiokutsu id="9" version="0" funktionimi="LUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="9" version="0" funktionimi="LUKUARVO"/>
     <syoteparametri id="9" version="0" avain="luku" arvo="9.0" funktiokutsu_id="9"/>
 
-    <funktiokutsu id="101" version="0" funktionimi="TOTUUSARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="101" version="0" funktionimi="TOTUUSARVO"/>
     <syoteparametri id="101" version="0" avain="totuusarvo" arvo="true" funktiokutsu_id="101"/>
 
-    <funktiokutsu id="102" version="0" funktionimi="TOTUUSARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="102" version="0" funktionimi="TOTUUSARVO"/>
     <syoteparametri id="102" version="0" avain="totuusarvo" arvo="true" funktiokutsu_id="102"/>
 
     <laskentakaava id="101" version="0" on_luonnos="false" tyyppi="TOTUUSARVOFUNKTIO" nimi="kaava101"
@@ -41,40 +41,40 @@
     <laskentakaava id="102" version="0" on_luonnos="false" tyyppi="TOTUUSARVOFUNKTIO" nimi="kaava102"
                    funktiokutsu_id="102"/>
 
-    <funktiokutsu id="201" version="0" funktionimi="SUMMA"/>
+    <funktiokutsu tallenna_tulos="false" id="201" version="0" funktionimi="SUMMA"/>
     <funktioargumentti id="201" version="0" funktiokutsuparent_id="201" laskentakaavachild_id="[NULL]"
                        funktiokutsuchild_id="1" indeksi="1"/>
     <funktioargumentti id="202" version="0" funktiokutsuparent_id="201" funktiokutsuchild_id="2" indeksi="2"/>
     <funktioargumentti id="210" version="0" funktiokutsuparent_id="201" funktiokutsuchild_id="405" indeksi="3"/>
 
-    <funktiokutsu id="202" version="0" funktionimi="TULO"/>
+    <funktiokutsu tallenna_tulos="false" id="202" version="0" funktionimi="TULO"/>
     <funktioargumentti id="203" version="0" funktiokutsuparent_id="202" funktiokutsuchild_id="3" indeksi="1"/>
     <funktioargumentti id="204" version="0" funktiokutsuparent_id="202" funktiokutsuchild_id="4" indeksi="2"/>
 
-    <funktiokutsu id="203" version="0" funktionimi="SUMMA"/>
+    <funktiokutsu tallenna_tulos="false" id="203" version="0" funktionimi="SUMMA"/>
     <funktioargumentti id="205" version="0" funktiokutsuparent_id="203" funktiokutsuchild_id="201" indeksi="1"/>
     <funktioargumentti id="206" version="0" funktiokutsuparent_id="203" funktiokutsuchild_id="202" indeksi="2"/>
     <funktioargumentti id="207" version="0" funktiokutsuparent_id="203" funktiokutsuchild_id="5" indeksi="3"/>
 
-    <funktiokutsu id="204" version="0" funktionimi="MAKSIMI"/>
+    <funktiokutsu tallenna_tulos="false" id="204" version="0" funktionimi="MAKSIMI"/>
     <funktioargumentti id="208" version="0" funktiokutsuparent_id="204" funktiokutsuchild_id="203" indeksi="1"/>
     <funktioargumentti id="209" version="0" funktiokutsuparent_id="204" funktiokutsuchild_id="6" indeksi="2"/>
     <laskentakaava id="204" version="0" nimi="kaava204" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO"
                    funktiokutsu_id="204"/>
 
-    <funktiokutsu id="205" version="0" funktionimi="SUMMA"/>
+    <funktiokutsu tallenna_tulos="false" id="205" version="0" funktionimi="SUMMA"/>
     <funktioargumentti id="211" version="0" funktiokutsuparent_id="205" funktiokutsuchild_id="201" indeksi="1"/>
     <funktioargumentti id="212" version="0" funktiokutsuparent_id="205" funktiokutsuchild_id="202" indeksi="2"/>
     <funktioargumentti id="213" version="0" funktiokutsuparent_id="205" funktiokutsuchild_id="5" indeksi="3"/>
 
-    <funktiokutsu id="206" version="0" funktionimi="NIMETTYLUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="206" version="0" funktionimi="NIMETTYLUKUARVO"/>
     <funktioargumentti id="214" version="0" funktiokutsuparent_id="206" funktiokutsuchild_id="205" indeksi="1"/>
     <syoteparametri id="206" version="0" avain="nimi" arvo="summafunktio206" funktiokutsu_id="206"/>
 
     <laskentakaava id="206" version="0" nimi="kaava206" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO"
                    funktiokutsu_id="206"/>
 
-    <funktiokutsu id="301" version="0" funktionimi="KONVERTOILUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="301" version="0" funktionimi="KONVERTOILUKUARVO"/>
     <funktioargumentti id="301" version="0" funktiokutsuparent_id="301" funktiokutsuchild_id="1" indeksi="1"/>
     <arvokonvertteriparametri id="301" version="0" paluuarvo="10.0" arvo="4.0" hylkaysperuste="false"
                               funktiokutsu_id="301"/>
@@ -83,7 +83,7 @@
     <arvokonvertteriparametri id="303" version="0" paluuarvo="30.0" arvo="6.0" hylkaysperuste="false"
                               funktiokutsu_id="301"/>
 
-    <funktiokutsu id="302" version="0" funktionimi="KONVERTOILUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="302" version="0" funktionimi="KONVERTOILUKUARVO"/>
     <funktioargumentti id="302" version="0" funktiokutsuparent_id="302" funktiokutsuchild_id="1" indeksi="1"/>
     <arvovalikonvertteriparametri id="305" version="0" minvalue="1.0" maxvalue="3.0" paluuarvo="50.0"
                                   palauta_haettu_arvo="false" funktiokutsu_id="302"/>
@@ -92,42 +92,42 @@
     <arvovalikonvertteriparametri id="306" version="0" minvalue="5.0" maxvalue="7.0" paluuarvo="60.0"
                                   palauta_haettu_arvo="false" funktiokutsu_id="302"/>
 
-    <funktiokutsu id="401" version="0" funktionimi="KONVERTOILUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="401" version="0" funktionimi="KONVERTOILUKUARVO"/>
     <funktioargumentti id="401" version="0" funktiokutsuparent_id="401" funktiokutsuchild_id="403" indeksi="1"/>
     <arvovalikonvertteriparametri id="401" version="0" minvalue="1.0" maxvalue="3.0" paluuarvo="50.0"
                                   palauta_haettu_arvo="false" funktiokutsu_id="401"/>
 
-    <funktiokutsu id="402" version="0" funktionimi="KONVERTOILUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="402" version="0" funktionimi="KONVERTOILUKUARVO"/>
     <funktioargumentti id="402" version="0" funktiokutsuparent_id="402" funktiokutsuchild_id="404" indeksi="1"/>
     <arvovalikonvertteriparametri id="402" version="0" minvalue="1.0" maxvalue="3.0" paluuarvo="50.0"
                                   palauta_haettu_arvo="false" funktiokutsu_id="402"/>
 
-    <funktiokutsu id="403" version="0" funktionimi="HAELUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="403" version="0" funktionimi="HAELUKUARVO"/>
     <valintaperuste_viite id="403" version="0" tunniste="t1" kuvaus="t1" lahde="SYOTETTAVA_ARVO" funktiokutsu_id="403"
                           on_pakollinen="true" indeksi="1"/>
 
-    <funktiokutsu id="404" version="0" funktionimi="HAELUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="404" version="0" funktionimi="HAELUKUARVO"/>
     <valintaperuste_viite id="404" version="0" tunniste="t2" kuvaus="t1" lahde="SYOTETTAVA_ARVO" funktiokutsu_id="404"
                           on_pakollinen="true" indeksi="1"/>
 
-    <funktiokutsu id="405" version="0" funktionimi="HAELUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="405" version="0" funktionimi="HAELUKUARVO"/>
     <valintaperuste_viite id="405" version="0" tunniste="aidinkieli" kuvaus="aidinkieli" lahde="SYOTETTAVA_ARVO"
                           funktiokutsu_id="405" on_pakollinen="true" indeksi="1"/>
 
-    <funktiokutsu id="506" version="0" funktionimi="SUMMA"/>
+    <funktiokutsu tallenna_tulos="false" id="506" version="0" funktionimi="SUMMA"/>
     <funktioargumentti id="506" version="0" funktiokutsuparent_id="506" funktiokutsuchild_id="7" indeksi="1"/>
     <funktioargumentti id="507" version="0" funktiokutsuparent_id="506" funktiokutsuchild_id="8" indeksi="2"/>
 
-    <funktiokutsu id="500" version="0" funktionimi="SUMMA"/>
+    <funktiokutsu tallenna_tulos="false" id="500" version="0" funktionimi="SUMMA"/>
 
-    <funktiokutsu id="501" version="0" funktionimi="LUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="501" version="0" funktionimi="LUKUARVO"/>
     <syoteparametri id="501" version="0" avain="luku" arvo="10.0" funktiokutsu_id="501"/>
 
-    <funktiokutsu id="502" version="0" funktionimi="LUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="502" version="0" funktionimi="LUKUARVO"/>
     <syoteparametri id="502" version="0" avain="luku" arvo="3.0" funktiokutsu_id="502"/>
 
-    <funktiokutsu id="503" version="0" funktionimi="SUMMA"/>
-    <funktiokutsu id="504" version="0" funktionimi="HAEMERKKIJONOJAKONVERTOILUKUARVOKSI"/>
+    <funktiokutsu tallenna_tulos="false" id="503" version="0" funktionimi="SUMMA"/>
+    <funktiokutsu tallenna_tulos="false" id="504" version="0" funktionimi="HAEMERKKIJONOJAKONVERTOILUKUARVOKSI"/>
 
     <valintaperuste_viite id="504" version="0" tunniste="matematiikka_yo" kuvaus="matematiikan yo-arvosana"
                           lahde="SYOTETTAVA_ARVO" on_pakollinen="true" funktiokutsu_id="504" indeksi="1"/>
@@ -142,37 +142,37 @@
     <arvokonvertteriparametri id="508" version="0" arvo="B" paluuarvo="6.0" hylkaysperuste="false"
                               funktiokutsu_id="504"/>
 
-    <funktiokutsu id="505" version="0" funktionimi="LUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="505" version="0" funktionimi="LUKUARVO"/>
     <syoteparametri id="505" version="0" avain="luku" arvo="6.0" funktiokutsu_id="505"/>
 
-    <funktiokutsu id="508" version="0" funktionimi="LUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="508" version="0" funktionimi="LUKUARVO"/>
     <syoteparametri id="508" version="0" avain="luku" arvo="5.0" funktiokutsu_id="508"/>
 
-    <funktiokutsu id="509" version="0" funktionimi="LUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="509" version="0" funktionimi="LUKUARVO"/>
     <syoteparametri id="509" version="0" avain="luku" arvo="105.0" funktiokutsu_id="509"/>
 
-    <funktiokutsu id="507" version="0" funktionimi="SUMMA"/>
+    <funktiokutsu tallenna_tulos="false" id="507" version="0" funktionimi="SUMMA"/>
     <funktioargumentti id="509" version="0" funktiokutsuchild_id="508" funktiokutsuparent_id="507" indeksi="1"/>
     <funktioargumentti id="510" version="0" funktiokutsuchild_id="509" funktiokutsuparent_id="507" indeksi="2"/>
 
-    <funktiokutsu id="510" version="0" funktionimi="NIMETTYLUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="510" version="0" funktionimi="NIMETTYLUKUARVO"/>
     <syoteparametri id="510" version="0" avain="nimi" arvo="kaava509" funktiokutsu_id="510"/>
     <funktioargumentti id="515" version="0" funktiokutsuchild_id="507" funktiokutsuparent_id="510" indeksi="1"/>
 
     <laskentakaava id="509" version="0" nimi="kaava509" funktiokutsu_id="510" on_luonnos="false"
                    tyyppi="LUKUARVOFUNKTIO"/>'
 
-    <funktiokutsu id="511" version="0" funktionimi="LUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="511" version="0" funktionimi="LUKUARVO"/>
     <syoteparametri id="511" version="0" avain="luku" arvo="300.0" funktiokutsu_id="511"/>
 
-    <funktiokutsu id="512" version="0" funktionimi="TULO"/>
+    <funktiokutsu tallenna_tulos="false" id="512" version="0" funktionimi="TULO"/>
     <funktioargumentti id="512" version="0" laskentakaavachild_id="509" funktiokutsuparent_id="512" indeksi="1"/>
     <funktioargumentti id="513" version="0" funktiokutsuchild_id="511" funktiokutsuparent_id="512" indeksi="2"/>
 
-    <funktiokutsu id="513" version="0" funktionimi="NIMETTYLUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="513" version="0" funktionimi="NIMETTYLUKUARVO"/>
     <funktioargumentti id="514" version="0" funktiokutsuchild_id="512" funktiokutsuparent_id="513" indeksi="1"/>
 
-    <funktiokutsu id="514" version="0" funktionimi="HAELUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="514" version="0" funktionimi="HAELUKUARVO"/>
     <valintaperuste_viite id="514" version="0" lahde="SYOTETTAVA_ARVO" tunniste="valintaperuste1" kuvaus="kuvaus"
                           on_pakollinen="true" funktiokutsu_id="514" indeksi="1"/>
     <arvokonvertteriparametri id="514" version="0" arvo="arvo1" paluuarvo="10.0" hylkaysperuste="false"
@@ -189,15 +189,15 @@
     <laskentakaava id="514" version="0" nimi="kaava514" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO"
                    funktiokutsu_id="514"/>
 
-    <funktiokutsu id="519" version="0" funktionimi="LUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="519" version="0" funktionimi="LUKUARVO"/>
     <syoteparametri id="519" version="0" avain="luku" arvo="25.0" funktiokutsu_id="519"/>
 
-    <funktiokutsu id="520" version="0" funktionimi="SUMMA"/>
+    <funktiokutsu tallenna_tulos="false" id="520" version="0" funktionimi="SUMMA"/>
     <funktioargumentti id="520" version="0" funktiokutsuparent_id="520" laskentakaavachild_id="514" indeksi="1"/>
     <funktioargumentti id="521" version="0" funktiokutsuparent_id="520" funktiokutsuchild_id="519" indeksi="1"/>
 
 
-    <funktiokutsu id="600" version="0" funktionimi="HAELUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="600" version="0" funktionimi="HAELUKUARVO"/>
     <valintaperuste_viite id="600" version="0" lahde="HAKUKOHTEEN_SYOTETTAVA_ARVO" tunniste="hakukohteentunniste"
                           kuvaus="kuvaus"
                           on_pakollinen="true" epasuora_viittaus="true" funktiokutsu_id="600" indeksi="1"/>
@@ -243,31 +243,31 @@
     <laskentakaava id="410" version="0" nimi="kaava410" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO"
                    funktiokutsu_id="8"/>
 
-    <funktiokutsu id="700" version="0" funktionimi="SUMMA"/>
+    <funktiokutsu tallenna_tulos="false" id="700" version="0" funktionimi="SUMMA"/>
     <funktioargumentti id="700" version="0" funktiokutsuparent_id="700" funktiokutsuchild_id="1" indeksi="1"/>
     <funktioargumentti id="701" version="0" funktiokutsuparent_id="700" funktiokutsuchild_id="2" indeksi="2"/>
 
     <laskentakaava id="414" version="0" funktiokutsu_id="700" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO"
                    nimi="summakaava414"/>
 
-    <funktiokutsu id="701" version="0" funktionimi="SUMMA"/>
+    <funktiokutsu tallenna_tulos="false" id="701" version="0" funktionimi="SUMMA"/>
     <funktioargumentti id="702" version="0" funktiokutsuparent_id="701" funktiokutsuchild_id="1" indeksi="1"/>
     <funktioargumentti id="703" version="0" funktiokutsuparent_id="701" laskentakaavachild_id="414" indeksi="2"/>
 
     <laskentakaava id="415" version="0" funktiokutsu_id="701" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO"
                    nimi="summakaava415"/>
 
-    <funktiokutsu id="702" version="0" funktionimi="DEMOGRAFIA"/>
+    <funktiokutsu tallenna_tulos="false" id="702" version="0" funktionimi="DEMOGRAFIA"/>
     <syoteparametri id="704" version="0" avain="tunniste" arvo="puuppa" funktiokutsu_id="702"/>
     <syoteparametri id="705" version="0" avain="prosenttiosuus" arvo="30.0" funktiokutsu_id="702"/>
 
-    <funktiokutsu id="703" version="0" funktionimi="LUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="703" version="0" funktionimi="LUKUARVO"/>
     <syoteparametri id="706" version="0" avain="luku" arvo="10.0" funktiokutsu_id="703"/>
 
-    <funktiokutsu id="704" version="0" funktionimi="LUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="704" version="0" funktionimi="LUKUARVO"/>
     <syoteparametri id="707" version="0" avain="luku" arvo="20.0" funktiokutsu_id="704"/>
 
-    <funktiokutsu id="705" version="0" funktionimi="JOS"/>
+    <funktiokutsu tallenna_tulos="false" id="705" version="0" funktionimi="JOS"/>
     <funktioargumentti id="704" version="0" funktiokutsuparent_id="705" funktiokutsuchild_id="702" indeksi="1"/>
     <funktioargumentti id="705" version="0" funktiokutsuparent_id="705" funktiokutsuchild_id="703" indeksi="2"/>
     <funktioargumentti id="706" version="0" funktiokutsuparent_id="705" funktiokutsuchild_id="704" indeksi="3"/>
@@ -275,10 +275,10 @@
     <laskentakaava id="416" version="0" funktiokutsu_id="705" nimi="puuppa" on_luonnos="false"
                    tyyppi="LUKUARVOFUNKTIO"/>
 
-    <funktiokutsu id="706" version="0" funktionimi="LUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="706" version="0" funktionimi="LUKUARVO"/>
     <syoteparametri id="708" version="0" avain="luku" arvo="15.0" funktiokutsu_id="706"/>
 
-    <funktiokutsu id="707" version="0" funktionimi="SUUREMPI"/>
+    <funktiokutsu tallenna_tulos="false" id="707" version="0" funktionimi="SUUREMPI"/>
     <funktioargumentti id="707" version="0" funktiokutsuparent_id="707" laskentakaavachild_id="416" indeksi="1"/>
     <funktioargumentti id="708" version="0" funktiokutsuparent_id="707" funktiokutsuchild_id="706" indeksi="2"/>
 
@@ -286,7 +286,7 @@
                    tyyppi="TOTUUSARVOFUNKTIO"/>
 
 
-    <funktiokutsu id="708" version="0" funktionimi="KONVERTOILUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="708" version="0" funktionimi="KONVERTOILUKUARVO"/>
     <valintaperuste_viite id="601" version="0" lahde="HAKUKOHTEEN_ARVO" tunniste="{{hakukohde.paasykoe_tunniste}}"
                           kuvaus="kuvaus"
                           on_pakollinen="true" funktiokutsu_id="708" indeksi="1"/>
@@ -302,7 +302,7 @@
     <laskentakaava id="418" version="0" funktiokutsu_id="708" nimi="jeppis" on_luonnos="false"
                    tyyppi="LUKUARVOFUNKTIO"/>
 
-    <funktiokutsu id="709" version="0" funktionimi="KONVERTOILUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="709" version="0" funktionimi="KONVERTOILUKUARVO"/>
     <funktioargumentti id="710" version="0" funktiokutsuparent_id="709" laskentakaavachild_id="418" indeksi="1"/>
     <valintaperuste_viite id="602" version="0" lahde="HAKUKOHTEEN_SYOTETTAVA_ARVO"
                           tunniste="{{hakukohde.paasykoe_tunniste}}" kuvaus="kuvaus"
@@ -1586,9 +1586,9 @@
                      ei_varasijatayttoa="false"/>
 
     <!-- Valintaryhmään liitetyt laskentakaavat -testien objektit -->
-    <funktiokutsu id="411" version="0" funktionimi="LUKUARVO"/>
-    <funktiokutsu id="412" version="0" funktionimi="LUKUARVO"/>
-    <funktiokutsu id="413" version="0" funktionimi="LUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="411" version="0" funktionimi="LUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="412" version="0" funktionimi="LUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="413" version="0" funktionimi="LUKUARVO"/>
 
     <laskentakaava id="411" version="0" nimi="kaava411" on_luonnos="true" tyyppi="LUKUARVOFUNKTIO" funktiokutsu_id="411"
                    valintaryhmaviite="1"/>

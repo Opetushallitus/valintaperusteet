@@ -151,6 +151,7 @@ public class LaskentakaavaServiceTest {
 
         FunktiokutsuDTO funktiokutsu = new FunktiokutsuDTO();
         funktiokutsu.setFunktionimi(Funktionimi.LUKUARVO);
+        funktiokutsu.setTallennaTulos(false);
 
         SyoteparametriDTO syoteparametri = new SyoteparametriDTO();
         syoteparametri.setAvain(funktiokuvaus.syoteparametrit().head().avain());
@@ -164,6 +165,7 @@ public class LaskentakaavaServiceTest {
     private FunktiokutsuDTO createSumma(FunktiokutsuDTO... args) {
         FunktiokutsuDTO funktiokutsu = new FunktiokutsuDTO();
         funktiokutsu.setFunktionimi(Funktionimi.SUMMA);
+        funktiokutsu.setTallennaTulos(false);
 
         for (int i = 0; i < args.length; ++i) {
             FunktiokutsuDTO f = args[i];
@@ -278,6 +280,9 @@ public class LaskentakaavaServiceTest {
             summa500L.getFunktioargumentit().add(summa500L1arg);
             summa500L.getFunktioargumentit().add(summa500L2arg);
 
+            assertFalse(summa500L.getTallennaTulos());
+            summa500L.setTallennaTulos(true);
+
             // Poistetaan vielä yksi konvertteriparametri konvertointifunktiosta
             Arvokonvertteriparametri param = haeMerkkijonoJaKonvertoiLukuarvoksi504L.getArvokonvertteriparametrit()
                     .iterator().next();
@@ -293,6 +298,7 @@ public class LaskentakaavaServiceTest {
             assertNull(funktiokutsuDAO.getFunktiokutsu(506L));
             assertNotNull(funktiokutsuDAO.getFunktiokutsu(7L));
             assertNotNull(funktiokutsuDAO.getFunktiokutsu(8L));
+            assertTrue(paivitetty.getFunktiokutsu().getTallennaTulos());
         }
 
         Funktiokutsu summa500Lp = paivitetty.getFunktiokutsu();
@@ -323,6 +329,8 @@ public class LaskentakaavaServiceTest {
 
     private FunktiokutsuDTO nimettyFunktiokutsu(String nimi, FunktiokutsuDTO child) {
         FunktiokutsuDTO nimetty = new FunktiokutsuDTO();
+        nimetty.setTallennaTulos(false);
+
         FunktioargumenttiDTO arg = new FunktioargumenttiDTO();
         arg.setFunktiokutsuChild(child);
         arg.setIndeksi(1);

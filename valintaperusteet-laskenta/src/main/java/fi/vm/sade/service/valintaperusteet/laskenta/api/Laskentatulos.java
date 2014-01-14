@@ -12,17 +12,20 @@ import java.util.Map;
 public class Laskentatulos<T> {
 
 
-    public Laskentatulos(Tila tila, T tulos, StringBuffer historia, Map<String, SyotettyArvo> syotetytArvot) {
+    public Laskentatulos(Tila tila, T tulos, StringBuffer historia, Map<String, SyotettyArvo> syotetytArvot,
+                         Map<String, FunktioTulos> tulokset) {
         this.tila = tila;
         this.tulos = tulos;
         this.historia = historia;
         this.syotetytArvot = syotetytArvot;
+        this.tulokset = tulokset;
     }
 
     private Tila tila;
     private T tulos;
     private StringBuffer historia;
     private Map<String, SyotettyArvo> syotetytArvot;
+    private Map<String, FunktioTulos> tulokset;
 
     public Tila getTila() {
         return tila;
@@ -38,5 +41,9 @@ public class Laskentatulos<T> {
 
     public Map<String, SyotettyArvo> getSyotetytArvot() {
         return syotetytArvot;
+    }
+
+    public Map<String, FunktioTulos> getTulokset() {
+        return tulokset;
     }
 }
