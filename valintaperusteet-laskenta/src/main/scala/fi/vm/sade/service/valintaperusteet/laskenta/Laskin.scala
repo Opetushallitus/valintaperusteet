@@ -249,10 +249,11 @@ private class Laskin private(private val hakukohde: Hakukohde,
         }
       }
       case HakukohteenSyotettavaValintaperuste(tunniste, pakollinen, epasuoraViittaus, osallistumisenTunnistePostfix) => {
+
         hakukohde.valintaperusteet.get(tunniste).filter(!_.trim.isEmpty) match {
           case Some(arvo) => {
             if (epasuoraViittaus) {
-              haeValintaperuste(SyotettavaValintaperuste(arvo, true, s"$arvo$osallistumisenTunnistePostfix"), hakemus, konv, None)
+              haeValintaperuste(SyotettavaValintaperuste(arvo, pakollinen, s"$arvo$osallistumisenTunnistePostfix"), hakemus, konv, oletusarvo)
             } else konv(arvo)
           }
           case None => {
