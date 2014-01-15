@@ -91,7 +91,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
     }));
 
     private final String PAASYKOE_TUNNISTE = "paasykoe_tunniste";
-    private final String KIELIKOE_TUNNISTE = "kielikoe_tunniste";
+    private final String KIELIKOE_TUNNISTE = "{{hakukohde."+PkJaYoPohjaiset.kielikoetunniste+"}}";
     private final String LISANAYTTO_TUNNISTE = "lisanaytto_tunniste";
 
     @Override
@@ -187,7 +187,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         kielikoe.setAktiivinen(true);
         kielikoe.setKuvaus(kielikoeNimi);
         kielikoe.setNimi(kielikoeNimi);
-        kielikoe.setTunniste(PkJaYoPohjaiset.kielikoetunniste);
+        kielikoe.setTunniste(KIELIKOE_TUNNISTE);
         kielikoe.setLaskentakaavaId(kielikokeenLaskentakaava.getId());
 
         valintakoeService.lisaaValintakoeValinnanVaiheelle(kielikoevalinnanVaihe.getOid(), kielikoe);
