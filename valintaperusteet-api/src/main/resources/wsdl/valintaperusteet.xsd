@@ -77,7 +77,7 @@
 
     <xs:complexType name="FunktiokutsuTyyppi">
         <xs:sequence>
-            <xs:element name="oid" type="xs:long" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="oid" type="xs:long" minOccurs="0" maxOccurs="1"/>
             <xs:element name="funktionimi" type="xs:string" minOccurs="1" maxOccurs="1"/>
 
             <xs:element name="tallennaTulos" type="xs:boolean" minOccurs="1" maxOccurs="1"/>
