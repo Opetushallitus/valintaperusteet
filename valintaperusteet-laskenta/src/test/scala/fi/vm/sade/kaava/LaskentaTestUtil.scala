@@ -60,9 +60,12 @@ object LaskentaTestUtil {
     def apply(nimi: Funktionimi, funktioargumentit: Seq[FunktionArgumentti] = Nil, syoteparametrit: Seq[Syoteparametri] = Nil,
               arvokonvertterit: Seq[Arvokonvertteriparametri] = Nil,
               arvovalikonvertterit: Seq[Arvovalikonvertteriparametri] = Nil,
-              valintaperustetunniste: Seq[ValintaperusteViite] = Nil) = {
+              valintaperustetunniste: Seq[ValintaperusteViite] = Nil,
+              tulosTunniste: String = "", tallennaTulos: Boolean = false) = {
       val funktiokutsu = new Funktiokutsu
       funktiokutsu.setFunktionimi(nimi)
+      funktiokutsu.setTallennaTulos(tallennaTulos)
+      funktiokutsu.setTulosTunniste(tulosTunniste)
 
       val fargs = for {
         i <- 1 to funktioargumentit.size

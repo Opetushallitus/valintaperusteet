@@ -27,6 +27,7 @@ import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 
 /**
  * User: kwuoti Date: 28.1.2013 Time: 13.04
@@ -60,6 +61,7 @@ public class LaskentakaavaResourceTest {
 
         FunktiokutsuDTO funktiokutsu = new FunktiokutsuDTO();
         funktiokutsu.setFunktionimi(Funktionimi.LUKUARVO);
+        funktiokutsu.setTallennaTulos(false);
 
         SyoteparametriDTO syoteparametri = new SyoteparametriDTO();
         syoteparametri.setAvain(funktiokuvaus.syoteparametrit().head().avain());
@@ -73,6 +75,12 @@ public class LaskentakaavaResourceTest {
     private FunktiokutsuDTO createSumma(FunktiokutsuDTO... args) {
         FunktiokutsuDTO funktiokutsu = new FunktiokutsuDTO();
         funktiokutsu.setFunktionimi(Funktionimi.SUMMA);
+
+        funktiokutsu.setTallennaTulos(true);
+        funktiokutsu.setTulosTekstiEn("en");
+        funktiokutsu.setTulosTekstiSv("sv");
+        funktiokutsu.setTulosTekstiFi("fi");
+        funktiokutsu.setTulosTunniste("tunniste");
 
         for (int i = 0; i < args.length; ++i) {
             FunktiokutsuDTO f = args[i];
@@ -96,7 +104,10 @@ public class LaskentakaavaResourceTest {
 
         final String json = mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(laskentakaava);
         LaskentakaavaCreateDTO fromJson = mapper.readValue(json, LaskentakaavaCreateDTO.class);
-        assertEquals(Response.Status.CREATED.getStatusCode(), laskentakaavaResource.insert(new LaskentakaavaInsertDTO(fromJson, null, null)).getStatus());
+        Response insert = laskentakaavaResource.insert(new LaskentakaavaInsertDTO(fromJson, null, null));
+        assertEquals(Response.Status.CREATED.getStatusCode(), insert.getStatus());
+
+        assertTrue(((LaskentakaavaDTO) insert.getEntity()).getFunktiokutsu().getTallennaTulos());
     }
 
     @Test
@@ -109,7 +120,6 @@ public class LaskentakaavaResourceTest {
 
         final String json = mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(laskentakaava);
         LaskentakaavaCreateDTO fromJson = mapper.readValue(json, LaskentakaavaCreateDTO.class);
-
 
         Response response = laskentakaavaResource.insert(new LaskentakaavaInsertDTO(fromJson, null, null));
 
