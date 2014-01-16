@@ -1550,4 +1550,41 @@ public class LuoValintaperusteetServiceTest {
             }
         }
     }
+
+    @Test
+    public void testKielikoekriteeri8FunktiokutsuTrue() {
+        final String kieli = "fi";
+
+        final Hakukohde hakukohde = new Hakukohde(HAKUKOHDE_OID1, yhdistaMapit(
+                valintaperuste(PkJaYoPohjaiset.opetuskieli, kieli)
+        ));
+
+        final Hakemus hakemus = new Hakemus(HAKEMUS_OID, new HashMap<Integer, String>(),
+                yhdistaMapit(valintaperuste(PkJaYoPohjaiset.peruskoulunPaattotodistusVahintaanSeitseman+kieli, true)));
+
+        Funktiokutsu funktiokutsu = PkJaYoPohjaiset.luoKielikoekriteeri8Funktiokutsu();
+
+        Laskentatulos<Boolean> tulos = laskentaService.suoritaValintakoelaskenta(hakukohde, hakemus, Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu));
+        assertTrue(tulos.getTulos());
+        assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
+
+    }
+
+    @Test
+    public void testKielikoekriteeri8FunktiokutsuPerusopetuksenKieliPuuttuuHakemukselta() {
+        final String opetuskieli = "fi";
+
+        final Hakukohde hakukohde = new Hakukohde(HAKUKOHDE_OID1, yhdistaMapit(
+                valintaperuste(PkJaYoPohjaiset.opetuskieli, opetuskieli)
+        ));
+
+        final Hakemus hakemus = new Hakemus(HAKEMUS_OID, new HashMap<Integer, String>(),
+                new HashMap<String, String>());
+
+        Funktiokutsu funktiokutsu = PkJaYoPohjaiset.luoKielikoekriteeri8Funktiokutsu();
+
+        Laskentatulos<Boolean> tulos = laskentaService.suoritaValintakoelaskenta(hakukohde, hakemus, Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu));
+        assertFalse(tulos.getTulos());
+        assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
+    }
 }

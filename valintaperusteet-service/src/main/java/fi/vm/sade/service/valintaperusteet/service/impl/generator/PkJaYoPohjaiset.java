@@ -32,6 +32,9 @@ public class PkJaYoPohjaiset {
     public static final String kielikoetunniste = "kielikoe_tunniste";
     public static final String opetuskieli = "opetuskieli";
 
+    public static final String peruskoulunPaattotodistusVahintaanSeitseman = "peruskoulun_paattotodistus_vahintaan_seitseman_";
+    public static final String lukionPaattotodistusVahintaanSeitseman = "lukion_paattotodistus_vahintaan_seitseman_";
+
     public static Laskentakaava luoHakutoivejarjestyspisteytysmalli() {
         Funktiokutsu pisteet = GenericHelper.luoLukuarvo(2.0);
         Funktiokutsu nollaarvo = GenericHelper.luoLukuarvo(0.0);
@@ -146,7 +149,8 @@ public class PkJaYoPohjaiset {
                 luoKielikoekriteeri4Funktiokutsu(),
                 luoKielikoekriteeri5Funktiokutsu(),
                 luoKielikoekriteeri6Funktiokutsu(),
-                luoKielikoekriteeri7Funktiokutsu()
+                luoKielikoekriteeri7Funktiokutsu(),
+                luoKielikoekriteeri8Funktiokutsu()
         };
 
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(GenericHelper.luoEi(GenericHelper.luoTai(args)),
@@ -417,6 +421,52 @@ public class PkJaYoPohjaiset {
                                         GenericHelper.luoValintaperusteViite(valtionhallinnonKielitutkintoPrefix + sv, false,
                                                 Valintaperustelahde.HAETTAVA_ARVO), false)
                         )
+                )
+        );
+    }
+
+    /**
+     * 8) PK Hakijan peruskoulun päättodistuksen tai LK hakijan lukion päättötodistuksen arvosana on
+     * vähintään seitsemän hakukohteen opetuskielelle
+     */
+    public static Funktiokutsu luoKielikoekriteeri8Funktiokutsu() {
+        final String fi = "fi";
+        final String sv = "sv";
+        final String se = "se";
+        final String vk = "vk";
+
+        return GenericHelper.luoTai(
+                GenericHelper.luoJa(
+                        GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(GenericHelper.luoValintaperusteViite(opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO, "Opetuskieli", false), fi),
+                        GenericHelper.luoHaeTotuusarvo(GenericHelper.luoValintaperusteViite(peruskoulunPaattotodistusVahintaanSeitseman + fi, false,Valintaperustelahde.HAETTAVA_ARVO), false)
+                ),
+                GenericHelper.luoJa(
+                        GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(GenericHelper.luoValintaperusteViite(opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO, "Opetuskieli", false), sv),
+                        GenericHelper.luoHaeTotuusarvo(GenericHelper.luoValintaperusteViite(peruskoulunPaattotodistusVahintaanSeitseman + sv, false,Valintaperustelahde.HAETTAVA_ARVO), false)
+                ),
+                GenericHelper.luoJa(
+                        GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(GenericHelper.luoValintaperusteViite(opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO, "Opetuskieli", false), se),
+                        GenericHelper.luoHaeTotuusarvo(GenericHelper.luoValintaperusteViite(peruskoulunPaattotodistusVahintaanSeitseman + se, false,Valintaperustelahde.HAETTAVA_ARVO), false)
+                ),
+                GenericHelper.luoJa(
+                        GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(GenericHelper.luoValintaperusteViite(opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO, "Opetuskieli", false), vk),
+                        GenericHelper.luoHaeTotuusarvo(GenericHelper.luoValintaperusteViite(peruskoulunPaattotodistusVahintaanSeitseman + vk, false,Valintaperustelahde.HAETTAVA_ARVO), false)
+                ),
+                GenericHelper.luoJa(
+                        GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(GenericHelper.luoValintaperusteViite(opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO, "Opetuskieli", false), fi),
+                        GenericHelper.luoHaeTotuusarvo(GenericHelper.luoValintaperusteViite(lukionPaattotodistusVahintaanSeitseman + fi, false,Valintaperustelahde.HAETTAVA_ARVO), false)
+                ),
+                GenericHelper.luoJa(
+                        GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(GenericHelper.luoValintaperusteViite(opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO, "Opetuskieli", false), sv),
+                        GenericHelper.luoHaeTotuusarvo(GenericHelper.luoValintaperusteViite(lukionPaattotodistusVahintaanSeitseman + sv, false,Valintaperustelahde.HAETTAVA_ARVO), false)
+                ),
+                GenericHelper.luoJa(
+                        GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(GenericHelper.luoValintaperusteViite(opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO, "Opetuskieli", false), se),
+                        GenericHelper.luoHaeTotuusarvo(GenericHelper.luoValintaperusteViite(lukionPaattotodistusVahintaanSeitseman + se, false,Valintaperustelahde.HAETTAVA_ARVO), false)
+                ),
+                GenericHelper.luoJa(
+                        GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(GenericHelper.luoValintaperusteViite(opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO, "Opetuskieli", false), vk),
+                        GenericHelper.luoHaeTotuusarvo(GenericHelper.luoValintaperusteViite(lukionPaattotodistusVahintaanSeitseman + vk, false,Valintaperustelahde.HAETTAVA_ARVO), false)
                 )
         );
     }
