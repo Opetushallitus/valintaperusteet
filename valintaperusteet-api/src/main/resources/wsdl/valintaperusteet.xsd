@@ -77,8 +77,15 @@
 
     <xs:complexType name="FunktiokutsuTyyppi">
         <xs:sequence>
-            <xs:element name="oid" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="oid" type="xs:long" minOccurs="0" maxOccurs="1"/>
             <xs:element name="funktionimi" type="xs:string" minOccurs="1" maxOccurs="1"/>
+
+            <xs:element name="tallennaTulos" type="xs:boolean" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="tulosTunniste" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="tulosTekstiFi" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="tulosTekstiSv" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="tulosTekstiEn" type="xs:string" minOccurs="0" maxOccurs="1"/>
+
             <xs:element name="arvokonvertteriparametrit" type="tns:ArvokonvertteriparametriTyyppi" minOccurs="0"
                         maxOccurs="unbounded"/>
             <xs:element name="arvovalikonvertteriparametrit" type="tns:ArvovalikonvertteriparametriTyyppi" minOccurs="0"

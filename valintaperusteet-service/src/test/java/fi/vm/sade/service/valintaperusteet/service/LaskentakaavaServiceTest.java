@@ -3,7 +3,6 @@ package fi.vm.sade.service.valintaperusteet.service;
 import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.generic.dao.GenericDAO;
-import fi.vm.sade.kaava.Funktiokuvaaja;
 import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
 import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
@@ -11,6 +10,7 @@ import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuMuodostaaSilmukanException;
 import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuaEiVoidaKayttaaValintakoelaskennassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaMuodostaaSilmukanException;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +22,12 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.*;
 
 import static junit.framework.Assert.*;
+import fi.vm.sade.kaava.Funktiokuvaaja;
 
 /**
  * User: kwuoti Date: 21.1.2013 Time: 9.42
@@ -49,6 +52,8 @@ public class LaskentakaavaServiceTest {
     @Autowired
     private ValintaperusteetModelMapper modelMapper;
 
+
+
     private final static FunktioArgumenttiComparator comparator = new FunktioArgumenttiComparator();
 
     private static class FunktioArgumenttiComparator implements Comparator<Funktioargumentti> {
@@ -66,14 +71,27 @@ public class LaskentakaavaServiceTest {
         return args;
     }
 
+    @Before
+    public void initialize() {
+        try {
+            Class.forName("org.hsqldb.jdbcDriver");
+            Connection conn = DriverManager.
+                getConnection("jdbc:hsqldb:mem:valintaperusteet", "sa", "");
+            conn.createStatement().executeUpdate("SET DATABASE TRANSACTION CONTROL MVCC");
+            conn.commit();
+            conn.close();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     @Test
-    public void testHaeKaava() {
+     public void testHaeKaava() {
         final Long id = 204L;
         Laskentakaava laskentakaava = laskentakaavaService.read(id);
         Funktiokutsu maksimi204L = laskentakaava.getFunktiokutsu();
         assertEquals(Funktionimi.MAKSIMI, maksimi204L.getFunktionimi());
         assertEquals(2, maksimi204L.getFunktioargumentit().size());
-
         List<Funktioargumentti> maksimi204Largs = argsSorted(maksimi204L.getFunktioargumentit());
 
         Funktiokutsu summa203L = maksimi204Largs.get(0).getFunktiokutsuChild();
@@ -131,25 +149,23 @@ public class LaskentakaavaServiceTest {
 
         final Funktiokuvaaja.Funktiokuvaus funktiokuvaus = Funktiokuvaaja.annaFunktiokuvaus(nimi)._2();
 
-        Funktiokutsu funktiokutsu = new Funktiokutsu();
+        FunktiokutsuDTO funktiokutsu = new FunktiokutsuDTO();
         funktiokutsu.setFunktionimi(Funktionimi.LUKUARVO);
+        funktiokutsu.setTallennaTulos(false);
 
-        Syoteparametri syoteparametri = new Syoteparametri();
+        SyoteparametriDTO syoteparametri = new SyoteparametriDTO();
         syoteparametri.setAvain(funktiokuvaus.syoteparametrit().head().avain());
         syoteparametri.setArvo(luku.toString());
 
         funktiokutsu.getSyoteparametrit().add(syoteparametri);
 
-        FunktiokutsuDTO dto = modelMapper.map(funktiokutsu, FunktiokutsuDTO.class);
-
-        return modelMapper.map(funktiokutsu, FunktiokutsuDTO.class);
+        return funktiokutsu;
     }
 
     private FunktiokutsuDTO createSumma(FunktiokutsuDTO... args) {
-        Funktiokutsu kutsu = new Funktiokutsu();
-        kutsu.setFunktionimi(Funktionimi.SUMMA);
-
-        FunktiokutsuDTO funktiokutsu = modelMapper.map(kutsu, FunktiokutsuDTO.class);
+        FunktiokutsuDTO funktiokutsu = new FunktiokutsuDTO();
+        funktiokutsu.setFunktionimi(Funktionimi.SUMMA);
+        funktiokutsu.setTallennaTulos(false);
 
         for (int i = 0; i < args.length; ++i) {
             FunktioargumentinLapsiDTO f = modelMapper.map(args[i], FunktioargumentinLapsiDTO.class);
@@ -165,11 +181,9 @@ public class LaskentakaavaServiceTest {
 
     @Test
     public void testInsertNew() {
-
-        Laskentakaava kaava = new Laskentakaava();
-        kaava.setNimi("kaava3342");
-        kaava.setOnLuonnos(false);
-        LaskentakaavaCreateDTO laskentakaava = modelMapper.map(kaava, LaskentakaavaCreateDTO.class);
+        LaskentakaavaCreateDTO laskentakaava = new LaskentakaavaCreateDTO();
+        laskentakaava.setNimi("kaava3342");
+        laskentakaava.setOnLuonnos(false);
         laskentakaava.setFunktiokutsu(createSumma(createLukuarvo(5.0), createLukuarvo(10.0), createLukuarvo(100.0)));
 
         Laskentakaava tallennettu = laskentakaavaService.insert(laskentakaava, null, null);
@@ -267,6 +281,9 @@ public class LaskentakaavaServiceTest {
             summa500L.getFunktioargumentit().add(summa500L1arg);
             summa500L.getFunktioargumentit().add(summa500L2arg);
 
+            assertFalse(summa500L.getTallennaTulos());
+            summa500L.setTallennaTulos(true);
+
             // Poistetaan vielä yksi konvertteriparametri konvertointifunktiosta
             Arvokonvertteriparametri param = haeMerkkijonoJaKonvertoiLukuarvoksi504L.getArvokonvertteriparametrit()
                     .iterator().next();
@@ -276,11 +293,13 @@ public class LaskentakaavaServiceTest {
             assertNotNull(funktiokutsuDAO.getFunktiokutsu(506L));
             assertNotNull(funktiokutsuDAO.getFunktiokutsu(7L));
             assertNotNull(funktiokutsuDAO.getFunktiokutsu(8L));
-            paivitetty = laskentakaavaService.update(laskentakaava.getId(), modelMapper.map(laskentakaava, LaskentakaavaCreateDTO.class));
+            LaskentakaavaCreateDTO dto = modelMapper.map(laskentakaava, LaskentakaavaCreateDTO.class);
+            paivitetty = laskentakaavaService.update(laskentakaava.getId(), dto);
             assertNull(funktiokutsuDAO.getFunktiokutsu(502L));
             assertNull(funktiokutsuDAO.getFunktiokutsu(506L));
             assertNotNull(funktiokutsuDAO.getFunktiokutsu(7L));
             assertNotNull(funktiokutsuDAO.getFunktiokutsu(8L));
+            assertTrue(paivitetty.getFunktiokutsu().getTallennaTulos());
         }
 
         Funktiokutsu summa500Lp = paivitetty.getFunktiokutsu();
@@ -311,6 +330,8 @@ public class LaskentakaavaServiceTest {
 
     private FunktiokutsuDTO nimettyFunktiokutsu(String nimi, FunktiokutsuDTO child) {
         FunktiokutsuDTO nimetty = new FunktiokutsuDTO();
+        nimetty.setTallennaTulos(false);
+
         FunktioargumenttiDTO arg = new FunktioargumenttiDTO();
         FunktioargumentinLapsiDTO lapsiDTO = modelMapper.map(child, FunktioargumentinLapsiDTO.class);
         lapsiDTO.setLapsityyppi(FunktioargumentinLapsiDTO.FUNKTIOKUTSUTYYPPI);
@@ -462,8 +483,7 @@ public class LaskentakaavaServiceTest {
 
     @Test
     public void testFindAvaimetForHakukohdes() {
-        final List<String> oids = Arrays.asList("oid17");
-        List<ValintaperusteDTO> valintaperusteet = laskentakaavaService.findAvaimetForHakukohdes(oids);
+        List<ValintaperusteDTO> valintaperusteet = laskentakaavaService.findAvaimetForHakukohde("oid17");
         assertEquals(2, valintaperusteet.size());
 
         Collections.sort(valintaperusteet, new Comparator<ValintaperusteDTO>() {
@@ -482,6 +502,8 @@ public class LaskentakaavaServiceTest {
         assertEquals(new BigDecimal("0.0"), new BigDecimal(valintaperusteet.get(1).getMin()));
         assertEquals(new BigDecimal("30.0"), new BigDecimal(valintaperusteet.get(1).getMax()));
         assertNull(valintaperusteet.get(1).getArvot());
+        assertEquals(Valintaperustelahde.SYOTETTAVA_ARVO, valintaperusteet.get(1).getLahde());
+
     }
 
     @Test

@@ -13,6 +13,7 @@ import fi.vm.sade.kaava.Funktiokuvaaja.Konvertterinimi.Konvertterinimi
 import fi.vm.sade.kaava.Funktiokuvaaja.Konvertterinimi
 import play.api.libs.json._
 import scala.util.Try
+import java.math.{BigDecimal => JBigDecimal}
 
 /**
  * Created with IntelliJ IDEA.
@@ -159,7 +160,7 @@ object JsonFormats {
   }
   implicit def tilaWrites: Writes[Tila] = new Writes[Tila] {
     def writes(o: Tila): JsValue = {
-      val json = mapper.writerWithView(classOf[JsonViews.Basic]).writeValueAsString(o);
+      val json = mapper.writerWithView(classOf[JsonViews.Basic]).writeValueAsString(o)
       Json.parse(json)
     }
   }
@@ -221,10 +222,16 @@ object JsonHelpers {
   implicit def mapWritesStringString: Writes[JMap[String, String]] =
     new Writes[JMap[String,String]] {
       def writes(map: JMap[String,String]): JsValue = {
-        val json = mapper.writerWithView(classOf[JsonViews.Basic]).writeValueAsString(map);
+        val json = mapper.writerWithView(classOf[JsonViews.Basic]).writeValueAsString(map)
         Json.parse(json)
       }
     }
+
+  implicit def mapWrites: Writes[Map[_,_]] =
+    new Writes[Map[_,_]] {
+      def writes(s: Map[_,_]): JsValue = s.foldLeft(Json.obj())((o, cur)=> o++Json.obj(cur._1.toString -> cur._2))
+    }
+
 
   implicit def anyReads: Reads[Any] =
     new Reads[Any] {
@@ -240,15 +247,30 @@ object JsonHelpers {
 
   implicit def anyWrites: Writes[Any] =
     new Writes[Any] {
-      def writes(s: Any): JsValue = s match {
+      def writes(a: Any): JsValue = a match {
         case s: String => JsString(s)
         case s: Boolean => JsBoolean(s)
         case s: Int => JsNumber(s)
         case s: Double => JsNumber(s)
         case s: Long => JsNumber(s)
         case s: BigDecimal => JsNumber(s)
-        //case _ => JsNull
-        case s => Try(Json.toJson(s)).getOrElse(JsString("No Json Formatter Found :("))
+        case s: JBigDecimal => JsNumber(s)
+        case Some(s: String) => JsString(s)
+        case Some(s: Boolean) => JsBoolean(s)
+        case Some(s: Int) => JsNumber(s)
+        case Some(s: Double) => JsNumber(s)
+        case Some(s: Long) => JsNumber(s)
+        case Some(s: BigDecimal) => JsNumber(s)
+        case Some(s: JBigDecimal) => JsNumber(s)
+        case null => JsNull
+        case None => JsNull
+        case s: Map[_, _] => {
+          s.foldLeft(Json.obj())((o, cur)=> o++Json.obj(cur._1.toString -> cur._2))
+        }
+        case s: Any => {
+          JsString(s"No json formatter found for $s")
+        }
       }
     }
+
 }

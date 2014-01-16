@@ -19,9 +19,10 @@ public class LaskentakaavaCache {
 
     public Laskentakaava get(Long id) {
         Laskentakaava laskentakaava = laskentakaavat.getIfPresent(id);
-        if (laskentakaava != null) {
-            laskentakaavat.invalidate(laskentakaava);
-        }
         return laskentakaava;
+    }
+
+    public void clear(){
+        laskentakaavat.invalidateAll();
     }
 }

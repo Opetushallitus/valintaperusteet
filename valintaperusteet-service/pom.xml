@@ -157,21 +157,13 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
-        <!-- Commons-Logging on loggaus jarjestelma siina missa SLF4J 
-        jos halutaan logitus SLF4J:lla niin taytyy kayttaa JCL-OVER-SLF4J:ta 
-        eli java commons logging over slf4j !!! -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
-            <version>${slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
         </dependency>
 
 
@@ -309,6 +301,16 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-ldap</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-actor_2.10</artifactId>
+            <version>2.2.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jolbox</groupId>
+            <artifactId>bonecp</artifactId>
+            <version>0.8.0.RELEASE</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -395,6 +397,7 @@
                         <artifactId>hibernate-ehcache</artifactId>
                         <version>${hibernate.version}</version>
                     </dependency>
+
                 </dependencies>
             </plugin>
         </plugins>

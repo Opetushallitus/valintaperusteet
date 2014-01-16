@@ -4,10 +4,8 @@ import com.wordnik.swagger.annotations.*;
 import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
-import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakukohdeViiteEiOleOlemassaException;
-import org.codehaus.jackson.map.annotate.JsonView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -180,8 +178,8 @@ public class HakukohdeResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Secured({READ, UPDATE, CRUD})
     @ApiOperation(value = "Hakee hakukohteen syötettävät tiedot", response = ValintaperusteDTO.class)
-    public List<ValintaperusteDTO> findAvaimet(@ApiParam(value = "Hakukohteiden OID:t", required = true) List<String> oids) {
-        return laskentakaavaService.findAvaimetForHakukohdes(oids);
+    public List<ValintaperusteDTO> findAvaimet(@ApiParam(value = "Hakukohde OID", required = true) String oid) {
+        return laskentakaavaService.findAvaimetForHakukohde(oid);
     }
 
     @GET

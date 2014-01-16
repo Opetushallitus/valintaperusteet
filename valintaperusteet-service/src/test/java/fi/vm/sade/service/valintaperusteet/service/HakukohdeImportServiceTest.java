@@ -416,9 +416,9 @@ public class HakukohdeImportServiceTest {
             assertNotNull(valintaryhma);
 
             List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheService.findByValintaryhma(valintaryhmaOid);
-            assertEquals(2, valinnanVaiheet.size());
+            assertEquals(3, valinnanVaiheet.size());
 
-            ValinnanVaihe vaihe = valinnanVaiheet.get(1);
+            ValinnanVaihe vaihe = valinnanVaiheet.get(2);
             assertEquals(ValinnanVaiheTyyppi.TAVALLINEN, vaihe.getValinnanVaiheTyyppi());
             assertNull(vaihe.getMasterValinnanVaihe());
 
@@ -441,9 +441,9 @@ public class HakukohdeImportServiceTest {
             assertFalse(hakukohde.getManuaalisestiSiirretty());
 
             List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheService.findByHakukohde(hakukohdeOid);
-            assertEquals(2, valinnanVaiheet.size());
+            assertEquals(3, valinnanVaiheet.size());
 
-            ValinnanVaihe vaihe = valinnanVaiheet.get(1);
+            ValinnanVaihe vaihe = valinnanVaiheet.get(2);
             assertEquals(ValinnanVaiheTyyppi.TAVALLINEN, vaihe.getValinnanVaiheTyyppi());
             assertNotNull(vaihe.getMasterValinnanVaihe());
 
@@ -559,28 +559,6 @@ public class HakukohdeImportServiceTest {
         final String hakukohdeOid = "uusihakukohdeoid";
         final String hakukohdekoodiUri = "hakukohdekoodiuri13";
 
-        final int aloituspaikat = 100;
-        {
-            assertNull(hakukohdeViiteDAO.readByOid(hakukohdeOid));
-            Valintaryhma valintaryhma = valintaryhmaService.readByOid(valintaryhmaOid);
-            assertNotNull(valintaryhma);
-
-            List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheService.findByValintaryhma(valintaryhmaOid);
-            assertEquals(2, valinnanVaiheet.size());
-
-            ValinnanVaihe vaihe = valinnanVaiheet.get(1);
-            assertEquals(ValinnanVaiheTyyppi.TAVALLINEN, vaihe.getValinnanVaiheTyyppi());
-            assertNull(vaihe.getMasterValinnanVaihe());
-
-            List<Valintatapajono> jonot = valintatapajonoService.findJonoByValinnanvaihe(vaihe.getOid());
-            assertEquals(1, jonot.size());
-
-            Valintatapajono jono = jonot.get(0);
-            assertNull(jono.getMasterValintatapajono());
-            assertFalse(aloituspaikat == jono.getAloituspaikat().intValue());
-
-        }
-
         HakukohdeImportTyyppi importData = luoHakukohdeImportTyyppi(hakukohdeOid, hakuOid, hakukohdekoodiUri);
         AvainArvoTyyppi avainArvo = new AvainArvoTyyppi();
 
@@ -612,20 +590,6 @@ public class HakukohdeImportServiceTest {
         {
             HakukohdeViite hakukohde = hakukohdeViiteDAO.readByOid(hakukohdeOid);
             assertNotNull(hakukohde);
-            assertFalse(hakukohde.getManuaalisestiSiirretty());
-
-            List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheService.findByHakukohde(hakukohdeOid);
-            assertEquals(2, valinnanVaiheet.size());
-
-            ValinnanVaihe vaihe = valinnanVaiheet.get(1);
-            assertEquals(ValinnanVaiheTyyppi.TAVALLINEN, vaihe.getValinnanVaiheTyyppi());
-            assertNotNull(vaihe.getMasterValinnanVaihe());
-
-            List<Valintatapajono> jonot = valintatapajonoService.findJonoByValinnanvaihe(vaihe.getOid());
-            assertEquals(1, jonot.size());
-
-            Valintatapajono jono = jonot.get(0);
-            assertNotNull(jono.getMasterValintatapajono());
 
             assertEquals("12.0", hakukohde.getHakukohteenValintaperusteet().get("paasykoe_min").getArvo());
             assertEquals("tämä on kielikokeen tunniste", hakukohde.getHakukohteenValintaperusteet().get("kielikoe_tunniste").getArvo());

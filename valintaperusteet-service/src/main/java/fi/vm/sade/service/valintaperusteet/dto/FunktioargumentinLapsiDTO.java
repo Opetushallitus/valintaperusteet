@@ -61,6 +61,61 @@ public class FunktioargumentinLapsiDTO {
     @ApiModelProperty(value = "Lapsen tyyppi")
     private String lapsityyppi;
 
+    @ApiModelProperty(value = "Tallennetun tuloksen tunniste")
+    private String tulosTunniste;
+
+    @ApiModelProperty(value = "Tallennetun tuloksen suomenkielinen teksti")
+    private String tulosTekstiFi;
+
+    @ApiModelProperty(value = "Tallennetun tuloksen ruotsinkielinen teksti")
+    private String tulosTekstiSv;
+
+    @ApiModelProperty(value = "Tallennetun tuloksen englanninkielinen teksti")
+    private String tulosTekstiEn;
+
+    @ApiModelProperty(value = "Tallennetaanko tulos", required = true)
+    private Boolean tallennaTulos;
+
+    public String getTulosTunniste() {
+        return tulosTunniste;
+    }
+
+    public void setTulosTunniste(String tulosTunniste) {
+        this.tulosTunniste = tulosTunniste;
+    }
+
+    public String getTulosTekstiFi() {
+        return tulosTekstiFi;
+    }
+
+    public void setTulosTekstiFi(String tulosTekstiFi) {
+        this.tulosTekstiFi = tulosTekstiFi;
+    }
+
+    public String getTulosTekstiSv() {
+        return tulosTekstiSv;
+    }
+
+    public void setTulosTekstiSv(String tulosTekstiSv) {
+        this.tulosTekstiSv = tulosTekstiSv;
+    }
+
+    public String getTulosTekstiEn() {
+        return tulosTekstiEn;
+    }
+
+    public void setTulosTekstiEn(String tulosTekstiEn) {
+        this.tulosTekstiEn = tulosTekstiEn;
+    }
+
+    public Boolean getTallennaTulos() {
+        return tallennaTulos;
+    }
+
+    public void setTallennaTulos(Boolean tallennaTulos) {
+        this.tallennaTulos = tallennaTulos;
+    }
+
     public Funktionimi getFunktionimi() {
         return funktionimi;
     }

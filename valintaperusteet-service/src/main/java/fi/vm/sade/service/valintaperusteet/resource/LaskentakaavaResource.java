@@ -75,17 +75,12 @@ public class LaskentakaavaResource {
     @ApiOperation(value = "Hakee laskentakaavan ID:n perusteella", response = LaskentakaavaDTO.class)
     public LaskentakaavaDTO kaava(@ApiParam(value = "Laskentakaavan ID", required = true) @PathParam("id") Long id) {
         long beginTime = System.currentTimeMillis();
-        Laskentakaava laskentakaava = laskentakaavaService.haeMallinnettuKaava(id);
+        LaskentakaavaDTO mapped = modelMapper.map(laskentakaavaService.haeMallinnettuKaava(id), LaskentakaavaDTO.class);
         long endTime = System.currentTimeMillis();
         long timeTaken = (endTime - beginTime) / 1000L;
-        LOGGER.info("Laskentakaavan hakemiseen kului: {} sekuntia", timeTaken);
+        LOGGER.info("Laskentakaavan hakemiseen kului: "+timeTaken+" sekuntia");
+        return mapped;
 
-        beginTime = System.currentTimeMillis();
-        LaskentakaavaDTO kaava = modelMapper.map(laskentakaava, LaskentakaavaDTO.class);
-        endTime = System.currentTimeMillis();
-        timeTaken = (endTime - beginTime) / 1000L;
-        LOGGER.info("Laskentakaava-LaskentakaavaDTO muunnokseen kului: {} sekuntia", timeTaken);
-        return kaava;
     }
 
     @GET
@@ -152,9 +147,6 @@ public class LaskentakaavaResource {
             return Response.status(Response.Status.BAD_REQUEST).entity(inserted).build();
         } catch (Exception e) {
             LOGGER.error("Virhe tallennettaessa laskentakaavaa.", e);
-
-            System.out.print(e);
-
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }

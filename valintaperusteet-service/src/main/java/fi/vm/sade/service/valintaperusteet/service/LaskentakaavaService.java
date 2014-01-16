@@ -18,7 +18,7 @@ import java.util.List;
  */
 public interface LaskentakaavaService {
 
-    List<ValintaperusteDTO> findAvaimetForHakukohdes(List<String> oids);
+    List<ValintaperusteDTO> findAvaimetForHakukohde(String hakukohdeOid);
 
     HakukohteenValintaperusteAvaimetDTO findHakukohteenAvaimet(String oid);
 
@@ -47,7 +47,6 @@ public interface LaskentakaavaService {
 
     Laskentakaava update(Long id, LaskentakaavaCreateDTO laskentakaava);
 
-    @Transactional(readOnly = true)
     Laskentakaava read(Long key);
 
     Laskentakaava insert(Laskentakaava laskentakaava, String hakukohdeOid, String valintaryhmaOid);

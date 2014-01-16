@@ -3,8 +3,8 @@
     <dataset>
         <funktioargumentti id="15" version="0" indeksi="1" funktiokutsuchild_id="12" funktiokutsuparent_id="9"/>
 
-        <funktiokutsu id="12" version="0" funktionimi="HAELUKUARVO"/>
-        <funktiokutsu id="9" version="2" funktionimi="NIMETTYLUKUARVO"/>
+        <funktiokutsu tallenna_tulos="true" id="12" version="0" funktionimi="HAELUKUARVO"/>
+        <funktiokutsu tallenna_tulos="true" id="9" version="2" funktionimi="NIMETTYLUKUARVO"/>
 
         <hakijaryhma id="25" version="0" kiintio="20" kuvaus="" nimi="hakijaryhma 1" oid="hr1" laskentakaava_id="11" valintaryhma_id="1"/>
         <hakijaryhma id="26" version="0" kiintio="20" kuvaus="" nimi="hakijaryhma 1" oid="hr2" hakukohde_viite_id="2" laskentakaava_id="11" master_hakijaryhma_id="25"/>

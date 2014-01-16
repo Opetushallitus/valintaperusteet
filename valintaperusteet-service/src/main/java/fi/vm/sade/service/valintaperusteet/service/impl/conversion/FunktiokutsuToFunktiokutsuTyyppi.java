@@ -32,6 +32,13 @@ public class FunktiokutsuToFunktiokutsuTyyppi implements Converter<Funktiokutsu,
         tyyppi.setFunktionimi(funktiokutsu.getFunktionimi().name());
         tyyppi.setOid(funktiokutsu.getId());
 
+        tyyppi.setTallennaTulos(funktiokutsu.getTallennaTulos());
+        tyyppi.setTulosTekstiEn(funktiokutsu.getTulosTekstiEn());
+        tyyppi.setTulosTekstiFi(funktiokutsu.getTulosTekstiFi());
+        tyyppi.setTulosTekstiSv(funktiokutsu.getTulosTekstiSv());
+        tyyppi.setTulosTunniste(funktiokutsu.getTulosTunniste());
+
+
         for (Arvokonvertteriparametri arvokonvertteriparametri : funktiokutsu.getArvokonvertteriparametrit()) {
             ArvokonvertteriparametriTyyppi convert = arvokonvertteriparametriToArvokonvertteriparametriTyyppi.convert(arvokonvertteriparametri);
             tyyppi.getArvokonvertteriparametrit().add(convert);
