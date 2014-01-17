@@ -93,6 +93,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
     private final String PAASYKOE_TUNNISTE = "paasykoe_tunniste";
     private final String KIELIKOE_TUNNISTE = "{{hakukohde."+PkJaYoPohjaiset.kielikoetunniste+"}}";
     private final String LISANAYTTO_TUNNISTE = "lisanaytto_tunniste";
+    public static final String URHEILIJA_LISAPISTE_TUNNISTE = "{{hakukohde."+PkJaYoPohjaiset.urheilijaLisapisteTunniste+"}}";
 
     @Override
     public void luo() throws IOException {
@@ -232,6 +233,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         Laskentakaava hakutoivejarjestyspisteytysmalli = asetaValintaryhmaJaTallennaKantaan(PkJaYoPohjaiset.luoHakutoivejarjestyspisteytysmalli(), ammatillinenKoulutusVr.getOid());
         Laskentakaava tyokokemuspisteytysmalli = asetaValintaryhmaJaTallennaKantaan(PkJaYoPohjaiset.luoTyokokemuspisteytysmalli(), ammatillinenKoulutusVr.getOid());
         Laskentakaava sukupuolipisteytysmalli = asetaValintaryhmaJaTallennaKantaan(PkJaYoPohjaiset.luoSukupuolipisteytysmalli(), ammatillinenKoulutusVr.getOid());
+        Laskentakaava urheilijanLisapiste = asetaValintaryhmaJaTallennaKantaan(PkJaYoPohjaiset.urheilijaLisapisteLukuarvo(PkJaYoPohjaiset.urheilijaLisapisteTunniste), ammatillinenKoulutusVr.getOid());
 
         transactionManager.commit(tx);
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
@@ -239,7 +241,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         // Pk koostava iso kaava
         Laskentakaava toisenAsteenPeruskoulupohjainenPeruskaava = asetaValintaryhmaJaTallennaKantaan(PkPohjaiset.luoToisenAsteenPeruskoulupohjainenPeruskaava(pk_painotettavatKeskiarvotLaskentakaava,
                 pk_yleinenkoulumenestyspisteytysmalli, pk_pohjakoulutuspisteytysmalli, pk_ilmanKoulutuspaikkaaPisteytysmalli, hakutoivejarjestyspisteytysmalli, tyokokemuspisteytysmalli,
-                sukupuolipisteytysmalli), peruskouluVr.getOid());
+                sukupuolipisteytysmalli,urheilijanLisapiste), peruskouluVr.getOid());
         transactionManager.commit(tx);
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
@@ -257,7 +259,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
         // Yo koostava iso kaava
         Laskentakaava toisenAsteenYlioppilaspohjainenPeruskaava = asetaValintaryhmaJaTallennaKantaan(YoPohjaiset.luoToisenAsteenYlioppilaspohjainenPeruskaava(hakutoivejarjestyspisteytysmalli,
-                tyokokemuspisteytysmalli, sukupuolipisteytysmalli, lk_yleinenkoulumenestyspisteytysmalli), lukioVr.getOid());
+                tyokokemuspisteytysmalli, sukupuolipisteytysmalli, lk_yleinenkoulumenestyspisteytysmalli,urheilijanLisapiste), lukioVr.getOid());
         transactionManager.commit(tx);
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 

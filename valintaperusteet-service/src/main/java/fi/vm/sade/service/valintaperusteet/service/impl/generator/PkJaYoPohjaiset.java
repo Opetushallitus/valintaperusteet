@@ -34,6 +34,7 @@ public class PkJaYoPohjaiset {
 
     public static final String peruskoulunPaattotodistusVahintaanSeitseman = "peruskoulun_paattotodistus_vahintaan_seitseman_";
     public static final String lukionPaattotodistusVahintaanSeitseman = "lukion_paattotodistus_vahintaan_seitseman_";
+    public static final String urheilijaLisapisteTunniste = "urheilija_lisapiste_tunniste";
 
     public static Laskentakaava luoHakutoivejarjestyspisteytysmalli() {
         Funktiokutsu pisteet = GenericHelper.luoLukuarvo(2.0);
@@ -438,7 +439,7 @@ public class PkJaYoPohjaiset {
         return GenericHelper.luoTai(
                 GenericHelper.luoJa(
                         GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(GenericHelper.luoValintaperusteViite(opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO, "Opetuskieli", false), fi),
-                        GenericHelper.luoHaeTotuusarvo(GenericHelper.luoValintaperusteViite(peruskoulunPaattotodistusVahintaanSeitseman + fi, false,Valintaperustelahde.HAETTAVA_ARVO), false)
+                        GenericHelper.luoHaeTotuusarvo(GenericHelper.luoValintaperusteViite(peruskoulunPaattotodistusVahintaanSeitseman + fi, false, Valintaperustelahde.HAETTAVA_ARVO), false)
                 ),
                 GenericHelper.luoJa(
                         GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(GenericHelper.luoValintaperusteViite(opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO, "Opetuskieli", false), sv),
@@ -515,6 +516,22 @@ public class PkJaYoPohjaiset {
                 GenericHelper.luoHylkaa(kielikoekaava,
                         "Kielikoetta ei suoritettu tai kielikokeen korvaavuusehto ei täyttynyt")),
                 valintakoekaava.getNimi() + " + hylkäysperusteet (*)");
+
+    }
+
+    public static Laskentakaava urheilijaLisapisteLukuarvo(String tunniste) {
+ 
+        String alaraja = "0";
+        String ylaraja = "3";
+
+        List<Arvovalikonvertteriparametri> konvs = new ArrayList<Arvovalikonvertteriparametri>();
+        konvs.add(GenericHelper.luoArvovalikonvertteriparametri(alaraja, ylaraja));
+
+        Funktiokutsu funktiokutsu = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(tunniste, false, Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO, "", true), 0, konvs);
+
+        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
+                funktiokutsu,
+                "Urheilijalisäpisteen laskentakaava");
 
     }
 }
