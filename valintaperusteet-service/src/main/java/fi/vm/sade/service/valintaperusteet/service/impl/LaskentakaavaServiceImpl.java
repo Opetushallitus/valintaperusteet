@@ -478,6 +478,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
 
                 if (vp.getEpasuoraViittaus() != null && vp.getEpasuoraViittaus()) {
                     valintaperuste.setTunniste(hakukohteenValintaperusteet.get(vp.getTunniste()));
+                    valintaperuste.setOsallistuminenTunniste(valintaperuste.getTunniste() + ValintaperusteViite.OSALLISTUMINEN_POSTFIX);
                 }
 
                 if (funktiokutsu.getArvokonvertteriparametrit() != null
