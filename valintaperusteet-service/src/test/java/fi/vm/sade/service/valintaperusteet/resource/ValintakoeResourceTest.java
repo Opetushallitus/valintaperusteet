@@ -5,6 +5,7 @@ import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
+import fi.vm.sade.service.valintaperusteet.resource.impl.ValintakoeResourceImpl;
 import fi.vm.sade.service.valintaperusteet.util.TestUtil;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
@@ -35,8 +36,8 @@ import static org.junit.Assert.*;
 @DataSetLocation("classpath:test-data.xml")
 public class ValintakoeResourceTest {
 
-    private ValintakoeResource valintakoeResource = new ValintakoeResource();
-    private ObjectMapper mapper = new ObjectMapperProvider().getContext(ValintakoeResource.class);
+    private ValintakoeResourceImpl valintakoeResource = new ValintakoeResourceImpl();
+    private ObjectMapper mapper = new ObjectMapperProvider().getContext(ValintakoeResourceImpl.class);
     private TestUtil testUtil = new TestUtil(this.getClass());
 
 

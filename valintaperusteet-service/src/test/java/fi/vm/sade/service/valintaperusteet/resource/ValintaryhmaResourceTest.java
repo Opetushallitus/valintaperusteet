@@ -1,13 +1,17 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
-import fi.vm.sade.dbunit.annotation.DataSetLocation;
-import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
-import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
-import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
-import fi.vm.sade.service.valintaperusteet.dto.*;
-import fi.vm.sade.service.valintaperusteet.model.JsonViews;
-import fi.vm.sade.service.valintaperusteet.model.ValinnanVaiheTyyppi;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import javax.ws.rs.core.Response;
+
 import junit.framework.Assert;
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,30 +25,31 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
-import javax.ws.rs.core.Response;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import fi.vm.sade.dbunit.annotation.DataSetLocation;
+import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
+import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
+import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
+import fi.vm.sade.service.valintaperusteet.dto.KoodiDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaDTO;
+import fi.vm.sade.service.valintaperusteet.model.JsonViews;
+import fi.vm.sade.service.valintaperusteet.resource.impl.ValintaryhmaResourceImpl;
 
 /**
- * User: tommiha
- * Date: 1/21/13
- * Time: 4:05 PM
+ * User: tommiha Date: 1/21/13 Time: 4:05 PM
  */
 @ContextConfiguration(locations = "classpath:test-context.xml")
-@TestExecutionListeners(listeners = {JTACleanInsertTestExecutionListener.class,
+@TestExecutionListeners(listeners = { JTACleanInsertTestExecutionListener.class,
         DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
-        TransactionalTestExecutionListener.class})
+        TransactionalTestExecutionListener.class })
 @RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data.xml")
 public class ValintaryhmaResourceTest {
 
-    private ValintaryhmaResource valintaryhmaResource = new ValintaryhmaResource();
-    private ObjectMapper mapper = new ObjectMapperProvider().getContext(ValintaryhmaResource.class);
+    private ValintaryhmaResourceImpl valintaryhmaResource = new ValintaryhmaResourceImpl();
+    private ObjectMapper mapper = new ObjectMapperProvider().getContext(ValintaryhmaResourceImpl.class);
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -119,7 +124,8 @@ public class ValintaryhmaResourceTest {
 
         valinnanVaihe.setNimi("uusi");
         valinnanVaihe.setAktiivinen(true);
-        valinnanVaihe.setValinnanVaiheTyyppi(ValinnanVaiheTyyppi.TAVALLINEN);
+        valinnanVaihe
+                .setValinnanVaiheTyyppi(fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi.TAVALLINEN);
 
         Response response = valintaryhmaResource.insertValinnanvaihe("oid1", null, valinnanVaihe);
         assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
@@ -128,7 +134,8 @@ public class ValintaryhmaResourceTest {
         valinnanVaihe = new ValinnanVaiheCreateDTO();
         valinnanVaihe.setNimi("uusi");
         valinnanVaihe.setAktiivinen(true);
-        valinnanVaihe.setValinnanVaiheTyyppi(ValinnanVaiheTyyppi.TAVALLINEN);
+        valinnanVaihe
+                .setValinnanVaiheTyyppi(fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi.TAVALLINEN);
 
         response = valintaryhmaResource.insertValinnanvaihe("oid1", vv.getOid(), valinnanVaihe);
         assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
@@ -204,7 +211,6 @@ public class ValintaryhmaResourceTest {
 
     }
 
-
     @Test
     public void testLisaaValintakoekoodiValintaryhmalle() throws IOException {
         final String valintaryhmaOid = "oid52";
@@ -221,8 +227,8 @@ public class ValintaryhmaResourceTest {
 
     @Test
     public void testPaivitaValintaryhmanValintakoekoodit() throws IOException {
-        final String[] koeUrit = new String[]{"uusivalintakoekoodi", "uusivalintakoekoodi",
-                "valintakoeuri1", "valintakoeuri1", "valintakoeuri2"};
+        final String[] koeUrit = new String[] { "uusivalintakoekoodi", "uusivalintakoekoodi", "valintakoeuri1",
+                "valintakoeuri1", "valintakoeuri2" };
         final String valintaryhmaOid = "oid52";
 
         List<KoodiDTO> kokeet = new ArrayList<KoodiDTO>();
@@ -236,10 +242,9 @@ public class ValintaryhmaResourceTest {
 
         valintaryhmaResource.updateValintakoekoodi(valintaryhmaOid, kokeet).getEntity();
 
-        ValintaryhmaDTO paivitetty =
-                mapper.readValue(mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(
+        ValintaryhmaDTO paivitetty = mapper.readValue(
+                mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(
                         valintaryhmaResource.queryFull(valintaryhmaOid)), ValintaryhmaDTO.class);
-
 
         assertEquals(koeUrit.length, paivitetty.getValintakoekoodit().size());
     }

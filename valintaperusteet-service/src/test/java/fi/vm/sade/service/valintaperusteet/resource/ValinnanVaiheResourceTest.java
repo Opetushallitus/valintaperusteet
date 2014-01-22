@@ -1,14 +1,18 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
-import fi.vm.sade.dbunit.annotation.DataSetLocation;
-import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
-import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
-import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
-import fi.vm.sade.service.valintaperusteet.model.JsonViews;
-import fi.vm.sade.service.valintaperusteet.model.Tasapistesaanto;
-import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheEiOleOlemassaException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.After;
 import org.junit.Before;
@@ -23,31 +27,31 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import static org.junit.Assert.*;
+import fi.vm.sade.dbunit.annotation.DataSetLocation;
+import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
+import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
+import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
+import fi.vm.sade.service.valintaperusteet.model.JsonViews;
+import fi.vm.sade.service.valintaperusteet.resource.impl.HakukohdeResourceImpl;
+import fi.vm.sade.service.valintaperusteet.resource.impl.ValinnanVaiheResourceImpl;
+import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheEiOleOlemassaException;
 
 /**
- * User: tommiha
- * Date: 1/23/13
- * Time: 1:03 PM
+ * User: tommiha Date: 1/23/13 Time: 1:03 PM
  */
 @ContextConfiguration(locations = "classpath:test-context.xml")
-@TestExecutionListeners(listeners = {JTACleanInsertTestExecutionListener.class,
+@TestExecutionListeners(listeners = { JTACleanInsertTestExecutionListener.class,
         DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
-        TransactionalTestExecutionListener.class})
+        TransactionalTestExecutionListener.class })
 @RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data.xml")
 public class ValinnanVaiheResourceTest {
 
-    private ObjectMapper mapper = new ObjectMapperProvider().getContext(ValinnanVaiheResource.class);
-    private ValinnanVaiheResource vaiheResource = new ValinnanVaiheResource();
-    private HakukohdeResource hakuResource = new HakukohdeResource();
+    private ObjectMapper mapper = new ObjectMapperProvider().getContext(ValinnanVaiheResourceImpl.class);
+    private ValinnanVaiheResourceImpl vaiheResource = new ValinnanVaiheResourceImpl();
+    private HakukohdeResourceImpl hakuResource = new HakukohdeResourceImpl();
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -202,11 +206,10 @@ public class ValinnanVaiheResourceTest {
         jono.setOid("oid123");
         jono.setAloituspaikat(1);
         jono.setSiirretaanSijoitteluun(false);
-        jono.setTasapistesaanto(Tasapistesaanto.ARVONTA);
+        jono.setTasapistesaanto(fi.vm.sade.service.valintaperusteet.dto.model.Tasapistesaanto.ARVONTA);
         jono.setAktiivinen(true);
         return jono;
     }
-
 
     @Test
     public void testKuuluuSijoitteluun() {

@@ -9,6 +9,7 @@ import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriInsertDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
+import fi.vm.sade.service.valintaperusteet.resource.impl.JarjestyskriteeriResourceImpl;
 import fi.vm.sade.service.valintaperusteet.util.TestUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,7 +43,7 @@ import static junit.framework.Assert.assertEquals;
 @DataSetLocation("classpath:test-data.xml")
 public class JarjestyskriteeriResourceTest {
 
-    private JarjestyskriteeriResource resource = new JarjestyskriteeriResource();
+    private JarjestyskriteeriResourceImpl resource = new JarjestyskriteeriResourceImpl();
     private TestUtil testUtil = new TestUtil(this.getClass());
 
     @Autowired

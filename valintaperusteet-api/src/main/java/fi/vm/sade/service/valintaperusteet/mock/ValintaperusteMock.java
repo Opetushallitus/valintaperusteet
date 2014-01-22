@@ -1,28 +1,44 @@
 package fi.vm.sade.service.valintaperusteet.mock;
 
-import fi.vm.sade.service.valintaperusteet.GenericFault;
-import fi.vm.sade.service.valintaperusteet.ValintaperusteService;
-import fi.vm.sade.service.valintaperusteet.messages.HakuparametritTyyppi;
-import fi.vm.sade.service.valintaperusteet.schema.*;
-
-import javax.jws.WebParam;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.jws.WebParam;
+
+import fi.vm.sade.service.valintaperusteet.GenericFault;
+import fi.vm.sade.service.valintaperusteet.ValintaperusteService;
+import fi.vm.sade.service.valintaperusteet.messages.HakuparametritTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.FunktioargumenttiTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.FunktiokutsuTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.HakukohdeImportTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.JarjestyskriteeriTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.SyoteparametriTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.TasasijasaantoTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.TavallinenValinnanVaiheTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.ValintaperusteetTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.ValintatapajonoJarjestyskriteereillaTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.ValintatapajonoTyyppi;
+
 /**
  * @author Eetu Blomqvist
+ * 
+ * @Deprecated Mika tama on?
  */
+@Deprecated
 public class ValintaperusteMock implements ValintaperusteService {
 
-
     @Override
-    public void tuoHakukohde(@WebParam(name = "hakukohde", targetNamespace = "") HakukohdeImportTyyppi hakukohde) throws GenericFault {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void tuoHakukohde(@WebParam(name = "hakukohde", targetNamespace = "") HakukohdeImportTyyppi hakukohde)
+            throws GenericFault {
+        // To change body of implemented methods use File | Settings | File
+        // Templates.
     }
 
     @Override
-    public List<ValintatapajonoTyyppi> haeValintatapajonotSijoittelulle(@WebParam(name = "hakukohdeOid", targetNamespace = "") String hakukohdeOid) throws GenericFault {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public List<ValintatapajonoTyyppi> haeValintatapajonotSijoittelulle(
+            @WebParam(name = "hakukohdeOid", targetNamespace = "") String hakukohdeOid) throws GenericFault {
+        return null; // To change body of implemented methods use File |
+                     // Settings | File Templates.
     }
 
     @Override

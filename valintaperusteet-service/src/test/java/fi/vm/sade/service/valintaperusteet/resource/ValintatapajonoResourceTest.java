@@ -7,6 +7,8 @@ import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriDTO;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriInsertDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
+import fi.vm.sade.service.valintaperusteet.resource.impl.ValinnanVaiheResourceImpl;
+import fi.vm.sade.service.valintaperusteet.resource.impl.ValintatapajonoResourceImpl;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintatapajonoEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.util.TestUtil;
 import org.junit.Before;
@@ -42,12 +44,12 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data.xml")
 public class ValintatapajonoResourceTest {
-    private ValintatapajonoResource resource = new ValintatapajonoResource();
-    private ValinnanVaiheResource vaiheResource = new ValinnanVaiheResource();
+    private ValintatapajonoResourceImpl resource = new ValintatapajonoResourceImpl();
+    private ValinnanVaiheResourceImpl vaiheResource = new ValinnanVaiheResourceImpl();
 
     @Autowired
     private ApplicationContext applicationContext;
-    private TestUtil testUtil = new TestUtil(ValintatapajonoResource.class);
+    private TestUtil testUtil = new TestUtil(ValintatapajonoResourceImpl.class);
 
     @Before
     public void setUp() {

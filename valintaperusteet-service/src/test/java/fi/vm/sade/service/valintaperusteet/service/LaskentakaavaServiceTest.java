@@ -1,16 +1,20 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
-import fi.vm.sade.dbunit.annotation.DataSetLocation;
-import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
-import fi.vm.sade.generic.dao.GenericDAO;
-import fi.vm.sade.kaava.Funktiokuvaaja;
-import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
-import fi.vm.sade.service.valintaperusteet.dto.*;
-import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
-import fi.vm.sade.service.valintaperusteet.model.*;
-import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuMuodostaaSilmukanException;
-import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuaEiVoidaKayttaaValintakoelaskennassaException;
-import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaMuodostaaSilmukanException;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.assertTrue;
+
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,20 +26,40 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
-import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.util.*;
-
-import static junit.framework.Assert.*;
+import fi.vm.sade.dbunit.annotation.DataSetLocation;
+import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
+import fi.vm.sade.generic.dao.GenericDAO;
+import fi.vm.sade.kaava.Funktiokuvaaja;
+import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
+import fi.vm.sade.service.valintaperusteet.dto.FunktioargumenttiDTO;
+import fi.vm.sade.service.valintaperusteet.dto.FunktiokutsuDTO;
+import fi.vm.sade.service.valintaperusteet.dto.HakukohteenValintaperusteAvaimetDTO;
+import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaListDTO;
+import fi.vm.sade.service.valintaperusteet.dto.SyoteparametriDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
+import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
+import fi.vm.sade.service.valintaperusteet.model.Arvokonvertteriparametri;
+import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti;
+import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
+import fi.vm.sade.service.valintaperusteet.model.Funktionimi;
+import fi.vm.sade.service.valintaperusteet.model.Funktiotyyppi;
+import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
+import fi.vm.sade.service.valintaperusteet.model.Laskentamoodi;
+import fi.vm.sade.service.valintaperusteet.model.Syoteparametri;
+import fi.vm.sade.service.valintaperusteet.model.ValintaperusteViite;
+import fi.vm.sade.service.valintaperusteet.model.Valintaperustelahde;
+import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuMuodostaaSilmukanException;
+import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuaEiVoidaKayttaaValintakoelaskennassaException;
+import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaMuodostaaSilmukanException;
 
 /**
  * User: kwuoti Date: 21.1.2013 Time: 9.42
  */
 @ContextConfiguration(locations = "classpath:test-context.xml")
-@TestExecutionListeners(listeners = {JTACleanInsertTestExecutionListener.class,
+@TestExecutionListeners(listeners = { JTACleanInsertTestExecutionListener.class,
         DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
-        TransactionalTestExecutionListener.class})
+        TransactionalTestExecutionListener.class })
 @RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data.xml")
 public class LaskentakaavaServiceTest {
@@ -51,8 +75,6 @@ public class LaskentakaavaServiceTest {
 
     @Autowired
     private ValintaperusteetModelMapper modelMapper;
-
-
 
     private final static FunktioArgumenttiComparator comparator = new FunktioArgumenttiComparator();
 
@@ -75,18 +97,17 @@ public class LaskentakaavaServiceTest {
     public void initialize() {
         try {
             Class.forName("org.hsqldb.jdbcDriver");
-            Connection conn = DriverManager.
-                getConnection("jdbc:hsqldb:mem:valintaperusteet", "sa", "");
+            Connection conn = DriverManager.getConnection("jdbc:hsqldb:mem:valintaperusteet", "sa", "");
             conn.createStatement().executeUpdate("SET DATABASE TRANSACTION CONTROL MVCC");
             conn.commit();
             conn.close();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Test
-     public void testHaeKaava() {
+    public void testHaeKaava() {
         final Long id = 204L;
         Laskentakaava laskentakaava = laskentakaavaService.read(id);
         Funktiokutsu maksimi204L = laskentakaava.getFunktiokutsu();
@@ -137,7 +158,8 @@ public class LaskentakaavaServiceTest {
         assertEquals(0, luku2L.getFunktioargumentit().size());
         assertEquals(0, haeLukuarvo405L.getFunktioargumentit().size());
         assertEquals(1, haeLukuarvo405L.getValintaperusteviitteet().size());
-        ValintaperusteViite haeLukuarvo405LValintaperuste = haeLukuarvo405L.getValintaperusteviitteet().iterator().next();
+        ValintaperusteViite haeLukuarvo405LValintaperuste = haeLukuarvo405L.getValintaperusteviitteet().iterator()
+                .next();
         assertEquals("aidinkieli", haeLukuarvo405LValintaperuste.getTunniste());
 
         assertEquals(0, luku3L.getFunktioargumentit().size());
@@ -150,7 +172,7 @@ public class LaskentakaavaServiceTest {
         final Funktiokuvaaja.Funktiokuvaus funktiokuvaus = Funktiokuvaaja.annaFunktiokuvaus(nimi)._2();
 
         FunktiokutsuDTO funktiokutsu = new FunktiokutsuDTO();
-        funktiokutsu.setFunktionimi(Funktionimi.LUKUARVO);
+        funktiokutsu.setFunktionimi(fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.LUKUARVO);
         funktiokutsu.setTallennaTulos(false);
 
         SyoteparametriDTO syoteparametri = new SyoteparametriDTO();
@@ -164,7 +186,7 @@ public class LaskentakaavaServiceTest {
 
     private FunktiokutsuDTO createSumma(FunktiokutsuDTO... args) {
         FunktiokutsuDTO funktiokutsu = new FunktiokutsuDTO();
-        funktiokutsu.setFunktionimi(Funktionimi.SUMMA);
+        funktiokutsu.setFunktionimi(fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.SUMMA);
         funktiokutsu.setTallennaTulos(false);
 
         for (int i = 0; i < args.length; ++i) {
@@ -337,9 +359,9 @@ public class LaskentakaavaServiceTest {
         nimetty.getFunktioargumentit().add(arg);
 
         if (Funktiotyyppi.LUKUARVOFUNKTIO.equals(child.getFunktionimi().getTyyppi())) {
-            nimetty.setFunktionimi(Funktionimi.NIMETTYLUKUARVO);
+            nimetty.setFunktionimi(fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.NIMETTYLUKUARVO);
         } else {
-            nimetty.setFunktionimi(Funktionimi.NIMETTYTOTUUSARVO);
+            nimetty.setFunktionimi(fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.NIMETTYTOTUUSARVO);
         }
 
         SyoteparametriDTO syoteparametri = new SyoteparametriDTO();
@@ -357,7 +379,8 @@ public class LaskentakaavaServiceTest {
         Laskentakaava tallennettu = null;
         {
 
-            LaskentakaavaListDTO tallennettuKaava = modelMapper.map(laskentakaavaService.read(tallennettuKaavaId), LaskentakaavaListDTO.class);
+            LaskentakaavaListDTO tallennettuKaava = modelMapper.map(laskentakaavaService.read(tallennettuKaavaId),
+                    LaskentakaavaListDTO.class);
 
             FunktiokutsuDTO summa = createSumma(createLukuarvo(1.0), createLukuarvo(2.0));
             FunktioargumenttiDTO kaavaArg = new FunktioargumenttiDTO();
@@ -422,7 +445,8 @@ public class LaskentakaavaServiceTest {
         {
             final Long laskentakaavaId = 510L;
 
-            Laskentakaava laskentakaava = laskentakaavaService.haeLaskettavaKaava(laskentakaavaId, Laskentamoodi.VALINTALASKENTA);
+            Laskentakaava laskentakaava = laskentakaavaService.haeLaskettavaKaava(laskentakaavaId,
+                    Laskentamoodi.VALINTALASKENTA);
             Funktiokutsu nimetty513L = laskentakaava.getFunktiokutsu();
 
             assertEquals(Funktionimi.NIMETTYLUKUARVO, nimetty513L.getFunktionimi());
@@ -458,7 +482,8 @@ public class LaskentakaavaServiceTest {
     public void haeMallinnettuLaskentakaava() {
         final Long laskentakaavaId = 510L;
 
-        Laskentakaava laskentakaava = laskentakaavaService.haeLaskettavaKaava(laskentakaavaId, Laskentamoodi.VALINTALASKENTA);
+        Laskentakaava laskentakaava = laskentakaavaService.haeLaskettavaKaava(laskentakaavaId,
+                Laskentamoodi.VALINTALASKENTA);
         Funktiokutsu nimetty513L = laskentakaava.getFunktiokutsu();
 
         assertEquals(Funktionimi.NIMETTYLUKUARVO, nimetty513L.getFunktionimi());
@@ -515,7 +540,8 @@ public class LaskentakaavaServiceTest {
 
     @Test
     public void testItseensaViittaavaKaava() {
-        // Kaava 415 viittaa kaavaan 414. Asetetaan kaava 414 viittaamaan takaisin kaavaan 415, jolloin saadaan
+        // Kaava 415 viittaa kaavaan 414. Asetetaan kaava 414 viittaamaan
+        // takaisin kaavaan 415, jolloin saadaan
         // silmukka muodostettua.
 
         final Long alakaavaId = 414L;

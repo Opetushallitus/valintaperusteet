@@ -1,13 +1,11 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
-import fi.vm.sade.dbunit.annotation.DataSetLocation;
-import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
-import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
-import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
-import fi.vm.sade.service.valintaperusteet.dto.*;
-import fi.vm.sade.service.valintaperusteet.model.JsonViews;
-import fi.vm.sade.service.valintaperusteet.model.ValinnanVaiheTyyppi;
-import fi.vm.sade.service.valintaperusteet.util.TestUtil;
+import static org.junit.Assert.assertEquals;
+
+import java.util.List;
+
+import javax.ws.rs.core.Response;
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,29 +19,37 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
-import javax.ws.rs.core.Response;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
+import fi.vm.sade.dbunit.annotation.DataSetLocation;
+import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
+import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
+import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
+import fi.vm.sade.service.valintaperusteet.dto.HakukohdeInsertDTO;
+import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
+import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriDTO;
+import fi.vm.sade.service.valintaperusteet.dto.KoodiDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
+import fi.vm.sade.service.valintaperusteet.model.JsonViews;
+import fi.vm.sade.service.valintaperusteet.resource.impl.HakukohdeResourceImpl;
+import fi.vm.sade.service.valintaperusteet.util.TestUtil;
 
 /**
- * User: jukais
- * Date: 16.1.2013
- * Time: 14.15
+ * User: jukais Date: 16.1.2013 Time: 14.15
  */
 @ContextConfiguration(locations = "classpath:test-context.xml")
-@TestExecutionListeners(listeners = {JTACleanInsertTestExecutionListener.class,
+@TestExecutionListeners(listeners = { JTACleanInsertTestExecutionListener.class,
         DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
-        TransactionalTestExecutionListener.class})
+        TransactionalTestExecutionListener.class })
 @RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data.xml")
 public class HakukohdeResourceTest {
 
-    private HakukohdeResource hakukohdeResource = new HakukohdeResource();
+    private HakukohdeResourceImpl hakukohdeResource = new HakukohdeResourceImpl();
     private TestUtil testUtil = new TestUtil(HakukohdeResourceTest.class);
 
-    private ObjectMapper mapper = new ObjectMapperProvider().getContext(HakukohdeResource.class);
-
+    private ObjectMapper mapper = new ObjectMapperProvider().getContext(HakukohdeResourceImpl.class);
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -161,14 +167,14 @@ public class HakukohdeResourceTest {
         mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(valintaperusteet);
     }
 
-
     @Test
     public void testInsertValinnanVaihe() throws Exception {
         ValinnanVaiheCreateDTO valinnanVaihe = new ValinnanVaiheCreateDTO();
 
         valinnanVaihe.setNimi("uusi");
         valinnanVaihe.setAktiivinen(true);
-        valinnanVaihe.setValinnanVaiheTyyppi(ValinnanVaiheTyyppi.TAVALLINEN);
+        valinnanVaihe
+                .setValinnanVaiheTyyppi(fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi.TAVALLINEN);
 
         Response response = hakukohdeResource.insertValinnanvaihe("oid1", null, valinnanVaihe);
         assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
@@ -177,7 +183,8 @@ public class HakukohdeResourceTest {
         valinnanVaihe = new ValinnanVaiheCreateDTO();
         valinnanVaihe.setNimi("uusi");
         valinnanVaihe.setAktiivinen(true);
-        valinnanVaihe.setValinnanVaiheTyyppi(ValinnanVaiheTyyppi.TAVALLINEN);
+        valinnanVaihe
+                .setValinnanVaiheTyyppi(fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi.TAVALLINEN);
 
         response = hakukohdeResource.insertValinnanvaihe("oid1", vv.getOid(), valinnanVaihe);
         assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());

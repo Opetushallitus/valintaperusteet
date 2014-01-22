@@ -1,14 +1,14 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
-import fi.vm.sade.dbunit.annotation.DataSetLocation;
-import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
-import fi.vm.sade.kaava.Funktiokuvaaja;
-import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
-import fi.vm.sade.service.valintaperusteet.dto.*;
-import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
-import fi.vm.sade.service.valintaperusteet.model.Funktionimi;
-import fi.vm.sade.service.valintaperusteet.model.Funktiotyyppi;
-import fi.vm.sade.service.valintaperusteet.model.JsonViews;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertNull;
+
+import java.util.List;
+
+import javax.ws.rs.core.Response;
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,27 +22,36 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
-import javax.ws.rs.core.Response;
-import java.util.List;
-
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
-import static org.junit.Assert.assertNull;
+import fi.vm.sade.dbunit.annotation.DataSetLocation;
+import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
+import fi.vm.sade.kaava.Funktiokuvaaja;
+import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
+import fi.vm.sade.service.valintaperusteet.dto.FunktioargumenttiDTO;
+import fi.vm.sade.service.valintaperusteet.dto.FunktiokutsuDTO;
+import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaDTO;
+import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaInsertDTO;
+import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaListDTO;
+import fi.vm.sade.service.valintaperusteet.dto.SyoteparametriDTO;
+import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
+import fi.vm.sade.service.valintaperusteet.model.Funktionimi;
+import fi.vm.sade.service.valintaperusteet.model.Funktiotyyppi;
+import fi.vm.sade.service.valintaperusteet.model.JsonViews;
+import fi.vm.sade.service.valintaperusteet.resource.impl.LaskentakaavaResourceImpl;
 
 /**
  * User: kwuoti Date: 28.1.2013 Time: 13.04
  */
 @ContextConfiguration(locations = "classpath:test-context.xml")
-@TestExecutionListeners(listeners = {JTACleanInsertTestExecutionListener.class,
+@TestExecutionListeners(listeners = { JTACleanInsertTestExecutionListener.class,
         DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
-        TransactionalTestExecutionListener.class})
+        TransactionalTestExecutionListener.class })
 @RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data.xml")
 public class LaskentakaavaResourceTest {
 
-    private LaskentakaavaResource laskentakaavaResource = new LaskentakaavaResource();
-    private ObjectMapper mapper = new ObjectMapperProvider().getContext(LaskentakaavaResource.class);
+    private LaskentakaavaResourceImpl laskentakaavaResource = new LaskentakaavaResourceImpl();
+    private ObjectMapper mapper = new ObjectMapperProvider().getContext(LaskentakaavaResourceImpl.class);
 
     @Autowired
     private ValintaperusteetModelMapper modelMapper;
@@ -61,7 +70,7 @@ public class LaskentakaavaResourceTest {
         final Funktiokuvaaja.Funktiokuvaus funktiokuvaus = Funktiokuvaaja.annaFunktiokuvaus(nimi)._2();
 
         FunktiokutsuDTO funktiokutsu = new FunktiokutsuDTO();
-        funktiokutsu.setFunktionimi(Funktionimi.LUKUARVO);
+        funktiokutsu.setFunktionimi(fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.LUKUARVO);
         funktiokutsu.setTallennaTulos(false);
 
         SyoteparametriDTO syoteparametri = new SyoteparametriDTO();
@@ -75,7 +84,7 @@ public class LaskentakaavaResourceTest {
 
     private FunktiokutsuDTO createSumma(FunktiokutsuDTO... args) {
         FunktiokutsuDTO funktiokutsu = new FunktiokutsuDTO();
-        funktiokutsu.setFunktionimi(Funktionimi.SUMMA);
+        funktiokutsu.setFunktionimi(fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.SUMMA);
 
         funktiokutsu.setTallennaTulos(true);
         funktiokutsu.setTulosTekstiEn("en");
@@ -196,10 +205,10 @@ public class LaskentakaavaResourceTest {
         assertEquals("sv", laskentakaava.getFunktiokutsu().getTulosTekstiSv());
     }
 
-
     @Test
     public void testGetTotuusarvokaava() {
-        List<LaskentakaavaListDTO> kaavat = laskentakaavaResource.kaavat(false, null, null, Funktiotyyppi.TOTUUSARVOFUNKTIO);
+        List<LaskentakaavaListDTO> kaavat = laskentakaavaResource.kaavat(false, null, null,
+                fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi.TOTUUSARVOFUNKTIO);
         assertEquals(4, kaavat.size());
 
         for (LaskentakaavaListDTO kaava : kaavat) {

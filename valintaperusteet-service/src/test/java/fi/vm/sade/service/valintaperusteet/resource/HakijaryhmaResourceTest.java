@@ -4,6 +4,7 @@ import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaDTO;
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.*;
+import fi.vm.sade.service.valintaperusteet.resource.impl.HakijaryhmaResourceImpl;
 import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaValintatapajonoService;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,13 +27,13 @@ import static org.mockito.Mockito.when;
  */
 public class HakijaryhmaResourceTest {
 
-    private HakijaryhmaResource hakijaryhmaResource;
+    private HakijaryhmaResourceImpl hakijaryhmaResource;
     private HakijaryhmaValintatapajonoService hakijaryhmaValintatapajonoServiceMock;
     private ValintaperusteetModelMapper modelMapper = new ValintaperusteetModelMapper();
 
     @Before
     public void setUp() {
-        hakijaryhmaResource = new HakijaryhmaResource();
+        hakijaryhmaResource = new HakijaryhmaResourceImpl();
         hakijaryhmaValintatapajonoServiceMock = mock(HakijaryhmaValintatapajonoService.class);
 
         ReflectionTestUtils.setField(hakijaryhmaResource, "hakijaryhmaValintatapajonoService", hakijaryhmaValintatapajonoServiceMock);

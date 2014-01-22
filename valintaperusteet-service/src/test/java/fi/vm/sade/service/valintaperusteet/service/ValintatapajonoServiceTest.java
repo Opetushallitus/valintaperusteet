@@ -1,5 +1,28 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNotSame;
+import static junit.framework.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
+import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
+import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
+
 import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
@@ -10,31 +33,15 @@ import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaiheTyyppi;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintatapajonoaEiVoiLisataException;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
-import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
-import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
-
-import java.util.*;
-
-import static junit.framework.Assert.*;
 
 /**
- * Created with IntelliJ IDEA.
- * User: jukais
- * Date: 17.1.2013
- * Time: 15.14
- * To change this template use File | Settings | File Templates.
+ * Created with IntelliJ IDEA. User: jukais Date: 17.1.2013 Time: 15.14 To
+ * change this template use File | Settings | File Templates.
  */
 @ContextConfiguration(locations = "classpath:test-context.xml")
-@TestExecutionListeners(listeners = {JTACleanInsertTestExecutionListener.class,
+@TestExecutionListeners(listeners = { JTACleanInsertTestExecutionListener.class,
         DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
-        TransactionalTestExecutionListener.class})
+        TransactionalTestExecutionListener.class })
 @RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data.xml")
 public class ValintatapajonoServiceTest {
@@ -55,12 +62,11 @@ public class ValintatapajonoServiceTest {
     }
 
     private boolean valintatapajonotOvatKopioita(Valintatapajono jono1, Valintatapajono jono2) {
-        return jono1.getAktiivinen().equals(jono2.getAktiivinen()) &&
-                jono1.getSiirretaanSijoitteluun().equals(jono2.getSiirretaanSijoitteluun()) &&
-                jono1.getAloituspaikat().equals(jono2.getAloituspaikat()) &&
-                jono1.getKuvaus().equals(jono2.getKuvaus()) &&
-                jono1.getNimi().equals(jono2.getNimi()) &&
-                jono1.getTasapistesaanto().equals(jono2.getTasapistesaanto());
+        return jono1.getAktiivinen().equals(jono2.getAktiivinen())
+                && jono1.getSiirretaanSijoitteluun().equals(jono2.getSiirretaanSijoitteluun())
+                && jono1.getAloituspaikat().equals(jono2.getAloituspaikat())
+                && jono1.getKuvaus().equals(jono2.getKuvaus()) && jono1.getNimi().equals(jono2.getNimi())
+                && jono1.getTasapistesaanto().equals(jono2.getTasapistesaanto());
     }
 
     @Test
@@ -70,25 +76,27 @@ public class ValintatapajonoServiceTest {
         {
             // Alkutilanne:
             // --Valintaryhma (id 14)
-            //     |    - valinnan vaihe 1 (id 45)
-            //     |          - jono 1 (id 1050)
-            //     |          - jono 2 (id 1051)
-            //     |          - jono 3 (id 1052)
-            //     |
-            //     |--Valintaryhma (id 15)
-            //               - valinnan vaihe 1.1 (id 46)
-            //                     - jono 1.1 (id 1053)
-            //                     - jono 2.1 (id 1054)
-            //                     - jono 4   (id 1055)
-            //                     - jono 3.1 (id 1056)
+            // | - valinnan vaihe 1 (id 45)
+            // | - jono 1 (id 1050)
+            // | - jono 2 (id 1051)
+            // | - jono 3 (id 1052)
+            // |
+            // |--Valintaryhma (id 15)
+            // - valinnan vaihe 1.1 (id 46)
+            // - jono 1.1 (id 1053)
+            // - jono 2.1 (id 1054)
+            // - jono 4 (id 1055)
+            // - jono 3.1 (id 1056)
 
             assertNotNull(valinnanVaiheDAO.readByOid(masterValinnanVaiheOid));
             List<Valintatapajono> vv45Ljonot = valintatapajonoService.findJonoByValinnanvaihe(masterValinnanVaiheOid);
             assertEquals(3, vv45Ljonot.size());
-            assertTrue(vv45Ljonot.get(0).getId().longValue() == 1050L && vv45Ljonot.get(0).getMasterValintatapajono() == null);
-            assertTrue(vv45Ljonot.get(1).getId().longValue() == 1051L && vv45Ljonot.get(1).getMasterValintatapajono() == null);
-            assertTrue(vv45Ljonot.get(2).getId().longValue() == 1052L && vv45Ljonot.get(1).getMasterValintatapajono() == null);
-
+            assertTrue(vv45Ljonot.get(0).getId().longValue() == 1050L
+                    && vv45Ljonot.get(0).getMasterValintatapajono() == null);
+            assertTrue(vv45Ljonot.get(1).getId().longValue() == 1051L
+                    && vv45Ljonot.get(1).getMasterValintatapajono() == null);
+            assertTrue(vv45Ljonot.get(2).getId().longValue() == 1052L
+                    && vv45Ljonot.get(1).getMasterValintatapajono() == null);
 
             ValinnanVaihe vv46L = valinnanVaiheDAO.readByOid(kopioValinnanVaiheOid);
             assertNotNull(vv46L);
@@ -96,10 +104,14 @@ public class ValintatapajonoServiceTest {
             List<Valintatapajono> vv46Ljonot = valintatapajonoService.findJonoByValinnanvaihe(kopioValinnanVaiheOid);
             assertEquals(4, vv46Ljonot.size());
 
-            assertTrue(vv46Ljonot.get(0).getId().longValue() == 1053L && vv46Ljonot.get(0).getMasterValintatapajono().getId().longValue() == 1050L);
-            assertTrue(vv46Ljonot.get(1).getId().longValue() == 1054L && vv46Ljonot.get(1).getMasterValintatapajono().getId().longValue() == 1051L);
-            assertTrue(vv46Ljonot.get(2).getId().longValue() == 1055L && vv46Ljonot.get(2).getMasterValintatapajono() == null);
-            assertTrue(vv46Ljonot.get(3).getId().longValue() == 1056L && vv46Ljonot.get(3).getMasterValintatapajono().getId().longValue() == 1052L);
+            assertTrue(vv46Ljonot.get(0).getId().longValue() == 1053L
+                    && vv46Ljonot.get(0).getMasterValintatapajono().getId().longValue() == 1050L);
+            assertTrue(vv46Ljonot.get(1).getId().longValue() == 1054L
+                    && vv46Ljonot.get(1).getMasterValintatapajono().getId().longValue() == 1051L);
+            assertTrue(vv46Ljonot.get(2).getId().longValue() == 1055L
+                    && vv46Ljonot.get(2).getMasterValintatapajono() == null);
+            assertTrue(vv46Ljonot.get(3).getId().longValue() == 1056L
+                    && vv46Ljonot.get(3).getMasterValintatapajono().getId().longValue() == 1052L);
         }
 
         final String edellinenValintatapajonoOid = "1051";
@@ -109,7 +121,7 @@ public class ValintatapajonoServiceTest {
         uusiJono.setAloituspaikat(15);
         uusiJono.setKuvaus("uusi kuvaus");
         uusiJono.setNimi("uusi nimi");
-        uusiJono.setTasapistesaanto(Tasapistesaanto.ALITAYTTO);
+        uusiJono.setTasapistesaanto(fi.vm.sade.service.valintaperusteet.dto.model.Tasapistesaanto.ALITAYTTO);
         uusiJono.setSiirretaanSijoitteluun(true);
 
         Valintatapajono lisatty = valintatapajonoService.lisaaValintatapajonoValinnanVaiheelle(masterValinnanVaiheOid,
@@ -118,27 +130,29 @@ public class ValintatapajonoServiceTest {
         {
             // Lopputilanne:
             // --Valintaryhma (id 14)
-            //     |    - valinnan vaihe 1 (id 45)
-            //     |          - jono 1 (id 1050)
-            //     |          - jono 2 (id 1051)
-            //     |          - uusi jono x
-            //     |          - jono 3 (id 1052)
-            //     |
-            //     |--Valintaryhma (id 15)
-            //               - valinnan vaihe 1.1 (id 46)
-            //                     - jono 1.1 (id 1053)
-            //                     - jono 2.1 (id 1054)
-            //                     - uusi jono x.1
-            //                     - jono 4   (id 1055)
-            //                     - jono 3.1 (id 1056)
+            // | - valinnan vaihe 1 (id 45)
+            // | - jono 1 (id 1050)
+            // | - jono 2 (id 1051)
+            // | - uusi jono x
+            // | - jono 3 (id 1052)
+            // |
+            // |--Valintaryhma (id 15)
+            // - valinnan vaihe 1.1 (id 46)
+            // - jono 1.1 (id 1053)
+            // - jono 2.1 (id 1054)
+            // - uusi jono x.1
+            // - jono 4 (id 1055)
+            // - jono 3.1 (id 1056)
             assertNotNull(valinnanVaiheDAO.readByOid(masterValinnanVaiheOid));
             List<Valintatapajono> vv45Ljonot = valintatapajonoService.findJonoByValinnanvaihe(masterValinnanVaiheOid);
             assertEquals(4, vv45Ljonot.size());
-            assertTrue(vv45Ljonot.get(0).getId().longValue() == 1050L && vv45Ljonot.get(0).getMasterValintatapajono() == null);
-            assertTrue(vv45Ljonot.get(1).getId().longValue() == 1051L && vv45Ljonot.get(1).getMasterValintatapajono() == null);
+            assertTrue(vv45Ljonot.get(0).getId().longValue() == 1050L
+                    && vv45Ljonot.get(0).getMasterValintatapajono() == null);
+            assertTrue(vv45Ljonot.get(1).getId().longValue() == 1051L
+                    && vv45Ljonot.get(1).getMasterValintatapajono() == null);
             assertTrue(vv45Ljonot.get(2).equals(lisatty) && vv45Ljonot.get(2).getMasterValintatapajono() == null);
-            assertTrue(vv45Ljonot.get(3).getId().longValue() == 1052L && vv45Ljonot.get(3).getMasterValintatapajono() == null);
-
+            assertTrue(vv45Ljonot.get(3).getId().longValue() == 1052L
+                    && vv45Ljonot.get(3).getMasterValintatapajono() == null);
 
             ValinnanVaihe vv46L = valinnanVaiheDAO.readByOid(kopioValinnanVaiheOid);
             assertNotNull(vv46L);
@@ -146,11 +160,16 @@ public class ValintatapajonoServiceTest {
             List<Valintatapajono> vv46Ljonot = valintatapajonoService.findJonoByValinnanvaihe(kopioValinnanVaiheOid);
             assertEquals(5, vv46Ljonot.size());
 
-            assertTrue(vv46Ljonot.get(0).getId().longValue() == 1053L && vv46Ljonot.get(0).getMasterValintatapajono().getId().longValue() == 1050L);
-            assertTrue(vv46Ljonot.get(1).getId().longValue() == 1054L && vv46Ljonot.get(1).getMasterValintatapajono().getId().longValue() == 1051L);
-            assertTrue(vv46Ljonot.get(2).getMasterValintatapajono().equals(lisatty) && valintatapajonotOvatKopioita(vv46Ljonot.get(2), lisatty));
-            assertTrue(vv46Ljonot.get(3).getId().longValue() == 1055L && vv46Ljonot.get(3).getMasterValintatapajono() == null);
-            assertTrue(vv46Ljonot.get(4).getId().longValue() == 1056L && vv46Ljonot.get(4).getMasterValintatapajono().getId().longValue() == 1052L);
+            assertTrue(vv46Ljonot.get(0).getId().longValue() == 1053L
+                    && vv46Ljonot.get(0).getMasterValintatapajono().getId().longValue() == 1050L);
+            assertTrue(vv46Ljonot.get(1).getId().longValue() == 1054L
+                    && vv46Ljonot.get(1).getMasterValintatapajono().getId().longValue() == 1051L);
+            assertTrue(vv46Ljonot.get(2).getMasterValintatapajono().equals(lisatty)
+                    && valintatapajonotOvatKopioita(vv46Ljonot.get(2), lisatty));
+            assertTrue(vv46Ljonot.get(3).getId().longValue() == 1055L
+                    && vv46Ljonot.get(3).getMasterValintatapajono() == null);
+            assertTrue(vv46Ljonot.get(4).getId().longValue() == 1056L
+                    && vv46Ljonot.get(4).getMasterValintatapajono().getId().longValue() == 1052L);
         }
     }
 
@@ -167,9 +186,10 @@ public class ValintatapajonoServiceTest {
         uusiJono.setAloituspaikat(15);
         uusiJono.setKuvaus("uusi kuvaus");
         uusiJono.setNimi("uusi nimi");
-        uusiJono.setTasapistesaanto(Tasapistesaanto.ALITAYTTO);
+        uusiJono.setTasapistesaanto(fi.vm.sade.service.valintaperusteet.dto.model.Tasapistesaanto.ALITAYTTO);
         uusiJono.setSiirretaanSijoitteluun(true);
-        Valintatapajono lisatty = valintatapajonoService.lisaaValintatapajonoValinnanVaiheelle(valinnanVaiheOid, uusiJono, null);
+        Valintatapajono lisatty = valintatapajonoService.lisaaValintatapajonoValinnanVaiheelle(valinnanVaiheOid,
+                uusiJono, null);
 
         {
             assertNotNull(valinnanVaiheDAO.readByOid(valinnanVaiheOid));
@@ -191,15 +211,15 @@ public class ValintatapajonoServiceTest {
             assertTrue(jonot.get(2).getId().longValue() == 1059L);
         }
 
-
         ValintatapajonoCreateDTO uusiJono = new ValintatapajonoCreateDTO();
         uusiJono.setAktiivinen(true);
         uusiJono.setAloituspaikat(15);
         uusiJono.setKuvaus("uusi kuvaus");
         uusiJono.setNimi("uusi nimi");
-        uusiJono.setTasapistesaanto(Tasapistesaanto.ALITAYTTO);
+        uusiJono.setTasapistesaanto(fi.vm.sade.service.valintaperusteet.dto.model.Tasapistesaanto.ALITAYTTO);
         uusiJono.setSiirretaanSijoitteluun(true);
-        Valintatapajono lisatty = valintatapajonoService.lisaaValintatapajonoValinnanVaiheelle(valinnanVaiheOid, uusiJono, null);
+        Valintatapajono lisatty = valintatapajonoService.lisaaValintatapajonoValinnanVaiheelle(valinnanVaiheOid,
+                uusiJono, null);
 
         {
             assertNotNull(valinnanVaiheDAO.readByOid(valinnanVaiheOid));
@@ -219,70 +239,86 @@ public class ValintatapajonoServiceTest {
         {
             // Alkutilanne:
             // --Valintaryhma (id 21)
-            //     |    - valinnan vaihe 1 (id 68)
-            //     |          - jono 1 (id 18)
-            //     |          - jono 2 (id 19)
-            //     |          - jono 3 (id 20)
-            //     |
-            //     |--Valintaryhma (id 22)
-            //               - valinnan vaihe 1.1 (id 69)
-            //                     - jono 4   (id 21)
-            //                     - jono 1.1 (id 22)
-            //                     - jono 3.1 (id 23)
-            //                     - jono 5   (id 24)
-            //                     - jono 2.1 (id 25)
+            // | - valinnan vaihe 1 (id 68)
+            // | - jono 1 (id 18)
+            // | - jono 2 (id 19)
+            // | - jono 3 (id 20)
+            // |
+            // |--Valintaryhma (id 22)
+            // - valinnan vaihe 1.1 (id 69)
+            // - jono 4 (id 21)
+            // - jono 1.1 (id 22)
+            // - jono 3.1 (id 23)
+            // - jono 5 (id 24)
+            // - jono 2.1 (id 25)
 
             assertNotNull(valinnanVaiheDAO.readByOid(valinnanVaiheOid));
             List<Valintatapajono> vv68Ljonot = valintatapajonoService.findJonoByValinnanvaihe(valinnanVaiheOid);
             assertEquals(3, vv68Ljonot.size());
-            assertTrue(vv68Ljonot.get(0).getId().longValue() == 18L && vv68Ljonot.get(0).getMasterValintatapajono() == null);
-            assertTrue(vv68Ljonot.get(1).getId().longValue() == 19L && vv68Ljonot.get(1).getMasterValintatapajono() == null);
-            assertTrue(vv68Ljonot.get(2).getId().longValue() == 20L && vv68Ljonot.get(2).getMasterValintatapajono() == null);
+            assertTrue(vv68Ljonot.get(0).getId().longValue() == 18L
+                    && vv68Ljonot.get(0).getMasterValintatapajono() == null);
+            assertTrue(vv68Ljonot.get(1).getId().longValue() == 19L
+                    && vv68Ljonot.get(1).getMasterValintatapajono() == null);
+            assertTrue(vv68Ljonot.get(2).getId().longValue() == 20L
+                    && vv68Ljonot.get(2).getMasterValintatapajono() == null);
 
             assertNotNull(valinnanVaiheDAO.readByOid(kopioValinnanVaiheOid));
             List<Valintatapajono> vv69Ljonot = valintatapajonoService.findJonoByValinnanvaihe(kopioValinnanVaiheOid);
             assertEquals(5, vv69Ljonot.size());
-            assertTrue(vv69Ljonot.get(0).getId().longValue() == 21L && vv69Ljonot.get(0).getMasterValintatapajono() == null);
-            assertTrue(vv69Ljonot.get(1).getId().longValue() == 22L && vv69Ljonot.get(1).getMasterValintatapajono().getId().longValue() == 18L);
-            assertTrue(vv69Ljonot.get(2).getId().longValue() == 23L && vv69Ljonot.get(2).getMasterValintatapajono().getId().longValue() == 20L);
-            assertTrue(vv69Ljonot.get(3).getId().longValue() == 24L && vv69Ljonot.get(3).getMasterValintatapajono() == null);
-            assertTrue(vv69Ljonot.get(4).getId().longValue() == 25L && vv69Ljonot.get(4).getMasterValintatapajono().getId().longValue() == 19L);
+            assertTrue(vv69Ljonot.get(0).getId().longValue() == 21L
+                    && vv69Ljonot.get(0).getMasterValintatapajono() == null);
+            assertTrue(vv69Ljonot.get(1).getId().longValue() == 22L
+                    && vv69Ljonot.get(1).getMasterValintatapajono().getId().longValue() == 18L);
+            assertTrue(vv69Ljonot.get(2).getId().longValue() == 23L
+                    && vv69Ljonot.get(2).getMasterValintatapajono().getId().longValue() == 20L);
+            assertTrue(vv69Ljonot.get(3).getId().longValue() == 24L
+                    && vv69Ljonot.get(3).getMasterValintatapajono() == null);
+            assertTrue(vv69Ljonot.get(4).getId().longValue() == 25L
+                    && vv69Ljonot.get(4).getMasterValintatapajono().getId().longValue() == 19L);
         }
 
-        String[] uusiJarjestys = new String[]{"20", "18", "19"};
+        String[] uusiJarjestys = new String[] { "20", "18", "19" };
         valintatapajonoService.jarjestaValintatapajonot(Arrays.asList(uusiJarjestys));
 
         {
             // Lopputilanne:
             // --Valintaryhma (id 21)
-            //     |    - valinnan vaihe 1 (id 68)
-            //     |          - jono 1 (id 18)
-            //     |          - jono 2 (id 19)
-            //     |          - jono 3 (id 20)
-            //     |
-            //     |--Valintaryhma (id 22)
-            //               - valinnan vaihe 1.1 (id 69)
-            //                     - jono 4   (id 21)
-            //                     - jono 3.1 (id 23)
-            //                     - jono 5   (id 24)
-            //                     - jono 1.1 (id 22)
-            //                     - jono 2.1 (id 25)
+            // | - valinnan vaihe 1 (id 68)
+            // | - jono 1 (id 18)
+            // | - jono 2 (id 19)
+            // | - jono 3 (id 20)
+            // |
+            // |--Valintaryhma (id 22)
+            // - valinnan vaihe 1.1 (id 69)
+            // - jono 4 (id 21)
+            // - jono 3.1 (id 23)
+            // - jono 5 (id 24)
+            // - jono 1.1 (id 22)
+            // - jono 2.1 (id 25)
 
             assertNotNull(valinnanVaiheDAO.readByOid(valinnanVaiheOid));
             List<Valintatapajono> vv68Ljonot = valintatapajonoService.findJonoByValinnanvaihe(valinnanVaiheOid);
             assertEquals(3, vv68Ljonot.size());
-            assertTrue(vv68Ljonot.get(0).getId().longValue() == 20L && vv68Ljonot.get(0).getMasterValintatapajono() == null);
-            assertTrue(vv68Ljonot.get(1).getId().longValue() == 18L && vv68Ljonot.get(1).getMasterValintatapajono() == null);
-            assertTrue(vv68Ljonot.get(2).getId().longValue() == 19L && vv68Ljonot.get(2).getMasterValintatapajono() == null);
+            assertTrue(vv68Ljonot.get(0).getId().longValue() == 20L
+                    && vv68Ljonot.get(0).getMasterValintatapajono() == null);
+            assertTrue(vv68Ljonot.get(1).getId().longValue() == 18L
+                    && vv68Ljonot.get(1).getMasterValintatapajono() == null);
+            assertTrue(vv68Ljonot.get(2).getId().longValue() == 19L
+                    && vv68Ljonot.get(2).getMasterValintatapajono() == null);
 
             assertNotNull(valinnanVaiheDAO.readByOid(kopioValinnanVaiheOid));
             List<Valintatapajono> vv69Ljonot = valintatapajonoService.findJonoByValinnanvaihe(kopioValinnanVaiheOid);
             assertEquals(5, vv69Ljonot.size());
-            assertTrue(vv69Ljonot.get(0).getId().longValue() == 21L && vv69Ljonot.get(0).getMasterValintatapajono() == null);
-            assertTrue(vv69Ljonot.get(1).getId().longValue() == 23L && vv69Ljonot.get(1).getMasterValintatapajono().getId().longValue() == 20L);
-            assertTrue(vv69Ljonot.get(2).getId().longValue() == 24L && vv69Ljonot.get(2).getMasterValintatapajono() == null);
-            assertTrue(vv69Ljonot.get(3).getId().longValue() == 22L && vv69Ljonot.get(3).getMasterValintatapajono().getId().longValue() == 18L);
-            assertTrue(vv69Ljonot.get(4).getId().longValue() == 25L && vv69Ljonot.get(4).getMasterValintatapajono().getId().longValue() == 19L);
+            assertTrue(vv69Ljonot.get(0).getId().longValue() == 21L
+                    && vv69Ljonot.get(0).getMasterValintatapajono() == null);
+            assertTrue(vv69Ljonot.get(1).getId().longValue() == 23L
+                    && vv69Ljonot.get(1).getMasterValintatapajono().getId().longValue() == 20L);
+            assertTrue(vv69Ljonot.get(2).getId().longValue() == 24L
+                    && vv69Ljonot.get(2).getMasterValintatapajono() == null);
+            assertTrue(vv69Ljonot.get(3).getId().longValue() == 22L
+                    && vv69Ljonot.get(3).getMasterValintatapajono().getId().longValue() == 18L);
+            assertTrue(vv69Ljonot.get(4).getId().longValue() == 25L
+                    && vv69Ljonot.get(4).getMasterValintatapajono().getId().longValue() == 19L);
         }
     }
 
@@ -304,7 +340,6 @@ public class ValintatapajonoServiceTest {
         final String uusiKuvaus = "uusi kuvaus";
         final Tasapistesaanto uusiTasapistesaanto = Tasapistesaanto.YLITAYTTO;
         final Integer uusiAloituspaikat = 1;
-
 
         final String valintatapajonoOid = "26";
         {
@@ -357,7 +392,8 @@ public class ValintatapajonoServiceTest {
         paivitys.setNimi(uusiNimi);
         paivitys.setKuvaus(uusiKuvaus);
         paivitys.setAloituspaikat(uusiAloituspaikat);
-        paivitys.setTasapistesaanto(uusiTasapistesaanto);
+        paivitys.setTasapistesaanto(new ModelMapper().map(uusiTasapistesaanto,
+                fi.vm.sade.service.valintaperusteet.dto.model.Tasapistesaanto.class));
         paivitys.setKaytetaanValintalaskentaa(true);
 
         Valintatapajono paivitetty = valintatapajonoService.update(valintatapajonoOid, paivitys);
@@ -419,10 +455,9 @@ public class ValintatapajonoServiceTest {
         jono.setKuvaus("kuvaus");
         jono.setNimi("nimi");
         jono.setSiirretaanSijoitteluun(false);
-        jono.setTasapistesaanto(Tasapistesaanto.ARVONTA);
+        jono.setTasapistesaanto(fi.vm.sade.service.valintaperusteet.dto.model.Tasapistesaanto.ARVONTA);
 
         valintatapajonoService.lisaaValintatapajonoValinnanVaiheelle(valinnanVaiheOid, jono, null);
     }
-
 
 }
