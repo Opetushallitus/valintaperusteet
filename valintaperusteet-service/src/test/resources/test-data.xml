@@ -993,46 +993,46 @@
 
 
     <valintakoe id="1" version="0" oid="oid1" tunniste="valintakoetunniste1" nimi="valintakoe1" kuvaus="kuvaus1"
-                aktiivinen="true" valinnan_vaihe_id="83" laskentakaava_id="101" master_valintakoe_id="[NULL]"/>
+                aktiivinen="true" valinnan_vaihe_id="83" laskentakaava_id="101" master_valintakoe_id="[NULL]" lahetetaanko_koekutsut="true" />
     <valintakoe id="2" version="0" oid="oid2" tunniste="valintakoetunniste2" nimi="valintakoe2" kuvaus="kuvaus2"
-                aktiivinen="true" valinnan_vaihe_id="83" laskentakaava_id="101"/>
+                aktiivinen="true" valinnan_vaihe_id="83" laskentakaava_id="101" lahetetaanko_koekutsut="true"/>
     <valintakoe id="3" version="0" oid="oid3" tunniste="valintakoetunniste3" nimi="valintakoe3" kuvaus="kuvaus3"
-                aktiivinen="true" valinnan_vaihe_id="83" laskentakaava_id="101"/>
+                aktiivinen="true" valinnan_vaihe_id="83" laskentakaava_id="101" lahetetaanko_koekutsut="true"/>
     <valintakoe id="4" version="0" oid="oid4" tunniste="valintakoetunniste4" nimi="valintakoe4" kuvaus="kuvaus4"
-                aktiivinen="true" valinnan_vaihe_id="83"/>
+                aktiivinen="true" valinnan_vaihe_id="83" lahetetaanko_koekutsut="true"/>
 
     <valintakoe id="5" version="0" oid="oid5" tunniste="valintakoetunniste5" nimi="valintakoe5" kuvaus="kuvaus5"
-                aktiivinen="true" valinnan_vaihe_id="86" laskentakaava_id="101"/>
+                aktiivinen="true" valinnan_vaihe_id="86" laskentakaava_id="101" lahetetaanko_koekutsut="true"/>
 
     <valintakoe id="6" version="0" oid="oid6" tunniste="valintakoetunniste6" nimi="valintakoe6" kuvaus="kuvaus6"
-                aktiivinen="true" valinnan_vaihe_id="88" laskentakaava_id="101"/>
+                aktiivinen="true" valinnan_vaihe_id="88" laskentakaava_id="101" lahetetaanko_koekutsut="true"/>
     <valintakoe id="7" version="0" oid="oid7" tunniste="valintakoetunniste6" nimi="valintakoe6" kuvaus="kuvaus6"
-                aktiivinen="true" valinnan_vaihe_id="90" laskentakaava_id="101" master_valintakoe_id="6"/>
+                aktiivinen="true" valinnan_vaihe_id="90" laskentakaava_id="101" master_valintakoe_id="6" lahetetaanko_koekutsut="true"/>
 
     <valintakoe id="8" version="0" oid="oid8" tunniste="valintakoetunniste8" nimi="valintakoe8" kuvaus="kuvaus8"
-                aktiivinen="true" valinnan_vaihe_id="91" laskentakaava_id="101"/>
+                aktiivinen="true" valinnan_vaihe_id="91" laskentakaava_id="101" lahetetaanko_koekutsut="true"/>
     <valintakoe id="9" version="0" oid="oid9" tunniste="valintakoetunniste8" nimi="valintakoe8" kuvaus="kuvaus8"
-                aktiivinen="true" valinnan_vaihe_id="92" laskentakaava_id="101" master_valintakoe_id="8"/>
+                aktiivinen="true" valinnan_vaihe_id="92" laskentakaava_id="101" master_valintakoe_id="8" lahetetaanko_koekutsut="true"/>
 
     <valintakoe id="10" version="0" oid="oid10" tunniste="valintakoetunniste10" nimi="valintakoe10" kuvaus="kuvaus10"
-                aktiivinen="true" valinnan_vaihe_id="94" laskentakaava_id="101"/>
+                aktiivinen="true" valinnan_vaihe_id="94" laskentakaava_id="101" lahetetaanko_koekutsut="true"/>
     <valintakoe id="11" version="0" oid="oid11" tunniste="valintakoetunniste10" nimi="valintakoe10" kuvaus="kuvaus10"
-                aktiivinen="true" valinnan_vaihe_id="95" laskentakaava_id="101" master_valintakoe_id="10"/>
+                aktiivinen="true" valinnan_vaihe_id="95" laskentakaava_id="101" master_valintakoe_id="10" lahetetaanko_koekutsut="true"/>
 
     <valintakoe id="12" version="0" oid="oid12" tunniste="valintakoetunniste12" nimi="valintakoe12" kuvaus="kuvaus12"
-                aktiivinen="true" valinnan_vaihe_id="98" laskentakaava_id="101"/>
+                aktiivinen="true" valinnan_vaihe_id="98" laskentakaava_id="101" lahetetaanko_koekutsut="true"/>
 
     <valintakoe id="13" version="0" oid="oid13" tunniste="valintakoetunniste13" nimi="valintakoe13" kuvaus="kuvaus13"
-                aktiivinen="true" valinnan_vaihe_id="99" laskentakaava_id="101"/>
+                aktiivinen="true" valinnan_vaihe_id="99" laskentakaava_id="101" lahetetaanko_koekutsut="true"/>
 
     <valintakoe id="14" version="0" oid="oid14" tunniste="valintakoetunniste14" nimi="valintakoe14" kuvaus="kuvaus14"
-                aktiivinen="true" valinnan_vaihe_id="107" laskentakaava_id="101"/>
+                aktiivinen="true" valinnan_vaihe_id="107" laskentakaava_id="101" lahetetaanko_koekutsut="true"/>
 
     <valintakoe id="15" version="0" oid="oid15" tunniste="valintakoetunniste15" nimi="valintakoe15" kuvaus="kuvaus15"
-                aktiivinen="true" valinnan_vaihe_id="113"/>
+                aktiivinen="true" valinnan_vaihe_id="113" lahetetaanko_koekutsut="true"/>
 
     <valintakoe id="16" version="0" oid="oid16" tunniste="valintakoetunniste16" nimi="valintakoe16" kuvaus="kuvaus16"
-                aktiivinen="true" valinnan_vaihe_id="114"/>
+                aktiivinen="true" valinnan_vaihe_id="114" lahetetaanko_koekutsut="true"/>
 
     <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="1" version="1"
                      oid="1" aloituspaikat="10" nimi="jono1" kuvaus="kuvaus"

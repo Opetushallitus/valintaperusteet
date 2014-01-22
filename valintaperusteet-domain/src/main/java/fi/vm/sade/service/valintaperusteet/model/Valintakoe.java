@@ -33,6 +33,9 @@ public class Valintakoe extends BaseEntity implements Kopioitava<Valintakoe, Set
     @Column(name = "aktiivinen", nullable = false)
     private Boolean aktiivinen;
 
+    @Column(name = "lahetetaanko_koekutsut", nullable = false)
+    private Boolean lahetetaankoKoekutsut = true;
+
     @JoinColumn(name = "laskentakaava_id", nullable = true)
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     private Laskentakaava laskentakaava;
@@ -47,6 +50,14 @@ public class Valintakoe extends BaseEntity implements Kopioitava<Valintakoe, Set
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "masterValintakoe")
     private Set<Valintakoe> kopioValintakokeet = new HashSet<Valintakoe>();
+
+    public Boolean getLahetetaankoKoekutsut() {
+        return lahetetaankoKoekutsut;
+    }
+
+    public void setLahetetaankoKoekutsut(Boolean lahetetaankoKoekutsut) {
+        this.lahetetaankoKoekutsut = lahetetaankoKoekutsut;
+    }
 
     public String getOid() {
         return oid;

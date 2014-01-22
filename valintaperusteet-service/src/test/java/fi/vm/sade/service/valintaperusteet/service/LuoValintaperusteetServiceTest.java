@@ -2,6 +2,7 @@ package fi.vm.sade.service.valintaperusteet.service;
 
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.kaava.Laskentadomainkonvertteri;
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskin;
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus;
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakukohde;
 import fi.vm.sade.service.valintaperusteet.laskenta.api.LaskentaService;
@@ -11,6 +12,7 @@ import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti;
 import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
 import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
 import fi.vm.sade.service.valintaperusteet.service.impl.generator.*;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,6 +26,8 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -43,6 +47,20 @@ public class LuoValintaperusteetServiceTest {
 
     @Autowired
     private LaskentaService laskentaService;
+
+    @Before
+    public void initialize() {
+        try {
+            Class.forName("org.hsqldb.jdbcDriver");
+            Connection conn = DriverManager.
+                    getConnection("jdbc:hsqldb:mem:valintaperusteet", "sa", "");
+            conn.createStatement().executeUpdate("SET DATABASE TRANSACTION CONTROL MVCC");
+            conn.commit();
+            conn.close();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
     @Test
     @Ignore
@@ -622,7 +640,7 @@ public class LuoValintaperusteetServiceTest {
     @Test
     public void testHakutoivejarjestystasapistekaavaEnsimmainen() {
         Hakemus hakemus = luoPerushakemus();
-        final BigDecimal odotettuTulos = new BigDecimal("5.0");
+        final BigDecimal odotettuTulos = new BigDecimal("10.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoHakutoivejarjestysTasapistekaava());
         Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemus, hakemukset(hakemus),
@@ -635,7 +653,7 @@ public class LuoValintaperusteetServiceTest {
     @Test
     public void testHakutoivejarjestystasapistekaavaToinen() {
         Hakemus hakemus = luoPerushakemus();
-        final BigDecimal odotettuTulos = new BigDecimal("4.0");
+        final BigDecimal odotettuTulos = new BigDecimal("9.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoHakutoivejarjestysTasapistekaava());
         Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE2, hakemus, hakemukset(hakemus),
@@ -648,7 +666,7 @@ public class LuoValintaperusteetServiceTest {
     @Test
     public void testHakutoivejarjestystasapistekaavaKolmas() {
         Hakemus hakemus = luoPerushakemus();
-        final BigDecimal odotettuTulos = new BigDecimal("3.0");
+        final BigDecimal odotettuTulos = new BigDecimal("8.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoHakutoivejarjestysTasapistekaava());
         Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE3, hakemus, hakemukset(hakemus),
@@ -661,7 +679,7 @@ public class LuoValintaperusteetServiceTest {
     @Test
     public void testHakutoivejarjestystasapistekaavaNeljas() {
         Hakemus hakemus = luoPerushakemus();
-        final BigDecimal odotettuTulos = new BigDecimal("2.0");
+        final BigDecimal odotettuTulos = new BigDecimal("7.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoHakutoivejarjestysTasapistekaava());
         Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE4, hakemus, hakemukset(hakemus),
@@ -674,7 +692,7 @@ public class LuoValintaperusteetServiceTest {
     @Test
     public void testHakutoivejarjestystasapistekaavaViides() {
         Hakemus hakemus = luoPerushakemus();
-        final BigDecimal odotettuTulos = new BigDecimal("1.0");
+        final BigDecimal odotettuTulos = new BigDecimal("6.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoHakutoivejarjestysTasapistekaava());
         Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE5, hakemus, hakemukset(hakemus),
@@ -848,6 +866,73 @@ public class LuoValintaperusteetServiceTest {
                 Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
 
         assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
+    }
+
+    @Test
+    public void testUrheilijaLisapisteMahdollisuus() {
+        Hakemus[] hakemukset = new Hakemus[]{
+                hakemus(yhdistaMapit(
+                        valintaperuste(PkJaYoPohjaiset.preferenceTunniste+1+PkJaYoPohjaiset.koulutusIdTunniste, HAKUKOHDE_OID1),
+                        valintaperuste(PkJaYoPohjaiset.preferenceTunniste+1+PkJaYoPohjaiset.urheilijanAmmatillisenKoulutuksenLisakysymysTunniste, Boolean.TRUE.toString()))),
+                hakemus(yhdistaMapit(
+                        valintaperuste(PkJaYoPohjaiset.preferenceTunniste+3+PkJaYoPohjaiset.koulutusIdTunniste, HAKUKOHDE_OID1),
+                        valintaperuste(PkJaYoPohjaiset.preferenceTunniste+3+PkJaYoPohjaiset.urheilijanAmmatillisenKoulutuksenLisakysymysTunniste, Boolean.FALSE.toString()))),
+                hakemus(yhdistaMapit(
+                        valintaperuste(PkJaYoPohjaiset.preferenceTunniste+3+PkJaYoPohjaiset.koulutusIdTunniste, HAKUKOHDE_OID1),
+                        valintaperuste(PkJaYoPohjaiset.preferenceTunniste+5+PkJaYoPohjaiset.urheilijanAmmatillisenKoulutuksenLisakysymysTunniste, Boolean.TRUE.toString()))),
+                hakemus(yhdistaMapit(
+                        valintaperuste(PkJaYoPohjaiset.preferenceTunniste + 3 + PkJaYoPohjaiset.koulutusIdTunniste, HAKUKOHDE_OID2),
+                        valintaperuste(PkJaYoPohjaiset.preferenceTunniste+3+PkJaYoPohjaiset.urheilijanAmmatillisenKoulutuksenLisakysymysTunniste, Boolean.TRUE.toString())))
+        };
+
+        final Hakukohde hakukohde = new Hakukohde(HAKUKOHDE_OID1, yhdistaMapit(
+                valintaperuste(PkJaYoPohjaiset.hakukohteenOid, HAKUKOHDE_OID1),
+                valintaperuste(PkJaYoPohjaiset.urheilijaHakuSallittu, Boolean.TRUE.toString())
+        ));
+
+        final Hakukohde hakukohde2 = new Hakukohde(HAKUKOHDE_OID1, yhdistaMapit(
+                valintaperuste(PkJaYoPohjaiset.hakukohteenOid, HAKUKOHDE_OID1),
+                valintaperuste(PkJaYoPohjaiset.urheilijaHakuSallittu, Boolean.FALSE.toString())
+        ));
+
+        final Hakukohde hakukohde3 = new Hakukohde(HAKUKOHDE_OID2, yhdistaMapit(
+                valintaperuste(PkJaYoPohjaiset.hakukohteenOid, HAKUKOHDE_OID2),
+                valintaperuste(PkJaYoPohjaiset.urheilijaHakuSallittu, Boolean.TRUE.toString())
+        ));
+
+        Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoUrheilijaLisapisteenMahdollisuus());
+
+        Laskentatulos<Boolean> tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemukset[0],
+                Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaTotuusarvolasku(kaava.getFunktiokutsu()));
+
+        assertTrue(tulos.getTulos());
+        assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
+
+        tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemukset[1],
+                Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaTotuusarvolasku(kaava.getFunktiokutsu()));
+        assertFalse(tulos.getTulos());
+        assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
+
+        tulos = Laskin.suoritaValintalaskenta(hakukohde2, hakemukset[0],
+                Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaTotuusarvolasku(kaava.getFunktiokutsu()));
+        assertFalse(tulos.getTulos());
+        assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
+
+        tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemukset[2],
+                Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaTotuusarvolasku(kaava.getFunktiokutsu()));
+        assertFalse(tulos.getTulos());
+        assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
+
+        tulos = Laskin.suoritaValintalaskenta(hakukohde3, hakemukset[0],
+                Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaTotuusarvolasku(kaava.getFunktiokutsu()));
+        assertFalse(tulos.getTulos());
+        assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
+
+        tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemukset[3],
+                Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaTotuusarvolasku(kaava.getFunktiokutsu()));
+        assertFalse(tulos.getTulos());
+        assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
+
     }
 
     @Test

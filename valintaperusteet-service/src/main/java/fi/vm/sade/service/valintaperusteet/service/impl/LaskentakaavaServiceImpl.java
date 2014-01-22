@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import scala.concurrent.Await;
 import scala.concurrent.Future;
@@ -344,7 +345,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     }
 
     @Override
-    public Laskentakaava    insert(Laskentakaava laskentakaava, String hakukohdeOid, String valintaryhmaOid) {
+    public Laskentakaava insert(Laskentakaava laskentakaava, String hakukohdeOid, String valintaryhmaOid) {
         laskentakaavaCache.clear();
         try {
             asetaNullitOletusarvoiksi(laskentakaava.getFunktiokutsu());
@@ -681,6 +682,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             throws FunktiokutsuMuodostaaSilmukanException {
         Laskentakaava laskentakaava = haeLaskentakaava(id);
         if (laskentakaava != null) {
+            //System.out.println("############# " + laskentakaava.getNimi() + " #############");
             laskentakaavaIds.add(laskentakaava.getId());
             Funktiokutsu funktiokutsu = haeFunktiokutsuRekursiivisesti(laskentakaava.getFunktiokutsu().getId(), laajennaAlakaavat,laskentakaavaIds);
             laskentakaava.setFunktiokutsu(funktiokutsu);
@@ -696,6 +698,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             throws FunktiokutsuMuodostaaSilmukanException {
         Laskentakaava laskentakaava = haeLaskentakaava(id);
         if (laskentakaava != null) {
+            System.out.println("############# " + laskentakaava.getNimi() + " ############# " + laskentakaava.getId());
             laskentakaavaIds.add(laskentakaava.getId());
             Funktiokutsu funktiokutsu = haeFunktiokutsuRekursiivisesti(laskentakaava.getFunktiokutsu().getId(), laajennaAlakaavat,laskentakaavaIds);
 
