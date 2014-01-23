@@ -1,19 +1,30 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
-import fi.vm.sade.generic.model.BaseEntity;
-import org.codehaus.jackson.map.annotate.JsonView;
-
-import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.Cacheable;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+
+import fi.vm.sade.generic.model.BaseEntity;
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi;
+
 /**
- * User: kwuoti
- * Date: 28.1.2013
- * Time: 9.51
+ * User: kwuoti Date: 28.1.2013 Time: 9.51
  */
 @Entity
-@Table(name="laskentakaava")
+@Table(name = "laskentakaava")
 @Cacheable(true)
 public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
     @Column(name = "on_luonnos", nullable = false)
@@ -37,7 +48,7 @@ public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
     @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
     private Funktiokutsu funktiokutsu;
 
-    @Column(name="tyyppi", nullable = false)
+    @Column(name = "tyyppi", nullable = false)
     @Enumerated(EnumType.STRING)
     private Funktiotyyppi tyyppi;
 
@@ -116,7 +127,7 @@ public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
     @PrePersist
     @PreUpdate
     private void updateTyyppi() {
-        if(funktiokutsu != null) {
+        if (funktiokutsu != null) {
             tyyppi = funktiokutsu.getFunktionimi().getTyyppi();
         }
     }

@@ -150,6 +150,7 @@ public class LaskentakaavaResourceTest {
         LaskentakaavaDTO fromJson = mapper.readValue(json, LaskentakaavaDTO.class);
 
         LaskentakaavaDTO validoitu = laskentakaavaResource.validoi(fromJson);
+
         String validoituJson = mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(validoitu);
     }
 

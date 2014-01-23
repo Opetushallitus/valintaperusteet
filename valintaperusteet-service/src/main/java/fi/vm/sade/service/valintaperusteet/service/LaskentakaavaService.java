@@ -1,17 +1,14 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
+import java.util.List;
+
 import fi.vm.sade.service.valintaperusteet.dto.HakukohteenValintaperusteAvaimetDTO;
 import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
 import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
-import fi.vm.sade.service.valintaperusteet.model.Funktiotyyppi;
 import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
-import fi.vm.sade.service.valintaperusteet.model.Laskentamoodi;
 import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuMuodostaaSilmukanException;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 /**
  * User: kwuoti Date: 21.1.2013 Time: 9.34
@@ -28,11 +25,13 @@ public interface LaskentakaavaService {
 
     boolean onkoKaavaValidi(Laskentakaava laskentakaava);
 
-    List<Laskentakaava> findKaavas(boolean all, String valintaryhmaOid, String hakukohdeOid, Funktiotyyppi tyyppi);
+    List<Laskentakaava> findKaavas(boolean all, String valintaryhmaOid, String hakukohdeOid,
+            fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi tyyppi);
 
     /**
-     * Päivittää ainostaan laskentakaavan metadatan. Paluuarvossa EI tule funktiokutsuja.
-     *
+     * Päivittää ainostaan laskentakaavan metadatan. Paluuarvossa EI tule
+     * funktiokutsuja.
+     * 
      * @param id
      * @param laskentakaava
      * @return

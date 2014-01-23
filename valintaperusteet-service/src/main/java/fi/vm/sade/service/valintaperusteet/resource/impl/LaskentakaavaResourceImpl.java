@@ -35,7 +35,6 @@ import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaDTO;
 import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaInsertDTO;
 import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaListDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
-import fi.vm.sade.service.valintaperusteet.model.Funktiotyyppi;
 import fi.vm.sade.service.valintaperusteet.resource.LaskentakaavaResource;
 import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaEiValidiException;
@@ -99,9 +98,8 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
             @ApiParam(value = "Valintaryhmä OID, jonka kaavoja haetaan") @QueryParam("valintaryhma") String valintaryhmaOid,
             @ApiParam(value = "Hakukohde OID, jonka kaavoja haetaan") @QueryParam("hakukohde") String hakukohdeOid,
             @ApiParam(value = "Haettavien laskentakaavojen tyyppi") @QueryParam("tyyppi") fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi tyyppi) {
-        return modelMapper.mapList(
-                laskentakaavaService.findKaavas(all, valintaryhmaOid, hakukohdeOid,
-                        modelMapper.map(tyyppi, Funktiotyyppi.class)), LaskentakaavaListDTO.class);
+        return modelMapper.mapList(laskentakaavaService.findKaavas(all, valintaryhmaOid, hakukohdeOid, tyyppi),
+                LaskentakaavaListDTO.class);
     }
 
     @POST

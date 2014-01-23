@@ -1,13 +1,26 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
-import fi.vm.sade.generic.model.BaseEntity;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.annotate.JsonView;
-
-import javax.persistence.*;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.persistence.Cacheable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import org.codehaus.jackson.annotate.JsonProperty;
+
+import fi.vm.sade.generic.model.BaseEntity;
+import fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi;
 
 @Entity
 @Table(name = "valinnan_vaihe")
@@ -231,6 +244,5 @@ public class ValinnanVaihe extends BaseEntity implements LinkitettavaJaKopioitav
         koe.setValinnanVaihe(this);
         this.valintakokeet.add(koe);
     }
-
 
 }

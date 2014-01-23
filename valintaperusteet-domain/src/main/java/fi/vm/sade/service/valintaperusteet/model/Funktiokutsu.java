@@ -1,10 +1,25 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
-import fi.vm.sade.generic.model.BaseEntity;
-import org.codehaus.jackson.map.annotate.JsonView;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
-import javax.persistence.*;
-import java.util.*;
+import javax.persistence.Cacheable;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import fi.vm.sade.generic.model.BaseEntity;
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi;
 
 @Entity
 @Table(name = "funktiokutsu")
@@ -35,22 +50,22 @@ public class Funktiokutsu extends BaseEntity implements FunktionArgumentti {
     @Column(name = "tallenna_tulos", nullable = false)
     private Boolean tallennaTulos = false;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "funktiokutsu", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "funktiokutsu", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
     private Set<Arvokonvertteriparametri> arvokonvertteriparametrit = new HashSet<Arvokonvertteriparametri>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "funktiokutsu", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "funktiokutsu", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
     // @Sort(type = SortType.NATURAL)
     @OrderBy("minValue")
     private Set<Arvovalikonvertteriparametri> arvovalikonvertteriparametrit = new HashSet<Arvovalikonvertteriparametri>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "funktiokutsu", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "funktiokutsu", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
     private Set<Syoteparametri> syoteparametrit = new HashSet<Syoteparametri>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent", cascade = { CascadeType.PERSIST, CascadeType.REMOVE }, orphanRemoval = true)
     @OrderBy("indeksi")
     private Set<Funktioargumentti> funktioargumentit = new TreeSet<Funktioargumentti>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "funktiokutsu", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "funktiokutsu", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
     @OrderBy("indeksi")
     private Set<ValintaperusteViite> valintaperusteviitteet = new TreeSet<ValintaperusteViite>();
 
@@ -96,7 +111,6 @@ public class Funktiokutsu extends BaseEntity implements FunktionArgumentti {
     public void setFunktioargumentit(Set<Funktioargumentti> funktioargumentit) {
         this.funktioargumentit = funktioargumentit;
     }
-
 
     public Set<ValintaperusteViite> getValintaperusteviitteet() {
         return valintaperusteviitteet;

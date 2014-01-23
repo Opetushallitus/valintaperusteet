@@ -1,16 +1,35 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
-import fi.vm.sade.generic.model.BaseEntity;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.annotate.JsonView;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-import javax.persistence.*;
-import java.util.*;
+import javax.persistence.Cacheable;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import org.codehaus.jackson.annotate.JsonProperty;
+
+import fi.vm.sade.generic.model.BaseEntity;
+import fi.vm.sade.service.valintaperusteet.dto.model.Tasapistesaanto;
 
 @Entity
 @Table(name = "valintatapajono")
 @Cacheable(true)
-public class Valintatapajono extends BaseEntity implements LinkitettavaJaKopioitava<Valintatapajono, Set<Valintatapajono>> {
+public class Valintatapajono extends BaseEntity implements
+        LinkitettavaJaKopioitava<Valintatapajono, Set<Valintatapajono>> {
 
     /**
      *
@@ -321,7 +340,6 @@ public class Valintatapajono extends BaseEntity implements LinkitettavaJaKopioit
         jarjestyskriteeri.setValintatapajono(this);
         this.jarjestyskriteerit.add(jarjestyskriteeri);
     }
-
 
     public Boolean getEiVarasijatayttoa() {
         return eiVarasijatayttoa;

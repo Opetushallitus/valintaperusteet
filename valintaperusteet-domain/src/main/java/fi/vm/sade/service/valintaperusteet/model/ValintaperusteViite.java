@@ -1,12 +1,21 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
+import javax.persistence.Cacheable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 
 import fi.vm.sade.generic.model.BaseEntity;
-import org.codehaus.jackson.map.annotate.JsonView;
+import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
 
-import javax.persistence.*;
-
-@Table(name = "valintaperuste_viite", uniqueConstraints = @UniqueConstraint(name = "UK_valintaperuste_viite_001", columnNames = {"funktiokutsu_id", "indeksi"}))
+@Table(name = "valintaperuste_viite", uniqueConstraints = @UniqueConstraint(name = "UK_valintaperuste_viite_001", columnNames = {
+        "funktiokutsu_id", "indeksi" }))
 @Entity
 @Cacheable(true)
 public class ValintaperusteViite extends BaseEntity implements Comparable<ValintaperusteViite> {
@@ -35,7 +44,8 @@ public class ValintaperusteViite extends BaseEntity implements Comparable<Valint
     @Column(name = "on_pakollinen", nullable = false)
     private Boolean onPakollinen;
 
-    // Jos valintaperusteen lähde on hakukohde, voidaan epäsuoralla viittauksella hakea
+    // Jos valintaperusteen lähde on hakukohde, voidaan epäsuoralla
+    // viittauksella hakea
     // hakukohteelta tunniste, jolla viitataan hakemuksen arvoon
     @Column(name = "epasuora_viittaus", nullable = true)
     private Boolean epasuoraViittaus;
@@ -104,13 +114,13 @@ public class ValintaperusteViite extends BaseEntity implements Comparable<Valint
         String osallistuminenTunniste = null;
 
         switch (lahde) {
-            case SYOTETTAVA_ARVO:
-                if(tunniste != null) {
-                    osallistuminenTunniste = tunniste + OSALLISTUMINEN_POSTFIX;
-                }
-                break;
-            default:
-                break;
+        case SYOTETTAVA_ARVO:
+            if (tunniste != null) {
+                osallistuminenTunniste = tunniste + OSALLISTUMINEN_POSTFIX;
+            }
+            break;
+        default:
+            break;
         }
 
         return osallistuminenTunniste;
