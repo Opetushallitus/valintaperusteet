@@ -6,6 +6,7 @@ import fi.vm.sade.service.valintaperusteet.dto.HakukohteenValintaperusteAvaimetD
 import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
+import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
 import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
 import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
 import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuMuodostaaSilmukanException;

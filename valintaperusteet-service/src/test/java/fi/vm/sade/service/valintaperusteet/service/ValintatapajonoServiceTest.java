@@ -28,9 +28,8 @@ import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoCreateDTO;
-import fi.vm.sade.service.valintaperusteet.model.Tasapistesaanto;
+import fi.vm.sade.service.valintaperusteet.dto.model.Tasapistesaanto;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
-import fi.vm.sade.service.valintaperusteet.model.ValinnanVaiheTyyppi;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintatapajonoaEiVoiLisataException;
 
@@ -338,7 +337,7 @@ public class ValintatapajonoServiceTest {
     public void testUpdate() {
         final String uusiNimi = "uusi nimi";
         final String uusiKuvaus = "uusi kuvaus";
-        final Tasapistesaanto uusiTasapistesaanto = Tasapistesaanto.YLITAYTTO;
+        final fi.vm.sade.service.valintaperusteet.dto.model.Tasapistesaanto uusiTasapistesaanto = Tasapistesaanto.YLITAYTTO;
         final Integer uusiAloituspaikat = 1;
 
         final String valintatapajonoOid = "26";

@@ -1,16 +1,26 @@
 package fi.vm.sade.service.valintaperusteet.dao.impl;
 
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
 import com.mysema.query.BooleanBuilder;
 import com.mysema.query.Tuple;
 import com.mysema.query.jpa.impl.JPAQuery;
 import com.mysema.query.types.EntityPath;
 import com.mysema.query.types.QTuple;
+
 import fi.vm.sade.generic.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.LaskentakaavaDAO;
-import fi.vm.sade.service.valintaperusteet.model.*;
-import org.springframework.stereotype.Repository;
-
-import java.util.List;
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi;
+import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
+import fi.vm.sade.service.valintaperusteet.model.QFunktioargumentti;
+import fi.vm.sade.service.valintaperusteet.model.QFunktiokutsu;
+import fi.vm.sade.service.valintaperusteet.model.QHakukohdeViite;
+import fi.vm.sade.service.valintaperusteet.model.QJarjestyskriteeri;
+import fi.vm.sade.service.valintaperusteet.model.QLaskentakaava;
+import fi.vm.sade.service.valintaperusteet.model.QValinnanVaihe;
+import fi.vm.sade.service.valintaperusteet.model.QValintatapajono;
 
 /**
  * User: tommiha Date: 1/14/13 Time: 4:07 PM
@@ -25,13 +35,10 @@ public class LaskentakaavaDAOImpl extends AbstractJpaDAOImpl<Laskentakaava, Long
         QFunktioargumentti fa = QFunktioargumentti.funktioargumentti;
 
         Laskentakaava laskentakaava = from(lk).setHint("org.hibernate.cacheable", Boolean.TRUE)
-                .leftJoin(lk.funktiokutsu, fk)
-                .leftJoin(fk.arvokonvertteriparametrit)
-                .leftJoin(fk.arvovalikonvertteriparametrit)
-                .leftJoin(fk.syoteparametrit)
-                .leftJoin(fk.funktioargumentit, fa)
-                .leftJoin(fa.laskentakaavaChild)
-                .leftJoin(fk.valintaperusteviitteet).where(lk.id.eq(id)).distinct().singleResult(lk);
+                .leftJoin(lk.funktiokutsu, fk).leftJoin(fk.arvokonvertteriparametrit)
+                .leftJoin(fk.arvovalikonvertteriparametrit).leftJoin(fk.syoteparametrit)
+                .leftJoin(fk.funktioargumentit, fa).leftJoin(fa.laskentakaavaChild).leftJoin(fk.valintaperusteviitteet)
+                .where(lk.id.eq(id)).distinct().singleResult(lk);
 
         return laskentakaava;
     }
@@ -47,10 +54,9 @@ public class LaskentakaavaDAOImpl extends AbstractJpaDAOImpl<Laskentakaava, Long
         QValinnanVaihe vv = QValinnanVaihe.valinnanVaihe;
         QHakukohdeViite hkv1 = QHakukohdeViite.hakukohdeViite;
 
-        return from(lk).setHint("org.hibernate.cacheable", Boolean.TRUE)
-                .leftJoin(lk.jarjestyskriteerit, jk).leftJoin(jk.valintatapajono, vtj)
-                .leftJoin(vtj.valinnanVaihe, vv).leftJoin(vv.hakukohdeViite, hkv1).where(hkv1.oid.in(oids)).distinct()
-                .list(new QTuple(hkv1.oid, vv.oid, lk));
+        return from(lk).setHint("org.hibernate.cacheable", Boolean.TRUE).leftJoin(lk.jarjestyskriteerit, jk)
+                .leftJoin(jk.valintatapajono, vtj).leftJoin(vtj.valinnanVaihe, vv).leftJoin(vv.hakukohdeViite, hkv1)
+                .where(hkv1.oid.in(oids)).distinct().list(new QTuple(hkv1.oid, vv.oid, lk));
     }
 
     @Override
@@ -64,11 +70,8 @@ public class LaskentakaavaDAOImpl extends AbstractJpaDAOImpl<Laskentakaava, Long
             builder.and(lk.onLuonnos.isFalse());
         }
 
-
-        builder.and(valintaryhmaOid != null ?
-                lk.valintaryhma.oid.eq(valintaryhmaOid) : lk.valintaryhma.isNull());
-        builder.and(hakukohdeOid != null ?
-                lk.hakukohde.oid.eq(hakukohdeOid) : lk.hakukohde.isNull());
+        builder.and(valintaryhmaOid != null ? lk.valintaryhma.oid.eq(valintaryhmaOid) : lk.valintaryhma.isNull());
+        builder.and(hakukohdeOid != null ? lk.hakukohde.oid.eq(hakukohdeOid) : lk.hakukohde.isNull());
 
         if (tyyppi != null) {
             builder.and(lk.tyyppi.eq(tyyppi));

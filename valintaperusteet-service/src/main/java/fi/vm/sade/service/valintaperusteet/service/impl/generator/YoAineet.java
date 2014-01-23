@@ -1,15 +1,12 @@
 package fi.vm.sade.service.valintaperusteet.service.impl.generator;
 
-import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
-import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
-import fi.vm.sade.service.valintaperusteet.model.Valintaperustelahde;
-
 import java.util.Map;
 
+import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
+import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
+
 /**
- * User: wuoti
- * Date: 31.5.2013
- * Time: 12.04
+ * User: wuoti Date: 31.5.2013 Time: 12.04
  */
 public class YoAineet extends Aineet {
 
@@ -20,8 +17,7 @@ public class YoAineet extends Aineet {
     public static final String LK_OPPIAINE_TEMPLATE = LK_ETULIITE + "%s_OPPIAINE";
 
     private enum YoAine {
-        FI(filosofia, "Filosofia"),
-        PS(psykologia, "Psykologia");
+        FI(filosofia, "Filosofia"), PS(psykologia, "Psykologia");
 
         YoAine(String tunniste, String kuvaus) {
             this.tunniste = tunniste;
@@ -50,11 +46,11 @@ public class YoAineet extends Aineet {
     }
 
     public Laskentakaava luoYOAine(String ainetunniste, String ainekuvaus) {
-        Funktiokutsu aine = GenericHelper.luoHaeLukuarvo(
-                GenericHelper.luoValintaperusteViite(pakollinen(ainetunniste), false,
-                        Valintaperustelahde.HAETTAVA_ARVO));
+        Funktiokutsu aine = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(pakollinen(ainetunniste),
+                false, fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde.HAETTAVA_ARVO));
 
-        Laskentakaava laskentakaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(aine, ainekuvaus + LK_KUVAUSJALKILIITE);
+        Laskentakaava laskentakaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(aine, ainekuvaus
+                + LK_KUVAUSJALKILIITE);
         return laskentakaava;
     }
 

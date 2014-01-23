@@ -1,6 +1,6 @@
 package fi.vm.sade.kaava
 
-import fi.vm.sade.service.valintaperusteet.model.Funktionimi
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi
 import play.api.libs.json.{JsArray, Json}
 import scala.Predef._
 import scala.Some

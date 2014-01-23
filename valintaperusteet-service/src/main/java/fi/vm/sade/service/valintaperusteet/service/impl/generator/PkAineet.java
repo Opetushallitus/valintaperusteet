@@ -1,15 +1,13 @@
 package fi.vm.sade.service.valintaperusteet.service.impl.generator;
 
-import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
-import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
-import fi.vm.sade.service.valintaperusteet.model.Valintaperustelahde;
-
 import java.util.Map;
 
+import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
+import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
+import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
+
 /**
- * User: wuoti
- * Date: 31.5.2013
- * Time: 12.04
+ * User: wuoti Date: 31.5.2013 Time: 12.04
  */
 public class PkAineet extends Aineet {
     public static final String PK_Valinnainen1 = "_VAL1";
@@ -23,8 +21,7 @@ public class PkAineet extends Aineet {
     public static final String PK_OPPIAINE_TEMPLATE = PK_etuliite + "%s_OPPIAINE";
 
     private enum PkAine {
-        KO(kotitalous, "Kotitalous"),
-        KS(kasityo, "Käsityö");
+        KO(kotitalous, "Kotitalous"), KS(kasityo, "Käsityö");
 
         PkAine(String tunniste, String kuvaus) {
             this.tunniste = tunniste;
@@ -61,20 +58,18 @@ public class PkAineet extends Aineet {
     }
 
     private Laskentakaava luoPKAine(String ainetunniste, String kuvaus) {
-        Funktiokutsu aine = GenericHelper.luoHaeLukuarvo(
-                GenericHelper.luoValintaperusteViite(pakollinen(ainetunniste), false,
-                        Valintaperustelahde.HAETTAVA_ARVO));
-        Funktiokutsu aineValinnainen1 = GenericHelper.luoHaeLukuarvo(
-                GenericHelper.luoValintaperusteViite(valinnainen1(ainetunniste),
-                        false, Valintaperustelahde.HAETTAVA_ARVO));
-        Funktiokutsu aineValinnainen2 = GenericHelper.luoHaeLukuarvo(
-                GenericHelper.luoValintaperusteViite(valinnainen2(ainetunniste),
-                        false, Valintaperustelahde.HAETTAVA_ARVO));
+        Funktiokutsu aine = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(pakollinen(ainetunniste),
+                false, Valintaperustelahde.HAETTAVA_ARVO));
+        Funktiokutsu aineValinnainen1 = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(
+                valinnainen1(ainetunniste), false, Valintaperustelahde.HAETTAVA_ARVO));
+        Funktiokutsu aineValinnainen2 = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(
+                valinnainen2(ainetunniste), false, Valintaperustelahde.HAETTAVA_ARVO));
 
         Funktiokutsu valinnainenKeskiarvo = GenericHelper.luoKeskiarvo(aineValinnainen1, aineValinnainen2);
         Funktiokutsu keskiarvo = GenericHelper.luoKeskiarvo(aine, valinnainenKeskiarvo);
 
-        Laskentakaava laskentakaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(keskiarvo, kuvaus + PK_kuvausjalkiliite);
+        Laskentakaava laskentakaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(keskiarvo, kuvaus
+                + PK_kuvausjalkiliite);
         return laskentakaava;
     }
 

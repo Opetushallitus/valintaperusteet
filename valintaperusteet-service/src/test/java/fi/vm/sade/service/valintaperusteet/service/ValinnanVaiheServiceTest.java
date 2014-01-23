@@ -30,7 +30,6 @@ import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheCreateDTO;
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
-import fi.vm.sade.service.valintaperusteet.model.ValinnanVaiheTyyppi;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 
 /**
@@ -95,7 +94,8 @@ public class ValinnanVaiheServiceTest {
         final String valinnanVaiheOid = "83";
 
         ValinnanVaihe valinnanVaihe = valinnanVaiheService.readByOid(valinnanVaiheOid);
-        assertEquals(ValinnanVaiheTyyppi.VALINTAKOE, valinnanVaihe.getValinnanVaiheTyyppi());
+        assertEquals(fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi.VALINTAKOE,
+                valinnanVaihe.getValinnanVaiheTyyppi());
 
         valinnanVaiheService.deleteByOid(valinnanVaiheOid);
     }

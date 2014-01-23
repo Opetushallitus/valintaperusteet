@@ -1,15 +1,17 @@
 package fi.vm.sade.service.valintaperusteet.service.impl.lukio;
 
-import fi.vm.sade.service.valintaperusteet.model.*;
-import fi.vm.sade.service.valintaperusteet.service.impl.generator.GenericHelper;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
+import fi.vm.sade.service.valintaperusteet.model.Arvovalikonvertteriparametri;
+import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
+import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
+import fi.vm.sade.service.valintaperusteet.model.ValintaperusteViite;
+import fi.vm.sade.service.valintaperusteet.service.impl.generator.GenericHelper;
+
 /**
- * User: wuoti
- * Date: 30.9.2013
- * Time: 14.55
+ * User: wuoti Date: 30.9.2013 Time: 14.55
  */
 public class LukionValintaperusteet {
     public static final String PAINOKERROIN_POSTFIX = "_painokerroin";
@@ -76,72 +78,22 @@ public class LukionValintaperusteet {
     public static final String VIITTOMAKIELI = "VK";
     public static final String KIINA = "ZH";
 
+    public static final String[] LUKUAINEET = { AIDINKIELI_JA_KIRJALLISUUS1, AIDINKIELI_JA_KIRJALLISUUS2, USKONTO,
+            HISTORIA, YHTEISKUNTAOPPI, MATEMATIIKKA, FYSIIKKA, KEMIA, BIOLOGIA, TERVEYSTIETO, MAANTIETO };
 
-    public static final String[] LUKUAINEET = {
-            AIDINKIELI_JA_KIRJALLISUUS1,
-            AIDINKIELI_JA_KIRJALLISUUS2,
-            USKONTO,
-            HISTORIA,
-            YHTEISKUNTAOPPI,
-            MATEMATIIKKA,
-            FYSIIKKA,
-            KEMIA,
-            BIOLOGIA,
-            TERVEYSTIETO,
-            MAANTIETO
-    };
+    public static final String[] KIELET = { A11KIELI, A12KIELI, A13KIELI, A21KIELI, A22KIELI, A23KIELI, B1KIELI,
+            B21KIELI, B22KIELI, B23KIELI, B31KIELI, B32KIELI, B33KIELI };
 
-    public static final String[] KIELET = {
-            A11KIELI,
-            A12KIELI,
-            A13KIELI,
-            A21KIELI,
-            A22KIELI,
-            A23KIELI,
-            B1KIELI,
-            B21KIELI,
-            B22KIELI,
-            B23KIELI,
-            B31KIELI,
-            B32KIELI,
-            B33KIELI
-    };
+    public static final String[] KIELIKOODIT = { SAKSA, KREIKKA, ENGLANTI, ESPANJA, EESTI, SUOMI, RANSKA, ITALIA,
+            JAPANI, LATINA, LIETTUA, LATVIA, PORTUGALI, VENAJA, SAAME, RUOTSI, VIITTOMAKIELI, KIINA };
 
-    public static final String[] KIELIKOODIT = {
-            SAKSA,
-            KREIKKA,
-            ENGLANTI,
-            ESPANJA,
-            EESTI,
-            SUOMI,
-            RANSKA,
-            ITALIA,
-            JAPANI,
-            LATINA,
-            LIETTUA,
-            LATVIA,
-            PORTUGALI,
-            VENAJA,
-            SAAME,
-            RUOTSI,
-            VIITTOMAKIELI,
-            KIINA
-    };
-
-    public static final String[] TAITO_JA_TAIDEAINEET = {
-            LIIKUNTA,
-            KASITYO,
-            KOTITALOUS,
-            MUSIIKKI,
-            KUVATAIDE
-    };
+    public static final String[] TAITO_JA_TAIDEAINEET = { LIIKUNTA, KASITYO, KOTITALOUS, MUSIIKKI, KUVATAIDE };
 
     public static Laskentakaava painotettuLukuaineidenKeskiarvoJaPaasykoe(Laskentakaava ka, Laskentakaava paasykoe) {
 
         Funktiokutsu summa = GenericHelper.luoSumma(ka, paasykoe);
 
-        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
-                summa,
+        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(summa,
                 "Lukion valintaperusteet, painotettu keskiarvo ja pääsykoe");
 
     }
@@ -149,22 +101,20 @@ public class LukionValintaperusteet {
     public static Laskentakaava painotettuLukuaineidenKeskiarvoJaLisanaytto(Laskentakaava ka, Laskentakaava lisanaytto) {
         Funktiokutsu summa = GenericHelper.luoSumma(ka, lisanaytto);
 
-        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
-                summa,
+        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(summa,
                 "Lukion valintaperusteet, painotettu keskiarvo ja lisänäyttö");
 
     }
 
-    public static Laskentakaava painotettuLukuaineidenKeskiarvoJaPaasykoeJaLisanaytto(Laskentakaava ka, Laskentakaava paasykoeJaLisanaytto) {
+    public static Laskentakaava painotettuLukuaineidenKeskiarvoJaPaasykoeJaLisanaytto(Laskentakaava ka,
+            Laskentakaava paasykoeJaLisanaytto) {
 
         Funktiokutsu summa = GenericHelper.luoSumma(ka, paasykoeJaLisanaytto);
 
-        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
-                summa,
+        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(summa,
                 "Lukion valintaperusteet, painotettu keskiarvo, pääsykoe ja lisänäyttö");
 
     }
-
 
     public static Laskentakaava painotettuLukuaineidenKeskiarvo() {
 
@@ -173,18 +123,23 @@ public class LukionValintaperusteet {
 
         List<GenericHelper.Painotus> painotukset = new ArrayList<GenericHelper.Painotus>();
         for (String aine : LUKUAINEET) {
-            Funktiokutsu arvo = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(AINE_PREFIX+aine, false, Valintaperustelahde.HAETTAVA_ARVO));
-            Funktiokutsu painokerroin = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(aine + PAINOKERROIN_POSTFIX, false, Valintaperustelahde.HAKUKOHTEEN_ARVO), 1.0);
+            Funktiokutsu arvo = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(AINE_PREFIX + aine,
+                    false, Valintaperustelahde.HAETTAVA_ARVO));
+            Funktiokutsu painokerroin = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(aine
+                    + PAINOKERROIN_POSTFIX, false, Valintaperustelahde.HAKUKOHTEEN_ARVO), 1.0);
 
             painotukset.add(new GenericHelper.Painotus(painokerroin, arvo));
         }
 
         for (String aine : KIELET) {
-            for(String koodi : KIELIKOODIT) {
-                String avain = "{{"+AINE_PREFIX+aine+"_OPPIAINE."+koodi+"}}";
-                ValintaperusteViite vp = GenericHelper.luoValintaperusteViite(avain, false, Valintaperustelahde.HAETTAVA_ARVO);
-                Funktiokutsu arvo = GenericHelper.luoHaeLukuarvoEhdolla(GenericHelper.luoValintaperusteViite(AINE_PREFIX+aine, false, Valintaperustelahde.HAETTAVA_ARVO),vp);
-                Funktiokutsu painokerroin = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(aine + "_" + koodi + PAINOKERROIN_POSTFIX, false, Valintaperustelahde.HAKUKOHTEEN_ARVO), 1.0);
+            for (String koodi : KIELIKOODIT) {
+                String avain = "{{" + AINE_PREFIX + aine + "_OPPIAINE." + koodi + "}}";
+                ValintaperusteViite vp = GenericHelper.luoValintaperusteViite(avain, false,
+                        Valintaperustelahde.HAETTAVA_ARVO);
+                Funktiokutsu arvo = GenericHelper.luoHaeLukuarvoEhdolla(GenericHelper.luoValintaperusteViite(
+                        AINE_PREFIX + aine, false, Valintaperustelahde.HAETTAVA_ARVO), vp);
+                Funktiokutsu painokerroin = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(aine
+                        + "_" + koodi + PAINOKERROIN_POSTFIX, false, Valintaperustelahde.HAKUKOHTEEN_ARVO), 1.0);
 
                 painotukset.add(new GenericHelper.Painotus(painokerroin, arvo));
             }
@@ -192,17 +147,21 @@ public class LukionValintaperusteet {
         }
 
         for (String aine : TAITO_JA_TAIDEAINEET) {
-            Funktiokutsu arvo = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(AINE_PREFIX+aine, false, Valintaperustelahde.HAETTAVA_ARVO));
-            Funktiokutsu painokerroin = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(aine + PAINOKERROIN_POSTFIX, false, Valintaperustelahde.HAKUKOHTEEN_ARVO));
+            Funktiokutsu arvo = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(AINE_PREFIX + aine,
+                    false, Valintaperustelahde.HAETTAVA_ARVO));
+            Funktiokutsu painokerroin = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(aine
+                    + PAINOKERROIN_POSTFIX, false, Valintaperustelahde.HAKUKOHTEEN_ARVO));
 
             painotukset.add(new GenericHelper.Painotus(painokerroin, arvo));
         }
 
-        Funktiokutsu painotuksetFunktio = GenericHelper.luoPainotettuKeskiarvo(painotukset.toArray(new GenericHelper.Painotus[painotukset.size()]));
+        Funktiokutsu painotuksetFunktio = GenericHelper.luoPainotettuKeskiarvo(painotukset
+                .toArray(new GenericHelper.Painotus[painotukset.size()]));
 
-        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
-                GenericHelper.luoHylkaaArvovalilla(painotuksetFunktio, "Painotettu keskiarvo hylätty", minimi, maksimi),
-                "Lukion valintaperusteet, painotettu keskiarvo");
+        return GenericHelper
+                .luoLaskentakaavaJaNimettyFunktio(GenericHelper.luoHylkaaArvovalilla(painotuksetFunktio,
+                        "Painotettu keskiarvo hylätty", minimi, maksimi),
+                        "Lukion valintaperusteet, painotettu keskiarvo");
     }
 
     public static Laskentakaava paasykoeJaLisanaytto(Laskentakaava paasykoe, Laskentakaava lisanaytto) {
@@ -212,8 +171,8 @@ public class LukionValintaperusteet {
         String minimi = "{{hakukohde.paasykoe_ja_lisanaytto_hylkays_min}}";
         String maksimi = "{{hakukohde.paasykoe_ja_lisanaytto_hylkays_max}}";
 
-        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
-                GenericHelper.luoHylkaaArvovalilla(summa, "Pääsykokeen ja lisänäytön summa ei ole tarpeeksi suuri", minimi, maksimi),
+        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(GenericHelper.luoHylkaaArvovalilla(summa,
+                "Pääsykokeen ja lisänäytön summa ei ole tarpeeksi suuri", minimi, maksimi),
                 "Lukion valintaperusteet, pääsykoe ja lisänäyttö");
 
     }
@@ -228,7 +187,8 @@ public class LukionValintaperusteet {
         List<Arvovalikonvertteriparametri> konvs = new ArrayList<Arvovalikonvertteriparametri>();
         konvs.add(GenericHelper.luoArvovalikonvertteriparametri(alaraja, ylaraja));
 
-        Funktiokutsu funktiokutsu = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(paasykoeTunniste, true, Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO, "", true), konvs);
+        Funktiokutsu funktiokutsu = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(paasykoeTunniste,
+                true, Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO, "", true), konvs);
 
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
                 GenericHelper.luoHylkaaArvovalilla(funktiokutsu, "Pääsykoetulos hylätty", minimi, maksimi),
@@ -246,7 +206,8 @@ public class LukionValintaperusteet {
         List<Arvovalikonvertteriparametri> konvs = new ArrayList<Arvovalikonvertteriparametri>();
         konvs.add(GenericHelper.luoArvovalikonvertteriparametri(alaraja, ylaraja));
 
-        Funktiokutsu funktiokutsu = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(lisanayttoTunniste, true, Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO, "", true), konvs);
+        Funktiokutsu funktiokutsu = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(
+                lisanayttoTunniste, true, Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO, "", true), konvs);
 
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
                 GenericHelper.luoHylkaaArvovalilla(funktiokutsu, "Pääsykoetulos hylätty", minimi, maksimi),

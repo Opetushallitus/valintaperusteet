@@ -1,14 +1,11 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
-import fi.vm.sade.dbunit.annotation.DataSetLocation;
-import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
-import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
-import fi.vm.sade.service.valintaperusteet.dao.ValintakoeDAO;
-import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
-import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaCreateDTO;
-import fi.vm.sade.service.valintaperusteet.model.*;
-import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
+
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,21 +17,28 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
-import java.util.List;
-
-import static junit.framework.Assert.*;
+import fi.vm.sade.dbunit.annotation.DataSetLocation;
+import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
+import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
+import fi.vm.sade.service.valintaperusteet.dao.ValintakoeDAO;
+import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
+import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi;
+import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
+import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
+import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
+import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
+import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 
 /**
- * Created with IntelliJ IDEA.
- * User: jukais
- * Date: 16.1.2013
- * Time: 14.16
- * To change this template use File | Settings | File Templates.
+ * Created with IntelliJ IDEA. User: jukais Date: 16.1.2013 Time: 14.16 To
+ * change this template use File | Settings | File Templates.
  */
 @ContextConfiguration(locations = "classpath:test-context.xml")
-@TestExecutionListeners(listeners = {JTACleanInsertTestExecutionListener.class,
+@TestExecutionListeners(listeners = { JTACleanInsertTestExecutionListener.class,
         DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
-        TransactionalTestExecutionListener.class})
+        TransactionalTestExecutionListener.class })
 @RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data.xml")
 public class ValintaryhmaServiceTest {
@@ -62,9 +66,9 @@ public class ValintaryhmaServiceTest {
         ValintaryhmaCreateDTO uusiValintaryhma = new ValintaryhmaCreateDTO();
         uusiValintaryhma.setNimi("uusi valintaryhma");
 
-
         Valintaryhma lisatty = valintaryhmaService.insert(uusiValintaryhma, parentOid);
-        List<ValinnanVaihe> valinnanVaiheet = LinkitettavaJaKopioitavaUtil.jarjesta(valinnanVaiheDAO.findByValintaryhma(lisatty.getOid()));
+        List<ValinnanVaihe> valinnanVaiheet = LinkitettavaJaKopioitavaUtil.jarjesta(valinnanVaiheDAO
+                .findByValintaryhma(lisatty.getOid()));
         assertEquals(valinnanVaiheetLkm, valinnanVaiheet.size());
 
         assertEquals(10L, valinnanVaiheet.get(0).getMasterValinnanVaihe().getId().longValue());
@@ -79,14 +83,17 @@ public class ValintaryhmaServiceTest {
         final String parentOid = "oid33";
         {
             assertNotNull(valintaryhmaService.readByOid(parentOid));
-            List<ValinnanVaihe> vr33Lvaiheet = LinkitettavaJaKopioitavaUtil.jarjesta(valinnanVaiheDAO.findByValintaryhma(parentOid));
+            List<ValinnanVaihe> vr33Lvaiheet = LinkitettavaJaKopioitavaUtil.jarjesta(valinnanVaiheDAO
+                    .findByValintaryhma(parentOid));
 
             assertEquals(2, vr33Lvaiheet.size());
             ValinnanVaihe vaihe80L = vr33Lvaiheet.get(0);
             ValinnanVaihe vaihe81L = vr33Lvaiheet.get(1);
 
-            List<Valintatapajono> vaihe80Ljonot = LinkitettavaJaKopioitavaUtil.jarjesta(valintatapajonoDAO.findByValinnanVaihe(vaihe80L.getOid()));
-            List<Valintatapajono> vaihe81Ljonot = LinkitettavaJaKopioitavaUtil.jarjesta(valintatapajonoDAO.findByValinnanVaihe(vaihe81L.getOid()));
+            List<Valintatapajono> vaihe80Ljonot = LinkitettavaJaKopioitavaUtil.jarjesta(valintatapajonoDAO
+                    .findByValinnanVaihe(vaihe80L.getOid()));
+            List<Valintatapajono> vaihe81Ljonot = LinkitettavaJaKopioitavaUtil.jarjesta(valintatapajonoDAO
+                    .findByValinnanVaihe(vaihe81L.getOid()));
 
             assertEquals(2, vaihe80Ljonot.size());
             assertEquals(1, vaihe81Ljonot.size());
@@ -101,28 +108,34 @@ public class ValintaryhmaServiceTest {
 
         {
             assertNotNull(valintaryhmaService.readByOid(parentOid));
-            List<ValinnanVaihe> vr33Lvaiheet = LinkitettavaJaKopioitavaUtil.jarjesta(valinnanVaiheDAO.findByValintaryhma(parentOid));
+            List<ValinnanVaihe> vr33Lvaiheet = LinkitettavaJaKopioitavaUtil.jarjesta(valinnanVaiheDAO
+                    .findByValintaryhma(parentOid));
 
             assertEquals(2, vr33Lvaiheet.size());
             ValinnanVaihe vaihe80L = vr33Lvaiheet.get(0);
             ValinnanVaihe vaihe81L = vr33Lvaiheet.get(1);
 
-            List<Valintatapajono> vaihe80Ljonot = LinkitettavaJaKopioitavaUtil.jarjesta(valintatapajonoDAO.findByValinnanVaihe(vaihe80L.getOid()));
-            List<Valintatapajono> vaihe81Ljonot = LinkitettavaJaKopioitavaUtil.jarjesta(valintatapajonoDAO.findByValinnanVaihe(vaihe81L.getOid()));
+            List<Valintatapajono> vaihe80Ljonot = LinkitettavaJaKopioitavaUtil.jarjesta(valintatapajonoDAO
+                    .findByValinnanVaihe(vaihe80L.getOid()));
+            List<Valintatapajono> vaihe81Ljonot = LinkitettavaJaKopioitavaUtil.jarjesta(valintatapajonoDAO
+                    .findByValinnanVaihe(vaihe81L.getOid()));
 
             assertEquals(2, vaihe80Ljonot.size());
             assertEquals(1, vaihe81Ljonot.size());
         }
         {
             assertNotNull(valintaryhmaService.readByOid(lisatty.getOid()));
-            List<ValinnanVaihe> uusiVaiheet = LinkitettavaJaKopioitavaUtil.jarjesta(valinnanVaiheDAO.findByValintaryhma(lisatty.getOid()));
+            List<ValinnanVaihe> uusiVaiheet = LinkitettavaJaKopioitavaUtil.jarjesta(valinnanVaiheDAO
+                    .findByValintaryhma(lisatty.getOid()));
 
             assertEquals(2, uusiVaiheet.size());
             ValinnanVaihe uusiVaihe1 = uusiVaiheet.get(0);
             ValinnanVaihe uusiVaihe2 = uusiVaiheet.get(1);
 
-            List<Valintatapajono> uusiVaihe1jonot = LinkitettavaJaKopioitavaUtil.jarjesta(valintatapajonoDAO.findByValinnanVaihe(uusiVaihe1.getOid()));
-            List<Valintatapajono> uusiVaihe2jonot = LinkitettavaJaKopioitavaUtil.jarjesta(valintatapajonoDAO.findByValinnanVaihe(uusiVaihe2.getOid()));
+            List<Valintatapajono> uusiVaihe1jonot = LinkitettavaJaKopioitavaUtil.jarjesta(valintatapajonoDAO
+                    .findByValinnanVaihe(uusiVaihe1.getOid()));
+            List<Valintatapajono> uusiVaihe2jonot = LinkitettavaJaKopioitavaUtil.jarjesta(valintatapajonoDAO
+                    .findByValinnanVaihe(uusiVaihe2.getOid()));
 
             assertEquals(2, uusiVaihe1jonot.size());
             assertEquals(1, uusiVaihe2jonot.size());

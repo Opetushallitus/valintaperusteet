@@ -1,10 +1,11 @@
 package fi.vm.sade.service.valintaperusteet.dao;
 
-import com.mysema.query.Tuple;
-import fi.vm.sade.dbunit.annotation.DataSetLocation;
-import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
-import fi.vm.sade.kaava.Funktiokuvaaja;
-import fi.vm.sade.service.valintaperusteet.model.*;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,19 +17,28 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.mysema.query.Tuple;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
+import fi.vm.sade.dbunit.annotation.DataSetLocation;
+import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
+import fi.vm.sade.kaava.Funktiokuvaaja;
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi;
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi;
+import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti;
+import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
+import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
+import fi.vm.sade.service.valintaperusteet.model.QHakukohdeViite;
+import fi.vm.sade.service.valintaperusteet.model.QLaskentakaava;
+import fi.vm.sade.service.valintaperusteet.model.QValinnanVaihe;
+import fi.vm.sade.service.valintaperusteet.model.Syoteparametri;
 
 /**
  * User: kwuoti Date: 28.1.2013 Time: 10.17
  */
 @ContextConfiguration(locations = "classpath:test-context.xml")
-@TestExecutionListeners(listeners = {
-        DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
-        TransactionalTestExecutionListener.class, JTACleanInsertTestExecutionListener.class})
+@TestExecutionListeners(listeners = { DependencyInjectionTestExecutionListener.class,
+        DirtiesContextTestExecutionListener.class, TransactionalTestExecutionListener.class,
+        JTACleanInsertTestExecutionListener.class })
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
 @DataSetLocation("classpath:test-data.xml")

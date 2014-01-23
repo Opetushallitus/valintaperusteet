@@ -1,16 +1,12 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
-import fi.vm.sade.generic.dao.GenericDAO;
-import fi.vm.sade.service.valintaperusteet.dao.*;
-import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
-import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
-import fi.vm.sade.service.valintaperusteet.model.*;
-import fi.vm.sade.service.valintaperusteet.model.ValinnanVaiheTyyppi;
-import fi.vm.sade.service.valintaperusteet.schema.*;
-import fi.vm.sade.service.valintaperusteet.service.HakukohdeImportService;
-import fi.vm.sade.service.valintaperusteet.service.HakukohdeService;
-import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
-import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,12 +14,35 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import fi.vm.sade.generic.dao.GenericDAO;
+import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
+import fi.vm.sade.service.valintaperusteet.dao.HakukohdekoodiDAO;
+import fi.vm.sade.service.valintaperusteet.dao.HakukohteenValintaperusteDAO;
+import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
+import fi.vm.sade.service.valintaperusteet.dao.ValintakoekoodiDAO;
+import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
+import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
+import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
+import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
+import fi.vm.sade.service.valintaperusteet.model.Hakukohdekoodi;
+import fi.vm.sade.service.valintaperusteet.model.HakukohteenValintaperuste;
+import fi.vm.sade.service.valintaperusteet.model.Koodi;
+import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
+import fi.vm.sade.service.valintaperusteet.model.Valintakoekoodi;
+import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
+import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
+import fi.vm.sade.service.valintaperusteet.schema.AvainArvoTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.HakukohdeImportTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.HakukohdekoodiTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.HakukohteenValintakoeTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.MonikielinenTekstiTyyppi;
+import fi.vm.sade.service.valintaperusteet.service.HakukohdeImportService;
+import fi.vm.sade.service.valintaperusteet.service.HakukohdeService;
+import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
+import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
 
 /**
- * User: wuoti
- * Date: 8.5.2013
- * Time: 13.38
+ * User: wuoti Date: 8.5.2013 Time: 13.38
  */
 @Service
 @Transactional
@@ -173,10 +192,10 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
             }
         }
 
-        // Haetaan potentiaaliset valintaryhmät hakukohdekoodin, opetuskielikoodien ja valintakoekoodien mukaan
+        // Haetaan potentiaaliset valintaryhmät hakukohdekoodin,
+        // opetuskielikoodien ja valintakoekoodien mukaan
         List<Valintaryhma> valintaryhmat = valintaryhmaDAO.haeHakukohdekoodinJaValintakoekoodienMukaan(
-                sanitizeKoodiUri(importData.getHakukohdekoodi().getKoodiUri()),
-                valintakoekoodiUrit.keySet());
+                sanitizeKoodiUri(importData.getHakukohdekoodi().getKoodiUri()), valintakoekoodiUrit.keySet());
 
         LOG.info("Potentiaalisia valintaryhmiä {} kpl", valintaryhmat.size());
 
@@ -206,17 +225,20 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
 
         LOG.info("Valintakoekoodifilterin jälkeen potentiaalisia valintaryhmiä {} kpl", valintaryhmat.size());
 
-        // Filtteroinnin jälkeen pitäisi jäljellä olla toivottavasti enää yksi valintaryhmä. Jos valintaryhmiä on
-        // enemmän kuin yksi (eli valintaryhmien mallinnassa on ryssitty ja esim. sama hakukohdekoodi on usealla
-        // valintaryhmällä) tai jos valintaryhmiä on nolla kappaletta, lisätään importoitava hakukohde juureen (eli
+        // Filtteroinnin jälkeen pitäisi jäljellä olla toivottavasti enää yksi
+        // valintaryhmä. Jos valintaryhmiä on
+        // enemmän kuin yksi (eli valintaryhmien mallinnassa on ryssitty ja
+        // esim. sama hakukohdekoodi on usealla
+        // valintaryhmällä) tai jos valintaryhmiä on nolla kappaletta, lisätään
+        // importoitava hakukohde juureen (eli
         // tämä metodi palauttaa nullin).
         Valintaryhma valintaryhma = null;
         if (valintaryhmat.size() == 1) {
             valintaryhma = valintaryhmat.get(0);
             LOG.info("Hakukohteen tulisi olla valintaryhmän {} alla", valintaryhma.getOid());
         } else {
-            LOG.info("Hakukohteelle ei pystytty määrittämään valintaryhmää. Potentiaalisia valintaryhmiä on {} kpl. " +
-                    "Hakukohde lisätään juureen.", valintaryhmat.size());
+            LOG.info("Hakukohteelle ei pystytty määrittämään valintaryhmää. Potentiaalisia valintaryhmiä on {} kpl. "
+                    + "Hakukohde lisätään juureen.", valintaryhmat.size());
 
         }
 
@@ -246,27 +268,30 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
             LOG.info("Hakukohdetta ei ole olemassa. Luodaan uusi hakukohde.");
             hakukohde = new HakukohdeViite();
             kopioiTiedot(importData, hakukohde);
-            hakukohde = hakukohdeService.insert(modelMapper.map(hakukohde, HakukohdeViiteDTO.class), valintaryhma != null ? valintaryhma.getOid() : null);
+            hakukohde = hakukohdeService.insert(modelMapper.map(hakukohde, HakukohdeViiteDTO.class),
+                    valintaryhma != null ? valintaryhma.getOid() : null);
             hakukohde.setHakukohdekoodi(koodi);
         } else {
             LOG.info("Hakukohde löytyi.");
             Valintaryhma hakukohdeValintaryhma = hakukohde.getValintaryhma();
             kopioiTiedot(importData, hakukohde);
-            // ^ on XOR-operaattori. Tsekataan, että sekä koodin että hakukohteen kautta navigoidut valintaryhmät ovat
-            // samat ja että hakukohdetta ei ole manuaalisesti siirretty valintaryhmään.
-            if ((valintaryhma != null ^ hakukohdeValintaryhma != null) ||
-                    (valintaryhma != null && hakukohdeValintaryhma != null
-                            && !valintaryhma.getOid().equals(hakukohdeValintaryhma.getOid()))) {
+            // ^ on XOR-operaattori. Tsekataan, että sekä koodin että
+            // hakukohteen kautta navigoidut valintaryhmät ovat
+            // samat ja että hakukohdetta ei ole manuaalisesti siirretty
+            // valintaryhmään.
+            if ((valintaryhma != null ^ hakukohdeValintaryhma != null)
+                    || (valintaryhma != null && hakukohdeValintaryhma != null && !valintaryhma.getOid().equals(
+                            hakukohdeValintaryhma.getOid()))) {
 
                 if (hakukohde.getManuaalisestiSiirretty() != null && hakukohde.getManuaalisestiSiirretty()) {
-                    LOG.info("Hakukohde on väärän valintaryhmän alla, mutta se on siirretty manuaalisesti. " +
-                            "Synkronointia ei suoriteta");
+                    LOG.info("Hakukohde on väärän valintaryhmän alla, mutta se on siirretty manuaalisesti. "
+                            + "Synkronointia ei suoriteta");
 
                 } else {
                     LOG.info("Hakukohde on väärän valintaryhmän alla. Synkronoidaan hakukohde oikean valintaryhmän alle");
                     String valintaryhmaOid = valintaryhma != null ? valintaryhma.getOid() : null;
-                    hakukohde =
-                            hakukohdeService.siirraHakukohdeValintaryhmaan(importData.getHakukohdeOid(), valintaryhmaOid, false);
+                    hakukohde = hakukohdeService.siirraHakukohdeValintaryhmaan(importData.getHakukohdeOid(),
+                            valintaryhmaOid, false);
                 }
 
                 hakukohde.setHakukohdekoodi(koodi);
@@ -289,7 +314,8 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
 
         // Lisätään valinaperusteet
         if (hakukohde.getHakukohteenValintaperusteet() != null) {
-            List<HakukohteenValintaperuste> perusteet = hakukohteenValintaperusteDAO.haeHakukohteenValintaperusteet(hakukohde.getOid());
+            List<HakukohteenValintaperuste> perusteet = hakukohteenValintaperusteDAO
+                    .haeHakukohteenValintaperusteet(hakukohde.getOid());
             for (HakukohteenValintaperuste hv : perusteet) {
                 hv.setHakukohde(null);
                 hakukohteenValintaperusteDAO.remove(hv);
@@ -307,13 +333,15 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
     }
 
     private void paivitaAloituspaikkojenLkm(final HakukohdeViite hakukohde, final int valinnanAloituspaikat) {
-        // Jos hakukohteella on tasan kaksi valinnan vaihetta, joista jälkimmäinen on tavallinen, periytyvä valinnan
-        // vaihe ja jossa on yksi periytyvä valintatapajono, päivitetään jonolle aloituspaikkojen lukumäärä
+        // Jos hakukohteella on tasan kaksi valinnan vaihetta, joista
+        // jälkimmäinen on tavallinen, periytyvä valinnan
+        // vaihe ja jossa on yksi periytyvä valintatapajono, päivitetään jonolle
+        // aloituspaikkojen lukumäärä
 
         List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheService.findByHakukohde(hakukohde.getOid());
         if (valinnanVaiheet.size() == 3
-                && ValinnanVaiheTyyppi.TAVALLINEN.equals(valinnanVaiheet.get(2).getValinnanVaiheTyyppi())
-                && valinnanVaiheet.get(2).getMasterValinnanVaihe() != null) {
+                && fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi.TAVALLINEN.equals(valinnanVaiheet
+                        .get(2).getValinnanVaiheTyyppi()) && valinnanVaiheet.get(2).getMasterValinnanVaihe() != null) {
             ValinnanVaihe vaihe = valinnanVaiheet.get(2);
             List<Valintatapajono> jonot = valintatapajonoService.findJonoByValinnanvaihe(vaihe.getOid());
             if (jonot.size() == 1 && jonot.get(0).getMasterValintatapajono() != null) {
@@ -343,7 +371,8 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
         return koekoodit;
     }
 
-    private Map<String, HakukohteenValintaperuste> lisaaValintaperusteet(HakukohdeImportTyyppi importData, HakukohdeViite hakukohde) {
+    private Map<String, HakukohteenValintaperuste> lisaaValintaperusteet(HakukohdeImportTyyppi importData,
+            HakukohdeViite hakukohde) {
         Map<String, HakukohteenValintaperuste> perusteet = new HashMap<String, HakukohteenValintaperuste>();
         for (AvainArvoTyyppi avainArvo : importData.getValintaperuste()) {
             HakukohteenValintaperuste peruste = new HakukohteenValintaperuste();

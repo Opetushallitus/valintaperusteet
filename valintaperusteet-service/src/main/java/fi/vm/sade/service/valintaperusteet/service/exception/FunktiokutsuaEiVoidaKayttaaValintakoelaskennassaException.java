@@ -1,11 +1,9 @@
 package fi.vm.sade.service.valintaperusteet.service.exception;
 
-import fi.vm.sade.service.valintaperusteet.model.Funktionimi;
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi;
 
 /**
- * User: wuoti
- * Date: 23.9.2013
- * Time: 13.00
+ * User: wuoti Date: 23.9.2013 Time: 13.00
  */
 public class FunktiokutsuaEiVoidaKayttaaValintakoelaskennassaException extends RuntimeException {
     private Long id;
@@ -22,7 +20,8 @@ public class FunktiokutsuaEiVoidaKayttaaValintakoelaskennassaException extends R
         this.funktionimi = funktionimi;
     }
 
-    public FunktiokutsuaEiVoidaKayttaaValintakoelaskennassaException(String message, Throwable cause, Long id, Funktionimi funktionimi) {
+    public FunktiokutsuaEiVoidaKayttaaValintakoelaskennassaException(String message, Throwable cause, Long id,
+            Funktionimi funktionimi) {
         super(message, cause);
         this.id = id;
         this.funktionimi = funktionimi;

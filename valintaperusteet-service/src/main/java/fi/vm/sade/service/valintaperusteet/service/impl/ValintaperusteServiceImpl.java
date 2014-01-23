@@ -1,30 +1,57 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
-import fi.vm.sade.generic.service.conversion.SadeConversionService;
-import fi.vm.sade.service.valintaperusteet.GenericFault;
-import fi.vm.sade.service.valintaperusteet.ValintaperusteService;
-import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
-import fi.vm.sade.service.valintaperusteet.messages.HakuparametritTyyppi;
-import fi.vm.sade.service.valintaperusteet.model.*;
-import fi.vm.sade.service.valintaperusteet.schema.*;
-import fi.vm.sade.service.valintaperusteet.schema.ValinnanVaiheTyyppi;
-import fi.vm.sade.service.valintaperusteet.service.*;
-import fi.vm.sade.service.valintaperusteet.service.exception.HakukohdeViiteEiOleOlemassaException;
-import fi.vm.sade.service.valintaperusteet.service.exception.HakuparametritOnTyhjaException;
-import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheEpaaktiivinenException;
-import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheJarjestyslukuOutOfBoundsException;
-import fi.vm.sade.service.valintaperusteet.service.impl.util.ValintaperusteServiceUtil;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.jws.WebParam;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
-import javax.jws.WebParam;
-import java.util.ArrayList;
-import java.util.List;
-
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.*;
+import fi.vm.sade.generic.service.conversion.SadeConversionService;
+import fi.vm.sade.service.valintaperusteet.GenericFault;
+import fi.vm.sade.service.valintaperusteet.ValintaperusteService;
+import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
+import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
+import fi.vm.sade.service.valintaperusteet.messages.HakuparametritTyyppi;
+import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
+import fi.vm.sade.service.valintaperusteet.model.HakukohteenValintaperuste;
+import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
+import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
+import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
+import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
+import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
+import fi.vm.sade.service.valintaperusteet.schema.FunktiokutsuTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.HakukohdeImportTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.HakukohteenValintaperusteTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.JarjestyskriteeriTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.TasasijasaantoTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.TavallinenValinnanVaiheTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.ValinnanVaiheTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.ValintakoeTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.ValintakoeValinnanVaiheTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.ValintaperusteetTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.ValintatapajonoJarjestyskriteereillaTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.ValintatapajonoTyyppi;
+import fi.vm.sade.service.valintaperusteet.service.HakukohdeImportService;
+import fi.vm.sade.service.valintaperusteet.service.HakukohdeService;
+import fi.vm.sade.service.valintaperusteet.service.JarjestyskriteeriService;
+import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
+import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
+import fi.vm.sade.service.valintaperusteet.service.ValintakoeService;
+import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
+import fi.vm.sade.service.valintaperusteet.service.exception.HakukohdeViiteEiOleOlemassaException;
+import fi.vm.sade.service.valintaperusteet.service.exception.HakuparametritOnTyhjaException;
+import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheEpaaktiivinenException;
+import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheJarjestyslukuOutOfBoundsException;
+import fi.vm.sade.service.valintaperusteet.service.impl.util.ValintaperusteServiceUtil;
 
 /**
  * User: kwuoti Date: 22.1.2013 Time: 15.00
@@ -44,8 +71,8 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
     @Autowired
     private SadeConversionService conversionService;
 
-    //@Autowired
-   // private PaasykoeTunnisteetService tunnisteService;
+    // @Autowired
+    // private PaasykoeTunnisteetService tunnisteService;
 
     @Autowired
     private ValinnanVaiheService valinnanVaiheService;
@@ -66,7 +93,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
     private HakukohdeImportService hakukohdeImportService;
 
     @Override
-    @Secured({READ, UPDATE, CRUD})
+    @Secured({ READ, UPDATE, CRUD })
     public List<ValintatapajonoTyyppi> haeValintatapajonotSijoittelulle(
             @WebParam(name = "hakukohdeOid", targetNamespace = "") String hakukohdeOid) throws GenericFault {
         List<Valintatapajono> jonot = valintatapajonoDAO.haeValintatapajonotSijoittelulle(hakukohdeOid);
@@ -75,7 +102,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
     }
 
     @Override
-    @Secured({READ, UPDATE, CRUD})
+    @Secured({ READ, UPDATE, CRUD })
     public List<ValintaperusteetTyyppi> haeValintaperusteet(
             @WebParam(name = "hakuparametrit", targetNamespace = "") List<HakuparametritTyyppi> hakuparametrit)
             throws GenericFault {
@@ -89,7 +116,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
 
         for (HakuparametritTyyppi param : hakuparametrit) {
             LOG.info("Haetaan hakukohteen {}, valinnanvaihe {} valintaperusteet",
-                    new Object[]{param.getHakukohdeOid(), param.getValinnanVaiheJarjestysluku()});
+                    new Object[] { param.getHakukohdeOid(), param.getValinnanVaiheJarjestysluku() });
 
             HakukohdeViite hakukohde = null;
             try {
@@ -113,8 +140,8 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
                             + " valinnan vaiheen jarjestysluku " + jarjestysluku + " on epäkelpo.");
                 } else if (!valinnanVaiheList.get(jarjestysluku).getAktiivinen()) {
                     throw new ValinnanVaiheEpaaktiivinenException("Valinnan vaihe (oid "
-                            + valinnanVaiheList.get(jarjestysluku).getOid() + ", järjestysluku "
-                            + jarjestysluku + ") ei ole aktiivinen");
+                            + valinnanVaiheList.get(jarjestysluku).getOid() + ", järjestysluku " + jarjestysluku
+                            + ") ei ole aktiivinen");
                 }
 
                 ValintaperusteetTyyppi valinnanVaihe = convertValintaperusteet(valinnanVaiheList.get(jarjestysluku),
@@ -146,7 +173,8 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
         return list;
     }
 
-    private ValintaperusteetTyyppi convertValintaperusteet(ValinnanVaihe valinnanVaihe, HakukohdeViite hakukohde, int valinnanvaiheJarjestysluku) {
+    private ValintaperusteetTyyppi convertValintaperusteet(ValinnanVaihe valinnanVaihe, HakukohdeViite hakukohde,
+            int valinnanvaiheJarjestysluku) {
 
         ValintaperusteetTyyppi valintaperusteetTyyppi = new ValintaperusteetTyyppi();
         valintaperusteetTyyppi.setHakukohdeOid(hakukohde.getOid());
@@ -156,20 +184,20 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
         ValinnanVaiheTyyppi vv = null;
         switch (valinnanVaihe.getValinnanVaiheTyyppi()) {
 
-            case TAVALLINEN:
-                TavallinenValinnanVaiheTyyppi tavallinen = new TavallinenValinnanVaiheTyyppi();
-                tavallinen.getValintatapajono().addAll(convertJonot(valinnanVaihe));
+        case TAVALLINEN:
+            TavallinenValinnanVaiheTyyppi tavallinen = new TavallinenValinnanVaiheTyyppi();
+            tavallinen.getValintatapajono().addAll(convertJonot(valinnanVaihe));
 
-                vv = tavallinen;
-                break;
-            case VALINTAKOE:
-                ValintakoeValinnanVaiheTyyppi valintakoe = new ValintakoeValinnanVaiheTyyppi();
-                valintakoe.getValintakoe().addAll(convertValintakokeet(valinnanVaihe));
-                vv = valintakoe;
-                break;
+            vv = tavallinen;
+            break;
+        case VALINTAKOE:
+            ValintakoeValinnanVaiheTyyppi valintakoe = new ValintakoeValinnanVaiheTyyppi();
+            valintakoe.getValintakoe().addAll(convertValintakokeet(valinnanVaihe));
+            vv = valintakoe;
+            break;
 
-            default:
-                throw new UnsupportedOperationException("Virheellinen valinnan vaiheen tyyppi. Ei pystytä käsittelemään");
+        default:
+            throw new UnsupportedOperationException("Virheellinen valinnan vaiheen tyyppi. Ei pystytä käsittelemään");
         }
 
         vv.setValinnanVaiheJarjestysluku(valinnanvaiheJarjestysluku);
@@ -259,13 +287,12 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
             JarjestyskriteeriTyyppi jarjestyskriteeriTyyppi = new JarjestyskriteeriTyyppi();
             jarjestyskriteeriTyyppi.setPrioriteetti(prioriteetti);
 
-
             Long start = System.currentTimeMillis();
             Laskentakaava laskentakaava = laskentakaavaService.haeLaskettavaKaava(jarjestyskriteeri.getLaskentakaava()
                     .getId(), Laskentamoodi.VALINTALASKENTA);
             if (LOG.isInfoEnabled()) {
-                LOG.info("haeLaskettavaKaava: " + jarjestyskriteeri.getLaskentakaava()
-                        .getId() + ":" + (System.currentTimeMillis() - start));
+                LOG.info("haeLaskettavaKaava: " + jarjestyskriteeri.getLaskentakaava().getId() + ":"
+                        + (System.currentTimeMillis() - start));
             }
             FunktiokutsuTyyppi convert = conversionService.convert(laskentakaava.getFunktiokutsu(),
                     FunktiokutsuTyyppi.class);
@@ -279,7 +306,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
     }
 
     @Override
-    @Secured({CRUD})
+    @Secured({ CRUD })
     public void tuoHakukohde(@WebParam(name = "hakukohde", targetNamespace = "") HakukohdeImportTyyppi hakukohde)
             throws GenericFault {
         try {

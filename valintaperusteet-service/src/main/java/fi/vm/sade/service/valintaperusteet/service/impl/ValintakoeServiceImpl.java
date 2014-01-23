@@ -1,28 +1,40 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
-import fi.vm.sade.service.valintaperusteet.dao.LaskentakaavaDAO;
-import fi.vm.sade.service.valintaperusteet.dao.ValintakoeDAO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintakoeCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
-import fi.vm.sade.service.valintaperusteet.model.*;
-import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
-import fi.vm.sade.service.valintaperusteet.service.OidService;
-import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
-import fi.vm.sade.service.valintaperusteet.service.ValintakoeService;
-import fi.vm.sade.service.valintaperusteet.service.exception.*;
-import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
-import fi.vm.sade.service.valintaperusteet.util.ValintakoeKopioija;
-import fi.vm.sade.service.valintaperusteet.util.ValintakoeUtil;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import fi.vm.sade.service.valintaperusteet.dao.LaskentakaavaDAO;
+import fi.vm.sade.service.valintaperusteet.dao.ValintakoeDAO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintakoeCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi;
+import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
+import fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi;
+import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti;
+import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
+import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
+import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
+import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
+import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
+import fi.vm.sade.service.valintaperusteet.service.OidService;
+import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
+import fi.vm.sade.service.valintaperusteet.service.ValintakoeService;
+import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuaEiVoidaKayttaaValintakoelaskennassaException;
+import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaEiOleOlemassaException;
+import fi.vm.sade.service.valintaperusteet.service.exception.VaaranTyyppinenLaskentakaavaException;
+import fi.vm.sade.service.valintaperusteet.service.exception.ValintakoettaEiOleOlemassaException;
+import fi.vm.sade.service.valintaperusteet.service.exception.ValintakoettaEiVoiLisataException;
+import fi.vm.sade.service.valintaperusteet.service.exception.ValintakoettaEiVoiPoistaaException;
+import fi.vm.sade.service.valintaperusteet.service.exception.ValintakokeeseenLiitettavaLaskentakaavaOnLuonnosException;
+import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
+import fi.vm.sade.service.valintaperusteet.util.ValintakoeKopioija;
+import fi.vm.sade.service.valintaperusteet.util.ValintakoeUtil;
 
 /**
- * User: kwuoti
- * Date: 15.4.2013
- * Time: 16.13
+ * User: kwuoti Date: 15.4.2013 Time: 16.13
  */
 @Transactional
 @Service
@@ -86,8 +98,8 @@ public class ValintakoeServiceImpl implements ValintakoeService {
     public Valintakoe lisaaValintakoeValinnanVaiheelle(String valinnanVaiheOid, ValintakoeCreateDTO koe) {
         ValinnanVaihe valinnanVaihe = valinnanVaiheService.readByOid(valinnanVaiheOid);
         if (!ValinnanVaiheTyyppi.VALINTAKOE.equals(valinnanVaihe.getValinnanVaiheTyyppi())) {
-            throw new ValintakoettaEiVoiLisataException("Valintakoetta ei voi lisätä valinnan vaiheelle, jonka " +
-                    "tyyppi on " + valinnanVaihe.getValinnanVaiheTyyppi().name());
+            throw new ValintakoettaEiVoiLisataException("Valintakoetta ei voi lisätä valinnan vaiheelle, jonka "
+                    + "tyyppi on " + valinnanVaihe.getValinnanVaiheTyyppi().name());
         }
 
         Valintakoe valintakoe = new Valintakoe();
@@ -110,7 +122,7 @@ public class ValintakoeServiceImpl implements ValintakoeService {
     }
 
     private void lisaaValinnanVaiheelleKopioMasterValintakokeesta(ValinnanVaihe valinnanVaihe,
-                                                                  Valintakoe masterValintakoe) {
+            Valintakoe masterValintakoe) {
         Valintakoe kopio = ValintakoeUtil.teeKopioMasterista(masterValintakoe);
         kopio.setValinnanVaihe(valinnanVaihe);
         kopio.setOid(oidService.haeValintakoeOid());
@@ -125,9 +137,10 @@ public class ValintakoeServiceImpl implements ValintakoeService {
     private void validoiFunktiokutsuValintakoettaVarten(Funktiokutsu funktiokutsu) {
         if (funktiokutsu != null) {
             if (!funktiokutsu.getFunktionimi().getLaskentamoodit().contains(Laskentamoodi.VALINTAKOELASKENTA)) {
-                throw new FunktiokutsuaEiVoidaKayttaaValintakoelaskennassaException("Funktiokutsua " +
-                        funktiokutsu.getFunktionimi().name() + ", id " + funktiokutsu.getId() +
-                        " ei voida käyttää valintakoelaskennassa.", funktiokutsu.getId(), funktiokutsu.getFunktionimi());
+                throw new FunktiokutsuaEiVoidaKayttaaValintakoelaskennassaException("Funktiokutsua "
+                        + funktiokutsu.getFunktionimi().name() + ", id " + funktiokutsu.getId()
+                        + " ei voida käyttää valintakoelaskennassa.", funktiokutsu.getId(),
+                        funktiokutsu.getFunktionimi());
             }
 
             for (Funktioargumentti arg : funktiokutsu.getFunktioargumentit()) {
@@ -143,14 +156,14 @@ public class ValintakoeServiceImpl implements ValintakoeService {
     private Laskentakaava haeLaskentakaavaValintakokeelle(Long laskentakaavaId) {
         Laskentakaava laskentakaava = laskentakaavaDAO.getLaskentakaava(laskentakaavaId);
         if (laskentakaava == null) {
-            throw new LaskentakaavaEiOleOlemassaException("Laskentakaavaa (" + laskentakaavaId + ") ei ole " +
-                    "olemassa", laskentakaavaId);
+            throw new LaskentakaavaEiOleOlemassaException("Laskentakaavaa (" + laskentakaavaId + ") ei ole "
+                    + "olemassa", laskentakaavaId);
         } else if (!Funktiotyyppi.TOTUUSARVOFUNKTIO.equals(laskentakaava.getTyyppi())) {
-            throw new VaaranTyyppinenLaskentakaavaException("Valintakokeen laskentakaavan tulee olla tyyppiä " +
-                    Funktiotyyppi.TOTUUSARVOFUNKTIO.name());
+            throw new VaaranTyyppinenLaskentakaavaException("Valintakokeen laskentakaavan tulee olla tyyppiä "
+                    + Funktiotyyppi.TOTUUSARVOFUNKTIO.name());
         } else if (laskentakaava.getOnLuonnos()) {
-            throw new ValintakokeeseenLiitettavaLaskentakaavaOnLuonnosException("Valintakokeeseen liitettävä " +
-                    "laskentakaava on LUONNOS-tilassa");
+            throw new ValintakokeeseenLiitettavaLaskentakaavaOnLuonnosException("Valintakokeeseen liitettävä "
+                    + "laskentakaava on LUONNOS-tilassa");
         }
 
         validoiFunktiokutsuValintakoettaVarten(laskentakaava.getFunktiokutsu());
@@ -180,7 +193,8 @@ public class ValintakoeServiceImpl implements ValintakoeService {
     }
 
     @Override
-    public void kopioiValintakokeetMasterValinnanVaiheeltaKopiolle(ValinnanVaihe valinnanVaihe, ValinnanVaihe masterValinnanVaihe) {
+    public void kopioiValintakokeetMasterValinnanVaiheeltaKopiolle(ValinnanVaihe valinnanVaihe,
+            ValinnanVaihe masterValinnanVaihe) {
         List<Valintakoe> kokeet = valintakoeDAO.findByValinnanVaihe(masterValinnanVaihe.getOid());
         for (Valintakoe master : kokeet) {
             Valintakoe kopio = ValintakoeUtil.teeKopioMasterista(master);

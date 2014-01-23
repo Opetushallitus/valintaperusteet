@@ -29,12 +29,12 @@ import akka.actor.UntypedActor;
 import akka.japi.Function;
 import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
+import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
 import fi.vm.sade.service.valintaperusteet.model.Arvokonvertteriparametri;
 import fi.vm.sade.service.valintaperusteet.model.Arvovalikonvertteriparametri;
 import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti;
 import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
 import fi.vm.sade.service.valintaperusteet.model.ValintaperusteViite;
-import fi.vm.sade.service.valintaperusteet.model.Valintaperustelahde;
 import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.UusiValintaperusteRekursio;
 
 /**
@@ -98,7 +98,8 @@ public class HaeValintaperusteetRekursiivisestiActorBean extends UntypedActor {
     private Funktiokutsu kasitteleLoppuun(Funktiokutsu funktiokutsu) {
         for (ValintaperusteViite vp : funktiokutsu.getValintaperusteviitteet()) {
             if (Valintaperustelahde.SYOTETTAVA_ARVO.equals(vp.getLahde())
-                    || Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO.equals(vp.getLahde())) {
+                    || fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO
+                            .equals(vp.getLahde())) {
 
                 ValintaperusteDTO valintaperuste = new ValintaperusteDTO();
                 valintaperuste.setFunktiotyyppi(new ModelMapper().map(funktiokutsu.getFunktionimi().getTyyppi(),

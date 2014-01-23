@@ -27,9 +27,9 @@ import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
+import fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi;
 import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
-import fi.vm.sade.service.valintaperusteet.model.ValinnanVaiheTyyppi;
 import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import fi.vm.sade.service.valintaperusteet.service.HakukohdekoodiService;
@@ -964,7 +964,8 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheService.findByValintaryhma(koevalintaryhma.getOid());
 
         ValinnanVaihe valintakoevaihe = valinnanVaiheet.get(1);
-        assert (valintakoevaihe.getValinnanVaiheTyyppi().equals(ValinnanVaiheTyyppi.VALINTAKOE));
+        assert (valintakoevaihe.getValinnanVaiheTyyppi()
+                .equals(fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi.VALINTAKOE));
         assert (valintakoevaihe.getNimi().contains("ja pääsykoe"));
 
         List<Valintakoe> valintakokeet = valintakoeService.findValintakoeByValinnanVaihe(valintakoevaihe.getOid());

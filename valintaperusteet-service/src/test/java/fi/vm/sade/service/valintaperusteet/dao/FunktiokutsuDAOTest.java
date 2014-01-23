@@ -1,10 +1,13 @@
 package fi.vm.sade.service.valintaperusteet.dao;
 
-import fi.vm.sade.dbunit.annotation.DataSetLocation;
-import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
-import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti;
-import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
-import fi.vm.sade.service.valintaperusteet.model.Funktionimi;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNull;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,23 +19,19 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNull;
+import fi.vm.sade.dbunit.annotation.DataSetLocation;
+import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi;
+import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti;
+import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
 
 /**
- * User: kwuoti
- * Date: 18.1.2013
- * Time: 10.04
+ * User: kwuoti Date: 18.1.2013 Time: 10.04
  */
 @ContextConfiguration(locations = "classpath:test-context.xml")
-@TestExecutionListeners(listeners = {JTACleanInsertTestExecutionListener.class,
+@TestExecutionListeners(listeners = { JTACleanInsertTestExecutionListener.class,
         DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
-        TransactionalTestExecutionListener.class})
+        TransactionalTestExecutionListener.class })
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
 @DataSetLocation("classpath:test-data.xml")
@@ -46,7 +45,7 @@ public class FunktiokutsuDAOTest {
         final Long id = 1L;
 
         Funktiokutsu funktiokutsu = funktiokutsuDAO.getFunktiokutsu(id);
-        assertEquals(Funktionimi.LUKUARVO, funktiokutsu.getFunktionimi());
+        assertEquals(fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.LUKUARVO, funktiokutsu.getFunktionimi());
     }
 
     @Test

@@ -35,8 +35,7 @@ import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaInsertDTO;
 import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaListDTO;
 import fi.vm.sade.service.valintaperusteet.dto.SyoteparametriDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
-import fi.vm.sade.service.valintaperusteet.model.Funktionimi;
-import fi.vm.sade.service.valintaperusteet.model.Funktiotyyppi;
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.resource.impl.LaskentakaavaResourceImpl;
 
@@ -66,7 +65,7 @@ public class LaskentakaavaResourceTest {
     }
 
     private FunktiokutsuDTO createLukuarvo(String luku) {
-        final Funktionimi nimi = Funktionimi.LUKUARVO;
+        final fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi nimi = Funktionimi.LUKUARVO;
 
         final Funktiokuvaaja.Funktiokuvaus funktiokuvaus = Funktiokuvaaja.annaFunktiokuvaus(nimi)._2();
 
@@ -216,7 +215,8 @@ public class LaskentakaavaResourceTest {
         assertEquals(4, kaavat.size());
 
         for (LaskentakaavaListDTO kaava : kaavat) {
-            assertEquals(Funktiotyyppi.TOTUUSARVOFUNKTIO, kaava.getTyyppi());
+            assertEquals(fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi.TOTUUSARVOFUNKTIO,
+                    kaava.getTyyppi());
             assertFalse(kaava.getOnLuonnos());
         }
     }
