@@ -26,6 +26,7 @@ import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.kaava.Funktiokuvaaja;
 import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
+import fi.vm.sade.service.valintaperusteet.dto.FunktioargumentinLapsiDTO;
 import fi.vm.sade.service.valintaperusteet.dto.FunktioargumenttiDTO;
 import fi.vm.sade.service.valintaperusteet.dto.FunktiokutsuDTO;
 import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaCreateDTO;
@@ -93,9 +94,10 @@ public class LaskentakaavaResourceTest {
         funktiokutsu.setTulosTunniste("tunniste");
 
         for (int i = 0; i < args.length; ++i) {
-            FunktiokutsuDTO f = args[i];
+            FunktioargumentinLapsiDTO f = modelMapper.map(args[i], FunktioargumentinLapsiDTO.class);
             FunktioargumenttiDTO arg = new FunktioargumenttiDTO();
-            arg.setFunktiokutsuChild(f);
+            f.setLapsityyppi(FunktioargumentinLapsiDTO.FUNKTIOKUTSUTYYPPI);
+            arg.setLapsi(f);
             arg.setIndeksi(i + 1);
             funktiokutsu.getFunktioargumentit().add(arg);
         }
@@ -118,6 +120,7 @@ public class LaskentakaavaResourceTest {
         assertEquals(Response.Status.CREATED.getStatusCode(), insert.getStatus());
 
         assertTrue(((LaskentakaavaDTO) insert.getEntity()).getFunktiokutsu().getTallennaTulos());
+
     }
 
     @Test

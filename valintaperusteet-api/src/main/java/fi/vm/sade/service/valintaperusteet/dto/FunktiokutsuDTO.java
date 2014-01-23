@@ -2,6 +2,7 @@ package fi.vm.sade.service.valintaperusteet.dto;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -46,7 +47,7 @@ public class FunktiokutsuDTO {
     private Set<SyoteparametriDTO> syoteparametrit = new HashSet<SyoteparametriDTO>();
 
     @ApiModelProperty(value = "Funktioargumentit")
-    private Set<FunktioargumenttiDTO> funktioargumentit = new TreeSet<FunktioargumenttiDTO>();
+    private List<FunktioargumenttiDTO> funktioargumentit = new LinkedList<FunktioargumenttiDTO>();
 
     @ApiModelProperty(value = "Valintaperusteviitteet")
     private Set<ValintaperusteViiteDTO> valintaperusteviitteet = new TreeSet<ValintaperusteViiteDTO>();
@@ -86,11 +87,11 @@ public class FunktiokutsuDTO {
         this.syoteparametrit = syoteparametrit;
     }
 
-    public Set<FunktioargumenttiDTO> getFunktioargumentit() {
+    public List<FunktioargumenttiDTO> getFunktioargumentit() {
         return funktioargumentit;
     }
 
-    public void setFunktioargumentit(Set<FunktioargumenttiDTO> funktioargumentit) {
+    public void setFunktioargumentit(List<FunktioargumenttiDTO> funktioargumentit) {
         this.funktioargumentit = funktioargumentit;
     }
 

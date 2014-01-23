@@ -9,30 +9,14 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "FunktioargumenttiDTO", description = "Funktioargumentti")
 public class FunktioargumenttiDTO implements Comparable<FunktioargumenttiDTO> {
 
-    @ApiModelProperty(value = "Lapsifunktiokutsu")
-    private FunktiokutsuDTO funktiokutsuChild;
 
-    @ApiModelProperty(value = "Lapsilaskentakaava")
-    private LaskentakaavaListDTO laskentakaavaChild;
+    @ApiModelProperty(value = "Funktioargumentin lapsi (funktiokutsu tai laskentakaava)")
+    private FunktioargumentinLapsiDTO lapsi;
+
 
     @ApiModelProperty(value = "Indeksi", required = true)
     private Integer indeksi;
 
-    public FunktiokutsuDTO getFunktiokutsuChild() {
-        return funktiokutsuChild;
-    }
-
-    public void setFunktiokutsuChild(FunktiokutsuDTO funktiokutsuChild) {
-        this.funktiokutsuChild = funktiokutsuChild;
-    }
-
-    public LaskentakaavaListDTO getLaskentakaavaChild() {
-        return laskentakaavaChild;
-    }
-
-    public void setLaskentakaavaChild(LaskentakaavaListDTO laskentakaavaChild) {
-        this.laskentakaavaChild = laskentakaavaChild;
-    }
 
     public Integer getIndeksi() {
         return indeksi;
@@ -45,5 +29,13 @@ public class FunktioargumenttiDTO implements Comparable<FunktioargumenttiDTO> {
     @Override
     public int compareTo(FunktioargumenttiDTO o) {
         return indeksi - o.indeksi;
+    }
+
+    public FunktioargumentinLapsiDTO getLapsi() {
+        return lapsi;
+    }
+
+    public void setLapsi(FunktioargumentinLapsiDTO lapsi) {
+        this.lapsi = lapsi;
     }
 }
