@@ -104,32 +104,6 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
 
         }
 
-
-//        Funktiokutsu funktiokutsu = funktiokutsuDAO.getFunktiokutsu(id);
-//        if (funktiokutsu == null) {
-//            throw new FunktiokutsuEiOleOlemassaException("Funktiokutsu (" + id + ") ei ole olemassa", id);
-//        }
-//
-//        for (Funktioargumentti fa : funktiokutsu.getFunktioargumentit()) {
-//            if (fa.getFunktiokutsuChild() != null) {
-//                haeFunktiokutsuRekursiivisesti(fa.getFunktiokutsuChild().getId(), laajennaAlakaavat, laskentakaavaIds);
-//            } else if (laajennaAlakaavat && fa.getLaskentakaavaChild() != null) {
-//                if (laskentakaavaIds.contains(fa.getLaskentakaavaChild().getId())) {
-//                    throw new FunktiokutsuMuodostaaSilmukanException("Funktiokutsu " + id + " muodostaa silmukan " +
-//                            "laskentakaavaan " + fa.getLaskentakaavaChild().getId(), id,
-//                            funktiokutsu.getFunktionimi(), fa.getLaskentakaavaChild().getId());
-//                }
-//                Set<Long> newLaskentakaavaIds = new HashSet<Long>(laskentakaavaIds);
-//                newLaskentakaavaIds.add(fa.getLaskentakaavaChild().getId());
-//
-//                Funktiokutsu fk = haeFunktiokutsuRekursiivisesti(fa.getLaskentakaavaChild().getFunktiokutsu().getId(),
-//                        laajennaAlakaavat, newLaskentakaavaIds);
-//                fa.setLaajennettuKaava(fk);
-//            }
-//        }
-//
-//        return funktiokutsu;
-
     }
 
     @Override
@@ -410,75 +384,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     private void haeValintaperusteetRekursiivisesti(Funktiokutsu funktiokutsu,
                                                     Map<String, ValintaperusteDTO> valintaperusteet,
                                                     Map<String, String> hakukohteenValintaperusteet) {
-//        for (ValintaperusteViite vp : funktiokutsu.getValintaperusteviitteet()) {
-//            if (Valintaperustelahde.SYOTETTAVA_ARVO.equals(vp.getLahde()) || Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO.equals(vp.getLahde())) {
-//
-//                ValintaperusteDTO valintaperuste = new ValintaperusteDTO();
-//                valintaperuste.setFunktiotyyppi(funktiokutsu.getFunktionimi().getTyyppi());
-//                valintaperuste.setTunniste(vp.getTunniste());
-//                valintaperuste.setKuvaus(vp.getKuvaus());
-//
-//                valintaperuste.setLahde(Valintaperustelahde.SYOTETTAVA_ARVO);
-//                valintaperuste.setOnPakollinen(vp.getOnPakollinen());
-//                valintaperuste.setOsallistuminenTunniste(vp.getOsallistuminenTunniste());
-//
-//                if (vp.getEpasuoraViittaus() != null && vp.getEpasuoraViittaus()) {
-//                    valintaperuste.setTunniste(hakukohteenValintaperusteet.get(vp.getTunniste()));
-//                    valintaperuste.setOsallistuminenTunniste(valintaperuste.getTunniste() + ValintaperusteViite.OSALLISTUMINEN_POSTFIX);
-//                }
-//
-//                if (funktiokutsu.getArvokonvertteriparametrit() != null
-//                        && funktiokutsu.getArvokonvertteriparametrit().size() > 0) {
-//                    List<String> arvot = new ArrayList<String>();
-//
-//                    for (Arvokonvertteriparametri ap : funktiokutsu.getArvokonvertteriparametrit()) {
-//                        arvot.add(haeTunniste(ap.getArvo(), hakukohteenValintaperusteet));
-//                    }
-//
-//                    valintaperuste.setArvot(arvot);
-//                } else if (funktiokutsu.getArvovalikonvertteriparametrit() != null
-//                        && funktiokutsu.getArvovalikonvertteriparametrit().size() > 0) {
-//                    BigDecimal min = null;
-//                    BigDecimal max = null;
-//
-//                    for (Arvovalikonvertteriparametri av : funktiokutsu.getArvovalikonvertteriparametrit()) {
-//                        try {
-//                            BigDecimal current = new BigDecimal(haeTunniste(av.getMinValue(), hakukohteenValintaperusteet));
-//                            if (min == null || current.compareTo(min) < 0) {
-//                                min = current;
-//                            }
-//                        } catch (NumberFormatException e) {
-//                            LOGGER.error("Cannot convert min value {} to BigDecimal", av.getMaxValue());
-//                        }
-//
-//                        try {
-//                            BigDecimal current = new BigDecimal(haeTunniste(av.getMaxValue(), hakukohteenValintaperusteet));
-//                            if (max == null || current.compareTo(max) > 0) {
-//                                max = current;
-//                            }
-//                        } catch (NumberFormatException e) {
-//                            LOGGER.error("Cannot convert max value {} to BigDecimal", av.getMaxValue());
-//                        }
-//                    }
-//
-//                    valintaperuste.setMin(min != null ? min.toString() : null);
-//                    valintaperuste.setMax(max != null ? max.toString() : null);
-//                }
-//
-//                valintaperusteet.put(valintaperuste.getTunniste(), valintaperuste);
-//            }
-//        }
-//
-//        for (Funktioargumentti arg : funktiokutsu.getFunktioargumentit()) {
-//            if (arg.getFunktiokutsuChild() != null) {
-//                haeValintaperusteetRekursiivisesti(funktiokutsuDAO.getFunktiokutsu(arg.getFunktiokutsuChild().getId()),
-//                        valintaperusteet, hakukohteenValintaperusteet);
-//            } else if (arg.getLaskentakaavaChild() != null) {
-//                haeValintaperusteetRekursiivisesti(
-//                        laskentakaavaDAO.getLaskentakaava(arg.getLaskentakaavaChild().getId()).getFunktiokutsu(),
-//                        valintaperusteet, hakukohteenValintaperusteet);
-//            }
-//        }
+
         // Akka toteutus
         ActorSystem system = ActorSystem.create("actorSystem");
         SpringExtProvider.get(system).initialize(applicationContext);
