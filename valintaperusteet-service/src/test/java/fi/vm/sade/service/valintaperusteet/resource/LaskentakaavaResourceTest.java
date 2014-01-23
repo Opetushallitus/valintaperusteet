@@ -84,9 +84,10 @@ public class LaskentakaavaResourceTest {
         funktiokutsu.setTulosTunniste("tunniste");
 
         for (int i = 0; i < args.length; ++i) {
-            FunktiokutsuDTO f = args[i];
+            FunktioargumentinLapsiDTO f = modelMapper.map(args[i], FunktioargumentinLapsiDTO.class);
             FunktioargumenttiDTO arg = new FunktioargumenttiDTO();
-            arg.setFunktiokutsuChild(f);
+            f.setLapsityyppi(FunktioargumentinLapsiDTO.FUNKTIOKUTSUTYYPPI);
+            arg.setLapsi(f);
             arg.setIndeksi(i + 1);
             funktiokutsu.getFunktioargumentit().add(arg);
         }
@@ -109,6 +110,7 @@ public class LaskentakaavaResourceTest {
         assertEquals(Response.Status.CREATED.getStatusCode(), insert.getStatus());
 
         assertTrue(((LaskentakaavaDTO) insert.getEntity()).getFunktiokutsu().getTallennaTulos());
+
     }
 
     @Test

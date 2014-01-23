@@ -3,7 +3,6 @@ package fi.vm.sade.service.valintaperusteet.service;
 import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.generic.dao.GenericDAO;
-import fi.vm.sade.kaava.Funktiokuvaaja;
 import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
 import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
@@ -28,6 +27,7 @@ import java.sql.DriverManager;
 import java.util.*;
 
 import static junit.framework.Assert.*;
+import fi.vm.sade.kaava.Funktiokuvaaja;
 
 /**
  * User: kwuoti Date: 21.1.2013 Time: 9.42
@@ -168,11 +168,12 @@ public class LaskentakaavaServiceTest {
         funktiokutsu.setTallennaTulos(false);
 
         for (int i = 0; i < args.length; ++i) {
-            FunktiokutsuDTO f = args[i];
+            FunktioargumentinLapsiDTO f = modelMapper.map(args[i], FunktioargumentinLapsiDTO.class);
             FunktioargumenttiDTO arg = new FunktioargumenttiDTO();
-            arg.setFunktiokutsuChild(f);
+            arg.setLapsi(f);
             arg.setIndeksi(i + 1);
             funktiokutsu.getFunktioargumentit().add(arg);
+            f.setLapsityyppi(FunktioargumentinLapsiDTO.FUNKTIOKUTSUTYYPPI);
         }
 
         return funktiokutsu;
@@ -332,7 +333,9 @@ public class LaskentakaavaServiceTest {
         nimetty.setTallennaTulos(false);
 
         FunktioargumenttiDTO arg = new FunktioargumenttiDTO();
-        arg.setFunktiokutsuChild(child);
+        FunktioargumentinLapsiDTO lapsiDTO = modelMapper.map(child, FunktioargumentinLapsiDTO.class);
+        lapsiDTO.setLapsityyppi(FunktioargumentinLapsiDTO.FUNKTIOKUTSUTYYPPI);
+        arg.setLapsi(lapsiDTO);
         arg.setIndeksi(1);
         nimetty.getFunktioargumentit().add(arg);
 
@@ -361,7 +364,9 @@ public class LaskentakaavaServiceTest {
 
             FunktiokutsuDTO summa = createSumma(createLukuarvo(1.0), createLukuarvo(2.0));
             FunktioargumenttiDTO kaavaArg = new FunktioargumenttiDTO();
-            kaavaArg.setLaskentakaavaChild(tallennettuKaava);
+            FunktioargumentinLapsiDTO lapsiDTO = modelMapper.map(tallennettuKaava, FunktioargumentinLapsiDTO.class);
+            lapsiDTO.setLapsityyppi(FunktioargumentinLapsiDTO.LASKENTAKAAVATYYPPI);
+            kaavaArg.setLapsi(lapsiDTO);
             kaavaArg.setIndeksi(summa.getFunktioargumentit().size() + 1);
             summa.getFunktioargumentit().add(kaavaArg);
 

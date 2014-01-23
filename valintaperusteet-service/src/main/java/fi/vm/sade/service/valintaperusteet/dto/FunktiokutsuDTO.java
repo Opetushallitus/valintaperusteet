@@ -46,7 +46,7 @@ public class FunktiokutsuDTO {
     private Set<SyoteparametriDTO> syoteparametrit = new HashSet<SyoteparametriDTO>();
 
     @ApiModelProperty(value = "Funktioargumentit")
-    private Set<FunktioargumenttiDTO> funktioargumentit = new TreeSet<FunktioargumenttiDTO>();
+    private List<FunktioargumenttiDTO> funktioargumentit = new LinkedList<FunktioargumenttiDTO>();
 
     @ApiModelProperty(value = "Valintaperusteviitteet")
     private Set<ValintaperusteViiteDTO> valintaperusteviitteet = new TreeSet<ValintaperusteViiteDTO>();
@@ -86,11 +86,11 @@ public class FunktiokutsuDTO {
         this.syoteparametrit = syoteparametrit;
     }
 
-    public Set<FunktioargumenttiDTO> getFunktioargumentit() {
+    public List<FunktioargumenttiDTO> getFunktioargumentit() {
         return funktioargumentit;
     }
 
-    public void setFunktioargumentit(Set<FunktioargumenttiDTO> funktioargumentit) {
+    public void setFunktioargumentit(List<FunktioargumenttiDTO> funktioargumentit) {
         this.funktioargumentit = funktioargumentit;
     }
 
