@@ -172,13 +172,13 @@ public class HakukohdeResource {
         return modelMapper.mapList(jarjestyskriteeriService.findByHakukohde(oid), JarjestyskriteeriDTO.class);
     }
 
-    @POST
-    @Path("/avaimet")
+    @GET
+    @Path("/avaimet/{oid}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Secured({READ, UPDATE, CRUD})
     @ApiOperation(value = "Hakee hakukohteen syötettävät tiedot", response = ValintaperusteDTO.class)
-    public List<ValintaperusteDTO> findAvaimet(@ApiParam(value = "Hakukohde OID", required = true) String oid) {
+    public List<ValintaperusteDTO> findAvaimet(@ApiParam(value = "Hakukohde OID", required = true) @PathParam("oid") String oid) {
         return laskentakaavaService.findAvaimetForHakukohde(oid);
     }
 

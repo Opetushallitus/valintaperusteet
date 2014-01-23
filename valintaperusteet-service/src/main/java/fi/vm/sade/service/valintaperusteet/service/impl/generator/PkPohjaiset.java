@@ -106,11 +106,11 @@ public class PkPohjaiset {
             Laskentakaava painotettavatKeskiarvotLaskentakaava, Laskentakaava yleinenkoulumenestyspisteytysmalli,
             Laskentakaava pohjakoulutuspisteytysmalli, Laskentakaava ilmanKoulutuspaikkaaPisteytysmalli,
             Laskentakaava hakutoivejarjestyspisteytysmalli, Laskentakaava tyokokemuspisteytysmalli,
-            Laskentakaava sukupuolipisteytysmalli) {
+            Laskentakaava sukupuolipisteytysmalli, Laskentakaava urheilijanLisapiste) {
 
         Funktiokutsu summa = GenericHelper.luoSumma(painotettavatKeskiarvotLaskentakaava,
                 yleinenkoulumenestyspisteytysmalli, pohjakoulutuspisteytysmalli, ilmanKoulutuspaikkaaPisteytysmalli,
-                hakutoivejarjestyspisteytysmalli, tyokokemuspisteytysmalli, sukupuolipisteytysmalli);
+                hakutoivejarjestyspisteytysmalli, tyokokemuspisteytysmalli, sukupuolipisteytysmalli, urheilijanLisapiste);
 
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(summa,
                 "2. asteen peruskoulupohjainen peruskaava");

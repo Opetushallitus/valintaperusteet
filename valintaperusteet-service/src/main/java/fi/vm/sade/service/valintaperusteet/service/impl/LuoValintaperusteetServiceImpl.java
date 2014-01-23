@@ -93,6 +93,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
     private final String PAASYKOE_TUNNISTE = "paasykoe_tunniste";
     private final String KIELIKOE_TUNNISTE = "{{hakukohde."+PkJaYoPohjaiset.kielikoetunniste+"}}";
     private final String LISANAYTTO_TUNNISTE = "lisanaytto_tunniste";
+    public static final String URHEILIJA_LISAPISTE_TUNNISTE = "{{hakukohde."+PkJaYoPohjaiset.urheilijaLisapisteTunniste+"}}";
 
     @Override
     public void luo() throws IOException {
@@ -180,17 +181,37 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         transactionManager.commit(tx);
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
+        Laskentakaava urheilijaLisapisteenMahdollisuusLaskentakaava = asetaValintaryhmaJaTallennaKantaan(PkJaYoPohjaiset.luoUrheilijaLisapisteenMahdollisuus(),
+                ammatillinenKoulutusVr.getOid());
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
 
         final String kielikoeNimi = "Kielikoe";
         ValintakoeDTO kielikoe = new ValintakoeDTO();
-        kielikoe.setAktiivinen(false);
         kielikoe.setAktiivinen(true);
+        kielikoe.setLahetetaankoKoekutsut(true);
         kielikoe.setKuvaus(kielikoeNimi);
         kielikoe.setNimi(kielikoeNimi);
         kielikoe.setTunniste(KIELIKOE_TUNNISTE);
         kielikoe.setLaskentakaavaId(kielikokeenLaskentakaava.getId());
 
         valintakoeService.lisaaValintakoeValinnanVaiheelle(kielikoevalinnanVaihe.getOid(), kielikoe);
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
+        final String urheilijaLisapisteNimi = "Urheilijalisäpiste";
+        ValintakoeDTO urheilijaLisapiste = new ValintakoeDTO();
+        urheilijaLisapiste.setAktiivinen(true);
+        urheilijaLisapiste.setLahetetaankoKoekutsut(false);
+        urheilijaLisapiste.setKuvaus(urheilijaLisapisteNimi);
+        urheilijaLisapiste.setNimi(urheilijaLisapisteNimi);
+        urheilijaLisapiste.setTunniste(URHEILIJA_LISAPISTE_TUNNISTE);
+        urheilijaLisapiste.setLaskentakaavaId(urheilijaLisapisteenMahdollisuusLaskentakaava.getId());
+
+        valintakoeService.lisaaValintakoeValinnanVaiheelle(kielikoevalinnanVaihe.getOid(), urheilijaLisapiste);
 
         transactionManager.commit(tx);
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
@@ -220,6 +241,10 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
         //pisteytysmalli
         Laskentakaava pk_painotettavatKeskiarvotLaskentakaava = asetaValintaryhmaJaTallennaKantaan(PkPohjaiset.luoPainotettavatKeskiarvotLaskentakaava(pkAineet), peruskouluVr.getOid());
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
         Laskentakaava pkPohjainenKaikkienAineidenKeskiarvo = asetaValintaryhmaJaTallennaKantaan(PkPohjaiset.luoPKPohjaisenKoulutuksenKaikkienAineidenKeskiarvo(pkAineet), peruskouluVr.getOid());
 
         transactionManager.commit(tx);
@@ -227,11 +252,35 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
         //pisteytysmalli
         Laskentakaava pk_yleinenkoulumenestyspisteytysmalli = asetaValintaryhmaJaTallennaKantaan(PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(pkPohjainenKaikkienAineidenKeskiarvo, "Yleinen koulumenestys pisteytysmalli, PK"), peruskouluVr.getOid());
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
         Laskentakaava pk_pohjakoulutuspisteytysmalli = asetaValintaryhmaJaTallennaKantaan(PkPohjaiset.luoPohjakoulutuspisteytysmalli(), peruskouluVr.getOid());
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
         Laskentakaava pk_ilmanKoulutuspaikkaaPisteytysmalli = asetaValintaryhmaJaTallennaKantaan(PkPohjaiset.ilmanKoulutuspaikkaaPisteytysmalli(), peruskouluVr.getOid());
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
         Laskentakaava hakutoivejarjestyspisteytysmalli = asetaValintaryhmaJaTallennaKantaan(PkJaYoPohjaiset.luoHakutoivejarjestyspisteytysmalli(), ammatillinenKoulutusVr.getOid());
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
         Laskentakaava tyokokemuspisteytysmalli = asetaValintaryhmaJaTallennaKantaan(PkJaYoPohjaiset.luoTyokokemuspisteytysmalli(), ammatillinenKoulutusVr.getOid());
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
         Laskentakaava sukupuolipisteytysmalli = asetaValintaryhmaJaTallennaKantaan(PkJaYoPohjaiset.luoSukupuolipisteytysmalli(), ammatillinenKoulutusVr.getOid());
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
+        Laskentakaava urheilijanLisapiste = asetaValintaryhmaJaTallennaKantaan(PkJaYoPohjaiset.urheilijaLisapisteLukuarvo(PkJaYoPohjaiset.urheilijaLisapisteTunniste), ammatillinenKoulutusVr.getOid());
 
         transactionManager.commit(tx);
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
@@ -239,17 +288,21 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         // Pk koostava iso kaava
         Laskentakaava toisenAsteenPeruskoulupohjainenPeruskaava = asetaValintaryhmaJaTallennaKantaan(PkPohjaiset.luoToisenAsteenPeruskoulupohjainenPeruskaava(pk_painotettavatKeskiarvotLaskentakaava,
                 pk_yleinenkoulumenestyspisteytysmalli, pk_pohjakoulutuspisteytysmalli, pk_ilmanKoulutuspaikkaaPisteytysmalli, hakutoivejarjestyspisteytysmalli, tyokokemuspisteytysmalli,
-                sukupuolipisteytysmalli), peruskouluVr.getOid());
+                sukupuolipisteytysmalli,urheilijanLisapiste), peruskouluVr.getOid());
         transactionManager.commit(tx);
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
         for (Laskentakaava kaava : yoAineet.getLaskentakaavat()) {
             asetaValintaryhmaJaTallennaKantaan(kaava, lukioVr.getOid());
+            transactionManager.commit(tx);
+            tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
         }
+
+        Laskentakaava lk_paattotodistuksenkeskiarvo = asetaValintaryhmaJaTallennaKantaan(YoPohjaiset.luoYOPohjaisenKoulutuksenPaattotodistuksenKeskiarvo(yoAineet), lukioVr.getOid());
+
         transactionManager.commit(tx);
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
-        Laskentakaava lk_paattotodistuksenkeskiarvo = asetaValintaryhmaJaTallennaKantaan(YoPohjaiset.luoYOPohjaisenKoulutuksenPaattotodistuksenKeskiarvo(yoAineet), lukioVr.getOid());
         Laskentakaava lk_yleinenkoulumenestyspisteytysmalli = asetaValintaryhmaJaTallennaKantaan(PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(lk_paattotodistuksenkeskiarvo, "Yleinen koulumenestys pisteytysmalli, LK"), lukioVr.getOid());
 
         transactionManager.commit(tx);
@@ -257,7 +310,8 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
         // Yo koostava iso kaava
         Laskentakaava toisenAsteenYlioppilaspohjainenPeruskaava = asetaValintaryhmaJaTallennaKantaan(YoPohjaiset.luoToisenAsteenYlioppilaspohjainenPeruskaava(hakutoivejarjestyspisteytysmalli,
-                tyokokemuspisteytysmalli, sukupuolipisteytysmalli, lk_yleinenkoulumenestyspisteytysmalli), lukioVr.getOid());
+                tyokokemuspisteytysmalli, sukupuolipisteytysmalli, lk_yleinenkoulumenestyspisteytysmalli,urheilijanLisapiste), lukioVr.getOid());
+
         transactionManager.commit(tx);
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
@@ -284,6 +338,9 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
         Laskentakaava pkYhdistettyPeruskaavaJaKielikoekaava = asetaValintaryhmaJaTallennaKantaan(PkJaYoPohjaiset.luoYhdistettyPeruskaavaJaKielikoekaava(
                 toisenAsteenPeruskoulupohjainenPeruskaava, kielikokeenLaskentakaava), peruskouluVr.getOid());
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
         Laskentakaava lkYhdistettyPeruskaavaJaKielikoekaava = asetaValintaryhmaJaTallennaKantaan(PkJaYoPohjaiset.luoYhdistettyPeruskaavaJaKielikoekaava(
                 toisenAsteenYlioppilaspohjainenPeruskaava, kielikokeenLaskentakaava), peruskouluVr.getOid());
@@ -312,9 +369,25 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
         Laskentakaava painotettuKeskiarvo = asetaValintaryhmaJaTallennaKantaan(LukionValintaperusteet.painotettuLukuaineidenKeskiarvo(), lukioKoulutusVr.getOid());
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
         Laskentakaava paasykoe = asetaValintaryhmaJaTallennaKantaan(LukionValintaperusteet.paasykoeLukuarvo(PAASYKOE_TUNNISTE), lukioKoulutusVr.getOid());
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
         Laskentakaava lisanaytto = asetaValintaryhmaJaTallennaKantaan(LukionValintaperusteet.lisanayttoLukuarvo(LISANAYTTO_TUNNISTE), lukioKoulutusVr.getOid());
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
         Laskentakaava paasykoeJaLisanaytto = asetaValintaryhmaJaTallennaKantaan(LukionValintaperusteet.paasykoeJaLisanaytto(paasykoe, lisanaytto), lukioKoulutusVr.getOid());
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
         Laskentakaava ulkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt = asetaValintaryhmaJaTallennaKantaan(PkJaYoPohjaiset.luoUlkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt(), lukioKoulutusVr.getOid());
 
         transactionManager.commit(tx);
@@ -363,6 +436,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         valintakoePaasykoe.setNimi("Pääsykoe");
         valintakoePaasykoe.setKuvaus("Pääsykoe");
         valintakoePaasykoe.setAktiivinen(false);
+        valintakoePaasykoe.setLahetetaankoKoekutsut(true);
         valintakoePaasykoe.setTunniste("{{hakukohde." + PAASYKOE_TUNNISTE + "}}");
 
         valintakoeService.lisaaValintakoeValinnanVaiheelle(paasykoeValinnanVaihe.getOid(), valintakoePaasykoe);
@@ -371,6 +445,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         valintakoeLisanaytto.setNimi("Lisänäyttö");
         valintakoeLisanaytto.setKuvaus("Lisänäyttö");
         valintakoeLisanaytto.setAktiivinen(false);
+        valintakoeLisanaytto.setLahetetaankoKoekutsut(false);
         valintakoeLisanaytto.setTunniste("{{hakukohde." + LISANAYTTO_TUNNISTE + "}}");
 
         valintakoeService.lisaaValintakoeValinnanVaiheelle(paasykoeValinnanVaihe.getOid(), valintakoeLisanaytto);
@@ -468,6 +543,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                 dto.setKuvaus(k.getKuvaus());
                 dto.setTunniste(k.getTunniste());
                 dto.setLaskentakaavaId(k.getLaskentakaavaId());
+                dto.setLahetetaankoKoekutsut(true);
                 valintakoeService.update(k.getOid(), dto);
             }
         }
@@ -513,6 +589,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                 dto.setKuvaus(k.getKuvaus());
                 dto.setTunniste(k.getTunniste());
                 dto.setLaskentakaavaId(k.getLaskentakaavaId());
+                dto.setLahetetaankoKoekutsut(false);
                 valintakoeService.update(k.getOid(), dto);
             }
         }
@@ -560,6 +637,11 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
             dto.setKuvaus(k.getKuvaus());
             dto.setTunniste(k.getTunniste());
             dto.setLaskentakaavaId(k.getLaskentakaavaId());
+            if (k.getTunniste().contains(PAASYKOE_TUNNISTE)) {
+                dto.setLahetetaankoKoekutsut(true);
+            } else {
+                dto.setLahetetaankoKoekutsut(false);
+            }
             valintakoeService.update(k.getOid(), dto);
         }
 
@@ -664,6 +746,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                 valintakoe.setKuvaus(valintakoetunniste);
                 valintakoe.setTunniste(valintakoetunniste);
                 valintakoe.setNimi(valintakoetunniste);
+                valintakoe.setLahetetaankoKoekutsut(true);
 
                 // Valintakoe on pakollinen niille, joilla ei ole ulkomailla suoritettua koulutusta tai
                 // joiden oppivelvollisuuden suorittaminen ei ole keskeytynyt
@@ -780,6 +863,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         dto.setKuvaus(paasykoe.getKuvaus());
         dto.setTunniste(paasykoe.getTunniste());
         dto.setLaskentakaavaId(paasykoe.getLaskentakaavaId());
+        dto.setLahetetaankoKoekutsut(true);
         valintakoeService.update(paasykoe.getOid(), dto);
 
         transactionManager.commit(tx);

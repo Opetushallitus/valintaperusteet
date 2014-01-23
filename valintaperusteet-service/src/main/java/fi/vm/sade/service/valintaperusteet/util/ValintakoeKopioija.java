@@ -18,6 +18,10 @@ public class ValintakoeKopioija implements Kopioija<Valintakoe> {
 
     @Override
     public void kopioiTiedot(Valintakoe from, Valintakoe to) {
+        if (from.getLahetetaankoKoekutsut() != null) {
+            to.setLahetetaankoKoekutsut(from.getLahetetaankoKoekutsut());
+        }
+
         if (from.getAktiivinen() != null) {
             to.setAktiivinen(from.getAktiivinen());
         }
@@ -53,5 +57,6 @@ public class ValintakoeKopioija implements Kopioija<Valintakoe> {
         kopio.setNimi(paivitettyMaster.getNimi());
         kopio.setKuvaus(paivitettyMaster.getKuvaus());
         kopio.setTunniste(paivitettyMaster.getTunniste());
+        kopio.setLahetetaankoKoekutsut(paivitettyMaster.getLahetetaankoKoekutsut());
     }
 }
