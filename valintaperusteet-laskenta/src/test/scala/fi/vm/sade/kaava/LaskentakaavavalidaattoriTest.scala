@@ -2,11 +2,12 @@ package fi.vm.sade.kaava
 
 import org.scalatest.FunSuite
 import fi.vm.sade.kaava.LaskentaTestUtil._
-import fi.vm.sade.service.valintaperusteet.model.{Valintaperustelahde, Funktioargumentti, Funktionimi}
+import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti
 import fi.vm.sade.kaava.LaskentaTestUtil.Funktiokutsu
 import java.math.BigDecimal
 import fi.vm.sade.service.valintaperusteet.service.validointi.virhe.{Validointivirhe, Virhetyyppi}
 import java.util
+import fi.vm.sade.service.valintaperusteet.dto.model.{Funktionimi, Valintaperustelahde}
 
 /**
  * User: kwuoti

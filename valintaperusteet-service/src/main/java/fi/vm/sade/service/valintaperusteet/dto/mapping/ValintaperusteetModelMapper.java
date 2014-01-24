@@ -71,6 +71,7 @@ public class ValintaperusteetModelMapper extends ModelMapper {
                         for(Funktioargumentti arg : context.getSource()) {
                             FunktioargumenttiDTO dto = new FunktioargumenttiDTO();
                             ModelMapper modelMapper = new ModelMapper();
+                            modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
                             if(arg.getFunktiokutsuChild() != null) {
                                 FunktioargumentinLapsiDTO lapsi = asetaFunktioArgumenttiLapsetRekursiivisesti(arg.getFunktiokutsuChild());
                                 lapsi.setLapsityyppi(FunktioargumentinLapsiDTO.FUNKTIOKUTSUTYYPPI);
@@ -109,11 +110,14 @@ public class ValintaperusteetModelMapper extends ModelMapper {
                             if(arg.getLapsi() != null && arg.getLapsi().getLapsityyppi().equals(FunktioargumentinLapsiDTO.FUNKTIOKUTSUTYYPPI)) {
                                 asetaIndeksitRekursiivisesti(arg.getLapsi());
                                 FunktiokutsuDTO dto = modelMapper.map(arg, FunktiokutsuDTO.class);
-                                funktioargumentti.setFunktiokutsuChild(convertFromDto(dto));
+                                //funktioargumentti.setFunktiokutsuChild(convertFromDto(dto));
+                                Funktiokutsu kutsu = convertFromDto(dto);
+                                funktioargumentti.setFunktiokutsuChild(kutsu);
                             }
                             if(arg.getLapsi() != null && arg.getLapsi().getLapsityyppi().equals(FunktioargumentinLapsiDTO.LASKENTAKAAVATYYPPI)) {
                                 LaskentakaavaListDTO dto = modelMapper.map(arg, LaskentakaavaListDTO.class);
-                                funktioargumentti.setLaskentakaavaChild(convertFromDto(dto));
+                                Laskentakaava kaava = convertFromDto(dto);
+                                funktioargumentti.setLaskentakaavaChild(kaava);
                             }
 
                             funktioargumentti.setIndeksi(arg.getIndeksi());
@@ -139,7 +143,6 @@ public class ValintaperusteetModelMapper extends ModelMapper {
     }
 
     public FunktioargumentinLapsiDTO asetaFunktioArgumenttiLapsetRekursiivisesti(Funktiokutsu kutsu) {
-
         FunktioargumentinLapsiDTO parent = map(kutsu, FunktioargumentinLapsiDTO.class);
         List<FunktioargumenttiDTO> result = new LinkedList<FunktioargumenttiDTO>();
         for(Funktioargumentti arg : kutsu.getFunktioargumentit()) {

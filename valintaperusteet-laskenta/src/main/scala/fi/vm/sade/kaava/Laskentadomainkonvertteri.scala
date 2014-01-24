@@ -43,6 +43,7 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaVert
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Ei
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Hakutoive
 import fi.vm.sade.service.valintaperusteet.service.validointi.virhe.LaskentakaavaEiOleValidiException
+import fi.vm.sade.service.valintaperusteet.dto.model.{Funktionimi, Valintaperustelahde}
 
 /**
  * User: kwuoti

@@ -6,4 +6,5 @@ package fi.vm.sade.service.valintaperusteet.dto.model;
  * Time: 16.26
  */
 public abstract class Abstraktivalidointivirhe {
+    public Abstraktivalidointivirhe() {}
 }

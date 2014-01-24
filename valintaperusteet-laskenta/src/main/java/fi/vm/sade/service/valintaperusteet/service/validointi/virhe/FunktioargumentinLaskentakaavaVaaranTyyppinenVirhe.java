@@ -1,8 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.service.validointi.virhe;
 
-import fi.vm.sade.service.valintaperusteet.model.Funktiotyyppi;
-import fi.vm.sade.service.valintaperusteet.model.JsonViews;
-import org.codehaus.jackson.map.annotate.JsonView;
+
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi;
 
 /**
  * User: kwuoti

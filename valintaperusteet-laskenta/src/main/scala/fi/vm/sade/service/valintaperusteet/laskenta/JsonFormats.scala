@@ -2,7 +2,7 @@ package fi.vm.sade.service.valintaperusteet.laskenta
 
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
-import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.{Virhetila, Hyvaksyttavissatila, Hylattytila, Tila}
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.{Tila, Virhetila, Hyvaksyttavissatila, Hylattytila}
 import org.codehaus.jackson.map.ObjectMapper
 import fi.vm.sade.service.valintaperusteet.model.JsonViews
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus

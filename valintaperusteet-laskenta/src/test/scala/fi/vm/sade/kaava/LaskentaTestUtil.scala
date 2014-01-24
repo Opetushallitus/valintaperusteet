@@ -6,6 +6,7 @@ import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus
 import java.util.TreeSet
 import java.math.BigDecimal
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
+import fi.vm.sade.service.valintaperusteet.dto.model.{Funktionimi, Valintaperustelahde}
 
 /**
  * User: kwuoti

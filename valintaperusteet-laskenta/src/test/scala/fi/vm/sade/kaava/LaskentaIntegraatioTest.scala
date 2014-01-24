@@ -1,7 +1,6 @@
 package fi.vm.sade.kaava
 
 import org.scalatest.FunSuite
-import fi.vm.sade.service.valintaperusteet.model.{Valintaperustelahde, Funktionimi}
 import fi.vm.sade.kaava.LaskentaTestUtil._
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskin
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
@@ -12,6 +11,7 @@ import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.VirheMetatieto.Virh
 import java.util
 import java.lang.Boolean
 import fi.vm.sade.kaava.LaskentaTestUtil.TestHakemus
+import fi.vm.sade.service.valintaperusteet.dto.model.{Valintaperustelahde, Funktionimi}
 
 /**
  * User: kwuoti
