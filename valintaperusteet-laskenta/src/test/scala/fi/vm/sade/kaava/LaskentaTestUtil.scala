@@ -1,5 +1,6 @@
 package fi.vm.sade.kaava
 
+import fi.vm.sade.service.valintaperusteet.dto.model._
 import fi.vm.sade.service.valintaperusteet.model._
 import collection.JavaConversions._
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus
@@ -59,10 +60,10 @@ object LaskentaTestUtil {
 
   object Funktiokutsu {
     def apply(nimi: Funktionimi, funktioargumentit: Seq[FunktionArgumentti] = Nil, syoteparametrit: Seq[Syoteparametri] = Nil,
-              arvokonvertterit: Seq[Arvokonvertteriparametri] = Nil,
-              arvovalikonvertterit: Seq[Arvovalikonvertteriparametri] = Nil,
-              valintaperustetunniste: Seq[ValintaperusteViite] = Nil,
-              tulosTunniste: String = "", tallennaTulos: Boolean = false) = {
+      arvokonvertterit: Seq[Arvokonvertteriparametri] = Nil,
+      arvovalikonvertterit: Seq[Arvovalikonvertteriparametri] = Nil,
+      valintaperustetunniste: Seq[ValintaperusteViite] = Nil,
+      tulosTunniste: String = "", tallennaTulos: Boolean = false) = {
       val funktiokutsu = new Funktiokutsu
       funktiokutsu.setFunktionimi(nimi)
       funktiokutsu.setTallennaTulos(tallennaTulos)
@@ -119,10 +120,10 @@ object LaskentaTestUtil {
 
   object ValintaperusteViite {
     def apply(onPakollinen: java.lang.Boolean,
-              tunniste: String,
-              lahde: Valintaperustelahde = Valintaperustelahde.HAETTAVA_ARVO,
-              epasuoraViittaus: Boolean = false,
-              indeksi: Int = 1) = {
+      tunniste: String,
+      lahde: Valintaperustelahde = Valintaperustelahde.HAETTAVA_ARVO,
+      epasuoraViittaus: Boolean = false,
+      indeksi: Int = 1) = {
       val viite = new ValintaperusteViite
       viite.setKuvaus("")
       viite.setLahde(lahde)

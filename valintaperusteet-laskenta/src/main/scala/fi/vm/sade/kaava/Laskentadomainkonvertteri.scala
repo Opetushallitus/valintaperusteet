@@ -1,6 +1,7 @@
 package fi.vm.sade.kaava
 
 import fi.vm.sade.service.valintaperusteet.model._
+import fi.vm.sade.service.valintaperusteet.dto.model._
 import fi.vm.sade.service.valintaperusteet.laskenta._
 import Laskenta._
 import Laskenta.{HakukohteenValintaperuste => HkValintaperuste}
