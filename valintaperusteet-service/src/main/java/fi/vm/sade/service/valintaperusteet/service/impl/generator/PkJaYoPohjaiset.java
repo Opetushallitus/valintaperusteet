@@ -20,7 +20,7 @@ public class PkJaYoPohjaiset {
 
     public static final String tyokokemuskuukaudet = "TYOKOKEMUSKUUKAUDET";
     public static final String sukupuoli = "SUKUPUOLI";
-    public static final int HAKUTOIVEIDEN_LKM = 10;
+
     public static final String aidinkieli = "aidinkieli";
 
     public static final String yleinenKielitutkintoPrefix = "yleinen_kielitutkinto_";
@@ -149,26 +149,9 @@ public class PkJaYoPohjaiset {
                 .luoLaskentakaavaJaNimettyFunktio(GenericHelper.luoHaeLukuarvo(valintaperuste, konvs), nimi);
     }
 
-    public static Laskentakaava luoHakutoivejarjestysTasapistekaava() {
-        Funktiokutsu nolla = GenericHelper.luoLukuarvo(0.0);
-        List<Funktiokutsu> summattavat = new ArrayList<Funktiokutsu>();
-        int hakutoive = 1;
-        for (int i = HAKUTOIVEIDEN_LKM; i > 0; --i) {
-            Funktiokutsu pistemaara = GenericHelper.luoLukuarvo(i);
-
-            summattavat.add(GenericHelper.luoJosFunktio(GenericHelper.luoNsHakutoive(hakutoive), pistemaara, nolla));
-            ++hakutoive;
-        }
-
-        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
-                GenericHelper.luoSumma(summattavat.toArray(new FunktionArgumentti[summattavat.size()])),
-                "Hakutoivejärjestystasapistetilanne, 2 aste, pk ja yo");
-
-    }
-
     public static Laskentakaava luoUrheilijaLisapisteenMahdollisuus() {
-        Funktiokutsu[] args = new Funktiokutsu[HAKUTOIVEIDEN_LKM];
-        for (int i = 1; i <= HAKUTOIVEIDEN_LKM; i++) {
+        Funktiokutsu[] args = new Funktiokutsu[YhteisetKaavat.HAKUTOIVEIDEN_LKM];
+        for (int i = 1; i <= YhteisetKaavat.HAKUTOIVEIDEN_LKM; i++) {
             Funktiokutsu kutsu = GenericHelper
                     .luoJa(GenericHelper.luoValintaperusteyhtasuuruus(GenericHelper.luoValintaperusteViite(
                             preferenceTunniste + i + koulutusIdTunniste, false, Valintaperustelahde.HAETTAVA_ARVO,
@@ -544,5 +527,9 @@ public class PkJaYoPohjaiset {
 
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(funktiokutsu, "Urheilijalisäpisteen laskentakaava");
 
+    }
+
+    public static Laskentakaava luoHakutoivejarjestysTasapistekaava() {
+        return YhteisetKaavat.luoHakutoivejarjestysTasapistekaava("Hakutoivejärjestystasapistetilanne, 2 aste, pk ja yo");
     }
 }

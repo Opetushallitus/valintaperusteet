@@ -159,26 +159,8 @@ public class PkPohjaiset {
     }
 
     public static Laskentakaava luoPKPohjaisenKoulutuksenKaikkienAineidenKeskiarvo(PkAineet pkAineet) {
-        Laskentakaava[] args = new Laskentakaava[] { pkAineet.getLaskentakaava(Aineet.aidinkieliJaKirjallisuus1),
-                pkAineet.getLaskentakaava(Aineet.aidinkieliJaKirjallisuus2),
-                pkAineet.getLaskentakaava(Aineet.historia), pkAineet.getLaskentakaava(Aineet.yhteiskuntaoppi),
-                pkAineet.getLaskentakaava(Aineet.matematiikka), pkAineet.getLaskentakaava(Aineet.fysiikka),
-                pkAineet.getLaskentakaava(Aineet.kemia), pkAineet.getLaskentakaava(Aineet.biologia),
-                pkAineet.getLaskentakaava(Aineet.kuvataide), pkAineet.getLaskentakaava(Aineet.musiikki),
-                pkAineet.getLaskentakaava(Aineet.maantieto), pkAineet.getLaskentakaava(PkAineet.kasityo),
-                pkAineet.getLaskentakaava(PkAineet.kotitalous), pkAineet.getLaskentakaava(Aineet.liikunta),
-                pkAineet.getLaskentakaava(Aineet.terveystieto), pkAineet.getLaskentakaava(Aineet.uskonto),
-                pkAineet.getLaskentakaava(Aineet.a11Kieli), pkAineet.getLaskentakaava(Aineet.a12Kieli),
-                pkAineet.getLaskentakaava(Aineet.a13Kieli), pkAineet.getLaskentakaava(Aineet.a21Kieli),
-                pkAineet.getLaskentakaava(Aineet.a22Kieli), pkAineet.getLaskentakaava(Aineet.a23Kieli),
-                pkAineet.getLaskentakaava(Aineet.b1Kieli), pkAineet.getLaskentakaava(Aineet.b21Kieli),
-                pkAineet.getLaskentakaava(Aineet.b22Kieli), pkAineet.getLaskentakaava(Aineet.b23Kieli),
-                pkAineet.getLaskentakaava(Aineet.b31Kieli), pkAineet.getLaskentakaava(Aineet.b32Kieli),
-                pkAineet.getLaskentakaava(Aineet.b33Kieli) };
-
-        Funktiokutsu keskiarvo = GenericHelper.luoKeskiarvo(args);
-        Laskentakaava laskentakaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(keskiarvo,
-                "Kaikkien aineiden keskiarvo, PK");
-        return laskentakaava;
+        return YhteisetKaavat.luoPKPohjaisenKoulutuksenKaikkienAineidenKeskiarvo(pkAineet, "Kaikkien aineiden keskiarvo, PK");
     }
+
+
 }

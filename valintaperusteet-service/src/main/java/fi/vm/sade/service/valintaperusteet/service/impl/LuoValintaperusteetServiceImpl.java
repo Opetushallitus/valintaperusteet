@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
+import fi.vm.sade.service.valintaperusteet.service.impl.generator.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,12 +42,6 @@ import fi.vm.sade.service.valintaperusteet.service.ValintakoeService;
 import fi.vm.sade.service.valintaperusteet.service.ValintakoekoodiService;
 import fi.vm.sade.service.valintaperusteet.service.ValintaryhmaService;
 import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
-import fi.vm.sade.service.valintaperusteet.service.impl.generator.PkAineet;
-import fi.vm.sade.service.valintaperusteet.service.impl.generator.PkJaYoPohjaiset;
-import fi.vm.sade.service.valintaperusteet.service.impl.generator.PkPohjaiset;
-import fi.vm.sade.service.valintaperusteet.service.impl.generator.YoAineet;
-import fi.vm.sade.service.valintaperusteet.service.impl.generator.YoPohjaiset;
-import fi.vm.sade.service.valintaperusteet.service.impl.lukio.LukionValintaperusteet;
 
 /**
  * User: kkammone Date: 25.2.2013 Time: 12:57
@@ -445,6 +440,19 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         transactionManager.commit(tx);
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
+        Laskentakaava hakutoivejarjestystasapistekaava = asetaValintaryhmaJaTallennaKantaan(
+                YhteisetKaavat.luoHakutoivejarjestysTasapistekaava("Hakutoivejärjestystasapistetilanne, lukiokoulutus"), lukioKoulutusVr.getOid());
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
+        PkAineet pkAineet = new PkAineet();
+        Laskentakaava keskiarvotLaskentakaava = asetaValintaryhmaJaTallennaKantaan(
+                YhteisetKaavat.luoPKPohjaisenKoulutuksenKaikkienAineidenKeskiarvo(pkAineet,"Kaikkien aineiden keskiarvo, lukiokoulutus"), lukioKoulutusVr.getOid());
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
         Laskentakaava paasykoe = asetaValintaryhmaJaTallennaKantaan(
                 LukionValintaperusteet.paasykoeLukuarvo(PAASYKOE_TUNNISTE), lukioKoulutusVr.getOid());
 
@@ -592,6 +600,24 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         transactionManager.commit(tx);
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
+        jk = new JarjestyskriteeriDTO();
+        jk.setAktiivinen(true);
+        jk.setMetatiedot(hakutoivejarjestystasapistekaava.getNimi());
+        jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(valintatapajono.getOid(), jk, null,
+                hakutoivejarjestystasapistekaava.getId());
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
+        jk = new JarjestyskriteeriDTO();
+        jk.setAktiivinen(true);
+        jk.setMetatiedot(keskiarvotLaskentakaava.getNimi());
+        jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(valintatapajono.getOid(), jk, null,
+                keskiarvotLaskentakaava.getId());
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
         ValintaryhmaDTO painotettuKeskiarvoJaPaasykoeVr = new ValintaryhmaDTO();
         painotettuKeskiarvoJaPaasykoeVr.setNimi("Painotettu keskiarvo ja paasykoe");
         painotettuKeskiarvoJaPaasykoeVr = modelMapper.map(
@@ -613,11 +639,30 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
         valinnanVaihe1 = valinnanVaiheService.findByValintaryhma(painotettuKeskiarvoJaPaasykoeVr.getOid()).get(2);
         valintatapajono = valintatapajonoService.findJonoByValinnanvaihe(valinnanVaihe1.getOid()).get(0);
+
         jk = new JarjestyskriteeriDTO();
         jk.setAktiivinen(true);
         jk.setMetatiedot(laskentakaavapainotettuKeskiarvoJaPaasykoe.getNimi());
         jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(valintatapajono.getOid(), jk, null,
                 laskentakaavapainotettuKeskiarvoJaPaasykoe.getId());
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
+        jk = new JarjestyskriteeriDTO();
+        jk.setAktiivinen(true);
+        jk.setMetatiedot(hakutoivejarjestystasapistekaava.getNimi());
+        jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(valintatapajono.getOid(), jk, null,
+                hakutoivejarjestystasapistekaava.getId());
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
+        jk = new JarjestyskriteeriDTO();
+        jk.setAktiivinen(true);
+        jk.setMetatiedot(keskiarvotLaskentakaava.getNimi());
+        jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(valintatapajono.getOid(), jk, null,
+                keskiarvotLaskentakaava.getId());
 
         transactionManager.commit(tx);
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
@@ -667,11 +712,30 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
         valinnanVaihe1 = valinnanVaiheService.findByValintaryhma(painotettuKeskiarvoJaLisanayttoVr.getOid()).get(2);
         valintatapajono = valintatapajonoService.findJonoByValinnanvaihe(valinnanVaihe1.getOid()).get(0);
+
         jk = new JarjestyskriteeriDTO();
         jk.setAktiivinen(true);
         jk.setMetatiedot(laskentakaavapainotettuKeskiarvoJaLisanaytto.getNimi());
         jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(valintatapajono.getOid(), jk, null,
                 laskentakaavapainotettuKeskiarvoJaLisanaytto.getId());
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
+        jk = new JarjestyskriteeriDTO();
+        jk.setAktiivinen(true);
+        jk.setMetatiedot(hakutoivejarjestystasapistekaava.getNimi());
+        jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(valintatapajono.getOid(), jk, null,
+                hakutoivejarjestystasapistekaava.getId());
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
+        jk = new JarjestyskriteeriDTO();
+        jk.setAktiivinen(true);
+        jk.setMetatiedot(keskiarvotLaskentakaava.getNimi());
+        jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(valintatapajono.getOid(), jk, null,
+                keskiarvotLaskentakaava.getId());
 
         transactionManager.commit(tx);
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
@@ -723,11 +787,30 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         valinnanVaihe1 = valinnanVaiheService.findByValintaryhma(painotettuKeskiarvoJaPaasykoeJaLisanayttoVr.getOid())
                 .get(2);
         valintatapajono = valintatapajonoService.findJonoByValinnanvaihe(valinnanVaihe1.getOid()).get(0);
+
         jk = new JarjestyskriteeriDTO();
         jk.setAktiivinen(true);
         jk.setMetatiedot(laskentakaavapainotettuKeskiarvoJaPaasykoeJaLisanaytto.getNimi());
         jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(valintatapajono.getOid(), jk, null,
                 laskentakaavapainotettuKeskiarvoJaPaasykoeJaLisanaytto.getId());
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
+        jk = new JarjestyskriteeriDTO();
+        jk.setAktiivinen(true);
+        jk.setMetatiedot(hakutoivejarjestystasapistekaava.getNimi());
+        jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(valintatapajono.getOid(), jk, null,
+                hakutoivejarjestystasapistekaava.getId());
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
+        jk = new JarjestyskriteeriDTO();
+        jk.setAktiivinen(true);
+        jk.setMetatiedot(keskiarvotLaskentakaava.getNimi());
+        jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(valintatapajono.getOid(), jk, null,
+                keskiarvotLaskentakaava.getId());
 
         transactionManager.commit(tx);
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());

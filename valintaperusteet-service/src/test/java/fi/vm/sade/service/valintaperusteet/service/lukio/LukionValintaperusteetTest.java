@@ -2,7 +2,6 @@ package fi.vm.sade.service.valintaperusteet.service.lukio;
 
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.kaava.Laskentadomainkonvertteri;
-import fi.vm.sade.kaava.Laskentakaavavalidaattori;
 import fi.vm.sade.service.valintaperusteet.laskenta.Lukuarvofunktio;
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus;
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakukohde;
@@ -12,7 +11,7 @@ import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Tila;
 import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti;
 import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
 import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
-import fi.vm.sade.service.valintaperusteet.service.impl.lukio.LukionValintaperusteet;
+import fi.vm.sade.service.valintaperusteet.service.impl.generator.LukionValintaperusteet;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

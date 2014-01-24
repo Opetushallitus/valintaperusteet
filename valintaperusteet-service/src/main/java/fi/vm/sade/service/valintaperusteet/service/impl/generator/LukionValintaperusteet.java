@@ -1,4 +1,4 @@
-package fi.vm.sade.service.valintaperusteet.service.impl.lukio;
+package fi.vm.sade.service.valintaperusteet.service.impl.generator;
 
 import java.util.ArrayList;
 import java.util.List;
