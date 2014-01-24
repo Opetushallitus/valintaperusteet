@@ -39,6 +39,7 @@ import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi;
+import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
 import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
 import fi.vm.sade.service.valintaperusteet.model.Arvokonvertteriparametri;
 import fi.vm.sade.service.valintaperusteet.model.Arvovalikonvertteriparametri;
