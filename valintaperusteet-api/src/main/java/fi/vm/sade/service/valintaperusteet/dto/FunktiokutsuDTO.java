@@ -10,7 +10,7 @@ import java.util.TreeSet;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
-import fi.vm.sade.service.valintaperusteet.dto.model.Abstraktivalidointivirhe;
+import fi.vm.sade.service.valintaperusteet.dto.model.ValidointivirheDTO;
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi;
 
 /**
@@ -53,7 +53,7 @@ public class FunktiokutsuDTO {
     private Set<ValintaperusteViiteDTO> valintaperusteviitteet = new TreeSet<ValintaperusteViiteDTO>();
 
     @ApiModelProperty(value = "Validointivirheet")
-    private List<Abstraktivalidointivirhe> validointivirheet = new ArrayList<Abstraktivalidointivirhe>();
+    private List<ValidointivirheDTO> validointivirheet = new ArrayList<ValidointivirheDTO>();
 
     public Funktionimi getFunktionimi() {
         return funktionimi;
@@ -103,11 +103,11 @@ public class FunktiokutsuDTO {
         this.valintaperusteviitteet = valintaperusteviitteet;
     }
 
-    public List<Abstraktivalidointivirhe> getValidointivirheet() {
+    public List<ValidointivirheDTO> getValidointivirheet() {
         return validointivirheet;
     }
 
-    public void setValidointivirheet(List<Abstraktivalidointivirhe> validointivirheet) {
+    public void setValidointivirheet(List<ValidointivirheDTO> validointivirheet) {
         this.validointivirheet = validointivirheet;
     }
 

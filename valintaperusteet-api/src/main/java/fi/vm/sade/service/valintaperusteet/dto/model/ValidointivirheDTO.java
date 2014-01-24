@@ -1,21 +1,18 @@
-package fi.vm.sade.service.valintaperusteet.service.validointi.virhe;
+package fi.vm.sade.service.valintaperusteet.dto.model;
 
-
-import fi.vm.sade.service.valintaperusteet.model.Abstraktivalidointivirhe;
+import java.math.BigDecimal;
 
 /**
- * User: kwuoti Date: 30.1.2013 Time: 12.49
+ * User: kwuoti
+ * Date: 30.1.2013
+ * Time: 16.26
  */
-public class Validointivirhe extends Abstraktivalidointivirhe {
+public class ValidointivirheDTO {
 
     private Virhetyyppi virhetyyppi;
 
     private String virheviesti;
 
-    public Validointivirhe(Virhetyyppi virhetyyppi, String virheviesti) {
-        this.virhetyyppi = virhetyyppi;
-        this.virheviesti = virheviesti;
-    }
 
     public Virhetyyppi getVirhetyyppi() {
         return virhetyyppi;

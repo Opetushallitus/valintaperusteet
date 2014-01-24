@@ -2,7 +2,11 @@ package fi.vm.sade.service.valintaperusteet.dto.mapping;
 
 
 import fi.vm.sade.service.valintaperusteet.dto.*;
+import fi.vm.sade.service.valintaperusteet.dto.model.*;
 import fi.vm.sade.service.valintaperusteet.model.*;
+import fi.vm.sade.service.valintaperusteet.model.Abstraktivalidointivirhe;
+import fi.vm.sade.service.valintaperusteet.service.validointi.virhe.*;
+import fi.vm.sade.service.valintaperusteet.service.validointi.virhe.Virhetyyppi;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
@@ -21,6 +25,21 @@ public class ValintaperusteetModelMapper extends ModelMapper {
     public ValintaperusteetModelMapper() {
         super();
 
+        // Validointivirheet
+        final Converter<List<ValidointivirheDTO>, List<Abstraktivalidointivirhe>> virheListConverter = new Converter<List<ValidointivirheDTO>, List<Abstraktivalidointivirhe>>() {
+            public List<Abstraktivalidointivirhe> convert(MappingContext<List<ValidointivirheDTO>, List<Abstraktivalidointivirhe>> context) {
+                List<Abstraktivalidointivirhe> result = new ArrayList<Abstraktivalidointivirhe>();
+                for(int i = 0; i < context.getSource().size(); i++) {
+                    ValidointivirheDTO dto = context.getSource().get(i);
+                    Validointivirhe virhe = new Validointivirhe(Virhetyyppi.valueOf(dto.getVirhetyyppi().name()), dto.getVirheviesti());
+                    result.add(virhe);
+
+                }
+                return result;
+            }
+        };
+
+        // Perus DTO mäppäykset
         this.addMappings(new PropertyMap<Hakijaryhma, HakijaryhmaDTO>() {
             @Override
             protected void configure() {
@@ -61,6 +80,17 @@ public class ValintaperusteetModelMapper extends ModelMapper {
 
             }
         });
+
+
+        this.addMappings(new PropertyMap<FunktioargumentinLapsiDTO, Funktiokutsu>() {
+            @Override
+            protected void configure() {
+
+                using(virheListConverter).map(source.getValidointivirheet()).setValidointivirheet(null);
+            }
+        });
+
+
 
         this.addMappings(new PropertyMap<Funktiokutsu, FunktiokutsuDTO>() {
             @Override
@@ -128,6 +158,10 @@ public class ValintaperusteetModelMapper extends ModelMapper {
                 };
 
                 using(funktioargumenttiToDtoConverter).map(source.getFunktioargumentit()).setFunktioargumentit(null);
+
+                using(virheListConverter).map(source.getValidointivirheet()).setValidointivirheet(null);
+
+
             }
         });
 

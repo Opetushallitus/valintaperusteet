@@ -11,6 +11,7 @@ import javax.ws.rs.core.Response;
 
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
+import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -146,12 +147,17 @@ public class LaskentakaavaResourceTest {
         laskentakaava.setFunktiokutsu(createSumma(createLukuarvo("viisi"), createLukuarvo("10.0"),
                 createLukuarvo("100.0")));
 
-        final String json = mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(laskentakaava);
+        final String json = mapper.writeValueAsString(laskentakaava);
         LaskentakaavaDTO fromJson = mapper.readValue(json, LaskentakaavaDTO.class);
 
         LaskentakaavaDTO validoitu = laskentakaavaResource.validoi(fromJson);
 
-        String validoituJson = mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(validoitu);
+        String validoituJson = mapper.writeValueAsString(validoitu);
+
+        LaskentakaavaDTO validoituFromJson = mapper.readValue(validoituJson, LaskentakaavaDTO.class);
+
+        Laskentakaava validoituFromDTO = modelMapper.map(validoituFromJson, Laskentakaava.class);
+
     }
 
     @Test

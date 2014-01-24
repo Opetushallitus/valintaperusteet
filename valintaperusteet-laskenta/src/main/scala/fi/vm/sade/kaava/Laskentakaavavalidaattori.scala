@@ -41,8 +41,7 @@ object Laskentakaavavalidaattori {
   private def tarkistaParametriarvo(funktiokutsu: Funktiokutsu, annettuParametri: Syoteparametri,
     vaadittuParametri: Syoteparametrikuvaus): Option[Validointivirhe] = {
     if (StringUtils.isBlank(annettuParametri.getArvo)) {
-      Some(new TyhjaSyoteparametrinArvoVirhe(s"Parametrin (avain ${annettuParametri.getAvain}) arvo on tyhjä",
-        annettuParametri.getAvain))
+      Some(new Validointivirhe(Virhetyyppi.TYHJA_SYOTEPARAMETRIN_ARVO, s"Parametrin (avain ${annettuParametri.getAvain}) arvo on tyhjä"))
     } else {
       val nimi = funktiokutsu.getFunktionimi.name()
 
@@ -61,8 +60,7 @@ object Laskentakaavavalidaattori {
       if (muutaMerkkijonoParametrityypiksi(annettuParametri.getArvo, vaadittuParametri.tyyppi)) {
         None
       } else {
-        Some(new VirheellinenSyoteParametrinTyyppiVirhe(virheviesti, annettuParametri.getAvain,
-          vaadittuParametri.tyyppi.toString))
+        Some(new Validointivirhe(Virhetyyppi.VIRHEELLINEN_SYOTEPARAMETRIN_TYYPPI,virheviesti))
       }
     }
   }
@@ -77,9 +75,8 @@ object Laskentakaavavalidaattori {
 
     pakolliset.foldLeft(List[Validointivirhe]())((l, p) => {
       annetutParametrit.find(p.avain == _.getAvain) match {
-        case None => new SyoteparametriPuuttuuVirhe(
-          s"Avainta ${p.avain} vastaavaa parametria ei ole olemassa funktiolle ${funktiokutsu.getFunktionimi.name()}",
-          p.avain) :: l
+        case None => new Validointivirhe(Virhetyyppi.SYOTEPARAMETRI_PUUTTUU,
+          s"Avainta ${p.avain} vastaavaa parametria ei ole olemassa funktiolle ${funktiokutsu.getFunktionimi.name()}") :: l
         case Some(param) => (tarkistaParametriarvo(funktiokutsu, param, p) ++ l).toList
       }
     }) ::: eiPakolliset.foldLeft(List[Validointivirhe]())((l, p) => {
@@ -100,33 +97,27 @@ object Laskentakaavavalidaattori {
       argumentti: Funktioargumentti, accum: List[Validointivirhe]): List[Validointivirhe] = {
 
       if (validoiLaskettava && argumentti.getFunktiokutsuChild == null) {
-        new FunktiokutsuaEiOleMaariteltyFunktioargumentilleVirhe(
-          s"Funktiokutsua ei ole annettu funktiokutsun $nimi funktioargumentille, indeksi ${argumentti.getIndeksi}",
-          argumentti.getIndeksi) :: accum
+        new Validointivirhe(Virhetyyppi.FUNKTIOKUTSUA_EI_OLE_MAARITELTY_FUNKTIOARGUMENTILLE,
+          s"Funktiokutsua ei ole annettu funktiokutsun $nimi funktioargumentille, indeksi ${argumentti.getIndeksi}") :: accum
       } else if (!validoiLaskettava && argumentti.getFunktiokutsuChild == null && argumentti.getLaskentakaavaChild == null) {
-        new FunktioargumenttiaEiMaariteltyVirhe(
-          s"Funktiokutsua tai laskentakaavaa ei ole määritelty funktiokutsun $nimi funktioargumentille, indeksi ${argumentti.getIndeksi}",
-          argumentti.getIndeksi) :: accum
+        new Validointivirhe(Virhetyyppi.FUNKTIOARGUMENTTIA_EI_MAARITELTY,
+          s"Funktiokutsua tai laskentakaavaa ei ole määritelty funktiokutsun $nimi funktioargumentille, indeksi ${argumentti.getIndeksi}") :: accum
       } else {
         if (argumentti.getFunktiokutsuChild != null
           && vaadittuArgumentti.tyyppi.toString != argumentti.getFunktiokutsuChild.getFunktionimi.getTyyppi.name()) {
-          new VirheellinenFunktioargumentinTyyppiVirhe(
+          new Validointivirhe(Virhetyyppi.VIRHEELLINEN_FUNKTIOARGUMENTIN_TYYPPI,
             s"""Funktion $nimi funktioargumentti on väärää tyyppiä. Vaadittu: ${vaadittuArgumentti.tyyppi.toString},
-            annettu: ${argumentti.getFunktiokutsuChild.getFunktionimi.getTyyppi.name()}""", argumentti.getIndeksi,
-            vaadittuArgumentti.tyyppi.toString, argumentti.getFunktiokutsuChild.getFunktionimi.getTyyppi.name()) :: accum
+            annettu: ${argumentti.getFunktiokutsuChild.getFunktionimi.getTyyppi.name()}""") :: accum
         } else if (argumentti.getLaskentakaavaChild != null) {
           val vv = if (vaadittuArgumentti.tyyppi.toString != argumentti.getLaskentakaavaChild.getTyyppi.name()) {
-            new VirheellinenFunktioargumentinTyyppiVirhe(
+            new Validointivirhe(Virhetyyppi.VIRHEELLINEN_FUNKTIOARGUMENTIN_TYYPPI,
               s"""Funktion $nimi funktioargumentti on väärää tyyppiä.
-              Vaadittu: ${vaadittuArgumentti.tyyppi.toString}, annettu: ${argumentti.getLaskentakaavaChild.getTyyppi.name()}""",
-              argumentti.getIndeksi,
-              vaadittuArgumentti.tyyppi.toString, argumentti.getLaskentakaavaChild.getTyyppi.name()) :: accum
+              Vaadittu: ${vaadittuArgumentti.tyyppi.toString}, annettu: ${argumentti.getLaskentakaavaChild.getTyyppi.name()}""") :: accum
           } else accum
 
           if (argumentti.getLaskentakaavaChild.getOnLuonnos) {
-            new FunktioargumentinLaskentakaavaOnLuonnosVirhe(
-              s"Funktion $nimi funktioargumentille määriteltylaskentakaava on luonnos-tilassa",
-              argumentti.getIndeksi) :: vv
+            new Validointivirhe(Virhetyyppi.FUNKTIOARGUMENTIN_LASKENTAKAAVA_ON_LUONNOS,
+              s"Funktion $nimi funktioargumentille määriteltylaskentakaava on luonnos-tilassa") :: vv
           } else vv
         } else accum
       }
@@ -142,22 +133,19 @@ object Laskentakaavavalidaattori {
       if (vaaditutArgumentit.size == 1 && vaaditutArgumentit(0).kardinaliteetti == Kardinaliteetti.N) {
         val arg = vaaditutArgumentit(0)
         if (annetutArgumentit.isEmpty) {
-          List(new VaaraMaaraFunktioargumenttejaVirhe(
-            s"Väärä määrä funktioargumentteja funktiolle $nimi. Vaadittu: ainakin yksi, annettu: ${annetutArgumentit.size}",
-            ">=1", annetutArgumentit.size))
+          List(new Validointivirhe(Virhetyyppi.VAARA_MAARA_FUNKTIOARGUMENTTEJA,
+            s"Väärä määrä funktioargumentteja funktiolle $nimi. Vaadittu: ainakin yksi, annettu: ${annetutArgumentit.size}"))
         } else funktiokutsu.getFunktioargumentit.foldLeft(List[Validointivirhe]())((l, a) => validoiFunktioargumentti(arg, a, l))
       } else if (vaaditutArgumentit.size == 1 && vaaditutArgumentit(0).kardinaliteetti == Kardinaliteetti.LISTA_PAREJA) {
         val arg = vaaditutArgumentit(0)
         if (annetutArgumentit.size == 0 || annetutArgumentit.size % 2 != 0) {
-          List(new VaaraMaaraFunktioargumenttejaVirhe(
-            s"Väärä määrä funktioargumentteja funktiolle $nimi. Vaadittu: parillinen määrä, annettu: ${annetutArgumentit.size}",
-            "parillinen määrä", annetutArgumentit.size))
+          List(new Validointivirhe(Virhetyyppi.VAARA_MAARA_FUNKTIOARGUMENTTEJA,
+            s"Väärä määrä funktioargumentteja funktiolle $nimi. Vaadittu: parillinen määrä, annettu: ${annetutArgumentit.size}"))
         } else funktiokutsu.getFunktioargumentit.foldLeft(List[Validointivirhe]())((l, a) => validoiFunktioargumentti(arg, a, l))
       } else {
         if (vaaditutArgumentit.size != annetutArgumentit.size) {
-          List(new VaaraMaaraFunktioargumenttejaVirhe(
-            s"Väärä määrä funktioargumentteja funktiolle $nimi. Vaadittu: ${vaaditutArgumentit.size}, annettu: ${annetutArgumentit.size}",
-            vaaditutArgumentit.size.toString, annetutArgumentit.size))
+          List(new Validointivirhe(Virhetyyppi.VAARA_MAARA_FUNKTIOARGUMENTTEJA,
+            s"Väärä määrä funktioargumentteja funktiolle $nimi. Vaadittu: ${vaaditutArgumentit.size}, annettu: ${annetutArgumentit.size}"))
         } else {
           def tarkistaFunktioargumentit(annetutArgumentit: List[Funktioargumentti],
             vaaditutArgumentit: List[Funktiokuvaaja.Funktioargumenttikuvaus],
@@ -193,7 +181,7 @@ object Laskentakaavavalidaattori {
         } else {
           funktiokutsu.getValintaperusteviitteet.foldLeft(List[Validointivirhe]())((l, vp) => {
             if (StringUtils.isBlank(vp.getTunniste))
-              new ValintaperusteparametrinTunnistePuuttuuVirhe(s"Valintaperusteparametrin tunniste puuttuu funktiolle $nimi", vp.getIndeksi) :: l
+              new Validointivirhe(Virhetyyppi.VALINTAPERUSTEPARAMETRI_PUUTTUUU, s"Valintaperusteparametrin tunniste puuttuu funktiolle $nimi") :: l
             else l
           })
         }
@@ -240,8 +228,8 @@ object Laskentakaavavalidaattori {
             }
 
             if (paluuarvoPuuttuu) {
-              Some(new KonvertteriparametrinPaluuarvoPuuttuuVirhe(
-                s"Konvertteriparametrin paluuarvo puuttuu funktiolle $nimi", indeksi))
+              Some(new Validointivirhe(Virhetyyppi.KONVERTTERIPARAMETRIN_PALUUARVO_PUUTTUU,
+                s"Konvertteriparametrin paluuarvo puuttuu funktiolle $nimi"))
             } else {
               val tarkistaPaluuarvonTyyppi = konv match {
                 case av: Arvovalikonvertteriparametri => false
@@ -268,8 +256,9 @@ object Laskentakaavavalidaattori {
                 }
 
                 virheviesti match {
-                  case Some(virheviesti) => Some(new VirheellinenKonvertteriparametrinPaluuarvoTyyppiVirhe(
-                    virheviesti, indeksi, funktiokutsu.getFunktionimi.name()))
+                  case Some(virheviesti) => Some(new Validointivirhe(
+                    Virhetyyppi.VIRHEELLINEN_KONVERTTERIPARAMETRIN_PALUUARVOTYYPPI,
+                    virheviesti))
                   case None => None
                 }
               } else None
@@ -289,8 +278,8 @@ object Laskentakaavavalidaattori {
                 }
 
                 val arvovirhe = if (StringUtils.isBlank(head.getArvo)) {
-                  Some(new ArvokonvertterinArvoPuuttuuVirhe(
-                    "Konvertteriparametrin arvo puuttuu funktiolle " + nimi, indeksi))
+                  Some(new Validointivirhe(Virhetyyppi.ARVOKONVERTTERIN_ARVO_PUUTTUU,
+                    "Konvertteriparametrin arvo puuttuu funktiolle " + nimi))
                 } else {
                   val virheviesti = arvokonvertterikuvaus.arvotyyppi match {
                     case Syoteparametrityyppi.DESIMAALILUKU => virhe("BigDecimal")
@@ -302,7 +291,7 @@ object Laskentakaavavalidaattori {
                   if (muutaMerkkijonoParametrityypiksi(head.getArvo, arvokonvertterikuvaus.arvotyyppi)) {
                     None
                   } else {
-                    Some(new VirheellinenArvokonvertterinArvoTyyppiVirhe(virheviesti, indeksi))
+                    Some(new Validointivirhe(Virhetyyppi.VIRHEELLINEN_ARVOKONVERTTERIN_ARVOTYYPPI, virheviesti))
                   }
                 }
 
@@ -327,11 +316,11 @@ object Laskentakaavavalidaattori {
           val n = head.getArvo.toInt
 
           if (n < 1) {
-            List(new NPienempiKuinYksiVirhe(
-              s"Syöteparametri n ei voi olla pienempi kuin yksi. Annettu arvo: $n", n))
+            List(new Validointivirhe(Virhetyyppi.N_PIENEMPI_KUIN_YKSI,
+              s"Syöteparametri n ei voi olla pienempi kuin yksi. Annettu arvo: $n"))
           } else if (n > funktiokutsu.getFunktioargumentit.size()) {
-            List(new NSuurempiKuinFunktioargumenttienLkmVirhe(
-              s"Syöteparametri n ei voi olla suurempi kuin annettujen funktioargumenttien lukumäärä. Annettu arvo: $n", n))
+            List(new Validointivirhe(Virhetyyppi.N_SUUREMPI_KUIN_FUNKTIOARGUMENTTIEN_LKM,
+              s"Syöteparametri n ei voi olla suurempi kuin annettujen funktioargumenttien lukumäärä. Annettu arvo: $n"))
           } else Nil
         }
         case _ => Nil
@@ -348,8 +337,8 @@ object Laskentakaavavalidaattori {
           case head :: tail if (tryConvertString(head.getArvo, new BigDecimal(_))) => {
             val prosenttiosuus = new BigDecimal(head.getArvo)
             if (prosenttiosuus.compareTo(BigDecimal.ZERO) != 1 || prosenttiosuus.compareTo(new BigDecimal("100.0")) == 1) {
-              List(new ProsenttiosuusEpavalidiVirhe(
-                s"Prosenttiosuuden pitää olla välillä 0.0 - 100.0. Annettu arvo: $prosenttiosuus", prosenttiosuus))
+              List(new Validointivirhe(Virhetyyppi.PROSENTTIOSUUS_EPAVALIDI,
+                s"Prosenttiosuuden pitää olla välillä 0.0 - 100.0. Annettu arvo: $prosenttiosuus"))
             } else Nil
           }
           case _ => Nil
@@ -360,8 +349,8 @@ object Laskentakaavavalidaattori {
           case Some(p) if (tryConvertString(p.getArvo, _.toInt)) => {
             val tarkkuus = p.getArvo.toInt
             if (tarkkuus < 0) {
-              List(new TarkkuusPienempiKuinNollaVirhe(
-                s"Tarkkuuden pitää olla suurempi kuin nolla. Annettu arvo: $tarkkuus", tarkkuus))
+              List(new Validointivirhe(Virhetyyppi.TARKKUUS_PIENEMPI_KUIN_NOLLA,
+                s"Tarkkuuden pitää olla suurempi kuin nolla. Annettu arvo: $tarkkuus"))
             } else Nil
           }
           case _ => Nil
@@ -385,7 +374,7 @@ object Laskentakaavavalidaattori {
             ((if (!kohdeskaalaMin.isEmpty && !kohdeskaalaMin.get.isEmpty
               && !kohdeskaalaMax.isEmpty && !kohdeskaalaMax.get.isEmpty
               && kohdeskaalaMin.get.get.compareTo(kohdeskaalaMax.get.get) > 0) {
-              Some(new KohdeskaalaVirheellinenVirhe("Kohdeskaalan minimin pitää olla pienempi kuin maksimi"))
+              Some(new Validointivirhe(Virhetyyppi.KOHDESKAALA_VIRHEELLINEN, "Kohdeskaalan minimin pitää olla pienempi kuin maksimi"))
             } else None) ++ (if (!kaytaLaskennallistaLahdeskaalaa) {
               val lahdeskaalaMin = funktiokutsu.getSyoteparametrit.find(_.getAvain == "lahdeskaalaMin").map(sa => {
                 if (tryConvertString(sa.getArvo, new BigDecimal(_))) Some(new BigDecimal(sa.getArvo)) else None
@@ -396,11 +385,13 @@ object Laskentakaavavalidaattori {
               })
 
               if (lahdeskaalaMin.isEmpty || lahdeskaalaMax.isEmpty) {
-                Some(new SkaalauksenLahdeskaalaaEiOleMaariteltyVirhe("Skaalauksen lähdeskaalaa ei ole määritelty"))
+                Some(new Validointivirhe(Virhetyyppi.LAHDESKAALAA_EI_OLE_MAARITELTY,
+                  "Skaalauksen lähdeskaalaa ei ole määritelty"))
               } else if (!lahdeskaalaMin.isEmpty && !lahdeskaalaMin.get.isEmpty
                 && !lahdeskaalaMax.isEmpty && !lahdeskaalaMax.get.isEmpty
                 && lahdeskaalaMin.get.get.compareTo(lahdeskaalaMax.get.get) > 0) {
-                Some(new LahdeskaalaVirheellinenVirhe("Lähdeskaalan minimin pitää olla pienempi kuin maksimi"))
+                Some(new Validointivirhe(Virhetyyppi.LAHDESKAALA_VIRHEELLINEN,
+                  "Lähdeskaalan minimin pitää olla pienempi kuin maksimi"))
               } else None
             } else None) ++ virheet).toList
           }
