@@ -38,10 +38,17 @@
     <bean id="flyway" class="com.googlecode.flyway.core.Flyway" init-method="migrate">
         <property name="initOnMigrate" value="true"/>
         <property name="dataSource">
-            <bean id="dbDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
-                <property name="jndiName" value="java:comp/env/jdbc/valintaperusteet"/>
+            <bean id="dataSource"
+                  class="org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy">
+                <property name="targetDataSource">
+                    <ref local="dbDataSource" />
+                </property>
             </bean>
         </property>
+    </bean>
+
+    <bean id="dbDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+        <property name="jndiName" value="java:comp/env/jdbc/valintaperusteet"/>
     </bean>
 
 </beans>

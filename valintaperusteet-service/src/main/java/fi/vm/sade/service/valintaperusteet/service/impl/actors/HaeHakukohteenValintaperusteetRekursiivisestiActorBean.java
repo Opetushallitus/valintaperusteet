@@ -38,9 +38,6 @@ import static fi.vm.sade.service.valintaperusteet.service.impl.actors.creators.S
 @org.springframework.context.annotation.Scope(value = "prototype")
 public class HaeHakukohteenValintaperusteetRekursiivisestiActorBean extends UntypedActor {
 
-    final static private Logger LOGGER = LoggerFactory.getLogger(HaeHakukohteenValintaperusteetRekursiivisestiActorBean.class
-            .getName());
-
     private int funktiokutsuLapset = 0;
 
     @Autowired
