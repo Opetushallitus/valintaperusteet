@@ -14,6 +14,7 @@ public class PkAineet extends Aineet {
     public static final String PK_Valinnainen2 = "_VAL2";
     public static final String PK_etuliite = "PK_";
     public static final String PK_kuvausjalkiliite = ", PK päättötodistus, mukaanlukien valinnaiset";
+    public static final String PK_kuvausjalkiliite_ilman_valinnaisia = ", PK päättötodistus";
 
     public static final String kotitalous = "KO";
     public static final String kasityo = "KS";
@@ -32,7 +33,7 @@ public class PkAineet extends Aineet {
         String kuvaus;
     }
 
-    public PkAineet() {
+    public PkAineet(boolean lasketaankoValinnaiset) {
         for (PkAine aine : PkAine.values()) {
             getAineet().put(aine.tunniste, aine.kuvaus);
         }
@@ -40,8 +41,11 @@ public class PkAineet extends Aineet {
         for (Map.Entry<String, String> aine : getAineet().entrySet()) {
             String ainetunniste = aine.getKey();
             String ainekuvaus = aine.getValue();
-
-            getKaavat().put(ainetunniste, luoPKAine(ainetunniste, ainekuvaus));
+            if(lasketaankoValinnaiset) {
+                getKaavat().put(ainetunniste, luoPKAine(ainetunniste, ainekuvaus));
+            } else {
+                getKaavat().put(ainetunniste, luoPKAineIlmanValinnaisia(ainetunniste,ainekuvaus));
+            }
         }
     }
 
@@ -70,6 +74,15 @@ public class PkAineet extends Aineet {
 
         Laskentakaava laskentakaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(keskiarvo, kuvaus
                 + PK_kuvausjalkiliite);
+        return laskentakaava;
+    }
+
+    private Laskentakaava luoPKAineIlmanValinnaisia(String ainetunniste, String kuvaus) {
+        Funktiokutsu aine = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(pakollinen(ainetunniste),
+                false, Valintaperustelahde.HAETTAVA_ARVO));
+
+        Laskentakaava laskentakaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(aine, kuvaus
+                + PK_kuvausjalkiliite_ilman_valinnaisia);
         return laskentakaava;
     }
 

@@ -132,6 +132,18 @@ class LaskentaTest extends FunSuite {
     assert(BigDecimal(tulos.get) == BigDecimal(13.0))
   }
 
+  test("KeskiarvoNParasta selects the n greatest values and calculates their average") {
+    val luvut = List(Lukuarvo(4.0), Lukuarvo(6.0), Lukuarvo(5.0), Lukuarvo(1.0))
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, KeskiarvoNParasta(3, luvut: _*))
+    assert(BigDecimal(tulos.get) == BigDecimal(5.0))
+  }
+
+  test("KeskiarvoNParasta n > kuin arvojen lukumäärä") {
+    val luvut = List(Lukuarvo(4.0), Lukuarvo(6.0), HaeLukuarvo(None, None, HakemuksenValintaperuste("puuppa", false)))
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, KeskiarvoNParasta(3, luvut: _*))
+    assert(BigDecimal(tulos.get) == BigDecimal(5.0))
+  }
+
   test("NMinimi returns the nth lowest value") {
     val luvut = List(Lukuarvo(5.0), Lukuarvo(6.0), Lukuarvo(2.0), Lukuarvo(1.0))
     val (tulos, _) = Laskin.laske(hakukohde, tyhjaHakemus, NMinimi(2, luvut: _*))

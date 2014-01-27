@@ -449,7 +449,6 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     private void haeHakukohteenValintaperusteetRekursiivisesti(Funktiokutsu funktiokutsu,
             HakukohteenValintaperusteAvaimetDTO valintaperusteet) {
 
-
         // Akka toteutus
         ActorSystem system = ActorSystem.create("actorSystem");
         SpringExtProvider.get(system).initialize(applicationContext);

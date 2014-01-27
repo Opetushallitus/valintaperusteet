@@ -68,7 +68,7 @@ public class LuoValintaperusteetServiceTest {
         luoValintaperusteetService.luo();
     }
 
-    private PkAineet pkAineet = new PkAineet();
+    private PkAineet pkAineet = new PkAineet(true);
     private YoAineet yoAineet = new YoAineet();
 
     private static final String HAKEMUS_OID = "hakemusOid";
