@@ -12,6 +12,7 @@ import java.util.UUID;
 
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
+import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.UusiHakukohteenValintaperusteRekursio;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -448,120 +449,27 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     private void haeHakukohteenValintaperusteetRekursiivisesti(Funktiokutsu funktiokutsu,
             HakukohteenValintaperusteAvaimetDTO valintaperusteet) {
 
-        List<String> tunnisteet = new ArrayList<String>();
-        List<String> arvot = new ArrayList<String>();
-        List<String> hylkaysperusteet = new ArrayList<String>();
-        List<String> minimit = new ArrayList<String>();
-        List<String> maksimit = new ArrayList<String>();
-        List<String> palautaHaetutArvot = new ArrayList<String>();
 
-        for (ValintaperusteViite vp : funktiokutsu.getValintaperusteviitteet()) {
-            Valintaperustelahde lahde = vp.getLahde();
-            if (lahde.equals(Valintaperustelahde.HAKUKOHTEEN_ARVO)
-                    || lahde.equals(Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO)) {
-                tunnisteet.add(vp.getTunniste());
-            }
+        // Akka toteutus
+        ActorSystem system = ActorSystem.create("actorSystem");
+        SpringExtProvider.get(system).initialize(applicationContext);
+        Timeout timeout = new Timeout(Duration.create(30, "seconds"));
 
-            if (funktiokutsu.getArvokonvertteriparametrit() != null
-                    && funktiokutsu.getArvokonvertteriparametrit().size() > 0) {
+        ActorRef master = system.actorOf(
+                SpringExtProvider.get(system).props("HaeHakukohteenValintaperusteetRekursiivisestiActorBean"), UUID.randomUUID()
+                .toString());
 
-                for (Arvokonvertteriparametri ap : funktiokutsu.getArvokonvertteriparametrit()) {
-                    if (ap.getArvo().contains("hakukohde") && ap.getArvo().startsWith("{{")) {
-                        arvot.add(ap.getArvo());
-                    }
-                    if (ap.getHylkaysperuste().contains("hakukohde") && ap.getHylkaysperuste().startsWith("{{")) {
-                        hylkaysperusteet.add(ap.getHylkaysperuste());
-                    }
-                }
+        Future<Object> future = Patterns.ask(master, new UusiHakukohteenValintaperusteRekursio(funktiokutsu.getId(),
+                valintaperusteet), timeout);
 
-            } else if (funktiokutsu.getArvovalikonvertteriparametrit() != null
-                    && funktiokutsu.getArvovalikonvertteriparametrit().size() > 0) {
-                for (Arvovalikonvertteriparametri ap : funktiokutsu.getArvovalikonvertteriparametrit()) {
-                    if (ap.getMinValue().contains("hakukohde") && ap.getMinValue().startsWith("{{")) {
-                        minimit.add(ap.getMinValue());
-                    }
-                    if (ap.getMaxValue().contains("hakukohde") && ap.getMaxValue().startsWith("{{")) {
-                        maksimit.add(ap.getMaxValue());
-                    }
-                    if (ap.getPalautaHaettuArvo().contains("hakukohde") && ap.getPalautaHaettuArvo().startsWith("{{")) {
-                        palautaHaetutArvot.add(ap.getPalautaHaettuArvo());
-                    }
-                }
-
-            }
-
+        try {
+            funktiokutsu = (Funktiokutsu) Await.result(future, timeout.duration());
+            system.shutdown();
+        } catch (Exception e) {
+            system.shutdown();
+            e.printStackTrace();
         }
 
-        if (tunnisteet.size() > 0) {
-            if (valintaperusteet.getTunnisteet() == null) {
-                valintaperusteet.setTunnisteet(tunnisteet);
-            } else {
-                List<String> temp = valintaperusteet.getTunnisteet();
-                temp.addAll(tunnisteet);
-                valintaperusteet.setTunnisteet(temp);
-            }
-        }
-
-        if (arvot.size() > 0) {
-            if (valintaperusteet.getArvot() == null) {
-                valintaperusteet.setArvot(arvot);
-            } else {
-                List<String> temp = valintaperusteet.getArvot();
-                temp.addAll(arvot);
-                valintaperusteet.setArvot(temp);
-            }
-        }
-
-        if (hylkaysperusteet.size() > 0) {
-            if (valintaperusteet.getHylkaysperusteet() == null) {
-                valintaperusteet.setHylkaysperusteet(hylkaysperusteet);
-            } else {
-                List<String> temp = valintaperusteet.getHylkaysperusteet();
-                temp.addAll(hylkaysperusteet);
-                valintaperusteet.setHylkaysperusteet(temp);
-            }
-        }
-
-        if (minimit.size() > 0) {
-            if (valintaperusteet.getMinimit() == null) {
-                valintaperusteet.setMinimit(minimit);
-            } else {
-                List<String> temp = valintaperusteet.getMinimit();
-                temp.addAll(minimit);
-                valintaperusteet.setMinimit(temp);
-            }
-        }
-
-        if (maksimit.size() > 0) {
-            if (valintaperusteet.getMaksimit() == null) {
-                valintaperusteet.setMaksimit(maksimit);
-            } else {
-                List<String> temp = valintaperusteet.getMaksimit();
-                temp.addAll(maksimit);
-                valintaperusteet.setMaksimit(temp);
-            }
-        }
-
-        if (palautaHaetutArvot.size() > 0) {
-            if (valintaperusteet.getPalautaHaettutArvot() == null) {
-                valintaperusteet.setPalautaHaettutArvot(palautaHaetutArvot);
-            } else {
-                List<String> temp = valintaperusteet.getPalautaHaettutArvot();
-                temp.addAll(palautaHaetutArvot);
-                valintaperusteet.setPalautaHaettutArvot(temp);
-            }
-        }
-
-        for (Funktioargumentti arg : funktiokutsu.getFunktioargumentit()) {
-            if (arg.getFunktiokutsuChild() != null) {
-                haeHakukohteenValintaperusteetRekursiivisesti(
-                        funktiokutsuDAO.getFunktiokutsu(arg.getFunktiokutsuChild().getId()), valintaperusteet);
-            } else if (arg.getLaskentakaavaChild() != null) {
-                haeHakukohteenValintaperusteetRekursiivisesti(
-                        laskentakaavaDAO.getLaskentakaava(arg.getLaskentakaavaChild().getId()).getFunktiokutsu(),
-                        valintaperusteet);
-            }
-        }
     }
 
     @Override
