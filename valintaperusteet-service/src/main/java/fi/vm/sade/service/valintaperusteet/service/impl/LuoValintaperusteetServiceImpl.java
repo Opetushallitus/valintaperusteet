@@ -126,8 +126,8 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
     public void luo() throws IOException {
         long beginTime = System.currentTimeMillis();
 
-        luoLukioKoulutus();
         luoAmmatillinenKoulutus();
+        luoLukioKoulutus();
 
         long endTime = System.currentTimeMillis();
         long timeTaken = (endTime - beginTime) / 1000L / 60L;
@@ -141,7 +141,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         TransactionStatus tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
         transactionManager.commit(tx);
 
-        PkAineet pkAineet = new PkAineet(true);
+        PkAineet pkAineet = new PkAineet();
         YoAineet yoAineet = new YoAineet();
 
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
@@ -272,10 +272,10 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
         for (Laskentakaava kaava : pkAineet.getLaskentakaavat()) {
             asetaValintaryhmaJaTallennaKantaan(kaava, peruskouluVr.getOid());
-        }
 
-        transactionManager.commit(tx);
-        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+            transactionManager.commit(tx);
+            tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+        }
 
         // pisteytysmalli
         Laskentakaava pk_painotettavatKeskiarvotLaskentakaava = asetaValintaryhmaJaTallennaKantaan(
@@ -446,20 +446,20 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         transactionManager.commit(tx);
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
-        PkAineet pkAineet = new PkAineet(false);
+        LukionPkAineet pkAineet = new LukionPkAineet();
 
         transactionManager.commit(tx);
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
         for (Laskentakaava kaava : pkAineet.getLaskentakaavat()) {
             asetaValintaryhmaJaTallennaKantaan(kaava, lukioKoulutusVr.getOid());
+
+            transactionManager.commit(tx);
+            tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
         }
 
-        transactionManager.commit(tx);
-        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
-
         Laskentakaava keskiarvotLaskentakaava = asetaValintaryhmaJaTallennaKantaan(
-                YhteisetKaavat.luoPKPohjaisenKoulutuksenKaikkienAineidenKeskiarvo(pkAineet,"Kaikkien aineiden keskiarvo, lukiokoulutus"), lukioKoulutusVr.getOid());
+                LukionValintaperusteet.luoKaikkienAineidenKeskiarvo(pkAineet), lukioKoulutusVr.getOid());
 
         transactionManager.commit(tx);
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
