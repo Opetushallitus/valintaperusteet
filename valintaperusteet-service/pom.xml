@@ -151,7 +151,17 @@
             <version>1.9.1</version>
             <scope>test</scope>
         </dependency>
-
+		<dependency>
+		    <groupId>org.apache.httpcomponents</groupId>
+		    <artifactId>httpclient-cache</artifactId>
+		    <version>4.2.5</version>
+		    <exclusions>
+                <exclusion>
+                    <artifactId>commons-logging</artifactId>
+                    <groupId>commons-logging</groupId>
+                </exclusion>
+            </exclusions>
+		</dependency>
         <!-- LOG -->
         <dependency>
             <groupId>org.slf4j</groupId>
