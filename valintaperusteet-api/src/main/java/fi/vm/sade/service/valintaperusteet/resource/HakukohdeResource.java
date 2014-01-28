@@ -74,11 +74,10 @@ public interface HakukohdeResource {
     @Produces(MediaType.APPLICATION_JSON)
     List<JarjestyskriteeriDTO> findLaskentaKaavat(@PathParam("oid") String oid);
 
-    @POST
-    @Path("/avaimet")
+    @GET
+    @Path("/avaimet/{oid}")
     @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    List<ValintaperusteDTO> findAvaimet(String oid);
+    List<ValintaperusteDTO> findAvaimet(@PathParam("oid") String oid);
 
     @GET
     @Path("{hakukohdeOid}/avaimet")

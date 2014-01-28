@@ -211,7 +211,6 @@ public class HakukohdeResourceImpl implements HakukohdeResource {
     @GET
     @Path("/avaimet/{oid}")
     @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
     @Secured({ READ, UPDATE, CRUD })
     @ApiOperation(value = "Hakee hakukohteen syötettävät tiedot", response = ValintaperusteDTO.class)
     public List<ValintaperusteDTO> findAvaimet(@ApiParam(value = "Hakukohde OID", required = true) @PathParam("oid") String oid) {
