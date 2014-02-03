@@ -278,9 +278,11 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
         for (Laskentakaava kaava : pkAineet.getLaskentakaavat()) {
             asetaValintaryhmaJaTallennaKantaan(kaava, peruskouluVr.getOid());
-            transactionManager.commit(tx);
-            tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
         }
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
         // pisteytysmalli
         Laskentakaava pk_painotettavatKeskiarvotLaskentakaava = asetaValintaryhmaJaTallennaKantaan(
@@ -350,9 +352,11 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
         for (Laskentakaava kaava : yoAineet.getLaskentakaavat()) {
             asetaValintaryhmaJaTallennaKantaan(kaava, lukioVr.getOid());
-            transactionManager.commit(tx);
-            tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
         }
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
         Laskentakaava lk_paattotodistuksenkeskiarvo = asetaValintaryhmaJaTallennaKantaan(
                 YoPohjaiset.luoYOPohjaisenKoulutuksenPaattotodistuksenKeskiarvo(yoAineet), lukioVr.getOid());
@@ -458,12 +462,10 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
         for (Laskentakaava kaava : pkAineet.getLaskentakaavat()) {
             asetaValintaryhmaJaTallennaKantaan(kaava, lukioKoulutusVr.getOid());
-
+            transactionManager.commit(tx);
+            tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
         }
-
-        transactionManager.commit(tx);
-        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
         Laskentakaava keskiarvotLaskentakaava = asetaValintaryhmaJaTallennaKantaan(
                 LukionValintaperusteet.luoKaikkienAineidenKeskiarvo(pkAineet), lukioKoulutusVr.getOid());
@@ -929,7 +931,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                         lkPeruskaava, lkTasasijakriteerit, kielikoeLaskentakaava);
 
                 ActorRef master = system.actorOf(
-                        SpringExtProvider.get(system).props("HaeFunktiokutsuRekursiivisestiActorBean"), UUID.randomUUID()
+                        SpringExtProvider.get(system).props("LuoValintaperusteetActorBean"), UUID.randomUUID()
                         .toString());
                 master.tell(peruste, ActorRef.noSender());
 
