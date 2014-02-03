@@ -4,16 +4,17 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
+import akka.actor.ActorRef;
+import akka.actor.ActorSystem;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
+import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.LuoValintaperuste;
 import fi.vm.sade.service.valintaperusteet.service.impl.generator.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -42,6 +43,8 @@ import fi.vm.sade.service.valintaperusteet.service.ValintakoeService;
 import fi.vm.sade.service.valintaperusteet.service.ValintakoekoodiService;
 import fi.vm.sade.service.valintaperusteet.service.ValintaryhmaService;
 import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
+
+import static fi.vm.sade.service.valintaperusteet.service.impl.actors.creators.SpringExtension.SpringExtProvider;
 
 /**
  * User: kkammone Date: 25.2.2013 Time: 12:57
@@ -80,6 +83,9 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
     @Autowired
     private ValintaperusteetModelMapper modelMapper;
+
+    @Autowired
+    private ApplicationContext applicationContext;
 
     private ResourceLoader resourceLoader;
 
@@ -272,12 +278,9 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
         for (Laskentakaava kaava : pkAineet.getLaskentakaavat()) {
             asetaValintaryhmaJaTallennaKantaan(kaava, peruskouluVr.getOid());
-
-
+            transactionManager.commit(tx);
+            tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
         }
-
-        transactionManager.commit(tx);
-        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
         // pisteytysmalli
         Laskentakaava pk_painotettavatKeskiarvotLaskentakaava = asetaValintaryhmaJaTallennaKantaan(
@@ -347,11 +350,9 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
         for (Laskentakaava kaava : yoAineet.getLaskentakaavat()) {
             asetaValintaryhmaJaTallennaKantaan(kaava, lukioVr.getOid());
-
+            transactionManager.commit(tx);
+            tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
         }
-
-        transactionManager.commit(tx);
-        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
         Laskentakaava lk_paattotodistuksenkeskiarvo = asetaValintaryhmaJaTallennaKantaan(
                 YoPohjaiset.luoYOPohjaisenKoulutuksenPaattotodistuksenKeskiarvo(yoAineet), lukioVr.getOid());
@@ -911,6 +912,8 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
             reader = new BufferedReader(new InputStreamReader(resourceLoader.getResource(
                     "classpath:hakukohdekoodit/ammatillinenkoulutushakukohdekoodit.csv").getInputStream(),
                     Charset.forName("UTF-8")));
+            ActorSystem system = ActorSystem.create("luoValintaperusteetActorSystem");
+            SpringExtProvider.get(system).initialize(applicationContext);
 
             // Luetaan otsikkorivi pois
             String line = reader.readLine();
@@ -921,114 +924,123 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                 String nimi = splitted[1].replace("\"", "");
                 String nimiSV = splitted[2].replace("\"", "");
 
-                KoodiDTO hakukohdekoodi = new KoodiDTO();
-                hakukohdekoodi.setArvo(arvo);
-                hakukohdekoodi.setUri(uri);
-                hakukohdekoodi.setNimiFi(nimi);
-                hakukohdekoodi.setNimiSv(nimiSV);
-                hakukohdekoodi.setNimiEn(nimi);
+                LuoValintaperuste peruste = new LuoValintaperuste(arvo, uri, nimi, nimiSV, nimi,
+                        peruskouluVr.getOid(), lukioVr.getOid(), pkPeruskaava, pkTasasijakriteerit,
+                        lkPeruskaava, lkTasasijakriteerit, kielikoeLaskentakaava);
 
-                ValintaryhmaDTO valintaryhma = new ValintaryhmaDTO();
+                ActorRef master = system.actorOf(
+                        SpringExtProvider.get(system).props("HaeFunktiokutsuRekursiivisestiActorBean"), UUID.randomUUID()
+                        .toString());
+                master.tell(peruste, ActorRef.noSender());
 
-                valintaryhma.setNimi(nimi);
-
-                TransactionStatus tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
-
-                if (nimi.contains(", pk")) {
-                    valintaryhma = modelMapper.map(valintaryhmaService.insert(valintaryhma, peruskouluVr.getOid()),
-                            ValintaryhmaDTO.class);
-                } else {
-                    valintaryhma = modelMapper.map(valintaryhmaService.insert(valintaryhma, lukioVr.getOid()),
-                            ValintaryhmaDTO.class);
-                }
-
-                transactionManager.commit(tx);
-                tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
-
-                ValinnanVaihe valintakoevaihe = valinnanVaiheService.findByValintaryhma(valintaryhma.getOid()).get(1);
-                assert (valintakoevaihe.getValinnanVaiheTyyppi().equals(ValinnanVaiheTyyppi.VALINTAKOE));
-                valintakoevaihe.setNimi("Kielikokeen pakollisuus ja pääsykoe");
-                valintakoevaihe.setKuvaus("Kielikokeen pakollisuus ja pääsykoe");
-                valintakoevaihe = valinnanVaiheService.update(valintakoevaihe.getOid(),
-                        modelMapper.map(valintakoevaihe, ValinnanVaiheCreateDTO.class));
-
-                transactionManager.commit(tx);
-                tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
-
-                String valintakoetunniste = nimi + ", pääsykoe";
-                ValintakoeDTO valintakoe = new ValintakoeDTO();
-                valintakoe.setAktiivinen(false);
-                valintakoe.setKuvaus(valintakoetunniste);
-                valintakoe.setTunniste(valintakoetunniste);
-                valintakoe.setNimi(valintakoetunniste);
-                valintakoe.setLahetetaankoKoekutsut(true);
-
-                // Valintakoe on pakollinen niille, joilla ei ole ulkomailla
-                // suoritettua koulutusta tai
-                // joiden oppivelvollisuuden suorittaminen ei ole keskeytynyt
-                valintakoe.setLaskentakaavaId(null);
-                valintakoeService.lisaaValintakoeValinnanVaiheelle(valintakoevaihe.getOid(), valintakoe);
-
-                transactionManager.commit(tx);
-                tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
-
-                ValinnanVaiheDTO valinnanVaihe = new ValinnanVaiheDTO();
-                valinnanVaihe.setAktiivinen(true);
-                valinnanVaihe.setKuvaus("Varsinainen valinnanvaihe");
-                valinnanVaihe.setNimi("Varsinainen valinnanvaihe");
-                valinnanVaihe
-                        .setValinnanVaiheTyyppi(fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi.TAVALLINEN);
-
-                valinnanVaihe = modelMapper.map(valinnanVaiheService.lisaaValinnanVaiheValintaryhmalle(
-                        valintaryhma.getOid(), valinnanVaihe, valintakoevaihe.getOid()), ValinnanVaiheDTO.class);
-
-                transactionManager.commit(tx);
-                tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
-
-                ValintatapajonoDTO jono = new ValintatapajonoDTO();
-
-                jono.setAktiivinen(true);
-                jono.setAloituspaikat(0);
-                jono.setKuvaus("Varsinaisen valinnanvaiheen valintatapajono");
-                jono.setNimi("Varsinaisen valinnanvaiheen valintatapajono");
-                jono.setTasapistesaanto(fi.vm.sade.service.valintaperusteet.dto.model.Tasapistesaanto.ARVONTA);
-                jono.setSiirretaanSijoitteluun(true);
-
-                valintatapajonoService.lisaaValintatapajonoValinnanVaiheelle(valinnanVaihe.getOid(), jono, null);
-
-                transactionManager.commit(tx);
-                tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
-
-                Laskentakaava valintakoekaava = asetaValintaryhmaJaTallennaKantaan(
-                        PkJaYoPohjaiset.luoValintakoekaava(valintakoetunniste), valintaryhma.getOid());
-
-                transactionManager.commit(tx);
-
-                Laskentakaava peruskaava = null;
-                Laskentakaava[] tasasijakriteerit = null;
-
-                if (nimi.contains(", pk")) {
-                    peruskaava = pkPeruskaava;
-                    tasasijakriteerit = pkTasasijakriteerit;
-                } else {
-                    peruskaava = lkPeruskaava;
-                    tasasijakriteerit = lkTasasijakriteerit;
-                }
-
-                tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
-                Laskentakaava ensisijainenJarjestyskriteeri = null;
-                if (poikkeavatValintaryhmat.contains(hakukohdekoodi.getUri())) {
-                    ensisijainenJarjestyskriteeri = PkJaYoPohjaiset.luoPoikkeavanValintaryhmanLaskentakaava(
-                            valintakoekaava, kielikoeLaskentakaava);
-                } else {
-                    ensisijainenJarjestyskriteeri = PkJaYoPohjaiset.luoYhdistettyPeruskaavaJaValintakoekaava(
-                            peruskaava, valintakoekaava);
-                }
-
-                transactionManager.commit(tx);
-                insertKoe(valintaryhma, valintakoetunniste, ensisijainenJarjestyskriteeri, valintakoekaava,
-                        tasasijakriteerit, hakukohdekoodi);
-                insertEiKoetta(valintaryhma, peruskaava, tasasijakriteerit, hakukohdekoodi);
+//                KoodiDTO hakukohdekoodi = new KoodiDTO();
+//                hakukohdekoodi.setArvo(arvo);
+//                hakukohdekoodi.setUri(uri);
+//                hakukohdekoodi.setNimiFi(nimi);
+//                hakukohdekoodi.setNimiSv(nimiSV);
+//                hakukohdekoodi.setNimiEn(nimi);
+//
+//                ValintaryhmaDTO valintaryhma = new ValintaryhmaDTO();
+//
+//                valintaryhma.setNimi(nimi);
+//
+//                TransactionStatus tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+//
+//                if (nimi.contains(", pk")) {
+//                    valintaryhma = modelMapper.map(valintaryhmaService.insert(valintaryhma, peruskouluVr.getOid()),
+//                            ValintaryhmaDTO.class);
+//                } else {
+//                    valintaryhma = modelMapper.map(valintaryhmaService.insert(valintaryhma, lukioVr.getOid()),
+//                            ValintaryhmaDTO.class);
+//                }
+//
+//                transactionManager.commit(tx);
+//                tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+//
+//                ValinnanVaihe valintakoevaihe = valinnanVaiheService.findByValintaryhma(valintaryhma.getOid()).get(1);
+//                assert (valintakoevaihe.getValinnanVaiheTyyppi().equals(ValinnanVaiheTyyppi.VALINTAKOE));
+//                valintakoevaihe.setNimi("Kielikokeen pakollisuus ja pääsykoe");
+//                valintakoevaihe.setKuvaus("Kielikokeen pakollisuus ja pääsykoe");
+//                valintakoevaihe = valinnanVaiheService.update(valintakoevaihe.getOid(),
+//                        modelMapper.map(valintakoevaihe, ValinnanVaiheCreateDTO.class));
+//
+//                transactionManager.commit(tx);
+//                tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+//
+//                String valintakoetunniste = nimi + ", pääsykoe";
+//                ValintakoeDTO valintakoe = new ValintakoeDTO();
+//                valintakoe.setAktiivinen(false);
+//                valintakoe.setKuvaus(valintakoetunniste);
+//                valintakoe.setTunniste(valintakoetunniste);
+//                valintakoe.setNimi(valintakoetunniste);
+//                valintakoe.setLahetetaankoKoekutsut(true);
+//
+//                // Valintakoe on pakollinen niille, joilla ei ole ulkomailla
+//                // suoritettua koulutusta tai
+//                // joiden oppivelvollisuuden suorittaminen ei ole keskeytynyt
+//                valintakoe.setLaskentakaavaId(null);
+//                valintakoeService.lisaaValintakoeValinnanVaiheelle(valintakoevaihe.getOid(), valintakoe);
+//
+//                transactionManager.commit(tx);
+//                tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+//
+//                ValinnanVaiheDTO valinnanVaihe = new ValinnanVaiheDTO();
+//                valinnanVaihe.setAktiivinen(true);
+//                valinnanVaihe.setKuvaus("Varsinainen valinnanvaihe");
+//                valinnanVaihe.setNimi("Varsinainen valinnanvaihe");
+//                valinnanVaihe
+//                        .setValinnanVaiheTyyppi(fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi.TAVALLINEN);
+//
+//                valinnanVaihe = modelMapper.map(valinnanVaiheService.lisaaValinnanVaiheValintaryhmalle(
+//                        valintaryhma.getOid(), valinnanVaihe, valintakoevaihe.getOid()), ValinnanVaiheDTO.class);
+//
+//                transactionManager.commit(tx);
+//                tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+//
+//                ValintatapajonoDTO jono = new ValintatapajonoDTO();
+//
+//                jono.setAktiivinen(true);
+//                jono.setAloituspaikat(0);
+//                jono.setKuvaus("Varsinaisen valinnanvaiheen valintatapajono");
+//                jono.setNimi("Varsinaisen valinnanvaiheen valintatapajono");
+//                jono.setTasapistesaanto(fi.vm.sade.service.valintaperusteet.dto.model.Tasapistesaanto.ARVONTA);
+//                jono.setSiirretaanSijoitteluun(true);
+//
+//                valintatapajonoService.lisaaValintatapajonoValinnanVaiheelle(valinnanVaihe.getOid(), jono, null);
+//
+//                transactionManager.commit(tx);
+//                tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+//
+//                Laskentakaava valintakoekaava = asetaValintaryhmaJaTallennaKantaan(
+//                        PkJaYoPohjaiset.luoValintakoekaava(valintakoetunniste), valintaryhma.getOid());
+//
+//                transactionManager.commit(tx);
+//
+//                Laskentakaava peruskaava = null;
+//                Laskentakaava[] tasasijakriteerit = null;
+//
+//                if (nimi.contains(", pk")) {
+//                    peruskaava = pkPeruskaava;
+//                    tasasijakriteerit = pkTasasijakriteerit;
+//                } else {
+//                    peruskaava = lkPeruskaava;
+//                    tasasijakriteerit = lkTasasijakriteerit;
+//                }
+//
+//                tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+//                Laskentakaava ensisijainenJarjestyskriteeri = null;
+//                if (poikkeavatValintaryhmat.contains(hakukohdekoodi.getUri())) {
+//                    ensisijainenJarjestyskriteeri = PkJaYoPohjaiset.luoPoikkeavanValintaryhmanLaskentakaava(
+//                            valintakoekaava, kielikoeLaskentakaava);
+//                } else {
+//                    ensisijainenJarjestyskriteeri = PkJaYoPohjaiset.luoYhdistettyPeruskaavaJaValintakoekaava(
+//                            peruskaava, valintakoekaava);
+//                }
+//
+//                transactionManager.commit(tx);
+//                insertKoe(valintaryhma, valintakoetunniste, ensisijainenJarjestyskriteeri, valintakoekaava,
+//                        tasasijakriteerit, hakukohdekoodi);
+//                insertEiKoetta(valintaryhma, peruskaava, tasasijakriteerit, hakukohdekoodi);
 
             }
         } finally {
