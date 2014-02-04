@@ -56,7 +56,7 @@ public interface LaskentakaavaResource {
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Response update(@PathParam("id") Long id, @DefaultValue("false") Boolean metadata,
+    Response update(@PathParam("id") Long id, @QueryParam("metadata") @DefaultValue("false") Boolean metadata,
             LaskentakaavaCreateDTO laskentakaava);
 
     @PUT
