@@ -51,16 +51,16 @@ public class HaeFunktiokutsuRekursiivisestiActorBean extends UntypedActor {
 
     }
 
-    @Override
-    public SupervisorStrategy supervisorStrategy() {
-        return new OneForOneStrategy(5, Duration.create("10 seconds"),
-                new Function<Throwable, Directive>() {
-                    public Directive apply(Throwable cause) {
-                        cause.printStackTrace();
-                        return SupervisorStrategy.restart();
-                    }
-                });
-    }
+//    @Override
+//    public SupervisorStrategy supervisorStrategy() {
+//        return new OneForOneStrategy(5, Duration.create("10 seconds"),
+//                new Function<Throwable, Directive>() {
+//                    public Directive apply(Throwable cause) {
+//                        cause.printStackTrace();
+//                        return SupervisorStrategy.restart();
+//                    }
+//                });
+//    }
 
     public void onReceive(Object message) throws Exception {
 
@@ -80,8 +80,8 @@ public class HaeFunktiokutsuRekursiivisestiActorBean extends UntypedActor {
                     }
                     arg.getLaskentakaavaChild().setFunktiokutsu(response);
                     arg.setLaajennettuKaava(response);
-                } else if( arg.getLaskentakaavaChild() != null ) {
-//                    arg.getLaskentakaavaChild().setFunktiokutsu(response);
+                } else if( arg.getLaskentakaavaChild() != null && arg.getLaskentakaavaChild().getFunktiokutsu().getId().equals(response.getId())) {
+                    arg.getLaskentakaavaChild().setFunktiokutsu(response);
                 }
             }
             funktiokutsuLapset--;
