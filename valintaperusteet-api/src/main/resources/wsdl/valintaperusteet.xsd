@@ -26,6 +26,7 @@
 
     <xs:complexType name="ValinnanVaiheTyyppi" abstract="true">
         <xs:attribute name="valinnanVaiheOid" type="xs:string" use="required"/>
+        <xs:attribute name="nimi" type="xs:string" use="required"/>
         <xs:attribute name="valinnanVaiheJarjestysluku" type="xs:int" use="required"/>
     </xs:complexType>
 

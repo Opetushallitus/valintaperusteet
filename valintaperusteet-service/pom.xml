@@ -341,6 +341,11 @@
             <version>2.2.3</version>
         </dependency>
         <dependency>
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-slf4j_2.10</artifactId>
+            <version>2.2.3</version>
+        </dependency>
+        <dependency>
             <groupId>com.jolbox</groupId>
             <artifactId>bonecp</artifactId>
             <version>0.8.0.RELEASE</version>
