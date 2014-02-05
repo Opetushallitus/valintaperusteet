@@ -526,7 +526,7 @@ public class PkJaYoPohjaiset {
         konvs.add(GenericHelper.luoArvovalikonvertteriparametri(alaraja, ylaraja));
 
         Funktiokutsu funktiokutsu = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(tunniste, false,
-                Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO, "", true), 0, konvs);
+                Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO, "Urheilijan lisäpiste", true), 0, konvs);
 
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(funktiokutsu, "Urheilijalisäpisteen laskentakaava");
 
