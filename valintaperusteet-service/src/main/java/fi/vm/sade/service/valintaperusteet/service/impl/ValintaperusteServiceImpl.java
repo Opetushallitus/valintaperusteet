@@ -202,6 +202,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
 
         vv.setValinnanVaiheJarjestysluku(valinnanvaiheJarjestysluku);
         vv.setValinnanVaiheOid(valinnanVaihe.getOid());
+        vv.setNimi(valinnanVaihe.getNimi());
         valintaperusteetTyyppi.setValinnanVaihe(vv);
 
         for (HakukohteenValintaperuste vp : hakukohde.getHakukohteenValintaperusteet().values()) {
