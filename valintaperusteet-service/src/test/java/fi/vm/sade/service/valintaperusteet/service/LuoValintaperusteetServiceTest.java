@@ -2,6 +2,7 @@ package fi.vm.sade.service.valintaperusteet.service;
 
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.kaava.Laskentadomainkonvertteri;
+import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskin;
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus;
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakukohde;
@@ -48,6 +49,9 @@ public class LuoValintaperusteetServiceTest {
     @Autowired
     private LaskentaService laskentaService;
 
+    @Autowired
+    private ValintaryhmaDAO valintaryhmaDAO;
+
     @Before
     public void initialize() {
         try {
@@ -66,6 +70,8 @@ public class LuoValintaperusteetServiceTest {
     @Ignore
     public void testLuo() throws IOException {
         luoValintaperusteetService.luo();
+        int ryhmienMaara = valintaryhmaDAO.findAll().size();
+        assertEquals(ryhmienMaara, 944);
     }
 
     private PkAineet pkAineet = new PkAineet();
@@ -546,6 +552,7 @@ public class LuoValintaperusteetServiceTest {
                         valintaperuste(PkPohjaiset.todistuksenSaantivuosi, PkPohjaiset.kuluvaVuosi),
                         valintaperuste(PkPohjaiset.koulutuspaikkaAmmatilliseenTutkintoon, Boolean.FALSE.toString()),
                         valintaperuste(PkJaYoPohjaiset.tyokokemuskuukaudet, 7),
+                        valintaperuste("urheilija_lisapiste", 2),
                         valintaperuste(PkJaYoPohjaiset.sukupuoli, "m"))),
                 hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "m"))),
                 hakemus(yhdistaMapit(valintaperuste(PkJaYoPohjaiset.sukupuoli, "m"))),
@@ -556,7 +563,7 @@ public class LuoValintaperusteetServiceTest {
                 valintaperuste(PkJaYoPohjaiset.urheilijaLisapisteTunniste, "urheilija_lisapiste")
         ));
 
-        final BigDecimal odotettuTulos = new BigDecimal("31.0");
+        final BigDecimal odotettuTulos = new BigDecimal("33.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkPohjaiset.luoToisenAsteenPeruskoulupohjainenPeruskaava(
                 PkPohjaiset.luoPainotettavatKeskiarvotLaskentakaava(pkAineet),
@@ -1677,6 +1684,42 @@ public class LuoValintaperusteetServiceTest {
 
         final Hakemus hakemus = new Hakemus(HAKEMUS_OID, new HashMap<Integer, String>(),
                 new HashMap<String, String>());
+
+        Funktiokutsu funktiokutsu = PkJaYoPohjaiset.luoKielikoekriteeri8Funktiokutsu();
+
+        Laskentatulos<Boolean> tulos = laskentaService.suoritaValintakoelaskenta(hakukohde, hakemus, Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu));
+        assertFalse(tulos.getTulos());
+        assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
+    }
+
+    @Test
+    public void testKielikoekriteeri8FunktiokutsuTrueLukio() {
+        final String opetuskieli = "fi";
+
+        final Hakukohde hakukohde = new Hakukohde(HAKUKOHDE_OID1, yhdistaMapit(
+                valintaperuste(PkJaYoPohjaiset.opetuskieli, opetuskieli)
+        ));
+
+        final Hakemus hakemus = new Hakemus(HAKEMUS_OID, new HashMap<Integer, String>(),
+                yhdistaMapit(valintaperuste(PkJaYoPohjaiset.lukionPaattotodistusVahintaanSeitseman+opetuskieli, true)));
+
+        Funktiokutsu funktiokutsu = PkJaYoPohjaiset.luoKielikoekriteeri8Funktiokutsu();
+
+        Laskentatulos<Boolean> tulos = laskentaService.suoritaValintakoelaskenta(hakukohde, hakemus, Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu));
+        assertTrue(tulos.getTulos());
+        assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
+    }
+
+    @Test
+    public void testKielikoekriteeri8FunktiokutsuPerusopetuksenKieliEriHakemukselta() {
+        final String opetuskieli = "fi";
+
+        final Hakukohde hakukohde = new Hakukohde(HAKUKOHDE_OID1, yhdistaMapit(
+                valintaperuste(PkJaYoPohjaiset.opetuskieli, opetuskieli)
+        ));
+
+        final Hakemus hakemus = new Hakemus(HAKEMUS_OID, new HashMap<Integer, String>(),
+                yhdistaMapit(valintaperuste(PkJaYoPohjaiset.peruskoulunPaattotodistusVahintaanSeitseman+"sv", true)));
 
         Funktiokutsu funktiokutsu = PkJaYoPohjaiset.luoKielikoekriteeri8Funktiokutsu();
 
