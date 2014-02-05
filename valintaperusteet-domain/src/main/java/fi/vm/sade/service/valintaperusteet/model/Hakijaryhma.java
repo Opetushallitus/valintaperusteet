@@ -1,9 +1,5 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
-import fi.vm.sade.generic.model.BaseEntity;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.annotate.JsonView;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -162,26 +158,22 @@ public class Hakijaryhma extends BaseEntity implements LinkitettavaJaKopioitava<
         this.kopiot = kopiot;
     }
 
-    @JsonProperty(value = "inheritance")
     @Transient
     public Boolean getInheritance() {
         return getMaster() != null;
     }
 
-    @JsonProperty("laskentakaava_id")
     @Transient
     public Long getLaskentakaavaId() {
         return laskentakaava.getId();
     }
 
-    @JsonProperty("laskentakaava_id")
     @Transient
     public void setLaskentakaavaId(Long id) {
         laskentakaava = new Laskentakaava();
         laskentakaava.setId(id);
     }
 
-    @JsonProperty("valintatapajonot")
     public List<String> getValintatapajonoIds() {
         List<String> valintatapajonoIds = new ArrayList<String>();
         if (jonot != null) {
@@ -192,7 +184,6 @@ public class Hakijaryhma extends BaseEntity implements LinkitettavaJaKopioitava<
         return valintatapajonoIds;
     }
 
-    @JsonProperty("valintatapajonot")
     public void setValintatapajonoIds(List<String> ids) {
 
     }

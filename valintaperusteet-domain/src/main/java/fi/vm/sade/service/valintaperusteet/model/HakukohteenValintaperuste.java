@@ -1,7 +1,5 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
-import fi.vm.sade.generic.model.BaseEntity;
-
 import javax.persistence.*;
 
 /**

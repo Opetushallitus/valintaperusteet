@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import fi.vm.sade.service.valintaperusteet.dao.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -15,13 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import fi.vm.sade.generic.dao.GenericDAO;
-import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
-import fi.vm.sade.service.valintaperusteet.dao.HakukohdekoodiDAO;
-import fi.vm.sade.service.valintaperusteet.dao.HakukohteenValintaperusteDAO;
-import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
-import fi.vm.sade.service.valintaperusteet.dao.ValintakoekoodiDAO;
-import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.Hakukohdekoodi;

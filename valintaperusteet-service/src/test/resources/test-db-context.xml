@@ -11,7 +11,7 @@
        http://www.springframework.org/schema/tx
        http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
 
-    <bean id="genericDAO" class="fi.vm.sade.generic.dao.GenericDAOImpl" />
+    <bean id="genericDAO" class="fi.vm.sade.service.valintaperusteet.dao.impl.GenericDAOImpl" />
     <context:annotation-config />
     <context:component-scan base-package="fi.vm.sade.service.valintaperusteet.dao.impl" />
 

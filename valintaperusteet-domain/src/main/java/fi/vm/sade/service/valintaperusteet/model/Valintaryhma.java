@@ -1,11 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
-import fi.vm.sade.generic.model.BaseEntity;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.annotate.JsonView;
-
 import javax.persistence.*;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -13,7 +8,6 @@ import java.util.Set;
 
 @Entity
 @Table(name = "valintaryhma")
-@XmlRootElement
 @Cacheable(true)
 public class Valintaryhma extends BaseEntity {
 
@@ -60,7 +54,7 @@ public class Valintaryhma extends BaseEntity {
 
     @JoinTable(name = "valintaryhma_organisaatio",
             joinColumns = @JoinColumn(name = "valintaryhma_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME),
-            inverseJoinColumns = @JoinColumn(name = "organisaatio_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME))
+            inverseJoinColumns = @JoinColumn(name = "organisaatio_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME ))
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<Organisaatio> organisaatiot = new HashSet<Organisaatio>();
 
@@ -111,13 +105,11 @@ public class Valintaryhma extends BaseEntity {
         this.hakukohdeViitteet = hakukohdeViitteet;
     }
 
-    @JsonProperty(value = "lapsivalintaryhma")
     @Transient
     public boolean lapsivalintaryhma() {
         return alavalintaryhmat.size() > 0 ? true : false;
     }
 
-    @JsonProperty(value = "lapsihakukohde")
     @Transient
     public boolean lapsihakukohde() {
         return hakukohdeViitteet.size() > 0 ? true : false;

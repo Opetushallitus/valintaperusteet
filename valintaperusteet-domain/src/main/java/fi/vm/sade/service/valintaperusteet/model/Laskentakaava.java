@@ -17,7 +17,6 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
-import fi.vm.sade.generic.model.BaseEntity;
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi;
 
 /**

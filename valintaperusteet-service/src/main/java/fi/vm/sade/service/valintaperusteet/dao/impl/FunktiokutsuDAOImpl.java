@@ -3,9 +3,10 @@ package fi.vm.sade.service.valintaperusteet.dao.impl;
 import com.mysema.query.jpa.impl.JPAQuery;
 import com.mysema.query.jpa.impl.JPASubQuery;
 import com.mysema.query.types.EntityPath;
-import fi.vm.sade.generic.dao.AbstractJpaDAOImpl;
-import fi.vm.sade.generic.dao.GenericDAO;
+
+import fi.vm.sade.service.valintaperusteet.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
+import fi.vm.sade.service.valintaperusteet.dao.GenericDAO;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

@@ -1,10 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
-import fi.vm.sade.generic.model.BaseEntity;
-import org.codehaus.jackson.map.annotate.JsonView;
-
 import javax.persistence.*;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,7 +13,6 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "organisaatio")
-@XmlRootElement
 @Cacheable(true)
 public class Organisaatio extends BaseEntity {
     @ManyToMany(mappedBy = "organisaatiot")

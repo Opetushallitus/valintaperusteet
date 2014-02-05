@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.mysema.query.Tuple;
 
-import fi.vm.sade.generic.dao.JpaDAO;
 import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
 
 /**
