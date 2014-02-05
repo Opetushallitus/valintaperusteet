@@ -1,8 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
 
-/*@Entity */
-public class Tulos /* extends BaseEntity */{
+public class Tulos {
 
     /**
      * 

@@ -15,6 +15,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
+import fi.vm.sade.service.valintaperusteet.dao.GenericDAO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +30,7 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 
 import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
-import fi.vm.sade.generic.dao.GenericDAO;
+
 import fi.vm.sade.kaava.Funktiokuvaaja;
 import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
 import fi.vm.sade.service.valintaperusteet.dto.FunktioargumentinLapsiDTO;

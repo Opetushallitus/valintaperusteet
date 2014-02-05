@@ -18,7 +18,6 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import fi.vm.sade.generic.model.BaseEntity;
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi;
 
 @Entity

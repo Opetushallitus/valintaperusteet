@@ -11,7 +11,6 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
-import fi.vm.sade.generic.model.BaseEntity;
 import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
 
 @Table(name = "valintaperuste_viite", uniqueConstraints = @UniqueConstraint(name = "UK_valintaperuste_viite_001", columnNames = {

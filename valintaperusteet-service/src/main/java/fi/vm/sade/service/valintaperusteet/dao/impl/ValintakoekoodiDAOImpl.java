@@ -2,7 +2,7 @@ package fi.vm.sade.service.valintaperusteet.dao.impl;
 
 import com.mysema.query.jpa.impl.JPAQuery;
 import com.mysema.query.types.EntityPath;
-import fi.vm.sade.generic.dao.AbstractJpaDAOImpl;
+import fi.vm.sade.service.valintaperusteet.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.ValintakoekoodiDAO;
 import fi.vm.sade.service.valintaperusteet.model.QValintakoekoodi;
 import fi.vm.sade.service.valintaperusteet.model.QValintaryhma;

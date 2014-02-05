@@ -1,9 +1,5 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
-import fi.vm.sade.generic.model.BaseEntity;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.annotate.JsonView;
-
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -136,7 +132,6 @@ public class Valintakoe extends BaseEntity implements Kopioitava<Valintakoe, Set
         return laskentakaava == null;
     }
 
-    @JsonProperty("laskentakaavaId")
     @Transient
     public Long getLaskentakaavaId() {
         return laskentakaava != null ? laskentakaava.getId() : null;

@@ -72,7 +72,7 @@ public class HaeFunktiokutsuRekursiivisestiActorBean extends UntypedActor {
                 if(arg.getFunktiokutsuChild() != null && arg.getFunktiokutsuChild().getId().equals(response.getId())) {
                     arg.setFunktiokutsuChild(response);
                 }
-                else if (laajennaAlakaavat && arg.getLaskentakaavaChild() != null) {
+                else if (laajennaAlakaavat && arg.getLaskentakaavaChild() != null && arg.getLaskentakaavaChild().getFunktiokutsu().getId().equals(response.getId())) {
                     if (laskentakaavaIds.contains(arg.getLaskentakaavaChild().getId())) {
                         silmukka = new FunktiokutsuMuodostaaSilmukanException("Funktiokutsu " + id + " muodostaa silmukan " +
                                 "laskentakaavaan " + arg.getLaskentakaavaChild().getId(), id,
@@ -81,7 +81,7 @@ public class HaeFunktiokutsuRekursiivisestiActorBean extends UntypedActor {
                     arg.getLaskentakaavaChild().setFunktiokutsu(response);
                     arg.setLaajennettuKaava(response);
                 } else if( arg.getLaskentakaavaChild() != null ) {
-                    arg.getLaskentakaavaChild().setFunktiokutsu(response);
+//                    arg.getLaskentakaavaChild().setFunktiokutsu(response);
                 }
             }
             funktiokutsuLapset--;

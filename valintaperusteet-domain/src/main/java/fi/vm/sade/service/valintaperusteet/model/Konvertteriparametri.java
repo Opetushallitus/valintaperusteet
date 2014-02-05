@@ -1,8 +1,5 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
-import fi.vm.sade.generic.model.BaseEntity;
-import org.codehaus.jackson.map.annotate.JsonView;
-
 import javax.persistence.*;
 
 /**

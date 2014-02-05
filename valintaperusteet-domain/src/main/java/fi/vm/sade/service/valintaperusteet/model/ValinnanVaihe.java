@@ -17,9 +17,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.codehaus.jackson.annotate.JsonProperty;
-
-import fi.vm.sade.generic.model.BaseEntity;
 import fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi;
 
 @Entity
@@ -197,7 +194,6 @@ public class ValinnanVaihe extends BaseEntity implements LinkitettavaJaKopioitav
         setSeuraavaValinnanVaihe(seuraava);
     }
 
-    @JsonProperty(value = "inheritance")
     @Transient
     public Boolean getInheritance() {
         return getMasterValinnanVaihe() != null;

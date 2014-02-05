@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import fi.vm.sade.service.valintaperusteet.dao.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
 import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.UusiHakukohteenValintaperusteRekursio;
@@ -28,13 +29,7 @@ import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.pattern.Patterns;
 import akka.util.Timeout;
-import fi.vm.sade.generic.dao.GenericDAO;
 import fi.vm.sade.kaava.Laskentakaavavalidaattori;
-import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
-import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
-import fi.vm.sade.service.valintaperusteet.dao.HakukohteenValintaperusteDAO;
-import fi.vm.sade.service.valintaperusteet.dao.LaskentakaavaDAO;
-import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.dto.HakukohteenValintaperusteAvaimetDTO;
 import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaDTO;
@@ -100,17 +95,19 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     @Autowired
     private ApplicationContext applicationContext;
 
+    @Autowired
+    private ActorSystem actorSystem;
+
     @Transactional(readOnly = true)
     public Funktiokutsu haeFunktiokutsuRekursiivisesti(final Long id, final boolean laajennaAlakaavat,
             final Set<Long> laskentakaavaIds) throws FunktiokutsuMuodostaaSilmukanException {
 
         // Akka toteutus
-        ActorSystem system = ActorSystem.create("actorSystem");
-        SpringExtProvider.get(system).initialize(applicationContext);
+        SpringExtProvider.get(actorSystem).initialize(applicationContext);
         Timeout timeout = new Timeout(Duration.create(30, "seconds"));
 
-        ActorRef master = system.actorOf(
-                SpringExtProvider.get(system).props("HaeFunktiokutsuRekursiivisestiActorBean"), UUID.randomUUID()
+        ActorRef master = actorSystem.actorOf(
+                SpringExtProvider.get(actorSystem).props("HaeFunktiokutsuRekursiivisestiActorBean"), UUID.randomUUID()
                         .toString());
 
         Future<Object> future = Patterns
@@ -118,10 +115,10 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
 
         try {
             Funktiokutsu funktiokutsu = (Funktiokutsu) Await.result(future, timeout.duration());
-            system.shutdown();
+//            system.shutdown();
             return funktiokutsu;
         } catch (Exception e) {
-            system.shutdown();
+//            system.shutdown();
             if (e instanceof FunktiokutsuMuodostaaSilmukanException) {
                 FunktiokutsuMuodostaaSilmukanException exp = (FunktiokutsuMuodostaaSilmukanException) e;
                 throw new FunktiokutsuMuodostaaSilmukanException(exp.getMessage(), exp.getFunktiokutsuId(),
@@ -160,7 +157,13 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     @Override
     @Transactional
     public Laskentakaava read(Long key) {
-        return haeMallinnettuKaava(key);
+        long beginTime = System.currentTimeMillis();
+        Laskentakaava kaava = haeMallinnettuKaava(key);
+        long endTime = System.currentTimeMillis();
+        long timeTaken = (endTime - beginTime);
+
+        LOGGER.info("Kaava haettu. Aikaa hakuun kului: {} millisekuntia", timeTaken);
+        return kaava;
     }
 
     @Override
@@ -413,12 +416,11 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             Map<String, ValintaperusteDTO> valintaperusteet, Map<String, String> hakukohteenValintaperusteet) {
 
         // Akka toteutus
-        ActorSystem system = ActorSystem.create("actorSystem");
-        SpringExtProvider.get(system).initialize(applicationContext);
+        SpringExtProvider.get(actorSystem).initialize(applicationContext);
         Timeout timeout = new Timeout(Duration.create(30, "seconds"));
 
-        ActorRef master = system.actorOf(
-                SpringExtProvider.get(system).props("HaeValintaperusteetRekursiivisestiActorBean"), UUID.randomUUID()
+        ActorRef master = actorSystem.actorOf(
+                SpringExtProvider.get(actorSystem).props("HaeValintaperusteetRekursiivisestiActorBean"), UUID.randomUUID()
                         .toString());
 
         Future<Object> future = Patterns.ask(master, new UusiValintaperusteRekursio(funktiokutsu.getId(),
@@ -426,9 +428,9 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
 
         try {
             funktiokutsu = (Funktiokutsu) Await.result(future, timeout.duration());
-            system.shutdown();
+            //system.shutdown();
         } catch (Exception e) {
-            system.shutdown();
+            //system.shutdown();
             e.printStackTrace();
         }
     }
@@ -592,11 +594,12 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     @Override
     @Transactional
     public Laskentakaava haeLaskettavaKaava(final Long id, final Laskentamoodi laskentamoodi) {
-        Laskentakaava laskentakaava = laskentakaavaCache.get(id);
-        if (laskentakaava == null) {
-            laskentakaava = haeKokoLaskentakaava(id, true);
-            laskentakaavaCache.addLaskentakaava(laskentakaava, id);
-        }
+//        Laskentakaava laskentakaava = laskentakaavaCache.get(id);
+//        if (laskentakaava == null) {
+//            laskentakaava = haeKokoLaskentakaava(id, true);
+//            laskentakaavaCache.addLaskentakaava(laskentakaava, id);
+//        }
+        Laskentakaava laskentakaava = haeKokoLaskentakaava(id, true);
         validoiFunktiokutsuMoodiaVasten(laskentakaava.getFunktiokutsu(), laskentamoodi);
         return laskentakaava;
     }

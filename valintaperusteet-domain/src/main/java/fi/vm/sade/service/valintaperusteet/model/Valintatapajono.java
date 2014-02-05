@@ -6,23 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.Cacheable;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
-import org.codehaus.jackson.annotate.JsonProperty;
-
-import fi.vm.sade.generic.model.BaseEntity;
 import fi.vm.sade.service.valintaperusteet.dto.model.Tasapistesaanto;
 
 @Entity
@@ -260,13 +245,11 @@ public class Valintatapajono extends BaseEntity implements
         this.poissaOlevaTaytto = poissaOlevaTaytto;
     }
 
-    @JsonProperty("valinnan_vaihe")
     public String getValinnanVaiheId() {
         // Kai oidi olisi parempi palauttaa kuin id
         return valinnanVaihe.getOid();
     }
 
-    @JsonProperty("hakijaryhmat")
     public List<String> getHakijaryhmaIds() {
         List<String> hakijaryhmaIds = new ArrayList<String>();
         if (hakijaryhmat != null) {
@@ -277,7 +260,6 @@ public class Valintatapajono extends BaseEntity implements
         return hakijaryhmaIds;
     }
 
-    @JsonProperty("hakijaryhmat")
     public void setHakijaryhmaIds(List<String> ids) {
 
     }
@@ -330,7 +312,6 @@ public class Valintatapajono extends BaseEntity implements
         return getKopioValintatapajonot();
     }
 
-    @JsonProperty(value = "inheritance")
     @Transient
     public Boolean getInheritance() {
         return getMasterValintatapajono() != null;

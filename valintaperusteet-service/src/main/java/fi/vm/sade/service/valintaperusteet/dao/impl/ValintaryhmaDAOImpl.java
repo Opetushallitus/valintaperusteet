@@ -4,7 +4,7 @@ import com.mysema.query.BooleanBuilder;
 import com.mysema.query.jpa.impl.JPAQuery;
 import com.mysema.query.types.EntityPath;
 import com.mysema.query.types.expr.BooleanExpression;
-import fi.vm.sade.generic.dao.AbstractJpaDAOImpl;
+import fi.vm.sade.service.valintaperusteet.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.model.QHakukohdekoodi;
 import fi.vm.sade.service.valintaperusteet.model.QValintakoekoodi;

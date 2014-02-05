@@ -13,7 +13,7 @@
 
     <context:annotation-config />
 
-    <bean id="genericDAO" class="fi.vm.sade.generic.dao.GenericDAOImpl" />
+    <bean id="genericDAO" class="fi.vm.sade.service.valintaperusteet.dao.impl.GenericDAOImpl" />
     <context:component-scan base-package="fi.vm.sade.service.valintaperusteet.dao.impl" />
 
     <!-- Add EntityManagerFactory (required by jta) support -->
