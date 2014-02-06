@@ -158,8 +158,11 @@ public class LukionValintaperusteet {
         Funktiokutsu painotuksetFunktio = GenericHelper.luoPainotettuKeskiarvo(painotukset
                 .toArray(new GenericHelper.Painotus[painotukset.size()]));
 
+
+        Funktiokutsu pyoristetty = GenericHelper.luoPyoristys(painotuksetFunktio, 2);
+
         return GenericHelper
-                .luoLaskentakaavaJaNimettyFunktio(GenericHelper.luoHylkaaArvovalilla(painotuksetFunktio,
+                .luoLaskentakaavaJaNimettyFunktio(GenericHelper.luoHylkaaArvovalilla(pyoristetty,
                         "Painotettu keskiarvo hylätty", minimi, maksimi),
                         "Lukion valintaperusteet, painotettu keskiarvo");
     }

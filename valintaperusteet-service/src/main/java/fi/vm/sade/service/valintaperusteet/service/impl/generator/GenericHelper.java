@@ -341,6 +341,14 @@ public class GenericHelper {
         return f;
     }
 
+    public static Funktiokutsu luoPyoristys(Funktiokutsu f1, int tarkkuus) {
+        Funktiokutsu f = new Funktiokutsu();
+        f.setFunktionimi(Funktionimi.PYORISTYS);
+        f.getSyoteparametrit().add(luoSyoteparametri("tarkkuus", String.valueOf(tarkkuus)));
+        f.getFunktioargumentit().addAll(luoFunktioargumentit(f1));
+        return f;
+    }
+
     public static Funktiokutsu luoHaeMerkkijonoJaVertaaYhtasuuruus(ValintaperusteViite vp, String vertailtava,
             boolean oletusarvo) {
         Funktiokutsu f = luoHaeMerkkijonoJaVertaaYhtasuuruus(vp, vertailtava);
