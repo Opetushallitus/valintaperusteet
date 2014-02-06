@@ -146,7 +146,7 @@ public class HaeValintaperusteetRekursiivisestiActorBean extends UntypedActor {
                                 max = current;
                             }
                         } catch (NumberFormatException e) {
-                            System.out.println(("Cannot convert max value "+av.getMaxValue()+" to BigDecimal");
+                            System.out.println("Cannot convert max value "+av.getMaxValue()+" to BigDecimal");
                             e.printStackTrace();
                         }
                     }
