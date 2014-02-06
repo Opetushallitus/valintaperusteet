@@ -51,16 +51,16 @@ public class HaeFunktiokutsuRekursiivisestiActorBean extends UntypedActor {
 
     }
 
-//    @Override
-//    public SupervisorStrategy supervisorStrategy() {
-//        return new OneForOneStrategy(5, Duration.create("10 seconds"),
-//                new Function<Throwable, Directive>() {
-//                    public Directive apply(Throwable cause) {
-//                        cause.printStackTrace();
-//                        return SupervisorStrategy.restart();
-//                    }
-//                });
-//    }
+    @Override
+    public SupervisorStrategy supervisorStrategy() {
+        return new OneForOneStrategy(5, Duration.create("10 seconds"),
+                new Function<Throwable, Directive>() {
+                    public Directive apply(Throwable cause) {
+                        cause.printStackTrace();
+                        return SupervisorStrategy.restart();
+                    }
+                });
+    }
 
     public void onReceive(Object message) throws Exception {
 
@@ -150,6 +150,7 @@ public class HaeFunktiokutsuRekursiivisestiActorBean extends UntypedActor {
                 }
                 actorParent.tell(new Status.Failure(ex), ActorRef.noSender());
             }
+            Exception e = (Exception)message;
             getContext().stop(self());
         } else {
             unhandled(message);

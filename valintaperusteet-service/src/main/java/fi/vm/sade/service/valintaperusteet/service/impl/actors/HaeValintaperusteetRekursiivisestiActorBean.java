@@ -13,8 +13,6 @@ import java.util.regex.Pattern;
 import javax.inject.Named;
 
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -47,9 +45,6 @@ import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.UusiVali
 @org.springframework.context.annotation.Scope(value = "prototype")
 public class HaeValintaperusteetRekursiivisestiActorBean extends UntypedActor {
 
-    final static private Logger LOGGER = LoggerFactory.getLogger(HaeValintaperusteetRekursiivisestiActorBean.class
-            .getName());
-
     private int funktiokutsuLapset = 0;
 
     @Autowired
@@ -65,15 +60,15 @@ public class HaeValintaperusteetRekursiivisestiActorBean extends UntypedActor {
 
     }
 
-//    @Override
-//    public SupervisorStrategy supervisorStrategy() {
-//        return new OneForOneStrategy(5, Duration.create("10 seconds"), new Function<Throwable, Directive>() {
-//            public Directive apply(Throwable cause) {
-//                cause.printStackTrace();
-//                return SupervisorStrategy.restart();
-//            }
-//        });
-//    }
+    @Override
+    public SupervisorStrategy supervisorStrategy() {
+        return new OneForOneStrategy(5, Duration.create("10 seconds"), new Function<Throwable, Directive>() {
+            public Directive apply(Throwable cause) {
+                cause.printStackTrace();
+                return SupervisorStrategy.restart();
+            }
+        });
+    }
 
     private String haeTunniste(String mustache, Map<String, String> hakukohteenValintaperusteet) {
         String r = "\\{\\{([A-Za-z0–9\\-_]+)\\.([A-Za-z0–9\\-_]+)\\}\\}";
@@ -140,7 +135,8 @@ public class HaeValintaperusteetRekursiivisestiActorBean extends UntypedActor {
                                 min = current;
                             }
                         } catch (NumberFormatException e) {
-                            LOGGER.error("Cannot convert min value {} to BigDecimal", av.getMaxValue());
+                            System.out.println("Cannot convert min value "+av.getMinValue()+" to BigDecimal");
+                            e.printStackTrace();
                         }
 
                         try {
@@ -150,7 +146,8 @@ public class HaeValintaperusteetRekursiivisestiActorBean extends UntypedActor {
                                 max = current;
                             }
                         } catch (NumberFormatException e) {
-                            LOGGER.error("Cannot convert max value {} to BigDecimal", av.getMaxValue());
+                            System.out.println(("Cannot convert max value "+av.getMaxValue()+" to BigDecimal");
+                            e.printStackTrace();
                         }
                     }
 

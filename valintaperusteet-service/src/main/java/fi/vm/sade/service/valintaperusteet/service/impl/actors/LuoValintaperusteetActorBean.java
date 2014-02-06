@@ -77,16 +77,16 @@ public class LuoValintaperusteetActorBean extends UntypedActor {
 
     }
 
-//    @Override
-//    public SupervisorStrategy supervisorStrategy() {
-//        return new OneForOneStrategy(5, Duration.create("10 seconds"),
-//                new Function<Throwable, Directive>() {
-//                    public Directive apply(Throwable cause) {
-//                        cause.printStackTrace();
-//                        return SupervisorStrategy.restart();
-//                    }
-//                });
-//    }
+    @Override
+    public SupervisorStrategy supervisorStrategy() {
+        return new OneForOneStrategy(5, Duration.create("10 seconds"),
+                new Function<Throwable, Directive>() {
+                    public Directive apply(Throwable cause) {
+                        cause.printStackTrace();
+                        return SupervisorStrategy.restart();
+                    }
+                });
+    }
 
     public void onReceive(Object message) throws Exception {
 
@@ -351,9 +351,7 @@ public class LuoValintaperusteetActorBean extends UntypedActor {
     }
 
     private Laskentakaava asetaValintaryhmaJaTallennaKantaan(Laskentakaava kaava, String valintaryhmaOid) {
-        TransactionStatus tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
         Laskentakaava laskentakaava = laskentakaavaService.insert(kaava, null, valintaryhmaOid);
-        transactionManager.commit(tx);
         return laskentakaava;
     }
 }
