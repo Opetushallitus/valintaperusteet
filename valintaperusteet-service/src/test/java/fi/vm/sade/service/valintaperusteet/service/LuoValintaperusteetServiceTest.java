@@ -922,7 +922,8 @@ public class LuoValintaperusteetServiceTest {
 
         tulos = Laskin.suoritaValintalaskenta(hakukohde2, hakemukset[0],
                 Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaTotuusarvolasku(kaava.getFunktiokutsu()));
-        assertFalse(tulos.getTulos());
+        //assertFalse(tulos.getTulos());
+        assertTrue(tulos.getTulos());
         assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
 
         tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemukset[2],

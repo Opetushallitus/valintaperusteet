@@ -152,6 +152,18 @@ public class PkJaYoPohjaiset {
     public static Laskentakaava luoUrheilijaLisapisteenMahdollisuus() {
         Funktiokutsu[] args = new Funktiokutsu[YhteisetKaavat.HAKUTOIVEIDEN_LKM];
         for (int i = 1; i <= YhteisetKaavat.HAKUTOIVEIDEN_LKM; i++) {
+            // Hakukohdekohtainen tarkistus poistettu
+//            Funktiokutsu kutsu = GenericHelper
+//                    .luoJa(GenericHelper.luoValintaperusteyhtasuuruus(GenericHelper.luoValintaperusteViite(
+//                            preferenceTunniste + i + koulutusIdTunniste, false, Valintaperustelahde.HAETTAVA_ARVO,
+//                            "Hakukohteen OID hakemuksella"), GenericHelper.luoValintaperusteViite(hakukohteenOid, true,
+//                            Valintaperustelahde.HAKUKOHTEEN_ARVO, "Hakukohteen OID")), GenericHelper.luoHaeTotuusarvo(
+//                            GenericHelper.luoValintaperusteViite(preferenceTunniste + i
+//                                    + urheilijanAmmatillisenKoulutuksenLisakysymysTunniste, false,
+//                                    Valintaperustelahde.HAETTAVA_ARVO), false), GenericHelper.luoHaeTotuusarvo(
+//                            GenericHelper.luoValintaperusteViite(urheilijaHakuSallittu, false,
+//                                    Valintaperustelahde.HAKUKOHTEEN_ARVO), false));
+
             Funktiokutsu kutsu = GenericHelper
                     .luoJa(GenericHelper.luoValintaperusteyhtasuuruus(GenericHelper.luoValintaperusteViite(
                             preferenceTunniste + i + koulutusIdTunniste, false, Valintaperustelahde.HAETTAVA_ARVO,
@@ -159,9 +171,8 @@ public class PkJaYoPohjaiset {
                             Valintaperustelahde.HAKUKOHTEEN_ARVO, "Hakukohteen OID")), GenericHelper.luoHaeTotuusarvo(
                             GenericHelper.luoValintaperusteViite(preferenceTunniste + i
                                     + urheilijanAmmatillisenKoulutuksenLisakysymysTunniste, false,
-                                    Valintaperustelahde.HAETTAVA_ARVO), false), GenericHelper.luoHaeTotuusarvo(
-                            GenericHelper.luoValintaperusteViite(urheilijaHakuSallittu, false,
-                                    Valintaperustelahde.HAKUKOHTEEN_ARVO), false));
+                                    Valintaperustelahde.HAETTAVA_ARVO), false));
+
             args[i - 1] = kutsu;
         }
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(GenericHelper.luoTai(args),
