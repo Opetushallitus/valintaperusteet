@@ -164,7 +164,7 @@ public class LukionValintaperusteetTest {
         Lukuarvofunktio lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(laajennaAlakaavat(LukionValintaperusteet.painotettuLukuaineidenKeskiarvo()).getFunktiokutsu());
         Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(hakukohde, hakemus, new ArrayList<Hakemus>(), lasku);
 
-        assertTrue(new BigDecimal("7.1111").compareTo(tulos.getTulos()) == 0);
+        assertTrue(new BigDecimal("7.11").compareTo(tulos.getTulos()) == 0);
         assertEquals(Tila.Tilatyyppi.HYLATTY, tulos.getTila().getTilatyyppi());
     }
 
@@ -525,7 +525,7 @@ public class LukionValintaperusteetTest {
         Lukuarvofunktio lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(laajennaAlakaavat(LukionValintaperusteet.painotettuLukuaineidenKeskiarvo()).getFunktiokutsu());
         Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(hakukohde, hakemus, new ArrayList<Hakemus>(), lasku);
 
-        assertTrue(new BigDecimal("7.6000").compareTo(tulos.getTulos()) == 0);
+        assertTrue(new BigDecimal("7.60").compareTo(tulos.getTulos()) == 0);
         assertEquals(Tila.Tilatyyppi.HYVAKSYTTAVISSA, tulos.getTila().getTilatyyppi());
     }
 
