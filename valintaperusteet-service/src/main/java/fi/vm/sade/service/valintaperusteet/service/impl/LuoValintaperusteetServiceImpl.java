@@ -950,7 +950,10 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
 
     private Laskentakaava asetaValintaryhmaJaTallennaKantaan(Laskentakaava kaava, String valintaryhmaOid) {
-        return laskentakaavaService.insert(kaava, null, valintaryhmaOid);
+        TransactionStatus tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+        Laskentakaava laskentakaava = laskentakaavaService.insert(kaava, null, valintaryhmaOid);
+        transactionManager.commit(tx);
+        return laskentakaava;
     }
 
     @Override
