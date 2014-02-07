@@ -149,21 +149,23 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
                 for (int i = 0; i < valinnanVaiheList.size(); i++) {
                     ValinnanVaihe vaihe = valinnanVaiheList.get(i);
                     if(!vaihe.getAktiivinen()) {
+                        LOG.info("Jätetään käsittelemättä ei-aktiivinen valinnanvaihe");
                         valinnanVaiheList.remove(i);
                     } else if(i == jarjestysluku) {
                         kasiteltava = vaihe;
                     }
                 }
 
+                int todellinenJarjestysluku = jarjestysluku;
                 if(kasiteltava != null) {
-                    jarjestysluku = valinnanVaiheList.indexOf(kasiteltava);
+                    todellinenJarjestysluku = valinnanVaiheList.indexOf(kasiteltava);
                 } else {
-                    LOG.error("Yritetään laskea valinnanvaihetta, joka ei ole aktiivinen!");
+                    LOG.info("Yritetään laskea valinnanvaihetta, joka ei ole aktiivinen");
                     continue;
                 }
 
                 ValintaperusteetTyyppi valinnanVaihe = convertValintaperusteet(kasiteltava,
-                        hakukohde, jarjestysluku);
+                        hakukohde, todellinenJarjestysluku);
                 if (valinnanVaihe != null) {
                     list.add(valinnanVaihe);
                 }
