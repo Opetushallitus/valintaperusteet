@@ -12,6 +12,8 @@ import java.util.regex.Pattern;
 
 import javax.inject.Named;
 
+import akka.event.Logging;
+import akka.event.LoggingAdapter;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -44,6 +46,8 @@ import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.UusiVali
 @Component
 @org.springframework.context.annotation.Scope(value = "prototype")
 public class HaeValintaperusteetRekursiivisestiActorBean extends UntypedActor {
+
+    LoggingAdapter log = Logging.getLogger(getContext().system(), this);
 
     private int funktiokutsuLapset = 0;
 
@@ -135,7 +139,7 @@ public class HaeValintaperusteetRekursiivisestiActorBean extends UntypedActor {
                                 min = current;
                             }
                         } catch (NumberFormatException e) {
-                            System.out.println("Cannot convert min value "+av.getMinValue()+" to BigDecimal");
+                            log.error("Cannot convert min value {} to BigDecimal", av.getMinValue());
                             e.printStackTrace();
                         }
 
@@ -146,7 +150,7 @@ public class HaeValintaperusteetRekursiivisestiActorBean extends UntypedActor {
                                 max = current;
                             }
                         } catch (NumberFormatException e) {
-                            System.out.println("Cannot convert max value "+av.getMaxValue()+" to BigDecimal");
+                            log.error("Cannot convert max value {} to BigDecimal", av.getMaxValue());
                             e.printStackTrace();
                         }
                     }

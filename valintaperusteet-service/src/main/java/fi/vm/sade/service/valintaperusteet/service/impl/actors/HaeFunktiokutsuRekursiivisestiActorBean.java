@@ -1,6 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.service.impl.actors;
 
 import akka.actor.*;
+import akka.event.Logging;
+import akka.event.LoggingAdapter;
 import akka.japi.Function;
 import akka.actor.SupervisorStrategy;
 import akka.actor.SupervisorStrategy.Directive;
@@ -33,6 +35,8 @@ import static fi.vm.sade.service.valintaperusteet.service.impl.actors.creators.S
 @Component
 @org.springframework.context.annotation.Scope(value = "prototype")
 public class HaeFunktiokutsuRekursiivisestiActorBean extends UntypedActor {
+
+    LoggingAdapter log = Logging.getLogger(getContext().system(), this);
 
     private int funktiokutsuLapset = 0;
 
