@@ -162,7 +162,7 @@ public class ValintaperusteServiceTest {
         params = new ArrayList<HakuparametritTyyppi>();
         params.add(getHakuparametritTyyppi("oid21", 2));
         vps = valintaperusteService.haeValintaperusteet(params);
-        assertEquals(0, vps.size());
+        assertEquals(1, vps.size());
 
         params = new ArrayList<HakuparametritTyyppi>();
         params.add(getHakuparametritTyyppi("oid21", 1));
