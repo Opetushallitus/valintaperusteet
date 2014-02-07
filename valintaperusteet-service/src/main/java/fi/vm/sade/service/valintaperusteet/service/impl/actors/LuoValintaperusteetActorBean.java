@@ -2,18 +2,16 @@ package fi.vm.sade.service.valintaperusteet.service.impl.actors;
 
 import akka.actor.*;
 import akka.actor.SupervisorStrategy.Directive;
+import akka.event.Logging;
+import akka.event.LoggingAdapter;
 import akka.japi.Function;
-import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
 import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.*;
-import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuEiOleOlemassaException;
-import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuMuodostaaSilmukanException;
 import fi.vm.sade.service.valintaperusteet.service.impl.LuoValintaperusteetServiceImpl;
 import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.LuoValintaperuste;
-import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.UusiRekursio;
 import fi.vm.sade.service.valintaperusteet.service.impl.generator.PkJaYoPohjaiset;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -23,12 +21,7 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 import scala.concurrent.duration.Duration;
 
 import javax.inject.Named;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-
-import static fi.vm.sade.service.valintaperusteet.service.impl.actors.creators.SpringExtension.SpringExtProvider;
 
 /**
  * Created with IntelliJ IDEA.
@@ -42,6 +35,8 @@ import static fi.vm.sade.service.valintaperusteet.service.impl.actors.creators.S
 @Component
 @org.springframework.context.annotation.Scope(value = "prototype")
 public class LuoValintaperusteetActorBean extends UntypedActor {
+
+    LoggingAdapter log = Logging.getLogger(getContext().system(), this);
 
     @Autowired
     private LaskentakaavaService laskentakaavaService;

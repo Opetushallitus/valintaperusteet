@@ -15,14 +15,14 @@
 	<dependencies>
 		<dependency>
             <groupId>com.wordnik</groupId>
-            <artifactId>swagger-annotations_2.10</artifactId>
-            <scope>provided</scope>
+            <artifactId>swagger-annotations</artifactId>
             <version>${swagger.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-core-asl</artifactId>
-            <version>1.9.11</version>
+            <version>${jackson.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

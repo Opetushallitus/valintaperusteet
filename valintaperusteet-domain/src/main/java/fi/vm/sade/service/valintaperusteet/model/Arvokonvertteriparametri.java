@@ -1,7 +1,5 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
-import org.codehaus.jackson.map.annotate.JsonView;
-
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
