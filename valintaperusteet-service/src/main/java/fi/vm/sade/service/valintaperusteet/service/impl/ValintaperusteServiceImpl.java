@@ -319,6 +319,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
                     FunktiokutsuTyyppi.class);
 
             jarjestyskriteeriTyyppi.setFunktiokutsu(convert);
+            jarjestyskriteeriTyyppi.setNimi(jarjestyskriteeri.getMetatiedot());
 
             jarjestyskriteerit.add(jarjestyskriteeriTyyppi);
         }
