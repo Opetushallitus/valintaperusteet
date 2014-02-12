@@ -319,6 +319,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
                     FunktiokutsuTyyppi.class);
 
             jarjestyskriteeriTyyppi.setFunktiokutsu(convert);
+            jarjestyskriteeriTyyppi.setNimi(jarjestyskriteeri.getMetatiedot());
 
             jarjestyskriteerit.add(jarjestyskriteeriTyyppi);
         }
@@ -330,10 +331,11 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
     @Secured({ CRUD })
     public void tuoHakukohde(@WebParam(name = "hakukohde", targetNamespace = "") HakukohdeImportTyyppi hakukohde)
             throws GenericFault {
-        try {
-            hakukohdeImportService.tuoHakukohde(hakukohde);
-        } catch (Exception e) {
-            LOG.error("Hakukohteen tuominen epäonnistui.", e);
-        }
+//        try {
+//            hakukohdeImportService.tuoHakukohde(hakukohde);
+//        } catch (Exception e) {
+//            LOG.error("Hakukohteen tuominen epäonnistui.", e);
+//        }
+        hakukohdeImportService.tuoHakukohde(hakukohde);
     }
 }

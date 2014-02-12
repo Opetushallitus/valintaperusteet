@@ -237,7 +237,10 @@ public class LukionValintaperusteet {
                 pkAineet.getLaskentakaava(Aineet.b33Kieli) };
 
         Funktiokutsu keskiarvo = GenericHelper.luoKeskiarvo(args);
-        Laskentakaava laskentakaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(keskiarvo,
+
+        Funktiokutsu pyoristetty = GenericHelper.luoPyoristys(keskiarvo, 2);
+
+        Laskentakaava laskentakaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(pyoristetty,
                 "Kaikkien aineiden keskiarvo, lukiokoulutus");
         return laskentakaava;
     }
