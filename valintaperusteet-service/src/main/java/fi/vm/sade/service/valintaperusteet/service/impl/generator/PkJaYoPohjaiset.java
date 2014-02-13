@@ -127,7 +127,7 @@ public class PkJaYoPohjaiset {
 
     public static Laskentakaava luoValintakoekaava(String nimi) {
         ValintaperusteViite valintaperuste = GenericHelper.luoValintaperusteViite(nimi, true,
-                Valintaperustelahde.SYOTETTAVA_ARVO);
+                Valintaperustelahde.SYOTETTAVA_ARVO, "Valintakoe");
 
         List<Arvovalikonvertteriparametri> konvs = new ArrayList<Arvovalikonvertteriparametri>();
 
@@ -141,7 +141,7 @@ public class PkJaYoPohjaiset {
 
     public static Laskentakaava luoLisapistekaava(String nimi) {
         ValintaperusteViite valintaperuste = GenericHelper.luoValintaperusteViite(nimi, true,
-                Valintaperustelahde.SYOTETTAVA_ARVO);
+                Valintaperustelahde.SYOTETTAVA_ARVO, "Lisäpiste");
         List<Arvovalikonvertteriparametri> konvs = new ArrayList<Arvovalikonvertteriparametri>();
         konvs.add(GenericHelper.luoArvovalikonvertteriparametri(0.0, 3.0));
 
@@ -198,7 +198,7 @@ public class PkJaYoPohjaiset {
 
     public static Funktiokutsu luoKielikoeSuoritettuFunktiokutsu() {
         return GenericHelper.luoHaeTotuusarvo(GenericHelper.luoValintaperusteViite(kielikoetunniste, false,
-                Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO, "Kielikokeen tunniste", true), false);
+                Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO, "Kielikoe", true), false);
     }
 
     /**
