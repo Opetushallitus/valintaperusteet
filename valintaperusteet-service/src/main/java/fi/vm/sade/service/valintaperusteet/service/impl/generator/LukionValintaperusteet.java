@@ -191,7 +191,7 @@ public class LukionValintaperusteet {
         konvs.add(GenericHelper.luoArvovalikonvertteriparametri(alaraja, ylaraja));
 
         Funktiokutsu funktiokutsu = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(paasykoeTunniste,
-                true, Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO, "", true), konvs);
+                true, Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO, "Pääsykoe", true), konvs);
 
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
                 GenericHelper.luoHylkaaArvovalilla(funktiokutsu, "Pääsykoetulos hylätty", minimi, maksimi),
@@ -210,7 +210,7 @@ public class LukionValintaperusteet {
         konvs.add(GenericHelper.luoArvovalikonvertteriparametri(alaraja, ylaraja));
 
         Funktiokutsu funktiokutsu = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(
-                lisanayttoTunniste, true, Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO, "", true), konvs);
+                lisanayttoTunniste, true, Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO, "Lisänäyttö", true), konvs);
 
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
                 GenericHelper.luoHylkaaArvovalilla(funktiokutsu, "Pääsykoetulos hylätty", minimi, maksimi),
