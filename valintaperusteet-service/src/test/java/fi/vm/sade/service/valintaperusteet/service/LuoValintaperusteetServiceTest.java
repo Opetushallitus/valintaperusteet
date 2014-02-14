@@ -647,7 +647,7 @@ public class LuoValintaperusteetServiceTest {
     @Test
     public void testHakutoivejarjestystasapistekaavaEnsimmainen() {
         Hakemus hakemus = luoPerushakemus();
-        final BigDecimal odotettuTulos = new BigDecimal("10.0");
+        final BigDecimal odotettuTulos = new BigDecimal("5.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoHakutoivejarjestysTasapistekaava());
         Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemus, hakemukset(hakemus),
@@ -660,7 +660,7 @@ public class LuoValintaperusteetServiceTest {
     @Test
     public void testHakutoivejarjestystasapistekaavaToinen() {
         Hakemus hakemus = luoPerushakemus();
-        final BigDecimal odotettuTulos = new BigDecimal("9.0");
+        final BigDecimal odotettuTulos = new BigDecimal("4.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoHakutoivejarjestysTasapistekaava());
         Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE2, hakemus, hakemukset(hakemus),
@@ -673,7 +673,7 @@ public class LuoValintaperusteetServiceTest {
     @Test
     public void testHakutoivejarjestystasapistekaavaKolmas() {
         Hakemus hakemus = luoPerushakemus();
-        final BigDecimal odotettuTulos = new BigDecimal("8.0");
+        final BigDecimal odotettuTulos = new BigDecimal("3.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoHakutoivejarjestysTasapistekaava());
         Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE3, hakemus, hakemukset(hakemus),
@@ -686,7 +686,7 @@ public class LuoValintaperusteetServiceTest {
     @Test
     public void testHakutoivejarjestystasapistekaavaNeljas() {
         Hakemus hakemus = luoPerushakemus();
-        final BigDecimal odotettuTulos = new BigDecimal("7.0");
+        final BigDecimal odotettuTulos = new BigDecimal("2.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoHakutoivejarjestysTasapistekaava());
         Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE4, hakemus, hakemukset(hakemus),
@@ -699,7 +699,7 @@ public class LuoValintaperusteetServiceTest {
     @Test
     public void testHakutoivejarjestystasapistekaavaViides() {
         Hakemus hakemus = luoPerushakemus();
-        final BigDecimal odotettuTulos = new BigDecimal("6.0");
+        final BigDecimal odotettuTulos = new BigDecimal("1.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoHakutoivejarjestysTasapistekaava());
         Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE5, hakemus, hakemukset(hakemus),
