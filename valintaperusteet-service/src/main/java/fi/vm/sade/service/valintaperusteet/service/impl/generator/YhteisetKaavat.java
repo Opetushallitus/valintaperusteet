@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class YhteisetKaavat {
 
-    public static final int HAKUTOIVEIDEN_LKM = 10;
+    public static final int HAKUTOIVEIDEN_LKM = 5;
 
     public static Laskentakaava luoHakutoivejarjestysTasapistekaava(String nimi) {
         Funktiokutsu nolla = GenericHelper.luoLukuarvo(0.0);
