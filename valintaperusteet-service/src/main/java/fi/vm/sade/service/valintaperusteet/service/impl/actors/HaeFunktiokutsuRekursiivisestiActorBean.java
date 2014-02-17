@@ -60,6 +60,7 @@ public class HaeFunktiokutsuRekursiivisestiActorBean extends UntypedActor {
         return new OneForOneStrategy(5, Duration.create("10 seconds"),
                 new Function<Throwable, Directive>() {
                     public Directive apply(Throwable cause) {
+                        log.error("Virhe laskentakaavan haussa (HaeFunktiokutsuRekursiivisestiActorBean). Syy: {}, viesti:{}", cause.getCause(), cause.getMessage());
                         cause.printStackTrace();
                         return SupervisorStrategy.restart();
                     }
@@ -149,12 +150,13 @@ public class HaeFunktiokutsuRekursiivisestiActorBean extends UntypedActor {
                 if (message instanceof FunktiokutsuMuodostaaSilmukanException) {
                     FunktiokutsuMuodostaaSilmukanException exp = (FunktiokutsuMuodostaaSilmukanException)message;
                     ex =  new FunktiokutsuMuodostaaSilmukanException(exp.getMessage(), exp.getFunktiokutsuId(), exp.getFunktionimi(),exp.getLaskentakaavaId());
-                }  else {
+                } else if (message instanceof FunktiokutsuEiOleOlemassaException) {
                     ex = new FunktiokutsuEiOleOlemassaException("Funktiokutsu (" + id + ") ei ole olemassa", id);
+                }  else {
+                    ex = (Exception)message;
                 }
                 actorParent.tell(new Status.Failure(ex), ActorRef.noSender());
             }
-            Exception e = (Exception)message;
             getContext().stop(self());
         } else {
             unhandled(message);

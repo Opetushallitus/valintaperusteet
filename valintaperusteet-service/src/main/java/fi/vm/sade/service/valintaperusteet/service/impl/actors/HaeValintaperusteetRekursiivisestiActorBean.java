@@ -68,6 +68,7 @@ public class HaeValintaperusteetRekursiivisestiActorBean extends UntypedActor {
     public SupervisorStrategy supervisorStrategy() {
         return new OneForOneStrategy(5, Duration.create("10 seconds"), new Function<Throwable, Directive>() {
             public Directive apply(Throwable cause) {
+                log.error("Virhe valintaperusteiden haussa (HaeValintaperusteetRekursiivisestiActorBean). Syy: {}, viesti:{}", cause.getCause(), cause.getMessage());
                 cause.printStackTrace();
                 return SupervisorStrategy.restart();
             }

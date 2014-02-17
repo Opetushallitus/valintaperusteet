@@ -77,6 +77,7 @@ public class LuoValintaperusteetActorBean extends UntypedActor {
         return new OneForOneStrategy(5, Duration.create("10 seconds"),
                 new Function<Throwable, Directive>() {
                     public Directive apply(Throwable cause) {
+                        log.error("Virhe valintaperusteiden luonnissa (LuoValintaperusteetActorBean). Syy: {}, viesti:{}", cause.getCause(), cause.getMessage());
                         cause.printStackTrace();
                         return SupervisorStrategy.restart();
                     }

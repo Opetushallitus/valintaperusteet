@@ -124,8 +124,11 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
                 FunktiokutsuMuodostaaSilmukanException exp = (FunktiokutsuMuodostaaSilmukanException) e;
                 throw new FunktiokutsuMuodostaaSilmukanException(exp.getMessage(), exp.getFunktiokutsuId(),
                         exp.getFunktionimi(), exp.getLaskentakaavaId());
-            } else {
+            } else if (e instanceof FunktiokutsuEiOleOlemassaException) {
                 throw new FunktiokutsuEiOleOlemassaException("Funktiokutsu (" + id + ") ei ole olemassa", id);
+            } else {
+                LOGGER.error("Virhe laskentakaavan haussa. Syy: {}, viesti:{}", e.getCause(), e.getMessage());
+                throw new FunktiokutsuEiOleOlemassaException("Odottomaton virhe haettaessa funktiokutsua "+id+": "+e.getCause(), id);
             }
 
         }
