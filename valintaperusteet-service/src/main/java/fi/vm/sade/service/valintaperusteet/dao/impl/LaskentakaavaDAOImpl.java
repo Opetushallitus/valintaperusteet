@@ -35,13 +35,6 @@ public class LaskentakaavaDAOImpl extends AbstractJpaDAOImpl<Laskentakaava, Long
         QFunktioargumentti fa = QFunktioargumentti.funktioargumentti;
 
         Laskentakaava laskentakaava = from(lk).setHint("org.hibernate.cacheable", Boolean.TRUE)
-                .leftJoin(lk.funktiokutsu, fk)
-                .leftJoin(fk.arvokonvertteriparametrit)
-                .leftJoin(fk.arvovalikonvertteriparametrit)
-                .leftJoin(fk.syoteparametrit)
-                .leftJoin(fk.funktioargumentit, fa)
-                .leftJoin(fa.laskentakaavaChild)
-                .leftJoin(fk.valintaperusteviitteet)
                 .where(lk.id.eq(id)).distinct().singleResult(lk);
 
         return laskentakaava;

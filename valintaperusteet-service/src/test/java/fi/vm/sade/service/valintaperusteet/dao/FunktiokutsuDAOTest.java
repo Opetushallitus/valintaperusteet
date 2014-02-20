@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import fi.vm.sade.service.valintaperusteet.model.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi;
-import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti;
-import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
 
 /**
  * User: kwuoti Date: 18.1.2013 Time: 10.04
@@ -39,6 +38,9 @@ public class FunktiokutsuDAOTest {
 
     @Autowired
     private FunktiokutsuDAO funktiokutsuDAO;
+
+    @Autowired
+    private GenericDAO dao;
 
     @Test
     public void testGetLukuarvo() {
@@ -131,5 +133,22 @@ public class FunktiokutsuDAOTest {
     public void testFindFunktiokutsuByHakukohdeOids() {
         List<Funktiokutsu> kaavat = funktiokutsuDAO.findFunktiokutsuByHakukohdeOids("oid17");
         assertEquals(2, kaavat.size());
+    }
+
+    @Test
+    public void testGetHylkaysperuste() {
+        final Long id = 708L;
+
+        Funktiokutsu funktiokutsu = funktiokutsuDAO.getFunktiokutsu(id);
+
+        for (Arvokonvertteriparametri ak : funktiokutsu.getArvokonvertteriparametrit()) {
+            TekstiRyhma ryhma = ak.getKuvaukset();
+            if(ryhma.getId().equals(1L)) {
+                assertEquals(3, ryhma.getTekstit().size());
+            } else {
+                assertEquals(1, ryhma.getTekstit().size());
+            }
+        }
+
     }
 }

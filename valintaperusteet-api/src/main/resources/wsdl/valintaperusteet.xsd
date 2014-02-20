@@ -112,6 +112,7 @@
                 <xs:sequence>
                     <xs:element name="arvo" type="xs:string" minOccurs="1" maxOccurs="1"/>
                     <xs:element name="hylkaysperuste" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                    <xs:element name="kuvaukset" type="tns:TekstiRyhmaTyyppi" minOccurs="0" maxOccurs="1"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
@@ -170,6 +171,25 @@
             <xs:enumeration value="ARVONTA"/>
             <xs:enumeration value="YLITAYTTO"/>
             <xs:enumeration value="ALITAYTTO"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="TekstiRyhmaTyyppi">
+        <xs:sequence>
+            <xs:element name="tekstit" type="tns:LokalisoituTekstiTyyppi" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="LokalisoituTekstiTyyppi">
+        <xs:attribute name="teksti" type="xs:string" use="required"/>
+        <xs:attribute name="kieli" type="tns:KieliTyyppi" use="required"/>
+    </xs:complexType>
+
+    <xs:simpleType name="KieliTyyppi">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="EN"/>
+            <xs:enumeration value="FI"/>
+            <xs:enumeration value="SV"/>
         </xs:restriction>
     </xs:simpleType>
 

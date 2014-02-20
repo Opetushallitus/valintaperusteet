@@ -934,7 +934,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                         lkPeruskaava, lkTasasijakriteerit, kielikoeLaskentakaava);
 
                 ActorRef master = actorSystem.actorOf(
-                        SpringExtProvider.get(actorSystem).props("LuoValintaperusteetActorBean"), UUID.randomUUID()
+                        SpringExtProvider.get(actorSystem).props("LuoValintaperusteetActorBean").withDispatcher("thread-pool-dispatcher"), UUID.randomUUID()
                         .toString());
                 master.tell(peruste, ActorRef.noSender());
 

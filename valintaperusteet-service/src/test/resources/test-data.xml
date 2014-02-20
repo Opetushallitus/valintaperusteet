@@ -291,16 +291,29 @@
                           kuvaus="kuvaus"
                           on_pakollinen="true" funktiokutsu_id="708" indeksi="1"/>
     <funktioargumentti id="709" version="0" funktiokutsuparent_id="708" funktiokutsuchild_id="1" indeksi="1"/>
+
+    <tekstiryhma id="1" version="0" />
+    <tekstiryhma id="2" version="0" />
+
+    <lokalisoitu_teksti id="1" teksti="Tämä on hylkäysperuste teksti" kieli="FI" version="0" tekstiryhma_id="1" />
+    <lokalisoitu_teksti id="2" teksti="This is text" kieli="EN" version="0" tekstiryhma_id="1" />
+    <lokalisoitu_teksti id="3" teksti="Samma på svenska" kieli="SV" version="0" tekstiryhma_id="1" />
+
+    <lokalisoitu_teksti id="4" teksti="Samma på svenska" kieli="SV" version="0" tekstiryhma_id="2" />
+
     <arvokonvertteriparametri id="519" version="0" paluuarvo="10.0" arvo="{{hakukohde.av1_arvo}}"
                               hylkaysperuste="{{hakukohde.av1_hp}}"
-                              funktiokutsu_id="708"/>
+                              funktiokutsu_id="708" tekstiryhma_id="2" />
     <arvokonvertteriparametri id="520" version="0" paluuarvo="20.0" arvo="{{hakukohde.av2_arvo}}" hylkaysperuste="false"
-                              funktiokutsu_id="708"/>
+                              funktiokutsu_id="708" tekstiryhma_id="2" />
+
+
+
     <arvokonvertteriparametri id="521" version="0" paluuarvo="30.0" arvo="6.0" hylkaysperuste="true"
-                              funktiokutsu_id="708"/>
+                              funktiokutsu_id="708"  tekstiryhma_id="1" />
 
     <laskentakaava id="418" version="0" funktiokutsu_id="708" nimi="jeppis" on_luonnos="false"
-                   tyyppi="LUKUARVOFUNKTIO"/>
+                   tyyppi="LUKUARVOFUNKTIO" />
 
     <funktiokutsu tallenna_tulos="false" id="709" version="0" funktionimi="KONVERTOILUKUARVO"/>
     <funktioargumentti id="710" version="0" funktiokutsuparent_id="709" laskentakaavachild_id="418" indeksi="1"/>

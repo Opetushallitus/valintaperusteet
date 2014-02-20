@@ -3,6 +3,9 @@ package fi.vm.sade.service.valintaperusteet.dto;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * User: wuoti
  * Date: 2.12.2013
@@ -19,6 +22,9 @@ public class ArvokonvertteriparametriDTO {
 
     @ApiModelProperty(value = "Hylkäysperuste")
     private String hylkaysperuste;
+
+    @ApiModelProperty(value = "Hylkäysperusteen kuvaukset")
+    private Set<KuvausDTO> kuvaukset = new HashSet<KuvausDTO>();
 
     public String getPaluuarvo() {
         return paluuarvo;
@@ -42,5 +48,13 @@ public class ArvokonvertteriparametriDTO {
 
     public void setHylkaysperuste(String hylkaysperuste) {
         this.hylkaysperuste = hylkaysperuste;
+    }
+
+    public Set<KuvausDTO> getKuvaukset() {
+        return kuvaukset;
+    }
+
+    public void setKuvaukset(Set<KuvausDTO> kuvaukset) {
+        this.kuvaukset = kuvaukset;
     }
 }
