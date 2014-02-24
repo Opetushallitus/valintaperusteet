@@ -206,7 +206,7 @@ public class HaeValintaperusteetRekursiivisestiActorBean extends UntypedActor {
                 for (Funktioargumentti arg : original.getFunktioargumentit()) {
                     ActorSystem system = getContext().system();
                     ActorRef child = getContext().actorOf(
-                            SpringExtProvider.get(system).props("HaeValintaperusteetRekursiivisestiActorBean"),
+                            SpringExtProvider.get(system).props("HaeValintaperusteetRekursiivisestiActorBean").withDispatcher("default-dispatcher"),
                             UUID.randomUUID().toString().replaceAll("-", ""));
                     if (arg.getFunktiokutsuChild() != null) {
                         child.tell(

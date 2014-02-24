@@ -108,7 +108,8 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
         Timeout timeout = new Timeout(Duration.create(30, "seconds"));
 
         ActorRef master = system.actorOf(
-                SpringExtProvider.get(system).props("HaeFunktiokutsuRekursiivisestiActorBean"), UUID.randomUUID()
+                SpringExtProvider.get(system).props("HaeFunktiokutsuRekursiivisestiActorBean").withDispatcher("default-dispatcher")
+                , UUID.randomUUID()
                         .toString());
 
         Future<Object> future = Patterns
@@ -425,7 +426,8 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
         Timeout timeout = new Timeout(Duration.create(30, "seconds"));
 
         ActorRef master = system.actorOf(
-                SpringExtProvider.get(system).props("HaeValintaperusteetRekursiivisestiActorBean"), UUID.randomUUID()
+                SpringExtProvider.get(system).props("HaeValintaperusteetRekursiivisestiActorBean").withDispatcher("default-dispatcher")
+                , UUID.randomUUID()
                         .toString());
 
         Future<Object> future = Patterns.ask(master, new UusiValintaperusteRekursio(funktiokutsu.getId(),
@@ -462,7 +464,8 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
         Timeout timeout = new Timeout(Duration.create(30, "seconds"));
 
         ActorRef master = system.actorOf(
-                SpringExtProvider.get(system).props("HaeHakukohteenValintaperusteetRekursiivisestiActorBean"), UUID.randomUUID()
+                SpringExtProvider.get(system).props("HaeHakukohteenValintaperusteetRekursiivisestiActorBean").withDispatcher("default-dispatcher")
+                , UUID.randomUUID()
                 .toString());
 
         Future<Object> future = Patterns.ask(master, new UusiHakukohteenValintaperusteRekursio(funktiokutsu.getId(),
@@ -599,12 +602,12 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     @Override
     @Transactional
     public Laskentakaava haeLaskettavaKaava(final Long id, final Laskentamoodi laskentamoodi) {
-//        Laskentakaava laskentakaava = laskentakaavaCache.get(id);
-//        if (laskentakaava == null) {
-//            laskentakaava = haeKokoLaskentakaava(id, true);
-//            laskentakaavaCache.addLaskentakaava(laskentakaava, id);
-//        }
-        Laskentakaava laskentakaava = haeKokoLaskentakaava(id, true);
+        Laskentakaava laskentakaava = laskentakaavaCache.get(id);
+        if (laskentakaava == null) {
+            laskentakaava = haeKokoLaskentakaava(id, true);
+            laskentakaavaCache.addLaskentakaava(laskentakaava, id);
+        }
+
         validoiFunktiokutsuMoodiaVasten(laskentakaava.getFunktiokutsu(), laskentamoodi);
         return laskentakaava;
     }

@@ -1,9 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
-import javax.persistence.Cacheable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * User: kwuoti
@@ -20,6 +19,10 @@ public class Arvokonvertteriparametri extends Konvertteriparametri {
     @Column(name = "hylkaysperuste", nullable = false)
     private String hylkaysperuste;
 
+    @JoinColumn(name = "tekstiryhma_id", nullable = true)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    private TekstiRyhma kuvaukset;
+
     public String getArvo() {
         return arvo;
     }
@@ -34,5 +37,13 @@ public class Arvokonvertteriparametri extends Konvertteriparametri {
 
     public void setHylkaysperuste(String hylkaysperuste) {
         this.hylkaysperuste = hylkaysperuste;
+    }
+
+    public TekstiRyhma getKuvaukset() {
+        return kuvaukset;
+    }
+
+    public void setKuvaukset(TekstiRyhma kuvaukset) {
+        this.kuvaukset = kuvaukset;
     }
 }

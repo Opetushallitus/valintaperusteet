@@ -29,6 +29,8 @@
         <class>fi.vm.sade.service.valintaperusteet.model.ValintaperusteViite</class>
         <class>fi.vm.sade.service.valintaperusteet.model.Valintaryhma</class>
         <class>fi.vm.sade.service.valintaperusteet.model.Organisaatio</class>
+        <class>fi.vm.sade.service.valintaperusteet.model.LokalisoituTeksti</class>
+        <class>fi.vm.sade.service.valintaperusteet.model.TekstiRyhma</class>
         <shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
 
         <properties>

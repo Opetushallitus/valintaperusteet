@@ -214,7 +214,7 @@ public class HaeHakukohteenValintaperusteetRekursiivisestiActorBean extends Unty
                 for (Funktioargumentti arg : original.getFunktioargumentit()) {
                     ActorSystem system = getContext().system();
                     ActorRef child = getContext().actorOf(
-                            SpringExtProvider.get(system).props("HaeHakukohteenValintaperusteetRekursiivisestiActorBean"),
+                            SpringExtProvider.get(system).props("HaeHakukohteenValintaperusteetRekursiivisestiActorBean").withDispatcher("default-dispatcher"),
                             UUID.randomUUID().toString().replaceAll("-", ""));
                     if (arg.getFunktiokutsuChild() != null) {
                         child.tell(

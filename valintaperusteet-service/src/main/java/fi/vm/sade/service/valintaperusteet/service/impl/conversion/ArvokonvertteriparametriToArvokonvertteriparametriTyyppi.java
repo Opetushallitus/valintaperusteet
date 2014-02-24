@@ -1,7 +1,10 @@
 package fi.vm.sade.service.valintaperusteet.service.impl.conversion;
 
 import fi.vm.sade.service.valintaperusteet.model.Arvokonvertteriparametri;
+import fi.vm.sade.service.valintaperusteet.model.LokalisoituTeksti;
+import fi.vm.sade.service.valintaperusteet.model.TekstiRyhma;
 import fi.vm.sade.service.valintaperusteet.schema.ArvokonvertteriparametriTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.TekstiRyhmaTyyppi;
 import org.springframework.core.convert.converter.Converter;
 
 /**
@@ -20,6 +23,13 @@ public class ArvokonvertteriparametriToArvokonvertteriparametriTyyppi implements
         tyyppi.setArvo(arvokonvertteriparametri.getArvo());
         tyyppi.setHylkaysperuste(arvokonvertteriparametri.getHylkaysperuste());
         tyyppi.setPaluuarvo(arvokonvertteriparametri.getPaluuarvo());
+
+        LokalisoituTekstiToLokalisoituTekstiTyyppiConverter converter = new LokalisoituTekstiToLokalisoituTekstiTyyppiConverter();
+        TekstiRyhmaTyyppi ryhma = new TekstiRyhmaTyyppi();
+        for (LokalisoituTeksti k : arvokonvertteriparametri.getKuvaukset().getTekstit()) {
+            ryhma.getTekstit().add(converter.convert(k));
+        }
+        tyyppi.setKuvaukset(ryhma);
 
         return tyyppi;
     }
