@@ -4,8 +4,6 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRU
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ;
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE;
 
-import java.util.List;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -46,6 +44,10 @@ public class ValintakoeResourceImpl implements ValintakoeResource {
 	@Autowired
 	private ValintaperusteetModelMapper modelMapper;
 
+	/**
+	 * @Transactional Heittaa lazy initin. Ehka modelmapper servicen puolelle?
+	 */
+	@Transactional
 	@GET
 	@Path("/{oid}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -57,16 +59,15 @@ public class ValintakoeResourceImpl implements ValintakoeResource {
 				ValintakoeDTO.class);
 	}
 
-	@Transactional
-	@GET
-	@Path("/")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Secured({ READ, UPDATE, CRUD })
-	@ApiOperation(value = "Hakee valintakokeet", response = List.class)
-	public List<ValintakoeDTO> readAll() {
-		return modelMapper.mapList(valintakoeService.readAll(),
-				ValintakoeDTO.class);
-	}
+	// @Transactional
+	// @GET
+	// @Produces(MediaType.APPLICATION_JSON)
+	// @Secured({ READ, UPDATE, CRUD })
+	// @ApiOperation(value = "Hakee valintakokeet", response = List.class)
+	// public List<ValintakoeDTO> readAll() {
+	// return modelMapper.mapList(valintakoeService.readAll(),
+	// ValintakoeDTO.class);
+	// }
 
 	@POST
 	@Path("/{oid}")

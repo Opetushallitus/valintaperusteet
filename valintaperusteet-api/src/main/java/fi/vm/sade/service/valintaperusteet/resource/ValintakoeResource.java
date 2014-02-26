@@ -1,7 +1,5 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
-import java.util.List;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -20,10 +18,10 @@ import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
 @Path("valintakoe")
 public interface ValintakoeResource {
 
-	@GET
-	@Path("/")
-	@Produces(MediaType.APPLICATION_JSON)
-	List<ValintakoeDTO> readAll();
+	// @GET
+	// @Path("/")
+	// @Produces(MediaType.APPLICATION_JSON)
+	// List<ValintakoeDTO> readAll();
 
 	@GET
 	@Path("/{oid}")
