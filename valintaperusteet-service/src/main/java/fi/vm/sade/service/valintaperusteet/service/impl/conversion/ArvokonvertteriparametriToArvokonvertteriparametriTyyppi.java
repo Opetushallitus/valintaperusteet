@@ -7,6 +7,8 @@ import fi.vm.sade.service.valintaperusteet.schema.ArvokonvertteriparametriTyyppi
 import fi.vm.sade.service.valintaperusteet.schema.TekstiRyhmaTyyppi;
 import org.springframework.core.convert.converter.Converter;
 
+import java.util.Set;
+
 /**
  * Created with IntelliJ IDEA.
  * User: jukais
@@ -26,8 +28,10 @@ public class ArvokonvertteriparametriToArvokonvertteriparametriTyyppi implements
 
         LokalisoituTekstiToLokalisoituTekstiTyyppiConverter converter = new LokalisoituTekstiToLokalisoituTekstiTyyppiConverter();
         TekstiRyhmaTyyppi ryhma = new TekstiRyhmaTyyppi();
-        for (LokalisoituTeksti k : arvokonvertteriparametri.getKuvaukset().getTekstit()) {
-            ryhma.getTekstit().add(converter.convert(k));
+        if (arvokonvertteriparametri.getKuvaukset() != null && arvokonvertteriparametri.getKuvaukset().getTekstit() != null) {
+            for (LokalisoituTeksti k : arvokonvertteriparametri.getKuvaukset().getTekstit()) {
+                ryhma.getTekstit().add(converter.convert(k));
+            }
         }
         tyyppi.setKuvaukset(ryhma);
 
