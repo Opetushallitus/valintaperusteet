@@ -1,8 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD;
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ;
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,7 @@ import javax.jws.WebParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import fi.vm.sade.generic.service.conversion.SadeConversionService;
@@ -93,7 +93,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
     private HakukohdeImportService hakukohdeImportService;
 
     @Override
-    @Secured({ READ, UPDATE, CRUD })
+    @PreAuthorize(READ_UPDATE_CRUD)
     public List<ValintatapajonoTyyppi> haeValintatapajonotSijoittelulle(
             @WebParam(name = "hakukohdeOid", targetNamespace = "") String hakukohdeOid) throws GenericFault {
         List<Valintatapajono> jonot = valintatapajonoDAO.haeValintatapajonotSijoittelulle(hakukohdeOid);
@@ -102,7 +102,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
     }
 
     @Override
-    @Secured({ READ, UPDATE, CRUD })
+    @PreAuthorize(READ_UPDATE_CRUD)
     public List<ValintaperusteetTyyppi> haeValintaperusteet(
             @WebParam(name = "hakuparametrit", targetNamespace = "") List<HakuparametritTyyppi> hakuparametrit)
             throws GenericFault {
@@ -328,7 +328,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
     }
 
     @Override
-    @Secured({ CRUD })
+    @PreAuthorize(CRUD)
     public void tuoHakukohde(@WebParam(name = "hakukohde", targetNamespace = "") HakukohdeImportTyyppi hakukohde)
             throws GenericFault {
 //        try {

@@ -1,8 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.resource.impl;
 
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD;
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ;
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +25,6 @@ import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapp
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
@@ -100,7 +99,7 @@ public class HakukohdeResourceImpl implements HakukohdeResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Secured({ READ, UPDATE, CRUD })
+    @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Hakee hakukohteita. Joko kaikki tai päätason hakukohteet.", response = HakukohdeViiteDTO.class)
     public List<HakukohdeViiteDTO> query(
             @QueryParam("paataso") @DefaultValue("false") @ApiParam(name = "paataso", value = "Haetaanko päätason hakukohteet vai kaikki") boolean paataso) {
@@ -118,7 +117,7 @@ public class HakukohdeResourceImpl implements HakukohdeResource {
     @GET
     @Path("/{oid}")
     @Produces(MediaType.APPLICATION_JSON)
-    @Secured({ READ, UPDATE, CRUD })
+    @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Hakee hakukohteen OID:n perusteella", response = HakukohdeViiteDTO.class)
     @ApiResponses(value = { @ApiResponse(code = 404, message = "Hakukohdetta ei löydy"), })
     public HakukohdeViiteDTO queryFull(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
@@ -132,7 +131,7 @@ public class HakukohdeResourceImpl implements HakukohdeResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Secured({ CRUD })
+    @PreAuthorize(CRUD)
     @ApiOperation(value = "Lisää hakukohteen valintaryhmään (tai juureen, jos valintaryhmän OID:a ei ole annettu)")
     public Response insert(
             @ApiParam(value = "Lisättävä hakukohde ja valintaryhmä", required = true) HakukohdeInsertDTO hakukohde) {
@@ -152,7 +151,7 @@ public class HakukohdeResourceImpl implements HakukohdeResource {
     @Path("/{oid}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Secured({ UPDATE, CRUD })
+    @PreAuthorize(UPDATE_CRUD)
     @ApiOperation(value = "Päivittää hakukohdetta OID:n perusteella")
     public Response update(
             @ApiParam(value = "Päivitettävän hakukohteen OID", required = true) @PathParam("oid") String oid,
@@ -170,7 +169,7 @@ public class HakukohdeResourceImpl implements HakukohdeResource {
     @GET
     @Path("/{oid}/valinnanvaihe")
     @Produces(MediaType.APPLICATION_JSON)
-    @Secured({ READ, UPDATE, CRUD })
+    @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Hakee hakukohteen valinnan vaiheet OID:n perusteella", response = ValinnanVaiheDTO.class)
     public List<ValinnanVaiheDTO> valinnanVaihesForHakukohde(
             @ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
@@ -180,7 +179,7 @@ public class HakukohdeResourceImpl implements HakukohdeResource {
     @GET
     @Path("/{oid}/kuuluuSijoitteluun")
     @Produces(MediaType.APPLICATION_JSON)
-    @Secured({ READ, UPDATE, CRUD })
+    @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Palauttaa tiedon, kuuluuko hakukohde sijoitteluun", response = Boolean.class)
     public Map<String, Boolean> kuuluuSijoitteluun(
             @ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
@@ -192,7 +191,7 @@ public class HakukohdeResourceImpl implements HakukohdeResource {
     @GET
     @Path("/{oid}/hakijaryhma")
     @Produces(MediaType.APPLICATION_JSON)
-    @Secured({ READ, UPDATE, CRUD })
+    @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Hakee hakukohteen hakijaryhmät", response = HakijaryhmaDTO.class)
     public List<HakijaryhmaDTO> hakijaryhmat(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
         return modelMapper.mapList(hakijaryhmaService.findByHakukohde(oid), HakijaryhmaDTO.class);
@@ -201,7 +200,7 @@ public class HakukohdeResourceImpl implements HakukohdeResource {
     @GET
     @Path("/{oid}/laskentakaava")
     @Produces(MediaType.APPLICATION_JSON)
-    @Secured({ READ, UPDATE, CRUD })
+    @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Hakee hakukohteen järjestyskriteerit", response = JarjestyskriteeriDTO.class)
     public List<JarjestyskriteeriDTO> findLaskentaKaavat(
             @ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
@@ -211,7 +210,7 @@ public class HakukohdeResourceImpl implements HakukohdeResource {
     @GET
     @Path("/avaimet/{oid}")
     @Produces(MediaType.APPLICATION_JSON)
-    @Secured({ READ, UPDATE, CRUD })
+    @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Hakee hakukohteen syötettävät tiedot", response = ValintaperusteDTO.class)
     public List<ValintaperusteDTO> findAvaimet(@ApiParam(value = "Hakukohde OID", required = true) @PathParam("oid") String oid) {
         return laskentakaavaService.findAvaimetForHakukohde(oid);
@@ -221,7 +220,7 @@ public class HakukohdeResourceImpl implements HakukohdeResource {
     @Path("{hakukohdeOid}/avaimet")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Secured({ READ, UPDATE, CRUD })
+    @PreAuthorize(READ_UPDATE_CRUD)
     public HakukohteenValintaperusteAvaimetDTO findHakukohteenAvaimet(@PathParam("hakukohdeOid") String hakukohdeOid) {
         return laskentakaavaService.findHakukohteenAvaimet(hakukohdeOid);
     }
@@ -230,7 +229,7 @@ public class HakukohdeResourceImpl implements HakukohdeResource {
     @Path("/{hakukohdeOid}/valinnanvaihe")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Secured({ CRUD })
+    @PreAuthorize(CRUD)
     @ApiOperation(value = "Lisää valinnan vaiheen hakukohteelle")
     @ApiResponses(@ApiResponse(code = 400, message = "Valinnan vaiheen lisääminen epäonnistui"))
     public Response insertValinnanvaihe(
@@ -251,7 +250,7 @@ public class HakukohdeResourceImpl implements HakukohdeResource {
     @Path("/{hakukohdeOid}/hakijaryhma")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Secured({ CRUD })
+    @PreAuthorize(CRUD)
     @ApiOperation(value = "Lisää hakijaryhmän hakukohteelle")
     @ApiResponses(@ApiResponse(code = 400, message = "Hakijaryhmän lisääminen epäonnistui"))
     public Response insertHakijaryhma(
@@ -271,7 +270,7 @@ public class HakukohdeResourceImpl implements HakukohdeResource {
     @Path("/{hakukohdeOid}/hakukohdekoodi")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Secured({ UPDATE, CRUD })
+    @PreAuthorize(UPDATE_CRUD)
     @ApiOperation(value = "Päivittää hakukohteen hakukohdekoodia")
     @ApiResponses(@ApiResponse(code = 400, message = "Päivittäminen epäonnistui"))
     public Response updateHakukohdekoodi(
@@ -291,7 +290,7 @@ public class HakukohdeResourceImpl implements HakukohdeResource {
     @Path("/{hakukohdeOid}/hakukohdekoodi")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Secured({ CRUD })
+    @PreAuthorize(CRUD)
     @ApiOperation(value = "Lisää hakukohdekoodin hakukohteelle")
     @ApiResponses(@ApiResponse(code = 400, message = "Lisääminen epäonnistui"))
     public Response insertHakukohdekoodi(
@@ -311,7 +310,7 @@ public class HakukohdeResourceImpl implements HakukohdeResource {
     @Path("/{hakukohdeOid}/siirra")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Secured({ CRUD })
+    @PreAuthorize(CRUD)
     @ApiOperation(value = "Siirtää hakukohteen uuteen valintaryhmään (tai juureen, jos valintaryhmää ei anneta)")
     @ApiResponses(@ApiResponse(code = 400, message = "Siirtäminen epäonnistui"))
     public Response siirraHakukohdeValintaryhmaan(

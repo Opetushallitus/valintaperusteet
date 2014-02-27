@@ -1,8 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.resource.impl;
 
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD;
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ;
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +21,6 @@ import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapp
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
@@ -67,7 +66,7 @@ public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValint
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{oid}")
-    @Secured({ READ, UPDATE, CRUD })
+    @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Poistaa hakijaryhmän ja valintatapajonon välisen liitoksen")
     @ApiResponses(value = { @ApiResponse(code = 403, message = "Liitosta ei voida poistaa, esim. se on peritty"), })
     public Response poistaHakijaryhma(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
@@ -88,7 +87,7 @@ public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValint
     @Path("/{oid}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Secured({ UPDATE, CRUD })
+    @PreAuthorize(UPDATE_CRUD)
     @ApiOperation(value = "Päivittää hakijaryhmän ja valintatapajonon välistä liitosta")
     @ApiResponses(value = { @ApiResponse(code = 404, message = "Liitosta ei ole olemassa"), })
     public Response update(

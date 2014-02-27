@@ -1,8 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.resource.impl;
 
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD;
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ;
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -15,7 +15,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,7 +50,7 @@ public class ValintakoeResourceImpl implements ValintakoeResource {
 	@GET
 	@Path("/{oid}")
 	@Produces(MediaType.APPLICATION_JSON)
-	@Secured({ READ, UPDATE, CRUD })
+	@PreAuthorize(READ_UPDATE_CRUD)
 	@ApiOperation(value = "Hakee valintakokeen OID:n perusteella", response = ValintakoeDTO.class)
 	public ValintakoeDTO readByOid(
 			@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
@@ -59,21 +58,11 @@ public class ValintakoeResourceImpl implements ValintakoeResource {
 				ValintakoeDTO.class);
 	}
 
-	// @Transactional
-	// @GET
-	// @Produces(MediaType.APPLICATION_JSON)
-	// @Secured({ READ, UPDATE, CRUD })
-	// @ApiOperation(value = "Hakee valintakokeet", response = List.class)
-	// public List<ValintakoeDTO> readAll() {
-	// return modelMapper.mapList(valintakoeService.readAll(),
-	// ValintakoeDTO.class);
-	// }
-
 	@POST
 	@Path("/{oid}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	@Secured({ UPDATE, CRUD })
+	@PreAuthorize(UPDATE_CRUD)
 	@ApiOperation(value = "Päivittää valintakoetta")
 	public Response update(
 			@ApiParam(value = "OID", required = true) @PathParam("oid") String oid,
@@ -85,7 +74,7 @@ public class ValintakoeResourceImpl implements ValintakoeResource {
 
 	@DELETE
 	@Path("/{oid}")
-	@Secured({ CRUD })
+	@PreAuthorize(CRUD)
 	@ApiOperation(value = "Poistaa valintakokeen OID:n perusteella")
 	public Response delete(
 			@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {

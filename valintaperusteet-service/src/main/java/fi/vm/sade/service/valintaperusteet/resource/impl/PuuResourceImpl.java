@@ -1,8 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.resource.impl;
 
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD;
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ;
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
 
 import java.util.List;
 
@@ -16,7 +16,6 @@ import javax.ws.rs.core.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
@@ -47,7 +46,7 @@ public class PuuResourceImpl implements PuuResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Secured({ READ, UPDATE, CRUD })
+    @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Hakee valintaperustepuun annettujen parametrien perusteella", response = ValintaperustePuuDTO.class)
     public List<ValintaperustePuuDTO> search(@ApiParam(value = "Hakulauseke") @QueryParam("q") String searchString,
             @ApiParam(value = "Haun OID") @QueryParam("hakuOid") String hakuOid,

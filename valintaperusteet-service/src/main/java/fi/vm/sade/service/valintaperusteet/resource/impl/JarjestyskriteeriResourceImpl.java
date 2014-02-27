@@ -1,8 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.resource.impl;
 
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD;
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ;
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
 
 import java.util.List;
 
@@ -19,7 +19,6 @@ import javax.ws.rs.core.Response;
 
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
@@ -55,7 +54,7 @@ public class JarjestyskriteeriResourceImpl implements JarjestyskriteeriResource 
     @GET
     @Path("/{oid}")
     @Produces(MediaType.APPLICATION_JSON)
-    @Secured({ READ, UPDATE, CRUD })
+    @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Hakee järjestyskriteerin OID:n perusteella", response = JarjestyskriteeriDTO.class)
     @ApiResponses(@ApiResponse(code = 404, message = "Järjestyskriteeriä ei löydy"))
     public JarjestyskriteeriDTO readByOid(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
@@ -70,7 +69,7 @@ public class JarjestyskriteeriResourceImpl implements JarjestyskriteeriResource 
     @Path("/{oid}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Secured({ UPDATE, CRUD })
+    @PreAuthorize(UPDATE_CRUD)
     @ApiOperation(value = "Päivittää järjestyskriteeriä OID:n perusteella")
     @ApiResponses(@ApiResponse(code = 400, message = "Laskentakaavaa ei ole määritetty"))
     public Response update(
@@ -88,7 +87,7 @@ public class JarjestyskriteeriResourceImpl implements JarjestyskriteeriResource 
 
     @DELETE
     @Path("/{oid}")
-    @Secured({ CRUD })
+    @PreAuthorize(CRUD)
     @ApiOperation(value = "Poistaa järjestyskriteerin OID:n perusteella")
     @ApiResponses(@ApiResponse(code = 403, message = "Järjestyskriteeriä ei voida poistaa, esim. se on peritty"))
     public Response delete(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
@@ -104,7 +103,7 @@ public class JarjestyskriteeriResourceImpl implements JarjestyskriteeriResource 
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/jarjesta")
-    @Secured({ UPDATE, CRUD })
+    @PreAuthorize(UPDATE_CRUD)
     @ApiOperation(value = "Järjestää järjestyskriteerit annetun listan mukaiseen järjestykseen")
     public List<JarjestyskriteeriDTO> jarjesta(@ApiParam(value = "Uusi järjestys", required = true) List<String> oids) {
         return modelMapper.mapList(jarjestyskriteeriService.jarjestaKriteerit(oids), JarjestyskriteeriDTO.class);

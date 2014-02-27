@@ -1,8 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.resource.impl;
 
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD;
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ;
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
 
 import java.util.List;
 
@@ -21,7 +21,6 @@ import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapp
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
@@ -73,7 +72,7 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{oid}")
-    @Secured({ READ, UPDATE, CRUD })
+    @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Hakee hakijaryhmän OID:n perusteella", response = HakijaryhmaDTO.class)
     @ApiResponses(value = { @ApiResponse(code = 404, message = "Hakijaryhmää ei löydy"), })
     public HakijaryhmaDTO read(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
@@ -89,7 +88,7 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{hakijaryhmaOid}/valintatapajono")
-    @Secured({ READ, UPDATE, CRUD })
+    @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Hakee hakijaryhmän ja siihen liittyvät valintatapajonot OID:n perusteella", response = HakijaryhmaValintatapajonoDTO.class)
     public List<HakijaryhmaValintatapajonoDTO> valintatapajonot(
             @ApiParam(value = "OID", required = true) @PathParam("hakijaryhmaOid") String hakijaryhmaOid) {
@@ -105,7 +104,7 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{oid}")
-    @Secured({ UPDATE, CRUD })
+    @PreAuthorize(UPDATE_CRUD)
     @ApiOperation(value = "Päivittää hakijaryhmän", response = HakijaryhmaDTO.class)
     public HakijaryhmaDTO update(
             @ApiParam(value = "Päivitettävän hakijaryhmän OID", required = true) @PathParam("oid") String oid,
@@ -117,7 +116,7 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/jarjesta")
-    @Secured({ UPDATE, CRUD })
+    @PreAuthorize(UPDATE_CRUD)
     @ApiOperation(value = "Järjestää hakijaryhmät parametrina annetun listan mukaan", response = HakijaryhmaDTO.class)
     @ApiResponses(value = { @ApiResponse(code = 400, message = "OID-lista on tyhjä"), })
     public List<HakijaryhmaDTO> jarjesta(
@@ -131,7 +130,7 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
 
     @DELETE
     @Path("/{oid}")
-    @Secured({ CRUD })
+    @PreAuthorize(CRUD)
     @ApiOperation(value = "Poistaa hakijaryhmän OID:n perusteella")
     @ApiResponses(value = { @ApiResponse(code = 202, message = "Poisto onnistui"),
             @ApiResponse(code = 403, message = "Hakijaryhmää ei voida poistaa, esim. se on peritty") })

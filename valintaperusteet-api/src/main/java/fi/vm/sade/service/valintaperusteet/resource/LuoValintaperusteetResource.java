@@ -9,12 +9,10 @@ import javax.ws.rs.core.Response;
  * change this template use File | Settings | File Templates.
  */
 @Path("luovalintaperusteet")
-// @PreAuthorize("isAuthenticated()")
 public interface LuoValintaperusteetResource {
 
     @GET
     @Path("luo")
-    // @Secured({CRUD_OPH})
     Response luo();
 
 }

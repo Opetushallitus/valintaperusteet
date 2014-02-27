@@ -1,8 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.resource.impl;
 
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD;
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ;
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
 
 import java.util.List;
 
@@ -22,7 +22,6 @@ import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapp
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
@@ -59,7 +58,7 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
     @GET
     @Path("/funktiokuvaus")
     @Produces(MediaType.APPLICATION_JSON)
-    @Secured({ READ, UPDATE, CRUD })
+    @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Palauttaa funktiokuvaukset")
     public String funktiokuvaukset() {
         return Funktiokuvaaja.annaFunktiokuvauksetAsJson();
@@ -69,7 +68,7 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
     @Path("/funktiokuvaus/{nimi}")
     @ApiOperation(value = "Palauttaa parametrina annetun funktion kuvauksen")
     @Produces(MediaType.APPLICATION_JSON)
-    @Secured({ READ, UPDATE, CRUD })
+    @PreAuthorize(READ_UPDATE_CRUD)
     public String funktiokuvaus(@ApiParam(value = "Funktion nimi", required = true) @PathParam("nimi") String nimi) {
         return Funktiokuvaaja.annaFunktiokuvausAsJson(nimi);
     }
@@ -77,7 +76,7 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    @Secured({ READ, UPDATE, CRUD })
+    @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Hakee laskentakaavan ID:n perusteella", response = LaskentakaavaDTO.class)
     public LaskentakaavaDTO kaava(@ApiParam(value = "Laskentakaavan ID", required = true) @PathParam("id") Long id) {
         long beginTime = System.currentTimeMillis();
@@ -91,7 +90,7 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Secured({ READ, UPDATE, CRUD })
+    @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Hakee laskentakaavat annettujen hakuparametrien perusteella", response = LaskentakaavaListDTO.class)
     public List<LaskentakaavaListDTO> kaavat(
             @ApiParam(value = "Haetaanko myös luonnos-tilassa olevat kaavat") @DefaultValue("false") @QueryParam("myosLuonnos") Boolean all,
@@ -105,7 +104,7 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
     @POST
     @Path("/validoi")
     @Produces(MediaType.APPLICATION_JSON)
-    @Secured({ READ, UPDATE, CRUD })
+    @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Validoi parametrina annetun laskentakaavan", response = LaskentakaavaDTO.class)
     public LaskentakaavaDTO validoi(
             @ApiParam(value = "Validoitava laskentakaava", required = true) LaskentakaavaDTO laskentakaava) {
@@ -116,7 +115,7 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Secured({ UPDATE, CRUD })
+    @PreAuthorize(UPDATE_CRUD)
     @ApiOperation(value = "Päivittää laskentakaavan")
     public Response update(
             @ApiParam(value = "Päivitettävän laskentakaavan ID", required = true) @PathParam("id") Long id,
@@ -146,7 +145,7 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Secured({ CRUD })
+    @PreAuthorize(CRUD)
     @ApiOperation(value = "Lisää uuden laskentakaavan")
     public Response insert(
             @ApiParam(value = "Lisättävä laskentakaava", required = true) LaskentakaavaInsertDTO laskentakaava) {
