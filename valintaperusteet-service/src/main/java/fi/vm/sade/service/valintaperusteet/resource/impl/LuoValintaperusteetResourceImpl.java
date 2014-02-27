@@ -1,6 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.resource.impl;
 
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD_OPH;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.OPH_CRUD;
 
 import java.io.IOException;
 
@@ -10,7 +10,6 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
@@ -31,7 +30,7 @@ public class LuoValintaperusteetResourceImpl implements LuoValintaperusteetResou
 
     @GET
     @Path("luo")
-    @Secured({ CRUD_OPH })
+    @PreAuthorize(OPH_CRUD)
     public Response luo() {
 
         try {

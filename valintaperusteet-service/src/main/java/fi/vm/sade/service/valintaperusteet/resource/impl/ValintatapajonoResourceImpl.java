@@ -1,8 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.resource.impl;
 
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD;
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ;
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -25,7 +25,6 @@ import org.codehaus.jettison.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
@@ -74,7 +73,7 @@ public class ValintatapajonoResourceImpl implements ValintatapajonoResource {
     @GET
     @Path("/{oid}")
     @Produces(MediaType.APPLICATION_JSON)
-    @Secured({ READ, UPDATE, CRUD })
+    @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Hakee valintatapajonon OID:n perusteella", response = ValintatapajonoDTO.class)
     public ValintatapajonoDTO readByOid(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
         return modelMapper.map(valintatapajonoService.readByOid(oid), ValintatapajonoDTO.class);
@@ -83,7 +82,7 @@ public class ValintatapajonoResourceImpl implements ValintatapajonoResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{oid}/jarjestyskriteeri")
-    @Secured({ READ, UPDATE, CRUD })
+    @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Hakee järjestyskriteerit valintatapajonon OID:n perusteella", response = JarjestyskriteeriDTO.class)
     public List<JarjestyskriteeriDTO> findJarjestyskriteeri(
             @ApiParam(value = "Valintatapajonon OID", required = true) @PathParam("oid") String oid) {
@@ -95,7 +94,7 @@ public class ValintatapajonoResourceImpl implements ValintatapajonoResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{valintatapajonoOid}/hakijaryhma/{hakijaryhmaOid}")
-    @Secured({ READ, UPDATE, CRUD })
+    @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Liittää hakijaryhmän valintatapajonoon")
     public Response liitaHakijaryhma(
             @ApiParam(value = "Valintatapajonon OID, jolle hakijaryhmä liitetään", required = true) @PathParam("valintatapajonoOid") String valintatapajonoOid,
@@ -114,7 +113,7 @@ public class ValintatapajonoResourceImpl implements ValintatapajonoResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{valintatapajonoOid}/hakijaryhma")
-    @Secured({ READ, UPDATE, CRUD })
+    @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Hakee valintatapajonoon liitetyt hakijaryhmät valintatapajonon OID:n perusteella")
     public List<HakijaryhmaValintatapajonoDTO> hakijaryhmat(
             @ApiParam(value = "Valintatapajonon OID", required = true) @PathParam("valintatapajonoOid") String valintatapajonoOid) {
@@ -124,7 +123,7 @@ public class ValintatapajonoResourceImpl implements ValintatapajonoResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Secured({ READ, UPDATE, CRUD })
+    @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Hakee kaikki valintatapajonot", response = ValintatapajonoDTO.class)
     public List<ValintatapajonoDTO> findAll() {
         return modelMapper.mapList(valintatapajonoService.findAll(), ValintatapajonoDTO.class);
@@ -134,7 +133,7 @@ public class ValintatapajonoResourceImpl implements ValintatapajonoResource {
     @Path("/{oid}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Secured({ UPDATE, CRUD })
+    @PreAuthorize(UPDATE_CRUD)
     @ApiOperation(value = "Päivittää valintatapajonoa")
     public Response update(
             @ApiParam(value = "Päivitettävän valintatapajonon OID", required = true) @PathParam("oid") String oid,
@@ -147,7 +146,7 @@ public class ValintatapajonoResourceImpl implements ValintatapajonoResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{valintatapajonoOid}/jarjestyskriteeri")
-    @Secured({ CRUD })
+    @PreAuthorize(CRUD)
     @ApiOperation(value = "Lisää järjestyskriteerin valintatapajonolle")
     public Response insertJarjestyskriteeri(
             @ApiParam(value = "Valintatapajonon OID, jolle järjestyskriteeri lisätään", required = true) @PathParam("valintatapajonoOid") String valintatapajonoOid,
@@ -164,7 +163,7 @@ public class ValintatapajonoResourceImpl implements ValintatapajonoResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/jarjesta")
-    @Secured({ UPDATE, CRUD })
+    @PreAuthorize(UPDATE_CRUD)
     @ApiOperation(value = "Järjestää valintatapajonot annetun OID-listan mukaan", response = ValintatapajonoDTO.class)
     public List<ValintatapajonoDTO> jarjesta(
             @ApiParam(value = "OID-lista jonka mukaiseen järjestykseen valintatapajonot järjestetään", required = true) List<String> oids) {
@@ -173,7 +172,7 @@ public class ValintatapajonoResourceImpl implements ValintatapajonoResource {
 
     @DELETE
     @Path("/{oid}")
-    @Secured({ CRUD })
+    @PreAuthorize(CRUD)
     @ApiOperation(value = "Poistaa valintatapajonon OID:n perusteella")
     public Response delete(
             @ApiParam(value = "Poistettavan valintatapajonon OID", required = true) @PathParam("oid") String oid) {

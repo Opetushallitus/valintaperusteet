@@ -1,8 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.resource.impl;
 
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD;
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ;
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,7 +24,6 @@ import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapp
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
@@ -73,7 +72,7 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{oid}")
-    @Secured({ READ, UPDATE, CRUD })
+    @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Hakee valinnan vaiheen OID:n perusteella", response = ValinnanVaiheDTO.class)
     public ValinnanVaiheDTO read(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
         return modelMapper.map(valinnanVaiheService.readByOid(oid), ValinnanVaiheDTO.class);
@@ -82,7 +81,7 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{oid}/valintatapajono")
-    @Secured({ READ, UPDATE, CRUD })
+    @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Hakee valinnan vaiheen valintatapajonot OID:n perusteella", response = ValintatapajonoDTO.class)
     public List<ValintatapajonoDTO> listJonos(
             @ApiParam(value = "Valinnan vaiheen OID", required = true) @PathParam("oid") String oid) {
@@ -92,7 +91,7 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{oid}/valintakoe")
-    @Secured({ READ, UPDATE, CRUD })
+    @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Hakee valintakokeet valinnan vaiheen OID:n perusteella", response = ValintakoeDTO.class)
     public List<ValintakoeDTO> listValintakokeet(
             @ApiParam(value = "Valinnan vaiheen OID", required = true) @PathParam("oid") String oid) {
@@ -103,7 +102,7 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{parentOid}/valintatapajono")
-    @Secured({ UPDATE, CRUD })
+    @PreAuthorize(UPDATE_CRUD)
     @ApiOperation(value = "Lisää valintatapajonon valinnan vaiheelle")
     public Response addJonoToValinnanVaihe(
             @ApiParam(value = "Valinnan vaiheen OID", required = true) @PathParam("parentOid") String parentOid,
@@ -122,7 +121,7 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{parentOid}/valintakoe")
-    @Secured({ UPDATE, CRUD })
+    @PreAuthorize(UPDATE_CRUD)
     @ApiOperation(value = "Lisää valintakokeen valinnan vaiheelle")
     public Response addValintakoeToValinnanVaihe(
             @ApiParam(value = "Valinnan vaiheen OID", required = true) @PathParam("parentOid") String parentOid,
@@ -142,7 +141,7 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{oid}")
-    @Secured({ UPDATE, CRUD })
+    @PreAuthorize(UPDATE_CRUD)
     @ApiOperation(value = "Päivittää valinnan vaihetta", response = ValinnanVaiheDTO.class)
     public ValinnanVaiheDTO update(
             @ApiParam(value = "Päivitettävän valinnan vaiheen OID", required = true) @PathParam("oid") String oid,
@@ -154,7 +153,7 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/jarjesta")
-    @Secured({ UPDATE, CRUD })
+    @PreAuthorize(UPDATE_CRUD)
     @ApiOperation(value = "Järjestää valinnan vaiheet parametrina annetun OID-listan mukaiseen järjestykseen", response = ValinnanVaiheDTO.class)
     public List<ValinnanVaiheDTO> jarjesta(
             @ApiParam(value = "Valinnan vaiheiden uusi järjestys", required = true) List<String> oids) {
@@ -163,7 +162,7 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
 
     @DELETE
     @Path("/{oid}")
-    @Secured({ CRUD })
+    @PreAuthorize(CRUD)
     @ApiOperation(value = "Poistaa valinnan vaiheen OID:n perusteetlla")
     @ApiResponses({ @ApiResponse(code = 404, message = "Valinnan vaihetta ei ole olemassa"),
             @ApiResponse(code = 400, message = "Valinnan vaihetta ei voida poistaa, esim. se on peritty") })
@@ -181,7 +180,7 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
     @GET
     @Path("/{oid}/kuuluuSijoitteluun")
     @Produces(MediaType.APPLICATION_JSON)
-    @Secured({ READ, UPDATE, CRUD })
+    @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Palauttaa tiedon siitä, kuuluuko valinnan vaihe sijoitteluun", response = Boolean.class)
     public Map<String, Boolean> kuuluuSijoitteluun(
             @ApiParam(value = "Valinnan vaiheen OID", required = true) @PathParam("oid") String oid) {
