@@ -18,19 +18,24 @@ import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
 @Path("valintakoe")
 public interface ValintakoeResource {
 
-    @GET
-    @Path("/{oid}")
-    @Produces(MediaType.APPLICATION_JSON)
-    ValintakoeDTO readByOid(@PathParam("oid") String oid);
+	// @GET
+	// @Path("/")
+	// @Produces(MediaType.APPLICATION_JSON)
+	// List<ValintakoeDTO> readAll();
 
-    @POST
-    @Path("/{oid}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    Response update(@PathParam("oid") String oid, ValintakoeDTO valintakoe);
+	@GET
+	@Path("/{oid}")
+	@Produces(MediaType.APPLICATION_JSON)
+	ValintakoeDTO readByOid(@PathParam("oid") String oid);
 
-    @DELETE
-    @Path("/{oid}")
-    Response delete(@PathParam("oid") String oid);
+	@POST
+	@Path("/{oid}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	Response update(@PathParam("oid") String oid, ValintakoeDTO valintakoe);
+
+	@DELETE
+	@Path("/{oid}")
+	Response delete(@PathParam("oid") String oid);
 
 }

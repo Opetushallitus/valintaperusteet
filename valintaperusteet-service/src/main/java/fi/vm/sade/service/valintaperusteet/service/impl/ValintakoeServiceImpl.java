@@ -40,168 +40,194 @@ import fi.vm.sade.service.valintaperusteet.util.ValintakoeUtil;
 @Service
 public class ValintakoeServiceImpl implements ValintakoeService {
 
-    @Autowired
-    private ValintakoeDAO valintakoeDAO;
+	@Autowired
+	private ValintakoeDAO valintakoeDAO;
 
-    @Autowired
-    private ValinnanVaiheService valinnanVaiheService;
+	@Autowired
+	private ValinnanVaiheService valinnanVaiheService;
 
-    @Autowired
-    private LaskentakaavaDAO laskentakaavaDAO;
+	@Autowired
+	private LaskentakaavaDAO laskentakaavaDAO;
 
-    @Autowired
-    private OidService oidService;
+	@Autowired
+	private OidService oidService;
 
-    @Autowired
-    private LaskentakaavaService laskentakaavaService;
+	@Autowired
+	private LaskentakaavaService laskentakaavaService;
 
-    private static ValintakoeKopioija kopioija = new ValintakoeKopioija();
+	private static ValintakoeKopioija kopioija = new ValintakoeKopioija();
 
-    @Override
-    public void deleteByOid(String oid) {
-        Valintakoe valintakoe = haeValintakoeOidilla(oid);
-        if (valintakoe.getMaster() != null) {
-            throw new ValintakoettaEiVoiPoistaaException("Valintakoe on peritty.");
-        }
+	@Override
+	public void deleteByOid(String oid) {
+		Valintakoe valintakoe = haeValintakoeOidilla(oid);
+		if (valintakoe.getMaster() != null) {
+			throw new ValintakoettaEiVoiPoistaaException(
+					"Valintakoe on peritty.");
+		}
 
-        removeValintakoe(valintakoe);
-    }
+		removeValintakoe(valintakoe);
+	}
 
-    private void removeValintakoe(Valintakoe valintakoe) {
-        for (Valintakoe koe : valintakoe.getKopiot()) {
-            removeValintakoe(koe);
-        }
+	private void removeValintakoe(Valintakoe valintakoe) {
+		for (Valintakoe koe : valintakoe.getKopiot()) {
+			removeValintakoe(koe);
+		}
 
-        valintakoeDAO.remove(valintakoe);
-    }
+		valintakoeDAO.remove(valintakoe);
+	}
 
-    @Override
-    public Valintakoe readByOid(String oid) {
-        return haeValintakoeOidilla(oid);
-    }
+	@Override
+	public Valintakoe readByOid(String oid) {
+		return haeValintakoeOidilla(oid);
+	}
 
-    private Valintakoe haeValintakoeOidilla(String oid) {
-        Valintakoe valintakoe = valintakoeDAO.readByOid(oid);
-        if (valintakoe == null) {
-            throw new ValintakoettaEiOleOlemassaException("Valintakoetta (oid " + oid + ") ei ole olemassa");
-        }
+	@Override
+	public List<Valintakoe> readAll() {
+		return valintakoeDAO.findAll();
+	}
 
-        return valintakoe;
-    }
+	private Valintakoe haeValintakoeOidilla(String oid) {
+		Valintakoe valintakoe = valintakoeDAO.readByOid(oid);
+		if (valintakoe == null) {
+			throw new ValintakoettaEiOleOlemassaException("Valintakoetta (oid "
+					+ oid + ") ei ole olemassa");
+		}
 
-    @Override
-    public List<Valintakoe> findValintakoeByValinnanVaihe(String oid) {
-        return valintakoeDAO.findByValinnanVaihe(oid);
-    }
+		return valintakoe;
+	}
 
-    @Override
-    public Valintakoe lisaaValintakoeValinnanVaiheelle(String valinnanVaiheOid, ValintakoeCreateDTO koe) {
-        ValinnanVaihe valinnanVaihe = valinnanVaiheService.readByOid(valinnanVaiheOid);
-        if (!ValinnanVaiheTyyppi.VALINTAKOE.equals(valinnanVaihe.getValinnanVaiheTyyppi())) {
-            throw new ValintakoettaEiVoiLisataException("Valintakoetta ei voi lisätä valinnan vaiheelle, jonka "
-                    + "tyyppi on " + valinnanVaihe.getValinnanVaiheTyyppi().name());
-        }
+	@Override
+	public List<Valintakoe> findValintakoeByValinnanVaihe(String oid) {
+		return valintakoeDAO.findByValinnanVaihe(oid);
+	}
 
-        Valintakoe valintakoe = new Valintakoe();
-        valintakoe.setOid(oidService.haeValintakoeOid());
-        valintakoe.setTunniste(koe.getTunniste());
-        valintakoe.setNimi(koe.getNimi());
-        valintakoe.setKuvaus(koe.getKuvaus());
-        valintakoe.setValinnanVaihe(valinnanVaihe);
-        valintakoe.setAktiivinen(koe.getAktiivinen());
+	@Override
+	public Valintakoe lisaaValintakoeValinnanVaiheelle(String valinnanVaiheOid,
+			ValintakoeCreateDTO koe) {
+		ValinnanVaihe valinnanVaihe = valinnanVaiheService
+				.readByOid(valinnanVaiheOid);
+		if (!ValinnanVaiheTyyppi.VALINTAKOE.equals(valinnanVaihe
+				.getValinnanVaiheTyyppi())) {
+			throw new ValintakoettaEiVoiLisataException(
+					"Valintakoetta ei voi lisätä valinnan vaiheelle, jonka "
+							+ "tyyppi on "
+							+ valinnanVaihe.getValinnanVaiheTyyppi().name());
+		}
 
-        if (koe.getLaskentakaavaId() != null) {
-            valintakoe.setLaskentakaava(haeLaskentakaavaValintakokeelle(koe.getLaskentakaavaId()));
-        }
-        Valintakoe lisatty = valintakoeDAO.insert(valintakoe);
-        for (ValinnanVaihe kopio : valinnanVaihe.getKopiot()) {
-            lisaaValinnanVaiheelleKopioMasterValintakokeesta(kopio, lisatty);
-        }
+		Valintakoe valintakoe = new Valintakoe();
+		valintakoe.setOid(oidService.haeValintakoeOid());
+		valintakoe.setTunniste(koe.getTunniste());
+		valintakoe.setNimi(koe.getNimi());
+		valintakoe.setKuvaus(koe.getKuvaus());
+		valintakoe.setValinnanVaihe(valinnanVaihe);
+		valintakoe.setAktiivinen(koe.getAktiivinen());
 
-        return lisatty;
-    }
+		if (koe.getLaskentakaavaId() != null) {
+			valintakoe.setLaskentakaava(haeLaskentakaavaValintakokeelle(koe
+					.getLaskentakaavaId()));
+		}
+		Valintakoe lisatty = valintakoeDAO.insert(valintakoe);
+		for (ValinnanVaihe kopio : valinnanVaihe.getKopiot()) {
+			lisaaValinnanVaiheelleKopioMasterValintakokeesta(kopio, lisatty);
+		}
 
-    private void lisaaValinnanVaiheelleKopioMasterValintakokeesta(ValinnanVaihe valinnanVaihe,
-            Valintakoe masterValintakoe) {
-        Valintakoe kopio = ValintakoeUtil.teeKopioMasterista(masterValintakoe);
-        kopio.setValinnanVaihe(valinnanVaihe);
-        kopio.setOid(oidService.haeValintakoeOid());
+		return lisatty;
+	}
 
-        Valintakoe lisatty = valintakoeDAO.insert(kopio);
+	private void lisaaValinnanVaiheelleKopioMasterValintakokeesta(
+			ValinnanVaihe valinnanVaihe, Valintakoe masterValintakoe) {
+		Valintakoe kopio = ValintakoeUtil.teeKopioMasterista(masterValintakoe);
+		kopio.setValinnanVaihe(valinnanVaihe);
+		kopio.setOid(oidService.haeValintakoeOid());
 
-        for (ValinnanVaihe vaihekopio : valinnanVaihe.getKopioValinnanVaiheet()) {
-            lisaaValinnanVaiheelleKopioMasterValintakokeesta(vaihekopio, lisatty);
-        }
-    }
+		Valintakoe lisatty = valintakoeDAO.insert(kopio);
 
-    private void validoiFunktiokutsuValintakoettaVarten(Funktiokutsu funktiokutsu) {
-        if (funktiokutsu != null) {
-            if (!funktiokutsu.getFunktionimi().getLaskentamoodit().contains(Laskentamoodi.VALINTAKOELASKENTA)) {
-                throw new FunktiokutsuaEiVoidaKayttaaValintakoelaskennassaException("Funktiokutsua "
-                        + funktiokutsu.getFunktionimi().name() + ", id " + funktiokutsu.getId()
-                        + " ei voida käyttää valintakoelaskennassa.", funktiokutsu.getId(),
-                        funktiokutsu.getFunktionimi());
-            }
+		for (ValinnanVaihe vaihekopio : valinnanVaihe.getKopioValinnanVaiheet()) {
+			lisaaValinnanVaiheelleKopioMasterValintakokeesta(vaihekopio,
+					lisatty);
+		}
+	}
 
-            for (Funktioargumentti arg : funktiokutsu.getFunktioargumentit()) {
-                if (arg.getFunktiokutsuChild() != null) {
-                    validoiFunktiokutsuValintakoettaVarten(arg.getFunktiokutsuChild());
-                } else if (arg.getLaskentakaavaChild() != null) {
-                    validoiFunktiokutsuValintakoettaVarten(arg.getLaskentakaavaChild().getFunktiokutsu());
-                }
-            }
-        }
-    }
+	private void validoiFunktiokutsuValintakoettaVarten(
+			Funktiokutsu funktiokutsu) {
+		if (funktiokutsu != null) {
+			if (!funktiokutsu.getFunktionimi().getLaskentamoodit()
+					.contains(Laskentamoodi.VALINTAKOELASKENTA)) {
+				throw new FunktiokutsuaEiVoidaKayttaaValintakoelaskennassaException(
+						"Funktiokutsua " + funktiokutsu.getFunktionimi().name()
+								+ ", id " + funktiokutsu.getId()
+								+ " ei voida käyttää valintakoelaskennassa.",
+						funktiokutsu.getId(), funktiokutsu.getFunktionimi());
+			}
 
-    private Laskentakaava haeLaskentakaavaValintakokeelle(Long laskentakaavaId) {
-        Laskentakaava laskentakaava = laskentakaavaDAO.getLaskentakaava(laskentakaavaId);
-        if (laskentakaava == null) {
-            throw new LaskentakaavaEiOleOlemassaException("Laskentakaavaa (" + laskentakaavaId + ") ei ole "
-                    + "olemassa", laskentakaavaId);
-        } else if (!Funktiotyyppi.TOTUUSARVOFUNKTIO.equals(laskentakaava.getTyyppi())) {
-            throw new VaaranTyyppinenLaskentakaavaException("Valintakokeen laskentakaavan tulee olla tyyppiä "
-                    + Funktiotyyppi.TOTUUSARVOFUNKTIO.name());
-        } else if (laskentakaava.getOnLuonnos()) {
-            throw new ValintakokeeseenLiitettavaLaskentakaavaOnLuonnosException("Valintakokeeseen liitettävä "
-                    + "laskentakaava on LUONNOS-tilassa");
-        }
+			for (Funktioargumentti arg : funktiokutsu.getFunktioargumentit()) {
+				if (arg.getFunktiokutsuChild() != null) {
+					validoiFunktiokutsuValintakoettaVarten(arg
+							.getFunktiokutsuChild());
+				} else if (arg.getLaskentakaavaChild() != null) {
+					validoiFunktiokutsuValintakoettaVarten(arg
+							.getLaskentakaavaChild().getFunktiokutsu());
+				}
+			}
+		}
+	}
 
-        validoiFunktiokutsuValintakoettaVarten(laskentakaava.getFunktiokutsu());
+	private Laskentakaava haeLaskentakaavaValintakokeelle(Long laskentakaavaId) {
+		Laskentakaava laskentakaava = laskentakaavaDAO
+				.getLaskentakaava(laskentakaavaId);
+		if (laskentakaava == null) {
+			throw new LaskentakaavaEiOleOlemassaException("Laskentakaavaa ("
+					+ laskentakaavaId + ") ei ole " + "olemassa",
+					laskentakaavaId);
+		} else if (!Funktiotyyppi.TOTUUSARVOFUNKTIO.equals(laskentakaava
+				.getTyyppi())) {
+			throw new VaaranTyyppinenLaskentakaavaException(
+					"Valintakokeen laskentakaavan tulee olla tyyppiä "
+							+ Funktiotyyppi.TOTUUSARVOFUNKTIO.name());
+		} else if (laskentakaava.getOnLuonnos()) {
+			throw new ValintakokeeseenLiitettavaLaskentakaavaOnLuonnosException(
+					"Valintakokeeseen liitettävä "
+							+ "laskentakaava on LUONNOS-tilassa");
+		}
 
-        return laskentakaava;
-    }
+		validoiFunktiokutsuValintakoettaVarten(laskentakaava.getFunktiokutsu());
 
-    @Override
-    public Valintakoe update(String oid, ValintakoeDTO valintakoe) {
-        Valintakoe incoming = new Valintakoe();
-        incoming.setAktiivinen(valintakoe.getAktiivinen());
-        incoming.setKuvaus(valintakoe.getKuvaus());
-        incoming.setNimi(valintakoe.getNimi());
-        incoming.setTunniste(valintakoe.getTunniste());
+		return laskentakaava;
+	}
 
-        Valintakoe managedObject = haeValintakoeOidilla(oid);
-        Long laskentakaavaOid = valintakoe.getLaskentakaavaId();
+	@Override
+	public Valintakoe update(String oid, ValintakoeDTO valintakoe) {
+		Valintakoe incoming = new Valintakoe();
+		incoming.setAktiivinen(valintakoe.getAktiivinen());
+		incoming.setKuvaus(valintakoe.getKuvaus());
+		incoming.setNimi(valintakoe.getNimi());
+		incoming.setTunniste(valintakoe.getTunniste());
 
-        if (laskentakaavaOid != null) {
-            Laskentakaava laskentakaava = haeLaskentakaavaValintakokeelle(laskentakaavaOid);
-            incoming.setLaskentakaava(laskentakaava);
-        } else {
-            incoming.setLaskentakaava(null);
-        }
+		Valintakoe managedObject = haeValintakoeOidilla(oid);
+		Long laskentakaavaOid = valintakoe.getLaskentakaavaId();
 
-        return LinkitettavaJaKopioitavaUtil.paivita(managedObject, incoming, kopioija);
-    }
+		if (laskentakaavaOid != null) {
+			Laskentakaava laskentakaava = haeLaskentakaavaValintakokeelle(laskentakaavaOid);
+			incoming.setLaskentakaava(laskentakaava);
+		} else {
+			incoming.setLaskentakaava(null);
+		}
 
-    @Override
-    public void kopioiValintakokeetMasterValinnanVaiheeltaKopiolle(ValinnanVaihe valinnanVaihe,
-            ValinnanVaihe masterValinnanVaihe) {
-        List<Valintakoe> kokeet = valintakoeDAO.findByValinnanVaihe(masterValinnanVaihe.getOid());
-        for (Valintakoe master : kokeet) {
-            Valintakoe kopio = ValintakoeUtil.teeKopioMasterista(master);
-            kopio.setOid(oidService.haeValintakoeOid());
-            valinnanVaihe.addValintakoe(kopio);
+		return LinkitettavaJaKopioitavaUtil.paivita(managedObject, incoming,
+				kopioija);
+	}
 
-            valintakoeDAO.insert(kopio);
-        }
-    }
+	@Override
+	public void kopioiValintakokeetMasterValinnanVaiheeltaKopiolle(
+			ValinnanVaihe valinnanVaihe, ValinnanVaihe masterValinnanVaihe) {
+		List<Valintakoe> kokeet = valintakoeDAO
+				.findByValinnanVaihe(masterValinnanVaihe.getOid());
+		for (Valintakoe master : kokeet) {
+			Valintakoe kopio = ValintakoeUtil.teeKopioMasterista(master);
+			kopio.setOid(oidService.haeValintakoeOid());
+			valinnanVaihe.addValintakoe(kopio);
+
+			valintakoeDAO.insert(kopio);
+		}
+	}
 }
