@@ -203,7 +203,7 @@ public class HaeHakukohteenValintaperusteetRekursiivisestiActorBean extends Unty
             actorParent = sender();
             UusiHakukohteenValintaperusteRekursio viesti = (UusiHakukohteenValintaperusteRekursio) message;
 
-            original = funktiokutsuDAO.getFunktiokutsu(viesti.getId());
+            original = funktiokutsuDAO.getFunktiokutsunValintaperusteet(viesti.getId());
             valintaperusteet = viesti.getValintaperusteet();
 
             if (original.getFunktioargumentit() == null || original.getFunktioargumentit().size() == 0) {
