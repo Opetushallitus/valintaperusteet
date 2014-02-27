@@ -14,6 +14,7 @@ import javax.inject.Named;
 
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
+import fi.vm.sade.service.valintaperusteet.service.impl.LaskentakaavaServiceImpl;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -76,9 +77,8 @@ public class HaeValintaperusteetRekursiivisestiActorBean extends UntypedActor {
     }
 
     private String haeTunniste(String mustache, Map<String, String> hakukohteenValintaperusteet) {
-        String r = "\\{\\{([A-Za-z0–9\\-_]+)\\.([A-Za-z0–9\\-_]+)\\}\\}";
-        Pattern pattern = Pattern.compile(r);
-        final Matcher m = pattern.matcher(mustache);
+
+        final Matcher m = LaskentakaavaServiceImpl.pattern.matcher(mustache);
 
         String avain = null;
         while (m.find()) {
@@ -194,7 +194,7 @@ public class HaeValintaperusteetRekursiivisestiActorBean extends UntypedActor {
             actorParent = sender();
             UusiValintaperusteRekursio viesti = (UusiValintaperusteRekursio) message;
 
-            original = funktiokutsuDAO.getFunktiokutsu(viesti.getId());
+            original = funktiokutsuDAO.getFunktiokutsunValintaperusteet(viesti.getId());
             valintaperusteet = viesti.getValintaperusteet();
             hakukohteenValintaperusteet = viesti.getHakukohteenValintaperusteet();
 

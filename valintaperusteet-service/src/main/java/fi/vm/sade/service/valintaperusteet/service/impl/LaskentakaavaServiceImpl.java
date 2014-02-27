@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 import fi.vm.sade.service.valintaperusteet.dao.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
@@ -67,6 +68,9 @@ import fi.vm.sade.service.valintaperusteet.service.impl.util.LaskentakaavaCache;
 public class LaskentakaavaServiceImpl implements LaskentakaavaService {
 
     final static private Logger LOGGER = LoggerFactory.getLogger(LaskentakaavaService.class.getName());
+
+    private static final String r = "\\{\\{([A-Za-z0–9\\-_]+)\\.([A-Za-z0–9\\-_]+)\\}\\}";
+    public static final Pattern pattern = Pattern.compile(r);
 
     @Autowired
     private GenericDAO genericDAO;

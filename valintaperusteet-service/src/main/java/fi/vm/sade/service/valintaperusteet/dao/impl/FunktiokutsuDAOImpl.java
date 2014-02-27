@@ -40,6 +40,18 @@ public class FunktiokutsuDAOImpl extends AbstractJpaDAOImpl<Funktiokutsu, Long> 
     }
 
     @Override
+    public Funktiokutsu getFunktiokutsunValintaperusteet(Long id) {
+        QFunktiokutsu fk = QFunktiokutsu.funktiokutsu;
+
+        return from(fk)
+                .leftJoin(fk.arvokonvertteriparametrit).fetch()
+                .leftJoin(fk.arvovalikonvertteriparametrit).fetch()
+                .leftJoin(fk.funktioargumentit).fetch()
+                .leftJoin(fk.valintaperusteviitteet).fetch()
+                .where(fk.id.eq(id)).distinct().singleResult(fk);
+    }
+
+    @Override
     public List<Funktiokutsu> getOrphans() {
         QFunktiokutsu fk = QFunktiokutsu.funktiokutsu;
         QLaskentakaava lk = QLaskentakaava.laskentakaava;
