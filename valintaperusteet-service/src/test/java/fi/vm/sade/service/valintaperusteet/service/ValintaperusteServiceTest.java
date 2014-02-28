@@ -2,6 +2,7 @@ package fi.vm.sade.service.valintaperusteet.service;
 
 import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
+import fi.vm.sade.service.valintaperusteet.GenericFault;
 import fi.vm.sade.service.valintaperusteet.ValintaperusteService;
 import fi.vm.sade.service.valintaperusteet.messages.HakuparametritTyyppi;
 import fi.vm.sade.service.valintaperusteet.schema.*;
@@ -76,14 +77,14 @@ public class ValintaperusteServiceTest {
         assertEquals(1, valintaperusteetTyyppis.size());
     }
 
-    @Test(expected = ValinnanVaiheJarjestyslukuOutOfBoundsException.class)
+    @Test(expected = GenericFault.class)
     public void testHaeValintaperusteetEpakelvollaJarjestysluvulla() {
         List<HakuparametritTyyppi> params = new ArrayList<HakuparametritTyyppi>();
         params.add(getHakuparametritTyyppi("oid6", -1));
         valintaperusteService.haeValintaperusteet(params);
     }
 
-    @Test(expected = ValinnanVaiheJarjestyslukuOutOfBoundsException.class)
+    @Test(expected = GenericFault.class)
     public void testHaeValintaperusteetLiianIsollaJarjestysluvulla() {
         List<HakuparametritTyyppi> params = new ArrayList<HakuparametritTyyppi>();
         params.add(getHakuparametritTyyppi("oid6", 77));
@@ -100,7 +101,7 @@ public class ValintaperusteServiceTest {
         assertEquals(2, valintaperusteetTyyppis.size());
     }
 
-    @Test(expected = HakuparametritOnTyhjaException.class)
+    @Test(expected = GenericFault.class)
     public void testHaeValintaperusteetNullilla() {
         valintaperusteService.haeValintaperusteet(null);
     }
@@ -151,7 +152,7 @@ public class ValintaperusteServiceTest {
         assertNotNull(vk.getTunniste());
     }
 
-    @Test(expected = ValinnanVaiheEpaaktiivinenException.class)
+    @Test(expected = GenericFault.class)
     public void testHaeValintaperusteetMukanaEpaaktiivisiaVaiheita() {
         List<HakuparametritTyyppi> params = new ArrayList<HakuparametritTyyppi>();
         params.add(getHakuparametritTyyppi("oid21", 0));

@@ -104,7 +104,7 @@ public class HaeFunktiokutsuRekursiivisestiActorBean extends UntypedActor {
             }
         } else if(message instanceof UusiRekursio) {
             actorParent = sender();
-            UusiRekursio viesti = (UusiRekursio)message;;
+            UusiRekursio viesti = (UusiRekursio)message;
             id = viesti.getId();
             laajennaAlakaavat = viesti.isLaajennaAlakaavat();
             laskentakaavaIds = viesti.getLaskentakaavaIds();
