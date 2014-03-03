@@ -24,7 +24,7 @@ public class ArvokonvertteriparametriDTO {
     private String hylkaysperuste;
 
     @ApiModelProperty(value = "Hylkäysperusteen kuvaukset")
-    private Set<KuvausDTO> kuvaukset = new HashSet<KuvausDTO>();
+    private TekstiRyhmaDTO kuvaukset = new TekstiRyhmaDTO();
 
     public String getPaluuarvo() {
         return paluuarvo;
@@ -50,11 +50,11 @@ public class ArvokonvertteriparametriDTO {
         this.hylkaysperuste = hylkaysperuste;
     }
 
-    public Set<KuvausDTO> getKuvaukset() {
+    public TekstiRyhmaDTO getKuvaukset() {
         return kuvaukset;
     }
 
-    public void setKuvaukset(Set<KuvausDTO> kuvaukset) {
+    public void setKuvaukset(TekstiRyhmaDTO kuvaukset) {
         this.kuvaukset = kuvaukset;
     }
 }
