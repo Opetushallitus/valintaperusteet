@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 import fi.vm.sade.service.valintaperusteet.dao.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
+import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.UusiHakukohteenValintaperusteRekursio;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -38,16 +39,6 @@ import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi;
 import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
 import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
-import fi.vm.sade.service.valintaperusteet.model.Arvokonvertteriparametri;
-import fi.vm.sade.service.valintaperusteet.model.Arvovalikonvertteriparametri;
-import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti;
-import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
-import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
-import fi.vm.sade.service.valintaperusteet.model.HakukohteenValintaperuste;
-import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
-import fi.vm.sade.service.valintaperusteet.model.Syoteparametri;
-import fi.vm.sade.service.valintaperusteet.model.ValintaperusteViite;
-import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
 import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuMuodostaaSilmukanException;
@@ -321,6 +312,20 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             newParam.setHylkaysperuste(k.getHylkaysperuste());
             newParam.setPaluuarvo(k.getPaluuarvo());
             newParam.setFunktiokutsu(managed);
+            if(k.getKuvaukset() != null) {
+                TekstiRyhma ryhma = new TekstiRyhma();
+                genericDAO.insert(ryhma);
+                for (LokalisoituTeksti teksti : k.getKuvaukset().getTekstit()) {
+                    LokalisoituTeksti newTeksti = new LokalisoituTeksti();
+                    newTeksti.setKieli(teksti.getKieli());
+                    newTeksti.setTeksti(teksti.getTeksti());
+                    newTeksti.setRyhma(ryhma);
+                    genericDAO.insert(newTeksti);
+                    ryhma.getTekstit().add(newTeksti);
+                }
+
+                newParam.setKuvaukset(ryhma);
+            }
             managed.getArvokonvertteriparametrit().add(newParam);
         }
 

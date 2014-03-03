@@ -28,10 +28,14 @@ public class FunktiokutsuDAOImpl extends AbstractJpaDAOImpl<Funktiokutsu, Long> 
     public Funktiokutsu getFunktiokutsu(Long id) {
         QFunktiokutsu fk = QFunktiokutsu.funktiokutsu;
         QFunktioargumentti fa = QFunktioargumentti.funktioargumentti;
+        QArvokonvertteriparametri ak = QArvokonvertteriparametri.arvokonvertteriparametri;
+        QTekstiRyhma t = QTekstiRyhma.tekstiRyhma;
 
         return from(fk)
                 .leftJoin(fk.syoteparametrit).fetch()
-                .leftJoin(fk.arvokonvertteriparametrit).fetch()
+                .leftJoin(fk.arvokonvertteriparametrit, ak).fetch()
+                .leftJoin(ak.kuvaukset, t).fetch()
+                .leftJoin(t.tekstit).fetch()
                 .leftJoin(fk.arvovalikonvertteriparametrit).fetch()
                 .leftJoin(fk.funktioargumentit, fa).fetch()
                 .leftJoin(fa.laskentakaavaChild).fetch()

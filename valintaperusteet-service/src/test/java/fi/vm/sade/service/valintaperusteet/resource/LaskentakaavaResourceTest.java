@@ -9,7 +9,9 @@ import java.util.List;
 
 import javax.ws.rs.core.Response;
 
+import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
+import fi.vm.sade.service.valintaperusteet.dto.model.Kieli;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -29,14 +31,6 @@ import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.kaava.Funktiokuvaaja;
 import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
-import fi.vm.sade.service.valintaperusteet.dto.FunktioargumentinLapsiDTO;
-import fi.vm.sade.service.valintaperusteet.dto.FunktioargumenttiDTO;
-import fi.vm.sade.service.valintaperusteet.dto.FunktiokutsuDTO;
-import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaDTO;
-import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaInsertDTO;
-import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaListDTO;
-import fi.vm.sade.service.valintaperusteet.dto.SyoteparametriDTO;
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi;
 //import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.resource.impl.LaskentakaavaResourceImpl;
@@ -144,8 +138,25 @@ public class LaskentakaavaResourceTest {
     public void testValidoi() throws Exception {
         LaskentakaavaDTO laskentakaava = new LaskentakaavaDTO();
         laskentakaava.setOnLuonnos(false);
-        laskentakaava.setFunktiokutsu(createSumma(createLukuarvo("viisi"), createLukuarvo("10.0"),
-                createLukuarvo("100.0")));
+        FunktiokutsuDTO kutsu = createSumma(createLukuarvo("viisi"), createLukuarvo("10.0"),
+                createLukuarvo("100.0"));
+
+        LokalisoituTekstiDTO kuvaus = new LokalisoituTekstiDTO();
+        kuvaus.setKieli(Kieli.FI);
+        kuvaus.setTeksti("Teksti");
+
+        TekstiRyhmaDTO ryhma = new TekstiRyhmaDTO();
+        ryhma.getTekstit().add(kuvaus);
+
+        ArvokonvertteriparametriDTO ak = new ArvokonvertteriparametriDTO();
+        ak.setArvo("2");
+        ak.setPaluuarvo("1");
+        ak.setHylkaysperuste("true");
+        ak.setKuvaukset(ryhma);
+
+        kutsu.getArvokonvertteriparametrit().add(ak);
+
+        laskentakaava.setFunktiokutsu(kutsu);
 
         final String json = mapper.writeValueAsString(laskentakaava);
         LaskentakaavaDTO fromJson = mapper.readValue(json, LaskentakaavaDTO.class);
