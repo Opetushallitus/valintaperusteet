@@ -66,6 +66,7 @@ public class ValintakoeServiceTest {
         valintakoe.setLaskentakaavaId(101L);
         valintakoe.setNimi("uusinimi");
         valintakoe.setTunniste("uusitunniste");
+        valintakoe.setLahetetaankoKoekutsut(true);
 
         valintakoeService.lisaaValintakoeValinnanVaiheelle(valinnanVaiheOid, valintakoe);
 
