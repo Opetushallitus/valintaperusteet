@@ -43,7 +43,7 @@ public interface LaskentakaavaResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    List<LaskentakaavaListDTO> kaavat(@QueryParam("myosLuonnos") Boolean all,
+    List<LaskentakaavaListDTO> kaavat(@DefaultValue("false") @QueryParam("myosLuonnos") Boolean all,
             @QueryParam("valintaryhma") String valintaryhmaOid, @QueryParam("hakukohde") String hakukohdeOid,
             @QueryParam("tyyppi") Funktiotyyppi tyyppi);
 
