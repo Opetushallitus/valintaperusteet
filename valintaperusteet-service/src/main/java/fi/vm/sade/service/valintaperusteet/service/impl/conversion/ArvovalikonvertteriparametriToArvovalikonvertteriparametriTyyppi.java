@@ -1,7 +1,9 @@
 package fi.vm.sade.service.valintaperusteet.service.impl.conversion;
 
 import fi.vm.sade.service.valintaperusteet.model.Arvovalikonvertteriparametri;
+import fi.vm.sade.service.valintaperusteet.model.LokalisoituTeksti;
 import fi.vm.sade.service.valintaperusteet.schema.ArvovalikonvertteriparametriTyyppi;
+import fi.vm.sade.service.valintaperusteet.schema.TekstiRyhmaTyyppi;
 import org.springframework.core.convert.converter.Converter;
 
 /**
@@ -18,7 +20,18 @@ public class ArvovalikonvertteriparametriToArvovalikonvertteriparametriTyyppi im
         tyyppi.setMaksimiarvo(arvovalikonvertteriparametri.getMaxValue().toString());
         tyyppi.setMinimiarvo(arvovalikonvertteriparametri.getMinValue().toString());
         tyyppi.setPalautaHaettuArvo(arvovalikonvertteriparametri.getPalautaHaettuArvo());
+
+        tyyppi.setHylkaysperuste(arvovalikonvertteriparametri.getHylkaysperuste());
         tyyppi.setPaluuarvo(arvovalikonvertteriparametri.getPaluuarvo());
+
+        LokalisoituTekstiToLokalisoituTekstiTyyppiConverter converter = new LokalisoituTekstiToLokalisoituTekstiTyyppiConverter();
+        TekstiRyhmaTyyppi ryhma = new TekstiRyhmaTyyppi();
+        if (arvovalikonvertteriparametri.getKuvaukset() != null && arvovalikonvertteriparametri.getKuvaukset().getTekstit() != null) {
+            for (LokalisoituTeksti k : arvovalikonvertteriparametri.getKuvaukset().getTekstit()) {
+                ryhma.getTekstit().add(converter.convert(k));
+            }
+        }
+        tyyppi.setKuvaukset(ryhma);
 
         return tyyppi;
     }

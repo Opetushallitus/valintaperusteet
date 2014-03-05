@@ -20,6 +20,12 @@ public class ArvovalikonvertteriparametriDTO {
     @ApiModelProperty(value = "Palautetaanko haettu arvo")
     private String palautaHaettuArvo;
 
+    @ApiModelProperty(value = "Hylkäysperuste")
+    private String hylkaysperuste;
+
+    @ApiModelProperty(value = "Hylkäysperusteen kuvaukset")
+    private TekstiRyhmaDTO kuvaukset = new TekstiRyhmaDTO();
+
     public String getPaluuarvo() {
         return paluuarvo;
     }
@@ -50,5 +56,21 @@ public class ArvovalikonvertteriparametriDTO {
 
     public void setPalautaHaettuArvo(String palautaHaettuArvo) {
         this.palautaHaettuArvo = palautaHaettuArvo;
+    }
+
+    public String getHylkaysperuste() {
+        return hylkaysperuste;
+    }
+
+    public void setHylkaysperuste(String hylkaysperuste) {
+        this.hylkaysperuste = hylkaysperuste;
+    }
+
+    public TekstiRyhmaDTO getKuvaukset() {
+        return kuvaukset;
+    }
+
+    public void setKuvaukset(TekstiRyhmaDTO kuvaukset) {
+        this.kuvaukset = kuvaukset;
     }
 }

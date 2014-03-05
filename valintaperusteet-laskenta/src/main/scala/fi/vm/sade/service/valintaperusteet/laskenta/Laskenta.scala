@@ -6,8 +6,8 @@ import java.math.{BigDecimal => BigDec}
 import fi.vm.sade.service.valintaperusteet.laskenta.api.{Hakemus, Hakukohde}
 import scala._
 import scala.Some
-import scala.reflect.runtime.universe._
-import scala.reflect.ClassTag
+import fi.vm.sade.service.valintaperusteet.model.{LokalisoituTeksti, TekstiRyhma}
+import scala.collection.JavaConversions
 
 /**
  *
@@ -39,18 +39,31 @@ object Laskenta {
     val konvertteri: Konvertteri[S, T]
   }
 
+  def tekstiryhmaToMap(ryhma: TekstiRyhma): java.util.Map[String,String] = {
+    val tekstit = JavaConversions.asScalaSet(ryhma.getTekstit)
+    val res = tekstit.foldLeft(Map.empty[String,String]){
+      (result: Map[String,String],teksti: LokalisoituTeksti) => result + (teksti.getKieli.name -> teksti.getTeksti)
+    }
+    JavaConversions.mapAsJavaMap(res)
+  }
+
+  def tekstiToMap(teksti: String): java.util.Map[String,String] = {
+    val res = Map("FI" -> teksti)
+    JavaConversions.mapAsJavaMap(res)
+  }
+
   case class Arvokonvertteri[S, T](konversioMap: Seq[Konversio]) extends Konvertteri[S, T] {
 
     def konvertoi(arvo: S): (Option[T], Tila) = {
       val konversiot = konversioMap.map(konv => konv.asInstanceOf[Arvokonversio[S,T]])
 
       konversiot.filter(arvo == _.arvo) match {
-        case Nil => (None, new Virhetila(s"Arvo $arvo ei täsmää yhteenkään konvertterille määritettyyn arvoon",
+        case Nil => (None, new Virhetila(tekstiToMap(s"Arvo $arvo ei täsmää yhteenkään konvertterille määritettyyn arvoon"),
           new ArvokonvertointiVirhe(arvo.toString)))
         case head :: tail => {
           val paluuarvo = head.paluuarvo
           val tila = if (head.hylkaysperuste) {
-            new Hylattytila(s"Arvo $arvo on määritelty konvertterissa hylkäysperusteeksi",
+            new Hylattytila(tekstiryhmaToMap(head.kuvaukset),
               new Arvokonvertterihylkays(arvo.toString))
           } else new Hyvaksyttavissatila
 
@@ -69,16 +82,16 @@ object Laskenta {
       konversiot.sortWith((a, b) => a.max > b.max)
       .filter(konv =>arvo >= konv.min && arvo <= konv.max
       ) match {
-        case Nil => (None, new Virhetila("Arvo $arvo ei täsmää yhteenkään konvertterille määritettyyn arvoväliin",
+        case Nil => (None, new Virhetila(tekstiToMap("Arvo $arvo ei täsmää yhteenkään konvertterille määritettyyn arvoväliin"),
           new ArvovalikonvertointiVirhe(arvo.underlying)))
         case head :: tail => {
           val paluuarvo = if (head.palautaHaettuArvo) arvo else head.paluuarvo
-//          val tila = if (head.hylkaysperuste) {
-//            new Hylattytila(s"Arvoväli ${head.min}-${head.max} on määritelty konvertterissa hylkäysperusteeksi. Konvertoitava arvo $arvo.",
-//              new Arvovalikonvertterihylkays(arvo.underlying, head.min.underlying, head.max.underlying))
-//          } else new Hyvaksyttavissatila
+          val tila = if (head.hylkaysperuste) {
+            new Hylattytila(tekstiryhmaToMap(head.kuvaukset),
+              new Arvovalikonvertterihylkays(arvo.underlying, head.min.underlying, head.max.underlying))
+          } else new Hyvaksyttavissatila
 
-          val tila = new Hyvaksyttavissatila
+          //val tila = new Hyvaksyttavissatila
 
           (Some(paluuarvo), tila)
         }
@@ -88,15 +101,15 @@ object Laskenta {
 
   sealed trait Konversio
 
-  case class Arvokonversio[S, T](arvo: S, paluuarvo: T, hylkaysperuste: Boolean) extends Konversio
+  case class Arvokonversio[S, T](arvo: S, paluuarvo: T, hylkaysperuste: Boolean, kuvaukset: TekstiRyhma) extends Konversio
 
-  case class ArvokonversioMerkkijonoilla[S, T](arvo: String, paluuarvo: T, hylkaysperuste: String) extends Konversio
+  case class ArvokonversioMerkkijonoilla[S, T](arvo: String, paluuarvo: T, hylkaysperuste: String, kuvaukset: TekstiRyhma) extends Konversio
 
   case class Lukuarvovalikonversio(min: BigDecimal, max: BigDecimal, paluuarvo: BigDecimal,
-                                   palautaHaettuArvo: Boolean) extends Konversio
+                                   palautaHaettuArvo: Boolean, hylkaysperuste: Boolean, kuvaukset: TekstiRyhma) extends Konversio
 
   case class LukuarvovalikonversioMerkkijonoilla(min: String, max: String, paluuarvo: String,
-                                   palautaHaettuArvo: String) extends Konversio
+                                   palautaHaettuArvo: String, hylkaysperuste: String, kuvaukset: TekstiRyhma) extends Konversio
 
   case class KonvertoiLukuarvo(konvertteri: Konvertteri[BigDecimal, BigDecimal], f: Lukuarvofunktio, oid: String = "", tulosTunniste: String = "")
     extends KonvertoivaFunktio[BigDecimal, BigDecimal] with Lukuarvofunktio

@@ -1,5 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.laskenta.api.tila;
 
+import java.util.Map;
+
 /**
  * User: kwuoti
  * Date: 25.2.2013
@@ -7,7 +9,7 @@ package fi.vm.sade.service.valintaperusteet.laskenta.api.tila;
  */
 public class Virhetila extends Tila {
 
-    public Virhetila(String kuvaus, VirheMetatieto metatieto) {
+    public Virhetila(Map<String, String> kuvaus, VirheMetatieto metatieto) {
         super(Tilatyyppi.VIRHE);
         this.kuvaus = kuvaus;
         this.metatieto = metatieto;
@@ -17,10 +19,10 @@ public class Virhetila extends Tila {
         super(Tilatyyppi.VIRHE);
     }
 
-    private String kuvaus;
+    private Map<String, String> kuvaus;
     private VirheMetatieto metatieto;
 
-    public String getKuvaus() {
+    public Map<String, String> getKuvaus() {
         return kuvaus;
     }
 

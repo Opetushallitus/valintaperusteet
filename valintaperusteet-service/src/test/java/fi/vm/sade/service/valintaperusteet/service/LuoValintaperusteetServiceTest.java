@@ -974,7 +974,7 @@ public class LuoValintaperusteetServiceTest {
         assertEquals(odotettuTulos, tulos.getTulos());
         assertEquals(Tila.Tilatyyppi.HYLATTY, tulos.getTila().getTilatyyppi());
         assertEquals(HylattyMetatieto.Hylattymetatietotyyppi.HYLKAA_FUNKTION_SUORITTAMA_HYLKAYS, ((Hylattytila) tulos.getTila()).getMetatieto().getMetatietotyyppi());
-        assertEquals("Kielikoetta ei suoritettu tai kielikokeen korvaavuusehto ei täyttynyt", ((Hylattytila) tulos.getTila()).getKuvaus());
+        assertEquals("Kielikoetta ei suoritettu tai kielikokeen korvaavuusehto ei täyttynyt", ((Hylattytila) tulos.getTila()).getKuvaus().get("FI"));
 
         Laskentatulos<BigDecimal> tulos2 = laskentaService.suoritaValintalaskenta(hakukohde, hakemukset[1],
                 Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
@@ -1019,7 +1019,7 @@ public class LuoValintaperusteetServiceTest {
         assertEquals(odotettuTulos, tulos.getTulos());
         assertEquals(Tila.Tilatyyppi.HYLATTY, tulos.getTila().getTilatyyppi());
         assertEquals(HylattyMetatieto.Hylattymetatietotyyppi.HYLKAA_FUNKTION_SUORITTAMA_HYLKAYS, ((Hylattytila) tulos.getTila()).getMetatieto().getMetatietotyyppi());
-        assertEquals("Kielikoetta ei suoritettu tai kielikokeen korvaavuusehto ei täyttynyt", ((Hylattytila) tulos.getTila()).getKuvaus());
+        assertEquals("Kielikoetta ei suoritettu tai kielikokeen korvaavuusehto ei täyttynyt", ((Hylattytila) tulos.getTila()).getKuvaus().get("FI"));
 
         Laskentatulos<BigDecimal> tulos2 = laskentaService.suoritaValintalaskenta(hakukohde, hakemukset[1],
                 Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaLukuarvolasku(yhdistetty.getFunktiokutsu()));

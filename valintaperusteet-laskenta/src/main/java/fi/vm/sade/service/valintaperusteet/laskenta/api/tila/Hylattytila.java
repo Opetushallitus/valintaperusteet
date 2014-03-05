@@ -1,5 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.laskenta.api.tila;
 
+import java.util.Map;
+
 /**
  * User: kwuoti
  * Date: 25.2.2013
@@ -11,17 +13,17 @@ public class Hylattytila extends Tila {
         super(Tilatyyppi.HYLATTY);
     }
 
-    public Hylattytila(String kuvaus, HylattyMetatieto metatieto) {
+    public Hylattytila(Map<String,String> kuvaus, HylattyMetatieto metatieto) {
         super(Tilatyyppi.HYLATTY);
         this.kuvaus = kuvaus;
         this.metatieto = metatieto;
     }
 
-    private String kuvaus;
+    private Map<String,String> kuvaus;
 
     private HylattyMetatieto metatieto;
 
-    public String getKuvaus() {
+    public Map<String,String> getKuvaus() {
         return kuvaus;
     }
 

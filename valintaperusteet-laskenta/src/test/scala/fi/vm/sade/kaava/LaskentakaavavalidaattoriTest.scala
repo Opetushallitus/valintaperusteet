@@ -2,7 +2,7 @@ package fi.vm.sade.kaava
 
 import org.scalatest.FunSuite
 import fi.vm.sade.kaava.LaskentaTestUtil._
-import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti
+import fi.vm.sade.service.valintaperusteet.model.{TekstiRyhma, Funktioargumentti}
 import fi.vm.sade.kaava.LaskentaTestUtil.Funktiokutsu
 import java.math.BigDecimal
 import fi.vm.sade.service.valintaperusteet.service.validointi.virhe.{Validointivirhe, Virhetyyppi}
@@ -71,12 +71,16 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
         paluuarvo = "40",
         min = "20.0",
         max = "101.0",
-        palautaHaettuArvo = "false"),
+        palautaHaettuArvo = "false",
+        hylkaysperuste = "false",
+        kuvaukset = new TekstiRyhma()),
       Arvovalikonvertteriparametri(
         paluuarvo = "50.0",
         min = "101.0",
         max = "350.0",
-        palautaHaettuArvo = "false")))
+        palautaHaettuArvo = "false",
+        hylkaysperuste = "false",
+        kuvaukset = new TekstiRyhma())))
 
   val validKonvertoiLukuarvovaliLukuarvoksi2 = Funktiokutsu(
     nimi = Funktionimi.KONVERTOILUKUARVO,
@@ -85,11 +89,15 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
       Arvovalikonvertteriparametri(
         min = "20.0",
         max = "101.0",
-        palautaHaettuArvo = "true"),
+        palautaHaettuArvo = "true",
+        hylkaysperuste = "false",
+        kuvaukset = new TekstiRyhma()),
       Arvovalikonvertteriparametri(
         min = "101.0",
         max = "350.0",
-        palautaHaettuArvo = "true")))
+        palautaHaettuArvo = "true",
+        hylkaysperuste = "false",
+        kuvaukset = new TekstiRyhma())))
 
   val validKonvertoiLukuarvoLukuarvoksi = Funktiokutsu(
     nimi = Funktionimi.KONVERTOILUKUARVO,
@@ -98,11 +106,13 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
       Arvokonvertteriparametri(
         paluuarvo = "5.0",
         arvo = "100.0",
-        hylkaysperuste = "false"),
+        hylkaysperuste = "false",
+        kuvaukset = new TekstiRyhma()),
       Arvokonvertteriparametri(
         paluuarvo = "10.0",
         arvo = "200.0",
-        hylkaysperuste = "false")))
+        hylkaysperuste = "false",
+        kuvaukset = new TekstiRyhma())))
 
   test("Lukuarvo without input parameters") {
     val funktiokutsu = Funktiokutsu(
@@ -332,11 +342,13 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
         Arvokonvertteriparametri(
           paluuarvo = "40",
           arvo = "kymmenen",
-          hylkaysperuste = "false"),
+          hylkaysperuste = "false",
+          kuvaukset = new TekstiRyhma()),
         Arvokonvertteriparametri(
           paluuarvo = "50.0",
           arvo = "100.0",
-          hylkaysperuste = "false")))
+          hylkaysperuste = "false",
+          kuvaukset = new TekstiRyhma())))
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(1 == validationMessages.size)
@@ -352,11 +364,13 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
         Arvokonvertteriparametri(
           paluuarvo = "",
           arvo = "",
-          hylkaysperuste = "false"),
+          hylkaysperuste = "false",
+          kuvaukset = new TekstiRyhma()),
         Arvokonvertteriparametri(
           paluuarvo = "50",
           arvo = "",
-          hylkaysperuste = "false")))
+          hylkaysperuste = "false",
+          kuvaukset = new TekstiRyhma())))
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(3 == validationMessages.size)
@@ -398,8 +412,8 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
         onPakollinen = true,
         tunniste = "paasykoepisteet")),
       arvokonvertterit = List(
-        Arvokonvertteriparametri("10.0", "23.0", "false"),
-        Arvokonvertteriparametri("5.0", "13.0", "false")))
+        Arvokonvertteriparametri("10.0", "23.0", "false", new TekstiRyhma()),
+        Arvokonvertteriparametri("5.0", "13.0", "false", new TekstiRyhma())))
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(0 == validationMessages.size)
@@ -415,12 +429,16 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
         Arvovalikonvertteriparametri(
           min = "0.0",
           max = "10.0",
-          palautaHaettuArvo = "true"),
+          palautaHaettuArvo = "true",
+          hylkaysperuste = "false",
+          kuvaukset = new TekstiRyhma()),
         Arvovalikonvertteriparametri(
           min = "10.0",
           max = "20.0",
           paluuarvo = "100.0",
-          palautaHaettuArvo = "false")))
+          palautaHaettuArvo = "false",
+          hylkaysperuste = "false",
+          kuvaukset = new TekstiRyhma())))
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(0 == validationMessages.size)
@@ -494,7 +512,8 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
         Arvokonvertteriparametri(
           paluuarvo = "10.0",
           arvo = "L",
-          hylkaysperuste = "false")))
+          hylkaysperuste = "false",
+          kuvaukset = new TekstiRyhma())))
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(1 == validationMessages.size)
@@ -514,7 +533,8 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
         Arvokonvertteriparametri(
           paluuarvo = "10.0",
           arvo = "L",
-          hylkaysperuste = "false")))
+          hylkaysperuste = "false",
+          kuvaukset = new TekstiRyhma())))
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(0 == validationMessages.size)
@@ -547,7 +567,8 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
         Arvokonvertteriparametri(
           paluuarvo = "true",
           arvo = "L",
-          hylkaysperuste = "false")))
+          hylkaysperuste = "false",
+          kuvaukset = new TekstiRyhma())))
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(1 == validationMessages.size)
@@ -567,7 +588,8 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
         Arvokonvertteriparametri(
           paluuarvo = "true",
           arvo = "L",
-          hylkaysperuste = "false")))
+          hylkaysperuste = "false",
+          kuvaukset = new TekstiRyhma())))
 
     val validationMessages = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet
     assert(0 == validationMessages.size)
@@ -617,13 +639,16 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
         Arvokonvertteriparametri(
           paluuarvo = "5.0",
           arvo = "10.0",
-          hylkaysperuste = "true")),
+          hylkaysperuste = "true",
+          kuvaukset = new TekstiRyhma())),
       arvovalikonvertterit = List(
         Arvovalikonvertteriparametri(
           paluuarvo = "20.0",
           min = "0.0",
           max = "100.0",
-          palautaHaettuArvo = "false")),
+          palautaHaettuArvo = "false",
+          hylkaysperuste = "false",
+          kuvaukset = new TekstiRyhma())),
       valintaperustetunniste = List(ValintaperusteViite(
         onPakollinen = true,
         tunniste = "joku_tunniste")))

@@ -144,7 +144,7 @@ object Laskentadomainkonvertteri {
         val konvertteri = if (!funktiokutsu.getArvokonvertteriparametrit.isEmpty) {
           val konversioMap = funktiokutsu.getArvokonvertteriparametrit.map(konv =>
             ArvokonversioMerkkijonoilla[BigDecimal, BigDecimal](konv.getArvo, BigDecimal(konv.getPaluuarvo),
-              konv.getHylkaysperuste)).toList
+              konv.getHylkaysperuste, konv.getKuvaukset)).toList
 
           Some(Arvokonvertteri[BigDecimal, BigDecimal](konversioMap))
         } else if (!funktiokutsu.getArvovalikonvertteriparametrit.isEmpty) {
@@ -155,7 +155,7 @@ object Laskentadomainkonvertteri {
               "0.0"
             }
             LukuarvovalikonversioMerkkijonoilla(konv.getMinValue(), konv.getMaxValue(), paluuarvo,
-              konv.getPalautaHaettuArvo)
+              konv.getPalautaHaettuArvo, konv.getHylkaysperuste, konv.getKuvaukset)
           }).toList
 
           Some(Lukuarvovalikonvertteri(konversioMap))
@@ -170,7 +170,7 @@ object Laskentadomainkonvertteri {
         val konvertteri = if (!funktiokutsu.getArvokonvertteriparametrit.isEmpty) {
           val konversioMap = funktiokutsu.getArvokonvertteriparametrit.map(konv =>
             ArvokonversioMerkkijonoilla[BigDecimal, BigDecimal](konv.getArvo, BigDecimal(konv.getPaluuarvo),
-              konv.getHylkaysperuste)).toList
+              konv.getHylkaysperuste, konv.getKuvaukset)).toList
 
           Some(Arvokonvertteri[BigDecimal, BigDecimal](konversioMap))
         } else if (!funktiokutsu.getArvovalikonvertteriparametrit.isEmpty) {
@@ -181,7 +181,7 @@ object Laskentadomainkonvertteri {
               "0.0"
             }
             LukuarvovalikonversioMerkkijonoilla(konv.getMinValue(), konv.getMaxValue(), paluuarvo,
-              konv.getPalautaHaettuArvo)
+              konv.getPalautaHaettuArvo, konv.getHylkaysperuste, konv.getKuvaukset)
           }).toList
 
           Some(Lukuarvovalikonvertteri(konversioMap))
@@ -194,7 +194,7 @@ object Laskentadomainkonvertteri {
       }
       case Funktionimi.HAEMERKKIJONOJAKONVERTOILUKUARVOKSI => {
         val konversioMap = funktiokutsu.getArvokonvertteriparametrit.map(konv =>
-          ArvokonversioMerkkijonoilla[String, BigDecimal](konv.getArvo, BigDecimal(konv.getPaluuarvo), konv.getHylkaysperuste)).toList
+          ArvokonversioMerkkijonoilla[String, BigDecimal](konv.getArvo, BigDecimal(konv.getPaluuarvo), konv.getHylkaysperuste, konv.getKuvaukset)).toList
 
         val oletusarvo = funktiokutsu.getSyoteparametrit.find(_.getAvain == "oletusarvo")
           .map(p => parametriToBigDecimal(p))
@@ -208,7 +208,7 @@ object Laskentadomainkonvertteri {
 
       case Funktionimi.HAEMERKKIJONOJAKONVERTOITOTUUSARVOKSI => {
         val konversioMap = funktiokutsu.getArvokonvertteriparametrit.map(konv =>
-          ArvokonversioMerkkijonoilla[String, Boolean](konv.getArvo, konv.getPaluuarvo.toBoolean, konv.getHylkaysperuste)).toList
+          ArvokonversioMerkkijonoilla[String, Boolean](konv.getArvo, konv.getPaluuarvo.toBoolean, konv.getHylkaysperuste, konv.getKuvaukset)).toList
 
         val oletusarvo = funktiokutsu.getSyoteparametrit.find(_.getAvain == "oletusarvo")
           .map(p => parametriToBoolean(p))
@@ -233,7 +233,7 @@ object Laskentadomainkonvertteri {
         val konvertteri = if (!funktiokutsu.getArvokonvertteriparametrit.isEmpty) {
           val konversioMap = funktiokutsu.getArvokonvertteriparametrit.map(konv => {
             ArvokonversioMerkkijonoilla[Boolean, Boolean](konv.getArvo, konv.getPaluuarvo.toBoolean,
-              konv.getHylkaysperuste)
+              konv.getHylkaysperuste, konv.getKuvaukset)
           }).toList
 
           Some(Arvokonvertteri[Boolean, Boolean](konversioMap))
@@ -275,13 +275,13 @@ object Laskentadomainkonvertteri {
         val konvertteri = if (!funktiokutsu.getArvokonvertteriparametrit.isEmpty) {
           val konversioMap = funktiokutsu.getArvokonvertteriparametrit.map(konv =>
             ArvokonversioMerkkijonoilla[BigDecimal, BigDecimal](konv.getArvo, BigDecimal(konv.getPaluuarvo),
-              konv.getHylkaysperuste)).toList
+              konv.getHylkaysperuste, konv.getKuvaukset)).toList
 
           Arvokonvertteri[BigDecimal, BigDecimal](konversioMap)
         } else {
           val konversioMap = funktiokutsu.getArvovalikonvertteriparametrit.map(konv =>
             LukuarvovalikonversioMerkkijonoilla(konv.getMinValue, konv.getMaxValue, konv.getPaluuarvo,
-              konv.getPalautaHaettuArvo)).toList
+              konv.getPalautaHaettuArvo, konv.getHylkaysperuste, konv.getKuvaukset)).toList
 
           Lukuarvovalikonvertteri(konversioMap)
         }

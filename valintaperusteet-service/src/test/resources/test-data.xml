@@ -86,21 +86,21 @@
     <funktiokutsu tallenna_tulos="false" id="302" version="0" funktionimi="KONVERTOILUKUARVO"/>
     <funktioargumentti id="302" version="0" funktiokutsuparent_id="302" funktiokutsuchild_id="1" indeksi="1"/>
     <arvovalikonvertteriparametri id="305" version="0" minvalue="1.0" maxvalue="3.0" paluuarvo="50.0"
-                                  palauta_haettu_arvo="false" funktiokutsu_id="302"/>
+                                  palauta_haettu_arvo="false" funktiokutsu_id="302" hylkaysperuste="false"/>
     <arvovalikonvertteriparametri id="304" version="0" minvalue="3.0" maxvalue="5.0" paluuarvo="40.0"
-                                  palauta_haettu_arvo="false" funktiokutsu_id="302"/>
+                                  palauta_haettu_arvo="false" funktiokutsu_id="302" hylkaysperuste="false"/>
     <arvovalikonvertteriparametri id="306" version="0" minvalue="5.0" maxvalue="7.0" paluuarvo="60.0"
-                                  palauta_haettu_arvo="false" funktiokutsu_id="302"/>
+                                  palauta_haettu_arvo="false" funktiokutsu_id="302" hylkaysperuste="false"/>
 
     <funktiokutsu tallenna_tulos="false" id="401" version="0" funktionimi="KONVERTOILUKUARVO"/>
     <funktioargumentti id="401" version="0" funktiokutsuparent_id="401" funktiokutsuchild_id="403" indeksi="1"/>
     <arvovalikonvertteriparametri id="401" version="0" minvalue="1.0" maxvalue="3.0" paluuarvo="50.0"
-                                  palauta_haettu_arvo="false" funktiokutsu_id="401"/>
+                                  palauta_haettu_arvo="false" funktiokutsu_id="401" hylkaysperuste="false"/>
 
     <funktiokutsu tallenna_tulos="false" id="402" version="0" funktionimi="KONVERTOILUKUARVO"/>
     <funktioargumentti id="402" version="0" funktiokutsuparent_id="402" funktiokutsuchild_id="404" indeksi="1"/>
     <arvovalikonvertteriparametri id="402" version="0" minvalue="1.0" maxvalue="3.0" paluuarvo="50.0"
-                                  palauta_haettu_arvo="false" funktiokutsu_id="402"/>
+                                  palauta_haettu_arvo="false" funktiokutsu_id="402" hylkaysperuste="false"/>
 
     <funktiokutsu tallenna_tulos="false" id="403" version="0" funktionimi="HAELUKUARVO"/>
     <valintaperuste_viite id="403" version="0" tunniste="t1" kuvaus="t1" lahde="SYOTETTAVA_ARVO" funktiokutsu_id="403"
@@ -203,12 +203,12 @@
                           on_pakollinen="true" epasuora_viittaus="true" funktiokutsu_id="600" indeksi="1"/>
     <arvovalikonvertteriparametri id="600" version="0" minvalue="{{hakukohde.minimiarvo}}" maxvalue="10.0"
                                   palauta_haettu_arvo="false"
-                                  paluuarvo="1.0" funktiokutsu_id="600"/>
+                                  paluuarvo="1.0" funktiokutsu_id="600" hylkaysperuste="false"/>
     <arvovalikonvertteriparametri id="601" version="0" minvalue="10.0" maxvalue="20.0" palauta_haettu_arvo="false"
-                                  paluuarvo="2.0" funktiokutsu_id="600"/>
+                                  paluuarvo="2.0" funktiokutsu_id="600" hylkaysperuste="false"/>
     <arvovalikonvertteriparametri id="602" version="0" minvalue="20.0" maxvalue="{{hakukohde.maksimiarvo}}"
                                   palauta_haettu_arvo="false"
-                                  paluuarvo="3.0" funktiokutsu_id="600"/>
+                                  paluuarvo="3.0" funktiokutsu_id="600" hylkaysperuste="false"/>
 
     <laskentakaava id="520" version="0" nimi="kaava520" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO"
                    funktiokutsu_id="520"/>
@@ -322,13 +322,13 @@
                           on_pakollinen="true" funktiokutsu_id="709" indeksi="1"/>
     <arvovalikonvertteriparametri id="603" version="0" minvalue="{{hakukohde.paasykoe_min}}" maxvalue="3.0"
                                   paluuarvo="50.0"
-                                  palauta_haettu_arvo="{{hakukohde.avk1_pha}}" funktiokutsu_id="709"/>
+                                  palauta_haettu_arvo="{{hakukohde.avk1_pha}}" funktiokutsu_id="709" hylkaysperuste="false"/>
     <arvovalikonvertteriparametri id="604" version="0" minvalue="{{hakukohde.lisanaytto_min}}"
                                   maxvalue="{{hakukohde.lisanaytto_max}}" paluuarvo="40.0"
-                                  palauta_haettu_arvo="false" funktiokutsu_id="709"/>
+                                  palauta_haettu_arvo="false" funktiokutsu_id="709" hylkaysperuste="false"/>
     <arvovalikonvertteriparametri id="605" version="0" minvalue="{{hakukohde.lisanaytto_hylkays_min}}"
                                   maxvalue="{{hakukohde.lisanaytto_hylkays_max}}" paluuarvo="60.0"
-                                  palauta_haettu_arvo="true" funktiokutsu_id="709"/>
+                                  palauta_haettu_arvo="true" funktiokutsu_id="709" hylkaysperuste="false"/>
 
     <laskentakaava id="419" version="0" funktiokutsu_id="709" nimi="jeppis2" on_luonnos="false"
                    tyyppi="TOTUUSARVOFUNKTIO"/>
