@@ -7,6 +7,8 @@ import scala.Some
 import scala.Tuple2
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonversio
 import scala.util.Try
+import scala.collection.JavaConversions
+import fi.vm.sade.service.valintaperusteet.model.TekstiRyhma
 
 /**
  * Created with IntelliJ IDEA.
@@ -25,6 +27,10 @@ trait LaskinFunktiot {
       case Some(t) => f(t, alkupTila)
       case None => (None, List(alkupTila))
     }
+  }
+
+  protected def suomenkielinenHylkaysperusteMap(teksti: String) = {
+    JavaConversions.mapAsJavaMap(Map("FI" -> teksti))
   }
 
   protected def suoritaKonvertointi[S, T](tulos: Tuple2[Option[S], Tila],
@@ -56,7 +62,7 @@ trait LaskinFunktiot {
       case Some(s) if (!s.trim.isEmpty) => (Some(s), new Hyvaksyttavissatila)
       case _ => {
         val tila = if (pakollinen) {
-          new Hylattytila(s"Pakollista arvoa (tunniste $tunniste) ei ole olemassa",
+          new Hylattytila(suomenkielinenHylkaysperusteMap(s"Pakollista arvoa (tunniste $tunniste) ei ole olemassa"),
             new PakollinenValintaperusteHylkays(tunniste))
         } else new Hyvaksyttavissatila
 
@@ -153,7 +159,7 @@ trait LaskinFunktiot {
   }
 
   protected def moodiVirhe(virheViesti: String, funktioNimi: String, moodi: String) = {
-    (None, List(new Virhetila(virheViesti, new VirheellinenLaskentamoodiVirhe(funktioNimi, moodi))),
+    (None, List(new Virhetila(suomenkielinenHylkaysperusteMap(virheViesti), new VirheellinenLaskentamoodiVirhe(funktioNimi, moodi))),
       Historia(funktioNimi, None, List(), None, None))
   }
 
@@ -161,7 +167,7 @@ trait LaskinFunktiot {
     try {
       (Some(s.toBoolean), oletustila)
     } catch {
-      case e: Throwable => (None, new Virhetila(s"Arvoa $s ei voida muuttaa Boolean-tyyppiseksi (tunniste $tunniste)",
+      case e: Throwable => (None, new Virhetila(suomenkielinenHylkaysperusteMap(s"Arvoa $s ei voida muuttaa Boolean-tyyppiseksi (tunniste $tunniste)"),
         new ValintaperustettaEiVoidaTulkitaTotuusarvoksiVirhe(tunniste)))
     }
   }
@@ -170,7 +176,7 @@ trait LaskinFunktiot {
     try {
       (Some(BigDecimal(s)), oletustila)
     } catch {
-      case e: Throwable => (None, new Virhetila(s"Arvoa $s ei voida muuttaa BigDecimal-tyyppiseksi (tunniste $tunniste)",
+      case e: Throwable => (None, new Virhetila(suomenkielinenHylkaysperusteMap(s"Arvoa $s ei voida muuttaa BigDecimal-tyyppiseksi (tunniste $tunniste)"),
         new ValintaperustettaEiVoidaTulkitaLukuarvoksiVirhe(tunniste)))
     }
   }
@@ -220,20 +226,32 @@ trait LaskinFunktiot {
             }
             case s: String => haeValintaperuste(s)
           }
-          (min, max, paluuarvo, palautaHaettuArvo)
+          val hylkaysperuste = l.hylkaysperuste match {
+            case pattern(source, identifier) => {
+              source match {
+                case "hakemus" => haeValintaperusteHakemukselta(identifier, hakemus)
+                case "hakukohde" => haeValintaperusteHakukohteelta(identifier, hakukohde)
+              }
+            }
+            case s: String => haeValintaperuste(s)
+          }
+          (min, max, paluuarvo, palautaHaettuArvo, hylkaysperuste, Some(l.kuvaukset))
         }
         case lk: Lukuarvovalikonversio => {
 
-         (Some(lk.min),Some(lk.max),Some(lk.paluuarvo),Some(lk.palautaHaettuArvo))
+         (Some(lk.min),Some(lk.max),Some(lk.paluuarvo),Some(lk.palautaHaettuArvo),Some(lk.hylkaysperuste), Some(lk.kuvaukset))
         }
         case _ => {
-          (None,None,None,None,false)
+          (None,None,None,None,false,None,None)
         }
       }
 
       tilat match {
-        case (Some(min: BigDecimal), Some(max: BigDecimal),Some(p: BigDecimal), Some(ph: Boolean)) => {
-          Some(Lukuarvovalikonversio(min, max, p, ph))
+        case (Some(min: BigDecimal), Some(max: BigDecimal),Some(p: BigDecimal), Some(ph: Boolean), Some(h: Boolean), Some(k: TekstiRyhma)) => {
+          Some(Lukuarvovalikonversio(min, max, p, ph, h, k))
+        }
+        case (Some(min: BigDecimal), Some(max: BigDecimal),Some(p: BigDecimal), Some(ph: Boolean), Some(h: Boolean), Some(null)) => {
+          Some(Lukuarvovalikonversio(min, max, p, ph, h, new TekstiRyhma()))
         }
         case _ => None
       }
@@ -243,7 +261,7 @@ trait LaskinFunktiot {
     val konvertoidut = konversiot.map(konv => getLukuarvovaliKonversio(konv))
 
     if(konvertoidut.contains(None)) {
-      (None, List(new Virhetila(s"Konversioita ei voitu muuttaa Arvovalikonversioiksi",new ArvokonvertointiVirhe())))
+      (None, List(new Virhetila(suomenkielinenHylkaysperusteMap(s"Konversioita ei voitu muuttaa Arvovälikonversioiksi"),new ArvokonvertointiVirhe())))
     } else {
       val konvertteri = Lukuarvovalikonvertteri(konvertoidut.map(k => k.get))
       (Some(konvertteri), List(new Hyvaksyttavissatila))
@@ -277,20 +295,23 @@ trait LaskinFunktiot {
             case s: String => haeValintaperuste(s)
           }
 
-          (arvo, Some(a.paluuarvo), hylkaysperuste)
+          (arvo, Some(a.paluuarvo), hylkaysperuste, Some(a.kuvaukset))
         }
         case ak: Arvokonversio[_,_] => {
 
-          (Some(ak.arvo),Some(ak.paluuarvo),Some(ak.hylkaysperuste))
+          (Some(ak.arvo),Some(ak.paluuarvo),Some(ak.hylkaysperuste), Some(ak.kuvaukset))
         }
         case _ => {
-          (None,None,None)
+          (None,None,None,None)
         }
       }
 
       tilat match {
-        case (Some(arvo: Any), Some(paluuarvo: Any), Some(h: Boolean)) => {
-          Some(Arvokonversio(arvo, paluuarvo, h))
+        case (Some(arvo: Any), Some(paluuarvo: Any), Some(h: Boolean), Some(k: TekstiRyhma)) => {
+          Some(Arvokonversio(arvo, paluuarvo, h, k))
+        }
+        case (Some(arvo: Any), Some(paluuarvo: Any), Some(h: Boolean), Some(null)) => {
+          Some(Arvokonversio(arvo, paluuarvo, h, new TekstiRyhma()))
         }
         case _ => None
       }
@@ -300,7 +321,7 @@ trait LaskinFunktiot {
     val konvertoidut = konversiot.map(konv => getArvoKonversio(konv))
 
     if(konvertoidut.contains(None)) {
-      (None, List(new Virhetila(s"Konversioita ei voitu muuttaa Arvokonversioiksi",new ArvokonvertointiVirhe())))
+      (None, List(new Virhetila(suomenkielinenHylkaysperusteMap(s"Konversioita ei voitu muuttaa Arvokonversioiksi"),new ArvokonvertointiVirhe())))
     } else {
       val konvertteri = Arvokonvertteri[S,T](konvertoidut.map(k => k.get))
       (Some(konvertteri), List(new Hyvaksyttavissatila))

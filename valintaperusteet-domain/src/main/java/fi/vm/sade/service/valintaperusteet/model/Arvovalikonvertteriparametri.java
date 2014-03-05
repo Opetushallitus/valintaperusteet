@@ -1,9 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
-import javax.persistence.Cacheable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * User: kwuoti Date: 21.2.2013 Time: 9.20
@@ -37,6 +34,13 @@ public class Arvovalikonvertteriparametri extends Konvertteriparametri {
     @Column(name = "palauta_haettu_arvo")
     private String palautaHaettuArvo;
 
+    @Column(name = "hylkaysperuste", nullable = false)
+    private String hylkaysperuste;
+
+    @JoinColumn(name = "tekstiryhma_id", nullable = true)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    private TekstiRyhma kuvaukset;
+
     public String getMinValue() {
         return minValue;
     }
@@ -62,4 +66,20 @@ public class Arvovalikonvertteriparametri extends Konvertteriparametri {
     }
 
     private static final long serialVersionUID = 7028232303346391201L;
+
+    public String getHylkaysperuste() {
+        return hylkaysperuste;
+    }
+
+    public void setHylkaysperuste(String hylkaysperuste) {
+        this.hylkaysperuste = hylkaysperuste;
+    }
+
+    public TekstiRyhma getKuvaukset() {
+        return kuvaukset;
+    }
+
+    public void setKuvaukset(TekstiRyhma kuvaukset) {
+        this.kuvaukset = kuvaukset;
+    }
 }

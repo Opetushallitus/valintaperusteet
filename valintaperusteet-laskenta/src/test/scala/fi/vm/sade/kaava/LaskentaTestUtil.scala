@@ -8,6 +8,7 @@ import java.util.TreeSet
 import java.math.BigDecimal
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
 import fi.vm.sade.service.valintaperusteet.dto.model.{Funktionimi, Valintaperustelahde}
+import scala.collection.JavaConversions
 
 /**
  * User: kwuoti
@@ -96,23 +97,25 @@ object LaskentaTestUtil {
   }
 
   object Arvokonvertteriparametri {
-    def apply(paluuarvo: String, arvo: String, hylkaysperuste: String) = {
+    def apply(paluuarvo: String, arvo: String, hylkaysperuste: String, kuvaukset: TekstiRyhma) = {
       val konv = new Arvokonvertteriparametri
       konv.setArvo(arvo)
       konv.setHylkaysperuste(hylkaysperuste)
       konv.setPaluuarvo(paluuarvo)
-
+      konv.setKuvaukset(kuvaukset)
       konv
     }
   }
 
   object Arvovalikonvertteriparametri {
-    def apply(paluuarvo: String = "", min: String, max: String, palautaHaettuArvo: String = null) = {
+    def apply(paluuarvo: String = "", min: String, max: String, palautaHaettuArvo: String = null, hylkaysperuste: String = "false", kuvaukset: TekstiRyhma) = {
       val konv = new Arvovalikonvertteriparametri
       konv.setMaxValue(max)
       konv.setMinValue(min)
       konv.setPaluuarvo(paluuarvo)
       konv.setPalautaHaettuArvo(palautaHaettuArvo)
+      konv.setHylkaysperuste(hylkaysperuste)
+      konv.setKuvaukset(kuvaukset)
 
       konv
     }
@@ -156,6 +159,10 @@ object LaskentaTestUtil {
 
       kaava
     }
+  }
+
+  def suomenkielinenHylkaysperusteMap(teksti: String) = {
+    JavaConversions.mapAsJavaMap(Map("FI" -> teksti))
   }
 
 }

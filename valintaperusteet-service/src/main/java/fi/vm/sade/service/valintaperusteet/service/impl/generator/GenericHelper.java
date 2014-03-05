@@ -210,6 +210,7 @@ public class GenericHelper {
         a.setMinValue(String.valueOf(min));
         a.setPalautaHaettuArvo("false");
         a.setPaluuarvo(String.valueOf(paluuarvo));
+        a.setHylkaysperuste("false");
         return a;
     }
 
@@ -218,6 +219,7 @@ public class GenericHelper {
         a.setMaxValue(String.valueOf(max));
         a.setMinValue(String.valueOf(min));
         a.setPalautaHaettuArvo("true");
+        a.setHylkaysperuste("false");
         return a;
     }
 
@@ -226,6 +228,7 @@ public class GenericHelper {
         a.setMaxValue(max);
         a.setMinValue(min);
         a.setPalautaHaettuArvo("true");
+        a.setHylkaysperuste("false");
         return a;
     }
 

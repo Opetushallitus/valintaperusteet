@@ -210,7 +210,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
               (Osallistuminen.valueOf(osallistuiArvo), new Hyvaksyttavissatila)
             } catch {
               case e: IllegalArgumentException => (Osallistuminen.MERKITSEMATTA,
-                new Virhetila(s"Osallistumistietoa $osallistuiArvo ei pystytty tulkitsemaan (tunniste $osallistuminenTunniste)",
+                new Virhetila(suomenkielinenHylkaysperusteMap(s"Osallistumistietoa $osallistuiArvo ei pystytty tulkitsemaan (tunniste $osallistuminenTunniste)"),
                   new OsallistumistietoaEiVoidaTulkitaVirhe(osallistuminenTunniste)))
             }
           }
@@ -222,10 +222,10 @@ private class Laskin private(private val hakukohde: Hakukohde,
 
         val (arvo, konvertoitu, tilat) = if (pakollinen && Osallistuminen.EI_OSALLISTUNUT == osallistuminen)
           (None, None, List(osallistumistila,
-            new Hylattytila(s"Pakollisen syötettävän kentän arvo on '${osallistuminen.name()}' (tunniste $tunniste)",
+            new Hylattytila(suomenkielinenHylkaysperusteMap(s"Pakollisen syötettävän kentän arvo on '${osallistuminen.name()}' (tunniste $tunniste)"),
               new EiOsallistunutHylkays(tunniste))))
         else if (pakollinen && Osallistuminen.MERKITSEMATTA == osallistuminen)
-          (None, None, List(osallistumistila, new Virhetila(s"Pakollisen syötettävän kentän arvo on merkitsemättä (tunniste $tunniste)",
+          (None, None, List(osallistumistila, new Virhetila(suomenkielinenHylkaysperusteMap(s"Pakollisen syötettävän kentän arvo on merkitsemättä (tunniste $tunniste)"),
             new SyotettavaArvoMerkitsemattaVirhe(tunniste))))
         else {
           val (arvo, konvertoitu, tilat) = haeValintaperusteenArvoHakemukselta(tunniste, pakollinen)
@@ -248,7 +248,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
             } else konv(arvo)
           }
           case None => {
-            val tila = if (epasuoraViittaus || pakollinen) new Virhetila(s"Hakukohteen valintaperustetta $tunniste ei ole määritelty",
+            val tila = if (epasuoraViittaus || pakollinen) new Virhetila(suomenkielinenHylkaysperusteMap(s"Hakukohteen valintaperustetta $tunniste ei ole määritelty"),
               new HakukohteenValintaperusteMaarittelemattaVirhe(tunniste))
             else new Hyvaksyttavissatila
 
@@ -268,7 +268,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
             } else konv(arvo)
           }
           case None => {
-            val tila = if (epasuoraViittaus || pakollinen) new Virhetila(s"Hakukohteen valintaperustetta $tunniste ei ole määritelty",
+            val tila = if (epasuoraViittaus || pakollinen) new Virhetila(suomenkielinenHylkaysperusteMap(s"Hakukohteen valintaperustetta $tunniste ei ole määritelty"),
               new HakukohteenValintaperusteMaarittelemattaVirhe(tunniste))
             else new Hyvaksyttavissatila
 
@@ -499,7 +499,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
           n <- nimittajaTulos.tulos
           o <- osoittajaTulos.tulos
         } yield {
-          if (n.intValue() == 0) (None, new Virhetila("Jako nollalla", new JakoNollallaVirhe))
+          if (n.intValue() == 0) (None, new Virhetila(suomenkielinenHylkaysperusteMap("Jako nollalla"), new JakoNollallaVirhe))
           else {
             (Some(BigDecimal(o.underlying.divide(n.underlying, 4, RoundingMode.HALF_UP))), new Hyvaksyttavissatila)
           }
@@ -653,10 +653,10 @@ private class Laskin private(private val hakukohde: Hakukohde,
       case Hylkaa(f, hylkaysperustekuvaus, oid, tulosTunniste) => {
         laskeTotuusarvo(f) match {
           case Tulos(tulos, tila, historia) => {
-            val tila2 = tulos.map(b => if (b) new Hylattytila(hylkaysperustekuvaus.getOrElse("Hylätty hylkäämisfunktiolla"),
+            val tila2 = tulos.map(b => if (b) new Hylattytila(suomenkielinenHylkaysperusteMap(hylkaysperustekuvaus.getOrElse("Hylätty hylkäämisfunktiolla")),
               new HylkaaFunktionSuorittamaHylkays)
             else new Hyvaksyttavissatila)
-              .getOrElse(new Virhetila("Hylkäämisfunktion syöte on tyhjä. Hylkäystä ei voida tulkita.", new HylkaamistaEiVoidaTulkita))
+              .getOrElse(new Virhetila(suomenkielinenHylkaysperusteMap("Hylkäämisfunktion syöte on tyhjä. Hylkäystä ei voida tulkita."), new HylkaamistaEiVoidaTulkita))
             val tilat = List(tila, tila2)            
             (None, tilat, Historia("Hylkää", None, tilat, Some(List(historia)), None))
           }
@@ -667,10 +667,10 @@ private class Laskin private(private val hakukohde: Hakukohde,
           case Tulos(tulos, tila, historia) => {
             val arvovali = haeArvovali((min, max), hakukohde, hakemus)
             if(arvovali isEmpty) {
-              val virheTila = new Virhetila("Arvovalin arvoja ei voida muuntaa lukuarvoiksi", new HylkaamistaEiVoidaTulkita)
+              val virheTila = new Virhetila(suomenkielinenHylkaysperusteMap("Arvovalin arvoja ei voida muuntaa lukuarvoiksi"), new HylkaamistaEiVoidaTulkita)
               (None, List(virheTila), Historia("Hylkää Arvovälillä", None, List(virheTila), Some(List(historia)), None))
             } else {
-              val arvovaliTila = tulos.map(arvo => if(onArvovalilla(arvo, (arvovali.get._1,arvovali.get._2), true, false)) new Hylattytila(hylkaysperustekuvaus.getOrElse("Hylätty hylkäämisfunktiolla"),
+              val arvovaliTila = tulos.map(arvo => if(onArvovalilla(arvo, (arvovali.get._1,arvovali.get._2), true, false)) new Hylattytila(suomenkielinenHylkaysperusteMap(hylkaysperustekuvaus.getOrElse("Hylätty hylkää arvovälillä funktiolla")),
                 new HylkaaFunktionSuorittamaHylkays) else new Hyvaksyttavissatila)
                 .getOrElse(new Hyvaksyttavissatila)
               val tilat = List(tila, arvovaliTila)
@@ -700,7 +700,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
               lahdeskaala match {
                 case Some((lahdeMin, lahdeMax)) => {
                   if (!onArvovalilla(skaalattavaArvo, (lahdeMin, lahdeMax), false, false)) {
-                    (None, new Virhetila(s"Arvo ${skaalattavaArvo.toString} ei ole arvovälillä ${lahdeMin.toString} - ${lahdeMax.toString}",
+                    (None, new Virhetila(suomenkielinenHylkaysperusteMap(s"Arvo ${skaalattavaArvo.toString} ei ole arvovälillä ${lahdeMin.toString} - ${lahdeMax.toString}"),
                       new SkaalattavaArvoEiOleLahdeskaalassaVirhe(skaalattavaArvo.underlying, lahdeMin.underlying, lahdeMax.underlying)))
                   } else {
                     val skaalattuArvo = skaalaa(skaalattavaArvo, (kohdeMin, kohdeMax), (lahdeMin, lahdeMax))
@@ -713,8 +713,8 @@ private class Laskin private(private val hakukohde: Hakukohde,
                   }).filter(!_.isEmpty).map(_.get)
 
                   tulokset match {
-                    case _ if tulokset.size < 2 => (None, new Virhetila("Skaalauksen lähdeskaalaa ei voida määrittää laskennallisesti. " +
-                      "Tuloksia on vähemmän kuin 2 kpl tai kaikki tulokset ovat samoja.", new TuloksiaLiianVahanLahdeskaalanMaarittamiseenVirhe))
+                    case _ if tulokset.size < 2 => (None, new Virhetila(suomenkielinenHylkaysperusteMap("Skaalauksen lähdeskaalaa ei voida määrittää laskennallisesti. " +
+                      "Tuloksia on vähemmän kuin 2 kpl tai kaikki tulokset ovat samoja."), new TuloksiaLiianVahanLahdeskaalanMaarittamiseenVirhe))
                     case _ => {
                       val lahdeSkaalaMin: BigDecimal = tulokset.min
                       val lahdeSkaalaMax: BigDecimal = tulokset.max

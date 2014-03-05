@@ -29,18 +29,50 @@ public class FunktiokutsuDAOImpl extends AbstractJpaDAOImpl<Funktiokutsu, Long> 
         QFunktiokutsu fk = QFunktiokutsu.funktiokutsu;
         QFunktioargumentti fa = QFunktioargumentti.funktioargumentti;
         QArvokonvertteriparametri ak = QArvokonvertteriparametri.arvokonvertteriparametri;
+        QArvovalikonvertteriparametri avk = QArvovalikonvertteriparametri.arvovalikonvertteriparametri;
         QTekstiRyhma t = QTekstiRyhma.tekstiRyhma;
 
-        return from(fk)
-                .leftJoin(fk.syoteparametrit).fetch()
-                .leftJoin(fk.arvokonvertteriparametrit, ak).fetch()
+        JPAQuery query = from(fk);
+
+        if(from(ak).where(ak.funktiokutsu.id.eq(id)).count() > 0) {
+            query.leftJoin(fk.arvokonvertteriparametrit, ak).fetch()
                 .leftJoin(ak.kuvaukset, t).fetch()
-                .leftJoin(t.tekstit).fetch()
-                .leftJoin(fk.arvovalikonvertteriparametrit).fetch()
-                .leftJoin(fk.funktioargumentit, fa).fetch()
-                .leftJoin(fa.laskentakaavaChild).fetch()
-                .leftJoin(fk.valintaperusteviitteet).fetch()
+                .leftJoin(t.tekstit).fetch();
+        } else {
+            query.leftJoin(fk.arvokonvertteriparametrit).fetch();
+        }
+
+        if(from(avk).where(avk.funktiokutsu.id.eq(id)).count() > 0) {
+            query.leftJoin(fk.arvovalikonvertteriparametrit, avk).fetch()
+                    .leftJoin(avk.kuvaukset, t).fetch()
+                    .leftJoin(t.tekstit).fetch();
+        } else {
+            query.leftJoin(fk.arvovalikonvertteriparametrit).fetch();
+        }
+
+        if(from(fa).where(fa.parent.id.eq(id)).count() > 0) {
+            query.leftJoin(fk.funktioargumentit, fa).fetch()
+                .leftJoin(fa.laskentakaavaChild).fetch();
+        } else {
+            query.leftJoin(fk.funktioargumentit).fetch();
+        }
+
+        return query.leftJoin(fk.valintaperusteviitteet).fetch()
+                .leftJoin(fk.syoteparametrit).fetch()
                 .where(fk.id.eq(id)).distinct().singleResult(fk);
+
+
+//        return from(fk)
+//                .leftJoin(fk.syoteparametrit).fetch()
+//                .leftJoin(fk.arvokonvertteriparametrit, ak).fetch()
+//                .leftJoin(fk.arvovalikonvertteriparametrit, avk).fetch()
+//                .leftJoin(avk.kuvaukset, t).fetch()
+//                .leftJoin(t.tekstit).fetch()
+//                .leftJoin(fk.funktioargumentit, fa).fetch()
+//                .leftJoin(fa.laskentakaavaChild).fetch()
+//                .leftJoin(fk.valintaperusteviitteet).fetch()
+//                .where(fk.id.eq(id)).distinct().singleResult(fk);
+
     }
 
     @Override

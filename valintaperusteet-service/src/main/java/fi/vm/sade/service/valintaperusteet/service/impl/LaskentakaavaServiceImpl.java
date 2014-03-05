@@ -336,6 +336,22 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             newParam.setPalautaHaettuArvo(k.getPalautaHaettuArvo());
             newParam.setPaluuarvo(k.getPaluuarvo());
             newParam.setFunktiokutsu(managed);
+
+            newParam.setHylkaysperuste(k.getHylkaysperuste());
+            if(k.getKuvaukset() != null) {
+                TekstiRyhma ryhma = new TekstiRyhma();
+                genericDAO.insert(ryhma);
+                for (LokalisoituTeksti teksti : k.getKuvaukset().getTekstit()) {
+                    LokalisoituTeksti newTeksti = new LokalisoituTeksti();
+                    newTeksti.setKieli(teksti.getKieli());
+                    newTeksti.setTeksti(teksti.getTeksti());
+                    newTeksti.setRyhma(ryhma);
+                    genericDAO.insert(newTeksti);
+                    ryhma.getTekstit().add(newTeksti);
+                }
+
+                newParam.setKuvaukset(ryhma);
+            }
             managed.getArvovalikonvertteriparametrit().add(newParam);
         }
 

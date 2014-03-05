@@ -125,6 +125,8 @@
                     <xs:element name="minimiarvo" type="xs:string" minOccurs="1" maxOccurs="1"/>
                     <xs:element name="maksimiarvo" type="xs:string" minOccurs="1" maxOccurs="1"/>
                     <xs:element name="palautaHaettuArvo" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                    <xs:element name="hylkaysperuste" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                    <xs:element name="kuvaukset" type="tns:TekstiRyhmaTyyppi" minOccurs="0" maxOccurs="1"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
