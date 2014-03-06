@@ -354,7 +354,7 @@ object Laskenta {
     require(n > 0, "n must be greater than zero")
   }
 
-  case class Hylkaa(f: Totuusarvofunktio, hylkaysperustekuvaus: Option[String] = None, oid: String = "", tulosTunniste: String = "")
+  case class Hylkaa(f: Totuusarvofunktio, hylkaysperustekuvaus: Option[Map[String,String]] = None, oid: String = "", tulosTunniste: String = "")
     extends Lukuarvofunktio
 
 
@@ -374,7 +374,7 @@ object Laskenta {
   case class Valintaperusteyhtasuuruus(oid: String = "", tulosTunniste: String = "",
                                        valintaperusteet: Pair[Valintaperuste, Valintaperuste]) extends Totuusarvofunktio
 
-  case class HylkaaArvovalilla(f: Lukuarvofunktio, hylkaysperustekuvaus: Option[String] = None, oid: String = "", tulosTunniste: String = "", arvovali: Pair[String, String])
+  case class HylkaaArvovalilla(f: Lukuarvofunktio, hylkaysperustekuvaus: Option[Map[String,String]] = None, oid: String = "", tulosTunniste: String = "", arvovali: Pair[String, String])
     extends Lukuarvofunktio {
     //require(arvovali._1 < arvovali._2, "Arvovälin minimin pitää olla pienempi kuin maksimi")
   }

@@ -44,6 +44,7 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Hakutoive
 import scala.collection.JavaConversions._
 import play.api.libs.json._
 import fi.vm.sade.service.valintaperusteet.laskenta.JsonFormats._
+import scala.collection.JavaConversions
 
 private case class Tulos[T](tulos: Option[T], tila: Tila, historia: Historia)
 
@@ -653,7 +654,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
       case Hylkaa(f, hylkaysperustekuvaus, oid, tulosTunniste) => {
         laskeTotuusarvo(f) match {
           case Tulos(tulos, tila, historia) => {
-            val tila2 = tulos.map(b => if (b) new Hylattytila(suomenkielinenHylkaysperusteMap(hylkaysperustekuvaus.getOrElse("Hylätty hylkäämisfunktiolla")),
+            val tila2 = tulos.map(b => if (b) new Hylattytila(JavaConversions.mapAsJavaMap(hylkaysperustekuvaus.getOrElse(Map.empty[String,String])),
               new HylkaaFunktionSuorittamaHylkays)
             else new Hyvaksyttavissatila)
               .getOrElse(new Virhetila(suomenkielinenHylkaysperusteMap("Hylkäämisfunktion syöte on tyhjä. Hylkäystä ei voida tulkita."), new HylkaamistaEiVoidaTulkita))
@@ -670,7 +671,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
               val virheTila = new Virhetila(suomenkielinenHylkaysperusteMap("Arvovalin arvoja ei voida muuntaa lukuarvoiksi"), new HylkaamistaEiVoidaTulkita)
               (None, List(virheTila), Historia("Hylkää Arvovälillä", None, List(virheTila), Some(List(historia)), None))
             } else {
-              val arvovaliTila = tulos.map(arvo => if(onArvovalilla(arvo, (arvovali.get._1,arvovali.get._2), true, false)) new Hylattytila(suomenkielinenHylkaysperusteMap(hylkaysperustekuvaus.getOrElse("Hylätty hylkää arvovälillä funktiolla")),
+              val arvovaliTila = tulos.map(arvo => if(onArvovalilla(arvo, (arvovali.get._1,arvovali.get._2), true, false)) new Hylattytila(JavaConversions.mapAsJavaMap(hylkaysperustekuvaus.getOrElse(Map.empty[String,String])),
                 new HylkaaFunktionSuorittamaHylkays) else new Hyvaksyttavissatila)
                 .getOrElse(new Hyvaksyttavissatila)
               val tilat = List(tila, arvovaliTila)

@@ -45,6 +45,7 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Ei
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Hakutoive
 import fi.vm.sade.service.valintaperusteet.service.validointi.virhe.LaskentakaavaEiOleValidiException
 import fi.vm.sade.service.valintaperusteet.dto.model.{Funktionimi, Valintaperustelahde}
+import scala.collection.JavaConversions
 
 /**
  * User: kwuoti
@@ -245,15 +246,22 @@ object Laskentadomainkonvertteri {
         HaeTotuusarvo(konvertteri, oletusarvo, valintaperusteviitteet.head, oid, tulosTunniste)
       }
       case Funktionimi.HYLKAA => {
-        val hylkaysperustekuvaus = funktiokutsu.getSyoteparametrit.find(_.getAvain == "hylkaysperustekuvaus").map(_.getArvo)
-        Hylkaa(muunnaTotuusarvofunktioksi(lasketutArgumentit(0)), hylkaysperustekuvaus, oid, tulosTunniste)
+        //val hylkaysperustekuvaus = funktiokutsu.getSyoteparametrit.find(_.getAvain == "hylkaysperustekuvaus").map(_.getArvo)
+        val hylkaysperustekuvaus = funktiokutsu.getSyoteparametrit.filter(_.getAvain.startsWith("hylkaysperustekuvaus_")).foldLeft(Map.empty[String,String]) {
+          (result, kuvaus) => result + (kuvaus.getAvain.split("_")(1) -> kuvaus.getArvo)
+        }
+
+        Hylkaa(muunnaTotuusarvofunktioksi(lasketutArgumentit(0)), Some(hylkaysperustekuvaus), oid, tulosTunniste)
       }
       case Funktionimi.HYLKAAARVOVALILLA => {
-        val hylkaysperustekuvaus = funktiokutsu.getSyoteparametrit.find(_.getAvain == "hylkaysperustekuvaus").map(_.getArvo)
+        val hylkaysperustekuvaus = funktiokutsu.getSyoteparametrit.filter(_.getAvain.startsWith("hylkaysperustekuvaus_")).foldLeft(Map.empty[String,String]) {
+          (result, kuvaus) => result + (kuvaus.getAvain.split("_")(1) -> kuvaus.getArvo)
+        }
+
         val min = getParametri("arvovaliMin", funktiokutsu.getSyoteparametrit).getArvo
         val max = getParametri("arvovaliMax", funktiokutsu.getSyoteparametrit).getArvo
 
-        HylkaaArvovalilla(muunnaLukuarvofunktioksi(lasketutArgumentit(0)), hylkaysperustekuvaus, oid, tulosTunniste, Pair(min, max))
+        HylkaaArvovalilla(muunnaLukuarvofunktioksi(lasketutArgumentit(0)), Some(hylkaysperustekuvaus), oid, tulosTunniste, Pair(min, max))
 
       }
       case Funktionimi.JA => Ja(lasketutArgumentit.map(muunnaTotuusarvofunktioksi(_)), oid, tulosTunniste)
