@@ -1800,7 +1800,7 @@ class LaskentaIntegraatioTest extends FunSuite {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HYLKAA,
       funktioargumentit = List(totuusarvoTrue),
-      syoteparametrit = List(Syoteparametri(avain = "hylkaysperustekuvaus", arvo = hylkaysperustekuvaus)))
+      syoteparametrit = List(Syoteparametri(avain = "hylkaysperustekuvaus_FI", arvo = hylkaysperustekuvaus)))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)

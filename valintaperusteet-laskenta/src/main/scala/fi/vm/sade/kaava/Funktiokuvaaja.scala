@@ -236,7 +236,9 @@ object Funktiokuvaaja {
       funktioargumentit = List(
         Funktioargumenttikuvaus("f", Funktiotyyppi.TOTUUSARVOFUNKTIO, Kardinaliteetti.YKSI)
       ),
-      syoteparametrit = List(Syoteparametrikuvaus(avain = "hylkaysperustekuvaus", tyyppi = Syoteparametrityyppi.MERKKIJONO, pakollinen = false))
+      syoteparametrit = List(Syoteparametrikuvaus(avain = "hylkaysperustekuvaus_FI", tyyppi = Syoteparametrityyppi.MERKKIJONO, pakollinen = false),
+        Syoteparametrikuvaus(avain = "hylkaysperustekuvaus_SV", tyyppi = Syoteparametrityyppi.MERKKIJONO, pakollinen = false),
+        Syoteparametrikuvaus(avain = "hylkaysperustekuvaus_EN", tyyppi = Syoteparametrityyppi.MERKKIJONO, pakollinen = false))
     ),
     Funktionimi.HYLKAAARVOVALILLA -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
@@ -244,7 +246,9 @@ object Funktiokuvaaja {
         Funktioargumenttikuvaus("f", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.YKSI)
       ),
       syoteparametrit = List(
-        Syoteparametrikuvaus(avain = "hylkaysperustekuvaus", tyyppi = Syoteparametrityyppi.MERKKIJONO, pakollinen = false),
+        Syoteparametrikuvaus(avain = "hylkaysperustekuvaus_FI", tyyppi = Syoteparametrityyppi.MERKKIJONO, pakollinen = false),
+        Syoteparametrikuvaus(avain = "hylkaysperustekuvaus_SV", tyyppi = Syoteparametrityyppi.MERKKIJONO, pakollinen = false),
+        Syoteparametrikuvaus(avain = "hylkaysperustekuvaus_EN", tyyppi = Syoteparametrityyppi.MERKKIJONO, pakollinen = false),
         Syoteparametrikuvaus("arvovaliMin", Syoteparametrityyppi.MERKKIJONO, pakollinen = true),
         Syoteparametrikuvaus("arvovaliMax", Syoteparametrityyppi.MERKKIJONO, pakollinen = true)
       )

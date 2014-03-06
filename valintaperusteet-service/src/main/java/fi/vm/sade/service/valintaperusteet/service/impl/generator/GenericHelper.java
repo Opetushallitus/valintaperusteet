@@ -379,7 +379,7 @@ public class GenericHelper {
         Funktiokutsu f = new Funktiokutsu();
         f.setFunktionimi(Funktionimi.HYLKAA);
         f.getFunktioargumentit().addAll(luoFunktioargumentit(arg));
-        f.getSyoteparametrit().add(luoSyoteparametri("hylkaysperustekuvaus", hylkaysperustekuvaus));
+        f.getSyoteparametrit().add(luoSyoteparametri("hylkaysperustekuvaus_FI", hylkaysperustekuvaus));
         return f;
     }
 
@@ -388,7 +388,7 @@ public class GenericHelper {
         Funktiokutsu f = new Funktiokutsu();
         f.setFunktionimi(Funktionimi.HYLKAAARVOVALILLA);
         f.getFunktioargumentit().addAll(luoFunktioargumentit(arg));
-        f.getSyoteparametrit().add(luoSyoteparametri("hylkaysperustekuvaus", hylkaysperustekuvaus));
+        f.getSyoteparametrit().add(luoSyoteparametri("hylkaysperustekuvaus_FI", hylkaysperustekuvaus));
         f.getSyoteparametrit().add(luoSyoteparametri("arvovaliMin", min));
         f.getSyoteparametrit().add(luoSyoteparametri("arvovaliMax", max));
         return f;
