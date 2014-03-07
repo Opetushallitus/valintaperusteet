@@ -64,7 +64,7 @@ object Laskenta {
           val paluuarvo = head.paluuarvo
           val tila = if (head.hylkaysperuste) {
             new Hylattytila(tekstiryhmaToMap(head.kuvaukset),
-              new Arvokonvertterihylkays(arvo.toString))
+              new Arvokonvertterihylkays(arvo.toString), "Arvokonvertterin konvertoi metodissa suoritettu hylkays.")
           } else new Hyvaksyttavissatila
 
           (Some(paluuarvo), tila)
@@ -82,13 +82,14 @@ object Laskenta {
       konversiot.sortWith((a, b) => a.max > b.max)
       .filter(konv =>arvo >= konv.min && arvo <= konv.max
       ) match {
-        case Nil => (None, new Virhetila(tekstiToMap("Arvo $arvo ei täsmää yhteenkään konvertterille määritettyyn arvoväliin"),
+        case Nil => (None, new Virhetila(tekstiToMap(s"Arvo $arvo ei täsmää yhteenkään konvertterille määritettyyn arvoväliin"),
           new ArvovalikonvertointiVirhe(arvo.underlying)))
         case head :: tail => {
           val paluuarvo = if (head.palautaHaettuArvo) arvo else head.paluuarvo
           val tila = if (head.hylkaysperuste) {
             new Hylattytila(tekstiryhmaToMap(head.kuvaukset),
-              new Arvovalikonvertterihylkays(arvo.underlying, head.min.underlying, head.max.underlying))
+              new Arvovalikonvertterihylkays(arvo.underlying, head.min.underlying, head.max.underlying),
+              "Arvovälikonvertterin konvertoi metodissa suoritettu hylkays.")
           } else new Hyvaksyttavissatila
 
           //val tila = new Hyvaksyttavissatila
