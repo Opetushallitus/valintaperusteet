@@ -19,7 +19,7 @@ import java.util.List;
 @Component
 @Provider
 public class CacheFilterFactory implements ResourceFilterFactory {
-    private static final List<ResourceFilter> NO_CACHE_FILTER = Collections.<ResourceFilter>singletonList(new CacheResponseFilter("no-cache"));
+    private static final List<ResourceFilter> NO_CACHE_FILTER = Collections.<ResourceFilter>singletonList(new CacheResponseFilter("no-cache, no-store, must-revalidate"));
 
     @Override
     public List<ResourceFilter> create(AbstractMethod am) {
