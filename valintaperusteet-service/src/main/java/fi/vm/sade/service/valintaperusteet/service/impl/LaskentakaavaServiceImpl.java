@@ -220,6 +220,12 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             }
         }
 
+        for (Syoteparametri s : fk.getSyoteparametrit()) {
+            if (s.getArvo() == null) {
+                s.setArvo("");
+            }
+        }
+
         if (fk.getValintaperusteviitteet().size() == 1) {
             fk.getValintaperusteviitteet().iterator().next().setIndeksi(1);
         }
