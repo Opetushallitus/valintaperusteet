@@ -53,7 +53,7 @@ public class PkPohjaiset {
     // Onko todistuksen saantivuosi sama kuin hakuvuosi
     public static final String todistuksenSaantivuosi = "PK_PAATTOTODISTUSVUOSI";
 
-    public static final int kuluvaVuosi = 2013;
+    public static final int kuluvaVuosi = 2014;
 
     public static Laskentakaava luoPohjakoulutuspisteytysmalli() {
 

@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.service.impl.actors.messages;
 
+import fi.vm.sade.service.valintaperusteet.dto.KoodiDTO;
 import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
 
 /**
@@ -11,11 +12,7 @@ import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
  */
 public class LuoValintaperuste {
 
-    private String arvo;
-    private String uri;
-    private String nimi;
-    private String nimiSv;
-    private String nimiEn;
+    private KoodiDTO hakukohdekoodi;
     private String pOid;
     private String lOid;
     private Laskentakaava pkPeruskaava;
@@ -24,17 +21,15 @@ public class LuoValintaperuste {
     private Laskentakaava[] lkTasasijakriteerit;
 
     private Laskentakaava kielikoelaskentakaava;
+    private Laskentakaava lisapisteLaskentakaava;
 
 
-    public LuoValintaperuste(String arvo, String uri, String nimi, String nimiSv, String nimiEn,
+    public LuoValintaperuste(KoodiDTO hakukohdekoodi,
                              String pOid, String lOid, Laskentakaava pkPeruskaava,
                              Laskentakaava[] pkTasasijakriteerit, Laskentakaava lkPeruskaava,
-                             Laskentakaava[] lkTasasijakriteerit, Laskentakaava kielikoelaskentakaava) {
-        this.arvo = arvo;
-        this.uri = uri;
-        this.nimi = nimi;
-        this.nimiSv = nimiSv;
-        this.nimiEn = nimiEn;
+                             Laskentakaava[] lkTasasijakriteerit, Laskentakaava kielikoelaskentakaava,
+                             Laskentakaava lisapisteLaskentakaava) {
+        this.hakukohdekoodi = hakukohdekoodi;
         this.pOid = pOid;
         this.lOid = lOid;
         this.pkPeruskaava = pkPeruskaava;
@@ -42,46 +37,7 @@ public class LuoValintaperuste {
         this.lkPeruskaava = lkPeruskaava;
         this.lkTasasijakriteerit = lkTasasijakriteerit;
         this.kielikoelaskentakaava = kielikoelaskentakaava;
-    }
-
-    public String getArvo() {
-        return arvo;
-    }
-
-    public void setArvo(String arvo) {
-        this.arvo = arvo;
-    }
-
-    public String getUri() {
-        return uri;
-    }
-
-    public void setUri(String uri) {
-        this.uri = uri;
-    }
-
-    public String getNimi() {
-        return nimi;
-    }
-
-    public void setNimi(String nimi) {
-        this.nimi = nimi;
-    }
-
-    public String getNimiSv() {
-        return nimiSv;
-    }
-
-    public void setNimiSv(String nimiSv) {
-        this.nimiSv = nimiSv;
-    }
-
-    public String getNimiEn() {
-        return nimiEn;
-    }
-
-    public void setNimiEn(String nimiEn) {
-        this.nimiEn = nimiEn;
+        this.lisapisteLaskentakaava = lisapisteLaskentakaava;
     }
 
     public String getpOid() {
@@ -138,5 +94,21 @@ public class LuoValintaperuste {
 
     public void setKielikoelaskentakaava(Laskentakaava kielikoelaskentakaava) {
         this.kielikoelaskentakaava = kielikoelaskentakaava;
+    }
+
+    public Laskentakaava getLisapisteLaskentakaava() {
+        return lisapisteLaskentakaava;
+    }
+
+    public void setLisapisteLaskentakaava(Laskentakaava lisapisteLaskentakaava) {
+        this.lisapisteLaskentakaava = lisapisteLaskentakaava;
+    }
+
+    public KoodiDTO getHakukohdekoodi() {
+        return hakukohdekoodi;
+    }
+
+    public void setHakukohdekoodi(KoodiDTO hakukohdekoodi) {
+        this.hakukohdekoodi = hakukohdekoodi;
     }
 }
