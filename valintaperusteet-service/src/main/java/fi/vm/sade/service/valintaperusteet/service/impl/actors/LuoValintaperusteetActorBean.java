@@ -361,7 +361,7 @@ public class LuoValintaperusteetActorBean extends UntypedActor {
             lisapiste.setLahetetaankoKoekutsut(false);
             lisapiste.setKuvaus(lisapisteNimi);
             lisapiste.setNimi(lisapisteNimi);
-            lisapiste.setTunniste("lisapiste_tunniste");
+            lisapiste.setTunniste("{{hakukohde.lisapiste_tunniste}}");
             lisapiste.setLaskentakaavaId(null);
 
             valintakoeService.lisaaValintakoeValinnanVaiheelle(koevaihe.getOid(), lisapiste);
