@@ -125,9 +125,9 @@ public class PkJaYoPohjaiset {
         return palautettavaLaskentakaava;
     }
 
-    public static Laskentakaava luoValintakoekaava(String nimi) {
+    public static Laskentakaava luoValintakoekaava(String nimi, Valintaperustelahde lahde) {
         ValintaperusteViite valintaperuste = GenericHelper.luoValintaperusteViite(nimi, true,
-                Valintaperustelahde.SYOTETTAVA_ARVO, "Valintakoe");
+                lahde, "Pääsy- ja soveltuvuuskoe");
 
         List<Arvovalikonvertteriparametri> konvs = new ArrayList<Arvovalikonvertteriparametri>();
 
@@ -139,14 +139,14 @@ public class PkJaYoPohjaiset {
                 GenericHelper.luoHylkaaArvovalilla(funktiokutsu, "Valintakoetulos hylätty", "0.0", "1.0"), nimi);
     }
 
-    public static Laskentakaava luoLisapistekaava(String nimi) {
-        ValintaperusteViite valintaperuste = GenericHelper.luoValintaperusteViite(nimi, true,
-                Valintaperustelahde.SYOTETTAVA_ARVO, "Lisäpiste");
+    public static Laskentakaava luoLisapistekaava(String tunniste) {
+        ValintaperusteViite valintaperuste = GenericHelper.luoValintaperusteViite(tunniste, true,
+                Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO, "Lisäpiste", true);
         List<Arvovalikonvertteriparametri> konvs = new ArrayList<Arvovalikonvertteriparametri>();
         konvs.add(GenericHelper.luoArvovalikonvertteriparametri(0.0, 3.0));
 
         return GenericHelper
-                .luoLaskentakaavaJaNimettyFunktio(GenericHelper.luoHaeLukuarvo(valintaperuste, konvs), nimi);
+                .luoLaskentakaavaJaNimettyFunktio(GenericHelper.luoHaeLukuarvo(valintaperuste, konvs), "Ammatillinen koulutus, lisäpiste");
     }
 
     public static Laskentakaava luoUrheilijaLisapisteenMahdollisuus() {

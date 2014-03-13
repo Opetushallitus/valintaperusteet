@@ -8,6 +8,7 @@ import akka.japi.Function;
 import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi;
+import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.impl.LuoValintaperusteetServiceImpl;
@@ -74,11 +75,10 @@ public class LuoValintaperusteetActorBean extends UntypedActor {
 
     @Override
     public SupervisorStrategy supervisorStrategy() {
-        return new OneForOneStrategy(5, Duration.create("10 seconds"),
+        return new OneForOneStrategy(5, Duration.create("20 seconds"),
                 new Function<Throwable, Directive>() {
                     public Directive apply(Throwable cause) {
                         log.error("Virhe valintaperusteiden luonnissa (LuoValintaperusteetActorBean). Syy: {}, viesti:{}", cause.getCause(), cause.getMessage());
-                        cause.printStackTrace();
                         return SupervisorStrategy.restart();
                     }
                 });
@@ -88,20 +88,15 @@ public class LuoValintaperusteetActorBean extends UntypedActor {
 
         if (message instanceof LuoValintaperuste) {
             LuoValintaperuste peruste = (LuoValintaperuste)message;
-            String nimi = peruste.getNimi();
-
-            KoodiDTO hakukohdekoodi = new KoodiDTO();
-            hakukohdekoodi.setArvo(peruste.getArvo());
-            hakukohdekoodi.setUri(peruste.getUri());
-            hakukohdekoodi.setNimiFi(nimi);
-            hakukohdekoodi.setNimiSv(peruste.getNimiSv());
-            hakukohdekoodi.setNimiEn(nimi);
+            String nimi = peruste.getHakukohdekoodi().getNimiFi();
 
             ValintaryhmaDTO valintaryhma = new ValintaryhmaDTO();
 
             valintaryhma.setNimi(nimi);
 
             TransactionStatus tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+            transactionManager.commit(tx);
+            tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
             if (nimi.contains(", pk")) {
                 valintaryhma = modelMapper.map(valintaryhmaService.insert(valintaryhma, peruste.getpOid()),
@@ -124,12 +119,23 @@ public class LuoValintaperusteetActorBean extends UntypedActor {
             transactionManager.commit(tx);
             tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
-            String valintakoetunniste = nimi + ", pääsykoe";
+            boolean onPoikkeavaRyhma = LuoValintaperusteetServiceImpl.poikkeavatValintaryhmat.contains(peruste.getHakukohdekoodi().getUri());
+
+            String valintakoetunniste;
+            String valintakoeNimi;
+            if (!onPoikkeavaRyhma) {
+                valintakoetunniste = nimi + ", pääsy- ja soveltuvuuskoe";
+                valintakoeNimi = valintakoetunniste;
+            } else {
+                valintakoetunniste = "{{hakukohde.paasykoe_tunniste}}";
+                valintakoeNimi = "Pääsy- ja soveltuvuuskoe";
+            }
+
             ValintakoeDTO valintakoe = new ValintakoeDTO();
             valintakoe.setAktiivinen(false);
-            valintakoe.setKuvaus(valintakoetunniste);
+            valintakoe.setKuvaus(valintakoeNimi);
             valintakoe.setTunniste(valintakoetunniste);
-            valintakoe.setNimi(valintakoetunniste);
+            valintakoe.setNimi(valintakoeNimi);
             valintakoe.setLahetetaankoKoekutsut(true);
 
             // Valintakoe on pakollinen niille, joilla ei ole ulkomailla
@@ -168,10 +174,18 @@ public class LuoValintaperusteetActorBean extends UntypedActor {
             transactionManager.commit(tx);
             tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
-            Laskentakaava valintakoekaava = asetaValintaryhmaJaTallennaKantaan(
-                    PkJaYoPohjaiset.luoValintakoekaava(valintakoetunniste), valintaryhma.getOid());
+            Valintaperustelahde lahde;
+            if(onPoikkeavaRyhma) {
+                lahde = Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO;
+            } else {
+                lahde = Valintaperustelahde.SYOTETTAVA_ARVO;
+            }
+
+            Laskentakaava valintakoekaava = laskentakaavaService.insert(
+                    PkJaYoPohjaiset.luoValintakoekaava(valintakoetunniste, lahde), null, valintaryhma.getOid());
 
             transactionManager.commit(tx);
+            tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
             Laskentakaava peruskaava = null;
             Laskentakaava[] tasasijakriteerit = null;
@@ -184,9 +198,9 @@ public class LuoValintaperusteetActorBean extends UntypedActor {
                 tasasijakriteerit = peruste.getLkTasasijakriteerit();
             }
 
-            tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+//            tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
             Laskentakaava ensisijainenJarjestyskriteeri = null;
-            if (LuoValintaperusteetServiceImpl.poikkeavatValintaryhmat.contains(hakukohdekoodi.getUri())) {
+            if (onPoikkeavaRyhma) {
                 ensisijainenJarjestyskriteeri = PkJaYoPohjaiset.luoPoikkeavanValintaryhmanLaskentakaava(
                         valintakoekaava, peruste.getKielikoelaskentakaava());
             } else {
@@ -196,8 +210,8 @@ public class LuoValintaperusteetActorBean extends UntypedActor {
 
             transactionManager.commit(tx);
             insertKoe(valintaryhma, valintakoetunniste, ensisijainenJarjestyskriteeri, valintakoekaava,
-                    tasasijakriteerit, hakukohdekoodi);
-            insertEiKoetta(valintaryhma, peruskaava, tasasijakriteerit, hakukohdekoodi);
+                    tasasijakriteerit, peruste.getHakukohdekoodi());
+            insertEiKoetta(valintaryhma, peruskaava, tasasijakriteerit, peruste.getHakukohdekoodi(), peruste.getLisapisteLaskentakaava());
 
         }else if(message instanceof Exception) {
             Exception exp = (Exception)message;
@@ -213,7 +227,10 @@ public class LuoValintaperusteetActorBean extends UntypedActor {
     private void insertKoe(ValintaryhmaDTO valintaryhma, String valintakoetunniste,
                            Laskentakaava peruskaavaJaValintakoekaava, Laskentakaava valintakoekaava,
                            Laskentakaava[] tasasijakriteerit, KoodiDTO hakukohdekoodi) {
+
         TransactionStatus tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
         ValintaryhmaDTO koevalintaryhma = new ValintaryhmaDTO();
         koevalintaryhma.setNimi("Peruskaava ja pääsykoe");
@@ -225,7 +242,11 @@ public class LuoValintaperusteetActorBean extends UntypedActor {
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
         hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(koevalintaryhma.getOid(), hakukohdekoodi);
-        peruskaavaJaValintakoekaava = asetaValintaryhmaJaTallennaKantaan(peruskaavaJaValintakoekaava,
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
+        peruskaavaJaValintakoekaava = laskentakaavaService.insert(peruskaavaJaValintakoekaava, null,
                 koevalintaryhma.getOid());
 
         transactionManager.commit(tx);
@@ -259,9 +280,6 @@ public class LuoValintaperusteetActorBean extends UntypedActor {
         dto.setLaskentakaavaId(paasykoe.getLaskentakaavaId());
         dto.setLahetetaankoKoekutsut(true);
         valintakoeService.update(paasykoe.getOid(), dto);
-
-        transactionManager.commit(tx);
-        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
         KoodiDTO valintakoekoodi = new KoodiDTO();
         valintakoekoodi.setUri(LuoValintaperusteetServiceImpl.PAASY_JA_SOVELTUVUUSKOE);
@@ -307,8 +325,11 @@ public class LuoValintaperusteetActorBean extends UntypedActor {
     }
 
     private void insertEiKoetta(ValintaryhmaDTO valintaryhma, Laskentakaava peruskaava,
-                                Laskentakaava[] tasasijakriteerit, KoodiDTO hakukohdekoodi) {
+                                Laskentakaava[] tasasijakriteerit, KoodiDTO hakukohdekoodi, Laskentakaava lisapistekaava) {
+
         TransactionStatus tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
         ValintaryhmaDTO koe = new ValintaryhmaDTO();
         koe.setNimi("Peruskaava");
@@ -327,16 +348,47 @@ public class LuoValintaperusteetActorBean extends UntypedActor {
         assert (vaihe.getValinnanVaiheTyyppi().equals(ValinnanVaiheTyyppi.TAVALLINEN));
         Valintatapajono jono = valintatapajonoService.findJonoByValinnanvaihe(vaihe.getOid()).get(0);
 
+        boolean onPoikkeavaRyhma = LuoValintaperusteetServiceImpl.poikkeavatValintaryhmatLisapisteilla.contains(hakukohdekoodi.getUri());
+        Laskentakaava lisattava = null;
+
+        if(onPoikkeavaRyhma) {
+            lisattava =  laskentakaavaService.insert(PkJaYoPohjaiset.luoYhdistettyPeruskaavaJaLisapistekaava(peruskaava, lisapistekaava), null,
+                    koe.getOid());
+
+            transactionManager.commit(tx);
+            tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
+            ValinnanVaihe koevaihe = valinnanVaiheService.findByValintaryhma(koe.getOid()).get(1);
+            assert (koevaihe.getValinnanVaiheTyyppi().equals(ValinnanVaiheTyyppi.VALINTAKOE));
+
+            final String lisapisteNimi = "Lisäpiste";
+            ValintakoeDTO lisapiste = new ValintakoeDTO();
+            lisapiste.setAktiivinen(true);
+            lisapiste.setLahetetaankoKoekutsut(false);
+            lisapiste.setKuvaus(lisapisteNimi);
+            lisapiste.setNimi(lisapisteNimi);
+            lisapiste.setTunniste("lisapiste_tunniste");
+            lisapiste.setLaskentakaavaId(null);
+
+            valintakoeService.lisaaValintakoeValinnanVaiheelle(koevaihe.getOid(), lisapiste);
+
+            transactionManager.commit(tx);
+            tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
+        } else {
+            lisattava = peruskaava;
+        }
+
         JarjestyskriteeriDTO kriteeri = new JarjestyskriteeriDTO();
         kriteeri.setAktiivinen(true);
-        kriteeri.setMetatiedot(peruskaava.getNimi());
+        kriteeri.setMetatiedot(lisattava.getNimi());
         jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(jono.getOid(), kriteeri, null,
-                peruskaava.getId());
+                lisattava.getId());
 
         transactionManager.commit(tx);
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
-        for (int i = 0; i < tasasijakriteerit.length; ++i) {
+        for(int i = 0; i < tasasijakriteerit.length; ++i) {
             Laskentakaava kaava = tasasijakriteerit[i];
             JarjestyskriteeriDTO jk = new JarjestyskriteeriDTO();
             jk.setAktiivinen(true);
@@ -344,10 +396,5 @@ public class LuoValintaperusteetActorBean extends UntypedActor {
             jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(jono.getOid(), jk, null, kaava.getId());
         }
         transactionManager.commit(tx);
-    }
-
-    private Laskentakaava asetaValintaryhmaJaTallennaKantaan(Laskentakaava kaava, String valintaryhmaOid) {
-        Laskentakaava laskentakaava = laskentakaavaService.insert(kaava, null, valintaryhmaOid);
-        return laskentakaava;
     }
 }

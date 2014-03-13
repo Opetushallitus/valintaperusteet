@@ -124,7 +124,6 @@ public class HaeFunktiokutsuRekursiivisestiActorBean extends UntypedActor {
                                 UUID.randomUUID().toString().replaceAll("-", "")
                         );
                         if (fa.getFunktiokutsuChild() != null) {
-
                             child.tell(new UusiRekursio(fa.getFunktiokutsuChild().getId(), viesti.isLaajennaAlakaavat(), viesti.getLaskentakaavaIds()), self());
                         } else if (viesti.isLaajennaAlakaavat() && fa.getLaskentakaavaChild() != null) {
                             Set<Long> newLaskentakaavaIds = new HashSet<Long>(viesti.getLaskentakaavaIds());

@@ -8,7 +8,9 @@ import java.util.*;
 
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
+import akka.routing.RoundRobinRouter;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
+import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.LukionValintaperuste;
 import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.LuoValintaperuste;
 import fi.vm.sade.service.valintaperusteet.service.impl.generator.*;
 import org.slf4j.Logger;
@@ -98,31 +100,207 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
     public static final String LISANAYTTO = "valintakokeentyyppi_2";
 
     public static final Set<String> poikkeavatValintaryhmat = new HashSet<String>(Arrays.asList(new String[] {
-            "hakukohteet_354", // Lasiala, pk (Käsi- ja taideteollisuusalan
-                               // perustutkinto)
-            "hakukohteet_383", // Lasiala, yo (Käsi- ja taideteollisuusalan
-                               // perustutkinto)
-            "hakukohteet_483", // Sisustustekstiilit, pk (Käsi- ja
-                               // taideteollisuusalan perustutkinto)
-            "hakukohteet_485", // Sisustustekstiilit, yo (Käsi- ja
-                               // taideteollisuusalan perustutkinto)
-            "hakukohteet_538", // Tekstiiliala, pk (Käsi- ja taideteollisuusalan
-                               // perustutkinto)
-            "hakukohteet_550", // Tekstiiliala, yo (Käsi- ja taideteollisuusalan
-                               // perustutkinto)
-            "hakukohteet_551", // Vaatetusala, pk (Käsi- ja taideteollisuusalan
-                               // perustutkinto)
-            "hakukohteet_565", // Vaatetusala, yo (Käsi- ja taideteollisuusalan
-                               // perustutkinto)
+            "hakukohteet_280", // Asesepäntyö, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_486", // Ateljee- ja asusteompelu, pk (Käsi- ja taideteollisuusalan perustutkinto)
             "hakukohteet_452", // Audiovisuaalisen viestinnän perustutkinto, pk
-            "hakukohteet_511", // Audiovisuaalisen viestinnän perustutkinto, yo
-            "hakukohteet_610", // Äänituotanto, pk (Audiovisuaalisen viestinnän
-                               // perustutkinto)
-            "hakukohteet_611", // Äänituotanto, yo (Audiovisuaalisen viestinnän
-                               // perustutkinto)
+            "hakukohteet_423", // Digimedia, pk (Audiovisuaalisen viestinnän perustutkinto)
+            "hakukohteet_434", // Elokuva- ja tv-alan tuotanto-assistentti, pk (Audiovisuaalisen viestinnän perustutkinto)
+            "hakukohteet_282", // Graafinen suunnittelu, pk (Audiovisuaalisen viestinnän perustutkinto)
+            "hakukohteet_029", // Graafinen suunnittelu, pk (Kuvallisen ilmaisun perustutkinto)
+            "hakukohteet_450", // Graafisen suunnittelun koulutusohjelma, pk (Kuvallisen ilmaisun perustutkinto)
+            "hakukohteet_038", // Hienopuuseppä, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_296", // Hopeasepänala, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_477", // Huonekalupuuseppä, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_125", // Jazz- ja populaaritanssi, pk (Tanssialan perustutkinto)
+            "hakukohteet_122", // Kansantanssi, pk (Tanssialan perustutkinto)
+            "hakukohteet_385", // Keramiikka-ala, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_524", // Kirjansidonta, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_117", // Klassinen baletti, pk (Tanssialan perustutkinto)
+            "hakukohteet_336", // Korukivi- ja jalometalliala, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_299", // Kultasepänala, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_455", // Kuva- ja mediataiteen koulutusohjelma, pk (Kuvallisen ilmaisun perustutkinto)
+            "hakukohteet_674", // Kuva ja ääni, pk (Audiovisuaalisen viestinnän perustutkinto)
             "hakukohteet_497", // Kuvallisen ilmaisun perustutkinto, pk
+            "hakukohteet_875", // Käsi- ja taideteollisuusalan perustutkinto, pk
+            "hakukohteet_012", // Käsityömuotoilu, pk (Käsi-ja taideteollisuusalan perustutkinto)
+            "hakukohteet_354", // Lasiala, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_701", // Lavasterakentaminen, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_416", // Liikkuva kuva, pk (Audiovisuaalisen viestinnän perustutkinto)
+            "hakukohteet_115", // Liikunnanohjauksen perustutkinto, pk
+            "hakukohteet_612", // Maalaus ja animaatio, pk (Kuvallisen ilmaisun perustutkinto)
+            "hakukohteet_798", // Maalausala, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_406", // Mallinrakennus, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_261", // Metalliala, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_522", // Muinaistekniikka, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_379", // Muotoilu ja mallintaminen, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_460", // Musiikin koulutusohjelma, pk (Musiikkialan perustutkinto)
+            "hakukohteet_463", // Musiikkiteknologian koulutusohjelma, pk (Musiikkialan perustutkinto)
+            "hakukohteet_557", // Neulevaatetus, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_119", // Nykytanssi, pk (Tanssialan perustutkinto)
+            "hakukohteet_799", // Näyttely- ja messurakentaminen, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_370", // Ohjaustoiminta, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_275", // Peliala, pk (Audiovisuaalisen viestinnän perustutkinto)
+            "hakukohteet_466", // Pianonvirityksen koulutusohjelma, pk (Musiikkialan perustutkinto)
+            "hakukohteet_481", // Puu- ja metallihuonekalupeppä, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_007", // Puu ja muotoilu, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_111", // Puuala, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_051", // Puumuotoilu- ja puusepänala, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_796", // Rakennusala, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_797", // Restaurointiala, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_527", // Saamenkäsityöt, kovat materiaalit, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_559", // Saamenkäsityöt, pehmeät materiaalit, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_398", // Sirkusalan perustutkinto, pk
+            "hakukohteet_702", // Sisustusala, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_042", // Sisustusassistentti, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_026", // Sisustusompelun yritystoiminta, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_794", // Sisustusrakentaminen, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_483", // Sisustustekstiilit, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_396", // Soitinrakennusala, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_046", // Stailausala, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_411", // Taidekehystys, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_035", // Tanssialan perustutkinto, pk
+            "hakukohteet_525", // Tarpeistonvalmistus, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_277", // Teatteri- ja esitystekniikka, pk (Audiovisuaalisen viestinnän perustutkinto)
+            "hakukohteet_014", // Tekstiili- ja vaatemuotoilu, pk (Käsi-ja taideteollisuusalan perustutkinto)
+            "hakukohteet_185", // Tekstiili- ja vaatetusala, pk  (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_538", // Tekstiiliala, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_049", // Tekstiilimuotoilu- ja sisustusala, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_426", // Tietokoneanimaatio ja pelit, pk (Audiovisuaalisen viestinnän perustutkinto)
+            "hakukohteet_413", // Tilarakennus, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_005", // Tilasuunnittelu ja toteutus, pk (Käsi-ja taideteollisuusalan perustutkinto)
+            "hakukohteet_408", // Tilauspuusepäntyö, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_157", // Tuotteen suunnittelun ja valmistuksen koulutusohjelma, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_345", // Uusi kuva- ja mediataide, pk (Kuvallisen ilmaisun perustutkinto)
+            "hakukohteet_420", // Uusmedia, pk (Audiovisuaalisen viestinnän perustutkinto)
+            "hakukohteet_551", // Vaatetusala, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_052", // Vaatetusmuotoilu- ja stailausala, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_458", // Valokuvauksen koulutusohjelma, pk (Kuvallisen ilmaisun perustutkinto)
+            "hakukohteet_352", // Valokuvaus, pk (Audiovisuaalisen viestinnän perustutkinto)
+            "hakukohteet_242", // Veneenrakennus, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_021", // Viherrakennus, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_106", // Visualisti, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_949", // Ympäristön suunnittelun ja rakentamisen koulutusohjelma, pk (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_418", // Ääni, pk (Audiovisuaalisen viestinnän perustutkinto)
+            "hakukohteet_610", // Äänituotanto, pk (Audiovisuaalisen viestinnän perustutkinto)
+            "hakukohteet_291", // Asesepäntyö, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_487", // Ateljee- ja asusteompelu, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_511", // Audiovisuaalisen viestinnän perustutkinto, yo
+            "hakukohteet_425", // Digimedia, yo (Audiovisuaalisen viestinnän perustutkinto)
+            "hakukohteet_435", // Elokuva- ja tv-alan tuotanto-assistentti, yo (Audiovisuaalisen viestinnän perustutkinto)
+            "hakukohteet_403", // Graafinen suunnittelu, yo (Audiovisuaalisen viestinnän perustutkinto)
+            "hakukohteet_034", // Graafinen suunnittelu, yo (Kuvallisen ilmaisun perustutkinto)
+            "hakukohteet_451", // Graafisen suunnittelun koulutusohjelma, yo (Kuvallisen ilmaisun perustutkinto)
+            "hakukohteet_002", // Hienopuuseppä, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_298", // Hopeasepänala, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_478", // Huonekalupuuseppä, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_128", // Jazz- ja populaaritanssi, yo (Tanssialan perustutkinto)
+            "hakukohteet_123", // Kansantanssi, yo (Tanssialan perustutkinto)
+            "hakukohteet_424", // Keramiikka-ala, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_531", // Kirjansidonta, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_563", // Kiviala, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_118", // Klassinen baletti, yo (Tanssialan perustutkinto)
+            "hakukohteet_359", // Korukivi- ja jalometalliala, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_306", // Kultasepänala, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_457", // Kuva- ja mediataiteen koulutusohjelma, yo (Kuvallisen ilmaisun perustutkinto)
+            "hakukohteet_678", // Kuva ja ääni, yo (Audiovisuaalisen viestinnän perustutkinto)
+            "hakukohteet_523", // Kuvallisen ilmaisun perustutkinto, yo
+            "hakukohteet_902", // Käsi- ja taideteollisuusalan perustutkinto, yo
+            "hakukohteet_013", // Käsityömuotoilu, yo (Käsi-ja taideteollisuusalan perustutkinto)
+            "hakukohteet_383", // Lasiala, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_756", // Lavasterakentaminen, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_417", // Liikkuva kuva, yo (Audiovisuaalisen viestinnän perustutkinto)
+            "hakukohteet_126", // Liikunnanohjauksen perustutkinto, yo
+            "hakukohteet_613", // Maalaus ja animaatio, yo (Kuvallisen ilmaisun perustutkinto)
+            "hakukohteet_322", // Maalausala, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_327", // Mallinrakennus, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_273", // Metalliala, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_530", // Muinaistekniikka, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_384", // Muotoilu ja mallintaminen, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_462", // Musiikin koulutusohjelma, yo (Musiikkialan perustutkinto)
+            "hakukohteet_464", // Musiikkiteknologian koulutusohjelma, yo (Musiikkialan perustutkinto)
+            "hakukohteet_566", // Neulevaatetus, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_121", // Nykytanssi, yo (Tanssialan perustutkinto)
+            "hakukohteet_323", // Näyttely- ja messurakentaminen, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_382", // Ohjaustoiminta, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_401", // Peliala, yo (Audiovisuaalisen viestinnän perustutkinto)
+            "hakukohteet_469", // Pianonvirityksen koulutusohjelma, yo (Musiikkialan perustutkinto)
+            "hakukohteet_482", // Puu- ja metallihuonekaluseppä, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_008", // Puu ja muotoilu, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_190", // Puuala, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_054", // Puumuotoilu- ja puusepänala, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_318", // Rakennusala, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_319", // Restaurointiala, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_537", // Saamenkäsityöt, kovat materiaalit, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_580", // Saamenkäsityöt, pehmeät materiaalit, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_400", // Sirkusalan perustutkinto, yo
+            "hakukohteet_793", // Sisustusala, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_003", // Sisustusassistentti, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_314", // Sisustusrakentaminen, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_485", // Sisustustekstiilit, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_564", // Soitinrakennusala, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_047", // Stailausala, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_412", // Taidekehystys, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_039", // Tanssialan perustutkinto, yo
+            "hakukohteet_532", // Tarpeistonvalmistus, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_402", // Teatteri- ja esitystekniikka, yo (Audiovisuaalisen viestinnän perustutkinto)
+            "hakukohteet_015", // Tekstiili- ja vaatemuotoilu, yo (Käsi-ja taideteollisuusalan perustutkinto)
+            "hakukohteet_188", // Tekstiili- ja vaatetusala, yo  (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_550", // Tekstiiliala, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_053", // Tekstiilimuotoilu- ja sisustusala, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_415", // Tilarakennus, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_006", // Tilasuunnittelu ja toteutus, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_410", // Tilauspuusepäntyö, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_158", // Tuotteen suunnittelun ja valmistuksen koulutusohjelma, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_350", // Uusi kuva- ja mediataide, yo (Kuvallisen ilmaisun perustutkinto)
+            "hakukohteet_421", // Uusmedia, yo (Audiovisuaalisen viestinnän perustutkinto)
+            "hakukohteet_565", // Vaatetusala, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_057", // Vaatetusmuotoilu- ja stailausala, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_459", // Valokuvauksen koulutusohjelma, yo (Kuvallisen ilmaisun perustutkinto)
+            "hakukohteet_363", // Valokuvaus, yo (Audiovisuaalisen viestinnän perustutkinto)
+            "hakukohteet_246", // Veneenrakennus, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_295", // Videoassistentti, yo (Audiovisuaalisen viestinnän perustutkinto)
+            "hakukohteet_024", // Viherrakennus, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_116", // Visualisti, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_952", // Ympäristön suunnittelun ja rakentamisen koulutusohjelma, yo (Käsi- ja taideteollisuusalan perustutkinto)
+            "hakukohteet_419", // Ääni, yo (Audiovisuaalisen viestinnän perustutkinto)
+            "hakukohteet_611", // Äänituotanto, yo (Audiovisuaalisen viestinnän perustutkinto)
+    }));
+
+    public static final Set<String> poikkeavatValintaryhmatLisapisteilla = new HashSet<String>(Arrays.asList(new String[] {
+            "hakukohteet_029", // Graafinen suunnittelu, pk (Kuvallisen ilmaisun perustutkinto)
+            "hakukohteet_450", // Graafisen suunnittelun koulutusohjelma, pk (Kuvallisen ilmaisun perustutkinto)
+            "hakukohteet_125", // Jazz- ja populaaritanssi, pk (Tanssialan perustutkinto)
+            "hakukohteet_122", // Kansantanssi, pk (Tanssialan perustutkinto)
+            "hakukohteet_117", // Klassinen baletti, pk (Tanssialan perustutkinto)
+            "hakukohteet_455", // Kuva- ja mediataiteen koulutusohjelma, pk (Kuvallisen ilmaisun perustutkinto)
+            "hakukohteet_497", // Kuvallisen ilmaisun perustutkinto, pk
+            "hakukohteet_115", // Liikunnanohjauksen perustutkinto, pk
+            "hakukohteet_612", // Maalaus ja animaatio, pk (Kuvallisen ilmaisun perustutkinto)
+            "hakukohteet_460", // Musiikin koulutusohjelma, pk (Musiikkialan perustutkinto)
+            "hakukohteet_463", // Musiikkiteknologian koulutusohjelma, pk (Musiikkialan perustutkinto)
+            "hakukohteet_119", // Nykytanssi, pk (Tanssialan perustutkinto)
+            "hakukohteet_466", // Pianonvirityksen koulutusohjelma, pk (Musiikkialan perustutkinto)
+            "hakukohteet_398", // Sirkusalan perustutkinto, pk
+            "hakukohteet_035", // Tanssialan perustutkinto, pk
+            "hakukohteet_345", // Uusi kuva- ja mediataide, pk (Kuvallisen ilmaisun perustutkinto)
+            "hakukohteet_458", // Valokuvauksen koulutusohjelma, pk (Kuvallisen ilmaisun perustutkinto)
+            "hakukohteet_034", // Graafinen suunnittelu, yo (Kuvallisen ilmaisun perustutkinto)
+            "hakukohteet_451", // Graafisen suunnittelun koulutusohjelma, yo (Kuvallisen ilmaisun perustutkinto)
+            "hakukohteet_128", // Jazz- ja populaaritanssi, yo (Tanssialan perustutkinto)
+            "hakukohteet_123", // Kansantanssi, yo (Tanssialan perustutkinto)
+            "hakukohteet_118", // Klassinen baletti, yo (Tanssialan perustutkinto)
+            "hakukohteet_457", // Kuva- ja mediataiteen koulutusohjelma, yo (Kuvallisen ilmaisun perustutkinto)
             "hakukohteet_523", // Kuvallisen ilmaisun perustutkinto, yo
             "hakukohteet_126", // Liikunnanohjauksen perustutkinto, yo
+            "hakukohteet_613", // Maalaus ja animaatio, yo (Kuvallisen ilmaisun perustutkinto)
+            "hakukohteet_462", // Musiikin koulutusohjelma, yo (Musiikkialan perustutkinto)
+            "hakukohteet_464", // Musiikkiteknologian koulutusohjelma, yo (Musiikkialan perustutkinto)
+            "hakukohteet_121", // Nykytanssi, yo (Tanssialan perustutkinto)
+            "hakukohteet_469", // Pianonvirityksen koulutusohjelma, yo (Musiikkialan perustutkinto)
+            "hakukohteet_400", // Sirkusalan perustutkinto, yo
+            "hakukohteet_039", // Tanssialan perustutkinto, yo
+            "hakukohteet_350", // Uusi kuva- ja mediataide, yo (Kuvallisen ilmaisun perustutkinto)
+            "hakukohteet_459", // Valokuvauksen koulutusohjelma, yo (Kuvallisen ilmaisun perustutkinto)
     }));
 
     private final String PAASYKOE_TUNNISTE = "paasykoe_tunniste";
@@ -149,11 +327,11 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
         TransactionStatus tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
         transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
         PkAineet pkAineet = new PkAineet();
         YoAineet yoAineet = new YoAineet();
 
-        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
         ValintaryhmaDTO ammatillinenKoulutusVr = new ValintaryhmaDTO();
         ammatillinenKoulutusVr.setNimi("Ammatillinen koulutus");
 
@@ -164,8 +342,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
         Laskentakaava ulkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt = asetaValintaryhmaJaTallennaKantaan(
-                PkJaYoPohjaiset.luoUlkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt(),
-                ammatillinenKoulutusVr.getOid());
+                PkJaYoPohjaiset.luoUlkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt(), ammatillinenKoulutusVr.getOid());
 
         transactionManager.commit(tx);
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
@@ -227,6 +404,12 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         transactionManager.commit(tx);
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
+        Laskentakaava lisapisteenLaskentakaava = asetaValintaryhmaJaTallennaKantaan(
+                PkJaYoPohjaiset.luoLisapistekaava("lisapiste_tunniste"), ammatillinenKoulutusVr.getOid());
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
         Laskentakaava urheilijaLisapisteenMahdollisuusLaskentakaava = asetaValintaryhmaJaTallennaKantaan(
                 PkJaYoPohjaiset.luoUrheilijaLisapisteenMahdollisuus(), ammatillinenKoulutusVr.getOid());
 
@@ -281,7 +464,6 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
         for (Laskentakaava kaava : pkAineet.getLaskentakaavat()) {
             asetaValintaryhmaJaTallennaKantaan(kaava, peruskouluVr.getOid());
-
         }
 
         transactionManager.commit(tx);
@@ -331,6 +513,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
         transactionManager.commit(tx);
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
         Laskentakaava sukupuolipisteytysmalli = asetaValintaryhmaJaTallennaKantaan(
                 PkJaYoPohjaiset.luoSukupuolipisteytysmalli(), ammatillinenKoulutusVr.getOid());
 
@@ -403,13 +586,13 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                 PkJaYoPohjaiset.luoHakutoivejarjestysTasapistekaava(), ammatillinenKoulutusVr.getOid());
 
         transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
         Laskentakaava[] pkTasasijakriteerit = new Laskentakaava[] { hakutoivejarjestystasapistekaava,
                 pk_yleinenkoulumenestyspisteytysmalli, pk_painotettavatKeskiarvotLaskentakaava };
         Laskentakaava[] lkTasasijakriteerit = new Laskentakaava[] { hakutoivejarjestystasapistekaava,
                 lk_yleinenkoulumenestyspisteytysmalli };
 
-        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
         Laskentakaava pkYhdistettyPeruskaavaJaKielikoekaava = asetaValintaryhmaJaTallennaKantaan(
                 PkJaYoPohjaiset.luoYhdistettyPeruskaavaJaKielikoekaava(toisenAsteenPeruskoulupohjainenPeruskaava,
                         kielikokeenLaskentakaava), peruskouluVr.getOid());
@@ -419,12 +602,14 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
         Laskentakaava lkYhdistettyPeruskaavaJaKielikoekaava = asetaValintaryhmaJaTallennaKantaan(
                 PkJaYoPohjaiset.luoYhdistettyPeruskaavaJaKielikoekaava(toisenAsteenYlioppilaspohjainenPeruskaava,
-                        kielikokeenLaskentakaava), peruskouluVr.getOid());
+                        kielikokeenLaskentakaava), lukioVr.getOid());
+
         transactionManager.commit(tx);
+
 
         lisaaHakukohdekoodit(peruskouluVr, lukioVr, pkYhdistettyPeruskaavaJaKielikoekaava,
                 lkYhdistettyPeruskaavaJaKielikoekaava, pkTasasijakriteerit, lkTasasijakriteerit,
-                kielikokeenLaskentakaava);
+                kielikokeenLaskentakaava, lisapisteenLaskentakaava);
 
         long endTime = System.currentTimeMillis();
         long timeTaken = (endTime - beginTime) / 1000L / 60L;
@@ -437,12 +622,13 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
         TransactionStatus tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
         transactionManager.commit(tx);
-
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
         ValintaryhmaDTO lukioKoulutusVr = new ValintaryhmaDTO();
         lukioKoulutusVr.setNimi("Lukiokoulutus");
 
         lukioKoulutusVr = modelMapper.map(valintaryhmaService.insert(lukioKoulutusVr), ValintaryhmaDTO.class);
+
         transactionManager.commit(tx);
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
@@ -467,11 +653,12 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
             asetaValintaryhmaJaTallennaKantaan(kaava, lukioKoulutusVr.getOid());
             transactionManager.commit(tx);
             tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
-
         }
 
-        Laskentakaava keskiarvotLaskentakaava = asetaValintaryhmaJaTallennaKantaan(
-                LukionValintaperusteet.luoKaikkienAineidenKeskiarvo(pkAineet), lukioKoulutusVr.getOid());
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
+        Laskentakaava keskiarvotLaskentakaava = asetaValintaryhmaJaTallennaKantaan(LukionValintaperusteet.luoKaikkienAineidenKeskiarvo(pkAineet), lukioKoulutusVr.getOid());
 
         transactionManager.commit(tx);
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
@@ -605,6 +792,9 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         painotettuKeskiarvoVr = modelMapper.map(
                 valintaryhmaService.insert(painotettuKeskiarvoVr, lukioKoulutusVr.getOid()), ValintaryhmaDTO.class);
 
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
         Laskentakaava laskentakaavaPainotettuKeskiarvo = asetaValintaryhmaJaTallennaKantaan(
                 LukionValintaperusteet.painotettuLukuaineidenKeskiarvo(), painotettuKeskiarvoVr.getOid());
 
@@ -652,6 +842,9 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
         valintakoekoodiService.lisaaValintakoekoodiValintaryhmalle(painotettuKeskiarvoJaPaasykoeVr.getOid(),
                 paasykoeKoodi);
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
         Laskentakaava laskentakaavapainotettuKeskiarvoJaPaasykoe = asetaValintaryhmaJaTallennaKantaan(
                 LukionValintaperusteet.painotettuLukuaineidenKeskiarvoJaPaasykoe(painotettuKeskiarvo, paasykoe),
@@ -726,6 +919,9 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         valintakoekoodiService.lisaaValintakoekoodiValintaryhmalle(painotettuKeskiarvoJaLisanayttoVr.getOid(),
                 lisanayttoKoodi);
 
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
         Laskentakaava laskentakaavapainotettuKeskiarvoJaLisanaytto = asetaValintaryhmaJaTallennaKantaan(
                 LukionValintaperusteet.painotettuLukuaineidenKeskiarvoJaLisanaytto(painotettuKeskiarvo, lisanaytto),
                 painotettuKeskiarvoJaLisanayttoVr.getOid());
@@ -797,12 +993,20 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
         valintakoekoodiService.lisaaValintakoekoodiValintaryhmalle(
                 painotettuKeskiarvoJaPaasykoeJaLisanayttoVr.getOid(), lisanayttoKoodi);
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+        
         valintakoekoodiService.lisaaValintakoekoodiValintaryhmalle(
                 painotettuKeskiarvoJaPaasykoeJaLisanayttoVr.getOid(), paasykoeKoodi);
+
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
         Laskentakaava laskentakaavapainotettuKeskiarvoJaPaasykoeJaLisanaytto = asetaValintaryhmaJaTallennaKantaan(
                 LukionValintaperusteet.painotettuLukuaineidenKeskiarvoJaPaasykoeJaLisanaytto(painotettuKeskiarvo,
                         paasykoeJaLisanaytto), painotettuKeskiarvoJaPaasykoeJaLisanayttoVr.getOid());
+
 
         transactionManager.commit(tx);
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
@@ -862,7 +1066,6 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         }
 
         transactionManager.commit(tx);
-        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
         BufferedReader reader = null;
         try {
@@ -870,6 +1073,10 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                     "classpath:hakukohdekoodit/lukiohakukohdekoodit.csv").getInputStream(), Charset.forName("UTF-8")));
             // Luetaan otsikkorivi pois
             String line = reader.readLine();
+
+            ActorRef master = actorSystem.actorOf(
+                    SpringExtProvider.get(actorSystem).props("LukionValintaperusteetActorBean").withRouter(new RoundRobinRouter(10)));
+
             while ((line = reader.readLine()) != null) {
                 String[] splitted = line.split(CSV_DELIMITER);
                 String arvo = splitted[0];
@@ -884,17 +1091,17 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                 hakukohdekoodi.setNimiSv(nimiSv);
                 hakukohdekoodi.setNimiEn(nimiFi);
 
-                hakukohdekoodiService
-                        .lisaaHakukohdekoodiValintaryhmalle(painotettuKeskiarvoVr.getOid(), hakukohdekoodi);
-                hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(painotettuKeskiarvoJaLisanayttoVr.getOid(),
-                        hakukohdekoodi);
-                hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(painotettuKeskiarvoJaPaasykoeVr.getOid(),
-                        hakukohdekoodi);
-                hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(
-                        painotettuKeskiarvoJaPaasykoeJaLisanayttoVr.getOid(), hakukohdekoodi);
+                LukionValintaperuste peruste = new LukionValintaperuste(hakukohdekoodi,
+                        painotettuKeskiarvoVr,
+                        painotettuKeskiarvoJaLisanayttoVr,
+                        painotettuKeskiarvoJaPaasykoeVr,
+                        painotettuKeskiarvoJaPaasykoeJaLisanayttoVr);
 
-                transactionManager.commit(tx);
-                tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+//                ActorRef master = actorSystem.actorOf(
+//                        SpringExtProvider.get(actorSystem).props("LukionValintaperusteetActorBean").withDispatcher("default-dispatcher"), UUID.randomUUID()
+//                        .toString());
+
+                master.tell(peruste, ActorRef.noSender());
             }
         } finally {
             if (reader != null) {
@@ -911,7 +1118,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
     private void lisaaHakukohdekoodit(ValintaryhmaDTO peruskouluVr, ValintaryhmaDTO lukioVr,
             Laskentakaava pkPeruskaava, Laskentakaava lkPeruskaava, Laskentakaava[] pkTasasijakriteerit,
-            Laskentakaava[] lkTasasijakriteerit, Laskentakaava kielikoeLaskentakaava) throws IOException {
+            Laskentakaava[] lkTasasijakriteerit, Laskentakaava kielikoeLaskentakaava, Laskentakaava lisapisteLaskentakaava) throws IOException {
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new InputStreamReader(resourceLoader.getResource(
@@ -922,6 +1129,11 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
             // Luetaan otsikkorivi pois
             String line = reader.readLine();
+
+
+            ActorRef master = actorSystem.actorOf(
+                    SpringExtProvider.get(actorSystem).props("LuoValintaperusteetActorBean").withRouter(new RoundRobinRouter(10)));
+
             while ((line = reader.readLine()) != null) {
                 String[] splitted = line.split(CSV_DELIMITER);
                 String arvo = splitted[0];
@@ -929,13 +1141,21 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                 String nimi = splitted[1].replace("\"", "");
                 String nimiSV = splitted[2].replace("\"", "");
 
-                LuoValintaperuste peruste = new LuoValintaperuste(arvo, uri, nimi, nimiSV, nimi,
-                        peruskouluVr.getOid(), lukioVr.getOid(), pkPeruskaava, pkTasasijakriteerit,
-                        lkPeruskaava, lkTasasijakriteerit, kielikoeLaskentakaava);
+                KoodiDTO hakukohdekoodi = new KoodiDTO();
+                hakukohdekoodi.setArvo(arvo);
+                hakukohdekoodi.setUri(uri);
+                hakukohdekoodi.setNimiFi(nimi);
+                hakukohdekoodi.setNimiSv(nimiSV);
+                hakukohdekoodi.setNimiEn(nimi);
 
-                ActorRef master = actorSystem.actorOf(
-                        SpringExtProvider.get(actorSystem).props("LuoValintaperusteetActorBean").withDispatcher("thread-pool-dispatcher"), UUID.randomUUID()
-                        .toString());
+                LuoValintaperuste peruste = new LuoValintaperuste(hakukohdekoodi,
+                        peruskouluVr.getOid(), lukioVr.getOid(), pkPeruskaava, pkTasasijakriteerit,
+                        lkPeruskaava, lkTasasijakriteerit, kielikoeLaskentakaava, lisapisteLaskentakaava);
+
+//                ActorRef master = actorSystem.actorOf(
+//                    SpringExtProvider.get(actorSystem).props("LuoValintaperusteetActorBean").withDispatcher("default-dispatcher"), UUID.randomUUID()
+//                    .toString());
+
                 master.tell(peruste, ActorRef.noSender());
 
 
