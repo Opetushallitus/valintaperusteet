@@ -10,10 +10,7 @@ import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi;
 import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
-import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
-import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
-import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
-import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
+import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.impl.LuoValintaperusteetServiceImpl;
 import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.LukionValintaperuste;
@@ -23,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 import scala.concurrent.duration.Duration;
 
@@ -56,7 +54,7 @@ public class LukionValintaperusteetActorBean extends UntypedActor {
 
     @Override
     public SupervisorStrategy supervisorStrategy() {
-        return new OneForOneStrategy(5, Duration.create("20 seconds"),
+        return new OneForOneStrategy(5, Duration.create("10 seconds"),
                 new Function<Throwable, SupervisorStrategy.Directive>() {
                     public SupervisorStrategy.Directive apply(Throwable cause) {
                         log.error("Virhe valintaperusteiden luonnissa (LukionValintaperusteetActorBean). Syy: {}, viesti:{}", cause.getCause(), cause.getMessage());
@@ -69,22 +67,28 @@ public class LukionValintaperusteetActorBean extends UntypedActor {
 
         if (message instanceof LukionValintaperuste) {
             LukionValintaperuste peruste = (LukionValintaperuste)message;
+            KoodiDTO hakukohdekoodi = peruste.getHakukohdekoodi();
+            ValintaryhmaDTO pkvr = peruste.getPainotettuKeskiarvoVr();
+            ValintaryhmaDTO pklsvr = peruste.getPainotettuKeskiarvoJaLisanayttoVr();
+            ValintaryhmaDTO pkpsvr = peruste.getPainotettuKeskiarvoJaPaasykoeVr();
+            ValintaryhmaDTO pkpslsvr = peruste.getPainotettuKeskiarvoJaPaasykoeJaLisanayttoVr();
+
 
             TransactionStatus tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
-            transactionManager.commit(tx);
-            tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
             hakukohdekoodiService
-                    .lisaaHakukohdekoodiValintaryhmalle(peruste.getPainotettuKeskiarvoVr().getOid(), peruste.getHakukohdekoodi());
-            hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(peruste.getPainotettuKeskiarvoJaLisanayttoVr().getOid(),
-                    peruste.getHakukohdekoodi());
-            hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(peruste.getPainotettuKeskiarvoJaPaasykoeVr().getOid(),
-                    peruste.getHakukohdekoodi());
+                    .lisaaHakukohdekoodiValintaryhmalle(pkvr.getOid(), hakukohdekoodi);
+
+            hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(pklsvr.getOid(),
+                    hakukohdekoodi);
+
+            hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(pkpsvr.getOid(),
+                    hakukohdekoodi);
+
             hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(
-                    peruste.getPainotettuKeskiarvoJaPaasykoeJaLisanayttoVr().getOid(), peruste.getHakukohdekoodi());
+                    pkpslsvr.getOid(), hakukohdekoodi);
 
             transactionManager.commit(tx);
-
 
         }else if(message instanceof Exception) {
             Exception exp = (Exception)message;

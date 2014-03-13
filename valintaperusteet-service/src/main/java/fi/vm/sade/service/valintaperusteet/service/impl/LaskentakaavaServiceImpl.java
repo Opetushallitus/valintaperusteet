@@ -562,15 +562,11 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             throws FunktiokutsuMuodostaaSilmukanException {
         Laskentakaava laskentakaava = haeLaskentakaava(id);
         if (laskentakaava != null) {
-            // System.out.println("############# " + laskentakaava.getNimi() +
-            // " #############");
             laskentakaavaIds.add(laskentakaava.getId());
             Funktiokutsu funktiokutsu = haeFunktiokutsuRekursiivisesti(laskentakaava.getFunktiokutsu().getId(),
                     laajennaAlakaavat, laskentakaavaIds);
             laskentakaava.setFunktiokutsu(funktiokutsu);
             genericDAO.detach(laskentakaava);
-            // haeFunktiokutsuRekursiivisesti(laskentakaava.getFunktiokutsu().getId(),
-            // laajennaAlakaavat,laskentakaavaIds);
 
         }
 
@@ -581,7 +577,6 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             Set<Long> laskentakaavaIds) throws FunktiokutsuMuodostaaSilmukanException {
         Laskentakaava laskentakaava = haeLaskentakaava(id);
         if (laskentakaava != null) {
-            System.out.println("############# " + laskentakaava.getNimi() + " ############# " + laskentakaava.getId());
             laskentakaavaIds.add(laskentakaava.getId());
             Funktiokutsu funktiokutsu = haeFunktiokutsuRekursiivisesti(laskentakaava.getFunktiokutsu().getId(),
                     laajennaAlakaavat, laskentakaavaIds);

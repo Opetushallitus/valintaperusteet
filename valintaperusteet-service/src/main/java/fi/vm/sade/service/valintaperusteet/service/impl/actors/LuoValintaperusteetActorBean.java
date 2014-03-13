@@ -75,10 +75,11 @@ public class LuoValintaperusteetActorBean extends UntypedActor {
 
     @Override
     public SupervisorStrategy supervisorStrategy() {
-        return new OneForOneStrategy(5, Duration.create("20 seconds"),
+        return new OneForOneStrategy(5, Duration.create("10 seconds"),
                 new Function<Throwable, Directive>() {
                     public Directive apply(Throwable cause) {
                         log.error("Virhe valintaperusteiden luonnissa (LuoValintaperusteetActorBean). Syy: {}, viesti:{}", cause.getCause(), cause.getMessage());
+                        cause.printStackTrace();
                         return SupervisorStrategy.restart();
                     }
                 });
@@ -95,8 +96,6 @@ public class LuoValintaperusteetActorBean extends UntypedActor {
             valintaryhma.setNimi(nimi);
 
             TransactionStatus tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
-            transactionManager.commit(tx);
-            tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
             if (nimi.contains(", pk")) {
                 valintaryhma = modelMapper.map(valintaryhmaService.insert(valintaryhma, peruste.getpOid()),
@@ -212,7 +211,6 @@ public class LuoValintaperusteetActorBean extends UntypedActor {
             insertKoe(valintaryhma, valintakoetunniste, ensisijainenJarjestyskriteeri, valintakoekaava,
                     tasasijakriteerit, peruste.getHakukohdekoodi());
             insertEiKoetta(valintaryhma, peruskaava, tasasijakriteerit, peruste.getHakukohdekoodi(), peruste.getLisapisteLaskentakaava());
-
         }else if(message instanceof Exception) {
             Exception exp = (Exception)message;
             exp.printStackTrace();
@@ -229,8 +227,6 @@ public class LuoValintaperusteetActorBean extends UntypedActor {
                            Laskentakaava[] tasasijakriteerit, KoodiDTO hakukohdekoodi) {
 
         TransactionStatus tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
-        transactionManager.commit(tx);
-        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
         ValintaryhmaDTO koevalintaryhma = new ValintaryhmaDTO();
         koevalintaryhma.setNimi("Peruskaava ja pääsykoe");
@@ -328,8 +324,6 @@ public class LuoValintaperusteetActorBean extends UntypedActor {
                                 Laskentakaava[] tasasijakriteerit, KoodiDTO hakukohdekoodi, Laskentakaava lisapistekaava) {
 
         TransactionStatus tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
-        transactionManager.commit(tx);
-        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
         ValintaryhmaDTO koe = new ValintaryhmaDTO();
         koe.setNimi("Peruskaava");

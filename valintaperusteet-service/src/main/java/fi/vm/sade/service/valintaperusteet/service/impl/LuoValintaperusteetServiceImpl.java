@@ -8,9 +8,10 @@ import java.util.*;
 
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
+import akka.actor.PoisonPill;
+import akka.routing.Broadcast;
 import akka.routing.RoundRobinRouter;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
-import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.LukionValintaperuste;
 import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.LuoValintaperuste;
 import fi.vm.sade.service.valintaperusteet.service.impl.generator.*;
 import org.slf4j.Logger;
@@ -31,7 +32,6 @@ import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
-import fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi;
 import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
@@ -1074,8 +1074,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
             // Luetaan otsikkorivi pois
             String line = reader.readLine();
 
-            ActorRef master = actorSystem.actorOf(
-                    SpringExtProvider.get(actorSystem).props("LukionValintaperusteetActorBean").withRouter(new RoundRobinRouter(10)));
+            tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
             while ((line = reader.readLine()) != null) {
                 String[] splitted = line.split(CSV_DELIMITER);
@@ -1091,18 +1090,21 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                 hakukohdekoodi.setNimiSv(nimiSv);
                 hakukohdekoodi.setNimiEn(nimiFi);
 
-                LukionValintaperuste peruste = new LukionValintaperuste(hakukohdekoodi,
-                        painotettuKeskiarvoVr,
-                        painotettuKeskiarvoJaLisanayttoVr,
-                        painotettuKeskiarvoJaPaasykoeVr,
-                        painotettuKeskiarvoJaPaasykoeJaLisanayttoVr);
+                hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(painotettuKeskiarvoVr.getOid(), hakukohdekoodi);
 
-//                ActorRef master = actorSystem.actorOf(
-//                        SpringExtProvider.get(actorSystem).props("LukionValintaperusteetActorBean").withDispatcher("default-dispatcher"), UUID.randomUUID()
-//                        .toString());
+                hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(painotettuKeskiarvoJaLisanayttoVr.getOid(),hakukohdekoodi);
 
-                master.tell(peruste, ActorRef.noSender());
+                hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(painotettuKeskiarvoJaPaasykoeVr.getOid(),hakukohdekoodi);
+
+                hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(
+                        painotettuKeskiarvoJaPaasykoeJaLisanayttoVr.getOid(), hakukohdekoodi);
+
+
             }
+
+            transactionManager.commit(tx);
+
+
         } finally {
             if (reader != null) {
                 reader.close();
@@ -1125,14 +1127,13 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                     "classpath:hakukohdekoodit/ammatillinenkoulutushakukohdekoodit.csv").getInputStream(),
                     Charset.forName("UTF-8")));
 
-            SpringExtProvider.get(actorSystem).initialize(applicationContext);
-
             // Luetaan otsikkorivi pois
             String line = reader.readLine();
 
+            SpringExtProvider.get(actorSystem).initialize(applicationContext);
 
             ActorRef master = actorSystem.actorOf(
-                    SpringExtProvider.get(actorSystem).props("LuoValintaperusteetActorBean").withRouter(new RoundRobinRouter(10)));
+                    SpringExtProvider.get(actorSystem).props("LuoValintaperusteetActorBean").withRouter(new RoundRobinRouter(15)), "AmmatillinenRouter");
 
             while ((line = reader.readLine()) != null) {
                 String[] splitted = line.split(CSV_DELIMITER);
@@ -1152,14 +1153,14 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                         peruskouluVr.getOid(), lukioVr.getOid(), pkPeruskaava, pkTasasijakriteerit,
                         lkPeruskaava, lkTasasijakriteerit, kielikoeLaskentakaava, lisapisteLaskentakaava);
 
-//                ActorRef master = actorSystem.actorOf(
-//                    SpringExtProvider.get(actorSystem).props("LuoValintaperusteetActorBean").withDispatcher("default-dispatcher"), UUID.randomUUID()
-//                    .toString());
 
                 master.tell(peruste, ActorRef.noSender());
 
 
             }
+
+            master.tell(new Broadcast(PoisonPill.getInstance()), ActorRef.noSender());
+
         } finally {
             if (reader != null) {
                 reader.close();
