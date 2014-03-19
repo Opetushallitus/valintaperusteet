@@ -4,6 +4,7 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRU
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.jws.WebParam;
@@ -214,6 +215,9 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
 			return list;
 		} catch (Exception e) {
 			e.printStackTrace();
+			LOG.error("Valintaperusteiden haussa virhe {} {} {}",
+					e.getMessage(), e.getCause(),
+					Arrays.toString(e.getStackTrace()));
 			throw new GenericFault(e.getMessage(), e);
 		}
 	}
