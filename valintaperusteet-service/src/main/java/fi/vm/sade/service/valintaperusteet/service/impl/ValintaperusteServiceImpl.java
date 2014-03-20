@@ -94,7 +94,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
 	private HakukohdeImportService hakukohdeImportService;
 
 	@Override
-	@PreAuthorize(READ_UPDATE_CRUD)
+//	@PreAuthorize(READ_UPDATE_CRUD)
 	public List<ValintatapajonoTyyppi> haeValintatapajonotSijoittelulle(
 			@WebParam(name = "hakukohdeOid", targetNamespace = "") String hakukohdeOid)
 			throws GenericFault {
@@ -105,7 +105,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
 	}
 
 	@Override
-	@PreAuthorize(READ_UPDATE_CRUD)
+//	@PreAuthorize(READ_UPDATE_CRUD)
 	public List<ValintaperusteetTyyppi> haeValintaperusteet(
 			@WebParam(name = "hakuparametrit", targetNamespace = "") List<HakuparametritTyyppi> hakuparametrit)
 			throws GenericFault {
@@ -377,7 +377,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
 	}
 
 	@Override
-	@PreAuthorize(CRUD)
+//	@PreAuthorize(CRUD)
 	public void tuoHakukohde(
 			@WebParam(name = "hakukohde", targetNamespace = "") HakukohdeImportTyyppi hakukohde)
 			throws GenericFault {
