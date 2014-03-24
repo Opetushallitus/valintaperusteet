@@ -126,14 +126,14 @@ public class LuoValintaperusteetActorBean extends UntypedActor {
                 valintakoetunniste = nimi + ", pääsy- ja soveltuvuuskoe";
                 valintakoeNimi = valintakoetunniste;
             } else {
-                valintakoetunniste = "{{hakukohde.paasykoe_tunniste}}";
+                valintakoetunniste = "paasykoe_tunniste";
                 valintakoeNimi = "Pääsy- ja soveltuvuuskoe";
             }
 
             ValintakoeDTO valintakoe = new ValintakoeDTO();
             valintakoe.setAktiivinen(false);
             valintakoe.setKuvaus(valintakoeNimi);
-            valintakoe.setTunniste(valintakoetunniste);
+            valintakoe.setTunniste("{{hakukohde."+valintakoetunniste+"}}");
             valintakoe.setNimi(valintakoeNimi);
             valintakoe.setLahetetaankoKoekutsut(true);
 
