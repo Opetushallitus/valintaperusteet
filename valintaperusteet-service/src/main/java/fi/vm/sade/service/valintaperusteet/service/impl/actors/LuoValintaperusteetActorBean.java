@@ -174,14 +174,18 @@ public class LuoValintaperusteetActorBean extends UntypedActor {
             tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
             Valintaperustelahde lahde;
+            Laskentakaava valintakoekaava;
             if(onPoikkeavaRyhma) {
                 lahde = Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO;
+                valintakoekaava = laskentakaavaService.insert(
+                        PkJaYoPohjaiset.luoValintakoekaava(valintakoetunniste, lahde, true), null, valintaryhma.getOid());
             } else {
                 lahde = Valintaperustelahde.SYOTETTAVA_ARVO;
+                valintakoekaava = laskentakaavaService.insert(
+                        PkJaYoPohjaiset.luoValintakoekaava(valintakoetunniste, lahde), null, valintaryhma.getOid());
             }
 
-            Laskentakaava valintakoekaava = laskentakaavaService.insert(
-                    PkJaYoPohjaiset.luoValintakoekaava(valintakoetunniste, lahde), null, valintaryhma.getOid());
+
 
             transactionManager.commit(tx);
             tx = transactionManager.getTransaction(new DefaultTransactionDefinition());

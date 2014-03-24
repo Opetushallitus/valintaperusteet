@@ -139,6 +139,20 @@ public class PkJaYoPohjaiset {
                 GenericHelper.luoHylkaaArvovalilla(funktiokutsu, "Valintakoetulos hylätty", "0.0", "1.0"), nimi);
     }
 
+    public static Laskentakaava luoValintakoekaava(String nimi, Valintaperustelahde lahde, boolean epasuoraViittaus) {
+        ValintaperusteViite valintaperuste = GenericHelper.luoValintaperusteViite(nimi, true,
+                lahde, "Pääsy- ja soveltuvuuskoe", epasuoraViittaus);
+
+        List<Arvovalikonvertteriparametri> konvs = new ArrayList<Arvovalikonvertteriparametri>();
+
+        konvs.add(GenericHelper.luoArvovalikonvertteriparametri(0.0, 10.0));
+
+        Funktiokutsu funktiokutsu = GenericHelper.luoHaeLukuarvo(valintaperuste, konvs);
+
+        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
+                GenericHelper.luoHylkaaArvovalilla(funktiokutsu, "Valintakoetulos hylätty", "0.0", "1.0"), nimi);
+    }
+
     public static Laskentakaava luoLisapistekaava(String tunniste) {
         ValintaperusteViite valintaperuste = GenericHelper.luoValintaperusteViite(tunniste, true,
                 Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO, "Lisäpiste", true);
