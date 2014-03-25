@@ -122,18 +122,21 @@ public class LuoValintaperusteetActorBean extends UntypedActor {
 
             String valintakoetunniste;
             String valintakoeNimi;
+            String valintakoeKaavanTunniste;
             if (!onPoikkeavaRyhma) {
                 valintakoetunniste = nimi + ", pääsy- ja soveltuvuuskoe";
                 valintakoeNimi = valintakoetunniste;
+                valintakoeKaavanTunniste = valintakoetunniste;
             } else {
-                valintakoetunniste = "paasykoe_tunniste";
+                valintakoetunniste = "{{hakukohde.paasykoe_tunniste}}";
+                valintakoeKaavanTunniste = "paasykoe_tunniste";
                 valintakoeNimi = "Pääsy- ja soveltuvuuskoe";
             }
 
             ValintakoeDTO valintakoe = new ValintakoeDTO();
             valintakoe.setAktiivinen(false);
             valintakoe.setKuvaus(valintakoeNimi);
-            valintakoe.setTunniste("{{hakukohde."+valintakoetunniste+"}}");
+            valintakoe.setTunniste(valintakoetunniste);
             valintakoe.setNimi(valintakoeNimi);
             valintakoe.setLahetetaankoKoekutsut(true);
 
@@ -178,11 +181,11 @@ public class LuoValintaperusteetActorBean extends UntypedActor {
             if(onPoikkeavaRyhma) {
                 lahde = Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO;
                 valintakoekaava = laskentakaavaService.insert(
-                        PkJaYoPohjaiset.luoValintakoekaava(valintakoetunniste, lahde, true), null, valintaryhma.getOid());
+                        PkJaYoPohjaiset.luoValintakoekaava(valintakoeKaavanTunniste, lahde, true), null, valintaryhma.getOid());
             } else {
                 lahde = Valintaperustelahde.SYOTETTAVA_ARVO;
                 valintakoekaava = laskentakaavaService.insert(
-                        PkJaYoPohjaiset.luoValintakoekaava(valintakoetunniste, lahde), null, valintaryhma.getOid());
+                        PkJaYoPohjaiset.luoValintakoekaava(valintakoeKaavanTunniste, lahde), null, valintaryhma.getOid());
             }
 
 
