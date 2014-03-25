@@ -281,6 +281,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
 				tyyppi.setNimi(koe.getNimi());
 				tyyppi.setOid(koe.getOid());
 				tyyppi.setTunniste(koe.getTunniste());
+                tyyppi.setLahetetaankoKoekutsut(koe.getLahetetaankoKoekutsut());
 
 				FunktiokutsuTyyppi converted = null;
 				if (koe.ainaPakollinen()) {

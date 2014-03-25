@@ -60,6 +60,7 @@
         <xs:attribute name="nimi" type="xs:string" use="required"/>
         <xs:attribute name="tunniste" type="xs:string" use="required"/>
         <xs:attribute name="kuvaus" type="xs:string" use="optional"/>
+        <xs:attribute name="lahetetaankoKoekutsut" type="xs:boolean" use="optional" default="true"/>
     </xs:complexType>
 
     <xs:simpleType name="ValinnanVaiheTyyppiTyyppi">
