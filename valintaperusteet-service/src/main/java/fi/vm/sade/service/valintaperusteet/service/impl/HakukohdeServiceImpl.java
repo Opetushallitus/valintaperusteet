@@ -165,6 +165,17 @@ public class HakukohdeServiceImpl implements HakukohdeService {
 
             lisatty.getValintakokeet().addAll(hakukohdeViite.getValintakokeet());
 
+            for (String key : hakukohdeViite.getHakukohteenValintaperusteet().keySet()) {
+                HakukohteenValintaperuste peruste = hakukohdeViite.getHakukohteenValintaperusteet().get(key);
+
+                HakukohteenValintaperuste lisattava = new HakukohteenValintaperuste();
+                lisattava.setArvo(peruste.getArvo());
+                lisattava.setKuvaus(peruste.getKuvaus());
+                lisattava.setTunniste(peruste.getTunniste());
+                lisattava.setHakukohde(lisatty);
+                lisatty.getHakukohteenValintaperusteet().put(key, lisattava);
+            }
+
             ValinnanVaihe viimeinenValinnanVaihe =
                     valinnanVaiheDAO.haeHakukohteenViimeinenValinnanVaihe(hakukohdeOid);
 
