@@ -703,10 +703,11 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
     assert(Virhetyyppi.FUNKTIOKUTSUA_EI_OLE_MAARITELTY_FUNKTIOARGUMENTILLE ==
       validationMessages1.get(0).asInstanceOf[Validointivirhe].getVirhetyyppi)
 
-    val validationMessages2 = Laskentakaavavalidaattori.validoiMallinnettuKaava(funktiokutsu).getValidointivirheet
-    assert(1 == validationMessages2.size())
-    assert(Virhetyyppi.FUNKTIOARGUMENTIN_LASKENTAKAAVA_ON_LUONNOS ==
-      validationMessages2.get(0).asInstanceOf[Validointivirhe].getVirhetyyppi)
+    // Laskentakaavaa ei voi tällä hetkellä tallentaa luonnoksena
+//    val validationMessages2 = Laskentakaavavalidaattori.validoiMallinnettuKaava(funktiokutsu).getValidointivirheet
+//    assert(1 == validationMessages2.size())
+//    assert(Virhetyyppi.FUNKTIOARGUMENTIN_LASKENTAKAAVA_ON_LUONNOS ==
+//      validationMessages2.get(0).asInstanceOf[Validointivirhe].getVirhetyyppi)
   }
 
   test("Funktiokutsu with argument null values") {
