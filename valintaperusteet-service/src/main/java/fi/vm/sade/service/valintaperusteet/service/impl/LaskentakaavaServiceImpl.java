@@ -177,10 +177,14 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             Set<Long> laskentakaavaIds = new HashSet<Long>();
             laskentakaavaIds.add(managed.getId());
 
-            managed.setOnLuonnos(incoming.getOnLuonnos());
+            // Laskentakaavaa ei voi tällä hetkellä tallentaa luonnoksena
+            //managed.setOnLuonnos(incoming.getOnLuonnos());
+
             managed.setFunktiokutsu(updateFunktiokutsu(entity.getFunktiokutsu(), laskentakaavaIds));
 
-            if (!incoming.getOnLuonnos() && !Laskentakaavavalidaattori.onkoMallinnettuKaavaValidi(managed)) {
+            // Laskentakaavaa ei voi tällä hetkellä tallentaa luonnoksena
+            //if (!incoming.getOnLuonnos() && !Laskentakaavavalidaattori.onkoMallinnettuKaavaValidi(managed)) {
+            if (!Laskentakaavavalidaattori.onkoMallinnettuKaavaValidi(managed)) {
                 throw new LaskentakaavaEiValidiException("Laskentakaava ei ole validi",
                         Laskentakaavavalidaattori.validoiMallinnettuKaava(entity));
             }
@@ -396,7 +400,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
 
             Laskentakaava entity = modelMapper.map(laskentakaava, Laskentakaava.class);
 
-            if (!laskentakaava.getOnLuonnos() && !Laskentakaavavalidaattori.onkoMallinnettuKaavaValidi(entity)) {
+            if (!Laskentakaavavalidaattori.onkoMallinnettuKaavaValidi(entity)) {
                 throw new LaskentakaavaEiValidiException("Laskentakaava ei ole validi",
                         Laskentakaavavalidaattori.validoiMallinnettuKaava(entity));
             }

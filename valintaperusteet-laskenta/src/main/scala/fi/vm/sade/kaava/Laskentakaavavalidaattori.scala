@@ -33,6 +33,7 @@ object Laskentakaavavalidaattori {
       case Syoteparametrityyppi.KOKONAISLUKU => (mj: String) => mj.toInt
       case Syoteparametrityyppi.TOTUUSARVO => (mj: String) => mj.toBoolean
       case Syoteparametrityyppi.MERKKIJONO => (mj: String) => Unit
+      case Syoteparametrityyppi.ARVOJOUKKO => (mj: String) => Unit
     }
 
     tryConvertString(s, konv)
@@ -55,6 +56,7 @@ object Laskentakaavavalidaattori {
         case Syoteparametrityyppi.KOKONAISLUKU => viesti("Integer")
         case Syoteparametrityyppi.TOTUUSARVO => viesti("Boolean")
         case Syoteparametrityyppi.MERKKIJONO => ""
+        case Syoteparametrityyppi.ARVOJOUKKO => viesti("Enum")
       }
 
       if (muutaMerkkijonoParametrityypiksi(annettuParametri.getArvo, vaadittuParametri.tyyppi)) {
@@ -115,10 +117,13 @@ object Laskentakaavavalidaattori {
               Vaadittu: ${vaadittuArgumentti.tyyppi.toString}, annettu: ${argumentti.getLaskentakaavaChild.getTyyppi.name()}""") :: accum
           } else accum
 
-          if (argumentti.getLaskentakaavaChild.getOnLuonnos) {
-            new Validointivirhe(Virhetyyppi.FUNKTIOARGUMENTIN_LASKENTAKAAVA_ON_LUONNOS,
-              s"Funktion $nimi funktioargumentille määriteltylaskentakaava on luonnos-tilassa") :: vv
-          } else vv
+          // Laskentakaavaa ei voi tällä hetkellä tallentaa luonnoksena
+//          if (argumentti.getLaskentakaavaChild.getOnLuonnos) {
+//            new Validointivirhe(Virhetyyppi.FUNKTIOARGUMENTIN_LASKENTAKAAVA_ON_LUONNOS,
+//              s"Funktion $nimi funktioargumentille määriteltylaskentakaava on luonnos-tilassa") :: vv
+//          } else vv
+
+          vv
         } else accum
       }
     }
@@ -428,6 +433,8 @@ object Laskentakaavavalidaattori {
     })
 
     funktiokutsu.setValidointivirheet(virheet)
+
+    virheet.foreach(v => println(s"Validointivirhe: ${v.getVirheviesti}"))
 
     funktiokutsu
   }

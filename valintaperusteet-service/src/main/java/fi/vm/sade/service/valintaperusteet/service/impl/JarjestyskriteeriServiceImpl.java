@@ -95,10 +95,13 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
         } else if (!Funktiotyyppi.LUKUARVOFUNKTIO.equals(laskentakaava.getTyyppi())) {
             throw new VaaranTyyppinenLaskentakaavaException("Järjestyskriteerin laskentakaavan tulee olla tyyppiä "
                     + Funktiotyyppi.LUKUARVOFUNKTIO.name());
-        } else if (laskentakaava.getOnLuonnos()) {
-            throw new JarjestyskriteeriinLiitettavaLaskentakaavaOnLuonnosException("Luonnos-tilassa olevaa"
-                    + " laskentakaavaa ei voi liittää " + "valintatapajonoon", laskentakaava.getId());
         }
+
+        // Laskentakaavaa ei voi tällä hetkellä tallentaa luonnoksena
+//        else if (laskentakaava.getOnLuonnos()) {
+//            throw new JarjestyskriteeriinLiitettavaLaskentakaavaOnLuonnosException("Luonnos-tilassa olevaa"
+//                    + " laskentakaavaa ei voi liittää " + "valintatapajonoon", laskentakaava.getId());
+//        }
 
         validoiFunktiokutsuJarjestyskriteeriaVarten(laskentakaava.getFunktiokutsu());
     }

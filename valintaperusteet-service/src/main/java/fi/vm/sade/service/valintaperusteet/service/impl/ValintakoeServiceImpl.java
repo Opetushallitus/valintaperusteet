@@ -185,11 +185,14 @@ public class ValintakoeServiceImpl implements ValintakoeService {
 			throw new VaaranTyyppinenLaskentakaavaException(
 					"Valintakokeen laskentakaavan tulee olla tyyppiä "
 							+ Funktiotyyppi.TOTUUSARVOFUNKTIO.name());
-		} else if (laskentakaava.getOnLuonnos()) {
-			throw new ValintakokeeseenLiitettavaLaskentakaavaOnLuonnosException(
-					"Valintakokeeseen liitettävä "
-							+ "laskentakaava on LUONNOS-tilassa");
 		}
+
+        // Laskentakaavaa ei voi tällä hetkellä tallentaa luonnoksena
+//        else if (laskentakaava.getOnLuonnos()) {
+//			throw new ValintakokeeseenLiitettavaLaskentakaavaOnLuonnosException(
+//					"Valintakokeeseen liitettävä "
+//							+ "laskentakaava on LUONNOS-tilassa");
+//		}
 
 		validoiFunktiokutsuValintakoettaVarten(laskentakaava.getFunktiokutsu());
 
