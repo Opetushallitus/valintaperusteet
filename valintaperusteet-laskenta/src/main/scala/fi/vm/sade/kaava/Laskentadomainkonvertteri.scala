@@ -398,6 +398,65 @@ object Laskentadomainkonvertteri {
         Valintaperusteyhtasuuruus(oid, tulosTunniste, Pair(valintaperusteviitteet(0), valintaperusteviitteet(1)))
       }
 
+      case Funktionimi.HAEYOARVOSANA => {
+
+        List("A", "B", "C", "M", "E", "L", "I").foreach(
+          arvosana => {
+            if (funktiokutsu.getSyoteparametrit.count(s => s.getAvain == arvosana) == 0) {
+              val target = new Syoteparametri
+              target.setArvo("0.0")
+              target.setAvain(arvosana)
+              funktiokutsu.getSyoteparametrit.add(target)
+            }
+          }
+
+        )
+
+        val arvosanaKonvertterit = funktiokutsu.getSyoteparametrit.filter(s => s.getAvain.length == 1).map(
+          param => ArvokonversioMerkkijonoilla[String, BigDecimal](param.getAvain, BigDecimal(param.getArvo), "false", new TekstiRyhma)
+        ).toList
+
+        val alkuvuosi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("alkuvuosi")) match {
+          case Some(sp: Syoteparametri) => BigDecimal(sp.getArvo)
+          case _ => BigDecimal("0.0")
+        }
+
+        val loppuvuosi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("loppuvuosi")) match {
+          case Some(sp: Syoteparametri) => BigDecimal(sp.getArvo)
+          case _ => BigDecimal("9999")
+        }
+
+        val alkulukukausi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("alkulukukausi")) match {
+          case Some(sp: Syoteparametri) => BigDecimal(sp.getArvo)
+          case _ => BigDecimal("1")
+        }
+
+        val loppulukukausi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("loppulukukausi")) match {
+          case Some(sp: Syoteparametri) => BigDecimal(sp.getArvo)
+          case _ => BigDecimal("2")
+        }
+
+        val arvosana = HaeMerkkijonoJaKonvertoiLukuarvoksi(
+          Arvokonvertteri[String, BigDecimal](arvosanaKonvertterit),
+          None,
+          valintaperusteviitteet.head)
+
+        val vuosiperuste = HakemuksenValintaperuste(s"${valintaperusteviitteet.head.tunniste}_suoritusvuosi", pakollinen = false)
+        val lukukausiperuste = HakemuksenValintaperuste(s"${valintaperusteviitteet.head.tunniste}_suorituslukukausi", pakollinen = false)
+
+        val ehdot = Ja(
+          Seq(
+            SuurempiTaiYhtasuuri(HaeLukuarvo(None, None, vuosiperuste), Lukuarvo(alkuvuosi)),
+            SuurempiTaiYhtasuuri(HaeLukuarvo(None, None, lukukausiperuste), Lukuarvo(alkulukukausi)),
+            PienempiTaiYhtasuuri(HaeLukuarvo(None, None, vuosiperuste), Lukuarvo(loppuvuosi)),
+            PienempiTaiYhtasuuri(HaeLukuarvo(None, None, lukukausiperuste), Lukuarvo(loppulukukausi))
+          )
+        )
+
+        Jos(ehdot, arvosana, Lukuarvo(BigDecimal("0.0")))
+
+      }
+
       case _ => sys.error(s"Could not calculate funktio ${funktiokutsu.getFunktionimi.name()}")
     }
   }

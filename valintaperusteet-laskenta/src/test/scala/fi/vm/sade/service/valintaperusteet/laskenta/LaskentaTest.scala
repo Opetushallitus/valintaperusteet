@@ -37,7 +37,11 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.SyotettavaValintape
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonvertteri
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeTotuusarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaVertaaYhtasuuruus
-import fi.vm.sade.service.valintaperusteet.model.TekstiRyhma
+import fi.vm.sade.service.valintaperusteet.model.{Syoteparametri, ValintaperusteViite, Funktiokutsu, TekstiRyhma}
+import fi.vm.sade.kaava.LaskentaTestUtil.Funktiokutsu
+import fi.vm.sade.service.valintaperusteet.dto.model.{Valintaperustelahde, Funktionimi}
+import fi.vm.sade.kaava.Laskentadomainkonvertteri
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Tila.Tilatyyppi
 
 /**
  *
@@ -47,7 +51,7 @@ import fi.vm.sade.service.valintaperusteet.model.TekstiRyhma
  */
 class LaskentaTest extends FunSuite {
 
-  val tekstiRyhma = new TekstiRyhma();
+  val tekstiRyhma = new TekstiRyhma()
 
   val hakukohde = new Hakukohde("123", new util.HashMap[String, String])
 
@@ -64,6 +68,15 @@ class LaskentaTest extends FunSuite {
     put("B22_oppiaine", "EN")
     put("B22_arvosana", "8")
     put("aA_-", "EN")
+    put("SA", "M")
+    put("SA_suoritusvuosi", "2011")
+    put("SA_suorituslukukausi", "2")
+    put("PS", "L")
+    put("REAALI", "X")
+    put("REAALI_suoritusvuosi", "jeppis")
+    put("HI", "G")
+    put("HI_suoritusvuosi", "2011")
+    put("HI_suorituslukukausi", "2")
   }}
 
   val hakukohdeMustache = new Hakukohde("1234", mustacheMap)
@@ -1147,4 +1160,89 @@ class LaskentaTest extends FunSuite {
     assert(BigDecimal(yliTulos.get) == BigDecimal("10.0"))
     assertTilaHyvaksyttavissa(yliTila)
   }
+
+  test("HaeYoArvosana") {
+    val hakemus = hakemusMustache
+
+    val kutsu: Funktiokutsu = new Funktiokutsu
+    kutsu.setFunktionimi(Funktionimi.HAEYOARVOSANA)
+
+    val viite: ValintaperusteViite = new ValintaperusteViite
+    viite.setTunniste("SA")
+    viite.setIndeksi(0)
+    viite.setLahde(Valintaperustelahde.HAETTAVA_ARVO)
+    viite.setEpasuoraViittaus(false)
+    viite.setOnPakollinen(false)
+
+    kutsu.getValintaperusteviitteet.add(viite)
+
+    val syoteparametri: Syoteparametri = new Syoteparametri
+    syoteparametri.setAvain("M")
+    syoteparametri.setArvo("3")
+
+    val syoteparametri2: Syoteparametri = new Syoteparametri
+    syoteparametri2.setAvain("A")
+    syoteparametri2.setArvo("5")
+
+    val syoteparametri3: Syoteparametri = new Syoteparametri
+    syoteparametri3.setAvain("alkuvuosi")
+    syoteparametri3.setArvo("2010")
+
+    val syoteparametri4: Syoteparametri = new Syoteparametri
+    syoteparametri4.setAvain("loppuvuosi")
+    syoteparametri4.setArvo("2014")
+
+    val syoteparametri5: Syoteparametri = new Syoteparametri
+    syoteparametri5.setAvain("alkulukukausi")
+    syoteparametri5.setArvo("1")
+
+    val syoteparametri6: Syoteparametri = new Syoteparametri
+    syoteparametri6.setAvain("loppulukukausi")
+    syoteparametri6.setArvo("2")
+
+    kutsu.getSyoteparametrit.add(syoteparametri)
+    kutsu.getSyoteparametrit.add(syoteparametri2)
+    kutsu.getSyoteparametrit.add(syoteparametri3)
+    kutsu.getSyoteparametrit.add(syoteparametri4)
+    kutsu.getSyoteparametrit.add(syoteparametri5)
+    kutsu.getSyoteparametrit.add(syoteparametri6)
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(kutsu)
+
+    val (tulos, _) = Laskin.laske(hakukohde, hakemus,
+     lasku)
+    assert(BigDecimal(tulos.get) == BigDecimal("3"))
+
+    viite.setTunniste("PS")
+
+    val lasku2 = Laskentadomainkonvertteri.muodostaLukuarvolasku(kutsu)
+    val (tulos2, tila2) = Laskin.laske(hakukohde, hakemus,
+      lasku2)
+
+    assert(tulos2.isEmpty)
+    assert(tila2.getTilatyyppi == Tilatyyppi.HYVAKSYTTAVISSA)
+
+    viite.setTunniste("REAALI")
+
+    val lasku3 = Laskentadomainkonvertteri.muodostaLukuarvolasku(kutsu)
+    val (tulos3, tila3) = Laskin.laske(hakukohde, hakemus,
+      lasku3)
+
+    assert(tulos3.isEmpty)
+    assert(tila3.getTilatyyppi == Tilatyyppi.VIRHE)
+
+    viite.setTunniste("HI")
+
+    val lasku4 = Laskentadomainkonvertteri.muodostaLukuarvolasku(kutsu)
+    val (tulos4, tila4) = Laskin.laske(hakukohde, hakemus,
+      lasku4)
+
+    assert(tulos4.isEmpty)
+    assert(tila4.getTilatyyppi == Tilatyyppi.VIRHE)
+
+
+
+
+  }
+
 }

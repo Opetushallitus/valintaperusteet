@@ -26,6 +26,7 @@ object Funktiokuvaaja {
     val DESIMAALILUKU = Value("DESIMAALILUKU")
     val TOTUUSARVO = Value("TOTUUSARVO")
     val MERKKIJONO = Value("MERKKIJONO")
+    val ARVOJOUKKO = Value("ARVOJOUKKO")
   }
 
   object Konvertterinimi extends Enumeration {
@@ -64,9 +65,13 @@ object Funktiokuvaaja {
   case class Konvertterikuvaus(pakollinen: Boolean,
                                konvertteriTyypit: Map[Konvertterinimi.Konvertterinimi, KonvertteriTyyppi])
 
-  case class Valintaperusteparametrikuvaus(nimi: String, tyyppi: Syoteparametrityyppi)
+  case class Valintaperusteparametrikuvaus(nimi: String, tyyppi: Syoteparametrityyppi, arvojoukko: Map[String,String] = Map.empty[String,String],kuvaus: String = "")
 
-  case class Syoteparametrikuvaus(avain: String, tyyppi: Syoteparametrityyppi, pakollinen: Boolean = true)
+  case class Syoteparametrikuvaus(avain: String,
+                                  tyyppi: Syoteparametrityyppi,
+                                  pakollinen: Boolean = true,
+                                  arvojoukko: Map[String,String] = Map.empty[String,String],
+                                  kuvaus: String = "")
 
   case class Funktioargumenttikuvaus(nimi: String, tyyppi: Funktiotyyppi,
                                      kardinaliteetti: Kardinaliteetti = Kardinaliteetti.YKSI)
@@ -126,7 +131,7 @@ object Funktiokuvaaja {
       fk.syoteparametrit.map(Json.toJson(_)))
 
     val valintaperuste = if (fk.valintaperusteparametri.isEmpty) Json.obj()
-    else Json.obj("valintaperuste" -> fk.valintaperusteparametri.map(Json.toJson(_)))
+    else Json.obj("valintaperusteviitteet" -> fk.valintaperusteparametri.map(Json.toJson(_)))
 
     val konvertteri = fk.konvertteri match {
       case Some(konv) => Json.obj("konvertteri" -> Json.toJson(konv))
@@ -181,6 +186,23 @@ object Funktiokuvaaja {
           konvertteriTyypit = Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.DESIMAALILUKU),
             ARVOVALIKONVERTTERI -> Arvovalikonvertterikuvaus)
         ))
+    ),
+    Funktionimi.HAEYOARVOSANA -> Funktiokuvaus(
+      tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
+      syoteparametrit = List(
+        Syoteparametrikuvaus(avain = "alkuvuosi", tyyppi = Syoteparametrityyppi.KOKONAISLUKU, pakollinen = false, kuvaus = "Alkaen (vuosi)"),
+        Syoteparametrikuvaus(avain = "alkulukukausi", tyyppi = Syoteparametrityyppi.ARVOJOUKKO, pakollinen = false, arvojoukko = Arvojoukot.LUKUKAUDET, kuvaus = "Alkaen (lukukausi)"),
+        Syoteparametrikuvaus(avain = "loppuvuosi", tyyppi = Syoteparametrityyppi.KOKONAISLUKU, pakollinen = false, kuvaus = "Päättyen (vuosi)"),
+        Syoteparametrikuvaus(avain = "loppulukukausi", tyyppi = Syoteparametrityyppi.ARVOJOUKKO, pakollinen = false, arvojoukko = Arvojoukot.LUKUKAUDET, kuvaus = "Päättyen (lukukausi)"),
+        Syoteparametrikuvaus(avain = "I", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = false, kuvaus = "Arvosana I"),
+        Syoteparametrikuvaus(avain = "A", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = false, kuvaus = "Arvosana A"),
+        Syoteparametrikuvaus(avain = "B", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = false, kuvaus = "Arvosana B"),
+        Syoteparametrikuvaus(avain = "C", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = false, kuvaus = "Arvosana C"),
+        Syoteparametrikuvaus(avain = "M", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = false, kuvaus = "Arvosana M"),
+        Syoteparametrikuvaus(avain = "E", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = false, kuvaus = "Arvosana E"),
+        Syoteparametrikuvaus(avain = "L", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = false, kuvaus = "Arvosana L")
+      ),
+      valintaperusteparametri = List(Valintaperusteparametrikuvaus("oppiaine", tyyppi = Syoteparametrityyppi.ARVOJOUKKO, arvojoukko = Arvojoukot.YO_OPPIAINEET, kuvaus = "Oppiaine"))
     ),
     Funktionimi.HAEMERKKIJONOJAKONVERTOILUKUARVOKSI -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,

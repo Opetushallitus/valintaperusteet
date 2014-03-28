@@ -156,6 +156,8 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
                     laskentakaava.getHakukohdeOid(), laskentakaava.getValintaryhmaOid()), LaskentakaavaDTO.class);
             return Response.status(Response.Status.CREATED).entity(inserted).build();
         } catch (LaskentakaavaEiValidiException e) {
+            LOGGER.error("Laskentakaava ei ole validi.", e);
+            e.printStackTrace();
             return Response.status(Response.Status.BAD_REQUEST).entity(inserted).build();
         } catch (Exception e) {
             LOGGER.error("Virhe tallennettaessa laskentakaavaa.", e);
