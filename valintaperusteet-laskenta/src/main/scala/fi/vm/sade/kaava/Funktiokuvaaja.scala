@@ -204,6 +204,22 @@ object Funktiokuvaaja {
       ),
       valintaperusteparametri = List(Valintaperusteparametrikuvaus("oppiaine", tyyppi = Syoteparametrityyppi.ARVOJOUKKO, arvojoukko = Arvojoukot.YO_OPPIAINEET, kuvaus = "Oppiaine"))
     ),
+    Funktionimi.HAEOSAKOEARVOSANA -> Funktiokuvaus(
+      tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
+      syoteparametrit = List(
+        Syoteparametrikuvaus(avain = "alkuvuosi", tyyppi = Syoteparametrityyppi.KOKONAISLUKU, pakollinen = false, kuvaus = "Alkaen (vuosi)"),
+        Syoteparametrikuvaus(avain = "alkulukukausi", tyyppi = Syoteparametrityyppi.ARVOJOUKKO, pakollinen = false, arvojoukko = Arvojoukot.LUKUKAUDET, kuvaus = "Alkaen (lukukausi)"),
+        Syoteparametrikuvaus(avain = "loppuvuosi", tyyppi = Syoteparametrityyppi.KOKONAISLUKU, pakollinen = false, kuvaus = "Päättyen (vuosi)"),
+        Syoteparametrikuvaus(avain = "loppulukukausi", tyyppi = Syoteparametrityyppi.ARVOJOUKKO, pakollinen = false, arvojoukko = Arvojoukot.LUKUKAUDET, kuvaus = "Päättyen (lukukausi)")
+      ),
+      valintaperusteparametri = List(Valintaperusteparametrikuvaus("oppiaine", tyyppi = Syoteparametrityyppi.ARVOJOUKKO, arvojoukko = Arvojoukot.OSAKOKEET, kuvaus = "Osakoe")),
+      konvertteri = Some(
+        Konvertterikuvaus(
+          pakollinen = false,
+          konvertteriTyypit = Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.DESIMAALILUKU),
+            ARVOVALIKONVERTTERI -> Arvovalikonvertterikuvaus)
+        ))
+    ),
     Funktionimi.HAEMERKKIJONOJAKONVERTOILUKUARVOKSI -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
       syoteparametrit = List(
