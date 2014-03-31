@@ -37,11 +37,40 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.SyotettavaValintape
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonvertteri
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeTotuusarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaVertaaYhtasuuruus
-import fi.vm.sade.service.valintaperusteet.model.{Syoteparametri, ValintaperusteViite, Funktiokutsu, TekstiRyhma}
+import fi.vm.sade.service.valintaperusteet.model._
 import fi.vm.sade.kaava.LaskentaTestUtil.Funktiokutsu
 import fi.vm.sade.service.valintaperusteet.dto.model.{Valintaperustelahde, Funktionimi}
 import fi.vm.sade.kaava.Laskentadomainkonvertteri
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Tila.Tilatyyppi
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.KonvertoiLukuarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Totuusarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeLukuarvoEhdolla
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonvertteri
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Suurempi
+import scala.Some
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonversio
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Jos
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Demografia
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakukohteenValintaperuste
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaKonvertoiLukuarvoksi
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.PainotettuKeskiarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvo
+import fi.vm.sade.service.valintaperusteet.model.ValintaperusteViite
+import fi.vm.sade.service.valintaperusteet.model.Syoteparametri
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonversio
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Valintaperusteyhtasuuruus
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HylkaaArvovalilla
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakemuksenValintaperuste
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeLukuarvo
+import fi.vm.sade.kaava.LaskentaTestUtil.Funktiokutsu
+import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Skaalaus
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.SyotettavaValintaperuste
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonvertteri
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeTotuusarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaVertaaYhtasuuruus
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.LukuarvovalikonversioMerkkijonoilla
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.ArvokonversioMerkkijonoilla
 
 /**
  *
@@ -77,6 +106,9 @@ class LaskentaTest extends FunSuite {
     put("HI", "G")
     put("HI_suoritusvuosi", "2011")
     put("HI_suorituslukukausi", "2")
+    put("01", "15")
+    put("01_suoritusvuosi", "2011")
+    put("01_suorituslukukausi", "2")
   }}
 
   val hakukohdeMustache = new Hakukohde("1234", mustacheMap)
@@ -1242,6 +1274,159 @@ class LaskentaTest extends FunSuite {
 
 
 
+
+  }
+
+  test("HaeOsakoeArvosana - ilman konverttereita") {
+    val hakemus = hakemusMustache
+
+    val kutsu: Funktiokutsu = new Funktiokutsu
+    kutsu.setFunktionimi(Funktionimi.HAEOSAKOEARVOSANA)
+
+    val viite: ValintaperusteViite = new ValintaperusteViite
+    viite.setTunniste("01")
+    viite.setIndeksi(0)
+    viite.setLahde(Valintaperustelahde.HAETTAVA_ARVO)
+    viite.setEpasuoraViittaus(false)
+    viite.setOnPakollinen(false)
+
+    kutsu.getValintaperusteviitteet.add(viite)
+
+    val syoteparametri3: Syoteparametri = new Syoteparametri
+    syoteparametri3.setAvain("alkuvuosi")
+    syoteparametri3.setArvo("2010")
+
+    val syoteparametri4: Syoteparametri = new Syoteparametri
+    syoteparametri4.setAvain("loppuvuosi")
+    syoteparametri4.setArvo("2014")
+
+    val syoteparametri5: Syoteparametri = new Syoteparametri
+    syoteparametri5.setAvain("alkulukukausi")
+    syoteparametri5.setArvo("1")
+
+    val syoteparametri6: Syoteparametri = new Syoteparametri
+    syoteparametri6.setAvain("loppulukukausi")
+    syoteparametri6.setArvo("2")
+
+    kutsu.getSyoteparametrit.add(syoteparametri3)
+    kutsu.getSyoteparametrit.add(syoteparametri4)
+    kutsu.getSyoteparametrit.add(syoteparametri5)
+    kutsu.getSyoteparametrit.add(syoteparametri6)
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(kutsu)
+
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemus,
+      lasku)
+    assert(BigDecimal(tulos.get) == BigDecimal("15"))
+    assert(tila.getTilatyyppi == Tilatyyppi.HYVAKSYTTAVISSA)
+
+  }
+
+  test("HaeOsakoeArvosana - Arvokonvertterilla") {
+    val hakemus = hakemusMustache
+
+    val kutsu: Funktiokutsu = new Funktiokutsu
+    kutsu.setFunktionimi(Funktionimi.HAEOSAKOEARVOSANA)
+
+    val viite: ValintaperusteViite = new ValintaperusteViite
+    viite.setTunniste("01")
+    viite.setIndeksi(0)
+    viite.setLahde(Valintaperustelahde.HAETTAVA_ARVO)
+    viite.setEpasuoraViittaus(false)
+    viite.setOnPakollinen(false)
+
+    kutsu.getValintaperusteviitteet.add(viite)
+
+    val syoteparametri3: Syoteparametri = new Syoteparametri
+    syoteparametri3.setAvain("alkuvuosi")
+    syoteparametri3.setArvo("2010")
+
+    val syoteparametri4: Syoteparametri = new Syoteparametri
+    syoteparametri4.setAvain("loppuvuosi")
+    syoteparametri4.setArvo("2014")
+
+    val syoteparametri5: Syoteparametri = new Syoteparametri
+    syoteparametri5.setAvain("alkulukukausi")
+    syoteparametri5.setArvo("1")
+
+    val syoteparametri6: Syoteparametri = new Syoteparametri
+    syoteparametri6.setAvain("loppulukukausi")
+    syoteparametri6.setArvo("2")
+
+    kutsu.getSyoteparametrit.add(syoteparametri3)
+    kutsu.getSyoteparametrit.add(syoteparametri4)
+    kutsu.getSyoteparametrit.add(syoteparametri5)
+    kutsu.getSyoteparametrit.add(syoteparametri6)
+
+
+    val konv1 = new Arvokonvertteriparametri
+    konv1.setArvo("15")
+    konv1.setPaluuarvo("5.0")
+    konv1.setHylkaysperuste("false")
+
+    kutsu.getArvokonvertteriparametrit.add(konv1)
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(kutsu)
+
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemus,
+      lasku)
+    assert(BigDecimal(tulos.get) == BigDecimal("5.0"))
+    assert(tila.getTilatyyppi == Tilatyyppi.HYVAKSYTTAVISSA)
+
+  }
+
+  test("HaeOsakoeArvosana - Arvovälikonvertterilla") {
+    val hakemus = hakemusMustache
+
+    val kutsu: Funktiokutsu = new Funktiokutsu
+    kutsu.setFunktionimi(Funktionimi.HAEOSAKOEARVOSANA)
+
+    val viite: ValintaperusteViite = new ValintaperusteViite
+    viite.setTunniste("01")
+    viite.setIndeksi(0)
+    viite.setLahde(Valintaperustelahde.HAETTAVA_ARVO)
+    viite.setEpasuoraViittaus(false)
+    viite.setOnPakollinen(false)
+
+    kutsu.getValintaperusteviitteet.add(viite)
+
+    val syoteparametri3: Syoteparametri = new Syoteparametri
+    syoteparametri3.setAvain("alkuvuosi")
+    syoteparametri3.setArvo("2010")
+
+    val syoteparametri4: Syoteparametri = new Syoteparametri
+    syoteparametri4.setAvain("loppuvuosi")
+    syoteparametri4.setArvo("2014")
+
+    val syoteparametri5: Syoteparametri = new Syoteparametri
+    syoteparametri5.setAvain("alkulukukausi")
+    syoteparametri5.setArvo("1")
+
+    val syoteparametri6: Syoteparametri = new Syoteparametri
+    syoteparametri6.setAvain("loppulukukausi")
+    syoteparametri6.setArvo("2")
+
+    kutsu.getSyoteparametrit.add(syoteparametri3)
+    kutsu.getSyoteparametrit.add(syoteparametri4)
+    kutsu.getSyoteparametrit.add(syoteparametri5)
+    kutsu.getSyoteparametrit.add(syoteparametri6)
+
+
+    val konv1 = new Arvovalikonvertteriparametri
+    konv1.setPalautaHaettuArvo("false")
+    konv1.setMinValue("12")
+    konv1.setMaxValue("17")
+    konv1.setPaluuarvo("5.0")
+    konv1.setHylkaysperuste("false")
+
+    kutsu.getArvovalikonvertteriparametrit.add(konv1)
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(kutsu)
+
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemus,
+      lasku)
+    assert(BigDecimal(tulos.get) == BigDecimal("5.0"))
+    assert(tila.getTilatyyppi == Tilatyyppi.HYVAKSYTTAVISSA)
 
   }
 
