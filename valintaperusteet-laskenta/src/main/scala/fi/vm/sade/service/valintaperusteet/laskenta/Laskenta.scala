@@ -24,7 +24,7 @@ object Laskenta {
   case class HakemuksenValintaperuste(tunniste: String, pakollinen: Boolean) extends Valintaperuste
 
   case class SyotettavaValintaperuste(tunniste: String, pakollinen: Boolean,
-                                      osallistuminenTunniste: String) extends Valintaperuste
+                                      osallistuminenTunniste: String, kuvaus: String = "") extends Valintaperuste
 
   case class HakukohteenValintaperuste(tunniste: String, pakollinen: Boolean, epasuoraViittaus: Boolean) extends Valintaperuste
 

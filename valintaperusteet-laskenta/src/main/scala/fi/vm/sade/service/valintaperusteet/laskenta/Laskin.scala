@@ -204,7 +204,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
 
     // Jos kyseessä on syötettävä valintaperuste, pitää ensin tsekata osallistumistieto
     valintaperusteviite match {
-      case SyotettavaValintaperuste(tunniste, pakollinen, osallistuminenTunniste) => {
+      case SyotettavaValintaperuste(tunniste, pakollinen, osallistuminenTunniste, kuvaus) => {
         val (osallistuminen, osallistumistila) = hakemus.kentat.get(osallistuminenTunniste) match {
           case Some(osallistuiArvo) => {
             try {
@@ -223,7 +223,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
 
         val (arvo, konvertoitu, tilat) = if (pakollinen && Osallistuminen.EI_OSALLISTUNUT == osallistuminen)
           (None, None, List(osallistumistila,
-            new Hylattytila(suomenkielinenHylkaysperusteMap(s"Pakollisen syötettävän kentän arvo on '${osallistuminen.name()}' (tunniste $tunniste)"),
+            new Hylattytila(suomenkielinenHylkaysperusteMap(s"${kuvaus}: Ei Osallistunut"),
               new EiOsallistunutHylkays(tunniste))))
         else if (pakollinen && Osallistuminen.MERKITSEMATTA == osallistuminen)
           (None, None, List(osallistumistila, new Virhetila(suomenkielinenHylkaysperusteMap(s"Pakollisen syötettävän kentän arvo on merkitsemättä (tunniste $tunniste)"),
@@ -758,7 +758,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
         (painotettuKeskiarvo, tilat, Historia("Painotettu keskiarvo", painotettuKeskiarvo, tilat, Some(historiat), None))
       }
     }
-    if(!laskettava.tulosTunniste.isEmpty()) funktioTulokset(laskettava.tulosTunniste) = FunktioTulos(laskettava.tulosTunniste, laskettuTulos.getOrElse("").toString)
+    if(!laskettava.tulosTunniste.isEmpty) funktioTulokset(laskettava.tulosTunniste) = FunktioTulos(laskettava.tulosTunniste, laskettuTulos.getOrElse("").toString)
     Tulos(laskettuTulos, palautettavaTila(tilat), historia)
   }
 }
