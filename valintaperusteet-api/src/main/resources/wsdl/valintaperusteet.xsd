@@ -208,6 +208,7 @@
     <xs:complexType name="ValintaperusteviiteTyyppi">
         <xs:attribute name="onPakollinen" use="required" type="xs:boolean"/>
         <xs:attribute name="tunniste" use="required" type="xs:string"/>
+        <xs:attribute name="kuvaus" use="optional" type="xs:string"/>
         <xs:attribute name="lahde" use="required" type="tns:ValintaperustelahdeTyyppi"/>
         <xs:attribute name="indeksi" use="required" type="xs:int"/>
         <xs:attribute name="epasuoraViittaus" use="optional" type="xs:boolean"/>
