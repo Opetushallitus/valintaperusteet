@@ -163,7 +163,7 @@ object Funktiokuvaaja {
       syoteparametrit = List(
         Syoteparametrikuvaus(avain = "oletusarvo", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = false)
       ),
-      valintaperusteparametri = List(Valintaperusteparametrikuvaus("tunniste", Syoteparametrityyppi.DESIMAALILUKU)),
+      valintaperusteparametri = List(Valintaperusteparametrikuvaus("tunniste", Syoteparametrityyppi.DESIMAALILUKU, kuvaus = "Tunniste")),
       konvertteri = Some(
         Konvertterikuvaus(
           pakollinen = false,
@@ -177,8 +177,8 @@ object Funktiokuvaaja {
         Syoteparametrikuvaus(avain = "oletusarvo", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = false)
       ),
       valintaperusteparametri = List(
-        Valintaperusteparametrikuvaus("tunniste", Syoteparametrityyppi.DESIMAALILUKU),
-        Valintaperusteparametrikuvaus("ehto", Syoteparametrityyppi.MERKKIJONO)
+        Valintaperusteparametrikuvaus("tunniste", Syoteparametrityyppi.DESIMAALILUKU, kuvaus = "Tunniste"),
+        Valintaperusteparametrikuvaus("ehto", Syoteparametrityyppi.MERKKIJONO, kuvaus = "Ehto")
       ),
       konvertteri = Some(
         Konvertterikuvaus(
@@ -225,7 +225,7 @@ object Funktiokuvaaja {
       syoteparametrit = List(
         Syoteparametrikuvaus(avain = "oletusarvo", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = false)
       ),
-      valintaperusteparametri = List(Valintaperusteparametrikuvaus("tunniste", Syoteparametrityyppi.MERKKIJONO)),
+      valintaperusteparametri = List(Valintaperusteparametrikuvaus("tunniste", Syoteparametrityyppi.MERKKIJONO, kuvaus = "Tunniste")),
       konvertteri = Some(
         Konvertterikuvaus(
           pakollinen = true,
@@ -237,7 +237,7 @@ object Funktiokuvaaja {
       syoteparametrit = List(
         Syoteparametrikuvaus(avain = "oletusarvo", tyyppi = Syoteparametrityyppi.TOTUUSARVO, pakollinen = false)
       ),
-      valintaperusteparametri = List(Valintaperusteparametrikuvaus("tunniste", Syoteparametrityyppi.MERKKIJONO)),
+      valintaperusteparametri = List(Valintaperusteparametrikuvaus("tunniste", Syoteparametrityyppi.MERKKIJONO, kuvaus = "Tunniste")),
       konvertteri = Some(
         Konvertterikuvaus(
           pakollinen = true,
@@ -250,14 +250,14 @@ object Funktiokuvaaja {
         Syoteparametrikuvaus(avain = "oletusarvo", tyyppi = Syoteparametrityyppi.TOTUUSARVO, pakollinen = false),
         Syoteparametrikuvaus(avain = "vertailtava", tyyppi = Syoteparametrityyppi.MERKKIJONO, pakollinen = true)
       ),
-      valintaperusteparametri = List(Valintaperusteparametrikuvaus("tunniste", Syoteparametrityyppi.MERKKIJONO))
+      valintaperusteparametri = List(Valintaperusteparametrikuvaus("tunniste", Syoteparametrityyppi.MERKKIJONO, kuvaus = "Tunniste"))
     ),
     Funktionimi.HAETOTUUSARVO -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.TOTUUSARVOFUNKTIO,
       syoteparametrit = List(
         Syoteparametrikuvaus(avain = "oletusarvo", tyyppi = Syoteparametrityyppi.TOTUUSARVO, pakollinen = false)
       ),
-      valintaperusteparametri = List(Valintaperusteparametrikuvaus("tunniste", Syoteparametrityyppi.TOTUUSARVO)),
+      valintaperusteparametri = List(Valintaperusteparametrikuvaus("tunniste", Syoteparametrityyppi.TOTUUSARVO, kuvaus = "Tunniste")),
       konvertteri = Some(
         Konvertterikuvaus(
           pakollinen = false,
@@ -436,8 +436,8 @@ object Funktiokuvaaja {
     Funktionimi.VALINTAPERUSTEYHTASUURUUS -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.TOTUUSARVOFUNKTIO,
       valintaperusteparametri = List(
-        Valintaperusteparametrikuvaus(nimi = "tunniste1", tyyppi = MERKKIJONO),
-        Valintaperusteparametrikuvaus(nimi = "tunniste2", tyyppi = MERKKIJONO)
+        Valintaperusteparametrikuvaus(nimi = "tunniste1", tyyppi = MERKKIJONO, kuvaus = "Ensimmäinen valintaperuste"),
+        Valintaperusteparametrikuvaus(nimi = "tunniste2", tyyppi = MERKKIJONO, kuvaus = "Toinen valintaperuste")
       )
     )
   )
