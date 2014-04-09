@@ -22,6 +22,9 @@ public class FunktioTulos {
     public FunktioTulos(String tunniste, String arvo, String nimiFi, String nimiSv, String nimiEn) {
         this.tunniste = tunniste;
         this.arvo = arvo;
+        this.nimiFi = nimiFi;
+        this.nimiSv = nimiSv;
+        this.nimiEn = nimiEn;
     }
 
     public String getTunniste() {
