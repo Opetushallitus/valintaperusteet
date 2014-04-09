@@ -112,7 +112,8 @@ object Laskenta {
   case class LukuarvovalikonversioMerkkijonoilla(min: String, max: String, paluuarvo: String,
                                    palautaHaettuArvo: String, hylkaysperuste: String, kuvaukset: TekstiRyhma) extends Konversio
 
-  case class KonvertoiLukuarvo(konvertteri: Konvertteri[BigDecimal, BigDecimal], f: Lukuarvofunktio, oid: String = "", tulosTunniste: String = "")
+  case class KonvertoiLukuarvo(konvertteri: Konvertteri[BigDecimal, BigDecimal], f: Lukuarvofunktio, oid: String = "", tulosTunniste: String = "",
+                               tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "")
     extends KonvertoivaFunktio[BigDecimal, BigDecimal] with Lukuarvofunktio
 
   sealed trait KoostavaFunktio[T] extends Funktio[T] {
@@ -149,15 +150,15 @@ object Laskenta {
     def unapply(n: Ns): Option[(Int, Seq[Funktio[BigDecimal]])] = Some((n.ns, n.fs))
   }
 
-  case class Lukuarvo(d: BigDecimal, oid: String = "", tulosTunniste: String = "") extends Lukuarvofunktio
+  case class Lukuarvo(d: BigDecimal, oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "") extends Lukuarvofunktio
 
-  case class Negaatio(f: Lukuarvofunktio, oid: String = "", tulosTunniste: String = "") extends Lukuarvofunktio
+  case class Negaatio(f: Lukuarvofunktio, oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "") extends Lukuarvofunktio
 
-  case class Pyoristys(tarkkuus: Int, f: Lukuarvofunktio, oid: String = "", tulosTunniste: String = "") extends Lukuarvofunktio {
+  case class Pyoristys(tarkkuus: Int, f: Lukuarvofunktio, oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "") extends Lukuarvofunktio {
     require(tarkkuus >= 0, "Parameter tarkkuus must be zero or greater")
   }
 
-  case class Summa(fs: Seq[Lukuarvofunktio], oid: String = "", tulosTunniste: String = "")
+  case class Summa(fs: Seq[Lukuarvofunktio], oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "")
     extends KoostavaFunktio[BigDecimal] with Lukuarvofunktio
 
   object Summa {
@@ -166,7 +167,7 @@ object Laskenta {
     }
   }
 
-  case class SummaNParasta(n: Int, fs: Seq[Lukuarvofunktio], oid: String = "", tulosTunniste: String = "")
+  case class SummaNParasta(n: Int, fs: Seq[Lukuarvofunktio], oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "")
     extends NParasta with Lukuarvofunktio
 
   object SummaNParasta {
@@ -175,7 +176,7 @@ object Laskenta {
     }
   }
 
-  case class KeskiarvoNParasta(n: Int, fs: Seq[Lukuarvofunktio], oid: String = "", tulosTunniste: String = "")
+  case class KeskiarvoNParasta(n: Int, fs: Seq[Lukuarvofunktio], oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "")
     extends NParasta with Lukuarvofunktio
 
   object KeskiarvoNParasta {
@@ -184,7 +185,7 @@ object Laskenta {
     }
   }
 
-  case class Keskiarvo(fs: Seq[Lukuarvofunktio], oid: String = "", tulosTunniste: String = "")
+  case class Keskiarvo(fs: Seq[Lukuarvofunktio], oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "")
     extends KoostavaFunktio[BigDecimal] with Lukuarvofunktio
 
   object Keskiarvo {
@@ -193,7 +194,7 @@ object Laskenta {
     }
   }
 
-  case class Mediaani(fs: Seq[Lukuarvofunktio], oid: String = "", tulosTunniste: String = "")
+  case class Mediaani(fs: Seq[Lukuarvofunktio], oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "")
     extends KoostavaFunktio[BigDecimal] with Lukuarvofunktio
 
   object Mediaani {
@@ -202,13 +203,13 @@ object Laskenta {
     }
   }
 
-  case class Osamaara(osoittaja: Lukuarvofunktio, nimittaja: Lukuarvofunktio, oid: String = "", tulosTunniste: String = "")
+  case class Osamaara(osoittaja: Lukuarvofunktio, nimittaja: Lukuarvofunktio, oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "")
     extends Funktio[BigDecimal] with Lukuarvofunktio {
     val f1 = osoittaja
     val f2 = nimittaja
   }
 
-  case class Minimi(fs: Seq[Lukuarvofunktio], oid: String = "", tulosTunniste: String = "")
+  case class Minimi(fs: Seq[Lukuarvofunktio], oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "")
     extends KoostavaFunktio[BigDecimal] with Lukuarvofunktio
 
   object Minimi {
@@ -217,7 +218,7 @@ object Laskenta {
     }
   }
 
-  case class Maksimi(fs: Seq[Lukuarvofunktio], oid: String = "", tulosTunniste: String = "")
+  case class Maksimi(fs: Seq[Lukuarvofunktio], oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "")
     extends KoostavaFunktio[BigDecimal] with Lukuarvofunktio
 
   object Maksimi {
@@ -226,7 +227,7 @@ object Laskenta {
     }
   }
 
-  case class NMinimi(ns: Int, fs: Seq[Lukuarvofunktio], oid: String = "", tulosTunniste: String = "")
+  case class NMinimi(ns: Int, fs: Seq[Lukuarvofunktio], oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "")
     extends Ns with Lukuarvofunktio
 
   object NMinimi {
@@ -235,7 +236,7 @@ object Laskenta {
     }
   }
 
-  case class NMaksimi(ns: Int, fs: Seq[Lukuarvofunktio], oid: String = "", tulosTunniste: String = "")
+  case class NMaksimi(ns: Int, fs: Seq[Lukuarvofunktio], oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "")
     extends Ns with Lukuarvofunktio
 
   object NMaksimi {
@@ -244,7 +245,7 @@ object Laskenta {
     }
   }
 
-  case class Tulo(fs: Seq[Lukuarvofunktio], oid: String = "", tulosTunniste: String = "")
+  case class Tulo(fs: Seq[Lukuarvofunktio], oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "")
     extends KoostavaFunktio[BigDecimal] with Lukuarvofunktio
 
   object Tulo {
@@ -253,7 +254,7 @@ object Laskenta {
     }
   }
 
-  case class Jos(ehto: Totuusarvofunktio, ifHaara: Lukuarvofunktio, elseHaara: Lukuarvofunktio, oid: String = "", tulosTunniste: String = "")
+  case class Jos(ehto: Totuusarvofunktio, ifHaara: Lukuarvofunktio, elseHaara: Lukuarvofunktio, oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "")
     extends Lukuarvofunktio
 
   sealed trait HaeArvo[T] extends Funktio[T] {
@@ -268,37 +269,37 @@ object Laskenta {
   case class HaeMerkkijonoJaKonvertoiLukuarvoksi(konvertteri: Konvertteri[String, BigDecimal],
                                                  oletusarvo: Option[BigDecimal],
                                                  valintaperusteviite: Valintaperuste,
-                                                 oid: String = "", tulosTunniste: String = "")
+                                                 oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "")
     extends HaeArvo[BigDecimal] with Lukuarvofunktio
 
   case class HaeMerkkijonoJaKonvertoiTotuusarvoksi(konvertteri: Konvertteri[String, Boolean],
                                                    oletusarvo: Option[Boolean],
                                                    valintaperusteviite: Valintaperuste,
-                                                   oid: String = "", tulosTunniste: String = "")
+                                                   oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "")
     extends HaeArvo[Boolean] with Totuusarvofunktio
 
   case class HaeTotuusarvo(konvertteri: Option[Konvertteri[Boolean, Boolean]],
                            oletusarvo: Option[Boolean],
-                           valintaperusteviite: Valintaperuste, oid: String = "", tulosTunniste: String = "")
+                           valintaperusteviite: Valintaperuste, oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "")
     extends HaeArvo[Boolean] with Totuusarvofunktio
 
   case class HaeLukuarvo(konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]],
                          oletusarvo: Option[BigDecimal],
-                         valintaperusteviite: Valintaperuste, oid: String = "", tulosTunniste: String = "")
+                         valintaperusteviite: Valintaperuste, oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "")
     extends HaeArvo[BigDecimal] with Lukuarvofunktio
 
   case class HaeLukuarvoEhdolla(konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]],
                          oletusarvo: Option[BigDecimal],
-                         valintaperusteviite: Valintaperuste, ehto: Valintaperuste, oid: String = "", tulosTunniste: String = "")
+                         valintaperusteviite: Valintaperuste, ehto: Valintaperuste, oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "")
     extends HaeArvo[BigDecimal] with Lukuarvofunktio
 
   case class HaeMerkkijonoJaVertaaYhtasuuruus(oletusarvo: Option[Boolean],
                                               valintaperusteviite: Valintaperuste,
-                                              vertailtava: String, oid: String = "", tulosTunniste: String = "")
+                                              vertailtava: String, oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "")
     extends HaeArvo[Boolean] with Totuusarvofunktio
 
   // Boolean-funktiot
-  case class Ja(fs: Seq[Totuusarvofunktio], oid: String = "", tulosTunniste: String = "")
+  case class Ja(fs: Seq[Totuusarvofunktio], oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "")
     extends KoostavaFunktio[Boolean] with Totuusarvofunktio
 
   object Ja {
@@ -307,7 +308,7 @@ object Laskenta {
     }
   }
 
-  case class Tai(fs: Seq[Totuusarvofunktio], oid: String = "", tulosTunniste: String = "")
+  case class Tai(fs: Seq[Totuusarvofunktio], oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "")
     extends KoostavaFunktio[Boolean] with Totuusarvofunktio
 
   object Tai {
@@ -316,24 +317,24 @@ object Laskenta {
     }
   }
 
-  case class Ei(f: Totuusarvofunktio, oid: String = "", tulosTunniste: String = "") extends Totuusarvofunktio
+  case class Ei(f: Totuusarvofunktio, oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "") extends Totuusarvofunktio
 
-  case class Suurempi(f1: Lukuarvofunktio, f2: Lukuarvofunktio, oid: String = "", tulosTunniste: String = "")
+  case class Suurempi(f1: Lukuarvofunktio, f2: Lukuarvofunktio, oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "")
     extends Totuusarvofunktio
 
-  case class SuurempiTaiYhtasuuri(f1: Lukuarvofunktio, f2: Lukuarvofunktio, oid: String = "", tulosTunniste: String = "")
+  case class SuurempiTaiYhtasuuri(f1: Lukuarvofunktio, f2: Lukuarvofunktio, oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "")
     extends Totuusarvofunktio
 
-  case class Pienempi(f1: Lukuarvofunktio, f2: Lukuarvofunktio, oid: String = "", tulosTunniste: String = "")
+  case class Pienempi(f1: Lukuarvofunktio, f2: Lukuarvofunktio, oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "")
     extends Totuusarvofunktio
 
-  case class PienempiTaiYhtasuuri(f1: Lukuarvofunktio, f2: Lukuarvofunktio, oid: String = "", tulosTunniste: String = "")
+  case class PienempiTaiYhtasuuri(f1: Lukuarvofunktio, f2: Lukuarvofunktio, oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "")
     extends Totuusarvofunktio
 
-  case class Yhtasuuri(f1: Lukuarvofunktio, f2: Lukuarvofunktio, oid: String = "", tulosTunniste: String = "")
+  case class Yhtasuuri(f1: Lukuarvofunktio, f2: Lukuarvofunktio, oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "")
     extends Totuusarvofunktio
 
-  case class Totuusarvo(b: Boolean, oid: String = "", tulosTunniste: String = "") extends Totuusarvofunktio
+  case class Totuusarvo(b: Boolean, oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "") extends Totuusarvofunktio
 
   sealed trait Nimetty[T] extends Funktio[T] {
     def nimi: String
@@ -345,37 +346,37 @@ object Laskenta {
     def unapply(n: Nimetty[_]): Option[(String, Funktio[_])] = Some((n.nimi, n.f))
   }
 
-  case class NimettyTotuusarvo(nimi: String, f: Totuusarvofunktio, oid: String = "", tulosTunniste: String = "")
+  case class NimettyTotuusarvo(nimi: String, f: Totuusarvofunktio, oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "")
     extends Nimetty[Boolean] with Totuusarvofunktio
 
-  case class NimettyLukuarvo(nimi: String, f: Lukuarvofunktio, oid: String = "", tulosTunniste: String = "")
+  case class NimettyLukuarvo(nimi: String, f: Lukuarvofunktio, oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "")
     extends Nimetty[BigDecimal] with Lukuarvofunktio
 
-  case class Hakutoive(n: Int, oid: String = "", tulosTunniste: String = "") extends Totuusarvofunktio {
+  case class Hakutoive(n: Int, oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "") extends Totuusarvofunktio {
     require(n > 0, "n must be greater than zero")
   }
 
-  case class Hylkaa(f: Totuusarvofunktio, hylkaysperustekuvaus: Option[Map[String,String]] = None, oid: String = "", tulosTunniste: String = "")
+  case class Hylkaa(f: Totuusarvofunktio, hylkaysperustekuvaus: Option[Map[String,String]] = None, oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "")
     extends Lukuarvofunktio
 
 
-  case class Demografia(oid: String = "", tulosTunniste: String = "", tunniste: String, prosenttiosuus: BigDecimal) extends Totuusarvofunktio
+  case class Demografia(oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", tunniste: String, prosenttiosuus: BigDecimal) extends Totuusarvofunktio
 
-  case class Skaalaus(oid: String = "", tulosTunniste: String = "", skaalattava: Lukuarvofunktio, kohdeskaala: Pair[BigDecimal, BigDecimal],
+  case class Skaalaus(oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", skaalattava: Lukuarvofunktio, kohdeskaala: Pair[BigDecimal, BigDecimal],
                       lahdeskaala: Option[Pair[BigDecimal, BigDecimal]]) extends Lukuarvofunktio {
     require(kohdeskaala._1 < kohdeskaala._2, "Kohdeskaalan minimin pitää olla pienempi kuin maksimi")
     require(lahdeskaala.isEmpty || lahdeskaala.get._1 < lahdeskaala.get._2,
       "Lähdeskaalan minimin pitää olla pienempi kuin maksimi")
   }
 
-  case class PainotettuKeskiarvo(oid: String = "", tulosTunniste: String = "", fs: Seq[Pair[Lukuarvofunktio, Lukuarvofunktio]]) extends Lukuarvofunktio {
+  case class PainotettuKeskiarvo(oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", fs: Seq[Pair[Lukuarvofunktio, Lukuarvofunktio]]) extends Lukuarvofunktio {
     require(fs.size > 0, "Parametreja pitää olla vähintään yksi")
   }
 
-  case class Valintaperusteyhtasuuruus(oid: String = "", tulosTunniste: String = "",
+  case class Valintaperusteyhtasuuruus(oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "",
                                        valintaperusteet: Pair[Valintaperuste, Valintaperuste]) extends Totuusarvofunktio
 
-  case class HylkaaArvovalilla(f: Lukuarvofunktio, hylkaysperustekuvaus: Option[Map[String,String]] = None, oid: String = "", tulosTunniste: String = "", arvovali: Pair[String, String])
+  case class HylkaaArvovalilla(f: Lukuarvofunktio, hylkaysperustekuvaus: Option[Map[String,String]] = None, oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", arvovali: Pair[String, String])
     extends Lukuarvofunktio {
     //require(arvovali._1 < arvovali._2, "Arvovälin minimin pitää olla pienempi kuin maksimi")
   }
