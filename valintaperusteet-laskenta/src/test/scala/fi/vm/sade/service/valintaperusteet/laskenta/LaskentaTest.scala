@@ -312,7 +312,7 @@ class LaskentaTest extends FunSuite {
 
     val hakukohde = new Hakukohde("hakutoiveoid1", new util.HashMap[String, String])
 
-    val funktio = Demografia("funktioid1", "",  "sukupuoli", BigDecimal("33.0"))
+    val funktio = Demografia("funktioid1", "","","","",  "sukupuoli", BigDecimal("33.0"))
 
     val tulokset = hakemukset.map(h => Laskin.suoritaValintalaskenta(hakukohde, h, hakemukset, funktio))
 
