@@ -1998,7 +1998,8 @@ class LaskentaIntegraatioTest extends FunSuite {
               avain = "luku",
               arvo = "10.0")),
           tulosTunniste = "tunniste1",
-          tallennaTulos = true),
+          tallennaTulos = true,
+          tulosTekstiFi = "tulosteksti"),
         Funktiokutsu( // Painokerroin 2
           nimi = Funktionimi.LUKUARVO,
           syoteparametrit = List(
