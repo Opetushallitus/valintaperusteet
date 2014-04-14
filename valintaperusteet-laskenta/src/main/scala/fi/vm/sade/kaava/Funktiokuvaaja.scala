@@ -194,6 +194,7 @@ object Funktiokuvaaja {
         Syoteparametrikuvaus(avain = "alkulukukausi", tyyppi = Syoteparametrityyppi.ARVOJOUKKO, pakollinen = false, arvojoukko = Arvojoukot.LUKUKAUDET, kuvaus = "Alkaen (lukukausi)"),
         Syoteparametrikuvaus(avain = "loppuvuosi", tyyppi = Syoteparametrityyppi.KOKONAISLUKU, pakollinen = false, kuvaus = "Päättyen (vuosi)"),
         Syoteparametrikuvaus(avain = "loppulukukausi", tyyppi = Syoteparametrityyppi.ARVOJOUKKO, pakollinen = false, arvojoukko = Arvojoukot.LUKUKAUDET, kuvaus = "Päättyen (lukukausi)"),
+        Syoteparametrikuvaus(avain = "rooli", tyyppi = Syoteparametrityyppi.ARVOJOUKKO, pakollinen = false, arvojoukko = Arvojoukot.KOEROOLIT, kuvaus = "Rooli"),
         Syoteparametrikuvaus(avain = "I", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = false, kuvaus = "Arvosana I"),
         Syoteparametrikuvaus(avain = "A", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = false, kuvaus = "Arvosana A"),
         Syoteparametrikuvaus(avain = "B", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = false, kuvaus = "Arvosana B"),
@@ -210,7 +211,8 @@ object Funktiokuvaaja {
         Syoteparametrikuvaus(avain = "alkuvuosi", tyyppi = Syoteparametrityyppi.KOKONAISLUKU, pakollinen = false, kuvaus = "Alkaen (vuosi)"),
         Syoteparametrikuvaus(avain = "alkulukukausi", tyyppi = Syoteparametrityyppi.ARVOJOUKKO, pakollinen = false, arvojoukko = Arvojoukot.LUKUKAUDET, kuvaus = "Alkaen (lukukausi)"),
         Syoteparametrikuvaus(avain = "loppuvuosi", tyyppi = Syoteparametrityyppi.KOKONAISLUKU, pakollinen = false, kuvaus = "Päättyen (vuosi)"),
-        Syoteparametrikuvaus(avain = "loppulukukausi", tyyppi = Syoteparametrityyppi.ARVOJOUKKO, pakollinen = false, arvojoukko = Arvojoukot.LUKUKAUDET, kuvaus = "Päättyen (lukukausi)")
+        Syoteparametrikuvaus(avain = "loppulukukausi", tyyppi = Syoteparametrityyppi.ARVOJOUKKO, pakollinen = false, arvojoukko = Arvojoukot.LUKUKAUDET, kuvaus = "Päättyen (lukukausi)"),
+        Syoteparametrikuvaus(avain = "rooli", tyyppi = Syoteparametrityyppi.ARVOJOUKKO, pakollinen = false, arvojoukko = Arvojoukot.KOEROOLIT, kuvaus = "Rooli")
       ),
       valintaperusteparametri = List(Valintaperusteparametrikuvaus("oppiaine", tyyppi = Syoteparametrityyppi.ARVOJOUKKO, arvojoukko = Arvojoukot.OSAKOKEET, kuvaus = "Osakoe")),
       konvertteri = Some(
