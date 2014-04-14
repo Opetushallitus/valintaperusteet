@@ -91,4 +91,22 @@ object Arvojoukot {
     "10" -> "Maantiede"
   )
 
+  val KOEROOLIT = Map(
+    "11" -> "Äidinkieli",
+    "12" -> "Äidinkieli, saame",
+    "13" -> "Kypsyyskoe",
+    "14" -> "Äidinkielen tilalla suoritettava suomen tai ruotsin koe",
+    "21" -> "Pakollinen toisen kotimaisen kielen koe tai erivapaudella suoritettava muu kieli tai reaali tai matematiikka",
+    "22" -> "Pakollinen toisen kotimaisen sijaan suoritettu äidinkieli tässä kielessä",
+    "31" -> "Pakollisena kokeena suoritettu vieras kieli",
+    "32" -> "Pakollisena kokeen suoritettu vieras kieli",
+    "41" -> "Pakollisena kokeena suoritettu reaaliaine",
+    "42" -> "Pakollisena kokeena suoritettu matematiikka",
+    "60" -> "Ylimääräinen äidinkieli",
+    "61" -> "Ylimääräisenä kokeena suoritettu vieras kieli",
+    "62" -> "Ylimääräisenä suoritettu toisen kotimaisen kielen koe",
+    "71" -> "Ylimääräisenä kokeena suoritettu reaaliaine",
+    "81" -> "Ylimääräisenä kokeena suoritettu matematiikka"
+  )
+
 }
