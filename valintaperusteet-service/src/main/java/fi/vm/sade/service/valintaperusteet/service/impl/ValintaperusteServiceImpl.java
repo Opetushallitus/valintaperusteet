@@ -328,6 +328,8 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
 
 			tyyppi.setSiirretaanSijoitteluun(valintatapajono
 					.getSiirretaanSijoitteluun());
+
+            tyyppi.setEiVarasijatayttoa(valintatapajono.getEiVarasijatayttoa());
 			tyyppi.setTasasijasaanto(TasasijasaantoTyyppi
 					.fromValue(valintatapajono.getTasapistesaanto().name()));
 
