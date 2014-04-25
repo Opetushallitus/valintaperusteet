@@ -58,6 +58,9 @@ public class Valintatapajono extends BaseEntity implements
     @Column(name = "poissa_oleva_taytto")
     private Boolean poissaOlevaTaytto = false;
 
+    @Column(name = "kaikki_ehdon_tayttavat_hyvaksytaan")
+    private Boolean kaikkiEhdonTayttavatHyvaksytaan = false;
+
     @Column(name = "kaytetaan_valintalaskentaa", nullable = false)
     private Boolean kaytetaanValintalaskentaa = true;
 
@@ -328,5 +331,13 @@ public class Valintatapajono extends BaseEntity implements
 
     public void setEiVarasijatayttoa(Boolean eiVarasijatayttoa) {
         this.eiVarasijatayttoa = eiVarasijatayttoa;
+    }
+
+    public Boolean getKaikkiEhdonTayttavatHyvaksytaan() {
+        return kaikkiEhdonTayttavatHyvaksytaan;
+    }
+
+    public void setKaikkiEhdonTayttavatHyvaksytaan(Boolean kaikkiEhdonTayttavatHyvaksytaan) {
+        this.kaikkiEhdonTayttavatHyvaksytaan = kaikkiEhdonTayttavatHyvaksytaan;
     }
 }

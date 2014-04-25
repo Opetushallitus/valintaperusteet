@@ -46,6 +46,10 @@ public class ValintatapajonoKopioija implements Kopioija<Valintatapajono> {
             to.setTasapistesaanto(from.getTasapistesaanto());
         }
 
+        if (from.getKaikkiEhdonTayttavatHyvaksytaan() != null) {
+            to.setKaikkiEhdonTayttavatHyvaksytaan(from.getKaikkiEhdonTayttavatHyvaksytaan());
+        }
+
         // VT-657
         if(from.getVarasijanTayttojono() != null) {
             to.setVarasijanTayttojono(from.getVarasijanTayttojono());
@@ -89,6 +93,10 @@ public class ValintatapajonoKopioija implements Kopioija<Valintatapajono> {
 
         if (kopio.getTasapistesaanto().equals(alkuperainenMaster.getTasapistesaanto())) {
             kopio.setTasapistesaanto(paivitettyMaster.getTasapistesaanto());
+        }
+
+        if (kopio.getKaikkiEhdonTayttavatHyvaksytaan().equals(alkuperainenMaster.getKaikkiEhdonTayttavatHyvaksytaan())) {
+            kopio.setKaikkiEhdonTayttavatHyvaksytaan(paivitettyMaster.getKaikkiEhdonTayttavatHyvaksytaan());
         }
 
         // VT-657
