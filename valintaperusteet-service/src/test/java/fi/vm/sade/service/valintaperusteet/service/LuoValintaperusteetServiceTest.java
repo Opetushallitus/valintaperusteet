@@ -995,7 +995,7 @@ public class LuoValintaperusteetServiceTest {
                         valintaperuste("kielikoe_fi", Boolean.TRUE.toString())))
         };
 
-        final BigDecimal odotettuTulos = new BigDecimal("2.0");
+        final BigDecimal odotettuTulos = new BigDecimal("10.0");
         final Hakukohde hakukohde = new Hakukohde(HAKUKOHDE_OID1, yhdistaMapit(
                 valintaperuste(PkJaYoPohjaiset.opetuskieli, "fi"),
                 valintaperuste(PkJaYoPohjaiset.kielikoetunniste, "kielikoe_fi"),
