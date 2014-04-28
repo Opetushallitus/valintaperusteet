@@ -120,7 +120,7 @@ public class PkPohjaiset {
         Funktiokutsu thenHaara = GenericHelper.luoLukuarvo(8.0);
         Funktiokutsu elseHaara = GenericHelper.luoLukuarvo(0.0);
         Funktiokutsu ehto = GenericHelper.luoEi(GenericHelper.luoHaeTotuusarvo(GenericHelper.luoValintaperusteViite(
-                koulutuspaikkaAmmatilliseenTutkintoon, false, Valintaperustelahde.HAETTAVA_ARVO)));
+                koulutuspaikkaAmmatilliseenTutkintoon, false, Valintaperustelahde.HAETTAVA_ARVO), false));
 
         Funktiokutsu jos = GenericHelper.luoJosFunktio(ehto, thenHaara, elseHaara);
 
