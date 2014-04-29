@@ -33,6 +33,9 @@ public class ValintatapajonoCreateDTO {
     @ApiModelProperty(value = "Ei varasijatäyttöä", required = true)
     private Boolean eiVarasijatayttoa = false;
 
+    @ApiModelProperty(value = "Hyväksytäänkö kaikki hyväksyttävissä olevat aloituspaikoista riippumatta", required = true)
+    private Boolean kaikkiEhdonTayttavatHyvaksytaan = false;
+
     @ApiModelProperty(value = "Varasijojen lkm. 0 == pois päältä", required = true)
     private Integer varasijat = 0;
 
@@ -153,5 +156,13 @@ public class ValintatapajonoCreateDTO {
 
     public void setKaytetaanValintalaskentaa(Boolean kaytetaanValintalaskentaa) {
         this.kaytetaanValintalaskentaa = kaytetaanValintalaskentaa;
+    }
+
+    public Boolean getKaikkiEhdonTayttavatHyvaksytaan() {
+        return kaikkiEhdonTayttavatHyvaksytaan;
+    }
+
+    public void setKaikkiEhdonTayttavatHyvaksytaan(Boolean kaikkiEhdonTayttavatHyvaksytaan) {
+        this.kaikkiEhdonTayttavatHyvaksytaan = kaikkiEhdonTayttavatHyvaksytaan;
     }
 }
