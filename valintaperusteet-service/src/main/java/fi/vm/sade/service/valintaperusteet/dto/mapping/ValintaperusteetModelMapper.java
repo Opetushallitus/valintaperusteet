@@ -185,11 +185,13 @@ public class ValintaperusteetModelMapper extends ModelMapper {
             if(arg.getFunktiokutsuChild() != null) {
                 FunktioargumentinLapsiDTO lapsi = asetaFunktioArgumenttiLapsetRekursiivisesti(arg.getFunktiokutsuChild());
                 lapsi.setLapsityyppi(FunktioargumentinLapsiDTO.FUNKTIOKUTSUTYYPPI);
+                lapsi.setTyyppi(arg.getFunktiokutsuChild().getFunktionimi().getTyyppi());
                 dto.setLapsi(lapsi);
             }
             if(arg.getLaskentakaavaChild() != null) {
                 FunktioargumentinLapsiDTO lapsi = map(arg.getLaskentakaavaChild(), FunktioargumentinLapsiDTO.class);
                 lapsi.setLapsityyppi(FunktioargumentinLapsiDTO.LASKENTAKAAVATYYPPI);
+                lapsi.setTyyppi(arg.getLaskentakaavaChild().getTyyppi());
                 dto.setLapsi(lapsi);
             }
             result.add(dto);
@@ -197,6 +199,7 @@ public class ValintaperusteetModelMapper extends ModelMapper {
         }
         parent.setFunktioargumentit(result);
         parent.setLapsityyppi(FunktioargumentinLapsiDTO.FUNKTIOKUTSUTYYPPI);
+        parent.setTyyppi(kutsu.getFunktionimi().getTyyppi());
         return parent;
     }
 
