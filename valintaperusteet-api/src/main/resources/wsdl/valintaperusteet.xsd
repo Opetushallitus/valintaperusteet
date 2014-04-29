@@ -154,6 +154,7 @@
         <xs:attribute name="siirretaanSijoitteluun" type="xs:boolean" use="required"/>
         <xs:attribute name="eiVarasijatayttoa" type="xs:boolean" use="optional"/>
         <xs:attribute name="kaikkiEhdonTayttavatHyvaksytaan" type="xs:boolean" use="optional"/>
+        <xs:attribute name="poissaOlevaTaytto" type="xs:boolean" use="optional"/>
         <xs:attribute name="oid" type="xs:string" use="required"/>
         <xs:attribute name="prioriteetti" type="xs:int" use="required"/>
         <xs:attribute name="aloituspaikat" type="xs:int" use="required"/>

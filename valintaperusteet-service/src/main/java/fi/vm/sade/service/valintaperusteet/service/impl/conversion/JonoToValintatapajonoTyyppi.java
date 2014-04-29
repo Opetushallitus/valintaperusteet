@@ -18,6 +18,7 @@ public class JonoToValintatapajonoTyyppi implements Converter<Valintatapajono, V
         converted.setOid(jono.getOid());
         converted.setSiirretaanSijoitteluun(jono.getSiirretaanSijoitteluun());
         converted.setKaikkiEhdonTayttavatHyvaksytaan(jono.getKaikkiEhdonTayttavatHyvaksytaan());
+        converted.setPoissaOlevaTaytto(jono.getPoissaOlevaTaytto());
         converted.setEiVarasijatayttoa(jono.getEiVarasijatayttoa());
         converted.setTasasijasaanto(TasasijasaantoTyyppi.fromValue(jono.getTasapistesaanto().name()));
         return converted;
