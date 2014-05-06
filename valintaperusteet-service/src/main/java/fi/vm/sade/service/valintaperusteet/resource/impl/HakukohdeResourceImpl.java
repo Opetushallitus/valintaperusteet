@@ -119,7 +119,7 @@ public class HakukohdeResourceImpl implements HakukohdeResource {
     @Produces(MediaType.APPLICATION_JSON)
     @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Hakee hakukohteen OID:n perusteella", response = HakukohdeViiteDTO.class)
-    @ApiResponses(value = { @ApiResponse(code = 404, message = "Hakukohdetta ei löydy"), })
+    @ApiResponses(value = { @ApiResponse(code = 404, message = "Hakukohdetta ei löydy") })
     public HakukohdeViiteDTO queryFull(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
         try {
             return modelMapper.map(hakukohdeService.readByOid(oid), HakukohdeViiteDTO.class);
