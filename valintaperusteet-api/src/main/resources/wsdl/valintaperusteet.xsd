@@ -61,6 +61,7 @@
         <xs:attribute name="tunniste" type="xs:string" use="required"/>
         <xs:attribute name="kuvaus" type="xs:string" use="optional"/>
         <xs:attribute name="lahetetaankoKoekutsut" type="xs:boolean" use="optional" default="true"/>
+        <xs:attribute name="kutsutaankoKaikki" type="xs:boolean" use="optional" default="false"/>
         <xs:attribute name="aktiivinen" type="xs:boolean" use="optional" default="true"/>
     </xs:complexType>
 
