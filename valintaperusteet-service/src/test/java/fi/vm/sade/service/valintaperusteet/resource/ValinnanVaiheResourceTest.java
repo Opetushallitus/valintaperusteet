@@ -110,6 +110,7 @@ public class ValinnanVaiheResourceTest {
         valintakoe.setAktiivinen(true);
         valintakoe.setLaskentakaavaId(laskentakaavaId);
         valintakoe.setLahetetaankoKoekutsut(true);
+        valintakoe.setKutsutaankoKaikki(false);
 
         Response response = vaiheResource.addValintakoeToValinnanVaihe(valinnanVaiheOid, valintakoe);
         assertEquals(201, response.getStatus());

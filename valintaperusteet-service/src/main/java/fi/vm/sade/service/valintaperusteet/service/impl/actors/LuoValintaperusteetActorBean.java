@@ -139,6 +139,7 @@ public class LuoValintaperusteetActorBean extends UntypedActor {
             valintakoe.setTunniste(valintakoetunniste);
             valintakoe.setNimi(valintakoeNimi);
             valintakoe.setLahetetaankoKoekutsut(true);
+            valintakoe.setKutsutaankoKaikki(false);
 
             // Valintakoe on pakollinen niille, joilla ei ole ulkomailla
             // suoritettua koulutusta tai
@@ -282,6 +283,7 @@ public class LuoValintaperusteetActorBean extends UntypedActor {
         dto.setTunniste(paasykoe.getTunniste());
         dto.setLaskentakaavaId(paasykoe.getLaskentakaavaId());
         dto.setLahetetaankoKoekutsut(true);
+        dto.setKutsutaankoKaikki(false);
         valintakoeService.update(paasykoe.getOid(), dto);
 
         KoodiDTO valintakoekoodi = new KoodiDTO();
@@ -366,6 +368,7 @@ public class LuoValintaperusteetActorBean extends UntypedActor {
             ValintakoeDTO lisapiste = new ValintakoeDTO();
             lisapiste.setAktiivinen(true);
             lisapiste.setLahetetaankoKoekutsut(false);
+            lisapiste.setKutsutaankoKaikki(false);
             lisapiste.setKuvaus(lisapisteNimi);
             lisapiste.setNimi(lisapisteNimi);
             lisapiste.setTunniste("{{hakukohde.lisapiste_tunniste}}");

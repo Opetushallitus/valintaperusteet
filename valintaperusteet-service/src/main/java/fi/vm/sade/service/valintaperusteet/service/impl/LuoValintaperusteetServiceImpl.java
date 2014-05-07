@@ -420,6 +420,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         ValintakoeDTO kielikoe = new ValintakoeDTO();
         kielikoe.setAktiivinen(true);
         kielikoe.setLahetetaankoKoekutsut(true);
+        kielikoe.setKutsutaankoKaikki(false);
         kielikoe.setKuvaus(kielikoeNimi);
         kielikoe.setNimi(kielikoeNimi);
         kielikoe.setTunniste(KIELIKOE_TUNNISTE);
@@ -434,6 +435,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         ValintakoeDTO urheilijaLisapiste = new ValintakoeDTO();
         urheilijaLisapiste.setAktiivinen(true);
         urheilijaLisapiste.setLahetetaankoKoekutsut(false);
+        urheilijaLisapiste.setKutsutaankoKaikki(false);
         urheilijaLisapiste.setKuvaus(urheilijaLisapisteNimi);
         urheilijaLisapiste.setNimi(urheilijaLisapisteNimi);
         urheilijaLisapiste.setTunniste(URHEILIJA_LISAPISTE_TUNNISTE);
@@ -737,6 +739,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         valintakoePaasykoe.setKuvaus("Pääsykoe");
         valintakoePaasykoe.setAktiivinen(false);
         valintakoePaasykoe.setLahetetaankoKoekutsut(true);
+        valintakoePaasykoe.setKutsutaankoKaikki(false);
         valintakoePaasykoe.setTunniste("{{hakukohde." + PAASYKOE_TUNNISTE + "}}");
 
         valintakoeService.lisaaValintakoeValinnanVaiheelle(paasykoeValinnanVaihe.getOid(), valintakoePaasykoe);
@@ -746,6 +749,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         valintakoeLisanaytto.setKuvaus("Lisänäyttö");
         valintakoeLisanaytto.setAktiivinen(false);
         valintakoeLisanaytto.setLahetetaankoKoekutsut(false);
+        valintakoeLisanaytto.setKutsutaankoKaikki(false);
         valintakoeLisanaytto.setTunniste("{{hakukohde." + LISANAYTTO_TUNNISTE + "}}");
 
         valintakoeService.lisaaValintakoeValinnanVaiheelle(paasykoeValinnanVaihe.getOid(), valintakoeLisanaytto);
@@ -899,6 +903,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                 dto.setTunniste(k.getTunniste());
                 dto.setLaskentakaavaId(k.getLaskentakaavaId());
                 dto.setLahetetaankoKoekutsut(true);
+                dto.setKutsutaankoKaikki(false);
                 valintakoeService.update(k.getOid(), dto);
             }
         }
@@ -974,6 +979,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                 dto.setTunniste(k.getTunniste());
                 dto.setLaskentakaavaId(k.getLaskentakaavaId());
                 dto.setLahetetaankoKoekutsut(false);
+                dto.setKutsutaankoKaikki(false);
                 valintakoeService.update(k.getOid(), dto);
             }
         }
@@ -1057,6 +1063,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
             dto.setKuvaus(k.getKuvaus());
             dto.setTunniste(k.getTunniste());
             dto.setLaskentakaavaId(k.getLaskentakaavaId());
+            dto.setKutsutaankoKaikki(false);
             if (k.getTunniste().contains(PAASYKOE_TUNNISTE)) {
                 dto.setLahetetaankoKoekutsut(true);
             } else {
