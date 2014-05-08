@@ -17,6 +17,7 @@ public class ValintakoeUtil {
         kopio.setNimi(master.getNimi());
         kopio.setTunniste(master.getTunniste());
         kopio.setLahetetaankoKoekutsut(master.getLahetetaankoKoekutsut());
+        kopio.setKutsutaankoKaikki(master.getKutsutaankoKaikki());
 
         return kopio;
     }

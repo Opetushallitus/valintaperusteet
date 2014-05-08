@@ -27,6 +27,9 @@ public class ValintakoeCreateDTO {
     @ApiModelProperty(value = "Lähetetäänkö koekutsut", required = true)
     private Boolean lahetetaankoKoekutsut;
 
+    @ApiModelProperty(value = "Kutsutaanko kaikki kokeeseen", required = true)
+    private Boolean kutsutaankoKaikki;
+
     public String getTunniste() {
         return tunniste;
     }
@@ -73,5 +76,13 @@ public class ValintakoeCreateDTO {
 
     public void setLahetetaankoKoekutsut(Boolean lahetetaankoKoekutsut) {
         this.lahetetaankoKoekutsut = lahetetaankoKoekutsut;
+    }
+
+    public Boolean getKutsutaankoKaikki() {
+        return kutsutaankoKaikki;
+    }
+
+    public void setKutsutaankoKaikki(Boolean kutsutaankoKaikki) {
+        this.kutsutaankoKaikki = kutsutaankoKaikki;
     }
 }

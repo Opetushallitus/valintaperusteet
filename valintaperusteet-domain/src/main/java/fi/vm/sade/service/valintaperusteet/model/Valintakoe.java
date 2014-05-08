@@ -32,6 +32,9 @@ public class Valintakoe extends BaseEntity implements Kopioitava<Valintakoe, Set
     @Column(name = "lahetetaanko_koekutsut", nullable = false)
     private Boolean lahetetaankoKoekutsut = true;
 
+    @Column(name = "kutsutaanko_kaikki", nullable = false)
+    private Boolean kutsutaankoKaikki = false;
+
     @JoinColumn(name = "laskentakaava_id", nullable = true)
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     private Laskentakaava laskentakaava;
@@ -159,5 +162,13 @@ public class Valintakoe extends BaseEntity implements Kopioitava<Valintakoe, Set
     @Override
     public Set<Valintakoe> getKopiot() {
         return this.kopioValintakokeet;
+    }
+
+    public Boolean getKutsutaankoKaikki() {
+        return kutsutaankoKaikki;
+    }
+
+    public void setKutsutaankoKaikki(Boolean kutsutaankoKaikki) {
+        this.kutsutaankoKaikki = kutsutaankoKaikki;
     }
 }

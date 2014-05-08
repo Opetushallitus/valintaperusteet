@@ -122,6 +122,7 @@ public class ValintakoeServiceImpl implements ValintakoeService {
 		valintakoe.setValinnanVaihe(valinnanVaihe);
 		valintakoe.setAktiivinen(koe.getAktiivinen());
         valintakoe.setLahetetaankoKoekutsut(koe.getLahetetaankoKoekutsut());
+        valintakoe.setKutsutaankoKaikki(koe.getKutsutaankoKaikki());
 
 		if (koe.getLaskentakaavaId() != null) {
 			valintakoe.setLaskentakaava(haeLaskentakaavaValintakokeelle(koe
@@ -207,6 +208,7 @@ public class ValintakoeServiceImpl implements ValintakoeService {
 		incoming.setNimi(valintakoe.getNimi());
 		incoming.setTunniste(valintakoe.getTunniste());
         incoming.setLahetetaankoKoekutsut(valintakoe.getLahetetaankoKoekutsut());
+        incoming.setKutsutaankoKaikki(valintakoe.getKutsutaankoKaikki());
 
 		Valintakoe managedObject = haeValintakoeOidilla(oid);
 		Long laskentakaavaOid = valintakoe.getLaskentakaavaId();

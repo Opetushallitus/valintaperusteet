@@ -282,9 +282,10 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
 				tyyppi.setOid(koe.getOid());
 				tyyppi.setTunniste(koe.getTunniste());
                 tyyppi.setLahetetaankoKoekutsut(koe.getLahetetaankoKoekutsut());
+                tyyppi.setKutsutaankoKaikki(koe.getKutsutaankoKaikki());
 
 				FunktiokutsuTyyppi converted = null;
-				if (koe.ainaPakollinen()) {
+				if (koe.ainaPakollinen() || koe.getKutsutaankoKaikki()) {
 					converted = conversionService.convert(
 							ValintaperusteServiceUtil
 									.getAinaPakollinenFunktiokutsu(),
@@ -330,6 +331,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
 					.getSiirretaanSijoitteluun());
 
             tyyppi.setEiVarasijatayttoa(valintatapajono.getEiVarasijatayttoa());
+            tyyppi.setKaytetaanValintalaskentaa(valintatapajono.getKaytetaanValintalaskentaa());
             tyyppi.setKaikkiEhdonTayttavatHyvaksytaan(valintatapajono.getKaikkiEhdonTayttavatHyvaksytaan());
             tyyppi.setPoissaOlevaTaytto(valintatapajono.getPoissaOlevaTaytto());
 			tyyppi.setTasasijasaanto(TasasijasaantoTyyppi
