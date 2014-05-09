@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,7 +102,16 @@ public class ValintakoeServiceImpl implements ValintakoeService {
 		return valintakoeDAO.findByValinnanVaihe(oid);
 	}
 
-	@Override
+    @Override
+    public List<Valintakoe> findValintakoesByValinnanVaihes(List<ValinnanVaihe> vaiheet) {
+        List<Valintakoe> kokeet = new ArrayList<Valintakoe>();
+        for (ValinnanVaihe vaihe : vaiheet) {
+            kokeet.addAll(valintakoeDAO.findByValinnanVaihe(vaihe.getOid()));
+        }
+        return kokeet;
+    }
+
+    @Override
 	public Valintakoe lisaaValintakoeValinnanVaiheelle(String valinnanVaiheOid,
 			ValintakoeCreateDTO koe) {
 		ValinnanVaihe valinnanVaihe = valinnanVaiheService

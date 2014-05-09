@@ -15,17 +15,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaDTO;
-import fi.vm.sade.service.valintaperusteet.dto.HakukohdeInsertDTO;
-import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
-import fi.vm.sade.service.valintaperusteet.dto.HakukohteenValintaperusteAvaimetDTO;
-import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriDTO;
-import fi.vm.sade.service.valintaperusteet.dto.KoodiDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
+import fi.vm.sade.service.valintaperusteet.dto.*;
 
 /**
  * Created with IntelliJ IDEA. User: kkammone Date: 10.1.2013 Time: 12:01 To
@@ -58,6 +48,11 @@ public interface HakukohdeResource {
     @Path("/{oid}/valinnanvaihe")
     @Produces(MediaType.APPLICATION_JSON)
     List<ValinnanVaiheDTO> valinnanVaihesForHakukohde(@PathParam("oid") String oid);
+
+    @GET
+    @Path("/{oid}/valintakoe")
+    @Produces(MediaType.APPLICATION_JSON)
+    List<ValintakoeDTO> valintakoesForHakukohde(@PathParam("oid") String oid);
 
     @GET
     @Path("/{oid}/kuuluuSijoitteluun")
