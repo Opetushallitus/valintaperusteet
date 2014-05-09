@@ -134,8 +134,8 @@ public class HaeValintaperusteetRekursiivisestiActorBean extends UntypedActor {
 
                     for (Arvovalikonvertteriparametri av : funktiokutsu.getArvovalikonvertteriparametrit()) {
                         try {
-                            BigDecimal current = new BigDecimal(haeTunniste(av.getMinValue(),
-                                    hakukohteenValintaperusteet));
+                            BigDecimal current = new BigDecimal((haeTunniste(av.getMinValue(),
+                                    hakukohteenValintaperusteet)).replace(',', '.'));
                             if (min == null || current.compareTo(min) < 0) {
                                 min = current;
                             }
@@ -145,8 +145,8 @@ public class HaeValintaperusteetRekursiivisestiActorBean extends UntypedActor {
                         }
 
                         try {
-                            BigDecimal current = new BigDecimal(haeTunniste(av.getMaxValue(),
-                                    hakukohteenValintaperusteet));
+                            BigDecimal current = new BigDecimal((haeTunniste(av.getMaxValue(),
+                                    hakukohteenValintaperusteet)).replace(',', '.'));
                             if (max == null || current.compareTo(max) > 0) {
                                 max = current;
                             }

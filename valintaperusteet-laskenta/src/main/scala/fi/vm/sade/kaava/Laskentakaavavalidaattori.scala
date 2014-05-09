@@ -19,7 +19,7 @@ object Laskentakaavavalidaattori {
 
   private def tryConvertString(s: String, f: (String => Unit)) = {
     try {
-      f(s)
+      f(s.replace(',', '.'))
       true
     } catch {
       case e: Throwable => false
@@ -29,7 +29,7 @@ object Laskentakaavavalidaattori {
   private def muutaMerkkijonoParametrityypiksi(s: String,
     tyyppi: Syoteparametrityyppi.Syoteparametrityyppi) = {
     val konv: (String => Unit) = tyyppi match {
-      case Syoteparametrityyppi.DESIMAALILUKU => (mj: String) => new BigDecimal(mj)
+      case Syoteparametrityyppi.DESIMAALILUKU => (mj: String) => new BigDecimal(mj.replace(',', '.'))
       case Syoteparametrityyppi.KOKONAISLUKU => (mj: String) => mj.toInt
       case Syoteparametrityyppi.TOTUUSARVO => (mj: String) => mj.toBoolean
       case Syoteparametrityyppi.MERKKIJONO => (mj: String) => Unit

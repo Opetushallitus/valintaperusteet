@@ -65,7 +65,7 @@ object Laskentadomainkonvertteri {
 
   private def parametriToBigDecimal(param: Syoteparametri) = {
     try {
-      BigDecimal(param.getArvo)
+      BigDecimal(param.getArvo.replace(',','.'))
     } catch {
       case e: Throwable => sys.error(s"Could not interpret parameter ${param.getAvain} value ${param.getArvo} as big decimal")
     }

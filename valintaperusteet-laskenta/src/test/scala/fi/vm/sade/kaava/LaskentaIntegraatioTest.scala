@@ -24,7 +24,7 @@ class LaskentaIntegraatioTest extends FunSuite {
   val luku25 = Funktiokutsu(
     nimi = Funktionimi.LUKUARVO,
     syoteparametrit = List(
-      Syoteparametri("luku", "25.0")))
+      Syoteparametri("luku", "25,0")))
 
   val luku50 = Funktiokutsu(
     nimi = Funktionimi.LUKUARVO,
