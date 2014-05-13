@@ -60,6 +60,11 @@ public interface HakukohdeResource {
     Map<String, Boolean> kuuluuSijoitteluun(@PathParam("oid") String oid);
 
     @GET
+    @Path("/{oid}/ilmanlaskentaa")
+    @Produces(MediaType.APPLICATION_JSON)
+    List<ValintatapajonoDTO> ilmanLaskentaa(@PathParam("oid") String oid);
+
+    @GET
     @Path("/{oid}/hakijaryhma")
     @Produces(MediaType.APPLICATION_JSON)
     List<HakijaryhmaDTO> hakijaryhmat(@PathParam("oid") String oid);

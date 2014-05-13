@@ -81,6 +81,16 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
     }
 
     @Override
+    public List<Valintatapajono> ilmanLaskentaaOlevatHakukohteelle(String hakukohdeOid) {
+        QHakukohdeViite hakukohde = QHakukohdeViite.hakukohdeViite;
+        QValinnanVaihe vv = QValinnanVaihe.valinnanVaihe;
+        QValintatapajono jono = QValintatapajono.valintatapajono;
+
+        return from(hakukohde).leftJoin(hakukohde.valinnanvaiheet, vv).leftJoin(vv.jonot, jono)
+                .where(hakukohde.oid.eq(hakukohdeOid).and(jono.kaytetaanValintalaskentaa.isFalse())).distinct().list(jono);
+    }
+
+    @Override
     public List<Valintatapajono> haeValintatapajonotSijoittelulle(String hakukohdeOid) {
         QHakukohdeViite hakukohde = QHakukohdeViite.hakukohdeViite;
         QValinnanVaihe vv = QValinnanVaihe.valinnanVaihe;

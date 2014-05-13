@@ -2,6 +2,7 @@ package fi.vm.sade.service.valintaperusteet.service.impl;
 
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
+import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
 import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.*;
@@ -27,6 +28,9 @@ public class HakukohdeServiceImpl implements HakukohdeService {
 
     @Autowired
     private HakukohdeViiteDAO hakukohdeViiteDAO;
+
+    @Autowired
+    private ValintatapajonoDAO valintatapajonoDAO;
 
     @Autowired
     private ValintaryhmaService valintaryhmaService;
@@ -108,6 +112,11 @@ public class HakukohdeServiceImpl implements HakukohdeService {
     @Override
     public boolean kuuluuSijoitteluun(String oid) {
         return hakukohdeViiteDAO.kuuluuSijoitteluun(oid);
+    }
+
+    @Override
+    public List<Valintatapajono> ilmanLaskentaa(String oid) {
+        return valintatapajonoDAO.ilmanLaskentaaOlevatHakukohteelle(oid);
     }
 
 

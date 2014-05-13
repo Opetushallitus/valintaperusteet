@@ -3,6 +3,7 @@ package fi.vm.sade.service.valintaperusteet.service;
 import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
+import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 
 import java.util.List;
 
@@ -26,6 +27,8 @@ public interface HakukohdeService {
     HakukohdeViite update(String oid, HakukohdeViiteCreateDTO incoming) throws Exception;
 
     boolean kuuluuSijoitteluun(String oid);
+
+    List<Valintatapajono> ilmanLaskentaa(String oid);
 
     void deleteByOid(String oid);
 

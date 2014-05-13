@@ -186,6 +186,15 @@ public class HakukohdeResourceImpl implements HakukohdeResource {
     }
 
     @GET
+    @Path("/{oid}/ilmanlaskentaa")
+    @Produces(MediaType.APPLICATION_JSON)
+    @PreAuthorize(READ_UPDATE_CRUD)
+    @ApiOperation(value = "Palauttaa valintatapajonot, jossa ei käytetä laskentaa", response = ValintatapajonoDTO.class)
+    public List<ValintatapajonoDTO> ilmanLaskentaa(String oid) {
+        return modelMapper.mapList(hakukohdeService.ilmanLaskentaa(oid), ValintatapajonoDTO.class);
+    }
+
+    @GET
     @Path("/{oid}/hakijaryhma")
     @Produces(MediaType.APPLICATION_JSON)
     @PreAuthorize(READ_UPDATE_CRUD)
