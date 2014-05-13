@@ -20,6 +20,8 @@ public interface ValintakoeService {
 
 	List<Valintakoe> findValintakoeByValinnanVaihe(String oid);
 
+    List<Valintakoe> findValintakoesByValinnanVaihes(List<ValinnanVaihe> vaiheet);
+
 	Valintakoe lisaaValintakoeValinnanVaiheelle(String valinnanVaiheOid,
 			ValintakoeCreateDTO koe);
 

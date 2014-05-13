@@ -21,7 +21,10 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
+import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
+import fi.vm.sade.service.valintaperusteet.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,28 +37,9 @@ import com.wordnik.swagger.annotations.ApiParam;
 import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 
-import fi.vm.sade.service.valintaperusteet.dto.ErrorDTO;
-import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaDTO;
-import fi.vm.sade.service.valintaperusteet.dto.HakukohdeInsertDTO;
-import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
-import fi.vm.sade.service.valintaperusteet.dto.HakukohteenValintaperusteAvaimetDTO;
-import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriDTO;
-import fi.vm.sade.service.valintaperusteet.dto.KoodiDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.resource.HakukohdeResource;
 import fi.vm.sade.service.valintaperusteet.resource.ValintaryhmaResource;
-import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaService;
-import fi.vm.sade.service.valintaperusteet.service.HakukohdeService;
-import fi.vm.sade.service.valintaperusteet.service.HakukohdekoodiService;
-import fi.vm.sade.service.valintaperusteet.service.JarjestyskriteeriService;
-import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
-import fi.vm.sade.service.valintaperusteet.service.OidService;
-import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakukohdeViiteEiOleOlemassaException;
 
 /**
@@ -78,6 +62,9 @@ public class HakukohdeResourceImpl implements HakukohdeResource {
 
     @Autowired
     ValinnanVaiheService valinnanVaiheService;
+
+    @Autowired
+    ValintakoeService valintakoeService;
 
     @Autowired
     JarjestyskriteeriService jarjestyskriteeriService;
@@ -177,6 +164,16 @@ public class HakukohdeResourceImpl implements HakukohdeResource {
     }
 
     @GET
+    @Path("/{oid}/valintakoe")
+    @Produces(MediaType.APPLICATION_JSON)
+    @PreAuthorize(READ_UPDATE_CRUD)
+    @ApiOperation(value = "Hakee hakukohteen valintakokeet OID:n perusteella", response = ValintakoeDTO.class)
+    public List<ValintakoeDTO> valintakoesForHakukohde(String oid) {
+        return modelMapper.mapList(valintakoeService.findValintakoesByValinnanVaihes(valinnanVaiheService.findByHakukohde(oid)), ValintakoeDTO.class);
+    }
+
+
+    @GET
     @Path("/{oid}/kuuluuSijoitteluun")
     @Produces(MediaType.APPLICATION_JSON)
     @PreAuthorize(READ_UPDATE_CRUD)
@@ -186,6 +183,15 @@ public class HakukohdeResourceImpl implements HakukohdeResource {
         Map<String, Boolean> map = new HashMap<String, Boolean>();
         map.put("sijoitteluun", hakukohdeService.kuuluuSijoitteluun(oid));
         return map;
+    }
+
+    @GET
+    @Path("/{oid}/ilmanlaskentaa")
+    @Produces(MediaType.APPLICATION_JSON)
+    @PreAuthorize(READ_UPDATE_CRUD)
+    @ApiOperation(value = "Palauttaa valintatapajonot, jossa ei käytetä laskentaa", response = ValintatapajonoDTO.class)
+    public List<ValintatapajonoDTO> ilmanLaskentaa(String oid) {
+        return modelMapper.mapList(hakukohdeService.ilmanLaskentaa(oid), ValintatapajonoDTO.class);
     }
 
     @GET

@@ -172,9 +172,9 @@ public class LukionValintaperusteetTest {
     public void testPainotettavatArvosanatTaitoJaTaideaineidenPainotus() {
         Hakemus hakemus = hakemus(yhdistaMapit(
                 valintaperuste(LukionValintaperusteet.AINE_PREFIX+LukionValintaperusteet.AIDINKIELI_JA_KIRJALLISUUS1, "8.0"),
-                valintaperuste(LukionValintaperusteet.AINE_PREFIX+LukionValintaperusteet.B1KIELI, "7.0"),
+                valintaperuste(LukionValintaperusteet.AINE_PREFIX+LukionValintaperusteet.B1KIELI, "7,0"),
                 valintaperuste(LukionValintaperusteet.AINE_PREFIX+LukionValintaperusteet.B1KIELI + OPPIAINE_POSTFIX, LukionValintaperusteet.SAKSA),
-                valintaperuste(LukionValintaperusteet.AINE_PREFIX+LukionValintaperusteet.A11KIELI, "7.0"),
+                valintaperuste(LukionValintaperusteet.AINE_PREFIX+LukionValintaperusteet.A11KIELI, "7,0"),
                 valintaperuste(LukionValintaperusteet.AINE_PREFIX+LukionValintaperusteet.A11KIELI + OPPIAINE_POSTFIX, LukionValintaperusteet.LATVIA),
                 valintaperuste(LukionValintaperusteet.AINE_PREFIX+LukionValintaperusteet.B21KIELI, "7.0"),
                 valintaperuste(LukionValintaperusteet.AINE_PREFIX+LukionValintaperusteet.B21KIELI + OPPIAINE_POSTFIX, LukionValintaperusteet.RANSKA),

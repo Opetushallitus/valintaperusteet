@@ -74,8 +74,9 @@ trait LaskinFunktiot {
   protected def haeValintaperusteHakemukselta(tunniste: String, hakemus: Hakemus): Option[Any] = {
     hakemus.kentat.get(tunniste) match {
       case Some(s) if (!s.trim.isEmpty) => {
+        val pilkuton = s.replace(',', '.')
         val result = Try(s.toBoolean).getOrElse(
-          Try(BigDecimal(s)).getOrElse(s)
+          Try(BigDecimal(pilkuton)).getOrElse(s)
         )
         Some(result)
       }
@@ -86,8 +87,9 @@ trait LaskinFunktiot {
   protected def haeValintaperusteHakukohteelta(tunniste: String, hakukohde: Hakukohde): Option[Any] = {
     hakukohde.valintaperusteet.get(tunniste) match {
       case Some(s) if (!s.trim.isEmpty) => {
+        val pilkuton = s.replace(',', '.')
         val result = Try(s.toBoolean).getOrElse(
-          Try(BigDecimal(s)).getOrElse(s)
+          Try(BigDecimal(pilkuton)).getOrElse(s)
         )
         Some(result)
       }
@@ -96,8 +98,9 @@ trait LaskinFunktiot {
   }
 
   protected def haeValintaperuste(tunniste: String): Option[Any] = {
+    val pilkuton = tunniste.replace(',', '.')
     val result = Try(tunniste.toBoolean).getOrElse(
-      Try(BigDecimal(tunniste)).getOrElse(tunniste)
+      Try(BigDecimal(pilkuton)).getOrElse(tunniste)
     )
     Some(result)
   }
@@ -174,7 +177,7 @@ trait LaskinFunktiot {
 
   protected def string2bigDecimal(s: String, tunniste: String, oletustila: Tila = new Hyvaksyttavissatila): (Option[BigDecimal], Tila) = {
     try {
-      (Some(BigDecimal(s)), oletustila)
+      (Some(BigDecimal(s.replace(',', '.'))), oletustila)
     } catch {
       case e: Throwable => (None, new Virhetila(suomenkielinenHylkaysperusteMap(s"Arvoa $s ei voida muuttaa BigDecimal-tyyppiseksi (tunniste $tunniste)"),
         new ValintaperustettaEiVoidaTulkitaLukuarvoksiVirhe(tunniste)))
