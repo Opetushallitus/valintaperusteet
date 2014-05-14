@@ -375,20 +375,22 @@ public class GenericHelper {
         return f;
     }
 
-    public static Funktiokutsu luoHylkaa(FunktionArgumentti arg, String hylkaysperustekuvaus) {
+    public static Funktiokutsu luoHylkaa(FunktionArgumentti arg, String hylkaysperustekuvaus, String hylkaysperustekuvaus_sv) {
         Funktiokutsu f = new Funktiokutsu();
         f.setFunktionimi(Funktionimi.HYLKAA);
         f.getFunktioargumentit().addAll(luoFunktioargumentit(arg));
         f.getSyoteparametrit().add(luoSyoteparametri("hylkaysperustekuvaus_FI", hylkaysperustekuvaus));
+        f.getSyoteparametrit().add(luoSyoteparametri("hylkaysperustekuvaus_SV", hylkaysperustekuvaus_sv));
         return f;
     }
 
-    public static Funktiokutsu luoHylkaaArvovalilla(FunktionArgumentti arg, String hylkaysperustekuvaus, String min,
+    public static Funktiokutsu luoHylkaaArvovalilla(FunktionArgumentti arg, String hylkaysperustekuvaus, String hylkaysperustekuvaus_sv, String min,
             String max) {
         Funktiokutsu f = new Funktiokutsu();
         f.setFunktionimi(Funktionimi.HYLKAAARVOVALILLA);
         f.getFunktioargumentit().addAll(luoFunktioargumentit(arg));
         f.getSyoteparametrit().add(luoSyoteparametri("hylkaysperustekuvaus_FI", hylkaysperustekuvaus));
+        f.getSyoteparametrit().add(luoSyoteparametri("hylkaysperustekuvaus_SV", hylkaysperustekuvaus_sv));
         f.getSyoteparametrit().add(luoSyoteparametri("arvovaliMin", min));
         f.getSyoteparametrit().add(luoSyoteparametri("arvovaliMax", max));
         return f;

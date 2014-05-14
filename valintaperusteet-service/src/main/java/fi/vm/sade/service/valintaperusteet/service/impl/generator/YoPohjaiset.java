@@ -55,6 +55,12 @@ public class YoPohjaiset {
         };
 
         Funktiokutsu keskiarvo = GenericHelper.luoKeskiarvo(args);
+
+        keskiarvo.setTallennaTulos(true);
+        keskiarvo.setTulosTunniste("keskiarvo");
+        keskiarvo.setTulosTekstiFi("Kaikkien aineiden keskiarvo");
+        keskiarvo.setTulosTekstiSv("Medeltalet av alla ämnen");
+
         Laskentakaava laskentakaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(
                 keskiarvo, "Päättötodistuksen keskiarvo, LK");
         return laskentakaava;

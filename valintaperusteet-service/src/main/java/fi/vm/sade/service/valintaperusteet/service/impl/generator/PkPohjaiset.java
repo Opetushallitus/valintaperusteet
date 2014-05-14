@@ -99,6 +99,11 @@ public class PkPohjaiset {
 
         Funktiokutsu jos = GenericHelper.luoJosFunktio(tai, thenHaara, elseHaara);
 
+        jos.setTallennaTulos(true);
+        jos.setTulosTunniste("pohjakoulutus");
+        jos.setTulosTekstiFi("Perusopetuksen tai lisäkoulutuksen suorittaminen");
+        jos.setTulosTekstiSv("Genomfört grundläggande utbildning eller tilläggsutbildning");
+
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(jos, "Pohjakoulutuspisteytys, 2 aste, pk");
     }
 
@@ -123,6 +128,11 @@ public class PkPohjaiset {
                 koulutuspaikkaAmmatilliseenTutkintoon, false, Valintaperustelahde.HAETTAVA_ARVO), false));
 
         Funktiokutsu jos = GenericHelper.luoJosFunktio(ehto, thenHaara, elseHaara);
+
+        jos.setTallennaTulos(true);
+        jos.setTulosTunniste("ilmanopiskelupaikkaa");
+        jos.setTulosTekstiFi("Ilman opiskelupaikkaa");
+        jos.setTulosTekstiSv("Utan utbildningsplats");
 
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(jos, "Ilman koulutuspaikkaa -pisteytys, 2 aste, pk");
     }
@@ -153,6 +163,11 @@ public class PkPohjaiset {
         konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(9.0, 9.5, 7));
         konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(9.5, 10.1, 8));
 
+        konvertteri.setTallennaTulos(true);
+        konvertteri.setTulosTunniste("painotettavat_arvosanat");
+        konvertteri.setTulosTekstiFi("Painotettavat arvosanat");
+        konvertteri.setTulosTekstiSv("Betonade vitsord");
+
         Laskentakaava laskentakaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(konvertteri,
                 "Painotettavat arvosanat pisteytysmalli, PK");
         return laskentakaava;
@@ -177,6 +192,12 @@ public class PkPohjaiset {
                 pkAineet.getLaskentakaava(Aineet.b33Kieli) };
 
         Funktiokutsu keskiarvo = GenericHelper.luoKeskiarvo(args);
+
+        keskiarvo.setTallennaTulos(true);
+        keskiarvo.setTulosTunniste("keskiarvo_pk");
+        keskiarvo.setTulosTekstiFi("Kaikkien aineiden keskiarvo");
+        keskiarvo.setTulosTekstiSv("Medeltalet av alla ämnen");
+
         Laskentakaava laskentakaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(keskiarvo,
                 "Kaikkien aineiden keskiarvo, PK");
         return laskentakaava;
