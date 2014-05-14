@@ -277,7 +277,8 @@ public class LuoValintaperusteetServiceTest {
         final BigDecimal odotettuTulos = new BigDecimal("7.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(
-                luoVakiokaava(new BigDecimal(7.0)), "nimi"));
+                luoVakiokaava(new BigDecimal(7.0)), "nimi",
+                "koulumenestys", "Yleinen koulumenestys", "Allmän skolframgång"));
 
         Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemus, hakemukset(hakemus),
                 Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
@@ -293,7 +294,8 @@ public class LuoValintaperusteetServiceTest {
         final BigDecimal odotettuTulos = new BigDecimal("8.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(
-                luoVakiokaava(new BigDecimal(7.25)), "nimi"));
+                luoVakiokaava(new BigDecimal(7.25)), "nimi",
+                "koulumenestys", "Yleinen koulumenestys", "Allmän skolframgång"));
 
         Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemus, hakemukset(hakemus),
                 Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
@@ -312,7 +314,8 @@ public class LuoValintaperusteetServiceTest {
         final BigDecimal odotettuTulos = new BigDecimal("8.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(
-                PkPohjaiset.luoPKPohjaisenKoulutuksenKaikkienAineidenKeskiarvo(pkAineet), "nimi"));
+                PkPohjaiset.luoPKPohjaisenKoulutuksenKaikkienAineidenKeskiarvo(pkAineet), "nimi",
+                "koulumenestys", "Yleinen koulumenestys", "Allmän skolframgång"));
 
         Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemus, hakemukset(hakemus),
                 Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
@@ -569,7 +572,8 @@ public class LuoValintaperusteetServiceTest {
         Laskentakaava kaava = laajennaAlakaavat(PkPohjaiset.luoToisenAsteenPeruskoulupohjainenPeruskaava(
                 PkPohjaiset.luoPainotettavatKeskiarvotLaskentakaava(pkAineet),
                 PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(
-                        PkPohjaiset.luoPKPohjaisenKoulutuksenKaikkienAineidenKeskiarvo(pkAineet), "nimi"),
+                        PkPohjaiset.luoPKPohjaisenKoulutuksenKaikkienAineidenKeskiarvo(pkAineet), "nimi",
+                        "koulumenestys", "Yleinen koulumenestys", "Allmän skolframgång"),
                 PkPohjaiset.luoPohjakoulutuspisteytysmalli(), PkPohjaiset.ilmanKoulutuspaikkaaPisteytysmalli(),
                 PkJaYoPohjaiset.luoHakutoivejarjestyspisteytysmalli(), PkJaYoPohjaiset.luoTyokokemuspisteytysmalli(),
                 PkJaYoPohjaiset.luoSukupuolipisteytysmalli(), PkJaYoPohjaiset.urheilijaLisapisteLukuarvo(PkJaYoPohjaiset.urheilijaLisapisteTunniste)));
@@ -607,7 +611,8 @@ public class LuoValintaperusteetServiceTest {
         final BigDecimal odotettuTulos = new BigDecimal("9.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(
-                YoPohjaiset.luoYOPohjaisenKoulutuksenPaattotodistuksenKeskiarvo(yoAineet), "nimi"));
+                YoPohjaiset.luoYOPohjaisenKoulutuksenPaattotodistuksenKeskiarvo(yoAineet), "nimi",
+                "koulumenestys", "Yleinen koulumenestys", "Allmän skolframgång"));
 
         Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemus, hakemukset(hakemus),
                 Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
@@ -637,7 +642,8 @@ public class LuoValintaperusteetServiceTest {
                 PkJaYoPohjaiset.luoTyokokemuspisteytysmalli(),
                 PkJaYoPohjaiset.luoSukupuolipisteytysmalli(),
                 PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(
-                        YoPohjaiset.luoYOPohjaisenKoulutuksenPaattotodistuksenKeskiarvo(yoAineet), "nimi"),PkJaYoPohjaiset.urheilijaLisapisteLukuarvo(PkJaYoPohjaiset.urheilijaLisapisteTunniste)));
+                        YoPohjaiset.luoYOPohjaisenKoulutuksenPaattotodistuksenKeskiarvo(yoAineet), "nimi",
+                        "koulumenestys", "Yleinen koulumenestys", "Allmän skolframgång"),PkJaYoPohjaiset.urheilijaLisapisteLukuarvo(PkJaYoPohjaiset.urheilijaLisapisteTunniste)));
         Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(hakukohde, hakemukset[0],
                 Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
 
@@ -751,7 +757,8 @@ public class LuoValintaperusteetServiceTest {
         Laskentakaava peruskaava = PkPohjaiset.luoToisenAsteenPeruskoulupohjainenPeruskaava(
                 PkPohjaiset.luoPainotettavatKeskiarvotLaskentakaava(pkAineet),
                 PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(
-                        PkPohjaiset.luoPKPohjaisenKoulutuksenKaikkienAineidenKeskiarvo(pkAineet), "nimi"),
+                        PkPohjaiset.luoPKPohjaisenKoulutuksenKaikkienAineidenKeskiarvo(pkAineet), "nimi",
+                        "koulumenestys", "Yleinen koulumenestys", "Allmän skolframgång"),
                 PkPohjaiset.luoPohjakoulutuspisteytysmalli(), PkPohjaiset.ilmanKoulutuspaikkaaPisteytysmalli(),
                 PkJaYoPohjaiset.luoHakutoivejarjestyspisteytysmalli(), PkJaYoPohjaiset.luoTyokokemuspisteytysmalli(),
                 PkJaYoPohjaiset.luoSukupuolipisteytysmalli(),PkJaYoPohjaiset.urheilijaLisapisteLukuarvo(PkJaYoPohjaiset.urheilijaLisapisteTunniste));
@@ -794,7 +801,8 @@ public class LuoValintaperusteetServiceTest {
         Laskentakaava peruskaava = PkPohjaiset.luoToisenAsteenPeruskoulupohjainenPeruskaava(
                 PkPohjaiset.luoPainotettavatKeskiarvotLaskentakaava(pkAineet),
                 PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(
-                        PkPohjaiset.luoPKPohjaisenKoulutuksenKaikkienAineidenKeskiarvo(pkAineet), "nimi"),
+                        PkPohjaiset.luoPKPohjaisenKoulutuksenKaikkienAineidenKeskiarvo(pkAineet), "nimi",
+                        "koulumenestys", "Yleinen koulumenestys", "Allmän skolframgång"),
                 PkPohjaiset.luoPohjakoulutuspisteytysmalli(), PkPohjaiset.ilmanKoulutuspaikkaaPisteytysmalli(),
                 PkJaYoPohjaiset.luoHakutoivejarjestyspisteytysmalli(), PkJaYoPohjaiset.luoTyokokemuspisteytysmalli(),
                 PkJaYoPohjaiset.luoSukupuolipisteytysmalli(),PkJaYoPohjaiset.urheilijaLisapisteLukuarvo(PkJaYoPohjaiset.urheilijaLisapisteTunniste));
@@ -967,7 +975,8 @@ public class LuoValintaperusteetServiceTest {
                 PkJaYoPohjaiset.luoTyokokemuspisteytysmalli(),
                 PkJaYoPohjaiset.luoSukupuolipisteytysmalli(),
                 PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(
-                        YoPohjaiset.luoYOPohjaisenKoulutuksenPaattotodistuksenKeskiarvo(yoAineet), "nimi"),PkJaYoPohjaiset.urheilijaLisapisteLukuarvo(PkJaYoPohjaiset.urheilijaLisapisteTunniste)), PkJaYoPohjaiset.luoKielikokeenPakollisuudenLaskentakaava()));
+                        YoPohjaiset.luoYOPohjaisenKoulutuksenPaattotodistuksenKeskiarvo(yoAineet), "nimi",
+                        "koulumenestys_pk", "Yleinen koulumenestys", "Allmän skolframgång"),PkJaYoPohjaiset.urheilijaLisapisteLukuarvo(PkJaYoPohjaiset.urheilijaLisapisteTunniste)), PkJaYoPohjaiset.luoKielikokeenPakollisuudenLaskentakaava()));
 
         Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(hakukohde, hakemukset[0],
                 Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
@@ -975,7 +984,7 @@ public class LuoValintaperusteetServiceTest {
         assertEquals(odotettuTulos, tulos.getTulos());
         assertEquals(Tila.Tilatyyppi.HYLATTY, tulos.getTila().getTilatyyppi());
         assertEquals(HylattyMetatieto.Hylattymetatietotyyppi.HYLKAA_FUNKTION_SUORITTAMA_HYLKAYS, ((Hylattytila) tulos.getTila()).getMetatieto().getMetatietotyyppi());
-        assertEquals("Kielikoetta ei suoritettu tai kielikokeen korvaavuusehto ei täyttynyt", ((Hylattytila) tulos.getTila()).getKuvaus().get("FI"));
+        assertEquals("Hylätty kielikoetulos", ((Hylattytila) tulos.getTila()).getKuvaus().get("FI"));
 
         Laskentatulos<BigDecimal> tulos2 = laskentaService.suoritaValintalaskenta(hakukohde, hakemukset[1],
                 Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
@@ -1005,7 +1014,8 @@ public class LuoValintaperusteetServiceTest {
         Laskentakaava peruskaava = PkPohjaiset.luoToisenAsteenPeruskoulupohjainenPeruskaava(
                 PkPohjaiset.luoPainotettavatKeskiarvotLaskentakaava(pkAineet),
                 PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(
-                        PkPohjaiset.luoPKPohjaisenKoulutuksenKaikkienAineidenKeskiarvo(pkAineet), "nimi"),
+                        PkPohjaiset.luoPKPohjaisenKoulutuksenKaikkienAineidenKeskiarvo(pkAineet), "nimi",
+                        "koulumenestys", "Yleinen koulumenestys", "Allmän skolframgång"),
                 PkPohjaiset.luoPohjakoulutuspisteytysmalli(), PkPohjaiset.ilmanKoulutuspaikkaaPisteytysmalli(),
                 PkJaYoPohjaiset.luoHakutoivejarjestyspisteytysmalli(), PkJaYoPohjaiset.luoTyokokemuspisteytysmalli(),
                 PkJaYoPohjaiset.luoSukupuolipisteytysmalli(),PkJaYoPohjaiset.urheilijaLisapisteLukuarvo(PkJaYoPohjaiset.urheilijaLisapisteTunniste));
@@ -1020,7 +1030,7 @@ public class LuoValintaperusteetServiceTest {
         assertEquals(odotettuTulos, tulos.getTulos());
         assertEquals(Tila.Tilatyyppi.HYLATTY, tulos.getTila().getTilatyyppi());
         assertEquals(HylattyMetatieto.Hylattymetatietotyyppi.HYLKAA_FUNKTION_SUORITTAMA_HYLKAYS, ((Hylattytila) tulos.getTila()).getMetatieto().getMetatietotyyppi());
-        assertEquals("Kielikoetta ei suoritettu tai kielikokeen korvaavuusehto ei täyttynyt", ((Hylattytila) tulos.getTila()).getKuvaus().get("FI"));
+        assertEquals("Hylätty kielikoetulos", ((Hylattytila) tulos.getTila()).getKuvaus().get("FI"));
 
         Laskentatulos<BigDecimal> tulos2 = laskentaService.suoritaValintalaskenta(hakukohde, hakemukset[1],
                 Arrays.asList(hakemukset), Laskentadomainkonvertteri.muodostaLukuarvolasku(yhdistetty.getFunktiokutsu()));

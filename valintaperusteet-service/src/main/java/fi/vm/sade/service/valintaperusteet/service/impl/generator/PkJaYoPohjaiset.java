@@ -51,6 +51,12 @@ public class PkJaYoPohjaiset {
         Funktiokutsu ensimmainenHakutoive = GenericHelper.luoEnsimmainenHakutoive();
 
         Funktiokutsu jos = GenericHelper.luoJosFunktio(ensimmainenHakutoive, pisteet, nollaarvo);
+
+        jos.setTallennaTulos(true);
+        jos.setTulosTunniste("hakutoivejarjestys");
+        jos.setTulosTekstiFi("Hakutoivejärjestys");
+        jos.setTulosTekstiSv("Ansökningsmålsordning");
+
         Laskentakaava laskentakaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(jos,
                 "Hakutoivejärjestyspisteytys, 2 aste, pk ja yo");
         return laskentakaava;
@@ -67,6 +73,11 @@ public class PkJaYoPohjaiset {
                 GenericHelper.luoValintaperusteViite(tyokokemuskuukaudet, false, Valintaperustelahde.HAETTAVA_ARVO), 0,
                 Arrays.asList(konvs));
 
+        f.setTallennaTulos(true);
+        f.setTulosTunniste("tyokokemus");
+        f.setTulosTekstiFi("Työkokemus");
+        f.setTulosTekstiSv("Arbetserfarenhet");
+
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(f, "Työkokemuspisteytys, 2 aste, pk ja yo");
     }
 
@@ -76,10 +87,17 @@ public class PkJaYoPohjaiset {
         Funktiokutsu ehto = GenericHelper.luoDemografia(sukupuoli, 30.0);
 
         Funktiokutsu jos = GenericHelper.luoJosFunktio(ehto, thenHaara, elseHaara);
+
+        jos.setTallennaTulos(true);
+        jos.setTulosTunniste("sukupuoli");
+        jos.setTulosTekstiFi("Sukupuoli");
+        jos.setTulosTekstiSv("Kön");
+
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(jos, "Sukupuolipisteytys, 2 aste, pk ja yo");
     }
 
-    public static Laskentakaava luoYleinenKoulumenestysLaskentakaava(Laskentakaava laskentakaava, String nimi) {
+    public static Laskentakaava luoYleinenKoulumenestysLaskentakaava(Laskentakaava laskentakaava, String nimi,
+                                                                     String tulosTunniste, String tulosTekstiFi, String tulosTekstiSv) {
         Funktiokutsu konvertteri = new Funktiokutsu();
         konvertteri.setFunktionimi(Funktionimi.KONVERTOILUKUARVO);
         Funktioargumentti funk = new Funktioargumentti();
@@ -121,6 +139,11 @@ public class PkJaYoPohjaiset {
         konvertteri.getArvovalikonvertteriparametrit().add(
                 GenericHelper.luoArvovalikonvertteriparametri(9.25, 10.1, 16));
 
+        konvertteri.setTallennaTulos(true);
+        konvertteri.setTulosTekstiFi(tulosTekstiFi);
+        konvertteri.setTulosTekstiSv(tulosTekstiSv);
+        konvertteri.setTulosTunniste(tulosTunniste);
+
         Laskentakaava palautettavaLaskentakaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(konvertteri, nimi);
         return palautettavaLaskentakaava;
     }
@@ -136,7 +159,8 @@ public class PkJaYoPohjaiset {
         Funktiokutsu funktiokutsu = GenericHelper.luoHaeLukuarvo(valintaperuste, konvs);
 
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
-                GenericHelper.luoHylkaaArvovalilla(funktiokutsu, "Valintakoetulos hylätty", "0.0", "1.0"), nimi);
+                GenericHelper.luoHylkaaArvovalilla(funktiokutsu, "Hylätty pääsy- ja soveltuvuuskoetulos",
+                        "Underkänd i inträdes- eller lämplighetsprov", "0.0", "1.0"), nimi);
     }
 
     public static Laskentakaava luoValintakoekaava(String nimi, Valintaperustelahde lahde, boolean epasuoraViittaus) {
@@ -150,7 +174,8 @@ public class PkJaYoPohjaiset {
         Funktiokutsu funktiokutsu = GenericHelper.luoHaeLukuarvo(valintaperuste, konvs);
 
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
-                GenericHelper.luoHylkaaArvovalilla(funktiokutsu, "Valintakoetulos hylätty", "0.0", "1.0"), nimi);
+                GenericHelper.luoHylkaaArvovalilla(funktiokutsu, "Hylätty pääsy- ja soveltuvuuskoetulos",
+                        "Underkänd i inträdes- eller lämplighetsprov", "0.0", "1.0"), nimi);
     }
 
     public static Laskentakaava luoLisapistekaava(String tunniste) {
@@ -492,7 +517,7 @@ public class PkJaYoPohjaiset {
     public static Laskentakaava luoYhdistettyPeruskaavaJaKielikoekaava(Laskentakaava peruskaava,
             Laskentakaava kielikoekaava) {
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(GenericHelper.luoSumma(peruskaava, GenericHelper
-                .luoHylkaa(kielikoekaava, "Kielikoetta ei suoritettu tai kielikokeen korvaavuusehto ei täyttynyt")),
+                .luoHylkaa(kielikoekaava, "Hylätty kielikoetulos", "Underkänd i språkprov")),
                 peruskaava.getNimi() + " + " + kielikoekaava.getNimi());
     }
 
@@ -528,7 +553,7 @@ public class PkJaYoPohjaiset {
                 oppivelvollisuudenSuorittaminenKeskeytynyt);
 
         Funktiokutsu hylkaa = GenericHelper.luoHylkaa(tai,
-                "Ulkomailla suoritettu koulutus tai oppivelvollisuuden keskeytyminen");
+                "Hylätty harkinnanvaraisessa valinnassa", "ej godkänd i antagning enligt prövning");
 
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(hylkaa, "Ulkomailla suoritettu koulutus tai "
                 + "oppivelvollisuuden suorittaminen keskeytynyt");
@@ -537,7 +562,7 @@ public class PkJaYoPohjaiset {
     public static Laskentakaava luoPoikkeavanValintaryhmanLaskentakaava(Laskentakaava valintakoekaava,
             Laskentakaava kielikoekaava) {
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(GenericHelper.luoSumma(valintakoekaava, GenericHelper
-                .luoHylkaa(kielikoekaava, "Kielikoetta ei suoritettu tai kielikokeen korvaavuusehto ei täyttynyt")),
+                .luoHylkaa(kielikoekaava, "Hylätty kielikoetulos", "Underkänd i språkprov")),
                 valintakoekaava.getNimi() + " + hylkäysperusteet (*)");
 
     }

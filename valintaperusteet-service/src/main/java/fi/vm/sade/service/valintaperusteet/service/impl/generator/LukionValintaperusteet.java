@@ -161,9 +161,15 @@ public class LukionValintaperusteet {
 
         Funktiokutsu pyoristetty = GenericHelper.luoPyoristys(painotuksetFunktio, 2);
 
+        pyoristetty.setTallennaTulos(true);
+        pyoristetty.setTulosTunniste("painotettu_keskiarvo");
+        pyoristetty.setTulosTekstiFi("Keskiarvo");
+        pyoristetty.setTulosTekstiSv("Medeltalet");
+
         return GenericHelper
                 .luoLaskentakaavaJaNimettyFunktio(GenericHelper.luoHylkaaArvovalilla(pyoristetty,
-                        "Painotettu keskiarvo hylätty", minimi, maksimi),
+                        "Lukion asettama keskiarvoraja ei ylity",
+                        "Uppnår inte av gymnasiet fastställda lägsta godkända medeltalsgräns", minimi, maksimi),
                         "Lukion valintaperusteet, painotettu keskiarvo");
     }
 
@@ -175,7 +181,8 @@ public class LukionValintaperusteet {
         String maksimi = "{{hakukohde.paasykoe_ja_lisanaytto_hylkays_max}}";
 
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(GenericHelper.luoHylkaaArvovalilla(summa,
-                "Pääsykokeen ja lisänäytön summa ei ole tarpeeksi suuri", minimi, maksimi),
+                "Pääsykokeen ja lisänäytön alin hyväksyttävä yhteispistemäärä ei ylity",
+                "Uppnår inte lägsta godkända sammanlagda poängantal för inträdesprov och tilläggsprestation", minimi, maksimi),
                 "Lukion valintaperusteet, pääsykoe ja lisänäyttö");
 
     }
@@ -194,7 +201,8 @@ public class LukionValintaperusteet {
                 true, Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO, "Pääsykoe", true), konvs);
 
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
-                GenericHelper.luoHylkaaArvovalilla(funktiokutsu, "Pääsykoetulos hylätty", minimi, maksimi),
+                GenericHelper.luoHylkaaArvovalilla(funktiokutsu, "Pääsykokeen alin hyväksyttävä pistemäärä ei ylity",
+                        "Uppnår inte lägsta godkända poängantal för inträdesprov", minimi, maksimi),
                 "Lukion valintaperusteet, pääsykoe");
 
     }
@@ -213,7 +221,8 @@ public class LukionValintaperusteet {
                 lisanayttoTunniste, true, Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO, "Lisänäyttö", true), konvs);
 
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
-                GenericHelper.luoHylkaaArvovalilla(funktiokutsu, "Pääsykoetulos hylätty", minimi, maksimi),
+                GenericHelper.luoHylkaaArvovalilla(funktiokutsu, "Lisänäytön alin hyväksyttävä pistemäärä ei ylity",
+                        "Uppnår inte lägsta godkända poängantal för tilläggsprestation", minimi, maksimi),
                 "Lukion valintaperusteet, lisänäyttö");
 
     }

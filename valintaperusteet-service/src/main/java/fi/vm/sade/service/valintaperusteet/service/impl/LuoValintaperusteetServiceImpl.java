@@ -487,7 +487,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         // pisteytysmalli
         Laskentakaava pk_yleinenkoulumenestyspisteytysmalli = asetaValintaryhmaJaTallennaKantaan(
                 PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(pkPohjainenKaikkienAineidenKeskiarvo,
-                        "Yleinen koulumenestys pisteytysmalli, PK"), peruskouluVr.getOid());
+                        "Yleinen koulumenestys pisteytysmalli, PK", "koulumenestys_pk", "Yleinen koulumenestys", "Allmän skolframgång"), peruskouluVr.getOid());
 
         transactionManager.commit(tx);
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
@@ -554,7 +554,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
 
         Laskentakaava lk_yleinenkoulumenestyspisteytysmalli = asetaValintaryhmaJaTallennaKantaan(
                 PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(lk_paattotodistuksenkeskiarvo,
-                        "Yleinen koulumenestys pisteytysmalli, LK"), lukioVr.getOid());
+                        "Yleinen koulumenestys pisteytysmalli, LK", "koulumenestys_lk", "Yleinen koulumenestys", "Allmän skolframgång"), lukioVr.getOid());
 
         transactionManager.commit(tx);
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
