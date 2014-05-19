@@ -173,15 +173,15 @@ private class Laskin private(private val hakukohde: Hakukohde,
   def getFunktioTulokset = Map[String, FunktioTulos](funktioTulokset.toList: _*)
 
   def laske(laskettava: Lukuarvofunktio) = {
-    syotetytArvot.clear
-    funktioTulokset.clear
+//    syotetytArvot.clear
+//    funktioTulokset.clear
     laskeLukuarvo(laskettava)
   }
 
 
   def laske(laskettava: Totuusarvofunktio) = {
-    syotetytArvot.clear
-    funktioTulokset.clear
+//    syotetytArvot.clear
+//    funktioTulokset.clear
     laskeTotuusarvo(laskettava)
   }
 
@@ -262,7 +262,6 @@ private class Laskin private(private val hakukohde: Hakukohde,
         }
       }
       case HakukohteenSyotettavaValintaperuste(tunniste, pakollinen, epasuoraViittaus, osallistumisenTunnistePostfix) => {
-
         hakukohde.valintaperusteet.get(tunniste).filter(!_.trim.isEmpty) match {
           case Some(arvo) => {
             if (epasuoraViittaus) {
