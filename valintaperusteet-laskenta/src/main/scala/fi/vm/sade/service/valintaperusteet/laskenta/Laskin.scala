@@ -45,6 +45,7 @@ import scala.collection.JavaConversions._
 import play.api.libs.json._
 import fi.vm.sade.service.valintaperusteet.laskenta.JsonFormats._
 import scala.collection.JavaConversions
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Tila.Tilatyyppi
 
 private case class Tulos[T](tulos: Option[T], tila: Tila, historia: Historia)
 
@@ -668,13 +669,16 @@ private class Laskin private(private val hakukohde: Hakukohde,
         laske(f) match {
           case Tulos(tulos, tila, historia) => {
             val arvovali = haeArvovali((min, max), hakukohde, hakemus)
-            if(arvovali isEmpty) {
+            if(tulos.isEmpty && tila.getTilatyyppi.equals(Tilatyyppi.HYVAKSYTTAVISSA)) {
+              val virheTila = new Virhetila(suomenkielinenHylkaysperusteMap("Hylkäämisfunktion syöte on tyhjä. Hylkäystä ei voida tulkita."), new HylkaamistaEiVoidaTulkita)
+              (None, List(virheTila), Historia("Hylkää Arvovälillä", None, List(virheTila), Some(List(historia)), None))
+            } else if(arvovali isEmpty) {
               val virheTila = new Virhetila(suomenkielinenHylkaysperusteMap("Arvovalin arvoja ei voida muuntaa lukuarvoiksi"), new HylkaamistaEiVoidaTulkita)
               (None, List(virheTila), Historia("Hylkää Arvovälillä", None, List(virheTila), Some(List(historia)), None))
             } else {
               val arvovaliTila = tulos.map(arvo => if(onArvovalilla(arvo, (arvovali.get._1,arvovali.get._2), true, false)) new Hylattytila(JavaConversions.mapAsJavaMap(hylkaysperustekuvaus.getOrElse(Map.empty[String,String])),
-                new HylkaaFunktionSuorittamaHylkays) else new Hyvaksyttavissatila)
-                .getOrElse(new Hyvaksyttavissatila)
+                new HylkaaFunktionSuorittamaHylkays) else new Hyvaksyttavissatila).getOrElse(new Hyvaksyttavissatila)
+
               val tilat = List(tila, arvovaliTila)
               (tulos, tilat, Historia("Hylkää Arvovälillä", tulos, tilat, Some(List(historia)), None))
             }
