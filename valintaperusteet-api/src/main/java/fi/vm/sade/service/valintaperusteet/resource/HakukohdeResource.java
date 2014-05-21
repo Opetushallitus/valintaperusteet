@@ -62,7 +62,7 @@ public interface HakukohdeResource {
     @GET
     @Path("/{oid}/ilmanlaskentaa")
     @Produces(MediaType.APPLICATION_JSON)
-    List<ValintatapajonoDTO> ilmanLaskentaa(@PathParam("oid") String oid);
+    List<ValinnanVaiheJonoillaDTO> ilmanLaskentaa(@PathParam("oid") String oid);
 
     @GET
     @Path("/{oid}/hakijaryhma")

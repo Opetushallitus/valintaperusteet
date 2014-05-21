@@ -161,4 +161,14 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
                         jono.siirretaanSijoitteluun.eq(true)
                 ).count() > 0;
     }
+
+    @Override
+    public List<ValinnanVaihe> ilmanLaskentaaOlevatHakukohteelle(String hakukohdeOid) {
+        QHakukohdeViite hakukohde = QHakukohdeViite.hakukohdeViite;
+        QValinnanVaihe vv = QValinnanVaihe.valinnanVaihe;
+        QValintatapajono jono = QValintatapajono.valintatapajono;
+
+        return from(hakukohde).leftJoin(hakukohde.valinnanvaiheet, vv).leftJoin(vv.jonot, jono).fetch()
+                .where(hakukohde.oid.eq(hakukohdeOid).and(jono.kaytetaanValintalaskentaa.isFalse())).distinct().list(vv);
+    }
 }

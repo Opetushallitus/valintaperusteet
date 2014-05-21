@@ -1,6 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.dao;
 
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
+import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 
 import java.util.List;
 import java.util.Set;
@@ -33,4 +34,6 @@ public interface ValinnanVaiheDAO extends JpaDAO<ValinnanVaihe, Long> {
     List<ValinnanVaihe> haeKopiot(String oid);
 
     boolean kuuluuSijoitteluun(String oid);
+
+    List<ValinnanVaihe> ilmanLaskentaaOlevatHakukohteelle(String hakukohdeOid);
 }
