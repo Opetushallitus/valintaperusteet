@@ -30,9 +30,6 @@ public class HakukohdeServiceImpl implements HakukohdeService {
     private HakukohdeViiteDAO hakukohdeViiteDAO;
 
     @Autowired
-    private ValintatapajonoDAO valintatapajonoDAO;
-
-    @Autowired
     private ValintaryhmaService valintaryhmaService;
 
     @Autowired
@@ -115,8 +112,8 @@ public class HakukohdeServiceImpl implements HakukohdeService {
     }
 
     @Override
-    public List<Valintatapajono> ilmanLaskentaa(String oid) {
-        return valintatapajonoDAO.ilmanLaskentaaOlevatHakukohteelle(oid);
+    public List<ValinnanVaihe> ilmanLaskentaa(String oid) {
+        return valinnanVaiheDAO.ilmanLaskentaaOlevatHakukohteelle(oid);
     }
 
 
