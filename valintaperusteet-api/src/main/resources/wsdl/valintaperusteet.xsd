@@ -160,7 +160,7 @@
         <xs:attribute name="oid" type="xs:string" use="required"/>
         <xs:attribute name="prioriteetti" type="xs:int" use="required"/>
         <xs:attribute name="aloituspaikat" type="xs:int" use="required"/>
-        <xs:attribute name="tasasijasaanto" type="tns:TasasijasaantoTyyppi" use="required"/>
+        <xs:attribute name="tasasijasaanto" type="tns:TasasijasaantoTyyppi" use="required" default="ARVONTA"/>
     </xs:complexType>
 
     <xs:complexType name="ValintatapajonoJarjestyskriteereillaTyyppi">
