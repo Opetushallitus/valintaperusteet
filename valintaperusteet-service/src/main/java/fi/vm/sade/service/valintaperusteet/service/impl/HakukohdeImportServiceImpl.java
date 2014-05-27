@@ -327,18 +327,16 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
     }
 
     private void paivitaAloituspaikkojenLkm(final HakukohdeViite hakukohde, final int valinnanAloituspaikat) {
-        // Jos hakukohteella on tasan kaksi valinnan vaihetta, joista
-        // jälkimmäinen on tavallinen, periytyvä valinnan
-        // vaihe ja jossa on yksi periytyvä valintatapajono, päivitetään jonolle
-        // aloituspaikkojen lukumäärä
+        // Päivitetään viimeisen valinnanvaiheen ensimmäiselle jonolle tarjonnasta tulleet alotuspaikkalukumäärät
 
         List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheService.findByHakukohde(hakukohde.getOid());
-        if (valinnanVaiheet.size() == 3
+        int vaiheidenMaara = valinnanVaiheet.size() - 1;
+        if (vaiheidenMaara >= 0
                 && fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi.TAVALLINEN.equals(valinnanVaiheet
-                        .get(2).getValinnanVaiheTyyppi()) && valinnanVaiheet.get(2).getMasterValinnanVaihe() != null) {
-            ValinnanVaihe vaihe = valinnanVaiheet.get(2);
+                        .get(vaiheidenMaara).getValinnanVaiheTyyppi()) && valinnanVaiheet.get(vaiheidenMaara).getMasterValinnanVaihe() != null) {
+            ValinnanVaihe vaihe = valinnanVaiheet.get(vaiheidenMaara);
             List<Valintatapajono> jonot = valintatapajonoService.findJonoByValinnanvaihe(vaihe.getOid());
-            if (jonot.size() == 1 && jonot.get(0).getMasterValintatapajono() != null) {
+            if (jonot.size() > 0 && jonot.get(0).getMasterValintatapajono() != null) {
                 Valintatapajono jono = jonot.get(0);
                 jono.setAloituspaikat(valinnanAloituspaikat);
             }
