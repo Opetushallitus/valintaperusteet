@@ -46,6 +46,7 @@ import play.api.libs.json._
 import fi.vm.sade.service.valintaperusteet.laskenta.JsonFormats._
 import scala.collection.JavaConversions
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Tila.Tilatyyppi
+import fi.vm.sade.service.valintaperusteet.model.TekstiRyhma
 
 private case class Tulos[T](tulos: Option[T], tila: Tila, historia: Historia)
 
@@ -205,7 +206,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
 
     // Jos kyseessä on syötettävä valintaperuste, pitää ensin tsekata osallistumistieto
     valintaperusteviite match {
-      case SyotettavaValintaperuste(tunniste, pakollinen, osallistuminenTunniste, kuvaus) => {
+      case SyotettavaValintaperuste(tunniste, pakollinen, osallistuminenTunniste, kuvaus, kuvaukset) => {
         val (osallistuminen, osallistumistila) = hakemus.kentat.get(osallistuminenTunniste) match {
           case Some(osallistuiArvo) => {
             try {
@@ -225,7 +226,8 @@ private class Laskin private(private val hakukohde: Hakukohde,
 
         val (arvo, konvertoitu, tilat) = if (pakollinen && Osallistuminen.EI_OSALLISTUNUT == osallistuminen)
           (None, None, List(osallistumistila,
-            new Hylattytila(suomenkielinenHylkaysperusteMap(s"$hylkaysKuvaus: Ei Osallistunut"),
+            //new Hylattytila(suomenkielinenHylkaysperusteMap(s"$hylkaysKuvaus: Ei Osallistunut"),
+            new Hylattytila(tekstiryhmaToMap(kuvaukset),
               new EiOsallistunutHylkays(tunniste))))
         else if (pakollinen && Osallistuminen.MERKITSEMATTA == osallistuminen)
           (None, None, List(osallistumistila, new Virhetila(suomenkielinenHylkaysperusteMap(s"Pakollisen syötettävän kentän arvo on merkitsemättä (tunniste $tunniste)"),
@@ -262,11 +264,11 @@ private class Laskin private(private val hakukohde: Hakukohde,
           }
         }
       }
-      case HakukohteenSyotettavaValintaperuste(tunniste, pakollinen, epasuoraViittaus, osallistumisenTunnistePostfix) => {
+      case HakukohteenSyotettavaValintaperuste(tunniste, pakollinen, epasuoraViittaus, osallistumisenTunnistePostfix, kuvaus, kuvaukset) => {
         hakukohde.valintaperusteet.get(tunniste).filter(!_.trim.isEmpty) match {
           case Some(arvo) => {
             if (epasuoraViittaus) {
-              haeValintaperuste(SyotettavaValintaperuste(arvo, pakollinen, s"$arvo$osallistumisenTunnistePostfix"), hakemus, konv, oletusarvo)
+              haeValintaperuste(SyotettavaValintaperuste(arvo, pakollinen, s"$arvo$osallistumisenTunnistePostfix", kuvaus, kuvaukset), hakemus, konv, oletusarvo)
             } else konv(arvo)
           }
           case None => {

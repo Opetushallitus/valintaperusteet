@@ -9,7 +9,7 @@ import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
  * User: wuoti Date: 2.12.2013 Time: 10.06
  */
 @ApiModel(value = "ValintaperusteViiteDTO", description = "Valintaperusteviite")
-public class ValintaperusteViiteDTO {
+public class ValintaperusteViiteDTO  implements Comparable<ValintaperusteViiteDTO> {
 
     @ApiModelProperty(value = "tunniste", required = true)
     private String tunniste;
@@ -31,6 +31,9 @@ public class ValintaperusteViiteDTO {
 
     @ApiModelProperty(value = "Indeksi", required = true)
     private Integer indeksi;
+
+    @ApiModelProperty(value = "Hylkäysperusteen kuvaukset")
+    private TekstiRyhmaDTO kuvaukset = new TekstiRyhmaDTO();
 
     public String getTunniste() {
         return tunniste;
@@ -78,5 +81,18 @@ public class ValintaperusteViiteDTO {
 
     public void setIndeksi(Integer indeksi) {
         this.indeksi = indeksi;
+    }
+
+    @Override
+    public int compareTo(ValintaperusteViiteDTO o) {
+        return indeksi - o.indeksi;
+    }
+
+    public TekstiRyhmaDTO getKuvaukset() {
+        return kuvaukset;
+    }
+
+    public void setKuvaukset(TekstiRyhmaDTO kuvaukset) {
+        this.kuvaukset = kuvaukset;
     }
 }

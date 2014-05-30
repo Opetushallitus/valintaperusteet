@@ -6,14 +6,7 @@ import java.util.List;
 
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi;
 import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
-import fi.vm.sade.service.valintaperusteet.model.Arvokonvertteriparametri;
-import fi.vm.sade.service.valintaperusteet.model.Arvovalikonvertteriparametri;
-import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti;
-import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
-import fi.vm.sade.service.valintaperusteet.model.FunktionArgumentti;
-import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
-import fi.vm.sade.service.valintaperusteet.model.Syoteparametri;
-import fi.vm.sade.service.valintaperusteet.model.ValintaperusteViite;
+import fi.vm.sade.service.valintaperusteet.model.*;
 
 /**
  * Created with IntelliJ IDEA. User: kkammone Date: 4.3.2013 Time: 14:25 To
@@ -46,6 +39,13 @@ public class GenericHelper {
     public static Funktiokutsu luoKeskiarvo(FunktionArgumentti... args) {
         Funktiokutsu funktiokutsu = new Funktiokutsu();
         funktiokutsu.setFunktionimi(Funktionimi.KESKIARVO);
+        funktiokutsu.getFunktioargumentit().addAll(luoFunktioargumentit(args));
+        return funktiokutsu;
+    }
+
+    public static Funktiokutsu luoMaksimi(FunktionArgumentti... args) {
+        Funktiokutsu funktiokutsu = new Funktiokutsu();
+        funktiokutsu.setFunktionimi(Funktionimi.MAKSIMI);
         funktiokutsu.getFunktioargumentit().addAll(luoFunktioargumentit(args));
         return funktiokutsu;
     }
@@ -90,6 +90,20 @@ public class GenericHelper {
         vp.setKuvaus(kuvaus);
         vp.setEpasuoraViittaus(epasuoraViittaus);
         vp.setIndeksi(1);
+        return vp;
+    }
+
+    public static ValintaperusteViite luoValintaperusteViite(String tunniste, boolean onPakollinen,
+                                                             Valintaperustelahde lahde, String kuvaus, boolean epasuoraViittaus,
+                                                             TekstiRyhma kuvaukset) {
+        ValintaperusteViite vp = new ValintaperusteViite();
+        vp.setTunniste(tunniste);
+        vp.setOnPakollinen(onPakollinen);
+        vp.setLahde(lahde);
+        vp.setKuvaus(kuvaus);
+        vp.setEpasuoraViittaus(epasuoraViittaus);
+        vp.setIndeksi(1);
+        vp.setKuvaukset(kuvaukset);
         return vp;
     }
 

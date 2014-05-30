@@ -411,7 +411,7 @@ class LaskentaTest extends FunSuite {
     val hakemus = TestHakemus("", Nil, Map("valintakoe" -> "8.7"))
 
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus,
-      HaeLukuarvo(None, None, SyotettavaValintaperuste("valintakoe", true, "valintakoe-OSALLISTUMINEN")))
+      HaeLukuarvo(None, None, SyotettavaValintaperuste("valintakoe", true, "valintakoe-OSALLISTUMINEN", "", new TekstiRyhma)))
 
     assertTulosTyhja(tulos)
     assertTilaVirhe(tila, VirheMetatietotyyppi.SYOTETTAVA_ARVO_MERKITSEMATTA)
@@ -422,7 +422,7 @@ class LaskentaTest extends FunSuite {
       "valintakoe-OSALLISTUMINEN" -> Osallistuminen.EI_OSALLISTUNUT.name))
 
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus,
-      HaeLukuarvo(None, None, SyotettavaValintaperuste("valintakoe", true, "valintakoe-OSALLISTUMINEN")))
+      HaeLukuarvo(None, None, SyotettavaValintaperuste("valintakoe", true, "valintakoe-OSALLISTUMINEN", "", new TekstiRyhma)))
 
     assertTulosTyhja(tulos)
     assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.EI_OSALLISTUNUT_HYLKAYS)
@@ -433,7 +433,7 @@ class LaskentaTest extends FunSuite {
       "valintakoe-OSALLISTUMINEN" -> Osallistuminen.OSALLISTUI.name))
 
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus,
-      HaeLukuarvo(None, None, SyotettavaValintaperuste("valintakoe", true, "valintakoe-OSALLISTUMINEN")))
+      HaeLukuarvo(None, None, SyotettavaValintaperuste("valintakoe", true, "valintakoe-OSALLISTUMINEN", "", new TekstiRyhma)))
 
     assert(BigDecimal(tulos.get) == BigDecimal("8.7"))
     assertTilaHyvaksyttavissa(tila)
@@ -444,7 +444,7 @@ class LaskentaTest extends FunSuite {
       "valintakoe-OSALLISTUMINEN" -> "ehkaosallistui"))
 
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus,
-      HaeLukuarvo(None, None, SyotettavaValintaperuste("valintakoe", true, "valintakoe-OSALLISTUMINEN")))
+      HaeLukuarvo(None, None, SyotettavaValintaperuste("valintakoe", true, "valintakoe-OSALLISTUMINEN", "", new TekstiRyhma)))
 
     assertTulosTyhja(tulos)
     assertTilaVirhe(tila, VirheMetatietotyyppi.OSALLISTUSMISTIETOA_EI_VOIDA_TULKITA)
@@ -548,7 +548,8 @@ class LaskentaTest extends FunSuite {
         valintaperusteviite = new SyotettavaValintaperuste(
           tunniste = "tunniste1",
           pakollinen = false,
-          osallistuminenTunniste = "tunniste1-OSALLISTUMINEN"
+          osallistuminenTunniste = "tunniste1-OSALLISTUMINEN",
+          kuvaukset = new TekstiRyhma
         )
       ),
       Summa(
@@ -560,7 +561,8 @@ class LaskentaTest extends FunSuite {
           valintaperusteviite = SyotettavaValintaperuste(
             tunniste = "tunniste2",
             pakollinen = false,
-            osallistuminenTunniste = "tunniste2-OSALLISTUMINEN"
+            osallistuminenTunniste = "tunniste2-OSALLISTUMINEN",
+            kuvaukset = new TekstiRyhma
           )),
         HaeLukuarvo(
           konvertteri = None,
@@ -576,7 +578,8 @@ class LaskentaTest extends FunSuite {
             valintaperusteviite = SyotettavaValintaperuste(
               tunniste = "tunniste4",
               pakollinen = true,
-              osallistuminenTunniste = "tunniste4-OSALLISTUMINEN"
+              osallistuminenTunniste = "tunniste4-OSALLISTUMINEN",
+              kuvaukset = new TekstiRyhma
             ), vertailtava = "vertailtava4"
           ),
           ifHaara = Lukuarvo(BigDecimal("100.0")),
@@ -589,7 +592,8 @@ class LaskentaTest extends FunSuite {
         valintaperusteviite = new SyotettavaValintaperuste(
           tunniste = "tunniste5",
           pakollinen = false,
-          osallistuminenTunniste = "tunniste5-OSALLISTUMINEN"
+          osallistuminenTunniste = "tunniste5-OSALLISTUMINEN",
+          kuvaukset = new TekstiRyhma
         )
       ),
       HaeLukuarvo(
@@ -598,7 +602,8 @@ class LaskentaTest extends FunSuite {
         valintaperusteviite = new SyotettavaValintaperuste(
           tunniste = "tunniste6",
           pakollinen = true,
-          osallistuminenTunniste = "tunniste6-OSALLISTUMINEN"
+          osallistuminenTunniste = "tunniste6-OSALLISTUMINEN",
+          kuvaukset = new TekstiRyhma
         )
       )
     )

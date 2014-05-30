@@ -1,15 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
-import javax.persistence.Cacheable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 
 import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
 
@@ -51,6 +42,10 @@ public class ValintaperusteViite extends BaseEntity implements Comparable<Valint
 
     @Column(name = "indeksi", nullable = false)
     private Integer indeksi;
+
+    @JoinColumn(name = "tekstiryhma_id", nullable = true)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    private TekstiRyhma kuvaukset;
 
     public String getTunniste() {
         return tunniste;
@@ -128,5 +123,13 @@ public class ValintaperusteViite extends BaseEntity implements Comparable<Valint
     @Override
     public int compareTo(ValintaperusteViite o) {
         return indeksi - o.indeksi;
+    }
+
+    public TekstiRyhma getKuvaukset() {
+        return kuvaukset;
+    }
+
+    public void setKuvaukset(TekstiRyhma kuvaukset) {
+        this.kuvaukset = kuvaukset;
     }
 }

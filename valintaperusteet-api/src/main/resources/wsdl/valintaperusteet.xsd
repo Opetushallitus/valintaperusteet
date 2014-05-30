@@ -210,6 +210,9 @@
     </xs:complexType>
 
     <xs:complexType name="ValintaperusteviiteTyyppi">
+        <xs:sequence>
+            <xs:element name="kuvaukset" type="tns:TekstiRyhmaTyyppi" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
         <xs:attribute name="onPakollinen" use="required" type="xs:boolean"/>
         <xs:attribute name="tunniste" use="required" type="xs:string"/>
         <xs:attribute name="kuvaus" use="optional" type="xs:string"/>

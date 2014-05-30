@@ -1,6 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.service.impl.conversion;
 
+import fi.vm.sade.service.valintaperusteet.model.LokalisoituTeksti;
 import fi.vm.sade.service.valintaperusteet.model.ValintaperusteViite;
+import fi.vm.sade.service.valintaperusteet.schema.TekstiRyhmaTyyppi;
 import fi.vm.sade.service.valintaperusteet.schema.ValintaperustelahdeTyyppi;
 import fi.vm.sade.service.valintaperusteet.schema.ValintaperusteviiteTyyppi;
 import org.springframework.core.convert.converter.Converter;
@@ -21,6 +23,15 @@ public class ValintaperusteViiteToValintaperusteViiteTyyppi implements Converter
         tyyppi.setIndeksi(valintaperusteViite.getIndeksi());
         tyyppi.setEpasuoraViittaus(valintaperusteViite.getEpasuoraViittaus());
         tyyppi.setKuvaus(valintaperusteViite.getKuvaus());
+
+        LokalisoituTekstiToLokalisoituTekstiTyyppiConverter converter = new LokalisoituTekstiToLokalisoituTekstiTyyppiConverter();
+        TekstiRyhmaTyyppi ryhma = new TekstiRyhmaTyyppi();
+        if (valintaperusteViite.getKuvaukset() != null && valintaperusteViite.getKuvaukset().getTekstit() != null) {
+            for (LokalisoituTeksti k : valintaperusteViite.getKuvaukset().getTekstit()) {
+                ryhma.getTekstit().add(converter.convert(k));
+            }
+        }
+        tyyppi.setKuvaukset(ryhma);
 
         return tyyppi;
     }

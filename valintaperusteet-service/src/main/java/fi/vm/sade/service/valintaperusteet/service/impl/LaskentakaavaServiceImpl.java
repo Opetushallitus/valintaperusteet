@@ -103,7 +103,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
         Timeout timeout = new Timeout(Duration.create(30, "seconds"));
 
         ActorRef master = system.actorOf(
-                SpringExtProvider.get(system).props("HaeFunktiokutsuRekursiivisestiActorBean").withDispatcher("default-dispatcher")
+                SpringExtProvider.get(system).props("HaeFunktiokutsuRekursiivisestiActorBean")
                 , UUID.randomUUID()
                         .toString());
 
@@ -382,6 +382,22 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             newVp.setOnPakollinen(vp.getOnPakollinen());
             newVp.setTunniste(vp.getTunniste());
             newVp.setFunktiokutsu(managed);
+
+            if(vp.getKuvaukset() != null) {
+                TekstiRyhma ryhma = new TekstiRyhma();
+                genericDAO.insert(ryhma);
+                for (LokalisoituTeksti teksti : vp.getKuvaukset().getTekstit()) {
+                    LokalisoituTeksti newTeksti = new LokalisoituTeksti();
+                    newTeksti.setKieli(teksti.getKieli());
+                    newTeksti.setTeksti(teksti.getTeksti());
+                    newTeksti.setRyhma(ryhma);
+                    genericDAO.insert(newTeksti);
+                    ryhma.getTekstit().add(newTeksti);
+                }
+
+                newVp.setKuvaukset(ryhma);
+            }
+
             managed.getValintaperusteviitteet().add(newVp);
         }
 
@@ -461,7 +477,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
         Timeout timeout = new Timeout(Duration.create(30, "seconds"));
 
         ActorRef master = system.actorOf(
-                SpringExtProvider.get(system).props("HaeValintaperusteetRekursiivisestiActorBean").withDispatcher("default-dispatcher")
+                SpringExtProvider.get(system).props("HaeValintaperusteetRekursiivisestiActorBean")
                 , UUID.randomUUID()
                         .toString());
 
@@ -499,7 +515,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
         Timeout timeout = new Timeout(Duration.create(30, "seconds"));
 
         ActorRef master = system.actorOf(
-                SpringExtProvider.get(system).props("HaeHakukohteenValintaperusteetRekursiivisestiActorBean").withDispatcher("default-dispatcher")
+                SpringExtProvider.get(system).props("HaeHakukohteenValintaperusteetRekursiivisestiActorBean")
                 , UUID.randomUUID()
                 .toString());
 

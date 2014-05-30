@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * User: tommiha Date: 1/14/13 Time: 4:07 PM
@@ -24,12 +25,25 @@ public class FunktiokutsuDAOImpl extends AbstractJpaDAOImpl<Funktiokutsu, Long> 
     @Autowired
     private GenericDAO genericDAO;
 
+    private List<ValintaperusteViite> valintaperusteet(Long id) {
+        QFunktiokutsu fk = QFunktiokutsu.funktiokutsu;
+        QValintaperusteViite vpv = QValintaperusteViite.valintaperusteViite;
+        QTekstiRyhma t = QTekstiRyhma.tekstiRyhma;
+
+        JPAQuery query = from(vpv);
+
+        return query.leftJoin(vpv.kuvaukset, t).fetch()
+                .leftJoin(t.tekstit).fetch()
+                .where(vpv.funktiokutsu.id.eq(id)).distinct().list(vpv);
+    }
+
     @Override
     public Funktiokutsu getFunktiokutsu(Long id) {
         QFunktiokutsu fk = QFunktiokutsu.funktiokutsu;
         QFunktioargumentti fa = QFunktioargumentti.funktioargumentti;
         QArvokonvertteriparametri ak = QArvokonvertteriparametri.arvokonvertteriparametri;
         QArvovalikonvertteriparametri avk = QArvovalikonvertteriparametri.arvovalikonvertteriparametri;
+        QValintaperusteViite vpv = QValintaperusteViite.valintaperusteViite;
         QTekstiRyhma t = QTekstiRyhma.tekstiRyhma;
 
         JPAQuery query = from(fk);
@@ -57,9 +71,18 @@ public class FunktiokutsuDAOImpl extends AbstractJpaDAOImpl<Funktiokutsu, Long> 
             query.leftJoin(fk.funktioargumentit).fetch();
         }
 
-        return query.leftJoin(fk.valintaperusteviitteet).fetch()
+        Funktiokutsu kutsu =  query.leftJoin(fk.valintaperusteviitteet, vpv).fetch()
+                .leftJoin(fk.valintaperusteviitteet).fetch()
                 .leftJoin(fk.syoteparametrit).fetch()
                 .where(fk.id.eq(id)).distinct().singleResult(fk);
+
+        if (kutsu != null) {
+            Set<ValintaperusteViite> set = new TreeSet<ValintaperusteViite>();
+            set.addAll(valintaperusteet(id));
+            kutsu.setValintaperusteviitteet(set);
+        }
+
+        return kutsu;
 
 
 //        return from(fk)
