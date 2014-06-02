@@ -3,11 +3,9 @@ package fi.vm.sade.service.valintaperusteet.service.impl.generator;
 import java.util.ArrayList;
 import java.util.List;
 
+import fi.vm.sade.service.valintaperusteet.dto.model.Kieli;
 import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
-import fi.vm.sade.service.valintaperusteet.model.Arvovalikonvertteriparametri;
-import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
-import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
-import fi.vm.sade.service.valintaperusteet.model.ValintaperusteViite;
+import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.impl.generator.GenericHelper;
 
 /**
@@ -16,6 +14,7 @@ import fi.vm.sade.service.valintaperusteet.service.impl.generator.GenericHelper;
 public class LukionValintaperusteet {
     public static final String PAINOKERROIN_POSTFIX = "_painokerroin";
     public static final String AINE_PREFIX = "PK_";
+    public static final String KYMPPILUOKKA_SUFFIX = "_10";
 
     public static final String AIDINKIELI_JA_KIRJALLISUUS1 = "AI";
     public static final String AIDINKIELI_JA_KIRJALLISUUS2 = "AI2";
@@ -125,10 +124,16 @@ public class LukionValintaperusteet {
         for (String aine : LUKUAINEET) {
             Funktiokutsu arvo = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(AINE_PREFIX + aine,
                     false, Valintaperustelahde.HAETTAVA_ARVO));
+
+            Funktiokutsu arvo_kymppiluokka = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(AINE_PREFIX + aine + KYMPPILUOKKA_SUFFIX,
+                    false, Valintaperustelahde.HAETTAVA_ARVO));
+
+            Funktiokutsu max = GenericHelper.luoMaksimi(arvo, arvo_kymppiluokka);
+
             Funktiokutsu painokerroin = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(aine
                     + PAINOKERROIN_POSTFIX, false, Valintaperustelahde.HAKUKOHTEEN_ARVO), 1.0);
 
-            painotukset.add(new GenericHelper.Painotus(painokerroin, arvo));
+            painotukset.add(new GenericHelper.Painotus(painokerroin, max));
         }
 
         for (String aine : KIELET) {
@@ -136,12 +141,19 @@ public class LukionValintaperusteet {
                 String avain = "{{" + AINE_PREFIX + aine + "_OPPIAINE." + koodi + "}}";
                 ValintaperusteViite vp = GenericHelper.luoValintaperusteViite(avain, false,
                         Valintaperustelahde.HAETTAVA_ARVO);
+
                 Funktiokutsu arvo = GenericHelper.luoHaeLukuarvoEhdolla(GenericHelper.luoValintaperusteViite(
                         AINE_PREFIX + aine, false, Valintaperustelahde.HAETTAVA_ARVO), vp);
+
+                Funktiokutsu arvo_kymppiluokka = GenericHelper.luoHaeLukuarvoEhdolla(GenericHelper.luoValintaperusteViite(
+                        AINE_PREFIX + aine + KYMPPILUOKKA_SUFFIX, false, Valintaperustelahde.HAETTAVA_ARVO), vp);
+
+                Funktiokutsu max = GenericHelper.luoMaksimi(arvo, arvo_kymppiluokka);
+
                 Funktiokutsu painokerroin = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(aine
                         + "_" + koodi + PAINOKERROIN_POSTFIX, false, Valintaperustelahde.HAKUKOHTEEN_ARVO), 1.0);
 
-                painotukset.add(new GenericHelper.Painotus(painokerroin, arvo));
+                painotukset.add(new GenericHelper.Painotus(painokerroin, max));
             }
 
         }
@@ -149,10 +161,16 @@ public class LukionValintaperusteet {
         for (String aine : TAITO_JA_TAIDEAINEET) {
             Funktiokutsu arvo = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(AINE_PREFIX + aine,
                     false, Valintaperustelahde.HAETTAVA_ARVO));
+
+            Funktiokutsu arvo_kymppiluokka = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(AINE_PREFIX + aine + KYMPPILUOKKA_SUFFIX,
+                    false, Valintaperustelahde.HAETTAVA_ARVO));
+
+            Funktiokutsu max = GenericHelper.luoMaksimi(arvo, arvo_kymppiluokka);
+
             Funktiokutsu painokerroin = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(aine
                     + PAINOKERROIN_POSTFIX, false, Valintaperustelahde.HAKUKOHTEEN_ARVO));
 
-            painotukset.add(new GenericHelper.Painotus(painokerroin, arvo));
+            painotukset.add(new GenericHelper.Painotus(painokerroin, max));
         }
 
         Funktiokutsu painotuksetFunktio = GenericHelper.luoPainotettuKeskiarvo(painotukset
@@ -197,8 +215,19 @@ public class LukionValintaperusteet {
         List<Arvovalikonvertteriparametri> konvs = new ArrayList<Arvovalikonvertteriparametri>();
         konvs.add(GenericHelper.luoArvovalikonvertteriparametri(alaraja, ylaraja));
 
+        TekstiRyhma kuvaukset = new TekstiRyhma();
+        LokalisoituTeksti fi = new LokalisoituTeksti();
+        fi.setKieli(Kieli.FI);
+        fi.setTeksti("Ei ole osallistunut pääsykokeeseen");
+        kuvaukset.getTekstit().add(fi);
+
+        LokalisoituTeksti sv = new LokalisoituTeksti();
+        sv.setKieli(Kieli.SV);
+        sv.setTeksti("Har inte deltagit i inträdesprov");
+        kuvaukset.getTekstit().add(sv);
+
         Funktiokutsu funktiokutsu = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(paasykoeTunniste,
-                true, Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO, "Pääsykoe", true), konvs);
+                true, Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO, "Pääsykoe", true, kuvaukset), konvs);
 
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
                 GenericHelper.luoHylkaaArvovalilla(funktiokutsu, "Pääsykokeen alin hyväksyttävä pistemäärä ei ylity",
@@ -217,8 +246,19 @@ public class LukionValintaperusteet {
         List<Arvovalikonvertteriparametri> konvs = new ArrayList<Arvovalikonvertteriparametri>();
         konvs.add(GenericHelper.luoArvovalikonvertteriparametri(alaraja, ylaraja));
 
+        TekstiRyhma kuvaukset = new TekstiRyhma();
+        LokalisoituTeksti fi = new LokalisoituTeksti();
+        fi.setKieli(Kieli.FI);
+        fi.setTeksti("Ei ole osallistunut lisänäyttöön");
+        kuvaukset.getTekstit().add(fi);
+
+        LokalisoituTeksti sv = new LokalisoituTeksti();
+        sv.setKieli(Kieli.SV);
+        sv.setTeksti("Har inte deltagit i tilläggsprestation");
+        kuvaukset.getTekstit().add(sv);
+
         Funktiokutsu funktiokutsu = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(
-                lisanayttoTunniste, true, Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO, "Lisänäyttö", true), konvs);
+                lisanayttoTunniste, true, Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO, "Lisänäyttö", true, kuvaukset), konvs);
 
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
                 GenericHelper.luoHylkaaArvovalilla(funktiokutsu, "Lisänäytön alin hyväksyttävä pistemäärä ei ylity",

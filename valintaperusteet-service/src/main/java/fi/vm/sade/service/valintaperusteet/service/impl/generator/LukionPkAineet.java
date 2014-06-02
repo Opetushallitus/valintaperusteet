@@ -11,6 +11,7 @@ import java.util.Map;
  */
 public class LukionPkAineet extends Aineet {
     public static final String PK_etuliite = "PK_";
+    public static final String PK_kymmpiluokka = "_10";
     public static final String PK_kuvausjalkiliite_ilman_valinnaisia = ", PK päättötodistus";
 
     public static final String kotitalous = "KO";
@@ -47,11 +48,20 @@ public class LukionPkAineet extends Aineet {
         return PK_etuliite + ainetunniste;
     }
 
+    public static String kymppi(String ainetunniste) {
+        return PK_etuliite + ainetunniste + PK_kymmpiluokka;
+    }
+
     private Laskentakaava luoPKAine(String ainetunniste, String kuvaus) {
         Funktiokutsu aine = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(pakollinen(ainetunniste),
                 false, Valintaperustelahde.HAETTAVA_ARVO));
 
-        Laskentakaava laskentakaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(aine, kuvaus
+        Funktiokutsu aine_kymppiluokka = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(kymppi(ainetunniste),
+                false, Valintaperustelahde.HAETTAVA_ARVO));
+
+        Funktiokutsu max = GenericHelper.luoMaksimi(aine, aine_kymppiluokka);
+
+        Laskentakaava laskentakaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(max, kuvaus
                 + PK_kuvausjalkiliite_ilman_valinnaisia);
         return laskentakaava;
     }

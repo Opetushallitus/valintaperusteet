@@ -5,13 +5,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi;
+import fi.vm.sade.service.valintaperusteet.dto.model.Kieli;
 import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
-import fi.vm.sade.service.valintaperusteet.model.Arvovalikonvertteriparametri;
-import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti;
-import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
-import fi.vm.sade.service.valintaperusteet.model.FunktionArgumentti;
-import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
-import fi.vm.sade.service.valintaperusteet.model.ValintaperusteViite;
+import fi.vm.sade.service.valintaperusteet.model.*;
 
 /**
  * User: kwuoti Date: 5.3.2013 Time: 12.14
@@ -149,8 +145,20 @@ public class PkJaYoPohjaiset {
     }
 
     public static Laskentakaava luoValintakoekaava(String nimi, Valintaperustelahde lahde) {
+
+        TekstiRyhma kuvaukset = new TekstiRyhma();
+        LokalisoituTeksti fi = new LokalisoituTeksti();
+        fi.setKieli(Kieli.FI);
+        fi.setTeksti("Ei ole osallistunut pääsy- ja soveltuvuuskokeeseen");
+        kuvaukset.getTekstit().add(fi);
+
+        LokalisoituTeksti sv = new LokalisoituTeksti();
+        sv.setKieli(Kieli.SV);
+        sv.setTeksti("Har inte deltagit i inträdes- eller lämplighetsprov");
+        kuvaukset.getTekstit().add(sv);
+
         ValintaperusteViite valintaperuste = GenericHelper.luoValintaperusteViite(nimi, true,
-                lahde, "Pääsy- ja soveltuvuuskoe");
+                lahde, "Pääsy- ja soveltuvuuskoe", false, kuvaukset);
 
         List<Arvovalikonvertteriparametri> konvs = new ArrayList<Arvovalikonvertteriparametri>();
 
@@ -236,8 +244,20 @@ public class PkJaYoPohjaiset {
     }
 
     public static Funktiokutsu luoKielikoeSuoritettuFunktiokutsu() {
+
+        TekstiRyhma kuvaukset = new TekstiRyhma();
+        LokalisoituTeksti fi = new LokalisoituTeksti();
+        fi.setKieli(Kieli.FI);
+        fi.setTeksti("Ei ole osallistunut kielikokeeseen");
+        kuvaukset.getTekstit().add(fi);
+
+        LokalisoituTeksti sv = new LokalisoituTeksti();
+        sv.setKieli(Kieli.SV);
+        sv.setTeksti("Har inte deltagit i språkprov");
+        kuvaukset.getTekstit().add(sv);
+
         return GenericHelper.luoHaeTotuusarvo(GenericHelper.luoValintaperusteViite(kielikoetunniste, false,
-                Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO, "Kielikoe", true), false);
+                Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO, "Kielikoe", true, kuvaukset), false);
     }
 
     /**
@@ -268,7 +288,12 @@ public class PkJaYoPohjaiset {
                 Funktiokutsu arvosana = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(
                         PkAineet.pakollinen(ainetunniste), false, Valintaperustelahde.HAETTAVA_ARVO), 0.0);
 
-                Funktiokutsu arvosanaSuurempiKuin7 = GenericHelper.luoSuurempiTaiYhtasuuriKuin(arvosana, seitseman);
+                Funktiokutsu arvosana_kymppiluokka = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(
+                        PkAineet.kymppi(ainetunniste), false, Valintaperustelahde.HAETTAVA_ARVO), 0.0);
+
+                Funktiokutsu max = GenericHelper.luoMaksimi(arvosana, arvosana_kymppiluokka);
+
+                Funktiokutsu arvosanaSuurempiKuin7 = GenericHelper.luoSuurempiTaiYhtasuuriKuin(max, seitseman);
 
                 return GenericHelper.luoJa(oppiaineOnOpetuskieli, arvosanaSuurempiKuin7);
             }
@@ -315,7 +340,12 @@ public class PkJaYoPohjaiset {
                 Funktiokutsu arvosanaAi = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(
                         PkAineet.pakollinen(ainetunniste), false, Valintaperustelahde.HAETTAVA_ARVO), 0);
 
-                Funktiokutsu arvosanaSuurempiKuin7 = GenericHelper.luoSuurempiTaiYhtasuuriKuin(arvosanaAi, seitseman);
+                Funktiokutsu arvosanaAi_kymppiluokka = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(
+                        PkAineet.kymppi(ainetunniste), false, Valintaperustelahde.HAETTAVA_ARVO), 0);
+
+                Funktiokutsu max = GenericHelper.luoMaksimi(arvosanaAi, arvosanaAi_kymppiluokka);
+
+                Funktiokutsu arvosanaSuurempiKuin7 = GenericHelper.luoSuurempiTaiYhtasuuriKuin(max, seitseman);
 
                 return GenericHelper.luoJa(aidinkieliOnFiTaiSvToisenaKielena, arvosanaSuurempiKuin7);
             }

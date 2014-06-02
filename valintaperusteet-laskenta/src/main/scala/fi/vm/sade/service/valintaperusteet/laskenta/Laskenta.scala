@@ -8,6 +8,7 @@ import scala._
 import scala.Some
 import fi.vm.sade.service.valintaperusteet.model.{LokalisoituTeksti, TekstiRyhma}
 import scala.collection.JavaConversions
+import java.util
 
 /**
  *
@@ -24,11 +25,12 @@ object Laskenta {
   case class HakemuksenValintaperuste(tunniste: String, pakollinen: Boolean) extends Valintaperuste
 
   case class SyotettavaValintaperuste(tunniste: String, pakollinen: Boolean,
-                                      osallistuminenTunniste: String, kuvaus: String = "") extends Valintaperuste
+                                      osallistuminenTunniste: String, kuvaus: String = "", kuvaukset: TekstiRyhma) extends Valintaperuste
 
   case class HakukohteenValintaperuste(tunniste: String, pakollinen: Boolean, epasuoraViittaus: Boolean) extends Valintaperuste
 
-  case class HakukohteenSyotettavaValintaperuste(tunniste: String, pakollinen: Boolean, epasuoraViittaus: Boolean, osallistuminenTunniste: String) extends Valintaperuste
+  case class HakukohteenSyotettavaValintaperuste(tunniste: String, pakollinen: Boolean, epasuoraViittaus: Boolean,
+                                                 osallistuminenTunniste: String, kuvaus: String = "", kuvaukset: TekstiRyhma) extends Valintaperuste
 
   trait Konvertteri[S, T] {
     def konvertoi(arvo: S): (Option[T], Tila)
@@ -40,11 +42,16 @@ object Laskenta {
   }
 
   def tekstiryhmaToMap(ryhma: TekstiRyhma): java.util.Map[String,String] = {
-    val tekstit = JavaConversions.asScalaSet(ryhma.getTekstit)
-    val res = tekstit.foldLeft(Map.empty[String,String]){
-      (result: Map[String,String],teksti: LokalisoituTeksti) => result + (teksti.getKieli.name -> teksti.getTeksti)
+    if(ryhma != null && ryhma.getTekstit != null) {
+      val tekstit = JavaConversions.asScalaSet(ryhma.getTekstit)
+      val res = tekstit.foldLeft(Map.empty[String,String]){
+        (result: Map[String,String],teksti: LokalisoituTeksti) => result + (teksti.getKieli.name -> teksti.getTeksti)
+      }
+      JavaConversions.mapAsJavaMap(res)
+    } else {
+      val res = Map("FI" -> "Valintaperusteelle ei oltu määritelty hylkäysperustekuvauksia")
+      JavaConversions.mapAsJavaMap(res)
     }
-    JavaConversions.mapAsJavaMap(res)
   }
 
   def tekstiToMap(teksti: String): java.util.Map[String,String] = {

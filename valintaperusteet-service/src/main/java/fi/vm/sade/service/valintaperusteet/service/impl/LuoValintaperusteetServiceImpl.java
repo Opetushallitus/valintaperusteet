@@ -313,7 +313,6 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
     public void luo() throws IOException {
         long beginTime = System.currentTimeMillis();
 
-        luoAmmatillinenKoulutus();
         luoLukioKoulutus();
 
         long endTime = System.currentTimeMillis();
@@ -617,6 +616,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         long timeTaken = (endTime - beginTime) / 1000L / 60L;
 
         LOG.info("Valintaperusteet ammatilliseen koulutukseen generoitu. Aikaa generointiin kului: {} min", timeTaken);
+
     }
 
     public void luoLukioKoulutus() throws IOException {
@@ -1123,6 +1123,8 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         long timeTaken = (endTime - beginTime) / 1000L / 60L;
 
         LOG.info("Valintaperusteet lukiokoulutukseen generoitu. Aikaa generointiin kului: {} min", timeTaken);
+
+        luoAmmatillinenKoulutus();
     }
 
     private void lisaaHakukohdekoodit(ValintaryhmaDTO peruskouluVr, ValintaryhmaDTO lukioVr,
