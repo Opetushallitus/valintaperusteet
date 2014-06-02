@@ -50,7 +50,7 @@ public class FunktiokutsuDTO {
     private List<FunktioargumenttiDTO> funktioargumentit = new LinkedList<FunktioargumenttiDTO>();
 
     @ApiModelProperty(value = "Valintaperusteviitteet")
-    private Set<ValintaperusteViiteDTO> valintaperusteviitteet = new TreeSet<ValintaperusteViiteDTO>();
+    private List<ValintaperusteViiteDTO> valintaperusteviitteet = new ArrayList<ValintaperusteViiteDTO>();
 
     @ApiModelProperty(value = "Validointivirheet")
     private List<ValidointivirheDTO> validointivirheet = new ArrayList<ValidointivirheDTO>();
@@ -95,11 +95,11 @@ public class FunktiokutsuDTO {
         this.funktioargumentit = funktioargumentit;
     }
 
-    public Set<ValintaperusteViiteDTO> getValintaperusteviitteet() {
+    public List<ValintaperusteViiteDTO> getValintaperusteviitteet() {
         return valintaperusteviitteet;
     }
 
-    public void setValintaperusteviitteet(Set<ValintaperusteViiteDTO> valintaperusteviitteet) {
+    public void setValintaperusteviitteet(List<ValintaperusteViiteDTO> valintaperusteviitteet) {
         this.valintaperusteviitteet = valintaperusteviitteet;
     }
 
