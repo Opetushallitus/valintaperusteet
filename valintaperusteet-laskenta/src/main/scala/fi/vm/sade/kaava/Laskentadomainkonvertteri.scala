@@ -67,7 +67,9 @@ object Laskentadomainkonvertteri {
     try {
       BigDecimal(param.getArvo.replace(',','.'))
     } catch {
-      case e: Throwable => sys.error(s"Could not interpret parameter ${param.getAvain} value ${param.getArvo} as big decimal")
+      case e: Throwable =>
+        e.printStackTrace()
+        sys.error(s"Could not interpret parameter ${param.getAvain} value ${param.getArvo} as big decimal")
     }
   }
 
@@ -75,7 +77,9 @@ object Laskentadomainkonvertteri {
     try {
       param.getArvo.toInt
     } catch {
-      case e: Throwable => sys.error(s"Could not interpret parameter ${param.getAvain} value ${param.getArvo} as integer")
+      case e: Throwable =>
+        e.printStackTrace()
+        sys.error(s"Could not interpret parameter ${param.getAvain} value ${param.getArvo} as integer")
     }
   }
 
@@ -83,7 +87,9 @@ object Laskentadomainkonvertteri {
     try {
       param.getArvo.toBoolean
     } catch {
-      case e: Throwable => sys.error(s"Could not interpret parameter ${param.getAvain} value ${param.getArvo} as boolean")
+      case e: Throwable =>
+        e.printStackTrace()
+        sys.error(s"Could not interpret parameter ${param.getAvain} value ${param.getArvo} as boolean")
     }
   }
 
@@ -166,7 +172,7 @@ object Laskentadomainkonvertteri {
           Some(Lukuarvovalikonvertteri(konversioMap))
         } else None
 
-        val oletusarvo = funktiokutsu.getSyoteparametrit.find(_.getAvain == "oletusarvo")
+        val oletusarvo = funktiokutsu.getSyoteparametrit.find(_.getAvain == "oletusarvo").filter(!_.getArvo.isEmpty)
           .map(p => parametriToBigDecimal(p))
 
         HaeLukuarvo(konvertteri, oletusarvo, valintaperusteviitteet.head, oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
@@ -192,7 +198,8 @@ object Laskentadomainkonvertteri {
           Some(Lukuarvovalikonvertteri(konversioMap))
         } else None
 
-        val oletusarvo = funktiokutsu.getSyoteparametrit.find(_.getAvain == "oletusarvo")
+
+        val oletusarvo = funktiokutsu.getSyoteparametrit.find(_.getAvain == "oletusarvo").filter(!_.getArvo.isEmpty)
           .map(p => parametriToBigDecimal(p))
 
         HaeLukuarvoEhdolla(konvertteri, oletusarvo, valintaperusteviitteet(0), valintaperusteviitteet(1), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
@@ -201,7 +208,7 @@ object Laskentadomainkonvertteri {
         val konversioMap = funktiokutsu.getArvokonvertteriparametrit.map(konv =>
           ArvokonversioMerkkijonoilla[String, BigDecimal](konv.getArvo, BigDecimal(konv.getPaluuarvo), konv.getHylkaysperuste, konv.getKuvaukset)).toList
 
-        val oletusarvo = funktiokutsu.getSyoteparametrit.find(_.getAvain == "oletusarvo")
+        val oletusarvo = funktiokutsu.getSyoteparametrit.find(_.getAvain == "oletusarvo").filter(!_.getArvo.isEmpty)
           .map(p => parametriToBigDecimal(p))
 
         HaeMerkkijonoJaKonvertoiLukuarvoksi(
