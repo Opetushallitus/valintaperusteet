@@ -168,7 +168,7 @@ public class HakukohdeResourceImpl implements HakukohdeResource {
     @Produces(MediaType.APPLICATION_JSON)
     @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Hakee hakukohteen valintakokeet OID:n perusteella", response = ValintakoeDTO.class)
-    public List<ValintakoeDTO> valintakoesForHakukohde(String oid) {
+    public List<ValintakoeDTO> valintakoesForHakukohde(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
         return modelMapper.mapList(valintakoeService.findValintakoesByValinnanVaihes(valinnanVaiheService.findByHakukohde(oid)), ValintakoeDTO.class);
     }
 
