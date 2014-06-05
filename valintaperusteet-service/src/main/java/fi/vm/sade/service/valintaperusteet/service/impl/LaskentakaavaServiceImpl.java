@@ -648,11 +648,13 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     @Override
     @Transactional
     public Laskentakaava haeLaskettavaKaava(final Long id, final Laskentamoodi laskentamoodi) {
-        Laskentakaava laskentakaava = laskentakaavaCache.get(id);
-        if (laskentakaava == null) {
-            laskentakaava = haeKokoLaskentakaava(id, true);
-            laskentakaavaCache.addLaskentakaava(laskentakaava, id);
-        }
+//        Laskentakaava laskentakaava = laskentakaavaCache.get(id);
+//        if (laskentakaava == null) {
+//            laskentakaava = haeKokoLaskentakaava(id, true);
+//            laskentakaavaCache.addLaskentakaava(laskentakaava, id);
+//        }
+
+        Laskentakaava laskentakaava = haeKokoLaskentakaava(id, true);
 
         validoiFunktiokutsuMoodiaVasten(laskentakaava.getFunktiokutsu(), laskentamoodi);
         return laskentakaava;
