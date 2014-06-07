@@ -19,6 +19,9 @@ public class Valintaryhma extends BaseEntity {
     @Column(name = "nimi", nullable = false)
     private String nimi;
 
+    @Column(name = "kohdejoukko", nullable = true)
+    private String kohdejoukko;
+
     @JoinColumn(name = "parent_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Valintaryhma ylavalintaryhma;
@@ -159,5 +162,13 @@ public class Valintaryhma extends BaseEntity {
 
     public void setOrganisaatiot(Set<Organisaatio> organisaatiot) {
         this.organisaatiot = organisaatiot;
+    }
+
+    public String getKohdejoukko() {
+        return kohdejoukko;
+    }
+
+    public void setKohdejoukko(String kohdejoukko) {
+        this.kohdejoukko = kohdejoukko;
     }
 }
