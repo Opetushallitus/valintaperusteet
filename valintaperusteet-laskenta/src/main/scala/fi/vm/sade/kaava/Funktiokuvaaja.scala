@@ -195,13 +195,13 @@ object Funktiokuvaaja {
         Syoteparametrikuvaus(avain = "loppuvuosi", tyyppi = Syoteparametrityyppi.KOKONAISLUKU, pakollinen = false, kuvaus = "Päättyen (vuosi)"),
         Syoteparametrikuvaus(avain = "loppulukukausi", tyyppi = Syoteparametrityyppi.ARVOJOUKKO, pakollinen = false, arvojoukko = Arvojoukot.LUKUKAUDET, kuvaus = "Päättyen (lukukausi)"),
         Syoteparametrikuvaus(avain = "rooli", tyyppi = Syoteparametrityyppi.ARVOJOUKKO, pakollinen = false, arvojoukko = Arvojoukot.KOEROOLIT, kuvaus = "Rooli"),
-        Syoteparametrikuvaus(avain = "I", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = false, kuvaus = "Arvosana I"),
-        Syoteparametrikuvaus(avain = "A", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = false, kuvaus = "Arvosana A"),
-        Syoteparametrikuvaus(avain = "B", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = false, kuvaus = "Arvosana B"),
-        Syoteparametrikuvaus(avain = "C", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = false, kuvaus = "Arvosana C"),
-        Syoteparametrikuvaus(avain = "M", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = false, kuvaus = "Arvosana M"),
-        Syoteparametrikuvaus(avain = "E", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = false, kuvaus = "Arvosana E"),
-        Syoteparametrikuvaus(avain = "L", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = false, kuvaus = "Arvosana L")
+        Syoteparametrikuvaus(avain = "I", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = true, kuvaus = "Arvosana I"),
+        Syoteparametrikuvaus(avain = "A", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = true, kuvaus = "Arvosana A"),
+        Syoteparametrikuvaus(avain = "B", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = true, kuvaus = "Arvosana B"),
+        Syoteparametrikuvaus(avain = "C", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = true, kuvaus = "Arvosana C"),
+        Syoteparametrikuvaus(avain = "M", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = true, kuvaus = "Arvosana M"),
+        Syoteparametrikuvaus(avain = "E", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = true, kuvaus = "Arvosana E"),
+        Syoteparametrikuvaus(avain = "L", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = true, kuvaus = "Arvosana L")
       ),
       valintaperusteparametri = List(Valintaperusteparametrikuvaus("oppiaine", tyyppi = Syoteparametrityyppi.ARVOJOUKKO, arvojoukko = Arvojoukot.YO_OPPIAINEET, kuvaus = "Oppiaine"))
     ),
