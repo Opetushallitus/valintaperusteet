@@ -190,6 +190,7 @@ class LaskentaTest extends FunSuite {
     val luvut = List(Lukuarvo(4.0), Lukuarvo(6.0), HaeLukuarvo(None, None, HakemuksenValintaperuste("puuppa", false)))
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, KeskiarvoNParasta(3, luvut: _*))
     assert(BigDecimal(tulos.get) == BigDecimal(5.0))
+    //assertTulosTyhja(tulos)
   }
 
   test("NMinimi returns the nth lowest value") {
@@ -208,6 +209,7 @@ class LaskentaTest extends FunSuite {
     val luvut = List(HaeLukuarvo(None, None, HakemuksenValintaperuste("yksi", false)), HaeLukuarvo(None, None, HakemuksenValintaperuste("kaksi", false)), HaeLukuarvo(None, None, HakemuksenValintaperuste("kymmenen", false)))
     val (tulos, _) = Laskin.laske(hakukohde, hakemusMustache, NMaksimi(3, luvut: _*))
     assert(BigDecimal(tulos.get) == BigDecimal(1.0))
+    //assertTulosTyhja(tulos)
   }
 
   test("Mediaani returns the middle value of a sequence") {
@@ -1227,6 +1229,26 @@ class LaskentaTest extends FunSuite {
     syoteparametri2.setAvain("A")
     syoteparametri2.setArvo("5")
 
+    val syoteparametri7: Syoteparametri = new Syoteparametri
+    syoteparametri7.setAvain("B")
+    syoteparametri7.setArvo("5")
+
+    val syoteparametri8: Syoteparametri = new Syoteparametri
+    syoteparametri8.setAvain("C")
+    syoteparametri8.setArvo("5")
+
+    val syoteparametri9: Syoteparametri = new Syoteparametri
+    syoteparametri9.setAvain("I")
+    syoteparametri9.setArvo("0")
+
+    val syoteparametri10: Syoteparametri = new Syoteparametri
+    syoteparametri10.setAvain("E")
+    syoteparametri10.setArvo("5")
+
+    val syoteparametri11: Syoteparametri = new Syoteparametri
+    syoteparametri11.setAvain("L")
+    syoteparametri11.setArvo("5")
+
     val syoteparametri3: Syoteparametri = new Syoteparametri
     syoteparametri3.setAvain("alkuvuosi")
     syoteparametri3.setArvo("2010")
@@ -1249,6 +1271,11 @@ class LaskentaTest extends FunSuite {
     kutsu.getSyoteparametrit.add(syoteparametri4)
     kutsu.getSyoteparametrit.add(syoteparametri5)
     kutsu.getSyoteparametrit.add(syoteparametri6)
+    kutsu.getSyoteparametrit.add(syoteparametri7)
+    kutsu.getSyoteparametrit.add(syoteparametri8)
+    kutsu.getSyoteparametrit.add(syoteparametri9)
+    kutsu.getSyoteparametrit.add(syoteparametri10)
+    kutsu.getSyoteparametrit.add(syoteparametri11)
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(kutsu)
 

@@ -11,11 +11,22 @@ public abstract class AbstractValintaryhmaDTO {
     @ApiModelProperty(value = "Nimi", required = true)
     private String nimi;
 
+    @ApiModelProperty(value = "Haun kohdejoukko", required = false)
+    private String kohdejoukko;
+
     public String getNimi() {
         return nimi;
     }
 
     public void setNimi(String nimi) {
         this.nimi = nimi;
+    }
+
+    public String getKohdejoukko() {
+        return kohdejoukko;
+    }
+
+    public void setKohdejoukko(String kohdejoukko) {
+        this.kohdejoukko = kohdejoukko;
     }
 }
