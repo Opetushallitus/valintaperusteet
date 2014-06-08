@@ -70,7 +70,8 @@ object Arvojoukot {
     "RR"->"Osakoereaali",
     "PITKA_KIELI"->"Kieli, pitkä oppimäärä",
     "KESKIPITKA_KIELI"->"Kieli, keskipitkä oppimäärä",
-    "LYHYT_KIELI"->"Kieli, lyhyt oppimäärä"
+    "LYHYT_KIELI"->"Kieli, lyhyt oppimäärä",
+    "AIDINKIELI"->"Äidinkieli"
   )
 
   val LUKUKAUDET = Map(
