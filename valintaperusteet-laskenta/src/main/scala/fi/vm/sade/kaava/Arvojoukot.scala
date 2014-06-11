@@ -5,7 +5,7 @@ package fi.vm.sade.kaava
  */
 object Arvojoukot {
 
-  val YO_OPPIAINEET = Map(
+  val YO_OPPIAINEET = Array(
     "O"->"Äidinkielen koe, ruotsi",
     "O5"->"Ruotsi toisena kielenä",
     "A"->"Äidinkielen koe, suomi",
@@ -74,12 +74,12 @@ object Arvojoukot {
     "AIDINKIELI"->"Äidinkieli"
   )
 
-  val LUKUKAUDET = Map(
+  val LUKUKAUDET = Array(
     "1" -> "Syksy",
     "2" -> "Kevät"
   )
 
-  val OSAKOKEET = Map(
+  val OSAKOKEET = Array(
     "01" -> "Ev.lut. uskonto",
     "02" -> "Ortodoksiuskonto",
     "03" -> "Elämänkatsomustieto",
@@ -92,7 +92,7 @@ object Arvojoukot {
     "10" -> "Maantiede"
   )
 
-  val KOEROOLIT = Map(
+  val KOEROOLIT = Array(
     "11" -> "Äidinkieli",
     "12" -> "Äidinkieli, saame",
     "13" -> "Kypsyyskoe",

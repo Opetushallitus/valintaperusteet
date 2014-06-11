@@ -24,6 +24,8 @@ import java.math.{BigDecimal => JBigDecimal}
  */
 object JsonFormats {
   import JsonHelpers.enumFormat
+  import JsonHelpers.arrayMapReads
+  import JsonHelpers.arrayMapWrites
 
   // Enumit
   implicit def funktiotyyppiFormat = enumFormat(Funktiotyyppi)
@@ -194,6 +196,21 @@ object JsonHelpers {
     Format(enumReads(enum), enumWrites)
   }
 
+  implicit def arrayMapReads: Reads[Array[(String,String)]] =
+    new Reads[Array[(String,String)]] {
+      def reads(json: JsValue): JsResult[Array[(String,String)]] = json match {
+        case s : JsArray => JsSuccess(mapper.readValue(Json.stringify(s), classOf[Array[(String,String)]]))
+        case _ => JsError("Tyyppiä Array ei löytynyt")
+      }
+    }
+
+  implicit def arrayMapWrites: Writes[Array[(String,String)]] =
+    new Writes[Array[(String,String)]] {
+      def writes(map: Array[(String,String)]): JsValue = {
+        map.foldLeft(Json.arr())((s,a) => s.append(Json.obj(a._1 -> a._2)))
+      }
+    }
+
   implicit def mapReadsIntString: Reads[JMap[JInteger, String]] =
     new Reads[JMap[JInteger,String]] {
       def reads(json: JsValue): JsResult[JMap[JInteger,String]] = json match {
@@ -206,7 +223,7 @@ object JsonHelpers {
     new Writes[JMap[JInteger,String]] {
       def writes(map: JMap[JInteger,String]): JsValue = {
         //map.foldLeft(Json.obj())((s,a) => s ++ Json.obj(a._1.toString -> a._2))
-        val json = mapper.writerWithView(classOf[JsonViews.Basic]).writeValueAsString(map);
+        val json = mapper.writerWithView(classOf[JsonViews.Basic]).writeValueAsString(map)
         Json.parse(json)
       }
     }

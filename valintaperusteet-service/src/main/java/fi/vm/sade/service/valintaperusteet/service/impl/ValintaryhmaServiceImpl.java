@@ -96,6 +96,9 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
     public Valintaryhma update(String oid, ValintaryhmaCreateDTO incoming) {
         Valintaryhma managedObject = haeValintaryhma(oid);
         managedObject.setNimi(incoming.getNimi());
+        if(incoming.getKohdejoukko() != null) {
+            managedObject.setKohdejoukko(incoming.getKohdejoukko());
+        }
 
         managedObject.setOrganisaatiot(getOrganisaatios(incoming.getOrganisaatiot()));
         return managedObject;
