@@ -65,12 +65,12 @@ object Funktiokuvaaja {
   case class Konvertterikuvaus(pakollinen: Boolean,
                                konvertteriTyypit: Map[Konvertterinimi.Konvertterinimi, KonvertteriTyyppi])
 
-  case class Valintaperusteparametrikuvaus(nimi: String, tyyppi: Syoteparametrityyppi, arvojoukko: Map[String,String] = Map.empty[String,String],kuvaus: String = "")
+  case class Valintaperusteparametrikuvaus(nimi: String, tyyppi: Syoteparametrityyppi, arvojoukko: Array[(String,String)] = Array.empty[(String,String)], kuvaus: String = "")
 
   case class Syoteparametrikuvaus(avain: String,
                                   tyyppi: Syoteparametrityyppi,
                                   pakollinen: Boolean = true,
-                                  arvojoukko: Map[String,String] = Map.empty[String,String],
+                                  arvojoukko: Array[(String,String)] = Array.empty[(String,String)],
                                   kuvaus: String = "")
 
   case class Funktioargumenttikuvaus(nimi: String, tyyppi: Funktiotyyppi,
