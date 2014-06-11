@@ -24,7 +24,6 @@ import java.math.{BigDecimal => JBigDecimal}
  */
 object JsonFormats {
   import JsonHelpers.enumFormat
-  import JsonHelpers.arrayMapReads
   import JsonHelpers.arrayMapWrites
 
   // Enumit
@@ -207,7 +206,7 @@ object JsonHelpers {
   implicit def arrayMapWrites: Writes[Array[(String,String)]] =
     new Writes[Array[(String,String)]] {
       def writes(map: Array[(String,String)]): JsValue = {
-        map.foldLeft(Json.arr())((s,a) => s.append(Json.obj(a._1 -> a._2)))
+        map.foldLeft(Json.arr())((s,a) => s.append(Json.obj("avain" -> a._1, "arvo" -> a._2)))
       }
     }
 
