@@ -25,6 +25,7 @@ import java.math.{BigDecimal => JBigDecimal}
 object JsonFormats {
   import JsonHelpers.enumFormat
   import JsonHelpers.arrayMapWrites
+  import JsonHelpers.arrayMapReads
 
   // Enumit
   implicit def funktiotyyppiFormat = enumFormat(Funktiotyyppi)
