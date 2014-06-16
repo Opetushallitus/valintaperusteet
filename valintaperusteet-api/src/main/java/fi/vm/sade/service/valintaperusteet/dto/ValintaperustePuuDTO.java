@@ -27,6 +27,8 @@ public class ValintaperustePuuDTO {
 
     private ValintaperustePuuTyyppi tyyppi;
 
+    private String kohdejoukko;
+
     private Set<OrganisaatioDTO> organisaatiot = new HashSet<OrganisaatioDTO>();
 
     public String getHakuOid() {
@@ -107,5 +109,13 @@ public class ValintaperustePuuDTO {
 
     public void setOrganisaatiot(Set<OrganisaatioDTO> organisaatiot) {
         this.organisaatiot = organisaatiot;
+    }
+
+    public String getKohdejoukko() {
+        return kohdejoukko;
+    }
+
+    public void setKohdejoukko(String kohdejoukko) {
+        this.kohdejoukko = kohdejoukko;
     }
 }

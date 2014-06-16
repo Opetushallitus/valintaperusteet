@@ -37,7 +37,7 @@ public class PuuServiceImpl implements PuuService {
 
 
     @Override
-    public List<ValintaperustePuuDTO> search(String hakuOid, List<String> tila, String searchString, boolean hakukohteet) {
+    public List<ValintaperustePuuDTO> search(String hakuOid, List<String> tila, String searchString, boolean hakukohteet, String kohdejoukko) {
         //fetch whole tree in a single query, is at least now faster than individually querying
 
         List<Valintaryhma>  valintaryhmaList = valintaryhmaDAO.findAllFetchAlavalintaryhmat();
@@ -48,8 +48,15 @@ public class PuuServiceImpl implements PuuService {
         //parse parents
         List<Valintaryhma>  parents = new ArrayList<Valintaryhma>();
         for(Valintaryhma valintaryhma : valintaryhmaList) {
-            if(valintaryhma.getYlavalintaryhma() == null ) {
-                parents.add(valintaryhma);
+            if(kohdejoukko.isEmpty()) {
+                if(valintaryhma.getYlavalintaryhma() == null ) {
+                    parents.add(valintaryhma);
+                }
+            } else {
+                if(valintaryhma.getYlavalintaryhma() == null
+                        && (valintaryhma.getKohdejoukko() == null || valintaryhma.getKohdejoukko().isEmpty() || valintaryhma.getKohdejoukko().equals(kohdejoukko))) {
+                    parents.add(valintaryhma);
+                }
             }
         }
         for(Valintaryhma valintaryhma : parents) {
@@ -98,6 +105,7 @@ public class PuuServiceImpl implements PuuService {
         valintaperustePuuDTO.setNimi(valintaryhma.getNimi());
         valintaperustePuuDTO.setTyyppi(ValintaperustePuuTyyppi.VALINTARYHMA);
         valintaperustePuuDTO.setOid(valintaryhma.getOid());
+        valintaperustePuuDTO.setKohdejoukko(valintaryhma.getKohdejoukko());
 
         for (Organisaatio organisaatio : valintaryhma.getOrganisaatiot()) {
             OrganisaatioDTO orgDTO = new OrganisaatioDTO();
