@@ -51,7 +51,7 @@ public class PuuResourceImpl implements PuuResource {
     public List<ValintaperustePuuDTO> search(@ApiParam(value = "Hakulauseke") @QueryParam("q") String searchString,
             @ApiParam(value = "Haun OID") @QueryParam("hakuOid") String hakuOid,
             @ApiParam(value = "Tila") @QueryParam("tila") List<String> tila,
-            @ApiParam(value = "Hakukohteet") @QueryParam("hakukohteet") @DefaultValue("true") boolean hakukohteet) {
-        return puuService.search(hakuOid, tila, searchString, hakukohteet);
+            @ApiParam(value = "Hakukohteet") @QueryParam("hakukohteet") @DefaultValue("true") boolean hakukohteet, @QueryParam("kohdejoukko") @DefaultValue("") String kohdejoukko) {
+        return puuService.search(hakuOid, tila, searchString, hakukohteet, kohdejoukko);
     }
 }
