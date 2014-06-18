@@ -29,6 +29,11 @@ public interface HakukohdeResource {
     List<HakukohdeViiteDTO> query(@QueryParam("paataso") @DefaultValue("false") boolean paataso);
 
     @GET
+    @Path("haku/{hakuOid}")
+    @Produces(MediaType.APPLICATION_JSON)
+    List<HakukohdeViiteDTO> haunHakukohteet(@PathParam("hakuOid") String hakuOid);
+
+    @GET
     @Path("/{oid}")
     @Produces(MediaType.APPLICATION_JSON)
     HakukohdeViiteDTO queryFull(@PathParam("oid") String oid);

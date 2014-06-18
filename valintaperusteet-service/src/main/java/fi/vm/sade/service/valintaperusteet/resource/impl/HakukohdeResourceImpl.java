@@ -102,6 +102,15 @@ public class HakukohdeResourceImpl implements HakukohdeResource {
     }
 
     @GET
+    @Path("haku/{hakuOid}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @PreAuthorize(READ_UPDATE_CRUD)
+    @ApiOperation(value = "Hakee haun hakukohteet", response = HakukohdeViiteDTO.class)
+    public List<HakukohdeViiteDTO> haunHakukohteet(@ApiParam(value = "hakuOid", required = true) @PathParam("hakuOid") String hakuOid) {
+        return modelMapper.mapList(hakukohdeService.haunHakukohteet(hakuOid), HakukohdeViiteDTO.class);
+    }
+
+    @GET
     @Path("/{oid}")
     @Produces(MediaType.APPLICATION_JSON)
     @PreAuthorize(READ_UPDATE_CRUD)

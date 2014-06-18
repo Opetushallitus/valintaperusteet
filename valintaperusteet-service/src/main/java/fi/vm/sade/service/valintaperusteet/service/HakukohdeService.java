@@ -19,6 +19,8 @@ public interface HakukohdeService {
 
     List<HakukohdeViite> findAll();
 
+    List<HakukohdeViite> haunHakukohteet(String hakuOid);
+
     HakukohdeViite readByOid(String oid);
 
     List<HakukohdeViite> findRoot();

@@ -239,7 +239,7 @@ public class LuoValintaperusteetServiceTest {
         // Asettuu välille 8.0 - 8.5 ===> 5 pistettä
         final BigDecimal odotettuTulos = new BigDecimal("5.0");
 
-        Laskentakaava kaava = laajennaAlakaavat(PkPohjaiset.luoPainotettavatKeskiarvotLaskentakaava(pkAineet));
+        Laskentakaava kaava = laajennaAlakaavat(PkPohjaiset.luoPainotettavatKeskiarvotLaskentakaava(PkPohjaiset.luoPainotettavatKeskiarvotLaskentakaavaIlmanKonvertteria(pkAineet)));
 
         Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(HAKUKOHDE1, hakemus, hakemukset(hakemus),
                 Laskentadomainkonvertteri.muodostaLukuarvolasku(kaava.getFunktiokutsu()));
@@ -570,7 +570,7 @@ public class LuoValintaperusteetServiceTest {
         final BigDecimal odotettuTulos = new BigDecimal("33.0");
 
         Laskentakaava kaava = laajennaAlakaavat(PkPohjaiset.luoToisenAsteenPeruskoulupohjainenPeruskaava(
-                PkPohjaiset.luoPainotettavatKeskiarvotLaskentakaava(pkAineet),
+                PkPohjaiset.luoPainotettavatKeskiarvotLaskentakaava(PkPohjaiset.luoPainotettavatKeskiarvotLaskentakaavaIlmanKonvertteria(pkAineet)),
                 PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(
                         PkPohjaiset.luoPKPohjaisenKoulutuksenKaikkienAineidenKeskiarvo(pkAineet), "nimi",
                         "koulumenestys", "Yleinen koulumenestys", "Allmän skolframgång"),
@@ -755,7 +755,7 @@ public class LuoValintaperusteetServiceTest {
         final BigDecimal odotettuTulos = new BigDecimal("31.0");
 
         Laskentakaava peruskaava = PkPohjaiset.luoToisenAsteenPeruskoulupohjainenPeruskaava(
-                PkPohjaiset.luoPainotettavatKeskiarvotLaskentakaava(pkAineet),
+                PkPohjaiset.luoPainotettavatKeskiarvotLaskentakaava(PkPohjaiset.luoPainotettavatKeskiarvotLaskentakaavaIlmanKonvertteria(pkAineet)),
                 PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(
                         PkPohjaiset.luoPKPohjaisenKoulutuksenKaikkienAineidenKeskiarvo(pkAineet), "nimi",
                         "koulumenestys", "Yleinen koulumenestys", "Allmän skolframgång"),
@@ -799,7 +799,7 @@ public class LuoValintaperusteetServiceTest {
         ));
 
         Laskentakaava peruskaava = PkPohjaiset.luoToisenAsteenPeruskoulupohjainenPeruskaava(
-                PkPohjaiset.luoPainotettavatKeskiarvotLaskentakaava(pkAineet),
+                PkPohjaiset.luoPainotettavatKeskiarvotLaskentakaava(PkPohjaiset.luoPainotettavatKeskiarvotLaskentakaavaIlmanKonvertteria(pkAineet)),
                 PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(
                         PkPohjaiset.luoPKPohjaisenKoulutuksenKaikkienAineidenKeskiarvo(pkAineet), "nimi",
                         "koulumenestys", "Yleinen koulumenestys", "Allmän skolframgång"),
@@ -1012,7 +1012,7 @@ public class LuoValintaperusteetServiceTest {
         ));
 
         Laskentakaava peruskaava = PkPohjaiset.luoToisenAsteenPeruskoulupohjainenPeruskaava(
-                PkPohjaiset.luoPainotettavatKeskiarvotLaskentakaava(pkAineet),
+                PkPohjaiset.luoPainotettavatKeskiarvotLaskentakaava(PkPohjaiset.luoPainotettavatKeskiarvotLaskentakaavaIlmanKonvertteria(pkAineet)),
                 PkJaYoPohjaiset.luoYleinenKoulumenestysLaskentakaava(
                         PkPohjaiset.luoPKPohjaisenKoulutuksenKaikkienAineidenKeskiarvo(pkAineet), "nimi",
                         "koulumenestys", "Yleinen koulumenestys", "Allmän skolframgång"),

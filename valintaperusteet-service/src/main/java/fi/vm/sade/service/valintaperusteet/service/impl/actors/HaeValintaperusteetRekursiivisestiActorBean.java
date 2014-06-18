@@ -89,8 +89,7 @@ public class HaeValintaperusteetRekursiivisestiActorBean extends UntypedActor {
         if (avain == null) {
             return mustache;
         } else {
-            String arvo = hakukohteenValintaperusteet.get(avain);
-            return arvo;
+            return hakukohteenValintaperusteet.get(avain);
         }
 
     }

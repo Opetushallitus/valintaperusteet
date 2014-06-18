@@ -137,7 +137,7 @@ public class PkPohjaiset {
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(jos, "Ilman koulutuspaikkaa -pisteytys, 2 aste, pk");
     }
 
-    public static Laskentakaava luoPainotettavatKeskiarvotLaskentakaava(PkAineet pkAineet) {
+    public static Laskentakaava luoPainotettavatKeskiarvotLaskentakaavaIlmanKonvertteria(PkAineet pkAineet) {
 
         Laskentakaava[] args = new Laskentakaava[] { pkAineet.getLaskentakaava(Aineet.kuvataide),
                 pkAineet.getLaskentakaava(Aineet.musiikki), pkAineet.getLaskentakaava(PkAineet.kasityo),
@@ -145,11 +145,25 @@ public class PkPohjaiset {
 
         Funktiokutsu kolmeParasta = GenericHelper.nParastaKeskiarvo(3, args);
 
+        kolmeParasta.setTallennaTulos(true);
+        kolmeParasta.setTulosTunniste("painotettavat_ka");
+        kolmeParasta.setTulosTekstiFi("Painotettavien arvosanojen keskiarvo");
+        kolmeParasta.setTulosTekstiSv("Medeltalet av betonade vitsord");
+
+
+
+        Laskentakaava laskentakaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(kolmeParasta,
+                "Painotettavien arvosanojen keskiarvo");
+        return laskentakaava;
+    }
+
+    public static Laskentakaava luoPainotettavatKeskiarvotLaskentakaava(Laskentakaava keskiarvot) {
+
         Funktiokutsu konvertteri = new Funktiokutsu();
         konvertteri.setFunktionimi(Funktionimi.KONVERTOILUKUARVO);
 
         Funktioargumentti funk = new Funktioargumentti();
-        funk.setFunktiokutsuChild(kolmeParasta);
+        funk.setFunktiokutsuChild(keskiarvot.getFunktiokutsu());
         funk.setIndeksi(1);
 
         konvertteri.getFunktioargumentit().add(funk);

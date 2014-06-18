@@ -76,6 +76,7 @@ public class LukionValintaperusteet {
     public static final String RUOTSI = "SV";
     public static final String VIITTOMAKIELI = "VK";
     public static final String KIINA = "ZH";
+    public static final String MUUKIELI = "XX";
 
     public static final String[] LUKUAINEET = { AIDINKIELI_JA_KIRJALLISUUS1, AIDINKIELI_JA_KIRJALLISUUS2, USKONTO,
             HISTORIA, YHTEISKUNTAOPPI, MATEMATIIKKA, FYSIIKKA, KEMIA, BIOLOGIA, TERVEYSTIETO, MAANTIETO };
@@ -84,7 +85,7 @@ public class LukionValintaperusteet {
             B21KIELI, B22KIELI, B23KIELI, B31KIELI, B32KIELI, B33KIELI };
 
     public static final String[] KIELIKOODIT = { SAKSA, KREIKKA, ENGLANTI, ESPANJA, EESTI, SUOMI, RANSKA, ITALIA,
-            JAPANI, LATINA, LIETTUA, LATVIA, PORTUGALI, VENAJA, SAAME, RUOTSI, VIITTOMAKIELI, KIINA };
+            JAPANI, LATINA, LIETTUA, LATVIA, PORTUGALI, VENAJA, SAAME, RUOTSI, VIITTOMAKIELI, KIINA, MUUKIELI };
 
     public static final String[] TAITO_JA_TAIDEAINEET = { LIIKUNTA, KASITYO, KOTITALOUS, MUSIIKKI, KUVATAIDE };
 
