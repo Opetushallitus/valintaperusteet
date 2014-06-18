@@ -135,7 +135,7 @@ public class LuoValintaperusteetActorBean extends UntypedActor {
 
             ValintakoeDTO valintakoe = new ValintakoeDTO();
             valintakoe.setAktiivinen(false);
-            valintakoe.setKuvaus(valintakoeNimi);
+            valintakoe.setKuvaus("Pääsy- ja soveltuvuuskoe");
             valintakoe.setTunniste(valintakoetunniste);
             valintakoe.setNimi(valintakoeNimi);
             valintakoe.setLahetetaankoKoekutsut(true);
@@ -171,6 +171,7 @@ public class LuoValintaperusteetActorBean extends UntypedActor {
             jono.setNimi("Varsinaisen valinnanvaiheen valintatapajono");
             jono.setTasapistesaanto(fi.vm.sade.service.valintaperusteet.dto.model.Tasapistesaanto.ARVONTA);
             jono.setSiirretaanSijoitteluun(true);
+            jono.setPoissaOlevaTaytto(true);
 
             valintatapajonoService.lisaaValintatapajonoValinnanVaiheelle(valinnanVaihe.getOid(), jono, null);
 

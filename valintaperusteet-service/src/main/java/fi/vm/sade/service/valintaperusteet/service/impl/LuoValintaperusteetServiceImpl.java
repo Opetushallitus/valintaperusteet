@@ -471,8 +471,12 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
         // pisteytysmalli
+        Laskentakaava pk_painotettavatKeskiarvotLaskentakaavaIlmanKonvertteria = asetaValintaryhmaJaTallennaKantaan(
+                PkPohjaiset.luoPainotettavatKeskiarvotLaskentakaavaIlmanKonvertteria(pkAineet), peruskouluVr.getOid());
+
+        // pisteytysmalli
         Laskentakaava pk_painotettavatKeskiarvotLaskentakaava = asetaValintaryhmaJaTallennaKantaan(
-                PkPohjaiset.luoPainotettavatKeskiarvotLaskentakaava(pkAineet), peruskouluVr.getOid());
+                PkPohjaiset.luoPainotettavatKeskiarvotLaskentakaava(pk_painotettavatKeskiarvotLaskentakaavaIlmanKonvertteria), peruskouluVr.getOid());
 
         transactionManager.commit(tx);
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
@@ -589,10 +593,16 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         transactionManager.commit(tx);
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
+          // Vanhat tasasijakriteerit
+//        Laskentakaava[] pkTasasijakriteerit = new Laskentakaava[] { hakutoivejarjestystasapistekaava,
+//                pk_yleinenkoulumenestyspisteytysmalli, pk_painotettavatKeskiarvotLaskentakaava };
+//        Laskentakaava[] lkTasasijakriteerit = new Laskentakaava[] { hakutoivejarjestystasapistekaava,
+//                lk_yleinenkoulumenestyspisteytysmalli };
+
         Laskentakaava[] pkTasasijakriteerit = new Laskentakaava[] { hakutoivejarjestystasapistekaava,
-                pk_yleinenkoulumenestyspisteytysmalli, pk_painotettavatKeskiarvotLaskentakaava };
+                pkPohjainenKaikkienAineidenKeskiarvo, pk_painotettavatKeskiarvotLaskentakaavaIlmanKonvertteria };
         Laskentakaava[] lkTasasijakriteerit = new Laskentakaava[] { hakutoivejarjestystasapistekaava,
-                lk_yleinenkoulumenestyspisteytysmalli };
+                lk_paattotodistuksenkeskiarvo };
 
         Laskentakaava pkYhdistettyPeruskaavaJaKielikoekaava = asetaValintaryhmaJaTallennaKantaan(
                 PkJaYoPohjaiset.luoYhdistettyPeruskaavaJaKielikoekaava(toisenAsteenPeruskoulupohjainenPeruskaava,
@@ -778,6 +788,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         jono.setNimi("Varsinaisen valinnanvaiheen valintatapajono");
         jono.setTasapistesaanto(fi.vm.sade.service.valintaperusteet.dto.model.Tasapistesaanto.ARVONTA);
         jono.setSiirretaanSijoitteluun(true);
+        jono.setPoissaOlevaTaytto(true);
 
         valintatapajonoService.lisaaValintatapajonoValinnanVaiheelle(valinnanVaihe.getOid(), jono, null);
 
@@ -796,11 +807,13 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         painotettuKeskiarvoVr = modelMapper.map(
                 valintaryhmaService.insert(painotettuKeskiarvoVr, lukioKoulutusVr.getOid()), ValintaryhmaDTO.class);
 
-        transactionManager.commit(tx);
-        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
-
-        Laskentakaava laskentakaavaPainotettuKeskiarvo = asetaValintaryhmaJaTallennaKantaan(
-                LukionValintaperusteet.painotettuLukuaineidenKeskiarvo(), painotettuKeskiarvoVr.getOid());
+//        transactionManager.commit(tx);
+//        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+//
+//
+//
+//        Laskentakaava laskentakaavaPainotettuKeskiarvo = asetaValintaryhmaJaTallennaKantaan(
+//                painotettuKeskiarvo, painotettuKeskiarvoVr.getOid());
 
         transactionManager.commit(tx);
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
@@ -810,9 +823,9 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                 .get(0);
         JarjestyskriteeriDTO jk = new JarjestyskriteeriDTO();
         jk.setAktiivinen(true);
-        jk.setMetatiedot(laskentakaavaPainotettuKeskiarvo.getNimi());
+        jk.setMetatiedot(painotettuKeskiarvo.getNimi());
         jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(valintatapajono.getOid(), jk, null,
-                laskentakaavaPainotettuKeskiarvo.getId());
+                painotettuKeskiarvo.getId());
 
         transactionManager.commit(tx);
         tx = transactionManager.getTransaction(new DefaultTransactionDefinition());

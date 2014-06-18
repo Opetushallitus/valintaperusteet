@@ -583,7 +583,7 @@ public class PkJaYoPohjaiset {
                 oppivelvollisuudenSuorittaminenKeskeytynyt);
 
         Funktiokutsu hylkaa = GenericHelper.luoHylkaa(tai,
-                "Hylätty harkinnanvaraisessa valinnassa", "ej godkänd i antagning enligt prövning");
+                "Hylätty harkinnanvaraisessa valinnassa", "Ej godkänd i antagning enligt prövning");
 
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(hylkaa, "Ulkomailla suoritettu koulutus tai "
                 + "oppivelvollisuuden suorittaminen keskeytynyt");
