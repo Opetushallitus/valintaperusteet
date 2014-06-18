@@ -32,6 +32,18 @@ public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Lo
     }
 
     @Override
+    public List<HakukohdeViite> haunHakukohteet(String hakuOid) {
+        QHakukohdeViite hakukohdeViite = QHakukohdeViite.hakukohdeViite;
+        QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
+
+        return from(hakukohdeViite)
+                .leftJoin(hakukohdeViite.valintaryhma, valintaryhma).fetch()
+                .leftJoin(hakukohdeViite.hakukohdekoodi).fetch()
+                .where(hakukohdeViite.hakuoid.eq(hakuOid))
+                .list(hakukohdeViite);
+    }
+
+    @Override
     public List<HakukohdeViite> findAll() {
         QHakukohdeViite hakukohdeViite = QHakukohdeViite.hakukohdeViite;
         QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
