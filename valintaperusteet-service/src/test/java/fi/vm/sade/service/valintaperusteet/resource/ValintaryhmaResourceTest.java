@@ -10,6 +10,7 @@ import java.util.Set;
 
 import javax.ws.rs.core.Response;
 
+import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import junit.framework.Assert;
 
 import org.codehaus.jackson.map.ObjectMapper;
@@ -41,7 +42,7 @@ import fi.vm.sade.service.valintaperusteet.resource.impl.ValintaryhmaResourceImp
  * User: tommiha Date: 1/21/13 Time: 4:05 PM
  */
 @ContextConfiguration(locations = "classpath:test-context.xml")
-@TestExecutionListeners(listeners = { JTACleanInsertTestExecutionListener.class,
+@TestExecutionListeners(listeners = { ValinnatJTACleanInsertTestExecutionListener.class,
         DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
         TransactionalTestExecutionListener.class })
 @RunWith(SpringJUnit4ClassRunner.class)
