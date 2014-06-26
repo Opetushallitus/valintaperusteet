@@ -1,23 +1,17 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
-
-import fi.vm.sade.service.valintaperusteet.dto.model.ValidointivirheDTO;
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi;
+import fi.vm.sade.service.valintaperusteet.dto.model.ValidointivirheDTO;
+
+import java.util.*;
 
 /**
  * User: wuoti Date: 2.12.2013 Time: 9.15
  */
-@ApiModel(value = "FunktiokutsuDTO", description = "Funktiokutsu")
-public class FunktiokutsuDTO {
+@ApiModel(value = "ValintaperusteetFunktiokutsuDTO", description = "Funktiokutsu")
+public class ValintaperusteetFunktiokutsuDTO {
 
     @ApiModelProperty(value = "Funktion nimi", required = true)
     private Funktionimi funktionimi;
@@ -35,7 +29,7 @@ public class FunktiokutsuDTO {
     private String tulosTekstiEn;
 
     @ApiModelProperty(value = "Tallennetaanko tulos", required = true)
-    private Boolean tallennaTulos = false;
+    private Boolean tallennaTulos;
 
     @ApiModelProperty(value = "Arvokonvertteriparametrit")
     private Set<ArvokonvertteriparametriDTO> arvokonvertteriparametrit = new HashSet<ArvokonvertteriparametriDTO>();
@@ -47,13 +41,12 @@ public class FunktiokutsuDTO {
     private Set<SyoteparametriDTO> syoteparametrit = new HashSet<SyoteparametriDTO>();
 
     @ApiModelProperty(value = "Funktioargumentit")
-    private List<FunktioargumenttiDTO> funktioargumentit = new LinkedList<FunktioargumenttiDTO>();
+    private Set<ValintaperusteetFunktioargumenttiDTO> funktioargumentit = new HashSet<ValintaperusteetFunktioargumenttiDTO>();
 
     @ApiModelProperty(value = "Valintaperusteviitteet")
-    private List<ValintaperusteViiteDTO> valintaperusteviitteet = new ArrayList<ValintaperusteViiteDTO>();
+    private Set<ValintaperusteViiteDTO> valintaperusteviitteet = new HashSet<ValintaperusteViiteDTO>();
 
-    @ApiModelProperty(value = "Validointivirheet")
-    private List<ValidointivirheDTO> validointivirheet = new ArrayList<ValidointivirheDTO>();
+    private Long id;
 
     public Funktionimi getFunktionimi() {
         return funktionimi;
@@ -87,29 +80,6 @@ public class FunktiokutsuDTO {
         this.syoteparametrit = syoteparametrit;
     }
 
-    public List<FunktioargumenttiDTO> getFunktioargumentit() {
-        return funktioargumentit;
-    }
-
-    public void setFunktioargumentit(List<FunktioargumenttiDTO> funktioargumentit) {
-        this.funktioargumentit = funktioargumentit;
-    }
-
-    public List<ValintaperusteViiteDTO> getValintaperusteviitteet() {
-        return valintaperusteviitteet;
-    }
-
-    public void setValintaperusteviitteet(List<ValintaperusteViiteDTO> valintaperusteviitteet) {
-        this.valintaperusteviitteet = valintaperusteviitteet;
-    }
-
-    public List<ValidointivirheDTO> getValidointivirheet() {
-        return validointivirheet;
-    }
-
-    public void setValidointivirheet(List<ValidointivirheDTO> validointivirheet) {
-        this.validointivirheet = validointivirheet;
-    }
 
     public String getTulosTunniste() {
         return tulosTunniste;
@@ -149,5 +119,29 @@ public class FunktiokutsuDTO {
 
     public void setTallennaTulos(Boolean tallennaTulos) {
         this.tallennaTulos = tallennaTulos;
+    }
+
+    public Set<ValintaperusteetFunktioargumenttiDTO> getFunktioargumentit() {
+        return funktioargumentit;
+    }
+
+    public void setFunktioargumentit(Set<ValintaperusteetFunktioargumenttiDTO> funktioargumentit) {
+        this.funktioargumentit = funktioargumentit;
+    }
+
+    public Set<ValintaperusteViiteDTO> getValintaperusteviitteet() {
+        return valintaperusteviitteet;
+    }
+
+    public void setValintaperusteviitteet(Set<ValintaperusteViiteDTO> valintaperusteviitteet) {
+        this.valintaperusteviitteet = valintaperusteviitteet;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

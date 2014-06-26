@@ -3,7 +3,6 @@ package fi.vm.sade.service.valintaperusteet.dto.mapping;
 
 import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.model.*;
-import fi.vm.sade.service.valintaperusteet.dto.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.model.Abstraktivalidointivirhe;
 import fi.vm.sade.service.valintaperusteet.service.validointi.virhe.*;
@@ -11,7 +10,6 @@ import fi.vm.sade.service.valintaperusteet.service.validointi.virhe.Virhetyyppi;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
-import org.modelmapper.convention.MatchingStrategies;
 import org.modelmapper.spi.MappingContext;
 
 import java.util.*;
@@ -122,6 +120,42 @@ public class ValintaperusteetModelMapper extends ModelMapper {
             }
         };
 
+        final Converter<Set<Funktioargumentti>, Set<ValintaperusteetFunktioargumenttiDTO>> funktioargumenttiToValintaperusteetDtoConverter = new Converter<Set<Funktioargumentti>, Set<ValintaperusteetFunktioargumenttiDTO>>() {
+            public Set<ValintaperusteetFunktioargumenttiDTO> convert(MappingContext<Set<Funktioargumentti>, Set<ValintaperusteetFunktioargumenttiDTO>> context) {
+                Set<ValintaperusteetFunktioargumenttiDTO> result = new HashSet<ValintaperusteetFunktioargumenttiDTO>();
+                for(Funktioargumentti arg : context.getSource()) {
+                    ValintaperusteetFunktioargumenttiDTO dto = new ValintaperusteetFunktioargumenttiDTO();
+                    if(arg.getFunktiokutsuChild() != null) {
+                        dto.setFunktiokutsu(map(arg.getFunktiokutsuChild(), ValintaperusteetFunktiokutsuDTO.class));
+                    }
+                    else if(arg.getLaskentakaavaChild() != null) {
+                        dto.setFunktiokutsu(map(arg.getLaskentakaavaChild().getFunktiokutsu(), ValintaperusteetFunktiokutsuDTO.class));
+                    }
+
+                    dto.setIndeksi(arg.getIndeksi());
+                    dto.setId(arg.getId());
+                    result.add(dto);
+                }
+
+                return result;
+            }
+        };
+
+        final Converter<Set<ValintaperusteetFunktioargumenttiDTO>, Set<Funktioargumentti>> valintaperusteetDtoFunktioargumenttiToConverter = new Converter<Set<ValintaperusteetFunktioargumenttiDTO>, Set<Funktioargumentti>>() {
+            public Set<Funktioargumentti> convert(MappingContext<Set<ValintaperusteetFunktioargumenttiDTO>, Set<Funktioargumentti>> context) {
+                Set<Funktioargumentti> result = new HashSet<Funktioargumentti>();
+                for(ValintaperusteetFunktioargumenttiDTO dto : context.getSource()) {
+                    Funktioargumentti arg = new Funktioargumentti();
+                    arg.setFunktiokutsuChild(map(dto.getFunktiokutsu(), Funktiokutsu.class));
+                    arg.setIndeksi(dto.getIndeksi());
+                    arg.setId(dto.getId());
+                    result.add(arg);
+                }
+
+                return result;
+            }
+        };
+
         // Perus DTO mäppäykset
         this.addMappings(new PropertyMap<Hakijaryhma, HakijaryhmaDTO>() {
             @Override
@@ -148,6 +182,18 @@ public class ValintaperusteetModelMapper extends ModelMapper {
             }
         });
 
+        this.addMappings(new PropertyMap<Jarjestyskriteeri, ValintaperusteetJarjestyskriteeriDTO>() {
+            @Override
+            protected void configure() {
+                map().setNimi(source.getMetatiedot());
+            }
+        });
+        this.addMappings(new PropertyMap<ValintaperusteetJarjestyskriteeriDTO, Jarjestyskriteeri>() {
+            @Override
+            protected void configure() {
+                map().setMetatiedot(source.getNimi());
+            }
+        });
 
         this.addMappings(new PropertyMap<Laskentakaava, FunktioargumentinLapsiDTO>() {
             @Override
@@ -196,6 +242,28 @@ public class ValintaperusteetModelMapper extends ModelMapper {
                 using(virheListConverter).map(source.getValidointivirheet()).setValidointivirheet(null);
 
                 using(dtoToValintaperusteViiteConverter).map(source.getValintaperusteviitteet()).setValintaperusteviitteet(null);
+
+
+            }
+        });
+
+        this.addMappings(new PropertyMap<Funktiokutsu, ValintaperusteetFunktiokutsuDTO>() {
+            @Override
+            protected void configure() {
+
+
+                using(funktioargumenttiToValintaperusteetDtoConverter).map(source.getFunktioargumentit()).setFunktioargumentit(null);
+
+
+            }
+        });
+
+        this.addMappings(new PropertyMap<ValintaperusteetFunktiokutsuDTO, Funktiokutsu>() {
+            @Override
+            protected void configure() {
+
+
+                using(valintaperusteetDtoFunktioargumenttiToConverter).map(source.getFunktioargumentit()).setFunktioargumentit(null);
 
 
             }

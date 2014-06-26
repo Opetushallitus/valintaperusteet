@@ -5,7 +5,6 @@ import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
 public abstract class HakijaryhmaUtil {
     public static Hakijaryhma teeKopioMasterista(Hakijaryhma master) {
         Hakijaryhma kopio = new Hakijaryhma();
-        //kopio.setValinnanVaiheTyyppi(master.getValinnanVaiheTyyppi());
         kopio.setKiintio(master.getKiintio());
         kopio.setLaskentakaava(master.getLaskentakaava());
 
