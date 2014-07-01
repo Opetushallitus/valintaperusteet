@@ -8,7 +8,8 @@ public abstract class HakijaryhmaUtil {
         //kopio.setValinnanVaiheTyyppi(master.getValinnanVaiheTyyppi());
         kopio.setKiintio(master.getKiintio());
         kopio.setLaskentakaava(master.getLaskentakaava());
-
+        kopio.setKaytaKaikki(master.isKaytaKaikki());
+        kopio.setTarkkaKiintio(master.isKaytaKaikki());
         kopio.setKuvaus(master.getKuvaus());
         kopio.setNimi(master.getNimi());
         kopio.setMaster(master);

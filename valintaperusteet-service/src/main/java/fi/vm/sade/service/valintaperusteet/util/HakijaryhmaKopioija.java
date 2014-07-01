@@ -20,7 +20,8 @@ public class HakijaryhmaKopioija implements Kopioija<Hakijaryhma> {
     public void kopioiTiedot(Hakijaryhma from, Hakijaryhma to) {
 
         to.setKiintio(from.getKiintio());
-
+        to.setKaytaKaikki(from.isKaytaKaikki());
+        to.setTarkkaKiintio(from.isTarkkaKiintio());
         to.setLaskentakaava(from.getLaskentakaava());
 
         if (StringUtils.isNotBlank(from.getKuvaus())) {
@@ -43,5 +44,8 @@ public class HakijaryhmaKopioija implements Kopioija<Hakijaryhma> {
         kopio.setKuvaus(paivitettyMaster.getKuvaus());
         kopio.setNimi(paivitettyMaster.getNimi());
         kopio.setLaskentakaava(paivitettyMaster.getLaskentakaava());
+        kopio.setTarkkaKiintio(paivitettyMaster.isTarkkaKiintio());
+        kopio.setKaytaKaikki(paivitettyMaster.isKaytaKaikki());
+
     }
 }
