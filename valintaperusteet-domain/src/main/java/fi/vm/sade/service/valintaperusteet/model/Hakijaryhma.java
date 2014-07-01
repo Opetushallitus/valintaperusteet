@@ -25,6 +25,12 @@ public class Hakijaryhma extends BaseEntity implements LinkitettavaJaKopioitava<
     @Column(nullable = false)
     private int kiintio;
 
+    @Column
+    private boolean kaytaKaikki;
+
+    @Column
+    private boolean tarkkaKiintio;
+
     @OneToMany(mappedBy = "hakijaryhma", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Set<HakijaryhmaValintatapajono> jonot = new HashSet<HakijaryhmaValintatapajono>();
 
@@ -85,6 +91,14 @@ public class Hakijaryhma extends BaseEntity implements LinkitettavaJaKopioitava<
     public void setKiintio(int kiintio) {
         this.kiintio = kiintio;
     }
+
+    public boolean isKaytaKaikki() { return kaytaKaikki; }
+
+    public void setKaytaKaikki(boolean kaytaKaikki) { this.kaytaKaikki = kaytaKaikki; }
+
+    public boolean isTarkkaKiintio() { return tarkkaKiintio; }
+
+    public void setTarkkaKiintio(boolean tarkkaKiintio) { this.tarkkaKiintio = tarkkaKiintio; }
 
     public Set<HakijaryhmaValintatapajono> getJonot() {
         return jonot;
