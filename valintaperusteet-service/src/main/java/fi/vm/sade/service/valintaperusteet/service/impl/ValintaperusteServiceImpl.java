@@ -6,16 +6,19 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.REA
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.jws.WebParam;
+import javax.jws.WebService;
 
+import fi.vm.sade.service.valintaperusteet.service.impl.conversion.FunktiokutsuToFunktiokutsuTyyppi;
+import fi.vm.sade.service.valintaperusteet.service.impl.conversion.JonoToValintatapajonoTyyppi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
-import fi.vm.sade.generic.service.conversion.SadeConversionService;
 import fi.vm.sade.service.valintaperusteet.GenericFault;
 import fi.vm.sade.service.valintaperusteet.ValintaperusteService;
 import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
@@ -69,11 +72,11 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
 	@Autowired
 	private ValintatapajonoDAO valintatapajonoDAO;
 
-	@Autowired
-	private SadeConversionService conversionService;
+    @Autowired
+    private JonoToValintatapajonoTyyppi jonoToValintatapajonoTyyppi;
 
-	// @Autowired
-	// private PaasykoeTunnisteetService tunnisteService;
+    @Autowired
+    private FunktiokutsuToFunktiokutsuTyyppi funktiokutsuToFunktiokutsuTyyppi;
 
 	@Autowired
 	private ValinnanVaiheService valinnanVaiheService;
@@ -101,7 +104,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
 		List<Valintatapajono> jonot = valintatapajonoDAO
 				.haeValintatapajonotSijoittelulle(hakukohdeOid);
 
-		return conversionService.convertAll(jonot, ValintatapajonoTyyppi.class);
+		return jonot.stream().map(jonoToValintatapajonoTyyppi::convert).collect(Collectors.toList());
 	}
 
 	@Override
@@ -286,17 +289,15 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
 
 				FunktiokutsuTyyppi converted = null;
 				if (koe.ainaPakollinen() || koe.getKutsutaankoKaikki()) {
-					converted = conversionService.convert(
+					converted = funktiokutsuToFunktiokutsuTyyppi.convert(
 							ValintaperusteServiceUtil
-									.getAinaPakollinenFunktiokutsu(),
-							FunktiokutsuTyyppi.class);
+									.getAinaPakollinenFunktiokutsu());
 				} else {
 					Laskentakaava laskentakaava = laskentakaavaService
 							.haeLaskettavaKaava(koe.getLaskentakaava().getId(),
 									Laskentamoodi.VALINTAKOELASKENTA);
-					converted = conversionService.convert(
-							laskentakaava.getFunktiokutsu(),
-							FunktiokutsuTyyppi.class);
+					converted = funktiokutsuToFunktiokutsuTyyppi.convert(
+							laskentakaava.getFunktiokutsu());
 				}
 				tyyppi.setFunktiokutsu(converted);
 
@@ -371,8 +372,8 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
 						+ jarjestyskriteeri.getLaskentakaava().getId() + ":"
 						+ (System.currentTimeMillis() - start));
 			}
-			FunktiokutsuTyyppi convert = conversionService.convert(
-					laskentakaava.getFunktiokutsu(), FunktiokutsuTyyppi.class);
+			FunktiokutsuTyyppi convert = funktiokutsuToFunktiokutsuTyyppi.convert(
+					laskentakaava.getFunktiokutsu());
 
 			jarjestyskriteeriTyyppi.setFunktiokutsu(convert);
 			jarjestyskriteeriTyyppi.setNimi(jarjestyskriteeri.getMetatiedot());
