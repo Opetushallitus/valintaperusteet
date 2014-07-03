@@ -209,6 +209,8 @@ public class HakijaryhmaServiceTest {
         HakijaryhmaCreateDTO hakijaryhma = new HakijaryhmaCreateDTO();
         hakijaryhma.setKiintio(20);
         hakijaryhma.setKuvaus("");
+        hakijaryhma.setKaytaKaikki(true);
+        hakijaryhma.setTarkkaKiintio(true);
         hakijaryhma.setLaskentakaavaId(11L);
         hakijaryhma.setNimi("nimi");
 
@@ -222,6 +224,8 @@ public class HakijaryhmaServiceTest {
 
         hakijaryhma = new HakijaryhmaCreateDTO();
         hakijaryhma.setKiintio(20);
+        hakijaryhma.setKaytaKaikki(true);
+        hakijaryhma.setTarkkaKiintio(true);
         hakijaryhma.setKuvaus("");
         hakijaryhma.setLaskentakaavaId(11L);
         hakijaryhma.setNimi("nimi");
@@ -237,6 +241,8 @@ public class HakijaryhmaServiceTest {
         hakijaryhma = new HakijaryhmaCreateDTO();
         hakijaryhma.setKiintio(20);
         hakijaryhma.setKuvaus("");
+        hakijaryhma.setKaytaKaikki(true);
+        hakijaryhma.setTarkkaKiintio(true);
         hakijaryhma.setLaskentakaavaId(11L);
         hakijaryhma.setNimi("nimi");
 
