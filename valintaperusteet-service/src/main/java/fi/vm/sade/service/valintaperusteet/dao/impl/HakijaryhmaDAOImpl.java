@@ -118,4 +118,22 @@ public class HakijaryhmaDAOImpl extends AbstractJpaDAOImpl<Hakijaryhma, Long> im
 
         return lastValinnanVaihe;
     }
+
+    @Override
+    public Hakijaryhma haeValintatapajononViimeinenHakijaryhma(String valintatapajonoOid) {
+        QValintatapajono valintatapajono = QValintatapajono.valintatapajono;
+        QHakijaryhma hakijaryhma = QHakijaryhma.hakijaryhma;
+
+        Hakijaryhma lastHakijaryhma = from(valintatapajono)
+                .leftJoin(valintatapajono.hakijaryhmat, hakijaryhma)
+                .where(hakijaryhma.id.notIn(
+                        subQuery().from(hakijaryhma)
+                                .where(hakijaryhma.edellinen.isNotNull())
+                                .list(hakijaryhma.edellinen.id)
+                )
+                        .and(valintatapajono.oid.eq(valintatapajonoOid)))
+                .singleResult(hakijaryhma);
+
+        return lastHakijaryhma;
+    }
 }

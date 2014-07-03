@@ -198,7 +198,8 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
         Hakijaryhma hakijaryhma = modelMapper.map(dto, Hakijaryhma.class);
         hakijaryhma.setOid(oidService.haeHakijaryhmaOid());
         hakijaryhma.setValintaryhma(valintaryhma);
-
+        hakijaryhma.setKaytaKaikki(dto.isKaytaKaikki());
+        hakijaryhma.setTarkkaKiintio(dto.isTarkkaKiintio());
         hakijaryhma.setLaskentakaava(laskentakaavaService.haeMallinnettuKaava(hakijaryhma.getLaskentakaavaId()));
 
         hakijaryhma.setEdellinen(edellinenHakijaryhma);
@@ -272,11 +273,10 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
         Hakijaryhma hakijaryhma = modelMapper.map(dto, Hakijaryhma.class);
         HakukohdeViite hakukohde = hakukohdeService.readByOid(hakukohdeOid);
         Hakijaryhma edellinenHakijaryhma = hakijaryhmaDAO.haeHakukohteenViimeinenHakijaryhma(hakukohdeOid);
-
-
         hakijaryhma.setOid(oidService.haeHakijaryhmaOid());
         hakijaryhma.setHakukohdeViite(hakukohde);
-
+        hakijaryhma.setKaytaKaikki(dto.isKaytaKaikki());
+        hakijaryhma.setTarkkaKiintio(dto.isTarkkaKiintio());
         hakijaryhma.setLaskentakaava(laskentakaavaService.haeMallinnettuKaava(dto.getLaskentakaavaId()));
 
         hakijaryhma.setEdellinen(edellinenHakijaryhma);

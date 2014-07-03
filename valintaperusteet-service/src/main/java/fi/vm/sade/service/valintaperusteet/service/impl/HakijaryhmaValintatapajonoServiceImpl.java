@@ -2,9 +2,12 @@ package fi.vm.sade.service.valintaperusteet.service.impl;
 
 import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaValintatapajonoDAO;
+import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaValintatapajonoUpdateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
+import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
 import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
+import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaaEiVoiPoistaaException;
@@ -76,6 +79,26 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
         return hakijaryhmaValintatapajonoDAO.findByHakijaryhma(hakijaryhmaOid);
     }
 
+    @Override
+    public Hakijaryhma lisaaHakijaryhmaValintatapajonolle(String valintatapajonoOid, HakijaryhmaCreateDTO dto) {
+        Hakijaryhma hakijaryhma = modelMapper.map(dto, Hakijaryhma.class);
+        Valintatapajono valintatapajono = valintapajonoService.readByOid(valintatapajonoOid);
+        Hakijaryhma edellinenHakijaryhma = hakijaryhmaDAO.haeValintatapajononViimeinenHakijaryhma(valintatapajonoOid);
+
+        hakijaryhma.setOid(oidService.haeHakijaryhmaOid());
+        hakijaryhma.setOid(oidService.haeHakijaryhmaOid());
+        hakijaryhma.setValintatapajono(valintatapajono);
+        hakijaryhma.setKaytaKaikki(dto.isKaytaKaikki());
+        hakijaryhma.setTarkkaKiintio(dto.isTarkkaKiintio());
+        hakijaryhma.setLaskentakaava(laskentakaavaService.haeMallinnettuKaava(dto.getLaskentakaavaId()));
+        hakijaryhma.setEdellinen(edellinenHakijaryhma);
+        Hakijaryhma lisatty = hakijaryhmaDAO.insert(hakijaryhma);
+
+        LinkitettavaJaKopioitavaUtil.asetaSeuraava(edellinenHakijaryhma, lisatty);
+
+        return lisatty;
+    }
+
 
     @Override
     public void deleteByOid(String oid, boolean skipInheritedCheck) {
@@ -89,7 +112,6 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
 
         delete(hakijaryhmaValintatapajono);
     }
-
 
     // CRUD
     @Override

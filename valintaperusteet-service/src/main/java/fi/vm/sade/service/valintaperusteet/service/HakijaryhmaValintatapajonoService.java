@@ -1,6 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
+import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaValintatapajonoUpdateDTO;
+import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
 import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
 
 import java.util.List;
@@ -19,6 +21,8 @@ public interface HakijaryhmaValintatapajonoService {
 
     // CRUD
     HakijaryhmaValintatapajono update(String oid, HakijaryhmaValintatapajonoUpdateDTO dto);
+
+    Hakijaryhma lisaaHakijaryhmaValintatapajonolle(String valintatapajonoOid, HakijaryhmaCreateDTO dto);
 
     void delete(HakijaryhmaValintatapajono entity);
 }

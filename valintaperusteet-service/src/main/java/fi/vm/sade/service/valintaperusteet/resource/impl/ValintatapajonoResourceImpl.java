@@ -20,6 +20,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import org.codehaus.jettison.json.JSONException;
 import org.slf4j.Logger;
@@ -32,11 +33,6 @@ import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 
-import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaValintatapajonoDTO;
-import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriDTO;
-import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriInsertDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.resource.ValintatapajonoResource;
 import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaService;
 import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaValintatapajonoService;
@@ -120,6 +116,26 @@ public class ValintatapajonoResourceImpl implements ValintatapajonoResource {
         return modelMapper.mapList(hakijaryhmaValintatapajonoService.findHakijaryhmaByJono(valintatapajonoOid),
                 HakijaryhmaValintatapajonoDTO.class);
     }
+
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{valintatapajonoOid}/hakijaryhma")
+    @ApiOperation(value = "Luo valintatapajonolle uuden hakijaryhmän")
+    public Response insertHakijaryhma(
+            @ApiParam(value = "Valintatapajonon OID, jolle hakijaryhmä lisätään", required = true) @PathParam("valintatapajonoOid") String valintatapajonoOid,
+            @ApiParam(value = "Lisättävä hakijaryhmä", required = true) HakijaryhmaCreateDTO hakijaryhma)  {
+            try {
+                System.out.println("insert valintatapajono hakijaryhmätouhut");
+                HakijaryhmaDTO lisattava = modelMapper.map(hakijaryhmaValintatapajonoService.lisaaHakijaryhmaValintatapajonolle(valintatapajonoOid, hakijaryhma), HakijaryhmaDTO.class);
+                return Response.status(Response.Status.CREATED).entity(lisattava).build();
+            } catch (Exception e) {
+                LOGGER.error("Error creating hakijaryhma for valintatapajono.", e);
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+
+    }
+
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
