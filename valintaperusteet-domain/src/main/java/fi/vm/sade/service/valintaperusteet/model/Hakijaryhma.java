@@ -42,7 +42,7 @@ public class Hakijaryhma extends BaseEntity implements LinkitettavaJaKopioitava<
     @ManyToOne(fetch = FetchType.LAZY)
     private HakukohdeViite hakukohdeViite;
 
-    @JoinColumn(name = "valintapajono_id")
+    @JoinColumn(name = "valintatapajono_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Valintatapajono valintatapajono;
 
