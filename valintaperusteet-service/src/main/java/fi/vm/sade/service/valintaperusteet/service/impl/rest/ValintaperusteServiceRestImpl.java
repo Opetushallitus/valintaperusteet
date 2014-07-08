@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * User: kwuoti Date: 22.1.2013 Time: 15.00
@@ -138,14 +140,17 @@ public class ValintaperusteServiceRestImpl implements ValintaperusteService {
                         continue;
                     }
 
-                    for (ValinnanVaihe vaihe : valinnanVaiheList) {
-                        if (!vaihe.getAktiivinen()) {
-                            LOG.info("Jätetään käsittelemättä ei-aktiivinen valinnanvaihe");
-                            valinnanVaiheList.remove(vaihe);
-                        }
-                    }
+//                    for (ValinnanVaihe vaihe : valinnanVaiheList) {
+//                        if (!vaihe.getAktiivinen()) {
+//                            LOG.info("Jätetään käsittelemättä ei-aktiivinen valinnanvaihe");
+//                            valinnanVaiheList.remove(vaihe);
+//                        }
+//                    }
 
-                    int todellinenJarjestysluku = valinnanVaiheList
+
+                    List<ValinnanVaihe> vaiheet = valinnanVaiheList.stream().filter(ValinnanVaihe::getAktiivinen).collect(Collectors.toList());
+
+                    int todellinenJarjestysluku = vaiheet
                             .indexOf(kasiteltava);
 
                     ValintaperusteetDTO valinnanVaihe = convertValintaperusteet(
@@ -155,15 +160,18 @@ public class ValintaperusteServiceRestImpl implements ValintaperusteService {
                     }
 
                 } else {
-                    for (ValinnanVaihe vaihe : valinnanVaiheList) {
-                        if (!vaihe.getAktiivinen()) {
-                            valinnanVaiheList.remove(vaihe);
-                        }
-                    }
-                    for (int i = 0; i < valinnanVaiheList.size(); i++) {
-                        if (valinnanVaiheList.get(i).getAktiivinen()) {
+//                    for (ValinnanVaihe vaihe : valinnanVaiheList) {
+//                        if (!vaihe.getAktiivinen()) {
+//                            valinnanVaiheList.remove(vaihe);
+//                        }
+//                    }
+
+                    List<ValinnanVaihe> vaiheet = valinnanVaiheList.stream().filter(ValinnanVaihe::getAktiivinen).collect(Collectors.toList());
+
+                    for (int i = 0; i < vaiheet.size(); i++) {
+                        if (vaiheet.get(i).getAktiivinen()) {
                             ValintaperusteetDTO valinnanVaihe = convertValintaperusteet(
-                                    valinnanVaiheList.get(i), hakukohde, i);
+                                    vaiheet.get(i), hakukohde, i);
                             if (valinnanVaihe != null) {
                                 list.add(valinnanVaihe);
                             }
@@ -223,13 +231,22 @@ public class ValintaperusteServiceRestImpl implements ValintaperusteService {
         vv.setNimi(valinnanVaihe.getNimi());
         valintaperusteetDTO.setValinnanVaihe(vv);
 
-        for (HakukohteenValintaperuste vp : hakukohde
-                .getHakukohteenValintaperusteet().values()) {
-            HakukohteenValintaperusteDTO vpDTO = new HakukohteenValintaperusteDTO();
-            vpDTO.setTunniste(vp.getTunniste());
-            vpDTO.setArvo(vp.getArvo());
-            valintaperusteetDTO.getHakukohteenValintaperuste().add(vpDTO);
-        }
+        valintaperusteetDTO.getHakukohteenValintaperuste().addAll(
+            hakukohde.getHakukohteenValintaperusteet().values().parallelStream().map(vp -> {
+                HakukohteenValintaperusteDTO vpDTO = new HakukohteenValintaperusteDTO();
+                vpDTO.setTunniste(vp.getTunniste());
+                vpDTO.setArvo(vp.getArvo());
+                return vpDTO;
+            }).collect(Collectors.toList())
+        );
+
+//        for (HakukohteenValintaperuste vp : hakukohde
+//                .getHakukohteenValintaperusteet().values()) {
+//            HakukohteenValintaperusteDTO vpDTO = new HakukohteenValintaperusteDTO();
+//            vpDTO.setTunniste(vp.getTunniste());
+//            vpDTO.setArvo(vp.getArvo());
+//            valintaperusteetDTO.getHakukohteenValintaperuste().add(vpDTO);
+//        }
 
         return valintaperusteetDTO;
     }
@@ -340,8 +357,7 @@ public class ValintaperusteServiceRestImpl implements ValintaperusteService {
         // LOG.error("Hakukohteen tuominen epäonnistui.", e);
         // }
 
-        // TODO ei vissiin toimi :)
-        hakukohdeImportService.tuoHakukohde(modelMapper.map(hakukohde, HakukohdeImportTyyppi.class));
+        hakukohdeImportService.tuoHakukohdeRest(hakukohde);
     }
 }
 

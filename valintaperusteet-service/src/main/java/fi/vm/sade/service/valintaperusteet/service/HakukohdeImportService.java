@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
+import fi.vm.sade.service.valintaperusteet.dto.HakukohdeImportDTO;
 import fi.vm.sade.service.valintaperusteet.schema.HakukohdeImportTyyppi;
 
 /**
@@ -9,4 +10,6 @@ import fi.vm.sade.service.valintaperusteet.schema.HakukohdeImportTyyppi;
  */
 public interface HakukohdeImportService {
     void tuoHakukohde(HakukohdeImportTyyppi hakukohde);
+
+    void tuoHakukohdeRest(HakukohdeImportDTO hakukohde);
 }

@@ -65,6 +65,16 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
     }
 
     @GET
+    @Path("/cache")
+    @Produces(MediaType.TEXT_PLAIN)
+    @PreAuthorize(READ_UPDATE_CRUD)
+    @ApiOperation(value = "Tyhjentää laskentakaavat välimuistista")
+    public String tyhjennaCache() {
+        laskentakaavaService.tyhjennaCache();
+        return "cache tyhjennetty";
+    }
+
+    @GET
     @Path("/funktiokuvaus/{nimi}")
     @ApiOperation(value = "Palauttaa parametrina annetun funktion kuvauksen")
     @Produces(MediaType.APPLICATION_JSON)

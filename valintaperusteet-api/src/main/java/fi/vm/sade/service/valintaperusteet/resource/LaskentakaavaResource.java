@@ -32,6 +32,11 @@ public interface LaskentakaavaResource {
     String funktiokuvaukset();
 
     @GET
+    @Path("/cache")
+    @Produces(MediaType.TEXT_PLAIN)
+    String tyhjennaCache();
+
+    @GET
     @Path("/funktiokuvaus/{nimi}")
     @Produces(MediaType.APPLICATION_JSON)
     String funktiokuvaus(@PathParam("nimi") String nimi);

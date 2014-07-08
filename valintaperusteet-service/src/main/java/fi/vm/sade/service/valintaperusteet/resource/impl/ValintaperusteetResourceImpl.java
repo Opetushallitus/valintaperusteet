@@ -19,6 +19,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD;
@@ -60,8 +61,8 @@ public class ValintaperusteetResourceImpl implements ValintaperusteetResource {
         if(valinnanVaiheJarjestysluku != null) {
             hakuparametrit.setValinnanVaiheJarjestysluku(valinnanVaiheJarjestysluku);
         }
-        List<HakuparametritDTO> list = new ArrayList<HakuparametritDTO>();
-        list.add(hakuparametrit);
+        List<HakuparametritDTO> list = Arrays.asList(hakuparametrit);
+
         return valintaperusteService.haeValintaperusteet(list);
     }
 

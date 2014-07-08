@@ -90,9 +90,6 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     @Autowired
     private ApplicationContext applicationContext;
 
-    @Autowired
-    private ActorSystem actorSystem;
-
     @Transactional(readOnly = true)
     public Funktiokutsu haeFunktiokutsuRekursiivisesti(final Long id, final boolean laajennaAlakaavat,
             final Set<Long> laskentakaavaIds) throws FunktiokutsuMuodostaaSilmukanException {
@@ -439,6 +436,11 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     }
 
     @Override
+    public void tyhjennaCache() {
+        laskentakaavaCache.clear();
+    }
+
+    @Override
     public Laskentakaava insert(LaskentakaavaCreateDTO laskentakaava, String hakukohdeOid, String valintaryhmaOid) {
         return insert(modelMapper.map(laskentakaava, Laskentakaava.class), hakukohdeOid, valintaryhmaOid);
     }
@@ -648,13 +650,11 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     @Override
     @Transactional
     public Laskentakaava haeLaskettavaKaava(final Long id, final Laskentamoodi laskentamoodi) {
-//        Laskentakaava laskentakaava = laskentakaavaCache.get(id);
-//        if (laskentakaava == null) {
-//            laskentakaava = haeKokoLaskentakaava(id, true);
-//            laskentakaavaCache.addLaskentakaava(laskentakaava, id);
-//        }
-
-        Laskentakaava laskentakaava = haeKokoLaskentakaava(id, true);
+        Laskentakaava laskentakaava = laskentakaavaCache.get(id);
+        if (laskentakaava == null) {
+            laskentakaava = haeKokoLaskentakaava(id, true);
+            laskentakaavaCache.addLaskentakaava(laskentakaava, id);
+        }
 
         validoiFunktiokutsuMoodiaVasten(laskentakaava.getFunktiokutsu(), laskentamoodi);
         return laskentakaava;

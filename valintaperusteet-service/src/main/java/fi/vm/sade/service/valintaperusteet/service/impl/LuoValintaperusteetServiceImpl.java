@@ -1155,7 +1155,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
             SpringExtProvider.get(actorSystem).initialize(applicationContext);
 
             ActorRef master = actorSystem.actorOf(
-                    SpringExtProvider.get(actorSystem).props("LuoValintaperusteetActorBean").withRouter(new RoundRobinRouter(3)), "AmmatillinenRouter");
+                    SpringExtProvider.get(actorSystem).props("LuoValintaperusteetActorBean").withRouter(new RoundRobinRouter(10)), "AmmatillinenRouter");
 
             while ((line = reader.readLine()) != null) {
                 String[] splitted = line.split(CSV_DELIMITER);
