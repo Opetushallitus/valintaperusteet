@@ -50,4 +50,7 @@ public class DummyOidServiceImpl implements OidService {
     public String haeHakijaryhmaOid() {
         return generoiOid();
     }
+
+    @Override
+    public String haeValintatapajonoHakijaryhmaOid() { return generoiOid(); }
 }

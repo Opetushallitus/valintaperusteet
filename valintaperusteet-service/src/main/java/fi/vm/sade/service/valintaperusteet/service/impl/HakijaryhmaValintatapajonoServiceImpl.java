@@ -3,6 +3,7 @@ package fi.vm.sade.service.valintaperusteet.service.impl;
 import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaValintatapajonoDAO;
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaValintatapajonoUpdateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
@@ -81,11 +82,11 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
 
     @Override
     public Hakijaryhma lisaaHakijaryhmaValintatapajonolle(String valintatapajonoOid, HakijaryhmaCreateDTO dto) {
+
         Hakijaryhma hakijaryhma = modelMapper.map(dto, Hakijaryhma.class);
         Valintatapajono valintatapajono = valintapajonoService.readByOid(valintatapajonoOid);
         Hakijaryhma edellinenHakijaryhma = hakijaryhmaDAO.haeValintatapajononViimeinenHakijaryhma(valintatapajonoOid);
 
-        hakijaryhma.setOid(oidService.haeHakijaryhmaOid());
         hakijaryhma.setOid(oidService.haeHakijaryhmaOid());
         hakijaryhma.setValintatapajono(valintatapajono);
         hakijaryhma.setKaytaKaikki(dto.isKaytaKaikki());
@@ -95,6 +96,14 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
         Hakijaryhma lisatty = hakijaryhmaDAO.insert(hakijaryhma);
 
         LinkitettavaJaKopioitavaUtil.asetaSeuraava(edellinenHakijaryhma, lisatty);
+
+        HakijaryhmaValintatapajono jono = new HakijaryhmaValintatapajono();
+        jono.setOid(oidService.haeValintatapajonoHakijaryhmaOid());
+        jono.setHakijaryhma(hakijaryhma);
+        jono.setValintatapajono(valintatapajono);
+        jono.setAktiivinen(true);
+        jono.setEdellinen(hakijaryhmaValintatapajonoDAO.readByOid(edellinenHakijaryhma.getOid()));
+        hakijaryhmaValintatapajonoDAO.insert(jono);
 
         return lisatty;
     }

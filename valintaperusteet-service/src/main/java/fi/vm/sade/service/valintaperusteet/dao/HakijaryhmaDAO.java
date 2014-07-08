@@ -24,5 +24,5 @@ public interface HakijaryhmaDAO extends JpaDAO<Hakijaryhma, Long> {
 
     Hakijaryhma haeHakukohteenViimeinenHakijaryhma(String hakukohdeOid);
 
-    Hakijaryhma haeValintatapajononViimeinenHakijaryhma(String hakukohdeOid);
+    Hakijaryhma haeValintatapajononViimeinenHakijaryhma(String valintatapajonoOid);
 }
