@@ -13,8 +13,4 @@
     <import resource="classpath:META-INF/cxf/cxf-extension-jaxws.xml" />
     <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
 
-    <bean id="valintaperusteServiceImpl" class="fi.vm.sade.service.valintaperusteet.service.impl.ValintaperusteServiceImpl" />
-
-    <jaxws:endpoint id="valintaperusteService" address="/ws" implementor="#valintaperusteServiceImpl" />
-
 </beans>

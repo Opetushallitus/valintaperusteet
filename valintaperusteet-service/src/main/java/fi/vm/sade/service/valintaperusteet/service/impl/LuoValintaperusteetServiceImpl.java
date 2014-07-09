@@ -474,6 +474,9 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         Laskentakaava pk_painotettavatKeskiarvotLaskentakaavaIlmanKonvertteria = asetaValintaryhmaJaTallennaKantaan(
                 PkPohjaiset.luoPainotettavatKeskiarvotLaskentakaavaIlmanKonvertteria(pkAineet), peruskouluVr.getOid());
 
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
         // pisteytysmalli
         Laskentakaava pk_painotettavatKeskiarvotLaskentakaava = asetaValintaryhmaJaTallennaKantaan(
                 PkPohjaiset.luoPainotettavatKeskiarvotLaskentakaava(pk_painotettavatKeskiarvotLaskentakaavaIlmanKonvertteria), peruskouluVr.getOid());
