@@ -25,4 +25,6 @@ public interface HakijaryhmaValintatapajonoService {
     Hakijaryhma lisaaHakijaryhmaValintatapajonolle(String valintatapajonoOid, HakijaryhmaCreateDTO dto);
 
     void delete(HakijaryhmaValintatapajono entity);
+
+    List<HakijaryhmaValintatapajono> jarjestaHakijaryhmat(String hakijaryhmaValintatapajonoOid, List<String> oids);
 }

@@ -11,6 +11,7 @@ import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaEiOleOlemassaException;
+import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaOidListaOnTyhjaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaaEiVoiPoistaaException;
 import fi.vm.sade.service.valintaperusteet.util.HakijaryhmaValintatapajonoKopioija;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
@@ -18,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -102,7 +105,9 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
         jono.setHakijaryhma(hakijaryhma);
         jono.setValintatapajono(valintatapajono);
         jono.setAktiivinen(true);
-        jono.setEdellinen(hakijaryhmaValintatapajonoDAO.readByOid(edellinenHakijaryhma.getOid()));
+        if(edellinenHakijaryhma != null && edellinenHakijaryhma.getOid() != null) {
+            jono.setEdellinen(hakijaryhmaValintatapajonoDAO.readByOid(edellinenHakijaryhma.getOid()));
+        }
         hakijaryhmaValintatapajonoDAO.insert(jono);
 
         return lisatty;
@@ -129,6 +134,20 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
         HakijaryhmaValintatapajono entity = modelMapper.map(dto, HakijaryhmaValintatapajono.class);
 
         return LinkitettavaJaKopioitavaUtil.paivita(managedObject, entity, kopioija);
+    }
+
+    @Override
+    public List<HakijaryhmaValintatapajono> jarjestaHakijaryhmat(String hakijaryhmaValintatapajonoOid, List<String> oids) {
+        if (oids.isEmpty()) {
+            throw new HakijaryhmaOidListaOnTyhjaException("Valintatapajonon Hakijaryhma sOID-lista on tyhjä");
+        }
+
+        LinkedHashMap<String, HakijaryhmaValintatapajono> alkuperainenJarjestys = LinkitettavaJaKopioitavaUtil.
+                teeMappiOidienMukaan(LinkitettavaJaKopioitavaUtil.jarjesta(hakijaryhmaValintatapajonoDAO.findByValintatapajono(hakijaryhmaValintatapajonoOid)));
+
+        LinkedHashMap<String, HakijaryhmaValintatapajono> jarjestetty = LinkitettavaJaKopioitavaUtil.jarjestaOidListanMukaan(alkuperainenJarjestys, oids);
+
+        return new ArrayList<HakijaryhmaValintatapajono>(jarjestetty.values());
     }
 
     @Override

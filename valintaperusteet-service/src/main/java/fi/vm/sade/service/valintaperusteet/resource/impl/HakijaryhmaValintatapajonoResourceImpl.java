@@ -5,6 +5,7 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.REA
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.Consumes;
@@ -68,7 +69,7 @@ public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValint
     @Path("/{oid}")
     @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Poistaa hakijaryhmän ja valintatapajonon välisen liitoksen")
-    @ApiResponses(value = { @ApiResponse(code = 403, message = "Liitosta ei voida poistaa, esim. se on peritty"), })
+    @ApiResponses(value = {@ApiResponse(code = 403, message = "Liitosta ei voida poistaa, esim. se on peritty"),})
     public Response poistaHakijaryhma(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
         try {
             hakijaryhmaValintatapajonoService.deleteByOid(oid, false);
@@ -89,7 +90,7 @@ public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValint
     @Produces(MediaType.APPLICATION_JSON)
     @PreAuthorize(UPDATE_CRUD)
     @ApiOperation(value = "Päivittää hakijaryhmän ja valintatapajonon välistä liitosta")
-    @ApiResponses(value = { @ApiResponse(code = 404, message = "Liitosta ei ole olemassa"), })
+    @ApiResponses(value = {@ApiResponse(code = 404, message = "Liitosta ei ole olemassa"),})
     public Response update(
             @ApiParam(value = "Päivitettävän liitoksen OID", required = true) @PathParam("oid") String oid,
             @ApiParam(value = "Liitoksen uudet tiedot", required = true) HakijaryhmaValintatapajonoUpdateDTO jono) {
@@ -99,6 +100,23 @@ public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValint
             return Response.status(Response.Status.ACCEPTED).entity(update).build();
         } catch (HakijaryhmaEiOleOlemassaException e) {
             throw new WebApplicationException(e, Response.Status.NOT_FOUND);
+        }
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/jarjesta")
+    @PreAuthorize(UPDATE_CRUD)
+    @ApiOperation(value = "Järjestää valintatapajonon hakijaryhmät argumentin mukaiseen järjestykseen")
+    @ApiResponses(value = {@ApiResponse(code = 400, message = "OID-lista on tyhjä"),})
+    public List<HakijaryhmaValintatapajonoUpdateDTO> jarjesta(
+            @ApiParam(value = "Päivitettävän liitoksen oid", required = true) String hakijaryhmaValintatapajonoOid,
+            @ApiParam(value = "Hakijaryhmien uusi järjestys", required = true) List<String> oids) {
+        try {
+            return modelMapper.mapList(hakijaryhmaValintatapajonoService.jarjestaHakijaryhmat(hakijaryhmaValintatapajonoOid, oids), HakijaryhmaValintatapajonoDTO.class);
+        } catch (Exception e) {
+            throw new WebApplicationException(e, Response.Status.BAD_REQUEST);
         }
     }
 
