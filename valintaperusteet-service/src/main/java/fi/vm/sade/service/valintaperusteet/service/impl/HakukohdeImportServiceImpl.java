@@ -341,7 +341,7 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
 
     private List<Valintakoekoodi> haeTaiLisaaValintakoekooditRest(HakukohdeImportDTO importData) {
 
-        return importData.getValintakoe().parallelStream()
+        return importData.getValintakoe().stream()
                 .map(koe -> haeTaiLisaaKoodi(Valintakoekoodi.class, koe.getTyyppiUri(),
                         new KoodiFactory<Valintakoekoodi>() {
                             @Override
