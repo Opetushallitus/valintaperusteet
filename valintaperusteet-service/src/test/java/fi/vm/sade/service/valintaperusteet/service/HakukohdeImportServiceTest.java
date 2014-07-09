@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import junit.framework.Assert;
 
@@ -25,7 +26,6 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
 import fi.vm.sade.dbunit.annotation.DataSetLocation;
-import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdekoodiDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
@@ -35,11 +35,6 @@ import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintakoekoodi;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
-import fi.vm.sade.service.valintaperusteet.schema.AvainArvoTyyppi;
-import fi.vm.sade.service.valintaperusteet.schema.HakukohdeImportTyyppi;
-import fi.vm.sade.service.valintaperusteet.schema.HakukohdekoodiTyyppi;
-import fi.vm.sade.service.valintaperusteet.schema.HakukohteenValintakoeTyyppi;
-import fi.vm.sade.service.valintaperusteet.schema.MonikielinenTekstiTyyppi;
 import fi.vm.sade.service.valintaperusteet.service.impl.HakukohdeImportServiceImpl;
 
 /**
@@ -79,15 +74,15 @@ public class HakukohdeImportServiceTest {
 
     private static final String OLETUS_VALINTAKOEURI = "valintakoeuri1";
 
-    private MonikielinenTekstiTyyppi luoMonikielinenTeksti(String teksti, HakukohdeImportServiceImpl.Kieli kieli) {
-        MonikielinenTekstiTyyppi t = new MonikielinenTekstiTyyppi();
+    private MonikielinenTekstiDTO luoMonikielinenTeksti(String teksti, HakukohdeImportServiceImpl.Kieli kieli) {
+        MonikielinenTekstiDTO t = new MonikielinenTekstiDTO();
         t.setLang(kieli.getUri());
         t.setText(teksti);
         return t;
     }
 
-    private HakukohdeImportTyyppi luoHakukohdeImportTyyppi(String hakukohdeOid, String hakuOid, String koodiUri) {
-        HakukohdeImportTyyppi imp = new HakukohdeImportTyyppi();
+    private HakukohdeImportDTO luoHakukohdeImportDTO(String hakukohdeOid, String hakuOid, String koodiUri) {
+        HakukohdeImportDTO imp = new HakukohdeImportDTO();
         imp.setHakukohdeOid(hakukohdeOid);
         imp.setHakuOid(hakuOid);
         imp.getHakukohdeNimi().add(luoMonikielinenTeksti(hakukohdeOid + "-nimi", HakukohdeImportServiceImpl.Kieli.FI));
@@ -96,12 +91,12 @@ public class HakukohdeImportServiceTest {
         imp.getHakuKausi().add(luoMonikielinenTeksti("Syksy", HakukohdeImportServiceImpl.Kieli.FI));
         imp.setHakuVuosi("2013");
 
-        HakukohteenValintakoeTyyppi koe = new HakukohteenValintakoeTyyppi();
+        HakukohteenValintakoeDTO koe = new HakukohteenValintakoeDTO();
         koe.setOid("oid123");
         koe.setTyyppiUri(OLETUS_VALINTAKOEURI);
 
         imp.getValintakoe().add(koe);
-        HakukohdekoodiTyyppi koodi = new HakukohdekoodiTyyppi();
+        HakukohdekoodiDTO koodi = new HakukohdekoodiDTO();
         koodi.setKoodiUri(koodiUri);
         koodi.setArvo(koodiUri);
         koodi.setNimiFi(koodiUri);
@@ -138,8 +133,8 @@ public class HakukohdeImportServiceTest {
         assertNull(hakukohdekoodiDAO.readByUri(koodiUri));
         assertNull(hakukohdeViiteDAO.readByOid(hakukohdeOid));
 
-        HakukohdeImportTyyppi importData = luoHakukohdeImportTyyppi(hakukohdeOid, hakuOid, koodiUri);
-        hakukohdeImportService.tuoHakukohde(importData);
+        HakukohdeImportDTO importData = luoHakukohdeImportDTO(hakukohdeOid, hakuOid, koodiUri);
+        hakukohdeImportService.tuoHakukohdeRest(importData);
 
         Hakukohdekoodi koodi = hakukohdekoodiDAO.readByUri(koodiUri);
         assertEquals(koodiUri, koodi.getUri());
@@ -170,8 +165,8 @@ public class HakukohdeImportServiceTest {
 
         assertEquals(0, hakukohdeViiteDAO.findByValintaryhmaOid(valintaryhmaOid).size());
 
-        HakukohdeImportTyyppi importData = luoHakukohdeImportTyyppi(hakukohdeOid, hakuOid, koodiUri);
-        hakukohdeImportService.tuoHakukohde(importData);
+        HakukohdeImportDTO importData = luoHakukohdeImportDTO(hakukohdeOid, hakuOid, koodiUri);
+        hakukohdeImportService.tuoHakukohdeRest(importData);
 
         valintaryhmas = valintaryhmaDAO.readByHakukohdekoodiUri(koodiUri);
         hakukohdeViites = hakukohdeViiteDAO.readByHakukohdekoodiUri(koodiUri);
@@ -227,8 +222,8 @@ public class HakukohdeImportServiceTest {
             assertTrue(vaiheet.get(3).getId().equals(98L) && vaiheet.get(3).getMasterValinnanVaihe() == null);
         }
 
-        HakukohdeImportTyyppi importData = luoHakukohdeImportTyyppi(hakukohdeOid, hakuOid, hakukohdekoodiUri);
-        hakukohdeImportService.tuoHakukohde(importData);
+        HakukohdeImportDTO importData = luoHakukohdeImportDTO(hakukohdeOid, hakuOid, hakukohdekoodiUri);
+        hakukohdeImportService.tuoHakukohdeRest(importData);
 
         {
             List<Valintaryhma> valintaryhmas = valintaryhmaDAO.readByHakukohdekoodiUri(hakukohdekoodiUri);
@@ -287,8 +282,8 @@ public class HakukohdeImportServiceTest {
             assertTrue(vaiheet.get(3).getId().equals(98L) && vaiheet.get(3).getMasterValinnanVaihe() == null);
         }
 
-        HakukohdeImportTyyppi importData = luoHakukohdeImportTyyppi(hakukohdeOid, hakuOid, hakukohdekoodiUri);
-        hakukohdeImportService.tuoHakukohde(importData);
+        HakukohdeImportDTO importData = luoHakukohdeImportDTO(hakukohdeOid, hakuOid, hakukohdekoodiUri);
+        hakukohdeImportService.tuoHakukohdeRest(importData);
 
         {
             List<Valintaryhma> valintaryhmas = valintaryhmaDAO.readByHakukohdekoodiUri(hakukohdekoodiUri);
@@ -342,8 +337,8 @@ public class HakukohdeImportServiceTest {
             assertTrue(vaiheet.get(3).getId().equals(98L) && vaiheet.get(3).getMasterValinnanVaihe() == null);
         }
 
-        HakukohdeImportTyyppi importData = luoHakukohdeImportTyyppi(hakukohdeOid, hakuOid, hakukohdekoodiUri);
-        hakukohdeImportService.tuoHakukohde(importData);
+        HakukohdeImportDTO importData = luoHakukohdeImportDTO(hakukohdeOid, hakuOid, hakukohdekoodiUri);
+        hakukohdeImportService.tuoHakukohdeRest(importData);
 
         {
             List<Valintaryhma> valintaryhmas = valintaryhmaDAO.readByHakukohdekoodiUri(hakukohdekoodiUri);
@@ -418,8 +413,8 @@ public class HakukohdeImportServiceTest {
                     && OLETUS_VALINTAKOEURI.equals(valintaryhma2.getValintakoekoodit().iterator().next().getUri()));
         }
 
-        HakukohdeImportTyyppi importData = luoHakukohdeImportTyyppi(hakukohdeOid, hakuOid, hakukohdekoodiUri);
-        hakukohdeImportService.tuoHakukohde(importData);
+        HakukohdeImportDTO importData = luoHakukohdeImportDTO(hakukohdeOid, hakuOid, hakukohdekoodiUri);
+        hakukohdeImportService.tuoHakukohdeRest(importData);
 
         {
             HakukohdeViite hakukohde = hakukohdeViiteDAO.readByOid(hakukohdeOid);
@@ -460,10 +455,10 @@ public class HakukohdeImportServiceTest {
 
         }
 
-        HakukohdeImportTyyppi importData = luoHakukohdeImportTyyppi(hakukohdeOid, hakuOid, hakukohdekoodiUri);
+        HakukohdeImportDTO importData = luoHakukohdeImportDTO(hakukohdeOid, hakuOid, hakukohdekoodiUri);
         importData.setValinnanAloituspaikat(aloituspaikat);
 
-        hakukohdeImportService.tuoHakukohde(importData);
+        hakukohdeImportService.tuoHakukohdeRest(importData);
         {
             HakukohdeViite hakukohde = hakukohdeViiteDAO.readByOid(hakukohdeOid);
             assertNotNull(hakukohde);
@@ -519,13 +514,13 @@ public class HakukohdeImportServiceTest {
             assertEquals(valintakoekoodit.get(1).getUri(), OLETUS_VALINTAKOEURI);
         }
 
-        HakukohdeImportTyyppi importData = luoHakukohdeImportTyyppi(hakukohdeOid, hakuOid, hakukohdekoodiUri);
-        HakukohteenValintakoeTyyppi koe = new HakukohteenValintakoeTyyppi();
+        HakukohdeImportDTO importData = luoHakukohdeImportDTO(hakukohdeOid, hakuOid, hakukohdekoodiUri);
+        HakukohteenValintakoeDTO koe = new HakukohteenValintakoeDTO();
         koe.setTyyppiUri("toinenkoodityyppiuri");
         koe.setOid("toinenoid");
         importData.getValintakoe().add(koe);
 
-        hakukohdeImportService.tuoHakukohde(importData);
+        hakukohdeImportService.tuoHakukohdeRest(importData);
 
         {
             HakukohdeViite hakukohde = hakukohdeViiteDAO.readByOid(hakukohdeOid);
@@ -562,8 +557,8 @@ public class HakukohdeImportServiceTest {
             assertEquals(0, hakukohteet.size());
         }
 
-        HakukohdeImportTyyppi importData = luoHakukohdeImportTyyppi(hakukohdeOid, hakuOid, hakukohdekoodiUri);
-        hakukohdeImportService.tuoHakukohde(importData);
+        HakukohdeImportDTO importData = luoHakukohdeImportDTO(hakukohdeOid, hakuOid, hakukohdekoodiUri);
+        hakukohdeImportService.tuoHakukohdeRest(importData);
 
         {
             List<Valintaryhma> valintaryhmas = valintaryhmaDAO.readByHakukohdekoodiUri(hakukohdekoodiUri);
@@ -592,34 +587,34 @@ public class HakukohdeImportServiceTest {
         final String hakukohdeOid = "uusihakukohdeoid";
         final String hakukohdekoodiUri = "hakukohdekoodiuri13";
 
-        HakukohdeImportTyyppi importData = luoHakukohdeImportTyyppi(hakukohdeOid, hakuOid, hakukohdekoodiUri);
-        AvainArvoTyyppi avainArvo = new AvainArvoTyyppi();
+        HakukohdeImportDTO importData = luoHakukohdeImportDTO(hakukohdeOid, hakuOid, hakukohdekoodiUri);
+        AvainArvoDTO avainArvo = new AvainArvoDTO();
 
         avainArvo.setAvain("paasykoe_min");
         avainArvo.setArvo("12.0");
         importData.getValintaperuste().add(avainArvo);
 
-        avainArvo = new AvainArvoTyyppi();
+        avainArvo = new AvainArvoDTO();
         avainArvo.setAvain("kielikoe_tunniste");
         avainArvo.setArvo("tämä on kielikokeen tunniste");
         importData.getValintaperuste().add(avainArvo);
 
-        avainArvo = new AvainArvoTyyppi();
+        avainArvo = new AvainArvoDTO();
         avainArvo.setAvain("MU_painokerroin");
         avainArvo.setArvo("15.0");
         importData.getValintaperuste().add(avainArvo);
 
-        avainArvo = new AvainArvoTyyppi();
+        avainArvo = new AvainArvoDTO();
         avainArvo.setAvain("A1_EN_painokerroin");
         avainArvo.setArvo("35.0");
         importData.getValintaperuste().add(avainArvo);
 
-        avainArvo = new AvainArvoTyyppi();
+        avainArvo = new AvainArvoDTO();
         avainArvo.setAvain("B3_FR_painokerroin");
         avainArvo.setArvo("43.0");
         importData.getValintaperuste().add(avainArvo);
 
-        hakukohdeImportService.tuoHakukohde(importData);
+        hakukohdeImportService.tuoHakukohdeRest(importData);
         {
             HakukohdeViite hakukohde = hakukohdeViiteDAO.readByOid(hakukohdeOid);
             assertNotNull(hakukohde);
@@ -632,17 +627,17 @@ public class HakukohdeImportServiceTest {
             assertEquals("43.0", hakukohde.getHakukohteenValintaperusteet().get("B3_FR_painokerroin").getArvo());
         }
 
-        avainArvo = new AvainArvoTyyppi();
+        avainArvo = new AvainArvoDTO();
         avainArvo.setAvain("A1_EN_painokerroin");
         avainArvo.setArvo("3.0");
         importData.getValintaperuste().add(avainArvo);
 
-        avainArvo = new AvainArvoTyyppi();
+        avainArvo = new AvainArvoDTO();
         avainArvo.setAvain("B3_FR_painokerroin");
         avainArvo.setArvo("1.0");
         importData.getValintaperuste().add(avainArvo);
 
-        hakukohdeImportService.tuoHakukohde(importData);
+        hakukohdeImportService.tuoHakukohdeRest(importData);
 
         {
             HakukohdeViite hakukohde = hakukohdeViiteDAO.readByOid(hakukohdeOid);
