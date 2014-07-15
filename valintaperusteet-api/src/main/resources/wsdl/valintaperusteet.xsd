@@ -63,6 +63,7 @@
         <xs:attribute name="lahetetaankoKoekutsut" type="xs:boolean" use="optional" default="true"/>
         <xs:attribute name="kutsutaankoKaikki" type="xs:boolean" use="optional" default="false"/>
         <xs:attribute name="aktiivinen" type="xs:boolean" use="optional" default="true"/>
+        <xs:attribute name="kutsuttavienMaara" type="xs:integer" use="optional"/>
     </xs:complexType>
 
     <xs:simpleType name="ValinnanVaiheTyyppiTyyppi">

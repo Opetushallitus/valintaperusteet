@@ -133,6 +133,7 @@ public class ValintakoeServiceImpl implements ValintakoeService {
 		valintakoe.setAktiivinen(koe.getAktiivinen());
         valintakoe.setLahetetaankoKoekutsut(koe.getLahetetaankoKoekutsut());
         valintakoe.setKutsutaankoKaikki(koe.getKutsutaankoKaikki());
+        valintakoe.setKutsuttavienMaara(koe.getKutsuttavienMaara());
 
 		if (koe.getLaskentakaavaId() != null) {
 			valintakoe.setLaskentakaava(haeLaskentakaavaValintakokeelle(koe
