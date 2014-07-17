@@ -57,7 +57,7 @@ import fi.vm.sade.service.valintaperusteet.service.impl.util.ValintaperusteServi
  * User: kwuoti Date: 22.1.2013 Time: 15.00
  */
 @Service
-// @PreAuthorize("isAuthenticated()")
+@PreAuthorize("isAuthenticated()")
 public class ValintaperusteServiceImpl implements ValintaperusteService {
 
 	private static final Logger LOG = LoggerFactory
@@ -71,9 +71,6 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
 
 	@Autowired
 	private SadeConversionService conversionService;
-
-	// @Autowired
-	// private PaasykoeTunnisteetService tunnisteService;
 
 	@Autowired
 	private ValinnanVaiheService valinnanVaiheService;
@@ -94,7 +91,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
 	private HakukohdeImportService hakukohdeImportService;
 
 	@Override
-//	@PreAuthorize(READ_UPDATE_CRUD)
+	@PreAuthorize(READ_UPDATE_CRUD)
 	public List<ValintatapajonoTyyppi> haeValintatapajonotSijoittelulle(
 			@WebParam(name = "hakukohdeOid", targetNamespace = "") String hakukohdeOid)
 			throws GenericFault {
@@ -105,7 +102,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
 	}
 
 	@Override
-//	@PreAuthorize(READ_UPDATE_CRUD)
+	@PreAuthorize(READ_UPDATE_CRUD)
 	public List<ValintaperusteetTyyppi> haeValintaperusteet(
 			@WebParam(name = "hakuparametrit", targetNamespace = "") List<HakuparametritTyyppi> hakuparametrit)
 			throws GenericFault {
@@ -283,6 +280,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
 				tyyppi.setTunniste(koe.getTunniste());
                 tyyppi.setLahetetaankoKoekutsut(koe.getLahetetaankoKoekutsut());
                 tyyppi.setKutsutaankoKaikki(koe.getKutsutaankoKaikki());
+                tyyppi.setKutsuttavienMaara(koe.getKutsuttavienMaara());
 
 				FunktiokutsuTyyppi converted = null;
 				if (koe.ainaPakollinen() || koe.getKutsutaankoKaikki()) {
@@ -388,11 +386,6 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
 	public void tuoHakukohde(
 			@WebParam(name = "hakukohde", targetNamespace = "") HakukohdeImportTyyppi hakukohde)
 			throws GenericFault {
-		// try {
-		// hakukohdeImportService.tuoHakukohde(hakukohde);
-		// } catch (Exception e) {
-		// LOG.error("Hakukohteen tuominen epäonnistui.", e);
-		// }
 		hakukohdeImportService.tuoHakukohde(hakukohde);
 	}
 }
