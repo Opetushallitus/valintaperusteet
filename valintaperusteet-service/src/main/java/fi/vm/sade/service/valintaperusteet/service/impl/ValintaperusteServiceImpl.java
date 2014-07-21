@@ -5,6 +5,7 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.REA
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.jws.WebParam;
@@ -166,12 +167,13 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
 						continue;
 					}
 
-					for (ValinnanVaihe vaihe : valinnanVaiheList) {
-						if (!vaihe.getAktiivinen()) {
-							LOG.info("Jätetään käsittelemättä ei-aktiivinen valinnanvaihe");
-							valinnanVaiheList.remove(vaihe);
-						}
-					}
+                    Iterator<ValinnanVaihe> iter = valinnanVaiheList.iterator();
+                    while(iter.hasNext()){
+                        LOG.info("Jätetään käsittelemättä ei-aktiivinen valinnanvaihe");
+                        if(!iter.next().getAktiivinen()) {
+                            iter.remove();
+                        }
+                    }
 
 					int todellinenJarjestysluku = valinnanVaiheList
 							.indexOf(kasiteltava);
@@ -183,11 +185,14 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
 					}
 
 				} else {
-					for (ValinnanVaihe vaihe : valinnanVaiheList) {
-						if (!vaihe.getAktiivinen()) {
-							valinnanVaiheList.remove(vaihe);
-						}
-					}
+
+                    Iterator<ValinnanVaihe> iter = valinnanVaiheList.iterator();
+                    while(iter.hasNext()){
+                        if (!iter.next().getAktiivinen()) {
+                            iter.remove();
+                        }
+                    }
+
 					for (int i = 0; i < valinnanVaiheList.size(); i++) {
 						if (valinnanVaiheList.get(i).getAktiivinen()) {
 							ValintaperusteetTyyppi valinnanVaihe = convertValintaperusteet(
