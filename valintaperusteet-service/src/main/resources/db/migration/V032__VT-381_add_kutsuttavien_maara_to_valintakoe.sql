@@ -1,1 +1,1 @@
-alter table valintakoe add column kutsuttavien_maara int4;
+alter table valintakoe add column kutsuttavien_maara integer;
