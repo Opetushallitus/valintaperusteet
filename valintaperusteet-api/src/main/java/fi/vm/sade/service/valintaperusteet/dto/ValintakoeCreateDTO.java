@@ -30,6 +30,9 @@ public class ValintakoeCreateDTO {
     @ApiModelProperty(value = "Kutsutaanko kaikki kokeeseen", required = true)
     private Boolean kutsutaankoKaikki;
 
+    @ApiModelProperty(value = "Kutsuttavien määrä")
+    private Integer kutsuttavienMaara;
+
     public String getTunniste() {
         return tunniste;
     }
@@ -84,5 +87,13 @@ public class ValintakoeCreateDTO {
 
     public void setKutsutaankoKaikki(Boolean kutsutaankoKaikki) {
         this.kutsutaankoKaikki = kutsutaankoKaikki;
+    }
+
+    public Integer getKutsuttavienMaara() {
+        return kutsuttavienMaara;
+    }
+
+    public void setKutsuttavienMaara(final Integer kutsuttavienMaara) {
+        this.kutsuttavienMaara = kutsuttavienMaara;
     }
 }
