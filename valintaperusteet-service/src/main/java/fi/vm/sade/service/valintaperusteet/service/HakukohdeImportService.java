@@ -9,5 +9,5 @@ import fi.vm.sade.service.valintaperusteet.dto.HakukohdeImportDTO;
  */
 public interface HakukohdeImportService {
 
-    void tuoHakukohdeRest(HakukohdeImportDTO hakukohde);
+    void tuoHakukohde(HakukohdeImportDTO hakukohde);
 }

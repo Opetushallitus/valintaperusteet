@@ -27,10 +27,10 @@ import java.util.stream.Collectors;
  */
 @Service
 // @PreAuthorize("isAuthenticated()")
-public class ValintaperusteServiceRestImpl implements ValintaperusteService {
+public class ValintaperusteServiceImpl implements ValintaperusteService {
 
     private static final Logger LOG = LoggerFactory
-            .getLogger(ValintaperusteServiceRestImpl.class);
+            .getLogger(ValintaperusteServiceImpl.class);
 
     @Autowired
     private HakukohdeService hakukohdeService;
@@ -355,7 +355,7 @@ public class ValintaperusteServiceRestImpl implements ValintaperusteService {
         // LOG.error("Hakukohteen tuominen epäonnistui.", e);
         // }
 
-        hakukohdeImportService.tuoHakukohdeRest(hakukohde);
+        hakukohdeImportService.tuoHakukohde(hakukohde);
     }
 }
 

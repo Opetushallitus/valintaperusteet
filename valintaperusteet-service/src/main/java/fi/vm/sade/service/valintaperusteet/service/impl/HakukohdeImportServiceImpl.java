@@ -89,7 +89,7 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
     @Autowired
     private ValintaperusteetModelMapper modelMapper;
 
-    protected void convertKoodiRest(HakukohdekoodiDTO from, Hakukohdekoodi to) {
+    protected void convertKoodi(HakukohdekoodiDTO from, Hakukohdekoodi to) {
         to.setArvo(from.getArvo());
         to.setUri(sanitizeKoodiUri(from.getKoodiUri()));
         to.setNimiFi(from.getNimiFi());
@@ -97,7 +97,7 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
         to.setNimiEn(from.getNimiEn());
     }
 
-    private String haeMonikielinenTekstiKielelleRest(Collection<MonikielinenTekstiDTO> tekstit, Kieli kieli) {
+    private String haeMonikielinenTekstiKielelle(Collection<MonikielinenTekstiDTO> tekstit, Kieli kieli) {
         String found = null;
         for (MonikielinenTekstiDTO t : tekstit) {
             if (kieli.uri.equals(t.getLang())) {
@@ -109,8 +109,8 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
         return found;
     }
 
-    private String haeLahinMonikielinenTekstiKielelleRest(Collection<MonikielinenTekstiDTO> tekstit, Kieli kieli) {
-        String found = haeMonikielinenTekstiKielelleRest(tekstit, kieli);
+    private String haeLahinMonikielinenTekstiKielelle(Collection<MonikielinenTekstiDTO> tekstit, Kieli kieli) {
+        String found = haeMonikielinenTekstiKielelle(tekstit, kieli);
 
         Kieli alkuperainenKieli = kieli;
         int plus = 0;
@@ -122,17 +122,17 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
                 continue;
             }
 
-            found = haeMonikielinenTekstiKielelleRest(tekstit, kieli);
+            found = haeMonikielinenTekstiKielelle(tekstit, kieli);
         }
 
         return found;
     }
 
 
-    private String generoiHakukohdeNimiRest(HakukohdeImportDTO importData) {
-        String tarjoajanimi = haeLahinMonikielinenTekstiKielelleRest(importData.getTarjoajaNimi(), Kieli.FI);
-        String hakukohdeNimi = haeLahinMonikielinenTekstiKielelleRest(importData.getHakukohdeNimi(), Kieli.FI);
-        String hakukausi = haeLahinMonikielinenTekstiKielelleRest(importData.getHakuKausi(), Kieli.FI);
+    private String generoiHakukohdeNimi(HakukohdeImportDTO importData) {
+        String tarjoajanimi = haeLahinMonikielinenTekstiKielelle(importData.getTarjoajaNimi(), Kieli.FI);
+        String hakukohdeNimi = haeLahinMonikielinenTekstiKielelle(importData.getHakukohdeNimi(), Kieli.FI);
+        String hakukausi = haeLahinMonikielinenTekstiKielelle(importData.getHakuKausi(), Kieli.FI);
         String hakuvuosi = importData.getHakuVuosi();
 
         String nimi = "";
@@ -153,8 +153,8 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
         return nimi;
     }
 
-    private void kopioiTiedotRest(HakukohdeImportDTO from, HakukohdeViite to) {
-        to.setNimi(generoiHakukohdeNimiRest(from));
+    private void kopioiTiedot(HakukohdeImportDTO from, HakukohdeViite to) {
+        to.setNimi(generoiHakukohdeNimi(from));
         to.setHakuoid(from.getHakuOid());
         to.setOid(from.getHakukohdeOid());
         to.setTarjoajaOid(from.getTarjoajaOid());
@@ -165,7 +165,7 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
         return uri != null ? uri.split("#")[0] : null;
     }
 
-    private Valintaryhma selvitaValintaryhmaRest(HakukohdeImportDTO importData) {
+    private Valintaryhma selvitaValintaryhma(HakukohdeImportDTO importData) {
         LOG.info("Yritetään selvittää hakukohteen {} valintaryhmä", importData.getHakukohdeOid());
 
         // Lasketaan valintakokeiden esiintymiset importtidatalle
@@ -236,7 +236,7 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
     }
 
     @Override
-    public void tuoHakukohdeRest(HakukohdeImportDTO importData) {
+    public void tuoHakukohde(HakukohdeImportDTO importData) {
         LOG.info("Aloitetaan import hakukohteelle. Hakukohde OID: {}, hakukohdekoodi URI: {}",
                 importData.getHakukohdeOid(), importData.getHakukohdekoodi().getKoodiUri());
         HakukohdekoodiDTO hakukohdekoodiTyyppi = importData.getHakukohdekoodi();
@@ -246,25 +246,25 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
 
         if (koodi == null) {
             koodi = new Hakukohdekoodi();
-            convertKoodiRest(hakukohdekoodiTyyppi, koodi);
+            convertKoodi(hakukohdekoodiTyyppi, koodi);
             koodi = hakukohdekoodiDAO.insert(koodi);
         } else {
-            convertKoodiRest(hakukohdekoodiTyyppi, koodi);
+            convertKoodi(hakukohdekoodiTyyppi, koodi);
         }
 
-        final Valintaryhma valintaryhma = selvitaValintaryhmaRest(importData);
+        final Valintaryhma valintaryhma = selvitaValintaryhma(importData);
 
         if (hakukohde == null) {
             LOG.info("Hakukohdetta ei ole olemassa. Luodaan uusi hakukohde.");
             hakukohde = new HakukohdeViite();
-            kopioiTiedotRest(importData, hakukohde);
+            kopioiTiedot(importData, hakukohde);
             hakukohde = hakukohdeService.insert(modelMapper.map(hakukohde, HakukohdeViiteDTO.class),
                     valintaryhma != null ? valintaryhma.getOid() : null);
             hakukohde.setHakukohdekoodi(koodi);
         } else {
             LOG.info("Hakukohde löytyi.");
             Valintaryhma hakukohdeValintaryhma = hakukohde.getValintaryhma();
-            kopioiTiedotRest(importData, hakukohde);
+            kopioiTiedot(importData, hakukohde);
             // ^ on XOR-operaattori. Tsekataan, että sekä koodin että
             // hakukohteen kautta navigoidut valintaryhmät ovat
             // samat ja että hakukohdetta ei ole manuaalisesti siirretty
@@ -289,7 +289,7 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
             } else {
                 LOG.info("Hakukohde on oikeassa valintaryhmässä. Synkronoidaan hakukohteen nimi ja koodi.");
                 // Synkataan nimi ja koodi
-                hakukohde.setNimi(generoiHakukohdeNimiRest(importData));
+                hakukohde.setNimi(generoiHakukohdeNimi(importData));
                 hakukohde.setTarjoajaOid(importData.getTarjoajaOid());
                 if (hakukohde.getManuaalisestiSiirretty() == null) {
                     hakukohde.setManuaalisestiSiirretty(false);
@@ -300,7 +300,7 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
         }
 
         // Päivitetään valintakoekoodit
-        hakukohde.setValintakokeet(haeTaiLisaaValintakoekooditRest(importData));
+        hakukohde.setValintakokeet(haeTaiLisaaValintakoekoodit(importData));
 
         // Lisätään valinaperusteet
         if (hakukohde.getHakukohteenValintaperusteet() != null) {
@@ -316,7 +316,7 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
         genericDAO.flush();
         hakukohde = hakukohdeViiteDAO.readByOid(importData.getHakukohdeOid());
 
-        hakukohde.setHakukohteenValintaperusteet(lisaaValintaperusteetRest(importData, hakukohde));
+        hakukohde.setHakukohteenValintaperusteet(lisaaValintaperusteet(importData, hakukohde));
 
         // Päivitetään aloituspaikkojen lukumäärä jos mahdollista
         paivitaAloituspaikkojenLkm(hakukohde, importData.getValinnanAloituspaikat());
@@ -339,7 +339,7 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
         }
     }
 
-    private List<Valintakoekoodi> haeTaiLisaaValintakoekooditRest(HakukohdeImportDTO importData) {
+    private List<Valintakoekoodi> haeTaiLisaaValintakoekoodit(HakukohdeImportDTO importData) {
 
         return importData.getValintakoe().stream()
                 .map(koe -> haeTaiLisaaKoodi(Valintakoekoodi.class, koe.getTyyppiUri(),
@@ -352,7 +352,7 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
 
     }
 
-    private Map<String, HakukohteenValintaperuste> lisaaValintaperusteetRest(HakukohdeImportDTO importData,
+    private Map<String, HakukohteenValintaperuste> lisaaValintaperusteet(HakukohdeImportDTO importData,
                                                                          HakukohdeViite hakukohde) {
         return importData.getValintaperuste().parallelStream().map(a -> {
             HakukohteenValintaperuste peruste = new HakukohteenValintaperuste();

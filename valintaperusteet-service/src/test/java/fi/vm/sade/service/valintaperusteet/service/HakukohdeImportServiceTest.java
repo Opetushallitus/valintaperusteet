@@ -134,7 +134,7 @@ public class HakukohdeImportServiceTest {
         assertNull(hakukohdeViiteDAO.readByOid(hakukohdeOid));
 
         HakukohdeImportDTO importData = luoHakukohdeImportDTO(hakukohdeOid, hakuOid, koodiUri);
-        hakukohdeImportService.tuoHakukohdeRest(importData);
+        hakukohdeImportService.tuoHakukohde(importData);
 
         Hakukohdekoodi koodi = hakukohdekoodiDAO.readByUri(koodiUri);
         assertEquals(koodiUri, koodi.getUri());
@@ -166,7 +166,7 @@ public class HakukohdeImportServiceTest {
         assertEquals(0, hakukohdeViiteDAO.findByValintaryhmaOid(valintaryhmaOid).size());
 
         HakukohdeImportDTO importData = luoHakukohdeImportDTO(hakukohdeOid, hakuOid, koodiUri);
-        hakukohdeImportService.tuoHakukohdeRest(importData);
+        hakukohdeImportService.tuoHakukohde(importData);
 
         valintaryhmas = valintaryhmaDAO.readByHakukohdekoodiUri(koodiUri);
         hakukohdeViites = hakukohdeViiteDAO.readByHakukohdekoodiUri(koodiUri);
@@ -223,7 +223,7 @@ public class HakukohdeImportServiceTest {
         }
 
         HakukohdeImportDTO importData = luoHakukohdeImportDTO(hakukohdeOid, hakuOid, hakukohdekoodiUri);
-        hakukohdeImportService.tuoHakukohdeRest(importData);
+        hakukohdeImportService.tuoHakukohde(importData);
 
         {
             List<Valintaryhma> valintaryhmas = valintaryhmaDAO.readByHakukohdekoodiUri(hakukohdekoodiUri);
@@ -283,7 +283,7 @@ public class HakukohdeImportServiceTest {
         }
 
         HakukohdeImportDTO importData = luoHakukohdeImportDTO(hakukohdeOid, hakuOid, hakukohdekoodiUri);
-        hakukohdeImportService.tuoHakukohdeRest(importData);
+        hakukohdeImportService.tuoHakukohde(importData);
 
         {
             List<Valintaryhma> valintaryhmas = valintaryhmaDAO.readByHakukohdekoodiUri(hakukohdekoodiUri);
@@ -338,7 +338,7 @@ public class HakukohdeImportServiceTest {
         }
 
         HakukohdeImportDTO importData = luoHakukohdeImportDTO(hakukohdeOid, hakuOid, hakukohdekoodiUri);
-        hakukohdeImportService.tuoHakukohdeRest(importData);
+        hakukohdeImportService.tuoHakukohde(importData);
 
         {
             List<Valintaryhma> valintaryhmas = valintaryhmaDAO.readByHakukohdekoodiUri(hakukohdekoodiUri);
@@ -414,7 +414,7 @@ public class HakukohdeImportServiceTest {
         }
 
         HakukohdeImportDTO importData = luoHakukohdeImportDTO(hakukohdeOid, hakuOid, hakukohdekoodiUri);
-        hakukohdeImportService.tuoHakukohdeRest(importData);
+        hakukohdeImportService.tuoHakukohde(importData);
 
         {
             HakukohdeViite hakukohde = hakukohdeViiteDAO.readByOid(hakukohdeOid);
@@ -458,7 +458,7 @@ public class HakukohdeImportServiceTest {
         HakukohdeImportDTO importData = luoHakukohdeImportDTO(hakukohdeOid, hakuOid, hakukohdekoodiUri);
         importData.setValinnanAloituspaikat(aloituspaikat);
 
-        hakukohdeImportService.tuoHakukohdeRest(importData);
+        hakukohdeImportService.tuoHakukohde(importData);
         {
             HakukohdeViite hakukohde = hakukohdeViiteDAO.readByOid(hakukohdeOid);
             assertNotNull(hakukohde);
@@ -520,7 +520,7 @@ public class HakukohdeImportServiceTest {
         koe.setOid("toinenoid");
         importData.getValintakoe().add(koe);
 
-        hakukohdeImportService.tuoHakukohdeRest(importData);
+        hakukohdeImportService.tuoHakukohde(importData);
 
         {
             HakukohdeViite hakukohde = hakukohdeViiteDAO.readByOid(hakukohdeOid);
@@ -558,7 +558,7 @@ public class HakukohdeImportServiceTest {
         }
 
         HakukohdeImportDTO importData = luoHakukohdeImportDTO(hakukohdeOid, hakuOid, hakukohdekoodiUri);
-        hakukohdeImportService.tuoHakukohdeRest(importData);
+        hakukohdeImportService.tuoHakukohde(importData);
 
         {
             List<Valintaryhma> valintaryhmas = valintaryhmaDAO.readByHakukohdekoodiUri(hakukohdekoodiUri);
@@ -614,7 +614,7 @@ public class HakukohdeImportServiceTest {
         avainArvo.setArvo("43.0");
         importData.getValintaperuste().add(avainArvo);
 
-        hakukohdeImportService.tuoHakukohdeRest(importData);
+        hakukohdeImportService.tuoHakukohde(importData);
         {
             HakukohdeViite hakukohde = hakukohdeViiteDAO.readByOid(hakukohdeOid);
             assertNotNull(hakukohde);
@@ -637,7 +637,7 @@ public class HakukohdeImportServiceTest {
         avainArvo.setArvo("1.0");
         importData.getValintaperuste().add(avainArvo);
 
-        hakukohdeImportService.tuoHakukohdeRest(importData);
+        hakukohdeImportService.tuoHakukohde(importData);
 
         {
             HakukohdeViite hakukohde = hakukohdeViiteDAO.readByOid(hakukohdeOid);
