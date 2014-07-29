@@ -6,6 +6,7 @@ import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdekoodiDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.dto.KoodiDTO;
+import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.Hakukohdekoodi;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
@@ -31,7 +32,7 @@ import static org.junit.Assert.*;
  * Time: 12.11
  */
 @ContextConfiguration(locations = "classpath:test-context.xml")
-@TestExecutionListeners(listeners = {JTACleanInsertTestExecutionListener.class,
+@TestExecutionListeners(listeners = {ValinnatJTACleanInsertTestExecutionListener.class,
         DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
         TransactionalTestExecutionListener.class})
 @RunWith(SpringJUnit4ClassRunner.class)

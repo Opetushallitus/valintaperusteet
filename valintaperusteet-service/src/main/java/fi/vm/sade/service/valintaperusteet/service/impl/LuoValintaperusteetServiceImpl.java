@@ -474,6 +474,9 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         Laskentakaava pk_painotettavatKeskiarvotLaskentakaavaIlmanKonvertteria = asetaValintaryhmaJaTallennaKantaan(
                 PkPohjaiset.luoPainotettavatKeskiarvotLaskentakaavaIlmanKonvertteria(pkAineet), peruskouluVr.getOid());
 
+        transactionManager.commit(tx);
+        tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
         // pisteytysmalli
         Laskentakaava pk_painotettavatKeskiarvotLaskentakaava = asetaValintaryhmaJaTallennaKantaan(
                 PkPohjaiset.luoPainotettavatKeskiarvotLaskentakaava(pk_painotettavatKeskiarvotLaskentakaavaIlmanKonvertteria), peruskouluVr.getOid());
@@ -1155,7 +1158,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
             SpringExtProvider.get(actorSystem).initialize(applicationContext);
 
             ActorRef master = actorSystem.actorOf(
-                    SpringExtProvider.get(actorSystem).props("LuoValintaperusteetActorBean").withRouter(new RoundRobinRouter(3)), "AmmatillinenRouter");
+                    SpringExtProvider.get(actorSystem).props("LuoValintaperusteetActorBean").withRouter(new RoundRobinRouter(10)), "AmmatillinenRouter");
 
             while ((line = reader.readLine()) != null) {
                 String[] splitted = line.split(CSV_DELIMITER);

@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,7 +29,7 @@ import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi;
  * User: kwuoti Date: 18.1.2013 Time: 10.04
  */
 @ContextConfiguration(locations = "classpath:test-context.xml")
-@TestExecutionListeners(listeners = { JTACleanInsertTestExecutionListener.class,
+@TestExecutionListeners(listeners = { ValinnatJTACleanInsertTestExecutionListener.class,
         DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
         TransactionalTestExecutionListener.class })
 @RunWith(SpringJUnit4ClassRunner.class)

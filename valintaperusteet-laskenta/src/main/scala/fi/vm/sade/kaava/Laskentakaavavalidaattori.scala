@@ -100,7 +100,7 @@ object Laskentakaavavalidaattori {
 
       if (validoiLaskettava && argumentti.getFunktiokutsuChild == null) {
         new Validointivirhe(Virhetyyppi.FUNKTIOKUTSUA_EI_OLE_MAARITELTY_FUNKTIOARGUMENTILLE,
-          s"Funktiokutsua ei ole annettu funktiokutsun $nimi funktioargumentille, indeksi ${argumentti.getIndeksi}") :: accum
+          s"Funktiokutsua ei ole annettu funktiokutsun $nimi funktioargumentille, indeksi ${argumentti.getIndeksi}, id ${argumentti.getId}, funktio id: ${funktiokutsu.getId}") :: accum
       } else if (!validoiLaskettava && argumentti.getFunktiokutsuChild == null && argumentti.getLaskentakaavaChild == null) {
         new Validointivirhe(Virhetyyppi.FUNKTIOARGUMENTTIA_EI_MAARITELTY,
           s"Funktiokutsua tai laskentakaavaa ei ole määritelty funktiokutsun $nimi funktioargumentille, indeksi ${argumentti.getIndeksi}") :: accum
