@@ -7,15 +7,30 @@ import java.util.List;
  * Created by jukais on 13.3.2014.
  */
 public class ValintatapajonoJarjestyskriteereillaDTO {
+
     private Integer aloituspaikat;
+
     private String kuvaus;
+
     private String nimi;
+
     private String oid;
+
     private int prioriteetti;
-    private Boolean siirretaanSijoitteluun;
-    private String tasasijasaanto;
+
+    private Boolean siirretaanSijoitteluun = true;
+
+    private String tasasijasaanto = "ARVONTA";
+
     private List<ValintaperusteetJarjestyskriteeriDTO> jarjestyskriteerit = new ArrayList<ValintaperusteetJarjestyskriteeriDTO>();
+
     private boolean eiVarasijatayttoa;
+
+    private Boolean poissaOlevaTaytto = false;
+
+    private Boolean kaikkiEhdonTayttavatHyvaksytaan = false;
+
+    private Boolean kaytetaanValintalaskentaa = true;
 
     public void setAloituspaikat(Integer aloituspaikat) {
         this.aloituspaikat = aloituspaikat;
@@ -88,5 +103,29 @@ public class ValintatapajonoJarjestyskriteereillaDTO {
 
     public void setEiVarasijatayttoa(boolean eiVarasijatayttoa) {
         this.eiVarasijatayttoa = eiVarasijatayttoa;
+    }
+
+    public Boolean getPoissaOlevaTaytto() {
+        return poissaOlevaTaytto;
+    }
+
+    public void setPoissaOlevaTaytto(Boolean poissaOlevaTaytto) {
+        this.poissaOlevaTaytto = poissaOlevaTaytto;
+    }
+
+    public Boolean getKaikkiEhdonTayttavatHyvaksytaan() {
+        return kaikkiEhdonTayttavatHyvaksytaan;
+    }
+
+    public void setKaikkiEhdonTayttavatHyvaksytaan(Boolean kaikkiEhdonTayttavatHyvaksytaan) {
+        this.kaikkiEhdonTayttavatHyvaksytaan = kaikkiEhdonTayttavatHyvaksytaan;
+    }
+
+    public Boolean getKaytetaanValintalaskentaa() {
+        return kaytetaanValintalaskentaa;
+    }
+
+    public void setKaytetaanValintalaskentaa(Boolean kaytetaanValintalaskentaa) {
+        this.kaytetaanValintalaskentaa = kaytetaanValintalaskentaa;
     }
 }
