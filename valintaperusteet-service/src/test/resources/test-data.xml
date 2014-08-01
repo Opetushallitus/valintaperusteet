@@ -1005,46 +1005,46 @@
                     edellinen_valinnan_vaihe_id="114"/>
 
 
-    <valintakoe id="1" version="0" oid="oid1" tunniste="valintakoetunniste1" nimi="valintakoe1" kuvaus="kuvaus1"
+    <valintakoe id="1" version="0" oid="oid1" tunniste="valintakoetunniste1" nimi="valintakoe1" kuvaus="kuvaus1" kutsun_kohde="YLIN_TOIVE"
                 aktiivinen="true" valinnan_vaihe_id="83" laskentakaava_id="101" master_valintakoe_id="[NULL]" lahetetaanko_koekutsut="true" kutsutaanko_kaikki="true" />
-    <valintakoe id="2" version="0" oid="oid2" tunniste="valintakoetunniste2" nimi="valintakoe2" kuvaus="kuvaus2"
+    <valintakoe id="2" version="0" oid="oid2" tunniste="valintakoetunniste2" nimi="valintakoe2" kuvaus="kuvaus2" kutsun_kohde="YLIN_TOIVE"
                 aktiivinen="true" valinnan_vaihe_id="83" laskentakaava_id="101" lahetetaanko_koekutsut="true" kutsutaanko_kaikki="true"/>
-    <valintakoe id="3" version="0" oid="oid3" tunniste="valintakoetunniste3" nimi="valintakoe3" kuvaus="kuvaus3"
+    <valintakoe id="3" version="0" oid="oid3" tunniste="valintakoetunniste3" nimi="valintakoe3" kuvaus="kuvaus3" kutsun_kohde="YLIN_TOIVE"
                 aktiivinen="true" valinnan_vaihe_id="83" laskentakaava_id="101" lahetetaanko_koekutsut="true" kutsutaanko_kaikki="true"/>
-    <valintakoe id="4" version="0" oid="oid4" tunniste="valintakoetunniste4" nimi="valintakoe4" kuvaus="kuvaus4"
+    <valintakoe id="4" version="0" oid="oid4" tunniste="valintakoetunniste4" nimi="valintakoe4" kuvaus="kuvaus4" kutsun_kohde="YLIN_TOIVE"
                 aktiivinen="true" valinnan_vaihe_id="83" lahetetaanko_koekutsut="true" kutsutaanko_kaikki="true"/>
 
-    <valintakoe id="5" version="0" oid="oid5" tunniste="valintakoetunniste5" nimi="valintakoe5" kuvaus="kuvaus5"
+    <valintakoe id="5" version="0" oid="oid5" tunniste="valintakoetunniste5" nimi="valintakoe5" kuvaus="kuvaus5" kutsun_kohde="YLIN_TOIVE"
                 aktiivinen="true" valinnan_vaihe_id="86" laskentakaava_id="101" lahetetaanko_koekutsut="true" kutsutaanko_kaikki="true"/>
 
-    <valintakoe id="6" version="0" oid="oid6" tunniste="valintakoetunniste6" nimi="valintakoe6" kuvaus="kuvaus6"
+    <valintakoe id="6" version="0" oid="oid6" tunniste="valintakoetunniste6" nimi="valintakoe6" kuvaus="kuvaus6" kutsun_kohde="YLIN_TOIVE"
                 aktiivinen="true" valinnan_vaihe_id="88" laskentakaava_id="101" lahetetaanko_koekutsut="true" kutsutaanko_kaikki="true"/>
-    <valintakoe id="7" version="0" oid="oid7" tunniste="valintakoetunniste6" nimi="valintakoe6" kuvaus="kuvaus6"
+    <valintakoe id="7" version="0" oid="oid7" tunniste="valintakoetunniste6" nimi="valintakoe6" kuvaus="kuvaus6" kutsun_kohde="YLIN_TOIVE"
                 aktiivinen="true" valinnan_vaihe_id="90" laskentakaava_id="101" master_valintakoe_id="6" lahetetaanko_koekutsut="true" kutsutaanko_kaikki="true"/>
 
-    <valintakoe id="8" version="0" oid="oid8" tunniste="valintakoetunniste8" nimi="valintakoe8" kuvaus="kuvaus8"
+    <valintakoe id="8" version="0" oid="oid8" tunniste="valintakoetunniste8" nimi="valintakoe8" kuvaus="kuvaus8" kutsun_kohde="YLIN_TOIVE"
                 aktiivinen="true" valinnan_vaihe_id="91" laskentakaava_id="101" lahetetaanko_koekutsut="true" kutsutaanko_kaikki="true"/>
-    <valintakoe id="9" version="0" oid="oid9" tunniste="valintakoetunniste8" nimi="valintakoe8" kuvaus="kuvaus8"
+    <valintakoe id="9" version="0" oid="oid9" tunniste="valintakoetunniste8" nimi="valintakoe8" kuvaus="kuvaus8" kutsun_kohde="YLIN_TOIVE"
                 aktiivinen="true" valinnan_vaihe_id="92" laskentakaava_id="101" master_valintakoe_id="8" lahetetaanko_koekutsut="true" kutsutaanko_kaikki="true"/>
 
-    <valintakoe id="10" version="0" oid="oid10" tunniste="valintakoetunniste10" nimi="valintakoe10" kuvaus="kuvaus10"
+    <valintakoe id="10" version="0" oid="oid10" tunniste="valintakoetunniste10" nimi="valintakoe10" kuvaus="kuvaus10" kutsun_kohde="YLIN_TOIVE"
                 aktiivinen="true" valinnan_vaihe_id="94" laskentakaava_id="101" lahetetaanko_koekutsut="true" kutsutaanko_kaikki="true"/>
-    <valintakoe id="11" version="0" oid="oid11" tunniste="valintakoetunniste10" nimi="valintakoe10" kuvaus="kuvaus10"
+    <valintakoe id="11" version="0" oid="oid11" tunniste="valintakoetunniste10" nimi="valintakoe10" kuvaus="kuvaus10" kutsun_kohde="YLIN_TOIVE"
                 aktiivinen="true" valinnan_vaihe_id="95" laskentakaava_id="101" master_valintakoe_id="10" lahetetaanko_koekutsut="true" kutsutaanko_kaikki="true"/>
 
-    <valintakoe id="12" version="0" oid="oid12" tunniste="valintakoetunniste12" nimi="valintakoe12" kuvaus="kuvaus12"
+    <valintakoe id="12" version="0" oid="oid12" tunniste="valintakoetunniste12" nimi="valintakoe12" kuvaus="kuvaus12" kutsun_kohde="YLIN_TOIVE"
                 aktiivinen="true" valinnan_vaihe_id="98" laskentakaava_id="101" lahetetaanko_koekutsut="true" kutsutaanko_kaikki="true"/>
 
-    <valintakoe id="13" version="0" oid="oid13" tunniste="valintakoetunniste13" nimi="valintakoe13" kuvaus="kuvaus13"
+    <valintakoe id="13" version="0" oid="oid13" tunniste="valintakoetunniste13" nimi="valintakoe13" kuvaus="kuvaus13" kutsun_kohde="YLIN_TOIVE"
                 aktiivinen="true" valinnan_vaihe_id="99" laskentakaava_id="101" lahetetaanko_koekutsut="true" kutsutaanko_kaikki="true"/>
 
-    <valintakoe id="14" version="0" oid="oid14" tunniste="valintakoetunniste14" nimi="valintakoe14" kuvaus="kuvaus14"
+    <valintakoe id="14" version="0" oid="oid14" tunniste="valintakoetunniste14" nimi="valintakoe14" kuvaus="kuvaus14" kutsun_kohde="YLIN_TOIVE"
                 aktiivinen="true" valinnan_vaihe_id="107" laskentakaava_id="101" lahetetaanko_koekutsut="true" kutsutaanko_kaikki="true"/>
 
-    <valintakoe id="15" version="0" oid="oid15" tunniste="valintakoetunniste15" nimi="valintakoe15" kuvaus="kuvaus15"
+    <valintakoe id="15" version="0" oid="oid15" tunniste="valintakoetunniste15" nimi="valintakoe15" kuvaus="kuvaus15" kutsun_kohde="YLIN_TOIVE"
                 aktiivinen="true" valinnan_vaihe_id="113" lahetetaanko_koekutsut="true" kutsutaanko_kaikki="true"/>
 
-    <valintakoe id="16" version="0" oid="oid16" tunniste="valintakoetunniste16" nimi="valintakoe16" kuvaus="kuvaus16"
+    <valintakoe id="16" version="0" oid="oid16" tunniste="valintakoetunniste16" nimi="valintakoe16" kuvaus="kuvaus16" kutsun_kohde="YLIN_TOIVE"
                 aktiivinen="true" valinnan_vaihe_id="114" lahetetaanko_koekutsut="true" kutsutaanko_kaikki="true"/>
 
     <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="1" version="1"

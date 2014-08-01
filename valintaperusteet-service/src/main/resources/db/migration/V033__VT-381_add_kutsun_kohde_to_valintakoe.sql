@@ -1,0 +1,1 @@
+alter table valintakoe add column kutsun_kohde varchar default 'YLIN_TOIVE';

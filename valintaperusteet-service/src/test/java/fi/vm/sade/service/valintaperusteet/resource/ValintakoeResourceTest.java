@@ -4,6 +4,7 @@ import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
+import fi.vm.sade.service.valintaperusteet.dto.model.Koekutsu;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.resource.impl.ValintakoeResourceImpl;
@@ -69,6 +70,7 @@ public class ValintakoeResourceTest {
         koe.setNimi("uusi nimi");
         koe.setTunniste("uusi tunniste");
         koe.setLaskentakaavaId(laskentakaavaId);
+        koe.setKutsunKohde(Koekutsu.YLIN_TOIVE);
 
         assertFalse(saved.getNimi().equals(koe.getNimi()));
         assertFalse(saved.getKuvaus().equals(koe.getKuvaus()));
@@ -96,6 +98,7 @@ public class ValintakoeResourceTest {
         koe.setNimi("uusi nimi");
         koe.setTunniste("uusi tunniste");
         koe.setLaskentakaavaId(null);
+        koe.setKutsunKohde(Koekutsu.YLIN_TOIVE);
 
         assertFalse(saved.getNimi().equals(koe.getNimi()));
         assertFalse(saved.getKuvaus().equals(koe.getKuvaus()));

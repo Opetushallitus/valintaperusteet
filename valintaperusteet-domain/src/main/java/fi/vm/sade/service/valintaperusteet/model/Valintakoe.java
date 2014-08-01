@@ -1,5 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
+import fi.vm.sade.service.valintaperusteet.dto.model.Koekutsu;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -52,6 +54,10 @@ public class Valintakoe extends BaseEntity implements Kopioitava<Valintakoe, Set
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "masterValintakoe")
     private Set<Valintakoe> kopioValintakokeet = new HashSet<Valintakoe>();
+
+    @Enumerated(EnumType.STRING)
+    @Column(name="kutsun_kohde", nullable = false)
+    private Koekutsu kutsunKohde;
 
     public Boolean getLahetetaankoKoekutsut() {
         return lahetetaankoKoekutsut;
@@ -181,5 +187,13 @@ public class Valintakoe extends BaseEntity implements Kopioitava<Valintakoe, Set
 
     public void setKutsuttavienMaara(final Integer kutsuttavienMaara) {
         this.kutsuttavienMaara = kutsuttavienMaara;
+    }
+
+    public Koekutsu getKutsunKohde() {
+        return kutsunKohde;
+    }
+
+    public void setKutsunKohde(Koekutsu kutsunKohde) {
+        this.kutsunKohde = kutsunKohde;
     }
 }
