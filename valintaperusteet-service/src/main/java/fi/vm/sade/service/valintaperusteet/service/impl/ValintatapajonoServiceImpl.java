@@ -106,6 +106,11 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
         jono.setValinnanVaihe(valinnanVaihe);
         jono.setEdellinenValintatapajono(edellinenValintatapajono);
 
+        if(dto.getTayttojono() != null) {
+            Valintatapajono tayttoJono = valintatapajonoDAO.readByOid(dto.getTayttojono());
+            jono.setVarasijanTayttojono(tayttoJono);
+        }
+
         Valintatapajono lisatty = valintatapajonoDAO.insert(jono);
         LinkitettavaJaKopioitavaUtil.asetaSeuraava(edellinenValintatapajono, lisatty);
 
@@ -167,7 +172,15 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
     @Override
     public Valintatapajono update(String oid, ValintatapajonoCreateDTO dto) {
         Valintatapajono managedObject = haeValintatapajono(oid);
-        return LinkitettavaJaKopioitavaUtil.paivita(managedObject, modelMapper.map(dto, Valintatapajono.class),
+
+        Valintatapajono konvertoitu = modelMapper.map(dto, Valintatapajono.class);
+
+        if(dto.getTayttojono() != null) {
+            Valintatapajono tayttoJono = valintatapajonoDAO.readByOid(dto.getTayttojono());
+            konvertoitu.setVarasijanTayttojono(tayttoJono);
+        }
+
+        return LinkitettavaJaKopioitavaUtil.paivita(managedObject, konvertoitu,
                 kopioija);
     }
 

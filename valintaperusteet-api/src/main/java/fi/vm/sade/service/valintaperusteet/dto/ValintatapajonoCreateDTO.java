@@ -54,6 +54,8 @@ public class ValintatapajonoCreateDTO {
     @ApiModelProperty(value = "Käytetäänkö valintalaskentaa", required = true)
     private Boolean kaytetaanValintalaskentaa = true;
 
+    private String tayttojono;
+
     public Integer getAloituspaikat() {
         return aloituspaikat;
     }
@@ -164,5 +166,13 @@ public class ValintatapajonoCreateDTO {
 
     public void setKaikkiEhdonTayttavatHyvaksytaan(Boolean kaikkiEhdonTayttavatHyvaksytaan) {
         this.kaikkiEhdonTayttavatHyvaksytaan = kaikkiEhdonTayttavatHyvaksytaan;
+    }
+
+    public String getTayttojono() {
+        return tayttojono;
+    }
+
+    public void setTayttojono(String tayttojono) {
+        this.tayttojono = tayttojono;
     }
 }
