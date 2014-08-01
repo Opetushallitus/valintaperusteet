@@ -13,6 +13,7 @@ import java.util.List;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
+import fi.vm.sade.service.valintaperusteet.dto.model.Koekutsu;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.After;
@@ -112,6 +113,7 @@ public class ValinnanVaiheResourceTest {
         valintakoe.setLaskentakaavaId(laskentakaavaId);
         valintakoe.setLahetetaankoKoekutsut(true);
         valintakoe.setKutsutaankoKaikki(false);
+        valintakoe.setKutsunKohde(Koekutsu.YLIN_TOIVE);
 
         Response response = vaiheResource.addValintakoeToValinnanVaihe(valinnanVaiheOid, valintakoe);
         assertEquals(201, response.getStatus());

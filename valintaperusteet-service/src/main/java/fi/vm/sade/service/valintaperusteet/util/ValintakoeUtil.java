@@ -18,6 +18,8 @@ public class ValintakoeUtil {
         kopio.setTunniste(master.getTunniste());
         kopio.setLahetetaankoKoekutsut(master.getLahetetaankoKoekutsut());
         kopio.setKutsutaankoKaikki(master.getKutsutaankoKaikki());
+        kopio.setKutsuttavienMaara(master.getKutsuttavienMaara());
+        kopio.setKutsunKohde(master.getKutsunKohde());
 
         return kopio;
     }
