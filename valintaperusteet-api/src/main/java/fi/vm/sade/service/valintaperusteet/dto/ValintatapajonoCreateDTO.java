@@ -54,6 +54,7 @@ public class ValintatapajonoCreateDTO {
     @ApiModelProperty(value = "Käytetäänkö valintalaskentaa", required = true)
     private Boolean kaytetaanValintalaskentaa = true;
 
+    @ApiModelProperty(value = "Valintatapajono, josta vapaaksi jääneet paikat täytetään", required = false)
     private String tayttojono;
 
     public Integer getAloituspaikat() {

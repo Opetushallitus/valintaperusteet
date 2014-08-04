@@ -155,7 +155,6 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
         if (valintatapajono == null) {
             throw new ValintatapajonoEiOleOlemassaException("Valintatapajono (" + oid + ") ei ole olemassa", oid);
         }
-
         return valintatapajono;
     }
 

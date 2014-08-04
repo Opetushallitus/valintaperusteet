@@ -33,6 +33,7 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
                 .leftJoin(valinnanVaihe.valintaryhma)
                 .leftJoin(jono.edellinenValintatapajono).fetch()
                 .leftJoin(jono.masterValintatapajono).fetch()
+                .leftJoin(jono.varasijanTayttojono).fetch()
                 .leftJoin(jono.hakijaryhmat, hv).fetch()
                 .leftJoin(hv.hakijaryhma).fetch()
                 .leftJoin(jono.valinnanVaihe).fetch()
@@ -49,6 +50,7 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
         return from(jono)
                 .leftJoin(jono.valinnanVaihe, valinnanVaihe).fetch()
                 .leftJoin(jono.hakijaryhmat, hakijaryhmaValintatapajono).fetch()
+                .leftJoin(jono.varasijanTayttojono).fetch()
                 .leftJoin(hakijaryhmaValintatapajono.hakijaryhma).fetch()
                 .leftJoin(valinnanVaihe.valintaryhma)
                 .distinct().list(jono);
@@ -65,6 +67,7 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
                 .leftJoin(jono.valinnanVaihe, valinnanVaihe).fetch()
                 .leftJoin(jono.masterValintatapajono).fetch()
                 .leftJoin(jono.edellinenValintatapajono).fetch()
+                .leftJoin(jono.varasijanTayttojono).fetch()
                 .leftJoin(jono.hakijaryhmat, hakijaryhmaValintatapajono).fetch()
                 .leftJoin(hakijaryhmaValintatapajono.hakijaryhma).fetch()
                 .leftJoin(valinnanVaihe.valintaryhma)
