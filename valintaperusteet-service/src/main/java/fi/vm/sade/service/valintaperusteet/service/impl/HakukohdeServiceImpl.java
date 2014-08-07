@@ -103,7 +103,7 @@ public class HakukohdeServiceImpl implements HakukohdeService {
             lisatty.setValintaryhma(valintaryhma);
             lisatty = hakukohdeViiteDAO.insert(lisatty);
             valinnanVaiheService.kopioiValinnanVaiheetParentilta(lisatty, valintaryhma);
-            hakijaryhmaService.kopioiHakijaryhmatParentilta(lisatty, valintaryhma);
+            //hakijaryhmaService.kopioiHakijaryhmatParentilta(lisatty, valintaryhma);
         } else {
             lisatty = hakukohdeViiteDAO.insert(lisatty);
         }
@@ -219,12 +219,12 @@ public class HakukohdeServiceImpl implements HakukohdeService {
             }
         }
 
-        List<Hakijaryhma> byHakukohde = hakijaryhmaService.findByHakukohde(hakukohdeOid);
-        for (Hakijaryhma hakijaryhma : byHakukohde) {
-            if (hakijaryhma.getMaster() != null) {
-                hakijaryhmaService.deleteByOid(hakijaryhma.getOid(), true);
-            }
-        }
+//        List<Hakijaryhma> byHakukohde = hakijaryhmaService.findByHakukohde(hakukohdeOid);
+//        for (Hakijaryhma hakijaryhma : byHakukohde) {
+//            if (hakijaryhma.getMaster() != null) {
+//                hakijaryhmaService.deleteByOid(hakijaryhma.getOid(), true);
+//            }
+//        }
 
     }
 }

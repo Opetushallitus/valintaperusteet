@@ -35,6 +35,9 @@ public class Valintakoe extends BaseEntity implements Kopioitava<Valintakoe, Set
     @Column(name = "kutsutaanko_kaikki", nullable = false)
     private Boolean kutsutaankoKaikki = false;
 
+    @Column(name = "kutsuttavien_maara")
+    private Integer kutsuttavienMaara;
+
     @JoinColumn(name = "laskentakaava_id", nullable = true)
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     private Laskentakaava laskentakaava;
@@ -170,5 +173,13 @@ public class Valintakoe extends BaseEntity implements Kopioitava<Valintakoe, Set
 
     public void setKutsutaankoKaikki(Boolean kutsutaankoKaikki) {
         this.kutsutaankoKaikki = kutsutaankoKaikki;
+    }
+
+    public Integer getKutsuttavienMaara() {
+        return kutsuttavienMaara;
+    }
+
+    public void setKutsuttavienMaara(final Integer kutsuttavienMaara) {
+        this.kutsuttavienMaara = kutsuttavienMaara;
     }
 }

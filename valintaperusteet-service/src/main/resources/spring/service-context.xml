@@ -20,33 +20,4 @@
     </bean>
 
 
-    <bean id="arvokonvertteriparametriToArvokonvertteriparametriTyyppi"
-          class="fi.vm.sade.service.valintaperusteet.service.impl.conversion.ArvokonvertteriparametriToArvokonvertteriparametriTyyppi"/>
-    <bean id="arvovalikonvertteriparametriToArvovalikonvertteriparametriTyyppi"
-          class="fi.vm.sade.service.valintaperusteet.service.impl.conversion.ArvovalikonvertteriparametriToArvovalikonvertteriparametriTyyppi"/>
-    <bean id="funktioargumenttiToFunktioargumenttiTyyppi"
-          class="fi.vm.sade.service.valintaperusteet.service.impl.conversion.FunktioargumenttiToFunktioargumenttiTyyppi"/>
-    <bean id="funktiokutsuToFunktiokutsuTyyppi"
-          class="fi.vm.sade.service.valintaperusteet.service.impl.conversion.FunktiokutsuToFunktiokutsuTyyppi"/>
-    <bean id="jonoToValintatapajonoTyyppi"
-          class="fi.vm.sade.service.valintaperusteet.service.impl.conversion.JonoToValintatapajonoTyyppi"/>
-    <bean id="syoteparametriToSyoteparametriTyyppi"
-          class="fi.vm.sade.service.valintaperusteet.service.impl.conversion.SyoteparametriToSyoteparametriTyyppi"/>
-    <bean id="valintaperusteViiteToValintaperusteViiteTyyppi"
-          class="fi.vm.sade.service.valintaperusteet.service.impl.conversion.ValintaperusteViiteToValintaperusteViiteTyyppi"/>
-
-    <bean id="conversionService"
-          class="fi.vm.sade.generic.service.conversion.SadeConversionServiceFactoryBean">
-        <property name="converters">
-            <list>
-                <ref bean="arvokonvertteriparametriToArvokonvertteriparametriTyyppi"/>
-                <ref bean="arvovalikonvertteriparametriToArvovalikonvertteriparametriTyyppi"/>
-                <ref bean="funktioargumenttiToFunktioargumenttiTyyppi"/>
-                <ref bean="funktiokutsuToFunktiokutsuTyyppi"/>
-                <ref bean="jonoToValintatapajonoTyyppi"/>
-                <ref bean="syoteparametriToSyoteparametriTyyppi"/>
-                <ref bean="valintaperusteViiteToValintaperusteViiteTyyppi"/>
-            </list>
-        </property>
-    </bean>
 </beans>

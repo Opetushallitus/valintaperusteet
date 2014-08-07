@@ -19,9 +19,13 @@ public class HakijaryhmaValintatapajono extends BaseEntity implements Linkitetta
     @ManyToOne(fetch = FetchType.LAZY)
     private Hakijaryhma hakijaryhma;
 
-    @JoinColumn(name = "valintatapajono_id", nullable = false)
+    @JoinColumn(name = "valintatapajono_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Valintatapajono valintatapajono;
+
+    @JoinColumn(name = "hakukohde_viite_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private HakukohdeViite hakukohdeViite;
 
     @Column(name = "aktiivinen", nullable = false)
     private Boolean aktiivinen;
@@ -37,7 +41,7 @@ public class HakijaryhmaValintatapajono extends BaseEntity implements Linkitetta
     @ManyToOne(fetch = FetchType.LAZY)
     private HakijaryhmaValintatapajono master;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "master")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "master", cascade = CascadeType.REMOVE)
     private Set<HakijaryhmaValintatapajono> kopiot = new HashSet<HakijaryhmaValintatapajono>();
 
     public Hakijaryhma getHakijaryhma() {
@@ -115,5 +119,13 @@ public class HakijaryhmaValintatapajono extends BaseEntity implements Linkitetta
     @Transient
     public Boolean getInheritance() {
         return getMaster() != null;
+    }
+
+    public HakukohdeViite getHakukohdeViite() {
+        return hakukohdeViite;
+    }
+
+    public void setHakukohdeViite(HakukohdeViite hakukohdeViite) {
+        this.hakukohdeViite = hakukohdeViite;
     }
 }

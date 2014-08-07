@@ -50,4 +50,6 @@ public interface LaskentakaavaService {
     Laskentakaava read(Long key);
 
     Laskentakaava insert(Laskentakaava laskentakaava, String hakukohdeOid, String valintaryhmaOid);
+
+    void tyhjennaCache();
 }

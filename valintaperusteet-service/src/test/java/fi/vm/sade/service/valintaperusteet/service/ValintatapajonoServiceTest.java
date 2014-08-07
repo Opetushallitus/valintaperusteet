@@ -13,6 +13,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi;
+import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.modelmapper.ModelMapper;
@@ -40,7 +41,7 @@ import fi.vm.sade.service.valintaperusteet.service.exception.ValintatapajonoaEiV
  * change this template use File | Settings | File Templates.
  */
 @ContextConfiguration(locations = "classpath:test-context.xml")
-@TestExecutionListeners(listeners = { JTACleanInsertTestExecutionListener.class,
+@TestExecutionListeners(listeners = { ValinnatJTACleanInsertTestExecutionListener.class,
         DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
         TransactionalTestExecutionListener.class })
 @RunWith(SpringJUnit4ClassRunner.class)

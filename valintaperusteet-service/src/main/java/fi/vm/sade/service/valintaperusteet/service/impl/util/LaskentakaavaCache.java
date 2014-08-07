@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class LaskentakaavaCache {
     private Cache<Long, Laskentakaava> laskentakaavat = CacheBuilder.newBuilder()
-            .expireAfterWrite(10, TimeUnit.MINUTES).build();
+            .expireAfterWrite(30, TimeUnit.MINUTES).maximumSize(5000).softValues().build();
 
     public Long addLaskentakaava(Laskentakaava download, long id) {
         laskentakaavat.put(id, download);

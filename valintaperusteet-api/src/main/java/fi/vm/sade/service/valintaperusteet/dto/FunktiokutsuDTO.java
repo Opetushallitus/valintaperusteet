@@ -35,7 +35,7 @@ public class FunktiokutsuDTO {
     private String tulosTekstiEn;
 
     @ApiModelProperty(value = "Tallennetaanko tulos", required = true)
-    private Boolean tallennaTulos;
+    private Boolean tallennaTulos = false;
 
     @ApiModelProperty(value = "Arvokonvertteriparametrit")
     private Set<ArvokonvertteriparametriDTO> arvokonvertteriparametrit = new HashSet<ArvokonvertteriparametriDTO>();

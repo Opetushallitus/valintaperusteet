@@ -12,6 +12,8 @@ import javax.ws.rs.core.Response;
 import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.dto.model.Kieli;
+import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
+import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -39,7 +41,7 @@ import fi.vm.sade.service.valintaperusteet.resource.impl.LaskentakaavaResourceIm
  * User: kwuoti Date: 28.1.2013 Time: 13.04
  */
 @ContextConfiguration(locations = "classpath:test-context.xml")
-@TestExecutionListeners(listeners = { JTACleanInsertTestExecutionListener.class,
+@TestExecutionListeners(listeners = { ValinnatJTACleanInsertTestExecutionListener.class,
         DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
         TransactionalTestExecutionListener.class })
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -78,6 +80,24 @@ public class LaskentakaavaResourceTest {
         return funktiokutsu;
     }
 
+    private ValintaperusteetFunktiokutsuDTO createLukuarvoVP(String luku) {
+        final fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi nimi = Funktionimi.LUKUARVO;
+
+        final Funktiokuvaaja.Funktiokuvaus funktiokuvaus = Funktiokuvaaja.annaFunktiokuvaus(nimi)._2();
+
+        ValintaperusteetFunktiokutsuDTO funktiokutsu = new ValintaperusteetFunktiokutsuDTO();
+        funktiokutsu.setFunktionimi(fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.LUKUARVO);
+        funktiokutsu.setTallennaTulos(false);
+
+        SyoteparametriDTO syoteparametri = new SyoteparametriDTO();
+        syoteparametri.setAvain(funktiokuvaus.syoteparametrit().head().avain());
+        syoteparametri.setArvo(luku);
+
+        funktiokutsu.getSyoteparametrit().add(syoteparametri);
+
+        return funktiokutsu;
+    }
+
     private FunktiokutsuDTO createSumma(FunktiokutsuDTO... args) {
         FunktiokutsuDTO funktiokutsu = new FunktiokutsuDTO();
         funktiokutsu.setFunktionimi(fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.SUMMA);
@@ -100,6 +120,26 @@ public class LaskentakaavaResourceTest {
         return funktiokutsu;
     }
 
+    private ValintaperusteetFunktiokutsuDTO createSummaVP(ValintaperusteetFunktiokutsuDTO... args) {
+        ValintaperusteetFunktiokutsuDTO funktiokutsu = new ValintaperusteetFunktiokutsuDTO();
+        funktiokutsu.setFunktionimi(fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.SUMMA);
+
+        funktiokutsu.setTallennaTulos(true);
+        funktiokutsu.setTulosTekstiEn("en");
+        funktiokutsu.setTulosTekstiSv("sv");
+        funktiokutsu.setTulosTekstiFi("fi");
+        funktiokutsu.setTulosTunniste("tunniste");
+
+        for (int i = 0; i < args.length; ++i) {
+            ValintaperusteetFunktioargumenttiDTO f = new ValintaperusteetFunktioargumenttiDTO();
+            f.setFunktiokutsu(args[i]);
+            f.setIndeksi(i + 1);
+            funktiokutsu.getFunktioargumentit().add(f);
+        }
+
+        return funktiokutsu;
+    }
+
     @Test
     public void testInsert() throws Exception {
 
@@ -108,6 +148,11 @@ public class LaskentakaavaResourceTest {
         laskentakaava.setOnLuonnos(false);
         laskentakaava.setFunktiokutsu(createSumma(createLukuarvo("5.0"), createLukuarvo("10.0"),
                 createLukuarvo("100.0")));
+
+        ValintaperusteetFunktiokutsuDTO dto1 = createSummaVP(createLukuarvoVP("5.0"),createLukuarvoVP("10.0"),createLukuarvoVP("100.0"));
+        ValintaperusteetFunktiokutsuDTO dto2 = createSummaVP(createLukuarvoVP("5.0"),createLukuarvoVP("10.0"),createLukuarvoVP("100.0"));
+        ValintaperusteetFunktiokutsuDTO dto3 = createSummaVP(dto1, dto2);
+        Funktiokutsu kutsu = modelMapper.map(dto3, Funktiokutsu.class);
 
         final String json = mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(laskentakaava);
         LaskentakaavaCreateDTO fromJson = mapper.readValue(json, LaskentakaavaCreateDTO.class);

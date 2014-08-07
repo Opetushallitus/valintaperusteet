@@ -6,6 +6,7 @@ import static junit.framework.Assert.assertTrue;
 
 import java.util.List;
 
+import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,7 +37,7 @@ import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
  * change this template use File | Settings | File Templates.
  */
 @ContextConfiguration(locations = "classpath:test-context.xml")
-@TestExecutionListeners(listeners = { JTACleanInsertTestExecutionListener.class,
+@TestExecutionListeners(listeners = { ValinnatJTACleanInsertTestExecutionListener.class,
         DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
         TransactionalTestExecutionListener.class })
 @RunWith(SpringJUnit4ClassRunner.class)

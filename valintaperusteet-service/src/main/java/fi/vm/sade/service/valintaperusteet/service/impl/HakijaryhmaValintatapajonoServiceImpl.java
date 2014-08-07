@@ -8,6 +8,7 @@ import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaValintatapajonoUpdateD
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
 import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
+import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaEiOleOlemassaException;
@@ -88,27 +89,54 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
 
         Hakijaryhma hakijaryhma = modelMapper.map(dto, Hakijaryhma.class);
         Valintatapajono valintatapajono = valintapajonoService.readByOid(valintatapajonoOid);
-        Hakijaryhma edellinenHakijaryhma = hakijaryhmaDAO.haeValintatapajononViimeinenHakijaryhma(valintatapajonoOid);
+        HakijaryhmaValintatapajono edellinenHakijaryhma = hakijaryhmaValintatapajonoDAO.haeValintatapajononViimeinenHakijaryhma(valintatapajonoOid);
 
         hakijaryhma.setOid(oidService.haeHakijaryhmaOid());
-        hakijaryhma.setValintatapajono(valintatapajono);
         hakijaryhma.setKaytaKaikki(dto.isKaytaKaikki());
         hakijaryhma.setTarkkaKiintio(dto.isTarkkaKiintio());
         hakijaryhma.setLaskentakaava(laskentakaavaService.haeMallinnettuKaava(dto.getLaskentakaavaId()));
-        hakijaryhma.setEdellinen(edellinenHakijaryhma);
-        Hakijaryhma lisatty = hakijaryhmaDAO.insert(hakijaryhma);
 
-        LinkitettavaJaKopioitavaUtil.asetaSeuraava(edellinenHakijaryhma, lisatty);
+        Hakijaryhma lisatty = hakijaryhmaDAO.insert(hakijaryhma);
 
         HakijaryhmaValintatapajono jono = new HakijaryhmaValintatapajono();
         jono.setOid(oidService.haeValintatapajonoHakijaryhmaOid());
         jono.setHakijaryhma(hakijaryhma);
         jono.setValintatapajono(valintatapajono);
         jono.setAktiivinen(true);
-        if(edellinenHakijaryhma != null && edellinenHakijaryhma.getOid() != null) {
-            jono.setEdellinen(hakijaryhmaValintatapajonoDAO.readByOid(edellinenHakijaryhma.getOid()));
-        }
+        jono.setEdellinen(edellinenHakijaryhma);
+
         hakijaryhmaValintatapajonoDAO.insert(jono);
+
+        LinkitettavaJaKopioitavaUtil.asetaSeuraava(edellinenHakijaryhma, jono);
+
+        return lisatty;
+    }
+
+    @Override
+    public Hakijaryhma lisaaHakijaryhmaHakukohteelle(String hakukohdeOid, HakijaryhmaCreateDTO dto) {
+        Hakijaryhma hakijaryhma = modelMapper.map(dto, Hakijaryhma.class);
+        HakukohdeViite hakukohde = hakukohdeService.readByOid(hakukohdeOid);
+        HakijaryhmaValintatapajono edellinenHakijaryhma = hakijaryhmaValintatapajonoDAO.haeHakukohteenViimeinenHakijaryhma(hakukohdeOid);
+
+        hakijaryhma.setOid(oidService.haeHakijaryhmaOid());
+        hakijaryhma.setKaytaKaikki(dto.isKaytaKaikki());
+        hakijaryhma.setTarkkaKiintio(dto.isTarkkaKiintio());
+        hakijaryhma.setLaskentakaava(laskentakaavaService.haeMallinnettuKaava(dto.getLaskentakaavaId()));
+
+        Hakijaryhma lisatty = hakijaryhmaDAO.insert(hakijaryhma);
+
+
+
+        HakijaryhmaValintatapajono jono = new HakijaryhmaValintatapajono();
+        jono.setOid(oidService.haeValintatapajonoHakijaryhmaOid());
+        jono.setHakijaryhma(hakijaryhma);
+        jono.setHakukohdeViite(hakukohde);
+        jono.setAktiivinen(true);
+        jono.setEdellinen(edellinenHakijaryhma);
+
+        hakijaryhmaValintatapajonoDAO.insert(jono);
+
+        LinkitettavaJaKopioitavaUtil.asetaSeuraava(edellinenHakijaryhma, jono);
 
         return lisatty;
     }
@@ -137,6 +165,11 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
     }
 
     @Override
+    public void liitaHakijaryhmaValintatapajonolle(String valintatapajonoOid, String hakijaryhmaOid) {
+
+    }
+
+    @Override
     public List<HakijaryhmaValintatapajono> jarjestaHakijaryhmat(String hakijaryhmaValintatapajonoOid, List<String> oids) {
         if (oids.isEmpty()) {
             throw new HakijaryhmaOidListaOnTyhjaException("Valintatapajonon Hakijaryhma sOID-lista on tyhjä");
@@ -147,7 +180,12 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
 
         LinkedHashMap<String, HakijaryhmaValintatapajono> jarjestetty = LinkitettavaJaKopioitavaUtil.jarjestaOidListanMukaan(alkuperainenJarjestys, oids);
 
-        return new ArrayList<HakijaryhmaValintatapajono>(jarjestetty.values());
+        return new ArrayList<>(jarjestetty.values());
+    }
+
+    @Override
+    public List<HakijaryhmaValintatapajono> findByHakukohde(String oid) {
+        return hakijaryhmaValintatapajonoDAO.findByHakukohde(oid);
     }
 
     @Override

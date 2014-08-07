@@ -82,7 +82,7 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
 
         Valintaryhma inserted = valintaryhmaDAO.insert(valintaryhma);
         valinnanVaiheService.kopioiValinnanVaiheetParentilta(inserted, parent);
-        hakijaryhmaService.kopioiHakijaryhmatParentilta(inserted, parent);
+        //hakijaryhmaService.kopioiHakijaryhmatParentilta(inserted, parent);
         return inserted;
     }
 

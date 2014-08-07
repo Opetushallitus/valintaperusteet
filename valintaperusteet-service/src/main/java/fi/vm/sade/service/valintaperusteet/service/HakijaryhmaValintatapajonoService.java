@@ -22,9 +22,15 @@ public interface HakijaryhmaValintatapajonoService {
     // CRUD
     HakijaryhmaValintatapajono update(String oid, HakijaryhmaValintatapajonoUpdateDTO dto);
 
+    void liitaHakijaryhmaValintatapajonolle(String valintatapajonoOid, String hakijaryhmaOid);
+
     Hakijaryhma lisaaHakijaryhmaValintatapajonolle(String valintatapajonoOid, HakijaryhmaCreateDTO dto);
+
+    Hakijaryhma lisaaHakijaryhmaHakukohteelle(String hakukohdeOid, HakijaryhmaCreateDTO hakijaryhma);
 
     void delete(HakijaryhmaValintatapajono entity);
 
     List<HakijaryhmaValintatapajono> jarjestaHakijaryhmat(String hakijaryhmaValintatapajonoOid, List<String> oids);
+
+    List<HakijaryhmaValintatapajono> findByHakukohde(String oid);
 }

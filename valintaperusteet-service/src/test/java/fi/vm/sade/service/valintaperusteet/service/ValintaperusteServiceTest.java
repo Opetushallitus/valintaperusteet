@@ -1,14 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
 import fi.vm.sade.dbunit.annotation.DataSetLocation;
-import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
-import fi.vm.sade.service.valintaperusteet.GenericFault;
-import fi.vm.sade.service.valintaperusteet.ValintaperusteService;
-import fi.vm.sade.service.valintaperusteet.messages.HakuparametritTyyppi;
-import fi.vm.sade.service.valintaperusteet.schema.*;
-import fi.vm.sade.service.valintaperusteet.service.exception.HakuparametritOnTyhjaException;
-import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheEpaaktiivinenException;
-import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheJarjestyslukuOutOfBoundsException;
+import fi.vm.sade.service.valintaperusteet.dto.*;
+import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +21,7 @@ import static junit.framework.Assert.*;
  * User: kwuoti Date: 22.1.2013 Time: 15.40
  */
 @ContextConfiguration(locations = "classpath:test-context.xml")
-@TestExecutionListeners(listeners = {JTACleanInsertTestExecutionListener.class,
+@TestExecutionListeners(listeners = {ValinnatJTACleanInsertTestExecutionListener.class,
         DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
         TransactionalTestExecutionListener.class})
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -46,105 +40,104 @@ public class ValintaperusteServiceTest {
 
     @Test
     public void testHaeValintaperusteet() {
-        List<HakuparametritTyyppi> params = new ArrayList<HakuparametritTyyppi>();
-        params.add(getHakuparametritTyyppi("oid6", null));
+        List<HakuparametritDTO> params = new ArrayList<>();
+        params.add(getHakuparametritDTO("oid6", null));
 
-        Set<String> tunnisteet = new HashSet<String>(Arrays.asList(new String[]{"tunniste1", "tunniste2", "tunniste3", "tunniste4"}));
+        Set<String> tunnisteet = new HashSet<>(Arrays.asList(new String[]{"tunniste1", "tunniste2", "tunniste3", "tunniste4"}));
 
-        List<ValintaperusteetTyyppi> valintaperusteetTyyppis = valintaperusteService.haeValintaperusteet(params);
+        List<ValintaperusteetDTO> ValintaperusteetDTOs = valintaperusteService.haeValintaperusteet(params);
 
-        assertEquals(3, valintaperusteetTyyppis.size());
-        for (ValintaperusteetTyyppi vp : valintaperusteetTyyppis) {
+        assertEquals(3, ValintaperusteetDTOs.size());
+        for (ValintaperusteetDTO vp : ValintaperusteetDTOs) {
             assertEquals(tunnisteet.size(), vp.getHakukohteenValintaperuste().size());
-            for (HakukohteenValintaperusteTyyppi hkvpt : vp.getHakukohteenValintaperuste()) {
+            for (HakukohteenValintaperusteDTO hkvpt : vp.getHakukohteenValintaperuste()) {
                 assertTrue(tunnisteet.contains(hkvpt.getTunniste()));
                 assertNotNull(hkvpt.getArvo());
             }
         }
 
-        assertEquals(1, valintaperusteetTyyppis.get(1).getValinnanVaihe().getValinnanVaiheJarjestysluku());
-        assertEquals(3, ((TavallinenValinnanVaiheTyyppi) valintaperusteetTyyppis.get(0).getValinnanVaihe()).getValintatapajono().get(0).getJarjestyskriteerit().size());
-        assertEquals(1, ((TavallinenValinnanVaiheTyyppi) valintaperusteetTyyppis.get(0).getValinnanVaihe()).getValintatapajono().get(1).getPrioriteetti());
-        assertEquals(1, ((TavallinenValinnanVaiheTyyppi) valintaperusteetTyyppis.get(0).getValinnanVaihe()).getValintatapajono().get(0).getJarjestyskriteerit().get(1).getPrioriteetti());
+        assertEquals(1, ValintaperusteetDTOs.get(1).getValinnanVaihe().getValinnanVaiheJarjestysluku());
+        assertEquals(3, (ValintaperusteetDTOs.get(0).getValinnanVaihe()).getValintatapajono().get(0).getJarjestyskriteerit().size());
+        assertEquals(1, ( ValintaperusteetDTOs.get(0).getValinnanVaihe()).getValintatapajono().get(1).getPrioriteetti());
+        assertEquals(1, ( ValintaperusteetDTOs.get(0).getValinnanVaihe()).getValintatapajono().get(0).getJarjestyskriteerit().get(1).getPrioriteetti());
     }
 
     @Test
     public void testHaeValintaperusteetJarjestysluvulla() {
-        List<HakuparametritTyyppi> params = new ArrayList<HakuparametritTyyppi>();
-        params.add(getHakuparametritTyyppi("oid6", 2));
-        List<ValintaperusteetTyyppi> valintaperusteetTyyppis = valintaperusteService.haeValintaperusteet(params);
+        List<HakuparametritDTO> params = new ArrayList<>();
+        params.add(getHakuparametritDTO("oid6", 2));
+        List<ValintaperusteetDTO> ValintaperusteetDTOs = valintaperusteService.haeValintaperusteet(params);
 
-        assertEquals(1, valintaperusteetTyyppis.size());
+        assertEquals(1, ValintaperusteetDTOs.size());
     }
 
-    @Test(expected = GenericFault.class)
+    @Test(expected = RuntimeException.class)
     public void testHaeValintaperusteetEpakelvollaJarjestysluvulla() {
-        List<HakuparametritTyyppi> params = new ArrayList<HakuparametritTyyppi>();
-        params.add(getHakuparametritTyyppi("oid6", -1));
+        List<HakuparametritDTO> params = new ArrayList<>();
+        params.add(getHakuparametritDTO("oid6", -1));
         valintaperusteService.haeValintaperusteet(params);
     }
 
-    @Test(expected = GenericFault.class)
+    @Test(expected = RuntimeException.class)
     public void testHaeValintaperusteetLiianIsollaJarjestysluvulla() {
-        List<HakuparametritTyyppi> params = new ArrayList<HakuparametritTyyppi>();
-        params.add(getHakuparametritTyyppi("oid6", 77));
+        List<HakuparametritDTO> params = new ArrayList<>();
+        params.add(getHakuparametritDTO("oid6", 77));
         valintaperusteService.haeValintaperusteet(params);
     }
 
     @Test
     public void testHaeValintaperusteetJarjestysluvulla2() {
-        List<HakuparametritTyyppi> params = new ArrayList<HakuparametritTyyppi>();
-        params.add(getHakuparametritTyyppi("oid6", 2));
-        params.add(getHakuparametritTyyppi("oid2", 2));
-        List<ValintaperusteetTyyppi> valintaperusteetTyyppis = valintaperusteService.haeValintaperusteet(params);
+        List<HakuparametritDTO> params = new ArrayList<>();
+        params.add(getHakuparametritDTO("oid6", 2));
+        params.add(getHakuparametritDTO("oid2", 2));
+        List<ValintaperusteetDTO> ValintaperusteetDTOs = valintaperusteService.haeValintaperusteet(params);
 
-        assertEquals(2, valintaperusteetTyyppis.size());
+        assertEquals(2, ValintaperusteetDTOs.size());
     }
 
-    @Test(expected = GenericFault.class)
+    @Test(expected = RuntimeException.class)
     public void testHaeValintaperusteetNullilla() {
         valintaperusteService.haeValintaperusteet(null);
     }
 
     @Test
     public void testHaeValintaperusteet2() {
-        List<HakuparametritTyyppi> params = new ArrayList<HakuparametritTyyppi>();
+        List<HakuparametritDTO> params = new ArrayList<>();
 
-        params.add(getHakuparametritTyyppi("oid1", null));
-        params.add(getHakuparametritTyyppi("oid2", null));
-        params.add(getHakuparametritTyyppi("oid3", null));
-        params.add(getHakuparametritTyyppi("oid4", null));
-        params.add(getHakuparametritTyyppi("oid5", null));
-        params.add(getHakuparametritTyyppi("oid6", null));
+        params.add(getHakuparametritDTO("oid1", null));
+        params.add(getHakuparametritDTO("oid2", null));
+        params.add(getHakuparametritDTO("oid3", null));
+        params.add(getHakuparametritDTO("oid4", null));
+        params.add(getHakuparametritDTO("oid5", null));
+        params.add(getHakuparametritDTO("oid6", null));
 
-        List<ValintaperusteetTyyppi> valintaperusteetTyyppis = valintaperusteService.haeValintaperusteet(params);
+        List<ValintaperusteetDTO> ValintaperusteetDTOs = valintaperusteService.haeValintaperusteet(params);
 
-        assertEquals(6, valintaperusteetTyyppis.size());
+        assertEquals(6, ValintaperusteetDTOs.size());
     }
 
-    private HakuparametritTyyppi getHakuparametritTyyppi(String oid, Integer jl) {
-        HakuparametritTyyppi hakuparametritTyyppi = new HakuparametritTyyppi();
-        hakuparametritTyyppi.setHakukohdeOid(oid);
-        hakuparametritTyyppi.setValinnanVaiheJarjestysluku(jl);
-        return hakuparametritTyyppi;
+    private HakuparametritDTO getHakuparametritDTO(String oid, Integer jl) {
+        HakuparametritDTO HakuparametritDTO = new HakuparametritDTO();
+        HakuparametritDTO.setHakukohdeOid(oid);
+        HakuparametritDTO.setValinnanVaiheJarjestysluku(jl);
+        return HakuparametritDTO;
     }
 
     @Test
     public void testHaeValintakoeValintaperusteet() {
-        List<HakuparametritTyyppi> params = new ArrayList<HakuparametritTyyppi>();
-        params.add(getHakuparametritTyyppi("oid10", null));
+        List<HakuparametritDTO> params = new ArrayList<>();
+        params.add(getHakuparametritDTO("oid10", null));
 
-        List<ValintaperusteetTyyppi> valintaperusteetTyyppis = valintaperusteService.haeValintaperusteet(params);
-        assertEquals(1, valintaperusteetTyyppis.size());
+        List<ValintaperusteetDTO> ValintaperusteetDTOs = valintaperusteService.haeValintaperusteet(params);
+        assertEquals(1, ValintaperusteetDTOs.size());
 
-        ValintakoeValinnanVaiheTyyppi vv = (ValintakoeValinnanVaiheTyyppi)
-                valintaperusteetTyyppis.get(0).getValinnanVaihe();
+        ValintaperusteetValinnanVaiheDTO vv = ValintaperusteetDTOs.get(0).getValinnanVaihe();
 
         assertNotNull(vv.getValinnanVaiheJarjestysluku());
         assertNotNull(vv.getValinnanVaiheOid());
         assertEquals(1, vv.getValintakoe().size());
 
-        ValintakoeTyyppi vk = vv.getValintakoe().get(0);
+        ValintakoeDTO vk = vv.getValintakoe().get(0);
         assertNotNull(vk.getFunktiokutsu());
         assertNotNull(vk.getKuvaus());
         assertNotNull(vk.getNimi());
@@ -152,29 +145,29 @@ public class ValintaperusteServiceTest {
         assertNotNull(vk.getTunniste());
     }
 
-    @Test(expected = GenericFault.class)
+    @Test(expected = RuntimeException.class)
     public void testHaeValintaperusteetMukanaEpaaktiivisiaVaiheita() {
-        List<HakuparametritTyyppi> params = new ArrayList<HakuparametritTyyppi>();
-        params.add(getHakuparametritTyyppi("oid21", 0));
-        List<ValintaperusteetTyyppi> vps = valintaperusteService.haeValintaperusteet(params);
+        List<HakuparametritDTO> params = new ArrayList<>();
+        params.add(getHakuparametritDTO("oid21", 0));
+        List<ValintaperusteetDTO> vps = valintaperusteService.haeValintaperusteet(params);
         assertEquals(1, vps.size());
         assertEquals("108", vps.get(0).getValinnanVaihe().getValinnanVaiheOid());
 
-        params = new ArrayList<HakuparametritTyyppi>();
-        params.add(getHakuparametritTyyppi("oid21", 2));
+        params = new ArrayList<>();
+        params.add(getHakuparametritDTO("oid21", 2));
         vps = valintaperusteService.haeValintaperusteet(params);
         assertEquals(1, vps.size());
 
-        params = new ArrayList<HakuparametritTyyppi>();
-        params.add(getHakuparametritTyyppi("oid21", 1));
+        params = new ArrayList<>();
+        params.add(getHakuparametritDTO("oid21", 1));
         valintaperusteService.haeValintaperusteet(params);
     }
 
     @Test
     public void testHaeKaikkiValintaperusteetMukanaEpaaktiivisiaVaiheita() {
-        List<HakuparametritTyyppi> params = new ArrayList<HakuparametritTyyppi>();
-        params.add(getHakuparametritTyyppi("oid21", null));
-        List<ValintaperusteetTyyppi> vps = valintaperusteService.haeValintaperusteet(params);
+        List<HakuparametritDTO> params = new ArrayList<>();
+        params.add(getHakuparametritDTO("oid21", null));
+        List<ValintaperusteetDTO> vps = valintaperusteService.haeValintaperusteet(params);
         assertEquals(2, vps.size());
         assertEquals("108", vps.get(0).getValinnanVaihe().getValinnanVaiheOid());
         assertEquals("110", vps.get(1).getValinnanVaihe().getValinnanVaiheOid());
@@ -182,17 +175,17 @@ public class ValintaperusteServiceTest {
 
     @Test
     public void testHakukohdettaEiOleOlemassa() {
-        List<HakuparametritTyyppi> params = new ArrayList<HakuparametritTyyppi>();
-        params.add(getHakuparametritTyyppi("ei-ole-olemassa", 1));
+        List<HakuparametritDTO> params = new ArrayList<>();
+        params.add(getHakuparametritDTO("ei-ole-olemassa", 1));
 
         assertEquals(0, valintaperusteService.haeValintaperusteet(params).size());
     }
 
     @Test
     public void testHaeHakukohteenValintaperusteet() {
-        List<HakuparametritTyyppi> params = new ArrayList<HakuparametritTyyppi>();
-        params.add(getHakuparametritTyyppi("oid21", null));
-        List<ValintaperusteetTyyppi> vps = valintaperusteService.haeValintaperusteet(params);
+        List<HakuparametritDTO> params = new ArrayList<>();
+        params.add(getHakuparametritDTO("oid21", null));
+        List<ValintaperusteetDTO> vps = valintaperusteService.haeValintaperusteet(params);
         assertEquals(2, vps.size());
         assertEquals("108", vps.get(0).getValinnanVaihe().getValinnanVaiheOid());
         assertEquals("110", vps.get(1).getValinnanVaihe().getValinnanVaiheOid());

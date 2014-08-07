@@ -1,13 +1,14 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import fi.vm.sade.service.valintaperusteet.dao.*;
+import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -16,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.Hakukohdekoodi;
 import fi.vm.sade.service.valintaperusteet.model.HakukohteenValintaperuste;
@@ -25,11 +25,6 @@ import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintakoekoodi;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
-import fi.vm.sade.service.valintaperusteet.schema.AvainArvoTyyppi;
-import fi.vm.sade.service.valintaperusteet.schema.HakukohdeImportTyyppi;
-import fi.vm.sade.service.valintaperusteet.schema.HakukohdekoodiTyyppi;
-import fi.vm.sade.service.valintaperusteet.schema.HakukohteenValintakoeTyyppi;
-import fi.vm.sade.service.valintaperusteet.schema.MonikielinenTekstiTyyppi;
 import fi.vm.sade.service.valintaperusteet.service.HakukohdeImportService;
 import fi.vm.sade.service.valintaperusteet.service.HakukohdeService;
 import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
@@ -94,7 +89,7 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
     @Autowired
     private ValintaperusteetModelMapper modelMapper;
 
-    protected void convertKoodi(HakukohdekoodiTyyppi from, Hakukohdekoodi to) {
+    protected void convertKoodi(HakukohdekoodiDTO from, Hakukohdekoodi to) {
         to.setArvo(from.getArvo());
         to.setUri(sanitizeKoodiUri(from.getKoodiUri()));
         to.setNimiFi(from.getNimiFi());
@@ -102,9 +97,9 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
         to.setNimiEn(from.getNimiEn());
     }
 
-    private String haeMonikielinenTekstiKielelle(Collection<MonikielinenTekstiTyyppi> tekstit, Kieli kieli) {
+    private String haeMonikielinenTekstiKielelle(Collection<MonikielinenTekstiDTO> tekstit, Kieli kieli) {
         String found = null;
-        for (MonikielinenTekstiTyyppi t : tekstit) {
+        for (MonikielinenTekstiDTO t : tekstit) {
             if (kieli.uri.equals(t.getLang())) {
                 found = t.getText();
                 break;
@@ -114,7 +109,7 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
         return found;
     }
 
-    private String haeLahinMonikielinenTekstiKielelle(Collection<MonikielinenTekstiTyyppi> tekstit, Kieli kieli) {
+    private String haeLahinMonikielinenTekstiKielelle(Collection<MonikielinenTekstiDTO> tekstit, Kieli kieli) {
         String found = haeMonikielinenTekstiKielelle(tekstit, kieli);
 
         Kieli alkuperainenKieli = kieli;
@@ -133,7 +128,8 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
         return found;
     }
 
-    private String generoiHakukohdeNimi(HakukohdeImportTyyppi importData) {
+
+    private String generoiHakukohdeNimi(HakukohdeImportDTO importData) {
         String tarjoajanimi = haeLahinMonikielinenTekstiKielelle(importData.getTarjoajaNimi(), Kieli.FI);
         String hakukohdeNimi = haeLahinMonikielinenTekstiKielelle(importData.getHakukohdeNimi(), Kieli.FI);
         String hakukausi = haeLahinMonikielinenTekstiKielelle(importData.getHakuKausi(), Kieli.FI);
@@ -157,7 +153,7 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
         return nimi;
     }
 
-    private void kopioiTiedot(HakukohdeImportTyyppi from, HakukohdeViite to) {
+    private void kopioiTiedot(HakukohdeImportDTO from, HakukohdeViite to) {
         to.setNimi(generoiHakukohdeNimi(from));
         to.setHakuoid(from.getHakuOid());
         to.setOid(from.getHakukohdeOid());
@@ -169,12 +165,12 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
         return uri != null ? uri.split("#")[0] : null;
     }
 
-    private Valintaryhma selvitaValintaryhma(HakukohdeImportTyyppi importData) {
+    private Valintaryhma selvitaValintaryhma(HakukohdeImportDTO importData) {
         LOG.info("Yritetään selvittää hakukohteen {} valintaryhmä", importData.getHakukohdeOid());
 
         // Lasketaan valintakokeiden esiintymiset importtidatalle
         Map<String, Integer> valintakoekoodiUrit = new HashMap<String, Integer>();
-        for (HakukohteenValintakoeTyyppi valintakoe : importData.getValintakoe()) {
+        for (HakukohteenValintakoeDTO valintakoe : importData.getValintakoe()) {
             final String valintakoeUri = sanitizeKoodiUri(valintakoe.getTyyppiUri());
             if (StringUtils.isNotBlank(valintakoeUri)) {
                 if (!valintakoekoodiUrit.containsKey(valintakoeUri)) {
@@ -240,10 +236,10 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
     }
 
     @Override
-    public void tuoHakukohde(HakukohdeImportTyyppi importData) {
+    public void tuoHakukohde(HakukohdeImportDTO importData) {
         LOG.info("Aloitetaan import hakukohteelle. Hakukohde OID: {}, hakukohdekoodi URI: {}",
                 importData.getHakukohdeOid(), importData.getHakukohdekoodi().getKoodiUri());
-        HakukohdekoodiTyyppi hakukohdekoodiTyyppi = importData.getHakukohdekoodi();
+        HakukohdekoodiDTO hakukohdekoodiTyyppi = importData.getHakukohdekoodi();
 
         HakukohdeViite hakukohde = hakukohdeViiteDAO.readByOid(importData.getHakukohdeOid());
         Hakukohdekoodi koodi = hakukohdekoodiDAO.readByUri(sanitizeKoodiUri(hakukohdekoodiTyyppi.getKoodiUri()));
@@ -275,7 +271,7 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
             // valintaryhmään.
             if ((valintaryhma != null ^ hakukohdeValintaryhma != null)
                     || (valintaryhma != null && hakukohdeValintaryhma != null && !valintaryhma.getOid().equals(
-                            hakukohdeValintaryhma.getOid()))) {
+                    hakukohdeValintaryhma.getOid()))) {
 
                 if (hakukohde.getManuaalisestiSiirretty() != null && hakukohde.getManuaalisestiSiirretty()) {
                     LOG.info("Hakukohde on väärän valintaryhmän alla, mutta se on siirretty manuaalisesti. "
@@ -343,38 +339,30 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
         }
     }
 
-    private List<Valintakoekoodi> haeTaiLisaaValintakoekoodit(HakukohdeImportTyyppi importData) {
-        List<Valintakoekoodi> koekoodit = new ArrayList<Valintakoekoodi>();
+    private List<Valintakoekoodi> haeTaiLisaaValintakoekoodit(HakukohdeImportDTO importData) {
 
-        for (HakukohteenValintakoeTyyppi koe : importData.getValintakoe()) {
-            Valintakoekoodi koodi = haeTaiLisaaKoodi(Valintakoekoodi.class, koe.getTyyppiUri(),
-                    new KoodiFactory<Valintakoekoodi>() {
-                        @Override
-                        public Valintakoekoodi newInstance() {
-                            return new Valintakoekoodi();
-                        }
-                    });
+        return importData.getValintakoe().stream()
+                .map(koe -> haeTaiLisaaKoodi(Valintakoekoodi.class, koe.getTyyppiUri(),
+                        new KoodiFactory<Valintakoekoodi>() {
+                            @Override
+                            public Valintakoekoodi newInstance() {
+                                return new Valintakoekoodi();
+                            }
+                        })).filter(koodi -> koodi != null).collect(Collectors.toList());
 
-            if (koodi != null) {
-                koekoodit.add(koodi);
-            }
-        }
-
-        return koekoodit;
     }
 
-    private Map<String, HakukohteenValintaperuste> lisaaValintaperusteet(HakukohdeImportTyyppi importData,
-            HakukohdeViite hakukohde) {
-        Map<String, HakukohteenValintaperuste> perusteet = new HashMap<String, HakukohteenValintaperuste>();
-        for (AvainArvoTyyppi avainArvo : importData.getValintaperuste()) {
+    private Map<String, HakukohteenValintaperuste> lisaaValintaperusteet(HakukohdeImportDTO importData,
+                                                                         HakukohdeViite hakukohde) {
+        return importData.getValintaperuste().parallelStream().map(a -> {
             HakukohteenValintaperuste peruste = new HakukohteenValintaperuste();
-            peruste.setTunniste(avainArvo.getAvain());
-            peruste.setArvo(avainArvo.getArvo());
-            peruste.setKuvaus(avainArvo.getAvain());
+            peruste.setTunniste(a.getAvain());
+            peruste.setArvo(a.getArvo());
+            peruste.setKuvaus(a.getAvain());
             peruste.setHakukohde(hakukohde);
-            perusteet.put(peruste.getTunniste(), peruste);
-        }
-        return perusteet;
+            return peruste;
+        }).collect(Collectors.toMap(HakukohteenValintaperuste::getTunniste, p -> p, (s,a) -> a));
+
     }
 
     private abstract class KoodiFactory<T extends Koodi> {

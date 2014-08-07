@@ -12,6 +12,9 @@ public class ValintakoeDTO extends ValintakoeCreateDTO {
     @ApiModelProperty(value = "OID", required = true)
     private String oid;
 
+    @ApiModelProperty(value = "Funktiokutsu", required = false)
+    private FunktiokutsuDTO funktiokutsu;
+
     public String getOid() {
         return oid;
     }
@@ -19,4 +22,13 @@ public class ValintakoeDTO extends ValintakoeCreateDTO {
     public void setOid(String oid) {
         this.oid = oid;
     }
+
+    public FunktiokutsuDTO getFunktiokutsu() {
+        return funktiokutsu;
+    }
+
+    public void setFunktiokutsu(FunktiokutsuDTO funktiokutsu) {
+        this.funktiokutsu = funktiokutsu;
+    }
+
 }

@@ -96,7 +96,7 @@ public class ValintatapajonoResourceImpl implements ValintatapajonoResource {
             @ApiParam(value = "Valintatapajonon OID, jolle hakijaryhmä liitetään", required = true) @PathParam("valintatapajonoOid") String valintatapajonoOid,
             @ApiParam(value = "Hakijaryhmän OID, joka valintatapajonoon liitetään", required = true) @PathParam("hakijaryhmaOid") String hakijaryhmaOid) {
         try {
-            hakijaryhmaService.liitaHakijaryhmaValintatapajonolle(valintatapajonoOid, hakijaryhmaOid);
+            //hakijaryhmaService.liitaHakijaryhmaValintatapajonolle(valintatapajonoOid, hakijaryhmaOid);
             return Response.status(Response.Status.ACCEPTED).build();
         } catch (Exception e) {
             LOGGER.error("Error linking hakijaryhma.", e);

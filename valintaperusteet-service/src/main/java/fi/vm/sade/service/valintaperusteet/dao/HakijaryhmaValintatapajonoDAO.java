@@ -17,4 +17,10 @@ public interface HakijaryhmaValintatapajonoDAO extends JpaDAO<HakijaryhmaValinta
     List<HakijaryhmaValintatapajono> findByValintatapajono(String oid);
 
     List<HakijaryhmaValintatapajono> findByHakijaryhma(String hakijaryhmaOid);
+
+    List<HakijaryhmaValintatapajono> findByHakukohde(String oid);
+
+    HakijaryhmaValintatapajono haeHakukohteenViimeinenHakijaryhma(String hakukohdeOid);
+
+    HakijaryhmaValintatapajono haeValintatapajononViimeinenHakijaryhma(String valintatapajonoOid);
 }

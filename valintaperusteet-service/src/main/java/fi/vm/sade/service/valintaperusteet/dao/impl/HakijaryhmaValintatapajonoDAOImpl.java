@@ -82,4 +82,59 @@ public class HakijaryhmaValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Hakija
                 .leftJoin(hv.edellinen).fetch()
                 .listDistinct(hv);
     }
+
+    @Override
+    public List<HakijaryhmaValintatapajono> findByHakukohde(String oid) {
+        QHakijaryhmaValintatapajono hv = QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
+
+        QHakijaryhma h = QHakijaryhma.hakijaryhma;
+        QHakukohdeViite v = QHakukohdeViite.hakukohdeViite;
+
+        return from(hv).where(hv.hakukohdeViite.oid.eq(oid))
+                .leftJoin(hv.hakijaryhma, h).fetch()
+                .leftJoin(h.jonot).fetch()
+                .leftJoin(hv.hakukohdeViite, v).fetch()
+                .leftJoin(v.hakijaryhmat).fetch()
+                .leftJoin(hv.master).fetch()
+                .leftJoin(hv.edellinen).fetch()
+                .listDistinct(hv);
+    }
+
+    @Override
+    public HakijaryhmaValintatapajono haeHakukohteenViimeinenHakijaryhma(String hakukohdeOid) {
+        QHakukohdeViite hakukohde = QHakukohdeViite.hakukohdeViite;
+        QHakijaryhmaValintatapajono hakijaryhmajono = QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
+        QHakijaryhma h = QHakijaryhma.hakijaryhma;
+
+        HakijaryhmaValintatapajono lastValinnanVaihe = from(hakukohde)
+                .leftJoin(hakukohde.hakijaryhmat, hakijaryhmajono)
+                .leftJoin(hakijaryhmajono.hakijaryhma, h)
+                .where(hakijaryhmajono.id.notIn(
+                        subQuery().from(hakijaryhmajono)
+                                .where(hakijaryhmajono.edellinen.isNotNull())
+                                .list(hakijaryhmajono.edellinen.id)
+                )
+                        .and(hakukohde.oid.eq(hakukohdeOid)))
+                .singleResult(hakijaryhmajono);
+
+        return lastValinnanVaihe;
+    }
+
+    @Override
+    public HakijaryhmaValintatapajono haeValintatapajononViimeinenHakijaryhma(String valintatapajonoOid) {
+        QValintatapajono valintatapajono = QValintatapajono.valintatapajono;
+        QHakijaryhmaValintatapajono hakijaryhmajono = QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
+        QHakijaryhma h = QHakijaryhma.hakijaryhma;
+
+        return from(valintatapajono)
+                .leftJoin(valintatapajono.hakijaryhmat, hakijaryhmajono)
+                .leftJoin(hakijaryhmajono.hakijaryhma, h)
+                .where(hakijaryhmajono.id.notIn(
+                        subQuery().from(hakijaryhmajono)
+                                .where(hakijaryhmajono.edellinen.isNotNull())
+                                .list(hakijaryhmajono.edellinen.id)
+                )
+                .and(valintatapajono.oid.eq(valintatapajonoOid)))
+                .singleResult(hakijaryhmajono);
+    }
 }

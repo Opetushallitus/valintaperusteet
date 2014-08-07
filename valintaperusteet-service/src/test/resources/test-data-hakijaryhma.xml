@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="MacRoman"?>
+<?xml version="1.0" encoding="utf-8"?>
 
     <dataset>
         <funktioargumentti id="15" version="0" indeksi="1" funktiokutsuchild_id="12" funktiokutsuparent_id="9"/>
@@ -6,17 +6,19 @@
         <funktiokutsu tallenna_tulos="true" id="12" version="0" funktionimi="HAELUKUARVO"/>
         <funktiokutsu tallenna_tulos="true" id="9" version="2" funktionimi="NIMETTYLUKUARVO"/>
 
-        <hakijaryhma id="25" version="0" kiintio="20" kuvaus="" nimi="hakijaryhma 1" oid="hr1" laskentakaava_id="11" valintaryhma_id="1"/>
-        <hakijaryhma id="26" version="0" kiintio="20" kuvaus="" nimi="hakijaryhma 1" oid="hr2" hakukohde_viite_id="2" laskentakaava_id="11" master_hakijaryhma_id="25"/>
-        <hakijaryhma id="34" version="0" kiintio="20" kuvaus="" nimi="hakukohde hakijaryhma 1" oid="hr3" edellinen_hakijaryhma_id="26" hakukohde_viite_id="2" laskentakaava_id="11"/>
-        <hakijaryhma id="37" version="0" kiintio="44" kuvaus="" nimi="hakukohde hakijaryhma 2" oid="hr4" edellinen_hakijaryhma_id="34" hakukohde_viite_id="2" laskentakaava_id="11"/>
-        <hakijaryhma id="43" version="0" kiintio="20" kuvaus="" nimi="hakijaryhma 1" oid="hr5" laskentakaava_id="11" master_hakijaryhma_id="25" valintaryhma_id="39"/>
+        <valintaryhma id="1" version="0" nimi="valintaryhma1" oid="vr1"/>
+        <valintaryhma id="39" version="2" nimi="valintaryhma2" oid="vr2" parent_id="1"/>
+
+        <hakijaryhma id="25" version="0" kiintio="20" kuvaus="" nimi="hakijaryhma 1" oid="hr1" laskentakaava_id="11" valintaryhma_id="1" kaytaKaikki="false" tarkkaKiintio="false"/>
+        <hakijaryhma id="26" version="0" kiintio="20" kuvaus="" nimi="hakijaryhma 1" oid="hr2" laskentakaava_id="11" kaytaKaikki="false" tarkkaKiintio="false"/>
+        <hakijaryhma id="34" version="0" kiintio="20" kuvaus="" nimi="hakukohde hakijaryhma 1" oid="hr3" laskentakaava_id="11" kaytaKaikki="false" tarkkaKiintio="false"/>
+        <hakijaryhma id="37" version="0" kiintio="44" kuvaus="" nimi="hakukohde hakijaryhma 2" oid="hr4" laskentakaava_id="11" kaytaKaikki="false" tarkkaKiintio="false"/>
+        <hakijaryhma id="43" version="0" kiintio="20" kuvaus="" nimi="hakijaryhma 1" oid="hr5" laskentakaava_id="11" valintaryhma_id="39" kaytaKaikki="false" tarkkaKiintio="false"/>
 
         <hakijaryhma_jono id="31" version="0" aktiivinen="true" oid="hr1_vtj1" hakijaryhma_id="25" valintatapajono_id="5" />
-        <hakijaryhma_jono id="32" version="0" aktiivinen="true" oid="hr2_vtj2" hakijaryhma_id="26" master_hakijaryhma_jono_id="31" valintatapajono_id="6" />
-        <hakijaryhma_jono id="36" version="0" aktiivinen="true" oid="hr3_vtj5" hakijaryhma_id="34" valintatapajono_id="35" />
-        <hakijaryhma_jono id="38" version="0" aktiivinen="true" oid="hr4_vtj2" hakijaryhma_id="37" valintatapajono_id="6" />
-
+        <hakijaryhma_jono id="32" version="0" aktiivinen="true" oid="hr2_vtj2" hakijaryhma_id="26" master_hakijaryhma_jono_id="31" valintatapajono_id="6" hakukohde_viite_id="2" />
+        <hakijaryhma_jono id="36" version="0" aktiivinen="true" oid="hr3_vtj5" hakijaryhma_id="34" valintatapajono_id="35" hakukohde_viite_id="2"/>
+        <hakijaryhma_jono id="38" version="0" aktiivinen="true" oid="hr4_vtj2" hakijaryhma_id="37" valintatapajono_id="6" hakukohde_viite_id="2"/>
         <hakijaryhma_jono id="44" version="0" aktiivinen="true" oid="hr5_vtj6" hakijaryhma_id="43" valintatapajono_id="41" />
 
         <hakukohde_viite id="2" version="0" hakuoid="1" nimi="valintaryhma1 - hakukohde1" oid="1" valintaryhma_id="1" manuaalisesti_siirretty="false"/>
@@ -32,8 +34,7 @@
 
         <valintaperuste_viite id="14" version="0" lahde="HAETTAVA_ARVO" on_pakollinen="false" tunniste="id" funktiokutsu_id="12" indeksi="1" kuvaus="kuvaus"/>
 
-        <valintaryhma id="1" version="0" nimi="valintaryhma1" oid="vr1"/>
-        <valintaryhma id="39" version="2" nimi="valintaryhma2" oid="vr2" parent_id="1"/>
+
 
         <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="5" version="3" aktiivinen="true" aloituspaikat="20" nimi="jono 1" oid="vtj1" siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO"
                          valinnan_vaihe_id="3" ei_varasijatayttoa="false"/>

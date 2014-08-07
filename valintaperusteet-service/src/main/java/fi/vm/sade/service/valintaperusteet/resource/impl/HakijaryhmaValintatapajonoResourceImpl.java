@@ -114,7 +114,7 @@ public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValint
             @ApiParam(value = "Päivitettävän liitoksen oid", required = true) String hakijaryhmaValintatapajonoOid,
             @ApiParam(value = "Hakijaryhmien uusi järjestys", required = true) List<String> oids) {
         try {
-            return modelMapper.mapList(hakijaryhmaValintatapajonoService.jarjestaHakijaryhmat(hakijaryhmaValintatapajonoOid, oids), HakijaryhmaValintatapajonoDTO.class);
+            return modelMapper.mapList(hakijaryhmaValintatapajonoService.jarjestaHakijaryhmat(hakijaryhmaValintatapajonoOid, oids), HakijaryhmaValintatapajonoUpdateDTO.class);
         } catch (Exception e) {
             throw new WebApplicationException(e, Response.Status.BAD_REQUEST);
         }

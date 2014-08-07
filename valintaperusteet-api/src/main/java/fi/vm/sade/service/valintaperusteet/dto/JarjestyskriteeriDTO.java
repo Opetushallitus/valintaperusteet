@@ -20,6 +20,12 @@ public class JarjestyskriteeriDTO extends JarjestyskriteeriCreateDTO {
     @ApiModelProperty(value = "Laskentakaava ID", required = true)
     private Long laskentakaavaId;
 
+    @ApiModelProperty(value = "Järjestyskriteerin prioriteetti", required = false)
+    private int prioriteetti;
+
+    @ApiModelProperty(value = "Funktiokutsu", required = false)
+    private FunktiokutsuDTO funktiokutsu;
+
     public String getOid() {
         return oid;
     }
@@ -50,5 +56,21 @@ public class JarjestyskriteeriDTO extends JarjestyskriteeriCreateDTO {
 
     public void setLaskentakaavaId(Long laskentakaavaId) {
         this.laskentakaavaId = laskentakaavaId;
+    }
+
+    public int getPrioriteetti() {
+        return prioriteetti;
+    }
+
+    public void setPrioriteetti(int prioriteetti) {
+        this.prioriteetti = prioriteetti;
+    }
+
+    public FunktiokutsuDTO getFunktiokutsu() {
+        return funktiokutsu;
+    }
+
+    public void setFunktiokutsu(FunktiokutsuDTO funktiokutsu) {
+        this.funktiokutsu = funktiokutsu;
     }
 }
