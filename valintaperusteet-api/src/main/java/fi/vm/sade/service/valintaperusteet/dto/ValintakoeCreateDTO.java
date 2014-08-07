@@ -2,6 +2,7 @@ package fi.vm.sade.service.valintaperusteet.dto;
 
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
+import fi.vm.sade.service.valintaperusteet.dto.model.Koekutsu;
 
 /**
  * User: kwuoti Date: 16.4.2013 Time: 13.01
@@ -32,6 +33,9 @@ public class ValintakoeCreateDTO {
 
     @ApiModelProperty(value = "Kutsuttavien määrä")
     private Integer kutsuttavienMaara;
+
+    @ApiModelProperty(value = "Minne koekutsu osoitetaan")
+    private Koekutsu kutsunKohde;
 
     public String getTunniste() {
         return tunniste;
@@ -95,5 +99,13 @@ public class ValintakoeCreateDTO {
 
     public void setKutsuttavienMaara(final Integer kutsuttavienMaara) {
         this.kutsuttavienMaara = kutsuttavienMaara;
+    }
+
+    public Koekutsu getKutsunKohde() {
+        return kutsunKohde;
+    }
+
+    public void setKutsunKohde(Koekutsu kutsunKohde) {
+        this.kutsunKohde = kutsunKohde;
     }
 }

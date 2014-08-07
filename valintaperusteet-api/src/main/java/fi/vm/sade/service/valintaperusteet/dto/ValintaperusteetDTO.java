@@ -8,9 +8,13 @@ import java.util.List;
  */
 public class ValintaperusteetDTO {
     private String hakukohdeOid;
+
     private String hakuOid;
+
     private String tarjoajaOid;
+
     private ValintaperusteetValinnanVaiheDTO valinnanVaihe;
+
     private List<HakukohteenValintaperusteDTO> hakukohteenValintaperuste = new ArrayList<HakukohteenValintaperusteDTO>();
 
     public void setHakukohdeOid(String hakukohdeOid) {

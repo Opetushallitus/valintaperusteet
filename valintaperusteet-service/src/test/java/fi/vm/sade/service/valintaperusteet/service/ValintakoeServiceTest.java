@@ -3,6 +3,7 @@ package fi.vm.sade.service.valintaperusteet.service;
 import fi.vm.sade.dbunit.annotation.DataSetLocation;
 import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
+import fi.vm.sade.service.valintaperusteet.dto.model.Koekutsu;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
@@ -69,6 +70,7 @@ public class ValintakoeServiceTest {
         valintakoe.setTunniste("uusitunniste");
         valintakoe.setLahetetaankoKoekutsut(true);
         valintakoe.setKutsutaankoKaikki(false);
+        valintakoe.setKutsunKohde(Koekutsu.YLIN_TOIVE);
 
         valintakoeService.lisaaValintakoeValinnanVaiheelle(valinnanVaiheOid, valintakoe);
 
@@ -146,6 +148,7 @@ public class ValintakoeServiceTest {
         update.setLaskentakaavaId(102L);
         update.setNimi("nimeäminen");
         update.setTunniste("uustunniste");
+        update.setKutsunKohde(Koekutsu.YLIN_TOIVE);
 
         Valintakoe managed = valintakoeService.readByOid(valintakoeOid);
         assertFalse(managed.getAktiivinen().equals(update.getAktiivinen()));

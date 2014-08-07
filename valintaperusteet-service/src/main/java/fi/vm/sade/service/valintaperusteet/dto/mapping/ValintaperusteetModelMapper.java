@@ -182,6 +182,20 @@ public class ValintaperusteetModelMapper extends ModelMapper {
             }
         });
 
+        this.addMappings(new PropertyMap<Valintatapajono, ValintatapajonoDTO>() {
+            @Override
+            protected void configure() {
+                map().setTayttojono(source.getVarasijanTayttojono().getOid());
+            }
+        });
+
+        this.addMappings(new PropertyMap<Valintatapajono, ValintatapajonoCreateDTO>() {
+            @Override
+            protected void configure() {
+                map().setTayttojono(source.getVarasijanTayttojono().getOid());
+            }
+        });
+
         this.addMappings(new PropertyMap<Jarjestyskriteeri, ValintaperusteetJarjestyskriteeriDTO>() {
             @Override
             protected void configure() {
