@@ -11,6 +11,8 @@ import javax.ws.rs.core.Response;
 
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaValintatapajonoUpdateDTO;
 
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA. User: jukais Date: 17.1.2013 Time: 14.42 To
  * change this template use File | Settings | File Templates.
@@ -28,5 +30,11 @@ public interface HakijaryhmaValintatapajonoResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response update(@PathParam("oid") String oid, HakijaryhmaValintatapajonoUpdateDTO jono);
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/jarjesta")
+    List<HakijaryhmaValintatapajonoUpdateDTO> jarjesta(String valintatapajonoOid, List<String> oids);
 
 }

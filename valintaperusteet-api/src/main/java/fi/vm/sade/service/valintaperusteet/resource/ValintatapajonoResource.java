@@ -13,11 +13,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaValintatapajonoDTO;
-import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriDTO;
-import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriInsertDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
+import fi.vm.sade.service.valintaperusteet.dto.*;
 
 /**
  * Created with IntelliJ IDEA. User: jukais Date: 17.1.2013 Time: 14.42 To
@@ -47,6 +43,12 @@ public interface ValintatapajonoResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{valintatapajonoOid}/hakijaryhma")
     List<HakijaryhmaValintatapajonoDTO> hakijaryhmat(@PathParam("valintatapajonoOid") String valintatapajonoOid);
+
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{valintatapajonoOid}/hakijaryhma")
+    Response insertHakijaryhma(@PathParam("valintatapajonoOid") String valintatapajonoOid, HakijaryhmaCreateDTO hakijaryhma);
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

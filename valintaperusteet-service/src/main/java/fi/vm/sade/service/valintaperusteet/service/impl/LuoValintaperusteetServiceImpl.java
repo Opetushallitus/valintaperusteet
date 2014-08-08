@@ -1097,7 +1097,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
             // Luetaan otsikkorivi pois
             String line = reader.readLine();
 
-            tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
 
             while ((line = reader.readLine()) != null) {
                 String[] splitted = line.split(CSV_DELIMITER);
@@ -1113,19 +1113,32 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
                 hakukohdekoodi.setNimiSv(nimiSv);
                 hakukohdekoodi.setNimiEn(nimiFi);
 
+                tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
                 hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(painotettuKeskiarvoVr.getOid(), hakukohdekoodi);
+
+                transactionManager.commit(tx);
+                tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
                 hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(painotettuKeskiarvoJaLisanayttoVr.getOid(),hakukohdekoodi);
 
+                transactionManager.commit(tx);
+                tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
                 hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(painotettuKeskiarvoJaPaasykoeVr.getOid(),hakukohdekoodi);
+
+                transactionManager.commit(tx);
+                tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
                 hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(
                         painotettuKeskiarvoJaPaasykoeJaLisanayttoVr.getOid(), hakukohdekoodi);
 
+                transactionManager.commit(tx);
+
 
             }
 
-            transactionManager.commit(tx);
+
 
 
         } finally {

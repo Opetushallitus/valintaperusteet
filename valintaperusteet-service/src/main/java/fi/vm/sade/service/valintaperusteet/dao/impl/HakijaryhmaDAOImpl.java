@@ -30,12 +30,12 @@ public class HakijaryhmaDAOImpl extends AbstractJpaDAOImpl<Hakijaryhma, Long> im
     @Override
     public Hakijaryhma readByOid(String oid) {
         QHakijaryhma hakijaryhma = QHakijaryhma.hakijaryhma;
+        QHakijaryhmaValintatapajono hakijaryhmaValintatapajono = QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
 
         return from(hakijaryhma).where(hakijaryhma.oid.eq(oid))
-                .leftJoin(hakijaryhma.jonot).fetch()
-                .leftJoin(hakijaryhma.master).fetch()
-                .leftJoin(hakijaryhma.edellinen).fetch()
-                .leftJoin(hakijaryhma.hakukohdeViite).fetch()
+                .leftJoin(hakijaryhma.jonot, hakijaryhmaValintatapajono).fetch()
+                .leftJoin(hakijaryhmaValintatapajono.valintatapajono).fetch()
+                .leftJoin(hakijaryhmaValintatapajono.hakukohdeViite).fetch()
                 .leftJoin(hakijaryhma.valintaryhma).fetch()
                 .leftJoin(hakijaryhma.laskentakaava).fetch()
                 .singleResult(hakijaryhma);
@@ -47,9 +47,6 @@ public class HakijaryhmaDAOImpl extends AbstractJpaDAOImpl<Hakijaryhma, Long> im
 
         return from(hakijaryhma).where(hakijaryhma.jonot.any().valintatapajono.oid.eq(oid))
                 .leftJoin(hakijaryhma.jonot).fetch()
-                .leftJoin(hakijaryhma.master).fetch()
-                .leftJoin(hakijaryhma.edellinen).fetch()
-                .leftJoin(hakijaryhma.hakukohdeViite).fetch()
                 .leftJoin(hakijaryhma.valintaryhma).fetch()
                 .leftJoin(hakijaryhma.laskentakaava).fetch()
                 .listDistinct(hakijaryhma);
@@ -59,11 +56,8 @@ public class HakijaryhmaDAOImpl extends AbstractJpaDAOImpl<Hakijaryhma, Long> im
     public List<Hakijaryhma> findByHakukohde(String oid) {
         QHakijaryhma hakijaryhma = QHakijaryhma.hakijaryhma;
 
-        return from(hakijaryhma).where(hakijaryhma.hakukohdeViite.oid.eq(oid))
+        return from(hakijaryhma).where(hakijaryhma.jonot.any().hakukohdeViite.oid.eq(oid))
                 .leftJoin(hakijaryhma.jonot).fetch()
-                .leftJoin(hakijaryhma.master).fetch()
-                .leftJoin(hakijaryhma.edellinen).fetch()
-                .leftJoin(hakijaryhma.hakukohdeViite).fetch()
                 .leftJoin(hakijaryhma.valintaryhma).fetch()
                 .leftJoin(hakijaryhma.laskentakaava).fetch()
                 .listDistinct(hakijaryhma);
@@ -72,12 +66,12 @@ public class HakijaryhmaDAOImpl extends AbstractJpaDAOImpl<Hakijaryhma, Long> im
     @Override
     public List<Hakijaryhma> findByValintaryhma(String oid) {
         QHakijaryhma hakijaryhma = QHakijaryhma.hakijaryhma;
+        QHakijaryhmaValintatapajono hakijaryhmaValintatapajono = QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
 
         return from(hakijaryhma).where(hakijaryhma.valintaryhma.oid.eq(oid))
-                .leftJoin(hakijaryhma.jonot).fetch()
-                .leftJoin(hakijaryhma.master).fetch()
-                .leftJoin(hakijaryhma.edellinen).fetch()
-                .leftJoin(hakijaryhma.hakukohdeViite).fetch()
+                .leftJoin(hakijaryhma.jonot, hakijaryhmaValintatapajono).fetch()
+                .leftJoin(hakijaryhmaValintatapajono.valintatapajono).fetch()
+                .leftJoin(hakijaryhmaValintatapajono.hakukohdeViite).fetch()
                 .leftJoin(hakijaryhma.valintaryhma).fetch()
                 .leftJoin(hakijaryhma.laskentakaava).fetch()
                 .listDistinct(hakijaryhma);
@@ -90,30 +84,13 @@ public class HakijaryhmaDAOImpl extends AbstractJpaDAOImpl<Hakijaryhma, Long> im
 
         Hakijaryhma lastValinnanVaihe = from(valintaryhma)
                 .leftJoin(valintaryhma.hakijaryhmat, hakijaryhma)
-                .where(hakijaryhma.id.notIn(
-                        subQuery().from(hakijaryhma)
-                                .where(hakijaryhma.edellinen.isNotNull())
-                                .list(hakijaryhma.edellinen.id)
-                )
-                .and(valintaryhma.oid.eq(valintaryhmaOid)))
-                .singleResult(hakijaryhma);
-
-        return lastValinnanVaihe;
-    }
-
-    @Override
-    public Hakijaryhma haeHakukohteenViimeinenHakijaryhma(String hakukohdeOid) {
-        QHakukohdeViite hakukohde = QHakukohdeViite.hakukohdeViite;
-        QHakijaryhma hakijaryhma = QHakijaryhma.hakijaryhma;
-
-        Hakijaryhma lastValinnanVaihe = from(hakukohde)
-                .leftJoin(hakukohde.hakijaryhmat, hakijaryhma)
-                .where(hakijaryhma.id.notIn(
-                        subQuery().from(hakijaryhma)
-                                .where(hakijaryhma.edellinen.isNotNull())
-                                .list(hakijaryhma.edellinen.id)
-                )
-                .and(hakukohde.oid.eq(hakukohdeOid)))
+//                .where(hakijaryhma.id.notIn(
+//                        subQuery().from(hakijaryhma)
+//                                .where(hakijaryhma.edellinen.isNotNull())
+//                                .list(hakijaryhma.edellinen.id)
+//                )
+//                .where(valintaryhma.oid.eq(valintaryhmaOid)))
+                .where(valintaryhma.oid.eq(valintaryhmaOid))
                 .singleResult(hakijaryhma);
 
         return lastValinnanVaihe;

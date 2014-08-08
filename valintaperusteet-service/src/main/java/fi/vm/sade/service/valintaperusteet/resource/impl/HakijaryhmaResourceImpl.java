@@ -122,7 +122,8 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
     public List<HakijaryhmaDTO> jarjesta(
             @ApiParam(value = "Hakijaryhmien uusi järjestys", required = true) List<String> oids) {
         try {
-            return modelMapper.mapList(hakijaryhmaService.jarjestaHakijaryhmat(oids), HakijaryhmaDTO.class);
+//            return modelMapper.mapList(hakijaryhmaService.jarjestaHakijaryhmat(oids), HakijaryhmaDTO.class);
+            return null;
         } catch (HakijaryhmaOidListaOnTyhjaException e) {
             throw new WebApplicationException(e, Response.Status.BAD_REQUEST);
         }

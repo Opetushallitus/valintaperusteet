@@ -12,4 +12,5 @@ public interface OidService {
     String haeJarjestyskriteeriOid();
     String haeValintakoeOid();
     String haeHakijaryhmaOid();
+    String haeValintatapajonoHakijaryhmaOid();
 }

@@ -14,14 +14,27 @@ public class HakijaryhmaValintatapajono extends BaseEntity implements Linkitetta
     @Column(name = "oid", nullable = false, unique = true)
     private String oid;
 
+    @Column(name = "kiintio", nullable = false)
+    private int kiintio;
+
+    @Column(name = "kaytakaikki")
+    private boolean kaytaKaikki;
+
+    @Column(name = "tarkkakiintio")
+    private boolean tarkkaKiintio;
+
 
     @JoinColumn(name = "hakijaryhma_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Hakijaryhma hakijaryhma;
 
-    @JoinColumn(name = "valintatapajono_id", nullable = false)
+    @JoinColumn(name = "valintatapajono_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Valintatapajono valintatapajono;
+
+    @JoinColumn(name = "hakukohde_viite_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private HakukohdeViite hakukohdeViite;
 
     @Column(name = "aktiivinen", nullable = false)
     private Boolean aktiivinen;
@@ -37,7 +50,7 @@ public class HakijaryhmaValintatapajono extends BaseEntity implements Linkitetta
     @ManyToOne(fetch = FetchType.LAZY)
     private HakijaryhmaValintatapajono master;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "master")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "master", cascade = CascadeType.REMOVE)
     private Set<HakijaryhmaValintatapajono> kopiot = new HashSet<HakijaryhmaValintatapajono>();
 
     public Hakijaryhma getHakijaryhma() {
@@ -115,5 +128,37 @@ public class HakijaryhmaValintatapajono extends BaseEntity implements Linkitetta
     @Transient
     public Boolean getInheritance() {
         return getMaster() != null;
+    }
+
+    public HakukohdeViite getHakukohdeViite() {
+        return hakukohdeViite;
+    }
+
+    public void setHakukohdeViite(HakukohdeViite hakukohdeViite) {
+        this.hakukohdeViite = hakukohdeViite;
+    }
+
+    public int getKiintio() {
+        return kiintio;
+    }
+
+    public void setKiintio(int kiintio) {
+        this.kiintio = kiintio;
+    }
+
+    public boolean isKaytaKaikki() {
+        return kaytaKaikki;
+    }
+
+    public void setKaytaKaikki(boolean kaytaKaikki) {
+        this.kaytaKaikki = kaytaKaikki;
+    }
+
+    public boolean isTarkkaKiintio() {
+        return tarkkaKiintio;
+    }
+
+    public void setTarkkaKiintio(boolean tarkkaKiintio) {
+        this.tarkkaKiintio = tarkkaKiintio;
     }
 }

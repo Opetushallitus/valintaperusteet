@@ -23,6 +23,7 @@ import javax.ws.rs.core.Response;
 
 import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
+import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
 import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
 import fi.vm.sade.service.valintaperusteet.service.*;
 import org.slf4j.Logger;
@@ -74,6 +75,9 @@ public class HakukohdeResourceImpl implements HakukohdeResource {
 
     @Autowired
     private HakijaryhmaService hakijaryhmaService;
+
+    @Autowired
+    private HakijaryhmaValintatapajonoService hakijaryhmaValintatapajonoServiceService;
 
     @Autowired
     private OidService oidService;
@@ -273,11 +277,31 @@ public class HakukohdeResourceImpl implements HakukohdeResource {
             @ApiParam(value = "Lisättävä hakijaryhmä", required = true) HakijaryhmaCreateDTO hakijaryhma) {
         try {
             HakijaryhmaDTO lisatty = modelMapper.map(
-                    hakijaryhmaService.lisaaHakijaryhmaHakukohteelle(hakukohdeOid, hakijaryhma), HakijaryhmaDTO.class);
+                    hakijaryhmaValintatapajonoServiceService.lisaaHakijaryhmaHakukohteelle(hakukohdeOid, hakijaryhma), HakijaryhmaDTO.class);
             return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (Exception e) {
             LOGGER.error("Error creating hakijaryhma.", e);
             return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{hakukohdeOid}/hakijaryhma/{hakijaryhmaOid}")
+    @PreAuthorize(READ_UPDATE_CRUD)
+    @ApiOperation(value = "Liittää hakijaryhmän hakukohteelle")
+    public Response liitaHakijaryhma(
+            @ApiParam(value = "Hakukohteen OID, jolle hakijaryhmä liitetään", required = true) @PathParam("hakukohdeOid") String hakukohdeOid,
+            @ApiParam(value = "Hakijaryhmän OID, joka valintatapajonoon liitetään", required = true) @PathParam("hakijaryhmaOid") String hakijaryhmaOid) {
+        try {
+            hakijaryhmaValintatapajonoServiceService.liitaHakijaryhmaHakukohteelle(hakukohdeOid, hakijaryhmaOid);
+            return Response.status(Response.Status.ACCEPTED).build();
+        } catch (Exception e) {
+            LOGGER.error("Error linking hakijaryhma.", e);
+            Map map = new HashMap();
+            map.put("error", e.getMessage());
+            return Response.status(Response.Status.BAD_REQUEST).entity(map).build();
         }
     }
 

@@ -20,6 +20,12 @@ public class HakijaryhmaCreateDTO {
     @ApiModelProperty(value = "Laskentakaavan ID", required = true)
     private Long laskentakaavaId;
 
+    @ApiModelProperty(value = "Kayta kaikki")
+    private boolean kaytaKaikki;
+
+    @ApiModelProperty(value = "Tarkka kiintio")
+    private boolean tarkkaKiintio;
+
     public String getNimi() {
         return nimi;
     }
@@ -51,4 +57,12 @@ public class HakijaryhmaCreateDTO {
     public void setLaskentakaavaId(Long laskentakaavaId) {
         this.laskentakaavaId = laskentakaavaId;
     }
+
+    public boolean isTarkkaKiintio() { return tarkkaKiintio; }
+
+    public void setTarkkaKiintio(boolean tarkkaKiintio) { this.tarkkaKiintio = tarkkaKiintio; }
+
+    public boolean isKaytaKaikki() { return kaytaKaikki; }
+
+    public void setKaytaKaikki(boolean kaytaKaikki) { this.kaytaKaikki = kaytaKaikki; }
 }

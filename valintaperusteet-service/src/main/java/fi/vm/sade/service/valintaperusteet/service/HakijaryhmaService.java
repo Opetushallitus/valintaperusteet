@@ -21,13 +21,13 @@ public interface HakijaryhmaService {
 
     Hakijaryhma lisaaHakijaryhmaValintaryhmalle(String valintaryhmaOid, HakijaryhmaCreateDTO hakijaryhma);
 
-    Hakijaryhma lisaaHakijaryhmaHakukohteelle(String hakukohdeOid, HakijaryhmaCreateDTO hakijaryhma);
+//    Hakijaryhma lisaaHakijaryhmaHakukohteelle(String hakukohdeOid, HakijaryhmaCreateDTO hakijaryhma);
 
-    List<Hakijaryhma> jarjestaHakijaryhmat(List<String> oids);
-
-    void kopioiHakijaryhmatParentilta(Valintaryhma inserted, Valintaryhma parent);
-
-    void kopioiHakijaryhmatParentilta(HakukohdeViite inserted, Valintaryhma parent);
+//    List<Hakijaryhma> jarjestaHakijaryhmat(List<String> oids);
+//
+//    void kopioiHakijaryhmatParentilta(Valintaryhma inserted, Valintaryhma parent);
+//
+//    void kopioiHakijaryhmatParentilta(HakukohdeViite inserted, Valintaryhma parent);
 
     Hakijaryhma insert(Hakijaryhma entity);
 
