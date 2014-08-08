@@ -9,6 +9,7 @@ import fi.vm.sade.service.valintaperusteet.service.ValintaryhmaService;
 import fi.vm.sade.service.valintaperusteet.service.impl.util.koodi.ValintakoekoodiHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -33,6 +34,7 @@ public class ValintakoekoodiServiceImpl implements ValintakoekoodiService {
     private ValintaperusteetModelMapper modelMapper;
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void lisaaValintakoekoodiValintaryhmalle(String valintaryhmaOid, KoodiDTO valintakoekoodi) {
         new ValintakoekoodiHandler(valintaryhmaService, valintakoekoodiDAO)
                 .lisaaKoodiValintaryhmalle(valintaryhmaOid, modelMapper.map(valintakoekoodi, Valintakoekoodi.class));

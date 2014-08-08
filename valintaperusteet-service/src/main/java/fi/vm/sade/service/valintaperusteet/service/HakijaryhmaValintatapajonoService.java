@@ -24,6 +24,8 @@ public interface HakijaryhmaValintatapajonoService {
 
     void liitaHakijaryhmaValintatapajonolle(String valintatapajonoOid, String hakijaryhmaOid);
 
+    void liitaHakijaryhmaHakukohteelle(String hakukohdeOid, String hakijaryhmaOid);
+
     Hakijaryhma lisaaHakijaryhmaValintatapajonolle(String valintatapajonoOid, HakijaryhmaCreateDTO dto);
 
     Hakijaryhma lisaaHakijaryhmaHakukohteelle(String hakukohdeOid, HakijaryhmaCreateDTO hakijaryhma);

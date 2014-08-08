@@ -105,6 +105,13 @@ public interface HakukohdeResource {
     Response insertHakijaryhma(@PathParam("hakukohdeOid") String hakukohdeOid, HakijaryhmaCreateDTO hakijaryhma);
 
     @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{hakukohdeOid}/hakijaryhma/{hakijaryhmaOid}")
+    Response liitaHakijaryhma(@PathParam("valintatapajonoOid") String hakukohdeOid,
+                              @PathParam("hakijaryhmaOid") String hakijaryhmaOid);
+
+    @POST
     @Path("/{hakukohdeOid}/hakukohdekoodi")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

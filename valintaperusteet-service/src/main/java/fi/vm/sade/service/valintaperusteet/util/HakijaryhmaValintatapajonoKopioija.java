@@ -19,6 +19,9 @@ public class HakijaryhmaValintatapajonoKopioija implements Kopioija<HakijaryhmaV
     public void kopioiTiedot(HakijaryhmaValintatapajono from, HakijaryhmaValintatapajono to) {
 
         to.setAktiivinen(from.getAktiivinen());
+        to.setKaytaKaikki(from.isKaytaKaikki());
+        to.setKiintio(from.getKiintio());
+        to.setTarkkaKiintio(from.isTarkkaKiintio());
     }
 
     @Override
@@ -28,5 +31,9 @@ public class HakijaryhmaValintatapajonoKopioija implements Kopioija<HakijaryhmaV
         if (kopio.getAktiivinen() == alkuperainenMaster.getAktiivinen()) {
             kopio.setAktiivinen(paivitettyMaster.getAktiivinen());
         }
+
+        kopio.setKaytaKaikki(paivitettyMaster.isKaytaKaikki());
+        kopio.setKiintio(paivitettyMaster.getKiintio());
+        kopio.setTarkkaKiintio(paivitettyMaster.isTarkkaKiintio());
     }
 }

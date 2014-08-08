@@ -69,6 +69,7 @@ public class HakijaryhmaResourceTest {
 
         hrjono.setAktiivinen(true);
         hrjono.setHakijaryhma(hr);
+        hrjono.setKiintio(hr.getKiintio());
         hrjono.setValintatapajono(jono);
         hrjono.setOid("hrjono oid");
 

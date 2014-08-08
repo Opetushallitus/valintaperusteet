@@ -286,6 +286,26 @@ public class HakukohdeResourceImpl implements HakukohdeResource {
     }
 
     @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{hakukohdeOid}/hakijaryhma/{hakijaryhmaOid}")
+    @PreAuthorize(READ_UPDATE_CRUD)
+    @ApiOperation(value = "Liittää hakijaryhmän hakukohteelle")
+    public Response liitaHakijaryhma(
+            @ApiParam(value = "Hakukohteen OID, jolle hakijaryhmä liitetään", required = true) @PathParam("hakukohdeOid") String hakukohdeOid,
+            @ApiParam(value = "Hakijaryhmän OID, joka valintatapajonoon liitetään", required = true) @PathParam("hakijaryhmaOid") String hakijaryhmaOid) {
+        try {
+            hakijaryhmaValintatapajonoServiceService.liitaHakijaryhmaHakukohteelle(hakukohdeOid, hakijaryhmaOid);
+            return Response.status(Response.Status.ACCEPTED).build();
+        } catch (Exception e) {
+            LOGGER.error("Error linking hakijaryhma.", e);
+            Map map = new HashMap();
+            map.put("error", e.getMessage());
+            return Response.status(Response.Status.BAD_REQUEST).entity(map).build();
+        }
+    }
+
+    @POST
     @Path("/{hakukohdeOid}/hakukohdekoodi")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

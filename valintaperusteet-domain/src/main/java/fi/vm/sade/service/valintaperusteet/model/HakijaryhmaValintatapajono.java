@@ -14,6 +14,15 @@ public class HakijaryhmaValintatapajono extends BaseEntity implements Linkitetta
     @Column(name = "oid", nullable = false, unique = true)
     private String oid;
 
+    @Column(name = "kiintio", nullable = false)
+    private int kiintio;
+
+    @Column(name = "kaytakaikki")
+    private boolean kaytaKaikki;
+
+    @Column(name = "tarkkakiintio")
+    private boolean tarkkaKiintio;
+
 
     @JoinColumn(name = "hakijaryhma_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
@@ -127,5 +136,29 @@ public class HakijaryhmaValintatapajono extends BaseEntity implements Linkitetta
 
     public void setHakukohdeViite(HakukohdeViite hakukohdeViite) {
         this.hakukohdeViite = hakukohdeViite;
+    }
+
+    public int getKiintio() {
+        return kiintio;
+    }
+
+    public void setKiintio(int kiintio) {
+        this.kiintio = kiintio;
+    }
+
+    public boolean isKaytaKaikki() {
+        return kaytaKaikki;
+    }
+
+    public void setKaytaKaikki(boolean kaytaKaikki) {
+        this.kaytaKaikki = kaytaKaikki;
+    }
+
+    public boolean isTarkkaKiintio() {
+        return tarkkaKiintio;
+    }
+
+    public void setTarkkaKiintio(boolean tarkkaKiintio) {
+        this.tarkkaKiintio = tarkkaKiintio;
     }
 }

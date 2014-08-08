@@ -50,6 +50,9 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
     private LaskentakaavaService laskentakaavaService;
 
     @Autowired
+    private HakijaryhmaValintatapajonoService hakijaryhmaValintatapajonoService;
+
+    @Autowired
     private ValintaperusteetModelMapper modelMapper;
 
     @Autowired
@@ -98,50 +101,8 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
 
     @Override
     public void liitaHakijaryhmaValintatapajonolle(String valintatapajonoOid, String hakijaryhmaOid) {
-        if (hakijaryhmaValintatapajonoDAO.readByOid(hakijaryhmaOid + "_" + valintatapajonoOid) != null) {
-            throw new HakijaryhmaValintatapajonoOnJoOlemassaException("HakijaryhmaValintatapajono (" + hakijaryhmaOid + "_" + valintatapajonoOid + ") on jo olemassa");
-        }
-        Valintatapajono valintatapajono = valintapajonoService.readByOid(valintatapajonoOid);
-        if (valintatapajono == null) {
-            throw new ValintatapajonoEiOleOlemassaException("Valintatpajono (" + valintatapajonoOid + ") ei ole olemassa");
-        }
-        Hakijaryhma hakijaryhma = haeHakijaryhma(hakijaryhmaOid);
 
-
-        // Tarkistetaan kuuluuko hakijaryhma valintatapajonon hakukohteelle tai valintaryhmaan.
-        HakukohdeViite hakukohdeViite = valintatapajono.getValinnanVaihe().getHakukohdeViite();
-        Valintaryhma valintaryhma = valintatapajono.getValinnanVaihe().getValintaryhma();
-
-        boolean hakijaryhmaFound = false;
-        if (hakukohdeViite != null) {
-            for (HakijaryhmaValintatapajono hr : hakukohdeViite.getHakijaryhmat()) {
-                if (hakijaryhma.getOid().equals(hr.getHakijaryhma().getOid())) {
-                    hakijaryhmaFound = true;
-                    break;
-                }
-            }
-        } else if (valintaryhma != null) {
-            for (Hakijaryhma hr : valintaryhma.getHakijaryhmat()) {
-                if (hakijaryhma.getOid().equals(hr.getOid())) {
-                    hakijaryhmaFound = true;
-                    break;
-                }
-            }
-        }
-
-        if (!hakijaryhmaFound) {
-            throw new HakijaryhmaEiKuuluValintatapajonolleException("");
-        }
-
-        HakijaryhmaValintatapajono master = new HakijaryhmaValintatapajono();
-
-        master.setHakijaryhma(hakijaryhma);
-        master.setValintatapajono(valintatapajono);
-        master.setOid(hakijaryhma.getOid() + "_" + valintatapajono.getOid());
-        master.setAktiivinen(true);
-        master = hakijaryhmaValintatapajonoDAO.insert(master);
-
-        kopioHakijaryhmat(valintatapajono, hakijaryhma, master);
+        hakijaryhmaValintatapajonoService.liitaHakijaryhmaValintatapajonolle(valintatapajonoOid, hakijaryhmaOid);
 
 
     }
@@ -184,6 +145,7 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
             kopioLink.setOid(kopioLink.getHakijaryhma().getOid() + "_" + kopio.getOid());
             kopioLink.setAktiivinen(true);
             kopioLink.setMaster(master);
+            kopioLink.setKiintio(master.getKiintio());
             kopioLink = hakijaryhmaValintatapajonoDAO.insert(kopioLink);
 
             kopioHakijaryhmat(kopio, kopioLink.getHakijaryhma(), kopioLink);
@@ -197,9 +159,6 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
             throw new ValintaryhmaEiOleOlemassaException("Valintaryhmää (" + valintaryhmaOid + ") ei ole olemassa");
         }
 
-
-        Hakijaryhma edellinenHakijaryhma = hakijaryhmaDAO.haeValintaryhmanViimeinenHakijaryhma(valintaryhmaOid);
-
         Hakijaryhma hakijaryhma = modelMapper.map(dto, Hakijaryhma.class);
         hakijaryhma.setOid(oidService.haeHakijaryhmaOid());
         hakijaryhma.setValintaryhma(valintaryhma);
@@ -211,7 +170,7 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
 
         List<Valintaryhma> alaValintaryhmat = valintaryhmaService.findValintaryhmasByParentOid(valintaryhmaOid);
         for (Valintaryhma alavalintaryhma : alaValintaryhmat) {
-            lisaaValintaryhmalleKopioMasterHakijaryhmasta(alavalintaryhma, lisatty, edellinenHakijaryhma);
+            lisaaValintaryhmalleKopioMasterHakijaryhmasta(alavalintaryhma, lisatty);
         }
 
 //        List<HakukohdeViite> hakukohteet = hakukohdeService.findByValintaryhmaOid(valintaryhmaOid);
@@ -247,27 +206,24 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
 //    }
 
     private void lisaaValintaryhmalleKopioMasterHakijaryhmasta(Valintaryhma valintaryhma,
-                                                               Hakijaryhma masterHakijaryhma,
-                                                               Hakijaryhma edellinenMasterHakijaryhma) {
+                                                               Hakijaryhma masterHakijaryhma) {
 
-//        Hakijaryhma kopio = HakijaryhmaUtil.teeKopioMasterista(masterHakijaryhma);
-//        kopio.setValintaryhma(valintaryhma);
-//        kopio.setOid(oidService.haeHakijaryhmaOid());
-//        List<Hakijaryhma> vaiheet = LinkitettavaJaKopioitavaUtil.jarjesta(
-//                hakijaryhmaDAO.findByValintaryhma(valintaryhma.getOid()));
-//
-//        Hakijaryhma lisatty = lisaaKopio(kopio, edellinenMasterHakijaryhma, vaiheet);
-//
-//        List<Valintaryhma> alavalintaryhmat = valintaryhmaService.findValintaryhmasByParentOid(valintaryhma.getOid());
-//        for (Valintaryhma alavalintaryhma : alavalintaryhmat) {
-//            lisaaValintaryhmalleKopioMasterHakijaryhmasta(alavalintaryhma, lisatty,
-//                    lisatty.getEdellinen());
-//        }
-//
-//        List<HakukohdeViite> hakukohteet = hakukohdeService.findByValintaryhmaOid(valintaryhma.getOid());
-//        for (HakukohdeViite hakukohde : hakukohteet) {
-//            lisaaHakukohteelleKopioMasterHakijaryhmasta(hakukohde, lisatty, lisatty.getEdellinen());
-//        }
+        Hakijaryhma kopio = new Hakijaryhma();
+        kopio.setValintaryhma(valintaryhma);
+        kopio.setOid(oidService.haeHakijaryhmaOid());
+        kopio.setKiintio(masterHakijaryhma.getKiintio());
+        kopio.setKuvaus(masterHakijaryhma.getKuvaus());
+        kopio.setKaytaKaikki(masterHakijaryhma.isKaytaKaikki());
+        kopio.setLaskentakaava(masterHakijaryhma.getLaskentakaava());
+        kopio.setNimi(masterHakijaryhma.getNimi());
+        kopio.setTarkkaKiintio(masterHakijaryhma.isTarkkaKiintio());
+
+        Hakijaryhma lisatty = hakijaryhmaDAO.insert(kopio);
+
+        List<Valintaryhma> alavalintaryhmat = valintaryhmaService.findValintaryhmasByParentOid(valintaryhma.getOid());
+        for (Valintaryhma alavalintaryhma : alavalintaryhmat) {
+            lisaaValintaryhmalleKopioMasterHakijaryhmasta(alavalintaryhma, lisatty);
+        }
 
     }
 
