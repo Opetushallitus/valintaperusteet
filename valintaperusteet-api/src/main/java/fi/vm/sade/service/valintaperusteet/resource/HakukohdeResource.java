@@ -108,7 +108,7 @@ public interface HakukohdeResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{hakukohdeOid}/hakijaryhma/{hakijaryhmaOid}")
-    Response liitaHakijaryhma(@PathParam("valintatapajonoOid") String hakukohdeOid,
+    Response liitaHakijaryhma(@PathParam("hakukohdeOid") String hakukohdeOid,
                               @PathParam("hakijaryhmaOid") String hakijaryhmaOid);
 
     @POST
