@@ -76,7 +76,6 @@ public class HakijaryhmaResourceTest {
         when(hakijaryhmaValintatapajonoServiceMock.findByHakijaryhma(anyString())).thenReturn(Arrays.asList(hrjono));
 
         List<HakijaryhmaValintatapajonoDTO> puuppa = hakijaryhmaResource.valintatapajonot("oid");
-        Hakijaryhma suo = modelMapper.map(puuppa.get(0).getHakijaryhma(), Hakijaryhma.class);
 
         System.out.println(puuppa.size());
     }

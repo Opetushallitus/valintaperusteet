@@ -64,6 +64,17 @@ public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValint
     @Autowired
     private ValintaperusteetModelMapper modelMapper;
 
+    @Override
+    public HakijaryhmaValintatapajonoUpdateDTO read(String oid) {
+        try {
+            return modelMapper.map(hakijaryhmaValintatapajonoService.readByOid(oid), HakijaryhmaValintatapajonoUpdateDTO.class);
+        } catch (HakijaryhmaEiOleOlemassaException e) {
+            throw new WebApplicationException(e, Response.Status.NOT_FOUND);
+        } catch (Exception e) {
+            throw new WebApplicationException(e, Response.Status.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{oid}")

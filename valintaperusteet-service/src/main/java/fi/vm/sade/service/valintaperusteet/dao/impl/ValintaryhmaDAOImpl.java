@@ -144,4 +144,13 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long> 
 
     }
 
+    @Override
+    public List<Valintaryhma> readByHakuoid(String hakuoid) {
+        QValintaryhma vr = QValintaryhma.valintaryhma;
+
+        return from(vr)
+                .where(vr.hakuoid.eq(hakuoid))
+                .distinct().list(vr);
+    }
+
 }
