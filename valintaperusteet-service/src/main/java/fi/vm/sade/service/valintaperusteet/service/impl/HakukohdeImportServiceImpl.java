@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import fi.vm.sade.service.valintaperusteet.dao.*;
@@ -224,15 +225,39 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
         // tämä metodi palauttaa nullin).
         Valintaryhma valintaryhma = null;
         if (valintaryhmat.size() == 1) {
-            valintaryhma = valintaryhmat.get(0);
-            LOG.info("Hakukohteen tulisi olla valintaryhmän {} alla", valintaryhma.getOid());
+            if(valintaryhmat.get(0).getHakuoid() != null && !valintaryhmat.get(0).getHakuoid().equals(importData.getHakuOid())) {
+                LOG.info("Hakukohteelle ei pystytty määrittämään valintaryhmää. Potentiaalinen ryhmä löytyi, mutta haun oid ei täsmää.");
+            } else {
+                valintaryhma = valintaryhmat.get(0);
+                LOG.info("Hakukohteen tulisi olla valintaryhmän {} alla", valintaryhma.getOid());
+            }
+
+        } else if(valintaryhmat.size() > 1) {
+            List<Valintaryhma> filtered = valintaryhmat.stream().filter(hakuoidFilter(importData.getHakuOid())).collect(Collectors.toList());
+            if(filtered.size() == 1) {
+                valintaryhma = valintaryhmat.get(0);
+                LOG.info("Hakukohteen tulisi olla valintaryhmän {} alla", valintaryhma.getOid());
+            } else {
+                LOG.info("Hakukohteelle ei pystytty määrittämään valintaryhmää. Potentiaalisia valintaryhmiä on {} kpl. "
+                        + "Hakukohde lisätään juureen.", filtered.size());
+            }
         } else {
-            LOG.info("Hakukohteelle ei pystytty määrittämään valintaryhmää. Potentiaalisia valintaryhmiä on {} kpl. "
-                    + "Hakukohde lisätään juureen.", valintaryhmat.size());
+            List<Valintaryhma> haunRyhmat = valintaryhmaDAO.readByHakuoid(importData.getHakuOid());
+            if(haunRyhmat.size() == 1) {
+                valintaryhma = haunRyhmat.get(0);
+                LOG.info("Hakukohteen tulisi olla valintaryhmän {} alla", valintaryhma.getOid());
+            } else {
+                LOG.info("Yhtään potentiaalista valintaryhmää ei löytynyt. Hakukohde lisätään juureen.");
+            }
+
 
         }
 
         return valintaryhma;
+    }
+
+    private Predicate<Valintaryhma> hakuoidFilter(String hakuoid) {
+        return v -> v.getHakuoid() == null || v.getHakuoid().equals(hakuoid);
     }
 
     @Override

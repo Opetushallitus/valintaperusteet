@@ -189,6 +189,15 @@ public class ValintaperusteetModelMapper extends ModelMapper {
             }
         });
 
+        this.addMappings(new PropertyMap<HakijaryhmaValintatapajono, HakijaryhmaValintatapajonoDTO>() {
+            @Override
+            protected void configure() {
+                map().setNimi(source.getHakijaryhma().getNimi());
+                map().setKuvaus(source.getHakijaryhma().getKuvaus());
+                map().setOid(source.getOid());
+            }
+        });
+
         this.addMappings(new PropertyMap<Valintatapajono, ValintatapajonoCreateDTO>() {
             @Override
             protected void configure() {
