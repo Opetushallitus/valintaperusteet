@@ -100,6 +100,10 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
             managedObject.setKohdejoukko(incoming.getKohdejoukko());
         }
 
+        if(incoming.getHakuoid() != null) {
+            managedObject.setHakuoid(incoming.getHakuoid());
+        }
+
         managedObject.setOrganisaatiot(getOrganisaatios(incoming.getOrganisaatiot()));
         return managedObject;
     }
