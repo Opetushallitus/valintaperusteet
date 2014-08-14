@@ -2,16 +2,11 @@ package fi.vm.sade.service.valintaperusteet.service.impl;
 
 import static fi.vm.sade.service.valintaperusteet.service.impl.actors.creators.SpringExtension.SpringExtProvider;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import fi.vm.sade.service.valintaperusteet.dao.*;
+import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
 import fi.vm.sade.service.valintaperusteet.model.*;
@@ -32,10 +27,6 @@ import akka.actor.ActorSystem;
 import akka.pattern.Patterns;
 import akka.util.Timeout;
 import fi.vm.sade.kaava.Laskentakaavavalidaattori;
-import fi.vm.sade.service.valintaperusteet.dto.HakukohteenValintaperusteAvaimetDTO;
-import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi;
 import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
 import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
@@ -438,6 +429,23 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     @Override
     public void tyhjennaCache() {
         laskentakaavaCache.clear();
+    }
+
+
+
+    @Override
+    public Optional<Laskentakaava> siirra(LaskentakaavaSiirraDTO dto) {
+        if(dto.getUusinimi() != null) {
+            dto.setNimi(dto.getUusinimi());
+        }
+
+        Optional<Valintaryhma> ryhma = Optional.ofNullable(valintaryhmaDAO.readByOid(dto.getValintaryhmaOid()));
+
+        if(!ryhma.isPresent()) {
+            return Optional.empty();
+        }
+
+        return Optional.ofNullable(insert(modelMapper.map(dto, Laskentakaava.class), null, ryhma.get().getOid()));
     }
 
     @Override
