@@ -4,6 +4,7 @@ import fi.vm.sade.service.valintaperusteet.dao.GenericDAO;
 import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaValintatapajonoDAO;
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaSiirraDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.*;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -391,6 +393,21 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
         hakijaryhmaDAO.update(managedObject);
 //        return LinkitettavaJaKopioitavaUtil.paivita(managedObject, entity, kopioija);
         return managedObject;
+    }
+
+    @Override
+    public Optional<Hakijaryhma> siirra(HakijaryhmaSiirraDTO dto) {
+        if(dto.getUusinimi() != null) {
+            dto.setNimi(dto.getUusinimi());
+        }
+
+        Optional<Valintaryhma> ryhma = Optional.ofNullable(valintaryhmaService.readByOid(dto.getValintaryhmaOid()));
+
+        if(!ryhma.isPresent()) {
+            return Optional.empty();
+        }
+
+        return Optional.ofNullable(lisaaHakijaryhmaValintaryhmalle(ryhma.get().getOid(), dto));
     }
 
     @Override

@@ -8,6 +8,7 @@
 
         <valintaryhma id="1" version="0" nimi="valintaryhma1" oid="vr1"/>
         <valintaryhma id="39" version="2" nimi="valintaryhma2" oid="vr2" parent_id="1"/>
+        <valintaryhma id="60" version="2" nimi="valintaryhma3" oid="vr3"/>
 
         <hakijaryhma id="25" version="0" kiintio="20" kuvaus="" nimi="hakijaryhma 1" oid="hr1" laskentakaava_id="11" valintaryhma_id="1" kaytaKaikki="false" tarkkaKiintio="false"/>
         <hakijaryhma id="26" version="0" kiintio="20" kuvaus="" nimi="hakijaryhma 1" oid="hr2" laskentakaava_id="11" kaytaKaikki="false" tarkkaKiintio="false"/>

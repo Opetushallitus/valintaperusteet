@@ -1,11 +1,13 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaSiirraDTO;
 import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface HakijaryhmaService {
 
@@ -34,4 +36,6 @@ public interface HakijaryhmaService {
     void delete(Hakijaryhma entity);
 
     Hakijaryhma update(String oid, HakijaryhmaCreateDTO entity);
+
+    Optional<Hakijaryhma> siirra(HakijaryhmaSiirraDTO dto);
 }
