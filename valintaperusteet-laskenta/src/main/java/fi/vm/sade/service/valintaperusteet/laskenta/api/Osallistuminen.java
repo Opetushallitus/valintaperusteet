@@ -6,5 +6,5 @@ package fi.vm.sade.service.valintaperusteet.laskenta.api;
  * Time: 12.42
  */
 public enum Osallistuminen {
-    OSALLISTUI, EI_OSALLISTUNUT, MERKITSEMATTA
+    OSALLISTUI, EI_OSALLISTUNUT, MERKITSEMATTA, EI_VAADITA
 }

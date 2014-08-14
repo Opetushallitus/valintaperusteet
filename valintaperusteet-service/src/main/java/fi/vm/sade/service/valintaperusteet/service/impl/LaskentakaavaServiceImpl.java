@@ -369,6 +369,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             newVp.setLahde(vp.getLahde());
             newVp.setOnPakollinen(vp.getOnPakollinen());
             newVp.setTunniste(vp.getTunniste());
+            newVp.setVaatiiOsallistumisen(vp.getVaatiiOsallistumisen());
             newVp.setFunktiokutsu(managed);
 
             if(vp.getKuvaukset() != null) {

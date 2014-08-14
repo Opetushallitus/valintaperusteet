@@ -47,6 +47,10 @@ public class ValintaperusteViite extends BaseEntity implements Comparable<Valint
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     private TekstiRyhma kuvaukset;
 
+    // VT-854 mahdollistetaan syötettävien arvojen pistesyöttö ilman laskentaa
+    @Column(name = "vaatii_osallistumisen", nullable = false)
+    private Boolean vaatiiOsallistumisen = true;
+
     public String getTunniste() {
         return tunniste;
     }
@@ -131,5 +135,13 @@ public class ValintaperusteViite extends BaseEntity implements Comparable<Valint
 
     public void setKuvaukset(TekstiRyhma kuvaukset) {
         this.kuvaukset = kuvaukset;
+    }
+
+    public Boolean getVaatiiOsallistumisen() {
+        return vaatiiOsallistumisen;
+    }
+
+    public void setVaatiiOsallistumisen(Boolean vaatiiOsallistumisen) {
+        this.vaatiiOsallistumisen = vaatiiOsallistumisen;
     }
 }

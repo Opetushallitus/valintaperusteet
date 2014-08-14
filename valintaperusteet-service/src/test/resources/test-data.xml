@@ -104,15 +104,15 @@
 
     <funktiokutsu tallenna_tulos="false" id="403" version="0" funktionimi="HAELUKUARVO"/>
     <valintaperuste_viite id="403" version="0" tunniste="t1" kuvaus="t1" lahde="SYOTETTAVA_ARVO" funktiokutsu_id="403"
-                          on_pakollinen="true" indeksi="1"/>
+                          on_pakollinen="true" indeksi="1" vaatii_osallistumisen="true"/>
 
     <funktiokutsu tallenna_tulos="false" id="404" version="0" funktionimi="HAELUKUARVO"/>
     <valintaperuste_viite id="404" version="0" tunniste="t2" kuvaus="t1" lahde="SYOTETTAVA_ARVO" funktiokutsu_id="404"
-                          on_pakollinen="true" indeksi="1"/>
+                          on_pakollinen="true" indeksi="1" vaatii_osallistumisen="true"/>
 
     <funktiokutsu tallenna_tulos="false" id="405" version="0" funktionimi="HAELUKUARVO"/>
     <valintaperuste_viite id="405" version="0" tunniste="aidinkieli" kuvaus="aidinkieli" lahde="SYOTETTAVA_ARVO"
-                          funktiokutsu_id="405" on_pakollinen="true" indeksi="1"/>
+                          funktiokutsu_id="405" on_pakollinen="true" indeksi="1" vaatii_osallistumisen="true"/>
 
     <funktiokutsu tallenna_tulos="false" id="506" version="0" funktionimi="SUMMA"/>
     <funktioargumentti id="506" version="0" funktiokutsuparent_id="506" funktiokutsuchild_id="7" indeksi="1"/>
@@ -130,7 +130,7 @@
     <funktiokutsu tallenna_tulos="false" id="504" version="0" funktionimi="HAEMERKKIJONOJAKONVERTOILUKUARVOKSI"/>
 
     <valintaperuste_viite id="504" version="0" tunniste="matematiikka_yo" kuvaus="matematiikan yo-arvosana"
-                          lahde="SYOTETTAVA_ARVO" on_pakollinen="true" funktiokutsu_id="504" indeksi="1"/>
+                          lahde="SYOTETTAVA_ARVO" on_pakollinen="true" funktiokutsu_id="504" indeksi="1" vaatii_osallistumisen="true"/>
     <arvokonvertteriparametri id="504" version="0" arvo="L" paluuarvo="10.0" hylkaysperuste="false"
                               funktiokutsu_id="504"/>
     <arvokonvertteriparametri id="505" version="0" arvo="E" paluuarvo="9.0" hylkaysperuste="false"
@@ -174,7 +174,7 @@
 
     <funktiokutsu tallenna_tulos="false" id="514" version="0" funktionimi="HAELUKUARVO"/>
     <valintaperuste_viite id="514" version="0" lahde="SYOTETTAVA_ARVO" tunniste="valintaperuste1" kuvaus="kuvaus"
-                          on_pakollinen="true" funktiokutsu_id="514" indeksi="1"/>
+                          on_pakollinen="true" funktiokutsu_id="514" indeksi="1" vaatii_osallistumisen="true"/>
     <arvokonvertteriparametri id="514" version="0" arvo="arvo1" paluuarvo="10.0" hylkaysperuste="false"
                               funktiokutsu_id="514"/>
     <arvokonvertteriparametri id="515" version="0" arvo="arvo2" paluuarvo="9.0" hylkaysperuste="false"
@@ -200,7 +200,7 @@
     <funktiokutsu tallenna_tulos="false" id="600" version="0" funktionimi="HAELUKUARVO"/>
     <valintaperuste_viite id="600" version="0" lahde="HAKUKOHTEEN_SYOTETTAVA_ARVO" tunniste="hakukohteentunniste"
                           kuvaus="kuvaus"
-                          on_pakollinen="true" epasuora_viittaus="true" funktiokutsu_id="600" indeksi="1"/>
+                          on_pakollinen="true" epasuora_viittaus="true" funktiokutsu_id="600" indeksi="1" vaatii_osallistumisen="true"/>
     <arvovalikonvertteriparametri id="600" version="0" minvalue="{{hakukohde.minimiarvo}}" maxvalue="10.0"
                                   palauta_haettu_arvo="false"
                                   paluuarvo="1.0" funktiokutsu_id="600" hylkaysperuste="false"/>
@@ -289,7 +289,7 @@
     <funktiokutsu tallenna_tulos="false" id="708" version="0" funktionimi="KONVERTOILUKUARVO"/>
     <valintaperuste_viite id="601" version="0" lahde="HAKUKOHTEEN_ARVO" tunniste="{{hakukohde.paasykoe_tunniste}}"
                           kuvaus="kuvaus"
-                          on_pakollinen="true" funktiokutsu_id="708" indeksi="1"/>
+                          on_pakollinen="true" funktiokutsu_id="708" indeksi="1" vaatii_osallistumisen="true"/>
     <funktioargumentti id="709" version="0" funktiokutsuparent_id="708" funktiokutsuchild_id="1" indeksi="1"/>
 
     <tekstiryhma id="1" version="0" />
@@ -319,7 +319,7 @@
     <funktioargumentti id="710" version="0" funktiokutsuparent_id="709" laskentakaavachild_id="418" indeksi="1"/>
     <valintaperuste_viite id="602" version="0" lahde="HAKUKOHTEEN_SYOTETTAVA_ARVO"
                           tunniste="{{hakukohde.paasykoe_tunniste}}" kuvaus="kuvaus"
-                          on_pakollinen="true" funktiokutsu_id="709" indeksi="1"/>
+                          on_pakollinen="true" funktiokutsu_id="709" indeksi="1" vaatii_osallistumisen="true"/>
     <arvovalikonvertteriparametri id="603" version="0" minvalue="{{hakukohde.paasykoe_min}}" maxvalue="3.0"
                                   paluuarvo="50.0"
                                   palauta_haettu_arvo="{{hakukohde.avk1_pha}}" funktiokutsu_id="709" hylkaysperuste="false"/>

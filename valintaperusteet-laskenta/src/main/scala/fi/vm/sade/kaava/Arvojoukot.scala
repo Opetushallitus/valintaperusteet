@@ -67,7 +67,7 @@ object Arvojoukot {
     "TE"->"Terveystieto",
     "YH"->"Yhteiskuntaoppi",
     "REAALI"->"Ainereaali",
-    "RR"->"Osakoereaali",
+    "RR"->"Reaali",
     "PITKA_KIELI"->"Kieli, pitkä oppimäärä",
     "KESKIPITKA_KIELI"->"Kieli, keskipitkä oppimäärä",
     "LYHYT_KIELI"->"Kieli, lyhyt oppimäärä",

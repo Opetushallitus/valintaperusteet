@@ -41,6 +41,9 @@ public class ValintaperusteDTO {
     @ApiModelProperty(value = "Osallistumistunniste")
     private String osallistuminenTunniste;
 
+    @ApiModelProperty(value = "Vaatiiko syötettävä arvo osallistumisen")
+    private Boolean vaatiiOsallistumisen = true;
+
     public String getTunniste() {
         return tunniste;
     }
@@ -111,5 +114,13 @@ public class ValintaperusteDTO {
 
     public void setOsallistuminenTunniste(String osallistuminenTunniste) {
         this.osallistuminenTunniste = osallistuminenTunniste;
+    }
+
+    public Boolean getVaatiiOsallistumisen() {
+        return vaatiiOsallistumisen;
+    }
+
+    public void setVaatiiOsallistumisen(Boolean vaatiiOsallistumisen) {
+        this.vaatiiOsallistumisen = vaatiiOsallistumisen;
     }
 }
