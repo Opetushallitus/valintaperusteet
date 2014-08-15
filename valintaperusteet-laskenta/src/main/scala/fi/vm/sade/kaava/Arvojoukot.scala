@@ -110,4 +110,9 @@ object Arvojoukot {
     "81" -> "Ylimääräisenä kokeena suoritettu matematiikka"
   )
 
+  val TOTUUSARVOT = Array(
+    "true" -> "true",
+    "false" -> "false"
+  )
+
 }

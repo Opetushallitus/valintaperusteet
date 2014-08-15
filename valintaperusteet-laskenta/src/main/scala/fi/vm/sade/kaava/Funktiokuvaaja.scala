@@ -58,7 +58,8 @@ object Funktiokuvaaja {
     override val nimi = ARVOVALIKONVERTTERI
   }
 
-  case class Arvokonvertterikuvaus(arvotyyppi: Syoteparametrityyppi) extends KonvertteriTyyppi {
+  case class Arvokonvertterikuvaus(arvotyyppi: Syoteparametrityyppi,
+                                   arvojoukko: Array[(String,String)] = Array.empty[(String,String)]) extends KonvertteriTyyppi {
     override val nimi = ARVOKONVERTTERI
   }
 
@@ -243,7 +244,7 @@ object Funktiokuvaaja {
       konvertteri = Some(
         Konvertterikuvaus(
           pakollinen = true,
-          konvertteriTyypit = Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.TOTUUSARVO))
+          konvertteriTyypit = Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.ARVOJOUKKO, Arvojoukot.TOTUUSARVOT))
         ))
     ),
     Funktionimi.HAEMERKKIJONOJAKONVERTOITOTUUSARVOKSI -> Funktiokuvaus(
