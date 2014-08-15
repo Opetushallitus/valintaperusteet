@@ -279,6 +279,12 @@ object Laskenta {
                                                  oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "")
     extends HaeArvo[BigDecimal] with Lukuarvofunktio
 
+  case class HaeTotuusarvoJaKonvertoiLukuarvoksi(konvertteri: Konvertteri[Boolean, BigDecimal],
+                                                 oletusarvo: Option[BigDecimal],
+                                                 valintaperusteviite: Valintaperuste,
+                                                 oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "")
+    extends HaeArvo[BigDecimal] with Lukuarvofunktio
+
   case class HaeMerkkijonoJaKonvertoiTotuusarvoksi(konvertteri: Konvertteri[String, Boolean],
                                                    oletusarvo: Option[Boolean],
                                                    valintaperusteviite: Valintaperuste,

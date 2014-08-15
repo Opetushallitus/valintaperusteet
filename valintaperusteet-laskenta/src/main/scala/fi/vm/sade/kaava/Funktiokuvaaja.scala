@@ -234,6 +234,18 @@ object Funktiokuvaaja {
           konvertteriTyypit = Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.MERKKIJONO))
         ))
     ),
+    Funktionimi.HAETOTUUSARVOJAKONVERTOILUKUARVOKSI -> Funktiokuvaus(
+      tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
+      syoteparametrit = List(
+        Syoteparametrikuvaus(avain = "oletusarvo", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = false)
+      ),
+      valintaperusteparametri = List(Valintaperusteparametrikuvaus("tunniste", Syoteparametrityyppi.MERKKIJONO, kuvaus = "Tunniste")),
+      konvertteri = Some(
+        Konvertterikuvaus(
+          pakollinen = true,
+          konvertteriTyypit = Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.TOTUUSARVO))
+        ))
+    ),
     Funktionimi.HAEMERKKIJONOJAKONVERTOITOTUUSARVOKSI -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.TOTUUSARVOFUNKTIO,
       syoteparametrit = List(

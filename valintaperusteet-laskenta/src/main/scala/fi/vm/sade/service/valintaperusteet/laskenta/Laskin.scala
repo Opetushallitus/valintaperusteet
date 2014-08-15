@@ -376,7 +376,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
       }
 
       case Hakutoive(n, oid, tulosTunniste,_,_,_) => {
-        val onko = Some(hakemus.onkoHakutoivePrioriteetilla(hakukohde.hakukohdeOid, n));
+        val onko = Some(hakemus.onkoHakutoivePrioriteetilla(hakukohde.hakukohdeOid, n))
         val tilat = List(new Hyvaksyttavissatila)
         (onko, tilat, Historia("Hakutoive", onko, tilat, None, Some(Map("prioriteetti" -> Some(n)))))
       }
@@ -646,6 +646,31 @@ private class Laskin private(private val hakukohde: Hakukohde,
           }
         }
       }
+
+
+      case HaeTotuusarvoJaKonvertoiLukuarvoksi(konvertteri, oletusarvo, valintaperusteviite, oid, tulosTunniste,_,_,_) => {
+        konvertteri match {
+          case a: Arvokonvertteri[_,_] => {
+            val (konv, virheet) = konversioToArvokonversio(a.konversioMap,hakemus, hakukohde)
+            if(konv.isEmpty) {
+              (None, virheet, Historia("Hae totuusarvo ja konvertoi lukuarvoksi", None, virheet, None, None))
+            } else {
+              val (tulos, tila) = haeValintaperuste[BigDecimal](valintaperusteviite, hakemus,
+                s => suoritaKonvertointi[Boolean, BigDecimal]((string2boolean(s, valintaperusteviite.tunniste, new Hyvaksyttavissatila)), konv.get.asInstanceOf[Arvokonvertteri[Boolean,BigDecimal]]), oletusarvo)
+
+              (tulos, tila, Historia("Hae totuusarvo ja konvertoi lukuarvoksi", tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
+            }
+
+          }
+          case _ => {
+            val (tulos, tila) = haeValintaperuste[BigDecimal](valintaperusteviite, hakemus,
+              s => suoritaKonvertointi[Boolean, BigDecimal]((string2boolean(s, valintaperusteviite.tunniste, new Hyvaksyttavissatila)), konvertteri), oletusarvo)
+            (tulos, tila, Historia("Hae totuusarvo ja konvertoi lukuarvoksi", tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
+          }
+        }
+      }
+
+
       case NimettyLukuarvo(nimi, f, oid, tulosTunniste,_,_,_) => {
         val (tulos, tilat, h) = muodostaYksittainenTulos(f, d => d)
         (tulos, tilat, Historia("Nimetty lukuarvo", tulos, tilat, Some(List(h)), Some(Map("nimi" -> Some(nimi)))))

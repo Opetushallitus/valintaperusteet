@@ -300,6 +300,28 @@ class LaskentaTest extends FunSuite {
     assert(BigDecimal(tulos.get) == BigDecimal("10.0"))
   }
 
+  test("HaeTotuusarvoJaKonvertoiLukuarvoksi") {
+    val hakemus = TestHakemus("", Nil, Map("kymppiluokka" -> "true", "ysiluokka" -> "jeppis"))
+
+    val konv = Arvokonvertteri[Boolean, BigDecimal](List(Arvokonversio(true, BigDecimal("1.0"), false ,tekstiRyhma),
+      Arvokonversio(false, BigDecimal(0.0), false, tekstiRyhma)))
+    val f = HaeTotuusarvoJaKonvertoiLukuarvoksi(konv, None, HakemuksenValintaperuste("kymppiluokka", false))
+    val f2 = HaeTotuusarvoJaKonvertoiLukuarvoksi(konv, None, HakemuksenValintaperuste("ysiluokka", false))
+    val f3 = HaeTotuusarvoJaKonvertoiLukuarvoksi(konv, None, HakemuksenValintaperuste("jepa", false))
+
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemus, f)
+    assert(BigDecimal(tulos.get) == BigDecimal("1.0"))
+    assertTilaHyvaksyttavissa(tila)
+
+    val (tulos2, tila2) = Laskin.laske(hakukohde, hakemus, f2)
+    assert(tulos2.isEmpty)
+    assertTilaVirhe(tila2, VirheMetatietotyyppi.VALINTAPERUSTETTA_EI_VOIDA_TULKITA_TOTUUSARVOKSI)
+
+    val (tulos3, tila3) = Laskin.laske(hakukohde, hakemus, f3)
+    assert(tulos3.isEmpty)
+    assertTilaHyvaksyttavissa(tila3)
+  }
+
   test("Demografia") {
     val hakemukset = List(
       TestHakemus("hakemusoid1",

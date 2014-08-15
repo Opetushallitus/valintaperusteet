@@ -218,6 +218,21 @@ object Laskentadomainkonvertteri {
           oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
       }
 
+      case Funktionimi.HAETOTUUSARVOJAKONVERTOILUKUARVOKSI => {
+
+        val konversioMap = funktiokutsu.getArvokonvertteriparametrit.map(konv =>
+          ArvokonversioMerkkijonoilla[Boolean, BigDecimal](konv.getArvo, BigDecimal(konv.getPaluuarvo), konv.getHylkaysperuste, konv.getKuvaukset)).toList
+
+        val oletusarvo = funktiokutsu.getSyoteparametrit.find(_.getAvain == "oletusarvo").filter(!_.getArvo.isEmpty)
+          .map(p => parametriToBigDecimal(p))
+
+        HaeTotuusarvoJaKonvertoiLukuarvoksi(
+          Arvokonvertteri[Boolean, BigDecimal](konversioMap),
+          oletusarvo,
+          valintaperusteviitteet.head,
+          oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
+      }
+
       case Funktionimi.HAEMERKKIJONOJAKONVERTOITOTUUSARVOKSI => {
         val konversioMap = funktiokutsu.getArvokonvertteriparametrit.map(konv =>
           ArvokonversioMerkkijonoilla[String, Boolean](konv.getArvo, konv.getPaluuarvo.toBoolean, konv.getHylkaysperuste, konv.getKuvaukset)).toList
