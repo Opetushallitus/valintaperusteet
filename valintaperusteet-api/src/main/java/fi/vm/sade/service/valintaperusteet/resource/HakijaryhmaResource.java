@@ -2,19 +2,11 @@ package fi.vm.sade.service.valintaperusteet.resource;
 
 import java.util.List;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaDTO;
-import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaValintatapajonoDTO;
+import fi.vm.sade.service.valintaperusteet.dto.*;
 
 /**
  * Created with IntelliJ IDEA. User: jukais Date: 17.1.2013 Time: 14.42 To
@@ -48,5 +40,11 @@ public interface HakijaryhmaResource {
     @DELETE
     @Path("/{oid}")
     Response delete(@PathParam("oid") String oid);
+
+    @PUT
+    @Path("/siirra")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    Response siirra(HakijaryhmaSiirraDTO dto);
 
 }

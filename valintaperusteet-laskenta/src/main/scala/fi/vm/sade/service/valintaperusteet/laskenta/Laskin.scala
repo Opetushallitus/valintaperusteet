@@ -206,7 +206,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
 
     // Jos kyseessä on syötettävä valintaperuste, pitää ensin tsekata osallistumistieto
     valintaperusteviite match {
-      case SyotettavaValintaperuste(tunniste, pakollinen, osallistuminenTunniste, kuvaus, kuvaukset) => {
+      case SyotettavaValintaperuste(tunniste, pakollinen, osallistuminenTunniste, kuvaus, kuvaukset, vaatiiOsallistumisen) => {
         val (osallistuminen, osallistumistila) = hakemus.kentat.get(osallistuminenTunniste) match {
           case Some(osallistuiArvo) => {
             try {
@@ -217,7 +217,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
                   new OsallistumistietoaEiVoidaTulkitaVirhe(osallistuminenTunniste)))
             }
           }
-          case None => (Osallistuminen.MERKITSEMATTA, new Hyvaksyttavissatila)
+          case None => if(vaatiiOsallistumisen) (Osallistuminen.MERKITSEMATTA, new Hyvaksyttavissatila) else (Osallistuminen.EI_VAADITA, new Hyvaksyttavissatila)
         }
 
         // Jos valintaperusteelle on merkitty arvo "ei osallistunut" tai sitä ei ole merkitty, palautetaan hylätty-tila,
@@ -264,11 +264,11 @@ private class Laskin private(private val hakukohde: Hakukohde,
           }
         }
       }
-      case HakukohteenSyotettavaValintaperuste(tunniste, pakollinen, epasuoraViittaus, osallistumisenTunnistePostfix, kuvaus, kuvaukset) => {
+      case HakukohteenSyotettavaValintaperuste(tunniste, pakollinen, epasuoraViittaus, osallistumisenTunnistePostfix, kuvaus, kuvaukset, vaatiiOsallistumisen) => {
         hakukohde.valintaperusteet.get(tunniste).filter(!_.trim.isEmpty) match {
           case Some(arvo) => {
             if (epasuoraViittaus) {
-              haeValintaperuste(SyotettavaValintaperuste(arvo, pakollinen, s"$arvo$osallistumisenTunnistePostfix", kuvaus, kuvaukset), hakemus, konv, oletusarvo)
+              haeValintaperuste(SyotettavaValintaperuste(arvo, pakollinen, s"$arvo$osallistumisenTunnistePostfix", kuvaus, kuvaukset, vaatiiOsallistumisen), hakemus, konv, oletusarvo)
             } else konv(arvo)
           }
           case None => {
@@ -376,7 +376,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
       }
 
       case Hakutoive(n, oid, tulosTunniste,_,_,_) => {
-        val onko = Some(hakemus.onkoHakutoivePrioriteetilla(hakukohde.hakukohdeOid, n));
+        val onko = Some(hakemus.onkoHakutoivePrioriteetilla(hakukohde.hakukohdeOid, n))
         val tilat = List(new Hyvaksyttavissatila)
         (onko, tilat, Historia("Hakutoive", onko, tilat, None, Some(Map("prioriteetti" -> Some(n)))))
       }
@@ -646,6 +646,31 @@ private class Laskin private(private val hakukohde: Hakukohde,
           }
         }
       }
+
+
+      case HaeTotuusarvoJaKonvertoiLukuarvoksi(konvertteri, oletusarvo, valintaperusteviite, oid, tulosTunniste,_,_,_) => {
+        konvertteri match {
+          case a: Arvokonvertteri[_,_] => {
+            val (konv, virheet) = konversioToArvokonversio(a.konversioMap,hakemus, hakukohde)
+            if(konv.isEmpty) {
+              (None, virheet, Historia("Hae totuusarvo ja konvertoi lukuarvoksi", None, virheet, None, None))
+            } else {
+              val (tulos, tila) = haeValintaperuste[BigDecimal](valintaperusteviite, hakemus,
+                s => suoritaKonvertointi[Boolean, BigDecimal]((string2boolean(s, valintaperusteviite.tunniste, new Hyvaksyttavissatila)), konv.get.asInstanceOf[Arvokonvertteri[Boolean,BigDecimal]]), oletusarvo)
+
+              (tulos, tila, Historia("Hae totuusarvo ja konvertoi lukuarvoksi", tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
+            }
+
+          }
+          case _ => {
+            val (tulos, tila) = haeValintaperuste[BigDecimal](valintaperusteviite, hakemus,
+              s => suoritaKonvertointi[Boolean, BigDecimal]((string2boolean(s, valintaperusteviite.tunniste, new Hyvaksyttavissatila)), konvertteri), oletusarvo)
+            (tulos, tila, Historia("Hae totuusarvo ja konvertoi lukuarvoksi", tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
+          }
+        }
+      }
+
+
       case NimettyLukuarvo(nimi, f, oid, tulosTunniste,_,_,_) => {
         val (tulos, tilat, h) = muodostaYksittainenTulos(f, d => d)
         (tulos, tilat, Historia("Nimetty lukuarvo", tulos, tilat, Some(List(h)), Some(Map("nimi" -> Some(nimi)))))

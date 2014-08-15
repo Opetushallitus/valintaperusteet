@@ -1,11 +1,9 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
 import java.util.List;
+import java.util.Optional;
 
-import fi.vm.sade.service.valintaperusteet.dto.HakukohteenValintaperusteAvaimetDTO;
-import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
+import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
 import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
 import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
@@ -52,4 +50,6 @@ public interface LaskentakaavaService {
     Laskentakaava insert(Laskentakaava laskentakaava, String hakukohdeOid, String valintaryhmaOid);
 
     void tyhjennaCache();
+
+    Optional<Laskentakaava> siirra(LaskentakaavaSiirraDTO dto);
 }

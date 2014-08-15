@@ -83,8 +83,8 @@ object JsonFormats {
       def writes(map: Map[Konvertterinimi, KonvertteriTyyppi]): JsValue = {
         val tyypit = map.map(t => {
           t._2 match {
-            case Arvokonvertterikuvaus(arvotyyppi) => {
-              Json.obj("tyyppi" -> t._2.nimi.toString, "arvotyyppi" -> arvotyyppi.toString)
+            case Arvokonvertterikuvaus(arvotyyppi,arvojoukko) => {
+              Json.obj("tyyppi" -> t._2.nimi.toString, "arvotyyppi" -> arvotyyppi.toString, "arvojoukko" -> Json.toJson(arvojoukko))
             }
             case _ => Json.obj("tyyppi" -> t._2.nimi.toString)
           }

@@ -25,12 +25,12 @@ object Laskenta {
   case class HakemuksenValintaperuste(tunniste: String, pakollinen: Boolean) extends Valintaperuste
 
   case class SyotettavaValintaperuste(tunniste: String, pakollinen: Boolean,
-                                      osallistuminenTunniste: String, kuvaus: String = "", kuvaukset: TekstiRyhma) extends Valintaperuste
+                                      osallistuminenTunniste: String, kuvaus: String = "", kuvaukset: TekstiRyhma, vaatiiOsallistumisen: Boolean = true) extends Valintaperuste
 
   case class HakukohteenValintaperuste(tunniste: String, pakollinen: Boolean, epasuoraViittaus: Boolean) extends Valintaperuste
 
   case class HakukohteenSyotettavaValintaperuste(tunniste: String, pakollinen: Boolean, epasuoraViittaus: Boolean,
-                                                 osallistuminenTunniste: String, kuvaus: String = "", kuvaukset: TekstiRyhma) extends Valintaperuste
+                                                 osallistuminenTunniste: String, kuvaus: String = "", kuvaukset: TekstiRyhma, vaatiiOsallistumisen: Boolean = true) extends Valintaperuste
 
   trait Konvertteri[S, T] {
     def konvertoi(arvo: S): (Option[T], Tila)
@@ -274,6 +274,12 @@ object Laskenta {
   }
 
   case class HaeMerkkijonoJaKonvertoiLukuarvoksi(konvertteri: Konvertteri[String, BigDecimal],
+                                                 oletusarvo: Option[BigDecimal],
+                                                 valintaperusteviite: Valintaperuste,
+                                                 oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "")
+    extends HaeArvo[BigDecimal] with Lukuarvofunktio
+
+  case class HaeTotuusarvoJaKonvertoiLukuarvoksi(konvertteri: Konvertteri[Boolean, BigDecimal],
                                                  oletusarvo: Option[BigDecimal],
                                                  valintaperusteviite: Valintaperuste,
                                                  oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "")

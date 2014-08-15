@@ -5,19 +5,16 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.REA
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
 
 import java.util.List;
+import java.util.Optional;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaSiirraDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
+import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
+import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -143,6 +140,17 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
         } catch (HakijaryhmaaEiVoiPoistaaException e) {
             throw new WebApplicationException(e, Response.Status.FORBIDDEN);
         }
+    }
+
+    @PUT
+    @Path("/siirra")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response siirra(HakijaryhmaSiirraDTO dto) {
+        Optional<Hakijaryhma> siirretty = hakijaryhmaService.siirra(dto);
+        return siirretty.map(kaava ->
+                Response.status(Response.Status.ACCEPTED).entity(modelMapper.map(kaava, HakijaryhmaDTO.class)).build())
+                .orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
 
 }

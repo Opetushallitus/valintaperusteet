@@ -6,6 +6,7 @@ import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaSiirraDTO;
 import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
@@ -160,6 +161,15 @@ public class HakijaryhmaServiceTest {
         assertEquals(2, hakijaryhmaService.findByValintaryhma("vr1").size());
         assertEquals(3, hakijaryhmaService.findByValintaryhma("vr2").size());
         assertEquals(1, hakijaryhmaService.findByHakukohde("1").size());
+
+        HakijaryhmaSiirraDTO siirrettava = modelMapper.map(hakijaryhma, HakijaryhmaSiirraDTO.class);
+        siirrettava.setUusinimi("Uusi nimi");
+        siirrettava.setValintaryhmaOid("vr3");
+
+        Hakijaryhma siirretty = hakijaryhmaService.siirra(siirrettava).get();
+
+        assertEquals(1, hakijaryhmaService.findByValintaryhma("vr3").size());
+        assertEquals("Uusi nimi", siirretty.getNimi());
     }
 
     @Test

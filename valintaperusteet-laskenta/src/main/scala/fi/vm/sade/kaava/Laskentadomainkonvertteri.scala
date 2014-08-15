@@ -125,9 +125,9 @@ object Laskentadomainkonvertteri {
         HkValintaperuste(valintaperuste.getTunniste, valintaperuste.getOnPakollinen, Option(valintaperuste.getEpasuoraViittaus).map(Boolean2boolean(_)).getOrElse(false))
       case Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO =>
         HksValintaperuste(valintaperuste.getTunniste, valintaperuste.getOnPakollinen, Option(valintaperuste.getEpasuoraViittaus).map(Boolean2boolean(_)).getOrElse(false),
-          ValintaperusteViite.OSALLISTUMINEN_POSTFIX, valintaperuste.getKuvaus, valintaperuste.getKuvaukset)
+          ValintaperusteViite.OSALLISTUMINEN_POSTFIX, valintaperuste.getKuvaus, valintaperuste.getKuvaukset, valintaperuste.getVaatiiOsallistumisen)
       case Valintaperustelahde.SYOTETTAVA_ARVO => SyotettavaValintaperuste(valintaperuste.getTunniste,
-        valintaperuste.getOnPakollinen, valintaperuste.getOsallistuminenTunniste, valintaperuste.getKuvaus, valintaperuste.getKuvaukset)
+        valintaperuste.getOnPakollinen, valintaperuste.getOsallistuminenTunniste, valintaperuste.getKuvaus, valintaperuste.getKuvaukset, valintaperuste.getVaatiiOsallistumisen)
     }
   }
 
@@ -213,6 +213,21 @@ object Laskentadomainkonvertteri {
 
         HaeMerkkijonoJaKonvertoiLukuarvoksi(
           Arvokonvertteri[String, BigDecimal](konversioMap),
+          oletusarvo,
+          valintaperusteviitteet.head,
+          oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
+      }
+
+      case Funktionimi.HAETOTUUSARVOJAKONVERTOILUKUARVOKSI => {
+
+        val konversioMap = funktiokutsu.getArvokonvertteriparametrit.map(konv =>
+          ArvokonversioMerkkijonoilla[Boolean, BigDecimal](konv.getArvo, BigDecimal(konv.getPaluuarvo), konv.getHylkaysperuste, konv.getKuvaukset)).toList
+
+        val oletusarvo = funktiokutsu.getSyoteparametrit.find(_.getAvain == "oletusarvo").filter(!_.getArvo.isEmpty)
+          .map(p => parametriToBigDecimal(p))
+
+        HaeTotuusarvoJaKonvertoiLukuarvoksi(
+          Arvokonvertteri[Boolean, BigDecimal](konversioMap),
           oletusarvo,
           valintaperusteviitteet.head,
           oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)

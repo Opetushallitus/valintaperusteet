@@ -66,8 +66,8 @@ object Arvojoukot {
     "GE"->"Maantiede",
     "TE"->"Terveystieto",
     "YH"->"Yhteiskuntaoppi",
-    "REAALI"->"Ainereaali",
-    "RR"->"Osakoereaali",
+    "AINEREAALI"->"Ainereaali",
+    "REAALI"->"Reaali",
     "PITKA_KIELI"->"Kieli, pitkä oppimäärä",
     "KESKIPITKA_KIELI"->"Kieli, keskipitkä oppimäärä",
     "LYHYT_KIELI"->"Kieli, lyhyt oppimäärä",
@@ -108,6 +108,11 @@ object Arvojoukot {
     "62" -> "Ylimääräisenä suoritettu toisen kotimaisen kielen koe",
     "71" -> "Ylimääräisenä kokeena suoritettu reaaliaine",
     "81" -> "Ylimääräisenä kokeena suoritettu matematiikka"
+  )
+
+  val TOTUUSARVOT = Array(
+    "true" -> "true",
+    "false" -> "false"
   )
 
 }

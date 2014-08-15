@@ -14,10 +14,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaDTO;
-import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaInsertDTO;
-import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaListDTO;
+import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi;
 
 /**
@@ -68,5 +65,11 @@ public interface LaskentakaavaResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response insert(LaskentakaavaInsertDTO laskentakaava);
+
+    @PUT
+    @Path("/siirra")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    Response siirra(LaskentakaavaSiirraDTO dto);
 
 }

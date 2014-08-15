@@ -207,6 +207,7 @@ public class LaskentakaavaServiceTest {
         }
     }
 
+
     private double luku(Funktiokutsu lukufunktio) {
         if (!Funktionimi.LUKUARVO.equals(lukufunktio.getFunktionimi()) || lukufunktio.getSyoteparametrit().size() != 1) {
             throw new RuntimeException("Illegal lukuarvo");
@@ -594,5 +595,72 @@ public class LaskentakaavaServiceTest {
     public void testHaeLaskettavaKaavaVaarallaMoodilla() {
         final Long laskentakaavaId = 417L;
         laskentakaavaService.haeLaskettavaKaava(laskentakaavaId, Laskentamoodi.VALINTAKOELASKENTA);
+    }
+
+    @Test
+    public void testSiirra() {
+        LaskentakaavaCreateDTO laskentakaava = new LaskentakaavaCreateDTO();
+        laskentakaava.setNimi("kaava3342");
+        laskentakaava.setOnLuonnos(false);
+        laskentakaava.setFunktiokutsu(createSumma(createLukuarvo(5.0), createLukuarvo(10.0), createLukuarvo(100.0)));
+
+        Laskentakaava tallennettu = laskentakaavaService.insert(laskentakaava, null, "oid1");
+
+        Laskentakaava haettu = laskentakaavaService.read(tallennettu.getId());
+        assertFalse(haettu.getOnLuonnos());
+        assertEquals(Funktionimi.SUMMA, haettu.getFunktiokutsu().getFunktionimi());
+        assertEquals(3, haettu.getFunktiokutsu().getFunktioargumentit().size());
+
+        for (Funktioargumentti fa : haettu.getFunktiokutsu().getFunktioargumentit()) {
+            assertEquals(Funktionimi.LUKUARVO, fa.getFunktiokutsuChild().getFunktionimi());
+        }
+
+        LaskentakaavaSiirraDTO siirrettava = modelMapper.map(tallennettu, LaskentakaavaSiirraDTO.class);
+        siirrettava.setUusinimi("UusiNimi");
+        siirrettava.setValintaryhmaOid("oid2");
+
+        Laskentakaava siirretty = laskentakaavaService.siirra(siirrettava).get();
+
+        assertFalse(siirretty.getOnLuonnos());
+        assertEquals(Funktionimi.SUMMA, siirretty.getFunktiokutsu().getFunktionimi());
+        assertEquals(3, siirretty.getFunktiokutsu().getFunktioargumentit().size());
+
+
+        for (Funktioargumentti fa : siirretty.getFunktiokutsu().getFunktioargumentit()) {
+            assertEquals(Funktionimi.LUKUARVO, fa.getFunktiokutsuChild().getFunktionimi());
+        }
+
+        assertEquals("UusiNimi", siirretty.getNimi());
+        assertEquals("oid2", siirretty.getValintaryhma().getOid());
+
+
+    }
+
+    @Test
+    public void testSiirraValintaRyhmaaEiLoydy() {
+        LaskentakaavaCreateDTO laskentakaava = new LaskentakaavaCreateDTO();
+        laskentakaava.setNimi("kaava3342");
+        laskentakaava.setOnLuonnos(false);
+        laskentakaava.setFunktiokutsu(createSumma(createLukuarvo(5.0), createLukuarvo(10.0), createLukuarvo(100.0)));
+
+        Laskentakaava tallennettu = laskentakaavaService.insert(laskentakaava, null, "oid1");
+
+        Laskentakaava haettu = laskentakaavaService.read(tallennettu.getId());
+        assertFalse(haettu.getOnLuonnos());
+        assertEquals(Funktionimi.SUMMA, haettu.getFunktiokutsu().getFunktionimi());
+        assertEquals(3, haettu.getFunktiokutsu().getFunktioargumentit().size());
+
+        for (Funktioargumentti fa : haettu.getFunktiokutsu().getFunktioargumentit()) {
+            assertEquals(Funktionimi.LUKUARVO, fa.getFunktiokutsuChild().getFunktionimi());
+        }
+
+        LaskentakaavaSiirraDTO siirrettava = modelMapper.map(tallennettu, LaskentakaavaSiirraDTO.class);
+        siirrettava.setUusinimi("UusiNimi");
+        siirrettava.setValintaryhmaOid("jeppis");
+
+        Optional<Laskentakaava> siirretty = laskentakaavaService.siirra(siirrettava);
+
+        assertFalse(siirretty.isPresent());
+
     }
 }

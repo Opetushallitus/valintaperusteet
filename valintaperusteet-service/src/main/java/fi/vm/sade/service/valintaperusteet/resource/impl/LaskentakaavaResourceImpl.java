@@ -5,6 +5,7 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.REA
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -18,7 +19,9 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
+import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +33,6 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 
 import fi.vm.sade.kaava.Funktiokuvaaja;
-import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaDTO;
-import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaInsertDTO;
-import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaListDTO;
 import fi.vm.sade.service.valintaperusteet.resource.LaskentakaavaResource;
 import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaEiValidiException;
@@ -173,5 +172,17 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
             LOGGER.error("Virhe tallennettaessa laskentakaavaa.", e);
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
+    }
+
+    @PUT
+    @Path("/siirra")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response siirra(LaskentakaavaSiirraDTO dto) {
+
+        Optional<Laskentakaava> siirretty = laskentakaavaService.siirra(dto);
+        return siirretty.map(kaava ->
+                Response.status(Response.Status.ACCEPTED).entity(modelMapper.map(kaava, LaskentakaavaDTO.class)).build())
+                .orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
 }
