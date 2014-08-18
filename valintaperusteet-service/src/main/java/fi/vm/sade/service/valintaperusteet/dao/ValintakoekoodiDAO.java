@@ -15,4 +15,6 @@ public interface ValintakoekoodiDAO extends JpaDAO<Valintakoekoodi, Long>, Koodi
     Valintakoekoodi readByUri(String uri);
 
     List<Valintakoekoodi> findByUris(String[] koodiUris);
+
+    Valintakoekoodi insertOrUpdate(Valintakoekoodi koodi);
 }
