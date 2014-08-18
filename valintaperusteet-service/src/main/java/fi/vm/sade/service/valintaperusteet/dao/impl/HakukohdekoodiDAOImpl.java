@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * User: wuoti
@@ -64,6 +65,15 @@ public class HakukohdekoodiDAOImpl extends AbstractJpaDAOImpl<Hakukohdekoodi, Lo
         return from(koodi)
                 .where(koodi.uri.in(koodiUris))
                 .list(koodi);
+    }
+
+    @Override
+    public Hakukohdekoodi insertOrUpdate(Hakukohdekoodi koodi) {
+        Optional<Hakukohdekoodi> haettu = Optional.ofNullable(readByUri(koodi.getUri()));
+        return haettu.map(k -> {
+            update(k);
+            return k;
+        }).orElse(insert(koodi));
     }
 
 

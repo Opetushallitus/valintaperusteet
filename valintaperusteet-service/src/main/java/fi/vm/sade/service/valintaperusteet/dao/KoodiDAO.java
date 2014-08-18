@@ -15,4 +15,6 @@ public interface KoodiDAO<T extends Koodi> extends JpaDAO<T, Long> {
 
     List<T> findByUris(String... koodiUris);
 
+    T insertOrUpdate(T koodi);
+
 }

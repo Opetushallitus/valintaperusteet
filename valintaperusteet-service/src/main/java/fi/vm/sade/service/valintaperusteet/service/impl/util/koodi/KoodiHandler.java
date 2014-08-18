@@ -33,7 +33,7 @@ public abstract class KoodiHandler<T extends Koodi> {
             haettu.setNimiEn(koodi.getNimiEn());
             haettu.setArvo(koodi.getArvo());
         } else {
-            haettu = koodiDAO.insert(koodi);
+            haettu = koodiDAO.insertOrUpdate(koodi);
         }
 
         addKoodiToValintaryhma(valintaryhma, haettu);

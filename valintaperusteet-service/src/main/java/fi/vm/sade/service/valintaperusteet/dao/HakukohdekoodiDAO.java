@@ -17,4 +17,6 @@ public interface HakukohdekoodiDAO extends JpaDAO<Hakukohdekoodi, Long>, KoodiDA
     Hakukohdekoodi readByUri(String koodiUri);
 
     List<Hakukohdekoodi> findByUris(String... koodiUris);
+
+    Hakukohdekoodi insertOrUpdate(Hakukohdekoodi koodi);
 }
