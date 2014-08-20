@@ -92,10 +92,12 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
     private void validoiLaskentakaavaJarjestyskriteeriaVarten(Laskentakaava laskentakaava) {
         if (laskentakaava == null) {
             throw new LaskentakaavaEiOleOlemassaException("Laskentakaavaa ei ole olemassa", null);
-        } else if (!Funktiotyyppi.LUKUARVOFUNKTIO.equals(laskentakaava.getTyyppi())) {
-            throw new VaaranTyyppinenLaskentakaavaException("Järjestyskriteerin laskentakaavan tulee olla tyyppiä "
-                    + Funktiotyyppi.LUKUARVOFUNKTIO.name());
         }
+// VT-938
+//        else if (!Funktiotyyppi.LUKUARVOFUNKTIO.equals(laskentakaava.getTyyppi())) {
+//            throw new VaaranTyyppinenLaskentakaavaException("Järjestyskriteerin laskentakaavan tulee olla tyyppiä "
+//                    + Funktiotyyppi.LUKUARVOFUNKTIO.name());
+//        }
 
         // Laskentakaavaa ei voi tällä hetkellä tallentaa luonnoksena
 //        else if (laskentakaava.getOnLuonnos()) {
