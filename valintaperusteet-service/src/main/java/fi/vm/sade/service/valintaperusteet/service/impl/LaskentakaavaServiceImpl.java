@@ -168,6 +168,9 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             // Laskentakaavaa ei voi tällä hetkellä tallentaa luonnoksena
             //managed.setOnLuonnos(incoming.getOnLuonnos());
 
+            managed.setNimi(entity.getNimi());
+            managed.setKuvaus(entity.getKuvaus());
+
             managed.setFunktiokutsu(updateFunktiokutsu(entity.getFunktiokutsu(), laskentakaavaIds));
 
             // Laskentakaavaa ei voi tällä hetkellä tallentaa luonnoksena
