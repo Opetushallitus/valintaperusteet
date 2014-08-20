@@ -3,14 +3,7 @@ package fi.vm.sade.service.valintaperusteet.resource;
 import java.util.List;
 import java.util.Set;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -34,6 +27,10 @@ public interface ValintaryhmaResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     List<ValintaryhmaDTO> search(@QueryParam("paataso") Boolean paataso, @QueryParam("parentsOf") String parentsOf);
+
+    @DELETE
+    @Path("/{oid}")
+    public Response delete(@PathParam("oid") String oid);
 
     @GET
     @Path("/{oid}")

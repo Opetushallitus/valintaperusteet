@@ -10,27 +10,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.wordnik.swagger.annotations.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
+import fi.vm.sade.service.valintaperusteet.service.exception.ValintaryhmaEiOleOlemassaException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
-
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiOperation;
-import com.wordnik.swagger.annotations.ApiParam;
 
 import fi.vm.sade.service.valintaperusteet.dto.ErrorDTO;
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaCreateDTO;
@@ -104,6 +95,22 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
                     ValintaryhmaDTO.class));
         }
         return valintaryhmas;
+    }
+
+    @DELETE
+    @Path("/{oid}")
+    @PreAuthorize(CRUD)
+    @ApiOperation(value = "Poistaa valintaryhmän OID:n perusteella")
+    @ApiResponses({
+            @ApiResponse(code = 404, message = "Valintaryhmää ei ole olemassa") })
+    public Response delete(
+            @ApiParam(value = "Valintaryhmän OID", required = true) @PathParam("oid") String oid) {
+        try {
+
+            return Response.status(Response.Status.ACCEPTED).build();
+        } catch (ValintaryhmaEiOleOlemassaException e) {
+            throw new WebApplicationException(e, Response.Status.NOT_FOUND);
+        }
     }
 
     @GET
