@@ -193,12 +193,15 @@ public class ValintakoeServiceImpl implements ValintakoeService {
 			throw new LaskentakaavaEiOleOlemassaException("Laskentakaavaa ("
 					+ laskentakaavaId + ") ei ole " + "olemassa",
 					laskentakaavaId);
-		} else if (!Funktiotyyppi.TOTUUSARVOFUNKTIO.equals(laskentakaava
-				.getTyyppi())) {
-			throw new VaaranTyyppinenLaskentakaavaException(
-					"Valintakokeen laskentakaavan tulee olla tyyppiä "
-							+ Funktiotyyppi.TOTUUSARVOFUNKTIO.name());
 		}
+
+// VT-938
+//        else if (!Funktiotyyppi.TOTUUSARVOFUNKTIO.equals(laskentakaava
+//				.getTyyppi())) {
+//			throw new VaaranTyyppinenLaskentakaavaException(
+//					"Valintakokeen laskentakaavan tulee olla tyyppiä "
+//							+ Funktiotyyppi.TOTUUSARVOFUNKTIO.name());
+//		}
 
         // Laskentakaavaa ei voi tällä hetkellä tallentaa luonnoksena
 //        else if (laskentakaava.getOnLuonnos()) {
