@@ -30,6 +30,9 @@ public class HakijaryhmaValintatapajonoUpdateDTO {
     @ApiModelProperty(value = "Aktiivinen", required = true)
     private Boolean aktiivinen;
 
+    @ApiModelProperty(value = "Master haikjaryhmän OID", required = false)
+    private String masterOid;
+
     public Boolean getAktiivinen() {
         return aktiivinen;
     }
@@ -84,5 +87,13 @@ public class HakijaryhmaValintatapajonoUpdateDTO {
 
     public void setOid(String oid) {
         this.oid = oid;
+    }
+
+    public String getMasterOid() {
+        return masterOid;
+    }
+
+    public void setMasterOid(String masterOid) {
+        this.masterOid = masterOid;
     }
 }
