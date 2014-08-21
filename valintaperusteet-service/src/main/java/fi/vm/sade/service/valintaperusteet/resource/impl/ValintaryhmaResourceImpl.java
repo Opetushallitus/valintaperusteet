@@ -106,7 +106,6 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
     public Response delete(
             @ApiParam(value = "Valintaryhmän OID", required = true) @PathParam("oid") String oid) {
         try {
-
             return Response.status(Response.Status.ACCEPTED).build();
         } catch (ValintaryhmaEiOleOlemassaException e) {
             throw new WebApplicationException(e, Response.Status.NOT_FOUND);

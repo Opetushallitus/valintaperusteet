@@ -24,10 +24,10 @@ public class ValintaryhmaDTO extends ValintaryhmaCreateDTO {
     private List<KoodiDTO> valintakoekoodit = new ArrayList<KoodiDTO>();
 
     @ApiModelProperty(value = "Onko valintaryhmällä lapsivalintaryhmiä")
-    private Boolean lapsivalintaryhma;
+    private boolean lapsivalintaryhma;
 
     @ApiModelProperty(value = "Onko valintaryhmällä lapsihakukohteita")
-    private Boolean lapsihakukohde;
+    private boolean lapsihakukohde;
 
     public String getOid() {
         return oid;
@@ -53,19 +53,19 @@ public class ValintaryhmaDTO extends ValintaryhmaCreateDTO {
         this.valintakoekoodit = valintakoekoodit;
     }
 
-    public Boolean getLapsivalintaryhma() {
+    public boolean isLapsivalintaryhma() {
         return lapsivalintaryhma;
     }
 
-    public void setLapsivalintaryhma(Boolean lapsivalintaryhma) {
+    public void setLapsivalintaryhma(boolean lapsivalintaryhma) {
         this.lapsivalintaryhma = lapsivalintaryhma;
     }
 
-    public Boolean getLapsihakukohde() {
+    public boolean isLapsihakukohde() {
         return lapsihakukohde;
     }
 
-    public void setLapsihakukohde(Boolean lapsihakukohde) {
+    public void setLapsihakukohde(boolean lapsihakukohde) {
         this.lapsihakukohde = lapsihakukohde;
     }
 }

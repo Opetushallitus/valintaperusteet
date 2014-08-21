@@ -130,4 +130,11 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
         entity.setOrganisaatiot(getOrganisaatios(dto.getOrganisaatiot()));
         return valintaryhmaDAO.insert(entity);
     }
+
+    @Override
+    public void delete(String oid) {
+        Valintaryhma managedObject = haeValintaryhma(oid);
+
+        valintaryhmaDAO.remove(managedObject);
+    }
 }
