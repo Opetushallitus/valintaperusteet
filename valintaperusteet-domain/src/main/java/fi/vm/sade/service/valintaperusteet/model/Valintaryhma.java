@@ -112,12 +112,12 @@ public class Valintaryhma extends BaseEntity {
     }
 
     @Transient
-    public boolean lapsivalintaryhma() {
+    public boolean getLapsivalintaryhma() {
         return alavalintaryhmat.size() > 0 ? true : false;
     }
 
     @Transient
-    public boolean lapsihakukohde() {
+    public boolean getLapsihakukohde() {
         return hakukohdeViitteet.size() > 0 ? true : false;
     }
 

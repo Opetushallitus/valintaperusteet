@@ -22,4 +22,6 @@ public interface ValintaryhmaService {
     Valintaryhma insert(ValintaryhmaCreateDTO valintaryhma);
 
     Valintaryhma update(String oid, ValintaryhmaCreateDTO valintaryhma);
+
+    void delete(String oid);
 }

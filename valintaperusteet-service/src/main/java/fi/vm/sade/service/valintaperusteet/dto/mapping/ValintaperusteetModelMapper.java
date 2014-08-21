@@ -195,6 +195,7 @@ public class ValintaperusteetModelMapper extends ModelMapper {
                 map().setNimi(source.getHakijaryhma().getNimi());
                 map().setKuvaus(source.getHakijaryhma().getKuvaus());
                 map().setOid(source.getOid());
+                map().setMasterOid(source.getHakijaryhma().getOid());
             }
         });
 
