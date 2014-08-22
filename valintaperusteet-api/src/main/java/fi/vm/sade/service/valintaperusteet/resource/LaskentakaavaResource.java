@@ -41,7 +41,8 @@ public interface LaskentakaavaResource {
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    LaskentakaavaDTO kaava(@PathParam("id") Long id);
+    LaskentakaavaDTO kaava(@PathParam("id") Long id,
+                           @DefaultValue("true") @QueryParam("funktiopuu") Boolean funktiopuu);
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

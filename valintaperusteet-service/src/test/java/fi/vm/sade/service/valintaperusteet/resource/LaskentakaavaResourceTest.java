@@ -229,7 +229,7 @@ public class LaskentakaavaResourceTest {
 
     @Test
     public void testTallennaTulosUpdate() throws Exception {
-        LaskentakaavaDTO kaava = laskentakaavaResource.kaava(206L);
+        LaskentakaavaDTO kaava = laskentakaavaResource.kaava(206L, true);
         LaskentakaavaDTO laskentakaava = new LaskentakaavaDTO();
         laskentakaava.setNimi("Test");
         laskentakaava.setOnLuonnos(false);

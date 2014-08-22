@@ -88,13 +88,19 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
     @Produces(MediaType.APPLICATION_JSON)
     @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Hakee laskentakaavan ID:n perusteella", response = LaskentakaavaDTO.class)
-    public LaskentakaavaDTO kaava(@ApiParam(value = "Laskentakaavan ID", required = true) @PathParam("id") Long id) {
-        long beginTime = System.currentTimeMillis();
-        LaskentakaavaDTO mapped = modelMapper.map(laskentakaavaService.haeMallinnettuKaava(id), LaskentakaavaDTO.class);
-        long endTime = System.currentTimeMillis();
-        long timeTaken = (endTime - beginTime) / 1000L;
-        LOGGER.info("Laskentakaavan hakemiseen kului: " + timeTaken + " sekuntia");
-        return mapped;
+    public LaskentakaavaDTO kaava(@ApiParam(value = "Laskentakaavan ID", required = true) @PathParam("id") Long id,
+                                  @ApiParam(value = "Palautetaanko koko funktiopuu", required = false) @DefaultValue("true") @QueryParam("funktiopuu") Boolean funktiopuu) {
+        if(funktiopuu) {
+            LaskentakaavaDTO mapped = modelMapper.map(laskentakaavaService.haeMallinnettuKaava(id), LaskentakaavaDTO.class);
+            return mapped;
+        } else {
+            Optional<Laskentakaava> kaava = laskentakaavaService.pelkkaKaava(id);
+            return kaava.map(k -> {
+                k.setFunktiokutsu(null);
+                return modelMapper.map(k, LaskentakaavaDTO.class);
+            }).orElse(new LaskentakaavaDTO());
+        }
+
 
     }
 

@@ -459,6 +459,11 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     }
 
     @Override
+    public Optional<Laskentakaava> pelkkaKaava(Long key) {
+        return Optional.ofNullable(laskentakaavaDAO.getLaskentakaava(key));
+    }
+
+    @Override
     public Laskentakaava insert(LaskentakaavaCreateDTO laskentakaava, String hakukohdeOid, String valintaryhmaOid) {
         return insert(modelMapper.map(laskentakaava, Laskentakaava.class), hakukohdeOid, valintaryhmaOid);
     }

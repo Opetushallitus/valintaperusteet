@@ -55,4 +55,6 @@ public interface LaskentakaavaService {
     Optional<Laskentakaava> siirra(LaskentakaavaSiirraDTO dto);
 
     Optional<Valintaryhma> valintaryhma(long id);
+
+    Optional<Laskentakaava> pelkkaKaava(Long key);
 }
