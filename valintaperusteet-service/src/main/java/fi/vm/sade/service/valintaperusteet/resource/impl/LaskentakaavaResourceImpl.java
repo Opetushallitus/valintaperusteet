@@ -22,6 +22,7 @@ import javax.ws.rs.core.Response;
 import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
+import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -184,5 +185,18 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
         return siirretty.map(kaava ->
                 Response.status(Response.Status.ACCEPTED).entity(modelMapper.map(kaava, LaskentakaavaDTO.class)).build())
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
+    }
+
+    @GET
+    @Path("/{id}/valintaryhma")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response valintaryhma( @PathParam("id") Long id) {
+
+        Optional<Valintaryhma> ryhma = laskentakaavaService.valintaryhma(id);
+
+        return ryhma.map(r ->
+            Response.status(Response.Status.ACCEPTED).entity(modelMapper.map(r, ValintaryhmaPlainDTO.class)).build()
+        ).orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
 }
