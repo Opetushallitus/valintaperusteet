@@ -12,6 +12,8 @@ import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
 public interface LaskentakaavaDAO extends JpaDAO<Laskentakaava, Long> {
     Laskentakaava getLaskentakaava(Long id);
 
+    Laskentakaava getLaskentakaavaValintaryhma(Long id);
+
     /**
      * Hakee kannasta hakukohteille funktiokutsut
      * 

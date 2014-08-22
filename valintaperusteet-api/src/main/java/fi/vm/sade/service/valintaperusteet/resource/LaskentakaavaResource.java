@@ -72,4 +72,10 @@ public interface LaskentakaavaResource {
     @Produces(MediaType.APPLICATION_JSON)
     Response siirra(LaskentakaavaSiirraDTO dto);
 
+    @GET
+    @Path("/{id}/valintaryhma")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response valintaryhma( @PathParam("id") Long id);
+
 }
