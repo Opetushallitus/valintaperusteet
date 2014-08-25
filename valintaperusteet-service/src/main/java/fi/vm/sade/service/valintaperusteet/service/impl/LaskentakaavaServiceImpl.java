@@ -8,7 +8,8 @@ import java.util.regex.Pattern;
 import fi.vm.sade.service.valintaperusteet.dao.*;
 import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
-import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
+import fi.vm.sade.service.valintaperusteet.dto.model.*;
+import fi.vm.sade.service.valintaperusteet.dto.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.UusiHakukohteenValintaperusteRekursio;
 import org.apache.commons.lang.StringUtils;
@@ -27,9 +28,7 @@ import akka.actor.ActorSystem;
 import akka.pattern.Patterns;
 import akka.util.Timeout;
 import fi.vm.sade.kaava.Laskentakaavavalidaattori;
-import fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi;
 import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
-import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
 import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
 import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuMuodostaaSilmukanException;
@@ -450,6 +449,18 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
         }
 
         return Optional.ofNullable(insert(modelMapper.map(dto, Laskentakaava.class), null, ryhma.get().getOid()));
+    }
+
+    @Override
+    public Optional<Valintaryhma> valintaryhma(long id) {
+        Optional<Laskentakaava> kaava = Optional.ofNullable(laskentakaavaDAO.getLaskentakaavaValintaryhma(id));
+
+        return kaava.map(k -> Optional.ofNullable(k.getValintaryhma())).orElse(Optional.empty());
+    }
+
+    @Override
+    public Optional<Laskentakaava> pelkkaKaava(Long key) {
+        return Optional.ofNullable(laskentakaavaDAO.getLaskentakaava(key));
     }
 
     @Override

@@ -41,7 +41,8 @@ public interface LaskentakaavaResource {
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    LaskentakaavaDTO kaava(@PathParam("id") Long id);
+    LaskentakaavaDTO kaava(@PathParam("id") Long id,
+                           @DefaultValue("true") @QueryParam("funktiopuu") Boolean funktiopuu);
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -71,5 +72,11 @@ public interface LaskentakaavaResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response siirra(LaskentakaavaSiirraDTO dto);
+
+    @GET
+    @Path("/{id}/valintaryhma")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response valintaryhma( @PathParam("id") Long id);
 
 }

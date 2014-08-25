@@ -12,10 +12,7 @@ import fi.vm.sade.service.valintaperusteet.service.PuuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -81,8 +78,8 @@ public class PuuServiceImpl implements PuuService {
         if(viite.getValintaryhma() == null) {
             list.add(dto);
         } else {
-            ValintaperustePuuDTO a =  map.get(viite.getValintaryhma().getId());
-            a.getHakukohdeViitteet().add(dto);
+            Optional<ValintaperustePuuDTO> puu =  Optional.ofNullable(map.get(viite.getValintaryhma().getId()));
+            puu.map(a -> a.getHakukohdeViitteet().add(dto));
         }
     }
 

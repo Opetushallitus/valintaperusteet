@@ -98,6 +98,7 @@ public class ValintaryhmaResourceTest {
         mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(valintaryhma);
     }
 
+
     @Test
     public void testInsertParent() throws Exception {
         ValintaryhmaCreateDTO valintaryhma = new ValintaryhmaCreateDTO();
@@ -248,4 +249,18 @@ public class ValintaryhmaResourceTest {
 
         assertEquals(koeUrit.length, paivitetty.getValintakoekoodit().size());
     }
+
+    @Test
+    public void testDelete() throws Exception {
+        ValintaryhmaDTO valintaryhma = new ValintaryhmaDTO();
+        valintaryhma.setOid("oid2");
+        valintaryhma.setNimi("Uusi valintaryhmä");
+        System.out.println(mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(valintaryhma));
+        valintaryhmaResource.insert(valintaryhma);
+
+        mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(valintaryhma);
+
+        valintaryhmaResource.delete("oid2");
+    }
+
 }
