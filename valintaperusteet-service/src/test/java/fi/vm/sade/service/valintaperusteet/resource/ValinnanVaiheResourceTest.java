@@ -213,6 +213,7 @@ public class ValinnanVaiheResourceTest {
         jono.setSiirretaanSijoitteluun(false);
         jono.setTasapistesaanto(fi.vm.sade.service.valintaperusteet.dto.model.Tasapistesaanto.ARVONTA);
         jono.setAktiivinen(true);
+        jono.setAutomaattinenLaskentaanSiirto(true);
         jono.setValisijoittelu(false);
         return jono;
     }

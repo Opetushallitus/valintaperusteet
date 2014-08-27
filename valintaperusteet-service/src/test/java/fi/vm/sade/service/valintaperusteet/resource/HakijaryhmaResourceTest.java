@@ -56,6 +56,7 @@ public class HakijaryhmaResourceTest {
 
         Valintatapajono jono = new Valintatapajono();
         jono.setAktiivinen(true);
+        jono.setAutomaattinenLaskentaanSiirto(true);
         jono.setValisijoittelu(false);
         jono.setAloituspaikat(10);
         jono.setEiVarasijatayttoa(true);

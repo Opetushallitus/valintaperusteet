@@ -33,6 +33,9 @@ public class ValintatapajonoCreateDTO {
     @ApiModelProperty(value = "Suoritetaanko jonolle välisijoittelu", required = true)
     private Boolean valisijoittelu;
 
+    @ApiModelProperty(value = "Siirretäänkö laskennan tulokset automaattisesti sijoitteluun", required = true)
+    private Boolean automaattinenLaskentaanSiirto;
+
     @ApiModelProperty(value = "Ei varasijatäyttöä", required = true)
     private Boolean eiVarasijatayttoa = false;
 
@@ -186,5 +189,13 @@ public class ValintatapajonoCreateDTO {
 
     public void setValisijoittelu(Boolean valisijoittelu) {
         this.valisijoittelu = valisijoittelu;
+    }
+
+    public Boolean getAutomaattinenLaskentaanSiirto() {
+        return automaattinenLaskentaanSiirto;
+    }
+
+    public void setAutomaattinenLaskentaanSiirto(Boolean automaattinenLaskentaanSiirto) {
+        this.automaattinenLaskentaanSiirto = automaattinenLaskentaanSiirto;
     }
 }

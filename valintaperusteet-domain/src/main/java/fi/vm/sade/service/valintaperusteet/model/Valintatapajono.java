@@ -46,6 +46,9 @@ public class Valintatapajono extends BaseEntity implements
     @Column(name = "valisijoittelu", nullable = false)
     private Boolean valisijoittelu;
 
+    @Column(name = "automaattinen_laskentaan_siirto", nullable = false)
+    private Boolean automaattinenLaskentaanSiirto;
+
     @Column(name = "ei_varasijatayttoa", nullable = false)
     private Boolean eiVarasijatayttoa = false;
 
@@ -350,5 +353,13 @@ public class Valintatapajono extends BaseEntity implements
 
     public void setValisijoittelu(Boolean valisijoittelu) {
         this.valisijoittelu = valisijoittelu;
+    }
+
+    public Boolean getAutomaattinenLaskentaanSiirto() {
+        return automaattinenLaskentaanSiirto;
+    }
+
+    public void setAutomaattinenLaskentaanSiirto(Boolean automaattinenLaskentaanSiirto) {
+        this.automaattinenLaskentaanSiirto = automaattinenLaskentaanSiirto;
     }
 }
