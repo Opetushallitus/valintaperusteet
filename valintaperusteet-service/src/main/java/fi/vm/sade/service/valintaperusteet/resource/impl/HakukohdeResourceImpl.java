@@ -83,6 +83,9 @@ public class HakukohdeResourceImpl implements HakukohdeResource {
     private OidService oidService;
 
     @Autowired
+    HakijaryhmaValintatapajonoService hakijaryhmaValintatapajonoService;
+
+    @Autowired
     private ValintaperusteetModelMapper modelMapper;
 
     public HakukohdeResourceImpl() {
@@ -212,8 +215,8 @@ public class HakukohdeResourceImpl implements HakukohdeResource {
     @Produces(MediaType.APPLICATION_JSON)
     @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Hakee hakukohteen hakijaryhmät", response = HakijaryhmaDTO.class)
-    public List<HakijaryhmaDTO> hakijaryhmat(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
-        return modelMapper.mapList(hakijaryhmaService.findByHakukohde(oid), HakijaryhmaDTO.class);
+    public List<HakijaryhmaValintatapajonoDTO> hakijaryhmat(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
+        return modelMapper.mapList(hakijaryhmaValintatapajonoService.findByHakukohde(oid), HakijaryhmaValintatapajonoDTO.class);
     }
 
     @GET

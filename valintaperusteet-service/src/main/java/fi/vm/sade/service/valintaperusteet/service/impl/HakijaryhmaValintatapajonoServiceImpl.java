@@ -105,6 +105,7 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
         jono.setKiintio(hakijaryhma.getKiintio());
         jono.setKaytaKaikki(hakijaryhma.isKaytaKaikki());
         jono.setTarkkaKiintio(hakijaryhma.isTarkkaKiintio());
+        jono.setKaytetaanRyhmaanKuuluvia(true);
 
         hakijaryhmaValintatapajonoDAO.insert(jono);
 
@@ -163,6 +164,7 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
         jono.setKiintio(hakijaryhma.getKiintio());
         jono.setKaytaKaikki(hakijaryhma.isKaytaKaikki());
         jono.setTarkkaKiintio(hakijaryhma.isTarkkaKiintio());
+        jono.setKaytetaanRyhmaanKuuluvia(true);
 
         hakijaryhmaValintatapajonoDAO.insert(jono);
 
@@ -211,6 +213,7 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
         jono.setKiintio(hakijaryhma.getKiintio());
         jono.setKaytaKaikki(hakijaryhma.isKaytaKaikki());
         jono.setTarkkaKiintio(hakijaryhma.isTarkkaKiintio());
+        jono.setKaytetaanRyhmaanKuuluvia(true);
 
         hakijaryhmaValintatapajonoDAO.insert(jono);
 
@@ -238,6 +241,7 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
         jono.setKiintio(hakijaryhma.getKiintio());
         jono.setKaytaKaikki(hakijaryhma.isKaytaKaikki());
         jono.setTarkkaKiintio(hakijaryhma.isTarkkaKiintio());
+        jono.setKaytetaanRyhmaanKuuluvia(true);
 
         hakijaryhmaValintatapajonoDAO.insert(jono);
 

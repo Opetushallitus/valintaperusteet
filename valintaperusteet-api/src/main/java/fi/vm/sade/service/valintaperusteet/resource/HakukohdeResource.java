@@ -72,7 +72,7 @@ public interface HakukohdeResource {
     @GET
     @Path("/{oid}/hakijaryhma")
     @Produces(MediaType.APPLICATION_JSON)
-    List<HakijaryhmaDTO> hakijaryhmat(@PathParam("oid") String oid);
+    List<HakijaryhmaValintatapajonoDTO> hakijaryhmat(@PathParam("oid") String oid);
 
     @GET
     @Path("/{oid}/laskentakaava")

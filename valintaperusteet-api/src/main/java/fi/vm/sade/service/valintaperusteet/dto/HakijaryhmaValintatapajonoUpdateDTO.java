@@ -27,6 +27,9 @@ public class HakijaryhmaValintatapajonoUpdateDTO {
     @ApiModelProperty(value = "Tarkka kiintio", required = true)
     private boolean tarkkaKiintio;
 
+    @ApiModelProperty(value = "Käytetäänkö hakijaryhmään kuuluvia", required = true)
+    private boolean kaytetaanRyhmaanKuuluvia;
+
     @ApiModelProperty(value = "Aktiivinen", required = true)
     private Boolean aktiivinen;
 
@@ -95,5 +98,13 @@ public class HakijaryhmaValintatapajonoUpdateDTO {
 
     public void setMasterOid(String masterOid) {
         this.masterOid = masterOid;
+    }
+
+    public boolean isKaytetaanRyhmaanKuuluvia() {
+        return kaytetaanRyhmaanKuuluvia;
+    }
+
+    public void setKaytetaanRyhmaanKuuluvia(boolean kaytetaanRyhmaanKuuluvia) {
+        this.kaytetaanRyhmaanKuuluvia = kaytetaanRyhmaanKuuluvia;
     }
 }
