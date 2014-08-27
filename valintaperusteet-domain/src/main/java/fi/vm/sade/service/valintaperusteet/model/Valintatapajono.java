@@ -43,6 +43,9 @@ public class Valintatapajono extends BaseEntity implements
     @Column(name = "aktiivinen", nullable = false)
     private Boolean aktiivinen;
 
+    @Column(name = "valisijoittelu", nullable = false)
+    private Boolean valisijoittelu;
+
     @Column(name = "ei_varasijatayttoa", nullable = false)
     private Boolean eiVarasijatayttoa = false;
 
@@ -339,5 +342,13 @@ public class Valintatapajono extends BaseEntity implements
 
     public void setKaikkiEhdonTayttavatHyvaksytaan(Boolean kaikkiEhdonTayttavatHyvaksytaan) {
         this.kaikkiEhdonTayttavatHyvaksytaan = kaikkiEhdonTayttavatHyvaksytaan;
+    }
+
+    public Boolean getValisijoittelu() {
+        return valisijoittelu;
+    }
+
+    public void setValisijoittelu(Boolean valisijoittelu) {
+        this.valisijoittelu = valisijoittelu;
     }
 }

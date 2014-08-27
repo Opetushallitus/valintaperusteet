@@ -120,6 +120,7 @@ public class ValintatapajonoServiceTest {
 
         ValintatapajonoCreateDTO uusiJono = new ValintatapajonoCreateDTO();
         uusiJono.setAktiivinen(true);
+        uusiJono.setValisijoittelu(false);
         uusiJono.setAloituspaikat(15);
         uusiJono.setKuvaus("uusi kuvaus");
         uusiJono.setNimi("uusi nimi");
@@ -185,6 +186,7 @@ public class ValintatapajonoServiceTest {
 
         ValintatapajonoCreateDTO uusiJono = new ValintatapajonoCreateDTO();
         uusiJono.setAktiivinen(true);
+        uusiJono.setValisijoittelu(false);
         uusiJono.setAloituspaikat(15);
         uusiJono.setKuvaus("uusi kuvaus");
         uusiJono.setNimi("uusi nimi");
@@ -215,6 +217,7 @@ public class ValintatapajonoServiceTest {
 
         ValintatapajonoCreateDTO uusiJono = new ValintatapajonoCreateDTO();
         uusiJono.setAktiivinen(true);
+        uusiJono.setValisijoittelu(false);
         uusiJono.setAloituspaikat(15);
         uusiJono.setKuvaus("uusi kuvaus");
         uusiJono.setNimi("uusi nimi");
@@ -391,6 +394,7 @@ public class ValintatapajonoServiceTest {
 
         ValintatapajonoCreateDTO paivitys = new ValintatapajonoCreateDTO();
         paivitys.setAktiivinen(true);
+        paivitys.setValisijoittelu(false);
         paivitys.setNimi(uusiNimi);
         paivitys.setKuvaus(uusiKuvaus);
         paivitys.setAloituspaikat(uusiAloituspaikat);
@@ -453,6 +457,7 @@ public class ValintatapajonoServiceTest {
 
         ValintatapajonoCreateDTO jono = new ValintatapajonoCreateDTO();
         jono.setAktiivinen(true);
+        jono.setValisijoittelu(false);
         jono.setAloituspaikat(10);
         jono.setKuvaus("kuvaus");
         jono.setNimi("nimi");

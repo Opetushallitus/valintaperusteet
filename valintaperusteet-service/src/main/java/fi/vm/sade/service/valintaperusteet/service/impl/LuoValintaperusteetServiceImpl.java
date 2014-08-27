@@ -362,6 +362,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         ValintatapajonoDTO esijono = new ValintatapajonoDTO();
 
         esijono.setAktiivinen(true);
+        esijono.setValisijoittelu(false);
         esijono.setAloituspaikat(0);
         esijono.setKuvaus("Harkinnanvaraisten käsittelyvaiheen valintatapajono");
         esijono.setNimi("Harkinnanvaraisten käsittelyvaiheen valintatapajono");
@@ -719,6 +720,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         ValintatapajonoDTO esijono = new ValintatapajonoDTO();
 
         esijono.setAktiivinen(true);
+        esijono.setValisijoittelu(false);
         esijono.setAloituspaikat(0);
         esijono.setKuvaus("Harkinnanvaraisten käsittelyvaiheen valintatapajono");
         esijono.setNimi("Harkinnanvaraisten käsittelyvaiheen valintatapajono");
@@ -786,6 +788,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         ValintatapajonoDTO jono = new ValintatapajonoDTO();
 
         jono.setAktiivinen(true);
+        jono.setValisijoittelu(false);
         jono.setAloituspaikat(0);
         jono.setKuvaus("Varsinaisen valinnanvaiheen valintatapajono");
         jono.setNimi("Varsinaisen valinnanvaiheen valintatapajono");

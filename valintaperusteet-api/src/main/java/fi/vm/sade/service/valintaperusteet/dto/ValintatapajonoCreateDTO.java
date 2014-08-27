@@ -30,6 +30,9 @@ public class ValintatapajonoCreateDTO {
     @ApiModelProperty(value = "Aktiivinen", required = true)
     private Boolean aktiivinen;
 
+    @ApiModelProperty(value = "Suoritetaanko jonolle välisijoittelu", required = true)
+    private Boolean valisijoittelu;
+
     @ApiModelProperty(value = "Ei varasijatäyttöä", required = true)
     private Boolean eiVarasijatayttoa = false;
 
@@ -175,5 +178,13 @@ public class ValintatapajonoCreateDTO {
 
     public void setTayttojono(String tayttojono) {
         this.tayttojono = tayttojono;
+    }
+
+    public Boolean getValisijoittelu() {
+        return valisijoittelu;
+    }
+
+    public void setValisijoittelu(Boolean valisijoittelu) {
+        this.valisijoittelu = valisijoittelu;
     }
 }
