@@ -291,6 +291,7 @@ object Laskentakaavavalidaattori {
                     case Syoteparametrityyppi.KOKONAISLUKU => virhe("Integer")
                     case Syoteparametrityyppi.TOTUUSARVO => virhe("Boolean")
                     case Syoteparametrityyppi.MERKKIJONO => ""
+                    case Syoteparametrityyppi.ARVOJOUKKO => virhe("Arvojoukko")
                   }
 
                   if (muutaMerkkijonoParametrityypiksi(head.getArvo, arvokonvertterikuvaus.arvotyyppi)) {
