@@ -66,12 +66,12 @@ public class HakijaryhmaDAOImpl extends AbstractJpaDAOImpl<Hakijaryhma, Long> im
     @Override
     public List<Hakijaryhma> findByValintaryhma(String oid) {
         QHakijaryhma hakijaryhma = QHakijaryhma.hakijaryhma;
-        QHakijaryhmaValintatapajono hakijaryhmaValintatapajono = QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
+//        QHakijaryhmaValintatapajono hakijaryhmaValintatapajono = QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
 
         return from(hakijaryhma).where(hakijaryhma.valintaryhma.oid.eq(oid))
-                .leftJoin(hakijaryhma.jonot, hakijaryhmaValintatapajono).fetch()
-                .leftJoin(hakijaryhmaValintatapajono.valintatapajono).fetch()
-                .leftJoin(hakijaryhmaValintatapajono.hakukohdeViite).fetch()
+//                .leftJoin(hakijaryhma.jonot, hakijaryhmaValintatapajono).fetch()
+//                .leftJoin(hakijaryhmaValintatapajono.valintatapajono).fetch()
+//                .leftJoin(hakijaryhmaValintatapajono.hakukohdeViite).fetch()
                 .leftJoin(hakijaryhma.valintaryhma).fetch()
                 .leftJoin(hakijaryhma.laskentakaava).fetch()
                 .listDistinct(hakijaryhma);
