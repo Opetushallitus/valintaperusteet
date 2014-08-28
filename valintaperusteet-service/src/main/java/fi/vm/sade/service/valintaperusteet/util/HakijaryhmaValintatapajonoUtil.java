@@ -9,6 +9,7 @@ public abstract class HakijaryhmaValintatapajonoUtil {
         kopio.setKiintio(master.getKiintio());
         kopio.setKaytaKaikki(master.isKaytaKaikki());
         kopio.setTarkkaKiintio(master.isKaytaKaikki());
+        kopio.setKaytetaanRyhmaanKuuluvia(master.isKaytetaanRyhmaanKuuluvia());
         kopio.setAktiivinen(master.getAktiivinen());
         kopio.setHakijaryhma(master.getHakijaryhma());
         kopio.setMaster(master);

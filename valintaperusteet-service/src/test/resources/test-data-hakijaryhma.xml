@@ -16,11 +16,11 @@
         <hakijaryhma id="37" version="0" kiintio="44" kuvaus="" nimi="hakukohde hakijaryhma 2" oid="hr4" laskentakaava_id="11" kaytaKaikki="false" tarkkaKiintio="false"/>
         <hakijaryhma id="43" version="0" kiintio="20" kuvaus="" nimi="hakijaryhma 1" oid="hr5" laskentakaava_id="11" valintaryhma_id="39" kaytaKaikki="false" tarkkaKiintio="false"/>
 
-        <hakijaryhma_jono id="31" version="0" aktiivinen="true" oid="hr1_vtj1" hakijaryhma_id="25" valintatapajono_id="5" kiintio="20" kaytaKaikki="false" tarkkaKiintio="false"/>
-        <hakijaryhma_jono id="32" version="0" aktiivinen="true" oid="hr2_vtj2" hakijaryhma_id="26" master_hakijaryhma_jono_id="31" valintatapajono_id="6" hakukohde_viite_id="2" kiintio="20" kaytaKaikki="false" tarkkaKiintio="false"/>
-        <hakijaryhma_jono id="36" version="0" aktiivinen="true" oid="hr3_vtj5" hakijaryhma_id="34" valintatapajono_id="35" hakukohde_viite_id="2" kiintio="20" kaytaKaikki="false" tarkkaKiintio="false"/>
-        <hakijaryhma_jono id="38" version="0" aktiivinen="true" oid="hr4_vtj2" hakijaryhma_id="37" valintatapajono_id="6" hakukohde_viite_id="2" kiintio="20" kaytaKaikki="false" tarkkaKiintio="false"/>
-        <hakijaryhma_jono id="44" version="0" aktiivinen="true" oid="hr5_vtj6" hakijaryhma_id="43" valintatapajono_id="41" kiintio="20" kaytaKaikki="false" tarkkaKiintio="false"/>
+        <hakijaryhma_jono id="31" version="0" aktiivinen="true" oid="hr1_vtj1" hakijaryhma_id="25" valintatapajono_id="5" kiintio="20" kaytaKaikki="false" tarkkaKiintio="false" kaytetaan_ryhmaan_kuuluvia="true"/>
+        <hakijaryhma_jono id="32" version="0" aktiivinen="true" oid="hr2_vtj2" hakijaryhma_id="26" master_hakijaryhma_jono_id="31" valintatapajono_id="6" hakukohde_viite_id="2" kiintio="20" kaytaKaikki="false" tarkkaKiintio="false" kaytetaan_ryhmaan_kuuluvia="true"/>
+        <hakijaryhma_jono id="36" version="0" aktiivinen="true" oid="hr3_vtj5" hakijaryhma_id="34" valintatapajono_id="35" hakukohde_viite_id="2" kiintio="20" kaytaKaikki="false" tarkkaKiintio="false" kaytetaan_ryhmaan_kuuluvia="true"/>
+        <hakijaryhma_jono id="38" version="0" aktiivinen="true" oid="hr4_vtj2" hakijaryhma_id="37" valintatapajono_id="6" hakukohde_viite_id="2" kiintio="20" kaytaKaikki="false" tarkkaKiintio="false" kaytetaan_ryhmaan_kuuluvia="true"/>
+        <hakijaryhma_jono id="44" version="0" aktiivinen="true" oid="hr5_vtj6" hakijaryhma_id="43" valintatapajono_id="41" kiintio="20" kaytaKaikki="false" tarkkaKiintio="false" kaytetaan_ryhmaan_kuuluvia="true"/>
 
         <hakukohde_viite id="2" version="0" hakuoid="1" nimi="valintaryhma1 - hakukohde1" oid="1" valintaryhma_id="1" manuaalisesti_siirretty="false"/>
 
@@ -38,19 +38,19 @@
 
 
         <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="5" version="3" aktiivinen="true" aloituspaikat="20" nimi="jono 1" oid="vtj1" siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO"
-                         valinnan_vaihe_id="3" ei_varasijatayttoa="false"/>
+                         valinnan_vaihe_id="3" ei_varasijatayttoa="false" valisijoittelu="false" automaattinen_laskentaan_siirto="true"/>
         <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="6" version="1" aktiivinen="true" aloituspaikat="20" nimi="jono 1" oid="vtj2" siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO"
-                         master_valintatapajono_id="5" valinnan_vaihe_id="4" ei_varasijatayttoa="false"/>
+                         master_valintatapajono_id="5" valinnan_vaihe_id="4" ei_varasijatayttoa="false" valisijoittelu="false" automaattinen_laskentaan_siirto="true"/>
         <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="7" version="0" aktiivinen="true" aloituspaikat="10" kuvaus="" nimi="jono 2" oid="vtj3" siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO"
-                         edellinen_valintatapajono_id="5" valinnan_vaihe_id="3" ei_varasijatayttoa="false"/>
+                         edellinen_valintatapajono_id="5" valinnan_vaihe_id="3" ei_varasijatayttoa="false" valisijoittelu="false" automaattinen_laskentaan_siirto="true"/>
         <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="8" version="0" aktiivinen="true" aloituspaikat="10" kuvaus="" nimi="jono 2" oid="vtj4" siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO"
-                         edellinen_valintatapajono_id="6" master_valintatapajono_id="7" valinnan_vaihe_id="4" ei_varasijatayttoa="false"/>
+                         edellinen_valintatapajono_id="6" master_valintatapajono_id="7" valinnan_vaihe_id="4" ei_varasijatayttoa="false" valisijoittelu="false" automaattinen_laskentaan_siirto="true"/>
         <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="35" version="0" aktiivinen="true" aloituspaikat="10" nimi="hakukohde jono" oid="vtj5" siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO"
-                         edellinen_valintatapajono_id="8" valinnan_vaihe_id="4" ei_varasijatayttoa="false"/>
+                         edellinen_valintatapajono_id="8" valinnan_vaihe_id="4" ei_varasijatayttoa="false" valisijoittelu="false" automaattinen_laskentaan_siirto="true"/>
         <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="41" version="0" aktiivinen="true" aloituspaikat="20" nimi="jono 1" oid="vtj6" siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO"
-                         master_valintatapajono_id="5" valinnan_vaihe_id="40" ei_varasijatayttoa="false"/>
+                         master_valintatapajono_id="5" valinnan_vaihe_id="40" ei_varasijatayttoa="false" valisijoittelu="false" automaattinen_laskentaan_siirto="true"/>
         <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="42" version="0" aktiivinen="true" aloituspaikat="10" kuvaus="" nimi="jono 2" oid="vtj7" siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO"
-                         edellinen_valintatapajono_id="41" master_valintatapajono_id="7" valinnan_vaihe_id="40" ei_varasijatayttoa="false"/>
+                         edellinen_valintatapajono_id="41" master_valintatapajono_id="7" valinnan_vaihe_id="40" ei_varasijatayttoa="false" valisijoittelu="false" automaattinen_laskentaan_siirto="true"/>
 
         <jarjestyskriteeri />
         <valintakoe />

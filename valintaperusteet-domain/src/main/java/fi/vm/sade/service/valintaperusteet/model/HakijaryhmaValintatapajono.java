@@ -23,6 +23,9 @@ public class HakijaryhmaValintatapajono extends BaseEntity implements Linkitetta
     @Column(name = "tarkkakiintio")
     private boolean tarkkaKiintio;
 
+    @Column(name = "kaytetaan_ryhmaan_kuuluvia")
+    private boolean kaytetaanRyhmaanKuuluvia;
+
 
     @JoinColumn(name = "hakijaryhma_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
@@ -160,5 +163,13 @@ public class HakijaryhmaValintatapajono extends BaseEntity implements Linkitetta
 
     public void setTarkkaKiintio(boolean tarkkaKiintio) {
         this.tarkkaKiintio = tarkkaKiintio;
+    }
+
+    public boolean isKaytetaanRyhmaanKuuluvia() {
+        return kaytetaanRyhmaanKuuluvia;
+    }
+
+    public void setKaytetaanRyhmaanKuuluvia(boolean kaytetaanRyhmaanKuuluvia) {
+        this.kaytetaanRyhmaanKuuluvia = kaytetaanRyhmaanKuuluvia;
     }
 }

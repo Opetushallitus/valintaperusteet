@@ -22,6 +22,14 @@ public class ValintatapajonoKopioija implements Kopioija<Valintatapajono> {
             to.setAktiivinen(from.getAktiivinen());
         }
 
+        if (from.getAutomaattinenLaskentaanSiirto() != null) {
+            to.setAutomaattinenLaskentaanSiirto(from.getAutomaattinenLaskentaanSiirto());
+        }
+
+        if (from.getValisijoittelu() != null) {
+            to.setValisijoittelu(from.getValisijoittelu());
+        }
+
         if (from.getAloituspaikat() != null) {
             to.setAloituspaikat(from.getAloituspaikat());
         }
@@ -77,6 +85,14 @@ public class ValintatapajonoKopioija implements Kopioija<Valintatapajono> {
                                                Valintatapajono paivitettyMaster, Valintatapajono kopio) {
         if (kopio.getAktiivinen().equals(alkuperainenMaster.getAktiivinen())) {
             kopio.setAktiivinen(paivitettyMaster.getAktiivinen());
+        }
+
+        if (kopio.getAutomaattinenLaskentaanSiirto().equals(alkuperainenMaster.getAutomaattinenLaskentaanSiirto())) {
+            kopio.setAutomaattinenLaskentaanSiirto(paivitettyMaster.getAutomaattinenLaskentaanSiirto());
+        }
+
+        if (kopio.getValisijoittelu().equals(alkuperainenMaster.getValisijoittelu())) {
+            kopio.setValisijoittelu(paivitettyMaster.getValisijoittelu());
         }
 
         if (kopio.getAloituspaikat().equals(alkuperainenMaster.getAloituspaikat())) {

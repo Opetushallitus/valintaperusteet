@@ -166,6 +166,8 @@ public class LuoValintaperusteetActorBean extends UntypedActor {
             ValintatapajonoDTO jono = new ValintatapajonoDTO();
 
             jono.setAktiivinen(true);
+            jono.setAutomaattinenLaskentaanSiirto(true);
+            jono.setValisijoittelu(false);
             jono.setAloituspaikat(0);
             jono.setKuvaus("Varsinaisen valinnanvaiheen valintatapajono");
             jono.setNimi("Varsinaisen valinnanvaiheen valintatapajono");

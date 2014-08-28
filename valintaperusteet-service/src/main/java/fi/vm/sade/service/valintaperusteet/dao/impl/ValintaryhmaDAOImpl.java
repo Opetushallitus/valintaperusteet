@@ -73,17 +73,38 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long> 
     @Override
     public List<Valintaryhma> readHierarchy(String childOid) {
         List<Valintaryhma> set = new LinkedList<Valintaryhma>();
-        set.add(readByOid(childOid));
-        Valintaryhma parent = null;
-        String currentOid = childOid;
+
+        Valintaryhma current = readPlainByOid(childOid);
+        set.add(current);
+        current = current.getYlavalintaryhma();
+
         do {
-            parent = findParent(currentOid);
-            if (parent != null) {
-                currentOid = parent.getOid();
-                set.add(parent);
+            if (current != null) {
+                current = readPlainByOid(current.getOid());
+                set.add(current);
+                current = current.getYlavalintaryhma();
             }
-        } while (parent != null);
+        } while (current != null);
+
+//        Valintaryhma parent = null;
+//        String currentOid = childOid;
+//        do {
+//            parent = findParent(currentOid);
+//            if (parent != null) {
+//                currentOid = parent.getOid();
+//                set.add(parent);
+//            }
+//        } while (parent != null);
         return set;
+    }
+
+    private Valintaryhma readPlainByOid(String oid) {
+        QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
+
+        return from(valintaryhma).leftJoin(valintaryhma.alavalintaryhmat).fetch()
+                .leftJoin(valintaryhma.ylavalintaryhma).fetch()
+                .where(valintaryhma.oid.eq(oid))
+                .singleResult(valintaryhma);
     }
 
     @Override
