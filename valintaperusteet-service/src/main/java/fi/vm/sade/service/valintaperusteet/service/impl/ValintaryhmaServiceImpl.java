@@ -1,11 +1,13 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
+import fi.vm.sade.service.valintaperusteet.dao.LaskentakaavaDAO;
 import fi.vm.sade.service.valintaperusteet.dao.OrganisaatioDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.dto.OrganisaatioDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
+import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
 import fi.vm.sade.service.valintaperusteet.model.Organisaatio;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaService;
@@ -44,6 +46,9 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
 
     @Autowired
     private OrganisaatioDAO organisaatioDAO;
+
+    @Autowired
+    private LaskentakaavaDAO laskentakaavaDAO;
 
     @Autowired
     private OidService oidService;
@@ -133,8 +138,12 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
 
     @Override
     public void delete(String oid) {
-        Valintaryhma managedObject = haeValintaryhma(oid);
-
-        valintaryhmaDAO.remove(managedObject);
+        Optional<Valintaryhma> managedObject = Optional.ofNullable(haeValintaryhma(oid));
+        if (managedObject.isPresent()) {
+            for (Laskentakaava laskentakaava : managedObject.get().getLaskentakaava()) {
+                laskentakaavaDAO.remove(laskentakaava);
+            }
+            valintaryhmaDAO.remove(managedObject.get());
+        }
     }
 }
