@@ -18,6 +18,8 @@ public interface ValintatapajonoDAO extends JpaDAO<Valintatapajono, Long> {
 
     List<Valintatapajono> haeValintatapajonotSijoittelulle(String hakukohdeOid);
 
+    List<Valintatapajono> haeValintatapajonotHakukohteelle(String hakukohdeOid);
+
     Valintatapajono haeValinnanVaiheenViimeinenValintatapajono(String valinnanVaiheOid);
 
     List<Valintatapajono> haeKopiot(String oid);

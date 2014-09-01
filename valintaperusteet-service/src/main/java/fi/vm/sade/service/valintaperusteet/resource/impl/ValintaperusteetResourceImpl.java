@@ -27,7 +27,7 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.REA
 
 @Component
 @Path("valintaperusteet")
-//@PreAuthorize("isAuthenticated()")
+@PreAuthorize("isAuthenticated()")
 @Api(value = "/valintaperusteet", description = "Resurssi laskentakaavojen ja funktiokutsujen käsittelyyn")
 public class ValintaperusteetResourceImpl implements ValintaperusteetResource {
 
@@ -40,7 +40,7 @@ public class ValintaperusteetResourceImpl implements ValintaperusteetResource {
     @Path("valintatapajono/{hakukohdeOid}")
     @Produces(MediaType.APPLICATION_JSON)
     @Override
-//    @PreAuthorize(READ_UPDATE_CRUD)
+    @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Hakee valintapajonot sijoittelulle", response = ValintatapajonoDTO.class)
     public List<ValintatapajonoDTO> haeValintatapajonotSijoittelulle(
             @ApiParam(value = "Hakukohde oid") @PathParam("hakukohdeOid") String hakukohdeOid) {
@@ -52,7 +52,7 @@ public class ValintaperusteetResourceImpl implements ValintaperusteetResource {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Hakee valintaperusteet")
     @Override
-//    @PreAuthorize(READ_UPDATE_CRUD)
+    @PreAuthorize(READ_UPDATE_CRUD)
     public List<ValintaperusteetDTO> haeValintaperusteet(@ApiParam(value = "Hakukohde OID") @PathParam("hakukohdeOid") String hakukohdeOid,
                                                          @ApiParam(value = "Valinnanvaiheen järjestysluku") @QueryParam("vaihe") Integer valinnanVaiheJarjestysluku) {
 
@@ -71,7 +71,7 @@ public class ValintaperusteetResourceImpl implements ValintaperusteetResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "importoi hakukohde")
     @Override
-//    @PreAuthorize(CRUD)
+    @PreAuthorize(CRUD)
     public Response tuoHakukohde(
             @ApiParam(value = "Importoitava hakukohde") HakukohdeImportDTO hakukohde) {
         valintaperusteService.tuoHakukohde(hakukohde);
