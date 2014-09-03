@@ -5,6 +5,9 @@ import static fi.vm.sade.service.valintaperusteet.service.impl.actors.creators.S
 import java.util.*;
 import java.util.regex.Pattern;
 
+import akka.actor.PoisonPill;
+import akka.routing.Broadcast;
+import akka.routing.RoundRobinRouter;
 import fi.vm.sade.service.valintaperusteet.dao.*;
 import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
@@ -40,6 +43,9 @@ import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaMuodos
 import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.UusiRekursio;
 import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.UusiValintaperusteRekursio;
 import fi.vm.sade.service.valintaperusteet.service.impl.util.LaskentakaavaCache;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 /**
  * User: kwuoti Date: 21.1.2013 Time: 9.34
@@ -80,29 +86,41 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     @Autowired
     private ApplicationContext applicationContext;
 
+    private ActorSystem actorSystem;
+
+    @PostConstruct
+    public void initActorSystem() {
+        actorSystem = ActorSystem.create("ValintaperusteetActorSystem");
+        SpringExtProvider.get(actorSystem).initialize(applicationContext);
+
+    }
+
+    @PreDestroy
+    public void tearDownActorSystem() {
+        actorSystem.shutdown();
+        actorSystem.awaitTermination();
+    }
+
     @Transactional(readOnly = true)
     public Funktiokutsu haeFunktiokutsuRekursiivisesti(final Long id, final boolean laajennaAlakaavat,
             final Set<Long> laskentakaavaIds) throws FunktiokutsuMuodostaaSilmukanException {
 
         // Akka toteutus
-        ActorSystem system = ActorSystem.create("actorSystem");
-        SpringExtProvider.get(system).initialize(applicationContext);
         Timeout timeout = new Timeout(Duration.create(30, "seconds"));
 
-        ActorRef master = system.actorOf(
-                SpringExtProvider.get(system).props("HaeFunktiokutsuRekursiivisestiActorBean")
+        ActorRef master = actorSystem.actorOf(
+                SpringExtProvider.get(actorSystem).props("HaeFunktiokutsuRekursiivisestiActorBean")
                 , UUID.randomUUID()
-                        .toString());
+                .toString());
 
         Future<Object> future = Patterns
                 .ask(master, new UusiRekursio(id, laajennaAlakaavat, laskentakaavaIds), timeout);
 
         try {
-            Funktiokutsu funktiokutsu = (Funktiokutsu) Await.result(future, timeout.duration());
-            system.shutdown();
+            Funktiokutsu funktiokutsu =  (Funktiokutsu) Await.result(future, timeout.duration());
+            master.tell(PoisonPill.getInstance(), ActorRef.noSender());
             return funktiokutsu;
         } catch (Exception e) {
-            system.shutdown();
             if (e instanceof FunktiokutsuMuodostaaSilmukanException) {
                 FunktiokutsuMuodostaaSilmukanException exp = (FunktiokutsuMuodostaaSilmukanException) e;
                 throw new FunktiokutsuMuodostaaSilmukanException(exp.getMessage(), exp.getFunktiokutsuId(),
@@ -110,6 +128,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             } else if (e instanceof FunktiokutsuEiOleOlemassaException) {
                 throw new FunktiokutsuEiOleOlemassaException("Funktiokutsu (" + id + ") ei ole olemassa", id);
             } else {
+                e.printStackTrace();
                 LOGGER.error("Virhe laskentakaavan haussa. Syy: {}, viesti:{}", e.getCause(), e.getMessage());
                 throw new FunktiokutsuEiOleOlemassaException("Odottomaton virhe haettaessa funktiokutsua "+id+": "+e.getCause(), id);
             }
@@ -497,23 +516,20 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             Map<String, ValintaperusteDTO> valintaperusteet, Map<String, String> hakukohteenValintaperusteet) {
 
         // Akka toteutus
-        ActorSystem system = ActorSystem.create("ValintaperusteetActorSystem");
-        SpringExtProvider.get(system).initialize(applicationContext);
         Timeout timeout = new Timeout(Duration.create(30, "seconds"));
 
-        ActorRef master = system.actorOf(
-                SpringExtProvider.get(system).props("HaeValintaperusteetRekursiivisestiActorBean")
+        ActorRef master = actorSystem.actorOf(
+                SpringExtProvider.get(actorSystem).props("HaeValintaperusteetRekursiivisestiActorBean")
                 , UUID.randomUUID()
-                        .toString());
+                .toString());
 
         Future<Object> future = Patterns.ask(master, new UusiValintaperusteRekursio(funktiokutsu.getId(),
                 valintaperusteet, hakukohteenValintaperusteet), timeout);
 
         try {
             funktiokutsu = (Funktiokutsu) Await.result(future, timeout.duration());
-            system.shutdown();
+            master.tell(PoisonPill.getInstance(), ActorRef.noSender());
         } catch (Exception e) {
-            system.shutdown();
             e.printStackTrace();
         }
     }
@@ -535,12 +551,10 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             HakukohteenValintaperusteAvaimetDTO valintaperusteet) {
 
         // Akka toteutus
-        ActorSystem system = ActorSystem.create("actorSystem");
-        SpringExtProvider.get(system).initialize(applicationContext);
         Timeout timeout = new Timeout(Duration.create(30, "seconds"));
 
-        ActorRef master = system.actorOf(
-                SpringExtProvider.get(system).props("HaeHakukohteenValintaperusteetRekursiivisestiActorBean")
+        ActorRef master = actorSystem.actorOf(
+                SpringExtProvider.get(actorSystem).props("HaeHakukohteenValintaperusteetRekursiivisestiActorBean")
                 , UUID.randomUUID()
                 .toString());
 
@@ -549,9 +563,8 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
 
         try {
             funktiokutsu = (Funktiokutsu) Await.result(future, timeout.duration());
-            system.shutdown();
+            master.tell(PoisonPill.getInstance(), ActorRef.noSender());
         } catch (Exception e) {
-            system.shutdown();
             e.printStackTrace();
         }
 
