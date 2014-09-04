@@ -52,17 +52,6 @@ public class LukionValintaperusteetActorBean extends UntypedActor {
 
     }
 
-    @Override
-    public SupervisorStrategy supervisorStrategy() {
-        return new OneForOneStrategy(5, Duration.create("10 seconds"),
-                new Function<Throwable, SupervisorStrategy.Directive>() {
-                    public SupervisorStrategy.Directive apply(Throwable cause) {
-                        log.error("Virhe valintaperusteiden luonnissa (LukionValintaperusteetActorBean). Syy: {}, viesti:{}", cause.getCause(), cause.getMessage());
-                        return SupervisorStrategy.restart();
-                    }
-                });
-    }
-
     public void onReceive(Object message) throws Exception {
 
         if (message instanceof LukionValintaperuste) {
