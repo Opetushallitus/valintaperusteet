@@ -7,6 +7,7 @@ import akka.japi.Function;
 import akka.actor.SupervisorStrategy;
 import akka.actor.SupervisorStrategy.Directive;
 
+import akka.japi.pf.DeciderBuilder;
 import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
 import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti;
 import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
@@ -53,18 +54,6 @@ public class HaeFunktiokutsuRekursiivisestiActorBean extends UntypedActor {
 
     public HaeFunktiokutsuRekursiivisestiActorBean() {
 
-    }
-
-    @Override
-    public SupervisorStrategy supervisorStrategy() {
-        return new OneForOneStrategy(5, Duration.create("10 seconds"),
-                new Function<Throwable, Directive>() {
-                    public Directive apply(Throwable cause) {
-                        log.error("Virhe laskentakaavan haussa (HaeFunktiokutsuRekursiivisestiActorBean). Syy: {}, viesti:{}", cause.getCause(), cause.getMessage());
-                        cause.printStackTrace();
-                        return SupervisorStrategy.restart();
-                    }
-                });
     }
 
     public void onReceive(Object message) throws Exception {
