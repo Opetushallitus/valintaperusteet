@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
  * User: kwuoti Date: 22.1.2013 Time: 15.00
  */
 @Service
-// @PreAuthorize("isAuthenticated()")
 public class ValintaperusteServiceImpl implements ValintaperusteService {
 
     private static final Logger LOG = LoggerFactory
@@ -63,7 +62,6 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
     private ValintaperusteetModelMapper modelMapper;
 
     @Override
-//    @PreAuthorize(READ_UPDATE_CRUD)
     public List<ValintatapajonoDTO> haeValintatapajonotSijoittelulle(String hakukohdeOid) {
         List<Valintatapajono> jonot = valintatapajonoDAO
                 .haeValintatapajonotSijoittelulle(hakukohdeOid);
@@ -73,10 +71,9 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
     }
 
     @Override
-//    @PreAuthorize(READ_UPDATE_CRUD)
     public List<ValintaperusteetDTO> haeValintaperusteet(List<HakuparametritDTO> hakuparametrit) {
         try {
-            List<ValintaperusteetDTO> list = new ArrayList<ValintaperusteetDTO>();
+            List<ValintaperusteetDTO> list = new ArrayList<>();
 
             if (hakuparametrit == null) {
                 throw new HakuparametritOnTyhjaException(
@@ -138,14 +135,6 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
                         continue;
                     }
 
-//                    for (ValinnanVaihe vaihe : valinnanVaiheList) {
-//                        if (!vaihe.getAktiivinen()) {
-//                            LOG.info("Jätetään käsittelemättä ei-aktiivinen valinnanvaihe");
-//                            valinnanVaiheList.remove(vaihe);
-//                        }
-//                    }
-
-
                     List<ValinnanVaihe> vaiheet = valinnanVaiheList.stream().filter(ValinnanVaihe::getAktiivinen).collect(Collectors.toList());
 
                     int todellinenJarjestysluku = vaiheet
@@ -158,11 +147,6 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
                     }
 
                 } else {
-//                    for (ValinnanVaihe vaihe : valinnanVaiheList) {
-//                        if (!vaihe.getAktiivinen()) {
-//                            valinnanVaiheList.remove(vaihe);
-//                        }
-//                    }
 
                     List<ValinnanVaihe> vaiheet = valinnanVaiheList.stream().filter(ValinnanVaihe::getAktiivinen).collect(Collectors.toList());
 
@@ -237,14 +221,6 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
                 return vpDTO;
             }).collect(Collectors.toList())
         );
-
-//        for (HakukohteenValintaperuste vp : hakukohde
-//                .getHakukohteenValintaperusteet().values()) {
-//            HakukohteenValintaperusteDTO vpDTO = new HakukohteenValintaperusteDTO();
-//            vpDTO.setTunniste(vp.getTunniste());
-//            vpDTO.setArvo(vp.getArvo());
-//            valintaperusteetDTO.getHakukohteenValintaperuste().add(vpDTO);
-//        }
 
         return valintaperusteetDTO;
     }
@@ -353,15 +329,12 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
     }
 
     @Override
-//    @PreAuthorize(CRUD)
     public void tuoHakukohde(HakukohdeImportDTO hakukohde) {
-        // try {
-        // hakukohdeImportService.tuoHakukohde(hakukohde);
-        // } catch (Exception e) {
-        // LOG.error("Hakukohteen tuominen epäonnistui.", e);
-        // }
-
-        hakukohdeImportService.tuoHakukohde(hakukohde);
+        try {
+            hakukohdeImportService.tuoHakukohde(hakukohde);
+        } catch (Exception e) {
+            LOG.error("Hakukohteen tuominen epäonnistui.", e);
+        }
     }
 }
 

@@ -16,12 +16,9 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.REA
  * Created by jukais on 13.3.2014.
  */
 public interface ValintaperusteService {
-    @PreAuthorize(READ_UPDATE_CRUD)
     List<ValintatapajonoDTO> haeValintatapajonotSijoittelulle(String hakukohdeOid);
 
-    @PreAuthorize(READ_UPDATE_CRUD)
     List<ValintaperusteetDTO> haeValintaperusteet(List<HakuparametritDTO> hakuparametrit);
 
-    @PreAuthorize(CRUD)
     void tuoHakukohde(HakukohdeImportDTO hakukohde);
 }
