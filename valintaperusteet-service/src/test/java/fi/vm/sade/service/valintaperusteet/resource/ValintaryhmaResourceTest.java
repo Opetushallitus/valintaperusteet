@@ -10,7 +10,7 @@ import java.util.Set;
 
 import javax.ws.rs.core.Response;
 
-import fi.vm.sade.dbunit.annotation.DataSetLocation;
+import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import junit.framework.Assert;
 

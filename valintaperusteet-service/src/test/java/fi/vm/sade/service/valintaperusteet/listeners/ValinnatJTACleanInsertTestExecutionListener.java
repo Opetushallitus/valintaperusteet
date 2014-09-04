@@ -1,6 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.listeners;
 
-import fi.vm.sade.dbunit.annotation.DataSetLocation;
+import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.DatabaseSequenceFilter;
 import org.dbunit.database.IDatabaseConnection;
