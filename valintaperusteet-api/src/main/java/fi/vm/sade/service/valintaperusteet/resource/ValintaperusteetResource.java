@@ -1,9 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
-import fi.vm.sade.service.valintaperusteet.dto.HakukohdeImportDTO;
-import fi.vm.sade.service.valintaperusteet.dto.HakuparametritDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteetDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
+import fi.vm.sade.service.valintaperusteet.dto.*;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -23,6 +20,11 @@ public interface ValintaperusteetResource {
     @Path("{hakukohdeOid}")
     @Produces(MediaType.APPLICATION_JSON)
     List<ValintaperusteetDTO> haeValintaperusteet(@PathParam("hakukohdeOid") String hakukohdeOid, @QueryParam("vaihe") Integer valinnanVaiheJarjestysluku);
+
+    @GET
+    @Path("hakijaryhma/{hakukohdeOid}")
+    @Produces(MediaType.APPLICATION_JSON)
+    List<ValintaperusteetHakijaryhmaDTO> haeHakijaryhmat(@PathParam("hakukohdeOid") String hakukohdeOid);
 
     @POST
     @Path("tuoHakukohde")

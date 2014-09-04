@@ -69,7 +69,8 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
 
     @Override
     public List<HakijaryhmaValintatapajono> findHakijaryhmaByJono(String oid) {
-        return hakijaryhmaValintatapajonoDAO.findByValintatapajono(oid);
+        List<HakijaryhmaValintatapajono> byJono =  hakijaryhmaValintatapajonoDAO.findByValintatapajono(oid);
+        return LinkitettavaJaKopioitavaUtil.jarjesta(byJono);
     }
 
     @Override
@@ -264,7 +265,8 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
 
     @Override
     public List<HakijaryhmaValintatapajono> findByHakukohde(String oid) {
-        return hakijaryhmaValintatapajonoDAO.findByHakukohde(oid);
+        List<HakijaryhmaValintatapajono> byHakukohde = hakijaryhmaValintatapajonoDAO.findByHakukohde(oid);
+        return LinkitettavaJaKopioitavaUtil.jarjesta(byHakukohde);
     }
 
     @Override

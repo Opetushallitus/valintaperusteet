@@ -6,6 +6,7 @@ import static junit.framework.Assert.assertFalse;
 import java.util.ArrayList;
 import java.util.List;
 
+import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,8 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.mysema.query.Tuple;
 
-import fi.vm.sade.dbunit.annotation.DataSetLocation;
-import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.kaava.Funktiokuvaaja;
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi;
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi;

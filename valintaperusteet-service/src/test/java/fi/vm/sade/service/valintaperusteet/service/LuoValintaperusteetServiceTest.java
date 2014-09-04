@@ -1,6 +1,5 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
-import fi.vm.sade.dbunit.listener.JTACleanInsertTestExecutionListener;
 import fi.vm.sade.kaava.Laskentadomainkonvertteri;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
