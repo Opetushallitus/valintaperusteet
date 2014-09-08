@@ -43,6 +43,8 @@ public class BaseEntity implements Serializable {
 	public boolean equals(Object o) {
 		if (this == o) {
 			return true;
+		} else if (id == 0L) {
+			return false;
 		}
 		return o instanceof BaseEntity && id == ((BaseEntity) o).getId();
 	}

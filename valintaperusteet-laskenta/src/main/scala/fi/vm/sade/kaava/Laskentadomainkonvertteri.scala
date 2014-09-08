@@ -141,7 +141,7 @@ object Laskentadomainkonvertteri {
 
     val funktiokuvaus = Funktiokuvaaja.annaFunktiokuvaus(funktiokutsu.getFunktionimi)._2
 
-    val oid = funktiokutsu.getId.toString
+    val oid = if (funktiokutsu.getId != 0L) funktiokutsu.getId.toString else ""
     val tulosTunniste = if (java.lang.Boolean.TRUE.equals(funktiokutsu.getTallennaTulos)) funktiokutsu.getTulosTunniste() else ""
     val tulosTekstiFi = if (funktiokutsu.getTulosTekstiFi != null) funktiokutsu.getTulosTekstiFi else ""
     val tulosTekstiSv = if (funktiokutsu.getTulosTekstiSv != null) funktiokutsu.getTulosTekstiSv else ""
