@@ -4,11 +4,11 @@ import fi.vm.sade.service.valintaperusteet.model._
 import fi.vm.sade.service.valintaperusteet.dto.model._
 import fi.vm.sade.service.valintaperusteet.laskenta._
 import Laskenta._
-import Laskenta.{HakukohteenValintaperuste => HkValintaperuste}
-import Laskenta.{HakukohteenSyotettavaValintaperuste => HksValintaperuste}
+import Laskenta.{ HakukohteenValintaperuste => HkValintaperuste }
+import Laskenta.{ HakukohteenSyotettavaValintaperuste => HksValintaperuste }
 import org.apache.commons.lang.StringUtils
-import java.math.{BigDecimal => JBigDecimal}
-import java.util.{Set => JSet}
+import java.math.{ BigDecimal => JBigDecimal }
+import java.util.{ Set => JSet }
 import scala.math.BigDecimal._
 import scala._
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.KonvertoiLukuarvo
@@ -44,7 +44,7 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaVert
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Ei
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Hakutoive
 import fi.vm.sade.service.valintaperusteet.service.validointi.virhe.LaskentakaavaEiOleValidiException
-import fi.vm.sade.service.valintaperusteet.dto.model.{Funktionimi, Valintaperustelahde}
+import fi.vm.sade.service.valintaperusteet.dto.model.{ Funktionimi, Valintaperustelahde }
 import scala.collection.JavaConversions
 
 /**
@@ -65,7 +65,7 @@ object Laskentadomainkonvertteri {
 
   private def parametriToBigDecimal(param: Syoteparametri) = {
     try {
-      BigDecimal(param.getArvo.replace(',','.'))
+      BigDecimal(param.getArvo.replace(',', '.'))
     } catch {
       case e: Throwable =>
         e.printStackTrace()
@@ -141,11 +141,11 @@ object Laskentadomainkonvertteri {
 
     val funktiokuvaus = Funktiokuvaaja.annaFunktiokuvaus(funktiokutsu.getFunktionimi)._2
 
-    val oid = if (funktiokutsu.getId != null) funktiokutsu.getId.toString else ""
+    val oid = funktiokutsu.getId.toString
     val tulosTunniste = if (java.lang.Boolean.TRUE.equals(funktiokutsu.getTallennaTulos)) funktiokutsu.getTulosTunniste() else ""
-    val tulosTekstiFi = if(funktiokutsu.getTulosTekstiFi != null) funktiokutsu.getTulosTekstiFi else ""
-    val tulosTekstiSv = if(funktiokutsu.getTulosTekstiSv != null) funktiokutsu.getTulosTekstiSv else ""
-    val tulosTekstiEn = if(funktiokutsu.getTulosTekstiEn != null) funktiokutsu.getTulosTekstiEn else ""
+    val tulosTekstiFi = if (funktiokutsu.getTulosTekstiFi != null) funktiokutsu.getTulosTekstiFi else ""
+    val tulosTekstiSv = if (funktiokutsu.getTulosTekstiSv != null) funktiokutsu.getTulosTekstiSv else ""
+    val tulosTekstiEn = if (funktiokutsu.getTulosTekstiEn != null) funktiokutsu.getTulosTekstiEn else ""
 
     val valintaperusteviitteet = funktiokutsu.getValintaperusteviitteet.toList.sortWith(_.getIndeksi < _.getIndeksi).map(luoValintaperusteviite(_))
 
@@ -197,7 +197,6 @@ object Laskentadomainkonvertteri {
 
           Some(Lukuarvovalikonvertteri(konversioMap))
         } else None
-
 
         val oletusarvo = funktiokutsu.getSyoteparametrit.find(_.getAvain == "oletusarvo").filter(!_.getArvo.isEmpty)
           .map(p => parametriToBigDecimal(p))
@@ -273,14 +272,14 @@ object Laskentadomainkonvertteri {
       }
       case Funktionimi.HYLKAA => {
         //val hylkaysperustekuvaus = funktiokutsu.getSyoteparametrit.find(_.getAvain == "hylkaysperustekuvaus").map(_.getArvo)
-        val hylkaysperustekuvaus = funktiokutsu.getSyoteparametrit.filter(_.getAvain.startsWith("hylkaysperustekuvaus_")).foldLeft(Map.empty[String,String]) {
+        val hylkaysperustekuvaus = funktiokutsu.getSyoteparametrit.filter(_.getAvain.startsWith("hylkaysperustekuvaus_")).foldLeft(Map.empty[String, String]) {
           (result, kuvaus) => result + (kuvaus.getAvain.split("_")(1) -> kuvaus.getArvo)
         }
 
         Hylkaa(muunnaTotuusarvofunktioksi(lasketutArgumentit(0)), Some(hylkaysperustekuvaus), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
       }
       case Funktionimi.HYLKAAARVOVALILLA => {
-        val hylkaysperustekuvaus = funktiokutsu.getSyoteparametrit.filter(_.getAvain.startsWith("hylkaysperustekuvaus_")).foldLeft(Map.empty[String,String]) {
+        val hylkaysperustekuvaus = funktiokutsu.getSyoteparametrit.filter(_.getAvain.startsWith("hylkaysperustekuvaus_")).foldLeft(Map.empty[String, String]) {
           (result, kuvaus) => result + (kuvaus.getAvain.split("_")(1) -> kuvaus.getArvo)
         }
 
@@ -434,13 +433,10 @@ object Laskentadomainkonvertteri {
               target.setAvain(arvosana)
               funktiokutsu.getSyoteparametrit.add(target)
             }
-          }
-
-        )
+          })
 
         val arvosanaKonvertterit = funktiokutsu.getSyoteparametrit.filter(s => s.getAvain.length == 1).map(
-          param => ArvokonversioMerkkijonoilla[String, BigDecimal](param.getAvain, BigDecimal(param.getArvo), "false", new TekstiRyhma)
-        ).toList
+          param => ArvokonversioMerkkijonoilla[String, BigDecimal](param.getAvain, BigDecimal(param.getArvo), "false", new TekstiRyhma)).toList
 
         val alkuvuosi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("alkuvuosi")) match {
           case Some(sp: Syoteparametri) => BigDecimal(sp.getArvo)
@@ -462,8 +458,6 @@ object Laskentadomainkonvertteri {
           case _ => BigDecimal("2")
         }
 
-
-
         val arvosana = HaeMerkkijonoJaKonvertoiLukuarvoksi(
           Arvokonvertteri[String, BigDecimal](arvosanaKonvertterit),
           None,
@@ -479,15 +473,14 @@ object Laskentadomainkonvertteri {
           SuurempiTaiYhtasuuri(HaeLukuarvo(None, None, vuosiperuste), Lukuarvo(alkuvuosi)),
           SuurempiTaiYhtasuuri(HaeLukuarvo(None, None, lukukausiperuste), Lukuarvo(alkulukukausi)),
           PienempiTaiYhtasuuri(HaeLukuarvo(None, None, vuosiperuste), Lukuarvo(loppuvuosi)),
-          PienempiTaiYhtasuuri(HaeLukuarvo(None, None, lukukausiperuste), Lukuarvo(loppulukukausi))
-        )
+          PienempiTaiYhtasuuri(HaeLukuarvo(None, None, lukukausiperuste), Lukuarvo(loppulukukausi)))
 
         val ehdot = syotettyRooli match {
-          case Some(sp: Syoteparametri) => Ja(ehtoLauseet :+ HaeMerkkijonoJaVertaaYhtasuuruus(Some(false), rooli, sp.getArvo) )
+          case Some(sp: Syoteparametri) => Ja(ehtoLauseet :+ HaeMerkkijonoJaVertaaYhtasuuruus(Some(false), rooli, sp.getArvo))
           case _ => Ja(ehtoLauseet)
         }
 
-        Jos(ehdot, arvosana, Lukuarvo(BigDecimal("0.0")),tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
+        Jos(ehdot, arvosana, Lukuarvo(BigDecimal("0.0")), tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
 
       }
 
@@ -548,15 +541,14 @@ object Laskentadomainkonvertteri {
           SuurempiTaiYhtasuuri(HaeLukuarvo(None, None, vuosiperuste), Lukuarvo(alkuvuosi)),
           SuurempiTaiYhtasuuri(HaeLukuarvo(None, None, lukukausiperuste), Lukuarvo(alkulukukausi)),
           PienempiTaiYhtasuuri(HaeLukuarvo(None, None, vuosiperuste), Lukuarvo(loppuvuosi)),
-          PienempiTaiYhtasuuri(HaeLukuarvo(None, None, lukukausiperuste), Lukuarvo(loppulukukausi))
-        )
+          PienempiTaiYhtasuuri(HaeLukuarvo(None, None, lukukausiperuste), Lukuarvo(loppulukukausi)))
 
         val ehdot = syotettyRooli match {
           case Some(sp: Syoteparametri) => Ja(ehtoLauseet :+ HaeMerkkijonoJaVertaaYhtasuuruus(Some(false), rooli, sp.getArvo))
           case _ => Ja(ehtoLauseet)
         }
 
-        Jos(ehdot, arvosana, Lukuarvo(BigDecimal("0.0")),tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
+        Jos(ehdot, arvosana, Lukuarvo(BigDecimal("0.0")), tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
 
       }
 

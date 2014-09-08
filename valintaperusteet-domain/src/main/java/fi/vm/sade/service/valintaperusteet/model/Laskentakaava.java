@@ -26,109 +26,109 @@ import fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi;
 @Table(name = "laskentakaava")
 @Cacheable(true)
 public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
-    @Column(name = "on_luonnos", nullable = false)
-    private Boolean onLuonnos;
+	@Column(name = "on_luonnos", nullable = false)
+	private Boolean onLuonnos;
 
-    @Column(name = "nimi", nullable = false)
-    private String nimi;
+	@Column(name = "nimi", nullable = false)
+	private String nimi;
 
-    @Column(name = "kuvaus")
-    private String kuvaus;
+	@Column(name = "kuvaus")
+	private String kuvaus;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "valintaryhmaviite", nullable = true, unique = false)
-    private Valintaryhma valintaryhma;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "valintaryhmaviite", nullable = true, unique = false)
+	private Valintaryhma valintaryhma;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "hakukohdeviite", nullable = true, unique = false)
-    private HakukohdeViite hakukohde;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "hakukohdeviite", nullable = true, unique = false)
+	private HakukohdeViite hakukohde;
 
-    @JoinColumn(name = "funktiokutsu_id", nullable = false, unique = false)
-    @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
-    private Funktiokutsu funktiokutsu;
+	@JoinColumn(name = "funktiokutsu_id", nullable = false, unique = false)
+	@ManyToOne(optional = false, cascade = CascadeType.PERSIST)
+	private Funktiokutsu funktiokutsu;
 
-    @Column(name = "tyyppi", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Funktiotyyppi tyyppi;
+	@Column(name = "tyyppi", nullable = false)
+	@Enumerated(EnumType.STRING)
+	private Funktiotyyppi tyyppi;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "laskentakaava", cascade = CascadeType.PERSIST)
-    private Set<Jarjestyskriteeri> jarjestyskriteerit = new HashSet<Jarjestyskriteeri>();
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "laskentakaava", cascade = CascadeType.PERSIST)
+	private Set<Jarjestyskriteeri> jarjestyskriteerit = new HashSet<Jarjestyskriteeri>();
 
-    public Boolean getOnLuonnos() {
-        return onLuonnos;
-    }
+	public Boolean getOnLuonnos() {
+		return onLuonnos;
+	}
 
-    public void setOnLuonnos(Boolean onLuonnos) {
-        this.onLuonnos = onLuonnos;
-    }
+	public void setOnLuonnos(Boolean onLuonnos) {
+		this.onLuonnos = onLuonnos;
+	}
 
-    public String getNimi() {
-        return nimi;
-    }
+	public String getNimi() {
+		return nimi;
+	}
 
-    public void setNimi(String nimi) {
-        this.nimi = nimi;
-    }
+	public void setNimi(String nimi) {
+		this.nimi = nimi;
+	}
 
-    public String getKuvaus() {
-        return kuvaus;
-    }
+	public String getKuvaus() {
+		return kuvaus;
+	}
 
-    public void setKuvaus(String kuvaus) {
-        this.kuvaus = kuvaus;
-    }
+	public void setKuvaus(String kuvaus) {
+		this.kuvaus = kuvaus;
+	}
 
-    public Valintaryhma getValintaryhma() {
-        return valintaryhma;
-    }
+	public Valintaryhma getValintaryhma() {
+		return valintaryhma;
+	}
 
-    public void setValintaryhma(Valintaryhma valintaryhma) {
-        this.valintaryhma = valintaryhma;
-    }
+	public void setValintaryhma(Valintaryhma valintaryhma) {
+		this.valintaryhma = valintaryhma;
+	}
 
-    public HakukohdeViite getHakukohde() {
-        return hakukohde;
-    }
+	public HakukohdeViite getHakukohde() {
+		return hakukohde;
+	}
 
-    public void setHakukohde(HakukohdeViite hakukohde) {
-        this.hakukohde = hakukohde;
-    }
+	public void setHakukohde(HakukohdeViite hakukohde) {
+		this.hakukohde = hakukohde;
+	}
 
-    public Funktiokutsu getFunktiokutsu() {
-        return funktiokutsu;
-    }
+	public Funktiokutsu getFunktiokutsu() {
+		return funktiokutsu;
+	}
 
-    public void setFunktiokutsu(Funktiokutsu funktiokutsu) {
-        this.funktiokutsu = funktiokutsu;
-    }
+	public void setFunktiokutsu(Funktiokutsu funktiokutsu) {
+		this.funktiokutsu = funktiokutsu;
+	}
 
-    public Funktiotyyppi getTyyppi() {
-        return tyyppi;
-    }
+	public Funktiotyyppi getTyyppi() {
+		return tyyppi;
+	}
 
-    public void setTyyppi(Funktiotyyppi tyyppi) {
-        this.tyyppi = tyyppi;
-    }
+	public void setTyyppi(Funktiotyyppi tyyppi) {
+		this.tyyppi = tyyppi;
+	}
 
-    public Set<Jarjestyskriteeri> getJarjestyskriteerit() {
-        return jarjestyskriteerit;
-    }
+	public Set<Jarjestyskriteeri> getJarjestyskriteerit() {
+		return jarjestyskriteerit;
+	}
 
-    public void setJarjestyskriteerit(Set<Jarjestyskriteeri> jarjestyskriteerit) {
-        this.jarjestyskriteerit = jarjestyskriteerit;
-    }
+	public void setJarjestyskriteerit(Set<Jarjestyskriteeri> jarjestyskriteerit) {
+		this.jarjestyskriteerit = jarjestyskriteerit;
+	}
 
-    @Override
-    public Long getId() {
-        return super.getId();
-    }
+	@Override
+	public long getId() {
+		return super.getId();
+	}
 
-    @PrePersist
-    @PreUpdate
-    private void updateTyyppi() {
-        if (funktiokutsu != null) {
-            tyyppi = funktiokutsu.getFunktionimi().getTyyppi();
-        }
-    }
+	@PrePersist
+	@PreUpdate
+	private void updateTyyppi() {
+		if (funktiokutsu != null) {
+			tyyppi = funktiokutsu.getFunktionimi().getTyyppi();
+		}
+	}
 
 }
