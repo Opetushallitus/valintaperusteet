@@ -1,6 +1,9 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
 import javax.persistence.*;
+
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import java.io.Serializable;
 
 /**
@@ -17,13 +20,13 @@ public class BaseEntity implements Serializable {
 	@Id
 	@Column(name = ID_COLUMN_NAME, unique = true, nullable = false)
 	@GeneratedValue
-	private long id;
+	private Long id;
 
 	@Version
 	@Column(name = VERSION_COLUMN_NAME, nullable = false)
-	private long version;
+	private Long version;
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
@@ -43,15 +46,14 @@ public class BaseEntity implements Serializable {
 	public boolean equals(Object o) {
 		if (this == o) {
 			return true;
-		} else if (id == 0L) {
-			return false;
 		}
-		return o instanceof BaseEntity && id == ((BaseEntity) o).getId();
+		return o instanceof BaseEntity && id != null
+				&& id.equals(((BaseEntity) o).getId());
 	}
 
 	@Override
 	public int hashCode() {
-		return new Long(id).hashCode();
+		return id == null ? 0 : id.hashCode();
 	}
 
 	@Override
