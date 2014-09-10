@@ -2,15 +2,14 @@ package fi.vm.sade.service.valintaperusteet.service.impl;
 
 import fi.vm.sade.service.valintaperusteet.dao.LaskentakaavaDAO;
 import fi.vm.sade.service.valintaperusteet.dao.OrganisaatioDAO;
-import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.dto.OrganisaatioDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
 import fi.vm.sade.service.valintaperusteet.model.Organisaatio;
+import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
-import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaService;
 import fi.vm.sade.service.valintaperusteet.service.OidService;
 import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
 import fi.vm.sade.service.valintaperusteet.service.ValintaryhmaService;
@@ -37,12 +36,6 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
 
     @Autowired
     private ValinnanVaiheService valinnanVaiheService;
-
-    @Autowired
-    private HakijaryhmaService hakijaryhmaService;
-
-    @Autowired
-    private ValinnanVaiheDAO valinnanVaiheDAO;
 
     @Autowired
     private OrganisaatioDAO organisaatioDAO;
@@ -140,6 +133,10 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
     public void delete(String oid) {
         Optional<Valintaryhma> managedObject = Optional.ofNullable(haeValintaryhma(oid));
         if (managedObject.isPresent()) {
+            for (ValinnanVaihe valinnanVaihe : managedObject.get().getValinnanvaiheet()) {
+                valinnanVaiheService.delete(valinnanVaihe);
+            }
+
             for (Laskentakaava laskentakaava : managedObject.get().getLaskentakaava()) {
                 laskentakaavaDAO.remove(laskentakaava);
             }
