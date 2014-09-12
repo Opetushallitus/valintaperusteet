@@ -18,6 +18,16 @@ public class LaskentaServiceImpl implements LaskentaService {
         return tulos;
     }
 
+    public Laskentatulos<Boolean> suoritaValintalaskenta(Hakukohde hakukohde, Hakemus hakemus,
+                                                            Collection<Hakemus> kaikkiHakemukset, Totuusarvofunktio laskettava) {
+        Laskentatulos<Boolean> tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemus, kaikkiHakemukset, laskettava);
+        return tulos;
+    }
+
+    public Laskentatulos<BigDecimal> suoritaValintakoelaskenta(Hakukohde hakukohde, Hakemus hakemus, Lukuarvofunktio laskettava) {
+        return Laskin.suoritaValintakoelaskenta(hakukohde, hakemus, laskettava);
+    }
+
     public Laskentatulos<Boolean> suoritaValintakoelaskenta(Hakukohde hakukohde, Hakemus hakemus, Totuusarvofunktio laskettava) {
         return Laskin.suoritaValintakoelaskenta(hakukohde, hakemus, laskettava);
     }
