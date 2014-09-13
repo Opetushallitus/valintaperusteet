@@ -442,22 +442,22 @@ object Laskentadomainkonvertteri {
           param => ArvokonversioMerkkijonoilla[String, BigDecimal](param.getAvain, BigDecimal(param.getArvo), "false", new TekstiRyhma)
         ).toList
 
-        val alkuvuosi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("alkuvuosi")) match {
+        val alkuvuosi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("alkuvuosi") && !s.getArvo.isEmpty) match {
           case Some(sp: Syoteparametri) => BigDecimal(sp.getArvo)
           case _ => BigDecimal("0.0")
         }
 
-        val loppuvuosi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("loppuvuosi")) match {
+        val loppuvuosi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("loppuvuosi") && !s.getArvo.isEmpty) match {
           case Some(sp: Syoteparametri) => BigDecimal(sp.getArvo)
           case _ => BigDecimal("9999")
         }
 
-        val alkulukukausi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("alkulukukausi")) match {
+        val alkulukukausi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("alkulukukausi") && !s.getArvo.isEmpty) match {
           case Some(sp: Syoteparametri) => BigDecimal(sp.getArvo)
           case _ => BigDecimal("1")
         }
 
-        val loppulukukausi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("loppulukukausi")) match {
+        val loppulukukausi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("loppulukukausi") && !s.getArvo.isEmpty) match {
           case Some(sp: Syoteparametri) => BigDecimal(sp.getArvo)
           case _ => BigDecimal("2")
         }
@@ -513,22 +513,22 @@ object Laskentadomainkonvertteri {
           Some(Lukuarvovalikonvertteri(konversioMap))
         } else None
 
-        val alkuvuosi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("alkuvuosi")) match {
+        val alkuvuosi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("alkuvuosi") && !s.getArvo.isEmpty) match {
           case Some(sp: Syoteparametri) => BigDecimal(sp.getArvo)
           case _ => BigDecimal("0.0")
         }
 
-        val loppuvuosi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("loppuvuosi")) match {
+        val loppuvuosi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("loppuvuosi") && !s.getArvo.isEmpty) match {
           case Some(sp: Syoteparametri) => BigDecimal(sp.getArvo)
           case _ => BigDecimal("9999")
         }
 
-        val alkulukukausi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("alkulukukausi")) match {
+        val alkulukukausi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("alkulukukausi") && !s.getArvo.isEmpty) match {
           case Some(sp: Syoteparametri) => BigDecimal(sp.getArvo)
           case _ => BigDecimal("1")
         }
 
-        val loppulukukausi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("loppulukukausi")) match {
+        val loppulukukausi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("loppulukukausi") && !s.getArvo.isEmpty) match {
           case Some(sp: Syoteparametri) => BigDecimal(sp.getArvo)
           case _ => BigDecimal("2")
         }
