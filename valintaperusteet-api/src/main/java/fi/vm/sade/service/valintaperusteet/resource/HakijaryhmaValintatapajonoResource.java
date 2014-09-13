@@ -35,7 +35,7 @@ public interface HakijaryhmaValintatapajonoResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/jarjesta")
-    List<HakijaryhmaValintatapajonoUpdateDTO> jarjesta(String valintatapajonoOid, List<String> oids);
+    @Path("/{oid}/jarjesta")
+    List<HakijaryhmaValintatapajonoUpdateDTO> jarjesta(@PathParam("oid") String hakijaryhmaValintatapajonoOid, List<String> oids);
 
 }
