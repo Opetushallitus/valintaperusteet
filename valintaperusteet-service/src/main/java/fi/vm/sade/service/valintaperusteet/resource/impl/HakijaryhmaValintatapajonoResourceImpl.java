@@ -122,7 +122,7 @@ public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValint
     @ApiOperation(value = "Järjestää valintatapajonon hakijaryhmät argumentin mukaiseen järjestykseen")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "OID-lista on tyhjä"),})
     public List<HakijaryhmaValintatapajonoUpdateDTO> jarjesta(
-            @ApiParam(value = "Päivitettävän liitoksen oid", required = true) String hakijaryhmaValintatapajonoOid,
+            @ApiParam(value = "Päivitettävän liitoksen oid", required = true) @PathParam("oid") String hakijaryhmaValintatapajonoOid,
             @ApiParam(value = "Hakijaryhmien uusi järjestys", required = true) List<String> oids) {
         try {
             return modelMapper.mapList(hakijaryhmaValintatapajonoService.jarjestaHakijaryhmat(hakijaryhmaValintatapajonoOid, oids), HakijaryhmaValintatapajonoUpdateDTO.class);

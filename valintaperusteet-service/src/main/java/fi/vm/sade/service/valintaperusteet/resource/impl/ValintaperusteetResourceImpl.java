@@ -5,15 +5,14 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
+import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakukohde;
 import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
+import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
-import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaValintatapajonoService;
-import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
-import fi.vm.sade.service.valintaperusteet.service.ValintaperusteService;
+import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.resource.ValintaperusteetResource;
-import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +46,9 @@ public class ValintaperusteetResourceImpl implements ValintaperusteetResource {
 
     @Autowired
     private ValintatapajonoService valintatapajonoService;
+
+    @Autowired
+    private LaskentakaavaService laskentakaavaService;
 
     @Autowired
     private ValintaperusteetModelMapper modelMapper;
@@ -95,8 +97,14 @@ public class ValintaperusteetResourceImpl implements ValintaperusteetResource {
         List<ValintaperusteetHakijaryhmaDTO> result = new ArrayList<>();
         for(int i = 0; i < hakukohteenRyhmat.size(); i++) {
             HakijaryhmaValintatapajono original = hakukohteenRyhmat.get(i);
+            Laskentakaava laskentakaava = laskentakaavaService
+                    .haeLaskettavaKaava(original.getHakijaryhma().getLaskentakaava()
+                            .getId(), Laskentamoodi.VALINTALASKENTA);
+
             ValintaperusteetHakijaryhmaDTO dto = modelMapper.map(original, ValintaperusteetHakijaryhmaDTO.class);
-            dto.setFunktiokutsu(modelMapper.map(original.getHakijaryhma().getLaskentakaava().getFunktiokutsu(), ValintaperusteetFunktiokutsuDTO.class));
+            dto.setFunktiokutsu(modelMapper.map(laskentakaava.getFunktiokutsu(), ValintaperusteetFunktiokutsuDTO.class));
+            dto.setNimi(original.getHakijaryhma().getNimi());
+            dto.setKuvaus(original.getHakijaryhma().getKuvaus());
             dto.setPrioriteetti(i);
             if(original.getValintatapajono() != null) {
                 dto.setValintatapajonoOid(original.getValintatapajono().getOid());
