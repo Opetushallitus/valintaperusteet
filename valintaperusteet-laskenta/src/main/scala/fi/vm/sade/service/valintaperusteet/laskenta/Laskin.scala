@@ -220,13 +220,8 @@ private class Laskin private(private val hakukohde: Hakukohde,
           case None => if(vaatiiOsallistumisen) (Osallistuminen.MERKITSEMATTA, new Hyvaksyttavissatila) else (Osallistuminen.EI_VAADITA, new Hyvaksyttavissatila)
         }
 
-        // Jos valintaperusteelle on merkitty arvo "ei osallistunut" tai sitä ei ole merkitty, palautetaan hylätty-tila,
-        // jos kyseessä on pakollinen tieto
-        val hylkaysKuvaus = if(kuvaus.isEmpty) tunniste else kuvaus
-
         val (arvo, konvertoitu, tilat) = if (pakollinen && Osallistuminen.EI_OSALLISTUNUT == osallistuminen)
           (None, None, List(osallistumistila,
-            //new Hylattytila(suomenkielinenHylkaysperusteMap(s"$hylkaysKuvaus: Ei Osallistunut"),
             new Hylattytila(tekstiryhmaToMap(kuvaukset),
               new EiOsallistunutHylkays(tunniste))))
         else if (pakollinen && Osallistuminen.MERKITSEMATTA == osallistuminen)
