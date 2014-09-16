@@ -38,6 +38,9 @@ public class ValintaperusteetHakijaryhmaDTO {
     @ApiModelProperty(value = "valintatapajonon OID", required = true)
     private String valintatapajonoOid;
 
+    @ApiModelProperty(value = "hakukohteen OID", required = true)
+    private String hakukohdeOid;
+
     public String getNimi() {
         return nimi;
     }
@@ -110,5 +113,13 @@ public class ValintaperusteetHakijaryhmaDTO {
 
     public void setValintatapajonoOid(String valintatapajonoOid) {
         this.valintatapajonoOid = valintatapajonoOid;
+    }
+
+    public String getHakukohdeOid() {
+        return hakukohdeOid;
+    }
+
+    public void setHakukohdeOid(String hakukohdeOid) {
+        this.hakukohdeOid = hakukohdeOid;
     }
 }
