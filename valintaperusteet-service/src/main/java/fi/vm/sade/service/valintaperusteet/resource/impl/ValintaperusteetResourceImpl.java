@@ -106,6 +106,7 @@ public class ValintaperusteetResourceImpl implements ValintaperusteetResource {
             dto.setNimi(original.getHakijaryhma().getNimi());
             dto.setKuvaus(original.getHakijaryhma().getKuvaus());
             dto.setPrioriteetti(i);
+            dto.setHakukohdeOid(hakukohdeOid);
             if(original.getValintatapajono() != null) {
                 dto.setValintatapajonoOid(original.getValintatapajono().getOid());
             }
