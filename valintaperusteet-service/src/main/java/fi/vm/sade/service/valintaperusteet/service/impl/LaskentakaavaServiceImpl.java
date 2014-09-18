@@ -458,13 +458,28 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             dto.setNimi(dto.getUusinimi());
         }
 
-        Optional<Valintaryhma> ryhma = Optional.ofNullable(valintaryhmaDAO.readByOid(dto.getValintaryhmaOid()));
+        String valintaryhmaOid = null;
+        String hakukohdeOid = null;
 
-        if(!ryhma.isPresent()) {
+        if(dto.getValintaryhmaOid() != null) {
+            Optional<Valintaryhma> ryhma = Optional.ofNullable(valintaryhmaDAO.readByOid(dto.getValintaryhmaOid()));
+            if(ryhma.isPresent()) {
+                valintaryhmaOid = ryhma.get().getOid();
+            }
+        }
+
+        if(dto.getHakukohdeOid() != null) {
+            Optional<HakukohdeViite> hakukohde = Optional.ofNullable(hakukohdeViiteDAO.readByOid(dto.getHakukohdeOid()));
+            if(hakukohde.isPresent()) {
+                hakukohdeOid = hakukohde.get().getOid();
+            }
+        }
+
+        if(valintaryhmaOid == null && hakukohdeOid == null) {
             return Optional.empty();
         }
 
-        return Optional.ofNullable(insert(modelMapper.map(dto, Laskentakaava.class), null, ryhma.get().getOid()));
+        return Optional.ofNullable(insert(modelMapper.map(dto, Laskentakaava.class), hakukohdeOid, valintaryhmaOid));
     }
 
     @Override

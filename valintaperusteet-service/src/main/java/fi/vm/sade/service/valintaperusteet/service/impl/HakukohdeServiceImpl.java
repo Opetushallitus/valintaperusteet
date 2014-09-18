@@ -1,6 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
+import fi.vm.sade.service.valintaperusteet.dao.LaskentakaavaDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
 import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteCreateDTO;
@@ -40,6 +41,12 @@ public class HakukohdeServiceImpl implements HakukohdeService {
 
     @Autowired
     private HakijaryhmaService hakijaryhmaService;
+
+    @Autowired
+    private LaskentakaavaService laskentakaavaService;
+
+    @Autowired
+    private LaskentakaavaDAO laskentakaavaDAO;
 
     @Autowired
     private OidService oidService;
@@ -160,12 +167,26 @@ public class HakukohdeServiceImpl implements HakukohdeService {
                 vv.setHakukohdeViite(null);
             }
 
+            List<Laskentakaava> kaavat = laskentakaavaService.findKaavas(true, null, hakukohdeViite.getOid(), null);
+
+            // Poistetaan hakukohteen kaavoilta viittaus vanhaan hakukohteeseen
+            kaavat.stream().forEach(kaava -> {
+                kaava.setHakukohde(null);
+                laskentakaavaDAO.update(kaava);
+            });
+
             // Poistetaan vanha hakukohde
             deleteByOid(hakukohdeOid);
 
             // Luodaan uusi hakukohde
             HakukohdeViite lisatty = insert(modelMapper.map(hakukohdeViite, HakukohdeViiteCreateDTO.class),
                     valintaryhma != null ? valintaryhma.getOid() : null);
+
+            // Lisätään kaavat takaisin uudelleen luodulle hakukohteelle
+            kaavat.stream().forEach(kaava -> {
+                kaava.setHakukohde(lisatty);
+                laskentakaavaDAO.update(kaava);
+            });
 
             lisatty.setManuaalisestiSiirretty(siirretaanManuaalisesti);
 
