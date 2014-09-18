@@ -18,6 +18,9 @@ public class LaskentakaavaSiirraDTO extends LaskentakaavaCreateDTO{
     @ApiModelProperty(value = "Valintaryhmä OID, jolle laskentakaava lisätään")
     private String valintaryhmaOid;
 
+    @ApiModelProperty(value = "Hakukohde OID, jolle laskentakaava lisätään")
+    private String hakukohdeOid;
+
     public String getValintaryhmaOid() {
         return valintaryhmaOid;
     }
@@ -32,5 +35,13 @@ public class LaskentakaavaSiirraDTO extends LaskentakaavaCreateDTO{
 
     public void setUusinimi(String uusinimi) {
         this.uusinimi = uusinimi;
+    }
+
+    public String getHakukohdeOid() {
+        return hakukohdeOid;
+    }
+
+    public void setHakukohdeOid(String hakukohdeOid) {
+        this.hakukohdeOid = hakukohdeOid;
     }
 }
