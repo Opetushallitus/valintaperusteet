@@ -121,7 +121,7 @@ public class ValintaperusteetResourceImpl implements ValintaperusteetResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "importoi hakukohde")
     @Override
-    @PreAuthorize(CRUD)
+//    @PreAuthorize(CRUD)
     public Response tuoHakukohde(
             @ApiParam(value = "Importoitava hakukohde") HakukohdeImportDTO hakukohde) {
         valintaperusteService.tuoHakukohde(hakukohde);
