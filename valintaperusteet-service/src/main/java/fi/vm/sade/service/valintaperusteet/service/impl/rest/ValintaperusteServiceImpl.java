@@ -211,6 +211,8 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
         vv.setValinnanVaiheJarjestysluku(valinnanvaiheJarjestysluku);
         vv.setValinnanVaiheOid(valinnanVaihe.getOid());
         vv.setNimi(valinnanVaihe.getNimi());
+        vv.setValinnanVaiheOid(valinnanVaihe.getOid());
+        vv.setAktiivinen(valinnanVaihe.getAktiivinen());
         valintaperusteetDTO.setValinnanVaihe(vv);
 
         valintaperusteetDTO.getHakukohteenValintaperuste().addAll(
@@ -272,6 +274,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
             dto.setNimi(valintatapajono.getNimi());
             dto.setOid(valintatapajono.getOid());
 
+
             dto.setPrioriteetti(prioriteetti);
 
             dto.setSiirretaanSijoitteluun(valintatapajono
@@ -308,6 +311,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
 
             ValintaperusteetJarjestyskriteeriDTO jarjestyskriteeriDTO = modelMapper.map(jarjestyskriteeri, ValintaperusteetJarjestyskriteeriDTO.class);
             jarjestyskriteeriDTO.setPrioriteetti(prioriteetti);
+            jarjestyskriteeriDTO.setNimi(jarjestyskriteeri.getMetatiedot());
 
             Long start = System.currentTimeMillis();
             Laskentakaava laskentakaava = laskentakaavaService
