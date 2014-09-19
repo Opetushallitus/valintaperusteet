@@ -322,6 +322,13 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
                         + jarjestyskriteeri.getLaskentakaava().getId() + ":"
                         + (System.currentTimeMillis() - start));
             }
+
+            // Asetetaan laskentakaavan nimi ensimmäisen funktiokutsun nimeksi
+            laskentakaava.getFunktiokutsu().getSyoteparametrit().forEach(s -> {
+                if (s.getAvain().equals("nimi")) {
+                    s.setArvo(laskentakaava.getNimi());
+                }
+            });
             ValintaperusteetFunktiokutsuDTO convert = modelMapper.map(laskentakaava.getFunktiokutsu(), ValintaperusteetFunktiokutsuDTO.class);
 
             jarjestyskriteeriDTO.setFunktiokutsu(convert);
