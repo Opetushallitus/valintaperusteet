@@ -461,14 +461,14 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
         String valintaryhmaOid = null;
         String hakukohdeOid = null;
 
-        if(dto.getValintaryhmaOid() != null) {
+        if(dto.getValintaryhmaOid() != null && !dto.getValintaryhmaOid().isEmpty()) {
             Optional<Valintaryhma> ryhma = Optional.ofNullable(valintaryhmaDAO.readByOid(dto.getValintaryhmaOid()));
             if(ryhma.isPresent()) {
                 valintaryhmaOid = ryhma.get().getOid();
             }
         }
 
-        if(dto.getHakukohdeOid() != null) {
+        if(dto.getHakukohdeOid() != null&& !dto.getHakukohdeOid().isEmpty()) {
             Optional<HakukohdeViite> hakukohde = Optional.ofNullable(hakukohdeViiteDAO.readByOid(dto.getHakukohdeOid()));
             if(hakukohde.isPresent()) {
                 hakukohdeOid = hakukohde.get().getOid();
