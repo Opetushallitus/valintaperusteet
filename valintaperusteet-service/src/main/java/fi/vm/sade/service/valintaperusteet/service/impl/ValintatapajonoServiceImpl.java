@@ -1,25 +1,23 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
+import com.google.gson.GsonBuilder;
+import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
+import fi.vm.sade.service.valintaperusteet.model.*;
+import fi.vm.sade.service.valintaperusteet.service.*;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoCreateDTO;
-import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
-import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
-import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
-import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaService;
-import fi.vm.sade.service.valintaperusteet.service.JarjestyskriteeriService;
-import fi.vm.sade.service.valintaperusteet.service.OidService;
-import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
-import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintatapajonoEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintatapajonoOidListaOnTyhjaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintatapajonoaEiVoiLisataException;
@@ -36,6 +34,8 @@ import fi.vm.sade.service.valintaperusteet.util.ValintatapajonoUtil;
 @Transactional
 public class ValintatapajonoServiceImpl implements ValintatapajonoService {
 
+    final static private Logger LOGGER = LoggerFactory.getLogger(ValintatapajonoService.class.getName());
+
     @Autowired
     private ValintatapajonoDAO valintatapajonoDAO;
 
@@ -51,6 +51,12 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
     @Autowired
     private HakijaryhmaService hakijaryhmaService;
 
+    @Autowired
+    private HakukohdeService hakukohdeService;
+
+    @Autowired
+    HakukohdeViiteDAO hakukohdeDao;
+
     private static ValintatapajonoKopioija kopioija = new ValintatapajonoKopioija();
 
     @Autowired
@@ -59,6 +65,65 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
     @Override
     public List<Valintatapajono> findJonoByValinnanvaihe(String oid) {
         return LinkitettavaJaKopioitavaUtil.jarjesta(valintatapajonoDAO.findByValinnanVaihe(oid));
+    }
+
+    @Override
+    public Map<String, List<String>> findKopiot(List<String> oidit) {
+        Map<String, List<String>> jonot = new ConcurrentHashMap<>();
+        oidit.forEach(oid -> {
+            Optional<Valintatapajono> jono = Optional.ofNullable(valintatapajonoDAO.readByOid(oid));
+            if (jono.isPresent()) {
+                LOGGER.info("{} {} {}", jono.get().getValinnanVaihe().getNimi(), jono.get().getValinnanVaihe().getOid(), jono.get().getValinnanVaihe().getValintaryhma());
+
+                Valintatapajono master;
+
+                if(jono.get().getMasterValintatapajono() == null) {
+                    master = jono.get();
+                } else {
+                    master = valintatapajonoDAO.readByOid(jono.get().getMasterValintatapajono().getOid());
+                }
+
+                LOGGER.info("Haetaan master jonon {} kopiot", master.getOid());
+                //haetaan kopiot
+                List<String> kopiot = valintatapajonoDAO.haeKopiotValisijoittelulle(master.getOid()).parallelStream()
+                        .map(j -> {
+                            LOGGER.info("löydettiin kopio {}", j.getOid());
+                            return j.getOid();
+                        }).collect(Collectors.toList());
+
+                Optional<Valintaryhma> ryhma = Optional.ofNullable(master.getValinnanVaihe().getValintaryhma());
+
+                if(ryhma.isPresent()) {
+                    LOGGER.info("löydettiin valintaryhmä {} jonolle {}", ryhma.get().getNimi(), master.getOid());
+                    List<HakukohdeViite> viitteet = hakukohdeDao.findByValintaryhmaOidForValisijoittelu(ryhma.get().getOid());
+
+                    // Muodostetaan map
+                    viitteet.parallelStream().forEach(viite -> {
+                        viite.getValinnanvaiheet().stream().filter(ValinnanVaihe::getAktiivinen).forEach(vaihe -> {
+                            vaihe.getJonot().stream().forEach(j -> {
+                                if (kopiot.contains(j.getOid())) {
+                                    List<String> lista = jonot.getOrDefault(viite.getOid(), new ArrayList<>());
+                                    lista.add(j.getOid());
+                                    jonot.put(viite.getOid(), lista);
+                                }
+                            });
+                        });
+                    });
+                } else {
+                    LOGGER.info("jonolle {} ei löytynyt valintaryhmää. Haetaan hakukohdeviite", master.getOid());
+                    ValinnanVaihe vaihe = valinnanVaiheService.readByOid(master.getValinnanVaihe().getOid());
+                    Optional<HakukohdeViite> viite = Optional.ofNullable(vaihe.getHakukohdeViite());
+                    if(viite.isPresent()) {
+                        LOGGER.info("löydettiin hakukohdeviite ({}) jonolle {}", viite.get().getNimi(), master.getOid());
+                        List<String> lista = jonot.getOrDefault(viite.get().getOid(), new ArrayList<>());
+                        lista.addAll(kopiot);
+                        jonot.put(viite.get().getOid(), lista);
+                    }
+                }
+
+            }
+        });
+        return jonot;
     }
 
     private void lisaaValinnanVaiheelleKopioMasterValintatapajonosta(ValinnanVaihe valinnanVaihe,

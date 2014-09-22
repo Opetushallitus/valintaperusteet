@@ -77,6 +77,15 @@ public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Lo
     }
 
     @Override
+    public List<HakukohdeViite> findByValintaryhmaOidForValisijoittelu(String oid) {
+        QHakukohdeViite hakukohdeViite = QHakukohdeViite.hakukohdeViite;
+        return from(hakukohdeViite)
+                .leftJoin(hakukohdeViite.valintaryhma)
+                .leftJoin(hakukohdeViite.hakukohdekoodi).fetch()
+                .where(hakukohdeViite.valintaryhma.oid.eq(oid)).list(hakukohdeViite);
+    }
+
+    @Override
     public boolean kuuluuSijoitteluun(String oid) {
         QHakukohdeViite hakukohdeViite = QHakukohdeViite.hakukohdeViite;
         QValinnanVaihe vv = QValinnanVaihe.valinnanVaihe;

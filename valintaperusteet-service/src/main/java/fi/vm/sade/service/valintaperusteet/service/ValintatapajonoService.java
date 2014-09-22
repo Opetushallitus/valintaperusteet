@@ -5,6 +5,7 @@ import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,6 +17,8 @@ import java.util.List;
 public interface ValintatapajonoService {
 
     List<Valintatapajono> findJonoByValinnanvaihe(String oid);
+
+    Map<String, List<String>> findKopiot(List<String> oidit);
 
     Valintatapajono readByOid(String oid);
 

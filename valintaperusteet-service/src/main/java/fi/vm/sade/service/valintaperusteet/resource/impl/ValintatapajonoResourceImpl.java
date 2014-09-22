@@ -66,6 +66,16 @@ public class ValintatapajonoResourceImpl implements ValintatapajonoResource {
     @Autowired
     private ValintaperusteetModelMapper modelMapper;
 
+    @Override
+    public Map<String, List<String>> findKopiot(List<String> oid) {
+        try {
+            return valintatapajonoService.findKopiot(oid);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new HashMap<>();
+        }
+    }
+
     @GET
     @Path("/{oid}")
     @Produces(MediaType.APPLICATION_JSON)
