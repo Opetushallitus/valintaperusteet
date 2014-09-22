@@ -286,6 +286,9 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
             dto.setKaikkiEhdonTayttavatHyvaksytaan(valintatapajono.getKaikkiEhdonTayttavatHyvaksytaan());
             dto.setKaytetaanValintalaskentaa(valintatapajono.getKaytetaanValintalaskentaa());
             dto.setValmisSijoiteltavaksi(valintatapajono.getAutomaattinenLaskentaanSiirto());
+            if(valintatapajono.getValisijoittelu() != null) {
+                dto.setValisijoittelu(valintatapajono.getValisijoittelu());
+            }
 
             dto.getJarjestyskriteerit().addAll(
                     convertJarjestyskriteerit(valintatapajono));
