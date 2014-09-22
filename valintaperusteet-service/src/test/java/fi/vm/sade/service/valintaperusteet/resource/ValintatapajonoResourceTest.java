@@ -90,7 +90,7 @@ public class ValintatapajonoResourceTest {
         resource.delete("");
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void testDeleteInherited() {
         // objekti on peritty
         resource.delete("27");

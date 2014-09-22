@@ -143,14 +143,8 @@ public class ValinnanVaiheResourceTest {
     public void testDeleteInherited() {
         boolean caughtOne = false;
 
-        try {
             vaiheResource.delete("32");
-        } catch (WebApplicationException e) {
-            caughtOne = true;
-            assertEquals(400, e.getResponse().getStatus());
-        }
 
-        assertTrue(caughtOne);
     }
 
     @Test
