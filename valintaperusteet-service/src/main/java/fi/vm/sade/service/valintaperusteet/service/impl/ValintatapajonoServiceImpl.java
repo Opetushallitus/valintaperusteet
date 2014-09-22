@@ -190,10 +190,6 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
     public void deleteByOid(String oid) {
         Valintatapajono valintatapajono = haeValintatapajono(oid);
 
-        if (valintatapajono.getMasterValintatapajono() != null) {
-            throw new ValintatapajonoaEiVoiPoistaaException("valintatapajono on peritty.");
-        }
-
         delete(valintatapajono);
     }
 
