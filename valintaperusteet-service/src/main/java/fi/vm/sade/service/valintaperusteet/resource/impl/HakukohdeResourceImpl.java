@@ -49,7 +49,7 @@ import fi.vm.sade.service.valintaperusteet.service.exception.HakukohdeViiteEiOle
  */
 @Component
 @Path("hakukohde")
-@PreAuthorize("isAuthenticated()")
+// @PreAuthorize("isAuthenticated()")
 @Api(value = "/hakukohde", description = "Resurssi hakukohteiden käsittelyyn")
 public class HakukohdeResourceImpl implements HakukohdeResource {
 
