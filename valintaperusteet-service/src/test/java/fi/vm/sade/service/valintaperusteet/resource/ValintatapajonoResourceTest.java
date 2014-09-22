@@ -92,8 +92,16 @@ public class ValintatapajonoResourceTest {
 
     @Test
     public void testDeleteInherited() {
-        // objekti on peritty
-        resource.delete("27");
+        ValintatapajonoDTO valintatapajono = resource.readByOid("27");
+        assertNotNull(valintatapajono);
+        Response delete = resource.delete("27");
+        assertEquals(Response.Status.ACCEPTED.getStatusCode(), delete.getStatus());
+        try {
+            valintatapajono = resource.readByOid("27");
+            assertNull(valintatapajono);
+        } catch (ValintatapajonoEiOleOlemassaException e) {
+
+        }
     }
 
     @Test

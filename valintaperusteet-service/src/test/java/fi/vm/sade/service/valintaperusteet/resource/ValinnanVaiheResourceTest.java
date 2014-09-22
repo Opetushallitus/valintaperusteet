@@ -141,10 +141,18 @@ public class ValinnanVaiheResourceTest {
 
     @Test
     public void testDeleteInherited() {
-        boolean caughtOne = false;
+        ValinnanVaiheDTO read = vaiheResource.read("32");
 
-            vaiheResource.delete("32");
+        assertNotNull(read);
+        Response delete = vaiheResource.delete("32");
+        assertEquals(Response.Status.ACCEPTED.getStatusCode(), delete.getStatus());
 
+        try {
+            ValinnanVaiheDTO read1 = vaiheResource.read("32");
+            assertNull(read1);
+        } catch (ValinnanVaiheEiOleOlemassaException e) {
+
+        }
     }
 
     @Test
