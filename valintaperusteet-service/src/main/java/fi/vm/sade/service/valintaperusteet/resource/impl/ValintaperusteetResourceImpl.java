@@ -6,7 +6,6 @@ import com.wordnik.swagger.annotations.ApiParam;
 import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
-import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakukohde;
 import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
 import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
@@ -16,7 +15,6 @@ import fi.vm.sade.service.valintaperusteet.resource.ValintaperusteetResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
@@ -26,12 +24,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD;
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
-
 @Component
 @Path("valintaperusteet")
-//@PreAuthorize("isAuthenticated()")
 @Api(value = "/valintaperusteet", description = "Resurssi laskentakaavojen ja funktiokutsujen käsittelyyn")
 public class ValintaperusteetResourceImpl implements ValintaperusteetResource {
 
@@ -59,7 +53,6 @@ public class ValintaperusteetResourceImpl implements ValintaperusteetResource {
     @Path("valintatapajono/{hakukohdeOid}")
     @Produces(MediaType.APPLICATION_JSON)
     @Override
-//    @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Hakee valintapajonot sijoittelulle", response = ValintatapajonoDTO.class)
     public List<ValintatapajonoDTO> haeValintatapajonotSijoittelulle(
             @ApiParam(value = "Hakukohde oid") @PathParam("hakukohdeOid") String hakukohdeOid) {
@@ -71,7 +64,6 @@ public class ValintaperusteetResourceImpl implements ValintaperusteetResource {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Hakee valintaperusteet")
     @Override
-//    @PreAuthorize(READ_UPDATE_CRUD)
     public List<ValintaperusteetDTO> haeValintaperusteet(@ApiParam(value = "Hakukohde OID") @PathParam("hakukohdeOid") String hakukohdeOid,
                                                          @ApiParam(value = "Valinnanvaiheen järjestysluku") @QueryParam("vaihe") Integer valinnanVaiheJarjestysluku) {
 
@@ -129,7 +121,6 @@ public class ValintaperusteetResourceImpl implements ValintaperusteetResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "importoi hakukohde")
     @Override
-//    @PreAuthorize(CRUD)
     public Response tuoHakukohde(
             @ApiParam(value = "Importoitava hakukohde") HakukohdeImportDTO hakukohde) {
         valintaperusteService.tuoHakukohde(hakukohde);

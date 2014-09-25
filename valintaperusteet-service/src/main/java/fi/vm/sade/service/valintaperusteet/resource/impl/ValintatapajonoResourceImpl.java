@@ -9,14 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -67,7 +60,11 @@ public class ValintatapajonoResourceImpl implements ValintatapajonoResource {
     private ValintaperusteetModelMapper modelMapper;
 
     @Override
-    public Map<String, List<String>> findKopiot(List<String> oid) {
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @PreAuthorize(READ_UPDATE_CRUD)
+    @Path("/kopiot")
+    public Map<String, List<String>> findKopiot(@QueryParam("oid") List<String> oid) {
         try {
             return valintatapajonoService.findKopiot(oid);
         } catch (Exception e) {
