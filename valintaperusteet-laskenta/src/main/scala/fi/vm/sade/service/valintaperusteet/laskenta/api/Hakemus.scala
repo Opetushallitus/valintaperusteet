@@ -18,6 +18,15 @@ class Hakemus(val oid: String,
   def onkoHakutoivePrioriteetilla(hakukohde: String, prioriteetti: Int) = {
     hakutoiveet.containsKey(prioriteetti) && hakutoiveet.get(prioriteetti) == hakukohde
   }
+
+  def onkoHakukelpoinen(hakukohdeOid: String) = {
+    val key = jkentat.keySet().filter(k => k.startsWith("preference") && k.endsWith("-Koulutus-id")).find(k => jkentat.get(k) == hakukohdeOid)
+    val result = key match {
+      case Some(k) => jkentat.getOrDefault(s"$k-eligibility", "false")
+      case _ => "false"
+    }
+    result.toBoolean
+  }
 }
 
 object Hakemus {

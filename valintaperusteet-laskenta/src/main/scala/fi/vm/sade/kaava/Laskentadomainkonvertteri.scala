@@ -413,6 +413,10 @@ object Laskentadomainkonvertteri {
         Hakutoive(parametriToInteger(nParam), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
       }
 
+      case Funktionimi.HAKUKELPOISUUS => {
+        Hakukelpoisuus(oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
+      }
+
       case Funktionimi.DEMOGRAFIA => {
         val tunniste = getParametri("tunniste", funktiokutsu.getSyoteparametrit).getArvo
         val prosenttiosuus = getParametri("prosenttiosuus", funktiokutsu.getSyoteparametrit)

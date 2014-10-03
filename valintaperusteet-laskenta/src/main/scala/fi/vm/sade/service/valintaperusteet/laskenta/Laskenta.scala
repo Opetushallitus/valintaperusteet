@@ -369,6 +369,10 @@ object Laskenta {
     require(n > 0, "n must be greater than zero")
   }
 
+  case class Hakukelpoisuus(oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "") extends Totuusarvofunktio {
+
+  }
+
   case class Hylkaa(f: Totuusarvofunktio, hylkaysperustekuvaus: Option[Map[String,String]] = None, oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "")
     extends Lukuarvofunktio
 
