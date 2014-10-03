@@ -67,6 +67,31 @@ public class ValintaperusteetModelMapper extends ModelMapper {
             }
         };
 
+
+        final Converter<Set<Arvovalikonvertteriparametri>, List<ArvovalikonvertteriparametriDTO>> arvovalikonvertteriparametriToDtoConverter = new Converter<Set<Arvovalikonvertteriparametri>, List<ArvovalikonvertteriparametriDTO>>() {
+            public List<ArvovalikonvertteriparametriDTO> convert(MappingContext<Set<Arvovalikonvertteriparametri>, List<ArvovalikonvertteriparametriDTO>> context) {
+                List<Arvovalikonvertteriparametri> sorted = new ArrayList<>();
+                sorted.addAll(context.getSource());
+                sorted.sort((a1, a2) -> {
+                    try {
+                        return Integer.parseInt(a1.getMinValue()) - Integer.parseInt(a2.getMinValue());
+                    } catch (Exception e) {
+                        return 0;
+                    }
+                });
+
+                return mapList(sorted, ArvovalikonvertteriparametriDTO.class);
+            }
+        };
+
+        final Converter<List<ArvovalikonvertteriparametriDTO>, Set<Arvovalikonvertteriparametri>> dtoToArvovalikonvertteriparametriConverter = new Converter<List<ArvovalikonvertteriparametriDTO>, Set<Arvovalikonvertteriparametri>>() {
+            public Set<Arvovalikonvertteriparametri> convert(MappingContext<List<ArvovalikonvertteriparametriDTO>, Set<Arvovalikonvertteriparametri>> context) {
+                Set<Arvovalikonvertteriparametri> result = new TreeSet<>();
+                result.addAll(mapList(context.getSource(), Arvovalikonvertteriparametri.class));
+                return result;
+            }
+        };
+
         final Converter<List<FunktioargumenttiDTO>, Set<Funktioargumentti>> dtoToFunktioargumenttiConverter = new Converter<List<FunktioargumenttiDTO>, Set<Funktioargumentti>>() {
             public Set<Funktioargumentti> convert(MappingContext<List<FunktioargumenttiDTO>, Set<Funktioargumentti>> context) {
                 Set<Funktioargumentti> result = new TreeSet<Funktioargumentti>();
@@ -252,6 +277,7 @@ public class ValintaperusteetModelMapper extends ModelMapper {
                 using(funktioargumenttiToDtoConverter).map(source.getFunktioargumentit()).setFunktioargumentit(null);
 
                 using(valintaperusteViiteToDtoConverter).map(source.getValintaperusteviitteet()).setValintaperusteviitteet(null);
+                using(arvovalikonvertteriparametriToDtoConverter).map(source.getArvovalikonvertteriparametrit()).setArvovalikonvertteriparametrit(null);
 
             }
         });
@@ -266,6 +292,7 @@ public class ValintaperusteetModelMapper extends ModelMapper {
                 using(virheListConverter).map(source.getValidointivirheet()).setValidointivirheet(null);
 
                 using(dtoToValintaperusteViiteConverter).map(source.getValintaperusteviitteet()).setValintaperusteviitteet(null);
+                using(dtoToArvovalikonvertteriparametriConverter).map(source.getArvovalikonvertteriparametrit()).setArvovalikonvertteriparametrit(null);
 
 
             }
