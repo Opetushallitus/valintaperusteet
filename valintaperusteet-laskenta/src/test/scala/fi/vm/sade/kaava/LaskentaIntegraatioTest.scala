@@ -1339,11 +1339,11 @@ class LaskentaIntegraatioTest extends FunSuite {
     val hakukohde4 = new Hakukohde("oid4", new util.HashMap[String, String])
     val map = Map(
       "preference1-Koulutus-id" -> "oid1",
-      "preference1-Koulutus-id-eligibility" -> "true",
+      "preference1-Koulutus-id-eligibility" -> "ELIGIBLE",
       "preference2-Koulutus-id" -> "oid2",
-      "preference2-Koulutus-id-eligibility" -> "false",
+      "preference2-Koulutus-id-eligibility" -> "NOT_CHECKED",
       "preference3-Koulutus-id" -> "oid3",
-      "preference3-Koulutus-id-eligibility" -> "true",
+      "preference3-Koulutus-id-eligibility" -> "ELIGIBLE",
       "preference4-Koulutus-id" -> "oid4"
     )
     val hakemus = TestHakemus("", List("oid1", "oid2", "oid3", "oid4"), map)
