@@ -70,17 +70,12 @@ public class ValintaperusteetModelMapper extends ModelMapper {
 
         final Converter<Set<Arvovalikonvertteriparametri>, List<ArvovalikonvertteriparametriDTO>> arvovalikonvertteriparametriToDtoConverter = new Converter<Set<Arvovalikonvertteriparametri>, List<ArvovalikonvertteriparametriDTO>>() {
             public List<ArvovalikonvertteriparametriDTO> convert(MappingContext<Set<Arvovalikonvertteriparametri>, List<ArvovalikonvertteriparametriDTO>> context) {
-                List<Arvovalikonvertteriparametri> sorted = new ArrayList<>();
-                sorted.addAll(context.getSource());
-                sorted.sort((a1, a2) -> {
-                    try {
-                        return Integer.parseInt(a1.getMinValue()) - Integer.parseInt(a2.getMinValue());
-                    } catch (Exception e) {
-                        return 0;
-                    }
-                });
+                List<ArvovalikonvertteriparametriDTO> result = new LinkedList<>();
+                for(Arvovalikonvertteriparametri a : context.getSource()) {
+                    result.add(map(a, ArvovalikonvertteriparametriDTO.class));
+                }
 
-                return mapList(sorted, ArvovalikonvertteriparametriDTO.class);
+                return result;
             }
         };
 
@@ -255,6 +250,7 @@ public class ValintaperusteetModelMapper extends ModelMapper {
             @Override
             protected void configure() {
                 map().setLapsityyppi(FunktioargumentinLapsiDTO.FUNKTIOKUTSUTYYPPI);
+                using(arvovalikonvertteriparametriToDtoConverter).map(source.getArvovalikonvertteriparametrit()).setArvovalikonvertteriparametrit(null);
             }
         });
 
@@ -264,6 +260,7 @@ public class ValintaperusteetModelMapper extends ModelMapper {
             protected void configure() {
 
                 using(virheListConverter).map(source.getValidointivirheet()).setValidointivirheet(null);
+                using(dtoToArvovalikonvertteriparametriConverter).map(source.getArvovalikonvertteriparametrit()).setArvovalikonvertteriparametrit(null);
             }
         });
 

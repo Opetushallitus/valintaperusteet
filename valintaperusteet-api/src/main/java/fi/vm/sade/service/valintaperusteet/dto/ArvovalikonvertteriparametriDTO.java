@@ -7,7 +7,7 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
  * User: wuoti Date: 2.12.2013 Time: 9.49
  */
 @ApiModel(value = "ArvovalikonvertteriparametriDTO", description = "Arvovälikonvertteriparametri")
-public class ArvovalikonvertteriparametriDTO {
+public class ArvovalikonvertteriparametriDTO implements Comparable<ArvovalikonvertteriparametriDTO> {
     @ApiModelProperty(value = "Paluuarvo")
     private String paluuarvo;
 
@@ -72,5 +72,15 @@ public class ArvovalikonvertteriparametriDTO {
 
     public void setKuvaukset(TekstiRyhmaDTO kuvaukset) {
         this.kuvaukset = kuvaukset;
+    }
+
+    @Override
+    public int compareTo(ArvovalikonvertteriparametriDTO o) {
+        try {
+            return Integer.compare(Integer.parseInt(minValue), Integer.parseInt(o.minValue));
+        } catch (Exception e) {
+            return minValue.compareTo(o.minValue);
+        }
+
     }
 }

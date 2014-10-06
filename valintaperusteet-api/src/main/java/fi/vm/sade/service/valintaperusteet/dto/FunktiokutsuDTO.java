@@ -41,7 +41,7 @@ public class FunktiokutsuDTO {
     private Set<ArvokonvertteriparametriDTO> arvokonvertteriparametrit = new HashSet<ArvokonvertteriparametriDTO>();
 
     @ApiModelProperty(value = "Arvovälikonvertteriparametrit")
-    private List<ArvovalikonvertteriparametriDTO> arvovalikonvertteriparametrit = new ArrayList<ArvovalikonvertteriparametriDTO>();
+    private List<ArvovalikonvertteriparametriDTO> arvovalikonvertteriparametrit = new LinkedList<ArvovalikonvertteriparametriDTO>();
 
     @ApiModelProperty(value = "Syöteparametrit")
     private Set<SyoteparametriDTO> syoteparametrit = new HashSet<SyoteparametriDTO>();
