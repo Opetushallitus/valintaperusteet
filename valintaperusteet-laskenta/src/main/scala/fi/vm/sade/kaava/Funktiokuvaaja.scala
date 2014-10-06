@@ -284,6 +284,9 @@ object Funktiokuvaaja {
       syoteparametrit = List(
         Syoteparametrikuvaus("n", Syoteparametrityyppi.KOKONAISLUKU))
     ),
+    Funktionimi.HAKUKELPOISUUS -> Funktiokuvaus(
+      tyyppi = Funktiotyyppi.TOTUUSARVOFUNKTIO
+    ),
     Funktionimi.HYLKAA -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
       funktioargumentit = List(

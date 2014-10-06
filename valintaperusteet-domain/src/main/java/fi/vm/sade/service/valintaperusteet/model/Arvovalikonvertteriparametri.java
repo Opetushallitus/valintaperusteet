@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "arvovalikonvertteriparametri")
 @Cacheable(true)
-public class Arvovalikonvertteriparametri extends Konvertteriparametri {
+public class Arvovalikonvertteriparametri extends Konvertteriparametri implements Comparable<Arvovalikonvertteriparametri> {
 
 
     @Override
@@ -81,5 +81,14 @@ public class Arvovalikonvertteriparametri extends Konvertteriparametri {
 
     public void setKuvaukset(TekstiRyhma kuvaukset) {
         this.kuvaukset = kuvaukset;
+    }
+
+    @Override
+    public int compareTo(Arvovalikonvertteriparametri o) {
+        try {
+            return Integer.compare(Integer.parseInt(minValue), Integer.parseInt(o.minValue));
+        } catch (Exception e) {
+            return minValue.compareTo(o.minValue);
+        }
     }
 }

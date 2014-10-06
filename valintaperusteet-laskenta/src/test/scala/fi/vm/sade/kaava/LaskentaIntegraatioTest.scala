@@ -1329,6 +1329,44 @@ class LaskentaIntegraatioTest extends FunSuite {
     assertTilaHyvaksyttavissa(tila)
   }
 
+  test("Hakukelpoisuus") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HAKUKELPOISUUS)
+
+    val hakukohde = new Hakukohde("oid1", new util.HashMap[String, String])
+    val hakukohde2 = new Hakukohde("oid2", new util.HashMap[String, String])
+    val hakukohde3 = new Hakukohde("oid3", new util.HashMap[String, String])
+    val hakukohde4 = new Hakukohde("oid4", new util.HashMap[String, String])
+    val map = Map(
+      "preference1-Koulutus-id" -> "oid1",
+      "preference1-Koulutus-id-eligibility" -> "ELIGIBLE",
+      "preference2-Koulutus-id" -> "oid2",
+      "preference2-Koulutus-id-eligibility" -> "NOT_CHECKED",
+      "preference3-Koulutus-id" -> "oid3",
+      "preference3-Koulutus-id-eligibility" -> "ELIGIBLE",
+      "preference4-Koulutus-id" -> "oid4"
+    )
+    val hakemus = TestHakemus("", List("oid1", "oid2", "oid3", "oid4"), map)
+
+    val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
+
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
+    assert(tulos.get)
+    assertTilaHyvaksyttavissa(tila)
+
+    val (tulos2, tila2) = Laskin.laske(hakukohde2, hakemus, lasku)
+    assert(!tulos2.get)
+    assertTilaHyvaksyttavissa(tila2)
+
+    val (tulos3, tila3) = Laskin.laske(hakukohde3, hakemus, lasku)
+    assert(tulos3.get)
+    assertTilaHyvaksyttavissa(tila3)
+
+    val (tulos4, tila4) = Laskin.laske(hakukohde4, hakemus, lasku)
+    assert(!tulos4.get)
+    assertTilaHyvaksyttavissa(tila4)
+  }
+
   test("Hakutoive, ei tarpeeksi hakutoiveita") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAKUTOIVE,

@@ -32,7 +32,7 @@ public class FunktioargumentinLapsiDTO {
     private Set<ArvokonvertteriparametriDTO> arvokonvertteriparametrit = new HashSet<ArvokonvertteriparametriDTO>();
 
     @ApiModelProperty(value = "Arvovälikonvertteriparametrit")
-    private Set<ArvovalikonvertteriparametriDTO> arvovalikonvertteriparametrit = new HashSet<ArvovalikonvertteriparametriDTO>();
+    private List<ArvovalikonvertteriparametriDTO> arvovalikonvertteriparametrit = new LinkedList<ArvovalikonvertteriparametriDTO>();
 
     @ApiModelProperty(value = "Syöteparametrit")
     private Set<SyoteparametriDTO> syoteparametrit = new HashSet<SyoteparametriDTO>();
@@ -135,11 +135,11 @@ public class FunktioargumentinLapsiDTO {
         this.arvokonvertteriparametrit = arvokonvertteriparametrit;
     }
 
-    public Set<ArvovalikonvertteriparametriDTO> getArvovalikonvertteriparametrit() {
+    public List<ArvovalikonvertteriparametriDTO> getArvovalikonvertteriparametrit() {
         return arvovalikonvertteriparametrit;
     }
 
-    public void setArvovalikonvertteriparametrit(Set<ArvovalikonvertteriparametriDTO> arvovalikonvertteriparametrit) {
+    public void setArvovalikonvertteriparametrit(List<ArvovalikonvertteriparametriDTO> arvovalikonvertteriparametrit) {
         this.arvovalikonvertteriparametrit = arvovalikonvertteriparametrit;
     }
 

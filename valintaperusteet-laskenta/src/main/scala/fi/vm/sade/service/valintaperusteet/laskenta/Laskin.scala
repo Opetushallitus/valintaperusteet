@@ -376,6 +376,12 @@ private class Laskin private(private val hakukohde: Hakukohde,
         (onko, tilat, Historia("Hakutoive", onko, tilat, None, Some(Map("prioriteetti" -> Some(n)))))
       }
 
+      case Hakukelpoisuus(oid, tulosTunniste,_,_,_) => {
+        val onko = Some(hakemus.onkoHakukelpoinen(hakukohde.hakukohdeOid))
+        val tilat = List(new Hyvaksyttavissatila)
+        (onko, tilat, Historia("Hakukelpoisuus", onko, tilat, None, Some(Map("hakukohde" -> Some(hakukohde.hakukohdeOid)))))
+      }
+
       case Demografia(oid, tulosTunniste,_,_,_, tunniste, prosenttiosuus) => {
         if (laskentamoodi != Laskentamoodi.VALINTALASKENTA) {
           val moodi = laskentamoodi.toString
