@@ -42,6 +42,10 @@ public class ValintakoeKopioija implements Kopioija<Valintakoe> {
             to.setTunniste(from.getTunniste());
         }
 
+        if (StringUtils.isNotBlank(from.getKutsunKohdeAvain())) {
+            to.setKutsunKohdeAvain(from.getKutsunKohdeAvain());
+        }
+
         to.setKutsunKohde(from.getKutsunKohde());
 
 
@@ -67,6 +71,7 @@ public class ValintakoeKopioija implements Kopioija<Valintakoe> {
         kopio.setNimi(paivitettyMaster.getNimi());
         kopio.setKuvaus(paivitettyMaster.getKuvaus());
         kopio.setTunniste(paivitettyMaster.getTunniste());
+        kopio.setKutsunKohdeAvain(paivitettyMaster.getKutsunKohdeAvain());
         kopio.setLahetetaankoKoekutsut(paivitettyMaster.getLahetetaankoKoekutsut());
         kopio.setKutsutaankoKaikki(paivitettyMaster.getKutsutaankoKaikki());
         kopio.setKutsuttavienMaara(paivitettyMaster.getKutsuttavienMaara());

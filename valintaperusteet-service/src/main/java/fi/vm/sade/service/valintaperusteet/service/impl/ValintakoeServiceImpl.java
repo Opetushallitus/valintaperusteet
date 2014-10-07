@@ -136,6 +136,10 @@ public class ValintakoeServiceImpl implements ValintakoeService {
         valintakoe.setKutsuttavienMaara(koe.getKutsuttavienMaara());
         valintakoe.setKutsunKohde(koe.getKutsunKohde());
 
+        if(koe.getKutsunKohdeAvain() != null && !koe.getKutsunKohdeAvain().isEmpty()) {
+            valintakoe.setKutsunKohdeAvain(koe.getKutsunKohdeAvain());
+        }
+
 		if (koe.getLaskentakaavaId() != null) {
 			valintakoe.setLaskentakaava(haeLaskentakaavaValintakokeelle(koe
 					.getLaskentakaavaId()));
@@ -226,6 +230,10 @@ public class ValintakoeServiceImpl implements ValintakoeService {
         incoming.setKutsutaankoKaikki(valintakoe.getKutsutaankoKaikki());
         incoming.setKutsuttavienMaara(valintakoe.getKutsuttavienMaara());
         incoming.setKutsunKohde(valintakoe.getKutsunKohde());
+
+        if(valintakoe.getKutsunKohdeAvain() != null && !valintakoe.getKutsunKohdeAvain().isEmpty()) {
+            incoming.setKutsunKohdeAvain(valintakoe.getKutsunKohdeAvain());
+        }
 
 		Valintakoe managedObject = haeValintakoeOidilla(oid);
 		Long laskentakaavaOid = valintakoe.getLaskentakaavaId();

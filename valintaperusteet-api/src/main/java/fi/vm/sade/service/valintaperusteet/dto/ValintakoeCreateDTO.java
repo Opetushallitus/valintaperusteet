@@ -37,6 +37,9 @@ public class ValintakoeCreateDTO {
     @ApiModelProperty(value = "Minne koekutsu osoitetaan")
     private Koekutsu kutsunKohde;
 
+    @ApiModelProperty(value = "Avain, josta kutsun kohde haetaan", required = false)
+    private String kutsunKohdeAvain;
+
     public String getTunniste() {
         return tunniste;
     }
@@ -107,5 +110,13 @@ public class ValintakoeCreateDTO {
 
     public void setKutsunKohde(Koekutsu kutsunKohde) {
         this.kutsunKohde = kutsunKohde;
+    }
+
+    public String getKutsunKohdeAvain() {
+        return kutsunKohdeAvain;
+    }
+
+    public void setKutsunKohdeAvain(String kutsunKohdeAvain) {
+        this.kutsunKohdeAvain = kutsunKohdeAvain;
     }
 }
