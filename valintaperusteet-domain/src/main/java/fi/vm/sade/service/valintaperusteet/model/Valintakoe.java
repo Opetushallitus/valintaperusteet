@@ -59,6 +59,9 @@ public class Valintakoe extends BaseEntity implements Kopioitava<Valintakoe, Set
     @Column(name="kutsun_kohde", nullable = false)
     private Koekutsu kutsunKohde;
 
+    @Column(name = "kutsun_kohde_avain")
+    private String kutsunKohdeAvain;
+
     public Boolean getLahetetaankoKoekutsut() {
         return lahetetaankoKoekutsut;
     }
@@ -195,5 +198,13 @@ public class Valintakoe extends BaseEntity implements Kopioitava<Valintakoe, Set
 
     public void setKutsunKohde(Koekutsu kutsunKohde) {
         this.kutsunKohde = kutsunKohde;
+    }
+
+    public String getKutsunKohdeAvain() {
+        return kutsunKohdeAvain;
+    }
+
+    public void setKutsunKohdeAvain(String kutsunKohdeAvain) {
+        this.kutsunKohdeAvain = kutsunKohdeAvain;
     }
 }
