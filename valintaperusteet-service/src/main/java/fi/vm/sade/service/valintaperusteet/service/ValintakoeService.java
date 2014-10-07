@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
+import java.util.Collection;
 import java.util.List;
 
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeCreateDTO;
@@ -16,11 +17,13 @@ public interface ValintakoeService {
 
 	Valintakoe readByOid(String oid);
 
+	List<Valintakoe> readByOids(Collection<String> oids);
+
 	List<Valintakoe> readAll();
 
 	List<Valintakoe> findValintakoeByValinnanVaihe(String oid);
 
-    List<Valintakoe> findValintakoesByValinnanVaihes(List<ValinnanVaihe> vaiheet);
+	List<Valintakoe> findValintakoesByValinnanVaihes(List<ValinnanVaihe> vaiheet);
 
 	Valintakoe lisaaValintakoeValinnanVaiheelle(String valinnanVaiheOid,
 			ValintakoeCreateDTO koe);
