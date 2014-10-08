@@ -4,6 +4,8 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRU
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
 
+import java.util.List;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -55,6 +57,19 @@ public class ValintakoeResourceImpl implements ValintakoeResource {
 	public ValintakoeDTO readByOid(
 			@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
 		return modelMapper.map(valintakoeService.readByOid(oid),
+				ValintakoeDTO.class);
+	}
+
+	@Transactional
+	@POST
+	@Path("/")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@PreAuthorize(READ_UPDATE_CRUD)
+	@ApiOperation(value = "Hakee valintakokeen OID:n perusteella", response = ValintakoeDTO.class)
+	public List<ValintakoeDTO> readByOids(
+			@ApiParam(value = "OID", required = true) List<String> oids) {
+		return modelMapper.mapList(valintakoeService.readByOids(oids),
 				ValintakoeDTO.class);
 	}
 

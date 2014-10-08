@@ -1,6 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,8 +85,24 @@ public class ValintakoeServiceImpl implements ValintakoeService {
 	}
 
 	@Override
+	public List<Valintakoe> readByOids(Collection<String> oids) {
+		return haeValintakoeOideilla(oids);
+	}
+
+	@Override
 	public List<Valintakoe> readAll() {
 		return valintakoeDAO.findAll();
+	}
+
+	private List<Valintakoe> haeValintakoeOideilla(Collection<String> oids) {
+		List<Valintakoe> valintakoe = valintakoeDAO.readByOids(oids);
+		if (valintakoe == null) {
+			throw new ValintakoettaEiOleOlemassaException(
+					"Valintakoetta (oideja " + Arrays.toString(oids.toArray())
+							+ ") ei ole olemassa");
+		}
+
+		return valintakoe;
 	}
 
 	private Valintakoe haeValintakoeOidilla(String oid) {
@@ -102,16 +120,17 @@ public class ValintakoeServiceImpl implements ValintakoeService {
 		return valintakoeDAO.findByValinnanVaihe(oid);
 	}
 
-    @Override
-    public List<Valintakoe> findValintakoesByValinnanVaihes(List<ValinnanVaihe> vaiheet) {
-        List<Valintakoe> kokeet = new ArrayList<Valintakoe>();
-        for (ValinnanVaihe vaihe : vaiheet) {
-            kokeet.addAll(valintakoeDAO.findByValinnanVaihe(vaihe.getOid()));
-        }
-        return kokeet;
-    }
+	@Override
+	public List<Valintakoe> findValintakoesByValinnanVaihes(
+			List<ValinnanVaihe> vaiheet) {
+		List<Valintakoe> kokeet = new ArrayList<Valintakoe>();
+		for (ValinnanVaihe vaihe : vaiheet) {
+			kokeet.addAll(valintakoeDAO.findByValinnanVaihe(vaihe.getOid()));
+		}
+		return kokeet;
+	}
 
-    @Override
+	@Override
 	public Valintakoe lisaaValintakoeValinnanVaiheelle(String valinnanVaiheOid,
 			ValintakoeCreateDTO koe) {
 		ValinnanVaihe valinnanVaihe = valinnanVaiheService
@@ -131,10 +150,10 @@ public class ValintakoeServiceImpl implements ValintakoeService {
 		valintakoe.setKuvaus(koe.getKuvaus());
 		valintakoe.setValinnanVaihe(valinnanVaihe);
 		valintakoe.setAktiivinen(koe.getAktiivinen());
-        valintakoe.setLahetetaankoKoekutsut(koe.getLahetetaankoKoekutsut());
-        valintakoe.setKutsutaankoKaikki(koe.getKutsutaankoKaikki());
-        valintakoe.setKutsuttavienMaara(koe.getKutsuttavienMaara());
-        valintakoe.setKutsunKohde(koe.getKutsunKohde());
+		valintakoe.setLahetetaankoKoekutsut(koe.getLahetetaankoKoekutsut());
+		valintakoe.setKutsutaankoKaikki(koe.getKutsutaankoKaikki());
+		valintakoe.setKutsuttavienMaara(koe.getKutsuttavienMaara());
+		valintakoe.setKutsunKohde(koe.getKutsunKohde());
 
         if(koe.getKutsunKohdeAvain() != null && !koe.getKutsunKohdeAvain().isEmpty()) {
             valintakoe.setKutsunKohdeAvain(koe.getKutsunKohdeAvain());
@@ -199,20 +218,20 @@ public class ValintakoeServiceImpl implements ValintakoeService {
 					laskentakaavaId);
 		}
 
-// VT-938
-//        else if (!Funktiotyyppi.TOTUUSARVOFUNKTIO.equals(laskentakaava
-//				.getTyyppi())) {
-//			throw new VaaranTyyppinenLaskentakaavaException(
-//					"Valintakokeen laskentakaavan tulee olla tyyppiä "
-//							+ Funktiotyyppi.TOTUUSARVOFUNKTIO.name());
-//		}
+		// VT-938
+		// else if (!Funktiotyyppi.TOTUUSARVOFUNKTIO.equals(laskentakaava
+		// .getTyyppi())) {
+		// throw new VaaranTyyppinenLaskentakaavaException(
+		// "Valintakokeen laskentakaavan tulee olla tyyppiä "
+		// + Funktiotyyppi.TOTUUSARVOFUNKTIO.name());
+		// }
 
-        // Laskentakaavaa ei voi tällä hetkellä tallentaa luonnoksena
-//        else if (laskentakaava.getOnLuonnos()) {
-//			throw new ValintakokeeseenLiitettavaLaskentakaavaOnLuonnosException(
-//					"Valintakokeeseen liitettävä "
-//							+ "laskentakaava on LUONNOS-tilassa");
-//		}
+		// Laskentakaavaa ei voi tällä hetkellä tallentaa luonnoksena
+		// else if (laskentakaava.getOnLuonnos()) {
+		// throw new ValintakokeeseenLiitettavaLaskentakaavaOnLuonnosException(
+		// "Valintakokeeseen liitettävä "
+		// + "laskentakaava on LUONNOS-tilassa");
+		// }
 
 		validoiFunktiokutsuValintakoettaVarten(laskentakaava.getFunktiokutsu());
 
@@ -226,10 +245,10 @@ public class ValintakoeServiceImpl implements ValintakoeService {
 		incoming.setKuvaus(valintakoe.getKuvaus());
 		incoming.setNimi(valintakoe.getNimi());
 		incoming.setTunniste(valintakoe.getTunniste());
-        incoming.setLahetetaankoKoekutsut(valintakoe.getLahetetaankoKoekutsut());
-        incoming.setKutsutaankoKaikki(valintakoe.getKutsutaankoKaikki());
-        incoming.setKutsuttavienMaara(valintakoe.getKutsuttavienMaara());
-        incoming.setKutsunKohde(valintakoe.getKutsunKohde());
+		incoming.setLahetetaankoKoekutsut(valintakoe.getLahetetaankoKoekutsut());
+		incoming.setKutsutaankoKaikki(valintakoe.getKutsutaankoKaikki());
+		incoming.setKutsuttavienMaara(valintakoe.getKutsuttavienMaara());
+		incoming.setKutsunKohde(valintakoe.getKutsunKohde());
 
         if(valintakoe.getKutsunKohdeAvain() != null && !valintakoe.getKutsunKohdeAvain().isEmpty()) {
             incoming.setKutsunKohdeAvain(valintakoe.getKutsunKohdeAvain());
