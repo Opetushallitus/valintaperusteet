@@ -1,5 +1,9 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
+
+import java.util.List;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -9,6 +13,11 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import org.springframework.security.access.prepost.PreAuthorize;
+
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
 
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
 
@@ -22,6 +31,11 @@ public interface ValintakoeResource {
 	// @Path("/")
 	// @Produces(MediaType.APPLICATION_JSON)
 	// List<ValintakoeDTO> readAll();
+	@POST
+	@Path("/")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	List<ValintakoeDTO> readByOids(List<String> oids);
 
 	@GET
 	@Path("/{oid}")
