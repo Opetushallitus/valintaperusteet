@@ -237,7 +237,7 @@ object Laskentadomainkonvertteri {
         val konversioMap = funktiokutsu.getArvokonvertteriparametrit.map(konv =>
           ArvokonversioMerkkijonoilla[String, Boolean](konv.getArvo, konv.getPaluuarvo.toBoolean, konv.getHylkaysperuste, konv.getKuvaukset)).toList
 
-        val oletusarvo = funktiokutsu.getSyoteparametrit.find(_.getAvain == "oletusarvo")
+        val oletusarvo = funktiokutsu.getSyoteparametrit.filter(!_.getArvo.isEmpty).find(_.getAvain == "oletusarvo")
           .map(p => parametriToBoolean(p))
 
         HaeMerkkijonoJaKonvertoiTotuusarvoksi(
@@ -248,7 +248,7 @@ object Laskentadomainkonvertteri {
       }
 
       case Funktionimi.HAEMERKKIJONOJAVERTAAYHTASUURUUS => {
-        val oletusarvo = funktiokutsu.getSyoteparametrit.find(_.getAvain == "oletusarvo")
+        val oletusarvo = funktiokutsu.getSyoteparametrit.filter(!_.getArvo.isEmpty).find(_.getAvain == "oletusarvo")
           .map(p => parametriToBoolean(p))
 
         val vertailtava = getParametri("vertailtava", funktiokutsu.getSyoteparametrit).getArvo
@@ -266,7 +266,7 @@ object Laskentadomainkonvertteri {
           Some(Arvokonvertteri[Boolean, Boolean](konversioMap))
         } else None
 
-        val oletusarvo = funktiokutsu.getSyoteparametrit.find(_.getAvain == "oletusarvo")
+        val oletusarvo = funktiokutsu.getSyoteparametrit.filter(!_.getArvo.isEmpty).find(_.getAvain == "oletusarvo")
           .map(p => parametriToBoolean(p))
 
         HaeTotuusarvo(konvertteri, oletusarvo, valintaperusteviitteet.head, oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
