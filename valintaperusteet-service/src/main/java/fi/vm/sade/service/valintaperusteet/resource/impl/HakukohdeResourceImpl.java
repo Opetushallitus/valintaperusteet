@@ -7,6 +7,7 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPD
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -26,6 +27,7 @@ import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapp
 import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
 import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
 import fi.vm.sade.service.valintaperusteet.service.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -200,6 +202,22 @@ public class HakukohdeResourceImpl implements HakukohdeResource {
 		return modelMapper.mapList(valintakoeService
 				.findValintakoesByValinnanVaihes(valinnanVaiheService
 						.findByHakukohde(oid)), ValintakoeDTO.class);
+	}
+
+	@POST
+	@Path("/valintakoe")
+	@Produces(MediaType.APPLICATION_JSON)
+	@PreAuthorize(READ_UPDATE_CRUD)
+	@ApiOperation(value = "Hakee hakukohteen valintakokeet OID:n perusteella", response = ValintakoeDTO.class)
+	public List<ValintakoeDTO> valintakoesForHakukohteet(List<String> oids) {
+		return modelMapper
+				.mapList(
+						oids.stream()
+								.map(oid -> valintakoeService
+										.findValintakoesByValinnanVaihes(valinnanVaiheService
+												.findByHakukohde(oid)))
+								.collect(Collectors.toList()),
+						ValintakoeDTO.class);
 	}
 
 	@GET
