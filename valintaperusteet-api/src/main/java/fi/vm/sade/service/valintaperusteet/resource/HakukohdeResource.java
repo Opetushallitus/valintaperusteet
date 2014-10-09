@@ -24,109 +24,127 @@ import fi.vm.sade.service.valintaperusteet.dto.*;
 @Path("hakukohde")
 public interface HakukohdeResource {
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    List<HakukohdeViiteDTO> query(@QueryParam("paataso") @DefaultValue("false") boolean paataso);
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	List<HakukohdeViiteDTO> query(
+			@QueryParam("paataso") @DefaultValue("false") boolean paataso);
 
-    @GET
-    @Path("haku/{hakuOid}")
-    @Produces(MediaType.APPLICATION_JSON)
-    List<HakukohdeViiteDTO> haunHakukohteet(@PathParam("hakuOid") String hakuOid);
+	@GET
+	@Path("haku/{hakuOid}")
+	@Produces(MediaType.APPLICATION_JSON)
+	List<HakukohdeViiteDTO> haunHakukohteet(@PathParam("hakuOid") String hakuOid);
 
-    @GET
-    @Path("/{oid}")
-    @Produces(MediaType.APPLICATION_JSON)
-    HakukohdeViiteDTO queryFull(@PathParam("oid") String oid);
+	@GET
+	@Path("/{oid}")
+	@Produces(MediaType.APPLICATION_JSON)
+	HakukohdeViiteDTO queryFull(@PathParam("oid") String oid);
 
-    @PUT
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    Response insert(HakukohdeInsertDTO hakukohde);
+	@PUT
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	Response insert(HakukohdeInsertDTO hakukohde);
 
-    @POST
-    @Path("/{oid}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    Response update(@PathParam("oid") String oid, HakukohdeViiteCreateDTO hakukohdeViite);
+	@POST
+	@Path("/{oid}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	Response update(@PathParam("oid") String oid,
+			HakukohdeViiteCreateDTO hakukohdeViite);
 
-    @GET
-    @Path("/{oid}/valinnanvaihe")
-    @Produces(MediaType.APPLICATION_JSON)
-    List<ValinnanVaiheDTO> valinnanVaihesForHakukohde(@PathParam("oid") String oid);
+	@GET
+	@Path("/{oid}/valinnanvaihe")
+	@Produces(MediaType.APPLICATION_JSON)
+	List<ValinnanVaiheDTO> valinnanVaihesForHakukohde(
+			@PathParam("oid") String oid);
 
-    @GET
-    @Path("/{oid}/valintakoe")
-    @Produces(MediaType.APPLICATION_JSON)
-    List<ValintakoeDTO> valintakoesForHakukohde(@PathParam("oid") String oid);
+	@GET
+	@Path("/{oid}/valintakoe")
+	@Produces(MediaType.APPLICATION_JSON)
+	List<ValintakoeDTO> valintakoesForHakukohde(@PathParam("oid") String oid);
 
-    @GET
-    @Path("/{oid}/kuuluuSijoitteluun")
-    @Produces(MediaType.APPLICATION_JSON)
-    Map<String, Boolean> kuuluuSijoitteluun(@PathParam("oid") String oid);
+	@POST
+	@Path("/valintakoe")
+	@Produces(MediaType.APPLICATION_JSON)
+	List<ValintakoeDTO> valintakoesForHakukohteet(List<String> oids);
 
-    @GET
-    @Path("/{oid}/ilmanlaskentaa")
-    @Produces(MediaType.APPLICATION_JSON)
-    List<ValinnanVaiheJonoillaDTO> ilmanLaskentaa(@PathParam("oid") String oid);
+	@GET
+	@Path("/{oid}/kuuluuSijoitteluun")
+	@Produces(MediaType.APPLICATION_JSON)
+	Map<String, Boolean> kuuluuSijoitteluun(@PathParam("oid") String oid);
 
-    @GET
-    @Path("/{oid}/hakijaryhma")
-    @Produces(MediaType.APPLICATION_JSON)
-    List<HakijaryhmaValintatapajonoDTO> hakijaryhmat(@PathParam("oid") String oid);
+	@GET
+	@Path("/{oid}/ilmanlaskentaa")
+	@Produces(MediaType.APPLICATION_JSON)
+	List<ValinnanVaiheJonoillaDTO> ilmanLaskentaa(@PathParam("oid") String oid);
 
-    @GET
-    @Path("/{oid}/laskentakaava")
-    @Produces(MediaType.APPLICATION_JSON)
-    List<JarjestyskriteeriDTO> findLaskentaKaavat(@PathParam("oid") String oid);
+	@GET
+	@Path("/{oid}/hakijaryhma")
+	@Produces(MediaType.APPLICATION_JSON)
+	List<HakijaryhmaValintatapajonoDTO> hakijaryhmat(
+			@PathParam("oid") String oid);
 
-    @GET
-    @Path("/avaimet/{oid}")
-    @Produces(MediaType.APPLICATION_JSON)
-    List<ValintaperusteDTO> findAvaimet(@PathParam("oid") String oid);
+	@GET
+	@Path("/{oid}/laskentakaava")
+	@Produces(MediaType.APPLICATION_JSON)
+	List<JarjestyskriteeriDTO> findLaskentaKaavat(@PathParam("oid") String oid);
 
-    @GET
-    @Path("{hakukohdeOid}/avaimet")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    HakukohteenValintaperusteAvaimetDTO findHakukohteenAvaimet(@PathParam("hakukohdeOid") String hakukohdeOid);
+	@GET
+	@Path("/avaimet/{oid}")
+	@Produces(MediaType.APPLICATION_JSON)
+	List<ValintaperusteDTO> findAvaimet(@PathParam("oid") String oid);
 
-    @PUT
-    @Path("/{hakukohdeOid}/valinnanvaihe")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    Response insertValinnanvaihe(@PathParam("hakukohdeOid") String hakukohdeOid,
-            @QueryParam("edellinenValinnanVaiheOid") String edellinenValinnanVaiheOid,
-            ValinnanVaiheCreateDTO valinnanVaihe);
+	@GET
+	@Path("{hakukohdeOid}/avaimet")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	HakukohteenValintaperusteAvaimetDTO findHakukohteenAvaimet(
+			@PathParam("hakukohdeOid") String hakukohdeOid);
 
-    @PUT
-    @Path("/{hakukohdeOid}/hakijaryhma")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    Response insertHakijaryhma(@PathParam("hakukohdeOid") String hakukohdeOid, HakijaryhmaCreateDTO hakijaryhma);
+	@PUT
+	@Path("/{hakukohdeOid}/valinnanvaihe")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	Response insertValinnanvaihe(
+			@PathParam("hakukohdeOid") String hakukohdeOid,
+			@QueryParam("edellinenValinnanVaiheOid") String edellinenValinnanVaiheOid,
+			ValinnanVaiheCreateDTO valinnanVaihe);
 
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/{hakukohdeOid}/hakijaryhma/{hakijaryhmaOid}")
-    Response liitaHakijaryhma(@PathParam("hakukohdeOid") String hakukohdeOid,
-                              @PathParam("hakijaryhmaOid") String hakijaryhmaOid);
+	@PUT
+	@Path("/{hakukohdeOid}/hakijaryhma")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	Response insertHakijaryhma(@PathParam("hakukohdeOid") String hakukohdeOid,
+			HakijaryhmaCreateDTO hakijaryhma);
 
-    @POST
-    @Path("/{hakukohdeOid}/hakukohdekoodi")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    Response updateHakukohdekoodi(@PathParam("hakukohdeOid") String hakukohdeOid, KoodiDTO hakukohdekoodi);
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/{hakukohdeOid}/hakijaryhma/{hakijaryhmaOid}")
+	Response liitaHakijaryhma(@PathParam("hakukohdeOid") String hakukohdeOid,
+			@PathParam("hakijaryhmaOid") String hakijaryhmaOid);
 
-    @PUT
-    @Path("/{hakukohdeOid}/hakukohdekoodi")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    Response insertHakukohdekoodi(@PathParam("hakukohdeOid") String hakukohdeOid, KoodiDTO hakukohdekoodi);
+	@POST
+	@Path("/{hakukohdeOid}/hakukohdekoodi")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	Response updateHakukohdekoodi(
+			@PathParam("hakukohdeOid") String hakukohdeOid,
+			KoodiDTO hakukohdekoodi);
 
-    @POST
-    @Path("/{hakukohdeOid}/siirra")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    Response siirraHakukohdeValintaryhmaan(@PathParam("hakukohdeOid") String hakukohdeOid, String valintaryhmaOid);
+	@PUT
+	@Path("/{hakukohdeOid}/hakukohdekoodi")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	Response insertHakukohdekoodi(
+			@PathParam("hakukohdeOid") String hakukohdeOid,
+			KoodiDTO hakukohdekoodi);
+
+	@POST
+	@Path("/{hakukohdeOid}/siirra")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	Response siirraHakukohdeValintaryhmaan(
+			@PathParam("hakukohdeOid") String hakukohdeOid,
+			String valintaryhmaOid);
 
 }

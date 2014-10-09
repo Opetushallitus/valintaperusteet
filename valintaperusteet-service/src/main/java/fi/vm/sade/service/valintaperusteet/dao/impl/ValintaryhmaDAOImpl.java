@@ -117,6 +117,17 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long> 
                 .distinct().list(valintaryhma);
     }
 
+    @Override
+    public List<Valintaryhma> findAllFetchAlavalintaryhmat(String oid) {
+        QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
+
+        return from(valintaryhma)
+                .leftJoin(valintaryhma.alavalintaryhmat).fetch()
+                .leftJoin(valintaryhma.organisaatiot).fetch()
+                .where(valintaryhma.oid.eq(oid))
+                .distinct().list(valintaryhma);
+    }
+
 
     @Override
     public List<Valintaryhma> haeHakukohdekoodinJaValintakoekoodienMukaan(String hakukohdekoodiUri,
