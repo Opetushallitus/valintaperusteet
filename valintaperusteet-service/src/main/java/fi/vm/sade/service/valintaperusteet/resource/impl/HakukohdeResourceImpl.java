@@ -34,6 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
+import com.google.gson.Gson;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
@@ -209,16 +210,18 @@ public class HakukohdeResourceImpl implements HakukohdeResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@PreAuthorize(READ_UPDATE_CRUD)
 	@ApiOperation(value = "Hakee hakukohteen valintakokeet OID:n perusteella", response = ValintakoeDTO.class)
-	public Map<String, List<ValintakoeDTO>> valintakoesForHakukohteet(
-			List<String> oids) {
-		return oids.stream().collect(
-				Collectors.toMap(oid -> oid, oid -> modelMapper.mapList(
-
-				valintakoeService
-						.findValintakoesByValinnanVaihes(valinnanVaiheService
-								.findByHakukohde(oid)), ValintakoeDTO.class))
-
-		);
+	public String valintakoesForHakukohteet(List<String> oids) {
+		return new Gson()
+				.toJson(oids
+						.stream()
+						.collect(
+								Collectors.toMap(
+										oid -> oid,
+										oid -> modelMapper.mapList(
+												valintakoeService
+														.findValintakoesByValinnanVaihes(valinnanVaiheService
+																.findByHakukohde(oid)),
+												ValintakoeDTO.class))));
 	}
 
 	@GET
