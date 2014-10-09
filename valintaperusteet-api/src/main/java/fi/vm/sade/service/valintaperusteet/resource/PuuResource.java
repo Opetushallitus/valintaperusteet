@@ -22,6 +22,7 @@ public interface PuuResource {
     @Produces(MediaType.APPLICATION_JSON)
     List<ValintaperustePuuDTO> search(@QueryParam("q") String searchString, @QueryParam("hakuOid") String hakuOid,
             @QueryParam("tila") List<String> tila, @QueryParam("hakukohteet") @DefaultValue("true") boolean hakukohteet,
-            @QueryParam("kohdejoukko") @DefaultValue("") String kohdejoukko);
+            @QueryParam("kohdejoukko") @DefaultValue("") String kohdejoukko,
+            @QueryParam("valintaryhma") @DefaultValue("") String valintaryhma);
 
 }

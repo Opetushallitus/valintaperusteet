@@ -13,5 +13,5 @@ import java.util.List;
  */
 public interface PuuService {
 
-    List<ValintaperustePuuDTO> search(String hakuOid, List<String> tila, String searchString, boolean hakukohteet, String kohdejoukko);
+    List<ValintaperustePuuDTO> search(String hakuOid, List<String> tila, String searchString, boolean hakukohteet, String kohdejoukko, String valintaryhmaOid);
 }
