@@ -209,15 +209,16 @@ public class HakukohdeResourceImpl implements HakukohdeResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@PreAuthorize(READ_UPDATE_CRUD)
 	@ApiOperation(value = "Hakee hakukohteen valintakokeet OID:n perusteella", response = ValintakoeDTO.class)
-	public List<ValintakoeDTO> valintakoesForHakukohteet(List<String> oids) {
-		return modelMapper
-				.mapList(
-						oids.stream()
-								.map(oid -> valintakoeService
-										.findValintakoesByValinnanVaihes(valinnanVaiheService
-												.findByHakukohde(oid)))
-								.collect(Collectors.toList()),
-						ValintakoeDTO.class);
+	public Map<String, List<ValintakoeDTO>> valintakoesForHakukohteet(
+			List<String> oids) {
+		return oids.stream().collect(
+				Collectors.toMap(oid -> oid, oid -> modelMapper.mapList(
+
+				valintakoeService
+						.findValintakoesByValinnanVaihes(valinnanVaiheService
+								.findByHakukohde(oid)), ValintakoeDTO.class))
+
+		);
 	}
 
 	@GET
