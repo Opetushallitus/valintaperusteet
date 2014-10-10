@@ -225,8 +225,8 @@ public class HakukohdeResourceImpl implements HakukohdeResource {
 					if (valintakoeDtos == null || valintakoeDtos.isEmpty()) {
 						return null;
 					}
-					LOG.error("{}", new GsonBuilder().setPrettyPrinting()
-							.create().toJson(valintakoeDtos));
+					// LOG.error("{}", new GsonBuilder().setPrettyPrinting()
+					// .create().toJson(valintakoeDtos));
 					return new HakukohdeJaValintakoeDTO(oid, valintakoeDtos);
 				})
 				//
