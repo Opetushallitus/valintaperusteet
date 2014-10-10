@@ -220,7 +220,8 @@ public class HakukohdeResourceImpl implements HakukohdeResource {
 										oid -> modelMapper.mapList(
 												valintakoeService
 														.findValintakoesByValinnanVaihes(valinnanVaiheService
-																.findByHakukohde(oid)),
+																.findByHakukohde(oid
+																		.toString())),
 												ValintakoeDTO.class))));
 	}
 
