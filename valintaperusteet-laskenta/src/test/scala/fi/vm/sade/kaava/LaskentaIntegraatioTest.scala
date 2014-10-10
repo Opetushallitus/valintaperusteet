@@ -1341,7 +1341,7 @@ class LaskentaIntegraatioTest extends FunSuite {
       "preference1-Koulutus-id" -> "oid1",
       "preference1-Koulutus-id-eligibility" -> "ELIGIBLE",
       "preference2-Koulutus-id" -> "oid2",
-      "preference2-Koulutus-id-eligibility" -> "NOT_CHECKED",
+      "preference2-Koulutus-id-eligibility" -> "INELIGIBLE",
       "preference3-Koulutus-id" -> "oid3",
       "preference3-Koulutus-id-eligibility" -> "ELIGIBLE",
       "preference4-Koulutus-id" -> "oid4"
@@ -1363,7 +1363,7 @@ class LaskentaIntegraatioTest extends FunSuite {
     assertTilaHyvaksyttavissa(tila3)
 
     val (tulos4, tila4) = Laskin.laske(hakukohde4, hakemus, lasku)
-    assert(!tulos4.get)
+    assert(tulos4.get)
     assertTilaHyvaksyttavissa(tila4)
   }
 
