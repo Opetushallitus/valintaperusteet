@@ -39,7 +39,7 @@ public class PuuServiceImpl implements PuuService {
 
         List<Valintaryhma>  valintaryhmaList;
         if(valintaryhmaOid != null && !valintaryhmaOid.isEmpty()) {
-            valintaryhmaList = valintaryhmaDAO.findAllFetchAlavalintaryhmat(valintaryhmaOid);
+            valintaryhmaList = Arrays.asList(valintaryhmaDAO.findAllFetchAlavalintaryhmat(valintaryhmaOid));
         } else {
             valintaryhmaList = valintaryhmaDAO.findAllFetchAlavalintaryhmat();
         }
