@@ -44,10 +44,10 @@ public class Valintatapajono extends BaseEntity implements
     private Boolean aktiivinen;
 
     @Column(name = "valisijoittelu", nullable = false)
-    private Boolean valisijoittelu;
+    private Boolean valisijoittelu = false;
 
     @Column(name = "automaattinen_laskentaan_siirto", nullable = false)
-    private Boolean automaattinenLaskentaanSiirto;
+    private Boolean automaattinenLaskentaanSiirto = false;
 
     @Column(name = "ei_varasijatayttoa", nullable = false)
     private Boolean eiVarasijatayttoa = false;
