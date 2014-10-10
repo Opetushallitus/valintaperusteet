@@ -7,6 +7,7 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPD
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.Consumes;
@@ -35,6 +36,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
@@ -56,7 +58,7 @@ import fi.vm.sade.service.valintaperusteet.service.exception.HakukohdeViiteEiOle
 @Api(value = "/hakukohde", description = "Resurssi hakukohteiden käsittelyyn")
 public class HakukohdeResourceImpl implements HakukohdeResource {
 
-	protected final static Logger LOGGER = LoggerFactory
+	protected final static Logger LOG = LoggerFactory
 			.getLogger(ValintaryhmaResource.class);
 
 	@Autowired
@@ -153,7 +155,7 @@ public class HakukohdeResourceImpl implements HakukohdeResource {
 					HakukohdeViiteDTO.class);
 			return Response.status(Response.Status.CREATED).entity(hkv).build();
 		} catch (Exception e) {
-			LOGGER.warn("Hakukohdetta ei saatu lisättyä. ", e);
+			LOG.warn("Hakukohdetta ei saatu lisättyä. ", e);
 
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
 					.entity(new ErrorDTO(e.getMessage())).build();
@@ -176,7 +178,7 @@ public class HakukohdeResourceImpl implements HakukohdeResource {
 			return Response.status(Response.Status.ACCEPTED).entity(hkv)
 					.build();
 		} catch (Exception e) {
-			LOGGER.warn("Hakukohdetta ei saatu päivitettyä. ", e);
+			LOG.warn("Hakukohdetta ei saatu päivitettyä. ", e);
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
 					.build();
 		}
@@ -210,19 +212,27 @@ public class HakukohdeResourceImpl implements HakukohdeResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@PreAuthorize(READ_UPDATE_CRUD)
 	@ApiOperation(value = "Hakee hakukohteen valintakokeet OID:n perusteella", response = ValintakoeDTO.class)
-	public String valintakoesForHakukohteet(List<String> oids) {
-		return new Gson()
-				.toJson(oids
-						.stream()
-						.collect(
-								Collectors.toMap(
-										oid -> oid,
-										oid -> modelMapper.mapList(
-												valintakoeService
-														.findValintakoesByValinnanVaihes(valinnanVaiheService
-																.findByHakukohde(oid
-																		.toString())),
-												ValintakoeDTO.class))));
+	public List<HakukohdeJaValintakoeDTO> valintakoesForHakukohteet(
+			List<String> oids) {
+		return oids.stream()
+				//
+				.map(oid -> {
+					List<ValintakoeDTO> valintakoeDtos = modelMapper.mapList(
+							valintakoeService
+									.findValintakoesByValinnanVaihes(valinnanVaiheService
+											.findByHakukohde(oid.toString())),
+							ValintakoeDTO.class);
+					if (valintakoeDtos == null || valintakoeDtos.isEmpty()) {
+						return null;
+					}
+					LOG.error("{}", new GsonBuilder().setPrettyPrinting()
+							.create().toJson(valintakoeDtos));
+					return new HakukohdeJaValintakoeDTO(oid, valintakoeDtos);
+				})
+				//
+				.filter(Objects::nonNull)
+				//
+				.collect(Collectors.toList());
 	}
 
 	@GET
@@ -311,7 +321,7 @@ public class HakukohdeResourceImpl implements HakukohdeResource {
 			return Response.status(Response.Status.CREATED).entity(lisatty)
 					.build();
 		} catch (Exception e) {
-			LOGGER.error("Error creating valinnanvaihe.", e);
+			LOG.error("Error creating valinnanvaihe.", e);
 			return Response.status(Response.Status.BAD_REQUEST).build();
 		}
 	}
@@ -334,7 +344,7 @@ public class HakukohdeResourceImpl implements HakukohdeResource {
 			return Response.status(Response.Status.CREATED).entity(lisatty)
 					.build();
 		} catch (Exception e) {
-			LOGGER.error("Error creating hakijaryhma.", e);
+			LOG.error("Error creating hakijaryhma.", e);
 			return Response.status(Response.Status.BAD_REQUEST).build();
 		}
 	}
@@ -353,7 +363,7 @@ public class HakukohdeResourceImpl implements HakukohdeResource {
 					.liitaHakijaryhmaHakukohteelle(hakukohdeOid, hakijaryhmaOid);
 			return Response.status(Response.Status.ACCEPTED).build();
 		} catch (Exception e) {
-			LOGGER.error("Error linking hakijaryhma.", e);
+			LOG.error("Error linking hakijaryhma.", e);
 			Map map = new HashMap();
 			map.put("error", e.getMessage());
 			return Response.status(Response.Status.BAD_REQUEST).entity(map)
@@ -378,7 +388,7 @@ public class HakukohdeResourceImpl implements HakukohdeResource {
 			return Response.status(Response.Status.ACCEPTED).entity(lisatty)
 					.build();
 		} catch (Exception e) {
-			LOGGER.error("Error updating hakukohdekoodit.", e);
+			LOG.error("Error updating hakukohdekoodit.", e);
 			return Response.status(Response.Status.BAD_REQUEST)
 					.entity(e.getMessage()).build();
 		}
@@ -401,7 +411,7 @@ public class HakukohdeResourceImpl implements HakukohdeResource {
 			return Response.status(Response.Status.CREATED).entity(lisatty)
 					.build();
 		} catch (Exception e) {
-			LOGGER.error("Error inserting hakukohdekoodi.", e);
+			LOG.error("Error inserting hakukohdekoodi.", e);
 			return Response.status(Response.Status.BAD_REQUEST)
 					.entity(e.getMessage()).build();
 		}
@@ -424,7 +434,7 @@ public class HakukohdeResourceImpl implements HakukohdeResource {
 			return Response.status(Response.Status.ACCEPTED).entity(hakukohde)
 					.build();
 		} catch (Exception e) {
-			LOGGER.error("Error moving hakukohde to new valintaryhma.", e);
+			LOG.error("Error moving hakukohde to new valintaryhma.", e);
 			return Response.status(Response.Status.BAD_REQUEST)
 					.entity(e.getMessage()).build();
 		}

@@ -1,5 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
+import java.util.List;
+
 /**
  * 
  * @author jussi jartamo
@@ -8,14 +10,14 @@ package fi.vm.sade.service.valintaperusteet.dto;
 public class HakukohdeJaValintakoeDTO {
 
 	private String hakukohdeOid;
-	private ValintakoeDTO valintakoeDTO;
+	private List<ValintakoeDTO> valintakoeDTO;
 
 	public HakukohdeJaValintakoeDTO() {
 
 	}
 
 	public HakukohdeJaValintakoeDTO(String hakukohdeOid,
-			ValintakoeDTO valintakoeDTO) {
+			List<ValintakoeDTO> valintakoeDTO) {
 		this.hakukohdeOid = hakukohdeOid;
 		this.valintakoeDTO = valintakoeDTO;
 	}
@@ -24,7 +26,7 @@ public class HakukohdeJaValintakoeDTO {
 		return hakukohdeOid;
 	}
 
-	public ValintakoeDTO getValintakoeDTO() {
+	public List<ValintakoeDTO> getValintakoeDTO() {
 		return valintakoeDTO;
 	}
 }
