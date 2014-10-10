@@ -65,7 +65,7 @@ public interface HakukohdeResource {
 	@POST
 	@Path("/valintakoe")
 	@Produces(MediaType.APPLICATION_JSON)
-	String valintakoesForHakukohteet(List<String> oids);
+	List<HakukohdeJaValintakoeDTO> valintakoesForHakukohteet(List<String> oids);
 
 	@GET
 	@Path("/{oid}/kuuluuSijoitteluun")
