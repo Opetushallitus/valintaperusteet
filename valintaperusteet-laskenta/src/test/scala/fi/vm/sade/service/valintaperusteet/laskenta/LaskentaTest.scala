@@ -1311,7 +1311,7 @@ class LaskentaTest extends FunSuite {
     val (tulos2, tila2) = Laskin.laske(hakukohde, hakemus,
       lasku2)
 
-    assert(tulos2.isEmpty)
+    assert(BigDecimal(tulos2.get) == BigDecimal("0.0"))
     assert(tila2.getTilatyyppi == Tilatyyppi.HYVAKSYTTAVISSA)
 
     viite.setTunniste("REAALI")
