@@ -105,7 +105,9 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
 //                    + " laskentakaavaa ei voi liittää " + "valintatapajonoon", laskentakaava.getId());
 //        }
 
-        validoiFunktiokutsuJarjestyskriteeriaVarten(laskentakaava.getFunktiokutsu());
+
+        // KORJAA!!!!!!!!!
+        //validoiFunktiokutsuJarjestyskriteeriaVarten(laskentakaava.getFunktiokutsu());
     }
 
     @Override
