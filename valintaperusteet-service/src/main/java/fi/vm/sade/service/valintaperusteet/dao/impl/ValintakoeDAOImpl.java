@@ -52,7 +52,16 @@ public class ValintakoeDAOImpl extends AbstractJpaDAOImpl<Valintakoe, Long>
 				.getResults();
 	}
 
-	protected JPAQuery from(EntityPath<?>... o) {
+    @Override
+    public List<Valintakoe> findByLaskentakaava(long id) {
+        QValintakoe valintakoe = QValintakoe.valintakoe;
+        return from(valintakoe)
+                .leftJoin(valintakoe.laskentakaava)
+                .where(valintakoe.laskentakaava.id.eq(id))
+                .list(valintakoe);
+    }
+
+    protected JPAQuery from(EntityPath<?>... o) {
 		return new JPAQuery(getEntityManager()).from(o);
 	}
 

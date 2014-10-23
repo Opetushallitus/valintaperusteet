@@ -83,6 +83,15 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     @Autowired
     private ApplicationContext applicationContext;
 
+    @Autowired
+    private JarjestyskriteeriDAO jarjestyskriteeriDAO;
+
+    @Autowired
+    private HakijaryhmaDAO hakijaryhmaDAO;
+
+    @Autowired
+    private ValintakoeDAO valintakoeDAO;
+
     private ActorSystem actorSystem;
 
     @PostConstruct
@@ -492,6 +501,26 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     @Override
     public Optional<Laskentakaava> pelkkaKaava(Long key) {
         return Optional.ofNullable(laskentakaavaDAO.getLaskentakaava(key));
+    }
+
+    @Override
+    public boolean poista(long id) {
+
+        Optional<Laskentakaava> kaava = Optional.ofNullable(laskentakaavaDAO.getLaskentakaava(id));
+        if(!kaava.isPresent()) {
+            return false;
+        }
+        List<Jarjestyskriteeri> j = jarjestyskriteeriDAO.findByLaskentakaava(id);
+        List<Hakijaryhma> h = hakijaryhmaDAO.findByLaskentakaava(id);
+        List<Valintakoe> v = valintakoeDAO.findByLaskentakaava(id);
+
+        if(j.isEmpty() && h.isEmpty() && v.isEmpty()) {
+            laskentakaavaDAO.remove(kaava.get());
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     @Override

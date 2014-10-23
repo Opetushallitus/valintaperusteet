@@ -57,4 +57,6 @@ public interface LaskentakaavaService {
     Optional<Valintaryhma> valintaryhma(long id);
 
     Optional<Laskentakaava> pelkkaKaava(Long key);
+
+    boolean poista(long id);
 }
