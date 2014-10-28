@@ -95,4 +95,13 @@ public class HakijaryhmaDAOImpl extends AbstractJpaDAOImpl<Hakijaryhma, Long> im
 
         return lastValinnanVaihe;
     }
+
+    @Override
+    public List<Hakijaryhma> findByLaskentakaava(long id) {
+        QHakijaryhma hakijaryhma = QHakijaryhma.hakijaryhma;
+        return from(hakijaryhma)
+                .leftJoin(hakijaryhma.laskentakaava)
+                .where(hakijaryhma.laskentakaava.id.eq(id))
+                .list(hakijaryhma);
+    }
 }

@@ -23,4 +23,6 @@ public interface JarjestyskriteeriDAO extends JpaDAO<Jarjestyskriteeri, Long> {
     Jarjestyskriteeri readByOid(String oid);
 
     Jarjestyskriteeri haeValintatapajononViimeinenJarjestyskriteeri(String valintatapajonoOid);
+
+    List<Jarjestyskriteeri> findByLaskentakaava(long id);
 }

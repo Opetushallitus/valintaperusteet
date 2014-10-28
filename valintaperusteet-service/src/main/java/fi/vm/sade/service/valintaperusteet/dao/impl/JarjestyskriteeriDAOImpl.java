@@ -66,4 +66,13 @@ public class JarjestyskriteeriDAOImpl extends AbstractJpaDAOImpl<Jarjestyskritee
                         jono.oid.eq(valintatapajonoOid))).singleResult(jk);
     }
 
+    @Override
+    public List<Jarjestyskriteeri> findByLaskentakaava(long id) {
+        QJarjestyskriteeri jk = QJarjestyskriteeri.jarjestyskriteeri;
+        return from(jk)
+                .leftJoin(jk.laskentakaava)
+                .where(jk.laskentakaava.id.eq(id))
+                .list(jk);
+    }
+
 }
