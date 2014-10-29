@@ -144,7 +144,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
 					ValintaperusteetDTO valinnanVaihe = convertValintaperusteet(
 							kasiteltava, hakukohde, todellinenJarjestysluku);
 					if (valinnanVaihe != null) {
-                        valinnanVaihe.setViimeinenValinnanvaihe(vaiheet.size());
+                        valinnanVaihe.setViimeinenValinnanvaihe(vaiheet.size() - 1);
 						list.add(valinnanVaihe);
 					}
 
@@ -159,7 +159,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
 							ValintaperusteetDTO valinnanVaihe = convertValintaperusteet(
 									vaiheet.get(i), hakukohde, i);
 							if (valinnanVaihe != null) {
-                                valinnanVaihe.setViimeinenValinnanvaihe(vaiheet.size());
+                                valinnanVaihe.setViimeinenValinnanvaihe(vaiheet.size() - 1);
 								list.add(valinnanVaihe);
 							}
 						}
