@@ -13,6 +13,8 @@ public class ValintaperusteetDTO {
 
     private String tarjoajaOid;
 
+    private int viimeinenValinnanvaihe;
+
     private ValintaperusteetValinnanVaiheDTO valinnanVaihe;
 
     private List<HakukohteenValintaperusteDTO> hakukohteenValintaperuste = new ArrayList<HakukohteenValintaperusteDTO>();
@@ -55,5 +57,13 @@ public class ValintaperusteetDTO {
 
     public void setHakukohteenValintaperuste(List<HakukohteenValintaperusteDTO> hakukohteenValintaperuste) {
         this.hakukohteenValintaperuste = hakukohteenValintaperuste;
+    }
+
+    public int getViimeinenValinnanvaihe() {
+        return viimeinenValinnanvaihe;
+    }
+
+    public void setViimeinenValinnanvaihe(int viimeinenValinnanvaihe) {
+        this.viimeinenValinnanvaihe = viimeinenValinnanvaihe;
     }
 }
