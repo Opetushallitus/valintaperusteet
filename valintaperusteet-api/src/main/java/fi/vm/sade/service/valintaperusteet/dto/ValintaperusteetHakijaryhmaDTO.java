@@ -26,13 +26,13 @@ public class ValintaperusteetHakijaryhmaDTO {
     @ApiModelProperty(value = "Funktiokutsu", required = false)
     private ValintaperusteetFunktiokutsuDTO funktiokutsu;
 
-    @ApiModelProperty(value = "Kayta kaikki")
+    @ApiModelProperty(value = "Vain hakijaryhmään kuuluvat voivat tulla hyväksytyksi")
     private boolean kaytaKaikki;
 
-    @ApiModelProperty(value = "Tarkka kiintio")
+    @ApiModelProperty(value = "Vain kiintiön verran voi tulla hyväksytyksi tästä hakijaryhmästä")
     private boolean tarkkaKiintio;
 
-    @ApiModelProperty(value = "Käytetäänkö hakijaryhmään kuuluvia", required = true)
+    @ApiModelProperty(value = "Käytetäänkö vain hakijaryhmään kuuluvia", required = true)
     private boolean kaytetaanRyhmaanKuuluvia;
 
     @ApiModelProperty(value = "valintatapajonon OID", required = true)
