@@ -464,7 +464,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
       case (false, false) => if(arvo > arvovali._1 && arvo < arvovali._2) true else false
     }
 
-    def muodostaKoostettuTulos(fs: Seq[Lukuarvofunktio], trans: Seq[BigDecimal] => BigDecimal): (Option[BigDecimal], List[Tila], Historia) = {
+    def muodostaKoostettuTulos(fs: Seq[Lukuarvofunktio], trans: Seq[BigDecimal] => BigDecimal, ns: Option[Int] = None): (Option[BigDecimal], List[Tila], Historia) = {
       val tulokset = fs.reverse.foldLeft((Nil, Nil, ListBuffer()): Tuple3[List[BigDecimal], List[Tila], ListBuffer[Historia]])((lst, f) => {
         laskeLukuarvo(f) match {
           case Tulos(tulos, tila, historia) => {
@@ -474,7 +474,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
         }
       })
 
-      val lukuarvo = if (tulokset._1.isEmpty) None else Some(trans(tulokset._1))
+      val lukuarvo = if (tulokset._1.isEmpty || (ns.isDefined && tulokset._1.size < ns.get)) None else Some(trans(tulokset._1))
       (lukuarvo, tulokset._2, Historia("Koostettu tulos", lukuarvo, tulokset._2, Some(tulokset._3.toList), None))
     }
 
@@ -546,12 +546,12 @@ private class Laskin private(private val hakukohde: Hakukohde,
       }
 
       case NMinimi(ns, fs, oid, tulosTunniste,_,_,_) => {
-        val (tulos, tilat, h) = muodostaKoostettuTulos(fs, ds => ds.sortWith(_ < _)(scala.math.min(ns, ds.size) - 1))
+        val (tulos, tilat, h) = muodostaKoostettuTulos(fs, ds => ds.sortWith(_ < _)(scala.math.min(ns, ds.size) - 1), Some(ns))
         (tulos, tilat, Historia("N-minimi", tulos, tilat, h.historiat, Some(Map("ns" -> Some(ns)))))
       }
 
       case NMaksimi(ns, fs, oid, tulosTunniste,_,_,_) => {
-        val (tulos, tilat, h) = muodostaKoostettuTulos(fs, ds => ds.sortWith(_ > _)(scala.math.min(ns, ds.size) - 1))
+        val (tulos, tilat, h) = muodostaKoostettuTulos(fs, ds => ds.sortWith(_ > _)(scala.math.min(ns, ds.size) - 1), Some(ns))
         (tulos, tilat, Historia("N-maksimi", tulos, tilat, h.historiat, Some(Map("ns" -> Some(ns)))))
       }
 
