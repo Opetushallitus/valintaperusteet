@@ -199,6 +199,12 @@ class LaskentaTest extends FunSuite {
     assert(BigDecimal(tulos.get) == BigDecimal(2.0))
   }
 
+  test("NMinimi ei riittävästi arvoja") {
+    val luvut = List(HaeLukuarvo(None, None, HakemuksenValintaperuste("yksi", false)), HaeLukuarvo(None, None, HakemuksenValintaperuste("kaksi", false)), HaeLukuarvo(None, None, HakemuksenValintaperuste("kymmenen", false)))
+    val (tulos, _) = Laskin.laske(hakukohde, hakemusMustache, NMinimi(3, luvut: _*))
+    assertTulosTyhja(tulos)
+  }
+
   test("NMaksimi returns the nth greatest value") {
     val luvut = List(Lukuarvo(5.0), Lukuarvo(6.0), Lukuarvo(2.0), Lukuarvo(1.0))
     val (tulos, _) = Laskin.laske(hakukohde, tyhjaHakemus, NMaksimi(2, luvut: _*))
@@ -208,8 +214,7 @@ class LaskentaTest extends FunSuite {
   test("NMaksimi ei riittävästi arvoja") {
     val luvut = List(HaeLukuarvo(None, None, HakemuksenValintaperuste("yksi", false)), HaeLukuarvo(None, None, HakemuksenValintaperuste("kaksi", false)), HaeLukuarvo(None, None, HakemuksenValintaperuste("kymmenen", false)))
     val (tulos, _) = Laskin.laske(hakukohde, hakemusMustache, NMaksimi(3, luvut: _*))
-    assert(BigDecimal(tulos.get) == BigDecimal(1.0))
-    //assertTulosTyhja(tulos)
+    assertTulosTyhja(tulos)
   }
 
   test("Mediaani returns the middle value of a sequence") {
