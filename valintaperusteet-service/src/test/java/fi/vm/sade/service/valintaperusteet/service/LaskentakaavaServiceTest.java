@@ -17,6 +17,7 @@ import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.model.*;
+import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaEiOleOlemassaException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -660,5 +661,16 @@ public class LaskentakaavaServiceTest {
 
         assertFalse(siirretty.isPresent());
 
+    }
+
+    @Test(expected = LaskentakaavaEiOleOlemassaException.class)
+    public void testPoistaKaava() {
+        final Long id = 204L;
+        Laskentakaava laskentakaava = laskentakaavaService.read(id);
+        Funktiokutsu maksimi204L = laskentakaava.getFunktiokutsu();
+        assertEquals(fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.MAKSIMI, maksimi204L.getFunktionimi());
+        assertEquals(2, maksimi204L.getFunktioargumentit().size());
+        laskentakaavaService.poista(id);
+        laskentakaava = laskentakaavaService.read(id);
     }
 }

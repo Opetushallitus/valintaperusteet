@@ -503,6 +503,36 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
         return Optional.ofNullable(laskentakaavaDAO.getLaskentakaava(key));
     }
 
+    private void poistaFunktiokutsu(Funktiokutsu kutsu) {
+
+        for (Funktioargumentti arg : kutsu.getFunktioargumentit()) {
+            genericDAO.remove(arg);
+        }
+
+        for (Arvokonvertteriparametri p : kutsu.getArvokonvertteriparametrit()) {
+            genericDAO.remove(p);
+        }
+
+        for (Arvovalikonvertteriparametri p : kutsu.getArvovalikonvertteriparametrit()) {
+            genericDAO.remove(p);
+        }
+
+        for (Syoteparametri p : kutsu.getSyoteparametrit()) {
+            genericDAO.remove(p);
+        }
+
+        for (ValintaperusteViite vp : kutsu.getValintaperusteviitteet()) {
+            genericDAO.remove(vp);
+        }
+
+        kutsu.getFunktioargumentit().clear();
+        kutsu.getArvokonvertteriparametrit().clear();
+        kutsu.getArvovalikonvertteriparametrit().clear();
+        kutsu.getSyoteparametrit().clear();
+        kutsu.getValintaperusteviitteet().clear();
+        funktiokutsuDAO.flush();
+    }
+
     @Override
     public boolean poista(long id) {
 
@@ -515,6 +545,8 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
         List<Valintakoe> v = valintakoeDAO.findByLaskentakaava(id);
 
         if(j.isEmpty() && h.isEmpty() && v.isEmpty()) {
+            Laskentakaava l = kaava.get();
+            poistaFunktiokutsu(l.getFunktiokutsu());
             laskentakaavaDAO.remove(kaava.get());
             return true;
         } else {
