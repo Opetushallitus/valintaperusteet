@@ -87,11 +87,11 @@ public class ValintatapajonoKopioija implements Kopioija<Valintatapajono> {
             kopio.setAktiivinen(paivitettyMaster.getAktiivinen());
         }
 
-        if (kopio.getAutomaattinenLaskentaanSiirto().equals(alkuperainenMaster.getAutomaattinenLaskentaanSiirto())) {
+        if (kopio.getAutomaattinenLaskentaanSiirto() == null || kopio.getAutomaattinenLaskentaanSiirto().equals(alkuperainenMaster.getAutomaattinenLaskentaanSiirto())) {
             kopio.setAutomaattinenLaskentaanSiirto(paivitettyMaster.getAutomaattinenLaskentaanSiirto());
         }
 
-        if (kopio.getValisijoittelu().equals(alkuperainenMaster.getValisijoittelu())) {
+        if (kopio.getValisijoittelu() == null || kopio.getValisijoittelu().equals(alkuperainenMaster.getValisijoittelu())) {
             kopio.setValisijoittelu(paivitettyMaster.getValisijoittelu());
         }
 
