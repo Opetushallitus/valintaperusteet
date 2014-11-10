@@ -23,6 +23,7 @@ public class HakukohdeImportDTO {
     private String tila;
     private List<HakukohteenValintakoeDTO> valintakoe = new ArrayList<HakukohteenValintakoeDTO>();
     private List<AvainArvoDTO> valintaperuste = new ArrayList<AvainArvoDTO>();
+    private String haunkohdejoukkoUri;
 
     public String getHakukohdeOid() {
         return hakukohdeOid;
@@ -121,5 +122,13 @@ public class HakukohdeImportDTO {
 
     public void setValintaperuste(List<AvainArvoDTO> valintaperuste) {
         this.valintaperuste = valintaperuste;
+    }
+
+    public String getHaunkohdejoukkoUri() {
+        return haunkohdejoukkoUri;
+    }
+
+    public void setHaunkohdejoukkoUri(String haunkohdejoukkoUri) {
+        this.haunkohdejoukkoUri = haunkohdejoukkoUri;
     }
 }

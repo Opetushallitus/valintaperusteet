@@ -42,6 +42,7 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
     public final static String KIELI_FI_URI = "kieli_fi";
     public final static String KIELI_SV_URI = "kieli_sv";
     public final static String KIELI_EN_URI = "kieli_en";
+    public final String KK_KOHDEJOUKKO = "haunkohdejoukko_12";
 
     public enum Kieli {
         FI(KIELI_FI_URI), SV(KIELI_SV_URI), EN(KIELI_EN_URI);
@@ -164,6 +165,14 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
 
     public String sanitizeKoodiUri(String uri) {
         return uri != null ? uri.split("#")[0] : null;
+    }
+
+    public boolean isKKkohde(String kohdejoukkoUri) {
+        if(kohdejoukkoUri == null) {
+            return false;
+        }
+        String uri = sanitizeKoodiUri(kohdejoukkoUri);
+        return uri.equals(KK_KOHDEJOUKKO);
     }
 
     private Valintaryhma selvitaValintaryhma(HakukohdeImportDTO importData) {
@@ -343,8 +352,10 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
 
         hakukohde.setHakukohteenValintaperusteet(lisaaValintaperusteet(importData, hakukohde));
 
-        // Päivitetään aloituspaikkojen lukumäärä jos mahdollista
-        paivitaAloituspaikkojenLkm(hakukohde, importData.getValinnanAloituspaikat());
+        // Päivitetään aloituspaikkojen lukumäärä jos mahdollista (KK-kohteille ei päivitetä)
+        if(!isKKkohde(importData.getHaunkohdejoukkoUri())) {
+            paivitaAloituspaikkojenLkm(hakukohde, importData.getValinnanAloituspaikat());
+        }
     }
 
     private void paivitaAloituspaikkojenLkm(final HakukohdeViite hakukohde, final int valinnanAloituspaikat) {
