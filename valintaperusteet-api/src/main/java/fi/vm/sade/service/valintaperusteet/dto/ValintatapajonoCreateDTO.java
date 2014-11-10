@@ -31,10 +31,10 @@ public class ValintatapajonoCreateDTO {
     private Boolean aktiivinen;
 
     @ApiModelProperty(value = "Suoritetaanko jonolle välisijoittelu", required = true)
-    private Boolean valisijoittelu;
+    private Boolean valisijoittelu = false;
 
     @ApiModelProperty(value = "Siirretäänkö laskennan tulokset automaattisesti sijoitteluun", required = true)
-    private Boolean automaattinenLaskentaanSiirto;
+    private Boolean automaattinenLaskentaanSiirto = false;
 
     @ApiModelProperty(value = "Ei varasijatäyttöä", required = true)
     private Boolean eiVarasijatayttoa = false;

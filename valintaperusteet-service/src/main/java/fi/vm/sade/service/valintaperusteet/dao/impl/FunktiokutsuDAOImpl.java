@@ -205,6 +205,12 @@ public class FunktiokutsuDAOImpl extends AbstractJpaDAOImpl<Funktiokutsu, Long> 
     }
 
     @Override
+    public List<Funktioargumentti> findByLaskentakaavaChild(Long laskentakaavaId) {
+        QFunktioargumentti fa = QFunktioargumentti.funktioargumentti;
+        return from(fa).leftJoin(fa.laskentakaavaChild).where(fa.laskentakaavaChild.id.eq(laskentakaavaId)).list(fa);
+    }
+
+    @Override
     public void flush() {
         getEntityManager().flush();
     }
