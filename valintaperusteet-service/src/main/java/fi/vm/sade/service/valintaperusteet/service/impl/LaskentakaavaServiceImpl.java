@@ -543,8 +543,9 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
         List<Jarjestyskriteeri> j = jarjestyskriteeriDAO.findByLaskentakaava(id);
         List<Hakijaryhma> h = hakijaryhmaDAO.findByLaskentakaava(id);
         List<Valintakoe> v = valintakoeDAO.findByLaskentakaava(id);
+        List<Funktioargumentti> f = funktiokutsuDAO.findByLaskentakaavaChild(id);
 
-        if(j.isEmpty() && h.isEmpty() && v.isEmpty()) {
+        if(j.isEmpty() && h.isEmpty() && v.isEmpty() && f.isEmpty()) {
             Laskentakaava l = kaava.get();
             poistaFunktiokutsu(l.getFunktiokutsu());
             laskentakaavaDAO.remove(kaava.get());
