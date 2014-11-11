@@ -457,6 +457,7 @@ public class HakukohdeImportServiceTest {
 
         HakukohdeImportDTO importData = luoHakukohdeImportDTO(hakukohdeOid, hakuOid, hakukohdekoodiUri);
         importData.setValinnanAloituspaikat(aloituspaikat);
+        importData.setHaunkohdejoukkoUri("haunkohdejoukko_11#1");
 
         hakukohdeImportService.tuoHakukohde(importData);
         {
@@ -478,6 +479,64 @@ public class HakukohdeImportServiceTest {
             Valintatapajono jono = jonot.get(0);
             assertNotNull(jono.getMasterValintatapajono());
             assertEquals(aloituspaikat, jono.getAloituspaikat().intValue());
+        }
+    }
+
+    @Test
+    public void testKKAlaPaivitaAloituspaikkojenLkm() {
+        final String valintaryhmaOid = "oid48";
+
+        final String hakuOid = "hakuoid1";
+        final String hakukohdeOid = "uusihakukohdeoid";
+        final String hakukohdekoodiUri = "hakukohdekoodiuri13";
+
+        final int aloituspaikat = 100;
+        {
+            assertNull(hakukohdeViiteDAO.readByOid(hakukohdeOid));
+            Valintaryhma valintaryhma = valintaryhmaService.readByOid(valintaryhmaOid);
+            assertNotNull(valintaryhma);
+
+            List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheService.findByValintaryhma(valintaryhmaOid);
+            assertEquals(3, valinnanVaiheet.size());
+
+            ValinnanVaihe vaihe = valinnanVaiheet.get(2);
+            assertEquals(fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi.TAVALLINEN,
+                    vaihe.getValinnanVaiheTyyppi());
+            assertNull(vaihe.getMasterValinnanVaihe());
+
+            List<Valintatapajono> jonot = valintatapajonoService.findJonoByValinnanvaihe(vaihe.getOid());
+            assertEquals(1, jonot.size());
+
+            Valintatapajono jono = jonot.get(0);
+            assertNull(jono.getMasterValintatapajono());
+            assertFalse(aloituspaikat == jono.getAloituspaikat().intValue());
+
+        }
+
+        HakukohdeImportDTO importData = luoHakukohdeImportDTO(hakukohdeOid, hakuOid, hakukohdekoodiUri);
+        importData.setValinnanAloituspaikat(aloituspaikat);
+        importData.setHaunkohdejoukkoUri("haunkohdejoukko_12#1");
+
+        hakukohdeImportService.tuoHakukohde(importData);
+        {
+            HakukohdeViite hakukohde = hakukohdeViiteDAO.readByOid(hakukohdeOid);
+            assertNotNull(hakukohde);
+            assertFalse(hakukohde.getManuaalisestiSiirretty());
+
+            List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheService.findByHakukohde(hakukohdeOid);
+            assertEquals(3, valinnanVaiheet.size());
+
+            ValinnanVaihe vaihe = valinnanVaiheet.get(2);
+            assertEquals(fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi.TAVALLINEN,
+                    vaihe.getValinnanVaiheTyyppi());
+            assertNotNull(vaihe.getMasterValinnanVaihe());
+
+            List<Valintatapajono> jonot = valintatapajonoService.findJonoByValinnanvaihe(vaihe.getOid());
+            assertEquals(1, jonot.size());
+
+            Valintatapajono jono = jonot.get(0);
+            assertNotNull(jono.getMasterValintatapajono());
+            assertFalse(aloituspaikat == jono.getAloituspaikat().intValue());
         }
     }
 
