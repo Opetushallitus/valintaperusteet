@@ -80,6 +80,11 @@ public interface ValintaryhmaResource {
     Response update(@PathParam("oid") String oid, ValintaryhmaCreateDTO valintaryhma);
 
     @PUT
+    @Path("/{oid}/kopioiLapseksi")
+    @Produces(MediaType.APPLICATION_JSON)
+    Response copyAsChild(@PathParam("oid") String oid, @QueryParam("lahdeOid") String lahdeOid);
+
+    @PUT
     @Path("/{valintaryhmaOid}/valinnanvaihe")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

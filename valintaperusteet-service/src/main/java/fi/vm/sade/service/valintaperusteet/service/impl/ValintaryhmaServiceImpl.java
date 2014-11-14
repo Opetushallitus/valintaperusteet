@@ -120,6 +120,26 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
         return organisaatiot;
     }
 
+    private Valintaryhma copyAsChild(Valintaryhma source, Valintaryhma parent) {
+        Valintaryhma copy = new Valintaryhma();
+        copy.setYlavalintaryhma(parent);
+        copy.setNimi(source.getNimi());
+        Valintaryhma inserted = valintaryhmaDAO.insert(copy);
+
+        List<Valintaryhma> children = valintaryhmaDAO.findChildrenByParentOid(source.getOid());
+        for(Valintaryhma child : children) {
+            copyAsChild(child, inserted);
+        }
+
+        return inserted;
+    }
+
+    public Valintaryhma copyAsChild(String sourceOid, String parentOid) {
+        Valintaryhma source = valintaryhmaDAO.readByOid(sourceOid);
+        Valintaryhma parent = valintaryhmaDAO.readByOid(parentOid);
+        return copyAsChild(source, parent);
+    }
+
     @Override
     public Valintaryhma insert(ValintaryhmaCreateDTO dto) {
         Valintaryhma entity = modelMapper.map(dto, Valintaryhma.class);
