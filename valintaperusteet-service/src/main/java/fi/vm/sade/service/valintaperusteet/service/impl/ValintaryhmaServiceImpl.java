@@ -141,12 +141,20 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
         return inserted;
     }
 
-    public Valintaryhma copyAsChild(String sourceOid, String parentOid) {
+    public Valintaryhma copyAsChild(String sourceOid, String parentOid, String name) {
         // Tarkistetaan, että parent ei ole sourcen jälkeläinen
         if(isChildOf(parentOid, sourceOid)) {
             throw new ValintaryhmaaEiVoidaKopioida("Valintaryhmä (" + parentOid + ") on kohderyhmän (" + sourceOid + ") lapsi");
         }
+
+        // Tarkistetaan sisarusten nimet
+        List<Valintaryhma> children = valintaryhmaDAO.findChildrenByParentOid(parentOid);
+        if(children.stream().anyMatch((vr) -> vr.getNimi().equals(name))) {
+            throw new ValintaryhmaaEiVoidaKopioida("Valintaryhmällä (" + parentOid + ") on jo \"" + name + "\" niminen lapsi");
+        }
+
         Valintaryhma source = valintaryhmaDAO.readByOid(sourceOid);
+        source.setNimi(name);
         Valintaryhma parent = valintaryhmaDAO.readByOid(parentOid);
         return copyAsChild(source, parent);
     }

@@ -82,7 +82,7 @@ public interface ValintaryhmaResource {
     @PUT
     @Path("/{oid}/kopioiLapseksi")
     @Produces(MediaType.APPLICATION_JSON)
-    Response copyAsChild(@PathParam("oid") String oid, @QueryParam("lahdeOid") String lahdeOid);
+    Response copyAsChild(@PathParam("oid") String oid, @QueryParam("lahdeOid") String lahdeOid, @QueryParam("nimi") String nimi);
 
     @PUT
     @Path("/{valintaryhmaOid}/valinnanvaihe")
