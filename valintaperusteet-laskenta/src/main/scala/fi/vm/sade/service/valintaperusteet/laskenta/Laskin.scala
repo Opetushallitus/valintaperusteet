@@ -733,7 +733,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
             case Some(skaalattavaArvo) => {
               lahdeskaala match {
                 case Some((lahdeMin, lahdeMax)) => {
-                  if (!onArvovalilla(skaalattavaArvo, (lahdeMin, lahdeMax), false, false)) {
+                  if (!onArvovalilla(skaalattavaArvo, (lahdeMin, lahdeMax), true, true)) {
                     (None, new Virhetila(suomenkielinenHylkaysperusteMap(s"Arvo ${skaalattavaArvo.toString} ei ole arvovälillä ${lahdeMin.toString} - ${lahdeMax.toString}"),
                       new SkaalattavaArvoEiOleLahdeskaalassaVirhe(skaalattavaArvo.underlying, lahdeMin.underlying, lahdeMax.underlying)))
                   } else {
