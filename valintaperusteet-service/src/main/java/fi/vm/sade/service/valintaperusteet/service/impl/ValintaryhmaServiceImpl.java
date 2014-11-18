@@ -126,16 +126,16 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
                 .anyMatch(vr -> vr.getOid().equals(parentOid));
 
     }
-    private Valintaryhma copyAsChild(Valintaryhma source, Valintaryhma parent) {
+    private Valintaryhma copyAsChild(Valintaryhma source, Valintaryhma parent, String name) {
         Valintaryhma copy = new Valintaryhma();
         copy.setYlavalintaryhma(parent);
-        copy.setNimi(source.getNimi());
+        copy.setNimi(name);
         copy.setOid(oidService.haeValintaryhmaOid());
         Valintaryhma inserted = valintaryhmaDAO.insert(copy);
         valinnanVaiheService.kopioiValinnanVaiheetParentilta(inserted, parent);
 
         List<Valintaryhma> children = valintaryhmaDAO.findChildrenByParentOid(source.getOid());
-        children.stream().forEach((child -> copyAsChild(child, inserted)));
+        children.stream().forEach((child -> copyAsChild(child, inserted, child.getNimi())));
         return inserted;
     }
 
@@ -152,9 +152,8 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
         }
 
         Valintaryhma source = valintaryhmaDAO.readByOid(sourceOid);
-        source.setNimi(name);
         Valintaryhma parent = valintaryhmaDAO.readByOid(parentOid);
-        return copyAsChild(source, parent);
+        return copyAsChild(source, parent, name);
     }
 
     @Override
