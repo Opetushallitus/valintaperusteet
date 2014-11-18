@@ -123,7 +123,7 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
 
     private boolean isChildOf(String childOid, String parentOid) {
         return valintaryhmaDAO.readHierarchy(childOid).stream()
-                .anyMatch((vr) -> vr.getOid().equals(parentOid));
+                .anyMatch(vr -> vr.getOid().equals(parentOid));
 
     }
     private Valintaryhma copyAsChild(Valintaryhma source, Valintaryhma parent) {
@@ -135,22 +135,20 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
         valinnanVaiheService.kopioiValinnanVaiheetParentilta(inserted, parent);
 
         List<Valintaryhma> children = valintaryhmaDAO.findChildrenByParentOid(source.getOid());
-        for(Valintaryhma child : children) {
-            copyAsChild(child, inserted);
-        }
+        children.stream().forEach((child -> copyAsChild(child, inserted)));
         return inserted;
     }
 
     public Valintaryhma copyAsChild(String sourceOid, String parentOid, String name) {
         // Tarkistetaan, että parent ei ole sourcen jälkeläinen
         if(isChildOf(parentOid, sourceOid)) {
-            throw new ValintaryhmaaEiVoidaKopioida("Valintaryhmä (" + parentOid + ") on kohderyhmän (" + sourceOid + ") lapsi");
+            throw new ValintaryhmaaEiVoidaKopioida("Valintaryhmä (" + parentOid + ") on kohderyhmän (" + sourceOid + ") lapsi", sourceOid, parentOid);
         }
 
         // Tarkistetaan sisarusten nimet
         List<Valintaryhma> children = valintaryhmaDAO.findChildrenByParentOid(parentOid);
-        if(children.stream().anyMatch((vr) -> vr.getNimi().equals(name))) {
-            throw new ValintaryhmaaEiVoidaKopioida("Valintaryhmällä (" + parentOid + ") on jo \"" + name + "\" niminen lapsi");
+        if(children.stream().anyMatch(vr -> vr.getNimi().equals(name))) {
+            throw new ValintaryhmaaEiVoidaKopioida("Valintaryhmällä (" + parentOid + ") on jo \"" + name + "\" niminen lapsi", sourceOid, parentOid);
         }
 
         Valintaryhma source = valintaryhmaDAO.readByOid(sourceOid);

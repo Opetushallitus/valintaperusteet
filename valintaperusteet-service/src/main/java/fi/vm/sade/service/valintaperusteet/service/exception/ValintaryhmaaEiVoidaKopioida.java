@@ -5,24 +5,29 @@ package fi.vm.sade.service.valintaperusteet.service.exception;
  */
 public class ValintaryhmaaEiVoidaKopioida extends RuntimeException {
 
-    private String valintaryhmaOid;
+    private String parentOid;
+    private String lahdeOid;
 
-    public ValintaryhmaaEiVoidaKopioida(String valintaryhmaOid) {
-        this.valintaryhmaOid = valintaryhmaOid;
+    public ValintaryhmaaEiVoidaKopioida(String lahdeOid, String parentOid) {
+        this.lahdeOid = lahdeOid;
+        this.parentOid = parentOid;
     }
 
-    public ValintaryhmaaEiVoidaKopioida(String message, String valintaryhmaOid) {
+    public ValintaryhmaaEiVoidaKopioida(String message, String lahdeOid, String parentOid) {
         super(message);
-        this.valintaryhmaOid = valintaryhmaOid;
+        this.lahdeOid = lahdeOid;
+        this.parentOid = parentOid;
     }
 
-    public ValintaryhmaaEiVoidaKopioida(String message, Throwable cause, String valintaryhmaOid) {
+    public ValintaryhmaaEiVoidaKopioida(String message, Throwable cause, String lahdeOid, String parentOid) {
         super(message, cause);
-        this.valintaryhmaOid = valintaryhmaOid;
+        this.lahdeOid = lahdeOid;
+        this.parentOid = parentOid;
     }
 
-    public ValintaryhmaaEiVoidaKopioida(Throwable cause, String valintaryhmaOid) {
+    public ValintaryhmaaEiVoidaKopioida(Throwable cause, String lahdeOid, String parentOid) {
         super(cause);
-        this.valintaryhmaOid = valintaryhmaOid;
+        this.lahdeOid = lahdeOid;
+        this.parentOid = parentOid;
     }
 }
