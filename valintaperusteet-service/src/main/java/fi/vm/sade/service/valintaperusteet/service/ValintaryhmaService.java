@@ -19,6 +19,8 @@ public interface ValintaryhmaService {
 
     List<Valintaryhma> findParentHierarchyFromOid(String oid);
 
+    Valintaryhma copyAsChild(String sourceOid, String parentOid, String name);
+
     Valintaryhma insert(ValintaryhmaCreateDTO valintaryhma);
 
     Valintaryhma update(String oid, ValintaryhmaCreateDTO valintaryhma);
