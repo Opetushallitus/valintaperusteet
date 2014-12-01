@@ -76,5 +76,14 @@ public interface ValintatapajonoResource {
     @Path("/{oid}")
     Response delete(@PathParam("oid") String oid);
 
+    @GET
+    @Path("/{oid}/automaattinenSiirto")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response readAutomaattinenSijoitteluunSiirto(@PathParam("oid") String oid);
 
+    @POST
+    @Path("/{oid}/automaattinenSiirto")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateAutomaattinenSijoitteluunSiirto(@PathParam("oid") String oid, Boolean arvo);
 }
