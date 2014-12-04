@@ -70,11 +70,13 @@ public class ValintaperusteetModelMapper extends ModelMapper {
 
         final Converter<Set<Arvovalikonvertteriparametri>, List<ArvovalikonvertteriparametriDTO>> arvovalikonvertteriparametriToDtoConverter = new Converter<Set<Arvovalikonvertteriparametri>, List<ArvovalikonvertteriparametriDTO>>() {
             public List<ArvovalikonvertteriparametriDTO> convert(MappingContext<Set<Arvovalikonvertteriparametri>, List<ArvovalikonvertteriparametriDTO>> context) {
-                List<ArvovalikonvertteriparametriDTO> result = new LinkedList<>();
+                Set<ArvovalikonvertteriparametriDTO> resultSet = new TreeSet<>();
                 for(Arvovalikonvertteriparametri a : context.getSource()) {
-                    result.add(map(a, ArvovalikonvertteriparametriDTO.class));
+                    resultSet.add(map(a, ArvovalikonvertteriparametriDTO.class));
                 }
 
+                List<ArvovalikonvertteriparametriDTO> result = new LinkedList<>();
+                result.addAll(resultSet);
                 return result;
             }
         };
