@@ -1,5 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.resource.impl;
 
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
@@ -15,6 +18,7 @@ import fi.vm.sade.service.valintaperusteet.resource.ValintaperusteetResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
@@ -159,4 +163,19 @@ public class ValintaperusteetResourceImpl implements ValintaperusteetResource {
 		}
 	}
 
+	@GET
+	@Path("/{oid}/automaattinenSiirto")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Boolean readAutomaattinenSijoitteluunSiirto(@PathParam("oid") String oid) {
+		return valintatapajonoService.readAutomaattinenSijoitteluunSiirto(oid);
+	}
+
+	@POST
+	@Path("/{oid}/automaattinenSiirto")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@PreAuthorize(UPDATE_CRUD)
+	public Boolean updateAutomaattinenSijoitteluunSiirto(@PathParam("oid") String oid, Boolean arvo) {
+		return valintatapajonoService.updateAutomaattinenSijoitteluunSiirto(oid, arvo);
+	}
 }

@@ -30,4 +30,15 @@ public interface ValintaperusteetResource {
     @Path("tuoHakukohde")
     @Consumes(MediaType.APPLICATION_JSON)
     Response tuoHakukohde(HakukohdeImportDTO hakukohde);
+
+    @GET
+    @Path("/{oid}/automaattinenSiirto")
+    @Produces(MediaType.APPLICATION_JSON)
+    Boolean readAutomaattinenSijoitteluunSiirto(@PathParam("oid") String oid);
+
+    @POST
+    @Path("/{oid}/automaattinenSiirto")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    Boolean updateAutomaattinenSijoitteluunSiirto(@PathParam("oid") String oid, Boolean arvo);
 }
