@@ -1,14 +1,17 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
-
-import com.google.gson.GsonBuilder;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
+import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.*;
+import fi.vm.sade.service.valintaperusteet.service.exception.ValintatapajonoEiOleOlemassaException;
+import fi.vm.sade.service.valintaperusteet.service.exception.ValintatapajonoOidListaOnTyhjaException;
+import fi.vm.sade.service.valintaperusteet.service.exception.ValintatapajonoaEiVoiLisataException;
+import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
+import fi.vm.sade.service.valintaperusteet.util.ValintatapajonoKopioija;
+import fi.vm.sade.service.valintaperusteet.util.ValintatapajonoUtil;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,15 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoCreateDTO;
-import fi.vm.sade.service.valintaperusteet.service.exception.ValintatapajonoEiOleOlemassaException;
-import fi.vm.sade.service.valintaperusteet.service.exception.ValintatapajonoOidListaOnTyhjaException;
-import fi.vm.sade.service.valintaperusteet.service.exception.ValintatapajonoaEiVoiLisataException;
-import fi.vm.sade.service.valintaperusteet.service.exception.ValintatapajonoaEiVoiPoistaaException;
-import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
-import fi.vm.sade.service.valintaperusteet.util.ValintatapajonoKopioija;
-import fi.vm.sade.service.valintaperusteet.util.ValintatapajonoUtil;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Created with IntelliJ IDEA. User: jukais Date: 17.1.2013 Time: 14.44 To
@@ -77,7 +74,7 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
 
                 Valintatapajono master;
 
-                if(jono.get().getMasterValintatapajono() == null) {
+                if (jono.get().getMasterValintatapajono() == null) {
                     master = jono.get();
                 } else {
                     master = valintatapajonoDAO.readByOid(jono.get().getMasterValintatapajono().getOid());
@@ -93,7 +90,7 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
 
                 Optional<Valintaryhma> ryhma = Optional.ofNullable(master.getValinnanVaihe().getValintaryhma());
 
-                if(ryhma.isPresent()) {
+                if (ryhma.isPresent()) {
                     LOGGER.info("löydettiin valintaryhmä {} jonolle {}", ryhma.get().getNimi(), master.getOid());
                     List<HakukohdeViite> viitteet = hakukohdeDao.findByValintaryhmaOidForValisijoittelu(ryhma.get().getOid());
 
@@ -113,7 +110,7 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
                     LOGGER.info("jonolle {} ei löytynyt valintaryhmää. Haetaan hakukohdeviite", master.getOid());
                     ValinnanVaihe vaihe = valinnanVaiheService.readByOid(master.getValinnanVaihe().getOid());
                     Optional<HakukohdeViite> viite = Optional.ofNullable(vaihe.getHakukohdeViite());
-                    if(viite.isPresent()) {
+                    if (viite.isPresent()) {
                         LOGGER.info("löydettiin hakukohdeviite ({}) jonolle {}", viite.get().getNimi(), master.getOid());
                         List<String> lista = jonot.getOrDefault(viite.get().getOid(), new ArrayList<>());
                         lista.addAll(kopiot);
@@ -127,7 +124,7 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
     }
 
     private void lisaaValinnanVaiheelleKopioMasterValintatapajonosta(ValinnanVaihe valinnanVaihe,
-            Valintatapajono masterValintatapajono, Valintatapajono edellinenMasterValintatapajono) {
+                                                                     Valintatapajono masterValintatapajono, Valintatapajono edellinenMasterValintatapajono) {
         Valintatapajono kopio = ValintatapajonoUtil.teeKopioMasterista(masterValintatapajono);
         kopio.setValinnanVaihe(valinnanVaihe);
         kopio.setOid(oidService.haeValintatapajonoOid());
@@ -150,7 +147,7 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
 
     @Override
     public Valintatapajono lisaaValintatapajonoValinnanVaiheelle(String valinnanVaiheOid, ValintatapajonoCreateDTO dto,
-            String edellinenValintatapajonoOid) {
+                                                                 String edellinenValintatapajonoOid) {
         ValinnanVaihe valinnanVaihe = valinnanVaiheService.readByOid(valinnanVaiheOid);
         if (!fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi.TAVALLINEN.equals(valinnanVaihe
                 .getValinnanVaiheTyyppi())) {
@@ -171,7 +168,7 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
         jono.setValinnanVaihe(valinnanVaihe);
         jono.setEdellinenValintatapajono(edellinenValintatapajono);
 
-        if(dto.getTayttojono() != null) {
+        if (dto.getTayttojono() != null) {
             Valintatapajono tayttoJono = valintatapajonoDAO.readByOid(dto.getTayttojono());
             jono.setVarasijanTayttojono(tayttoJono);
         }
@@ -248,7 +245,7 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
 
         Valintatapajono konvertoitu = modelMapper.map(dto, Valintatapajono.class);
 
-        if(dto.getTayttojono() != null) {
+        if (dto.getTayttojono() != null) {
             Valintatapajono tayttoJono = valintatapajonoDAO.readByOid(dto.getTayttojono());
             konvertoitu.setVarasijanTayttojono(tayttoJono);
         }
@@ -290,7 +287,7 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
 
     @Override
     public void kopioiValintatapajonotMasterValinnanVaiheeltaKopiolle(ValinnanVaihe valinnanVaihe,
-            ValinnanVaihe masterValinnanVaihe) {
+                                                                      ValinnanVaihe masterValinnanVaihe) {
         Valintatapajono vv = valintatapajonoDAO
                 .haeValinnanVaiheenViimeinenValintatapajono(masterValinnanVaihe.getOid());
         kopioiValintatapajonotRekursiivisesti(valinnanVaihe, vv);
@@ -312,7 +309,7 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
     }
 
     private void jarjestaKopioValinnanVaiheenValintatapajonot(ValinnanVaihe vaihe,
-            LinkedHashMap<String, Valintatapajono> uusiMasterJarjestys) {
+                                                              LinkedHashMap<String, Valintatapajono> uusiMasterJarjestys) {
         LinkedHashMap<String, Valintatapajono> alkuperainenJarjestys = LinkitettavaJaKopioitavaUtil
                 .teeMappiOidienMukaan(LinkitettavaJaKopioitavaUtil.jarjesta(valintatapajonoDAO
                         .findByValinnanVaihe(vaihe.getOid())));
