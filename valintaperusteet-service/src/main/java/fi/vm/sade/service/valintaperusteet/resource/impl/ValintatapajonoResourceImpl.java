@@ -201,26 +201,4 @@ public class ValintatapajonoResourceImpl implements ValintatapajonoResource {
         valintatapajonoService.deleteByOid(oid);
         return Response.status(Response.Status.ACCEPTED).build();
     }
-
-    @GET
-    @Path("/{oid}/automaattinenSiirto")
-    @Produces(MediaType.APPLICATION_JSON)
-    @PreAuthorize(READ_UPDATE_CRUD)
-    @ApiOperation(value = "Hakee valintatapajonon automaattisen sijoitteluun siirron tilan OID:n perusteella")
-    public Response readAutomaattinenSijoitteluunSiirto(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
-        Boolean response = modelMapper.map(valintatapajonoService.readAutomaattinenSijoitteluunSiirto(oid), Boolean.class);
-        return Response.status(Response.Status.ACCEPTED).entity(response).build();
-    }
-    @POST
-    @Path("/{oid}/automaattinenSiirto")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @PreAuthorize(UPDATE_CRUD)
-    @ApiOperation(value = "Päivittää valintatapajonon automaattisen sijoitteluun siirron tilan")
-    public Response updateAutomaattinenSijoitteluunSiirto(
-            @ApiParam(value = "Päivitettävän valintatapajonon OID", required = true) @PathParam("oid") String oid,
-            @ApiParam(value = "Valintatapajonon automaattisen sijoitteluun siirron uusi tila", required = true) Boolean arvo) {
-        Boolean update = modelMapper.map(valintatapajonoService.updateAutomaattinenSijoitteluunSiirto(oid, arvo), Boolean.class);
-        return Response.status(Response.Status.ACCEPTED).entity(update).build();
-    }
 }
