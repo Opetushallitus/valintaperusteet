@@ -201,5 +201,4 @@ public class ValintatapajonoResourceImpl implements ValintatapajonoResource {
         valintatapajonoService.deleteByOid(oid);
         return Response.status(Response.Status.ACCEPTED).build();
     }
-
 }

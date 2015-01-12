@@ -76,5 +76,4 @@ public interface ValintatapajonoResource {
     @Path("/{oid}")
     Response delete(@PathParam("oid") String oid);
 
-
 }
