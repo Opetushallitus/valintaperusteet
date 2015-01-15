@@ -389,6 +389,10 @@ object Laskentadomainkonvertteri {
         val nParam = getParametri(funktiokuvaus.syoteparametrit.head.avain, funktiokutsu.getSyoteparametrit)
         SummaNParasta(parametriToInteger(nParam), lasketutArgumentit.map(muunnaLukuarvofunktioksi(_)), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
       }
+      case Funktionimi.TULONPARASTA => {
+        val nParam = getParametri(funktiokuvaus.syoteparametrit.head.avain, funktiokutsu.getSyoteparametrit)
+        TuloNParasta(parametriToInteger(nParam), lasketutArgumentit.map(muunnaLukuarvofunktioksi(_)), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
+      }
       case Funktionimi.SUUREMPI => Suurempi(
         muunnaLukuarvofunktioksi(lasketutArgumentit(0)),
         muunnaLukuarvofunktioksi(lasketutArgumentit(1)),

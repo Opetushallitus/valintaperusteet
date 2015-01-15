@@ -336,6 +336,7 @@ object Laskentakaavavalidaattori {
     funktiokutsu.getFunktionimi match {
       case Funktionimi.KESKIARVONPARASTA |
         Funktionimi.SUMMANPARASTA |
+        Funktionimi.TULONPARASTA |
         Funktionimi.NMAKSIMI |
         Funktionimi.NMINIMI => tarkistaN
       case Funktionimi.DEMOGRAFIA => {
