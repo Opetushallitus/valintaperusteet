@@ -66,12 +66,12 @@ object Arvojoukot {
     "GE"->"Maantiede (GE)",
     "TE"->"Terveystieto (TE)",
     "YH"->"Yhteiskuntaoppi (YH)",
-    "AINEREAALI"->"Ainereaali",
-    "REAALI"->"Reaali",
-    "PITKA_KIELI"->"Kieli, pitkä oppimäärä",
-    "KESKIPITKA_KIELI"->"Kieli, keskipitkä oppimäärä",
-    "LYHYT_KIELI"->"Kieli, lyhyt oppimäärä",
-    "AIDINKIELI"->"Äidinkieli"
+    "AINEREAALI"->"Ainereaali (UE, UO, ET, FF, PS, HI, FY, KE, BI, GE, TE, YH)",
+    "REAALI"->"Reaali (RR, RO, RY)",
+    "PITKA_KIELI"->"Kieli, pitkä oppimäärä (EA, FA, GA, HA, PA, SA, TA, VA)",
+    "KESKIPITKA_KIELI"->"Kieli, keskipitkä oppimäärä (EB, FB, GB, HB, PB, SB, TB, VB)",
+    "LYHYT_KIELI"->"Kieli, lyhyt oppimäärä (EC, FC, GC, L1, PC, SC, TC, VC, KC)",
+    "AIDINKIELI"->"Äidinkieli (O, A, I, W, Z, O5, A5)"
   )
 
   val LUKUKAUDET = Array(
