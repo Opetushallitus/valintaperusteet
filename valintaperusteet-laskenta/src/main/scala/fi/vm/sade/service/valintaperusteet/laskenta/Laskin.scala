@@ -450,6 +450,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
   private def laskeLukuarvo(laskettava: Lukuarvofunktio): Tulos[BigDecimal] = {
 
     def summa(vals: Seq[BigDecimal]): BigDecimal = vals.reduceLeft(_ + _)
+    def tulo(vals: Seq[BigDecimal]): BigDecimal = vals.reduceLeft(_ * _)
 
     def muodostaYksittainenTulos(f: Lukuarvofunktio, trans: BigDecimal => BigDecimal): (Option[BigDecimal], List[Tila], Historia) = {
       laskeLukuarvo(f) match {
@@ -495,6 +496,11 @@ private class Laskin private(private val hakukohde: Hakukohde,
       case SummaNParasta(n, fs, oid, tulosTunniste,_,_,_) => {
         val (tulos, tilat, h) = muodostaKoostettuTulos(fs, ds => summa(ds.sortWith(_ > _).take(n)))
         (tulos, tilat, Historia("Summa N-parasta", tulos, tilat, h.historiat, Some(Map("n" -> Some(n)))))
+      }
+
+      case TuloNParasta(n, fs, oid, tulosTunniste,_,_,_) => {
+        val (tulos, tilat, h) = muodostaKoostettuTulos(fs, ds => tulo(ds.sortWith(_ > _).take(n)))
+        (tulos, tilat, Historia("Tulo N-parasta", tulos, tilat, h.historiat, Some(Map("n" -> Some(n)))))
       }
 
       case Osamaara(osoittaja, nimittaja, oid, tulosTunniste,_,_,_) => {

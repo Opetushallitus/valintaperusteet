@@ -424,6 +424,11 @@ object Funktiokuvaaja {
       funktioargumentit = List(Funktioargumenttikuvaus("args", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.N)),
       syoteparametrit = List(Syoteparametrikuvaus("n", Syoteparametrityyppi.KOKONAISLUKU))
     ),
+    Funktionimi.TULONPARASTA -> Funktiokuvaus(
+      tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
+      funktioargumentit = List(Funktioargumenttikuvaus("args", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.N)),
+      syoteparametrit = List(Syoteparametrikuvaus("n", Syoteparametrityyppi.KOKONAISLUKU))
+    ),
     Funktionimi.SUUREMPI -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.TOTUUSARVOFUNKTIO,
       funktioargumentit = List(Funktioargumenttikuvaus("vasenOperandi", Funktiotyyppi.LUKUARVOFUNKTIO),

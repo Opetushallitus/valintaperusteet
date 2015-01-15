@@ -183,6 +183,14 @@ object Laskenta {
     }
   }
 
+  case class TuloNParasta(n: Int, fs: Seq[Lukuarvofunktio], oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "")
+    extends NParasta with Lukuarvofunktio
+
+  object TuloNParasta {
+    def apply(n: Int, fs: Lukuarvofunktio*) = {
+      new TuloNParasta(n, fs.toSeq)
+    }
+  }
   case class KeskiarvoNParasta(n: Int, fs: Seq[Lukuarvofunktio], oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "")
     extends NParasta with Lukuarvofunktio
 
