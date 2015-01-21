@@ -1184,6 +1184,43 @@ class LaskentaIntegraatioTest extends FunSuite {
     assertTilaHyvaksyttavissa(tila)
   }
 
+  test("TuloNParasta, osa tyhjia arvoja") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.TULONPARASTA,
+      funktioargumentit = List(
+        luku100,
+        luku50,
+        haeLukuarvo,
+        haeLukuarvo),
+      syoteparametrit = List(
+        Syoteparametri(
+          avain = "n",
+          arvo = "3")))
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assert(tulos.get.compareTo(new BigDecimal("5000")) == 0)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("TuloNParasta, kaikki tyhjia arvoja") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.TULONPARASTA,
+      funktioargumentit = List(
+        haeLukuarvo,
+        haeLukuarvo,
+        haeLukuarvo,
+        haeLukuarvo),
+      syoteparametrit = List(
+        Syoteparametri(
+          avain = "n",
+          arvo = "3")))
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
+    assertTulosTyhja(tulos)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
   test("Jos, ehto tyhja") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.JOS,
