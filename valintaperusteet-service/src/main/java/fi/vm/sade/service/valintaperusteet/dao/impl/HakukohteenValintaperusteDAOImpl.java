@@ -4,6 +4,7 @@ import com.mysema.query.jpa.impl.JPAQuery;
 import com.mysema.query.types.EntityPath;
 import fi.vm.sade.service.valintaperusteet.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohteenValintaperusteDAO;
+import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.HakukohteenValintaperuste;
 import fi.vm.sade.service.valintaperusteet.model.QHakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.QHakukohteenValintaperuste;
@@ -28,14 +29,11 @@ public class HakukohteenValintaperusteDAOImpl extends AbstractJpaDAOImpl<Hakukoh
         QHakukohdeViite hk = QHakukohdeViite.hakukohdeViite;
         QHakukohteenValintaperuste vp = QHakukohteenValintaperuste.hakukohteenValintaperuste;
 
-//        return from(hk)
-//                .innerJoin(hk.hakukohteenValintaperusteet, vp)
-//                .where(hk.oid.eq(hakukohdeOid))
-//                .list(vp);
+        HakukohdeViite viite = from(hk).where(hk.oid.eq(hakukohdeOid)).singleResult(hk);
 
         return from(vp)
-//                .join(vp.hakukohde, hk)
-                .where(vp.hakukohde.oid.eq(hakukohdeOid))
-                .listDistinct(vp);
+                .where(vp.hakukohde.eq(viite))
+                .list(vp);
+
     }
 }
