@@ -28,9 +28,14 @@ public class HakukohteenValintaperusteDAOImpl extends AbstractJpaDAOImpl<Hakukoh
         QHakukohdeViite hk = QHakukohdeViite.hakukohdeViite;
         QHakukohteenValintaperuste vp = QHakukohteenValintaperuste.hakukohteenValintaperuste;
 
-        return from(hk)
-                .innerJoin(hk.hakukohteenValintaperusteet, vp)
-                .where(hk.oid.eq(hakukohdeOid))
-                .list(vp);
+//        return from(hk)
+//                .innerJoin(hk.hakukohteenValintaperusteet, vp)
+//                .where(hk.oid.eq(hakukohdeOid))
+//                .list(vp);
+
+        return from(vp)
+//                .join(vp.hakukohde, hk)
+                .where(vp.hakukohde.oid.eq(hakukohdeOid))
+                .listDistinct(vp);
     }
 }

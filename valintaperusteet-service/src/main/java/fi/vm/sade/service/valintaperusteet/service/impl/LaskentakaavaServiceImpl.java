@@ -439,7 +439,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             entity.setFunktiokutsu(updateFunktiokutsu(entity.getFunktiokutsu()));
 
             if (StringUtils.isNotBlank(hakukohdeOid)) {
-                HakukohdeViite hakukohde = hakukohdeViiteDAO.readByOid(hakukohdeOid);
+                HakukohdeViite hakukohde = hakukohdeViiteDAO.readForImport(hakukohdeOid);
                 entity.setHakukohde(hakukohde);
             } else if (StringUtils.isNotBlank(valintaryhmaOid)) {
                 Valintaryhma valintaryhma = valintaryhmaDAO.readByOid(valintaryhmaOid);
