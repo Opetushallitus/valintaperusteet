@@ -19,6 +19,8 @@ public interface HakukohdeViiteDAO extends JpaDAO<HakukohdeViite, Long> {
 
     HakukohdeViite readByOid(String oid);
 
+    HakukohdeViite readForImport(String oid);
+
     List<HakukohdeViite> findByValintaryhmaOid(String oid);
 
     List<HakukohdeViite> findByValintaryhmaOidForValisijoittelu(String oid);
