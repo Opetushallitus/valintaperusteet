@@ -348,7 +348,7 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
 
         }
         genericDAO.flush();
-        hakukohde = hakukohdeViiteDAO.readByOid(importData.getHakukohdeOid());
+        hakukohde = hakukohdeViiteDAO.readForImport(importData.getHakukohdeOid());
 
         hakukohde.setHakukohteenValintaperusteet(lisaaValintaperusteet(importData, hakukohde));
 

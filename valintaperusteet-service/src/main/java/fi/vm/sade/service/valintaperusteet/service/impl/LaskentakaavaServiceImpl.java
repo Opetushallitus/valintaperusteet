@@ -478,7 +478,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
         }
 
         if(dto.getHakukohdeOid() != null&& !dto.getHakukohdeOid().isEmpty()) {
-            Optional<HakukohdeViite> hakukohde = Optional.ofNullable(hakukohdeViiteDAO.readByOid(dto.getHakukohdeOid()));
+            Optional<HakukohdeViite> hakukohde = Optional.ofNullable(hakukohdeViiteDAO.readForImport(dto.getHakukohdeOid()));
             if(hakukohde.isPresent()) {
                 hakukohdeOid = hakukohde.get().getOid();
             }
