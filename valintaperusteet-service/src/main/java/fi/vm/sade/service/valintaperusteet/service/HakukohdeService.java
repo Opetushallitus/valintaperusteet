@@ -33,6 +33,8 @@ public interface HakukohdeService {
 
     List<ValinnanVaihe> ilmanLaskentaa(String oid);
 
+    List<ValinnanVaihe> vaiheetJaJonot(String oid);
+
     void deleteByOid(String oid);
 
     HakukohdeViite siirraHakukohdeValintaryhmaan(String hakukohdeOid, String valintaryhmaOid,

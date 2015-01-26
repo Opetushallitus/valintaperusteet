@@ -36,4 +36,6 @@ public interface ValinnanVaiheDAO extends JpaDAO<ValinnanVaihe, Long> {
     boolean kuuluuSijoitteluun(String oid);
 
     List<ValinnanVaihe> ilmanLaskentaaOlevatHakukohteelle(String hakukohdeOid);
+
+    List<ValinnanVaihe> valinnanVaiheetJaJonot(String hakukohdeOid);
 }
