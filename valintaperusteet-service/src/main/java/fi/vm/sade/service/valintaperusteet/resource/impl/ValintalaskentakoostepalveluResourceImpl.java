@@ -244,4 +244,14 @@ public class ValintalaskentakoostepalveluResourceImpl {
 		}
 		return result;
 	}
+
+    @GET
+    @Path("hakukohde/{oid}/valinnanvaihe")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Palauttaa valintatapajonot", response = ValintatapajonoDTO.class)
+    public List<ValinnanVaiheJonoillaDTO> vaiheetJaJonot(
+            @PathParam("oid") String oid) {
+        return modelMapper.mapList(hakukohdeService.vaiheetJaJonot(oid),
+                ValinnanVaiheJonoillaDTO.class);
+    }
 }

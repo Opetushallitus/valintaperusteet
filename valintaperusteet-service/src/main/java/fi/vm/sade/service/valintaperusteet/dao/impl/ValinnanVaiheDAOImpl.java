@@ -5,6 +5,7 @@ import com.mysema.query.jpa.impl.JPASubQuery;
 import com.mysema.query.types.EntityPath;
 import fi.vm.sade.service.valintaperusteet.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
+import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakukohde;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import org.springframework.stereotype.Repository;
 
@@ -170,5 +171,18 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
 
         return from(hakukohde).leftJoin(hakukohde.valinnanvaiheet, vv).leftJoin(vv.jonot, jono).fetch()
                 .where(hakukohde.oid.eq(hakukohdeOid).and(jono.kaytetaanValintalaskentaa.isFalse())).distinct().list(vv);
+    }
+
+    @Override
+    public List<ValinnanVaihe> valinnanVaiheetJaJonot(String hakukohdeOid) {
+        QHakukohdeViite hakukohde = QHakukohdeViite.hakukohdeViite;
+        QValinnanVaihe vv = QValinnanVaihe.valinnanVaihe;
+        QValintatapajono jono = QValintatapajono.valintatapajono;
+
+        HakukohdeViite h = from(hakukohde).where(hakukohde.oid.eq(hakukohdeOid)).singleResult(hakukohde);
+
+        return from(vv).leftJoin(vv.jonot, jono).fetch()
+                .where(vv.hakukohdeViite.eq(h)).distinct().list(vv);
+
     }
 }

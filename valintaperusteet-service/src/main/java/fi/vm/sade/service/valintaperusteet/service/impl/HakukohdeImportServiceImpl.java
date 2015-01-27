@@ -275,7 +275,7 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
                 importData.getHakukohdeOid(), importData.getHakukohdekoodi().getKoodiUri());
         HakukohdekoodiDTO hakukohdekoodiTyyppi = importData.getHakukohdekoodi();
 
-        HakukohdeViite hakukohde = hakukohdeViiteDAO.readByOid(importData.getHakukohdeOid());
+        HakukohdeViite hakukohde = hakukohdeViiteDAO.readForImport(importData.getHakukohdeOid());
         Hakukohdekoodi koodi = hakukohdekoodiDAO.readByUri(sanitizeKoodiUri(hakukohdekoodiTyyppi.getKoodiUri()));
 
         if (koodi == null) {
@@ -348,7 +348,7 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
 
         }
         genericDAO.flush();
-        hakukohde = hakukohdeViiteDAO.readByOid(importData.getHakukohdeOid());
+        hakukohde = hakukohdeViiteDAO.readForImport(importData.getHakukohdeOid());
 
         hakukohde.setHakukohteenValintaperusteet(lisaaValintaperusteet(importData, hakukohde));
 

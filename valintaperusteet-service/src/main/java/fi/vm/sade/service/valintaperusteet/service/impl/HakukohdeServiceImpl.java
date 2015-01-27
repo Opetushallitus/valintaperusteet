@@ -128,6 +128,11 @@ public class HakukohdeServiceImpl implements HakukohdeService {
         return valinnanVaiheDAO.ilmanLaskentaaOlevatHakukohteelle(oid);
     }
 
+    @Override
+    public List<ValinnanVaihe> vaiheetJaJonot(String oid) {
+        return valinnanVaiheDAO.valinnanVaiheetJaJonot(oid);
+    }
+
 
     @Override
     public void deleteByOid(String oid) {

@@ -439,7 +439,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             entity.setFunktiokutsu(updateFunktiokutsu(entity.getFunktiokutsu()));
 
             if (StringUtils.isNotBlank(hakukohdeOid)) {
-                HakukohdeViite hakukohde = hakukohdeViiteDAO.readByOid(hakukohdeOid);
+                HakukohdeViite hakukohde = hakukohdeViiteDAO.readForImport(hakukohdeOid);
                 entity.setHakukohde(hakukohde);
             } else if (StringUtils.isNotBlank(valintaryhmaOid)) {
                 Valintaryhma valintaryhma = valintaryhmaDAO.readByOid(valintaryhmaOid);
@@ -478,7 +478,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
         }
 
         if(dto.getHakukohdeOid() != null&& !dto.getHakukohdeOid().isEmpty()) {
-            Optional<HakukohdeViite> hakukohde = Optional.ofNullable(hakukohdeViiteDAO.readByOid(dto.getHakukohdeOid()));
+            Optional<HakukohdeViite> hakukohde = Optional.ofNullable(hakukohdeViiteDAO.readForImport(dto.getHakukohdeOid()));
             if(hakukohde.isPresent()) {
                 hakukohdeOid = hakukohde.get().getOid();
             }
