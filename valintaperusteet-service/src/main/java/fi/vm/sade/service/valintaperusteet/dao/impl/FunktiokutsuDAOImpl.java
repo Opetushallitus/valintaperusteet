@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.dao.impl;
 
+import com.google.common.collect.Sets;
 import com.mysema.query.jpa.impl.JPAQuery;
 import com.mysema.query.jpa.impl.JPASubQuery;
 import com.mysema.query.types.EntityPath;
@@ -25,18 +26,6 @@ public class FunktiokutsuDAOImpl extends AbstractJpaDAOImpl<Funktiokutsu, Long> 
     @Autowired
     private GenericDAO genericDAO;
 
-    private List<ValintaperusteViite> valintaperusteet(Long id) {
-        QFunktiokutsu fk = QFunktiokutsu.funktiokutsu;
-        QValintaperusteViite vpv = QValintaperusteViite.valintaperusteViite;
-        QTekstiRyhma t = QTekstiRyhma.tekstiRyhma;
-
-        JPAQuery query = from(vpv);
-
-        return query.leftJoin(vpv.kuvaukset, t).fetch()
-                .leftJoin(t.tekstit).fetch()
-                .where(vpv.funktiokutsu.id.eq(id)).distinct().list(vpv);
-    }
-
     @Override
     public Funktiokutsu getFunktiokutsu(Long id) {
         QFunktiokutsu fk = QFunktiokutsu.funktiokutsu;
@@ -48,53 +37,35 @@ public class FunktiokutsuDAOImpl extends AbstractJpaDAOImpl<Funktiokutsu, Long> 
 
         JPAQuery query = from(fk);
 
-        if(from(ak).where(ak.funktiokutsu.id.eq(id)).count() > 0) {
-            query.leftJoin(fk.arvokonvertteriparametrit, ak).fetch()
-                .leftJoin(ak.kuvaukset, t).fetch()
-                .leftJoin(t.tekstit).fetch();
-        } else {
-            query.leftJoin(fk.arvokonvertteriparametrit).fetch();
-        }
 
-        if(from(avk).where(avk.funktiokutsu.id.eq(id)).count() > 0) {
-            query.leftJoin(fk.arvovalikonvertteriparametrit, avk).fetch()
-                    .leftJoin(avk.kuvaukset, t).fetch()
-                    .leftJoin(t.tekstit).fetch();
-        } else {
-            query.leftJoin(fk.arvovalikonvertteriparametrit).fetch();
-        }
-
-        if(from(fa).where(fa.parent.id.eq(id)).count() > 0) {
-            query.leftJoin(fk.funktioargumentit, fa).fetch()
-                .leftJoin(fa.laskentakaavaChild).fetch();
-        } else {
-            query.leftJoin(fk.funktioargumentit).fetch();
-        }
-
-        Funktiokutsu kutsu =  query.leftJoin(fk.valintaperusteviitteet, vpv).fetch()
-                .leftJoin(fk.valintaperusteviitteet).fetch()
+        Funktiokutsu kutsu =  query
                 .leftJoin(fk.syoteparametrit).fetch()
-                .where(fk.id.eq(id)).distinct().singleResult(fk);
+                .leftJoin(fk.funktioargumentit, fa).fetch()
+                .leftJoin(fa.laskentakaavaChild).fetch()
+                .leftJoin(fk.valintaperusteviitteet, vpv).fetch()
+                .leftJoin(vpv.kuvaukset, t).fetch()
+                .leftJoin(t.tekstit).fetch()
+                .where(fk.id.eq(id)).singleResult(fk);
 
         if (kutsu != null) {
-            Set<ValintaperusteViite> set = new TreeSet<ValintaperusteViite>();
-            set.addAll(valintaperusteet(id));
-            kutsu.setValintaperusteviitteet(set);
+
+            List<Arvokonvertteriparametri> arvokonvertteriparametris = from(ak).leftJoin(ak.kuvaukset, t).fetch()
+                    .leftJoin(t.tekstit).fetch()
+                    .where(ak.funktiokutsu.eq(kutsu)).distinct().list(ak);
+
+            List<Arvovalikonvertteriparametri> arvovalikonvertteriparametris = from(avk).leftJoin(avk.kuvaukset, t).fetch()
+                    .leftJoin(t.tekstit).fetch()
+                    .where(avk.funktiokutsu.eq(kutsu)).distinct().list(avk);
+
+
+            kutsu.setArvokonvertteriparametrit(Sets.newHashSet(arvokonvertteriparametris));
+            kutsu.setArvovalikonvertteriparametrit(Sets.newHashSet(arvovalikonvertteriparametris));
+
+
         }
 
         return kutsu;
 
-
-//        return from(fk)
-//                .leftJoin(fk.syoteparametrit).fetch()
-//                .leftJoin(fk.arvokonvertteriparametrit, ak).fetch()
-//                .leftJoin(fk.arvovalikonvertteriparametrit, avk).fetch()
-//                .leftJoin(avk.kuvaukset, t).fetch()
-//                .leftJoin(t.tekstit).fetch()
-//                .leftJoin(fk.funktioargumentit, fa).fetch()
-//                .leftJoin(fa.laskentakaavaChild).fetch()
-//                .leftJoin(fk.valintaperusteviitteet).fetch()
-//                .where(fk.id.eq(id)).distinct().singleResult(fk);
 
     }
 
