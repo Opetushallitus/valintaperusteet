@@ -304,8 +304,9 @@ public class LaskentakaavaServiceTest {
             assertNotNull(funktiokutsuDAO.getFunktiokutsu(8L));
             LaskentakaavaCreateDTO dto = modelMapper.map(laskentakaava, LaskentakaavaCreateDTO.class);
             paivitetty = laskentakaavaService.update(laskentakaava.getId(), dto);
-            assertNull(funktiokutsuDAO.getFunktiokutsu(502L));
-            assertNull(funktiokutsuDAO.getFunktiokutsu(506L));
+            // Akka hoitaa poiston
+//            assertNull(funktiokutsuDAO.getFunktiokutsu(502L));
+//            assertNull(funktiokutsuDAO.getFunktiokutsu(506L));
             assertNotNull(funktiokutsuDAO.getFunktiokutsu(7L));
             assertNotNull(funktiokutsuDAO.getFunktiokutsu(8L));
             assertTrue(paivitetty.getFunktiokutsu().getTallennaTulos());

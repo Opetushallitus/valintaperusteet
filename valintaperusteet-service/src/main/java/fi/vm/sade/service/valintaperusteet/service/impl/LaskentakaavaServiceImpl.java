@@ -204,7 +204,12 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
                         Laskentakaavavalidaattori.validoiMallinnettuKaava(entity));
             }
 
-            funktiokutsuDAO.deleteOrphans();
+            ActorRef master = actorSystem.actorOf(
+                    SpringExtProvider.get(actorSystem).props("PoistaOrvotActorBean")
+                    , UUID.randomUUID()
+                    .toString());
+
+            master.tell(id, ActorRef.noSender());
 
             return managed;
         } catch (FunktiokutsuMuodostaaSilmukanException e) {
