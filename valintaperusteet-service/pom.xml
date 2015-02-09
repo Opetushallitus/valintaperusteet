@@ -161,11 +161,32 @@
         </dependency>
         <dependency>
             <groupId>com.wordnik</groupId>
-            <artifactId>swagger-jersey-jaxrs_2.10</artifactId>
+            <artifactId>swagger-jersey2-jaxrs_2.11</artifactId>
+            <version>${swagger.version}</version>
             <exclusions>
                 <exclusion>
-                    <groupId>org.javassist</groupId>
-                    <artifactId>javassist</artifactId>
+                    <artifactId>
+                        jersey-container-servlet-core
+                    </artifactId>
+                    <groupId>org.glassfish.jersey.containers</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.wordnik</groupId>
+            <artifactId>swagger-core_2.11</artifactId>
+            <version>${swagger.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.spec</groupId>
+            <artifactId>jboss-javaee-6.0</artifactId>
+            <version>1.0.0.Final</version>
+            <type>pom</type>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>jaxrs-api</artifactId>
+                    <groupId>org.jboss.resteasy</groupId>
                 </exclusion>
             </exclusions>
         </dependency>
