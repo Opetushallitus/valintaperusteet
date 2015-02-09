@@ -4,8 +4,10 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRU
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -65,6 +67,68 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
     private ValintaperusteetModelMapper modelMapper;
 
     protected final static Logger LOGGER = LoggerFactory.getLogger(HakijaryhmaResourceImpl.class);
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @PreAuthorize(READ_UPDATE_CRUD)
+    @Path("/haku")
+    @ApiOperation(value = "Hakee hakijaryhmät annetulle hakukohde OID joukolle", response = HakijaryhmaDTO.class)
+    @ApiResponses(value = { @ApiResponse(code = 404, message = "Hakijaryhmää ei löydy"), })
+    public List<HakijaryhmaValintatapajonoDTO> readByHakukohdeOids(List<String> hakukohdeOids) {
+        long t0 = System.currentTimeMillis();
+        try {
+            if(hakukohdeOids == null || hakukohdeOids.isEmpty()) {
+                // Haetaan hakuOid:lla
+                LOGGER.error("Yritettiin hakea hakijaryhmia tyhjalla hakukohde OID joukolla");
+                //return hakijaryhmaValintatapajonoService.findByHaku(hakuOid).stream().map(h -> modelMapper.map(h, HakijaryhmaValintatapajonoDTO.class)).collect(Collectors.toList());
+                throw new WebApplicationException(
+                        new RuntimeException("Yritettiin hakea hakijaryhmia tyhjalla hakukohde OID joukolla"), Response.Status.NOT_FOUND);
+            } else {
+                // Haetaan hakukohdeOid joukolla
+                LOGGER.info("Haetaan hakukohdeOid joukolla {}", Arrays.toString(hakukohdeOids.toArray()));
+                return hakijaryhmaValintatapajonoService.findByHakukohteet(hakukohdeOids).stream().map(h -> modelMapper.map(h, HakijaryhmaValintatapajonoDTO.class)).collect(Collectors.toList());
+            }
+        } catch (HakijaryhmaEiOleOlemassaException e) {
+            LOGGER.error("Hakijaryhmää ei löytynyt! {}", e.getMessage());
+            throw new WebApplicationException(e, Response.Status.NOT_FOUND);
+        } catch (Exception e) {
+            LOGGER.error("Hakijaryhmää ei saatu haettua! {} {}", e.getMessage(), Arrays.toString(e.getStackTrace()));
+            throw new WebApplicationException(e, Response.Status.INTERNAL_SERVER_ERROR);
+        } finally {
+            LOGGER.info("Haku kesti {}ms", (System.currentTimeMillis() - t0));
+        }
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @PreAuthorize(READ_UPDATE_CRUD)
+    @Path("/haku/{hakuOid}")
+    @ApiOperation(value = "Hakee hakijaryhmät annetulle haku OID:lle", response = HakijaryhmaDTO.class)
+    @ApiResponses(value = { @ApiResponse(code = 404, message = "Hakijaryhmää ei löydy"), })
+    public List<HakijaryhmaValintatapajonoDTO> readByHakuOid(@PathParam("hakuOid") String hakuOid) {
+        LOGGER.info("Haetaan hakuOid:lla {}", hakuOid);
+        long t0 = System.currentTimeMillis();
+        try {
+            if(hakuOid == null) {
+                // Haetaan hakuOid:lla
+                LOGGER.error("Yritettiin hakea hakijaryhmia tyhjalla haku OID:lla");
+                //return hakijaryhmaValintatapajonoService.findByHaku(hakuOid).stream().map(h -> modelMapper.map(h, HakijaryhmaValintatapajonoDTO.class)).collect(Collectors.toList());
+                throw new WebApplicationException(
+                        new RuntimeException("Yritettiin hakea hakijaryhmia tyhjalla haku OID:lla"), Response.Status.NOT_FOUND);
+            } else {
+                return hakijaryhmaValintatapajonoService.findByHaku(hakuOid).stream().map(h -> modelMapper.map(h, HakijaryhmaValintatapajonoDTO.class)).collect(Collectors.toList());
+            }
+        } catch (HakijaryhmaEiOleOlemassaException e) {
+            LOGGER.error("Hakijaryhmää ei löytynyt! {}", e.getMessage());
+            throw new WebApplicationException(e, Response.Status.NOT_FOUND);
+        } catch (Exception e) {
+            LOGGER.error("Hakijaryhmää ei saatu haettua! {} {}", e.getMessage(), Arrays.toString(e.getStackTrace()));
+            throw new WebApplicationException(e, Response.Status.INTERNAL_SERVER_ERROR);
+        } finally {
+            LOGGER.info("Haku kesti {}ms", (System.currentTimeMillis() - t0));
+        }
+    }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

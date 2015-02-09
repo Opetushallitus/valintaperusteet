@@ -6,36 +6,25 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
+import fi.vm.sade.service.valintaperusteet.dto.*;
+import fi.vm.sade.service.valintaperusteet.resource.ValintalaskentakoostepalveluResource;
+import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaEiOleOlemassaException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 
-import fi.vm.sade.service.valintaperusteet.dto.HakukohdeImportDTO;
-import fi.vm.sade.service.valintaperusteet.dto.HakukohdeJaValintakoeDTO;
-import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
-import fi.vm.sade.service.valintaperusteet.dto.HakuparametritDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheJonoillaDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteetDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteetFunktiokutsuDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteetHakijaryhmaDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
 import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
@@ -50,6 +39,8 @@ import fi.vm.sade.service.valintaperusteet.service.ValintakoeService;
 import fi.vm.sade.service.valintaperusteet.service.ValintaperusteService;
 import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
 
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
+
 /**
  * 
  * @author jussi jartamo
@@ -57,7 +48,7 @@ import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
  */
 @Component
 @Path("valintalaskentakoostepalvelu")
-public class ValintalaskentakoostepalveluResourceImpl {
+public class ValintalaskentakoostepalveluResourceImpl implements ValintalaskentakoostepalveluResource {
 	private static final Logger LOG = LoggerFactory
 			.getLogger(ValintaperusteetResourceImpl.class);
 	@Autowired
@@ -84,6 +75,48 @@ public class ValintalaskentakoostepalveluResourceImpl {
 	@Autowired
 	private ValintakoeService valintakoeService;
 
+	@POST
+	@Path("/valintatapajono")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public List<ValintatapajonoDTO> haeValintatapajonotSijoittelulle(
+			List<String> hakukohdeOids) {
+		long t0 = System.currentTimeMillis();
+		try {
+			return valintaperusteService
+					.haeValintatapajonotSijoittelulle(hakukohdeOids);
+		} finally {
+			LOG.info("Valintatapajonojen haku kesti {}ms", (System.currentTimeMillis() - t0));
+		}
+	}
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/haku")
+	public List<HakijaryhmaValintatapajonoDTO> readByHakukohdeOids(List<String> hakukohdeOids) {
+		long t0 = System.currentTimeMillis();
+		try {
+			if(hakukohdeOids == null || hakukohdeOids.isEmpty()) {
+				// Haetaan hakuOid:lla
+				LOG.error("Yritettiin hakea hakijaryhmia tyhjalla hakukohde OID joukolla");
+				//return hakijaryhmaValintatapajonoService.findByHaku(hakuOid).stream().map(h -> modelMapper.map(h, HakijaryhmaValintatapajonoDTO.class)).collect(Collectors.toList());
+				throw new WebApplicationException(
+						new RuntimeException("Yritettiin hakea hakijaryhmia tyhjalla hakukohde OID joukolla"), Response.Status.NOT_FOUND);
+			} else {
+				// Haetaan hakukohdeOid joukolla
+				LOG.info("Haetaan hakukohdeOid joukolla {}", Arrays.toString(hakukohdeOids.toArray()));
+				return hakijaryhmaValintatapajonoService.findByHakukohteet(hakukohdeOids).stream().map(h -> modelMapper.map(h, HakijaryhmaValintatapajonoDTO.class)).collect(Collectors.toList());
+			}
+		} catch (HakijaryhmaEiOleOlemassaException e) {
+			LOG.error("Hakijaryhmää ei löytynyt! {}", e.getMessage());
+			throw new WebApplicationException(e, Response.Status.NOT_FOUND);
+		} catch (Exception e) {
+			LOG.error("Hakijaryhmää ei saatu haettua! {} {}", e.getMessage(), Arrays.toString(e.getStackTrace()));
+			throw new WebApplicationException(e, Response.Status.INTERNAL_SERVER_ERROR);
+		} finally {
+			LOG.info("Haku kesti {}ms", (System.currentTimeMillis() - t0));
+		}
+	}
 	@Transactional
 	@POST
 	@Path("valintakoe/")

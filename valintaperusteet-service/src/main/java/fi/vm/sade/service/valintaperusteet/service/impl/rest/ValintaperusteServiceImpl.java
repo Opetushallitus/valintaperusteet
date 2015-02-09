@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -71,7 +72,16 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
 				jonot, ValintatapajonoDTO.class);
 		return valintatapajonoDTOs;
 	}
+	@Override
+	public List<ValintatapajonoDTO> haeValintatapajonotSijoittelulle(
+			Collection<String> hakukohdeOids) {
+		List<Valintatapajono> jonot = valintatapajonoDAO
+				.haeValintatapajonotSijoittelulle(hakukohdeOids);
 
+		List<ValintatapajonoDTO> valintatapajonoDTOs = modelMapper.mapList(
+				jonot, ValintatapajonoDTO.class);
+		return valintatapajonoDTOs;
+	}
 	@Override
 	public List<ValintaperusteetDTO> haeValintaperusteet(
 			List<HakuparametritDTO> hakuparametrit) {

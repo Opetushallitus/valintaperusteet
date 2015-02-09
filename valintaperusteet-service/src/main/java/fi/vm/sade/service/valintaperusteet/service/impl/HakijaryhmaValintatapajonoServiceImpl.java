@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -83,6 +84,15 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
         return hakijaryhmaValintatapajonoDAO.findByHakijaryhma(hakijaryhmaOid);
     }
 
+    @Override
+    public List<HakijaryhmaValintatapajono> findByHaku(String hakuOid) {
+        return hakijaryhmaValintatapajonoDAO.findByHaku(hakuOid);
+    }
+
+    @Override
+    public List<HakijaryhmaValintatapajono> findByHakukohteet(Collection<String> hakukohdeOids) {
+        return hakijaryhmaValintatapajonoDAO.findByHakukohteet(hakukohdeOids);
+    }
     @Override
     public Hakijaryhma lisaaHakijaryhmaValintatapajonolle(String valintatapajonoOid, HakijaryhmaCreateDTO dto) {
 

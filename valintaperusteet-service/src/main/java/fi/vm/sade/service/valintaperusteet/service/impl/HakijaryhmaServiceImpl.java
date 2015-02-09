@@ -15,10 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -88,6 +85,17 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
         List<HakijaryhmaValintatapajono> byHakukohde = hakijaryhmaValintatapajonoDAO.findByHakukohde(oid);
         List<HakijaryhmaValintatapajono> jarjestetty = LinkitettavaJaKopioitavaUtil.jarjesta(byHakukohde);
         return jarjestetty.stream().map(HakijaryhmaValintatapajono::getHakijaryhma).collect(Collectors.toList());
+    }
+    @Override
+    public List<Hakijaryhma> findByHakukohteet(Collection<String> hakukohdeOids) {
+        List<HakijaryhmaValintatapajono> byHakukohde = hakijaryhmaValintatapajonoDAO.findByHakukohteet(hakukohdeOids);
+        return byHakukohde.stream().map(HakijaryhmaValintatapajono::getHakijaryhma).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Hakijaryhma> findByHaku(String hakuOid) {
+        List<HakijaryhmaValintatapajono> byHakukohde = hakijaryhmaValintatapajonoDAO.findByHaku(hakuOid);
+        return byHakukohde.stream().map(HakijaryhmaValintatapajono::getHakijaryhma).collect(Collectors.toList());
     }
 
     @Override

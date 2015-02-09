@@ -66,6 +66,18 @@ public class ValintaperusteetResourceImpl implements ValintaperusteetResource {
 				.haeValintatapajonotSijoittelulle(hakukohdeOid);
 	}
 
+	@POST
+	@Path("/valintatapajono")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Override
+	@ApiOperation(value = "Hakee valintapajonot sijoittelulle", response = ValintatapajonoDTO.class)
+	public List<ValintatapajonoDTO> haeValintatapajonotSijoittelulle(
+			List<String> hakukohdeOids) {
+		return valintaperusteService
+				.haeValintatapajonotSijoittelulle(hakukohdeOids);
+	}
+
 	@GET
 	@Path("/{hakukohdeOid}")
 	@Produces(MediaType.APPLICATION_JSON)

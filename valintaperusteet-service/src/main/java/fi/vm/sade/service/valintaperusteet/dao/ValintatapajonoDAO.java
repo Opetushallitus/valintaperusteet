@@ -2,6 +2,7 @@ package fi.vm.sade.service.valintaperusteet.dao;
 
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -17,6 +18,7 @@ public interface ValintatapajonoDAO extends JpaDAO<Valintatapajono, Long> {
     Valintatapajono readByOid(String oid);
 
     List<Valintatapajono> haeValintatapajonotSijoittelulle(String hakukohdeOid);
+    List<Valintatapajono> haeValintatapajonotSijoittelulle(Collection<String> hakukohdeOids);
 
     List<Valintatapajono> haeValintatapajonotHakukohteelle(String hakukohdeOid);
 

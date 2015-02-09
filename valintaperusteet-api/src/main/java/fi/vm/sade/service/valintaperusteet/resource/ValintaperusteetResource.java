@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
+import com.wordnik.swagger.annotations.ApiOperation;
 import fi.vm.sade.service.valintaperusteet.dto.*;
 
 import javax.ws.rs.*;
@@ -15,6 +16,15 @@ public interface ValintaperusteetResource {
     @Path("valintatapajono/{hakukohdeOid}")
     @Produces(MediaType.APPLICATION_JSON)
     List<ValintatapajonoDTO> haeValintatapajonotSijoittelulle(@PathParam("hakukohdeOid") String hakukohdeOid);
+
+    /**
+     * Idempotentti operaatio eli GET body:lla
+     */
+    @POST
+    @Path("/valintatapajono")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    List<ValintatapajonoDTO> haeValintatapajonotSijoittelulle(List<String> hakukohdeOids);
 
     @GET
     @Path("{hakukohdeOid}")

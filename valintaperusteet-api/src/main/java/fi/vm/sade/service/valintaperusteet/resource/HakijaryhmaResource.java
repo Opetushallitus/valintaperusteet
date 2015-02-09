@@ -6,6 +6,9 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
 import fi.vm.sade.service.valintaperusteet.dto.*;
 
 /**
@@ -14,6 +17,21 @@ import fi.vm.sade.service.valintaperusteet.dto.*;
  */
 @Path("hakijaryhma")
 public interface HakijaryhmaResource {
+
+    /**
+     * Operation is idempotent
+     * @body hakukohdeOid lista JSON:lla
+     */
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/haku")
+    List<HakijaryhmaValintatapajonoDTO> readByHakukohdeOids(List<String> hakukohdeOids);
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/haku/{hakuOid}")
+    List<HakijaryhmaValintatapajonoDTO> readByHakuOid(@PathParam("hakuOid") String hakuOid);
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

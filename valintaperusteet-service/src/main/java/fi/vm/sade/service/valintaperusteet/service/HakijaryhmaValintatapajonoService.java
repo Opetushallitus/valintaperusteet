@@ -5,6 +5,7 @@ import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaValintatapajonoUpdateD
 import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
 import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface HakijaryhmaValintatapajonoService {
@@ -16,6 +17,10 @@ public interface HakijaryhmaValintatapajonoService {
     HakijaryhmaValintatapajono readByOid(String oid);
 
     List<HakijaryhmaValintatapajono> findByHakijaryhma(String hakijaryhmaOid);
+
+    List<HakijaryhmaValintatapajono> findByHaku(String hakuOid);
+
+    List<HakijaryhmaValintatapajono> findByHakukohteet(Collection<String> hakukohdeOids);
 
     HakijaryhmaValintatapajono insert(HakijaryhmaValintatapajono entity);
 
