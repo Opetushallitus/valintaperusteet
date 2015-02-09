@@ -8,11 +8,10 @@ package fi.vm.sade.service.valintaperusteet;
  * To change this template use File | Settings | File Templates.
  */
 
-import org.codehaus.jackson.Version;
-import org.codehaus.jackson.map.DeserializationConfig;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.SerializationConfig.Feature;
-import org.codehaus.jackson.map.module.SimpleModule;
+import com.fasterxml.jackson.core.Version;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.hibernate.collection.internal.PersistentSet;
 import org.springframework.stereotype.Component;
 
@@ -27,8 +26,9 @@ public class ObjectMapperProvider implements ContextResolver<ObjectMapper> {
 
     public ObjectMapperProvider() {
         objectMapper = new ObjectMapper();
-        objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        //objectMapper.setSerializerFactory(new HibernateAwareSerializerFactory(null));
+        objectMapper.configure(
+                DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
         SimpleModule module = new SimpleModule("Module", new Version(1, 0, 0, null));
         module.addSerializer(PersistentSet.class, new CollectionSerializer());
         objectMapper.registerModule(module);

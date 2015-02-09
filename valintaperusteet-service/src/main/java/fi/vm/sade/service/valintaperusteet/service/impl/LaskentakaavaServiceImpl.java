@@ -15,6 +15,7 @@ import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.dto.model.*;
 import fi.vm.sade.service.valintaperusteet.model.*;
+import fi.vm.sade.service.valintaperusteet.service.impl.actors.ActorService;
 import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.UusiHakukohteenValintaperusteRekursio;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -92,20 +93,9 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     @Autowired
     private ValintakoeDAO valintakoeDAO;
 
-    private ActorSystem actorSystem;
 
-    @PostConstruct
-    public void initActorSystem() {
-        actorSystem = ActorSystem.create("ValintaperusteetActorSystem");
-        SpringExtProvider.get(actorSystem).initialize(applicationContext);
-
-    }
-
-    @PreDestroy
-    public void tearDownActorSystem() {
-        actorSystem.shutdown();
-        actorSystem.awaitTermination();
-    }
+    @Autowired
+    private ActorService actorService;
 
     @Transactional(readOnly = true)
     public Funktiokutsu haeFunktiokutsuRekursiivisesti(final Long id, final boolean laajennaAlakaavat,
@@ -113,6 +103,8 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
 
         // Akka toteutus
         Timeout timeout = new Timeout(Duration.create(30, "seconds"));
+
+        ActorSystem actorSystem = actorService.getActorSystem();
 
         ActorRef master = actorSystem.actorOf(
                 SpringExtProvider.get(actorSystem).props("HaeFunktiokutsuRekursiivisestiActorBean")
@@ -204,12 +196,8 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
                         Laskentakaavavalidaattori.validoiMallinnettuKaava(entity));
             }
 
-            ActorRef master = actorSystem.actorOf(
-                    SpringExtProvider.get(actorSystem).props("PoistaOrvotActorBean")
-                    , UUID.randomUUID()
-                    .toString());
-
-            master.tell(id, ActorRef.noSender());
+            // Ajastetaan orpojen poisto jos ajastin jostain syystä kaatunut
+            actorService.runSchedulerIfNotRunning();
 
             return managed;
         } catch (FunktiokutsuMuodostaaSilmukanException e) {
@@ -597,6 +585,8 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
         // Akka toteutus
         Timeout timeout = new Timeout(Duration.create(30, "seconds"));
 
+        ActorSystem actorSystem = actorService.getActorSystem();
+
         ActorRef master = actorSystem.actorOf(
                 SpringExtProvider.get(actorSystem).props("HaeValintaperusteetRekursiivisestiActorBean")
                 , UUID.randomUUID()
@@ -631,6 +621,8 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
 
         // Akka toteutus
         Timeout timeout = new Timeout(Duration.create(30, "seconds"));
+
+        ActorSystem actorSystem = actorService.getActorSystem();
 
         ActorRef master = actorSystem.actorOf(
                 SpringExtProvider.get(actorSystem).props("HaeHakukohteenValintaperusteetRekursiivisestiActorBean")

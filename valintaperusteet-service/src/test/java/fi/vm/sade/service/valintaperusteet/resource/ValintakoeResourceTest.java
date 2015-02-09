@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
@@ -8,7 +9,7 @@ import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestE
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.resource.impl.ValintakoeResourceImpl;
 import fi.vm.sade.service.valintaperusteet.util.TestUtil;
-import org.codehaus.jackson.map.ObjectMapper;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

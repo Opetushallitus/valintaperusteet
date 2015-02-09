@@ -48,8 +48,9 @@ public class PoistaOrvotActorBean extends UntypedActor {
     public void onReceive(Object message) throws Exception {
 
         if (message != null) {
+            log.error("Ajastettu orpojen poistaminen päällä");
             funktiokutsuDAO.deleteOrphans();
-            getContext().stop(self());
+            log.error("Orvot poistettu");
         } else {
             unhandled(message);
             getContext().stop(getSelf());

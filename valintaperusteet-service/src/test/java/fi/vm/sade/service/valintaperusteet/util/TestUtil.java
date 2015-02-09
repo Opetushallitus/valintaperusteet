@@ -1,7 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.util;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
-import org.codehaus.jackson.map.ObjectMapper;
+
 
 /**
  * Created with IntelliJ IDEA.

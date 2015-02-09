@@ -6,9 +6,10 @@ import java.util.List;
 
 import javax.ws.rs.core.Response;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
-import org.codehaus.jackson.map.ObjectMapper;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
