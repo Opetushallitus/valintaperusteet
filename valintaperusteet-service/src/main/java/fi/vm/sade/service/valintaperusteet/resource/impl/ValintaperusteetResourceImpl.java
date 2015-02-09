@@ -56,7 +56,7 @@ public class ValintaperusteetResourceImpl implements ValintaperusteetResource {
 			.getLogger(ValintaperusteetResourceImpl.class);
 
 	@GET
-	@Path("valintatapajono/{hakukohdeOid}")
+	@Path("/valintatapajono/{hakukohdeOid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
 	@ApiOperation(value = "Hakee valintapajonot sijoittelulle", response = ValintatapajonoDTO.class)
@@ -67,7 +67,7 @@ public class ValintaperusteetResourceImpl implements ValintaperusteetResource {
 	}
 
 	@GET
-	@Path("{hakukohdeOid}")
+	@Path("/{hakukohdeOid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Hakee valintaperusteet")
 	@Override
