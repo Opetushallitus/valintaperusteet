@@ -24,8 +24,6 @@ public class LaskentakaavaDAOImpl extends AbstractJpaDAOImpl<Laskentakaava, Long
     @Override
     public Laskentakaava getLaskentakaava(Long id) {
         QLaskentakaava lk = QLaskentakaava.laskentakaava;
-        QFunktiokutsu fk = QFunktiokutsu.funktiokutsu;
-        QFunktioargumentti fa = QFunktioargumentti.funktioargumentti;
 
         Laskentakaava laskentakaava = from(lk).setHint("org.hibernate.cacheable", Boolean.TRUE)
                 .where(lk.id.eq(id)).distinct().singleResult(lk);
