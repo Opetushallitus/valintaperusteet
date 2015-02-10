@@ -10,6 +10,7 @@ import fi.vm.sade.service.valintaperusteet.model.QHakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.QHakukohteenValintaperuste;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,6 +31,10 @@ public class HakukohteenValintaperusteDAOImpl extends AbstractJpaDAOImpl<Hakukoh
         QHakukohteenValintaperuste vp = QHakukohteenValintaperuste.hakukohteenValintaperuste;
 
         HakukohdeViite viite = from(hk).where(hk.oid.eq(hakukohdeOid)).singleResult(hk);
+
+        if(viite == null) {
+            return new ArrayList<>();
+        }
 
         return from(vp)
                 .where(vp.hakukohde.eq(viite))
