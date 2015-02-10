@@ -5,6 +5,8 @@ import fi.vm.sade.service.valintaperusteet.dao.HakukohdekoodiDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
 import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheJonoillaDTO;
+import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
@@ -25,6 +27,7 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 import java.util.List;
 
 import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertEquals;
 
 /**
  * User: kwuoti
@@ -53,6 +56,9 @@ public class HakukohdeServiceTest {
 
     @Autowired
     private ValintaryhmaService valintaryhmaService;
+
+    @Autowired
+    private ValintaperusteetModelMapper modelMapper;
 
     @Test
     public void testInsert() {
@@ -317,5 +323,14 @@ public class HakukohdeServiceTest {
             assertEquals(1, hakukohde.getValintakokeet().size());
             assertEquals(valintakoekoodiUri, hakukohde.getValintakokeet().iterator().next().getUri());
         }
+    }
+
+    @Test
+    public void testTyhjatVaiheet() {
+        List<ValinnanVaihe> list = hakukohdeService.vaiheetJaJonot("nönönöö");
+        assertEquals(0, list.size());
+        List<ValinnanVaiheJonoillaDTO> dtos = modelMapper.mapList(hakukohdeService.vaiheetJaJonot("nönönöö"),
+                ValinnanVaiheJonoillaDTO.class);
+        assertEquals(0, dtos.size());
     }
 }

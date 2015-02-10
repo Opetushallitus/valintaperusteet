@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -130,7 +131,11 @@ public class HakukohdeServiceImpl implements HakukohdeService {
 
     @Override
     public List<ValinnanVaihe> vaiheetJaJonot(String oid) {
-        return valinnanVaiheDAO.valinnanVaiheetJaJonot(oid);
+        List<ValinnanVaihe> vaiheet = valinnanVaiheDAO.valinnanVaiheetJaJonot(oid);
+        if(vaiheet == null) {
+            return new ArrayList<>();
+        }
+        return vaiheet;
     }
 
 

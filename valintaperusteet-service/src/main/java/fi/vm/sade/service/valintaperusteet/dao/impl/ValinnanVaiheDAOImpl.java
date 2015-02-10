@@ -9,6 +9,7 @@ import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakukohde;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -180,6 +181,10 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
         QValintatapajono jono = QValintatapajono.valintatapajono;
 
         HakukohdeViite h = from(hakukohde).where(hakukohde.oid.eq(hakukohdeOid)).singleResult(hakukohde);
+
+        if(h == null) {
+            return new ArrayList<>();
+        }
 
         return from(vv).leftJoin(vv.jonot, jono).fetch()
                 .where(vv.hakukohdeViite.eq(h)).distinct().list(vv);
