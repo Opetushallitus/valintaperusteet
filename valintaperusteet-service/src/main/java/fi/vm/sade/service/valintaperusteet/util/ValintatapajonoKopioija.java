@@ -78,6 +78,8 @@ public class ValintatapajonoKopioija implements Kopioija<Valintatapajono> {
             to.setKaytetaanValintalaskentaa(from.getKaytetaanValintalaskentaa());
         }
 
+        to.setPoistetaankoHylatyt(from.isPoistetaankoHylatyt());
+
     }
 
     @Override
@@ -114,6 +116,8 @@ public class ValintatapajonoKopioija implements Kopioija<Valintatapajono> {
         if (kopio.getKaikkiEhdonTayttavatHyvaksytaan().equals(alkuperainenMaster.getKaikkiEhdonTayttavatHyvaksytaan())) {
             kopio.setKaikkiEhdonTayttavatHyvaksytaan(paivitettyMaster.getKaikkiEhdonTayttavatHyvaksytaan());
         }
+
+        kopio.setPoistetaankoHylatyt(paivitettyMaster.isPoistetaankoHylatyt());
 
         // VT-657
         // Pitää kopioida kopion kopio

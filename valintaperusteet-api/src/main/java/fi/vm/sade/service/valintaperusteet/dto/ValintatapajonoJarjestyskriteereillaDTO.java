@@ -36,6 +36,8 @@ public class ValintatapajonoJarjestyskriteereillaDTO {
 
     private Boolean valisijoittelu = false;
 
+    private boolean poistetaankoHylatyt = false;
+
     public void setAloituspaikat(Integer aloituspaikat) {
         this.aloituspaikat = aloituspaikat;
     }
@@ -147,5 +149,13 @@ public class ValintatapajonoJarjestyskriteereillaDTO {
 
     public void setValisijoittelu(Boolean valisijoittelu) {
         this.valisijoittelu = valisijoittelu;
+    }
+
+    public boolean isPoistetaankoHylatyt() {
+        return poistetaankoHylatyt;
+    }
+
+    public void setPoistetaankoHylatyt(boolean poistetaankoHylatyt) {
+        this.poistetaankoHylatyt = poistetaankoHylatyt;
     }
 }

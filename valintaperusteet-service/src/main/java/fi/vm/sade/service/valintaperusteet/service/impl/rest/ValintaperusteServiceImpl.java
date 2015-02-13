@@ -312,6 +312,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
 			if (valintatapajono.getValisijoittelu() != null) {
 				dto.setValisijoittelu(valintatapajono.getValisijoittelu());
 			}
+            dto.setPoistetaankoHylatyt(valintatapajono.isPoistetaankoHylatyt());
 
 			dto.getJarjestyskriteerit().addAll(
 					convertJarjestyskriteerit(valintatapajono));

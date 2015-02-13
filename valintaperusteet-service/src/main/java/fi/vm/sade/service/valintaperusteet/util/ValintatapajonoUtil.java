@@ -20,6 +20,7 @@ public abstract class ValintatapajonoUtil {
         kopio.setTasapistesaanto(master.getTasapistesaanto());
         kopio.setEiVarasijatayttoa(master.getEiVarasijatayttoa());
         kopio.setKaikkiEhdonTayttavatHyvaksytaan(master.getKaikkiEhdonTayttavatHyvaksytaan());
+        kopio.setPoistetaankoHylatyt(master.isPoistetaankoHylatyt());
 
         // VT-657
         kopio.setVarasijanTayttojono(master.getVarasijanTayttojono());
