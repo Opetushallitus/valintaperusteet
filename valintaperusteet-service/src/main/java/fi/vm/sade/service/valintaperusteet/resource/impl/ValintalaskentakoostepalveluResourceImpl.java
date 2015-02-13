@@ -48,7 +48,7 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.REA
  */
 @Component
 @Path("valintalaskentakoostepalvelu")
-public class ValintalaskentakoostepalveluResourceImpl implements ValintalaskentakoostepalveluResource {
+public class ValintalaskentakoostepalveluResourceImpl {
 	private static final Logger LOG = LoggerFactory
 			.getLogger(ValintaperusteetResourceImpl.class);
 	@Autowired
