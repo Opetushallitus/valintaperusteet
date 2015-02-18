@@ -70,6 +70,9 @@ public class Valintatapajono extends BaseEntity implements
     @Column(name = "kaytetaan_valintalaskentaa", nullable = false)
     private Boolean kaytetaanValintalaskentaa = true;
 
+    @Column(name = "poistetaanko_hylatyt", nullable = false)
+    private boolean poistetaankoHylatyt = false;
+
     @JoinColumn(name = "varasijan_tayttojono_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Valintatapajono varasijanTayttojono;
@@ -361,5 +364,13 @@ public class Valintatapajono extends BaseEntity implements
 
     public void setAutomaattinenLaskentaanSiirto(Boolean automaattinenLaskentaanSiirto) {
         this.automaattinenLaskentaanSiirto = automaattinenLaskentaanSiirto;
+    }
+
+    public boolean isPoistetaankoHylatyt() {
+        return poistetaankoHylatyt;
+    }
+
+    public void setPoistetaankoHylatyt(boolean poistetaankoHylatyt) {
+        this.poistetaankoHylatyt = poistetaankoHylatyt;
     }
 }

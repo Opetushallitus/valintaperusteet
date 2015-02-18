@@ -51,6 +51,9 @@ public class ValintatapajonoCreateDTO {
     @ApiModelProperty(value = "Täytetäänkö poissaolevia", required = true)
     private Boolean poissaOlevaTaytto = false;
 
+    @ApiModelProperty(value = "Poistetaanko hylätyt laskentojen tuloksista", required = true)
+    private Boolean poistetaankoHylatyt = false;
+
     @ApiModelProperty(value = "Varasijasääntöjä käytetään alkaen")
     private Date varasijojaKaytetaanAlkaen;
 
@@ -197,5 +200,13 @@ public class ValintatapajonoCreateDTO {
 
     public void setAutomaattinenLaskentaanSiirto(Boolean automaattinenLaskentaanSiirto) {
         this.automaattinenLaskentaanSiirto = automaattinenLaskentaanSiirto;
+    }
+
+    public Boolean getPoistetaankoHylatyt() {
+        return poistetaankoHylatyt;
+    }
+
+    public void setPoistetaankoHylatyt(Boolean poistetaankoHylatyt) {
+        this.poistetaankoHylatyt = poistetaankoHylatyt;
     }
 }

@@ -93,6 +93,16 @@ object Laskentadomainkonvertteri {
     }
   }
 
+  private def stringToBigDecimal(arvo: String) = {
+    try {
+      BigDecimal(arvo.replace(',','.'))
+    } catch {
+      case e: Throwable =>
+        e.printStackTrace()
+        sys.error(s"Could not interpret string $arvo value as big decimal")
+    }
+  }
+
   private def muunnaTotuusarvofunktioksi(f: Funktio[_]): Totuusarvofunktio = {
     f match {
       case tf: Totuusarvofunktio => tf
@@ -154,7 +164,7 @@ object Laskentadomainkonvertteri {
       case Funktionimi.HAELUKUARVO => {
         val konvertteri = if (!funktiokutsu.getArvokonvertteriparametrit.isEmpty) {
           val konversioMap = funktiokutsu.getArvokonvertteriparametrit.map(konv =>
-            ArvokonversioMerkkijonoilla[BigDecimal, BigDecimal](konv.getArvo, BigDecimal(konv.getPaluuarvo),
+            ArvokonversioMerkkijonoilla[BigDecimal, BigDecimal](konv.getArvo, stringToBigDecimal(konv.getPaluuarvo),
               konv.getHylkaysperuste, konv.getKuvaukset)).toList
 
           Some(Arvokonvertteri[BigDecimal, BigDecimal](konversioMap))
@@ -180,7 +190,7 @@ object Laskentadomainkonvertteri {
       case Funktionimi.HAELUKUARVOEHDOLLA => {
         val konvertteri = if (!funktiokutsu.getArvokonvertteriparametrit.isEmpty) {
           val konversioMap = funktiokutsu.getArvokonvertteriparametrit.map(konv =>
-            ArvokonversioMerkkijonoilla[BigDecimal, BigDecimal](konv.getArvo, BigDecimal(konv.getPaluuarvo),
+            ArvokonversioMerkkijonoilla[BigDecimal, BigDecimal](konv.getArvo, stringToBigDecimal(konv.getPaluuarvo),
               konv.getHylkaysperuste, konv.getKuvaukset)).toList
 
           Some(Arvokonvertteri[BigDecimal, BigDecimal](konversioMap))
@@ -206,7 +216,7 @@ object Laskentadomainkonvertteri {
       }
       case Funktionimi.HAEMERKKIJONOJAKONVERTOILUKUARVOKSI => {
         val konversioMap = funktiokutsu.getArvokonvertteriparametrit.map(konv =>
-          ArvokonversioMerkkijonoilla[String, BigDecimal](konv.getArvo, BigDecimal(konv.getPaluuarvo), konv.getHylkaysperuste, konv.getKuvaukset)).toList
+          ArvokonversioMerkkijonoilla[String, BigDecimal](konv.getArvo, stringToBigDecimal(konv.getPaluuarvo), konv.getHylkaysperuste, konv.getKuvaukset)).toList
 
         val oletusarvo = funktiokutsu.getSyoteparametrit.find(_.getAvain == "oletusarvo").filter(!_.getArvo.isEmpty)
           .map(p => parametriToBigDecimal(p))
@@ -221,7 +231,7 @@ object Laskentadomainkonvertteri {
       case Funktionimi.HAETOTUUSARVOJAKONVERTOILUKUARVOKSI => {
 
         val konversioMap = funktiokutsu.getArvokonvertteriparametrit.map(konv =>
-          ArvokonversioMerkkijonoilla[Boolean, BigDecimal](konv.getArvo, BigDecimal(konv.getPaluuarvo), konv.getHylkaysperuste, konv.getKuvaukset)).toList
+          ArvokonversioMerkkijonoilla[Boolean, BigDecimal](konv.getArvo, stringToBigDecimal(konv.getPaluuarvo), konv.getHylkaysperuste, konv.getKuvaukset)).toList
 
         val oletusarvo = funktiokutsu.getSyoteparametrit.find(_.getAvain == "oletusarvo").filter(!_.getArvo.isEmpty)
           .map(p => parametriToBigDecimal(p))
@@ -308,7 +318,7 @@ object Laskentadomainkonvertteri {
       case Funktionimi.KONVERTOILUKUARVO => {
         val konvertteri = if (!funktiokutsu.getArvokonvertteriparametrit.isEmpty) {
           val konversioMap = funktiokutsu.getArvokonvertteriparametrit.map(konv =>
-            ArvokonversioMerkkijonoilla[BigDecimal, BigDecimal](konv.getArvo, BigDecimal(konv.getPaluuarvo),
+            ArvokonversioMerkkijonoilla[BigDecimal, BigDecimal](konv.getArvo, stringToBigDecimal(konv.getPaluuarvo),
               konv.getHylkaysperuste, konv.getKuvaukset)).toList
 
           Arvokonvertteri[BigDecimal, BigDecimal](konversioMap)
@@ -447,26 +457,26 @@ object Laskentadomainkonvertteri {
         )
 
         val arvosanaKonvertterit = funktiokutsu.getSyoteparametrit.filter(s => s.getAvain.length == 1).map(
-          param => ArvokonversioMerkkijonoilla[String, BigDecimal](param.getAvain, BigDecimal(param.getArvo), "false", new TekstiRyhma)
+          param => ArvokonversioMerkkijonoilla[String, BigDecimal](param.getAvain, stringToBigDecimal(param.getArvo), "false", new TekstiRyhma)
         ).toList
 
         val alkuvuosi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("alkuvuosi") && !s.getArvo.isEmpty) match {
-          case Some(sp: Syoteparametri) => BigDecimal(sp.getArvo)
+          case Some(sp: Syoteparametri) => stringToBigDecimal(sp.getArvo)
           case _ => BigDecimal("0.0")
         }
 
         val loppuvuosi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("loppuvuosi") && !s.getArvo.isEmpty) match {
-          case Some(sp: Syoteparametri) => BigDecimal(sp.getArvo)
+          case Some(sp: Syoteparametri) => stringToBigDecimal(sp.getArvo)
           case _ => BigDecimal("9999")
         }
 
         val alkulukukausi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("alkulukukausi") && !s.getArvo.isEmpty) match {
-          case Some(sp: Syoteparametri) => BigDecimal(sp.getArvo)
+          case Some(sp: Syoteparametri) => stringToBigDecimal(sp.getArvo)
           case _ => BigDecimal("1")
         }
 
         val loppulukukausi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("loppulukukausi") && !s.getArvo.isEmpty) match {
-          case Some(sp: Syoteparametri) => BigDecimal(sp.getArvo)
+          case Some(sp: Syoteparametri) => stringToBigDecimal(sp.getArvo)
           case _ => BigDecimal("2")
         }
 
@@ -503,7 +513,7 @@ object Laskentadomainkonvertteri {
 
         val konvertteri = if (!funktiokutsu.getArvokonvertteriparametrit.isEmpty) {
           val konversioMap = funktiokutsu.getArvokonvertteriparametrit.map(konv =>
-            ArvokonversioMerkkijonoilla[BigDecimal, BigDecimal](konv.getArvo, BigDecimal(konv.getPaluuarvo),
+            ArvokonversioMerkkijonoilla[BigDecimal, BigDecimal](konv.getArvo, stringToBigDecimal(konv.getPaluuarvo),
               konv.getHylkaysperuste, konv.getKuvaukset)).toList
 
           Some(Arvokonvertteri[BigDecimal, BigDecimal](konversioMap))
@@ -522,22 +532,22 @@ object Laskentadomainkonvertteri {
         } else None
 
         val alkuvuosi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("alkuvuosi") && !s.getArvo.isEmpty) match {
-          case Some(sp: Syoteparametri) => BigDecimal(sp.getArvo)
+          case Some(sp: Syoteparametri) => stringToBigDecimal(sp.getArvo)
           case _ => BigDecimal("0.0")
         }
 
         val loppuvuosi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("loppuvuosi") && !s.getArvo.isEmpty) match {
-          case Some(sp: Syoteparametri) => BigDecimal(sp.getArvo)
+          case Some(sp: Syoteparametri) => stringToBigDecimal(sp.getArvo)
           case _ => BigDecimal("9999")
         }
 
         val alkulukukausi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("alkulukukausi") && !s.getArvo.isEmpty) match {
-          case Some(sp: Syoteparametri) => BigDecimal(sp.getArvo)
+          case Some(sp: Syoteparametri) => stringToBigDecimal(sp.getArvo)
           case _ => BigDecimal("1")
         }
 
         val loppulukukausi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("loppulukukausi") && !s.getArvo.isEmpty) match {
-          case Some(sp: Syoteparametri) => BigDecimal(sp.getArvo)
+          case Some(sp: Syoteparametri) => stringToBigDecimal(sp.getArvo)
           case _ => BigDecimal("2")
         }
 
