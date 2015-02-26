@@ -71,9 +71,9 @@ object Arvojoukot {
   val KOOSTETUT = Array(
     "AINEREAALI"->"Ainereaali (UE, UO, ET, FF, PS, HI, FY, KE, BI, GE, TE, YH)",
     "REAALI"->"Reaali (RR, RO, RY)",
-    "PITKA_KIELI"->"Kieli, pitkä oppimäärä (EA, FA, GA, HA, PA, SA, TA, VA)",
+    "PITKA_KIELI"->"Kieli, pitkä oppimäärä (EA, FA, GA, HA, PA, SA, TA, VA, S9)",
     "KESKIPITKA_KIELI"->"Kieli, keskipitkä oppimäärä (EB, FB, GB, HB, PB, SB, TB, VB)",
-    "LYHYT_KIELI"->"Kieli, lyhyt oppimäärä (EC, FC, GC, L1, PC, SC, TC, VC, KC)",
+    "LYHYT_KIELI"->"Kieli, lyhyt oppimäärä (EC, FC, GC, L1, PC, SC, TC, VC, KC, L7)",
     "AIDINKIELI"->"Äidinkieli (O, A, I, W, Z, O5, A5)"
   )
 
