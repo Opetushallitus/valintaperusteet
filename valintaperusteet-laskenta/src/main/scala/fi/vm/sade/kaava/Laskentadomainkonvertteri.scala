@@ -54,6 +54,12 @@ import scala.collection.JavaConversions
  */
 object Laskentadomainkonvertteri {
 
+  private val YO = "YO"
+  private val PK = "PK"
+  private val LK = "LK"
+  private val KYMPPI = "10"
+  private val TILA_SUFFIX = "_tila"
+
   import scala.collection.JavaConversions._
 
   private def getParametri(avain: String, params: JSet[Syoteparametri]): Syoteparametri = {
@@ -480,12 +486,21 @@ object Laskentadomainkonvertteri {
           case _ => BigDecimal("2")
         }
 
+        val vainValmistuneet = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("valmistuneet") && !s.getArvo.isEmpty) match {
+          case Some(sp: Syoteparametri) => parametriToBoolean(sp)
+          case _ => false
+        }
 
-
-        val arvosana = HaeMerkkijonoJaKonvertoiLukuarvoksi(
+        val arvosanaFunktio = HaeMerkkijonoJaKonvertoiLukuarvoksi(
           Arvokonvertteri[String, BigDecimal](arvosanaKonvertterit),
           None,
           valintaperusteviitteet.head)
+
+        val arvosana = if(vainValmistuneet) {
+          Jos(HaeTotuusarvo(None, Some(false), HakemuksenValintaperuste(YO+TILA_SUFFIX, false)), arvosanaFunktio, Lukuarvo(BigDecimal("0.0")))
+        } else {
+          arvosanaFunktio
+        }
 
         val vuosiperuste = HakemuksenValintaperuste(s"${valintaperusteviitteet.head.tunniste}_suoritusvuosi", pakollinen = false)
         val lukukausiperuste = HakemuksenValintaperuste(s"${valintaperusteviitteet.head.tunniste}_suorituslukukausi", pakollinen = false)
@@ -505,7 +520,8 @@ object Laskentadomainkonvertteri {
           case _ => Ja(ehtoLauseet)
         }
 
-        Jos(ehdot, arvosana, Lukuarvo(BigDecimal("0.0")),tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
+        val lasku = Jos(ehdot, arvosana, Lukuarvo(BigDecimal("0.0")),tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
+        NimettyLukuarvo(s"YO-arvosana (${valintaperusteviitteet.head.tunniste})", lasku)
 
       }
 

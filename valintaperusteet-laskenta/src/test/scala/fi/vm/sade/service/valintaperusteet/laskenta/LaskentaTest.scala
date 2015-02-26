@@ -109,6 +109,7 @@ class LaskentaTest extends FunSuite {
     put("01", "15")
     put("01_suoritusvuosi", "2011")
     put("01_suorituslukukausi", "2")
+    put("YO_tila", "false")
   }}
 
   val hakukohdeMustache = new Hakukohde("1234", mustacheMap)
@@ -1337,7 +1338,36 @@ class LaskentaTest extends FunSuite {
     assert(tulos4.isEmpty)
     assert(tila4.getTilatyyppi == Tilatyyppi.VIRHE)
 
+    val syoteparametriValmistuneet: Syoteparametri = new Syoteparametri
+    syoteparametriValmistuneet.setAvain("valmistuneet")
+    syoteparametriValmistuneet.setArvo("false")
 
+    val kutsu2 = kutsu
+
+    kutsu2.getSyoteparametrit.add(syoteparametriValmistuneet)
+
+    viite.setTunniste("SA")
+
+    val lasku5 = Laskentadomainkonvertteri.muodostaLukuarvolasku(kutsu2)
+
+    val (tulos5, _) = Laskin.laske(hakukohde, hakemus,
+      lasku5)
+    assert(BigDecimal(tulos5.get) == BigDecimal("3"))
+
+    // Vain valmistuneet huomioidaan
+    val syoteparametriValmistuneet2: Syoteparametri = new Syoteparametri
+    syoteparametriValmistuneet2.setAvain("valmistuneet")
+    syoteparametriValmistuneet2.setArvo("true")
+
+    val kutsu3 = kutsu
+
+    kutsu3.getSyoteparametrit.add(syoteparametriValmistuneet2)
+
+    val lasku6 = Laskentadomainkonvertteri.muodostaLukuarvolasku(kutsu3)
+
+    val (tulos6, _) = Laskin.laske(hakukohde, hakemus,
+      lasku6)
+    assert(BigDecimal(tulos6.get) == BigDecimal("0.0"))
 
 
   }

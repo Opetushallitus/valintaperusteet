@@ -202,7 +202,8 @@ object Funktiokuvaaja {
         Syoteparametrikuvaus(avain = "C", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = true, kuvaus = "Arvosana C"),
         Syoteparametrikuvaus(avain = "M", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = true, kuvaus = "Arvosana M"),
         Syoteparametrikuvaus(avain = "E", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = true, kuvaus = "Arvosana E"),
-        Syoteparametrikuvaus(avain = "L", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = true, kuvaus = "Arvosana L")
+        Syoteparametrikuvaus(avain = "L", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = true, kuvaus = "Arvosana L"),
+        Syoteparametrikuvaus(avain = "valmistuneet", tyyppi = Syoteparametrityyppi.TOTUUSARVO, pakollinen = false, kuvaus = "Vain valmistuneet huomioidaan")
       ),
       valintaperusteparametri = List(Valintaperusteparametrikuvaus("oppiaine", tyyppi = Syoteparametrityyppi.ARVOJOUKKO, arvojoukko = Arvojoukot.YO_OPPIAINEET, kuvaus = "Oppiaine"))
     ),
