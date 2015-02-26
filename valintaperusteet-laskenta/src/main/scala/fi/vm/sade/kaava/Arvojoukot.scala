@@ -5,7 +5,7 @@ package fi.vm.sade.kaava
  */
 object Arvojoukot {
 
-  val YO_OPPIAINEET = Array(
+  val EI_KOOSTETUT = Array(
     "O"->"Äidinkielen koe, ruotsi (O)",
     "O5"->"Ruotsi toisena kielenä (O5)",
     "A"->"Äidinkielen koe, suomi (A)",
@@ -65,7 +65,10 @@ object Arvojoukot {
     "BI"->"Biologia (BI)",
     "GE"->"Maantiede (GE)",
     "TE"->"Terveystieto (TE)",
-    "YH"->"Yhteiskuntaoppi (YH)",
+    "YH"->"Yhteiskuntaoppi (YH)"
+  )
+
+  val KOOSTETUT = Array(
     "AINEREAALI"->"Ainereaali (UE, UO, ET, FF, PS, HI, FY, KE, BI, GE, TE, YH)",
     "REAALI"->"Reaali (RR, RO, RY)",
     "PITKA_KIELI"->"Kieli, pitkä oppimäärä (EA, FA, GA, HA, PA, SA, TA, VA)",
@@ -73,6 +76,8 @@ object Arvojoukot {
     "LYHYT_KIELI"->"Kieli, lyhyt oppimäärä (EC, FC, GC, L1, PC, SC, TC, VC, KC)",
     "AIDINKIELI"->"Äidinkieli (O, A, I, W, Z, O5, A5)"
   )
+
+  val YO_OPPIAINEET = EI_KOOSTETUT ++ KOOSTETUT
 
   val LUKUKAUDET = Array(
     "1" -> "Syksy",
@@ -90,7 +95,7 @@ object Arvojoukot {
     "08" -> "Kemia (08)",
     "09" -> "Biologia (09)",
     "10" -> "Maantiede (10)"
-  )
+  ) ++ EI_KOOSTETUT
 
   val KOEROOLIT = Array(
     "11" -> "Äidinkieli (11)",

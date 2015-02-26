@@ -214,9 +214,10 @@ object Funktiokuvaaja {
         Syoteparametrikuvaus(avain = "alkulukukausi", tyyppi = Syoteparametrityyppi.ARVOJOUKKO, pakollinen = false, arvojoukko = Arvojoukot.LUKUKAUDET, kuvaus = "Alkaen (lukukausi)"),
         Syoteparametrikuvaus(avain = "loppuvuosi", tyyppi = Syoteparametrityyppi.KOKONAISLUKU, pakollinen = false, kuvaus = "Päättyen (vuosi)"),
         Syoteparametrikuvaus(avain = "loppulukukausi", tyyppi = Syoteparametrityyppi.ARVOJOUKKO, pakollinen = false, arvojoukko = Arvojoukot.LUKUKAUDET, kuvaus = "Päättyen (lukukausi)"),
-        Syoteparametrikuvaus(avain = "rooli", tyyppi = Syoteparametrityyppi.ARVOJOUKKO, pakollinen = false, arvojoukko = Arvojoukot.KOEROOLIT, kuvaus = "Rooli")
+        Syoteparametrikuvaus(avain = "rooli", tyyppi = Syoteparametrityyppi.ARVOJOUKKO, pakollinen = false, arvojoukko = Arvojoukot.KOEROOLIT, kuvaus = "Rooli"),
+        Syoteparametrikuvaus(avain = "valmistuneet", tyyppi = Syoteparametrityyppi.TOTUUSARVO, pakollinen = false, kuvaus = "Vain valmistuneet huomioidaan")
       ),
-      valintaperusteparametri = List(Valintaperusteparametrikuvaus("oppiaine", tyyppi = Syoteparametrityyppi.ARVOJOUKKO, arvojoukko = Arvojoukot.OSAKOKEET, kuvaus = "Osakoe")),
+      valintaperusteparametri = List(Valintaperusteparametrikuvaus("oppiaine", tyyppi = Syoteparametrityyppi.ARVOJOUKKO, arvojoukko = Arvojoukot.OSAKOKEET, kuvaus = "YO-koe")),
       konvertteri = Some(
         Konvertterikuvaus(
           pakollinen = false,

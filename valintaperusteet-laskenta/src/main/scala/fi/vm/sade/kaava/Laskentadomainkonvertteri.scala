@@ -466,30 +466,9 @@ object Laskentadomainkonvertteri {
           param => ArvokonversioMerkkijonoilla[String, BigDecimal](param.getAvain, stringToBigDecimal(param.getArvo), "false", new TekstiRyhma)
         ).toList
 
-        val alkuvuosi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("alkuvuosi") && !s.getArvo.isEmpty) match {
-          case Some(sp: Syoteparametri) => stringToBigDecimal(sp.getArvo)
-          case _ => BigDecimal("0.0")
-        }
+        val (alkuvuosi, loppuvuosi, alkulukukausi, loppulukukausi, vainValmistuneet) = yoparametrit(funktiokutsu)
 
-        val loppuvuosi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("loppuvuosi") && !s.getArvo.isEmpty) match {
-          case Some(sp: Syoteparametri) => stringToBigDecimal(sp.getArvo)
-          case _ => BigDecimal("9999")
-        }
-
-        val alkulukukausi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("alkulukukausi") && !s.getArvo.isEmpty) match {
-          case Some(sp: Syoteparametri) => stringToBigDecimal(sp.getArvo)
-          case _ => BigDecimal("1")
-        }
-
-        val loppulukukausi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("loppulukukausi") && !s.getArvo.isEmpty) match {
-          case Some(sp: Syoteparametri) => stringToBigDecimal(sp.getArvo)
-          case _ => BigDecimal("2")
-        }
-
-        val vainValmistuneet = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("valmistuneet") && !s.getArvo.isEmpty) match {
-          case Some(sp: Syoteparametri) => parametriToBoolean(sp)
-          case _ => false
-        }
+        val ehdot: Laskenta.Ja = yoehdot(valintaperusteviitteet, funktiokutsu, alkuvuosi, alkulukukausi, loppuvuosi, loppulukukausi)
 
         val arvosanaFunktio = HaeMerkkijonoJaKonvertoiLukuarvoksi(
           Arvokonvertteri[String, BigDecimal](arvosanaKonvertterit),
@@ -500,24 +479,6 @@ object Laskentadomainkonvertteri {
           Jos(HaeTotuusarvo(None, Some(false), HakemuksenValintaperuste(YO+TILA_SUFFIX, false)), arvosanaFunktio, Lukuarvo(BigDecimal("0.0")))
         } else {
           arvosanaFunktio
-        }
-
-        val vuosiperuste = HakemuksenValintaperuste(s"${valintaperusteviitteet.head.tunniste}_suoritusvuosi", pakollinen = false)
-        val lukukausiperuste = HakemuksenValintaperuste(s"${valintaperusteviitteet.head.tunniste}_suorituslukukausi", pakollinen = false)
-
-        val syotettyRooli = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("rooli") && !s.getArvo.isEmpty)
-        val rooli = HakemuksenValintaperuste(s"${valintaperusteviitteet.head.tunniste}_rooli", pakollinen = false)
-
-        val ehtoLauseet = Seq(
-          SuurempiTaiYhtasuuri(HaeLukuarvo(None, Some(BigDecimal("0.0")), vuosiperuste), Lukuarvo(alkuvuosi)),
-          SuurempiTaiYhtasuuri(HaeLukuarvo(None, Some(BigDecimal("1")), lukukausiperuste), Lukuarvo(alkulukukausi)),
-          PienempiTaiYhtasuuri(HaeLukuarvo(None, Some(BigDecimal("9999")), vuosiperuste), Lukuarvo(loppuvuosi)),
-          PienempiTaiYhtasuuri(HaeLukuarvo(None, Some(BigDecimal("2")), lukukausiperuste), Lukuarvo(loppulukukausi))
-        )
-
-        val ehdot = syotettyRooli match {
-          case Some(sp: Syoteparametri) => Ja(ehtoLauseet :+ HaeMerkkijonoJaVertaaYhtasuuruus(Some(true), rooli, sp.getArvo) )
-          case _ => Ja(ehtoLauseet)
         }
 
         val lasku = Jos(ehdot, arvosana, Lukuarvo(BigDecimal("0.0")),tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
@@ -547,50 +508,23 @@ object Laskentadomainkonvertteri {
           Some(Lukuarvovalikonvertteri(konversioMap))
         } else None
 
-        val alkuvuosi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("alkuvuosi") && !s.getArvo.isEmpty) match {
-          case Some(sp: Syoteparametri) => stringToBigDecimal(sp.getArvo)
-          case _ => BigDecimal("0.0")
-        }
+        val (alkuvuosi, loppuvuosi, alkulukukausi, loppulukukausi, vainValmistuneet) = yoparametrit(funktiokutsu)
 
-        val loppuvuosi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("loppuvuosi") && !s.getArvo.isEmpty) match {
-          case Some(sp: Syoteparametri) => stringToBigDecimal(sp.getArvo)
-          case _ => BigDecimal("9999")
-        }
+        val ehdot: Laskenta.Ja = yoehdot(valintaperusteviitteet, funktiokutsu, alkuvuosi, alkulukukausi, loppuvuosi, loppulukukausi)
 
-        val alkulukukausi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("alkulukukausi") && !s.getArvo.isEmpty) match {
-          case Some(sp: Syoteparametri) => stringToBigDecimal(sp.getArvo)
-          case _ => BigDecimal("1")
-        }
-
-        val loppulukukausi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("loppulukukausi") && !s.getArvo.isEmpty) match {
-          case Some(sp: Syoteparametri) => stringToBigDecimal(sp.getArvo)
-          case _ => BigDecimal("2")
-        }
-
-        val arvosana = HaeLukuarvo(
+        val arvosanaFunktio = HaeLukuarvo(
           konvertteri,
           None,
           valintaperusteviitteet.head)
 
-        val vuosiperuste = HakemuksenValintaperuste(s"${valintaperusteviitteet.head.tunniste}_suoritusvuosi", pakollinen = false)
-        val lukukausiperuste = HakemuksenValintaperuste(s"${valintaperusteviitteet.head.tunniste}_suorituslukukausi", pakollinen = false)
-
-        val syotettyRooli = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("rooli") && !s.getArvo.isEmpty)
-        val rooli = HakemuksenValintaperuste(s"${valintaperusteviitteet.head.tunniste}_rooli", pakollinen = false)
-
-        val ehtoLauseet = Seq(
-          SuurempiTaiYhtasuuri(HaeLukuarvo(None, Some(BigDecimal("0.0")), vuosiperuste), Lukuarvo(alkuvuosi)),
-          SuurempiTaiYhtasuuri(HaeLukuarvo(None, Some(BigDecimal("1")), lukukausiperuste), Lukuarvo(alkulukukausi)),
-          PienempiTaiYhtasuuri(HaeLukuarvo(None, Some(BigDecimal("9999")), vuosiperuste), Lukuarvo(loppuvuosi)),
-          PienempiTaiYhtasuuri(HaeLukuarvo(None, Some(BigDecimal("2")), lukukausiperuste), Lukuarvo(loppulukukausi))
-        )
-
-        val ehdot = syotettyRooli match {
-          case Some(sp: Syoteparametri) => Ja(ehtoLauseet :+ HaeMerkkijonoJaVertaaYhtasuuruus(Some(true), rooli, sp.getArvo))
-          case _ => Ja(ehtoLauseet)
+        val arvosana = if(vainValmistuneet) {
+          Jos(HaeTotuusarvo(None, Some(false), HakemuksenValintaperuste(YO+TILA_SUFFIX, false)), arvosanaFunktio, Lukuarvo(BigDecimal("0.0")))
+        } else {
+          arvosanaFunktio
         }
 
-        Jos(ehdot, arvosana, Lukuarvo(BigDecimal("0.0")),tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
+        val lasku = Jos(ehdot, arvosana, Lukuarvo(BigDecimal("0.0")),tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
+        NimettyLukuarvo(s"YO-kokeen pisteet (${valintaperusteviitteet.head.tunniste})", lasku)
 
       }
 
@@ -598,4 +532,53 @@ object Laskentadomainkonvertteri {
     }
   }
 
+
+  def yoehdot(valintaperusteviitteet: List[Laskenta.Valintaperuste], funktiokutsu: Funktiokutsu, alkuvuosi: BigDecimal, alkulukukausi: BigDecimal, loppuvuosi: BigDecimal, loppulukukausi: BigDecimal): Laskenta.Ja = {
+    val vuosiperuste = HakemuksenValintaperuste(s"${valintaperusteviitteet.head.tunniste}_suoritusvuosi", pakollinen = false)
+    val lukukausiperuste = HakemuksenValintaperuste(s"${valintaperusteviitteet.head.tunniste}_suorituslukukausi", pakollinen = false)
+
+    val syotettyRooli = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("rooli") && !s.getArvo.isEmpty)
+    val rooli = HakemuksenValintaperuste(s"${valintaperusteviitteet.head.tunniste}_rooli", pakollinen = false)
+
+    val ehtoLauseet = Seq(
+      SuurempiTaiYhtasuuri(HaeLukuarvo(None, Some(BigDecimal("0.0")), vuosiperuste), Lukuarvo(alkuvuosi)),
+      SuurempiTaiYhtasuuri(HaeLukuarvo(None, Some(BigDecimal("1")), lukukausiperuste), Lukuarvo(alkulukukausi)),
+      PienempiTaiYhtasuuri(HaeLukuarvo(None, Some(BigDecimal("9999")), vuosiperuste), Lukuarvo(loppuvuosi)),
+      PienempiTaiYhtasuuri(HaeLukuarvo(None, Some(BigDecimal("2")), lukukausiperuste), Lukuarvo(loppulukukausi))
+    )
+
+    val ehdot = syotettyRooli match {
+      case Some(sp: Syoteparametri) => Ja(ehtoLauseet :+ HaeMerkkijonoJaVertaaYhtasuuruus(Some(true), rooli, sp.getArvo))
+      case _ => Ja(ehtoLauseet)
+    }
+    ehdot
+  }
+
+  def yoparametrit(funktiokutsu: Funktiokutsu): (BigDecimal, BigDecimal, BigDecimal, BigDecimal, Boolean) = {
+    val alkuvuosi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("alkuvuosi") && !s.getArvo.isEmpty) match {
+      case Some(sp: Syoteparametri) => stringToBigDecimal(sp.getArvo)
+      case _ => BigDecimal("0.0")
+    }
+
+    val loppuvuosi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("loppuvuosi") && !s.getArvo.isEmpty) match {
+      case Some(sp: Syoteparametri) => stringToBigDecimal(sp.getArvo)
+      case _ => BigDecimal("9999")
+    }
+
+    val alkulukukausi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("alkulukukausi") && !s.getArvo.isEmpty) match {
+      case Some(sp: Syoteparametri) => stringToBigDecimal(sp.getArvo)
+      case _ => BigDecimal("1")
+    }
+
+    val loppulukukausi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("loppulukukausi") && !s.getArvo.isEmpty) match {
+      case Some(sp: Syoteparametri) => stringToBigDecimal(sp.getArvo)
+      case _ => BigDecimal("2")
+    }
+
+    val vainValmistuneet = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("valmistuneet") && !s.getArvo.isEmpty) match {
+      case Some(sp: Syoteparametri) => parametriToBoolean(sp)
+      case _ => false
+    }
+    (alkuvuosi, loppuvuosi, alkulukukausi, loppulukukausi, vainValmistuneet)
+  }
 }
