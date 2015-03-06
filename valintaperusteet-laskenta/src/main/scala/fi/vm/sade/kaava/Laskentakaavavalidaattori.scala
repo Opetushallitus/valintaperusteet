@@ -32,6 +32,7 @@ object Laskentakaavavalidaattori {
       case Syoteparametrityyppi.DESIMAALILUKU => (mj: String) => new BigDecimal(mj.replace(',', '.'))
       case Syoteparametrityyppi.KOKONAISLUKU => (mj: String) => mj.toInt
       case Syoteparametrityyppi.TOTUUSARVO => (mj: String) => mj.toBoolean
+      case Syoteparametrityyppi.CHECKBOX => (mj: String) => mj.toBoolean
       case Syoteparametrityyppi.MERKKIJONO => (mj: String) => Unit
       case Syoteparametrityyppi.ARVOJOUKKO => (mj: String) => Unit
     }
@@ -55,6 +56,7 @@ object Laskentakaavavalidaattori {
         case Syoteparametrityyppi.DESIMAALILUKU => viesti("BigDecimal")
         case Syoteparametrityyppi.KOKONAISLUKU => viesti("Integer")
         case Syoteparametrityyppi.TOTUUSARVO => viesti("Boolean")
+        case Syoteparametrityyppi.CHECKBOX => viesti("Boolean")
         case Syoteparametrityyppi.MERKKIJONO => ""
         case Syoteparametrityyppi.ARVOJOUKKO => viesti("Enum")
       }
@@ -290,6 +292,7 @@ object Laskentakaavavalidaattori {
                     case Syoteparametrityyppi.DESIMAALILUKU => virhe("BigDecimal")
                     case Syoteparametrityyppi.KOKONAISLUKU => virhe("Integer")
                     case Syoteparametrityyppi.TOTUUSARVO => virhe("Boolean")
+                    case Syoteparametrityyppi.CHECKBOX => virhe("Boolean")
                     case Syoteparametrityyppi.MERKKIJONO => ""
                     case Syoteparametrityyppi.ARVOJOUKKO => virhe("Enum")
                   }

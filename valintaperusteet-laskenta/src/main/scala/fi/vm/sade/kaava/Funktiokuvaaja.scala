@@ -25,6 +25,7 @@ object Funktiokuvaaja {
     val KOKONAISLUKU = Value("KOKONAISLUKU")
     val DESIMAALILUKU = Value("DESIMAALILUKU")
     val TOTUUSARVO = Value("TOTUUSARVO")
+    val CHECKBOX = Value("CHECKBOX")
     val MERKKIJONO = Value("MERKKIJONO")
     val ARVOJOUKKO = Value("ARVOJOUKKO")
   }
@@ -203,7 +204,7 @@ object Funktiokuvaaja {
         Syoteparametrikuvaus(avain = "M", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = true, kuvaus = "Arvosana M"),
         Syoteparametrikuvaus(avain = "E", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = true, kuvaus = "Arvosana E"),
         Syoteparametrikuvaus(avain = "L", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = true, kuvaus = "Arvosana L"),
-        Syoteparametrikuvaus(avain = "valmistuneet", tyyppi = Syoteparametrityyppi.TOTUUSARVO, pakollinen = false, kuvaus = "Vain valmistuneet huomioidaan")
+        Syoteparametrikuvaus(avain = "valmistuneet", tyyppi = Syoteparametrityyppi.CHECKBOX, pakollinen = false, kuvaus = "Vain valmistuneet huomioidaan")
       ),
       valintaperusteparametri = List(Valintaperusteparametrikuvaus("oppiaine", tyyppi = Syoteparametrityyppi.ARVOJOUKKO, arvojoukko = Arvojoukot.YO_OPPIAINEET, kuvaus = "Oppiaine"))
     ),
@@ -215,7 +216,7 @@ object Funktiokuvaaja {
         Syoteparametrikuvaus(avain = "loppuvuosi", tyyppi = Syoteparametrityyppi.KOKONAISLUKU, pakollinen = false, kuvaus = "Päättyen (vuosi)"),
         Syoteparametrikuvaus(avain = "loppulukukausi", tyyppi = Syoteparametrityyppi.ARVOJOUKKO, pakollinen = false, arvojoukko = Arvojoukot.LUKUKAUDET, kuvaus = "Päättyen (lukukausi)"),
         Syoteparametrikuvaus(avain = "rooli", tyyppi = Syoteparametrityyppi.ARVOJOUKKO, pakollinen = false, arvojoukko = Arvojoukot.KOEROOLIT, kuvaus = "Rooli"),
-        Syoteparametrikuvaus(avain = "valmistuneet", tyyppi = Syoteparametrityyppi.TOTUUSARVO, pakollinen = false, kuvaus = "Vain valmistuneet huomioidaan")
+        Syoteparametrikuvaus(avain = "valmistuneet", tyyppi = Syoteparametrityyppi.CHECKBOX, pakollinen = false, kuvaus = "Vain valmistuneet huomioidaan")
       ),
       valintaperusteparametri = List(Valintaperusteparametrikuvaus("oppiaine", tyyppi = Syoteparametrityyppi.ARVOJOUKKO, arvojoukko = Arvojoukot.OSAKOKEET, kuvaus = "YO-koe")),
       konvertteri = Some(
