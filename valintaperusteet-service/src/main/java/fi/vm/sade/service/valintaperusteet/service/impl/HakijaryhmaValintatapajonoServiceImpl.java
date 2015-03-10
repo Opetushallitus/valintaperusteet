@@ -103,6 +103,7 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
         hakijaryhma.setOid(oidService.haeHakijaryhmaOid());
         hakijaryhma.setKaytaKaikki(dto.isKaytaKaikki());
         hakijaryhma.setTarkkaKiintio(dto.isTarkkaKiintio());
+        hakijaryhma.setKaytetaanRyhmaanKuuluvia(dto.isKaytetaanRyhmaanKuuluvia());
         hakijaryhma.setLaskentakaava(laskentakaavaService.haeMallinnettuKaava(dto.getLaskentakaavaId()));
 
         Hakijaryhma lisatty = hakijaryhmaDAO.insert(hakijaryhma);
@@ -116,7 +117,7 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
         jono.setKiintio(hakijaryhma.getKiintio());
         jono.setKaytaKaikki(hakijaryhma.isKaytaKaikki());
         jono.setTarkkaKiintio(hakijaryhma.isTarkkaKiintio());
-        jono.setKaytetaanRyhmaanKuuluvia(true);
+        jono.setKaytetaanRyhmaanKuuluvia(hakijaryhma.isKaytetaanRyhmaanKuuluvia());
 
         hakijaryhmaValintatapajonoDAO.insert(jono);
 
@@ -160,6 +161,7 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
         hakijaryhma.setOid(oidService.haeHakijaryhmaOid());
         hakijaryhma.setKaytaKaikki(dto.isKaytaKaikki());
         hakijaryhma.setTarkkaKiintio(dto.isTarkkaKiintio());
+        hakijaryhma.setKaytetaanRyhmaanKuuluvia(dto.isKaytetaanRyhmaanKuuluvia());
         hakijaryhma.setLaskentakaava(laskentakaavaService.haeMallinnettuKaava(dto.getLaskentakaavaId()));
 
         Hakijaryhma lisatty = hakijaryhmaDAO.insert(hakijaryhma);
@@ -175,7 +177,7 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
         jono.setKiintio(hakijaryhma.getKiintio());
         jono.setKaytaKaikki(hakijaryhma.isKaytaKaikki());
         jono.setTarkkaKiintio(hakijaryhma.isTarkkaKiintio());
-        jono.setKaytetaanRyhmaanKuuluvia(true);
+        jono.setKaytetaanRyhmaanKuuluvia(hakijaryhma.isKaytetaanRyhmaanKuuluvia());
 
         hakijaryhmaValintatapajonoDAO.insert(jono);
 
@@ -224,7 +226,7 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
         jono.setKiintio(hakijaryhma.getKiintio());
         jono.setKaytaKaikki(hakijaryhma.isKaytaKaikki());
         jono.setTarkkaKiintio(hakijaryhma.isTarkkaKiintio());
-        jono.setKaytetaanRyhmaanKuuluvia(true);
+        jono.setKaytetaanRyhmaanKuuluvia(hakijaryhma.isKaytetaanRyhmaanKuuluvia());
 
         hakijaryhmaValintatapajonoDAO.insert(jono);
 
@@ -252,7 +254,7 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
         jono.setKiintio(hakijaryhma.getKiintio());
         jono.setKaytaKaikki(hakijaryhma.isKaytaKaikki());
         jono.setTarkkaKiintio(hakijaryhma.isTarkkaKiintio());
-        jono.setKaytetaanRyhmaanKuuluvia(true);
+        jono.setKaytetaanRyhmaanKuuluvia(hakijaryhma.isKaytetaanRyhmaanKuuluvia());
 
         hakijaryhmaValintatapajonoDAO.insert(jono);
 

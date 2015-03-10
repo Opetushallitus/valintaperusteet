@@ -26,6 +26,9 @@ public class HakijaryhmaCreateDTO {
     @ApiModelProperty(value = "Tarkka kiintio")
     private boolean tarkkaKiintio;
 
+    @ApiModelProperty(value = "Käytetäänkö hakijaryhmään kuuluvia", required = true)
+    private boolean kaytetaanRyhmaanKuuluvia;
+
     public String getNimi() {
         return nimi;
     }
@@ -65,4 +68,12 @@ public class HakijaryhmaCreateDTO {
     public boolean isKaytaKaikki() { return kaytaKaikki; }
 
     public void setKaytaKaikki(boolean kaytaKaikki) { this.kaytaKaikki = kaytaKaikki; }
+
+    public boolean isKaytetaanRyhmaanKuuluvia() {
+        return kaytetaanRyhmaanKuuluvia;
+    }
+
+    public void setKaytetaanRyhmaanKuuluvia(boolean kaytetaanRyhmaanKuuluvia) {
+        this.kaytetaanRyhmaanKuuluvia = kaytetaanRyhmaanKuuluvia;
+    }
 }

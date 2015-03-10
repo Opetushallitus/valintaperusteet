@@ -31,6 +31,9 @@ public class Hakijaryhma extends BaseEntity {
     @Column
     private boolean tarkkaKiintio;
 
+    @Column(name = "kaytetaan_ryhmaan_kuuluvia")
+    private boolean kaytetaanRyhmaanKuuluvia = true;
+
     @OneToMany(mappedBy = "hakijaryhma", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Set<HakijaryhmaValintatapajono> jonot = new HashSet<>();
 
@@ -139,5 +142,13 @@ public class Hakijaryhma extends BaseEntity {
 
     public void setValintatapajonoIds(List<String> ids) {
 
+    }
+
+    public boolean isKaytetaanRyhmaanKuuluvia() {
+        return kaytetaanRyhmaanKuuluvia;
+    }
+
+    public void setKaytetaanRyhmaanKuuluvia(boolean kaytetaanRyhmaanKuuluvia) {
+        this.kaytetaanRyhmaanKuuluvia = kaytetaanRyhmaanKuuluvia;
     }
 }
