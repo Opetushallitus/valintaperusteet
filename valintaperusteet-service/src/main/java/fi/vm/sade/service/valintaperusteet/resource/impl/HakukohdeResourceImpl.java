@@ -56,7 +56,7 @@ import fi.vm.sade.service.valintaperusteet.service.exception.HakukohdeViiteEiOle
 @Path("hakukohde")
 // @PreAuthorize("isAuthenticated()")
 @Api(value = "/hakukohde", description = "Resurssi hakukohteiden käsittelyyn")
-public class HakukohdeResourceImpl implements HakukohdeResource {
+public class HakukohdeResourceImpl {
 
 	protected final static Logger LOG = LoggerFactory
 			.getLogger(ValintaryhmaResource.class);

@@ -40,7 +40,7 @@ import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
 @Path("valintatapajono")
 @PreAuthorize("isAuthenticated()")
 @Api(value = "/valintatapajono", description = "Resurssi valintatapajonojen käsittelyyn")
-public class ValintatapajonoResourceImpl implements ValintatapajonoResource {
+public class ValintatapajonoResourceImpl {
 
     protected final static Logger LOGGER = LoggerFactory.getLogger(ValintatapajonoResourceImpl.class);
 
@@ -59,7 +59,6 @@ public class ValintatapajonoResourceImpl implements ValintatapajonoResource {
     @Autowired
     private ValintaperusteetModelMapper modelMapper;
 
-    @Override
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @PreAuthorize(READ_UPDATE_CRUD)
