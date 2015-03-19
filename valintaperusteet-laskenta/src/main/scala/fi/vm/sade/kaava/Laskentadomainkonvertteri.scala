@@ -58,7 +58,10 @@ object Laskentadomainkonvertteri {
   private val PK = "PK"
   private val LK = "LK"
   private val KYMPPI = "10"
-  private val TILA_SUFFIX = "_tila"
+  private val TILA_SUFFIX = "_TILA"
+  private val VUOSI_SUFFIX = "_SUORITUSVUOSI"
+  private val KAUSI_SUFFIX = "_SUORITUSLUKUKAUSI"
+  private val ROOLI_SUFFIX = "_ROOLI"
 
   import scala.collection.JavaConversions._
 
@@ -534,11 +537,11 @@ object Laskentadomainkonvertteri {
 
 
   def yoehdot(valintaperusteviitteet: List[Laskenta.Valintaperuste], funktiokutsu: Funktiokutsu, alkuvuosi: BigDecimal, alkulukukausi: BigDecimal, loppuvuosi: BigDecimal, loppulukukausi: BigDecimal): Laskenta.Ja = {
-    val vuosiperuste = HakemuksenValintaperuste(s"${valintaperusteviitteet.head.tunniste}_suoritusvuosi", pakollinen = false)
-    val lukukausiperuste = HakemuksenValintaperuste(s"${valintaperusteviitteet.head.tunniste}_suorituslukukausi", pakollinen = false)
+    val vuosiperuste = HakemuksenValintaperuste(s"${valintaperusteviitteet.head.tunniste}$VUOSI_SUFFIX", pakollinen = false)
+    val lukukausiperuste = HakemuksenValintaperuste(s"${valintaperusteviitteet.head.tunniste}$KAUSI_SUFFIX", pakollinen = false)
 
     val syotettyRooli = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("rooli") && !s.getArvo.isEmpty)
-    val rooli = HakemuksenValintaperuste(s"${valintaperusteviitteet.head.tunniste}_rooli", pakollinen = false)
+    val rooli = HakemuksenValintaperuste(s"${valintaperusteviitteet.head.tunniste}$ROOLI_SUFFIX", pakollinen = false)
 
     val ehtoLauseet = Seq(
       SuurempiTaiYhtasuuri(HaeLukuarvo(None, Some(BigDecimal("0.0")), vuosiperuste), Lukuarvo(alkuvuosi)),
