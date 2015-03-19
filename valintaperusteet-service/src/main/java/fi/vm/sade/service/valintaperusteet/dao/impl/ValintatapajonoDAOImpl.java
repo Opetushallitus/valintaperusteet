@@ -93,6 +93,7 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
                 .where(valintatapajono.masterValintatapajono.oid.eq(oid))
                 .where(valintatapajono.aktiivinen.eq(Boolean.TRUE))
                 .where(valintatapajono.valisijoittelu.eq(Boolean.TRUE))
+                .distinct()
                 .list(valintatapajono);
     }
 

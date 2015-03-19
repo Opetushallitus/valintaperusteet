@@ -73,9 +73,11 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
                 LOGGER.info("{} {} {}", jono.get().getValinnanVaihe().getNimi(), jono.get().getValinnanVaihe().getOid(), jono.get().getValinnanVaihe().getValintaryhma());
 
                 Valintatapajono master;
+                boolean isMaster = false;
 
                 if (jono.get().getMasterValintatapajono() == null) {
                     master = jono.get();
+                    isMaster = true;
                 } else {
                     master = valintatapajonoDAO.readByOid(jono.get().getMasterValintatapajono().getOid());
                 }
@@ -87,6 +89,10 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
                             LOGGER.info("löydettiin kopio {}", j.getOid());
                             return j.getOid();
                         }).collect(Collectors.toList());
+
+                if(!kopiot.contains(master.getOid()) && isMaster) {
+                    kopiot.add(master.getOid());
+                }
 
                 Optional<Valintaryhma> ryhma = Optional.ofNullable(master.getValinnanVaihe().getValintaryhma());
 
