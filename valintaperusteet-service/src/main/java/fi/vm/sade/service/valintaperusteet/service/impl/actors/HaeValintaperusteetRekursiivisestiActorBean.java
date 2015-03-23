@@ -94,6 +94,7 @@ public class HaeValintaperusteetRekursiivisestiActorBean extends UntypedActor {
                         fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi.class));
                 valintaperuste.setTunniste(vp.getTunniste());
                 valintaperuste.setVaatiiOsallistumisen(vp.getVaatiiOsallistumisen());
+                valintaperuste.setSyotettavissaKaikille(vp.getSyotettavissaKaikille());
                 valintaperuste.setKuvaus(vp.getKuvaus());
 
                 valintaperuste
