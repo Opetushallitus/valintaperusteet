@@ -52,7 +52,7 @@ public class ValintaperusteViite extends BaseEntity implements Comparable<Valint
     private Boolean vaatiiOsallistumisen = true;
 
     @Column(name = "syotettavissa_kaikille", nullable = false)
-    private Boolean syotettavissaKaikille = false;
+    private Boolean syotettavissaKaikille = true;
 
     public String getTunniste() {
         return tunniste;

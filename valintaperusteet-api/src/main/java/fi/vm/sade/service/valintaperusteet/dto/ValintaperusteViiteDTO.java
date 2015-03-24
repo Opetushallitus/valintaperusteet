@@ -36,7 +36,7 @@ public class ValintaperusteViiteDTO  implements Comparable<ValintaperusteViiteDT
     private Boolean vaatiiOsallistumisen = true;
 
     @ApiModelProperty(value = "Syotettavissa kaikille", required = true)
-    private Boolean syotettavissaKaikille = false;
+    private Boolean syotettavissaKaikille = true;
 
     @ApiModelProperty(value = "Hylkäysperusteen kuvaukset")
     private TekstiRyhmaDTO kuvaukset = new TekstiRyhmaDTO();
