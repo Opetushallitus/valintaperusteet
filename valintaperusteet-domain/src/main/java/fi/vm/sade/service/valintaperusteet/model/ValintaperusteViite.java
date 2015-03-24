@@ -51,6 +51,9 @@ public class ValintaperusteViite extends BaseEntity implements Comparable<Valint
     @Column(name = "vaatii_osallistumisen", nullable = false)
     private Boolean vaatiiOsallistumisen = true;
 
+    @Column(name = "syotettavissa_kaikille", nullable = false)
+    private Boolean syotettavissaKaikille = true;
+
     public String getTunniste() {
         return tunniste;
     }
@@ -143,5 +146,13 @@ public class ValintaperusteViite extends BaseEntity implements Comparable<Valint
 
     public void setVaatiiOsallistumisen(Boolean vaatiiOsallistumisen) {
         this.vaatiiOsallistumisen = vaatiiOsallistumisen;
+    }
+
+    public Boolean getSyotettavissaKaikille() {
+        return syotettavissaKaikille;
+    }
+
+    public void setSyotettavissaKaikille(Boolean syotettavissaKaikille) {
+        this.syotettavissaKaikille = syotettavissaKaikille;
     }
 }

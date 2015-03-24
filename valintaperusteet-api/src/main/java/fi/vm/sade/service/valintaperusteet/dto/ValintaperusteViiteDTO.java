@@ -35,6 +35,9 @@ public class ValintaperusteViiteDTO  implements Comparable<ValintaperusteViiteDT
     @ApiModelProperty(value = "Vaatii osallistumisen", required = true)
     private Boolean vaatiiOsallistumisen = true;
 
+    @ApiModelProperty(value = "Syotettavissa kaikille", required = true)
+    private Boolean syotettavissaKaikille = true;
+
     @ApiModelProperty(value = "Hylkäysperusteen kuvaukset")
     private TekstiRyhmaDTO kuvaukset = new TekstiRyhmaDTO();
 
@@ -105,5 +108,13 @@ public class ValintaperusteViiteDTO  implements Comparable<ValintaperusteViiteDT
 
     public void setVaatiiOsallistumisen(Boolean vaatiiOsallistumisen) {
         this.vaatiiOsallistumisen = vaatiiOsallistumisen;
+    }
+
+    public Boolean getSyotettavissaKaikille() {
+        return syotettavissaKaikille;
+    }
+
+    public void setSyotettavissaKaikille(Boolean syotettavissaKaikille) {
+        this.syotettavissaKaikille = syotettavissaKaikille;
     }
 }
