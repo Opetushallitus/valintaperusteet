@@ -458,6 +458,16 @@ class LaskentaTest extends FunSuite {
     assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.EI_OSALLISTUNUT_HYLKAYS)
   }
 
+  test("Syotettava valintaperuste, osallistumistieto EI_OSALLISTUNUT, vaatiiOsallistumisen false") {
+    val hakemus = TestHakemus("", Nil, Map("valintakoe" -> "8.7",
+      "valintakoe-OSALLISTUMINEN" -> Osallistuminen.EI_OSALLISTUNUT.name))
+
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemus,
+      HaeLukuarvo(None, None, SyotettavaValintaperuste("valintakoe", true, "valintakoe-OSALLISTUMINEN", "", new TekstiRyhma, false, false)))
+
+    assertTilaHyvaksyttavissa(tila)
+  }
+
   test("Syotettava valintaperuste, osallistumistieto OSALLISTUI") {
     val hakemus = TestHakemus("", Nil, Map("valintakoe" -> "8.7",
       "valintakoe-OSALLISTUMINEN" -> Osallistuminen.OSALLISTUI.name))

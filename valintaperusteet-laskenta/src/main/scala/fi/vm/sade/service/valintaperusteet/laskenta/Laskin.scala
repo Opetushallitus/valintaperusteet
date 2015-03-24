@@ -206,7 +206,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
 
     // Jos kyseessä on syötettävä valintaperuste, pitää ensin tsekata osallistumistieto
     valintaperusteviite match {
-      case SyotettavaValintaperuste(tunniste, pakollinen, osallistuminenTunniste, kuvaus, kuvaukset, vaatiiOsallistumisen) => {
+      case SyotettavaValintaperuste(tunniste, pakollinen, osallistuminenTunniste, kuvaus, kuvaukset, vaatiiOsallistumisen, syotettavavissaKaikille) => {
         val (osallistuminen, osallistumistila) = hakemus.kentat.get(osallistuminenTunniste) match {
           case Some(osallistuiArvo) => {
             try {
@@ -220,7 +220,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
           case None => if(vaatiiOsallistumisen) (Osallistuminen.MERKITSEMATTA, new Hyvaksyttavissatila) else (Osallistuminen.EI_VAADITA, new Hyvaksyttavissatila)
         }
 
-        val (arvo, konvertoitu, tilat) = if (pakollinen && Osallistuminen.EI_OSALLISTUNUT == osallistuminen)
+        val (arvo, konvertoitu, tilat) = if (pakollinen && vaatiiOsallistumisen && Osallistuminen.EI_OSALLISTUNUT == osallistuminen)
           (None, None, List(osallistumistila,
             new Hylattytila(tekstiryhmaToMap(kuvaukset),
               new EiOsallistunutHylkays(tunniste))))
@@ -259,11 +259,11 @@ private class Laskin private(private val hakukohde: Hakukohde,
           }
         }
       }
-      case HakukohteenSyotettavaValintaperuste(tunniste, pakollinen, epasuoraViittaus, osallistumisenTunnistePostfix, kuvaus, kuvaukset, vaatiiOsallistumisen) => {
+      case HakukohteenSyotettavaValintaperuste(tunniste, pakollinen, epasuoraViittaus, osallistumisenTunnistePostfix, kuvaus, kuvaukset, vaatiiOsallistumisen, syotettavissaKaikille) => {
         hakukohde.valintaperusteet.get(tunniste).filter(!_.trim.isEmpty) match {
           case Some(arvo) => {
             if (epasuoraViittaus) {
-              haeValintaperuste(SyotettavaValintaperuste(arvo, pakollinen, s"$arvo$osallistumisenTunnistePostfix", kuvaus, kuvaukset, vaatiiOsallistumisen), hakemus, konv, oletusarvo)
+              haeValintaperuste(SyotettavaValintaperuste(arvo, pakollinen, s"$arvo$osallistumisenTunnistePostfix", kuvaus, kuvaukset, vaatiiOsallistumisen, syotettavissaKaikille), hakemus, konv, oletusarvo)
             } else konv(arvo)
           }
           case None => {
