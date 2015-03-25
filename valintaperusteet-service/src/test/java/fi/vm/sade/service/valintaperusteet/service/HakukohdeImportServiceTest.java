@@ -13,6 +13,7 @@ import java.util.List;
 
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dto.*;
+import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import junit.framework.Assert;
 
@@ -71,6 +72,8 @@ public class HakukohdeImportServiceTest {
 
     @Autowired
     private ValintatapajonoService valintatapajonoService;
+
+
 
     private static final String OLETUS_VALINTAKOEURI = "valintakoeuri1";
 
@@ -422,6 +425,25 @@ public class HakukohdeImportServiceTest {
             assertNotNull(hakukohde);
             assertNull(hakukohde.getValintaryhma());
         }
+
+        // Lisätään toiselle valintaryhmälle hakuvuosi ja katsotaan että hakukohde putoaa oikeaan ryhmään
+        {
+            Valintaryhma valintaryhma2 = valintaryhmaService.readByOid(valintaryhmaOid2);
+            ValintaperusteetModelMapper mapper = new ValintaperusteetModelMapper();
+            ValintaryhmaCreateDTO dto = mapper.map(valintaryhma2, ValintaryhmaCreateDTO.class);
+            dto.setHakuvuosi("2013");
+            valintaryhmaService.update(valintaryhmaOid2, dto);
+        }
+
+        hakukohdeImportService.tuoHakukohde(importData);
+
+        {
+            HakukohdeViite hakukohde = hakukohdeViiteDAO.readByOid(hakukohdeOid);
+            assertFalse(hakukohde.getManuaalisestiSiirretty());
+            assertNotNull(hakukohde);
+            assertEquals(valintaryhmaOid2, hakukohde.getValintaryhma().getOid());
+        }
+
     }
 
     @Test
