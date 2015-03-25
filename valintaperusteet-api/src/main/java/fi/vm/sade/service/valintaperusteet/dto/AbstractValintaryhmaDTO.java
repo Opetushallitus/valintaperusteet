@@ -17,6 +17,9 @@ public abstract class AbstractValintaryhmaDTO {
     @ApiModelProperty(value = "Haun oid", required = false)
     private String hakuoid;
 
+    @ApiModelProperty(value = "Hakuvuosi", required = false)
+    private String hakuvuosi;
+
     public String getNimi() {
         return nimi;
     }
@@ -39,5 +42,13 @@ public abstract class AbstractValintaryhmaDTO {
 
     public void setHakuoid(String hakuoid) {
         this.hakuoid = hakuoid;
+    }
+
+    public String getHakuvuosi() {
+        return hakuvuosi;
+    }
+
+    public void setHakuvuosi(String hakuvuosi) {
+        this.hakuvuosi = hakuvuosi;
     }
 }

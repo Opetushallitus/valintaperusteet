@@ -244,11 +244,19 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
         } else if(valintaryhmat.size() > 1) {
             List<Valintaryhma> filtered = valintaryhmat.stream().filter(hakuoidFilter(importData.getHakuOid())).collect(Collectors.toList());
             if(filtered.size() == 1) {
-                valintaryhma = valintaryhmat.get(0);
+                valintaryhma = filtered.get(0);
                 LOG.info("Hakukohteen tulisi olla valintaryhmän {} alla", valintaryhma.getOid());
             } else {
-                LOG.info("Hakukohteelle ei pystytty määrittämään valintaryhmää. Potentiaalisia valintaryhmiä on {} kpl. "
-                        + "Hakukohde lisätään juureen.", filtered.size());
+                // Testataan vielä hakuvuodella
+                final List<Valintaryhma> vuodenRyhmat = valintaryhmat.stream().filter(v -> v.getHakuvuosi() != null && v.getHakuvuosi().equals(importData.getHakuVuosi())).collect(Collectors.toList());
+                if(vuodenRyhmat.size() == 1) {
+                    valintaryhma = vuodenRyhmat.get(0);
+                    LOG.info("Hakukohteen tulisi olla valintaryhmän {} alla", valintaryhma.getOid());
+                } else {
+                    LOG.info("Hakukohteelle ei pystytty määrittämään valintaryhmää. Potentiaalisia valintaryhmiä on {} kpl. "
+                            + "Hakukohde lisätään juureen.", valintaryhmat.size());
+                }
+
             }
         } else {
             List<Valintaryhma> haunRyhmat = valintaryhmaDAO.readByHakuoid(importData.getHakuOid());

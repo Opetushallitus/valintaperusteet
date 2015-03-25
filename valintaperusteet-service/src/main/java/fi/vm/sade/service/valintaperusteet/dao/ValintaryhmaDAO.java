@@ -20,6 +20,8 @@ public interface ValintaryhmaDAO extends JpaDAO<Valintaryhma, Long> {
      */
     List<Valintaryhma> findChildrenByParentOid(String oid);
 
+    List<Valintaryhma> findChildrenByParentOidPlain(String oid);
+
     Valintaryhma readByOid(String oid);
 
     /**

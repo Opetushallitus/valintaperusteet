@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -47,6 +48,19 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long> 
                 .leftJoin(valintaryhma.valintakoekoodit).fetch()
                 .leftJoin(valintaryhma.organisaatiot).fetch()
                 .where(eq).distinct().orderBy(valintaryhma.nimi.asc()).list(valintaryhma);
+    }
+
+    @Override
+    public List<Valintaryhma> findChildrenByParentOidPlain(String oid) {
+
+        if(oid == null) {
+            return new ArrayList<>();
+        }
+        QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
+
+
+        return from(valintaryhma)
+                .where(valintaryhma.ylavalintaryhma.oid.eq(oid)).distinct().list(valintaryhma);
     }
 
     @Override

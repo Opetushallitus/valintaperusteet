@@ -98,8 +98,21 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
         managedObject.setKohdejoukko(incoming.getKohdejoukko());
         managedObject.setHakuoid(incoming.getHakuoid());
 
+        if(managedObject.getHakuvuosi() != incoming.getHakuvuosi()) {
+            managedObject.setHakuvuosi(incoming.getHakuvuosi());
+            asetaHakuvuosiAlaryhmille(managedObject.getOid(), incoming.getHakuvuosi());
+        }
+
         managedObject.setOrganisaatiot(getOrganisaatios(incoming.getOrganisaatiot()));
         return managedObject;
+    }
+
+    private void asetaHakuvuosiAlaryhmille(String oid, String hakuvuosi) {
+        final List<Valintaryhma> children = valintaryhmaDAO.findChildrenByParentOidPlain(oid);
+        children.forEach(v -> {
+            v.setHakuvuosi(hakuvuosi);
+            asetaHakuvuosiAlaryhmille(v.getOid(), hakuvuosi);
+        });
     }
 
     private Set<Organisaatio> getOrganisaatios(Set<OrganisaatioDTO> incoming) {

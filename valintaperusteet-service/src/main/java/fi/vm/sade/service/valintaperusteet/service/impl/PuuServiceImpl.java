@@ -106,6 +106,7 @@ public class PuuServiceImpl implements PuuService {
         ValintaperustePuuDTO valintaperustePuuDTO = new ValintaperustePuuDTO();
         dtoMap.put(valintaryhma.getId(), valintaperustePuuDTO);
         valintaperustePuuDTO.setNimi(valintaryhma.getNimi());
+        valintaperustePuuDTO.setHakuvuosi(valintaryhma.getHakuvuosi());
         valintaperustePuuDTO.setTyyppi(ValintaperustePuuTyyppi.VALINTARYHMA);
         valintaperustePuuDTO.setOid(valintaryhma.getOid());
         valintaperustePuuDTO.setKohdejoukko(valintaryhma.getKohdejoukko());
