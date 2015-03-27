@@ -27,6 +27,7 @@ import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @Component
 @Path("valintaperusteet")
@@ -72,7 +73,7 @@ public class ValintaperusteetResourceImpl implements ValintaperusteetResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Override
 	@ApiOperation(value = "Hakee valintapajonot sijoittelulle", response = ValintatapajonoDTO.class)
-	public List<ValintatapajonoDTO> haeValintatapajonotSijoittelulle(
+	public Map<String, List<ValintatapajonoDTO>> haeValintatapajonotSijoittelulle(
 			List<String> hakukohdeOids) {
 		return valintaperusteService
 				.haeValintatapajonotSijoittelulle(hakukohdeOids);

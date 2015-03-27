@@ -7,6 +7,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.Map;
 
 
 @Path("valintaperusteet")
@@ -24,7 +25,7 @@ public interface ValintaperusteetResource {
     @Path("/valintatapajono")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    List<ValintatapajonoDTO> haeValintatapajonotSijoittelulle(List<String> hakukohdeOids);
+    Map<String, List<ValintatapajonoDTO>> haeValintatapajonotSijoittelulle(List<String> hakukohdeOids);
 
     @GET
     @Path("{hakukohdeOid}")
