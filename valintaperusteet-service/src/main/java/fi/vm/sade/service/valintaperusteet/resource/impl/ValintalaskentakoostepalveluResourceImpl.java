@@ -1,9 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.resource.impl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.*;
@@ -79,7 +76,7 @@ public class ValintalaskentakoostepalveluResourceImpl {
 	@Path("/valintatapajono")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public List<ValintatapajonoDTO> haeValintatapajonotSijoittelulle(
+	public Map<String, List<ValintatapajonoDTO>> haeValintatapajonotSijoittelulle(
 			List<String> hakukohdeOids) {
 		long t0 = System.currentTimeMillis();
 		try {

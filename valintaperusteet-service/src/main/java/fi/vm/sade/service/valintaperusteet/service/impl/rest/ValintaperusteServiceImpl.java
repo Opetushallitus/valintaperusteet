@@ -17,10 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -73,14 +70,13 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
 		return valintatapajonoDTOs;
 	}
 	@Override
-	public List<ValintatapajonoDTO> haeValintatapajonotSijoittelulle(
+	public Map<String, List<ValintatapajonoDTO>> haeValintatapajonotSijoittelulle(
 			Collection<String> hakukohdeOids) {
-		List<Valintatapajono> jonot = valintatapajonoDAO
-				.haeValintatapajonotSijoittelulle(hakukohdeOids);
+		return hakukohdeOids.stream().collect(Collectors.toMap(h -> h, h -> {
+			return modelMapper.mapList(
+					valintatapajonoDAO.haeValintatapajonotSijoittelulle(h), ValintatapajonoDTO.class);
 
-		List<ValintatapajonoDTO> valintatapajonoDTOs = modelMapper.mapList(
-				jonot, ValintatapajonoDTO.class);
-		return valintatapajonoDTOs;
+		}));
 	}
 	@Override
 	public List<ValintaperusteetDTO> haeValintaperusteet(

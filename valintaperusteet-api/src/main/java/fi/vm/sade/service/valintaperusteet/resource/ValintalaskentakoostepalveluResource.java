@@ -9,6 +9,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Jussi Jartamo
@@ -20,7 +21,7 @@ public interface ValintalaskentakoostepalveluResource {
     @Path("/valintatapajono")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    List<ValintatapajonoDTO> haeValintatapajonotSijoittelulle(
+    Map<String, List<ValintatapajonoDTO>> haeValintatapajonotSijoittelulle(
             List<String> hakukohdeOids);
 
     @POST
