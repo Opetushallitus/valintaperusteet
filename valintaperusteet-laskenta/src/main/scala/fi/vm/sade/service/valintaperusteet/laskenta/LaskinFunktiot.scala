@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.laskenta
 
+import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus.Kentat
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
 import fi.vm.sade.service.valintaperusteet.laskenta.api.{Hakukohde, Osallistuminen, Hakemus}
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta._
@@ -57,8 +58,8 @@ trait LaskinFunktiot {
     })
   }
 
-  protected def haeValintaperuste(tunniste: String, pakollinen: Boolean, hakemus: Hakemus): (Option[String], Tila) = {
-    hakemus.kentat.get(tunniste) match {
+  protected def haeValintaperuste(tunniste: String, pakollinen: Boolean, kentat: Kentat): (Option[String], Tila) = {
+    kentat.get(tunniste) match {
       case Some(s) if (!s.trim.isEmpty) => (Some(s), new Hyvaksyttavissatila)
       case _ => {
         val tila = if (pakollinen) {
@@ -71,8 +72,8 @@ trait LaskinFunktiot {
     }
   }
 
-  protected def haeValintaperusteHakemukselta(tunniste: String, hakemus: Hakemus): Option[Any] = {
-    hakemus.kentat.get(tunniste) match {
+  protected def haeValintaperusteHakemukselta(tunniste: String, kentat: Kentat): Option[Any] = {
+    kentat.get(tunniste) match {
       case Some(s) if (!s.trim.isEmpty) => {
         val pilkuton = s.replace(',', '.')
         val result = Try(s.toBoolean).getOrElse(
@@ -105,10 +106,10 @@ trait LaskinFunktiot {
     Some(result)
   }
 
-  protected def ehtoTayttyy(ehto: String, hakemus: Hakemus): Boolean = {
+  protected def ehtoTayttyy(ehto: String, kentat: Kentat): Boolean = {
     ehto match {
       case pattern(avain, oletus) => {
-        haeValintaperusteHakemukselta(avain, hakemus) match {
+        haeValintaperusteHakemukselta(avain, kentat) match {
           case Some(arvo: String) => if(arvo.equals(oletus)) true else false
           case _ => false
         }
@@ -117,11 +118,11 @@ trait LaskinFunktiot {
     }
   }
 
-  protected def haeArvovali(tunnisteet: (String,String), hakukohde: Hakukohde, hakemus: Hakemus): Option[(BigDecimal, BigDecimal)] = {
+  protected def haeArvovali(tunnisteet: (String,String), hakukohde: Hakukohde, kentat: Kentat): Option[(BigDecimal, BigDecimal)] = {
     val min = tunnisteet._1 match {
       case pattern(source, identifier) => {
         source match {
-          case "hakemus" => haeValintaperusteHakemukselta(identifier, hakemus)
+          case "hakemus" => haeValintaperusteHakemukselta(identifier, kentat)
           case "hakukohde" => haeValintaperusteHakukohteelta(identifier, hakukohde)
           case _ => None
         }
@@ -131,7 +132,7 @@ trait LaskinFunktiot {
     val max = tunnisteet._2 match {
       case pattern(source, identifier) => {
         source match {
-          case "hakemus" => haeValintaperusteHakemukselta(identifier, hakemus)
+          case "hakemus" => haeValintaperusteHakemukselta(identifier, kentat)
           case "hakukohde" => haeValintaperusteHakukohteelta(identifier, hakukohde)
           case _ => None
         }
@@ -184,7 +185,7 @@ trait LaskinFunktiot {
     }
   }
 
-  def konversioToLukuarvovalikonversio[S, T](konversiot: Seq[Konversio], hakemus: Hakemus, hakukohde: Hakukohde): (Option[Lukuarvovalikonvertteri], List[Tila]) = {
+  def konversioToLukuarvovalikonversio[S, T](konversiot: Seq[Konversio], kentat: Kentat, hakukohde: Hakukohde): (Option[Lukuarvovalikonvertteri], List[Tila]) = {
 
     def getLukuarvovaliKonversio(k: Konversio) = {
       val tilat = k match {
@@ -192,7 +193,7 @@ trait LaskinFunktiot {
           val min = l.min match {
             case pattern(source, identifier) => {
               source match {
-                case "hakemus" => haeValintaperusteHakemukselta(identifier, hakemus)
+                case "hakemus" => haeValintaperusteHakemukselta(identifier, kentat)
                 case "hakukohde" => haeValintaperusteHakukohteelta(identifier, hakukohde)
                 case _ => None
               }
@@ -202,7 +203,7 @@ trait LaskinFunktiot {
           val max = l.max match {
             case pattern(source, identifier) => {
               source match {
-                case "hakemus" => haeValintaperusteHakemukselta(identifier, hakemus)
+                case "hakemus" => haeValintaperusteHakemukselta(identifier, kentat)
                 case "hakukohde" => haeValintaperusteHakukohteelta(identifier, hakukohde)
                 case _ => None
               }
@@ -212,7 +213,7 @@ trait LaskinFunktiot {
           val paluuarvo = l.paluuarvo match {
             case pattern(source, identifier) => {
               source match {
-                case "hakemus" => haeValintaperusteHakemukselta(identifier, hakemus)
+                case "hakemus" => haeValintaperusteHakemukselta(identifier, kentat)
                 case "hakukohde" => haeValintaperusteHakukohteelta(identifier, hakukohde)
                 case _ => None
               }
@@ -222,7 +223,7 @@ trait LaskinFunktiot {
           val palautaHaettuArvo = l.palautaHaettuArvo match {
             case pattern(source, identifier) => {
               source match {
-                case "hakemus" => haeValintaperusteHakemukselta(identifier, hakemus)
+                case "hakemus" => haeValintaperusteHakemukselta(identifier, kentat)
                 case "hakukohde" => haeValintaperusteHakukohteelta(identifier, hakukohde)
                 case _ => None
               }
@@ -232,7 +233,7 @@ trait LaskinFunktiot {
           val hylkaysperuste = l.hylkaysperuste match {
             case pattern(source, identifier) => {
               source match {
-                case "hakemus" => haeValintaperusteHakemukselta(identifier, hakemus)
+                case "hakemus" => haeValintaperusteHakemukselta(identifier, kentat)
                 case "hakukohde" => haeValintaperusteHakukohteelta(identifier, hakukohde)
               }
             }
@@ -273,7 +274,7 @@ trait LaskinFunktiot {
 
   }
 
-  def konversioToArvokonversio[S, T](konversiot: Seq[Konversio], hakemus: Hakemus, hakukohde: Hakukohde): (Option[Arvokonvertteri[S,T]], List[Tila]) = {
+  def konversioToArvokonversio[S, T](konversiot: Seq[Konversio], kentat: Kentat, hakukohde: Hakukohde): (Option[Arvokonvertteri[S,T]], List[Tila]) = {
 
     def getArvoKonversio(k: Konversio) = {
       val tilat = k match {
@@ -281,7 +282,7 @@ trait LaskinFunktiot {
           val arvo = a.arvo match {
             case pattern(source, identifier) => {
               source match {
-                case "hakemus" => haeValintaperusteHakemukselta(identifier, hakemus)
+                case "hakemus" => haeValintaperusteHakemukselta(identifier, kentat)
                 case "hakukohde" => haeValintaperusteHakukohteelta(identifier, hakukohde)
                 case _ => None
               }
@@ -291,7 +292,7 @@ trait LaskinFunktiot {
           val hylkaysperuste = a.hylkaysperuste match {
             case pattern(source, identifier) => {
               source match {
-                case "hakemus" => haeValintaperusteHakemukselta(identifier, hakemus)
+                case "hakemus" => haeValintaperusteHakemukselta(identifier, kentat)
                 case "hakukohde" => haeValintaperusteHakukohteelta(identifier, hakukohde)
               }
             }

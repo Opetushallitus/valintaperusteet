@@ -1,5 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.laskenta.api
 
+import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus.Kentat
+
 import scala.collection.JavaConversions._
 import java.util.{Map => JMap}
 import java.lang.{Integer => JInteger}
@@ -13,7 +15,7 @@ class Hakemus(val oid: String,
               val hakutoiveet: JMap[JInteger, String],
               jkentat: JMap[String, String]) {
 
-  val kentat: Map[String, String] = jkentat.toMap
+  val kentat: Kentat = jkentat.toMap
 
   def onkoHakutoivePrioriteetilla(hakukohde: String, prioriteetti: Int) = {
     hakutoiveet.containsKey(prioriteetti) && hakutoiveet.get(prioriteetti) == hakukohde
@@ -32,6 +34,9 @@ class Hakemus(val oid: String,
 }
 
 object Hakemus {
+
+  type Kentat = Map[String, String]
+
   def apply(oid: String, hakutoiveet: JMap[JInteger, String], jkentat: JMap[String, String]): Hakemus = {
     return new Hakemus(oid, hakutoiveet, jkentat)
   }
