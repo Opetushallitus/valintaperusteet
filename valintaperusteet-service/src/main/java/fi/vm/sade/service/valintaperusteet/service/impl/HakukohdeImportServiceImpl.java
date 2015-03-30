@@ -234,7 +234,8 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
         // tämä metodi palauttaa nullin).
         Valintaryhma valintaryhma = null;
         if (valintaryhmat.size() == 1) {
-            if(valintaryhmat.get(0).getHakuoid() != null && !valintaryhmat.get(0).getHakuoid().equals(importData.getHakuOid())) {
+            String ryhmanHakuoid = valintaryhmat.get(0).getHakuoid();
+            if(!StringUtils.isBlank(ryhmanHakuoid) && !ryhmanHakuoid.equals(importData.getHakuOid())) {
                 LOG.info("Hakukohteelle ei pystytty määrittämään valintaryhmää. Potentiaalinen ryhmä löytyi, mutta haun oid ei täsmää.");
             } else {
                 valintaryhma = valintaryhmat.get(0);
@@ -248,7 +249,7 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
                 LOG.info("Hakukohteen tulisi olla valintaryhmän {} alla", valintaryhma.getOid());
             } else {
                 // Testataan vielä hakuvuodella
-                final List<Valintaryhma> vuodenRyhmat = valintaryhmat.stream().filter(v -> v.getHakuvuosi() != null && v.getHakuvuosi().equals(importData.getHakuVuosi())).collect(Collectors.toList());
+                final List<Valintaryhma> vuodenRyhmat = valintaryhmat.stream().filter(v -> !StringUtils.isBlank(v.getHakuvuosi()) && v.getHakuvuosi().equals(importData.getHakuVuosi())).collect(Collectors.toList());
                 if(vuodenRyhmat.size() == 1) {
                     valintaryhma = vuodenRyhmat.get(0);
                     LOG.info("Hakukohteen tulisi olla valintaryhmän {} alla", valintaryhma.getOid());
@@ -274,7 +275,7 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
     }
 
     private Predicate<Valintaryhma> hakuoidFilter(String hakuoid) {
-        return v -> v.getHakuoid() == null || v.getHakuoid().equals(hakuoid);
+        return v -> StringUtils.isBlank(v.getHakuoid()) || v.getHakuoid().equals(hakuoid);
     }
 
     @Override
