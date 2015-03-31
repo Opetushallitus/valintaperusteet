@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+    <funktiokutsu tallenna_tulos="false" id="1" version="0" funktionimi="LUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="2" version="0" funktionimi="LUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="3" version="0" funktionimi="LUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="4" version="0" funktionimi="LUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="5" version="0" funktionimi="LUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="6" version="0" funktionimi="LUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="7" version="0" funktionimi="LUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="8" version="0" funktionimi="LUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="9" version="0" funktionimi="LUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="10" version="0" funktionimi="LUKUARVO"/>
+
+    <funktioargumentti id="1" version="0" funktiokutsuparent_id="1" funktiokutsuchild_id="2" indeksi="1"/>
+    <funktioargumentti id="2" version="0" funktiokutsuparent_id="1" funktiokutsuchild_id="3" indeksi="2"/>
+
+    <funktioargumentti id="3" version="0" funktiokutsuparent_id="2" funktiokutsuchild_id="4" indeksi="1"/>
+    <funktioargumentti id="4" version="0" funktiokutsuparent_id="3" funktiokutsuchild_id="5" indeksi="1"/>
+
+    <funktioargumentti id="5" version="0" funktiokutsuparent_id="5" funktiokutsuchild_id="6" indeksi="1"/>
+    <funktioargumentti id="6" version="0" funktiokutsuparent_id="6" funktiokutsuchild_id="7" indeksi="1"/>
+    <funktioargumentti id="7" version="0" funktiokutsuparent_id="6" funktiokutsuchild_id="8" indeksi="2"/>
+    <funktioargumentti id="8" version="0" funktiokutsuparent_id="9" laskentakaavachild_id="2" indeksi="1"/>
+    <funktioargumentti id="9" version="0" funktiokutsuparent_id="3" laskentakaavachild_id="2" indeksi="2"/>
+
+    <laskentakaava id="1" version="0" nimi="kaava1" funktiokutsu_id="1" on_luonnos="false"
+                   tyyppi="LUKUARVOFUNKTIO"/>
+
+    <laskentakaava id="2" version="0" nimi="kaava2" funktiokutsu_id="10" on_luonnos="false"
+                   tyyppi="LUKUARVOFUNKTIO"/>
+
+    <valintaryhma />
+    <hakijaryhma />
+    <hakijaryhma_jono />
+    <hakukohde_viite />
+    <syoteparametri />
+    <valinnan_vaihe />
+    <valintaperuste_viite />
+    <valintatapajono />
+
+    <jarjestyskriteeri />
+    <valintakoe />
+    <hakukohteen_valintaperuste />
+    <hakukohde_viite_opetuskielikoodi />
+    <opetuskielikoodi />
+    <valintaryhma_opetuskielikoodi />
+    <valintakoekoodi />
+    <valintaryhma_valintakoekoodi />
+    <hakukohde_viite_valintakoekoodi />
+    <valintaryhma_hakukohdekoodi />
+    <arvokonvertteriparametri />
+    <arvovalikonvertteriparametri />
+
+</dataset>

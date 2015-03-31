@@ -1,26 +1,15 @@
 package fi.vm.sade.service.valintaperusteet.service.impl.actors;
 
-import akka.actor.ActorRef;
-import akka.actor.ActorSystem;
-import akka.actor.Status;
 import akka.actor.UntypedActor;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
 import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
-import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti;
-import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
-import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuEiOleOlemassaException;
-import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuMuodostaaSilmukanException;
-import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.UusiRekursio;
+import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Named;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
-
-import static fi.vm.sade.service.valintaperusteet.service.impl.actors.creators.SpringExtension.SpringExtProvider;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -39,17 +28,28 @@ public class PoistaOrvotActorBean extends UntypedActor {
 
 
     @Autowired
+    private LaskentakaavaService laskentakaavaService;
+
+    @Autowired
     private FunktiokutsuDAO funktiokutsuDAO;
 
     public PoistaOrvotActorBean() {
 
     }
 
+    private void poistaOrvot() {
+        List<Long> orphans = funktiokutsuDAO.getOrphans();
+        orphans.forEach(laskentakaavaService::poistaOrpoFunktiokutsu);
+        if(orphans.size() > 0) {
+            poistaOrvot();
+        }
+    }
+
     public void onReceive(Object message) throws Exception {
 
         if (message != null) {
             log.error("Ajastettu orpojen poistaminen päällä");
-            funktiokutsuDAO.deleteOrphans();
+            this.poistaOrvot();
             log.error("Orvot poistettu");
         } else {
             unhandled(message);

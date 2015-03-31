@@ -10,12 +10,17 @@ import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
 import fi.vm.sade.service.valintaperusteet.dao.GenericDAO;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 /**
  * User: tommiha Date: 1/14/13 Time: 4:07 PM
@@ -38,7 +43,8 @@ public class FunktiokutsuDAOImpl extends AbstractJpaDAOImpl<Funktiokutsu, Long> 
         JPAQuery query = from(fk);
 
 
-        Funktiokutsu kutsu =  query
+        Funktiokutsu kutsu =
+                query
                 .leftJoin(fk.syoteparametrit).fetch()
                 .leftJoin(fk.funktioargumentit, fa).fetch()
                 .leftJoin(fa.laskentakaavaChild).fetch()
@@ -82,40 +88,38 @@ public class FunktiokutsuDAOImpl extends AbstractJpaDAOImpl<Funktiokutsu, Long> 
     }
 
     @Override
-    public List<Funktiokutsu> getOrphans() {
+    public List<Long> getOrphans() {
         QFunktiokutsu fk = QFunktiokutsu.funktiokutsu;
         QLaskentakaava lk = QLaskentakaava.laskentakaava;
         QFunktioargumentti arg = QFunktioargumentti.funktioargumentti;
 
-        List<Funktiokutsu> orphans = from(fk)
-                .leftJoin(fk.syoteparametrit)
-                .fetch()
-                .leftJoin(fk.arvokonvertteriparametrit)
-                .fetch()
-                .leftJoin(fk.arvovalikonvertteriparametrit)
-                .fetch()
-                .leftJoin(fk.funktioargumentit)
-                .fetch()
-                .leftJoin(fk.valintaperusteviitteet)
-                .fetch()
-                .where(
-                        fk.id.notIn(
-                                subQuery().from(lk)
-                                        .leftJoin(lk.funktiokutsu)
-                                        .distinct()
-                                        .list(lk.funktiokutsu.id)
-                        )
-                                .and(
-                                        fk.id.notIn(
-                                                subQuery().from(arg)
-                                                        .leftJoin(arg.funktiokutsuChild)
-                                                        .distinct()
-                                                        .list(arg.funktiokutsuChild.id)
-                                        )
-                                )
-                )
-                .distinct().list(fk);
-        return orphans;
+        List<Long> laskentaakaavat = from(lk)
+                //.leftJoin(lk.funktiokutsu)
+                .distinct()
+                .list(lk.funktiokutsu.id);
+
+        List<Long> argumentit = from(arg)
+                //.leftJoin(arg.funktiokutsuChild)
+                .distinct()
+                .list(arg.funktiokutsuChild.id);
+
+        List<Long> orphans = from(fk)
+//                .leftJoin(fk.syoteparametrit)
+//                .fetch()
+//                .leftJoin(fk.arvokonvertteriparametrit)
+//                .fetch()
+//                .leftJoin(fk.arvovalikonvertteriparametrit)
+//                .fetch()
+//                .leftJoin(fk.funktioargumentit)
+//                .fetch()
+//                .leftJoin(fk.valintaperusteviitteet)
+//                .fetch()
+//                .where(
+//                        fk.id.notIn(laskentaakaavat).and(fk.id.notIn(argumentit))
+//                )
+                .distinct().list(fk.id);
+
+        return orphans.stream().filter(f -> !laskentaakaavat.contains(f) && !argumentit.contains(f)).collect(Collectors.toList());
     }
 
     private boolean isReferenced(Long id) {
@@ -131,15 +135,15 @@ public class FunktiokutsuDAOImpl extends AbstractJpaDAOImpl<Funktiokutsu, Long> 
     }
 
     public void deleteRecursively(Funktiokutsu funktiokutsu) {
-        if (isReferenced(funktiokutsu.getId())) {
-            return;
-        }
+//        if (isReferenced(funktiokutsu.getId())) {
+//            return;
+//        }
 
         Set<Funktiokutsu> children = new HashSet<Funktiokutsu>();
 
-        for (Funktioargumentti arg : funktiokutsu.getFunktioargumentit()) {
+        for (Funktioargumentti arg : funktiokutsu.getFunktioargumentit().stream().filter(a -> a.getFunktiokutsuChild() != null).collect(Collectors.toList())) {
             children.add(getFunktiokutsu(arg.getFunktiokutsuChild().getId()));
-            genericDAO.remove(arg);
+            //genericDAO.remove(arg);
         }
         remove(funktiokutsu);
         for (Funktiokutsu child : children) {
@@ -188,9 +192,20 @@ public class FunktiokutsuDAOImpl extends AbstractJpaDAOImpl<Funktiokutsu, Long> 
 
     @Override
     public void deleteOrphans() {
-        for (Funktiokutsu orphan : getOrphans()) {
-            deleteRecursively(orphan);
+        List<Long> orphans = getOrphans();
+        for (Long orphan : orphans) {
+            Funktiokutsu funktiokutsu = read(orphan);
+            remove(funktiokutsu);
         }
+        if(orphans.size() > 0) {
+            deleteOrphans();
+        }
+    }
+
+    @Override
+    public void deleteOrphan(Long id) {
+        Funktiokutsu funktiokutsu = read(id);
+        remove(funktiokutsu);
     }
 
     protected JPAQuery from(EntityPath<?>... o) {
