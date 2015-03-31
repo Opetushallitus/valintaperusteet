@@ -1247,9 +1247,6 @@ class LaskentaTest extends FunSuite {
   test("HaeYoArvosana") {
     val hakemus = hakemusMustache
 
-    val kutsu: Funktiokutsu = new Funktiokutsu
-    kutsu.setFunktionimi(Funktionimi.HAEYOARVOSANA)
-
     val viite: ValintaperusteViite = new ValintaperusteViite
     viite.setTunniste("SA")
     viite.setIndeksi(0)
@@ -1257,65 +1254,71 @@ class LaskentaTest extends FunSuite {
     viite.setEpasuoraViittaus(false)
     viite.setOnPakollinen(false)
 
-    kutsu.getValintaperusteviitteet.add(viite)
+    def createHaeYoArvosanaKutsu: Funktiokutsu = {
+      val kutsu: Funktiokutsu = new Funktiokutsu
+      kutsu.setFunktionimi(Funktionimi.HAEYOARVOSANA)
 
-    val syoteparametri: Syoteparametri = new Syoteparametri
-    syoteparametri.setAvain("M")
-    syoteparametri.setArvo("3")
+      kutsu.getValintaperusteviitteet.add(viite)
 
-    val syoteparametri2: Syoteparametri = new Syoteparametri
-    syoteparametri2.setAvain("A")
-    syoteparametri2.setArvo("5")
+      val syoteparametri: Syoteparametri = new Syoteparametri
+      syoteparametri.setAvain("M")
+      syoteparametri.setArvo("3")
 
-    val syoteparametri7: Syoteparametri = new Syoteparametri
-    syoteparametri7.setAvain("B")
-    syoteparametri7.setArvo("5")
+      val syoteparametri2: Syoteparametri = new Syoteparametri
+      syoteparametri2.setAvain("A")
+      syoteparametri2.setArvo("5")
 
-    val syoteparametri8: Syoteparametri = new Syoteparametri
-    syoteparametri8.setAvain("C")
-    syoteparametri8.setArvo("5")
+      val syoteparametri7: Syoteparametri = new Syoteparametri
+      syoteparametri7.setAvain("B")
+      syoteparametri7.setArvo("5")
 
-    val syoteparametri9: Syoteparametri = new Syoteparametri
-    syoteparametri9.setAvain("I")
-    syoteparametri9.setArvo("0")
+      val syoteparametri8: Syoteparametri = new Syoteparametri
+      syoteparametri8.setAvain("C")
+      syoteparametri8.setArvo("5")
 
-    val syoteparametri10: Syoteparametri = new Syoteparametri
-    syoteparametri10.setAvain("E")
-    syoteparametri10.setArvo("5")
+      val syoteparametri9: Syoteparametri = new Syoteparametri
+      syoteparametri9.setAvain("I")
+      syoteparametri9.setArvo("0")
 
-    val syoteparametri11: Syoteparametri = new Syoteparametri
-    syoteparametri11.setAvain("L")
-    syoteparametri11.setArvo("5")
+      val syoteparametri10: Syoteparametri = new Syoteparametri
+      syoteparametri10.setAvain("E")
+      syoteparametri10.setArvo("5")
 
-    val syoteparametri3: Syoteparametri = new Syoteparametri
-    syoteparametri3.setAvain("alkuvuosi")
-    syoteparametri3.setArvo("2010")
+      val syoteparametri11: Syoteparametri = new Syoteparametri
+      syoteparametri11.setAvain("L")
+      syoteparametri11.setArvo("5")
 
-    val syoteparametri4: Syoteparametri = new Syoteparametri
-    syoteparametri4.setAvain("loppuvuosi")
-    syoteparametri4.setArvo("2014")
+      val syoteparametri3: Syoteparametri = new Syoteparametri
+      syoteparametri3.setAvain("alkuvuosi")
+      syoteparametri3.setArvo("2010")
 
-    val syoteparametri5: Syoteparametri = new Syoteparametri
-    syoteparametri5.setAvain("alkulukukausi")
-    syoteparametri5.setArvo("1")
+      val syoteparametri4: Syoteparametri = new Syoteparametri
+      syoteparametri4.setAvain("loppuvuosi")
+      syoteparametri4.setArvo("2014")
 
-    val syoteparametri6: Syoteparametri = new Syoteparametri
-    syoteparametri6.setAvain("loppulukukausi")
-    syoteparametri6.setArvo("2")
+      val syoteparametri5: Syoteparametri = new Syoteparametri
+      syoteparametri5.setAvain("alkulukukausi")
+      syoteparametri5.setArvo("1")
 
-    kutsu.getSyoteparametrit.add(syoteparametri)
-    kutsu.getSyoteparametrit.add(syoteparametri2)
-    kutsu.getSyoteparametrit.add(syoteparametri3)
-    kutsu.getSyoteparametrit.add(syoteparametri4)
-    kutsu.getSyoteparametrit.add(syoteparametri5)
-    kutsu.getSyoteparametrit.add(syoteparametri6)
-    kutsu.getSyoteparametrit.add(syoteparametri7)
-    kutsu.getSyoteparametrit.add(syoteparametri8)
-    kutsu.getSyoteparametrit.add(syoteparametri9)
-    kutsu.getSyoteparametrit.add(syoteparametri10)
-    kutsu.getSyoteparametrit.add(syoteparametri11)
+      val syoteparametri6: Syoteparametri = new Syoteparametri
+      syoteparametri6.setAvain("loppulukukausi")
+      syoteparametri6.setArvo("2")
 
-    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(kutsu)
+      kutsu.getSyoteparametrit.add(syoteparametri)
+      kutsu.getSyoteparametrit.add(syoteparametri2)
+      kutsu.getSyoteparametrit.add(syoteparametri3)
+      kutsu.getSyoteparametrit.add(syoteparametri4)
+      kutsu.getSyoteparametrit.add(syoteparametri5)
+      kutsu.getSyoteparametrit.add(syoteparametri6)
+      kutsu.getSyoteparametrit.add(syoteparametri7)
+      kutsu.getSyoteparametrit.add(syoteparametri8)
+      kutsu.getSyoteparametrit.add(syoteparametri9)
+      kutsu.getSyoteparametrit.add(syoteparametri10)
+      kutsu.getSyoteparametrit.add(syoteparametri11)
+      kutsu
+    }
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeYoArvosanaKutsu)
 
     val (tulos, _) = Laskin.laske(hakukohde, hakemus,
      lasku)
@@ -1323,7 +1326,7 @@ class LaskentaTest extends FunSuite {
 
     viite.setTunniste("PS")
 
-    val lasku2 = Laskentadomainkonvertteri.muodostaLukuarvolasku(kutsu)
+    val lasku2 = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeYoArvosanaKutsu)
     val (tulos2, tila2) = Laskin.laske(hakukohde, hakemus,
       lasku2)
 
@@ -1332,7 +1335,7 @@ class LaskentaTest extends FunSuite {
 
     viite.setTunniste("REAALI")
 
-    val lasku3 = Laskentadomainkonvertteri.muodostaLukuarvolasku(kutsu)
+    val lasku3 = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeYoArvosanaKutsu)
     val (tulos3, tila3) = Laskin.laske(hakukohde, hakemus,
       lasku3)
 
@@ -1341,7 +1344,7 @@ class LaskentaTest extends FunSuite {
 
     viite.setTunniste("HI")
 
-    val lasku4 = Laskentadomainkonvertteri.muodostaLukuarvolasku(kutsu)
+    val lasku4 = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeYoArvosanaKutsu)
     val (tulos4, tila4) = Laskin.laske(hakukohde, hakemus,
       lasku4)
 
@@ -1352,7 +1355,7 @@ class LaskentaTest extends FunSuite {
     syoteparametriValmistuneet.setAvain("valmistuneet")
     syoteparametriValmistuneet.setArvo("false")
 
-    val kutsu2 = kutsu
+    val kutsu2 = createHaeYoArvosanaKutsu
 
     kutsu2.getSyoteparametrit.add(syoteparametriValmistuneet)
 
@@ -1369,7 +1372,7 @@ class LaskentaTest extends FunSuite {
     syoteparametriValmistuneet2.setAvain("valmistuneet")
     syoteparametriValmistuneet2.setArvo("true")
 
-    val kutsu3 = kutsu
+    val kutsu3 = createHaeYoArvosanaKutsu
 
     kutsu3.getSyoteparametrit.add(syoteparametriValmistuneet2)
 
