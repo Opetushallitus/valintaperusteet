@@ -13,9 +13,11 @@ import java.lang.{Integer => JInteger}
  */
 class Hakemus(val oid: String,
               val hakutoiveet: JMap[JInteger, String],
-              jkentat: JMap[String, String]) {
+              jkentat: JMap[String, String],
+              jsuoritustiedot: JMap[String, JMap[String, String]]) {
 
   val kentat: Kentat = jkentat.toMap
+  val suoritustiedot: Map[String, Kentat] = jsuoritustiedot.toMap.mapValues(_.toMap)
 
   def onkoHakutoivePrioriteetilla(hakukohde: String, prioriteetti: Int) = {
     hakutoiveet.containsKey(prioriteetti) && hakutoiveet.get(prioriteetti) == hakukohde
@@ -37,11 +39,11 @@ object Hakemus {
 
   type Kentat = Map[String, String]
 
-  def apply(oid: String, hakutoiveet: JMap[JInteger, String], jkentat: JMap[String, String]): Hakemus = {
-    return new Hakemus(oid, hakutoiveet, jkentat)
+  def apply(oid: String, hakutoiveet: JMap[JInteger, String], jkentat: JMap[String, String], jsuoritustiedot: JMap[String, JMap[String, String]]): Hakemus = {
+    return new Hakemus(oid, hakutoiveet, jkentat, jsuoritustiedot)
   }
 
-  def unapply(h: Hakemus): Option[(String, JMap[JInteger, String], JMap[String, String])] = {
-    return Some((h.oid, h.hakutoiveet, mapAsJavaMap(h.kentat)))
+  def unapply(h: Hakemus): Option[(String, JMap[JInteger, String], JMap[String, String], JMap[String, JMap[String, String]])] = {
+    return Some((h.oid, h.hakutoiveet, mapAsJavaMap(h.kentat), mapAsJavaMap(h.suoritustiedot.mapValues(mapAsJavaMap(_)))))
   }
 }

@@ -1042,7 +1042,7 @@ class LaskentaTest extends FunSuite {
     )
 
     val hakukohde = new Hakukohde("oid1", Map("hakukohteentunniste" -> "hakemuksentunniste"))
-    val hakemus = new Hakemus("oid1", Map[java.lang.Integer, String](), Map("hakemuksentunniste" -> "100.0"))
+    val hakemus = new Hakemus("oid1", Map[java.lang.Integer, String](), Map("hakemuksentunniste" -> "100.0"), Map[String, java.util.Map[String, String]]())
 
     val tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemus, List(hakemus), funktiokutsu)
     assert(tulos.getTulos.compareTo(BigDecimal("100.0").underlying) == 0)
@@ -1061,7 +1061,7 @@ class LaskentaTest extends FunSuite {
     )
 
     val hakukohde = new Hakukohde("oid1", Map("hakukohteentunniste" -> "hakemuksentunniste"))
-    val hakemus = new Hakemus("oid1", Map[java.lang.Integer, String](), Map[String, String]())
+    val hakemus = new Hakemus("oid1", Map[java.lang.Integer, String](), Map[String, String](), Map[String, java.util.Map[String, String]]())
 
     val tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemus, List(hakemus), funktiokutsu)
     assert(tulos.getTulos.compareTo(BigDecimal("100.0").underlying) == 0)
@@ -1080,7 +1080,7 @@ class LaskentaTest extends FunSuite {
     )
 
     val hakukohde = new Hakukohde("oid1", Map[String, String]())
-    val hakemus = new Hakemus("oid1", Map[java.lang.Integer, String](), Map("hakemuksentunniste" -> "500.0"))
+    val hakemus = new Hakemus("oid1", Map[java.lang.Integer, String](), Map("hakemuksentunniste" -> "500.0"), Map[String, java.util.Map[String, String]]())
 
     val tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemus, List(hakemus), funktiokutsu)
     assert(tulos.getTulos.compareTo(BigDecimal("100.0").underlying) == 0)
@@ -1099,7 +1099,7 @@ class LaskentaTest extends FunSuite {
     )
 
     val hakukohde = new Hakukohde("oid1", Map("hakukohteentunniste" -> "hakemuksentunniste"))
-    val hakemus = new Hakemus("oid1", Map[java.lang.Integer, String](), Map[String, String]())
+    val hakemus = new Hakemus("oid1", Map[java.lang.Integer, String](), Map[String, String](), Map[String, java.util.Map[String, String]]())
 
     val tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemus, List(hakemus), funktiokutsu)
     assert(Option(tulos.getTulos).isEmpty)
@@ -1121,7 +1121,7 @@ class LaskentaTest extends FunSuite {
     )
 
     val hakukohde = new Hakukohde("oid1", Map("hakukohteentunniste" -> "arvo"))
-    val hakemus = new Hakemus("oid1", Map[java.lang.Integer, String](), Map("hakemuksentunniste" -> "arvo"))
+    val hakemus = new Hakemus("oid1", Map[java.lang.Integer, String](), Map("hakemuksentunniste" -> "arvo"), Map[String, java.util.Map[String, String]]())
 
     val tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemus, List(hakemus), funktiokutsu)
     assert(tulos.getTulos)
@@ -1143,7 +1143,7 @@ class LaskentaTest extends FunSuite {
     )
 
     val hakukohde = new Hakukohde("oid1", Map("hakukohteentunniste" -> "hakukohteenarvo"))
-    val hakemus = new Hakemus("oid1", Map[java.lang.Integer, String](), Map("hakemuksentunniste" -> "hakemuksenarvo"))
+    val hakemus = new Hakemus("oid1", Map[java.lang.Integer, String](), Map("hakemuksentunniste" -> "hakemuksenarvo"), Map[String, java.util.Map[String, String]]())
 
     val tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemus, List(hakemus), funktiokutsu)
     assert(!tulos.getTulos)
@@ -1165,7 +1165,7 @@ class LaskentaTest extends FunSuite {
     )
 
     val hakukohde = new Hakukohde("oid1", Map[String, String]())
-    val hakemus = new Hakemus("oid1", Map[java.lang.Integer, String](), Map[String, String]())
+    val hakemus = new Hakemus("oid1", Map[java.lang.Integer, String](), Map[String, String](), Map[String, java.util.Map[String, String]]())
 
     val tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemus, List(hakemus), funktiokutsu)
     assert(tulos.getTulos)
@@ -1187,7 +1187,7 @@ class LaskentaTest extends FunSuite {
     )
 
     val hakukohde = new Hakukohde("oid1", Map[String, String]())
-    val hakemus = new Hakemus("oid1", Map[java.lang.Integer, String](), Map[String, String]())
+    val hakemus = new Hakemus("oid1", Map[java.lang.Integer, String](), Map[String, String](), Map[String, java.util.Map[String, String]]())
 
     val tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemus, List(hakemus), funktiokutsu)
     assert(tulos.getTulos)

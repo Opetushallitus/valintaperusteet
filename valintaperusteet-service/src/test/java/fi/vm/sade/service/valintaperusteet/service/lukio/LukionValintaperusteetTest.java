@@ -114,7 +114,7 @@ public class LukionValintaperusteetTest {
             h.put(e.getKey(), e.getValue());
         }
 
-        return new Hakemus(HAKEMUS_OID, hakutoiveet, h);
+        return new Hakemus(HAKEMUS_OID, hakutoiveet, h, new HashMap<>());
     }
 
     private Laskentakaava laajennaAlakaavat(Laskentakaava lk) {

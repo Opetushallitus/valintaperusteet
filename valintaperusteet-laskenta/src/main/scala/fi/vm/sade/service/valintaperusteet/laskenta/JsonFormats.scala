@@ -119,13 +119,15 @@ object JsonFormats {
   implicit def hakemusReads: Reads[Hakemus] = (
     (__ \ "oid").read[String] and
     (__ \ "hakutoiveet").read[JMap[JInteger, String]] and
-    (__ \ "jkentat").read[JMap[String, String]]
+    (__ \ "jkentat").read[JMap[String, String]] and
+    (__ \ "jsuoritukset").read[JMap[String, JMap[String, String]]]
   )(Hakemus.apply _)
 
   implicit def hakemusWrites: Writes[Hakemus] = (
     (__ \ "oid").write[String] and
     (__ \ "hakutoiveet").write[JMap[JInteger, String]] and
-    (__ \ "jkentat").write[JMap[String, String]]
+    (__ \ "jkentat").write[JMap[String, String]] and
+    (__ \ "jsuoritukset").write[JMap[String, JMap[String, String]]]
     )(unlift(Hakemus.unapply _))
 
   //Histroia
@@ -239,6 +241,22 @@ object JsonHelpers {
   implicit def mapWritesStringString: Writes[JMap[String, String]] =
     new Writes[JMap[String,String]] {
       def writes(map: JMap[String,String]): JsValue = {
+        val json = mapper.writerWithView(classOf[JsonViews.Basic]).writeValueAsString(map)
+        Json.parse(json)
+      }
+    }
+
+  implicit def mapReadsStringStringMap: Reads[JMap[String, JMap[String, String]]] =
+    new Reads[JMap[String,JMap[String, String]]] {
+      def reads(json: JsValue): JsResult[JMap[String,JMap[String, String]]] = json match {
+        case s : JsObject => JsSuccess(mapper.readValue(Json.stringify(s), classOf[JMap[String, JMap[String, String]]]))
+        case _ => JsError("Tyyppiä Map ei löytynyt")
+      }
+    }
+
+  implicit def mapWritesStringStringMap: Writes[JMap[String, JMap[String, String]]] =
+    new Writes[JMap[String,JMap[String, String]]] {
+      def writes(map: JMap[String,JMap[String, String]]): JsValue = {
         val json = mapper.writerWithView(classOf[JsonViews.Basic]).writeValueAsString(map)
         Json.parse(json)
       }

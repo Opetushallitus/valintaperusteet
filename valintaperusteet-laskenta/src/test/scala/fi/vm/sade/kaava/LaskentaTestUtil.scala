@@ -146,7 +146,7 @@ object LaskentaTestUtil {
         prio <- 1 to hakutoiveet.size
       } yield (new java.lang.Integer(prio), hakutoiveet(prio - 1))).toMap
 
-      new Hakemus(oid, mapAsJavaMap(hakutoiveetMap), mapAsJavaMap(kentat))
+      new Hakemus(oid, mapAsJavaMap(hakutoiveetMap), mapAsJavaMap(kentat), mapAsJavaMap(Map()))
     }
   }
 
