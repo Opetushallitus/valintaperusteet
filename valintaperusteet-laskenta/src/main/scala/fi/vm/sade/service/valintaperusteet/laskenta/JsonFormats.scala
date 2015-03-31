@@ -7,6 +7,7 @@ import org.codehaus.jackson.map.ObjectMapper
 import fi.vm.sade.service.valintaperusteet.model.JsonViews
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus
 import java.util.{Map => JMap}
+import java.util.{List => JList}
 import java.lang.{Integer => JInteger}
 import fi.vm.sade.kaava.Funktiokuvaaja._
 import fi.vm.sade.kaava.Funktiokuvaaja.Konvertterinimi.Konvertterinimi
@@ -120,14 +121,14 @@ object JsonFormats {
     (__ \ "oid").read[String] and
     (__ \ "hakutoiveet").read[JMap[JInteger, String]] and
     (__ \ "jkentat").read[JMap[String, String]] and
-    (__ \ "jsuoritukset").read[JMap[String, JMap[String, String]]]
+    (__ \ "jsuoritukset").read[JMap[String, JList[JMap[String, String]]]]
   )(Hakemus.apply _)
 
   implicit def hakemusWrites: Writes[Hakemus] = (
     (__ \ "oid").write[String] and
     (__ \ "hakutoiveet").write[JMap[JInteger, String]] and
     (__ \ "jkentat").write[JMap[String, String]] and
-    (__ \ "jsuoritukset").write[JMap[String, JMap[String, String]]]
+    (__ \ "jsuoritukset").write[JMap[String, JList[JMap[String, String]]]]
     )(unlift(Hakemus.unapply _))
 
   //Histroia
@@ -246,17 +247,17 @@ object JsonHelpers {
       }
     }
 
-  implicit def mapReadsStringStringMap: Reads[JMap[String, JMap[String, String]]] =
-    new Reads[JMap[String,JMap[String, String]]] {
-      def reads(json: JsValue): JsResult[JMap[String,JMap[String, String]]] = json match {
-        case s : JsObject => JsSuccess(mapper.readValue(Json.stringify(s), classOf[JMap[String, JMap[String, String]]]))
+  implicit def mapReadsStringStringMapList: Reads[JMap[String, JList[JMap[String, String]]]] =
+    new Reads[JMap[String,JList[JMap[String, String]]]] {
+      def reads(json: JsValue): JsResult[JMap[String,JList[JMap[String, String]]]] = json match {
+        case s : JsObject => JsSuccess(mapper.readValue(Json.stringify(s), classOf[JMap[String, JList[JMap[String, String]]]]))
         case _ => JsError("Tyyppiä Map ei löytynyt")
       }
     }
 
-  implicit def mapWritesStringStringMap: Writes[JMap[String, JMap[String, String]]] =
-    new Writes[JMap[String,JMap[String, String]]] {
-      def writes(map: JMap[String,JMap[String, String]]): JsValue = {
+  implicit def mapWritesStringStringMapList: Writes[JMap[String, JList[JMap[String, String]]]] =
+    new Writes[JMap[String,JList[JMap[String, String]]]] {
+      def writes(map: JMap[String,JList[JMap[String, String]]]): JsValue = {
         val json = mapper.writerWithView(classOf[JsonViews.Basic]).writeValueAsString(map)
         Json.parse(json)
       }

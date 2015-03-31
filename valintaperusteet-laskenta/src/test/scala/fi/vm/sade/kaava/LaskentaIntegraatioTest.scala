@@ -2039,7 +2039,7 @@ class LaskentaIntegraatioTest extends FunSuite {
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val hakukohde = new Hakukohde("hakukohdeOid", Map("hakukohteenTunniste" -> "hakemuksenTunniste"))
-    val hakemus = new Hakemus("oid", Map[java.lang.Integer, String](), Map("hakemuksenTunniste" -> "100.0"), Map[String, java.util.Map[String, String]]())
+    val hakemus = new Hakemus("oid", Map[java.lang.Integer, String](), Map("hakemuksenTunniste" -> "100.0"), Map[String, java.util.List[java.util.Map[String, String]]]())
 
     val tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemus, List(hakemus), lasku)
     assert(tulos.getTulos.compareTo(new BigDecimal("100.0")) == 0)

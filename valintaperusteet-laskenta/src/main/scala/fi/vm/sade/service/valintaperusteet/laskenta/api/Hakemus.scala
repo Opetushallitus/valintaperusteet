@@ -4,6 +4,7 @@ import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus.Kentat
 
 import scala.collection.JavaConversions._
 import java.util.{Map => JMap}
+import java.util.{List => JList}
 import java.lang.{Integer => JInteger}
 
 /**
@@ -14,10 +15,10 @@ import java.lang.{Integer => JInteger}
 class Hakemus(val oid: String,
               val hakutoiveet: JMap[JInteger, String],
               jkentat: JMap[String, String],
-              jsuoritustiedot: JMap[String, JMap[String, String]]) {
+              jsuoritustiedot: JMap[String, JList[JMap[String, String]]]) {
 
   val kentat: Kentat = jkentat.toMap
-  val suoritustiedot: Map[String, Kentat] = jsuoritustiedot.toMap.mapValues(_.toMap)
+  val suoritustiedot: Map[String, List[Kentat]] = jsuoritustiedot.toMap.mapValues(_.toList.map(_.toMap))
 
   def onkoHakutoivePrioriteetilla(hakukohde: String, prioriteetti: Int) = {
     hakutoiveet.containsKey(prioriteetti) && hakutoiveet.get(prioriteetti) == hakukohde
@@ -39,11 +40,11 @@ object Hakemus {
 
   type Kentat = Map[String, String]
 
-  def apply(oid: String, hakutoiveet: JMap[JInteger, String], jkentat: JMap[String, String], jsuoritustiedot: JMap[String, JMap[String, String]]): Hakemus = {
+  def apply(oid: String, hakutoiveet: JMap[JInteger, String], jkentat: JMap[String, String], jsuoritustiedot: JMap[String, JList[JMap[String, String]]]): Hakemus = {
     return new Hakemus(oid, hakutoiveet, jkentat, jsuoritustiedot)
   }
 
-  def unapply(h: Hakemus): Option[(String, JMap[JInteger, String], JMap[String, String], JMap[String, JMap[String, String]])] = {
-    return Some((h.oid, h.hakutoiveet, mapAsJavaMap(h.kentat), mapAsJavaMap(h.suoritustiedot.mapValues(mapAsJavaMap(_)))))
+  def unapply(h: Hakemus): Option[(String, JMap[JInteger, String], JMap[String, String], JMap[String, JList[JMap[String, String]]])] = {
+    return Some((h.oid, h.hakutoiveet, mapAsJavaMap(h.kentat), mapAsJavaMap(h.suoritustiedot.mapValues(list => seqAsJavaList(list.map(mapAsJavaMap))))))
   }
 }
