@@ -185,6 +185,14 @@ trait LaskinFunktiot {
     }
   }
 
+  protected def string2integer(s: Option[String], default: Int):Int = {
+    try {
+      s.get.toInt
+    } catch {
+      case e:Exception => default
+    }
+  }
+
   def konversioToLukuarvovalikonversio[S, T](konversiot: Seq[Konversio], kentat: Kentat, hakukohde: Hakukohde): (Option[Lukuarvovalikonvertteri], List[Tila]) = {
 
     def getLukuarvovaliKonversio(k: Konversio) = {

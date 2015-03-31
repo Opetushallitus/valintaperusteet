@@ -141,12 +141,12 @@ object LaskentaTestUtil {
   }
 
   object TestHakemus {
-    def apply(oid: String, hakutoiveet: List[String], kentat: Map[String, String]) = {
+    def apply(oid: String, hakutoiveet: List[String], kentat: Map[String, String], suoritukset: java.util.Map[String, java.util.List[java.util.Map[String, String]]] = mapAsJavaMap(Map())) = {
       val hakutoiveetMap: Map[java.lang.Integer, String] = (for {
         prio <- 1 to hakutoiveet.size
       } yield (new java.lang.Integer(prio), hakutoiveet(prio - 1))).toMap
 
-      new Hakemus(oid, mapAsJavaMap(hakutoiveetMap), mapAsJavaMap(kentat), mapAsJavaMap(Map()))
+      new Hakemus(oid, mapAsJavaMap(hakutoiveetMap), mapAsJavaMap(kentat), suoritukset)
     }
   }
 

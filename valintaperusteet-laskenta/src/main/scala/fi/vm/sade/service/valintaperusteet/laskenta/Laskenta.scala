@@ -20,6 +20,7 @@ object Laskenta {
 
   trait Valintaperuste {
     val tunniste: String
+    val pakollinen: Boolean
   }
 
   case class HakemuksenValintaperuste(tunniste: String, pakollinen: Boolean) extends Valintaperuste
@@ -282,6 +283,28 @@ object Laskenta {
   object HaeArvo {
     def unapply(ha: HaeArvo[_]): Option[(Option[_], Valintaperuste)] = Some((ha.oletusarvo, ha.valintaperusteviite))
   }
+
+  case class YoEhdot(
+    alkuvuosi: Option[Int],
+    loppuvuosi: Option[Int],
+    alkulukukausi: Option[Int],
+    loppulukukausi: Option[Int],
+    vainValmistuneet: Boolean,
+    rooli: Option[String]
+  )
+
+  case class HaeYoArvosana(konvertteri: Konvertteri[String, BigDecimal],
+                           ehdot: YoEhdot,
+                           oletusarvo: Option[BigDecimal],
+                           valintaperusteviite: Valintaperuste,
+                           oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "")
+    extends HaeArvo[BigDecimal] with Lukuarvofunktio
+
+  case class HaeYoPisteet(konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]],
+                          ehdot: YoEhdot,
+                          oletusarvo: Option[BigDecimal],
+                          valintaperusteviite: Valintaperuste, oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "")
+    extends HaeArvo[BigDecimal] with Lukuarvofunktio
 
   case class HaeMerkkijonoJaKonvertoiLukuarvoksi(konvertteri: Konvertteri[String, BigDecimal],
                                                  oletusarvo: Option[BigDecimal],

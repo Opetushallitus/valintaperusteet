@@ -97,26 +97,50 @@ class LaskentaTest extends FunSuite {
     put("B22_oppiaine", "EN")
     put("B22_arvosana", "8")
     put("aA_-", "EN")
-    put("SA", "M")
-    put("SA_SUORITUSVUOSI", "2011")
-    put("SA_SUORITUSLUKUKAUSI", "2")
-    put("PS", "L")
-    put("REAALI", "X")
-    put("REAALI_SUORITUSVUOSI", "jeppis")
-    put("HI", "G")
-    put("HI_SUORITUSVUOSI", "2011")
-    put("HI_SUORITUSLUKUKAUSI", "2")
-    put("01", "15")
-    put("01_SUORITUSVUOSI", "2011")
-    put("01_SUORITUSLUKUKAUSI", "2")
     put("YO_TILA", "false")
   }}
 
-  val hakukohdeMustache = new Hakukohde("1234", mustacheMap)
+  val mustacheMapSA = new util.HashMap[String, String](){{
+    put("ARVO", "M")
+    put("SUORITUSVUOSI", "2011")
+    put("SUORITUSLUKUKAUSI", "2")
+  }}
+
+  val mustacheMapPS = new util.HashMap[String, String](){{
+    put("ARVO", "L")
+  }}
+
+  val mustacheMapREAALI = new util.HashMap[String, String](){{
+    put("ARVO", "X")
+    put("SUORITUSVUOSI", "jeppis")
+  }}
+
+  val mustacheMapHI = new util.HashMap[String, String](){{
+    put("ARVO", "G")
+    put("SUORITUSVUOSI", "2011")
+    put("SUORITUSLUKUKAUSI", "2")
+  }}
+
+  val mustacheMap01 = new util.HashMap[String, String](){{
+    put("PISTEET", "15")
+    put("SUORITUSVUOSI", "2011")
+    put("SUORITUSLUKUKAUSI", "2")
+  }}
+
+  val suorituksetMustacheMap = new util.HashMap[String, util.List[util.Map[String, String]]]{{
+    put("SA", util.Arrays.asList(mustacheMapSA))
+    put("PS", util.Arrays.asList(mustacheMapPS))
+    put("REAALI", util.Arrays.asList(mustacheMapREAALI))
+    put("HI", util.Arrays.asList(mustacheMapHI))
+    put("01", util.Arrays.asList(mustacheMap01))
+  }}
+
+
+    val hakukohdeMustache = new Hakukohde("1234", mustacheMap)
 
   val tyhjaHakemus = TestHakemus("", Nil, Map[String, String]())
 
-  val hakemusMustache = TestHakemus("", Nil, mustacheMap.toMap)
+  val hakemusMustache = TestHakemus("", Nil, mustacheMap.toMap, suorituksetMustacheMap)
 
   test("Lukuarvo function returns its value") {
     val (tulos, _) = Laskin.laske(hakukohde, tyhjaHakemus, Lukuarvo(BigDecimal("5.0")))
@@ -1319,70 +1343,47 @@ class LaskentaTest extends FunSuite {
     }
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeYoArvosanaKutsu)
-
-    val (tulos, _) = Laskin.laske(hakukohde, hakemus,
-     lasku)
+    val (tulos, _) = Laskin.laske(hakukohde, hakemus, lasku)
     assert(BigDecimal(tulos.get) == BigDecimal("3"))
 
     viite.setTunniste("PS")
-
     val lasku2 = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeYoArvosanaKutsu)
-    val (tulos2, tila2) = Laskin.laske(hakukohde, hakemus,
-      lasku2)
-
+    val (tulos2, tila2) = Laskin.laske(hakukohde, hakemus, lasku2)
     assert(BigDecimal(tulos2.get) == BigDecimal("0.0"))
     assert(tila2.getTilatyyppi == Tilatyyppi.HYVAKSYTTAVISSA)
 
     viite.setTunniste("REAALI")
-
     val lasku3 = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeYoArvosanaKutsu)
-    val (tulos3, tila3) = Laskin.laske(hakukohde, hakemus,
-      lasku3)
-
-    assert(tulos3.isEmpty)
-    assert(tila3.getTilatyyppi == Tilatyyppi.VIRHE)
+    val (tulos3, tila3) = Laskin.laske(hakukohde, hakemus, lasku3)
+    assert(BigDecimal(tulos2.get) == BigDecimal("0.0"))
+    assert(tila2.getTilatyyppi == Tilatyyppi.HYVAKSYTTAVISSA)
 
     viite.setTunniste("HI")
-
     val lasku4 = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeYoArvosanaKutsu)
-    val (tulos4, tila4) = Laskin.laske(hakukohde, hakemus,
-      lasku4)
-
+    val (tulos4, tila4) = Laskin.laske(hakukohde, hakemus, lasku4)
     assert(tulos4.isEmpty)
     assert(tila4.getTilatyyppi == Tilatyyppi.VIRHE)
 
     val syoteparametriValmistuneet: Syoteparametri = new Syoteparametri
     syoteparametriValmistuneet.setAvain("valmistuneet")
     syoteparametriValmistuneet.setArvo("false")
-
     val kutsu2 = createHaeYoArvosanaKutsu
-
     kutsu2.getSyoteparametrit.add(syoteparametriValmistuneet)
-
     viite.setTunniste("SA")
 
     val lasku5 = Laskentadomainkonvertteri.muodostaLukuarvolasku(kutsu2)
-
-    val (tulos5, _) = Laskin.laske(hakukohde, hakemus,
-      lasku5)
+    val (tulos5, _) = Laskin.laske(hakukohde, hakemus, lasku5)
     assert(BigDecimal(tulos5.get) == BigDecimal("3"))
 
     // Vain valmistuneet huomioidaan
     val syoteparametriValmistuneet2: Syoteparametri = new Syoteparametri
     syoteparametriValmistuneet2.setAvain("valmistuneet")
     syoteparametriValmistuneet2.setArvo("true")
-
     val kutsu3 = createHaeYoArvosanaKutsu
-
     kutsu3.getSyoteparametrit.add(syoteparametriValmistuneet2)
-
     val lasku6 = Laskentadomainkonvertteri.muodostaLukuarvolasku(kutsu3)
-
-    val (tulos6, _) = Laskin.laske(hakukohde, hakemus,
-      lasku6)
+    val (tulos6, _) = Laskin.laske(hakukohde, hakemus, lasku6)
     assert(BigDecimal(tulos6.get) == BigDecimal("0.0"))
-
-
   }
 
   test("HaeOsakoeArvosana - ilman konverttereita") {

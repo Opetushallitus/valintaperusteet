@@ -480,6 +480,50 @@ private class Laskin private(private val hakukohde: Hakukohde,
       (lukuarvo, tulokset._2, Historia("Koostettu tulos", lukuarvo, tulokset._2, Some(tulokset._3.toList), None))
     }
 
+    def haeLukuarvo(konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]], oletusarvo: Option[BigDecimal], valintaperusteviite: Valintaperuste, kentat: Kentat): (Option[BigDecimal], Seq[Tila], Historia)  = {
+      val (konv, virheet) = konvertteri match {
+        case Some(l: Lukuarvovalikonvertteri) => konversioToLukuarvovalikonversio(l.konversioMap,kentat, hakukohde)
+        case Some(a: Arvokonvertteri[_,_]) => konversioToArvokonversio[BigDecimal, BigDecimal](a.konversioMap,kentat, hakukohde)
+        case _ => (konvertteri, List())
+      }
+      val (tulos, tila) = haeValintaperuste[BigDecimal](valintaperusteviite, kentat,
+        (s => suoritaOptionalKonvertointi[BigDecimal](string2bigDecimal(s, valintaperusteviite.tunniste), konv)), oletusarvo)
+      (tulos, tila, Historia("Hae Lukuarvo", tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
+
+    }
+
+    def haeMerkkijonoJaKonvertoiLukuarvoksi(konvertteri: Konvertteri[String, BigDecimal], oletusarvo: Option[BigDecimal], valintaperusteviite: Valintaperuste, kentat: Kentat): (Option[BigDecimal], Seq[Tila], Historia)  = {
+
+      konvertteri match {
+        case a: Arvokonvertteri[_, _] => {
+          val (konv, virheet) = konversioToArvokonversio(a.konversioMap, kentat, hakukohde)
+          if (konv.isEmpty) {
+            (None, virheet, Historia("Hae merkkijono ja konvertoi lukuarvoksi", None, virheet, None, None))
+          } else {
+            val (tulos, tila) = haeValintaperuste[BigDecimal](valintaperusteviite, kentat,
+              s => suoritaKonvertointi[String, BigDecimal]((Some(s), new Hyvaksyttavissatila), konv.get.asInstanceOf[Arvokonvertteri[String, BigDecimal]]), oletusarvo)
+
+            (tulos, tila, Historia("Hae merkkijono ja konvertoi lukuarvoksi", tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
+          }
+        }
+        case _ => {
+          val (tulos, tila) = haeValintaperuste[BigDecimal](valintaperusteviite, kentat,
+            s => suoritaKonvertointi[String, BigDecimal]((Some(s), new Hyvaksyttavissatila), konvertteri), oletusarvo)
+          (tulos, tila, Historia("Hae merkkijono ja konvertoi lukuarvoksi", tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
+        }
+      }
+    }
+
+    def filteredSuoritusTiedot(valintaperusteviite: Valintaperuste, ehdot: YoEhdot): List[Kentat] = {
+      hakemus.suoritustiedot.getOrElse(valintaperusteviite.tunniste, List()).filter(kentat =>
+        (ehdot.alkuvuosi.isEmpty ||  string2integer(kentat.get("SUORITUSVUOSI"), 9999) >= ehdot.alkuvuosi.get) &&
+        (ehdot.loppuvuosi.isEmpty ||  string2integer(kentat.get("SUORITUSVUOSI"), 0) <= ehdot.loppuvuosi.get) &&
+        (ehdot.alkulukukausi.isEmpty ||  string2integer(kentat.get("SUORITUSLUKUKAUSI"), 0) >= ehdot.alkulukukausi.get) &&
+        (ehdot.loppulukukausi.isEmpty ||  string2integer(kentat.get("SUORITUSLUKUKAUSI"), 3) <= ehdot.loppulukukausi.get) &&
+        (ehdot.rooli.isEmpty || ehdot.rooli.contains(kentat.getOrElse("ROOLI", "")))
+      )
+    }
+
     val (laskettuTulos: Option[BigDecimal], tilat: Seq[Tila], historia: Historia) = laskettava match {
       case Lukuarvo(d, oid, tulosTunniste,_,_,_) => {
         val tila = List(new Hyvaksyttavissatila)
@@ -603,16 +647,12 @@ private class Laskin private(private val hakukohde: Hakukohde,
       }
 
       case HaeLukuarvo(konvertteri, oletusarvo, valintaperusteviite, oid, tulosTunniste,_,_,_) => {
-        val (konv, virheet) = konvertteri match {
-          case Some(l: Lukuarvovalikonvertteri) => konversioToLukuarvovalikonversio(l.konversioMap,hakemus.kentat, hakukohde)
-          case Some(a: Arvokonvertteri[_,_]) => konversioToArvokonversio[BigDecimal, BigDecimal](a.konversioMap,hakemus.kentat, hakukohde)
-          case _ => (konvertteri, List())
-        }
-        val (tulos, tila) = haeValintaperuste[BigDecimal](valintaperusteviite, hakemus.kentat,
-          (s => suoritaOptionalKonvertointi[BigDecimal](string2bigDecimal(s, valintaperusteviite.tunniste),
-            konv)), oletusarvo)
-        (tulos, tila, Historia("Hae Lukuarvo", tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
+        haeLukuarvo(konvertteri, oletusarvo, valintaperusteviite, hakemus.kentat)
+      }
 
+      case HaeYoPisteet(konvertteri, ehdot, oletusarvo, valintaperusteviite, oid, tulosTunniste,_,_,_) => {
+        val suoritukset = filteredSuoritusTiedot(valintaperusteviite, ehdot)
+        haeLukuarvo(konvertteri, oletusarvo, HakemuksenValintaperuste("PISTEET", valintaperusteviite.pakollinen), suoritukset.headOption.getOrElse(Map()))
       }
 
       case HaeLukuarvoEhdolla(konvertteri, oletusarvo, valintaperusteviite, ehto, oid, tulosTunniste,_,_,_) => {
@@ -634,27 +674,13 @@ private class Laskin private(private val hakukohde: Hakukohde,
       }
 
       case HaeMerkkijonoJaKonvertoiLukuarvoksi(konvertteri, oletusarvo, valintaperusteviite, oid, tulosTunniste,_,_,_) => {
-        konvertteri match {
-          case a: Arvokonvertteri[_,_] => {
-            val (konv, virheet) = konversioToArvokonversio(a.konversioMap,hakemus.kentat, hakukohde)
-            if(konv.isEmpty) {
-              (None, virheet, Historia("Hae merkkijono ja konvertoi lukuarvoksi", None, virheet, None, None))
-            } else {
-              val (tulos, tila) = haeValintaperuste[BigDecimal](valintaperusteviite, hakemus.kentat,
-                s => suoritaKonvertointi[String, BigDecimal]((Some(s), new Hyvaksyttavissatila), konv.get.asInstanceOf[Arvokonvertteri[String,BigDecimal]]), oletusarvo)
-      
-              (tulos, tila, Historia("Hae merkkijono ja konvertoi lukuarvoksi", tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
-            }
-
-          }
-          case _ => {
-            val (tulos, tila) = haeValintaperuste[BigDecimal](valintaperusteviite, hakemus.kentat,
-              s => suoritaKonvertointi[String, BigDecimal]((Some(s), new Hyvaksyttavissatila), konvertteri), oletusarvo)
-            (tulos, tila, Historia("Hae merkkijono ja konvertoi lukuarvoksi", tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
-          }
-        }
+        haeMerkkijonoJaKonvertoiLukuarvoksi(konvertteri, oletusarvo, valintaperusteviite, hakemus.kentat)
       }
 
+      case HaeYoArvosana(konvertteri, ehdot, oletusarvo, valintaperusteviite, oid, tulosTunniste,_,_,_) => {
+        val suoritukset = filteredSuoritusTiedot(valintaperusteviite, ehdot)
+        haeMerkkijonoJaKonvertoiLukuarvoksi(konvertteri, oletusarvo, HakemuksenValintaperuste("ARVO", valintaperusteviite.pakollinen), suoritukset.headOption.getOrElse(Map()))
+      }
 
       case HaeTotuusarvoJaKonvertoiLukuarvoksi(konvertteri, oletusarvo, valintaperusteviite, oid, tulosTunniste,_,_,_) => {
         konvertteri match {
