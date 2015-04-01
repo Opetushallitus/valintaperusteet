@@ -15,6 +15,7 @@ import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
+import fi.vm.sade.service.valintaperusteet.service.impl.actors.ActorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,9 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
 
     @Autowired
     private ValintaperusteetModelMapper modelMapper;
+
+    @Autowired
+    private ActorService actorService;
 
     private final static Logger LOGGER = LoggerFactory.getLogger(LaskentakaavaResourceImpl.class);
 
@@ -139,6 +143,9 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
                 updated = modelMapper.map(laskentakaavaService.update(id, laskentakaava), LaskentakaavaDTO.class);
             }
 
+            // Kaava päivitetty, poistetaan orvot
+            actorService.runOnce();
+
             return Response.status(Response.Status.OK).entity(updated).build();
         } catch (LaskentakaavaEiValidiException e) {
             e.printStackTrace();
@@ -205,6 +212,8 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
     public Response poista(@PathParam("id") Long id) {
         boolean poistettu = laskentakaavaService.poista(id);
         if(poistettu) {
+            // Kaava poistettu, poistetaan orvot
+            actorService.runOnce();
             return Response.status(Response.Status.ACCEPTED).build();
         } else {
             return Response.status(Response.Status.FORBIDDEN).build();

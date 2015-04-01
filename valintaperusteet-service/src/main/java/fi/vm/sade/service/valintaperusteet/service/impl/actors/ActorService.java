@@ -85,5 +85,9 @@ public class ActorService {
         }
     }
 
+    public void runOnce() {
+        deleteOrphans.tell("run", ActorRef.noSender());
+    }
+
 
 }
