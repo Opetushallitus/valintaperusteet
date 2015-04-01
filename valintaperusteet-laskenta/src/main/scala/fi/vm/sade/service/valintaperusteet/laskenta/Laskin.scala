@@ -515,7 +515,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
     }
 
     def filteredSuoritusTiedot(valintaperusteviite: Valintaperuste, ehdot: YoEhdot): List[Kentat] = {
-      hakemus.suoritustiedot.getOrElse(valintaperusteviite.tunniste, List()).filter(kentat =>
+      hakemus.metatiedot.getOrElse(valintaperusteviite.tunniste, List()).filter(kentat =>
         (ehdot.alkuvuosi.isEmpty ||  string2integer(kentat.get("SUORITUSVUOSI"), 9999) >= ehdot.alkuvuosi.get) &&
         (ehdot.loppuvuosi.isEmpty ||  string2integer(kentat.get("SUORITUSVUOSI"), 0) <= ehdot.loppuvuosi.get) &&
         (ehdot.alkulukukausi.isEmpty ||  string2integer(kentat.get("SUORITUSLUKUKAUSI"), 0) >= ehdot.alkulukukausi.get) &&
