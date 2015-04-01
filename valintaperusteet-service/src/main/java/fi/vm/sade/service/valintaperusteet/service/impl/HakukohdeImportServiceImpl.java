@@ -275,7 +275,7 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
     }
 
     private Predicate<Valintaryhma> hakuoidFilter(String hakuoid) {
-        return v -> StringUtils.isBlank(v.getHakuoid()) || v.getHakuoid().equals(hakuoid);
+        return v -> !StringUtils.isBlank(v.getHakuoid()) && v.getHakuoid().equals(hakuoid);
     }
 
     @Override
