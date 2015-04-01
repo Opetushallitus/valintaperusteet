@@ -1397,11 +1397,18 @@ class LaskentaTest extends FunSuite {
     assert(tila.getTilatyyppi == Tilatyyppi.HYLATTY)
   }
 
-  test("HaeYoArvosana: suoritus, jolla epävalidit kausitiedot filttröidään pois") {
-    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeYoArvosanaKutsu("REAALI"))
+  test("HaeYoArvosana: suoritus, jolla epävalidit kausitiedot filtteröidään pois, mutta on hyväksyttävissä, jos ei pakollinen") {
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeYoArvosanaKutsu("REAALI", false))
     val (tulos, tila) = Laskin.laske(hakukohde, hakemusMustache, lasku)
     assert(BigDecimal(tulos.get) == BigDecimal("0.0"))
     assert(tila.getTilatyyppi == Tilatyyppi.HYVAKSYTTAVISSA)
+  }
+
+  test("HaeYoArvosana: suoritus, jolla epävalidit kausitiedot filtteröidään pois ja tulee hylatty, jos pakollinen") {
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeYoArvosanaKutsu("REAALI", true))
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemusMustache, lasku)
+    assert(BigDecimal(tulos.get) == BigDecimal("0.0"))
+    assert(tila.getTilatyyppi == Tilatyyppi.HYLATTY)
   }
 
   test("HaeYoArvosana: suoritus, jolla validit kausitiedot, mutta epävalidi arvo palauttaa virheen") {
