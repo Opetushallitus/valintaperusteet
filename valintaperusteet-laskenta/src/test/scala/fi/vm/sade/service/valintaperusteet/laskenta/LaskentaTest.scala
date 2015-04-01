@@ -1268,122 +1268,136 @@ class LaskentaTest extends FunSuite {
     assertTilaHyvaksyttavissa(yliTila)
   }
 
-  test("HaeYoArvosana") {
-    val hakemus = hakemusMustache
+  private def createHaeYoArvosanaKutsu(aine: String, pakollinen: Boolean = false): Funktiokutsu = {
 
     val viite: ValintaperusteViite = new ValintaperusteViite
-    viite.setTunniste("SA")
+    viite.setTunniste(aine)
     viite.setIndeksi(0)
     viite.setLahde(Valintaperustelahde.HAETTAVA_ARVO)
     viite.setEpasuoraViittaus(false)
-    viite.setOnPakollinen(false)
+    viite.setOnPakollinen(pakollinen)
 
-    def createHaeYoArvosanaKutsu: Funktiokutsu = {
-      val kutsu: Funktiokutsu = new Funktiokutsu
-      kutsu.setFunktionimi(Funktionimi.HAEYOARVOSANA)
+    val kutsu: Funktiokutsu = new Funktiokutsu
+    kutsu.setFunktionimi(Funktionimi.HAEYOARVOSANA)
 
-      kutsu.getValintaperusteviitteet.add(viite)
+    kutsu.getValintaperusteviitteet.add(viite)
 
-      val syoteparametri: Syoteparametri = new Syoteparametri
-      syoteparametri.setAvain("M")
-      syoteparametri.setArvo("3")
+    val syoteparametri: Syoteparametri = new Syoteparametri
+    syoteparametri.setAvain("M")
+    syoteparametri.setArvo("3")
 
-      val syoteparametri2: Syoteparametri = new Syoteparametri
-      syoteparametri2.setAvain("A")
-      syoteparametri2.setArvo("5")
+    val syoteparametri2: Syoteparametri = new Syoteparametri
+    syoteparametri2.setAvain("A")
+    syoteparametri2.setArvo("5")
 
-      val syoteparametri7: Syoteparametri = new Syoteparametri
-      syoteparametri7.setAvain("B")
-      syoteparametri7.setArvo("5")
+    val syoteparametri7: Syoteparametri = new Syoteparametri
+    syoteparametri7.setAvain("B")
+    syoteparametri7.setArvo("5")
 
-      val syoteparametri8: Syoteparametri = new Syoteparametri
-      syoteparametri8.setAvain("C")
-      syoteparametri8.setArvo("5")
+    val syoteparametri8: Syoteparametri = new Syoteparametri
+    syoteparametri8.setAvain("C")
+    syoteparametri8.setArvo("5")
 
-      val syoteparametri9: Syoteparametri = new Syoteparametri
-      syoteparametri9.setAvain("I")
-      syoteparametri9.setArvo("0")
+    val syoteparametri9: Syoteparametri = new Syoteparametri
+    syoteparametri9.setAvain("I")
+    syoteparametri9.setArvo("0")
 
-      val syoteparametri10: Syoteparametri = new Syoteparametri
-      syoteparametri10.setAvain("E")
-      syoteparametri10.setArvo("5")
+    val syoteparametri10: Syoteparametri = new Syoteparametri
+    syoteparametri10.setAvain("E")
+    syoteparametri10.setArvo("5")
 
-      val syoteparametri11: Syoteparametri = new Syoteparametri
-      syoteparametri11.setAvain("L")
-      syoteparametri11.setArvo("5")
+    val syoteparametri11: Syoteparametri = new Syoteparametri
+    syoteparametri11.setAvain("L")
+    syoteparametri11.setArvo("5")
 
-      val syoteparametri3: Syoteparametri = new Syoteparametri
-      syoteparametri3.setAvain("alkuvuosi")
-      syoteparametri3.setArvo("2010")
+    val syoteparametri3: Syoteparametri = new Syoteparametri
+    syoteparametri3.setAvain("alkuvuosi")
+    syoteparametri3.setArvo("2010")
 
-      val syoteparametri4: Syoteparametri = new Syoteparametri
-      syoteparametri4.setAvain("loppuvuosi")
-      syoteparametri4.setArvo("2014")
+    val syoteparametri4: Syoteparametri = new Syoteparametri
+    syoteparametri4.setAvain("loppuvuosi")
+    syoteparametri4.setArvo("2014")
 
-      val syoteparametri5: Syoteparametri = new Syoteparametri
-      syoteparametri5.setAvain("alkulukukausi")
-      syoteparametri5.setArvo("1")
+    val syoteparametri5: Syoteparametri = new Syoteparametri
+    syoteparametri5.setAvain("alkulukukausi")
+    syoteparametri5.setArvo("1")
 
-      val syoteparametri6: Syoteparametri = new Syoteparametri
-      syoteparametri6.setAvain("loppulukukausi")
-      syoteparametri6.setArvo("2")
+    val syoteparametri6: Syoteparametri = new Syoteparametri
+    syoteparametri6.setAvain("loppulukukausi")
+    syoteparametri6.setArvo("2")
 
-      kutsu.getSyoteparametrit.add(syoteparametri)
-      kutsu.getSyoteparametrit.add(syoteparametri2)
-      kutsu.getSyoteparametrit.add(syoteparametri3)
-      kutsu.getSyoteparametrit.add(syoteparametri4)
-      kutsu.getSyoteparametrit.add(syoteparametri5)
-      kutsu.getSyoteparametrit.add(syoteparametri6)
-      kutsu.getSyoteparametrit.add(syoteparametri7)
-      kutsu.getSyoteparametrit.add(syoteparametri8)
-      kutsu.getSyoteparametrit.add(syoteparametri9)
-      kutsu.getSyoteparametrit.add(syoteparametri10)
-      kutsu.getSyoteparametrit.add(syoteparametri11)
-      kutsu
-    }
+    kutsu.getSyoteparametrit.add(syoteparametri)
+    kutsu.getSyoteparametrit.add(syoteparametri2)
+    kutsu.getSyoteparametrit.add(syoteparametri3)
+    kutsu.getSyoteparametrit.add(syoteparametri4)
+    kutsu.getSyoteparametrit.add(syoteparametri5)
+    kutsu.getSyoteparametrit.add(syoteparametri6)
+    kutsu.getSyoteparametrit.add(syoteparametri7)
+    kutsu.getSyoteparametrit.add(syoteparametri8)
+    kutsu.getSyoteparametrit.add(syoteparametri9)
+    kutsu.getSyoteparametrit.add(syoteparametri10)
+    kutsu.getSyoteparametrit.add(syoteparametri11)
+    kutsu
+  }
 
-    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeYoArvosanaKutsu)
-    val (tulos, _) = Laskin.laske(hakukohde, hakemus, lasku)
+  test("HaeYoArvosana: suoritus, jolla validi arvo, vuosi and kausi palauttaa arvosanaa vastaavat pisteet") {
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeYoArvosanaKutsu("SA"))
+    val (tulos, _) = Laskin.laske(hakukohde, hakemusMustache, lasku)
     assert(BigDecimal(tulos.get) == BigDecimal("3"))
+  }
 
-    viite.setTunniste("PS")
-    val lasku2 = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeYoArvosanaKutsu)
-    val (tulos2, tila2) = Laskin.laske(hakukohde, hakemus, lasku2)
-    assert(BigDecimal(tulos2.get) == BigDecimal("0.0"))
-    assert(tila2.getTilatyyppi == Tilatyyppi.HYVAKSYTTAVISSA)
+  test("HaeYoArvosana: suoritus, jolla validi arvo, mutta ei vuotta ja kautta filtteröidään pois -> palauttaa hyväksyttävissä & 0 pistettä, jos ei pakollinen") {
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeYoArvosanaKutsu("PS", false))
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemusMustache, lasku)
+    assert(BigDecimal(tulos.get) == BigDecimal("0.0"))
+    assert(tila.getTilatyyppi == Tilatyyppi.HYVAKSYTTAVISSA)
+  }
 
-    viite.setTunniste("REAALI")
-    val lasku3 = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeYoArvosanaKutsu)
-    val (tulos3, tila3) = Laskin.laske(hakukohde, hakemus, lasku3)
-    assert(BigDecimal(tulos2.get) == BigDecimal("0.0"))
-    assert(tila2.getTilatyyppi == Tilatyyppi.HYVAKSYTTAVISSA)
+  test("HaeYoArvosana: suoritus, jolla validi arvo, mutta ei vuotta ja kautta filtteröidään pois -> palauttaa hylätty &  0 pistettä, jos ei pakollinen") {
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeYoArvosanaKutsu("PS", true))
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemusMustache, lasku)
+    assert(BigDecimal(tulos.get) == BigDecimal("0.0"))
+    assert(tila.getTilatyyppi == Tilatyyppi.HYLATTY)
+  }
 
-    viite.setTunniste("HI")
-    val lasku4 = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeYoArvosanaKutsu)
-    val (tulos4, tila4) = Laskin.laske(hakukohde, hakemus, lasku4)
-    assert(tulos4.isEmpty)
-    assert(tila4.getTilatyyppi == Tilatyyppi.VIRHE)
+  test("HaeYoArvosana: suoritus, jolla epävalidit kausitiedot filttröidään pois") {
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeYoArvosanaKutsu("REAALI"))
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemusMustache, lasku)
+    assert(BigDecimal(tulos.get) == BigDecimal("0.0"))
+    assert(tila.getTilatyyppi == Tilatyyppi.HYVAKSYTTAVISSA)
+  }
 
-    val syoteparametriValmistuneet: Syoteparametri = new Syoteparametri
+  test("HaeYoArvosana: suoritus, jolla validit kausitiedot, mutta epävalidi arvo palauttaa virheen") {
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeYoArvosanaKutsu("HI"))
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemusMustache, lasku)
+    assert(tulos.isEmpty)
+    assert(tila.getTilatyyppi == Tilatyyppi.VIRHE)
+  }
+
+  test("HaeYoArvosana: myös ei valmistuneelle palautetaan arvosanaa vastaavat pisteet, jos parametri valmistuneet=false") {
+    val kutsu = createHaeYoArvosanaKutsu("SA")
+
+    val syoteparametriValmistuneet = new Syoteparametri
     syoteparametriValmistuneet.setAvain("valmistuneet")
     syoteparametriValmistuneet.setArvo("false")
-    val kutsu2 = createHaeYoArvosanaKutsu
-    kutsu2.getSyoteparametrit.add(syoteparametriValmistuneet)
-    viite.setTunniste("SA")
+    kutsu.getSyoteparametrit.add(syoteparametriValmistuneet)
 
-    val lasku5 = Laskentadomainkonvertteri.muodostaLukuarvolasku(kutsu2)
-    val (tulos5, _) = Laskin.laske(hakukohde, hakemus, lasku5)
-    assert(BigDecimal(tulos5.get) == BigDecimal("3"))
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(kutsu)
+    val (tulos, _) = Laskin.laske(hakukohde, hakemusMustache, lasku)
+    assert(BigDecimal(tulos.get) == BigDecimal("3"))
+  }
 
-    // Vain valmistuneet huomioidaan
-    val syoteparametriValmistuneet2: Syoteparametri = new Syoteparametri
-    syoteparametriValmistuneet2.setAvain("valmistuneet")
-    syoteparametriValmistuneet2.setArvo("true")
-    val kutsu3 = createHaeYoArvosanaKutsu
-    kutsu3.getSyoteparametrit.add(syoteparametriValmistuneet2)
-    val lasku6 = Laskentadomainkonvertteri.muodostaLukuarvolasku(kutsu3)
-    val (tulos6, _) = Laskin.laske(hakukohde, hakemus, lasku6)
-    assert(BigDecimal(tulos6.get) == BigDecimal("0.0"))
+  test("HaeYoArvosana: ei valmistuneelle palautetaan 0 pistettä, jos parametri valmistuneet=true") {
+    val kutsu = createHaeYoArvosanaKutsu("SA")
+
+    val syoteparametriValmistuneet = new Syoteparametri
+    syoteparametriValmistuneet.setAvain("valmistuneet")
+    syoteparametriValmistuneet.setArvo("true")
+    kutsu.getSyoteparametrit.add(syoteparametriValmistuneet)
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(kutsu)
+    val (tulos, _) = Laskin.laske(hakukohde, hakemusMustache, lasku)
+    assert(BigDecimal(tulos.get) == BigDecimal("0.0"))
   }
 
   test("HaeOsakoeArvosana - ilman konverttereita") {
