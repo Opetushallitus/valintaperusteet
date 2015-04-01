@@ -1377,7 +1377,7 @@ class LaskentaTest extends FunSuite {
     kutsu
   }
 
-  test("HaeYoArvosana: aine, jolla useita suortiuksia palautetaan se, jolla vuosi and kausi ja annettu ja paras validi arvo ja arvoa vastaavat pisteet") {
+  test("HaeYoArvosana: aine, jolla useita suorituksia valitaan se, joka osuu hakuehtoihin ja jolla on paras validi arvo, jota vastaavat pisteet palautetaan") {
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeYoArvosanaKutsu("SA"))
     val (tulos, _) = Laskin.laske(hakukohde, hakemusMustache, lasku)
     assert(BigDecimal(tulos.get) == BigDecimal("3"))
@@ -1444,7 +1444,7 @@ class LaskentaTest extends FunSuite {
     assert(BigDecimal(tulos.get) == BigDecimal("0.0"))
   }
 
-  test("HaeOsakoeArvosana - ilman konverttereita, palauttaa parhaan validin suoriuksen pisteet") {
+  test("HaeOsakoeArvosana - ilman konverttereita, palauttaa parhaan validin ja hakuehtoihin osuvan suorituksen pisteet") {
     val hakemus = hakemusMustache
 
     val kutsu: Funktiokutsu = new Funktiokutsu
@@ -1489,7 +1489,7 @@ class LaskentaTest extends FunSuite {
 
   }
 
-  test("HaeOsakoeArvosana - Arvokonvertterilla, palauttaa parhaan validin suoriuksen pisteet") {
+  test("HaeOsakoeArvosana - Arvokonvertterilla, palauttaa parhaan validin ja hakuehtoihin osuvan suorituksen pisteitä vastaavan arvon") {
     val hakemus = hakemusMustache
 
     val kutsu: Funktiokutsu = new Funktiokutsu
@@ -1542,7 +1542,7 @@ class LaskentaTest extends FunSuite {
 
   }
 
-  test("HaeOsakoeArvosana - Arvovälikonvertterilla, palauttaa parhaan validin suoriuksen pisteet") {
+  test("HaeOsakoeArvosana - Arvovälikonvertterilla, palauttaa parhaan validin ja hakuehtoihin osuvan suorituksen pisteitä vastaavan arvon") {
     val hakemus = hakemusMustache
 
     val kutsu: Funktiokutsu = new Funktiokutsu
