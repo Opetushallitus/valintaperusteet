@@ -652,7 +652,10 @@ private class Laskin private(private val hakukohde: Hakukohde,
 
       case HaeYoPisteet(konvertteri, ehdot, oletusarvo, valintaperusteviite, oid, tulosTunniste,_,_,_) => {
         val suoritukset = filteredSuoritusTiedot(valintaperusteviite, ehdot)
-        haeLukuarvo(konvertteri, oletusarvo, HakemuksenValintaperuste("PISTEET", valintaperusteviite.pakollinen), suoritukset.headOption.getOrElse(Map()))
+        val sortedValues = suoritukset.sortWith((kentat1, kentat2) =>
+          string2integer(kentat1.get("PISTEET"), 0) > string2integer(kentat2.get("PISTEET"), 0)
+        )
+        haeLukuarvo(konvertteri, oletusarvo, HakemuksenValintaperuste("PISTEET", valintaperusteviite.pakollinen), sortedValues.headOption.getOrElse(Map()))
       }
 
       case HaeLukuarvoEhdolla(konvertteri, oletusarvo, valintaperusteviite, ehto, oid, tulosTunniste,_,_,_) => {
@@ -679,7 +682,10 @@ private class Laskin private(private val hakukohde: Hakukohde,
 
       case HaeYoArvosana(konvertteri, ehdot, oletusarvo, valintaperusteviite, oid, tulosTunniste,_,_,_) => {
         val suoritukset = filteredSuoritusTiedot(valintaperusteviite, ehdot)
-        haeMerkkijonoJaKonvertoiLukuarvoksi(konvertteri, oletusarvo, HakemuksenValintaperuste("ARVO", valintaperusteviite.pakollinen), suoritukset.headOption.getOrElse(Map()))
+        val sortedValues = suoritukset.sortWith((kentat1, kentat2) =>
+          ehdot.YO_ORDER.indexOf(kentat1.getOrElse("ARVO", "I")) < ehdot.YO_ORDER.indexOf(kentat2.getOrElse("ARVO", "I"))
+        )
+        haeMerkkijonoJaKonvertoiLukuarvoksi(konvertteri, oletusarvo, HakemuksenValintaperuste("ARVO", valintaperusteviite.pakollinen), sortedValues.headOption.getOrElse(Map()))
       }
 
       case HaeTotuusarvoJaKonvertoiLukuarvoksi(konvertteri, oletusarvo, valintaperusteviite, oid, tulosTunniste,_,_,_) => {

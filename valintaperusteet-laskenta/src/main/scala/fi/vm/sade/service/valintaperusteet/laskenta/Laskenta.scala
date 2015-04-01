@@ -291,7 +291,9 @@ object Laskenta {
     loppulukukausi: Option[Int],
     vainValmistuneet: Boolean,
     rooli: Option[String]
-  )
+  ) {
+    final val YO_ORDER = List("L", "E", "M", "C", "B", "A", "I")
+  }
 
   case class HaeYoArvosana(konvertteri: Konvertteri[String, BigDecimal],
                            ehdot: YoEhdot,

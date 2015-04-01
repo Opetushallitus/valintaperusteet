@@ -100,11 +100,27 @@ class LaskentaTest extends FunSuite {
     put("YO_TILA", "false")
   }}
 
-  val mustacheMapSA = new util.HashMap[String, String](){{
-    put("ARVO", "M")
-    put("SUORITUSVUOSI", "2011")
-    put("SUORITUSLUKUKAUSI", "2")
-  }}
+  val mustacheMapSA: util.List[util.Map[String,String]] = util.Arrays.asList(
+    new util.HashMap[String, String](){{
+      put("ARVO", "A")
+      put("SUORITUSVUOSI", "2012")
+      put("SUORITUSLUKUKAUSI", "1")
+    }},
+    new util.HashMap[String, String](){{
+      put("SUORITUSVUOSI", "2012")
+      put("SUORITUSLUKUKAUSI", "1")
+    }},
+    new util.HashMap[String, String](){{
+      put("ARVO", "M")
+      put("SUORITUSVUOSI", "2011")
+      put("SUORITUSLUKUKAUSI", "2")
+    }},
+    new util.HashMap[String, String](){{
+      put("ARVO", "L")
+      put("SUORITUSVUOSI", "1999")
+      put("SUORITUSLUKUKAUSI", "1")
+    }}
+  )
 
   val mustacheMapPS = new util.HashMap[String, String](){{
     put("ARVO", "L")
@@ -121,18 +137,39 @@ class LaskentaTest extends FunSuite {
     put("SUORITUSLUKUKAUSI", "2")
   }}
 
-  val mustacheMap01 = new util.HashMap[String, String](){{
-    put("PISTEET", "15")
-    put("SUORITUSVUOSI", "2011")
-    put("SUORITUSLUKUKAUSI", "2")
-  }}
+  val mustacheMap01: util.List[util.Map[String,String]] = util.Arrays.asList(
+    new util.HashMap[String, String](){{
+      put("PISTEET", "13")
+      put("SUORITUSVUOSI", "2012")
+      put("SUORITUSLUKUKAUSI", "2")
+    }},
+    new util.HashMap[String, String](){{
+      put("SUORITUSVUOSI", "2012")
+      put("SUORITUSLUKUKAUSI", "2")
+    }},
+    new util.HashMap[String, String](){{
+      put("PISTEET", "13")
+      put("SUORITUSVUOSI", "2012")
+      put("SUORITUSLUKUKAUSI", "1")
+    }},
+    new util.HashMap[String, String](){{
+      put("PISTEET", "15")
+      put("SUORITUSVUOSI", "2011")
+      put("SUORITUSLUKUKAUSI", "2")
+    }},
+    new util.HashMap[String, String](){{
+      put("PISTEET", "22")
+      put("SUORITUSVUOSI", "2005")
+      put("SUORITUSLUKUKAUSI", "2")
+    }}
+  )
 
   val suorituksetMustacheMap = new util.HashMap[String, util.List[util.Map[String, String]]]{{
-    put("SA", util.Arrays.asList(mustacheMapSA))
+    put("SA", mustacheMapSA)
     put("PS", util.Arrays.asList(mustacheMapPS))
     put("REAALI", util.Arrays.asList(mustacheMapREAALI))
     put("HI", util.Arrays.asList(mustacheMapHI))
-    put("01", util.Arrays.asList(mustacheMap01))
+    put("01", mustacheMap01)
   }}
 
 
@@ -1340,7 +1377,7 @@ class LaskentaTest extends FunSuite {
     kutsu
   }
 
-  test("HaeYoArvosana: suoritus, jolla validi arvo, vuosi and kausi palauttaa arvosanaa vastaavat pisteet") {
+  test("HaeYoArvosana: aine, jolla useita suortiuksia palautetaan se, jolla vuosi and kausi ja annettu ja paras validi arvo ja arvoa vastaavat pisteet") {
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeYoArvosanaKutsu("SA"))
     val (tulos, _) = Laskin.laske(hakukohde, hakemusMustache, lasku)
     assert(BigDecimal(tulos.get) == BigDecimal("3"))
@@ -1400,7 +1437,7 @@ class LaskentaTest extends FunSuite {
     assert(BigDecimal(tulos.get) == BigDecimal("0.0"))
   }
 
-  test("HaeOsakoeArvosana - ilman konverttereita") {
+  test("HaeOsakoeArvosana - ilman konverttereita, palauttaa parhaan validin suoriuksen pisteet") {
     val hakemus = hakemusMustache
 
     val kutsu: Funktiokutsu = new Funktiokutsu
@@ -1445,7 +1482,7 @@ class LaskentaTest extends FunSuite {
 
   }
 
-  test("HaeOsakoeArvosana - Arvokonvertterilla") {
+  test("HaeOsakoeArvosana - Arvokonvertterilla, palauttaa parhaan validin suoriuksen pisteet") {
     val hakemus = hakemusMustache
 
     val kutsu: Funktiokutsu = new Funktiokutsu
@@ -1498,7 +1535,7 @@ class LaskentaTest extends FunSuite {
 
   }
 
-  test("HaeOsakoeArvosana - Arvovälikonvertterilla") {
+  test("HaeOsakoeArvosana - Arvovälikonvertterilla, palauttaa parhaan validin suoriuksen pisteet") {
     val hakemus = hakemusMustache
 
     val kutsu: Funktiokutsu = new Funktiokutsu
