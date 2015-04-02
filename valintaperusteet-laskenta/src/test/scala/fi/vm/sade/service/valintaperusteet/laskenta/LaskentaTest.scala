@@ -1492,13 +1492,31 @@ class LaskentaTest extends FunSuite {
     assert(tila.getTilatyyppi == Tilatyyppi.HYVAKSYTTAVISSA)
   }
 
-  test("HaeOsakoeArvosana - ilman konverttereita, palauttaa myös ei kooostetun aineen parhaan validin ja hakuehtoihin osuvan suorituksen pisteet") {
+  test("HaeOsakoeArvosana, palauttaa myös ei kooostetun aineen parhaan validin ja hakuehtoihin osuvan suorituksen pisteet") {
     val kutsu: Funktiokutsu = createHaeOsakoeArvosanaKutsu("SA")
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(kutsu)
 
     val (tulos, tila) = Laskin.laske(hakukohde, hakemusMustache, lasku)
     assert(BigDecimal(tulos.get) == BigDecimal("16"))
     assert(tila.getTilatyyppi == Tilatyyppi.HYVAKSYTTAVISSA)
+  }
+
+  test("HaeOsakoeArvosana, palauttaa myös ei 0 pistetta ja hyvaksyttavissa jos ei pisteitä ja ei pakollinen") {
+    val kutsu: Funktiokutsu = createHaeOsakoeArvosanaKutsu("HI", false)
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(kutsu)
+
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemusMustache, lasku)
+    assert(BigDecimal(tulos.get) == BigDecimal("0"))
+    assert(tila.getTilatyyppi == Tilatyyppi.HYVAKSYTTAVISSA)
+  }
+
+  test("HaeOsakoeArvosana, palauttaa myös ei 0 pistetta ja hylatty jos pakollinen") {
+    val kutsu: Funktiokutsu = createHaeOsakoeArvosanaKutsu("HI", true)
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(kutsu)
+
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemusMustache, lasku)
+    assert(BigDecimal(tulos.get) == BigDecimal("0"))
+    assert(tila.getTilatyyppi == Tilatyyppi.HYLATTY)
   }
 
   test("HaeOsakoeArvosana - Arvokonvertterilla, palauttaa parhaan validin ja hakuehtoihin osuvan suorituksen pisteitä vastaavan arvon") {
