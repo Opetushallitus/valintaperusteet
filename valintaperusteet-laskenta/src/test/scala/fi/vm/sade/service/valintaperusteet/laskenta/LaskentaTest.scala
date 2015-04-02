@@ -1444,18 +1444,16 @@ class LaskentaTest extends FunSuite {
     assert(BigDecimal(tulos.get) == BigDecimal("0.0"))
   }
 
-  test("HaeOsakoeArvosana - ilman konverttereita, palauttaa parhaan validin ja hakuehtoihin osuvan suorituksen pisteet") {
-    val hakemus = hakemusMustache
-
+  private def createHaeOsakoeArvosanaKutsu(aine: String, pakollinen: Boolean = false): Funktiokutsu = {
     val kutsu: Funktiokutsu = new Funktiokutsu
     kutsu.setFunktionimi(Funktionimi.HAEOSAKOEARVOSANA)
 
     val viite: ValintaperusteViite = new ValintaperusteViite
-    viite.setTunniste("01")
+    viite.setTunniste(aine)
     viite.setIndeksi(0)
     viite.setLahde(Valintaperustelahde.HAETTAVA_ARVO)
     viite.setEpasuoraViittaus(false)
-    viite.setOnPakollinen(false)
+    viite.setOnPakollinen(pakollinen)
 
     kutsu.getValintaperusteviitteet.add(viite)
 
@@ -1479,119 +1477,47 @@ class LaskentaTest extends FunSuite {
     kutsu.getSyoteparametrit.add(syoteparametri4)
     kutsu.getSyoteparametrit.add(syoteparametri5)
     kutsu.getSyoteparametrit.add(syoteparametri6)
+    kutsu
+  }
 
+  test("HaeOsakoeArvosana - ilman konverttereita, palauttaa parhaan validin ja hakuehtoihin osuvan suorituksen pisteet") {
+    val kutsu: Funktiokutsu = createHaeOsakoeArvosanaKutsu("01")
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(kutsu)
 
-    val (tulos, tila) = Laskin.laske(hakukohde, hakemus,
-      lasku)
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemusMustache, lasku)
     assert(BigDecimal(tulos.get) == BigDecimal("15"))
     assert(tila.getTilatyyppi == Tilatyyppi.HYVAKSYTTAVISSA)
-
   }
 
   test("HaeOsakoeArvosana - Arvokonvertterilla, palauttaa parhaan validin ja hakuehtoihin osuvan suorituksen pisteitä vastaavan arvon") {
-    val hakemus = hakemusMustache
 
-    val kutsu: Funktiokutsu = new Funktiokutsu
-    kutsu.setFunktionimi(Funktionimi.HAEOSAKOEARVOSANA)
-
-    val viite: ValintaperusteViite = new ValintaperusteViite
-    viite.setTunniste("01")
-    viite.setIndeksi(0)
-    viite.setLahde(Valintaperustelahde.HAETTAVA_ARVO)
-    viite.setEpasuoraViittaus(false)
-    viite.setOnPakollinen(false)
-
-    kutsu.getValintaperusteviitteet.add(viite)
-
-    val syoteparametri3: Syoteparametri = new Syoteparametri
-    syoteparametri3.setAvain("alkuvuosi")
-    syoteparametri3.setArvo("2010")
-
-    val syoteparametri4: Syoteparametri = new Syoteparametri
-    syoteparametri4.setAvain("loppuvuosi")
-    syoteparametri4.setArvo("2014")
-
-    val syoteparametri5: Syoteparametri = new Syoteparametri
-    syoteparametri5.setAvain("alkulukukausi")
-    syoteparametri5.setArvo("1")
-
-    val syoteparametri6: Syoteparametri = new Syoteparametri
-    syoteparametri6.setAvain("loppulukukausi")
-    syoteparametri6.setArvo("2")
-
-    kutsu.getSyoteparametrit.add(syoteparametri3)
-    kutsu.getSyoteparametrit.add(syoteparametri4)
-    kutsu.getSyoteparametrit.add(syoteparametri5)
-    kutsu.getSyoteparametrit.add(syoteparametri6)
-
-
+    val kutsu: Funktiokutsu = createHaeOsakoeArvosanaKutsu("01")
     val konv1 = new Arvokonvertteriparametri
     konv1.setArvo("15")
     konv1.setPaluuarvo("5.0")
     konv1.setHylkaysperuste("false")
-
     kutsu.getArvokonvertteriparametrit.add(konv1)
-
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(kutsu)
 
-    val (tulos, tila) = Laskin.laske(hakukohde, hakemus,
-      lasku)
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemusMustache, lasku)
     assert(BigDecimal(tulos.get) == BigDecimal("5.0"))
     assert(tila.getTilatyyppi == Tilatyyppi.HYVAKSYTTAVISSA)
 
   }
 
   test("HaeOsakoeArvosana - Arvovälikonvertterilla, palauttaa parhaan validin ja hakuehtoihin osuvan suorituksen pisteitä vastaavan arvon") {
-    val hakemus = hakemusMustache
 
-    val kutsu: Funktiokutsu = new Funktiokutsu
-    kutsu.setFunktionimi(Funktionimi.HAEOSAKOEARVOSANA)
-
-    val viite: ValintaperusteViite = new ValintaperusteViite
-    viite.setTunniste("01")
-    viite.setIndeksi(0)
-    viite.setLahde(Valintaperustelahde.HAETTAVA_ARVO)
-    viite.setEpasuoraViittaus(false)
-    viite.setOnPakollinen(false)
-
-    kutsu.getValintaperusteviitteet.add(viite)
-
-    val syoteparametri3: Syoteparametri = new Syoteparametri
-    syoteparametri3.setAvain("alkuvuosi")
-    syoteparametri3.setArvo("2010")
-
-    val syoteparametri4: Syoteparametri = new Syoteparametri
-    syoteparametri4.setAvain("loppuvuosi")
-    syoteparametri4.setArvo("2014")
-
-    val syoteparametri5: Syoteparametri = new Syoteparametri
-    syoteparametri5.setAvain("alkulukukausi")
-    syoteparametri5.setArvo("1")
-
-    val syoteparametri6: Syoteparametri = new Syoteparametri
-    syoteparametri6.setAvain("loppulukukausi")
-    syoteparametri6.setArvo("2")
-
-    kutsu.getSyoteparametrit.add(syoteparametri3)
-    kutsu.getSyoteparametrit.add(syoteparametri4)
-    kutsu.getSyoteparametrit.add(syoteparametri5)
-    kutsu.getSyoteparametrit.add(syoteparametri6)
-
-
+    val kutsu: Funktiokutsu = createHaeOsakoeArvosanaKutsu("01")
     val konv1 = new Arvovalikonvertteriparametri
     konv1.setPalautaHaettuArvo("false")
     konv1.setMinValue("12")
     konv1.setMaxValue("17")
     konv1.setPaluuarvo("5.0")
     konv1.setHylkaysperuste("false")
-
     kutsu.getArvovalikonvertteriparametrit.add(konv1)
-
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(kutsu)
 
-    val (tulos, tila) = Laskin.laske(hakukohde, hakemus,
-      lasku)
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemusMustache, lasku)
     assert(BigDecimal(tulos.get) == BigDecimal("5.0"))
     assert(tila.getTilatyyppi == Tilatyyppi.HYVAKSYTTAVISSA)
 
