@@ -105,10 +105,12 @@ class LaskentaTest extends FunSuite {
       put("ARVO", "A")
       put("SUORITUSVUOSI", "2012")
       put("SUORITUSLUKUKAUSI", "1")
+      put("PISTEET", "15")
     }},
     new util.HashMap[String, String](){{
       put("SUORITUSVUOSI", "2012")
       put("SUORITUSLUKUKAUSI", "1")
+      put("PISTEET", "16")
     }},
     new util.HashMap[String, String](){{
       put("ARVO", "M")
@@ -117,6 +119,7 @@ class LaskentaTest extends FunSuite {
     }},
     new util.HashMap[String, String](){{
       put("ARVO", "L")
+      put("PISTEET", "22")
       put("SUORITUSVUOSI", "1999")
       put("SUORITUSLUKUKAUSI", "1")
     }}
@@ -1486,6 +1489,15 @@ class LaskentaTest extends FunSuite {
 
     val (tulos, tila) = Laskin.laske(hakukohde, hakemusMustache, lasku)
     assert(BigDecimal(tulos.get) == BigDecimal("15"))
+    assert(tila.getTilatyyppi == Tilatyyppi.HYVAKSYTTAVISSA)
+  }
+
+  test("HaeOsakoeArvosana - ilman konverttereita, palauttaa myös ei kooostetun aineen parhaan validin ja hakuehtoihin osuvan suorituksen pisteet") {
+    val kutsu: Funktiokutsu = createHaeOsakoeArvosanaKutsu("SA")
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(kutsu)
+
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemusMustache, lasku)
+    assert(BigDecimal(tulos.get) == BigDecimal("16"))
     assert(tila.getTilatyyppi == Tilatyyppi.HYVAKSYTTAVISSA)
   }
 
