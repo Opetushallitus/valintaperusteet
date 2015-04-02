@@ -84,69 +84,6 @@ object Arvojoukot {
     "2" -> "Kevät"
   )
 
-  val EI_KOOSTETUT_PISTEET = Array(
-    "O_PISTEET"->"Äidinkielen koe, ruotsi (O)",
-    "O5_PISTEET"->"Ruotsi toisena kielenä (O5)",
-    "A_PISTEET"->"Äidinkielen koe, suomi (A)",
-    "A5_PISTEET"->"Suomi toisena kielenä (A5)",
-    "BA_PISTEET"->"Ruotsi, pitkä oppimäärä (BA)",
-    "BB_PISTEET"->"Ruotsi, keskipitkä oppimäärä (BB)",
-    "CA_PISTEET"->"Suomi, pitkä oppimäärä (CA)",
-    "CB_PISTEET"->"Suomi, keskipitkä oppimäärä (CB)",
-    "CC_PISTEET"->"Suomi, lyhyt oppimäärä (CC)",
-    "DC_PISTEET"->"Pohjoissaame, lyhyt oppimäärä (DC)",
-    "EA_PISTEET"->"Englanti, pitkä oppimäärä (EA)",
-    "EB_PISTEET"->"Englanti, keskipitkä oppimäärä (EB)",
-    "EC_PISTEET"->"Englanti, lyhyt oppimäärä (EC)",
-    "FA_PISTEET"->"Ranska, pitkä oppimäärä (FA)",
-    "FB_PISTEET"->"Ranska, keskipitkä oppimäärä (FB)",
-    "FC_PISTEET"->"Ranska, lyhyt oppimäärä (FC)",
-    "GA_PISTEET"->"Portugali, pitkä oppimäärä (GA)",
-    "GB_PISTEET"->"Portugali, keskipitkä oppimäärä (GB)",
-    "GC_PISTEET"->"Portugali, lyhyt oppimäärä (GC)",
-    "HA_PISTEET"->"Unkari, pitkä oppimäärä (HA)",
-    "HB_PISTEET"->"Unkari, keskipitkä oppimäärä (HB)",
-    "I_PISTEET"->"Äidinkielen koe, inarinsaame (I)",
-    "W_PISTEET"->"Äidinkielen koe, koltansaame (W)",
-    "IC_PISTEET"->"Inarinsaame, lyhyt oppimäärä (IC)",
-    "QC_PISTEET"->"Koltan saame, lyhyt oppimäärä (QC)",
-    "J_PISTEET"->"Englanninkielinen kypsyyskoe (J)",
-    "KC_PISTEET"->"Kreikka, lyhyt oppimäärä (KC)",
-    "L1_PISTEET"->"Latina, lyhyt oppimäärä (L1)",
-    "L7_PISTEET"->"Latina, laajempi oppimäärä (L7)",
-    "M_PISTEET"->"Matematiikan koe, pitkä oppimäärä (M)",
-    "N_PISTEET"->"Matematiikan koe, lyhyt oppimäärä (N)",
-    "PA_PISTEET"->"Espanja, pitkä oppimäärä (PA)",
-    "PB_PISTEET"->"Espanja, keskipitkä oppimäärä (PB)",
-    "PC_PISTEET"->"Espanja, lyhyt oppimäärä (PC)",
-    "RR_PISTEET"->"Reaali, ev lut uskonnon kysymykset (RR)",
-    "RO_PISTEET"->"Reaali, ortod.uskonnon kysymykset (RO)",
-    "RY_PISTEET"->"Reaali, elämänkatsomustiedon kysymykset (RY)",
-    "SA_PISTEET"->"Saksa, pitkä oppimäärä (SA)",
-    "SB_PISTEET"->"Saksa, keskipitkä oppimäärä (SB)",
-    "SC_PISTEET"->"Saksa, lyhyt oppimäärä (SC)",
-    "S9_PISTEET"->"Saksalaisen koulun saksan kielen koe (S9)",
-    "TA_PISTEET"->"Italia, pitkä oppimäärä (TA)",
-    "TB_PISTEET"->"Italia, keskipitkä oppimäärä (TB)",
-    "TC_PISTEET"->"Italia, lyhyt oppimäärä (TC)",
-    "VA_PISTEET"->"Venäjä, pitkä oppimäärä (VA)",
-    "VB_PISTEET"->"Venäjä, keskipitkä oppimäärä (VB)",
-    "VC_PISTEET"->"Venäjä, lyhyt oppimäärä (VC)",
-    "Z_PISTEET"->"Äidinkielen koe, pohjoissaame (Z)",
-    "UE_PISTEET"->"Ev.lut. Uskonto (UE)",
-    "UO_PISTEET"->"Ortodoksiuskonto (UO)",
-    "ET_PISTEET"->"Elämänkatsomustieto (ET)",
-    "FF_PISTEET"->"Filosofia (FF)",
-    "PS_PISTEET"->"Psykologia (PS)",
-    "HI_PISTEET"->"Historia (HI)",
-    "FY_PISTEET"->"Fysiikka (FY)",
-    "KE_PISTEET"->"Kemia (KE)",
-    "BI_PISTEET"->"Biologia (BI)",
-    "GE_PISTEET"->"Maantiede (GE)",
-    "TE_PISTEET"->"Terveystieto (TE)",
-    "YH_PISTEET"->"Yhteiskuntaoppi (YH)"
-  )
-
   val OSAKOKEET = Array(
     "01" -> "Ev.lut. uskonto (01)",
     "02" -> "Ortodoksiuskonto (02)",
@@ -158,7 +95,7 @@ object Arvojoukot {
     "08" -> "Kemia (08)",
     "09" -> "Biologia (09)",
     "10" -> "Maantiede (10)"
-  ) ++ EI_KOOSTETUT_PISTEET
+  ) ++ EI_KOOSTETUT
 
   val KOEROOLIT = Array(
     "11" -> "Äidinkieli (11)",
