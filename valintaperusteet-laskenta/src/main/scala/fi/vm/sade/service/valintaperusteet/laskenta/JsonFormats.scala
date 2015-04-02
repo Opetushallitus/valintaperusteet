@@ -263,12 +263,6 @@ object JsonHelpers {
       }
     }
 
-  implicit def mapWrites: Writes[Map[_,_]] =
-    new Writes[Map[_,_]] {
-      def writes(s: Map[_,_]): JsValue = s.foldLeft(Json.obj())((o, cur)=> o++Json.obj(cur._1.toString -> cur._2))
-    }
-
-
   implicit def anyReads: Reads[Any] =
     new Reads[Any] {
       def reads(json: JsValue): JsResult[Any] = json match {
@@ -298,10 +292,14 @@ object JsonHelpers {
         case Some(s: Long) => JsNumber(s)
         case Some(s: BigDecimal) => JsNumber(s)
         case Some(s: JBigDecimal) => JsNumber(s)
+        case Some(s: Any) => writes(s)
         case null => JsNull
         case None => JsNull
         case s: Map[_, _] => {
           s.foldLeft(Json.obj())((o, cur)=> o++Json.obj(cur._1.toString -> cur._2))
+        }
+        case s: Seq[_] => {
+          JsArray(s.map(writes))
         }
         case s: Any => {
           JsString(s"No json formatter found for $s")

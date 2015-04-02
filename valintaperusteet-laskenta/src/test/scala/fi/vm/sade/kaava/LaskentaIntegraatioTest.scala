@@ -1750,6 +1750,27 @@ class LaskentaIntegraatioTest extends FunSuite {
     assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.PAKOLLINEN_VALINTAPERUSTE_HYLKAYS)
   }
 
+  test("hae yo koe, hakemuksella arvo") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HAEOSAKOEARVOSANA,
+      valintaperustetunniste = List(ValintaperusteViite(
+        tunniste = "HI",
+        onPakollinen = true)))
+
+    val arvosanat =  Map[String, java.util.List[java.util.Map[String, String]]](
+      ("HI" -> util.Arrays.asList(Map(
+        "PISTEET" -> "15"
+      )))
+    )
+    val hakemus = TestHakemus("", Nil, Map(), arvosanat)
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
+
+    val tulos = Laskin.suoritaValintakoelaskenta(hakukohde, hakemus, lasku)
+    assert(tulos.getTulos.equals(new BigDecimal("15")))
+    assertTilaHyvaksyttavissa(tulos.getTila)
+    assert(tulos.getHistoria.indexOf(""""avaimet":{"HI":[{"PISTEET":"15"}]}""") > 0)
+  }
+
   test("hae lukuarvo, oletusarvo, hakemuksella tyhja arvo") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAELUKUARVO,

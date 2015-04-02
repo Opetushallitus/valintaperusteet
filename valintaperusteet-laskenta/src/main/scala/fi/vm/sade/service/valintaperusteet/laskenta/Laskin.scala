@@ -149,7 +149,7 @@ object Laskin {
   }
 
   private def wrapHistoria(hakemus: Hakemus, historia: Historia) = {
-    val v: Map[String, Option[Any]] = hakemus.kentat.map(f => (f._1 -> Some(f._2)))
+    val v: Map[String, Option[Any]] = hakemus.kentat.map(f => (f._1 -> Some(f._2))) ++ hakemus.metatiedot.map(f => (f._1 -> Some(f._2)))
 
     val name = new StringBuffer().append(s"Laskenta hakemukselle (${hakemus.oid})").toString
     Historia(name, historia.tulos, historia.tilat, Some(List(historia)), Some(v))
