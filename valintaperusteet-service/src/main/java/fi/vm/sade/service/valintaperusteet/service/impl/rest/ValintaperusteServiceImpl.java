@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.service.impl.rest;
 
+import com.google.common.collect.Lists;
 import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
 import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
@@ -73,8 +74,12 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
 	public Map<String, List<ValintatapajonoDTO>> haeValintatapajonotSijoittelulle(
 			Collection<String> hakukohdeOids) {
 		return hakukohdeOids.stream().collect(Collectors.toMap(h -> h, h -> {
-			return modelMapper.mapList(
-					valintatapajonoDAO.haeValintatapajonotSijoittelulle(h), ValintatapajonoDTO.class);
+            final List<Valintatapajono> valintatapajonot = valintatapajonoDAO.haeValintatapajonotSijoittelulle(h);
+            if(valintatapajonot == null || valintatapajonot.isEmpty()) {
+                return Lists.newArrayList();
+            }
+            return modelMapper.mapList(
+                    valintatapajonot, ValintatapajonoDTO.class);
 
 		}));
 	}
