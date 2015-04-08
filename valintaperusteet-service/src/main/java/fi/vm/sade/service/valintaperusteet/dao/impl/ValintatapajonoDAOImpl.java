@@ -116,6 +116,7 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
         return from(hakukohde).leftJoin(hakukohde.valinnanvaiheet, vv).leftJoin(vv.jonot, jono)
                 .where(hakukohde.oid.eq(hakukohdeOid).and(jono.siirretaanSijoitteluun.isTrue()).and(vv.aktiivinen.isTrue())).distinct().list(jono);
     }
+
     @Override
     public List<Valintatapajono> haeValintatapajonotSijoittelulle(Collection<String> hakukohdeOids) {
         QHakukohdeViite hakukohde = QHakukohdeViite.hakukohdeViite;
