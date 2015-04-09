@@ -59,9 +59,8 @@ public class ValintatapajonoKopioija implements Kopioija<Valintatapajono> {
         }
 
         // VT-657
-        if(from.getVarasijanTayttojono() != null) {
-            to.setVarasijanTayttojono(from.getVarasijanTayttojono());
-        }
+        to.setVarasijanTayttojono(from.getVarasijanTayttojono());
+
         if(from.getPoissaOlevaTaytto() != null) {
             to.setPoissaOlevaTaytto(from.getPoissaOlevaTaytto());
         }
@@ -121,9 +120,6 @@ public class ValintatapajonoKopioija implements Kopioija<Valintatapajono> {
 
         // VT-657
         // Pitää kopioida kopion kopio
-//        if (kopio.getVarasijanTayttojono().equals(alkuperainenMaster.getVarasijanTayttojono())) {
-//            kopio.setVarasijanTayttojono(paivitettyMaster.getVarasijanTayttojono());
-//        }
         if (kopio.getPoissaOlevaTaytto().equals(alkuperainenMaster.getPoissaOlevaTaytto())) {
             kopio.setPoissaOlevaTaytto(paivitettyMaster.getPoissaOlevaTaytto());
         }

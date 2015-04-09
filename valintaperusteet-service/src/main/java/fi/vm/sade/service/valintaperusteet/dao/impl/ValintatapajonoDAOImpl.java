@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * User: tommiha Date: 1/17/13 Time: 12:51 PM
@@ -113,18 +114,22 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
         QValinnanVaihe vv = QValinnanVaihe.valinnanVaihe;
         QValintatapajono jono = QValintatapajono.valintatapajono;
 
-        return from(hakukohde).leftJoin(hakukohde.valinnanvaiheet, vv).leftJoin(vv.jonot, jono)
+        List<Valintatapajono> jonot = from(hakukohde)
+                .leftJoin(hakukohde.valinnanvaiheet, vv)
+                .leftJoin(vv.jonot, jono)
+                .leftJoin(jono.varasijanTayttojono).fetch()
                 .where(hakukohde.oid.eq(hakukohdeOid).and(jono.siirretaanSijoitteluun.isTrue()).and(vv.aktiivinen.isTrue())).distinct().list(jono);
-    }
 
-    @Override
-    public List<Valintatapajono> haeValintatapajonotSijoittelulle(Collection<String> hakukohdeOids) {
-        QHakukohdeViite hakukohde = QHakukohdeViite.hakukohdeViite;
-        QValinnanVaihe vv = QValinnanVaihe.valinnanVaihe;
-        QValintatapajono jono = QValintatapajono.valintatapajono;
+        // BUG-255 poistetaan jonoista väärin tallentuneet täyttöjonot
+        List<Long> ids = jonot.stream().map(j -> j.getId()).collect(Collectors.toList());
 
-        return from(hakukohde).leftJoin(hakukohde.valinnanvaiheet, vv).leftJoin(vv.jonot, jono)
-                .where(hakukohde.oid.in(hakukohdeOids).and(jono.siirretaanSijoitteluun.isTrue()).and(vv.aktiivinen.isTrue())).distinct().list(jono);
+        jonot.forEach(j -> {
+            if(j.getVarasijanTayttojono() != null && !ids.contains(j.getVarasijanTayttojono().getId())) {
+                j.setVarasijanTayttojono(null);
+            }
+        });
+
+        return jonot;
     }
 
     @Override

@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+
+    <valintaryhma id="1" version="0" oid="oid1" nimi="Valintaryhma 1" parent_id="[NULL]" />
+
+    <hakukohde_viite id="2" version="0" hakuoid="hakuoid1" oid="oid2" nimi="haku2" valintaryhma_id="1"
+                     manuaalisesti_siirretty="[NULL]"/>
+
+
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="2" version="0" oid="2"
+                    nimi="valinnanvaihe2" aktiivinen="true" kuvaus="kuvaus" valintaryhma_id="1" />
+
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="3" version="0" oid="3" hakukohde_viite_id="2"
+                    nimi="valinnanvaihe" aktiivinen="true" kuvaus="kuvaus" master_valinnan_vaihe_id="2"/>
+
+
+    <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="2" version="0"
+                     oid="2" aloituspaikat="18" nimi="Jono 2" poistetaanko_hylatyt="false"
+                     kuvaus="kuvaus" tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="2"
+                     aktiivinen="true"
+                     ei_varasijatayttoa="false" kaikki_ehdon_tayttavat_hyvaksytaan="false" valisijoittelu="true" automaattinen_laskentaan_siirto="true"/>
+
+    <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="3" version="0"
+                     oid="3" aloituspaikat="18" nimi="Jono 2" poistetaanko_hylatyt="false"
+                     kuvaus="kuvaus" tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="3"
+                     aktiivinen="true" master_valintatapajono_id="2"
+                     ei_varasijatayttoa="false" kaikki_ehdon_tayttavat_hyvaksytaan="false" valisijoittelu="true" automaattinen_laskentaan_siirto="true"/>
+
+    <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="4" version="0"
+                     oid="4" aloituspaikat="18" nimi="Täyttöjono" poistetaanko_hylatyt="false"
+                     kuvaus="kuvaus" tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="2"
+                     aktiivinen="true" edellinen_valintatapajono_id="2"
+                     ei_varasijatayttoa="false" kaikki_ehdon_tayttavat_hyvaksytaan="false" valisijoittelu="true" automaattinen_laskentaan_siirto="true"/>
+
+    <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="5" version="0"
+                     oid="5" aloituspaikat="18" nimi="Täyttöjono" poistetaanko_hylatyt="false"
+                     kuvaus="kuvaus" tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="3"
+                     aktiivinen="true" master_valintatapajono_id="4" edellinen_valintatapajono_id="3"
+                     ei_varasijatayttoa="false" kaikki_ehdon_tayttavat_hyvaksytaan="false" valisijoittelu="true" automaattinen_laskentaan_siirto="true"/>
+
+    <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="6" version="0"
+                     oid="6" aloituspaikat="18" nimi="Kolmas jono" poistetaanko_hylatyt="false"
+                     kuvaus="kuvaus" tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="2"
+                     aktiivinen="true" edellinen_valintatapajono_id="4"
+                     ei_varasijatayttoa="false" kaikki_ehdon_tayttavat_hyvaksytaan="false" valisijoittelu="true" automaattinen_laskentaan_siirto="true"/>
+
+    <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="7" version="0"
+                     oid="7" aloituspaikat="18" nimi="Kolmas jono" poistetaanko_hylatyt="false"
+                     kuvaus="kuvaus" tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="3"
+                     aktiivinen="true" master_valintatapajono_id="6" edellinen_valintatapajono_id="5"
+                     ei_varasijatayttoa="false" kaikki_ehdon_tayttavat_hyvaksytaan="false" valisijoittelu="true" automaattinen_laskentaan_siirto="true"/>
+
+    <valintaryhma id="2" version="0" oid="oid2" nimi="Valintaryhma 2" parent_id="[NULL]" />
+
+    <funktiokutsu />
+    <funktioargumentti />
+    <laskentakaava />
+
+    <hakijaryhma />
+    <hakijaryhma_jono />
+    <syoteparametri />
+    <valintaperuste_viite />
+
+    <jarjestyskriteeri />
+    <valintakoe />
+    <hakukohteen_valintaperuste />
+    <hakukohde_viite_opetuskielikoodi />
+    <opetuskielikoodi />
+    <valintaryhma_opetuskielikoodi />
+    <valintakoekoodi />
+    <valintaryhma_valintakoekoodi />
+    <hakukohde_viite_valintakoekoodi />
+    <valintaryhma_hakukohdekoodi />
+    <arvokonvertteriparametri />
+    <arvovalikonvertteriparametri />
+</dataset>

@@ -254,6 +254,8 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
         if (dto.getTayttojono() != null) {
             Valintatapajono tayttoJono = valintatapajonoDAO.readByOid(dto.getTayttojono());
             konvertoitu.setVarasijanTayttojono(tayttoJono);
+        } else {
+            konvertoitu.setVarasijanTayttojono(null);
         }
 
         return LinkitettavaJaKopioitavaUtil.paivita(managedObject, konvertoitu,
