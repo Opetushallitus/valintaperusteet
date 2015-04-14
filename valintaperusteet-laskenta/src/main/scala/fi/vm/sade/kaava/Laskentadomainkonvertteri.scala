@@ -154,7 +154,7 @@ object Laskentadomainkonvertteri {
 
   private def muodostaLasku(funktiokutsu: Funktiokutsu): Funktio[_] = {
     if (!Laskentakaavavalidaattori.onkoLaskettavaKaavaValidi(funktiokutsu)) {
-      throw new LaskentakaavaEiOleValidiException("Funktiokutsu ei ole validi")
+      throw new LaskentakaavaEiOleValidiException("Funktiokutsu ei ole validi: " + funktiokutsu.getValidointivirheet().mkString(", "))
     }
 
     val jarjestetytArgumentit: List[Funktioargumentti] = LaskentaUtil.jarjestaFunktioargumentit(funktiokutsu.getFunktioargumentit)
