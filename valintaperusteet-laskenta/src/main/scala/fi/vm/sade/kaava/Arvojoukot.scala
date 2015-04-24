@@ -80,8 +80,8 @@ object Arvojoukot {
   val YO_OPPIAINEET = EI_KOOSTETUT ++ KOOSTETUT
 
   val LUKUKAUDET = Array(
-    "1" -> "Syksy",
-    "2" -> "Kevät"
+    "2" -> "Syksy",
+    "1" -> "Kevät"
   )
 
   val OSAKOKEET = Array(
