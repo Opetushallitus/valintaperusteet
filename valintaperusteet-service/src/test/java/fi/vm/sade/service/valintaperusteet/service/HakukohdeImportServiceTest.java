@@ -256,8 +256,8 @@ public class HakukohdeImportServiceTest {
     @Test
     public void testImportHakukohdeOutsideValintaryhma() {
         // Oletetaan että kannassa on hakukohde, joka on valintaryhmän alla
-        // mutta synkkaus siirtää hakukohteen
-        // pois valintaryhmästä
+        // mutta synkkaus yrittää siirtää hakukohteen juureen
+        // säilytetään vanha valintaryhmä
 
         final String valintaryhmaOidAluksi = "oid40";
 
@@ -295,16 +295,20 @@ public class HakukohdeImportServiceTest {
             assertEquals(1, hakukohdeViites.size());
             assertEquals(hakukohdeOid, hakukohdeViites.get(0).getOid());
 
-            assertEquals(0, hakukohdeService.findByValintaryhmaOid(valintaryhmaOidAluksi).size());
+            assertEquals(1, hakukohdeService.findByValintaryhmaOid(valintaryhmaOidAluksi).size());
             HakukohdeViite hakukohde = hakukohdeService.readByOid(hakukohdeOid);
             assertFalse(hakukohde.getManuaalisestiSiirretty());
 
-            assertNull(hakukohde.getValintaryhma());
+            assertEquals(hakukohde.getValintaryhma().getOid(), valintaryhmaOidAluksi);
 
             List<ValinnanVaihe> vaiheet = valinnanVaiheService.findByHakukohde(hakukohdeOid);
-            assertEquals(2, vaiheet.size());
-            assertTrue(vaiheet.get(0).getId().equals(96L) && vaiheet.get(0).getMasterValinnanVaihe() == null);
-            assertTrue(vaiheet.get(1).getId().equals(98L) && vaiheet.get(1).getMasterValinnanVaihe() == null);
+            assertEquals(4, vaiheet.size());
+            assertTrue(vaiheet.get(0).getId().equals(95L)
+                    && vaiheet.get(0).getMasterValinnanVaihe().getId().equals(94L));
+            assertTrue(vaiheet.get(1).getId().equals(96L) && vaiheet.get(1).getMasterValinnanVaihe() == null);
+            assertTrue(vaiheet.get(2).getId().equals(97L)
+                    && vaiheet.get(2).getMasterValinnanVaihe().getId().equals(93L));
+            assertTrue(vaiheet.get(3).getId().equals(98L) && vaiheet.get(3).getMasterValinnanVaihe() == null);
         }
     }
 

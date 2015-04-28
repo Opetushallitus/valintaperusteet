@@ -255,7 +255,7 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
                     LOG.info("Hakukohteen tulisi olla valintaryhmän {} alla", valintaryhma.getOid());
                 } else {
                     LOG.info("Hakukohteelle ei pystytty määrittämään valintaryhmää. Potentiaalisia valintaryhmiä on {} kpl. "
-                            + "Hakukohde lisätään juureen.", valintaryhmat.size());
+                            + "Hakukohde lisätään juureen tai säilytetään vanhassa ryhmässä.", valintaryhmat.size());
                 }
 
             }
@@ -308,11 +308,15 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
             LOG.info("Hakukohde löytyi.");
             Valintaryhma hakukohdeValintaryhma = hakukohde.getValintaryhma();
             kopioiTiedot(importData, hakukohde);
+            if(valintaryhma == null && hakukohdeValintaryhma != null) {
+                LOG.info("Hakukohde on ollut valintaryhmässä ja nyt yritetään laittaa juureen. Säilytetään vanhassa ryhmässä");
+                SynkronoiKoodiJanimi(importData, hakukohde, koodi);
+            }
             // ^ on XOR-operaattori. Tsekataan, että sekä koodin että
             // hakukohteen kautta navigoidut valintaryhmät ovat
             // samat ja että hakukohdetta ei ole manuaalisesti siirretty
             // valintaryhmään.
-            if ((valintaryhma != null ^ hakukohdeValintaryhma != null)
+            else if ((valintaryhma != null ^ hakukohdeValintaryhma != null)
                     || (valintaryhma != null && hakukohdeValintaryhma != null && !valintaryhma.getOid().equals(
                     hakukohdeValintaryhma.getOid()))) {
 
@@ -332,13 +336,7 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
             } else {
                 LOG.info("Hakukohde on oikeassa valintaryhmässä. Synkronoidaan hakukohteen nimi ja koodi.");
                 // Synkataan nimi ja koodi
-                hakukohde.setNimi(generoiHakukohdeNimi(importData));
-                hakukohde.setTarjoajaOid(importData.getTarjoajaOid());
-                if (hakukohde.getManuaalisestiSiirretty() == null) {
-                    hakukohde.setManuaalisestiSiirretty(false);
-                }
-
-                hakukohde.setHakukohdekoodi(koodi);
+                SynkronoiKoodiJanimi(importData, hakukohde, koodi);
             }
         }
 
@@ -365,6 +363,16 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
         if(!isKKkohde(importData.getHaunkohdejoukkoUri())) {
             paivitaAloituspaikkojenLkm(hakukohde, importData.getValinnanAloituspaikat());
         }
+    }
+
+    private void SynkronoiKoodiJanimi(HakukohdeImportDTO importData, HakukohdeViite hakukohde, Hakukohdekoodi koodi) {
+        hakukohde.setNimi(generoiHakukohdeNimi(importData));
+        hakukohde.setTarjoajaOid(importData.getTarjoajaOid());
+        if (hakukohde.getManuaalisestiSiirretty() == null) {
+            hakukohde.setManuaalisestiSiirretty(false);
+        }
+
+        hakukohde.setHakukohdekoodi(koodi);
     }
 
     private void paivitaAloituspaikkojenLkm(final HakukohdeViite hakukohde, final int valinnanAloituspaikat) {
