@@ -178,6 +178,17 @@ public class ValintaperusteetModelMapper extends ModelMapper {
             }
         };
 
+        final Converter<Valintakoe, Boolean> valintakoeKutsutaankoKaikkiConverter = new Converter<Valintakoe, Boolean>() {
+            public Boolean convert(MappingContext<Valintakoe, Boolean> context) {
+                switch (context.getSource().getKutsunKohde()) {
+                    case HAKIJAN_VALINTA:
+                        return Boolean.FALSE;
+                    default:
+                        return context.getSource().getKutsutaankoKaikki();
+                }
+            }
+        };
+
         // Perus DTO mäppäykset
         this.addMappings(new PropertyMap<Hakijaryhma, HakijaryhmaDTO>() {
             @Override
@@ -245,6 +256,15 @@ public class ValintaperusteetModelMapper extends ModelMapper {
             @Override
             protected void configure() {
                 map().setLapsityyppi(FunktioargumentinLapsiDTO.LASKENTAKAAVATYYPPI);
+            }
+        });
+
+        this.addMappings(new PropertyMap<Valintakoe, ValintakoeDTO>() {
+            @Override
+            protected void configure() {
+
+                using(valintakoeKutsutaankoKaikkiConverter).map(source).setKutsutaankoKaikki(null);
+
             }
         });
 
