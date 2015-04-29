@@ -4,9 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
+import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.dto.model.Koekutsu;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
+import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
 import fi.vm.sade.service.valintaperusteet.resource.impl.ValintakoeResourceImpl;
 import fi.vm.sade.service.valintaperusteet.util.TestUtil;
 
@@ -22,6 +24,8 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.*;
 
@@ -41,10 +45,12 @@ public class ValintakoeResourceTest {
     private ValintakoeResourceImpl valintakoeResource = new ValintakoeResourceImpl();
     private ObjectMapper mapper = new ObjectMapperProvider().getContext(ValintakoeResourceImpl.class);
     private TestUtil testUtil = new TestUtil(this.getClass());
+    private ValintaperusteetModelMapper modelMapper = new ValintaperusteetModelMapper();
 
 
     @Autowired
     private ApplicationContext applicationContext;
+
 
     @Before
     public void setUp() {
@@ -113,6 +119,41 @@ public class ValintakoeResourceTest {
         assertEquals(koe.getNimi(), saved.getNimi());
         assertEquals(koe.getTunniste(), saved.getTunniste());
         assertNull(saved.getLaskentakaavaId());
+    }
+
+    @Test
+    public void testMappings() {
+        Valintakoe koe = new Valintakoe();
+        koe.setAktiivinen(true);
+        koe.setKutsunKohde(Koekutsu.YLIN_TOIVE);
+        koe.setKutsunKohdeAvain("jeppis");
+        koe.setKutsutaankoKaikki(true);
+        koe.setLahetetaankoKoekutsut(false);
+        koe.setNimi("Koe");
+        koe.setOid("KoeOid");
+        koe.setTunniste("KoeTunniste");
+
+        ValintakoeDTO ylinToive = modelMapper.map(koe, ValintakoeDTO.class);
+        assertTrue(ylinToive.getAktiivinen());
+        assertEquals(ylinToive.getKutsunKohde(), Koekutsu.YLIN_TOIVE);
+        assertEquals(ylinToive.getKutsunKohdeAvain(), "jeppis");
+        assertTrue(ylinToive.getKutsutaankoKaikki());
+        assertFalse(ylinToive.getLahetetaankoKoekutsut());
+        assertEquals(ylinToive.getNimi(), "Koe");
+        assertEquals(ylinToive.getOid(), "KoeOid");
+        assertEquals(ylinToive.getTunniste(), "KoeTunniste");
+
+        koe.setKutsunKohde(Koekutsu.HAKIJAN_VALINTA);
+
+        ValintakoeDTO hakijanValinta = modelMapper.map(koe, ValintakoeDTO.class);
+        assertTrue(hakijanValinta.getAktiivinen());
+        assertEquals(hakijanValinta.getKutsunKohde(), Koekutsu.HAKIJAN_VALINTA);
+        assertEquals(hakijanValinta.getKutsunKohdeAvain(), "jeppis");
+        assertFalse(hakijanValinta.getKutsutaankoKaikki());
+        assertFalse(hakijanValinta.getLahetetaankoKoekutsut());
+        assertEquals(hakijanValinta.getNimi(), "Koe");
+        assertEquals(hakijanValinta.getOid(), "KoeOid");
+        assertEquals(hakijanValinta.getTunniste(), "KoeTunniste");
     }
 
 }
