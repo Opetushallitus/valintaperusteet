@@ -10,6 +10,7 @@ import fi.vm.sade.service.valintaperusteet.service.validointi.virhe.Virhetyyppi;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
+import org.modelmapper.Provider;
 import org.modelmapper.spi.MappingContext;
 
 import java.util.*;
@@ -189,6 +190,16 @@ public class ValintaperusteetModelMapper extends ModelMapper {
             }
         };
 
+        final Provider<Set> linkedHashSetProvider = new Provider<Set>() {
+            public Set get(Provider.ProvisionRequest<Set> request) {
+                Class<?> klass = request.getRequestedType();
+                return klass.isAssignableFrom(Set.class)
+                        ? new LinkedHashSet<Object>()
+                        : null;
+            }
+        };
+        this.getConfiguration().setProvider(linkedHashSetProvider);
+
         // Perus DTO mäppäykset
         this.addMappings(new PropertyMap<Hakijaryhma, HakijaryhmaDTO>() {
             @Override
@@ -217,7 +228,7 @@ public class ValintaperusteetModelMapper extends ModelMapper {
 
         this.addMappings(new PropertyMap<Valintatapajono, ValintatapajonoDTO>() {
             @Override
-            protected void configure() {
+                protected void configure() {
                 map().setTayttojono(source.getVarasijanTayttojono().getOid());
             }
         });

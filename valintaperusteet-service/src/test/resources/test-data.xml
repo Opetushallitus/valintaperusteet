@@ -1632,6 +1632,29 @@
                      siirretaan_sijoitteluun="true" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3701"
                      ei_varasijatayttoa="false" valisijoittelu="false" automaattinen_laskentaan_siirto="true"/>
 
+    <hakukohde_viite id="3801" version="0" hakuoid="hakuoid99" oid="3801" nimi="Hakukohde"/>
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="3801" version="0" valintaryhma_id="[NULL]"
+                    hakukohde_viite_id="3801"
+                    master_valinnan_vaihe_id="[NULL]" oid="3801" nimi="Hakukohde Vaihe1" kuvaus="kuvaus1"
+                    aktiivinen="true"/>
+
+    <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="false" varasijat="0" id="3802" version="0"
+                     aktiivinen="true" aloituspaikat="30" nimi="VR1 VAIHE1 JONO2" oid="3802" poistetaanko_hylatyt="false"
+                     siirretaan_sijoitteluun="true" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3801"
+                     ei_varasijatayttoa="false" valisijoittelu="false" automaattinen_laskentaan_siirto="true"/>
+
+    <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="false" varasijat="0" id="3801" version="0"
+                     aktiivinen="true" aloituspaikat="20" nimi="VR1 VAIHE1 JONO1" oid="3801" poistetaanko_hylatyt="false"
+                     siirretaan_sijoitteluun="true" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3801"
+                     ei_varasijatayttoa="false" valisijoittelu="false" automaattinen_laskentaan_siirto="true"
+                     edellinen_valintatapajono_id="3802"/>
+
+    <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="false" varasijat="0" id="3803" version="0"
+                     aktiivinen="true" aloituspaikat="30" nimi="VR1 VAIHE1 JONO3" oid="3803" poistetaanko_hylatyt="false"
+                     siirretaan_sijoitteluun="true" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3801"
+                     ei_varasijatayttoa="false" valisijoittelu="false" automaattinen_laskentaan_siirto="true"
+                     edellinen_valintatapajono_id="3801"/>
+
     <!-- Valintaryhmään liitetyt laskentakaavat -testien objektit -->
     <funktiokutsu tallenna_tulos="false" id="411" version="0" funktionimi="LUKUARVO"/>
     <funktiokutsu tallenna_tulos="false" id="412" version="0" funktionimi="LUKUARVO"/>

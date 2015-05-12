@@ -9,6 +9,7 @@ import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapp
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakukohdeViiteEiOleOlemassaException;
+import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -126,7 +127,15 @@ public class HakukohdeServiceImpl implements HakukohdeService {
 
     @Override
     public List<ValinnanVaihe> ilmanLaskentaa(String oid) {
-        return valinnanVaiheDAO.ilmanLaskentaaOlevatHakukohteelle(oid);
+
+        List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheDAO.ilmanLaskentaaOlevatHakukohteelle(oid);
+
+        for(ValinnanVaihe valinnanVaihe : valinnanVaiheet) {
+            valinnanVaiheDAO.detach(valinnanVaihe);
+            valinnanVaihe.setJonot(LinkitettavaJaKopioitavaUtil.jarjestaSet(valinnanVaihe.getJonot()));
+        }
+
+        return valinnanVaiheet;
     }
 
     @Override

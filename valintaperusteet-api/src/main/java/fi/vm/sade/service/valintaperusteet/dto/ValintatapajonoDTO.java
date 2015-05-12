@@ -15,6 +15,9 @@ public class ValintatapajonoDTO extends ValintatapajonoCreateDTO {
     @ApiModelProperty(value = "Onko valintapajono peritty")
     private Boolean inheritance;
 
+    @ApiModelProperty(value = "Valintapajonon prioriteetti")
+    private int prioriteetti;
+
     public String getOid() {
         return oid;
     }
@@ -29,5 +32,13 @@ public class ValintatapajonoDTO extends ValintatapajonoCreateDTO {
 
     public void setInheritance(Boolean inheritance) {
         this.inheritance = inheritance;
+    }
+
+    public void setPrioriteetti(int prioriteetti) {
+        this.prioriteetti = prioriteetti;
+    }
+
+    public int getPrioriteetti() {
+        return prioriteetti;
     }
 }

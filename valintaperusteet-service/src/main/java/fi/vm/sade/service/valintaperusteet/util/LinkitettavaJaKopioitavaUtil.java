@@ -121,6 +121,33 @@ public abstract class LinkitettavaJaKopioitavaUtil {
         return jarjestetty;
     }
 
+    public static <T extends Linkitettava> Set<T> jarjestaSet(Collection<T> linkitettavat) {
+        Set<T> jarjestetty = new LinkedHashSet<T>();
+
+        T linkitettava = null;
+
+        // Haetaan linkitetyn listan ensimmäinen elementti
+        for (T t : linkitettavat) {
+
+            // Oheinen checki on syystä, että querydsl-palauttaa kyselyssä collectionin, joka sisältää null-elementin
+            if (t != null) {
+                // Ensimmäisen elementin edellinen on null
+                if (t.getEdellinen() == null) {
+                    linkitettava = t;
+                    break;
+                }
+            }
+        }
+
+        // Loopataan ensimmäisestä elementistä alkaen ja tungetaan kaikki uuteen listaan
+        while (linkitettava != null) {
+            jarjestetty.add(linkitettava);
+            linkitettava = (T) linkitettava.getSeuraava();
+        }
+
+        return jarjestetty;
+    }
+
     public static <T extends Linkitettava> void asetaSeuraava(T edellinen, T seuraava) {
         seuraava.setEdellinen(edellinen);
         if (edellinen != null) {

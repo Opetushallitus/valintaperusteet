@@ -12,6 +12,7 @@ import com.wordnik.swagger.annotations.ApiResponses;
 import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.resource.ValintalaskentakoostepalveluResource;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaEiOleOlemassaException;
+import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -141,8 +142,21 @@ public class ValintalaskentakoostepalveluResourceImpl {
 	@ApiOperation(value = "Palauttaa valintatapajonot, jossa ei käytetä laskentaa", response = ValintatapajonoDTO.class)
 	public List<ValinnanVaiheJonoillaDTO> ilmanLaskentaa(
 			@PathParam("oid") String oid) {
-		return modelMapper.mapList(hakukohdeService.ilmanLaskentaa(oid),
-				ValinnanVaiheJonoillaDTO.class);
+
+        List<ValinnanVaiheJonoillaDTO> valinnanVaiheJonoillaDTOs = modelMapper.mapList(hakukohdeService.ilmanLaskentaa(oid),
+                ValinnanVaiheJonoillaDTO.class);
+
+        for(ValinnanVaiheJonoillaDTO vaihe : valinnanVaiheJonoillaDTOs) {
+            if(vaihe.getJonot() != null) {
+                int i = 0;
+                for(ValintatapajonoDTO jono : vaihe.getJonot()) {
+                    jono.setPrioriteetti(i);
+                    i++;
+                }
+            }
+        }
+
+		return valinnanVaiheJonoillaDTOs;
 	}
 	@GET
 	@Path("hakukohde/avaimet/{oid}")

@@ -73,14 +73,14 @@ public class HakukohdeResourceTest {
     @Test
     public void testFindAll() throws Exception {
         List<HakukohdeViiteDTO> hakukohdeViites = hakukohdeResource.query(false);
-        assertEquals(31, hakukohdeViites.size());
+        assertEquals(32, hakukohdeViites.size());
         testUtil.lazyCheck(JsonViews.Basic.class, hakukohdeViites);
     }
 
     @Test
     public void testFindRoot() throws Exception {
         List<HakukohdeViiteDTO> hakukohdeViites = hakukohdeResource.query(true);
-        assertEquals(16, hakukohdeViites.size());
+        assertEquals(17, hakukohdeViites.size());
         testUtil.lazyCheck(JsonViews.Basic.class, hakukohdeViites);
     }
 
