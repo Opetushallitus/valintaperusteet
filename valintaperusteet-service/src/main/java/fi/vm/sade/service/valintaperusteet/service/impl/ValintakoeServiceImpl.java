@@ -143,7 +143,14 @@ public class ValintakoeServiceImpl implements ValintakoeService {
 							+ valinnanVaihe.getValinnanVaiheTyyppi().name());
 		}
 
-		Valintakoe valintakoe = new Valintakoe();
+        boolean hasValintakoe = valinnanVaihe.getValintakokeet().stream().anyMatch(k -> k.getTunniste().equals(koe.getTunniste()));
+        if(hasValintakoe) {
+            throw new ValintakoettaEiVoiLisataException(
+                    "Valinnanvaiheelle ei voi lisätä toista valintakoetta samalla tunnisteella "
+                            + koe.getTunniste());
+        }
+
+        Valintakoe valintakoe = new Valintakoe();
 		valintakoe.setOid(oidService.haeValintakoeOid());
 		valintakoe.setTunniste(koe.getTunniste());
 		valintakoe.setNimi(koe.getNimi());
@@ -240,7 +247,21 @@ public class ValintakoeServiceImpl implements ValintakoeService {
 
 	@Override
 	public Valintakoe update(String oid, ValintakoeDTO valintakoe) {
-		Valintakoe incoming = new Valintakoe();
+
+        Valintakoe managedObject = haeValintakoeOidilla(oid);
+
+        boolean hasValintakoeTunniste = managedObject.getValinnanVaihe().getValintakokeet().stream()
+                .filter(k -> !k.getOid().equals(oid))
+                .anyMatch(k -> k.getTunniste().equals(valintakoe.getTunniste()));
+
+        if(hasValintakoeTunniste) {
+            throw new ValintakoettaEiVoiLisataException(
+                    "Valinnanvaiheelle ei voi lisätä toista valintakoetta samalla tunnisteella "
+                            + valintakoe.getTunniste());
+        }
+
+
+        Valintakoe incoming = new Valintakoe();
 		incoming.setAktiivinen(valintakoe.getAktiivinen());
 		incoming.setKuvaus(valintakoe.getKuvaus());
 		incoming.setNimi(valintakoe.getNimi());
@@ -254,7 +275,6 @@ public class ValintakoeServiceImpl implements ValintakoeService {
             incoming.setKutsunKohdeAvain(valintakoe.getKutsunKohdeAvain());
         }
 
-		Valintakoe managedObject = haeValintakoeOidilla(oid);
 		Long laskentakaavaOid = valintakoe.getLaskentakaavaId();
 
 		if (laskentakaavaOid != null) {

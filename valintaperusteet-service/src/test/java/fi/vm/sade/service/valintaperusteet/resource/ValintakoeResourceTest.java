@@ -10,6 +10,7 @@ import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestE
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
 import fi.vm.sade.service.valintaperusteet.resource.impl.ValintakoeResourceImpl;
+import fi.vm.sade.service.valintaperusteet.service.exception.ValintakoettaEiVoiLisataException;
 import fi.vm.sade.service.valintaperusteet.util.TestUtil;
 
 import org.junit.Before;
@@ -154,6 +155,18 @@ public class ValintakoeResourceTest {
         assertEquals(hakijanValinta.getNimi(), "Koe");
         assertEquals(hakijanValinta.getOid(), "KoeOid");
         assertEquals(hakijanValinta.getTunniste(), "KoeTunniste");
+    }
+
+    @Test(expected = ValintakoettaEiVoiLisataException.class)
+    public void testUpdateValintakoeWithExistingTunniste() {
+
+        final String oid = "oid1";
+        ValintakoeDTO valintakoe = valintakoeResource.readByOid(oid);
+
+        valintakoe.setTunniste("valintakoetunniste2");
+
+        valintakoeResource.update(oid, valintakoe);
+
     }
 
 }

@@ -18,6 +18,7 @@ import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dto.model.Koekutsu;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 
+import fi.vm.sade.service.valintaperusteet.service.exception.ValintakoettaEiVoiLisataException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -117,6 +118,26 @@ public class ValinnanVaiheResourceTest {
 
         Response response = vaiheResource.addValintakoeToValinnanVaihe(valinnanVaiheOid, valintakoe);
         assertEquals(201, response.getStatus());
+
+    }
+
+    @Test
+    public void testInsertValintakoeWithExistingTunniste() {
+
+        final String valinnanVaiheOid = "83";
+        final Long laskentakaavaId = 101L;
+
+        ValintakoeDTO valintakoe = new ValintakoeDTO();
+        valintakoe.setTunniste("valintakoetunniste2");
+        valintakoe.setNimi("nimi");
+        valintakoe.setAktiivinen(true);
+        valintakoe.setLaskentakaavaId(laskentakaavaId);
+        valintakoe.setLahetetaankoKoekutsut(true);
+        valintakoe.setKutsutaankoKaikki(false);
+        valintakoe.setKutsunKohde(Koekutsu.YLIN_TOIVE);
+
+        Response response = vaiheResource.addValintakoeToValinnanVaihe(valinnanVaiheOid, valintakoe);
+        assertEquals(500, response.getStatus());
 
     }
 
