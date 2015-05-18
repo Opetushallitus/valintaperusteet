@@ -154,7 +154,7 @@ public class LaskentakaavaResourceTest {
         laskentakaavaInserted.getFunktiokutsu().setTulosTekstiFi("fi");
         laskentakaavaInserted.getFunktiokutsu().setTulosTekstiSv("sv");
 
-        response = laskentakaavaResource.update(laskentakaavaInserted.getId(), false, laskentakaavaInserted);
+        response = laskentakaavaResource.update(laskentakaavaInserted.getId(), laskentakaavaInserted);
 
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
         mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(response.getEntity());
@@ -170,7 +170,7 @@ public class LaskentakaavaResourceTest {
     public void testUpdateName() throws Exception {
         final LaskentakaavaDTO inserted = kaavaFromResponse(insert(newLaskentakaava("kaava1")));
         inserted.setNimi("kaava2");
-        final LaskentakaavaDTO updated = kaavaFromResponse(laskentakaavaResource.update(inserted.getId(), false, inserted));
+        final LaskentakaavaDTO updated = kaavaFromResponse(laskentakaavaResource.update(inserted.getId(), inserted));
         assertEquals("kaava2", updated.getNimi());
 
         tarkistaFunktiokutsunNimi(updated);
