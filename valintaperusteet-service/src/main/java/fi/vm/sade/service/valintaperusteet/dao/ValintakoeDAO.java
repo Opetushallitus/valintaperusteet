@@ -16,6 +16,8 @@ public interface ValintakoeDAO extends JpaDAO<Valintakoe, Long> {
 
 	List<Valintakoe> readByOids(Collection<String> oids);
 
+	List<Valintakoe> readByTunnisteet(Collection<String> tunnisteet);
+
     List<Valintakoe> findByLaskentakaava(long id);
 
 }

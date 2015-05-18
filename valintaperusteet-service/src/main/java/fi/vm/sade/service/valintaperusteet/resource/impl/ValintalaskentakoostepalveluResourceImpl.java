@@ -126,7 +126,19 @@ public class ValintalaskentakoostepalveluResourceImpl {
 		return modelMapper.mapList(valintakoeService.readByOids(oids),
 				ValintakoeDTO.class);
 	}
-	
+
+	@Transactional
+	@POST
+	@Path("tunniste/")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Hakee valintakokeen OID:n perusteella", response = ValintakoeDTO.class)
+	public List<ValintakoeDTO> readByTunnisteet(
+			@ApiParam(value = "tunnisteet", required = true) List<String> tunnisteet) {
+		return modelMapper.mapList(valintakoeService.readByTunnisteet(tunnisteet),
+				ValintakoeDTO.class);
+	}
+
 	@GET
 	@Path("hakukohde/haku/{hakuOid}")
 	@Produces(MediaType.APPLICATION_JSON)

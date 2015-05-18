@@ -19,6 +19,8 @@ public interface ValintakoeService {
 
 	List<Valintakoe> readByOids(Collection<String> oids);
 
+	List<Valintakoe> readByTunnisteet(Collection<String> tunnisteet);
+
 	List<Valintakoe> readAll();
 
 	List<Valintakoe> findValintakoeByValinnanVaihe(String oid);

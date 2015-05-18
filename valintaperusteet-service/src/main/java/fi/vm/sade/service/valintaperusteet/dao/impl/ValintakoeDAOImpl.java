@@ -52,7 +52,16 @@ public class ValintakoeDAOImpl extends AbstractJpaDAOImpl<Valintakoe, Long>
 				.getResults();
 	}
 
-    @Override
+	@Override
+	public List<Valintakoe> readByTunnisteet(Collection<String> tunnisteet) {
+		QValintakoe valintakoe = QValintakoe.valintakoe;
+		return from(valintakoe).leftJoin(valintakoe.laskentakaava).fetch()
+				.leftJoin(valintakoe.masterValintakoe).fetch()
+				.where(valintakoe.tunniste.in(tunnisteet)).listResults(valintakoe)
+				.getResults();
+	}
+
+	@Override
     public List<Valintakoe> findByLaskentakaava(long id) {
         QValintakoe valintakoe = QValintakoe.valintakoe;
         return from(valintakoe)

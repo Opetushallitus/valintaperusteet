@@ -90,6 +90,11 @@ public class ValintakoeServiceImpl implements ValintakoeService {
 	}
 
 	@Override
+	public List<Valintakoe> readByTunnisteet(Collection<String> tunnisteet) {
+		return haeValintakoeTunnisteilla(tunnisteet);
+	}
+
+	@Override
 	public List<Valintakoe> readAll() {
 		return valintakoeDAO.findAll();
 	}
@@ -110,6 +115,17 @@ public class ValintakoeServiceImpl implements ValintakoeService {
 		if (valintakoe == null) {
 			throw new ValintakoettaEiOleOlemassaException("Valintakoetta (oid "
 					+ oid + ") ei ole olemassa");
+		}
+
+		return valintakoe;
+	}
+
+	private List<Valintakoe> haeValintakoeTunnisteilla(Collection<String> tunnisteet) {
+		List<Valintakoe> valintakoe = valintakoeDAO.readByTunnisteet(tunnisteet);
+		if (valintakoe == null) {
+			throw new ValintakoettaEiOleOlemassaException(
+					"Valintakoetta (tunnisteet " + Arrays.toString(tunnisteet.toArray())
+							+ ") ei ole olemassa");
 		}
 
 		return valintakoe;
