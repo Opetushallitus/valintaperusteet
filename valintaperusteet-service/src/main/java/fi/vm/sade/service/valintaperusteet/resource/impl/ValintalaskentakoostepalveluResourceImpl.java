@@ -10,6 +10,7 @@ import javax.ws.rs.core.Response;
 import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 import fi.vm.sade.service.valintaperusteet.dto.*;
+import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.resource.ValintalaskentakoostepalveluResource;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
@@ -25,10 +26,6 @@ import com.wordnik.swagger.annotations.ApiParam;
 
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
-import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
-import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
-import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
-import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaValintatapajonoService;
 import fi.vm.sade.service.valintaperusteet.service.HakukohdeService;
 import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
@@ -49,6 +46,7 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.REA
 public class ValintalaskentakoostepalveluResourceImpl {
 	private static final Logger LOG = LoggerFactory
 			.getLogger(ValintaperusteetResourceImpl.class);
+	private final static String HAKUKOHDE_VIITE_PREFIX = "{{hakukohde.";
 	@Autowired
 	private ValintaperusteService valintaperusteService;
 
@@ -66,7 +64,7 @@ public class ValintalaskentakoostepalveluResourceImpl {
 
 	@Autowired
 	private ValintaperusteetModelMapper modelMapper;
-	
+
 	@Autowired
 	private HakukohdeService hakukohdeService;
 
@@ -116,15 +114,30 @@ public class ValintalaskentakoostepalveluResourceImpl {
 		}
 	}
 	@Transactional
-	@POST
-	@Path("valintakoe/")
-	@Consumes(MediaType.APPLICATION_JSON)
+	@GET
+	@Path("/{oid}/valintakoe")
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "Hakee valintakokeen OID:n perusteella", response = ValintakoeDTO.class)
-	public List<ValintakoeDTO> readByOids(
-			@ApiParam(value = "OID", required = true) List<String> oids) {
-		return modelMapper.mapList(valintakoeService.readByOids(oids),
-				ValintakoeDTO.class);
+	@PreAuthorize(READ_UPDATE_CRUD)
+	@ApiOperation(value = "Hakee hakukohteen valintakokeet OID:n perusteella", response = ValintakoeDTO.class)
+	public List<ValintakoeDTO> valintakoesForHakukohde(
+			@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
+		HakukohdeViite viite = hakukohdeService.readByOid(oid);
+		Map<String, HakukohteenValintaperuste> hakukohteenValintaperusteet = viite.getHakukohteenValintaperusteet();
+		Map<String, String> tunnisteArvoPari =
+		hakukohteenValintaperusteet.values().stream().collect(Collectors.toMap(t -> t.getTunniste(), t -> t.getArvo()));
+		return modelMapper.mapList(valintakoeService
+				.findValintakoesByValinnanVaihes(valinnanVaiheService
+						.findByHakukohde(oid)), ValintakoeDTO.class).stream().map(
+				vk -> {
+					if(Optional.ofNullable(vk.getTunniste()).orElse("").startsWith(HAKUKOHDE_VIITE_PREFIX)) {
+						String tunniste = vk.getTunniste().replace(HAKUKOHDE_VIITE_PREFIX, "").replace("}}","");
+						vk.setSelvitettyTunniste(tunnisteArvoPari.get(tunniste));
+					} else {
+						vk.setSelvitettyTunniste(vk.getTunniste());
+					}
+					return vk;
+				}
+		).collect(Collectors.toList());
 	}
 
 	@Transactional

@@ -12,8 +12,19 @@ public class ValintakoeDTO extends ValintakoeCreateDTO {
     @ApiModelProperty(value = "OID", required = true)
     private String oid;
 
+    @ApiModelProperty(value = "Selvitetty tunniste", required = true)
+    private String selvitettyTunniste;
+
     @ApiModelProperty(value = "Funktiokutsu", required = false)
     private FunktiokutsuDTO funktiokutsu;
+
+    public String getSelvitettyTunniste() {
+        return selvitettyTunniste;
+    }
+
+    public void setSelvitettyTunniste(String selvitettyTunniste) {
+        this.selvitettyTunniste = selvitettyTunniste;
+    }
 
     public String getOid() {
         return oid;

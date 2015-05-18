@@ -4,10 +4,7 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRU
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.Consumes;
@@ -26,6 +23,7 @@ import javax.ws.rs.core.Response;
 import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
+import fi.vm.sade.service.valintaperusteet.model.HakukohteenValintaperuste;
 import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
 import fi.vm.sade.service.valintaperusteet.service.*;
 
@@ -47,6 +45,7 @@ import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.resource.HakukohdeResource;
 import fi.vm.sade.service.valintaperusteet.resource.ValintaryhmaResource;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakukohdeViiteEiOleOlemassaException;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created with IntelliJ IDEA. User: kkammone Date: 10.1.2013 Time: 12:01 To
@@ -58,6 +57,7 @@ import fi.vm.sade.service.valintaperusteet.service.exception.HakukohdeViiteEiOle
 @Api(value = "/hakukohde", description = "Resurssi hakukohteiden käsittelyyn")
 public class HakukohdeResourceImpl {
 
+	private final static String HAKUKOHDE_VIITE_PREFIX = "{{hakukohde.";
 	protected final static Logger LOG = LoggerFactory
 			.getLogger(ValintaryhmaResource.class);
 
@@ -195,6 +195,7 @@ public class HakukohdeResourceImpl {
 				ValinnanVaiheDTO.class);
 	}
 
+	@Transactional
 	@GET
 	@Path("/{oid}/valintakoe")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -202,9 +203,23 @@ public class HakukohdeResourceImpl {
 	@ApiOperation(value = "Hakee hakukohteen valintakokeet OID:n perusteella", response = ValintakoeDTO.class)
 	public List<ValintakoeDTO> valintakoesForHakukohde(
 			@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
+		HakukohdeViite viite = hakukohdeService.readByOid(oid);
+		Map<String, HakukohteenValintaperuste> hakukohteenValintaperusteet = viite.getHakukohteenValintaperusteet();
+		Map<String, String> tunnisteArvoPari =
+				hakukohteenValintaperusteet.values().stream().collect(Collectors.toMap(t -> t.getTunniste(), t -> t.getArvo()));
 		return modelMapper.mapList(valintakoeService
 				.findValintakoesByValinnanVaihes(valinnanVaiheService
-						.findByHakukohde(oid)), ValintakoeDTO.class);
+						.findByHakukohde(oid)), ValintakoeDTO.class).stream().map(
+				vk -> {
+					if(Optional.ofNullable(vk.getTunniste()).orElse("").startsWith(HAKUKOHDE_VIITE_PREFIX)) {
+						String tunniste = vk.getTunniste().replace(HAKUKOHDE_VIITE_PREFIX, "").replace("}}","");
+						vk.setSelvitettyTunniste(tunnisteArvoPari.get(tunniste));
+					} else {
+						vk.setSelvitettyTunniste(vk.getTunniste());
+					}
+					return vk;
+				}
+		).collect(Collectors.toList());
 	}
 
 	@POST
