@@ -62,84 +62,6 @@ public class LaskentakaavaResourceTest {
         applicationContext.getAutowireCapableBeanFactory().autowireBean(laskentakaavaResource);
     }
 
-    private FunktiokutsuDTO createLukuarvo(String luku) {
-        final fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi nimi = Funktionimi.LUKUARVO;
-
-        final Funktiokuvaaja.Funktiokuvaus funktiokuvaus = Funktiokuvaaja.annaFunktiokuvaus(nimi)._2();
-
-        FunktiokutsuDTO funktiokutsu = new FunktiokutsuDTO();
-        funktiokutsu.setFunktionimi(fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.LUKUARVO);
-        funktiokutsu.setTallennaTulos(false);
-
-        SyoteparametriDTO syoteparametri = new SyoteparametriDTO();
-        syoteparametri.setAvain(funktiokuvaus.syoteparametrit().head().avain());
-        syoteparametri.setArvo(luku);
-
-        funktiokutsu.getSyoteparametrit().add(syoteparametri);
-
-        return funktiokutsu;
-    }
-
-    private ValintaperusteetFunktiokutsuDTO createLukuarvoVP(String luku) {
-        final fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi nimi = Funktionimi.LUKUARVO;
-
-        final Funktiokuvaaja.Funktiokuvaus funktiokuvaus = Funktiokuvaaja.annaFunktiokuvaus(nimi)._2();
-
-        ValintaperusteetFunktiokutsuDTO funktiokutsu = new ValintaperusteetFunktiokutsuDTO();
-        funktiokutsu.setFunktionimi(fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.LUKUARVO);
-        funktiokutsu.setTallennaTulos(false);
-
-        SyoteparametriDTO syoteparametri = new SyoteparametriDTO();
-        syoteparametri.setAvain(funktiokuvaus.syoteparametrit().head().avain());
-        syoteparametri.setArvo(luku);
-
-        funktiokutsu.getSyoteparametrit().add(syoteparametri);
-
-        return funktiokutsu;
-    }
-
-    private FunktiokutsuDTO createSumma(FunktiokutsuDTO... args) {
-        FunktiokutsuDTO funktiokutsu = new FunktiokutsuDTO();
-        funktiokutsu.setFunktionimi(fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.SUMMA);
-
-        funktiokutsu.setTallennaTulos(true);
-        funktiokutsu.setTulosTekstiEn("en");
-        funktiokutsu.setTulosTekstiSv("sv");
-        funktiokutsu.setTulosTekstiFi("fi");
-        funktiokutsu.setTulosTunniste("tunniste");
-
-        for (int i = 0; i < args.length; ++i) {
-            FunktioargumentinLapsiDTO f = modelMapper.map(args[i], FunktioargumentinLapsiDTO.class);
-            FunktioargumenttiDTO arg = new FunktioargumenttiDTO();
-            f.setLapsityyppi(FunktioargumentinLapsiDTO.FUNKTIOKUTSUTYYPPI);
-            arg.setLapsi(f);
-            arg.setIndeksi(i + 1);
-            funktiokutsu.getFunktioargumentit().add(arg);
-        }
-
-        return funktiokutsu;
-    }
-
-    private ValintaperusteetFunktiokutsuDTO createSummaVP(ValintaperusteetFunktiokutsuDTO... args) {
-        ValintaperusteetFunktiokutsuDTO funktiokutsu = new ValintaperusteetFunktiokutsuDTO();
-        funktiokutsu.setFunktionimi(fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.SUMMA);
-
-        funktiokutsu.setTallennaTulos(true);
-        funktiokutsu.setTulosTekstiEn("en");
-        funktiokutsu.setTulosTekstiSv("sv");
-        funktiokutsu.setTulosTekstiFi("fi");
-        funktiokutsu.setTulosTunniste("tunniste");
-
-        for (int i = 0; i < args.length; ++i) {
-            ValintaperusteetFunktioargumenttiDTO f = new ValintaperusteetFunktioargumenttiDTO();
-            f.setFunktiokutsu(args[i]);
-            f.setIndeksi(i + 1);
-            funktiokutsu.getFunktioargumentit().add(f);
-        }
-
-        return funktiokutsu;
-    }
-
     @Test
     public void testInsert() throws Exception {
 
@@ -282,5 +204,84 @@ public class LaskentakaavaResourceTest {
                     kaava.getTyyppi());
             assertFalse(kaava.getOnLuonnos());
         }
+    }
+
+
+    private FunktiokutsuDTO createLukuarvo(String luku) {
+        final fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi nimi = Funktionimi.LUKUARVO;
+
+        final Funktiokuvaaja.Funktiokuvaus funktiokuvaus = Funktiokuvaaja.annaFunktiokuvaus(nimi)._2();
+
+        FunktiokutsuDTO funktiokutsu = new FunktiokutsuDTO();
+        funktiokutsu.setFunktionimi(fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.LUKUARVO);
+        funktiokutsu.setTallennaTulos(false);
+
+        SyoteparametriDTO syoteparametri = new SyoteparametriDTO();
+        syoteparametri.setAvain(funktiokuvaus.syoteparametrit().head().avain());
+        syoteparametri.setArvo(luku);
+
+        funktiokutsu.getSyoteparametrit().add(syoteparametri);
+
+        return funktiokutsu;
+    }
+
+    private ValintaperusteetFunktiokutsuDTO createLukuarvoVP(String luku) {
+        final fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi nimi = Funktionimi.LUKUARVO;
+
+        final Funktiokuvaaja.Funktiokuvaus funktiokuvaus = Funktiokuvaaja.annaFunktiokuvaus(nimi)._2();
+
+        ValintaperusteetFunktiokutsuDTO funktiokutsu = new ValintaperusteetFunktiokutsuDTO();
+        funktiokutsu.setFunktionimi(fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.LUKUARVO);
+        funktiokutsu.setTallennaTulos(false);
+
+        SyoteparametriDTO syoteparametri = new SyoteparametriDTO();
+        syoteparametri.setAvain(funktiokuvaus.syoteparametrit().head().avain());
+        syoteparametri.setArvo(luku);
+
+        funktiokutsu.getSyoteparametrit().add(syoteparametri);
+
+        return funktiokutsu;
+    }
+
+    private FunktiokutsuDTO createSumma(FunktiokutsuDTO... args) {
+        FunktiokutsuDTO funktiokutsu = new FunktiokutsuDTO();
+        funktiokutsu.setFunktionimi(fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.SUMMA);
+
+        funktiokutsu.setTallennaTulos(true);
+        funktiokutsu.setTulosTekstiEn("en");
+        funktiokutsu.setTulosTekstiSv("sv");
+        funktiokutsu.setTulosTekstiFi("fi");
+        funktiokutsu.setTulosTunniste("tunniste");
+
+        for (int i = 0; i < args.length; ++i) {
+            FunktioargumentinLapsiDTO f = modelMapper.map(args[i], FunktioargumentinLapsiDTO.class);
+            FunktioargumenttiDTO arg = new FunktioargumenttiDTO();
+            f.setLapsityyppi(FunktioargumentinLapsiDTO.FUNKTIOKUTSUTYYPPI);
+            arg.setLapsi(f);
+            arg.setIndeksi(i + 1);
+            funktiokutsu.getFunktioargumentit().add(arg);
+        }
+
+        return funktiokutsu;
+    }
+
+    private ValintaperusteetFunktiokutsuDTO createSummaVP(ValintaperusteetFunktiokutsuDTO... args) {
+        ValintaperusteetFunktiokutsuDTO funktiokutsu = new ValintaperusteetFunktiokutsuDTO();
+        funktiokutsu.setFunktionimi(fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.SUMMA);
+
+        funktiokutsu.setTallennaTulos(true);
+        funktiokutsu.setTulosTekstiEn("en");
+        funktiokutsu.setTulosTekstiSv("sv");
+        funktiokutsu.setTulosTekstiFi("fi");
+        funktiokutsu.setTulosTunniste("tunniste");
+
+        for (int i = 0; i < args.length; ++i) {
+            ValintaperusteetFunktioargumenttiDTO f = new ValintaperusteetFunktioargumenttiDTO();
+            f.setFunktiokutsu(args[i]);
+            f.setIndeksi(i + 1);
+            funktiokutsu.getFunktioargumentit().add(f);
+        }
+
+        return funktiokutsu;
     }
 }
