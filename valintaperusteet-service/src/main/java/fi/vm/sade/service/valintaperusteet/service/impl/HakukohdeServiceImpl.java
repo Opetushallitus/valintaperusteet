@@ -71,6 +71,10 @@ public class HakukohdeServiceImpl implements HakukohdeService {
     public HakukohdeViite readByOid(String oid) {
         return haeHakukohdeViite(oid);
     }
+    @Override
+    public List<HakukohdeViite> readByOids(List<String> oids) {
+        return hakukohdeViiteDAO.readByOids(oids);
+    }
 
     @Override
     public List<HakukohdeViite> findRoot() {

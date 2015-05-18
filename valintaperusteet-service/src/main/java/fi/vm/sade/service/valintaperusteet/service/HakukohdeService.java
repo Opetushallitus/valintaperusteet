@@ -23,6 +23,8 @@ public interface HakukohdeService {
 
     HakukohdeViite readByOid(String oid);
 
+    List<HakukohdeViite> readByOids(List<String> oids);
+
     List<HakukohdeViite> findRoot();
 
     List<HakukohdeViite> findByValintaryhmaOid(String oid);

@@ -1,6 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.resource.impl;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.*;
@@ -113,6 +114,19 @@ public class ValintalaskentakoostepalveluResourceImpl {
 			LOG.info("Haku kesti {}ms", (System.currentTimeMillis() - t0));
 		}
 	}
+
+	private Function<ValintakoeDTO, ValintakoeDTO> lisaaSelvitettyTunniste(Map<String, String> tunnisteArvoPari) {
+		return vk -> {
+			if(Optional.ofNullable(vk.getTunniste()).orElse("").startsWith(HAKUKOHDE_VIITE_PREFIX)) {
+				String tunniste = vk.getTunniste().replace(HAKUKOHDE_VIITE_PREFIX, "").replace("}}","");
+				vk.setSelvitettyTunniste(tunnisteArvoPari.get(tunniste));
+			} else {
+				vk.setSelvitettyTunniste(vk.getTunniste());
+			}
+			return vk;
+		};
+	}
+
 	@Transactional
 	@GET
 	@Path("/{oid}/valintakoe")
@@ -127,15 +141,7 @@ public class ValintalaskentakoostepalveluResourceImpl {
 		return modelMapper.mapList(valintakoeService
 				.findValintakoesByValinnanVaihes(valinnanVaiheService
 						.findByHakukohde(oid)), ValintakoeDTO.class).stream().map(
-				vk -> {
-					if(Optional.ofNullable(vk.getTunniste()).orElse("").startsWith(HAKUKOHDE_VIITE_PREFIX)) {
-						String tunniste = vk.getTunniste().replace(HAKUKOHDE_VIITE_PREFIX, "").replace("}}","");
-						vk.setSelvitettyTunniste(tunnisteArvoPari.get(tunniste));
-					} else {
-						vk.setSelvitettyTunniste(vk.getTunniste());
-					}
-					return vk;
-				}
+				lisaaSelvitettyTunniste(tunnisteArvoPari)
 		).collect(Collectors.toList());
 	}
 
@@ -199,16 +205,19 @@ public class ValintalaskentakoostepalveluResourceImpl {
 		return oids.stream()
 				//
 				.map(oid -> {
+					HakukohdeViite viite = hakukohdeService.readByOid(oid);
+					Map<String, HakukohteenValintaperuste> hakukohteenValintaperusteet = viite.getHakukohteenValintaperusteet();
+					Map<String, String> tunnisteArvoPari =
+							hakukohteenValintaperusteet.values().stream().collect(Collectors.toMap(t -> t.getTunniste(), t -> t.getArvo()));
+
 					List<ValintakoeDTO> valintakoeDtos = modelMapper.mapList(
 							valintakoeService
 									.findValintakoesByValinnanVaihes(valinnanVaiheService
 											.findByHakukohde(oid.toString())),
-							ValintakoeDTO.class);
+							ValintakoeDTO.class).stream().map(lisaaSelvitettyTunniste(tunnisteArvoPari)).collect(Collectors.toList());
 					if (valintakoeDtos == null || valintakoeDtos.isEmpty()) {
 						return null;
 					}
-					// LOG.error("{}", new GsonBuilder().setPrettyPrinting()
-					// .create().toJson(valintakoeDtos));
 					return new HakukohdeJaValintakoeDTO(oid, valintakoeDtos);
 				})
 				//

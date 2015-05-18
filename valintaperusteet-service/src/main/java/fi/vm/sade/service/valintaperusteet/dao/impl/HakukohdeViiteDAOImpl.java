@@ -65,7 +65,18 @@ public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Lo
                 .where(hakukohdeViite.oid.eq(oid))
                 .singleResult(hakukohdeViite);
     }
-
+    @Override
+    public List<HakukohdeViite> readByOids(List<String> oids) {
+        QHakukohdeViite hakukohdeViite = QHakukohdeViite.hakukohdeViite;
+        QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
+        return from(hakukohdeViite)
+                .leftJoin(hakukohdeViite.valintaryhma, valintaryhma).fetch()
+                .leftJoin(hakukohdeViite.hakukohdekoodi).fetch()
+                .leftJoin(hakukohdeViite.valintakokeet).fetch()
+                .leftJoin(hakukohdeViite.hakukohteenValintaperusteet).fetch()
+                .where(hakukohdeViite.oid.in(oids))
+                .list(hakukohdeViite);
+    }
     @Override
     public HakukohdeViite readForImport(String oid) {
         QHakukohdeViite hakukohdeViite = QHakukohdeViite.hakukohdeViite;
