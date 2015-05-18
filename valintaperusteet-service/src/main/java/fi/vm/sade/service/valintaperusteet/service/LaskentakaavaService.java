@@ -28,15 +28,6 @@ public interface LaskentakaavaService {
     List<Laskentakaava> findKaavas(boolean all, String valintaryhmaOid, String hakukohdeOid,
             fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi tyyppi);
 
-    /**
-     * Päivittää ainostaan laskentakaavan metadatan. Paluuarvossa EI tule
-     * funktiokutsuja.
-     * 
-     * @param id
-     * @param laskentakaava
-     * @return
-     */
-    Laskentakaava updateMetadata(Long id, LaskentakaavaCreateDTO laskentakaava);
 
     Laskentakaava haeLaskettavaKaava(Long id, Laskentamoodi laskentamoodi);
 

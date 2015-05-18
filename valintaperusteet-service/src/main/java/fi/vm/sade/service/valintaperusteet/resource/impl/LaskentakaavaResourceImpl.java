@@ -131,21 +131,12 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
     @ApiOperation(value = "Päivittää laskentakaavan")
     public Response update(
             @ApiParam(value = "Päivitettävän laskentakaavan ID", required = true) @PathParam("id") Long id,
-            @ApiParam(value = "Päivitetäänkö vain metadataa") @QueryParam("metadata") @DefaultValue("false") Boolean metadata,
             @ApiParam(value = "Päivitettävän laskentakaavan uudet tiedot", required = true) LaskentakaavaCreateDTO laskentakaava) {
         LaskentakaavaDTO updated = null;
         try {
-            if (metadata) {
-                updated = modelMapper.map(laskentakaavaService.updateMetadata(id, laskentakaava),
-                        LaskentakaavaDTO.class);
-                updated.setFunktiokutsu(null);
-            } else {
-                updated = modelMapper.map(laskentakaavaService.update(id, laskentakaava), LaskentakaavaDTO.class);
-            }
-
+            updated = modelMapper.map(laskentakaavaService.update(id, laskentakaava), LaskentakaavaDTO.class);
             // Kaava päivitetty, poistetaan orvot
             actorService.runOnce();
-
             return Response.status(Response.Status.OK).entity(updated).build();
         } catch (LaskentakaavaEiValidiException e) {
             e.printStackTrace();

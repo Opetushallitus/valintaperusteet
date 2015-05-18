@@ -667,15 +667,6 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
         return laskentakaavaDAO.findKaavas(all, valintaryhmaOid, hakukohdeOid, tyyppi);
     }
 
-    @Override
-    public Laskentakaava updateMetadata(Long id, LaskentakaavaCreateDTO laskentakaava) {
-        laskentakaavaCache.clear();
-        Laskentakaava managed = laskentakaavaDAO.read(id);
-        managed.setKuvaus(laskentakaava.getKuvaus());
-        managed.setNimi(laskentakaava.getNimi());
-        return managed;
-    }
-
     private Laskentakaava laajennaAlakaavat(Laskentakaava laskentakaava) {
         laajennaAlakaavat(laskentakaava.getFunktiokutsu());
         return laskentakaava;
