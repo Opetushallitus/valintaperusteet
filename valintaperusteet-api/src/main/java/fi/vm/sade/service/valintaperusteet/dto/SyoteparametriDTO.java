@@ -15,6 +15,15 @@ public class SyoteparametriDTO {
     @ApiModelProperty(value = "Arvo", required = true)
     private String arvo;
 
+    public SyoteparametriDTO() {
+
+    }
+
+    public SyoteparametriDTO(final String avain, final String arvo) {
+        this.avain = avain;
+        this.arvo = arvo;
+    }
+
     public String getAvain() {
         return avain;
     }

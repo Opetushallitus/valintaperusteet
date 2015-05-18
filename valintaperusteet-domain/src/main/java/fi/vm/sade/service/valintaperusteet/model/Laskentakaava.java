@@ -125,10 +125,24 @@ public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
 
     @PrePersist
     @PreUpdate
+    private void fixIt() {
+        updateTyyppi();
+        korjaaFunktiokutsunNimi();
+    }
+
     private void updateTyyppi() {
         if (funktiokutsu != null) {
             tyyppi = funktiokutsu.getFunktionimi().getTyyppi();
         }
     }
 
+    private void korjaaFunktiokutsunNimi() {
+        if (funktiokutsu != null) {
+            for (Syoteparametri parametri : getFunktiokutsu().getSyoteparametrit()) {
+                if (parametri.getAvain().equals("nimi")) {
+                    parametri.setArvo(getNimi());
+                }
+            }
+        }
+    }
 }
