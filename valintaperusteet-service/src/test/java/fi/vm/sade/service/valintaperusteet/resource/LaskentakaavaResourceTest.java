@@ -5,6 +5,7 @@ import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertNull;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.ws.rs.core.Response;
@@ -15,7 +16,6 @@ import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.dto.model.Kieli;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
-import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
 
@@ -64,41 +64,20 @@ public class LaskentakaavaResourceTest {
 
     @Test
     public void testInsert() throws Exception {
-
-        LaskentakaavaCreateDTO laskentakaava = new LaskentakaavaCreateDTO();
-        laskentakaava.setNimi("jokuhienonimi");
-        laskentakaava.setOnLuonnos(false);
-        laskentakaava.setFunktiokutsu(createSumma(createLukuarvo("5.0"), createLukuarvo("10.0"),
-                createLukuarvo("100.0")));
-
-        ValintaperusteetFunktiokutsuDTO dto1 = createSummaVP(createLukuarvoVP("5.0"),createLukuarvoVP("10.0"),createLukuarvoVP("100.0"));
-        ValintaperusteetFunktiokutsuDTO dto2 = createSummaVP(createLukuarvoVP("5.0"),createLukuarvoVP("10.0"),createLukuarvoVP("100.0"));
-        ValintaperusteetFunktiokutsuDTO dto3 = createSummaVP(dto1, dto2);
-        Funktiokutsu kutsu = modelMapper.map(dto3, Funktiokutsu.class);
-
-        final String json = mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(laskentakaava);
-        LaskentakaavaCreateDTO fromJson = mapper.readValue(json, LaskentakaavaCreateDTO.class);
-        Response insert = laskentakaavaResource.insert(new LaskentakaavaInsertDTO(fromJson, null, null));
+        Response insert = insert(newLaskentakaava("jokuhienonimi"));
         assertEquals(Response.Status.CREATED.getStatusCode(), insert.getStatus());
 
         assertTrue(((LaskentakaavaDTO) insert.getEntity()).getFunktiokutsu().getTallennaTulos());
-
     }
 
     @Test
     public void testInsertInvalid() throws Exception {
-
-        LaskentakaavaCreateDTO laskentakaava = new LaskentakaavaCreateDTO();
-        laskentakaava.setOnLuonnos(false);
-        laskentakaava.setFunktiokutsu(createSumma(createLukuarvo("viisi"), createLukuarvo("10.0"),
-                createLukuarvo("100.0")));
-
-        final String json = mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(laskentakaava);
-        LaskentakaavaCreateDTO fromJson = mapper.readValue(json, LaskentakaavaCreateDTO.class);
-
-        Response response = laskentakaavaResource.insert(new LaskentakaavaInsertDTO(fromJson, null, null));
-
+        Response response = insert(newLaskentakaava(null));
         assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+    }
+
+    private Response insert(final LaskentakaavaCreateDTO kaava) {
+        return laskentakaavaResource.insert(new LaskentakaavaInsertDTO(kaava, null, null));
     }
 
     @Test
@@ -151,46 +130,43 @@ public class LaskentakaavaResourceTest {
 
     @Test
     public void testTallennaTulosUpdate() throws Exception {
-        LaskentakaavaDTO kaava = laskentakaavaResource.kaava(206L, true);
-        LaskentakaavaDTO laskentakaava = new LaskentakaavaDTO();
-        laskentakaava.setNimi("Test");
-        laskentakaava.setOnLuonnos(false);
-        laskentakaava.setFunktiokutsu(createSumma(createLukuarvo("5")));
-        laskentakaava.getFunktiokutsu().setTallennaTulos(false);
-        laskentakaava.getFunktiokutsu().setTulosTunniste(null);
-        laskentakaava.getFunktiokutsu().setTulosTekstiEn(null);
-        laskentakaava.getFunktiokutsu().setTulosTekstiSv(null);
-        laskentakaava.getFunktiokutsu().setTulosTekstiFi(null);
+        final LaskentakaavaCreateDTO laskentakaavaOriginal = newLaskentakaava("Test");
+        laskentakaavaOriginal.setNimi("Test");
+        laskentakaavaOriginal.setOnLuonnos(false);
+        laskentakaavaOriginal.setFunktiokutsu(createSumma(createLukuarvo("5")));
+        laskentakaavaOriginal.getFunktiokutsu().setTallennaTulos(false);
+        laskentakaavaOriginal.getFunktiokutsu().setTulosTunniste(null);
+        laskentakaavaOriginal.getFunktiokutsu().setTulosTekstiEn(null);
+        laskentakaavaOriginal.getFunktiokutsu().setTulosTekstiSv(null);
+        laskentakaavaOriginal.getFunktiokutsu().setTulosTekstiFi(null);
 
-        LaskentakaavaInsertDTO insert = new LaskentakaavaInsertDTO();
-        insert.setLaskentakaava(laskentakaava);
+        Response response = insert(laskentakaavaOriginal);
 
-        Response response = laskentakaavaResource.insert(insert);
-        laskentakaava = (LaskentakaavaDTO) response.getEntity();
+        final LaskentakaavaDTO laskentakaavaInserted = (LaskentakaavaDTO) response.getEntity();
 
-        assertFalse(laskentakaava.getFunktiokutsu().getTallennaTulos());
-        assertNull(laskentakaava.getFunktiokutsu().getTulosTunniste());
-        assertNull(laskentakaava.getFunktiokutsu().getTulosTekstiEn());
-        assertNull(laskentakaava.getFunktiokutsu().getTulosTekstiFi());
-        assertNull(laskentakaava.getFunktiokutsu().getTulosTekstiSv());
+        assertFalse(laskentakaavaInserted.getFunktiokutsu().getTallennaTulos());
+        assertNull(laskentakaavaInserted.getFunktiokutsu().getTulosTunniste());
+        assertNull(laskentakaavaInserted.getFunktiokutsu().getTulosTekstiEn());
+        assertNull(laskentakaavaInserted.getFunktiokutsu().getTulosTekstiFi());
+        assertNull(laskentakaavaInserted.getFunktiokutsu().getTulosTekstiSv());
 
-        laskentakaava.getFunktiokutsu().setTallennaTulos(true);
-        laskentakaava.getFunktiokutsu().setTulosTunniste("t1");
-        laskentakaava.getFunktiokutsu().setTulosTekstiEn("en");
-        laskentakaava.getFunktiokutsu().setTulosTekstiFi("fi");
-        laskentakaava.getFunktiokutsu().setTulosTekstiSv("sv");
+        laskentakaavaInserted.getFunktiokutsu().setTallennaTulos(true);
+        laskentakaavaInserted.getFunktiokutsu().setTulosTunniste("t1");
+        laskentakaavaInserted.getFunktiokutsu().setTulosTekstiEn("en");
+        laskentakaavaInserted.getFunktiokutsu().setTulosTekstiFi("fi");
+        laskentakaavaInserted.getFunktiokutsu().setTulosTekstiSv("sv");
 
-        response = laskentakaavaResource.update(laskentakaava.getId(), false, laskentakaava);
+        response = laskentakaavaResource.update(laskentakaavaInserted.getId(), false, laskentakaavaInserted);
 
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
         mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(response.getEntity());
 
-        laskentakaava = (LaskentakaavaDTO) response.getEntity();
-        assertTrue(laskentakaava.getFunktiokutsu().getTallennaTulos());
-        assertEquals("t1", laskentakaava.getFunktiokutsu().getTulosTunniste());
-        assertEquals("en", laskentakaava.getFunktiokutsu().getTulosTekstiEn());
-        assertEquals("fi", laskentakaava.getFunktiokutsu().getTulosTekstiFi());
-        assertEquals("sv", laskentakaava.getFunktiokutsu().getTulosTekstiSv());
+        final LaskentakaavaDTO laskentakaavaUpdated = (LaskentakaavaDTO) response.getEntity();
+        assertTrue(laskentakaavaUpdated.getFunktiokutsu().getTallennaTulos());
+        assertEquals("t1", laskentakaavaUpdated.getFunktiokutsu().getTulosTunniste());
+        assertEquals("en", laskentakaavaUpdated.getFunktiokutsu().getTulosTekstiEn());
+        assertEquals("fi", laskentakaavaUpdated.getFunktiokutsu().getTulosTekstiFi());
+        assertEquals("sv", laskentakaavaUpdated.getFunktiokutsu().getTulosTekstiSv());
     }
 
     @Test
@@ -206,6 +182,20 @@ public class LaskentakaavaResourceTest {
         }
     }
 
+
+    private LaskentakaavaCreateDTO newLaskentakaava(final String name) throws IOException {
+        LaskentakaavaCreateDTO laskentakaava = new LaskentakaavaCreateDTO();
+        laskentakaava.setNimi(name);
+        laskentakaava.setOnLuonnos(false);
+        laskentakaava.setFunktiokutsu(createSumma(createLukuarvo("5.0"), createLukuarvo("10.0"),
+            createLukuarvo("100.0")));
+        return serializeAndDeserialize(laskentakaava);
+    };
+
+    private LaskentakaavaCreateDTO serializeAndDeserialize(final LaskentakaavaCreateDTO laskentakaava) throws java.io.IOException {
+        final String json = mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(laskentakaava);
+        return mapper.readValue(json, LaskentakaavaCreateDTO.class);
+    }
 
     private FunktiokutsuDTO createLukuarvo(String luku) {
         final fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi nimi = Funktionimi.LUKUARVO;
