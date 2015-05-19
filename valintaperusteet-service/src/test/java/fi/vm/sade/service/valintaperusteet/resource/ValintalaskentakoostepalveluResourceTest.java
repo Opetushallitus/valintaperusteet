@@ -20,6 +20,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +50,12 @@ public class ValintalaskentakoostepalveluResourceTest {
         applicationContext.getAutowireCapableBeanFactory().autowireBean(vaiheResource);
         applicationContext.getAutowireCapableBeanFactory().autowireBean(valintalaskentakoostepalveluResource);
         applicationContext.getAutowireCapableBeanFactory().autowireBean(hakukohdeResource);
+    }
+
+    @Test
+    public void testHakukohdeJaValintakoeResurssi() {
+        valintalaskentakoostepalveluResource.valintakoesForHakukohteet(Arrays.asList("oid1", "oid2", "oid3", "oid4", "oid5", "oid6", "oid7", "oid8", "oid9", "oid10", "oid11", "oid12", "oid13", "oid14", "oid15", "oid16", "oid17", "oid18", "oid19", "oid20", "oid21", "oid22", "oid23", "3001", "3101", "3201", "3301", "3401", "3501", "3601", "3701", "3801"));
+
     }
 
     @Test

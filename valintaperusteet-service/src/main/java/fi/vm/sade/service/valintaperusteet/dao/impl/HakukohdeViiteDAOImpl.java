@@ -6,16 +6,20 @@ import fi.vm.sade.service.valintaperusteet.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * User: tommiha Date: 1/17/13 Time: 12:51 PM
  */
 @Repository
 public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Long> implements HakukohdeViiteDAO {
-
+    private static final Logger LOG = LoggerFactory.getLogger(HakukohdeViiteDAOImpl.class);
     protected JPAQuery from(EntityPath<?>... o) {
         return new JPAQuery(getEntityManager()).from(o);
     }
@@ -65,18 +69,17 @@ public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Lo
                 .where(hakukohdeViite.oid.eq(oid))
                 .singleResult(hakukohdeViite);
     }
+
     @Override
     public List<HakukohdeViite> readByOids(List<String> oids) {
         QHakukohdeViite hakukohdeViite = QHakukohdeViite.hakukohdeViite;
         QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
         return from(hakukohdeViite)
-                .leftJoin(hakukohdeViite.valintaryhma, valintaryhma).fetch()
-                .leftJoin(hakukohdeViite.hakukohdekoodi).fetch()
-                .leftJoin(hakukohdeViite.valintakokeet).fetch()
                 .leftJoin(hakukohdeViite.hakukohteenValintaperusteet).fetch()
                 .where(hakukohdeViite.oid.in(oids))
-                .list(hakukohdeViite);
+                .listDistinct(hakukohdeViite);
     }
+
     @Override
     public HakukohdeViite readForImport(String oid) {
         QHakukohdeViite hakukohdeViite = QHakukohdeViite.hakukohdeViite;

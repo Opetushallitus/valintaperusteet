@@ -115,11 +115,16 @@ public class ValintalaskentakoostepalveluResourceImpl {
 		}
 	}
 
-	private Function<ValintakoeDTO, ValintakoeDTO> lisaaSelvitettyTunniste(Map<String, String> tunnisteArvoPari) {
+	private Function<ValintakoeDTO, ValintakoeDTO> lisaaSelvitettyTunniste(Map<String, String> tunnisteArvoPari, String hakukohdeOid) {
 		return vk -> {
 			if(Optional.ofNullable(vk.getTunniste()).orElse("").startsWith(HAKUKOHDE_VIITE_PREFIX)) {
 				String tunniste = vk.getTunniste().replace(HAKUKOHDE_VIITE_PREFIX, "").replace("}}","");
-				vk.setSelvitettyTunniste(tunnisteArvoPari.get(tunniste));
+				if(!tunnisteArvoPari.containsKey(tunniste)) {
+					LOG.error("Tunnistetta {} ei voitu selvittää. Tämä oletettavasti johtuu puuttuvista valintaperusteista hakukohteelle {}", tunniste, hakukohdeOid);
+					vk.setSelvitettyTunniste(tunniste);
+				} else {
+					vk.setSelvitettyTunniste(tunnisteArvoPari.get(tunniste));
+				}
 			} else {
 				vk.setSelvitettyTunniste(vk.getTunniste());
 			}
@@ -141,7 +146,7 @@ public class ValintalaskentakoostepalveluResourceImpl {
 		return modelMapper.mapList(valintakoeService
 				.findValintakoesByValinnanVaihes(valinnanVaiheService
 						.findByHakukohde(oid)), ValintakoeDTO.class).stream().map(
-				lisaaSelvitettyTunniste(tunnisteArvoPari)
+				lisaaSelvitettyTunniste(tunnisteArvoPari, oid)
 		).collect(Collectors.toList());
 	}
 
@@ -202,19 +207,28 @@ public class ValintalaskentakoostepalveluResourceImpl {
 	@ApiOperation(value = "Hakee hakukohteen valintakokeet OID:n perusteella", response = ValintakoeDTO.class)
 	public List<HakukohdeJaValintakoeDTO> valintakoesForHakukohteet(
 			List<String> oids) {
+		List<HakukohdeViite> viites = hakukohdeService.readByOids(oids);
+		Map<String, HakukohdeViite> viitteet = viites.stream().collect(Collectors.toMap(v -> v.getOid(), v -> v));
 		return oids.stream()
 				//
 				.map(oid -> {
-					HakukohdeViite viite = hakukohdeService.readByOid(oid);
-					Map<String, HakukohteenValintaperuste> hakukohteenValintaperusteet = viite.getHakukohteenValintaperusteet();
-					Map<String, String> tunnisteArvoPari =
-							hakukohteenValintaperusteet.values().stream().collect(Collectors.toMap(t -> t.getTunniste(), t -> t.getArvo()));
+					Map<String, String> tunnisteArvoPari;
+					if(viitteet.containsKey(oid)) {
+						Map<String, HakukohteenValintaperuste> hakukohteenValintaperusteet =
+								Optional.ofNullable(viitteet.get(oid).getHakukohteenValintaperusteet())
+								.orElse(Collections.emptyMap());
+						tunnisteArvoPari =
+								hakukohteenValintaperusteet.values().stream().collect(Collectors.toMap(t -> t.getTunniste(), t -> t.getArvo()));
+					} else {
+						tunnisteArvoPari = Collections.emptyMap();
+					}
+
 
 					List<ValintakoeDTO> valintakoeDtos = modelMapper.mapList(
 							valintakoeService
 									.findValintakoesByValinnanVaihes(valinnanVaiheService
 											.findByHakukohde(oid.toString())),
-							ValintakoeDTO.class).stream().map(lisaaSelvitettyTunniste(tunnisteArvoPari)).collect(Collectors.toList());
+							ValintakoeDTO.class).stream().map(lisaaSelvitettyTunniste(tunnisteArvoPari, oid)).collect(Collectors.toList());
 					if (valintakoeDtos == null || valintakoeDtos.isEmpty()) {
 						return null;
 					}
