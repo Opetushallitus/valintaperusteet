@@ -26,7 +26,7 @@ public class ValintaperusteDTO {
     @ApiModelProperty(value = "Valintaperusteen lähde")
     private Valintaperustelahde lahde;
 
-    @ApiModelProperty(value = "Onko valintaperuste pakollinen")
+    @ApiModelProperty(value = "Onko valintaperuste pakollinen, eli laskenta merkitsee virheelliseksi hakemuksen millä ei ole arvoa tunnisteelle.")
     private boolean onPakollinen;
 
     @ApiModelProperty(value = "Arvovälin minimi")
