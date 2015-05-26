@@ -71,7 +71,17 @@ public class ValintalaskentakoostepalveluResourceImpl {
 
 	@Autowired
 	private ValintakoeService valintakoeService;
-
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/valintatapajono/kopiot")
+	public Map<String, List<String>> findKopiot(@QueryParam("oid") List<String> oid) {
+		try {
+			return valintatapajonoService.findKopiot(oid);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new HashMap<>();
+		}
+	}
 	@POST
 	@Path("/valintatapajono")
 	@Produces(MediaType.APPLICATION_JSON)
