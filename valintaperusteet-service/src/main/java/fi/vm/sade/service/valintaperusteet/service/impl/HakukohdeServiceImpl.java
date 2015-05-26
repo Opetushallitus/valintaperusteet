@@ -3,7 +3,6 @@ package fi.vm.sade.service.valintaperusteet.service.impl;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.dao.LaskentakaavaDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
-import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
 import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.*;

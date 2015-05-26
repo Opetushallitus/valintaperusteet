@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -161,5 +162,13 @@ public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Lo
                 .innerJoin(hk.hakukohdekoodi, koodi)
                 .where(koodi.uri.eq(koodiUri))
                 .distinct().list(hk);
+    }
+
+    @Override
+    public Optional<Valintaryhma> findValintaryhmaByHakukohdeOid(String oid) {
+        QHakukohdeViite hk = QHakukohdeViite.hakukohdeViite;
+        final Optional<HakukohdeViite> hakukohdeViite = Optional.ofNullable(
+                from(hk).leftJoin(hk.valintaryhma).fetch().where(hk.oid.eq(oid)).singleResult(hk));
+        return Optional.ofNullable(hakukohdeViite.orElse(new HakukohdeViite()).getValintaryhma());
     }
 }

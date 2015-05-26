@@ -1,8 +1,10 @@
 package fi.vm.sade.service.valintaperusteet.dao;
 
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
+import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created with IntelliJ IDEA.
@@ -34,4 +36,6 @@ public interface HakukohdeViiteDAO extends JpaDAO<HakukohdeViite, Long> {
     List<HakukohdeViite> search(String hakuOid, List<String> tila, String searchString);
 
     List<HakukohdeViite> readByHakukohdekoodiUri(String koodiUri);
+
+    Optional<Valintaryhma> findValintaryhmaByHakukohdeOid(String oid);
 }

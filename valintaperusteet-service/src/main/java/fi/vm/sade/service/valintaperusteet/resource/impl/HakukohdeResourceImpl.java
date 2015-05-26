@@ -20,11 +20,11 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
-import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
 import fi.vm.sade.service.valintaperusteet.model.HakukohteenValintaperuste;
-import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
+import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import fi.vm.sade.service.valintaperusteet.service.*;
 
 import org.slf4j.Logger;
@@ -33,8 +33,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
@@ -42,7 +40,6 @@ import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
-import fi.vm.sade.service.valintaperusteet.resource.HakukohdeResource;
 import fi.vm.sade.service.valintaperusteet.resource.ValintaryhmaResource;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakukohdeViiteEiOleOlemassaException;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,6 +75,9 @@ public class HakukohdeResourceImpl {
 
 	@Autowired
 	LaskentakaavaService laskentakaavaService;
+
+	@Autowired
+	HakukohdeViiteDAO hakukohdeViiteDAO;
 
 	@Autowired
 	private HakijaryhmaService hakijaryhmaService;
@@ -138,6 +138,23 @@ public class HakukohdeResourceImpl {
 					HakukohdeViiteDTO.class);
 		} catch (HakukohdeViiteEiOleOlemassaException e) {
 			throw new WebApplicationException(e, Response.Status.NOT_FOUND);
+		}
+	}
+
+	@GET
+	@Path("/{oid}/valintaryhma")
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Hakee valintaryhman OID:n perusteella", response = ValintaryhmaDTO.class)
+	@ApiResponses(value = { @ApiResponse(code = 404, message = "Valintaryhmaa ei löydy") })
+	public ValintaryhmaDTO queryValintaryhma(@PathParam("oid") String oid) {
+		final Optional<Valintaryhma> valintaryhmaByHakukohdeOid = hakukohdeViiteDAO.findValintaryhmaByHakukohdeOid(oid);
+		if (valintaryhmaByHakukohdeOid.isPresent()) {
+			return new ValintaryhmaDTO() {{
+				setNimi(valintaryhmaByHakukohdeOid.get().getNimi());
+				setOid(valintaryhmaByHakukohdeOid.get().getOid());
+			}};
+		} else {
+			return new ValintaryhmaDTO();
 		}
 	}
 
