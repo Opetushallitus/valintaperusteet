@@ -100,10 +100,10 @@ trait LaskinFunktiot {
 
   protected def haeValintaperuste(tunniste: String): Option[Any] = {
     val pilkuton = tunniste.replace(',', '.')
-    val result = Try(tunniste.toBoolean).getOrElse(
-      Try(BigDecimal(pilkuton)).getOrElse(tunniste)
-    )
-    Some(result)
+    if(tunniste.equalsIgnoreCase("true") || tunniste.equalsIgnoreCase("false")) {
+      return Some(tunniste.toBoolean)
+    }
+    Some(Try(BigDecimal(pilkuton)).getOrElse(tunniste));
   }
 
   protected def ehtoTayttyy(ehto: String, kentat: Kentat): Boolean = {
