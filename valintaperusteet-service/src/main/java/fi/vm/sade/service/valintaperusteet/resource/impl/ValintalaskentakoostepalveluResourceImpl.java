@@ -96,24 +96,20 @@ public class ValintalaskentakoostepalveluResourceImpl {
 			LOG.info("Valintatapajonojen haku kesti {}ms", (System.currentTimeMillis() - t0));
 		}
 	}
+
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/haku")
 	public List<HakijaryhmaValintatapajonoDTO> readByHakukohdeOids(List<String> hakukohdeOids) {
-		long t0 = System.currentTimeMillis();
+		if (hakukohdeOids == null || hakukohdeOids.isEmpty()) {
+			LOG.error("Yritettiin hakea hakijaryhmia tyhjalla hakukohde OID joukolla");
+			throw new WebApplicationException(new RuntimeException("Yritettiin hakea hakijaryhmia tyhjalla hakukohde OID joukolla"), Response.Status.NOT_FOUND);
+		}
+		long started = System.currentTimeMillis();
+		LOG.info("Haetaan hakukohdeOid joukolla {}", Arrays.toString(hakukohdeOids.toArray()));
 		try {
-			if(hakukohdeOids == null || hakukohdeOids.isEmpty()) {
-				// Haetaan hakuOid:lla
-				LOG.error("Yritettiin hakea hakijaryhmia tyhjalla hakukohde OID joukolla");
-				//return hakijaryhmaValintatapajonoService.findByHaku(hakuOid).stream().map(h -> modelMapper.map(h, HakijaryhmaValintatapajonoDTO.class)).collect(Collectors.toList());
-				throw new WebApplicationException(
-						new RuntimeException("Yritettiin hakea hakijaryhmia tyhjalla hakukohde OID joukolla"), Response.Status.NOT_FOUND);
-			} else {
-				// Haetaan hakukohdeOid joukolla
-				LOG.info("Haetaan hakukohdeOid joukolla {}", Arrays.toString(hakukohdeOids.toArray()));
-				return hakijaryhmaValintatapajonoService.findByHakukohteet(hakukohdeOids).stream().map(h -> modelMapper.map(h, HakijaryhmaValintatapajonoDTO.class)).collect(Collectors.toList());
-			}
+			return hakijaryhmaValintatapajonoService.findByHakukohteet(hakukohdeOids).stream().map(h -> modelMapper.map(h, HakijaryhmaValintatapajonoDTO.class)).collect(Collectors.toList());
 		} catch (HakijaryhmaEiOleOlemassaException e) {
 			LOG.error("Hakijaryhmää ei löytynyt! {}", e.getMessage());
 			throw new WebApplicationException(e, Response.Status.NOT_FOUND);
@@ -121,7 +117,7 @@ public class ValintalaskentakoostepalveluResourceImpl {
 			LOG.error("Hakijaryhmää ei saatu haettua! {} {}", e.getMessage(), Arrays.toString(e.getStackTrace()));
 			throw new WebApplicationException(e, Response.Status.INTERNAL_SERVER_ERROR);
 		} finally {
-			LOG.info("Haku kesti {}ms", (System.currentTimeMillis() - t0));
+			LOG.info("Haku kesti {}ms", (System.currentTimeMillis() - started));
 		}
 	}
 
