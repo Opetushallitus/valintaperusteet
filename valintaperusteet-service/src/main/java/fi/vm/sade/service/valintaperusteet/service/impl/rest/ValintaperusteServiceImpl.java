@@ -13,6 +13,7 @@ import fi.vm.sade.service.valintaperusteet.service.exception.HakuparametritOnTyh
 import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheEpaaktiivinenException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheJarjestyslukuOutOfBoundsException;
 import fi.vm.sade.service.valintaperusteet.service.impl.util.ValintaperusteServiceUtil;
+import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * User: kwuoti Date: 22.1.2013 Time: 15.00
@@ -71,19 +73,18 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
 		return valintatapajonoDTOs;
 	}
 	@Override
-	public Map<String, List<ValintatapajonoDTO>> haeValintatapajonotSijoittelulle(
-			Collection<String> hakukohdeOids) {
+	public Map<String, List<ValintatapajonoDTO>> haeValintatapajonotSijoittelulle(Collection<String> hakukohdeOids) {
 		return hakukohdeOids.stream().collect(Collectors.toMap(h -> h, h -> {
             final List<Valintatapajono> valintatapajonot = valintatapajonoDAO.haeValintatapajonotSijoittelulle(h);
+			LinkitettavaJaKopioitavaUtil.jarjesta(valintatapajonot);
 
             LOG.error("Hakukohde: {} - jonot: {}", h, Arrays.toString(valintatapajonot.toArray()));
-
-            if(valintatapajonot == null || valintatapajonot.isEmpty()) {
+            if(valintatapajonot.isEmpty()) {
                 return Lists.newArrayList();
             }
-            return modelMapper.mapList(
-                    valintatapajonot, ValintatapajonoDTO.class);
-
+			final List<ValintatapajonoDTO> valintatapajonoDTOs = modelMapper.mapList(valintatapajonot, ValintatapajonoDTO.class);
+			IntStream.range(0, valintatapajonoDTOs.size()).forEach(i -> { valintatapajonoDTOs.get(i).setPrioriteetti(i);});
+			return valintatapajonoDTOs;
 		}));
 	}
 	@Override
