@@ -3,6 +3,7 @@ package fi.vm.sade.service.valintaperusteet.resource.impl;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -109,7 +110,11 @@ public class ValintalaskentakoostepalveluResourceImpl {
 		long started = System.currentTimeMillis();
 		LOG.info("Haetaan hakukohdeOid joukolla {}", Arrays.toString(hakukohdeOids.toArray()));
 		try {
-			return hakijaryhmaValintatapajonoService.findByHakukohteet(hakukohdeOids).stream().map(h -> modelMapper.map(h, HakijaryhmaValintatapajonoDTO.class)).collect(Collectors.toList());
+			final List<HakijaryhmaValintatapajono> byHakukohteet = hakijaryhmaValintatapajonoService.findByHakukohteet(hakukohdeOids);
+			LinkitettavaJaKopioitavaUtil.jarjesta(byHakukohteet);
+			final List<HakijaryhmaValintatapajonoDTO> hakijaryhmaValintatapajonoDTOs = byHakukohteet.stream().map(h -> modelMapper.map(h, HakijaryhmaValintatapajonoDTO.class)).collect(Collectors.toList());
+			IntStream.range(0, hakijaryhmaValintatapajonoDTOs.size()).forEach(i -> {hakijaryhmaValintatapajonoDTOs.get(i).setPrioriteetti(i); });
+			return hakijaryhmaValintatapajonoDTOs;
 		} catch (HakijaryhmaEiOleOlemassaException e) {
 			LOG.error("Hakijaryhmää ei löytynyt! {}", e.getMessage());
 			throw new WebApplicationException(e, Response.Status.NOT_FOUND);

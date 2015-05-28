@@ -33,6 +33,9 @@ public class HakijaryhmaValintatapajonoUpdateDTO {
     @ApiModelProperty(value = "Aktiivinen", required = true)
     private Boolean aktiivinen;
 
+    @ApiModelProperty(value = "Prioriteetti", required = true)
+    private int prioriteetti;
+
     @ApiModelProperty(value = "Master haikjaryhmän OID", required = false)
     private String masterOid;
 
@@ -106,5 +109,13 @@ public class HakijaryhmaValintatapajonoUpdateDTO {
 
     public void setKaytetaanRyhmaanKuuluvia(boolean kaytetaanRyhmaanKuuluvia) {
         this.kaytetaanRyhmaanKuuluvia = kaytetaanRyhmaanKuuluvia;
+    }
+
+    public int getPrioriteetti() {
+        return prioriteetti;
+    }
+
+    public void setPrioriteetti(int prioriteetti) {
+        this.prioriteetti = prioriteetti;
     }
 }
