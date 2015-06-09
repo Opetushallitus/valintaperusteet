@@ -7,11 +7,6 @@ import java.util.{Map => JMap}
 import java.util.{List => JList}
 import java.lang.{Integer => JInteger}
 
-/**
- * User: kwuoti
- * Date: 27.2.2013
- * Time: 9.53
- */
 class Hakemus(val oid: String,
               val hakutoiveet: JMap[JInteger, String],
               jkentat: JMap[String, String],

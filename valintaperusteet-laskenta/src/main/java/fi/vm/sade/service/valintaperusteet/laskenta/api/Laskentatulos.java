@@ -4,14 +4,7 @@ import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Tila;
 
 import java.util.Map;
 
-/**
- * User: kwuoti
- * Date: 24.2.2013
- * Time: 19.21
- */
 public class Laskentatulos<T> {
-
-
     public Laskentatulos(Tila tila, T tulos, StringBuffer historia, Map<String, SyotettyArvo> syotetytArvot,
                          Map<String, FunktioTulos> funktioTulokset) {
         this.tila = tila;
