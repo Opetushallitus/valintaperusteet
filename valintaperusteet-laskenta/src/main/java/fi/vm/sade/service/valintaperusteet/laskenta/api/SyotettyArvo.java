@@ -1,10 +1,5 @@
 package fi.vm.sade.service.valintaperusteet.laskenta.api;
 
-/**
- * User: wuoti
- * Date: 17.9.2013
- * Time: 10.48
- */
 public class SyotettyArvo {
     private String tunniste;
     private String arvo;
