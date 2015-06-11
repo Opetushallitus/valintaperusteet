@@ -7,15 +7,7 @@ import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created with IntelliJ IDEA.
- * User: jukais
- * Date: 17.1.2013
- * Time: 14.43
- * To change this template use File | Settings | File Templates.
- */
 public interface ValintatapajonoService {
-
     List<Valintatapajono> findJonoByValinnanvaihe(String oid);
 
     Map<String, List<String>> findKopiot(List<String> oidit);

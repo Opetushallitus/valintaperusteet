@@ -12,9 +12,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * User: tommiha Date: 1/17/13 Time: 12:51 PM
- */
 @Repository
 public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, Long> implements ValintatapajonoDAO {
 
