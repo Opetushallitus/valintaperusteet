@@ -84,12 +84,11 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
 
     @Override
     public List<ValintaperusteetDTO> haeValintaperusteet(List<HakuparametritDTO> hakuparametrit) {
+        if (hakuparametrit == null) {
+            throw new HakuparametritOnTyhjaException("Hakuparametrit oli tyhjä.");
+        }
+        List<ValintaperusteetDTO> list = new ArrayList<>();
         try {
-            List<ValintaperusteetDTO> list = new ArrayList<>();
-
-            if (hakuparametrit == null) {
-                throw new HakuparametritOnTyhjaException("Hakuparametrit oli tyhjä.");
-            }
             Long start = System.currentTimeMillis();
             LOG.info("Hakuparametrien lkm {}", hakuparametrit.size());
 
