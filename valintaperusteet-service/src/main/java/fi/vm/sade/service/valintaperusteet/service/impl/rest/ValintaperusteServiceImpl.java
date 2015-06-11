@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Service
 public class ValintaperusteServiceImpl implements ValintaperusteService {
@@ -133,13 +132,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
                             .collect(Collectors.toList());
 
                     int todellinenJarjestysluku = vaiheet.indexOf(kasiteltava);
-
-                    ValintaperusteetDTO valinnanVaihe = convertValintaperusteet(kasiteltava, hakukohde, todellinenJarjestysluku);
-                    if (valinnanVaihe != null) {
-                        valinnanVaihe.setViimeinenValinnanvaihe(vaiheet.size() - 1);
-                        list.add(valinnanVaihe);
-                    }
-
+                    addValintaperusteToValintaperusteList(list, hakukohde, kasiteltava, vaiheet, todellinenJarjestysluku);
                 } else {
 
                     List<ValinnanVaihe> vaiheet = valinnanVaiheList.stream()
@@ -148,11 +141,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
 
                     for (int i = 0; i < vaiheet.size(); i++) {
                         if (vaiheet.get(i).getAktiivinen()) {
-                            ValintaperusteetDTO valinnanVaihe = convertValintaperusteet(vaiheet.get(i), hakukohde, i);
-                            if (valinnanVaihe != null) {
-                                valinnanVaihe.setViimeinenValinnanvaihe(vaiheet.size() - 1);
-                                list.add(valinnanVaihe);
-                            }
+                            addValintaperusteToValintaperusteList(list, hakukohde, vaiheet.get(i), vaiheet, i);
                         }
                     }
                 }
@@ -169,6 +158,14 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
             LOG.error("Valintaperusteiden haussa virhe {} {} {}", e.getMessage(), e.getCause(), Arrays.toString(e.getStackTrace()));
             e.printStackTrace();
             throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    private void addValintaperusteToValintaperusteList(List<ValintaperusteetDTO> list, HakukohdeViite hakukohde, ValinnanVaihe kasiteltava, List<ValinnanVaihe> vaiheet, int todellinenJarjestysluku) {
+        ValintaperusteetDTO valinnanVaihe = convertValintaperusteet(kasiteltava, hakukohde, todellinenJarjestysluku);
+        if (valinnanVaihe != null) {
+            valinnanVaihe.setViimeinenValinnanvaihe(vaiheet.size() - 1);
+            list.add(valinnanVaihe);
         }
     }
 
