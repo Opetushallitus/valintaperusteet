@@ -82,8 +82,14 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
             if(valintatapajonot.isEmpty()) {
                 return Lists.newArrayList();
             }
-			final List<ValintatapajonoDTO> valintatapajonoDTOs = modelMapper.mapList(valintatapajonot, ValintatapajonoDTO.class);
-			IntStream.range(0, valintatapajonoDTOs.size()).forEach(i -> { valintatapajonoDTOs.get(i).setPrioriteetti(i);});
+			int index = 0;
+			List<ValintatapajonoDTO> valintatapajonoDTOs = new LinkedList<>();
+			for(Valintatapajono jono: valintatapajonot) {
+				final ValintatapajonoDTO valintatapajonoDTO = modelMapper.map(jono, ValintatapajonoDTO.class);
+				valintatapajonoDTO.setPrioriteetti(index);
+				valintatapajonoDTOs.add(valintatapajonoDTO);
+				index++;
+			}
 			return valintatapajonoDTOs;
 		}));
 	}
