@@ -130,9 +130,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
                     addValintaperusteToValintaperusteList(list, hakukohde, kasiteltava, vaiheet, todellinenJarjestysluku);
                 } else {
                     for (int i = 0; i < vaiheet.size(); i++) {
-                        if (vaiheet.get(i).getAktiivinen()) {
-                            addValintaperusteToValintaperusteList(list, hakukohde, vaiheet.get(i), vaiheet, i);
-                        }
+                        addValintaperusteToValintaperusteList(list, hakukohde, vaiheet.get(i), vaiheet, i);
                     }
                 }
                 if (LOG.isInfoEnabled()) {
