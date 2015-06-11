@@ -112,6 +112,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
                     LOG.info("findByHakukohde: " + (System.currentTimeMillis() - startFind));
                 }
                 Long startConvert = System.currentTimeMillis();
+                List<ValinnanVaihe> vaiheet = valinnanVaiheList.stream().filter(ValinnanVaihe::getAktiivinen).collect(Collectors.toList());
                 if (jarjestysluku != null) {
                     if (jarjestysluku < 0 || jarjestysluku >= valinnanVaiheList.size()) {
                         throw new ValinnanVaiheJarjestyslukuOutOfBoundsException("Hakukohteen " + param.getHakukohdeOid()
@@ -120,25 +121,14 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
                         throw new ValinnanVaiheEpaaktiivinenException("Valinnan vaihe (oid " + valinnanVaiheList.get(jarjestysluku).getOid()
                                 + ", järjestysluku " + jarjestysluku + ") ei ole aktiivinen");
                     }
-
                     ValinnanVaihe kasiteltava = valinnanVaiheList.get(jarjestysluku);
                     if (!kasiteltava.getAktiivinen()) {
                         LOG.info("Yritetään laskea valinnanvaihetta, joka ei ole aktiivinen");
                         continue;
                     }
-
-                    List<ValinnanVaihe> vaiheet = valinnanVaiheList.stream()
-                            .filter(ValinnanVaihe::getAktiivinen)
-                            .collect(Collectors.toList());
-
                     int todellinenJarjestysluku = vaiheet.indexOf(kasiteltava);
                     addValintaperusteToValintaperusteList(list, hakukohde, kasiteltava, vaiheet, todellinenJarjestysluku);
                 } else {
-
-                    List<ValinnanVaihe> vaiheet = valinnanVaiheList.stream()
-                            .filter(ValinnanVaihe::getAktiivinen)
-                            .collect(Collectors.toList());
-
                     for (int i = 0; i < vaiheet.size(); i++) {
                         if (vaiheet.get(i).getAktiivinen()) {
                             addValintaperusteToValintaperusteList(list, hakukohde, vaiheet.get(i), vaiheet, i);
