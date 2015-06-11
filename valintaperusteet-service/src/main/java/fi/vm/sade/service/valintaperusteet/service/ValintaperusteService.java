@@ -14,9 +14,6 @@ import java.util.Map;
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD;
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
 
-/**
- * Created by jukais on 13.3.2014.
- */
 public interface ValintaperusteService {
     List<ValintatapajonoDTO> haeValintatapajonotSijoittelulle(String hakukohdeOid);
     Map<String,List<ValintatapajonoDTO>> haeValintatapajonotSijoittelulle(Collection<String> hakukohdeOids);

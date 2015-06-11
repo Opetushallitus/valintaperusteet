@@ -3,9 +3,6 @@ package fi.vm.sade.service.valintaperusteet.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by jukais on 13.3.2014.
- */
 public class ValintatapajonoJarjestyskriteereillaDTO {
 
     private Integer aloituspaikat;
