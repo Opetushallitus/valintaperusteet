@@ -1083,15 +1083,15 @@
                      tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="4" aktiivinen="true"
                      ei_varasijatayttoa="false" kaikki_ehdon_tayttavat_hyvaksytaan="false" valisijoittelu="false" automaattinen_laskentaan_siirto="true"/>
 
-    <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="7" version="1"
-                     oid="7" edellinen_valintatapajono_id="6" aloituspaikat="10" poistetaanko_hylatyt="false"
-                     nimi="haku 6 valinnanvaihe 1 jono2" kuvaus="kuvaus" tasapistesaanto="ARVONTA"
+    <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="8" version="1"
+                     oid="8" edellinen_valintatapajono_id="6" aloituspaikat="10" poistetaanko_hylatyt="false"
+                     nimi="haku 6 valinnanvaihe 1 jono3" kuvaus="kuvaus" tasapistesaanto="ARVONTA"
                      siirretaan_sijoitteluun="true" valinnan_vaihe_id="4" aktiivinen="true" ei_varasijatayttoa="false"
                      kaikki_ehdon_tayttavat_hyvaksytaan="false" valisijoittelu="false" automaattinen_laskentaan_siirto="true"/>
 
-    <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="8" version="1"
-                     oid="8" edellinen_valintatapajono_id="7" aloituspaikat="10" poistetaanko_hylatyt="false"
-                     nimi="haku 6 valinnanvaihe 1 jono3" kuvaus="kuvaus" tasapistesaanto="ARVONTA"
+    <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="7" version="1"
+                     oid="7" edellinen_valintatapajono_id="8" aloituspaikat="10" poistetaanko_hylatyt="false"
+                     nimi="haku 6 valinnanvaihe 1 jono2" kuvaus="kuvaus" tasapistesaanto="ARVONTA"
                      siirretaan_sijoitteluun="true" valinnan_vaihe_id="4" aktiivinen="true" ei_varasijatayttoa="false"
                      kaikki_ehdon_tayttavat_hyvaksytaan="false" valisijoittelu="false" automaattinen_laskentaan_siirto="true"/>
 

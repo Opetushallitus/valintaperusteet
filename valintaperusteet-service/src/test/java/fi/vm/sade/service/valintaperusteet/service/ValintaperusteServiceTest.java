@@ -200,10 +200,13 @@ public class ValintaperusteServiceTest {
                 valintaperusteService.haeValintatapajonotSijoittelulle(Arrays.asList("oid6"));
         assertNotNull(valintatapajonotSijoittelulle);
         final List<ValintatapajonoDTO> valintatapajonoDTOs = valintatapajonotSijoittelulle.get("oid6");
-        assertEquals(9, valintatapajonoDTOs.size());
+        assertEquals(3, valintatapajonoDTOs.size());
         assertEquals(0, valintatapajonoDTOs.get(0).getPrioriteetti());
         assertEquals("6", valintatapajonoDTOs.get(0).getOid());
-        assertEquals(8, valintatapajonoDTOs.get(8).getPrioriteetti());
-        assertEquals("14", valintatapajonoDTOs.get(8).getOid());
+        assertEquals(2, valintatapajonoDTOs.get(2).getPrioriteetti());
+        assertEquals("7", valintatapajonoDTOs.get(2).getOid());
+
+        assertEquals(1, valintatapajonoDTOs.get(1).getPrioriteetti());
+        assertEquals("8", valintatapajonoDTOs.get(1).getOid());
     }
 }

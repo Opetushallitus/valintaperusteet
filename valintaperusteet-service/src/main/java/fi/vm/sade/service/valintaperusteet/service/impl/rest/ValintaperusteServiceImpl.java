@@ -63,8 +63,8 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
     @Override
     public Map<String, List<ValintatapajonoDTO>> haeValintatapajonotSijoittelulle(Collection<String> hakukohdeOids) {
         return hakukohdeOids.stream().collect(Collectors.toMap(h -> h, h -> {
-            final List<Valintatapajono> valintatapajonot = valintatapajonoDAO.haeValintatapajonotSijoittelulle(h);
-            LinkitettavaJaKopioitavaUtil.jarjesta(valintatapajonot);
+            List<Valintatapajono> valintatapajonot = valintatapajonoDAO.haeValintatapajonotSijoittelulle(h);
+            valintatapajonot = LinkitettavaJaKopioitavaUtil.jarjesta( valintatapajonot);
 
             LOG.error("Hakukohde: {} - jonot: {}", h, Arrays.toString(valintatapajonot.toArray()));
             if (valintatapajonot.isEmpty()) {
