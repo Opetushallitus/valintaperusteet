@@ -15,11 +15,6 @@ import org.modelmapper.spi.MappingContext;
 
 import java.util.*;
 
-/**
- * User: wuoti
- * Date: 27.11.2013
- * Time: 15.22
- */
 public class ValintaperusteetModelMapper extends ModelMapper {
 
     public ValintaperusteetModelMapper() {
@@ -29,7 +24,7 @@ public class ValintaperusteetModelMapper extends ModelMapper {
         final Converter<List<ValidointivirheDTO>, List<Abstraktivalidointivirhe>> virheListConverter = new Converter<List<ValidointivirheDTO>, List<Abstraktivalidointivirhe>>() {
             public List<Abstraktivalidointivirhe> convert(MappingContext<List<ValidointivirheDTO>, List<Abstraktivalidointivirhe>> context) {
                 List<Abstraktivalidointivirhe> result = new ArrayList<Abstraktivalidointivirhe>();
-                for(int i = 0; i < context.getSource().size(); i++) {
+                for (int i = 0; i < context.getSource().size(); i++) {
                     ValidointivirheDTO dto = context.getSource().get(i);
                     Validointivirhe virhe = new Validointivirhe(Virhetyyppi.valueOf(dto.getVirhetyyppi().name()), dto.getVirheviesti());
                     result.add(virhe);
@@ -42,12 +37,10 @@ public class ValintaperusteetModelMapper extends ModelMapper {
         final Converter<Set<ValintaperusteViite>, List<ValintaperusteViiteDTO>> valintaperusteViiteToDtoConverter = new Converter<Set<ValintaperusteViite>, List<ValintaperusteViiteDTO>>() {
             public List<ValintaperusteViiteDTO> convert(MappingContext<Set<ValintaperusteViite>, List<ValintaperusteViiteDTO>> context) {
                 List<ValintaperusteViiteDTO> result = new LinkedList<ValintaperusteViiteDTO>();
-                for(ValintaperusteViite arg : context.getSource()) {
-
+                for (ValintaperusteViite arg : context.getSource()) {
                     ValintaperusteViiteDTO dto = map(arg, ValintaperusteViiteDTO.class);
                     result.add(dto);
                 }
-
                 return result;
             }
         };
@@ -55,12 +48,10 @@ public class ValintaperusteetModelMapper extends ModelMapper {
         final Converter<List<ValintaperusteViiteDTO>, Set<ValintaperusteViite>> dtoToValintaperusteViiteConverter = new Converter<List<ValintaperusteViiteDTO>, Set<ValintaperusteViite>>() {
             public Set<ValintaperusteViite> convert(MappingContext<List<ValintaperusteViiteDTO>, Set<ValintaperusteViite>> context) {
                 Set<ValintaperusteViite> result = new TreeSet<ValintaperusteViite>();
-
-                for(int i = 0; i < context.getSource().size(); i++) {
+                for (int i = 0; i < context.getSource().size(); i++) {
                     ValintaperusteViiteDTO arg = context.getSource().get(i);
                     arg.setIndeksi(i + 1);
                     ValintaperusteViite viite = map(arg, ValintaperusteViite.class);
-
                     viite.setIndeksi(arg.getIndeksi());
                     result.add(viite);
                 }
@@ -72,10 +63,9 @@ public class ValintaperusteetModelMapper extends ModelMapper {
         final Converter<Set<Arvovalikonvertteriparametri>, List<ArvovalikonvertteriparametriDTO>> arvovalikonvertteriparametriToDtoConverter = new Converter<Set<Arvovalikonvertteriparametri>, List<ArvovalikonvertteriparametriDTO>>() {
             public List<ArvovalikonvertteriparametriDTO> convert(MappingContext<Set<Arvovalikonvertteriparametri>, List<ArvovalikonvertteriparametriDTO>> context) {
                 Set<ArvovalikonvertteriparametriDTO> resultSet = new TreeSet<>();
-                for(Arvovalikonvertteriparametri a : context.getSource()) {
+                for (Arvovalikonvertteriparametri a : context.getSource()) {
                     resultSet.add(map(a, ArvovalikonvertteriparametriDTO.class));
                 }
-
                 List<ArvovalikonvertteriparametriDTO> result = new LinkedList<>();
                 result.addAll(resultSet);
                 return result;
@@ -93,24 +83,21 @@ public class ValintaperusteetModelMapper extends ModelMapper {
         final Converter<List<FunktioargumenttiDTO>, Set<Funktioargumentti>> dtoToFunktioargumenttiConverter = new Converter<List<FunktioargumenttiDTO>, Set<Funktioargumentti>>() {
             public Set<Funktioargumentti> convert(MappingContext<List<FunktioargumenttiDTO>, Set<Funktioargumentti>> context) {
                 Set<Funktioargumentti> result = new TreeSet<Funktioargumentti>();
-
-                for(int i = 0; i < context.getSource().size(); i++) {
+                for (int i = 0; i < context.getSource().size(); i++) {
                     FunktioargumenttiDTO arg = context.getSource().get(i);
-                    arg.setIndeksi(i+1);
-
+                    arg.setIndeksi(i + 1);
                     Funktioargumentti funktioargumentti = new Funktioargumentti();
-                    if(arg.getLapsi() != null && arg.getLapsi().getLapsityyppi().equals(FunktioargumentinLapsiDTO.FUNKTIOKUTSUTYYPPI)) {
+                    if (arg.getLapsi() != null && arg.getLapsi().getLapsityyppi().equals(FunktioargumentinLapsiDTO.FUNKTIOKUTSUTYYPPI)) {
                         asetaIndeksitRekursiivisesti(arg.getLapsi());
                         FunktiokutsuDTO dto = map(arg.getLapsi(), FunktiokutsuDTO.class);
                         Funktiokutsu kutsu = convertFromDto(dto);
                         funktioargumentti.setFunktiokutsuChild(kutsu);
                     }
-                    if(arg.getLapsi() != null && arg.getLapsi().getLapsityyppi().equals(FunktioargumentinLapsiDTO.LASKENTAKAAVATYYPPI)) {
+                    if (arg.getLapsi() != null && arg.getLapsi().getLapsityyppi().equals(FunktioargumentinLapsiDTO.LASKENTAKAAVATYYPPI)) {
                         LaskentakaavaListDTO dto = map(arg.getLapsi(), LaskentakaavaListDTO.class);
                         Laskentakaava kaava = convertFromDto(dto);
                         funktioargumentti.setLaskentakaavaChild(kaava);
                     }
-
                     funktioargumentti.setIndeksi(arg.getIndeksi());
                     result.add(funktioargumentti);
                 }
@@ -121,15 +108,15 @@ public class ValintaperusteetModelMapper extends ModelMapper {
         final Converter<Set<Funktioargumentti>, List<FunktioargumenttiDTO>> funktioargumenttiToDtoConverter = new Converter<Set<Funktioargumentti>, List<FunktioargumenttiDTO>>() {
             public List<FunktioargumenttiDTO> convert(MappingContext<Set<Funktioargumentti>, List<FunktioargumenttiDTO>> context) {
                 List<FunktioargumenttiDTO> result = new LinkedList<FunktioargumenttiDTO>();
-                for(Funktioargumentti arg : context.getSource()) {
+                for (Funktioargumentti arg : context.getSource()) {
                     FunktioargumenttiDTO dto = new FunktioargumenttiDTO();
-                    if(arg.getFunktiokutsuChild() != null) {
+                    if (arg.getFunktiokutsuChild() != null) {
                         FunktioargumentinLapsiDTO lapsi = asetaFunktioArgumenttiLapsetRekursiivisesti(arg.getFunktiokutsuChild());
                         lapsi.setLapsityyppi(FunktioargumentinLapsiDTO.FUNKTIOKUTSUTYYPPI);
                         lapsi.setFunktionimi(arg.getFunktiokutsuChild().getFunktionimi());
                         dto.setLapsi(lapsi);
                     }
-                    if(arg.getLaskentakaavaChild() != null) {
+                    if (arg.getLaskentakaavaChild() != null) {
                         FunktioargumentinLapsiDTO lapsi = map(arg.getLaskentakaavaChild(), FunktioargumentinLapsiDTO.class);
                         lapsi.setLapsityyppi(FunktioargumentinLapsiDTO.LASKENTAKAAVATYYPPI);
                         lapsi.setTyyppi(arg.getLaskentakaavaChild().getTyyppi());
@@ -146,20 +133,17 @@ public class ValintaperusteetModelMapper extends ModelMapper {
         final Converter<Set<Funktioargumentti>, Set<ValintaperusteetFunktioargumenttiDTO>> funktioargumenttiToValintaperusteetDtoConverter = new Converter<Set<Funktioargumentti>, Set<ValintaperusteetFunktioargumenttiDTO>>() {
             public Set<ValintaperusteetFunktioargumenttiDTO> convert(MappingContext<Set<Funktioargumentti>, Set<ValintaperusteetFunktioargumenttiDTO>> context) {
                 Set<ValintaperusteetFunktioargumenttiDTO> result = new HashSet<ValintaperusteetFunktioargumenttiDTO>();
-                for(Funktioargumentti arg : context.getSource()) {
+                for (Funktioargumentti arg : context.getSource()) {
                     ValintaperusteetFunktioargumenttiDTO dto = new ValintaperusteetFunktioargumenttiDTO();
-                    if(arg.getFunktiokutsuChild() != null) {
+                    if (arg.getFunktiokutsuChild() != null) {
                         dto.setFunktiokutsu(map(arg.getFunktiokutsuChild(), ValintaperusteetFunktiokutsuDTO.class));
-                    }
-                    else if(arg.getLaskentakaavaChild() != null) {
+                    } else if (arg.getLaskentakaavaChild() != null) {
                         dto.setFunktiokutsu(map(arg.getLaskentakaavaChild().getFunktiokutsu(), ValintaperusteetFunktiokutsuDTO.class));
                     }
-
                     dto.setIndeksi(arg.getIndeksi());
                     dto.setId(arg.getId());
                     result.add(dto);
                 }
-
                 return result;
             }
         };
@@ -167,14 +151,13 @@ public class ValintaperusteetModelMapper extends ModelMapper {
         final Converter<Set<ValintaperusteetFunktioargumenttiDTO>, Set<Funktioargumentti>> valintaperusteetDtoFunktioargumenttiToConverter = new Converter<Set<ValintaperusteetFunktioargumenttiDTO>, Set<Funktioargumentti>>() {
             public Set<Funktioargumentti> convert(MappingContext<Set<ValintaperusteetFunktioargumenttiDTO>, Set<Funktioargumentti>> context) {
                 Set<Funktioargumentti> result = new HashSet<Funktioargumentti>();
-                for(ValintaperusteetFunktioargumenttiDTO dto : context.getSource()) {
+                for (ValintaperusteetFunktioargumenttiDTO dto : context.getSource()) {
                     Funktioargumentti arg = new Funktioargumentti();
                     arg.setFunktiokutsuChild(map(dto.getFunktiokutsu(), Funktiokutsu.class));
                     arg.setIndeksi(dto.getIndeksi());
                     arg.setId(dto.getId());
                     result.add(arg);
                 }
-
                 return result;
             }
         };
@@ -193,9 +176,7 @@ public class ValintaperusteetModelMapper extends ModelMapper {
         final Provider<Set> linkedHashSetProvider = new Provider<Set>() {
             public Set get(Provider.ProvisionRequest<Set> request) {
                 Class<?> klass = request.getRequestedType();
-                return klass.isAssignableFrom(Set.class)
-                        ? new LinkedHashSet<Object>()
-                        : null;
+                return klass.isAssignableFrom(Set.class) ? new LinkedHashSet<>() : null;
             }
         };
         this.getConfiguration().setProvider(linkedHashSetProvider);
@@ -228,7 +209,7 @@ public class ValintaperusteetModelMapper extends ModelMapper {
 
         this.addMappings(new PropertyMap<Valintatapajono, ValintatapajonoDTO>() {
             @Override
-                protected void configure() {
+            protected void configure() {
                 map().setTayttojono(source.getVarasijanTayttojono().getOid());
             }
         });
@@ -273,9 +254,7 @@ public class ValintaperusteetModelMapper extends ModelMapper {
         this.addMappings(new PropertyMap<Valintakoe, ValintakoeDTO>() {
             @Override
             protected void configure() {
-
                 using(valintakoeKutsutaankoKaikkiConverter).map(source).setKutsutaankoKaikki(null);
-
             }
         });
 
@@ -291,21 +270,16 @@ public class ValintaperusteetModelMapper extends ModelMapper {
         this.addMappings(new PropertyMap<FunktioargumentinLapsiDTO, Funktiokutsu>() {
             @Override
             protected void configure() {
-
                 using(virheListConverter).map(source.getValidointivirheet()).setValidointivirheet(null);
                 using(dtoToArvovalikonvertteriparametriConverter).map(source.getArvovalikonvertteriparametrit()).setArvovalikonvertteriparametrit(null);
             }
         });
 
 
-
         this.addMappings(new PropertyMap<Funktiokutsu, FunktiokutsuDTO>() {
             @Override
             protected void configure() {
-
-
                 using(funktioargumenttiToDtoConverter).map(source.getFunktioargumentit()).setFunktioargumentit(null);
-
                 using(valintaperusteViiteToDtoConverter).map(source.getValintaperusteviitteet()).setValintaperusteviitteet(null);
                 using(arvovalikonvertteriparametriToDtoConverter).map(source.getArvovalikonvertteriparametrit()).setArvovalikonvertteriparametrit(null);
 
@@ -315,38 +289,24 @@ public class ValintaperusteetModelMapper extends ModelMapper {
         this.addMappings(new PropertyMap<FunktiokutsuDTO, Funktiokutsu>() {
             @Override
             protected void configure() {
-
-
                 using(dtoToFunktioargumenttiConverter).map(source.getFunktioargumentit()).setFunktioargumentit(null);
-
                 using(virheListConverter).map(source.getValidointivirheet()).setValidointivirheet(null);
-
                 using(dtoToValintaperusteViiteConverter).map(source.getValintaperusteviitteet()).setValintaperusteviitteet(null);
                 using(dtoToArvovalikonvertteriparametriConverter).map(source.getArvovalikonvertteriparametrit()).setArvovalikonvertteriparametrit(null);
-
-
             }
         });
 
         this.addMappings(new PropertyMap<Funktiokutsu, ValintaperusteetFunktiokutsuDTO>() {
             @Override
             protected void configure() {
-
-
                 using(funktioargumenttiToValintaperusteetDtoConverter).map(source.getFunktioargumentit()).setFunktioargumentit(null);
-
-
             }
         });
 
         this.addMappings(new PropertyMap<ValintaperusteetFunktiokutsuDTO, Funktiokutsu>() {
             @Override
             protected void configure() {
-
-
                 using(valintaperusteetDtoFunktioargumenttiToConverter).map(source.getFunktioargumentit()).setFunktioargumentit(null);
-
-
             }
         });
 
@@ -364,16 +324,16 @@ public class ValintaperusteetModelMapper extends ModelMapper {
     public FunktioargumentinLapsiDTO asetaFunktioArgumenttiLapsetRekursiivisesti(Funktiokutsu kutsu) {
         FunktioargumentinLapsiDTO parent = map(kutsu, FunktioargumentinLapsiDTO.class);
         List<FunktioargumenttiDTO> result = new LinkedList<FunktioargumenttiDTO>();
-        for(Funktioargumentti arg : kutsu.getFunktioargumentit()) {
+        for (Funktioargumentti arg : kutsu.getFunktioargumentit()) {
             FunktioargumenttiDTO dto = new FunktioargumenttiDTO();
             dto.setIndeksi(arg.getIndeksi());
-            if(arg.getFunktiokutsuChild() != null) {
+            if (arg.getFunktiokutsuChild() != null) {
                 FunktioargumentinLapsiDTO lapsi = asetaFunktioArgumenttiLapsetRekursiivisesti(arg.getFunktiokutsuChild());
                 lapsi.setLapsityyppi(FunktioargumentinLapsiDTO.FUNKTIOKUTSUTYYPPI);
                 lapsi.setTyyppi(arg.getFunktiokutsuChild().getFunktionimi().getTyyppi());
                 dto.setLapsi(lapsi);
             }
-            if(arg.getLaskentakaavaChild() != null) {
+            if (arg.getLaskentakaavaChild() != null) {
                 FunktioargumentinLapsiDTO lapsi = map(arg.getLaskentakaavaChild(), FunktioargumentinLapsiDTO.class);
                 lapsi.setLapsityyppi(FunktioargumentinLapsiDTO.LASKENTAKAAVATYYPPI);
                 lapsi.setTyyppi(arg.getLaskentakaavaChild().getTyyppi());
@@ -389,26 +349,22 @@ public class ValintaperusteetModelMapper extends ModelMapper {
     }
 
     public Funktiokutsu asetaIndeksitRekursiivisesti(FunktioargumentinLapsiDTO kutsu) {
-        for(int i = 0; i < kutsu.getFunktioargumentit().size(); i++) {
+        for (int i = 0; i < kutsu.getFunktioargumentit().size(); i++) {
             FunktioargumenttiDTO arg = kutsu.getFunktioargumentit().get(i);
-            arg.setIndeksi(i+1);
+            arg.setIndeksi(i + 1);
             if (arg.getLapsi() != null && arg.getLapsi().getLapsityyppi().equals(FunktioargumentinLapsiDTO.FUNKTIOKUTSUTYYPPI)) {
                 asetaIndeksitRekursiivisesti(arg.getLapsi());
             }
-
         }
         Funktiokutsu funktiokutsu = map(kutsu, Funktiokutsu.class);
         return funktiokutsu;
     }
 
     public <FROM, TO> List<TO> mapList(List<FROM> list, final Class<TO> to) {
-
         List<TO> toList = new ArrayList<TO>();
-
         for (FROM f : list) {
             toList.add(map(f, to));
         }
-
         return toList;
     }
 }
