@@ -11,21 +11,11 @@ import org.springframework.stereotype.Component;
 import javax.inject.Named;
 import java.util.List;
 
-/**
- * Created with IntelliJ IDEA.
- * User: kjsaila
- * Date: 17/12/13
- * Time: 13:10
- * To change this template use File | Settings | File Templates.
- */
-
 @Named("PoistaOrvotActorBean")
 @Component
 @org.springframework.context.annotation.Scope(value = "prototype")
 public class PoistaOrvotActorBean extends UntypedActor {
-
     LoggingAdapter log = Logging.getLogger(getContext().system(), this);
-
 
     @Autowired
     private LaskentakaavaService laskentakaavaService;
@@ -40,13 +30,12 @@ public class PoistaOrvotActorBean extends UntypedActor {
     private void poistaOrvot() {
         List<Long> orphans = funktiokutsuDAO.getOrphans();
         orphans.forEach(laskentakaavaService::poistaOrpoFunktiokutsu);
-        if(orphans.size() > 0) {
+        if (orphans.size() > 0) {
             poistaOrvot();
         }
     }
 
     public void onReceive(Object message) throws Exception {
-
         if (message != null) {
             log.info("Ajastettu orpojen poistaminen päällä");
             this.poistaOrvot();
@@ -55,6 +44,5 @@ public class PoistaOrvotActorBean extends UntypedActor {
             unhandled(message);
             getContext().stop(getSelf());
         }
-
     }
 }

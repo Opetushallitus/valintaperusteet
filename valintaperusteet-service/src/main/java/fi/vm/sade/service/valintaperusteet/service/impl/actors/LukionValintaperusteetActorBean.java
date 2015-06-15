@@ -27,19 +27,10 @@ import scala.concurrent.duration.Duration;
 import javax.inject.Named;
 import java.util.List;
 
-/**
- * Created with IntelliJ IDEA.
- * User: kjsaila
- * Date: 17/12/13
- * Time: 13:10
- * To change this template use File | Settings | File Templates.
- */
-
 @Named("LukionValintaperusteetActorBean")
 @Component
 @org.springframework.context.annotation.Scope(value = "prototype")
 public class LukionValintaperusteetActorBean extends UntypedActor {
-
     LoggingAdapter log = Logging.getLogger(getContext().system(), this);
 
     @Autowired
@@ -53,42 +44,26 @@ public class LukionValintaperusteetActorBean extends UntypedActor {
     }
 
     public void onReceive(Object message) throws Exception {
-
         if (message instanceof LukionValintaperuste) {
-            LukionValintaperuste peruste = (LukionValintaperuste)message;
+            LukionValintaperuste peruste = (LukionValintaperuste) message;
             KoodiDTO hakukohdekoodi = peruste.getHakukohdekoodi();
             ValintaryhmaDTO pkvr = peruste.getPainotettuKeskiarvoVr();
             ValintaryhmaDTO pklsvr = peruste.getPainotettuKeskiarvoJaLisanayttoVr();
             ValintaryhmaDTO pkpsvr = peruste.getPainotettuKeskiarvoJaPaasykoeVr();
             ValintaryhmaDTO pkpslsvr = peruste.getPainotettuKeskiarvoJaPaasykoeJaLisanayttoVr();
-
-
             TransactionStatus tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
-
-            hakukohdekoodiService
-                    .lisaaHakukohdekoodiValintaryhmalle(pkvr.getOid(), hakukohdekoodi);
-
-            hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(pklsvr.getOid(),
-                    hakukohdekoodi);
-
-            hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(pkpsvr.getOid(),
-                    hakukohdekoodi);
-
-            hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(
-                    pkpslsvr.getOid(), hakukohdekoodi);
-
+            hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(pkvr.getOid(), hakukohdekoodi);
+            hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(pklsvr.getOid(), hakukohdekoodi);
+            hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(pkpsvr.getOid(), hakukohdekoodi);
+            hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(pkpslsvr.getOid(), hakukohdekoodi);
             transactionManager.commit(tx);
-
-        }else if(message instanceof Exception) {
-            Exception exp = (Exception)message;
+        } else if (message instanceof Exception) {
+            Exception exp = (Exception) message;
             exp.printStackTrace();
             getContext().stop(self());
         } else {
             unhandled(message);
             getContext().stop(getSelf());
         }
-
     }
-
-
 }
