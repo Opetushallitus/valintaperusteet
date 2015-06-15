@@ -68,12 +68,12 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
         ValinnanVaihe lastValinnanVaihe = from(hakukohde)
                 .leftJoin(hakukohde.valinnanvaiheet, vv)
                 .where(vv.id.notIn(
-                    subQuery()
-                            .from(vv)
-                            .where(vv.edellinenValinnanVaihe.isNotNull())
-                            .list(vv.edellinenValinnanVaihe.id)
+                        subQuery()
+                                .from(vv)
+                                .where(vv.edellinenValinnanVaihe.isNotNull())
+                                .list(vv.edellinenValinnanVaihe.id)
                 )
-                .and(hakukohde.oid.eq(hakukohdeOid)))
+                        .and(hakukohde.oid.eq(hakukohdeOid)))
                 .singleResult(vv);
 
         return lastValinnanVaihe;
@@ -86,9 +86,9 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
 
         return new HashSet<String>(
                 from(valintaryhma)
-                    .leftJoin(valintaryhma.valinnanvaiheet, valinnanVaihe)
-                .where(valintaryhma.oid.eq(valintaryhmaOid))
-                .list(valinnanVaihe.oid)
+                        .leftJoin(valintaryhma.valinnanvaiheet, valinnanVaihe)
+                        .where(valintaryhma.oid.eq(valintaryhmaOid))
+                        .list(valinnanVaihe.oid)
         );
     }
 
@@ -99,9 +99,9 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
 
         return new HashSet<String>(
                 from(hakukohde)
-                    .leftJoin(hakukohde.valinnanvaiheet, valinnanVaihe)
-                .where(hakukohde.oid.eq(hakukohdeOid))
-                .list(valinnanVaihe.oid)
+                        .leftJoin(hakukohde.valinnanvaiheet, valinnanVaihe)
+                        .where(hakukohde.oid.eq(hakukohdeOid))
+                        .list(valinnanVaihe.oid)
         );
     }
 
@@ -118,7 +118,7 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
                                 .where(vv.edellinenValinnanVaihe.isNotNull())
                                 .list(vv.edellinenValinnanVaihe.id)
                 )
-                .and(valintaryhma.oid.eq(oid)))
+                        .and(valintaryhma.oid.eq(oid)))
                 .singleResult(vv);
 
         return lastValinnanVaihe;
@@ -157,7 +157,7 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
 
         return from(jono)
                 .leftJoin(jono.valinnanVaihe, vv)
-                .where( vv.oid.eq(oid),
+                .where(vv.oid.eq(oid),
                         vv.aktiivinen.eq(true),
                         jono.aktiivinen.eq(true),
                         jono.siirretaanSijoitteluun.eq(true)
@@ -182,7 +182,7 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
 
         HakukohdeViite h = from(hakukohde).where(hakukohde.oid.eq(hakukohdeOid)).singleResult(hakukohde);
 
-        if(h == null) {
+        if (h == null) {
             return new ArrayList<>();
         }
 

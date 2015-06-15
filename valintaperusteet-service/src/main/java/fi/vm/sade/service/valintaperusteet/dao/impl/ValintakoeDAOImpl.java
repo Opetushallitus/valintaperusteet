@@ -20,48 +20,48 @@ import java.util.List;
  */
 @Repository
 public class ValintakoeDAOImpl extends AbstractJpaDAOImpl<Valintakoe, Long>
-		implements ValintakoeDAO {
+        implements ValintakoeDAO {
 
-	@Override
-	public List<Valintakoe> findByValinnanVaihe(String valinnanVaiheOid) {
-		QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
-		QValintakoe valintakoe = QValintakoe.valintakoe;
+    @Override
+    public List<Valintakoe> findByValinnanVaihe(String valinnanVaiheOid) {
+        QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
+        QValintakoe valintakoe = QValintakoe.valintakoe;
 
-		return from(valinnanVaihe)
-				.innerJoin(valinnanVaihe.valintakokeet, valintakoe)
-				.leftJoin(valintakoe.laskentakaava).fetch()
-				.leftJoin(valintakoe.masterValintakoe).fetch()
-				.where(valinnanVaihe.oid.eq(valinnanVaiheOid)).distinct()
-				.list(valintakoe);
-	}
+        return from(valinnanVaihe)
+                .innerJoin(valinnanVaihe.valintakokeet, valintakoe)
+                .leftJoin(valintakoe.laskentakaava).fetch()
+                .leftJoin(valintakoe.masterValintakoe).fetch()
+                .where(valinnanVaihe.oid.eq(valinnanVaiheOid)).distinct()
+                .list(valintakoe);
+    }
 
-	@Override
-	public Valintakoe readByOid(String oid) {
-		QValintakoe valintakoe = QValintakoe.valintakoe;
-		return from(valintakoe).leftJoin(valintakoe.laskentakaava).fetch()
-				.leftJoin(valintakoe.masterValintakoe).fetch()
-				.where(valintakoe.oid.eq(oid)).singleResult(valintakoe);
-	}
+    @Override
+    public Valintakoe readByOid(String oid) {
+        QValintakoe valintakoe = QValintakoe.valintakoe;
+        return from(valintakoe).leftJoin(valintakoe.laskentakaava).fetch()
+                .leftJoin(valintakoe.masterValintakoe).fetch()
+                .where(valintakoe.oid.eq(oid)).singleResult(valintakoe);
+    }
 
-	@Override
-	public List<Valintakoe> readByOids(Collection<String> oids) {
-		QValintakoe valintakoe = QValintakoe.valintakoe;
-		return from(valintakoe).leftJoin(valintakoe.laskentakaava).fetch()
-				.leftJoin(valintakoe.masterValintakoe).fetch()
-				.where(valintakoe.oid.in(oids)).listResults(valintakoe)
-				.getResults();
-	}
+    @Override
+    public List<Valintakoe> readByOids(Collection<String> oids) {
+        QValintakoe valintakoe = QValintakoe.valintakoe;
+        return from(valintakoe).leftJoin(valintakoe.laskentakaava).fetch()
+                .leftJoin(valintakoe.masterValintakoe).fetch()
+                .where(valintakoe.oid.in(oids)).listResults(valintakoe)
+                .getResults();
+    }
 
-	@Override
-	public List<Valintakoe> readByTunnisteet(Collection<String> tunnisteet) {
-		QValintakoe valintakoe = QValintakoe.valintakoe;
-		return from(valintakoe).leftJoin(valintakoe.laskentakaava).fetch()
-				.leftJoin(valintakoe.masterValintakoe).fetch()
-				.where(valintakoe.tunniste.in(tunnisteet)).listResults(valintakoe)
-				.getResults();
-	}
+    @Override
+    public List<Valintakoe> readByTunnisteet(Collection<String> tunnisteet) {
+        QValintakoe valintakoe = QValintakoe.valintakoe;
+        return from(valintakoe).leftJoin(valintakoe.laskentakaava).fetch()
+                .leftJoin(valintakoe.masterValintakoe).fetch()
+                .where(valintakoe.tunniste.in(tunnisteet)).listResults(valintakoe)
+                .getResults();
+    }
 
-	@Override
+    @Override
     public List<Valintakoe> findByLaskentakaava(long id) {
         QValintakoe valintakoe = QValintakoe.valintakoe;
         return from(valintakoe)
@@ -71,11 +71,11 @@ public class ValintakoeDAOImpl extends AbstractJpaDAOImpl<Valintakoe, Long>
     }
 
     protected JPAQuery from(EntityPath<?>... o) {
-		return new JPAQuery(getEntityManager()).from(o);
-	}
+        return new JPAQuery(getEntityManager()).from(o);
+    }
 
-	protected JPASubQuery subQuery() {
-		return new JPASubQuery();
-	}
+    protected JPASubQuery subQuery() {
+        return new JPASubQuery();
+    }
 
 }

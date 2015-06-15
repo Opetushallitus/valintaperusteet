@@ -53,7 +53,7 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long> 
     @Override
     public List<Valintaryhma> findChildrenByParentOidPlain(String oid) {
 
-        if(oid == null) {
+        if (oid == null) {
             return new ArrayList<>();
         }
         QValintaryhma valintaryhma = QValintaryhma.valintaryhma;

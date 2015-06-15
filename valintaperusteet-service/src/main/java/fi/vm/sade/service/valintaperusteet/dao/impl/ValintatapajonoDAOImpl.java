@@ -121,7 +121,7 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
         List<Long> ids = jonot.stream().map(j -> j.getId()).collect(Collectors.toList());
 
         jonot.forEach(j -> {
-            if(j.getVarasijanTayttojono() != null && !ids.contains(j.getVarasijanTayttojono().getId())) {
+            if (j.getVarasijanTayttojono() != null && !ids.contains(j.getVarasijanTayttojono().getId())) {
                 j.setVarasijanTayttojono(null);
             }
         });

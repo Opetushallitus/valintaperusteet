@@ -6,9 +6,6 @@ import com.mysema.query.Tuple;
 
 import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
 
-/**
- * User: kwuoti Date: 28.1.2013 Time: 10.00
- */
 public interface LaskentakaavaDAO extends JpaDAO<Laskentakaava, Long> {
     Laskentakaava getLaskentakaava(Long id);
 
@@ -26,5 +23,4 @@ public interface LaskentakaavaDAO extends JpaDAO<Laskentakaava, Long> {
 
     List<Laskentakaava> findKaavas(boolean all, String valintaryhmaOid, String hakukohdeOid,
             fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi tyyppi);
-
 }

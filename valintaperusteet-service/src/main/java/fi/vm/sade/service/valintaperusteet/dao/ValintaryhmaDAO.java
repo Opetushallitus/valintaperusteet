@@ -5,19 +5,7 @@ import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * Created with IntelliJ IDEA.
- * User: jukais
- * Date: 15.1.2013
- * Time: 17.20
- * To change this template use File | Settings | File Templates.
- */
 public interface ValintaryhmaDAO extends JpaDAO<Valintaryhma, Long> {
-
-    /**
-     * @param oid
-     * @return
-     */
     List<Valintaryhma> findChildrenByParentOid(String oid);
 
     List<Valintaryhma> findChildrenByParentOidPlain(String oid);
@@ -26,9 +14,6 @@ public interface ValintaryhmaDAO extends JpaDAO<Valintaryhma, Long> {
 
     /**
      * Hakee valintaryhmähierarkian annetusta lapsesta ylöspäin. Lapsi tulee mukana.
-     *
-     * @param childOid
-     * @return
      */
     List<Valintaryhma> readHierarchy(String childOid);
 
@@ -36,8 +21,7 @@ public interface ValintaryhmaDAO extends JpaDAO<Valintaryhma, Long> {
 
     Valintaryhma findAllFetchAlavalintaryhmat(String oid);
 
-    List<Valintaryhma> haeHakukohdekoodinJaValintakoekoodienMukaan(String hakukohdekoodiUri,
-                                                                   Collection<String> valintakoekoodiUrit);
+    List<Valintaryhma> haeHakukohdekoodinJaValintakoekoodienMukaan(String hakukohdekoodiUri, Collection<String> valintakoekoodiUrit);
 
     List<Valintaryhma> readByHakukohdekoodiUri(String koodiUri);
     List<Valintaryhma> readByHakuoid(String hakuoid);

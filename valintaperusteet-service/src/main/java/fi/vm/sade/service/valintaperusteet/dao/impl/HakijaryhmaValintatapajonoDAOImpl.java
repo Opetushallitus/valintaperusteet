@@ -169,7 +169,7 @@ public class HakijaryhmaValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Hakija
                                 .where(hakijaryhmajono.edellinen.isNotNull())
                                 .list(hakijaryhmajono.edellinen.id)
                 )
-                .and(valintatapajono.oid.eq(valintatapajonoOid)))
+                        .and(valintatapajono.oid.eq(valintatapajonoOid)))
                 .singleResult(hakijaryhmajono);
     }
 }

@@ -32,7 +32,7 @@ public class HakukohteenValintaperusteDAOImpl extends AbstractJpaDAOImpl<Hakukoh
 
         HakukohdeViite viite = from(hk).where(hk.oid.eq(hakukohdeOid)).singleResult(hk);
 
-        if(viite == null) {
+        if (viite == null) {
             return new ArrayList<>();
         }
 

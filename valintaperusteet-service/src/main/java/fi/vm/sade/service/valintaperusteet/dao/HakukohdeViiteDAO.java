@@ -6,15 +6,7 @@ import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Created with IntelliJ IDEA.
- * User: jukais
- * Date: 15.1.2013
- * Time: 17.20
- * To change this template use File | Settings | File Templates.
- */
 public interface HakukohdeViiteDAO extends JpaDAO<HakukohdeViite, Long> {
-
     List<HakukohdeViite> findRoot();
 
     List<HakukohdeViite> haunHakukohteet(String hakuOid);

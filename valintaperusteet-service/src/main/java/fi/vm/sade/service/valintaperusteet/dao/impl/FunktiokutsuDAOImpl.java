@@ -45,13 +45,13 @@ public class FunktiokutsuDAOImpl extends AbstractJpaDAOImpl<Funktiokutsu, Long> 
 
         Funktiokutsu kutsu =
                 query
-                .leftJoin(fk.syoteparametrit).fetch()
-                .leftJoin(fk.funktioargumentit, fa).fetch()
-                .leftJoin(fa.laskentakaavaChild).fetch()
-                .leftJoin(fk.valintaperusteviitteet, vpv).fetch()
-                .leftJoin(vpv.kuvaukset, t).fetch()
-                .leftJoin(t.tekstit).fetch()
-                .where(fk.id.eq(id)).singleResult(fk);
+                        .leftJoin(fk.syoteparametrit).fetch()
+                        .leftJoin(fk.funktioargumentit, fa).fetch()
+                        .leftJoin(fa.laskentakaavaChild).fetch()
+                        .leftJoin(fk.valintaperusteviitteet, vpv).fetch()
+                        .leftJoin(vpv.kuvaukset, t).fetch()
+                        .leftJoin(t.tekstit).fetch()
+                        .where(fk.id.eq(id)).singleResult(fk);
 
         if (kutsu != null) {
 
@@ -197,7 +197,7 @@ public class FunktiokutsuDAOImpl extends AbstractJpaDAOImpl<Funktiokutsu, Long> 
             Funktiokutsu funktiokutsu = read(orphan);
             remove(funktiokutsu);
         }
-        if(orphans.size() > 0) {
+        if (orphans.size() > 0) {
             deleteOrphans();
         }
     }

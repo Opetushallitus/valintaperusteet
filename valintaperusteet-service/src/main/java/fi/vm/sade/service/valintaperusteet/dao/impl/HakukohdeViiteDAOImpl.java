@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 @Repository
 public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Long> implements HakukohdeViiteDAO {
     private static final Logger LOG = LoggerFactory.getLogger(HakukohdeViiteDAOImpl.class);
+
     protected JPAQuery from(EntityPath<?>... o) {
         return new JPAQuery(getEntityManager()).from(o);
     }

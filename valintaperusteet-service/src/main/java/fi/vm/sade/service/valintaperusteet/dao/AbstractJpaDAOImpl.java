@@ -6,9 +6,6 @@ import javax.persistence.Query;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
-/**
- * Created by kjsaila on 30/01/14.
- */
 public abstract class AbstractJpaDAOImpl<E, ID> implements JpaDAO<E, ID> {
 
     private EntityManager entityManager;
@@ -62,7 +59,7 @@ public abstract class AbstractJpaDAOImpl<E, ID> implements JpaDAO<E, ID> {
 
     @Override
     public List<E> findBy(String column, Object value, int startIndex, int maxResults) {
-        Query query = getEntityManager().createQuery("SELECT x FROM " + entityClass.getSimpleName() + " x WHERE x."+column+" = :value");
+        Query query = getEntityManager().createQuery("SELECT x FROM " + entityClass.getSimpleName() + " x WHERE x." + column + " = :value");
         query.setParameter("value", value);
         query.setFirstResult(startIndex);
         query.setMaxResults(maxResults);
