@@ -7,11 +7,6 @@ import fi.vm.sade.service.valintaperusteet.service.ValintaryhmaService;
 
 import java.util.*;
 
-/**
- * User: wuoti
- * Date: 25.6.2013
- * Time: 13.19
- */
 public abstract class KoodiHandler<T extends Koodi> {
     private ValintaryhmaService valintaryhmaService;
     private KoodiDAO<T> koodiDAO;
@@ -21,10 +16,8 @@ public abstract class KoodiHandler<T extends Koodi> {
         this.koodiDAO = koodiDAO;
     }
 
-
     public void lisaaKoodiValintaryhmalle(String valintaryhmaOid, T koodi) {
         Valintaryhma valintaryhma = valintaryhmaService.readByOid(valintaryhmaOid);
-
         T haettu = koodiDAO.readByUri(koodi.getUri());
         if (haettu != null) {
             haettu.setUri(koodi.getUri());
@@ -35,21 +28,17 @@ public abstract class KoodiHandler<T extends Koodi> {
         } else {
             haettu = koodiDAO.insertOrUpdate(koodi);
         }
-
         addKoodiToValintaryhma(valintaryhma, haettu);
     }
 
     public void paivitaValintaryhmanKoodit(String valintaryhmaOid, Collection<T> koodit) {
         Valintaryhma valintaryhma = valintaryhmaService.readByOid(valintaryhmaOid);
         clearValintaryhmaKoodis(valintaryhma);
-
         Map<String, T> urit = new HashMap<String, T>();
         Map<String, Integer> esiintymat = new HashMap<String, Integer>();
-
         if (koodit == null) {
             koodit = new ArrayList<T>();
         }
-
         for (T k : koodit) {
             if (!urit.containsKey(k.getUri())) {
                 urit.put(k.getUri(), k);
@@ -59,22 +48,16 @@ public abstract class KoodiHandler<T extends Koodi> {
                 esiintymat.put(k.getUri(), lkm);
             }
         }
-
-        List<T> managedKoodis =
-                koodiDAO.findByUris(urit.keySet().toArray(new String[urit.keySet().size()]));
-
+        List<T> managedKoodis = koodiDAO.findByUris(urit.keySet().toArray(new String[urit.keySet().size()]));
         for (T managed : managedKoodis) {
             if (urit.containsKey(managed.getUri())) {
-
                 for (int i = 0; i < esiintymat.get(managed.getUri()); ++i) {
                     addKoodiToValintaryhma(valintaryhma, managed);
                 }
-
                 urit.remove(managed.getUri());
                 esiintymat.remove(managed.getUri());
             }
         }
-
         for (T uusiKoodi : urit.values()) {
             T lisatty = koodiDAO.insert(uusiKoodi);
             for (int i = 0; i < esiintymat.get(uusiKoodi.getUri()); ++i) {

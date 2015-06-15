@@ -5,11 +5,6 @@ import fi.vm.sade.service.valintaperusteet.model.Valintakoekoodi;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import fi.vm.sade.service.valintaperusteet.service.ValintaryhmaService;
 
-/**
- * User: wuoti
- * Date: 25.6.2013
- * Time: 13.53
- */
 public class ValintakoekoodiHandler extends KoodiHandler<Valintakoekoodi> {
 
     public ValintakoekoodiHandler(ValintaryhmaService valintaryhmaService, ValintakoekoodiDAO koodiDAO) {
