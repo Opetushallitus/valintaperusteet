@@ -6,9 +6,6 @@ import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
 import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
 import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
 
-/**
- * User: wuoti Date: 31.5.2013 Time: 12.04
- */
 public class PkAineet extends Aineet {
     public static final String PK_Valinnainen1 = "_VAL1";
     public static final String PK_Valinnainen2 = "_VAL2";
@@ -71,29 +68,18 @@ public class PkAineet extends Aineet {
     }
 
     private Laskentakaava luoPKAine(String ainetunniste, String kuvaus) {
-        Funktiokutsu aine = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(pakollinen(ainetunniste),
-                false, Valintaperustelahde.HAETTAVA_ARVO));
-        Funktiokutsu aine_kymppiluokka = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(kymppi(ainetunniste),
-                false, Valintaperustelahde.HAETTAVA_ARVO));
+        Funktiokutsu aine = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(pakollinen(ainetunniste), false, Valintaperustelahde.HAETTAVA_ARVO));
+        Funktiokutsu aine_kymppiluokka = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(kymppi(ainetunniste), false, Valintaperustelahde.HAETTAVA_ARVO));
         Funktiokutsu aine_max = GenericHelper.luoMaksimi(aine, aine_kymppiluokka);
-
-        Funktiokutsu aineValinnainen1 = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(
-                valinnainen1(ainetunniste), false, Valintaperustelahde.HAETTAVA_ARVO));
-        Funktiokutsu aineValinnainen1_kymppiluokka = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(
-                valinnainen1kymppi(ainetunniste), false, Valintaperustelahde.HAETTAVA_ARVO));
+        Funktiokutsu aineValinnainen1 = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(valinnainen1(ainetunniste), false, Valintaperustelahde.HAETTAVA_ARVO));
+        Funktiokutsu aineValinnainen1_kymppiluokka = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(valinnainen1kymppi(ainetunniste), false, Valintaperustelahde.HAETTAVA_ARVO));
         Funktiokutsu valinnainen1_max = GenericHelper.luoMaksimi(aineValinnainen1, aineValinnainen1_kymppiluokka);
-
-        Funktiokutsu aineValinnainen2 = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(
-                valinnainen2(ainetunniste), false, Valintaperustelahde.HAETTAVA_ARVO));
-        Funktiokutsu aineValinnainen2_kymppiluokka = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(
-                valinnainen2kymppi(ainetunniste), false, Valintaperustelahde.HAETTAVA_ARVO));
+        Funktiokutsu aineValinnainen2 = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(valinnainen2(ainetunniste), false, Valintaperustelahde.HAETTAVA_ARVO));
+        Funktiokutsu aineValinnainen2_kymppiluokka = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(valinnainen2kymppi(ainetunniste), false, Valintaperustelahde.HAETTAVA_ARVO));
         Funktiokutsu valinnainen2_max = GenericHelper.luoMaksimi(aineValinnainen2, aineValinnainen2_kymppiluokka);
-
         Funktiokutsu valinnainenKeskiarvo = GenericHelper.luoKeskiarvo(valinnainen1_max, valinnainen2_max);
         Funktiokutsu keskiarvo = GenericHelper.luoKeskiarvo(aine_max, valinnainenKeskiarvo);
-
-        Laskentakaava laskentakaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(keskiarvo, kuvaus
-                + PK_kuvausjalkiliite);
+        Laskentakaava laskentakaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(keskiarvo, kuvaus + PK_kuvausjalkiliite);
         return laskentakaava;
     }
 
