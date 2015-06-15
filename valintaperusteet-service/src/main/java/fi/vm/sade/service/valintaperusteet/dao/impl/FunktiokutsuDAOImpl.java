@@ -22,12 +22,8 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-/**
- * User: tommiha Date: 1/14/13 Time: 4:07 PM
- */
 @Repository
 public class FunktiokutsuDAOImpl extends AbstractJpaDAOImpl<Funktiokutsu, Long> implements FunktiokutsuDAO {
-
     @Autowired
     private GenericDAO genericDAO;
 
@@ -39,40 +35,27 @@ public class FunktiokutsuDAOImpl extends AbstractJpaDAOImpl<Funktiokutsu, Long> 
         QArvovalikonvertteriparametri avk = QArvovalikonvertteriparametri.arvovalikonvertteriparametri;
         QValintaperusteViite vpv = QValintaperusteViite.valintaperusteViite;
         QTekstiRyhma t = QTekstiRyhma.tekstiRyhma;
-
         JPAQuery query = from(fk);
-
-
-        Funktiokutsu kutsu =
-                query
-                        .leftJoin(fk.syoteparametrit).fetch()
-                        .leftJoin(fk.funktioargumentit, fa).fetch()
-                        .leftJoin(fa.laskentakaavaChild).fetch()
-                        .leftJoin(fk.valintaperusteviitteet, vpv).fetch()
-                        .leftJoin(vpv.kuvaukset, t).fetch()
-                        .leftJoin(t.tekstit).fetch()
-                        .where(fk.id.eq(id)).singleResult(fk);
+        Funktiokutsu kutsu = query
+                .leftJoin(fk.syoteparametrit).fetch()
+                .leftJoin(fk.funktioargumentit, fa).fetch()
+                .leftJoin(fa.laskentakaavaChild).fetch()
+                .leftJoin(fk.valintaperusteviitteet, vpv).fetch()
+                .leftJoin(vpv.kuvaukset, t).fetch()
+                .leftJoin(t.tekstit).fetch()
+                .where(fk.id.eq(id)).singleResult(fk);
 
         if (kutsu != null) {
-
             List<Arvokonvertteriparametri> arvokonvertteriparametris = from(ak).leftJoin(ak.kuvaukset, t).fetch()
                     .leftJoin(t.tekstit).fetch()
                     .where(ak.funktiokutsu.eq(kutsu)).distinct().list(ak);
-
             List<Arvovalikonvertteriparametri> arvovalikonvertteriparametris = from(avk).leftJoin(avk.kuvaukset, t).fetch()
                     .leftJoin(t.tekstit).fetch()
                     .where(avk.funktiokutsu.eq(kutsu)).distinct().list(avk);
-
-
             kutsu.setArvokonvertteriparametrit(Sets.newHashSet(arvokonvertteriparametris));
             kutsu.setArvovalikonvertteriparametrit(Sets.newHashSet(arvovalikonvertteriparametris));
-
-
         }
-
         return kutsu;
-
-
     }
 
     @Override
@@ -99,26 +82,10 @@ public class FunktiokutsuDAOImpl extends AbstractJpaDAOImpl<Funktiokutsu, Long> 
                 .list(lk.funktiokutsu.id);
 
         List<Long> argumentit = from(arg)
-                //.leftJoin(arg.funktiokutsuChild)
                 .distinct()
                 .list(arg.funktiokutsuChild.id);
 
-        List<Long> orphans = from(fk)
-//                .leftJoin(fk.syoteparametrit)
-//                .fetch()
-//                .leftJoin(fk.arvokonvertteriparametrit)
-//                .fetch()
-//                .leftJoin(fk.arvovalikonvertteriparametrit)
-//                .fetch()
-//                .leftJoin(fk.funktioargumentit)
-//                .fetch()
-//                .leftJoin(fk.valintaperusteviitteet)
-//                .fetch()
-//                .where(
-//                        fk.id.notIn(laskentaakaavat).and(fk.id.notIn(argumentit))
-//                )
-                .distinct().list(fk.id);
-
+        List<Long> orphans = from(fk).distinct().list(fk.id);
         return orphans.stream().filter(f -> !laskentaakaavat.contains(f) && !argumentit.contains(f)).collect(Collectors.toList());
     }
 
@@ -135,15 +102,10 @@ public class FunktiokutsuDAOImpl extends AbstractJpaDAOImpl<Funktiokutsu, Long> 
     }
 
     public void deleteRecursively(Funktiokutsu funktiokutsu) {
-//        if (isReferenced(funktiokutsu.getId())) {
-//            return;
-//        }
-
         Set<Funktiokutsu> children = new HashSet<Funktiokutsu>();
 
         for (Funktioargumentti arg : funktiokutsu.getFunktioargumentit().stream().filter(a -> a.getFunktiokutsuChild() != null).collect(Collectors.toList())) {
             children.add(getFunktiokutsu(arg.getFunktiokutsuChild().getId()));
-            //genericDAO.remove(arg);
         }
         remove(funktiokutsu);
         for (Funktiokutsu child : children) {

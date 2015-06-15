@@ -9,11 +9,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.List;
 
-/**
- * Created by kjsaila on 30/01/14.
- */
 public class GenericDAOImpl implements GenericDAO {
-
     @PersistenceContext
     private EntityManager entityManager;
 

@@ -19,9 +19,6 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * User: tommiha Date: 1/17/13 Time: 12:51 PM
- */
 @Repository
 public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long> implements ValintaryhmaDAO {
 
@@ -52,13 +49,10 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long> 
 
     @Override
     public List<Valintaryhma> findChildrenByParentOidPlain(String oid) {
-
         if (oid == null) {
             return new ArrayList<>();
         }
         QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
-
-
         return from(valintaryhma)
                 .where(valintaryhma.ylavalintaryhma.oid.eq(oid)).distinct().list(valintaryhma);
     }
@@ -66,32 +60,24 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long> 
     @Override
     public Valintaryhma readByOid(String oid) {
         QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
-
         Valintaryhma vr = from(valintaryhma).leftJoin(valintaryhma.alavalintaryhmat).fetch()
                 .leftJoin(valintaryhma.hakukohdeViitteet).fetch()
                 .leftJoin(valintaryhma.hakukohdekoodit).fetch()
                 .leftJoin(valintaryhma.organisaatiot).fetch()
                 .where(valintaryhma.oid.eq(oid))
                 .singleResult(valintaryhma);
-
-
         if (vr != null) {
-            // Initialisoidaan valintakoekoodien haku
             vr.getValintakoekoodit().size();
         }
-
         return vr;
-
     }
 
     @Override
     public List<Valintaryhma> readHierarchy(String childOid) {
         List<Valintaryhma> set = new LinkedList<Valintaryhma>();
-
         Valintaryhma current = readPlainByOid(childOid);
         set.add(current);
         current = current.getYlavalintaryhma();
-
         do {
             if (current != null) {
                 current = readPlainByOid(current.getOid());
@@ -99,22 +85,11 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long> 
                 current = current.getYlavalintaryhma();
             }
         } while (current != null);
-
-//        Valintaryhma parent = null;
-//        String currentOid = childOid;
-//        do {
-//            parent = findParent(currentOid);
-//            if (parent != null) {
-//                currentOid = parent.getOid();
-//                set.add(parent);
-//            }
-//        } while (parent != null);
         return set;
     }
 
     private Valintaryhma readPlainByOid(String oid) {
         QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
-
         return from(valintaryhma).leftJoin(valintaryhma.alavalintaryhmat).fetch()
                 .leftJoin(valintaryhma.ylavalintaryhma).fetch()
                 .where(valintaryhma.oid.eq(oid))
@@ -124,7 +99,6 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long> 
     @Override
     public List<Valintaryhma> findAllFetchAlavalintaryhmat() {
         QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
-
         return from(valintaryhma)
                 .leftJoin(valintaryhma.alavalintaryhmat).fetch()
                 .leftJoin(valintaryhma.organisaatiot).fetch()
@@ -134,7 +108,6 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long> 
     @Override
     public Valintaryhma findAllFetchAlavalintaryhmat(String oid) {
         QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
-
         return from(valintaryhma)
                 .leftJoin(valintaryhma.alavalintaryhmat).fetch()
                 .leftJoin(valintaryhma.organisaatiot).fetch()
@@ -144,22 +117,16 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long> 
 
 
     @Override
-    public List<Valintaryhma> haeHakukohdekoodinJaValintakoekoodienMukaan(String hakukohdekoodiUri,
-                                                                          Collection<String> valintakoekoodiUrit) {
-        LOG.info("hakukohdekoodi: {}, valintakoekoodit: {}",
-                new Object[]{hakukohdekoodiUri, valintakoekoodiUrit});
-
+    public List<Valintaryhma> haeHakukohdekoodinJaValintakoekoodienMukaan(String hakukohdekoodiUri, Collection<String> valintakoekoodiUrit) {
+        LOG.info("hakukohdekoodi: {}, valintakoekoodit: {}", new Object[]{hakukohdekoodiUri, valintakoekoodiUrit});
         QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
         QHakukohdekoodi hakukohdekoodi = QHakukohdekoodi.hakukohdekoodi;
         QValintakoekoodi valintakoekoodi = QValintakoekoodi.valintakoekoodi;
-
         BooleanBuilder booleanBuilder = new BooleanBuilder();
         booleanBuilder.and(hakukohdekoodi.uri.eq(hakukohdekoodiUri));
-
         if (!valintakoekoodiUrit.isEmpty()) {
             booleanBuilder.and(valintakoekoodi.uri.in(valintakoekoodiUrit));
         }
-
         return from(valintaryhma)
                 .join(valintaryhma.hakukohdekoodit, hakukohdekoodi).fetch()
                 .leftJoin(valintaryhma.valintakoekoodit, valintakoekoodi).fetch()
@@ -170,11 +137,9 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long> 
 
     private Valintaryhma findParent(String oid) {
         QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
-
         Valintaryhma current = from(valintaryhma)
                 .where(valintaryhma.oid.eq(oid))
                 .singleResult(valintaryhma);
-
         return current.getYlavalintaryhma();
     }
 
@@ -182,7 +147,6 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long> 
     public List<Valintaryhma> readByHakukohdekoodiUri(String koodiUri) {
         QHakukohdekoodi koodi = QHakukohdekoodi.hakukohdekoodi;
         QValintaryhma vr = QValintaryhma.valintaryhma;
-
         return from(vr)
                 .innerJoin(vr.hakukohdekoodit, koodi)
                 .where(koodi.uri.eq(koodiUri))
@@ -198,5 +162,4 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long> 
                 .where(vr.hakuoid.eq(hakuoid))
                 .distinct().list(vr);
     }
-
 }

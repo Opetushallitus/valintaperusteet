@@ -13,11 +13,6 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * User: wuoti
- * Date: 12.9.2013
- * Time: 13.45
- */
 @Repository
 public class HakukohteenValintaperusteDAOImpl extends AbstractJpaDAOImpl<HakukohteenValintaperuste, Long> implements HakukohteenValintaperusteDAO {
 
@@ -29,16 +24,12 @@ public class HakukohteenValintaperusteDAOImpl extends AbstractJpaDAOImpl<Hakukoh
     public List<HakukohteenValintaperuste> haeHakukohteenValintaperusteet(String hakukohdeOid) {
         QHakukohdeViite hk = QHakukohdeViite.hakukohdeViite;
         QHakukohteenValintaperuste vp = QHakukohteenValintaperuste.hakukohteenValintaperuste;
-
         HakukohdeViite viite = from(hk).where(hk.oid.eq(hakukohdeOid)).singleResult(hk);
-
         if (viite == null) {
             return new ArrayList<>();
         }
-
         return from(vp)
                 .where(vp.hakukohde.eq(viite))
                 .list(vp);
-
     }
 }

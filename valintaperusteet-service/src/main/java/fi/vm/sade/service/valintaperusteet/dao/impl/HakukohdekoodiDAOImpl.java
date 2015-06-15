@@ -13,11 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * User: wuoti
- * Date: 8.5.2013
- * Time: 13.59
- */
 @Repository
 public class HakukohdekoodiDAOImpl extends AbstractJpaDAOImpl<Hakukohdekoodi, Long> implements HakukohdekoodiDAO {
 
@@ -28,7 +23,6 @@ public class HakukohdekoodiDAOImpl extends AbstractJpaDAOImpl<Hakukohdekoodi, Lo
     @Override
     public Hakukohdekoodi readByUri(String koodiUri) {
         QHakukohdekoodi koodi = QHakukohdekoodi.hakukohdekoodi;
-
         return from(koodi)
                 .where(koodi.uri.eq(koodiUri))
                 .singleResult(koodi);
@@ -38,7 +32,6 @@ public class HakukohdekoodiDAOImpl extends AbstractJpaDAOImpl<Hakukohdekoodi, Lo
     public Hakukohdekoodi findByHakukohdeOid(String hakukohdeOid) {
         QHakukohdeViite hakukohde = QHakukohdeViite.hakukohdeViite;
         QHakukohdekoodi hakukohdekoodi = QHakukohdekoodi.hakukohdekoodi;
-
         return from(hakukohde)
                 .innerJoin(hakukohde.hakukohdekoodi, hakukohdekoodi)
                 .where(hakukohde.oid.eq(hakukohdeOid))
@@ -49,7 +42,6 @@ public class HakukohdekoodiDAOImpl extends AbstractJpaDAOImpl<Hakukohdekoodi, Lo
     public Hakukohdekoodi findByHakukohdeOidAndKoodiUri(String hakukohdeOid, String koodiUri) {
         QHakukohdekoodi koodi = QHakukohdekoodi.hakukohdekoodi;
         QHakukohdeViite hakukohde = QHakukohdeViite.hakukohdeViite;
-
         return from(koodi)
                 .where(koodi.uri.eq(koodiUri).and(hakukohde.oid.eq(hakukohdeOid)))
                 .singleResult(koodi);
@@ -61,7 +53,6 @@ public class HakukohdekoodiDAOImpl extends AbstractJpaDAOImpl<Hakukohdekoodi, Lo
             return new ArrayList<Hakukohdekoodi>();
         }
         QHakukohdekoodi koodi = QHakukohdekoodi.hakukohdekoodi;
-
         return from(koodi)
                 .where(koodi.uri.in(koodiUris))
                 .list(koodi);

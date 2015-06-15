@@ -14,10 +14,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Created with IntelliJ IDEA. User: jukais Date: 18.1.2013 Time: 13.12 To
- * change this template use File | Settings | File Templates.
- */
 @Repository
 public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long> implements ValinnanVaiheDAO {
 
@@ -32,7 +28,6 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
     @Override
     public ValinnanVaihe readByOid(String oid) {
         QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
-
         return from(valinnanVaihe)
                 .leftJoin(valinnanVaihe.masterValinnanVaihe).fetch()
                 .leftJoin(valinnanVaihe.valintaryhma).fetch()
@@ -44,7 +39,6 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
     @Override
     public List<ValinnanVaihe> haeKopiot(String oid) {
         QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
-
         return from(valinnanVaihe)
                 .leftJoin(valinnanVaihe.masterValinnanVaihe).fetch()
                 .leftJoin(valinnanVaihe.valintaryhma).fetch()
@@ -56,7 +50,6 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
     @Override
     public List<ValinnanVaihe> readByOids(Set<String> oids) {
         QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
-
         return from(valinnanVaihe).where(valinnanVaihe.oid.in(oids)).list(valinnanVaihe);
     }
 
@@ -64,7 +57,6 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
     public ValinnanVaihe haeHakukohteenViimeinenValinnanVaihe(String hakukohdeOid) {
         QHakukohdeViite hakukohde = QHakukohdeViite.hakukohdeViite;
         QValinnanVaihe vv = QValinnanVaihe.valinnanVaihe;
-
         ValinnanVaihe lastValinnanVaihe = from(hakukohde)
                 .leftJoin(hakukohde.valinnanvaiheet, vv)
                 .where(vv.id.notIn(
@@ -83,8 +75,7 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
     public Set<String> findValinnanVaiheOidsByValintaryhma(String valintaryhmaOid) {
         QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
         QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
-
-        return new HashSet<String>(
+        return new HashSet<>(
                 from(valintaryhma)
                         .leftJoin(valintaryhma.valinnanvaiheet, valinnanVaihe)
                         .where(valintaryhma.oid.eq(valintaryhmaOid))
@@ -96,8 +87,7 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
     public Set<String> findValinnanVaiheOidsByHakukohde(String hakukohdeOid) {
         QHakukohdeViite hakukohde = QHakukohdeViite.hakukohdeViite;
         QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
-
-        return new HashSet<String>(
+        return new HashSet<>(
                 from(hakukohde)
                         .leftJoin(hakukohde.valinnanvaiheet, valinnanVaihe)
                         .where(hakukohde.oid.eq(hakukohdeOid))
@@ -109,7 +99,6 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
     public ValinnanVaihe haeValintaryhmanViimeinenValinnanVaihe(String oid) {
         QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
         QValinnanVaihe vv = QValinnanVaihe.valinnanVaihe;
-
         ValinnanVaihe lastValinnanVaihe = from(valintaryhma)
                 .leftJoin(valintaryhma.valinnanvaiheet, vv)
                 .where(vv.id.notIn(
@@ -128,7 +117,6 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
     public List<ValinnanVaihe> findByValintaryhma(String oid) {
         QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
         QValinnanVaihe vv = QValinnanVaihe.valinnanVaihe;
-
         return from(valintaryhma)
                 .leftJoin(valintaryhma.valinnanvaiheet, vv)
                 .leftJoin(vv.seuraavaValinnanVaihe).fetch()
@@ -141,7 +129,6 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
     public List<ValinnanVaihe> findByHakukohde(String oid) {
         QHakukohdeViite hakukohde = QHakukohdeViite.hakukohdeViite;
         QValinnanVaihe vv = QValinnanVaihe.valinnanVaihe;
-
         return from(hakukohde)
                 .leftJoin(hakukohde.valinnanvaiheet, vv)
                 .leftJoin(vv.seuraavaValinnanVaihe).fetch()
@@ -154,7 +141,6 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
     public boolean kuuluuSijoitteluun(String oid) {
         QValinnanVaihe vv = QValinnanVaihe.valinnanVaihe;
         QValintatapajono jono = QValintatapajono.valintatapajono;
-
         return from(jono)
                 .leftJoin(jono.valinnanVaihe, vv)
                 .where(vv.oid.eq(oid),
@@ -169,7 +155,6 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
         QHakukohdeViite hakukohde = QHakukohdeViite.hakukohdeViite;
         QValinnanVaihe vv = QValinnanVaihe.valinnanVaihe;
         QValintatapajono jono = QValintatapajono.valintatapajono;
-
         return from(hakukohde).leftJoin(hakukohde.valinnanvaiheet, vv).leftJoin(vv.jonot, jono).fetch()
                 .where(hakukohde.oid.eq(hakukohdeOid).and(jono.kaytetaanValintalaskentaa.isFalse())).distinct().list(vv);
     }
@@ -179,15 +164,11 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
         QHakukohdeViite hakukohde = QHakukohdeViite.hakukohdeViite;
         QValinnanVaihe vv = QValinnanVaihe.valinnanVaihe;
         QValintatapajono jono = QValintatapajono.valintatapajono;
-
         HakukohdeViite h = from(hakukohde).where(hakukohde.oid.eq(hakukohdeOid)).singleResult(hakukohde);
-
         if (h == null) {
             return new ArrayList<>();
         }
-
         return from(vv).leftJoin(vv.jonot, jono).fetch()
                 .where(vv.hakukohdeViite.eq(h)).distinct().list(vv);
-
     }
 }

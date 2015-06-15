@@ -15,18 +15,13 @@ import org.springframework.stereotype.Repository;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * User: kwuoti Date: 15.4.2013 Time: 16.20
- */
 @Repository
-public class ValintakoeDAOImpl extends AbstractJpaDAOImpl<Valintakoe, Long>
-        implements ValintakoeDAO {
+public class ValintakoeDAOImpl extends AbstractJpaDAOImpl<Valintakoe, Long> implements ValintakoeDAO {
 
     @Override
     public List<Valintakoe> findByValinnanVaihe(String valinnanVaiheOid) {
         QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
         QValintakoe valintakoe = QValintakoe.valintakoe;
-
         return from(valinnanVaihe)
                 .innerJoin(valinnanVaihe.valintakokeet, valintakoe)
                 .leftJoin(valintakoe.laskentakaava).fetch()

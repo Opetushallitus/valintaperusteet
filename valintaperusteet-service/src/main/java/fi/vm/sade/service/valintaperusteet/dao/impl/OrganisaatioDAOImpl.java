@@ -13,16 +13,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Created with IntelliJ IDEA.
- * User: jukais
- * Date: 26.11.2013
- * Time: 13.16
- * To change this template use File | Settings | File Templates.
- */
 @Repository
 public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> implements OrganisaatioDAO {
-
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioDAOImpl.class);
 
     protected JPAQuery from(EntityPath<?>... o) {
@@ -32,7 +24,6 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
     @Override
     public Organisaatio readByOid(String oid) {
         QOrganisaatio o = QOrganisaatio.organisaatio;
-
         return from(o)
                 .where(o.oid.eq(oid))
                 .singleResult(o);
@@ -41,7 +32,6 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
     @Override
     public List<Organisaatio> readByOidList(Set<String> oids) {
         QOrganisaatio organisaatio = QOrganisaatio.organisaatio;
-
         return from(organisaatio)
                 .where(organisaatio.oid.in(oids))
                 .list(organisaatio);

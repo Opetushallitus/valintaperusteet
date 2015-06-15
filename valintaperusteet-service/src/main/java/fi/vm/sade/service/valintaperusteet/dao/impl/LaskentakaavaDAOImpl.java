@@ -15,16 +15,11 @@ import com.mysema.query.types.QTuple;
 import fi.vm.sade.service.valintaperusteet.dao.LaskentakaavaDAO;
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi;
 
-/**
- * User: tommiha Date: 1/14/13 Time: 4:07 PM
- */
 @Repository
 public class LaskentakaavaDAOImpl extends AbstractJpaDAOImpl<Laskentakaava, Long> implements LaskentakaavaDAO {
-
     @Override
     public Laskentakaava getLaskentakaava(Long id) {
         QLaskentakaava lk = QLaskentakaava.laskentakaava;
-
         Laskentakaava laskentakaava = from(lk).setHint("org.hibernate.cacheable", Boolean.TRUE)
                 .where(lk.id.eq(id)).distinct().singleResult(lk);
 
@@ -35,7 +30,6 @@ public class LaskentakaavaDAOImpl extends AbstractJpaDAOImpl<Laskentakaava, Long
     public Laskentakaava getLaskentakaavaValintaryhma(Long id) {
         QLaskentakaava lk = QLaskentakaava.laskentakaava;
         QValintaryhma v = QValintaryhma.valintaryhma;
-
         Laskentakaava laskentakaava = from(lk)
                 .leftJoin(lk.valintaryhma, v).fetch()
                 .where(lk.id.eq(id)).distinct().singleResult(lk);
@@ -62,21 +56,16 @@ public class LaskentakaavaDAOImpl extends AbstractJpaDAOImpl<Laskentakaava, Long
     @Override
     public List<Laskentakaava> findKaavas(boolean all, String valintaryhmaOid, String hakukohdeOid, Funktiotyyppi tyyppi) {
         QLaskentakaava lk = QLaskentakaava.laskentakaava;
-
         JPAQuery query = from(lk);
-
         BooleanBuilder builder = new BooleanBuilder();
         if (!all) {
             builder.and(lk.onLuonnos.isFalse());
         }
-
         builder.and(valintaryhmaOid != null ? lk.valintaryhma.oid.eq(valintaryhmaOid) : lk.valintaryhma.isNull());
         builder.and(hakukohdeOid != null ? lk.hakukohde.oid.eq(hakukohdeOid) : lk.hakukohde.isNull());
-
         if (tyyppi != null) {
             builder.and(lk.tyyppi.eq(tyyppi));
         }
-
         return query.setHint("org.hibernate.cacheable", Boolean.TRUE).where(builder).list(lk);
     }
 

@@ -11,13 +11,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * Created with IntelliJ IDEA.
- * User: jukais
- * Date: 21.10.2013
- * Time: 12.53
- * To change this template use File | Settings | File Templates.
- */
 @Repository
 public class HakijaryhmaValintatapajonoDAOImpl extends AbstractJpaDAOImpl<HakijaryhmaValintatapajono, Long> implements HakijaryhmaValintatapajonoDAO {
     protected JPAQuery from(EntityPath<?>... o) {

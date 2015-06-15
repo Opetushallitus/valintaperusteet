@@ -15,9 +15,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-/**
- * User: tommiha Date: 1/17/13 Time: 12:51 PM
- */
 @Repository
 public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Long> implements HakukohdeViiteDAO {
     private static final Logger LOG = LoggerFactory.getLogger(HakukohdeViiteDAOImpl.class);
@@ -88,9 +85,6 @@ public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Lo
         QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
         return from(hakukohdeViite)
                 .leftJoin(hakukohdeViite.valintaryhma, valintaryhma).fetch()
-//                .join(hakukohdeViite.hakukohdekoodi)
-//                .join(hakukohdeViite.valintakokeet)
-//                .join(hakukohdeViite.hakukohteenValintaperusteet)
                 .where(hakukohdeViite.oid.eq(oid))
                 .singleResult(hakukohdeViite);
     }
@@ -139,7 +133,6 @@ public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Lo
     public List<HakukohdeViite> search(String hakuOid, List<String> tila, String searchString) {
         QHakukohdeViite hakukohdeViite = QHakukohdeViite.hakukohdeViite;
         JPAQuery a = from(hakukohdeViite).leftJoin(hakukohdeViite.valintaryhma).fetch();
-
         if (StringUtils.isNotBlank(hakuOid)) {
             a.where(hakukohdeViite.hakuoid.eq(hakuOid));
         }
@@ -149,16 +142,13 @@ public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Lo
         if (StringUtils.isNotBlank(searchString)) {
             a.where(hakukohdeViite.nimi.containsIgnoreCase(searchString));
         }
-
         return a.list(hakukohdeViite);
-
     }
 
     @Override
     public List<HakukohdeViite> readByHakukohdekoodiUri(String koodiUri) {
         QHakukohdekoodi koodi = QHakukohdekoodi.hakukohdekoodi;
         QHakukohdeViite hk = QHakukohdeViite.hakukohdeViite;
-
         return from(hk)
                 .innerJoin(hk.hakukohdekoodi, koodi)
                 .where(koodi.uri.eq(koodiUri))

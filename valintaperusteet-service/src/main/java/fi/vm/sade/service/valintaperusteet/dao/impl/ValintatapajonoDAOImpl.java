@@ -27,7 +27,6 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
         QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
         QValintatapajono jono = QValintatapajono.valintatapajono;
         QHakijaryhmaValintatapajono hv = QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
-
         return from(valinnanVaihe).leftJoin(valinnanVaihe.jonot, jono)
                 .leftJoin(valinnanVaihe.valintaryhma)
                 .leftJoin(jono.edellinenValintatapajono).fetch()
@@ -45,7 +44,6 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
         QValintatapajono jono = QValintatapajono.valintatapajono;
         QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
         QHakijaryhmaValintatapajono hakijaryhmaValintatapajono = QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
-
         return from(jono)
                 .leftJoin(jono.valinnanVaihe, valinnanVaihe).fetch()
                 .leftJoin(jono.hakijaryhmat, hakijaryhmaValintatapajono).fetch()
@@ -60,7 +58,6 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
         QValintatapajono jono = QValintatapajono.valintatapajono;
         QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
         QHakijaryhmaValintatapajono hakijaryhmaValintatapajono = QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
-
         return from(jono)
                 .where(jono.oid.eq(oid))
                 .leftJoin(jono.valinnanVaihe, valinnanVaihe).fetch()
@@ -76,7 +73,6 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
     @Override
     public List<Valintatapajono> haeKopiot(String oid) {
         QValintatapajono valintatapajono = QValintatapajono.valintatapajono;
-
         return from(valintatapajono).leftJoin(valintatapajono.valinnanVaihe).fetch()
                 .leftJoin(valintatapajono.masterValintatapajono).fetch()
                 .where(valintatapajono.masterValintatapajono.oid.eq(oid)).list(valintatapajono);
@@ -85,7 +81,6 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
     @Override
     public List<Valintatapajono> haeKopiotValisijoittelulle(String oid) {
         QValintatapajono valintatapajono = QValintatapajono.valintatapajono;
-
         return from(valintatapajono)
                 .leftJoin(valintatapajono.masterValintatapajono)
                 .where(valintatapajono.masterValintatapajono.oid.eq(oid))
@@ -100,7 +95,6 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
         QHakukohdeViite hakukohde = QHakukohdeViite.hakukohdeViite;
         QValinnanVaihe vv = QValinnanVaihe.valinnanVaihe;
         QValintatapajono jono = QValintatapajono.valintatapajono;
-
         return from(hakukohde).leftJoin(hakukohde.valinnanvaiheet, vv).leftJoin(vv.jonot, jono)
                 .where(hakukohde.oid.eq(hakukohdeOid).and(jono.kaytetaanValintalaskentaa.isFalse())).distinct().list(jono);
     }
@@ -110,22 +104,18 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
         QHakukohdeViite hakukohde = QHakukohdeViite.hakukohdeViite;
         QValinnanVaihe vv = QValinnanVaihe.valinnanVaihe;
         QValintatapajono jono = QValintatapajono.valintatapajono;
-
         List<Valintatapajono> jonot = from(hakukohde)
                 .leftJoin(hakukohde.valinnanvaiheet, vv)
                 .leftJoin(vv.jonot, jono)
                 .leftJoin(jono.varasijanTayttojono).fetch()
                 .where(hakukohde.oid.eq(hakukohdeOid).and(jono.siirretaanSijoitteluun.isTrue()).and(vv.aktiivinen.isTrue())).distinct().list(jono);
-
         // BUG-255 poistetaan jonoista väärin tallentuneet täyttöjonot
         List<Long> ids = jonot.stream().map(j -> j.getId()).collect(Collectors.toList());
-
         jonot.forEach(j -> {
             if (j.getVarasijanTayttojono() != null && !ids.contains(j.getVarasijanTayttojono().getId())) {
                 j.setVarasijanTayttojono(null);
             }
         });
-
         return jonot;
     }
 
@@ -134,17 +124,14 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
         QHakukohdeViite hakukohde = QHakukohdeViite.hakukohdeViite;
         QValinnanVaihe vv = QValinnanVaihe.valinnanVaihe;
         QValintatapajono jono = QValintatapajono.valintatapajono;
-
         return from(hakukohde).leftJoin(hakukohde.valinnanvaiheet, vv).leftJoin(vv.jonot, jono)
                 .where(hakukohde.oid.eq(hakukohdeOid)).distinct().list(jono);
     }
 
     @Override
     public Valintatapajono haeValinnanVaiheenViimeinenValintatapajono(String valinnanVaiheOid) {
-
         QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
         QValintatapajono jono = QValintatapajono.valintatapajono;
-
         return from(valinnanVaihe)
                 .leftJoin(valinnanVaihe.jonot, jono)
                 .leftJoin(valinnanVaihe.valintaryhma)

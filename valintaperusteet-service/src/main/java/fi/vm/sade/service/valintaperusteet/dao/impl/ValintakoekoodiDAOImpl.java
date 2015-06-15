@@ -13,11 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * User: kwuoti
- * Date: 15.4.2013
- * Time: 16.20
- */
 @Repository
 public class ValintakoekoodiDAOImpl extends AbstractJpaDAOImpl<Valintakoekoodi, Long> implements ValintakoekoodiDAO {
 
@@ -29,7 +24,6 @@ public class ValintakoekoodiDAOImpl extends AbstractJpaDAOImpl<Valintakoekoodi, 
     public List<Valintakoekoodi> findByValintaryhma(String valintaryhmaOid) {
         QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
         QValintakoekoodi valintakoekoodi = QValintakoekoodi.valintakoekoodi;
-
         return from(valintaryhma)
                 .innerJoin(valintaryhma.valintakoekoodit, valintakoekoodi)
                 .where(valintaryhma.oid.eq(valintaryhmaOid))
@@ -50,7 +44,6 @@ public class ValintakoekoodiDAOImpl extends AbstractJpaDAOImpl<Valintakoekoodi, 
             return new ArrayList<Valintakoekoodi>();
         }
         QValintakoekoodi koodi = QValintakoekoodi.valintakoekoodi;
-
         return from(koodi)
                 .where(koodi.uri.in(koodiUris))
                 .list(koodi);
