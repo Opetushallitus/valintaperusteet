@@ -24,19 +24,10 @@ import java.util.*;
 
 import static fi.vm.sade.service.valintaperusteet.service.impl.actors.creators.SpringExtension.SpringExtProvider;
 
-/**
- * Created with IntelliJ IDEA.
- * User: kjsaila
- * Date: 17/12/13
- * Time: 13:10
- * To change this template use File | Settings | File Templates.
- */
-
 @Named("HaeFunktiokutsuRekursiivisestiActorBean")
 @Component
 @org.springframework.context.annotation.Scope(value = "prototype")
 public class HaeFunktiokutsuRekursiivisestiActorBean extends UntypedActor {
-
     LoggingAdapter log = Logging.getLogger(getContext().system(), this);
 
     private int funktiokutsuLapset = 0;
@@ -57,16 +48,13 @@ public class HaeFunktiokutsuRekursiivisestiActorBean extends UntypedActor {
     }
 
     public void onReceive(Object message) throws Exception {
-
         if (message instanceof Funktiokutsu) {
-
-            Funktiokutsu response = (Funktiokutsu)message;
+            Funktiokutsu response = (Funktiokutsu) message;
             FunktiokutsuMuodostaaSilmukanException silmukka = null;
-            for(Funktioargumentti arg : original.getFunktioargumentit()) {
-                if(arg.getFunktiokutsuChild() != null && arg.getFunktiokutsuChild().getId().equals(response.getId())) {
+            for (Funktioargumentti arg : original.getFunktioargumentit()) {
+                if (arg.getFunktiokutsuChild() != null && arg.getFunktiokutsuChild().getId().equals(response.getId())) {
                     arg.setFunktiokutsuChild(response);
-                }
-                else if (laajennaAlakaavat && arg.getLaskentakaavaChild() != null && arg.getLaskentakaavaChild().getFunktiokutsu().getId().equals(response.getId())) {
+                } else if (laajennaAlakaavat && arg.getLaskentakaavaChild() != null && arg.getLaskentakaavaChild().getFunktiokutsu().getId().equals(response.getId())) {
                     if (laskentakaavaIds.contains(arg.getLaskentakaavaChild().getId())) {
                         silmukka = new FunktiokutsuMuodostaaSilmukanException("Funktiokutsu " + id + " muodostaa silmukan " +
                                 "laskentakaavaan " + arg.getLaskentakaavaChild().getId(), id,
@@ -74,35 +62,33 @@ public class HaeFunktiokutsuRekursiivisestiActorBean extends UntypedActor {
                     }
                     arg.getLaskentakaavaChild().setFunktiokutsu(response);
                     arg.setLaajennettuKaava(response);
-                } else if( arg.getLaskentakaavaChild() != null && arg.getLaskentakaavaChild().getFunktiokutsu().getId().equals(response.getId())) {
+                } else if (arg.getLaskentakaavaChild() != null && arg.getLaskentakaavaChild().getFunktiokutsu().getId().equals(response.getId())) {
                     arg.getLaskentakaavaChild().setFunktiokutsu(response);
                 }
             }
             funktiokutsuLapset--;
             if (silmukka != null) {
                 self().tell(silmukka, getSelf());
-            }
-            else if(funktiokutsuLapset <= 0) {
+            } else if (funktiokutsuLapset <= 0) {
                 ActorRef par = getContext().parent();
-                if(par.equals(actorParent)) {
+                if (par.equals(actorParent)) {
                     par.tell(original, getSelf());
                 } else {
                     actorParent.tell(original, getSelf());
                 }
                 getContext().stop(self());
             }
-        } else if(message instanceof UusiRekursio) {
+        } else if (message instanceof UusiRekursio) {
             actorParent = sender();
-            UusiRekursio viesti = (UusiRekursio)message;
+            UusiRekursio viesti = (UusiRekursio) message;
             id = viesti.getId();
             laajennaAlakaavat = viesti.isLaajennaAlakaavat();
             laskentakaavaIds = viesti.getLaskentakaavaIds();
-
             original = funktiokutsuDAO.getFunktiokutsu(viesti.getId());
             if (original == null) {
                 self().tell(new FunktiokutsuEiOleOlemassaException("Funktiokutsu (" + id + ") ei ole olemassa", id), getSelf());
             } else {
-                if(original.getFunktioargumentit() == null || original.getFunktioargumentit().size() == 0) {
+                if (original.getFunktioargumentit() == null || original.getFunktioargumentit().size() == 0) {
                     self().tell(original, getSelf());
                 } else {
                     funktiokutsuLapset = original.getFunktioargumentit().size();
@@ -129,19 +115,19 @@ public class HaeFunktiokutsuRekursiivisestiActorBean extends UntypedActor {
                 }
             }
 
-        } else if(message instanceof Exception) {
+        } else if (message instanceof Exception) {
             ActorRef par = getContext().parent();
-            if(par.equals(actorParent)) {
+            if (par.equals(actorParent)) {
                 par.tell(message, ActorRef.noSender());
             } else {
                 Throwable ex;
                 if (message instanceof FunktiokutsuMuodostaaSilmukanException) {
-                    FunktiokutsuMuodostaaSilmukanException exp = (FunktiokutsuMuodostaaSilmukanException)message;
-                    ex =  new FunktiokutsuMuodostaaSilmukanException(exp.getMessage(), exp.getFunktiokutsuId(), exp.getFunktionimi(),exp.getLaskentakaavaId());
+                    FunktiokutsuMuodostaaSilmukanException exp = (FunktiokutsuMuodostaaSilmukanException) message;
+                    ex = new FunktiokutsuMuodostaaSilmukanException(exp.getMessage(), exp.getFunktiokutsuId(), exp.getFunktionimi(), exp.getLaskentakaavaId());
                 } else if (message instanceof FunktiokutsuEiOleOlemassaException) {
                     ex = new FunktiokutsuEiOleOlemassaException("Funktiokutsu (" + id + ") ei ole olemassa", id);
-                }  else {
-                    ex = (Exception)message;
+                } else {
+                    ex = (Exception) message;
                 }
                 actorParent.tell(new Status.Failure(ex), ActorRef.noSender());
             }
@@ -150,6 +136,5 @@ public class HaeFunktiokutsuRekursiivisestiActorBean extends UntypedActor {
             unhandled(message);
             getContext().stop(getSelf());
         }
-
     }
 }

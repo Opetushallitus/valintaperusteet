@@ -16,12 +16,8 @@ import java.util.concurrent.TimeUnit;
 
 import static fi.vm.sade.service.valintaperusteet.service.impl.actors.creators.SpringExtension.SpringExtProvider;
 
-/**
- * Created by kjsaila on 09/02/15.
- */
 @Service
 public class ActorService {
-
     @Autowired
     ApplicationContext applicationContext;
 
@@ -37,14 +33,9 @@ public class ActorService {
     private void initActorSystemAndSchedulers() {
         actorSystem = ActorSystem.create("ValintaperusteetActorSystem");
         SpringExtProvider.get(actorSystem).initialize(applicationContext);
-
         initOrphanRemovalActor();
-
         duration = Duration.create(6, TimeUnit.HOURS);
-
         runScheduler(duration, deleteOrphans);
-
-
     }
 
     @PreDestroy
@@ -54,16 +45,11 @@ public class ActorService {
     }
 
     private void initOrphanRemovalActor() {
-        deleteOrphans = actorSystem.actorOf(
-                SpringExtProvider.get(actorSystem).props("PoistaOrvotActorBean")
-                , "OrphanRemovalActor");
+        deleteOrphans = actorSystem.actorOf(SpringExtProvider.get(actorSystem).props("PoistaOrvotActorBean"), "OrphanRemovalActor");
     }
 
     private void runScheduler(FiniteDuration duration, ActorRef actor) {
-        cancellable = actorSystem.scheduler().schedule(
-                Duration.Zero(),
-                duration, actor, "run",
-                actorSystem.dispatcher(), ActorRef.noSender());
+        cancellable = actorSystem.scheduler().schedule(Duration.Zero(), duration, actor, "run", actorSystem.dispatcher(), ActorRef.noSender());
     }
 
     public ActorSystem getActorSystem() {
@@ -71,16 +57,13 @@ public class ActorService {
     }
 
     public void runSchedulerIfNotRunning() {
-        if(deleteOrphans.isTerminated()) {
-            if(!cancellable.isCancelled()) {
+        if (deleteOrphans.isTerminated()) {
+            if (!cancellable.isCancelled()) {
                 cancellable.cancel();
             }
-
             initOrphanRemovalActor();
-
             runScheduler(duration, deleteOrphans);
-
-        } else if(cancellable.isCancelled()) {
+        } else if (cancellable.isCancelled()) {
             runScheduler(duration, deleteOrphans);
         }
     }
@@ -88,6 +71,4 @@ public class ActorService {
     public void runOnce() {
         deleteOrphans.tell("run", ActorRef.noSender());
     }
-
-
 }

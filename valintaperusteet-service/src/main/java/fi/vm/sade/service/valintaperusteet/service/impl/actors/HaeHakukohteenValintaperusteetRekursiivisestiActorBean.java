@@ -57,24 +57,18 @@ public class HaeHakukohteenValintaperusteetRekursiivisestiActorBean extends Unty
     }
 
     private Funktiokutsu kasitteleLoppuun(Funktiokutsu funktiokutsu) {
-
         List<String> tunnisteet = new ArrayList<String>();
         List<String> arvot = new ArrayList<String>();
         List<String> hylkaysperusteet = new ArrayList<String>();
         List<String> minimit = new ArrayList<String>();
         List<String> maksimit = new ArrayList<String>();
         List<String> palautaHaetutArvot = new ArrayList<String>();
-
         for (ValintaperusteViite vp : funktiokutsu.getValintaperusteviitteet()) {
             Valintaperustelahde lahde = vp.getLahde();
-            if (lahde.equals(Valintaperustelahde.HAKUKOHTEEN_ARVO)
-                    || lahde.equals(Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO)) {
+            if (lahde.equals(Valintaperustelahde.HAKUKOHTEEN_ARVO) || lahde.equals(Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO)) {
                 tunnisteet.add(vp.getTunniste());
             }
-
-            if (funktiokutsu.getArvokonvertteriparametrit() != null
-                    && funktiokutsu.getArvokonvertteriparametrit().size() > 0) {
-
+            if (funktiokutsu.getArvokonvertteriparametrit() != null && funktiokutsu.getArvokonvertteriparametrit().size() > 0) {
                 for (Arvokonvertteriparametri ap : funktiokutsu.getArvokonvertteriparametrit()) {
                     if (ap.getArvo().contains("hakukohde") && ap.getArvo().startsWith("{{")) {
                         arvot.add(ap.getArvo());
@@ -83,7 +77,6 @@ public class HaeHakukohteenValintaperusteetRekursiivisestiActorBean extends Unty
                         hylkaysperusteet.add(ap.getHylkaysperuste());
                     }
                 }
-
             } else if (funktiokutsu.getArvovalikonvertteriparametrit() != null
                     && funktiokutsu.getArvovalikonvertteriparametrit().size() > 0) {
                 for (Arvovalikonvertteriparametri ap : funktiokutsu.getArvovalikonvertteriparametrit()) {
@@ -97,11 +90,8 @@ public class HaeHakukohteenValintaperusteetRekursiivisestiActorBean extends Unty
                         palautaHaetutArvot.add(ap.getPalautaHaettuArvo());
                     }
                 }
-
             }
-
         }
-
         if (tunnisteet.size() > 0) {
             if (valintaperusteet.getTunnisteet() == null) {
                 valintaperusteet.setTunnisteet(tunnisteet);
@@ -166,9 +156,7 @@ public class HaeHakukohteenValintaperusteetRekursiivisestiActorBean extends Unty
     }
 
     public void onReceive(Object message) throws Exception {
-
         if (message instanceof Funktiokutsu) {
-
             Funktiokutsu response = (Funktiokutsu) message;
             for (Funktioargumentti arg : original.getFunktioargumentit()) {
                 if (arg.getFunktiokutsuChild() != null && arg.getFunktiokutsuChild().getId().equals(response.getId())) {
@@ -191,31 +179,24 @@ public class HaeHakukohteenValintaperusteetRekursiivisestiActorBean extends Unty
         } else if (message instanceof UusiHakukohteenValintaperusteRekursio) {
             actorParent = sender();
             UusiHakukohteenValintaperusteRekursio viesti = (UusiHakukohteenValintaperusteRekursio) message;
-
             original = funktiokutsuDAO.getFunktiokutsunValintaperusteet(viesti.getId());
             valintaperusteet = viesti.getValintaperusteet();
-
             if (original.getFunktioargumentit() == null || original.getFunktioargumentit().size() == 0) {
                 self().tell(original, getSelf());
             } else {
                 funktiokutsuLapset = original.getFunktioargumentit().size();
-
                 for (Funktioargumentti arg : original.getFunktioargumentit()) {
                     ActorSystem system = getContext().system();
                     ActorRef child = getContext().actorOf(
                             SpringExtProvider.get(system).props("HaeHakukohteenValintaperusteetRekursiivisestiActorBean"),
                             UUID.randomUUID().toString().replaceAll("-", ""));
                     if (arg.getFunktiokutsuChild() != null) {
-                        child.tell(
-                                new UusiHakukohteenValintaperusteRekursio(arg.getFunktiokutsuChild().getId(), viesti
-                                        .getValintaperusteet()), self());
+                        child.tell(new UusiHakukohteenValintaperusteRekursio(arg.getFunktiokutsuChild().getId(), viesti.getValintaperusteet()), self());
                     } else if (arg.getLaskentakaavaChild() != null) {
-                        child.tell(new UusiHakukohteenValintaperusteRekursio(
-                                arg.getLaskentakaavaChild().getFunktiokutsu().getId(), viesti.getValintaperusteet()), self());
+                        child.tell(new UusiHakukohteenValintaperusteRekursio(arg.getLaskentakaavaChild().getFunktiokutsu().getId(), viesti.getValintaperusteet()), self());
                     }
                 }
             }
-
         } else if (message instanceof Exception) {
             ActorRef par = getContext().parent();
             if (par.equals(actorParent)) {
@@ -229,6 +210,5 @@ public class HaeHakukohteenValintaperusteetRekursiivisestiActorBean extends Unty
             unhandled(message);
             getContext().stop(getSelf());
         }
-
     }
 }
