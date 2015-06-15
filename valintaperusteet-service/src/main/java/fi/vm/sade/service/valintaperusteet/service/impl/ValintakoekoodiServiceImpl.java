@@ -14,15 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-/**
- * User: wuoti
- * Date: 24.6.2013
- * Time: 14.25
- */
 @Service
 @Transactional
 public class ValintakoekoodiServiceImpl implements ValintakoekoodiService {
-
 
     @Autowired
     private ValintaryhmaService valintaryhmaService;
@@ -36,14 +30,13 @@ public class ValintakoekoodiServiceImpl implements ValintakoekoodiService {
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void lisaaValintakoekoodiValintaryhmalle(String valintaryhmaOid, KoodiDTO valintakoekoodi) {
-        new ValintakoekoodiHandler(valintaryhmaService, valintakoekoodiDAO)
-                .lisaaKoodiValintaryhmalle(valintaryhmaOid, modelMapper.map(valintakoekoodi, Valintakoekoodi.class));
+        new ValintakoekoodiHandler(valintaryhmaService, valintakoekoodiDAO).lisaaKoodiValintaryhmalle(
+                valintaryhmaOid, modelMapper.map(valintakoekoodi, Valintakoekoodi.class));
     }
 
     @Override
     public void updateValintaryhmanValintakoekoodit(String valintaryhmaOid, List<KoodiDTO> valintakoekoodit) {
-        new ValintakoekoodiHandler(valintaryhmaService, valintakoekoodiDAO)
-                .paivitaValintaryhmanKoodit(valintaryhmaOid, modelMapper.mapList(valintakoekoodit, Valintakoekoodi.class));
+        new ValintakoekoodiHandler(valintaryhmaService, valintakoekoodiDAO).paivitaValintaryhmanKoodit(
+                valintaryhmaOid, modelMapper.mapList(valintakoekoodit, Valintakoekoodi.class));
     }
-
 }

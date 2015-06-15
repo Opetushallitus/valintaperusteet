@@ -14,81 +14,61 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-/**
- * Created with IntelliJ IDEA.
- * User: jukais
- * Date: 16.1.2013
- * Time: 10.37
- * To change this template use File | Settings | File Templates.
- */
 @Service
 //@Transactional .. do not change this, otherwise you risk doing lazy loading here
 public class PuuServiceImpl implements PuuService {
-
     @Autowired
     private ValintaryhmaDAO valintaryhmaDAO;
-
 
     @Autowired
     private HakukohdeViiteDAO hakukohdeViiteDAO;
 
-
     @Override
     public List<ValintaperustePuuDTO> search(String hakuOid, List<String> tila, String searchString, boolean hakukohteet, String kohdejoukko, String valintaryhmaOid) {
         //fetch whole tree in a single query, is at least now faster than individually querying
-
-        List<Valintaryhma>  valintaryhmaList;
-        if(valintaryhmaOid != null && !valintaryhmaOid.isEmpty()) {
+        List<Valintaryhma> valintaryhmaList;
+        if (valintaryhmaOid != null && !valintaryhmaOid.isEmpty()) {
             valintaryhmaList = Arrays.asList(valintaryhmaDAO.findAllFetchAlavalintaryhmat(valintaryhmaOid));
         } else {
             valintaryhmaList = valintaryhmaDAO.findAllFetchAlavalintaryhmat();
         }
-
-
         List<ValintaperustePuuDTO> parentList = new ArrayList<ValintaperustePuuDTO>();
         Map<Long, ValintaperustePuuDTO> dtoMap = new HashMap<Long, ValintaperustePuuDTO>();
-
-        //parse parents
-        List<Valintaryhma>  parents = new ArrayList<Valintaryhma>();
-        for(Valintaryhma valintaryhma : valintaryhmaList) {
-            if(kohdejoukko.isEmpty()) {
-                if(valintaryhma.getYlavalintaryhma() == null ) {
+        List<Valintaryhma> parents = new ArrayList<Valintaryhma>();
+        for (Valintaryhma valintaryhma : valintaryhmaList) {
+            if (kohdejoukko.isEmpty()) {
+                if (valintaryhma.getYlavalintaryhma() == null) {
                     parents.add(valintaryhma);
                 }
             } else {
-                if(valintaryhma.getYlavalintaryhma() == null
+                if (valintaryhma.getYlavalintaryhma() == null
                         && (valintaryhma.getKohdejoukko() == null || valintaryhma.getKohdejoukko().isEmpty() || valintaryhma.getKohdejoukko().equals(kohdejoukko))) {
                     parents.add(valintaryhma);
                 }
             }
         }
-        for(Valintaryhma valintaryhma : parents) {
+        for (Valintaryhma valintaryhma : parents) {
             ValintaperustePuuDTO dto = convert(valintaryhma, dtoMap);
             parentList.add(dto);
         }
-        if(hakukohteet) {
-            List<HakukohdeViite> hakukohdeList = hakukohdeViiteDAO.search(hakuOid,tila,searchString);
-
-            for(HakukohdeViite hakukohdeViite : hakukohdeList) {
+        if (hakukohteet) {
+            List<HakukohdeViite> hakukohdeList = hakukohdeViiteDAO.search(hakuOid, tila, searchString);
+            for (HakukohdeViite hakukohdeViite : hakukohdeList) {
                 attach(hakukohdeViite, dtoMap, parentList);
             }
         }
-
-
-
         return parentList;
     }
 
     private void attach(HakukohdeViite viite, Map<Long, ValintaperustePuuDTO> map, List<ValintaperustePuuDTO> list) {
         ValintaperustePuuDTO dto = convert(viite);
-        if(viite.getValintaryhma() == null) {
+        if (viite.getValintaryhma() == null) {
             list.add(dto);
         } else {
-            Optional<ValintaperustePuuDTO> puu =  Optional.ofNullable(map.get(viite.getValintaryhma().getId()));
+            Optional<ValintaperustePuuDTO> puu = Optional.ofNullable(map.get(viite.getValintaryhma().getId()));
             puu.map(a -> a.getHakukohdeViitteet().add(dto));
         }
     }
-
 
     private ValintaperustePuuDTO convert(HakukohdeViite viite) {
         ValintaperustePuuDTO dto = new ValintaperustePuuDTO();
@@ -98,7 +78,6 @@ public class PuuServiceImpl implements PuuService {
         dto.setNimi(viite.getNimi());
         dto.setTarjoajaOid(viite.getTarjoajaOid());
         dto.setTila(viite.getTila());
-
         return dto;
     }
 
@@ -110,22 +89,15 @@ public class PuuServiceImpl implements PuuService {
         valintaperustePuuDTO.setTyyppi(ValintaperustePuuTyyppi.VALINTARYHMA);
         valintaperustePuuDTO.setOid(valintaryhma.getOid());
         valintaperustePuuDTO.setKohdejoukko(valintaryhma.getKohdejoukko());
-
         for (Organisaatio organisaatio : valintaryhma.getOrganisaatiot()) {
             OrganisaatioDTO orgDTO = new OrganisaatioDTO();
             orgDTO.setOid(organisaatio.getOid());
             orgDTO.setParentOidPath(organisaatio.getParentOidPath());
             valintaperustePuuDTO.getOrganisaatiot().add(orgDTO);
         }
-
-
-        for(Valintaryhma valintaryhma1: valintaryhma.getAlavalintaryhmat()){
-            valintaperustePuuDTO.getAlavalintaryhmat().add(convert(valintaryhma1,dtoMap));
+        for (Valintaryhma valintaryhma1 : valintaryhma.getAlavalintaryhmat()) {
+            valintaperustePuuDTO.getAlavalintaryhmat().add(convert(valintaryhma1, dtoMap));
         }
-
-
         return valintaperustePuuDTO;
     }
-
-
 }
