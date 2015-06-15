@@ -31,9 +31,6 @@ import fi.vm.sade.service.valintaperusteet.service.HakukohdeService;
 import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
 import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
 
-/**
- * User: wuoti Date: 8.5.2013 Time: 13.38
- */
 @Service
 @Transactional
 public class HakukohdeImportServiceImpl implements HakukohdeImportService {
@@ -107,26 +104,21 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
                 break;
             }
         }
-
         return found;
     }
 
     private String haeLahinMonikielinenTekstiKielelle(Collection<MonikielinenTekstiDTO> tekstit, Kieli kieli) {
         String found = haeMonikielinenTekstiKielelle(tekstit, kieli);
-
         Kieli alkuperainenKieli = kieli;
         int plus = 0;
-
         while ((found == null || "".equals(found)) && kieli.ordinal() < Kieli.values().length - 1) {
             kieli = Kieli.values()[plus];
             ++plus;
             if (kieli == alkuperainenKieli) {
                 continue;
             }
-
             found = haeMonikielinenTekstiKielelle(tekstit, kieli);
         }
-
         return found;
     }
 
@@ -136,9 +128,7 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
         String hakukohdeNimi = haeLahinMonikielinenTekstiKielelle(importData.getHakukohdeNimi(), Kieli.FI);
         String hakukausi = haeLahinMonikielinenTekstiKielelle(importData.getHakuKausi(), Kieli.FI);
         String hakuvuosi = importData.getHakuVuosi();
-
         String nimi = "";
-
         if (StringUtils.isNotBlank(tarjoajanimi)) {
             nimi = tarjoajanimi + ", ";
         }
@@ -151,7 +141,6 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
         if (StringUtils.isNotBlank(hakuvuosi)) {
             nimi += hakuvuosi;
         }
-
         return nimi;
     }
 
@@ -168,7 +157,7 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
     }
 
     public boolean isKKkohde(String kohdejoukkoUri) {
-        if(kohdejoukkoUri == null) {
+        if (kohdejoukkoUri == null) {
             return false;
         }
         String uri = sanitizeKoodiUri(kohdejoukkoUri);
@@ -177,7 +166,6 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
 
     private Valintaryhma selvitaValintaryhma(HakukohdeImportDTO importData) {
         LOG.info("Yritetään selvittää hakukohteen {} valintaryhmä", importData.getHakukohdeOid());
-
         // Lasketaan valintakokeiden esiintymiset importtidatalle
         Map<String, Integer> valintakoekoodiUrit = new HashMap<String, Integer>();
         for (HakukohteenValintakoeDTO valintakoe : importData.getValintakoe()) {
@@ -186,45 +174,34 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
                 if (!valintakoekoodiUrit.containsKey(valintakoeUri)) {
                     valintakoekoodiUrit.put(valintakoeUri, 0);
                 }
-
                 Integer esiintymat = valintakoekoodiUrit.get(valintakoeUri) + 1;
                 valintakoekoodiUrit.put(valintakoeUri, esiintymat);
             }
         }
-
         // Haetaan potentiaaliset valintaryhmät hakukohdekoodin,
         // opetuskielikoodien ja valintakoekoodien mukaan
         List<Valintaryhma> valintaryhmat = valintaryhmaDAO.haeHakukohdekoodinJaValintakoekoodienMukaan(
                 sanitizeKoodiUri(importData.getHakukohdekoodi().getKoodiUri()), valintakoekoodiUrit.keySet());
-
         LOG.info("Potentiaalisia valintaryhmiä {} kpl", valintaryhmat.size());
-
         // Tarkistetaan valintaryhmät valintakoekoodien osalta.
         Iterator<Valintaryhma> iterator = valintaryhmat.iterator();
-
         while (iterator.hasNext()) {
             Valintaryhma r = iterator.next();
-
             Map<String, Integer> valintaryhmanValintakoekoodiUrit = new HashMap<String, Integer>();
             List<Valintakoekoodi> valintakoekoodit = valintakoekoodiDAO.findByValintaryhma(r.getOid());
-
             // Lasketaan valintakoekoodien esiintymät valintaryhmässä
             for (Valintakoekoodi k : valintakoekoodit) {
                 if (!valintaryhmanValintakoekoodiUrit.containsKey(k.getUri())) {
                     valintaryhmanValintakoekoodiUrit.put(k.getUri(), 0);
                 }
-
                 Integer esiintymat = valintaryhmanValintakoekoodiUrit.get(k.getUri()) + 1;
                 valintaryhmanValintakoekoodiUrit.put(k.getUri(), esiintymat);
             }
-
             if (!valintakoekoodiUrit.equals(valintaryhmanValintakoekoodiUrit)) {
                 iterator.remove();
             }
         }
-
         LOG.info("Valintakoekoodifilterin jälkeen potentiaalisia valintaryhmiä {} kpl", valintaryhmat.size());
-
         // Filtteroinnin jälkeen pitäisi jäljellä olla toivottavasti enää yksi
         // valintaryhmä. Jos valintaryhmiä on
         // enemmän kuin yksi (eli valintaryhmien mallinnassa on ryssitty ja
@@ -235,42 +212,37 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
         Valintaryhma valintaryhma = null;
         if (valintaryhmat.size() == 1) {
             String ryhmanHakuoid = valintaryhmat.get(0).getHakuoid();
-            if(!StringUtils.isBlank(ryhmanHakuoid) && !ryhmanHakuoid.equals(importData.getHakuOid())) {
+            if (!StringUtils.isBlank(ryhmanHakuoid) && !ryhmanHakuoid.equals(importData.getHakuOid())) {
                 LOG.info("Hakukohteelle ei pystytty määrittämään valintaryhmää. Potentiaalinen ryhmä löytyi, mutta haun oid ei täsmää.");
             } else {
                 valintaryhma = valintaryhmat.get(0);
                 LOG.info("Hakukohteen tulisi olla valintaryhmän {} alla", valintaryhma.getOid());
             }
-
-        } else if(valintaryhmat.size() > 1) {
+        } else if (valintaryhmat.size() > 1) {
             List<Valintaryhma> filtered = valintaryhmat.stream().filter(hakuoidFilter(importData.getHakuOid())).collect(Collectors.toList());
-            if(filtered.size() == 1) {
+            if (filtered.size() == 1) {
                 valintaryhma = filtered.get(0);
                 LOG.info("Hakukohteen tulisi olla valintaryhmän {} alla", valintaryhma.getOid());
             } else {
                 // Testataan vielä hakuvuodella
                 final List<Valintaryhma> vuodenRyhmat = valintaryhmat.stream().filter(v -> !StringUtils.isBlank(v.getHakuvuosi()) && v.getHakuvuosi().equals(importData.getHakuVuosi())).collect(Collectors.toList());
-                if(vuodenRyhmat.size() == 1) {
+                if (vuodenRyhmat.size() == 1) {
                     valintaryhma = vuodenRyhmat.get(0);
                     LOG.info("Hakukohteen tulisi olla valintaryhmän {} alla", valintaryhma.getOid());
                 } else {
                     LOG.info("Hakukohteelle ei pystytty määrittämään valintaryhmää. Potentiaalisia valintaryhmiä on {} kpl. "
                             + "Hakukohde lisätään juureen tai säilytetään vanhassa ryhmässä.", valintaryhmat.size());
                 }
-
             }
         } else {
             List<Valintaryhma> haunRyhmat = valintaryhmaDAO.readByHakuoid(importData.getHakuOid());
-            if(haunRyhmat.size() == 1) {
+            if (haunRyhmat.size() == 1) {
                 valintaryhma = haunRyhmat.get(0);
                 LOG.info("Hakukohteen tulisi olla valintaryhmän {} alla", valintaryhma.getOid());
             } else {
                 LOG.info("Yhtään potentiaalista valintaryhmää ei löytynyt. Hakukohde lisätään juureen.");
             }
-
-
         }
-
         return valintaryhma;
     }
 
@@ -280,13 +252,10 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
 
     @Override
     public void tuoHakukohde(HakukohdeImportDTO importData) {
-        LOG.info("Aloitetaan import hakukohteelle. Hakukohde OID: {}, hakukohdekoodi URI: {}",
-                importData.getHakukohdeOid(), importData.getHakukohdekoodi().getKoodiUri());
+        LOG.info("Aloitetaan import hakukohteelle. Hakukohde OID: {}, hakukohdekoodi URI: {}", importData.getHakukohdeOid(), importData.getHakukohdekoodi().getKoodiUri());
         HakukohdekoodiDTO hakukohdekoodiTyyppi = importData.getHakukohdekoodi();
-
         HakukohdeViite hakukohde = hakukohdeViiteDAO.readForImport(importData.getHakukohdeOid());
         Hakukohdekoodi koodi = hakukohdekoodiDAO.readByUri(sanitizeKoodiUri(hakukohdekoodiTyyppi.getKoodiUri()));
-
         if (koodi == null) {
             koodi = new Hakukohdekoodi();
             convertKoodi(hakukohdekoodiTyyppi, koodi);
@@ -294,21 +263,18 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
         } else {
             convertKoodi(hakukohdekoodiTyyppi, koodi);
         }
-
         final Valintaryhma valintaryhma = selvitaValintaryhma(importData);
-
         if (hakukohde == null) {
             LOG.info("Hakukohdetta ei ole olemassa. Luodaan uusi hakukohde.");
             hakukohde = new HakukohdeViite();
             kopioiTiedot(importData, hakukohde);
-            hakukohde = hakukohdeService.insert(modelMapper.map(hakukohde, HakukohdeViiteDTO.class),
-                    valintaryhma != null ? valintaryhma.getOid() : null);
+            hakukohde = hakukohdeService.insert(modelMapper.map(hakukohde, HakukohdeViiteDTO.class), valintaryhma != null ? valintaryhma.getOid() : null);
             hakukohde.setHakukohdekoodi(koodi);
         } else {
             LOG.info("Hakukohde löytyi.");
             Valintaryhma hakukohdeValintaryhma = hakukohde.getValintaryhma();
             kopioiTiedot(importData, hakukohde);
-            if(valintaryhma == null && hakukohdeValintaryhma != null) {
+            if (valintaryhma == null && hakukohdeValintaryhma != null) {
                 LOG.info("Hakukohde on ollut valintaryhmässä ja nyt yritetään laittaa juureen. Säilytetään vanhassa ryhmässä");
                 SynkronoiKoodiJanimi(importData, hakukohde, koodi);
             }
@@ -319,48 +285,37 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
             else if ((valintaryhma != null ^ hakukohdeValintaryhma != null)
                     || (valintaryhma != null && hakukohdeValintaryhma != null && !valintaryhma.getOid().equals(
                     hakukohdeValintaryhma.getOid()))) {
-
                 if (hakukohde.getManuaalisestiSiirretty() != null && hakukohde.getManuaalisestiSiirretty()) {
                     LOG.info("Hakukohde on väärän valintaryhmän alla, mutta se on siirretty manuaalisesti. "
                             + "Synkronointia ei suoriteta");
-
                 } else {
                     LOG.info("Hakukohde on väärän valintaryhmän alla. Synkronoidaan hakukohde oikean valintaryhmän alle");
                     String valintaryhmaOid = valintaryhma != null ? valintaryhma.getOid() : null;
-                    hakukohde = hakukohdeService.siirraHakukohdeValintaryhmaan(importData.getHakukohdeOid(),
-                            valintaryhmaOid, false);
+                    hakukohde = hakukohdeService.siirraHakukohdeValintaryhmaan(importData.getHakukohdeOid(), valintaryhmaOid, false);
                 }
-
                 hakukohde.setHakukohdekoodi(koodi);
-
             } else {
                 LOG.info("Hakukohde on oikeassa valintaryhmässä. Synkronoidaan hakukohteen nimi ja koodi.");
                 // Synkataan nimi ja koodi
                 SynkronoiKoodiJanimi(importData, hakukohde, koodi);
             }
         }
-
         // Päivitetään valintakoekoodit
         hakukohde.setValintakokeet(haeTaiLisaaValintakoekoodit(importData));
-
         // Lisätään valinaperusteet
         if (hakukohde.getHakukohteenValintaperusteet() != null) {
-            List<HakukohteenValintaperuste> perusteet = hakukohteenValintaperusteDAO
-                    .haeHakukohteenValintaperusteet(hakukohde.getOid());
+            List<HakukohteenValintaperuste> perusteet = hakukohteenValintaperusteDAO.haeHakukohteenValintaperusteet(hakukohde.getOid());
             for (HakukohteenValintaperuste hv : perusteet) {
                 hv.setHakukohde(null);
                 hakukohteenValintaperusteDAO.remove(hv);
             }
             hakukohde.getHakukohteenValintaperusteet().clear();
-
         }
         genericDAO.flush();
         hakukohde = hakukohdeViiteDAO.readForImport(importData.getHakukohdeOid());
-
         hakukohde.setHakukohteenValintaperusteet(lisaaValintaperusteet(importData, hakukohde));
-
         // Päivitetään aloituspaikkojen lukumäärä jos mahdollista (KK-kohteille ei päivitetä)
-        if(!isKKkohde(importData.getHaunkohdejoukkoUri())) {
+        if (!isKKkohde(importData.getHaunkohdejoukkoUri())) {
             paivitaAloituspaikkojenLkm(hakukohde, importData.getValinnanAloituspaikat());
         }
     }
@@ -371,18 +326,16 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
         if (hakukohde.getManuaalisestiSiirretty() == null) {
             hakukohde.setManuaalisestiSiirretty(false);
         }
-
         hakukohde.setHakukohdekoodi(koodi);
     }
 
     private void paivitaAloituspaikkojenLkm(final HakukohdeViite hakukohde, final int valinnanAloituspaikat) {
         // Päivitetään viimeisen valinnanvaiheen ensimmäiselle jonolle tarjonnasta tulleet alotuspaikkalukumäärät
-
         List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheService.findByHakukohde(hakukohde.getOid());
         int vaiheidenMaara = valinnanVaiheet.size() - 1;
         if (vaiheidenMaara >= 0
                 && fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi.TAVALLINEN.equals(valinnanVaiheet
-                        .get(vaiheidenMaara).getValinnanVaiheTyyppi()) && valinnanVaiheet.get(vaiheidenMaara).getMasterValinnanVaihe() != null) {
+                .get(vaiheidenMaara).getValinnanVaiheTyyppi()) && valinnanVaiheet.get(vaiheidenMaara).getMasterValinnanVaihe() != null) {
             ValinnanVaihe vaihe = valinnanVaiheet.get(vaiheidenMaara);
             List<Valintatapajono> jonot = valintatapajonoService.findJonoByValinnanvaihe(vaihe.getOid());
             if (jonot.size() > 0 && jonot.get(0).getMasterValintatapajono() != null) {
@@ -393,7 +346,6 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
     }
 
     private List<Valintakoekoodi> haeTaiLisaaValintakoekoodit(HakukohdeImportDTO importData) {
-
         return importData.getValintakoe().stream()
                 .map(koe -> haeTaiLisaaKoodi(Valintakoekoodi.class, koe.getTyyppiUri(),
                         new KoodiFactory<Valintakoekoodi>() {
@@ -402,11 +354,9 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
                                 return new Valintakoekoodi();
                             }
                         })).filter(koodi -> koodi != null).collect(Collectors.toList());
-
     }
 
-    private Map<String, HakukohteenValintaperuste> lisaaValintaperusteet(HakukohdeImportDTO importData,
-                                                                         HakukohdeViite hakukohde) {
+    private Map<String, HakukohteenValintaperuste> lisaaValintaperusteet(HakukohdeImportDTO importData, HakukohdeViite hakukohde) {
         return importData.getValintaperuste().parallelStream().map(a -> {
             HakukohteenValintaperuste peruste = new HakukohteenValintaperuste();
             peruste.setTunniste(a.getAvain());
@@ -414,18 +364,16 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
             peruste.setKuvaus(a.getAvain());
             peruste.setHakukohde(hakukohde);
             return peruste;
-        }).collect(Collectors.toMap(HakukohteenValintaperuste::getTunniste, p -> p, (s,a) -> a));
+        }).collect(Collectors.toMap(HakukohteenValintaperuste::getTunniste, p -> p, (s, a) -> a));
 
     }
 
     private abstract class KoodiFactory<T extends Koodi> {
         public abstract T newInstance();
-
     }
 
     private <T extends Koodi> T haeTaiLisaaKoodi(Class<T> clazz, String uri, KoodiFactory<T> factory) {
         String sanitizedUri = sanitizeKoodiUri(uri);
-
         if (StringUtils.isNotBlank(sanitizedUri)) {
             List<T> result = genericDAO.findBy(clazz, "uri", sanitizedUri);
             if (result != null && result.size() > 0) {
