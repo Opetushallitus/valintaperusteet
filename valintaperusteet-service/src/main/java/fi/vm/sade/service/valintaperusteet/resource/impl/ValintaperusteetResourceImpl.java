@@ -3,6 +3,7 @@ package fi.vm.sade.service.valintaperusteet.resource.impl;
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD;
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
+
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
@@ -33,161 +34,130 @@ import java.util.Map;
 @Path("valintaperusteet")
 @Api(value = "/valintaperusteet", description = "Resurssi laskentakaavojen ja funktiokutsujen käsittelyyn")
 public class ValintaperusteetResourceImpl implements ValintaperusteetResource {
-	private static final Logger LOG = LoggerFactory
-			.getLogger(ValintaperusteetResourceImpl.class);
-	@Autowired
-	private ValintaperusteService valintaperusteService;
+    private static final Logger LOG = LoggerFactory.getLogger(ValintaperusteetResourceImpl.class);
+    @Autowired
+    private ValintaperusteService valintaperusteService;
 
-	@Autowired
-	private HakijaryhmaValintatapajonoService hakijaryhmaValintatapajonoService;
+    @Autowired
+    private HakijaryhmaValintatapajonoService hakijaryhmaValintatapajonoService;
 
-	@Autowired
-	private ValinnanVaiheService valinnanVaiheService;
+    @Autowired
+    private ValinnanVaiheService valinnanVaiheService;
 
-	@Autowired
-	private ValintatapajonoService valintatapajonoService;
+    @Autowired
+    private ValintatapajonoService valintatapajonoService;
 
-	@Autowired
-	private LaskentakaavaService laskentakaavaService;
+    @Autowired
+    private LaskentakaavaService laskentakaavaService;
 
-	@Autowired
-	private ValintaperusteetModelMapper modelMapper;
+    @Autowired
+    private ValintaperusteetModelMapper modelMapper;
 
-	private final static Logger LOGGER = LoggerFactory
-			.getLogger(ValintaperusteetResourceImpl.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(ValintaperusteetResourceImpl.class);
 
-	@GET
-	@Path("/valintatapajono/{hakukohdeOid}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Override
-	@ApiOperation(value = "Hakee valintapajonot sijoittelulle", response = ValintatapajonoDTO.class)
-	public List<ValintatapajonoDTO> haeValintatapajonotSijoittelulle(
-			@ApiParam(value = "Hakukohde oid") @PathParam("hakukohdeOid") String hakukohdeOid) {
-		return valintaperusteService
-				.haeValintatapajonotSijoittelulle(hakukohdeOid);
-	}
+    @GET
+    @Path("/valintatapajono/{hakukohdeOid}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Override
+    @ApiOperation(value = "Hakee valintapajonot sijoittelulle", response = ValintatapajonoDTO.class)
+    public List<ValintatapajonoDTO> haeValintatapajonotSijoittelulle(@ApiParam(value = "Hakukohde oid") @PathParam("hakukohdeOid") String hakukohdeOid) {
+        return valintaperusteService.haeValintatapajonotSijoittelulle(hakukohdeOid);
+    }
 
-	@POST
-	@Path("/valintatapajono")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Override
-	@ApiOperation(value = "Hakee valintapajonot sijoittelulle", response = ValintatapajonoDTO.class)
-	public Map<String, List<ValintatapajonoDTO>> haeValintatapajonotSijoittelulle(
-			List<String> hakukohdeOids) {
-		return valintaperusteService
-				.haeValintatapajonotSijoittelulle(hakukohdeOids);
-	}
+    @POST
+    @Path("/valintatapajono")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Override
+    @ApiOperation(value = "Hakee valintapajonot sijoittelulle", response = ValintatapajonoDTO.class)
+    public Map<String, List<ValintatapajonoDTO>> haeValintatapajonotSijoittelulle(List<String> hakukohdeOids) {
+        return valintaperusteService.haeValintatapajonotSijoittelulle(hakukohdeOids);
+    }
 
-	@GET
-	@Path("/{hakukohdeOid}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "Hakee valintaperusteet")
-	@Override
-	public List<ValintaperusteetDTO> haeValintaperusteet(
-			@ApiParam(value = "Hakukohde OID") @PathParam("hakukohdeOid") String hakukohdeOid,
-			@ApiParam(value = "Valinnanvaiheen järjestysluku") @QueryParam("vaihe") Integer valinnanVaiheJarjestysluku) {
+    @GET
+    @Path("/{hakukohdeOid}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Hakee valintaperusteet")
+    @Override
+    public List<ValintaperusteetDTO> haeValintaperusteet(
+            @ApiParam(value = "Hakukohde OID") @PathParam("hakukohdeOid") String hakukohdeOid,
+            @ApiParam(value = "Valinnanvaiheen järjestysluku") @QueryParam("vaihe") Integer valinnanVaiheJarjestysluku) {
+        HakuparametritDTO hakuparametrit = new HakuparametritDTO();
+        hakuparametrit.setHakukohdeOid(hakukohdeOid);
+        if (valinnanVaiheJarjestysluku != null) {
+            hakuparametrit.setValinnanVaiheJarjestysluku(valinnanVaiheJarjestysluku);
+        }
+        List<HakuparametritDTO> list = Arrays.asList(hakuparametrit);
+        return valintaperusteService.haeValintaperusteet(list);
+    }
 
-		HakuparametritDTO hakuparametrit = new HakuparametritDTO();
-		hakuparametrit.setHakukohdeOid(hakukohdeOid);
-		if (valinnanVaiheJarjestysluku != null) {
-			hakuparametrit
-					.setValinnanVaiheJarjestysluku(valinnanVaiheJarjestysluku);
-		}
-		List<HakuparametritDTO> list = Arrays.asList(hakuparametrit);
+    @Override
+    public List<ValintaperusteetHakijaryhmaDTO> haeHakijaryhmat(String hakukohdeOid) {
+        List<HakijaryhmaValintatapajono> hakukohteenRyhmat = hakijaryhmaValintatapajonoService.findByHakukohde(hakukohdeOid);
+        List<ValinnanVaihe> vaiheet = valinnanVaiheService.findByHakukohde(hakukohdeOid);
+        vaiheet.stream().forEachOrdered(
+                vaihe -> {
+                    List<Valintatapajono> jonot = valintatapajonoService.findJonoByValinnanvaihe(vaihe.getOid());
+                    jonot.stream().forEachOrdered(jono ->
+                            hakukohteenRyhmat.addAll(hakijaryhmaValintatapajonoService.findHakijaryhmaByJono(jono.getOid())));
+                });
 
-		return valintaperusteService.haeValintaperusteet(list);
-	}
-
-	@Override
-	public List<ValintaperusteetHakijaryhmaDTO> haeHakijaryhmat(
-			String hakukohdeOid) {
-		List<HakijaryhmaValintatapajono> hakukohteenRyhmat = hakijaryhmaValintatapajonoService
-				.findByHakukohde(hakukohdeOid);
-		List<ValinnanVaihe> vaiheet = valinnanVaiheService
-				.findByHakukohde(hakukohdeOid);
-		vaiheet.stream().forEachOrdered(
-				vaihe -> {
-					List<Valintatapajono> jonot = valintatapajonoService
-							.findJonoByValinnanvaihe(vaihe.getOid());
-					jonot.stream().forEachOrdered(
-							jono -> hakukohteenRyhmat
-									.addAll(hakijaryhmaValintatapajonoService
-											.findHakijaryhmaByJono(jono
-													.getOid())));
-				});
-
-		List<ValintaperusteetHakijaryhmaDTO> result = new ArrayList<>();
-		for (int i = 0; i < hakukohteenRyhmat.size(); i++) {
-			HakijaryhmaValintatapajono original = hakukohteenRyhmat.get(i);
-			Laskentakaava laskentakaava = laskentakaavaService
-					.haeLaskettavaKaava(original.getHakijaryhma()
-							.getLaskentakaava().getId(),
-							Laskentamoodi.VALINTALASKENTA);
-
-			ValintaperusteetHakijaryhmaDTO dto = modelMapper.map(original,
-					ValintaperusteetHakijaryhmaDTO.class);
-
-			// Asetetaan laskentakaavan nimi ensimmäisen funktiokutsun nimeksi
-			laskentakaava.getFunktiokutsu().getSyoteparametrit().forEach(s -> {
-				if (s.getAvain().equals("nimi")) {
-					s.setArvo(laskentakaava.getNimi());
-				}
-			});
-
-			dto.setFunktiokutsu(modelMapper.map(
-					laskentakaava.getFunktiokutsu(),
-					ValintaperusteetFunktiokutsuDTO.class));
-			dto.setNimi(original.getHakijaryhma().getNimi());
-			dto.setKuvaus(original.getHakijaryhma().getKuvaus());
-			dto.setPrioriteetti(i);
+        List<ValintaperusteetHakijaryhmaDTO> result = new ArrayList<>();
+        for (int i = 0; i < hakukohteenRyhmat.size(); i++) {
+            HakijaryhmaValintatapajono original = hakukohteenRyhmat.get(i);
+            Laskentakaava laskentakaava = laskentakaavaService.haeLaskettavaKaava(original.getHakijaryhma().getLaskentakaava().getId(), Laskentamoodi.VALINTALASKENTA);
+            ValintaperusteetHakijaryhmaDTO dto = modelMapper.map(original, ValintaperusteetHakijaryhmaDTO.class);
+            // Asetetaan laskentakaavan nimi ensimmäisen funktiokutsun nimeksi
+            laskentakaava.getFunktiokutsu().getSyoteparametrit().forEach(s -> {
+                if (s.getAvain().equals("nimi")) {
+                    s.setArvo(laskentakaava.getNimi());
+                }
+            });
+            dto.setFunktiokutsu(modelMapper.map(laskentakaava.getFunktiokutsu(), ValintaperusteetFunktiokutsuDTO.class));
+            dto.setNimi(original.getHakijaryhma().getNimi());
+            dto.setKuvaus(original.getHakijaryhma().getKuvaus());
+            dto.setPrioriteetti(i);
             dto.setKaytetaanRyhmaanKuuluvia(original.isKaytetaanRyhmaanKuuluvia());
-			dto.setHakukohdeOid(hakukohdeOid);
-			if (original.getValintatapajono() != null) {
-				dto.setValintatapajonoOid(original.getValintatapajono()
-						.getOid());
-			}
-			result.add(dto);
+            dto.setHakukohdeOid(hakukohdeOid);
+            if (original.getValintatapajono() != null) {
+                dto.setValintatapajonoOid(original.getValintatapajono().getOid());
+            }
+            result.add(dto);
+        }
+        return result;
+    }
 
-		}
-		return result;
-	}
+    @POST
+    @Path("tuoHakukohde")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "importoi hakukohde")
+    @Override
+    public Response tuoHakukohde(@ApiParam(value = "Importoitava hakukohde") HakukohdeImportDTO hakukohde) {
+        if (hakukohde == null) {
+            LOG.error("Valintaperusteet sai null hakukohteen importoitavaksi!");
+            throw new RuntimeException("Valintaperusteet sai null hakukohteen importoitavaksi!");
+        }
+        try {
+            valintaperusteService.tuoHakukohde(hakukohde);
+            return Response.ok().build();
+        } catch (Exception e) {
+            LOG.error("Hakukohteen importointi valintaperusteisiin epaonnistui! {}", hakukohde.getHakukohdeOid());
+            throw e;
+        }
+    }
 
-	@POST
-	@Path("tuoHakukohde")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "importoi hakukohde")
-	@Override
-	public Response tuoHakukohde(
-			@ApiParam(value = "Importoitava hakukohde") HakukohdeImportDTO hakukohde) {
-		if (hakukohde == null) {
-			LOG.error("Valintaperusteet sai null hakukohteen importoitavaksi!");
-			throw new RuntimeException(
-					"Valintaperusteet sai null hakukohteen importoitavaksi!");
-		}
-		try {
-			valintaperusteService.tuoHakukohde(hakukohde);
-			return Response.ok().build();
-		} catch (Exception e) {
-			LOG.error(
-					"Hakukohteen importointi valintaperusteisiin epaonnistui! {}",
-					hakukohde.getHakukohdeOid());
-			throw e;
-		}
-	}
+    @GET
+    @Path("/{oid}/automaattinenSiirto")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Boolean readAutomaattinenSijoitteluunSiirto(@PathParam("oid") String oid) {
+        return valintatapajonoService.readAutomaattinenSijoitteluunSiirto(oid);
+    }
 
-	@GET
-	@Path("/{oid}/automaattinenSiirto")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Boolean readAutomaattinenSijoitteluunSiirto(@PathParam("oid") String oid) {
-		return valintatapajonoService.readAutomaattinenSijoitteluunSiirto(oid);
-	}
-
-	@POST
-	@Path("/{oid}/automaattinenSiirto")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Boolean updateAutomaattinenSijoitteluunSiirto(@PathParam("oid") String oid, Boolean arvo) {
-		return valintatapajonoService.updateAutomaattinenSijoitteluunSiirto(oid, arvo);
-	}
+    @POST
+    @Path("/{oid}/automaattinenSiirto")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Boolean updateAutomaattinenSijoitteluunSiirto(@PathParam("oid") String oid, Boolean arvo) {
+        return valintatapajonoService.updateAutomaattinenSijoitteluunSiirto(oid, arvo);
+    }
 }

@@ -16,15 +16,10 @@ import org.springframework.stereotype.Component;
 import fi.vm.sade.service.valintaperusteet.resource.LuoValintaperusteetResource;
 import fi.vm.sade.service.valintaperusteet.service.LuoValintaperusteetService;
 
-/**
- * Created with IntelliJ IDEA. User: jukais Date: 17.1.2013 Time: 14.42 To
- * change this template use File | Settings | File Templates.
- */
 @Component
 @Path("luovalintaperusteet")
 @PreAuthorize("isAuthenticated()")
 public class LuoValintaperusteetResourceImpl implements LuoValintaperusteetResource {
-
     @Autowired
     private LuoValintaperusteetService luoValintaperusteetService;
 
@@ -32,7 +27,6 @@ public class LuoValintaperusteetResourceImpl implements LuoValintaperusteetResou
     @Path("luo")
     @PreAuthorize(OPH_CRUD)
     public Response luo() {
-
         try {
             luoValintaperusteetService.luo();
             return Response.status(Response.Status.ACCEPTED).build();
@@ -40,5 +34,4 @@ public class LuoValintaperusteetResourceImpl implements LuoValintaperusteetResou
             throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
         }
     }
-
 }

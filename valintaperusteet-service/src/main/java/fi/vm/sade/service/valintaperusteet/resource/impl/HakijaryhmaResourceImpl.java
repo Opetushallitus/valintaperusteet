@@ -41,16 +41,11 @@ import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaEiOleOle
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaOidListaOnTyhjaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaaEiVoiPoistaaException;
 
-/**
- * Created with IntelliJ IDEA. User: jukais Date: 17.1.2013 Time: 14.42 To
- * change this template use File | Settings | File Templates.
- */
 @Component
 @Path("hakijaryhma")
 @PreAuthorize("isAuthenticated()")
 @Api(value = "/hakijaryhma", description = "Resurssi hakijaryhmien käsittelyyn")
 public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
-
     @Autowired
     ValintatapajonoService jonoService;
 
@@ -74,16 +69,15 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
     @PreAuthorize(READ_UPDATE_CRUD)
     @Path("/haku")
     @ApiOperation(value = "Hakee hakijaryhmät annetulle hakukohde OID joukolle", response = HakijaryhmaDTO.class)
-    @ApiResponses(value = { @ApiResponse(code = 404, message = "Hakijaryhmää ei löydy"), })
+    @ApiResponses(value = {@ApiResponse(code = 404, message = "Hakijaryhmää ei löydy"),})
     public List<HakijaryhmaValintatapajonoDTO> readByHakukohdeOids(List<String> hakukohdeOids) {
         long t0 = System.currentTimeMillis();
         try {
-            if(hakukohdeOids == null || hakukohdeOids.isEmpty()) {
+            if (hakukohdeOids == null || hakukohdeOids.isEmpty()) {
                 // Haetaan hakuOid:lla
                 LOGGER.error("Yritettiin hakea hakijaryhmia tyhjalla hakukohde OID joukolla");
                 //return hakijaryhmaValintatapajonoService.findByHaku(hakuOid).stream().map(h -> modelMapper.map(h, HakijaryhmaValintatapajonoDTO.class)).collect(Collectors.toList());
-                throw new WebApplicationException(
-                        new RuntimeException("Yritettiin hakea hakijaryhmia tyhjalla hakukohde OID joukolla"), Response.Status.NOT_FOUND);
+                throw new WebApplicationException(new RuntimeException("Yritettiin hakea hakijaryhmia tyhjalla hakukohde OID joukolla"), Response.Status.NOT_FOUND);
             } else {
                 // Haetaan hakukohdeOid joukolla
                 LOGGER.info("Haetaan hakukohdeOid joukolla {}", Arrays.toString(hakukohdeOids.toArray()));
@@ -105,17 +99,16 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
     @PreAuthorize(READ_UPDATE_CRUD)
     @Path("/haku/{hakuOid}")
     @ApiOperation(value = "Hakee hakijaryhmät annetulle haku OID:lle", response = HakijaryhmaDTO.class)
-    @ApiResponses(value = { @ApiResponse(code = 404, message = "Hakijaryhmää ei löydy"), })
+    @ApiResponses(value = {@ApiResponse(code = 404, message = "Hakijaryhmää ei löydy"),})
     public List<HakijaryhmaValintatapajonoDTO> readByHakuOid(@PathParam("hakuOid") String hakuOid) {
         LOGGER.info("Haetaan hakuOid:lla {}", hakuOid);
         long t0 = System.currentTimeMillis();
         try {
-            if(hakuOid == null) {
+            if (hakuOid == null) {
                 // Haetaan hakuOid:lla
                 LOGGER.error("Yritettiin hakea hakijaryhmia tyhjalla haku OID:lla");
                 //return hakijaryhmaValintatapajonoService.findByHaku(hakuOid).stream().map(h -> modelMapper.map(h, HakijaryhmaValintatapajonoDTO.class)).collect(Collectors.toList());
-                throw new WebApplicationException(
-                        new RuntimeException("Yritettiin hakea hakijaryhmia tyhjalla haku OID:lla"), Response.Status.NOT_FOUND);
+                throw new WebApplicationException(new RuntimeException("Yritettiin hakea hakijaryhmia tyhjalla haku OID:lla"), Response.Status.NOT_FOUND);
             } else {
                 return hakijaryhmaValintatapajonoService.findByHaku(hakuOid).stream().map(h -> modelMapper.map(h, HakijaryhmaValintatapajonoDTO.class)).collect(Collectors.toList());
             }
@@ -135,7 +128,7 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
     @Path("/{oid}")
     @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Hakee hakijaryhmän OID:n perusteella", response = HakijaryhmaDTO.class)
-    @ApiResponses(value = { @ApiResponse(code = 404, message = "Hakijaryhmää ei löydy"), })
+    @ApiResponses(value = {@ApiResponse(code = 404, message = "Hakijaryhmää ei löydy"),})
     public HakijaryhmaDTO read(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
         try {
             return modelMapper.map(hakijaryhmaService.readByOid(oid), HakijaryhmaDTO.class);
@@ -154,8 +147,7 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
     public List<HakijaryhmaValintatapajonoDTO> valintatapajonot(
             @ApiParam(value = "OID", required = true) @PathParam("hakijaryhmaOid") String hakijaryhmaOid) {
         try {
-            return modelMapper.mapList(hakijaryhmaValintatapajonoService.findByHakijaryhma(hakijaryhmaOid),
-                    HakijaryhmaValintatapajonoDTO.class);
+            return modelMapper.mapList(hakijaryhmaValintatapajonoService.findByHakijaryhma(hakijaryhmaOid), HakijaryhmaValintatapajonoDTO.class);
         } catch (Exception e) {
             throw new WebApplicationException(e, Response.Status.INTERNAL_SERVER_ERROR);
         }
@@ -179,7 +171,7 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
     @Path("/jarjesta")
     @PreAuthorize(UPDATE_CRUD)
     @ApiOperation(value = "Järjestää hakijaryhmät parametrina annetun listan mukaan", response = HakijaryhmaDTO.class)
-    @ApiResponses(value = { @ApiResponse(code = 400, message = "OID-lista on tyhjä"), })
+    @ApiResponses(value = {@ApiResponse(code = 400, message = "OID-lista on tyhjä"),})
     public List<HakijaryhmaDTO> jarjesta(
             @ApiParam(value = "Hakijaryhmien uusi järjestys", required = true) List<String> oids) {
         try {
@@ -194,8 +186,8 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
     @Path("/{oid}")
     @PreAuthorize(CRUD)
     @ApiOperation(value = "Poistaa hakijaryhmän OID:n perusteella")
-    @ApiResponses(value = { @ApiResponse(code = 202, message = "Poisto onnistui"),
-            @ApiResponse(code = 403, message = "Hakijaryhmää ei voida poistaa, esim. se on peritty") })
+    @ApiResponses(value = {@ApiResponse(code = 202, message = "Poisto onnistui"),
+            @ApiResponse(code = 403, message = "Hakijaryhmää ei voida poistaa, esim. se on peritty")})
     public Response delete(
             @ApiParam(value = "Poistettavan hakijaryhmän OID", required = true) @PathParam("oid") String oid) {
         try {

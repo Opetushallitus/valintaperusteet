@@ -42,10 +42,6 @@ import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
 import fi.vm.sade.service.valintaperusteet.service.ValintakoekoodiService;
 import fi.vm.sade.service.valintaperusteet.service.ValintaryhmaService;
 
-/**
- * Created with IntelliJ IDEA. User: kkammone Date: 10.1.2013 Time: 12:01 To
- * change this template use File | Settings | File Templates.
- */
 @Component
 @Path("valintaryhma")
 @PreAuthorize("isAuthenticated()")
@@ -87,12 +83,10 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
             @ApiParam(value = "Parent-valintaryhmän OID, jonka lapsia haetaan") @QueryParam("parentsOf") String parentsOf) {
         List<ValintaryhmaDTO> valintaryhmas = new ArrayList<ValintaryhmaDTO>();
         if (Boolean.TRUE.equals(paataso)) {
-            valintaryhmas.addAll(modelMapper.mapList(valintaryhmaService.findValintaryhmasByParentOid(null),
-                    ValintaryhmaDTO.class));
+            valintaryhmas.addAll(modelMapper.mapList(valintaryhmaService.findValintaryhmasByParentOid(null), ValintaryhmaDTO.class));
         }
         if (parentsOf != null) {
-            valintaryhmas.addAll(modelMapper.mapList(valintaryhmaService.findParentHierarchyFromOid(parentsOf),
-                    ValintaryhmaDTO.class));
+            valintaryhmas.addAll(modelMapper.mapList(valintaryhmaService.findParentHierarchyFromOid(parentsOf), ValintaryhmaDTO.class));
         }
         return valintaryhmas;
     }
@@ -102,9 +96,8 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
     @PreAuthorize(CRUD)
     @ApiOperation(value = "Poistaa valintaryhmän OID:n perusteella")
     @ApiResponses({
-            @ApiResponse(code = 404, message = "Valintaryhmää ei ole olemassa") })
-    public Response delete(
-            @ApiParam(value = "Valintaryhmän OID", required = true) @PathParam("oid") String oid) {
+            @ApiResponse(code = 404, message = "Valintaryhmää ei ole olemassa")})
+    public Response delete(@ApiParam(value = "Valintaryhmän OID", required = true) @PathParam("oid") String oid) {
         try {
             valintaryhmaService.delete(oid);
             return Response.status(Response.Status.ACCEPTED).build();
@@ -127,8 +120,7 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
     @Produces(MediaType.APPLICATION_JSON)
     @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Hakee hakijaryhmät valintaryhmän OID:n perusteella", response = HakijaryhmaDTO.class)
-    public List<HakijaryhmaDTO> hakijaryhmat(
-            @ApiParam(value = "Valintaryhmän OID", required = true) @PathParam("oid") String oid) {
+    public List<HakijaryhmaDTO> hakijaryhmat(@ApiParam(value = "Valintaryhmän OID", required = true) @PathParam("oid") String oid) {
         return modelMapper.mapList(hakijaryhmaService.findByValintaryhma(oid), HakijaryhmaDTO.class);
     }
 
@@ -137,12 +129,10 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
     @Produces(MediaType.APPLICATION_JSON)
     @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Hakee valintaryhmän parent-valintaryhmät OID:n perusteella", response = ValintaryhmaListDTO.class)
-    public List<ValintaryhmaListDTO> parentHierarchy(
-            @ApiParam(value = "OID", required = true) @PathParam("oid") String parentsOf) {
+    public List<ValintaryhmaListDTO> parentHierarchy(@ApiParam(value = "OID", required = true) @PathParam("oid") String parentsOf) {
         List<ValintaryhmaListDTO> valintaryhmas = new ArrayList<ValintaryhmaListDTO>();
         if (parentsOf != null) {
-            valintaryhmas.addAll(modelMapper.mapList(valintaryhmaService.findParentHierarchyFromOid(parentsOf),
-                    ValintaryhmaListDTO.class));
+            valintaryhmas.addAll(modelMapper.mapList(valintaryhmaService.findParentHierarchyFromOid(parentsOf), ValintaryhmaListDTO.class));
         }
         return valintaryhmas;
     }
@@ -185,8 +175,7 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
             @ApiParam(value = "Parent-valintaryhmän OID", required = true) @PathParam("parentOid") String parentOid,
             @ApiParam(value = "Lisättävä valintaryhmä", required = true) ValintaryhmaCreateDTO valintaryhma) {
         try {
-            ValintaryhmaDTO lisatty = modelMapper.map(valintaryhmaService.insert(valintaryhma, parentOid),
-                    ValintaryhmaDTO.class);
+            ValintaryhmaDTO lisatty = modelMapper.map(valintaryhmaService.insert(valintaryhma, parentOid), ValintaryhmaDTO.class);
             return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
@@ -247,8 +236,7 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
             @ApiParam(value = "Valinnan vaiheen OID, jonka jälkeen uusi valinnan vaihe lisätään") @QueryParam("edellinenValinnanVaiheOid") String edellinenValinnanVaiheOid,
             @ApiParam(value = "Uusi valinnan vaihe", required = true) ValinnanVaiheCreateDTO valinnanVaihe) {
         try {
-            ValinnanVaiheDTO lisatty = modelMapper.map(valinnanVaiheService.lisaaValinnanVaiheValintaryhmalle(
-                    valintaryhmaOid, valinnanVaihe, edellinenValinnanVaiheOid), ValinnanVaiheDTO.class);
+            ValinnanVaiheDTO lisatty = modelMapper.map(valinnanVaiheService.lisaaValinnanVaiheValintaryhmalle(valintaryhmaOid, valinnanVaihe, edellinenValinnanVaiheOid), ValinnanVaiheDTO.class);
             return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (Exception e) {
             e.printStackTrace();
@@ -267,9 +255,7 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
             @ApiParam(value = "Valintaryhmän OID, jolle hakijaryhmä lisätään", required = true) @PathParam("valintaryhmaOid") String valintaryhamOid,
             @ApiParam(value = "Lisättävä hakijaryhmä", required = true) HakijaryhmaCreateDTO hakijaryhma) {
         try {
-            HakijaryhmaDTO lisatty = modelMapper.map(
-                    hakijaryhmaService.lisaaHakijaryhmaValintaryhmalle(valintaryhamOid, hakijaryhma),
-                    HakijaryhmaDTO.class);
+            HakijaryhmaDTO lisatty = modelMapper.map(hakijaryhmaService.lisaaHakijaryhmaValintaryhmalle(valintaryhamOid, hakijaryhma), HakijaryhmaDTO.class);
             return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (Exception e) {
             LOGGER.error("Error creating hakijaryhma.", e);

@@ -32,16 +32,11 @@ import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaValintatapajonoSer
 import fi.vm.sade.service.valintaperusteet.service.JarjestyskriteeriService;
 import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
 
-/**
- * Created with IntelliJ IDEA. User: jukais Date: 17.1.2013 Time: 14.42 To
- * change this template use File | Settings | File Templates.
- */
 @Component
 @Path("valintatapajono")
 @PreAuthorize("isAuthenticated()")
 @Api(value = "/valintatapajono", description = "Resurssi valintatapajonojen käsittelyyn")
 public class ValintatapajonoResourceImpl {
-
     protected final static Logger LOGGER = LoggerFactory.getLogger(ValintatapajonoResourceImpl.class);
 
     @Autowired
@@ -86,10 +81,8 @@ public class ValintatapajonoResourceImpl {
     @Path("/{oid}/jarjestyskriteeri")
     @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Hakee järjestyskriteerit valintatapajonon OID:n perusteella", response = JarjestyskriteeriDTO.class)
-    public List<JarjestyskriteeriDTO> findJarjestyskriteeri(
-            @ApiParam(value = "Valintatapajonon OID", required = true) @PathParam("oid") String oid) {
-        return modelMapper.mapList(jarjestyskriteeriService.findJarjestyskriteeriByJono(oid),
-                JarjestyskriteeriDTO.class);
+    public List<JarjestyskriteeriDTO> findJarjestyskriteeri(@ApiParam(value = "Valintatapajonon OID", required = true) @PathParam("oid") String oid) {
+        return modelMapper.mapList(jarjestyskriteeriService.findJarjestyskriteeriByJono(oid), JarjestyskriteeriDTO.class);
     }
 
     @POST
@@ -119,8 +112,7 @@ public class ValintatapajonoResourceImpl {
     @ApiOperation(value = "Hakee valintatapajonoon liitetyt hakijaryhmät valintatapajonon OID:n perusteella")
     public List<HakijaryhmaValintatapajonoDTO> hakijaryhmat(
             @ApiParam(value = "Valintatapajonon OID", required = true) @PathParam("valintatapajonoOid") String valintatapajonoOid) {
-        return modelMapper.mapList(hakijaryhmaValintatapajonoService.findHakijaryhmaByJono(valintatapajonoOid),
-                HakijaryhmaValintatapajonoDTO.class);
+        return modelMapper.mapList(hakijaryhmaValintatapajonoService.findHakijaryhmaByJono(valintatapajonoOid), HakijaryhmaValintatapajonoDTO.class);
     }
 
     @PUT
@@ -130,15 +122,14 @@ public class ValintatapajonoResourceImpl {
     @ApiOperation(value = "Luo valintatapajonolle uuden hakijaryhmän")
     public Response insertHakijaryhma(
             @ApiParam(value = "Valintatapajonon OID, jolle hakijaryhmä lisätään", required = true) @PathParam("valintatapajonoOid") String valintatapajonoOid,
-            @ApiParam(value = "Lisättävä hakijaryhmä", required = true) HakijaryhmaCreateDTO hakijaryhma)  {
-            try {
-                HakijaryhmaDTO lisattava = modelMapper.map(hakijaryhmaValintatapajonoService.lisaaHakijaryhmaValintatapajonolle(valintatapajonoOid, hakijaryhma), HakijaryhmaDTO.class);
-                return Response.status(Response.Status.CREATED).entity(lisattava).build();
-            } catch (Exception e) {
-                LOGGER.error("Error creating hakijaryhma for valintatapajono.", e);
-                return Response.status(Response.Status.BAD_REQUEST).build();
-            }
-
+            @ApiParam(value = "Lisättävä hakijaryhmä", required = true) HakijaryhmaCreateDTO hakijaryhma) {
+        try {
+            HakijaryhmaDTO lisattava = modelMapper.map(hakijaryhmaValintatapajonoService.lisaaHakijaryhmaValintatapajonolle(valintatapajonoOid, hakijaryhma), HakijaryhmaDTO.class);
+            return Response.status(Response.Status.CREATED).entity(lisattava).build();
+        } catch (Exception e) {
+            LOGGER.error("Error creating hakijaryhma for valintatapajono.", e);
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
     }
 
 
@@ -173,10 +164,7 @@ public class ValintatapajonoResourceImpl {
             @ApiParam(value = "Valintatapajonon OID, jolle järjestyskriteeri lisätään", required = true) @PathParam("valintatapajonoOid") String valintatapajonoOid,
             @ApiParam(value = "Järjestyskriteeri ja laskentakaavaviite", required = true) JarjestyskriteeriInsertDTO jk)
             throws IOException, JSONException {
-
-        JarjestyskriteeriDTO insert = modelMapper.map(
-                jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(valintatapajonoOid,
-                        jk.getJarjestyskriteeri(), null, jk.getLaskentakaavaId()), JarjestyskriteeriDTO.class);
+        JarjestyskriteeriDTO insert = modelMapper.map(jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(valintatapajonoOid, jk.getJarjestyskriteeri(), null, jk.getLaskentakaavaId()), JarjestyskriteeriDTO.class);
         return Response.status(Response.Status.ACCEPTED).entity(insert).build();
     }
 
@@ -186,8 +174,7 @@ public class ValintatapajonoResourceImpl {
     @Path("/jarjesta")
     @PreAuthorize(UPDATE_CRUD)
     @ApiOperation(value = "Järjestää valintatapajonot annetun OID-listan mukaan", response = ValintatapajonoDTO.class)
-    public List<ValintatapajonoDTO> jarjesta(
-            @ApiParam(value = "OID-lista jonka mukaiseen järjestykseen valintatapajonot järjestetään", required = true) List<String> oids) {
+    public List<ValintatapajonoDTO> jarjesta(@ApiParam(value = "OID-lista jonka mukaiseen järjestykseen valintatapajonot järjestetään", required = true) List<String> oids) {
         return modelMapper.mapList(valintatapajonoService.jarjestaValintatapajonot(oids), ValintatapajonoDTO.class);
     }
 
@@ -195,8 +182,7 @@ public class ValintatapajonoResourceImpl {
     @Path("/{oid}")
     @PreAuthorize(CRUD)
     @ApiOperation(value = "Poistaa valintatapajonon OID:n perusteella")
-    public Response delete(
-            @ApiParam(value = "Poistettavan valintatapajonon OID", required = true) @PathParam("oid") String oid) {
+    public Response delete(@ApiParam(value = "Poistettavan valintatapajonon OID", required = true) @PathParam("oid") String oid) {
         valintatapajonoService.deleteByOid(oid);
         return Response.status(Response.Status.ACCEPTED).build();
     }

@@ -31,15 +31,11 @@ import fi.vm.sade.service.valintaperusteet.resource.LaskentakaavaResource;
 import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaEiValidiException;
 
-/**
- * User: kwuoti Date: 17.1.2013 Time: 13.54
- */
 @Component
 @Path("laskentakaava")
 @PreAuthorize("isAuthenticated()")
 @Api(value = "/laskentakaava", description = "Resurssi laskentakaavojen ja funktiokutsujen käsittelyyn")
 public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
-
     @Autowired
     private LaskentakaavaService laskentakaavaService;
 
@@ -86,7 +82,7 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
     @ApiOperation(value = "Hakee laskentakaavan ID:n perusteella", response = LaskentakaavaDTO.class)
     public LaskentakaavaDTO kaava(@ApiParam(value = "Laskentakaavan ID", required = true) @PathParam("id") Long id,
                                   @ApiParam(value = "Palautetaanko koko funktiopuu", required = false) @DefaultValue("true") @QueryParam("funktiopuu") Boolean funktiopuu) {
-        if(funktiopuu) {
+        if (funktiopuu) {
             LaskentakaavaDTO mapped = modelMapper.map(laskentakaavaService.haeMallinnettuKaava(id), LaskentakaavaDTO.class);
             return mapped;
         } else {
@@ -109,8 +105,7 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
             @ApiParam(value = "Valintaryhmä OID, jonka kaavoja haetaan") @QueryParam("valintaryhma") String valintaryhmaOid,
             @ApiParam(value = "Hakukohde OID, jonka kaavoja haetaan") @QueryParam("hakukohde") String hakukohdeOid,
             @ApiParam(value = "Haettavien laskentakaavojen tyyppi") @QueryParam("tyyppi") fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi tyyppi) {
-        return modelMapper.mapList(laskentakaavaService.findKaavas(all, valintaryhmaOid, hakukohdeOid, tyyppi),
-                LaskentakaavaListDTO.class);
+        return modelMapper.mapList(laskentakaavaService.findKaavas(all, valintaryhmaOid, hakukohdeOid, tyyppi), LaskentakaavaListDTO.class);
     }
 
     @POST
@@ -156,7 +151,6 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
     public Response insert(
             @ApiParam(value = "Lisättävä laskentakaava", required = true) LaskentakaavaInsertDTO laskentakaava) {
         LaskentakaavaDTO inserted = null;
-
         try {
             inserted = modelMapper.map(laskentakaavaService.insert(laskentakaava.getLaskentakaava(),
                     laskentakaava.getHakukohdeOid(), laskentakaava.getValintaryhmaOid()), LaskentakaavaDTO.class);
@@ -176,7 +170,6 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response siirra(LaskentakaavaSiirraDTO dto) {
-
         Optional<Laskentakaava> siirretty = laskentakaavaService.siirra(dto);
         return siirretty.map(kaava ->
                 Response.status(Response.Status.ACCEPTED).entity(modelMapper.map(kaava, LaskentakaavaDTO.class)).build())
@@ -187,12 +180,10 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
     @Path("/{id}/valintaryhma")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response valintaryhma( @PathParam("id") Long id) {
-
+    public Response valintaryhma(@PathParam("id") Long id) {
         Optional<Valintaryhma> ryhma = laskentakaavaService.valintaryhma(id);
-
         return ryhma.map(r ->
-            Response.status(Response.Status.ACCEPTED).entity(modelMapper.map(r, ValintaryhmaPlainDTO.class)).build()
+                        Response.status(Response.Status.ACCEPTED).entity(modelMapper.map(r, ValintaryhmaPlainDTO.class)).build()
         ).orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
 
@@ -202,7 +193,7 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response poista(@PathParam("id") Long id) {
         boolean poistettu = laskentakaavaService.poista(id);
-        if(poistettu) {
+        if (poistettu) {
             // Kaava poistettu, poistetaan orvot
             actorService.runOnce();
             return Response.status(Response.Status.ACCEPTED).build();

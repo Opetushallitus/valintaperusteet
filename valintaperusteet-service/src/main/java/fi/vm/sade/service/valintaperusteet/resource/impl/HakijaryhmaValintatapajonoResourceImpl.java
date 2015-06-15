@@ -41,10 +41,6 @@ import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaaEiVoiPoistaaException;
 
-/**
- * Created with IntelliJ IDEA. User: jukais Date: 17.1.2013 Time: 14.42 To
- * change this template use File | Settings | File Templates.
- */
 @Component
 @Path("hakijaryhma_valintatapajono")
 @PreAuthorize("isAuthenticated()")
@@ -106,8 +102,7 @@ public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValint
             @ApiParam(value = "Päivitettävän liitoksen OID", required = true) @PathParam("oid") String oid,
             @ApiParam(value = "Liitoksen uudet tiedot", required = true) HakijaryhmaValintatapajonoUpdateDTO jono) {
         try {
-            HakijaryhmaValintatapajonoDTO update = modelMapper.map(hakijaryhmaValintatapajonoService.update(oid, jono),
-                    HakijaryhmaValintatapajonoDTO.class);
+            HakijaryhmaValintatapajonoDTO update = modelMapper.map(hakijaryhmaValintatapajonoService.update(oid, jono), HakijaryhmaValintatapajonoDTO.class);
             return Response.status(Response.Status.ACCEPTED).entity(update).build();
         } catch (HakijaryhmaEiOleOlemassaException e) {
             throw new WebApplicationException(e, Response.Status.NOT_FOUND);

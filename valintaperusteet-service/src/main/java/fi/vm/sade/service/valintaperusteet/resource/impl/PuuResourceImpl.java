@@ -28,17 +28,11 @@ import fi.vm.sade.service.valintaperusteet.resource.PuuResource;
 import fi.vm.sade.service.valintaperusteet.resource.ValintaryhmaResource;
 import fi.vm.sade.service.valintaperusteet.service.PuuService;
 
-/**
- * Created with IntelliJ IDEA. User: kkammone Date: 17.10.2013 Time: 12:58 To
- * change this template use File | Settings | File Templates.
- */
-
 @Component
 @Path("puu")
 @PreAuthorize("isAuthenticated()")
 @Api(value = "/puu", description = "Resurssi valintaperustepuun hakemiseen")
 public class PuuResourceImpl implements PuuResource {
-
     @Autowired
     private PuuService puuService;
 
@@ -49,10 +43,10 @@ public class PuuResourceImpl implements PuuResource {
     @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Hakee valintaperustepuun annettujen parametrien perusteella", response = ValintaperustePuuDTO.class)
     public List<ValintaperustePuuDTO> search(@ApiParam(value = "Hakulauseke") @QueryParam("q") String searchString,
-            @ApiParam(value = "Haun OID") @QueryParam("hakuOid") String hakuOid,
-            @ApiParam(value = "Tila") @QueryParam("tila") List<String> tila,
-            @ApiParam(value = "Hakukohteet") @QueryParam("hakukohteet") @DefaultValue("true") boolean hakukohteet, @QueryParam("kohdejoukko") @DefaultValue("") String kohdejoukko,
-            @QueryParam("valintaryhma") @DefaultValue("") String valintaryhma) {
+                                             @ApiParam(value = "Haun OID") @QueryParam("hakuOid") String hakuOid,
+                                             @ApiParam(value = "Tila") @QueryParam("tila") List<String> tila,
+                                             @ApiParam(value = "Hakukohteet") @QueryParam("hakukohteet") @DefaultValue("true") boolean hakukohteet, @QueryParam("kohdejoukko") @DefaultValue("") String kohdejoukko,
+                                             @QueryParam("valintaryhma") @DefaultValue("") String valintaryhma) {
         return puuService.search(hakuOid, tila, searchString, hakukohteet, kohdejoukko, valintaryhma);
     }
 }

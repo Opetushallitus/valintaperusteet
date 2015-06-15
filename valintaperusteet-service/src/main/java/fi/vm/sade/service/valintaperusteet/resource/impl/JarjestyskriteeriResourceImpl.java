@@ -36,10 +36,6 @@ import fi.vm.sade.service.valintaperusteet.service.exception.JarjestyskriteeriEi
 import fi.vm.sade.service.valintaperusteet.service.exception.JarjestyskriteeriaEiVoiPoistaaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaOidTyhjaException;
 
-/**
- * Created with IntelliJ IDEA. User: jukais Date: 31.1.2013 Time: 10.51 To
- * change this template use File | Settings | File Templates.
- */
 @Component
 @Path("jarjestyskriteeri")
 @PreAuthorize("isAuthenticated()")
@@ -76,9 +72,7 @@ public class JarjestyskriteeriResourceImpl implements JarjestyskriteeriResource 
             @ApiParam(value = "OID", required = true) @PathParam("oid") String oid,
             @ApiParam(value = "Järjestyskriteerin uudet tiedot ja laskentakaava", required = true) JarjestyskriteeriInsertDTO jk) {
         try {
-            JarjestyskriteeriDTO update = modelMapper.map(
-                    jarjestyskriteeriService.update(oid, jk.getJarjestyskriteeri(), jk.getLaskentakaavaId()),
-                    JarjestyskriteeriDTO.class);
+            JarjestyskriteeriDTO update = modelMapper.map(jarjestyskriteeriService.update(oid, jk.getJarjestyskriteeri(), jk.getLaskentakaavaId()), JarjestyskriteeriDTO.class);
             return Response.status(Response.Status.ACCEPTED).entity(update).build();
         } catch (LaskentakaavaOidTyhjaException e) {
             throw new WebApplicationException(e, Response.Status.BAD_REQUEST);
