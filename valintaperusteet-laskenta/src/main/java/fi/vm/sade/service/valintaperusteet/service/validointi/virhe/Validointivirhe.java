@@ -2,39 +2,34 @@ package fi.vm.sade.service.valintaperusteet.service.validointi.virhe;
 
 import fi.vm.sade.service.valintaperusteet.model.Abstraktivalidointivirhe;
 
-/**
- * User: kwuoti Date: 30.1.2013 Time: 12.49
- */
 public class Validointivirhe extends Abstraktivalidointivirhe {
+    private Virhetyyppi virhetyyppi;
 
-	private Virhetyyppi virhetyyppi;
+    private String virheviesti;
 
-	private String virheviesti;
+    public Validointivirhe(Virhetyyppi virhetyyppi, String virheviesti) {
+        this.virhetyyppi = virhetyyppi;
+        this.virheviesti = virheviesti;
+    }
 
-	public Validointivirhe(Virhetyyppi virhetyyppi, String virheviesti) {
-		this.virhetyyppi = virhetyyppi;
-		this.virheviesti = virheviesti;
-	}
+    public Virhetyyppi getVirhetyyppi() {
+        return virhetyyppi;
+    }
 
-	public Virhetyyppi getVirhetyyppi() {
-		return virhetyyppi;
-	}
+    public void setVirhetyyppi(Virhetyyppi virhetyyppi) {
+        this.virhetyyppi = virhetyyppi;
+    }
 
-	public void setVirhetyyppi(Virhetyyppi virhetyyppi) {
-		this.virhetyyppi = virhetyyppi;
-	}
+    public String getVirheviesti() {
+        return virheviesti;
+    }
 
-	public String getVirheviesti() {
-		return virheviesti;
-	}
+    public void setVirheviesti(String virheviesti) {
+        this.virheviesti = virheviesti;
+    }
 
-	public void setVirheviesti(String virheviesti) {
-		this.virheviesti = virheviesti;
-	}
-
-	@Override
-	public String toString() {
-		return new StringBuilder().append(virhetyyppi).append(" ")
-				.append(virheviesti).toString();
-	}
+    @Override
+    public String toString() {
+        return new StringBuilder().append(virhetyyppi).append(" ").append(virheviesti).toString();
+    }
 }

@@ -9,13 +9,11 @@ import java.util.Collection;
 
 public class LaskentaServiceImpl implements LaskentaService {
 
-    public Laskentatulos<BigDecimal> suoritaValintalaskenta(Hakukohde hakukohde, Hakemus hakemus,
-                                                            Collection<Hakemus> kaikkiHakemukset, Lukuarvofunktio laskettava) {
+    public Laskentatulos<BigDecimal> suoritaValintalaskenta(Hakukohde hakukohde, Hakemus hakemus, Collection<Hakemus> kaikkiHakemukset, Lukuarvofunktio laskettava) {
         return Laskin.suoritaValintalaskenta(hakukohde, hakemus, kaikkiHakemukset, laskettava);
     }
 
-    public Laskentatulos<Boolean> suoritaValintalaskenta(Hakukohde hakukohde, Hakemus hakemus,
-                                                            Collection<Hakemus> kaikkiHakemukset, Totuusarvofunktio laskettava) {
+    public Laskentatulos<Boolean> suoritaValintalaskenta(Hakukohde hakukohde, Hakemus hakemus, Collection<Hakemus> kaikkiHakemukset, Totuusarvofunktio laskettava) {
         return Laskin.suoritaValintalaskenta(hakukohde, hakemus, kaikkiHakemukset, laskettava);
     }
 
