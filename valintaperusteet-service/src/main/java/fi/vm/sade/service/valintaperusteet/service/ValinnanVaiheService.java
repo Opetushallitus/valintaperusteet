@@ -7,9 +7,6 @@ import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 
 import java.util.List;
 
-/**
- * User: tommiha Date: 1/22/13 Time: 2:27 PM
- */
 public interface ValinnanVaiheService {
     ValinnanVaihe readByOid(String oid);
 
@@ -17,11 +14,9 @@ public interface ValinnanVaiheService {
 
     List<ValinnanVaihe> findByValintaryhma(String oid);
 
-    ValinnanVaihe lisaaValinnanVaiheValintaryhmalle(String valintaryhmaOid, ValinnanVaiheCreateDTO valinnanVaihe,
-                                                    String edellinenValinnanVaiheOid);
+    ValinnanVaihe lisaaValinnanVaiheValintaryhmalle(String valintaryhmaOid, ValinnanVaiheCreateDTO valinnanVaihe, String edellinenValinnanVaiheOid);
 
-    ValinnanVaihe lisaaValinnanVaiheHakukohteelle(String hakukohdeOid, ValinnanVaiheCreateDTO valinnanVaihe,
-                                                  String edellinenValinnanVaiheOid);
+    ValinnanVaihe lisaaValinnanVaiheHakukohteelle(String hakukohdeOid, ValinnanVaiheCreateDTO valinnanVaihe, String edellinenValinnanVaiheOid);
 
     void deleteByOid(String oid);
 

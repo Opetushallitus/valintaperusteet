@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface HakijaryhmaService {
-
     void deleteByOid(String oid, boolean skipInheritedCheck);
 
     List<Hakijaryhma> findByHakukohde(String oid);
@@ -27,14 +26,6 @@ public interface HakijaryhmaService {
     void liitaHakijaryhmaValintatapajonolle(String valintatapajonoOid, String hakijaryhmaOid);
 
     Hakijaryhma lisaaHakijaryhmaValintaryhmalle(String valintaryhmaOid, HakijaryhmaCreateDTO hakijaryhma);
-
-//    Hakijaryhma lisaaHakijaryhmaHakukohteelle(String hakukohdeOid, HakijaryhmaCreateDTO hakijaryhma);
-
-//    List<Hakijaryhma> jarjestaHakijaryhmat(List<String> oids);
-//
-//    void kopioiHakijaryhmatParentilta(Valintaryhma inserted, Valintaryhma parent);
-//
-//    void kopioiHakijaryhmatParentilta(HakukohdeViite inserted, Valintaryhma parent);
 
     Hakijaryhma insert(Hakijaryhma entity);
 

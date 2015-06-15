@@ -10,11 +10,7 @@ import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuMuodostaaSilmukanException;
 
-/**
- * User: kwuoti Date: 21.1.2013 Time: 9.34
- */
 public interface LaskentakaavaService {
-
     List<ValintaperusteDTO> findAvaimetForHakukohde(String hakukohdeOid);
 
     HakukohteenValintaperusteAvaimetDTO findHakukohteenAvaimet(String oid);
@@ -25,9 +21,7 @@ public interface LaskentakaavaService {
 
     boolean onkoKaavaValidi(Laskentakaava laskentakaava);
 
-    List<Laskentakaava> findKaavas(boolean all, String valintaryhmaOid, String hakukohdeOid,
-            fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi tyyppi);
-
+    List<Laskentakaava> findKaavas(boolean all, String valintaryhmaOid, String hakukohdeOid, fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi tyyppi);
 
     Laskentakaava haeLaskettavaKaava(Long id, Laskentamoodi laskentamoodi);
 

@@ -29,5 +29,6 @@ public interface ValintatapajonoService {
     void delete(Valintatapajono valintatapajono);
 
     Boolean readAutomaattinenSijoitteluunSiirto(String oid);
+
     Boolean updateAutomaattinenSijoitteluunSiirto(String oid, Boolean value);
 }

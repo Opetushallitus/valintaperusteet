@@ -5,11 +5,6 @@ import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 
 import java.util.List;
 
-/**
- * User: kkammone
- * Date: 14.1.2013
- * Time: 9:15
- */
 public interface ValintaryhmaService {
     List<Valintaryhma> findValintaryhmasByParentOid(String oid);
 
