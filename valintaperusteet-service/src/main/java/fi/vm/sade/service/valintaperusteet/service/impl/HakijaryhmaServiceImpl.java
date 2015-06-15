@@ -18,15 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
-/**
- * User: jukais
- * Date: 1.10.2013
- * Time: 16.23
- */
 @Service
 @Transactional
 public class HakijaryhmaServiceImpl implements HakijaryhmaService {
-
     @Autowired
     private HakijaryhmaDAO hakijaryhmaDAO;
 
@@ -86,6 +80,7 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
         List<HakijaryhmaValintatapajono> jarjestetty = LinkitettavaJaKopioitavaUtil.jarjesta(byHakukohde);
         return jarjestetty.stream().map(HakijaryhmaValintatapajono::getHakijaryhma).collect(Collectors.toList());
     }
+
     @Override
     public List<Hakijaryhma> findByHakukohteet(Collection<String> hakukohdeOids) {
         List<HakijaryhmaValintatapajono> byHakukohde = hakijaryhmaValintatapajonoDAO.findByHakukohteet(hakukohdeOids);
@@ -111,26 +106,18 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
 
     @Override
     public void liitaHakijaryhmaValintatapajonolle(String valintatapajonoOid, String hakijaryhmaOid) {
-
         hakijaryhmaValintatapajonoService.liitaHakijaryhmaValintatapajonolle(valintatapajonoOid, hakijaryhmaOid);
-
-
     }
 
     private void kopioHakijaryhmat(Valintatapajono valintatapajono, Hakijaryhma hakijaryhma, HakijaryhmaValintatapajono master) {
         for (Valintatapajono kopio : valintatapajono.getKopiot()) {
-
             HakukohdeViite kopioHakukohdeViite = kopio.getValinnanVaihe().getHakukohdeViite();
             Valintaryhma kopioValintaryhma = kopio.getValinnanVaihe().getValintaryhma();
-
             if (kopioHakukohdeViite == null && kopioValintaryhma == null) {
                 throw new ValinnanvaiheellaEiOleHakukohdettaTaiValintaryhmaaException("");
             }
-
             HakijaryhmaValintatapajono kopioLink = new HakijaryhmaValintatapajono();
-
             for (HakijaryhmaValintatapajono hrKopio : master.getKopiot()) {
-
                 if (kopioValintaryhma != null && hrKopio.getHakijaryhma().getValintaryhma() != null
                         && hrKopio.getHakijaryhma().getValintaryhma().getOid().equals(kopioValintaryhma.getOid())) {
                     kopioLink.setHakijaryhma(hrKopio.getHakijaryhma());
@@ -138,26 +125,20 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
                         && hrKopio.getHakukohdeViite().getOid().equals(kopioHakukohdeViite.getOid())) {
                     kopioLink.setHakijaryhma(hrKopio.getHakijaryhma());
                 }
-
             }
-
-
             if (hakijaryhmaValintatapajonoDAO.readByOid(kopioLink.getHakijaryhma().getOid() + "_" + kopio.getOid()) != null) {
                 // Hakijaryhma on jo liitetty aikaisemmin lapselle..
                 continue;
             }
-
             if (kopioLink.getHakijaryhma() == null) {
                 throw new HakijaryhmanKopiotaEiLoytynytException("");
             }
-
             kopioLink.setValintatapajono(kopio);
             kopioLink.setOid(kopioLink.getHakijaryhma().getOid() + "_" + kopio.getOid());
             kopioLink.setAktiivinen(true);
             kopioLink.setMaster(master);
             kopioLink.setKiintio(master.getKiintio());
             kopioLink = hakijaryhmaValintatapajonoDAO.insert(kopioLink);
-
             kopioHakijaryhmat(kopio, kopioLink.getHakijaryhma(), kopioLink);
         }
     }
@@ -168,7 +149,6 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
         if (valintaryhma == null) {
             throw new ValintaryhmaEiOleOlemassaException("Valintaryhmää (" + valintaryhmaOid + ") ei ole olemassa");
         }
-
         Hakijaryhma hakijaryhma = modelMapper.map(dto, Hakijaryhma.class);
         hakijaryhma.setOid(oidService.haeHakijaryhmaOid());
         hakijaryhma.setValintaryhma(valintaryhma);
@@ -176,21 +156,16 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
         hakijaryhma.setTarkkaKiintio(dto.isTarkkaKiintio());
         hakijaryhma.setKaytetaanRyhmaanKuuluvia(dto.isKaytetaanRyhmaanKuuluvia());
         hakijaryhma.setLaskentakaava(laskentakaavaService.haeMallinnettuKaava(hakijaryhma.getLaskentakaavaId()));
-
         Hakijaryhma lisatty = hakijaryhmaDAO.insert(hakijaryhma);
-
         List<Valintaryhma> alaValintaryhmat = valintaryhmaService.findValintaryhmasByParentOid(valintaryhmaOid);
         for (Valintaryhma alavalintaryhma : alaValintaryhmat) {
             lisaaValintaryhmalleKopioMasterHakijaryhmasta(alavalintaryhma, lisatty);
         }
-
         return lisatty;
     }
 
 
-    private void lisaaValintaryhmalleKopioMasterHakijaryhmasta(Valintaryhma valintaryhma,
-                                                               Hakijaryhma masterHakijaryhma) {
-
+    private void lisaaValintaryhmalleKopioMasterHakijaryhmasta(Valintaryhma valintaryhma, Hakijaryhma masterHakijaryhma) {
         Hakijaryhma kopio = new Hakijaryhma();
         kopio.setValintaryhma(valintaryhma);
         kopio.setOid(oidService.haeHakijaryhmaOid());
@@ -201,29 +176,23 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
         kopio.setNimi(masterHakijaryhma.getNimi());
         kopio.setTarkkaKiintio(masterHakijaryhma.isTarkkaKiintio());
         kopio.setKaytetaanRyhmaanKuuluvia(masterHakijaryhma.isKaytetaanRyhmaanKuuluvia());
-
         Hakijaryhma lisatty = hakijaryhmaDAO.insert(kopio);
-
         List<Valintaryhma> alavalintaryhmat = valintaryhmaService.findValintaryhmasByParentOid(valintaryhma.getOid());
         for (Valintaryhma alavalintaryhma : alavalintaryhmat) {
             lisaaValintaryhmalleKopioMasterHakijaryhmasta(alavalintaryhma, lisatty);
         }
-
     }
 
     @Override
     public Hakijaryhma update(String oid, HakijaryhmaCreateDTO dto) {
         Hakijaryhma managedObject = haeHakijaryhma(oid);
-        //Hakijaryhma entity = modelMapper.map(dto, Hakijaryhma.class);
         managedObject.setKaytaKaikki(dto.isKaytaKaikki());
         managedObject.setKiintio(dto.getKiintio());
         managedObject.setKuvaus(dto.getKuvaus());
         managedObject.setNimi(dto.getNimi());
         managedObject.setTarkkaKiintio(dto.isTarkkaKiintio());
         managedObject.setKaytetaanRyhmaanKuuluvia(dto.isKaytetaanRyhmaanKuuluvia());
-
         managedObject.setLaskentakaava(laskentakaavaService.haeMallinnettuKaava(dto.getLaskentakaavaId()));
-
         hakijaryhmaDAO.update(managedObject);
 //        return LinkitettavaJaKopioitavaUtil.paivita(managedObject, entity, kopioija);
         return managedObject;
@@ -231,16 +200,13 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
 
     @Override
     public Optional<Hakijaryhma> siirra(HakijaryhmaSiirraDTO dto) {
-        if(dto.getUusinimi() != null) {
+        if (dto.getUusinimi() != null) {
             dto.setNimi(dto.getUusinimi());
         }
-
         Optional<Valintaryhma> ryhma = Optional.ofNullable(valintaryhmaService.readByOid(dto.getValintaryhmaOid()));
-
-        if(!ryhma.isPresent()) {
+        if (!ryhma.isPresent()) {
             return Optional.empty();
         }
-
         return Optional.ofNullable(lisaaHakijaryhmaValintaryhmalle(ryhma.get().getOid(), dto));
     }
 
@@ -252,7 +218,6 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
 
     @Override
     public void delete(Hakijaryhma entity) {
-
         hakijaryhmaDAO.remove(entity);
     }
 
@@ -260,12 +225,10 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
         for (HakijaryhmaValintatapajono hakijaryhma : entity.getKopiot()) {
             deleteHakijaryhmaValintatajono(hakijaryhma);
         }
-
         if (entity.getSeuraava() != null) {
             HakijaryhmaValintatapajono seuraava = entity.getSeuraava();
             seuraava.setEdellinen(entity.getEdellinen());
         }
-
         hakijaryhmaValintatapajonoDAO.remove(entity);
     }
 }

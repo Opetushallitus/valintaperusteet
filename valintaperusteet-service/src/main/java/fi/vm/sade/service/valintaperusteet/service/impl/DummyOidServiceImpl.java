@@ -6,13 +6,8 @@ import org.springframework.stereotype.Service;
 import java.util.Random;
 
 /**
- * User: kwuoti
- * Date: 8.2.2013
- * Time: 10.32
- *
  * Tilapäinen OID-palvelu kehitykseen.
  */
-
 @Service
 public class DummyOidServiceImpl implements OidService {
     private static Random random = new Random();
@@ -52,5 +47,7 @@ public class DummyOidServiceImpl implements OidService {
     }
 
     @Override
-    public String haeValintatapajonoHakijaryhmaOid() { return generoiOid(); }
+    public String haeValintatapajonoHakijaryhmaOid() {
+        return generoiOid();
+    }
 }
