@@ -47,11 +47,6 @@ import fi.vm.sade.service.valintaperusteet.service.validointi.virhe.Laskentakaav
 import fi.vm.sade.service.valintaperusteet.dto.model.{Funktionimi, Valintaperustelahde}
 import scala.collection.JavaConversions
 
-/**
- * User: kwuoti
- * Date: 21.1.2013
- * Time: 12.12
- */
 object Laskentadomainkonvertteri {
 
   private val YO = "YO"

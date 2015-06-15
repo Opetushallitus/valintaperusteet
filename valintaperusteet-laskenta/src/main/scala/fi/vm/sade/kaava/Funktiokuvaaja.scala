@@ -5,11 +5,6 @@ import play.api.libs.json.{JsArray, Json}
 import scala.Predef._
 import scala.Some
 
-/**
- * User: kwuoti
- * Date: 16.1.2013
- * Time: 15.25
- */
 object Funktiokuvaaja {
 
   object Funktiotyyppi extends Enumeration {

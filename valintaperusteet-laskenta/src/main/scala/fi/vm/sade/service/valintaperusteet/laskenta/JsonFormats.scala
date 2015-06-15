@@ -16,13 +16,6 @@ import play.api.libs.json._
 import scala.util.Try
 import java.math.{BigDecimal => JBigDecimal}
 
-/**
- * Created with IntelliJ IDEA.
- * User: kjsaila
- * Date: 08/11/13
- * Time: 08:07
- * To change this template use File | Settings | File Templates.
- */
 object JsonFormats {
   import JsonHelpers.enumFormat
   import JsonHelpers.arrayMapWrites

@@ -8,11 +8,6 @@ import fi.vm.sade.service.valintaperusteet.dto.model.{Funktionimi, Funktiotyyppi
 import java.math.BigDecimal
 import scala.Some
 
-/**
- * User: kwuoti
- * Date: 31.1.2013
- * Time: 9.32
- */
 object Laskentakaavavalidaattori {
 
   import scala.collection.JavaConversions._

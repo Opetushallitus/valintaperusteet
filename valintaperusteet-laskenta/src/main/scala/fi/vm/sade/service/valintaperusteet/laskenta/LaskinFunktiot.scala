@@ -11,13 +11,6 @@ import scala.util.Try
 import scala.collection.JavaConversions
 import fi.vm.sade.service.valintaperusteet.model.TekstiRyhma
 
-/**
- * Created with IntelliJ IDEA.
- * User: kjsaila
- * Date: 06/11/13
- * Time: 16:26
- * To change this template use File | Settings | File Templates.
- */
 trait LaskinFunktiot {
 
   val pattern = """\{\{([A-Za-z\d\-_]+)\.([A-Za-z\d\-_]+)\}\}""".r

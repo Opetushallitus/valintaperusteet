@@ -1,8 +1,5 @@
 package fi.vm.sade.kaava
 
-/**
- * Created by kjsaila on 17/03/14.
- */
 object Arvojoukot {
 
   val EI_KOOSTETUT = Array(

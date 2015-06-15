@@ -10,12 +10,6 @@ import fi.vm.sade.service.valintaperusteet.model.{LokalisoituTeksti, TekstiRyhma
 import scala.collection.JavaConversions
 import java.util
 
-/**
- *
- * User: tommiha
- * Date: 1/12/13
- * Time: 12:56 PM
- */
 object Laskenta {
 
   trait Valintaperuste {
