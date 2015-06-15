@@ -10,9 +10,6 @@ import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
 import fi.vm.sade.service.valintaperusteet.model.FunktionArgumentti;
 import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
 
-/**
- * Created with IntelliJ IDEA. User: kkammone Date: 4.3.2013 Time: 14:26
- */
 public class PkPohjaiset {
 
     private PkPohjaiset() {
@@ -27,9 +24,9 @@ public class PkPohjaiset {
     public static final String kansanopistonLukuvuodenMittainenLinjaAmmatilliseenPeruskoulutukseen = "LISAKOULUTUS_KANSANOPISTO";
     public static final String koulutuspaikkaAmmatilliseenTutkintoon = "KOULUTUSPAIKKA_AMMATILLISEEN_TUTKINTOON";
 
-    public static final String[] lisapistekoulutus = { kymppiluokka, vammaistenValmentavaJaKuntouttavaOpetusJaOhjaus,
+    public static final String[] lisapistekoulutus = {kymppiluokka, vammaistenValmentavaJaKuntouttavaOpetusJaOhjaus,
             maahanmuuttajienAmmatilliseenPeruskoulutukseenValmistavaKoulutus, talouskoulu, ammattistartti,
-            kansanopistonLukuvuodenMittainenLinjaAmmatilliseenPeruskoulutukseen };
+            kansanopistonLukuvuodenMittainenLinjaAmmatilliseenPeruskoulutukseen};
 
     // Pohjakoulutus
     public static final String pohjakoulutusAvain = "POHJAKOULUTUS";
@@ -42,13 +39,13 @@ public class PkPohjaiset {
     public static final String oppivelvollisuudenSuorittaminenKeskeytynyt = "7";
     public static final String lukionPaattotodistus = "9";
 
-    public static final String[] pohjakoulutusPeruskoulutus = { perusopetuksenOppimaara,
+    public static final String[] pohjakoulutusPeruskoulutus = {perusopetuksenOppimaara,
             perusopetuksenErityisopetuksenOsittainYksilollistettyOppimaara,
             perusopetuksenErityisopetuksenYksilollistettyOppimaaraOpetusJarjestettyToimintaalueittain,
-            perusopetuksenPaaosinTaiKokonaanYksilollistettyOppimaara };
+            perusopetuksenPaaosinTaiKokonaanYksilollistettyOppimaara};
 
-    public static final String[] pohjakoulutusMuut = { oppivelvollisuudenSuorittaminenKeskeytynyt,
-            lukionPaattotodistus, ulkomaillaSuoritettuKoulutus };
+    public static final String[] pohjakoulutusMuut = {oppivelvollisuudenSuorittaminenKeskeytynyt,
+            lukionPaattotodistus, ulkomaillaSuoritettuKoulutus};
 
     // Onko todistuksen saantivuosi sama kuin hakuvuosi
     public static final String todistuksenSaantivuosi = "PK_PAATTOTODISTUSVUOSI";
@@ -56,33 +53,18 @@ public class PkPohjaiset {
     public static final int kuluvaVuosi = 2014;
 
     public static Laskentakaava luoPohjakoulutuspisteytysmalli() {
-
-        // Pohjakoulutus -->
-
         List<Funktiokutsu> vertailut = new ArrayList<Funktiokutsu>();
         for (String arvo : pohjakoulutusPeruskoulutus) {
             vertailut.add(GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(
                     GenericHelper.luoValintaperusteViite(pohjakoulutusAvain, false, Valintaperustelahde.HAETTAVA_ARVO),
                     arvo, false));
         }
-
-        Funktiokutsu pohjakoulutusOnPeruskoulutus = GenericHelper.luoTai(vertailut
-                .toArray(new FunktionArgumentti[vertailut.size()]));
-
-        // <---
-
+        Funktiokutsu pohjakoulutusOnPeruskoulutus = GenericHelper.luoTai(vertailut.toArray(new FunktionArgumentti[vertailut.size()]));
         // Todistuksen saantivuosi -->
         Funktiokutsu haeTodistuksenSaantivuosi = GenericHelper.luoHaeLukuarvo(
-                GenericHelper.luoValintaperusteViite(todistuksenSaantivuosi, false, Valintaperustelahde.HAETTAVA_ARVO),
-                -1);
-
-        Funktiokutsu todistuksenSaantivuosiOnSamaKuinKuluvavuosi = GenericHelper.luoYhtasuuri(
-                GenericHelper.luoLukuarvo(kuluvaVuosi), haeTodistuksenSaantivuosi);
-        // <---
-
-        Funktiokutsu ja = GenericHelper
-                .luoJa(pohjakoulutusOnPeruskoulutus, todistuksenSaantivuosiOnSamaKuinKuluvavuosi);
-
+                GenericHelper.luoValintaperusteViite(todistuksenSaantivuosi, false, Valintaperustelahde.HAETTAVA_ARVO), -1);
+        Funktiokutsu todistuksenSaantivuosiOnSamaKuinKuluvavuosi = GenericHelper.luoYhtasuuri(GenericHelper.luoLukuarvo(kuluvaVuosi), haeTodistuksenSaantivuosi);
+        Funktiokutsu ja = GenericHelper.luoJa(pohjakoulutusOnPeruskoulutus, todistuksenSaantivuosiOnSamaKuinKuluvavuosi);
         List<Funktiokutsu> args = new ArrayList<Funktiokutsu>();
         args.add(ja);
         // Lisäpistekoulutus -->
@@ -90,20 +72,14 @@ public class PkPohjaiset {
             args.add(GenericHelper.luoHaeTotuusarvo(
                     GenericHelper.luoValintaperusteViite(tunniste, false, Valintaperustelahde.HAETTAVA_ARVO), false));
         }
-        // <---
-
         Funktiokutsu tai = GenericHelper.luoTai(args.toArray(new FunktionArgumentti[args.size()]));
-
         Funktiokutsu thenHaara = GenericHelper.luoLukuarvo(6.0);
         Funktiokutsu elseHaara = GenericHelper.luoLukuarvo(0.0);
-
         Funktiokutsu jos = GenericHelper.luoJosFunktio(tai, thenHaara, elseHaara);
-
         jos.setTallennaTulos(true);
         jos.setTulosTunniste("pohjakoulutus");
         jos.setTulosTekstiFi("Perusopetuksen tai lisäkoulutuksen suorittaminen");
         jos.setTulosTekstiSv("Genomfört grundläggande utbildning eller tilläggsutbildning");
-
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(jos, "Pohjakoulutuspisteytys, 2 aste, pk");
     }
 
@@ -112,12 +88,10 @@ public class PkPohjaiset {
             Laskentakaava pohjakoulutuspisteytysmalli, Laskentakaava ilmanKoulutuspaikkaaPisteytysmalli,
             Laskentakaava hakutoivejarjestyspisteytysmalli, Laskentakaava tyokokemuspisteytysmalli,
             Laskentakaava sukupuolipisteytysmalli, Laskentakaava urheilijanLisapiste) {
-
         Funktiokutsu summa = GenericHelper.luoSumma(painotettavatKeskiarvotLaskentakaava,
                 yleinenkoulumenestyspisteytysmalli, pohjakoulutuspisteytysmalli, ilmanKoulutuspaikkaaPisteytysmalli,
                 hakutoivejarjestyspisteytysmalli, tyokokemuspisteytysmalli, sukupuolipisteytysmalli,
                 urheilijanLisapiste);
-
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(summa, "2. asteen peruskoulupohjainen peruskaava");
     }
 
@@ -126,46 +100,33 @@ public class PkPohjaiset {
         Funktiokutsu elseHaara = GenericHelper.luoLukuarvo(0.0);
         Funktiokutsu ehto = GenericHelper.luoEi(GenericHelper.luoHaeTotuusarvo(GenericHelper.luoValintaperusteViite(
                 koulutuspaikkaAmmatilliseenTutkintoon, false, Valintaperustelahde.HAETTAVA_ARVO), false));
-
         Funktiokutsu jos = GenericHelper.luoJosFunktio(ehto, thenHaara, elseHaara);
-
         jos.setTallennaTulos(true);
         jos.setTulosTunniste("ilmanopiskelupaikkaa");
         jos.setTulosTekstiFi("Ilman opiskelupaikkaa");
         jos.setTulosTekstiSv("Utan utbildningsplats");
-
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(jos, "Ilman koulutuspaikkaa -pisteytys, 2 aste, pk");
     }
 
     public static Laskentakaava luoPainotettavatKeskiarvotLaskentakaavaIlmanKonvertteria(PkAineet pkAineet) {
-
-        Laskentakaava[] args = new Laskentakaava[] { pkAineet.getLaskentakaava(Aineet.kuvataide),
+        Laskentakaava[] args = new Laskentakaava[]{pkAineet.getLaskentakaava(Aineet.kuvataide),
                 pkAineet.getLaskentakaava(Aineet.musiikki), pkAineet.getLaskentakaava(PkAineet.kasityo),
-                pkAineet.getLaskentakaava(PkAineet.kotitalous), pkAineet.getLaskentakaava(Aineet.liikunta) };
-
+                pkAineet.getLaskentakaava(PkAineet.kotitalous), pkAineet.getLaskentakaava(Aineet.liikunta)};
         Funktiokutsu kolmeParasta = GenericHelper.nParastaKeskiarvo(3, args);
-
         kolmeParasta.setTallennaTulos(true);
         kolmeParasta.setTulosTunniste("painotettavat_ka");
         kolmeParasta.setTulosTekstiFi("Painotettavien arvosanojen keskiarvo");
         kolmeParasta.setTulosTekstiSv("Medeltalet av betonade vitsord");
-
-
-
-        Laskentakaava laskentakaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(kolmeParasta,
-                "Painotettavien arvosanojen keskiarvo");
+        Laskentakaava laskentakaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(kolmeParasta, "Painotettavien arvosanojen keskiarvo");
         return laskentakaava;
     }
 
     public static Laskentakaava luoPainotettavatKeskiarvotLaskentakaava(Laskentakaava keskiarvot) {
-
         Funktiokutsu konvertteri = new Funktiokutsu();
         konvertteri.setFunktionimi(Funktionimi.KONVERTOILUKUARVO);
-
         Funktioargumentti funk = new Funktioargumentti();
         funk.setFunktiokutsuChild(keskiarvot.getFunktiokutsu());
         funk.setIndeksi(1);
-
         konvertteri.getFunktioargumentit().add(funk);
         konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(0.0, 6.0, 0));
         konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(6.0, 6.5, 1));
@@ -176,19 +137,16 @@ public class PkPohjaiset {
         konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(8.5, 9.0, 6));
         konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(9.0, 9.5, 7));
         konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(9.5, 10.1, 8));
-
         konvertteri.setTallennaTulos(true);
         konvertteri.setTulosTunniste("painotettavat_arvosanat");
         konvertteri.setTulosTekstiFi("Painotettavat arvosanat");
         konvertteri.setTulosTekstiSv("Betonade vitsord");
-
-        Laskentakaava laskentakaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(konvertteri,
-                "Painotettavat arvosanat pisteytysmalli, PK");
+        Laskentakaava laskentakaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(konvertteri, "Painotettavat arvosanat pisteytysmalli, PK");
         return laskentakaava;
     }
 
     public static Laskentakaava luoPKPohjaisenKoulutuksenKaikkienAineidenKeskiarvo(PkAineet pkAineet) {
-        Laskentakaava[] args = new Laskentakaava[] { pkAineet.getLaskentakaava(Aineet.aidinkieliJaKirjallisuus1),
+        Laskentakaava[] args = new Laskentakaava[]{pkAineet.getLaskentakaava(Aineet.aidinkieliJaKirjallisuus1),
                 pkAineet.getLaskentakaava(Aineet.aidinkieliJaKirjallisuus2),
                 pkAineet.getLaskentakaava(Aineet.historia), pkAineet.getLaskentakaava(Aineet.yhteiskuntaoppi),
                 pkAineet.getLaskentakaava(Aineet.matematiikka), pkAineet.getLaskentakaava(Aineet.fysiikka),
@@ -203,18 +161,13 @@ public class PkPohjaiset {
                 pkAineet.getLaskentakaava(Aineet.b1Kieli), pkAineet.getLaskentakaava(Aineet.b21Kieli),
                 pkAineet.getLaskentakaava(Aineet.b22Kieli), pkAineet.getLaskentakaava(Aineet.b23Kieli),
                 pkAineet.getLaskentakaava(Aineet.b31Kieli), pkAineet.getLaskentakaava(Aineet.b32Kieli),
-                pkAineet.getLaskentakaava(Aineet.b33Kieli) };
-
+                pkAineet.getLaskentakaava(Aineet.b33Kieli)};
         Funktiokutsu keskiarvo = GenericHelper.luoKeskiarvo(args);
-
         keskiarvo.setTallennaTulos(true);
         keskiarvo.setTulosTunniste("keskiarvo_pk");
         keskiarvo.setTulosTekstiFi("Kaikkien aineiden keskiarvo");
         keskiarvo.setTulosTekstiSv("Medeltalet av alla ämnen");
-
-        Laskentakaava laskentakaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(keskiarvo,
-                "Kaikkien aineiden keskiarvo, PK");
+        Laskentakaava laskentakaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(keskiarvo, "Kaikkien aineiden keskiarvo, PK");
         return laskentakaava;
     }
-
 }
