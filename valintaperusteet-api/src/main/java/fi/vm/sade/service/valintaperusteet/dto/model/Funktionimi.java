@@ -4,11 +4,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * User: kwuoti
- * Date: 18.1.2013
- * Time: 9.12
- */
 public enum Funktionimi {
     LUKUARVO(Funktiotyyppi.LUKUARVOFUNKTIO, Laskentamoodi.VALINTAKOELASKENTA, Laskentamoodi.VALINTALASKENTA),
     TOTUUSARVO(Funktiotyyppi.TOTUUSARVOFUNKTIO, Laskentamoodi.VALINTAKOELASKENTA, Laskentamoodi.VALINTALASKENTA),
