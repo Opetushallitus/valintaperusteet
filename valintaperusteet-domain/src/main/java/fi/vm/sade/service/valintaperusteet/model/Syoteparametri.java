@@ -2,17 +2,10 @@ package fi.vm.sade.service.valintaperusteet.model;
 
 import javax.persistence.*;
 
-/**
- * User: kwuoti
- * Date: 17.1.2013
- * Time: 16.12
- */
 @Entity
 @Table(name="syoteparametri")
 @Cacheable(true)
 public class Syoteparametri extends BaseEntity {
-
-
     @Column(name="avain", nullable = false)
     private String avain;
 

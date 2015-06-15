@@ -10,7 +10,6 @@ import java.util.Set;
 @Table(name = "valintaryhma")
 @Cacheable(true)
 public class Valintaryhma extends BaseEntity {
-
     private static final long serialVersionUID = 1L;
 
     @Column(name = "oid", nullable = false, unique = true)
@@ -63,7 +62,7 @@ public class Valintaryhma extends BaseEntity {
 
     @JoinTable(name = "valintaryhma_organisaatio",
             joinColumns = @JoinColumn(name = "valintaryhma_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME),
-            inverseJoinColumns = @JoinColumn(name = "organisaatio_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME ))
+            inverseJoinColumns = @JoinColumn(name = "organisaatio_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME))
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<Organisaatio> organisaatiot = new HashSet<Organisaatio>();
 

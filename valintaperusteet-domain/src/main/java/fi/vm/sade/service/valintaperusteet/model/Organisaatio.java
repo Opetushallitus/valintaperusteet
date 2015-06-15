@@ -4,13 +4,6 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Created with IntelliJ IDEA.
- * User: jukais
- * Date: 25.11.2013
- * Time: 16.08
- * To change this template use File | Settings | File Templates.
- */
 @Entity
 @Table(name = "organisaatio")
 @Cacheable(true)

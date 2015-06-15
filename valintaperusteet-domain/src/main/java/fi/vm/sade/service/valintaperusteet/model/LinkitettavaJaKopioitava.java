@@ -2,14 +2,7 @@ package fi.vm.sade.service.valintaperusteet.model;
 
 import java.util.Collection;
 
-/**
- * User: kwuoti
- * Date: 14.2.2013
- * Time: 9.52
- */
-public interface LinkitettavaJaKopioitava<T extends LinkitettavaJaKopioitava, C extends Collection<T>>
-        extends Linkitettava<T>, Kopioitava<T, C>  {
-
+public interface LinkitettavaJaKopioitava<T extends LinkitettavaJaKopioitava, C extends Collection<T>> extends Linkitettava<T>, Kopioitava<T, C>  {
     @Override
     void setMaster(T master);
 

@@ -13,12 +13,7 @@ import fi.vm.sade.service.valintaperusteet.dto.model.Tasapistesaanto;
 @Entity
 @Table(name = "valintatapajono")
 @Cacheable(true)
-public class Valintatapajono extends BaseEntity implements
-        LinkitettavaJaKopioitava<Valintatapajono, Set<Valintatapajono>> {
-
-    /**
-     *
-     */
+public class Valintatapajono extends BaseEntity implements LinkitettavaJaKopioitava<Valintatapajono, Set<Valintatapajono>> {
     private static final long serialVersionUID = 1L;
 
     @Column(name = "oid", nullable = false, unique = true)

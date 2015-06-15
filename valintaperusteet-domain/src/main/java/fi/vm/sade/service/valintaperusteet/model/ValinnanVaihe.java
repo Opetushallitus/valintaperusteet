@@ -23,7 +23,6 @@ import fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi;
 @Table(name = "valinnan_vaihe")
 @Cacheable(true)
 public class ValinnanVaihe extends BaseEntity implements LinkitettavaJaKopioitava<ValinnanVaihe, Set<ValinnanVaihe>> {
-
     private static final long serialVersionUID = 1L;
 
     @Column(name = "oid", nullable = false, unique = true)

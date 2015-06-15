@@ -5,14 +5,10 @@ import javax.persistence.*;
 import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
 
 @Table(name = "valintaperuste_viite", uniqueConstraints = @UniqueConstraint(name = "UK_valintaperuste_viite_001", columnNames = {
-        "funktiokutsu_id", "indeksi" }))
+        "funktiokutsu_id", "indeksi"}))
 @Entity
 @Cacheable(true)
 public class ValintaperusteViite extends BaseEntity implements Comparable<ValintaperusteViite> {
-
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
 
     public final static String OSALLISTUMINEN_POSTFIX = "-OSALLISTUMINEN";
@@ -115,13 +111,13 @@ public class ValintaperusteViite extends BaseEntity implements Comparable<Valint
         String osallistuminenTunniste = null;
 
         switch (lahde) {
-        case SYOTETTAVA_ARVO:
-            if (tunniste != null) {
-                osallistuminenTunniste = tunniste + OSALLISTUMINEN_POSTFIX;
-            }
-            break;
-        default:
-            break;
+            case SYOTETTAVA_ARVO:
+                if (tunniste != null) {
+                    osallistuminenTunniste = tunniste + OSALLISTUMINEN_POSTFIX;
+                }
+                break;
+            default:
+                break;
         }
 
         return osallistuminenTunniste;

@@ -6,11 +6,6 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * User: kwuoti
- * Date: 15.4.2013
- * Time: 15.55
- */
 @Entity
 @Table(name = "valintakoe")
 @Cacheable(true)

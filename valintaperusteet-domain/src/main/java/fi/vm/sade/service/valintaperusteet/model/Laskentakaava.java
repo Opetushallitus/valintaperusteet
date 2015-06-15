@@ -19,9 +19,6 @@ import javax.persistence.Table;
 
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi;
 
-/**
- * User: kwuoti Date: 28.1.2013 Time: 9.51
- */
 @Entity
 @Table(name = "laskentakaava")
 @Cacheable(true)
