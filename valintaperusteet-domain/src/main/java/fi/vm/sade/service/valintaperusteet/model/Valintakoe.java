@@ -51,7 +51,7 @@ public class Valintakoe extends BaseEntity implements Kopioitava<Valintakoe, Set
     private Set<Valintakoe> kopioValintakokeet = new HashSet<Valintakoe>();
 
     @Enumerated(EnumType.STRING)
-    @Column(name="kutsun_kohde", nullable = false)
+    @Column(name = "kutsun_kohde", nullable = false)
     private Koekutsu kutsunKohde;
 
     @Column(name = "kutsun_kohde_avain")

@@ -15,7 +15,7 @@ public class LokalisoituTeksti extends BaseEntity {
     private String teksti;
 
     @Enumerated(EnumType.STRING)
-    @Column(name="kieli", nullable = false)
+    @Column(name = "kieli", nullable = false)
     private Kieli kieli;
 
     @JoinColumn(name = "tekstiryhma_id", nullable = false)

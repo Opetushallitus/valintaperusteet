@@ -129,7 +129,9 @@ public class ValinnanVaihe extends BaseEntity implements LinkitettavaJaKopioitav
         return Collections.unmodifiableSet(jonot);
     }
 
-    public void setJonot(Set<Valintatapajono> jonot) { this.jonot = jonot; }
+    public void setJonot(Set<Valintatapajono> jonot) {
+        this.jonot = jonot;
+    }
 
     public Set<Valintakoe> getValintakokeet() {
         return Collections.unmodifiableSet(valintakokeet);

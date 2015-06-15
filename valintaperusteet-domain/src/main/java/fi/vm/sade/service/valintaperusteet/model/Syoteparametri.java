@@ -3,13 +3,13 @@ package fi.vm.sade.service.valintaperusteet.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name="syoteparametri")
+@Table(name = "syoteparametri")
 @Cacheable(true)
 public class Syoteparametri extends BaseEntity {
-    @Column(name="avain", nullable = false)
+    @Column(name = "avain", nullable = false)
     private String avain;
 
-    @Column(name="arvo", nullable = false)
+    @Column(name = "arvo", nullable = false)
     private String arvo;
 
     @JoinColumn(name = "funktiokutsu_id", nullable = false)

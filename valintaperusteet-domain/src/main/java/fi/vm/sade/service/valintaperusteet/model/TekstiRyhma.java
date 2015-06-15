@@ -8,7 +8,7 @@ import java.util.Set;
 @Table(name = "tekstiryhma")
 @Cacheable(true)
 public class TekstiRyhma extends BaseEntity {
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "ryhma", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "ryhma", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private Set<LokalisoituTeksti> tekstit = new HashSet<LokalisoituTeksti>();
 
     public Set<LokalisoituTeksti> getTekstit() {
