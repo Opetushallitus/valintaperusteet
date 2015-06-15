@@ -35,10 +35,6 @@ import fi.vm.sade.service.valintaperusteet.service.exception.VaaranTyyppinenLask
 import fi.vm.sade.service.valintaperusteet.util.JarjestyskriteeriKopioija;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 
-/**
- * Created with IntelliJ IDEA. User: jukais Date: 17.1.2013 Time: 14.44 To
- * change this template use File | Settings | File Templates.
- */
 @Service
 @Transactional
 public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
@@ -67,7 +63,6 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
         if (jarjestyskriteeri == null) {
             throw new JarjestyskriteeriEiOleOlemassaException("Järjestyskriteeri (" + oid + ") ei ole olemassa", oid);
         }
-
         return jarjestyskriteeri;
     }
 
@@ -78,7 +73,6 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
                         + funktiokutsu.getFunktionimi().name() + ", id " + funktiokutsu.getId()
                         + " ei voida käyttää valintalaskennassa.", funktiokutsu.getId(), funktiokutsu.getFunktionimi());
             }
-
             for (Funktioargumentti arg : funktiokutsu.getFunktioargumentit()) {
                 if (arg.getFunktiokutsuChild() != null) {
                     validoiFunktiokutsuJarjestyskriteeriaVarten(arg.getFunktiokutsuChild());
@@ -93,29 +87,12 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
         if (laskentakaava == null) {
             throw new LaskentakaavaEiOleOlemassaException("Laskentakaavaa ei ole olemassa", null);
         }
-// VT-938
-//        else if (!Funktiotyyppi.LUKUARVOFUNKTIO.equals(laskentakaava.getTyyppi())) {
-//            throw new VaaranTyyppinenLaskentakaavaException("Järjestyskriteerin laskentakaavan tulee olla tyyppiä "
-//                    + Funktiotyyppi.LUKUARVOFUNKTIO.name());
-//        }
-
-        // Laskentakaavaa ei voi tällä hetkellä tallentaa luonnoksena
-//        else if (laskentakaava.getOnLuonnos()) {
-//            throw new JarjestyskriteeriinLiitettavaLaskentakaavaOnLuonnosException("Luonnos-tilassa olevaa"
-//                    + " laskentakaavaa ei voi liittää " + "valintatapajonoon", laskentakaava.getId());
-//        }
-
-
-        // KORJAA!!!!!!!!!
-        //validoiFunktiokutsuJarjestyskriteeriaVarten(laskentakaava.getFunktiokutsu());
     }
 
     @Override
     public Jarjestyskriteeri update(String oid, JarjestyskriteeriCreateDTO dto, Long laskentakaavaId) {
-
         Jarjestyskriteeri entity = modelMapper.map(dto, Jarjestyskriteeri.class);
         Jarjestyskriteeri managedObject = haeJarjestyskriteeri(oid);
-
         if (laskentakaavaId != null) {
             Laskentakaava laskentakaava = laskentakaavaService.haeMallinnettuKaava(laskentakaavaId);
             validoiLaskentakaavaJarjestyskriteeriaVarten(laskentakaava);
@@ -123,13 +100,11 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
         } else {
             throw new LaskentakaavaOidTyhjaException("LaskentakaavaOid oli tyhjä.");
         }
-
         return LinkitettavaJaKopioitavaUtil.paivita(managedObject, entity, kopioija);
     }
 
     @Override
     public List<Jarjestyskriteeri> findJarjestyskriteeriByJono(String oid) {
-
         return LinkitettavaJaKopioitavaUtil.jarjesta(jarjestyskriteeriDAO.findByJono(oid));
     }
 
@@ -139,9 +114,8 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
     }
 
     @Override
-    public Jarjestyskriteeri lisaaJarjestyskriteeriValintatapajonolle(String valintatapajonoOid,
-            JarjestyskriteeriCreateDTO dto, String edellinenValintatapajonoOid, Long laskentakaavaOid) {
-
+    public Jarjestyskriteeri lisaaJarjestyskriteeriValintatapajonolle(String valintatapajonoOid, JarjestyskriteeriCreateDTO dto,
+                                                                      String edellinenValintatapajonoOid, Long laskentakaavaOid) {
         Jarjestyskriteeri jarjestyskriteeri = modelMapper.map(dto, Jarjestyskriteeri.class);
         if (laskentakaavaOid != null) {
             Laskentakaava laskentakaava = laskentakaavaDAO.getLaskentakaava(laskentakaavaOid);
@@ -150,49 +124,34 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
         } else {
             throw new LaskentakaavaOidTyhjaException("LaskentakaavaOid oli tyhjä.");
         }
-
         Valintatapajono valintatapajono = valintatapajonoService.readByOid(valintatapajonoOid);
-
         Jarjestyskriteeri edellinenJarjestyskriteeri = null;
         if (StringUtils.isNotBlank(edellinenValintatapajonoOid)) {
             edellinenJarjestyskriteeri = haeJarjestyskriteeri(edellinenValintatapajonoOid);
         } else {
-            edellinenJarjestyskriteeri = jarjestyskriteeriDAO
-                    .haeValintatapajononViimeinenJarjestyskriteeri(valintatapajonoOid);
+            edellinenJarjestyskriteeri = jarjestyskriteeriDAO.haeValintatapajononViimeinenJarjestyskriteeri(valintatapajonoOid);
         }
-
         jarjestyskriteeri.setOid(oidService.haeJarjestyskriteeriOid());
         jarjestyskriteeri.setValintatapajono(valintatapajono);
         jarjestyskriteeri.setEdellinen(edellinenJarjestyskriteeri);
-
         Jarjestyskriteeri lisatty = jarjestyskriteeriDAO.insert(jarjestyskriteeri);
         LinkitettavaJaKopioitavaUtil.asetaSeuraava(edellinenJarjestyskriteeri, lisatty);
-
         for (Valintatapajono kopio : valintatapajono.getKopiot()) {
             lisaaValintatapajonolleKopioMasterJarjestyskriteerista(kopio, lisatty, edellinenJarjestyskriteeri);
         }
-
         return lisatty;
     }
 
     private void lisaaValintatapajonolleKopioMasterJarjestyskriteerista(Valintatapajono valintatapajono,
-            Jarjestyskriteeri masterJarjestyskriteeri, Jarjestyskriteeri edellinenMasterJarjestyskriteeri) {
+                                                                        Jarjestyskriteeri masterJarjestyskriteeri, Jarjestyskriteeri edellinenMasterJarjestyskriteeri) {
         Jarjestyskriteeri kopio = teeKopioMasterista(masterJarjestyskriteeri);
-
         kopio.setValintatapajono(valintatapajono);
         kopio.setOid(oidService.haeJarjestyskriteeriOid());
-
-        List<Jarjestyskriteeri> jonot = LinkitettavaJaKopioitavaUtil.jarjesta(jarjestyskriteeriDAO
-                .findByJono(valintatapajono.getOid()));
-
-        Jarjestyskriteeri edellinenJarjestyskriteeri = LinkitettavaJaKopioitavaUtil.haeMasterinEdellistaVastaava(
-                edellinenMasterJarjestyskriteeri, jonot);
-
+        List<Jarjestyskriteeri> jonot = LinkitettavaJaKopioitavaUtil.jarjesta(jarjestyskriteeriDAO.findByJono(valintatapajono.getOid()));
+        Jarjestyskriteeri edellinenJarjestyskriteeri = LinkitettavaJaKopioitavaUtil.haeMasterinEdellistaVastaava(edellinenMasterJarjestyskriteeri, jonot);
         kopio.setEdellinen(edellinenJarjestyskriteeri);
         Jarjestyskriteeri lisatty = jarjestyskriteeriDAO.insert(kopio);
-
         LinkitettavaJaKopioitavaUtil.asetaSeuraava(edellinenJarjestyskriteeri, lisatty);
-
         for (Valintatapajono jonokopio : valintatapajono.getKopiot()) {
             lisaaValintatapajonolleKopioMasterJarjestyskriteerista(jonokopio, lisatty, lisatty.getEdellinen());
         }
@@ -212,35 +171,27 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
         if (oids.isEmpty()) {
             throw new JarjestyskriteeriOidListaOnTyhjaException("Jarjestyskriteeri OID-lista on tyhjä");
         }
-
         Jarjestyskriteeri ensimmainen = haeJarjestyskriteeri(oids.get(0));
         return jarjestaKriteerit(ensimmainen.getValintatapajono(), oids);
     }
 
     private List<Jarjestyskriteeri> jarjestaKriteerit(Valintatapajono jono, List<String> oids) {
         LinkedHashMap<String, Jarjestyskriteeri> alkuperainenJarjestys = LinkitettavaJaKopioitavaUtil
-                .teeMappiOidienMukaan(LinkitettavaJaKopioitavaUtil.jarjesta(jarjestyskriteeriDAO.findByJono(jono
-                        .getOid())));
-
+                .teeMappiOidienMukaan(LinkitettavaJaKopioitavaUtil.jarjesta(jarjestyskriteeriDAO.findByJono(jono.getOid())));
         LinkedHashMap<String, Jarjestyskriteeri> jarjestetty = LinkitettavaJaKopioitavaUtil.jarjestaOidListanMukaan(
                 alkuperainenJarjestys, oids);
-
         for (Valintatapajono kopio : jono.getKopiot()) {
             jarjestaKopioValintatapajononKriteerit(kopio, jarjestetty);
         }
-
-        return new ArrayList<Jarjestyskriteeri>(jarjestetty.values());
+        return new ArrayList<>(jarjestetty.values());
     }
 
     private void jarjestaKopioValintatapajononKriteerit(Valintatapajono jono,
-            LinkedHashMap<String, Jarjestyskriteeri> uusiMasterJarjestys) {
+                                                        LinkedHashMap<String, Jarjestyskriteeri> uusiMasterJarjestys) {
         LinkedHashMap<String, Jarjestyskriteeri> alkuperainenJarjestys = LinkitettavaJaKopioitavaUtil
-                .teeMappiOidienMukaan(LinkitettavaJaKopioitavaUtil.jarjesta(jarjestyskriteeriDAO.findByJono(jono
-                        .getOid())));
-
+                .teeMappiOidienMukaan(LinkitettavaJaKopioitavaUtil.jarjesta(jarjestyskriteeriDAO.findByJono(jono.getOid())));
         LinkedHashMap<String, Jarjestyskriteeri> jarjestetty = LinkitettavaJaKopioitavaUtil
                 .jarjestaKopiotMasterJarjestyksenMukaan(alkuperainenJarjestys, uusiMasterJarjestys);
-
         for (Valintatapajono kopio : jono.getKopiot()) {
             jarjestaKopioValintatapajononKriteerit(kopio, jarjestetty);
         }
@@ -249,11 +200,9 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
     @Override
     public void deleteByOid(String oid) {
         Jarjestyskriteeri jarjestyskriteeri = haeJarjestyskriteeri(oid);
-
         if (jarjestyskriteeri.getMaster() != null) {
             throw new JarjestyskriteeriaEiVoiPoistaaException("Jarjestyskriteeri on peritty.");
         }
-
         delete(jarjestyskriteeri);
     }
 
@@ -262,12 +211,10 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
         for (Jarjestyskriteeri jk : jarjestyskriteeri.getKopiot()) {
             delete(jk);
         }
-
         if (jarjestyskriteeri.getSeuraava() != null) {
             Jarjestyskriteeri seuraava = jarjestyskriteeri.getSeuraava();
             seuraava.setEdellinen(jarjestyskriteeri.getEdellinen());
         }
-
         jarjestyskriteeriDAO.remove(jarjestyskriteeri);
     }
 
@@ -278,18 +225,15 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
 
     @Override
     public void kopioiJarjestyskriteeritMasterValintatapajonoltaKopiolle(Valintatapajono valintatapajono,
-            Valintatapajono masterValintatapajono) {
-        Jarjestyskriteeri jk = jarjestyskriteeriDAO.haeValintatapajononViimeinenJarjestyskriteeri(masterValintatapajono
-                .getOid());
+                                                                         Valintatapajono masterValintatapajono) {
+        Jarjestyskriteeri jk = jarjestyskriteeriDAO.haeValintatapajononViimeinenJarjestyskriteeri(masterValintatapajono.getOid());
         kopioiJarjestyskriteeritRekursiivisesti(valintatapajono, jk);
     }
 
-    private Jarjestyskriteeri kopioiJarjestyskriteeritRekursiivisesti(Valintatapajono valintatapajono,
-            Jarjestyskriteeri master) {
+    private Jarjestyskriteeri kopioiJarjestyskriteeritRekursiivisesti(Valintatapajono valintatapajono, Jarjestyskriteeri master) {
         if (master == null) {
             return null;
         }
-
         Jarjestyskriteeri kopio = teeKopioMasterista(master);
         kopio.setOid(oidService.haeJarjestyskriteeriOid());
         valintatapajono.addJarjestyskriteeri(kopio);
@@ -298,7 +242,6 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
             kopio.setEdellinen(edellinen);
             edellinen.setSeuraava(kopio);
         }
-
         return jarjestyskriteeriDAO.insert(kopio);
     }
 }
