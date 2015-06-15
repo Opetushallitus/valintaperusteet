@@ -14,11 +14,6 @@ import fi.vm.sade.service.valintaperusteet.dto.model.ValidointivirheDTO;
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi;
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi;
 
-/**
- * Created with IntelliJ IDEA. User: kjsaila Date: 11/12/13 Time: 09:30 To
- * change this template use File | Settings | File Templates.
- */
-
 @ApiModel(value = "FunktioargumentinLapsiDTO", description = "DTO, joka kuvaa joko funktiokutsua tai laskentakaavaa")
 public class FunktioargumentinLapsiDTO {
 

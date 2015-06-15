@@ -6,11 +6,6 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * User: wuoti
- * Date: 2.12.2013
- * Time: 9.47
- */
 @ApiModel(value = "ArvokonvertteriparametriDTO", description = "Arvokonvertteriparametri")
 public class ArvokonvertteriparametriDTO {
 

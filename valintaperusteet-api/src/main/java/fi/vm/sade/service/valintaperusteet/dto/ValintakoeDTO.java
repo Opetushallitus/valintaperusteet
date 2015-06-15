@@ -3,9 +3,6 @@ package fi.vm.sade.service.valintaperusteet.dto;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
-/**
- * User: kwuoti Date: 16.4.2013 Time: 13.01
- */
 @ApiModel(value = "ValintakoeDTO", description = "Valintakoe")
 public class ValintakoeDTO extends ValintakoeCreateDTO {
 

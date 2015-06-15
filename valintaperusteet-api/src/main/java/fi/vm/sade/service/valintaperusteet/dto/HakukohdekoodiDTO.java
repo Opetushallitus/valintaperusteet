@@ -2,9 +2,6 @@ package fi.vm.sade.service.valintaperusteet.dto;
 
 import com.wordnik.swagger.annotations.ApiModel;
 
-/**
- * Created by jukais on 4.3.2014.
- */
 @ApiModel(value = "HakukohdekoodiDTO", description = "")
 public class HakukohdekoodiDTO {
     private String koodiUri;

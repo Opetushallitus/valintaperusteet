@@ -8,12 +8,8 @@ import java.util.Set;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
-/**
- * User: wuoti Date: 2.12.2013 Time: 14.08
- */
 @ApiModel(value = "ValintaryhmaDTO", description = "Valintaryhmä")
 public class ValintaryhmaDTO extends ValintaryhmaCreateDTO {
-
     @ApiModelProperty(value = "OID", required = true)
     private String oid;
 

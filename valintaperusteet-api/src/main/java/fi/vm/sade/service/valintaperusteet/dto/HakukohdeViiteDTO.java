@@ -4,11 +4,6 @@ import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 import org.codehaus.jackson.annotate.JsonProperty;
 
-/**
- * User: jukais
- * Date: 8.2.2013
- * Time: 13.34
- */
 @ApiModel(value = "HakukohdeViiteDTO", description = "Hakukohde")
 public class HakukohdeViiteDTO extends HakukohdeViiteCreateDTO {
 

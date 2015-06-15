@@ -5,9 +5,6 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 
 import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
 
-/**
- * User: wuoti Date: 2.12.2013 Time: 10.06
- */
 @ApiModel(value = "ValintaperusteViiteDTO", description = "Valintaperusteviite")
 public class ValintaperusteViiteDTO  implements Comparable<ValintaperusteViiteDTO> {
 

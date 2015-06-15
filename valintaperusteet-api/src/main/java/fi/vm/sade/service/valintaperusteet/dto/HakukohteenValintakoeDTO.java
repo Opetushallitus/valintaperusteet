@@ -4,9 +4,6 @@ import com.wordnik.swagger.annotations.ApiModel;
 
 import java.util.Collection;
 
-/**
- * Created by jukais on 4.3.2014.
- */
 @ApiModel(value = "HakukohteenValintakoeDTO", description = "Hakukohteen valintakoe")
 public class HakukohteenValintakoeDTO {
     private String tyyppiUri;

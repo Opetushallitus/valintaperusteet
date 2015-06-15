@@ -3,9 +3,6 @@ package fi.vm.sade.service.valintaperusteet.dto;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
-/**
- * User: wuoti Date: 4.12.2013 Time: 14.19
- */
 @ApiModel(value = "LaskentakaavaSiirraDTO", description = "Laskentakaavan siirto DTO")
 public class LaskentakaavaSiirraDTO extends LaskentakaavaCreateDTO{
 

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ValintatapajonoJarjestyskriteereillaDTO {
-
     private Integer aloituspaikat;
 
     private String kuvaus;

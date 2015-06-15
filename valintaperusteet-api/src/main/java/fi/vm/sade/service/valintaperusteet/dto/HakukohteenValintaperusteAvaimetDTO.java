@@ -2,11 +2,7 @@ package fi.vm.sade.service.valintaperusteet.dto;
 
 import java.util.List;
 
-/**
- * User: wuoti Date: 28.5.2013 Time: 14.52
- */
 public class HakukohteenValintaperusteAvaimetDTO {
-
     private List<String> tunnisteet;
 
     private List<String> minimit;

@@ -7,9 +7,6 @@ import fi.vm.sade.service.valintaperusteet.dto.model.Kieli;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * User: wuoti Date: 2.12.2013 Time: 9.15
- */
 @ApiModel(value = "TekstiRyhmaDTO", description = "Tekstiryhmä")
 public class TekstiRyhmaDTO {
 

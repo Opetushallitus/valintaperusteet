@@ -6,9 +6,6 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * User: wuoti Date: 27.11.2013 Time: 18.00
- */
 @ApiModel(value = "ValinnanVaiheDTO", description = "Valinnan vaihe")
 public class ValinnanVaiheJonoillaDTO extends ValinnanVaiheCreateDTO {
 

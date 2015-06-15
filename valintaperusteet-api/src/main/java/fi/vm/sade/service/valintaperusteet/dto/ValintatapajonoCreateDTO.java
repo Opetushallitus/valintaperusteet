@@ -7,9 +7,6 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 
 import fi.vm.sade.service.valintaperusteet.dto.model.Tasapistesaanto;
 
-/**
- * User: wuoti Date: 27.11.2013 Time: 14.06
- */
 @ApiModel(value = "ValintatapajonoCreateDTO", description = "Valintatapajono")
 public class ValintatapajonoCreateDTO {
     @ApiModelProperty(value = "Aloituspaikat", required = true)

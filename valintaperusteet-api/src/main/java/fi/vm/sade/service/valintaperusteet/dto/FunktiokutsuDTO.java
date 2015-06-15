@@ -13,9 +13,6 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 import fi.vm.sade.service.valintaperusteet.dto.model.ValidointivirheDTO;
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi;
 
-/**
- * User: wuoti Date: 2.12.2013 Time: 9.15
- */
 @ApiModel(value = "FunktiokutsuDTO", description = "Funktiokutsu")
 public class FunktiokutsuDTO {
 

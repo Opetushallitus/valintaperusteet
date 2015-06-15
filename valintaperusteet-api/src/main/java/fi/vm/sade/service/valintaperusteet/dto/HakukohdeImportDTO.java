@@ -6,9 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.List;
 
-/**
- * Created by jukais on 4.3.2014.
- */
 @ApiModel(value = "HakukohdeImportDTO", description = "Hakukohteen lisääminen")
 public class HakukohdeImportDTO {
     private String hakukohdeOid;

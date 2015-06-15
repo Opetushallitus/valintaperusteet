@@ -5,9 +5,6 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi;
 
-/**
- * User: wuoti Date: 29.11.2013 Time: 9.54
- */
 @ApiModel(value = "LaskentakaavaDTO", description = "Laskentakaava")
 public abstract class AbstractLaskentakaavaDTO {
 

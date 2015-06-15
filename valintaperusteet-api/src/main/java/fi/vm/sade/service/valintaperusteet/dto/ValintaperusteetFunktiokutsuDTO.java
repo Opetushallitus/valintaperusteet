@@ -7,9 +7,6 @@ import fi.vm.sade.service.valintaperusteet.dto.model.ValidointivirheDTO;
 
 import java.util.*;
 
-/**
- * User: wuoti Date: 2.12.2013 Time: 9.15
- */
 @ApiModel(value = "ValintaperusteetFunktiokutsuDTO", description = "Funktiokutsu")
 public class ValintaperusteetFunktiokutsuDTO {
 

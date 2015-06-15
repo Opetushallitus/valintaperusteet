@@ -5,9 +5,6 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 
 import fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi;
 
-/**
- * User: wuoti Date: 27.11.2013 Time: 18.00
- */
 @ApiModel(value = "ValinnanVaiheCreateDTO", description = "Valinnan vaihe")
 public class ValinnanVaiheCreateDTO {
 

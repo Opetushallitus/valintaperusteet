@@ -3,9 +3,6 @@ package fi.vm.sade.service.valintaperusteet.dto;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
-/**
- * User: wuoti Date: 4.12.2013 Time: 10.40
- */
 @ApiModel(value = "JarjestyskriteeriInsertDTO", description = "Jarjestyskriteeri ja laskentakaava")
 public class JarjestyskriteeriInsertDTO {
 

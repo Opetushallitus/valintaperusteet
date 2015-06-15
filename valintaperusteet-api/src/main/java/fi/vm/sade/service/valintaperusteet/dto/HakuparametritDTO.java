@@ -1,8 +1,5 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
-/**
- * Created by jukais on 4.3.2014.
- */
 public class HakuparametritDTO {
     private String hakukohdeOid;
     private Integer valinnanVaiheJarjestysluku;

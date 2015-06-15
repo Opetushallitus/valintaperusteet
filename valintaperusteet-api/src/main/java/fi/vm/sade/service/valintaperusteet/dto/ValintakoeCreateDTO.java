@@ -4,9 +4,6 @@ import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 import fi.vm.sade.service.valintaperusteet.dto.model.Koekutsu;
 
-/**
- * User: kwuoti Date: 16.4.2013 Time: 13.01
- */
 @ApiModel(value = "ValintakoeCreateDTO", description = "Valintakoe")
 public class ValintakoeCreateDTO {
 

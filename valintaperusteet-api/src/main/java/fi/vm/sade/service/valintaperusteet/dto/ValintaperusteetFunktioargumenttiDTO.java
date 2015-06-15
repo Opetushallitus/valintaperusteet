@@ -3,22 +3,16 @@ package fi.vm.sade.service.valintaperusteet.dto;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
-/**
- * User: wuoti Date: 2.12.2013 Time: 9.54
- */
 @ApiModel(value = "FunktioargumenttiDTO", description = "Funktioargumentti")
 public class ValintaperusteetFunktioargumenttiDTO implements Comparable<ValintaperusteetFunktioargumenttiDTO> {
 
-
     @ApiModelProperty(value = "Funktioargumentin lapsi (funktiokutsu tai laskentakaava)")
     private ValintaperusteetFunktiokutsuDTO funktiokutsu;
-
 
     @ApiModelProperty(value = "Indeksi", required = true)
     private Integer indeksi;
 
     private Long id;
-
 
     public Integer getIndeksi() {
         return indeksi;

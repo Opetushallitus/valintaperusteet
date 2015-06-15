@@ -3,12 +3,7 @@ package fi.vm.sade.service.valintaperusteet.dto;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Created with IntelliJ IDEA. User: kkammone Date: 17.10.2013 Time: 13:00 To
- * change this template use File | Settings | File Templates.
- */
 public class ValintaperustePuuDTO {
-
     private ValintaperustePuuDTO ylavalintaryhma;
 
     private Set<ValintaperustePuuDTO> alavalintaryhmat = new HashSet<ValintaperustePuuDTO>();
