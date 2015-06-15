@@ -22,7 +22,7 @@ public class LaskentakaavaCache {
         return laskentakaava;
     }
 
-    public void clear(){
+    public void clear() {
         laskentakaavat.invalidateAll();
     }
 }
