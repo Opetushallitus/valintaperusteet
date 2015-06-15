@@ -3,15 +3,7 @@ package fi.vm.sade.service.valintaperusteet.service.impl.actors.messages;
 import fi.vm.sade.service.valintaperusteet.dto.KoodiDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaDTO;
 
-/**
- * Created with IntelliJ IDEA.
- * User: kjsaila
- * Date: 17/12/13
- * Time: 13:12
- * To change this template use File | Settings | File Templates.
- */
 public class LukionValintaperuste {
-
     private KoodiDTO hakukohdekoodi;
     private ValintaryhmaDTO painotettuKeskiarvoVr;
     private ValintaryhmaDTO painotettuKeskiarvoJaLisanayttoVr;

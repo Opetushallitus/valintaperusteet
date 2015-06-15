@@ -5,22 +5,12 @@ import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
 
 import java.util.Map;
 
-/**
- * Created with IntelliJ IDEA.
- * User: kjsaila
- * Date: 17/12/13
- * Time: 13:12
- * To change this template use File | Settings | File Templates.
- */
 public class UusiValintaperusteRekursio {
-
     private Long id;
     private Map<String, ValintaperusteDTO> valintaperusteet;
     private Map<String, String> hakukohteenValintaperusteet;
 
-    public UusiValintaperusteRekursio(Long id,
-                                      Map<String, ValintaperusteDTO> valintaperusteet,
-                                      Map<String, String> hakukohteenValintaperusteet) {
+    public UusiValintaperusteRekursio(Long id, Map<String, ValintaperusteDTO> valintaperusteet, Map<String, String> hakukohteenValintaperusteet) {
         this.id = id;
         this.valintaperusteet = valintaperusteet;
         this.hakukohteenValintaperusteet = hakukohteenValintaperusteet;

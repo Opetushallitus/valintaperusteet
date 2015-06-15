@@ -5,20 +5,11 @@ import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
 
 import java.util.Map;
 
-/**
- * Created with IntelliJ IDEA.
- * User: kjsaila
- * Date: 17/12/13
- * Time: 13:12
- * To change this template use File | Settings | File Templates.
- */
 public class UusiHakukohteenValintaperusteRekursio {
-
     private Long id;
     HakukohteenValintaperusteAvaimetDTO valintaperusteet;
 
-    public UusiHakukohteenValintaperusteRekursio(Long id,
-                                                 HakukohteenValintaperusteAvaimetDTO valintaperusteet) {
+    public UusiHakukohteenValintaperusteRekursio(Long id, HakukohteenValintaperusteAvaimetDTO valintaperusteet) {
         this.id = id;
         this.valintaperusteet = valintaperusteet;
     }

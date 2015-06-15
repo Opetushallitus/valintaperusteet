@@ -2,15 +2,7 @@ package fi.vm.sade.service.valintaperusteet.service.impl.actors.messages;
 
 import java.util.Set;
 
-/**
- * Created with IntelliJ IDEA.
- * User: kjsaila
- * Date: 17/12/13
- * Time: 13:12
- * To change this template use File | Settings | File Templates.
- */
 public class UusiRekursio {
-
     private Long id;
     private boolean laajennaAlakaavat;
     private Set<Long> laskentakaavaIds;
