@@ -2,11 +2,6 @@ package fi.vm.sade.service.valintaperusteet.laskenta.api.tila;
 
 import java.util.Map;
 
-/**
- * User: kwuoti
- * Date: 25.2.2013
- * Time: 8.11
- */
 public class Virhetila extends Tila {
 
     public Virhetila(Map<String, String> kuvaus, VirheMetatieto metatieto) {

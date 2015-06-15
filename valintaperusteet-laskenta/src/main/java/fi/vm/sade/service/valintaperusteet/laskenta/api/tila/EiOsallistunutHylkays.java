@@ -1,10 +1,5 @@
 package fi.vm.sade.service.valintaperusteet.laskenta.api.tila;
 
-/**
- * User: kwuoti
- * Date: 25.2.2013
- * Time: 8.35
- */
 public class EiOsallistunutHylkays extends HylattyMetatieto {
     public EiOsallistunutHylkays(String valintaperustetunniste) {
         super(Hylattymetatietotyyppi.EI_OSALLISTUNUT_HYLKAYS);

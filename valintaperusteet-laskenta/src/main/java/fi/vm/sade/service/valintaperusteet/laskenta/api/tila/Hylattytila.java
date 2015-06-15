@@ -2,31 +2,26 @@ package fi.vm.sade.service.valintaperusteet.laskenta.api.tila;
 
 import java.util.Map;
 
-/**
- * User: kwuoti
- * Date: 25.2.2013
- * Time: 7.47
- */
 public class Hylattytila extends Tila {
 
     public Hylattytila() {
         super(Tilatyyppi.HYLATTY);
     }
 
-    public Hylattytila(Map<String,String> kuvaus, HylattyMetatieto metatieto) {
+    public Hylattytila(Map<String, String> kuvaus, HylattyMetatieto metatieto) {
         super(Tilatyyppi.HYLATTY);
         this.kuvaus = kuvaus;
         this.metatieto = metatieto;
     }
 
-    public Hylattytila(Map<String,String> kuvaus, HylattyMetatieto metatieto, String tekninenKuvaus) {
+    public Hylattytila(Map<String, String> kuvaus, HylattyMetatieto metatieto, String tekninenKuvaus) {
         super(Tilatyyppi.HYLATTY);
         this.kuvaus = kuvaus;
         this.metatieto = metatieto;
         this.tekninenKuvaus = tekninenKuvaus;
     }
 
-    private Map<String,String> kuvaus;
+    private Map<String, String> kuvaus;
 
     private HylattyMetatieto metatieto;
 
@@ -40,7 +35,7 @@ public class Hylattytila extends Tila {
         this.tekninenKuvaus = tekninenKuvaus;
     }
 
-    public Map<String,String> getKuvaus() {
+    public Map<String, String> getKuvaus() {
         return kuvaus;
     }
 

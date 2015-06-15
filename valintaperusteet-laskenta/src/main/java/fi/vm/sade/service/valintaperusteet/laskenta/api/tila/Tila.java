@@ -1,8 +1,5 @@
 package fi.vm.sade.service.valintaperusteet.laskenta.api.tila;
 
-/**
- * User: kwuoti Date: 24.2.2013 Time: 19.22
- */
 public abstract class Tila {
     public static enum Tilatyyppi {
         HYLATTY(Hylattytila.class), HYVAKSYTTAVISSA(Hyvaksyttavissatila.class), VIRHE(Virhetila.class);

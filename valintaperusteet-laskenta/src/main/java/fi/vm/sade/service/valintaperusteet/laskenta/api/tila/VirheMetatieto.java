@@ -3,30 +3,24 @@ package fi.vm.sade.service.valintaperusteet.laskenta.api.tila;
 import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 
-/**
- * User: wuoti
- * Date: 14.8.2013
- * Time: 15.03
- */
-
 @JsonTypeInfo(
-    use = JsonTypeInfo.Id.NAME,
-    include = JsonTypeInfo.As.PROPERTY,
-    property = "type"
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type"
 )
 @JsonSubTypes({
-    @JsonSubTypes.Type(value = OsallistumistietoaEiVoidaTulkitaVirhe.class, name = "OsallistumistietoaEiVoidaTulkitaVirhe"),
-    @JsonSubTypes.Type(value = ValintaperustettaEiVoidaTulkitaTotuusarvoksiVirhe.class, name = "ValintaperustettaEiVoidaTulkitaTotuusarvoksiVirhe"),
-    @JsonSubTypes.Type(value = ValintaperustettaEiVoidaTulkitaLukuarvoksiVirhe.class, name = "ValintaperustettaEiVoidaTulkitaLukuarvoksiVirhe"),
-    @JsonSubTypes.Type(value = ArvokonvertointiVirhe.class, name = "ArvokonvertointiVirhe"),
-    @JsonSubTypes.Type(value = ArvovalikonvertointiVirhe.class, name = "ArvovalikonvertointiVirhe"),
-    @JsonSubTypes.Type(value = JakoNollallaVirhe.class, name = "JakoNollallaVirhe"),
-    @JsonSubTypes.Type(value = HylkaamistaEiVoidaTulkita.class, name = "HylkaamistaEiVoidaTulkita"),
-    @JsonSubTypes.Type(value = SyotettavaArvoMerkitsemattaVirhe.class, name = "SyotettavaArvoMerkitsemattaVirhe"),
-    @JsonSubTypes.Type(value = HakukohteenValintaperusteMaarittelemattaVirhe.class, name = "HakukohteenValintaperusteMaarittelemattaVirhe"),
-    @JsonSubTypes.Type(value = VirheellinenLaskentamoodiVirhe.class, name = "VirheellinenLaskentamoodiVirhe"),
-    @JsonSubTypes.Type(value = SkaalattavaArvoEiOleLahdeskaalassaVirhe.class, name = "SkaalattavaArvoEiOleLahdeskaalassaVirhe"),
-    @JsonSubTypes.Type(value = TuloksiaLiianVahanLahdeskaalanMaarittamiseenVirhe.class, name = "TuloksiaLiianVahanLahdeskaalanMaarittamiseenVirhe")
+        @JsonSubTypes.Type(value = OsallistumistietoaEiVoidaTulkitaVirhe.class, name = "OsallistumistietoaEiVoidaTulkitaVirhe"),
+        @JsonSubTypes.Type(value = ValintaperustettaEiVoidaTulkitaTotuusarvoksiVirhe.class, name = "ValintaperustettaEiVoidaTulkitaTotuusarvoksiVirhe"),
+        @JsonSubTypes.Type(value = ValintaperustettaEiVoidaTulkitaLukuarvoksiVirhe.class, name = "ValintaperustettaEiVoidaTulkitaLukuarvoksiVirhe"),
+        @JsonSubTypes.Type(value = ArvokonvertointiVirhe.class, name = "ArvokonvertointiVirhe"),
+        @JsonSubTypes.Type(value = ArvovalikonvertointiVirhe.class, name = "ArvovalikonvertointiVirhe"),
+        @JsonSubTypes.Type(value = JakoNollallaVirhe.class, name = "JakoNollallaVirhe"),
+        @JsonSubTypes.Type(value = HylkaamistaEiVoidaTulkita.class, name = "HylkaamistaEiVoidaTulkita"),
+        @JsonSubTypes.Type(value = SyotettavaArvoMerkitsemattaVirhe.class, name = "SyotettavaArvoMerkitsemattaVirhe"),
+        @JsonSubTypes.Type(value = HakukohteenValintaperusteMaarittelemattaVirhe.class, name = "HakukohteenValintaperusteMaarittelemattaVirhe"),
+        @JsonSubTypes.Type(value = VirheellinenLaskentamoodiVirhe.class, name = "VirheellinenLaskentamoodiVirhe"),
+        @JsonSubTypes.Type(value = SkaalattavaArvoEiOleLahdeskaalassaVirhe.class, name = "SkaalattavaArvoEiOleLahdeskaalassaVirhe"),
+        @JsonSubTypes.Type(value = TuloksiaLiianVahanLahdeskaalanMaarittamiseenVirhe.class, name = "TuloksiaLiianVahanLahdeskaalanMaarittamiseenVirhe")
 })
 
 public abstract class VirheMetatieto {

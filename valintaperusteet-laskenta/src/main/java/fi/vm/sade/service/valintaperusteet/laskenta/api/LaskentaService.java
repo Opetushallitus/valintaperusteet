@@ -7,12 +7,9 @@ import java.math.BigDecimal;
 import java.util.Collection;
 
 public interface LaskentaService {
+    public Laskentatulos<BigDecimal> suoritaValintalaskenta(Hakukohde hakukohde, Hakemus hakemus, Collection<Hakemus> kaikkiHakemukset, Lukuarvofunktio laskettava);
 
-    public Laskentatulos<BigDecimal> suoritaValintalaskenta(Hakukohde hakukohde, Hakemus hakemus,
-                                                            Collection<Hakemus> kaikkiHakemukset, Lukuarvofunktio laskettava);
-
-    public Laskentatulos<Boolean> suoritaValintalaskenta(Hakukohde hakukohde, Hakemus hakemus,
-                                                            Collection<Hakemus> kaikkiHakemukset, Totuusarvofunktio laskettava);
+    public Laskentatulos<Boolean> suoritaValintalaskenta(Hakukohde hakukohde, Hakemus hakemus, Collection<Hakemus> kaikkiHakemukset, Totuusarvofunktio laskettava);
 
     public Laskentatulos<BigDecimal> suoritaValintakoelaskenta(Hakukohde hakukohde, Hakemus hakemus, Lukuarvofunktio laskettava);
 

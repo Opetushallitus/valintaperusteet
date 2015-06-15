@@ -2,13 +2,7 @@ package fi.vm.sade.service.valintaperusteet.laskenta.api.tila;
 
 import java.math.BigDecimal;
 
-/**
- * User: wuoti
- * Date: 24.9.2013
- * Time: 12.09
- */
 public class SkaalattavaArvoEiOleLahdeskaalassaVirhe extends VirheMetatieto {
-
     private BigDecimal skaalattavaArvo;
     private BigDecimal lahdeskaalaMin;
     private BigDecimal lahdeskaalaMax;
