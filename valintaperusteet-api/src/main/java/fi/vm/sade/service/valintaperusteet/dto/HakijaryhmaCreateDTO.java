@@ -58,13 +58,21 @@ public class HakijaryhmaCreateDTO {
         this.laskentakaavaId = laskentakaavaId;
     }
 
-    public boolean isTarkkaKiintio() { return tarkkaKiintio; }
+    public boolean isTarkkaKiintio() {
+        return tarkkaKiintio;
+    }
 
-    public void setTarkkaKiintio(boolean tarkkaKiintio) { this.tarkkaKiintio = tarkkaKiintio; }
+    public void setTarkkaKiintio(boolean tarkkaKiintio) {
+        this.tarkkaKiintio = tarkkaKiintio;
+    }
 
-    public boolean isKaytaKaikki() { return kaytaKaikki; }
+    public boolean isKaytaKaikki() {
+        return kaytaKaikki;
+    }
 
-    public void setKaytaKaikki(boolean kaytaKaikki) { this.kaytaKaikki = kaytaKaikki; }
+    public void setKaytaKaikki(boolean kaytaKaikki) {
+        this.kaytaKaikki = kaytaKaikki;
+    }
 
     public boolean isKaytetaanRyhmaanKuuluvia() {
         return kaytetaanRyhmaanKuuluvia;

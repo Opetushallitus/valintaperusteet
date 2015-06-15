@@ -35,8 +35,8 @@ public interface LaskentakaavaResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     List<LaskentakaavaListDTO> kaavat(@DefaultValue("false") @QueryParam("myosLuonnos") Boolean all,
-            @QueryParam("valintaryhma") String valintaryhmaOid, @QueryParam("hakukohde") String hakukohdeOid,
-            @QueryParam("tyyppi") Funktiotyyppi tyyppi);
+                                      @QueryParam("valintaryhma") String valintaryhmaOid, @QueryParam("hakukohde") String hakukohdeOid,
+                                      @QueryParam("tyyppi") Funktiotyyppi tyyppi);
 
     @POST
     @Path("/validoi")
@@ -64,7 +64,7 @@ public interface LaskentakaavaResource {
     @Path("/{id}/valintaryhma")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response valintaryhma( @PathParam("id") Long id);
+    public Response valintaryhma(@PathParam("id") Long id);
 
     @DELETE
     @Path("/{id}")

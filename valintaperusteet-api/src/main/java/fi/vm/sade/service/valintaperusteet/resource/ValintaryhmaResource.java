@@ -85,8 +85,8 @@ public interface ValintaryhmaResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response insertValinnanvaihe(@PathParam("valintaryhmaOid") String valintaryhmaOid,
-            @QueryParam("edellinenValinnanVaiheOid") String edellinenValinnanVaiheOid,
-            ValinnanVaiheCreateDTO valinnanVaihe);
+                                 @QueryParam("edellinenValinnanVaiheOid") String edellinenValinnanVaiheOid,
+                                 ValinnanVaiheCreateDTO valinnanVaihe);
 
     @PUT
     @Path("/{valintaryhmaOid}/hakijaryhma")

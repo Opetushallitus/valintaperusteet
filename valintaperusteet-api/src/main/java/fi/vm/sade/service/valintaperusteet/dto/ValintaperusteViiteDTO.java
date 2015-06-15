@@ -6,7 +6,7 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
 
 @ApiModel(value = "ValintaperusteViiteDTO", description = "Valintaperusteviite")
-public class ValintaperusteViiteDTO  implements Comparable<ValintaperusteViiteDTO> {
+public class ValintaperusteViiteDTO implements Comparable<ValintaperusteViiteDTO> {
 
     @ApiModelProperty(value = "tunniste", required = true)
     private String tunniste;

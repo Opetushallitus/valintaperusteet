@@ -32,7 +32,7 @@ public interface ValintatapajonoResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{valintatapajonoOid}/hakijaryhma/{hakijaryhmaOid}")
     Response liitaHakijaryhma(@PathParam("valintatapajonoOid") String valintatapajonoOid,
-            @PathParam("hakijaryhmaOid") String hakijaryhmaOid);
+                              @PathParam("hakijaryhmaOid") String hakijaryhmaOid);
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

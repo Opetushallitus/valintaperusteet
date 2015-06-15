@@ -30,7 +30,7 @@ public class ValintaperusteetValinnanVaiheDTO extends ValinnanVaiheDTO {
     }
 
     public List<ValintatapajonoJarjestyskriteereillaDTO> getValintatapajono() {
-        if(valintatapajono == null) {
+        if (valintatapajono == null) {
             valintatapajono = new ArrayList<ValintatapajonoJarjestyskriteereillaDTO>();
         }
         return valintatapajono;
@@ -41,7 +41,7 @@ public class ValintaperusteetValinnanVaiheDTO extends ValinnanVaiheDTO {
     }
 
     public List<ValintakoeDTO> getValintakoe() {
-        if(valintakoe == null) {
+        if (valintakoe == null) {
             valintakoe = new ArrayList<ValintakoeDTO>();
         }
         return valintakoe;

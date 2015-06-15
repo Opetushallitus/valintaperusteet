@@ -4,7 +4,7 @@ import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @ApiModel(value = "LaskentakaavaSiirraDTO", description = "Laskentakaavan siirto DTO")
-public class LaskentakaavaSiirraDTO extends LaskentakaavaCreateDTO{
+public class LaskentakaavaSiirraDTO extends LaskentakaavaCreateDTO {
 
     public LaskentakaavaSiirraDTO() {
     }
