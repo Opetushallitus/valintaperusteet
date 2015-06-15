@@ -21,17 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
-/**
- * Created with IntelliJ IDEA.
- * User: jukais
- * Date: 16.1.2013
- * Time: 10.37
- * To change this template use File | Settings | File Templates.
- */
 @Service
 @Transactional
 public class ValintaryhmaServiceImpl implements ValintaryhmaService {
-
     @Autowired
     private ValintaryhmaDAO valintaryhmaDAO;
 
@@ -65,23 +57,18 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
         if (valintaryhma == null) {
             throw new ValintaryhmaEiOleOlemassaException("Valintaryhma (" + oid + ") ei ole olemassa.", oid);
         }
-
         return valintaryhma;
     }
 
     @Override
     public Valintaryhma insert(ValintaryhmaCreateDTO dto, String parentOid) {
         Valintaryhma valintaryhma = modelMapper.map(dto, Valintaryhma.class);
-
         valintaryhma.setOid(oidService.haeValintaryhmaOid());
         Valintaryhma parent = haeValintaryhma(parentOid);
         valintaryhma.setYlavalintaryhma(parent);
-
         valintaryhma.setOrganisaatiot(getOrganisaatios(dto.getOrganisaatiot()));
-
         Valintaryhma inserted = valintaryhmaDAO.insert(valintaryhma);
         valinnanVaiheService.kopioiValinnanVaiheetParentilta(inserted, parent);
-        //hakijaryhmaService.kopioiHakijaryhmatParentilta(inserted, parent);
         return inserted;
     }
 
@@ -90,19 +77,16 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
         return valintaryhmaDAO.readHierarchy(oid);
     }
 
-
     @Override
     public Valintaryhma update(String oid, ValintaryhmaCreateDTO incoming) {
         Valintaryhma managedObject = haeValintaryhma(oid);
         managedObject.setNimi(incoming.getNimi());
         managedObject.setKohdejoukko(incoming.getKohdejoukko());
         managedObject.setHakuoid(incoming.getHakuoid());
-
-        if(managedObject.getHakuvuosi() != incoming.getHakuvuosi()) {
+        if (managedObject.getHakuvuosi() != incoming.getHakuvuosi()) {
             managedObject.setHakuvuosi(incoming.getHakuvuosi());
             asetaHakuvuosiAlaryhmille(managedObject.getOid(), incoming.getHakuvuosi());
         }
-
         managedObject.setOrganisaatiot(getOrganisaatios(incoming.getOrganisaatiot()));
         return managedObject;
     }
@@ -119,9 +103,8 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
         Set<Organisaatio> organisaatiot = new HashSet<Organisaatio>();
         for (OrganisaatioDTO organisaatio : incoming) {
             Organisaatio temp = organisaatioDAO.readByOid(organisaatio.getOid());
-
             // TODO: OidPath pitäis varmaan päivittää joskus vanoille kanssa.
-            if(temp == null) {
+            if (temp == null) {
                 temp = organisaatioDAO.insert(modelMapper.map(organisaatio, Organisaatio.class));
             }
             organisaatiot.add(temp);
@@ -130,10 +113,9 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
     }
 
     private boolean isChildOf(String childOid, String parentOid) {
-        return valintaryhmaDAO.readHierarchy(childOid).stream()
-                .anyMatch(vr -> vr.getOid().equals(parentOid));
-
+        return valintaryhmaDAO.readHierarchy(childOid).stream().anyMatch(vr -> vr.getOid().equals(parentOid));
     }
+
     private Valintaryhma copyAsChild(Valintaryhma source, Valintaryhma parent, String name) {
         Valintaryhma copy = new Valintaryhma();
         copy.setYlavalintaryhma(parent);
@@ -141,7 +123,6 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
         copy.setOid(oidService.haeValintaryhmaOid());
         Valintaryhma inserted = valintaryhmaDAO.insert(copy);
         valinnanVaiheService.kopioiValinnanVaiheetParentilta(inserted, parent);
-
         List<Valintaryhma> children = valintaryhmaDAO.findChildrenByParentOid(source.getOid());
         children.stream().forEach((child -> copyAsChild(child, inserted, child.getNimi())));
         return inserted;
@@ -149,16 +130,14 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
 
     public Valintaryhma copyAsChild(String sourceOid, String parentOid, String name) {
         // Tarkistetaan, että parent ei ole sourcen jälkeläinen
-        if(isChildOf(parentOid, sourceOid)) {
+        if (isChildOf(parentOid, sourceOid)) {
             throw new ValintaryhmaaEiVoidaKopioida("Valintaryhmä (" + parentOid + ") on kohderyhmän (" + sourceOid + ") lapsi", sourceOid, parentOid);
         }
-
         // Tarkistetaan sisarusten nimet
         List<Valintaryhma> children = valintaryhmaDAO.findChildrenByParentOid(parentOid);
-        if(children.stream().anyMatch(vr -> vr.getNimi().equals(name))) {
+        if (children.stream().anyMatch(vr -> vr.getNimi().equals(name))) {
             throw new ValintaryhmaaEiVoidaKopioida("Valintaryhmällä (" + parentOid + ") on jo \"" + name + "\" niminen lapsi", sourceOid, parentOid);
         }
-
         Valintaryhma source = valintaryhmaDAO.readByOid(sourceOid);
         Valintaryhma parent = valintaryhmaDAO.readByOid(parentOid);
         return copyAsChild(source, parent, name);
@@ -167,7 +146,6 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
     @Override
     public Valintaryhma insert(ValintaryhmaCreateDTO dto) {
         Valintaryhma entity = modelMapper.map(dto, Valintaryhma.class);
-
         entity.setOid(oidService.haeValintaryhmaOid());
         entity.setOrganisaatiot(getOrganisaatios(dto.getOrganisaatiot()));
         return valintaryhmaDAO.insert(entity);
@@ -180,7 +158,6 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
             for (ValinnanVaihe valinnanVaihe : managedObject.get().getValinnanvaiheet()) {
                 valinnanVaiheService.delete(valinnanVaihe);
             }
-
             for (Laskentakaava laskentakaava : managedObject.get().getLaskentakaava()) {
                 laskentakaavaDAO.remove(laskentakaava);
             }
