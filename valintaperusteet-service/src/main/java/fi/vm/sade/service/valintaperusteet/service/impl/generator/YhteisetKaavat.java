@@ -7,9 +7,6 @@ import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by kjsaila on 24/01/14.
- */
 public class YhteisetKaavat {
 
     public static final int HAKUTOIVEIDEN_LKM = 5;
@@ -20,15 +17,11 @@ public class YhteisetKaavat {
         int hakutoive = 1;
         for (int i = HAKUTOIVEIDEN_LKM; i > 0; --i) {
             Funktiokutsu pistemaara = GenericHelper.luoLukuarvo(i);
-
             summattavat.add(GenericHelper.luoJosFunktio(GenericHelper.luoNsHakutoive(hakutoive), pistemaara, nolla));
             ++hakutoive;
         }
-
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
                 GenericHelper.luoSumma(summattavat.toArray(new FunktionArgumentti[summattavat.size()])),
                 nimi);
-
     }
-
 }
