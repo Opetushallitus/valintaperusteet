@@ -64,8 +64,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
     public Map<String, List<ValintatapajonoDTO>> haeValintatapajonotSijoittelulle(Collection<String> hakukohdeOids) {
         return hakukohdeOids.stream().collect(Collectors.toMap(h -> h, h -> {
             List<Valintatapajono> valintatapajonot = valintatapajonoDAO.haeValintatapajonotSijoittelulle(h);
-            valintatapajonot = LinkitettavaJaKopioitavaUtil.jarjesta( valintatapajonot);
-
+            valintatapajonot = LinkitettavaJaKopioitavaUtil.jarjesta(valintatapajonot);
             LOG.error("Hakukohde: {} - jonot: {}", h, Arrays.toString(valintatapajonot.toArray()));
             if (valintatapajonot.isEmpty()) {
                 return Lists.newArrayList();
@@ -91,10 +90,8 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
         try {
             Long start = System.currentTimeMillis();
             LOG.info("Hakuparametrien lkm {}", hakuparametrit.size());
-
             for (HakuparametritDTO param : hakuparametrit) {
                 LOG.info("Haetaan hakukohteen {}, valinnanvaihe {} valintaperusteet", new Object[]{param.getHakukohdeOid(), param.getValinnanVaiheJarjestysluku()});
-
                 HakukohdeViite hakukohde = null;
                 try {
                     hakukohde = hakukohdeService.readByOid(param.getHakukohdeOid());
@@ -102,9 +99,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
                     LOG.warn("Hakukohdetta {} ei ole olemassa. Jätetään hakukohde huomioimatta.", param.getHakukohdeOid());
                     continue;
                 }
-
                 Integer jarjestysluku = param.getValinnanVaiheJarjestysluku();
-
                 Long startFind = System.currentTimeMillis();
                 List<ValinnanVaihe> valinnanVaiheList = valinnanVaiheService.findByHakukohde(param.getHakukohdeOid());
                 if (LOG.isInfoEnabled()) {
@@ -115,7 +110,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
                 if (jarjestysluku != null) {
                     if (jarjestysluku < 0 || jarjestysluku >= valinnanVaiheList.size()) {
                         throw new ValinnanVaiheJarjestyslukuOutOfBoundsException("Hakukohteen " + param.getHakukohdeOid()
-                                        + " valinnan vaiheen jarjestysluku " + jarjestysluku + " on epäkelpo.");
+                                + " valinnan vaiheen jarjestysluku " + jarjestysluku + " on epäkelpo.");
                     } else if (!valinnanVaiheList.get(jarjestysluku).getAktiivinen()) {
                         throw new ValinnanVaiheEpaaktiivinenException("Valinnan vaihe (oid " + valinnanVaiheList.get(jarjestysluku).getOid()
                                 + ", järjestysluku " + jarjestysluku + ") ei ole aktiivinen");
@@ -161,7 +156,6 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
         valintaperusteetDTO.setHakukohdeOid(hakukohde.getOid());
         valintaperusteetDTO.setHakuOid(hakukohde.getHakuoid());
         valintaperusteetDTO.setTarjoajaOid(hakukohde.getTarjoajaOid());
-
         ValintaperusteetValinnanVaiheDTO vv = new ValintaperusteetValinnanVaiheDTO();
         switch (valinnanVaihe.getValinnanVaiheTyyppi()) {
             case TAVALLINEN:
@@ -175,14 +169,12 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
             default:
                 throw new UnsupportedOperationException("Virheellinen valinnan vaiheen tyyppi. Ei pystytä käsittelemään");
         }
-
         vv.setValinnanVaiheJarjestysluku(valinnanvaiheJarjestysluku);
         vv.setValinnanVaiheOid(valinnanVaihe.getOid());
         vv.setNimi(valinnanVaihe.getNimi());
         vv.setValinnanVaiheOid(valinnanVaihe.getOid());
         vv.setAktiivinen(valinnanVaihe.getAktiivinen());
         valintaperusteetDTO.setValinnanVaihe(vv);
-
         valintaperusteetDTO
                 .getHakukohteenValintaperuste()
                 .addAll(hakukohde
@@ -201,7 +193,6 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
     private List<ValintakoeDTO> convertValintakokeet(ValinnanVaihe valinnanVaihe) {
         List<Valintakoe> valintakokeet = valintakoeService.findValintakoeByValinnanVaihe(valinnanVaihe.getOid());
         List<ValintakoeDTO> valintakoeDTOs = new ArrayList<ValintakoeDTO>();
-
         for (Valintakoe koe : valintakokeet) {
             if (koe.getAktiivinen()) {
                 ValintakoeDTO dto = modelMapper.map(koe, ValintakoeDTO.class);
@@ -222,7 +213,6 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
     private List<ValintatapajonoJarjestyskriteereillaDTO> convertJonot(ValinnanVaihe valinnanVaihe) {
         List<Valintatapajono> jonot = valintatapajonoService.findJonoByValinnanvaihe(valinnanVaihe.getOid());
         List<ValintatapajonoJarjestyskriteereillaDTO> valintatapajonot = new ArrayList<ValintatapajonoJarjestyskriteereillaDTO>();
-
         for (int prioriteetti = 0; prioriteetti < jonot.size(); prioriteetti++) {
             Valintatapajono valintatapajono = jonot.get(prioriteetti);
             if (!valintatapajono.getAktiivinen())
@@ -253,22 +243,18 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
     private List<ValintaperusteetJarjestyskriteeriDTO> convertJarjestyskriteerit(Valintatapajono valintatapajono) {
         List<Jarjestyskriteeri> jarjestyskriteeris = jarjestyskriteeriService.findJarjestyskriteeriByJono(valintatapajono.getOid());
         List<ValintaperusteetJarjestyskriteeriDTO> jarjestyskriteerit = new ArrayList<ValintaperusteetJarjestyskriteeriDTO>();
-
         for (int prioriteetti = 0; prioriteetti < jarjestyskriteeris.size(); prioriteetti++) {
             Jarjestyskriteeri jarjestyskriteeri = jarjestyskriteeris.get(prioriteetti);
             if (!jarjestyskriteeri.getAktiivinen())
                 continue;
-
             ValintaperusteetJarjestyskriteeriDTO jarjestyskriteeriDTO = modelMapper.map(jarjestyskriteeri, ValintaperusteetJarjestyskriteeriDTO.class);
             jarjestyskriteeriDTO.setPrioriteetti(prioriteetti);
             jarjestyskriteeriDTO.setNimi(jarjestyskriteeri.getMetatiedot());
-
             Long start = System.currentTimeMillis();
             Laskentakaava laskentakaava = laskentakaavaService.haeLaskettavaKaava(jarjestyskriteeri.getLaskentakaava().getId(), Laskentamoodi.VALINTALASKENTA);
             if (LOG.isInfoEnabled()) {
                 LOG.info("haeLaskettavaKaava: " + jarjestyskriteeri.getLaskentakaava().getId() + ":" + (System.currentTimeMillis() - start));
             }
-
             // Asetetaan laskentakaavan nimi ensimmäisen funktiokutsun nimeksi
             laskentakaava.getFunktiokutsu().getSyoteparametrit().forEach(s -> {
                 if (s.getAvain().equals("nimi")) {
