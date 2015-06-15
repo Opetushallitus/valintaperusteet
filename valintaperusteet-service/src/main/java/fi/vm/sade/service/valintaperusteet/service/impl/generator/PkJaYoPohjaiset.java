@@ -9,11 +9,7 @@ import fi.vm.sade.service.valintaperusteet.dto.model.Kieli;
 import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
 import fi.vm.sade.service.valintaperusteet.model.*;
 
-/**
- * User: kwuoti Date: 5.3.2013 Time: 12.14
- */
 public class PkJaYoPohjaiset {
-
     public static final String tyokokemuskuukaudet = "TYOKOKEMUSKUUKAUDET";
     public static final String sukupuoli = "SUKUPUOLI";
 
@@ -45,35 +41,27 @@ public class PkJaYoPohjaiset {
         Funktiokutsu pisteet = GenericHelper.luoLukuarvo(2.0);
         Funktiokutsu nollaarvo = GenericHelper.luoLukuarvo(0.0);
         Funktiokutsu ensimmainenHakutoive = GenericHelper.luoEnsimmainenHakutoive();
-
         Funktiokutsu jos = GenericHelper.luoJosFunktio(ensimmainenHakutoive, pisteet, nollaarvo);
-
         jos.setTallennaTulos(true);
         jos.setTulosTunniste("hakutoivejarjestys");
         jos.setTulosTekstiFi("Hakutoivejärjestys");
         jos.setTulosTekstiSv("Ansökningsmålsordning");
-
-        Laskentakaava laskentakaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(jos,
-                "Hakutoivejärjestyspisteytys, 2 aste, pk ja yo");
+        Laskentakaava laskentakaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(jos, "Hakutoivejärjestyspisteytys, 2 aste, pk ja yo");
         return laskentakaava;
     }
 
     public static Laskentakaava luoTyokokemuspisteytysmalli() {
-
-        Arvovalikonvertteriparametri[] konvs = { GenericHelper.luoArvovalikonvertteriparametri(-10000.0, 3.0, 0.0),
+        Arvovalikonvertteriparametri[] konvs = {GenericHelper.luoArvovalikonvertteriparametri(-10000.0, 3.0, 0.0),
                 GenericHelper.luoArvovalikonvertteriparametri(3.0, 6.0, 1.0),
                 GenericHelper.luoArvovalikonvertteriparametri(6.0, 12.0, 2.0),
-                GenericHelper.luoArvovalikonvertteriparametri(12.0, 10000.0, 3.0) };
-
+                GenericHelper.luoArvovalikonvertteriparametri(12.0, 10000.0, 3.0)};
         Funktiokutsu f = GenericHelper.luoHaeLukuarvo(
                 GenericHelper.luoValintaperusteViite(tyokokemuskuukaudet, false, Valintaperustelahde.HAETTAVA_ARVO), 0,
                 Arrays.asList(konvs));
-
         f.setTallennaTulos(true);
         f.setTulosTunniste("tyokokemus");
         f.setTulosTekstiFi("Työkokemus");
         f.setTulosTekstiSv("Arbetserfarenhet");
-
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(f, "Työkokemuspisteytys, 2 aste, pk ja yo");
     }
 
@@ -81,136 +69,83 @@ public class PkJaYoPohjaiset {
         Funktiokutsu thenHaara = GenericHelper.luoLukuarvo(2.0);
         Funktiokutsu elseHaara = GenericHelper.luoLukuarvo(0.0);
         Funktiokutsu ehto = GenericHelper.luoDemografia(sukupuoli, 30.0);
-
         Funktiokutsu jos = GenericHelper.luoJosFunktio(ehto, thenHaara, elseHaara);
-
         jos.setTallennaTulos(true);
         jos.setTulosTunniste("sukupuoli");
         jos.setTulosTekstiFi("Sukupuoli");
         jos.setTulosTekstiSv("Kön");
-
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(jos, "Sukupuolipisteytys, 2 aste, pk ja yo");
     }
 
-    public static Laskentakaava luoYleinenKoulumenestysLaskentakaava(Laskentakaava laskentakaava, String nimi,
-                                                                     String tulosTunniste, String tulosTekstiFi, String tulosTekstiSv) {
+    public static Laskentakaava luoYleinenKoulumenestysLaskentakaava(Laskentakaava laskentakaava, String nimi, String tulosTunniste, String tulosTekstiFi, String tulosTekstiSv) {
         Funktiokutsu konvertteri = new Funktiokutsu();
         konvertteri.setFunktionimi(Funktionimi.KONVERTOILUKUARVO);
         Funktioargumentti funk = new Funktioargumentti();
         funk.setLaskentakaavaChild(laskentakaava);
         funk.setIndeksi(1);
-
         konvertteri.getFunktioargumentit().add(funk);
         konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(0.0, 5.50, 0));
-        konvertteri.getArvovalikonvertteriparametrit()
-                .add(GenericHelper.luoArvovalikonvertteriparametri(5.50, 5.75, 1));
-        konvertteri.getArvovalikonvertteriparametrit()
-                .add(GenericHelper.luoArvovalikonvertteriparametri(5.75, 6.00, 2));
-        konvertteri.getArvovalikonvertteriparametrit()
-                .add(GenericHelper.luoArvovalikonvertteriparametri(6.00, 6.25, 3));
-        konvertteri.getArvovalikonvertteriparametrit()
-                .add(GenericHelper.luoArvovalikonvertteriparametri(6.25, 6.50, 4));
-        konvertteri.getArvovalikonvertteriparametrit()
-                .add(GenericHelper.luoArvovalikonvertteriparametri(6.50, 6.75, 5));
-        konvertteri.getArvovalikonvertteriparametrit()
-                .add(GenericHelper.luoArvovalikonvertteriparametri(6.75, 7.00, 6));
-        konvertteri.getArvovalikonvertteriparametrit()
-                .add(GenericHelper.luoArvovalikonvertteriparametri(7.00, 7.25, 7));
-        konvertteri.getArvovalikonvertteriparametrit()
-                .add(GenericHelper.luoArvovalikonvertteriparametri(7.25, 7.50, 8));
-        konvertteri.getArvovalikonvertteriparametrit()
-                .add(GenericHelper.luoArvovalikonvertteriparametri(7.50, 7.75, 9));
-        konvertteri.getArvovalikonvertteriparametrit().add(
-                GenericHelper.luoArvovalikonvertteriparametri(7.75, 8.00, 10));
-        konvertteri.getArvovalikonvertteriparametrit().add(
-                GenericHelper.luoArvovalikonvertteriparametri(8.00, 8.25, 11));
-        konvertteri.getArvovalikonvertteriparametrit().add(
-                GenericHelper.luoArvovalikonvertteriparametri(8.25, 8.50, 12));
-        konvertteri.getArvovalikonvertteriparametrit().add(
-                GenericHelper.luoArvovalikonvertteriparametri(8.50, 8.75, 13));
-        konvertteri.getArvovalikonvertteriparametrit().add(
-                GenericHelper.luoArvovalikonvertteriparametri(8.75, 9.00, 14));
-        konvertteri.getArvovalikonvertteriparametrit().add(
-                GenericHelper.luoArvovalikonvertteriparametri(9.00, 9.25, 15));
-        konvertteri.getArvovalikonvertteriparametrit().add(
-                GenericHelper.luoArvovalikonvertteriparametri(9.25, 10.1, 16));
-
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(5.50, 5.75, 1));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(5.75, 6.00, 2));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(6.00, 6.25, 3));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(6.25, 6.50, 4));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(6.50, 6.75, 5));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(6.75, 7.00, 6));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(7.00, 7.25, 7));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(7.25, 7.50, 8));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(7.50, 7.75, 9));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(7.75, 8.00, 10));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(8.00, 8.25, 11));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(8.25, 8.50, 12));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(8.50, 8.75, 13));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(8.75, 9.00, 14));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(9.00, 9.25, 15));
+        konvertteri.getArvovalikonvertteriparametrit().add(GenericHelper.luoArvovalikonvertteriparametri(9.25, 10.1, 16));
         konvertteri.setTallennaTulos(true);
         konvertteri.setTulosTekstiFi(tulosTekstiFi);
         konvertteri.setTulosTekstiSv(tulosTekstiSv);
         konvertteri.setTulosTunniste(tulosTunniste);
-
         Laskentakaava palautettavaLaskentakaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(konvertteri, nimi);
         return palautettavaLaskentakaava;
     }
 
     public static Laskentakaava luoValintakoekaava(String nimi, Valintaperustelahde lahde) {
-
         TekstiRyhma kuvaukset = new TekstiRyhma();
         LokalisoituTeksti fi = new LokalisoituTeksti();
         fi.setKieli(Kieli.FI);
         fi.setTeksti("Ei ole osallistunut pääsy- ja soveltuvuuskokeeseen");
         kuvaukset.getTekstit().add(fi);
-
         LokalisoituTeksti sv = new LokalisoituTeksti();
         sv.setKieli(Kieli.SV);
         sv.setTeksti("Har inte deltagit i inträdes- eller lämplighetsprov");
         kuvaukset.getTekstit().add(sv);
-
-        ValintaperusteViite valintaperuste = GenericHelper.luoValintaperusteViite(nimi, true,
-                lahde, "Pääsy- ja soveltuvuuskoe", false, kuvaukset);
-
+        ValintaperusteViite valintaperuste = GenericHelper.luoValintaperusteViite(nimi, true, lahde, "Pääsy- ja soveltuvuuskoe", false, kuvaukset);
         List<Arvovalikonvertteriparametri> konvs = new ArrayList<Arvovalikonvertteriparametri>();
-
         konvs.add(GenericHelper.luoArvovalikonvertteriparametri(0.0, 10.0));
-
         Funktiokutsu funktiokutsu = GenericHelper.luoHaeLukuarvo(valintaperuste, konvs);
-
-        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
-                GenericHelper.luoHylkaaArvovalilla(funktiokutsu, "Hylätty pääsy- ja soveltuvuuskoetulos",
-                        "Underkänd i inträdes- eller lämplighetsprov", "0.0", "1.0"), nimi);
+        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(GenericHelper.luoHylkaaArvovalilla(funktiokutsu, "Hylätty pääsy- ja soveltuvuuskoetulos",
+                "Underkänd i inträdes- eller lämplighetsprov", "0.0", "1.0"), nimi);
     }
 
     public static Laskentakaava luoValintakoekaava(String nimi, Valintaperustelahde lahde, boolean epasuoraViittaus) {
-        ValintaperusteViite valintaperuste = GenericHelper.luoValintaperusteViite(nimi, true,
-                lahde, "Pääsy- ja soveltuvuuskoe", epasuoraViittaus);
-
+        ValintaperusteViite valintaperuste = GenericHelper.luoValintaperusteViite(nimi, true, lahde, "Pääsy- ja soveltuvuuskoe", epasuoraViittaus);
         List<Arvovalikonvertteriparametri> konvs = new ArrayList<Arvovalikonvertteriparametri>();
-
         konvs.add(GenericHelper.luoArvovalikonvertteriparametri(0.0, 10.0));
-
         Funktiokutsu funktiokutsu = GenericHelper.luoHaeLukuarvo(valintaperuste, konvs);
-
-        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
-                GenericHelper.luoHylkaaArvovalilla(funktiokutsu, "Hylätty pääsy- ja soveltuvuuskoetulos",
-                        "Underkänd i inträdes- eller lämplighetsprov", "0.0", "1.0"), nimi);
+        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(GenericHelper.luoHylkaaArvovalilla(funktiokutsu, "Hylätty pääsy- ja soveltuvuuskoetulos",
+                "Underkänd i inträdes- eller lämplighetsprov", "0.0", "1.0"), nimi);
     }
 
     public static Laskentakaava luoLisapistekaava(String tunniste) {
-        ValintaperusteViite valintaperuste = GenericHelper.luoValintaperusteViite(tunniste, true,
-                Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO, "Lisäpiste", true);
+        ValintaperusteViite valintaperuste = GenericHelper.luoValintaperusteViite(tunniste, true, Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO, "Lisäpiste", true);
         List<Arvovalikonvertteriparametri> konvs = new ArrayList<Arvovalikonvertteriparametri>();
         konvs.add(GenericHelper.luoArvovalikonvertteriparametri(0.0, 3.0));
-
-        return GenericHelper
-                .luoLaskentakaavaJaNimettyFunktio(GenericHelper.luoHaeLukuarvo(valintaperuste, konvs), "Ammatillinen koulutus, lisäpiste");
+        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(GenericHelper.luoHaeLukuarvo(valintaperuste, konvs), "Ammatillinen koulutus, lisäpiste");
     }
 
     public static Laskentakaava luoUrheilijaLisapisteenMahdollisuus() {
         Funktiokutsu[] args = new Funktiokutsu[YhteisetKaavat.HAKUTOIVEIDEN_LKM];
         for (int i = 1; i <= YhteisetKaavat.HAKUTOIVEIDEN_LKM; i++) {
-            // Hakukohdekohtainen tarkistus poistettu
-//            Funktiokutsu kutsu = GenericHelper
-//                    .luoJa(GenericHelper.luoValintaperusteyhtasuuruus(GenericHelper.luoValintaperusteViite(
-//                            preferenceTunniste + i + koulutusIdTunniste, false, Valintaperustelahde.HAETTAVA_ARVO,
-//                            "Hakukohteen OID hakemuksella"), GenericHelper.luoValintaperusteViite(hakukohteenOid, true,
-//                            Valintaperustelahde.HAKUKOHTEEN_ARVO, "Hakukohteen OID")), GenericHelper.luoHaeTotuusarvo(
-//                            GenericHelper.luoValintaperusteViite(preferenceTunniste + i
-//                                    + urheilijanAmmatillisenKoulutuksenLisakysymysTunniste, false,
-//                                    Valintaperustelahde.HAETTAVA_ARVO), false), GenericHelper.luoHaeTotuusarvo(
-//                            GenericHelper.luoValintaperusteViite(urheilijaHakuSallittu, false,
-//                                    Valintaperustelahde.HAKUKOHTEEN_ARVO), false));
-
             Funktiokutsu kutsu = GenericHelper
                     .luoJa(GenericHelper.luoValintaperusteyhtasuuruus(GenericHelper.luoValintaperusteViite(
                             preferenceTunniste + i + koulutusIdTunniste, false, Valintaperustelahde.HAETTAVA_ARVO,
@@ -219,20 +154,17 @@ public class PkJaYoPohjaiset {
                             GenericHelper.luoValintaperusteViite(preferenceTunniste + i
                                     + urheilijanAmmatillisenKoulutuksenLisakysymysTunniste, false,
                                     Valintaperustelahde.HAETTAVA_ARVO), false));
-
             args[i - 1] = kutsu;
         }
-        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(GenericHelper.luoTai(args),
-                "Mahdollisuus urheilijalisäpisteeseen");
+        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(GenericHelper.luoTai(args), "Mahdollisuus urheilijalisäpisteeseen");
     }
 
     public static Laskentakaava luoKielikokeenPakollisuudenLaskentakaava() {
-        Funktiokutsu[] args = { luoKielikoeSuoritettuFunktiokutsu(), luoAidinkieliOnOpetuskieliFunktiokutsu(),
+        Funktiokutsu[] args = {luoKielikoeSuoritettuFunktiokutsu(), luoAidinkieliOnOpetuskieliFunktiokutsu(),
                 luoKielikoekriteeri1Funktiokutsu(), luoKielikoekriteeri2Funktiokutsu(),
                 luoKielikoekriteeri3Funktiokutsu(), luoKielikoekriteeri4Funktiokutsu(),
                 luoKielikoekriteeri5Funktiokutsu(), luoKielikoekriteeri6Funktiokutsu(),
-                luoKielikoekriteeri7Funktiokutsu(), luoKielikoekriteeri8Funktiokutsu() };
-
+                luoKielikoekriteeri7Funktiokutsu(), luoKielikoekriteeri8Funktiokutsu()};
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(GenericHelper.luoEi(GenericHelper.luoTai(args)),
                 "Kielikokeen pakollisuus - 2 aste, pk ja yo");
     }
@@ -244,18 +176,15 @@ public class PkJaYoPohjaiset {
     }
 
     public static Funktiokutsu luoKielikoeSuoritettuFunktiokutsu() {
-
         TekstiRyhma kuvaukset = new TekstiRyhma();
         LokalisoituTeksti fi = new LokalisoituTeksti();
         fi.setKieli(Kieli.FI);
         fi.setTeksti("Ei ole osallistunut kielikokeeseen");
         kuvaukset.getTekstit().add(fi);
-
         LokalisoituTeksti sv = new LokalisoituTeksti();
         sv.setKieli(Kieli.SV);
         sv.setTeksti("Har inte deltagit i språkprov");
         kuvaukset.getTekstit().add(sv);
-
         return GenericHelper.luoHaeTotuusarvo(GenericHelper.luoValintaperusteViite(kielikoetunniste, false,
                 Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO, "Kielikoe", true, kuvaukset), false);
     }
@@ -278,37 +207,27 @@ public class PkJaYoPohjaiset {
     public static Funktiokutsu luoKielikoekriteeri2Funktiokutsu() {
         final Funktiokutsu seitseman = GenericHelper.luoLukuarvo(7.0);
         class KriteeriGen {
-
             public Funktiokutsu luoKriteeri(final String ainetunniste) {
                 Funktiokutsu oppiaineOnOpetuskieli = GenericHelper.luoValintaperusteyhtasuuruus(GenericHelper
                         .luoValintaperusteViite(opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO, "Opetuskieli",
                                 false), GenericHelper.luoValintaperusteViite(PkAineet.oppiaine(ainetunniste), false,
                         Valintaperustelahde.HAETTAVA_ARVO, ainetunniste + " oppiaine"));
-
                 Funktiokutsu arvosana = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(
                         PkAineet.pakollinen(ainetunniste), false, Valintaperustelahde.HAETTAVA_ARVO), 0.0);
-
                 Funktiokutsu arvosana_kymppiluokka = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(
                         PkAineet.kymppi(ainetunniste), false, Valintaperustelahde.HAETTAVA_ARVO), 0.0);
-
                 Funktiokutsu max = GenericHelper.luoMaksimi(arvosana, arvosana_kymppiluokka);
-
                 Funktiokutsu arvosanaSuurempiKuin7 = GenericHelper.luoSuurempiTaiYhtasuuriKuin(max, seitseman);
-
                 return GenericHelper.luoJa(oppiaineOnOpetuskieli, arvosanaSuurempiKuin7);
             }
         }
-
         // Tarkastellaan A1- ja A2-kieliä
-        final String[] aineet = { Aineet.a11Kieli, Aineet.a12Kieli, Aineet.a13Kieli, Aineet.a21Kieli, Aineet.a22Kieli,
-                Aineet.a23Kieli };
-
+        final String[] aineet = {Aineet.a11Kieli, Aineet.a12Kieli, Aineet.a13Kieli, Aineet.a21Kieli, Aineet.a22Kieli, Aineet.a23Kieli};
         List<Funktiokutsu> args = new ArrayList<Funktiokutsu>();
         KriteeriGen gen = new KriteeriGen();
         for (String aine : aineet) {
             args.add(gen.luoKriteeri(aine));
         }
-
         return GenericHelper.luoTai(args.toArray(new FunktionArgumentti[args.size()]));
     }
 
@@ -318,7 +237,6 @@ public class PkJaYoPohjaiset {
      * oppilaitoksen opetuskieli
      */
     public static Funktiokutsu luoKielikoekriteeri3Funktiokutsu() {
-
         final Funktiokutsu seitseman = GenericHelper.luoLukuarvo(7.0);
         final String fi = "fi";
         final String sv = "sv";
@@ -336,25 +254,17 @@ public class PkJaYoPohjaiset {
                         GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(GenericHelper.luoValintaperusteViite(
                                 PkAineet.oppiaine(ainetunniste), false, Valintaperustelahde.HAETTAVA_ARVO, ainetunniste
                                         + " oppiaine"), sv + toisenaKielenaPostfix, false)));
-
                 Funktiokutsu arvosanaAi = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(
                         PkAineet.pakollinen(ainetunniste), false, Valintaperustelahde.HAETTAVA_ARVO), 0);
-
                 Funktiokutsu arvosanaAi_kymppiluokka = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(
                         PkAineet.kymppi(ainetunniste), false, Valintaperustelahde.HAETTAVA_ARVO), 0);
-
                 Funktiokutsu max = GenericHelper.luoMaksimi(arvosanaAi, arvosanaAi_kymppiluokka);
-
                 Funktiokutsu arvosanaSuurempiKuin7 = GenericHelper.luoSuurempiTaiYhtasuuriKuin(max, seitseman);
-
                 return GenericHelper.luoJa(aidinkieliOnFiTaiSvToisenaKielena, arvosanaSuurempiKuin7);
             }
         }
-
         KriteeriGen gen = new KriteeriGen();
-
-        return GenericHelper.luoTai(gen.luoKriteeri(Aineet.aidinkieliJaKirjallisuus1),
-                gen.luoKriteeri(Aineet.aidinkieliJaKirjallisuus2));
+        return GenericHelper.luoTai(gen.luoKriteeri(Aineet.aidinkieliJaKirjallisuus1), gen.luoKriteeri(Aineet.aidinkieliJaKirjallisuus2));
     }
 
     /**
@@ -375,7 +285,6 @@ public class PkJaYoPohjaiset {
      * viittomakielisille joka on vastaanottavan oppilaitoksen opetuskieli
      */
     public static Funktiokutsu luoKielikoekriteeri5Funktiokutsu() {
-
         final Funktiokutsu viisi = GenericHelper.luoLukuarvo(5.0);
         final String fi = "fi";
         final String sv = "sv";
@@ -420,11 +329,8 @@ public class PkJaYoPohjaiset {
                 return GenericHelper.luoJa(opetuskieli, arvosanaSuurempiKuinViisi);
             }
         }
-
         KriteeriGen gen = new KriteeriGen();
-        return GenericHelper.luoTai(gen.luoKriteeri(Aineet.aidinkieliJaKirjallisuus1),
-                gen.luoKriteeri(Aineet.aidinkieliJaKirjallisuus2));
-
+        return GenericHelper.luoTai(gen.luoKriteeri(Aineet.aidinkieliJaKirjallisuus1), gen.luoKriteeri(Aineet.aidinkieliJaKirjallisuus2));
     }
 
     /**
@@ -441,25 +347,19 @@ public class PkJaYoPohjaiset {
                         .luoValintaperusteViite(opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO, "Opetuskieli",
                                 false), GenericHelper.luoValintaperusteViite(YoAineet.oppiaine(ainetunniste), false,
                         Valintaperustelahde.HAETTAVA_ARVO, ainetunniste + " oppiaine"));
-
                 Funktiokutsu arvosana = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(
                         YoAineet.pakollinen(ainetunniste), false, Valintaperustelahde.HAETTAVA_ARVO), 0.0);
-
                 Funktiokutsu arvosanaSuurempiKuin5 = GenericHelper.luoSuurempiTaiYhtasuuriKuin(arvosana, viisi);
-
                 return GenericHelper.luoJa(oppiaineOnOpetuskieli, arvosanaSuurempiKuin5);
             }
         }
 
-        final String[] aineet = { Aineet.a11Kieli, Aineet.a12Kieli, Aineet.a13Kieli, Aineet.a21Kieli, Aineet.a22Kieli,
-                Aineet.a23Kieli, Aineet.b1Kieli };
-
+        final String[] aineet = {Aineet.a11Kieli, Aineet.a12Kieli, Aineet.a13Kieli, Aineet.a21Kieli, Aineet.a22Kieli, Aineet.a23Kieli, Aineet.b1Kieli};
         List<Funktiokutsu> args = new ArrayList<Funktiokutsu>();
         KriteeriGen gen = new KriteeriGen();
         for (String aine : aineet) {
             args.add(gen.luoKriteeri(aine));
         }
-
         return GenericHelper.luoTai(args.toArray(new FunktionArgumentti[args.size()]));
     }
 
@@ -501,67 +401,63 @@ public class PkJaYoPohjaiset {
         final String vk = "vk";
 
         return GenericHelper
-            .luoTai(
-                GenericHelper.luoJa(GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(GenericHelper
-                        .luoValintaperusteViite(opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO, "Opetuskieli",
-                                false), fi), GenericHelper.luoHaeTotuusarvo(GenericHelper.luoValintaperusteViite(
-                        peruskoulunPaattotodistusVahintaanSeitseman + fi, false, Valintaperustelahde.HAETTAVA_ARVO),
-                        false)),
-                GenericHelper.luoJa(GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(GenericHelper
-                        .luoValintaperusteViite(opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO, "Opetuskieli",
-                                false), sv), GenericHelper.luoHaeTotuusarvo(GenericHelper.luoValintaperusteViite(
-                        peruskoulunPaattotodistusVahintaanSeitseman + sv, false, Valintaperustelahde.HAETTAVA_ARVO),
-                        false)),
-                GenericHelper.luoJa(GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(GenericHelper
-                        .luoValintaperusteViite(opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO, "Opetuskieli",
-                                false), se), GenericHelper.luoHaeTotuusarvo(GenericHelper.luoValintaperusteViite(
-                        peruskoulunPaattotodistusVahintaanSeitseman + se, false, Valintaperustelahde.HAETTAVA_ARVO),
-                        false)),
-                GenericHelper.luoJa(GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(GenericHelper
-                        .luoValintaperusteViite(opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO, "Opetuskieli",
-                                false), vk), GenericHelper.luoHaeTotuusarvo(GenericHelper.luoValintaperusteViite(
-                        peruskoulunPaattotodistusVahintaanSeitseman + vk, false, Valintaperustelahde.HAETTAVA_ARVO),
-                        false)),
-                GenericHelper.luoJa(GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(GenericHelper
-                        .luoValintaperusteViite(opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO,
-                                "Opetuskieli", false), fi), GenericHelper.luoHaeTotuusarvo(GenericHelper
-                        .luoValintaperusteViite(lukionPaattotodistusVahintaanSeitseman + fi, false,
-                                Valintaperustelahde.HAETTAVA_ARVO), false)),
-                GenericHelper.luoJa(GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(GenericHelper
-                        .luoValintaperusteViite(opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO,
-                                "Opetuskieli", false), sv), GenericHelper.luoHaeTotuusarvo(GenericHelper
-                        .luoValintaperusteViite(lukionPaattotodistusVahintaanSeitseman + sv, false,
-                                Valintaperustelahde.HAETTAVA_ARVO), false)),
-                GenericHelper.luoJa(GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(GenericHelper
-                        .luoValintaperusteViite(opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO,
-                                "Opetuskieli", false), se), GenericHelper.luoHaeTotuusarvo(GenericHelper
-                        .luoValintaperusteViite(lukionPaattotodistusVahintaanSeitseman + se, false,
-                                Valintaperustelahde.HAETTAVA_ARVO), false)),
-                GenericHelper.luoJa(GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(GenericHelper
-                        .luoValintaperusteViite(opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO,
-                                "Opetuskieli", false), vk), GenericHelper.luoHaeTotuusarvo(GenericHelper
-                        .luoValintaperusteViite(lukionPaattotodistusVahintaanSeitseman + vk, false,
-                                Valintaperustelahde.HAETTAVA_ARVO), false)));
+                .luoTai(
+                        GenericHelper.luoJa(GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(GenericHelper
+                                .luoValintaperusteViite(opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO, "Opetuskieli",
+                                        false), fi), GenericHelper.luoHaeTotuusarvo(GenericHelper.luoValintaperusteViite(
+                                        peruskoulunPaattotodistusVahintaanSeitseman + fi, false, Valintaperustelahde.HAETTAVA_ARVO),
+                                false)),
+                        GenericHelper.luoJa(GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(GenericHelper
+                                .luoValintaperusteViite(opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO, "Opetuskieli",
+                                        false), sv), GenericHelper.luoHaeTotuusarvo(GenericHelper.luoValintaperusteViite(
+                                        peruskoulunPaattotodistusVahintaanSeitseman + sv, false, Valintaperustelahde.HAETTAVA_ARVO),
+                                false)),
+                        GenericHelper.luoJa(GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(GenericHelper
+                                .luoValintaperusteViite(opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO, "Opetuskieli",
+                                        false), se), GenericHelper.luoHaeTotuusarvo(GenericHelper.luoValintaperusteViite(
+                                        peruskoulunPaattotodistusVahintaanSeitseman + se, false, Valintaperustelahde.HAETTAVA_ARVO),
+                                false)),
+                        GenericHelper.luoJa(GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(GenericHelper
+                                .luoValintaperusteViite(opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO, "Opetuskieli",
+                                        false), vk), GenericHelper.luoHaeTotuusarvo(GenericHelper.luoValintaperusteViite(
+                                        peruskoulunPaattotodistusVahintaanSeitseman + vk, false, Valintaperustelahde.HAETTAVA_ARVO),
+                                false)),
+                        GenericHelper.luoJa(GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(GenericHelper
+                                .luoValintaperusteViite(opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO,
+                                        "Opetuskieli", false), fi), GenericHelper.luoHaeTotuusarvo(GenericHelper
+                                .luoValintaperusteViite(lukionPaattotodistusVahintaanSeitseman + fi, false,
+                                        Valintaperustelahde.HAETTAVA_ARVO), false)),
+                        GenericHelper.luoJa(GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(GenericHelper
+                                .luoValintaperusteViite(opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO,
+                                        "Opetuskieli", false), sv), GenericHelper.luoHaeTotuusarvo(GenericHelper
+                                .luoValintaperusteViite(lukionPaattotodistusVahintaanSeitseman + sv, false,
+                                        Valintaperustelahde.HAETTAVA_ARVO), false)),
+                        GenericHelper.luoJa(GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(GenericHelper
+                                .luoValintaperusteViite(opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO,
+                                        "Opetuskieli", false), se), GenericHelper.luoHaeTotuusarvo(GenericHelper
+                                .luoValintaperusteViite(lukionPaattotodistusVahintaanSeitseman + se, false,
+                                        Valintaperustelahde.HAETTAVA_ARVO), false)),
+                        GenericHelper.luoJa(GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(GenericHelper
+                                .luoValintaperusteViite(opetuskieli, true, Valintaperustelahde.HAKUKOHTEEN_ARVO,
+                                        "Opetuskieli", false), vk), GenericHelper.luoHaeTotuusarvo(GenericHelper
+                                .luoValintaperusteViite(lukionPaattotodistusVahintaanSeitseman + vk, false,
+                                        Valintaperustelahde.HAETTAVA_ARVO), false)));
     }
 
-    public static Laskentakaava luoYhdistettyPeruskaavaJaKielikoekaava(Laskentakaava peruskaava,
-            Laskentakaava kielikoekaava) {
-        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(GenericHelper.luoSumma(peruskaava, GenericHelper
-                .luoHylkaa(kielikoekaava, "Hylätty kielikoetulos", "Underkänd i språkprov")),
+    public static Laskentakaava luoYhdistettyPeruskaavaJaKielikoekaava(Laskentakaava peruskaava, Laskentakaava kielikoekaava) {
+        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(GenericHelper.luoSumma(peruskaava,
+                        GenericHelper.luoHylkaa(kielikoekaava, "Hylätty kielikoetulos", "Underkänd i språkprov")),
                 peruskaava.getNimi() + " + " + kielikoekaava.getNimi());
     }
 
-    public static Laskentakaava luoYhdistettyPeruskaavaJaLisapistekaava(Laskentakaava peruskaava,
-            Laskentakaava lisapistekaava) {
+    public static Laskentakaava luoYhdistettyPeruskaavaJaLisapistekaava(Laskentakaava peruskaava, Laskentakaava lisapistekaava) {
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(GenericHelper.luoSumma(peruskaava, lisapistekaava),
                 peruskaava.getNimi() + " + " + lisapistekaava.getNimi());
     }
 
-    public static Laskentakaava luoYhdistettyPeruskaavaJaValintakoekaava(Laskentakaava peruskaava,
-            Laskentakaava valintakoekaava) {
+    public static Laskentakaava luoYhdistettyPeruskaavaJaValintakoekaava(Laskentakaava peruskaava, Laskentakaava valintakoekaava) {
         Funktiokutsu yhdistetty = GenericHelper.luoSumma(peruskaava, valintakoekaava);
-        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(yhdistetty, peruskaava.getNimi() + " + "
-                + valintakoekaava.getNimi());
+        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(yhdistetty, peruskaava.getNimi() + " + " + valintakoekaava.getNimi());
     }
 
     /**
@@ -571,7 +467,7 @@ public class PkJaYoPohjaiset {
      */
     public static Laskentakaava luoUlkomaillaSuoritettuKoulutusTaiOppivelvollisuudenSuorittaminenKeskeytynyt() {
         Funktiokutsu ulkomaillaSuoritettuKoulutus = GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(GenericHelper
-                .luoValintaperusteViite(PkPohjaiset.pohjakoulutusAvain, false, Valintaperustelahde.HAETTAVA_ARVO),
+                        .luoValintaperusteViite(PkPohjaiset.pohjakoulutusAvain, false, Valintaperustelahde.HAETTAVA_ARVO),
                 PkPohjaiset.ulkomaillaSuoritettuKoulutus, Boolean.FALSE);
 
         Funktiokutsu oppivelvollisuudenSuorittaminenKeskeytynyt = GenericHelper.luoHaeMerkkijonoJaVertaaYhtasuuruus(
@@ -579,37 +475,25 @@ public class PkJaYoPohjaiset {
                         Valintaperustelahde.HAETTAVA_ARVO), PkPohjaiset.oppivelvollisuudenSuorittaminenKeskeytynyt,
                 Boolean.FALSE);
 
-        Funktiokutsu tai = GenericHelper.luoTai(ulkomaillaSuoritettuKoulutus,
-                oppivelvollisuudenSuorittaminenKeskeytynyt);
-
-        Funktiokutsu hylkaa = GenericHelper.luoHylkaa(tai,
-                "Hylätty harkinnanvaraisessa valinnassa", "Ej godkänd i antagning enligt prövning");
-
-        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(hylkaa, "Ulkomailla suoritettu koulutus tai "
-                + "oppivelvollisuuden suorittaminen keskeytynyt");
+        Funktiokutsu tai = GenericHelper.luoTai(ulkomaillaSuoritettuKoulutus, oppivelvollisuudenSuorittaminenKeskeytynyt);
+        Funktiokutsu hylkaa = GenericHelper.luoHylkaa(tai, "Hylätty harkinnanvaraisessa valinnassa", "Ej godkänd i antagning enligt prövning");
+        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(hylkaa, "Ulkomailla suoritettu koulutus tai " + "oppivelvollisuuden suorittaminen keskeytynyt");
     }
 
-    public static Laskentakaava luoPoikkeavanValintaryhmanLaskentakaava(Laskentakaava valintakoekaava,
-            Laskentakaava kielikoekaava) {
-        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(GenericHelper.luoSumma(valintakoekaava, GenericHelper
-                .luoHylkaa(kielikoekaava, "Hylätty kielikoetulos", "Underkänd i språkprov")),
-                valintakoekaava.getNimi() + " + hylkäysperusteet (*)");
+    public static Laskentakaava luoPoikkeavanValintaryhmanLaskentakaava(Laskentakaava valintakoekaava, Laskentakaava kielikoekaava) {
+        return GenericHelper.luoLaskentakaavaJaNimettyFunktio(GenericHelper.luoSumma(valintakoekaava, GenericHelper.luoHylkaa(kielikoekaava,
+                        "Hylätty kielikoetulos", "Underkänd i språkprov")), valintakoekaava.getNimi() + " + hylkäysperusteet (*)");
 
     }
 
     public static Laskentakaava urheilijaLisapisteLukuarvo(String tunniste) {
-
         String alaraja = "0";
         String ylaraja = "3";
-
         List<Arvovalikonvertteriparametri> konvs = new ArrayList<Arvovalikonvertteriparametri>();
         konvs.add(GenericHelper.luoArvovalikonvertteriparametri(alaraja, ylaraja));
-
         Funktiokutsu funktiokutsu = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(tunniste, false,
                 Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO, "Urheilijan lisäpiste", true), 0, konvs);
-
         return GenericHelper.luoLaskentakaavaJaNimettyFunktio(funktiokutsu, "Urheilijalisäpisteen laskentakaava");
-
     }
 
     public static Laskentakaava luoHakutoivejarjestysTasapistekaava() {
