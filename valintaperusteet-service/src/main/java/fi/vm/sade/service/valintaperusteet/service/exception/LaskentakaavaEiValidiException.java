@@ -2,11 +2,6 @@ package fi.vm.sade.service.valintaperusteet.service.exception;
 
 import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
 
-/**
- * User: kwuoti
- * Date: 28.1.2013
- * Time: 13.41
- */
 public class LaskentakaavaEiValidiException extends RuntimeException {
 
     private Laskentakaava validoituLaskentakaava;

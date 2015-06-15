@@ -2,9 +2,6 @@ package fi.vm.sade.service.valintaperusteet.service.exception;
 
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi;
 
-/**
- * User: wuoti Date: 30.7.2013 Time: 15.30
- */
 public class FunktiokutsuMuodostaaSilmukanException extends Exception {
     private Long funktiokutsuId;
     private Funktionimi funktionimi;
@@ -16,24 +13,21 @@ public class FunktiokutsuMuodostaaSilmukanException extends Exception {
         this.laskentakaavaId = laskentakaavaId;
     }
 
-    public FunktiokutsuMuodostaaSilmukanException(String message, Long funktiokutsuId, Funktionimi funktionimi,
-            Long laskentakaavaId) {
+    public FunktiokutsuMuodostaaSilmukanException(String message, Long funktiokutsuId, Funktionimi funktionimi, Long laskentakaavaId) {
         super(message);
         this.funktiokutsuId = funktiokutsuId;
         this.funktionimi = funktionimi;
         this.laskentakaavaId = laskentakaavaId;
     }
 
-    public FunktiokutsuMuodostaaSilmukanException(String message, Throwable cause, Long funktiokutsuId,
-            Funktionimi funktionimi, Long laskentakaavaId) {
+    public FunktiokutsuMuodostaaSilmukanException(String message, Throwable cause, Long funktiokutsuId, Funktionimi funktionimi, Long laskentakaavaId) {
         super(message, cause);
         this.funktiokutsuId = funktiokutsuId;
         this.funktionimi = funktionimi;
         this.laskentakaavaId = laskentakaavaId;
     }
 
-    public FunktiokutsuMuodostaaSilmukanException(Throwable cause, Long funktiokutsuId, Funktionimi funktionimi,
-            Long laskentakaavaId) {
+    public FunktiokutsuMuodostaaSilmukanException(Throwable cause, Long funktiokutsuId, Funktionimi funktionimi, Long laskentakaavaId) {
         super(cause);
         this.funktiokutsuId = funktiokutsuId;
         this.funktionimi = funktionimi;

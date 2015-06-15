@@ -1,12 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.service.exception;
 
-/**
- * User: wuoti
- * Date: 10.5.2013
- * Time: 10.15
- *
- * */
-public class ValintakoettaEiVoiPoistaaException extends  RuntimeException{
+public class ValintakoettaEiVoiPoistaaException extends RuntimeException {
 
     public ValintakoettaEiVoiPoistaaException() {
     }

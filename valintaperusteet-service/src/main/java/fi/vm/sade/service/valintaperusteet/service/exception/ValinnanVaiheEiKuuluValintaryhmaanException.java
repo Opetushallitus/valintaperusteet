@@ -1,14 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.service.exception;
 
-/**
- * User: kwuoti
- * Date: 18.2.2013
- * Time: 13.23
- */
 public class ValinnanVaiheEiKuuluValintaryhmaanException extends RuntimeException {
     private String valinnanVaiheOid;
     private String valintaryhmaOid;
-
 
     public ValinnanVaiheEiKuuluValintaryhmaanException(String valinnanVaiheOid, String valintaryhmaOid) {
         this.valinnanVaiheOid = valinnanVaiheOid;

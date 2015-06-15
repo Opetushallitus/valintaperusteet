@@ -1,10 +1,5 @@
 package fi.vm.sade.service.valintaperusteet.service.exception;
 
-/**
- * User: wuoti
- * Date: 30.7.2013
- * Time: 15.49
- */
 public class LaskentakaavaMuodostaaSilmukanException extends RuntimeException {
     private Long parentLaskentakaavaId;
     private Long funktiokutsuId;

@@ -1,8 +1,5 @@
 package fi.vm.sade.service.valintaperusteet.service.exception;
 
-/**
- * User: kwuoti Date: 18.2.2013 Time: 12.53
- */
 public class HakukohdeViiteEiOleOlemassaException extends RuntimeException {
 
     private String hakukohdeViiteOid;

@@ -1,8 +1,5 @@
 package fi.vm.sade.service.valintaperusteet.service.exception;
 
-/**
- * Created by teemu on 17.11.2014.
- */
 public class ValintaryhmaaEiVoidaKopioida extends RuntimeException {
 
     private String parentOid;

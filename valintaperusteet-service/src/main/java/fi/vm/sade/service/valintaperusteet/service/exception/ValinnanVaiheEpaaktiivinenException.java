@@ -1,10 +1,5 @@
 package fi.vm.sade.service.valintaperusteet.service.exception;
 
-/**
- * User: wuoti
- * Date: 2.8.2013
- * Time: 14.03
- */
 public class ValinnanVaiheEpaaktiivinenException extends RuntimeException {
     public ValinnanVaiheEpaaktiivinenException() {
     }

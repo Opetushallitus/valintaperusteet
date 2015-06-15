@@ -1,12 +1,5 @@
 package fi.vm.sade.service.valintaperusteet.service.exception;
 
-/**
- * Created with IntelliJ IDEA.
- * User: jukais
- * Date: 1.10.2013
- * Time: 17.07
- * To change this template use File | Settings | File Templates.
- */
 public class HakijaryhmaEiOleOlemassaException extends RuntimeException {
     private String hakijaryhmaOid;
 
