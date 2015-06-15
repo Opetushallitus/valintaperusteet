@@ -17,10 +17,6 @@ import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaListDTO;
 
-/**
- * Created with IntelliJ IDEA. User: kkammone Date: 10.1.2013 Time: 12:01 To
- * change this template use File | Settings | File Templates.
- */
 @Path("valintaryhma")
 public interface ValintaryhmaResource {
 
@@ -121,5 +117,4 @@ public interface ValintaryhmaResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response insertValintakoekoodi(@PathParam("valintaryhmaOid") String valintaryhamOid, KoodiDTO valintakoekoodi);
-
 }

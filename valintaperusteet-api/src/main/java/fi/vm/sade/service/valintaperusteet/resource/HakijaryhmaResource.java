@@ -11,16 +11,11 @@ import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 import fi.vm.sade.service.valintaperusteet.dto.*;
 
-/**
- * Created with IntelliJ IDEA. User: jukais Date: 17.1.2013 Time: 14.42 To
- * change this template use File | Settings | File Templates.
- */
 @Path("hakijaryhma")
 public interface HakijaryhmaResource {
 
     /**
      * Operation is idempotent
-     * @body hakukohdeOid lista JSON:lla
      */
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -64,5 +59,4 @@ public interface HakijaryhmaResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response siirra(HakijaryhmaSiirraDTO dto);
-
 }

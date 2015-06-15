@@ -9,9 +9,6 @@ import javax.ws.rs.core.Response;
 import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi;
 
-/**
- * User: kwuoti Date: 17.1.2013 Time: 13.54
- */
 @Path("laskentakaava")
 public interface LaskentakaavaResource {
 
@@ -33,8 +30,7 @@ public interface LaskentakaavaResource {
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    LaskentakaavaDTO kaava(@PathParam("id") Long id,
-                           @DefaultValue("true") @QueryParam("funktiopuu") Boolean funktiopuu);
+    LaskentakaavaDTO kaava(@PathParam("id") Long id, @DefaultValue("true") @QueryParam("funktiopuu") Boolean funktiopuu);
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

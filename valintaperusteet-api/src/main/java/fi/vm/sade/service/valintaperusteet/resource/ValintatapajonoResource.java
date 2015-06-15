@@ -9,10 +9,6 @@ import javax.ws.rs.core.Response;
 
 import fi.vm.sade.service.valintaperusteet.dto.*;
 
-/**
- * Created with IntelliJ IDEA. User: jukais Date: 17.1.2013 Time: 14.42 To
- * change this template use File | Settings | File Templates.
- */
 @Path("valintatapajono")
 public interface ValintatapajonoResource {
 
@@ -64,7 +60,7 @@ public interface ValintatapajonoResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{valintatapajonoOid}/jarjestyskriteeri")
     Response insertJarjestyskriteeri(@PathParam("valintatapajonoOid") String valintatapajonoOid,
-            JarjestyskriteeriInsertDTO jk) throws Exception;
+                                     JarjestyskriteeriInsertDTO jk) throws Exception;
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -75,5 +71,4 @@ public interface ValintatapajonoResource {
     @DELETE
     @Path("/{oid}")
     Response delete(@PathParam("oid") String oid);
-
 }

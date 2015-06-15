@@ -11,10 +11,6 @@ import javax.ws.rs.core.MediaType;
 
 import fi.vm.sade.service.valintaperusteet.dto.ValintaperustePuuDTO;
 
-/**
- * Created with IntelliJ IDEA. User: kkammone Date: 17.10.2013 Time: 12:58 To
- * change this template use File | Settings | File Templates.
- */
 @Path("puu")
 public interface PuuResource {
 
@@ -24,5 +20,4 @@ public interface PuuResource {
             @QueryParam("tila") List<String> tila, @QueryParam("hakukohteet") @DefaultValue("true") boolean hakukohteet,
             @QueryParam("kohdejoukko") @DefaultValue("") String kohdejoukko,
             @QueryParam("valintaryhma") @DefaultValue("") String valintaryhma);
-
 }

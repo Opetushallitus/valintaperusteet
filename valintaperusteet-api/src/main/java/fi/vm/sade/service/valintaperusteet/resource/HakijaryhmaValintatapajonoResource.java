@@ -9,10 +9,6 @@ import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaValintatapajonoUpdateD
 
 import java.util.List;
 
-/**
- * Created with IntelliJ IDEA. User: jukais Date: 17.1.2013 Time: 14.42 To
- * change this template use File | Settings | File Templates.
- */
 @Path("hakijaryhma_valintatapajono")
 public interface HakijaryhmaValintatapajonoResource {
 
@@ -37,5 +33,4 @@ public interface HakijaryhmaValintatapajonoResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{oid}/jarjesta")
     List<HakijaryhmaValintatapajonoUpdateDTO> jarjesta(@PathParam("oid") String hakijaryhmaValintatapajonoOid, List<String> oids);
-
 }

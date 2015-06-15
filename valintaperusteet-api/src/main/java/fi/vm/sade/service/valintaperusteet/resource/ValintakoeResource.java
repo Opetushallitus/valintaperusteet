@@ -14,35 +14,27 @@ import javax.ws.rs.core.Response;
 
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
 
-/**
- * User: kwuoti Date: 15.4.2013 Time: 16.04
- */
 @Path("valintakoe")
 public interface ValintakoeResource {
 
-	// @GET
-	// @Path("/")
-	// @Produces(MediaType.APPLICATION_JSON)
-	// List<ValintakoeDTO> readAll();
-	@POST
-	@Path("/")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	List<ValintakoeDTO> readByOids(List<String> oids);
+    @POST
+    @Path("/")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    List<ValintakoeDTO> readByOids(List<String> oids);
 
-	@GET
-	@Path("/{oid}")
-	@Produces(MediaType.APPLICATION_JSON)
-	ValintakoeDTO readByOid(@PathParam("oid") String oid);
+    @GET
+    @Path("/{oid}")
+    @Produces(MediaType.APPLICATION_JSON)
+    ValintakoeDTO readByOid(@PathParam("oid") String oid);
 
-	@POST
-	@Path("/{oid}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	Response update(@PathParam("oid") String oid, ValintakoeDTO valintakoe);
+    @POST
+    @Path("/{oid}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    Response update(@PathParam("oid") String oid, ValintakoeDTO valintakoe);
 
-	@DELETE
-	@Path("/{oid}")
-	Response delete(@PathParam("oid") String oid);
-
+    @DELETE
+    @Path("/{oid}")
+    Response delete(@PathParam("oid") String oid);
 }

@@ -15,10 +15,6 @@ import javax.ws.rs.core.Response;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriDTO;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriInsertDTO;
 
-/**
- * Created with IntelliJ IDEA. User: jukais Date: 31.1.2013 Time: 10.51 To
- * change this template use File | Settings | File Templates.
- */
 @Path("jarjestyskriteeri")
 public interface JarjestyskriteeriResource {
 

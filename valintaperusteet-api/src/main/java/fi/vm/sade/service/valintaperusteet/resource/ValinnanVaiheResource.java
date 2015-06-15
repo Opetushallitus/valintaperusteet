@@ -21,9 +21,6 @@ import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
 
-/**
- * User: jukais Date: 17.1.2013 Time: 14.42
- */
 @Path("valinnanvaihe")
 public interface ValinnanVaiheResource {
 
@@ -74,5 +71,4 @@ public interface ValinnanVaiheResource {
     @Path("/{oid}/kuuluuSijoitteluun")
     @Produces(MediaType.APPLICATION_JSON)
     Map<String, Boolean> kuuluuSijoitteluun(@PathParam("oid") String oid);
-
 }
