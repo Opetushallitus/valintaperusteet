@@ -2,11 +2,6 @@ package fi.vm.sade.service.valintaperusteet.util;
 
 import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
 
-/**
- * User: wuoti
- * Date: 10.5.2013
- * Time: 9.33
- */
 public class ValintakoeUtil {
     public static Valintakoe teeKopioMasterista(Valintakoe master) {
         Valintakoe kopio = new Valintakoe();
@@ -21,7 +16,6 @@ public class ValintakoeUtil {
         kopio.setKutsutaankoKaikki(master.getKutsutaankoKaikki());
         kopio.setKutsuttavienMaara(master.getKutsuttavienMaara());
         kopio.setKutsunKohde(master.getKutsunKohde());
-
         return kopio;
     }
 }

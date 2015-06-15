@@ -9,11 +9,6 @@ import org.hibernate.collection.internal.PersistentSet;
 
 import java.io.IOException;
 
-/**
- * User: bleed
- * Date: 3/7/13
- * Time: 4:17 PM
- */
 public class CollectionSerializer extends JsonSerializer<PersistentSet> {
     @Override
     public void serialize(PersistentSet value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
@@ -21,7 +16,6 @@ public class CollectionSerializer extends JsonSerializer<PersistentSet> {
             jgen.writeNull();
             return;
         }
-
         jgen.writeStartArray();
         for(Object obj : value) {
             JsonSerializer<Object> valueSerializer = provider.findValueSerializer(obj.getClass(), null);

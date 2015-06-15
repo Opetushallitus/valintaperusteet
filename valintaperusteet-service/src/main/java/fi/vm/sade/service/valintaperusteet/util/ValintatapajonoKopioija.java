@@ -3,11 +3,6 @@ package fi.vm.sade.service.valintaperusteet.util;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import org.apache.commons.lang.StringUtils;
 
-/**
- * User: kwuoti
- * Date: 14.2.2013
- * Time: 14.55
- */
 public class ValintatapajonoKopioija implements Kopioija<Valintatapajono> {
     @Override
     public Valintatapajono luoKlooni(Valintatapajono valintatapajono) {
@@ -21,64 +16,47 @@ public class ValintatapajonoKopioija implements Kopioija<Valintatapajono> {
         if (from.getAktiivinen() != null) {
             to.setAktiivinen(from.getAktiivinen());
         }
-
         if (from.getAutomaattinenLaskentaanSiirto() != null) {
             to.setAutomaattinenLaskentaanSiirto(from.getAutomaattinenLaskentaanSiirto());
         }
-
         if (from.getValisijoittelu() != null) {
             to.setValisijoittelu(from.getValisijoittelu());
         }
-
         if (from.getAloituspaikat() != null) {
             to.setAloituspaikat(from.getAloituspaikat());
         }
-
         if (StringUtils.isNotBlank(from.getKuvaus())) {
             to.setKuvaus(from.getKuvaus());
         }
-
         if (StringUtils.isNotBlank(from.getNimi())) {
             to.setNimi(from.getNimi());
         }
-
         if (from.getSiirretaanSijoitteluun() != null) {
             to.setSiirretaanSijoitteluun(from.getSiirretaanSijoitteluun());
         }
-
         if (from.getEiVarasijatayttoa() != null) {
             to.setEiVarasijatayttoa(from.getEiVarasijatayttoa());
         }
-
         if (from.getTasapistesaanto() != null) {
             to.setTasapistesaanto(from.getTasapistesaanto());
         }
-
         if (from.getKaikkiEhdonTayttavatHyvaksytaan() != null) {
             to.setKaikkiEhdonTayttavatHyvaksytaan(from.getKaikkiEhdonTayttavatHyvaksytaan());
         }
-
         // VT-657
         to.setVarasijanTayttojono(from.getVarasijanTayttojono());
-
         if(from.getPoissaOlevaTaytto() != null) {
             to.setPoissaOlevaTaytto(from.getPoissaOlevaTaytto());
         }
         if(from.getVarasijat() != null) {
             to.setVarasijat(from.getVarasijat());
         }
-
         to.setVarasijojaKaytetaanAlkaen(from.getVarasijojaKaytetaanAlkaen());
-
-
         to.setVarasijojaTaytetaanAsti(from.getVarasijojaTaytetaanAsti());
-
         if(from.getKaytetaanValintalaskentaa() != null) {
             to.setKaytetaanValintalaskentaa(from.getKaytetaanValintalaskentaa());
         }
-
         to.setPoistetaankoHylatyt(from.isPoistetaankoHylatyt());
-
     }
 
     @Override
@@ -87,37 +65,28 @@ public class ValintatapajonoKopioija implements Kopioija<Valintatapajono> {
         if (kopio.getAktiivinen().equals(alkuperainenMaster.getAktiivinen())) {
             kopio.setAktiivinen(paivitettyMaster.getAktiivinen());
         }
-
         if (kopio.getAutomaattinenLaskentaanSiirto() == null || kopio.getAutomaattinenLaskentaanSiirto().equals(alkuperainenMaster.getAutomaattinenLaskentaanSiirto())) {
             kopio.setAutomaattinenLaskentaanSiirto(paivitettyMaster.getAutomaattinenLaskentaanSiirto());
         }
-
         if (kopio.getValisijoittelu() == null || kopio.getValisijoittelu().equals(alkuperainenMaster.getValisijoittelu())) {
             kopio.setValisijoittelu(paivitettyMaster.getValisijoittelu());
         }
-
         if (kopio.getAloituspaikat().equals(alkuperainenMaster.getAloituspaikat())) {
             kopio.setAloituspaikat(paivitettyMaster.getAloituspaikat());
         }
-
         if (kopio.getSiirretaanSijoitteluun().equals(alkuperainenMaster.getSiirretaanSijoitteluun())) {
             kopio.setSiirretaanSijoitteluun(paivitettyMaster.getSiirretaanSijoitteluun());
         }
-
         if (kopio.getEiVarasijatayttoa().equals(alkuperainenMaster.getEiVarasijatayttoa())) {
             kopio.setEiVarasijatayttoa(paivitettyMaster.getEiVarasijatayttoa());
         }
-
         if (kopio.getTasapistesaanto().equals(alkuperainenMaster.getTasapistesaanto())) {
             kopio.setTasapistesaanto(paivitettyMaster.getTasapistesaanto());
         }
-
         if (kopio.getKaikkiEhdonTayttavatHyvaksytaan().equals(alkuperainenMaster.getKaikkiEhdonTayttavatHyvaksytaan())) {
             kopio.setKaikkiEhdonTayttavatHyvaksytaan(paivitettyMaster.getKaikkiEhdonTayttavatHyvaksytaan());
         }
-
         kopio.setPoistetaankoHylatyt(paivitettyMaster.isPoistetaankoHylatyt());
-
         // VT-657
         // Pitää kopioida kopion kopio
         if (kopio.getPoissaOlevaTaytto().equals(alkuperainenMaster.getPoissaOlevaTaytto())) {
@@ -135,7 +104,6 @@ public class ValintatapajonoKopioija implements Kopioija<Valintatapajono> {
         if (kopio.getKaytetaanValintalaskentaa().equals(alkuperainenMaster.getKaytetaanValintalaskentaa())) {
             kopio.setKaytetaanValintalaskentaa(paivitettyMaster.getKaytetaanValintalaskentaa());
         }
-
         kopio.setKuvaus(paivitettyMaster.getKuvaus());
         kopio.setNimi(paivitettyMaster.getNimi());
     }
