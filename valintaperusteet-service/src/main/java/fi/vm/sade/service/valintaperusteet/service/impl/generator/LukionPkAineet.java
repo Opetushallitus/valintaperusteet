@@ -6,9 +6,6 @@ import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
 
 import java.util.Map;
 
-/**
- * User: wuoti Date: 31.5.2013 Time: 12.04
- */
 public class LukionPkAineet extends Aineet {
     public static final String PK_etuliite = "PK_";
     public static final String PK_kymmpiluokka = "_10";
@@ -53,16 +50,10 @@ public class LukionPkAineet extends Aineet {
     }
 
     private Laskentakaava luoPKAine(String ainetunniste, String kuvaus) {
-        Funktiokutsu aine = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(pakollinen(ainetunniste),
-                false, Valintaperustelahde.HAETTAVA_ARVO));
-
-        Funktiokutsu aine_kymppiluokka = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(kymppi(ainetunniste),
-                false, Valintaperustelahde.HAETTAVA_ARVO));
-
+        Funktiokutsu aine = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(pakollinen(ainetunniste), false, Valintaperustelahde.HAETTAVA_ARVO));
+        Funktiokutsu aine_kymppiluokka = GenericHelper.luoHaeLukuarvo(GenericHelper.luoValintaperusteViite(kymppi(ainetunniste), false, Valintaperustelahde.HAETTAVA_ARVO));
         Funktiokutsu max = GenericHelper.luoMaksimi(aine, aine_kymppiluokka);
-
-        Laskentakaava laskentakaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(max, kuvaus
-                + PK_kuvausjalkiliite_ilman_valinnaisia);
+        Laskentakaava laskentakaava = GenericHelper.luoLaskentakaavaJaNimettyFunktio(max, kuvaus + PK_kuvausjalkiliite_ilman_valinnaisia);
         return laskentakaava;
     }
 

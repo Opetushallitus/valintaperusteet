@@ -8,31 +8,23 @@ import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi;
 import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
 import fi.vm.sade.service.valintaperusteet.model.*;
 
-/**
- * Created with IntelliJ IDEA. User: kkammone Date: 4.3.2013 Time: 14:25 To
- * change this template use File | Settings | File Templates.
- */
 public class GenericHelper {
     private GenericHelper() {
     }
 
     public static List<Funktioargumentti> luoFunktioargumentit(FunktionArgumentti... args) {
         List<Funktioargumentti> fargs = new ArrayList<Funktioargumentti>();
-
         for (int i = 0; i < args.length; ++i) {
             FunktionArgumentti k = args[i];
             Funktioargumentti arg = new Funktioargumentti();
-
             if (k instanceof Funktiokutsu) {
                 arg.setFunktiokutsuChild((Funktiokutsu) k);
             } else if (k instanceof Laskentakaava) {
                 arg.setLaskentakaavaChild((Laskentakaava) k);
             }
-
             arg.setIndeksi(i + 1);
             fargs.add(arg);
         }
-
         return fargs;
     }
 
@@ -71,18 +63,15 @@ public class GenericHelper {
         return funktiokutsu;
     }
 
-    public static ValintaperusteViite luoValintaperusteViite(String tunniste, boolean onPakollinen,
-            Valintaperustelahde lahde) {
+    public static ValintaperusteViite luoValintaperusteViite(String tunniste, boolean onPakollinen, Valintaperustelahde lahde) {
         return luoValintaperusteViite(tunniste, onPakollinen, lahde, "");
     }
 
-    public static ValintaperusteViite luoValintaperusteViite(String tunniste, boolean onPakollinen,
-            Valintaperustelahde lahde, String kuvaus) {
+    public static ValintaperusteViite luoValintaperusteViite(String tunniste, boolean onPakollinen, Valintaperustelahde lahde, String kuvaus) {
         return luoValintaperusteViite(tunniste, onPakollinen, lahde, kuvaus, false);
     }
 
-    public static ValintaperusteViite luoValintaperusteViite(String tunniste, boolean onPakollinen,
-            Valintaperustelahde lahde, String kuvaus, boolean epasuoraViittaus) {
+    public static ValintaperusteViite luoValintaperusteViite(String tunniste, boolean onPakollinen, Valintaperustelahde lahde, String kuvaus, boolean epasuoraViittaus) {
         ValintaperusteViite vp = new ValintaperusteViite();
         vp.setTunniste(tunniste);
         vp.setOnPakollinen(onPakollinen);
@@ -93,9 +82,7 @@ public class GenericHelper {
         return vp;
     }
 
-    public static ValintaperusteViite luoValintaperusteViite(String tunniste, boolean onPakollinen,
-                                                             Valintaperustelahde lahde, String kuvaus, boolean epasuoraViittaus,
-                                                             TekstiRyhma kuvaukset) {
+    public static ValintaperusteViite luoValintaperusteViite(String tunniste, boolean onPakollinen, Valintaperustelahde lahde, String kuvaus, boolean epasuoraViittaus, TekstiRyhma kuvaukset) {
         ValintaperusteViite vp = new ValintaperusteViite();
         vp.setTunniste(tunniste);
         vp.setOnPakollinen(onPakollinen);
@@ -164,35 +151,29 @@ public class GenericHelper {
         josArgumentti.setFunktiokutsuChild(ehto);
         josArgumentti.setIndeksi(1);
         f.getFunktioargumentit().add(josArgumentti);
-
         Funktioargumentti tottaArgumentti = new Funktioargumentti();
         tottaArgumentti.setFunktiokutsuChild(totta);
         tottaArgumentti.setIndeksi(2);
         f.getFunktioargumentit().add(tottaArgumentti);
-
         Funktioargumentti valettaArgumentti = new Funktioargumentti();
         valettaArgumentti.setFunktiokutsuChild(vale);
         valettaArgumentti.setIndeksi(3);
         f.getFunktioargumentit().add(valettaArgumentti);
-
         return f;
     }
 
     public static Funktiokutsu luoNimettyFunktio(Funktiokutsu funktiokutsu, String nimi) {
         Funktiokutsu nimettyFunktio = new Funktiokutsu();
-
         switch (funktiokutsu.getFunktionimi().getTyyppi()) {
-
-        case LUKUARVOFUNKTIO:
-            nimettyFunktio.setFunktionimi(Funktionimi.NIMETTYLUKUARVO);
-            break;
-        case TOTUUSARVOFUNKTIO:
-            nimettyFunktio.setFunktionimi(Funktionimi.NIMETTYTOTUUSARVO);
-            break;
-        case EI_VALIDI:
-            throw new RuntimeException("Funktiokutsu ei ole validi");
+            case LUKUARVOFUNKTIO:
+                nimettyFunktio.setFunktionimi(Funktionimi.NIMETTYLUKUARVO);
+                break;
+            case TOTUUSARVOFUNKTIO:
+                nimettyFunktio.setFunktionimi(Funktionimi.NIMETTYTOTUUSARVO);
+                break;
+            case EI_VALIDI:
+                throw new RuntimeException("Funktiokutsu ei ole validi");
         }
-
         Syoteparametri s = new Syoteparametri();
         s.setAvain("nimi");
         s.setArvo(nimi);
@@ -246,8 +227,7 @@ public class GenericHelper {
         return a;
     }
 
-    public static Arvokonvertteriparametri luoArvokonvertteriparametri(String arvo, String paluuarvo,
-            boolean hylkaysperuste) {
+    public static Arvokonvertteriparametri luoArvokonvertteriparametri(String arvo, String paluuarvo, boolean hylkaysperuste) {
         Arvokonvertteriparametri a = new Arvokonvertteriparametri();
         a.setArvo(arvo);
         a.setPaluuarvo(paluuarvo);
@@ -256,13 +236,11 @@ public class GenericHelper {
         return a;
     }
 
-    public static Funktiokutsu luoHaeMerkkijonoJaKonvertoiLukuarvoksi(ValintaperusteViite vp,
-            Collection<Arvokonvertteriparametri> arvokonvertterit) {
+    public static Funktiokutsu luoHaeMerkkijonoJaKonvertoiLukuarvoksi(ValintaperusteViite vp, Collection<Arvokonvertteriparametri> arvokonvertterit) {
         Funktiokutsu funktiokutsu = new Funktiokutsu();
         funktiokutsu.setFunktionimi(Funktionimi.HAEMERKKIJONOJAKONVERTOILUKUARVOKSI);
         funktiokutsu.getArvokonvertteriparametrit().addAll(arvokonvertterit);
         funktiokutsu.getValintaperusteviitteet().add(vp);
-
         return funktiokutsu;
     }
 
@@ -271,7 +249,6 @@ public class GenericHelper {
         funktiokutsu.setFunktionimi(Funktionimi.DEMOGRAFIA);
         funktiokutsu.getSyoteparametrit().add(luoSyoteparametri("tunniste", tunniste));
         funktiokutsu.getSyoteparametrit().add(luoSyoteparametri("prosenttiosuus", String.valueOf(prosenttiosuus)));
-
         return funktiokutsu;
     }
 
@@ -279,14 +256,12 @@ public class GenericHelper {
         Funktiokutsu funktiokutsu = new Funktiokutsu();
         funktiokutsu.setFunktionimi(Funktionimi.HAETOTUUSARVO);
         funktiokutsu.getValintaperusteviitteet().add(vp);
-
         return funktiokutsu;
     }
 
     public static Funktiokutsu luoHaeTotuusarvo(ValintaperusteViite vp, boolean oletusarvo) {
         Funktiokutsu funktiokutsu = luoHaeTotuusarvo(vp);
         funktiokutsu.getSyoteparametrit().add(luoSyoteparametri("oletusarvo", String.valueOf(oletusarvo)));
-
         return funktiokutsu;
     }
 
@@ -294,7 +269,6 @@ public class GenericHelper {
         Funktiokutsu ei = new Funktiokutsu();
         ei.setFunktionimi(Funktionimi.EI);
         ei.getFunktioargumentit().addAll(luoFunktioargumentit(arg));
-
         return ei;
     }
 
@@ -305,7 +279,7 @@ public class GenericHelper {
     }
 
     public static Funktiokutsu luoHaeLukuarvo(ValintaperusteViite vp, double oletusarvo,
-            Collection<Arvovalikonvertteriparametri> konvs) {
+                                              Collection<Arvovalikonvertteriparametri> konvs) {
         Funktiokutsu funktiokutsu = luoHaeLukuarvo(vp, oletusarvo);
         funktiokutsu.getArvovalikonvertteriparametrit().addAll(konvs);
         return funktiokutsu;
@@ -314,21 +288,17 @@ public class GenericHelper {
     public static Funktiokutsu luoTai(FunktionArgumentti... args) {
         Funktiokutsu funktiokutsu = new Funktiokutsu();
         funktiokutsu.setFunktionimi(Funktionimi.TAI);
-
         funktiokutsu.getFunktioargumentit().addAll(luoFunktioargumentit(args));
         return funktiokutsu;
     }
 
-    public static Funktiokutsu luoHaeMerkkijonoJaKonvertoiTotuusarvoksi(ValintaperusteViite vp, boolean oletusarvo,
-            Collection<Arvokonvertteriparametri> konvs) {
+    public static Funktiokutsu luoHaeMerkkijonoJaKonvertoiTotuusarvoksi(ValintaperusteViite vp, boolean oletusarvo, Collection<Arvokonvertteriparametri> konvs) {
         Funktiokutsu funktiokutsu = luoHaeMerkkijonoJaKonvertoiTotuusarvoksi(vp, konvs);
         funktiokutsu.getSyoteparametrit().add(luoSyoteparametri("oletusarvo", String.valueOf(oletusarvo)));
-
         return funktiokutsu;
     }
 
-    public static Funktiokutsu luoHaeMerkkijonoJaKonvertoiTotuusarvoksi(ValintaperusteViite vp,
-            Collection<Arvokonvertteriparametri> konvs) {
+    public static Funktiokutsu luoHaeMerkkijonoJaKonvertoiTotuusarvoksi(ValintaperusteViite vp, Collection<Arvokonvertteriparametri> konvs) {
         Funktiokutsu funktiokutsu = new Funktiokutsu();
         funktiokutsu.setFunktionimi(Funktionimi.HAEMERKKIJONOJAKONVERTOITOTUUSARVOKSI);
         funktiokutsu.getValintaperusteviitteet().add(vp);
@@ -366,11 +336,9 @@ public class GenericHelper {
         return f;
     }
 
-    public static Funktiokutsu luoHaeMerkkijonoJaVertaaYhtasuuruus(ValintaperusteViite vp, String vertailtava,
-            boolean oletusarvo) {
+    public static Funktiokutsu luoHaeMerkkijonoJaVertaaYhtasuuruus(ValintaperusteViite vp, String vertailtava, boolean oletusarvo) {
         Funktiokutsu f = luoHaeMerkkijonoJaVertaaYhtasuuruus(vp, vertailtava);
         f.getSyoteparametrit().add(luoSyoteparametri("oletusarvo", String.valueOf(oletusarvo)));
-
         return f;
     }
 
@@ -398,8 +366,7 @@ public class GenericHelper {
         return f;
     }
 
-    public static Funktiokutsu luoHylkaaArvovalilla(FunktionArgumentti arg, String hylkaysperustekuvaus, String hylkaysperustekuvaus_sv, String min,
-            String max) {
+    public static Funktiokutsu luoHylkaaArvovalilla(FunktionArgumentti arg, String hylkaysperustekuvaus, String hylkaysperustekuvaus_sv, String min, String max) {
         Funktiokutsu f = new Funktiokutsu();
         f.setFunktionimi(Funktionimi.HYLKAAARVOVALILLA);
         f.getFunktioargumentit().addAll(luoFunktioargumentit(arg));

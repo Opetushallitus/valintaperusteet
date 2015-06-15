@@ -6,13 +6,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * User: wuoti
- * Date: 31.5.2013
- * Time: 11.57
- */
 public abstract class Aineet {
-
     public static final String aidinkieliJaKirjallisuus1 = "AI";
     public static final String aidinkieliJaKirjallisuus2 = "AI2";
 
