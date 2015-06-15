@@ -3,14 +3,8 @@ package fi.vm.sade.service.valintaperusteet.model;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
-/**
- * User: wuoti
- * Date: 18.6.2013
- * Time: 13.41
- */
 @MappedSuperclass
 public abstract class Koodi extends BaseEntity {
-
     @Column(name = "uri", nullable = false, unique = true)
     private String uri;
 

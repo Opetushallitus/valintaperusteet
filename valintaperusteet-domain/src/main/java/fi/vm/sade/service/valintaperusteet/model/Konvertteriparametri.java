@@ -2,17 +2,10 @@ package fi.vm.sade.service.valintaperusteet.model;
 
 import javax.persistence.*;
 
-/**
- * User: tommiha
- * Date: 1/14/13
- * Time: 10:54 AM
- */
 @MappedSuperclass
 public abstract class Konvertteriparametri extends BaseEntity {
     @Column(name = "paluuarvo")
     private String paluuarvo;
-
-
 
     @JoinColumn(name = "funktiokutsu_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

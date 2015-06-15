@@ -9,10 +9,6 @@ import java.util.Set;
 @Table(name = "jarjestyskriteeri")
 @Cacheable(true)
 public class Jarjestyskriteeri extends BaseEntity implements LinkitettavaJaKopioitava<Jarjestyskriteeri, Set<Jarjestyskriteeri>> {
-
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
 
     @Column(name = "oid", nullable = false, unique = true)

@@ -24,10 +24,6 @@ import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi;
 @Table(name = "funktiokutsu")
 @Cacheable(true)
 public class Funktiokutsu extends BaseEntity implements FunktionArgumentti {
-
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
 
     @Enumerated(EnumType.STRING)
@@ -49,22 +45,22 @@ public class Funktiokutsu extends BaseEntity implements FunktionArgumentti {
     @Column(name = "tallenna_tulos", nullable = false)
     private Boolean tallennaTulos = false;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "funktiokutsu", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "funktiokutsu", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private Set<Arvokonvertteriparametri> arvokonvertteriparametrit = new HashSet<Arvokonvertteriparametri>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "funktiokutsu", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "funktiokutsu", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     // @Sort(type = SortType.NATURAL)
     @OrderBy("minValue")
     private Set<Arvovalikonvertteriparametri> arvovalikonvertteriparametrit = new HashSet<Arvovalikonvertteriparametri>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "funktiokutsu", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "funktiokutsu", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private Set<Syoteparametri> syoteparametrit = new HashSet<Syoteparametri>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent", cascade = { CascadeType.PERSIST, CascadeType.REMOVE }, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     @OrderBy("indeksi")
     private Set<Funktioargumentti> funktioargumentit = new TreeSet<Funktioargumentti>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "funktiokutsu", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "funktiokutsu", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @OrderBy("indeksi")
     private Set<ValintaperusteViite> valintaperusteviitteet = new TreeSet<ValintaperusteViite>();
 

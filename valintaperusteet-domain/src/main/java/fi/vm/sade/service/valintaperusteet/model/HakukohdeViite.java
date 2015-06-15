@@ -3,11 +3,6 @@ package fi.vm.sade.service.valintaperusteet.model;
 import javax.persistence.*;
 import java.util.*;
 
-/**
- * User: kkammone
- * Date: 11.1.2013
- * Time: 14:05
- */
 @Entity
 @Table(name = "hakukohde_viite")
 @Cacheable(true)

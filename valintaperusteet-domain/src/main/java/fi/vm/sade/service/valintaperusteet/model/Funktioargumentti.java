@@ -3,11 +3,6 @@ package fi.vm.sade.service.valintaperusteet.model;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 
-/**
- * User: kwuoti
- * Date: 17.1.2013
- * Time: 15.52
- */
 @Entity
 @Table(name = "funktioargumentti")
 @Cacheable(true)

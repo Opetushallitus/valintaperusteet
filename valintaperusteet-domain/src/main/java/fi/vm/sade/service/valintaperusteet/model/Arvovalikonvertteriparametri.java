@@ -2,14 +2,10 @@ package fi.vm.sade.service.valintaperusteet.model;
 
 import javax.persistence.*;
 
-/**
- * User: kwuoti Date: 21.2.2013 Time: 9.20
- */
 @Entity
 @Table(name = "arvovalikonvertteriparametri")
 @Cacheable(true)
 public class Arvovalikonvertteriparametri extends Konvertteriparametri implements Comparable<Arvovalikonvertteriparametri> {
-
 
     @Override
     public String toString() {
@@ -24,7 +20,6 @@ public class Arvovalikonvertteriparametri extends Konvertteriparametri implement
         return sb.toString();
     }
 
-    //@Column(precision = 17, scale = 4, name = "minvalue", nullable = false)
     @Column(name = "minvalue", nullable = false)
     private String minValue;
 

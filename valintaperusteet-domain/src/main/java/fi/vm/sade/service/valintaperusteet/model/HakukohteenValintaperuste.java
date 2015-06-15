@@ -2,16 +2,10 @@ package fi.vm.sade.service.valintaperusteet.model;
 
 import javax.persistence.*;
 
-/**
- * User: wuoti
- * Date: 12.9.2013
- * Time: 13.03
- */
 @Entity
 @Table(name = "hakukohteen_valintaperuste", uniqueConstraints =
         {@UniqueConstraint(name = "UK_hakukohteen_valintaperuste_01", columnNames = {"tunniste", "hakukohde_viite_id"})})
 public class HakukohteenValintaperuste extends BaseEntity {
-
     @Column(name = "tunniste", nullable = false)
     private String tunniste;
 

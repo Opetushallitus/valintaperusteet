@@ -4,11 +4,6 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * User: kwuoti
- * Date: 21.2.2013
- * Time: 9.21
- */
 @Entity
 @Table(name = "arvokonvertteriparametri")
 @Cacheable(true)
