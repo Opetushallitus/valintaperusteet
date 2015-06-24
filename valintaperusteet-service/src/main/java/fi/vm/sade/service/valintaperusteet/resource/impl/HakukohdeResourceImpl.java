@@ -251,7 +251,24 @@ public class HakukohdeResourceImpl {
     @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Palauttaa valintatapajonot, jossa ei käytetä laskentaa", response = ValintatapajonoDTO.class)
     public List<ValinnanVaiheJonoillaDTO> ilmanLaskentaa(@PathParam("oid") String oid) {
-        return modelMapper.mapList(hakukohdeService.ilmanLaskentaa(oid), ValinnanVaiheJonoillaDTO.class);
+        List<ValinnanVaiheJonoillaDTO> valinnanVaiheJonoillaDTOs = modelMapper.mapList(hakukohdeService.ilmanLaskentaa(oid), ValinnanVaiheJonoillaDTO.class);
+        // Lisää prioriteetit ja filtteröi sitten pois jonot jotka käyttävät laskentaa
+        for (ValinnanVaiheJonoillaDTO vaihe : valinnanVaiheJonoillaDTOs) {
+            if (vaihe.getJonot() != null) {
+                int i = 0;
+                Set<ValintatapajonoDTO> ilmanLaskentaaJonot = new HashSet<>();
+                for (ValintatapajonoDTO jono : vaihe.getJonot()) {
+                    jono.setPrioriteetti(i);
+                    if (!jono.getKaytetaanValintalaskentaa()) {
+                        ilmanLaskentaaJonot.add(jono);
+                    }
+                    i++;
+                }
+                vaihe.setJonot(ilmanLaskentaaJonot);
+            }
+        }
+        
+        return valinnanVaiheJonoillaDTOs;
     }
 
     @GET

@@ -182,10 +182,15 @@ public class ValintalaskentakoostepalveluResourceImpl {
         for (ValinnanVaiheJonoillaDTO vaihe : valinnanVaiheJonoillaDTOs) {
             if (vaihe.getJonot() != null) {
                 int i = 0;
+                Set<ValintatapajonoDTO> ilmanLaskentaaJonot = new HashSet<>();
                 for (ValintatapajonoDTO jono : vaihe.getJonot()) {
                     jono.setPrioriteetti(i);
+                    if (!jono.getKaytetaanValintalaskentaa()) {
+                        ilmanLaskentaaJonot.add(jono);
+                    }
                     i++;
                 }
+                vaihe.setJonot(ilmanLaskentaaJonot);
             }
         }
         return valinnanVaiheJonoillaDTOs;

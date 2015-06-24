@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -116,12 +117,20 @@ public class HakukohdeServiceImpl implements HakukohdeService {
 
     @Override
     public List<ValinnanVaihe> ilmanLaskentaa(String oid) {
-        List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheDAO.ilmanLaskentaaOlevatHakukohteelle(oid);
-        for (ValinnanVaihe valinnanVaihe : valinnanVaiheet) {
+        List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheDAO.valinnanVaiheetJaJonot(oid);
+        // Poistetaan vaiheet joilla ei ole jonoa, jossa ei käytetä laskentaa
+        List<ValinnanVaihe> valinnanVaiheetIlmanlaskentaa = valinnanVaiheet
+                .stream()
+                .filter(vv -> vv.getJonot()
+                        .stream().
+                        anyMatch(j -> Boolean.FALSE.equals(j.getKaytetaanValintalaskentaa()))).collect(Collectors.toList());
+        
+        // Järjestetään jonot vaiheiden sisällä
+        for (ValinnanVaihe valinnanVaihe : valinnanVaiheetIlmanlaskentaa) {
             valinnanVaiheDAO.detach(valinnanVaihe);
             valinnanVaihe.setJonot(LinkitettavaJaKopioitavaUtil.jarjestaSet(valinnanVaihe.getJonot()));
         }
-        return valinnanVaiheet;
+        return valinnanVaiheetIlmanlaskentaa;
     }
 
     @Override
