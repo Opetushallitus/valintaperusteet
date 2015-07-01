@@ -72,7 +72,6 @@ object Laskentadomainkonvertteri {
       BigDecimal(param.getArvo.replace(',','.'))
     } catch {
       case e: Throwable =>
-        e.printStackTrace()
         sys.error(s"Could not interpret parameter ${param.getAvain} value ${param.getArvo} as big decimal")
     }
   }
@@ -82,7 +81,6 @@ object Laskentadomainkonvertteri {
       param.getArvo.toInt
     } catch {
       case e: Throwable =>
-        e.printStackTrace()
         sys.error(s"Could not interpret parameter ${param.getAvain} value ${param.getArvo} as integer")
     }
   }
@@ -92,7 +90,6 @@ object Laskentadomainkonvertteri {
       param.getArvo.toBoolean
     } catch {
       case e: Throwable =>
-        e.printStackTrace()
         sys.error(s"Could not interpret parameter ${param.getAvain} value ${param.getArvo} as boolean")
     }
   }
@@ -102,7 +99,6 @@ object Laskentadomainkonvertteri {
       BigDecimal(arvo.replace(',','.'))
     } catch {
       case e: Throwable =>
-        e.printStackTrace()
         sys.error(s"Could not interpret string $arvo value as big decimal")
     }
   }

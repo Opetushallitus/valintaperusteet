@@ -239,7 +239,6 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
             ValinnanVaiheDTO lisatty = modelMapper.map(valinnanVaiheService.lisaaValinnanVaiheValintaryhmalle(valintaryhmaOid, valinnanVaihe, edellinenValinnanVaiheOid), ValinnanVaiheDTO.class);
             return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (Exception e) {
-            e.printStackTrace();
             LOGGER.error("Error creating valinnanvaihe.", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }

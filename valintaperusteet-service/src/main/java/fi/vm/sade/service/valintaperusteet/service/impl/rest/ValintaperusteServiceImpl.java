@@ -137,8 +137,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
             LOG.info("Haettu {} kpl valintaperusteita", list.size());
             return list;
         } catch (Exception e) {
-            LOG.error("Valintaperusteiden haussa virhe {} {} {}", e.getMessage(), e.getCause(), Arrays.toString(e.getStackTrace()));
-            e.printStackTrace();
+            LOG.error("Valintaperusteiden haussa virhe!", e);
             throw new RuntimeException(e.getMessage(), e);
         }
     }

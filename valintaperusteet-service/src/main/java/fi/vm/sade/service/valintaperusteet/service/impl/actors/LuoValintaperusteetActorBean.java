@@ -164,7 +164,7 @@ public class LuoValintaperusteetActorBean extends UntypedActor {
             insertEiKoetta(valintaryhma, peruskaava, tasasijakriteerit, peruste.getHakukohdekoodi(), peruste.getLisapisteLaskentakaava());
         } else if (message instanceof Exception) {
             Exception exp = (Exception) message;
-            exp.printStackTrace();
+            log.error("LuoValintaperusteetActorBean virhetilanne", exp);
             getContext().stop(self());
         } else {
             unhandled(message);

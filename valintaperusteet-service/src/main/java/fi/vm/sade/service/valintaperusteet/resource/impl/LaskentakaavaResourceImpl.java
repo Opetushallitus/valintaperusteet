@@ -134,10 +134,9 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
             actorService.runOnce();
             return Response.status(Response.Status.OK).entity(updated).build();
         } catch (LaskentakaavaEiValidiException e) {
-            e.printStackTrace();
+            LOGGER.error("Laskentakaava ei ole validi!", e);
             return Response.status(Response.Status.BAD_REQUEST).entity(updated).build();
         } catch (Exception e) {
-            e.printStackTrace();
             LOGGER.error("Virhe päivitettäessä laskentakaavaa.", e);
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
@@ -157,7 +156,6 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
             return Response.status(Response.Status.CREATED).entity(inserted).build();
         } catch (LaskentakaavaEiValidiException e) {
             LOGGER.error("Laskentakaava ei ole validi.", e);
-            e.printStackTrace();
             return Response.status(Response.Status.BAD_REQUEST).entity(inserted).build();
         } catch (Exception e) {
             LOGGER.error("Virhe tallennettaessa laskentakaavaa.", e);

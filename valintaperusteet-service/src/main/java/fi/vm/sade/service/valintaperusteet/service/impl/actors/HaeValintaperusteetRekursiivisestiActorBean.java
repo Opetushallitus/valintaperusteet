@@ -111,7 +111,6 @@ public class HaeValintaperusteetRekursiivisestiActorBean extends UntypedActor {
                             }
                         } catch (NumberFormatException e) {
                             log.error("Cannot convert min value {} to BigDecimal", av.getMinValue());
-                            e.printStackTrace();
                         }
 
                         try {
@@ -121,7 +120,6 @@ public class HaeValintaperusteetRekursiivisestiActorBean extends UntypedActor {
                             }
                         } catch (NumberFormatException e) {
                             log.error("Cannot convert max value {} to BigDecimal", av.getMaxValue());
-                            e.printStackTrace();
                         }
                     }
                     valintaperuste.setMin(min != null ? min.toString() : null);

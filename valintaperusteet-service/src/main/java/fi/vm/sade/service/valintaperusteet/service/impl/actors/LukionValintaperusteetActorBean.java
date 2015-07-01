@@ -59,7 +59,7 @@ public class LukionValintaperusteetActorBean extends UntypedActor {
             transactionManager.commit(tx);
         } else if (message instanceof Exception) {
             Exception exp = (Exception) message;
-            exp.printStackTrace();
+            log.error("LukionValintaperusteetActorBean virhetilanne", exp);
             getContext().stop(self());
         } else {
             unhandled(message);

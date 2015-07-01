@@ -88,7 +88,7 @@ public class LaskentakaavaServiceTest {
             conn.commit();
             conn.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 

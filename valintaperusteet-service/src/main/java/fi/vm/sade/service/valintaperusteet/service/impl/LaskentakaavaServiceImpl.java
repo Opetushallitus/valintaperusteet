@@ -110,8 +110,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             } else if (e instanceof FunktiokutsuEiOleOlemassaException) {
                 throw new FunktiokutsuEiOleOlemassaException("Funktiokutsu (" + id + ") ei ole olemassa", id);
             } else {
-                e.printStackTrace();
-                LOGGER.error("Virhe laskentakaavan haussa. Syy: {}, viesti:{}", e.getCause(), e.getMessage());
+                LOGGER.error("Virhe laskentakaavan haussa!", e);
                 throw new FunktiokutsuEiOleOlemassaException("Odottomaton virhe haettaessa funktiokutsua " + id + ": " + e.getCause(), id);
             }
         }
@@ -501,7 +500,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             funktiokutsu = (Funktiokutsu) Await.result(future, timeout.duration());
             master.tell(PoisonPill.getInstance(), ActorRef.noSender());
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Valintaperusteiden rekursiivisen haun virhetilanne.", e);
         }
     }
 
@@ -524,7 +523,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             funktiokutsu = (Funktiokutsu) Await.result(future, timeout.duration());
             master.tell(PoisonPill.getInstance(), ActorRef.noSender());
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Valintaperusteiden rekursiivisen haun virhetilanne.", e);
         }
     }
 
