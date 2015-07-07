@@ -116,7 +116,7 @@ public class ValintalaskentakoostepalveluResourceImpl {
             LOG.error("Hakijaryhmää ei löytynyt! {}", e.getMessage());
             throw new WebApplicationException(e, Response.Status.NOT_FOUND);
         } catch (Exception e) {
-            LOG.error("Hakijaryhmää ei saatu haettua! {} {}", e.getMessage(), Arrays.toString(e.getStackTrace()));
+            LOG.error("Hakijaryhmää ei saatu haettua!", e);
             throw new WebApplicationException(e, Response.Status.INTERNAL_SERVER_ERROR);
         } finally {
             LOG.info("Haku kesti {}ms", (System.currentTimeMillis() - started));

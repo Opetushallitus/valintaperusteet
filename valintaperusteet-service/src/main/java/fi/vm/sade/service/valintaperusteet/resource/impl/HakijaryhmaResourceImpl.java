@@ -84,10 +84,10 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
                 return hakijaryhmaValintatapajonoService.findByHakukohteet(hakukohdeOids).stream().map(h -> modelMapper.map(h, HakijaryhmaValintatapajonoDTO.class)).collect(Collectors.toList());
             }
         } catch (HakijaryhmaEiOleOlemassaException e) {
-            LOGGER.error("Hakijaryhmää ei löytynyt! {}", e.getMessage());
+            LOGGER.error("Hakijaryhmää ei löytynyt! {}", hakukohdeOids);
             throw new WebApplicationException(e, Response.Status.NOT_FOUND);
         } catch (Exception e) {
-            LOGGER.error("Hakijaryhmää ei saatu haettua! {} {}", e.getMessage(), Arrays.toString(e.getStackTrace()));
+            LOGGER.error("Hakijaryhmää ei saatu haettua!", e);
             throw new WebApplicationException(e, Response.Status.INTERNAL_SERVER_ERROR);
         } finally {
             LOGGER.info("Haku kesti {}ms", (System.currentTimeMillis() - t0));
@@ -113,10 +113,10 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
                 return hakijaryhmaValintatapajonoService.findByHaku(hakuOid).stream().map(h -> modelMapper.map(h, HakijaryhmaValintatapajonoDTO.class)).collect(Collectors.toList());
             }
         } catch (HakijaryhmaEiOleOlemassaException e) {
-            LOGGER.error("Hakijaryhmää ei löytynyt! {}", e.getMessage());
+            LOGGER.error("Hakijaryhmää ei löytynyt hakuoidilla {}", hakuOid);
             throw new WebApplicationException(e, Response.Status.NOT_FOUND);
         } catch (Exception e) {
-            LOGGER.error("Hakijaryhmää ei saatu haettua! {} {}", e.getMessage(), Arrays.toString(e.getStackTrace()));
+            LOGGER.error("Hakijaryhmää ei saatu haettua!", e);
             throw new WebApplicationException(e, Response.Status.INTERNAL_SERVER_ERROR);
         } finally {
             LOGGER.info("Haku kesti {}ms", (System.currentTimeMillis() - t0));
