@@ -157,7 +157,7 @@ public class HakukohdeResourceImpl {
             HakukohdeViiteDTO hkv = modelMapper.map(hakukohdeService.insert(hakukohde.getHakukohde(), hakukohde.getValintaryhmaOid()), HakukohdeViiteDTO.class);
             return Response.status(Response.Status.CREATED).entity(hkv).build();
         } catch (Exception e) {
-            LOG.warn("Hakukohdetta ei saatu lisättyä. ", e);
+            LOG.warn("Hakukohdetta ei saatu lisättyä", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ErrorDTO(e.getMessage())).build();
         }
     }

@@ -138,7 +138,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
             return list;
         } catch (Exception e) {
             LOG.error("Valintaperusteiden haussa virhe!", e);
-            throw new RuntimeException(e.getMessage(), e);
+            throw new RuntimeException(e);
         }
     }
 

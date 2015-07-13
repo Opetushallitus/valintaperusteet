@@ -113,7 +113,7 @@ public class ValintalaskentakoostepalveluResourceImpl {
             });
             return hakijaryhmaValintatapajonoDTOs;
         } catch (HakijaryhmaEiOleOlemassaException e) {
-            LOG.error("Hakijaryhmää ei löytynyt! {}", e.getMessage());
+            LOG.error("Hakijaryhmää ei löytynyt!", e);
             throw new WebApplicationException(e, Response.Status.NOT_FOUND);
         } catch (Exception e) {
             LOG.error("Hakijaryhmää ei saatu haettua!", e);
