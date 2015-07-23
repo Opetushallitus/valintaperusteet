@@ -30,5 +30,5 @@ public interface ValintatapajonoService {
 
     Boolean readAutomaattinenSijoitteluunSiirto(String oid);
 
-    Boolean updateAutomaattinenSijoitteluunSiirto(String oid, Boolean value);
+    Valintatapajono updateAutomaattinenSijoitteluunSiirto(String oid, Boolean value);
 }

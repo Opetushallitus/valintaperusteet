@@ -186,11 +186,11 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
     }
 
     @Override
-    public Boolean updateAutomaattinenSijoitteluunSiirto(String oid, Boolean value) {
+    public Valintatapajono updateAutomaattinenSijoitteluunSiirto(String oid, Boolean value) {
         Valintatapajono valintatapajono = haeValintatapajono(oid);
         valintatapajono.setAutomaattinenLaskentaanSiirto(value);
         valintatapajonoDAO.update(valintatapajono);
-        return value;
+        return valintatapajono;
     }
 
     private Valintatapajono haeValintatapajono(String oid) {

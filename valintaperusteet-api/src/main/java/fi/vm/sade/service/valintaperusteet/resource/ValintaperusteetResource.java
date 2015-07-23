@@ -50,5 +50,5 @@ public interface ValintaperusteetResource {
     @Path("/{oid}/automaattinenSiirto")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Boolean updateAutomaattinenSijoitteluunSiirto(@PathParam("oid") String oid, Boolean arvo);
+    ValintatapajonoDTO updateAutomaattinenSijoitteluunSiirto(@PathParam("oid") String oid, Boolean arvo);
 }

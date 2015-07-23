@@ -157,7 +157,7 @@ public class ValintaperusteetResourceImpl implements ValintaperusteetResource {
     @Path("/{oid}/automaattinenSiirto")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Boolean updateAutomaattinenSijoitteluunSiirto(@PathParam("oid") String oid, Boolean arvo) {
-        return valintatapajonoService.updateAutomaattinenSijoitteluunSiirto(oid, arvo);
+    public ValintatapajonoDTO updateAutomaattinenSijoitteluunSiirto(@PathParam("oid") String oid, Boolean arvo) {
+        return modelMapper.map(valintatapajonoService.updateAutomaattinenSijoitteluunSiirto(oid, arvo), ValintatapajonoDTO.class);
     }
 }
