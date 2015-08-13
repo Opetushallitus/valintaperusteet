@@ -4,7 +4,9 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRU
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -18,6 +20,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
+import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
@@ -35,6 +38,9 @@ import fi.vm.sade.service.valintaperusteet.service.JarjestyskriteeriService;
 import fi.vm.sade.service.valintaperusteet.service.exception.JarjestyskriteeriEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.JarjestyskriteeriaEiVoiPoistaaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaOidTyhjaException;
+
+import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.*;
+import static fi.vm.sade.auditlog.LogMessage.builder;
 
 @Component
 @Path("jarjestyskriteeri")
@@ -73,6 +79,17 @@ public class JarjestyskriteeriResourceImpl implements JarjestyskriteeriResource 
             @ApiParam(value = "Järjestyskriteerin uudet tiedot ja laskentakaava", required = true) JarjestyskriteeriInsertDTO jk) {
         try {
             JarjestyskriteeriDTO update = modelMapper.map(jarjestyskriteeriService.update(oid, jk.getJarjestyskriteeri(), jk.getLaskentakaavaId()), JarjestyskriteeriDTO.class);
+            AUDIT.log(builder()
+                    .id(username())
+                    .jarjestyskriteeriOid(oid)
+                    .valintatapajonoOid(update.getValintatapajonoOid())
+                    .add("periytyy", update.getInheritance())
+                    .add("laskentakaavaid", update.getLaskentakaavaId())
+                    .add("prioriteetti", update.getPrioriteetti())
+                    .add("aktiivinen", update.getAktiivinen())
+                    .add("metatiedot", update.getMetatiedot())
+                    .message("Päivitti järjestyskriteeriä OID:n perusteella")
+                    .build());
             return Response.status(Response.Status.ACCEPTED).entity(update).build();
         } catch (LaskentakaavaOidTyhjaException e) {
             throw new WebApplicationException(e, Response.Status.BAD_REQUEST);
@@ -87,6 +104,11 @@ public class JarjestyskriteeriResourceImpl implements JarjestyskriteeriResource 
     public Response delete(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
         try {
             jarjestyskriteeriService.deleteByOid(oid);
+            AUDIT.log(builder()
+                    .id(username())
+                    .jarjestyskriteeriOid(oid)
+                    .message("Poisti järjestyskriteerin OID:n perusteella")
+                    .build());
             return Response.status(Response.Status.ACCEPTED).build();
         } catch (JarjestyskriteeriaEiVoiPoistaaException e) {
             throw new WebApplicationException(e, Response.Status.FORBIDDEN);
@@ -100,6 +122,12 @@ public class JarjestyskriteeriResourceImpl implements JarjestyskriteeriResource 
     @PreAuthorize(UPDATE_CRUD)
     @ApiOperation(value = "Järjestää järjestyskriteerit annetun listan mukaiseen järjestykseen")
     public List<JarjestyskriteeriDTO> jarjesta(@ApiParam(value = "Uusi järjestys", required = true) List<String> oids) {
-        return modelMapper.mapList(jarjestyskriteeriService.jarjestaKriteerit(oids), JarjestyskriteeriDTO.class);
+        List<Jarjestyskriteeri> jks = jarjestyskriteeriService.jarjestaKriteerit(oids);
+        AUDIT.log(builder()
+                .id(username())
+                .add("jarjestyskriteerioids", Optional.ofNullable(oids).map(List::toArray).map(Arrays::toString).orElse(null))
+                .message("Järjesti järjestyskriteerit annetun listan mukaiseen järjestykseen")
+                .build());
+        return modelMapper.mapList(jks, JarjestyskriteeriDTO.class);
     }
 }

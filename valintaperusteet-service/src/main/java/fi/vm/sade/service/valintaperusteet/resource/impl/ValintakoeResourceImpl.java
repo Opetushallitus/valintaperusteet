@@ -30,6 +30,9 @@ import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapp
 import fi.vm.sade.service.valintaperusteet.resource.ValintakoeResource;
 import fi.vm.sade.service.valintaperusteet.service.ValintakoeService;
 
+import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.*;
+import static fi.vm.sade.auditlog.LogMessage.builder;
+
 @Component
 @Path("valintakoe")
 @PreAuthorize("isAuthenticated()")
@@ -76,6 +79,19 @@ public class ValintakoeResourceImpl implements ValintakoeResource {
             @ApiParam(value = "OID", required = true) @PathParam("oid") String oid,
             @ApiParam(value = "Valintakokeen uudet tiedot", required = true) ValintakoeDTO valintakoe) {
         ValintakoeDTO update = modelMapper.map(valintakoeService.update(oid, valintakoe), ValintakoeDTO.class);
+        AUDIT.log(builder()
+                .id(username())
+                .valintakoeOid(oid)
+                .add("aktiivinen", update.getAktiivinen())
+                .add("selvitettytunniste", update.getSelvitettyTunniste())
+                .add("kuvaus", update.getKuvaus())
+                .add("nimi", update.getNimi())
+                .add("tunniste", update.getTunniste())
+                .add("kutsutaankokaikki", update.getKutsutaankoKaikki())
+                .add("lahetetaankokoekutsut", update.getLahetetaankoKoekutsut())
+                .add("kutsunkohdeavain", update.getKutsunKohdeAvain())
+                .message("Päivitti valintakoetta")
+                .build());
         return Response.status(Response.Status.ACCEPTED).entity(update).build();
     }
 
@@ -85,6 +101,11 @@ public class ValintakoeResourceImpl implements ValintakoeResource {
     @ApiOperation(value = "Poistaa valintakokeen OID:n perusteella")
     public Response delete(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
         valintakoeService.deleteByOid(oid);
+        AUDIT.log(builder()
+                .id(username())
+                .valintakoeOid(oid)
+                .message("Poisti valintakokeen OID:n perusteella")
+                .build());
         return Response.status(Response.Status.ACCEPTED).build();
     }
 }

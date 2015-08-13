@@ -4,6 +4,7 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRU
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,6 +31,9 @@ import fi.vm.sade.kaava.Funktiokuvaaja;
 import fi.vm.sade.service.valintaperusteet.resource.LaskentakaavaResource;
 import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaEiValidiException;
+
+import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.*;
+import static fi.vm.sade.auditlog.LogMessage.builder;
 
 @Component
 @Path("laskentakaava")
@@ -130,6 +134,14 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
         LaskentakaavaDTO updated = null;
         try {
             updated = modelMapper.map(laskentakaavaService.update(id, laskentakaava), LaskentakaavaDTO.class);
+            AUDIT.log(builder()
+                    .id(username())
+                    .add("laskentakaavaid", updated.getId())
+                    .add("kuvaus", updated.getKuvaus())
+                    .add("nimi", updated.getNimi())
+                    .add("luonnos", updated.getOnLuonnos())
+                    .message("Päivitti laskentakaavan")
+                    .build());
             // Kaava päivitetty, poistetaan orvot
             actorService.runOnce();
             return Response.status(Response.Status.OK).entity(updated).build();
@@ -151,8 +163,16 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
             @ApiParam(value = "Lisättävä laskentakaava", required = true) LaskentakaavaInsertDTO laskentakaava) {
         LaskentakaavaDTO inserted = null;
         try {
-            inserted = modelMapper.map(laskentakaavaService.insert(laskentakaava.getLaskentakaava(),
-                    laskentakaava.getHakukohdeOid(), laskentakaava.getValintaryhmaOid()), LaskentakaavaDTO.class);
+            inserted = Optional.ofNullable(modelMapper.map(laskentakaavaService.insert(laskentakaava.getLaskentakaava(),
+                    laskentakaava.getHakukohdeOid(), laskentakaava.getValintaryhmaOid()), LaskentakaavaDTO.class)).orElse(new LaskentakaavaDTO());
+            AUDIT.log(builder()
+                    .id(username())
+                    .add("laskentakaavaid", inserted.getId())
+                    .add("kuvaus", inserted.getKuvaus())
+                    .add("nimi", inserted.getNimi())
+                    .add("luonnos", inserted.getOnLuonnos())
+                    .message("Lisäsi uuden laskentakaavan")
+                    .build());
             return Response.status(Response.Status.CREATED).entity(inserted).build();
         } catch (LaskentakaavaEiValidiException e) {
             LOGGER.error("Laskentakaava ei ole validi.", e);
@@ -169,8 +189,13 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response siirra(LaskentakaavaSiirraDTO dto) {
         Optional<Laskentakaava> siirretty = laskentakaavaService.siirra(dto);
-        return siirretty.map(kaava ->
-                Response.status(Response.Status.ACCEPTED).entity(modelMapper.map(kaava, LaskentakaavaDTO.class)).build())
+        return siirretty.map(kaava -> {
+            AUDIT.log(builder()
+                    .id(username())
+                    .add("laskentakaavaid", kaava.getId())
+                    .message("Siirsi laskentakaavan")
+                    .build());
+                return Response.status(Response.Status.ACCEPTED).entity(modelMapper.map(kaava, LaskentakaavaDTO.class)).build();})
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
 
@@ -191,6 +216,11 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response poista(@PathParam("id") Long id) {
         boolean poistettu = laskentakaavaService.poista(id);
+        AUDIT.log(builder()
+                .id(username())
+                .add("laskentakaavaid", id)
+                .message("Poisti laskentakaavan")
+                .build());
         if (poistettu) {
             // Kaava poistettu, poistetaan orvot
             actorService.runOnce();

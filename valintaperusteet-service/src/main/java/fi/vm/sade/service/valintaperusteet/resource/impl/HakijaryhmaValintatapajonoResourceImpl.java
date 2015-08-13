@@ -4,9 +4,7 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRU
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -19,6 +17,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
+import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +39,9 @@ import fi.vm.sade.service.valintaperusteet.service.ValintakoeService;
 import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaaEiVoiPoistaaException;
+
+import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.*;
+import static fi.vm.sade.auditlog.LogMessage.builder;
 
 @Component
 @Path("hakijaryhma_valintatapajono")
@@ -80,6 +82,11 @@ public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValint
     public Response poistaHakijaryhma(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
         try {
             hakijaryhmaValintatapajonoService.deleteByOid(oid, false);
+            AUDIT.log(builder()
+                    .id(username())
+                    .hakijaryhmaOid(oid)
+                    .message("Poisti hakijaryhmän ja valintatapajonon välisen liitoksen")
+                    .build());
             return Response.status(Response.Status.OK).build();
         } catch (HakijaryhmaaEiVoiPoistaaException e) {
             throw new WebApplicationException(e, Response.Status.FORBIDDEN);
@@ -103,6 +110,16 @@ public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValint
             @ApiParam(value = "Liitoksen uudet tiedot", required = true) HakijaryhmaValintatapajonoUpdateDTO jono) {
         try {
             HakijaryhmaValintatapajonoDTO update = modelMapper.map(hakijaryhmaValintatapajonoService.update(oid, jono), HakijaryhmaValintatapajonoDTO.class);
+            AUDIT.log(builder()
+                    .id(username())
+                    .hakijaryhmaValintatapajonoOid(update.getOid())
+                    .add("aktiivinen", update.getAktiivinen())
+                    .add("kiintio", update.getKiintio())
+                    .add("kuvaus", update.getKuvaus())
+                    .add("nimi", update.getNimi())
+                    .add("prioriteetti", update.getPrioriteetti())
+                    .message("Päivitti hakijaryhmän ja valintatapajonon välistä liitosta")
+                    .build());
             return Response.status(Response.Status.ACCEPTED).entity(update).build();
         } catch (HakijaryhmaEiOleOlemassaException e) {
             throw new WebApplicationException(e, Response.Status.NOT_FOUND);
@@ -120,7 +137,15 @@ public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValint
             @ApiParam(value = "Päivitettävän liitoksen oid", required = true) @PathParam("oid") String hakijaryhmaValintatapajonoOid,
             @ApiParam(value = "Hakijaryhmien uusi järjestys", required = true) List<String> oids) {
         try {
-            return modelMapper.mapList(hakijaryhmaValintatapajonoService.jarjestaHakijaryhmat(hakijaryhmaValintatapajonoOid, oids), HakijaryhmaValintatapajonoUpdateDTO.class);
+            List<HakijaryhmaValintatapajono> hj = hakijaryhmaValintatapajonoService.jarjestaHakijaryhmat(hakijaryhmaValintatapajonoOid, oids);
+            AUDIT.log(builder()
+                    .id(username())
+                    .hakijaryhmaValintatapajonoOid(hakijaryhmaValintatapajonoOid)
+                    .add("hakijaryhmanValintatapajonot", Arrays.toString(Optional.ofNullable(hj).orElse(Collections.<HakijaryhmaValintatapajono>emptyList())
+                            .stream().map(v -> v.getOid()).toArray()))
+                    .message("Järjesti valintatapajonon hakijaryhmät argumentin mukaiseen järjestykseen")
+                    .build());
+            return modelMapper.mapList(hj, HakijaryhmaValintatapajonoUpdateDTO.class);
         } catch (Exception e) {
             throw new WebApplicationException(e, Response.Status.BAD_REQUEST);
         }

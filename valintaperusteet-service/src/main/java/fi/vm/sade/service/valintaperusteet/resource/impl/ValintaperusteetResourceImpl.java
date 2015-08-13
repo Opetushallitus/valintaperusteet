@@ -30,6 +30,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.*;
+import static fi.vm.sade.auditlog.LogMessage.builder;
+
 @Component
 @Path("valintaperusteet")
 @Api(value = "/valintaperusteet", description = "Resurssi laskentakaavojen ja funktiokutsujen käsittelyyn")
@@ -158,6 +161,13 @@ public class ValintaperusteetResourceImpl implements ValintaperusteetResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public ValintatapajonoDTO updateAutomaattinenSijoitteluunSiirto(@PathParam("oid") String oid, Boolean arvo) {
-        return modelMapper.map(valintatapajonoService.updateAutomaattinenSijoitteluunSiirto(oid, arvo), ValintatapajonoDTO.class);
+        Valintatapajono v = valintatapajonoService.updateAutomaattinenSijoitteluunSiirto(oid, arvo);
+        AUDIT.log(builder()
+                .id(username())
+                .valintatapajonoOid(v.getOid())
+                .add("automaattinensijoitteluunsiirto", arvo)
+                .message("Päivitti automaattisen sijoitteluun siirron")
+                .build());
+        return modelMapper.map(v, ValintatapajonoDTO.class);
     }
 }

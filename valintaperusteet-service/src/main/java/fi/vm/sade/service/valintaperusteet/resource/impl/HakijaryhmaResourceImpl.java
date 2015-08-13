@@ -5,6 +5,7 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.REA
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -16,6 +17,7 @@ import javax.ws.rs.core.Response;
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaSiirraDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
+import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +42,9 @@ import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaOidListaOnTyhjaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaaEiVoiPoistaaException;
+
+import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.*;
+import static fi.vm.sade.auditlog.LogMessage.builder;
 
 @Component
 @Path("hakijaryhma")
@@ -162,7 +167,22 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
     public HakijaryhmaDTO update(
             @ApiParam(value = "Päivitettävän hakijaryhmän OID", required = true) @PathParam("oid") String oid,
             @ApiParam(value = "Hakijaryhmän uudet tiedot", required = true) HakijaryhmaCreateDTO hakijaryhma) {
-        return modelMapper.map(hakijaryhmaService.update(oid, hakijaryhma), HakijaryhmaDTO.class);
+        Hakijaryhma h = hakijaryhmaService.update(oid, hakijaryhma);
+        AUDIT.log(builder()
+                .id(username())
+                .hakijaryhmaOid(oid)
+                .valintaryhmaOid(Optional.ofNullable(h.getValintaryhma()).map(v -> v.getOid()).orElse(null))
+                .add("hakijaryhmanvalintatapajonot", Arrays.toString(Optional.ofNullable(h.getJonot()).orElse(Collections.<HakijaryhmaValintatapajono>emptySet())
+                        .stream().map(v -> v.getOid()).toArray()))
+                .add("valintatapajonoids", Arrays.toString(Optional.ofNullable(h.getValintatapajonoIds()).orElse(Collections.<String>emptyList())
+                        .stream().toArray()))
+                .add("kiintio", h.getKiintio())
+                .add("kuvaus", h.getKuvaus())
+                .add("laskentakaavaid", h.getLaskentakaavaId())
+                .add("nimi", h.getNimi())
+                .message("Päivitti hakijaryhmän")
+                .build());
+        return modelMapper.map(h, HakijaryhmaDTO.class);
     }
 
     @POST
@@ -192,6 +212,11 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
             @ApiParam(value = "Poistettavan hakijaryhmän OID", required = true) @PathParam("oid") String oid) {
         try {
             hakijaryhmaService.deleteByOid(oid, false);
+            AUDIT.log(builder()
+                    .id(username())
+                    .hakijaryhmaOid(oid)
+                    .message("Poisti hakijaryhmän OID:n perusteella")
+                    .build());
             return Response.status(Response.Status.ACCEPTED).build();
         } catch (HakijaryhmaaEiVoiPoistaaException e) {
             throw new WebApplicationException(e, Response.Status.FORBIDDEN);
@@ -205,8 +230,23 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
     public Response siirra(HakijaryhmaSiirraDTO dto) {
         Optional<Hakijaryhma> siirretty = hakijaryhmaService.siirra(dto);
         return siirretty.map(kaava ->
-                Response.status(Response.Status.ACCEPTED).entity(modelMapper.map(kaava, HakijaryhmaDTO.class)).build())
-                .orElse(Response.status(Response.Status.NOT_FOUND).build());
+        {
+            AUDIT.log(builder()
+                    .id(username())
+                    .hakijaryhmaOid(kaava.getOid())
+                    .valintaryhmaOid(Optional.ofNullable(kaava.getValintaryhma()).map(v -> v.getOid()).orElse(null))
+                    .add("hakijaryhmanvalintatapajonot", Arrays.toString(Optional.ofNullable(kaava.getJonot()).orElse(Collections.<HakijaryhmaValintatapajono>emptySet())
+                            .stream().map(v -> v.getOid()).toArray()))
+                    .add("valintatapajonoids", Arrays.toString(Optional.ofNullable(kaava.getValintatapajonoIds()).orElse(Collections.<String>emptyList())
+                            .stream().toArray()))
+                    .add("kiintio", kaava.getKiintio())
+                    .add("kuvaus", kaava.getKuvaus())
+                    .add("laskentakaavaid", kaava.getLaskentakaavaId())
+                    .add("nimi", kaava.getNimi(), dto.getNimi())
+                    .message("Siirti hakijaryhmän")
+                    .build());
+                return Response.status(Response.Status.ACCEPTED).entity(modelMapper.map(kaava, HakijaryhmaDTO.class)).build();
+        }).orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
 
 }

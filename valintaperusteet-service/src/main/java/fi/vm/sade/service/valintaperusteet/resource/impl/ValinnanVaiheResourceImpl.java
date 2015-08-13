@@ -4,9 +4,7 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRU
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -20,6 +18,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +44,9 @@ import fi.vm.sade.service.valintaperusteet.service.ValintakoeService;
 import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaihettaEiVoiPoistaaException;
+
+import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.*;
+import static fi.vm.sade.auditlog.LogMessage.builder;
 
 @Component
 @Path("valinnanvaihe")
@@ -103,6 +105,12 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
             @ApiParam(value = "Lisättävä valintatapajono", required = true) ValintatapajonoCreateDTO jono) {
         try {
             ValintatapajonoDTO inserted = modelMapper.map(jonoService.lisaaValintatapajonoValinnanVaiheelle(parentOid, jono, null), ValintatapajonoDTO.class);
+            AUDIT.log(builder()
+                    .id(username())
+                    .valinnanvaiheOid(parentOid)
+                    .valintatapajonoOid(inserted.getOid())
+                    .message("Lisäsi valintatapajonon valinnan vaiheelle")
+                    .build());
             return Response.status(Response.Status.CREATED).entity(inserted).build();
         } catch (Exception e) {
             LOGGER.error("error in addJonoToValinnanVaihe", e);
@@ -121,6 +129,12 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
             @ApiParam(value = "Lisättävä valintakoe", required = true) ValintakoeCreateDTO koe) {
         try {
             ValintakoeDTO vk = modelMapper.map(valintakoeService.lisaaValintakoeValinnanVaiheelle(parentOid, koe), ValintakoeDTO.class);
+            AUDIT.log(builder()
+                    .id(username())
+                    .valinnanvaiheOid(parentOid)
+                    .valintakoeOid(vk.getOid())
+                    .message("Lisäsi valintakokeen valinnan vaiheelle")
+                    .build());
             return Response.status(Response.Status.CREATED).entity(vk).build();
         } catch (Exception e) {
             LOGGER.error("error in addValintakoeToValinnanVaihe", e);
@@ -137,7 +151,17 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
     public ValinnanVaiheDTO update(
             @ApiParam(value = "Päivitettävän valinnan vaiheen OID", required = true) @PathParam("oid") String oid,
             @ApiParam(value = "Päivitettävän valinnan vaiheen uudet tiedot", required = true) ValinnanVaiheCreateDTO valinnanVaihe) {
-        return modelMapper.map(valinnanVaiheService.update(oid, valinnanVaihe), ValinnanVaiheDTO.class);
+        ValinnanVaihe vv = valinnanVaiheService.update(oid, valinnanVaihe);
+        AUDIT.log(builder()
+                .id(username())
+                .valinnanvaiheOid(vv.getOid())
+                .add("aktiivinen", vv.getAktiivinen())
+                .add("periytyy", vv.getInheritance())
+                .add("nimi", vv.getNimi())
+                .add("kuvaus", vv.getKuvaus())
+                .message("Päivitti valinnan vaihetta")
+                .build());
+        return modelMapper.map(vv, ValinnanVaiheDTO.class);
     }
 
     @POST
@@ -147,7 +171,13 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
     @PreAuthorize(UPDATE_CRUD)
     @ApiOperation(value = "Järjestää valinnan vaiheet parametrina annetun OID-listan mukaiseen järjestykseen", response = ValinnanVaiheDTO.class)
     public List<ValinnanVaiheDTO> jarjesta(@ApiParam(value = "Valinnan vaiheiden uusi järjestys", required = true) List<String> oids) {
-        return modelMapper.mapList(valinnanVaiheService.jarjestaValinnanVaiheet(oids), ValinnanVaiheDTO.class);
+        List<ValinnanVaihe> vvl = valinnanVaiheService.jarjestaValinnanVaiheet(oids);
+        AUDIT.log(builder()
+                .id(username())
+                .add("valinnanvaiheoids", Optional.ofNullable(oids).map(List::toArray).map(Arrays::toString).orElse(null))
+                .message("Järjesti valinnan vaiheet parametrina annetun OID-listan mukaiseen järjestykseen")
+                .build());
+        return modelMapper.mapList(vvl, ValinnanVaiheDTO.class);
     }
 
     @DELETE
@@ -161,6 +191,11 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
             @ApiParam(value = "Valinnan vaiheen OID", required = true) @PathParam("oid") String oid) {
         try {
             valinnanVaiheService.deleteByOid(oid);
+            AUDIT.log(builder()
+                    .id(username())
+                    .valinnanvaiheOid(oid)
+                    .message("Poisti valinnan vaiheen OID:n perusteetlla")
+                    .build());
             return Response.status(Response.Status.ACCEPTED).build();
         } catch (ValinnanVaiheEiOleOlemassaException e) {
             throw new WebApplicationException(e, Response.Status.NOT_FOUND);

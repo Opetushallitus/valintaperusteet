@@ -42,6 +42,9 @@ import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
 import fi.vm.sade.service.valintaperusteet.service.ValintakoekoodiService;
 import fi.vm.sade.service.valintaperusteet.service.ValintaryhmaService;
 
+import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.*;
+import static fi.vm.sade.auditlog.LogMessage.builder;
+
 @Component
 @Path("valintaryhma")
 @PreAuthorize("isAuthenticated()")
@@ -100,6 +103,11 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
     public Response delete(@ApiParam(value = "Valintaryhmän OID", required = true) @PathParam("oid") String oid) {
         try {
             valintaryhmaService.delete(oid);
+            AUDIT.log(builder()
+                    .id(username())
+                    .valintaryhmaOid(oid)
+                    .message("Poisti valintaryhmän OID:n perusteella")
+                    .build());
             return Response.status(Response.Status.ACCEPTED).build();
         } catch (ValintaryhmaEiOleOlemassaException e) {
             throw new WebApplicationException(e, Response.Status.NOT_FOUND);
@@ -176,6 +184,11 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
             @ApiParam(value = "Lisättävä valintaryhmä", required = true) ValintaryhmaCreateDTO valintaryhma) {
         try {
             ValintaryhmaDTO lisatty = modelMapper.map(valintaryhmaService.insert(valintaryhma, parentOid), ValintaryhmaDTO.class);
+            AUDIT.log(builder()
+                    .id(username())
+                    .valintaryhmaOid(parentOid)
+                    .message("Lisäsi lapsivalintaryhmän parametrina annetulle parent-valintaryhmälle")
+                    .build());
             return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
@@ -190,6 +203,11 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
     public Response insert(@ApiParam(value = "Uusi valintaryhmä", required = true) ValintaryhmaCreateDTO valintaryhma) {
         try {
             ValintaryhmaDTO lisatty = modelMapper.map(valintaryhmaService.insert(valintaryhma), ValintaryhmaDTO.class);
+            AUDIT.log(builder()
+                    .id(username())
+                    .valintaryhmaOid(lisatty.getOid())
+                    .message("Lisäsi valintaryhmän")
+                    .build());
             return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (Exception e) {
             LOGGER.error("Error creating valintaryhmä.", e);
@@ -207,6 +225,11 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
             @ApiParam(value = "Päivitettävän valintaryhmän OID", required = true) @PathParam("oid") String oid,
             @ApiParam(value = "Päivitettävän valintaryhmän uudet tiedot") ValintaryhmaCreateDTO valintaryhma) {
         valintaryhmaService.update(oid, valintaryhma);
+        AUDIT.log(builder()
+                .id(username())
+                .valintaryhmaOid(oid)
+                .message("Päivitti valintaryhmän")
+                .build());
         return Response.status(Response.Status.ACCEPTED).build();
     }
 
@@ -218,6 +241,13 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
     public Response copyAsChild(@PathParam("oid") String oid, @QueryParam("lahdeOid") String lahdeOid, @QueryParam("nimi") String nimi) {
         try {
             ValintaryhmaDTO lisatty = modelMapper.map(valintaryhmaService.copyAsChild(lahdeOid, oid, nimi), ValintaryhmaDTO.class);
+            AUDIT.log(builder()
+                    .id(username())
+                    .valintaryhmaOid(oid)
+                    .add("lahdeoid", lahdeOid)
+                    .add("nimi", nimi)
+                    .message("Lisäsi lapsivalintaryhmän kopioimalla lähdevalintaryhmän")
+                    .build());
             return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (Exception e) {
             LOGGER.error("Error copying valintaryhmä.", e);
@@ -237,6 +267,12 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
             @ApiParam(value = "Uusi valinnan vaihe", required = true) ValinnanVaiheCreateDTO valinnanVaihe) {
         try {
             ValinnanVaiheDTO lisatty = modelMapper.map(valinnanVaiheService.lisaaValinnanVaiheValintaryhmalle(valintaryhmaOid, valinnanVaihe, edellinenValinnanVaiheOid), ValinnanVaiheDTO.class);
+            AUDIT.log(builder()
+                    .id(username())
+                    .valintaryhmaOid(valintaryhmaOid)
+                    .valinnanvaiheOid(lisatty.getOid())
+                    .message("Lisäsi valinnan vaiheen valintaryhmälle")
+                    .build());
             return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (Exception e) {
             LOGGER.error("Error creating valinnanvaihe.", e);
@@ -251,10 +287,16 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
     @PreAuthorize(CRUD)
     @ApiOperation(value = "Lisää hakijaryhmän valintaryhmälle")
     public Response insertHakijaryhma(
-            @ApiParam(value = "Valintaryhmän OID, jolle hakijaryhmä lisätään", required = true) @PathParam("valintaryhmaOid") String valintaryhamOid,
+            @ApiParam(value = "Valintaryhmän OID, jolle hakijaryhmä lisätään", required = true) @PathParam("valintaryhmaOid") String valintaryhmaOid,
             @ApiParam(value = "Lisättävä hakijaryhmä", required = true) HakijaryhmaCreateDTO hakijaryhma) {
         try {
-            HakijaryhmaDTO lisatty = modelMapper.map(hakijaryhmaService.lisaaHakijaryhmaValintaryhmalle(valintaryhamOid, hakijaryhma), HakijaryhmaDTO.class);
+            HakijaryhmaDTO lisatty = modelMapper.map(hakijaryhmaService.lisaaHakijaryhmaValintaryhmalle(valintaryhmaOid, hakijaryhma), HakijaryhmaDTO.class);
+            AUDIT.log(builder()
+                    .id(username())
+                    .valintaryhmaOid(valintaryhmaOid)
+                    .hakijaryhmaOid(lisatty.getOid())
+                    .message("Lisäsi hakijaryhmän valintaryhmälle")
+                    .build());
             return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (Exception e) {
             LOGGER.error("Error creating hakijaryhma.", e);
@@ -273,6 +315,11 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
             @ApiParam(value = "Uudet hakukohdekoodit", required = true) Set<KoodiDTO> hakukohdekoodit) {
         try {
             hakukohdekoodiService.updateValintaryhmaHakukohdekoodit(valintaryhmaOid, hakukohdekoodit);
+            AUDIT.log(builder()
+                    .id(username())
+                    .valintaryhmaOid(valintaryhmaOid)
+                    .message("Päivitti valintaryhmän hakukohdekoodeja")
+                    .build());
             return Response.status(Response.Status.ACCEPTED).entity(hakukohdekoodit).build();
         } catch (Exception e) {
             LOGGER.error("Error updating hakukohdekoodit.", e);
@@ -287,10 +334,15 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
     @PreAuthorize(CRUD)
     @ApiOperation(value = "Lisää hakukohdekoodin valintaryhmälle")
     public Response insertHakukohdekoodi(
-            @ApiParam(value = "Valintaryhmän OID, jolle hakukohdekoodi lisätään", required = true) @PathParam("valintaryhmaOid") String valintaryhamOid,
+            @ApiParam(value = "Valintaryhmän OID, jolle hakukohdekoodi lisätään", required = true) @PathParam("valintaryhmaOid") String valintaryhmaOid,
             @ApiParam(value = "Lisättävä hakukohdekoodi", required = true) KoodiDTO hakukohdekoodi) {
         try {
-            hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(valintaryhamOid, hakukohdekoodi);
+            hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(valintaryhmaOid, hakukohdekoodi);
+            AUDIT.log(builder()
+                    .id(username())
+                    .valintaryhmaOid(valintaryhmaOid)
+                    .message("Lisäsi hakukohdekoodin valintaryhmälle")
+                    .build());
             return Response.status(Response.Status.CREATED).entity(hakukohdekoodi).build();
         } catch (Exception e) {
             LOGGER.error("Error inserting hakukohdekoodi.", e);
@@ -309,6 +361,11 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
             @ApiParam(value = "Päivitettävät valintakoekoodit", required = true) List<KoodiDTO> valintakoekoodit) {
         try {
             valintakoekoodiService.updateValintaryhmanValintakoekoodit(valintaryhmaOid, valintakoekoodit);
+            AUDIT.log(builder()
+                    .id(username())
+                    .valintaryhmaOid(valintaryhmaOid)
+                    .message("Päivitti valintaryhmän valintakoekoodeja")
+                    .build());
             return Response.status(Response.Status.ACCEPTED).entity(valintakoekoodit).build();
         } catch (Exception e) {
             LOGGER.error("Error updating valintakoekoodit.", e);
@@ -323,10 +380,15 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
     @PreAuthorize(CRUD)
     @ApiOperation(value = "Lisää valintakoekoodin valintaryhmälle")
     public Response insertValintakoekoodi(
-            @ApiParam(value = "Valintaryhmän OID, jolle valintakoekoodi lisätään", required = true) @PathParam("valintaryhmaOid") String valintaryhamOid,
+            @ApiParam(value = "Valintaryhmän OID, jolle valintakoekoodi lisätään", required = true) @PathParam("valintaryhmaOid") String valintaryhmaOid,
             @ApiParam(value = "Lisättävä valintakoekoodi", required = true) KoodiDTO valintakoekoodi) {
         try {
-            valintakoekoodiService.lisaaValintakoekoodiValintaryhmalle(valintaryhamOid, valintakoekoodi);
+            valintakoekoodiService.lisaaValintakoekoodiValintaryhmalle(valintaryhmaOid, valintakoekoodi);
+            AUDIT.log(builder()
+                    .id(username())
+                    .valintaryhmaOid(valintaryhmaOid)
+                    .message("Lisäsi valintakoekoodin valintaryhmälle")
+                    .build());
             return Response.status(Response.Status.CREATED).entity(valintakoekoodi).build();
         } catch (Exception e) {
             LOGGER.error("Error inserting valintakoekoodi.", e);
