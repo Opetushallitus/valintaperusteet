@@ -45,7 +45,7 @@ import fi.vm.sade.service.valintaperusteet.service.exception.HakukohdeViiteEiOle
 import org.springframework.transaction.annotation.Transactional;
 
 import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.*;
-import static fi.vm.sade.auditlog.LogMessage.builder;
+import static fi.vm.sade.auditlog.valintaperusteet.LogMessage.builder;
 
 @Component
 @Path("hakukohde")

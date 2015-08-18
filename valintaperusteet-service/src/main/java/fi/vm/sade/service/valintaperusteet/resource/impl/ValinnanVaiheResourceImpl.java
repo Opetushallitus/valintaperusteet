@@ -46,7 +46,7 @@ import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheEiOleO
 import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaihettaEiVoiPoistaaException;
 
 import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.*;
-import static fi.vm.sade.auditlog.LogMessage.builder;
+import static fi.vm.sade.auditlog.valintaperusteet.LogMessage.builder;
 
 @Component
 @Path("valinnanvaihe")

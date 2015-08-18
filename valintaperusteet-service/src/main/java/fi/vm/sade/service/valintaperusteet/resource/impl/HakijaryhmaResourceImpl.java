@@ -44,7 +44,7 @@ import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaOidLista
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaaEiVoiPoistaaException;
 
 import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.*;
-import static fi.vm.sade.auditlog.LogMessage.builder;
+import static fi.vm.sade.auditlog.valintaperusteet.LogMessage.builder;
 
 @Component
 @Path("hakijaryhma")

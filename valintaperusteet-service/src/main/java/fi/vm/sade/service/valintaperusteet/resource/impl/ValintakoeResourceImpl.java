@@ -31,7 +31,7 @@ import fi.vm.sade.service.valintaperusteet.resource.ValintakoeResource;
 import fi.vm.sade.service.valintaperusteet.service.ValintakoeService;
 
 import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.*;
-import static fi.vm.sade.auditlog.LogMessage.builder;
+import static fi.vm.sade.auditlog.valintaperusteet.LogMessage.builder;
 
 @Component
 @Path("valintakoe")

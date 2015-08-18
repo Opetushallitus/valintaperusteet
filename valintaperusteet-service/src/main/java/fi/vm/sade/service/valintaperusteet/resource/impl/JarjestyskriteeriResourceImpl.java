@@ -40,7 +40,7 @@ import fi.vm.sade.service.valintaperusteet.service.exception.JarjestyskriteeriaE
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaOidTyhjaException;
 
 import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.*;
-import static fi.vm.sade.auditlog.LogMessage.builder;
+import static fi.vm.sade.auditlog.valintaperusteet.LogMessage.builder;
 
 @Component
 @Path("jarjestyskriteeri")
