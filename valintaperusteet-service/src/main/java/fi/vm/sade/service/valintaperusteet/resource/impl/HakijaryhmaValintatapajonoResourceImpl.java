@@ -42,6 +42,7 @@ import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaaEiVoiPo
 
 import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.*;
 import static fi.vm.sade.auditlog.valintaperusteet.LogMessage.builder;
+import fi.vm.sade.auditlog.valintaperusteet.ValintaperusteetOperation;
 
 @Component
 @Path("hakijaryhma_valintatapajono")
@@ -85,7 +86,7 @@ public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValint
             AUDIT.log(builder()
                     .id(username())
                     .hakijaryhmaOid(oid)
-                    .message("Poisti hakijaryhmän ja valintatapajonon välisen liitoksen")
+                    .setOperaatio(ValintaperusteetOperation.HAKIJARYHMA_VALINTATAPAJONO_LIITOS_POISTO)
                     .build());
             return Response.status(Response.Status.OK).build();
         } catch (HakijaryhmaaEiVoiPoistaaException e) {
@@ -118,7 +119,7 @@ public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValint
                     .add("kuvaus", update.getKuvaus())
                     .add("nimi", update.getNimi())
                     .add("prioriteetti", update.getPrioriteetti())
-                    .message("Päivitti hakijaryhmän ja valintatapajonon välistä liitosta")
+                    .setOperaatio(ValintaperusteetOperation.HAKIJARYHMA_VALINTATAPAJONO_LIITOS_PAIVITYS)
                     .build());
             return Response.status(Response.Status.ACCEPTED).entity(update).build();
         } catch (HakijaryhmaEiOleOlemassaException e) {
@@ -143,7 +144,7 @@ public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValint
                     .hakijaryhmaValintatapajonoOid(hakijaryhmaValintatapajonoOid)
                     .add("hakijaryhmanValintatapajonot", Arrays.toString(Optional.ofNullable(hj).orElse(Collections.<HakijaryhmaValintatapajono>emptyList())
                             .stream().map(v -> v.getOid()).toArray()))
-                    .message("Järjesti valintatapajonon hakijaryhmät argumentin mukaiseen järjestykseen")
+                    .setOperaatio(ValintaperusteetOperation.VALINTATAPAJONO_HAKIJARYHMAT_JARJESTA)
                     .build());
             return modelMapper.mapList(hj, HakijaryhmaValintatapajonoUpdateDTO.class);
         } catch (Exception e) {

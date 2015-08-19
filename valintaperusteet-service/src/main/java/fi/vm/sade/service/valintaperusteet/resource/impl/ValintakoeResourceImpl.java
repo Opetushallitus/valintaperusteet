@@ -32,6 +32,7 @@ import fi.vm.sade.service.valintaperusteet.service.ValintakoeService;
 
 import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.*;
 import static fi.vm.sade.auditlog.valintaperusteet.LogMessage.builder;
+import fi.vm.sade.auditlog.valintaperusteet.ValintaperusteetOperation;
 
 @Component
 @Path("valintakoe")
@@ -90,7 +91,7 @@ public class ValintakoeResourceImpl implements ValintakoeResource {
                 .add("kutsutaankokaikki", update.getKutsutaankoKaikki())
                 .add("lahetetaankokoekutsut", update.getLahetetaankoKoekutsut())
                 .add("kutsunkohdeavain", update.getKutsunKohdeAvain())
-                .message("Päivitti valintakoetta")
+                .setOperaatio(ValintaperusteetOperation.VALINTAKOE_PAIVITYS)
                 .build());
         return Response.status(Response.Status.ACCEPTED).entity(update).build();
     }
@@ -104,7 +105,7 @@ public class ValintakoeResourceImpl implements ValintakoeResource {
         AUDIT.log(builder()
                 .id(username())
                 .valintakoeOid(oid)
-                .message("Poisti valintakokeen OID:n perusteella")
+                .setOperaatio(ValintaperusteetOperation.VALINTAKOE_POISTO)
                 .build());
         return Response.status(Response.Status.ACCEPTED).build();
     }

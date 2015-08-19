@@ -47,6 +47,7 @@ import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaihettaEiV
 
 import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.*;
 import static fi.vm.sade.auditlog.valintaperusteet.LogMessage.builder;
+import fi.vm.sade.auditlog.valintaperusteet.ValintaperusteetOperation;
 
 @Component
 @Path("valinnanvaihe")
@@ -109,7 +110,7 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
                     .id(username())
                     .valinnanvaiheOid(parentOid)
                     .valintatapajonoOid(inserted.getOid())
-                    .message("Lisäsi valintatapajonon valinnan vaiheelle")
+                    .setOperaatio(ValintaperusteetOperation.VALINNANVAIHE_LISAYS_VALINTATAPAJONO)
                     .build());
             return Response.status(Response.Status.CREATED).entity(inserted).build();
         } catch (Exception e) {
@@ -133,7 +134,7 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
                     .id(username())
                     .valinnanvaiheOid(parentOid)
                     .valintakoeOid(vk.getOid())
-                    .message("Lisäsi valintakokeen valinnan vaiheelle")
+                    .setOperaatio(ValintaperusteetOperation.VALINNANVAIHE_LISAYS_VALINTAKOE)
                     .build());
             return Response.status(Response.Status.CREATED).entity(vk).build();
         } catch (Exception e) {
@@ -159,7 +160,7 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
                 .add("periytyy", vv.getInheritance())
                 .add("nimi", vv.getNimi())
                 .add("kuvaus", vv.getKuvaus())
-                .message("Päivitti valinnan vaihetta")
+                .setOperaatio(ValintaperusteetOperation.VALINNANVAIHE_PAIVITYS)
                 .build());
         return modelMapper.map(vv, ValinnanVaiheDTO.class);
     }
@@ -175,7 +176,7 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
         AUDIT.log(builder()
                 .id(username())
                 .add("valinnanvaiheoids", Optional.ofNullable(oids).map(List::toArray).map(Arrays::toString).orElse(null))
-                .message("Järjesti valinnan vaiheet parametrina annetun OID-listan mukaiseen järjestykseen")
+                .setOperaatio(ValintaperusteetOperation.VALINNANVAIHE_JARJESTA)
                 .build());
         return modelMapper.mapList(vvl, ValinnanVaiheDTO.class);
     }
@@ -194,7 +195,7 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
             AUDIT.log(builder()
                     .id(username())
                     .valinnanvaiheOid(oid)
-                    .message("Poisti valinnan vaiheen OID:n perusteetlla")
+                    .setOperaatio(ValintaperusteetOperation.VALINNANVAIHE_POISTO)
                     .build());
             return Response.status(Response.Status.ACCEPTED).build();
         } catch (ValinnanVaiheEiOleOlemassaException e) {

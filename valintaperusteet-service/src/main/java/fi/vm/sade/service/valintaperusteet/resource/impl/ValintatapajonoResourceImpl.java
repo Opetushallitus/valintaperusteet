@@ -33,6 +33,7 @@ import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
 
 import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.*;
 import static fi.vm.sade.auditlog.valintaperusteet.LogMessage.builder;
+import fi.vm.sade.auditlog.valintaperusteet.ValintaperusteetOperation;
 
 @Component
 @Path("valintatapajono")
@@ -102,7 +103,7 @@ public class ValintatapajonoResourceImpl {
                     .id(username())
                     .hakijaryhmaOid(hakijaryhmaOid)
                     .valintatapajonoOid(valintatapajonoOid)
-                    .message("Liitti hakijaryhmän valintatapajonoon")
+                    .setOperaatio(ValintaperusteetOperation.VALINTATAPAJONO_LIITOS_HAKIJARYHMA)
                     .build());
             return Response.status(Response.Status.ACCEPTED).build();
         } catch (Exception e) {
@@ -137,7 +138,7 @@ public class ValintatapajonoResourceImpl {
                     .id(username())
                     .hakijaryhmaOid(lisattava.getOid())
                     .valintatapajonoOid(valintatapajonoOid)
-                    .message("Loi valintatapajonolle uuden hakijaryhmän")
+                    .setOperaatio(ValintaperusteetOperation.VALINTATAPAJONO_LISAYS_HAKIJARYHMA)
                     .build());
             return Response.status(Response.Status.CREATED).entity(lisattava).build();
         } catch (Exception e) {
@@ -188,7 +189,7 @@ public class ValintatapajonoResourceImpl {
                 .add("varasijatayttopaivat", update.getVarasijaTayttoPaivat())
                 .add("varasijojakaytetaanalkaen", update.getVarasijojaKaytetaanAlkaen())
                 .add("varasijojataytetaanasti", update.getVarasijojaTaytetaanAsti())
-                .message("Päivitti valintatapajonoa")
+                .setOperaatio(ValintaperusteetOperation.VALINTATAPAJONO_PAIVITYS)
                 .build());
         return Response.status(Response.Status.ACCEPTED).entity(update).build();
     }
@@ -208,7 +209,7 @@ public class ValintatapajonoResourceImpl {
                 .id(username())
                 .valintatapajonoOid(valintatapajonoOid)
                 .jarjestyskriteeriOid(insert.getOid())
-                .message("Lisäsi järjestyskriteerin valintatapajonolle")
+                .setOperaatio(ValintaperusteetOperation.VALINTATAPAJONO_LISAYS_JARJESTYSKRITEERI)
                 .build());
         return Response.status(Response.Status.ACCEPTED).entity(insert).build();
     }
@@ -224,7 +225,7 @@ public class ValintatapajonoResourceImpl {
         AUDIT.log(builder()
                 .id(username())
                 .add("valintatapajonooids", Optional.ofNullable(oids).map(List::toArray).map(Arrays::toString).orElse(null))
-                .message("Järjesti valintatapajonot annetun OID-listan mukaan")
+                .setOperaatio(ValintaperusteetOperation.VALINTATAPAJONO_JARJESTA)
                 .build());
         return modelMapper.mapList(j, ValintatapajonoDTO.class);
     }
@@ -238,7 +239,7 @@ public class ValintatapajonoResourceImpl {
         AUDIT.log(builder()
                 .id(username())
                 .valintatapajonoOid(oid)
-                .message("Poisti valintatapajonon OID:n perusteella")
+                .setOperaatio(ValintaperusteetOperation.VALINTATAPAJONO_POISTO)
                 .build());
         return Response.status(Response.Status.ACCEPTED).build();
     }

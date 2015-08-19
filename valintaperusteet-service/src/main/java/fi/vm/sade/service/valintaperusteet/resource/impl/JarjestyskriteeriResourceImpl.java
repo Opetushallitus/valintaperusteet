@@ -41,6 +41,7 @@ import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaOidTyh
 
 import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.*;
 import static fi.vm.sade.auditlog.valintaperusteet.LogMessage.builder;
+import fi.vm.sade.auditlog.valintaperusteet.ValintaperusteetOperation;
 
 @Component
 @Path("jarjestyskriteeri")
@@ -88,7 +89,7 @@ public class JarjestyskriteeriResourceImpl implements JarjestyskriteeriResource 
                     .add("prioriteetti", update.getPrioriteetti())
                     .add("aktiivinen", update.getAktiivinen())
                     .add("metatiedot", update.getMetatiedot())
-                    .message("Päivitti järjestyskriteeriä OID:n perusteella")
+                    .setOperaatio(ValintaperusteetOperation.JARJESTYSKRITEERI_PAIVITYS)
                     .build());
             return Response.status(Response.Status.ACCEPTED).entity(update).build();
         } catch (LaskentakaavaOidTyhjaException e) {
@@ -107,7 +108,7 @@ public class JarjestyskriteeriResourceImpl implements JarjestyskriteeriResource 
             AUDIT.log(builder()
                     .id(username())
                     .jarjestyskriteeriOid(oid)
-                    .message("Poisti järjestyskriteerin OID:n perusteella")
+                    .setOperaatio(ValintaperusteetOperation.JARJESTYSKRITEERI_POISTO)
                     .build());
             return Response.status(Response.Status.ACCEPTED).build();
         } catch (JarjestyskriteeriaEiVoiPoistaaException e) {
@@ -126,7 +127,7 @@ public class JarjestyskriteeriResourceImpl implements JarjestyskriteeriResource 
         AUDIT.log(builder()
                 .id(username())
                 .add("jarjestyskriteerioids", Optional.ofNullable(oids).map(List::toArray).map(Arrays::toString).orElse(null))
-                .message("Järjesti järjestyskriteerit annetun listan mukaiseen järjestykseen")
+                .setOperaatio(ValintaperusteetOperation.JARJESTYSKRITEERIT_JARJESTA)
                 .build());
         return modelMapper.mapList(jks, JarjestyskriteeriDTO.class);
     }

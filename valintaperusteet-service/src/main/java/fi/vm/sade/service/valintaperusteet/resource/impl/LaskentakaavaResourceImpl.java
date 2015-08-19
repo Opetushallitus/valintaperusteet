@@ -34,6 +34,7 @@ import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaEiVali
 
 import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.*;
 import static fi.vm.sade.auditlog.valintaperusteet.LogMessage.builder;
+import fi.vm.sade.auditlog.valintaperusteet.ValintaperusteetOperation;
 
 @Component
 @Path("laskentakaava")
@@ -140,7 +141,7 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
                     .add("kuvaus", updated.getKuvaus())
                     .add("nimi", updated.getNimi())
                     .add("luonnos", updated.getOnLuonnos())
-                    .message("Päivitti laskentakaavan")
+                    .setOperaatio(ValintaperusteetOperation.LASKENTAKAAVA_PAIVITYS)
                     .build());
             // Kaava päivitetty, poistetaan orvot
             actorService.runOnce();
@@ -171,7 +172,7 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
                     .add("kuvaus", inserted.getKuvaus())
                     .add("nimi", inserted.getNimi())
                     .add("luonnos", inserted.getOnLuonnos())
-                    .message("Lisäsi uuden laskentakaavan")
+                    .setOperaatio(ValintaperusteetOperation.LASKENTAKAAVA_LISAYS)
                     .build());
             return Response.status(Response.Status.CREATED).entity(inserted).build();
         } catch (LaskentakaavaEiValidiException e) {
@@ -193,7 +194,7 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
             AUDIT.log(builder()
                     .id(username())
                     .add("laskentakaavaid", kaava.getId())
-                    .message("Siirsi laskentakaavan")
+                    .setOperaatio(ValintaperusteetOperation.LASKENTAKAAVA_SIIRTO)
                     .build());
                 return Response.status(Response.Status.ACCEPTED).entity(modelMapper.map(kaava, LaskentakaavaDTO.class)).build();})
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
@@ -219,7 +220,7 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
         AUDIT.log(builder()
                 .id(username())
                 .add("laskentakaavaid", id)
-                .message("Poisti laskentakaavan")
+                .setOperaatio(ValintaperusteetOperation.LASKENTAKAAVA_POISTO)
                 .build());
         if (poistettu) {
             // Kaava poistettu, poistetaan orvot

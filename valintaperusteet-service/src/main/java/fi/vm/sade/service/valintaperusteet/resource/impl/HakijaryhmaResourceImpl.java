@@ -45,6 +45,7 @@ import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaaEiVoiPo
 
 import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.*;
 import static fi.vm.sade.auditlog.valintaperusteet.LogMessage.builder;
+import fi.vm.sade.auditlog.valintaperusteet.ValintaperusteetOperation;
 
 @Component
 @Path("hakijaryhma")
@@ -180,7 +181,7 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
                 .add("kuvaus", h.getKuvaus())
                 .add("laskentakaavaid", h.getLaskentakaavaId())
                 .add("nimi", h.getNimi())
-                .message("Päivitti hakijaryhmän")
+                .setOperaatio(ValintaperusteetOperation.HAKIJARYHMA_PAIVITYS)
                 .build());
         return modelMapper.map(h, HakijaryhmaDTO.class);
     }
@@ -215,7 +216,7 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
             AUDIT.log(builder()
                     .id(username())
                     .hakijaryhmaOid(oid)
-                    .message("Poisti hakijaryhmän OID:n perusteella")
+                    .setOperaatio(ValintaperusteetOperation.HAKIJARYHMA_POISTO)
                     .build());
             return Response.status(Response.Status.ACCEPTED).build();
         } catch (HakijaryhmaaEiVoiPoistaaException e) {
@@ -243,7 +244,7 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
                     .add("kuvaus", kaava.getKuvaus())
                     .add("laskentakaavaid", kaava.getLaskentakaavaId())
                     .add("nimi", kaava.getNimi(), dto.getNimi())
-                    .message("Siirti hakijaryhmän")
+                    .setOperaatio(ValintaperusteetOperation.HAKIJARYHMA_SIIRTO)
                     .build());
                 return Response.status(Response.Status.ACCEPTED).entity(modelMapper.map(kaava, HakijaryhmaDTO.class)).build();
         }).orElse(Response.status(Response.Status.NOT_FOUND).build());

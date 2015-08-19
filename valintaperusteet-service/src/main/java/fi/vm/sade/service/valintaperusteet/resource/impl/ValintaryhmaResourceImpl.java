@@ -44,6 +44,7 @@ import fi.vm.sade.service.valintaperusteet.service.ValintaryhmaService;
 
 import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.*;
 import static fi.vm.sade.auditlog.valintaperusteet.LogMessage.builder;
+import fi.vm.sade.auditlog.valintaperusteet.ValintaperusteetOperation;
 
 @Component
 @Path("valintaryhma")
@@ -106,7 +107,7 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
             AUDIT.log(builder()
                     .id(username())
                     .valintaryhmaOid(oid)
-                    .message("Poisti valintaryhmän OID:n perusteella")
+                    .setOperaatio(ValintaperusteetOperation.VALINTARYHMA_POISTO)
                     .build());
             return Response.status(Response.Status.ACCEPTED).build();
         } catch (ValintaryhmaEiOleOlemassaException e) {
@@ -187,7 +188,7 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
             AUDIT.log(builder()
                     .id(username())
                     .valintaryhmaOid(parentOid)
-                    .message("Lisäsi lapsivalintaryhmän parametrina annetulle parent-valintaryhmälle")
+                    .setOperaatio(ValintaperusteetOperation.LAPSIVALINTARYHMA_LISAYS_PARENT)
                     .build());
             return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (Exception e) {
@@ -206,7 +207,7 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
             AUDIT.log(builder()
                     .id(username())
                     .valintaryhmaOid(lisatty.getOid())
-                    .message("Lisäsi valintaryhmän")
+                    .setOperaatio(ValintaperusteetOperation.VALINTARYHMA_LISAYS)
                     .build());
             return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (Exception e) {
@@ -228,7 +229,7 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
         AUDIT.log(builder()
                 .id(username())
                 .valintaryhmaOid(oid)
-                .message("Päivitti valintaryhmän")
+                .setOperaatio(ValintaperusteetOperation.VALINTARYHMA_PAIVITYS)
                 .build());
         return Response.status(Response.Status.ACCEPTED).build();
     }
@@ -246,7 +247,7 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
                     .valintaryhmaOid(oid)
                     .add("lahdeoid", lahdeOid)
                     .add("nimi", nimi)
-                    .message("Lisäsi lapsivalintaryhmän kopioimalla lähdevalintaryhmän")
+                    .setOperaatio(ValintaperusteetOperation.LAPSIVALINTARYHMA_LISAYS)
                     .build());
             return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (Exception e) {
@@ -271,7 +272,7 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
                     .id(username())
                     .valintaryhmaOid(valintaryhmaOid)
                     .valinnanvaiheOid(lisatty.getOid())
-                    .message("Lisäsi valinnan vaiheen valintaryhmälle")
+                    .setOperaatio(ValintaperusteetOperation.VALINTARYHMA_LISAYS_VALINNANVAIHE)
                     .build());
             return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (Exception e) {
@@ -295,7 +296,7 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
                     .id(username())
                     .valintaryhmaOid(valintaryhmaOid)
                     .hakijaryhmaOid(lisatty.getOid())
-                    .message("Lisäsi hakijaryhmän valintaryhmälle")
+                    .setOperaatio(ValintaperusteetOperation.VALINTARYHMA_LISAYS_HAKIJARYHMA)
                     .build());
             return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (Exception e) {
@@ -318,7 +319,7 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
             AUDIT.log(builder()
                     .id(username())
                     .valintaryhmaOid(valintaryhmaOid)
-                    .message("Päivitti valintaryhmän hakukohdekoodeja")
+                    .setOperaatio(ValintaperusteetOperation.VALINTARYHMA_PAIVITYS_HAKUKOHDEKOODI)
                     .build());
             return Response.status(Response.Status.ACCEPTED).entity(hakukohdekoodit).build();
         } catch (Exception e) {
@@ -341,7 +342,7 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
             AUDIT.log(builder()
                     .id(username())
                     .valintaryhmaOid(valintaryhmaOid)
-                    .message("Lisäsi hakukohdekoodin valintaryhmälle")
+                    .setOperaatio(ValintaperusteetOperation.VALINTARYHMA_LISAYS_HAKUKOHDEKOODI)
                     .build());
             return Response.status(Response.Status.CREATED).entity(hakukohdekoodi).build();
         } catch (Exception e) {
@@ -364,7 +365,7 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
             AUDIT.log(builder()
                     .id(username())
                     .valintaryhmaOid(valintaryhmaOid)
-                    .message("Päivitti valintaryhmän valintakoekoodeja")
+                    .setOperaatio(ValintaperusteetOperation.VALINTARYHMA_PAIVITYS_VALINTAKOODI)
                     .build());
             return Response.status(Response.Status.ACCEPTED).entity(valintakoekoodit).build();
         } catch (Exception e) {
@@ -387,7 +388,7 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
             AUDIT.log(builder()
                     .id(username())
                     .valintaryhmaOid(valintaryhmaOid)
-                    .message("Lisäsi valintakoekoodin valintaryhmälle")
+                    .setOperaatio(ValintaperusteetOperation.VALINTARYHMA_LISAYS_VALINTAKOEKOODI)
                     .build());
             return Response.status(Response.Status.CREATED).entity(valintakoekoodi).build();
         } catch (Exception e) {

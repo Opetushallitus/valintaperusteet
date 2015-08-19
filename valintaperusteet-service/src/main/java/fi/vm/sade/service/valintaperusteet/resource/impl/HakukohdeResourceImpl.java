@@ -46,6 +46,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.*;
 import static fi.vm.sade.auditlog.valintaperusteet.LogMessage.builder;
+import fi.vm.sade.auditlog.valintaperusteet.ValintaperusteetOperation;
 
 @Component
 @Path("hakukohde")
@@ -166,7 +167,7 @@ public class HakukohdeResourceImpl {
                     .add("nimi", hkv.getNimi())
                     .add("tila", hkv.getTila())
                     .tarjoajaOid(hkv.getTarjoajaOid())
-                    .message("Lisäsi hakukohteen valintaryhmään (tai juureen, jos valintaryhmän OID:a ei ole annettu)")
+                    .setOperaatio(ValintaperusteetOperation.HAKUKOHDE_LISAYS_VALINTARYHMA)
                     .build());
             return Response.status(Response.Status.CREATED).entity(hkv).build();
         } catch (Exception e) {
@@ -194,7 +195,7 @@ public class HakukohdeResourceImpl {
                     .add("nimi", hkv.getNimi())
                     .add("tila", hkv.getTila())
                     .tarjoajaOid(hkv.getTarjoajaOid())
-                    .message("Päivitti hakukohdetta OID:n perusteella")
+                    .setOperaatio(ValintaperusteetOperation.HAKUKOHDE_PAIVITYS)
                     .build());
             return Response.status(Response.Status.ACCEPTED).entity(hkv).build();
         } catch (Exception e) {
@@ -352,7 +353,7 @@ public class HakukohdeResourceImpl {
                     .add("kuvaus", lisatty.getKuvaus())
                     .add("aktiivinen", lisatty.getAktiivinen())
                     .add("valinnanvaihetyyppi", lisatty.getValinnanVaiheTyyppi())
-                    .message("Lisäsi valinnan vaiheen hakukohteelle")
+                    .setOperaatio(ValintaperusteetOperation.HAKUKOHDE_LISAYS_VALINNANVAIHE)
                     .build());
             return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (Exception e) {
@@ -381,7 +382,7 @@ public class HakukohdeResourceImpl {
                     .add("nimi", lisatty.getNimi())
                     .add("kuvaus", lisatty.getKuvaus())
                     .add("laskentakaavaid", lisatty.getLaskentakaavaId())
-                    .message("Lisäsi hakijaryhmän hakukohteelle")
+                    .setOperaatio(ValintaperusteetOperation.HAKUKOHDE_LISAYS_HAKIJARYHMA)
                     .build());
             return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (Exception e) {
@@ -405,7 +406,7 @@ public class HakukohdeResourceImpl {
                     .id(username())
                     .hakukohdeOid(hakukohdeOid)
                     .hakijaryhmaOid(hakijaryhmaOid)
-                    .message("Liitti hakijaryhmän hakukohteelle")
+                    .setOperaatio(ValintaperusteetOperation.HAKUKOHDE_LIITOS_HAKIJARYHMA)
                     .build());
             return Response.status(Response.Status.ACCEPTED).build();
         } catch (Exception e) {
@@ -436,7 +437,7 @@ public class HakukohdeResourceImpl {
                     .add("nimi_fi", lisatty.getNimiFi())
                     .add("nimi_sv", lisatty.getNimiSv())
                     .add("uri", lisatty.getUri())
-                    .message("Päivitti hakukohteen hakukohdekoodia")
+                    .setOperaatio(ValintaperusteetOperation.HAKUKOHDE_HAKUKOHDEKOODI_PAIVITYS)
                     .build());
             return Response.status(Response.Status.ACCEPTED).entity(lisatty).build();
         } catch (Exception e) {
@@ -465,7 +466,7 @@ public class HakukohdeResourceImpl {
                     .add("nimi_fi", lisatty.getNimiFi())
                     .add("nimi_sv", lisatty.getNimiSv())
                     .add("uri", lisatty.getUri())
-                    .message("Lisäsi hakukohdekoodin hakukohteelle")
+                    .setOperaatio(ValintaperusteetOperation.HAKUKOHDE_LISAYS_HAKUKOHDEKOODI)
                     .build());
             return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (Exception e) {
@@ -494,7 +495,7 @@ public class HakukohdeResourceImpl {
                     .add("nimi", hakukohde.getNimi())
                     .add("tila", hakukohde.getTila())
                     .tarjoajaOid(hakukohde.getTarjoajaOid())
-                    .message("Siirsi hakukohteen uuteen valintaryhmään (tai juureen, jos valintaryhmää ei anneta)")
+                    .setOperaatio(ValintaperusteetOperation.HAKUKOHDE_SIIRTO_VALINTARYHMAAN)
                     .build());
             return Response.status(Response.Status.ACCEPTED).entity(hakukohde).build();
         } catch (Exception e) {

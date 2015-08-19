@@ -32,6 +32,7 @@ import java.util.Map;
 
 import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.*;
 import static fi.vm.sade.auditlog.valintaperusteet.LogMessage.builder;
+import fi.vm.sade.auditlog.valintaperusteet.ValintaperusteetOperation;
 
 @Component
 @Path("valintaperusteet")
@@ -166,7 +167,7 @@ public class ValintaperusteetResourceImpl implements ValintaperusteetResource {
                 .id(username())
                 .valintatapajonoOid(v.getOid())
                 .add("automaattinensijoitteluunsiirto", arvo)
-                .message("Päivitti automaattisen sijoitteluun siirron")
+                .setOperaatio(ValintaperusteetOperation.AUTOMAATTISEN_SIJOITTELUN_SIIRRON_PAIVITYS)
                 .build());
         return modelMapper.map(v, ValintatapajonoDTO.class);
     }
