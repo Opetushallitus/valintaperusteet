@@ -1,0 +1,1 @@
+ALTER TABLE hakukohde_viite ALTER COLUMN nimi TYPE text;
