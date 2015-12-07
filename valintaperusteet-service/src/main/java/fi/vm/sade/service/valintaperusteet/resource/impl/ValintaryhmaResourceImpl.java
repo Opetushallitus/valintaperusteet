@@ -192,6 +192,7 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
                     .build());
             return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (Exception e) {
+            LOGGER.error(String.format("Lapsivalintaryhmän lisäys valintaryhmälle {} ei onnistunut.", parentOid), e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
