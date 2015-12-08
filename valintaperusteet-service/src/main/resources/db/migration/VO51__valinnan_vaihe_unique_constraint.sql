@@ -1,0 +1,1 @@
+ALTER TABLE valinnan_vaihe ADD CONSTRAINT valinnan_vaihe_edellinen_hakukohde_valintaryhma UNIQUE (edellinen_valinnan_vaihe_id, hakukohde_viite_id, valintaryhma_id);
