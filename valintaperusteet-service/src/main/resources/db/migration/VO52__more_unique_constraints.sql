@@ -1,0 +1,3 @@
+ALTER TABLE hakijaryhma_jono ADD CONSTRAINT hakijaryhma_jono_edellinen_hakijaryhma UNIQUE (edellinen_hakijaryhma_jono_id, valintatapajono_id, hakukohde_viite_id);
+ALTER TABLE jarjestyskriteeri ADD CONSTRAINT jarjestyskriteeri_edellinen_jarjestyskriteeri_valintatapajono UNIQUE (edellinen_jarjestyskriteeri_id, valintatapajono_id);
+ALTER TABLE valintatapajono ADD CONSTRAINT valintatapajono_edellinen_valintatapajono_valinnan_vaihe UNIQUE (edellinen_valintatapajono_id, valinnan_vaihe_id);
