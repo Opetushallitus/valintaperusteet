@@ -1,13 +1,10 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
-
 import java.util.List;
 
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
+import fi.vm.sade.service.valintaperusteet.model.*;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,11 +22,9 @@ import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi;
-import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
-import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
-import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
-import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
+
+import static junit.framework.Assert.*;
 
 /**
  * Created with IntelliJ IDEA. User: jukais Date: 16.1.2013 Time: 14.16 To
@@ -45,6 +40,9 @@ public class ValintaryhmaServiceTest {
 
     @Autowired
     private ValintaryhmaService valintaryhmaService;
+
+    @Autowired
+    private HakijaryhmaService hakijaryhmaService;
 
     @Autowired
     private ValintaryhmaDAO valintaryhmaDAO;
@@ -76,6 +74,28 @@ public class ValintaryhmaServiceTest {
         assertEquals(12L, valinnanVaiheet.get(2).getMasterValinnanVaihe().getId().longValue());
         assertEquals(13L, valinnanVaiheet.get(3).getMasterValinnanVaihe().getId().longValue());
         assertEquals(14L, valinnanVaiheet.get(4).getMasterValinnanVaihe().getId().longValue());
+    }
+
+    @Test
+    public void testCopyHakijaryhmaToChild() {
+        final String parentOid = "oid6";
+        final int valinnanVaiheetLkm = 5;
+
+        Valintaryhma parent = valintaryhmaService.readByOid(parentOid);
+        List<Hakijaryhma> parentHakijaryhmat = hakijaryhmaService.findByValintaryhma(parentOid);
+
+        assertEquals(1, parentHakijaryhmat.size());
+
+        ValintaryhmaCreateDTO uusiValintaryhma = new ValintaryhmaCreateDTO();
+        uusiValintaryhma.setNimi("uusi valintaryhma");
+
+        Valintaryhma lisatty = valintaryhmaService.insert(uusiValintaryhma, parentOid);
+        List<Hakijaryhma> childHakijaryhmat = hakijaryhmaService.findByValintaryhma(lisatty.getOid());
+
+        assertEquals(1, childHakijaryhmat.size());
+
+        assertNotSame(parentHakijaryhmat.get(0).getOid(), childHakijaryhmat.get(0).getOid());
+
     }
 
     @Test

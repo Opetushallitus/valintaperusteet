@@ -1659,6 +1659,7 @@
     <funktiokutsu tallenna_tulos="false" id="411" version="0" funktionimi="LUKUARVO"/>
     <funktiokutsu tallenna_tulos="false" id="412" version="0" funktionimi="LUKUARVO"/>
     <funktiokutsu tallenna_tulos="false" id="413" version="0" funktionimi="LUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" id="414" version="0" funktionimi="LUKUARVO"/>
 
     <laskentakaava id="411" version="0" nimi="kaava411" on_luonnos="true" tyyppi="LUKUARVOFUNKTIO" funktiokutsu_id="411"
                    valintaryhmaviite="1"/>
@@ -1667,9 +1668,13 @@
     <laskentakaava id="413" version="0" nimi="kaava413" on_luonnos="true" tyyppi="LUKUARVOFUNKTIO" funktiokutsu_id="413"
                    valintaryhmaviite="1"/>
 
+    <laskentakaava id="998" version="0" nimi="kaava414" on_luonnos="true" tyyppi="LUKUARVOFUNKTIO" funktiokutsu_id="414"
+                   valintaryhmaviite="6"/>
+
     <laskentakaava id="999" version="0" nimi="kaava999" on_luonnos="true" tyyppi="LUKUARVOFUNKTIO" funktiokutsu_id="413"
                    hakukohdeviite="1"/>
 
+    <hakijaryhma id="1" version="0" kiintio="20" kuvaus="" nimi="hakijaryhma 1" laskentakaava_id="414" oid="hr1" valintaryhma_id="6" kaytaKaikki="false" tarkkaKiintio="false" kaytetaan_ryhmaan_kuuluvia="true"/>
+
     <hakijaryhma_jono/>
-    <hakijaryhma/>
 </dataset>
