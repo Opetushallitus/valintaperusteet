@@ -50,6 +50,10 @@ public abstract class LinkitettavaJaKopioitavaUtil {
         LinkedHashMap<String, T> masterienOidinMukaan = teeMappiMasterienOidinMukaan(jarjestettavatKopiot.values());
         for (String masterOid : uusiMasterJarjestys.keySet()) {
             T t = masterienOidinMukaan.get(masterOid);
+            if(t == null) {
+                continue;
+            }
+
             if (edellinen != null) {
                 edellinen.setSeuraava(t);
             }
