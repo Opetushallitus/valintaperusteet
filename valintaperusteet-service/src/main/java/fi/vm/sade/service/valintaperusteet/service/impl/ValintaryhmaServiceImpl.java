@@ -126,6 +126,7 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
         copy.setOid(oidService.haeValintaryhmaOid());
         Valintaryhma inserted = valintaryhmaDAO.insert(copy);
         valinnanVaiheService.kopioiValinnanVaiheetParentilta(inserted, parent);
+        hakijaryhmaService.kopioiHakijaryhmatMasterValintaryhmalta(source.getOid(), inserted.getOid());
         List<Valintaryhma> children = valintaryhmaDAO.findChildrenByParentOid(source.getOid());
         children.stream().forEach((child -> copyAsChild(child, inserted, child.getNimi())));
         return inserted;
