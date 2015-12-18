@@ -34,4 +34,6 @@ public interface HakijaryhmaService {
     Hakijaryhma update(String oid, HakijaryhmaCreateDTO entity);
 
     Optional<Hakijaryhma> siirra(HakijaryhmaSiirraDTO dto);
+
+    void kopioiHakijaryhmatMasterValintaryhmalta(String parentValintaryhmaOid, String childValintaryhmaoid);
 }

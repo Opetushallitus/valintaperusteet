@@ -3,13 +3,12 @@ package fi.vm.sade.service.valintaperusteet.service.impl;
 import fi.vm.sade.service.valintaperusteet.dao.LaskentakaavaDAO;
 import fi.vm.sade.service.valintaperusteet.dao.OrganisaatioDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
+import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.OrganisaatioDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
-import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
-import fi.vm.sade.service.valintaperusteet.model.Organisaatio;
-import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
-import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
+import fi.vm.sade.service.valintaperusteet.model.*;
+import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaService;
 import fi.vm.sade.service.valintaperusteet.service.OidService;
 import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
 import fi.vm.sade.service.valintaperusteet.service.ValintaryhmaService;
@@ -42,6 +41,9 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
     @Autowired
     private ValintaperusteetModelMapper modelMapper;
 
+    @Autowired
+    private HakijaryhmaService hakijaryhmaService;
+
 
     public List<Valintaryhma> findValintaryhmasByParentOid(String id) {
         return valintaryhmaDAO.findChildrenByParentOid(id);
@@ -69,6 +71,7 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
         valintaryhma.setOrganisaatiot(getOrganisaatios(dto.getOrganisaatiot()));
         Valintaryhma inserted = valintaryhmaDAO.insert(valintaryhma);
         valinnanVaiheService.kopioiValinnanVaiheetParentilta(inserted, parent);
+        hakijaryhmaService.kopioiHakijaryhmatMasterValintaryhmalta(parentOid, inserted.getOid());
         return inserted;
     }
 

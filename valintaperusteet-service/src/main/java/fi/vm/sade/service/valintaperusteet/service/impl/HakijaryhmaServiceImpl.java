@@ -164,6 +164,14 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
         return lisatty;
     }
 
+    @Override
+    public void kopioiHakijaryhmatMasterValintaryhmalta(String parentValintaryhmaOid, String childValintaryhmaoid) {
+        Valintaryhma childValintaryhma = valintaryhmaService.readByOid(childValintaryhmaoid);
+        hakijaryhmaDAO.findByValintaryhma(parentValintaryhmaOid).stream().forEach(parentHakijaryhma -> {
+            lisaaValintaryhmalleKopioMasterHakijaryhmasta(childValintaryhma, parentHakijaryhma);
+        });
+    }
+
 
     private void lisaaValintaryhmalleKopioMasterHakijaryhmasta(Valintaryhma valintaryhma, Hakijaryhma masterHakijaryhma) {
         Hakijaryhma kopio = new Hakijaryhma();
