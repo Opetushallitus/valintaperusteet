@@ -158,6 +158,9 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
         hakijaryhma.setKaytetaanRyhmaanKuuluvia(dto.isKaytetaanRyhmaanKuuluvia());
         hakijaryhma.setLaskentakaava(laskentakaavaService.haeMallinnettuKaava(hakijaryhma.getLaskentakaavaId()));
         Hakijaryhma lisatty = hakijaryhmaDAO.insert(hakijaryhma);
+        valintaryhma.getHakukohdeViitteet().stream().forEach(hk -> {
+            hakijaryhmaValintatapajonoService.liitaHakijaryhmaHakukohteelle(hk.getOid(), lisatty.getOid());
+        });
         List<Valintaryhma> alaValintaryhmat = valintaryhmaService.findValintaryhmasByParentOid(valintaryhmaOid);
         for (Valintaryhma alavalintaryhma : alaValintaryhmat) {
             lisaaValintaryhmalleKopioMasterHakijaryhmasta(alavalintaryhma, lisatty);
