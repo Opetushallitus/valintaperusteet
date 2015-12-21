@@ -247,6 +247,7 @@ public class HakukohdeServiceTest {
             List<Hakijaryhma> hakijaryhmat = hakijaryhmaService.findByHakukohde(hakukohdeOid);
             boolean hasHakijaryhma = hakijaryhmat.stream().anyMatch(hr -> hr.getOid().equals("hr2"));
             assertEquals(true, hasHakijaryhma);
+            assertEquals(1, hakijaryhmat.size());
         }
     }
 

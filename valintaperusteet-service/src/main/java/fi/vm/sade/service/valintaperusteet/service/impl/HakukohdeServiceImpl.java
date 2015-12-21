@@ -221,11 +221,6 @@ public class HakukohdeServiceImpl implements HakukohdeService {
                     vv.setHakukohdeViite(lisatty);
                 }
             }
-            if(valintaryhma != null && valintaryhma.getHakijaryhmat() != null) {
-                valintaryhma.getHakijaryhmat().stream().forEach(hakijaryhma -> {
-                    hakijaryhmaValintatapajonoService.liitaHakijaryhmaHakukohteelle(lisatty.getOid(), hakijaryhma.getOid());
-                });
-            }
             return lisatty;
         } else {
             hakukohdeViite.setManuaalisestiSiirretty(siirretaanManuaalisesti);
