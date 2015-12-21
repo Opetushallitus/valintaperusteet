@@ -6,6 +6,7 @@ import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaValintatapajonoDAO;
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaSiirraDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
+import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakukohde;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.*;
@@ -174,21 +175,29 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
 
 
     private void lisaaValintaryhmalleKopioMasterHakijaryhmasta(Valintaryhma valintaryhma, Hakijaryhma masterHakijaryhma) {
-        Hakijaryhma kopio = new Hakijaryhma();
+        Hakijaryhma kopio = luoKopioHakijaryhmasta(masterHakijaryhma);
         kopio.setValintaryhma(valintaryhma);
-        kopio.setOid(oidService.haeHakijaryhmaOid());
-        kopio.setKiintio(masterHakijaryhma.getKiintio());
-        kopio.setKuvaus(masterHakijaryhma.getKuvaus());
-        kopio.setKaytaKaikki(masterHakijaryhma.isKaytaKaikki());
-        kopio.setLaskentakaava(masterHakijaryhma.getLaskentakaava());
-        kopio.setNimi(masterHakijaryhma.getNimi());
-        kopio.setTarkkaKiintio(masterHakijaryhma.isTarkkaKiintio());
-        kopio.setKaytetaanRyhmaanKuuluvia(masterHakijaryhma.isKaytetaanRyhmaanKuuluvia());
         Hakijaryhma lisatty = hakijaryhmaDAO.insert(kopio);
         List<Valintaryhma> alavalintaryhmat = valintaryhmaService.findValintaryhmasByParentOid(valintaryhma.getOid());
-        for (Valintaryhma alavalintaryhma : alavalintaryhmat) {
+        valintaryhma.getHakukohdeViitteet().stream().forEach(hk -> {
+            hakijaryhmaValintatapajonoService.liitaHakijaryhmaHakukohteelle(hk.getOid(), lisatty.getOid());
+        });
+        alavalintaryhmat.stream().forEach(alavalintaryhma -> {
             lisaaValintaryhmalleKopioMasterHakijaryhmasta(alavalintaryhma, lisatty);
-        }
+        });
+    }
+
+    private Hakijaryhma luoKopioHakijaryhmasta(Hakijaryhma hakijaryhma) {
+        Hakijaryhma kopio = new Hakijaryhma();
+        kopio.setOid(oidService.haeHakijaryhmaOid());
+        kopio.setKiintio(hakijaryhma.getKiintio());
+        kopio.setKuvaus(hakijaryhma.getKuvaus());
+        kopio.setKaytaKaikki(hakijaryhma.isKaytaKaikki());
+        kopio.setLaskentakaava(hakijaryhma.getLaskentakaava());
+        kopio.setNimi(hakijaryhma.getNimi());
+        kopio.setTarkkaKiintio(hakijaryhma.isTarkkaKiintio());
+        kopio.setKaytetaanRyhmaanKuuluvia(hakijaryhma.isKaytetaanRyhmaanKuuluvia());
+        return kopio;
     }
 
     @Override

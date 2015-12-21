@@ -48,6 +48,9 @@ public class HakukohdeServiceImpl implements HakukohdeService {
     @Autowired
     private ValintaperusteetModelMapper modelMapper;
 
+    @Autowired
+    private HakijaryhmaValintatapajonoService hakijaryhmaValintatapajonoService;
+
     @Override
     public List<HakukohdeViite> findAll() {
         return hakukohdeViiteDAO.findAll();
@@ -103,7 +106,11 @@ public class HakukohdeServiceImpl implements HakukohdeService {
             Valintaryhma valintaryhma = valintaryhmaService.readByOid(valintaryhmaOid);
             lisatty.setValintaryhma(valintaryhma);
             lisatty = hakukohdeViiteDAO.insert(lisatty);
+            String hakukohdeOid = lisatty.getOid();
             valinnanVaiheService.kopioiValinnanVaiheetParentilta(lisatty, valintaryhma);
+            valintaryhma.getHakijaryhmat().stream().forEach(hakijaryhma -> {
+                hakijaryhmaValintatapajonoService.liitaHakijaryhmaHakukohteelle(hakukohdeOid, hakijaryhma.getOid());
+            });
         } else {
             lisatty = hakukohdeViiteDAO.insert(lisatty);
         }
@@ -213,6 +220,11 @@ public class HakukohdeServiceImpl implements HakukohdeService {
                 for (ValinnanVaihe vv : valinnanVaiheet) {
                     vv.setHakukohdeViite(lisatty);
                 }
+            }
+            if(valintaryhma != null && valintaryhma.getHakijaryhmat() != null) {
+                valintaryhma.getHakijaryhmat().stream().forEach(hakijaryhma -> {
+                    hakijaryhmaValintatapajonoService.liitaHakijaryhmaHakukohteelle(lisatty.getOid(), hakijaryhma.getOid());
+                });
             }
             return lisatty;
         } else {
