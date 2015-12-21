@@ -1676,5 +1676,7 @@
 
     <hakijaryhma id="1" version="0" kiintio="20" kuvaus="" nimi="hakijaryhma 1" laskentakaava_id="414" oid="hr1" valintaryhma_id="6" kaytaKaikki="false" tarkkaKiintio="false" kaytetaan_ryhmaan_kuuluvia="true"/>
 
+    <hakijaryhma id="2" version="0" kiintio="20" kuvaus="" nimi="hakijaryhma 1" laskentakaava_id="414" oid="hr2" valintaryhma_id="54" kaytaKaikki="false" tarkkaKiintio="false" kaytetaan_ryhmaan_kuuluvia="true"/>
+
     <hakijaryhma_jono/>
 </dataset>

@@ -8,6 +8,7 @@ import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheJonoillaDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
+import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
@@ -56,6 +57,9 @@ public class HakukohdeServiceTest {
 
     @Autowired
     private ValintaryhmaService valintaryhmaService;
+
+    @Autowired
+    private HakijaryhmaService hakijaryhmaService;
 
     @Autowired
     private ValintaperusteetModelMapper modelMapper;
@@ -198,6 +202,10 @@ public class HakukohdeServiceTest {
         final String valintakoekoodiUri = "valintakoeuri1";
         {
             HakukohdeViite hakukohde = hakukohdeService.readByOid(hakukohdeOid);
+
+            System.out.println("1 - valintaryhma.getHakijaryhmat(): " + hakijaryhmaService.findByValintaryhma(valintaryhmaOidLopuksi));
+            System.out.println("1 - hakukohde.getHakijaryhmat(): " + hakijaryhmaService.findByHakukohde(hakukohdeOid));
+
             assertNull(hakukohde.getValintaryhma());
             assertNull(hakukohde.getManuaalisestiSiirretty());
 
@@ -210,12 +218,17 @@ public class HakukohdeServiceTest {
 
             assertEquals(1, hakukohde.getValintakokeet().size());
             assertEquals(valintakoekoodiUri, hakukohde.getValintakokeet().iterator().next().getUri());
+
         }
 
         hakukohdeService.siirraHakukohdeValintaryhmaan(hakukohdeOid, valintaryhmaOidLopuksi, true);
 
         {
             HakukohdeViite hakukohde = hakukohdeService.readByOid(hakukohdeOid);
+            hakijaryhmaService.findByHakukohde(hakukohdeOid);
+
+            System.out.println("2 - hakukohde.getHakijaryhmat(): " + hakijaryhmaService.findByHakukohde(hakukohdeOid));
+
             assertEquals(valintaryhmaOidLopuksi, hakukohde.getValintaryhma().getOid());
             assertTrue(hakukohde.getManuaalisestiSiirretty());
 
@@ -230,6 +243,10 @@ public class HakukohdeServiceTest {
 
             assertEquals(1, hakukohde.getValintakokeet().size());
             assertEquals(valintakoekoodiUri, hakukohde.getValintakokeet().iterator().next().getUri());
+
+            List<Hakijaryhma> hakijaryhmat = hakijaryhmaService.findByHakukohde(hakukohdeOid);
+            boolean hasHakijaryhma = hakijaryhmat.stream().anyMatch(hr -> hr.getOid().equals("hr2"));
+            assertEquals(true, hasHakijaryhma);
         }
     }
 
