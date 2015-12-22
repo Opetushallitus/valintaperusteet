@@ -1,0 +1,3 @@
+ALTER TABLE hakijaryhma_jono ADD CONSTRAINT hakijaryhma_jono_edellinen_hakukohde_viite UNIQUE (edellinen_hakijaryhma_jono_id,  hakukohde_viite_id);
+CREATE UNIQUE INDEX valinnan_vaihe_null_hakukohde_viite ON valinnan_vaihe (edellinen_valinnan_vaihe_id, valintaryhma_id) WHERE hakukohde_viite_id IS NULL;
+CREATE UNIQUE INDEX valinnan_vaihe_null_valintaryhma ON valinnan_vaihe (edellinen_valinnan_vaihe_id, hakukohde_viite_id) WHERE valintaryhma_id IS NULL;
