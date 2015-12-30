@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -204,17 +205,30 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
         for (ValinnanVaihe vaihe : valinnanVaihe.getKopioValinnanVaiheet()) {
             removeValinnanvaihe(vaihe);
         }
+
         if (valinnanVaihe.getSeuraava() != null) {
             ValinnanVaihe seuraava = valinnanVaihe.getSeuraava();
-            seuraava.setEdellinen(valinnanVaihe.getEdellinen());
+            ValinnanVaihe edellinen = valinnanVaihe.getEdellinen();
+            valinnanVaihe.setEdellinen(null);
+            valinnanVaiheDAO.update(valinnanVaihe);
+            seuraava.setEdellinen(edellinen);
         }
-        for (Valintatapajono valintatapajono : valinnanVaihe.getJonot()) {
-            valintatapajonoService.delete(valintatapajono);
+        if(valinnanVaihe.getJonot() != null) {
+            for (Valintatapajono valintatapajono : valinnanVaihe.getJonot()) {
+                valintatapajonoService.delete(valintatapajono);
+            }
         }
-        for (Valintakoe valintakoe : valinnanVaihe.getValintakokeet()) {
-            valintakoeDAO.remove(valintakoe);
+        if(valinnanVaihe.getValintakokeet() != null) {
+            for (Valintakoe valintakoe : valinnanVaihe.getValintakokeet()) {
+                valintakoeDAO.remove(valintakoe);
+            }
         }
-        valinnanVaiheDAO.remove(valinnanVaihe);
+        valinnanVaihe = valinnanVaiheDAO.readByOid(valinnanVaihe.getOid());
+        if(valinnanVaihe != null) {
+            valinnanVaihe.setJonot(null);
+            valinnanVaihe.setValintakokeet(null);
+            valinnanVaiheDAO.remove(valinnanVaihe);
+        }
     }
 
     @Override

@@ -213,8 +213,12 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
         }
         if (jarjestyskriteeri.getSeuraava() != null) {
             Jarjestyskriteeri seuraava = jarjestyskriteeri.getSeuraava();
-            seuraava.setEdellinen(jarjestyskriteeri.getEdellinen());
+            Jarjestyskriteeri edellinen = jarjestyskriteeri.getEdellinen();
+            jarjestyskriteeri.setEdellinen(null);
+            jarjestyskriteeriDAO.update(jarjestyskriteeri);
+            seuraava.setEdellinen(edellinen);
         }
+        jarjestyskriteeri = jarjestyskriteeriDAO.readByOid(jarjestyskriteeri.getOid());
         jarjestyskriteeriDAO.remove(jarjestyskriteeri);
     }
 

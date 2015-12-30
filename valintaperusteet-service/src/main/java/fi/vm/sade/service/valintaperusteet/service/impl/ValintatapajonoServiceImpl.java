@@ -172,12 +172,21 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
         }
         if (valintatapajono.getSeuraava() != null) {
             Valintatapajono seuraava = valintatapajono.getSeuraava();
-            seuraava.setEdellinen(valintatapajono.getEdellinen());
+            Valintatapajono edellinen = valintatapajono.getEdellinen();
+            valintatapajono.setEdellinen(null);
+            valintatapajonoDAO.update(valintatapajono);
+            seuraava.setEdellinen(edellinen);
         }
-        for (Jarjestyskriteeri jarjestyskriteeri : valintatapajono.getJarjestyskriteerit()) {
-            jarjestyskriteeriService.delete(jarjestyskriteeri);
+        if(valintatapajono.getJarjestyskriteerit() != null) {
+            for (Jarjestyskriteeri jarjestyskriteeri : valintatapajono.getJarjestyskriteerit()) {
+                jarjestyskriteeriService.delete(jarjestyskriteeri);
+            }
         }
-        valintatapajonoDAO.remove(valintatapajono);
+        valintatapajono = valintatapajonoDAO.readByOid(valintatapajono.getOid());
+        if(valintatapajono != null) {
+            valintatapajono.setJarjestyskriteerit(null);
+            valintatapajonoDAO.remove(valintatapajono);
+        }
     }
 
     @Override
