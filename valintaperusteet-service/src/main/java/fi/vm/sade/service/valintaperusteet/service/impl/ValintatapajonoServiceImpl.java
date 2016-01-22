@@ -170,12 +170,27 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
         for (Valintatapajono valintatapajono1 : valintatapajono.getKopiot()) {
             delete(valintatapajono1);
         }
-        if (valintatapajono.getSeuraava() != null) {
-            Valintatapajono seuraava = valintatapajono.getSeuraava();
-            Valintatapajono edellinen = valintatapajono.getEdellinen();
-            valintatapajono.setEdellinen(null);
-            valintatapajonoDAO.update(valintatapajono);
+        valintatapajono.setKopiot(new HashSet<Valintatapajono>());
+
+        Valintatapajono edellinen = valintatapajono.getEdellinen();
+        Valintatapajono seuraava = valintatapajono.getSeuraava();
+
+        if(edellinen != null) {
+            edellinen.setSeuraava(null);
+            valintatapajonoDAO.update(edellinen);
+        }
+
+        valintatapajono.setEdellinen(null);
+        valintatapajono.setSeuraava(null);
+        valintatapajonoDAO.update(valintatapajono);
+
+        if(seuraava != null) {
             seuraava.setEdellinen(edellinen);
+            valintatapajonoDAO.update(seuraava);
+            if(edellinen != null) {
+                edellinen.setSeuraava(seuraava);
+                valintatapajonoDAO.update(edellinen);
+            }
         }
         if(valintatapajono.getJarjestyskriteerit() != null) {
             for (Jarjestyskriteeri jarjestyskriteeri : valintatapajono.getJarjestyskriteerit()) {

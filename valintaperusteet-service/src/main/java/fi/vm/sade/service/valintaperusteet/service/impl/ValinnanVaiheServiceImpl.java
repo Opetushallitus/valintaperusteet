@@ -205,13 +205,27 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
         for (ValinnanVaihe vaihe : valinnanVaihe.getKopioValinnanVaiheet()) {
             removeValinnanvaihe(vaihe);
         }
+        valinnanVaihe.setKopioValinnanvaiheet(new HashSet<ValinnanVaihe>());
 
-        if (valinnanVaihe.getSeuraava() != null) {
-            ValinnanVaihe seuraava = valinnanVaihe.getSeuraava();
-            ValinnanVaihe edellinen = valinnanVaihe.getEdellinen();
-            valinnanVaihe.setEdellinen(null);
-            valinnanVaiheDAO.update(valinnanVaihe);
+        ValinnanVaihe seuraava = valinnanVaihe.getSeuraava();
+        ValinnanVaihe edellinen = valinnanVaihe.getEdellinen();
+
+        if(edellinen != null) {
+            edellinen.setSeuraava(null);
+            valinnanVaiheDAO.update(edellinen);
+        }
+
+        valinnanVaihe.setEdellinen(null);
+        valinnanVaihe.setSeuraava(null);
+        valinnanVaiheDAO.update(valinnanVaihe);
+
+        if (seuraava != null) {
             seuraava.setEdellinen(edellinen);
+            valinnanVaiheDAO.update(seuraava);
+            if(edellinen!=null) {
+                edellinen.setSeuraava(seuraava);
+                valinnanVaiheDAO.update(edellinen);
+            }
         }
         if(valinnanVaihe.getJonot() != null) {
             for (Valintatapajono valintatapajono : valinnanVaihe.getJonot()) {

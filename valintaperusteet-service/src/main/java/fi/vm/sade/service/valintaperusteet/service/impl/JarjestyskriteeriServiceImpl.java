@@ -1,6 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -211,13 +212,30 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
         for (Jarjestyskriteeri jk : jarjestyskriteeri.getKopiot()) {
             delete(jk);
         }
-        if (jarjestyskriteeri.getSeuraava() != null) {
-            Jarjestyskriteeri seuraava = jarjestyskriteeri.getSeuraava();
-            Jarjestyskriteeri edellinen = jarjestyskriteeri.getEdellinen();
-            jarjestyskriteeri.setEdellinen(null);
-            jarjestyskriteeriDAO.update(jarjestyskriteeri);
-            seuraava.setEdellinen(edellinen);
+        jarjestyskriteeri.setKopiot(new HashSet<Jarjestyskriteeri>());
+
+        Jarjestyskriteeri edellinen = jarjestyskriteeri.getEdellinen();
+        Jarjestyskriteeri seuraava = jarjestyskriteeri.getSeuraava();
+
+        if(edellinen != null) {
+            edellinen.setSeuraava(null);
+            jarjestyskriteeriDAO.update(edellinen);
         }
+
+        jarjestyskriteeri.setEdellinen(null);
+        jarjestyskriteeri.setSeuraava(null);
+        jarjestyskriteeriDAO.update(jarjestyskriteeri);
+
+        if (seuraava != null) {
+            seuraava.setEdellinen(edellinen);
+            jarjestyskriteeriDAO.update(seuraava);
+
+            if(edellinen != null) {
+                edellinen.setSeuraava(seuraava);
+                jarjestyskriteeriDAO.update(edellinen);
+            }
+        }
+
         jarjestyskriteeri = jarjestyskriteeriDAO.readByOid(jarjestyskriteeri.getOid());
         jarjestyskriteeriDAO.remove(jarjestyskriteeri);
     }
