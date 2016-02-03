@@ -226,6 +226,7 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
 
     @PUT
     @Path("/siirra")
+    @PreAuthorize(CRUD)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response siirra(HakijaryhmaSiirraDTO dto) {
