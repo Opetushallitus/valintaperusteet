@@ -186,6 +186,7 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
 
     @PUT
     @Path("/siirra")
+    @PreAuthorize(CRUD)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response siirra(LaskentakaavaSiirraDTO dto) {
@@ -202,6 +203,7 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
 
     @GET
     @Path("/{id}/valintaryhma")
+    @PreAuthorize(CRUD)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response valintaryhma(@PathParam("id") Long id) {
@@ -213,6 +215,7 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
 
     @DELETE
     @Path("/{id}")
+    @PreAuthorize(CRUD)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response poista(@PathParam("id") Long id) {
