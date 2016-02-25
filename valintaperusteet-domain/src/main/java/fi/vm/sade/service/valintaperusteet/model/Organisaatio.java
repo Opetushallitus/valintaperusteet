@@ -11,6 +11,9 @@ public class Organisaatio extends BaseEntity {
     @ManyToMany(mappedBy = "organisaatiot")
     private Set<Valintaryhma> valintaryhmat = new HashSet<Valintaryhma>();
 
+    @OneToMany(mappedBy = "vastuuorganisaatio")
+    private Set<Valintaryhma> vastuuvalintaryhmat = new HashSet<Valintaryhma>();
+
     @Column(name = "oid", nullable = false, unique = true)
     private String oid;
 

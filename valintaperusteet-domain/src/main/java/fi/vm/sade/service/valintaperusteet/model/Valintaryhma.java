@@ -66,6 +66,10 @@ public class Valintaryhma extends BaseEntity {
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<Organisaatio> organisaatiot = new HashSet<Organisaatio>();
 
+    @JoinColumn(name = "vastuuorganisaatio_id", nullable = true)
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Organisaatio vastuuorganisaatio;
+
     public String getNimi() {
         return nimi;
     }
@@ -167,6 +171,14 @@ public class Valintaryhma extends BaseEntity {
 
     public void setOrganisaatiot(Set<Organisaatio> organisaatiot) {
         this.organisaatiot = organisaatiot;
+    }
+
+    public Organisaatio getVastuuorganisaatio() {
+        return vastuuorganisaatio;
+    }
+
+    public void setVastuuorganisaatio(Organisaatio vastuuorganisaatio) {
+        this.vastuuorganisaatio = vastuuorganisaatio;
     }
 
     public String getKohdejoukko() {

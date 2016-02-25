@@ -17,6 +17,7 @@ import fi.vm.sade.service.valintaperusteet.service.exception.ValintaryhmaaEiVoid
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
 
@@ -68,7 +69,7 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
         valintaryhma.setOid(oidService.haeValintaryhmaOid());
         Valintaryhma parent = haeValintaryhma(parentOid);
         valintaryhma.setYlavalintaryhma(parent);
-        valintaryhma.setOrganisaatiot(getOrganisaatios(dto.getOrganisaatiot()));
+        setOrganisaatiot(valintaryhma, dto);
         Valintaryhma inserted = valintaryhmaDAO.insert(valintaryhma);
         valinnanVaiheService.kopioiValinnanVaiheetParentilta(inserted, parent);
         hakijaryhmaService.kopioiHakijaryhmatMasterValintaryhmalta(parentOid, inserted.getOid());
@@ -90,7 +91,7 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
             managedObject.setHakuvuosi(incoming.getHakuvuosi());
             asetaHakuvuosiAlaryhmille(managedObject.getOid(), incoming.getHakuvuosi());
         }
-        managedObject.setOrganisaatiot(getOrganisaatios(incoming.getOrganisaatiot()));
+        setOrganisaatiot(managedObject, incoming);
         return managedObject;
     }
 
@@ -113,6 +114,21 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
             organisaatiot.add(temp);
         }
         return organisaatiot;
+    }
+
+    private Valintaryhma setOrganisaatiot(Valintaryhma entity, ValintaryhmaCreateDTO dto) {
+        Set<Organisaatio> organisaatiot = getOrganisaatios(dto.getOrganisaatiot());
+        entity.setOrganisaatiot(organisaatiot);
+        Organisaatio vastuuorganisaatio = null;
+        if(!StringUtils.isEmpty(dto.getVastuuorganisaatioOid())) {
+            for (Organisaatio organisaatio : organisaatiot) {
+                if(dto.getVastuuorganisaatioOid().equals(organisaatio.getOid())) {
+                    vastuuorganisaatio = organisaatio;
+                }
+            }
+        }
+        entity.setVastuuorganisaatio(vastuuorganisaatio);
+        return entity;
     }
 
     private boolean isChildOf(String childOid, String parentOid) {
@@ -151,7 +167,7 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
     public Valintaryhma insert(ValintaryhmaCreateDTO dto) {
         Valintaryhma entity = modelMapper.map(dto, Valintaryhma.class);
         entity.setOid(oidService.haeValintaryhmaOid());
-        entity.setOrganisaatiot(getOrganisaatios(dto.getOrganisaatiot()));
+        setOrganisaatiot(entity, dto);
         return valintaryhmaDAO.insert(entity);
     }
 
