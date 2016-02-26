@@ -28,6 +28,8 @@ public class ValintaperustePuuDTO {
 
     private Set<OrganisaatioDTO> organisaatiot = new HashSet<OrganisaatioDTO>();
 
+    private OrganisaatioDTO vastuuorganisaatio;
+
     public String getHakuOid() {
         return hakuOid;
     }
@@ -106,6 +108,14 @@ public class ValintaperustePuuDTO {
 
     public void setOrganisaatiot(Set<OrganisaatioDTO> organisaatiot) {
         this.organisaatiot = organisaatiot;
+    }
+
+    public OrganisaatioDTO getVastuuorganisaatio() {
+        return vastuuorganisaatio;
+    }
+
+    public void setVastuuorganisaatio(OrganisaatioDTO vastuuorganisaatio) {
+        this.vastuuorganisaatio = vastuuorganisaatio;
     }
 
     public String getKohdejoukko() {

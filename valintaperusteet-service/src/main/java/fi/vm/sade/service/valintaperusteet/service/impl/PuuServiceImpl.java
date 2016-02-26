@@ -90,14 +90,21 @@ public class PuuServiceImpl implements PuuService {
         valintaperustePuuDTO.setOid(valintaryhma.getOid());
         valintaperustePuuDTO.setKohdejoukko(valintaryhma.getKohdejoukko());
         for (Organisaatio organisaatio : valintaryhma.getOrganisaatiot()) {
-            OrganisaatioDTO orgDTO = new OrganisaatioDTO();
-            orgDTO.setOid(organisaatio.getOid());
-            orgDTO.setParentOidPath(organisaatio.getParentOidPath());
-            valintaperustePuuDTO.getOrganisaatiot().add(orgDTO);
+            valintaperustePuuDTO.getOrganisaatiot().add(convert(organisaatio));
+        }
+        if(valintaryhma.getVastuuorganisaatio() != null) {
+            valintaperustePuuDTO.setVastuuorganisaatio(convert(valintaryhma.getVastuuorganisaatio()));
         }
         for (Valintaryhma valintaryhma1 : valintaryhma.getAlavalintaryhmat()) {
             valintaperustePuuDTO.getAlavalintaryhmat().add(convert(valintaryhma1, dtoMap));
         }
         return valintaperustePuuDTO;
+    }
+
+    private OrganisaatioDTO convert(Organisaatio organisaatio) {
+        OrganisaatioDTO orgDTO = new OrganisaatioDTO();
+        orgDTO.setOid(organisaatio.getOid());
+        orgDTO.setParentOidPath(organisaatio.getParentOidPath());
+        return orgDTO;
     }
 }
