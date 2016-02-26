@@ -89,6 +89,7 @@ public class PuuServiceImpl implements PuuService {
         valintaperustePuuDTO.setTyyppi(ValintaperustePuuTyyppi.VALINTARYHMA);
         valintaperustePuuDTO.setOid(valintaryhma.getOid());
         valintaperustePuuDTO.setKohdejoukko(valintaryhma.getKohdejoukko());
+        valintaperustePuuDTO.setViimeinenKaynnistyspaiva(valintaryhma.getViimeinenKaynnistyspaiva());
         for (Organisaatio organisaatio : valintaryhma.getOrganisaatiot()) {
             valintaperustePuuDTO.getOrganisaatiot().add(convert(organisaatio));
         }

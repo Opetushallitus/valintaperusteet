@@ -70,6 +70,7 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
         Valintaryhma parent = haeValintaryhma(parentOid);
         valintaryhma.setYlavalintaryhma(parent);
         setOrganisaatiot(valintaryhma, dto);
+        valintaryhma.setViimeinenKaynnistyspaiva(dto.getViimeinenKaynnistyspaiva());
         Valintaryhma inserted = valintaryhmaDAO.insert(valintaryhma);
         valinnanVaiheService.kopioiValinnanVaiheetParentilta(inserted, parent);
         hakijaryhmaService.kopioiHakijaryhmatMasterValintaryhmalta(parentOid, inserted.getOid());
@@ -87,6 +88,7 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
         managedObject.setNimi(incoming.getNimi());
         managedObject.setKohdejoukko(incoming.getKohdejoukko());
         managedObject.setHakuoid(incoming.getHakuoid());
+        managedObject.setViimeinenKaynnistyspaiva(incoming.getViimeinenKaynnistyspaiva());
         if (managedObject.getHakuvuosi() != incoming.getHakuvuosi()) {
             managedObject.setHakuvuosi(incoming.getHakuvuosi());
             asetaHakuvuosiAlaryhmille(managedObject.getOid(), incoming.getHakuvuosi());

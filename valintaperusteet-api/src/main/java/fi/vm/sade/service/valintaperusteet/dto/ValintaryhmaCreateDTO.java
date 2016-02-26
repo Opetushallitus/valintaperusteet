@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,6 +14,9 @@ public class ValintaryhmaCreateDTO extends AbstractValintaryhmaDTO {
 
     @ApiModelProperty(value = "VastuuorganisaatioOid")
     private String vastuuorganisaatioOid;
+
+    @ApiModelProperty(value = "Viimeinen päivämäärä, jolloin valinta-ajon voi käynnistää")
+    private Date viimeinenKaynnistyspaiva;
 
     public Set<OrganisaatioDTO> getOrganisaatiot() {
         return organisaatiot;
@@ -28,5 +32,13 @@ public class ValintaryhmaCreateDTO extends AbstractValintaryhmaDTO {
 
     public void setVastuuorganisaatioOid(String vastuuorganisaatioOid) {
         this.vastuuorganisaatioOid = vastuuorganisaatioOid;
+    }
+
+    public Date getViimeinenKaynnistyspaiva() {
+        return viimeinenKaynnistyspaiva;
+    }
+
+    public void setViimeinenKaynnistyspaiva(Date viimeinenKaynnistyspaiva) {
+        this.viimeinenKaynnistyspaiva = viimeinenKaynnistyspaiva;
     }
 }

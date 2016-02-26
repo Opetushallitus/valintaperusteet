@@ -1,0 +1,1 @@
+alter table valintaryhma add column viimeinen_kaynnistyspaiva timestamp;

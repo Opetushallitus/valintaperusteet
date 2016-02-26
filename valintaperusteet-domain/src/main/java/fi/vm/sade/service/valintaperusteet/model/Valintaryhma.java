@@ -1,10 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "valintaryhma")
@@ -69,6 +66,9 @@ public class Valintaryhma extends BaseEntity {
     @JoinColumn(name = "vastuuorganisaatio_id", nullable = true)
     @ManyToOne(fetch = FetchType.LAZY)
     private Organisaatio vastuuorganisaatio;
+
+    @Column(name = "viimeinen_kaynnistyspaiva", nullable = true)
+    private Date viimeinenKaynnistyspaiva;
 
     public String getNimi() {
         return nimi;
@@ -203,5 +203,13 @@ public class Valintaryhma extends BaseEntity {
 
     public void setHakuvuosi(String hakuvuosi) {
         this.hakuvuosi = hakuvuosi;
+    }
+
+    public Date getViimeinenKaynnistyspaiva() {
+        return viimeinenKaynnistyspaiva;
+    }
+
+    public void setViimeinenKaynnistyspaiva(Date viimeinenKaynnistyspaiva) {
+        this.viimeinenKaynnistyspaiva = viimeinenKaynnistyspaiva;
     }
 }

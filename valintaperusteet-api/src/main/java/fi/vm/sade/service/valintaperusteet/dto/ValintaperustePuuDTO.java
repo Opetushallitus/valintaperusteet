@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,6 +30,8 @@ public class ValintaperustePuuDTO {
     private Set<OrganisaatioDTO> organisaatiot = new HashSet<OrganisaatioDTO>();
 
     private OrganisaatioDTO vastuuorganisaatio;
+
+    private Date viimeinenKaynnistyspaiva;
 
     public String getHakuOid() {
         return hakuOid;
@@ -132,5 +135,13 @@ public class ValintaperustePuuDTO {
 
     public void setHakuvuosi(String hakuvuosi) {
         this.hakuvuosi = hakuvuosi;
+    }
+
+    public Date getViimeinenKaynnistyspaiva() {
+        return viimeinenKaynnistyspaiva;
+    }
+
+    public void setViimeinenKaynnistyspaiva(Date viimeinenKaynnistyspaiva) {
+        this.viimeinenKaynnistyspaiva = viimeinenKaynnistyspaiva;
     }
 }
