@@ -5,13 +5,13 @@
     <parent>
         <groupId>fi.vm.sade.valintaperusteet</groupId>
         <artifactId>valintaperusteetbuild</artifactId>
-        <version>1.1-SNAPSHOT</version>
+        <version>yhdenpaikansaanto-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
 
     <groupId>fi.vm.sade.valintaperusteet</groupId>
     <artifactId>valintaperusteet-laskenta</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>yhdenpaikansaanto-SNAPSHOT</version>
     <name>Valintaperusteet :: Laskenta</name>
     <packaging>jar</packaging>
 
