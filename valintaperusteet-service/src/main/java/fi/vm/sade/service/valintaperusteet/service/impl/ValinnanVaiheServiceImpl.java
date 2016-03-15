@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
+import com.google.common.collect.Sets;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintakoeDAO;
 import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheCreateDTO;
@@ -15,10 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 @Transactional
 @Service
@@ -365,4 +363,21 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
     public boolean kuuluuSijoitteluun(String oid) {
         return valinnanVaiheDAO.kuuluuSijoitteluun(oid);
     }
+
+    @Override
+    public Set<String> getValintaryhmaOids(String oid) {
+        Set<String> res = Sets.newHashSet();
+        getValintaryhmaOids(readByOid(oid), res);
+        return res;
+    }
+
+    private void getValintaryhmaOids(ValinnanVaihe valinnanvaihe, Set<String> res) {
+        if(valinnanvaihe.getAktiivinen() && valinnanvaihe.getValintaryhma() != null)
+            res.add(valinnanvaihe.getValintaryhma().getOid());
+        for (ValinnanVaihe child: valinnanvaihe.getKopioValinnanVaiheet()) {
+            getValintaryhmaOids(child, res);
+        }
+    }
+
+
 }

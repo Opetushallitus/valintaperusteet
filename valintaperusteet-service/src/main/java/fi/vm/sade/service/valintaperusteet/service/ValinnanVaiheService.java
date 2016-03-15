@@ -6,6 +6,7 @@ import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 
 import java.util.List;
+import java.util.Set;
 
 public interface ValinnanVaiheService {
     ValinnanVaihe readByOid(String oid);
@@ -33,4 +34,6 @@ public interface ValinnanVaiheService {
     void delete(ValinnanVaihe valinnanVaihe);
 
     ValinnanVaihe update(String oid, ValinnanVaiheCreateDTO dto);
+
+    Set<String> getValintaryhmaOids(String oid);
 }

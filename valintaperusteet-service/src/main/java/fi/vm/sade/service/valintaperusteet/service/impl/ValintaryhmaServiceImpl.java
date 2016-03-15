@@ -1,15 +1,12 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
+import com.google.common.collect.Sets;
 import fi.vm.sade.service.valintaperusteet.dao.*;
-import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.OrganisaatioDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.*;
-import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaService;
-import fi.vm.sade.service.valintaperusteet.service.OidService;
-import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
-import fi.vm.sade.service.valintaperusteet.service.ValintaryhmaService;
+import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintaryhmaEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintaryhmaaEiVoidaKopioida;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +14,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -42,6 +43,9 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
 
     @Autowired
     private HakijaryhmaService hakijaryhmaService;
+
+    @Autowired
+    private HakukohdeService hakukohdeService;
 
     @Autowired
     private HakukohdekoodiDAO hakukohdekoodiDAO;
@@ -206,5 +210,33 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
             }
             valintaryhmaDAO.remove(managedObject.get());
         }
+    }
+
+    @Override
+    public Set<String> findHakukohdesRecursive(Set<String> oids) {
+        Set<String> hakukohdeOids = Sets.newHashSet();
+        for (String oid : oids) {
+            addHakukohdeOids(oid, hakukohdeOids);
+            getChildrenRecursive(oid, hakukohdeOids);
+        }
+        return hakukohdeOids;
+    }
+
+    private void getChildrenRecursive(String oid, Set<String> hakukohdeOids) {
+        for (Valintaryhma child : findValintaryhmasByParentOid(oid)) {
+            if (child.getLapsihakukohde()) {
+                addHakukohdeOids(child.getOid(), hakukohdeOids);
+            }
+            if (child.getLapsivalintaryhma()) {
+                getChildrenRecursive(child.getOid(), hakukohdeOids);
+            }
+        }
+    }
+
+    private void addHakukohdeOids(String oid, Set<String> hakukohdeOids) {
+        List<HakukohdeViite> childHakukohdes = hakukohdeService.findByValintaryhmaOid(oid);
+        hakukohdeOids.addAll(childHakukohdes.stream()
+                .map(HakukohdeViite::getOid)
+                .collect(Collectors.toList()));
     }
 }
