@@ -4,6 +4,7 @@ import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 
 import java.util.List;
+import java.util.Set;
 
 public interface ValintaryhmaService {
     List<Valintaryhma> findValintaryhmasByParentOid(String oid);
@@ -21,4 +22,6 @@ public interface ValintaryhmaService {
     Valintaryhma update(String oid, ValintaryhmaCreateDTO valintaryhma);
 
     void delete(String oid);
+
+    Set<String> findHakukohdesRecursive(Set<String> oids);
 }
