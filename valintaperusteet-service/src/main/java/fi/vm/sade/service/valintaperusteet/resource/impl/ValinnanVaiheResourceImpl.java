@@ -18,7 +18,9 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.google.common.collect.Sets;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
+import fi.vm.sade.service.valintaperusteet.service.ValintaryhmaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +64,9 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
 
     @Autowired
     ValinnanVaiheService valinnanVaiheService;
+
+    @Autowired
+    ValintaryhmaService valintaryhmaService;
 
     @Autowired
     private ValintaperusteetModelMapper modelMapper;
@@ -214,5 +219,14 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
         Map<String, Boolean> map = new HashMap<String, Boolean>();
         map.put("sijoitteluun", valinnanVaiheService.kuuluuSijoitteluun(oid));
         return map;
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{oid}/hakukohteet")
+    @ApiOperation(value = "Hakee hakukohteet, jotka liittyvät valinnanvaiheeseen", response = ValinnanVaiheDTO.class)
+    public Set<String> hakukohteet(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
+        Set<String> valintaryhmaoids = valinnanVaiheService.getValintaryhmaOids(oid);
+        return valintaryhmaService.findHakukohdesRecursive(valintaryhmaoids);
     }
 }

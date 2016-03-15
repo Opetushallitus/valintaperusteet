@@ -2,6 +2,7 @@ package fi.vm.sade.service.valintaperusteet.resource;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -71,4 +72,9 @@ public interface ValinnanVaiheResource {
     @Path("/{oid}/kuuluuSijoitteluun")
     @Produces(MediaType.APPLICATION_JSON)
     Map<String, Boolean> kuuluuSijoitteluun(@PathParam("oid") String oid);
+
+    @GET
+    @Path("/{oid}/hakukohteet")
+    @Produces(MediaType.APPLICATION_JSON)
+    Set<String> hakukohteet(@PathParam("oid") String oid);
 }
