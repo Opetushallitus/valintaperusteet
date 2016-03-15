@@ -73,4 +73,8 @@ public interface ValinnanVaiheResource {
     @Produces(MediaType.APPLICATION_JSON)
     Map<String, Boolean> kuuluuSijoitteluun(@PathParam("oid") String oid);
 
+    @GET
+    @Path("/{oid}/hakukohteet")
+    @Produces(MediaType.APPLICATION_JSON)
+    Set<String> hakukohteet(@PathParam("oid") String oid);
 }
