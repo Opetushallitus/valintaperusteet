@@ -14,6 +14,8 @@ import com.wordnik.swagger.annotations.ApiResponses;
 import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.resource.ValintalaskentakoostepalveluResource;
+import fi.vm.sade.service.valintaperusteet.resource.ValintaryhmaResource;
+import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 import org.slf4j.Logger;
@@ -28,13 +30,6 @@ import com.wordnik.swagger.annotations.ApiParam;
 
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
-import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaValintatapajonoService;
-import fi.vm.sade.service.valintaperusteet.service.HakukohdeService;
-import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
-import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
-import fi.vm.sade.service.valintaperusteet.service.ValintakoeService;
-import fi.vm.sade.service.valintaperusteet.service.ValintaperusteService;
-import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
 
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
 
@@ -51,6 +46,9 @@ public class ValintalaskentakoostepalveluResourceImpl {
 
     @Autowired
     private ValinnanVaiheService valinnanVaiheService;
+
+    @Autowired
+    private ValintaryhmaService valintaryhmaService;
 
     @Autowired
     private ValintatapajonoService valintatapajonoService;
@@ -310,5 +308,14 @@ public class ValintalaskentakoostepalveluResourceImpl {
     @ApiOperation(value = "Palauttaa valintatapajonot", response = ValintatapajonoDTO.class)
     public List<ValinnanVaiheJonoillaDTO> vaiheetJaJonot(@PathParam("oid") String oid) {
         return modelMapper.mapList(hakukohdeService.vaiheetJaJonot(oid), ValinnanVaiheJonoillaDTO.class);
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("valinnanvaihe/{oid}/hakukohteet")
+    @ApiOperation(value = "Hakee hakukohteet, jotka liittyvät valinnanvaiheeseen", response = ValinnanVaiheDTO.class)
+    public Set<String> hakukohteet(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
+        Set<String> valintaryhmaoids = valinnanVaiheService.getValintaryhmaOids(oid);
+        return valintaryhmaService.findHakukohdesRecursive(valintaryhmaoids);
     }
 }
