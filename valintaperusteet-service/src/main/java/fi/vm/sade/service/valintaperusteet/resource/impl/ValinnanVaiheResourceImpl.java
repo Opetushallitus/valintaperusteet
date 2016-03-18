@@ -221,12 +221,4 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
         return map;
     }
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/{oid}/hakukohteet")
-    @ApiOperation(value = "Hakee hakukohteet, jotka liittyvät valinnanvaiheeseen", response = ValinnanVaiheDTO.class)
-    public Set<String> hakukohteet(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
-        Set<String> valintaryhmaoids = valinnanVaiheService.getValintaryhmaOids(oid);
-        return valintaryhmaService.findHakukohdesRecursive(valintaryhmaoids);
-    }
 }
