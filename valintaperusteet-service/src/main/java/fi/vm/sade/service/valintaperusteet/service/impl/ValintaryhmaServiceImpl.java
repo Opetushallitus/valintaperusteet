@@ -159,33 +159,16 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
     private void copyHakukohdekoodit(Valintaryhma source, Valintaryhma target) {
         source.getHakukohdekoodit().stream().forEach( sourceKoodi -> {
             target.getHakukohdekoodit().add(sourceKoodi);
-            /*
-            Hakukohdekoodi targetKoodi = new Hakukohdekoodi();
-            targetKoodi.setArvo(sourceKoodi.getArvo());
-            targetKoodi.setNimiEn(sourceKoodi.getNimiEn());
-            targetKoodi.setNimiFi(sourceKoodi.getNimiFi());
-            targetKoodi.setNimiSv(sourceKoodi.getNimiSv());
-            targetKoodi.setUri(sourceKoodi.getUri());
-            target.getHakukohdekoodit().add(targetKoodi);
-            hakukohdekoodiDAO.insert(targetKoodi);
-            */
         });
     }
 
     private void copyValintakoekoodit(Valintaryhma source, Valintaryhma target) {
-        source.getValintakoekoodit().stream().forEach( sourceKoodi -> {
-            target.getValintakoekoodit().add(sourceKoodi);
-            /*
-            Valintakoekoodi targetKoodi = new Valintakoekoodi();
-            targetKoodi.setArvo(sourceKoodi.getArvo());
-            targetKoodi.setNimiEn(sourceKoodi.getNimiEn());
-            targetKoodi.setNimiFi(sourceKoodi.getNimiFi());
-            targetKoodi.setNimiSv(sourceKoodi.getNimiSv());
-            targetKoodi.setUri(sourceKoodi.getUri());
-            target.getValintakoekoodit().add(targetKoodi);
-            valintakoekoodiDAO.insert(targetKoodi);
-            */
-        });
+        List<Valintakoekoodi> sourceKoodit = valintakoekoodiDAO.findByValintaryhma(source.getOid());
+        if(sourceKoodit != null) {
+            sourceKoodit.stream().forEach(sourceKoodi -> {
+                target.getValintakoekoodit().add(sourceKoodi);
+            });
+        }
     }
 
     public Valintaryhma copyAsChild(String sourceOid, String parentOid, String name) {
