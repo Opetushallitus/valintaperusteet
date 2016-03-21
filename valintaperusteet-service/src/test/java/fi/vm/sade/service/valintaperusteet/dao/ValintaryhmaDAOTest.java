@@ -38,7 +38,7 @@ public class ValintaryhmaDAOTest {
     @Test
     public void testFindValintaryhmaByNullParentOid() throws Exception {
         List<Valintaryhma> valintaryhmas = valintaryhmaDAO.findChildrenByParentOid(null);
-        assertEquals(44, valintaryhmas.size());
+        assertEquals(46, valintaryhmas.size());
     }
 
     @Test

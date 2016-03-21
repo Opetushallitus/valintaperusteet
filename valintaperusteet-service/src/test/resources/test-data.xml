@@ -1,5 +1,16 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <dataset>
+
+    <valintaryhma id="700" version="0" oid="oid_700" nimi="Valintaryhma 700" parent_id="[NULL]" />
+    <valintaryhma id="701" version="0" oid="oid_701" nimi="Valintaryhma 701" parent_id="700" />
+    <valintaryhma id="702" version="0" oid="oid_702" nimi="Valintaryhma 702" parent_id="[NULL]" />
+
+    <valintakoekoodi id="703" version="0" uri="koekoodi703"/>
+    <valintaryhma_valintakoekoodi valintaryhma_id="702" valintakoekoodi_id="703"/>
+
+    <hakukohdekoodi id="704" version="0" uri="hakukohdekoodi704"/>
+    <valintaryhma_hakukohdekoodi valintaryhma_id="702" hakukohdekoodi_id="704"/>
+
     <!-- Valintaryhmä pitää luoda ensimmäisenä -->
     <valintaryhma id="1" version="0" oid="oid1" nimi="Valintaryhma 1" parent_id="[NULL]" />
 
