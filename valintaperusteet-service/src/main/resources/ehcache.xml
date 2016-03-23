@@ -6,9 +6,9 @@
     <defaultCache
             eternal="false"
             maxElementsInMemory="10000"
-            maxElementsOnDisk="100000"
-            overflowToDisk="true"
-            diskPersistent="true"
-            timeToLiveSeconds="300"
+            maxElementsOnDisk="100"
+            overflowToDisk="false"
+            diskPersistent="false"
+            timeToLiveSeconds="60"
             />
 </ehcache>
