@@ -74,7 +74,7 @@ public class ValintaryhmaResourceTest {
     @Test
     public void testSearch() throws Exception {
         List<ValintaryhmaDTO> valintaryhmas = valintaryhmaResource.search(true, null);
-        Assert.assertEquals(44, valintaryhmas.size());
+        Assert.assertEquals(46, valintaryhmas.size());
         Assert.assertEquals("oid1", valintaryhmas.get(0).getOid());
 
         mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(valintaryhmas);
@@ -262,6 +262,18 @@ public class ValintaryhmaResourceTest {
         mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(valintaryhma);
 
         valintaryhmaResource.delete("oid2");
+    }
+
+    @Test
+    public void testKopioiLapseksi() throws Exception {
+        Response response = valintaryhmaResource.copyAsChild("oid_700", "oid_702", "Testi");
+        ValintaryhmaDTO valintaryhmaDTO = mapper.readValue(
+                mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(
+                        response.getEntity()), ValintaryhmaDTO.class);
+        assertEquals(1, valintaryhmaDTO.getHakukohdekoodit().size());
+        assertEquals("hakukohdekoodi704", valintaryhmaDTO.getHakukohdekoodit().iterator().next().getUri());
+        assertEquals(1, valintaryhmaDTO.getValintakoekoodit().size());
+        assertEquals("koekoodi703", valintaryhmaDTO.getValintakoekoodit().get(0).getUri());
     }
 
 }

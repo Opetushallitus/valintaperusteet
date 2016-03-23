@@ -1,10 +1,11 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
+
+import fi.vm.sade.service.valintaperusteet.dao.*;
 import com.google.common.collect.Sets;
 import fi.vm.sade.service.valintaperusteet.dao.LaskentakaavaDAO;
 import fi.vm.sade.service.valintaperusteet.dao.OrganisaatioDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
-import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.OrganisaatioDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
@@ -43,6 +44,12 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
 
     @Autowired
     private HakijaryhmaService hakijaryhmaService;
+
+    @Autowired
+    private HakukohdekoodiDAO hakukohdekoodiDAO;
+
+    @Autowired
+    private ValintakoekoodiDAO valintakoekoodiDAO;
 
     @Autowired
     private HakukohdeService hakukohdeService;
@@ -146,10 +153,27 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
         copy.setOid(oidService.haeValintaryhmaOid());
         Valintaryhma inserted = valintaryhmaDAO.insert(copy);
         valinnanVaiheService.kopioiValinnanVaiheetParentilta(inserted, parent);
-        hakijaryhmaService.kopioiHakijaryhmatMasterValintaryhmalta(source.getOid(), inserted.getOid());
+        hakijaryhmaService.kopioiHakijaryhmatMasterValintaryhmalta(parent.getOid(), inserted.getOid());
+        copyHakukohdekoodit(source, inserted);
+        copyValintakoekoodit(source, inserted);
         List<Valintaryhma> children = valintaryhmaDAO.findChildrenByParentOid(source.getOid());
         children.stream().forEach((child -> copyAsChild(child, inserted, child.getNimi())));
         return inserted;
+    }
+
+    private void copyHakukohdekoodit(Valintaryhma source, Valintaryhma target) {
+        source.getHakukohdekoodit().stream().forEach( sourceKoodi -> {
+            target.getHakukohdekoodit().add(sourceKoodi);
+        });
+    }
+
+    private void copyValintakoekoodit(Valintaryhma source, Valintaryhma target) {
+        List<Valintakoekoodi> sourceKoodit = valintakoekoodiDAO.findByValintaryhma(source.getOid());
+        if(sourceKoodit != null) {
+            sourceKoodit.stream().forEach(sourceKoodi -> {
+                target.getValintakoekoodit().add(sourceKoodi);
+            });
+        }
     }
 
     public Valintaryhma copyAsChild(String sourceOid, String parentOid, String name) {
