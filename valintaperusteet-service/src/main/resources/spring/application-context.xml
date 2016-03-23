@@ -47,5 +47,4 @@
 
     <import resource="db-context.xml"/>
     <import resource="service-context.xml"/>
-    <import resource="cxf-context.xml"/>
 </beans>
