@@ -371,6 +371,8 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
         return res;
     }
 
+    // XXX: This recursive call is super slow, rather than making single queries for each ValinnanVaihe object
+    // XXX: implement interface that takes batch of these objects and processes these in a single run
     private void getValintaryhmaOids(ValinnanVaihe valinnanvaihe, Set<String> res) {
         if(valinnanvaihe.getAktiivinen() && valinnanvaihe.getValintaryhma() != null)
             res.add(valinnanvaihe.getValintaryhma().getOid());

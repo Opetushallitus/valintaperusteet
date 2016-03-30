@@ -99,7 +99,7 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
         managedObject.setKohdejoukko(incoming.getKohdejoukko());
         managedObject.setHakuoid(incoming.getHakuoid());
         managedObject.setViimeinenKaynnistyspaiva(incoming.getViimeinenKaynnistyspaiva());
-        if (managedObject.getHakuvuosi().equals(incoming.getHakuvuosi())) {
+        if (managedObject.getHakuvuosi() == null || !managedObject.getHakuvuosi().equals(incoming.getHakuvuosi())) {
             managedObject.setHakuvuosi(incoming.getHakuvuosi());
             asetaHakuvuosiAlaryhmille(managedObject.getOid(), incoming.getHakuvuosi());
         }
