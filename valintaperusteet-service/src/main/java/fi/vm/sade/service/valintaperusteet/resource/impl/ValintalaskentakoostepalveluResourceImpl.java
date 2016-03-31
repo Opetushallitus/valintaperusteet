@@ -1,37 +1,27 @@
 package fi.vm.sade.service.valintaperusteet.resource.impl;
 
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
-import com.wordnik.swagger.annotations.ApiResponse;
-import com.wordnik.swagger.annotations.ApiResponses;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
 import fi.vm.sade.service.valintaperusteet.dto.*;
+import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
+import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
 import fi.vm.sade.service.valintaperusteet.model.*;
-import fi.vm.sade.service.valintaperusteet.resource.ValintalaskentakoostepalveluResource;
-import fi.vm.sade.service.valintaperusteet.resource.ValintaryhmaResource;
 import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.wordnik.swagger.annotations.ApiOperation;
-import com.wordnik.swagger.annotations.ApiParam;
-
-import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
-import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
-
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Component
 @Path("valintalaskentakoostepalvelu")
