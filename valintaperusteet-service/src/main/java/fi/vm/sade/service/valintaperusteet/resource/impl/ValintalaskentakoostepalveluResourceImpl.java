@@ -318,4 +318,18 @@ public class ValintalaskentakoostepalveluResourceImpl {
         Set<String> valintaryhmaoids = valinnanVaiheService.getValintaryhmaOids(oid);
         return valintaryhmaService.findHakukohdesRecursive(valintaryhmaoids);
     }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("valinnanvaihe/{oid}/valintaperusteet")
+    @ApiOperation(value = "Hakee hakukohteet, jotka liittyvät valinnanvaiheeseen", response = ValinnanVaiheDTO.class)
+    public List<ValintaperusteetDTO> valintaperusteet(@ApiParam(value = "Valinnanvaihe OID", required = true) @PathParam("oid") String oid) {
+        Set<String> valintaryhmaoids = valinnanVaiheService.getValintaryhmaOids(oid);
+        Set<String> hakukohdeOids = valintaryhmaService.findHakukohdesRecursive(valintaryhmaoids);
+        return hakukohdeOids.stream().flatMap(hakukohdeOid -> {
+            HakuparametritDTO hakuparametrit = new HakuparametritDTO();
+            hakuparametrit.setHakukohdeOid(hakukohdeOid);
+            return valintaperusteService.haeValintaperusteet(Arrays.asList(hakuparametrit)).stream();
+        }).collect(Collectors.toList());
+    }
 }
