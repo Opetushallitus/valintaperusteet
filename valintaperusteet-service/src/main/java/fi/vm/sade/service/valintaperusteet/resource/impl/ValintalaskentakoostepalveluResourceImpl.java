@@ -191,7 +191,13 @@ public class ValintalaskentakoostepalveluResourceImpl {
     public List<ValintaperusteDTO> findAvaimet(@ApiParam(value = "Hakukohde OID", required = true) @PathParam("oid") String oid) {
         return laskentakaavaService.findAvaimetForHakukohde(oid);
     }
-
+    @POST
+    @Path("hakukohde/avaimet")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Hakee hakukohteen syötettävät tiedot", response = ValintaperusteDTO.class)
+    public List<HakukohdeJaValintaperusteDTO> findAvaimet(@ApiParam(value = "Hakukohde OIDs", required = true) List<String> oids) {
+        return oids.stream().map(oid -> new HakukohdeJaValintaperusteDTO(oid, laskentakaavaService.findAvaimetForHakukohde(oid))).collect(Collectors.toList());
+    }
     @POST
     @Path("hakukohde/valintakoe")
     @Produces(MediaType.APPLICATION_JSON)
@@ -235,7 +241,18 @@ public class ValintalaskentakoostepalveluResourceImpl {
         List<HakuparametritDTO> list = Arrays.asList(hakuparametrit);
         return valintaperusteService.haeValintaperusteet(list);
     }
-
+    @POST
+    @Path("valintaperusteet")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Hakee valintaperusteet")
+    public List<ValintaperusteetDTO> haeValintaperusteet(
+            @ApiParam(value = "Hakukohde OIDs") List<String> hakukohdeOids) {
+        return valintaperusteService.haeValintaperusteet(hakukohdeOids.stream().map(oid -> {
+            HakuparametritDTO hakuparametritDTO = new HakuparametritDTO();
+            hakuparametritDTO.setHakukohdeOid(oid);
+            return hakuparametritDTO;
+        }).collect(Collectors.toList()));
+    }
     @POST
     @Path("valintaperusteet/tuoHakukohde")
     @Consumes(MediaType.APPLICATION_JSON)
