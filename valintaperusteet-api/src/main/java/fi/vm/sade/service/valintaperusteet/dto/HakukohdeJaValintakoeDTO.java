@@ -5,7 +5,7 @@ import java.util.List;
 public class HakukohdeJaValintakoeDTO {
 
     private String hakukohdeOid;
-    private List<ValintakoeDTO> valintakokeet;
+    private List<ValintakoeDTO> valintakoeDTO;
 
     public HakukohdeJaValintakoeDTO() {
 
@@ -13,7 +13,7 @@ public class HakukohdeJaValintakoeDTO {
 
     public HakukohdeJaValintakoeDTO(String hakukohdeOid, List<ValintakoeDTO> valintakoeDTO) {
         this.hakukohdeOid = hakukohdeOid;
-        this.valintakokeet = valintakoeDTO;
+        this.valintakoeDTO = valintakoeDTO;
     }
 
     public String getHakukohdeOid() {
@@ -21,6 +21,6 @@ public class HakukohdeJaValintakoeDTO {
     }
 
     public List<ValintakoeDTO> getValintakoeDTO() {
-        return valintakokeet;
+        return valintakoeDTO;
     }
 }
