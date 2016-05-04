@@ -1,17 +1,14 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
-import static org.junit.Assert.*;
-
-import java.util.List;
-
-import javax.ws.rs.core.Response;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
+import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
-
-import junit.framework.Assert;
+import fi.vm.sade.service.valintaperusteet.model.JsonViews;
+import fi.vm.sade.service.valintaperusteet.resource.impl.HakukohdeResourceImpl;
+import fi.vm.sade.service.valintaperusteet.util.TestUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,11 +21,10 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
-import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
-import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
-import fi.vm.sade.service.valintaperusteet.model.JsonViews;
-import fi.vm.sade.service.valintaperusteet.resource.impl.HakukohdeResourceImpl;
-import fi.vm.sade.service.valintaperusteet.util.TestUtil;
+import javax.ws.rs.core.Response;
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 /**
  * User: jukais Date: 16.1.2013 Time: 14.15
