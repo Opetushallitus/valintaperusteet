@@ -1092,7 +1092,7 @@
     <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="6" version="1"
                      oid="6" aloituspaikat="10" nimi="haku 6 valinnanvaihe 1 jono1" kuvaus="kuvaus" poistetaanko_hylatyt="false"
                      tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="4" aktiivinen="true"
-                     ei_varasijatayttoa="false" kaikki_ehdon_tayttavat_hyvaksytaan="false" valisijoittelu="false" automaattinen_laskentaan_siirto="true"/>
+                     ei_varasijatayttoa="false" kaikki_ehdon_tayttavat_hyvaksytaan="false" valisijoittelu="true" automaattinen_laskentaan_siirto="true"/>
 
     <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="8" version="1"
                      oid="8" edellinen_valintatapajono_id="6" aloituspaikat="10" poistetaanko_hylatyt="false"

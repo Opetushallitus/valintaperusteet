@@ -197,7 +197,7 @@ public class ValinnanVaiheResourceTest {
 
     @Test
     public void testJarjesta() {
-        List<ValinnanVaiheDTO> valinnanVaiheList = hakuResource.valinnanVaihesForHakukohde("oid6");
+        List<ValinnanVaiheDTO> valinnanVaiheList = hakuResource.valinnanVaihesForHakukohde("oid6", "false");
         List<String> oids = new ArrayList<String>();
 
         for (ValinnanVaiheDTO valinnanVaihe : valinnanVaiheList) {
@@ -210,7 +210,7 @@ public class ValinnanVaiheResourceTest {
         List<ValinnanVaiheDTO> jarjesta = vaiheResource.jarjesta(oids);
         assertEquals("6", jarjesta.get(0).getOid());
         assertEquals("4", jarjesta.get(2).getOid());
-        jarjesta = hakuResource.valinnanVaihesForHakukohde("oid6");
+        jarjesta = hakuResource.valinnanVaihesForHakukohde("oid6", "false");
         assertEquals("6", jarjesta.get(0).getOid());
         assertEquals("4", jarjesta.get(2).getOid());
     }

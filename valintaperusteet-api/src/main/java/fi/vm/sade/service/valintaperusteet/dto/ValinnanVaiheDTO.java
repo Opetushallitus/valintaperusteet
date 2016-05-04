@@ -12,6 +12,9 @@ public class ValinnanVaiheDTO extends ValinnanVaiheCreateDTO {
     @ApiModelProperty(value = "Onko valinnan vaihe peritty")
     private Boolean inheritance;
 
+    @ApiModelProperty(value = "Onko valinnanvaiheella välisijoittelua")
+    private Boolean hasValisijoittelu;
+
     public String getOid() {
         return oid;
     }
@@ -26,5 +29,13 @@ public class ValinnanVaiheDTO extends ValinnanVaiheCreateDTO {
 
     public void setInheritance(Boolean inheritance) {
         this.inheritance = inheritance;
+    }
+
+    public void setHasValisijoittelu(Boolean hasValisijoittelu) {
+        this.hasValisijoittelu = hasValisijoittelu;
+    }
+
+    public Boolean getHasValisijoittelu() {
+        return this.hasValisijoittelu;
     }
 }

@@ -23,10 +23,10 @@ import javax.ws.rs.core.Response;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
-import fi.vm.sade.service.valintaperusteet.model.HakukohteenValintaperuste;
-import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
+import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.*;
 
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,6 @@ import com.wordnik.swagger.annotations.ApiParam;
 import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 
-import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.resource.ValintaryhmaResource;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakukohdeViiteEiOleOlemassaException;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,6 +71,9 @@ public class HakukohdeResourceImpl {
 
     @Autowired
     LaskentakaavaService laskentakaavaService;
+
+    @Autowired
+    ValintatapajonoService valintatapajonoService;
 
     @Autowired
     HakukohdeViiteDAO hakukohdeViiteDAO;
@@ -209,8 +211,31 @@ public class HakukohdeResourceImpl {
     @Produces(MediaType.APPLICATION_JSON)
     @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Hakee hakukohteen valinnan vaiheet OID:n perusteella", response = ValinnanVaiheDTO.class)
-    public List<ValinnanVaiheDTO> valinnanVaihesForHakukohde(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
-        return modelMapper.mapList(valinnanVaiheService.findByHakukohde(oid), ValinnanVaiheDTO.class);
+    public List<ValinnanVaiheDTO> valinnanVaihesForHakukohde(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid,
+                                                             @DefaultValue("false") @QueryParam("withValisijoitteluTieto") String withValisijoitteluTieto) {
+
+        List<ValinnanVaiheDTO> valinnanVaiheetDTO = modelMapper.mapList(valinnanVaiheService.findByHakukohde(oid), ValinnanVaiheDTO.class);
+
+        if (withValisijoitteluTieto.equalsIgnoreCase("true")) {
+
+            /**
+             * Fetch all the ValintatapaJono's for each ValinnanVaihe
+             * and check if any of the ValintatapaJono has Valisijoittelu.
+             * Sets hasValisijoittelu variable accordingly.
+             */
+            valinnanVaiheetDTO = valinnanVaiheetDTO.stream().map(vv -> {
+                if (valintatapajonoService.findJonoByValinnanvaihe(vv.getOid())
+                        .stream().anyMatch(Valintatapajono::getValisijoittelu)) {
+                    vv.setHasValisijoittelu(true);
+                } else {
+                    vv.setHasValisijoittelu(false);
+                }
+                return vv;
+            }).collect(Collectors.toList());
+
+        }
+
+        return valinnanVaiheetDTO;
     }
 
     @Transactional

@@ -1,6 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.util.List;
 
@@ -8,8 +8,10 @@ import javax.ws.rs.core.Response;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
+import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 
+import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,14 +26,6 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 
 import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
-import fi.vm.sade.service.valintaperusteet.dto.HakukohdeInsertDTO;
-import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
-import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriDTO;
-import fi.vm.sade.service.valintaperusteet.dto.KoodiDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.resource.impl.HakukohdeResourceImpl;
 import fi.vm.sade.service.valintaperusteet.util.TestUtil;
@@ -147,10 +141,20 @@ public class HakukohdeResourceTest {
 
     @Test
     public void testValinnanVaihesForHakukohde() throws Exception {
-        List<ValinnanVaiheDTO> valinnanVaihes = hakukohdeResource.valinnanVaihesForHakukohde("oid6");
+        List<ValinnanVaiheDTO> valinnanVaihes = hakukohdeResource.valinnanVaihesForHakukohde("oid6", "false");
         assertEquals(3, valinnanVaihes.size());
         testUtil.lazyCheck(JsonViews.Basic.class, valinnanVaihes);
 
+    }
+
+    @Test
+    public void testValinnanVaihesForHakukohdeWithValisijoittelutieto() throws Exception {
+        List<ValinnanVaiheDTO> valinnanVaihes = hakukohdeResource.valinnanVaihesForHakukohde("oid6", "true");
+        assertEquals(3, valinnanVaihes.size());
+        assertTrue(valinnanVaihes.get(0).getHasValisijoittelu());
+        assertFalse(valinnanVaihes.get(1).getHasValisijoittelu());
+        assertFalse(valinnanVaihes.get(2).getHasValisijoittelu());
+        testUtil.lazyCheck(JsonViews.Basic.class, valinnanVaihes);
     }
 
     @Test

@@ -53,7 +53,8 @@ public interface HakukohdeResource {
     @GET
     @Path("/{oid}/valinnanvaihe")
     @Produces(MediaType.APPLICATION_JSON)
-    List<ValinnanVaiheDTO> valinnanVaihesForHakukohde(@PathParam("oid") String oid);
+    List<ValinnanVaiheDTO> valinnanVaihesForHakukohde(@PathParam("oid") String oid,
+                                                      @QueryParam("withValisijoitteluTieto") String withValisijoitteluTieto);
 
     @GET
     @Path("/{oid}/valintakoe")
