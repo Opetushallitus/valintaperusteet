@@ -85,8 +85,9 @@ object Laskin {
 
     laskin.laske(laskettava) match {
       case Tulos(tulos, tila, historia) => {
-        new Laskentatulos[JBigDecimal](tila, if (tulos.isEmpty) null else tulos.get.underlying
-          , new StringBuffer().append(Json.toJson(wrapHistoria(hakemus, historia))), wrapSyotetytArvot(laskin.getSyotetytArvot), wrapFunktioTulokset(laskin.getFunktioTulokset))
+        new Laskentatulos[JBigDecimal](tila, if (tulos.isEmpty) null else tulos.get.underlying,
+          String.valueOf(Json.toJson(wrapHistoria(hakemus, historia))),
+          wrapSyotetytArvot(laskin.getSyotetytArvot), wrapFunktioTulokset(laskin.getFunktioTulokset))
       }
     }
 
@@ -101,8 +102,9 @@ object Laskin {
 
     laskin.laske(laskettava) match {
       case Tulos(tulos, tila, historia) => {
-        new Laskentatulos[JBoolean](tila, if (tulos.isEmpty) null else Boolean.box(tulos.get)
-          , new StringBuffer().append(Json.toJson(wrapHistoria(hakemus, historia))), wrapSyotetytArvot(laskin.getSyotetytArvot), wrapFunktioTulokset(laskin.getFunktioTulokset))
+        new Laskentatulos[JBoolean](tila, if (tulos.isEmpty) null else Boolean.box(tulos.get),
+          String.valueOf(Json.toJson(wrapHistoria(hakemus, historia))),
+          wrapSyotetytArvot(laskin.getSyotetytArvot), wrapFunktioTulokset(laskin.getFunktioTulokset))
       }
     }
   }
@@ -151,7 +153,7 @@ object Laskin {
   private def wrapHistoria(hakemus: Hakemus, historia: Historia) = {
     val v: Map[String, Option[Any]] = hakemus.kentat.map(f => (f._1 -> Some(f._2))) ++ hakemus.metatiedot.map(f => (f._1 -> Some(f._2)))
 
-    val name = new StringBuffer().append(s"Laskenta hakemukselle (${hakemus.oid})").toString
+    val name = s"Laskenta hakemukselle (${hakemus.oid})"
     Historia(name, historia.tulos, historia.tilat, Some(List(historia)), Some(v))
   }
 }

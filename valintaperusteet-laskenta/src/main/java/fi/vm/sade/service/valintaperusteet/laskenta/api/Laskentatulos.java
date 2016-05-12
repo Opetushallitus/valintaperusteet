@@ -5,7 +5,7 @@ import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Tila;
 import java.util.Map;
 
 public class Laskentatulos<T> {
-    public Laskentatulos(Tila tila, T tulos, StringBuffer historia, Map<String, SyotettyArvo> syotetytArvot, Map<String, FunktioTulos> funktioTulokset) {
+    public Laskentatulos(Tila tila, T tulos, String historia, Map<String, SyotettyArvo> syotetytArvot, Map<String, FunktioTulos> funktioTulokset) {
         this.tila = tila;
         this.tulos = tulos;
         this.historia = historia;
@@ -15,7 +15,7 @@ public class Laskentatulos<T> {
 
     private Tila tila;
     private T tulos;
-    private StringBuffer historia;
+    private String historia;
     private Map<String, SyotettyArvo> syotetytArvot;
     private Map<String, FunktioTulos> funktioTulokset;
 
@@ -27,7 +27,7 @@ public class Laskentatulos<T> {
         return tulos;
     }
 
-    public StringBuffer getHistoria() {
+    public String getHistoria() {
         return historia;
     }
 
