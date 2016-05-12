@@ -288,9 +288,8 @@ object JsonHelpers {
         case Some(s: Any) => writes(s)
         case null => JsNull
         case None => JsNull
-        case s: Map[_, _] => {
-          s.foldLeft(Json.obj())((o, cur)=> o++Json.obj(cur._1.toString -> cur._2))
-        }
+        case s: Map[_, _] =>
+          JsObject(s.toSeq.map(t => t._1.toString -> writes(t._2)))
         case s: Seq[_] => {
           JsArray(s.map(writes))
         }
