@@ -67,6 +67,11 @@ private object Laskentamoodi extends Enumeration {
 object Laskin {
   val LOG = LoggerFactory.getLogger(classOf[Laskin])
 
+  private val ZERO: BigDecimal = BigDecimal("0.0")
+  private val ONE: BigDecimal = BigDecimal("1.0")
+  private val TWO: BigDecimal = BigDecimal("2.0")
+  private val HUNDRED: BigDecimal = BigDecimal("100.0")
+
   private def wrapSyotetytArvot(sa: Map[String, SyotettyArvo]): Map[String, SArvo] = {
     sa.map(e => (e._1 -> new SArvo(e._1, if (e._2.arvo.isEmpty) null else e._2.arvo.get,
       if (e._2.laskennallinenArvo.isEmpty) null else e._2.laskennallinenArvo.get, e._2.osallistuminen)))
@@ -400,7 +405,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
 
 
             val vertailuarvo = BigDecimal(samojenArvojenLkm).underlying.divide(BigDecimal(ensisijaisetHakijat).underlying, 4, RoundingMode.HALF_UP)
-            vertailuarvo.compareTo(prosenttiosuus.underlying.divide(BigDecimal("100.0").underlying, 4, RoundingMode.HALF_UP)) != 1
+            vertailuarvo.compareTo(prosenttiosuus.underlying.divide(Laskin.HUNDRED.underlying, 4, RoundingMode.HALF_UP)) != 1
           })
 
           val tila = new Hyvaksyttavissatila
@@ -612,7 +617,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
         val (tulos, tilat, h) = muodostaKoostettuTulos(fs, ds => {
           val sorted = ds.sortWith(_ < _)
           if (sorted.size % 2 == 1) sorted(sorted.size / 2)
-          else BigDecimal((sorted(sorted.size / 2) + sorted(sorted.size / 2 - 1)).underlying.divide(BigDecimal("2.0").underlying, 4, RoundingMode.HALF_UP))
+          else BigDecimal((sorted(sorted.size / 2) + sorted(sorted.size / 2 - 1)).underlying.divide(Laskin.TWO.underlying, 4, RoundingMode.HALF_UP))
         })
         (tulos, tilat, Historia("Mediaani", tulos, tilat, h.historiat, None))
       }
@@ -813,19 +818,19 @@ private class Laskin private(private val hakukohde: Hakukohde,
         val tulokset = fs.map(p => Pair(laskeLukuarvo(p._1), laskeLukuarvo(p._2)))
         val (tilat, historiat) = tulokset.reverse.foldLeft(Pair(List[Tila](), List[Historia]()))((lst, t) => Pair(t._1.tila :: t._2.tila :: lst._1, t._1.historia :: t._2.historia :: lst._2))
 
-        val painokertointenSumma = tulokset.foldLeft(BigDecimal("0.0")) {
+        val painokertointenSumma = tulokset.foldLeft(Laskin.ZERO) {
           (s, a) =>
             val painokerroin = a._1.tulos
             val painotettava = a._2.tulos
 
             s + (painotettava match {
-              case Some(p) if(painokerroin.isEmpty) => BigDecimal("1.0")
+              case Some(p) if(painokerroin.isEmpty) => Laskin.ONE
               case Some(p) => painokerroin.get
-              case None => BigDecimal("0.0")
+              case None => Laskin.ZERO
             })
         }
 
-        val painotettuSumma = tulokset.foldLeft(BigDecimal("0.0"))((s, a) => s + a._1.tulos.getOrElse(BigDecimal("1.0")) * a._2.tulos.getOrElse(BigDecimal("0.0")))
+        val painotettuSumma = tulokset.foldLeft(Laskin.ZERO)((s, a) => s + a._1.tulos.getOrElse(Laskin.ONE) * a._2.tulos.getOrElse(Laskin.ZERO))
 
         val painotettuKeskiarvo = if(painokertointenSumma.intValue() == 0) None else Some(BigDecimal(painotettuSumma.underlying.divide(painokertointenSumma.underlying, 4, RoundingMode.HALF_UP)))
 
