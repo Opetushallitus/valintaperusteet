@@ -4,7 +4,7 @@ import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @ApiModel(value = "ValintaperusteetJarjestyskriteeriDTO", description = "Järjestyskriteeri")
-public class ValintaperusteetJarjestyskriteeriDTO {
+public class ValintaperusteetJarjestyskriteeriDTO implements Prioritized {
     @ApiModelProperty(value = "nimi", required = true)
     private String nimi;
 

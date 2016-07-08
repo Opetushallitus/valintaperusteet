@@ -362,8 +362,14 @@ public class ValintaperusteetModelMapper extends ModelMapper {
 
     public <FROM, TO> List<TO> mapList(List<FROM> list, final Class<TO> to) {
         List<TO> toList = new ArrayList<TO>();
+        int index = 0;
         for (FROM f : list) {
-            toList.add(map(f, to));
+            TO converted = map(f, to);
+            if(converted instanceof Prioritized){
+                ((Prioritized)converted).setPrioriteetti(index);
+            }
+            toList.add(converted);
+            ++index;
         }
         return toList;
     }

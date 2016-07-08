@@ -3,7 +3,7 @@ package fi.vm.sade.service.valintaperusteet.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ValintatapajonoJarjestyskriteereillaDTO {
+public class ValintatapajonoJarjestyskriteereillaDTO implements Prioritized {
     private Integer aloituspaikat;
 
     private String kuvaus;

@@ -4,7 +4,7 @@ import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @ApiModel(value = "JarjestyskriteeriDTO", description = "Järjestyskriteeri")
-public class JarjestyskriteeriDTO extends JarjestyskriteeriCreateDTO {
+public class JarjestyskriteeriDTO extends JarjestyskriteeriCreateDTO implements Prioritized {
     @ApiModelProperty(value = "OID", required = true)
     private String oid;
 

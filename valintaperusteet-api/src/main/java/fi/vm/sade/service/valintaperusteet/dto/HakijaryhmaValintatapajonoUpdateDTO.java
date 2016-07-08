@@ -4,7 +4,7 @@ import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @ApiModel(value = "HakijaryhmaValintatapajonoDTO", description = "Hakijaryhmän liittyminen valintatapajonoon")
-public class HakijaryhmaValintatapajonoUpdateDTO {
+public class HakijaryhmaValintatapajonoUpdateDTO implements Prioritized {
 
     @ApiModelProperty(value = "OID", required = true)
     private String oid;
