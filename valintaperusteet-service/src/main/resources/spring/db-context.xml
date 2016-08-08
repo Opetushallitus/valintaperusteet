@@ -41,10 +41,7 @@
         <property name="dataSource">
             <bean id="dataSource"
                   class="org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy">
-                <property name="targetDataSource" ref="dbDataSource">
-                    <!--<ref bean="dbDataSource" />-->
-
-                </property>
+                <property name="targetDataSource" ref="dbDataSource"/>
             </bean>
         </property>
     </bean>
