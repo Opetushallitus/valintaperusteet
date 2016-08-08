@@ -17,33 +17,6 @@
 -->
 <!-- The contents of this file will be loaded for each web application -->
 <Context>
-
     <!-- Default set of monitored resources -->
     <WatchedResource>WEB-INF/web.xml</WatchedResource>
-
-    <Resource name="jdbc/valintaperusteet" auth="Container" type="javax.sql.DataSource"
-              maxActive="${postgresql.maxActive}"
-              maxIdle="${postgresql.maxIdle}"
-              maxWait="${postgresql.maxWait}"
-              username="${postgresql.user}"
-              password="${postgresql.password}"
-              driverClassName="org.postgresql.Driver"
-              url="jdbc:postgresql://${postgresql.host}:${postgresql.port}/${postgresql.database}"
-              factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
-              testWhileIdle="true"
-              testOnBorrow="true"
-              testOnReturn="false"
-              validationQuery="SELECT 1"
-              validationInterval="30000"
-              timeBetweenEvictionRunsMillis="5000"
-              minIdle="2"
-              initialSize="2"
-              removeAbandonedTimeout="60"
-              removeAbandoned="true"
-              logAbandoned="true"
-              minEvictableIdleTimeMillis="30000"
-              jmxEnabled="true"
-              jdbcInterceptors="ConnectionState;StatementFinalizer;SlowQueryReportJmx(threshold=10000)"
-              abandonWhenPercentageFull="75"/>
-
 </Context>
