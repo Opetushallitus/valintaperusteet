@@ -51,17 +51,17 @@
         <property name="poolName" value="springHikariCP" />
         <property name="connectionTestQuery" value="SELECT 1" />
         <property name="dataSourceClassName" value="org.postgresql.ds.PGSimpleDataSource" />
-        <property name="maximumPoolSize" value="${postgresql.maxActive}" />
-        <property name="minimumIdle" value="2" />
-        <property name="idleTimeout" value="30000" />
-        <property name="connectionTimeout" value="${postgresql.maxWait}" />
-        <property name="maxLifetime" value="60000"/>
+        <property name="maximumPoolSize" value="${valintaperusteet-service.postgresql.maxactive}" />
+        <property name="minimumIdle" value="${valintaperusteet-service.postgresql.minimumidle}" />
+        <property name="idleTimeout" value="${valintaperusteet-service.postgresql.idletimeoutmillis}" />
+        <property name="connectionTimeout" value="${valintaperusteet-service.postgresql.maxwait}" />
+        <property name="maxLifetime" value="${valintaperusteet-service.postgresql.maxlifetimemillis}"/>
 
         <property name="dataSourceProperties">
             <props>
-                <prop key="url">jdbc:postgresql://${postgresql.host}:${postgresql.port}/${postgresql.database}</prop>
-                <prop key="user">${postgresql.user}</prop>
-                <prop key="password">${postgresql.password}</prop>
+                <prop key="url">${valintaperusteet-service.postgresql.url}</prop>
+                <prop key="user">${valintaperusteet-service.postgresql.user}</prop>
+                <prop key="password">${valintaperusteet-service.postgresql.password}</prop>
             </props>
         </property>
     </bean>
