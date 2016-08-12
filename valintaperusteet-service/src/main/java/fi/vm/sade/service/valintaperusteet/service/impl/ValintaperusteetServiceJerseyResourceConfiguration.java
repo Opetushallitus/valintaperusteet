@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
+import fi.vm.sade.generic.rest.CorsFilter;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 
@@ -24,5 +25,6 @@ public class ValintaperusteetServiceJerseyResourceConfiguration extends Resource
             new com.wordnik.swagger.jaxrs.listing.ResourceListingProvider(),
             new com.wordnik.swagger.jaxrs.listing.ApiDeclarationProvider());
         register(com.wordnik.swagger.jaxrs.listing.ApiListingResourceJSON.class);
+        register(CorsFilter.class);
     }
 }
