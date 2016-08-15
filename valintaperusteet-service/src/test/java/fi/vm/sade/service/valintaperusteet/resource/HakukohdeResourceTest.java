@@ -1,10 +1,21 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
-import fi.vm.sade.service.valintaperusteet.dto.*;
+import fi.vm.sade.service.valintaperusteet.dto.HakukohdeInsertDTO;
+import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
+import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriDTO;
+import fi.vm.sade.service.valintaperusteet.dto.KoodiDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.resource.impl.HakukohdeResourceImpl;
@@ -19,20 +30,16 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
-import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
 import javax.ws.rs.core.Response;
 import java.util.List;
-
-import static org.junit.Assert.*;
 
 /**
  * User: jukais Date: 16.1.2013 Time: 14.15
  */
 @ContextConfiguration(locations = "classpath:test-context.xml")
 @TestExecutionListeners(listeners = { ValinnatJTACleanInsertTestExecutionListener.class,
-        DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
-        TransactionalTestExecutionListener.class })
+        DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class })
 @RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data.xml")
 public class HakukohdeResourceTest {

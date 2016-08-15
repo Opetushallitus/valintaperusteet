@@ -1,10 +1,24 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
-import java.util.List;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNotSame;
+import static junit.framework.Assert.assertTrue;
 
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
+import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
+import fi.vm.sade.service.valintaperusteet.dao.ValintakoeDAO;
+import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
+import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
-import fi.vm.sade.service.valintaperusteet.model.*;
+import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
+import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
+import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
+import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
+import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
+import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,17 +28,8 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
-import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
-import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
-import fi.vm.sade.service.valintaperusteet.dao.ValintakoeDAO;
-import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
-import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi;
-import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
-
-import static junit.framework.Assert.*;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA. User: jukais Date: 16.1.2013 Time: 14.16 To
@@ -32,8 +37,7 @@ import static junit.framework.Assert.*;
  */
 @ContextConfiguration(locations = "classpath:test-context.xml")
 @TestExecutionListeners(listeners = { ValinnatJTACleanInsertTestExecutionListener.class,
-        DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
-        TransactionalTestExecutionListener.class })
+        DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class })
 @RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data.xml")
 public class ValintaryhmaServiceTest {

@@ -4,21 +4,19 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
+import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.dto.model.Koekutsu;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
-
-import fi.vm.sade.service.valintaperusteet.service.exception.ValintakoettaEiVoiLisataException;
+import fi.vm.sade.service.valintaperusteet.model.JsonViews;
+import fi.vm.sade.service.valintaperusteet.resource.impl.HakukohdeResourceImpl;
+import fi.vm.sade.service.valintaperusteet.resource.impl.ValinnanVaiheResourceImpl;
+import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheEiOleOlemassaException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,24 +28,20 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
-import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
-import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
-import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
-import fi.vm.sade.service.valintaperusteet.model.JsonViews;
-import fi.vm.sade.service.valintaperusteet.resource.impl.HakukohdeResourceImpl;
-import fi.vm.sade.service.valintaperusteet.resource.impl.ValinnanVaiheResourceImpl;
-import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheEiOleOlemassaException;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * User: tommiha Date: 1/23/13 Time: 1:03 PM
  */
 @ContextConfiguration(locations = "classpath:test-context.xml")
 @TestExecutionListeners(listeners = { ValinnatJTACleanInsertTestExecutionListener.class,
-        DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
-        TransactionalTestExecutionListener.class })
+        DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class })
 @RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data.xml")
 public class ValinnanVaiheResourceTest {

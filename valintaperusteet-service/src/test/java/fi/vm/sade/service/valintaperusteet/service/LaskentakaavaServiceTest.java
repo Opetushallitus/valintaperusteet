@@ -6,18 +6,35 @@ import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 
-import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.util.*;
-
+import fi.vm.sade.kaava.Funktiokuvaaja;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
+import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
 import fi.vm.sade.service.valintaperusteet.dao.GenericDAO;
-import fi.vm.sade.service.valintaperusteet.dto.*;
+import fi.vm.sade.service.valintaperusteet.dto.FunktioargumentinLapsiDTO;
+import fi.vm.sade.service.valintaperusteet.dto.FunktioargumenttiDTO;
+import fi.vm.sade.service.valintaperusteet.dto.FunktiokutsuDTO;
+import fi.vm.sade.service.valintaperusteet.dto.HakukohteenValintaperusteAvaimetDTO;
+import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaListDTO;
+import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaSiirraDTO;
+import fi.vm.sade.service.valintaperusteet.dto.SyoteparametriDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi;
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi;
+import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
+import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
-import fi.vm.sade.service.valintaperusteet.model.*;
+import fi.vm.sade.service.valintaperusteet.model.Arvokonvertteriparametri;
+import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti;
+import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
+import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
+import fi.vm.sade.service.valintaperusteet.model.Syoteparametri;
+import fi.vm.sade.service.valintaperusteet.model.ValintaperusteViite;
+import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuMuodostaaSilmukanException;
+import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuaEiVoidaKayttaaValintakoelaskennassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaEiOleOlemassaException;
+import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaMuodostaaSilmukanException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,25 +44,23 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
-import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
-import fi.vm.sade.kaava.Funktiokuvaaja;
-import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
-import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi;
-import fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi;
-import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
-import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
-import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuMuodostaaSilmukanException;
-import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuaEiVoidaKayttaaValintakoelaskennassaException;
-import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaMuodostaaSilmukanException;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * User: kwuoti Date: 21.1.2013 Time: 9.42
  */
 @ContextConfiguration(locations = "classpath:test-context.xml")
 @TestExecutionListeners(listeners = { ValinnatJTACleanInsertTestExecutionListener.class,
-        DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
-        TransactionalTestExecutionListener.class })
+        DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class })
 @RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data.xml")
 public class LaskentakaavaServiceTest {

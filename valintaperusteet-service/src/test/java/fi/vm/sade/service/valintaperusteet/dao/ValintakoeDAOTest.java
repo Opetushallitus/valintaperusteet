@@ -1,5 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.dao;
 
+import static org.junit.Assert.assertEquals;
+
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
@@ -11,14 +13,11 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
-import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * User: kwuoti
@@ -27,8 +26,7 @@ import static org.junit.Assert.assertEquals;
  */
 @ContextConfiguration(locations = "classpath:test-context.xml")
 @TestExecutionListeners(listeners = {ValinnatJTACleanInsertTestExecutionListener.class,
-        DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
-        TransactionalTestExecutionListener.class})
+        DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class })
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
 @DataSetLocation("classpath:test-data.xml")

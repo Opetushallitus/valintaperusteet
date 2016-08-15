@@ -1,6 +1,12 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
@@ -12,7 +18,6 @@ import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
 import fi.vm.sade.service.valintaperusteet.resource.impl.ValintakoeResourceImpl;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintakoettaEiVoiLisataException;
 import fi.vm.sade.service.valintaperusteet.util.TestUtil;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,12 +28,6 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
-import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
-
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNull;
-import static org.junit.Assert.*;
 
 /**
  * User: kwuoti
@@ -37,8 +36,7 @@ import static org.junit.Assert.*;
  */
 @ContextConfiguration(locations = "classpath:test-context.xml")
 @TestExecutionListeners(listeners = {ValinnatJTACleanInsertTestExecutionListener.class,
-        DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
-        TransactionalTestExecutionListener.class})
+        DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class })
 @RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data.xml")
 public class ValintakoeResourceTest {

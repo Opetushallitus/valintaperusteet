@@ -1,29 +1,23 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
+import static junit.framework.Assert.assertEquals;
+
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.model.Tasapistesaanto;
-import fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
-import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
-import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
-import fi.vm.sade.service.valintaperusteet.service.exception.ValintatapajonoaEiVoiLisataException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
-import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
-import java.util.*;
-
-import static junit.framework.Assert.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA. User: jukais Date: 17.1.2013 Time: 15.14 To
@@ -31,8 +25,7 @@ import static junit.framework.Assert.*;
  */
 @ContextConfiguration(locations = "classpath:test-context.xml")
 @TestExecutionListeners(listeners = { ValinnatJTACleanInsertTestExecutionListener.class,
-        DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
-        TransactionalTestExecutionListener.class })
+        DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class })
 @RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data-valisijoittelu.xml")
 public class ValintatapajonoValisijoitteluKopiotTest {

@@ -25,7 +25,7 @@
     <!-- BoneCP configuration -->
     <bean id="mainDataSource" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
         <property name="driverClass" value="org.hsqldb.jdbcDriver" />
-        <property name="jdbcUrl" value="jdbc:hsqldb:mem:valintaperusteet" />
+        <property name="jdbcUrl" value="jdbc:hsqldb:mem:valintaperusteet;hsqldb.tx=mvcc" />
         <property name="username" value="sa"/>
         <property name="password" value=""/>
         <property name="idleConnectionTestPeriod" value="3000"/>

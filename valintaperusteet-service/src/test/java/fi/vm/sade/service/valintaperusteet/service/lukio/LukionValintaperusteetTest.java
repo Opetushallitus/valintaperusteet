@@ -1,5 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.service.lukio;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import fi.vm.sade.kaava.Laskentadomainkonvertteri;
 import fi.vm.sade.service.valintaperusteet.laskenta.Lukuarvofunktio;
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus;
@@ -20,15 +23,11 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
-import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * User: wuoti
@@ -37,8 +36,7 @@ import static org.junit.Assert.assertTrue;
  */
 @ContextConfiguration(locations = "classpath:test-context.xml")
 @TestExecutionListeners(listeners = {ValinnatJTACleanInsertTestExecutionListener.class,
-        DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
-        TransactionalTestExecutionListener.class})
+        DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class })
 @RunWith(SpringJUnit4ClassRunner.class)
 public class LukionValintaperusteetTest {
     @Autowired

@@ -1,5 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
+import static junit.framework.Assert.assertEquals;
+
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dao.JarjestyskriteeriDAO;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriCreateDTO;
@@ -21,12 +23,9 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
-import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
 import java.util.Arrays;
 import java.util.List;
-
-import static junit.framework.Assert.assertEquals;
 
 /**
  * Created with IntelliJ IDEA.
@@ -37,8 +36,7 @@ import static junit.framework.Assert.assertEquals;
  */
 @ContextConfiguration(locations = "classpath:test-context.xml")
 @TestExecutionListeners(listeners = {ValinnatJTACleanInsertTestExecutionListener.class,
-        DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
-        TransactionalTestExecutionListener.class})
+        DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class })
 @RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data.xml")
 public class JarjestyskriteeriResourceTest {

@@ -1,5 +1,10 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import fi.vm.sade.kaava.Laskentadomainkonvertteri;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
@@ -8,12 +13,23 @@ import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus;
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakukohde;
 import fi.vm.sade.service.valintaperusteet.laskenta.api.LaskentaService;
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Laskentatulos;
-import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.*;
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.HylattyMetatieto;
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Hylattytila;
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Hyvaksyttavissatila;
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Tila;
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.VirheMetatieto;
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Virhetila;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti;
 import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
 import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
-import fi.vm.sade.service.valintaperusteet.service.impl.generator.*;
+import fi.vm.sade.service.valintaperusteet.service.impl.generator.Aineet;
+import fi.vm.sade.service.valintaperusteet.service.impl.generator.GenericHelper;
+import fi.vm.sade.service.valintaperusteet.service.impl.generator.PkAineet;
+import fi.vm.sade.service.valintaperusteet.service.impl.generator.PkJaYoPohjaiset;
+import fi.vm.sade.service.valintaperusteet.service.impl.generator.PkPohjaiset;
+import fi.vm.sade.service.valintaperusteet.service.impl.generator.YoAineet;
+import fi.vm.sade.service.valintaperusteet.service.impl.generator.YoPohjaiset;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -24,23 +40,23 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
-import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.util.*;
-
-import static org.junit.Assert.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * User: kwuoti Date: 5.3.2013 Time: 16.02
  */
 @ContextConfiguration(locations = "classpath:test-context.xml")
 @TestExecutionListeners(listeners = {ValinnatJTACleanInsertTestExecutionListener.class,
-        DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
-        TransactionalTestExecutionListener.class})
+        DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class })
 @RunWith(SpringJUnit4ClassRunner.class)
 public class LuoValintaperusteetServiceTest {
 

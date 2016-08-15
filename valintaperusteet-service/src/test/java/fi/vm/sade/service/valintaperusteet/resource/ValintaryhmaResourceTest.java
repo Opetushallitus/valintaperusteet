@@ -2,20 +2,20 @@ package fi.vm.sade.service.valintaperusteet.resource;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import javax.ws.rs.core.Response;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
+import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
+import fi.vm.sade.service.valintaperusteet.dto.KoodiDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaDTO;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
+import fi.vm.sade.service.valintaperusteet.model.JsonViews;
+import fi.vm.sade.service.valintaperusteet.resource.impl.ValintaryhmaResourceImpl;
 import junit.framework.Assert;
-
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,25 +26,19 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
-import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
-import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
-import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
-import fi.vm.sade.service.valintaperusteet.dto.KoodiDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaDTO;
-import fi.vm.sade.service.valintaperusteet.model.JsonViews;
-import fi.vm.sade.service.valintaperusteet.resource.impl.ValintaryhmaResourceImpl;
+import javax.ws.rs.core.Response;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * User: tommiha Date: 1/21/13 Time: 4:05 PM
  */
 @ContextConfiguration(locations = "classpath:test-context.xml")
 @TestExecutionListeners(listeners = { ValinnatJTACleanInsertTestExecutionListener.class,
-        DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
-        TransactionalTestExecutionListener.class })
+        DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class })
 @RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data.xml")
 public class ValintaryhmaResourceTest {
