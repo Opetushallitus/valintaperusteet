@@ -37,6 +37,10 @@
 			<param-name>javax.ws.rs.Application</param-name>
 			<param-value>fi.vm.sade.service.valintaperusteet.resource.impl.ValintaperusteetServiceJerseyResourceConfiguration</param-value>
 		</init-param>
+		<init-param>
+      <param-name>jersey.config.server.provider.packages</param-name>
+      <param-value>com.jersey.series.spring.security.service</param-value>
+  </init-param>
 		<load-on-startup>1</load-on-startup>
 		<async-supported>true</async-supported>
 	</servlet>
