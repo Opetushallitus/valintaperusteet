@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.hibernate.collection.internal.PersistentSet;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.ext.ContextResolver;
@@ -25,6 +26,11 @@ public class ObjectMapperProvider implements ContextResolver<ObjectMapper> {
 
     @Override
     public ObjectMapper getContext(Class<?> type) {
+        return objectMapper;
+    }
+
+    @Bean(name="valintaperusteetServiceObjectMapper")
+    public ObjectMapper getObjectMapper() {
         return objectMapper;
     }
 }
