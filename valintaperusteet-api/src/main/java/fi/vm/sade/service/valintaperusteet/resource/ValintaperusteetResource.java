@@ -1,6 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
-import com.wordnik.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiOperation;
 import fi.vm.sade.service.valintaperusteet.dto.*;
 
 import javax.ws.rs.*;

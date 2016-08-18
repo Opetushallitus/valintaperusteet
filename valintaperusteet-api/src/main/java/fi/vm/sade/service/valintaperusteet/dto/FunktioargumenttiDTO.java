@@ -1,7 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
-import com.wordnik.swagger.annotations.ApiModel;
-import com.wordnik.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel(value = "FunktioargumenttiDTO", description = "Funktioargumentti")
 public class FunktioargumenttiDTO implements Comparable<FunktioargumenttiDTO> {

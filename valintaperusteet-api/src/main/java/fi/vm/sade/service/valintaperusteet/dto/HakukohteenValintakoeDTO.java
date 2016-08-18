@@ -1,6 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
-import com.wordnik.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModel;
 
 import java.util.Collection;
 
