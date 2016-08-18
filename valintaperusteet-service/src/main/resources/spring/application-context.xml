@@ -27,12 +27,9 @@
         </property>
     </bean>
 
-    <!-- Swagger API listing resource -->
-    <bean id="swaggerResourceJSON" class="io.swagger.jaxrs.listing.SwaggerSerializers"/>
-
     <!-- Swagger writers -->
-    <bean id="resourceWriter" class="io.swagger.jaxrs.listing.ApiListingResource" scope="singleton"/>
-    <bean id="apiWriter" class="io.swagger.jaxrs.listing.AcceptHeaderApiListingResource" scope="singleton"/>
+    <bean id="swaggerResource" class="io.swagger.jaxrs.listing.ApiListingResource" />
+ 		<bean id="swaggerWriter" class="io.swagger.jaxrs.listing.SwaggerSerializers" />
 
     <!-- Swagger configuration -->
     <bean id="swaggerConfig" class="io.swagger.jaxrs.config.BeanConfig">
@@ -65,13 +62,14 @@
             <bean class="fi.vm.sade.service.valintaperusteet.resource.impl.ValintaperusteetResourceImpl"/>
             <bean class="fi.vm.sade.service.valintaperusteet.resource.impl.ValintaryhmaResourceImpl"/>
             <bean class="fi.vm.sade.service.valintaperusteet.resource.impl.ValintatapajonoResourceImpl"/>
-            <ref bean="swaggerResourceJSON"/>
+
+            <ref bean="swaggerWriter"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <ref bean="valintaperusteetServiceJsonProvider" />
-            <ref bean="resourceWriter" />
-            <ref bean="apiWriter" />
             <bean class="fi.vm.sade.service.valintaperusteet.util.CorsResponseFilter"/>
+
+            <ref bean="swaggerWriter"/>
         </jaxrs:providers>
     </jaxrs:server>
 
