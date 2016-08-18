@@ -63,7 +63,7 @@
             <bean class="fi.vm.sade.service.valintaperusteet.resource.impl.ValintaryhmaResourceImpl"/>
             <bean class="fi.vm.sade.service.valintaperusteet.resource.impl.ValintatapajonoResourceImpl"/>
 
-            <ref bean="swaggerWriter"/>
+            <ref bean="swaggerResource"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <ref bean="valintaperusteetServiceJsonProvider" />
