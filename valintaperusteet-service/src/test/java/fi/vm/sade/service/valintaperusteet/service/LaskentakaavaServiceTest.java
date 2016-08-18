@@ -1,10 +1,10 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import fi.vm.sade.kaava.Funktiokuvaaja;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
@@ -93,6 +93,8 @@ public class LaskentakaavaServiceTest {
 
         return args;
     }
+
+    private static final double DELTA = 0.000000000000001d;
 
     @Before
     public void initialize() {
@@ -253,9 +255,9 @@ public class LaskentakaavaServiceTest {
             Funktiokutsu summa506L = summa500Largs.get(3).getFunktiokutsuChild();
 
             assertEquals(Funktionimi.LUKUARVO, luku501L.getFunktionimi());
-            assertEquals(10.0, luku(luku501L));
+            assertEquals(10.0, luku(luku501L), DELTA);
             assertEquals(Funktionimi.LUKUARVO, luku502L.getFunktionimi());
-            assertEquals(3.0, luku(luku502L));
+            assertEquals(3.0, luku(luku502L), DELTA);
             assertEquals(Funktionimi.SUMMA, summa503L.getFunktionimi());
             assertEquals(2, summa503L.getFunktioargumentit().size());
             assertEquals(Funktionimi.SUMMA, summa506L.getFunktionimi());
@@ -268,7 +270,7 @@ public class LaskentakaavaServiceTest {
             assertEquals(Funktionimi.HAEMERKKIJONOJAKONVERTOILUKUARVOKSI,
                     haeMerkkijonoJaKonvertoiLukuarvoksi504L.getFunktionimi());
             assertEquals(Funktionimi.LUKUARVO, luku505L.getFunktionimi());
-            assertEquals(6.0, luku(luku505L));
+            assertEquals(6.0, luku(luku505L), DELTA);
             assertEquals(5, haeMerkkijonoJaKonvertoiLukuarvoksi504L.getArvokonvertteriparametrit().size());
 
             List<Funktioargumentti> summa506Largs = argsSorted(summa506L.getFunktioargumentit());
@@ -276,8 +278,8 @@ public class LaskentakaavaServiceTest {
             Funktiokutsu luku8L = summa506Largs.get(1).getFunktiokutsuChild();
             assertEquals(Funktionimi.LUKUARVO, luku7L.getFunktionimi());
             assertEquals(Funktionimi.LUKUARVO, luku8L.getFunktionimi());
-            assertEquals(7.0, luku(luku7L));
-            assertEquals(8.0, luku(luku8L));
+            assertEquals(7.0, luku(luku7L), DELTA);
+            assertEquals(8.0, luku(luku8L), DELTA);
 
             // Tehdään päivityksiä laskentakaavaan. Lisätään olemassa oleva luku
             // jälkimmäiseen summa-operaatioon.
@@ -336,7 +338,7 @@ public class LaskentakaavaServiceTest {
         Funktiokutsu summa503Lp = summa500Lpargs.get(1).getFunktiokutsuChild();
 
         assertEquals(Funktionimi.LUKUARVO, luku501Lp.getFunktionimi());
-        assertEquals(uusiLukuarvo, luku(luku501Lp));
+        assertEquals(uusiLukuarvo, luku(luku501Lp), DELTA);
         assertEquals(Funktionimi.SUMMA, summa503Lp.getFunktionimi());
         assertEquals(3, summa503Lp.getFunktioargumentit().size());
 
@@ -348,9 +350,9 @@ public class LaskentakaavaServiceTest {
         assertEquals(Funktionimi.HAEMERKKIJONOJAKONVERTOILUKUARVOKSI,
                 haeMerkkijonoJaKonvertoiLukuarvoksi504Lp.getFunktionimi());
         assertEquals(Funktionimi.LUKUARVO, luku505Lp.getFunktionimi());
-        assertEquals(6.0, luku(luku505Lp));
+        assertEquals(6.0, luku(luku505Lp), DELTA);
         assertEquals(Funktionimi.LUKUARVO, luku501Lp2.getFunktionimi());
-        assertEquals(uusiLukuarvo, luku(luku501Lp2));
+        assertEquals(uusiLukuarvo, luku(luku501Lp2), DELTA);
     }
 
     private FunktiokutsuDTO nimettyFunktiokutsu(String nimi, FunktiokutsuDTO child) {
