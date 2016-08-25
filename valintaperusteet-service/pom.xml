@@ -25,8 +25,8 @@
             <artifactId>auditlogger</artifactId>
         </dependency>
         <dependency>
-            <groupId>fi.vm.sade.generic</groupId>
-            <artifactId>generic-common</artifactId>
+            <groupId>fi.vm.sade.java-utils</groupId>
+            <artifactId>opintopolku-cas-servlet-filter</artifactId>
         </dependency>
         <dependency>
             <groupId>org.jasig.cas.client</groupId>
