@@ -41,6 +41,8 @@
     <laskentakaava />
 
     <hakijaryhma />
+    <hakijaryhmatyyppikoodi />
+    <hakijaryhma_hakijaryhmatyyppikoodi />
     <hakijaryhma_jono />
     <syoteparametri />
     <valintaperuste_viite />
@@ -57,4 +59,5 @@
     <valintaryhma_hakukohdekoodi />
     <arvokonvertteriparametri />
     <arvovalikonvertteriparametri />
+    <syotettavanarvonkoodi />
 </dataset>

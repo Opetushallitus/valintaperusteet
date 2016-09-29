@@ -50,6 +50,13 @@ public class ValintaperusteViite extends BaseEntity implements Comparable<Valint
     @Column(name = "syotettavissa_kaikille", nullable = false)
     private Boolean syotettavissaKaikille = true;
 
+    @JoinColumn(name = "syotettavanarvontyyppi_id", nullable = true)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    private Syotettavanarvontyyppi syotettavanarvontyyppi;
+
+    @Column(name = "tilastoidaan", nullable = true)
+    private Boolean tilastoidaan = false;
+
     public String getTunniste() {
         return tunniste;
     }
@@ -151,4 +158,21 @@ public class ValintaperusteViite extends BaseEntity implements Comparable<Valint
     public void setSyotettavissaKaikille(Boolean syotettavissaKaikille) {
         this.syotettavissaKaikille = syotettavissaKaikille;
     }
+
+    public Syotettavanarvontyyppi getSyotettavanarvontyyppi() {
+        return syotettavanarvontyyppi;
+    }
+
+    public void setSyotettavanarvontyyppi(Syotettavanarvontyyppi syotettavanarvontyyppi) {
+        this.syotettavanarvontyyppi = syotettavanarvontyyppi;
+    }
+
+    public Boolean getTilastoidaan() {
+        return tilastoidaan;
+    }
+
+    public void setTilastoidaan(boolean tilastoidaan) {
+        this.tilastoidaan = tilastoidaan;
+    }
+
 }

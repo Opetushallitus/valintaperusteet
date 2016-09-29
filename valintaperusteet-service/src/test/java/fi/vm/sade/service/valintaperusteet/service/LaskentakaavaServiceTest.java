@@ -169,6 +169,17 @@ public class LaskentakaavaServiceTest {
         assertEquals(0, luku4L.getFunktioargumentit().size());
     }
 
+    @Test
+    public void testHaeSyotettavanarvontyyppi(){
+        final Long id = 420L;
+        Laskentakaava laskentakaava = laskentakaavaService.read(id);
+        Funktiokutsu haelukuarvo204L = laskentakaava.getFunktiokutsu();
+        ValintaperusteViite viite = haelukuarvo204L.getValintaperusteviitteet().iterator().next();
+        assertTrue(viite.getTilastoidaan());
+        assertEquals("syotettavanarvontyypit_valintakoe", viite.getSyotettavanarvontyyppi().getUri());
+
+    }
+
     private FunktiokutsuDTO createLukuarvo(Double luku) {
         final Funktionimi nimi = Funktionimi.LUKUARVO;
 

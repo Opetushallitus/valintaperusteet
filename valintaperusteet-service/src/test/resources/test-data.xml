@@ -351,6 +351,19 @@
                    tyyppi="TOTUUSARVOFUNKTIO"/>
 
 
+    <funktiokutsu tallenna_tulos="false" id="710" version="0" funktionimi="HAELUKUARVO"/>
+    <laskentakaava id="420" version="0" funktiokutsu_id="710" nimi="Syotettavaa arvoa" on_luonnos="false"
+                   tyyppi="LUKUARVOFUNKTIO"/>
+
+    <syotettavanarvonkoodi id="1" version="0" arvo="valintakoe" uri="syotettavanarvontyypit_valintakoe"/>
+    <valintaperuste_viite id="603" version="0" tunniste="sat" kuvaus="syotettavan arvon tyyppi" lahde="SYOTETTAVA_ARVO"
+                          funktiokutsu_id="710" on_pakollinen="false" indeksi="1" vaatii_osallistumisen="true"
+                          syotettavissa_kaikille="false" syotettavanarvontyyppi_id="1" tilastoidaan="true"/>
+
+
+
+
+
     <!--
         Ensimmäisen valintaryhmän luonti on siirretty ensimmäiseksi, koska taulu pitää luoda ensimmäisenä.
         Ärsyttävä DBUnitin ominaisuus, jossa datan luonti/poistojärjestys määräytyy ensimmäisen tagin
@@ -1688,6 +1701,10 @@
     <hakijaryhma id="1" version="0" kiintio="20" kuvaus="" nimi="hakijaryhma 1" laskentakaava_id="414" oid="hr1" valintaryhma_id="6" kaytaKaikki="false" tarkkaKiintio="false" kaytetaan_ryhmaan_kuuluvia="true"/>
 
     <hakijaryhma id="2" version="0" kiintio="20" kuvaus="" nimi="hakijaryhma 1" laskentakaava_id="414" oid="hr2" valintaryhma_id="54" kaytaKaikki="false" tarkkaKiintio="false" kaytetaan_ryhmaan_kuuluvia="true"/>
+
+    <hakijaryhmatyyppikoodi id="1" version="0" uri="hakijaryhmantyypit_ensikertalaiset" arvo="hakijaryhmantyypit_ensikertalaiset" nimi_fi="hakijaryhmantyypit_ensikertalaiset"/>
+    <hakijaryhma_hakijaryhmatyyppikoodi hakijaryhma_id="1" hakijaryhmatyyppikoodi_id="1"/>
+    <hakijaryhma_hakijaryhmatyyppikoodi hakijaryhma_id="2" hakijaryhmatyyppikoodi_id="1"/>
 
     <hakijaryhma_jono/>
 </dataset>

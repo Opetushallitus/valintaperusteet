@@ -38,6 +38,12 @@ public class ValintaperusteViiteDTO implements Comparable<ValintaperusteViiteDTO
     @ApiModelProperty(value = "Hylkäysperusteen kuvaukset")
     private TekstiRyhmaDTO kuvaukset = new TekstiRyhmaDTO();
 
+    @ApiModelProperty(value = "Syötettävän arvon tyyppi", required = false)
+    private KoodiDTO syotettavanarvontyyppi;
+
+    @ApiModelProperty(value = "Tilastoidaan", required = false)
+    private boolean tilastoidaan;
+
     public String getTunniste() {
         return tunniste;
     }
@@ -114,4 +120,16 @@ public class ValintaperusteViiteDTO implements Comparable<ValintaperusteViiteDTO
     public void setSyotettavissaKaikille(Boolean syotettavissaKaikille) {
         this.syotettavissaKaikille = syotettavissaKaikille;
     }
+
+    public boolean isTilastoidaan() { return tilastoidaan; }
+
+    public void setTilastoidaan(boolean tilastoidaan){
+        this.tilastoidaan = tilastoidaan;
+    }
+
+    public void setSyotettavanarvontyyppi(KoodiDTO syotettavanarvontyyppi){
+        this.syotettavanarvontyyppi = syotettavanarvontyyppi;
+    }
+
+    public KoodiDTO getSyotettavanarvontyyppi(){ return syotettavanarvontyyppi; }
 }

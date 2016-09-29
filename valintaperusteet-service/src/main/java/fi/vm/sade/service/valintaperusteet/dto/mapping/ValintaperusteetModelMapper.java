@@ -188,6 +188,12 @@ public class ValintaperusteetModelMapper extends ModelMapper {
                 map().setLaskentakaavaId(source.getLaskentakaavaId());
             }
         });
+        this.addMappings(new PropertyMap<Hakijaryhma, HakijaryhmaHakijaryhmatyyppikoodiDTO>() {
+            @Override
+            protected void configure() {
+                map().setLaskentakaavaId(source.getLaskentakaavaId());
+            }
+        });
         this.addMappings(new PropertyMap<HakijaryhmaDTO, Hakijaryhma>() {
             @Override
             protected void configure() {

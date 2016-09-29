@@ -8,6 +8,7 @@ import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -24,14 +25,24 @@ public class HakijaryhmaDAOImpl extends AbstractJpaDAOImpl<Hakijaryhma, Long> im
     public Hakijaryhma readByOid(String oid) {
         QHakijaryhma hakijaryhma = QHakijaryhma.hakijaryhma;
         QHakijaryhmaValintatapajono hakijaryhmaValintatapajono = QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
+        QHakijaryhmatyyppikoodi hakijaryhmatyyppikoodit = QHakijaryhmatyyppikoodi.hakijaryhmatyyppikoodi;
 
-        return from(hakijaryhma).where(hakijaryhma.oid.eq(oid))
+        Hakijaryhma haettu = from(hakijaryhma).where(hakijaryhma.oid.eq(oid))
                 .leftJoin(hakijaryhma.jonot, hakijaryhmaValintatapajono).fetch()
                 .leftJoin(hakijaryhmaValintatapajono.valintatapajono).fetch()
                 .leftJoin(hakijaryhmaValintatapajono.hakukohdeViite).fetch()
                 .leftJoin(hakijaryhma.valintaryhma).fetch()
                 .leftJoin(hakijaryhma.laskentakaava).fetch()
                 .singleResult(hakijaryhma);
+        if(haettu != null){
+            List<Hakijaryhmatyyppikoodi> hakijatyypit = from(hakijaryhmatyyppikoodit)
+                    .leftJoin(hakijaryhmatyyppikoodit.hakijaryhmas, hakijaryhma).fetch()
+                    .where(hakijaryhma.oid.eq(oid))
+                    .list(hakijaryhmatyyppikoodit);
+            haettu.setHakijaryhmatyyppikoodit(hakijatyypit);
+        }
+
+        return haettu;
     }
 
     @Override

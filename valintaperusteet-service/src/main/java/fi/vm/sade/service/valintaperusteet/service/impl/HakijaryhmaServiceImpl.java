@@ -2,6 +2,7 @@ package fi.vm.sade.service.valintaperusteet.service.impl;
 
 import fi.vm.sade.service.valintaperusteet.dao.GenericDAO;
 import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaDAO;
+import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmatyyppikoodiDAO;
 import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaValintatapajonoDAO;
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaSiirraDTO;
@@ -24,6 +25,9 @@ import java.util.stream.Collectors;
 public class HakijaryhmaServiceImpl implements HakijaryhmaService {
     @Autowired
     private HakijaryhmaDAO hakijaryhmaDAO;
+
+    @Autowired
+    private HakijaryhmaDAO hakijaryhmatyyppikoodiDAO;
 
     @Autowired
     private HakijaryhmaValintatapajonoDAO hakijaryhmaValintatapajonoDAO;
@@ -214,7 +218,6 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
         managedObject.setKaytetaanRyhmaanKuuluvia(dto.isKaytetaanRyhmaanKuuluvia());
         managedObject.setLaskentakaava(laskentakaavaService.haeMallinnettuKaava(dto.getLaskentakaavaId()));
         hakijaryhmaDAO.update(managedObject);
-//        return LinkitettavaJaKopioitavaUtil.paivita(managedObject, entity, kopioija);
         return managedObject;
     }
 

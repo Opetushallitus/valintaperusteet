@@ -88,6 +88,9 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     @Autowired
     private ValintakoeDAO valintakoeDAO;
 
+    @Autowired
+    private SyotettavanarvontyyppiDAO syotettavanarvontyyppiDAO;
+
 
     @Autowired
     private ActorService actorService;
@@ -325,6 +328,26 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             newVp.setLahde(vp.getLahde());
             newVp.setOnPakollinen(vp.getOnPakollinen());
             newVp.setTunniste(vp.getTunniste());
+
+            if (vp.getSyotettavanarvontyyppi() != null) {
+                Syotettavanarvontyyppi syokoodi = vp.getSyotettavanarvontyyppi();
+                Syotettavanarvontyyppi found = syotettavanarvontyyppiDAO.readByUri(syokoodi.getUri());
+
+                if(found != null){
+                    newVp.setSyotettavanarvontyyppi(found);
+                } else {
+                    Syotettavanarvontyyppi uusikoodi = new Syotettavanarvontyyppi();
+                    uusikoodi.setUri(syokoodi.getUri());
+                    uusikoodi.setArvo(syokoodi.getArvo());
+                    uusikoodi.setNimiFi(syokoodi.getNimiFi());
+                    uusikoodi.setNimiEn(syokoodi.getNimiEn());
+                    uusikoodi.setNimiSv(syokoodi.getNimiSv());
+                    Syotettavanarvontyyppi inserted = syotettavanarvontyyppiDAO.insertOrUpdate(uusikoodi);
+                    newVp.setSyotettavanarvontyyppi(inserted);
+                }
+            }
+            newVp.setTilastoidaan(vp.getTilastoidaan());
+
             newVp.setVaatiiOsallistumisen(vp.getVaatiiOsallistumisen());
             newVp.setSyotettavissaKaikille(vp.getSyotettavissaKaikille());
             newVp.setFunktiokutsu(managed);

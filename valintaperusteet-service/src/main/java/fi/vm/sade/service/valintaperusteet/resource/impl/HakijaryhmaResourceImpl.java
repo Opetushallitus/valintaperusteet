@@ -14,7 +14,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaSiirraDTO;
+import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
 import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
@@ -31,11 +31,9 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaDTO;
-import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.resource.HakijaryhmaResource;
 import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaService;
+import fi.vm.sade.service.valintaperusteet.service.HakijaryhmatyyppikoodiService;
 import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaValintatapajonoService;
 import fi.vm.sade.service.valintaperusteet.service.ValintakoeService;
 import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
@@ -60,6 +58,9 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
 
     @Autowired
     HakijaryhmaService hakijaryhmaService;
+
+    @Autowired
+    HakijaryhmatyyppikoodiService hakijaryhmatyyppikoodiService;
 
     @Autowired
     HakijaryhmaValintatapajonoService hakijaryhmaValintatapajonoService;
@@ -133,11 +134,11 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{oid}")
     @PreAuthorize(READ_UPDATE_CRUD)
-    @ApiOperation(value = "Hakee hakijaryhmän OID:n perusteella", response = HakijaryhmaDTO.class)
+    @ApiOperation(value = "Hakee hakijaryhmän OID:n perusteella", response = HakijaryhmaHakijaryhmatyyppikoodiDTO.class)
     @ApiResponses(value = {@ApiResponse(code = 404, message = "Hakijaryhmää ei löydy"),})
-    public HakijaryhmaDTO read(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
+    public HakijaryhmaHakijaryhmatyyppikoodiDTO read(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
         try {
-            return modelMapper.map(hakijaryhmaService.readByOid(oid), HakijaryhmaDTO.class);
+            return modelMapper.map(hakijaryhmaService.readByOid(oid), HakijaryhmaHakijaryhmatyyppikoodiDTO.class);
         } catch (HakijaryhmaEiOleOlemassaException e) {
             throw new WebApplicationException(e, Response.Status.NOT_FOUND);
         } catch (Exception e) {
@@ -184,6 +185,54 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
                 .setOperaatio(ValintaperusteetOperation.HAKIJARYHMA_PAIVITYS)
                 .build());
         return modelMapper.map(h, HakijaryhmaDTO.class);
+    }
+
+    @POST
+    @Path("/{hakijaryhmaOid}/hakijaryhmatyyppikoodi")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @PreAuthorize(UPDATE_CRUD)
+    @ApiOperation(value = "Päivittää hakijaryhmän hakijaryhmätyyppikoodia")
+    @ApiResponses(@ApiResponse(code = 400, message = "Päivittäminen epäonnistui"))
+    public Response updateHakijaryhmatyyppikoodit(
+            @ApiParam(value = "Hakijaryhmän OID, jonka hakijaryhmätyyppikoodeja päivitetään", required = true) @PathParam("hakijaryhmaOid") String hakijaryhmaOid,
+            @ApiParam(value = "Uudet hakijaryhmätyyppikoodit", required = true) List<KoodiDTO> hakijaryhmatyyppikoodit) {
+        try {
+            hakijaryhmatyyppikoodiService.updateHakijaryhmanTyyppikoodi(hakijaryhmaOid, hakijaryhmatyyppikoodit);
+            AUDIT.log(builder()
+                    .id(username())
+                    .hakijaryhmaOid(hakijaryhmaOid)
+                    .setOperaatio(ValintaperusteetOperation.HAKIJARYHMA_PAIVITYS)
+                    .build());
+            return Response.status(Response.Status.ACCEPTED).entity(hakijaryhmatyyppikoodit).build();
+        } catch (Exception e) {
+            LOGGER.error("Error updating hakijaryhmatyyppikoodit.", e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
+
+    @PUT
+    @Path("/{hakijaryhmaOid}/hakijaryhmatyyppikoodi")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @PreAuthorize(CRUD)
+    @ApiOperation(value = "Lisää hakijaryhmätyypin hakijaryhmälle")
+    public Response updateHakijaryhmatyyppikoodi(
+            @ApiParam(value = "Hakijaryhmän OID, jolle hakijaryhmätyyppikoodi lisätään", required = true) @PathParam("hakijaryhmaOid") String hakijaryhmaOid,
+            @ApiParam(value = "Lisättävä hakijaryhmätyyppikoodi", required = true) KoodiDTO hakijaryhmatyyppikoodi) {
+        try {
+            hakijaryhmatyyppikoodiService.lisaaHakijaryhmatyyppikoodiHakijaryhmalle(hakijaryhmaOid, hakijaryhmatyyppikoodi);
+            AUDIT.log(builder()
+                    .id(username())
+                    .hakijaryhmaOid(hakijaryhmaOid)
+                    .setOperaatio(ValintaperusteetOperation.HAKIJARYHMA_PAIVITYS)
+                    .build());
+
+            return Response.status(Response.Status.CREATED).entity(hakijaryhmatyyppikoodi).build();
+        } catch (Exception e) {
+            LOGGER.error("Error inserting hakijaryhmatyyppikoodi.", e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
     }
 
     @POST

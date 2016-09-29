@@ -73,6 +73,17 @@ public class HakijaryhmaServiceTest {
     private ValintaperusteetModelMapper modelMapper;
 
     @Test
+    public void testReadByOid(){
+        final String oid = "hr1";
+        final String nimi = "hakijaryhma 1";
+
+        Hakijaryhma hr = hakijaryhmaService.readByOid(oid);
+        assertEquals(nimi, hr.getNimi());
+
+        assertEquals(2, hr.getHakijaryhmatyyppikoodit().size());
+    }
+
+    @Test
     public void testFindByValintaryhma() {
         final String oid = "vr1";
 

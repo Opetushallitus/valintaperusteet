@@ -35,12 +35,15 @@ public class FunktiokutsuDAOImpl extends AbstractJpaDAOImpl<Funktiokutsu, Long> 
         QArvovalikonvertteriparametri avk = QArvovalikonvertteriparametri.arvovalikonvertteriparametri;
         QValintaperusteViite vpv = QValintaperusteViite.valintaperusteViite;
         QTekstiRyhma t = QTekstiRyhma.tekstiRyhma;
+        QSyotettavanarvontyyppi sak = QSyotettavanarvontyyppi.syotettavanarvontyyppi;
+
         JPAQuery query = from(fk);
         Funktiokutsu kutsu = query
                 .leftJoin(fk.syoteparametrit).fetch()
                 .leftJoin(fk.funktioargumentit, fa).fetch()
                 .leftJoin(fa.laskentakaavaChild).fetch()
                 .leftJoin(fk.valintaperusteviitteet, vpv).fetch()
+                .leftJoin(vpv.syotettavanarvontyyppi, sak).fetch()
                 .leftJoin(vpv.kuvaukset, t).fetch()
                 .leftJoin(t.tekstit).fetch()
                 .where(fk.id.eq(id)).singleResult(fk);

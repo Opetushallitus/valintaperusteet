@@ -31,7 +31,7 @@ public interface HakijaryhmaResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{oid}")
-    HakijaryhmaDTO read(@PathParam("oid") String oid);
+    HakijaryhmaHakijaryhmatyyppikoodiDTO read(@PathParam("oid") String oid);
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -59,4 +59,17 @@ public interface HakijaryhmaResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response siirra(HakijaryhmaSiirraDTO dto);
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{hakijaryhmaOid}/hakijaryhmatyyppikoodi")
+    Response updateHakijaryhmatyyppikoodit(@PathParam("hakijaryhmaOid") String hakijaryhmaOid, List<KoodiDTO> hakijaryhmatyyppikoodi);
+
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{hakijaryhmaOid}/hakijaryhmatyyppikoodi")
+    Response updateHakijaryhmatyyppikoodi(@PathParam("hakijaryhmaOid") String hakijaryhmaOid, KoodiDTO hakijaryhmatyyppikoodi);
+
 }

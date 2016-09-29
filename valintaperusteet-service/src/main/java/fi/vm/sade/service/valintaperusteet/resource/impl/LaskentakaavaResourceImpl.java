@@ -14,6 +14,7 @@ import javax.ws.rs.core.Response;
 
 import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta;
 import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import fi.vm.sade.service.valintaperusteet.service.impl.actors.ActorService;
@@ -36,6 +37,9 @@ import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.*;
 import static fi.vm.sade.auditlog.valintaperusteet.LogMessage.builder;
 import fi.vm.sade.auditlog.valintaperusteet.ValintaperusteetOperation;
 
+
+import fi.vm.sade.service.valintaperusteet.model.*;
+import java.lang.reflect.Field;
 @Component
 @Path("laskentakaava")
 @PreAuthorize("isAuthenticated()")

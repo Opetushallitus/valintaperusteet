@@ -1,10 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "hakijaryhma")
@@ -41,10 +38,15 @@ public class Hakijaryhma extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Valintaryhma valintaryhma;
 
-
     @JoinColumn(name = "laskentakaava_id", nullable = false)
     @ManyToOne(optional = false)
     private Laskentakaava laskentakaava;
+
+    @JoinTable(name = "hakijaryhma_hakijaryhmatyyppikoodi",
+            joinColumns = @JoinColumn(name = "hakijaryhma_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME),
+            inverseJoinColumns = @JoinColumn(name = "hakijaryhmatyyppikoodi_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME))
+    @ManyToMany(fetch = FetchType.LAZY)
+    private List<Hakijaryhmatyyppikoodi> hakijaryhmatyyppikoodit = new ArrayList<Hakijaryhmatyyppikoodi>();
 
     public String getOid() {
         return oid;
@@ -118,6 +120,13 @@ public class Hakijaryhma extends BaseEntity {
         this.laskentakaava = laskentakaava;
     }
 
+    public List<Hakijaryhmatyyppikoodi> getHakijaryhmatyyppikoodit() {
+        return hakijaryhmatyyppikoodit;
+    }
+
+    public void setHakijaryhmatyyppikoodit(List<Hakijaryhmatyyppikoodi> hakijaryhmatyyppikoodit) {
+        this.hakijaryhmatyyppikoodit = hakijaryhmatyyppikoodit;
+    }
 
     @Transient
     public Long getLaskentakaavaId() {

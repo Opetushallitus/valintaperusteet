@@ -31,6 +31,8 @@
 
     <valintaryhma />
     <hakijaryhma />
+    <hakijaryhmatyyppikoodi />
+    <hakijaryhma_hakijaryhmatyyppikoodi />
     <hakijaryhma_jono />
     <hakukohde_viite />
     <syoteparametri />
