@@ -64,12 +64,12 @@ public interface HakijaryhmaResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{hakijaryhmaOid}/hakijaryhmatyyppikoodi")
-    Response updateHakijaryhmatyyppikoodit(@PathParam("hakijaryhmaOid") String hakijaryhmaOid, KoodiDTO hakijaryhmatyyppikoodi);
+    Response updateHakijaryhmatyyppikoodi(@PathParam("hakijaryhmaOid") String hakijaryhmaOid, KoodiDTO hakijaryhmatyyppikoodi);
 
-    @PUT
+    @DELETE
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{hakijaryhmaOid}/hakijaryhmatyyppikoodi")
-    Response updateHakijaryhmatyyppikoodi(@PathParam("hakijaryhmaOid") String hakijaryhmaOid, KoodiDTO hakijaryhmatyyppikoodi);
+    Response deleteHakijaryhmatyyppikoodi(@PathParam("hakijaryhmaOid") String hakijaryhmaOid);
 
 }

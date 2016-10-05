@@ -194,7 +194,7 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
     @PreAuthorize(UPDATE_CRUD)
     @ApiOperation(value = "Päivittää hakijaryhmän hakijaryhmätyyppikoodia")
     @ApiResponses(@ApiResponse(code = 400, message = "Päivittäminen epäonnistui"))
-    public Response updateHakijaryhmatyyppikoodit(
+    public Response updateHakijaryhmatyyppikoodi (
             @ApiParam(value = "Hakijaryhmän OID, jonka hakijaryhmätyyppikoodeja päivitetään", required = true) @PathParam("hakijaryhmaOid") String hakijaryhmaOid,
             @ApiParam(value = "Uusi hakijaryhmätyyppikoodi", required = true) KoodiDTO hakijaryhmatyyppikoodi) {
         try {
@@ -211,26 +211,25 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
         }
     }
 
-    @PUT
+    @DELETE
     @Path("/{hakijaryhmaOid}/hakijaryhmatyyppikoodi")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @PreAuthorize(CRUD)
-    @ApiOperation(value = "Lisää hakijaryhmätyypin hakijaryhmälle")
-    public Response updateHakijaryhmatyyppikoodi(
-            @ApiParam(value = "Hakijaryhmän OID, jolle hakijaryhmätyyppikoodi lisätään", required = true) @PathParam("hakijaryhmaOid") String hakijaryhmaOid,
-            @ApiParam(value = "Lisättävä hakijaryhmätyyppikoodi", required = true) KoodiDTO hakijaryhmatyyppikoodi) {
+    @ApiOperation(value = "Poistaa hakijaryhmätyypin hakijaryhmältä")
+    public Response deleteHakijaryhmatyyppikoodi(
+            @ApiParam(value = "Hakijaryhmän OID, jolta hakijaryhmätyyppikoodi poistetaan", required = true) @PathParam("hakijaryhmaOid") String hakijaryhmaOid) {
         try {
-            hakijaryhmatyyppikoodiService.updateHakijaryhmanTyyppikoodi(hakijaryhmaOid, hakijaryhmatyyppikoodi);
+            hakijaryhmatyyppikoodiService.updateHakijaryhmanTyyppikoodi(hakijaryhmaOid, null);
             AUDIT.log(builder()
                     .id(username())
                     .hakijaryhmaOid(hakijaryhmaOid)
                     .setOperaatio(ValintaperusteetOperation.HAKIJARYHMA_PAIVITYS)
                     .build());
 
-            return Response.status(Response.Status.CREATED).entity(hakijaryhmatyyppikoodi).build();
+            return Response.status(Response.Status.OK).build();
         } catch (Exception e) {
-            LOGGER.error("Error inserting hakijaryhmatyyppikoodi.", e);
+            LOGGER.error("Error deleting hakijaryhmatyyppikoodi.", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
