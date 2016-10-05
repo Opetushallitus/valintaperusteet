@@ -64,7 +64,7 @@ public interface HakijaryhmaResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{hakijaryhmaOid}/hakijaryhmatyyppikoodi")
-    Response updateHakijaryhmatyyppikoodit(@PathParam("hakijaryhmaOid") String hakijaryhmaOid, List<KoodiDTO> hakijaryhmatyyppikoodi);
+    Response updateHakijaryhmatyyppikoodit(@PathParam("hakijaryhmaOid") String hakijaryhmaOid, KoodiDTO hakijaryhmatyyppikoodi);
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)

@@ -196,17 +196,17 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
     @ApiResponses(@ApiResponse(code = 400, message = "Päivittäminen epäonnistui"))
     public Response updateHakijaryhmatyyppikoodit(
             @ApiParam(value = "Hakijaryhmän OID, jonka hakijaryhmätyyppikoodeja päivitetään", required = true) @PathParam("hakijaryhmaOid") String hakijaryhmaOid,
-            @ApiParam(value = "Uudet hakijaryhmätyyppikoodit", required = true) List<KoodiDTO> hakijaryhmatyyppikoodit) {
+            @ApiParam(value = "Uusi hakijaryhmätyyppikoodi", required = true) KoodiDTO hakijaryhmatyyppikoodi) {
         try {
-            hakijaryhmatyyppikoodiService.updateHakijaryhmanTyyppikoodi(hakijaryhmaOid, hakijaryhmatyyppikoodit);
+            hakijaryhmatyyppikoodiService.updateHakijaryhmanTyyppikoodi(hakijaryhmaOid, hakijaryhmatyyppikoodi);
             AUDIT.log(builder()
                     .id(username())
                     .hakijaryhmaOid(hakijaryhmaOid)
                     .setOperaatio(ValintaperusteetOperation.HAKIJARYHMA_PAIVITYS)
                     .build());
-            return Response.status(Response.Status.ACCEPTED).entity(hakijaryhmatyyppikoodit).build();
+            return Response.status(Response.Status.ACCEPTED).entity(hakijaryhmatyyppikoodi).build();
         } catch (Exception e) {
-            LOGGER.error("Error updating hakijaryhmatyyppikoodit.", e);
+            LOGGER.error("Error updating hakijaryhmatyyppikoodi.", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
@@ -221,7 +221,7 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
             @ApiParam(value = "Hakijaryhmän OID, jolle hakijaryhmätyyppikoodi lisätään", required = true) @PathParam("hakijaryhmaOid") String hakijaryhmaOid,
             @ApiParam(value = "Lisättävä hakijaryhmätyyppikoodi", required = true) KoodiDTO hakijaryhmatyyppikoodi) {
         try {
-            hakijaryhmatyyppikoodiService.lisaaHakijaryhmatyyppikoodiHakijaryhmalle(hakijaryhmaOid, hakijaryhmatyyppikoodi);
+            hakijaryhmatyyppikoodiService.updateHakijaryhmanTyyppikoodi(hakijaryhmaOid, hakijaryhmatyyppikoodi);
             AUDIT.log(builder()
                     .id(username())
                     .hakijaryhmaOid(hakijaryhmaOid)

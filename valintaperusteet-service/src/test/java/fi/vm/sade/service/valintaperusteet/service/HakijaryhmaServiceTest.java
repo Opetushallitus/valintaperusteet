@@ -80,7 +80,7 @@ public class HakijaryhmaServiceTest {
         Hakijaryhma hr = hakijaryhmaService.readByOid(oid);
         assertEquals(nimi, hr.getNimi());
 
-        assertEquals(2, hr.getHakijaryhmatyyppikoodit().size());
+        assertEquals("hakijaryhmantyypit_ensikertalaiset nimi", hr.getHakijaryhmatyyppikoodi().getNimiFi());
     }
 
     @Test

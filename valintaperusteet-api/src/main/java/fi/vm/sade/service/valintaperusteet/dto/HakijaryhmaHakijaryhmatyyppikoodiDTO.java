@@ -8,11 +8,11 @@ import java.util.List;
 public class HakijaryhmaHakijaryhmatyyppikoodiDTO extends HakijaryhmaDTO {
 
     @ApiModelProperty(value = "Hakijaryhmatyyppikoodi")
-    private List<KoodiDTO> hakijaryhmatyyppikoodit = new ArrayList<KoodiDTO>();
+    private KoodiDTO hakijaryhmatyyppikoodi = null;
 
-    public List<KoodiDTO> getHakijaryhmatyyppikoodit(){ return hakijaryhmatyyppikoodit; }
+    public KoodiDTO getHakijaryhmatyyppikoodi(){ return hakijaryhmatyyppikoodi; }
 
-    public void setHakijaryhmatyyppikoodit(List<KoodiDTO> hakijaryhmatyyppikoodit){
-        this.hakijaryhmatyyppikoodit = hakijaryhmatyyppikoodit;
+    public void setHakijaryhmatyyppikoodi(KoodiDTO hakijaryhmatyyppikoodi){
+        this.hakijaryhmatyyppikoodi = hakijaryhmatyyppikoodi;
     }
 }

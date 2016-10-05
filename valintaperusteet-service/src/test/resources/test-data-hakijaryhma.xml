@@ -19,8 +19,7 @@
         <hakijaryhmatyyppikoodi id="1" version="0" uri="hakijaryhmantyypit_ensikertalaiset" arvo="hakijaryhmantyypit_ensikertalaiset" nimi_fi="hakijaryhmantyypit_ensikertalaiset nimi"/>
         <hakijaryhmatyyppikoodi id="2" version="0" uri="hakijaryhmantyypit_muu" arvo="hakijaryhmantyypit_muu" nimi_fi="hakijaryhmantyypit_muu nimi"/>
         <hakijaryhma_hakijaryhmatyyppikoodi hakijaryhma_id="25" hakijaryhmatyyppikoodi_id="1"/>
-        <hakijaryhma_hakijaryhmatyyppikoodi hakijaryhma_id="26" hakijaryhmatyyppikoodi_id="1"/>
-        <hakijaryhma_hakijaryhmatyyppikoodi hakijaryhma_id="25" hakijaryhmatyyppikoodi_id="2"/>
+        <hakijaryhma_hakijaryhmatyyppikoodi hakijaryhma_id="26" hakijaryhmatyyppikoodi_id="2"/>
 
         <hakijaryhma_jono id="31" version="0" aktiivinen="true" oid="hr1_vtj1" hakijaryhma_id="25" valintatapajono_id="5" kiintio="20" kaytaKaikki="false" tarkkaKiintio="false" kaytetaan_ryhmaan_kuuluvia="true"/>
         <hakijaryhma_jono id="32" version="0" aktiivinen="true" oid="hr2_vtj2" hakijaryhma_id="26" master_hakijaryhma_jono_id="31" valintatapajono_id="6" hakukohde_viite_id="2" kiintio="20" kaytaKaikki="false" tarkkaKiintio="false" kaytetaan_ryhmaan_kuuluvia="true"/>

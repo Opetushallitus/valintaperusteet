@@ -12,7 +12,7 @@ public class HakijaryhmaDTO extends HakijaryhmaCreateDTO {
     private String oid;
 
     @ApiModelProperty(value = "Hakijaryhmatyyppikoodi")
-    private List<KoodiDTO> hakijaryhmatyyppikoodit = new ArrayList<KoodiDTO>();
+    private KoodiDTO hakijaryhmatyyppikoodi = null;
 
     public String getOid() {
         return oid;

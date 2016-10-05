@@ -9,6 +9,6 @@ import java.util.List;
 @Cacheable(true)
 public class Hakijaryhmatyyppikoodi extends Koodi{
 
-    @ManyToMany(mappedBy="hakijaryhmatyyppikoodit")
+    @OneToMany(mappedBy="hakijaryhmatyyppikoodi")
     private List<Hakijaryhma> hakijaryhmas = new ArrayList<Hakijaryhma>();
 }

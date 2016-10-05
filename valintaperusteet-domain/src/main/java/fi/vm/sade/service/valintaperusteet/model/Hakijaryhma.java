@@ -45,8 +45,8 @@ public class Hakijaryhma extends BaseEntity {
     @JoinTable(name = "hakijaryhma_hakijaryhmatyyppikoodi",
             joinColumns = @JoinColumn(name = "hakijaryhma_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME),
             inverseJoinColumns = @JoinColumn(name = "hakijaryhmatyyppikoodi_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME))
-    @ManyToMany(fetch = FetchType.LAZY)
-    private List<Hakijaryhmatyyppikoodi> hakijaryhmatyyppikoodit = new ArrayList<Hakijaryhmatyyppikoodi>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Hakijaryhmatyyppikoodi hakijaryhmatyyppikoodi;
 
     public String getOid() {
         return oid;
@@ -120,12 +120,12 @@ public class Hakijaryhma extends BaseEntity {
         this.laskentakaava = laskentakaava;
     }
 
-    public List<Hakijaryhmatyyppikoodi> getHakijaryhmatyyppikoodit() {
-        return hakijaryhmatyyppikoodit;
+    public Hakijaryhmatyyppikoodi getHakijaryhmatyyppikoodi() {
+        return hakijaryhmatyyppikoodi;
     }
 
-    public void setHakijaryhmatyyppikoodit(List<Hakijaryhmatyyppikoodi> hakijaryhmatyyppikoodit) {
-        this.hakijaryhmatyyppikoodit = hakijaryhmatyyppikoodit;
+    public void setHakijaryhmatyyppikoodi(Hakijaryhmatyyppikoodi hakijaryhmatyyppikoodi) {
+        this.hakijaryhmatyyppikoodi = hakijaryhmatyyppikoodi;
     }
 
     @Transient
