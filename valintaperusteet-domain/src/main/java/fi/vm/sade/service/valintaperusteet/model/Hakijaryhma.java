@@ -42,9 +42,7 @@ public class Hakijaryhma extends BaseEntity {
     @ManyToOne(optional = false)
     private Laskentakaava laskentakaava;
 
-    @JoinTable(name = "hakijaryhma_hakijaryhmatyyppikoodi",
-            joinColumns = @JoinColumn(name = "hakijaryhma_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME),
-            inverseJoinColumns = @JoinColumn(name = "hakijaryhmatyyppikoodi_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME))
+    @JoinColumn(name = "hakijaryhmatyyppikoodi_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Hakijaryhmatyyppikoodi hakijaryhmatyyppikoodi;
 

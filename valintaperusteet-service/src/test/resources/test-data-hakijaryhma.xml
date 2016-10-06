@@ -10,16 +10,14 @@
         <valintaryhma id="39" version="2" nimi="valintaryhma2" oid="vr2" parent_id="1"/>
         <valintaryhma id="60" version="2" nimi="valintaryhma3" oid="vr3"/>
 
-        <hakijaryhma id="25" version="0" kiintio="20" kuvaus="" nimi="hakijaryhma 1" oid="hr1" laskentakaava_id="11" valintaryhma_id="1" kaytaKaikki="false" tarkkaKiintio="false" kaytetaan_ryhmaan_kuuluvia="true"/>
-        <hakijaryhma id="26" version="0" kiintio="20" kuvaus="" nimi="hakijaryhma 1" oid="hr2" laskentakaava_id="11" kaytaKaikki="false" tarkkaKiintio="false" kaytetaan_ryhmaan_kuuluvia="true"/>
+        <hakijaryhmatyyppikoodi id="1" version="0" uri="hakijaryhmantyypit_ensikertalaiset" arvo="hakijaryhmantyypit_ensikertalaiset" nimi_fi="hakijaryhmantyypit_ensikertalaiset nimi"/>
+        <hakijaryhmatyyppikoodi id="2" version="0" uri="hakijaryhmantyypit_muu" arvo="hakijaryhmantyypit_muu" nimi_fi="hakijaryhmantyypit_muu nimi"/>
+
+        <hakijaryhma id="25" version="0" kiintio="20" kuvaus="" nimi="hakijaryhma 1" oid="hr1" laskentakaava_id="11" hakijaryhmatyyppikoodi_id="1" valintaryhma_id="1" kaytaKaikki="false" tarkkaKiintio="false" kaytetaan_ryhmaan_kuuluvia="true"/>
+        <hakijaryhma id="26" version="0" kiintio="20" kuvaus="" nimi="hakijaryhma 1" oid="hr2" laskentakaava_id="11" hakijaryhmatyyppikoodi_id="2" kaytaKaikki="false" tarkkaKiintio="false" kaytetaan_ryhmaan_kuuluvia="true"/>
         <hakijaryhma id="34" version="0" kiintio="20" kuvaus="" nimi="hakukohde hakijaryhma 1" oid="hr3" laskentakaava_id="11" kaytaKaikki="false" tarkkaKiintio="false" kaytetaan_ryhmaan_kuuluvia="true"/>
         <hakijaryhma id="37" version="0" kiintio="44" kuvaus="" nimi="hakukohde hakijaryhma 2" oid="hr4" laskentakaava_id="11" kaytaKaikki="false" tarkkaKiintio="false" kaytetaan_ryhmaan_kuuluvia="true"/>
         <hakijaryhma id="43" version="0" kiintio="20" kuvaus="" nimi="hakijaryhma 1" oid="hr5" laskentakaava_id="11" valintaryhma_id="39" kaytaKaikki="false" tarkkaKiintio="false" kaytetaan_ryhmaan_kuuluvia="true"/>
-
-        <hakijaryhmatyyppikoodi id="1" version="0" uri="hakijaryhmantyypit_ensikertalaiset" arvo="hakijaryhmantyypit_ensikertalaiset" nimi_fi="hakijaryhmantyypit_ensikertalaiset nimi"/>
-        <hakijaryhmatyyppikoodi id="2" version="0" uri="hakijaryhmantyypit_muu" arvo="hakijaryhmantyypit_muu" nimi_fi="hakijaryhmantyypit_muu nimi"/>
-        <hakijaryhma_hakijaryhmatyyppikoodi hakijaryhma_id="25" hakijaryhmatyyppikoodi_id="1"/>
-        <hakijaryhma_hakijaryhmatyyppikoodi hakijaryhma_id="26" hakijaryhmatyyppikoodi_id="2"/>
 
         <hakijaryhma_jono id="31" version="0" aktiivinen="true" oid="hr1_vtj1" hakijaryhma_id="25" valintatapajono_id="5" kiintio="20" kaytaKaikki="false" tarkkaKiintio="false" kaytetaan_ryhmaan_kuuluvia="true"/>
         <hakijaryhma_jono id="32" version="0" aktiivinen="true" oid="hr2_vtj2" hakijaryhma_id="26" master_hakijaryhma_jono_id="31" valintatapajono_id="6" hakukohde_viite_id="2" kiintio="20" kaytaKaikki="false" tarkkaKiintio="false" kaytetaan_ryhmaan_kuuluvia="true"/>

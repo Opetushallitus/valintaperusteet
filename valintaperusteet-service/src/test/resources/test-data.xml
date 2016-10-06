@@ -1698,13 +1698,11 @@
     <laskentakaava id="999" version="0" nimi="kaava999" on_luonnos="true" tyyppi="LUKUARVOFUNKTIO" funktiokutsu_id="413"
                    hakukohdeviite="1"/>
 
-    <hakijaryhma id="1" version="0" kiintio="20" kuvaus="" nimi="hakijaryhma 1" laskentakaava_id="414" oid="hr1" valintaryhma_id="6" kaytaKaikki="false" tarkkaKiintio="false" kaytetaan_ryhmaan_kuuluvia="true"/>
-
-    <hakijaryhma id="2" version="0" kiintio="20" kuvaus="" nimi="hakijaryhma 1" laskentakaava_id="414" oid="hr2" valintaryhma_id="54" kaytaKaikki="false" tarkkaKiintio="false" kaytetaan_ryhmaan_kuuluvia="true"/>
-
     <hakijaryhmatyyppikoodi id="1" version="0" uri="hakijaryhmantyypit_ensikertalaiset" arvo="hakijaryhmantyypit_ensikertalaiset" nimi_fi="hakijaryhmantyypit_ensikertalaiset"/>
-    <hakijaryhma_hakijaryhmatyyppikoodi hakijaryhma_id="1" hakijaryhmatyyppikoodi_id="1"/>
-    <hakijaryhma_hakijaryhmatyyppikoodi hakijaryhma_id="2" hakijaryhmatyyppikoodi_id="1"/>
+
+    <hakijaryhma id="1" version="0" kiintio="20" kuvaus="" nimi="hakijaryhma 1" laskentakaava_id="414" hakijaryhmatyyppikoodi_id="1" oid="hr1" valintaryhma_id="6" kaytaKaikki="false" tarkkaKiintio="false" kaytetaan_ryhmaan_kuuluvia="true"/>
+
+    <hakijaryhma id="2" version="0" kiintio="20" kuvaus="" nimi="hakijaryhma 1" laskentakaava_id="414" hakijaryhmatyyppikoodi_id="1" oid="hr2" valintaryhma_id="54" kaytaKaikki="false" tarkkaKiintio="false" kaytetaan_ryhmaan_kuuluvia="true"/>
 
     <hakijaryhma_jono/>
 </dataset>
