@@ -26,6 +26,7 @@ import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapp
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.*;
 
+import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaOidTyhjaException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -409,8 +410,13 @@ public class HakukohdeResourceImpl {
                     .setOperaatio(ValintaperusteetOperation.HAKUKOHDE_LISAYS_HAKIJARYHMA)
                     .build());
             return Response.status(Response.Status.CREATED).entity(lisatty).build();
+        } catch (LaskentakaavaOidTyhjaException e) {
+            LOG.warn("Error creating hakijaryhma for hakukohde: " + e.toString());
+            Map map = new HashMap();
+            map.put("error", e.getMessage());
+            return Response.status(Response.Status.BAD_REQUEST).entity(map).build();
         } catch (Exception e) {
-            LOG.error("Error creating hakijaryhma.", e);
+            LOG.error("Error creating hakijaryhma for hakukohde.", e);
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }

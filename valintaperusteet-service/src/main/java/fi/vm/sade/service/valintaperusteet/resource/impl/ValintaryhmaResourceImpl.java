@@ -14,6 +14,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaOidTyhjaException;
 import io.swagger.annotations.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintaryhmaEiOleOlemassaException;
@@ -300,8 +301,13 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
                     .setOperaatio(ValintaperusteetOperation.VALINTARYHMA_LISAYS_HAKIJARYHMA)
                     .build());
             return Response.status(Response.Status.CREATED).entity(lisatty).build();
+        } catch (LaskentakaavaOidTyhjaException e) {
+            LOGGER.warn("Error creating hakijaryhma for valintaryhmä: " + e.toString());
+            Map map = new HashMap();
+            map.put("error", e.getMessage());
+            return Response.status(Response.Status.BAD_REQUEST).entity(map).build();
         } catch (Exception e) {
-            LOGGER.error("Error creating hakijaryhma.", e);
+            LOGGER.error("Error creating hakijaryhma for valintaryhmä.", e);
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }

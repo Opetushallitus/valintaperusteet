@@ -14,6 +14,7 @@ import javax.ws.rs.core.Response;
 import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
+import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaOidTyhjaException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -139,6 +140,11 @@ public class ValintatapajonoResourceImpl {
                     .setOperaatio(ValintaperusteetOperation.VALINTATAPAJONO_LISAYS_HAKIJARYHMA)
                     .build());
             return Response.status(Response.Status.CREATED).entity(lisattava).build();
+        } catch (LaskentakaavaOidTyhjaException e) {
+            LOGGER.warn("Error creating hakijaryhma for valintatapajono: " + e.toString());
+            Map map = new HashMap();
+            map.put("error", e.getMessage());
+            return Response.status(Response.Status.BAD_REQUEST).entity(map).build();
         } catch (Exception e) {
             LOGGER.error("Error creating hakijaryhma for valintatapajono.", e);
             return Response.status(Response.Status.BAD_REQUEST).build();

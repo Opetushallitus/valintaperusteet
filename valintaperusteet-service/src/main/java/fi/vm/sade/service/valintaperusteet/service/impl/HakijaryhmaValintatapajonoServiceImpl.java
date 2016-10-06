@@ -11,6 +11,7 @@ import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaOidListaOnTyhjaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaaEiVoiPoistaaException;
+import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaOidTyhjaException;
 import fi.vm.sade.service.valintaperusteet.util.HakijaryhmaValintatapajonoKopioija;
 import fi.vm.sade.service.valintaperusteet.util.HakijaryhmaValintatapajonoUtil;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
@@ -88,6 +89,9 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
 
     @Override
     public Hakijaryhma lisaaHakijaryhmaValintatapajonolle(String valintatapajonoOid, HakijaryhmaCreateDTO dto) {
+        if (dto.getLaskentakaavaId() == null) {
+            throw new LaskentakaavaOidTyhjaException("LaskentakaavaOid oli tyhjä.");
+        }
         Hakijaryhma hakijaryhma = modelMapper.map(dto, Hakijaryhma.class);
         Valintatapajono valintatapajono = valintapajonoService.readByOid(valintatapajonoOid);
         HakijaryhmaValintatapajono edellinenHakijaryhma = hakijaryhmaValintatapajonoDAO.haeValintatapajononViimeinenHakijaryhma(valintatapajonoOid);
@@ -132,6 +136,9 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
 
     @Override
     public Hakijaryhma lisaaHakijaryhmaHakukohteelle(String hakukohdeOid, HakijaryhmaCreateDTO dto) {
+        if (dto.getLaskentakaavaId() == null) {
+            throw new LaskentakaavaOidTyhjaException("LaskentakaavaOid oli tyhjä.");
+        }
         Hakijaryhma hakijaryhma = modelMapper.map(dto, Hakijaryhma.class);
         HakukohdeViite hakukohde = hakukohdeService.readByOid(hakukohdeOid);
         HakijaryhmaValintatapajono edellinenHakijaryhma = hakijaryhmaValintatapajonoDAO.haeHakukohteenViimeinenHakijaryhma(hakukohdeOid);

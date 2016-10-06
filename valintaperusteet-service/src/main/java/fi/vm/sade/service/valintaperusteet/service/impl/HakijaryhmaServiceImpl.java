@@ -154,6 +154,9 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
         if (valintaryhma == null) {
             throw new ValintaryhmaEiOleOlemassaException("Valintaryhmää (" + valintaryhmaOid + ") ei ole olemassa");
         }
+        if (dto.getLaskentakaavaId() == null) {
+            throw new LaskentakaavaOidTyhjaException("LaskentakaavaOid oli tyhjä.");
+        }
         Hakijaryhma hakijaryhma = modelMapper.map(dto, Hakijaryhma.class);
         hakijaryhma.setOid(oidService.haeHakijaryhmaOid());
         hakijaryhma.setValintaryhma(valintaryhma);
@@ -209,6 +212,9 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
 
     @Override
     public Hakijaryhma update(String oid, HakijaryhmaCreateDTO dto) {
+        if (dto.getLaskentakaavaId() == null) {
+            throw new LaskentakaavaOidTyhjaException("LaskentakaavaOid oli tyhjä.");
+        }
         Hakijaryhma managedObject = haeHakijaryhma(oid);
         managedObject.setKaytaKaikki(dto.isKaytaKaikki());
         managedObject.setKiintio(dto.getKiintio());
