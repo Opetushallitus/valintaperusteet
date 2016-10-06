@@ -37,6 +37,7 @@ public class HakijaryhmaValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Hakija
                 .leftJoin(v.valinnanVaihe).fetch()
                 .leftJoin(hv.master).fetch()
                 .leftJoin(hv.edellinen).fetch()
+                .leftJoin(hv.hakijaryhmatyyppikoodi).fetch()
                 .singleResult(hv);
     }
 
@@ -55,6 +56,7 @@ public class HakijaryhmaValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Hakija
                 .leftJoin(v.valinnanVaihe).fetch()
                 .leftJoin(hv.master).fetch()
                 .leftJoin(hv.edellinen).fetch()
+                .leftJoin(hv.hakijaryhmatyyppikoodi).fetch()
                 .listDistinct(hv);
 
     }
@@ -74,6 +76,7 @@ public class HakijaryhmaValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Hakija
                 .leftJoin(v.valinnanVaihe).fetch()
                 .leftJoin(hv.master).fetch()
                 .leftJoin(hv.edellinen).fetch()
+                .leftJoin(hv.hakijaryhmatyyppikoodi).fetch()
                 .listDistinct(hv);
     }
 
@@ -91,6 +94,7 @@ public class HakijaryhmaValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Hakija
                 .leftJoin(v.hakijaryhmat).fetch()
                 .leftJoin(hv.master).fetch()
                 .leftJoin(hv.edellinen).fetch()
+                .leftJoin(hv.hakijaryhmatyyppikoodi).fetch()
                 .listDistinct(hv);
     }
 
@@ -108,6 +112,7 @@ public class HakijaryhmaValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Hakija
                 .leftJoin(v.hakijaryhmat).fetch()
                 .leftJoin(hv.master).fetch()
                 .leftJoin(hv.edellinen).fetch()
+                .leftJoin(hv.hakijaryhmatyyppikoodi).fetch()
                 .listDistinct(hv);
     }
 
@@ -125,6 +130,7 @@ public class HakijaryhmaValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Hakija
                 .leftJoin(v.hakijaryhmat).fetch()
                 .leftJoin(hv.master).fetch()
                 .leftJoin(hv.edellinen).fetch()
+                .leftJoin(hv.hakijaryhmatyyppikoodi).fetch()
                 .listDistinct(hv);
     }
 

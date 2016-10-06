@@ -22,4 +22,9 @@ public class HakijaryhmaDTO extends HakijaryhmaCreateDTO {
         this.oid = oid;
     }
 
+    public KoodiDTO getHakijaryhmatyyppikoodi(){ return hakijaryhmatyyppikoodi; }
+
+    public void setHakijaryhmatyyppikoodi(KoodiDTO hakijaryhmatyyppikoodi){
+        this.hakijaryhmatyyppikoodi = hakijaryhmatyyppikoodi;
+    }
 }

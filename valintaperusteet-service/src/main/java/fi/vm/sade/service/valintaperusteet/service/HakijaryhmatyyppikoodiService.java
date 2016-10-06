@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface HakijaryhmatyyppikoodiService {
     void updateHakijaryhmanTyyppikoodi(String hakijaryhmaOid, KoodiDTO hakijaryhmatyyppikoodi);
+
+    void updateHakijaryhmaValintatapajononTyyppikoodi(String hakijaryhmaJonoOid, KoodiDTO hakijaryhmatyyppikoodi);
 }

@@ -5,6 +5,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaValintatapajonoDTO;
+import fi.vm.sade.service.valintaperusteet.dto.KoodiDTO;
 
 import java.util.List;
 
@@ -26,6 +27,18 @@ public interface HakijaryhmaValintatapajonoResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response update(@PathParam("oid") String oid, HakijaryhmaValintatapajonoDTO jono);
+
+    @POST
+    @Path("/{hakijaryhmaOid}/hakijaryhmatyyppikoodi")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    Response updateHakijaryhmatyyppikoodi (@PathParam("hakijaryhmaOid") String hakijaryhmaOid, KoodiDTO hakijaryhmatyyppikoodi);
+
+    @DELETE
+    @Path("/{hakijaryhmaOid}/hakijaryhmatyyppikoodi")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    Response deleteHakijaryhmatyyppikoodi(@PathParam("hakijaryhmaOid") String hakijaryhmaOid);
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)

@@ -53,6 +53,10 @@ public class HakijaryhmaValintatapajono extends BaseEntity implements Linkitetta
     @ManyToOne(fetch = FetchType.LAZY)
     private HakijaryhmaValintatapajono master;
 
+    @JoinColumn(name = "hakijaryhmatyyppikoodi_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Hakijaryhmatyyppikoodi hakijaryhmatyyppikoodi;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "master", cascade = CascadeType.REMOVE)
     private Set<HakijaryhmaValintatapajono> kopiot = new HashSet<HakijaryhmaValintatapajono>();
 
@@ -171,5 +175,13 @@ public class HakijaryhmaValintatapajono extends BaseEntity implements Linkitetta
 
     public void setKaytetaanRyhmaanKuuluvia(boolean kaytetaanRyhmaanKuuluvia) {
         this.kaytetaanRyhmaanKuuluvia = kaytetaanRyhmaanKuuluvia;
+    }
+
+    public Hakijaryhmatyyppikoodi getHakijaryhmatyyppikoodi() {
+        return hakijaryhmatyyppikoodi;
+    }
+
+    public void setHakijaryhmatyyppikoodi(Hakijaryhmatyyppikoodi hakijaryhmatyyppikoodi) {
+        this.hakijaryhmatyyppikoodi = hakijaryhmatyyppikoodi;
     }
 }

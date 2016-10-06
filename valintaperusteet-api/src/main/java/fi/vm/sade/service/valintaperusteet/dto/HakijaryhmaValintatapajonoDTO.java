@@ -36,6 +36,9 @@ public class HakijaryhmaValintatapajonoDTO implements Prioritized {
     @ApiModelProperty(value = "Master haikjaryhmän OID", required = false)
     private String masterOid;
 
+    @ApiModelProperty(value = "Hakijaryhmatyyppikoodi")
+    private KoodiDTO hakijaryhmatyyppikoodi = null;
+
     public Boolean getAktiivinen() {
         return aktiivinen;
     }
@@ -114,5 +117,11 @@ public class HakijaryhmaValintatapajonoDTO implements Prioritized {
 
     public void setPrioriteetti(int prioriteetti) {
         this.prioriteetti = prioriteetti;
+    }
+
+    public KoodiDTO getHakijaryhmatyyppikoodi(){ return hakijaryhmatyyppikoodi; }
+
+    public void setHakijaryhmatyyppikoodi(KoodiDTO hakijaryhmatyyppikoodi){
+        this.hakijaryhmatyyppikoodi = hakijaryhmatyyppikoodi;
     }
 }
