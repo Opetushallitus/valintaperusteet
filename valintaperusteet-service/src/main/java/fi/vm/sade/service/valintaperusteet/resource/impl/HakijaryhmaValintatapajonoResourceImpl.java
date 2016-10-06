@@ -73,6 +73,7 @@ public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValint
         }
     }
 
+    @Override
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{oid}")
@@ -98,6 +99,7 @@ public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValint
         }
     }
 
+    @Override
     @POST
     @Path("/{oid}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -126,6 +128,7 @@ public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValint
         }
     }
 
+    @Override
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
