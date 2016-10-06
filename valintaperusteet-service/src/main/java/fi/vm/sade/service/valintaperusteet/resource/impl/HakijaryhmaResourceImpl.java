@@ -134,11 +134,11 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{oid}")
     @PreAuthorize(READ_UPDATE_CRUD)
-    @ApiOperation(value = "Hakee hakijaryhmän OID:n perusteella", response = HakijaryhmaHakijaryhmatyyppikoodiDTO.class)
+    @ApiOperation(value = "Hakee hakijaryhmän OID:n perusteella", response = HakijaryhmaValintatapajonoDTO.class)
     @ApiResponses(value = {@ApiResponse(code = 404, message = "Hakijaryhmää ei löydy"),})
-    public HakijaryhmaHakijaryhmatyyppikoodiDTO read(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
+    public HakijaryhmaDTO read(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
         try {
-            return modelMapper.map(hakijaryhmaService.readByOid(oid), HakijaryhmaHakijaryhmatyyppikoodiDTO.class);
+            return modelMapper.map(hakijaryhmaService.readByOid(oid), HakijaryhmaDTO.class);
         } catch (HakijaryhmaEiOleOlemassaException e) {
             throw new WebApplicationException(e, Response.Status.NOT_FOUND);
         } catch (Exception e) {

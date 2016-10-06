@@ -4,7 +4,6 @@ import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaValintatapajonoDAO;
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaValintatapajonoDTO;
-import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaValintatapajonoUpdateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.*;
@@ -175,7 +174,7 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
 
     // CRUD
     @Override
-    public HakijaryhmaValintatapajono update(String oid, HakijaryhmaValintatapajonoUpdateDTO dto) {
+    public HakijaryhmaValintatapajono update(String oid, HakijaryhmaValintatapajonoDTO dto) {
         HakijaryhmaValintatapajono managedObject = haeHakijaryhmaValintatapajono(oid);
         HakijaryhmaValintatapajono entity = modelMapper.map(dto, HakijaryhmaValintatapajono.class);
         return LinkitettavaJaKopioitavaUtil.paivita(managedObject, entity, kopioija);

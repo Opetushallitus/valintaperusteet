@@ -6,9 +6,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import fi.vm.sade.service.valintaperusteet.dto.*;
 
 @Path("hakijaryhma")
@@ -31,7 +28,7 @@ public interface HakijaryhmaResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{oid}")
-    HakijaryhmaHakijaryhmatyyppikoodiDTO read(@PathParam("oid") String oid);
+    HakijaryhmaDTO read(@PathParam("oid") String oid);
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

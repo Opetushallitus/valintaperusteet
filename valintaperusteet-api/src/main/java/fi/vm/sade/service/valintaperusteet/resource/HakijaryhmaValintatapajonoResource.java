@@ -4,8 +4,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaDTO;
-import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaValintatapajonoUpdateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaValintatapajonoDTO;
 
 import java.util.List;
 
@@ -15,7 +14,7 @@ public interface HakijaryhmaValintatapajonoResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{oid}")
-    HakijaryhmaValintatapajonoUpdateDTO read(@PathParam("oid") String oid);
+    HakijaryhmaValintatapajonoDTO read(@PathParam("oid") String oid);
 
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
@@ -26,11 +25,11 @@ public interface HakijaryhmaValintatapajonoResource {
     @Path("/{oid}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Response update(@PathParam("oid") String oid, HakijaryhmaValintatapajonoUpdateDTO jono);
+    Response update(@PathParam("oid") String oid, HakijaryhmaValintatapajonoDTO jono);
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{oid}/jarjesta")
-    List<HakijaryhmaValintatapajonoUpdateDTO> jarjesta(@PathParam("oid") String hakijaryhmaValintatapajonoOid, List<String> oids);
+    List<HakijaryhmaValintatapajonoDTO> jarjesta(@PathParam("oid") String hakijaryhmaValintatapajonoOid, List<String> oids);
 }

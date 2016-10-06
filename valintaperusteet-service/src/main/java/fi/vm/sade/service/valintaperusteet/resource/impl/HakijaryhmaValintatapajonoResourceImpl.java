@@ -31,7 +31,6 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaValintatapajonoDTO;
-import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaValintatapajonoUpdateDTO;
 import fi.vm.sade.service.valintaperusteet.resource.HakijaryhmaValintatapajonoResource;
 import fi.vm.sade.service.valintaperusteet.resource.ValintatapajonoResource;
 import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaValintatapajonoService;
@@ -64,9 +63,9 @@ public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValint
     private ValintaperusteetModelMapper modelMapper;
 
     @Override
-    public HakijaryhmaValintatapajonoUpdateDTO read(String oid) {
+    public HakijaryhmaValintatapajonoDTO read(String oid) {
         try {
-            return modelMapper.map(hakijaryhmaValintatapajonoService.readByOid(oid), HakijaryhmaValintatapajonoUpdateDTO.class);
+            return modelMapper.map(hakijaryhmaValintatapajonoService.readByOid(oid), HakijaryhmaValintatapajonoDTO.class);
         } catch (HakijaryhmaEiOleOlemassaException e) {
             throw new WebApplicationException(e, Response.Status.NOT_FOUND);
         } catch (Exception e) {
@@ -108,7 +107,7 @@ public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValint
     @ApiResponses(value = {@ApiResponse(code = 404, message = "Liitosta ei ole olemassa"),})
     public Response update(
             @ApiParam(value = "Päivitettävän liitoksen OID", required = true) @PathParam("oid") String oid,
-            @ApiParam(value = "Liitoksen uudet tiedot", required = true) HakijaryhmaValintatapajonoUpdateDTO jono) {
+            @ApiParam(value = "Liitoksen uudet tiedot", required = true) HakijaryhmaValintatapajonoDTO jono) {
         try {
             HakijaryhmaValintatapajonoDTO update = modelMapper.map(hakijaryhmaValintatapajonoService.update(oid, jono), HakijaryhmaValintatapajonoDTO.class);
             AUDIT.log(builder()
@@ -134,7 +133,7 @@ public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValint
     @PreAuthorize(UPDATE_CRUD)
     @ApiOperation(value = "Järjestää valintatapajonon hakijaryhmät argumentin mukaiseen järjestykseen")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "OID-lista on tyhjä"),})
-    public List<HakijaryhmaValintatapajonoUpdateDTO> jarjesta(
+    public List<HakijaryhmaValintatapajonoDTO> jarjesta(
             @ApiParam(value = "Päivitettävän liitoksen oid", required = true) @PathParam("oid") String hakijaryhmaValintatapajonoOid,
             @ApiParam(value = "Hakijaryhmien uusi järjestys", required = true) List<String> oids) {
         try {
@@ -146,7 +145,7 @@ public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValint
                             .stream().map(v -> v.getOid()).toArray()))
                     .setOperaatio(ValintaperusteetOperation.VALINTATAPAJONO_HAKIJARYHMAT_JARJESTA)
                     .build());
-            return modelMapper.mapList(hj, HakijaryhmaValintatapajonoUpdateDTO.class);
+            return modelMapper.mapList(hj, HakijaryhmaValintatapajonoDTO.class);
         } catch (Exception e) {
             throw new WebApplicationException(e, Response.Status.BAD_REQUEST);
         }
