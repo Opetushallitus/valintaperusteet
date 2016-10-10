@@ -23,6 +23,7 @@ public class HakijaryhmaValintatapajonoKopioija implements Kopioija<HakijaryhmaV
         to.setKiintio(from.getKiintio());
         to.setTarkkaKiintio(from.isTarkkaKiintio());
         to.setKaytetaanRyhmaanKuuluvia(from.isKaytetaanRyhmaanKuuluvia());
+        to.setHakijaryhmatyyppikoodi(from.getHakijaryhmatyyppikoodi());
     }
 
     @Override
@@ -37,5 +38,6 @@ public class HakijaryhmaValintatapajonoKopioija implements Kopioija<HakijaryhmaV
         kopio.setKiintio(paivitettyMaster.getKiintio());
         kopio.setTarkkaKiintio(paivitettyMaster.isTarkkaKiintio());
         kopio.setKaytetaanRyhmaanKuuluvia(paivitettyMaster.isKaytetaanRyhmaanKuuluvia());
+        kopio.setHakijaryhmatyyppikoodi(paivitettyMaster.getHakijaryhmatyyppikoodi());
     }
 }

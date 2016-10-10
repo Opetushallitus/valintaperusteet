@@ -9,10 +9,7 @@ import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
-import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaSiirraDTO;
-import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaDTO;
+import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
@@ -154,6 +151,9 @@ public class HakijaryhmaServiceTest {
         hakijaryhma.setKuvaus("");
         hakijaryhma.setLaskentakaavaId(11L);
         hakijaryhma.setNimi("nimi");
+        KoodiDTO hakijaryhmatyyppikoodi = new KoodiDTO();
+        hakijaryhmatyyppikoodi.setUri("muu");
+        hakijaryhma.setHakijaryhmatyyppikoodi(hakijaryhmatyyppikoodi);
 
         hakijaryhmaService.lisaaHakijaryhmaValintaryhmalle("vr1", hakijaryhma);
 
@@ -166,6 +166,7 @@ public class HakijaryhmaServiceTest {
         hakijaryhma.setKuvaus("");
         hakijaryhma.setLaskentakaavaId(11L);
         hakijaryhma.setNimi("nimi");
+        hakijaryhma.setHakijaryhmatyyppikoodi(hakijaryhmatyyppikoodi);
 
         hakijaryhmaService.lisaaHakijaryhmaValintaryhmalle("vr2", hakijaryhma);
 

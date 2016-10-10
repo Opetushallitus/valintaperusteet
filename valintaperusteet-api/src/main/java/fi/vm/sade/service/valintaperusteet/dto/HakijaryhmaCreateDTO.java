@@ -26,6 +26,9 @@ public class HakijaryhmaCreateDTO {
     @ApiModelProperty(value = "Käytetäänkö hakijaryhmään kuuluvia", required = true)
     private boolean kaytetaanRyhmaanKuuluvia;
 
+    @ApiModelProperty(value = "Hakijaryhmatyyppikoodi")
+    private KoodiDTO hakijaryhmatyyppikoodi = null;
+
     public String getNimi() {
         return nimi;
     }
@@ -80,5 +83,11 @@ public class HakijaryhmaCreateDTO {
 
     public void setKaytetaanRyhmaanKuuluvia(boolean kaytetaanRyhmaanKuuluvia) {
         this.kaytetaanRyhmaanKuuluvia = kaytetaanRyhmaanKuuluvia;
+    }
+
+    public KoodiDTO getHakijaryhmatyyppikoodi(){ return hakijaryhmatyyppikoodi; }
+
+    public void setHakijaryhmatyyppikoodi(KoodiDTO hakijaryhmatyyppikoodi){
+        this.hakijaryhmatyyppikoodi = hakijaryhmatyyppikoodi;
     }
 }

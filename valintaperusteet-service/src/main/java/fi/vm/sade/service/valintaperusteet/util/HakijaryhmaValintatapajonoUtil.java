@@ -12,6 +12,7 @@ public abstract class HakijaryhmaValintatapajonoUtil {
         kopio.setKaytetaanRyhmaanKuuluvia(master.isKaytetaanRyhmaanKuuluvia());
         kopio.setAktiivinen(master.getAktiivinen());
         kopio.setHakijaryhma(master.getHakijaryhma());
+        kopio.setHakijaryhmatyyppikoodi(master.getHakijaryhmatyyppikoodi());
         kopio.setMaster(master);
         return kopio;
     }

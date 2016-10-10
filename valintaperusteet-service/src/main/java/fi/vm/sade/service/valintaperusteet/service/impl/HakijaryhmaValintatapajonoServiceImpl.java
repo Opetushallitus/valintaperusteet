@@ -50,6 +50,9 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
     @Autowired
     private ValintaperusteetModelMapper modelMapper;
 
+    @Autowired
+    private HakijaryhmatyyppikoodiService hakijaryhmatyyppikoodiService;
+
     private static HakijaryhmaValintatapajonoKopioija kopioija = new HakijaryhmaValintatapajonoKopioija();
 
     private HakijaryhmaValintatapajono haeHakijaryhmaValintatapajono(String oid) {
@@ -99,6 +102,7 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
         hakijaryhma.setTarkkaKiintio(dto.isTarkkaKiintio());
         hakijaryhma.setKaytetaanRyhmaanKuuluvia(dto.isKaytetaanRyhmaanKuuluvia());
         hakijaryhma.setLaskentakaava(laskentakaavaService.haeMallinnettuKaava(dto.getLaskentakaavaId()));
+        hakijaryhma.setHakijaryhmatyyppikoodi(hakijaryhmatyyppikoodiService.getOrCreateHakijaryhmatyyppikoodi(dto.getHakijaryhmatyyppikoodi()));
         Hakijaryhma lisatty = hakijaryhmaDAO.insert(hakijaryhma);
         HakijaryhmaValintatapajono jono = new HakijaryhmaValintatapajono();
         jono.setOid(oidService.haeValintatapajonoHakijaryhmaOid());
@@ -110,6 +114,7 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
         jono.setKaytaKaikki(hakijaryhma.isKaytaKaikki());
         jono.setTarkkaKiintio(hakijaryhma.isTarkkaKiintio());
         jono.setKaytetaanRyhmaanKuuluvia(hakijaryhma.isKaytetaanRyhmaanKuuluvia());
+        jono.setHakijaryhmatyyppikoodi(hakijaryhma.getHakijaryhmatyyppikoodi());
         hakijaryhmaValintatapajonoDAO.insert(jono);
         LinkitettavaJaKopioitavaUtil.asetaSeuraava(edellinenHakijaryhma, jono);
         for (Valintatapajono kopio : valintatapajono.getKopioValintatapajonot()) {
@@ -146,6 +151,7 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
         hakijaryhma.setTarkkaKiintio(dto.isTarkkaKiintio());
         hakijaryhma.setKaytetaanRyhmaanKuuluvia(dto.isKaytetaanRyhmaanKuuluvia());
         hakijaryhma.setLaskentakaava(laskentakaavaService.haeMallinnettuKaava(dto.getLaskentakaavaId()));
+        hakijaryhma.setHakijaryhmatyyppikoodi(hakijaryhmatyyppikoodiService.getOrCreateHakijaryhmatyyppikoodi(dto.getHakijaryhmatyyppikoodi()));
         Hakijaryhma lisatty = hakijaryhmaDAO.insert(hakijaryhma);
         HakijaryhmaValintatapajono jono = new HakijaryhmaValintatapajono();
         jono.setOid(oidService.haeValintatapajonoHakijaryhmaOid());
@@ -157,6 +163,7 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
         jono.setKaytaKaikki(hakijaryhma.isKaytaKaikki());
         jono.setTarkkaKiintio(hakijaryhma.isTarkkaKiintio());
         jono.setKaytetaanRyhmaanKuuluvia(hakijaryhma.isKaytetaanRyhmaanKuuluvia());
+        jono.setHakijaryhmatyyppikoodi(hakijaryhma.getHakijaryhmatyyppikoodi());
         hakijaryhmaValintatapajonoDAO.insert(jono);
         LinkitettavaJaKopioitavaUtil.asetaSeuraava(edellinenHakijaryhma, jono);
         return lisatty;
@@ -176,8 +183,15 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
     @Override
     public HakijaryhmaValintatapajono update(String oid, HakijaryhmaValintatapajonoDTO dto) {
         HakijaryhmaValintatapajono managedObject = haeHakijaryhmaValintatapajono(oid);
-        HakijaryhmaValintatapajono entity = modelMapper.map(dto, HakijaryhmaValintatapajono.class);
-        return LinkitettavaJaKopioitavaUtil.paivita(managedObject, entity, kopioija);
+        HakijaryhmaValintatapajono updatedJono =  new HakijaryhmaValintatapajono();
+        updatedJono.setOid(dto.getOid());
+        updatedJono.setAktiivinen(dto.getAktiivinen());
+        updatedJono.setKiintio(dto.getKiintio());
+        updatedJono.setKaytaKaikki(dto.isKaytaKaikki());
+        updatedJono.setTarkkaKiintio(dto.isTarkkaKiintio());
+        updatedJono.setKaytetaanRyhmaanKuuluvia(dto.isKaytetaanRyhmaanKuuluvia());
+        updatedJono.setHakijaryhmatyyppikoodi(hakijaryhmatyyppikoodiService.getOrCreateHakijaryhmatyyppikoodi(dto.getHakijaryhmatyyppikoodi()));
+        return LinkitettavaJaKopioitavaUtil.paivita(managedObject, updatedJono, kopioija);
     }
 
     @Override

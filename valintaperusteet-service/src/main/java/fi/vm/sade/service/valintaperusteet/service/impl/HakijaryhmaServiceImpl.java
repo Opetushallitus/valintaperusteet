@@ -11,7 +11,6 @@ import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakukohde;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.*;
-import fi.vm.sade.service.valintaperusteet.util.HakijaryhmaValintatapajonoKopioija;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,12 +50,13 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
     private HakijaryhmaValintatapajonoService hakijaryhmaValintatapajonoService;
 
     @Autowired
+    private HakijaryhmatyyppikoodiService hakijaryhmatyyppikoodiService;
+
+    @Autowired
     private ValintaperusteetModelMapper modelMapper;
 
     @Autowired
     private OidService oidService;
-
-    private static HakijaryhmaValintatapajonoKopioija kopioija = new HakijaryhmaValintatapajonoKopioija();
 
     private Hakijaryhma haeHakijaryhma(String oid) {
         Hakijaryhma hakijaryhma = hakijaryhmaDAO.readByOid(oid);
@@ -164,6 +164,7 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
         hakijaryhma.setTarkkaKiintio(dto.isTarkkaKiintio());
         hakijaryhma.setKaytetaanRyhmaanKuuluvia(dto.isKaytetaanRyhmaanKuuluvia());
         hakijaryhma.setLaskentakaava(laskentakaavaService.haeMallinnettuKaava(hakijaryhma.getLaskentakaavaId()));
+        hakijaryhma.setHakijaryhmatyyppikoodi(hakijaryhmatyyppikoodiService.getOrCreateHakijaryhmatyyppikoodi(dto.getHakijaryhmatyyppikoodi()));
         Hakijaryhma lisatty = hakijaryhmaDAO.insert(hakijaryhma);
         valintaryhma.getHakukohdeViitteet().stream().forEach(hk -> {
             hakijaryhmaValintatapajonoService.liitaHakijaryhmaHakukohteelle(hk.getOid(), lisatty.getOid());
@@ -204,6 +205,7 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
         kopio.setKuvaus(hakijaryhma.getKuvaus());
         kopio.setKaytaKaikki(hakijaryhma.isKaytaKaikki());
         kopio.setLaskentakaava(hakijaryhma.getLaskentakaava());
+        kopio.setHakijaryhmatyyppikoodi(hakijaryhma.getHakijaryhmatyyppikoodi());
         kopio.setNimi(hakijaryhma.getNimi());
         kopio.setTarkkaKiintio(hakijaryhma.isTarkkaKiintio());
         kopio.setKaytetaanRyhmaanKuuluvia(hakijaryhma.isKaytetaanRyhmaanKuuluvia());
@@ -223,6 +225,7 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
         managedObject.setTarkkaKiintio(dto.isTarkkaKiintio());
         managedObject.setKaytetaanRyhmaanKuuluvia(dto.isKaytetaanRyhmaanKuuluvia());
         managedObject.setLaskentakaava(laskentakaavaService.haeMallinnettuKaava(dto.getLaskentakaavaId()));
+        managedObject.setHakijaryhmatyyppikoodi(hakijaryhmatyyppikoodiService.getOrCreateHakijaryhmatyyppikoodi(dto.getHakijaryhmatyyppikoodi()));
         hakijaryhmaDAO.update(managedObject);
         return managedObject;
     }

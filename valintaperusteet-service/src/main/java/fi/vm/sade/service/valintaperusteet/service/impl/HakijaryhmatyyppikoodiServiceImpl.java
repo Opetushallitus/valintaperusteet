@@ -11,6 +11,8 @@ import fi.vm.sade.service.valintaperusteet.model.Koodi;
 import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaValintatapajonoService;
 import fi.vm.sade.service.valintaperusteet.service.HakijaryhmatyyppikoodiService;
 import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaService;
+import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmatyyppikoodiOnTyhjaException;
+import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaOidTyhjaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -23,50 +25,21 @@ import java.util.*;
 public class HakijaryhmatyyppikoodiServiceImpl implements HakijaryhmatyyppikoodiService {
 
     @Autowired
-    private HakijaryhmaService hakijaryhmaService;
-
-    @Autowired
-    private HakijaryhmaValintatapajonoService hakijaryhmaValintatapajonoService;
-
-    @Autowired
     private HakijaryhmatyyppikoodiDAO hakijaryhmatyyppikoodiDAO;
 
     @Autowired
     private ValintaperusteetModelMapper modelMapper;
 
     @Override
-    public void updateHakijaryhmanTyyppikoodi(String hakijaryhmaOid, KoodiDTO hakijaryhmatyyppikoodi) {
-        Hakijaryhma hakijaryhma = hakijaryhmaService.readByOid(hakijaryhmaOid);
-        if(hakijaryhmatyyppikoodi == null) {
-            hakijaryhma.setHakijaryhmatyyppikoodi(null);
-        } else {
-            Hakijaryhmatyyppikoodi haettu = hakijaryhmatyyppikoodiDAO.readByUri(hakijaryhmatyyppikoodi.getUri());
-            if (haettu == null) {
-                haettu = hakijaryhmatyyppikoodiDAO.insert(modelMapper.map(hakijaryhmatyyppikoodi, Hakijaryhmatyyppikoodi.class));
-            }
-            haettu.setArvo(hakijaryhmatyyppikoodi.getArvo());
-            haettu.setNimiEn(hakijaryhmatyyppikoodi.getNimiEn());
-            haettu.setNimiFi(hakijaryhmatyyppikoodi.getNimiFi());
-            haettu.setNimiSv(hakijaryhmatyyppikoodi.getNimiSv());
-            hakijaryhma.setHakijaryhmatyyppikoodi(haettu);
+    public Hakijaryhmatyyppikoodi getOrCreateHakijaryhmatyyppikoodi(KoodiDTO hakijaryhmatyyppikoodi) {
+        if (hakijaryhmatyyppikoodi == null || hakijaryhmatyyppikoodi.getUri() == null) {
+            throw new HakijaryhmatyyppikoodiOnTyhjaException("hakijaryhman tyyppikoodi on tyhjä");
         }
-    }
-
-    @Override
-    public void updateHakijaryhmaValintatapajononTyyppikoodi(String hakijaryhmaOid, KoodiDTO hakijaryhmatyyppikoodi) {
-        HakijaryhmaValintatapajono hakijaryhma = hakijaryhmaValintatapajonoService.readByOid(hakijaryhmaOid);
-        if(hakijaryhmatyyppikoodi == null) {
-            hakijaryhma.setHakijaryhmatyyppikoodi(null);
-        } else {
-            Hakijaryhmatyyppikoodi haettu = hakijaryhmatyyppikoodiDAO.readByUri(hakijaryhmatyyppikoodi.getUri());
-            if (haettu == null) {
-                haettu = hakijaryhmatyyppikoodiDAO.insert(modelMapper.map(hakijaryhmatyyppikoodi, Hakijaryhmatyyppikoodi.class));
-            }
-            haettu.setArvo(hakijaryhmatyyppikoodi.getArvo());
-            haettu.setNimiEn(hakijaryhmatyyppikoodi.getNimiEn());
-            haettu.setNimiFi(hakijaryhmatyyppikoodi.getNimiFi());
-            haettu.setNimiSv(hakijaryhmatyyppikoodi.getNimiSv());
-            hakijaryhma.setHakijaryhmatyyppikoodi(haettu);
+        Hakijaryhmatyyppikoodi haettu = hakijaryhmatyyppikoodiDAO.readByUri(hakijaryhmatyyppikoodi.getUri());
+        if (haettu == null) {
+            haettu = hakijaryhmatyyppikoodiDAO.insert(modelMapper.map(hakijaryhmatyyppikoodi, Hakijaryhmatyyppikoodi.class));
         }
+        hakijaryhmatyyppikoodiDAO.detach(haettu);
+        return haettu;
     }
 }

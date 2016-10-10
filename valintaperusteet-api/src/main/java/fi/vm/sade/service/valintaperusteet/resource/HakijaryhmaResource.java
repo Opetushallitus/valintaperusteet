@@ -57,16 +57,4 @@ public interface HakijaryhmaResource {
     @Produces(MediaType.APPLICATION_JSON)
     Response siirra(HakijaryhmaSiirraDTO dto);
 
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/{hakijaryhmaOid}/hakijaryhmatyyppikoodi")
-    Response updateHakijaryhmatyyppikoodi(@PathParam("hakijaryhmaOid") String hakijaryhmaOid, KoodiDTO hakijaryhmatyyppikoodi);
-
-    @DELETE
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/{hakijaryhmaOid}/hakijaryhmatyyppikoodi")
-    Response deleteHakijaryhmatyyppikoodi(@PathParam("hakijaryhmaOid") String hakijaryhmaOid);
-
 }
