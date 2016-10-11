@@ -38,6 +38,9 @@ public class ValintaperusteetHakijaryhmaDTO implements Prioritized {
     @ApiModelProperty(value = "hakukohteen OID", required = true)
     private String hakukohdeOid;
 
+    @ApiModelProperty(value = "Hakijaryhmän tyyppi koodi", required = false)
+    private KoodiDTO hakijaryhmatyyppikoodi;
+
     public String getNimi() {
         return nimi;
     }
@@ -126,5 +129,13 @@ public class ValintaperusteetHakijaryhmaDTO implements Prioritized {
 
     public void setHakukohdeOid(String hakukohdeOid) {
         this.hakukohdeOid = hakukohdeOid;
+    }
+
+    public KoodiDTO getHakijaryhmatyyppikoodi() {
+        return hakijaryhmatyyppikoodi;
+    }
+
+    public void setHakijaryhmatyyppikoodi(KoodiDTO hakijaryhmatyyppikoodi) {
+        this.hakijaryhmatyyppikoodi = hakijaryhmatyyppikoodi;
     }
 }
