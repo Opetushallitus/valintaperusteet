@@ -136,10 +136,11 @@ object Laskentadomainkonvertteri {
       case Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO =>
         HksValintaperuste(valintaperuste.getTunniste, valintaperuste.getOnPakollinen, Option(valintaperuste.getEpasuoraViittaus).map(Boolean2boolean(_)).getOrElse(false),
           ValintaperusteViite.OSALLISTUMINEN_POSTFIX, valintaperuste.getKuvaus, valintaperuste.getKuvaukset,
-          valintaperuste.getVaatiiOsallistumisen, valintaperuste.getSyotettavissaKaikille)
+          valintaperuste.getVaatiiOsallistumisen, valintaperuste.getSyotettavissaKaikille,
+          Option(valintaperuste.getSyotettavanarvontyyppi).map(_.getUri), valintaperuste.getTilastoidaan)
       case Valintaperustelahde.SYOTETTAVA_ARVO => SyotettavaValintaperuste(valintaperuste.getTunniste,
         valintaperuste.getOnPakollinen, valintaperuste.getOsallistuminenTunniste, valintaperuste.getKuvaus, valintaperuste.getKuvaukset,
-        valintaperuste.getVaatiiOsallistumisen, valintaperuste.getSyotettavissaKaikille)
+        valintaperuste.getVaatiiOsallistumisen, valintaperuste.getSyotettavissaKaikille, Option(valintaperuste.getSyotettavanarvontyyppi).map(_.getUri), valintaperuste.getTilastoidaan)
     }
   }
 

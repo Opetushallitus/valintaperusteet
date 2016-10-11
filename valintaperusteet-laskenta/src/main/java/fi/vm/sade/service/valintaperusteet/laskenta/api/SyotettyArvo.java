@@ -5,12 +5,16 @@ public class SyotettyArvo {
     private String arvo;
     private String laskennallinenArvo;
     private Osallistuminen osallistuminen;
+    private String tyypinKoodiUri;
+    private boolean tilastoidaan;
 
-    public SyotettyArvo(String tunniste, String arvo, String laskennallinenArvo, Osallistuminen osallistuminen) {
+    public SyotettyArvo(String tunniste, String arvo, String laskennallinenArvo, Osallistuminen osallistuminen, String tyypinKoodiUri, boolean tilastoidaan) {
         this.tunniste = tunniste;
         this.arvo = arvo;
         this.laskennallinenArvo = laskennallinenArvo;
         this.osallistuminen = osallistuminen;
+        this.tyypinKoodiUri = tyypinKoodiUri;
+        this.tilastoidaan = tilastoidaan;
     }
 
     public String getTunniste() {
@@ -27,5 +31,13 @@ public class SyotettyArvo {
 
     public Osallistuminen getOsallistuminen() {
         return osallistuminen;
+    }
+
+    public String getTyypinKoodiUri() {
+        return tyypinKoodiUri;
+    }
+
+    public boolean isTilastoidaan() {
+        return tilastoidaan;
     }
 }

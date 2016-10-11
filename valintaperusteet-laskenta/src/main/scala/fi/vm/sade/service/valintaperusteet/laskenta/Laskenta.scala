@@ -21,13 +21,15 @@ object Laskenta {
 
   case class SyotettavaValintaperuste(tunniste: String, pakollinen: Boolean,
                                       osallistuminenTunniste: String, kuvaus: String = "", kuvaukset: TekstiRyhma,
-                                      vaatiiOsallistumisen: Boolean = true, syotettavissaKaikille: Boolean = true) extends Valintaperuste
+                                      vaatiiOsallistumisen: Boolean = true, syotettavissaKaikille: Boolean = true,
+                                      tyypinKoodiUri: Option[String] = None, tilastoidaan: Boolean = false) extends Valintaperuste
 
   case class HakukohteenValintaperuste(tunniste: String, pakollinen: Boolean, epasuoraViittaus: Boolean) extends Valintaperuste
 
   case class HakukohteenSyotettavaValintaperuste(tunniste: String, pakollinen: Boolean, epasuoraViittaus: Boolean,
                                                  osallistuminenTunniste: String, kuvaus: String = "", kuvaukset: TekstiRyhma,
-                                                 vaatiiOsallistumisen: Boolean = true, syotettavissaKaikille: Boolean = true) extends Valintaperuste
+                                                 vaatiiOsallistumisen: Boolean = true, syotettavissaKaikille: Boolean = true,
+                                                 tyypinKoodiUri: Option[String] = None, tilastoidaan: Boolean = false) extends Valintaperuste
 
   trait Konvertteri[S, T] {
     def konvertoi(arvo: S): (Option[T], Tila)

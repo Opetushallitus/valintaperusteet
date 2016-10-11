@@ -52,7 +52,8 @@ import fi.vm.sade.service.valintaperusteet.model.TekstiRyhma
 private case class Tulos[T](tulos: Option[T], tila: Tila, historia: Historia)
 
 private case class SyotettyArvo(val tunniste: String, val arvo: Option[String],
-                                val laskennallinenArvo: Option[String], val osallistuminen: Osallistuminen)
+                                val laskennallinenArvo: Option[String], val osallistuminen: Osallistuminen,
+                                val syotettavanarvontyyppiKoodiUri: Option[String], val tilastoidaan: Boolean)
 
 private case class FunktioTulos(val tunniste: String, val arvo: String, val nimiFi: String = "", val nimiSv: String = "", val nimiEn: String = "")
 
@@ -74,7 +75,8 @@ object Laskin {
 
   private def wrapSyotetytArvot(sa: Map[String, SyotettyArvo]): Map[String, SArvo] = {
     sa.map(e => (e._1 -> new SArvo(e._1, if (e._2.arvo.isEmpty) null else e._2.arvo.get,
-      if (e._2.laskennallinenArvo.isEmpty) null else e._2.laskennallinenArvo.get, e._2.osallistuminen)))
+      if (e._2.laskennallinenArvo.isEmpty) null else e._2.laskennallinenArvo.get, e._2.osallistuminen,
+      if (e._2.syotettavanarvontyyppiKoodiUri.isEmpty) null else e._2.syotettavanarvontyyppiKoodiUri.get, e._2.tilastoidaan)))
   }
 
   private def wrapFunktioTulokset(sa: Map[String, FunktioTulos]): Map[String, FTulos] = {
@@ -214,7 +216,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
 
     // Jos kyseessä on syötettävä valintaperuste, pitää ensin tsekata osallistumistieto
     valintaperusteviite match {
-      case SyotettavaValintaperuste(tunniste, pakollinen, osallistuminenTunniste, kuvaus, kuvaukset, vaatiiOsallistumisen, syotettavavissaKaikille) => {
+      case SyotettavaValintaperuste(tunniste, pakollinen, osallistuminenTunniste, kuvaus, kuvaukset, vaatiiOsallistumisen, syotettavavissaKaikille, tyypinKoodiUri, tilastoidaan) => {
         val (osallistuminen, osallistumistila) = hakemus.kentat.get(osallistuminenTunniste) match {
           case Some(osallistuiArvo) => {
             try {
@@ -240,7 +242,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
           (arvo, konvertoitu, osallistumistila :: tilat)
         }
 
-        syotetytArvot(tunniste) = SyotettyArvo(tunniste, arvo, konvertoitu.map(_.toString), osallistuminen)
+        syotetytArvot(tunniste) = SyotettyArvo(tunniste, arvo, konvertoitu.map(_.toString), osallistuminen, tyypinKoodiUri, tilastoidaan)
         (konvertoitu, tilat)
       }
       case HakemuksenValintaperuste(tunniste, pakollinen) => {
@@ -267,11 +269,11 @@ private class Laskin private(private val hakukohde: Hakukohde,
           }
         }
       }
-      case HakukohteenSyotettavaValintaperuste(tunniste, pakollinen, epasuoraViittaus, osallistumisenTunnistePostfix, kuvaus, kuvaukset, vaatiiOsallistumisen, syotettavissaKaikille) => {
+      case HakukohteenSyotettavaValintaperuste(tunniste, pakollinen, epasuoraViittaus, osallistumisenTunnistePostfix, kuvaus, kuvaukset, vaatiiOsallistumisen, syotettavissaKaikille, syotettavanarvontyyppiKoodiUri, tilastoidaan) => {
         hakukohde.valintaperusteet.get(tunniste).filter(!_.trim.isEmpty) match {
           case Some(arvo) => {
             if (epasuoraViittaus) {
-              haeValintaperuste(SyotettavaValintaperuste(arvo, pakollinen, s"$arvo$osallistumisenTunnistePostfix", kuvaus, kuvaukset, vaatiiOsallistumisen, syotettavissaKaikille), hakemus.kentat, konv, oletusarvo)
+              haeValintaperuste(SyotettavaValintaperuste(arvo, pakollinen, s"$arvo$osallistumisenTunnistePostfix", kuvaus, kuvaukset, vaatiiOsallistumisen, syotettavissaKaikille, syotettavanarvontyyppiKoodiUri, tilastoidaan), hakemus.kentat, konv, oletusarvo)
             } else konv(arvo)
           }
           case None => {
