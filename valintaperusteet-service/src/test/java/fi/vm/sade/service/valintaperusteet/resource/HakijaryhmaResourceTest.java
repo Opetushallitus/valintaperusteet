@@ -8,23 +8,17 @@ import java.util.Arrays;
 import java.util.List;
 
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
+import fi.vm.sade.service.valintaperusteet.model.*;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.dto.model.Tasapistesaanto;
-import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
-import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
-import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
-import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import fi.vm.sade.service.valintaperusteet.resource.impl.HakijaryhmaResourceImpl;
 import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaValintatapajonoService;
 
-/**
- * Created with IntelliJ IDEA. User: wuoti Date: 27.11.2013 Time: 14.18 To
- * change this template use File | Settings | File Templates.
- */
 public class HakijaryhmaResourceTest {
 
     private HakijaryhmaResourceImpl hakijaryhmaResource;
@@ -75,10 +69,14 @@ public class HakijaryhmaResourceTest {
         hrjono.setValintatapajono(jono);
         hrjono.setOid("hrjono oid");
 
+        Hakijaryhmatyyppikoodi koodi = new Hakijaryhmatyyppikoodi();
+        koodi.setUri("koodi_uri");
+        hrjono.setHakijaryhmatyyppikoodi(koodi);
+
         when(hakijaryhmaValintatapajonoServiceMock.findByHakijaryhma(anyString())).thenReturn(Arrays.asList(hrjono));
 
-        List<HakijaryhmaValintatapajonoDTO> puuppa = hakijaryhmaResource.valintatapajonot("oid");
-
-        System.out.println(puuppa.size());
+        List<HakijaryhmaValintatapajonoDTO> response = hakijaryhmaResource.valintatapajonot("oid");
+        Assert.assertEquals(1, response.size());
+        Assert.assertEquals("koodi_uri", response.get(0).getHakijaryhmatyyppikoodi().getUri());
     }
 }
