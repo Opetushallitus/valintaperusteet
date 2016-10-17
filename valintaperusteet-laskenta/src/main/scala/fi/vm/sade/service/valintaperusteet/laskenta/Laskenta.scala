@@ -1,14 +1,12 @@
 package fi.vm.sade.service.valintaperusteet.laskenta
 
-import org.apache.commons.lang.StringUtils
-import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
 import java.math.{BigDecimal => BigDec}
-import fi.vm.sade.service.valintaperusteet.laskenta.api.{Hakemus, Hakukohde}
-import scala._
-import scala.Some
+
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
 import fi.vm.sade.service.valintaperusteet.model.{LokalisoituTeksti, TekstiRyhma}
+import org.apache.commons.lang.StringUtils
+
 import scala.collection.JavaConversions
-import java.util
 
 object Laskenta {
 
@@ -22,7 +20,8 @@ object Laskenta {
   case class SyotettavaValintaperuste(tunniste: String, pakollinen: Boolean,
                                       osallistuminenTunniste: String, kuvaus: String = "", kuvaukset: TekstiRyhma,
                                       vaatiiOsallistumisen: Boolean = true, syotettavissaKaikille: Boolean = true,
-                                      tyypinKoodiUri: Option[String] = None, tilastoidaan: Boolean = false) extends Valintaperuste
+                                      tyypinKoodiUri: Option[String] = None, tilastoidaan: Boolean = false,
+                                      ammatillisenKielikoeOsallistuminenSpecialHandling: Boolean = false) extends Valintaperuste
 
   case class HakukohteenValintaperuste(tunniste: String, pakollinen: Boolean, epasuoraViittaus: Boolean) extends Valintaperuste
 

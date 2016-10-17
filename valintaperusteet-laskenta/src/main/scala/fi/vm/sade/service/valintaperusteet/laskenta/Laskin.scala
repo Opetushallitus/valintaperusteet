@@ -216,7 +216,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
 
     // Jos kyseessä on syötettävä valintaperuste, pitää ensin tsekata osallistumistieto
     valintaperusteviite match {
-      case SyotettavaValintaperuste(tunniste, pakollinen, osallistuminenTunniste, kuvaus, kuvaukset, vaatiiOsallistumisen, syotettavavissaKaikille, tyypinKoodiUri, tilastoidaan) => {
+      case SyotettavaValintaperuste(tunniste, pakollinen, osallistuminenTunniste, kuvaus, kuvaukset, vaatiiOsallistumisen, syotettavavissaKaikille, tyypinKoodiUri, tilastoidaan, ammatillisenKielikoeSpecialHandling) => {
         val (osallistuminen, osallistumistila) = hakemus.kentat.get(osallistuminenTunniste) match {
           case Some(osallistuiArvo) => {
             try {
@@ -230,7 +230,11 @@ private class Laskin private(private val hakukohde: Hakukohde,
           case None => if(vaatiiOsallistumisen) (Osallistuminen.MERKITSEMATTA, new Hyvaksyttavissatila) else (Osallistuminen.EI_VAADITA, new Hyvaksyttavissatila)
         }
 
-        val (arvo, konvertoitu, tilat) = if (pakollinen && vaatiiOsallistumisen && Osallistuminen.EI_OSALLISTUNUT == osallistuminen)
+        val checkingAmmatillisenKielikoeOsallistuminenFromHakemus = ammatillisenKielikoeSpecialHandling &&
+          (osallistuminenTunniste == "kielikoe_fi-OSALLISTUMINEN" || osallistuminenTunniste == "kielikoe_sv-OSALLISTUMINEN")
+        val overrideAmmatillisenKielikoeOsallistuminenToShowCorrectOsallistuminenForExistingResultInSure = checkingAmmatillisenKielikoeOsallistuminenFromHakemus && osallistuminen == Osallistuminen.OSALLISTUI
+
+        val (arvo: Option[String], konvertoitu: Option[T], tilat) = if (pakollinen && vaatiiOsallistumisen && Osallistuminen.EI_OSALLISTUNUT == osallistuminen)
           (None, None, List(osallistumistila,
             new Hylattytila(tekstiryhmaToMap(kuvaukset),
               new EiOsallistunutHylkays(tunniste))))
@@ -239,10 +243,21 @@ private class Laskin private(private val hakukohde: Hakukohde,
             new SyotettavaArvoMerkitsemattaVirhe(tunniste))))
         else {
           val (arvo, konvertoitu, tilat) = haeValintaperusteenArvoHakemukselta(tunniste, pakollinen)
-          (arvo, konvertoitu, osallistumistila :: tilat)
+          val (osallistumislaskennassaKaytettavaArvo, osallistumislaskennassaKaytettavaLaskennallinenArvo) = if (overrideAmmatillisenKielikoeOsallistuminenToShowCorrectOsallistuminenForExistingResultInSure) {
+            (Some("false"), Some(false).asInstanceOf[Some[T]])
+          } else {
+            (arvo, konvertoitu)
+          }
+          (osallistumislaskennassaKaytettavaArvo, osallistumislaskennassaKaytettavaLaskennallinenArvo, osallistumistila :: tilat)
         }
 
-        syotetytArvot(tunniste) = SyotettyArvo(tunniste, arvo, konvertoitu.map(_.toString), osallistuminen, tyypinKoodiUri, tilastoidaan)
+        val osallistuminenValueToUse = if (overrideAmmatillisenKielikoeOsallistuminenToShowCorrectOsallistuminenForExistingResultInSure) {
+          Osallistuminen.MERKITSEMATTA
+        } else {
+          osallistuminen
+        }
+
+        syotetytArvot(tunniste) = SyotettyArvo(tunniste, arvo, konvertoitu.map(_.toString), osallistuminenValueToUse, tyypinKoodiUri, tilastoidaan)
         (konvertoitu, tilat)
       }
       case HakemuksenValintaperuste(tunniste, pakollinen) => {
@@ -273,7 +288,9 @@ private class Laskin private(private val hakukohde: Hakukohde,
         hakukohde.valintaperusteet.get(tunniste).filter(!_.trim.isEmpty) match {
           case Some(arvo) => {
             if (epasuoraViittaus) {
-              haeValintaperuste(SyotettavaValintaperuste(arvo, pakollinen, s"$arvo$osallistumisenTunnistePostfix", kuvaus, kuvaukset, vaatiiOsallistumisen, syotettavissaKaikille, syotettavanarvontyyppiKoodiUri, tilastoidaan), hakemus.kentat, konv, oletusarvo)
+              val ammatillisenKielikoeOsallistuminenSpecialHandling = laskentamoodi == Laskentamoodi.VALINTAKOELASKENTA && tunniste == "kielikoe_tunniste"
+              haeValintaperuste(SyotettavaValintaperuste(arvo, pakollinen, s"$arvo$osallistumisenTunnistePostfix", kuvaus, kuvaukset, vaatiiOsallistumisen, syotettavissaKaikille, syotettavanarvontyyppiKoodiUri, tilastoidaan, ammatillisenKielikoeOsallistuminenSpecialHandling),
+                hakemus.kentat, konv, oletusarvo)
             } else konv(arvo)
           }
           case None => {
