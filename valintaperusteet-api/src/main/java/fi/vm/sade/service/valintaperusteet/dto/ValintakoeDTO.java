@@ -15,6 +15,9 @@ public class ValintakoeDTO extends ValintakoeCreateDTO {
     @ApiModelProperty(value = "Funktiokutsu", required = false)
     private FunktiokutsuDTO funktiokutsu;
 
+    @ApiModelProperty(value = "Peritty", required = false)
+    private Boolean peritty;
+
     public String getSelvitettyTunniste() {
         return selvitettyTunniste;
     }
@@ -39,4 +42,8 @@ public class ValintakoeDTO extends ValintakoeCreateDTO {
         this.funktiokutsu = funktiokutsu;
     }
 
+
+    public Boolean getPeritty() { return peritty; }
+
+    public void setPeritty(Boolean peritty) { this.peritty = peritty; }
 }

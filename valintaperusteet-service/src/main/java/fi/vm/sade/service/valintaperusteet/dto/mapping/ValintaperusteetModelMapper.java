@@ -173,6 +173,16 @@ public class ValintaperusteetModelMapper extends ModelMapper {
             }
         };
 
+        final Converter<Valintakoe, Boolean> valintakoePerittyConverter = new Converter<Valintakoe, Boolean>() {
+            public Boolean convert(MappingContext<Valintakoe, Boolean> context) {
+                if(context.getSource().getMasterValintakoe() != null) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        };
+
         final Provider<Set> linkedHashSetProvider = new Provider<Set>() {
             public Set get(Provider.ProvisionRequest<Set> request) {
                 Class<?> klass = request.getRequestedType();
@@ -255,6 +265,7 @@ public class ValintaperusteetModelMapper extends ModelMapper {
             @Override
             protected void configure() {
                 using(valintakoeKutsutaankoKaikkiConverter).map(source).setKutsutaankoKaikki(null);
+                using(valintakoePerittyConverter).map(source).setPeritty(null);
             }
         });
 

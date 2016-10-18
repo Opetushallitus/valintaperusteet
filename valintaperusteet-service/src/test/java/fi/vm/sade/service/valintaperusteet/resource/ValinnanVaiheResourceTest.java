@@ -256,8 +256,14 @@ public class ValinnanVaiheResourceTest {
         final String valintaryhmaOid = "83";
 
         List<ValintakoeDTO> kokeet = vaiheResource.listValintakokeet(valintaryhmaOid);
-        assertEquals(4, kokeet.size());
+
         String json = mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(kokeet);
+        System.out.println("JSON: " + json);
+
+        assertEquals(5, kokeet.size());
+        assertEquals(4, kokeet.stream().filter(vk -> vk.getPeritty() == false).count());
+        assertEquals(1, kokeet.stream().filter(vk -> vk.getPeritty() == true).count());
+
     }
 
     @Test

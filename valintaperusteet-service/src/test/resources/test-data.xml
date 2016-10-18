@@ -1034,13 +1034,15 @@
                     nimi="hakukohde 24 valinnan vaihe 2" aktiivinen="true" kuvaus="kuvaus"
                     edellinen_valinnan_vaihe_id="114"/>
 
+    <valintakoe id="17" version="0" oid="oid17" tunniste="valintakoetunniste17" nimi="valintakoe17" kuvaus="kuvaus17" kutsun_kohde="YLIN_TOIVE"
+                aktiivinen="true" valinnan_vaihe_id="83" laskentakaava_id="101" lahetetaanko_koekutsut="true" kutsutaanko_kaikki="true"/>
 
     <valintakoe id="1" version="0" oid="oid1" tunniste="valintakoetunniste1" nimi="valintakoe1" kuvaus="kuvaus1" kutsun_kohde="YLIN_TOIVE"
                 aktiivinen="true" valinnan_vaihe_id="83" laskentakaava_id="101" master_valintakoe_id="[NULL]" lahetetaanko_koekutsut="true" kutsutaanko_kaikki="true" />
     <valintakoe id="2" version="0" oid="oid2" tunniste="valintakoetunniste2" nimi="valintakoe2" kuvaus="kuvaus2" kutsun_kohde="YLIN_TOIVE"
                 aktiivinen="true" valinnan_vaihe_id="83" laskentakaava_id="101" lahetetaanko_koekutsut="true" kutsutaanko_kaikki="true"/>
     <valintakoe id="3" version="0" oid="oid3" tunniste="valintakoetunniste3" nimi="valintakoe3" kuvaus="kuvaus3" kutsun_kohde="YLIN_TOIVE"
-                aktiivinen="true" valinnan_vaihe_id="83" laskentakaava_id="101" lahetetaanko_koekutsut="true" kutsutaanko_kaikki="true"/>
+                aktiivinen="true" valinnan_vaihe_id="83" laskentakaava_id="101" lahetetaanko_koekutsut="true" kutsutaanko_kaikki="true" master_valintakoe_id="17"/>
     <valintakoe id="4" version="0" oid="oid4" tunniste="valintakoetunniste4" nimi="valintakoe4" kuvaus="kuvaus4" kutsun_kohde="YLIN_TOIVE"
                 aktiivinen="true" valinnan_vaihe_id="83" lahetetaanko_koekutsut="true" kutsutaanko_kaikki="true"/>
 
