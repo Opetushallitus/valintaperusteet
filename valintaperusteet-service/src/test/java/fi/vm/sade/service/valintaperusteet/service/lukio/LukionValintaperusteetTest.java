@@ -42,22 +42,23 @@ public class LukionValintaperusteetTest {
     @Autowired
     private LaskentaService laskentaService;
 
+    private static boolean korkeakouluhaku = false;
 
     private static final String HAKEMUS_OID = "hakemusOid";
     private static final String HAKUKOHDE_OID1 = "1.2.246.562.5.10095_02_186_0632";
-    private static final Hakukohde HAKUKOHDE1 = new Hakukohde(HAKUKOHDE_OID1, new HashMap<String, String>());
+    private static final Hakukohde HAKUKOHDE1 = new Hakukohde(HAKUKOHDE_OID1, new HashMap<String, String>(), korkeakouluhaku);
 
     private static final String HAKUKOHDE_OID2 = "1.2.246.562.5.01403_01_186_1027";
-    private static final Hakukohde HAKUKOHDE2 = new Hakukohde(HAKUKOHDE_OID2, new HashMap<String, String>());
+    private static final Hakukohde HAKUKOHDE2 = new Hakukohde(HAKUKOHDE_OID2, new HashMap<String, String>(), korkeakouluhaku);
 
     private static final String HAKUKOHDE_OID3 = "1.2.246.562.5.01787_01_406_1042";
-    private static final Hakukohde HAKUKOHDE3 = new Hakukohde(HAKUKOHDE_OID3, new HashMap<String, String>());
+    private static final Hakukohde HAKUKOHDE3 = new Hakukohde(HAKUKOHDE_OID3, new HashMap<String, String>(), korkeakouluhaku);
 
     private static final String HAKUKOHDE_OID4 = "1.2.246.562.5.01787_01_406_1043";
-    private static final Hakukohde HAKUKOHDE4 = new Hakukohde(HAKUKOHDE_OID4, new HashMap<String, String>());
+    private static final Hakukohde HAKUKOHDE4 = new Hakukohde(HAKUKOHDE_OID4, new HashMap<String, String>(), korkeakouluhaku);
 
     private static final String HAKUKOHDE_OID5 = "1.2.246.562.5.01787_01_406_1044";
-    private static final Hakukohde HAKUKOHDE5 = new Hakukohde(HAKUKOHDE_OID5, new HashMap<String, String>());
+    private static final Hakukohde HAKUKOHDE5 = new Hakukohde(HAKUKOHDE_OID5, new HashMap<String, String>(), korkeakouluhaku);
 
     private static final String OPPIAINE_POSTFIX = "_OPPIAINE";
 
@@ -157,7 +158,7 @@ public class LukionValintaperusteetTest {
                 valintaperuste(LukionValintaperusteet.B1KIELI + "_" + LukionValintaperusteet.SAKSA + LukionValintaperusteet.PAINOKERROIN_POSTFIX, "1.5"),
                 valintaperuste(LukionValintaperusteet.A11KIELI + "_" + LukionValintaperusteet.LATVIA + LukionValintaperusteet.PAINOKERROIN_POSTFIX, "1.5"),
                 mustacheMap
-        ));
+        ), korkeakouluhaku);
 
         Lukuarvofunktio lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(laajennaAlakaavat(LukionValintaperusteet.painotettuLukuaineidenKeskiarvo()).getFunktiokutsu());
         Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(hakukohde, hakemus, new ArrayList<Hakemus>(), lasku);
@@ -518,7 +519,7 @@ public class LukionValintaperusteetTest {
 //                valintaperuste("TE_painokerroin","1.0"),
 //                valintaperuste("YH_painokerroin","1.0")
 
-        ));
+        ), korkeakouluhaku);
 
         Lukuarvofunktio lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(laajennaAlakaavat(LukionValintaperusteet.painotettuLukuaineidenKeskiarvo()).getFunktiokutsu());
         Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(hakukohde, hakemus, new ArrayList<Hakemus>(), lasku);
@@ -559,7 +560,7 @@ public class LukionValintaperusteetTest {
 
         Hakukohde hakukohde = new Hakukohde(HAKUKOHDE_OID1, yhdistaMapit(
                 mustacheMap
-        ));
+        ), korkeakouluhaku);
 
         Lukuarvofunktio lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(laajennaAlakaavat(LukionValintaperusteet.paasykoeLukuarvo("paasykoe_tunniste")).getFunktiokutsu());
         Laskentatulos<BigDecimal> tulos = laskentaService.suoritaValintalaskenta(hakukohde, hakemus, new ArrayList<Hakemus>(), lasku);

@@ -230,7 +230,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
           case None => if(vaatiiOsallistumisen) (Osallistuminen.MERKITSEMATTA, new Hyvaksyttavissatila) else (Osallistuminen.EI_VAADITA, new Hyvaksyttavissatila)
         }
 
-        val checkingAmmatillisenKielikoeOsallistuminenFromHakemus = ammatillisenKielikoeSpecialHandling &&
+        val checkingAmmatillisenKielikoeOsallistuminenFromHakemus = !hakukohde.korkeakouluhaku && ammatillisenKielikoeSpecialHandling &&
           (osallistuminenTunniste == "kielikoe_fi-OSALLISTUMINEN" || osallistuminenTunniste == "kielikoe_sv-OSALLISTUMINEN")
         val overrideAmmatillisenKielikoeOsallistuminenToShowCorrectOsallistuminenForExistingResultInSure = checkingAmmatillisenKielikoeOsallistuminenFromHakemus && osallistuminen == Osallistuminen.OSALLISTUI
 
@@ -288,7 +288,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
         hakukohde.valintaperusteet.get(tunniste).filter(!_.trim.isEmpty) match {
           case Some(arvo) => {
             if (epasuoraViittaus) {
-              val ammatillisenKielikoeOsallistuminenSpecialHandling = laskentamoodi == Laskentamoodi.VALINTAKOELASKENTA && tunniste == "kielikoe_tunniste"
+              val ammatillisenKielikoeOsallistuminenSpecialHandling = !hakukohde.korkeakouluhaku && laskentamoodi == Laskentamoodi.VALINTAKOELASKENTA && tunniste == "kielikoe_tunniste"
               haeValintaperuste(SyotettavaValintaperuste(arvo, pakollinen, s"$arvo$osallistumisenTunnistePostfix", kuvaus, kuvaukset, vaatiiOsallistumisen, syotettavissaKaikille, syotettavanarvontyyppiKoodiUri, tilastoidaan, ammatillisenKielikoeOsallistuminenSpecialHandling),
                 hakemus.kentat, konv, oletusarvo)
             } else konv(arvo)
