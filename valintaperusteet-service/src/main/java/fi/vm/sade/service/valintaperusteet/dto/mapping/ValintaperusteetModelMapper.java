@@ -12,10 +12,13 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.modelmapper.Provider;
 import org.modelmapper.spi.MappingContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
 public class ValintaperusteetModelMapper extends ModelMapper {
+    private static final Logger LOG = LoggerFactory.getLogger(ValintaperusteetModelMapper.class);
 
     public ValintaperusteetModelMapper() {
         super();
@@ -51,12 +54,10 @@ public class ValintaperusteetModelMapper extends ModelMapper {
                 for (int i = 0; i < context.getSource().size(); i++) {
                     ValintaperusteViiteDTO arg = context.getSource().get(i);
                     arg.setIndeksi(i + 1);
-                    System.out.println("*********************************************************'");
                     ValintaperusteViite viite = map(arg, ValintaperusteViite.class);
-                    System.out.println("viite = " + viite);
-                    System.out.println("viite.getEpasuoraViittaus() = " + viite.getEpasuoraViittaus());
-                    System.out.println("viite.getLahde() = " + viite.getLahde() + "\n");
-                    if (viite.getEpasuoraViittaus() == null && Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO.equals(viite.getLahde())) {
+                    if ((viite.getEpasuoraViittaus() == null || !viite.getEpasuoraViittaus()) && Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO.equals(viite.getLahde())) {
+                        LOG.info(String.format("Pakotetaan epasuoraViittaus arvoon true, koska viitteen %d lähde on %s",
+                            viite.getId(), Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO));
                         viite.setEpasuoraViittaus(true);
                     }
                     viite.setIndeksi(arg.getIndeksi());
