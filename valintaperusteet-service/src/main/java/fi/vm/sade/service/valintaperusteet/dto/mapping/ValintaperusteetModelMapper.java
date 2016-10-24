@@ -51,7 +51,14 @@ public class ValintaperusteetModelMapper extends ModelMapper {
                 for (int i = 0; i < context.getSource().size(); i++) {
                     ValintaperusteViiteDTO arg = context.getSource().get(i);
                     arg.setIndeksi(i + 1);
+                    System.out.println("*********************************************************'");
                     ValintaperusteViite viite = map(arg, ValintaperusteViite.class);
+                    System.out.println("viite = " + viite);
+                    System.out.println("viite.getEpasuoraViittaus() = " + viite.getEpasuoraViittaus());
+                    System.out.println("viite.getLahde() = " + viite.getLahde() + "\n");
+                    if (viite.getEpasuoraViittaus() == null && Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO.equals(viite.getLahde())) {
+                        viite.setEpasuoraViittaus(true);
+                    }
                     viite.setIndeksi(arg.getIndeksi());
                     result.add(viite);
                 }
