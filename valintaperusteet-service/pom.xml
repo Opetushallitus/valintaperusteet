@@ -40,10 +40,6 @@
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 		</dependency>
-    <dependency>
-        <groupId>org.jasig.cas.client</groupId>
-        <artifactId>cas-client-support-distributed-ehcache</artifactId>
-    </dependency>
       <!--Internal -->
         <dependency>
             <groupId>fi.vm.sade.valintaperusteet</groupId>
@@ -347,20 +343,10 @@
             <!--<version>5.0.2</version>-->
         <!--</dependency>-->
 
-        <!-- EhCache Replication -->
         <dependency>
             <groupId>net.sf.ehcache</groupId>
             <artifactId>ehcache-core</artifactId>
         </dependency>
-        <dependency>
-            <groupId>net.sf.ehcache</groupId>
-            <artifactId>ehcache-jgroupsreplication</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jgroups</groupId>
-            <artifactId>jgroups</artifactId>
-        </dependency>
-
 
         <dependency>
             <groupId>com.typesafe.akka</groupId>
