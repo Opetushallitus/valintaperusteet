@@ -1,24 +1,28 @@
 package fi.vm.sade.service.valintaperusteet.laskenta
 
 import java.math.{BigDecimal => BigDec}
-import scala.math.BigDecimal._
 
-import fi.vm.sade.service.valintaperusteet.laskenta.api.{Hakukohde, Osallistuminen}
+import scala.math.BigDecimal._
+import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakukohde
 import org.scalatest._
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta._
+
 import scala.collection.JavaConversions._
 import fi.vm.sade.kaava.LaskentaTestUtil._
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.HylattyMetatieto
+
 import scala._
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.VirheMetatieto.VirheMetatietotyyppi
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.HylattyMetatieto.Hylattymetatietotyyppi
 import java.util
+
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus
 import fi.vm.sade.kaava.LaskentaTestUtil.TestHakemus
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.KonvertoiLukuarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Totuusarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonvertteri
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Suurempi
+
 import scala.Some
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonversio
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Jos
@@ -39,7 +43,7 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeTotuusarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaVertaaYhtasuuruus
 import fi.vm.sade.service.valintaperusteet.model._
 import fi.vm.sade.kaava.LaskentaTestUtil.Funktiokutsu
-import fi.vm.sade.service.valintaperusteet.dto.model.{Valintaperustelahde, Funktionimi}
+import fi.vm.sade.service.valintaperusteet.dto.model.{Funktionimi, Osallistuminen, Valintaperustelahde}
 import fi.vm.sade.kaava.Laskentadomainkonvertteri
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Tila.Tilatyyppi
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.KonvertoiLukuarvo
@@ -47,6 +51,7 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Totuusarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeLukuarvoEhdolla
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonvertteri
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Suurempi
+
 import scala.Some
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonversio
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Jos

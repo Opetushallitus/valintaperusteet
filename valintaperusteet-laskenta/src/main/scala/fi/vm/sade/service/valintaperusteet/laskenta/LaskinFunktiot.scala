@@ -2,7 +2,7 @@ package fi.vm.sade.service.valintaperusteet.laskenta
 
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus.Kentat
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
-import fi.vm.sade.service.valintaperusteet.laskenta.api.{Hakukohde, Osallistuminen, Hakemus}
+import fi.vm.sade.service.valintaperusteet.laskenta.api.{Hakukohde, Hakemus}
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta._
 import scala.Some
 import scala.Tuple2

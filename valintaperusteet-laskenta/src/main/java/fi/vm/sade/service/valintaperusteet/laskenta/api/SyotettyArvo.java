@@ -1,5 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.laskenta.api;
 
+import fi.vm.sade.service.valintaperusteet.dto.model.Osallistuminen;
+
 public class SyotettyArvo {
     private String tunniste;
     private String arvo;

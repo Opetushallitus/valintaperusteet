@@ -3,24 +3,28 @@ package fi.vm.sade.service.valintaperusteet.laskenta
 import api.Hakukohde
 import api.Hakemus
 import api.Laskentatulos
-import api.Osallistuminen
 import api.{SyotettyArvo => SArvo}
 import api.{FunktioTulos => FTulos}
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta._
 import java.util.{Collection => JCollection}
 import java.lang.{Boolean => JBoolean}
 import java.math.{BigDecimal => JBigDecimal}
+
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus.Kentat
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
 import org.slf4j.LoggerFactory
+
 import scala.collection.mutable.ListBuffer
 import java.math.RoundingMode
+
+import fi.vm.sade.service.valintaperusteet.dto.model.Osallistuminen
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.KonvertoiLukuarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Negaatio
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Totuusarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Osamaara
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Pyoristys
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Suurempi
+
 import scala.Some
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Yhtasuuri
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Jos
@@ -32,6 +36,7 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Pienempi
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.NimettyTotuusarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeLukuarvo
+
 import scala.Tuple3
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.NimettyLukuarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.SyotettavaValintaperuste
@@ -39,12 +44,15 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.SuurempiTaiYhtasuur
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeTotuusarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaVertaaYhtasuuruus
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakukohteenValintaperuste
+
 import scala.Tuple2
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Ei
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Hakutoive
+
 import scala.collection.JavaConversions._
 import play.api.libs.json._
 import fi.vm.sade.service.valintaperusteet.laskenta.JsonFormats._
+
 import scala.collection.JavaConversions
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Tila.Tilatyyppi
 import fi.vm.sade.service.valintaperusteet.model.TekstiRyhma
