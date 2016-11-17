@@ -70,6 +70,12 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
     }
 
     @Override
+    public List<HakijaryhmaValintatapajono> findHakijaryhmaByJonos(List<String> oids) {
+        List<HakijaryhmaValintatapajono> byJonos = hakijaryhmaValintatapajonoDAO.findByValintatapajonos(oids);
+        return byJonos;
+    }
+
+    @Override
     public HakijaryhmaValintatapajono readByOid(String oid) {
         return haeHakijaryhmaValintatapajono(oid);
     }

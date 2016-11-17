@@ -13,6 +13,8 @@ public interface HakijaryhmaValintatapajonoService {
 
     List<HakijaryhmaValintatapajono> findHakijaryhmaByJono(String oid);
 
+    List<HakijaryhmaValintatapajono> findHakijaryhmaByJonos(List<String> oid);
+
     HakijaryhmaValintatapajono readByOid(String oid);
 
     List<HakijaryhmaValintatapajono> findByHakijaryhma(String hakijaryhmaOid);

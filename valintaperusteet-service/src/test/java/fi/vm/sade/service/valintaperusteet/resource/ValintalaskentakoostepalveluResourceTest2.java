@@ -58,4 +58,13 @@ public class ValintalaskentakoostepalveluResourceTest2 {
         assertEquals(2, hakijaryhmaValintatapajonoDTOs.get(2).getPrioriteetti());
         assertEquals("hr4_vtj2", hakijaryhmaValintatapajonoDTOs.get(2).getOid());
     }
+
+    @Test
+    public void testReadByValintatapajonoOids() {
+        final List<HakijaryhmaValintatapajonoDTO> hakijaryhmaValintatapajonoDTOs =
+                valintalaskentakoostepalveluResource.readByValintatapajonoOids(Arrays.asList("vtj6"));
+        assertEquals(1, hakijaryhmaValintatapajonoDTOs.size());
+        assertEquals(0, hakijaryhmaValintatapajonoDTOs.get(0).getPrioriteetti());
+        assertEquals("hr5_vtj6", hakijaryhmaValintatapajonoDTOs.get(0).getOid());
+    }
 }

@@ -111,6 +111,36 @@ public class ValintalaskentakoostepalveluResourceImpl {
         }
     }
 
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/haku/valintatapajono/hakijaryhmat")
+    public List<HakijaryhmaValintatapajonoDTO> readByValintatapajonoOids(List<String> valintatapajonoOids) {
+        if (valintatapajonoOids == null || valintatapajonoOids.isEmpty()) {
+            LOG.error("Yritettiin hakea hakijaryhmia tyhjalla valintatapajono OID joukolla");
+            throw new WebApplicationException(new RuntimeException("Yritettiin hakea hakijaryhmia valintatapajono hakukohde OID joukolla"), Response.Status.NOT_FOUND);
+        }
+        long started = System.currentTimeMillis();
+        LOG.info("Haetaan valintatapajonoOid joukolla {}", Arrays.toString(valintatapajonoOids.toArray()));
+        try {
+            final List<HakijaryhmaValintatapajono> byHakukohteet = hakijaryhmaValintatapajonoService.findHakijaryhmaByJonos(valintatapajonoOids);
+            LinkitettavaJaKopioitavaUtil.jarjesta(byHakukohteet);
+            final List<HakijaryhmaValintatapajonoDTO> hakijaryhmaValintatapajonoDTOs = byHakukohteet.stream().map(h -> modelMapper.map(h, HakijaryhmaValintatapajonoDTO.class)).collect(Collectors.toList());
+            IntStream.range(0, hakijaryhmaValintatapajonoDTOs.size()).forEach(i -> {
+                hakijaryhmaValintatapajonoDTOs.get(i).setPrioriteetti(i);
+            });
+            return hakijaryhmaValintatapajonoDTOs;
+        } catch (HakijaryhmaEiOleOlemassaException e) {
+            LOG.error("Hakijaryhmää ei löytynyt!", e);
+            throw new WebApplicationException(e, Response.Status.NOT_FOUND);
+        } catch (Exception e) {
+            LOG.error("Hakijaryhmää ei saatu haettua!", e);
+            throw new WebApplicationException(e, Response.Status.INTERNAL_SERVER_ERROR);
+        } finally {
+            LOG.info("Haku kesti {}ms", (System.currentTimeMillis() - started));
+        }
+    }
+
     private Function<ValintakoeDTO, ValintakoeDTO> lisaaSelvitettyTunniste(Map<String, String> tunnisteArvoPari, String hakukohdeOid) {
         return vk -> {
             if (Optional.ofNullable(vk.getTunniste()).orElse("").startsWith(HAKUKOHDE_VIITE_PREFIX)) {

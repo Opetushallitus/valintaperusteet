@@ -62,6 +62,26 @@ public class HakijaryhmaValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Hakija
     }
 
     @Override
+    public List<HakijaryhmaValintatapajono> findByValintatapajonos(List<String> oids) {
+        QHakijaryhmaValintatapajono hv = QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
+
+        QHakijaryhma h = QHakijaryhma.hakijaryhma;
+        QValintatapajono v = QValintatapajono.valintatapajono;
+
+        return from(hv).where(hv.valintatapajono.oid.in(oids))
+                .leftJoin(hv.hakijaryhma, h).fetch()
+                .leftJoin(h.jonot).fetch()
+                .leftJoin(hv.valintatapajono, v).fetch()
+                .leftJoin(v.hakijaryhmat).fetch()
+                .leftJoin(v.valinnanVaihe).fetch()
+                .leftJoin(hv.master).fetch()
+                .leftJoin(hv.edellinen).fetch()
+                .leftJoin(hv.hakijaryhmatyyppikoodi).fetch()
+                .listDistinct(hv);
+
+    }
+
+    @Override
     public List<HakijaryhmaValintatapajono> findByHakijaryhma(String hakijaryhmaOid) {
         QHakijaryhmaValintatapajono hv = QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
 

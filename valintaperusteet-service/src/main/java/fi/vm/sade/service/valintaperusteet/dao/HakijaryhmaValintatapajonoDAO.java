@@ -10,6 +10,8 @@ public interface HakijaryhmaValintatapajonoDAO extends JpaDAO<HakijaryhmaValinta
 
     List<HakijaryhmaValintatapajono> findByValintatapajono(String oid);
 
+    List<HakijaryhmaValintatapajono> findByValintatapajonos(List<String> oids);
+
     List<HakijaryhmaValintatapajono> findByHakijaryhma(String hakijaryhmaOid);
 
     List<HakijaryhmaValintatapajono> findByHakukohde(String oid);

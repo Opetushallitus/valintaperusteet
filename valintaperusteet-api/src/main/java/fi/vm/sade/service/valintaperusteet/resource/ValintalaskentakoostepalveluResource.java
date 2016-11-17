@@ -26,4 +26,11 @@ public interface ValintalaskentakoostepalveluResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/haku")
     List<HakijaryhmaValintatapajonoDTO> readByHakukohdeOids(List<String> hakukohdeOids);
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/haku/valintatapajono/hakijaryhmat")
+    List<HakijaryhmaValintatapajonoDTO> readByValintatapajonoOids(List<String> valintatapajonoOids);
+
 }
