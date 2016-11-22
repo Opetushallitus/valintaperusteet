@@ -12,6 +12,8 @@
     <context:annotation-config/>
     <context:component-scan base-package="fi.vm.sade.service.valintaperusteet"/>
 
+    <bean id="ValintaperusteetAudit" class="fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit"/>
+
     <context:property-placeholder
             location="classpath:valintaperusteet-service.properties, file:///${user.home:''}/oph-configuration/common.properties, file:///${user.home:''}/oph-configuration/valinta.properties, file:///${user.home:''}/oph-configuration/override.properties"
             ignore-resource-not-found="true" properties-ref="defaultProps"/>
