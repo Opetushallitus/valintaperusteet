@@ -1146,7 +1146,7 @@
     <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="13" version="1"
                      oid="13" edellinen_valintatapajono_id="12" aloituspaikat="10" poistetaanko_hylatyt="false"
                      nimi="haku 6 valinnanvaihe 3 jono2" kuvaus="kuvaus" tasapistesaanto="ARVONTA"
-                     siirretaan_sijoitteluun="true" valinnan_vaihe_id="6" aktiivinen="true" ei_varasijatayttoa="false"
+                     siirretaan_sijoitteluun="false" valinnan_vaihe_id="6" aktiivinen="true" ei_varasijatayttoa="false"
                      kaikki_ehdon_tayttavat_hyvaksytaan="false" valisijoittelu="false" automaattinen_laskentaan_siirto="true"/>
 
     <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="14" version="1"

@@ -56,6 +56,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
     @Override
     public List<ValintatapajonoDTO> haeValintatapajonotSijoittelulle(String hakukohdeOid) {
         List<Valintatapajono> jonot = valintatapajonoDAO.haeValintatapajonotSijoittelulle(hakukohdeOid);
+        jonot = jonot.stream().filter(jono -> jono.getSiirretaanSijoitteluun()).collect(Collectors.toList());
         List<ValintatapajonoDTO> valintatapajonoDTOs = modelMapper.mapList(jonot, ValintatapajonoDTO.class);
         return valintatapajonoDTOs;
     }
@@ -65,6 +66,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
         return hakukohdeOids.stream().collect(Collectors.toMap(h -> h, h -> {
             List<Valintatapajono> valintatapajonot = valintatapajonoDAO.haeValintatapajonotSijoittelulle(h);
             valintatapajonot = LinkitettavaJaKopioitavaUtil.jarjesta(valintatapajonot);
+            valintatapajonot = valintatapajonot.stream().filter(jono -> jono.getSiirretaanSijoitteluun()).collect(Collectors.toList());
             LOG.info("Hakukohde: {} - jonot: {}", h, Arrays.toString(valintatapajonot.toArray()));
             if (valintatapajonot.isEmpty()) {
                 return Lists.newArrayList();

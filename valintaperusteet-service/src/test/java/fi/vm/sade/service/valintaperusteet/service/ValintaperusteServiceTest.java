@@ -45,7 +45,11 @@ public class ValintaperusteServiceTest {
     public void testHaeValintatapajonotSijoittelulle() {
         final String hakukohdeoid = "oid6";
 
-        assertEquals(9, valintaperusteService.haeValintatapajonotSijoittelulle(hakukohdeoid).size());
+        List<ValintatapajonoDTO> jonot = valintaperusteService.haeValintatapajonotSijoittelulle(hakukohdeoid);
+
+        assertEquals(2, jonot.size());
+        assertEquals("12", jonot.get(0).getOid());
+        assertEquals("14", jonot.get(1).getOid());
     }
 
     @Test
@@ -210,13 +214,10 @@ public class ValintaperusteServiceTest {
                 valintaperusteService.haeValintatapajonotSijoittelulle(Arrays.asList("oid6"));
         assertNotNull(valintatapajonotSijoittelulle);
         final List<ValintatapajonoDTO> valintatapajonoDTOs = valintatapajonotSijoittelulle.get("oid6");
-        assertEquals(3, valintatapajonoDTOs.size());
+        assertEquals(2, valintatapajonoDTOs.size());
         assertEquals(0, valintatapajonoDTOs.get(0).getPrioriteetti());
-        assertEquals("6", valintatapajonoDTOs.get(0).getOid());
-        assertEquals(2, valintatapajonoDTOs.get(2).getPrioriteetti());
-        assertEquals("7", valintatapajonoDTOs.get(2).getOid());
-
+        assertEquals("12", valintatapajonoDTOs.get(0).getOid());
         assertEquals(1, valintatapajonoDTOs.get(1).getPrioriteetti());
-        assertEquals("8", valintatapajonoDTOs.get(1).getOid());
+        assertEquals("14", valintatapajonoDTOs.get(1).getOid());
     }
 }

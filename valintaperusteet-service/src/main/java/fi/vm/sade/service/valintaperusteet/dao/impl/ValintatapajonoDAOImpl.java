@@ -6,6 +6,8 @@ import com.mysema.query.types.EntityPath;
 import fi.vm.sade.service.valintaperusteet.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
 import fi.vm.sade.service.valintaperusteet.model.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
@@ -14,6 +16,8 @@ import java.util.stream.Collectors;
 
 @Repository
 public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, Long> implements ValintatapajonoDAO {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ValintatapajonoDAOImpl.class);
 
     protected JPAQuery from(EntityPath<?>... o) {
         return new JPAQuery(getEntityManager()).from(o);
@@ -101,14 +105,30 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
 
     @Override
     public List<Valintatapajono> haeValintatapajonotSijoittelulle(String hakukohdeOid) {
+
         QHakukohdeViite hakukohde = QHakukohdeViite.hakukohdeViite;
         QValinnanVaihe vv = QValinnanVaihe.valinnanVaihe;
         QValintatapajono jono = QValintatapajono.valintatapajono;
-        List<Valintatapajono> jonot = from(hakukohde)
+
+        // Etsitään hakukohteen viimeinen aktiivinen valinnan vaihe
+        ValinnanVaihe lastValinnanVaihe = from(hakukohde)
                 .leftJoin(hakukohde.valinnanvaiheet, vv)
-                .leftJoin(vv.jonot, jono)
+                .where(vv.id.notIn(
+                        subQuery()
+                                .from(vv)
+                                .leftJoin(vv.hakukohdeViite, hakukohde)
+                                .where(vv.edellinenValinnanVaihe.isNotNull().and(hakukohde.oid.eq(hakukohdeOid)).and(vv.aktiivinen.isTrue()))
+                                .list(vv.edellinenValinnanVaihe.id)
+                )
+                .and(hakukohde.oid.eq(hakukohdeOid)).and(vv.aktiivinen.isTrue()))
+                .singleResult(vv);
+
+        // Haetaan löydetyn valinnan vaiheen kaikki jonot
+        List<Valintatapajono> jonot = from(jono)
+                .leftJoin(jono.valinnanVaihe, vv)
                 .leftJoin(jono.varasijanTayttojono).fetch()
-                .where(hakukohde.oid.eq(hakukohdeOid).and(jono.siirretaanSijoitteluun.isTrue()).and(vv.aktiivinen.isTrue())).distinct().list(jono);
+                .where(vv.oid.eq(lastValinnanVaihe.getOid())).distinct().list(jono);
+
         // BUG-255 poistetaan jonoista väärin tallentuneet täyttöjonot
         List<Long> ids = jonot.stream().map(j -> j.getId()).collect(Collectors.toList());
         jonot.forEach(j -> {
@@ -116,6 +136,7 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
                 j.setVarasijanTayttojono(null);
             }
         });
+
         return jonot;
     }
 

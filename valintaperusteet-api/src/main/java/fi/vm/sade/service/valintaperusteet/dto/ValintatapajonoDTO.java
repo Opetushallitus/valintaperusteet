@@ -37,4 +37,14 @@ public class ValintatapajonoDTO extends ValintatapajonoCreateDTO implements Prio
     public int getPrioriteetti() {
         return prioriteetti;
     }
+
+    @Override
+    public String toString() {
+        return "ValintatapajonoDTO{" +
+                "oid='" + oid + '\'' +
+                ", inheritance=" + inheritance +
+                ", prioriteetti=" + prioriteetti +
+                super.toString() +
+                '}';
+    }
 }

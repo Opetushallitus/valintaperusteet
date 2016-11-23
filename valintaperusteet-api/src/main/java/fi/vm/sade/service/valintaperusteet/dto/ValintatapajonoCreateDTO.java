@@ -206,4 +206,28 @@ public class ValintatapajonoCreateDTO {
     public void setPoistetaankoHylatyt(Boolean poistetaankoHylatyt) {
         this.poistetaankoHylatyt = poistetaankoHylatyt;
     }
+
+    @Override
+    public String toString() {
+        return "ValintatapajonoCreateDTO{" +
+                "aloituspaikat=" + aloituspaikat +
+                ", nimi='" + nimi + '\'' +
+                ", kuvaus='" + kuvaus + '\'' +
+                ", siirretaanSijoitteluun=" + siirretaanSijoitteluun +
+                ", tasapistesaanto=" + tasapistesaanto +
+                ", aktiivinen=" + aktiivinen +
+                ", valisijoittelu=" + valisijoittelu +
+                ", automaattinenLaskentaanSiirto=" + automaattinenLaskentaanSiirto +
+                ", eiVarasijatayttoa=" + eiVarasijatayttoa +
+                ", kaikkiEhdonTayttavatHyvaksytaan=" + kaikkiEhdonTayttavatHyvaksytaan +
+                ", varasijat=" + varasijat +
+                ", varasijaTayttoPaivat=" + varasijaTayttoPaivat +
+                ", poissaOlevaTaytto=" + poissaOlevaTaytto +
+                ", poistetaankoHylatyt=" + poistetaankoHylatyt +
+                ", varasijojaKaytetaanAlkaen=" + varasijojaKaytetaanAlkaen +
+                ", varasijojaTaytetaanAsti=" + varasijojaTaytetaanAsti +
+                ", kaytetaanValintalaskentaa=" + kaytetaanValintalaskentaa +
+                ", tayttojono='" + tayttojono + '\'' +
+                '}';
+    }
 }
