@@ -6,11 +6,13 @@ import com.mysema.query.types.EntityPath;
 import fi.vm.sade.service.valintaperusteet.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
 import fi.vm.sade.service.valintaperusteet.model.*;
+import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -111,17 +113,22 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
         QValintatapajono jono = QValintatapajono.valintatapajono;
 
         // Etsitään hakukohteen viimeinen aktiivinen valinnan vaihe
-        ValinnanVaihe lastValinnanVaihe = from(hakukohde)
+        List<ValinnanVaihe> valinnanVaiheet = from(hakukohde)
                 .leftJoin(hakukohde.valinnanvaiheet, vv)
-                .where(vv.id.notIn(
-                        subQuery()
-                                .from(vv)
-                                .leftJoin(vv.hakukohdeViite, hakukohde)
-                                .where(vv.edellinenValinnanVaihe.isNotNull().and(hakukohde.oid.eq(hakukohdeOid)).and(vv.aktiivinen.isTrue()))
-                                .list(vv.edellinenValinnanVaihe.id)
-                )
-                .and(hakukohde.oid.eq(hakukohdeOid)).and(vv.aktiivinen.isTrue()))
-                .singleResult(vv);
+                .where((hakukohde.oid.eq(hakukohdeOid)))
+                .list(vv);
+
+        if(valinnanVaiheet == null || valinnanVaiheet.isEmpty()) return Collections.emptyList();
+
+        LinkitettavaJaKopioitavaUtil.jarjesta(valinnanVaiheet);
+
+        List<ValinnanVaihe> aktiivisetValinnanVaiheet = valinnanVaiheet.stream()
+                .filter(vaihe -> vaihe.getAktiivinen())
+                .collect(Collectors.toList());
+
+        if(aktiivisetValinnanVaiheet == null || aktiivisetValinnanVaiheet.isEmpty()) return Collections.emptyList();
+
+        ValinnanVaihe lastValinnanVaihe = aktiivisetValinnanVaiheet.get(aktiivisetValinnanVaiheet.size() - 1);
 
         // Haetaan löydetyn valinnan vaiheen kaikki jonot
         List<Valintatapajono> jonot = from(jono)
