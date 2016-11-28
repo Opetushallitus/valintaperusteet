@@ -1,13 +1,15 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
+import fi.vm.sade.service.valintaperusteet.dao.LaskentakaavaDAO;
+import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
+import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import org.junit.Test;
@@ -22,11 +24,10 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-/**
- * Created with IntelliJ IDEA. User: jukais Date: 16.1.2013 Time: 14.16 To
- * change this template use File | Settings | File Templates.
- */
+import static org.junit.Assert.*;
+
 @ContextConfiguration(locations = "classpath:test-context.xml")
 @TestExecutionListeners(listeners = { ValinnatJTACleanInsertTestExecutionListener.class,
         DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class })
@@ -104,14 +105,22 @@ public class ValintaryhmaPerintaJaKopiointiTest {
         assertEquals(paivitetty.getVarasijanTayttojono().getOid(), "4");
 
         Valintaryhma valintaryhma = valintaryhmaService.copyAsChild("oid2", "oid1", "Jeppis");
+        assertNotEquals("oid2", valintaryhma.getOid());
+        assertEquals("Jeppis", valintaryhma.getNimi());
+        assertEquals("oid1", valintaryhma.getYlavalintaryhma().getOid());
         valintaryhma.getValinnanvaiheet().stream().forEach(v -> {
-            assertEquals(v.getJonot().size(), 3);
+            assertEquals(3, v.getJonot().size());
+            assertEquals(Sets.newHashSet("Kolmas jono", "Täyttöjono", "Jono 2"), v.getJonot().stream().map(j -> j.getNimi()).collect(Collectors.toSet()));
             v.getJonot().forEach(j -> {
                 assertNull(j.getVarasijanTayttojono());
+                if(j.getNimi().equals("Jono 2")) {
+                    assertEquals(1, j.getJarjestyskriteerit().size());
+                    Laskentakaava kaava = j.getJarjestyskriteerit().iterator().next().getLaskentakaava();
+                    assertEquals("Ammatillinen koulutus, lisäpiste", kaava.getNimi());
+                    assertEquals(1L, kaava.getId().longValue());
+                }
             });
         });
-
-
     }
 
 }
