@@ -48,12 +48,10 @@ public class ValintaryhmaPerintaJaKopiointiTest {
     private ValintaperusteService valintaperusteService;
 
     @Test
-    public void testTayttojonoPerintaJaMappays() {
-
-        // Testataan että masterin päivitys onnistuu
-        Valintatapajono paivitettava = valintatapajonoService.readByOid("2");
+    public void testMasterTayttojononMuutos() {
+        final Valintatapajono paivitettava = valintatapajonoService.readByOid("2");
         final Valintatapajono tayttojono = valintatapajonoService.readByOid("4");
-        final Valintatapajono tayttojono2 = valintatapajonoService.readByOid("6");
+
         paivitettava.setVarasijanTayttojono(tayttojono);
         final ValintatapajonoCreateDTO mapped = modelMapper.map(paivitettava, ValintatapajonoCreateDTO.class);
         valintatapajonoService.update("2", mapped);
@@ -61,6 +59,7 @@ public class ValintaryhmaPerintaJaKopiointiTest {
         Valintatapajono paivitetty = valintatapajonoService.readByOid("2");
         assertEquals(paivitetty.getVarasijanTayttojono().getOid(), "4");
 
+        final Valintatapajono tayttojono2 = valintatapajonoService.readByOid("6");
         paivitettava.setVarasijanTayttojono(tayttojono2);
         final ValintatapajonoCreateDTO mapped2 = modelMapper.map(paivitettava, ValintatapajonoCreateDTO.class);
         valintatapajonoService.update("2", mapped2);
@@ -74,9 +73,13 @@ public class ValintaryhmaPerintaJaKopiointiTest {
 
         paivitetty = valintatapajonoService.readByOid("2");
         assertNull(paivitetty.getVarasijanTayttojono());
+    }
 
+    @Test
+    public void testPeritynTayttojononMuutos() {
         // Testataan, että modelMapping ei hajoa vaikka data on kuraa
         final Valintatapajono peritty = valintatapajonoService.readByOid("3");
+        final Valintatapajono tayttojono = valintatapajonoService.readByOid("4");
         peritty.setVarasijanTayttojono(tayttojono);
         final ValintatapajonoCreateDTO mapped4 = modelMapper.map(peritty, ValintatapajonoCreateDTO.class);
         valintatapajonoService.update("3", mapped4);
@@ -95,13 +98,17 @@ public class ValintaryhmaPerintaJaKopiointiTest {
 
         jono3 = oid2.get("oid2").stream().filter(j -> j.getOid().equals("3")).findFirst().get();
         assertEquals(jono3.getTayttojono(), "7");
+    }
 
-        // Testataan kopiointi
+    @Test
+    public void testValintaryhmanKopiointi() {
+        final Valintatapajono paivitettava = valintatapajonoService.readByOid("2");
+        final Valintatapajono tayttojono = valintatapajonoService.readByOid("4");
         paivitettava.setVarasijanTayttojono(tayttojono);
         final ValintatapajonoCreateDTO mapped6 = modelMapper.map(paivitettava, ValintatapajonoCreateDTO.class);
         valintatapajonoService.update("2", mapped6);
 
-        paivitetty = valintatapajonoService.readByOid("2");
+        Valintatapajono paivitetty = valintatapajonoService.readByOid("2");
         assertEquals(paivitetty.getVarasijanTayttojono().getOid(), "4");
 
         Valintaryhma valintaryhma = valintaryhmaService.copyAsChild("oid2", "oid1", "Jeppis");
