@@ -39,6 +39,9 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
     private LaskentakaavaDAO laskentakaavaDAO;
 
     @Autowired
+    private LaskentakaavaService laskentakaavaService;
+
+    @Autowired
     private OidService oidService;
 
     @Autowired
@@ -155,11 +158,18 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
         Valintaryhma inserted = valintaryhmaDAO.insert(copy);
         valinnanVaiheService.kopioiValinnanVaiheetParentilta(inserted, parent);
         hakijaryhmaService.kopioiHakijaryhmatMasterValintaryhmalta(parent.getOid(), inserted.getOid());
+        copyLaskentakaavat(source, inserted);
         copyHakukohdekoodit(source, inserted);
         copyValintakoekoodit(source, inserted);
         List<Valintaryhma> children = valintaryhmaDAO.findChildrenByParentOid(source.getOid());
         children.stream().forEach((child -> copyAsChild(child, inserted, child.getNimi())));
         return inserted;
+    }
+
+    private void copyLaskentakaavat(Valintaryhma source, Valintaryhma target) {
+        source.getLaskentakaava().stream().forEach( sourceKaava -> {
+            target.getLaskentakaava().add(laskentakaavaService.kopioi(sourceKaava, sourceKaava.getHakukohde(), target));
+        });
     }
 
     private void copyHakukohdekoodit(Valintaryhma source, Valintaryhma target) {

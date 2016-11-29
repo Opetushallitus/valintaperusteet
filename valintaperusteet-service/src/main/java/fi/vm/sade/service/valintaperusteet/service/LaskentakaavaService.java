@@ -6,6 +6,7 @@ import java.util.Optional;
 import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
 import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
+import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuMuodostaaSilmukanException;
@@ -38,6 +39,8 @@ public interface LaskentakaavaService {
     void tyhjennaCache();
 
     Optional<Laskentakaava> siirra(LaskentakaavaSiirraDTO dto);
+
+    Laskentakaava kopioi(Laskentakaava lahdeLaskentakaava, HakukohdeViite kohdeHakukohde, Valintaryhma kohdeValintaryhma);
 
     Optional<Valintaryhma> valintaryhma(long id);
 

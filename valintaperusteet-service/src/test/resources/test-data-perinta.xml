@@ -52,10 +52,10 @@
 
     <valintaryhma id="2" version="0" oid="oid2" nimi="Valintaryhma 2" parent_id="[NULL]" />
 
-    <funktiokutsu id="1" version="0" funktionimi="SUMMA" tallenna_tulos="false"/>
-    <laskentakaava id="1" version="0" valintaryhmaviite="1" on_luonnos="false" nimi="Ammatillinen koulutus, lisäpiste" tyyppi="LUKUARVOFUNKTIO" funktiokutsu_id="1" />
+    <funktiokutsu id="2" version="0" funktionimi="SUMMA" tallenna_tulos="false"/>
+    <laskentakaava id="2" version="0" valintaryhmaviite="2" funktiokutsu_id="2" on_luonnos="false" nimi="Ammatillinen koulutus, lisäpiste" tyyppi="LUKUARVOFUNKTIO" />
     <funktioargumentti/>
-    <jarjestyskriteeri id="1" version="0" oid="jarjestyskriteeriOid1" aktiivinen="true" valintatapajono_id="2" laskentakaava_id="1"/>
+    <jarjestyskriteeri id="2" version="0" oid="jarjestyskriteeriOid1" aktiivinen="true" valintatapajono_id="2" laskentakaava_id="2"/>
 
     <hakijaryhma />
     <hakijaryhmatyyppikoodi />

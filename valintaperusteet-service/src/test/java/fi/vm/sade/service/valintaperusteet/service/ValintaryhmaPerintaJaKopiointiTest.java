@@ -24,6 +24,7 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
@@ -111,10 +112,16 @@ public class ValintaryhmaPerintaJaKopiointiTest {
         Valintatapajono paivitetty = valintatapajonoService.readByOid("2");
         assertEquals(paivitetty.getVarasijanTayttojono().getOid(), "4");
 
-        Valintaryhma valintaryhma = valintaryhmaService.copyAsChild("oid2", "oid1", "Jeppis");
+        Valintaryhma valintaryhma = valintaryhmaService.copyAsChild("oid2", "oid1", "oid2 kopio");
         assertNotEquals("oid2", valintaryhma.getOid());
-        assertEquals("Jeppis", valintaryhma.getNimi());
+        assertEquals("oid2 kopio", valintaryhma.getNimi());
         assertEquals("oid1", valintaryhma.getYlavalintaryhma().getOid());
+        Set<Laskentakaava> laskentakaavat = valintaryhma.getLaskentakaava();
+        assertEquals(1L, laskentakaavat.size());
+
+        Laskentakaava laskentakaava = laskentakaavat.iterator().next();
+        assertEquals("Ammatillinen koulutus, lisäpiste", laskentakaava.getNimi());
+        assertNotEquals(2L, laskentakaava.getId().longValue());
         valintaryhma.getValinnanvaiheet().stream().forEach(v -> {
             assertEquals(3, v.getJonot().size());
             assertEquals(Sets.newHashSet("Kolmas jono", "Täyttöjono", "Jono 2"), v.getJonot().stream().map(j -> j.getNimi()).collect(Collectors.toSet()));
@@ -124,7 +131,7 @@ public class ValintaryhmaPerintaJaKopiointiTest {
                     assertEquals(1, j.getJarjestyskriteerit().size());
                     Laskentakaava kaava = j.getJarjestyskriteerit().iterator().next().getLaskentakaava();
                     assertEquals("Ammatillinen koulutus, lisäpiste", kaava.getNimi());
-                    assertEquals(1L, kaava.getId().longValue());
+                    assertEquals(2L, kaava.getId().longValue());
                 }
             });
         });
