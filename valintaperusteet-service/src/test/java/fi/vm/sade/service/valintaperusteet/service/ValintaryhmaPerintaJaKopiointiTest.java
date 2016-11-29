@@ -131,7 +131,7 @@ public class ValintaryhmaPerintaJaKopiointiTest {
                     assertEquals(1, j.getJarjestyskriteerit().size());
                     Laskentakaava kaava = j.getJarjestyskriteerit().iterator().next().getLaskentakaava();
                     assertEquals("Ammatillinen koulutus, lisäpiste", kaava.getNimi());
-                    assertEquals(2L, kaava.getId().longValue());
+                    assertNotEquals(2L, laskentakaava.getId().longValue());
                 }
             });
         });

@@ -5,7 +5,11 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import fi.vm.sade.service.valintaperusteet.dto.FunktiokutsuDTO;
+import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaSiirraDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
+import fi.vm.sade.service.valintaperusteet.model.*;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,11 +20,6 @@ import fi.vm.sade.service.valintaperusteet.dao.LaskentakaavaDAO;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi;
 import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
-import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti;
-import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
-import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
-import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
-import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import fi.vm.sade.service.valintaperusteet.service.JarjestyskriteeriService;
 import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
 import fi.vm.sade.service.valintaperusteet.service.OidService;
@@ -145,7 +144,7 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
 
     private void lisaaValintatapajonolleKopioMasterJarjestyskriteerista(Valintatapajono valintatapajono,
                                                                         Jarjestyskriteeri masterJarjestyskriteeri, Jarjestyskriteeri edellinenMasterJarjestyskriteeri) {
-        Jarjestyskriteeri kopio = teeKopioMasterista(masterJarjestyskriteeri);
+        Jarjestyskriteeri kopio = teeKopioMasterista(valintatapajono, masterJarjestyskriteeri, false);
         kopio.setValintatapajono(valintatapajono);
         kopio.setOid(oidService.haeJarjestyskriteeriOid());
         List<Jarjestyskriteeri> jonot = LinkitettavaJaKopioitavaUtil.jarjesta(jarjestyskriteeriDAO.findByJono(valintatapajono.getOid()));
@@ -158,10 +157,15 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
         }
     }
 
-    private Jarjestyskriteeri teeKopioMasterista(Jarjestyskriteeri master) {
+    private Jarjestyskriteeri teeKopioMasterista(Valintatapajono jono, Jarjestyskriteeri master, boolean kopioiLaskentakaava) {
         Jarjestyskriteeri kopio = new Jarjestyskriteeri();
         kopio.setAktiivinen(master.getAktiivinen());
-        kopio.setLaskentakaava(master.getLaskentakaava());
+        if(kopioiLaskentakaava) {
+            Laskentakaava kopioituKaava = laskentakaavaService.kopioi(master.getLaskentakaava(), jono.getValinnanVaihe().getHakukohdeViite(), jono.getValinnanVaihe().getValintaryhma());
+            kopio.setLaskentakaava(kopioituKaava);
+        } else {
+            kopio.setLaskentakaava(master.getLaskentakaava());
+        }
         kopio.setMetatiedot(master.getMetatiedot());
         kopio.setMaster(master);
         return kopio;
@@ -256,7 +260,7 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
         if (master == null) {
             return null;
         }
-        Jarjestyskriteeri kopio = teeKopioMasterista(master);
+        Jarjestyskriteeri kopio = teeKopioMasterista(valintatapajono, master, true);
         kopio.setOid(oidService.haeJarjestyskriteeriOid());
         valintatapajono.addJarjestyskriteeri(kopio);
         Jarjestyskriteeri edellinen = kopioiJarjestyskriteeritRekursiivisesti(valintatapajono, master.getEdellinen());
