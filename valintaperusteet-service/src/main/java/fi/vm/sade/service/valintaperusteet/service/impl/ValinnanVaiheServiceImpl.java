@@ -314,6 +314,7 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
         }
         ValinnanVaihe kopio = ValinnanVaiheUtil.teeKopioMasterista(master);
         kopio.setOid(oidService.haeValinnanVaiheOid());
+        kopio.setValintaryhma(valintaryhma);
         valintaryhma.addValinnanVaihe(kopio);
         ValinnanVaihe edellinen = kopioiValinnanVaiheetRekursiivisesti(valintaryhma,
                 master.getEdellinenValinnanVaihe());

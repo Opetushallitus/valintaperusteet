@@ -40,6 +40,8 @@ public interface LaskentakaavaService {
 
     Optional<Laskentakaava> siirra(LaskentakaavaSiirraDTO dto);
 
+    Optional<Laskentakaava> haeLaskentakaavaPuusta(Long laskentakaavaId, HakukohdeViite hakukohde, Valintaryhma valintaryhma);
+
     Laskentakaava kopioi(Laskentakaava lahdeLaskentakaava, HakukohdeViite kohdeHakukohde, Valintaryhma kohdeValintaryhma);
 
     Optional<Valintaryhma> valintaryhma(long id);

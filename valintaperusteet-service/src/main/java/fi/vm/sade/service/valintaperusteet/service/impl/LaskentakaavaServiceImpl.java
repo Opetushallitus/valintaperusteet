@@ -14,16 +14,13 @@ import fi.vm.sade.service.valintaperusteet.dao.*;
 import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.dto.model.*;
-import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakukohde;
 import fi.vm.sade.service.valintaperusteet.model.*;
-import fi.vm.sade.service.valintaperusteet.service.HakukohdeService;
 import fi.vm.sade.service.valintaperusteet.service.impl.actors.ActorService;
 import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.UusiHakukohteenValintaperusteRekursio;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,9 +40,6 @@ import fi.vm.sade.service.valintaperusteet.service.impl.util.LaskentakaavaCache;
 import scala.concurrent.Await;
 import scala.concurrent.Future;
 import scala.concurrent.duration.Duration;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 
 @Service
 @Transactional
@@ -77,9 +71,6 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
 
     @Autowired
     private LaskentakaavaCache laskentakaavaCache;
-
-    @Autowired
-    private HakukohdeService hakukohdeService;
 
     @Autowired
     private JarjestyskriteeriDAO jarjestyskriteeriDAO;
@@ -267,13 +258,15 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
                 Set<Long> newLaskentakaavaIds = new HashSet<Long>(laskentakaavaIds);
                 newLaskentakaavaIds.add(laskentakaavaId);
                 final Laskentakaava oldLaskentakaava = haeKokoLaskentakaavaJaTarkistaSilmukat(laskentakaavaId, newLaskentakaavaIds);
-                final Laskentakaava newLaskentakaava;
-                if(!hasLaskentakaava(laskentakaavaId, hakukohde, valintaryhma)) {
-                    newLaskentakaava = kopioi(oldLaskentakaava, hakukohde, valintaryhma);
+                if (hakukohde == null && valintaryhma == null) {
+                    newArg.setLaskentakaavaChild(oldLaskentakaava);
                 } else {
-                    newLaskentakaava = oldLaskentakaava;
+                    Optional<Laskentakaava> newLaskentakaava = haeLaskentakaavaPuusta(laskentakaavaId, hakukohde, valintaryhma);
+                    if(!newLaskentakaava.isPresent()) {
+                        newLaskentakaava = Optional.of(kopioi(oldLaskentakaava, hakukohde, valintaryhma));
+                    }
+                    newArg.setLaskentakaavaChild(newLaskentakaava.get());
                 }
-                newArg.setLaskentakaavaChild(newLaskentakaava);
             }
             newArg.setIndeksi(arg.getIndeksi());
             managed.getFunktioargumentit().add(newArg);
@@ -440,11 +433,12 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
         return Optional.ofNullable(insert(modelMapper.map(dto, Laskentakaava.class), hakukohdeOid, valintaryhmaOid));
     }
 
-    private boolean hasLaskentakaava(Long laskentakaavaId, HakukohdeViite hakukohde, Valintaryhma valintaryhma) {
-        return hasLaskentakaava(laskentakaavaId, hakukohde, valintaryhma, new HashSet<>());
+    @Override
+    public Optional<Laskentakaava> haeLaskentakaavaPuusta(Long laskentakaavaId, HakukohdeViite hakukohde, Valintaryhma valintaryhma) {
+        return haeLaskentakaavaPuusta(laskentakaavaId, hakukohde, valintaryhma, new HashSet<>());
     }
 
-    private boolean hasLaskentakaava(Long laskentakaavaId, HakukohdeViite hakukohde, Valintaryhma valintaryhma, Set<Long> checkedLaskentaKaavaIds) {
+    private Optional<Laskentakaava> haeLaskentakaavaPuusta(Long laskentakaavaId, HakukohdeViite hakukohde, Valintaryhma valintaryhma, Set<Long> checkedLaskentaKaavaIds) {
         Set<Laskentakaava> parentLaskentakaavat = new HashSet<>();
         if(hakukohde != null) {
             parentLaskentakaavat.addAll(hakukohde.getLaskentakaava());
@@ -453,26 +447,47 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             parentLaskentakaavat.addAll(valintaryhma.getLaskentakaava());
         }
         for(Laskentakaava parentKaava: parentLaskentakaavat) {
-            if(laskentakaavaId.equals(parentKaava.getId())) {
-                return true;
+            if(laskentakaavaId.equals(parentKaava.getId()) ||
+              (parentKaava.getKopioLaskentakaavasta() != null && laskentakaavaId.equals(parentKaava.getKopioLaskentakaavasta().getId()))) {
+                return Optional.of(parentKaava);
             }
             if(checkedLaskentaKaavaIds.contains(parentKaava.getId())) {
                 continue;
             }
             checkedLaskentaKaavaIds.add(parentKaava.getId());
-            if(hasLaskentakaava(laskentakaavaId, parentKaava.getHakukohde(), parentKaava.getValintaryhma(), checkedLaskentaKaavaIds)) {
-                return true;
+            final Optional<Laskentakaava> grandParentKaava;
+            if(hakukohde != null && hakukohde.getValintaryhma() != null) {
+                grandParentKaava = haeLaskentakaavaPuusta(laskentakaavaId, null, hakukohde.getValintaryhma(), checkedLaskentaKaavaIds);
+            }
+            else if(valintaryhma != null && valintaryhma.getYlavalintaryhma() != null) {
+                grandParentKaava = haeLaskentakaavaPuusta(laskentakaavaId, null, valintaryhma.getYlavalintaryhma(), checkedLaskentaKaavaIds);
+            } else {
+                grandParentKaava = Optional.empty();
+            }
+            if(grandParentKaava.isPresent()) {
+                return grandParentKaava;
             }
         }
-        return false;
+        return Optional.empty();
     }
 
     @Override
     public Laskentakaava kopioi(Laskentakaava lahdeLaskentakaava, HakukohdeViite kohdeHakukohde, Valintaryhma kohdeValintaryhma) {
         LOGGER.info("Kopioidaan laskentakaava {}: kohde hakukohde={}, kohde valintaryhma={}", lahdeLaskentakaava, kohdeHakukohde, kohdeValintaryhma);
         Laskentakaava copy = new Laskentakaava();
+        copy.setKopioLaskentakaavasta(lahdeLaskentakaava);
         copy.setHakukohde(kohdeHakukohde);
         copy.setValintaryhma(kohdeValintaryhma);
+        copy.setKuvaus(lahdeLaskentakaava.getKuvaus());
+        copy.setTyyppi(lahdeLaskentakaava.getTyyppi());
+        copy.setNimi(lahdeLaskentakaava.getNimi());
+        copy.setOnLuonnos(lahdeLaskentakaava.getOnLuonnos());
+        if(kohdeValintaryhma != null) {
+            kohdeValintaryhma.getLaskentakaava().add(copy);
+        }
+        if(kohdeHakukohde != null) {
+            kohdeHakukohde.getLaskentakaava().add(copy);
+        }
         try {
             copy.setFunktiokutsu(updateFunktiokutsu(lahdeLaskentakaava.getFunktiokutsu(), true, kohdeHakukohde, kohdeValintaryhma));
         } catch (FunktiokutsuMuodostaaSilmukanException e) {
@@ -481,12 +496,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
                     + (e.getFunktiokutsuId() != null ? e.getFunktiokutsuId() : e.getFunktionimi()) + " kautta", e,
                     null, e.getFunktiokutsuId(), e.getLaskentakaavaId());
         }
-        copy.setKuvaus(lahdeLaskentakaava.getKuvaus());
-        copy.setTyyppi(lahdeLaskentakaava.getTyyppi());
-        copy.setNimi(lahdeLaskentakaava.getNimi());
-        copy.setOnLuonnos(lahdeLaskentakaava.getOnLuonnos());
         Laskentakaava inserted = laskentakaavaDAO.insert(copy);
-        kohdeValintaryhma.getLaskentakaava().add(inserted);
         return inserted;
     }
 

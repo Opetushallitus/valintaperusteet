@@ -106,7 +106,7 @@ public class ValintaryhmaPerintaJaKopiointiTest {
         assertEquals("oid1", valintaryhma.getYlavalintaryhma().getOid());
 
         Set<Laskentakaava> laskentakaavat = valintaryhma.getLaskentakaava();
-        assertEquals(2L, laskentakaavat.size());
+        assertEquals(1L, laskentakaavat.size());
         Laskentakaava laskentakaava = laskentakaavat.iterator().next();
         assertEquals("Ammatillinen koulutus, lisäpiste", laskentakaava.getNimi());
         assertNotEquals(2L, laskentakaava.getId().longValue());
@@ -120,10 +120,20 @@ public class ValintaryhmaPerintaJaKopiointiTest {
                     Laskentakaava kaava = j.getJarjestyskriteerit().iterator().next().getLaskentakaava();
                     assertEquals("Ammatillinen koulutus, lisäpiste", kaava.getNimi());
                     assertNotEquals(2L, kaava.getId().longValue());
-                    assertNotEquals(laskentakaava.getId(), kaava.getId());
+                    assertEquals(laskentakaava.getId(), kaava.getId());
                 }
             });
         });
+
+        assertEquals(1, valintaryhma.getAlavalintaryhmat().size());
+        Valintaryhma kopioituAlivalintaryhma = valintaryhma.getAlavalintaryhmat().iterator().next();
+        assertEquals("Valintaryhma 3", kopioituAlivalintaryhma.getNimi());
+        assertNotEquals("oid3 3", kopioituAlivalintaryhma.getOid());
+
+        Set<Laskentakaava> aliLaskentakaavat = kopioituAlivalintaryhma.getLaskentakaava();
+        assertEquals(1L, aliLaskentakaavat.size());
+        assertEquals("Ammatillinen koulutus, lisäpiste2", aliLaskentakaavat.iterator().next().getNimi());
+        assertNotEquals(3L, aliLaskentakaavat.iterator().next().getId().longValue());
     }
 
     @Test
@@ -134,7 +144,7 @@ public class ValintaryhmaPerintaJaKopiointiTest {
         assertEquals("oid1", valintaryhma.getYlavalintaryhma().getOid());
 
         Set<Laskentakaava> laskentakaavat = valintaryhma.getLaskentakaava();
-        assertEquals(3L, laskentakaavat.size());
+        assertEquals(2L, laskentakaavat.size());
         valintaryhma.getValinnanvaiheet().stream().forEach(v -> {
             assertEquals(3, v.getJonot().size());
             assertEquals(Sets.newHashSet("Kolmas jono", "Täyttöjono", "Jono 2"), v.getJonot().stream().map(j -> j.getNimi()).collect(Collectors.toSet()));

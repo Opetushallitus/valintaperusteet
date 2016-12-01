@@ -162,13 +162,16 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
         copyHakukohdekoodit(source, inserted);
         copyValintakoekoodit(source, inserted);
         List<Valintaryhma> children = valintaryhmaDAO.findChildrenByParentOid(source.getOid());
-        children.stream().forEach((child -> copyAsChild(child, inserted, child.getNimi())));
+        children.stream().forEach((child -> {
+            Valintaryhma copiedChild = copyAsChild(child, inserted, child.getNimi());
+            copy.getAlavalintaryhmat().add(copiedChild);
+        }));
         return inserted;
     }
 
     private void copyLaskentakaavat(Valintaryhma source, Valintaryhma target) {
         source.getLaskentakaava().stream().forEach( sourceKaava -> {
-            target.getLaskentakaava().add(laskentakaavaService.kopioi(sourceKaava, sourceKaava.getHakukohde(), target));
+            laskentakaavaService.kopioi(sourceKaava, sourceKaava.getHakukohde(), target);
         });
     }
 

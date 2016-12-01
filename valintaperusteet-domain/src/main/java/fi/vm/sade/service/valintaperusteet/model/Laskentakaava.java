@@ -32,6 +32,10 @@ public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
     @Column(name = "kuvaus")
     private String kuvaus;
 
+    @JoinColumn(name = "kopio_laskentakaavasta_id", nullable = true, unique = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Laskentakaava kopioLaskentakaavasta;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "valintaryhmaviite", nullable = true, unique = false)
     private Valintaryhma valintaryhma;
@@ -141,5 +145,13 @@ public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
                 }
             }
         }
+    }
+
+    public Laskentakaava getKopioLaskentakaavasta() {
+        return kopioLaskentakaavasta;
+    }
+
+    public void setKopioLaskentakaavasta(Laskentakaava kopioLaskentakaavasta) {
+        this.kopioLaskentakaavasta = kopioLaskentakaavasta;
     }
 }

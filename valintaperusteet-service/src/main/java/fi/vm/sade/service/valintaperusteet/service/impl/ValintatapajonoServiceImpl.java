@@ -263,6 +263,7 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
         }
         Valintatapajono kopio = ValintatapajonoUtil.teeKopioMasterista(master);
         kopio.setOid(oidService.haeValintatapajonoOid());
+        kopio.setValinnanVaihe(valinnanVaihe);
         valinnanVaihe.addJono(kopio);
         Valintatapajono edellinen = kopioiValintatapajonotRekursiivisesti(valinnanVaihe, master.getEdellinenValintatapajono());
         if (edellinen != null) {
