@@ -14,7 +14,9 @@ import fi.vm.sade.service.valintaperusteet.dao.*;
 import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.dto.model.*;
+import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakukohde;
 import fi.vm.sade.service.valintaperusteet.model.*;
+import fi.vm.sade.service.valintaperusteet.service.HakukohdeService;
 import fi.vm.sade.service.valintaperusteet.service.impl.actors.ActorService;
 import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.UusiHakukohteenValintaperusteRekursio;
 import org.apache.commons.lang.StringUtils;
@@ -77,7 +79,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     private LaskentakaavaCache laskentakaavaCache;
 
     @Autowired
-    private ApplicationContext applicationContext;
+    private HakukohdeService hakukohdeService;
 
     @Autowired
     private JarjestyskriteeriDAO jarjestyskriteeriDAO;
@@ -266,7 +268,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
                 newLaskentakaavaIds.add(laskentakaavaId);
                 final Laskentakaava oldLaskentakaava = haeKokoLaskentakaavaJaTarkistaSilmukat(laskentakaavaId, newLaskentakaavaIds);
                 final Laskentakaava newLaskentakaava;
-                if(copy) {
+                if(!hasLaskentakaava(laskentakaavaId, hakukohde, valintaryhma)) {
                     newLaskentakaava = kopioi(oldLaskentakaava, hakukohde, valintaryhma);
                 } else {
                     newLaskentakaava = oldLaskentakaava;
@@ -438,6 +440,33 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
         return Optional.ofNullable(insert(modelMapper.map(dto, Laskentakaava.class), hakukohdeOid, valintaryhmaOid));
     }
 
+    private boolean hasLaskentakaava(Long laskentakaavaId, HakukohdeViite hakukohde, Valintaryhma valintaryhma) {
+        return hasLaskentakaava(laskentakaavaId, hakukohde, valintaryhma, new HashSet<>());
+    }
+
+    private boolean hasLaskentakaava(Long laskentakaavaId, HakukohdeViite hakukohde, Valintaryhma valintaryhma, Set<Long> checkedLaskentaKaavaIds) {
+        Set<Laskentakaava> parentLaskentakaavat = new HashSet<>();
+        if(hakukohde != null) {
+            parentLaskentakaavat.addAll(hakukohde.getLaskentakaava());
+        }
+        if(valintaryhma != null) {
+            parentLaskentakaavat.addAll(valintaryhma.getLaskentakaava());
+        }
+        for(Laskentakaava parentKaava: parentLaskentakaavat) {
+            if(laskentakaavaId.equals(parentKaava.getId())) {
+                return true;
+            }
+            if(checkedLaskentaKaavaIds.contains(parentKaava.getId())) {
+                continue;
+            }
+            checkedLaskentaKaavaIds.add(parentKaava.getId());
+            if(hasLaskentakaava(laskentakaavaId, parentKaava.getHakukohde(), parentKaava.getValintaryhma(), checkedLaskentaKaavaIds)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public Laskentakaava kopioi(Laskentakaava lahdeLaskentakaava, HakukohdeViite kohdeHakukohde, Valintaryhma kohdeValintaryhma) {
         LOGGER.info("Kopioidaan laskentakaava {}: kohde hakukohde={}, kohde valintaryhma={}", lahdeLaskentakaava, kohdeHakukohde, kohdeValintaryhma);
@@ -456,7 +485,9 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
         copy.setTyyppi(lahdeLaskentakaava.getTyyppi());
         copy.setNimi(lahdeLaskentakaava.getNimi());
         copy.setOnLuonnos(lahdeLaskentakaava.getOnLuonnos());
-        return laskentakaavaDAO.insert(copy);
+        Laskentakaava inserted = laskentakaavaDAO.insert(copy);
+        kohdeValintaryhma.getLaskentakaava().add(inserted);
+        return inserted;
     }
 
     @Override

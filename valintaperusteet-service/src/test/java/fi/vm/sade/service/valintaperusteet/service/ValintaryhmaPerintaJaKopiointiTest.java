@@ -1,10 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
-import fi.vm.sade.service.valintaperusteet.dao.LaskentakaavaDAO;
-import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
@@ -102,14 +99,14 @@ public class ValintaryhmaPerintaJaKopiointiTest {
     }
 
     @Test
-    public void testValintaryhmanKopiointi() {
+    public void testKokoValintaryhmaPuunKopiointiToisenPuunAlle() {
         Valintaryhma valintaryhma = valintaryhmaService.copyAsChild("oid2", "oid1", "oid2 kopio");
         assertNotEquals("oid2", valintaryhma.getOid());
         assertEquals("oid2 kopio", valintaryhma.getNimi());
         assertEquals("oid1", valintaryhma.getYlavalintaryhma().getOid());
-        Set<Laskentakaava> laskentakaavat = valintaryhma.getLaskentakaava();
-        assertEquals(1L, laskentakaavat.size());
 
+        Set<Laskentakaava> laskentakaavat = valintaryhma.getLaskentakaava();
+        assertEquals(2L, laskentakaavat.size());
         Laskentakaava laskentakaava = laskentakaavat.iterator().next();
         assertEquals("Ammatillinen koulutus, lisäpiste", laskentakaava.getNimi());
         assertNotEquals(2L, laskentakaava.getId().longValue());
@@ -122,7 +119,32 @@ public class ValintaryhmaPerintaJaKopiointiTest {
                     assertEquals(1, j.getJarjestyskriteerit().size());
                     Laskentakaava kaava = j.getJarjestyskriteerit().iterator().next().getLaskentakaava();
                     assertEquals("Ammatillinen koulutus, lisäpiste", kaava.getNimi());
-                    assertNotEquals(2L, laskentakaava.getId().longValue());
+                    assertNotEquals(2L, kaava.getId().longValue());
+                    assertNotEquals(laskentakaava.getId(), kaava.getId());
+                }
+            });
+        });
+    }
+
+    @Test
+    public void testAliValintaryhmanKopiointiToisenPuunAlle() {
+        Valintaryhma valintaryhma = valintaryhmaService.copyAsChild("oid3", "oid1", "oid3 kopio");
+        assertNotEquals("oid3", valintaryhma.getOid());
+        assertEquals("oid3 kopio", valintaryhma.getNimi());
+        assertEquals("oid1", valintaryhma.getYlavalintaryhma().getOid());
+
+        Set<Laskentakaava> laskentakaavat = valintaryhma.getLaskentakaava();
+        assertEquals(3L, laskentakaavat.size());
+        valintaryhma.getValinnanvaiheet().stream().forEach(v -> {
+            assertEquals(3, v.getJonot().size());
+            assertEquals(Sets.newHashSet("Kolmas jono", "Täyttöjono", "Jono 2"), v.getJonot().stream().map(j -> j.getNimi()).collect(Collectors.toSet()));
+            v.getJonot().forEach(j -> {
+                assertNull(j.getVarasijanTayttojono());
+                if(j.getNimi().equals("Jono 2")) {
+                    assertEquals(1, j.getJarjestyskriteerit().size());
+                    Laskentakaava kaava = j.getJarjestyskriteerit().iterator().next().getLaskentakaava();
+                    assertEquals("Ammatillinen koulutus, lisäpiste", kaava.getNimi());
+                    assertNotEquals(2L, kaava.getId().longValue());
                 }
             });
         });
