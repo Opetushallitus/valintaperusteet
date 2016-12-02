@@ -1,11 +1,5 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 import fi.vm.sade.kaava.Funktiokuvaaja;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
@@ -48,12 +42,9 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+
+import static org.junit.Assert.*;
 
 /**
  * User: kwuoti Date: 21.1.2013 Time: 9.42
@@ -660,8 +651,39 @@ public class LaskentakaavaServiceTest {
 
         assertEquals("UusiNimi", siirretty.getNimi());
         assertEquals("oid2", siirretty.getValintaryhma().getOid());
+        assertNotEquals(haettu.getId(), siirretty.getId());
+    }
 
+    @Test
+    public void testSiirraAliKaavallinen() {
 
+        final Long alakaavaId = 414L;
+        final Long ylakaavaId = 415L;
+
+        final Laskentakaava vanhaYlakaava = laskentakaavaService.read(ylakaavaId);
+        assertEquals(2, vanhaYlakaava.getFunktiokutsu().getFunktioargumentit().size());
+        Laskentakaava vanhaAlikaava = vanhaYlakaava.getFunktiokutsu().getFunktioargumentit().stream().filter(kaava -> kaava.getLaskentakaavaChild() != null).findFirst().get().getLaskentakaavaChild();
+        assertEquals(alakaavaId, vanhaAlikaava.getId());
+
+        LaskentakaavaSiirraDTO siirrettava =  modelMapper.map(vanhaYlakaava, LaskentakaavaSiirraDTO.class);
+
+        siirrettava.setUusinimi(ylakaavaId + " kopio");
+        siirrettava.setValintaryhmaOid("oid2");
+
+        Laskentakaava siirretty = laskentakaavaService.siirra(siirrettava).get();
+
+        assertFalse(siirretty.getOnLuonnos());
+        assertEquals(Funktionimi.SUMMA, siirretty.getFunktiokutsu().getFunktionimi());
+        assertEquals(2, siirretty.getFunktiokutsu().getFunktioargumentit().size());
+
+        assertEquals("415 kopio", siirretty.getNimi());
+        assertEquals("oid2", siirretty.getValintaryhma().getOid());
+        assertNotEquals(vanhaYlakaava.getId(), siirretty.getId());
+
+        Laskentakaava siirrettyAlikaava = siirretty.getFunktiokutsu().getFunktioargumentit().stream().filter(kaava -> kaava.getLaskentakaavaChild() != null).findFirst().get().getLaskentakaavaChild();
+        assertNotEquals(vanhaAlikaava.getId(), siirrettyAlikaava.getId());
+        assertEquals("summakaava414", siirrettyAlikaava.getNimi());
+        assertEquals("oid2", siirrettyAlikaava.getValintaryhma().getOid());
     }
 
     @Test
