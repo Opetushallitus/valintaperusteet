@@ -71,9 +71,9 @@ public class ValintaperusteServiceTest {
         }
 
         assertEquals(1, ValintaperusteetDTOs.get(1).getValinnanVaihe().getValinnanVaiheJarjestysluku());
-        assertEquals(3, (ValintaperusteetDTOs.get(0).getValinnanVaihe()).getValintatapajono().get(0).getJarjestyskriteerit().size());
-        assertEquals(1, ( ValintaperusteetDTOs.get(0).getValinnanVaihe()).getValintatapajono().get(1).getPrioriteetti());
-        assertEquals(1, ( ValintaperusteetDTOs.get(0).getValinnanVaihe()).getValintatapajono().get(0).getJarjestyskriteerit().get(1).getPrioriteetti());
+        assertEquals(3, ValintaperusteetDTOs.get(0).getValinnanVaihe().getValintatapajono().get(0).getJarjestyskriteerit().size());
+        assertEquals(1, ValintaperusteetDTOs.get(0).getValinnanVaihe().getValintatapajono().get(1).getPrioriteetti());
+        assertEquals(1, ValintaperusteetDTOs.get(0).getValinnanVaihe().getValintatapajono().get(0).getJarjestyskriteerit().get(1).getPrioriteetti());
     }
 
     @Test
