@@ -93,8 +93,7 @@ public class ValintalaskentakoostepalveluResourceImpl {
         long started = System.currentTimeMillis();
         LOG.info("Haetaan hakukohdeOid joukolla {}", Arrays.toString(hakukohdeOids.toArray()));
         try {
-            final List<HakijaryhmaValintatapajono> byHakukohteet = hakijaryhmaValintatapajonoService.findByHakukohteet(hakukohdeOids);
-            LinkitettavaJaKopioitavaUtil.jarjesta(byHakukohteet);
+            final List<HakijaryhmaValintatapajono> byHakukohteet = LinkitettavaJaKopioitavaUtil.jarjesta(hakijaryhmaValintatapajonoService.findByHakukohteet(hakukohdeOids));
             final List<HakijaryhmaValintatapajonoDTO> hakijaryhmaValintatapajonoDTOs = byHakukohteet.stream().map(h -> modelMapper.map(h, HakijaryhmaValintatapajonoDTO.class)).collect(Collectors.toList());
             IntStream.range(0, hakijaryhmaValintatapajonoDTOs.size()).forEach(i -> {
                 hakijaryhmaValintatapajonoDTOs.get(i).setPrioriteetti(i);
@@ -123,8 +122,7 @@ public class ValintalaskentakoostepalveluResourceImpl {
         long started = System.currentTimeMillis();
         LOG.info("Haetaan valintatapajonoOid joukolla {}", Arrays.toString(valintatapajonoOids.toArray()));
         try {
-            final List<HakijaryhmaValintatapajono> byHakukohteet = hakijaryhmaValintatapajonoService.findHakijaryhmaByJonos(valintatapajonoOids);
-            LinkitettavaJaKopioitavaUtil.jarjesta(byHakukohteet);
+            final List<HakijaryhmaValintatapajono> byHakukohteet = LinkitettavaJaKopioitavaUtil.jarjesta(hakijaryhmaValintatapajonoService.findHakijaryhmaByJonos(valintatapajonoOids));
             final List<HakijaryhmaValintatapajonoDTO> hakijaryhmaValintatapajonoDTOs = byHakukohteet.stream().map(h -> modelMapper.map(h, HakijaryhmaValintatapajonoDTO.class)).collect(Collectors.toList());
             IntStream.range(0, hakijaryhmaValintatapajonoDTOs.size()).forEach(i -> {
                 hakijaryhmaValintatapajonoDTOs.get(i).setPrioriteetti(i);
