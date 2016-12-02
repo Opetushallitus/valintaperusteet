@@ -113,20 +113,14 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
         QValintatapajono jono = QValintatapajono.valintatapajono;
 
         // Etsitään hakukohteen viimeinen aktiivinen valinnan vaihe
-        List<ValinnanVaihe> valinnanVaiheet = from(hakukohde)
+        List<ValinnanVaihe> valinnanVaiheet = LinkitettavaJaKopioitavaUtil.jarjesta(from(hakukohde)
                 .leftJoin(hakukohde.valinnanvaiheet, vv)
                 .where((hakukohde.oid.eq(hakukohdeOid)))
-                .list(vv);
-
-        if(valinnanVaiheet == null || valinnanVaiheet.isEmpty()) return Collections.emptyList();
-
-        LinkitettavaJaKopioitavaUtil.jarjesta(valinnanVaiheet);
+                .list(vv));
 
         List<ValinnanVaihe> aktiivisetValinnanVaiheet = valinnanVaiheet.stream()
                 .filter(vaihe -> vaihe.getAktiivinen())
                 .collect(Collectors.toList());
-
-        if(aktiivisetValinnanVaiheet == null || aktiivisetValinnanVaiheet.isEmpty()) return Collections.emptyList();
 
         ValinnanVaihe lastValinnanVaihe = aktiivisetValinnanVaiheet.get(aktiivisetValinnanVaiheet.size() - 1);
 
