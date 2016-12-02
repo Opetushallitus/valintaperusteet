@@ -3,16 +3,20 @@ package fi.vm.sade.service.valintaperusteet.dao.impl;
 import com.mysema.query.jpa.impl.JPAQuery;
 import com.mysema.query.jpa.impl.JPASubQuery;
 import com.mysema.query.types.EntityPath;
+
 import fi.vm.sade.service.valintaperusteet.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
-import fi.vm.sade.service.valintaperusteet.model.*;
+import fi.vm.sade.service.valintaperusteet.model.QHakijaryhmaValintatapajono;
+import fi.vm.sade.service.valintaperusteet.model.QHakukohdeViite;
+import fi.vm.sade.service.valintaperusteet.model.QValinnanVaihe;
+import fi.vm.sade.service.valintaperusteet.model.QValintatapajono;
+import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
+import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -119,7 +123,7 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
                 .list(vv));
 
         List<ValinnanVaihe> aktiivisetValinnanVaiheet = valinnanVaiheet.stream()
-                .filter(vaihe -> vaihe.getAktiivinen())
+                .filter(ValinnanVaihe::getAktiivinen)
                 .collect(Collectors.toList());
 
         ValinnanVaihe lastValinnanVaihe = aktiivisetValinnanVaiheet.get(aktiivisetValinnanVaiheet.size() - 1);
