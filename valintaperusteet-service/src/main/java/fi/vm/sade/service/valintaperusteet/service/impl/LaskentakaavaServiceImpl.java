@@ -133,18 +133,6 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     }
 
     @Override
-    @Transactional
-    public Laskentakaava read(Long key) {
-        long beginTime = System.currentTimeMillis();
-        Laskentakaava kaava = haeMallinnettuKaava(key);
-        long endTime = System.currentTimeMillis();
-        long timeTaken = (endTime - beginTime);
-
-        LOGGER.info("Kaava haettu. Aikaa hakuun kului: {} millisekuntia", timeTaken);
-        return kaava;
-    }
-
-    @Override
     public Laskentakaava update(Long id, LaskentakaavaCreateDTO incoming) {
         laskentakaavaCache.clear();
         try {

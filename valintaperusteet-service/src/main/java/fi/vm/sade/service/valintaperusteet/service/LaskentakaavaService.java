@@ -32,8 +32,6 @@ public interface LaskentakaavaService {
 
     Laskentakaava update(Long id, LaskentakaavaCreateDTO laskentakaava);
 
-    Laskentakaava read(Long key);
-
     Laskentakaava insert(Laskentakaava laskentakaava, String hakukohdeOid, String valintaryhmaOid);
 
     void tyhjennaCache();
