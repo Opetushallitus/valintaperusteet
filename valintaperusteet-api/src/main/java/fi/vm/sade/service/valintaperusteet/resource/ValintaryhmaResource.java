@@ -81,6 +81,11 @@ public interface ValintaryhmaResource {
     Response copyAsChild(@PathParam("oid") String oid, @QueryParam("lahdeOid") String lahdeOid, @QueryParam("nimi") String nimi);
 
     @PUT
+    @Path("/kopioiJuureen")
+    @Produces(MediaType.APPLICATION_JSON)
+    Response copyToRoot(@QueryParam("lahdeOid") String lahdeOid, @QueryParam("nimi") String nimi);
+
+    @PUT
     @Path("/{valintaryhmaOid}/valinnanvaihe")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

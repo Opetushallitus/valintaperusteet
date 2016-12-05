@@ -259,6 +259,28 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
     }
 
     @PUT
+    @Path("/kopioiJuureen")
+    @Produces(MediaType.APPLICATION_JSON)
+    @PreAuthorize(CRUD)
+    @ApiOperation(value = "Lisää valintaryhmän juureen kopioimalla lähdevalintaryhmän")
+    public Response copyToRoot(@QueryParam("lahdeOid") String lahdeOid, @QueryParam("nimi") String nimi) {
+        try {
+            ValintaryhmaDTO lisatty = modelMapper.map(valintaryhmaService.copyAsChild(lahdeOid, null, nimi), ValintaryhmaDTO.class);
+            AUDIT.log(builder()
+                    .id(username())
+                    .valintaryhmaOid(lisatty.getOid())
+                    .add("lahdeoid", lahdeOid)
+                    .add("nimi", nimi)
+                    .setOperaatio(ValintaperusteetOperation.VALINTARYHMA_LISAYS)
+                    .build());
+            return Response.status(Response.Status.CREATED).entity(lisatty).build();
+        } catch (Exception e) {
+            LOGGER.error("Error copying valintaryhmä.", e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ErrorDTO(e.getMessage())).build();
+        }
+    }
+
+    @PUT
     @Path("/{valintaryhmaOid}/valinnanvaihe")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
