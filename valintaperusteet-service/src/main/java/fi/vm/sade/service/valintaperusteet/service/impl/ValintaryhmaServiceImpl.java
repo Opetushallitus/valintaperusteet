@@ -158,7 +158,9 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
         Valintaryhma inserted = valintaryhmaDAO.insert(copy);
         copyLaskentakaavat(source, inserted);
         valinnanVaiheService.kopioiValinnanVaiheetParentilta(inserted, parent);
-        hakijaryhmaService.kopioiHakijaryhmatMasterValintaryhmalta(parent.getOid(), inserted.getOid());
+        if(parent != null) {
+            hakijaryhmaService.kopioiHakijaryhmatMasterValintaryhmalta(parent.getOid(), inserted.getOid());
+        }
         copyHakukohdekoodit(source, inserted);
         copyValintakoekoodit(source, inserted);
         List<Valintaryhma> children = valintaryhmaDAO.findChildrenByParentOid(source.getOid());
@@ -191,17 +193,20 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
     }
 
     public Valintaryhma copyAsChild(String sourceOid, String parentOid, String name) {
-        // Tarkistetaan, että parent ei ole sourcen jälkeläinen
-        if (isChildOf(parentOid, sourceOid)) {
-            throw new ValintaryhmaaEiVoidaKopioida("Valintaryhmä (" + parentOid + ") on kohderyhmän (" + sourceOid + ") lapsi", sourceOid, parentOid);
-        }
-        // Tarkistetaan sisarusten nimet
-        List<Valintaryhma> children = valintaryhmaDAO.findChildrenByParentOid(parentOid);
-        if (children.stream().anyMatch(vr -> vr.getNimi().equals(name))) {
-            throw new ValintaryhmaaEiVoidaKopioida("Valintaryhmällä (" + parentOid + ") on jo \"" + name + "\" niminen lapsi", sourceOid, parentOid);
+        Valintaryhma parent = null;
+        if (parentOid != null) {
+            // Tarkistetaan, että parent ei ole sourcen jälkeläinen
+            if (isChildOf(parentOid, sourceOid)) {
+                throw new ValintaryhmaaEiVoidaKopioida("Valintaryhmä (" + parentOid + ") on kohderyhmän (" + sourceOid + ") lapsi", sourceOid, parentOid);
+            }
+            // Tarkistetaan sisarusten nimet
+            List<Valintaryhma> children = valintaryhmaDAO.findChildrenByParentOid(parentOid);
+            if (children.stream().anyMatch(vr -> vr.getNimi().equals(name))) {
+                throw new ValintaryhmaaEiVoidaKopioida("Valintaryhmällä (" + parentOid + ") on jo \"" + name + "\" niminen lapsi", sourceOid, parentOid);
+            }
+            parent = valintaryhmaDAO.readByOid(parentOid);
         }
         Valintaryhma source = valintaryhmaDAO.readByOid(sourceOid);
-        Valintaryhma parent = valintaryhmaDAO.readByOid(parentOid);
         return copyAsChild(source, parent, name);
     }
 

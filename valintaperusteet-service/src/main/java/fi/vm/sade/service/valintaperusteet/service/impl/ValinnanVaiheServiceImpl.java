@@ -348,8 +348,10 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
 
     @Override
     public void kopioiValinnanVaiheetParentilta(Valintaryhma valintaryhma, Valintaryhma parentValintaryhma) {
-        ValinnanVaihe vv = valinnanVaiheDAO.haeValintaryhmanViimeinenValinnanVaihe(parentValintaryhma.getOid());
-        kopioiValinnanVaiheetRekursiivisesti(valintaryhma, vv);
+        if (parentValintaryhma != null) {
+            ValinnanVaihe vv = valinnanVaiheDAO.haeValintaryhmanViimeinenValinnanVaihe(parentValintaryhma.getOid());
+            kopioiValinnanVaiheetRekursiivisesti(valintaryhma, vv);
+        }
     }
 
     @Override
