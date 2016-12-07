@@ -12,6 +12,8 @@ import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintaryhmaEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintaryhmaaEiVoidaKopioida;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +28,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class ValintaryhmaServiceImpl implements ValintaryhmaService {
+    final static private Logger LOGGER = LoggerFactory.getLogger(ValintaryhmaServiceImpl.class);
     @Autowired
     private ValintaryhmaDAO valintaryhmaDAO;
 
@@ -151,6 +154,7 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
     }
 
     private Valintaryhma copyAsChild(Valintaryhma source, Valintaryhma parent, String name) {
+        LOGGER.info("Kopioidaan valintaryhmä {} nimellä '{}' valintaryhmän {} alle", source, name, parent);
         Valintaryhma copy = new Valintaryhma();
         copy.setYlavalintaryhma(parent);
         copy.setNimi(name);
@@ -168,6 +172,7 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
             Valintaryhma copiedChild = copyAsChild(child, inserted, child.getNimi());
             copy.getAlavalintaryhmat().add(copiedChild);
         }));
+        LOGGER.info("Kopioitiin valintaryhmä {} nimellä '{}' valintaryhmän {} alle: {}", source, name, parent, inserted);
         return inserted;
     }
 
