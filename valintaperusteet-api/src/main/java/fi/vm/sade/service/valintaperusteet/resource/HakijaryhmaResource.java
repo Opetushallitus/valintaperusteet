@@ -1,12 +1,21 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
-import java.util.List;
+import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaDTO;
+import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaSiirraDTO;
+import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaValintatapajonoDTO;
 
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import fi.vm.sade.service.valintaperusteet.dto.*;
+import java.util.List;
 
 @Path("hakijaryhma")
 public interface HakijaryhmaResource {
@@ -40,12 +49,6 @@ public interface HakijaryhmaResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{oid}")
     HakijaryhmaDTO update(@PathParam("oid") String oid, HakijaryhmaCreateDTO hakijaryhma);
-
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/jarjesta")
-    List<HakijaryhmaDTO> jarjesta(List<String> oids);
 
     @DELETE
     @Path("/{oid}")

@@ -187,23 +187,6 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
         return modelMapper.map(h, HakijaryhmaDTO.class);
     }
 
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/jarjesta")
-    @PreAuthorize(UPDATE_CRUD)
-    @ApiOperation(value = "Järjestää hakijaryhmät parametrina annetun listan mukaan", response = HakijaryhmaDTO.class)
-    @ApiResponses(value = {@ApiResponse(code = 400, message = "OID-lista on tyhjä"),})
-    public List<HakijaryhmaDTO> jarjesta(
-            @ApiParam(value = "Hakijaryhmien uusi järjestys", required = true) List<String> oids) {
-        try {
-//            return modelMapper.mapList(hakijaryhmaService.jarjestaHakijaryhmat(oids), HakijaryhmaDTO.class);
-            return null;
-        } catch (HakijaryhmaOidListaOnTyhjaException e) {
-            throw new WebApplicationException(e, Response.Status.BAD_REQUEST);
-        }
-    }
-
     @DELETE
     @Path("/{oid}")
     @PreAuthorize(CRUD)

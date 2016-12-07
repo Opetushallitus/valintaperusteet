@@ -1,10 +1,26 @@
 package fi.vm.sade.service.valintaperusteet.resource.impl;
 
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD;
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
-
-import java.util.*;
+import fi.vm.sade.auditlog.valintaperusteet.ValintaperusteetOperation;
+import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaValintatapajonoDTO;
+import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
+import fi.vm.sade.service.valintaperusteet.resource.HakijaryhmaValintatapajonoResource;
+import fi.vm.sade.service.valintaperusteet.resource.ValintatapajonoResource;
+import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaValintatapajonoService;
+import fi.vm.sade.service.valintaperusteet.service.HakijaryhmatyyppikoodiService;
+import fi.vm.sade.service.valintaperusteet.service.ValintakoeService;
+import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
+import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaEiOleOlemassaException;
+import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaaEiVoiPoistaaException;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Component;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -15,35 +31,14 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.HashMap;
+import java.util.Map;
 
-import fi.vm.sade.service.valintaperusteet.dto.KoodiDTO;
-import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
-import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
-import fi.vm.sade.service.valintaperusteet.service.HakijaryhmatyyppikoodiService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Component;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-
-import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaValintatapajonoDTO;
-import fi.vm.sade.service.valintaperusteet.resource.HakijaryhmaValintatapajonoResource;
-import fi.vm.sade.service.valintaperusteet.resource.ValintatapajonoResource;
-import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaValintatapajonoService;
-import fi.vm.sade.service.valintaperusteet.service.ValintakoeService;
-import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
-import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaEiOleOlemassaException;
-import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaaEiVoiPoistaaException;
-
-import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.*;
 import static fi.vm.sade.auditlog.valintaperusteet.LogMessage.builder;
-import fi.vm.sade.auditlog.valintaperusteet.ValintaperusteetOperation;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
+import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.AUDIT;
+import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.username;
 
 @Component
 @Path("hakijaryhma_valintatapajono")
@@ -132,31 +127,4 @@ public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValint
             throw new WebApplicationException(e, Response.Status.NOT_FOUND);
         }
     }
-
-    @Override
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/jarjesta")
-    @PreAuthorize(UPDATE_CRUD)
-    @ApiOperation(value = "Järjestää valintatapajonon hakijaryhmät argumentin mukaiseen järjestykseen")
-    @ApiResponses(value = {@ApiResponse(code = 400, message = "OID-lista on tyhjä"),})
-    public List<HakijaryhmaValintatapajonoDTO> jarjesta(
-            @ApiParam(value = "Päivitettävän liitoksen oid", required = true) @PathParam("oid") String hakijaryhmaValintatapajonoOid,
-            @ApiParam(value = "Hakijaryhmien uusi järjestys", required = true) List<String> oids) {
-        try {
-            List<HakijaryhmaValintatapajono> hj = hakijaryhmaValintatapajonoService.jarjestaHakijaryhmat(hakijaryhmaValintatapajonoOid, oids);
-            AUDIT.log(builder()
-                    .id(username())
-                    .hakijaryhmaValintatapajonoOid(hakijaryhmaValintatapajonoOid)
-                    .add("hakijaryhmanValintatapajonot", Arrays.toString(Optional.ofNullable(hj).orElse(Collections.<HakijaryhmaValintatapajono>emptyList())
-                            .stream().map(v -> v.getOid()).toArray()))
-                    .setOperaatio(ValintaperusteetOperation.VALINTATAPAJONO_HAKIJARYHMAT_JARJESTA)
-                    .build());
-            return modelMapper.mapList(hj, HakijaryhmaValintatapajonoDTO.class);
-        } catch (Exception e) {
-            throw new WebApplicationException(e, Response.Status.BAD_REQUEST);
-        }
-    }
-
 }
