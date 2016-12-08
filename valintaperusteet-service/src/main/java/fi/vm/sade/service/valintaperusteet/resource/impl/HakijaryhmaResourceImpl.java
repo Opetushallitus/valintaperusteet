@@ -146,20 +146,6 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
         }
     }
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/{hakijaryhmaOid}/valintatapajono")
-    @PreAuthorize(READ_UPDATE_CRUD)
-    @ApiOperation(value = "Hakee hakijaryhmän ja siihen liittyvät valintatapajonot OID:n perusteella", response = HakijaryhmaValintatapajonoDTO.class)
-    public List<HakijaryhmaValintatapajonoDTO> valintatapajonot(
-            @ApiParam(value = "OID", required = true) @PathParam("hakijaryhmaOid") String hakijaryhmaOid) {
-        try {
-            return modelMapper.mapList(hakijaryhmaValintatapajonoService.findByHakijaryhma(hakijaryhmaOid), HakijaryhmaValintatapajonoDTO.class);
-        } catch (Exception e) {
-            throw new WebApplicationException(e, Response.Status.INTERNAL_SERVER_ERROR);
-        }
-    }
-
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

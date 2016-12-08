@@ -39,11 +39,6 @@ public interface HakijaryhmaResource {
     @Path("/{oid}")
     HakijaryhmaDTO read(@PathParam("oid") String oid);
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/{hakijaryhmaOid}/valintatapajono")
-    List<HakijaryhmaValintatapajonoDTO> valintatapajonot(@PathParam("hakijaryhmaOid") String hakijaryhmaOid);
-
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

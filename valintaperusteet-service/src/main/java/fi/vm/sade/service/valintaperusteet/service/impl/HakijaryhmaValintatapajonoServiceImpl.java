@@ -81,11 +81,6 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
     }
 
     @Override
-    public List<HakijaryhmaValintatapajono> findByHakijaryhma(String hakijaryhmaOid) {
-        return hakijaryhmaValintatapajonoDAO.findByHakijaryhma(hakijaryhmaOid);
-    }
-
-    @Override
     public List<HakijaryhmaValintatapajono> findByHaku(String hakuOid) {
         return hakijaryhmaValintatapajonoDAO.findByHaku(hakuOid);
     }

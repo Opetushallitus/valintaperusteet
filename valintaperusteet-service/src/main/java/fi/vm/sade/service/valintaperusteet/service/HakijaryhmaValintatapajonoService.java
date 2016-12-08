@@ -17,8 +17,6 @@ public interface HakijaryhmaValintatapajonoService {
 
     HakijaryhmaValintatapajono readByOid(String oid);
 
-    List<HakijaryhmaValintatapajono> findByHakijaryhma(String hakijaryhmaOid);
-
     List<HakijaryhmaValintatapajono> findByHaku(String hakuOid);
 
     List<HakijaryhmaValintatapajono> findByHakukohteet(Collection<String> hakukohdeOids);
