@@ -384,39 +384,4 @@ public class HakijaryhmaServiceTest {
         }
 
     }
-
-    @Test
-    @Ignore
-    public void testJarjesta() {
-        {
-            // hr2
-            // hr3
-            // hr4
-        }
-
-        List<Hakijaryhma> byHakukohde = hakijaryhmaService.findByHakukohde("1");
-        assertEquals(3, byHakukohde.size());
-        assertEquals("hr2", byHakukohde.get(0).getOid());
-        assertEquals("hr3", byHakukohde.get(1).getOid());
-        assertEquals("hr4", byHakukohde.get(2).getOid());
-
-
-        {
-            // hr4
-            // hr2
-            // hr3
-        }
-
-
-        List<HakijaryhmaValintatapajono> hakijaryhmas = hakijaryhmaValintatapajonoService.jarjestaHakijaryhmat("id", Arrays.asList(new String[]{"hr4", "hr2", "hr3"}));
-        assertEquals(3, hakijaryhmas.size());
-
-        byHakukohde = hakijaryhmaService.findByHakukohde("1");
-        assertEquals(3, byHakukohde.size());
-        assertEquals("hr4", byHakukohde.get(0).getOid());
-        assertEquals("hr2", byHakukohde.get(1).getOid());
-        assertEquals("hr3", byHakukohde.get(2).getOid());
-
-
-    }
 }

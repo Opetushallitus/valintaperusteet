@@ -21,9 +21,6 @@ public interface HakijaryhmaValintatapajonoService {
 
     List<HakijaryhmaValintatapajono> findByHakukohteet(Collection<String> hakukohdeOids);
 
-    HakijaryhmaValintatapajono insert(HakijaryhmaValintatapajono entity);
-
-    // CRUD
     HakijaryhmaValintatapajono update(String oid, HakijaryhmaValintatapajonoDTO dto);
 
     void liitaHakijaryhmaValintatapajonolle(String valintatapajonoOid, String hakijaryhmaOid);
@@ -33,10 +30,6 @@ public interface HakijaryhmaValintatapajonoService {
     Hakijaryhma lisaaHakijaryhmaValintatapajonolle(String valintatapajonoOid, HakijaryhmaCreateDTO dto);
 
     Hakijaryhma lisaaHakijaryhmaHakukohteelle(String hakukohdeOid, HakijaryhmaCreateDTO hakijaryhma);
-
-    void delete(HakijaryhmaValintatapajono entity);
-
-    List<HakijaryhmaValintatapajono> jarjestaHakijaryhmat(String hakijaryhmaValintatapajonoOid, List<String> oids);
 
     List<HakijaryhmaValintatapajono> findByHakukohde(String oid);
 }
