@@ -2,12 +2,10 @@ package fi.vm.sade.service.valintaperusteet.service.impl;
 
 import fi.vm.sade.service.valintaperusteet.dao.GenericDAO;
 import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaDAO;
-import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmatyyppikoodiDAO;
 import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaValintatapajonoDAO;
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaSiirraDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
-import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakukohde;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.*;
@@ -76,7 +74,7 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
             throw new HakijaryhmaaEiVoiPoistaaException("hakijaryhma on peritty.");
         }
 
-        delete(hakijaryhma);
+        hakijaryhmaDAO.remove(hakijaryhma);
     }
 
     @Override
@@ -84,18 +82,6 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
         List<HakijaryhmaValintatapajono> byHakukohde = hakijaryhmaValintatapajonoDAO.findByHakukohde(oid);
         List<HakijaryhmaValintatapajono> jarjestetty = LinkitettavaJaKopioitavaUtil.jarjesta(byHakukohde);
         return jarjestetty.stream().map(HakijaryhmaValintatapajono::getHakijaryhma).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<Hakijaryhma> findByHakukohteet(Collection<String> hakukohdeOids) {
-        List<HakijaryhmaValintatapajono> byHakukohde = hakijaryhmaValintatapajonoDAO.findByHakukohteet(hakukohdeOids);
-        return byHakukohde.stream().map(HakijaryhmaValintatapajono::getHakijaryhma).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<Hakijaryhma> findByHaku(String hakuOid) {
-        List<HakijaryhmaValintatapajono> byHakukohde = hakijaryhmaValintatapajonoDAO.findByHaku(hakuOid);
-        return byHakukohde.stream().map(HakijaryhmaValintatapajono::getHakijaryhma).collect(Collectors.toList());
     }
 
     @Override
@@ -240,17 +226,6 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
             return Optional.empty();
         }
         return Optional.ofNullable(lisaaHakijaryhmaValintaryhmalle(ryhma.get().getOid(), dto));
-    }
-
-    @Override
-    public Hakijaryhma insert(Hakijaryhma entity) {
-        entity.setOid(oidService.haeValintaryhmaOid());
-        return hakijaryhmaDAO.insert(entity);
-    }
-
-    @Override
-    public void delete(Hakijaryhma entity) {
-        hakijaryhmaDAO.remove(entity);
     }
 
     public void deleteHakijaryhmaValintatajono(HakijaryhmaValintatapajono entity) {

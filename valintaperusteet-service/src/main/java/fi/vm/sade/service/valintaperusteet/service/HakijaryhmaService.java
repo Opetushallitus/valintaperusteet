@@ -15,10 +15,6 @@ public interface HakijaryhmaService {
 
     List<Hakijaryhma> findByHakukohde(String oid);
 
-    List<Hakijaryhma> findByHakukohteet(Collection<String> hakukohdeOids);
-
-    List<Hakijaryhma> findByHaku(String hakuOid);
-
     List<Hakijaryhma> findByValintaryhma(String oid);
 
     Hakijaryhma readByOid(String oid);
@@ -26,10 +22,6 @@ public interface HakijaryhmaService {
     void liitaHakijaryhmaValintatapajonolle(String valintatapajonoOid, String hakijaryhmaOid);
 
     Hakijaryhma lisaaHakijaryhmaValintaryhmalle(String valintaryhmaOid, HakijaryhmaCreateDTO hakijaryhma);
-
-    Hakijaryhma insert(Hakijaryhma entity);
-
-    void delete(Hakijaryhma entity);
 
     Hakijaryhma update(String oid, HakijaryhmaCreateDTO entity);
 
