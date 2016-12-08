@@ -20,20 +20,6 @@ import java.util.List;
 @Path("hakijaryhma")
 public interface HakijaryhmaResource {
 
-    /**
-     * Operation is idempotent
-     */
-    @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/haku")
-    List<HakijaryhmaValintatapajonoDTO> readByHakukohdeOids(List<String> hakukohdeOids);
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/haku/{hakuOid}")
-    List<HakijaryhmaValintatapajonoDTO> readByHakuOid(@PathParam("hakuOid") String hakuOid);
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{oid}")
