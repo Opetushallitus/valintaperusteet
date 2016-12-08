@@ -26,7 +26,7 @@ import java.util.stream.IntStream;
 @Component
 @Path("valintalaskentakoostepalvelu")
 public class ValintalaskentakoostepalveluResourceImpl {
-    private static final Logger LOG = LoggerFactory.getLogger(ValintaperusteetResourceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ValintalaskentakoostepalveluResourceImpl.class);
     private final static String HAKUKOHDE_VIITE_PREFIX = "{{hakukohde.";
     @Autowired
     private ValintaperusteService valintaperusteService;
