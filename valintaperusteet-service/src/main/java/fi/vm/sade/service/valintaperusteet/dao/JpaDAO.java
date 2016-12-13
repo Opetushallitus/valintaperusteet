@@ -18,10 +18,16 @@ public interface JpaDAO<E, ID> {
     void update(E entity);
 
     /**
-     * Creates a new record to the database.
+     * Creates a new record to the database and flushes it.
      * @param entity
      */
     E insert(E entity);
+
+    /**
+     * Creates a new record to the database.
+     * @param entity
+     */
+    E insert(E entity, boolean flush);
 
     /**
      * Removes existing record from the database.

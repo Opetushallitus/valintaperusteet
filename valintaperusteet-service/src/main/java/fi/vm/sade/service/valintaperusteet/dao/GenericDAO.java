@@ -22,12 +22,20 @@ public interface GenericDAO {
     <E extends BaseEntity> void update(E entity);
 
     /**
-     * Creates a new record to the database
+     * Creates a new record to the database and flushes it
      *
      * @param entity
      * @return
      */
     <E extends BaseEntity> E insert(E entity);
+
+    /**
+     * Creates a new record to the database
+     *
+     * @param entity
+     * @return
+     */
+    <E extends BaseEntity> E insert(E entity, boolean flush);
 
     /**
      * Lists all objects of given type from database

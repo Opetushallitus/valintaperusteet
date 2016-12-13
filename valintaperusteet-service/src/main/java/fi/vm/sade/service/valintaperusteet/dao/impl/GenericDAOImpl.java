@@ -27,10 +27,18 @@ public class GenericDAOImpl implements GenericDAO {
         entityManager.flush();
     }
 
+    @Override
     public <E extends BaseEntity> E insert(E entity) {
+        return insert(entity, true);
+    }
+
+    @Override
+    public <E extends BaseEntity> E insert(E entity, boolean flush) {
         validate(entity);
         entityManager.persist(entity);
-        entityManager.flush();
+        if (flush) {
+            entityManager.flush();
+        }
         return entity;
     }
 

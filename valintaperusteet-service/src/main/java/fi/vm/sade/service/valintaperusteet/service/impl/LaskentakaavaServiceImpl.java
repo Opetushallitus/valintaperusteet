@@ -267,13 +267,13 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             newParam.setFunktiokutsu(managed);
             if (k.getKuvaukset() != null) {
                 TekstiRyhma ryhma = new TekstiRyhma();
-                genericDAO.insert(ryhma);
+                genericDAO.insert(ryhma, false);
                 for (LokalisoituTeksti teksti : k.getKuvaukset().getTekstit()) {
                     LokalisoituTeksti newTeksti = new LokalisoituTeksti();
                     newTeksti.setKieli(teksti.getKieli());
                     newTeksti.setTeksti(teksti.getTeksti());
                     newTeksti.setRyhma(ryhma);
-                    genericDAO.insert(newTeksti);
+                    genericDAO.insert(newTeksti, false);
                     ryhma.getTekstit().add(newTeksti);
                 }
                 newParam.setKuvaukset(ryhma);
@@ -290,13 +290,13 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             newParam.setHylkaysperuste(k.getHylkaysperuste());
             if (k.getKuvaukset() != null) {
                 TekstiRyhma ryhma = new TekstiRyhma();
-                genericDAO.insert(ryhma);
+                genericDAO.insert(ryhma, false);
                 for (LokalisoituTeksti teksti : k.getKuvaukset().getTekstit()) {
                     LokalisoituTeksti newTeksti = new LokalisoituTeksti();
                     newTeksti.setKieli(teksti.getKieli());
                     newTeksti.setTeksti(teksti.getTeksti());
                     newTeksti.setRyhma(ryhma);
-                    genericDAO.insert(newTeksti);
+                    genericDAO.insert(newTeksti, false);
                     ryhma.getTekstit().add(newTeksti);
                 }
                 newParam.setKuvaukset(ryhma);
@@ -343,13 +343,13 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             newVp.setFunktiokutsu(managed);
             if (vp.getKuvaukset() != null) {
                 TekstiRyhma ryhma = new TekstiRyhma();
-                genericDAO.insert(ryhma);
+                genericDAO.insert(ryhma, false);
                 for (LokalisoituTeksti teksti : vp.getKuvaukset().getTekstit()) {
                     LokalisoituTeksti newTeksti = new LokalisoituTeksti();
                     newTeksti.setKieli(teksti.getKieli());
                     newTeksti.setTeksti(teksti.getTeksti());
                     newTeksti.setRyhma(ryhma);
-                    genericDAO.insert(newTeksti);
+                    genericDAO.insert(newTeksti, false);
                     ryhma.getTekstit().add(newTeksti);
                 }
                 newVp.setKuvaukset(ryhma);
@@ -357,7 +357,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             managed.getValintaperusteviitteet().add(newVp);
         }
         if (managed.getId() == null) {
-            funktiokutsuDAO.insert(managed);
+            funktiokutsuDAO.insert(managed, false);
         }
         return managed;
     }

@@ -36,10 +36,16 @@ public abstract class AbstractJpaDAOImpl<E, ID> implements JpaDAO<E, ID> {
     }
 
     public E insert(E entity) {
+        // Database must be synchronized at this point or the insert query does not get executed at all (no id)
+        return insert(entity, true);
+    }
+
+    public E insert(E entity, boolean flush) {
         validate(entity);
         entityManager.persist(entity);
-        // Database must be synchronized at this point or the insert query does not get executed at all
-        entityManager.flush();
+        if (flush) {
+            entityManager.flush();
+        }
         return entity;
     }
 
