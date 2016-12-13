@@ -2,9 +2,6 @@ package fi.vm.sade.service.valintaperusteet.service.impl;
 
 import java.util.*;
 
-import fi.vm.sade.service.valintaperusteet.dto.FunktiokutsuDTO;
-import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaSiirraDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import org.apache.commons.lang.StringUtils;
@@ -15,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import fi.vm.sade.service.valintaperusteet.dao.JarjestyskriteeriDAO;
 import fi.vm.sade.service.valintaperusteet.dao.LaskentakaavaDAO;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi;
 import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
 import fi.vm.sade.service.valintaperusteet.service.JarjestyskriteeriService;
 import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
@@ -25,10 +21,8 @@ import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuaEiVoid
 import fi.vm.sade.service.valintaperusteet.service.exception.JarjestyskriteeriEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.JarjestyskriteeriOidListaOnTyhjaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.JarjestyskriteeriaEiVoiPoistaaException;
-import fi.vm.sade.service.valintaperusteet.service.exception.JarjestyskriteeriinLiitettavaLaskentakaavaOnLuonnosException;
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaOidTyhjaException;
-import fi.vm.sade.service.valintaperusteet.service.exception.VaaranTyyppinenLaskentakaavaException;
 import fi.vm.sade.service.valintaperusteet.util.JarjestyskriteeriKopioija;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 
@@ -158,7 +152,7 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
         Jarjestyskriteeri kopio = new Jarjestyskriteeri();
         kopio.setAktiivinen(master.getAktiivinen());
         kopio.setValintatapajono(jono);
-        Optional<Laskentakaava> laskentakaava = laskentakaavaService.haeLaskentakaavaPuusta(master.getLaskentakaavaId(), jono.getValinnanVaihe().getHakukohdeViite(), jono.getValinnanVaihe().getValintaryhma());
+        Optional<Laskentakaava> laskentakaava = laskentakaavaService.haeLaskentakaavaTaiSenKopioVanhemmilta(master.getLaskentakaavaId(), jono.getValinnanVaihe().getHakukohdeViite(), jono.getValinnanVaihe().getValintaryhma());
         if(laskentakaava.isPresent()) {
             kopio.setLaskentakaava(laskentakaava.get());
         } else {

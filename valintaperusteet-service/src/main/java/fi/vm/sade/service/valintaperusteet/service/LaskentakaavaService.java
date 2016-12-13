@@ -38,7 +38,7 @@ public interface LaskentakaavaService {
 
     Optional<Laskentakaava> siirra(LaskentakaavaSiirraDTO dto);
 
-    Optional<Laskentakaava> haeLaskentakaavaPuusta(Long laskentakaavaId, HakukohdeViite hakukohde, Valintaryhma valintaryhma);
+    Optional<Laskentakaava> haeLaskentakaavaTaiSenKopioVanhemmilta(Long laskentakaavaId, HakukohdeViite ylaHakukohde, Valintaryhma ylaValintaryhma);
 
     Laskentakaava kopioi(Laskentakaava lahdeLaskentakaava, HakukohdeViite kohdeHakukohde, Valintaryhma kohdeValintaryhma);
 

@@ -249,7 +249,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
                 if (hakukohde == null && valintaryhma == null) {
                     newArg.setLaskentakaavaChild(oldLaskentakaava);
                 } else {
-                    Optional<Laskentakaava> newLaskentakaava = haeLaskentakaavaPuusta(laskentakaavaId, hakukohde, valintaryhma);
+                    Optional<Laskentakaava> newLaskentakaava = haeLaskentakaavaTaiSenKopioVanhemmilta(laskentakaavaId, hakukohde, valintaryhma);
                     if(!newLaskentakaava.isPresent()) {
                         newLaskentakaava = Optional.of(kopioi(oldLaskentakaava, hakukohde, valintaryhma));
                     }
@@ -422,38 +422,39 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     }
 
     @Override
-    public Optional<Laskentakaava> haeLaskentakaavaPuusta(Long laskentakaavaId, HakukohdeViite hakukohde, Valintaryhma valintaryhma) {
-        return haeLaskentakaavaPuusta(laskentakaavaId, hakukohde, valintaryhma, new HashSet<>());
+    public Optional<Laskentakaava> haeLaskentakaavaTaiSenKopioVanhemmilta(Long laskentakaavaId, HakukohdeViite ylaHakukohde, Valintaryhma ylaValintaryhma) {
+        return haeLaskentakaavaTaiSenKopioVanhemmilta(laskentakaavaId, ylaHakukohde, ylaValintaryhma, new HashSet<>());
     }
 
-    private Optional<Laskentakaava> haeLaskentakaavaPuusta(Long laskentakaavaId, HakukohdeViite hakukohde, Valintaryhma valintaryhma, Set<Long> checkedLaskentaKaavaIds) {
-        Set<Laskentakaava> parentLaskentakaavat = new HashSet<>();
-        if(hakukohde != null) {
-            parentLaskentakaavat.addAll(hakukohde.getLaskentakaava());
+    private Optional<Laskentakaava> haeLaskentakaavaTaiSenKopioVanhemmilta(Long laskentakaavaId, HakukohdeViite ylaHakukohde, Valintaryhma ylaValintaryhma, Set<Long> tarkistetutLaskentaKaavaIdt) {
+        Set<Laskentakaava> vanhempienLaskentakaavat = new HashSet<>();
+        if(ylaHakukohde != null) {
+            vanhempienLaskentakaavat.addAll(ylaHakukohde.getLaskentakaava());
         }
-        if(valintaryhma != null) {
-            parentLaskentakaavat.addAll(valintaryhma.getLaskentakaava());
+        if(ylaValintaryhma != null) {
+            vanhempienLaskentakaavat.addAll(ylaValintaryhma.getLaskentakaava());
         }
-        for(Laskentakaava parentKaava: parentLaskentakaavat) {
-            if(laskentakaavaId.equals(parentKaava.getId()) ||
-              (parentKaava.getKopioLaskentakaavasta() != null && laskentakaavaId.equals(parentKaava.getKopioLaskentakaavasta().getId()))) {
-                return Optional.of(parentKaava);
-            }
-            if(checkedLaskentaKaavaIds.contains(parentKaava.getId())) {
+        for(Laskentakaava kaava: vanhempienLaskentakaavat) {
+            if(tarkistetutLaskentaKaavaIdt.contains(kaava.getId())) {
                 continue;
             }
-            checkedLaskentaKaavaIds.add(parentKaava.getId());
-            final Optional<Laskentakaava> grandParentKaava;
-            if(hakukohde != null && hakukohde.getValintaryhma() != null) {
-                grandParentKaava = haeLaskentakaavaPuusta(laskentakaavaId, null, hakukohde.getValintaryhma(), checkedLaskentaKaavaIds);
+            final boolean onSamaTaiKopioSamastaKaavasta = laskentakaavaId.equals(kaava.getId()) ||
+                    (kaava.getKopioLaskentakaavasta() != null && laskentakaavaId.equals(kaava.getKopioLaskentakaavasta().getId()));
+            if(onSamaTaiKopioSamastaKaavasta) {
+                return Optional.of(kaava);
             }
-            else if(valintaryhma != null && valintaryhma.getYlavalintaryhma() != null) {
-                grandParentKaava = haeLaskentakaavaPuusta(laskentakaavaId, null, valintaryhma.getYlavalintaryhma(), checkedLaskentaKaavaIds);
+            tarkistetutLaskentaKaavaIdt.add(kaava.getId());
+
+            final Optional<Laskentakaava> esiVanhempienKaava;
+            if(ylaHakukohde != null && ylaHakukohde.getValintaryhma() != null) {
+                esiVanhempienKaava = haeLaskentakaavaTaiSenKopioVanhemmilta(laskentakaavaId, null, ylaHakukohde.getValintaryhma(), tarkistetutLaskentaKaavaIdt);
+            } else if(ylaValintaryhma != null && ylaValintaryhma.getYlavalintaryhma() != null) {
+                esiVanhempienKaava = haeLaskentakaavaTaiSenKopioVanhemmilta(laskentakaavaId, null, ylaValintaryhma.getYlavalintaryhma(), tarkistetutLaskentaKaavaIdt);
             } else {
-                grandParentKaava = Optional.empty();
+                esiVanhempienKaava = Optional.empty();
             }
-            if(grandParentKaava.isPresent()) {
-                return grandParentKaava;
+            if(esiVanhempienKaava.isPresent()) {
+                return esiVanhempienKaava;
             }
         }
         return Optional.empty();
