@@ -7,7 +7,7 @@
                      manuaalisesti_siirretty="[NULL]"/>
 
 
-    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="2" version="0" oid="2"
+    <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="2" version="0" oid="valinnanvaihe2"
                     nimi="valinnanvaihe2" aktiivinen="true" kuvaus="kuvaus" valintaryhma_id="1" />
 
     <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="3" version="0" oid="3" hakukohde_viite_id="2"
@@ -61,6 +61,12 @@
     <funktiokutsu id="3" version="0" funktionimi="JOS" tallenna_tulos="false"/>
     <laskentakaava id="3" version="0" valintaryhmaviite="3" funktiokutsu_id="3" on_luonnos="false" nimi="Ammatillinen koulutus, lisäpiste2" tyyppi="LUKUARVOFUNKTIO" />
     <funktioargumentti id="3" version="0" indeksi="1" funktiokutsuparent_id="3" laskentakaavachild_id="2"/>
+
+    <valintaryhma id="4" version="0" oid="oid4" nimi="Valintaryhma 4" parent_id="1" />
+
+    <funktiokutsu id="4" version="0" funktionimi="JOS" tallenna_tulos="false"/>
+    <laskentakaava id="4" version="0" valintaryhmaviite="4" funktiokutsu_id="4" on_luonnos="false" nimi="Ammatillinen koulutus, lisäpiste3" tyyppi="LUKUARVOFUNKTIO" />
+    <funktioargumentti id="4" version="0" indeksi="1" funktiokutsuparent_id="4" laskentakaavachild_id="2"/>
 
     <hakijaryhma />
     <hakijaryhmatyyppikoodi />

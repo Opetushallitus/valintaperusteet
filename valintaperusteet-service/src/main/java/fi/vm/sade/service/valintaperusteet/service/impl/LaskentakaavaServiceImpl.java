@@ -427,6 +427,9 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     }
 
     private Optional<Laskentakaava> haeLaskentakaavaTaiSenKopioVanhemmilta(Long laskentakaavaId, HakukohdeViite ylaHakukohde, Valintaryhma ylaValintaryhma, Set<Long> tarkistetutLaskentaKaavaIdt) {
+        if(laskentakaavaId == null) {
+            return Optional.empty();
+        }
         Set<Laskentakaava> vanhempienLaskentakaavat = new HashSet<>();
         if(ylaHakukohde != null) {
             vanhempienLaskentakaavat.addAll(ylaHakukohde.getLaskentakaava());

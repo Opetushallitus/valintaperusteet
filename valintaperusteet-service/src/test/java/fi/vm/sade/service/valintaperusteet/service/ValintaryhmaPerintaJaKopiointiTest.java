@@ -7,6 +7,7 @@ import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
+import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import org.junit.Test;
@@ -128,7 +129,7 @@ public class ValintaryhmaPerintaJaKopiointiTest {
         assertEquals(1, valintaryhma.getAlavalintaryhmat().size());
         Valintaryhma kopioituAlivalintaryhma = valintaryhma.getAlavalintaryhmat().iterator().next();
         assertEquals("Valintaryhma 3", kopioituAlivalintaryhma.getNimi());
-        assertNotEquals("oid3 3", kopioituAlivalintaryhma.getOid());
+        assertNotEquals("oid3", kopioituAlivalintaryhma.getOid());
 
         Set<Laskentakaava> aliLaskentakaavat = kopioituAlivalintaryhma.getLaskentakaava();
         assertEquals(1L, aliLaskentakaavat.size());
@@ -138,10 +139,15 @@ public class ValintaryhmaPerintaJaKopiointiTest {
 
     @Test
     public void testKokoValintaryhmaPuunKopiointiJuurenAlle() {
-        Valintaryhma valintaryhma = valintaryhmaService.copyAsChild("oid2", null, "oid2 kopio");
-        assertNotEquals("oid2", valintaryhma.getOid());
-        assertEquals("oid2 kopio", valintaryhma.getNimi());
+        Valintaryhma valintaryhma = valintaryhmaService.copyAsChild("oid1", null, "oid1 kopio");
+        assertNotEquals("oid1", valintaryhma.getOid());
+        assertEquals("oid1 kopio", valintaryhma.getNimi());
         assertEquals(null, valintaryhma.getYlavalintaryhma());
+
+        assertEquals(1, valintaryhma.getValinnanvaiheet().size());
+        ValinnanVaihe vaihe = valintaryhma.getValinnanvaiheet().iterator().next();
+        assertEquals("valinnanvaihe2", vaihe.getNimi());
+        assertNotEquals("valinnanvaihe2oid", vaihe.getOid());
 
         Set<Laskentakaava> laskentakaavat = valintaryhma.getLaskentakaava();
         assertEquals(1L, laskentakaavat.size());
@@ -165,13 +171,13 @@ public class ValintaryhmaPerintaJaKopiointiTest {
 
         assertEquals(1, valintaryhma.getAlavalintaryhmat().size());
         Valintaryhma kopioituAlivalintaryhma = valintaryhma.getAlavalintaryhmat().iterator().next();
-        assertEquals("Valintaryhma 3", kopioituAlivalintaryhma.getNimi());
-        assertNotEquals("oid3 3", kopioituAlivalintaryhma.getOid());
+        assertEquals("Valintaryhma 4", kopioituAlivalintaryhma.getNimi());
+        assertNotEquals("oid4", kopioituAlivalintaryhma.getOid());
 
         Set<Laskentakaava> aliLaskentakaavat = kopioituAlivalintaryhma.getLaskentakaava();
         assertEquals(1L, aliLaskentakaavat.size());
-        assertEquals("Ammatillinen koulutus, lisäpiste2", aliLaskentakaavat.iterator().next().getNimi());
-        assertNotEquals(3L, aliLaskentakaavat.iterator().next().getId().longValue());
+        assertEquals("Ammatillinen koulutus, lisäpiste3", aliLaskentakaavat.iterator().next().getNimi());
+        assertNotEquals(4L, aliLaskentakaavat.iterator().next().getId().longValue());
     }
 
     @Test

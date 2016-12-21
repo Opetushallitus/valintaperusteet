@@ -172,7 +172,7 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
 
 
     private void lisaaValintaryhmalleKopioMasterHakijaryhmasta(Valintaryhma valintaryhma, Hakijaryhma masterHakijaryhma) {
-        Hakijaryhma kopio = luoKopioHakijaryhmasta(masterHakijaryhma);
+        Hakijaryhma kopio = luoKopioHakijaryhmasta(valintaryhma, masterHakijaryhma);
         kopio.setValintaryhma(valintaryhma);
         Hakijaryhma lisatty = hakijaryhmaDAO.insert(kopio);
         List<Valintaryhma> alavalintaryhmat = valintaryhmaService.findValintaryhmasByParentOid(valintaryhma.getOid());
@@ -184,13 +184,13 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
         });
     }
 
-    private Hakijaryhma luoKopioHakijaryhmasta(Hakijaryhma hakijaryhma) {
+    private Hakijaryhma luoKopioHakijaryhmasta(Valintaryhma kohdeValintaryhma, Hakijaryhma hakijaryhma) {
         Hakijaryhma kopio = new Hakijaryhma();
         kopio.setOid(oidService.haeHakijaryhmaOid());
         kopio.setKiintio(hakijaryhma.getKiintio());
         kopio.setKuvaus(hakijaryhma.getKuvaus());
         kopio.setKaytaKaikki(hakijaryhma.isKaytaKaikki());
-        kopio.setLaskentakaava(hakijaryhma.getLaskentakaava());
+        kopio.setLaskentakaava(laskentakaavaService.haeLaskentakaavaTaiSenKopioVanhemmilta(hakijaryhma.getLaskentakaavaId(), null, kohdeValintaryhma).orElse(hakijaryhma.getLaskentakaava()));
         kopio.setHakijaryhmatyyppikoodi(hakijaryhma.getHakijaryhmatyyppikoodi());
         kopio.setNimi(hakijaryhma.getNimi());
         kopio.setTarkkaKiintio(hakijaryhma.isTarkkaKiintio());
