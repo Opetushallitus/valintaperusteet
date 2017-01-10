@@ -557,6 +557,39 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
         return insert(modelMapper.map(laskentakaava, Laskentakaava.class), hakukohdeOid, valintaryhmaOid);
     }
 
+    @Override
+    public String haeHakuoid(String hakukohdeOid, String valintaryhmaOid) {
+        final Optional<String> hakuoid;
+        if (StringUtils.isNotBlank(hakukohdeOid)) {
+            hakuoid = getHakuOid(hakukohdeViiteDAO.readForImport(hakukohdeOid));
+        } else if (StringUtils.isNotBlank(valintaryhmaOid)) {
+            hakuoid = getHakuOid(valintaryhmaDAO.readByOid(valintaryhmaOid));
+        } else {
+            hakuoid = Optional.empty();
+        }
+        return hakuoid.orElse("");
+    }
+
+    private Optional<String> getHakuOid(Valintaryhma valintaryhma) {
+        if(valintaryhma.getHakuoid() != null) {
+            return Optional.of(valintaryhma.getHakuoid());
+        }
+        if(valintaryhma.getYlavalintaryhma() != null) {
+            return getHakuOid(valintaryhma.getYlavalintaryhma());
+        }
+        return Optional.empty();
+    }
+
+    private Optional<String> getHakuOid(HakukohdeViite hakukohde) {
+        if(hakukohde.getHakuoid() != null) {
+            return Optional.of(hakukohde.getHakuoid());
+        }
+        if(hakukohde.getValintaryhma() != null) {
+            return getHakuOid(hakukohde.getValintaryhma());
+        }
+        return Optional.empty();
+    }
+
     private Map<String, String> hakukohteenValintaperusteetMap(List<HakukohteenValintaperuste> vps) {
         Map<String, String> map = new HashMap<String, String>();
         for (HakukohteenValintaperuste vp : vps) {

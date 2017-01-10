@@ -30,6 +30,8 @@ public interface LaskentakaavaService {
 
     Laskentakaava insert(LaskentakaavaCreateDTO laskentakaava, String hakukohdeOid, String valintaryhmaOid);
 
+    String haeHakuoid(String hakukohdeOid, String valintaryhmaOid);
+
     Laskentakaava update(Long id, LaskentakaavaCreateDTO laskentakaava);
 
     Laskentakaava insert(Laskentakaava laskentakaava, String hakukohdeOid, String valintaryhmaOid);

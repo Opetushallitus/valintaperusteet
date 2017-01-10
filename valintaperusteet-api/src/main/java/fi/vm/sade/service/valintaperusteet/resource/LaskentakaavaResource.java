@@ -33,6 +33,11 @@ public interface LaskentakaavaResource {
     LaskentakaavaDTO kaava(@PathParam("id") Long id, @DefaultValue("true") @QueryParam("funktiopuu") Boolean funktiopuu);
 
     @GET
+    @Path("/hakuoid")
+    @Produces(MediaType.TEXT_PLAIN)
+    HakuViiteDTO kaavanHakuoid(@QueryParam("valintaryhma") String valintaryhmaOid, @QueryParam("hakukohde") String hakukohdeOid);
+
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
     List<LaskentakaavaListDTO> kaavat(@DefaultValue("false") @QueryParam("myosLuonnos") Boolean all,
                                       @QueryParam("valintaryhma") String valintaryhmaOid, @QueryParam("hakukohde") String hakukohdeOid,

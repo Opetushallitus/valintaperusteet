@@ -105,6 +105,20 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
 
     }
 
+    @Override
+    @GET
+    @Path("/hakuoid")
+    @Produces(MediaType.APPLICATION_JSON)
+    @PreAuthorize(READ_UPDATE_CRUD)
+    @ApiOperation(value = "Hakee laskentakaavan hakuoidin ID:n perusteella", response = HakuViiteDTO.class)
+    public HakuViiteDTO kaavanHakuoid(
+            @ApiParam(value = "Valintaryhmä OID, jonka hakua haetaan") @QueryParam("valintaryhma") String valintaryhmaOid,
+            @ApiParam(value = "Hakukohde OID, jonka hakua haetaan") @QueryParam("hakukohde") String hakukohdeOid) {
+        HakuViiteDTO haku = new HakuViiteDTO();
+        haku.setHakuoid(laskentakaavaService.haeHakuoid(hakukohdeOid, valintaryhmaOid));
+        return haku;
+    }
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @PreAuthorize(READ_UPDATE_CRUD)
