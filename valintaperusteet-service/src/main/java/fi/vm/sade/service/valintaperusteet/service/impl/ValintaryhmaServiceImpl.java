@@ -162,6 +162,8 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
         copy.setYlavalintaryhma(parent);
         copy.setNimi(name);
         copy.setOid(oidService.haeValintaryhmaOid());
+        copy.getOrganisaatiot().addAll(source.getOrganisaatiot());
+        copy.setVastuuorganisaatio(source.getVastuuorganisaatio());
         Valintaryhma inserted = valintaryhmaDAO.insert(copy);
         copyLaskentakaavat(source, inserted);
         if(copyValinnanVaiheetFromParent) {
