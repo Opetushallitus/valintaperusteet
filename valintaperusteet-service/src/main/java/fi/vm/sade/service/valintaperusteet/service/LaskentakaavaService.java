@@ -42,7 +42,7 @@ public interface LaskentakaavaService {
 
     Optional<Laskentakaava> haeLaskentakaavaTaiSenKopioVanhemmilta(Long laskentakaavaId, HakukohdeViite ylaHakukohde, Valintaryhma ylaValintaryhma);
 
-    Laskentakaava kopioi(Laskentakaava lahdeLaskentakaava, HakukohdeViite kohdeHakukohde, Valintaryhma kohdeValintaryhma);
+    Laskentakaava kopioiJosEiJoKopioitu(Laskentakaava lahdeLaskentakaava, HakukohdeViite kohdeHakukohde, Valintaryhma kohdeValintaryhma);
 
     Optional<Valintaryhma> valintaryhma(long id);
 

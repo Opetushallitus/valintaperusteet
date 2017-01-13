@@ -152,13 +152,7 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
         Jarjestyskriteeri kopio = new Jarjestyskriteeri();
         kopio.setAktiivinen(master.getAktiivinen());
         kopio.setValintatapajono(jono);
-        Optional<Laskentakaava> laskentakaava = laskentakaavaService.haeLaskentakaavaTaiSenKopioVanhemmilta(master.getLaskentakaavaId(), jono.getValinnanVaihe().getHakukohdeViite(), jono.getValinnanVaihe().getValintaryhma());
-        if(laskentakaava.isPresent()) {
-            kopio.setLaskentakaava(laskentakaava.get());
-        } else {
-            Laskentakaava kopioituKaava = laskentakaavaService.kopioi(master.getLaskentakaava(), jono.getValinnanVaihe().getHakukohdeViite(), jono.getValinnanVaihe().getValintaryhma());
-            kopio.setLaskentakaava(kopioituKaava);
-        }
+        kopio.setLaskentakaava(laskentakaavaService.kopioiJosEiJoKopioitu(master.getLaskentakaava(), jono.getValinnanVaihe().getHakukohdeViite(), jono.getValinnanVaihe().getValintaryhma()));
         kopio.setMetatiedot(master.getMetatiedot());
         kopio.setMaster(master);
         return kopio;

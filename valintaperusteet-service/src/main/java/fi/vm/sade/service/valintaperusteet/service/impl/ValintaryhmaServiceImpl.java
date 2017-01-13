@@ -186,7 +186,7 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
 
     private void copyLaskentakaavat(Valintaryhma source, Valintaryhma target) {
         source.getLaskentakaava().stream().forEach( sourceKaava -> {
-            laskentakaavaService.kopioi(sourceKaava, sourceKaava.getHakukohde(), target);
+            laskentakaavaService.kopioiJosEiJoKopioitu(sourceKaava, sourceKaava.getHakukohde(), target);
         });
     }
 

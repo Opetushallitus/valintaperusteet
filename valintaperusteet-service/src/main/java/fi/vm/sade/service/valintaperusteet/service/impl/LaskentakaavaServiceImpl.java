@@ -249,11 +249,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
                 if (hakukohde == null && valintaryhma == null) {
                     newArg.setLaskentakaavaChild(oldLaskentakaava);
                 } else {
-                    Optional<Laskentakaava> newLaskentakaava = haeLaskentakaavaTaiSenKopioVanhemmilta(laskentakaavaId, hakukohde, valintaryhma);
-                    if(!newLaskentakaava.isPresent()) {
-                        newLaskentakaava = Optional.of(kopioi(oldLaskentakaava, hakukohde, valintaryhma));
-                    }
-                    newArg.setLaskentakaavaChild(newLaskentakaava.get());
+                    newArg.setLaskentakaavaChild(kopioiJosEiJoKopioitu(oldLaskentakaava, hakukohde, valintaryhma));
                 }
             }
             newArg.setIndeksi(arg.getIndeksi());
@@ -464,7 +460,12 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     }
 
     @Override
-    public Laskentakaava kopioi(Laskentakaava lahdeLaskentakaava, HakukohdeViite kohdeHakukohde, Valintaryhma kohdeValintaryhma) {
+    public Laskentakaava kopioiJosEiJoKopioitu(Laskentakaava lahdeLaskentakaava, HakukohdeViite kohdeHakukohde, Valintaryhma kohdeValintaryhma) {
+        Optional<Laskentakaava> aikaisemminKopioituLaskentakaava = haeLaskentakaavaTaiSenKopioVanhemmilta(lahdeLaskentakaava.getId(), kohdeHakukohde, kohdeValintaryhma);
+        if(aikaisemminKopioituLaskentakaava.isPresent()) {
+            LOGGER.info("Käytetään laskentakaavan {} olemassaolevaa versiota {}: kohde hakukohde={}, kohde valintaryhma={}", lahdeLaskentakaava, aikaisemminKopioituLaskentakaava.get(), kohdeHakukohde, kohdeValintaryhma);
+            return aikaisemminKopioituLaskentakaava.get();
+        }
         LOGGER.info("Kopioidaan laskentakaava {}: kohde hakukohde={}, kohde valintaryhma={}", lahdeLaskentakaava, kohdeHakukohde, kohdeValintaryhma);
         Laskentakaava copy = new Laskentakaava();
         copy.setKopioLaskentakaavasta(lahdeLaskentakaava);
