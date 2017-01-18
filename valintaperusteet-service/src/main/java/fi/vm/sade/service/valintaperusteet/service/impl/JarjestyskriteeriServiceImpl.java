@@ -4,6 +4,7 @@ import java.util.*;
 
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.*;
+import fi.vm.sade.service.valintaperusteet.util.JuureenKopiointiCache;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -135,7 +136,7 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
 
     private void lisaaValintatapajonolleKopioMasterJarjestyskriteerista(Valintatapajono valintatapajono,
                                                                         Jarjestyskriteeri masterJarjestyskriteeri, Jarjestyskriteeri edellinenMasterJarjestyskriteeri) {
-        Jarjestyskriteeri kopio = teeKopioMasterista(valintatapajono, masterJarjestyskriteeri);
+        Jarjestyskriteeri kopio = teeKopioMasterista(valintatapajono, masterJarjestyskriteeri, null);
         kopio.setValintatapajono(valintatapajono);
         kopio.setOid(oidService.haeJarjestyskriteeriOid());
         List<Jarjestyskriteeri> jonot = LinkitettavaJaKopioitavaUtil.jarjesta(jarjestyskriteeriDAO.findByJono(valintatapajono.getOid()));
@@ -148,13 +149,23 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
         }
     }
 
-    private Jarjestyskriteeri teeKopioMasterista(Valintatapajono jono, Jarjestyskriteeri master) {
+    private Jarjestyskriteeri teeKopioMasterista(Valintatapajono jono, Jarjestyskriteeri master, JuureenKopiointiCache kopiointiCache) {
         Jarjestyskriteeri kopio = new Jarjestyskriteeri();
         kopio.setAktiivinen(master.getAktiivinen());
         kopio.setValintatapajono(jono);
         kopio.setLaskentakaava(laskentakaavaService.kopioiJosEiJoKopioitu(master.getLaskentakaava(), jono.getValinnanVaihe().getHakukohdeViite(), jono.getValinnanVaihe().getValintaryhma()));
         kopio.setMetatiedot(master.getMetatiedot());
-        kopio.setMaster(master);
+        if (kopiointiCache == null) {
+            kopio.setMaster(master);
+        } else {
+            if(master.getMaster() != null) {
+                Jarjestyskriteeri kopioituMaster = kopiointiCache.kopioidutJarjestyskriteerit.get(master.getMaster().getId());
+                if (kopioituMaster == null) {
+                    throw new IllegalStateException("Ei löydetty lähdejärjestyskriteetin " + master + " masterille " + master.getMaster() + " kopiota");
+                }
+                kopio.setMaster(kopioituMaster);
+            }
+        }
         return kopio;
     }
 
@@ -238,23 +249,28 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
 
     @Override
     public void kopioiJarjestyskriteeritMasterValintatapajonoltaKopiolle(Valintatapajono valintatapajono,
-                                                                         Valintatapajono masterValintatapajono) {
+                                                                         Valintatapajono masterValintatapajono,
+                                                                         JuureenKopiointiCache kopiointiCache) {
         Jarjestyskriteeri jk = jarjestyskriteeriDAO.haeValintatapajononViimeinenJarjestyskriteeri(masterValintatapajono.getOid());
-        kopioiJarjestyskriteeritRekursiivisesti(valintatapajono, jk);
+        kopioiJarjestyskriteeritRekursiivisesti(valintatapajono, jk, kopiointiCache);
     }
 
-    private Jarjestyskriteeri kopioiJarjestyskriteeritRekursiivisesti(Valintatapajono valintatapajono, Jarjestyskriteeri master) {
+    private Jarjestyskriteeri kopioiJarjestyskriteeritRekursiivisesti(Valintatapajono valintatapajono, Jarjestyskriteeri master, JuureenKopiointiCache kopiointiCache) {
         if (master == null) {
             return null;
         }
-        Jarjestyskriteeri kopio = teeKopioMasterista(valintatapajono, master);
+        Jarjestyskriteeri kopio = teeKopioMasterista(valintatapajono, master, kopiointiCache);
         kopio.setOid(oidService.haeJarjestyskriteeriOid());
         valintatapajono.addJarjestyskriteeri(kopio);
-        Jarjestyskriteeri edellinen = kopioiJarjestyskriteeritRekursiivisesti(valintatapajono, master.getEdellinen());
+        Jarjestyskriteeri edellinen = kopioiJarjestyskriteeritRekursiivisesti(valintatapajono, master.getEdellinen(), kopiointiCache);
         if (edellinen != null) {
             kopio.setEdellinen(edellinen);
             edellinen.setSeuraava(kopio);
         }
-        return jarjestyskriteeriDAO.insert(kopio);
+        Jarjestyskriteeri lisatty = jarjestyskriteeriDAO.insert(kopio);
+        if(kopiointiCache != null) {
+            kopiointiCache.kopioidutJarjestyskriteerit.put(master.getId(), lisatty);
+        }
+        return lisatty;
     }
 }

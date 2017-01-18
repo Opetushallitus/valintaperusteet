@@ -275,7 +275,7 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
         if (kopiointiCache != null) {
             kopiointiCache.kopioidutValintapajonot.put(master.getId(), lisatty);
         }
-        jarjestyskriteeriService.kopioiJarjestyskriteeritMasterValintatapajonoltaKopiolle(lisatty, master);
+        jarjestyskriteeriService.kopioiJarjestyskriteeritMasterValintatapajonoltaKopiolle(lisatty, master, kopiointiCache);
         return lisatty;
     }
 
