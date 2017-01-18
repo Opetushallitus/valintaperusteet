@@ -12,6 +12,7 @@ import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintaryhmaEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintaryhmaaEiVoidaKopioida;
+import fi.vm.sade.service.valintaperusteet.util.JuureenKopiointiCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,7 +89,7 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
         setOrganisaatiot(valintaryhma, dto);
         valintaryhma.setViimeinenKaynnistyspaiva(dto.getViimeinenKaynnistyspaiva());
         Valintaryhma inserted = valintaryhmaDAO.insert(valintaryhma);
-        valinnanVaiheService.kopioiValinnanVaiheetParentilta(inserted, parent);
+        valinnanVaiheService.kopioiValinnanVaiheetParentilta(inserted, parent, null);
         hakijaryhmaService.kopioiHakijaryhmatMasterValintaryhmalta(parentOid, inserted.getOid());
         return inserted;
     }
@@ -153,8 +154,8 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
         return valintaryhmaDAO.readHierarchy(childOid).stream().anyMatch(vr -> vr.getOid().equals(parentOid));
     }
 
-    private Valintaryhma copyAsChild(Valintaryhma source, Valintaryhma parent, String name, boolean copyValinnanVaiheetFromParent) {
-        if(parent == null && copyValinnanVaiheetFromParent) {
+    private Valintaryhma copyAsChild(Valintaryhma source, Valintaryhma parent, String name, JuureenKopiointiCache kopiointiCache) {
+        if(parent == null && kopiointiCache == null) {
             throw new IllegalArgumentException("Parent is required if want to copy valinnanvaiheet from it");
         }
         LOGGER.info("Kopioidaan valintaryhmä {} nimellä '{}' valintaryhmän {} alle", source, name, parent);
@@ -166,19 +167,19 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
         copy.setVastuuorganisaatio(source.getVastuuorganisaatio());
         Valintaryhma inserted = valintaryhmaDAO.insert(copy);
         copyLaskentakaavat(source, inserted);
-        if(copyValinnanVaiheetFromParent) {
-            valinnanVaiheService.kopioiValinnanVaiheetParentilta(inserted, parent);
+        if(kopiointiCache == null) {
+            valinnanVaiheService.kopioiValinnanVaiheetParentilta(inserted, parent, kopiointiCache);
             hakijaryhmaService.kopioiHakijaryhmatMasterValintaryhmalta(parent.getOid(), inserted.getOid());
         } else  {
-            valinnanVaiheService.kopioiValinnanVaiheetParentilta(inserted, source);
+            valinnanVaiheService.kopioiValinnanVaiheetParentilta(inserted, source, kopiointiCache);
             hakijaryhmaService.kopioiHakijaryhmatMasterValintaryhmalta(source.getOid(), inserted.getOid());
         }
         copyHakukohdekoodit(source, inserted);
         copyValintakoekoodit(source, inserted);
         List<Valintaryhma> children = valintaryhmaDAO.findChildrenByParentOid(source.getOid());
         children.stream().forEach((child -> {
-            Valintaryhma copiedChild = copyAsChild(child, inserted, child.getNimi(), copyValinnanVaiheetFromParent);
-            copy.getAlavalintaryhmat().add(copiedChild);
+            Valintaryhma copiedChild = copyAsChild(child, inserted, child.getNimi(), kopiointiCache);
+            inserted.getAlavalintaryhmat().add(copiedChild);
         }));
         LOGGER.info("Kopioitiin valintaryhmä {} nimellä '{}' valintaryhmän {} alle: {}", source, name, parent, inserted);
         return inserted;
@@ -220,7 +221,7 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
             parent = valintaryhmaDAO.readByOid(parentOid);
         }
         Valintaryhma source = valintaryhmaDAO.readByOid(sourceOid);
-        return copyAsChild(source, parent, name, parentOid != null);
+        return copyAsChild(source, parent, name, parentOid == null ? new JuureenKopiointiCache() : null);
     }
 
     @Override

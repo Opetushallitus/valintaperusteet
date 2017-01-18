@@ -3,6 +3,7 @@ package fi.vm.sade.service.valintaperusteet.service;
 import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoCreateDTO;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
+import fi.vm.sade.service.valintaperusteet.util.JuureenKopiointiCache;
 
 import java.util.List;
 import java.util.Map;
@@ -22,7 +23,7 @@ public interface ValintatapajonoService {
 
     List<Valintatapajono> jarjestaValintatapajonot(List<String> valintatapajonoOidit);
 
-    void kopioiValintatapajonotMasterValinnanVaiheeltaKopiolle(ValinnanVaihe valinnanVaihe, ValinnanVaihe masterValinnanVaihe);
+    void kopioiValintatapajonotMasterValinnanVaiheeltaKopiolle(ValinnanVaihe valinnanVaihe, ValinnanVaihe masterValinnanVaihe, JuureenKopiointiCache kopiointiCache);
 
     Valintatapajono update(String oid, ValintatapajonoCreateDTO jono);
 

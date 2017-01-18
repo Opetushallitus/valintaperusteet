@@ -107,7 +107,7 @@ public class HakukohdeServiceImpl implements HakukohdeService {
             lisatty.setValintaryhma(valintaryhma);
             lisatty = hakukohdeViiteDAO.insert(lisatty);
             String hakukohdeOid = lisatty.getOid();
-            valinnanVaiheService.kopioiValinnanVaiheetParentilta(lisatty, valintaryhma);
+            valinnanVaiheService.kopioiValinnanVaiheetParentilta(lisatty, valintaryhma, null);
             valintaryhma.getHakijaryhmat().stream().forEach(hakijaryhma -> {
                 hakijaryhmaValintatapajonoService.liitaHakijaryhmaHakukohteelle(hakukohdeOid, hakijaryhma.getOid());
             });
