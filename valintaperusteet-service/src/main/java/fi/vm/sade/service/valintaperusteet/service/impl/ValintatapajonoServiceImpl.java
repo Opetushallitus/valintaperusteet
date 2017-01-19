@@ -48,6 +48,9 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
     private HakukohdeService hakukohdeService;
 
     @Autowired
+    private HakijaryhmaValintatapajonoService hakijaryhmaValintatapajonoService;
+
+    @Autowired
     HakukohdeViiteDAO hakukohdeDao;
 
     private static ValintatapajonoKopioija kopioija = new ValintatapajonoKopioija();
@@ -274,6 +277,7 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
         Valintatapajono lisatty = valintatapajonoDAO.insert(kopio);
         if (kopiointiCache != null) {
             kopiointiCache.kopioidutValintapajonot.put(master.getId(), lisatty);
+            hakijaryhmaValintatapajonoService.kopioiValintatapajononHakijaryhmaValintatapajonot(master, kopio, kopiointiCache);
         }
         jarjestyskriteeriService.kopioiJarjestyskriteeritMasterValintatapajonoltaKopiolle(lisatty, master, kopiointiCache);
         return lisatty;
