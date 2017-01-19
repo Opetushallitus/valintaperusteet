@@ -100,40 +100,6 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
         hakijaryhmaValintatapajonoService.liitaHakijaryhmaValintatapajonolle(valintatapajonoOid, hakijaryhmaOid);
     }
 
-    private void kopioHakijaryhmat(Valintatapajono valintatapajono, Hakijaryhma hakijaryhma, HakijaryhmaValintatapajono master) {
-        for (Valintatapajono kopio : valintatapajono.getKopiot()) {
-            HakukohdeViite kopioHakukohdeViite = kopio.getValinnanVaihe().getHakukohdeViite();
-            Valintaryhma kopioValintaryhma = kopio.getValinnanVaihe().getValintaryhma();
-            if (kopioHakukohdeViite == null && kopioValintaryhma == null) {
-                throw new ValinnanvaiheellaEiOleHakukohdettaTaiValintaryhmaaException("");
-            }
-            HakijaryhmaValintatapajono kopioLink = new HakijaryhmaValintatapajono();
-            for (HakijaryhmaValintatapajono hrKopio : master.getKopiot()) {
-                if (kopioValintaryhma != null && hrKopio.getHakijaryhma().getValintaryhma() != null
-                        && hrKopio.getHakijaryhma().getValintaryhma().getOid().equals(kopioValintaryhma.getOid())) {
-                    kopioLink.setHakijaryhma(hrKopio.getHakijaryhma());
-                } else if (kopioHakukohdeViite != null && hrKopio.getHakukohdeViite() != null
-                        && hrKopio.getHakukohdeViite().getOid().equals(kopioHakukohdeViite.getOid())) {
-                    kopioLink.setHakijaryhma(hrKopio.getHakijaryhma());
-                }
-            }
-            if (hakijaryhmaValintatapajonoDAO.readByOid(kopioLink.getHakijaryhma().getOid() + "_" + kopio.getOid()) != null) {
-                // Hakijaryhma on jo liitetty aikaisemmin lapselle..
-                continue;
-            }
-            if (kopioLink.getHakijaryhma() == null) {
-                throw new HakijaryhmanKopiotaEiLoytynytException("");
-            }
-            kopioLink.setValintatapajono(kopio);
-            kopioLink.setOid(kopioLink.getHakijaryhma().getOid() + "_" + kopio.getOid());
-            kopioLink.setAktiivinen(true);
-            kopioLink.setMaster(master);
-            kopioLink.setKiintio(master.getKiintio());
-            kopioLink = hakijaryhmaValintatapajonoDAO.insert(kopioLink);
-            kopioHakijaryhmat(kopio, kopioLink.getHakijaryhma(), kopioLink);
-        }
-    }
-
     @Override
     public Hakijaryhma lisaaHakijaryhmaValintaryhmalle(String valintaryhmaOid, HakijaryhmaCreateDTO dto) {
         Valintaryhma valintaryhma = valintaryhmaService.readByOid(valintaryhmaOid);
