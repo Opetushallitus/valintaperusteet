@@ -5,7 +5,7 @@
     <diskStore path="java.io.tmpdir"/>
     <defaultCache
             eternal="false"
-            maxElementsInMemory="10000"
+            maxElementsInMemory="100000"
             maxElementsOnDisk="100"
             overflowToDisk="false"
             diskPersistent="false"
