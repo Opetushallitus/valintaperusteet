@@ -169,11 +169,11 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
         Valintaryhma inserted = valintaryhmaDAO.insert(copy);
         copyLaskentakaavat(source, inserted);
         if(kopiointiCache == null) {
-            valinnanVaiheService.kopioiValinnanVaiheetParentilta(inserted, parent, kopiointiCache);
             hakijaryhmaService.kopioiHakijaryhmatMasterValintaryhmalta(parent.getOid(), inserted.getOid(), kopiointiCache);
+            valinnanVaiheService.kopioiValinnanVaiheetParentilta(inserted, parent, kopiointiCache);
         } else  {
-            valinnanVaiheService.kopioiValinnanVaiheetParentilta(inserted, source, kopiointiCache);
             hakijaryhmaService.kopioiHakijaryhmatMasterValintaryhmalta(source.getOid(), inserted.getOid(), kopiointiCache);
+            valinnanVaiheService.kopioiValinnanVaiheetParentilta(inserted, source, kopiointiCache);
         }
         copyHakukohdekoodit(source, inserted);
         copyValintakoekoodit(source, inserted);
