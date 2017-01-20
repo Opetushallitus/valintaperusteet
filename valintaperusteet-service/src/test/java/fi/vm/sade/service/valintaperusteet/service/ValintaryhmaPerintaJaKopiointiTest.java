@@ -6,10 +6,7 @@ import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
-import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
-import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
-import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
-import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
+import fi.vm.sade.service.valintaperusteet.model.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -149,6 +146,11 @@ public class ValintaryhmaPerintaJaKopiointiTest {
         assertEquals("valinnanvaihe2", vaihe.getNimi());
         assertNotEquals("valinnanvaihe2oid", vaihe.getOid());
 
+        assertEquals(1, valintaryhma.getHakijaryhmat().size());
+        Hakijaryhma kopioituHakijaryhma = valintaryhma.getHakijaryhmat().iterator().next();
+        assertEquals("Hakijaryhma 1", kopioituHakijaryhma.getNimi());
+        assertNotEquals("oid1", kopioituHakijaryhma.getOid());
+
         Set<Laskentakaava> laskentakaavat = valintaryhma.getLaskentakaava();
         assertEquals(1L, laskentakaavat.size());
         Laskentakaava laskentakaava = laskentakaavat.iterator().next();
@@ -165,6 +167,10 @@ public class ValintaryhmaPerintaJaKopiointiTest {
                     assertEquals("Ammatillinen koulutus, lisäpiste", kaava.getNimi());
                     assertNotEquals(2L, kaava.getId().longValue());
                     assertEquals(laskentakaava.getId(), kaava.getId());
+                    assertEquals(1, j.getHakijaryhmat().size());
+                    HakijaryhmaValintatapajono jononRyhma = j.getHakijaryhmat().iterator().next();
+                    assertEquals("Hakijaryhma 1", jononRyhma.getHakijaryhma().getNimi());
+                    assertEquals(kopioituHakijaryhma.getId(), jononRyhma.getHakijaryhma().getId());
                 }
             });
         });

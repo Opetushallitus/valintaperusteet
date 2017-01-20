@@ -142,6 +142,7 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
         Hakijaryhma kopio = luoKopioHakijaryhmasta(valintaryhma, masterHakijaryhma);
         kopio.setValintaryhma(valintaryhma);
         Hakijaryhma lisatty = hakijaryhmaDAO.insert(kopio);
+        valintaryhma.getHakijaryhmat().add(lisatty);
         if (kopiointiCache != null) {
             kopiointiCache.kopioidutHakijaryhmat.put(masterHakijaryhma.getId(), lisatty);
         }
