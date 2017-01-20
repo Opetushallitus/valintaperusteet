@@ -90,7 +90,7 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
         valintaryhma.setViimeinenKaynnistyspaiva(dto.getViimeinenKaynnistyspaiva());
         Valintaryhma inserted = valintaryhmaDAO.insert(valintaryhma);
         valinnanVaiheService.kopioiValinnanVaiheetParentilta(inserted, parent, null);
-        hakijaryhmaService.kopioiHakijaryhmatMasterValintaryhmalta(parentOid, inserted.getOid());
+        hakijaryhmaService.kopioiHakijaryhmatMasterValintaryhmalta(parentOid, inserted.getOid(), null);
         return inserted;
     }
 
@@ -165,14 +165,15 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
         copy.setOid(oidService.haeValintaryhmaOid());
         copy.getOrganisaatiot().addAll(source.getOrganisaatiot());
         copy.setVastuuorganisaatio(source.getVastuuorganisaatio());
+        copy.setKohdejoukko(source.getKohdejoukko());
         Valintaryhma inserted = valintaryhmaDAO.insert(copy);
         copyLaskentakaavat(source, inserted);
         if(kopiointiCache == null) {
             valinnanVaiheService.kopioiValinnanVaiheetParentilta(inserted, parent, kopiointiCache);
-            hakijaryhmaService.kopioiHakijaryhmatMasterValintaryhmalta(parent.getOid(), inserted.getOid());
+            hakijaryhmaService.kopioiHakijaryhmatMasterValintaryhmalta(parent.getOid(), inserted.getOid(), kopiointiCache);
         } else  {
             valinnanVaiheService.kopioiValinnanVaiheetParentilta(inserted, source, kopiointiCache);
-            hakijaryhmaService.kopioiHakijaryhmatMasterValintaryhmalta(source.getOid(), inserted.getOid());
+            hakijaryhmaService.kopioiHakijaryhmatMasterValintaryhmalta(source.getOid(), inserted.getOid(), kopiointiCache);
         }
         copyHakukohdekoodit(source, inserted);
         copyValintakoekoodit(source, inserted);

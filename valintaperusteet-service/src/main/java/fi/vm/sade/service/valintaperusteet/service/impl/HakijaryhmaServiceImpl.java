@@ -9,6 +9,7 @@ import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapp
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.*;
+import fi.vm.sade.service.valintaperusteet.util.JuureenKopiointiCache;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -123,30 +124,33 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
         });
         List<Valintaryhma> alaValintaryhmat = valintaryhmaService.findValintaryhmasByParentOid(valintaryhmaOid);
         for (Valintaryhma alavalintaryhma : alaValintaryhmat) {
-            lisaaValintaryhmalleKopioMasterHakijaryhmasta(alavalintaryhma, lisatty);
+            lisaaValintaryhmalleKopioMasterHakijaryhmasta(alavalintaryhma, lisatty, null);
         }
         return lisatty;
     }
 
     @Override
-    public void kopioiHakijaryhmatMasterValintaryhmalta(String parentValintaryhmaOid, String childValintaryhmaoid) {
+    public void kopioiHakijaryhmatMasterValintaryhmalta(String parentValintaryhmaOid, String childValintaryhmaoid, JuureenKopiointiCache kopiointiCache) {
         Valintaryhma childValintaryhma = valintaryhmaService.readByOid(childValintaryhmaoid);
         hakijaryhmaDAO.findByValintaryhma(parentValintaryhmaOid).stream().forEach(parentHakijaryhma -> {
-            lisaaValintaryhmalleKopioMasterHakijaryhmasta(childValintaryhma, parentHakijaryhma);
+            lisaaValintaryhmalleKopioMasterHakijaryhmasta(childValintaryhma, parentHakijaryhma, kopiointiCache);
         });
     }
 
 
-    private void lisaaValintaryhmalleKopioMasterHakijaryhmasta(Valintaryhma valintaryhma, Hakijaryhma masterHakijaryhma) {
+    private void lisaaValintaryhmalleKopioMasterHakijaryhmasta(Valintaryhma valintaryhma, Hakijaryhma masterHakijaryhma, JuureenKopiointiCache kopiointiCache) {
         Hakijaryhma kopio = luoKopioHakijaryhmasta(valintaryhma, masterHakijaryhma);
         kopio.setValintaryhma(valintaryhma);
         Hakijaryhma lisatty = hakijaryhmaDAO.insert(kopio);
+        if (kopiointiCache != null) {
+            kopiointiCache.kopioidutHakijaryhmat.put(masterHakijaryhma.getId(), lisatty);
+        }
         List<Valintaryhma> alavalintaryhmat = valintaryhmaService.findValintaryhmasByParentOid(valintaryhma.getOid());
         valintaryhma.getHakukohdeViitteet().stream().forEach(hk -> {
             hakijaryhmaValintatapajonoService.liitaHakijaryhmaHakukohteelle(hk.getOid(), lisatty.getOid());
         });
         alavalintaryhmat.stream().forEach(alavalintaryhma -> {
-            lisaaValintaryhmalleKopioMasterHakijaryhmasta(alavalintaryhma, lisatty);
+            lisaaValintaryhmalleKopioMasterHakijaryhmasta(alavalintaryhma, lisatty, kopiointiCache);
         });
     }
 
