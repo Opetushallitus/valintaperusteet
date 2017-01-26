@@ -1,0 +1,1 @@
+ALTER TABLE hakijaryhma_jono ADD CONSTRAINT hakijaryhma_jono_hakijaryhma_id_hakukohde_viite_id UNIQUE (hakijaryhma_id, hakukohde_viite_id);
