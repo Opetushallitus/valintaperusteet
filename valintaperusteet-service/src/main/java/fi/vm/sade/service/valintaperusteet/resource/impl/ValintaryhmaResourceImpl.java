@@ -315,7 +315,7 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
             @ApiParam(value = "Valintaryhmän OID, jolle hakijaryhmä lisätään", required = true) @PathParam("valintaryhmaOid") String valintaryhmaOid,
             @ApiParam(value = "Lisättävä hakijaryhmä", required = true) HakijaryhmaCreateDTO hakijaryhma) {
         try {
-            HakijaryhmaDTO lisatty = modelMapper.map(hakijaryhmaService.lisaaHakijaryhmaValintaryhmalle(valintaryhmaOid, hakijaryhma), HakijaryhmaDTO.class);
+            HakijaryhmaDTO lisatty = modelMapper.map(hakijaryhmaService.lisaaHakijaryhmaValintaryhmalle(valintaryhmaOid, hakijaryhma, null), HakijaryhmaDTO.class);
             AUDIT.log(builder()
                     .id(username())
                     .valintaryhmaOid(valintaryhmaOid)
