@@ -19,11 +19,13 @@ public interface HakijaryhmaService {
 
     void liitaHakijaryhmaValintatapajonolle(String valintatapajonoOid, String hakijaryhmaOid);
 
-    Hakijaryhma lisaaHakijaryhmaValintaryhmalle(String valintaryhmaOid, HakijaryhmaCreateDTO hakijaryhma);
+    Hakijaryhma lisaaHakijaryhmaValintaryhmalle(String valintaryhmaOid, HakijaryhmaCreateDTO hakijaryhma, String edellinenHakijaryhmaOid);
 
     Hakijaryhma update(String oid, HakijaryhmaCreateDTO entity);
 
     Optional<Hakijaryhma> siirra(HakijaryhmaSiirraDTO dto);
 
     void kopioiHakijaryhmatMasterValintaryhmalta(String parentValintaryhmaOid, String childValintaryhmaoid, JuureenKopiointiCache kopiointiCache);
+
+    List<Hakijaryhma> jarjestaHakijaryhmat(List<String> oids);
 }
