@@ -420,7 +420,7 @@
                                 <schema>public</schema>
                             </schemas>
                             <driver>org.postgresql.Driver</driver>
-                            <url>jdbc:postgresql://taulu.hard.ware.fi:5432/valintaperusteet</url>
+                            <url>jdbc:postgresql://taulu.hard.ware.fi:5432/valintaperusteet?ApplicationName=valintaperusteet-flyway</url>
                         </configuration>
                     </plugin>
                 </plugins>
