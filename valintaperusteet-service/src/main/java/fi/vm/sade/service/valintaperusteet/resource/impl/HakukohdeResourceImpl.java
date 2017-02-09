@@ -82,13 +82,10 @@ public class HakukohdeResourceImpl {
     private HakijaryhmaService hakijaryhmaService;
 
     @Autowired
-    private HakijaryhmaValintatapajonoService hakijaryhmaValintatapajonoServiceService;
+    private HakijaryhmaValintatapajonoService hakijaryhmaValintatapajonoService;
 
     @Autowired
     private OidService oidService;
-
-    @Autowired
-    HakijaryhmaValintatapajonoService hakijaryhmaValintatapajonoService;
 
     @Autowired
     private ValintaperusteetModelMapper modelMapper;
@@ -398,7 +395,7 @@ public class HakukohdeResourceImpl {
             @ApiParam(value = "Hakukohteen OID", required = true) @PathParam("hakukohdeOid") String hakukohdeOid,
             @ApiParam(value = "Lisättävä hakijaryhmä", required = true) HakijaryhmaCreateDTO hakijaryhma) {
         try {
-            HakijaryhmaDTO lisatty = modelMapper.map(hakijaryhmaValintatapajonoServiceService.lisaaHakijaryhmaHakukohteelle(hakukohdeOid, hakijaryhma), HakijaryhmaDTO.class);
+            HakijaryhmaDTO lisatty = modelMapper.map(hakijaryhmaValintatapajonoService.lisaaHakijaryhmaHakukohteelle(hakukohdeOid, hakijaryhma), HakijaryhmaDTO.class);
             AUDIT.log(builder()
                     .id(username())
                     .hakukohdeOid(hakukohdeOid)
@@ -431,7 +428,7 @@ public class HakukohdeResourceImpl {
             @ApiParam(value = "Hakukohteen OID, jolle hakijaryhmä liitetään", required = true) @PathParam("hakukohdeOid") String hakukohdeOid,
             @ApiParam(value = "Hakijaryhmän OID, joka valintatapajonoon liitetään", required = true) @PathParam("hakijaryhmaOid") String hakijaryhmaOid) {
         try {
-            hakijaryhmaValintatapajonoServiceService.liitaHakijaryhmaHakukohteelle(hakukohdeOid, hakijaryhmaOid);
+            hakijaryhmaValintatapajonoService.liitaHakijaryhmaHakukohteelle(hakukohdeOid, hakijaryhmaOid);
             AUDIT.log(builder()
                     .id(username())
                     .hakukohdeOid(hakukohdeOid)
