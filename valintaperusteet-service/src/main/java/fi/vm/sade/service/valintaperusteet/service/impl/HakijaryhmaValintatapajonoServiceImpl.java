@@ -5,9 +5,19 @@ import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaValintatapajonoDAO;
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
-import fi.vm.sade.service.valintaperusteet.model.*;
-import fi.vm.sade.service.valintaperusteet.service.*;
+import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
+import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
+import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
+import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
+import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaValintatapajonoService;
+import fi.vm.sade.service.valintaperusteet.service.HakijaryhmatyyppikoodiService;
+import fi.vm.sade.service.valintaperusteet.service.HakukohdeService;
+import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
+import fi.vm.sade.service.valintaperusteet.service.OidService;
+import fi.vm.sade.service.valintaperusteet.service.ValintaryhmaService;
+import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaEiOleOlemassaException;
+import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaValintatapajonoOidListaOnTyhjaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaaEiVoiPoistaaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaOidTyhjaException;
 import fi.vm.sade.service.valintaperusteet.util.HakijaryhmaValintatapajonoKopioija;
@@ -18,7 +28,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 @Service
@@ -262,6 +274,24 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
         List<HakijaryhmaValintatapajono> byHakukohde = hakijaryhmaValintatapajonoDAO.findByHakukohde(oid);
         return LinkitettavaJaKopioitavaUtil.jarjesta(byHakukohde);
     }
+
+    @Override
+    public List<HakijaryhmaValintatapajono> jarjestaHakijaryhmat(List<String> hakijaryhmajonoOidit) {
+        if (hakijaryhmajonoOidit.isEmpty()) {
+            throw new HakijaryhmaValintatapajonoOidListaOnTyhjaException("Valintatapajonojen OID-lista on tyhjä");
+        }
+        HakijaryhmaValintatapajono ensimmainen = haeHakijaryhmaValintatapajono(hakijaryhmajonoOidit.get(0));
+        return jarjestaHakijaryhmajono(ensimmainen.getHakukohdeViite(), hakijaryhmajonoOidit);
+    }
+
+    private List<HakijaryhmaValintatapajono> jarjestaHakijaryhmajono(HakukohdeViite viite, List<String> hakijaryhmajonoOidit) {
+        LinkedHashMap<String, HakijaryhmaValintatapajono> alkuperainenJarjestys = LinkitettavaJaKopioitavaUtil.teeMappiOidienMukaan(
+                LinkitettavaJaKopioitavaUtil.jarjesta(hakijaryhmaValintatapajonoDAO.findByHakukohde(viite.getOid())));
+        LinkedHashMap<String, HakijaryhmaValintatapajono> jarjestetty = LinkitettavaJaKopioitavaUtil.jarjestaOidListanMukaan(
+                alkuperainenJarjestys, hakijaryhmajonoOidit);
+        return new ArrayList<>(jarjestetty.values());
+    }
+
 
     private void delete(HakijaryhmaValintatapajono entity) {
         for (HakijaryhmaValintatapajono hakijaryhma : entity.getKopiot()) {
