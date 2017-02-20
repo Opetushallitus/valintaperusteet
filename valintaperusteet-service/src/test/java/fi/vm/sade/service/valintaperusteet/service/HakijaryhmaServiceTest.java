@@ -155,7 +155,7 @@ public class HakijaryhmaServiceTest {
         hakijaryhmatyyppikoodi.setUri("muu");
         hakijaryhma.setHakijaryhmatyyppikoodi(hakijaryhmatyyppikoodi);
 
-        hakijaryhmaService.lisaaHakijaryhmaValintaryhmalle("vr1", hakijaryhma, null);
+        hakijaryhmaService.lisaaHakijaryhmaValintaryhmalle("vr1", hakijaryhma);
 
         assertEquals(2, hakijaryhmaService.findByValintaryhma("vr1").size());
         assertEquals(2, hakijaryhmaService.findByValintaryhma("vr2").size());
@@ -168,7 +168,7 @@ public class HakijaryhmaServiceTest {
         hakijaryhma.setNimi("nimi");
         hakijaryhma.setHakijaryhmatyyppikoodi(hakijaryhmatyyppikoodi);
 
-        hakijaryhmaService.lisaaHakijaryhmaValintaryhmalle("vr2", hakijaryhma, null);
+        hakijaryhmaService.lisaaHakijaryhmaValintaryhmalle("vr2", hakijaryhma);
 
         assertEquals(2, hakijaryhmaService.findByValintaryhma("vr1").size());
         assertEquals(3, hakijaryhmaService.findByValintaryhma("vr2").size());
@@ -254,7 +254,7 @@ public class HakijaryhmaServiceTest {
         hakijaryhma.setLaskentakaavaId(11L);
         hakijaryhma.setNimi("nimi");
 
-        hakijaryhmaService.lisaaHakijaryhmaValintaryhmalle("vr1", hakijaryhma, null);
+        hakijaryhmaService.lisaaHakijaryhmaValintaryhmalle("vr1", hakijaryhma);
 
         {
             assertEquals(2, hakijaryhmaService.findByValintaryhma("vr1").size());
@@ -270,7 +270,7 @@ public class HakijaryhmaServiceTest {
         hakijaryhma.setLaskentakaavaId(11L);
         hakijaryhma.setNimi("nimi");
 
-        hakijaryhmaService.lisaaHakijaryhmaValintaryhmalle("vr2", hakijaryhma, null);
+        hakijaryhmaService.lisaaHakijaryhmaValintaryhmalle("vr2", hakijaryhma);
 
         {
             assertEquals(2, hakijaryhmaService.findByValintaryhma("vr1").size());

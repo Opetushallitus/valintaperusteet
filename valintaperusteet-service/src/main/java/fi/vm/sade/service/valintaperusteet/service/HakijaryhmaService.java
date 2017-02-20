@@ -19,7 +19,7 @@ public interface HakijaryhmaService {
 
     void liitaHakijaryhmaValintatapajonolle(String valintatapajonoOid, String hakijaryhmaOid);
 
-    Hakijaryhma lisaaHakijaryhmaValintaryhmalle(String valintaryhmaOid, HakijaryhmaCreateDTO hakijaryhma, String edellinenHakijaryhmaOid);
+    Hakijaryhma lisaaHakijaryhmaValintaryhmalle(String valintaryhmaOid, HakijaryhmaCreateDTO hakijaryhma);
 
     Hakijaryhma update(String oid, HakijaryhmaCreateDTO entity);
 
