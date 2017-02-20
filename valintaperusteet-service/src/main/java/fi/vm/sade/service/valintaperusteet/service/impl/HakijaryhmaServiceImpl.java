@@ -100,7 +100,7 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
         Hakijaryhma edellinen = hakijaryhma.getEdellinen();
 
         if(edellinen != null) {
-            edellinen.setSeuraava(null);
+            edellinen.setSeuraava(seuraava);
             hakijaryhmaDAO.update(edellinen);
         }
 
@@ -111,10 +111,6 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
         if (seuraava != null) {
             seuraava.setEdellinen(edellinen);
             hakijaryhmaDAO.update(seuraava);
-            if(edellinen != null) {
-                edellinen.setSeuraava(seuraava);
-                hakijaryhmaDAO.update(edellinen);
-            }
         }
 
         if (hakijaryhma.getJonot() != null) {
