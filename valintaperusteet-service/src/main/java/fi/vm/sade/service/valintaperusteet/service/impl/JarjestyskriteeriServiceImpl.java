@@ -129,14 +129,13 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
         Jarjestyskriteeri lisatty = jarjestyskriteeriDAO.insert(jarjestyskriteeri);
         LinkitettavaJaKopioitavaUtil.asetaSeuraava(edellinenJarjestyskriteeri, lisatty);
         for (Valintatapajono kopio : valintatapajono.getKopiot()) {
-            lisaaValintatapajonolleKopioMasterJarjestyskriteerista(kopio, lisatty, edellinenJarjestyskriteeri);
+            lisaaValintatapajonolleKopioMasterJarjestyskriteerista(kopio, lisatty, lisatty.getLaskentakaava(), edellinenJarjestyskriteeri);
         }
         return lisatty;
     }
 
-    private void lisaaValintatapajonolleKopioMasterJarjestyskriteerista(Valintatapajono valintatapajono,
-                                                                        Jarjestyskriteeri masterJarjestyskriteeri, Jarjestyskriteeri edellinenMasterJarjestyskriteeri) {
-        Jarjestyskriteeri kopio = teeKopioMasterista(valintatapajono, masterJarjestyskriteeri, null);
+    private void lisaaValintatapajonolleKopioMasterJarjestyskriteerista(Valintatapajono valintatapajono, Jarjestyskriteeri masterJarjestyskriteeri, Laskentakaava laskentakaava, Jarjestyskriteeri edellinenMasterJarjestyskriteeri) {
+        Jarjestyskriteeri kopio = teeKopioMasterista(valintatapajono, masterJarjestyskriteeri, laskentakaava, null);
         kopio.setValintatapajono(valintatapajono);
         kopio.setOid(oidService.haeJarjestyskriteeriOid());
         List<Jarjestyskriteeri> jonot = LinkitettavaJaKopioitavaUtil.jarjesta(jarjestyskriteeriDAO.findByJono(valintatapajono.getOid()));
@@ -145,15 +144,20 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
         Jarjestyskriteeri lisatty = jarjestyskriteeriDAO.insert(kopio);
         LinkitettavaJaKopioitavaUtil.asetaSeuraava(edellinenJarjestyskriteeri, lisatty);
         for (Valintatapajono jonokopio : valintatapajono.getKopiot()) {
-            lisaaValintatapajonolleKopioMasterJarjestyskriteerista(jonokopio, lisatty, lisatty.getEdellinen());
+            lisaaValintatapajonolleKopioMasterJarjestyskriteerista(jonokopio, lisatty, laskentakaava, lisatty.getEdellinen());
         }
     }
 
     private Jarjestyskriteeri teeKopioMasterista(Valintatapajono jono, Jarjestyskriteeri master, JuureenKopiointiCache kopiointiCache) {
+        Laskentakaava kopioiJosEiJoKopioitu = laskentakaavaService.kopioiJosEiJoKopioitu(master.getLaskentakaava(), jono.getValinnanVaihe().getHakukohdeViite(), jono.getValinnanVaihe().getValintaryhma());
+        return teeKopioMasterista(jono, master, kopioiJosEiJoKopioitu, kopiointiCache);
+    }
+
+    private Jarjestyskriteeri teeKopioMasterista(Valintatapajono jono, Jarjestyskriteeri master, Laskentakaava laskentakaava, JuureenKopiointiCache kopiointiCache) {
         Jarjestyskriteeri kopio = new Jarjestyskriteeri();
         kopio.setAktiivinen(master.getAktiivinen());
         kopio.setValintatapajono(jono);
-        kopio.setLaskentakaava(laskentakaavaService.kopioiJosEiJoKopioitu(master.getLaskentakaava(), jono.getValinnanVaihe().getHakukohdeViite(), jono.getValinnanVaihe().getValintaryhma()));
+        kopio.setLaskentakaava(laskentakaava);
         kopio.setMetatiedot(master.getMetatiedot());
         if (kopiointiCache == null) {
             kopio.setMaster(master);
