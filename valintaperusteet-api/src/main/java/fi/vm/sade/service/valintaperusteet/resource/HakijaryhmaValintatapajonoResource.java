@@ -11,6 +11,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 @Path("hakijaryhma_valintatapajono")
 public interface HakijaryhmaValintatapajonoResource {
@@ -30,4 +31,10 @@ public interface HakijaryhmaValintatapajonoResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response update(@PathParam("oid") String oid, HakijaryhmaValintatapajonoDTO jono);
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/jarjesta")
+    List<HakijaryhmaValintatapajonoDTO> jarjesta(List<String> oids);
 }

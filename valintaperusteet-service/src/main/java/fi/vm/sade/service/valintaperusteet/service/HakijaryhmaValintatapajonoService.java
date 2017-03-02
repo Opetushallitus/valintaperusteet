@@ -36,4 +36,6 @@ public interface HakijaryhmaValintatapajonoService {
     Hakijaryhma lisaaHakijaryhmaHakukohteelle(String hakukohdeOid, HakijaryhmaCreateDTO hakijaryhma);
 
     List<HakijaryhmaValintatapajono> findByHakukohde(String oid);
+
+    List<HakijaryhmaValintatapajono> jarjestaHakijaryhmat(List<String> oids);
 }

@@ -6,7 +6,7 @@ import java.util.*;
 @Entity
 @Table(name = "hakijaryhma")
 @Cacheable(true)
-public class Hakijaryhma extends BaseEntity {
+public class Hakijaryhma extends BaseEntity implements LinkitettavaJaKopioitava<Hakijaryhma, Set<Hakijaryhma>> {
 
     private static final long serialVersionUID = 1L;
 
@@ -45,6 +45,20 @@ public class Hakijaryhma extends BaseEntity {
     @JoinColumn(name = "hakijaryhmatyyppikoodi_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Hakijaryhmatyyppikoodi hakijaryhmatyyppikoodi;
+
+    @JoinColumn(name = "master_hakijaryhma_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Hakijaryhma masterHakijaryhma;
+
+    @JoinColumn(name = "edellinen_hakijaryhma_id")
+    @OneToOne(fetch = FetchType.LAZY)
+    private Hakijaryhma edellinenHakijaryhma;
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "edellinenHakijaryhma")
+    private Hakijaryhma seuraavaHakijaryhma;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "masterHakijaryhma")
+    private Set<Hakijaryhma> kopioHakijaryhmat = new HashSet<>();
 
     public String getOid() {
         return oid;
@@ -126,6 +140,38 @@ public class Hakijaryhma extends BaseEntity {
         this.hakijaryhmatyyppikoodi = hakijaryhmatyyppikoodi;
     }
 
+    public Hakijaryhma getMasterHakijaryhma() {
+        return masterHakijaryhma;
+    }
+
+    public void setMasterHakijaryhma(Hakijaryhma masterHakijaryhma) {
+        this.masterHakijaryhma = masterHakijaryhma;
+    }
+
+    public Hakijaryhma getEdellinenHakijaryhma() {
+        return edellinenHakijaryhma;
+    }
+
+    public void setEdellinenHakijaryhma(Hakijaryhma edellinenHakijaryhma) {
+        this.edellinenHakijaryhma = edellinenHakijaryhma;
+    }
+
+    public Hakijaryhma getSeuraavaHakijaryhma() {
+        return seuraavaHakijaryhma;
+    }
+
+    public void setSeuraavaHakijaryhma(Hakijaryhma seuraavaHakijaryhma) {
+        this.seuraavaHakijaryhma = seuraavaHakijaryhma;
+    }
+
+    public Set<Hakijaryhma> getKopioHakijaryhmat() {
+        return kopioHakijaryhmat;
+    }
+
+    public void setKopioHakijaryhmat(Set<Hakijaryhma> kopioHakijaryhmat) {
+        this.kopioHakijaryhmat = kopioHakijaryhmat;
+    }
+
     @Transient
     public Long getLaskentakaavaId() {
         return laskentakaava.getId();
@@ -157,5 +203,45 @@ public class Hakijaryhma extends BaseEntity {
 
     public void setKaytetaanRyhmaanKuuluvia(boolean kaytetaanRyhmaanKuuluvia) {
         this.kaytetaanRyhmaanKuuluvia = kaytetaanRyhmaanKuuluvia;
+    }
+
+    @Override
+    public void setMaster(Hakijaryhma master) {
+        setMasterHakijaryhma(master);
+    }
+
+    @Override
+    public Hakijaryhma getMaster() {
+        return getMasterHakijaryhma();
+    }
+
+    @Override
+    public void setKopiot(Set<Hakijaryhma> kopiot) {
+        setKopioHakijaryhmat(kopiot);
+    }
+
+    @Override
+    public Set<Hakijaryhma> getKopiot() {
+        return getKopioHakijaryhmat();
+    }
+
+    @Override
+    public Hakijaryhma getEdellinen() {
+        return getEdellinenHakijaryhma();
+    }
+
+    @Override
+    public Hakijaryhma getSeuraava() {
+        return getSeuraavaHakijaryhma();
+    }
+
+    @Override
+    public void setEdellinen(Hakijaryhma edellinen) {
+        setEdellinenHakijaryhma(edellinen);
+    }
+
+    @Override
+    public void setSeuraava(Hakijaryhma seuraava) {
+        setSeuraavaHakijaryhma(seuraava);
     }
 }

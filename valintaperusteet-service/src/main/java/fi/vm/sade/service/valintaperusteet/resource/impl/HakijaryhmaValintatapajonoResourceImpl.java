@@ -2,7 +2,9 @@ package fi.vm.sade.service.valintaperusteet.resource.impl;
 
 import fi.vm.sade.auditlog.valintaperusteet.ValintaperusteetOperation;
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaValintatapajonoDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
+import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
 import fi.vm.sade.service.valintaperusteet.resource.HakijaryhmaValintatapajonoResource;
 import fi.vm.sade.service.valintaperusteet.resource.ValintatapajonoResource;
 import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaValintatapajonoService;
@@ -31,8 +33,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static fi.vm.sade.auditlog.valintaperusteet.LogMessage.builder;
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
@@ -126,5 +131,21 @@ public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValint
         } catch (HakijaryhmaEiOleOlemassaException e) {
             throw new WebApplicationException(e, Response.Status.NOT_FOUND);
         }
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/jarjesta")
+    @PreAuthorize(UPDATE_CRUD)
+    @ApiOperation(value = "Järjestää valintatapajonon hakijaryhmät annetun OID-listan mukaan", response = ValintatapajonoDTO.class)
+    public List<HakijaryhmaValintatapajonoDTO> jarjesta(@ApiParam(value = "OID-lista jonka mukaiseen järjestykseen valintatapajonon hakijaryhmät järjestetään", required = true) List<String> oids) {
+        List<HakijaryhmaValintatapajono> j = hakijaryhmaValintatapajonoService.jarjestaHakijaryhmat(oids);
+        AUDIT.log(builder()
+                .id(username())
+                .add("valintatapajonooids", Optional.ofNullable(oids).map(List::toArray).map(Arrays::toString).orElse(null))
+                .setOperaatio(ValintaperusteetOperation.HAKIJARYHMA_VALINTATAPAJONO_LIITOS_PAIVITYS)
+                .build());
+        return modelMapper.mapList(j, HakijaryhmaValintatapajonoDTO.class);
     }
 }

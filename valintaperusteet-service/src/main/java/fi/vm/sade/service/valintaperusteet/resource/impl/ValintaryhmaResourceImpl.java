@@ -1,29 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.resource.impl;
 
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD;
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
-import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaOidTyhjaException;
-import io.swagger.annotations.*;
-import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
-import fi.vm.sade.service.valintaperusteet.service.exception.ValintaryhmaEiOleOlemassaException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Component;
-
+import fi.vm.sade.auditlog.valintaperusteet.ValintaperusteetOperation;
 import fi.vm.sade.service.valintaperusteet.dto.ErrorDTO;
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaDTO;
@@ -34,6 +11,7 @@ import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaListDTO;
+import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.resource.ValintaryhmaResource;
 import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaService;
 import fi.vm.sade.service.valintaperusteet.service.HakukohdeService;
@@ -42,10 +20,43 @@ import fi.vm.sade.service.valintaperusteet.service.OidService;
 import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
 import fi.vm.sade.service.valintaperusteet.service.ValintakoekoodiService;
 import fi.vm.sade.service.valintaperusteet.service.ValintaryhmaService;
+import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaOidTyhjaException;
+import fi.vm.sade.service.valintaperusteet.service.exception.ValintaryhmaEiOleOlemassaException;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Component;
 
-import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import static fi.vm.sade.auditlog.valintaperusteet.LogMessage.builder;
-import fi.vm.sade.auditlog.valintaperusteet.ValintaperusteetOperation;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
+import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.AUDIT;
+import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.username;
 
 @Component
 @Path("valintaryhma")

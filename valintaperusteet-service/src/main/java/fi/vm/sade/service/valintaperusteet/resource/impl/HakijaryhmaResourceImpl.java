@@ -161,4 +161,19 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
         }).orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
 
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/jarjesta")
+    @PreAuthorize(UPDATE_CRUD)
+    @ApiOperation(value = "Järjestää hakijaryhmät parametrina annetun OID-listan mukaiseen järjestykseen", response = HakijaryhmaDTO.class)
+    public List<HakijaryhmaDTO> jarjesta(@ApiParam(value = "Hakijaryhmien uusi järjestys", required = true) List<String> oids) {
+        List<Hakijaryhma> hrl = hakijaryhmaService.jarjestaHakijaryhmat(oids);
+        AUDIT.log(builder()
+                .id(username())
+                .add("hakijaryhmaoids", Optional.ofNullable(oids).map(List::toArray).map(Arrays::toString).orElse(null))
+                .setOperaatio(ValintaperusteetOperation.HAKIJARYHMA_JARJESTA)
+                .build());
+        return modelMapper.mapList(hrl, HakijaryhmaDTO.class);
+    }
 }

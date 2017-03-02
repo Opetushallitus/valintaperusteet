@@ -32,6 +32,8 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created with IntelliJ IDEA.
@@ -82,11 +84,9 @@ public class HakijaryhmaServiceTest {
 
     @Test
     public void testFindByValintaryhma() {
-        final String oid = "vr1";
-
-        List<Hakijaryhma> hakijaryhmas = hakijaryhmaService.findByValintaryhma(oid);
-
-        assertEquals(1, hakijaryhmas.size());
+        // vr1:llä on vain yksi hakijaryhmä, vr4:lla kaksi joilla on tietty järjestys
+        assertEquals(1, hakijaryhmaService.findByValintaryhma("vr1").size());
+        assertEquals(2, hakijaryhmaService.findByValintaryhma("vr4").size());
     }
 
     @Test
@@ -224,7 +224,6 @@ public class HakijaryhmaServiceTest {
                         (vtj3)
 
             */
-
             assertEquals(1, hakijaryhmaService.findByValintaryhma("vr1").size());
             assertEquals(1, hakijaryhmaService.findByValintaryhma("vr2").size());
             assertEquals(1, hakijaryhmaService.findByHakukohde("1").size());
@@ -384,4 +383,20 @@ public class HakijaryhmaServiceTest {
         }
 
     }
+
+    @Test
+    public void testJarjestaValintaryhmanHakijaryhmatAsettaaUudenJarjestyksenAnnettujenOidienPerusteella() throws Exception {
+        List<String> original = Arrays.asList("hr6", "hr7");
+        assertStream(original, hakijaryhmaService.findByValintaryhma("vr4").stream().map(Hakijaryhma::getOid));
+
+        List<String> reversed = Arrays.asList("hr7", "hr6");
+        hakijaryhmaService.jarjestaHakijaryhmat(reversed).stream().map(Hakijaryhma::getOid);
+
+        assertStream(reversed, hakijaryhmaService.findByValintaryhma("vr4").stream().map(Hakijaryhma::getOid));
+    }
+
+    private <T> void assertStream(List<T> expected, Stream<T> stream) {
+        assertEquals(expected, stream.collect(Collectors.toList()));
+    }
+
 }

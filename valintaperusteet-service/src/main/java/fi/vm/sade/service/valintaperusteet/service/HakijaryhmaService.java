@@ -26,4 +26,6 @@ public interface HakijaryhmaService {
     Optional<Hakijaryhma> siirra(HakijaryhmaSiirraDTO dto);
 
     void kopioiHakijaryhmatMasterValintaryhmalta(String parentValintaryhmaOid, String childValintaryhmaoid, JuureenKopiointiCache kopiointiCache);
+
+    List<Hakijaryhma> jarjestaHakijaryhmat(List<String> oids);
 }

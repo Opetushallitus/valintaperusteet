@@ -3,7 +3,6 @@ package fi.vm.sade.service.valintaperusteet.resource;
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaDTO;
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaSiirraDTO;
-import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaValintatapajonoDTO;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -41,4 +40,9 @@ public interface HakijaryhmaResource {
     @Produces(MediaType.APPLICATION_JSON)
     Response siirra(HakijaryhmaSiirraDTO dto);
 
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/jarjesta")
+    List<HakijaryhmaDTO> jarjesta(List<String> oids);
 }
