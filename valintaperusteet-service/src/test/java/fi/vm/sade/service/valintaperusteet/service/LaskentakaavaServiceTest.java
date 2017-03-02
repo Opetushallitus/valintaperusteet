@@ -19,12 +19,7 @@ import fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi;
 import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
 import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
-import fi.vm.sade.service.valintaperusteet.model.Arvokonvertteriparametri;
-import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti;
-import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
-import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
-import fi.vm.sade.service.valintaperusteet.model.Syoteparametri;
-import fi.vm.sade.service.valintaperusteet.model.ValintaperusteViite;
+import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuMuodostaaSilmukanException;
 import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuaEiVoidaKayttaaValintakoelaskennassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaEiOleOlemassaException;
@@ -780,5 +775,23 @@ public class LaskentakaavaServiceTest {
 
         boolean poistettu = laskentakaavaService.poista(tallennettuKaavaId);
         assertFalse(poistettu);
+    }
+
+    // BUG-1313
+    @Test
+    public void laskentakaavaPeriytyyOikein(){
+        final Long id = 204L;
+        Laskentakaava l = laskentakaavaService.haeMallinnettuKaava(id);
+        Valintaryhma v1 = new Valintaryhma();
+        Valintaryhma v2 = new Valintaryhma();
+        Valintaryhma v3 = new Valintaryhma();
+        HakukohdeViite h = new HakukohdeViite();
+        h.setValintaryhma(v3);
+        v1.getLaskentakaava().add(l);
+        v2.setYlavalintaryhma(v1);
+        v3.setYlavalintaryhma(v2);
+        Optional<Laskentakaava> res = laskentakaavaService.haeLaskentakaavaTaiSenKopioVanhemmilta(l.getId(), h, null);
+        assertTrue(res.isPresent());
+        assertEquals(l, res.get());
     }
 }

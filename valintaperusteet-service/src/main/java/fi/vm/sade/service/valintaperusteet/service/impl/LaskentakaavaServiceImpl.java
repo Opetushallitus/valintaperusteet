@@ -1,45 +1,38 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
-import static fi.vm.sade.service.valintaperusteet.service.impl.actors.creators.SpringExtension.SpringExtProvider;
-
-import java.util.*;
-import java.util.regex.Pattern;
-
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.PoisonPill;
 import akka.pattern.Patterns;
 import akka.util.Timeout;
+import fi.vm.sade.kaava.Laskentakaavavalidaattori;
 import fi.vm.sade.service.valintaperusteet.dao.*;
 import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
-import fi.vm.sade.service.valintaperusteet.dto.model.*;
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi;
+import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
 import fi.vm.sade.service.valintaperusteet.model.*;
+import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
+import fi.vm.sade.service.valintaperusteet.service.exception.*;
 import fi.vm.sade.service.valintaperusteet.service.impl.actors.ActorService;
 import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.UusiHakukohteenValintaperusteRekursio;
+import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.UusiRekursio;
+import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.UusiValintaperusteRekursio;
+import fi.vm.sade.service.valintaperusteet.service.impl.util.LaskentakaavaCache;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import fi.vm.sade.kaava.Laskentakaavavalidaattori;
-import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
-import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
-import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuEiOleOlemassaException;
-import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuMuodostaaSilmukanException;
-import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuaEiVoidaKayttaaValintakoelaskennassaException;
-import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuaEiVoidaKayttaaValintalaskennassaException;
-import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaEiOleOlemassaException;
-import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaEiValidiException;
-import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaMuodostaaSilmukanException;
-import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.UusiRekursio;
-import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.UusiValintaperusteRekursio;
-import fi.vm.sade.service.valintaperusteet.service.impl.util.LaskentakaavaCache;
 import scala.concurrent.Await;
 import scala.concurrent.Future;
 import scala.concurrent.duration.Duration;
+
+import java.util.*;
+import java.util.regex.Pattern;
+
+import static fi.vm.sade.service.valintaperusteet.service.impl.actors.creators.SpringExtension.SpringExtProvider;
 
 @Service
 @Transactional
@@ -423,38 +416,38 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     }
 
     private Optional<Laskentakaava> haeLaskentakaavaTaiSenKopioVanhemmilta(Long laskentakaavaId, HakukohdeViite ylaHakukohde, Valintaryhma ylaValintaryhma, Set<Long> tarkistetutLaskentaKaavaIdt) {
-        if(laskentakaavaId == null) {
+        if (laskentakaavaId == null) {
             return Optional.empty();
         }
         Set<Laskentakaava> vanhempienLaskentakaavat = new HashSet<>();
-        if(ylaHakukohde != null) {
+        if (ylaHakukohde != null) {
             vanhempienLaskentakaavat.addAll(ylaHakukohde.getLaskentakaava());
         }
-        if(ylaValintaryhma != null) {
+        if (ylaValintaryhma != null) {
             vanhempienLaskentakaavat.addAll(ylaValintaryhma.getLaskentakaava());
         }
-        for(Laskentakaava kaava: vanhempienLaskentakaavat) {
-            if(tarkistetutLaskentaKaavaIdt.contains(kaava.getId())) {
+        for (Laskentakaava kaava : vanhempienLaskentakaavat) {
+            if (tarkistetutLaskentaKaavaIdt.contains(kaava.getId())) {
                 continue;
             }
             final boolean onSamaTaiKopioSamastaKaavasta = laskentakaavaId.equals(kaava.getId()) ||
                     (kaava.getKopioLaskentakaavasta() != null && laskentakaavaId.equals(kaava.getKopioLaskentakaavasta().getId()));
-            if(onSamaTaiKopioSamastaKaavasta) {
+            if (onSamaTaiKopioSamastaKaavasta) {
                 return Optional.of(kaava);
             }
             tarkistetutLaskentaKaavaIdt.add(kaava.getId());
+        }
 
-            final Optional<Laskentakaava> esiVanhempienKaava;
-            if(ylaHakukohde != null && ylaHakukohde.getValintaryhma() != null) {
-                esiVanhempienKaava = haeLaskentakaavaTaiSenKopioVanhemmilta(laskentakaavaId, null, ylaHakukohde.getValintaryhma(), tarkistetutLaskentaKaavaIdt);
-            } else if(ylaValintaryhma != null && ylaValintaryhma.getYlavalintaryhma() != null) {
-                esiVanhempienKaava = haeLaskentakaavaTaiSenKopioVanhemmilta(laskentakaavaId, null, ylaValintaryhma.getYlavalintaryhma(), tarkistetutLaskentaKaavaIdt);
-            } else {
-                esiVanhempienKaava = Optional.empty();
-            }
-            if(esiVanhempienKaava.isPresent()) {
-                return esiVanhempienKaava;
-            }
+        final Optional<Laskentakaava> esiVanhempienKaava;
+        if (ylaHakukohde != null && ylaHakukohde.getValintaryhma() != null) {
+            esiVanhempienKaava = haeLaskentakaavaTaiSenKopioVanhemmilta(laskentakaavaId, null, ylaHakukohde.getValintaryhma(), tarkistetutLaskentaKaavaIdt);
+        } else if (ylaValintaryhma != null && ylaValintaryhma.getYlavalintaryhma() != null) {
+            esiVanhempienKaava = haeLaskentakaavaTaiSenKopioVanhemmilta(laskentakaavaId, null, ylaValintaryhma.getYlavalintaryhma(), tarkistetutLaskentaKaavaIdt);
+        } else {
+            esiVanhempienKaava = Optional.empty();
+        }
+        if (esiVanhempienKaava.isPresent()) {
+            return esiVanhempienKaava;
         }
         return Optional.empty();
     }
