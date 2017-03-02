@@ -31,6 +31,7 @@ import scala.concurrent.duration.Duration;
 
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static fi.vm.sade.service.valintaperusteet.service.impl.actors.creators.SpringExtension.SpringExtProvider;
 
@@ -312,7 +313,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
                 Syotettavanarvontyyppi syokoodi = vp.getSyotettavanarvontyyppi();
                 Syotettavanarvontyyppi found = syotettavanarvontyyppiDAO.readByUri(syokoodi.getUri());
 
-                if(found != null){
+                if (found != null) {
                     newVp.setSyotettavanarvontyyppi(found);
                 } else {
                     Syotettavanarvontyyppi uusikoodi = new Syotettavanarvontyyppi();
@@ -360,7 +361,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             if (!Laskentakaavavalidaattori.onkoMallinnettuKaavaValidi(entity)) {
                 throw new LaskentakaavaEiValidiException("Laskentakaava ei ole validi", Laskentakaavavalidaattori.validoiMallinnettuKaava(entity));
             }
-            HakukohdeViite hakukohde =  null;
+            HakukohdeViite hakukohde = null;
             Valintaryhma valintaryhma = null;
             if (StringUtils.isNotBlank(hakukohdeOid)) {
                 hakukohde = hakukohdeViiteDAO.readForImport(hakukohdeOid);
@@ -411,51 +412,66 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     }
 
     @Override
-    public Optional<Laskentakaava> haeLaskentakaavaTaiSenKopioVanhemmilta(Long laskentakaavaId, HakukohdeViite ylaHakukohde, Valintaryhma ylaValintaryhma) {
-        return haeLaskentakaavaTaiSenKopioVanhemmilta(laskentakaavaId, ylaHakukohde, ylaValintaryhma, new HashSet<>());
-    }
-
-    private Optional<Laskentakaava> haeLaskentakaavaTaiSenKopioVanhemmilta(Long laskentakaavaId, HakukohdeViite ylaHakukohde, Valintaryhma ylaValintaryhma, Set<Long> tarkistetutLaskentaKaavaIdt) {
-        if (laskentakaavaId == null) {
+    public Optional<Laskentakaava> haeLaskentakaavaTaiSenKopioVanhemmilta(Long laskentakaavaId, HakukohdeViite hakukohde) {
+        if (laskentakaavaId == null || hakukohde == null) {
             return Optional.empty();
         }
-        Set<Laskentakaava> vanhempienLaskentakaavat = new HashSet<>();
-        if (ylaHakukohde != null) {
-            vanhempienLaskentakaavat.addAll(ylaHakukohde.getLaskentakaava());
-        }
-        if (ylaValintaryhma != null) {
-            vanhempienLaskentakaavat.addAll(ylaValintaryhma.getLaskentakaava());
-        }
-        for (Laskentakaava kaava : vanhempienLaskentakaavat) {
-            if (tarkistetutLaskentaKaavaIdt.contains(kaava.getId())) {
-                continue;
-            }
-            final boolean onSamaTaiKopioSamastaKaavasta = laskentakaavaId.equals(kaava.getId()) ||
-                    (kaava.getKopioLaskentakaavasta() != null && laskentakaavaId.equals(kaava.getKopioLaskentakaavasta().getId()));
-            if (onSamaTaiKopioSamastaKaavasta) {
-                return Optional.of(kaava);
-            }
-            tarkistetutLaskentaKaavaIdt.add(kaava.getId());
-        }
+        Optional<Laskentakaava> kaava = (hakukohde.getLaskentakaava().stream()
+                .filter(k -> onSamaTaiKopioSamastaKaavasta(laskentakaavaId, k)))
+                .findFirst();
 
-        final Optional<Laskentakaava> esiVanhempienKaava;
-        if (ylaHakukohde != null && ylaHakukohde.getValintaryhma() != null) {
-            esiVanhempienKaava = haeLaskentakaavaTaiSenKopioVanhemmilta(laskentakaavaId, null, ylaHakukohde.getValintaryhma(), tarkistetutLaskentaKaavaIdt);
-        } else if (ylaValintaryhma != null && ylaValintaryhma.getYlavalintaryhma() != null) {
-            esiVanhempienKaava = haeLaskentakaavaTaiSenKopioVanhemmilta(laskentakaavaId, null, ylaValintaryhma.getYlavalintaryhma(), tarkistetutLaskentaKaavaIdt);
+        if (kaava.isPresent()){
+            return kaava;
         } else {
-            esiVanhempienKaava = Optional.empty();
+            Set<Long> tarkistetutLaskentaKaavaIdt = getLaskentakaavaIds(hakukohde.getLaskentakaava());
+            return haeLaskentakaavaTaiSenKopioVanhemmiltaRecursion(laskentakaavaId, hakukohde.getValintaryhma(), tarkistetutLaskentaKaavaIdt);
         }
-        if (esiVanhempienKaava.isPresent()) {
-            return esiVanhempienKaava;
+    }
+
+    @Override
+    public Optional<Laskentakaava> haeLaskentakaavaTaiSenKopioVanhemmilta(Long laskentakaavaId, Valintaryhma valintaryhma) {
+        if (laskentakaavaId == null || valintaryhma == null) {
+            return Optional.empty();
         }
-        return Optional.empty();
+        return haeLaskentakaavaTaiSenKopioVanhemmiltaRecursion(laskentakaavaId, valintaryhma, new HashSet<>());
+    }
+
+    private boolean onSamaTaiKopioSamastaKaavasta(Long laskentakaavaId, Laskentakaava kaava) {
+        return laskentakaavaId.equals(kaava.getId()) ||
+                (kaava.getKopioLaskentakaavasta() != null && laskentakaavaId.equals(kaava.getKopioLaskentakaavasta().getId()));
+    }
+
+    private Set<Long> getLaskentakaavaIds(Set<Laskentakaava> set) {
+        return set.stream()
+                .map(Laskentakaava::getId)
+                .collect(Collectors.toSet());
+    }
+
+    private Optional<Laskentakaava> haeLaskentakaavaTaiSenKopioVanhemmiltaRecursion(Long laskentakaavaId, Valintaryhma valintaryhma, final Set<Long> tarkistetutLaskentaKaavaIdt) {
+        Optional<Laskentakaava> kaava = (valintaryhma.getLaskentakaava().stream()
+                .filter(k -> !tarkistetutLaskentaKaavaIdt.contains(k.getId()))
+                .filter(k -> onSamaTaiKopioSamastaKaavasta(laskentakaavaId, k)))
+                .findFirst();
+
+        if (kaava.isPresent()){
+            return kaava;
+        } else if (valintaryhma.getYlavalintaryhma() != null) {
+            tarkistetutLaskentaKaavaIdt.addAll(getLaskentakaavaIds(valintaryhma.getLaskentakaava()));
+            return haeLaskentakaavaTaiSenKopioVanhemmiltaRecursion(laskentakaavaId, valintaryhma.getYlavalintaryhma(), tarkistetutLaskentaKaavaIdt);
+        } else {
+            return Optional.empty();
+        }
     }
 
     @Override
     public Laskentakaava kopioiJosEiJoKopioitu(Laskentakaava lahdeLaskentakaava, HakukohdeViite kohdeHakukohde, Valintaryhma kohdeValintaryhma) {
-        Optional<Laskentakaava> aikaisemminKopioituLaskentakaava = haeLaskentakaavaTaiSenKopioVanhemmilta(lahdeLaskentakaava.getId(), kohdeHakukohde, kohdeValintaryhma);
-        if(aikaisemminKopioituLaskentakaava.isPresent()) {
+        Optional<Laskentakaava> aikaisemminKopioituLaskentakaava;
+        if (kohdeHakukohde != null) {
+            aikaisemminKopioituLaskentakaava = haeLaskentakaavaTaiSenKopioVanhemmilta(lahdeLaskentakaava.getId(), kohdeHakukohde);
+        } else {
+            aikaisemminKopioituLaskentakaava = haeLaskentakaavaTaiSenKopioVanhemmilta(lahdeLaskentakaava.getId(), kohdeValintaryhma);
+        }
+        if (aikaisemminKopioituLaskentakaava.isPresent()) {
             LOGGER.info("Käytetään laskentakaavan {} olemassaolevaa versiota {}: kohde hakukohde={}, kohde valintaryhma={}", lahdeLaskentakaava, aikaisemminKopioituLaskentakaava.get(), kohdeHakukohde, kohdeValintaryhma);
             return aikaisemminKopioituLaskentakaava.get();
         }
@@ -468,10 +484,10 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
         copy.setTyyppi(lahdeLaskentakaava.getTyyppi());
         copy.setNimi(lahdeLaskentakaava.getNimi());
         copy.setOnLuonnos(lahdeLaskentakaava.getOnLuonnos());
-        if(kohdeValintaryhma != null) {
+        if (kohdeValintaryhma != null) {
             kohdeValintaryhma.getLaskentakaava().add(copy);
         }
-        if(kohdeHakukohde != null) {
+        if (kohdeHakukohde != null) {
             kohdeHakukohde.getLaskentakaava().add(copy);
         }
         try {
@@ -482,8 +498,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
                     + (e.getFunktiokutsuId() != null ? e.getFunktiokutsuId() : e.getFunktionimi()) + " kautta", e,
                     null, e.getFunktiokutsuId(), e.getLaskentakaavaId());
         }
-        Laskentakaava inserted = laskentakaavaDAO.insert(copy);
-        return inserted;
+        return laskentakaavaDAO.insert(copy);
     }
 
     @Override
@@ -565,20 +580,20 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     }
 
     private Optional<String> getHakuOid(Valintaryhma valintaryhma) {
-        if(valintaryhma.getHakuoid() != null) {
+        if (valintaryhma.getHakuoid() != null) {
             return Optional.of(valintaryhma.getHakuoid());
         }
-        if(valintaryhma.getYlavalintaryhma() != null) {
+        if (valintaryhma.getYlavalintaryhma() != null) {
             return getHakuOid(valintaryhma.getYlavalintaryhma());
         }
         return Optional.empty();
     }
 
     private Optional<String> getHakuOid(HakukohdeViite hakukohde) {
-        if(hakukohde.getHakuoid() != null) {
+        if (hakukohde.getHakuoid() != null) {
             return Optional.of(hakukohde.getHakuoid());
         }
-        if(hakukohde.getValintaryhma() != null) {
+        if (hakukohde.getValintaryhma() != null) {
             return getHakuOid(hakukohde.getValintaryhma());
         }
         return Optional.empty();

@@ -249,7 +249,7 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
         kopio.setKiintio(hakijaryhma.getKiintio());
         kopio.setKuvaus(hakijaryhma.getKuvaus());
         kopio.setKaytaKaikki(hakijaryhma.isKaytaKaikki());
-        kopio.setLaskentakaava(laskentakaavaService.haeLaskentakaavaTaiSenKopioVanhemmilta(hakijaryhma.getLaskentakaavaId(), null, kohdeValintaryhma).orElse(hakijaryhma.getLaskentakaava()));
+        kopio.setLaskentakaava(laskentakaavaService.haeLaskentakaavaTaiSenKopioVanhemmilta(hakijaryhma.getLaskentakaavaId(), kohdeValintaryhma).orElse(hakijaryhma.getLaskentakaava()));
         kopio.setHakijaryhmatyyppikoodi(hakijaryhma.getHakijaryhmatyyppikoodi());
         kopio.setNimi(hakijaryhma.getNimi());
         kopio.setTarkkaKiintio(hakijaryhma.isTarkkaKiintio());

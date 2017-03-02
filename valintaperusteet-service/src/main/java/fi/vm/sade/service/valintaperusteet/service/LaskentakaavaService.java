@@ -40,7 +40,9 @@ public interface LaskentakaavaService {
 
     Optional<Laskentakaava> siirra(LaskentakaavaSiirraDTO dto);
 
-    Optional<Laskentakaava> haeLaskentakaavaTaiSenKopioVanhemmilta(Long laskentakaavaId, HakukohdeViite ylaHakukohde, Valintaryhma ylaValintaryhma);
+    Optional<Laskentakaava> haeLaskentakaavaTaiSenKopioVanhemmilta(Long laskentakaavaId, HakukohdeViite ylaHakukohde);
+
+    Optional<Laskentakaava> haeLaskentakaavaTaiSenKopioVanhemmilta(Long laskentakaavaId, Valintaryhma ylaValintaryhma);
 
     Laskentakaava kopioiJosEiJoKopioitu(Laskentakaava lahdeLaskentakaava, HakukohdeViite kohdeHakukohde, Valintaryhma kohdeValintaryhma);
 

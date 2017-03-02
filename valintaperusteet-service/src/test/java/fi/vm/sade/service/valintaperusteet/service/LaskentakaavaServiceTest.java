@@ -790,7 +790,7 @@ public class LaskentakaavaServiceTest {
         v1.getLaskentakaava().add(l);
         v2.setYlavalintaryhma(v1);
         v3.setYlavalintaryhma(v2);
-        Optional<Laskentakaava> res = laskentakaavaService.haeLaskentakaavaTaiSenKopioVanhemmilta(l.getId(), h, null);
+        Optional<Laskentakaava> res = laskentakaavaService.haeLaskentakaavaTaiSenKopioVanhemmilta(l.getId(), h);
         assertTrue(res.isPresent());
         assertEquals(l, res.get());
     }
