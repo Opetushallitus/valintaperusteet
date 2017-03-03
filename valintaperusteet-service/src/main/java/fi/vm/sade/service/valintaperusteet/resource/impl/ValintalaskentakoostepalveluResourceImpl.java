@@ -294,7 +294,7 @@ public class ValintalaskentakoostepalveluResourceImpl {
             valintaperusteService.tuoHakukohde(hakukohde);
             return Response.ok().build();
         } catch (Exception e) {
-            LOG.error("Hakukohteen importointi valintaperusteisiin epaonnistui! {}", hakukohde.getHakukohdeOid());
+            LOG.error("Hakukohteen importointi valintaperusteisiin epaonnistui! {}", hakukohde.getHakukohdeOid(), e);
             throw e;
         }
     }
