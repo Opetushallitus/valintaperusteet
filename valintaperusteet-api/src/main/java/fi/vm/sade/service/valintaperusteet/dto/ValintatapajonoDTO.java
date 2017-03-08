@@ -3,7 +3,7 @@ package fi.vm.sade.service.valintaperusteet.dto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(value = "ValintatapajonoDTO", description = "Valintatapajono")
+@ApiModel(value = "service.valintaperusteet.dto.ValintatapajonoDTO", description = "Valintatapajono")
 public class ValintatapajonoDTO extends ValintatapajonoCreateDTO implements Prioritized {
     @ApiModelProperty(value = "OID", required = true)
     private String oid;
