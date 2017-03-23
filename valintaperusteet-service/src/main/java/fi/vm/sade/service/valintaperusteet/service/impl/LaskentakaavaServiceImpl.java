@@ -138,7 +138,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             managed.setNimi(entity.getNimi());
             managed.setKuvaus(entity.getKuvaus());
             managed.setFunktiokutsu(updateFunktiokutsu(entity.getFunktiokutsu(), false, entity.getHakukohde(), entity.getValintaryhma(), laskentakaavaIds));
-            if (!Laskentakaavavalidaattori.onkoMallinnettuKaavaValidi(managed)) {
+            if (!Laskentakaavavalidaattori.onkoMallinnettuKaavaValidi(managed).isEmpty()) {
                 throw new LaskentakaavaEiValidiException("Laskentakaava ei ole validi", Laskentakaavavalidaattori.validoiMallinnettuKaava(entity));
             }
             // Ajastetaan orpojen poisto jos ajastin jostain syystä kaatunut
@@ -358,7 +358,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
         try {
             asetaNullitOletusarvoiksi(laskentakaava.getFunktiokutsu());
             Laskentakaava entity = modelMapper.map(laskentakaava, Laskentakaava.class);
-            if (!Laskentakaavavalidaattori.onkoMallinnettuKaavaValidi(entity)) {
+            if (!Laskentakaavavalidaattori.onkoMallinnettuKaavaValidi(entity).isEmpty()) {
                 throw new LaskentakaavaEiValidiException("Laskentakaava ei ole validi", Laskentakaavavalidaattori.validoiMallinnettuKaava(entity));
             }
             HakukohdeViite hakukohde = null;
@@ -666,7 +666,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     @Override
     @Transactional
     public boolean onkoKaavaValidi(Laskentakaava laskentakaava) {
-        return Laskentakaavavalidaattori.onkoMallinnettuKaavaValidi(laskentakaava);
+        return Laskentakaavavalidaattori.onkoMallinnettuKaavaValidi(laskentakaava).isEmpty();
     }
 
     @Override

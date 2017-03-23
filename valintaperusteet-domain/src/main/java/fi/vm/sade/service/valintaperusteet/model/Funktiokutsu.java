@@ -171,4 +171,23 @@ public class Funktiokutsu extends BaseEntity implements FunktionArgumentti {
     public void setTallennaTulos(Boolean tallennaTulos) {
         this.tallennaTulos = tallennaTulos;
     }
+
+    @Override
+    public String toString() {
+        return "Funktiokutsu{" +
+                "funktionimi=" + funktionimi +
+                ", tulosTunniste='" + tulosTunniste + '\'' +
+                ", tulosTekstiFi='" + tulosTekstiFi + '\'' +
+                ", tulosTekstiSv='" + tulosTekstiSv + '\'' +
+                ", tulosTekstiEn='" + tulosTekstiEn + '\'' +
+                ", tallennaTulos=" + tallennaTulos +
+                ", arvokonvertteriparametrit=" + arvokonvertteriparametrit +
+                ", arvovalikonvertteriparametrit=" + arvovalikonvertteriparametrit +
+                ", syoteparametrit=" + syoteparametrit +
+                ", funktioargumentit=" + funktioargumentit +
+                ", valintaperusteviitteet=" + valintaperusteviitteet +
+                ", validointivirheet=" + validointivirheet +
+                ", base=" + super.toString() +
+                '}';
+    }
 }

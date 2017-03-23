@@ -145,8 +145,9 @@ object Laskentadomainkonvertteri {
   }
 
   private def muodostaLasku(funktiokutsu: Funktiokutsu): Funktio[_] = {
-    if (!Laskentakaavavalidaattori.onkoLaskettavaKaavaValidi(funktiokutsu)) {
-      throw new LaskentakaavaEiOleValidiException("Funktiokutsu ei ole validi: " + funktiokutsu.getValidointivirheet().mkString(", "))
+    val virheet = Laskentakaavavalidaattori.onkoLaskettavaKaavaValidi(funktiokutsu)
+      if (!virheet.isEmpty) {
+      throw new LaskentakaavaEiOleValidiException("Funktiokutsu ei ole validi: " + virheet.mkString(", ") + " | " + funktiokutsu.toString())
     }
 
     val jarjestetytArgumentit: List[Funktioargumentti] = LaskentaUtil.jarjestaFunktioargumentit(funktiokutsu.getFunktioargumentit)

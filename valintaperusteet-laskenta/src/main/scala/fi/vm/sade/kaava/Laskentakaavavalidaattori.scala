@@ -6,7 +6,8 @@ import fi.vm.sade.service.valintaperusteet.service.validointi.virhe._
 import org.apache.commons.lang.StringUtils
 import fi.vm.sade.service.valintaperusteet.dto.model.{Funktionimi, Funktiotyyppi}
 import java.math.BigDecimal
-import scala.Some
+
+import scala.collection.JavaConverters._
 
 object Laskentakaavavalidaattori {
 
@@ -449,31 +450,27 @@ object Laskentakaavavalidaattori {
     laskentakaava
   }
 
-  def onkoMallinnettuKaavaValidi(laskentakaava: Laskentakaava): Boolean = {
+  def onkoMallinnettuKaavaValidi(laskentakaava: Laskentakaava): List[Abstraktivalidointivirhe] = {
     onkoMallinnettuKaavaValidi(laskentakaava.getFunktiokutsu)
   }
 
-  def onkoLaskettavaKaavaValidi(laskentakaava: Laskentakaava): Boolean = {
+  def onkoLaskettavaKaavaValidi(laskentakaava: Laskentakaava): List[Abstraktivalidointivirhe] = {
     onkoLaskettavaKaavaValidi(laskentakaava.getFunktiokutsu)
   }
 
-  def onkoMallinnettuKaavaValidi(funktiokutsu: Funktiokutsu): Boolean = {
+  def onkoMallinnettuKaavaValidi(funktiokutsu: Funktiokutsu): List[Abstraktivalidointivirhe] = {
     val validoitu = validoiMallinnettuKaava(funktiokutsu)
-    !onkoValidointiVirheita(validoitu)
+    onkoValidointiVirheita(validoitu)
   }
 
-  def onkoLaskettavaKaavaValidi(funktiokutsu: Funktiokutsu): Boolean = {
+  def onkoLaskettavaKaavaValidi(funktiokutsu: Funktiokutsu): List[Abstraktivalidointivirhe] = {
     val validoitu = validoiLaskettavaKaava(funktiokutsu)
-    !onkoValidointiVirheita(validoitu)
+    onkoValidointiVirheita(validoitu)
   }
 
-  def onkoValidointiVirheita(fk: Funktiokutsu): Boolean = {
-    if (fk.getValidointivirheet.isEmpty) {
-      fk.getFunktioargumentit.exists(fa => if (fa.getFunktiokutsuChild != null) {
+  def onkoValidointiVirheita(fk: Funktiokutsu): List[Abstraktivalidointivirhe] = {
+      fk.getValidointivirheet.asScala.toList ++ fk.getFunktioargumentit.flatMap(fa => if (fa.getFunktiokutsuChild != null) {
         onkoValidointiVirheita(fa.getFunktiokutsuChild)
-      } else false)
-    } else {
-      true
-    }
+      } else {List()})
   }
 }

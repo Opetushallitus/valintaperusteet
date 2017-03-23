@@ -629,7 +629,7 @@ class LaskentakaavavalidaattoriTest extends FunSuite {
 
     val validoitu = Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu)
     val isValid = Laskentakaavavalidaattori.onkoLaskettavaKaavaValidi(funktiokutsu)
-    assert(!isValid)
+    assert(!isValid.isEmpty)
   }
 
   test("HaeLukuarvo with both types of converters") {

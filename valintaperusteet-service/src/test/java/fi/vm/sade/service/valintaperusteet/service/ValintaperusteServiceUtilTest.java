@@ -17,7 +17,7 @@ public class ValintaperusteServiceUtilTest {
     @Test
     public void test() {
         assertTrue(Laskentakaavavalidaattori.onkoLaskettavaKaavaValidi(
-                ValintaperusteServiceUtil.getAinaPakollinenFunktiokutsu()));
+                ValintaperusteServiceUtil.getAinaPakollinenFunktiokutsu()).isEmpty());
     }
 
 }
