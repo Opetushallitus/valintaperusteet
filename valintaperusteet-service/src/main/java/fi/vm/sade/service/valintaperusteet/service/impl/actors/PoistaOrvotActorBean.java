@@ -27,18 +27,14 @@ public class PoistaOrvotActorBean extends UntypedActor {
 
     }
 
-    private void poistaOrvot() {
-        List<Long> orphans = funktiokutsuDAO.getOrphans();
-        orphans.forEach(laskentakaavaService::poistaOrpoFunktiokutsu);
-        if (orphans.size() > 0) {
-            poistaOrvot();
-        }
-    }
-
     public void onReceive(Object message) throws Exception {
         if (message != null) {
-            log.info("Ajastettu orpojen poistaminen päällä");
-            this.poistaOrvot();
+            List<Long> orphans = funktiokutsuDAO.getOrphans();
+            while (orphans.size() > 0) {
+                log.info(String.format("Poistetaan %d orpoa", orphans.size()));
+                orphans.forEach(laskentakaavaService::poistaOrpoFunktiokutsu);
+                orphans = funktiokutsuDAO.getOrphans();
+            }
             log.info("Orvot poistettu");
         } else {
             unhandled(message);
