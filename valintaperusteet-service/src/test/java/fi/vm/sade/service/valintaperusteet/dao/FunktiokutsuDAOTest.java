@@ -108,7 +108,7 @@ public class FunktiokutsuDAOTest {
 
     @Test
     public void testDeleteOrphans() {
-        funktiokutsuDAO.deleteOrphans();
+        assertEquals(3, funktiokutsuDAO.deleteOrphans());
         assertNull(funktiokutsuDAO.getFunktiokutsu(101L));
         assertNull(funktiokutsuDAO.getFunktiokutsu(301L));
         assertNull(funktiokutsuDAO.getFunktiokutsu(302L));

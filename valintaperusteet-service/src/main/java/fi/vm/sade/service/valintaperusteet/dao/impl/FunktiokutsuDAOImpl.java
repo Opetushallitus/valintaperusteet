@@ -149,26 +149,27 @@ public class FunktiokutsuDAOImpl extends AbstractJpaDAOImpl<Funktiokutsu, Long> 
 
     @Override
     @Transactional
-    public void deleteOrphans() {
+    public long deleteOrphans() {
         QFunktiokutsu funktiokutsu = QFunktiokutsu.funktiokutsu;
         QLaskentakaava laskentakaava = QLaskentakaava.laskentakaava;
         QFunktioargumentti funktioargumentti = QFunktioargumentti.funktioargumentti;
-
-        long poistettu = 0;
-        do {
-            JPADeleteClause sql = new JPADeleteClause(getEntityManager(), funktiokutsu)
-                    .where(
-                            new JPASubQuery()
-                                    .from(laskentakaava)
-                                    .where(laskentakaava.funktiokutsu.id.eq(funktiokutsu.id))
-                                    .notExists(),
-                            new JPASubQuery()
-                                    .from(funktioargumentti)
-                                    .where(funktioargumentti.funktiokutsuChild.id.eq(funktiokutsu.id))
-                                    .notExists()
-                    );
-            poistettu = sql.execute();
-        } while (poistettu > 0);
+        JPADeleteClause deleteClause =
+                new JPADeleteClause(getEntityManager(), funktiokutsu)
+                        .where(
+                                new JPASubQuery()
+                                        .from(laskentakaava)
+                                        .where(laskentakaava.funktiokutsu.id.eq(funktiokutsu.id))
+                                        .notExists(),
+                                new JPASubQuery()
+                                        .from(funktioargumentti)
+                                        .where(funktioargumentti.funktiokutsuChild.id.eq(funktiokutsu.id))
+                                        .notExists()
+                        );
+        long poistettiin = 0;
+        for (long i = deleteClause.execute(); i > 0; i = deleteClause.execute()) {
+            poistettiin += i;
+        }
+        return poistettiin;
     }
 
     protected JPAQuery from(EntityPath<?>... o) {

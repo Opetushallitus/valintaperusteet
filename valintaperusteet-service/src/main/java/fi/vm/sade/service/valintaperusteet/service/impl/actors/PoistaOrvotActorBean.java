@@ -28,11 +28,11 @@ public class PoistaOrvotActorBean extends UntypedActor {
         if (message != null) {
             log.info("Poistetaan orvot funktiokutsut");
             try {
-                funktiokutsuDAO.deleteOrphans();
+                long n = funktiokutsuDAO.deleteOrphans();
+                log.info(String.format("Poistettiin %d orpoa", n));
             } catch (Exception e) {
                 log.error(e, "Orpojen poisto epäonnistui");
             }
-            log.info("Orvot poistettu");
         } else {
             unhandled(message);
             getContext().stop(getSelf());

@@ -44,7 +44,7 @@ public class OrphanRemovalTest {
     @Test
     public void testDeleteOrphans() {
         assertNotNull(funktiokutsuDAO.getFunktiokutsu(9L));
-        funktiokutsuDAO.deleteOrphans();
+        assertEquals(1, funktiokutsuDAO.deleteOrphans());
         assertNull(funktiokutsuDAO.getFunktiokutsu(9L));
         assertNotNull(laskentakaavaDAO.getLaskentakaava(1L));
         assertNotNull(laskentakaavaDAO.getLaskentakaava(2L));

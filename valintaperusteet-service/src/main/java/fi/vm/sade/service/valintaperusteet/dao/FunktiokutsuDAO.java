@@ -10,7 +10,7 @@ public interface FunktiokutsuDAO extends JpaDAO<Funktiokutsu, Long> {
 
     Funktiokutsu getFunktiokutsunValintaperusteet(Long id);
 
-    void deleteOrphans();
+    long deleteOrphans();
 
     List<Funktiokutsu> findFunktiokutsuByHakukohdeOids(String hakukohdeOid);
 
