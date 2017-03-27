@@ -19,6 +19,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "funktiokutsu")
@@ -46,22 +48,27 @@ public class Funktiokutsu extends BaseEntity implements FunktionArgumentti {
     private Boolean tallennaTulos = false;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "funktiokutsu", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Arvokonvertteriparametri> arvokonvertteriparametrit = new HashSet<Arvokonvertteriparametri>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "funktiokutsu", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     // @Sort(type = SortType.NATURAL)
     @OrderBy("minValue")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Arvovalikonvertteriparametri> arvovalikonvertteriparametrit = new HashSet<Arvovalikonvertteriparametri>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "funktiokutsu", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Syoteparametri> syoteparametrit = new HashSet<Syoteparametri>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     @OrderBy("indeksi")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Funktioargumentti> funktioargumentit = new TreeSet<Funktioargumentti>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "funktiokutsu", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @OrderBy("indeksi")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<ValintaperusteViite> valintaperusteviitteet = new TreeSet<ValintaperusteViite>();
 
     @Transient

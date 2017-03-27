@@ -108,25 +108,10 @@ public class FunktiokutsuDAOTest {
 
     @Test
     public void testDeleteOrphans() {
-        List<Long> orphans = funktiokutsuDAO.getOrphans();
-        assertEquals(3, orphans.size());
-        Collections.sort(orphans, new Comparator<Long>() {
-            @Override
-            public int compare(Long o1, Long o2) {
-                return o1.compareTo(o2);
-            }
-        });
-
-        assertEquals(101L, orphans.get(0).longValue());
-        assertEquals(301L, orphans.get(1).longValue());
-        assertEquals(302L, orphans.get(2).longValue());
-
         funktiokutsuDAO.deleteOrphans();
         assertNull(funktiokutsuDAO.getFunktiokutsu(101L));
         assertNull(funktiokutsuDAO.getFunktiokutsu(301L));
         assertNull(funktiokutsuDAO.getFunktiokutsu(302L));
-
-        assertEquals(0, funktiokutsuDAO.getOrphans().size());
     }
 
     @Test

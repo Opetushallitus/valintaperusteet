@@ -1,6 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.dao;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
@@ -34,44 +36,18 @@ public class OrphanRemovalTest {
     private FunktiokutsuDAO funktiokutsuDAO;
 
     @Autowired
-    private GenericDAO dao;
+    private LaskentakaavaDAO laskentakaavaDAO;
 
+    @Autowired
+    private GenericDAO dao;
 
     @Test
     public void testDeleteOrphans() {
-        List<Long> orphans = funktiokutsuDAO.getOrphans();
-        assertEquals(1, orphans.size());
-
-        assertEquals(9L, orphans.get(0).longValue());
-
-        Funktiokutsu kutsu = funktiokutsuDAO.getFunktiokutsu(9L);
-        Laskentakaava laskentakaava = dao.read(Laskentakaava.class, 1L);
-        laskentakaava.setFunktiokutsu(kutsu);
-        dao.update(laskentakaava);
-
-        List<Funktioargumentti> funktioargumenttis = dao.findAll(Funktioargumentti.class);
-        List<Funktiokutsu> funktiokutsus = dao.findAll(Funktiokutsu.class);
-
-        assertEquals(9, funktioargumenttis.size());
-        assertEquals(10, funktiokutsus.size());
-
-        poistaOrvot();
-
-        assertEquals(0, funktiokutsuDAO.getOrphans().size());
-
-        funktioargumenttis = dao.findAll(Funktioargumentti.class);
-        funktiokutsus = dao.findAll(Funktiokutsu.class);
-
-        assertEquals(2, funktiokutsus.size());
-        assertEquals(1, funktioargumenttis.size());
+        assertNotNull(funktiokutsuDAO.getFunktiokutsu(9L));
+        funktiokutsuDAO.deleteOrphans();
+        assertNull(funktiokutsuDAO.getFunktiokutsu(9L));
+        assertNotNull(laskentakaavaDAO.getLaskentakaava(1L));
+        assertNotNull(laskentakaavaDAO.getLaskentakaava(2L));
+        assertNotNull(funktiokutsuDAO.getFunktiokutsu(2L));
     }
-
-    private void poistaOrvot() {
-        List<Long> orphans = funktiokutsuDAO.getOrphans();
-        orphans.forEach(funktiokutsuDAO::deleteOrphan);
-        if(orphans.size() > 0) {
-            poistaOrvot();
-        }
-    }
-
 }

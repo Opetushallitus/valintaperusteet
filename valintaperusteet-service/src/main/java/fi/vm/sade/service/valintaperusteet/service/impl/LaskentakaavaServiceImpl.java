@@ -557,11 +557,6 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     }
 
     @Override
-    public void poistaOrpoFunktiokutsu(Long id) {
-        funktiokutsuDAO.deleteOrphan(id);
-    }
-
-    @Override
     public Laskentakaava insert(LaskentakaavaCreateDTO laskentakaava, String hakukohdeOid, String valintaryhmaOid) {
         return insert(modelMapper.map(laskentakaava, Laskentakaava.class), hakukohdeOid, valintaryhmaOid);
     }

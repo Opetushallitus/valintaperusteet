@@ -1,25 +1,36 @@
 package fi.vm.sade.service.valintaperusteet.dao.impl;
 
 import com.google.common.collect.Sets;
+import com.mysema.query.jpa.impl.JPADeleteClause;
 import com.mysema.query.jpa.impl.JPAQuery;
 import com.mysema.query.jpa.impl.JPASubQuery;
 import com.mysema.query.types.EntityPath;
-
 import fi.vm.sade.service.valintaperusteet.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
 import fi.vm.sade.service.valintaperusteet.dao.GenericDAO;
-import fi.vm.sade.service.valintaperusteet.model.*;
+import fi.vm.sade.service.valintaperusteet.model.Arvokonvertteriparametri;
+import fi.vm.sade.service.valintaperusteet.model.Arvovalikonvertteriparametri;
+import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti;
+import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
+import fi.vm.sade.service.valintaperusteet.model.QArvokonvertteriparametri;
+import fi.vm.sade.service.valintaperusteet.model.QArvovalikonvertteriparametri;
+import fi.vm.sade.service.valintaperusteet.model.QFunktioargumentti;
+import fi.vm.sade.service.valintaperusteet.model.QFunktiokutsu;
+import fi.vm.sade.service.valintaperusteet.model.QHakukohdeViite;
+import fi.vm.sade.service.valintaperusteet.model.QJarjestyskriteeri;
+import fi.vm.sade.service.valintaperusteet.model.QLaskentakaava;
+import fi.vm.sade.service.valintaperusteet.model.QSyotettavanarvontyyppi;
+import fi.vm.sade.service.valintaperusteet.model.QTekstiRyhma;
+import fi.vm.sade.service.valintaperusteet.model.QValinnanVaihe;
+import fi.vm.sade.service.valintaperusteet.model.QValintaperusteViite;
+import fi.vm.sade.service.valintaperusteet.model.QValintatapajono;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 @Repository
@@ -71,25 +82,6 @@ public class FunktiokutsuDAOImpl extends AbstractJpaDAOImpl<Funktiokutsu, Long> 
                 .leftJoin(fk.funktioargumentit).fetch()
                 .leftJoin(fk.valintaperusteviitteet).fetch()
                 .where(fk.id.eq(id)).distinct().singleResult(fk);
-    }
-
-    @Override
-    public List<Long> getOrphans() {
-        QFunktiokutsu fk = QFunktiokutsu.funktiokutsu;
-        QLaskentakaava lk = QLaskentakaava.laskentakaava;
-        QFunktioargumentti arg = QFunktioargumentti.funktioargumentti;
-
-        List<Long> laskentaakaavat = from(lk)
-                //.leftJoin(lk.funktiokutsu)
-                .distinct()
-                .list(lk.funktiokutsu.id);
-
-        List<Long> argumentit = from(arg)
-                .distinct()
-                .list(arg.funktiokutsuChild.id);
-
-        List<Long> orphans = from(fk).distinct().list(fk.id);
-        return orphans.stream().filter(f -> !laskentaakaavat.contains(f) && !argumentit.contains(f)).collect(Collectors.toList());
     }
 
     private boolean isReferenced(Long id) {
@@ -156,21 +148,27 @@ public class FunktiokutsuDAOImpl extends AbstractJpaDAOImpl<Funktiokutsu, Long> 
     }
 
     @Override
+    @Transactional
     public void deleteOrphans() {
-        List<Long> orphans = getOrphans();
-        for (Long orphan : orphans) {
-            Funktiokutsu funktiokutsu = read(orphan);
-            remove(funktiokutsu);
-        }
-        if (orphans.size() > 0) {
-            deleteOrphans();
-        }
-    }
+        QFunktiokutsu funktiokutsu = QFunktiokutsu.funktiokutsu;
+        QLaskentakaava laskentakaava = QLaskentakaava.laskentakaava;
+        QFunktioargumentti funktioargumentti = QFunktioargumentti.funktioargumentti;
 
-    @Override
-    public void deleteOrphan(Long id) {
-        Funktiokutsu funktiokutsu = read(id);
-        remove(funktiokutsu);
+        long poistettu = 0;
+        do {
+            JPADeleteClause sql = new JPADeleteClause(getEntityManager(), funktiokutsu)
+                    .where(
+                            new JPASubQuery()
+                                    .from(laskentakaava)
+                                    .where(laskentakaava.funktiokutsu.id.eq(funktiokutsu.id))
+                                    .notExists(),
+                            new JPASubQuery()
+                                    .from(funktioargumentti)
+                                    .where(funktioargumentti.funktiokutsuChild.id.eq(funktiokutsu.id))
+                                    .notExists()
+                    );
+            poistettu = sql.execute();
+        } while (poistettu > 0);
     }
 
     protected JPAQuery from(EntityPath<?>... o) {

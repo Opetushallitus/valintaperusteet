@@ -51,6 +51,4 @@ public interface LaskentakaavaService {
     Optional<Laskentakaava> pelkkaKaava(Long key);
 
     boolean poista(long id);
-
-    void poistaOrpoFunktiokutsu(Long id);
 }

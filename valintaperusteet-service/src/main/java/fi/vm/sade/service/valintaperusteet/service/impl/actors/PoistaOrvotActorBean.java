@@ -18,9 +18,6 @@ public class PoistaOrvotActorBean extends UntypedActor {
     LoggingAdapter log = Logging.getLogger(getContext().system(), this);
 
     @Autowired
-    private LaskentakaavaService laskentakaavaService;
-
-    @Autowired
     private FunktiokutsuDAO funktiokutsuDAO;
 
     public PoistaOrvotActorBean() {
@@ -29,11 +26,11 @@ public class PoistaOrvotActorBean extends UntypedActor {
 
     public void onReceive(Object message) throws Exception {
         if (message != null) {
-            List<Long> orphans = funktiokutsuDAO.getOrphans();
-            while (orphans.size() > 0) {
-                log.info(String.format("Poistetaan %d orpoa", orphans.size()));
-                orphans.forEach(laskentakaavaService::poistaOrpoFunktiokutsu);
-                orphans = funktiokutsuDAO.getOrphans();
+            log.info("Poistetaan orvot funktiokutsut");
+            try {
+                funktiokutsuDAO.deleteOrphans();
+            } catch (Exception e) {
+                log.error(e, "Orpojen poisto epäonnistui");
             }
             log.info("Orvot poistettu");
         } else {
