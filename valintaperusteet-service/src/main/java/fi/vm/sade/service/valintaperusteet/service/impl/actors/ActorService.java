@@ -49,9 +49,7 @@ public class ActorService {
     }
 
     private void runScheduler(FiniteDuration duration, ActorRef actor) {
-        /* FIXME
         cancellable = actorSystem.scheduler().schedule(Duration.Zero(), duration, actor, "run", actorSystem.dispatcher(), ActorRef.noSender());
-        */
     }
 
     public ActorSystem getActorSystem() {
@@ -59,7 +57,6 @@ public class ActorService {
     }
 
     public void runSchedulerIfNotRunning() {
-        /* FIXME
         if (deleteOrphans.isTerminated()) {
             if (!cancellable.isCancelled()) {
                 cancellable.cancel();
@@ -69,12 +66,9 @@ public class ActorService {
         } else if (cancellable.isCancelled()) {
             runScheduler(duration, deleteOrphans);
         }
-        */
     }
 
     public void runOnce() {
-        /* FIXME
         deleteOrphans.tell("run", ActorRef.noSender());
-        */
     }
 }
