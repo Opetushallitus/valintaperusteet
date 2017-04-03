@@ -3,12 +3,22 @@ package fi.vm.sade.service.valintaperusteet.util;
 import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
 
 public class ValintakoeUtil {
-    public static Valintakoe teeKopioMasterista(Valintakoe master) {
+    public static Valintakoe teeKopioMasterista(Valintakoe master, JuureenKopiointiCache kopiointiCache) {
         Valintakoe kopio = new Valintakoe();
         kopio.setAktiivinen(master.getAktiivinen());
         kopio.setKuvaus(master.getKuvaus());
         kopio.setLaskentakaava(master.getLaskentakaava());
-        kopio.setMaster(master);
+        if(kopiointiCache == null) {
+            kopio.setMaster(master);
+        } else {
+            if(master.getMaster() != null) {
+                Valintakoe kopioituMaster = kopiointiCache.kopioidutValintakokeet.get(master.getMaster().getId());
+                if (kopioituMaster == null) {
+                    throw new IllegalStateException("Ei löydetty lähdekokeen " + master + " masterille " + master.getMaster() + " kopiota");
+                }
+                kopio.setMaster(kopioituMaster);
+            }
+        }
         kopio.setNimi(master.getNimi());
         kopio.setTunniste(master.getTunniste());
         kopio.setKutsunKohdeAvain(master.getKutsunKohdeAvain());

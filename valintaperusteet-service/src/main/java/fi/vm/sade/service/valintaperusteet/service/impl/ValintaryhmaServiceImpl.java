@@ -169,8 +169,8 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
         Valintaryhma inserted = valintaryhmaDAO.insert(copy);
         copyLaskentakaavat(source, inserted);
         if(kopiointiCache == null) {
-            hakijaryhmaService.kopioiHakijaryhmatMasterValintaryhmalta(parent.getOid(), inserted.getOid(), kopiointiCache);
-            valinnanVaiheService.kopioiValinnanVaiheetParentilta(inserted, parent, kopiointiCache);
+            hakijaryhmaService.kopioiHakijaryhmatMasterValintaryhmalta(parent.getOid(), inserted.getOid(), null);
+            valinnanVaiheService.kopioiValinnanVaiheetParentilta(inserted, parent, null);
         } else  {
             hakijaryhmaService.kopioiHakijaryhmatMasterValintaryhmalta(source.getOid(), inserted.getOid(), kopiointiCache);
             valinnanVaiheService.kopioiValinnanVaiheetParentilta(inserted, source, kopiointiCache);
@@ -178,10 +178,10 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
         copyHakukohdekoodit(source, inserted);
         copyValintakoekoodit(source, inserted);
         List<Valintaryhma> children = valintaryhmaDAO.findChildrenByParentOid(source.getOid());
-        children.stream().forEach((child -> {
+        children.forEach((child) -> {
             Valintaryhma copiedChild = copyAsChild(child, inserted, child.getNimi(), kopiointiCache);
             inserted.getAlavalintaryhmat().add(copiedChild);
-        }));
+        });
         LOGGER.info("Kopioitiin valintaryhmä {} nimellä '{}' valintaryhmän {} alle: {}", source, name, parent, inserted);
         return inserted;
     }

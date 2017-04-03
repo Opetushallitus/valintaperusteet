@@ -1,19 +1,9 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import fi.vm.sade.service.valintaperusteet.dao.LaskentakaavaDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintakoeDAO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
-import fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi;
 import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
 import fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi;
 import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti;
@@ -27,14 +17,21 @@ import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
 import fi.vm.sade.service.valintaperusteet.service.ValintakoeService;
 import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuaEiVoidaKayttaaValintakoelaskennassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaEiOleOlemassaException;
-import fi.vm.sade.service.valintaperusteet.service.exception.VaaranTyyppinenLaskentakaavaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintakoettaEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintakoettaEiVoiLisataException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintakoettaEiVoiPoistaaException;
-import fi.vm.sade.service.valintaperusteet.service.exception.ValintakokeeseenLiitettavaLaskentakaavaOnLuonnosException;
+import fi.vm.sade.service.valintaperusteet.util.JuureenKopiointiCache;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 import fi.vm.sade.service.valintaperusteet.util.ValintakoeKopioija;
 import fi.vm.sade.service.valintaperusteet.util.ValintakoeUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 @Transactional
 @Service
@@ -159,18 +156,18 @@ public class ValintakoeServiceImpl implements ValintakoeService {
         }
         Valintakoe lisatty = valintakoeDAO.insert(valintakoe);
         for (ValinnanVaihe kopio : valinnanVaihe.getKopiot()) {
-            lisaaValinnanVaiheelleKopioMasterValintakokeesta(kopio, lisatty);
+            lisaaValinnanVaiheelleKopioMasterValintakokeesta(kopio, lisatty, null);
         }
         return lisatty;
     }
 
-    private void lisaaValinnanVaiheelleKopioMasterValintakokeesta(ValinnanVaihe valinnanVaihe, Valintakoe masterValintakoe) {
-        Valintakoe kopio = ValintakoeUtil.teeKopioMasterista(masterValintakoe);
+    private void lisaaValinnanVaiheelleKopioMasterValintakokeesta(ValinnanVaihe valinnanVaihe, Valintakoe masterValintakoe, JuureenKopiointiCache kopiointiCache) {
+        Valintakoe kopio = ValintakoeUtil.teeKopioMasterista(masterValintakoe, kopiointiCache);
         kopio.setValinnanVaihe(valinnanVaihe);
         kopio.setOid(oidService.haeValintakoeOid());
         Valintakoe lisatty = valintakoeDAO.insert(kopio);
         for (ValinnanVaihe vaihekopio : valinnanVaihe.getKopioValinnanVaiheet()) {
-            lisaaValinnanVaiheelleKopioMasterValintakokeesta(vaihekopio, lisatty);
+            lisaaValinnanVaiheelleKopioMasterValintakokeesta(vaihekopio, lisatty, kopiointiCache);
         }
     }
 
@@ -232,13 +229,16 @@ public class ValintakoeServiceImpl implements ValintakoeService {
     }
 
     @Override
-    public void kopioiValintakokeetMasterValinnanVaiheeltaKopiolle(ValinnanVaihe valinnanVaihe, ValinnanVaihe masterValinnanVaihe) {
+    public void kopioiValintakokeetMasterValinnanVaiheeltaKopiolle(ValinnanVaihe valinnanVaihe, ValinnanVaihe masterValinnanVaihe, JuureenKopiointiCache kopiointiCache) {
         List<Valintakoe> kokeet = valintakoeDAO.findByValinnanVaihe(masterValinnanVaihe.getOid());
         for (Valintakoe master : kokeet) {
-            Valintakoe kopio = ValintakoeUtil.teeKopioMasterista(master);
+            Valintakoe kopio = ValintakoeUtil.teeKopioMasterista(master, kopiointiCache);
             kopio.setOid(oidService.haeValintakoeOid());
             valinnanVaihe.addValintakoe(kopio);
-            valintakoeDAO.insert(kopio);
+            Valintakoe lisatty = valintakoeDAO.insert(kopio);
+            if(kopiointiCache != null) {
+                kopiointiCache.kopioidutValintakokeet.put(master.getId(), lisatty);
+            }
         }
     }
 }

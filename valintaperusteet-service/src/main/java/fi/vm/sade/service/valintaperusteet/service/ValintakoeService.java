@@ -1,12 +1,13 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
-import java.util.Collection;
-import java.util.List;
-
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
+import fi.vm.sade.service.valintaperusteet.util.JuureenKopiointiCache;
+
+import java.util.Collection;
+import java.util.List;
 
 public interface ValintakoeService {
     void deleteByOid(String oid);
@@ -27,5 +28,5 @@ public interface ValintakoeService {
 
     Valintakoe update(String oid, ValintakoeDTO valintakoe);
 
-    void kopioiValintakokeetMasterValinnanVaiheeltaKopiolle(ValinnanVaihe valinnanVaihe, ValinnanVaihe masterValinnanVaihe);
+    void kopioiValintakokeetMasterValinnanVaiheeltaKopiolle(ValinnanVaihe valinnanVaihe, ValinnanVaihe masterValinnanVaihe, JuureenKopiointiCache kopiointiCache);
 }

@@ -107,7 +107,8 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
     }
 
     @Override
-    public ValinnanVaihe lisaaValinnanVaiheValintaryhmalle(String valintaryhmaOid, ValinnanVaiheCreateDTO dto,
+    public ValinnanVaihe lisaaValinnanVaiheValintaryhmalle(String valintaryhmaOid,
+                                                           ValinnanVaiheCreateDTO dto,
                                                            String edellinenValinnanVaiheOid) {
         Valintaryhma valintaryhma = valintaryhmaService.readByOid(valintaryhmaOid);
         if (valintaryhma == null) {
@@ -138,7 +139,8 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
     }
 
     @Override
-    public ValinnanVaihe lisaaValinnanVaiheHakukohteelle(String hakukohdeOid, ValinnanVaiheCreateDTO dto,
+    public ValinnanVaihe lisaaValinnanVaiheHakukohteelle(String hakukohdeOid,
+                                                         ValinnanVaiheCreateDTO dto,
                                                          String edellinenValinnanVaiheOid) {
         HakukohdeViite hakukohde = hakukohdeService.readByOid(hakukohdeOid);
         ValinnanVaihe edellinenValinnanVaihe = null;
@@ -317,8 +319,7 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
         kopio.setOid(oidService.haeValinnanVaiheOid());
         kopio.setValintaryhma(valintaryhma);
         valintaryhma.addValinnanVaihe(kopio);
-        ValinnanVaihe edellinen = kopioiValinnanVaiheetRekursiivisesti(valintaryhma,
-                master.getEdellinenValinnanVaihe(), kopiointiCache);
+        ValinnanVaihe edellinen = kopioiValinnanVaiheetRekursiivisesti(valintaryhma, master.getEdellinenValinnanVaihe(), kopiointiCache);
         if (edellinen != null) {
             kopio.setEdellinenValinnanVaihe(edellinen);
             edellinen.setSeuraavaValinnanVaihe(kopio);
@@ -328,7 +329,7 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
             kopiointiCache.kopioidutValinnanVaiheet.put(master.getId(), lisatty);
         }
         valintatapajonoService.kopioiValintatapajonotMasterValinnanVaiheeltaKopiolle(lisatty, master, kopiointiCache);
-        valintakoeService.kopioiValintakokeetMasterValinnanVaiheeltaKopiolle(lisatty, master);
+        valintakoeService.kopioiValintakokeetMasterValinnanVaiheeltaKopiolle(lisatty, master, kopiointiCache);
         return lisatty;
     }
 
@@ -349,7 +350,7 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
             kopiointiCache.kopioidutValinnanVaiheet.put(master.getId(), lisatty);
         }
         valintatapajonoService.kopioiValintatapajonotMasterValinnanVaiheeltaKopiolle(lisatty, master, kopiointiCache);
-        valintakoeService.kopioiValintakokeetMasterValinnanVaiheeltaKopiolle(lisatty, master);
+        valintakoeService.kopioiValintakokeetMasterValinnanVaiheeltaKopiolle(lisatty, master, kopiointiCache);
         return lisatty;
     }
 
