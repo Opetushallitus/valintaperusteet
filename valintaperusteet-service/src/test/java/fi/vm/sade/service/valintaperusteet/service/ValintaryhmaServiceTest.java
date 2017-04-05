@@ -8,7 +8,6 @@ import com.google.common.collect.Sets;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintakoeDAO;
-import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
 import fi.vm.sade.service.valintaperusteet.dto.FunktiokutsuDTO;
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaCreateDTO;
@@ -29,7 +28,6 @@ import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 import org.apache.commons.lang.StringUtils;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +36,6 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.List;
 import java.util.Set;
@@ -73,9 +69,6 @@ public class ValintaryhmaServiceTest {
     private ValintakoeService valintakoeService;
 
     @Autowired
-    private ValintaryhmaDAO valintaryhmaDAO;
-
-    @Autowired
     private ValinnanVaiheDAO valinnanVaiheDAO;
 
     @Autowired
@@ -83,16 +76,6 @@ public class ValintaryhmaServiceTest {
 
     @Autowired
     private ValintakoeDAO valintakoeDAO;
-
-    @Autowired
-    private PlatformTransactionManager txManager;
-
-    private TransactionTemplate tx;
-
-    @Before
-    public void setUp() throws Exception {
-        tx = new TransactionTemplate(txManager);
-    }
 
     @Test
     public void testInsertChild() {
