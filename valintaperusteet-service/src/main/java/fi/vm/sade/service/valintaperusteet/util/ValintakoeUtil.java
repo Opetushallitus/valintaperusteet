@@ -7,9 +7,9 @@ public class ValintakoeUtil {
         Valintakoe kopio = new Valintakoe();
         kopio.setAktiivinen(master.getAktiivinen());
         kopio.setKuvaus(master.getKuvaus());
-        kopio.setLaskentakaava(master.getLaskentakaava());
         if(kopiointiCache == null) {
             kopio.setMaster(master);
+            kopio.setLaskentakaava(master.getLaskentakaava());
         } else {
             if(master.getMaster() != null) {
                 Valintakoe kopioituMaster = kopiointiCache.kopioidutValintakokeet.get(master.getMaster().getId());
@@ -17,6 +17,9 @@ public class ValintakoeUtil {
                     throw new IllegalStateException("Ei löydetty lähdekokeen " + master + " masterille " + master.getMaster() + " kopiota");
                 }
                 kopio.setMaster(kopioituMaster);
+            }
+            if (master.getLaskentakaavaId() != null) {
+                kopio.setLaskentakaava(kopiointiCache.kopioidutLaskentakaavat.get(master.getLaskentakaavaId()));
             }
         }
         kopio.setNimi(master.getNimi());

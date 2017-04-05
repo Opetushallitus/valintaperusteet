@@ -212,7 +212,7 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
                                                                Hakijaryhma masterHakijaryhma,
                                                                Hakijaryhma edellinenHakijaryhma,
                                                                JuureenKopiointiCache kopiointiCache) {
-        Hakijaryhma kopio = luoKopioHakijaryhmasta(valintaryhma, masterHakijaryhma);
+        Hakijaryhma kopio = luoKopioHakijaryhmasta(valintaryhma, masterHakijaryhma, kopiointiCache);
         kopio.setValintaryhma(valintaryhma);
         List<Hakijaryhma> ryhmat = LinkitettavaJaKopioitavaUtil.jarjesta(hakijaryhmaDAO.findByValintaryhma(valintaryhma.getOid()));
         Hakijaryhma lisatty = lisaaKopio(kopio, edellinenHakijaryhma, ryhmat);
@@ -241,7 +241,7 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
         return kopio;
     }
 
-    private Hakijaryhma luoKopioHakijaryhmasta(Valintaryhma kohdeValintaryhma, Hakijaryhma hakijaryhma) {
+    private Hakijaryhma luoKopioHakijaryhmasta(Valintaryhma kohdeValintaryhma, Hakijaryhma hakijaryhma, JuureenKopiointiCache kopiointiCache) {
         Hakijaryhma kopio = new Hakijaryhma();
         kopio.setOid(oidService.haeHakijaryhmaOid());
         kopio.setMasterHakijaryhma(hakijaryhma);
@@ -249,7 +249,11 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
         kopio.setKiintio(hakijaryhma.getKiintio());
         kopio.setKuvaus(hakijaryhma.getKuvaus());
         kopio.setKaytaKaikki(hakijaryhma.isKaytaKaikki());
-        kopio.setLaskentakaava(laskentakaavaService.haeLaskentakaavaTaiSenKopioVanhemmilta(hakijaryhma.getLaskentakaavaId(), kohdeValintaryhma).orElse(hakijaryhma.getLaskentakaava()));
+        if (kopiointiCache != null && kopiointiCache.kopioidutLaskentakaavat.containsKey(hakijaryhma.getLaskentakaavaId())) {
+            kopio.setLaskentakaava(kopiointiCache.kopioidutLaskentakaavat.get(hakijaryhma.getLaskentakaavaId()));
+        } else {
+            kopio.setLaskentakaava(laskentakaavaService.haeLaskentakaavaTaiSenKopioVanhemmilta(hakijaryhma.getLaskentakaavaId(), kohdeValintaryhma).orElse(hakijaryhma.getLaskentakaava()));
+        }
         kopio.setHakijaryhmatyyppikoodi(hakijaryhma.getHakijaryhmatyyppikoodi());
         kopio.setNimi(hakijaryhma.getNimi());
         kopio.setTarkkaKiintio(hakijaryhma.isTarkkaKiintio());

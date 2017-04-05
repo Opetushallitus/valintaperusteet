@@ -3,6 +3,7 @@ package fi.vm.sade.service.valintaperusteet.util;
 import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
 import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
 import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
+import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
@@ -25,4 +26,5 @@ public class JuureenKopiointiCache {
     public final Map<Long, ValinnanVaihe> kopioidutValinnanVaiheet = new HashMap<>();
     public final Map<Long, Jarjestyskriteeri> kopioidutJarjestyskriteerit = new HashMap<>();
     public final Map<Long, Valintakoe> kopioidutValintakokeet = new HashMap<>();
+    public final Map<Long, Laskentakaava> kopioidutLaskentakaavat = new HashMap<>();
 }

@@ -4,18 +4,25 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintakoeDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
+import fi.vm.sade.service.valintaperusteet.dto.FunktiokutsuDTO;
+import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.SyoteparametriDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi;
 import fi.vm.sade.service.valintaperusteet.dto.model.Koekutsu;
 import fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
+import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
@@ -35,6 +42,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -56,6 +65,9 @@ public class ValintaryhmaServiceTest {
 
     @Autowired
     private ValinnanVaiheService valinnanVaiheService;
+
+    @Autowired
+    private LaskentakaavaService laskentakaavaService;
 
     @Autowired
     private ValintakoeService valintakoeService;
@@ -223,9 +235,8 @@ public class ValintaryhmaServiceTest {
         assertEquals(valintakoeOid, uudetKokeet.get(0).getMasterValintakoe().getOid());
     }
 
-
     /**
-     * Ensure there's no links between old and new hierarchies when Valintaryhmä is copied between roots
+     * Ensure there's no links between old and new hierarchies when Valintaryhmä is copied between roots.
      *
      * @see <a href="https://jira.oph.ware.fi/jira/browse/BUG-1359">BUG-1359: valintakokeen päivittäminen ei periydy</a>
      */
@@ -234,9 +245,14 @@ public class ValintaryhmaServiceTest {
         // create original root VR
         Valintaryhma originalRoot = valintaryhmaService.insert(createValintaryhma("parent"));
         assertNotNull("Parent ValintaRyhmä should be persisted at this point", originalRoot);
-        // add some VVs to original root
+        // add valinnanvaihe to original root
         addValinnanvaihe(originalRoot, "tavallinen", true, ValinnanVaiheTyyppi.TAVALLINEN);
         ValinnanVaihe examVV = addValinnanvaihe(originalRoot, "valintakoe", true, ValinnanVaiheTyyppi.VALINTAKOE);
+        // create Laskentakaavas to be paired with various entities
+        Laskentakaava originalValintakoeKaava = laskentakaavaService.insert(createLaskentakaava("valintakoekaava"), null, originalRoot.getOid());
+        Laskentakaava originalHakijaryhmaKaava = laskentakaavaService.insert(createLaskentakaava("hakijaryhmäkaava"), null, originalRoot.getOid());
+        // add hakijaryhma to original root
+        Hakijaryhma originalHakijaryhma = hakijaryhmaService.lisaaHakijaryhmaValintaryhmalle(originalRoot.getOid(), createHakijaryhma(originalHakijaryhmaKaava, "hakijaryhmä 1"));
         // add valintakoe (=qualification exam) to matching VV
         ValintakoeCreateDTO valintakoe = new ValintakoeCreateDTO();
         valintakoe.setNimi("qualification exam");
@@ -245,6 +261,7 @@ public class ValintaryhmaServiceTest {
         valintakoe.setKutsutaankoKaikki(true);
         valintakoe.setLahetetaankoKoekutsut(true);
         valintakoe.setTunniste("ID");
+        valintakoe.setLaskentakaavaId(originalValintakoeKaava.getId());
         valintakoeService.lisaaValintakoeValinnanVaiheelle(examVV.getOid(), valintakoe);
 
         // create original child VR
@@ -253,6 +270,9 @@ public class ValintaryhmaServiceTest {
 
         // copy the original hierarchy
         Valintaryhma copiedRoot = valintaryhmaService.copyAsChild(originalRoot.getOid(), null, "copy of " + originalRoot.getNimi());
+
+        // reload originalRoot so that all references are updated for assertions below
+        originalRoot = valintaryhmaService.readByOid(originalRoot.getOid());
 
         // get VVs for child VRs and check link integrities
         List<ValinnanVaihe> originalVVs = findVVs(originalRoot);
@@ -273,6 +293,19 @@ public class ValintaryhmaServiceTest {
         assertValintakoeRootLinking(originalVKs, copiedVKs);
         assertValintakoeChildLinking(originalVKs, originalChildVKs);
         assertValintakoeChildLinking(copiedVKs, copiedChildVKs);
+
+        assertValintakoeLaskentakaavaIds(originalRoot, Iterables.concat(originalVKs, originalChildVKs));
+        assertValintakoeLaskentakaavaIds(copiedRoot, Iterables.concat(copiedVKs, copiedChildVKs));
+
+        assertHakijaryhmaLinking(copiedRoot);
+    }
+
+    private void assertHakijaryhmaLinking(Valintaryhma copiedRoot) {
+        List<Hakijaryhma> copiedHakijaryhmas = hakijaryhmaService.findByValintaryhma(copiedRoot.getOid());
+        assertEquals("Copied Valintaryhma should have a single copied Hakijaryhma", 1, copiedHakijaryhmas.size());
+        Hakijaryhma copiedHakijaryhma = copiedHakijaryhmas.get(0);
+        assertEquals("Copied Hakijaryhma should be owned by copied root", copiedRoot.getOid(), copiedHakijaryhma.getValintaryhma().getOid());
+        assertEquals("Copied Hakijaryhma's Laskentakaava should be owned by copied root", copiedRoot.getOid(), copiedHakijaryhma.getLaskentakaava().getValintaryhma().getOid());
     }
 
     private static void assertValinnanvaiheRootLinking(List<ValinnanVaihe> originalVVs, List<ValinnanVaihe> copiedVVs) {
@@ -313,6 +346,22 @@ public class ValintaryhmaServiceTest {
         return children.get(0);
     }
 
+    /**
+     * Require all kokeet entries to reference Laskentakaava ids in given valintaryhma
+     */
+    private void assertValintakoeLaskentakaavaIds(Valintaryhma valintaryhma, Iterable<Valintakoe> kokeet) {
+        // this reloads the kaavas as in valintaryhma they're a lazy set and we don't have active Hibernate Session here
+        Set<Long> vrIds = laskentakaavaService.findKaavas(true, valintaryhma.getOid(), null, null).stream()
+                .map(Laskentakaava::getId)
+                .collect(Collectors.toSet());
+        kokeet.forEach((koe) -> {
+            assertNotNull("Expected reference to laskentakaava in Valintakoe " + koe.getId() + "::" + koe.getNimi() + " is missing", koe.getLaskentakaavaId());
+            assertTrue("Valintaryhma " + valintaryhma.getId() + "::" + valintaryhma.getNimi() + " does not contain expected laskentakaava id " + koe.getLaskentakaavaId(),
+                        vrIds.contains(koe.getLaskentakaavaId()));
+
+        });
+    }
+
     private ValinnanVaihe addValinnanvaihe(Valintaryhma parent, String nimi, boolean aktiivinen, ValinnanVaiheTyyppi tyyppi) {
         ValinnanVaiheCreateDTO valinnanvaihe = new ValinnanVaiheCreateDTO();
         valinnanvaihe.setNimi(nimi);
@@ -325,5 +374,34 @@ public class ValintaryhmaServiceTest {
         ValintaryhmaCreateDTO valintaryhma = new ValintaryhmaCreateDTO();
         valintaryhma.setNimi(nimi);
         return valintaryhma;
+    }
+
+    private HakijaryhmaCreateDTO createHakijaryhma(Laskentakaava laskentakaava, String nimi) {
+        HakijaryhmaCreateDTO hakijaryhma = new HakijaryhmaCreateDTO();
+        hakijaryhma.setNimi(nimi);
+        hakijaryhma.setLaskentakaavaId(laskentakaava.getId());
+        return hakijaryhma;
+    }
+
+    private LaskentakaavaCreateDTO createLaskentakaava(String nimi) {
+        LaskentakaavaCreateDTO laskentakaava = new LaskentakaavaCreateDTO();
+        laskentakaava.setNimi(nimi);
+        laskentakaava.setFunktiokutsu(createFunktiokutsu());
+        laskentakaava.setOnLuonnos(true);
+        return laskentakaava;
+    }
+
+    private FunktiokutsuDTO createFunktiokutsu() {
+        FunktiokutsuDTO funktiokutsu = new FunktiokutsuDTO();
+        funktiokutsu.setFunktionimi(Funktionimi.LUKUARVO);
+        funktiokutsu.setSyoteparametrit(Sets.newHashSet(createSyoteparametri()));
+        return funktiokutsu;
+    }
+
+    private SyoteparametriDTO createSyoteparametri() {
+        SyoteparametriDTO syoteparametri = new SyoteparametriDTO();
+        syoteparametri.setArvo("5.0");
+        syoteparametri.setAvain("luku");
+        return syoteparametri;
     }
 }

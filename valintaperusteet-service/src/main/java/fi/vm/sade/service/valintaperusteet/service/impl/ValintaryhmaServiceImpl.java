@@ -167,7 +167,7 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
         copy.setVastuuorganisaatio(source.getVastuuorganisaatio());
         copy.setKohdejoukko(source.getKohdejoukko());
         Valintaryhma inserted = valintaryhmaDAO.insert(copy);
-        copyLaskentakaavat(source, inserted);
+        copyLaskentakaavat(source, inserted, kopiointiCache);
         if(kopiointiCache == null) {
             hakijaryhmaService.kopioiHakijaryhmatMasterValintaryhmalta(parent.getOid(), inserted.getOid(), null);
             valinnanVaiheService.kopioiValinnanVaiheetParentilta(inserted, parent, null);
@@ -186,9 +186,12 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
         return inserted;
     }
 
-    private void copyLaskentakaavat(Valintaryhma source, Valintaryhma target) {
-        source.getLaskentakaava().stream().forEach( sourceKaava -> {
-            laskentakaavaService.kopioiJosEiJoKopioitu(sourceKaava, sourceKaava.getHakukohde(), target);
+    private void copyLaskentakaavat(Valintaryhma source, Valintaryhma target, JuureenKopiointiCache kopiointiCache) {
+        source.getLaskentakaava().forEach(sourceKaava -> {
+            Laskentakaava copied = laskentakaavaService.kopioiJosEiJoKopioitu(sourceKaava, sourceKaava.getHakukohde(), target);
+            if (kopiointiCache != null) {
+                kopiointiCache.kopioidutLaskentakaavat.put(sourceKaava.getId(), copied);
+            }
         });
     }
 
