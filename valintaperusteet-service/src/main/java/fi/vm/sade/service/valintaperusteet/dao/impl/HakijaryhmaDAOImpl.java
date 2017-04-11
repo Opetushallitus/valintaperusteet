@@ -67,7 +67,6 @@ public class HakijaryhmaDAOImpl extends AbstractJpaDAOImpl<Hakijaryhma, Long> im
         QHakijaryhma hakijaryhma = QHakijaryhma.hakijaryhma;
         return from(valintaryhma)
                 .leftJoin(valintaryhma.hakijaryhmat, hakijaryhma)
-                .leftJoin(hakijaryhma.jonot).fetch()
                 .leftJoin(hakijaryhma.valintaryhma).fetch()
                 .leftJoin(hakijaryhma.laskentakaava).fetch()
                 .leftJoin(hakijaryhma.hakijaryhmatyyppikoodi).fetch()

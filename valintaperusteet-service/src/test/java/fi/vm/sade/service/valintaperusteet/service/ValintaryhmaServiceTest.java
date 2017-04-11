@@ -11,13 +11,16 @@ import fi.vm.sade.service.valintaperusteet.dao.ValintakoeDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
 import fi.vm.sade.service.valintaperusteet.dto.FunktiokutsuDTO;
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.KoodiDTO;
 import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.SyoteparametriDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi;
 import fi.vm.sade.service.valintaperusteet.dto.model.Koekutsu;
+import fi.vm.sade.service.valintaperusteet.dto.model.Tasapistesaanto;
 import fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
@@ -38,6 +41,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -57,7 +61,13 @@ public class ValintaryhmaServiceTest {
     private ValintaryhmaService valintaryhmaService;
 
     @Autowired
+    private ValintatapajonoService valintatapajonoService;
+
+    @Autowired
     private HakijaryhmaService hakijaryhmaService;
+
+    @Autowired
+    private HakijaryhmaValintatapajonoService hakijaryhmaValintatapajonoService;
 
     @Autowired
     private ValinnanVaiheService valinnanVaiheService;
@@ -235,7 +245,7 @@ public class ValintaryhmaServiceTest {
         Laskentakaava originalValintakoeKaava = laskentakaavaService.insert(createLaskentakaava("valintakoekaava"), null, originalRoot.getOid());
         Laskentakaava originalHakijaryhmaKaava = laskentakaavaService.insert(createLaskentakaava("hakijaryhmäkaava"), null, originalRoot.getOid());
         // add hakijaryhma to original root
-        Hakijaryhma originalHakijaryhma = hakijaryhmaService.lisaaHakijaryhmaValintaryhmalle(originalRoot.getOid(), createHakijaryhma(originalHakijaryhmaKaava, "hakijaryhmä 1"));
+        Hakijaryhma originalHakijaryhma = hakijaryhmaService.lisaaHakijaryhmaValintaryhmalle(originalRoot.getOid(), createHakijaryhma(originalHakijaryhmaKaava, "hakijaryhmä 1", Optional.empty()));
         // add valintakoe (=qualification exam) to matching VV
         ValintakoeCreateDTO valintakoe = new ValintakoeCreateDTO();
         valintakoe.setNimi("qualification exam");
@@ -281,6 +291,43 @@ public class ValintaryhmaServiceTest {
         assertValintakoeLaskentakaavaIds(copiedRoot, Iterables.concat(copiedVKs, copiedChildVKs));
 
         assertHakijaryhmaLinking(copiedRoot);
+    }
+
+    /**
+     * Make sure child's Hakijaryhma is not cloned as toplevel Hakijaryhma when the assignment is done through
+     * Valintatapajono.
+     * 
+     * Specifically this bug required the HR to be added to root VR, then linked to root VR's VTJ and a child with exact
+     * same structure which reuses the root HR without modifications.
+     *
+     * @see <a href="https://jira.oph.ware.fi/jira/browse/BUG-1376">BUG-1376: Alivalintaryhmän luominen muodostaa satoja hakijaryhmiä</a>
+     */
+    @Test
+    public void addingNewChildValintaryhmaDoesNotExcessivelyCloneHakijaryhmas() throws Exception {
+        // create original root VR with single hakijaryhma
+        Valintaryhma rootVR = valintaryhmaService.insert(createValintaryhma("parent"));
+        Laskentakaava rootLK = laskentakaavaService.insert(createLaskentakaava("hakijaryhmäkaava"), null, rootVR.getOid());
+        Hakijaryhma rootHR = hakijaryhmaService.lisaaHakijaryhmaValintaryhmalle(rootVR.getOid(), createHakijaryhma(rootLK, "hakijaryhmä 1", Optional.of(createHakijaryhmatyyppikoodi())));
+        // add valinnanvaihe with valintatapajono
+        ValinnanVaihe rootVV = addValinnanvaihe(rootVR, "valinnanvaihe 1", true, ValinnanVaiheTyyppi.TAVALLINEN);
+        Valintatapajono rootVTJ = valintatapajonoService.lisaaValintatapajonoValinnanVaiheelle(rootVV.getOid(), createValintatapajono("valintatapajono 1"), null);
+        // link root's HR with the VTJ
+        hakijaryhmaValintatapajonoService.liitaHakijaryhmaValintatapajonolle(rootVTJ.getOid(), rootHR.getOid());
+
+        // add new child VR to root
+        Valintaryhma childVR = valintaryhmaService.insert(createValintaryhma("child A"), rootVR.getOid());
+        ValinnanVaihe childVV = addValinnanvaihe(childVR, "valinnanvaihe 2", true, ValinnanVaiheTyyppi.TAVALLINEN);
+        // add VTJ to child VR which reuses the parent's HR
+        Valintatapajono childVTJ = valintatapajonoService.lisaaValintatapajonoValinnanVaiheelle(childVV.getOid(), createValintatapajono("valintatapajono 2"), null);
+        hakijaryhmaValintatapajonoService.liitaHakijaryhmaValintatapajonolle(childVTJ.getOid(), rootHR.getOid());
+
+        // add new VR to root as one normally would
+        Valintaryhma addedVR = valintaryhmaService.insert(createValintaryhma("child B"), rootVR.getOid());
+
+        // list available HRs for the child B
+        List<Hakijaryhma> hrs = hakijaryhmaService.findByValintaryhma(addedVR.getOid());
+        // make sure there's only one HR as one would expect
+        assertEquals("There should be exactly one Hakijaryhma for child B as it is added as child to parent, not child B", 1, hrs.size());
     }
 
     private void assertHakijaryhmaLinking(Valintaryhma copiedRoot) {
@@ -359,10 +406,11 @@ public class ValintaryhmaServiceTest {
         return valintaryhma;
     }
 
-    private HakijaryhmaCreateDTO createHakijaryhma(Laskentakaava laskentakaava, String nimi) {
+    private HakijaryhmaCreateDTO createHakijaryhma(Laskentakaava laskentakaava, String nimi, Optional<KoodiDTO> hakijaryhmatyyppikoodi) {
         HakijaryhmaCreateDTO hakijaryhma = new HakijaryhmaCreateDTO();
         hakijaryhma.setNimi(nimi);
         hakijaryhma.setLaskentakaavaId(laskentakaava.getId());
+        hakijaryhmatyyppikoodi.ifPresent(hakijaryhma::setHakijaryhmatyyppikoodi);
         return hakijaryhma;
     }
 
@@ -386,5 +434,20 @@ public class ValintaryhmaServiceTest {
         syoteparametri.setArvo("5.0");
         syoteparametri.setAvain("luku");
         return syoteparametri;
+    }
+
+    private KoodiDTO createHakijaryhmatyyppikoodi() {
+        KoodiDTO koodi = new KoodiDTO();
+        koodi.setUri("www.example.fi");
+        return koodi;
+    }
+
+    private ValintatapajonoCreateDTO createValintatapajono(String nimi) {
+        ValintatapajonoCreateDTO vtj = new ValintatapajonoCreateDTO();
+        vtj.setNimi(nimi);
+        vtj.setAktiivinen(true);
+        vtj.setAloituspaikat(10);
+        vtj.setTasapistesaanto(Tasapistesaanto.ARVONTA);
+        return vtj;
     }
 }
