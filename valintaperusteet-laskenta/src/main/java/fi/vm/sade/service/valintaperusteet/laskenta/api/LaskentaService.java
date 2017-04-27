@@ -1,6 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.laskenta.api;
 
-import fi.vm.sade.service.valintaperusteet.laskenta.Lukuarvofunktio;
+import fi.vm.sade.service.valintaperusteet.laskenta .Lukuarvofunktio;
 import fi.vm.sade.service.valintaperusteet.laskenta.Totuusarvofunktio;
 
 import java.math.BigDecimal;
