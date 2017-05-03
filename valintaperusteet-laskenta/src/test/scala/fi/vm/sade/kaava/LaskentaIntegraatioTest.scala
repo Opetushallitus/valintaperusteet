@@ -1,21 +1,19 @@
 package fi.vm.sade.kaava
 
-import org.scalatest.FunSuite
-import fi.vm.sade.kaava.LaskentaTestUtil._
+import java.lang.Boolean
+import java.math.BigDecimal
+import java.util
+
+import fi.vm.sade.kaava.LaskentaTestUtil.{Syoteparametri, TestHakemus, _}
+import fi.vm.sade.service.valintaperusteet.dto.model.{Funktionimi, Osallistuminen, Valintaperustelahde}
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskin
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.VirheMetatieto.VirheMetatietotyyppi
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
+import fi.vm.sade.service.valintaperusteet.laskenta.api.{Hakemus, Hakukohde, Hakutoive, Laskentatulos}
+import fi.vm.sade.service.valintaperusteet.model.TekstiRyhma
+import org.scalatest.FunSuite
 
 import scala.collection.JavaConversions._
-import java.math.BigDecimal
-
-import fi.vm.sade.service.valintaperusteet.laskenta.api.{Hakemus, Hakukohde, Hakutoive, Laskentatulos}
-import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.VirheMetatieto.VirheMetatietotyyppi
-import java.util
-import java.lang.Boolean
-
-import fi.vm.sade.kaava.LaskentaTestUtil.TestHakemus
-import fi.vm.sade.service.valintaperusteet.dto.model.{Funktionimi, Osallistuminen, Valintaperustelahde}
-import fi.vm.sade.service.valintaperusteet.model.TekstiRyhma
 
 /**
  * User: kwuoti
@@ -1364,6 +1362,49 @@ class LaskentaIntegraatioTest extends FunSuite {
 
     val hakukohde = new Hakukohde("oid1", new util.HashMap[String, String])
     val hakemus = TestHakemus("", List("oid2", "oid1", "oid3"), Map[String, String]())
+
+    val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
+    assert(!tulos.get)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+
+  test("Hakutoive ryhmassa, true") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HAKUTOIVERYHMASSA,
+      syoteparametrit = List(
+        Syoteparametri(
+          avain = "n",
+          arvo = "2"),
+        Syoteparametri(
+          avain = "ryhmaoid",
+          arvo = "1.2.3.4")
+      ))
+
+    val hakukohde = new Hakukohde("oid1", new util.HashMap[String, String])
+    val hakemus = TestHakemusWithRyhmaOids("", List("oid2", "oid1", "oid3"), List(List(), List("1.2.3.4"), List("1.2.3.5")), Map[String, String](), mapAsJavaMap(Map()))
+
+    val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
+    assert(tulos.get)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("Hakutoive ryhmassa, false") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HAKUTOIVERYHMASSA,
+      syoteparametrit = List(
+        Syoteparametri(
+          avain = "n",
+          arvo = "2"),
+        Syoteparametri(
+          avain = "ryhmaoid",
+          arvo = "1.2.3.5")
+      ))
+
+    val hakukohde = new Hakukohde("oid1", new util.HashMap[String, String])
+    val hakemus = TestHakemusWithRyhmaOids("", List("oid2", "oid1", "oid3"), List(List(), List("1.2.3.4"), List("1.2.3.5")), Map[String, String](), mapAsJavaMap(Map()))
 
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)

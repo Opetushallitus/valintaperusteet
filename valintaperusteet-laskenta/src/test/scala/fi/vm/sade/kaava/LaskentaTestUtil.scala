@@ -138,13 +138,20 @@ object LaskentaTestUtil {
     }
   }
 
-  object TestHakemus {
-    def apply(oid: String, hakutoiveet: List[String], kentat: Map[String, String], suoritukset: java.util.Map[String, java.util.List[java.util.Map[String, String]]] = mapAsJavaMap(Map())) = {
+  object TestHakemusWithRyhmaOids {
+    def apply(oid: String, hakutoiveet: List[String], ryhmaoidit: List[List[String]], kentat: Map[String, String], suoritukset: java.util.Map[String, java.util.List[java.util.Map[String, String]]]) = {
       val hakutoiveetMap: Map[java.lang.Integer, Hakutoive] = (for {
         prio <- 1 to hakutoiveet.size
-      } yield (new java.lang.Integer(prio), new Hakutoive(hakutoiveet(prio - 1), Seq()))).toMap
+      } yield (new java.lang.Integer(prio), new Hakutoive(hakutoiveet(prio - 1), ryhmaoidit(prio - 1)))).toMap
 
       new Hakemus(oid, mapAsJavaMap(hakutoiveetMap), mapAsJavaMap(kentat), suoritukset)
+    }
+  }
+
+  object TestHakemus {
+    def apply(oid: String, hakutoiveet: List[String], kentat: Map[String, String], suoritukset: java.util.Map[String, java.util.List[java.util.Map[String, String]]] = mapAsJavaMap(Map())) = {
+      val ryhmaoidit = hakutoiveet.map(_ => List())
+      TestHakemusWithRyhmaOids(oid, hakutoiveet, ryhmaoidit, kentat, suoritukset)
     }
   }
 

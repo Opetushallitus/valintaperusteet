@@ -396,7 +396,7 @@ object Laskentadomainkonvertteri {
 
       case Funktionimi.HAKUTOIVERYHMASSA => {
         val nParam = getParametri("n", funktiokutsu.getSyoteparametrit)
-        val ryhmaOid = getParametri("ryhmaOid", funktiokutsu.getSyoteparametrit).getArvo
+        val ryhmaOid = getParametri("ryhmaoid", funktiokutsu.getSyoteparametrit).getArvo
         HakutoiveRyhmassa(parametriToInteger(nParam), ryhmaOid, oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
       }
 
