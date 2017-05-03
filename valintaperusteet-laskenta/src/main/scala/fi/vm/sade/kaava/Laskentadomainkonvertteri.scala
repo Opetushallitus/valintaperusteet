@@ -1,51 +1,14 @@
 package fi.vm.sade.kaava
 
-import fi.vm.sade.service.valintaperusteet.model._
-import fi.vm.sade.service.valintaperusteet.dto.model._
-import fi.vm.sade.service.valintaperusteet.laskenta._
-import Laskenta._
-import Laskenta.{HakukohteenValintaperuste => HkValintaperuste}
-import Laskenta.{HakukohteenSyotettavaValintaperuste => HksValintaperuste}
-import org.apache.commons.lang.StringUtils
 import java.math.{BigDecimal => JBigDecimal}
 import java.util.{Set => JSet}
-import scala.math.BigDecimal._
-import scala._
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.KonvertoiLukuarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Negaatio
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Totuusarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Osamaara
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Pyoristys
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonvertteri
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Suurempi
-import scala.Some
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Yhtasuuri
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Jos
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.PienempiTaiYhtasuuri
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaKonvertoiTotuusarvoksi
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Demografia
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaKonvertoiLukuarvoksi
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.PainotettuKeskiarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Pienempi
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Valintaperusteyhtasuuruus
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HylkaaArvovalilla
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakemuksenValintaperuste
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.NimettyTotuusarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeLukuarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.NimettyLukuarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Skaalaus
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.SyotettavaValintaperuste
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonvertteri
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeTotuusarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.SuurempiTaiYhtasuuri
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Hylkaa
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaVertaaYhtasuuruus
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Ei
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Hakutoive
-import fi.vm.sade.service.valintaperusteet.service.validointi.virhe.LaskentakaavaEiOleValidiException
+
 import fi.vm.sade.service.valintaperusteet.dto.model.{Funktionimi, Valintaperustelahde}
-import scala.collection.JavaConversions
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.{Arvokonvertteri, Demografia, Ei, HaeLukuarvo, HaeMerkkijonoJaKonvertoiLukuarvoksi, HaeMerkkijonoJaKonvertoiTotuusarvoksi, HaeMerkkijonoJaVertaaYhtasuuruus, HaeTotuusarvo, HakemuksenValintaperuste, Hakutoive, Hylkaa, HylkaaArvovalilla, Jos, KonvertoiLukuarvo, Lukuarvo, Lukuarvovalikonvertteri, Negaatio, NimettyLukuarvo, NimettyTotuusarvo, Osamaara, PainotettuKeskiarvo, Pienempi, PienempiTaiYhtasuuri, Pyoristys, Skaalaus, Suurempi, SuurempiTaiYhtasuuri, SyotettavaValintaperuste, Totuusarvo, Valintaperusteyhtasuuruus, Yhtasuuri, HakukohteenSyotettavaValintaperuste => HksValintaperuste, HakukohteenValintaperuste => HkValintaperuste, _}
+import fi.vm.sade.service.valintaperusteet.laskenta._
+import fi.vm.sade.service.valintaperusteet.model._
+import fi.vm.sade.service.valintaperusteet.service.validointi.virhe.LaskentakaavaEiOleValidiException
+import org.apache.commons.lang.StringUtils
 
 object Laskentadomainkonvertteri {
 
@@ -429,6 +392,12 @@ object Laskentadomainkonvertteri {
       case Funktionimi.HAKUTOIVE => {
         val nParam = getParametri(funktiokuvaus.syoteparametrit.head.avain, funktiokutsu.getSyoteparametrit)
         Hakutoive(parametriToInteger(nParam), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
+      }
+
+      case Funktionimi.HAKUTOIVERYHMASSA => {
+        val nParam = getParametri("n", funktiokutsu.getSyoteparametrit)
+        val ryhmaOid = getParametri("ryhmaOid", funktiokutsu.getSyoteparametrit).getArvo
+        HakutoiveRyhmassa(parametriToInteger(nParam), ryhmaOid, oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
       }
 
       case Funktionimi.HAKUKELPOISUUS => {

@@ -1,61 +1,22 @@
 package fi.vm.sade.service.valintaperusteet.laskenta
 
-import api.Hakukohde
-import api.Hakemus
-import api.Laskentatulos
-import api.{SyotettyArvo => SArvo}
-import api.{FunktioTulos => FTulos}
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta._
-import java.util.{Collection => JCollection}
 import java.lang.{Boolean => JBoolean}
-import java.math.{BigDecimal => JBigDecimal}
-
-import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus.Kentat
-import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
-import org.slf4j.LoggerFactory
-
-import scala.collection.mutable.ListBuffer
-import java.math.RoundingMode
+import java.math.{RoundingMode, BigDecimal => JBigDecimal}
+import java.util.{Collection => JCollection}
 
 import fi.vm.sade.service.valintaperusteet.dto.model.Osallistuminen
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.KonvertoiLukuarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Negaatio
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Totuusarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Osamaara
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Pyoristys
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Suurempi
-
-import scala.Some
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Yhtasuuri
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Jos
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.PienempiTaiYhtasuuri
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaKonvertoiTotuusarvoksi
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Demografia
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaKonvertoiLukuarvoksi
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Pienempi
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.NimettyTotuusarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeLukuarvo
-
-import scala.Tuple3
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.NimettyLukuarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.SyotettavaValintaperuste
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.SuurempiTaiYhtasuuri
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeTotuusarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaVertaaYhtasuuruus
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakukohteenValintaperuste
-
-import scala.Tuple2
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Ei
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Hakutoive
-
-import scala.collection.JavaConversions._
-import play.api.libs.json._
 import fi.vm.sade.service.valintaperusteet.laskenta.JsonFormats._
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.{Demografia, Ei, HaeLukuarvo, HaeMerkkijonoJaKonvertoiLukuarvoksi, HaeMerkkijonoJaKonvertoiTotuusarvoksi, HaeMerkkijonoJaVertaaYhtasuuruus, HaeTotuusarvo, HakukohteenValintaperuste, Hakutoive, Jos, KonvertoiLukuarvo, Lukuarvo, Negaatio, NimettyLukuarvo, NimettyTotuusarvo, Osamaara, Pienempi, PienempiTaiYhtasuuri, Pyoristys, Suurempi, SuurempiTaiYhtasuuri, SyotettavaValintaperuste, Totuusarvo, Yhtasuuri, _}
+import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus.Kentat
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Tila.Tilatyyppi
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
+import fi.vm.sade.service.valintaperusteet.laskenta.api.{Hakemus, Hakukohde, Laskentatulos, FunktioTulos => FTulos, SyotettyArvo => SArvo}
+import org.slf4j.LoggerFactory
+import play.api.libs.json._
 
 import scala.collection.JavaConversions
-import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Tila.Tilatyyppi
-import fi.vm.sade.service.valintaperusteet.model.TekstiRyhma
+import scala.collection.JavaConversions._
+import scala.collection.mutable.ListBuffer
 
 private case class Tulos[T](tulos: Option[T], tila: Tila, historia: Historia)
 
@@ -405,10 +366,16 @@ private class Laskin private(private val hakukohde: Hakukohde,
         (tulos, tilat, Historia("Nimetty totuusarvo", tulos, tilat, Some(List(h)), Some(Map("nimi" -> Some(nimi)))))
       }
 
-      case Hakutoive(n, oid, tulosTunniste,_,_,_) => {
+      case Hakutoive(n, _, _, _, _, _) => {
         val onko = Some(hakemus.onkoHakutoivePrioriteetilla(hakukohde.hakukohdeOid, n))
         val tilat = List(new Hyvaksyttavissatila)
         (onko, tilat, Historia("Hakutoive", onko, tilat, None, Some(Map("prioriteetti" -> Some(n)))))
+      }
+
+      case HakutoiveRyhmassa(n, ryhmaOid, _, _, _, _, _) => {
+        val onko = Some(hakemus.onkoHakutoivePrioriteetilla(hakukohde.hakukohdeOid, n, Some(ryhmaOid)))
+        val tilat = List(new Hyvaksyttavissatila)
+        (onko, tilat, Historia("HakutoiveRyhmassa", onko, tilat, None, Some(Map("prioriteetti" -> Some(n)))))
       }
 
       case Hakukelpoisuus(oid, tulosTunniste,_,_,_) => {

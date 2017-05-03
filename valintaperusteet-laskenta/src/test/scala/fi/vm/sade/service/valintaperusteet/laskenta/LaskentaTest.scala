@@ -1,81 +1,22 @@
 package fi.vm.sade.service.valintaperusteet.laskenta
 
 import java.math.{BigDecimal => BigDec}
-
-import scala.math.BigDecimal._
-import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakukohde
-import org.scalatest._
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta._
-
-import scala.collection.JavaConversions._
-import fi.vm.sade.kaava.LaskentaTestUtil._
-import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.HylattyMetatieto
-
-import scala._
-import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.VirheMetatieto.VirheMetatietotyyppi
-import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.HylattyMetatieto.Hylattymetatietotyyppi
 import java.util
 
-import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus
-import fi.vm.sade.kaava.LaskentaTestUtil.TestHakemus
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.KonvertoiLukuarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Totuusarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonvertteri
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Suurempi
-
-import scala.Some
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonversio
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Jos
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Demografia
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakukohteenValintaperuste
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaKonvertoiLukuarvoksi
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.PainotettuKeskiarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonversio
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Valintaperusteyhtasuuruus
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HylkaaArvovalilla
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakemuksenValintaperuste
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeLukuarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Skaalaus
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.SyotettavaValintaperuste
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonvertteri
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeTotuusarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaVertaaYhtasuuruus
-import fi.vm.sade.service.valintaperusteet.model._
-import fi.vm.sade.kaava.LaskentaTestUtil.Funktiokutsu
-import fi.vm.sade.service.valintaperusteet.dto.model.{Funktionimi, Osallistuminen, Valintaperustelahde}
+import fi.vm.sade.kaava.LaskentaTestUtil.{TestHakemus, _}
 import fi.vm.sade.kaava.Laskentadomainkonvertteri
+import fi.vm.sade.service.valintaperusteet.dto.model.{Funktionimi, Osallistuminen, Valintaperustelahde}
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.{Arvokonversio, ArvokonversioMerkkijonoilla, Arvokonvertteri, Demografia, HaeLukuarvo, HaeLukuarvoEhdolla, HaeMerkkijonoJaKonvertoiLukuarvoksi, HaeMerkkijonoJaVertaaYhtasuuruus, HaeTotuusarvo, HakemuksenValintaperuste, HakukohteenValintaperuste, HylkaaArvovalilla, Jos, KonvertoiLukuarvo, Lukuarvo, Lukuarvovalikonversio, LukuarvovalikonversioMerkkijonoilla, Lukuarvovalikonvertteri, PainotettuKeskiarvo, Skaalaus, Suurempi, SyotettavaValintaperuste, Totuusarvo, Valintaperusteyhtasuuruus, _}
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.HylattyMetatieto
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.HylattyMetatieto.Hylattymetatietotyyppi
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Tila.Tilatyyppi
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.KonvertoiLukuarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Totuusarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeLukuarvoEhdolla
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonvertteri
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Suurempi
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.VirheMetatieto.VirheMetatietotyyppi
+import fi.vm.sade.service.valintaperusteet.laskenta.api.{Hakemus, Hakukohde, Hakutoive}
+import fi.vm.sade.service.valintaperusteet.model.{Funktiokutsu, Syoteparametri, ValintaperusteViite, _}
+import org.scalatest._
 
-import scala.Some
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonversio
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Jos
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Demografia
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakukohteenValintaperuste
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaKonvertoiLukuarvoksi
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.PainotettuKeskiarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvo
-import fi.vm.sade.service.valintaperusteet.model.ValintaperusteViite
-import fi.vm.sade.service.valintaperusteet.model.Syoteparametri
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonversio
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Valintaperusteyhtasuuruus
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HylkaaArvovalilla
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakemuksenValintaperuste
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeLukuarvo
-import fi.vm.sade.kaava.LaskentaTestUtil.Funktiokutsu
-import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Skaalaus
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.SyotettavaValintaperuste
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonvertteri
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeTotuusarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaVertaaYhtasuuruus
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.LukuarvovalikonversioMerkkijonoilla
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.ArvokonversioMerkkijonoilla
+import scala.collection.JavaConversions._
+import scala.math.BigDecimal._
 
 /**
  *
@@ -1111,7 +1052,7 @@ class LaskentaTest extends FunSuite {
     )
 
     val hakukohde = new Hakukohde("oid1", Map("hakukohteentunniste" -> "hakemuksentunniste"))
-    val hakemus = new Hakemus("oid1", Map[java.lang.Integer, String](), Map("hakemuksentunniste" -> "100.0"), Map[String, java.util.List[java.util.Map[String, String]]]())
+    val hakemus = new Hakemus("oid1", Map[java.lang.Integer, Hakutoive](), Map("hakemuksentunniste" -> "100.0"), Map[String, java.util.List[java.util.Map[String, String]]]())
 
     val tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemus, List(hakemus), funktiokutsu)
     assert(tulos.getTulos.compareTo(BigDecimal("100.0").underlying) == 0)
@@ -1130,7 +1071,7 @@ class LaskentaTest extends FunSuite {
     )
 
     val hakukohde = new Hakukohde("oid1", Map("hakukohteentunniste" -> "hakemuksentunniste"))
-    val hakemus = new Hakemus("oid1", Map[java.lang.Integer, String](), Map[String, String](), Map[String, java.util.List[java.util.Map[String, String]]]())
+    val hakemus = new Hakemus("oid1", Map[java.lang.Integer, Hakutoive](), Map[String, String](), Map[String, java.util.List[java.util.Map[String, String]]]())
 
     val tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemus, List(hakemus), funktiokutsu)
     assert(tulos.getTulos.compareTo(BigDecimal("100.0").underlying) == 0)
@@ -1149,7 +1090,7 @@ class LaskentaTest extends FunSuite {
     )
 
     val hakukohde = new Hakukohde("oid1", Map[String, String]())
-    val hakemus = new Hakemus("oid1", Map[java.lang.Integer, String](), Map("hakemuksentunniste" -> "500.0"), Map[String, java.util.List[java.util.Map[String, String]]]())
+    val hakemus = new Hakemus("oid1", Map[java.lang.Integer, Hakutoive](), Map("hakemuksentunniste" -> "500.0"), Map[String, java.util.List[java.util.Map[String, String]]]())
 
     val tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemus, List(hakemus), funktiokutsu)
     assert(tulos.getTulos.compareTo(BigDecimal("100.0").underlying) == 0)
@@ -1168,7 +1109,7 @@ class LaskentaTest extends FunSuite {
     )
 
     val hakukohde = new Hakukohde("oid1", Map("hakukohteentunniste" -> "hakemuksentunniste"))
-    val hakemus = new Hakemus("oid1", Map[java.lang.Integer, String](), Map[String, String](), Map[String, java.util.List[java.util.Map[String, String]]]())
+    val hakemus = new Hakemus("oid1", Map[java.lang.Integer, Hakutoive](), Map[String, String](), Map[String, java.util.List[java.util.Map[String, String]]]())
 
     val tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemus, List(hakemus), funktiokutsu)
     assert(Option(tulos.getTulos).isEmpty)
@@ -1190,7 +1131,7 @@ class LaskentaTest extends FunSuite {
     )
 
     val hakukohde = new Hakukohde("oid1", Map("hakukohteentunniste" -> "arvo"))
-    val hakemus = new Hakemus("oid1", Map[java.lang.Integer, String](), Map("hakemuksentunniste" -> "arvo"), Map[String, java.util.List[java.util.Map[String, String]]]())
+    val hakemus = new Hakemus("oid1", Map[java.lang.Integer, Hakutoive](), Map("hakemuksentunniste" -> "arvo"), Map[String, java.util.List[java.util.Map[String, String]]]())
 
     val tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemus, List(hakemus), funktiokutsu)
     assert(tulos.getTulos)
@@ -1212,7 +1153,7 @@ class LaskentaTest extends FunSuite {
     )
 
     val hakukohde = new Hakukohde("oid1", Map("hakukohteentunniste" -> "hakukohteenarvo"))
-    val hakemus = new Hakemus("oid1", Map[java.lang.Integer, String](), Map("hakemuksentunniste" -> "hakemuksenarvo"), Map[String, java.util.List[java.util.Map[String, String]]]())
+    val hakemus = new Hakemus("oid1", Map[java.lang.Integer, Hakutoive](), Map("hakemuksentunniste" -> "hakemuksenarvo"), Map[String, java.util.List[java.util.Map[String, String]]]())
 
     val tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemus, List(hakemus), funktiokutsu)
     assert(!tulos.getTulos)
@@ -1234,7 +1175,7 @@ class LaskentaTest extends FunSuite {
     )
 
     val hakukohde = new Hakukohde("oid1", Map[String, String]())
-    val hakemus = new Hakemus("oid1", Map[java.lang.Integer, String](), Map[String, String](), Map[String, java.util.List[java.util.Map[String, String]]]())
+    val hakemus = new Hakemus("oid1", Map[java.lang.Integer, Hakutoive](), Map[String, String](), Map[String, java.util.List[java.util.Map[String, String]]]())
 
     val tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemus, List(hakemus), funktiokutsu)
     assert(tulos.getTulos)
@@ -1256,7 +1197,7 @@ class LaskentaTest extends FunSuite {
     )
 
     val hakukohde = new Hakukohde("oid1", Map[String, String]())
-    val hakemus = new Hakemus("oid1", Map[java.lang.Integer, String](), Map[String, String](), Map[String, java.util.List[java.util.Map[String, String]]]())
+    val hakemus = new Hakemus("oid1", Map[java.lang.Integer, Hakutoive](), Map[String, String](), Map[String, java.util.List[java.util.Map[String, String]]]())
 
     val tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemus, List(hakemus), funktiokutsu)
     assert(tulos.getTulos)

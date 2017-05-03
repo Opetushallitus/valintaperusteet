@@ -399,6 +399,11 @@ object Laskenta {
     require(n > 0, "n must be greater than zero")
   }
 
+  case class HakutoiveRyhmassa(n: Int, ryhmaOid: String, oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "") extends Totuusarvofunktio {
+    require(n > 0, "n must be greater than zero")
+    require(StringUtils.isNotBlank(ryhmaOid), "Nimi cannot be null or empty")
+  }
+
   case class Hakukelpoisuus(oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "") extends Totuusarvofunktio {
 
   }

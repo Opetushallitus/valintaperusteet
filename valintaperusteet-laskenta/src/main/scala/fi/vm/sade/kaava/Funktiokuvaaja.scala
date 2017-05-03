@@ -2,8 +2,8 @@ package fi.vm.sade.kaava
 
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi
 import play.api.libs.json.{JsArray, Json}
+
 import scala.Predef._
-import scala.Some
 
 object Funktiokuvaaja {
 
@@ -41,9 +41,9 @@ object Funktiokuvaaja {
   }
 
   import Funktiotyyppi._
-  import Syoteparametrityyppi._
   import Kardinaliteetti._
   import Konvertterinimi._
+  import Syoteparametrityyppi._
   import fi.vm.sade.service.valintaperusteet.laskenta.JsonFormats._
 
   trait KonvertteriTyyppi {
@@ -281,6 +281,12 @@ object Funktiokuvaaja {
       tyyppi = Funktiotyyppi.TOTUUSARVOFUNKTIO,
       syoteparametrit = List(
         Syoteparametrikuvaus("n", Syoteparametrityyppi.KOKONAISLUKU))
+    ),
+    Funktionimi.HAKUTOIVERYHMASSA -> Funktiokuvaus(
+      tyyppi = Funktiotyyppi.TOTUUSARVOFUNKTIO,
+      syoteparametrit = List(
+        Syoteparametrikuvaus("n", Syoteparametrityyppi.KOKONAISLUKU),
+        Syoteparametrikuvaus("ryhmaoid", Syoteparametrityyppi.MERKKIJONO))
     ),
     Funktionimi.HAKUKELPOISUUS -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.TOTUUSARVOFUNKTIO

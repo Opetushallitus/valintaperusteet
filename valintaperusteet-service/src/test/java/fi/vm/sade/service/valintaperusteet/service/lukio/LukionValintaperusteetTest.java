@@ -3,12 +3,10 @@ package fi.vm.sade.service.valintaperusteet.service.lukio;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import com.google.common.collect.Lists;
 import fi.vm.sade.kaava.Laskentadomainkonvertteri;
 import fi.vm.sade.service.valintaperusteet.laskenta.Lukuarvofunktio;
-import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus;
-import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakukohde;
-import fi.vm.sade.service.valintaperusteet.laskenta.api.LaskentaService;
-import fi.vm.sade.service.valintaperusteet.laskenta.api.Laskentatulos;
+import fi.vm.sade.service.valintaperusteet.laskenta.api.*;
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Tila;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti;
@@ -63,7 +61,7 @@ public class LukionValintaperusteetTest {
     private static final String OPPIAINE_POSTFIX = "_OPPIAINE";
 
 
-    private static final Map<Integer, String> hakutoiveet;
+    private static final Map<Integer, Hakutoive> hakutoiveet;
 
     private static final Map mustacheMap = new HashMap<String, String>() {{
         put("paasykoe_hylkays_min", "0");
@@ -79,16 +77,16 @@ public class LukionValintaperusteetTest {
     }};
 
     static {
-        hakutoiveet = new HashMap<Integer, String>();
-        hakutoiveet.put(1, HAKUKOHDE_OID1);
-        hakutoiveet.put(2, HAKUKOHDE_OID2);
-        hakutoiveet.put(3, HAKUKOHDE_OID3);
-        hakutoiveet.put(4, HAKUKOHDE_OID4);
-        hakutoiveet.put(5, HAKUKOHDE_OID5);
+        hakutoiveet = new HashMap<> ();
+        hakutoiveet.put(1, new Hakutoive(HAKUKOHDE_OID1, Lists.newArrayList()));
+        hakutoiveet.put(2, new Hakutoive(HAKUKOHDE_OID2, Lists.newArrayList()));
+        hakutoiveet.put(3, new Hakutoive(HAKUKOHDE_OID3, Lists.newArrayList()));
+        hakutoiveet.put(4, new Hakutoive(HAKUKOHDE_OID4, Lists.newArrayList()));
+        hakutoiveet.put(5, new Hakutoive(HAKUKOHDE_OID5, Lists.newArrayList()));
     }
 
     private Map<String, String> newMap() {
-        return new HashMap<String, String>();
+        return new HashMap<> ();
     }
 
     private Map<String, String> yhdistaMapit(Map<String, String>... maps) {

@@ -8,7 +8,7 @@ import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
 import scala.collection.JavaConversions._
 import java.math.BigDecimal
 
-import fi.vm.sade.service.valintaperusteet.laskenta.api.{Hakemus, Hakukohde, Laskentatulos}
+import fi.vm.sade.service.valintaperusteet.laskenta.api.{Hakemus, Hakukohde, Hakutoive, Laskentatulos}
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.VirheMetatieto.VirheMetatietotyyppi
 import java.util
 import java.lang.Boolean
@@ -2063,7 +2063,7 @@ class LaskentaIntegraatioTest extends FunSuite {
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val hakukohde = new Hakukohde("hakukohdeOid", Map("hakukohteenTunniste" -> "hakemuksenTunniste"))
-    val hakemus = new Hakemus("oid", Map[java.lang.Integer, String](), Map("hakemuksenTunniste" -> "100.0"), Map[String, java.util.List[java.util.Map[String, String]]]())
+    val hakemus = new Hakemus("oid", Map[java.lang.Integer, Hakutoive](), Map("hakemuksenTunniste" -> "100.0"), Map[String, java.util.List[java.util.Map[String, String]]]())
 
     val tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemus, List(hakemus), lasku)
     assert(tulos.getTulos.compareTo(new BigDecimal("100.0")) == 0)

@@ -5,14 +5,12 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import com.google.common.collect.Lists;
 import fi.vm.sade.kaava.Laskentadomainkonvertteri;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskin;
-import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus;
-import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakukohde;
-import fi.vm.sade.service.valintaperusteet.laskenta.api.LaskentaService;
-import fi.vm.sade.service.valintaperusteet.laskenta.api.Laskentatulos;
+import fi.vm.sade.service.valintaperusteet.laskenta.api.*;
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.HylattyMetatieto;
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Hylattytila;
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Hyvaksyttavissatila;
@@ -113,16 +111,16 @@ public class LuoValintaperusteetServiceTest {
     private static final Hakukohde HAKUKOHDE5 = new Hakukohde(HAKUKOHDE_OID5, new HashMap<String, String>(), korkeakouluhaku);
 
 
-    private static final Map<Integer, String> hakutoiveet;
+    private static final Map<Integer, Hakutoive> hakutoiveet;
     private static final String[] KIELET = new String[]{"fi", "sv"};
 
     static {
-        hakutoiveet = new HashMap<Integer, String>();
-        hakutoiveet.put(1, HAKUKOHDE_OID1);
-        hakutoiveet.put(2, HAKUKOHDE_OID2);
-        hakutoiveet.put(3, HAKUKOHDE_OID3);
-        hakutoiveet.put(4, HAKUKOHDE_OID4);
-        hakutoiveet.put(5, HAKUKOHDE_OID5);
+        hakutoiveet = new HashMap<>();
+        hakutoiveet.put(1, new Hakutoive(HAKUKOHDE_OID1, Lists.newArrayList()));
+        hakutoiveet.put(2, new Hakutoive(HAKUKOHDE_OID2, Lists.newArrayList()));
+        hakutoiveet.put(3, new Hakutoive(HAKUKOHDE_OID3, Lists.newArrayList()));
+        hakutoiveet.put(4, new Hakutoive(HAKUKOHDE_OID4, Lists.newArrayList()));
+        hakutoiveet.put(5, new Hakutoive(HAKUKOHDE_OID5, Lists.newArrayList()));
     }
 
     private Map<String, String> newMap() {
@@ -1180,7 +1178,7 @@ public class LuoValintaperusteetServiceTest {
                 valintaperuste(PkJaYoPohjaiset.kielikoetunniste, hakemuksenKielikoetunniste)
         ), korkeakouluhaku);
 
-        final Hakemus hakemus = new Hakemus(HAKEMUS_OID, new HashMap<Integer, String>(), yhdistaMapit(valintaperuste(hakemuksenKielikoetunniste, true)), new HashMap<>());
+        final Hakemus hakemus = new Hakemus(HAKEMUS_OID, new HashMap<>(), yhdistaMapit(valintaperuste(hakemuksenKielikoetunniste, true)), new HashMap<>());
 
         Funktiokutsu funktiokutsu = PkJaYoPohjaiset.luoKielikoeSuoritettuFunktiokutsu();
 
@@ -1197,7 +1195,7 @@ public class LuoValintaperusteetServiceTest {
                 valintaperuste(PkJaYoPohjaiset.kielikoetunniste, hakemuksenKielikoetunniste)
         ), korkeakouluhaku);
 
-        final Hakemus hakemus = new Hakemus(HAKEMUS_OID, new HashMap<Integer, String>(), yhdistaMapit(valintaperuste(hakemuksenKielikoetunniste, false)), new HashMap<>());
+        final Hakemus hakemus = new Hakemus(HAKEMUS_OID, new HashMap<>(), yhdistaMapit(valintaperuste(hakemuksenKielikoetunniste, false)), new HashMap<>());
 
         Funktiokutsu funktiokutsu = PkJaYoPohjaiset.luoKielikoeSuoritettuFunktiokutsu();
 
@@ -1214,7 +1212,7 @@ public class LuoValintaperusteetServiceTest {
                 valintaperuste(PkJaYoPohjaiset.kielikoetunniste, hakemuksenKielikoetunniste)
         ), korkeakouluhaku);
 
-        final Hakemus hakemus = new Hakemus(HAKEMUS_OID, new HashMap<Integer, String>(), new HashMap<String, String>(), new HashMap<>());
+        final Hakemus hakemus = new Hakemus(HAKEMUS_OID, new HashMap<>(), new HashMap<String, String>(), new HashMap<>());
 
         Funktiokutsu funktiokutsu = PkJaYoPohjaiset.luoKielikoeSuoritettuFunktiokutsu();
 
@@ -1227,7 +1225,7 @@ public class LuoValintaperusteetServiceTest {
     public void testKielikoeSuoritettuFunktiokutsuTunnistettaEiOleHakukohteella() {
         final Hakukohde hakukohde = new Hakukohde(HAKUKOHDE_OID1, new HashMap<String, String>(), korkeakouluhaku);
 
-        final Hakemus hakemus = new Hakemus(HAKEMUS_OID, new HashMap<Integer, String>(), new HashMap<String, String>(), new HashMap<>());
+        final Hakemus hakemus = new Hakemus(HAKEMUS_OID, new HashMap<>(), new HashMap<String, String>(), new HashMap<>());
 
         Funktiokutsu funktiokutsu = PkJaYoPohjaiset.luoKielikoeSuoritettuFunktiokutsu();
 
@@ -1245,7 +1243,7 @@ public class LuoValintaperusteetServiceTest {
                 valintaperuste(PkJaYoPohjaiset.opetuskieli, kieli)
         ), korkeakouluhaku);
 
-        final Hakemus hakemus = new Hakemus(HAKEMUS_OID, new HashMap<Integer, String>(), yhdistaMapit(valintaperuste(PkJaYoPohjaiset.aidinkieli, kieli)), new HashMap<>());
+        final Hakemus hakemus = new Hakemus(HAKEMUS_OID, new HashMap<>(), yhdistaMapit(valintaperuste(PkJaYoPohjaiset.aidinkieli, kieli)), new HashMap<>());
 
         Funktiokutsu funktiokutsu = PkJaYoPohjaiset.luoAidinkieliOnOpetuskieliFunktiokutsu();
 
@@ -1264,7 +1262,7 @@ public class LuoValintaperusteetServiceTest {
                 valintaperuste(PkJaYoPohjaiset.opetuskieli, opetuskieli)
         ), korkeakouluhaku);
 
-        final Hakemus hakemus = new Hakemus(HAKEMUS_OID, new HashMap<Integer, String>(), yhdistaMapit(valintaperuste(PkJaYoPohjaiset.aidinkieli, aidinkieli)), new HashMap<>());
+        final Hakemus hakemus = new Hakemus(HAKEMUS_OID, new HashMap<>(), yhdistaMapit(valintaperuste(PkJaYoPohjaiset.aidinkieli, aidinkieli)), new HashMap<>());
 
         Funktiokutsu funktiokutsu = PkJaYoPohjaiset.luoAidinkieliOnOpetuskieliFunktiokutsu();
 
@@ -1282,7 +1280,7 @@ public class LuoValintaperusteetServiceTest {
                 valintaperuste(PkJaYoPohjaiset.opetuskieli, opetuskieli)
         ), korkeakouluhaku);
 
-        final Hakemus hakemus = new Hakemus(HAKEMUS_OID, new HashMap<Integer, String>(), new HashMap<String, String>(), new HashMap<>());
+        final Hakemus hakemus = new Hakemus(HAKEMUS_OID, new HashMap<>(), new HashMap<String, String>(), new HashMap<>());
 
         Funktiokutsu funktiokutsu = PkJaYoPohjaiset.luoAidinkieliOnOpetuskieliFunktiokutsu();
 
@@ -1297,7 +1295,7 @@ public class LuoValintaperusteetServiceTest {
 
         final Hakukohde hakukohde = new Hakukohde(HAKUKOHDE_OID1, new HashMap<String, String>(), korkeakouluhaku);
 
-        final Hakemus hakemus = new Hakemus(HAKEMUS_OID, new HashMap<Integer, String>(), yhdistaMapit(valintaperuste(PkJaYoPohjaiset.aidinkieli, aidinkieli)), new HashMap<>());
+        final Hakemus hakemus = new Hakemus(HAKEMUS_OID, new HashMap<>(), yhdistaMapit(valintaperuste(PkJaYoPohjaiset.aidinkieli, aidinkieli)), new HashMap<>());
 
         Funktiokutsu funktiokutsu = PkJaYoPohjaiset.luoAidinkieliOnOpetuskieliFunktiokutsu();
 
@@ -1315,7 +1313,7 @@ public class LuoValintaperusteetServiceTest {
                 valintaperuste(PkJaYoPohjaiset.opetuskieli, kieli)
         ), korkeakouluhaku);
 
-        final Hakemus hakemus = new Hakemus(HAKEMUS_OID, new HashMap<Integer, String>(), yhdistaMapit(valintaperuste(PkJaYoPohjaiset.perustopetuksenKieli, kieli)), new HashMap<>());
+        final Hakemus hakemus = new Hakemus(HAKEMUS_OID, new HashMap<>(), yhdistaMapit(valintaperuste(PkJaYoPohjaiset.perustopetuksenKieli, kieli)), new HashMap<>());
 
         Funktiokutsu funktiokutsu = PkJaYoPohjaiset.luoKielikoekriteeri1Funktiokutsu();
 
@@ -1334,7 +1332,7 @@ public class LuoValintaperusteetServiceTest {
                 valintaperuste(PkJaYoPohjaiset.opetuskieli, opetuskieli)
         ), korkeakouluhaku);
 
-        final Hakemus hakemus = new Hakemus(HAKEMUS_OID, new HashMap<Integer, String>(), yhdistaMapit(valintaperuste(PkJaYoPohjaiset.perustopetuksenKieli, perusopetuksenKieli)), new HashMap<>());
+        final Hakemus hakemus = new Hakemus(HAKEMUS_OID, new HashMap<>(), yhdistaMapit(valintaperuste(PkJaYoPohjaiset.perustopetuksenKieli, perusopetuksenKieli)), new HashMap<>());
 
         Funktiokutsu funktiokutsu = PkJaYoPohjaiset.luoKielikoekriteeri1Funktiokutsu();
 
@@ -1351,7 +1349,7 @@ public class LuoValintaperusteetServiceTest {
                 valintaperuste(PkJaYoPohjaiset.opetuskieli, opetuskieli)
         ), korkeakouluhaku);
 
-        final Hakemus hakemus = new Hakemus(HAKEMUS_OID, new HashMap<Integer, String>(), new HashMap<String, String>(), new HashMap<>());
+        final Hakemus hakemus = new Hakemus(HAKEMUS_OID, new HashMap<>(), new HashMap<String, String>(), new HashMap<>());
 
         Funktiokutsu funktiokutsu = PkJaYoPohjaiset.luoKielikoekriteeri1Funktiokutsu();
 
@@ -1682,7 +1680,7 @@ public class LuoValintaperusteetServiceTest {
                 valintaperuste(PkJaYoPohjaiset.opetuskieli, kieli)
         ), korkeakouluhaku);
 
-        final Hakemus hakemus = new Hakemus(HAKEMUS_OID, new HashMap<Integer, String>(), yhdistaMapit(valintaperuste(PkJaYoPohjaiset.peruskoulunPaattotodistusVahintaanSeitseman+kieli, true)), new HashMap<>());
+        final Hakemus hakemus = new Hakemus(HAKEMUS_OID, new HashMap<>(), yhdistaMapit(valintaperuste(PkJaYoPohjaiset.peruskoulunPaattotodistusVahintaanSeitseman+kieli, true)), new HashMap<>());
 
         Funktiokutsu funktiokutsu = PkJaYoPohjaiset.luoKielikoekriteeri8Funktiokutsu();
 
@@ -1700,7 +1698,7 @@ public class LuoValintaperusteetServiceTest {
                 valintaperuste(PkJaYoPohjaiset.opetuskieli, opetuskieli)
         ), korkeakouluhaku);
 
-        final Hakemus hakemus = new Hakemus(HAKEMUS_OID, new HashMap<Integer, String>(), new HashMap<String, String>(), new HashMap<>());
+        final Hakemus hakemus = new Hakemus(HAKEMUS_OID, new HashMap<>(), new HashMap<>(), new HashMap<>());
 
         Funktiokutsu funktiokutsu = PkJaYoPohjaiset.luoKielikoekriteeri8Funktiokutsu();
 
@@ -1717,7 +1715,7 @@ public class LuoValintaperusteetServiceTest {
                 valintaperuste(PkJaYoPohjaiset.opetuskieli, opetuskieli)
         ), korkeakouluhaku);
 
-        final Hakemus hakemus = new Hakemus(HAKEMUS_OID, new HashMap<Integer, String>(), yhdistaMapit(valintaperuste(PkJaYoPohjaiset.lukionPaattotodistusVahintaanSeitseman+opetuskieli, true)), new HashMap<>());
+        final Hakemus hakemus = new Hakemus(HAKEMUS_OID, new HashMap<>(), yhdistaMapit(valintaperuste(PkJaYoPohjaiset.lukionPaattotodistusVahintaanSeitseman+opetuskieli, true)), new HashMap<>());
 
         Funktiokutsu funktiokutsu = PkJaYoPohjaiset.luoKielikoekriteeri8Funktiokutsu();
 
@@ -1734,7 +1732,7 @@ public class LuoValintaperusteetServiceTest {
                 valintaperuste(PkJaYoPohjaiset.opetuskieli, opetuskieli)
         ), korkeakouluhaku);
 
-        final Hakemus hakemus = new Hakemus(HAKEMUS_OID, new HashMap<Integer, String>(), yhdistaMapit(valintaperuste(PkJaYoPohjaiset.peruskoulunPaattotodistusVahintaanSeitseman+"sv", true)), new HashMap<>());
+        final Hakemus hakemus = new Hakemus(HAKEMUS_OID, new HashMap<>(), yhdistaMapit(valintaperuste(PkJaYoPohjaiset.peruskoulunPaattotodistusVahintaanSeitseman+"sv", true)), new HashMap<>());
 
         Funktiokutsu funktiokutsu = PkJaYoPohjaiset.luoKielikoekriteeri8Funktiokutsu();
 

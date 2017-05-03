@@ -1,14 +1,12 @@
 package fi.vm.sade.kaava
 
-import fi.vm.sade.service.valintaperusteet.dto.model._
-import fi.vm.sade.service.valintaperusteet.model._
-import collection.JavaConversions._
-import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus
-import java.util.TreeSet
-import java.math.BigDecimal
-import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
 import fi.vm.sade.service.valintaperusteet.dto.model.{Funktionimi, Valintaperustelahde}
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
+import fi.vm.sade.service.valintaperusteet.laskenta.api.{Hakemus, Hakutoive}
+import fi.vm.sade.service.valintaperusteet.model._
+
 import scala.collection.JavaConversions
+import scala.collection.JavaConversions._
 
 /**
  * User: kwuoti
@@ -142,9 +140,9 @@ object LaskentaTestUtil {
 
   object TestHakemus {
     def apply(oid: String, hakutoiveet: List[String], kentat: Map[String, String], suoritukset: java.util.Map[String, java.util.List[java.util.Map[String, String]]] = mapAsJavaMap(Map())) = {
-      val hakutoiveetMap: Map[java.lang.Integer, String] = (for {
+      val hakutoiveetMap: Map[java.lang.Integer, Hakutoive] = (for {
         prio <- 1 to hakutoiveet.size
-      } yield (new java.lang.Integer(prio), hakutoiveet(prio - 1))).toMap
+      } yield (new java.lang.Integer(prio), new Hakutoive(hakutoiveet(prio - 1), Seq()))).toMap
 
       new Hakemus(oid, mapAsJavaMap(hakutoiveetMap), mapAsJavaMap(kentat), suoritukset)
     }

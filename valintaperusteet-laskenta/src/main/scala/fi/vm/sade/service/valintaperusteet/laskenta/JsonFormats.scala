@@ -1,25 +1,20 @@
 package fi.vm.sade.service.valintaperusteet.laskenta
 
-import play.api.libs.json._
-import play.api.libs.functional.syntax._
-import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.{Tila, Virhetila, Hyvaksyttavissatila, Hylattytila}
-import org.codehaus.jackson.map.ObjectMapper
-import fi.vm.sade.service.valintaperusteet.model.JsonViews
-import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus
-import java.util.{Map => JMap}
-import java.util.{List => JList}
 import java.lang.{Integer => JInteger}
-import fi.vm.sade.kaava.Funktiokuvaaja._
-import fi.vm.sade.kaava.Funktiokuvaaja.Konvertterinimi.Konvertterinimi
-import fi.vm.sade.kaava.Funktiokuvaaja.Konvertterinimi
-import play.api.libs.json._
-import scala.util.Try
 import java.math.{BigDecimal => JBigDecimal}
+import java.util.{List => JList, Map => JMap}
+
+import fi.vm.sade.kaava.Funktiokuvaaja.Konvertterinimi.Konvertterinimi
+import fi.vm.sade.kaava.Funktiokuvaaja.{Konvertterinimi, _}
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.{Hylattytila, Hyvaksyttavissatila, Tila, Virhetila}
+import fi.vm.sade.service.valintaperusteet.laskenta.api.{Hakemus, Hakutoive}
+import fi.vm.sade.service.valintaperusteet.model.JsonViews
+import org.codehaus.jackson.map.ObjectMapper
+import play.api.libs.functional.syntax._
+import play.api.libs.json._
 
 object JsonFormats {
-  import JsonHelpers.enumFormat
-  import JsonHelpers.arrayMapWrites
-  import JsonHelpers.arrayMapReads
+  import JsonHelpers._
 
   // Enumit
   implicit def funktiotyyppiFormat = enumFormat(Funktiotyyppi)
@@ -110,19 +105,29 @@ object JsonFormats {
   import JsonHelpers._
 
   //Hakemus
+  implicit def hakutoiveReads: Reads[Hakutoive] = (
+    (__ \ "hakukohdeoid").read[String] and
+    (__ \ "hakukohdeRyhmatOids").read[JList[String]]
+    ) (Hakutoive.apply _)
+
+  implicit def hakutoiveWrites: Writes[Hakutoive] = (
+    (__ \ "hakukohdeoid").write[String] and
+    (__ \ "hakukohdeRyhmatOids").write[JList[String]]
+    ) (unlift(Hakutoive.unapply))
+
   implicit def hakemusReads: Reads[Hakemus] = (
     (__ \ "oid").read[String] and
-    (__ \ "hakutoiveet").read[JMap[JInteger, String]] and
+    (__ \ "hakutoiveet").read[JMap[JInteger, Hakutoive]] and
     (__ \ "jkentat").read[JMap[String, String]] and
     (__ \ "jsuoritukset").read[JMap[String, JList[JMap[String, String]]]]
-  )(Hakemus.apply _)
+    ) (Hakemus.apply _)
 
   implicit def hakemusWrites: Writes[Hakemus] = (
     (__ \ "oid").write[String] and
-    (__ \ "hakutoiveet").write[JMap[JInteger, String]] and
+    (__ \ "hakutoiveet").write[JMap[Integer, Hakutoive]] and
     (__ \ "jkentat").write[JMap[String, String]] and
     (__ \ "jsuoritukset").write[JMap[String, JList[JMap[String, String]]]]
-    )(unlift(Hakemus.unapply _))
+    ) (unlift(Hakemus.unapply))
 
   //Histroia
   implicit def historiaReads: Reads[Historia] = (
@@ -162,9 +167,6 @@ object JsonFormats {
       Json.parse(json)
     }
   }
-
-
-
 }
 
 object JsonHelpers {
@@ -239,6 +241,39 @@ object JsonHelpers {
         Json.parse(json)
       }
     }
+
+  implicit def mapReadsIntegerHakukohde: Reads[JMap[JInteger, Hakutoive]] =
+    new Reads[JMap[JInteger, Hakutoive]] {
+      def reads(json: JsValue): JsResult[JMap[JInteger, Hakutoive]] = json match {
+        case s : JsObject => JsSuccess(mapper.readValue(Json.stringify(s), classOf[JMap[JInteger, Hakutoive]]))
+        case _ => JsError("Tyyppiä Map ei löytynyt")
+      }
+    }
+
+  implicit def mapWritesIntegerHakukohde: Writes[JMap[JInteger, Hakutoive]] =
+    new Writes[JMap[JInteger, Hakutoive]] {
+      def writes(map: JMap[JInteger, Hakutoive]): JsValue = {
+        val json = mapper.writerWithView(classOf[JsonViews.Basic]).writeValueAsString(map)
+        Json.parse(json)
+      }
+    }
+
+  implicit def mapReadsListString: Reads[JList[String]] =
+    new Reads[JList[String]] {
+      def reads(json: JsValue): JsResult[JList[String]] = json match {
+        case s : JsObject => JsSuccess(mapper.readValue(Json.stringify(s), classOf[JList[String]]))
+        case _ => JsError("Tyyppiä List ei löytynyt")
+      }
+    }
+
+  implicit def mapWritesListString: Writes[JList[String]] =
+    new Writes[JList[String]] {
+      def writes(list: JList[String]): JsValue = {
+        val json = mapper.writerWithView(classOf[JsonViews.Basic]).writeValueAsString(list)
+        Json.parse(json)
+      }
+    }
+
 
   implicit def mapReadsStringStringMapList: Reads[JMap[String, JList[JMap[String, String]]]] =
     new Reads[JMap[String,JList[JMap[String, String]]]] {
