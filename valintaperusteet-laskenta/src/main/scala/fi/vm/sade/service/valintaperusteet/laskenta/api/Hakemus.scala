@@ -16,21 +16,29 @@ class Hakemus(val oid: String,
   val kentat: Kentat = jkentat.toMap
   val metatiedot: Map[String, List[Kentat]] = jmetatiedot.toMap.mapValues(_.toList.map(_.toMap))
 
-  def onkoHakutoivePrioriteetilla(hakukohde: String, prioriteetti: Int, ryhmaOid: Option[String] = None) = {
-    if(ryhmaOid.isDefined){
+  def onkoHakutoivePrioriteetilla(hakukohde: String, prioriteetti: Int, ryhmaOid: Option[String] = None): Boolean = {
+    def hakutoiveKuuluuRyhmaan: Hakutoive => Boolean = {
+      _.hakukohdeRyhmat.contains(ryhmaOid.get)
+    }
+
+    if(ryhmaOid.isDefined) {
       // Hakutoive on hakukohderyhmansä N:s hakutoive lomakkeella
-      hakutoiveet.filter(_._2.hakukohdeRyhmat.contains(ryhmaOid.get)).get(prioriteetti).exists(_.hakukohdeOid == hakukohde)
+      hakutoiveet.asScala.values
+        .filter(hakutoiveKuuluuRyhmaan).toList
+        .lift(prioriteetti - 1)
+        .exists(_.hakukohdeOid == hakukohde)
     } else {
       // Hakutoive on N:s hakutoive lomakkeella
       hakutoiveet.asScala.get(prioriteetti).exists(_.hakukohdeOid == hakukohde)
     }
   }
 
-  def onkoHakukelpoinen(hakukohdeOid: String) = {
-    val key = jkentat.keySet().filter(k => k.startsWith("preference") && k.endsWith("-Koulutus-id")).find(k => jkentat.get(k) == hakukohdeOid)
+  def onkoHakukelpoinen(hakukohdeOid: String): Boolean = {
+    val key = jkentat.keySet().filter(k => k.startsWith("preference") && k.endsWith("-Koulutus-id"))
+      .find(k => jkentat.get(k) == hakukohdeOid)
     val result = key match {
       case Some(k) =>
-        val status = kentat.getOrElse(s"$k-eligibility", "ELIGIBLE")//jkentat.getOrDefault(s"$k-eligibility", "ELIGIBLE")
+        val status = kentat.getOrElse(s"$k-eligibility", "ELIGIBLE") //jkentat.getOrDefault(s"$k-eligibility", "ELIGIBLE")
         if(status != "INELIGIBLE") true else false
       case _ => false
     }

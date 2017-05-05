@@ -1370,7 +1370,28 @@ class LaskentaIntegraatioTest extends FunSuite {
   }
 
 
-  test("Hakutoive ryhmassa, true") {
+  test("Hakutoive ensimmainen ryhmassa, true") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HAKUTOIVERYHMASSA,
+      syoteparametrit = List(
+        Syoteparametri(
+          avain = "n",
+          arvo = "1"),
+        Syoteparametri(
+          avain = "ryhmaoid",
+          arvo = "1.2.3.4")
+      ))
+
+    val hakukohde = new Hakukohde("oid1", new util.HashMap[String, String])
+    val hakemus = TestHakemusWithRyhmaOids("", List("oid2", "oid3", "oid1"), List(List("1.2.3.5"), List("1.2.3.5"), List("1.2.3.4")), Map[String, String](), mapAsJavaMap(Map()))
+
+    val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
+    assert(tulos.get)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("Hakutoive toinen ryhmassa, true") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAKUTOIVERYHMASSA,
       syoteparametrit = List(
@@ -1383,7 +1404,7 @@ class LaskentaIntegraatioTest extends FunSuite {
       ))
 
     val hakukohde = new Hakukohde("oid1", new util.HashMap[String, String])
-    val hakemus = TestHakemusWithRyhmaOids("", List("oid2", "oid1", "oid3"), List(List(), List("1.2.3.4"), List("1.2.3.5")), Map[String, String](), mapAsJavaMap(Map()))
+    val hakemus = TestHakemusWithRyhmaOids("", List("oid2", "oid3", "oid1"), List(List("1.2.3.4"), List("1.2.3.5"), List("1.2.3.4")), Map[String, String](), mapAsJavaMap(Map()))
 
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
@@ -1391,7 +1412,7 @@ class LaskentaIntegraatioTest extends FunSuite {
     assertTilaHyvaksyttavissa(tila)
   }
 
-  test("Hakutoive ryhmassa, false") {
+  test("Hakutoive ryhmassa muttei sijalla, false") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAKUTOIVERYHMASSA,
       syoteparametrit = List(
@@ -1405,6 +1426,27 @@ class LaskentaIntegraatioTest extends FunSuite {
 
     val hakukohde = new Hakukohde("oid1", new util.HashMap[String, String])
     val hakemus = TestHakemusWithRyhmaOids("", List("oid2", "oid1", "oid3"), List(List(), List("1.2.3.4"), List("1.2.3.5")), Map[String, String](), mapAsJavaMap(Map()))
+
+    val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
+    assert(!tulos.get)
+    assertTilaHyvaksyttavissa(tila)
+  }
+
+  test("Hakutoive ryhmassa puuttuva ryhma, false") {
+    val funktiokutsu = Funktiokutsu(
+      nimi = Funktionimi.HAKUTOIVERYHMASSA,
+      syoteparametrit = List(
+        Syoteparametri(
+          avain = "n",
+          arvo = "2"),
+        Syoteparametri(
+          avain = "ryhmaoid",
+          arvo = "1.2.3.5")
+      ))
+
+    val hakukohde = new Hakukohde("oid1", new util.HashMap[String, String])
+    val hakemus = TestHakemusWithRyhmaOids("", List("oid2", "oid1", "oid3"), List(List(), List(), List("1.2.3.5")), Map[String, String](), mapAsJavaMap(Map()))
 
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
