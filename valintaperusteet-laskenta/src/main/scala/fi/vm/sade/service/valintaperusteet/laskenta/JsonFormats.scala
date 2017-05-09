@@ -14,7 +14,9 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
 object JsonFormats {
-  import JsonHelpers._
+  import JsonHelpers.enumFormat
+  import JsonHelpers.arrayMapWrites
+  import JsonHelpers.arrayMapReads
 
   // Enumit
   implicit def funktiotyyppiFormat = enumFormat(Funktiotyyppi)
