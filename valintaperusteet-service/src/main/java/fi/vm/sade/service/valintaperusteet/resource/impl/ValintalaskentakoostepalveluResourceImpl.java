@@ -93,10 +93,16 @@ public class ValintalaskentakoostepalveluResourceImpl {
         long started = System.currentTimeMillis();
         LOG.info("Haetaan hakukohdeOid joukolla {}", Arrays.toString(hakukohdeOids.toArray()));
         try {
-            final List<HakijaryhmaValintatapajono> byHakukohteet = LinkitettavaJaKopioitavaUtil.jarjesta(hakijaryhmaValintatapajonoService.findByHakukohteet(hakukohdeOids));
-            final List<HakijaryhmaValintatapajonoDTO> hakijaryhmaValintatapajonoDTOs = byHakukohteet.stream().map(h -> modelMapper.map(h, HakijaryhmaValintatapajonoDTO.class)).collect(Collectors.toList());
-            IntStream.range(0, hakijaryhmaValintatapajonoDTOs.size()).forEach(i -> {
-                hakijaryhmaValintatapajonoDTOs.get(i).setPrioriteetti(i);
+            Map<String, List<HakijaryhmaValintatapajono>> hakukohdeHakijaryhmaMap = hakijaryhmaValintatapajonoService.findByHakukohteet(hakukohdeOids).stream().collect(Collectors.groupingBy(hr -> hr.getHakukohdeViite().getOid()));
+
+            List<HakijaryhmaValintatapajonoDTO> hakijaryhmaValintatapajonoDTOs = new ArrayList<>();
+            hakukohdeHakijaryhmaMap.keySet().forEach(hakukohdeOid -> {
+                List<HakijaryhmaValintatapajono> jarjestetytHakijaryhmat = LinkitettavaJaKopioitavaUtil.jarjesta(hakukohdeHakijaryhmaMap.get(hakukohdeOid));
+                List<HakijaryhmaValintatapajonoDTO> hakukohteenHakijaryhmaValintatapajonoDTOs = jarjestetytHakijaryhmat.stream().map(h -> modelMapper.map(h, HakijaryhmaValintatapajonoDTO.class)).collect(Collectors.toList());
+                IntStream.range(0, hakukohteenHakijaryhmaValintatapajonoDTOs.size()).forEach(i -> {
+                    hakukohteenHakijaryhmaValintatapajonoDTOs.get(i).setPrioriteetti(i);
+                });
+                hakijaryhmaValintatapajonoDTOs.addAll(hakukohteenHakijaryhmaValintatapajonoDTOs);
             });
             return hakijaryhmaValintatapajonoDTOs;
         } catch (HakijaryhmaEiOleOlemassaException e) {
@@ -122,11 +128,18 @@ public class ValintalaskentakoostepalveluResourceImpl {
         long started = System.currentTimeMillis();
         LOG.info("Haetaan valintatapajonoOid joukolla {}", Arrays.toString(valintatapajonoOids.toArray()));
         try {
-            final List<HakijaryhmaValintatapajono> byHakukohteet = LinkitettavaJaKopioitavaUtil.jarjesta(hakijaryhmaValintatapajonoService.findHakijaryhmaByJonos(valintatapajonoOids));
-            final List<HakijaryhmaValintatapajonoDTO> hakijaryhmaValintatapajonoDTOs = byHakukohteet.stream().map(h -> modelMapper.map(h, HakijaryhmaValintatapajonoDTO.class)).collect(Collectors.toList());
-            IntStream.range(0, hakijaryhmaValintatapajonoDTOs.size()).forEach(i -> {
-                hakijaryhmaValintatapajonoDTOs.get(i).setPrioriteetti(i);
+            Map<String, List<HakijaryhmaValintatapajono>> valintatapajonoHakijaryhmaMap = hakijaryhmaValintatapajonoService.findHakijaryhmaByJonos(valintatapajonoOids).stream().collect(Collectors.groupingBy(hr -> hr.getValintatapajono().getOid() ));
+
+            List<HakijaryhmaValintatapajonoDTO> hakijaryhmaValintatapajonoDTOs = new ArrayList<>();
+            valintatapajonoHakijaryhmaMap.keySet().forEach(hakukohdeOid -> {
+                List<HakijaryhmaValintatapajono> jarjestetytHakijaryhmat = LinkitettavaJaKopioitavaUtil.jarjesta(valintatapajonoHakijaryhmaMap.get(hakukohdeOid));
+                List<HakijaryhmaValintatapajonoDTO> valintapajononHakijaryhmaValintatapajonoDTOs = jarjestetytHakijaryhmat.stream().map(h -> modelMapper.map(h, HakijaryhmaValintatapajonoDTO.class)).collect(Collectors.toList());
+                IntStream.range(0, valintapajononHakijaryhmaValintatapajonoDTOs.size()).forEach(i -> {
+                    valintapajononHakijaryhmaValintatapajonoDTOs.get(i).setPrioriteetti(i);
+                });
+                hakijaryhmaValintatapajonoDTOs.addAll(valintapajononHakijaryhmaValintatapajonoDTOs);
             });
+
             return hakijaryhmaValintatapajonoDTOs;
         } catch (HakijaryhmaEiOleOlemassaException e) {
             LOG.error("Hakijaryhmää ei löytynyt!", e);
