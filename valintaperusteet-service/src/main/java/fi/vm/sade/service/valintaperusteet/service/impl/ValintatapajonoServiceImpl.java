@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
+import fi.vm.sade.generic.rest.CachingRestClient;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoCreateDTO;
@@ -9,17 +10,16 @@ import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintatapajonoEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintatapajonoOidListaOnTyhjaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintatapajonoaEiVoiLisataException;
-import fi.vm.sade.service.valintaperusteet.util.JuureenKopiointiCache;
-import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
-import fi.vm.sade.service.valintaperusteet.util.ValintatapajonoKopioija;
-import fi.vm.sade.service.valintaperusteet.util.ValintatapajonoUtil;
+import fi.vm.sade.service.valintaperusteet.util.*;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -29,34 +29,54 @@ import java.util.stream.Collectors;
 public class ValintatapajonoServiceImpl implements ValintatapajonoService {
     final static private Logger LOGGER = LoggerFactory.getLogger(ValintatapajonoService.class.getName());
 
-    @Autowired
-    private ValintatapajonoDAO valintatapajonoDAO;
+    private final ValintatapajonoDAO valintatapajonoDAO;
 
-    @Autowired
-    private ValinnanVaiheService valinnanVaiheService;
+    private final ValinnanVaiheService valinnanVaiheService;
 
-    @Autowired
-    private OidService oidService;
+    private final OidService oidService;
 
-    @Autowired
-    private JarjestyskriteeriService jarjestyskriteeriService;
+    private final JarjestyskriteeriService jarjestyskriteeriService;
 
-    @Autowired
-    private HakijaryhmaService hakijaryhmaService;
+    private final HakijaryhmaService hakijaryhmaService;
 
-    @Autowired
-    private HakukohdeService hakukohdeService;
+    private final HakukohdeService hakukohdeService;
 
-    @Autowired
-    private HakijaryhmaValintatapajonoService hakijaryhmaValintatapajonoService;
+    private final HakijaryhmaValintatapajonoService hakijaryhmaValintatapajonoService;
 
-    @Autowired
-    HakukohdeViiteDAO hakukohdeDao;
+    private final HakukohdeViiteDAO hakukohdeDao;
 
     private static ValintatapajonoKopioija kopioija = new ValintatapajonoKopioija();
 
+    private static final CachingRestClient restClient = new CachingRestClient();
+
+    private final ValintaperusteetModelMapper modelMapper;
+
+    private final ValintaperusteetUrlProperties valintaperusteetUrlProperties;
+
     @Autowired
-    private ValintaperusteetModelMapper modelMapper;
+    public ValintatapajonoServiceImpl(@Lazy ValintatapajonoDAO valintatapajonoDAO,
+                                      @Lazy ValinnanVaiheService valinnanVaiheService,
+                                      @Lazy OidService oidService,
+                                      @Lazy JarjestyskriteeriService jarjestyskriteeriService,
+                                      @Lazy HakijaryhmaService hakijaryhmaService,
+                                      @Lazy HakukohdeService hakukohdeService,
+                                      @Lazy HakijaryhmaValintatapajonoService hakijaryhmaValintatapajonoService,
+                                      @Lazy HakukohdeViiteDAO hakukohdeDao,
+                                      @Lazy ValintaperusteetModelMapper modelMapper,
+                                      @Lazy ValintaperusteetUrlProperties valintaperusteetUrlProperties) {
+        this.valintatapajonoDAO = valintatapajonoDAO;
+        this.valinnanVaiheService = valinnanVaiheService;
+        this.oidService = oidService;
+        this.jarjestyskriteeriService = jarjestyskriteeriService;
+        this.hakijaryhmaService = hakijaryhmaService;
+        this.hakukohdeService = hakukohdeService;
+        this.hakijaryhmaValintatapajonoService = hakijaryhmaValintatapajonoService;
+        this.hakukohdeDao = hakukohdeDao;
+        this.modelMapper = modelMapper;
+        this.valintaperusteetUrlProperties = valintaperusteetUrlProperties;
+
+        restClient.setCallerId("valintaperusteet-service");
+    }
 
     @Override
     public List<Valintatapajono> findJonoByValinnanvaihe(String oid) {
@@ -243,6 +263,29 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
     public Valintatapajono update(String oid, ValintatapajonoCreateDTO dto) {
         Valintatapajono managedObject = haeValintatapajono(oid);
         Valintatapajono konvertoitu = modelMapper.map(dto, Valintatapajono.class);
+
+        if (dto.getTayttojono() != null) {
+            Valintatapajono tayttoJono = valintatapajonoDAO.readByOid(dto.getTayttojono());
+            konvertoitu.setVarasijanTayttojono(tayttoJono);
+        } else {
+            konvertoitu.setVarasijanTayttojono(null);
+        }
+        return LinkitettavaJaKopioitavaUtil.paivita(managedObject, konvertoitu, kopioija);
+    }
+    @Override
+    public Valintatapajono update(String oid, String hakuOid, ValintatapajonoCreateDTO dto) {
+        Valintatapajono managedObject = haeValintatapajono(oid);
+        Valintatapajono konvertoitu = modelMapper.map(dto, Valintatapajono.class);
+
+        String url = valintaperusteetUrlProperties.url("valinta-tulos-service.sijotteluexistsForJono", hakuOid, oid);
+        try {
+            boolean exists = restClient.get(url, Boolean.class);
+            if(exists) {
+                konvertoitu.setSiirretaanSijoitteluun(true);
+            }
+        } catch (IOException e) {
+            LOGGER.error(String.format("Virhe tarkistaessa onko valintatapajonolle %s suoritettu sijoitteluajoa", oid), e);
+        }
         if (dto.getTayttojono() != null) {
             Valintatapajono tayttoJono = valintatapajonoDAO.readByOid(dto.getTayttojono());
             konvertoitu.setVarasijanTayttojono(tayttoJono);

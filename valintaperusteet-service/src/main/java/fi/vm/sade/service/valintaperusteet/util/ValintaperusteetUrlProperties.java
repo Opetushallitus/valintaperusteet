@@ -8,7 +8,7 @@ public class ValintaperusteetUrlProperties extends OphProperties {
     public ValintaperusteetUrlProperties() {
         config.addSystemKeyForFiles("oph-properties");
         frontConfig.addSystemKeyForFiles("front-properties");
-        String[] files = new String[]{"/valintaperusteet-service-oph.properties"};
-        addFiles(files);
+        String[] files = new String[]{"valintaperusteet-service-oph.properties"};
+        addOptionalFiles(files);
     }
 }

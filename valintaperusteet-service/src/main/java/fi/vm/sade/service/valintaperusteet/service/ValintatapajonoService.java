@@ -27,6 +27,8 @@ public interface ValintatapajonoService {
 
     Valintatapajono update(String oid, ValintatapajonoCreateDTO jono);
 
+    Valintatapajono update(String oid, String hakuOid, ValintatapajonoCreateDTO jono);
+
     void delete(Valintatapajono valintatapajono);
 
     Boolean readAutomaattinenSijoitteluunSiirto(String oid);
