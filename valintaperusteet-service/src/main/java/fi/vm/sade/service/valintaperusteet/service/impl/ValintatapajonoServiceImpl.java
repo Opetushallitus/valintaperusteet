@@ -278,7 +278,7 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
         Valintatapajono konvertoitu = modelMapper.map(dto, Valintatapajono.class);
 
         //TODO fix url props
-        String url = String.format("https://testi.virkailija.opintopolku.fi/valinta-tulos-service/%s/jono/%s", hakuOid, oid);
+        String url = String.format("https://testi.virkailija.opintopolku.fi/valinta-tulos-service/auth/sijoittelu/%s/jono/%s", hakuOid, oid);
         //String url = valintaperusteetUrlProperties.url("valinta-tulos-service.sijotteluexistsForJono", hakuOid, oid);
         try {
             boolean exists = restClient.get(url, Boolean.class);
