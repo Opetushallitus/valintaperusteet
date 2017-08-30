@@ -15,6 +15,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,6 +54,16 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
 
     private final ValintaperusteetUrlProperties valintaperusteetUrlProperties;
 
+
+    private String casKey = "valintaperusteet-service";
+
+    @Value("${cas.service.valintaperusteet-service}")
+    private String casService;
+
+    @Value("${cas.callback.valintaperusteet-service}")
+    private String casCallbackurl;
+
+
     @Autowired
     public ValintatapajonoServiceImpl(@Lazy ValintatapajonoDAO valintatapajonoDAO,
                                       @Lazy ValinnanVaiheService valinnanVaiheService,
@@ -76,6 +87,8 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
         this.valintaperusteetUrlProperties = valintaperusteetUrlProperties;
 
         restClient.setCallerId("valintaperusteet-service");
+        restClient.setCasService(casService);
+        restClient.setWebCasUrl(casCallbackurl);
     }
 
     @Override
