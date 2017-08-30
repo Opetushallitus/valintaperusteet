@@ -282,8 +282,11 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
         //String url = valintaperusteetUrlProperties.url("valinta-tulos-service.sijotteluexistsForJono", hakuOid, oid);
         try {
             boolean exists = restClient.get(url, Boolean.class);
+            LOGGER.info(String.format("Onko jono sijoiteltu: %b", exists));
             if(exists) {
                 konvertoitu.setSiirretaanSijoitteluun(true);
+                dto.setSiirretaanSijoitteluun(true);
+                managedObject.setSiirretaanSijoitteluun(true);
             }
         } catch (IOException e) {
             LOGGER.error(String.format("Virhe tarkistaessa onko valintatapajonolle %s suoritettu sijoitteluajoa", oid), e);
