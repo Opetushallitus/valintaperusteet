@@ -29,6 +29,14 @@
             <artifactId>generic-common</artifactId>
             <version>9.7-SNAPSHOT</version>
         </dependency>
+
+        <!-- needed for generic common http client since it's only provided there -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.4</version>
+        </dependency>
+
         <dependency>
             <groupId>fi.vm.sade.java-utils</groupId>
             <artifactId>opintopolku-cas-servlet-filter</artifactId>
