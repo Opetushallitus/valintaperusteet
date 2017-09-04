@@ -54,9 +54,6 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
 
     private final ValintaperusteetUrlProperties valintaperusteetUrlProperties;
 
-
-    private String casKey = "valintaperusteet-service";
-
     @Value("${cas.service.valintaperusteet-service}")
     private String casService;
 
@@ -93,6 +90,7 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
         this.valintaperusteetUrlProperties = valintaperusteetUrlProperties;
 
         restClient.setCallerId("valintaperusteet-service");
+        restClient.setClientSubSystemCode("valintaperusteet-service");
         restClient.setCasService(casService);
         restClient.setWebCasUrl(casCallbackurl);
         restClient.setUsername(vtsUsername);
