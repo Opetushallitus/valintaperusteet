@@ -63,6 +63,12 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
     @Value("${cas.callback.valintaperusteet-service}")
     private String casCallbackurl;
 
+    @Value("${valintaperusteet.service.username.to.valinta.tulos.service}")
+    private String vtsUsername;
+
+    @Value("${valintaperusteet.service.password.to.valinta.tulos.service}")
+    private String vtsPassword;
+
 
     @Autowired
     public ValintatapajonoServiceImpl(@Lazy ValintatapajonoDAO valintatapajonoDAO,
@@ -89,6 +95,8 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
         restClient.setCallerId("valintaperusteet-service");
         restClient.setCasService(casService);
         restClient.setWebCasUrl(casCallbackurl);
+        restClient.setUsername(vtsUsername);
+        restClient.setPassword(vtsPassword);
     }
 
     @Override
