@@ -300,9 +300,10 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
         String url = String.format("https://testi.virkailija.opintopolku.fi/valinta-tulos-service/sijoittelu/jono/%s", oid);
         //String url = valintaperusteetUrlProperties.url("valinta-tulos-service.sijotteluexistsForJono", hakuOid, oid);
         try {
-            boolean exists = restClient.get(url, Boolean.class);
+            HashMap<String, Boolean> existsResponse = restClient.get(url, HashMap.class);
+            Boolean exists = existsResponse.get("IsSijoiteltu");
             LOGGER.info(String.format("Onko jono sijoiteltu: %b", exists));
-            if(exists) {
+            if(exists != null && exists) {
                 konvertoitu.setSiirretaanSijoitteluun(true);
                 dto.setSiirretaanSijoitteluun(true);
                 managedObject.setSiirretaanSijoitteluun(true);
