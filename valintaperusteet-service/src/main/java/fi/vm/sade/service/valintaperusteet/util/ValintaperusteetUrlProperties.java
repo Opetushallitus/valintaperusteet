@@ -7,6 +7,6 @@ import org.springframework.stereotype.Component;
 public class ValintaperusteetUrlProperties extends OphProperties {
     public ValintaperusteetUrlProperties() {
 
-        addOptionalFiles("common.properties", "valintaperusteet-service-oph.properties");
+        addOptionalFiles("oph-configuration/common.properties", "oph-configuration/valintaperusteet-service-oph.properties");
     }
 }
