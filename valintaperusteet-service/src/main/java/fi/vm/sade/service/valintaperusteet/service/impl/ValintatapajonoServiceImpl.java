@@ -283,26 +283,12 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
         Valintatapajono managedObject = haeValintatapajono(oid);
         Valintatapajono konvertoitu = modelMapper.map(dto, Valintatapajono.class);
 
-        if (dto.getTayttojono() != null) {
-            Valintatapajono tayttoJono = valintatapajonoDAO.readByOid(dto.getTayttojono());
-            konvertoitu.setVarasijanTayttojono(tayttoJono);
-        } else {
-            konvertoitu.setVarasijanTayttojono(null);
-        }
-        return LinkitettavaJaKopioitavaUtil.paivita(managedObject, konvertoitu, kopioija);
-    }
-    @Override
-    public Valintatapajono update(String oid, String hakuOid, ValintatapajonoCreateDTO dto) {
-        Valintatapajono managedObject = haeValintatapajono(oid);
-        Valintatapajono konvertoitu = modelMapper.map(dto, Valintatapajono.class);
-
         //TODO fix url props
         String url = String.format("https://testi.virkailija.opintopolku.fi/valinta-tulos-service/sijoittelu/jono/%s", oid);
         //String url = valintaperusteetUrlProperties.url("valinta-tulos-service.sijotteluexistsForJono", hakuOid, oid);
         try {
             HashMap<String, Boolean> existsResponse = restClient.get(url, HashMap.class);
             Boolean exists = existsResponse.get("IsSijoiteltu");
-            LOGGER.info(String.format("Onko jono sijoiteltu: %b", exists));
             if(exists != null && exists) {
                 konvertoitu.setSiirretaanSijoitteluun(true);
                 dto.setSiirretaanSijoitteluun(true);

@@ -198,47 +198,6 @@ public class ValintatapajonoResourceImpl {
         return Response.status(Response.Status.ACCEPTED).entity(update).build();
     }
 
-    @POST
-    @Path("/{oid}/haku/{hakuOid}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @PreAuthorize(UPDATE_CRUD)
-    @ApiOperation(value = "Päivittää valintatapajonoa tarkistaen ensin onko jonolle tehty sijoittelua kyseiselle haulle")
-    public Response update(
-            @ApiParam(value = "Päivitettävän valintatapajonon OID", required = true) @PathParam("oid") String oid,
-            @ApiParam(value = "Haun OID jossa jonoa käytetään", required = true) @PathParam("hakuOid") String hakuOid,
-            @ApiParam(value = "Päivitettävän valintatapajonon uudet tiedot", required = true) ValintatapajonoCreateDTO jono) {
-
-
-
-        ValintatapajonoDTO update = modelMapper.map(valintatapajonoService.update(oid, hakuOid, jono), ValintatapajonoDTO.class);
-        AUDIT.log(builder()
-                .id(username())
-                .valintatapajonoOid(oid)
-                .add("periytyy", update.getInheritance())
-                .add("prioriteetti",update.getPrioriteetti())
-                .add("aktiivinen",update.getAktiivinen())
-                .add("aloituspaikat",update.getAloituspaikat())
-                .add("automaattinenlaskentaansiirto",update.getAutomaattinenLaskentaanSiirto())
-                .add("eivarasijatayttoa", update.getEiVarasijatayttoa())
-                .add("kaikkiehdontayttavathyvaksytaan", update.getKaikkiEhdonTayttavatHyvaksytaan())
-                .add("kaytetaanvalintalaskentaa", update.getKaytetaanValintalaskentaa())
-                .add("kuvaus", update.getKuvaus())
-                .add("nimi", update.getNimi())
-                .add("poissaolevataytto", update.getPoissaOlevaTaytto())
-                .add("poistetaankohylatyt", update.getPoistetaankoHylatyt())
-                .add("siirretaansijoitteluun", update.getSiirretaanSijoitteluun())
-                .add("tasapistesaanto", update.getTasapistesaanto())
-                .add("tayttojono", update.getTayttojono())
-                .add("valisijoittelu", update.getValisijoittelu())
-                .add("varasijat", update.getVarasijat())
-                .add("varasijatayttopaivat", update.getVarasijaTayttoPaivat())
-                .add("varasijojakaytetaanalkaen", update.getVarasijojaKaytetaanAlkaen())
-                .add("varasijojataytetaanasti", update.getVarasijojaTaytetaanAsti())
-                .setOperaatio(ValintaperusteetOperation.VALINTATAPAJONO_PAIVITYS)
-                .build());
-        return Response.status(Response.Status.ACCEPTED).entity(update).build();
-    }
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
