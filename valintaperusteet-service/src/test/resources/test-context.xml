@@ -7,4 +7,5 @@
     <import resource="classpath:spring/service-context.xml"/>
 
     <bean id="laskentaService" class="fi.vm.sade.service.valintaperusteet.laskenta.api.LaskentaServiceImpl"/>
+    <bean id="ValintaperusteetUrlProperties" class="fi.vm.sade.service.valintaperusteet.util.ValintaperusteetUrlProperties"/>
 </beans>
