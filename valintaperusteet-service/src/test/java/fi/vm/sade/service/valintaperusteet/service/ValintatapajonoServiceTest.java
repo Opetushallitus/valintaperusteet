@@ -4,44 +4,47 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.dto.model.Tasapistesaanto;
 import fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintatapajonoaEiVoiLisataException;
+import fi.vm.sade.service.valintaperusteet.util.VtsRestClient;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.*;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA. User: jukais Date: 17.1.2013 Time: 15.14 To
  * change this template use File | Settings | File Templates.
  */
-@ContextConfiguration(locations = "classpath:test-context.xml")
+@ContextConfiguration(classes = VtsRestClientConfig.class)
 @TestExecutionListeners(listeners = { ValinnatJTACleanInsertTestExecutionListener.class,
         DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class })
 @RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data.xml")
 public class ValintatapajonoServiceTest {
+
     @Autowired
     private ValintatapajonoService valintatapajonoService;
 
@@ -50,6 +53,8 @@ public class ValintatapajonoServiceTest {
 
     @Autowired
     private ValintatapajonoDAO valintatapajonoDAO;
+
+
 
     @Test
     public void testFindJonoByValinnanvaihe() throws Exception {
@@ -448,6 +453,24 @@ public class ValintatapajonoServiceTest {
         }
     }
 
+    @Test
+    public void testUpdateSijoiteltuJono() throws Exception {
+        final String valintatapajonoOid = "26";
+        Valintatapajono jono26L = valintatapajonoService.readByOid(valintatapajonoOid);
+        //when(mockVtsRestClient.isJonoSijoiteltu(anyString())).thenReturn(true);
+
+        assertEquals(true, jono26L.getSiirretaanSijoitteluun());
+
+        ValintaperusteetModelMapper mapper = new ValintaperusteetModelMapper();
+        ValintatapajonoCreateDTO dto = mapper.map(jono26L, ValintatapajonoCreateDTO.class);
+
+        dto.setSiirretaanSijoitteluun(false);
+
+        Valintatapajono update = valintatapajonoService.update(valintatapajonoOid, dto);
+        assertEquals("Siirretaan sijoitteluun should remain true for jonos that have been ran through sijoittelu process",
+                true, update.getSiirretaanSijoitteluun());
+    }
+
     @Test(expected = ValintatapajonoaEiVoiLisataException.class)
     public void testLisaaValintatapajonoValintakoeValinnanVaiheelle() {
         final String valinnanVaiheOid = "82";
@@ -467,4 +490,21 @@ public class ValintatapajonoServiceTest {
         valintatapajonoService.lisaaValintatapajonoValinnanVaiheelle(valinnanVaiheOid, jono, null);
     }
 
+}
+
+@Configuration
+@ImportResource(value = "classpath:test-context.xml")
+class VtsRestClientConfig {
+
+    @Bean
+    @Primary
+    VtsRestClient vtsRestClient() {
+        VtsRestClient mock = mock(VtsRestClient.class);
+        try {
+            when(mock.isJonoSijoiteltu(eq("26"))).thenReturn(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return mock;
+    }
 }

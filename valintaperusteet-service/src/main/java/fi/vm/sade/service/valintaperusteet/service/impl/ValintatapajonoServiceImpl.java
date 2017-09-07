@@ -1,6 +1,5 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
-import fi.vm.sade.generic.rest.CachingRestClient;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoCreateDTO;
@@ -15,7 +14,6 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,24 +46,9 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
 
     private static ValintatapajonoKopioija kopioija = new ValintatapajonoKopioija();
 
-    private static final CachingRestClient restClient = new CachingRestClient();
-
     private final ValintaperusteetModelMapper modelMapper;
 
-    private final ValintaperusteetUrlProperties valintaperusteetUrlProperties;
-
-    @Value("${cas.service.valintaperusteet-service}")
-    private String casService;
-
-    @Value("${cas.callback.valintaperusteet-service}")
-    private String casCallbackurl;
-
-    @Value("${valintaperusteet.service.username.to.valinta.tulos.service}")
-    private String vtsUsername;
-
-    @Value("${valintaperusteet.service.password.to.valinta.tulos.service}")
-    private String vtsPassword;
-
+    private final VtsRestClient vtsRestClient;
 
     @Autowired
     public ValintatapajonoServiceImpl(@Lazy ValintatapajonoDAO valintatapajonoDAO,
@@ -77,7 +60,7 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
                                       @Lazy HakijaryhmaValintatapajonoService hakijaryhmaValintatapajonoService,
                                       @Lazy HakukohdeViiteDAO hakukohdeDao,
                                       @Lazy ValintaperusteetModelMapper modelMapper,
-                                      @Lazy ValintaperusteetUrlProperties valintaperusteetUrlProperties) {
+                                      VtsRestClient vtsRestClient) {
         this.valintatapajonoDAO = valintatapajonoDAO;
         this.valinnanVaiheService = valinnanVaiheService;
         this.oidService = oidService;
@@ -87,14 +70,7 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
         this.hakijaryhmaValintatapajonoService = hakijaryhmaValintatapajonoService;
         this.hakukohdeDao = hakukohdeDao;
         this.modelMapper = modelMapper;
-        this.valintaperusteetUrlProperties = valintaperusteetUrlProperties;
-
-        restClient.setCallerId("valintaperusteet-service");
-        restClient.setClientSubSystemCode("valintaperusteet-service");
-        restClient.setCasService(casService);
-        restClient.setWebCasUrl(casCallbackurl);
-        restClient.setUsername(vtsUsername);
-        restClient.setPassword(vtsPassword);
+        this.vtsRestClient = vtsRestClient;
     }
 
     @Override
@@ -283,11 +259,9 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
         Valintatapajono managedObject = haeValintatapajono(oid);
         Valintatapajono konvertoitu = modelMapper.map(dto, Valintatapajono.class);
 
-        String url = valintaperusteetUrlProperties.url("valinta-tulos-service.sijotteluexistsForJono", oid);
         try {
-            HashMap<String, Boolean> existsResponse = restClient.get(url, HashMap.class);
-            Boolean exists = existsResponse.get("IsSijoiteltu");
-            if(exists != null && exists) {
+            boolean isJonoSijoiteltu = vtsRestClient.isJonoSijoiteltu(oid);
+            if(isJonoSijoiteltu) {
                 konvertoitu.setSiirretaanSijoitteluun(true);
                 dto.setSiirretaanSijoitteluun(true);
                 managedObject.setSiirretaanSijoitteluun(true);
