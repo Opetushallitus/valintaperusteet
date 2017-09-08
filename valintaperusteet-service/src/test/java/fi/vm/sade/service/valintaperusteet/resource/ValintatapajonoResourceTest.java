@@ -3,6 +3,9 @@ package fi.vm.sade.service.valintaperusteet.resource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriCreateDTO;
@@ -15,11 +18,16 @@ import fi.vm.sade.service.valintaperusteet.resource.impl.ValinnanVaiheResourceIm
 import fi.vm.sade.service.valintaperusteet.resource.impl.ValintatapajonoResourceImpl;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintatapajonoEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.util.TestUtil;
+import fi.vm.sade.service.valintaperusteet.util.VtsRestClient;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ImportResource;
+import org.springframework.context.annotation.Primary;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -27,6 +35,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -38,7 +47,7 @@ import java.util.List;
  * Time: 10.58
  * To change this template use File | Settings | File Templates.
  */
-@ContextConfiguration(locations = "classpath:test-context.xml")
+@ContextConfiguration(classes = VtsRestClientConfig.class)
 @TestExecutionListeners(listeners = {ValinnatJTACleanInsertTestExecutionListener.class,
         DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class })
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -164,5 +173,22 @@ public class ValintatapajonoResourceTest {
         jarjesta = vaiheResource.listJonos("1");
         assertEquals("5", jarjesta.get(0).getOid());
         assertEquals("1", jarjesta.get(4).getOid());
+    }
+}
+
+@Configuration
+@ImportResource(value = "classpath:test-context.xml")
+class VtsRestClientConfig {
+
+    @Bean
+    @Primary
+    VtsRestClient vtsRestClient() {
+        VtsRestClient mock = mock(VtsRestClient.class);
+        try {
+            when(mock.isJonoSijoiteltu(eq("26"))).thenReturn(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return mock;
     }
 }
