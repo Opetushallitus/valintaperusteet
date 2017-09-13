@@ -22,9 +22,13 @@ import fi.vm.sade.service.valintaperusteet.service.exception.ValintatapajonoaEiV
 import fi.vm.sade.service.valintaperusteet.util.VtsRestClient;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -40,7 +44,9 @@ import java.util.*;
  */
 @ContextConfiguration(classes = VtsRestClientConfig.class)
 @TestExecutionListeners(listeners = { ValinnatJTACleanInsertTestExecutionListener.class,
-        DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class })
+        DependencyInjectionTestExecutionListener.class,
+        DirtiesContextTestExecutionListener.class,
+        WithSecurityContextTestExecutionListener.class })
 @RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data.xml")
 public class ValintatapajonoServiceTest {
@@ -54,7 +60,8 @@ public class ValintatapajonoServiceTest {
     @Autowired
     private ValintatapajonoDAO valintatapajonoDAO;
 
-
+    @Mock
+    SecurityContextHolder securityContextHolder;
 
     @Test
     public void testFindJonoByValinnanvaihe() throws Exception {
@@ -471,6 +478,25 @@ public class ValintatapajonoServiceTest {
                 true, update.getSiirretaanSijoitteluun());
     }
 
+    @Test
+    @WithMockUser(username="admin",authorities = "${root.organisaatio.oid}")
+    public void testUpdateSijoiteltuJonoWithOPHUser() throws Exception {
+        final String valintatapajonoOid = "26";
+        Valintatapajono jono26L = valintatapajonoService.readByOid(valintatapajonoOid);
+        //when(mockVtsRestClient.isJonoSijoiteltu(anyString())).thenReturn(true);
+
+        assertEquals(true, jono26L.getSiirretaanSijoitteluun());
+
+        ValintaperusteetModelMapper mapper = new ValintaperusteetModelMapper();
+        ValintatapajonoCreateDTO dto = mapper.map(jono26L, ValintatapajonoCreateDTO.class);
+
+        dto.setSiirretaanSijoitteluun(false);
+
+        Valintatapajono update = valintatapajonoService.update(valintatapajonoOid, dto);
+        assertEquals("Siirretaan sijoitteluun should remain false for jonos that have been ran through sijoittelu process IF update is done with oph user account",
+                false, update.getSiirretaanSijoitteluun());
+    }
+
     @Test(expected = ValintatapajonoaEiVoiLisataException.class)
     public void testLisaaValintatapajonoValintakoeValinnanVaiheelle() {
         final String valinnanVaiheOid = "82";
@@ -508,3 +534,24 @@ class VtsRestClientConfig {
         return mock;
     }
 }
+/*
+final class WithUserDetailsSecurityContextFactory
+        implements WithSecurityContextFactory<WithUserDetails> {
+
+    private UserDetailsService userDetailsService;
+
+    @Autowired
+    public WithUserDetailsSecurityContextFactory(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
+
+    public SecurityContext createSecurityContext(WithUserDetails withUser) {
+        String username = withUser.value();
+        Assert.hasLength(username, "value() must be non-empty String");
+        UserDetails principal = userDetailsService.loadUserByUsername(username);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(principal, principal.getPassword(), principal.getAuthorities());
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(authentication);
+        return context;
+    }
+}*/

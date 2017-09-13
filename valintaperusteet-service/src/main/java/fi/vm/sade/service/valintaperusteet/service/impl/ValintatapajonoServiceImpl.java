@@ -14,7 +14,12 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,6 +54,9 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
     private final ValintaperusteetModelMapper modelMapper;
 
     private final VtsRestClient vtsRestClient;
+
+    @Value("${root.organisaatio.oid}")
+    private String rootOrgOid;
 
     @Autowired
     public ValintatapajonoServiceImpl(@Lazy ValintatapajonoDAO valintatapajonoDAO,
@@ -259,15 +267,17 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
         Valintatapajono managedObject = haeValintatapajono(oid);
         Valintatapajono konvertoitu = modelMapper.map(dto, Valintatapajono.class);
 
-        try {
-            boolean isJonoSijoiteltu = vtsRestClient.isJonoSijoiteltu(oid);
-            if(isJonoSijoiteltu) {
-                konvertoitu.setSiirretaanSijoitteluun(true);
-                dto.setSiirretaanSijoitteluun(true);
-                managedObject.setSiirretaanSijoitteluun(true);
+        //we must allow registry managers to set siirretaanSijoitteluun to any value at all times
+        if(!isOPH()) {
+            try {
+                if(vtsRestClient.isJonoSijoiteltu(oid)) {
+                    konvertoitu.setSiirretaanSijoitteluun(true);
+                    dto.setSiirretaanSijoitteluun(true);
+                    managedObject.setSiirretaanSijoitteluun(true);
+                }
+            } catch (IOException e) {
+                LOGGER.error(String.format("Virhe tarkistaessa onko valintatapajonolle %s suoritettu sijoitteluajoa", oid), e);
             }
-        } catch (IOException e) {
-            LOGGER.error(String.format("Virhe tarkistaessa onko valintatapajonolle %s suoritettu sijoitteluajoa", oid), e);
         }
         if (dto.getTayttojono() != null) {
             Valintatapajono tayttoJono = valintatapajonoDAO.readByOid(dto.getTayttojono());
@@ -336,5 +346,17 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
         for (ValinnanVaihe kopio : vaihe.getKopiot()) {
             jarjestaKopioValinnanVaiheenValintatapajonot(kopio, jarjestetty);
         }
+    }
+
+    private boolean isOPH() {
+        SecurityContext context = SecurityContextHolder.getContext();
+        Authentication authentication = context.getAuthentication();
+        if(authentication == null) return false;
+        for (GrantedAuthority authority : authentication.getAuthorities()) {
+            if (authority.getAuthority().contains(rootOrgOid)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
