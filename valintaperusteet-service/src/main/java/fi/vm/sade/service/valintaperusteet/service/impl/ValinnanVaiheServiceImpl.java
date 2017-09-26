@@ -13,6 +13,8 @@ import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 import fi.vm.sade.service.valintaperusteet.util.ValinnanVaiheKopioija;
 import fi.vm.sade.service.valintaperusteet.util.ValinnanVaiheUtil;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +24,8 @@ import java.util.*;
 @Transactional
 @Service
 public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(ValinnanVaiheServiceImpl.class.getName());
 
     @Autowired
     private OidService oidService;
@@ -270,17 +274,22 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
 
     private void jarjestaAlavalintaryhmanValnnanVaiheet(Valintaryhma valintaryhma,
                                                         LinkedHashMap<String, ValinnanVaihe> uusiMasterJarjestys) {
-        LinkedHashMap<String, ValinnanVaihe> alkuperainenJarjestys = LinkitettavaJaKopioitavaUtil.teeMappiOidienMukaan(
-                LinkitettavaJaKopioitavaUtil.jarjesta(valinnanVaiheDAO.findByValintaryhma(valintaryhma.getOid())));
-        LinkedHashMap<String, ValinnanVaihe> jarjestetty = LinkitettavaJaKopioitavaUtil.
-                jarjestaKopiotMasterJarjestyksenMukaan(alkuperainenJarjestys, uusiMasterJarjestys);
-        List<Valintaryhma> alavalintaryhmat = valintaryhmaService.findValintaryhmasByParentOid(valintaryhma.getOid());
-        for (Valintaryhma alavalintaryhma : alavalintaryhmat) {
-            jarjestaAlavalintaryhmanValnnanVaiheet(alavalintaryhma, jarjestetty);
-        }
-        List<HakukohdeViite> hakukohteet = hakukohdeService.findByValintaryhmaOid(valintaryhma.getOid());
-        for (HakukohdeViite hakukohde : hakukohteet) {
-            jarjestaHakukohteenValinnanVaiheet(hakukohde, jarjestetty);
+        try {
+            LinkedHashMap<String, ValinnanVaihe> alkuperainenJarjestys = LinkitettavaJaKopioitavaUtil.teeMappiOidienMukaan(
+                    LinkitettavaJaKopioitavaUtil.jarjesta(valinnanVaiheDAO.findByValintaryhma(valintaryhma.getOid())));
+            LinkedHashMap<String, ValinnanVaihe> jarjestetty = LinkitettavaJaKopioitavaUtil.
+                    jarjestaKopiotMasterJarjestyksenMukaan(alkuperainenJarjestys, uusiMasterJarjestys);
+            List<Valintaryhma> alavalintaryhmat = valintaryhmaService.findValintaryhmasByParentOid(valintaryhma.getOid());
+            for (Valintaryhma alavalintaryhma : alavalintaryhmat) {
+                jarjestaAlavalintaryhmanValnnanVaiheet(alavalintaryhma, jarjestetty);
+            }
+            List<HakukohdeViite> hakukohteet = hakukohdeService.findByValintaryhmaOid(valintaryhma.getOid());
+            for (HakukohdeViite hakukohde : hakukohteet) {
+                jarjestaHakukohteenValinnanVaiheet(hakukohde, jarjestetty);
+            }
+        } catch (Exception e) {
+            LOGGER.error("Valintaryhmän {} {} valinnanvaiheiden järjestäminen epäonnistui: ", valintaryhma.getNimi(), valintaryhma.getOid(), e);
+            throw e;
         }
     }
 
