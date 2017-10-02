@@ -10,6 +10,7 @@ public abstract class ValintatapajonoUtil {
         kopio.setValisijoittelu(master.getValisijoittelu());
         kopio.setAloituspaikat(master.getAloituspaikat());
         kopio.setKuvaus(master.getKuvaus());
+        kopio.setTyyppi(master.getTyyppi());
         kopio.setNimi(master.getNimi());
         kopio.setSiirretaanSijoitteluun(master.getSiirretaanSijoitteluun());
         kopio.setTasapistesaanto(master.getTasapistesaanto());

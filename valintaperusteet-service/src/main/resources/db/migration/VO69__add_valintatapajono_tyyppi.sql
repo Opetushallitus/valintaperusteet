@@ -1,0 +1,1 @@
+alter table valintatapajono add column tyyppi varchar(255);

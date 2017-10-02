@@ -221,6 +221,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
             ValintatapajonoJarjestyskriteereillaDTO dto = new ValintatapajonoJarjestyskriteereillaDTO();
             dto.setAloituspaikat(valintatapajono.getAloituspaikat());
             dto.setKuvaus(valintatapajono.getKuvaus());
+            dto.setTyyppi(valintatapajono.getTyyppi());
             dto.setNimi(valintatapajono.getNimi());
             dto.setOid(valintatapajono.getOid());
             dto.setPrioriteetti(prioriteetti);

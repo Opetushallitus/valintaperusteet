@@ -182,6 +182,7 @@ public class ValintatapajonoResourceImpl {
                 .add("kaikkiehdontayttavathyvaksytaan", update.getKaikkiEhdonTayttavatHyvaksytaan())
                 .add("kaytetaanvalintalaskentaa", update.getKaytetaanValintalaskentaa())
                 .add("kuvaus", update.getKuvaus())
+                .add("tyyppi", update.getTyyppi())
                 .add("nimi", update.getNimi())
                 .add("poissaolevataytto", update.getPoissaOlevaTaytto())
                 .add("poistetaankohylatyt", update.getPoistetaankoHylatyt())

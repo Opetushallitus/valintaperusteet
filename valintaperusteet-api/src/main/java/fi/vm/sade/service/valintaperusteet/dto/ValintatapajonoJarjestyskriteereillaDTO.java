@@ -8,6 +8,8 @@ public class ValintatapajonoJarjestyskriteereillaDTO implements Prioritized {
 
     private String kuvaus;
 
+    private String tyyppi;
+
     private String nimi;
 
     private String oid;
@@ -48,6 +50,14 @@ public class ValintatapajonoJarjestyskriteereillaDTO implements Prioritized {
 
     public String getKuvaus() {
         return kuvaus;
+    }
+
+    public String getTyyppi() {
+        return tyyppi;
+    }
+
+    public void setTyyppi(String tyyppi) {
+        this.tyyppi = tyyppi;
     }
 
     public void setNimi(String nimi) {

@@ -28,6 +28,9 @@ public class Valintatapajono extends BaseEntity implements LinkitettavaJaKopioit
     @Column(name = "kuvaus")
     private String kuvaus;
 
+    @Column(name ="tyyppi")
+    private String tyyppi;
+
     @Column(name = "siirretaan_sijoitteluun", nullable = false)
     private Boolean siirretaanSijoitteluun = false;
 
@@ -118,6 +121,14 @@ public class Valintatapajono extends BaseEntity implements LinkitettavaJaKopioit
 
     public void setKuvaus(String kuvaus) {
         this.kuvaus = kuvaus;
+    }
+
+    public String getTyyppi() {
+        return tyyppi;
+    }
+
+    public void setTyyppi(String tyyppi) {
+        this.tyyppi = tyyppi;
     }
 
     public Boolean getSiirretaanSijoitteluun() {

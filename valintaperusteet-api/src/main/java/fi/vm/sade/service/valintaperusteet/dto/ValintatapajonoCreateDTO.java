@@ -18,6 +18,9 @@ public class ValintatapajonoCreateDTO {
     @ApiModelProperty(value = "Kuvaus")
     private String kuvaus;
 
+    @ApiModelProperty(value = "Tyyppi")
+    private String tyyppi;
+
     @ApiModelProperty(value = "Siirretään sijoitteluun", required = true)
     private Boolean siirretaanSijoitteluun = false;
 
@@ -85,6 +88,14 @@ public class ValintatapajonoCreateDTO {
 
     public void setKuvaus(String kuvaus) {
         this.kuvaus = kuvaus;
+    }
+
+    public String getTyyppi() {
+        return tyyppi;
+    }
+
+    public void setTyyppi(String tyyppi) {
+        this.tyyppi = tyyppi;
     }
 
     public Boolean getSiirretaanSijoitteluun() {
