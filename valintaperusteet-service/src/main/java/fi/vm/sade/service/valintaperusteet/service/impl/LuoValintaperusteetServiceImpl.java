@@ -774,7 +774,6 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
         jono.setAutomaattinenLaskentaanSiirto(true);
         jono.setValisijoittelu(false);
         jono.setAloituspaikat(0);
-        jono.setTyyppi("valintatapajono_kp");
         jono.setKuvaus("Varsinaisen valinnanvaiheen valintatapajono");
         jono.setNimi("Varsinaisen valinnanvaiheen valintatapajono");
         jono.setTasapistesaanto(fi.vm.sade.service.valintaperusteet.dto.model.Tasapistesaanto.ARVONTA);
