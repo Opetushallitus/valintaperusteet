@@ -1,9 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -75,6 +72,7 @@ public class ValintatapajonoServiceTest {
                 && jono1.getSiirretaanSijoitteluun().equals(jono2.getSiirretaanSijoitteluun())
                 && jono1.getAloituspaikat().equals(jono2.getAloituspaikat())
                 && jono1.getKuvaus().equals(jono2.getKuvaus()) && jono1.getNimi().equals(jono2.getNimi())
+                && jono1.getTyyppi().equals(jono2.getTyyppi())
                 && jono1.getTasapistesaanto().equals(jono2.getTasapistesaanto());
     }
 
@@ -131,12 +129,17 @@ public class ValintatapajonoServiceTest {
         uusiJono.setValisijoittelu(false);
         uusiJono.setAloituspaikat(15);
         uusiJono.setKuvaus("uusi kuvaus");
+        uusiJono.setTyyppi("valintatapajono_kp");
         uusiJono.setNimi("uusi nimi");
         uusiJono.setTasapistesaanto(fi.vm.sade.service.valintaperusteet.dto.model.Tasapistesaanto.ALITAYTTO);
         uusiJono.setSiirretaanSijoitteluun(true);
 
         Valintatapajono lisatty = valintatapajonoService.lisaaValintatapajonoValinnanVaiheelle(masterValinnanVaiheOid,
                 uusiJono, edellinenValintatapajonoOid);
+
+        assertEquals(uusiJono.getNimi(), lisatty.getNimi());
+        assertEquals(uusiJono.getKuvaus(), lisatty.getKuvaus());
+        assertEquals(uusiJono.getTyyppi(), lisatty.getTyyppi());
 
         {
             // Lopputilanne:
@@ -161,7 +164,8 @@ public class ValintatapajonoServiceTest {
                     && vv45Ljonot.get(0).getMasterValintatapajono() == null);
             assertTrue(vv45Ljonot.get(1).getId().longValue() == 1051L
                     && vv45Ljonot.get(1).getMasterValintatapajono() == null);
-            assertTrue(vv45Ljonot.get(2).equals(lisatty) && vv45Ljonot.get(2).getMasterValintatapajono() == null);
+            assertTrue(vv45Ljonot.get(2).equals(lisatty)
+                    && vv45Ljonot.get(2).getMasterValintatapajono() == null);
             assertTrue(vv45Ljonot.get(3).getId().longValue() == 1052L
                     && vv45Ljonot.get(3).getMasterValintatapajono() == null);
 
@@ -198,6 +202,7 @@ public class ValintatapajonoServiceTest {
         uusiJono.setValisijoittelu(false);
         uusiJono.setAloituspaikat(15);
         uusiJono.setKuvaus("uusi kuvaus");
+        uusiJono.setTyyppi("valintatapajono_kp");
         uusiJono.setNimi("uusi nimi");
         uusiJono.setTasapistesaanto(fi.vm.sade.service.valintaperusteet.dto.model.Tasapistesaanto.ALITAYTTO);
         uusiJono.setSiirretaanSijoitteluun(true);
@@ -205,6 +210,7 @@ public class ValintatapajonoServiceTest {
                 uusiJono, null);
 
         {
+            assertEquals(uusiJono.getTyyppi(), lisatty.getTyyppi());
             assertNotNull(valinnanVaiheDAO.readByOid(valinnanVaiheOid));
             List<Valintatapajono> jonot = valintatapajonoService.findJonoByValinnanvaihe(valinnanVaiheOid);
             assertEquals(1, jonot.size());
@@ -230,6 +236,7 @@ public class ValintatapajonoServiceTest {
         uusiJono.setValisijoittelu(false);
         uusiJono.setAloituspaikat(15);
         uusiJono.setKuvaus("uusi kuvaus");
+        uusiJono.setTyyppi("valintatapajono_kp");
         uusiJono.setNimi("uusi nimi");
         uusiJono.setTasapistesaanto(fi.vm.sade.service.valintaperusteet.dto.model.Tasapistesaanto.ALITAYTTO);
         uusiJono.setSiirretaanSijoitteluun(true);
@@ -412,6 +419,7 @@ public class ValintatapajonoServiceTest {
         paivitys.setTasapistesaanto(new ModelMapper().map(uusiTasapistesaanto,
                 fi.vm.sade.service.valintaperusteet.dto.model.Tasapistesaanto.class));
         paivitys.setKaytetaanValintalaskentaa(true);
+        paivitys.setTyyppi("valintatapajono_kp");
 
         Valintatapajono paivitetty = valintatapajonoService.update(valintatapajonoOid, paivitys);
         {
@@ -461,6 +469,66 @@ public class ValintatapajonoServiceTest {
     }
 
     @Test
+    public void testUpdateTyyppiCheck() {
+        final String valinnanVaiheOid = "48";
+
+        ValintatapajonoCreateDTO uusiJono = new ValintatapajonoCreateDTO();
+        uusiJono.setAktiivinen(true);
+        uusiJono.setAutomaattinenLaskentaanSiirto(true);
+        uusiJono.setValisijoittelu(false);
+        uusiJono.setAloituspaikat(15);
+        uusiJono.setKuvaus("uusi kuvaus");
+        uusiJono.setNimi("uusi nimi");
+        uusiJono.setTasapistesaanto(fi.vm.sade.service.valintaperusteet.dto.model.Tasapistesaanto.ALITAYTTO);
+        uusiJono.setSiirretaanSijoitteluun(true);
+
+        try {
+            valintatapajonoService.lisaaValintatapajonoValinnanVaiheelle(valinnanVaiheOid, uusiJono, null);
+            fail("Sijoitteltava jono cannot be saved without type");
+        } catch (Exception e) {
+            assertTrue("Wrong type of exception " + e.toString(), e instanceof ValintatapajonoaEiVoiLisataException);
+        }
+        uusiJono.setTyyppi("valintatapajono_kp");
+
+        Valintatapajono lisatty = null;
+        try {
+            lisatty = valintatapajonoService.lisaaValintatapajonoValinnanVaiheelle(valinnanVaiheOid, uusiJono, null);
+        } catch (ValintatapajonoaEiVoiLisataException e) {
+            fail("It should be possible to save sijoiteltava jono with type");
+        }
+
+        assertEquals("valintatapajono_kp", lisatty.getTyyppi());
+        uusiJono.setTyyppi(null);
+
+        try {
+            valintatapajonoService.update(lisatty.getOid(), uusiJono);
+            fail("Sijoitteltava jono cannot be saved without type");
+        } catch (Exception e) {
+            assertTrue("Wrong type of exception " + e.toString(), e instanceof ValintatapajonoaEiVoiLisataException);
+        }
+
+        uusiJono.setTyyppi("valintatapajono_m");
+
+        try {
+            valintatapajonoService.update(lisatty.getOid(), uusiJono);
+        } catch (ValintatapajonoaEiVoiLisataException e) {
+            fail("It should be possible to save sijoiteltava jono with type");
+        }
+        assertEquals("valintatapajono_m", valintatapajonoService.readByOid(lisatty.getOid()).getTyyppi());
+
+        uusiJono.setSiirretaanSijoitteluun(false);
+        uusiJono.setTyyppi(null);
+        assertNotNull(valintatapajonoService.readByOid(lisatty.getOid()).getKuvaus());
+        uusiJono.setKuvaus(null);
+        try {
+            valintatapajonoService.update(lisatty.getOid(), uusiJono);
+        } catch (ValintatapajonoaEiVoiLisataException e) {
+            fail("It should be possible to save ei-sijoiteltava jono without type");
+        }
+        assertEquals(null, valintatapajonoService.readByOid(lisatty.getOid()).getTyyppi());
+    }
+
+    @Test
     public void testUpdateSijoiteltuJono() throws Exception {
         final String valintatapajonoOid = "26";
         Valintatapajono jono26L = valintatapajonoService.readByOid(valintatapajonoOid);
@@ -472,10 +540,31 @@ public class ValintatapajonoServiceTest {
         ValintatapajonoCreateDTO dto = mapper.map(jono26L, ValintatapajonoCreateDTO.class);
 
         dto.setSiirretaanSijoitteluun(false);
+        dto.setTyyppi("valintatapajono_kp");
 
         Valintatapajono update = valintatapajonoService.update(valintatapajonoOid, dto);
         assertEquals("Siirretaan sijoitteluun should remain true for jonos that have been ran through sijoittelu process",
                 true, update.getSiirretaanSijoitteluun());
+    }
+
+    @Test
+    public void testUpdateSijoiteltuJonoFails() {
+        final String valintatapajonoOid = "26";
+        Valintatapajono jono26L = valintatapajonoService.readByOid(valintatapajonoOid);
+        assertEquals(true, jono26L.getSiirretaanSijoitteluun());
+
+        ValintaperusteetModelMapper mapper = new ValintaperusteetModelMapper();
+        ValintatapajonoCreateDTO dto = mapper.map(jono26L, ValintatapajonoCreateDTO.class);
+
+        dto.setSiirretaanSijoitteluun(false);
+
+        try {
+            valintatapajonoService.update(valintatapajonoOid, dto);
+            assertTrue("Sijoiteltu jono cannot be saved without type", false);
+        } catch (ValintatapajonoaEiVoiLisataException e) {
+        } catch (Exception e) {
+            assertTrue("Wrong type of exception " + e.toString(), false);
+        }
     }
 
     @Test
@@ -509,6 +598,7 @@ public class ValintatapajonoServiceTest {
         jono.setValisijoittelu(false);
         jono.setAloituspaikat(10);
         jono.setKuvaus("kuvaus");
+        jono.setTyyppi("valintatapajono_kp");
         jono.setNimi("nimi");
         jono.setSiirretaanSijoitteluun(false);
         jono.setTasapistesaanto(fi.vm.sade.service.valintaperusteet.dto.model.Tasapistesaanto.ARVONTA);

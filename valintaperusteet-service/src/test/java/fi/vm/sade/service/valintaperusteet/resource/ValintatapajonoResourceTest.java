@@ -70,6 +70,7 @@ public class ValintatapajonoResourceTest {
     public void testUpdate() throws Exception {
         ValintatapajonoDTO jono = resource.readByOid("1");
         jono.setNimi("muokattu");
+        jono.setTyyppi("valintatapajono_m");
         resource.update(jono.getOid(), jono);
 
         jono = resource.readByOid("1");
