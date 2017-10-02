@@ -28,9 +28,7 @@ public class ValintatapajonoKopioija implements Kopioija<Valintatapajono> {
         if (StringUtils.isNotBlank(from.getKuvaus())) {
             to.setKuvaus(from.getKuvaus());
         }
-        if (StringUtils.isNotBlank(from.getTyyppi())) {
-            to.setTyyppi(from.getTyyppi());
-        }
+        to.setTyyppi(from.getTyyppi());
         if (StringUtils.isNotBlank(from.getNimi())) {
             to.setNimi(from.getNimi());
         }

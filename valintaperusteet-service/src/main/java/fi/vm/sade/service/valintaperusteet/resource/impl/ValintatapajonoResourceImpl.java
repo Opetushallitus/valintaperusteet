@@ -15,6 +15,7 @@ import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaOidTyhjaException;
+import fi.vm.sade.service.valintaperusteet.service.exception.ValintatapajonoaEiVoiLisataException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -169,34 +170,39 @@ public class ValintatapajonoResourceImpl {
     public Response update(
             @ApiParam(value = "Päivitettävän valintatapajonon OID", required = true) @PathParam("oid") String oid,
             @ApiParam(value = "Päivitettävän valintatapajonon uudet tiedot", required = true) ValintatapajonoCreateDTO jono) {
-        ValintatapajonoDTO update = modelMapper.map(valintatapajonoService.update(oid, jono), ValintatapajonoDTO.class);
-        AUDIT.log(builder()
-                .id(username())
-                .valintatapajonoOid(oid)
-                .add("periytyy", update.getInheritance())
-                .add("prioriteetti",update.getPrioriteetti())
-                .add("aktiivinen",update.getAktiivinen())
-                .add("aloituspaikat",update.getAloituspaikat())
-                .add("automaattinenlaskentaansiirto",update.getAutomaattinenLaskentaanSiirto())
-                .add("eivarasijatayttoa", update.getEiVarasijatayttoa())
-                .add("kaikkiehdontayttavathyvaksytaan", update.getKaikkiEhdonTayttavatHyvaksytaan())
-                .add("kaytetaanvalintalaskentaa", update.getKaytetaanValintalaskentaa())
-                .add("kuvaus", update.getKuvaus())
-                .add("tyyppi", update.getTyyppi())
-                .add("nimi", update.getNimi())
-                .add("poissaolevataytto", update.getPoissaOlevaTaytto())
-                .add("poistetaankohylatyt", update.getPoistetaankoHylatyt())
-                .add("siirretaansijoitteluun", update.getSiirretaanSijoitteluun())
-                .add("tasapistesaanto", update.getTasapistesaanto())
-                .add("tayttojono", update.getTayttojono())
-                .add("valisijoittelu", update.getValisijoittelu())
-                .add("varasijat", update.getVarasijat())
-                .add("varasijatayttopaivat", update.getVarasijaTayttoPaivat())
-                .add("varasijojakaytetaanalkaen", update.getVarasijojaKaytetaanAlkaen())
-                .add("varasijojataytetaanasti", update.getVarasijojaTaytetaanAsti())
-                .setOperaatio(ValintaperusteetOperation.VALINTATAPAJONO_PAIVITYS)
-                .build());
-        return Response.status(Response.Status.ACCEPTED).entity(update).build();
+        try {
+            ValintatapajonoDTO update = modelMapper.map(valintatapajonoService.update(oid, jono), ValintatapajonoDTO.class);
+            AUDIT.log(builder()
+                    .id(username())
+                    .valintatapajonoOid(oid)
+                    .add("periytyy", update.getInheritance())
+                    .add("prioriteetti", update.getPrioriteetti())
+                    .add("aktiivinen", update.getAktiivinen())
+                    .add("aloituspaikat", update.getAloituspaikat())
+                    .add("automaattinenlaskentaansiirto", update.getAutomaattinenLaskentaanSiirto())
+                    .add("eivarasijatayttoa", update.getEiVarasijatayttoa())
+                    .add("kaikkiehdontayttavathyvaksytaan", update.getKaikkiEhdonTayttavatHyvaksytaan())
+                    .add("kaytetaanvalintalaskentaa", update.getKaytetaanValintalaskentaa())
+                    .add("kuvaus", update.getKuvaus())
+                    .add("tyyppi", update.getTyyppi())
+                    .add("nimi", update.getNimi())
+                    .add("poissaolevataytto", update.getPoissaOlevaTaytto())
+                    .add("poistetaankohylatyt", update.getPoistetaankoHylatyt())
+                    .add("siirretaansijoitteluun", update.getSiirretaanSijoitteluun())
+                    .add("tasapistesaanto", update.getTasapistesaanto())
+                    .add("tayttojono", update.getTayttojono())
+                    .add("valisijoittelu", update.getValisijoittelu())
+                    .add("varasijat", update.getVarasijat())
+                    .add("varasijatayttopaivat", update.getVarasijaTayttoPaivat())
+                    .add("varasijojakaytetaanalkaen", update.getVarasijojaKaytetaanAlkaen())
+                    .add("varasijojataytetaanasti", update.getVarasijojaTaytetaanAsti())
+                    .setOperaatio(ValintaperusteetOperation.VALINTATAPAJONO_PAIVITYS)
+                    .build());
+            return Response.status(Response.Status.ACCEPTED).entity(update).build();
+        } catch (ValintatapajonoaEiVoiLisataException e) {
+            LOGGER.error("Error creating/updating valintatapajono.", e);
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
     }
 
 

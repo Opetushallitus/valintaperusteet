@@ -164,6 +164,7 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
         if (!fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi.TAVALLINEN.equals(valinnanVaihe.getValinnanVaiheTyyppi())) {
             throw new ValintatapajonoaEiVoiLisataException("Valintatapajonoa ei voi lisätä valinnan vaiheelle, jonka " + "tyyppi on " + valinnanVaihe.getValinnanVaiheTyyppi().name());
         }
+        checkTyyppiPakollisuus(dto);
         Valintatapajono edellinenValintatapajono = null;
         if (StringUtils.isNotBlank(edellinenValintatapajonoOid)) {
             edellinenValintatapajono = haeValintatapajono(edellinenValintatapajonoOid);
@@ -184,6 +185,13 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
             lisaaValinnanVaiheelleKopioMasterValintatapajonosta(kopio, lisatty, edellinenValintatapajono);
         }
         return lisatty;
+    }
+
+    private void checkTyyppiPakollisuus(ValintatapajonoCreateDTO jono) throws ValintatapajonoaEiVoiLisataException {
+        if(Boolean.TRUE.equals(jono.getSiirretaanSijoitteluun()) && StringUtils.isEmpty(jono.getTyyppi())) {
+            throw new ValintatapajonoaEiVoiLisataException("Valintatapajonoa " + jono.getNimi() +
+                    "ei voi lisätä. Sijoitteluun menevällä jonolla on oltava tyyppi.");
+        }
     }
 
     @Override
@@ -279,6 +287,7 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
                 LOGGER.error(String.format("Virhe tarkistaessa onko valintatapajonolle %s suoritettu sijoitteluajoa", oid), e);
             }
         }
+        checkTyyppiPakollisuus(dto);
         if (dto.getTayttojono() != null) {
             Valintatapajono tayttoJono = valintatapajonoDAO.readByOid(dto.getTayttojono());
             konvertoitu.setVarasijanTayttojono(tayttoJono);
