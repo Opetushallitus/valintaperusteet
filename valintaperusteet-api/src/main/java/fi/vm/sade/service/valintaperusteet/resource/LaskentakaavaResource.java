@@ -1,13 +1,14 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
-import java.util.List;
-
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
 import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.util.List;
 
 @Path("laskentakaava")
 public interface LaskentakaavaResource {
@@ -52,18 +53,18 @@ public interface LaskentakaavaResource {
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Response update(@PathParam("id") Long id, LaskentakaavaCreateDTO laskentakaava);
+    Response update(@PathParam("id") Long id, LaskentakaavaCreateDTO laskentakaava, @Context HttpServletRequest request);
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Response insert(LaskentakaavaInsertDTO laskentakaava);
+    Response insert(LaskentakaavaInsertDTO laskentakaava, @Context HttpServletRequest request);
 
     @PUT
     @Path("/siirra")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Response siirra(LaskentakaavaSiirraDTO dto);
+    Response siirra(LaskentakaavaSiirraDTO dto, @Context HttpServletRequest request);
 
     @GET
     @Path("/{id}/valintaryhma")
@@ -74,6 +75,6 @@ public interface LaskentakaavaResource {
     @DELETE
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    Response poista(@PathParam("id") Long id);
+    Response poista(@PathParam("id") Long id, @Context HttpServletRequest request);
 
 }

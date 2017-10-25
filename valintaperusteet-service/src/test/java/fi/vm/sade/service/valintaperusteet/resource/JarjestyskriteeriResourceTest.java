@@ -1,7 +1,5 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
-import static org.junit.Assert.assertEquals;
-
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dao.JarjestyskriteeriDAO;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriCreateDTO;
@@ -16,6 +14,7 @@ import fi.vm.sade.service.valintaperusteet.util.TestUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -24,8 +23,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created with IntelliJ IDEA.
@@ -60,6 +62,8 @@ public class JarjestyskriteeriResourceTest {
 
     @Test
     public void testUpdate() throws Exception {
+        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+
         JarjestyskriteeriDTO jk = resource.readByOid("1");
 
 //        assertEquals(1, (int)jk.getPrioriteetti());
@@ -70,7 +74,7 @@ public class JarjestyskriteeriResourceTest {
         comb.setJarjestyskriteeri(update);
         comb.setLaskentakaavaId(jk.getLaskentakaavaId());
 
-        resource.update("1", comb);
+        resource.update("1", comb, request);
 
         jk = resource.readByOid("1");
 //        assertEquals(100, (int)jk.getPrioriteetti());
@@ -83,15 +87,19 @@ public class JarjestyskriteeriResourceTest {
         Jarjestyskriteeri jk = jarjestyskriteeriDAO.readByOid("1");
 //        assertEquals(1, (int)jk.getPrioriteetti());
 
-        resource.delete("1");
+        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+
+        resource.delete("1", request);
         jk = jarjestyskriteeriDAO.readByOid("1");
         assertEquals(null, jk);
     }
 
     @Test
     public void testJarjesta() throws Exception {
+        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+
         String[] uusiJarjestys = {"3203", "3202", "3201"};
-        List<JarjestyskriteeriDTO> jarjestetty = resource.jarjesta(Arrays.asList(uusiJarjestys));
+        List<JarjestyskriteeriDTO> jarjestetty = resource.jarjesta(Arrays.asList(uusiJarjestys), request);
         testUtil.lazyCheck(JsonViews.Basic.class, jarjestetty);
     }
 

@@ -1,47 +1,33 @@
 package fi.vm.sade.service.valintaperusteet.resource.impl;
 
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD;
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
-import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
-import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Component;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-
+import fi.vm.sade.auditlog.Changes;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriDTO;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriInsertDTO;
+import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
+import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
 import fi.vm.sade.service.valintaperusteet.resource.JarjestyskriteeriResource;
 import fi.vm.sade.service.valintaperusteet.service.JarjestyskriteeriService;
 import fi.vm.sade.service.valintaperusteet.service.exception.JarjestyskriteeriEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.JarjestyskriteeriaEiVoiPoistaaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaOidTyhjaException;
+import fi.vm.sade.generic.AuditLog;
+import fi.vm.sade.service.valintaperusteet.util.ValintaResource;
+import fi.vm.sade.service.valintaperusteet.util.ValintaperusteetOperation;
+import io.swagger.annotations.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Component;
 
-import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.*;
-import static fi.vm.sade.auditlog.valintaperusteet.LogMessage.builder;
-import fi.vm.sade.auditlog.valintaperusteet.ValintaperusteetOperation;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.*;
 
 @Component
 @Path("jarjestyskriteeri")
@@ -77,9 +63,15 @@ public class JarjestyskriteeriResourceImpl implements JarjestyskriteeriResource 
     @ApiResponses(@ApiResponse(code = 400, message = "Laskentakaavaa ei ole määritetty"))
     public Response update(
             @ApiParam(value = "OID", required = true) @PathParam("oid") String oid,
-            @ApiParam(value = "Järjestyskriteerin uudet tiedot ja laskentakaava", required = true) JarjestyskriteeriInsertDTO jk) {
+            @ApiParam(value = "Järjestyskriteerin uudet tiedot ja laskentakaava", required = true) JarjestyskriteeriInsertDTO jk, @Context HttpServletRequest request) {
         try {
+            //JarjestyskriteeriDTO old = jarjestyskriteeriService.
             JarjestyskriteeriDTO update = modelMapper.map(jarjestyskriteeriService.update(oid, jk.getJarjestyskriteeri(), jk.getLaskentakaavaId()), JarjestyskriteeriDTO.class);
+            Changes changes = new Changes.Builder()
+                    .removed("jarjestyskriteeri", oid).build();
+            AuditLog.log(ValintaperusteetOperation.JARJESTYSKRITEERI_POISTO, ValintaResource.JARJESTYSKRITEERIT, oid, changes, request);
+
+            /*
             AUDIT.log(builder()
                     .id(username())
                     .jarjestyskriteeriOid(oid)
@@ -91,6 +83,7 @@ public class JarjestyskriteeriResourceImpl implements JarjestyskriteeriResource 
                     .add("metatiedot", update.getMetatiedot())
                     .setOperaatio(ValintaperusteetOperation.JARJESTYSKRITEERI_PAIVITYS)
                     .build());
+            */
             return Response.status(Response.Status.ACCEPTED).entity(update).build();
         } catch (LaskentakaavaOidTyhjaException e) {
             throw new WebApplicationException(e, Response.Status.BAD_REQUEST);
@@ -102,14 +95,19 @@ public class JarjestyskriteeriResourceImpl implements JarjestyskriteeriResource 
     @PreAuthorize(CRUD)
     @ApiOperation(value = "Poistaa järjestyskriteerin OID:n perusteella")
     @ApiResponses(@ApiResponse(code = 403, message = "Järjestyskriteeriä ei voida poistaa, esim. se on peritty"))
-    public Response delete(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
+    public Response delete(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid, @Context HttpServletRequest request) {
         try {
             jarjestyskriteeriService.deleteByOid(oid);
+            Changes changes = new Changes.Builder()
+                    .removed("jarjestyskriteeri", oid).build();
+            AuditLog.log(ValintaperusteetOperation.JARJESTYSKRITEERI_POISTO, ValintaResource.JARJESTYSKRITEERIT, oid, changes, request);
+            /*
             AUDIT.log(builder()
                     .id(username())
                     .jarjestyskriteeriOid(oid)
                     .setOperaatio(ValintaperusteetOperation.JARJESTYSKRITEERI_POISTO)
                     .build());
+            */
             return Response.status(Response.Status.ACCEPTED).build();
         } catch (JarjestyskriteeriaEiVoiPoistaaException e) {
             throw new WebApplicationException(e, Response.Status.FORBIDDEN);
@@ -122,13 +120,21 @@ public class JarjestyskriteeriResourceImpl implements JarjestyskriteeriResource 
     @Path("/jarjesta")
     @PreAuthorize(UPDATE_CRUD)
     @ApiOperation(value = "Järjestää järjestyskriteerit annetun listan mukaiseen järjestykseen")
-    public List<JarjestyskriteeriDTO> jarjesta(@ApiParam(value = "Uusi järjestys", required = true) List<String> oids) {
+    public List<JarjestyskriteeriDTO> jarjesta(@ApiParam(value = "Uusi järjestys", required = true) List<String> oids, @Context HttpServletRequest request) {
         List<Jarjestyskriteeri> jks = jarjestyskriteeriService.jarjestaKriteerit(oids);
+        //Changes.Builder b = new Changes.Builder();
+        Changes changes = new Changes.Builder()
+                .added("jarjestyskriteerioids", Optional.ofNullable(oids).map(List::toArray).map(Arrays::toString).orElse(null)).build();
+        AuditLog.log(ValintaperusteetOperation.JARJESTYSKRITEERIT_JARJESTA, ValintaResource.JARJESTYSKRITEERIT, null,  changes, request);
+
+        /*
         AUDIT.log(builder()
                 .id(username())
                 .add("jarjestyskriteerioids", Optional.ofNullable(oids).map(List::toArray).map(Arrays::toString).orElse(null))
                 .setOperaatio(ValintaperusteetOperation.JARJESTYSKRITEERIT_JARJESTA)
                 .build());
+        */
+
         return modelMapper.mapList(jks, JarjestyskriteeriDTO.class);
     }
 }

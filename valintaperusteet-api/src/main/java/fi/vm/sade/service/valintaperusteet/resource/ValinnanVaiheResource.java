@@ -1,19 +1,14 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import fi.vm.sade.service.valintaperusteet.dto.*;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
+import java.util.Map;
 
 import fi.vm.sade.service.valintaperusteet.dto.*;
 
@@ -45,29 +40,29 @@ public interface ValinnanVaiheResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{parentOid}/valintatapajono")
-    Response addJonoToValinnanVaihe(@PathParam("parentOid") String parentOid, ValintatapajonoCreateDTO jono);
+    Response addJonoToValinnanVaihe(@PathParam("parentOid") String parentOid, ValintatapajonoCreateDTO jono, @Context HttpServletRequest request);
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{parentOid}/valintakoe")
-    Response addValintakoeToValinnanVaihe(@PathParam("parentOid") String parentOid, ValintakoeCreateDTO koe);
+    Response addValintakoeToValinnanVaihe(@PathParam("parentOid") String parentOid, ValintakoeCreateDTO koe, @Context HttpServletRequest request);
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{oid}")
-    ValinnanVaiheDTO update(@PathParam("oid") String oid, ValinnanVaiheCreateDTO valinnanVaihe);
+    ValinnanVaiheDTO update(@PathParam("oid") String oid, ValinnanVaiheCreateDTO valinnanVaihe, @Context HttpServletRequest request);
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/jarjesta")
-    List<ValinnanVaiheDTO> jarjesta(List<String> oids);
+    List<ValinnanVaiheDTO> jarjesta(List<String> oids, @Context HttpServletRequest request);
 
     @DELETE
     @Path("/{oid}")
-    Response delete(@PathParam("oid") String oid);
+    Response delete(@PathParam("oid") String oid, @Context HttpServletRequest request);
 
     @GET
     @Path("/{oid}/kuuluuSijoitteluun")

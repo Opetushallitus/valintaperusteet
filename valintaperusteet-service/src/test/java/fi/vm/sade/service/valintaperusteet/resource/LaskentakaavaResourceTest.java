@@ -1,28 +1,10 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertNull;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import fi.vm.sade.kaava.Funktiokuvaaja;
 import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
-import fi.vm.sade.service.valintaperusteet.dto.ArvokonvertteriparametriDTO;
-import fi.vm.sade.service.valintaperusteet.dto.FunktioargumentinLapsiDTO;
-import fi.vm.sade.service.valintaperusteet.dto.FunktioargumenttiDTO;
-import fi.vm.sade.service.valintaperusteet.dto.FunktiokutsuDTO;
-import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaDTO;
-import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaInsertDTO;
-import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaListDTO;
-import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaSiirraDTO;
-import fi.vm.sade.service.valintaperusteet.dto.LokalisoituTekstiDTO;
-import fi.vm.sade.service.valintaperusteet.dto.SyoteparametriDTO;
-import fi.vm.sade.service.valintaperusteet.dto.TekstiRyhmaDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteetFunktioargumenttiDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteetFunktiokutsuDTO;
+import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi;
 import fi.vm.sade.service.valintaperusteet.dto.model.Kieli;
@@ -33,6 +15,7 @@ import fi.vm.sade.service.valintaperusteet.resource.impl.LaskentakaavaResourceIm
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -41,9 +24,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.List;
+
+import static org.junit.Assert.*;
 
 //import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 
@@ -59,6 +45,8 @@ public class LaskentakaavaResourceTest {
 
     private LaskentakaavaResourceImpl laskentakaavaResource = new LaskentakaavaResourceImpl();
     private ObjectMapper mapper = new ObjectMapperProvider().getContext(LaskentakaavaResourceImpl.class);
+    HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+
 
     @Autowired
     private ValintaperusteetModelMapper modelMapper;
@@ -86,7 +74,7 @@ public class LaskentakaavaResourceTest {
     }
 
     private Response insert(final LaskentakaavaCreateDTO kaava) {
-        return laskentakaavaResource.insert(new LaskentakaavaInsertDTO(kaava, null, null));
+        return laskentakaavaResource.insert(new LaskentakaavaInsertDTO(kaava, null, null), request);
     }
 
     @Test
@@ -163,7 +151,7 @@ public class LaskentakaavaResourceTest {
         laskentakaavaInserted.getFunktiokutsu().setTulosTekstiFi("fi");
         laskentakaavaInserted.getFunktiokutsu().setTulosTekstiSv("sv");
 
-        response = laskentakaavaResource.update(laskentakaavaInserted.getId(), laskentakaavaInserted);
+        response = laskentakaavaResource.update(laskentakaavaInserted.getId(), laskentakaavaInserted, request);
 
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
         mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(response.getEntity());
@@ -179,7 +167,7 @@ public class LaskentakaavaResourceTest {
     public void testUpdateName() throws Exception {
         final LaskentakaavaDTO inserted = kaavaFromResponse(insert(newLaskentakaava("kaava1")));
         inserted.setNimi("kaava2");
-        final LaskentakaavaDTO updated = kaavaFromResponse(laskentakaavaResource.update(inserted.getId(), inserted));
+        final LaskentakaavaDTO updated = kaavaFromResponse(laskentakaavaResource.update(inserted.getId(), inserted, request));
         assertEquals("kaava2", updated.getNimi());
 
         tarkistaFunktiokutsunNimi(updated);
@@ -192,7 +180,7 @@ public class LaskentakaavaResourceTest {
         LaskentakaavaSiirraDTO siirrettava = modelMapper.map(inserted, LaskentakaavaSiirraDTO.class);
         siirrettava.setUusinimi("UusiNimi");
         siirrettava.setValintaryhmaOid("oid2");
-        final LaskentakaavaDTO siirretty = kaavaFromResponse(laskentakaavaResource.siirra(siirrettava));
+        final LaskentakaavaDTO siirretty = kaavaFromResponse(laskentakaavaResource.siirra(siirrettava, request));
         tarkistaFunktiokutsunNimi(siirretty);
         tarkistaFunktiokutsunNimi(laskentakaavaResource.kaava(siirretty.getId(), true));
         final List<LaskentakaavaListDTO> kaavatUudellaValintaryhmalla = laskentakaavaResource.kaavat(false, "oid2", null, null);

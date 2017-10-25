@@ -1,12 +1,5 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
-import java.util.List;
-import java.util.Set;
-
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaDTO;
 import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
@@ -17,6 +10,22 @@ import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaListDTO;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.util.List;
+import java.util.Set;
+
 @Path("valintaryhma")
 public interface ValintaryhmaResource {
 
@@ -26,7 +35,7 @@ public interface ValintaryhmaResource {
 
     @DELETE
     @Path("/{oid}")
-    Response delete(@PathParam("oid") String oid);
+    Response delete(@PathParam("oid") String oid, @Context HttpServletRequest request);
 
     @GET
     @Path("/{oid}")
@@ -62,28 +71,28 @@ public interface ValintaryhmaResource {
     @Path("/{parentOid}/lapsi")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Response insertChild(@PathParam("parentOid") String parentOid, ValintaryhmaCreateDTO valintaryhma);
+    Response insertChild(@PathParam("parentOid") String parentOid, ValintaryhmaCreateDTO valintaryhma, @Context HttpServletRequest request);
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Response insert(ValintaryhmaCreateDTO valintaryhma);
+    Response insert(ValintaryhmaCreateDTO valintaryhma, @Context HttpServletRequest request);
 
     @POST
     @Path("/{oid}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Response update(@PathParam("oid") String oid, ValintaryhmaCreateDTO valintaryhma);
+    Response update(@PathParam("oid") String oid, ValintaryhmaCreateDTO valintaryhma, @Context HttpServletRequest request);
 
     @PUT
     @Path("/{oid}/kopioiLapseksi")
     @Produces(MediaType.APPLICATION_JSON)
-    Response copyAsChild(@PathParam("oid") String oid, @QueryParam("lahdeOid") String lahdeOid, @QueryParam("nimi") String nimi);
+    Response copyAsChild(@PathParam("oid") String oid, @QueryParam("lahdeOid") String lahdeOid, @QueryParam("nimi") String nimi, @Context HttpServletRequest request);
 
     @PUT
     @Path("/kopioiJuureen")
     @Produces(MediaType.APPLICATION_JSON)
-    Response copyToRoot(@QueryParam("lahdeOid") String lahdeOid, @QueryParam("nimi") String nimi);
+    Response copyToRoot(@QueryParam("lahdeOid") String lahdeOid, @QueryParam("nimi") String nimi, @Context HttpServletRequest request);
 
     @POST
     @Path("/{valintaryhmaOid}/valinnanvaihe")
@@ -91,35 +100,35 @@ public interface ValintaryhmaResource {
     @Produces(MediaType.APPLICATION_JSON)
     Response insertValinnanvaihe(@PathParam("valintaryhmaOid") String valintaryhmaOid,
                                  @QueryParam("edellinenValinnanVaiheOid") String edellinenValinnanVaiheOid,
-                                 ValinnanVaiheCreateDTO valinnanVaihe);
+                                 ValinnanVaiheCreateDTO valinnanVaihe, @Context HttpServletRequest request);
 
     @PUT
     @Path("/{valintaryhmaOid}/hakijaryhma")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Response insertHakijaryhma(@PathParam("valintaryhmaOid") String valintaryhamOid, HakijaryhmaCreateDTO hakijaryhma);
+    Response insertHakijaryhma(@PathParam("valintaryhmaOid") String valintaryhamOid, HakijaryhmaCreateDTO hakijaryhma, @Context HttpServletRequest request);
 
     @POST
     @Path("/{valintaryhmaOid}/hakukohdekoodi")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Response updateHakukohdekoodi(@PathParam("valintaryhmaOid") String valintaryhmaOid, Set<KoodiDTO> hakukohdekoodit);
+    Response updateHakukohdekoodi(@PathParam("valintaryhmaOid") String valintaryhmaOid, Set<KoodiDTO> hakukohdekoodit, @Context HttpServletRequest request);
 
     @PUT
     @Path("/{valintaryhmaOid}/hakukohdekoodi")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Response insertHakukohdekoodi(@PathParam("valintaryhmaOid") String valintaryhamOid, KoodiDTO hakukohdekoodi);
+    Response insertHakukohdekoodi(@PathParam("valintaryhmaOid") String valintaryhamOid, KoodiDTO hakukohdekoodi, @Context HttpServletRequest request);
 
     @POST
     @Path("/{valintaryhmaOid}/valintakoekoodi")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Response updateValintakoekoodi(@PathParam("valintaryhmaOid") String valintaryhmaOid, List<KoodiDTO> valintakoekoodit);
+    Response updateValintakoekoodi(@PathParam("valintaryhmaOid") String valintaryhmaOid, List<KoodiDTO> valintakoekoodit, @Context HttpServletRequest request);
 
     @PUT
     @Path("/{valintaryhmaOid}/valintakoekoodi")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Response insertValintakoekoodi(@PathParam("valintaryhmaOid") String valintaryhamOid, KoodiDTO valintakoekoodi);
+    Response insertValintakoekoodi(@PathParam("valintaryhmaOid") String valintaryhamOid, KoodiDTO valintakoekoodi, @Context HttpServletRequest request);
 }

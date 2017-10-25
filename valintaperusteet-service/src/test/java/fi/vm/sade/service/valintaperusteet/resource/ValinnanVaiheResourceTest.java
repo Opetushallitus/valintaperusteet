@@ -1,11 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheDTO;
@@ -21,6 +16,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -29,12 +25,15 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static org.junit.Assert.*;
 
 /**
  * User: tommiha Date: 1/23/13 Time: 1:03 PM
@@ -79,25 +78,31 @@ public class ValinnanVaiheResourceTest {
 
     @Test
     public void testUpdate() throws IOException {
+        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+
         ValinnanVaiheDTO vaihe = vaiheResource.read("1");
 
-        ValinnanVaiheDTO vaihe1 = vaiheResource.update(vaihe.getOid(), vaihe);
+        ValinnanVaiheDTO vaihe1 = vaiheResource.update(vaihe.getOid(), vaihe, request);
         mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(vaihe1);
     }
 
     @Test
     public void testInsertValintatapajono() {
+        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+
         ValintatapajonoDTO jono = new ValintatapajonoDTO();
-        Response insert = vaiheResource.addJonoToValinnanVaihe("1", jono);
+        Response insert = vaiheResource.addJonoToValinnanVaihe("1", jono, request);
         assertEquals(500, insert.getStatus());
 
         jono = newJono();
-        insert = vaiheResource.addJonoToValinnanVaihe("1", jono);
+        insert = vaiheResource.addJonoToValinnanVaihe("1", jono, request);
         assertEquals(201, insert.getStatus());
     }
 
     @Test
     public void testInsertValintakoe() {
+        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+
         final String valinnanVaiheOid = "83";
         final Long laskentakaavaId = 101L;
 
@@ -110,13 +115,14 @@ public class ValinnanVaiheResourceTest {
         valintakoe.setKutsutaankoKaikki(false);
         valintakoe.setKutsunKohde(Koekutsu.YLIN_TOIVE);
 
-        Response response = vaiheResource.addValintakoeToValinnanVaihe(valinnanVaiheOid, valintakoe);
+        Response response = vaiheResource.addValintakoeToValinnanVaihe(valinnanVaiheOid, valintakoe, request);
         assertEquals(201, response.getStatus());
 
     }
 
     @Test
     public void testInsertValintakoeWithExistingTunniste() {
+        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
 
         final String valinnanVaiheOid = "83";
         final Long laskentakaavaId = 101L;
@@ -130,23 +136,25 @@ public class ValinnanVaiheResourceTest {
         valintakoe.setKutsutaankoKaikki(false);
         valintakoe.setKutsunKohde(Koekutsu.YLIN_TOIVE);
 
-        Response response = vaiheResource.addValintakoeToValinnanVaihe(valinnanVaiheOid, valintakoe);
+        Response response = vaiheResource.addValintakoeToValinnanVaihe(valinnanVaiheOid, valintakoe, request);
         assertEquals(500, response.getStatus());
 
     }
 
     @Test
     public void testDelete() {
-        Response delete = vaiheResource.delete("4");
+        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        Response delete = vaiheResource.delete("4", request);
         assertEquals(Response.Status.ACCEPTED.getStatusCode(), delete.getStatus());
     }
 
     @Test
     public void testDeleteOidNotFound() {
         boolean caughtOne = false;
+        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
 
         try {
-            vaiheResource.delete("");
+            vaiheResource.delete("", request);
         } catch (WebApplicationException e) {
             caughtOne = true;
             assertEquals(404, e.getResponse().getStatus());
@@ -157,10 +165,11 @@ public class ValinnanVaiheResourceTest {
 
     @Test
     public void testDeleteInherited() {
+        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
         ValinnanVaiheDTO read = vaiheResource.read("32");
 
         assertNotNull(read);
-        Response delete = vaiheResource.delete("32");
+        Response delete = vaiheResource.delete("32", request);
         assertEquals(Response.Status.ACCEPTED.getStatusCode(), delete.getStatus());
 
         try {
@@ -173,12 +182,13 @@ public class ValinnanVaiheResourceTest {
 
     @Test
     public void testChildrenAreDeleted() {
+        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
 
         ValinnanVaiheDTO read = vaiheResource.read("79");
 
         assertNotNull(read);
         // objekti on peritty
-        Response delete = vaiheResource.delete("75");
+        Response delete = vaiheResource.delete("75", request);
         assertEquals(Response.Status.ACCEPTED.getStatusCode(), delete.getStatus());
 
         try {
@@ -191,6 +201,8 @@ public class ValinnanVaiheResourceTest {
 
     @Test
     public void testJarjesta() {
+        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+
         List<ValinnanVaiheDTO> valinnanVaiheList = hakuResource.valinnanVaihesForHakukohde("oid6", "false");
         List<String> oids = new ArrayList<String>();
 
@@ -201,7 +213,7 @@ public class ValinnanVaiheResourceTest {
         assertEquals("4", oids.get(0));
         assertEquals("6", oids.get(2));
         Collections.reverse(oids);
-        List<ValinnanVaiheDTO> jarjesta = vaiheResource.jarjesta(oids);
+        List<ValinnanVaiheDTO> jarjesta = vaiheResource.jarjesta(oids, request);
         assertEquals("6", jarjesta.get(0).getOid());
         assertEquals("4", jarjesta.get(2).getOid());
         jarjesta = hakuResource.valinnanVaihesForHakukohde("oid6", "false");
@@ -211,6 +223,8 @@ public class ValinnanVaiheResourceTest {
 
     @Test(expected = RuntimeException.class)
     public void testJarjestaEriHakuvaiheita() {
+        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+
         List<String> oids = new ArrayList<String>();
 
         oids.add("4");
@@ -219,7 +233,7 @@ public class ValinnanVaiheResourceTest {
 
         oids.add("1");
 
-        vaiheResource.jarjesta(oids);
+        vaiheResource.jarjesta(oids, request);
     }
 
     private ValintatapajonoDTO newJono() {

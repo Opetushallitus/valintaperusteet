@@ -5,18 +5,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
-import fi.vm.sade.service.valintaperusteet.dto.HakukohdeInsertDTO;
-import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
-import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriDTO;
-import fi.vm.sade.service.valintaperusteet.dto.KoodiDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
+import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.resource.impl.HakukohdeResourceImpl;
@@ -24,6 +16,7 @@ import fi.vm.sade.service.valintaperusteet.util.TestUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -33,8 +26,11 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
 import javax.ws.rs.WebApplicationException;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
 import java.util.List;
+
+import static org.junit.Assert.*;
 
 /**
  * User: jukais Date: 16.1.2013 Time: 14.15
@@ -45,6 +41,8 @@ import java.util.List;
 @RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data.xml")
 public class HakukohdeResourceTest {
+    HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+
 
     private HakukohdeResourceImpl hakukohdeResource = new HakukohdeResourceImpl();
     private TestUtil testUtil = new TestUtil(HakukohdeResourceTest.class);
@@ -86,7 +84,7 @@ public class HakukohdeResourceTest {
     @Test
     public void testInsertNull() throws Exception {
         HakukohdeViiteDTO valintaryhma = new HakukohdeViiteDTO();
-        Response insert = hakukohdeResource.insert(new HakukohdeInsertDTO(valintaryhma, null));
+        Response insert = hakukohdeResource.insert(new HakukohdeInsertDTO(valintaryhma, null), request);
         assertEquals(500, insert.getStatus());
 
     }
@@ -98,7 +96,7 @@ public class HakukohdeResourceTest {
         hakukohdeDTO.setOid("uusi oid");
         hakukohdeDTO.setHakuoid("hakuoid");
 
-        Response insert = hakukohdeResource.insert(new HakukohdeInsertDTO(hakukohdeDTO, "oid1"));
+        Response insert = hakukohdeResource.insert(new HakukohdeInsertDTO(hakukohdeDTO, "oid1"), request);
         assertEquals(201, insert.getStatus());
 
         testUtil.lazyCheck(JsonViews.Basic.class, insert.getEntity());
@@ -111,7 +109,7 @@ public class HakukohdeResourceTest {
         hakukohdeDto.setOid("uusi oid");
         hakukohdeDto.setHakuoid("hakuoid");
 
-        Response insert = hakukohdeResource.insert(new HakukohdeInsertDTO(hakukohdeDto, null));
+        Response insert = hakukohdeResource.insert(new HakukohdeInsertDTO(hakukohdeDto, null), request);
         assertEquals(201, insert.getStatus());
 
         testUtil.lazyCheck(JsonViews.Basic.class, insert.getEntity());
@@ -122,7 +120,7 @@ public class HakukohdeResourceTest {
         HakukohdeViiteDTO hakukohde = new HakukohdeViiteDTO();
         hakukohde.setNimi("Uusi valintaryhmä");
         hakukohde.setOid("oid1");
-        Response insert = hakukohdeResource.insert(new HakukohdeInsertDTO(hakukohde, null));
+        Response insert = hakukohdeResource.insert(new HakukohdeInsertDTO(hakukohde, null), request);
         assertEquals(500, insert.getStatus());
         testUtil.lazyCheck(JsonViews.Basic.class, insert.getEntity());
     }
@@ -148,7 +146,7 @@ public class HakukohdeResourceTest {
         final String json = mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(hkv);
         HakukohdeViiteCreateDTO fromJson = mapper.readValue(json, HakukohdeViiteCreateDTO.class);
 
-        hakukohdeResource.update(hkv.getOid(), fromJson);
+        hakukohdeResource.update(hkv.getOid(), fromJson, request);
 
         hkv = hakukohdeResource.queryFull("oid1");
         assertEquals("muokattu", hkv.getNimi());
@@ -197,7 +195,7 @@ public class HakukohdeResourceTest {
         valinnanVaihe
                 .setValinnanVaiheTyyppi(fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi.TAVALLINEN);
 
-        Response response = hakukohdeResource.insertValinnanvaihe("oid1", null, valinnanVaihe);
+        Response response = hakukohdeResource.insertValinnanvaihe("oid1", null, valinnanVaihe, request);
         assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
         ValinnanVaiheDTO vv = (ValinnanVaiheDTO) response.getEntity();
 
@@ -207,7 +205,7 @@ public class HakukohdeResourceTest {
         valinnanVaihe
                 .setValinnanVaiheTyyppi(fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi.TAVALLINEN);
 
-        response = hakukohdeResource.insertValinnanvaihe("oid1", vv.getOid(), valinnanVaihe);
+        response = hakukohdeResource.insertValinnanvaihe("oid1", vv.getOid(), valinnanVaihe, request);
         assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
 
     }
@@ -235,7 +233,7 @@ public class HakukohdeResourceTest {
         KoodiDTO hakukohdekoodi = new KoodiDTO();
         hakukohdekoodi.setUri(URI);
         hakukohdekoodi.setArvo(ARVO);
-        Response response = hakukohdeResource.insertHakukohdekoodi("oid1", hakukohdekoodi);
+        Response response = hakukohdeResource.insertHakukohdekoodi("oid1", hakukohdekoodi, request);
         assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
 
         HakukohdeViiteDTO oid1 = hakukohdeResource.queryFull("oid1");
@@ -250,7 +248,7 @@ public class HakukohdeResourceTest {
         uusikoodi.setUri(URI2);
         uusikoodi.setArvo(ARVO);
 
-        response = hakukohdeResource.updateHakukohdekoodi("oid1", uusikoodi);
+        response = hakukohdeResource.updateHakukohdekoodi("oid1", uusikoodi, request);
         assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
 
         oid1 = hakukohdeResource.queryFull("oid1");
@@ -263,7 +261,7 @@ public class HakukohdeResourceTest {
         final String valintaryhmaOid = "oid54";
         final String hakukohdeOid = "oid18";
 
-        Response response = hakukohdeResource.siirraHakukohdeValintaryhmaan(hakukohdeOid, valintaryhmaOid);
+        Response response = hakukohdeResource.siirraHakukohdeValintaryhmaan(hakukohdeOid, valintaryhmaOid, request);
         assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
 
         HakukohdeViiteDTO hakukohde = (HakukohdeViiteDTO) response.getEntity();

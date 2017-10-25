@@ -1,0 +1,17 @@
+package fi.vm.sade.service.valintaperusteet.util;
+
+public enum ValintaResource {
+    KOOSTE,
+    LASKENTA,
+    SIJOITTELU,
+    VALINTAPERUSTEET,
+    JARJESTYSKRITEERIT,
+    HAKIJARYHMA_VALINTATAPAJONO,
+    LASKENTAKAAVA,
+    VALINTARYHMA,
+    HAKIJARYHMA,
+    HAKUKOHDE,
+    VALINTATAPAJONO,
+    VALINNANVAIHE,
+    VALINTAKOE
+}

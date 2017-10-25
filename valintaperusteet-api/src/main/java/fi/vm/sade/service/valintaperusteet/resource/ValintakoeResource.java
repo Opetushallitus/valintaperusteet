@@ -1,18 +1,13 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
-import java.util.List;
+import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
+import java.util.List;
 
 @Path("valintakoe")
 public interface ValintakoeResource {
@@ -32,9 +27,9 @@ public interface ValintakoeResource {
     @Path("/{oid}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Response update(@PathParam("oid") String oid, ValintakoeDTO valintakoe);
+    Response update(@PathParam("oid") String oid, ValintakoeDTO valintakoe, @Context HttpServletRequest request);
 
     @DELETE
     @Path("/{oid}")
-    Response delete(@PathParam("oid") String oid);
+    Response delete(@PathParam("oid") String oid, @Context HttpServletRequest request);
 }

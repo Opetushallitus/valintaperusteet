@@ -1,6 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.resource.impl;
 
-import fi.vm.sade.auditlog.valintaperusteet.ValintaperusteetOperation;
+import com.google.common.collect.ImmutableMap;
+import fi.vm.sade.auditlog.Changes;
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
@@ -13,37 +14,25 @@ import fi.vm.sade.service.valintaperusteet.service.ValintakoeService;
 import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaaEiVoiPoistaaException;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import fi.vm.sade.generic.AuditLog;
+import fi.vm.sade.service.valintaperusteet.util.ValintaResource;
+import fi.vm.sade.service.valintaperusteet.util.ValintaperusteetOperation;
+import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
-import static fi.vm.sade.auditlog.valintaperusteet.LogMessage.builder;
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
-import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.AUDIT;
-import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.username;
 
 @Component
 @Path("hakijaryhma_valintatapajono")
@@ -85,14 +74,19 @@ public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValint
     @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Poistaa hakijaryhmän ja valintatapajonon välisen liitoksen")
     @ApiResponses(value = {@ApiResponse(code = 403, message = "Liitosta ei voida poistaa, esim. se on peritty"),})
-    public Response poistaHakijaryhma(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
+    public Response poistaHakijaryhma(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid, @Context HttpServletRequest request) {
         try {
             hakijaryhmaValintatapajonoService.deleteByOid(oid, false);
+            Changes changes = new Changes.Builder()
+                    .removed("HAKIJARYHMA_VALINTATAPAJONO_LIITOS", oid).build();
+            AuditLog.log(ValintaperusteetOperation.HAKIJARYHMA_VALINTATAPAJONO_LIITOS_POISTO, ValintaResource.HAKIJARYHMA_VALINTATAPAJONO, oid, changes, request);
+            /*
             AUDIT.log(builder()
                     .id(username())
                     .hakijaryhmaOid(oid)
                     .setOperaatio(ValintaperusteetOperation.HAKIJARYHMA_VALINTATAPAJONO_LIITOS_POISTO)
                     .build());
+            */
             return Response.status(Response.Status.OK).build();
         } catch (HakijaryhmaaEiVoiPoistaaException e) {
             throw new WebApplicationException(e, Response.Status.FORBIDDEN);
@@ -114,9 +108,12 @@ public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValint
     @ApiResponses(value = {@ApiResponse(code = 404, message = "Liitosta ei ole olemassa"),})
     public Response update(
             @ApiParam(value = "Päivitettävän liitoksen OID", required = true) @PathParam("oid") String oid,
-            @ApiParam(value = "Liitoksen uudet tiedot", required = true) HakijaryhmaValintatapajonoDTO jono) {
+            @ApiParam(value = "Liitoksen uudet tiedot", required = true) HakijaryhmaValintatapajonoDTO jono, @Context HttpServletRequest request) {
         try {
-            HakijaryhmaValintatapajonoDTO update = modelMapper.map(hakijaryhmaValintatapajonoService.update(oid, jono), HakijaryhmaValintatapajonoDTO.class);
+            HakijaryhmaValintatapajonoDTO beforeUpdate = modelMapper.map(hakijaryhmaValintatapajonoService.readByOid(oid), HakijaryhmaValintatapajonoDTO.class);
+            HakijaryhmaValintatapajonoDTO afterUpdate = modelMapper.map(hakijaryhmaValintatapajonoService.update(oid, jono), HakijaryhmaValintatapajonoDTO.class);
+            AuditLog.log(ValintaperusteetOperation.HAKIJARYHMA_VALINTATAPAJONO_LIITOS_PAIVITYS, ValintaResource.HAKIJARYHMA_VALINTATAPAJONO, oid, afterUpdate, beforeUpdate, request);
+            /*
             AUDIT.log(builder()
                     .id(username())
                     .hakijaryhmaValintatapajonoOid(update.getOid())
@@ -127,7 +124,8 @@ public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValint
                     .add("prioriteetti", update.getPrioriteetti())
                     .setOperaatio(ValintaperusteetOperation.HAKIJARYHMA_VALINTATAPAJONO_LIITOS_PAIVITYS)
                     .build());
-            return Response.status(Response.Status.ACCEPTED).entity(update).build();
+            */
+            return Response.status(Response.Status.ACCEPTED).entity(afterUpdate).build();
         } catch (HakijaryhmaEiOleOlemassaException e) {
             throw new WebApplicationException(e, Response.Status.NOT_FOUND);
         }
@@ -139,13 +137,22 @@ public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValint
     @Path("/jarjesta")
     @PreAuthorize(UPDATE_CRUD)
     @ApiOperation(value = "Järjestää valintatapajonon hakijaryhmät annetun OID-listan mukaan", response = ValintatapajonoDTO.class)
-    public List<HakijaryhmaValintatapajonoDTO> jarjesta(@ApiParam(value = "OID-lista jonka mukaiseen järjestykseen valintatapajonon hakijaryhmät järjestetään", required = true) List<String> oids) {
+    public List<HakijaryhmaValintatapajonoDTO> jarjesta(@ApiParam(value = "OID-lista jonka mukaiseen järjestykseen valintatapajonon hakijaryhmät järjestetään", required = true) List<String> oids, @Context HttpServletRequest request) {
         List<HakijaryhmaValintatapajono> j = hakijaryhmaValintatapajonoService.jarjestaHakijaryhmat(oids);
+
+        //For AuditLog
+        String targetOid = "unknown";
+        if(!j.isEmpty()) { targetOid = j.get(0).getHakukohdeViite().getOid(); }
+        Map sortedOids = ImmutableMap.of("Oids", Optional.ofNullable(oids).map(List::toArray).map(Arrays::toString).orElse(null));
+        AuditLog.log(ValintaperusteetOperation.VALINTATAPAJONO_HAKIJARYHMAT_JARJESTA, ValintaResource.HAKIJARYHMA_VALINTATAPAJONO, targetOid,
+                null, null, request, sortedOids);
+        /*
         AUDIT.log(builder()
                 .id(username())
                 .add("valintatapajonooids", Optional.ofNullable(oids).map(List::toArray).map(Arrays::toString).orElse(null))
                 .setOperaatio(ValintaperusteetOperation.HAKIJARYHMA_VALINTATAPAJONO_LIITOS_PAIVITYS)
                 .build());
+        */
         return modelMapper.mapList(j, HakijaryhmaValintatapajonoDTO.class);
     }
 }

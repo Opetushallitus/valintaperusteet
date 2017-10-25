@@ -3,10 +3,70 @@ package fi.vm.sade.service.valintaperusteet.resource.impl;
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD;
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
+import com.google.common.collect.ImmutableMap;
 
+import fi.vm.sade.generic.AuditLog;
+import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
+import fi.vm.sade.service.valintaperusteet.dto.ErrorDTO;
+import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaDTO;
+import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaValintatapajonoDTO;
+import fi.vm.sade.service.valintaperusteet.dto.HakukohdeInsertDTO;
+import fi.vm.sade.service.valintaperusteet.dto.HakukohdeJaLinkitettyHakijaryhmaValintatapajonoDTO;
+import fi.vm.sade.service.valintaperusteet.dto.HakukohdeJaValinnanVaiheDTO;
+import fi.vm.sade.service.valintaperusteet.dto.HakukohdeJaValintakoeDTO;
+import fi.vm.sade.service.valintaperusteet.dto.HakukohdeJaValintaperusteDTO;
+import fi.vm.sade.service.valintaperusteet.dto.HakukohdeJaValintaryhmaDTO;
+import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
+import fi.vm.sade.service.valintaperusteet.dto.HakukohteenValintaperusteAvaimetDTO;
+import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriDTO;
+import fi.vm.sade.service.valintaperusteet.dto.KoodiDTO;
+import fi.vm.sade.service.valintaperusteet.dto.LinkitettyHakijaryhmaValintatapajonoDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheJaPrioriteettiDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheJonoillaDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
+import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
+import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
+import fi.vm.sade.service.valintaperusteet.model.HakukohteenValintaperuste;
+import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
+import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
+import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
+import fi.vm.sade.service.valintaperusteet.resource.ValintaryhmaResource;
+import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaService;
+import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaValintatapajonoService;
+import fi.vm.sade.service.valintaperusteet.service.HakukohdeService;
+import fi.vm.sade.service.valintaperusteet.service.HakukohdekoodiService;
+import fi.vm.sade.service.valintaperusteet.service.JarjestyskriteeriService;
+import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
+import fi.vm.sade.service.valintaperusteet.service.OidService;
+import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
+import fi.vm.sade.service.valintaperusteet.service.ValintakoeService;
+import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
+import fi.vm.sade.service.valintaperusteet.service.exception.HakukohdeViiteEiOleOlemassaException;
+import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaOidTyhjaException;
+import fi.vm.sade.service.valintaperusteet.util.ValintaResource;
+import fi.vm.sade.service.valintaperusteet.util.ValintaperusteetOperation;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -17,35 +77,18 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
-import fi.vm.sade.service.valintaperusteet.dto.*;
-import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
-import fi.vm.sade.service.valintaperusteet.model.*;
-import fi.vm.sade.service.valintaperusteet.service.*;
-
-import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaOidTyhjaException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Component;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-
-import fi.vm.sade.service.valintaperusteet.resource.ValintaryhmaResource;
-import fi.vm.sade.service.valintaperusteet.service.exception.HakukohdeViiteEiOleOlemassaException;
-import org.springframework.transaction.annotation.Transactional;
-
-import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.*;
-import static fi.vm.sade.auditlog.valintaperusteet.LogMessage.builder;
-import fi.vm.sade.auditlog.valintaperusteet.ValintaperusteetOperation;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 @Path("hakukohde")
@@ -188,9 +231,11 @@ public class HakukohdeResourceImpl {
     @Produces(MediaType.APPLICATION_JSON)
     @PreAuthorize(CRUD)
     @ApiOperation(value = "Lisää hakukohteen valintaryhmään (tai juureen, jos valintaryhmän OID:a ei ole annettu)")
-    public Response insert(@ApiParam(value = "Lisättävä hakukohde ja valintaryhmä", required = true) HakukohdeInsertDTO hakukohde) {
+    public Response insert(@ApiParam(value = "Lisättävä hakukohde ja valintaryhmä", required = true) HakukohdeInsertDTO hakukohde, @Context HttpServletRequest request) {
         try {
             HakukohdeViiteDTO hkv = modelMapper.map(hakukohdeService.insert(hakukohde.getHakukohde(), hakukohde.getValintaryhmaOid()), HakukohdeViiteDTO.class);
+            AuditLog.log(ValintaperusteetOperation.HAKUKOHDE_LISAYS_VALINTARYHMA, ValintaResource.HAKUKOHDE, hakukohde.getHakukohde().getHakuoid(), hkv, null, request );
+            /*
             AUDIT.log(builder()
                     .id(username())
                     .hakuOid(hkv.getHakuoid())
@@ -201,6 +246,7 @@ public class HakukohdeResourceImpl {
                     .tarjoajaOid(hkv.getTarjoajaOid())
                     .setOperaatio(ValintaperusteetOperation.HAKUKOHDE_LISAYS_VALINTARYHMA)
                     .build());
+            */
             return Response.status(Response.Status.CREATED).entity(hkv).build();
         } catch (Exception e) {
             LOG.warn("Hakukohdetta ei saatu lisättyä", e);
@@ -216,9 +262,12 @@ public class HakukohdeResourceImpl {
     @ApiOperation(value = "Päivittää hakukohdetta OID:n perusteella")
     public Response update(
             @ApiParam(value = "Päivitettävän hakukohteen OID", required = true) @PathParam("oid") String oid,
-            @ApiParam(value = "hakukohteen uudet tiedot", required = true) HakukohdeViiteCreateDTO hakukohdeViite) {
+            @ApiParam(value = "hakukohteen uudet tiedot", required = true) HakukohdeViiteCreateDTO hakukohdeViite, @Context HttpServletRequest request) {
         try {
+            HakukohdeViiteDTO old = modelMapper.map(hakukohdeService.readByOid(oid), HakukohdeViiteDTO.class);
             HakukohdeViiteDTO hkv = modelMapper.map(hakukohdeService.update(oid, hakukohdeViite), HakukohdeViiteDTO.class);
+            AuditLog.log(ValintaperusteetOperation.HAKUKOHDE_PAIVITYS, ValintaResource.HAKUKOHDE, oid, hkv, old, request);
+            /*
             AUDIT.log(builder()
                     .id(username())
                     .hakuOid(hkv.getHakuoid())
@@ -229,6 +278,7 @@ public class HakukohdeResourceImpl {
                     .tarjoajaOid(hkv.getTarjoajaOid())
                     .setOperaatio(ValintaperusteetOperation.HAKUKOHDE_PAIVITYS)
                     .build());
+            */
             return Response.status(Response.Status.ACCEPTED).entity(hkv).build();
         } catch (Exception e) {
             LOG.warn("Hakukohdetta ei saatu päivitettyä. ", e);
@@ -421,7 +471,7 @@ public class HakukohdeResourceImpl {
             return new HakukohdeJaLinkitettyHakijaryhmaValintatapajonoDTO(hakukohdeOid, hakukohteenHakijaryhmat);
         }).filter(hakukohde -> !hakukohde.getHakijaryhmat().isEmpty()).collect(Collectors.toList());
     }
-    
+
     @GET
     @Path("/{oid}/laskentakaava")
     @Produces(MediaType.APPLICATION_JSON)
@@ -471,9 +521,11 @@ public class HakukohdeResourceImpl {
     public Response insertValinnanvaihe(
             @ApiParam(value = "Hakukohteen OID", required = true) @PathParam("hakukohdeOid") String hakukohdeOid,
             @ApiParam(value = "Edellisen valinnan vaiheen OID (jos valinnan vaihe halutaa lisätä tietyn vaiheen jälkeen, muussa tapauksessa uusi vaihe lisätään viimeiseksi)") @QueryParam("edellinenValinnanVaiheOid") String edellinenValinnanVaiheOid,
-            @ApiParam(value = "Uusi valinnan vaihe", required = true) ValinnanVaiheCreateDTO valinnanVaihe) {
+            @ApiParam(value = "Uusi valinnan vaihe", required = true) ValinnanVaiheCreateDTO valinnanVaihe, @Context HttpServletRequest request) {
         try {
             ValinnanVaiheDTO lisatty = modelMapper.map(valinnanVaiheService.lisaaValinnanVaiheHakukohteelle(hakukohdeOid, valinnanVaihe, edellinenValinnanVaiheOid), ValinnanVaiheDTO.class);
+            AuditLog.log(ValintaperusteetOperation.HAKUKOHDE_LISAYS_VALINNANVAIHE, ValintaResource.HAKUKOHDE, hakukohdeOid, lisatty, null, request);
+            /*
             AUDIT.log(builder()
                     .id(username())
                     .hakukohdeOid(hakukohdeOid)
@@ -485,6 +537,7 @@ public class HakukohdeResourceImpl {
                     .add("valinnanvaihetyyppi", lisatty.getValinnanVaiheTyyppi())
                     .setOperaatio(ValintaperusteetOperation.HAKUKOHDE_LISAYS_VALINNANVAIHE)
                     .build());
+            */
             return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (Exception e) {
             LOG.error("Error creating valinnanvaihe.", e);
@@ -501,9 +554,11 @@ public class HakukohdeResourceImpl {
     @ApiResponses(@ApiResponse(code = 400, message = "Hakijaryhmän lisääminen epäonnistui"))
     public Response insertHakijaryhma(
             @ApiParam(value = "Hakukohteen OID", required = true) @PathParam("hakukohdeOid") String hakukohdeOid,
-            @ApiParam(value = "Lisättävä hakijaryhmä", required = true) HakijaryhmaCreateDTO hakijaryhma) {
+            @ApiParam(value = "Lisättävä hakijaryhmä", required = true) HakijaryhmaCreateDTO hakijaryhma, @Context HttpServletRequest request) {
         try {
             HakijaryhmaDTO lisatty = modelMapper.map(hakijaryhmaValintatapajonoService.lisaaHakijaryhmaHakukohteelle(hakukohdeOid, hakijaryhma), HakijaryhmaDTO.class);
+            AuditLog.log(ValintaperusteetOperation.HAKUKOHDE_LISAYS_HAKIJARYHMA, ValintaResource.HAKUKOHDE, hakukohdeOid, lisatty, null, request);
+            /*
             AUDIT.log(builder()
                     .id(username())
                     .hakukohdeOid(hakukohdeOid)
@@ -514,6 +569,7 @@ public class HakukohdeResourceImpl {
                     .add("laskentakaavaid", lisatty.getLaskentakaavaId())
                     .setOperaatio(ValintaperusteetOperation.HAKUKOHDE_LISAYS_HAKIJARYHMA)
                     .build());
+            */
             return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (LaskentakaavaOidTyhjaException e) {
             LOG.warn("Error creating hakijaryhma for hakukohde: " + e.toString());
@@ -534,15 +590,18 @@ public class HakukohdeResourceImpl {
     @ApiOperation(value = "Liittää hakijaryhmän hakukohteelle")
     public Response liitaHakijaryhma(
             @ApiParam(value = "Hakukohteen OID, jolle hakijaryhmä liitetään", required = true) @PathParam("hakukohdeOid") String hakukohdeOid,
-            @ApiParam(value = "Hakijaryhmän OID, joka valintatapajonoon liitetään", required = true) @PathParam("hakijaryhmaOid") String hakijaryhmaOid) {
+            @ApiParam(value = "Hakijaryhmän OID, joka valintatapajonoon liitetään", required = true) @PathParam("hakijaryhmaOid") String hakijaryhmaOid, @Context HttpServletRequest request) {
         try {
             hakijaryhmaValintatapajonoService.liitaHakijaryhmaHakukohteelle(hakukohdeOid, hakijaryhmaOid);
+            AuditLog.log(ValintaperusteetOperation.HAKUKOHDE_LIITOS_HAKIJARYHMA, ValintaResource.HAKUKOHDE, hakukohdeOid, null, null, request, ImmutableMap.of("liitettavaHakijaryhmaOid", hakijaryhmaOid));
+            /*
             AUDIT.log(builder()
                     .id(username())
                     .hakukohdeOid(hakukohdeOid)
                     .hakijaryhmaOid(hakijaryhmaOid)
                     .setOperaatio(ValintaperusteetOperation.HAKUKOHDE_LIITOS_HAKIJARYHMA)
                     .build());
+            */
             return Response.status(Response.Status.ACCEPTED).build();
         } catch (Exception e) {
             LOG.error("Error linking hakijaryhma.", e);
@@ -561,9 +620,12 @@ public class HakukohdeResourceImpl {
     @ApiResponses(@ApiResponse(code = 400, message = "Päivittäminen epäonnistui"))
     public Response updateHakukohdekoodi(
             @ApiParam(value = "Hakukohde OID", required = true) @PathParam("hakukohdeOid") String hakukohdeOid,
-            @ApiParam(value = "Lisättävä hakukohdekoodi", required = true) KoodiDTO hakukohdekoodi) {
+            @ApiParam(value = "Lisättävä hakukohdekoodi", required = true) KoodiDTO hakukohdekoodi, @Context HttpServletRequest request) {
         try {
             KoodiDTO lisatty = modelMapper.map(hakukohdekoodiService.updateHakukohdeHakukohdekoodi(hakukohdeOid, hakukohdekoodi), KoodiDTO.class);
+            AuditLog.log(ValintaperusteetOperation.HAKUKOHDE_HAKUKOHDEKOODI_PAIVITYS, ValintaResource.HAKUKOHDE, hakukohdeOid, lisatty, null, request);
+
+            /*
             AUDIT.log(builder()
                     .id(username())
                     .hakukohdeOid(hakukohdeOid)
@@ -574,6 +636,7 @@ public class HakukohdeResourceImpl {
                     .add("uri", lisatty.getUri())
                     .setOperaatio(ValintaperusteetOperation.HAKUKOHDE_HAKUKOHDEKOODI_PAIVITYS)
                     .build());
+            */
             return Response.status(Response.Status.ACCEPTED).entity(lisatty).build();
         } catch (Exception e) {
             LOG.error("Error updating hakukohdekoodit.", e);
@@ -590,9 +653,11 @@ public class HakukohdeResourceImpl {
     @ApiResponses(@ApiResponse(code = 400, message = "Lisääminen epäonnistui"))
     public Response insertHakukohdekoodi(
             @ApiParam(value = "Hakukohde OID", required = true) @PathParam("hakukohdeOid") String hakukohdeOid,
-            @ApiParam(value = "Lisättävä hakukohdekoodi", required = true) KoodiDTO hakukohdekoodi) {
+            @ApiParam(value = "Lisättävä hakukohdekoodi", required = true) KoodiDTO hakukohdekoodi, @Context HttpServletRequest request) {
         try {
             KoodiDTO lisatty = modelMapper.map(hakukohdekoodiService.lisaaHakukohdekoodiHakukohde(hakukohdeOid, hakukohdekoodi), KoodiDTO.class);
+            AuditLog.log(ValintaperusteetOperation.HAKUKOHDE_LISAYS_HAKUKOHDEKOODI, ValintaResource.HAKUKOHDE, hakukohdeOid, lisatty, null, request);
+            /*
             AUDIT.log(builder()
                     .id(username())
                     .hakukohdeOid(hakukohdeOid)
@@ -603,6 +668,7 @@ public class HakukohdeResourceImpl {
                     .add("uri", lisatty.getUri())
                     .setOperaatio(ValintaperusteetOperation.HAKUKOHDE_LISAYS_HAKUKOHDEKOODI)
                     .build());
+            */
             return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (Exception e) {
             LOG.error("Error inserting hakukohdekoodi.", e);
@@ -622,6 +688,7 @@ public class HakukohdeResourceImpl {
             @ApiParam(value = "Uuden valintaryhmän OID") String valintaryhmaOid) {
         try {
             HakukohdeViiteDTO hakukohde = modelMapper.map(hakukohdeService.siirraHakukohdeValintaryhmaan(hakukohdeOid, valintaryhmaOid, true), HakukohdeViiteDTO.class);
+            /*
             AUDIT.log(builder()
                     .id(username())
                     .hakuOid(hakukohde.getHakuoid())
@@ -632,6 +699,7 @@ public class HakukohdeResourceImpl {
                     .tarjoajaOid(hakukohde.getTarjoajaOid())
                     .setOperaatio(ValintaperusteetOperation.HAKUKOHDE_SIIRTO_VALINTARYHMAAN)
                     .build());
+            */
             return Response.status(Response.Status.ACCEPTED).entity(hakukohde).build();
         } catch (Exception e) {
             LOG.error("Error moving hakukohde to new valintaryhma.", e);

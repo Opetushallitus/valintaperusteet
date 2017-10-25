@@ -1,49 +1,34 @@
 package fi.vm.sade.service.valintaperusteet.resource.impl;
 
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD;
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
-import fi.vm.sade.service.valintaperusteet.dto.*;
+import com.google.common.collect.ImmutableMap;
+import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaDTO;
+import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaSiirraDTO;
+import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
-import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
-import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
+import fi.vm.sade.service.valintaperusteet.resource.HakijaryhmaResource;
+import fi.vm.sade.service.valintaperusteet.service.*;
+import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaEiOleOlemassaException;
+import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaaEiVoiPoistaaException;
+import fi.vm.sade.generic.AuditLog;
+import fi.vm.sade.service.valintaperusteet.util.ValintaResource;
+import fi.vm.sade.service.valintaperusteet.util.ValintaperusteetOperation;
+import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.util.*;
 
-import fi.vm.sade.service.valintaperusteet.resource.HakijaryhmaResource;
-import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaService;
-import fi.vm.sade.service.valintaperusteet.service.HakijaryhmatyyppikoodiService;
-import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaValintatapajonoService;
-import fi.vm.sade.service.valintaperusteet.service.ValintakoeService;
-import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
-import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaEiOleOlemassaException;
-import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaOidListaOnTyhjaException;
-import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaaEiVoiPoistaaException;
-
-import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.*;
-import static fi.vm.sade.auditlog.valintaperusteet.LogMessage.builder;
-import fi.vm.sade.auditlog.valintaperusteet.ValintaperusteetOperation;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.*;
 
 @Component
 @Path("hakijaryhma")
@@ -94,8 +79,11 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
     @ApiOperation(value = "Päivittää hakijaryhmän", response = HakijaryhmaDTO.class)
     public HakijaryhmaDTO update(
             @ApiParam(value = "Päivitettävän hakijaryhmän OID", required = true) @PathParam("oid") String oid,
-            @ApiParam(value = "Hakijaryhmän uudet tiedot", required = true) HakijaryhmaCreateDTO hakijaryhma) {
-        Hakijaryhma h = hakijaryhmaService.update(oid, hakijaryhma);
+            @ApiParam(value = "Hakijaryhmän uudet tiedot", required = true) HakijaryhmaCreateDTO hakijaryhma, @Context HttpServletRequest request) {
+        Hakijaryhma old = hakijaryhmaService.readByOid(oid);
+        Hakijaryhma updated = hakijaryhmaService.update(oid, hakijaryhma);
+        AuditLog.log(ValintaperusteetOperation.HAKIJARYHMA_PAIVITYS, ValintaResource.HAKIJARYHMA, oid, updated, old, request);
+        /*
         AUDIT.log(builder()
                 .id(username())
                 .hakijaryhmaOid(oid)
@@ -110,7 +98,8 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
                 .add("nimi", h.getNimi())
                 .setOperaatio(ValintaperusteetOperation.HAKIJARYHMA_PAIVITYS)
                 .build());
-        return modelMapper.map(h, HakijaryhmaDTO.class);
+        */
+        return modelMapper.map(updated, HakijaryhmaDTO.class);
     }
 
     @DELETE
@@ -120,14 +109,18 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
     @ApiResponses(value = {@ApiResponse(code = 202, message = "Poisto onnistui"),
             @ApiResponse(code = 403, message = "Hakijaryhmää ei voida poistaa, esim. se on peritty")})
     public Response delete(
-            @ApiParam(value = "Poistettavan hakijaryhmän OID", required = true) @PathParam("oid") String oid) {
+            @ApiParam(value = "Poistettavan hakijaryhmän OID", required = true) @PathParam("oid") String oid, @Context HttpServletRequest request) {
         try {
+            HakijaryhmaDTO h = modelMapper.map(hakijaryhmaService.readByOid(oid), HakijaryhmaDTO.class);
             hakijaryhmaService.deleteByOid(oid, false);
+            AuditLog.log(ValintaperusteetOperation.HAKIJARYHMA_POISTO, ValintaResource.HAKIJARYHMA, oid, null, h, request);
+            /*
             AUDIT.log(builder()
                     .id(username())
                     .hakijaryhmaOid(oid)
                     .setOperaatio(ValintaperusteetOperation.HAKIJARYHMA_POISTO)
                     .build());
+            */
             return Response.status(Response.Status.ACCEPTED).build();
         } catch (HakijaryhmaaEiVoiPoistaaException e) {
             throw new WebApplicationException(e, Response.Status.FORBIDDEN);
@@ -139,10 +132,15 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
     @PreAuthorize(CRUD)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response siirra(HakijaryhmaSiirraDTO dto) {
+    public Response siirra(HakijaryhmaSiirraDTO dto, @Context HttpServletRequest request) {
         Optional<Hakijaryhma> siirretty = hakijaryhmaService.siirra(dto);
         return siirretty.map(kaava ->
         {
+            //############
+            //Map<String, String> m = ImmutableMap.of("hakijaryhmasiirraDTO", dto.toString());
+            AuditLog.log(ValintaperusteetOperation.HAKIJARYHMA_SIIRTO, ValintaResource.HAKIJARYHMA, dto.getValintaryhmaOid(), kaava, null, request);
+
+            /*
             AUDIT.log(builder()
                     .id(username())
                     .hakijaryhmaOid(kaava.getOid())
@@ -157,6 +155,7 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
                     .add("nimi", kaava.getNimi(), dto.getNimi())
                     .setOperaatio(ValintaperusteetOperation.HAKIJARYHMA_SIIRTO)
                     .build());
+             */
                 return Response.status(Response.Status.ACCEPTED).entity(modelMapper.map(kaava, HakijaryhmaDTO.class)).build();
         }).orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
@@ -167,13 +166,17 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
     @Path("/jarjesta")
     @PreAuthorize(UPDATE_CRUD)
     @ApiOperation(value = "Järjestää hakijaryhmät parametrina annetun OID-listan mukaiseen järjestykseen", response = HakijaryhmaDTO.class)
-    public List<HakijaryhmaDTO> jarjesta(@ApiParam(value = "Hakijaryhmien uusi järjestys", required = true) List<String> oids) {
+    public List<HakijaryhmaDTO> jarjesta(@ApiParam(value = "Hakijaryhmien uusi järjestys", required = true) List<String> oids, @Context HttpServletRequest request) {
         List<Hakijaryhma> hrl = hakijaryhmaService.jarjestaHakijaryhmat(oids);
+        Map<String, String> muutosTieto = ImmutableMap.of("hakijaryhmien uusi järjestys", Optional.of(oids.toArray().toString()).orElse(null));
+        AuditLog.log(ValintaperusteetOperation.HAKIJARYHMA_JARJESTA, ValintaResource.HAKIJARYHMA, "tuntematon", null, null, request, muutosTieto);
+        /*
         AUDIT.log(builder()
                 .id(username())
                 .add("hakijaryhmaoids", Optional.ofNullable(oids).map(List::toArray).map(Arrays::toString).orElse(null))
                 .setOperaatio(ValintaperusteetOperation.HAKIJARYHMA_JARJESTA)
                 .build());
+        */
         return modelMapper.mapList(hrl, HakijaryhmaDTO.class);
     }
 }

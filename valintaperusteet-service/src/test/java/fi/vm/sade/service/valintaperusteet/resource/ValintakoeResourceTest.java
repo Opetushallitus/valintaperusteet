@@ -1,13 +1,5 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
@@ -21,6 +13,7 @@ import fi.vm.sade.service.valintaperusteet.util.TestUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -28,6 +21,10 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
+
+import javax.servlet.http.HttpServletRequest;
+
+import static org.junit.Assert.*;
 
 /**
  * User: kwuoti
@@ -64,6 +61,8 @@ public class ValintakoeResourceTest {
 
     @Test
     public void testUpdate() {
+        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+
         final String oid = "oid1";
         final Long laskentakaavaId = 102L;
 
@@ -81,7 +80,7 @@ public class ValintakoeResourceTest {
         assertFalse(saved.getTunniste().equals(koe.getTunniste()));
         assertFalse(saved.getLaskentakaavaId().equals(koe.getLaskentakaavaId()));
 
-        valintakoeResource.update(oid, koe);
+        valintakoeResource.update(oid, koe, request);
 
         saved = valintakoeResource.readByOid(oid);
 
@@ -94,6 +93,8 @@ public class ValintakoeResourceTest {
 
     @Test
     public void testUpdateSetLaskentakaavaNull() {
+        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+
         final String oid = "oid1";
         ValintakoeDTO saved = valintakoeResource.readByOid(oid);
 
@@ -109,7 +110,7 @@ public class ValintakoeResourceTest {
         assertFalse(saved.getTunniste().equals(koe.getTunniste()));
         assertNotNull(saved.getLaskentakaavaId());
 
-        valintakoeResource.update(oid, koe);
+        valintakoeResource.update(oid, koe, request);
 
         saved = valintakoeResource.readByOid(oid);
 
@@ -156,13 +157,15 @@ public class ValintakoeResourceTest {
 
     @Test(expected = ValintakoettaEiVoiLisataException.class)
     public void testUpdateValintakoeWithExistingTunniste() {
+        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+
 
         final String oid = "oid1";
         ValintakoeDTO valintakoe = valintakoeResource.readByOid(oid);
 
         valintakoe.setTunniste("valintakoetunniste2");
 
-        valintakoeResource.update(oid, valintakoe);
+        valintakoeResource.update(oid, valintakoe, request);
 
     }
 

@@ -1,38 +1,28 @@
 package fi.vm.sade.service.valintaperusteet.resource.impl;
 
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD;
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
-
-import java.util.List;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
+import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
+import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
+import fi.vm.sade.service.valintaperusteet.resource.ValintakoeResource;
+import fi.vm.sade.service.valintaperusteet.service.ValintakoeService;
+import fi.vm.sade.generic.AuditLog;
+import fi.vm.sade.service.valintaperusteet.util.ValintaResource;
+import fi.vm.sade.service.valintaperusteet.util.ValintaperusteetOperation;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.util.List;
 
-import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
-import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
-import fi.vm.sade.service.valintaperusteet.resource.ValintakoeResource;
-import fi.vm.sade.service.valintaperusteet.service.ValintakoeService;
-
-import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.*;
-import static fi.vm.sade.auditlog.valintaperusteet.LogMessage.builder;
-import fi.vm.sade.auditlog.valintaperusteet.ValintaperusteetOperation;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.*;
 
 @Component
 @Path("valintakoe")
@@ -78,9 +68,11 @@ public class ValintakoeResourceImpl implements ValintakoeResource {
     @ApiOperation(value = "Päivittää valintakoetta")
     public Response update(
             @ApiParam(value = "OID", required = true) @PathParam("oid") String oid,
-            @ApiParam(value = "Valintakokeen uudet tiedot", required = true) ValintakoeDTO valintakoe) {
+            @ApiParam(value = "Valintakokeen uudet tiedot", required = true) ValintakoeDTO valintakoe, @Context HttpServletRequest request) {
+        ValintakoeDTO old = modelMapper.map(valintakoeService.readByOid(oid), ValintakoeDTO.class);
         ValintakoeDTO update = modelMapper.map(valintakoeService.update(oid, valintakoe), ValintakoeDTO.class);
-        AUDIT.log(builder()
+        AuditLog.log(ValintaperusteetOperation.VALINTAKOE_PAIVITYS, ValintaResource.VALINTAKOE, oid, update, old, request);
+        /*AUDIT.log(builder()
                 .id(username())
                 .valintakoeOid(oid)
                 .add("aktiivinen", update.getAktiivinen())
@@ -92,7 +84,7 @@ public class ValintakoeResourceImpl implements ValintakoeResource {
                 .add("lahetetaankokoekutsut", update.getLahetetaankoKoekutsut())
                 .add("kutsunkohdeavain", update.getKutsunKohdeAvain())
                 .setOperaatio(ValintaperusteetOperation.VALINTAKOE_PAIVITYS)
-                .build());
+                .build());*/
         return Response.status(Response.Status.ACCEPTED).entity(update).build();
     }
 
@@ -100,13 +92,15 @@ public class ValintakoeResourceImpl implements ValintakoeResource {
     @Path("/{oid}")
     @PreAuthorize(CRUD)
     @ApiOperation(value = "Poistaa valintakokeen OID:n perusteella")
-    public Response delete(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
+    public Response delete(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid, @Context HttpServletRequest request) {
+        ValintakoeDTO old = modelMapper.map(valintakoeService.readByOid(oid), ValintakoeDTO.class);
         valintakoeService.deleteByOid(oid);
-        AUDIT.log(builder()
+        AuditLog.log(ValintaperusteetOperation.VALINTAKOE_POISTO, ValintaResource.VALINTAKOE, oid, null, old, request);
+        /*AUDIT.log(builder()
                 .id(username())
                 .valintakoeOid(oid)
                 .setOperaatio(ValintaperusteetOperation.VALINTAKOE_POISTO)
-                .build());
+                .build());*/
         return Response.status(Response.Status.ACCEPTED).build();
     }
 }
