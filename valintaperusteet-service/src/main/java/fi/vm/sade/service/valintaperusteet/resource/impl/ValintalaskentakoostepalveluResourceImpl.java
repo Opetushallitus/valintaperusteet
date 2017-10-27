@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StopWatch;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -316,20 +317,30 @@ public class ValintalaskentakoostepalveluResourceImpl {
     @Path("valintaperusteet/hakijaryhma/{hakukohdeOid}")
     @Produces(MediaType.APPLICATION_JSON)
     public List<ValintaperusteetHakijaryhmaDTO> haeHakijaryhmat(@PathParam("hakukohdeOid") String hakukohdeOid) {
-        long started = System.currentTimeMillis();
+        StopWatch stopWatch = new StopWatch("Hakukohteen  " + hakukohdeOid + " hakijaryhmien haku valintalaskennalle");
         LOG.info("Haetaan hakijaryhmät hakukohteelle {}", hakukohdeOid);
+        stopWatch.start("Haetaan hakukohteen hakijaryhmät");
         List<HakijaryhmaValintatapajono> hakukohteenRyhmat = hakijaryhmaValintatapajonoService.findByHakukohde(hakukohdeOid);
+        stopWatch.stop();
+        stopWatch.start("Haetaan valinnanvaiheet");
         List<ValinnanVaihe> vaiheet = valinnanVaiheService.findByHakukohde(hakukohdeOid);
-        vaiheet.stream().forEachOrdered(
-                vaihe -> {
-                    List<Valintatapajono> jonot = valintatapajonoService.findJonoByValinnanvaihe(vaihe.getOid());
-                    jonot.stream().forEachOrdered(jono ->
-                            hakukohteenRyhmat.addAll(hakijaryhmaValintatapajonoService.findHakijaryhmaByJono(jono.getOid())));
-                });
+        stopWatch.stop();
+        vaiheet.stream().forEachOrdered(vaihe -> {
+            stopWatch.start("Haetaan valintatapajonot vaiheelle: " + vaihe.getOid());
+            List<Valintatapajono> jonot = valintatapajonoService.findJonoByValinnanvaihe(vaihe.getOid());
+            stopWatch.stop();
+            jonot.stream().forEachOrdered(jono -> {
+                stopWatch.start("Haetaan hakijaryhmä valintatapajonolle: " + jono.getOid());
+                hakukohteenRyhmat.addAll(hakijaryhmaValintatapajonoService.findHakijaryhmaByJono(jono.getOid()));
+                stopWatch.stop();
+            });
+        });
         List<ValintaperusteetHakijaryhmaDTO> result = new ArrayList<>();
         for (int i = 0; i < hakukohteenRyhmat.size(); i++) {
             HakijaryhmaValintatapajono original = hakukohteenRyhmat.get(i);
+            stopWatch.start("Haketaan hakijaryhmän " + original.getHakijaryhma().getOid() + " laskentakaava");
             Laskentakaava laskentakaava = laskentakaavaService.haeLaskettavaKaava(original.getHakijaryhma().getLaskentakaava().getId(), Laskentamoodi.VALINTALASKENTA);
+            stopWatch.stop();;
             ValintaperusteetHakijaryhmaDTO dto = modelMapper.map(original, ValintaperusteetHakijaryhmaDTO.class);
             // Asetetaan laskentakaavan nimi ensimmäisen funktiokutsun nimeksi
             laskentakaava.getFunktiokutsu().getSyoteparametrit().forEach(s -> {
@@ -349,7 +360,7 @@ public class ValintalaskentakoostepalveluResourceImpl {
             result.add(dto);
 
         }
-        LOG.info("Hakijaryhmän haku kesti {} ms. Hakukohde: {}", (System.currentTimeMillis() - started), hakukohdeOid);
+        LOG.info(stopWatch.prettyPrint());
         return result;
     }
 
