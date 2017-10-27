@@ -32,9 +32,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import fi.vm.sade.sharedutils.AuditLog;
-import fi.vm.sade.sharedutils.ValintaResource;
-import fi.vm.sade.sharedutils.ValintaperusteetOperation;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
