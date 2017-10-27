@@ -1,6 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.resource.impl;
 
-import fi.vm.sade.auditlog.Changes;
+import com.google.common.collect.ImmutableMap;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriDTO;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriInsertDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
@@ -23,9 +23,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.*;
 
@@ -65,11 +63,9 @@ public class JarjestyskriteeriResourceImpl implements JarjestyskriteeriResource 
             @ApiParam(value = "OID", required = true) @PathParam("oid") String oid,
             @ApiParam(value = "Järjestyskriteerin uudet tiedot ja laskentakaava", required = true) JarjestyskriteeriInsertDTO jk, @Context HttpServletRequest request) {
         try {
-            //JarjestyskriteeriDTO old = jarjestyskriteeriService.
+            JarjestyskriteeriDTO old = modelMapper.map(jarjestyskriteeriService.readByOid(oid), JarjestyskriteeriDTO.class);
             JarjestyskriteeriDTO update = modelMapper.map(jarjestyskriteeriService.update(oid, jk.getJarjestyskriteeri(), jk.getLaskentakaavaId()), JarjestyskriteeriDTO.class);
-            Changes changes = new Changes.Builder()
-                    .removed("jarjestyskriteeri", oid).build();
-            AuditLog.log(ValintaperusteetOperation.JARJESTYSKRITEERI_POISTO, ValintaResource.JARJESTYSKRITEERIT, oid, changes, request);
+            AuditLog.log(ValintaperusteetOperation.JARJESTYSKRITEERI_PAIVITYS, ValintaResource.JARJESTYSKRITEERIT, oid, update, old, request);
 
             /*
             AUDIT.log(builder()
@@ -97,10 +93,9 @@ public class JarjestyskriteeriResourceImpl implements JarjestyskriteeriResource 
     @ApiResponses(@ApiResponse(code = 403, message = "Järjestyskriteeriä ei voida poistaa, esim. se on peritty"))
     public Response delete(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid, @Context HttpServletRequest request) {
         try {
+            JarjestyskriteeriDTO old = modelMapper.map(jarjestyskriteeriService.readByOid(oid), JarjestyskriteeriDTO.class);
             jarjestyskriteeriService.deleteByOid(oid);
-            Changes changes = new Changes.Builder()
-                    .removed("jarjestyskriteeri", oid).build();
-            AuditLog.log(ValintaperusteetOperation.JARJESTYSKRITEERI_POISTO, ValintaResource.JARJESTYSKRITEERIT, oid, changes, request);
+            AuditLog.log(ValintaperusteetOperation.JARJESTYSKRITEERI_POISTO, ValintaResource.JARJESTYSKRITEERIT, oid, null, old, request);
             /*
             AUDIT.log(builder()
                     .id(username())
@@ -122,11 +117,9 @@ public class JarjestyskriteeriResourceImpl implements JarjestyskriteeriResource 
     @ApiOperation(value = "Järjestää järjestyskriteerit annetun listan mukaiseen järjestykseen")
     public List<JarjestyskriteeriDTO> jarjesta(@ApiParam(value = "Uusi järjestys", required = true) List<String> oids, @Context HttpServletRequest request) {
         List<Jarjestyskriteeri> jks = jarjestyskriteeriService.jarjestaKriteerit(oids);
-        //Changes.Builder b = new Changes.Builder();
-        Changes changes = new Changes.Builder()
-                .added("jarjestyskriteerioids", Optional.ofNullable(oids).map(List::toArray).map(Arrays::toString).orElse(null)).build();
-        AuditLog.log(ValintaperusteetOperation.JARJESTYSKRITEERIT_JARJESTA, ValintaResource.JARJESTYSKRITEERIT, null,  changes, request);
 
+        ImmutableMap targetInfo = ImmutableMap.of("Uusi järjestys", oids.toArray().toString());
+        AuditLog.log(ValintaperusteetOperation.JARJESTYSKRITEERIT_JARJESTA, ValintaResource.JARJESTYSKRITEERIT, null, null, null, request, targetInfo);
         /*
         AUDIT.log(builder()
                 .id(username())

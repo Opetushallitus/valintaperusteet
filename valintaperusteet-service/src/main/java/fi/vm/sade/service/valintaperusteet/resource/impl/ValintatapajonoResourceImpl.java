@@ -259,7 +259,7 @@ public class ValintatapajonoResourceImpl {
     @ApiOperation(value = "Järjestää valintatapajonot annetun OID-listan mukaan", response = ValintatapajonoDTO.class)
     public List<ValintatapajonoDTO> jarjesta(@ApiParam(value = "OID-lista jonka mukaiseen järjestykseen valintatapajonot järjestetään", required = true) List<String> oids, @Context HttpServletRequest request) {
         List<Valintatapajono> j = valintatapajonoService.jarjestaValintatapajonot(oids);
-        AuditLog.log(ValintaperusteetOperation.VALINTATAPAJONO_JARJESTA, ValintaResource.VALINTATAPAJONO, "unknown target", null, null, request, ImmutableMap.of("Järjestetyt Oidit", oids.toArray().toString()));
+        AuditLog.log(ValintaperusteetOperation.VALINTATAPAJONO_JARJESTA, ValintaResource.VALINTATAPAJONO, "-", null, null, request, ImmutableMap.of("Järjestetyt Oidit", oids.toArray().toString()));
         /*AUDIT.log(builder()
                 .id(username())
                 .add("valintatapajonooids", Optional.ofNullable(oids).map(List::toArray).map(Arrays::toString).orElse(null))

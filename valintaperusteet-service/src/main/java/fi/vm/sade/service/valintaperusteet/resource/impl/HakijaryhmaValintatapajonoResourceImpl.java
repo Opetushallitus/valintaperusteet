@@ -1,7 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.resource.impl;
 
 import com.google.common.collect.ImmutableMap;
-import fi.vm.sade.auditlog.Changes;
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
@@ -77,9 +76,11 @@ public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValint
     public Response poistaHakijaryhma(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid, @Context HttpServletRequest request) {
         try {
             hakijaryhmaValintatapajonoService.deleteByOid(oid, false);
-            Changes changes = new Changes.Builder()
-                    .removed("HAKIJARYHMA_VALINTATAPAJONO_LIITOS", oid).build();
-            AuditLog.log(ValintaperusteetOperation.HAKIJARYHMA_VALINTATAPAJONO_LIITOS_POISTO, ValintaResource.HAKIJARYHMA_VALINTATAPAJONO, oid, changes, request);
+
+            Map<String, String> auditInfo = new HashMap();
+            auditInfo.put("Removed", oid);
+            AuditLog.log(ValintaperusteetOperation.HAKIJARYHMA_VALINTATAPAJONO_LIITOS_POISTO, ValintaResource.HAKIJARYHMA_VALINTATAPAJONO, oid, null, null, request, auditInfo);
+            //AuditLog.log(ValintaperusteetOperation.HAKIJARYHMA_VALINTATAPAJONO_LIITOS_POISTO, ValintaResource.HAKIJARYHMA_VALINTATAPAJONO, oid, null, oid, request);
             /*
             AUDIT.log(builder()
                     .id(username())
