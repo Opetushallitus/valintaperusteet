@@ -112,7 +112,7 @@ public class ValintalaskentakoostepalveluResourceImpl {
             LOG.error("Hakijaryhmää ei saatu haettua!", e);
             throw new WebApplicationException(e, Response.Status.INTERNAL_SERVER_ERROR);
         } finally {
-            LOG.info("Haku kesti {}ms", (System.currentTimeMillis() - started));
+            LOG.info("Haku kesti {} ms. Hakukohteet: {}", (System.currentTimeMillis() - started), Arrays.toString(hakukohdeOids.toArray()));
         }
     }
 
@@ -148,7 +148,7 @@ public class ValintalaskentakoostepalveluResourceImpl {
             LOG.error("Hakijaryhmää ei saatu haettua!", e);
             throw new WebApplicationException(e, Response.Status.INTERNAL_SERVER_ERROR);
         } finally {
-            LOG.info("Haku kesti {}ms", (System.currentTimeMillis() - started));
+            LOG.info("Haku kesti {} ms. Valintatapajonot: {}", (System.currentTimeMillis() - started), Arrays.toString(valintatapajonoOids.toArray()));
         }
     }
 
@@ -316,6 +316,8 @@ public class ValintalaskentakoostepalveluResourceImpl {
     @Path("valintaperusteet/hakijaryhma/{hakukohdeOid}")
     @Produces(MediaType.APPLICATION_JSON)
     public List<ValintaperusteetHakijaryhmaDTO> haeHakijaryhmat(@PathParam("hakukohdeOid") String hakukohdeOid) {
+        long started = System.currentTimeMillis();
+        LOG.info("Haetaan hakijaryhmät hakukohteelle {}", hakukohdeOid);
         List<HakijaryhmaValintatapajono> hakukohteenRyhmat = hakijaryhmaValintatapajonoService.findByHakukohde(hakukohdeOid);
         List<ValinnanVaihe> vaiheet = valinnanVaiheService.findByHakukohde(hakukohdeOid);
         vaiheet.stream().forEachOrdered(
@@ -347,6 +349,7 @@ public class ValintalaskentakoostepalveluResourceImpl {
             result.add(dto);
 
         }
+        LOG.info("Hakijaryhmän haku kesti {} ms. Hakukohde: {}", (System.currentTimeMillis() - started), hakukohdeOid);
         return result;
     }
 
