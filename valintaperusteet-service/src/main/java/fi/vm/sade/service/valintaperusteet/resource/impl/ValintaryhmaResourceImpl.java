@@ -1,15 +1,15 @@
 package fi.vm.sade.service.valintaperusteet.resource.impl;
 
 import com.google.common.collect.ImmutableMap;
+import fi.vm.sade.sharedutils.ValintaResource;
 import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.resource.ValintaryhmaResource;
 import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaOidTyhjaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintaryhmaEiOleOlemassaException;
-import fi.vm.sade.generic.AuditLog;
-import fi.vm.sade.service.valintaperusteet.util.ValintaResource;
-import fi.vm.sade.service.valintaperusteet.util.ValintaperusteetOperation;
+import fi.vm.sade.sharedutils.ValintaperusteetOperation;
+import fi.vm.sade.sharedutils.AuditLog;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

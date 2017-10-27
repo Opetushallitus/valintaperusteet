@@ -5,7 +5,6 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.REA
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
 import com.google.common.collect.ImmutableMap;
 
-import fi.vm.sade.generic.AuditLog;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.dto.ErrorDTO;
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaCreateDTO;
@@ -50,8 +49,9 @@ import fi.vm.sade.service.valintaperusteet.service.ValintakoeService;
 import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakukohdeViiteEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaOidTyhjaException;
-import fi.vm.sade.service.valintaperusteet.util.ValintaResource;
-import fi.vm.sade.service.valintaperusteet.util.ValintaperusteetOperation;
+import fi.vm.sade.sharedutils.AuditLog;
+import fi.vm.sade.sharedutils.ValintaResource;
+import fi.vm.sade.sharedutils.ValintaperusteetOperation;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
