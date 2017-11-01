@@ -29,7 +29,7 @@ import java.util.List;
         DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class })
 @RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data-hakijaryhma.xml")
-public class ValintalaskentakoostepalveluResourceTest2 {
+public class ValintalaskentakoostepalveluResource2Test {
 
     private ValintatapajonoResourceImpl jonoResource = new ValintatapajonoResourceImpl();
     private ValinnanVaiheResourceImpl vaiheResource = new ValinnanVaiheResourceImpl();
