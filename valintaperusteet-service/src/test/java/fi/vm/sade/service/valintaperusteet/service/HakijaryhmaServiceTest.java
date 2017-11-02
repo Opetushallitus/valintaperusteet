@@ -142,7 +142,7 @@ public class HakijaryhmaServiceTest {
 
             assertEquals(1, hakijaryhmaService.findByValintaryhma("vr1").size());
             assertEquals(1, hakijaryhmaService.findByValintaryhma("vr2").size());
-            assertEquals(1, hakijaryhmaService.findByHakukohde("1").size());
+            assertEquals(3, hakijaryhmaService.findByHakukohde("1").size());
 
         }
 
@@ -159,7 +159,7 @@ public class HakijaryhmaServiceTest {
 
         assertEquals(2, hakijaryhmaService.findByValintaryhma("vr1").size());
         assertEquals(2, hakijaryhmaService.findByValintaryhma("vr2").size());
-        assertEquals(2, hakijaryhmaService.findByHakukohde("1").size());
+        assertEquals(4, hakijaryhmaService.findByHakukohde("1").size());
 
         hakijaryhma = new HakijaryhmaCreateDTO();
         hakijaryhma.setKiintio(20);
@@ -172,7 +172,7 @@ public class HakijaryhmaServiceTest {
 
         assertEquals(2, hakijaryhmaService.findByValintaryhma("vr1").size());
         assertEquals(3, hakijaryhmaService.findByValintaryhma("vr2").size());
-        assertEquals(2, hakijaryhmaService.findByHakukohde("1").size());
+        assertEquals(4, hakijaryhmaService.findByHakukohde("1").size());
 
         HakijaryhmaSiirraDTO siirrettava = modelMapper.map(hakijaryhma, HakijaryhmaSiirraDTO.class);
         siirrettava.setUusinimi("Uusi nimi");
