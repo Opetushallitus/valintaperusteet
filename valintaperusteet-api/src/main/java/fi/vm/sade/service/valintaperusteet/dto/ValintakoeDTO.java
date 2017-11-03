@@ -46,4 +46,14 @@ public class ValintakoeDTO extends ValintakoeCreateDTO {
     public Boolean getPeritty() { return peritty; }
 
     public void setPeritty(Boolean peritty) { this.peritty = peritty; }
+
+    @Override
+    public String toString() {
+        return "ValintakoeDTO{" +
+            "oid='" + oid + '\'' +
+            ", selvitettyTunniste='" + selvitettyTunniste + '\'' +
+            ", funktiokutsu=" + funktiokutsu +
+            ", peritty=" + peritty +
+            '}';
+    }
 }
