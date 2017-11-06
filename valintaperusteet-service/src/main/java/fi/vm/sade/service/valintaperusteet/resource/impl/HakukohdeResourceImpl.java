@@ -235,7 +235,7 @@ public class HakukohdeResourceImpl {
     public Response insert(@ApiParam(value = "Lisättävä hakukohde ja valintaryhmä", required = true) HakukohdeInsertDTO hakukohde, @Context HttpServletRequest request) {
         try {
             HakukohdeViiteDTO hkv = modelMapper.map(hakukohdeService.insert(hakukohde.getHakukohde(), hakukohde.getValintaryhmaOid()), HakukohdeViiteDTO.class);
-            AuditLog.log(ValintaperusteetOperation.HAKUKOHDE_LISAYS_VALINTARYHMA, ValintaResource.HAKUKOHDE, hakukohde.getHakukohde().getHakuoid(), hkv, null, request );
+            AuditLog.log(ValintaperusteetOperation.HAKUKOHDE_LISAYS_VALINTARYHMA, ValintaResource.HAKUKOHDE, hakukohde.getHakukohde().getHakuoid(), hkv, null, request);
             /*
             AUDIT.log(builder()
                     .id(username())
@@ -265,22 +265,22 @@ public class HakukohdeResourceImpl {
             @ApiParam(value = "Päivitettävän hakukohteen OID", required = true) @PathParam("oid") String oid,
             @ApiParam(value = "hakukohteen uudet tiedot", required = true) HakukohdeViiteCreateDTO hakukohdeViite, @Context HttpServletRequest request) {
         try {
-            HakukohdeViiteDTO old = modelMapper.map(hakukohdeService.readByOid(oid), HakukohdeViiteDTO.class);
-            HakukohdeViiteDTO hkv = modelMapper.map(hakukohdeService.update(oid, hakukohdeViite), HakukohdeViiteDTO.class);
-            AuditLog.log(ValintaperusteetOperation.HAKUKOHDE_PAIVITYS, ValintaResource.HAKUKOHDE, oid, hkv, old, request);
+            HakukohdeViiteDTO beforeUpdate = modelMapper.map(hakukohdeService.readByOid(oid), HakukohdeViiteDTO.class);
+            HakukohdeViiteDTO afterUpdate = modelMapper.map(hakukohdeService.update(oid, hakukohdeViite), HakukohdeViiteDTO.class);
+            AuditLog.log(ValintaperusteetOperation.HAKUKOHDE_PAIVITYS, ValintaResource.HAKUKOHDE, oid, afterUpdate, beforeUpdate, request);
             /*
             AUDIT.log(builder()
                     .id(username())
-                    .hakuOid(hkv.getHakuoid())
-                    .hakukohdeOid(hkv.getOid())
-                    .valintaryhmaOid(hkv.getValintaryhmaOid())
-                    .add("nimi", hkv.getNimi())
-                    .add("tila", hkv.getTila())
-                    .tarjoajaOid(hkv.getTarjoajaOid())
+                    .hakuOid(afterUpdate.getHakuoid())
+                    .hakukohdeOid(afterUpdate.getOid())
+                    .valintaryhmaOid(afterUpdate.getValintaryhmaOid())
+                    .add("nimi", afterUpdate.getNimi())
+                    .add("tila", afterUpdate.getTila())
+                    .tarjoajaOid(afterUpdate.getTarjoajaOid())
                     .setOperaatio(ValintaperusteetOperation.HAKUKOHDE_PAIVITYS)
                     .build());
             */
-            return Response.status(Response.Status.ACCEPTED).entity(hkv).build();
+            return Response.status(Response.Status.ACCEPTED).entity(afterUpdate).build();
         } catch (Exception e) {
             LOG.warn("Hakukohdetta ei saatu päivitettyä. ", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
@@ -686,9 +686,11 @@ public class HakukohdeResourceImpl {
     @ApiResponses(@ApiResponse(code = 400, message = "Siirtäminen epäonnistui"))
     public Response siirraHakukohdeValintaryhmaan(
             @ApiParam(value = "Hakukohde OID", required = true) @PathParam("hakukohdeOid") String hakukohdeOid,
-            @ApiParam(value = "Uuden valintaryhmän OID") String valintaryhmaOid) {
+            @ApiParam(value = "Uuden valintaryhmän OID") String valintaryhmaOid, @Context HttpServletRequest request) {
         try {
             HakukohdeViiteDTO hakukohde = modelMapper.map(hakukohdeService.siirraHakukohdeValintaryhmaan(hakukohdeOid, valintaryhmaOid, true), HakukohdeViiteDTO.class);
+            Map additionalInfo = ImmutableMap.of("Uuden valintaryhman oid", valintaryhmaOid);
+            AuditLog.log(ValintaperusteetOperation.HAKUKOHDE_SIIRTO_VALINTARYHMAAN, ValintaResource.HAKUKOHDE, hakukohdeOid, hakukohde, null, request, additionalInfo);
             /*
             AUDIT.log(builder()
                     .id(username())

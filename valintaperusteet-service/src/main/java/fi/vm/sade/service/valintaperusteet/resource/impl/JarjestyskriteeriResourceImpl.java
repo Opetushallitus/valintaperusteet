@@ -118,8 +118,8 @@ public class JarjestyskriteeriResourceImpl implements JarjestyskriteeriResource 
     public List<JarjestyskriteeriDTO> jarjesta(@ApiParam(value = "Uusi järjestys", required = true) List<String> oids, @Context HttpServletRequest request) {
         List<Jarjestyskriteeri> jks = jarjestyskriteeriService.jarjestaKriteerit(oids);
 
-        ImmutableMap targetInfo = ImmutableMap.of("Uusi järjestys", oids.toArray().toString());
-        AuditLog.log(ValintaperusteetOperation.JARJESTYSKRITEERIT_JARJESTA, ValintaResource.JARJESTYSKRITEERIT, null, null, null, request, targetInfo);
+        ImmutableMap additionalInfo = ImmutableMap.of("Uusi järjestys", oids.toArray().toString());
+        AuditLog.log(ValintaperusteetOperation.JARJESTYSKRITEERIT_JARJESTA, ValintaResource.JARJESTYSKRITEERIT, null, null, null, request, additionalInfo);
         /*
         AUDIT.log(builder()
                 .id(username())

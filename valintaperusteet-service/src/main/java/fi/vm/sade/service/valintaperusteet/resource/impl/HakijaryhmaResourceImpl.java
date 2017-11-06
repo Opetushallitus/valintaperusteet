@@ -111,9 +111,9 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
     public Response delete(
             @ApiParam(value = "Poistettavan hakijaryhmän OID", required = true) @PathParam("oid") String oid, @Context HttpServletRequest request) {
         try {
-            HakijaryhmaDTO h = modelMapper.map(hakijaryhmaService.readByOid(oid), HakijaryhmaDTO.class);
+            HakijaryhmaDTO hakijaryhmaDTO = modelMapper.map(hakijaryhmaService.readByOid(oid), HakijaryhmaDTO.class);
             hakijaryhmaService.deleteByOid(oid, false);
-            AuditLog.log(ValintaperusteetOperation.HAKIJARYHMA_POISTO, ValintaResource.HAKIJARYHMA, oid, null, h, request);
+            AuditLog.log(ValintaperusteetOperation.HAKIJARYHMA_POISTO, ValintaResource.HAKIJARYHMA, oid, null, hakijaryhmaDTO, request);
             /*
             AUDIT.log(builder()
                     .id(username())
@@ -136,10 +136,9 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
         Optional<Hakijaryhma> siirretty = hakijaryhmaService.siirra(dto);
         return siirretty.map(kaava ->
         {
-            //############
-            //Map<String, String> m = ImmutableMap.of("hakijaryhmasiirraDTO", dto.toString());
-            AuditLog.log(ValintaperusteetOperation.HAKIJARYHMA_SIIRTO, ValintaResource.HAKIJARYHMA, dto.getValintaryhmaOid(), kaava, null, request);
-
+            Map<String, String> additionalAuditInfo = new HashMap<>();
+            additionalAuditInfo.put("Nimi", kaava.getNimi()+", "+dto.getNimi());
+            AuditLog.log(ValintaperusteetOperation.HAKIJARYHMA_SIIRTO, ValintaResource.HAKIJARYHMA, dto.getValintaryhmaOid(), kaava, null, request, additionalAuditInfo);
             /*
             AUDIT.log(builder()
                     .id(username())
@@ -168,8 +167,9 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
     @ApiOperation(value = "Järjestää hakijaryhmät parametrina annetun OID-listan mukaiseen järjestykseen", response = HakijaryhmaDTO.class)
     public List<HakijaryhmaDTO> jarjesta(@ApiParam(value = "Hakijaryhmien uusi järjestys", required = true) List<String> oids, @Context HttpServletRequest request) {
         List<Hakijaryhma> hrl = hakijaryhmaService.jarjestaHakijaryhmat(oids);
-        Map<String, String> muutosTieto = ImmutableMap.of("hakijaryhmien uusi järjestys", Optional.of(oids.toArray().toString()).orElse(null));
-        AuditLog.log(ValintaperusteetOperation.HAKIJARYHMA_JARJESTA, ValintaResource.HAKIJARYHMA, "tuntematon", null, null, request, muutosTieto);
+        Map<String, String> uusiJarjestys = ImmutableMap.of("hakijaryhmaoids", Optional.of(oids.toArray().toString()).orElse(null));
+        AuditLog.log(ValintaperusteetOperation.HAKIJARYHMA_JARJESTA, ValintaResource.HAKIJARYHMA, null,
+                null, null, request, uusiJarjestys);
         /*
         AUDIT.log(builder()
                 .id(username())

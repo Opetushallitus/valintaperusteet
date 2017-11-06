@@ -83,8 +83,9 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
             @ApiResponse(code = 404, message = "Valintaryhmää ei ole olemassa")})
     public Response delete(@ApiParam(value = "Valintaryhmän OID", required = true) @PathParam("oid") String oid, @Context HttpServletRequest request) {
         try {
+            ValintaryhmaDTO beforeDelete = modelMapper.map(valintaryhmaService.readByOid(oid), ValintaryhmaDTO.class);
             valintaryhmaService.delete(oid);
-            AuditLog.log(ValintaperusteetOperation.VALINTARYHMA_POISTO, ValintaResource.VALINTARYHMA, oid, null, null, request );
+            AuditLog.log(ValintaperusteetOperation.VALINTARYHMA_POISTO, ValintaResource.VALINTARYHMA, oid, null, beforeDelete, request);
             /*
             AUDIT.log(builder()
                     .id(username())
@@ -215,9 +216,9 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
     public Response update(
             @ApiParam(value = "Päivitettävän valintaryhmän OID", required = true) @PathParam("oid") String oid,
             @ApiParam(value = "Päivitettävän valintaryhmän uudet tiedot") ValintaryhmaCreateDTO valintaryhma, @Context HttpServletRequest request) {
-        ValintaryhmaCreateDTO old = modelMapper.map(valintaryhmaService.readByOid(oid), ValintaryhmaCreateDTO.class);
-        valintaryhmaService.update(oid, valintaryhma);
-        AuditLog.log(ValintaperusteetOperation.VALINTARYHMA_PAIVITYS, ValintaResource.VALINTARYHMA, oid, valintaryhma, old, request);
+        ValintaryhmaDTO beforeUpdate = modelMapper.map(valintaryhmaService.readByOid(oid), ValintaryhmaDTO.class);
+        ValintaryhmaDTO afterUpdate = modelMapper.map(valintaryhmaService.update(oid, valintaryhma), ValintaryhmaDTO.class);
+        AuditLog.log(ValintaperusteetOperation.VALINTARYHMA_PAIVITYS, ValintaResource.VALINTARYHMA, oid, afterUpdate, beforeUpdate, request);
         /*
         AUDIT.log(builder()
                 .id(username())
@@ -349,8 +350,8 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
             @ApiParam(value = "Uudet hakukohdekoodit", required = true) Set<KoodiDTO> hakukohdekoodit, @Context HttpServletRequest request) {
         try {
             hakukohdekoodiService.updateValintaryhmaHakukohdekoodit(valintaryhmaOid, hakukohdekoodit);
-            Map<String, String> muuttuneetHakukohdekoodit = ImmutableMap.of("hakukohdekoodit", Optional.of(hakukohdekoodit.toArray().toString()).orElse(null));
-            AuditLog.log(ValintaperusteetOperation.VALINTARYHMA_PAIVITYS_HAKUKOHDEKOODI, ValintaResource.VALINTARYHMA, valintaryhmaOid, null, null, request, muuttuneetHakukohdekoodit);
+            Map<String, String> uudetHakukohdekoodit = ImmutableMap.of("Uudet hakukohdekoodit", Optional.of(hakukohdekoodit.toArray().toString()).orElse(null));
+            AuditLog.log(ValintaperusteetOperation.VALINTARYHMA_PAIVITYS_HAKUKOHDEKOODI, ValintaResource.VALINTARYHMA, valintaryhmaOid, null, null, request, uudetHakukohdekoodit);
             /*
             AUDIT.log(builder()
                     .id(username())
@@ -402,8 +403,8 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
             @ApiParam(value = "Päivitettävät valintakoekoodit", required = true) List<KoodiDTO> valintakoekoodit, @Context HttpServletRequest request) {
         try {
             valintakoekoodiService.updateValintaryhmanValintakoekoodit(valintaryhmaOid, valintakoekoodit);
-            Map<String, String> muutetutKoodit = ImmutableMap.of("valintakoekoodit", Optional.of(valintakoekoodit.toArray().toString()).orElse(null));
-            AuditLog.log(ValintaperusteetOperation.VALINTARYHMA_PAIVITYS_VALINTAKOODI, ValintaResource.VALINTARYHMA, valintaryhmaOid, null, null, request, muutetutKoodit);
+            Map<String, String> muutetutValintakoekoodit = ImmutableMap.of("Päivitetyt valintakoekoodit", Optional.of(valintakoekoodit.toArray().toString()).orElse(null));
+            AuditLog.log(ValintaperusteetOperation.VALINTARYHMA_PAIVITYS_VALINTAKOODI, ValintaResource.VALINTARYHMA, valintaryhmaOid, null, null, request, muutetutValintakoekoodit);
             /*
             AUDIT.log(builder()
                     .id(username())

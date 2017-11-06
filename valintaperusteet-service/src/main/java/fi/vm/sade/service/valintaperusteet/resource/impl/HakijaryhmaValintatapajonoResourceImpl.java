@@ -75,12 +75,9 @@ public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValint
     @ApiResponses(value = {@ApiResponse(code = 403, message = "Liitosta ei voida poistaa, esim. se on peritty"),})
     public Response poistaHakijaryhma(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid, @Context HttpServletRequest request) {
         try {
+            HakijaryhmaValintatapajonoDTO hakijaryhmaValintatapajonoDTO = modelMapper.map(hakijaryhmaValintatapajonoService.readByOid(oid), HakijaryhmaValintatapajonoDTO.class);
             hakijaryhmaValintatapajonoService.deleteByOid(oid, false);
-
-            Map<String, String> auditInfo = new HashMap();
-            auditInfo.put("Removed", oid);
-            AuditLog.log(ValintaperusteetOperation.HAKIJARYHMA_VALINTATAPAJONO_LIITOS_POISTO, ValintaResource.HAKIJARYHMA_VALINTATAPAJONO, oid, null, null, request, auditInfo);
-            //AuditLog.log(ValintaperusteetOperation.HAKIJARYHMA_VALINTATAPAJONO_LIITOS_POISTO, ValintaResource.HAKIJARYHMA_VALINTATAPAJONO, oid, null, oid, request);
+            AuditLog.log(ValintaperusteetOperation.HAKIJARYHMA_VALINTATAPAJONO_LIITOS_POISTO, ValintaResource.HAKIJARYHMA_VALINTATAPAJONO, oid, null, hakijaryhmaValintatapajonoDTO, request);
             /*
             AUDIT.log(builder()
                     .id(username())
@@ -139,21 +136,21 @@ public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValint
     @PreAuthorize(UPDATE_CRUD)
     @ApiOperation(value = "Järjestää valintatapajonon hakijaryhmät annetun OID-listan mukaan", response = ValintatapajonoDTO.class)
     public List<HakijaryhmaValintatapajonoDTO> jarjesta(@ApiParam(value = "OID-lista jonka mukaiseen järjestykseen valintatapajonon hakijaryhmät järjestetään", required = true) List<String> oids, @Context HttpServletRequest request) {
-        List<HakijaryhmaValintatapajono> j = hakijaryhmaValintatapajonoService.jarjestaHakijaryhmat(oids);
+        List<HakijaryhmaValintatapajono> jarjestetytHakijaryhmat = hakijaryhmaValintatapajonoService.jarjestaHakijaryhmat(oids);
 
-        //For AuditLog
-        String targetOid = "unknown";
-        if(!j.isEmpty()) { targetOid = j.get(0).getHakukohdeViite().getOid(); }
-        Map sortedOids = ImmutableMap.of("Oids", Optional.ofNullable(oids).map(List::toArray).map(Arrays::toString).orElse(null));
+        //For auditlog
+        String targetOid = null;
+        if(!jarjestetytHakijaryhmat.isEmpty()) {
+            targetOid = jarjestetytHakijaryhmat.get(0).getHakukohdeViite().getOid(); }
+        Map sortedOids = ImmutableMap.of("Oid-järjestys", Optional.ofNullable(oids).map(List::toArray).map(Arrays::toString).orElse(null));
         AuditLog.log(ValintaperusteetOperation.VALINTATAPAJONO_HAKIJARYHMAT_JARJESTA, ValintaResource.HAKIJARYHMA_VALINTATAPAJONO, targetOid,
                 null, null, request, sortedOids);
-        /*
-        AUDIT.log(builder()
+        /*AUDIT.log(builder()
                 .id(username())
                 .add("valintatapajonooids", Optional.ofNullable(oids).map(List::toArray).map(Arrays::toString).orElse(null))
                 .setOperaatio(ValintaperusteetOperation.HAKIJARYHMA_VALINTATAPAJONO_LIITOS_PAIVITYS)
                 .build());
         */
-        return modelMapper.mapList(j, HakijaryhmaValintatapajonoDTO.class);
+        return modelMapper.mapList(jarjestetytHakijaryhmat, HakijaryhmaValintatapajonoDTO.class);
     }
 }

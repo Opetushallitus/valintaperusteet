@@ -141,28 +141,28 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
     public Response update(
             @ApiParam(value = "Päivitettävän laskentakaavan ID", required = true) @PathParam("id") Long id,
             @ApiParam(value = "Päivitettävän laskentakaavan uudet tiedot", required = true) LaskentakaavaCreateDTO laskentakaava, @Context HttpServletRequest request) {
-        LaskentakaavaDTO before_update = null;
-        LaskentakaavaDTO updated = null;
+        LaskentakaavaDTO beforeUpdate = null;
+        LaskentakaavaDTO afterUpdate = null;
         try {
-            before_update = modelMapper.map(laskentakaavaService.haeMallinnettuKaava(id), LaskentakaavaDTO.class);
-            updated = modelMapper.map(laskentakaavaService.update(id, laskentakaava), LaskentakaavaDTO.class);
-            AuditLog.log(ValintaperusteetOperation.LASKENTAKAAVA_PAIVITYS, ValintaResource.LASKENTAKAAVA, id.toString(), updated, before_update, request);
+            beforeUpdate = modelMapper.map(laskentakaavaService.haeMallinnettuKaava(id), LaskentakaavaDTO.class);
+            afterUpdate = modelMapper.map(laskentakaavaService.update(id, laskentakaava), LaskentakaavaDTO.class);
+            AuditLog.log(ValintaperusteetOperation.LASKENTAKAAVA_PAIVITYS, ValintaResource.LASKENTAKAAVA, id.toString(), afterUpdate, beforeUpdate, request);
             /*
             AUDIT.log(builder()
                     .id(username())
-                    .add("laskentakaavaid", updated.getId())
-                    .add("kuvaus", updated.getKuvaus())
-                    .add("nimi", updated.getNimi())
-                    .add("luonnos", updated.getOnLuonnos())
+                    .add("laskentakaavaid", afterUpdate.getId())
+                    .add("kuvaus", afterUpdate.getKuvaus())
+                    .add("nimi", afterUpdate.getNimi())
+                    .add("luonnos", afterUpdate.getOnLuonnos())
                     .setOperaatio(ValintaperusteetOperation.LASKENTAKAAVA_PAIVITYS)
                     .build());
             */
             // Kaava päivitetty, poistetaan orvot
             actorService.runOnce();
-            return Response.status(Response.Status.OK).entity(updated).build();
+            return Response.status(Response.Status.OK).entity(afterUpdate).build();
         } catch (LaskentakaavaEiValidiException e) {
             LOGGER.error("Laskentakaava ei ole validi!", e);
-            return Response.status(Response.Status.BAD_REQUEST).entity(updated).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(afterUpdate).build();
         } catch (Exception e) {
             LOGGER.error("Virhe päivitettäessä laskentakaavaa.", e);
             return Response.status(Response.Status.BAD_REQUEST).build();

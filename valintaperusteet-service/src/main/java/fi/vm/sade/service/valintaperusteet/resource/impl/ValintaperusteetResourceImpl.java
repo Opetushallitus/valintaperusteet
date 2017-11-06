@@ -158,17 +158,17 @@ public class ValintaperusteetResourceImpl implements ValintaperusteetResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public ValintatapajonoDTO updateAutomaattinenSijoitteluunSiirto(@PathParam("oid") String oid, Boolean arvo, @Context HttpServletRequest request) {
-        Valintatapajono old = valintatapajonoService.readByOid(oid);
-        Valintatapajono v = valintatapajonoService.updateAutomaattinenSijoitteluunSiirto(oid, arvo);
-        AuditLog.log(ValintaperusteetOperation.AUTOMAATTISEN_SIJOITTELUN_SIIRRON_PAIVITYS, ValintaResource.VALINTAPERUSTEET, oid, v, old, request);
+        ValintatapajonoDTO beforeUpdate = modelMapper.map(valintatapajonoService.readByOid(oid), ValintatapajonoDTO.class);
+        ValintatapajonoDTO afterUpdate = modelMapper.map(valintatapajonoService.updateAutomaattinenSijoitteluunSiirto(oid, arvo), ValintatapajonoDTO.class);
+        AuditLog.log(ValintaperusteetOperation.AUTOMAATTISEN_SIJOITTELUN_SIIRRON_PAIVITYS, ValintaResource.VALINTAPERUSTEET, oid, afterUpdate, beforeUpdate, request);
         /*
         AUDIT.log(builder()
                 .id(username())
-                .valintatapajonoOid(v.getOid())
+                .valintatapajonoOid(afterUpdate.getOid())
                 .add("automaattinensijoitteluunsiirto", arvo)
                 .setOperaatio(ValintaperusteetOperation.AUTOMAATTISEN_SIJOITTELUN_SIIRRON_PAIVITYS)
                 .build());
         */
-        return modelMapper.map(v, ValintatapajonoDTO.class);
+        return modelMapper.map(afterUpdate, ValintatapajonoDTO.class);
     }
 }

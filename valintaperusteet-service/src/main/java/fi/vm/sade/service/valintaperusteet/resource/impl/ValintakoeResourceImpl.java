@@ -69,23 +69,23 @@ public class ValintakoeResourceImpl implements ValintakoeResource {
     public Response update(
             @ApiParam(value = "OID", required = true) @PathParam("oid") String oid,
             @ApiParam(value = "Valintakokeen uudet tiedot", required = true) ValintakoeDTO valintakoe, @Context HttpServletRequest request) {
-        ValintakoeDTO old = modelMapper.map(valintakoeService.readByOid(oid), ValintakoeDTO.class);
-        ValintakoeDTO update = modelMapper.map(valintakoeService.update(oid, valintakoe), ValintakoeDTO.class);
-        AuditLog.log(ValintaperusteetOperation.VALINTAKOE_PAIVITYS, ValintaResource.VALINTAKOE, oid, update, old, request);
+        ValintakoeDTO beforeUpdate = modelMapper.map(valintakoeService.readByOid(oid), ValintakoeDTO.class);
+        ValintakoeDTO afterUpdate = modelMapper.map(valintakoeService.update(oid, valintakoe), ValintakoeDTO.class);
+        AuditLog.log(ValintaperusteetOperation.VALINTAKOE_PAIVITYS, ValintaResource.VALINTAKOE, oid, afterUpdate, beforeUpdate, request);
         /*AUDIT.log(builder()
                 .id(username())
                 .valintakoeOid(oid)
-                .add("aktiivinen", update.getAktiivinen())
-                .add("selvitettytunniste", update.getSelvitettyTunniste())
-                .add("kuvaus", update.getKuvaus())
-                .add("nimi", update.getNimi())
-                .add("tunniste", update.getTunniste())
-                .add("kutsutaankokaikki", update.getKutsutaankoKaikki())
-                .add("lahetetaankokoekutsut", update.getLahetetaankoKoekutsut())
-                .add("kutsunkohdeavain", update.getKutsunKohdeAvain())
+                .add("aktiivinen", afterUpdate.getAktiivinen())
+                .add("selvitettytunniste", afterUpdate.getSelvitettyTunniste())
+                .add("kuvaus", afterUpdate.getKuvaus())
+                .add("nimi", afterUpdate.getNimi())
+                .add("tunniste", afterUpdate.getTunniste())
+                .add("kutsutaankokaikki", afterUpdate.getKutsutaankoKaikki())
+                .add("lahetetaankokoekutsut", afterUpdate.getLahetetaankoKoekutsut())
+                .add("kutsunkohdeavain", afterUpdate.getKutsunKohdeAvain())
                 .setOperaatio(ValintaperusteetOperation.VALINTAKOE_PAIVITYS)
                 .build());*/
-        return Response.status(Response.Status.ACCEPTED).entity(update).build();
+        return Response.status(Response.Status.ACCEPTED).entity(afterUpdate).build();
     }
 
     @DELETE

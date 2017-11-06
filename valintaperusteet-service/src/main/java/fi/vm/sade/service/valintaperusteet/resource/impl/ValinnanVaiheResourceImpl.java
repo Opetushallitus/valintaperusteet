@@ -151,15 +151,15 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
             @ApiParam(value = "Valinnan vaiheen OID", required = true) @PathParam("parentOid") String parentOid,
             @ApiParam(value = "Lisättävä valintakoe", required = true) ValintakoeCreateDTO koe, @Context HttpServletRequest request) {
         try {
-            ValintakoeDTO vk = modelMapper.map(valintakoeService.lisaaValintakoeValinnanVaiheelle(parentOid, koe), ValintakoeDTO.class);
-            AuditLog.log(ValintaperusteetOperation.VALINNANVAIHE_LISAYS_VALINTAKOE, ValintaResource.VALINNANVAIHE, parentOid, vk, null, request);
+            ValintakoeDTO valintakoe = modelMapper.map(valintakoeService.lisaaValintakoeValinnanVaiheelle(parentOid, koe), ValintakoeDTO.class);
+            AuditLog.log(ValintaperusteetOperation.VALINNANVAIHE_LISAYS_VALINTAKOE, ValintaResource.VALINNANVAIHE, parentOid, valintakoe, null, request);
             /*AUDIT.log(builder()
                     .id(username())
                     .valinnanvaiheOid(parentOid)
-                    .valintakoeOid(vk.getOid())
+                    .valintakoeOid(valintakoe.getOid())
                     .setOperaatio(ValintaperusteetOperation.VALINNANVAIHE_LISAYS_VALINTAKOE)
                     .build());*/
-            return Response.status(Response.Status.CREATED).entity(vk).build();
+            return Response.status(Response.Status.CREATED).entity(valintakoe).build();
         } catch (Exception e) {
             LOGGER.error("error in addValintakoeToValinnanVaihe", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
@@ -197,15 +197,15 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
     @PreAuthorize(UPDATE_CRUD)
     @ApiOperation(value = "Järjestää valinnan vaiheet parametrina annetun OID-listan mukaiseen järjestykseen", response = ValinnanVaiheDTO.class)
     public List<ValinnanVaiheDTO> jarjesta(@ApiParam(value = "Valinnan vaiheiden uusi järjestys", required = true) List<String> oids, @Context HttpServletRequest request) {
-        List<ValinnanVaihe> vvl = valinnanVaiheService.jarjestaValinnanVaiheet(oids);
-        //##########
-        AuditLog.log(ValintaperusteetOperation.VALINNANVAIHE_JARJESTA, ValintaResource.VALINNANVAIHE, "tuntematon", null, null, request, ImmutableMap.of("Uusi järjestys:",oids.toArray().toString()));
+        List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheService.jarjestaValinnanVaiheet(oids);
+        Map additionalInfo = ImmutableMap.of("valinnanvaiheoids", oids.toArray().toString());
+        AuditLog.log(ValintaperusteetOperation.VALINNANVAIHE_JARJESTA, ValintaResource.VALINNANVAIHE, null, null, null, request, additionalInfo);
         /*AUDIT.log(builder()
                 .id(username())
                 .add("valinnanvaiheoids", Optional.ofNullable(oids).map(List::toArray).map(Arrays::toString).orElse(null))
                 .setOperaatio(ValintaperusteetOperation.VALINNANVAIHE_JARJESTA)
                 .build());*/
-        return modelMapper.mapList(vvl, ValinnanVaiheDTO.class);
+        return modelMapper.mapList(valinnanVaiheet, ValinnanVaiheDTO.class);
     }
 
     @DELETE

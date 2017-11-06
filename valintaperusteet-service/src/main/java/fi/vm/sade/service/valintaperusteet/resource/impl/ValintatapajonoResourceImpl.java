@@ -113,7 +113,8 @@ public class ValintatapajonoResourceImpl {
             @ApiParam(value = "Hakijaryhmän OID, joka valintatapajonoon liitetään", required = true) @PathParam("hakijaryhmaOid") String hakijaryhmaOid, @Context HttpServletRequest request) {
         try {
             hakijaryhmaService.liitaHakijaryhmaValintatapajonolle(valintatapajonoOid, hakijaryhmaOid);
-            AuditLog.log(ValintaperusteetOperation.VALINTATAPAJONO_LIITOS_HAKIJARYHMA, ValintaResource.VALINTATAPAJONO, valintatapajonoOid, null, null, request, ImmutableMap.of("Liitettävän Hakijaryhmän Oid", hakijaryhmaOid));
+            ImmutableMap<String, String> liitettavanHakijaryhmanOid = ImmutableMap.of("Liitettävän Hakijaryhmän Oid", hakijaryhmaOid);
+            AuditLog.log(ValintaperusteetOperation.VALINTATAPAJONO_LIITOS_HAKIJARYHMA, ValintaResource.VALINTATAPAJONO, valintatapajonoOid, null, null, request, liitettavanHakijaryhmanOid);
             /*
             AUDIT.log(builder()
                     .id(username())
@@ -258,14 +259,15 @@ public class ValintatapajonoResourceImpl {
     @PreAuthorize(UPDATE_CRUD)
     @ApiOperation(value = "Järjestää valintatapajonot annetun OID-listan mukaan", response = ValintatapajonoDTO.class)
     public List<ValintatapajonoDTO> jarjesta(@ApiParam(value = "OID-lista jonka mukaiseen järjestykseen valintatapajonot järjestetään", required = true) List<String> oids, @Context HttpServletRequest request) {
-        List<Valintatapajono> j = valintatapajonoService.jarjestaValintatapajonot(oids);
-        AuditLog.log(ValintaperusteetOperation.VALINTATAPAJONO_JARJESTA, ValintaResource.VALINTATAPAJONO, "-", null, null, request, ImmutableMap.of("Järjestetyt Oidit", oids.toArray().toString()));
+        List<Valintatapajono> jarjestetytJonot = valintatapajonoService.jarjestaValintatapajonot(oids);
+        ImmutableMap<String, String> jarjestetytOidit = ImmutableMap.of("Järjestetyt Oidit", oids.toArray().toString());
+        AuditLog.log(ValintaperusteetOperation.VALINTATAPAJONO_JARJESTA, ValintaResource.VALINTATAPAJONO, null, null, null, request, jarjestetytOidit);
         /*AUDIT.log(builder()
                 .id(username())
                 .add("valintatapajonooids", Optional.ofNullable(oids).map(List::toArray).map(Arrays::toString).orElse(null))
                 .setOperaatio(ValintaperusteetOperation.VALINTATAPAJONO_JARJESTA)
                 .build());*/
-        return modelMapper.mapList(j, ValintatapajonoDTO.class);
+        return modelMapper.mapList(jarjestetytJonot, ValintatapajonoDTO.class);
     }
 
     @DELETE
