@@ -73,4 +73,9 @@ public interface ValinnanVaiheResource {
     @Produces(MediaType.APPLICATION_JSON)
     Map<String, Boolean> kuuluuSijoitteluun(@PathParam("oid") String oid);
 
+    @POST
+    @Path("/kuuluuSijoitteluun")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    Map<String, Boolean> kuuluuSijoitteluun(List<String> valinnanvaiheOidit);
 }
