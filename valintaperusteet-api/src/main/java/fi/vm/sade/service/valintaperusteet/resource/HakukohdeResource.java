@@ -39,6 +39,12 @@ public interface HakukohdeResource {
     @Produces(MediaType.APPLICATION_JSON)
     ValintaryhmaDTO queryValintaryhma(@PathParam("oid") String oid);
 
+    @POST
+    @Path("/valintaryhmat")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    Map<String,ValintaryhmaDTO> queryValintaryhmat(List<String> hakukohdeOidit);
+
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
