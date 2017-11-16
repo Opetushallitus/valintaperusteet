@@ -379,6 +379,7 @@ public class HakukohdeResourceImpl {
         return modelMapper.mapList(hakijaryhmaValintatapajonoService.findByHakukohde(oid), HakijaryhmaValintatapajonoDTO.class);
     }
 
+<<<<<<< HEAD
     private List<LinkitettyHakijaryhmaValintatapajonoDTO> getValintatapajonokohtaisetHakijaryhmat(String hakukohdeOid) {
         List<String> valintatapajonoOids = valinnanVaiheService.findByHakukohde(hakukohdeOid).stream().map(ValinnanVaihe::getOid).map(valinnanvaihe ->
            valintatapajonoService.findJonoByValinnanvaihe(valinnanvaihe).stream().map(Valintatapajono::getOid)).flatMap(oid -> oid).collect(Collectors.toList());
@@ -398,7 +399,7 @@ public class HakukohdeResourceImpl {
             return dto;
         }).collect(Collectors.toList());
     }
-
+    
     @POST
     @Path("/hakijaryhmat")
     @Consumes(MediaType.APPLICATION_JSON)
