@@ -35,6 +35,12 @@ public interface ValinnanVaiheResource {
     @Path("/{oid}/valintatapajono")
     List<ValintatapajonoDTO> listJonos(@PathParam("oid") String oid);
 
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/valintatapajonot")
+    Map<String,List<ValintatapajonoDTO>> valintatapajonot(List<String> valinnanvaiheOidit);
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{oid}/valintakoe")
