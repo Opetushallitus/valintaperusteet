@@ -260,6 +260,19 @@ public class HakukohdeResourceImpl {
         return valinnanVaiheetDTO;
     }
 
+    @POST
+    @Path("/valinnanvaiheet")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @PreAuthorize(READ_UPDATE_CRUD)
+    @ApiOperation(value = "Hakee hakukohteiden valinnan vaiheet OIDien perusteella", response = ValinnanVaiheDTO.class)
+    public Map<String, List<ValinnanVaiheDTO>> valinnanVaiheetForHakukohteet(@ApiParam(value = "Hakukohde OIDit", required = true) List<String> hakukohdeOidit) {
+        Map<String,List<ValinnanVaiheDTO>> map = new HashMap<>();
+        hakukohdeOidit.forEach((oid) -> map.put(oid, modelMapper.mapList(valinnanVaiheService.findByHakukohde(oid), ValinnanVaiheDTO.class)));
+        return map;
+    }
+
+
     @Transactional
     @GET
     @Path("/{oid}/valintakoe")
