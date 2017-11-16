@@ -221,4 +221,15 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
         return map;
     }
 
+    @POST
+    @Path("/kuuluuSijoitteluun")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @PreAuthorize(READ_UPDATE_CRUD)
+    @ApiOperation(value = "Palauttaa tiedon siitä, kuuluvatko valinnan vaiheet sijoitteluun", response = Boolean.class)
+    public Map<String, Boolean> kuuluuSijoitteluun(@ApiParam(value = "Valinnan vaiheiden OID", required = true) List<String> oids) {
+        Map<String, Boolean> map = new HashMap<>();
+        oids.forEach((oid) -> map.put(oid, valinnanVaiheService.kuuluuSijoitteluun(oid)));
+        return map;
+    }
 }
