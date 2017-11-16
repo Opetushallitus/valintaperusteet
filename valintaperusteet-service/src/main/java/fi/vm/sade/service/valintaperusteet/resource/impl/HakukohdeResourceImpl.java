@@ -139,8 +139,13 @@ public class HakukohdeResourceImpl {
     @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Hakee hakukohteet OIDien perusteella", response = HakukohdeViiteDTO.class)
     public List<HakukohdeViiteDTO> hakukohteet(@ApiParam(value = "Lista hakukohdeOideja", required = true) List<String> hakukohdeOidit) {
-        return hakukohdeOidit.stream().map((oid) -> modelMapper.map(
-                hakukohdeService.readByOid(oid), HakukohdeViiteDTO.class)).collect(Collectors.toList());
+        return modelMapper.mapList(hakukohdeOidit.stream().map((oid) -> {
+            Optional<HakukohdeViite> hakukohdeViite = Optional.empty();
+            try {
+                hakukohdeViite = Optional.of(hakukohdeService.readByOid(oid));
+            } catch (HakukohdeViiteEiOleOlemassaException hveooe) {}
+            return hakukohdeViite;
+        }).filter((viite) -> viite.isPresent()).collect(Collectors.toList()), HakukohdeViiteDTO.class);
     }
 
     @GET
