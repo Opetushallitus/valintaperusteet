@@ -371,10 +371,8 @@ public class HakukohdeResourceImpl {
     @Produces(MediaType.APPLICATION_JSON)
     @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Hakee hakukohteiden hakijaryhmät", response = HakijaryhmaDTO.class)
-    public Map<String, List<HakijaryhmaValintatapajonoDTO>> hakijaryhmat(@ApiParam(value = "Hakukohde OIDit", required = true) List<String> hakukohdeOidit) {
-        Map<String, List<HakijaryhmaValintatapajonoDTO>> map = new HashMap<>();
-        hakukohdeOidit.forEach((oid) -> map.put(oid, modelMapper.mapList(hakijaryhmaValintatapajonoService.findByHakukohde(oid), HakijaryhmaValintatapajonoDTO.class)));
-        return map;
+    public List<HakijaryhmaValintatapajonoDTO> hakijaryhmat(@ApiParam(value = "Hakukohde OIDit", required = true) List<String> hakukohdeOidit) {
+        return modelMapper.mapList(hakijaryhmaValintatapajonoService.findByHakukohteet(hakukohdeOidit), HakijaryhmaValintatapajonoDTO.class);
     }
     
     @GET
