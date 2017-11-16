@@ -93,6 +93,13 @@ public interface HakukohdeResource {
     @Produces(MediaType.APPLICATION_JSON)
     List<HakijaryhmaValintatapajonoDTO> hakijaryhmat(@PathParam("oid") String oid);
 
+    @POST
+    @Path("/hakijaryhmat")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    Map<String, List<HakijaryhmaValintatapajonoDTO>> hakijaryhmat(List<String> hakukohdeOidit);
+
+
     @GET
     @Path("/{oid}/laskentakaava")
     @Produces(MediaType.APPLICATION_JSON)
