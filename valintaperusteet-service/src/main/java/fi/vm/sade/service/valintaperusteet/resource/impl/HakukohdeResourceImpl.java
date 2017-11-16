@@ -399,7 +399,7 @@ public class HakukohdeResourceImpl {
             return dto;
         }).collect(Collectors.toList());
     }
-    
+
     @POST
     @Path("/hakijaryhmat")
     @Consumes(MediaType.APPLICATION_JSON)

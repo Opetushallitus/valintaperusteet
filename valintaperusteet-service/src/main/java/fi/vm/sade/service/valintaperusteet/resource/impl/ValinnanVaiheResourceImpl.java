@@ -100,7 +100,6 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
             return new ValinnanVaiheJaValintatapajonoDTO(oid, kuuluuSijoitteluun, valintatapajonot);
         }).filter(dto -> !dto.getValintatapajonot().isEmpty()).collect(Collectors.toList());
     }
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{oid}/valintakoe")
