@@ -159,6 +159,22 @@ public class HakukohdeResourceImpl {
         }
     }
 
+    @POST
+    @Path("/valintaryhmat")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @PreAuthorize(READ_UPDATE_CRUD)
+    @ApiOperation(value = "Hakee valintaryhmät hakukohteiden OIDien perusteella", response = ValintaryhmaDTO.class)
+    public Map<String,ValintaryhmaDTO> queryValintaryhmat(@ApiParam(value = "Lista hakukohdeOideja", required = true) List<String> hakukohdeOidit) {
+        Map<String,ValintaryhmaDTO> map = new HashMap<>();
+        hakukohdeOidit.forEach((oid) -> hakukohdeViiteDAO.findValintaryhmaByHakukohdeOid(oid).ifPresent(valintaryhma ->
+            map.put(oid, new ValintaryhmaDTO() {{
+                setNimi(valintaryhma.getNimi());
+                setOid(valintaryhma.getOid());
+            }})));
+        return map;
+    }
+
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
