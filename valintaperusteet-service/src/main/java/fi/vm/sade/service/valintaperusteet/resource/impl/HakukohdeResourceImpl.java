@@ -133,6 +133,15 @@ public class HakukohdeResourceImpl {
         }
     }
 
+    @POST
+    @Path("/hakukohteet")
+    @Produces(MediaType.APPLICATION_JSON)
+    @PreAuthorize(READ_UPDATE_CRUD)
+    @ApiOperation(value = "Hakee hakukohteet OIDien perusteella", response = HakukohdeViiteDTO.class)
+    public List<HakukohdeViiteDTO> hakukohteet(@ApiParam(value = "Lista hakukohdeOideja", required = true) List<String> hakukohdeOidit) {
+        return modelMapper.mapList(hakukohdeService.readByOids(hakukohdeOidit), HakukohdeViiteDTO.class);
+    }
+
     @GET
     @Path("/{oid}/valintaryhma")
     @Produces(MediaType.APPLICATION_JSON)

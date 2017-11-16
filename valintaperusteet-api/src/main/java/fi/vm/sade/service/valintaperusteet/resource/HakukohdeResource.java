@@ -136,4 +136,10 @@ public interface HakukohdeResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response siirraHakukohdeValintaryhmaan(@PathParam("hakukohdeOid") String hakukohdeOid, String valintaryhmaOid);
+
+    @POST
+    @Path("/hakukohteet")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    Response haeHakukohteetOideilla(List<String> hakukohdeOidit);
 }
