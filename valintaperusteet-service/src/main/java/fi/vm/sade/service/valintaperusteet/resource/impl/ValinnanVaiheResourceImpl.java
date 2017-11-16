@@ -91,6 +91,19 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
         return modelMapper.mapList(jonoService.findJonoByValinnanvaihe(oid), ValintatapajonoDTO.class);
     }
 
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/valintatapajonot")
+    @PreAuthorize(READ_UPDATE_CRUD)
+    @ApiOperation(value = "Hakee useiden valinnan vaiheiden valintatapajonot OIDien perusteella", response = ValintatapajonoDTO.class)
+    public Map<String,List<ValintatapajonoDTO>> valintatapajonot(@ApiParam(value = "Valinnan vaiheiden OIDit", required = true) List<String> valinnanvaiheOidit) {
+        Map<String,List<ValintatapajonoDTO>> valintatapajonot = new HashMap<>();
+        valinnanvaiheOidit.forEach((oid) -> valintatapajonot.put(oid, modelMapper.mapList(jonoService.findJonoByValinnanvaihe(oid), ValintatapajonoDTO.class)));
+        return valintatapajonot;
+    }
+
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{oid}/valintakoe")
