@@ -97,6 +97,12 @@ public interface HakukohdeResource {
     @Produces(MediaType.APPLICATION_JSON)
     HakukohteenValintaperusteAvaimetDTO findHakukohteenAvaimet(@PathParam("hakukohdeOid") String hakukohdeOid);
 
+    @POST
+    @Path("/avaimet")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    Map<String,HakukohteenValintaperusteAvaimetDTO> findHakukohteidenAvaimet(List<String> hakukohdeOidit);
+
     @PUT
     @Path("/{hakukohdeOid}/valinnanvaihe")
     @Consumes(MediaType.APPLICATION_JSON)
