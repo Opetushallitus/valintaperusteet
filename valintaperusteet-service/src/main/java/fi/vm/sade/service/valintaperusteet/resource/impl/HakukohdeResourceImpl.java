@@ -145,7 +145,7 @@ public class HakukohdeResourceImpl {
                 hakukohdeViite = Optional.of(hakukohdeService.readByOid(oid));
             } catch (HakukohdeViiteEiOleOlemassaException hveooe) {}
             return hakukohdeViite;
-        }).filter((viite) -> viite.isPresent()).collect(Collectors.toList()), HakukohdeViiteDTO.class);
+        }).filter((viite) -> viite.isPresent()).map(Optional::get).collect(Collectors.toList()), HakukohdeViiteDTO.class);
     }
 
     @GET
