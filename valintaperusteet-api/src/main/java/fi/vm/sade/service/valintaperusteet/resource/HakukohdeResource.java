@@ -66,7 +66,7 @@ public interface HakukohdeResource {
     @Path("/valinnanvaiheet")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Map<String, List<ValinnanVaiheDTO>> valinnanVaiheetForHakukohteet(List<String> hakukohdeOidit);
+    List<HakukohdeJaValinnanVaiheDTO> valinnanVaiheetForHakukohteet(List<String> hakukohdeOidit);
 
     @GET
     @Path("/{oid}/valintakoe")

@@ -271,13 +271,17 @@ public class HakukohdeResourceImpl {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @PreAuthorize(READ_UPDATE_CRUD)
-    @ApiOperation(value = "Hakee hakukohteiden valinnan vaiheet OIDien perusteella", response = ValinnanVaiheDTO.class)
-    public Map<String, List<ValinnanVaiheDTO>> valinnanVaiheetForHakukohteet(@ApiParam(value = "Hakukohde OIDit", required = true) List<String> hakukohdeOidit) {
-        Map<String,List<ValinnanVaiheDTO>> map = new HashMap<>();
-        hakukohdeOidit.forEach((oid) -> map.put(oid, modelMapper.mapList(valinnanVaiheService.findByHakukohde(oid), ValinnanVaiheDTO.class)));
-        return map;
+    @ApiOperation(value = "Hakee hakukohteiden valinnan vaiheet OIDien perusteella", response = HakukohdeJaValinnanVaiheDTO.class)
+    public List<HakukohdeJaValinnanVaiheDTO> valinnanVaiheetForHakukohteet(@ApiParam(value = "Hakukohde OIDit", required = true) List<String> hakukohdeOidit) {
+        return hakukohdeOidit.stream().map((oid) -> {
+            List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheService.findByHakukohde(oid);
+            if (null == valinnanVaiheet || 0 == valinnanVaiheet.size()) {
+                return null;
+            } else {
+                return new HakukohdeJaValinnanVaiheDTO(oid, modelMapper.mapList(valinnanVaiheet, ValinnanVaiheDTO.class));
+            }
+        }).filter((dto) -> null != dto).collect(Collectors.toList());
     }
-
 
     @Transactional
     @GET
