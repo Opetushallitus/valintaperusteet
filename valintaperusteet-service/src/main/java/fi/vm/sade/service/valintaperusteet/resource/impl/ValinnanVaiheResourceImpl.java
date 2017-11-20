@@ -98,7 +98,7 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
         valinnanvaiheOidit.forEach((oid) -> valintatapajonot.put(oid, modelMapper.mapList(jonoService.findJonoByValinnanvaihe(oid), ValintatapajonoDTO.class)));
         return valintatapajonot.keySet().stream().map((oid) ->
             new ValinnanVaiheJaValintatapajonoDTO(oid, valintatapajonot.get(oid))
-        ).collect(Collectors.toList());
+        ).filter((vaihe) -> !vaihe.getValintatapajonot().isEmpty()).collect(Collectors.toList());
     }
 
     @GET
