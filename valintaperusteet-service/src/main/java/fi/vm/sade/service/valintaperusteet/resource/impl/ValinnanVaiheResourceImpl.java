@@ -5,6 +5,7 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.REA
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -19,6 +20,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.google.common.collect.Sets;
+import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.service.ValintaryhmaService;
 import org.slf4j.Logger;
@@ -33,12 +35,6 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintakoeCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.resource.ValinnanVaiheResource;
 import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
@@ -97,12 +93,13 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
     @Path("/valintatapajonot")
     @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Hakee useiden valinnan vaiheiden valintatapajonot OIDien perusteella", response = ValintatapajonoDTO.class)
-    public Map<String,List<ValintatapajonoDTO>> valintatapajonot(@ApiParam(value = "Valinnan vaiheiden OIDit", required = true) List<String> valinnanvaiheOidit) {
+    public List<ValinnanVaiheJaValintatapajonoDTO> valintatapajonot(@ApiParam(value = "Valinnan vaiheiden OIDit", required = true) List<String> valinnanvaiheOidit) {
         Map<String,List<ValintatapajonoDTO>> valintatapajonot = new HashMap<>();
         valinnanvaiheOidit.forEach((oid) -> valintatapajonot.put(oid, modelMapper.mapList(jonoService.findJonoByValinnanvaihe(oid), ValintatapajonoDTO.class)));
-        return valintatapajonot;
+        return valintatapajonot.keySet().stream().map((oid) ->
+            new ValinnanVaiheJaValintatapajonoDTO(oid, valintatapajonot.get(oid))
+        ).collect(Collectors.toList());
     }
-
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
