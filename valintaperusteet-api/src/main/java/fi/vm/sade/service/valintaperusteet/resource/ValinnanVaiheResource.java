@@ -15,12 +15,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintakoeCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
+import fi.vm.sade.service.valintaperusteet.dto.*;
 
 @Path("valinnanvaihe")
 public interface ValinnanVaiheResource {
@@ -39,7 +34,7 @@ public interface ValinnanVaiheResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/valintatapajonot")
-    Map<String,List<ValintatapajonoDTO>> valintatapajonot(List<String> valinnanvaiheOidit);
+    List<ValinnanVaiheJaValintatapajonoDTO> valintatapajonot(List<String> valinnanvaiheOidit);
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
