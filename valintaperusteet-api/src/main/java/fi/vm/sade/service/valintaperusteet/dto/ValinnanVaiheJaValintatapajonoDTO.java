@@ -21,7 +21,7 @@ public class ValinnanVaiheJaValintatapajonoDTO {
     public Boolean getKuuluuSijoitteluun() {
         return kuuluuSijoitteluun;
     }
-
+    
     public List<ValintatapajonoDTO> getValintatapajonot() {
         return valintatapajonot;
     }
