@@ -43,7 +43,7 @@ public interface HakukohdeResource {
     @Path("/valintaryhmat")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Map<String,ValintaryhmaDTO> queryValintaryhmat(List<String> hakukohdeOidit);
+    List<HakukohdeJaValintaryhmaDTO> queryValintaryhmat(List<String> hakukohdeOidit);
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
