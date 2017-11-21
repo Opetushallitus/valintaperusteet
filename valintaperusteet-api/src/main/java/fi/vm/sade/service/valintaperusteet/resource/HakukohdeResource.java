@@ -120,7 +120,7 @@ public interface HakukohdeResource {
     @Path("/avaimet")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Map<String,HakukohteenValintaperusteAvaimetDTO> findHakukohteidenAvaimet(List<String> hakukohdeOidit);
+    List<HakukohdeJaValintaperusteDTO> findHakukohteidenAvaimet(List<String> hakukohdeOidit);
 
     @PUT
     @Path("/{hakukohdeOid}/valinnanvaihe")
