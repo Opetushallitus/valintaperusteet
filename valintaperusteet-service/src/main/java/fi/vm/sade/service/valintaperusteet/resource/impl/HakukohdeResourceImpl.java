@@ -379,9 +379,16 @@ public class HakukohdeResourceImpl {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @PreAuthorize(READ_UPDATE_CRUD)
-    @ApiOperation(value = "Hakee hakukohteiden hakijaryhmät", response = HakijaryhmaDTO.class)
-    public List<HakijaryhmaValintatapajonoDTO> hakijaryhmat(@ApiParam(value = "Hakukohde OIDit", required = true) List<String> hakukohdeOidit) {
-        return modelMapper.mapList(hakijaryhmaValintatapajonoService.findByHakukohteet(hakukohdeOidit), HakijaryhmaValintatapajonoDTO.class);
+    @ApiOperation(value = "Hakee hakukohteiden hakijaryhmät", response = HakijaryhmaValintatapajonoDTO.class)
+    public List<HakukohdeJaHakijaryhmaValintatapajonoDTO> hakijaryhmat(@ApiParam(value = "Hakukohde OIDit", required = true) List<String> hakukohdeOidit) {
+        List<HakukohdeJaHakijaryhmaValintatapajonoDTO> result = hakukohdeOidit.stream().map(oid ->
+            new HakukohdeJaHakijaryhmaValintatapajonoDTO(oid, new ArrayList<HakijaryhmaValintatapajonoDTO>())
+        ).collect(Collectors.toList());
+        hakijaryhmaValintatapajonoService.findByHakukohteet(hakukohdeOidit).forEach((hakijaryhma) ->
+            result.stream().filter(r -> r.getHakukohdeOid().equals(hakijaryhma.getHakukohdeViite().getOid()))
+                .findFirst().get().getHakijaryhmat().add(modelMapper.map(hakijaryhma, HakijaryhmaValintatapajonoDTO.class))
+        );
+        return result.stream().filter(r -> !r.getHakijaryhmat().isEmpty()).collect(Collectors.toList());
     }
     
     @GET
