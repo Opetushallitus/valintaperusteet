@@ -94,11 +94,11 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
     @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Hakee useiden valinnan vaiheiden valintatapajonot OIDien perusteella", response = ValintatapajonoDTO.class)
     public List<ValinnanVaiheJaValintatapajonoDTO> valintatapajonot(@ApiParam(value = "Valinnan vaiheiden OIDit", required = true) List<String> valinnanvaiheOidit) {
-        Map<String,List<ValintatapajonoDTO>> valintatapajonot = new HashMap<>();
-        valinnanvaiheOidit.forEach((oid) -> valintatapajonot.put(oid, modelMapper.mapList(jonoService.findJonoByValinnanvaihe(oid), ValintatapajonoDTO.class)));
-        return valintatapajonot.keySet().stream().map((oid) ->
-            new ValinnanVaiheJaValintatapajonoDTO(oid, valintatapajonot.get(oid))
-        ).filter((vaihe) -> !vaihe.getValintatapajonot().isEmpty()).collect(Collectors.toList());
+        return valinnanvaiheOidit.stream().map(oid -> {
+            List<ValintatapajonoDTO> valintatapajonot = modelMapper.mapList(jonoService.findJonoByValinnanvaihe(oid), ValintatapajonoDTO.class);
+            Boolean kuuluuSijoitteluun = valinnanVaiheService.kuuluuSijoitteluun(oid);
+            return new ValinnanVaiheJaValintatapajonoDTO(oid, kuuluuSijoitteluun, valintatapajonot);
+        }).collect(Collectors.toList());
     }
 
     @GET
