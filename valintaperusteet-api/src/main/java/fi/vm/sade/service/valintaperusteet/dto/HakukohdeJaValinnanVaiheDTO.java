@@ -5,9 +5,9 @@ import java.util.List;
 public class HakukohdeJaValinnanVaiheDTO {
 
     private String hakukohdeOid;
-    private List<ValinnanVaiheDTO> valinnanvaiheet;
+    private List<ValinnanVaiheJaPrioriteettiDTO> valinnanvaiheet;
 
-    public HakukohdeJaValinnanVaiheDTO(String hakukohdeOid, List<ValinnanVaiheDTO> valinnanvaiheet) {
+    public HakukohdeJaValinnanVaiheDTO(String hakukohdeOid, List<ValinnanVaiheJaPrioriteettiDTO> valinnanvaiheet) {
         this.hakukohdeOid = hakukohdeOid;
         this.valinnanvaiheet = valinnanvaiheet;
     }
@@ -16,7 +16,7 @@ public class HakukohdeJaValinnanVaiheDTO {
         return hakukohdeOid;
     }
 
-    public List<ValinnanVaiheDTO> getValinnanvaiheet() {
+    public List<ValinnanVaiheJaPrioriteettiDTO> getValinnanvaiheet() {
         return valinnanvaiheet;
     }
 }
