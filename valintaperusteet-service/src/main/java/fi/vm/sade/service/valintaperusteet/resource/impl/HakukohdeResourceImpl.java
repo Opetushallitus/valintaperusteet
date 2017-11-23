@@ -385,7 +385,7 @@ public class HakukohdeResourceImpl {
     @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Hakee hakukohteiden hakijaryhmät", response = ValintatapajonoJaHakijaryhmaValintatapajonoDTO.class)
     public List<HakukohdeJaValintatapajonoJaHakijaryhmaValintatapajonoDTO> hakijaryhmat(@ApiParam(value = "Hakukohde OIDit", required = true) List<String> hakukohdeOidit) {
-        List<HakijaryhmaValintatapajono> kaikkiHakijaryhmat = hakijaryhmaValintatapajonoService.findByHakukohteet(hakukohdeOidit);
+        List<HakijaryhmaValintatapajono> kaikkiHakijaryhmat = hakijaryhmaValintatapajonoService.findByHakukohteetWithValintatapajono(hakukohdeOidit);
         return hakukohdeOidit.stream().map(oid ->
             new HakukohdeJaValintatapajonoJaHakijaryhmaValintatapajonoDTO(oid,
                     kaikkiHakijaryhmat.stream().filter(h -> oid.equals(h.getHakukohdeViite().getOid())).map(h -> {
