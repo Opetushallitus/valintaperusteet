@@ -97,7 +97,7 @@ public interface HakukohdeResource {
     @Path("/hakijaryhmat")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    List<HakukohdeJaHakijaryhmaValintatapajonoDTO> hakijaryhmat(List<String> hakukohdeOidit);
+    List<HakukohdeJaValintatapajonoJaHakijaryhmaValintatapajonoDTO> hakijaryhmat(List<String> hakukohdeOidit);
 
 
     @GET
