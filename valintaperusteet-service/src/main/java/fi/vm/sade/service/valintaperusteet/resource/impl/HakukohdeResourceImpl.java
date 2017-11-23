@@ -277,11 +277,13 @@ public class HakukohdeResourceImpl {
     public List<HakukohdeJaValinnanVaiheDTO> valinnanVaiheetForHakukohteet(@ApiParam(value = "Hakukohde OIDit", required = true) List<String> hakukohdeOidit) {
         return hakukohdeOidit.stream().map((oid) -> {
             List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheService.findByHakukohde(oid);
-            if (null == valinnanVaiheet || 0 == valinnanVaiheet.size()) {
-                return null;
-            } else {
-                return new HakukohdeJaValinnanVaiheDTO(oid, modelMapper.mapList(valinnanVaiheet, ValinnanVaiheDTO.class));
+            List<ValinnanVaiheJaPrioriteettiDTO> valinnanVaiheDtot = new ArrayList<>();
+            for(int i = 0; i < valinnanVaiheet.size(); i++) {
+                ValinnanVaiheJaPrioriteettiDTO dto = modelMapper.map(valinnanVaiheet.get(i), ValinnanVaiheJaPrioriteettiDTO.class);
+                dto.setPrioriteetti(i + 1);
+                valinnanVaiheDtot.add(dto);
             }
+            return valinnanVaiheDtot.isEmpty() ? null : new HakukohdeJaValinnanVaiheDTO(oid, valinnanVaiheDtot);
         }).filter((dto) -> null != dto).collect(Collectors.toList());
     }
 
