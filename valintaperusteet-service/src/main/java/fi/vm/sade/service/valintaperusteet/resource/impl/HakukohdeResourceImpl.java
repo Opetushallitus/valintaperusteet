@@ -389,10 +389,9 @@ public class HakukohdeResourceImpl {
         return hakukohdeOidit.stream().map(oid ->
             new HakukohdeJaValintatapajonoJaHakijaryhmaValintatapajonoDTO(oid,
                     kaikkiHakijaryhmat.stream().filter(h -> oid.equals(h.getHakukohdeViite().getOid())).map(h -> {
+                        String valintatapajonoOid = null == h.getValintatapajono() ? "NULL" : h.getValintatapajono().getOid();
                         ValintatapajonoJaHakijaryhmaValintatapajonoDTO dto = modelMapper.map(h, ValintatapajonoJaHakijaryhmaValintatapajonoDTO.class);
-                        if(null != h.getValintatapajono()) {
-                            dto.setValintatapajonoOid(h.getValintatapajono().getOid());
-                        }
+                        dto.setValintatapajonoOid(valintatapajonoOid);
                         return dto;
                     }).collect(Collectors.toList())
             )
