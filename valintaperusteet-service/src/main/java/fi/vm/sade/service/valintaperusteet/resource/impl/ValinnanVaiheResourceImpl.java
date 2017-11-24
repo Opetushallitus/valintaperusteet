@@ -98,7 +98,7 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
             List<ValintatapajonoDTO> valintatapajonot = modelMapper.mapList(jonoService.findJonoByValinnanvaihe(oid), ValintatapajonoDTO.class);
             Boolean kuuluuSijoitteluun = valinnanVaiheService.kuuluuSijoitteluun(oid);
             return new ValinnanVaiheJaValintatapajonoDTO(oid, kuuluuSijoitteluun, valintatapajonot);
-        }).collect(Collectors.toList());
+        }).filter(dto -> !dto.getValintatapajonot().isEmpty()).collect(Collectors.toList());
     }
 
     @GET
