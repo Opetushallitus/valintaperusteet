@@ -149,7 +149,7 @@ public class HakijaryhmaValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Hakija
             return from(hv).where(hv.hakukohdeViite.oid.in(oids))
                     .leftJoin(hv.hakijaryhma, h).fetch()
                     .leftJoin(h.jonot).fetch()
-                    .leftJoin(j.valintatapajono).fetch()
+                    .leftJoin(hv.valintatapajono, j).fetch()
                     .leftJoin(hv.hakukohdeViite, v).fetch()
                     .leftJoin(v.hakijaryhmat).fetch()
                     .leftJoin(hv.master).fetch()
