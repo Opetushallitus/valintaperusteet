@@ -380,15 +380,15 @@ public class HakukohdeResourceImpl {
     }
 
     private List<LinkitettyHakijaryhmaValintatapajonoDTO> getValintatapajonokohtaisetHakijaryhmat(String hakukohdeOid) {
-        return hakijaryhmaValintatapajonoService.findHakijaryhmaByJonos(
-                valinnanVaiheService.findByHakukohde(hakukohdeOid).stream().map(ValinnanVaihe::getOid).map(valinnanvaihe ->
-                        valintatapajonoService.findJonoByValinnanvaihe(valinnanvaihe).stream()
-                                .map(Valintatapajono::getOid)).flatMap(oid -> oid).collect(Collectors.toList())
-        ).stream().map(hakijaryhma -> {
-            LinkitettyHakijaryhmaValintatapajonoDTO dto = modelMapper.map(hakijaryhma, LinkitettyHakijaryhmaValintatapajonoDTO.class);
-            dto.setValintatapajonoOid(hakijaryhma.getValintatapajono().getOid());
-            return dto;
-        }).collect(Collectors.toList());
+        List<String> valintatapajonoOids = valinnanVaiheService.findByHakukohde(hakukohdeOid).stream().map(ValinnanVaihe::getOid).map(valinnanvaihe ->
+           valintatapajonoService.findJonoByValinnanvaihe(valinnanvaihe).stream().map(Valintatapajono::getOid)).flatMap(oid -> oid).collect(Collectors.toList());
+
+        return valintatapajonoOids.isEmpty() ? new ArrayList<>() : hakijaryhmaValintatapajonoService
+           .findHakijaryhmaByJonos(valintatapajonoOids).stream().map(hakijaryhma -> {
+              LinkitettyHakijaryhmaValintatapajonoDTO dto = modelMapper.map(hakijaryhma, LinkitettyHakijaryhmaValintatapajonoDTO.class);
+              dto.setValintatapajonoOid(hakijaryhma.getValintatapajono().getOid());
+              return dto;
+           }).collect(Collectors.toList());
     }
 
     private List<LinkitettyHakijaryhmaValintatapajonoDTO> getHakukohdekohtaisetHakijaryhmat(List<String> hakukohdeOidit) {
@@ -413,7 +413,7 @@ public class HakukohdeResourceImpl {
             hakukohteenHakijaryhmat.addAll(hakijaryhmat.stream().filter(hakijaryhma ->
                 hakukohdeOid.equals(hakijaryhma.getHakukohdeOid())).collect(Collectors.toList()));
             return new HakukohdeJaLinkitettyHakijaryhmaValintatapajonoDTO(hakukohdeOid, hakukohteenHakijaryhmat);
-        }).collect(Collectors.toList());
+        }).filter(hakukohde -> !hakukohde.getHakijaryhmat().isEmpty()).collect(Collectors.toList());
     }
     
     @GET
