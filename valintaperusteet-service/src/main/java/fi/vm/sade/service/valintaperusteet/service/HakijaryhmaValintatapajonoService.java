@@ -21,8 +21,6 @@ public interface HakijaryhmaValintatapajonoService {
 
     List<HakijaryhmaValintatapajono> findByHakukohteet(Collection<String> hakukohdeOids);
 
-    List<HakijaryhmaValintatapajono> findByHakukohteetWithValintatapajono(Collection<String> hakukohdeOids);
-
     HakijaryhmaValintatapajono update(String oid, HakijaryhmaValintatapajonoDTO dto);
 
     void liitaHakijaryhmaValintatapajonolle(String valintatapajonoOid, String hakijaryhmaOid);
