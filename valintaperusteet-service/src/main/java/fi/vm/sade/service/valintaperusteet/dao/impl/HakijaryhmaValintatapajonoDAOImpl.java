@@ -137,30 +137,6 @@ public class HakijaryhmaValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Hakija
     }
 
     @Override
-    public List<HakijaryhmaValintatapajono> findByHakukohteetWithValintatapajono(Collection<String> oids) {
-        QHakijaryhmaValintatapajono hv = QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
-
-        QHakijaryhma h = QHakijaryhma.hakijaryhma;
-        QHakukohdeViite v = QHakukohdeViite.hakukohdeViite;
-        QValintatapajono j = QValintatapajono.valintatapajono;
-
-        if (from(hv).leftJoin(hv.hakukohdeViite, v).fetch()
-                .where(hv.hakukohdeViite.oid.in(oids)).exists()) {
-            return from(hv).where(hv.hakukohdeViite.oid.in(oids))
-                    .leftJoin(hv.hakijaryhma, h).fetch()
-                    .leftJoin(h.jonot).fetch()
-                    .leftJoin(hv.valintatapajono, j).fetch()
-                    .leftJoin(hv.hakukohdeViite, v).fetch()
-                    .leftJoin(v.hakijaryhmat).fetch()
-                    .leftJoin(hv.master).fetch()
-                    .leftJoin(hv.edellinen).fetch()
-                    .leftJoin(hv.hakijaryhmatyyppikoodi).fetch()
-                    .listDistinct(hv);
-        }
-        return Lists.newArrayList();
-    }
-
-    @Override
     public HakijaryhmaValintatapajono haeHakukohteenViimeinenHakijaryhma(String hakukohdeOid) {
         QHakukohdeViite hakukohde = QHakukohdeViite.hakukohdeViite;
         QHakijaryhmaValintatapajono hakijaryhmajono = QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
