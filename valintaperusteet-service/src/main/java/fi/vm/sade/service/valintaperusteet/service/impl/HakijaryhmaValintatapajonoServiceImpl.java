@@ -95,10 +95,6 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
         return hakijaryhmaValintatapajonoDAO.findByHakukohteet(hakukohdeOids);
     }
 
-    @Override
-    public List<HakijaryhmaValintatapajono> findByHakukohteetWithValintatapajono(Collection<String> hakukohdeOids) {
-        return hakijaryhmaValintatapajonoDAO.findByHakukohteetWithValintatapajono(hakukohdeOids);
-    }
 
     @Override
     public Hakijaryhma lisaaHakijaryhmaValintatapajonolle(String valintatapajonoOid, HakijaryhmaCreateDTO dto) {

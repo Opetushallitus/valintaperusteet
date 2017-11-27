@@ -6,6 +6,7 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPD
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -378,24 +379,41 @@ public class HakukohdeResourceImpl {
         return modelMapper.mapList(hakijaryhmaValintatapajonoService.findByHakukohde(oid), HakijaryhmaValintatapajonoDTO.class);
     }
 
+    private List<LinkitettyHakijaryhmaValintatapajonoDTO> getValintatapajonokohtaisetHakijaryhmat(String hakukohdeOid) {
+        return hakijaryhmaValintatapajonoService.findHakijaryhmaByJonos(
+                valinnanVaiheService.findByHakukohde(hakukohdeOid).stream().map(ValinnanVaihe::getOid).map(valinnanvaihe ->
+                        valintatapajonoService.findJonoByValinnanvaihe(valinnanvaihe).stream()
+                                .map(Valintatapajono::getOid)).flatMap(oid -> oid).collect(Collectors.toList())
+        ).stream().map(hakijaryhma -> {
+            LinkitettyHakijaryhmaValintatapajonoDTO dto = modelMapper.map(hakijaryhma, LinkitettyHakijaryhmaValintatapajonoDTO.class);
+            dto.setValintatapajonoOid(hakijaryhma.getValintatapajono().getOid());
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
+    private List<LinkitettyHakijaryhmaValintatapajonoDTO> getHakukohdekohtaisetHakijaryhmat(List<String> hakukohdeOidit) {
+        return hakijaryhmaValintatapajonoService.findByHakukohteet(hakukohdeOidit).stream().map(hakijaryhma -> {
+            LinkitettyHakijaryhmaValintatapajonoDTO dto = modelMapper.map(hakijaryhma, LinkitettyHakijaryhmaValintatapajonoDTO.class);
+            dto.setHakukohdeOid(hakijaryhma.getHakukohdeViite().getOid());
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
     @POST
     @Path("/hakijaryhmat")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @PreAuthorize(READ_UPDATE_CRUD)
-    @ApiOperation(value = "Hakee hakukohteiden hakijaryhmät", response = ValintatapajonoJaHakijaryhmaValintatapajonoDTO.class)
-    public List<HakukohdeJaValintatapajonoJaHakijaryhmaValintatapajonoDTO> hakijaryhmat(@ApiParam(value = "Hakukohde OIDit", required = true) List<String> hakukohdeOidit) {
-        List<HakijaryhmaValintatapajono> kaikkiHakijaryhmat = hakijaryhmaValintatapajonoService.findByHakukohteetWithValintatapajono(hakukohdeOidit);
-        return hakukohdeOidit.stream().map(oid ->
-            new HakukohdeJaValintatapajonoJaHakijaryhmaValintatapajonoDTO(oid,
-                    kaikkiHakijaryhmat.stream().filter(h -> oid.equals(h.getHakukohdeViite().getOid())).map(h -> {
-                        String valintatapajonoOid = null == h.getValintatapajono() ? "NULL" : h.getValintatapajono().getOid();
-                        ValintatapajonoJaHakijaryhmaValintatapajonoDTO dto = modelMapper.map(h, ValintatapajonoJaHakijaryhmaValintatapajonoDTO.class);
-                        dto.setValintatapajonoOid(valintatapajonoOid);
-                        return dto;
-                    }).collect(Collectors.toList())
-            )
-        ).filter(r -> !r.getHakijaryhmat().isEmpty()).collect(Collectors.toList());
+    @ApiOperation(value = "Hakee hakukohteiden hakijaryhmät", response = LinkitettyHakijaryhmaValintatapajonoDTO.class)
+    public List<HakukohdeJaLinkitettyHakijaryhmaValintatapajonoDTO> hakijaryhmat(@ApiParam(value = "Hakukohde OIDit", required = true) List<String> hakukohdeOidit) {
+        List<LinkitettyHakijaryhmaValintatapajonoDTO> hakijaryhmat = getHakukohdekohtaisetHakijaryhmat(hakukohdeOidit);
+        return hakukohdeOidit.stream().map(hakukohdeOid -> {
+            List<LinkitettyHakijaryhmaValintatapajonoDTO> hakukohteenHakijaryhmat = new ArrayList<>();
+            hakukohteenHakijaryhmat.addAll(getValintatapajonokohtaisetHakijaryhmat(hakukohdeOid));
+            hakukohteenHakijaryhmat.addAll(hakijaryhmat.stream().filter(hakijaryhma ->
+                hakukohdeOid.equals(hakijaryhma.getHakukohdeOid())).collect(Collectors.toList()));
+            return new HakukohdeJaLinkitettyHakijaryhmaValintatapajonoDTO(hakukohdeOid, hakukohteenHakijaryhmat);
+        }).collect(Collectors.toList());
     }
     
     @GET
