@@ -530,6 +530,7 @@ public class LaskentakaavaServiceTest {
         assertEquals(new BigDecimal("30.0"), new BigDecimal(valintaperusteet.get(1).getMax()));
         assertNull(valintaperusteet.get(1).getArvot());
         assertEquals(Valintaperustelahde.SYOTETTAVA_ARVO, valintaperusteet.get(1).getLahde());
+        assertTrue(valintaperusteet.get(0).getTilastoidaan());
 
     }
 
