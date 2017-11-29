@@ -44,6 +44,17 @@ public class ValintaperusteDTO {
     @ApiModelProperty(value = "Voidaanko arvo syöttää kaikille vai vaan kutsutuille")
     private Boolean syotettavissaKaikille = true;
 
+    @ApiModelProperty(value = "Tilastoidaanko")
+    private Boolean tilastoidaan = null;
+
+    public Boolean getTilastoidaan() {
+        return tilastoidaan;
+    }
+
+    public void setTilastoidaan(Boolean tilastoidaan) {
+        this.tilastoidaan = tilastoidaan;
+    }
+
     public String getTunniste() {
         return tunniste;
     }
