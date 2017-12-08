@@ -188,7 +188,7 @@
     <funktiokutsu tallenna_tulos="false" id="514" version="0" funktionimi="HAELUKUARVO"/>
     <valintaperuste_viite id="514" version="0" lahde="SYOTETTAVA_ARVO" tunniste="valintaperuste1" kuvaus="kuvaus"
                           on_pakollinen="true" funktiokutsu_id="514" indeksi="1" vaatii_osallistumisen="true"
-                          syotettavissa_kaikille="false" tilastoidaan="true"/>
+                          syotettavissa_kaikille="false" tilastoidaan="true" syotettavanarvontyyppi_id="1"/>
     <arvokonvertteriparametri id="514" version="0" arvo="arvo1" paluuarvo="10.0" hylkaysperuste="false"
                               funktiokutsu_id="514"/>
     <arvokonvertteriparametri id="515" version="0" arvo="arvo2" paluuarvo="9.0" hylkaysperuste="false"

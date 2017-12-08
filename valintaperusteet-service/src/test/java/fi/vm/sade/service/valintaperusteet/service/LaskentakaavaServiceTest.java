@@ -531,7 +531,8 @@ public class LaskentakaavaServiceTest {
         assertNull(valintaperusteet.get(1).getArvot());
         assertEquals(Valintaperustelahde.SYOTETTAVA_ARVO, valintaperusteet.get(1).getLahde());
         assertTrue(valintaperusteet.get(0).getTilastoidaan());
-
+        assertNotNull(valintaperusteet.get(0).getSyötettavanArvonTyyppi());
+        assertEquals("syotettavanarvontyypit_valintakoe", valintaperusteet.get(0).getSyötettavanArvonTyyppi().getUri());
     }
 
     @Test

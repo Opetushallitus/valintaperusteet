@@ -89,6 +89,9 @@ public class HaeValintaperusteetRekursiivisestiActorBean extends UntypedActor {
                 valintaperuste.setOnPakollinen(vp.getOnPakollinen());
                 valintaperuste.setOsallistuminenTunniste(vp.getOsallistuminenTunniste());
                 valintaperuste.setTilastoidaan(vp.getTilastoidaan());
+                if(null != vp.getSyotettavanarvontyyppi()) {
+                    valintaperuste.setSyötettavanArvonTyyppi(new ModelMapper().map(vp.getSyotettavanarvontyyppi(), fi.vm.sade.service.valintaperusteet.dto.KoodiDTO.class));
+                }
 
                 if (vp.getEpasuoraViittaus() != null && vp.getEpasuoraViittaus()) {
                     valintaperuste.setTunniste(hakukohteenValintaperusteet.get(vp.getTunniste()));
