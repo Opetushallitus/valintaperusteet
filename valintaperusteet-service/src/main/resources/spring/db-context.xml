@@ -54,6 +54,7 @@
         <property name="maximumPoolSize" value="${valintaperusteet-service.postgresql.maxactive}" />
         <property name="connectionTimeout" value="${valintaperusteet-service.postgresql.maxwait}" />
         <property name="maxLifetime" value="${valintaperusteet-service.postgresql.maxlifetimemillis}"/>
+        <property name="leakDetectionThreshold" value="${valintaperusteet-service.postgresql.leakDetectionThresholdMillis}" />
         <property name="registerMbeans" value="true" />
 
         <property name="dataSourceProperties">
