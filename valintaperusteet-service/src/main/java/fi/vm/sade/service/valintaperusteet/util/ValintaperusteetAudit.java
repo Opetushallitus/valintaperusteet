@@ -3,9 +3,11 @@ package fi.vm.sade.service.valintaperusteet.util;
 import fi.vm.sade.auditlog.ApplicationType;
 import fi.vm.sade.auditlog.Audit;
 import fi.vm.sade.sharedutils.AuditLogger;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.security.Principal;
+import java.util.Collection;
 import java.util.Optional;
 
 /**
@@ -18,5 +20,9 @@ public class ValintaperusteetAudit {
         return Optional.ofNullable((Principal) SecurityContextHolder.getContext().getAuthentication()).orElse(
                 () -> "Kirjautumaton käyttäjä"
         ).getName();
+    }
+
+    public static String toNullsafeString(Collection l) {
+        return l == null ? "null" : StringUtils.join(l, ",");
     }
 }

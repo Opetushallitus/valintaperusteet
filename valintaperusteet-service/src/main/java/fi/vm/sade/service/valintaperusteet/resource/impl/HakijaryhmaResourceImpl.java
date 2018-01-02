@@ -29,6 +29,7 @@ import javax.ws.rs.core.Response;
 import java.util.*;
 
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.*;
+import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.toNullsafeString;
 
 @Component
 @Path("hakijaryhma")
@@ -167,16 +168,9 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
     @ApiOperation(value = "Järjestää hakijaryhmät parametrina annetun OID-listan mukaiseen järjestykseen", response = HakijaryhmaDTO.class)
     public List<HakijaryhmaDTO> jarjesta(@ApiParam(value = "Hakijaryhmien uusi järjestys", required = true) List<String> oids, @Context HttpServletRequest request) {
         List<Hakijaryhma> hrl = hakijaryhmaService.jarjestaHakijaryhmat(oids);
-        Map<String, String> uusiJarjestys = ImmutableMap.of("hakijaryhmaoids", Optional.of(oids.toArray().toString()).orElse(null));
+        Map<String, String> uusiJarjestys = ImmutableMap.of("hakijaryhmaoids", toNullsafeString(oids));
         AuditLog.log(ValintaperusteetOperation.HAKIJARYHMA_JARJESTA, ValintaResource.HAKIJARYHMA, null,
                 null, null, request, uusiJarjestys);
-        /*
-        AUDIT.log(builder()
-                .id(username())
-                .add("hakijaryhmaoids", Optional.ofNullable(oids).map(List::toArray).map(Arrays::toString).orElse(null))
-                .setOperaatio(ValintaperusteetOperation.HAKIJARYHMA_JARJESTA)
-                .build());
-        */
         return modelMapper.mapList(hrl, HakijaryhmaDTO.class);
     }
 }

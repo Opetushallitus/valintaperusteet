@@ -3,6 +3,7 @@ package fi.vm.sade.service.valintaperusteet.resource.impl;
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD;
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
+import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.toNullsafeString;
 import com.google.common.collect.ImmutableMap;
 
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaCreateDTO;
@@ -260,7 +261,7 @@ public class ValintatapajonoResourceImpl {
     @ApiOperation(value = "Järjestää valintatapajonot annetun OID-listan mukaan", response = ValintatapajonoDTO.class)
     public List<ValintatapajonoDTO> jarjesta(@ApiParam(value = "OID-lista jonka mukaiseen järjestykseen valintatapajonot järjestetään", required = true) List<String> oids, @Context HttpServletRequest request) {
         List<Valintatapajono> jarjestetytJonot = valintatapajonoService.jarjestaValintatapajonot(oids);
-        ImmutableMap<String, String> jarjestetytOidit = ImmutableMap.of("Järjestetyt Oidit", oids.toArray().toString());
+        ImmutableMap<String, String> jarjestetytOidit = ImmutableMap.of("Järjestetyt Oidit", toNullsafeString(oids));
         AuditLog.log(ValintaperusteetOperation.VALINTATAPAJONO_JARJESTA, ValintaResource.VALINTATAPAJONO, null, null, null, request, jarjestetytOidit);
         /*AUDIT.log(builder()
                 .id(username())

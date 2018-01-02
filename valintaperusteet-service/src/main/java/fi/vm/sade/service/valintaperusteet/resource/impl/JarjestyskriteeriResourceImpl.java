@@ -24,8 +24,10 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.Map;
 
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.*;
+import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.toNullsafeString;
 
 @Component
 @Path("jarjestyskriteeri")
@@ -118,15 +120,8 @@ public class JarjestyskriteeriResourceImpl implements JarjestyskriteeriResource 
     public List<JarjestyskriteeriDTO> jarjesta(@ApiParam(value = "Uusi järjestys", required = true) List<String> oids, @Context HttpServletRequest request) {
         List<Jarjestyskriteeri> jks = jarjestyskriteeriService.jarjestaKriteerit(oids);
 
-        ImmutableMap additionalInfo = ImmutableMap.of("Uusi järjestys", oids.toArray().toString());
+        Map<String,String> additionalInfo = ImmutableMap.of("Uusi järjestys", toNullsafeString(oids));
         AuditLog.log(ValintaperusteetOperation.JARJESTYSKRITEERIT_JARJESTA, ValintaResource.JARJESTYSKRITEERIT, null, null, null, request, additionalInfo);
-        /*
-        AUDIT.log(builder()
-                .id(username())
-                .add("jarjestyskriteerioids", Optional.ofNullable(oids).map(List::toArray).map(Arrays::toString).orElse(null))
-                .setOperaatio(ValintaperusteetOperation.JARJESTYSKRITEERIT_JARJESTA)
-                .build());
-        */
 
         return modelMapper.mapList(jks, JarjestyskriteeriDTO.class);
     }

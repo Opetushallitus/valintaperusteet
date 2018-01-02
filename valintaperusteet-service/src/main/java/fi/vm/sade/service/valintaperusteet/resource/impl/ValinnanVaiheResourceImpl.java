@@ -3,6 +3,7 @@ package fi.vm.sade.service.valintaperusteet.resource.impl;
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD;
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
+import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.toNullsafeString;
 import com.google.common.collect.ImmutableMap;
 
 import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheCreateDTO;
@@ -21,6 +22,9 @@ import fi.vm.sade.service.valintaperusteet.service.ValintaryhmaService;
 import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaihettaEiVoiPoistaaException;
+import fi.vm.sade.sharedutils.AuditLog;
+import fi.vm.sade.sharedutils.ValintaResource;
+import fi.vm.sade.sharedutils.ValintaperusteetOperation;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -198,13 +202,8 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
     @ApiOperation(value = "Järjestää valinnan vaiheet parametrina annetun OID-listan mukaiseen järjestykseen", response = ValinnanVaiheDTO.class)
     public List<ValinnanVaiheDTO> jarjesta(@ApiParam(value = "Valinnan vaiheiden uusi järjestys", required = true) List<String> oids, @Context HttpServletRequest request) {
         List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheService.jarjestaValinnanVaiheet(oids);
-        Map additionalInfo = ImmutableMap.of("valinnanvaiheoids", oids.toArray().toString());
+        Map<String, String> additionalInfo = ImmutableMap.of("valinnanvaiheoids", toNullsafeString(oids));
         AuditLog.log(ValintaperusteetOperation.VALINNANVAIHE_JARJESTA, ValintaResource.VALINNANVAIHE, null, null, null, request, additionalInfo);
-        /*AUDIT.log(builder()
-                .id(username())
-                .add("valinnanvaiheoids", Optional.ofNullable(oids).map(List::toArray).map(Arrays::toString).orElse(null))
-                .setOperaatio(ValintaperusteetOperation.VALINNANVAIHE_JARJESTA)
-                .build());*/
         return modelMapper.mapList(valinnanVaiheet, ValinnanVaiheDTO.class);
     }
 

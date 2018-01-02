@@ -25,6 +25,7 @@ import javax.ws.rs.core.Response;
 import java.util.*;
 
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.*;
+import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.toNullsafeString;
 
 @Component
 @Path("valintaryhma")
@@ -350,15 +351,8 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
             @ApiParam(value = "Uudet hakukohdekoodit", required = true) Set<KoodiDTO> hakukohdekoodit, @Context HttpServletRequest request) {
         try {
             hakukohdekoodiService.updateValintaryhmaHakukohdekoodit(valintaryhmaOid, hakukohdekoodit);
-            Map<String, String> uudetHakukohdekoodit = ImmutableMap.of("Uudet hakukohdekoodit", Optional.of(hakukohdekoodit.toArray().toString()).orElse(null));
+            Map<String, String> uudetHakukohdekoodit = ImmutableMap.of("Uudet hakukohdekoodit", toNullsafeString(hakukohdekoodit));
             AuditLog.log(ValintaperusteetOperation.VALINTARYHMA_PAIVITYS_HAKUKOHDEKOODI, ValintaResource.VALINTARYHMA, valintaryhmaOid, null, null, request, uudetHakukohdekoodit);
-            /*
-            AUDIT.log(builder()
-                    .id(username())
-                    .valintaryhmaOid(valintaryhmaOid)
-                    .setOperaatio(ValintaperusteetOperation.VALINTARYHMA_PAIVITYS_HAKUKOHDEKOODI)
-                    .build());
-            */
             return Response.status(Response.Status.ACCEPTED).entity(hakukohdekoodit).build();
         } catch (Exception e) {
             LOGGER.error("Error updating hakukohdekoodit.", e);
@@ -403,15 +397,8 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
             @ApiParam(value = "Päivitettävät valintakoekoodit", required = true) List<KoodiDTO> valintakoekoodit, @Context HttpServletRequest request) {
         try {
             valintakoekoodiService.updateValintaryhmanValintakoekoodit(valintaryhmaOid, valintakoekoodit);
-            Map<String, String> muutetutValintakoekoodit = ImmutableMap.of("Päivitetyt valintakoekoodit", Optional.of(valintakoekoodit.toArray().toString()).orElse(null));
+            Map<String, String> muutetutValintakoekoodit = ImmutableMap.of("Päivitetyt valintakoekoodit", toNullsafeString(valintakoekoodit));
             AuditLog.log(ValintaperusteetOperation.VALINTARYHMA_PAIVITYS_VALINTAKOODI, ValintaResource.VALINTARYHMA, valintaryhmaOid, null, null, request, muutetutValintakoekoodit);
-            /*
-            AUDIT.log(builder()
-                    .id(username())
-                    .valintaryhmaOid(valintaryhmaOid)
-                    .setOperaatio(ValintaperusteetOperation.VALINTARYHMA_PAIVITYS_VALINTAKOODI)
-                    .build());
-            */
             return Response.status(Response.Status.ACCEPTED).entity(valintakoekoodit).build();
         } catch (Exception e) {
             LOGGER.error("Error updating valintakoekoodit.", e);
