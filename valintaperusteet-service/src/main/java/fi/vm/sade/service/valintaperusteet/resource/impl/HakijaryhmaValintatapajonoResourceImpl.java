@@ -28,10 +28,13 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
+import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.toNullsafeString;
 
 @Component
 @Path("hakijaryhma_valintatapajono")
@@ -78,13 +81,6 @@ public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValint
             HakijaryhmaValintatapajonoDTO hakijaryhmaValintatapajonoDTO = modelMapper.map(hakijaryhmaValintatapajonoService.readByOid(oid), HakijaryhmaValintatapajonoDTO.class);
             hakijaryhmaValintatapajonoService.deleteByOid(oid, false);
             AuditLog.log(ValintaperusteetOperation.HAKIJARYHMA_VALINTATAPAJONO_LIITOS_POISTO, ValintaResource.HAKIJARYHMA_VALINTATAPAJONO, oid, null, hakijaryhmaValintatapajonoDTO, request);
-            /*
-            AUDIT.log(builder()
-                    .id(username())
-                    .hakijaryhmaOid(oid)
-                    .setOperaatio(ValintaperusteetOperation.HAKIJARYHMA_VALINTATAPAJONO_LIITOS_POISTO)
-                    .build());
-            */
             return Response.status(Response.Status.OK).build();
         } catch (HakijaryhmaaEiVoiPoistaaException e) {
             throw new WebApplicationException(e, Response.Status.FORBIDDEN);
@@ -111,18 +107,6 @@ public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValint
             HakijaryhmaValintatapajonoDTO beforeUpdate = modelMapper.map(hakijaryhmaValintatapajonoService.readByOid(oid), HakijaryhmaValintatapajonoDTO.class);
             HakijaryhmaValintatapajonoDTO afterUpdate = modelMapper.map(hakijaryhmaValintatapajonoService.update(oid, jono), HakijaryhmaValintatapajonoDTO.class);
             AuditLog.log(ValintaperusteetOperation.HAKIJARYHMA_VALINTATAPAJONO_LIITOS_PAIVITYS, ValintaResource.HAKIJARYHMA_VALINTATAPAJONO, oid, afterUpdate, beforeUpdate, request);
-            /*
-            AUDIT.log(builder()
-                    .id(username())
-                    .hakijaryhmaValintatapajonoOid(update.getOid())
-                    .add("aktiivinen", update.getAktiivinen())
-                    .add("kiintio", update.getKiintio())
-                    .add("kuvaus", update.getKuvaus())
-                    .add("nimi", update.getNimi())
-                    .add("prioriteetti", update.getPrioriteetti())
-                    .setOperaatio(ValintaperusteetOperation.HAKIJARYHMA_VALINTATAPAJONO_LIITOS_PAIVITYS)
-                    .build());
-            */
             return Response.status(Response.Status.ACCEPTED).entity(afterUpdate).build();
         } catch (HakijaryhmaEiOleOlemassaException e) {
             throw new WebApplicationException(e, Response.Status.NOT_FOUND);
@@ -142,15 +126,9 @@ public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValint
         String targetOid = null;
         if(!jarjestetytHakijaryhmat.isEmpty()) {
             targetOid = jarjestetytHakijaryhmat.get(0).getHakukohdeViite().getOid(); }
-        Map sortedOids = ImmutableMap.of("Oid-järjestys", Optional.ofNullable(oids).map(List::toArray).map(Arrays::toString).orElse(null));
+        Map<String, String> sortedOids = ImmutableMap.of("Oid-järjestys", toNullsafeString(oids));
         AuditLog.log(ValintaperusteetOperation.VALINTATAPAJONO_HAKIJARYHMAT_JARJESTA, ValintaResource.HAKIJARYHMA_VALINTATAPAJONO, targetOid,
                 null, null, request, sortedOids);
-        /*AUDIT.log(builder()
-                .id(username())
-                .add("valintatapajonooids", Optional.ofNullable(oids).map(List::toArray).map(Arrays::toString).orElse(null))
-                .setOperaatio(ValintaperusteetOperation.HAKIJARYHMA_VALINTATAPAJONO_LIITOS_PAIVITYS)
-                .build());
-        */
         return modelMapper.mapList(jarjestetytHakijaryhmat, HakijaryhmaValintatapajonoDTO.class);
     }
 }

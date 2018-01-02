@@ -72,19 +72,6 @@ public class ValintakoeResourceImpl implements ValintakoeResource {
         ValintakoeDTO beforeUpdate = modelMapper.map(valintakoeService.readByOid(oid), ValintakoeDTO.class);
         ValintakoeDTO afterUpdate = modelMapper.map(valintakoeService.update(oid, valintakoe), ValintakoeDTO.class);
         AuditLog.log(ValintaperusteetOperation.VALINTAKOE_PAIVITYS, ValintaResource.VALINTAKOE, oid, afterUpdate, beforeUpdate, request);
-        /*AUDIT.log(builder()
-                .id(username())
-                .valintakoeOid(oid)
-                .add("aktiivinen", afterUpdate.getAktiivinen())
-                .add("selvitettytunniste", afterUpdate.getSelvitettyTunniste())
-                .add("kuvaus", afterUpdate.getKuvaus())
-                .add("nimi", afterUpdate.getNimi())
-                .add("tunniste", afterUpdate.getTunniste())
-                .add("kutsutaankokaikki", afterUpdate.getKutsutaankoKaikki())
-                .add("lahetetaankokoekutsut", afterUpdate.getLahetetaankoKoekutsut())
-                .add("kutsunkohdeavain", afterUpdate.getKutsunKohdeAvain())
-                .setOperaatio(ValintaperusteetOperation.VALINTAKOE_PAIVITYS)
-                .build());*/
         return Response.status(Response.Status.ACCEPTED).entity(afterUpdate).build();
     }
 
@@ -96,11 +83,6 @@ public class ValintakoeResourceImpl implements ValintakoeResource {
         ValintakoeDTO old = modelMapper.map(valintakoeService.readByOid(oid), ValintakoeDTO.class);
         valintakoeService.deleteByOid(oid);
         AuditLog.log(ValintaperusteetOperation.VALINTAKOE_POISTO, ValintaResource.VALINTAKOE, oid, null, old, request);
-        /*AUDIT.log(builder()
-                .id(username())
-                .valintakoeOid(oid)
-                .setOperaatio(ValintaperusteetOperation.VALINTAKOE_POISTO)
-                .build());*/
         return Response.status(Response.Status.ACCEPTED).build();
     }
 }

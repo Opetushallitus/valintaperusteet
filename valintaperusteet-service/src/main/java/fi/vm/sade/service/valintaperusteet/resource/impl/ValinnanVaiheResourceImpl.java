@@ -132,12 +132,6 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
         try {
             ValintatapajonoDTO inserted = modelMapper.map(jonoService.lisaaValintatapajonoValinnanVaiheelle(parentOid, jono, null), ValintatapajonoDTO.class);
             AuditLog.log(ValintaperusteetOperation.VALINNANVAIHE_LISAYS_VALINTATAPAJONO, ValintaResource.VALINNANVAIHE, parentOid, inserted, null, request);
-            /*AUDIT.log(builder()
-                    .id(username())
-                    .valinnanvaiheOid(parentOid)
-                    .valintatapajonoOid(inserted.getOid())
-                    .setOperaatio(ValintaperusteetOperation.VALINNANVAIHE_LISAYS_VALINTATAPAJONO)
-                    .build());*/
             return Response.status(Response.Status.CREATED).entity(inserted).build();
         } catch (Exception e) {
             LOGGER.error("error in addJonoToValinnanVaihe", e);
@@ -157,12 +151,6 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
         try {
             ValintakoeDTO valintakoe = modelMapper.map(valintakoeService.lisaaValintakoeValinnanVaiheelle(parentOid, koe), ValintakoeDTO.class);
             AuditLog.log(ValintaperusteetOperation.VALINNANVAIHE_LISAYS_VALINTAKOE, ValintaResource.VALINNANVAIHE, parentOid, valintakoe, null, request);
-            /*AUDIT.log(builder()
-                    .id(username())
-                    .valinnanvaiheOid(parentOid)
-                    .valintakoeOid(valintakoe.getOid())
-                    .setOperaatio(ValintaperusteetOperation.VALINNANVAIHE_LISAYS_VALINTAKOE)
-                    .build());*/
             return Response.status(Response.Status.CREATED).entity(valintakoe).build();
         } catch (Exception e) {
             LOGGER.error("error in addValintakoeToValinnanVaihe", e);
@@ -182,15 +170,6 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
         ValinnanVaiheDTO vanhaVV = modelMapper.map(valinnanVaiheService.readByOid(oid), ValinnanVaiheDTO.class);
         ValinnanVaiheDTO uusiVV = modelMapper.map(valinnanVaiheService.update(oid, valinnanVaihe), ValinnanVaiheDTO.class);
         AuditLog.log(ValintaperusteetOperation.VALINNANVAIHE_PAIVITYS, ValintaResource.VALINNANVAIHE, oid, uusiVV, vanhaVV, request);
-        /*AUDIT.log(builder()
-                .id(username())
-                .valinnanvaiheOid(vv.getOid())
-                .add("aktiivinen", vv.getAktiivinen())
-                .add("periytyy", vv.getInheritance())
-                .add("nimi", vv.getNimi())
-                .add("kuvaus", vv.getKuvaus())
-                .setOperaatio(ValintaperusteetOperation.VALINNANVAIHE_PAIVITYS)
-                .build());*/
         return uusiVV;
     }
 
@@ -220,11 +199,6 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
             ValinnanVaiheDTO old = modelMapper.map(valinnanVaiheService.readByOid(oid), ValinnanVaiheDTO.class);
             valinnanVaiheService.deleteByOid(oid);
             AuditLog.log(ValintaperusteetOperation.VALINNANVAIHE_POISTO, ValintaResource.VALINNANVAIHE, oid, null, old, request);
-           /* AUDIT.log(builder()
-                    .id(username())
-                    .valinnanvaiheOid(oid)
-                    .setOperaatio(ValintaperusteetOperation.VALINNANVAIHE_POISTO)
-                    .build());*/
             return Response.status(Response.Status.ACCEPTED).build();
         } catch (ValinnanVaiheEiOleOlemassaException e) {
             throw new WebApplicationException(e, Response.Status.NOT_FOUND);

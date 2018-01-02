@@ -68,20 +68,6 @@ public class JarjestyskriteeriResourceImpl implements JarjestyskriteeriResource 
             JarjestyskriteeriDTO old = modelMapper.map(jarjestyskriteeriService.readByOid(oid), JarjestyskriteeriDTO.class);
             JarjestyskriteeriDTO update = modelMapper.map(jarjestyskriteeriService.update(oid, jk.getJarjestyskriteeri(), jk.getLaskentakaavaId()), JarjestyskriteeriDTO.class);
             AuditLog.log(ValintaperusteetOperation.JARJESTYSKRITEERI_PAIVITYS, ValintaResource.JARJESTYSKRITEERIT, oid, update, old, request);
-
-            /*
-            AUDIT.log(builder()
-                    .id(username())
-                    .jarjestyskriteeriOid(oid)
-                    .valintatapajonoOid(update.getValintatapajonoOid())
-                    .add("periytyy", update.getInheritance())
-                    .add("laskentakaavaid", update.getLaskentakaavaId())
-                    .add("prioriteetti", update.getPrioriteetti())
-                    .add("aktiivinen", update.getAktiivinen())
-                    .add("metatiedot", update.getMetatiedot())
-                    .setOperaatio(ValintaperusteetOperation.JARJESTYSKRITEERI_PAIVITYS)
-                    .build());
-            */
             return Response.status(Response.Status.ACCEPTED).entity(update).build();
         } catch (LaskentakaavaOidTyhjaException e) {
             throw new WebApplicationException(e, Response.Status.BAD_REQUEST);
@@ -98,13 +84,6 @@ public class JarjestyskriteeriResourceImpl implements JarjestyskriteeriResource 
             JarjestyskriteeriDTO old = modelMapper.map(jarjestyskriteeriService.readByOid(oid), JarjestyskriteeriDTO.class);
             jarjestyskriteeriService.deleteByOid(oid);
             AuditLog.log(ValintaperusteetOperation.JARJESTYSKRITEERI_POISTO, ValintaResource.JARJESTYSKRITEERIT, oid, null, old, request);
-            /*
-            AUDIT.log(builder()
-                    .id(username())
-                    .jarjestyskriteeriOid(oid)
-                    .setOperaatio(ValintaperusteetOperation.JARJESTYSKRITEERI_POISTO)
-                    .build());
-            */
             return Response.status(Response.Status.ACCEPTED).build();
         } catch (JarjestyskriteeriaEiVoiPoistaaException e) {
             throw new WebApplicationException(e, Response.Status.FORBIDDEN);

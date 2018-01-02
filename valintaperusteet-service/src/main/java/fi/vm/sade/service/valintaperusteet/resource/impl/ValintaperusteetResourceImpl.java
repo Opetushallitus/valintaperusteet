@@ -161,14 +161,6 @@ public class ValintaperusteetResourceImpl implements ValintaperusteetResource {
         ValintatapajonoDTO beforeUpdate = modelMapper.map(valintatapajonoService.readByOid(oid), ValintatapajonoDTO.class);
         ValintatapajonoDTO afterUpdate = modelMapper.map(valintatapajonoService.updateAutomaattinenSijoitteluunSiirto(oid, arvo), ValintatapajonoDTO.class);
         AuditLog.log(ValintaperusteetOperation.AUTOMAATTISEN_SIJOITTELUN_SIIRRON_PAIVITYS, ValintaResource.VALINTAPERUSTEET, oid, afterUpdate, beforeUpdate, request);
-        /*
-        AUDIT.log(builder()
-                .id(username())
-                .valintatapajonoOid(afterUpdate.getOid())
-                .add("automaattinensijoitteluunsiirto", arvo)
-                .setOperaatio(ValintaperusteetOperation.AUTOMAATTISEN_SIJOITTELUN_SIIRRON_PAIVITYS)
-                .build());
-        */
         return modelMapper.map(afterUpdate, ValintatapajonoDTO.class);
     }
 }

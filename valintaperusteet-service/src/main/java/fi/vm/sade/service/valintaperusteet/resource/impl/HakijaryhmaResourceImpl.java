@@ -26,7 +26,10 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.*;
 import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.toNullsafeString;
@@ -84,22 +87,6 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
         Hakijaryhma old = hakijaryhmaService.readByOid(oid);
         Hakijaryhma updated = hakijaryhmaService.update(oid, hakijaryhma);
         AuditLog.log(ValintaperusteetOperation.HAKIJARYHMA_PAIVITYS, ValintaResource.HAKIJARYHMA, oid, updated, old, request);
-        /*
-        AUDIT.log(builder()
-                .id(username())
-                .hakijaryhmaOid(oid)
-                .valintaryhmaOid(Optional.ofNullable(h.getValintaryhma()).map(v -> v.getOid()).orElse(null))
-                .add("hakijaryhmanvalintatapajonot", Arrays.toString(Optional.ofNullable(h.getJonot()).orElse(Collections.<HakijaryhmaValintatapajono>emptySet())
-                        .stream().map(v -> v.getOid()).toArray()))
-                .add("valintatapajonoids", Arrays.toString(Optional.ofNullable(h.getValintatapajonoIds()).orElse(Collections.<String>emptyList())
-                        .stream().toArray()))
-                .add("kiintio", h.getKiintio())
-                .add("kuvaus", h.getKuvaus())
-                .add("laskentakaavaid", h.getLaskentakaavaId())
-                .add("nimi", h.getNimi())
-                .setOperaatio(ValintaperusteetOperation.HAKIJARYHMA_PAIVITYS)
-                .build());
-        */
         return modelMapper.map(updated, HakijaryhmaDTO.class);
     }
 
@@ -115,13 +102,6 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
             HakijaryhmaDTO hakijaryhmaDTO = modelMapper.map(hakijaryhmaService.readByOid(oid), HakijaryhmaDTO.class);
             hakijaryhmaService.deleteByOid(oid, false);
             AuditLog.log(ValintaperusteetOperation.HAKIJARYHMA_POISTO, ValintaResource.HAKIJARYHMA, oid, null, hakijaryhmaDTO, request);
-            /*
-            AUDIT.log(builder()
-                    .id(username())
-                    .hakijaryhmaOid(oid)
-                    .setOperaatio(ValintaperusteetOperation.HAKIJARYHMA_POISTO)
-                    .build());
-            */
             return Response.status(Response.Status.ACCEPTED).build();
         } catch (HakijaryhmaaEiVoiPoistaaException e) {
             throw new WebApplicationException(e, Response.Status.FORBIDDEN);
@@ -138,25 +118,9 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
         return siirretty.map(kaava ->
         {
             Map<String, String> additionalAuditInfo = new HashMap<>();
-            additionalAuditInfo.put("Nimi", kaava.getNimi()+", "+dto.getNimi());
+            additionalAuditInfo.put("Nimi", kaava.getNimi() + ", " + dto.getNimi());
             AuditLog.log(ValintaperusteetOperation.HAKIJARYHMA_SIIRTO, ValintaResource.HAKIJARYHMA, dto.getValintaryhmaOid(), kaava, null, request, additionalAuditInfo);
-            /*
-            AUDIT.log(builder()
-                    .id(username())
-                    .hakijaryhmaOid(kaava.getOid())
-                    .valintaryhmaOid(Optional.ofNullable(kaava.getValintaryhma()).map(v -> v.getOid()).orElse(null))
-                    .add("hakijaryhmanvalintatapajonot", Arrays.toString(Optional.ofNullable(kaava.getJonot()).orElse(Collections.<HakijaryhmaValintatapajono>emptySet())
-                            .stream().map(v -> v.getOid()).toArray()))
-                    .add("valintatapajonoids", Arrays.toString(Optional.ofNullable(kaava.getValintatapajonoIds()).orElse(Collections.<String>emptyList())
-                            .stream().toArray()))
-                    .add("kiintio", kaava.getKiintio())
-                    .add("kuvaus", kaava.getKuvaus())
-                    .add("laskentakaavaid", kaava.getLaskentakaavaId())
-                    .add("nimi", kaava.getNimi(), dto.getNimi())
-                    .setOperaatio(ValintaperusteetOperation.HAKIJARYHMA_SIIRTO)
-                    .build());
-             */
-                return Response.status(Response.Status.ACCEPTED).entity(modelMapper.map(kaava, HakijaryhmaDTO.class)).build();
+            return Response.status(Response.Status.ACCEPTED).entity(modelMapper.map(kaava, HakijaryhmaDTO.class)).build();
         }).orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
 

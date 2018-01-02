@@ -46,6 +46,13 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.*;
+import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.toNullsafeString;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -116,14 +123,6 @@ public class ValintatapajonoResourceImpl {
             hakijaryhmaService.liitaHakijaryhmaValintatapajonolle(valintatapajonoOid, hakijaryhmaOid);
             ImmutableMap<String, String> liitettavanHakijaryhmanOid = ImmutableMap.of("Liitettävän Hakijaryhmän Oid", hakijaryhmaOid);
             AuditLog.log(ValintaperusteetOperation.VALINTATAPAJONO_LIITOS_HAKIJARYHMA, ValintaResource.VALINTATAPAJONO, valintatapajonoOid, null, null, request, liitettavanHakijaryhmanOid);
-            /*
-            AUDIT.log(builder()
-                    .id(username())
-                    .hakijaryhmaOid(hakijaryhmaOid)
-                    .valintatapajonoOid(valintatapajonoOid)
-                    .setOperaatio(ValintaperusteetOperation.VALINTATAPAJONO_LIITOS_HAKIJARYHMA)
-                    .build());
-            */
             return Response.status(Response.Status.ACCEPTED).build();
         } catch (Exception e) {
             LOGGER.error("Error linking hakijaryhma.", e);
@@ -154,14 +153,6 @@ public class ValintatapajonoResourceImpl {
         try {
             HakijaryhmaDTO lisattava = modelMapper.map(hakijaryhmaValintatapajonoService.lisaaHakijaryhmaValintatapajonolle(valintatapajonoOid, hakijaryhma), HakijaryhmaDTO.class);
             AuditLog.log(ValintaperusteetOperation.VALINTATAPAJONO_LISAYS_HAKIJARYHMA, ValintaResource.VALINTATAPAJONO, valintatapajonoOid, lisattava, null, request);
-            /*
-            AUDIT.log(builder()
-                    .id(username())
-                    .hakijaryhmaOid(lisattava.getOid())
-                    .valintatapajonoOid(valintatapajonoOid)
-                    .setOperaatio(ValintaperusteetOperation.VALINTATAPAJONO_LISAYS_HAKIJARYHMA)
-                    .build());
-            */
             return Response.status(Response.Status.CREATED).entity(lisattava).build();
         } catch (LaskentakaavaOidTyhjaException e) {
             LOGGER.warn("Error creating hakijaryhma for valintatapajono: " + e.toString());
@@ -196,34 +187,6 @@ public class ValintatapajonoResourceImpl {
             ValintatapajonoDTO old = modelMapper.map(valintatapajonoService.readByOid(oid), ValintatapajonoDTO.class);
             ValintatapajonoDTO update = modelMapper.map(valintatapajonoService.update(oid, jono), ValintatapajonoDTO.class);
             AuditLog.log(ValintaperusteetOperation.VALINTATAPAJONO_PAIVITYS, ValintaResource.VALINTATAPAJONO, oid, update, old, request);
-            /*
-            AUDIT.log(builder()
-                    .id(username())
-                    .valintatapajonoOid(oid)
-                    .add("periytyy", update.getInheritance())
-                    .add("prioriteetti", update.getPrioriteetti())
-                    .add("aktiivinen", update.getAktiivinen())
-                    .add("aloituspaikat", update.getAloituspaikat())
-                    .add("automaattinenSijoitteluunSiirto", update.getautomaattinenSijoitteluunSiirto())
-                    .add("eivarasijatayttoa", update.getEiVarasijatayttoa())
-                    .add("kaikkiehdontayttavathyvaksytaan", update.getKaikkiEhdonTayttavatHyvaksytaan())
-                    .add("kaytetaanvalintalaskentaa", update.getKaytetaanValintalaskentaa())
-                    .add("kuvaus", update.getKuvaus())
-                    .add("tyyppi", update.getTyyppi())
-                    .add("nimi", update.getNimi())
-                    .add("poissaolevataytto", update.getPoissaOlevaTaytto())
-                    .add("poistetaankohylatyt", update.getPoistetaankoHylatyt())
-                    .add("siirretaansijoitteluun", update.getSiirretaanSijoitteluun())
-                    .add("tasapistesaanto", update.getTasapistesaanto())
-                    .add("tayttojono", update.getTayttojono())
-                    .add("valisijoittelu", update.getValisijoittelu())
-                    .add("varasijat", update.getVarasijat())
-                    .add("varasijatayttopaivat", update.getVarasijaTayttoPaivat())
-                    .add("varasijojakaytetaanalkaen", update.getVarasijojaKaytetaanAlkaen())
-                    .add("varasijojataytetaanasti", update.getVarasijojaTaytetaanAsti())
-                    .setOperaatio(ValintaperusteetOperation.VALINTATAPAJONO_PAIVITYS)
-                    .build());
-            */
             return Response.status(Response.Status.ACCEPTED).entity(update).build();
         } catch (ValintatapajonoaEiVoiLisataException e) {
             LOGGER.error("Error creating/updating valintatapajono.", e);
@@ -243,13 +206,6 @@ public class ValintatapajonoResourceImpl {
             @ApiParam(value = "Järjestyskriteeri ja laskentakaavaviite", required = true) JarjestyskriteeriInsertDTO jk, @Context HttpServletRequest request) {
         JarjestyskriteeriDTO insert = modelMapper.map(jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(valintatapajonoOid, jk.getJarjestyskriteeri(), null, jk.getLaskentakaavaId()), JarjestyskriteeriDTO.class);
         AuditLog.log(ValintaperusteetOperation.VALINTATAPAJONO_LISAYS_JARJESTYSKRITEERI, ValintaResource.VALINTATAPAJONO, valintatapajonoOid, insert, null, request);
-        /*AUDIT.log(builder()
-                .id(username())
-                .valintatapajonoOid(valintatapajonoOid)
-                .jarjestyskriteeriOid(insert.getOid())
-                .setOperaatio(ValintaperusteetOperation.VALINTATAPAJONO_LISAYS_JARJESTYSKRITEERI)
-                .build());
-        */
         return Response.status(Response.Status.ACCEPTED).entity(insert).build();
     }
 
@@ -263,11 +219,6 @@ public class ValintatapajonoResourceImpl {
         List<Valintatapajono> jarjestetytJonot = valintatapajonoService.jarjestaValintatapajonot(oids);
         ImmutableMap<String, String> jarjestetytOidit = ImmutableMap.of("Järjestetyt Oidit", toNullsafeString(oids));
         AuditLog.log(ValintaperusteetOperation.VALINTATAPAJONO_JARJESTA, ValintaResource.VALINTATAPAJONO, null, null, null, request, jarjestetytOidit);
-        /*AUDIT.log(builder()
-                .id(username())
-                .add("valintatapajonooids", Optional.ofNullable(oids).map(List::toArray).map(Arrays::toString).orElse(null))
-                .setOperaatio(ValintaperusteetOperation.VALINTATAPAJONO_JARJESTA)
-                .build());*/
         return modelMapper.mapList(jarjestetytJonot, ValintatapajonoDTO.class);
     }
 
@@ -279,11 +230,6 @@ public class ValintatapajonoResourceImpl {
         ValintatapajonoDTO poistettu = modelMapper.map(valintatapajonoService.readByOid(oid), ValintatapajonoDTO.class);
         valintatapajonoService.deleteByOid(oid);
         AuditLog.log(ValintaperusteetOperation.VALINTATAPAJONO_POISTO, ValintaResource.VALINTATAPAJONO, oid, null, poistettu, request);
-        /*AUDIT.log(builder()
-                .id(username())
-                .valintatapajonoOid(oid)
-                .setOperaatio(ValintaperusteetOperation.VALINTATAPAJONO_POISTO)
-                .build());*/
         return Response.status(Response.Status.ACCEPTED).build();
     }
 }

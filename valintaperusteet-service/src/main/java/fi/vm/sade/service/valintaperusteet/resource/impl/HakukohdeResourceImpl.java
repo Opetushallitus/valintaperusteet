@@ -236,18 +236,6 @@ public class HakukohdeResourceImpl {
         try {
             HakukohdeViiteDTO hkv = modelMapper.map(hakukohdeService.insert(hakukohde.getHakukohde(), hakukohde.getValintaryhmaOid()), HakukohdeViiteDTO.class);
             AuditLog.log(ValintaperusteetOperation.HAKUKOHDE_LISAYS_VALINTARYHMA, ValintaResource.HAKUKOHDE, hakukohde.getHakukohde().getHakuoid(), hkv, null, request);
-            /*
-            AUDIT.log(builder()
-                    .id(username())
-                    .hakuOid(hkv.getHakuoid())
-                    .hakukohdeOid(hkv.getOid())
-                    .valintaryhmaOid(hkv.getValintaryhmaOid())
-                    .add("nimi", hkv.getNimi())
-                    .add("tila", hkv.getTila())
-                    .tarjoajaOid(hkv.getTarjoajaOid())
-                    .setOperaatio(ValintaperusteetOperation.HAKUKOHDE_LISAYS_VALINTARYHMA)
-                    .build());
-            */
             return Response.status(Response.Status.CREATED).entity(hkv).build();
         } catch (Exception e) {
             LOG.warn("Hakukohdetta ei saatu lisättyä", e);
@@ -268,18 +256,6 @@ public class HakukohdeResourceImpl {
             HakukohdeViiteDTO beforeUpdate = modelMapper.map(hakukohdeService.readByOid(oid), HakukohdeViiteDTO.class);
             HakukohdeViiteDTO afterUpdate = modelMapper.map(hakukohdeService.update(oid, hakukohdeViite), HakukohdeViiteDTO.class);
             AuditLog.log(ValintaperusteetOperation.HAKUKOHDE_PAIVITYS, ValintaResource.HAKUKOHDE, oid, afterUpdate, beforeUpdate, request);
-            /*
-            AUDIT.log(builder()
-                    .id(username())
-                    .hakuOid(afterUpdate.getHakuoid())
-                    .hakukohdeOid(afterUpdate.getOid())
-                    .valintaryhmaOid(afterUpdate.getValintaryhmaOid())
-                    .add("nimi", afterUpdate.getNimi())
-                    .add("tila", afterUpdate.getTila())
-                    .tarjoajaOid(afterUpdate.getTarjoajaOid())
-                    .setOperaatio(ValintaperusteetOperation.HAKUKOHDE_PAIVITYS)
-                    .build());
-            */
             return Response.status(Response.Status.ACCEPTED).entity(afterUpdate).build();
         } catch (Exception e) {
             LOG.warn("Hakukohdetta ei saatu päivitettyä. ", e);
@@ -299,7 +275,7 @@ public class HakukohdeResourceImpl {
 
         if (withValisijoitteluTieto.equalsIgnoreCase("true")) {
 
-            /**
+            /*
              * Fetch all the ValintatapaJono's for each ValinnanVaihe
              * and check if any of the ValintatapaJono has Valisijoittelu.
              * Sets hasValisijoittelu variable accordingly.
@@ -526,19 +502,6 @@ public class HakukohdeResourceImpl {
         try {
             ValinnanVaiheDTO lisatty = modelMapper.map(valinnanVaiheService.lisaaValinnanVaiheHakukohteelle(hakukohdeOid, valinnanVaihe, edellinenValinnanVaiheOid), ValinnanVaiheDTO.class);
             AuditLog.log(ValintaperusteetOperation.HAKUKOHDE_LISAYS_VALINNANVAIHE, ValintaResource.HAKUKOHDE, hakukohdeOid, lisatty, null, request);
-            /*
-            AUDIT.log(builder()
-                    .id(username())
-                    .hakukohdeOid(hakukohdeOid)
-                    .valinnanvaiheOid(lisatty.getOid())
-                    .add("periytyy", lisatty.getInheritance())
-                    .add("nimi", lisatty.getNimi())
-                    .add("kuvaus", lisatty.getKuvaus())
-                    .add("aktiivinen", lisatty.getAktiivinen())
-                    .add("valinnanvaihetyyppi", lisatty.getValinnanVaiheTyyppi())
-                    .setOperaatio(ValintaperusteetOperation.HAKUKOHDE_LISAYS_VALINNANVAIHE)
-                    .build());
-            */
             return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (Exception e) {
             LOG.error("Error creating valinnanvaihe.", e);
@@ -559,18 +522,6 @@ public class HakukohdeResourceImpl {
         try {
             HakijaryhmaDTO lisatty = modelMapper.map(hakijaryhmaValintatapajonoService.lisaaHakijaryhmaHakukohteelle(hakukohdeOid, hakijaryhma), HakijaryhmaDTO.class);
             AuditLog.log(ValintaperusteetOperation.HAKUKOHDE_LISAYS_HAKIJARYHMA, ValintaResource.HAKUKOHDE, hakukohdeOid, lisatty, null, request);
-            /*
-            AUDIT.log(builder()
-                    .id(username())
-                    .hakukohdeOid(hakukohdeOid)
-                    .hakijaryhmaOid(lisatty.getOid())
-                    .add("kiintio", lisatty.getKiintio())
-                    .add("nimi", lisatty.getNimi())
-                    .add("kuvaus", lisatty.getKuvaus())
-                    .add("laskentakaavaid", lisatty.getLaskentakaavaId())
-                    .setOperaatio(ValintaperusteetOperation.HAKUKOHDE_LISAYS_HAKIJARYHMA)
-                    .build());
-            */
             return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (LaskentakaavaOidTyhjaException e) {
             LOG.warn("Error creating hakijaryhma for hakukohde: " + e.toString());
@@ -595,14 +546,6 @@ public class HakukohdeResourceImpl {
         try {
             hakijaryhmaValintatapajonoService.liitaHakijaryhmaHakukohteelle(hakukohdeOid, hakijaryhmaOid);
             AuditLog.log(ValintaperusteetOperation.HAKUKOHDE_LIITOS_HAKIJARYHMA, ValintaResource.HAKUKOHDE, hakukohdeOid, null, null, request, ImmutableMap.of("liitettavaHakijaryhmaOid", hakijaryhmaOid));
-            /*
-            AUDIT.log(builder()
-                    .id(username())
-                    .hakukohdeOid(hakukohdeOid)
-                    .hakijaryhmaOid(hakijaryhmaOid)
-                    .setOperaatio(ValintaperusteetOperation.HAKUKOHDE_LIITOS_HAKIJARYHMA)
-                    .build());
-            */
             return Response.status(Response.Status.ACCEPTED).build();
         } catch (Exception e) {
             LOG.error("Error linking hakijaryhma.", e);
@@ -625,19 +568,6 @@ public class HakukohdeResourceImpl {
         try {
             KoodiDTO lisatty = modelMapper.map(hakukohdekoodiService.updateHakukohdeHakukohdekoodi(hakukohdeOid, hakukohdekoodi), KoodiDTO.class);
             AuditLog.log(ValintaperusteetOperation.HAKUKOHDE_HAKUKOHDEKOODI_PAIVITYS, ValintaResource.HAKUKOHDE, hakukohdeOid, lisatty, null, request);
-
-            /*
-            AUDIT.log(builder()
-                    .id(username())
-                    .hakukohdeOid(hakukohdeOid)
-                    .add("arvo", lisatty.getArvo())
-                    .add("nimi_en", lisatty.getNimiEn())
-                    .add("nimi_fi", lisatty.getNimiFi())
-                    .add("nimi_sv", lisatty.getNimiSv())
-                    .add("uri", lisatty.getUri())
-                    .setOperaatio(ValintaperusteetOperation.HAKUKOHDE_HAKUKOHDEKOODI_PAIVITYS)
-                    .build());
-            */
             return Response.status(Response.Status.ACCEPTED).entity(lisatty).build();
         } catch (Exception e) {
             LOG.error("Error updating hakukohdekoodit.", e);
@@ -658,18 +588,6 @@ public class HakukohdeResourceImpl {
         try {
             KoodiDTO lisatty = modelMapper.map(hakukohdekoodiService.lisaaHakukohdekoodiHakukohde(hakukohdeOid, hakukohdekoodi), KoodiDTO.class);
             AuditLog.log(ValintaperusteetOperation.HAKUKOHDE_LISAYS_HAKUKOHDEKOODI, ValintaResource.HAKUKOHDE, hakukohdeOid, lisatty, null, request);
-            /*
-            AUDIT.log(builder()
-                    .id(username())
-                    .hakukohdeOid(hakukohdeOid)
-                    .add("arvo", lisatty.getArvo())
-                    .add("nimi_en", lisatty.getNimiEn())
-                    .add("nimi_fi", lisatty.getNimiFi())
-                    .add("nimi_sv", lisatty.getNimiSv())
-                    .add("uri", lisatty.getUri())
-                    .setOperaatio(ValintaperusteetOperation.HAKUKOHDE_LISAYS_HAKUKOHDEKOODI)
-                    .build());
-            */
             return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (Exception e) {
             LOG.error("Error inserting hakukohdekoodi.", e);
@@ -691,18 +609,6 @@ public class HakukohdeResourceImpl {
             HakukohdeViiteDTO hakukohde = modelMapper.map(hakukohdeService.siirraHakukohdeValintaryhmaan(hakukohdeOid, valintaryhmaOid, true), HakukohdeViiteDTO.class);
             Map additionalInfo = ImmutableMap.of("Uuden valintaryhman oid", valintaryhmaOid);
             AuditLog.log(ValintaperusteetOperation.HAKUKOHDE_SIIRTO_VALINTARYHMAAN, ValintaResource.HAKUKOHDE, hakukohdeOid, hakukohde, null, request, additionalInfo);
-            /*
-            AUDIT.log(builder()
-                    .id(username())
-                    .hakuOid(hakukohde.getHakuoid())
-                    .hakukohdeOid(hakukohde.getOid())
-                    .valintaryhmaOid(hakukohde.getValintaryhmaOid())
-                    .add("nimi", hakukohde.getNimi())
-                    .add("tila", hakukohde.getTila())
-                    .tarjoajaOid(hakukohde.getTarjoajaOid())
-                    .setOperaatio(ValintaperusteetOperation.HAKUKOHDE_SIIRTO_VALINTARYHMAAN)
-                    .build());
-            */
             return Response.status(Response.Status.ACCEPTED).entity(hakukohde).build();
         } catch (Exception e) {
             LOG.error("Error moving hakukohde to new valintaryhma.", e);

@@ -1,15 +1,15 @@
 package fi.vm.sade.service.valintaperusteet.resource.impl;
 
 import com.google.common.collect.ImmutableMap;
-import fi.vm.sade.sharedutils.ValintaResource;
 import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.resource.ValintaryhmaResource;
 import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaOidTyhjaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintaryhmaEiOleOlemassaException;
-import fi.vm.sade.sharedutils.ValintaperusteetOperation;
 import fi.vm.sade.sharedutils.AuditLog;
+import fi.vm.sade.sharedutils.ValintaResource;
+import fi.vm.sade.sharedutils.ValintaperusteetOperation;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,13 +87,6 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
             ValintaryhmaDTO beforeDelete = modelMapper.map(valintaryhmaService.readByOid(oid), ValintaryhmaDTO.class);
             valintaryhmaService.delete(oid);
             AuditLog.log(ValintaperusteetOperation.VALINTARYHMA_POISTO, ValintaResource.VALINTARYHMA, oid, null, beforeDelete, request);
-            /*
-            AUDIT.log(builder()
-                    .id(username())
-                    .valintaryhmaOid(oid)
-                    .setOperaatio(ValintaperusteetOperation.VALINTARYHMA_POISTO)
-                    .build());
-            */
             return Response.status(Response.Status.ACCEPTED).build();
         } catch (ValintaryhmaEiOleOlemassaException e) {
             throw new WebApplicationException(e, Response.Status.NOT_FOUND);
@@ -171,13 +164,6 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
         try {
             ValintaryhmaDTO lisatty = modelMapper.map(valintaryhmaService.insert(valintaryhma, parentOid), ValintaryhmaDTO.class);
             AuditLog.log(ValintaperusteetOperation.LAPSIVALINTARYHMA_LISAYS_PARENT, ValintaResource.VALINTARYHMA, parentOid, lisatty, null, request);
-            /*
-            AUDIT.log(builder()
-                    .id(username())
-                    .valintaryhmaOid(parentOid)
-                    .setOperaatio(ValintaperusteetOperation.LAPSIVALINTARYHMA_LISAYS_PARENT)
-                    .build());
-            */
             return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (Exception e) {
             LOGGER.error("Lapsivalintaryhmän lisäys valintaryhmälle {} ei onnistunut.", parentOid, e);
@@ -194,13 +180,6 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
         try {
             ValintaryhmaDTO lisatty = modelMapper.map(valintaryhmaService.insert(valintaryhma), ValintaryhmaDTO.class);
             AuditLog.log(ValintaperusteetOperation.VALINTARYHMA_LISAYS, ValintaResource.VALINTARYHMA, valintaryhma.getVastuuorganisaatioOid(), lisatty, null, request);
-            /*
-            AUDIT.log(builder()
-                    .id(username())
-                    .valintaryhmaOid(lisatty.getOid())
-                    .setOperaatio(ValintaperusteetOperation.VALINTARYHMA_LISAYS)
-                    .build());
-            */
             return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (Exception e) {
             LOGGER.error("Error creating valintaryhmä.", e);
@@ -220,13 +199,6 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
         ValintaryhmaDTO beforeUpdate = modelMapper.map(valintaryhmaService.readByOid(oid), ValintaryhmaDTO.class);
         ValintaryhmaDTO afterUpdate = modelMapper.map(valintaryhmaService.update(oid, valintaryhma), ValintaryhmaDTO.class);
         AuditLog.log(ValintaperusteetOperation.VALINTARYHMA_PAIVITYS, ValintaResource.VALINTARYHMA, oid, afterUpdate, beforeUpdate, request);
-        /*
-        AUDIT.log(builder()
-                .id(username())
-                .valintaryhmaOid(oid)
-                .setOperaatio(ValintaperusteetOperation.VALINTARYHMA_PAIVITYS)
-                .build());
-        */
         return Response.status(Response.Status.ACCEPTED).build();
     }
 
@@ -239,15 +211,6 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
         try {
             ValintaryhmaDTO lisatty = modelMapper.map(valintaryhmaService.copyAsChild(lahdeOid, oid, nimi), ValintaryhmaDTO.class);
             AuditLog.log(ValintaperusteetOperation.LAPSIVALINTARYHMA_LISAYS, ValintaResource.VALINTARYHMA, oid, lisatty, null, request );
-            /*
-            AUDIT.log(builder()
-                    .id(username())
-                    .valintaryhmaOid(oid)
-                    .add("lahdeoid", lahdeOid)
-                    .add("nimi", nimi)
-                    .setOperaatio(ValintaperusteetOperation.LAPSIVALINTARYHMA_LISAYS)
-                    .build());
-            */
             return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (Exception e) {
             LOGGER.error("Error copying valintaryhmä.", e);
@@ -264,15 +227,6 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
         try {
             ValintaryhmaDTO lisatty = modelMapper.map(valintaryhmaService.copyAsChild(lahdeOid, null, nimi), ValintaryhmaDTO.class);
             AuditLog.log(ValintaperusteetOperation.VALINTARYHMA_LISAYS, ValintaResource.VALINTARYHMA, lahdeOid, lisatty, null, request);
-            /*
-            AUDIT.log(builder()
-                    .id(username())
-                    .valintaryhmaOid(lisatty.getOid())
-                    .add("lahdeoid", lahdeOid)
-                    .add("nimi", nimi)
-                    .setOperaatio(ValintaperusteetOperation.VALINTARYHMA_LISAYS)
-                    .build());
-            */
             return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (Exception e) {
             LOGGER.error("Error copying valintaryhmä.", e);
@@ -293,14 +247,6 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
         try {
             ValinnanVaiheDTO lisatty = modelMapper.map(valinnanVaiheService.lisaaValinnanVaiheValintaryhmalle(valintaryhmaOid, valinnanVaihe, edellinenValinnanVaiheOid), ValinnanVaiheDTO.class);
             AuditLog.log(ValintaperusteetOperation.VALINTARYHMA_LISAYS_VALINNANVAIHE, ValintaResource.VALINTARYHMA, valintaryhmaOid, lisatty, null, request);
-            /*
-            AUDIT.log(builder()
-                    .id(username())
-                    .valintaryhmaOid(valintaryhmaOid)
-                    .valinnanvaiheOid(lisatty.getOid())
-                    .setOperaatio(ValintaperusteetOperation.VALINTARYHMA_LISAYS_VALINNANVAIHE)
-                    .build());
-            */
             return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (Exception e) {
             LOGGER.error("Error creating valinnanvaihe.", e);
@@ -320,14 +266,6 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
         try {
             HakijaryhmaDTO lisatty = modelMapper.map(hakijaryhmaService.lisaaHakijaryhmaValintaryhmalle(valintaryhmaOid, hakijaryhma), HakijaryhmaDTO.class);
             AuditLog.log(ValintaperusteetOperation.VALINTARYHMA_LISAYS_HAKIJARYHMA, ValintaResource.VALINTARYHMA, valintaryhmaOid, lisatty, null, request);
-            /*
-            AUDIT.log(builder()
-                    .id(username())
-                    .valintaryhmaOid(valintaryhmaOid)
-                    .hakijaryhmaOid(lisatty.getOid())
-                    .setOperaatio(ValintaperusteetOperation.VALINTARYHMA_LISAYS_HAKIJARYHMA)
-                    .build());
-            */
             return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (LaskentakaavaOidTyhjaException e) {
             LOGGER.warn("Error creating hakijaryhma for valintaryhmä: " + e.toString());
@@ -372,13 +310,6 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
         try {
             hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(valintaryhmaOid, hakukohdekoodi);
             AuditLog.log(ValintaperusteetOperation.VALINTARYHMA_LISAYS_HAKUKOHDEKOODI, ValintaResource.VALINTARYHMA, valintaryhmaOid, hakukohdekoodi, null, request);
-            /*
-            AUDIT.log(builder()
-                    .id(username())
-                    .valintaryhmaOid(valintaryhmaOid)
-                    .setOperaatio(ValintaperusteetOperation.VALINTARYHMA_LISAYS_HAKUKOHDEKOODI)
-                    .build());
-            */
             return Response.status(Response.Status.CREATED).entity(hakukohdekoodi).build();
         } catch (Exception e) {
             LOGGER.error("Error inserting hakukohdekoodi.", e);
@@ -418,13 +349,6 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
         try {
             valintakoekoodiService.lisaaValintakoekoodiValintaryhmalle(valintaryhmaOid, valintakoekoodi);
             AuditLog.log(ValintaperusteetOperation.VALINTARYHMA_LISAYS_VALINTAKOEKOODI, ValintaResource.VALINTARYHMA, valintaryhmaOid, valintakoekoodi, null, request);
-            /*
-            AUDIT.log(builder()
-                    .id(username())
-                    .valintaryhmaOid(valintaryhmaOid)
-                    .setOperaatio(ValintaperusteetOperation.VALINTARYHMA_LISAYS_VALINTAKOEKOODI)
-                    .build());
-            */
             return Response.status(Response.Status.CREATED).entity(valintakoekoodi).build();
         } catch (Exception e) {
             LOGGER.error("Error inserting valintakoekoodi.", e);
