@@ -1,6 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import fi.vm.sade.service.valintaperusteet.dto.*;
@@ -13,6 +14,8 @@ import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuMuodost
 
 public interface LaskentakaavaService {
     List<ValintaperusteDTO> findAvaimetForHakukohde(String hakukohdeOid);
+
+    Map<String, List<ValintaperusteDTO>> findAvaimetForHakukohteet(List<String> hakukohdeOidit);
 
     HakukohteenValintaperusteAvaimetDTO findHakukohteenAvaimet(String oid);
 
