@@ -509,8 +509,19 @@ public class LaskentakaavaServiceTest {
     }
 
     @Test
-    public void testFindAvaimetForHakukohdes() {
+    public void testFindAvaimetForHakukohde() {
         List<ValintaperusteDTO> valintaperusteet = laskentakaavaService.findAvaimetForHakukohde("oid17");
+        assertSyotettavaArvoHakukohde17(valintaperusteet);
+    }
+
+    @Test
+    public void testFindAvaimetForHakukohteet() {
+        Map<String, List<ValintaperusteDTO>> valintaperusteet = laskentakaavaService.findAvaimetForHakukohteet(Arrays.asList("oid17"));
+        assertEquals(1, valintaperusteet.size());
+        assertSyotettavaArvoHakukohde17(valintaperusteet.get("oid17"));
+    }
+
+    private void assertSyotettavaArvoHakukohde17(List<ValintaperusteDTO> valintaperusteet) {
         assertEquals(2, valintaperusteet.size());
 
         Collections.sort(valintaperusteet, new Comparator<ValintaperusteDTO>() {

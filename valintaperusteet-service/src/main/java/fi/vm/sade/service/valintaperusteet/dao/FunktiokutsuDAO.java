@@ -4,6 +4,7 @@ import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti;
 import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
 
 import java.util.List;
+import java.util.Map;
 
 public interface FunktiokutsuDAO extends JpaDAO<Funktiokutsu, Long> {
     Funktiokutsu getFunktiokutsu(Long id);
@@ -12,7 +13,9 @@ public interface FunktiokutsuDAO extends JpaDAO<Funktiokutsu, Long> {
 
     long deleteOrphans();
 
-    List<Funktiokutsu> findFunktiokutsuByHakukohdeOids(String hakukohdeOid);
+    List<Funktiokutsu> findFunktiokutsuByHakukohdeOid(String hakukohdeOid);
+
+    Map<String, List<Funktiokutsu>> findFunktiokutsuByHakukohdeOids(List<String> hakukohdeOidit);
 
     List<Funktioargumentti> findByLaskentakaavaChild(Long laskentakaavaId);
 
