@@ -441,8 +441,9 @@ public class HakukohdeResourceImpl {
     @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Hakee hakukohteiden syötettävät tiedot", response = ValintaperusteDTO.class)
     public List<HakukohdeJaValintaperusteDTO> findHakukohteidenAvaimet(@ApiParam(value = "Hakukohteiden OIDit", required = true) List<String> hakukohdeOidit) {
-        return hakukohdeOidit.stream().map(oid -> new HakukohdeJaValintaperusteDTO(oid, laskentakaavaService.findAvaimetForHakukohde(oid)))
-            .filter(r -> !r.getValintaperusteDTO().isEmpty()).collect(Collectors.toList());
+        return laskentakaavaService.findAvaimetForHakukohteet(hakukohdeOidit).entrySet().stream().map(
+           entry -> new HakukohdeJaValintaperusteDTO(entry.getKey(), entry.getValue())).filter(
+                   r -> !r.getValintaperusteDTO().isEmpty()).collect(Collectors.toList());
     }
 
     @GET

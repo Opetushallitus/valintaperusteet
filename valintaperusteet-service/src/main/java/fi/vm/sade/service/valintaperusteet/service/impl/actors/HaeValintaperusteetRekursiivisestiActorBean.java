@@ -8,26 +8,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.inject.Named;
 
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
 import fi.vm.sade.service.valintaperusteet.service.impl.LaskentakaavaServiceImpl;
+import fi.vm.sade.service.valintaperusteet.service.impl.util.FunktiokutsuCache;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import scala.concurrent.duration.Duration;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
-import akka.actor.OneForOneStrategy;
 import akka.actor.Status;
-import akka.actor.SupervisorStrategy;
-import akka.actor.SupervisorStrategy.Directive;
 import akka.actor.UntypedActor;
-import akka.japi.Function;
 import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
 import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
@@ -54,6 +49,9 @@ public class HaeValintaperusteetRekursiivisestiActorBean extends UntypedActor {
     private Map<String, String> hakukohteenValintaperusteet;
 
     private ActorRef actorParent = null;
+
+    @Autowired
+    private FunktiokutsuCache funktiokutsuCache;
 
     public HaeValintaperusteetRekursiivisestiActorBean() {
 
@@ -159,7 +157,11 @@ public class HaeValintaperusteetRekursiivisestiActorBean extends UntypedActor {
         } else if (message instanceof UusiValintaperusteRekursio) {
             actorParent = sender();
             UusiValintaperusteRekursio viesti = (UusiValintaperusteRekursio) message;
-            original = funktiokutsuDAO.getFunktiokutsunValintaperusteet(viesti.getId());
+            original = funktiokutsuCache.get(viesti.getId());
+            if(null == original) {
+                original = funktiokutsuDAO.getFunktiokutsunValintaperusteet(viesti.getId());
+                funktiokutsuCache.add(viesti.getId(), original);
+            }
             valintaperusteet = viesti.getValintaperusteet();
             hakukohteenValintaperusteet = viesti.getHakukohteenValintaperusteet();
             if (original.getFunktioargumentit() == null || original.getFunktioargumentit().size() == 0) {
