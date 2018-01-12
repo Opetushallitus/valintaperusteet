@@ -361,7 +361,7 @@ public class ValintalaskentakoostepalveluResourceImpl {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("valinnanvaihe/{oid}/hakukohteet")
-    @ApiOperation(value = "Hakee hakukohteet, jotka liittyvät valinnanvaiheeseen", response = ValinnanVaiheDTO.class)
+    @ApiOperation(value = "Hakee oidit hakukohteille, jotka liittyvät valinnanvaiheeseen valintaryhmän kautta", response = ValinnanVaiheDTO.class)
     public Set<String> hakukohteet(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
         Set<String> valintaryhmaoids = valinnanVaiheService.getValintaryhmaOids(oid);
         return valintaryhmaService.findHakukohdesRecursive(valintaryhmaoids);
