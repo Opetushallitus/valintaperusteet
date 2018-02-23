@@ -5,6 +5,7 @@ import akka.actor.ActorSystem;
 import akka.actor.PoisonPill;
 import akka.pattern.Patterns;
 import akka.util.Timeout;
+import com.google.common.collect.Lists;
 import fi.vm.sade.kaava.Laskentakaavavalidaattori;
 import fi.vm.sade.service.valintaperusteet.dao.*;
 import fi.vm.sade.service.valintaperusteet.dto.*;
@@ -15,7 +16,6 @@ import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
 import fi.vm.sade.service.valintaperusteet.service.exception.*;
 import fi.vm.sade.service.valintaperusteet.service.impl.actors.ActorService;
-import fi.vm.sade.service.valintaperusteet.service.impl.actors.HaeValintaperusteetRekursiivisestiActorBean;
 import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.UusiHakukohteenValintaperusteRekursio;
 import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.UusiRekursio;
 import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.UusiValintaperusteRekursio;
@@ -31,7 +31,6 @@ import scala.concurrent.Future;
 import scala.concurrent.duration.Duration;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -619,10 +618,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
 
     @Override
     public List<ValintaperusteDTO> findAvaimetForHakukohde(String hakukohdeOid) {
-        List<ValintaperusteDTO> result = convertToAvaimet(
-                funktiokutsuDAO.findFunktiokutsuByHakukohdeOid(hakukohdeOid),
-                hakukohteenValintaperusteDAO.haeHakukohteenValintaperusteet(hakukohdeOid));
-        return result;
+        return findAvaimetForHakukohteet(Lists.newArrayList(hakukohdeOid)).get(hakukohdeOid);
     }
 
     @Override
