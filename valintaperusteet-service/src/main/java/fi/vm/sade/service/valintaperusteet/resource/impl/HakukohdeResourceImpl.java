@@ -279,7 +279,7 @@ public class HakukohdeResourceImpl {
         return hakukohdeOidit.stream().map((oid) -> {
             List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheService.findByHakukohde(oid);
             List<ValinnanVaiheJaPrioriteettiDTO> valinnanVaiheDtot = new ArrayList<>();
-            for(int i = 0; i < valinnanVaiheet.size(); i++) {
+            for (int i = 0; i < valinnanVaiheet.size(); i++) {
                 ValinnanVaiheJaPrioriteettiDTO dto = modelMapper.map(valinnanVaiheet.get(i), ValinnanVaiheJaPrioriteettiDTO.class);
                 dto.setPrioriteetti(i + 1);
                 valinnanVaiheDtot.add(dto);
