@@ -163,7 +163,7 @@ public class FunktiokutsuDAOImpl extends AbstractJpaDAOImpl<Funktiokutsu, Long> 
                 .list(hakukohde.oid, funktiokutsu).forEach(r -> {
                     String rHakukohdeOid = (String)r[0];
                     Funktiokutsu rFunktiokutsu = (Funktiokutsu)r[1];
-                    if(!result.containsKey(rHakukohdeOid)) {
+                    if (!result.containsKey(rHakukohdeOid)) {
                         result.put(rHakukohdeOid, new ArrayList<>());
                     }
                     result.get(rHakukohdeOid).add(rFunktiokutsu);

@@ -87,7 +87,7 @@ public class HaeValintaperusteetRekursiivisestiActorBean extends UntypedActor {
                 valintaperuste.setOnPakollinen(vp.getOnPakollinen());
                 valintaperuste.setOsallistuminenTunniste(vp.getOsallistuminenTunniste());
                 valintaperuste.setTilastoidaan(vp.getTilastoidaan());
-                if(null != vp.getSyotettavanarvontyyppi()) {
+                if (null != vp.getSyotettavanarvontyyppi()) {
                     valintaperuste.setSyötettavanArvonTyyppi(new ModelMapper().map(vp.getSyotettavanarvontyyppi(), fi.vm.sade.service.valintaperusteet.dto.KoodiDTO.class));
                 }
 
@@ -158,7 +158,7 @@ public class HaeValintaperusteetRekursiivisestiActorBean extends UntypedActor {
             actorParent = sender();
             UusiValintaperusteRekursio viesti = (UusiValintaperusteRekursio) message;
             original = funktiokutsuCache.get(viesti.getId());
-            if(null == original) {
+            if (null == original) {
                 original = funktiokutsuDAO.getFunktiokutsunValintaperusteet(viesti.getId());
                 funktiokutsuCache.add(viesti.getId(), original);
             }
