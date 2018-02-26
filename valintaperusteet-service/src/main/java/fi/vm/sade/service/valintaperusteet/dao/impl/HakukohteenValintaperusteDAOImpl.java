@@ -1,6 +1,5 @@
 package fi.vm.sade.service.valintaperusteet.dao.impl;
 
-import com.mysema.query.SearchResults;
 import com.mysema.query.jpa.impl.JPAQuery;
 import com.mysema.query.types.EntityPath;
 import fi.vm.sade.service.valintaperusteet.dao.AbstractJpaDAOImpl;
@@ -31,19 +30,6 @@ public class HakukohteenValintaperusteDAOImpl extends AbstractJpaDAOImpl<Hakukoh
         }
         return from(vp)
                 .where(vp.hakukohde.eq(viite))
-                .list(vp);
-    }
-
-    @Override
-    public List<HakukohteenValintaperuste> haeHakukohteidenValintaperusteet(List<String> hakukohdeOidit) {
-        QHakukohdeViite hk = QHakukohdeViite.hakukohdeViite;
-        QHakukohteenValintaperuste vp = QHakukohteenValintaperuste.hakukohteenValintaperuste;
-        List<HakukohdeViite> viite = from(hk).where(hk.oid.in(hakukohdeOidit)).listResults(hk).getResults();
-        if (viite == null || viite.isEmpty()) {
-            return new ArrayList<>();
-        }
-        return from(vp)
-                .where(vp.hakukohde.in(viite))
                 .list(vp);
     }
 }

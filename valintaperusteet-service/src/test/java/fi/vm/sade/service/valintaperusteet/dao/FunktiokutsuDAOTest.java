@@ -116,7 +116,7 @@ public class FunktiokutsuDAOTest {
 
     @Test
     public void testFindFunktiokutsuByHakukohdeOids() {
-        List<Funktiokutsu> kaavat = funktiokutsuDAO.findFunktiokutsuByHakukohdeOid("oid17");
+        List<Funktiokutsu> kaavat = funktiokutsuDAO.findFunktiokutsuByHakukohdeOids("oid17");
         assertEquals(2, kaavat.size());
     }
 

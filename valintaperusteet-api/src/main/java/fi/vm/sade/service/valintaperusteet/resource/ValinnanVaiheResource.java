@@ -15,7 +15,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import fi.vm.sade.service.valintaperusteet.dto.*;
+import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintakoeCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
 
 @Path("valinnanvaihe")
 public interface ValinnanVaiheResource {
@@ -29,12 +34,6 @@ public interface ValinnanVaiheResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{oid}/valintatapajono")
     List<ValintatapajonoDTO> listJonos(@PathParam("oid") String oid);
-
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/valintatapajonot")
-    List<ValinnanVaiheJaValintatapajonoDTO> valintatapajonot(List<String> valinnanvaiheOidit);
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -74,9 +73,4 @@ public interface ValinnanVaiheResource {
     @Produces(MediaType.APPLICATION_JSON)
     Map<String, Boolean> kuuluuSijoitteluun(@PathParam("oid") String oid);
 
-    @POST
-    @Path("/kuuluuSijoitteluun")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    Map<String, Boolean> kuuluuSijoitteluun(List<String> valinnanvaiheOidit);
 }

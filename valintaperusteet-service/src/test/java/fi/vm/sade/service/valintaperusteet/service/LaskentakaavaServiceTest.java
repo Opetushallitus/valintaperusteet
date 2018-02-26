@@ -532,22 +532,9 @@ public class LaskentakaavaServiceTest {
     }
 
     @Test
-    public void testFindAvaimetForHakukohde() {
+    public void testFindAvaimetForHakukohdes() {
         List<ValintaperusteDTO> valintaperusteet = laskentakaavaService.findAvaimetForHakukohde("oid17");
-        assertSyotettavaArvoHakukohde17(valintaperusteet);
-    }
-
-    @Test
-    public void testFindAvaimetForHakukohteet() {
-        Map<String, List<ValintaperusteDTO>> valintaperusteet = laskentakaavaService.findAvaimetForHakukohteet(Arrays.asList("oid17"));
-        Assert.assertThat(valintaperusteet.entrySet(), hasSize(1));
-        assertEquals(1, valintaperusteet.size());
-        assertSyotettavaArvoHakukohde17(valintaperusteet.get("oid17"));
-    }
-
-    private void assertSyotettavaArvoHakukohde17(List<ValintaperusteDTO> valintaperusteet) {
-        Assert.assertThat(valintaperusteet.stream().map(ToStringBuilder::reflectionToString).collect(Collectors.toList()).toString(),
-            valintaperusteet, hasSize(2));
+        assertEquals(2, valintaperusteet.size());
 
         Collections.sort(valintaperusteet, new Comparator<ValintaperusteDTO>() {
             @Override
@@ -566,9 +553,7 @@ public class LaskentakaavaServiceTest {
         assertEquals(new BigDecimal("30.0"), new BigDecimal(valintaperusteet.get(1).getMax()));
         assertNull(valintaperusteet.get(1).getArvot());
         assertEquals(Valintaperustelahde.SYOTETTAVA_ARVO, valintaperusteet.get(1).getLahde());
-        assertTrue(valintaperusteet.get(0).getTilastoidaan());
-        assertNotNull(valintaperusteet.get(0).getSyötettavanArvonTyyppi());
-        assertEquals("syotettavanarvontyypit_valintakoe", valintaperusteet.get(0).getSyötettavanArvonTyyppi().getUri());
+
     }
 
     @Test

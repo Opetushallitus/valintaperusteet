@@ -603,32 +603,15 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
         return map;
     }
 
-    private List<ValintaperusteDTO> convertToAvaimet(List<Funktiokutsu> hakukohteenFunktiokutsut, List<HakukohteenValintaperuste> hakukohteenValintaperusteet) {
-        return convertToAvaimet(hakukohteenFunktiokutsut, hakukohteenValintaperusteetMap(hakukohteenValintaperusteet));
-    }
-
-    private List<ValintaperusteDTO> convertToAvaimet(List<Funktiokutsu> hakukohteenFunktiokutsut, Map<String, String> hakukohteenValintaperusteet) {
-        Map<String, ValintaperusteDTO> valintaperusteet = new HashMap<>();
-        for (Funktiokutsu kutsu : hakukohteenFunktiokutsut) {
-            haeValintaperusteetRekursiivisesti(kutsu, valintaperusteet, hakukohteenValintaperusteet);
-        }
-        List<ValintaperusteDTO> result =  new ArrayList<>(valintaperusteet.values());
-        return result;
-    }
-
     @Override
     public List<ValintaperusteDTO> findAvaimetForHakukohde(String hakukohdeOid) {
-        return findAvaimetForHakukohteet(Lists.newArrayList(hakukohdeOid)).get(hakukohdeOid);
-    }
-
-    @Override
-    public Map<String, List<ValintaperusteDTO>> findAvaimetForHakukohteet(List<String> hakukohdeOidit) {
-        Map<String, List<Funktiokutsu>> hakukohteidenFunktiokutsut = funktiokutsuDAO.findFunktiokutsuByHakukohdeOids(hakukohdeOidit);
-        Map<String, List<HakukohteenValintaperuste>> hakukohteidenValintaperusteet = hakukohteenValintaperusteDAO.haeHakukohteidenValintaperusteet(hakukohdeOidit)
-                .stream().collect(Collectors.groupingBy(vp -> vp.getHakukohde().getOid(), Collectors.toList()));
-        return hakukohdeOidit.stream().collect(Collectors.toMap(oid -> oid,
-                oid -> convertToAvaimet(hakukohteidenFunktiokutsut.getOrDefault(oid, Collections.emptyList()),
-                                        hakukohteidenValintaperusteet.getOrDefault(oid, Collections.emptyList()))));
+        List<Funktiokutsu> funktiokutsut = funktiokutsuDAO.findFunktiokutsuByHakukohdeOids(hakukohdeOid);
+        Map<String, String> hakukohteenValintaperusteet = hakukohteenValintaperusteetMap(hakukohteenValintaperusteDAO.haeHakukohteenValintaperusteet(hakukohdeOid));
+        Map<String, ValintaperusteDTO> valintaperusteet = new HashMap<String, ValintaperusteDTO>();
+        for (Funktiokutsu kutsu : funktiokutsut) {
+            haeValintaperusteetRekursiivisesti(kutsu, valintaperusteet, hakukohteenValintaperusteet);
+        }
+        return new ArrayList<>(valintaperusteet.values());
     }
 
     private void haeValintaperusteetRekursiivisesti(Funktiokutsu funktiokutsu, Map<String, ValintaperusteDTO> valintaperusteet,
@@ -647,7 +630,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
 
     @Override
     public HakukohteenValintaperusteAvaimetDTO findHakukohteenAvaimet(String oid) {
-        List<Funktiokutsu> funktiokutsut = funktiokutsuDAO.findFunktiokutsuByHakukohdeOid(oid);
+        List<Funktiokutsu> funktiokutsut = funktiokutsuDAO.findFunktiokutsuByHakukohdeOids(oid);
         HakukohteenValintaperusteAvaimetDTO valintaperusteet = new HakukohteenValintaperusteAvaimetDTO();
         for (Funktiokutsu kutsu : funktiokutsut) {
             haeHakukohteenValintaperusteetRekursiivisesti(kutsu, valintaperusteet);

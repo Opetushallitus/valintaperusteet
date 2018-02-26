@@ -44,20 +44,6 @@ public class ValintaperusteDTO {
     @ApiModelProperty(value = "Voidaanko arvo syöttää kaikille vai vaan kutsutuille")
     private Boolean syotettavissaKaikille = true;
 
-    @ApiModelProperty(value = "Tilastoidaanko")
-    private Boolean tilastoidaan = null;
-
-    @ApiModelProperty(value = "Syötettävän arvon tyyppi")
-    private KoodiDTO syötettavanArvonTyyppi = null;
-
-    public Boolean getTilastoidaan() {
-        return tilastoidaan;
-    }
-
-    public void setTilastoidaan(Boolean tilastoidaan) {
-        this.tilastoidaan = tilastoidaan;
-    }
-
     public String getTunniste() {
         return tunniste;
     }
@@ -144,13 +130,5 @@ public class ValintaperusteDTO {
 
     public void setSyotettavissaKaikille(Boolean syotettavissaKaikille) {
         this.syotettavissaKaikille = syotettavissaKaikille;
-    }
-
-    public KoodiDTO getSyötettavanArvonTyyppi() {
-        return syötettavanArvonTyyppi;
-    }
-
-    public void setSyötettavanArvonTyyppi(KoodiDTO syötettavanArvonTyyppi) {
-        this.syötettavanArvonTyyppi = syötettavanArvonTyyppi;
     }
 }

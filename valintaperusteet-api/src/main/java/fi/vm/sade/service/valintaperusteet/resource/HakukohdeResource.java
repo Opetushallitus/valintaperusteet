@@ -39,12 +39,6 @@ public interface HakukohdeResource {
     @Produces(MediaType.APPLICATION_JSON)
     ValintaryhmaDTO queryValintaryhma(@PathParam("oid") String oid);
 
-    @POST
-    @Path("/valintaryhmat")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    List<HakukohdeJaValintaryhmaDTO> queryValintaryhmat(List<String> hakukohdeOidit);
-
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -61,12 +55,6 @@ public interface HakukohdeResource {
     @Produces(MediaType.APPLICATION_JSON)
     List<ValinnanVaiheDTO> valinnanVaihesForHakukohde(@PathParam("oid") String oid,
                                                       @QueryParam("withValisijoitteluTieto") String withValisijoitteluTieto);
-
-    @POST
-    @Path("/valinnanvaiheet")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    List<HakukohdeJaValinnanVaiheDTO> valinnanVaiheetForHakukohteet(List<String> hakukohdeOidit);
 
     @GET
     @Path("/{oid}/valintakoe")
@@ -93,13 +81,6 @@ public interface HakukohdeResource {
     @Produces(MediaType.APPLICATION_JSON)
     List<HakijaryhmaValintatapajonoDTO> hakijaryhmat(@PathParam("oid") String oid);
 
-    @POST
-    @Path("/hakijaryhmat")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    List<HakukohdeJaLinkitettyHakijaryhmaValintatapajonoDTO> hakijaryhmat(List<String> hakukohdeOidit);
-
-
     @GET
     @Path("/{oid}/laskentakaava")
     @Produces(MediaType.APPLICATION_JSON)
@@ -115,12 +96,6 @@ public interface HakukohdeResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     HakukohteenValintaperusteAvaimetDTO findHakukohteenAvaimet(@PathParam("hakukohdeOid") String hakukohdeOid);
-
-    @POST
-    @Path("/avaimet")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    List<HakukohdeJaValintaperusteDTO> findHakukohteidenAvaimet(List<String> hakukohdeOidit);
 
     @PUT
     @Path("/{hakukohdeOid}/valinnanvaihe")
@@ -161,10 +136,4 @@ public interface HakukohdeResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response siirraHakukohdeValintaryhmaan(@PathParam("hakukohdeOid") String hakukohdeOid, String valintaryhmaOid);
-
-    @POST
-    @Path("/hakukohteet")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    Response haeHakukohteetOideilla(List<String> hakukohdeOidit);
 }
