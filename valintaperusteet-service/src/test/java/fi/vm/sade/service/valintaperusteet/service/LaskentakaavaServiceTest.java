@@ -1,5 +1,13 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import fi.vm.sade.kaava.Funktiokuvaaja;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
@@ -19,11 +27,20 @@ import fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi;
 import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
 import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
-import fi.vm.sade.service.valintaperusteet.model.*;
+import fi.vm.sade.service.valintaperusteet.model.Arvokonvertteriparametri;
+import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti;
+import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
+import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
+import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
+import fi.vm.sade.service.valintaperusteet.model.Syoteparametri;
+import fi.vm.sade.service.valintaperusteet.model.ValintaperusteViite;
+import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuMuodostaaSilmukanException;
 import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuaEiVoidaKayttaaValintakoelaskennassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaMuodostaaSilmukanException;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,9 +54,15 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.util.*;
-
-import static org.junit.Assert.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * User: kwuoti Date: 21.1.2013 Time: 9.42
@@ -517,12 +540,14 @@ public class LaskentakaavaServiceTest {
     @Test
     public void testFindAvaimetForHakukohteet() {
         Map<String, List<ValintaperusteDTO>> valintaperusteet = laskentakaavaService.findAvaimetForHakukohteet(Arrays.asList("oid17"));
+        Assert.assertThat(valintaperusteet.entrySet(), hasSize(1));
         assertEquals(1, valintaperusteet.size());
         assertSyotettavaArvoHakukohde17(valintaperusteet.get("oid17"));
     }
 
     private void assertSyotettavaArvoHakukohde17(List<ValintaperusteDTO> valintaperusteet) {
-        assertEquals(2, valintaperusteet.size());
+        Assert.assertThat(valintaperusteet.stream().map(ToStringBuilder::reflectionToString).collect(Collectors.toList()).toString(),
+            valintaperusteet, hasSize(2));
 
         Collections.sort(valintaperusteet, new Comparator<ValintaperusteDTO>() {
             @Override
