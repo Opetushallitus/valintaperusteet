@@ -6,6 +6,7 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPD
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -133,6 +134,21 @@ public class HakukohdeResourceImpl {
         }
     }
 
+    @POST
+    @Path("/hakukohteet")
+    @Produces(MediaType.APPLICATION_JSON)
+    @PreAuthorize(READ_UPDATE_CRUD)
+    @ApiOperation(value = "Hakee hakukohteet OIDien perusteella", response = HakukohdeViiteDTO.class)
+    public List<HakukohdeViiteDTO> hakukohteet(@ApiParam(value = "Lista hakukohdeOideja", required = true) List<String> hakukohdeOidit) {
+        return modelMapper.mapList(hakukohdeOidit.stream().map((oid) -> {
+            Optional<HakukohdeViite> hakukohdeViite = Optional.empty();
+            try {
+                hakukohdeViite = Optional.of(hakukohdeService.readByOid(oid));
+            } catch (HakukohdeViiteEiOleOlemassaException hveooe) {}
+            return hakukohdeViite;
+        }).filter((viite) -> viite.isPresent()).map(Optional::get).collect(Collectors.toList()), HakukohdeViiteDTO.class);
+    }
+
     @GET
     @Path("/{oid}/valintaryhma")
     @Produces(MediaType.APPLICATION_JSON)
@@ -148,6 +164,24 @@ public class HakukohdeResourceImpl {
         } else {
             return new ValintaryhmaDTO();
         }
+    }
+
+    @POST
+    @Path("/valintaryhmat")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @PreAuthorize(READ_UPDATE_CRUD)
+    @ApiOperation(value = "Hakee valintaryhmät hakukohteiden OIDien perusteella", response = ValintaryhmaDTO.class)
+    public List<HakukohdeJaValintaryhmaDTO> queryValintaryhmat(@ApiParam(value = "Lista hakukohdeOideja", required = true) List<String> hakukohdeOidit) {
+        return hakukohdeOidit.stream().map(oid ->
+            hakukohdeViiteDAO.findValintaryhmaByHakukohdeOid(oid).flatMap(valintaryhma ->
+                Optional.of(
+                        new HakukohdeJaValintaryhmaDTO(oid, new ValintaryhmaDTO() {{
+                            setNimi(valintaryhma.getNimi());
+                            setOid(valintaryhma.getOid());
+                        }})
+                ))
+            ).filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());
     }
 
     @PUT
@@ -233,6 +267,25 @@ public class HakukohdeResourceImpl {
         }
 
         return valinnanVaiheetDTO;
+    }
+
+    @POST
+    @Path("/valinnanvaiheet")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @PreAuthorize(READ_UPDATE_CRUD)
+    @ApiOperation(value = "Hakee hakukohteiden valinnan vaiheet OIDien perusteella", response = HakukohdeJaValinnanVaiheDTO.class)
+    public List<HakukohdeJaValinnanVaiheDTO> valinnanVaiheetForHakukohteet(@ApiParam(value = "Hakukohde OIDit", required = true) List<String> hakukohdeOidit) {
+        return hakukohdeOidit.stream().map((oid) -> {
+            List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheService.findByHakukohde(oid);
+            List<ValinnanVaiheJaPrioriteettiDTO> valinnanVaiheDtot = new ArrayList<>();
+            for (int i = 0; i < valinnanVaiheet.size(); i++) {
+                ValinnanVaiheJaPrioriteettiDTO dto = modelMapper.map(valinnanVaiheet.get(i), ValinnanVaiheJaPrioriteettiDTO.class);
+                dto.setPrioriteetti(i + 1);
+                valinnanVaiheDtot.add(dto);
+            }
+            return valinnanVaiheDtot.isEmpty() ? null : new HakukohdeJaValinnanVaiheDTO(oid, valinnanVaiheDtot);
+        }).filter((dto) -> null != dto).collect(Collectors.toList());
     }
 
     @Transactional
@@ -326,6 +379,43 @@ public class HakukohdeResourceImpl {
         return modelMapper.mapList(hakijaryhmaValintatapajonoService.findByHakukohde(oid), HakijaryhmaValintatapajonoDTO.class);
     }
 
+    private List<LinkitettyHakijaryhmaValintatapajonoDTO> getValintatapajonokohtaisetHakijaryhmat(String hakukohdeOid) {
+        List<String> valintatapajonoOids = valinnanVaiheService.findByHakukohde(hakukohdeOid).stream().map(ValinnanVaihe::getOid).map(valinnanvaihe ->
+           valintatapajonoService.findJonoByValinnanvaihe(valinnanvaihe).stream().map(Valintatapajono::getOid)).flatMap(oid -> oid).collect(Collectors.toList());
+
+        return valintatapajonoOids.isEmpty() ? new ArrayList<>() : hakijaryhmaValintatapajonoService
+           .findHakijaryhmaByJonos(valintatapajonoOids).stream().map(hakijaryhma -> {
+              LinkitettyHakijaryhmaValintatapajonoDTO dto = modelMapper.map(hakijaryhma, LinkitettyHakijaryhmaValintatapajonoDTO.class);
+              dto.setValintatapajonoOid(hakijaryhma.getValintatapajono().getOid());
+              return dto;
+           }).collect(Collectors.toList());
+    }
+
+    private List<LinkitettyHakijaryhmaValintatapajonoDTO> getHakukohdekohtaisetHakijaryhmat(List<String> hakukohdeOidit) {
+        return hakijaryhmaValintatapajonoService.findByHakukohteet(hakukohdeOidit).stream().map(hakijaryhma -> {
+            LinkitettyHakijaryhmaValintatapajonoDTO dto = modelMapper.map(hakijaryhma, LinkitettyHakijaryhmaValintatapajonoDTO.class);
+            dto.setHakukohdeOid(hakijaryhma.getHakukohdeViite().getOid());
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
+    @POST
+    @Path("/hakijaryhmat")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @PreAuthorize(READ_UPDATE_CRUD)
+    @ApiOperation(value = "Hakee hakukohteiden hakijaryhmät", response = LinkitettyHakijaryhmaValintatapajonoDTO.class)
+    public List<HakukohdeJaLinkitettyHakijaryhmaValintatapajonoDTO> hakijaryhmat(@ApiParam(value = "Hakukohde OIDit", required = true) List<String> hakukohdeOidit) {
+        List<LinkitettyHakijaryhmaValintatapajonoDTO> hakijaryhmat = getHakukohdekohtaisetHakijaryhmat(hakukohdeOidit);
+        return hakukohdeOidit.stream().map(hakukohdeOid -> {
+            List<LinkitettyHakijaryhmaValintatapajonoDTO> hakukohteenHakijaryhmat = new ArrayList<>();
+            hakukohteenHakijaryhmat.addAll(getValintatapajonokohtaisetHakijaryhmat(hakukohdeOid));
+            hakukohteenHakijaryhmat.addAll(hakijaryhmat.stream().filter(hakijaryhma ->
+                hakukohdeOid.equals(hakijaryhma.getHakukohdeOid())).collect(Collectors.toList()));
+            return new HakukohdeJaLinkitettyHakijaryhmaValintatapajonoDTO(hakukohdeOid, hakukohteenHakijaryhmat);
+        }).filter(hakukohde -> !hakukohde.getHakijaryhmat().isEmpty()).collect(Collectors.toList());
+    }
+    
     @GET
     @Path("/{oid}/laskentakaava")
     @Produces(MediaType.APPLICATION_JSON)
@@ -342,6 +432,18 @@ public class HakukohdeResourceImpl {
     @ApiOperation(value = "Hakee hakukohteen syötettävät tiedot", response = ValintaperusteDTO.class)
     public List<ValintaperusteDTO> findAvaimet(@ApiParam(value = "Hakukohde OID", required = true) @PathParam("oid") String oid) {
         return laskentakaavaService.findAvaimetForHakukohde(oid);
+    }
+
+    @POST
+    @Path("/avaimet")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @PreAuthorize(READ_UPDATE_CRUD)
+    @ApiOperation(value = "Hakee hakukohteiden syötettävät tiedot", response = ValintaperusteDTO.class)
+    public List<HakukohdeJaValintaperusteDTO> findHakukohteidenAvaimet(@ApiParam(value = "Hakukohteiden OIDit", required = true) List<String> hakukohdeOidit) {
+        return laskentakaavaService.findAvaimetForHakukohteet(hakukohdeOidit).entrySet().stream().map(
+           entry -> new HakukohdeJaValintaperusteDTO(entry.getKey(), entry.getValue())).filter(
+                   r -> !r.getValintaperusteDTO().isEmpty()).collect(Collectors.toList());
     }
 
     @GET

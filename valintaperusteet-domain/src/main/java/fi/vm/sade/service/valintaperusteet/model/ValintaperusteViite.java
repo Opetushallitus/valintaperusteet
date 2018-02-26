@@ -51,7 +51,7 @@ public class ValintaperusteViite extends BaseEntity implements Comparable<Valint
     private Boolean syotettavissaKaikille = true;
 
     @JoinColumn(name = "syotettavanarvontyyppi_id", nullable = true)
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @ManyToOne(fetch = FetchType.EAGER, optional = true)
     private Syotettavanarvontyyppi syotettavanarvontyyppi;
 
     @Column(name = "tilastoidaan", nullable = true)

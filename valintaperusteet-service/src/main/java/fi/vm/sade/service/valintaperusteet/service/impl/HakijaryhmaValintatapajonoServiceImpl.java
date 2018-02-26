@@ -95,6 +95,7 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
         return hakijaryhmaValintatapajonoDAO.findByHakukohteet(hakukohdeOids);
     }
 
+
     @Override
     public Hakijaryhma lisaaHakijaryhmaValintatapajonolle(String valintatapajonoOid, HakijaryhmaCreateDTO dto) {
         if (dto.getLaskentakaavaId() == null) {

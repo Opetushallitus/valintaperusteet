@@ -28,9 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
@@ -109,7 +107,7 @@ public class FunktiokutsuDAOImpl extends AbstractJpaDAOImpl<Funktiokutsu, Long> 
     }
 
     @Override
-    public List<Funktiokutsu> findFunktiokutsuByHakukohdeOids(String hakukohdeOid) {
+    public List<Funktiokutsu> findFunktiokutsuByHakukohdeOid(String hakukohdeOid) {
         QHakukohdeViite hakukohde = QHakukohdeViite.hakukohdeViite;
         QValinnanVaihe vaihe = QValinnanVaihe.valinnanVaihe;
         QValintatapajono jono = QValintatapajono.valintatapajono;
@@ -134,6 +132,43 @@ public class FunktiokutsuDAOImpl extends AbstractJpaDAOImpl<Funktiokutsu, Long> 
                         .and(kriteeri.aktiivinen.isTrue()))
                 .distinct()
                 .list(funktiokutsu);
+    }
+
+    @Override
+    public Map<String, List<Funktiokutsu>> findFunktiokutsuByHakukohdeOids(List<String> hakukohdeOidit) {
+        QHakukohdeViite hakukohde = QHakukohdeViite.hakukohdeViite;
+        QValinnanVaihe vaihe = QValinnanVaihe.valinnanVaihe;
+        QValintatapajono jono = QValintatapajono.valintatapajono;
+        QJarjestyskriteeri kriteeri = QJarjestyskriteeri.jarjestyskriteeri;
+        QLaskentakaava kaava = QLaskentakaava.laskentakaava;
+        QFunktiokutsu funktiokutsu = QFunktiokutsu.funktiokutsu;
+
+        Map<String, List<Funktiokutsu>> result = new HashMap<>();
+        from(hakukohde)
+                .innerJoin(hakukohde.valinnanvaiheet, vaihe)
+                .innerJoin(vaihe.jonot, jono)
+                .innerJoin(jono.jarjestyskriteerit, kriteeri)
+                .innerJoin(kriteeri.laskentakaava, kaava)
+                .innerJoin(kaava.funktiokutsu, funktiokutsu)
+                .leftJoin(funktiokutsu.arvokonvertteriparametrit).fetch()
+                .leftJoin(funktiokutsu.arvovalikonvertteriparametrit).fetch()
+                .leftJoin(funktiokutsu.funktioargumentit).fetch()
+                .leftJoin(funktiokutsu.syoteparametrit).fetch()
+                .leftJoin(funktiokutsu.valintaperusteviitteet).fetch()
+                .where(hakukohde.oid.in(hakukohdeOidit)
+                        .and(vaihe.aktiivinen.isTrue())
+                        .and(jono.aktiivinen.isTrue())
+                        .and(kriteeri.aktiivinen.isTrue()))
+                .distinct()
+                .list(hakukohde.oid, funktiokutsu).forEach(r -> {
+                    String rHakukohdeOid = (String)r[0];
+                    Funktiokutsu rFunktiokutsu = (Funktiokutsu)r[1];
+                    if (!result.containsKey(rHakukohdeOid)) {
+                        result.put(rHakukohdeOid, new ArrayList<>());
+                    }
+                    result.get(rHakukohdeOid).add(rFunktiokutsu);
+                });
+        return result;
     }
 
     @Override

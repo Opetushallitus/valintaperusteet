@@ -16,6 +16,7 @@ import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
 import fi.vm.sade.service.valintaperusteet.service.exception.*;
 import fi.vm.sade.service.valintaperusteet.service.impl.actors.ActorService;
+import fi.vm.sade.service.valintaperusteet.service.impl.actors.HaeValintaperusteetRekursiivisestiActorBean;
 import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.UusiHakukohteenValintaperusteRekursio;
 import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.UusiRekursio;
 import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.UusiValintaperusteRekursio;
@@ -31,6 +32,7 @@ import scala.concurrent.Future;
 import scala.concurrent.duration.Duration;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -603,15 +605,35 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
         return map;
     }
 
-    @Override
-    public List<ValintaperusteDTO> findAvaimetForHakukohde(String hakukohdeOid) {
-        List<Funktiokutsu> funktiokutsut = funktiokutsuDAO.findFunktiokutsuByHakukohdeOids(hakukohdeOid);
-        Map<String, String> hakukohteenValintaperusteet = hakukohteenValintaperusteetMap(hakukohteenValintaperusteDAO.haeHakukohteenValintaperusteet(hakukohdeOid));
-        Map<String, ValintaperusteDTO> valintaperusteet = new HashMap<String, ValintaperusteDTO>();
-        for (Funktiokutsu kutsu : funktiokutsut) {
+    private List<ValintaperusteDTO> convertToAvaimet(List<Funktiokutsu> hakukohteenFunktiokutsut, List<HakukohteenValintaperuste> hakukohteenValintaperusteet) {
+        return convertToAvaimet(hakukohteenFunktiokutsut, hakukohteenValintaperusteetMap(hakukohteenValintaperusteet));
+    }
+
+    private List<ValintaperusteDTO> convertToAvaimet(List<Funktiokutsu> hakukohteenFunktiokutsut, Map<String, String> hakukohteenValintaperusteet) {
+        Map<String, ValintaperusteDTO> valintaperusteet = new HashMap<>();
+        for (Funktiokutsu kutsu : hakukohteenFunktiokutsut) {
             haeValintaperusteetRekursiivisesti(kutsu, valintaperusteet, hakukohteenValintaperusteet);
         }
-        return new ArrayList<>(valintaperusteet.values());
+        List<ValintaperusteDTO> result =  new ArrayList<>(valintaperusteet.values());
+        return result;
+    }
+
+    @Override
+    public List<ValintaperusteDTO> findAvaimetForHakukohde(String hakukohdeOid) {
+        List<ValintaperusteDTO> result = convertToAvaimet(
+                funktiokutsuDAO.findFunktiokutsuByHakukohdeOid(hakukohdeOid),
+                hakukohteenValintaperusteDAO.haeHakukohteenValintaperusteet(hakukohdeOid));
+        return result;
+    }
+
+    @Override
+    public Map<String, List<ValintaperusteDTO>> findAvaimetForHakukohteet(List<String> hakukohdeOidit) {
+        Map<String, List<Funktiokutsu>> hakukohteidenFunktiokutsut = funktiokutsuDAO.findFunktiokutsuByHakukohdeOids(hakukohdeOidit);
+        Map<String, List<HakukohteenValintaperuste>> hakukohteidenValintaperusteet = hakukohteenValintaperusteDAO.haeHakukohteidenValintaperusteet(hakukohdeOidit)
+                .stream().collect(Collectors.groupingBy(vp -> vp.getHakukohde().getOid(), Collectors.toList()));
+        return hakukohdeOidit.stream().collect(Collectors.toMap(oid -> oid,
+                oid -> convertToAvaimet(hakukohteidenFunktiokutsut.getOrDefault(oid, Collections.emptyList()),
+                                        hakukohteidenValintaperusteet.getOrDefault(oid, Collections.emptyList()))));
     }
 
     private void haeValintaperusteetRekursiivisesti(Funktiokutsu funktiokutsu, Map<String, ValintaperusteDTO> valintaperusteet,
@@ -630,7 +652,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
 
     @Override
     public HakukohteenValintaperusteAvaimetDTO findHakukohteenAvaimet(String oid) {
-        List<Funktiokutsu> funktiokutsut = funktiokutsuDAO.findFunktiokutsuByHakukohdeOids(oid);
+        List<Funktiokutsu> funktiokutsut = funktiokutsuDAO.findFunktiokutsuByHakukohdeOid(oid);
         HakukohteenValintaperusteAvaimetDTO valintaperusteet = new HakukohteenValintaperusteAvaimetDTO();
         for (Funktiokutsu kutsu : funktiokutsut) {
             haeHakukohteenValintaperusteetRekursiivisesti(kutsu, valintaperusteet);

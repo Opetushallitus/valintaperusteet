@@ -5,6 +5,7 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.REA
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -19,6 +20,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.google.common.collect.Sets;
+import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.service.ValintaryhmaService;
 import org.slf4j.Logger;
@@ -33,12 +35,6 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintakoeCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.resource.ValinnanVaiheResource;
 import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
@@ -89,6 +85,20 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
     @ApiOperation(value = "Hakee valinnan vaiheen valintatapajonot OID:n perusteella", response = ValintatapajonoDTO.class)
     public List<ValintatapajonoDTO> listJonos(@ApiParam(value = "Valinnan vaiheen OID", required = true) @PathParam("oid") String oid) {
         return modelMapper.mapList(jonoService.findJonoByValinnanvaihe(oid), ValintatapajonoDTO.class);
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/valintatapajonot")
+    @PreAuthorize(READ_UPDATE_CRUD)
+    @ApiOperation(value = "Hakee useiden valinnan vaiheiden valintatapajonot OIDien perusteella", response = ValintatapajonoDTO.class)
+    public List<ValinnanVaiheJaValintatapajonoDTO> valintatapajonot(@ApiParam(value = "Valinnan vaiheiden OIDit", required = true) List<String> valinnanvaiheOidit) {
+        return valinnanvaiheOidit.stream().map(oid -> {
+            List<ValintatapajonoDTO> valintatapajonot = modelMapper.mapList(jonoService.findJonoByValinnanvaihe(oid), ValintatapajonoDTO.class);
+            Boolean kuuluuSijoitteluun = valinnanVaiheService.kuuluuSijoitteluun(oid);
+            return new ValinnanVaiheJaValintatapajonoDTO(oid, kuuluuSijoitteluun, valintatapajonot);
+        }).filter(dto -> !dto.getValintatapajonot().isEmpty()).collect(Collectors.toList());
     }
 
     @GET
@@ -221,4 +231,15 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
         return map;
     }
 
+    @POST
+    @Path("/kuuluuSijoitteluun")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @PreAuthorize(READ_UPDATE_CRUD)
+    @ApiOperation(value = "Palauttaa tiedon siitä, kuuluvatko valinnan vaiheet sijoitteluun", response = Boolean.class)
+    public Map<String, Boolean> kuuluuSijoitteluun(@ApiParam(value = "Valinnan vaiheiden OID", required = true) List<String> oids) {
+        Map<String, Boolean> map = new HashMap<>();
+        oids.forEach((oid) -> map.put(oid, valinnanVaiheService.kuuluuSijoitteluun(oid)));
+        return map;
+    }
 }
