@@ -533,8 +533,10 @@ public class LaskentakaavaServiceTest {
 
     @Test
     public void testFindAvaimetForHakukohde() {
-        List<ValintaperusteDTO> valintaperusteet = laskentakaavaService.findAvaimetForHakukohde("oid17");
-        assertSyotettavaArvoHakukohde17(valintaperusteet);
+        for (int i = 0; i < 10; i++) {
+            List<ValintaperusteDTO> valintaperusteet = laskentakaavaService.findAvaimetForHakukohde("oid17");
+            assertSyotettavaArvoHakukohde17(valintaperusteet);
+        }
     }
 
     @Test
