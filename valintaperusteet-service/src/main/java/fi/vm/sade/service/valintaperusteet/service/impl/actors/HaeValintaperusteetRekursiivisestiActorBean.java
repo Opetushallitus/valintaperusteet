@@ -133,13 +133,13 @@ public class HaeValintaperusteetRekursiivisestiActorBean extends UntypedActor {
         return funktiokutsu;
     }
 
-    public void onReceive(Object message) throws Exception {
+    public void onReceive(Object message) {
         if (message instanceof Funktiokutsu) {
             Funktiokutsu response = (Funktiokutsu) message;
             for (Funktioargumentti arg : original.getFunktioargumentit()) {
                 if (arg.getFunktiokutsuChild() != null && arg.getFunktiokutsuChild().getId().equals(response.getId())) {
                     arg.setFunktiokutsuChild(response);
-                } else if (arg.getLaskentakaavaChild() != null) {
+                } else if (arg.getLaskentakaavaChild() != null && arg.getLaskentakaavaChild().getFunktiokutsu() == null) {
                     arg.getLaskentakaavaChild().setFunktiokutsu(response);
                 }
             }
