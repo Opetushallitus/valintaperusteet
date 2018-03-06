@@ -32,7 +32,7 @@ public class LaskentakaavaServiceIntegrationTestToBeRunManually {
 
     @Test
     public void testFindAvaimetForHakukohde() {
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 10; i++) {
             List<ValintaperusteDTO> valintaperusteet = laskentakaavaService.findAvaimetForHakukohde("1.2.246.562.20.39188224891");
             assertSyotettavaArvoHakukohde17(valintaperusteet);
         }

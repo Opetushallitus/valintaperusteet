@@ -38,7 +38,6 @@ import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.UusiVali
 @org.springframework.context.annotation.Scope(value = "prototype")
 public class HaeValintaperusteetRekursiivisestiActorBean extends UntypedActor {
     LoggingAdapter log = Logging.getLogger(getContext().system(), this);
-    private static final Object UPDATE_LOCK = new Object();
 
     private int funktiokutsuLapset = 0;
 
@@ -128,9 +127,7 @@ public class HaeValintaperusteetRekursiivisestiActorBean extends UntypedActor {
                     valintaperuste.setMin(min != null ? min.toString() : null);
                     valintaperuste.setMax(max != null ? max.toString() : null);
                 }
-                synchronized (UPDATE_LOCK) {
-                    valintaperusteet.put(valintaperuste.getTunniste(), valintaperuste);
-                }
+                valintaperusteet.put(valintaperuste.getTunniste(), valintaperuste);
             }
         }
         return funktiokutsu;

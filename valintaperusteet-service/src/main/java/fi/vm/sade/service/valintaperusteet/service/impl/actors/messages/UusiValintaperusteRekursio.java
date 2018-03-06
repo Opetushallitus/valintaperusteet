@@ -1,8 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.service.impl.actors.messages;
 
 import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
-import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
 
+import java.util.Collections;
 import java.util.Map;
 
 public class UusiValintaperusteRekursio {
@@ -12,8 +12,8 @@ public class UusiValintaperusteRekursio {
 
     public UusiValintaperusteRekursio(Long id, Map<String, ValintaperusteDTO> valintaperusteet, Map<String, String> hakukohteenValintaperusteet) {
         this.id = id;
-        this.valintaperusteet = valintaperusteet;
-        this.hakukohteenValintaperusteet = hakukohteenValintaperusteet;
+        this.valintaperusteet = Collections.synchronizedMap(valintaperusteet);
+        this.hakukohteenValintaperusteet = Collections.synchronizedMap(hakukohteenValintaperusteet);
     }
 
     public Long getId() {
@@ -29,7 +29,7 @@ public class UusiValintaperusteRekursio {
     }
 
     public void setValintaperusteet(Map<String, ValintaperusteDTO> valintaperusteet) {
-        this.valintaperusteet = valintaperusteet;
+        this.valintaperusteet = Collections.synchronizedMap(valintaperusteet);
     }
 
     public Map<String, String> getHakukohteenValintaperusteet() {
@@ -37,6 +37,6 @@ public class UusiValintaperusteRekursio {
     }
 
     public void setHakukohteenValintaperusteet(Map<String, String> hakukohteenValintaperusteet) {
-        this.hakukohteenValintaperusteet = hakukohteenValintaperusteet;
+        this.hakukohteenValintaperusteet = Collections.synchronizedMap(hakukohteenValintaperusteet);
     }
 }
