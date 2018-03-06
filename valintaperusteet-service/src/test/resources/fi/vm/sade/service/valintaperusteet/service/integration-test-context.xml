@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/util
+       http://www.springframework.org/schema/util/spring-util.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd">
+
+  <context:property-placeholder
+    location="classpath:valintaperusteet-service.properties, file:///${user.home:''}/oph-configuration/common.properties, file:///${user.home:''}/oph-configuration/valinta.properties, file:///${user.home:''}/oph-configuration/override.properties"
+    ignore-resource-not-found="true" properties-ref="defaultProps"/>
+
+  <bean id="defaultProps" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+    <property name="properties">
+      <util:properties local-override="true">
+        <prop key="valintaperusteet-service.postgresql.maxactive">5</prop>
+        <prop key="valintaperusteet-service.postgresql.maxwait">1000</prop>
+        <prop key="valintaperusteet-service.postgresql.maxlifetimemillis">60000</prop>
+        <prop key="valintaperusteet-service.postgresql.leakDetectionThresholdMillis">1000</prop>
+        <prop key="valintaperusteet-service.postgresql.user">oph</prop>
+        <prop key="valintaperusteet-service.postgresql.password">oph</prop>
+        <prop key="valintaperusteet-service.postgresql.url">jdbc:postgresql://localhost:5432/valintaperusteet</prop>
+      </util:properties>
+    </property>
+  </bean>
+
+  <import resource="classpath:spring/db-context.xml"/>
+  <import resource="classpath:spring/service-context.xml"/>
+
+  <bean id="flyway" class="java.lang.String">
+    <constructor-arg value="No flyway migrations from here, please :)"/>
+  </bean>
+
+  <bean id="hakijaryhmaServiceImpl" class="java.lang.String">
+    <constructor-arg value="Overriding a problematic bean that we don't need."/>
+  </bean>
+  <bean id="hakijaryhmaValintatapajonoServiceImpl" class="java.lang.String">
+    <constructor-arg value="Overriding a problematic bean that we don't need."/>
+  </bean>
+  <bean id="hakukohdeImportServiceImpl" class="java.lang.String">
+    <constructor-arg value="Overriding a problematic bean that we don't need."/>
+  </bean>
+  <bean id="hakukohdeServiceImpl" class="java.lang.String">
+    <constructor-arg value="Overriding a problematic bean that we don't need."/>
+  </bean>
+  <bean id="valinnanVaiheServiceImpl" class="java.lang.String">
+    <constructor-arg value="Overriding a problematic bean that we don't need."/>
+  </bean>
+  <bean id="valintaryhmaServiceImpl" class="java.lang.String">
+    <constructor-arg value="Overriding a problematic bean that we don't need."/>
+  </bean>
+  <bean id="valintatapajonoServiceImpl" class="java.lang.String">
+    <constructor-arg value="Overriding a problematic bean that we don't need."/>
+  </bean>
+  <bean id="hakukohdekoodiServiceImpl" class="java.lang.String">
+    <constructor-arg value="Overriding a problematic bean that we don't need."/>
+  </bean>
+  <bean id="jarjestyskriteeriServiceImpl" class="java.lang.String">
+    <constructor-arg value="Overriding a problematic bean that we don't need."/>
+  </bean>
+  <bean id="luoValintaperusteetServiceImpl" class="java.lang.String">
+    <constructor-arg value="Overriding a problematic bean that we don't need."/>
+  </bean>
+  <bean id="valintakoeServiceImpl" class="java.lang.String">
+    <constructor-arg value="Overriding a problematic bean that we don't need."/>
+  </bean>
+  <bean id="valintakoekoodiServiceImpl" class="java.lang.String">
+    <constructor-arg value="Overriding a problematic bean that we don't need."/>
+  </bean>
+  <bean id="valintaperusteServiceImpl" class="java.lang.String">
+    <constructor-arg value="Overriding a problematic bean that we don't need."/>
+  </bean>
+</beans>
