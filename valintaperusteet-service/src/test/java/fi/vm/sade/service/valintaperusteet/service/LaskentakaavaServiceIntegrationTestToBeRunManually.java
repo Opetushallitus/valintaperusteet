@@ -2,7 +2,6 @@ package fi.vm.sade.service.valintaperusteet.service;
 
 import static org.junit.Assert.assertThat;
 
-import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
 import org.apache.commons.lang3.tuple.Pair;
 import org.hamcrest.Description;
@@ -30,9 +29,6 @@ import java.util.List;
 public class LaskentakaavaServiceIntegrationTestToBeRunManually {
     @Autowired
     private LaskentakaavaService laskentakaavaService;
-
-    @Autowired
-    private FunktiokutsuDAO funktiokutsuDAO;
 
     @Test
     public void testFindAvaimetForHakukohde() {
