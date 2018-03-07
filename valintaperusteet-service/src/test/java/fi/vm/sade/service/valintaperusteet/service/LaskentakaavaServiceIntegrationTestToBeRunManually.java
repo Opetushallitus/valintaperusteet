@@ -12,18 +12,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
-import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 @ContextConfiguration(locations = "classpath:fi/vm/sade/service/valintaperusteet/service/integration-test-context.xml")
-@TestExecutionListeners(listeners = {
-        DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class })
 @RunWith(SpringJUnit4ClassRunner.class)
 @Ignore
 public class LaskentakaavaServiceIntegrationTestToBeRunManually {
