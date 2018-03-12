@@ -291,7 +291,7 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
         }
     }
 
-    @PUT
+    @POST
     @Path("/{valintaryhmaOid}/valinnanvaihe")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

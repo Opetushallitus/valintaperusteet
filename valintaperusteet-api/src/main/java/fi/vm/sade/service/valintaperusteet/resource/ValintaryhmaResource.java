@@ -26,7 +26,7 @@ public interface ValintaryhmaResource {
 
     @DELETE
     @Path("/{oid}")
-    public Response delete(@PathParam("oid") String oid);
+    Response delete(@PathParam("oid") String oid);
 
     @GET
     @Path("/{oid}")
@@ -85,7 +85,7 @@ public interface ValintaryhmaResource {
     @Produces(MediaType.APPLICATION_JSON)
     Response copyToRoot(@QueryParam("lahdeOid") String lahdeOid, @QueryParam("nimi") String nimi);
 
-    @PUT
+    @POST
     @Path("/{valintaryhmaOid}/valinnanvaihe")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
