@@ -302,18 +302,14 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
             @ApiParam(value = "Valinnan vaiheen OID, jonka jälkeen uusi valinnan vaihe lisätään") @QueryParam("edellinenValinnanVaiheOid") String edellinenValinnanVaiheOid,
             @ApiParam(value = "Uusi valinnan vaihe", required = true) ValinnanVaiheCreateDTO valinnanVaihe) {
         try {
-            new Thread(() -> {
-                ValinnanVaiheDTO lisatty = modelMapper.map(valinnanVaiheService.lisaaValinnanVaiheValintaryhmalle(valintaryhmaOid, valinnanVaihe, edellinenValinnanVaiheOid), ValinnanVaiheDTO.class);
-                AUDIT.log(builder()
-                        .id(username())
-                        .valintaryhmaOid(valintaryhmaOid)
-                        .valinnanvaiheOid(lisatty.getOid())
-                        .setOperaatio(ValintaperusteetOperation.VALINTARYHMA_LISAYS_VALINNANVAIHE)
-                        .build());
-            }).start();
-            Map<String,String> response = new HashMap<>();
-            response.put("response", "BUG-1682 Quick hack: Started creation as a background process...");
-            return Response.status(Response.Status.OK).entity(response).build();
+            ValinnanVaiheDTO lisatty = modelMapper.map(valinnanVaiheService.lisaaValinnanVaiheValintaryhmalle(valintaryhmaOid, valinnanVaihe, edellinenValinnanVaiheOid), ValinnanVaiheDTO.class);
+            AUDIT.log(builder()
+                    .id(username())
+                    .valintaryhmaOid(valintaryhmaOid)
+                    .valinnanvaiheOid(lisatty.getOid())
+                    .setOperaatio(ValintaperusteetOperation.VALINTARYHMA_LISAYS_VALINNANVAIHE)
+                    .build());
+            return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (Exception e) {
             LOGGER.error("Error creating valinnanvaihe.", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
