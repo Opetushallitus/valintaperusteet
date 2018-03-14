@@ -160,10 +160,9 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
             @ApiParam(value = "Päivitettävän laskentakaavan ID", required = true) @PathParam("id") Long id,
             @ApiParam(value = "Päivitettävän laskentakaavan uudet tiedot", required = true) LaskentakaavaCreateDTO laskentakaava,
             @Context HttpServletRequest request) {
-        LaskentakaavaDTO beforeUpdate = null;
         LaskentakaavaDTO afterUpdate = null;
         try {
-            beforeUpdate = modelMapper.map(laskentakaavaService.haeMallinnettuKaava(id), LaskentakaavaDTO.class);
+            LaskentakaavaDTO beforeUpdate = modelMapper.map(laskentakaavaService.haeMallinnettuKaava(id), LaskentakaavaDTO.class);
             afterUpdate = modelMapper.map(laskentakaavaService.update(id, laskentakaava), LaskentakaavaDTO.class);
             AuditLog.log(ValintaperusteetAudit.AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.LASKENTAKAAVA_PAIVITYS, ValintaResource.LASKENTAKAAVA, afterUpdate.getId().toString(), afterUpdate, beforeUpdate);
             // Kaava päivitetty, poistetaan orvot
