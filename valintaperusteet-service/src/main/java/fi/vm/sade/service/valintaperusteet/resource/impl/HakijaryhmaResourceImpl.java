@@ -134,13 +134,14 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response siirra(HakijaryhmaSiirraDTO dto, @Context HttpServletRequest request) {
         Optional<Hakijaryhma> siirretty = hakijaryhmaService.siirra(dto);
-        return siirretty.map(kaava ->
-        {
+        siirretty.ifPresent(hakijaryhma -> {
             Map<String, String> additionalAuditInfo = new HashMap<>();
-            additionalAuditInfo.put("Nimi", kaava.getNimi() + ", " + dto.getNimi());
-            AuditLog.log(ValintaperusteetAudit.AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.HAKIJARYHMA_SIIRTO, ValintaResource.HAKIJARYHMA, dto.getValintaryhmaOid(), kaava, null, additionalAuditInfo);
-            return Response.status(Response.Status.ACCEPTED).entity(modelMapper.map(kaava, HakijaryhmaDTO.class)).build();
-        }).orElse(Response.status(Response.Status.NOT_FOUND).build());
+            additionalAuditInfo.put("Nimi", hakijaryhma.getNimi() + ", " + dto.getNimi());
+            AuditLog.log(ValintaperusteetAudit.AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.HAKIJARYHMA_SIIRTO, ValintaResource.HAKIJARYHMA, dto.getValintaryhmaOid(), hakijaryhma, null, additionalAuditInfo);
+        });
+        return siirretty
+            .map(kaava -> Response.status(Response.Status.ACCEPTED).entity(modelMapper.map(kaava, HakijaryhmaDTO.class)).build())
+            .orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
 
     @POST
