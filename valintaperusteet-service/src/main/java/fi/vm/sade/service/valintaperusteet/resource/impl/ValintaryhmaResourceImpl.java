@@ -245,7 +245,9 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
     public Response copyAsChild(@PathParam("oid") String oid, @QueryParam("lahdeOid") String lahdeOid, @QueryParam("nimi") String nimi, @Context HttpServletRequest request) {
         try {
             ValintaryhmaDTO lisatty = modelMapper.map(valintaryhmaService.copyAsChild(lahdeOid, oid, nimi), ValintaryhmaDTO.class);
-            AuditLog.log(AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.LAPSIVALINTARYHMA_LISAYS, ValintaResource.VALINTARYHMA, oid, lisatty, null);
+            Map<String,String> additionalAuditInfo = new HashMap<>();
+            additionalAuditInfo.put("lahdeOid", lahdeOid);
+            AuditLog.log(AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.LAPSIVALINTARYHMA_LISAYS, ValintaResource.VALINTARYHMA, oid, lisatty, null, additionalAuditInfo);
             return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (Exception e) {
             LOGGER.error("Error copying valintaryhmä.", e);
