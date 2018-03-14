@@ -137,7 +137,7 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
         siirretty.ifPresent(hakijaryhma -> {
             Map<String, String> additionalAuditInfo = new HashMap<>();
             additionalAuditInfo.put("Nimi", hakijaryhma.getNimi() + ", " + dto.getNimi());
-            AuditLog.log(ValintaperusteetAudit.AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.HAKIJARYHMA_SIIRTO, ValintaResource.HAKIJARYHMA, dto.getValintaryhmaOid(), hakijaryhma, null, additionalAuditInfo);
+            AuditLog.log(ValintaperusteetAudit.AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.HAKIJARYHMA_SIIRTO, ValintaResource.HAKIJARYHMA, hakijaryhma.getOid(), hakijaryhma, null, additionalAuditInfo);
         });
         return siirretty
             .map(hakijaryhma -> Response.status(Response.Status.ACCEPTED).entity(modelMapper.map(hakijaryhma, HakijaryhmaDTO.class)).build())
