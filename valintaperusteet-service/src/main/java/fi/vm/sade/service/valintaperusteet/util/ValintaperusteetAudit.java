@@ -4,23 +4,14 @@ import fi.vm.sade.auditlog.ApplicationType;
 import fi.vm.sade.auditlog.Audit;
 import fi.vm.sade.sharedutils.AuditLogger;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.security.Principal;
 import java.util.Collection;
-import java.util.Optional;
 
 /**
  * @author Jussi Jartamo
  */
 public class ValintaperusteetAudit {
     public static final Audit AUDIT = new Audit(new AuditLogger(), "valintaperusteet-service", ApplicationType.VIRKAILIJA);
-
-    public static String username() {
-        return Optional.ofNullable((Principal) SecurityContextHolder.getContext().getAuthentication()).orElse(
-                () -> "Kirjautumaton käyttäjä"
-        ).getName();
-    }
 
     public static String toNullsafeString(Collection l) {
         return l == null ? "null" : StringUtils.join(l, ",");
