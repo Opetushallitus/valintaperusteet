@@ -18,6 +18,7 @@ import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaListDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
+import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import fi.vm.sade.service.valintaperusteet.resource.ValintaryhmaResource;
 import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaService;
 import fi.vm.sade.service.valintaperusteet.service.HakukohdeService;
@@ -214,7 +215,7 @@ public class ValintaryhmaResourceImpl implements ValintaryhmaResource {
     public Response insert(@ApiParam(value = "Uusi valintaryhmä", required = true) ValintaryhmaCreateDTO valintaryhma, @Context HttpServletRequest request) {
         try {
             ValintaryhmaDTO lisatty = modelMapper.map(valintaryhmaService.insert(valintaryhma), ValintaryhmaDTO.class);
-            AuditLog.log(AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.VALINTARYHMA_LISAYS, ValintaResource.VALINTARYHMA, valintaryhma.getVastuuorganisaatioOid(), lisatty, null);
+            AuditLog.log(AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.VALINTARYHMA_LISAYS, ValintaResource.VALINTARYHMA, lisatty.getOid(), lisatty, null);
             return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (Exception e) {
             LOGGER.error("Error creating valintaryhmä.", e);
