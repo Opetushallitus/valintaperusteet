@@ -140,7 +140,7 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
             AuditLog.log(ValintaperusteetAudit.AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.HAKIJARYHMA_SIIRTO, ValintaResource.HAKIJARYHMA, dto.getValintaryhmaOid(), hakijaryhma, null, additionalAuditInfo);
         });
         return siirretty
-            .map(kaava -> Response.status(Response.Status.ACCEPTED).entity(modelMapper.map(kaava, HakijaryhmaDTO.class)).build())
+            .map(hakijaryhma -> Response.status(Response.Status.ACCEPTED).entity(modelMapper.map(hakijaryhma, HakijaryhmaDTO.class)).build())
             .orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
 
