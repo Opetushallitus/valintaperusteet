@@ -235,7 +235,7 @@ public class HakukohdeResourceImpl {
     public Response insert(@ApiParam(value = "Lisättävä hakukohde ja valintaryhmä", required = true) HakukohdeInsertDTO hakukohde, @Context HttpServletRequest request) {
         try {
             HakukohdeViiteDTO hkv = modelMapper.map(hakukohdeService.insert(hakukohde.getHakukohde(), hakukohde.getValintaryhmaOid()), HakukohdeViiteDTO.class);
-            AuditLog.log(ValintaperusteetAudit.AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.HAKUKOHDE_LISAYS_VALINTARYHMA, ValintaResource.HAKUKOHDE, hakukohde.getHakukohde().getHakuoid(), hkv, null);
+            AuditLog.log(ValintaperusteetAudit.AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.HAKUKOHDE_LISAYS_VALINTARYHMA, ValintaResource.HAKUKOHDE, hakukohde.getHakukohde().getOid(), hkv, null);
             return Response.status(Response.Status.CREATED).entity(hkv).build();
         } catch (Exception e) {
             LOG.warn("Hakukohdetta ei saatu lisättyä", e);
