@@ -1,5 +1,12 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriDTO;
@@ -22,6 +29,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.Primary;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -35,11 +43,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Created with IntelliJ IDEA.
@@ -194,7 +197,7 @@ public class ValintatapajonoResourceTest {
         assertEquals("5", oids.get(4));
         Collections.reverse(oids);
 
-        List<ValintatapajonoDTO> jarjesta = resource.jarjesta(oids, request);
+        List<ValintatapajonoDTO> jarjesta = resource.jarjesta(oids, new MockHttpServletRequest());
         assertEquals("5", jarjesta.get(0).getOid());
         assertEquals("1", jarjesta.get(4).getOid());
 
