@@ -3,6 +3,7 @@ package fi.vm.sade.service.valintaperusteet.resource.impl;
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD;
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
+import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.AUDIT;
 import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.toNullsafeString;
 import com.google.common.collect.ImmutableMap;
 
@@ -128,10 +129,11 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
     @ApiOperation(value = "Lisää valintatapajonon valinnan vaiheelle")
     public Response addJonoToValinnanVaihe(
             @ApiParam(value = "Valinnan vaiheen OID", required = true) @PathParam("parentOid") String parentOid,
-            @ApiParam(value = "Lisättävä valintatapajono", required = true) ValintatapajonoCreateDTO jono, @Context HttpServletRequest request) {
+            @ApiParam(value = "Lisättävä valintatapajono", required = true) ValintatapajonoCreateDTO jono,
+            @Context HttpServletRequest request) {
         try {
             ValintatapajonoDTO inserted = modelMapper.map(jonoService.lisaaValintatapajonoValinnanVaiheelle(parentOid, jono, null), ValintatapajonoDTO.class);
-            AuditLog.log(ValintaperusteetOperation.VALINNANVAIHE_LISAYS_VALINTATAPAJONO, ValintaResource.VALINNANVAIHE, parentOid, inserted, null, request);
+            AuditLog.log(AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.VALINNANVAIHE_LISAYS_VALINTATAPAJONO, ValintaResource.VALINNANVAIHE, parentOid, inserted, null);
             return Response.status(Response.Status.CREATED).entity(inserted).build();
         } catch (Exception e) {
             LOGGER.error("error in addJonoToValinnanVaihe", e);
@@ -147,10 +149,11 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
     @ApiOperation(value = "Lisää valintakokeen valinnan vaiheelle")
     public Response addValintakoeToValinnanVaihe(
             @ApiParam(value = "Valinnan vaiheen OID", required = true) @PathParam("parentOid") String parentOid,
-            @ApiParam(value = "Lisättävä valintakoe", required = true) ValintakoeCreateDTO koe, @Context HttpServletRequest request) {
+            @ApiParam(value = "Lisättävä valintakoe", required = true) ValintakoeCreateDTO koe,
+            @Context HttpServletRequest request) {
         try {
             ValintakoeDTO valintakoe = modelMapper.map(valintakoeService.lisaaValintakoeValinnanVaiheelle(parentOid, koe), ValintakoeDTO.class);
-            AuditLog.log(ValintaperusteetOperation.VALINNANVAIHE_LISAYS_VALINTAKOE, ValintaResource.VALINNANVAIHE, parentOid, valintakoe, null, request);
+            AuditLog.log(AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.VALINNANVAIHE_LISAYS_VALINTAKOE, ValintaResource.VALINNANVAIHE, parentOid, valintakoe, null);
             return Response.status(Response.Status.CREATED).entity(valintakoe).build();
         } catch (Exception e) {
             LOGGER.error("error in addValintakoeToValinnanVaihe", e);
@@ -166,10 +169,11 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
     @ApiOperation(value = "Päivittää valinnan vaihetta", response = ValinnanVaiheDTO.class)
     public ValinnanVaiheDTO update(
             @ApiParam(value = "Päivitettävän valinnan vaiheen OID", required = true) @PathParam("oid") String oid,
-            @ApiParam(value = "Päivitettävän valinnan vaiheen uudet tiedot", required = true) ValinnanVaiheCreateDTO valinnanVaihe, @Context HttpServletRequest request) {
+            @ApiParam(value = "Päivitettävän valinnan vaiheen uudet tiedot", required = true) ValinnanVaiheCreateDTO valinnanVaihe,
+            @Context HttpServletRequest request) {
         ValinnanVaiheDTO vanhaVV = modelMapper.map(valinnanVaiheService.readByOid(oid), ValinnanVaiheDTO.class);
         ValinnanVaiheDTO uusiVV = modelMapper.map(valinnanVaiheService.update(oid, valinnanVaihe), ValinnanVaiheDTO.class);
-        AuditLog.log(ValintaperusteetOperation.VALINNANVAIHE_PAIVITYS, ValintaResource.VALINNANVAIHE, oid, uusiVV, vanhaVV, request);
+        AuditLog.log(AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.VALINNANVAIHE_PAIVITYS, ValintaResource.VALINNANVAIHE, oid, uusiVV, vanhaVV);
         return uusiVV;
     }
 
@@ -182,7 +186,7 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
     public List<ValinnanVaiheDTO> jarjesta(@ApiParam(value = "Valinnan vaiheiden uusi järjestys", required = true) List<String> oids, @Context HttpServletRequest request) {
         List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheService.jarjestaValinnanVaiheet(oids);
         Map<String, String> additionalInfo = ImmutableMap.of("valinnanvaiheoids", toNullsafeString(oids));
-        AuditLog.log(ValintaperusteetOperation.VALINNANVAIHE_JARJESTA, ValintaResource.VALINNANVAIHE, null, null, null, request, additionalInfo);
+        AuditLog.log(AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.VALINNANVAIHE_JARJESTA, ValintaResource.VALINNANVAIHE, null, null, null, additionalInfo);
         return modelMapper.mapList(valinnanVaiheet, ValinnanVaiheDTO.class);
     }
 
@@ -198,7 +202,7 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
         try {
             ValinnanVaiheDTO old = modelMapper.map(valinnanVaiheService.readByOid(oid), ValinnanVaiheDTO.class);
             valinnanVaiheService.deleteByOid(oid);
-            AuditLog.log(ValintaperusteetOperation.VALINNANVAIHE_POISTO, ValintaResource.VALINNANVAIHE, oid, null, old, request);
+            AuditLog.log(AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.VALINNANVAIHE_POISTO, ValintaResource.VALINNANVAIHE, oid, null, old);
             return Response.status(Response.Status.ACCEPTED).build();
         } catch (ValinnanVaiheEiOleOlemassaException e) {
             throw new WebApplicationException(e, Response.Status.NOT_FOUND);

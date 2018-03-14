@@ -1,6 +1,10 @@
 package fi.vm.sade.service.valintaperusteet.resource.impl;
 
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
+import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.toNullsafeString;
 import com.google.common.collect.ImmutableMap;
+
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
@@ -13,10 +17,15 @@ import fi.vm.sade.service.valintaperusteet.service.ValintakoeService;
 import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaaEiVoiPoistaaException;
+import fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit;
 import fi.vm.sade.sharedutils.AuditLog;
 import fi.vm.sade.sharedutils.ValintaResource;
 import fi.vm.sade.sharedutils.ValintaperusteetOperation;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,17 +33,19 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
-import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.toNullsafeString;
 
 @Component
 @Path("hakijaryhma_valintatapajono")
@@ -80,7 +91,7 @@ public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValint
         try {
             HakijaryhmaValintatapajonoDTO hakijaryhmaValintatapajonoDTO = modelMapper.map(hakijaryhmaValintatapajonoService.readByOid(oid), HakijaryhmaValintatapajonoDTO.class);
             hakijaryhmaValintatapajonoService.deleteByOid(oid, false);
-            AuditLog.log(ValintaperusteetOperation.HAKIJARYHMA_VALINTATAPAJONO_LIITOS_POISTO, ValintaResource.HAKIJARYHMA_VALINTATAPAJONO, oid, null, hakijaryhmaValintatapajonoDTO, request);
+            AuditLog.log(ValintaperusteetAudit.AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.HAKIJARYHMA_VALINTATAPAJONO_LIITOS_POISTO, ValintaResource.HAKIJARYHMA_VALINTATAPAJONO, oid, null, hakijaryhmaValintatapajonoDTO);
             return Response.status(Response.Status.OK).build();
         } catch (HakijaryhmaaEiVoiPoistaaException e) {
             throw new WebApplicationException(e, Response.Status.FORBIDDEN);
@@ -106,7 +117,7 @@ public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValint
         try {
             HakijaryhmaValintatapajonoDTO beforeUpdate = modelMapper.map(hakijaryhmaValintatapajonoService.readByOid(oid), HakijaryhmaValintatapajonoDTO.class);
             HakijaryhmaValintatapajonoDTO afterUpdate = modelMapper.map(hakijaryhmaValintatapajonoService.update(oid, jono), HakijaryhmaValintatapajonoDTO.class);
-            AuditLog.log(ValintaperusteetOperation.HAKIJARYHMA_VALINTATAPAJONO_LIITOS_PAIVITYS, ValintaResource.HAKIJARYHMA_VALINTATAPAJONO, oid, afterUpdate, beforeUpdate, request);
+            AuditLog.log(ValintaperusteetAudit.AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.HAKIJARYHMA_VALINTATAPAJONO_LIITOS_PAIVITYS, ValintaResource.HAKIJARYHMA_VALINTATAPAJONO, oid, afterUpdate, beforeUpdate);
             return Response.status(Response.Status.ACCEPTED).entity(afterUpdate).build();
         } catch (HakijaryhmaEiOleOlemassaException e) {
             throw new WebApplicationException(e, Response.Status.NOT_FOUND);
@@ -127,8 +138,8 @@ public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValint
         if(!jarjestetytHakijaryhmat.isEmpty()) {
             targetOid = jarjestetytHakijaryhmat.get(0).getHakukohdeViite().getOid(); }
         Map<String, String> sortedOids = ImmutableMap.of("Oid-järjestys", toNullsafeString(oids));
-        AuditLog.log(ValintaperusteetOperation.VALINTATAPAJONO_HAKIJARYHMAT_JARJESTA, ValintaResource.HAKIJARYHMA_VALINTATAPAJONO, targetOid,
-                null, null, request, sortedOids);
+        AuditLog.log(ValintaperusteetAudit.AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.VALINTATAPAJONO_HAKIJARYHMAT_JARJESTA,
+            ValintaResource.HAKIJARYHMA_VALINTATAPAJONO, targetOid, null, null, sortedOids);
         return modelMapper.mapList(jarjestetytHakijaryhmat, HakijaryhmaValintatapajonoDTO.class);
     }
 }

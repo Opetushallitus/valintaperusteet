@@ -1,7 +1,17 @@
 package fi.vm.sade.service.valintaperusteet.resource.impl;
 
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
+
 import fi.vm.sade.kaava.Funktiokuvaaja;
-import fi.vm.sade.service.valintaperusteet.dto.*;
+import fi.vm.sade.service.valintaperusteet.dto.HakuViiteDTO;
+import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaDTO;
+import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaInsertDTO;
+import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaListDTO;
+import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaSiirraDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaPlainDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
@@ -9,6 +19,7 @@ import fi.vm.sade.service.valintaperusteet.resource.LaskentakaavaResource;
 import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaEiValidiException;
 import fi.vm.sade.service.valintaperusteet.service.impl.actors.ActorService;
+import fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit;
 import fi.vm.sade.sharedutils.AuditLog;
 import fi.vm.sade.sharedutils.ValintaResource;
 import fi.vm.sade.sharedutils.ValintaperusteetOperation;
@@ -22,14 +33,21 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.Optional;
-
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.*;
 
 @Component
 @Path("laskentakaava")
@@ -140,13 +158,14 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
     @ApiOperation(value = "Päivittää laskentakaavan")
     public Response update(
             @ApiParam(value = "Päivitettävän laskentakaavan ID", required = true) @PathParam("id") Long id,
-            @ApiParam(value = "Päivitettävän laskentakaavan uudet tiedot", required = true) LaskentakaavaCreateDTO laskentakaava, @Context HttpServletRequest request) {
+            @ApiParam(value = "Päivitettävän laskentakaavan uudet tiedot", required = true) LaskentakaavaCreateDTO laskentakaava,
+            @Context HttpServletRequest request) {
         LaskentakaavaDTO beforeUpdate = null;
         LaskentakaavaDTO afterUpdate = null;
         try {
             beforeUpdate = modelMapper.map(laskentakaavaService.haeMallinnettuKaava(id), LaskentakaavaDTO.class);
             afterUpdate = modelMapper.map(laskentakaavaService.update(id, laskentakaava), LaskentakaavaDTO.class);
-            AuditLog.log(ValintaperusteetOperation.LASKENTAKAAVA_PAIVITYS, ValintaResource.LASKENTAKAAVA, afterUpdate.getId().toString(), afterUpdate, beforeUpdate, request);
+            AuditLog.log(ValintaperusteetAudit.AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.LASKENTAKAAVA_PAIVITYS, ValintaResource.LASKENTAKAAVA, afterUpdate.getId().toString(), afterUpdate, beforeUpdate);
             // Kaava päivitetty, poistetaan orvot
             actorService.runOnce();
             return Response.status(Response.Status.OK).entity(afterUpdate).build();
@@ -170,7 +189,7 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
         try {
             inserted = Optional.ofNullable(modelMapper.map(laskentakaavaService.insert(laskentakaava.getLaskentakaava(),
                     laskentakaava.getHakukohdeOid(), laskentakaava.getValintaryhmaOid()), LaskentakaavaDTO.class)).orElse(new LaskentakaavaDTO());
-            AuditLog.log(ValintaperusteetOperation.LASKENTAKAAVA_LISAYS, ValintaResource.LASKENTAKAAVA, laskentakaava.getHakukohdeOid(), inserted, null, request);
+            AuditLog.log(ValintaperusteetAudit.AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.LASKENTAKAAVA_LISAYS, ValintaResource.LASKENTAKAAVA, laskentakaava.getHakukohdeOid(), inserted, null);
             return Response.status(Response.Status.CREATED).entity(inserted).build();
         } catch (LaskentakaavaEiValidiException e) {
             LOGGER.error("Laskentakaava ei ole validi.", e);
@@ -189,7 +208,7 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
     public Response siirra(LaskentakaavaSiirraDTO dto, @Context HttpServletRequest request) {
         Optional<Laskentakaava> siirretty = laskentakaavaService.siirra(dto);
         return siirretty.map(kaava -> {
-            AuditLog.log(ValintaperusteetOperation.LASKENTAKAAVA_SIIRTO, ValintaResource.LASKENTAKAAVA, Long.toString(kaava.getId()), siirretty.get(), null, request);
+            AuditLog.log(ValintaperusteetAudit.AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.LASKENTAKAAVA_SIIRTO, ValintaResource.LASKENTAKAAVA, Long.toString(kaava.getId()), siirretty.get(), null);
             return Response.status(Response.Status.ACCEPTED).entity(modelMapper.map(kaava, LaskentakaavaDTO.class)).build();
         })
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
@@ -214,7 +233,7 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response poista(@PathParam("id") Long id, @Context HttpServletRequest request) {
         boolean poistettu = laskentakaavaService.poista(id);
-        AuditLog.log(ValintaperusteetOperation.LASKENTAKAAVA_POISTO, ValintaResource.LASKENTAKAAVA, id.toString(), null, null, request);
+        AuditLog.log(ValintaperusteetAudit.AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.LASKENTAKAAVA_POISTO, ValintaResource.LASKENTAKAAVA, id.toString(), null, null);
         if (poistettu) {
             // Kaava poistettu, poistetaan orvot
             actorService.runOnce();

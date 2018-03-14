@@ -4,7 +4,9 @@ import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
@@ -19,6 +21,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -29,8 +32,6 @@ import javax.ws.rs.WebApplicationException;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
 import java.util.List;
-
-import static org.junit.Assert.*;
 
 /**
  * User: jukais Date: 16.1.2013 Time: 14.15
@@ -82,7 +83,7 @@ public class HakukohdeResourceTest {
     }
 
     @Test
-    public void testInsertNull() throws Exception {
+    public void testInsertNull() {
         HakukohdeViiteDTO valintaryhma = new HakukohdeViiteDTO();
         Response insert = hakukohdeResource.insert(new HakukohdeInsertDTO(valintaryhma, null), request);
         assertEquals(500, insert.getStatus());
@@ -187,7 +188,7 @@ public class HakukohdeResourceTest {
     }
 
     @Test
-    public void testInsertValinnanVaihe() throws Exception {
+    public void testInsertValinnanVaihe() {
         ValinnanVaiheCreateDTO valinnanVaihe = new ValinnanVaiheCreateDTO();
 
         valinnanVaihe.setNimi("uusi");

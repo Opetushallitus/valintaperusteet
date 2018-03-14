@@ -49,6 +49,7 @@ import fi.vm.sade.service.valintaperusteet.service.ValintakoeService;
 import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakukohdeViiteEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaOidTyhjaException;
+import fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit;
 import fi.vm.sade.sharedutils.AuditLog;
 import fi.vm.sade.sharedutils.ValintaResource;
 import fi.vm.sade.sharedutils.ValintaperusteetOperation;
@@ -234,7 +235,7 @@ public class HakukohdeResourceImpl {
     public Response insert(@ApiParam(value = "Lisättävä hakukohde ja valintaryhmä", required = true) HakukohdeInsertDTO hakukohde, @Context HttpServletRequest request) {
         try {
             HakukohdeViiteDTO hkv = modelMapper.map(hakukohdeService.insert(hakukohde.getHakukohde(), hakukohde.getValintaryhmaOid()), HakukohdeViiteDTO.class);
-            AuditLog.log(ValintaperusteetOperation.HAKUKOHDE_LISAYS_VALINTARYHMA, ValintaResource.HAKUKOHDE, hakukohde.getHakukohde().getHakuoid(), hkv, null, request);
+            AuditLog.log(ValintaperusteetAudit.AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.HAKUKOHDE_LISAYS_VALINTARYHMA, ValintaResource.HAKUKOHDE, hakukohde.getHakukohde().getHakuoid(), hkv, null);
             return Response.status(Response.Status.CREATED).entity(hkv).build();
         } catch (Exception e) {
             LOG.warn("Hakukohdetta ei saatu lisättyä", e);
@@ -254,7 +255,7 @@ public class HakukohdeResourceImpl {
         try {
             HakukohdeViiteDTO beforeUpdate = modelMapper.map(hakukohdeService.readByOid(oid), HakukohdeViiteDTO.class);
             HakukohdeViiteDTO afterUpdate = modelMapper.map(hakukohdeService.update(oid, hakukohdeViite), HakukohdeViiteDTO.class);
-            AuditLog.log(ValintaperusteetOperation.HAKUKOHDE_PAIVITYS, ValintaResource.HAKUKOHDE, oid, afterUpdate, beforeUpdate, request);
+            AuditLog.log(ValintaperusteetAudit.AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.HAKUKOHDE_PAIVITYS, ValintaResource.HAKUKOHDE, oid, afterUpdate, beforeUpdate);
             return Response.status(Response.Status.ACCEPTED).entity(afterUpdate).build();
         } catch (Exception e) {
             LOG.warn("Hakukohdetta ei saatu päivitettyä. ", e);
@@ -500,7 +501,7 @@ public class HakukohdeResourceImpl {
             @ApiParam(value = "Uusi valinnan vaihe", required = true) ValinnanVaiheCreateDTO valinnanVaihe, @Context HttpServletRequest request) {
         try {
             ValinnanVaiheDTO lisatty = modelMapper.map(valinnanVaiheService.lisaaValinnanVaiheHakukohteelle(hakukohdeOid, valinnanVaihe, edellinenValinnanVaiheOid), ValinnanVaiheDTO.class);
-            AuditLog.log(ValintaperusteetOperation.HAKUKOHDE_LISAYS_VALINNANVAIHE, ValintaResource.HAKUKOHDE, hakukohdeOid, lisatty, null, request);
+            AuditLog.log(ValintaperusteetAudit.AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.HAKUKOHDE_LISAYS_VALINNANVAIHE, ValintaResource.HAKUKOHDE, hakukohdeOid, lisatty, null);
             return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (Exception e) {
             LOG.error("Error creating valinnanvaihe.", e);
@@ -520,7 +521,7 @@ public class HakukohdeResourceImpl {
             @ApiParam(value = "Lisättävä hakijaryhmä", required = true) HakijaryhmaCreateDTO hakijaryhma, @Context HttpServletRequest request) {
         try {
             HakijaryhmaDTO lisatty = modelMapper.map(hakijaryhmaValintatapajonoService.lisaaHakijaryhmaHakukohteelle(hakukohdeOid, hakijaryhma), HakijaryhmaDTO.class);
-            AuditLog.log(ValintaperusteetOperation.HAKUKOHDE_LISAYS_HAKIJARYHMA, ValintaResource.HAKUKOHDE, hakukohdeOid, lisatty, null, request);
+            AuditLog.log(ValintaperusteetAudit.AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.HAKUKOHDE_LISAYS_HAKIJARYHMA, ValintaResource.HAKUKOHDE, hakukohdeOid, lisatty, null);
             return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (LaskentakaavaOidTyhjaException e) {
             LOG.warn("Error creating hakijaryhma for hakukohde: " + e.toString());
@@ -540,11 +541,12 @@ public class HakukohdeResourceImpl {
     @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Liittää hakijaryhmän hakukohteelle")
     public Response liitaHakijaryhma(
-            @ApiParam(value = "Hakukohteen OID, jolle hakijaryhmä liitetään", required = true) @PathParam("hakukohdeOid") String hakukohdeOid,
-            @ApiParam(value = "Hakijaryhmän OID, joka valintatapajonoon liitetään", required = true) @PathParam("hakijaryhmaOid") String hakijaryhmaOid, @Context HttpServletRequest request) {
+        @ApiParam(value = "Hakukohteen OID, jolle hakijaryhmä liitetään", required = true) @PathParam("hakukohdeOid") String hakukohdeOid,
+        @ApiParam(value = "Hakijaryhmän OID, joka valintatapajonoon liitetään", required = true) @PathParam("hakijaryhmaOid") String hakijaryhmaOid,
+        @Context HttpServletRequest request) {
         try {
             hakijaryhmaValintatapajonoService.liitaHakijaryhmaHakukohteelle(hakukohdeOid, hakijaryhmaOid);
-            AuditLog.log(ValintaperusteetOperation.HAKUKOHDE_LIITOS_HAKIJARYHMA, ValintaResource.HAKUKOHDE, hakukohdeOid, null, null, request, ImmutableMap.of("liitettavaHakijaryhmaOid", hakijaryhmaOid));
+            AuditLog.log(ValintaperusteetAudit.AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.HAKUKOHDE_LIITOS_HAKIJARYHMA, ValintaResource.HAKUKOHDE, hakukohdeOid, null, null, ImmutableMap.of("liitettavaHakijaryhmaOid", hakijaryhmaOid));
             return Response.status(Response.Status.ACCEPTED).build();
         } catch (Exception e) {
             LOG.error("Error linking hakijaryhma.", e);
@@ -563,10 +565,11 @@ public class HakukohdeResourceImpl {
     @ApiResponses(@ApiResponse(code = 400, message = "Päivittäminen epäonnistui"))
     public Response updateHakukohdekoodi(
             @ApiParam(value = "Hakukohde OID", required = true) @PathParam("hakukohdeOid") String hakukohdeOid,
-            @ApiParam(value = "Lisättävä hakukohdekoodi", required = true) KoodiDTO hakukohdekoodi, @Context HttpServletRequest request) {
+            @ApiParam(value = "Lisättävä hakukohdekoodi", required = true) KoodiDTO hakukohdekoodi,
+            @Context HttpServletRequest request) {
         try {
             KoodiDTO lisatty = modelMapper.map(hakukohdekoodiService.updateHakukohdeHakukohdekoodi(hakukohdeOid, hakukohdekoodi), KoodiDTO.class);
-            AuditLog.log(ValintaperusteetOperation.HAKUKOHDE_HAKUKOHDEKOODI_PAIVITYS, ValintaResource.HAKUKOHDE, hakukohdeOid, lisatty, null, request);
+            AuditLog.log(ValintaperusteetAudit.AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.HAKUKOHDE_HAKUKOHDEKOODI_PAIVITYS, ValintaResource.HAKUKOHDE, hakukohdeOid, lisatty, null);
             return Response.status(Response.Status.ACCEPTED).entity(lisatty).build();
         } catch (Exception e) {
             LOG.error("Error updating hakukohdekoodit.", e);
@@ -583,10 +586,11 @@ public class HakukohdeResourceImpl {
     @ApiResponses(@ApiResponse(code = 400, message = "Lisääminen epäonnistui"))
     public Response insertHakukohdekoodi(
             @ApiParam(value = "Hakukohde OID", required = true) @PathParam("hakukohdeOid") String hakukohdeOid,
-            @ApiParam(value = "Lisättävä hakukohdekoodi", required = true) KoodiDTO hakukohdekoodi, @Context HttpServletRequest request) {
+            @ApiParam(value = "Lisättävä hakukohdekoodi", required = true) KoodiDTO hakukohdekoodi,
+            @Context HttpServletRequest request) {
         try {
             KoodiDTO lisatty = modelMapper.map(hakukohdekoodiService.lisaaHakukohdekoodiHakukohde(hakukohdeOid, hakukohdekoodi), KoodiDTO.class);
-            AuditLog.log(ValintaperusteetOperation.HAKUKOHDE_LISAYS_HAKUKOHDEKOODI, ValintaResource.HAKUKOHDE, hakukohdeOid, lisatty, null, request);
+            AuditLog.log(ValintaperusteetAudit.AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.HAKUKOHDE_LISAYS_HAKUKOHDEKOODI, ValintaResource.HAKUKOHDE, hakukohdeOid, lisatty, null);
             return Response.status(Response.Status.CREATED).entity(lisatty).build();
         } catch (Exception e) {
             LOG.error("Error inserting hakukohdekoodi.", e);
@@ -602,12 +606,13 @@ public class HakukohdeResourceImpl {
     @ApiOperation(value = "Siirtää hakukohteen uuteen valintaryhmään (tai juureen, jos valintaryhmää ei anneta)")
     @ApiResponses(@ApiResponse(code = 400, message = "Siirtäminen epäonnistui"))
     public Response siirraHakukohdeValintaryhmaan(
-            @ApiParam(value = "Hakukohde OID", required = true) @PathParam("hakukohdeOid") String hakukohdeOid,
-            @ApiParam(value = "Uuden valintaryhmän OID") String valintaryhmaOid, @Context HttpServletRequest request) {
+        @ApiParam(value = "Hakukohde OID", required = true) @PathParam("hakukohdeOid") String hakukohdeOid,
+        @ApiParam(value = "Uuden valintaryhmän OID") String valintaryhmaOid,
+        @Context HttpServletRequest request) {
         try {
             HakukohdeViiteDTO hakukohde = modelMapper.map(hakukohdeService.siirraHakukohdeValintaryhmaan(hakukohdeOid, valintaryhmaOid, true), HakukohdeViiteDTO.class);
-            Map additionalInfo = ImmutableMap.of("Uuden valintaryhman oid", valintaryhmaOid);
-            AuditLog.log(ValintaperusteetOperation.HAKUKOHDE_SIIRTO_VALINTARYHMAAN, ValintaResource.HAKUKOHDE, hakukohdeOid, hakukohde, null, request, additionalInfo);
+            Map<String,String> additionalInfo = ImmutableMap.of("Uuden valintaryhman oid", valintaryhmaOid);
+            AuditLog.log(ValintaperusteetAudit.AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.HAKUKOHDE_SIIRTO_VALINTARYHMAAN, ValintaResource.HAKUKOHDE, hakukohdeOid, hakukohde, null, additionalInfo);
             return Response.status(Response.Status.ACCEPTED).entity(hakukohde).build();
         } catch (Exception e) {
             LOG.error("Error moving hakukohde to new valintaryhma.", e);
