@@ -498,7 +498,8 @@ public class HakukohdeResourceImpl {
     public Response insertValinnanvaihe(
             @ApiParam(value = "Hakukohteen OID", required = true) @PathParam("hakukohdeOid") String hakukohdeOid,
             @ApiParam(value = "Edellisen valinnan vaiheen OID (jos valinnan vaihe halutaa lisätä tietyn vaiheen jälkeen, muussa tapauksessa uusi vaihe lisätään viimeiseksi)") @QueryParam("edellinenValinnanVaiheOid") String edellinenValinnanVaiheOid,
-            @ApiParam(value = "Uusi valinnan vaihe", required = true) ValinnanVaiheCreateDTO valinnanVaihe, @Context HttpServletRequest request) {
+            @ApiParam(value = "Uusi valinnan vaihe", required = true) ValinnanVaiheCreateDTO valinnanVaihe,
+            @Context HttpServletRequest request) {
         try {
             ValinnanVaiheDTO lisatty = modelMapper.map(valinnanVaiheService.lisaaValinnanVaiheHakukohteelle(hakukohdeOid, valinnanVaihe, edellinenValinnanVaiheOid), ValinnanVaiheDTO.class);
             AuditLog.log(ValintaperusteetAudit.AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.HAKUKOHDE_LISAYS_VALINNANVAIHE, ValintaResource.HAKUKOHDE, hakukohdeOid, lisatty, null);
@@ -518,7 +519,8 @@ public class HakukohdeResourceImpl {
     @ApiResponses(@ApiResponse(code = 400, message = "Hakijaryhmän lisääminen epäonnistui"))
     public Response insertHakijaryhma(
             @ApiParam(value = "Hakukohteen OID", required = true) @PathParam("hakukohdeOid") String hakukohdeOid,
-            @ApiParam(value = "Lisättävä hakijaryhmä", required = true) HakijaryhmaCreateDTO hakijaryhma, @Context HttpServletRequest request) {
+            @ApiParam(value = "Lisättävä hakijaryhmä", required = true) HakijaryhmaCreateDTO hakijaryhma,
+            @Context HttpServletRequest request) {
         try {
             HakijaryhmaDTO lisatty = modelMapper.map(hakijaryhmaValintatapajonoService.lisaaHakijaryhmaHakukohteelle(hakukohdeOid, hakijaryhma), HakijaryhmaDTO.class);
             AuditLog.log(ValintaperusteetAudit.AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.HAKUKOHDE_LISAYS_HAKIJARYHMA, ValintaResource.HAKUKOHDE, hakukohdeOid, lisatty, null);
