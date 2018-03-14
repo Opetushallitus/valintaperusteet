@@ -42,8 +42,7 @@ import java.util.List;
 @RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data.xml")
 public class HakukohdeResourceTest {
-    HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-
+    private HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
 
     private HakukohdeResourceImpl hakukohdeResource = new HakukohdeResourceImpl();
     private TestUtil testUtil = new TestUtil(HakukohdeResourceTest.class);
