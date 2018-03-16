@@ -34,7 +34,6 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.4</version>
         </dependency>
 
         <dependency>
@@ -374,7 +373,7 @@
         </dependency>
         <dependency>
             <groupId>fi.vm.sade.sharedutils</groupId>
-            <artifactId>Sharedutils</artifactId>
+            <artifactId>sharedutils</artifactId>
             <version>4.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
