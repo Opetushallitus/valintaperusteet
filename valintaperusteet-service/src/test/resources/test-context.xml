@@ -9,4 +9,5 @@
     <bean id="laskentaService" class="fi.vm.sade.service.valintaperusteet.laskenta.api.LaskentaServiceImpl"/>
     <bean id="ValintaperusteetUrlProperties" class="fi.vm.sade.service.valintaperusteet.util.ValintaperusteetUrlProperties"/>
     <bean id="VtsRestClient" class="fi.vm.sade.service.valintaperusteet.util.VtsRestClient"/>
+    <bean id="fakeAuthenticationInitializer" class="fi.vm.sade.service.valintaperusteet.resource.RequestTester"/>
 </beans>
