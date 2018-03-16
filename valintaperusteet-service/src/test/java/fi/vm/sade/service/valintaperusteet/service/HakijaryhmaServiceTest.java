@@ -9,7 +9,11 @@ import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
-import fi.vm.sade.service.valintaperusteet.dto.*;
+import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaSiirraDTO;
+import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
+import fi.vm.sade.service.valintaperusteet.dto.KoodiDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
@@ -20,6 +24,7 @@ import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaEiKuuluV
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaValintatapajonoOnJoOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintatapajonoEiOleOlemassaException;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,7 +53,6 @@ import java.util.stream.Stream;
 @RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data-hakijaryhma.xml")
 public class HakijaryhmaServiceTest {
-
     @Autowired
     private HakukohdeViiteDAO hakukohdeViiteDAO;
     @Autowired
@@ -70,6 +74,13 @@ public class HakijaryhmaServiceTest {
 
     @Autowired
     private ValintaperusteetModelMapper modelMapper;
+
+    private final KoodiDTO hakijaryhmatyyppikoodi = new KoodiDTO();
+
+    @Before public void setupTestData() {
+        hakijaryhmatyyppikoodi.setUri("hakijaryhmatyyppikoodi_uri");
+        hakijaryhmatyyppikoodi.setArvo("hakijaryhmätyyppi 1");
+    }
 
     @Test
     public void testReadByOid(){
@@ -151,7 +162,7 @@ public class HakijaryhmaServiceTest {
         hakijaryhma.setKuvaus("");
         hakijaryhma.setLaskentakaavaId(11L);
         hakijaryhma.setNimi("nimi");
-        KoodiDTO hakijaryhmatyyppikoodi = new KoodiDTO();
+        KoodiDTO hakijaryhmatyyppikoodi = this.hakijaryhmatyyppikoodi;
         hakijaryhmatyyppikoodi.setUri("muu");
         hakijaryhma.setHakijaryhmatyyppikoodi(hakijaryhmatyyppikoodi);
 
@@ -185,8 +196,9 @@ public class HakijaryhmaServiceTest {
     }
 
     @Test
-    @Ignore
     public void testLisaaHakijaryhmaHakukohteelle() {
+        int initialHakukohde1HakijaryhmaCount = 3;
+
         {
             /*
 
@@ -226,7 +238,7 @@ public class HakijaryhmaServiceTest {
             */
             assertEquals(1, hakijaryhmaService.findByValintaryhma("vr1").size());
             assertEquals(1, hakijaryhmaService.findByValintaryhma("vr2").size());
-            assertEquals(1, hakijaryhmaService.findByHakukohde("1").size());
+            assertEquals(initialHakukohde1HakijaryhmaCount, hakijaryhmaService.findByHakukohde("1").size());
 
         }
 
@@ -237,13 +249,14 @@ public class HakijaryhmaServiceTest {
         hakijaryhma.setTarkkaKiintio(true);
         hakijaryhma.setLaskentakaavaId(11L);
         hakijaryhma.setNimi("nimi");
+        hakijaryhma.setHakijaryhmatyyppikoodi(hakijaryhmatyyppikoodi);
 
         hakijaryhmaValintatapajonoService.lisaaHakijaryhmaHakukohteelle("1", hakijaryhma);
 
         {
             assertEquals(1, hakijaryhmaService.findByValintaryhma("vr1").size());
             assertEquals(1, hakijaryhmaService.findByValintaryhma("vr2").size());
-            assertEquals(1, hakijaryhmaService.findByHakukohde("1").size());
+            assertEquals(initialHakukohde1HakijaryhmaCount + 1, hakijaryhmaService.findByHakukohde("1").size());
         }
 
         hakijaryhma = new HakijaryhmaCreateDTO();
@@ -259,7 +272,7 @@ public class HakijaryhmaServiceTest {
         {
             assertEquals(2, hakijaryhmaService.findByValintaryhma("vr1").size());
             assertEquals(2, hakijaryhmaService.findByValintaryhma("vr2").size());
-            assertEquals(5, hakijaryhmaService.findByHakukohde("1").size());
+            assertEquals(initialHakukohde1HakijaryhmaCount + 2, hakijaryhmaService.findByHakukohde("1").size());
         }
 
         hakijaryhma = new HakijaryhmaCreateDTO();
@@ -275,7 +288,7 @@ public class HakijaryhmaServiceTest {
         {
             assertEquals(2, hakijaryhmaService.findByValintaryhma("vr1").size());
             assertEquals(3, hakijaryhmaService.findByValintaryhma("vr2").size());
-            assertEquals(5, hakijaryhmaService.findByHakukohde("1").size());
+            assertEquals(initialHakukohde1HakijaryhmaCount + 2, hakijaryhmaService.findByHakukohde("1").size());
         }
 
         HakukohdeViiteDTO hakukohde = new HakukohdeViiteDTO();
@@ -298,6 +311,12 @@ public class HakijaryhmaServiceTest {
         }
     }
 
+    /**
+     * TODO : Exception handling has changed here. It would be interesting to see if this has repercussions
+     * in e.g. ValintalaskentakoostepalveluResourceImpl where HakijaryhmaEiOleOlemassaException has special handling.
+     *
+     * @see fi.vm.sade.service.valintaperusteet.resource.impl.ValintalaskentakoostepalveluResourceImpl
+     */
     @Test
     @Ignore
     public void testLiitaHakijaryhmaValintatapajonolle() {
@@ -343,7 +362,6 @@ public class HakijaryhmaServiceTest {
     }
 
     @Test
-    @Ignore
     public void testHakijaryhmaValintatapajonoPeriytyminen() {
         // Poistetaan vanhat liitokset
         hakijaryhmaValintatapajonoService.deleteByOid("hr1_vtj1", true);
@@ -385,7 +403,7 @@ public class HakijaryhmaServiceTest {
     }
 
     @Test
-    public void testJarjestaValintaryhmanHakijaryhmatAsettaaUudenJarjestyksenAnnettujenOidienPerusteella() throws Exception {
+    public void testJarjestaValintaryhmanHakijaryhmatAsettaaUudenJarjestyksenAnnettujenOidienPerusteella() {
         List<String> original = Arrays.asList("hr6", "hr7");
         assertStream(original, hakijaryhmaService.findByValintaryhma("vr4").stream().map(Hakijaryhma::getOid));
 
