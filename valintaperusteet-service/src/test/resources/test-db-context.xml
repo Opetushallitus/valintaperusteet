@@ -45,7 +45,7 @@
         </property>
         <property name="jpaPropertyMap">
             <map>
-                <entry key="hibernate.show_sql" value="true" />
+                <entry key="hibernate.show_sql" value="false" />
                 <entry key="hibernate.jdbc.lob.non_contextual_creation" value="true" />
             </map>
         </property>
