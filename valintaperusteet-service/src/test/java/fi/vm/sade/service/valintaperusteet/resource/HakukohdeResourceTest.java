@@ -56,12 +56,10 @@ public class HakukohdeResourceTest {
     @Autowired
     ValinnanVaiheDAO valinnanVaiheDao;
 
-    @Autowired
-    private FakeAuthenticationInitialiser fakeAuthenticationInitializer;
-
     @Before
     public void setUp() {
         applicationContext.getAutowireCapableBeanFactory().autowireBean(hakukohdeResource);
+        FakeAuthenticationInitialiser.fakeAuthentication();
     }
 
     @Test
