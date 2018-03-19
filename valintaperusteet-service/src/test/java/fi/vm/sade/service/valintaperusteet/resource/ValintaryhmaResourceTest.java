@@ -8,6 +8,7 @@ import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.resource.impl.ValintaryhmaResourceImpl;
+import fi.vm.sade.sharedutils.RequestTester;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,6 +50,9 @@ public class ValintaryhmaResourceTest {
 
     @Autowired
     private ValinnanVaiheDAO valinnanVaiheDao;
+
+    @Autowired
+    private RequestTester fakeAuthenticationInitialiser;
 
     @Before
     public void setUp() {
@@ -115,7 +119,7 @@ public class ValintaryhmaResourceTest {
     }
 
     @Test
-    public void testInsertValinnanVaihe() throws IOException {
+    public void testInsertValinnanVaihe() {
         ValinnanVaiheCreateDTO valinnanVaihe = new ValinnanVaiheCreateDTO();
 
         valinnanVaihe.setNimi("uusi");
