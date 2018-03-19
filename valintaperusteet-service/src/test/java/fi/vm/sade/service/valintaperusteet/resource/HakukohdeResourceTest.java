@@ -15,7 +15,7 @@ import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestE
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.resource.impl.HakukohdeResourceImpl;
 import fi.vm.sade.service.valintaperusteet.util.TestUtil;
-import fi.vm.sade.sharedutils.RequestTester;
+import fi.vm.sade.sharedutils.FakeAuthenticationInitialiser;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,7 +57,7 @@ public class HakukohdeResourceTest {
     ValinnanVaiheDAO valinnanVaiheDao;
 
     @Autowired
-    private RequestTester fakeAuthenticationInitializer;
+    private FakeAuthenticationInitialiser fakeAuthenticationInitializer;
 
     @Before
     public void setUp() {
