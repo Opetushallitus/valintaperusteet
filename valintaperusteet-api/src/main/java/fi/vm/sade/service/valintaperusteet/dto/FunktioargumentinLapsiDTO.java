@@ -74,6 +74,9 @@ public class FunktioargumentinLapsiDTO {
     @ApiModelProperty(value = "Tallennetaanko tulos", required = true)
     private Boolean tallennaTulos;
 
+    @ApiModelProperty(value = "Näytetäänkö oppijan henkilökohtaisessa palvelussa")
+    private boolean omaopintopolku = false;
+
     public String getTulosTunniste() {
         return tulosTunniste;
     }
@@ -216,5 +219,13 @@ public class FunktioargumentinLapsiDTO {
 
     public void setLapsityyppi(String lapsityyppi) {
         this.lapsityyppi = lapsityyppi;
+    }
+
+    public boolean getOmaopintopolku() {
+        return omaopintopolku;
+    }
+
+    public void setOmaopintopolku(boolean omaopintopolku) {
+        this.omaopintopolku = omaopintopolku;
     }
 }

@@ -1,15 +1,15 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <dataset>
-    <funktiokutsu tallenna_tulos="false" id="1" version="0" funktionimi="LUKUARVO"/>
-    <funktiokutsu tallenna_tulos="false" id="2" version="0" funktionimi="LUKUARVO"/>
-    <funktiokutsu tallenna_tulos="false" id="3" version="0" funktionimi="LUKUARVO"/>
-    <funktiokutsu tallenna_tulos="false" id="4" version="0" funktionimi="LUKUARVO"/>
-    <funktiokutsu tallenna_tulos="false" id="5" version="0" funktionimi="LUKUARVO"/>
-    <funktiokutsu tallenna_tulos="false" id="6" version="0" funktionimi="LUKUARVO"/>
-    <funktiokutsu tallenna_tulos="false" id="7" version="0" funktionimi="LUKUARVO"/>
-    <funktiokutsu tallenna_tulos="false" id="8" version="0" funktionimi="LUKUARVO"/>
-    <funktiokutsu tallenna_tulos="false" id="9" version="0" funktionimi="LUKUARVO"/>
-    <funktiokutsu tallenna_tulos="false" id="10" version="0" funktionimi="LUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="1" version="0" funktionimi="LUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="2" version="0" funktionimi="LUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="3" version="0" funktionimi="LUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="4" version="0" funktionimi="LUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="5" version="0" funktionimi="LUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="6" version="0" funktionimi="LUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="7" version="0" funktionimi="LUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="8" version="0" funktionimi="LUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="9" version="0" funktionimi="LUKUARVO"/>
+    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="10" version="0" funktionimi="LUKUARVO"/>
 
     <funktioargumentti id="1" version="0" funktiokutsuparent_id="1" funktiokutsuchild_id="2" indeksi="1"/>
     <funktioargumentti id="2" version="0" funktiokutsuparent_id="1" funktiokutsuchild_id="3" indeksi="2"/>

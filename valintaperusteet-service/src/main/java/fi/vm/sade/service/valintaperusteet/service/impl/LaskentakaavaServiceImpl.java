@@ -227,6 +227,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
         managed.setTulosTekstiEn(incoming.getTulosTekstiEn());
         managed.setTulosTekstiFi(incoming.getTulosTekstiFi());
         managed.setTulosTekstiSv(incoming.getTulosTekstiSv());
+        managed.setOmaopintopolku(incoming.getOmaopintopolku());
         for (Funktioargumentti arg : incoming.getFunktioargumentit()) {
             Funktioargumentti newArg = new Funktioargumentti();
             newArg.setParent(managed);

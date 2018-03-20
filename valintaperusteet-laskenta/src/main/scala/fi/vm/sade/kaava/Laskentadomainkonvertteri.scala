@@ -1,6 +1,5 @@
 package fi.vm.sade.kaava
 
-import java.math.{BigDecimal => JBigDecimal}
 import java.util.{Set => JSet}
 
 import fi.vm.sade.service.valintaperusteet.dto.model.{Funktionimi, Valintaperustelahde}
@@ -123,6 +122,7 @@ object Laskentadomainkonvertteri {
     val tulosTekstiFi = if(funktiokutsu.getTulosTekstiFi != null) funktiokutsu.getTulosTekstiFi else ""
     val tulosTekstiSv = if(funktiokutsu.getTulosTekstiSv != null) funktiokutsu.getTulosTekstiSv else ""
     val tulosTekstiEn = if(funktiokutsu.getTulosTekstiEn != null) funktiokutsu.getTulosTekstiEn else ""
+    val omaopintopolku = if(java.lang.Boolean.TRUE.equals(funktiokutsu.getOmaopintopolku)) funktiokutsu.getOmaopintopolku else ""
 
     val valintaperusteviitteet = funktiokutsu.getValintaperusteviitteet.toList.sortWith(_.getIndeksi < _.getIndeksi).map(luoValintaperusteviite(_))
 

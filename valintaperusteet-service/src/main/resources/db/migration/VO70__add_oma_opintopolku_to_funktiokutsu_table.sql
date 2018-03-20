@@ -1,0 +1,1 @@
+alter table funktiokutsu add column oma_opintopolku boolean not null default false;

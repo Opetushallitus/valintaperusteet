@@ -47,6 +47,9 @@ public class Funktiokutsu extends BaseEntity implements FunktionArgumentti {
     @Column(name = "tallenna_tulos", nullable = false)
     private Boolean tallennaTulos = false;
 
+    @Column(name = "oma_opintopolku", nullable = false)
+    private boolean omaopintopolku = false;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "funktiokutsu", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Arvokonvertteriparametri> arvokonvertteriparametrit = new HashSet<Arvokonvertteriparametri>();
@@ -179,6 +182,14 @@ public class Funktiokutsu extends BaseEntity implements FunktionArgumentti {
         this.tallennaTulos = tallennaTulos;
     }
 
+    public boolean getOmaopintopolku() {
+        return omaopintopolku;
+    }
+
+    public void setOmaopintopolku(boolean omaopintopolku) {
+        this.omaopintopolku = omaopintopolku;
+    }
+
     @Override
     public String toString() {
         return "Funktiokutsu{" +
@@ -188,6 +199,7 @@ public class Funktiokutsu extends BaseEntity implements FunktionArgumentti {
                 ", tulosTekstiSv='" + tulosTekstiSv + '\'' +
                 ", tulosTekstiEn='" + tulosTekstiEn + '\'' +
                 ", tallennaTulos=" + tallennaTulos +
+                ", omaopintopolku=" + omaopintopolku +
                 ", arvokonvertteriparametrit=" + arvokonvertteriparametrit +
                 ", arvovalikonvertteriparametrit=" + arvovalikonvertteriparametrit +
                 ", syoteparametrit=" + syoteparametrit +

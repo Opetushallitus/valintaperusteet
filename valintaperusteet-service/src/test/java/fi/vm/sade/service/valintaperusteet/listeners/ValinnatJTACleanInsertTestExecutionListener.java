@@ -48,17 +48,12 @@ public class ValinnatJTACleanInsertTestExecutionListener extends TransactionalTe
             LocalContainerEntityManagerFactoryBean emf = testContext.getApplicationContext().getBean(
                     org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.class);
 
-            EntityManager entityManager = (EntityManager) emf.getObject().createEntityManager();
-
-            // entityManager.getTransaction().begin();
+            EntityManager entityManager = emf.getObject().createEntityManager();
             SessionImpl session = (SessionImpl) entityManager.getDelegate();
             Connection jdbcConn = session.connection();
             IDatabaseConnection con = new DatabaseConnection(jdbcConn);
-//            dataSet = new FilteredDataSet(new DatabaseSequenceFilter(con), dataSet);
-//            new TransactionOperation(DatabaseOperation.DELETE_ALL).execute(con, dataSet);
-            new TransactionOperation(DatabaseOperation.CLEAN_INSERT).execute(con,
-                    new FilteredDataSet(new DatabaseSequenceFilter(con),replacementDataSet));
-            // entityManager.getTransaction().commit();
+            new TransactionOperation(DatabaseOperation.CLEAN_INSERT)
+                    .execute(con, new FilteredDataSet(new DatabaseSequenceFilter(con),replacementDataSet));
             con.close();
         }
     }

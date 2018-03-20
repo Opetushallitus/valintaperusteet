@@ -31,8 +31,11 @@ public class FunktiokutsuDTO {
     @ApiModelProperty(value = "Tallennetun tuloksen englanninkielinen teksti")
     private String tulosTekstiEn;
 
-    @ApiModelProperty(value = "Tallennetaanko tulos", required = true)
+    @ApiModelProperty(value = "Tallennetaanko tulos")
     private Boolean tallennaTulos = false;
+
+    @ApiModelProperty(value = "Näytetäänkö oppijan henkilökohtaisessa palvelussa")
+    private boolean omaopintopolku = false;
 
     @ApiModelProperty(value = "Arvokonvertteriparametrit")
     private Set<ArvokonvertteriparametriDTO> arvokonvertteriparametrit = new HashSet<ArvokonvertteriparametriDTO>();
@@ -146,5 +149,13 @@ public class FunktiokutsuDTO {
 
     public void setTallennaTulos(Boolean tallennaTulos) {
         this.tallennaTulos = tallennaTulos;
+    }
+
+    public boolean getOmaopintopolku() {
+        return omaopintopolku;
+    }
+
+    public void setOmaopintopolku(boolean omaopintopolku) {
+        this.omaopintopolku = omaopintopolku;
     }
 }

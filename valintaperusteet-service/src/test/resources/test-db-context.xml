@@ -46,6 +46,7 @@
         <property name="jpaPropertyMap">
             <map>
                 <entry key="hibernate.show_sql" value="true" />
+                <entry key="hibernate.jdbc.lob.non_contextual_creation" value="true" />
             </map>
         </property>
         <property name="persistenceXmlLocation" value="classpath:META-INF/test-persistence.xml" />

@@ -28,6 +28,9 @@ public class ValintaperusteetFunktiokutsuDTO {
     @ApiModelProperty(value = "Tallennetaanko tulos", required = true)
     private Boolean tallennaTulos;
 
+    @ApiModelProperty(value = "Näytetäänkö oppijan henkilokohtaisessa palvelussa")
+    private boolean omaopintopolku;
+
     @ApiModelProperty(value = "Arvokonvertteriparametrit")
     private Set<ArvokonvertteriparametriDTO> arvokonvertteriparametrit = new HashSet<ArvokonvertteriparametriDTO>();
 
@@ -140,5 +143,13 @@ public class ValintaperusteetFunktiokutsuDTO {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public boolean getOmaopintopolku() {
+        return omaopintopolku;
+    }
+
+    public void setOmaopintopolku(boolean omaopintopolku) {
+        this.omaopintopolku = omaopintopolku;
     }
 }

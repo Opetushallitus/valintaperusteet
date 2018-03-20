@@ -52,19 +52,19 @@
 
     <valintaryhma id="2" version="0" oid="oid2" nimi="Valintaryhma 2" parent_id="[NULL]" />
 
-    <funktiokutsu id="2" version="0" funktionimi="SUMMA" tallenna_tulos="false"/>
+    <funktiokutsu id="2" version="0" funktionimi="SUMMA" tallenna_tulos="false" oma_opintopolku="false"/>
     <laskentakaava id="2" version="0" valintaryhmaviite="2" funktiokutsu_id="2" on_luonnos="false" nimi="Ammatillinen koulutus, lisäpiste" tyyppi="LUKUARVOFUNKTIO" />
     <jarjestyskriteeri id="2" version="0" oid="jarjestyskriteeriOid2" aktiivinen="true" valintatapajono_id="2" laskentakaava_id="2"/>
 
     <valintaryhma id="3" version="0" oid="oid3" nimi="Valintaryhma 3" parent_id="2" />
 
-    <funktiokutsu id="3" version="0" funktionimi="JOS" tallenna_tulos="false"/>
+    <funktiokutsu id="3" version="0" funktionimi="JOS" tallenna_tulos="false" oma_opintopolku="false"/>
     <laskentakaava id="3" version="0" valintaryhmaviite="3" funktiokutsu_id="3" on_luonnos="false" nimi="Ammatillinen koulutus, lisäpiste2" tyyppi="LUKUARVOFUNKTIO" />
     <funktioargumentti id="3" version="0" indeksi="1" funktiokutsuparent_id="3" laskentakaavachild_id="2"/>
 
     <valintaryhma id="4" version="0" oid="oid4" nimi="Valintaryhma 4" parent_id="1" />
 
-    <funktiokutsu id="4" version="0" funktionimi="JOS" tallenna_tulos="false"/>
+    <funktiokutsu id="4" version="0" funktionimi="JOS" tallenna_tulos="false" oma_opintopolku="false"/>
     <laskentakaava id="4" version="0" valintaryhmaviite="4" funktiokutsu_id="4" on_luonnos="false" nimi="Ammatillinen koulutus, lisäpiste3" tyyppi="LUKUARVOFUNKTIO" />
     <funktioargumentti id="4" version="0" indeksi="1" funktiokutsuparent_id="4" laskentakaavachild_id="2"/>
 

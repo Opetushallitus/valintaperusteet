@@ -3,8 +3,8 @@
     <dataset>
         <funktioargumentti id="15" version="0" indeksi="1" funktiokutsuchild_id="12" funktiokutsuparent_id="9"/>
 
-        <funktiokutsu tallenna_tulos="true" id="12" version="0" funktionimi="HAELUKUARVO"/>
-        <funktiokutsu tallenna_tulos="true" id="9" version="2" funktionimi="NIMETTYLUKUARVO"/>
+        <funktiokutsu tallenna_tulos="true" oma_opintopolku="false" id="12" version="0" funktionimi="HAELUKUARVO"/>
+        <funktiokutsu tallenna_tulos="true" oma_opintopolku="false" id="9" version="2" funktionimi="NIMETTYLUKUARVO"/>
 
         <valintaryhma id="1" version="0" nimi="valintaryhma1" oid="vr1"/>
         <valintaryhma id="39" version="2" nimi="valintaryhma2" oid="vr2" parent_id="1"/>

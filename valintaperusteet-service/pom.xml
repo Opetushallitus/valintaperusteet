@@ -181,14 +181,6 @@
             <artifactId>hibernate-ehcache</artifactId>
         </dependency>
 
-        <!-- javamelody-core -->
-        <!--<dependency>-->
-        <!--<groupId>net.bull.javamelody</groupId>-->
-        <!--<artifactId>javamelody-core</artifactId>-->
-        <!--<version>1.45.0</version>-->
-        <!--</dependency>-->
-
-
         <!-- Spring -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -360,18 +352,6 @@
             <artifactId>spring-security-ldap</artifactId>
             <version>${spring.security.version}</version>
         </dependency>
-
-        <!--<dependency>-->
-            <!--<groupId>org.ow2.asm</groupId>-->
-            <!--<artifactId>asm</artifactId>-->
-            <!--<version>5.0.2</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>org.ow2.asm</groupId>-->
-            <!--<artifactId>asm-commons</artifactId>-->
-            <!--<version>5.0.2</version>-->
-        <!--</dependency>-->
-
         <dependency>
             <groupId>net.sf.ehcache</groupId>
             <artifactId>ehcache-core</artifactId>
@@ -431,31 +411,6 @@
             </plugin>
         </plugins>
     </build>
-    <profiles>
-        <!--
-          Local schema preparation from maven. Set environment properties for this to work. (fyway.user & flyway.password)
-              mvn -Dflyway.user=XXX -Dflyway.password=XXX -P flyway flyway:migrate
-        -->
-        <profile>
-            <id>flyway</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.googlecode.flyway</groupId>
-                        <artifactId>flyway-maven-plugin</artifactId>
-                        <version>2.0.3</version>
-                        <configuration>
-                            <schemas>
-                                <schema>public</schema>
-                            </schemas>
-                            <driver>org.postgresql.Driver</driver>
-                            <url>jdbc:postgresql://taulu.hard.ware.fi:5432/valintaperusteet?ApplicationName=valintaperusteet-flyway</url>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
     <pluginRepositories>
         <pluginRepository>
             <id>smartics</id>
