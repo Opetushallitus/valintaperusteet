@@ -14,6 +14,9 @@ import java.util.Map;
 @Path("/valintalaskentakoostepalvelu")
 public interface ValintalaskentakoostepalveluResource {
 
+    /**
+     * @return sijoitteluun siirrettävät valintatapajonot hakukohdeoideittain
+     */
     @POST
     @Path("/valintatapajono")
     @Produces(MediaType.APPLICATION_JSON)
