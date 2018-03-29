@@ -118,25 +118,32 @@ object Laskentadomainkonvertteri {
     val funktiokuvaus = Funktiokuvaaja.annaFunktiokuvaus(funktiokutsu.getFunktionimi)._2
 
     val oid = if (funktiokutsu.getId != null) funktiokutsu.getId.toString else ""
+    val funktionimi = funktiokutsu.getFunktionimi
     val tulosTunniste = if (java.lang.Boolean.TRUE.equals(funktiokutsu.getTallennaTulos)) funktiokutsu.getTulosTunniste() else ""
     val tulosTekstiFi = if(funktiokutsu.getTulosTekstiFi != null) funktiokutsu.getTulosTekstiFi else ""
     val tulosTekstiSv = if(funktiokutsu.getTulosTekstiSv != null) funktiokutsu.getTulosTekstiSv else ""
     val tulosTekstiEn = if(funktiokutsu.getTulosTekstiEn != null) funktiokutsu.getTulosTekstiEn else ""
-    val omaopintopolku = if(java.lang.Boolean.TRUE.equals(funktiokutsu.getOmaopintopolku)) funktiokutsu.getOmaopintopolku else ""
+    val omaopintopolku: Boolean = if(java.lang.Boolean.TRUE.equals(funktiokutsu.getOmaopintopolku)) funktiokutsu.getOmaopintopolku else false
 
     val valintaperusteviitteet = funktiokutsu.getValintaperusteviitteet.toList.sortWith(_.getIndeksi < _.getIndeksi).map(luoValintaperusteviite(_))
 
-    funktiokutsu.getFunktionimi match {
-      case Funktionimi.EI => Ei(muunnaTotuusarvofunktioksi(lasketutArgumentit.head))
-      case Funktionimi.HAELUKUARVO => {
-        val konvertteri = if (!funktiokutsu.getArvokonvertteriparametrit.isEmpty) {
-          val konversioMap = funktiokutsu.getArvokonvertteriparametrit.map(konv =>
+    val arvokonvertteriparametrit = funktiokutsu.getArvokonvertteriparametrit
+    val arvovalikonvertteriparametrit = funktiokutsu.getArvovalikonvertteriparametrit
+    val syoteparametrit = funktiokutsu.getSyoteparametrit
+
+    funktionimi match {
+      case Funktionimi.EI =>
+        Ei(muunnaTotuusarvofunktioksi(lasketutArgumentit.head), omaopintopolku = omaopintopolku)
+
+      case Funktionimi.HAELUKUARVO =>
+        val konvertteri = if (!arvokonvertteriparametrit.isEmpty) {
+          val konversioMap = arvokonvertteriparametrit.map(konv =>
             ArvokonversioMerkkijonoilla[BigDecimal, BigDecimal](konv.getArvo, stringToBigDecimal(konv.getPaluuarvo),
               konv.getHylkaysperuste, konv.getKuvaukset)).toList
 
           Some(Arvokonvertteri[BigDecimal, BigDecimal](konversioMap))
-        } else if (!funktiokutsu.getArvovalikonvertteriparametrit.isEmpty) {
-          val konversioMap = funktiokutsu.getArvovalikonvertteriparametrit.map(konv => {
+        } else if (!arvovalikonvertteriparametrit.isEmpty) {
+          val konversioMap = arvovalikonvertteriparametrit.map(konv => {
             val paluuarvo = if (StringUtils.isNotBlank(konv.getPaluuarvo)) {
               konv.getPaluuarvo
             } else {
@@ -149,20 +156,20 @@ object Laskentadomainkonvertteri {
           Some(Lukuarvovalikonvertteri(konversioMap))
         } else None
 
-        val oletusarvo = funktiokutsu.getSyoteparametrit.find(_.getAvain == "oletusarvo").filter(!_.getArvo.isEmpty)
+        val oletusarvo = syoteparametrit.find(_.getAvain == "oletusarvo").filter(!_.getArvo.isEmpty)
           .map(p => parametriToBigDecimal(p))
 
-        HaeLukuarvo(konvertteri, oletusarvo, valintaperusteviitteet.head, oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
-      }
-      case Funktionimi.HAELUKUARVOEHDOLLA => {
-        val konvertteri = if (!funktiokutsu.getArvokonvertteriparametrit.isEmpty) {
-          val konversioMap = funktiokutsu.getArvokonvertteriparametrit.map(konv =>
+        HaeLukuarvo(konvertteri, oletusarvo, valintaperusteviitteet.head, oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
+
+      case Funktionimi.HAELUKUARVOEHDOLLA =>
+        val konvertteri = if (!arvokonvertteriparametrit.isEmpty) {
+          val konversioMap = arvokonvertteriparametrit.map(konv =>
             ArvokonversioMerkkijonoilla[BigDecimal, BigDecimal](konv.getArvo, stringToBigDecimal(konv.getPaluuarvo),
               konv.getHylkaysperuste, konv.getKuvaukset)).toList
 
           Some(Arvokonvertteri[BigDecimal, BigDecimal](konversioMap))
-        } else if (!funktiokutsu.getArvovalikonvertteriparametrit.isEmpty) {
-          val konversioMap = funktiokutsu.getArvovalikonvertteriparametrit.map(konv => {
+        } else if (!arvovalikonvertteriparametrit.isEmpty) {
+          val konversioMap = arvovalikonvertteriparametrit.map(konv => {
             val paluuarvo = if (StringUtils.isNotBlank(konv.getPaluuarvo)) {
               konv.getPaluuarvo
             } else {
@@ -176,66 +183,61 @@ object Laskentadomainkonvertteri {
         } else None
 
 
-        val oletusarvo = funktiokutsu.getSyoteparametrit.find(_.getAvain == "oletusarvo").filter(!_.getArvo.isEmpty)
+        val oletusarvo = syoteparametrit.find(_.getAvain == "oletusarvo").filter(!_.getArvo.isEmpty)
           .map(p => parametriToBigDecimal(p))
 
-        HaeLukuarvoEhdolla(konvertteri, oletusarvo, valintaperusteviitteet(0), valintaperusteviitteet(1), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
-      }
-      case Funktionimi.HAEMERKKIJONOJAKONVERTOILUKUARVOKSI => {
-        val konversioMap = funktiokutsu.getArvokonvertteriparametrit.map(konv =>
+        HaeLukuarvoEhdolla(konvertteri, oletusarvo, valintaperusteviitteet(0), valintaperusteviitteet(1), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
+
+      case Funktionimi.HAEMERKKIJONOJAKONVERTOILUKUARVOKSI =>
+        val konversioMap = arvokonvertteriparametrit.map(konv =>
           ArvokonversioMerkkijonoilla[String, BigDecimal](konv.getArvo, stringToBigDecimal(konv.getPaluuarvo), konv.getHylkaysperuste, konv.getKuvaukset)).toList
 
-        val oletusarvo = funktiokutsu.getSyoteparametrit.find(_.getAvain == "oletusarvo").filter(!_.getArvo.isEmpty)
+        val oletusarvo = syoteparametrit.find(_.getAvain == "oletusarvo").filter(!_.getArvo.isEmpty)
           .map(p => parametriToBigDecimal(p))
 
         HaeMerkkijonoJaKonvertoiLukuarvoksi(
           Arvokonvertteri[String, BigDecimal](konversioMap),
           oletusarvo,
           valintaperusteviitteet.head,
-          oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
-      }
+          oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
 
-      case Funktionimi.HAETOTUUSARVOJAKONVERTOILUKUARVOKSI => {
-
-        val konversioMap = funktiokutsu.getArvokonvertteriparametrit.map(konv =>
+      case Funktionimi.HAETOTUUSARVOJAKONVERTOILUKUARVOKSI =>
+        val konversioMap = arvokonvertteriparametrit.map(konv =>
           ArvokonversioMerkkijonoilla[Boolean, BigDecimal](konv.getArvo, stringToBigDecimal(konv.getPaluuarvo), konv.getHylkaysperuste, konv.getKuvaukset)).toList
 
-        val oletusarvo = funktiokutsu.getSyoteparametrit.find(_.getAvain == "oletusarvo").filter(!_.getArvo.isEmpty)
+        val oletusarvo = syoteparametrit.find(_.getAvain == "oletusarvo").filter(!_.getArvo.isEmpty)
           .map(p => parametriToBigDecimal(p))
 
         HaeTotuusarvoJaKonvertoiLukuarvoksi(
           Arvokonvertteri[Boolean, BigDecimal](konversioMap),
           oletusarvo,
           valintaperusteviitteet.head,
-          oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
-      }
+          oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
 
-      case Funktionimi.HAEMERKKIJONOJAKONVERTOITOTUUSARVOKSI => {
-        val konversioMap = funktiokutsu.getArvokonvertteriparametrit.map(konv =>
+      case Funktionimi.HAEMERKKIJONOJAKONVERTOITOTUUSARVOKSI =>
+        val konversioMap = arvokonvertteriparametrit.map(konv =>
           ArvokonversioMerkkijonoilla[String, Boolean](konv.getArvo, konv.getPaluuarvo.toBoolean, konv.getHylkaysperuste, konv.getKuvaukset)).toList
 
-        val oletusarvo = funktiokutsu.getSyoteparametrit.filter(!_.getArvo.isEmpty).find(_.getAvain == "oletusarvo")
+        val oletusarvo = syoteparametrit.filter(!_.getArvo.isEmpty).find(_.getAvain == "oletusarvo")
           .map(p => parametriToBoolean(p))
 
         HaeMerkkijonoJaKonvertoiTotuusarvoksi(
           Arvokonvertteri[String, Boolean](konversioMap),
           oletusarvo,
           valintaperusteviitteet.head,
-          oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
-      }
+          oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
 
-      case Funktionimi.HAEMERKKIJONOJAVERTAAYHTASUURUUS => {
-        val oletusarvo = funktiokutsu.getSyoteparametrit.filter(!_.getArvo.isEmpty).find(_.getAvain == "oletusarvo")
+      case Funktionimi.HAEMERKKIJONOJAVERTAAYHTASUURUUS =>
+        val oletusarvo = syoteparametrit.filter(!_.getArvo.isEmpty).find(_.getAvain == "oletusarvo")
           .map(p => parametriToBoolean(p))
 
-        val vertailtava = getParametri("vertailtava", funktiokutsu.getSyoteparametrit).getArvo
+        val vertailtava = getParametri("vertailtava", syoteparametrit).getArvo
 
-        HaeMerkkijonoJaVertaaYhtasuuruus(oletusarvo, valintaperusteviitteet.head, vertailtava, oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
-      }
+        HaeMerkkijonoJaVertaaYhtasuuruus(oletusarvo, valintaperusteviitteet.head, vertailtava, oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
 
-      case Funktionimi.HAETOTUUSARVO => {
-        val konvertteri = if (!funktiokutsu.getArvokonvertteriparametrit.isEmpty) {
-          val konversioMap = funktiokutsu.getArvokonvertteriparametrit.map(konv => {
+      case Funktionimi.HAETOTUUSARVO =>
+        val konvertteri = if (!arvokonvertteriparametrit.isEmpty) {
+          val konversioMap = arvokonvertteriparametrit.map(konv => {
             ArvokonversioMerkkijonoilla[Boolean, Boolean](konv.getArvo, konv.getPaluuarvo.toBoolean,
               konv.getHylkaysperuste, konv.getKuvaukset)
           }).toList
@@ -243,87 +245,98 @@ object Laskentadomainkonvertteri {
           Some(Arvokonvertteri[Boolean, Boolean](konversioMap))
         } else None
 
-        val oletusarvo = funktiokutsu.getSyoteparametrit.filter(!_.getArvo.isEmpty).find(_.getAvain == "oletusarvo")
+        val oletusarvo = syoteparametrit.filter(!_.getArvo.isEmpty).find(_.getAvain == "oletusarvo")
           .map(p => parametriToBoolean(p))
 
-        HaeTotuusarvo(konvertteri, oletusarvo, valintaperusteviitteet.head, oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
-      }
-      case Funktionimi.HYLKAA => {
-        //val hylkaysperustekuvaus = funktiokutsu.getSyoteparametrit.find(_.getAvain == "hylkaysperustekuvaus").map(_.getArvo)
-        val hylkaysperustekuvaus = funktiokutsu.getSyoteparametrit.filter(_.getAvain.startsWith("hylkaysperustekuvaus_")).foldLeft(Map.empty[String,String]) {
+        HaeTotuusarvo(konvertteri, oletusarvo, valintaperusteviitteet.head, oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
+
+      case Funktionimi.HYLKAA =>
+        val hylkaysperustekuvaus = syoteparametrit.filter(_.getAvain.startsWith("hylkaysperustekuvaus_")).foldLeft(Map.empty[String, String]) {
+          (result, kuvaus) => result + (kuvaus.getAvain.split("_")(1) -> kuvaus.getArvo)
+        }
+        Hylkaa(muunnaTotuusarvofunktioksi(lasketutArgumentit(0)), Some(hylkaysperustekuvaus), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
+
+      case Funktionimi.HYLKAAARVOVALILLA =>
+        val hylkaysperustekuvaus = syoteparametrit.filter(_.getAvain.startsWith("hylkaysperustekuvaus_")).foldLeft(Map.empty[String, String]) {
           (result, kuvaus) => result + (kuvaus.getAvain.split("_")(1) -> kuvaus.getArvo)
         }
 
-        Hylkaa(muunnaTotuusarvofunktioksi(lasketutArgumentit(0)), Some(hylkaysperustekuvaus), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
-      }
-      case Funktionimi.HYLKAAARVOVALILLA => {
-        val hylkaysperustekuvaus = funktiokutsu.getSyoteparametrit.filter(_.getAvain.startsWith("hylkaysperustekuvaus_")).foldLeft(Map.empty[String,String]) {
-          (result, kuvaus) => result + (kuvaus.getAvain.split("_")(1) -> kuvaus.getArvo)
-        }
+        val min = getParametri("arvovaliMin", syoteparametrit).getArvo
+        val max = getParametri("arvovaliMax", syoteparametrit).getArvo
 
-        val min = getParametri("arvovaliMin", funktiokutsu.getSyoteparametrit).getArvo
-        val max = getParametri("arvovaliMax", funktiokutsu.getSyoteparametrit).getArvo
+        HylkaaArvovalilla(muunnaLukuarvofunktioksi(lasketutArgumentit(0)), Some(hylkaysperustekuvaus), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku, Pair(min, max))
 
-        HylkaaArvovalilla(muunnaLukuarvofunktioksi(lasketutArgumentit(0)), Some(hylkaysperustekuvaus), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, Pair(min, max))
+      case Funktionimi.JA =>
+        Ja(lasketutArgumentit.map(muunnaTotuusarvofunktioksi(_)), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
 
-      }
-      case Funktionimi.JA => Ja(lasketutArgumentit.map(muunnaTotuusarvofunktioksi(_)), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
       case Funktionimi.JOS => Jos(
         muunnaTotuusarvofunktioksi(lasketutArgumentit(0)),
         muunnaLukuarvofunktioksi(lasketutArgumentit(1)),
         muunnaLukuarvofunktioksi(lasketutArgumentit(2)),
-        oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
-      case Funktionimi.KESKIARVO => Keskiarvo(lasketutArgumentit.map(muunnaLukuarvofunktioksi(_)), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
-      case Funktionimi.KESKIARVONPARASTA => {
-        val nParam = getParametri(funktiokuvaus.syoteparametrit.head.avain, funktiokutsu.getSyoteparametrit)
-        KeskiarvoNParasta(parametriToInteger(nParam), lasketutArgumentit.map(muunnaLukuarvofunktioksi(_)), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
-      }
-      case Funktionimi.LUKUARVO => {
-        val lukuParam = getParametri(funktiokuvaus.syoteparametrit.head.avain, funktiokutsu.getSyoteparametrit)
-        Lukuarvo(parametriToBigDecimal(lukuParam), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
-      }
-      case Funktionimi.KONVERTOILUKUARVO => {
-        val konvertteri = if (!funktiokutsu.getArvokonvertteriparametrit.isEmpty) {
-          val konversioMap = funktiokutsu.getArvokonvertteriparametrit.map(konv =>
+        oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku = omaopintopolku)
+
+      case Funktionimi.KESKIARVO =>
+        Keskiarvo(lasketutArgumentit.map(muunnaLukuarvofunktioksi(_)), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
+
+      case Funktionimi.KESKIARVONPARASTA =>
+        val nParam = getParametri(funktiokuvaus.syoteparametrit.head.avain, syoteparametrit)
+        KeskiarvoNParasta(parametriToInteger(nParam), lasketutArgumentit.map(muunnaLukuarvofunktioksi(_)), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
+
+      case Funktionimi.LUKUARVO =>
+        val lukuParam = getParametri(funktiokuvaus.syoteparametrit.head.avain, syoteparametrit)
+        Lukuarvo(parametriToBigDecimal(lukuParam), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
+
+      case Funktionimi.KONVERTOILUKUARVO =>
+        val konvertteri = if (!arvokonvertteriparametrit.isEmpty) {
+          val konversioMap = arvokonvertteriparametrit.map(konv =>
             ArvokonversioMerkkijonoilla[BigDecimal, BigDecimal](konv.getArvo, stringToBigDecimal(konv.getPaluuarvo),
               konv.getHylkaysperuste, konv.getKuvaukset)).toList
 
           Arvokonvertteri[BigDecimal, BigDecimal](konversioMap)
         } else {
-          val konversioMap = funktiokutsu.getArvovalikonvertteriparametrit.map(konv =>
+          val konversioMap = arvovalikonvertteriparametrit.map(konv =>
             LukuarvovalikonversioMerkkijonoilla(konv.getMinValue, konv.getMaxValue, konv.getPaluuarvo,
               konv.getPalautaHaettuArvo, konv.getHylkaysperuste, konv.getKuvaukset)).toList
 
           Lukuarvovalikonvertteri(konversioMap)
         }
 
-        KonvertoiLukuarvo(konvertteri, muunnaLukuarvofunktioksi(lasketutArgumentit.head), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
-      }
-      case Funktionimi.MAKSIMI => Maksimi(lasketutArgumentit.map(muunnaLukuarvofunktioksi(_)), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
-      case Funktionimi.MEDIAANI => Mediaani(lasketutArgumentit.map(muunnaLukuarvofunktioksi(_)), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
-      case Funktionimi.MINIMI => Minimi(lasketutArgumentit.map(muunnaLukuarvofunktioksi(_)), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
-      case Funktionimi.NEGAATIO => Negaatio(muunnaLukuarvofunktioksi(lasketutArgumentit.head), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
-      case Funktionimi.NIMETTYLUKUARVO => {
-        val nimiParam = getParametri(funktiokuvaus.syoteparametrit.head.avain, funktiokutsu.getSyoteparametrit)
-        NimettyLukuarvo(nimiParam.getArvo, muunnaLukuarvofunktioksi(lasketutArgumentit.head), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
-      }
-      case Funktionimi.NIMETTYTOTUUSARVO => {
-        val nimiParam = getParametri(funktiokuvaus.syoteparametrit.head.avain, funktiokutsu.getSyoteparametrit)
-        NimettyTotuusarvo(nimiParam.getArvo, muunnaTotuusarvofunktioksi(lasketutArgumentit.head), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
-      }
-      case Funktionimi.NMAKSIMI => {
-        val nParam = getParametri(funktiokuvaus.syoteparametrit.head.avain, funktiokutsu.getSyoteparametrit)
-        NMaksimi(parametriToInteger(nParam), lasketutArgumentit.map(muunnaLukuarvofunktioksi(_)), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
-      }
-      case Funktionimi.NMINIMI => {
-        val nParam = getParametri(funktiokuvaus.syoteparametrit.head.avain, funktiokutsu.getSyoteparametrit)
-        NMinimi(parametriToInteger(nParam), lasketutArgumentit.map(muunnaLukuarvofunktioksi(_)), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
-      }
+        KonvertoiLukuarvo(konvertteri, muunnaLukuarvofunktioksi(lasketutArgumentit.head), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
+
+      case Funktionimi.MAKSIMI =>
+        Maksimi(lasketutArgumentit.map(muunnaLukuarvofunktioksi(_)), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
+
+      case Funktionimi.MEDIAANI =>
+        Mediaani(lasketutArgumentit.map(muunnaLukuarvofunktioksi(_)), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
+
+      case Funktionimi.MINIMI =>
+        Minimi(lasketutArgumentit.map(muunnaLukuarvofunktioksi(_)), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
+
+      case Funktionimi.NEGAATIO =>
+        Negaatio(muunnaLukuarvofunktioksi(lasketutArgumentit.head), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
+
+      case Funktionimi.NIMETTYLUKUARVO =>
+        val nimiParam = getParametri(funktiokuvaus.syoteparametrit.head.avain, syoteparametrit)
+        NimettyLukuarvo(nimiParam.getArvo, muunnaLukuarvofunktioksi(lasketutArgumentit.head), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
+
+      case Funktionimi.NIMETTYTOTUUSARVO =>
+        val nimiParam = getParametri(funktiokuvaus.syoteparametrit.head.avain, syoteparametrit)
+        NimettyTotuusarvo(nimiParam.getArvo, muunnaTotuusarvofunktioksi(lasketutArgumentit.head), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
+
+      case Funktionimi.NMAKSIMI =>
+        val nParam = getParametri(funktiokuvaus.syoteparametrit.head.avain, syoteparametrit)
+        NMaksimi(parametriToInteger(nParam), lasketutArgumentit.map(muunnaLukuarvofunktioksi(_)), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
+
+      case Funktionimi.NMINIMI =>
+        val nParam = getParametri(funktiokuvaus.syoteparametrit.head.avain, syoteparametrit)
+        NMinimi(parametriToInteger(nParam), lasketutArgumentit.map(muunnaLukuarvofunktioksi(_)), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
+
       case Funktionimi.OSAMAARA => Osamaara(
         muunnaLukuarvofunktioksi(lasketutArgumentit(0)),
         muunnaLukuarvofunktioksi(lasketutArgumentit(1)),
-        oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
-      case Funktionimi.PAINOTETTUKESKIARVO => {
+        oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
+
+      case Funktionimi.PAINOTETTUKESKIARVO =>
         def muodostaParit(fs: Seq[Funktio[_]], accu: List[Pair[Lukuarvofunktio, Lukuarvofunktio]]): List[Pair[Lukuarvofunktio, Lukuarvofunktio]] = {
           fs match {
             case first :: second :: rest => muodostaParit(rest, Pair(muunnaLukuarvofunktioksi(first), muunnaLukuarvofunktioksi(second)) :: accu)
@@ -331,136 +344,150 @@ object Laskentadomainkonvertteri {
           }
         }
 
-        PainotettuKeskiarvo(oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, muodostaParit(lasketutArgumentit, Nil))
-      }
+        PainotettuKeskiarvo(oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku, muodostaParit(lasketutArgumentit, Nil))
+
       case Funktionimi.PIENEMPI => Pienempi(
         muunnaLukuarvofunktioksi(lasketutArgumentit(0)),
-        muunnaLukuarvofunktioksi(lasketutArgumentit(1)), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
+        muunnaLukuarvofunktioksi(lasketutArgumentit(1)), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
+
       case Funktionimi.PIENEMPITAIYHTASUURI => PienempiTaiYhtasuuri(
         muunnaLukuarvofunktioksi(lasketutArgumentit(0)),
         muunnaLukuarvofunktioksi(lasketutArgumentit(1)),
-        oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
+        oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
+
       case Funktionimi.PYORISTYS =>
-        val tarkkuus = getParametri("tarkkuus", funktiokutsu.getSyoteparametrit)
+        val tarkkuus = getParametri("tarkkuus", syoteparametrit)
         Pyoristys(
           parametriToInteger(tarkkuus),
           muunnaLukuarvofunktioksi(lasketutArgumentit(0)),
-          oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
+          oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
+
       case Funktionimi.SKAALAUS => {
-        val kohdeskaalaMin = parametriToBigDecimal(getParametri("kohdeskaalaMin", funktiokutsu.getSyoteparametrit))
-        val kohdeskaalaMax = parametriToBigDecimal(getParametri("kohdeskaalaMax", funktiokutsu.getSyoteparametrit))
+        val kohdeskaalaMin = parametriToBigDecimal(getParametri("kohdeskaalaMin", syoteparametrit))
+        val kohdeskaalaMax = parametriToBigDecimal(getParametri("kohdeskaalaMax", syoteparametrit))
 
         val kaytaLaskennallistaLahdeskaalaa = parametriToBoolean(getParametri("kaytaLaskennallistaLahdeskaalaa",
-          funktiokutsu.getSyoteparametrit))
+          syoteparametrit))
 
         val lahdeskaala = if (!kaytaLaskennallistaLahdeskaalaa) {
-          val lahdeskaalaMin = parametriToBigDecimal(getParametri("lahdeskaalaMin", funktiokutsu.getSyoteparametrit))
-          val lahdeskaalaMax = parametriToBigDecimal(getParametri("lahdeskaalaMax", funktiokutsu.getSyoteparametrit))
+          val lahdeskaalaMin = parametriToBigDecimal(getParametri("lahdeskaalaMin", syoteparametrit))
+          val lahdeskaalaMax = parametriToBigDecimal(getParametri("lahdeskaalaMax", syoteparametrit))
           Some(Pair(lahdeskaalaMin, lahdeskaalaMax))
         } else None
 
-        Skaalaus(oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, muunnaLukuarvofunktioksi(lasketutArgumentit.head), Pair(kohdeskaalaMin, kohdeskaalaMax), lahdeskaala)
+        Skaalaus(oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku, muunnaLukuarvofunktioksi(lasketutArgumentit.head), Pair(kohdeskaalaMin, kohdeskaalaMax), lahdeskaala)
       }
-      case Funktionimi.SUMMA => Summa(lasketutArgumentit.map(muunnaLukuarvofunktioksi(_)), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
-      case Funktionimi.SUMMANPARASTA => {
-        val nParam = getParametri(funktiokuvaus.syoteparametrit.head.avain, funktiokutsu.getSyoteparametrit)
-        SummaNParasta(parametriToInteger(nParam), lasketutArgumentit.map(muunnaLukuarvofunktioksi(_)), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
-      }
-      case Funktionimi.TULONPARASTA => {
-        val nParam = getParametri(funktiokuvaus.syoteparametrit.head.avain, funktiokutsu.getSyoteparametrit)
-        TuloNParasta(parametriToInteger(nParam), lasketutArgumentit.map(muunnaLukuarvofunktioksi(_)), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
-      }
+
+      case Funktionimi.SUMMA =>
+        Summa(lasketutArgumentit.map(muunnaLukuarvofunktioksi(_)), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
+
+      case Funktionimi.SUMMANPARASTA =>
+        val nParam = getParametri(funktiokuvaus.syoteparametrit.head.avain, syoteparametrit)
+        SummaNParasta(parametriToInteger(nParam), lasketutArgumentit.map(muunnaLukuarvofunktioksi(_)), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
+
+      case Funktionimi.TULONPARASTA =>
+        val nParam = getParametri(funktiokuvaus.syoteparametrit.head.avain, syoteparametrit)
+        TuloNParasta(parametriToInteger(nParam), lasketutArgumentit.map(muunnaLukuarvofunktioksi(_)), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
+
       case Funktionimi.SUUREMPI => Suurempi(
         muunnaLukuarvofunktioksi(lasketutArgumentit(0)),
         muunnaLukuarvofunktioksi(lasketutArgumentit(1)),
-        oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
+        oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
+
       case Funktionimi.SUUREMPITAIYHTASUURI => SuurempiTaiYhtasuuri(
         muunnaLukuarvofunktioksi(lasketutArgumentit(0)),
         muunnaLukuarvofunktioksi(lasketutArgumentit(1)),
-        oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
-      case Funktionimi.TAI => Tai(lasketutArgumentit.map(muunnaTotuusarvofunktioksi(_)), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
+        oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
+
+      case Funktionimi.TAI =>
+        Tai(lasketutArgumentit.map(muunnaTotuusarvofunktioksi(_)), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
+
       case Funktionimi.TOTUUSARVO => {
-        val totuusarvoParam = getParametri(funktiokuvaus.syoteparametrit.head.avain, funktiokutsu.getSyoteparametrit)
-        Totuusarvo(parametriToBoolean(totuusarvoParam), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
+        val totuusarvoParam = getParametri(funktiokuvaus.syoteparametrit.head.avain, syoteparametrit)
+        Totuusarvo(parametriToBoolean(totuusarvoParam), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
       }
-      case Funktionimi.TULO => Tulo(lasketutArgumentit.map(muunnaLukuarvofunktioksi(_)), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
+
+      case Funktionimi.TULO =>
+        Tulo(lasketutArgumentit.map(muunnaLukuarvofunktioksi(_)), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
+
       case Funktionimi.YHTASUURI => Yhtasuuri(
         muunnaLukuarvofunktioksi(lasketutArgumentit(0)),
         muunnaLukuarvofunktioksi(lasketutArgumentit(1)),
-        oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
+        oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
 
       case Funktionimi.HAKUTOIVE => {
-        val nParam = getParametri(funktiokuvaus.syoteparametrit.head.avain, funktiokutsu.getSyoteparametrit)
-        Hakutoive(parametriToInteger(nParam), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
+        val nParam = getParametri(funktiokuvaus.syoteparametrit.head.avain, syoteparametrit)
+        Hakutoive(parametriToInteger(nParam), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
       }
 
       case Funktionimi.HAKUTOIVERYHMASSA => {
-        val nParam = getParametri("n", funktiokutsu.getSyoteparametrit)
-        val ryhmaOid = getParametri("ryhmaoid", funktiokutsu.getSyoteparametrit).getArvo
-        HakutoiveRyhmassa(parametriToInteger(nParam), ryhmaOid, oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
+        val nParam = getParametri("n", syoteparametrit)
+        val ryhmaOid = getParametri("ryhmaoid", syoteparametrit).getArvo
+        HakutoiveRyhmassa(parametriToInteger(nParam), ryhmaOid, oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
       }
 
       case Funktionimi.HAKUKELPOISUUS => {
-        Hakukelpoisuus(oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
+        Hakukelpoisuus(oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
       }
 
       case Funktionimi.DEMOGRAFIA => {
-        val tunniste = getParametri("tunniste", funktiokutsu.getSyoteparametrit).getArvo
-        val prosenttiosuus = getParametri("prosenttiosuus", funktiokutsu.getSyoteparametrit)
+        val tunniste = getParametri("tunniste", syoteparametrit).getArvo
+        val prosenttiosuus = getParametri("prosenttiosuus", syoteparametrit)
 
-        Demografia(oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, tunniste, parametriToBigDecimal(prosenttiosuus))
+        Demografia(oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku, tunniste, parametriToBigDecimal(prosenttiosuus))
       }
 
       case Funktionimi.VALINTAPERUSTEYHTASUURUUS => {
-        Valintaperusteyhtasuuruus(oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, Pair(valintaperusteviitteet(0), valintaperusteviitteet(1)))
+        Valintaperusteyhtasuuruus(oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku, Pair(valintaperusteviitteet(0), valintaperusteviitteet(1)))
       }
 
-      case Funktionimi.HAEYOARVOSANA => {
-
+      case Funktionimi.HAEYOARVOSANA =>
         List("A", "B", "C", "M", "E", "L", "I").foreach(
           arvosana => {
-            if (funktiokutsu.getSyoteparametrit.count(s => s.getAvain == arvosana) == 0) {
+            if (syoteparametrit.count(s => s.getAvain == arvosana) == 0) {
               val target = new Syoteparametri
               target.setArvo("0.0")
               target.setAvain(arvosana)
-              funktiokutsu.getSyoteparametrit.add(target)
+              syoteparametrit.add(target)
             }
           }
 
         )
 
-        val arvosanaKonvertterit = funktiokutsu.getSyoteparametrit.filter(s => s.getAvain.length == 1).map(
+        val arvosanaKonvertterit = syoteparametrit.filter(s => s.getAvain.length == 1).map(
           param => ArvokonversioMerkkijonoilla[String, BigDecimal](param.getAvain, stringToBigDecimal(param.getArvo), "false", new TekstiRyhma)
         ).toList
 
-        val ehdot = yoehdot(funktiokutsu)
+        val ehdot = yoehdot(syoteparametrit)
 
         val arvosanaFunktio = HaeYoArvosana(
           Arvokonvertteri[String, BigDecimal](arvosanaKonvertterit),
           ehdot,
           Some(BigDecimal("0.0")),
-          valintaperusteviitteet.head)
+          valintaperusteviitteet.head,
+          omaopintopolku = omaopintopolku)
 
-        val arvosana = if(ehdot.vainValmistuneet) {
-          Jos(HaeTotuusarvo(None, Some(false), HakemuksenValintaperuste(YO+TILA_SUFFIX, false)), arvosanaFunktio, Lukuarvo(BigDecimal("0.0")))
+        val arvosana = if (ehdot.vainValmistuneet) {
+          Jos(HaeTotuusarvo(None, Some(false), HakemuksenValintaperuste(YO + TILA_SUFFIX, false), omaopintopolku = omaopintopolku),
+            arvosanaFunktio,
+            Lukuarvo(BigDecimal("0.0"), omaopintopolku = omaopintopolku),
+            omaopintopolku = omaopintopolku)
         } else {
           arvosanaFunktio
         }
 
-        NimettyLukuarvo(s"YO-arvosana (${valintaperusteviitteet.head.tunniste})", arvosana, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
+        NimettyLukuarvo(s"YO-arvosana (${valintaperusteviitteet.head.tunniste})", arvosana, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku = omaopintopolku)
 
-      }
 
-      case Funktionimi.HAEOSAKOEARVOSANA => {
-
-        val konvertteri = if (!funktiokutsu.getArvokonvertteriparametrit.isEmpty) {
-          val konversioMap = funktiokutsu.getArvokonvertteriparametrit.map(konv =>
+      case Funktionimi.HAEOSAKOEARVOSANA =>
+        val konvertteri = if (!arvokonvertteriparametrit.isEmpty) {
+          val konversioMap = arvokonvertteriparametrit.map(konv =>
             ArvokonversioMerkkijonoilla[BigDecimal, BigDecimal](konv.getArvo, stringToBigDecimal(konv.getPaluuarvo),
               konv.getHylkaysperuste, konv.getKuvaukset)).toList
 
           Some(Arvokonvertteri[BigDecimal, BigDecimal](konversioMap))
-        } else if (!funktiokutsu.getArvovalikonvertteriparametrit.isEmpty) {
-          val konversioMap = funktiokutsu.getArvovalikonvertteriparametrit.map(konv => {
+        } else if (!arvovalikonvertteriparametrit.isEmpty) {
+          val konversioMap = arvovalikonvertteriparametrit.map(konv => {
             val paluuarvo = if (StringUtils.isNotBlank(konv.getPaluuarvo)) {
               konv.getPaluuarvo
             } else {
@@ -473,43 +500,44 @@ object Laskentadomainkonvertteri {
           Some(Lukuarvovalikonvertteri(konversioMap))
         } else None
 
-        val ehdot= yoehdot(funktiokutsu)
+        val ehdot = yoehdot(syoteparametrit)
 
         val arvosanaFunktio = HaeYoPisteet(
           konvertteri,
           ehdot,
           Some(BigDecimal("0.0")),
-          valintaperusteviitteet.head)
+          valintaperusteviitteet.head,
+          omaopintopolku = omaopintopolku)
 
-        val arvosana = if(ehdot.vainValmistuneet) {
-          Jos(HaeTotuusarvo(None, Some(false), HakemuksenValintaperuste(YO+TILA_SUFFIX, false)), arvosanaFunktio, Lukuarvo(BigDecimal("0.0")))
+        val arvosana = if (ehdot.vainValmistuneet) {
+          Jos(HaeTotuusarvo(None, Some(false), HakemuksenValintaperuste(YO + TILA_SUFFIX, false), omaopintopolku = omaopintopolku),
+            arvosanaFunktio, Lukuarvo(BigDecimal("0.0"), omaopintopolku = omaopintopolku),
+            omaopintopolku = omaopintopolku)
         } else {
           arvosanaFunktio
         }
 
-        NimettyLukuarvo(s"YO-kokeen pisteet (${valintaperusteviitteet.head.tunniste})", arvosana, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn)
+        NimettyLukuarvo(s"YO-kokeen pisteet (${valintaperusteviitteet.head.tunniste})", arvosana, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku = omaopintopolku)
 
-      }
-
-      case _ => sys.error(s"Could not calculate funktio ${funktiokutsu.getFunktionimi.name()}")
+      case _ => sys.error(s"Could not calculate funktio ${funktionimi.name()}")
     }
   }
 
-  def yoehdot(funktiokutsu: Funktiokutsu): YoEhdot = {
-    val alkuvuosi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("alkuvuosi") && !s.getArvo.isEmpty).map(value => stringToBigDecimal(value.getArvo).intValue())
+  def yoehdot(syoteparametrit: JSet[Syoteparametri]): YoEhdot = {
+    val alkuvuosi = syoteparametrit.find(s => s.getAvain.equals("alkuvuosi") && !s.getArvo.isEmpty).map(value => stringToBigDecimal(value.getArvo).intValue())
 
-    val loppuvuosi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("loppuvuosi") && !s.getArvo.isEmpty).map(value => stringToBigDecimal(value.getArvo).intValue())
+    val loppuvuosi = syoteparametrit.find(s => s.getAvain.equals("loppuvuosi") && !s.getArvo.isEmpty).map(value => stringToBigDecimal(value.getArvo).intValue())
 
-    val alkulukukausi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("alkulukukausi") && !s.getArvo.isEmpty).map(value => stringToBigDecimal(value.getArvo).intValue())
+    val alkulukukausi = syoteparametrit.find(s => s.getAvain.equals("alkulukukausi") && !s.getArvo.isEmpty).map(value => stringToBigDecimal(value.getArvo).intValue())
 
-    val loppulukukausi = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("loppulukukausi") && !s.getArvo.isEmpty).map(value => stringToBigDecimal(value.getArvo).intValue())
+    val loppulukukausi = syoteparametrit.find(s => s.getAvain.equals("loppulukukausi") && !s.getArvo.isEmpty).map(value => stringToBigDecimal(value.getArvo).intValue())
 
-    val vainValmistuneet = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("valmistuneet") && !s.getArvo.isEmpty) match {
+    val vainValmistuneet = syoteparametrit.find(s => s.getAvain.equals("valmistuneet") && !s.getArvo.isEmpty) match {
       case Some(sp: Syoteparametri) => parametriToBoolean(sp)
       case _ => false
     }
 
-    val rooli = funktiokutsu.getSyoteparametrit.find(s => s.getAvain.equals("rooli") && !s.getArvo.isEmpty) match {
+    val rooli = syoteparametrit.find(s => s.getAvain.equals("rooli") && !s.getArvo.isEmpty) match {
       case Some(sp: Syoteparametri) => Some(sp.getArvo)
       case _ => None
     }

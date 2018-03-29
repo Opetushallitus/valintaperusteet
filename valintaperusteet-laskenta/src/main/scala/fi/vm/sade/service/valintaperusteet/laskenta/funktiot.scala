@@ -8,6 +8,7 @@ trait Funktio[T] {
   val tulosTekstiFi: String
   val tulosTekstiSv: String
   val tulosTekstiEn: String
+  val omaopintopolku: Boolean
 }
 
 trait Lukuarvofunktio extends Funktio[BigDecimal]
