@@ -20,11 +20,21 @@ import scala.collection.mutable.ListBuffer
 
 private case class Tulos[T](tulos: Option[T], tila: Tila, historia: Historia)
 
-private case class SyotettyArvo(val tunniste: String, val arvo: Option[String],
-                                val laskennallinenArvo: Option[String], val osallistuminen: Osallistuminen,
-                                val syotettavanarvontyyppiKoodiUri: Option[String], val tilastoidaan: Boolean)
+private case class SyotettyArvo(tunniste: String,
+                                arvo: Option[String],
+                                laskennallinenArvo: Option[String],
+                                osallistuminen: Osallistuminen,
+                                syotettavanarvontyyppiKoodiUri: Option[String],
+                                tilastoidaan: Boolean
+                               )
 
-private case class FunktioTulos(val tunniste: String, val arvo: String, val nimiFi: String = "", val nimiSv: String = "", val nimiEn: String = "")
+private case class FunktioTulos(tunniste: String,
+                                arvo: String,
+                                nimiFi: String,
+                                nimiSv: String,
+                                nimiEn: String,
+                                omaopintopolku: Boolean
+                               )
 
 private object Laskentamoodi extends Enumeration {
   type Laskentamoodi = Value
@@ -49,7 +59,7 @@ object Laskin {
   }
 
   private def wrapFunktioTulokset(sa: Map[String, FunktioTulos]): Map[String, FTulos] = {
-    sa.map(e => (e._1 -> new FTulos(e._1, e._2.arvo, e._2.nimiFi, e._2.nimiSv, e._2.nimiEn)))
+    sa.map(e => (e._1 -> new FTulos(e._1, e._2.arvo, e._2.nimiFi, e._2.nimiSv, e._2.nimiEn, e._2.omaopintopolku)))
   }
 
   protected def suoritaValintalaskentaLukuarvofunktiolla(hakukohde: Hakukohde,
@@ -150,19 +160,15 @@ private class Laskin private(private val hakukohde: Hakukohde,
   val syotetytArvot: scala.collection.mutable.Map[String, SyotettyArvo] = scala.collection.mutable.Map[String, SyotettyArvo]()
   val funktioTulokset: scala.collection.mutable.Map[String, FunktioTulos] = scala.collection.mutable.Map[String, FunktioTulos]()
 
-  def getSyotetytArvot = Map[String, SyotettyArvo](syotetytArvot.toList: _*)
-  def getFunktioTulokset = Map[String, FunktioTulos](funktioTulokset.toList: _*)
+  def getSyotetytArvot: Map[String, SyotettyArvo] = Map[String, SyotettyArvo](syotetytArvot.toList: _*)
+  def getFunktioTulokset: Map[String, FunktioTulos] = Map[String, FunktioTulos](funktioTulokset.toList: _*)
 
-  def laske(laskettava: Lukuarvofunktio) = {
-//    syotetytArvot.clear
-//    funktioTulokset.clear
+  def laske(laskettava: Lukuarvofunktio): Tulos[BigDecimal] = {
     laskeLukuarvo(laskettava)
   }
 
 
-  def laske(laskettava: Totuusarvofunktio) = {
-//    syotetytArvot.clear
-//    funktioTulokset.clear
+  def laske(laskettava: Totuusarvofunktio): Tulos[Boolean] = {
     laskeTotuusarvo(laskettava)
   }
 
@@ -444,8 +450,17 @@ private class Laskin private(private val hakukohde: Hakukohde,
       }
     }
 
-    if(!laskettava.tulosTunniste.isEmpty()) funktioTulokset(laskettava.tulosTunniste) = FunktioTulos(laskettava.tulosTunniste, laskettuTulos.getOrElse("").toString,
-      laskettava.tulosTekstiFi,laskettava.tulosTekstiSv,laskettava.tulosTekstiEn)
+    if (!laskettava.tulosTunniste.isEmpty) {
+      val v = FunktioTulos(
+        laskettava.tulosTunniste,
+        laskettuTulos.getOrElse("").toString,
+        laskettava.tulosTekstiFi,
+        laskettava.tulosTekstiSv,
+        laskettava.tulosTekstiEn,
+        laskettava.omaopintopolku
+      )
+      funktioTulokset.update(laskettava.tulosTunniste, v)
+    }
     Tulos(laskettuTulos, palautettavaTila(tilat), hist)
   }
 
@@ -831,8 +846,17 @@ private class Laskin private(private val hakukohde: Hakukohde,
         (painotettuKeskiarvo, tilat, Historia("Painotettu keskiarvo", painotettuKeskiarvo, tilat, Some(historiat), None))
       }
     }
-    if(!laskettava.tulosTunniste.isEmpty) funktioTulokset(laskettava.tulosTunniste) = FunktioTulos(laskettava.tulosTunniste, laskettuTulos.getOrElse("").toString,
-      laskettava.tulosTekstiFi,laskettava.tulosTekstiSv,laskettava.tulosTekstiEn)
+    if (!laskettava.tulosTunniste.isEmpty) {
+      val v = FunktioTulos(
+        laskettava.tulosTunniste,
+        laskettuTulos.getOrElse("").toString,
+        laskettava.tulosTekstiFi,
+        laskettava.tulosTekstiSv,
+        laskettava.tulosTekstiEn,
+        laskettava.omaopintopolku
+      )
+      funktioTulokset.update(laskettava.tulosTunniste, v)
+    }
     Tulos(laskettuTulos, palautettavaTila(tilat), historia)
   }
 }

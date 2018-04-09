@@ -6,6 +6,7 @@ public class FunktioTulos {
     private String nimiFi;
     private String nimiSv;
     private String nimiEn;
+    private boolean omaopintopolku;
 
     public String getNimiFi() {
         return nimiFi;
@@ -19,12 +20,13 @@ public class FunktioTulos {
         return nimiEn;
     }
 
-    public FunktioTulos(String tunniste, String arvo, String nimiFi, String nimiSv, String nimiEn) {
+    public FunktioTulos(String tunniste, String arvo, String nimiFi, String nimiSv, String nimiEn, boolean omaopintopolku) {
         this.tunniste = tunniste;
         this.arvo = arvo;
         this.nimiFi = nimiFi;
         this.nimiSv = nimiSv;
         this.nimiEn = nimiEn;
+        this.omaopintopolku = omaopintopolku;
     }
 
     public String getTunniste() {
@@ -33,5 +35,9 @@ public class FunktioTulos {
 
     public String getArvo() {
         return arvo;
+    }
+
+    public boolean isOmaopintopolku() {
+        return omaopintopolku;
     }
 }
