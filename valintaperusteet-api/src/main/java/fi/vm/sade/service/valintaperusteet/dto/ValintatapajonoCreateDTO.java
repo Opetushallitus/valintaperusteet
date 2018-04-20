@@ -34,7 +34,7 @@ public class ValintatapajonoCreateDTO {
     private Boolean valisijoittelu = false;
 
     @ApiModelProperty(value = "Siirretäänkö laskennan tulokset automaattisesti sijoitteluun", required = true)
-    private Boolean automaattinenLaskentaanSiirto = false;
+    private Boolean automaattinenSijoitteluunSiirto = false;
 
     @ApiModelProperty(value = "Ei varasijatäyttöä", required = true)
     private Boolean eiVarasijatayttoa = false;
@@ -202,12 +202,12 @@ public class ValintatapajonoCreateDTO {
         this.valisijoittelu = valisijoittelu;
     }
 
-    public Boolean getAutomaattinenLaskentaanSiirto() {
-        return automaattinenLaskentaanSiirto;
+    public Boolean getautomaattinenSijoitteluunSiirto() {
+        return automaattinenSijoitteluunSiirto;
     }
 
-    public void setAutomaattinenLaskentaanSiirto(Boolean automaattinenLaskentaanSiirto) {
-        this.automaattinenLaskentaanSiirto = automaattinenLaskentaanSiirto;
+    public void setautomaattinenSijoitteluunSiirto(Boolean automaattinenSijoitteluunSiirto) {
+        this.automaattinenSijoitteluunSiirto = automaattinenSijoitteluunSiirto;
     }
 
     public Boolean getPoistetaankoHylatyt() {
@@ -228,7 +228,7 @@ public class ValintatapajonoCreateDTO {
                 ", tasapistesaanto=" + tasapistesaanto +
                 ", aktiivinen=" + aktiivinen +
                 ", valisijoittelu=" + valisijoittelu +
-                ", automaattinenLaskentaanSiirto=" + automaattinenLaskentaanSiirto +
+                ", automaattinenSijoitteluunSiirto=" + automaattinenSijoitteluunSiirto +
                 ", eiVarasijatayttoa=" + eiVarasijatayttoa +
                 ", kaikkiEhdonTayttavatHyvaksytaan=" + kaikkiEhdonTayttavatHyvaksytaan +
                 ", varasijat=" + varasijat +

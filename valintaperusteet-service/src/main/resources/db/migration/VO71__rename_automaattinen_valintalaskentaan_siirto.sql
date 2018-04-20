@@ -1,0 +1,1 @@
+alter table valintatapajono rename column automaattinen_laskentaan_siirto to automaattinen_sijoitteluun_siirto;

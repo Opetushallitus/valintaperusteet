@@ -16,8 +16,8 @@ public class ValintatapajonoKopioija implements Kopioija<Valintatapajono> {
         if (from.getAktiivinen() != null) {
             to.setAktiivinen(from.getAktiivinen());
         }
-        if (from.getAutomaattinenLaskentaanSiirto() != null) {
-            to.setAutomaattinenLaskentaanSiirto(from.getAutomaattinenLaskentaanSiirto());
+        if (from.getautomaattinenSijoitteluunSiirto() != null) {
+            to.setautomaattinenSijoitteluunSiirto(from.getautomaattinenSijoitteluunSiirto());
         }
         if (from.getValisijoittelu() != null) {
             to.setValisijoittelu(from.getValisijoittelu());
@@ -66,8 +66,8 @@ public class ValintatapajonoKopioija implements Kopioija<Valintatapajono> {
         if (kopio.getAktiivinen().equals(alkuperainenMaster.getAktiivinen())) {
             kopio.setAktiivinen(paivitettyMaster.getAktiivinen());
         }
-        if (kopio.getAutomaattinenLaskentaanSiirto() == null || kopio.getAutomaattinenLaskentaanSiirto().equals(alkuperainenMaster.getAutomaattinenLaskentaanSiirto())) {
-            kopio.setAutomaattinenLaskentaanSiirto(paivitettyMaster.getAutomaattinenLaskentaanSiirto());
+        if (kopio.getautomaattinenSijoitteluunSiirto() == null || kopio.getautomaattinenSijoitteluunSiirto().equals(alkuperainenMaster.getautomaattinenSijoitteluunSiirto())) {
+            kopio.setautomaattinenSijoitteluunSiirto(paivitettyMaster.getautomaattinenSijoitteluunSiirto());
         }
         if (kopio.getValisijoittelu() == null || kopio.getValisijoittelu().equals(alkuperainenMaster.getValisijoittelu())) {
             kopio.setValisijoittelu(paivitettyMaster.getValisijoittelu());

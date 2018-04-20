@@ -241,13 +241,13 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
 
     @Override
     public Boolean readAutomaattinenSijoitteluunSiirto(String oid) {
-        return haeValintatapajono(oid).getAutomaattinenLaskentaanSiirto();
+        return haeValintatapajono(oid).getautomaattinenSijoitteluunSiirto();
     }
 
     @Override
     public Valintatapajono updateAutomaattinenSijoitteluunSiirto(String oid, Boolean value) {
         Valintatapajono valintatapajono = haeValintatapajono(oid);
-        valintatapajono.setAutomaattinenLaskentaanSiirto(value);
+        valintatapajono.setautomaattinenSijoitteluunSiirto(value);
         valintatapajonoDAO.update(valintatapajono);
         return valintatapajono;
     }

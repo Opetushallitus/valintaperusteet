@@ -54,13 +54,13 @@ public class ValinnanVaiheResourceTest {
     private ApplicationContext applicationContext;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         applicationContext.getAutowireCapableBeanFactory().autowireBean(vaiheResource);
         applicationContext.getAutowireCapableBeanFactory().autowireBean(hakuResource);
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
 
     }
 
@@ -230,7 +230,7 @@ public class ValinnanVaiheResourceTest {
         jono.setSiirretaanSijoitteluun(false);
         jono.setTasapistesaanto(fi.vm.sade.service.valintaperusteet.dto.model.Tasapistesaanto.ARVONTA);
         jono.setAktiivinen(true);
-        jono.setAutomaattinenLaskentaanSiirto(true);
+        jono.setautomaattinenSijoitteluunSiirto(true);
         jono.setValisijoittelu(false);
         return jono;
     }

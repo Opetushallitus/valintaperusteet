@@ -64,7 +64,7 @@ public class LuoValintaperusteetActorBean extends UntypedActor {
 
     }
 
-    public void onReceive(Object message) throws Exception {
+    public void onReceive(Object message) {
         if (message instanceof LuoValintaperuste) {
             LuoValintaperuste peruste = (LuoValintaperuste) message;
             String nimi = peruste.getHakukohdekoodi().getNimiFi();
@@ -122,7 +122,7 @@ public class LuoValintaperusteetActorBean extends UntypedActor {
             tx = transactionManager.getTransaction(new DefaultTransactionDefinition());
             ValintatapajonoDTO jono = new ValintatapajonoDTO();
             jono.setAktiivinen(true);
-            jono.setAutomaattinenLaskentaanSiirto(true);
+            jono.setautomaattinenSijoitteluunSiirto(true);
             jono.setValisijoittelu(false);
             jono.setAloituspaikat(0);
             jono.setKuvaus("Varsinaisen valinnanvaiheen valintatapajono");

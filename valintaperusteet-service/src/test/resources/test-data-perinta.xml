@@ -18,37 +18,37 @@
                      oid="2" aloituspaikat="18" nimi="Jono 2" poistetaanko_hylatyt="false"
                      kuvaus="kuvaus" tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="2"
                      aktiivinen="true" tyyppi="valintatapajono_kp"
-                     ei_varasijatayttoa="false" kaikki_ehdon_tayttavat_hyvaksytaan="false" valisijoittelu="true" automaattinen_laskentaan_siirto="true"/>
+                     ei_varasijatayttoa="false" kaikki_ehdon_tayttavat_hyvaksytaan="false" valisijoittelu="true" automaattinen_sijoitteluun_siirto="true"/>
 
     <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="3" version="0"
                      oid="3" aloituspaikat="18" nimi="Jono 2" poistetaanko_hylatyt="false"
                      kuvaus="kuvaus" tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="3"
                      aktiivinen="true" master_valintatapajono_id="2" tyyppi="valintatapajono_kp"
-                     ei_varasijatayttoa="false" kaikki_ehdon_tayttavat_hyvaksytaan="false" valisijoittelu="true" automaattinen_laskentaan_siirto="true"/>
+                     ei_varasijatayttoa="false" kaikki_ehdon_tayttavat_hyvaksytaan="false" valisijoittelu="true" automaattinen_sijoitteluun_siirto="true"/>
 
     <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="4" version="0"
                      oid="4" aloituspaikat="18" nimi="Täyttöjono" poistetaanko_hylatyt="false"
                      kuvaus="kuvaus" tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="2"
                      aktiivinen="true" edellinen_valintatapajono_id="2" tyyppi="valintatapajono_kp"
-                     ei_varasijatayttoa="false" kaikki_ehdon_tayttavat_hyvaksytaan="false" valisijoittelu="true" automaattinen_laskentaan_siirto="true"/>
+                     ei_varasijatayttoa="false" kaikki_ehdon_tayttavat_hyvaksytaan="false" valisijoittelu="true" automaattinen_sijoitteluun_siirto="true"/>
 
     <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="5" version="0"
                      oid="5" aloituspaikat="18" nimi="Täyttöjono" poistetaanko_hylatyt="false"
                      kuvaus="kuvaus" tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="3"
                      aktiivinen="true" master_valintatapajono_id="4" edellinen_valintatapajono_id="3" tyyppi="valintatapajono_kp"
-                     ei_varasijatayttoa="false" kaikki_ehdon_tayttavat_hyvaksytaan="false" valisijoittelu="true" automaattinen_laskentaan_siirto="true"/>
+                     ei_varasijatayttoa="false" kaikki_ehdon_tayttavat_hyvaksytaan="false" valisijoittelu="true" automaattinen_sijoitteluun_siirto="true"/>
 
     <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="6" version="0"
                      oid="6" aloituspaikat="18" nimi="Kolmas jono" poistetaanko_hylatyt="false"
                      kuvaus="kuvaus" tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="2"
                      aktiivinen="true" edellinen_valintatapajono_id="4" tyyppi="valintatapajono_kp"
-                     ei_varasijatayttoa="false" kaikki_ehdon_tayttavat_hyvaksytaan="false" valisijoittelu="true" automaattinen_laskentaan_siirto="true"/>
+                     ei_varasijatayttoa="false" kaikki_ehdon_tayttavat_hyvaksytaan="false" valisijoittelu="true" automaattinen_sijoitteluun_siirto="true"/>
 
     <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="7" version="0"
                      oid="7" aloituspaikat="18" nimi="Kolmas jono" poistetaanko_hylatyt="false"
                      kuvaus="kuvaus" tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="3"
                      aktiivinen="true" master_valintatapajono_id="6" edellinen_valintatapajono_id="5" tyyppi="valintatapajono_kp"
-                     ei_varasijatayttoa="false" kaikki_ehdon_tayttavat_hyvaksytaan="false" valisijoittelu="true" automaattinen_laskentaan_siirto="true"/>
+                     ei_varasijatayttoa="false" kaikki_ehdon_tayttavat_hyvaksytaan="false" valisijoittelu="true" automaattinen_sijoitteluun_siirto="true"/>
 
     <valintaryhma id="2" version="0" oid="oid2" nimi="Valintaryhma 2" parent_id="[NULL]" />
 

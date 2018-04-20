@@ -61,7 +61,7 @@ public class ValintatapajonoServiceTest {
     SecurityContextHolder securityContextHolder;
 
     @Test
-    public void testFindJonoByValinnanvaihe() throws Exception {
+    public void testFindJonoByValinnanvaihe() {
         List<Valintatapajono> valintatapajonoByValinnanvaihe = valintatapajonoService.findJonoByValinnanvaihe("1");
 
         assertEquals(5, valintatapajonoByValinnanvaihe.size());
@@ -125,7 +125,7 @@ public class ValintatapajonoServiceTest {
 
         ValintatapajonoCreateDTO uusiJono = new ValintatapajonoCreateDTO();
         uusiJono.setAktiivinen(true);
-        uusiJono.setAutomaattinenLaskentaanSiirto(true);
+        uusiJono.setautomaattinenSijoitteluunSiirto(true);
         uusiJono.setValisijoittelu(false);
         uusiJono.setAloituspaikat(15);
         uusiJono.setKuvaus("uusi kuvaus");
@@ -198,7 +198,7 @@ public class ValintatapajonoServiceTest {
 
         ValintatapajonoCreateDTO uusiJono = new ValintatapajonoCreateDTO();
         uusiJono.setAktiivinen(true);
-        uusiJono.setAutomaattinenLaskentaanSiirto(true);
+        uusiJono.setautomaattinenSijoitteluunSiirto(true);
         uusiJono.setValisijoittelu(false);
         uusiJono.setAloituspaikat(15);
         uusiJono.setKuvaus("uusi kuvaus");
@@ -232,7 +232,7 @@ public class ValintatapajonoServiceTest {
 
         ValintatapajonoCreateDTO uusiJono = new ValintatapajonoCreateDTO();
         uusiJono.setAktiivinen(true);
-        uusiJono.setAutomaattinenLaskentaanSiirto(true);
+        uusiJono.setautomaattinenSijoitteluunSiirto(true);
         uusiJono.setValisijoittelu(false);
         uusiJono.setAloituspaikat(15);
         uusiJono.setKuvaus("uusi kuvaus");
@@ -411,7 +411,7 @@ public class ValintatapajonoServiceTest {
 
         ValintatapajonoCreateDTO paivitys = new ValintatapajonoCreateDTO();
         paivitys.setAktiivinen(true);
-        paivitys.setAutomaattinenLaskentaanSiirto(true);
+        paivitys.setautomaattinenSijoitteluunSiirto(true);
         paivitys.setValisijoittelu(false);
         paivitys.setNimi(uusiNimi);
         paivitys.setKuvaus(uusiKuvaus);
@@ -474,7 +474,7 @@ public class ValintatapajonoServiceTest {
 
         ValintatapajonoCreateDTO uusiJono = new ValintatapajonoCreateDTO();
         uusiJono.setAktiivinen(true);
-        uusiJono.setAutomaattinenLaskentaanSiirto(true);
+        uusiJono.setautomaattinenSijoitteluunSiirto(true);
         uusiJono.setValisijoittelu(false);
         uusiJono.setAloituspaikat(15);
         uusiJono.setKuvaus("uusi kuvaus");
@@ -529,7 +529,7 @@ public class ValintatapajonoServiceTest {
     }
 
     @Test
-    public void testUpdateSijoiteltuJono() throws Exception {
+    public void testUpdateSijoiteltuJono() {
         final String valintatapajonoOid = "26";
         Valintatapajono jono26L = valintatapajonoService.readByOid(valintatapajonoOid);
         //when(mockVtsRestClient.isJonoSijoiteltu(anyString())).thenReturn(true);
@@ -569,7 +569,7 @@ public class ValintatapajonoServiceTest {
 
     @Test
     @WithMockUser(username="admin",authorities = "${root.organisaatio.oid}")
-    public void testUpdateSijoiteltuJonoWithOPHUser() throws Exception {
+    public void testUpdateSijoiteltuJonoWithOPHUser() {
         final String valintatapajonoOid = "26";
         Valintatapajono jono26L = valintatapajonoService.readByOid(valintatapajonoOid);
         //when(mockVtsRestClient.isJonoSijoiteltu(anyString())).thenReturn(true);
@@ -594,7 +594,7 @@ public class ValintatapajonoServiceTest {
 
         ValintatapajonoCreateDTO jono = new ValintatapajonoCreateDTO();
         jono.setAktiivinen(true);
-        jono.setAutomaattinenLaskentaanSiirto(true);
+        jono.setautomaattinenSijoitteluunSiirto(true);
         jono.setValisijoittelu(false);
         jono.setAloituspaikat(10);
         jono.setKuvaus("kuvaus");

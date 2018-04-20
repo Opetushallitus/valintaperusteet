@@ -179,7 +179,7 @@ public class ValintatapajonoResourceImpl {
                     .add("prioriteetti", update.getPrioriteetti())
                     .add("aktiivinen", update.getAktiivinen())
                     .add("aloituspaikat", update.getAloituspaikat())
-                    .add("automaattinenlaskentaansiirto", update.getAutomaattinenLaskentaanSiirto())
+                    .add("automaattinenSijoitteluunSiirto", update.getautomaattinenSijoitteluunSiirto())
                     .add("eivarasijatayttoa", update.getEiVarasijatayttoa())
                     .add("kaikkiehdontayttavathyvaksytaan", update.getKaikkiEhdonTayttavatHyvaksytaan())
                     .add("kaytetaanvalintalaskentaa", update.getKaytetaanValintalaskentaa())
@@ -214,8 +214,7 @@ public class ValintatapajonoResourceImpl {
     @ApiOperation(value = "Lisää järjestyskriteerin valintatapajonolle")
     public Response insertJarjestyskriteeri(
             @ApiParam(value = "Valintatapajonon OID, jolle järjestyskriteeri lisätään", required = true) @PathParam("valintatapajonoOid") String valintatapajonoOid,
-            @ApiParam(value = "Järjestyskriteeri ja laskentakaavaviite", required = true) JarjestyskriteeriInsertDTO jk)
-            throws IOException {
+            @ApiParam(value = "Järjestyskriteeri ja laskentakaavaviite", required = true) JarjestyskriteeriInsertDTO jk) {
         JarjestyskriteeriDTO insert = modelMapper.map(jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(valintatapajonoOid, jk.getJarjestyskriteeri(), null, jk.getLaskentakaavaId()), JarjestyskriteeriDTO.class);
         AUDIT.log(builder()
                 .id(username())

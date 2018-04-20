@@ -6,7 +6,7 @@ public abstract class ValintatapajonoUtil {
     public static Valintatapajono teeKopioMasterista(Valintatapajono master, JuureenKopiointiCache kopiointiCache) {
         Valintatapajono kopio = new Valintatapajono();
         kopio.setAktiivinen(master.getAktiivinen());
-        kopio.setAutomaattinenLaskentaanSiirto(master.getAutomaattinenLaskentaanSiirto());
+        kopio.setautomaattinenSijoitteluunSiirto(master.getautomaattinenSijoitteluunSiirto());
         kopio.setValisijoittelu(master.getValisijoittelu());
         kopio.setAloituspaikat(master.getAloituspaikat());
         kopio.setKuvaus(master.getKuvaus());

@@ -44,8 +44,8 @@ public class Valintatapajono extends BaseEntity implements LinkitettavaJaKopioit
     @Column(name = "valisijoittelu", nullable = false)
     private Boolean valisijoittelu = false;
 
-    @Column(name = "automaattinen_laskentaan_siirto", nullable = false)
-    private Boolean automaattinenLaskentaanSiirto = false;
+    @Column(name = "automaattinen_sijoitteluun_siirto", nullable = false)
+    private Boolean automaattinenSijoitteluunSiirto = false;
 
     @Column(name = "ei_varasijatayttoa", nullable = false)
     private Boolean eiVarasijatayttoa = false;
@@ -364,12 +364,12 @@ public class Valintatapajono extends BaseEntity implements LinkitettavaJaKopioit
         this.valisijoittelu = valisijoittelu;
     }
 
-    public Boolean getAutomaattinenLaskentaanSiirto() {
-        return automaattinenLaskentaanSiirto;
+    public Boolean getautomaattinenSijoitteluunSiirto() {
+        return automaattinenSijoitteluunSiirto;
     }
 
-    public void setAutomaattinenLaskentaanSiirto(Boolean automaattinenLaskentaanSiirto) {
-        this.automaattinenLaskentaanSiirto = automaattinenLaskentaanSiirto;
+    public void setautomaattinenSijoitteluunSiirto(Boolean automaattinenSijoitteluunSiirto) {
+        this.automaattinenSijoitteluunSiirto = automaattinenSijoitteluunSiirto;
     }
 
     public boolean isPoistetaankoHylatyt() {
