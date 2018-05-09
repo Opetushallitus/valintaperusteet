@@ -87,6 +87,7 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Map<String, List<String>> findKopiot(List<String> oidit) {
         Map<String, List<String>> jonot = new ConcurrentHashMap<>();
         oidit.forEach(oid -> {
