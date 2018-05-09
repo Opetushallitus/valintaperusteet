@@ -117,15 +117,22 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
                     // Muodostetaan map
                     LOGGER.info("löydettiin valintaryhmälle {} (oid {}) {} hakukohdeviitettä", ryhma.get().getNimi(), ryhma.get().getOid(), viitteet.size());
                     viitteet.parallelStream().forEach(viite -> {
-                        viite.getValinnanvaiheet().stream().filter(ValinnanVaihe::getAktiivinen).forEach(vaihe -> {
-                            vaihe.getJonot().stream().forEach(j -> {
-                                if (kopiot.contains(j.getOid())) {
-                                    List<String> lista = jonot.getOrDefault(viite.getOid(), new ArrayList<>());
-                                    lista.add(j.getOid());
-                                    jonot.put(viite.getOid(), lista);
-                                }
+                        try {
+                            viite.getValinnanvaiheet().stream().filter(ValinnanVaihe::getAktiivinen).forEach(vaihe -> {
+                                vaihe.getJonot().stream().forEach(j -> {
+                                    if (kopiot.contains(j.getOid())) {
+                                        List<String> lista = jonot.getOrDefault(viite.getOid(), new ArrayList<>());
+                                        lista.add(j.getOid());
+                                        jonot.put(viite.getOid(), lista);
+                                    }
+                                });
                             });
-                        });
+                        } catch (Exception e) {
+                            LOGGER.error("Odottamaton poikkeus käsiteltäessä hakukohdeviitettä " + viite, e);
+                            LOGGER.error(String.format("Odottamaton poikkeus käsiteltäessä hakukohdeviitettä %s (%s)",
+                                viite.getOid(), viite.getNimi()), e);
+                            throw e;
+                        }
                     });
                 } else {
                     LOGGER.info("jonolle {} ei löytynyt valintaryhmää. Haetaan hakukohdeviite", master.getOid());
