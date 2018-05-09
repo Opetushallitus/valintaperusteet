@@ -64,7 +64,7 @@ public class ValintalaskentakoostepalveluResourceImpl {
             return valintatapajonoService.findKopiot(oid);
         } catch (Exception e) {
             LOG.error("Virhe valintatapajonojen kopioiden hakemisessa!", e);
-            return new HashMap<>();
+            throw e;
         }
     }
 
