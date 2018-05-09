@@ -112,9 +112,10 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
                 }
                 Optional<Valintaryhma> ryhma = Optional.ofNullable(master.getValinnanVaihe().getValintaryhma());
                 if (ryhma.isPresent()) {
-                    LOGGER.info("löydettiin valintaryhmä {} jonolle {}", ryhma.get().getNimi(), master.getOid());
+                    LOGGER.info("löydettiin valintaryhmä {} (oid {}) jonolle {}", ryhma.get().getNimi(), ryhma.get().getOid(), master.getOid());
                     List<HakukohdeViite> viitteet = hakukohdeDao.findByValintaryhmaOidForValisijoittelu(ryhma.get().getOid());
                     // Muodostetaan map
+                    LOGGER.info("löydettiin valintaryhmälle {} (oid {}) {} hakukohdeviitettä", ryhma.get().getNimi(), ryhma.get().getOid(), viitteet.size());
                     viitteet.parallelStream().forEach(viite -> {
                         viite.getValinnanvaiheet().stream().filter(ValinnanVaihe::getAktiivinen).forEach(vaihe -> {
                             vaihe.getJonot().stream().forEach(j -> {
