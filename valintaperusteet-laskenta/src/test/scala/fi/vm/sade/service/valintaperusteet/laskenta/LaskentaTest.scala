@@ -71,6 +71,20 @@ class LaskentaTest extends FunSuite {
     }}
   )
 
+  val mustacheMapEN: util.Map[String,String] = new util.HashMap[String, String](){{
+    put("ARVO", "L")
+    put("PISTEET", "29")
+    put("SUORITUSVUOSI", "2012")
+    put("SUORITUSLUKUKAUSI", "1")
+  }}
+
+  val mustacheMapTT: util.Map[String,String] = new util.HashMap[String, String](){{
+    put("ARVO", "L")
+    put("PISTEET", "29")
+    put("SUORITUSVUOSI", "2012")
+    put("SUORITUSLUKUKAUSI", "2")
+  }}
+
   val mustacheMapPS = new util.HashMap[String, String](){{
     put("ARVO", "L")
   }}
@@ -119,6 +133,8 @@ class LaskentaTest extends FunSuite {
     put("REAALI", util.Arrays.asList(mustacheMapREAALI))
     put("HI", util.Arrays.asList(mustacheMapHI))
     put("01", mustacheMap01)
+    put("EN", util.Arrays.asList(mustacheMapEN))
+    put("TT", util.Arrays.asList(mustacheMapTT))
   }}
 
 
@@ -1254,7 +1270,7 @@ class LaskentaTest extends FunSuite {
     assertTilaHyvaksyttavissa(yliTila)
   }
 
-  private def createHaeYoArvosanaKutsu(aine: String, pakollinen: Boolean = false): Funktiokutsu = {
+  private def createHaeYoArvosanaKutsu(aine: String, pakollinen: Boolean = false, alkukausi: String = "1", loppukausi: String = "2"): Funktiokutsu = {
 
     val viite: ValintaperusteViite = new ValintaperusteViite
     viite.setTunniste(aine)
@@ -1306,11 +1322,11 @@ class LaskentaTest extends FunSuite {
 
     val syoteparametri5: Syoteparametri = new Syoteparametri
     syoteparametri5.setAvain("alkulukukausi")
-    syoteparametri5.setArvo("1")
+    syoteparametri5.setArvo(alkukausi)
 
     val syoteparametri6: Syoteparametri = new Syoteparametri
     syoteparametri6.setAvain("loppulukukausi")
-    syoteparametri6.setArvo("2")
+    syoteparametri6.setArvo(loppukausi)
 
     kutsu.getSyoteparametrit.add(syoteparametri)
     kutsu.getSyoteparametrit.add(syoteparametri2)
@@ -1339,7 +1355,7 @@ class LaskentaTest extends FunSuite {
     assert(tila.getTilatyyppi == Tilatyyppi.HYVAKSYTTAVISSA)
   }
 
-  test("HaeYoArvosana: suoritus, jolla validi arvo, mutta ei vuotta ja kautta filtteröidään pois -> palauttaa hylätty &  0 pistettä, jos ei pakollinen") {
+  test("HaeYoArvosana: suoritus, jolla validi arvo, mutta ei vuotta ja kautta filtteröidään pois -> palauttaa hylätty &  0 pistettä, jos pakollinen") {
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeYoArvosanaKutsu("PS", true))
     val (tulos, tila) = Laskin.laske(hakukohde, hakemusMustache, lasku)
     assert(BigDecimal(tulos.get) == BigDecimal("0.0"))
@@ -1391,6 +1407,22 @@ class LaskentaTest extends FunSuite {
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(kutsu)
     val (tulos, _) = Laskin.laske(hakukohde, hakemusMustache, lasku)
     assert(BigDecimal(tulos.get) == BigDecimal("0.0"))
+  }
+
+  test("HaeYoArvosana: alkukausi 2 ei filtteröi kevään suorituksia väliltä pois") {
+    val kutsu = createHaeYoArvosanaKutsu("EN", false, "2")
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(kutsu)
+
+    val (tulos, _) = Laskin.laske(hakukohde, hakemusMustache, lasku)
+    assert(BigDecimal(tulos.get) == BigDecimal("5"))
+  }
+
+  test("HaeYoArvosana: loppukausi 1 ei filtteröi syksyn suorituksia väliltä pois") {
+    val kutsu = createHaeYoArvosanaKutsu("TT", false, "1", "1")
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(kutsu)
+
+    val (tulos, _) = Laskin.laske(hakukohde, hakemusMustache, lasku)
+    assert(BigDecimal(tulos.get) == BigDecimal("5"))
   }
 
   private def createHaeOsakoeArvosanaKutsu(aine: String, pakollinen: Boolean = false): Funktiokutsu = {
