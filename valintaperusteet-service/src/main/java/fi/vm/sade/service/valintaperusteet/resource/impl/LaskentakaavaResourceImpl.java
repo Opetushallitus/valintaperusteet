@@ -208,7 +208,7 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
     public Response siirra(LaskentakaavaSiirraDTO dto, @Context HttpServletRequest request) {
         Optional<Laskentakaava> siirretty = laskentakaavaService.siirra(dto);
         return siirretty.map(kaava -> {
-            AuditLog.log(ValintaperusteetAudit.AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.LASKENTAKAAVA_SIIRTO, ValintaResource.LASKENTAKAAVA, Long.toString(kaava.getId()), Changes.addedDto(siirretty.get()), null);
+            AuditLog.log(ValintaperusteetAudit.AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.LASKENTAKAAVA_SIIRTO, ValintaResource.LASKENTAKAAVA, Long.toString(kaava.getId()), Changes.addedDto(siirretty.get()));
             return Response.status(Response.Status.ACCEPTED).entity(modelMapper.map(kaava, LaskentakaavaDTO.class)).build();
         })
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
@@ -233,7 +233,7 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response poista(@PathParam("id") Long id, @Context HttpServletRequest request) {
         boolean poistettu = laskentakaavaService.poista(id);
-        AuditLog.log(ValintaperusteetAudit.AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.LASKENTAKAAVA_POISTO, ValintaResource.LASKENTAKAAVA, id.toString(), Changes.EMPTY, null);
+        AuditLog.log(ValintaperusteetAudit.AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.LASKENTAKAAVA_POISTO, ValintaResource.LASKENTAKAAVA, id.toString(), Changes.EMPTY);
         if (poistettu) {
             // Kaava poistettu, poistetaan orvot
             actorService.runOnce();
