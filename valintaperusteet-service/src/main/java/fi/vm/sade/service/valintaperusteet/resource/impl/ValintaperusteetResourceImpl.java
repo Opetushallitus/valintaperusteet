@@ -2,6 +2,7 @@ package fi.vm.sade.service.valintaperusteet.resource.impl;
 
 import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.AUDIT;
 
+import fi.vm.sade.auditlog.Changes;
 import fi.vm.sade.service.valintaperusteet.dto.HakukohdeImportDTO;
 import fi.vm.sade.service.valintaperusteet.dto.HakuparametritDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteetDTO;
@@ -177,7 +178,7 @@ public class ValintaperusteetResourceImpl implements ValintaperusteetResource {
     public ValintatapajonoDTO updateAutomaattinenSijoitteluunSiirto(@PathParam("oid") String oid, Boolean arvo, @Context HttpServletRequest request) {
         ValintatapajonoDTO beforeUpdate = modelMapper.map(valintatapajonoService.readByOid(oid), ValintatapajonoDTO.class);
         ValintatapajonoDTO afterUpdate = modelMapper.map(valintatapajonoService.updateAutomaattinenSijoitteluunSiirto(oid, arvo), ValintatapajonoDTO.class);
-        AuditLog.log(AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.AUTOMAATTISEN_SIJOITTELUN_SIIRRON_PAIVITYS, ValintaResource.VALINTAPERUSTEET, oid, afterUpdate, beforeUpdate);
+        AuditLog.log(AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.AUTOMAATTISEN_SIJOITTELUN_SIIRRON_PAIVITYS, ValintaResource.VALINTAPERUSTEET, oid, Changes.updatedDto(afterUpdate, beforeUpdate));
         return modelMapper.map(afterUpdate, ValintatapajonoDTO.class);
     }
 }

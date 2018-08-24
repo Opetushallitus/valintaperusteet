@@ -5,6 +5,7 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPD
 import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.toNullsafeString;
 import com.google.common.collect.ImmutableMap;
 
+import fi.vm.sade.auditlog.Changes;
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
@@ -91,7 +92,7 @@ public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValint
         try {
             HakijaryhmaValintatapajonoDTO hakijaryhmaValintatapajonoDTO = modelMapper.map(hakijaryhmaValintatapajonoService.readByOid(oid), HakijaryhmaValintatapajonoDTO.class);
             hakijaryhmaValintatapajonoService.deleteByOid(oid, false);
-            AuditLog.log(ValintaperusteetAudit.AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.HAKIJARYHMA_VALINTATAPAJONO_LIITOS_POISTO, ValintaResource.HAKIJARYHMA_VALINTATAPAJONO, oid, null, hakijaryhmaValintatapajonoDTO);
+            AuditLog.log(ValintaperusteetAudit.AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.HAKIJARYHMA_VALINTATAPAJONO_LIITOS_POISTO, ValintaResource.HAKIJARYHMA_VALINTATAPAJONO, oid, Changes.deleteDto(hakijaryhmaValintatapajonoDTO));
             return Response.status(Response.Status.OK).build();
         } catch (HakijaryhmaaEiVoiPoistaaException e) {
             throw new WebApplicationException(e, Response.Status.FORBIDDEN);
@@ -117,7 +118,7 @@ public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValint
         try {
             HakijaryhmaValintatapajonoDTO beforeUpdate = modelMapper.map(hakijaryhmaValintatapajonoService.readByOid(oid), HakijaryhmaValintatapajonoDTO.class);
             HakijaryhmaValintatapajonoDTO afterUpdate = modelMapper.map(hakijaryhmaValintatapajonoService.update(oid, jono), HakijaryhmaValintatapajonoDTO.class);
-            AuditLog.log(ValintaperusteetAudit.AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.HAKIJARYHMA_VALINTATAPAJONO_LIITOS_PAIVITYS, ValintaResource.HAKIJARYHMA_VALINTATAPAJONO, oid, afterUpdate, beforeUpdate);
+            AuditLog.log(ValintaperusteetAudit.AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.HAKIJARYHMA_VALINTATAPAJONO_LIITOS_PAIVITYS, ValintaResource.HAKIJARYHMA_VALINTATAPAJONO, oid, Changes.updatedDto(afterUpdate, beforeUpdate));
             return Response.status(Response.Status.ACCEPTED).entity(afterUpdate).build();
         } catch (HakijaryhmaEiOleOlemassaException e) {
             throw new WebApplicationException(e, Response.Status.NOT_FOUND);
@@ -139,7 +140,7 @@ public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValint
             targetOid = jarjestetytHakijaryhmat.get(0).getHakukohdeViite().getOid(); }
         Map<String, String> sortedOids = ImmutableMap.of("Oid-järjestys", toNullsafeString(oids));
         AuditLog.log(ValintaperusteetAudit.AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.VALINTATAPAJONO_HAKIJARYHMAT_JARJESTA,
-            ValintaResource.HAKIJARYHMA_VALINTATAPAJONO, targetOid, null, null, sortedOids);
+            ValintaResource.HAKIJARYHMA_VALINTATAPAJONO, targetOid, Changes.EMPTY, sortedOids);
         return modelMapper.mapList(jarjestetytHakijaryhmat, HakijaryhmaValintatapajonoDTO.class);
     }
 }

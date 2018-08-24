@@ -6,6 +6,7 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPD
 import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.toNullsafeString;
 import com.google.common.collect.ImmutableMap;
 
+import fi.vm.sade.auditlog.Changes;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriDTO;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriInsertDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
@@ -82,7 +83,7 @@ public class JarjestyskriteeriResourceImpl implements JarjestyskriteeriResource 
         try {
             JarjestyskriteeriDTO old = modelMapper.map(jarjestyskriteeriService.readByOid(oid), JarjestyskriteeriDTO.class);
             JarjestyskriteeriDTO update = modelMapper.map(jarjestyskriteeriService.update(oid, jk.getJarjestyskriteeri(), jk.getLaskentakaavaId()), JarjestyskriteeriDTO.class);
-            AuditLog.log(ValintaperusteetAudit.AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.JARJESTYSKRITEERI_PAIVITYS, ValintaResource.JARJESTYSKRITEERIT, oid, update, old);
+            AuditLog.log(ValintaperusteetAudit.AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.JARJESTYSKRITEERI_PAIVITYS, ValintaResource.JARJESTYSKRITEERIT, oid, Changes.updatedDto(update, old));
             return Response.status(Response.Status.ACCEPTED).entity(update).build();
         } catch (LaskentakaavaOidTyhjaException e) {
             throw new WebApplicationException(e, Response.Status.BAD_REQUEST);
@@ -98,7 +99,7 @@ public class JarjestyskriteeriResourceImpl implements JarjestyskriteeriResource 
         try {
             JarjestyskriteeriDTO old = modelMapper.map(jarjestyskriteeriService.readByOid(oid), JarjestyskriteeriDTO.class);
             jarjestyskriteeriService.deleteByOid(oid);
-            AuditLog.log(ValintaperusteetAudit.AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.JARJESTYSKRITEERI_POISTO, ValintaResource.JARJESTYSKRITEERIT, oid, null, old);
+            AuditLog.log(ValintaperusteetAudit.AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.JARJESTYSKRITEERI_POISTO, ValintaResource.JARJESTYSKRITEERIT, oid, Changes.deleteDto(old));
             return Response.status(Response.Status.ACCEPTED).build();
         } catch (JarjestyskriteeriaEiVoiPoistaaException e) {
             throw new WebApplicationException(e, Response.Status.FORBIDDEN);
@@ -115,7 +116,7 @@ public class JarjestyskriteeriResourceImpl implements JarjestyskriteeriResource 
         List<Jarjestyskriteeri> jks = jarjestyskriteeriService.jarjestaKriteerit(oids);
 
         Map<String,String> additionalInfo = ImmutableMap.of("Uusi järjestys", toNullsafeString(oids));
-        AuditLog.log(ValintaperusteetAudit.AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.JARJESTYSKRITEERIT_JARJESTA, ValintaResource.JARJESTYSKRITEERIT, null, null, null, additionalInfo);
+        AuditLog.log(ValintaperusteetAudit.AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.JARJESTYSKRITEERIT_JARJESTA, ValintaResource.JARJESTYSKRITEERIT, null, Changes.EMPTY, additionalInfo);
 
         return modelMapper.mapList(jks, JarjestyskriteeriDTO.class);
     }

@@ -7,6 +7,7 @@ import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.AUD
 import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.toNullsafeString;
 import com.google.common.collect.ImmutableMap;
 
+import fi.vm.sade.auditlog.Changes;
 import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheJaValintatapajonoDTO;
@@ -133,7 +134,7 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
             @Context HttpServletRequest request) {
         try {
             ValintatapajonoDTO inserted = modelMapper.map(jonoService.lisaaValintatapajonoValinnanVaiheelle(parentOid, jono, null), ValintatapajonoDTO.class);
-            AuditLog.log(AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.VALINNANVAIHE_LISAYS_VALINTATAPAJONO, ValintaResource.VALINNANVAIHE, parentOid, inserted, null);
+            AuditLog.log(AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.VALINNANVAIHE_LISAYS_VALINTATAPAJONO, ValintaResource.VALINNANVAIHE, parentOid, Changes.addedDto(inserted));
             return Response.status(Response.Status.CREATED).entity(inserted).build();
         } catch (Exception e) {
             LOGGER.error("error in addJonoToValinnanVaihe", e);
@@ -153,7 +154,7 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
             @Context HttpServletRequest request) {
         try {
             ValintakoeDTO valintakoe = modelMapper.map(valintakoeService.lisaaValintakoeValinnanVaiheelle(parentOid, koe), ValintakoeDTO.class);
-            AuditLog.log(AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.VALINNANVAIHE_LISAYS_VALINTAKOE, ValintaResource.VALINNANVAIHE, parentOid, valintakoe, null);
+            AuditLog.log(AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.VALINNANVAIHE_LISAYS_VALINTAKOE, ValintaResource.VALINNANVAIHE, parentOid, Changes.addedDto(valintakoe));
             return Response.status(Response.Status.CREATED).entity(valintakoe).build();
         } catch (Exception e) {
             LOGGER.error("error in addValintakoeToValinnanVaihe", e);
@@ -173,7 +174,7 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
             @Context HttpServletRequest request) {
         ValinnanVaiheDTO vanhaVV = modelMapper.map(valinnanVaiheService.readByOid(oid), ValinnanVaiheDTO.class);
         ValinnanVaiheDTO uusiVV = modelMapper.map(valinnanVaiheService.update(oid, valinnanVaihe), ValinnanVaiheDTO.class);
-        AuditLog.log(AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.VALINNANVAIHE_PAIVITYS, ValintaResource.VALINNANVAIHE, oid, uusiVV, vanhaVV);
+        AuditLog.log(AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.VALINNANVAIHE_PAIVITYS, ValintaResource.VALINNANVAIHE, oid, Changes.updatedDto(uusiVV, vanhaVV));
         return uusiVV;
     }
 
@@ -186,7 +187,7 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
     public List<ValinnanVaiheDTO> jarjesta(@ApiParam(value = "Valinnan vaiheiden uusi järjestys", required = true) List<String> oids, @Context HttpServletRequest request) {
         List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheService.jarjestaValinnanVaiheet(oids);
         Map<String, String> additionalInfo = ImmutableMap.of("valinnanvaiheoids", toNullsafeString(oids));
-        AuditLog.log(AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.VALINNANVAIHE_JARJESTA, ValintaResource.VALINNANVAIHE, null, null, null, additionalInfo);
+        AuditLog.log(AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.VALINNANVAIHE_JARJESTA, ValintaResource.VALINNANVAIHE, null, Changes.EMPTY, additionalInfo);
         return modelMapper.mapList(valinnanVaiheet, ValinnanVaiheDTO.class);
     }
 
@@ -202,7 +203,7 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
         try {
             ValinnanVaiheDTO old = modelMapper.map(valinnanVaiheService.readByOid(oid), ValinnanVaiheDTO.class);
             valinnanVaiheService.deleteByOid(oid);
-            AuditLog.log(AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.VALINNANVAIHE_POISTO, ValintaResource.VALINNANVAIHE, oid, null, old);
+            AuditLog.log(AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.VALINNANVAIHE_POISTO, ValintaResource.VALINNANVAIHE, oid,  Changes.deleteDto(old));
             return Response.status(Response.Status.ACCEPTED).build();
         } catch (ValinnanVaiheEiOleOlemassaException e) {
             throw new WebApplicationException(e, Response.Status.NOT_FOUND);
