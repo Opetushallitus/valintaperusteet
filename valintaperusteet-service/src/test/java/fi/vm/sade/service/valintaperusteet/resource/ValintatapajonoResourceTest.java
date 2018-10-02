@@ -1,12 +1,5 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriDTO;
@@ -29,7 +22,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.Primary;
-import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -37,11 +29,17 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Created with IntelliJ IDEA.
@@ -72,6 +70,8 @@ public class ValintatapajonoResourceTest {
     @Test
     public void testUpdate() throws Exception {
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        HttpSession session = Mockito.mock(HttpSession.class);
+        Mockito.when(request.getSession(false)).thenReturn(session);
 
         ValintatapajonoDTO jono = resource.readByOid("1");
         jono.setNimi("muokattu");
@@ -110,6 +110,8 @@ public class ValintatapajonoResourceTest {
     @Test
     public void testDeleteInherited() {
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        HttpSession session = Mockito.mock(HttpSession.class);
+        Mockito.when(request.getSession(false)).thenReturn(session);
 
         ValintatapajonoDTO valintatapajono = resource.readByOid("27");
         assertNotNull(valintatapajono);
@@ -126,6 +128,8 @@ public class ValintatapajonoResourceTest {
     @Test
     public void testChildrenAreDeleted() {
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        HttpSession session = Mockito.mock(HttpSession.class);
+        Mockito.when(request.getSession(false)).thenReturn(session);
 
         ValintatapajonoDTO valintatapajono = resource.readByOid("30");
         assertNotNull(valintatapajono);
@@ -143,6 +147,8 @@ public class ValintatapajonoResourceTest {
     @Test
     public void testDelete() {
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        HttpSession session = Mockito.mock(HttpSession.class);
+        Mockito.when(request.getSession(false)).thenReturn(session);
 
         Response delete = resource.delete("12", request);
         assertEquals(Response.Status.ACCEPTED.getStatusCode(), delete.getStatus());
@@ -151,6 +157,8 @@ public class ValintatapajonoResourceTest {
     @Test
     public void testInsertJK() throws Exception {
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        HttpSession session = Mockito.mock(HttpSession.class);
+        Mockito.when(request.getSession(false)).thenReturn(session);
 
         JarjestyskriteeriCreateDTO jk = new JarjestyskriteeriCreateDTO();
         jk.setMetatiedot("mt1");
@@ -172,6 +180,8 @@ public class ValintatapajonoResourceTest {
     @Test
     public void testJarjesta() {
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        HttpSession session = Mockito.mock(HttpSession.class);
+        Mockito.when(request.getSession(false)).thenReturn(session);
 
         List<ValintatapajonoDTO> valintatapajonoList = vaiheResource.listJonos("1");
         List<String> oids = new ArrayList<String>();
@@ -184,7 +194,7 @@ public class ValintatapajonoResourceTest {
         assertEquals("5", oids.get(4));
         Collections.reverse(oids);
 
-        List<ValintatapajonoDTO> jarjesta = resource.jarjesta(oids, new MockHttpServletRequest());
+        List<ValintatapajonoDTO> jarjesta = resource.jarjesta(oids, request);
         assertEquals("5", jarjesta.get(0).getOid());
         assertEquals("1", jarjesta.get(4).getOid());
 

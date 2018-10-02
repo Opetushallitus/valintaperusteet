@@ -26,6 +26,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
@@ -79,6 +80,8 @@ public class ValinnanVaiheResourceTest {
     @Test
     public void testUpdate() throws IOException {
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        HttpSession session = Mockito.mock(HttpSession.class);
+        Mockito.when(request.getSession(false)).thenReturn(session);
 
         ValinnanVaiheDTO vaihe = vaiheResource.read("1");
 
@@ -89,6 +92,8 @@ public class ValinnanVaiheResourceTest {
     @Test
     public void testInsertValintatapajono() {
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        HttpSession session = Mockito.mock(HttpSession.class);
+        Mockito.when(request.getSession(false)).thenReturn(session);
 
         ValintatapajonoDTO jono = new ValintatapajonoDTO();
         Response insert = vaiheResource.addJonoToValinnanVaihe("1", jono, request);
@@ -102,6 +107,8 @@ public class ValinnanVaiheResourceTest {
     @Test
     public void testInsertValintakoe() {
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        HttpSession session = Mockito.mock(HttpSession.class);
+        Mockito.when(request.getSession(false)).thenReturn(session);
 
         final String valinnanVaiheOid = "83";
         final Long laskentakaavaId = 101L;
@@ -144,6 +151,8 @@ public class ValinnanVaiheResourceTest {
     @Test
     public void testDelete() {
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        HttpSession session = Mockito.mock(HttpSession.class);
+        Mockito.when(request.getSession(false)).thenReturn(session);
         Response delete = vaiheResource.delete("4", request);
         assertEquals(Response.Status.ACCEPTED.getStatusCode(), delete.getStatus());
     }
@@ -166,6 +175,8 @@ public class ValinnanVaiheResourceTest {
     @Test
     public void testDeleteInherited() {
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        HttpSession session = Mockito.mock(HttpSession.class);
+        Mockito.when(request.getSession(false)).thenReturn(session);
         ValinnanVaiheDTO read = vaiheResource.read("32");
 
         assertNotNull(read);
@@ -183,6 +194,8 @@ public class ValinnanVaiheResourceTest {
     @Test
     public void testChildrenAreDeleted() {
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        HttpSession session = Mockito.mock(HttpSession.class);
+        Mockito.when(request.getSession(false)).thenReturn(session);
 
         ValinnanVaiheDTO read = vaiheResource.read("79");
 
@@ -202,6 +215,8 @@ public class ValinnanVaiheResourceTest {
     @Test
     public void testJarjesta() {
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        HttpSession session = Mockito.mock(HttpSession.class);
+        Mockito.when(request.getSession(false)).thenReturn(session);
 
         List<ValinnanVaiheDTO> valinnanVaiheList = hakuResource.valinnanVaihesForHakukohde("oid6", "false");
         List<String> oids = new ArrayList<String>();

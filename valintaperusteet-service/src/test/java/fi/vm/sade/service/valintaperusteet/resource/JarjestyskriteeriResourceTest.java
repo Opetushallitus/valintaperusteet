@@ -24,6 +24,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Arrays;
 import java.util.List;
 
@@ -63,6 +64,8 @@ public class JarjestyskriteeriResourceTest {
     @Test
     public void testUpdate() throws Exception {
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        HttpSession session = Mockito.mock(HttpSession.class);
+        Mockito.when(request.getSession(false)).thenReturn(session);
 
         JarjestyskriteeriDTO jk = resource.readByOid("1");
 
@@ -88,6 +91,8 @@ public class JarjestyskriteeriResourceTest {
 //        assertEquals(1, (int)jk.getPrioriteetti());
 
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        HttpSession session = Mockito.mock(HttpSession.class);
+        Mockito.when(request.getSession(false)).thenReturn(session);
 
         resource.delete("1", request);
         jk = jarjestyskriteeriDAO.readByOid("1");
@@ -97,6 +102,8 @@ public class JarjestyskriteeriResourceTest {
     @Test
     public void testJarjesta() throws Exception {
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        HttpSession session = Mockito.mock(HttpSession.class);
+        Mockito.when(request.getSession(false)).thenReturn(session);
 
         String[] uusiJarjestys = {"3203", "3202", "3201"};
         List<JarjestyskriteeriDTO> jarjestetty = resource.jarjesta(Arrays.asList(uusiJarjestys), request);

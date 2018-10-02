@@ -23,6 +23,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import static org.junit.Assert.*;
 
@@ -62,6 +63,8 @@ public class ValintakoeResourceTest {
     @Test
     public void testUpdate() {
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        HttpSession session = Mockito.mock(HttpSession.class);
+        Mockito.when(request.getSession(false)).thenReturn(session);
 
         final String oid = "oid1";
         final Long laskentakaavaId = 102L;
@@ -94,6 +97,8 @@ public class ValintakoeResourceTest {
     @Test
     public void testUpdateSetLaskentakaavaNull() {
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        HttpSession session = Mockito.mock(HttpSession.class);
+        Mockito.when(request.getSession(false)).thenReturn(session);
 
         final String oid = "oid1";
         ValintakoeDTO saved = valintakoeResource.readByOid(oid);

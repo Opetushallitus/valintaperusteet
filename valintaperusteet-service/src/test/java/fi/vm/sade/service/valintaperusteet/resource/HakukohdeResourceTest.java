@@ -6,7 +6,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
@@ -22,7 +21,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -31,8 +29,11 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 
 import javax.ws.rs.WebApplicationException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Response;
 import java.util.List;
+
+import static org.junit.Assert.*;
 
 /**
  * User: jukais Date: 16.1.2013 Time: 14.15
@@ -44,6 +45,7 @@ import java.util.List;
 @DataSetLocation("classpath:test-data.xml")
 public class HakukohdeResourceTest {
     private HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+    private HttpSession session = Mockito.mock(HttpSession.class);
 
     private HakukohdeResourceImpl hakukohdeResource = new HakukohdeResourceImpl();
     private TestUtil testUtil = new TestUtil(HakukohdeResourceTest.class);
@@ -93,6 +95,7 @@ public class HakukohdeResourceTest {
 
     @Test
     public void testInsert() throws Exception {
+        Mockito.when(request.getSession(false)).thenReturn(session);
         HakukohdeViiteCreateDTO hakukohdeDTO = new HakukohdeViiteDTO();
         hakukohdeDTO.setNimi("Uusi valintaryhmä");
         hakukohdeDTO.setOid("uusi oid");
@@ -106,6 +109,7 @@ public class HakukohdeResourceTest {
 
     @Test
     public void testInsertRoot() throws Exception {
+        Mockito.when(request.getSession(false)).thenReturn(session);
         HakukohdeViiteDTO hakukohdeDto = new HakukohdeViiteDTO();
         hakukohdeDto.setNimi("Uusi valintaryhmä");
         hakukohdeDto.setOid("uusi oid");
@@ -190,6 +194,7 @@ public class HakukohdeResourceTest {
 
     @Test
     public void testInsertValinnanVaihe() {
+        Mockito.when(request.getSession(false)).thenReturn(session);
         ValinnanVaiheCreateDTO valinnanVaihe = new ValinnanVaiheCreateDTO();
 
         valinnanVaihe.setNimi("uusi");
@@ -230,6 +235,7 @@ public class HakukohdeResourceTest {
 
     @Test
     public void testInsertAndUpdateHakukohdekoodi() {
+        Mockito.when(request.getSession(false)).thenReturn(session);
         final String URI = "uri";
         final String ARVO = "arvo";
         KoodiDTO hakukohdekoodi = new KoodiDTO();
@@ -260,6 +266,7 @@ public class HakukohdeResourceTest {
 
     @Test
     public void testSiirraHakukohdeValintaryhmaan() {
+        Mockito.when(request.getSession(false)).thenReturn(session);
         final String valintaryhmaOid = "oid54";
         final String hakukohdeOid = "oid18";
 

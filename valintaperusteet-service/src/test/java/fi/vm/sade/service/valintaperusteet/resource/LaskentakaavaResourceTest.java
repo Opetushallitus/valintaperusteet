@@ -25,6 +25,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.List;
@@ -46,7 +47,7 @@ public class LaskentakaavaResourceTest {
     private LaskentakaavaResourceImpl laskentakaavaResource = new LaskentakaavaResourceImpl();
     private ObjectMapper mapper = new ObjectMapperProvider().getContext(LaskentakaavaResourceImpl.class);
     HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-
+    HttpSession session = Mockito.mock(HttpSession.class);
 
     @Autowired
     private ValintaperusteetModelMapper modelMapper;
@@ -61,6 +62,7 @@ public class LaskentakaavaResourceTest {
 
     @Test
     public void testInsert() throws Exception {
+        Mockito.when(request.getSession(false)).thenReturn(session);
         Response response = insert(newLaskentakaava("jokuhienonimi"));
         assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
         final LaskentakaavaDTO inserted = kaavaFromResponse(response);
@@ -127,6 +129,7 @@ public class LaskentakaavaResourceTest {
 
     @Test
     public void testTallennaTulosUpdate() throws Exception {
+        Mockito.when(request.getSession(false)).thenReturn(session);
         final LaskentakaavaCreateDTO laskentakaavaOriginal = newLaskentakaava("Test");
         laskentakaavaOriginal.setNimi("Test");
         laskentakaavaOriginal.setOnLuonnos(false);
@@ -165,6 +168,7 @@ public class LaskentakaavaResourceTest {
 
     @Test
     public void testUpdateName() throws Exception {
+        Mockito.when(request.getSession(false)).thenReturn(session);
         final LaskentakaavaDTO inserted = kaavaFromResponse(insert(newLaskentakaava("kaava1")));
         inserted.setNimi("kaava2");
         final LaskentakaavaDTO updated = kaavaFromResponse(laskentakaavaResource.update(inserted.getId(), inserted, request));
@@ -176,6 +180,7 @@ public class LaskentakaavaResourceTest {
 
     @Test
     public void testSiirra() throws Exception {
+        Mockito.when(request.getSession(false)).thenReturn(session);
         final LaskentakaavaDTO inserted = kaavaFromResponse(insert(newLaskentakaava("kaava1")));
         LaskentakaavaSiirraDTO siirrettava = modelMapper.map(inserted, LaskentakaavaSiirraDTO.class);
         siirrettava.setUusinimi("UusiNimi");

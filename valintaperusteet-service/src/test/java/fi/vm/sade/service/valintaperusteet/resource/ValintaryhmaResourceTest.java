@@ -1,17 +1,10 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
-import fi.vm.sade.service.valintaperusteet.dto.KoodiDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaDTO;
+import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.resource.impl.ValintaryhmaResourceImpl;
@@ -30,11 +23,15 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * User: tommiha Date: 1/21/13 Time: 4:05 PM
@@ -115,6 +112,9 @@ public class ValintaryhmaResourceTest {
         ValintaryhmaCreateDTO valintaryhma1 = valintaryhmaResource.queryFull("oid1");
         valintaryhma1.setNimi("Updated valintaryhmä");
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        HttpSession session = Mockito.mock(HttpSession.class);
+        Mockito.when(request.getSession(false)).thenReturn(session);
+
         valintaryhmaResource.update("oid1", valintaryhma1, request);
 
         mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(valintaryhma1);
@@ -129,6 +129,8 @@ public class ValintaryhmaResourceTest {
         valinnanVaihe
                 .setValinnanVaiheTyyppi(fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi.TAVALLINEN);
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        HttpSession session = Mockito.mock(HttpSession.class);
+        Mockito.when(request.getSession(false)).thenReturn(session);
 
         Response response = valintaryhmaResource.insertValinnanvaihe("oid1", null, valinnanVaihe, request);
         assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
@@ -150,6 +152,9 @@ public class ValintaryhmaResourceTest {
         final String URI = "uri";
         final String ARVO = "arvo";
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        HttpSession session = Mockito.mock(HttpSession.class);
+        Mockito.when(request.getSession(false)).thenReturn(session);
+
         KoodiDTO hakukohdekoodi = new KoodiDTO();
         hakukohdekoodi.setUri(URI);
         hakukohdekoodi.setArvo(ARVO);
@@ -173,6 +178,9 @@ public class ValintaryhmaResourceTest {
         final String URI = "uri";
         final String ARVO = "arvo";
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        HttpSession session = Mockito.mock(HttpSession.class);
+        Mockito.when(request.getSession(false)).thenReturn(session);
+
         KoodiDTO hakukohdekoodi = new KoodiDTO();
         hakukohdekoodi.setUri(URI);
         hakukohdekoodi.setArvo(ARVO);
@@ -200,6 +208,9 @@ public class ValintaryhmaResourceTest {
         final String URI = "uri";
         final String ARVO = "arvo";
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        HttpSession session = Mockito.mock(HttpSession.class);
+        Mockito.when(request.getSession(false)).thenReturn(session);
+
         KoodiDTO hakukohdekoodi = new KoodiDTO();
         hakukohdekoodi.setUri(URI);
         hakukohdekoodi.setArvo(ARVO);
@@ -260,6 +271,9 @@ public class ValintaryhmaResourceTest {
     @Test
     public void testDelete() throws Exception {
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        HttpSession session = Mockito.mock(HttpSession.class);
+        Mockito.when(request.getSession(false)).thenReturn(session);
+
         ValintaryhmaDTO valintaryhma = new ValintaryhmaDTO();
         valintaryhma.setOid("oid2");
         valintaryhma.setNimi("Uusi valintaryhmä");
@@ -274,6 +288,9 @@ public class ValintaryhmaResourceTest {
     @Test
     public void testKopioiLapseksi() throws Exception {
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        HttpSession session = Mockito.mock(HttpSession.class);
+        Mockito.when(request.getSession(false)).thenReturn(session);
+
         Response response = valintaryhmaResource.copyAsChild("oid_700", "oid_702", "Testi", request);
         ValintaryhmaDTO valintaryhmaDTO = mapper.readValue(
                 mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(
