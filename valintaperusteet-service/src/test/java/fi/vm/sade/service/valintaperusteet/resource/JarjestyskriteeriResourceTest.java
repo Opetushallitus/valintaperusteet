@@ -11,6 +11,7 @@ import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.resource.impl.JarjestyskriteeriResourceImpl;
 import fi.vm.sade.service.valintaperusteet.util.TestUtil;
+import fi.vm.sade.sharedutils.FakeAuthenticationInitialiser;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,6 +59,7 @@ public class JarjestyskriteeriResourceTest {
 
     @Before
     public void setUp() {
+        FakeAuthenticationInitialiser.fakeAuthentication();
         applicationContext.getAutowireCapableBeanFactory().autowireBean(resource);
     }
 
