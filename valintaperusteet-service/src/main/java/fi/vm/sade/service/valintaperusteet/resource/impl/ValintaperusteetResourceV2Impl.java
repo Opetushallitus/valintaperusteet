@@ -35,9 +35,9 @@ import java.util.Map;
 import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.AUDIT;
 
 @Controller
-@Path("valintatapajonoV2")
+@Path("valintaperusteet")
 @PreAuthorize("isAuthenticated()")
-@Api(value = "/valintatapajonoV2", description = "Resurssi valintatapajonon jonosijojen muokkaamiseen manuaalisesti")
+@Api(value = "/valintaperusteet", description = "Resurssi valintatapajonon jonosijojen muokkaamiseen manuaalisesti")
 public class ValintaperusteetResourceV2Impl implements ValintaperusteetResourceV2 {
     private static final Logger LOG = LoggerFactory.getLogger(ValintaperusteetResourceV2Impl.class);
     @Autowired

@@ -13,7 +13,7 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.Map;
 
-@Path("valintaperusteetV2")
+@Path("valintaperusteet")
 public interface ValintaperusteetResourceV2 {
 
     @GET
