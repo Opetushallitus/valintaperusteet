@@ -19,6 +19,7 @@ import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 
 import javax.servlet.http.HttpServletRequest;
@@ -59,7 +60,7 @@ public class ValintaperusteetResourceV2Impl implements ValintaperusteetResourceV
 
     private final static Logger LOGGER = LoggerFactory.getLogger(ValintaperusteetResourceImpl.class);
 
-   // @PreAuthorize("hasAnyRole('ROLE_APP_VALINTAPERUSTEET_READ', 'ROLE_APP_VALINTAPERUSTEET_CRUD')")
+    @PreAuthorize("hasAnyRole('ROLE_APP_VALINTAPERUSTEET_READ', 'ROLE_APP_VALINTAPERUSTEET_CRUD')")
     @GET
     @Path("/valintatapajono/{hakukohdeOid}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -69,7 +70,7 @@ public class ValintaperusteetResourceV2Impl implements ValintaperusteetResourceV
         return valintaperusteService.haeValintatapajonotSijoittelulle(hakukohdeOid);
     }
 
-  // @PreAuthorize("hasAnyRole('ROLE_APP_VALINTAPERUSTEET_READ', 'ROLE_APP_VALINTAPERUSTEET_CRUD')")
+    @PreAuthorize("hasAnyRole('ROLE_APP_VALINTAPERUSTEET_READ', 'ROLE_APP_VALINTAPERUSTEET_CRUD')")
     @POST
     @Path("/valintatapajono")
     @Produces(MediaType.APPLICATION_JSON)
@@ -80,7 +81,7 @@ public class ValintaperusteetResourceV2Impl implements ValintaperusteetResourceV
         return valintaperusteService.haeValintatapajonotSijoittelulle(hakukohdeOids);
     }
 
-   // @PreAuthorize("hasAnyRole('ROLE_APP_VALINTAPERUSTEET_READ', 'ROLE_APP_VALINTAPERUSTEET_CRUD')")
+    @PreAuthorize("hasAnyRole('ROLE_APP_VALINTAPERUSTEET_READ', 'ROLE_APP_VALINTAPERUSTEET_CRUD')")
     @GET
     @Path("/{hakukohdeOid}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -133,7 +134,7 @@ public class ValintaperusteetResourceV2Impl implements ValintaperusteetResourceV
         }
         return result;
     }
-  //  @PreAuthorize("hasAnyRole('ROLE_APP_VALINTAPERUSTEET_READ', 'ROLE_APP_VALINTAPERUSTEET_CRUD')")
+    @PreAuthorize("hasAnyRole('ROLE_APP_VALINTAPERUSTEET_READ', 'ROLE_APP_VALINTAPERUSTEET_CRUD')")
     @POST
     @Path("tuoHakukohde")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -153,7 +154,7 @@ public class ValintaperusteetResourceV2Impl implements ValintaperusteetResourceV
         }
     }
 
-  //  @PreAuthorize("hasAnyRole('ROLE_APP_VALINTAPERUSTEET_READ', 'ROLE_APP_VALINTAPERUSTEET_CRUD')")
+    @PreAuthorize("hasAnyRole('ROLE_APP_VALINTAPERUSTEET_READ', 'ROLE_APP_VALINTAPERUSTEET_CRUD')")
     @GET
     @Path("/{oid}/automaattinenSiirto")
     @Produces(MediaType.APPLICATION_JSON)
@@ -161,7 +162,7 @@ public class ValintaperusteetResourceV2Impl implements ValintaperusteetResourceV
         return valintatapajonoService.readAutomaattinenSijoitteluunSiirto(oid);
     }
 
- //   @PreAuthorize("hasAnyRole('ROLE_APP_VALINTAPERUSTEET_READ', 'ROLE_APP_VALINTAPERUSTEET_CRUD')")
+    @PreAuthorize("hasAnyRole('ROLE_APP_VALINTAPERUSTEET_READ', 'ROLE_APP_VALINTAPERUSTEET_CRUD')")
     @POST
     @Path("/{oid}/automaattinenSiirto")
     @Consumes(MediaType.APPLICATION_JSON)
