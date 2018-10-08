@@ -52,11 +52,10 @@ public interface ValintaperusteetResourceV2 {
     Boolean readAutomaattinenSijoitteluunSiirto(@PathParam("oid") String oid);
 
     @POST
-    @Path("/{valintatapajonoOid}/automaattinenSiirto")
+    @Path("/{oid}/automaattinenSiirto")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     ValintatapajonoDTO updateAutomaattinenSijoitteluunSiirto(
-        @ApiParam(value = "Valintatapajonon OID", required = true) @PathParam("valintatapajonoOid") String valintatapajonoOid,
-        @ApiParam(value = "Sijoittelustatus", required = true) @QueryParam("status") boolean status,
-        @Context HttpServletRequest request);
+        @ApiParam(value = "Valintatapajonon OID", required = true) @PathParam("oid") String valintatapajonoOid,
+        @ApiParam(value = "Sijoittelustatus", required = true) @QueryParam("status") boolean status, @Context HttpServletRequest request);
 }

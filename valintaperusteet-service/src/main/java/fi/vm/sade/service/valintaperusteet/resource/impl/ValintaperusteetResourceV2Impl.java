@@ -165,13 +165,13 @@ public class ValintaperusteetResourceV2Impl implements ValintaperusteetResourceV
     }
 
     //@PreAuthorize(CRUD)
-    @PreAuthorize(READ_UPDATE_CRUD)
+    //@PreAuthorize(READ_UPDATE_CRUD)
     @POST
-    @Path("/{valintatapajonoOid}/automaattinenSiirto")
+    @Path("/{oid}/automaattinenSiirto")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Lisää/poistaa valintatapajonon sijoittelusta", response = ValintatapajonoDTO.class)
-    public ValintatapajonoDTO updateAutomaattinenSijoitteluunSiirto(@ApiParam(value = "Valintatapajonon OID", required = true) @PathParam("valintatapajonoOid") String valintatapajonoOid,
+    public ValintatapajonoDTO updateAutomaattinenSijoitteluunSiirto(@ApiParam(value = "Valintatapajonon OID", required = true) @PathParam("oid") String valintatapajonoOid,
                                                                     @ApiParam(value = "Sijoittelustatus", required = true) @QueryParam("status") boolean status,
                                                                     @Context HttpServletRequest request) {
         ValintatapajonoDTO beforeUpdate = modelMapper.map(valintatapajonoService.readByOid(valintatapajonoOid), ValintatapajonoDTO.class);
