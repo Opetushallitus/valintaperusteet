@@ -164,7 +164,8 @@ public class ValintaperusteetResourceV2Impl implements ValintaperusteetResourceV
         return valintatapajonoService.readAutomaattinenSijoitteluunSiirto(oid);
     }
 
-    @PreAuthorize(CRUD)
+    //@PreAuthorize(CRUD)
+    @PreAuthorize(READ_UPDATE_CRUD)
     @POST
     @Path("/{oid}/automaattinenSiirto")
     @Consumes(MediaType.APPLICATION_JSON)
