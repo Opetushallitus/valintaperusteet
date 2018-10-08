@@ -167,14 +167,16 @@ public class ValintaperusteetResourceV2Impl implements ValintaperusteetResourceV
     //@PreAuthorize(CRUD)
     @PreAuthorize(READ_UPDATE_CRUD)
     @POST
-    @Path("/{oid}/automaattinenSiirto")
+    @Path("/{valintatapajonoOid}/automaattinenSiirto")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Lisää/poistaa valintatapajonon sijoittelusta", response = ValintatapajonoDTO.class)
-    public ValintatapajonoDTO updateAutomaattinenSijoitteluunSiirto(@PathParam("oid") String oid, Boolean arvo, @Context HttpServletRequest request) {
-        ValintatapajonoDTO beforeUpdate = modelMapper.map(valintatapajonoService.readByOid(oid), ValintatapajonoDTO.class);
-        ValintatapajonoDTO afterUpdate = modelMapper.map(valintatapajonoService.updateAutomaattinenSijoitteluunSiirto(oid, arvo), ValintatapajonoDTO.class);
-        AuditLog.log(AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.AUTOMAATTISEN_SIJOITTELUN_SIIRRON_PAIVITYS, ValintaResource.VALINTAPERUSTEET, oid, Changes.updatedDto(afterUpdate, beforeUpdate));
+    public ValintatapajonoDTO updateAutomaattinenSijoitteluunSiirto(@ApiParam(value = "Valintatapajonon OID", required = true) @PathParam("valintatapajonoOid") String valintatapajonoOid,
+                                                                    @ApiParam(value = "Sijoittelustatus", required = true) @QueryParam("status") boolean status,
+                                                                    @Context HttpServletRequest request) {
+        ValintatapajonoDTO beforeUpdate = modelMapper.map(valintatapajonoService.readByOid(valintatapajonoOid), ValintatapajonoDTO.class);
+        ValintatapajonoDTO afterUpdate = modelMapper.map(valintatapajonoService.updateAutomaattinenSijoitteluunSiirto(valintatapajonoOid, status), ValintatapajonoDTO.class);
+        AuditLog.log(AUDIT, AuditLog.getUser(request), ValintaperusteetOperation.AUTOMAATTISEN_SIJOITTELUN_SIIRRON_PAIVITYS, ValintaResource.VALINTAPERUSTEET, valintatapajonoOid, Changes.updatedDto(afterUpdate, beforeUpdate));
         return modelMapper.map(afterUpdate, ValintatapajonoDTO.class);
     }
 }
