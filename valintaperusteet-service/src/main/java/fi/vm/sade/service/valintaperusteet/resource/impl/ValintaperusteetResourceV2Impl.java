@@ -38,6 +38,7 @@ import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.AUD
 
 @Component
 @Path("valintaperusteetV2")
+@PreAuthorize("isAuthenticated()")
 @Api(value = "/valintaperusteetV2", description = "Resurssi laskentakaavojen ja funktiokutsujen käsittelyyn V2")
 public class ValintaperusteetResourceV2Impl implements ValintaperusteetResourceV2 {
     private static final Logger LOG = LoggerFactory.getLogger(ValintaperusteetResourceV2Impl.class);
@@ -163,8 +164,8 @@ public class ValintaperusteetResourceV2Impl implements ValintaperusteetResourceV
         return valintatapajonoService.readAutomaattinenSijoitteluunSiirto(oid);
     }
 
-    @PreAuthorize(CRUD)
-    //@PreAuthorize(READ_UPDATE_CRUD)
+    //@PreAuthorize(CRUD)
+    @PreAuthorize(READ_UPDATE_CRUD)
     @POST
     @Path("/{oid}/automaattinenSiirto")
     @Consumes(MediaType.APPLICATION_JSON)
