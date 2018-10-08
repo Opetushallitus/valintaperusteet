@@ -20,7 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -36,10 +36,9 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRU
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
 import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.AUDIT;
 
-@Controller
-@Path("valintaperusteet")
-@PreAuthorize("isAuthenticated()")
-@Api(value = "/valintaperusteet", description = "Resurssi valintatapajonon jonosijojen muokkaamiseen manuaalisesti")
+@Component
+@Path("valintaperusteetV2")
+@Api(value = "/valintaperusteetV2", description = "Resurssi laskentakaavojen ja funktiokutsujen käsittelyyn V2")
 public class ValintaperusteetResourceV2Impl implements ValintaperusteetResourceV2 {
     private static final Logger LOG = LoggerFactory.getLogger(ValintaperusteetResourceV2Impl.class);
     @Autowired
@@ -164,7 +163,7 @@ public class ValintaperusteetResourceV2Impl implements ValintaperusteetResourceV
         return valintatapajonoService.readAutomaattinenSijoitteluunSiirto(oid);
     }
 
-    //@PreAuthorize(CRUD)
+    @PreAuthorize(CRUD)
     //@PreAuthorize(READ_UPDATE_CRUD)
     @POST
     @Path("/{oid}/automaattinenSiirto")

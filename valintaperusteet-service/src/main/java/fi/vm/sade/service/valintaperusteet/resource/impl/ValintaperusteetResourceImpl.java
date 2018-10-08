@@ -34,8 +34,8 @@ import java.util.Map;
 import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.AUDIT;
 
 @Component
-@Path("valintaperusteetOLD")
-@Api(value = "/valintaperusteetOLD", description = "Resurssi laskentakaavojen ja funktiokutsujen käsittelyyn")
+@Path("valintaperusteet")
+@Api(value = "/valintaperusteet", description = "Resurssi laskentakaavojen ja funktiokutsujen käsittelyyn")
 public class ValintaperusteetResourceImpl implements ValintaperusteetResource {
     private static final Logger LOG = LoggerFactory.getLogger(ValintaperusteetResourceImpl.class);
     @Autowired
