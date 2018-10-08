@@ -37,9 +37,9 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.REA
 import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.AUDIT;
 
 @Component
-@Path("valintaperusteetV2")
+@Path("V2valintaperusteet")
 @PreAuthorize("isAuthenticated()")
-@Api(value = "/valintaperusteetV2", description = "Resurssi laskentakaavojen ja funktiokutsujen käsittelyyn V2")
+@Api(value = "/V2valintaperusteet", description = "Resurssi laskentakaavojen ja funktiokutsujen käsittelyyn V2")
 public class ValintaperusteetResourceV2Impl implements ValintaperusteetResourceV2 {
     private static final Logger LOG = LoggerFactory.getLogger(ValintaperusteetResourceV2Impl.class);
     @Autowired
