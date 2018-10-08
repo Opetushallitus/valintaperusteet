@@ -64,7 +64,7 @@ public class ValintaperusteetResourceV2Impl implements ValintaperusteetResourceV
 
     @PreAuthorize(READ_UPDATE_CRUD)
     @GET
-    @Path("/valintatapajono/{hakukohdeOid}")
+        @Path("/valintatapajono/{hakukohdeOid}")
     @Produces(MediaType.APPLICATION_JSON)
     @Override
     @ApiOperation(value = "Hakee valintapajonot sijoittelulle", response = ValintatapajonoDTO.class)

@@ -4,7 +4,6 @@ import fi.vm.sade.service.valintaperusteet.dto.HakukohdeImportDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteetDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteetHakijaryhmaDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
-import io.swagger.annotations.ApiParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -55,7 +54,5 @@ public interface ValintaperusteetResourceV2 {
     @Path("/{oid}/automaattinenSiirto")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    ValintatapajonoDTO updateAutomaattinenSijoitteluunSiirto(
-        @ApiParam(value = "Valintatapajonon OID", required = true) @PathParam("oid") String valintatapajonoOid,
-        @ApiParam(value = "Sijoittelustatus", required = true) @QueryParam("status") boolean status, @Context HttpServletRequest request);
+    ValintatapajonoDTO updateAutomaattinenSijoitteluunSiirto(@PathParam("oid") String valintatapajonoOid, @QueryParam("status") boolean status, @Context HttpServletRequest request);
 }
