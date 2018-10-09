@@ -34,6 +34,7 @@ import java.util.Map;
 
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD;
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
 import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.AUDIT;
 
 @Component
@@ -164,8 +165,7 @@ public class ValintaperusteetResourceV2Impl implements ValintaperusteetResourceV
         return valintatapajonoService.readAutomaattinenSijoitteluunSiirto(oid);
     }
 
-    //@PreAuthorize(CRUD)
-    @PreAuthorize(READ_UPDATE_CRUD)
+    @PreAuthorize(UPDATE_CRUD)
     @POST
     @Path("/{oid}/automaattinenSiirto")
     @Consumes(MediaType.APPLICATION_JSON)
