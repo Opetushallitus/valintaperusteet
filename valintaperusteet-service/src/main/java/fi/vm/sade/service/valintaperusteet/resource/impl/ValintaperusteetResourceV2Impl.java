@@ -60,7 +60,7 @@ public class ValintaperusteetResourceV2Impl implements ValintaperusteetResourceV
     @Autowired
     private ValintaperusteetModelMapper modelMapper;
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(ValintaperusteetResourceImpl.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(ValintaperusteetResourceV2Impl.class);
 
     @PreAuthorize(READ_UPDATE_CRUD)
     @GET
