@@ -76,7 +76,7 @@ object Laskentakaavavalidaattori {
     pakolliset.foldLeft(List[Validointivirhe]())((l, p) => {
       annetutParametrit.find(p.avain == _.getAvain) match {
         case None => new Validointivirhe(Virhetyyppi.SYOTEPARAMETRI_PUUTTUU,
-          s"Avainta ${p.avain} vastaavaa parametria ei ole olemassa funktiolle ${funktiokutsu.getFunktionimi.name()}") :: l
+          s"Avainta '${p.avain}' vastaavaa parametria ei ole olemassa funktiolle '${funktiokutsu.getFunktionimi.name()}'") :: l
         case Some(param) => (tarkistaParametriarvo(funktiokutsu, param, p) ++ l).toList
       }
     }) ::: eiPakolliset.foldLeft(List[Validointivirhe]())((l, p) => {
