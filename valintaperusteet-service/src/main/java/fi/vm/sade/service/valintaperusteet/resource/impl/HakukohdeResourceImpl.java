@@ -8,16 +8,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -296,21 +287,25 @@ public class HakukohdeResourceImpl {
     @ApiOperation(value = "Hakee hakukohteen valintakokeet OID:n perusteella", response = ValintakoeDTO.class)
     public List<ValintakoeDTO> valintakoesForHakukohde(
             @ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
-        HakukohdeViite viite = hakukohdeService.readByOid(oid);
-        Map<String, HakukohteenValintaperuste> hakukohteenValintaperusteet = viite.getHakukohteenValintaperusteet();
-        Map<String, String> tunnisteArvoPari = hakukohteenValintaperusteet.values().stream().collect(Collectors.toMap(t -> t.getTunniste(), t -> t.getArvo()));
-        return modelMapper.mapList(valintakoeService
-                .findValintakoesByValinnanVaihes(valinnanVaiheService.findByHakukohde(oid)), ValintakoeDTO.class).stream().map(
-                vk -> {
-                    if (Optional.ofNullable(vk.getTunniste()).orElse("").startsWith(HAKUKOHDE_VIITE_PREFIX)) {
-                        String tunniste = vk.getTunniste().replace(HAKUKOHDE_VIITE_PREFIX, "").replace("}}", "");
-                        vk.setSelvitettyTunniste(tunnisteArvoPari.get(tunniste));
-                    } else {
-                        vk.setSelvitettyTunniste(vk.getTunniste());
+        try {
+            HakukohdeViite viite = hakukohdeService.readByOid(oid);
+            Map<String, HakukohteenValintaperuste> hakukohteenValintaperusteet = viite.getHakukohteenValintaperusteet();
+            Map<String, String> tunnisteArvoPari = hakukohteenValintaperusteet.values().stream().collect(Collectors.toMap(t -> t.getTunniste(), t -> t.getArvo()));
+            return modelMapper.mapList(valintakoeService
+                    .findValintakoesByValinnanVaihes(valinnanVaiheService.findByHakukohde(oid)), ValintakoeDTO.class).stream().map(
+                    vk -> {
+                        if (Optional.ofNullable(vk.getTunniste()).orElse("").startsWith(HAKUKOHDE_VIITE_PREFIX)) {
+                            String tunniste = vk.getTunniste().replace(HAKUKOHDE_VIITE_PREFIX, "").replace("}}", "");
+                            vk.setSelvitettyTunniste(tunnisteArvoPari.get(tunniste));
+                        } else {
+                            vk.setSelvitettyTunniste(vk.getTunniste());
+                        }
+                        return vk;
                     }
-                    return vk;
-                }
-        ).collect(Collectors.toList());
+            ).collect(Collectors.toList());
+        } catch (HakukohdeViiteEiOleOlemassaException e) {
+            throw new NotFoundException(e.getMessage(), e);
+        }
     }
 
     @POST

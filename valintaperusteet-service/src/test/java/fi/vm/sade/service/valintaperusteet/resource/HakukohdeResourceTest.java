@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
+import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -30,7 +31,9 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
+import scala.reflect.internal.Trees;
 
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
@@ -123,6 +126,16 @@ public class HakukohdeResourceTest {
         Response insert = hakukohdeResource.insert(new HakukohdeInsertDTO(hakukohde, null));
         assertEquals(500, insert.getStatus());
         testUtil.lazyCheck(JsonViews.Basic.class, insert.getEntity());
+    }
+
+    @Test
+    public void getValintakoesForHakukohdeReturns404IfViiteNotFound() {
+        try {
+            hakukohdeResource.valintakoesForHakukohde("IMAGINARY_HAKUKOHDE_OID");
+            fail("Should not reach here. Expected to throw exception");
+        } catch (NotFoundException e) {
+            assertEquals("Hakukohde (IMAGINARY_HAKUKOHDE_OID) ei ole olemassa.", e.getMessage());
+        }
     }
 
     @Test
