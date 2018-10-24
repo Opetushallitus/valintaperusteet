@@ -133,7 +133,7 @@ public class HakukohdeResourceTest {
             hakukohdeResource.valintakoesForHakukohde("IMAGINARY_HAKUKOHDE_OID");
             fail("Should not reach here. Expected to throw exception");
         } catch (WebApplicationException e) {
-            assertEquals("Hakukohde (IMAGINARY_HAKUKOHDE_OID) ei ole olemassa.", e.getMessage());
+            assertEquals("HakukohdeViite (IMAGINARY_HAKUKOHDE_OID) ei ole olemassa.", e.getMessage());
             assertEquals(404, e.getResponse().getStatus());
         }
     }

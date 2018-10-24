@@ -299,8 +299,9 @@ public class HakukohdeResourceImpl {
         try {
              viite = hakukohdeService.readByOid(oid);
         } catch (HakukohdeViiteEiOleOlemassaException e) {
-            Response response = Response.status(404).entity(e.getMessage()).type(MediaType.TEXT_PLAIN_TYPE).build();
-            throw new WebApplicationException(e.getMessage(), e, response);
+            String message = "HakukohdeViite (" + oid + ") ei ole olemassa.";
+            Response response = Response.status(404).entity(message).type(MediaType.TEXT_PLAIN_TYPE).build();
+            throw new WebApplicationException(message, e, response);
         }
         Map<String, HakukohteenValintaperuste> hakukohteenValintaperusteet = viite.getHakukohteenValintaperusteet();
         Map<String, String> tunnisteArvoPari = hakukohteenValintaperusteet.values().stream().collect(Collectors.toMap(t -> t.getTunniste(), t -> t.getArvo()));
