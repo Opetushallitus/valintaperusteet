@@ -33,7 +33,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import scala.reflect.internal.Trees;
 
-import javax.ws.rs.NotFoundException;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
@@ -133,8 +133,9 @@ public class HakukohdeResourceTest {
         try {
             hakukohdeResource.valintakoesForHakukohde("IMAGINARY_HAKUKOHDE_OID");
             fail("Should not reach here. Expected to throw exception");
-        } catch (NotFoundException e) {
+        } catch (WebApplicationException e) {
             assertEquals("Hakukohde (IMAGINARY_HAKUKOHDE_OID) ei ole olemassa.", e.getMessage());
+            assertEquals(404, e.getResponse().getStatus());
         }
     }
 

@@ -6,12 +6,10 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPD
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -301,7 +299,7 @@ public class HakukohdeResourceImpl {
         try {
              viite = hakukohdeService.readByOid(oid);
         } catch (HakukohdeViiteEiOleOlemassaException e) {
-            throw new NotFoundException(e.getMessage(), e);
+            throw new WebApplicationException(e.getMessage(), e, 404);
         }
         Map<String, HakukohteenValintaperuste> hakukohteenValintaperusteet = viite.getHakukohteenValintaperusteet();
         Map<String, String> tunnisteArvoPari = hakukohteenValintaperusteet.values().stream().collect(Collectors.toMap(t -> t.getTunniste(), t -> t.getArvo()));
