@@ -297,25 +297,26 @@ public class HakukohdeResourceImpl {
     @ApiOperation(value = "Hakee hakukohteen valintakokeet OID:n perusteella", response = ValintakoeDTO.class)
     public List<ValintakoeDTO> valintakoesForHakukohde(
             @ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
+        HakukohdeViite viite;
         try {
-            HakukohdeViite viite = hakukohdeService.readByOid(oid);
-            Map<String, HakukohteenValintaperuste> hakukohteenValintaperusteet = viite.getHakukohteenValintaperusteet();
-            Map<String, String> tunnisteArvoPari = hakukohteenValintaperusteet.values().stream().collect(Collectors.toMap(t -> t.getTunniste(), t -> t.getArvo()));
-            return modelMapper.mapList(valintakoeService
-                    .findValintakoesByValinnanVaihes(valinnanVaiheService.findByHakukohde(oid)), ValintakoeDTO.class).stream().map(
-                    vk -> {
-                        if (Optional.ofNullable(vk.getTunniste()).orElse("").startsWith(HAKUKOHDE_VIITE_PREFIX)) {
-                            String tunniste = vk.getTunniste().replace(HAKUKOHDE_VIITE_PREFIX, "").replace("}}", "");
-                            vk.setSelvitettyTunniste(tunnisteArvoPari.get(tunniste));
-                        } else {
-                            vk.setSelvitettyTunniste(vk.getTunniste());
-                        }
-                        return vk;
-                    }
-            ).collect(Collectors.toList());
+             viite = hakukohdeService.readByOid(oid);
         } catch (HakukohdeViiteEiOleOlemassaException e) {
             throw new NotFoundException(e.getMessage(), e);
         }
+        Map<String, HakukohteenValintaperuste> hakukohteenValintaperusteet = viite.getHakukohteenValintaperusteet();
+        Map<String, String> tunnisteArvoPari = hakukohteenValintaperusteet.values().stream().collect(Collectors.toMap(t -> t.getTunniste(), t -> t.getArvo()));
+        return modelMapper.mapList(valintakoeService
+                .findValintakoesByValinnanVaihes(valinnanVaiheService.findByHakukohde(oid)), ValintakoeDTO.class).stream().map(
+                vk -> {
+                    if (Optional.ofNullable(vk.getTunniste()).orElse("").startsWith(HAKUKOHDE_VIITE_PREFIX)) {
+                        String tunniste = vk.getTunniste().replace(HAKUKOHDE_VIITE_PREFIX, "").replace("}}", "");
+                        vk.setSelvitettyTunniste(tunnisteArvoPari.get(tunniste));
+                    } else {
+                        vk.setSelvitettyTunniste(vk.getTunniste());
+                    }
+                    return vk;
+                }
+        ).collect(Collectors.toList());
     }
 
     @POST
