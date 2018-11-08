@@ -12,6 +12,7 @@ import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.resource.impl.HakukohdeResourceImpl;
 import fi.vm.sade.service.valintaperusteet.resource.impl.ValinnanVaiheResourceImpl;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheEiOleOlemassaException;
+import fi.vm.sade.sharedutils.FakeAuthenticationInitialiser;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -57,6 +58,7 @@ public class ValinnanVaiheResourceTest {
     public void setUp() {
         applicationContext.getAutowireCapableBeanFactory().autowireBean(vaiheResource);
         applicationContext.getAutowireCapableBeanFactory().autowireBean(hakuResource);
+        FakeAuthenticationInitialiser.fakeAuthentication();
     }
 
     @After
