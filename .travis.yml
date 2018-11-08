@@ -44,8 +44,8 @@ deploy:
   script: mvn deploy -pl valintaperusteet-api,valintaperusteet-laskenta -DskipTests --settings ci-tools/common/maven-settings.xml
   skip_cleanup: true
   on:
-    all_branches: true
-    #branch: master
+    #all_branches: true
+    branch: master
 - provider: script
   script: ./ci-tools/build/upload-image.sh $ARTIFACT_NAME
   on:
