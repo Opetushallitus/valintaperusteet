@@ -2,19 +2,19 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
         <groupId>fi.vm.sade.valintaperusteet</groupId>
-        <artifactId>valintaperusteetbuild</artifactId>
-		<version>5.1-SNAPSHOT</version>
+        <artifactId>valintaperusteet</artifactId>
+		<version>5.2-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
 	<artifactId>valintaperusteet-domain</artifactId>
 	<name>Valintaperusteet :: Domain</name>
 
 	<dependencies>
-		 <dependency>
-            <groupId>fi.vm.sade.valintaperusteet</groupId>
-            <artifactId>valintaperusteet-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+		<dependency>
+			<groupId>fi.vm.sade.valintaperusteet</groupId>
+			<artifactId>valintaperusteet-api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>javax.persistence</groupId>
 			<artifactId>com.springsource.javax.persistence</artifactId>

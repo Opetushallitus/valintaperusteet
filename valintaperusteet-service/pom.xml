@@ -4,14 +4,12 @@
 
     <parent>
         <groupId>fi.vm.sade.valintaperusteet</groupId>
-        <artifactId>valintaperusteetbuild</artifactId>
-        <version>5.1-SNAPSHOT</version>
+        <artifactId>valintaperusteet</artifactId>
+        <version>5.2-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
 
-    <groupId>fi.vm.sade.valintaperusteet</groupId>
     <artifactId>valintaperusteet-service</artifactId>
-    <version>5.1-SNAPSHOT</version>
     <name>Valintaperusteet :: Service</name>
     <packaging>war</packaging>
 
@@ -200,6 +198,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
+            <version>${spring.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
