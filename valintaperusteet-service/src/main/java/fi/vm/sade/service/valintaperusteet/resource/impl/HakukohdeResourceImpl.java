@@ -37,6 +37,7 @@ import fi.vm.sade.service.valintaperusteet.model.HakukohteenValintaperuste;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
+import fi.vm.sade.service.valintaperusteet.resource.HakukohdeResource;
 import fi.vm.sade.service.valintaperusteet.resource.ValintaryhmaResource;
 import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaService;
 import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaValintatapajonoService;
@@ -95,7 +96,7 @@ import java.util.stream.Collectors;
 @Component
 @Path("hakukohde")
 @Api(value = "/hakukohde", description = "Resurssi hakukohteiden käsittelyyn")
-public class HakukohdeResourceImpl {
+public class HakukohdeResourceImpl implements HakukohdeResource {
     private final static String HAKUKOHDE_VIITE_PREFIX = "{{hakukohde.";
     protected final static Logger LOG = LoggerFactory.getLogger(ValintaryhmaResource.class);
 

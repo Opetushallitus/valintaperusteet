@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.resource.impl;
 
+import fi.vm.sade.service.valintaperusteet.resource.ValintalaskentakoostepalveluResource;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import fi.vm.sade.service.valintaperusteet.dto.*;
@@ -26,7 +27,7 @@ import java.util.stream.IntStream;
 
 @Component
 @Path("valintalaskentakoostepalvelu")
-public class ValintalaskentakoostepalveluResourceImpl {
+public class ValintalaskentakoostepalveluResourceImpl implements ValintalaskentakoostepalveluResource {
     private static final Logger LOG = LoggerFactory.getLogger(ValintalaskentakoostepalveluResourceImpl.class);
     private final static String HAKUKOHDE_VIITE_PREFIX = "{{hakukohde.";
     @Autowired

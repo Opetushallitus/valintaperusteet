@@ -17,6 +17,7 @@ import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
+import fi.vm.sade.service.valintaperusteet.resource.ValintatapajonoResource;
 import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaService;
 import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaValintatapajonoService;
 import fi.vm.sade.service.valintaperusteet.service.JarjestyskriteeriService;
@@ -56,7 +57,7 @@ import java.util.Map;
 @Path("valintatapajono")
 @PreAuthorize("isAuthenticated()")
 @Api(value = "/valintatapajono", description = "Resurssi valintatapajonojen käsittelyyn")
-public class ValintatapajonoResourceImpl {
+public class ValintatapajonoResourceImpl implements ValintatapajonoResource {
     protected final static Logger LOGGER = LoggerFactory.getLogger(ValintatapajonoResourceImpl.class);
 
     @Autowired
