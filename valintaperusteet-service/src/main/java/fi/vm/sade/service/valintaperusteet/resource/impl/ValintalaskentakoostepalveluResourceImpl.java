@@ -395,4 +395,12 @@ public class ValintalaskentakoostepalveluResourceImpl implements Valintalaskenta
             return valintaperusteService.haeValintaperusteet(Arrays.asList(hakuparametrit)).stream();
         }).collect(Collectors.toList());
     }
+
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    @Path("valintaryhma/{oid}/vastuuorganisaatio")
+    @ApiOperation(value = "Hakee valintaryhmän vastuuorganisaation oidin", response = String.class)
+    public String valintaryhmaVastuuorganisaatio(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
+        return valintaryhmaService.readByOid(oid).getVastuuorganisaatio().getOid();
+    }
 }
