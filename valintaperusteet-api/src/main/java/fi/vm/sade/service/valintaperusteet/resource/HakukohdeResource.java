@@ -3,7 +3,6 @@ package fi.vm.sade.service.valintaperusteet.resource;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -13,7 +12,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -50,13 +48,13 @@ public interface HakukohdeResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Response insert(HakukohdeInsertDTO hakukohde, @Context HttpServletRequest request);
+    Response insert(HakukohdeInsertDTO hakukohde);
 
     @POST
     @Path("/{oid}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Response update(@PathParam("oid") String oid, HakukohdeViiteCreateDTO hakukohdeViite, @Context HttpServletRequest request);
+    Response update(@PathParam("oid") String oid, HakukohdeViiteCreateDTO hakukohdeViite);
 
     @GET
     @Path("/{oid}/valinnanvaihe")
@@ -131,36 +129,42 @@ public interface HakukohdeResource {
     Response insertValinnanvaihe(
             @PathParam("hakukohdeOid") String hakukohdeOid,
             @QueryParam("edellinenValinnanVaiheOid") String edellinenValinnanVaiheOid,
-            ValinnanVaiheCreateDTO valinnanVaihe, @Context HttpServletRequest request);
+            ValinnanVaiheCreateDTO valinnanVaihe);
 
     @PUT
     @Path("/{hakukohdeOid}/hakijaryhma")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Response insertHakijaryhma(@PathParam("hakukohdeOid") String hakukohdeOid, HakijaryhmaCreateDTO hakijaryhma, @Context HttpServletRequest request);
+    Response insertHakijaryhma(@PathParam("hakukohdeOid") String hakukohdeOid, HakijaryhmaCreateDTO hakijaryhma);
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{hakukohdeOid}/hakijaryhma/{hakijaryhmaOid}")
     Response liitaHakijaryhma(@PathParam("hakukohdeOid") String hakukohdeOid,
-                              @PathParam("hakijaryhmaOid") String hakijaryhmaOid, @Context HttpServletRequest request);
+                              @PathParam("hakijaryhmaOid") String hakijaryhmaOid);
 
     @POST
     @Path("/{hakukohdeOid}/hakukohdekoodi")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Response updateHakukohdekoodi(@PathParam("hakukohdeOid") String hakukohdeOid, KoodiDTO hakukohdekoodi, @Context HttpServletRequest request);
+    Response updateHakukohdekoodi(@PathParam("hakukohdeOid") String hakukohdeOid, KoodiDTO hakukohdekoodi);
 
     @PUT
     @Path("/{hakukohdeOid}/hakukohdekoodi")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Response insertHakukohdekoodi(@PathParam("hakukohdeOid") String hakukohdeOid, KoodiDTO hakukohdekoodi, @Context HttpServletRequest request);
+    Response insertHakukohdekoodi(@PathParam("hakukohdeOid") String hakukohdeOid, KoodiDTO hakukohdekoodi);
 
     @POST
     @Path("/{hakukohdeOid}/siirra")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Response siirraHakukohdeValintaryhmaan(@PathParam("hakukohdeOid") String hakukohdeOid, String valintaryhmaOid, @Context HttpServletRequest request);
+    Response siirraHakukohdeValintaryhmaan(@PathParam("hakukohdeOid") String hakukohdeOid, String valintaryhmaOid);
+
+    @POST
+    @Path("/hakukohteet")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    Response haeHakukohteetOideilla(List<String> hakukohdeOidit);
 }

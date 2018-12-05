@@ -3,9 +3,7 @@ package fi.vm.sade.service.valintaperusteet.resource;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -34,7 +32,7 @@ public interface ValintatapajonoResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{valintatapajonoOid}/hakijaryhma/{hakijaryhmaOid}")
     Response liitaHakijaryhma(@PathParam("valintatapajonoOid") String valintatapajonoOid,
-                              @PathParam("hakijaryhmaOid") String hakijaryhmaOid, @Context HttpServletRequest request);
+                              @PathParam("hakijaryhmaOid") String hakijaryhmaOid);
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -45,7 +43,7 @@ public interface ValintatapajonoResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{valintatapajonoOid}/hakijaryhma")
-    Response insertHakijaryhma(@PathParam("valintatapajonoOid") String valintatapajonoOid, HakijaryhmaCreateDTO hakijaryhma, @Context HttpServletRequest request);
+    Response insertHakijaryhma(@PathParam("valintatapajonoOid") String valintatapajonoOid, HakijaryhmaCreateDTO hakijaryhma);
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -55,23 +53,22 @@ public interface ValintatapajonoResource {
     @Path("/{oid}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Response update(@PathParam("oid") String oid, ValintatapajonoCreateDTO jono, @Context HttpServletRequest request);
+    Response update(@PathParam("oid") String oid, ValintatapajonoCreateDTO jono);
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{valintatapajonoOid}/jarjestyskriteeri")
     Response insertJarjestyskriteeri(@PathParam("valintatapajonoOid") String valintatapajonoOid,
-                                     JarjestyskriteeriInsertDTO jk,
-                                     @Context HttpServletRequest request) throws Exception;
+                                     JarjestyskriteeriInsertDTO jk) throws Exception;
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/jarjesta")
-    List<ValintatapajonoDTO> jarjesta(List<String> oids, @Context HttpServletRequest request);
+    List<ValintatapajonoDTO> jarjesta(List<String> oids);
 
     @DELETE
     @Path("/{oid}")
-    Response delete(@PathParam("oid") String oid, @Context HttpServletRequest request);
+    Response delete(@PathParam("oid") String oid);
 }
