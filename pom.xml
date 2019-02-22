@@ -4,7 +4,7 @@
 
     <groupId>fi.vm.sade.valintaperusteet</groupId>
     <artifactId>valintaperusteet</artifactId>
-    <version>5.2-SNAPSHOT</version>
+    <version>5.3-SNAPSHOT</version>
 
     <name>Valintaperusteet</name>
     <packaging>pom</packaging>
@@ -35,21 +35,6 @@
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>fi.vm.sade.generic</groupId>
-                <artifactId>generic-common</artifactId>
-                <version>9.6-SNAPSHOT</version>
-                <exclusions>
-                    <exclusion>
-                        <artifactId>jsr311-api</artifactId>
-                        <groupId>javax.ws.rs</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>jersey-server</artifactId>
-                        <groupId>com.sun.jersey</groupId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
             <dependency>
                 <groupId>io.swagger</groupId>
                 <artifactId>swagger-jaxrs</artifactId>
