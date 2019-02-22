@@ -11,7 +11,6 @@ import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
 import fi.vm.sade.service.valintaperusteet.resource.HakijaryhmaValintatapajonoResource;
-import fi.vm.sade.service.valintaperusteet.resource.ValintatapajonoResource;
 import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaValintatapajonoService;
 import fi.vm.sade.service.valintaperusteet.service.HakijaryhmatyyppikoodiService;
 import fi.vm.sade.service.valintaperusteet.service.ValintakoeService;
@@ -53,7 +52,7 @@ import java.util.Map;
 @PreAuthorize("isAuthenticated()")
 @Api(value = "/hakijaryhma_valintatapajono", description = "Resurssi hakijaryhmien ja valintatapajonojen välisten liitosten käsittelyyn")
 public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValintatapajonoResource {
-    protected final static Logger LOGGER = LoggerFactory.getLogger(ValintatapajonoResource.class);
+    protected final static Logger LOGGER = LoggerFactory.getLogger(HakijaryhmaValintatapajonoResource.class);
 
     @Autowired
     ValintatapajonoService jonoService;
