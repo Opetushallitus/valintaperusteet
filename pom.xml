@@ -25,7 +25,7 @@
         <modelmapper.version>2.1.0</modelmapper.version>
         <spring.asm.version>3.1.4.RELEASE</spring.asm.version>
         <spring.version>4.3.22.RELEASE</spring.version>
-        <spring.security.version>4.1.5.RELEASE</spring.security.version>
+        <spring.security.version>4.2.11.RELEASE</spring.security.version>
         <swagger.version>1.5.16</swagger.version>
 
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -137,7 +137,7 @@
             <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-ehcache</artifactId>
-                <version>4.2.7.Final</version>
+                <version>${hibernate.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.hibernate</groupId>
@@ -232,7 +232,7 @@
             <dependency>
                 <groupId>fi.vm.sade.java-utils</groupId>
                 <artifactId>opintopolku-cas-servlet-filter</artifactId>
-                <version>0.1.0-SNAPSHOT</version>
+                <version>0.1.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>commons-io</groupId>
@@ -329,11 +329,6 @@
              <dependency>
                  <groupId>org.springframework</groupId>
                  <artifactId>spring-webmvc</artifactId>
-                 <version>${spring.version}</version>
-             </dependency>
-             <dependency>
-                 <groupId>org.springframework</groupId>
-                 <artifactId>spring-webmvc-portlet</artifactId>
                  <version>${spring.version}</version>
              </dependency>
              <dependency>
