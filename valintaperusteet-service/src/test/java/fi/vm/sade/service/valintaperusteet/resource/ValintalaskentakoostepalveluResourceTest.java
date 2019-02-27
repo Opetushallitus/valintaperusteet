@@ -61,7 +61,7 @@ public class ValintalaskentakoostepalveluResourceTest {
     }
 
     @Test
-    public void testJonojenPrioriteetit() {
+    public void testJonojenPrioriteetitEndToEnd() {
 
         Map<String, Integer> oidToPrioriteetti = new HashMap<>();
 
@@ -84,5 +84,4 @@ public class ValintalaskentakoostepalveluResourceTest {
         }
 
     }
-
 }

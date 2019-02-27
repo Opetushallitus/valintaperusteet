@@ -3,7 +3,7 @@ package fi.vm.sade.service.valintaperusteet.dto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @ApiModel(value = "ValinnanVaiheDTO", description = "Valinnan vaihe")
@@ -16,7 +16,7 @@ public class ValinnanVaiheJonoillaDTO extends ValinnanVaiheCreateDTO {
     private Boolean inheritance;
 
     @ApiModelProperty(value = "Valinnan vaiheen valintatapajonot")
-    private Set<ValintatapajonoDTO> jonot = new HashSet<ValintatapajonoDTO>();
+    private LinkedHashSet<ValintatapajonoDTO> jonot = new LinkedHashSet<>();
 
     public String getOid() {
         return oid;
@@ -38,7 +38,7 @@ public class ValinnanVaiheJonoillaDTO extends ValinnanVaiheCreateDTO {
         return jonot;
     }
 
-    public void setJonot(Set<ValintatapajonoDTO> jonot) {
+    public void setJonot(LinkedHashSet<ValintatapajonoDTO> jonot) {
         this.jonot = jonot;
     }
 }
