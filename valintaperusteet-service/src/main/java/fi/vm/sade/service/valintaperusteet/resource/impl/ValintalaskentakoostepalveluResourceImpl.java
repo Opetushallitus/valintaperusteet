@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.resource.impl;
 
+import fi.vm.sade.service.valintaperusteet.util.JononPrioriteettiAsettaja;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import fi.vm.sade.service.valintaperusteet.dto.*;
@@ -209,20 +210,7 @@ public class ValintalaskentakoostepalveluResourceImpl {
     @ApiOperation(value = "Palauttaa valintatapajonot, jossa ei käytetä laskentaa", response = ValintatapajonoDTO.class)
     public List<ValinnanVaiheJonoillaDTO> ilmanLaskentaa(@PathParam("oid") String oid) {
         List<ValinnanVaiheJonoillaDTO> valinnanVaiheJonoillaDTOs = modelMapper.mapList(hakukohdeService.ilmanLaskentaa(oid), ValinnanVaiheJonoillaDTO.class);
-        for (ValinnanVaiheJonoillaDTO vaihe : valinnanVaiheJonoillaDTOs) {
-            if (vaihe.getJonot() != null) {
-                int i = 0;
-                Set<ValintatapajonoDTO> ilmanLaskentaaJonot = new HashSet<>();
-                for (ValintatapajonoDTO jono : vaihe.getJonot()) {
-                    jono.setPrioriteetti(i);
-                    if (!jono.getKaytetaanValintalaskentaa()) {
-                        ilmanLaskentaaJonot.add(jono);
-                    }
-                    i++;
-                }
-                vaihe.setJonot(ilmanLaskentaaJonot);
-            }
-        }
+        JononPrioriteettiAsettaja.filtteroiJaJarjestaJonotIlmanLaskentaa(valinnanVaiheJonoillaDTOs);
         return valinnanVaiheJonoillaDTOs;
     }
 

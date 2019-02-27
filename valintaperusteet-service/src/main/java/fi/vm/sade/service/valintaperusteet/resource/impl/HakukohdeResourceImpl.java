@@ -50,6 +50,7 @@ import fi.vm.sade.service.valintaperusteet.service.ValintakoeService;
 import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakukohdeViiteEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaOidTyhjaException;
+import fi.vm.sade.service.valintaperusteet.util.JononPrioriteettiAsettaja;
 import fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit;
 import fi.vm.sade.sharedutils.AuditLog;
 import fi.vm.sade.sharedutils.ValintaResource;
@@ -65,7 +66,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.*;
+
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -84,13 +85,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Component
 @Path("hakukohde")
@@ -385,22 +383,7 @@ public class HakukohdeResourceImpl {
     @ApiOperation(value = "Palauttaa valintatapajonot, jossa ei käytetä laskentaa", response = ValintatapajonoDTO.class)
     public List<ValinnanVaiheJonoillaDTO> ilmanLaskentaa(@PathParam("oid") String oid) {
         List<ValinnanVaiheJonoillaDTO> valinnanVaiheJonoillaDTOs = modelMapper.mapList(hakukohdeService.ilmanLaskentaa(oid), ValinnanVaiheJonoillaDTO.class);
-        // Lisää prioriteetit ja filtteröi sitten pois jonot jotka käyttävät laskentaa
-        for (ValinnanVaiheJonoillaDTO vaihe : valinnanVaiheJonoillaDTOs) {
-            if (vaihe.getJonot() != null) {
-                int i = 0;
-                Set<ValintatapajonoDTO> ilmanLaskentaaJonot = new HashSet<>();
-                for (ValintatapajonoDTO jono : vaihe.getJonot()) {
-                    jono.setPrioriteetti(i);
-                    if (!jono.getKaytetaanValintalaskentaa()) {
-                        ilmanLaskentaaJonot.add(jono);
-                    }
-                    i++;
-                }
-                vaihe.setJonot(ilmanLaskentaaJonot);
-            }
-        }
-        
+        JononPrioriteettiAsettaja.filtteroiJaJarjestaJonotIlmanLaskentaa(valinnanVaiheJonoillaDTOs);
         return valinnanVaiheJonoillaDTOs;
     }
 
