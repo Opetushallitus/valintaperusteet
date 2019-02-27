@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 public class JononPrioriteettiAsettaja {
-    public static void filtteroiJaJarjestaJonotIlmanLaskentaa(List<ValinnanVaiheJonoillaDTO> valinnanVaiheJonoillaDTOs) {
+    public static void filtteroiJonotIlmanLaskentaaJaAsetaPrioriteetit(List<ValinnanVaiheJonoillaDTO> valinnanVaiheJonoillaDTOs) {
         for (ValinnanVaiheJonoillaDTO vaihe : valinnanVaiheJonoillaDTOs) {
             if (vaihe.getJonot() != null) {
                 int i = 0;

@@ -383,7 +383,7 @@ public class HakukohdeResourceImpl {
     @ApiOperation(value = "Palauttaa valintatapajonot, jossa ei käytetä laskentaa", response = ValintatapajonoDTO.class)
     public List<ValinnanVaiheJonoillaDTO> ilmanLaskentaa(@PathParam("oid") String oid) {
         List<ValinnanVaiheJonoillaDTO> valinnanVaiheJonoillaDTOs = modelMapper.mapList(hakukohdeService.ilmanLaskentaa(oid), ValinnanVaiheJonoillaDTO.class);
-        JononPrioriteettiAsettaja.filtteroiJaJarjestaJonotIlmanLaskentaa(valinnanVaiheJonoillaDTOs);
+        JononPrioriteettiAsettaja.filtteroiJonotIlmanLaskentaaJaAsetaPrioriteetit(valinnanVaiheJonoillaDTOs);
         return valinnanVaiheJonoillaDTOs;
     }
 
