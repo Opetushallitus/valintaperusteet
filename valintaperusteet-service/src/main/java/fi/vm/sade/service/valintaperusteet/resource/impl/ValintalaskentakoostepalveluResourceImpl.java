@@ -30,32 +30,37 @@ import java.util.stream.IntStream;
 public class ValintalaskentakoostepalveluResourceImpl {
     private static final Logger LOG = LoggerFactory.getLogger(ValintalaskentakoostepalveluResourceImpl.class);
     private final static String HAKUKOHDE_VIITE_PREFIX = "{{hakukohde.";
-    @Autowired
-    private ValintaperusteService valintaperusteService;
+
+    private final ValintaperusteService valintaperusteService;
+    private final HakijaryhmaValintatapajonoService hakijaryhmaValintatapajonoService;
+    private final ValinnanVaiheService valinnanVaiheService;
+    private final ValintaryhmaService valintaryhmaService;
+    private final ValintatapajonoService valintatapajonoService;
+    private final LaskentakaavaService laskentakaavaService;
+    private final ValintaperusteetModelMapper modelMapper;
+    private final HakukohdeService hakukohdeService;
+    private final ValintakoeService valintakoeService;
 
     @Autowired
-    private HakijaryhmaValintatapajonoService hakijaryhmaValintatapajonoService;
-
-    @Autowired
-    private ValinnanVaiheService valinnanVaiheService;
-
-    @Autowired
-    private ValintaryhmaService valintaryhmaService;
-
-    @Autowired
-    private ValintatapajonoService valintatapajonoService;
-
-    @Autowired
-    private LaskentakaavaService laskentakaavaService;
-
-    @Autowired
-    private ValintaperusteetModelMapper modelMapper;
-
-    @Autowired
-    private HakukohdeService hakukohdeService;
-
-    @Autowired
-    private ValintakoeService valintakoeService;
+    public ValintalaskentakoostepalveluResourceImpl(ValintaperusteService valintaperusteService,
+                                                    HakijaryhmaValintatapajonoService hakijaryhmaValintatapajonoService,
+                                                    ValinnanVaiheService valinnanVaiheService,
+                                                    ValintaryhmaService valintaryhmaService,
+                                                    ValintatapajonoService valintatapajonoService,
+                                                    LaskentakaavaService laskentakaavaService,
+                                                    ValintaperusteetModelMapper modelMapper,
+                                                    HakukohdeService hakukohdeService,
+                                                    ValintakoeService valintakoeService) {
+        this.valintaperusteService = valintaperusteService;
+        this.hakijaryhmaValintatapajonoService = hakijaryhmaValintatapajonoService;
+        this.valinnanVaiheService = valinnanVaiheService;
+        this.valintaryhmaService = valintaryhmaService;
+        this.valintatapajonoService = valintatapajonoService;
+        this.laskentakaavaService = laskentakaavaService;
+        this.modelMapper = modelMapper;
+        this.hakukohdeService = hakukohdeService;
+        this.valintakoeService = valintakoeService;
+    }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

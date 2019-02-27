@@ -39,7 +39,7 @@ public class ValintalaskentakoostepalveluResourceTest {
 
     private ValintatapajonoResourceImpl jonoResource = new ValintatapajonoResourceImpl();
     private ValinnanVaiheResourceImpl vaiheResource = new ValinnanVaiheResourceImpl();
-    private ValintalaskentakoostepalveluResourceImpl valintalaskentakoostepalveluResource = new ValintalaskentakoostepalveluResourceImpl();
+    private ValintalaskentakoostepalveluResourceImpl valintalaskentakoostepalveluResource;
     private HakukohdeResourceImpl hakukohdeResource = new HakukohdeResourceImpl();
 
     @Autowired
@@ -50,8 +50,8 @@ public class ValintalaskentakoostepalveluResourceTest {
     public void setUp() {
         applicationContext.getAutowireCapableBeanFactory().autowireBean(jonoResource);
         applicationContext.getAutowireCapableBeanFactory().autowireBean(vaiheResource);
-        applicationContext.getAutowireCapableBeanFactory().autowireBean(valintalaskentakoostepalveluResource);
         applicationContext.getAutowireCapableBeanFactory().autowireBean(hakukohdeResource);
+        valintalaskentakoostepalveluResource = applicationContext.getAutowireCapableBeanFactory().getBean(ValintalaskentakoostepalveluResourceImpl.class);
     }
 
     @Test
