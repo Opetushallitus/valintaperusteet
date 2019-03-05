@@ -3,7 +3,7 @@ sudo: required
 language: java
 
 jdk:
-- openjdk11
+- oraclejdk8
 
 services:
 - docker
@@ -24,7 +24,7 @@ env:
   - secure: "iU4lhqNrrGNVdNJdelP6vuI6iApUHb622bc2HC7EOuZvedG3RdDkj2Uud5+LRiUqxQG57EPJR042qLHI6MxCFnrh4pL9f1liedhdG5y4Fpcdco2xhp9f30EiFuNVs9u5QIwwO+G8/Ck7Ul+DRQDFaMub3XfSFt7EPJTVgw6J3ArdGxe1RPwCZJ2fQ1MUZ43UDhLe0mvkLXwMrbhAjeBVME7RpjWRW2q1GxMuVs62f/Hx1M4GkdvIRQw68B1hHuZRS71QRQ7Ru/svRIOq4MKP5olparLZ+ZUDHx/CHyxjZ2KhBepeeyC6qvH54EpyS08Syxn4Jk/3DsHn+BRZXxO7FsHFq4f7S1Mq9F2xMpDE/JmkbNwwFyXLcwcJSW2wCgRUBmvFetq0fMctLZNGPh/nFkKN8+Nk+VpjSDgUu5I3zhWBHvY6vK0KuDyUHdjJSNi1Nu4iqNVYFVH/eUHKsF0gweAqGh3mu0VmKvSqccho8qIF4BOUtYfJOJj7EncJMuAWRRsrUaCuYKNBNLbu6NUDoQww9nH9ft0tvgvsRh6oVHFYSs/XLlESw958OCozr9fDh/IMkWZiIhhxwnyIyvIbaVbNMcpiQMXj2dODeidFUwhDcgfEHdeIXbN2A/2gbxGnlG32Vh87ilYQ8v62KNa6bMdNjsEtunj/8uUnUk2AIJ0="
 
 install:
-- git clone --single-branch --branch jdk11 https://github.com/Opetushallitus/ci-tools.git
+- git clone https://github.com/Opetushallitus/ci-tools.git
 - source ci-tools/common/setup-tools.sh
 - sudo sh -c "printf '\n%s penaali.hard.ware.fi\n' $(dig +short artifactory.opintopolku.fi|head -n1) >> /etc/hosts"
 - export ARTIFACT_NAME="valintaperusteet-service"
@@ -35,7 +35,7 @@ script:
 - mv valintaperusteet-service/target/valintaperusteet-service.war $DOCKER_BUILD_DIR/artifact/valintaperusteet-service.war
 - cp -vr src/main/resources/oph-configuration $DOCKER_BUILD_DIR/config/
 
-- export BASE_IMAGE="baseimage-war:jdk11"
+- export BASE_IMAGE="baseimage-war:master"
 - ./ci-tools/common/pull-image.sh
 - ./ci-tools/build/build-war.sh $ARTIFACT_NAME
 
