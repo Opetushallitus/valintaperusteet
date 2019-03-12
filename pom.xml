@@ -450,6 +450,11 @@
                 <artifactId>javax.xml.soap-api</artifactId>
                 <version>1.4.0</version>
             </dependency>
+            <dependency>
+                <groupId>org.reflections</groupId>
+                <artifactId>reflections</artifactId>
+                <version>0.9.10</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -484,8 +489,8 @@
                         </goals>
                         <configuration>
                             <target>
-                                <echo message="writing target/${project.build.finalName}/buildversion.txt"/>
-                                <echo file="target/${project.build.finalName}/buildversion.txt">
+                                <echo message="writing ${project.build.outputDirectory}/webapp/buildversion.txt"/>
+                                <echo file="${project.build.outputDirectory}/webapp/buildversion.txt">
                                     <![CDATA[artifactId=${project.artifactId}
 version=${project.version}
 buildNumber=${build}
@@ -495,7 +500,7 @@ buildTtime=${maven.build.timestamp}
 ]]>
                                 </echo>
                                 <loadfile property="buildversiontxt"
-                                          srcFile="target/${project.build.finalName}/buildversion.txt"/>
+                                          srcFile="${project.build.outputDirectory}/webapp/buildversion.txt"/>
                                 <echo message="${buildversiontxt}"/>
                                 <echo file="target/mavenversion.txt">${project.version}</echo>
                             </target>
