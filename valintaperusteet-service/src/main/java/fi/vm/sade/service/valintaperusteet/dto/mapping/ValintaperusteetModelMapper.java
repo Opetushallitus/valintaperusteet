@@ -389,6 +389,12 @@ public class ValintaperusteetModelMapper extends ModelMapper {
         return funktiokutsu;
     }
 
+    /**
+     * @param list must be in order by priority, if TO is Prioritized , as results are assigned
+     *             priorities according to their order in the input list.
+     * @see Prioritized
+     *
+     */
     public <FROM, TO> List<TO> mapList(List<FROM> list, final Class<TO> to) {
         List<TO> toList = new ArrayList<TO>();
         int index = 0;
