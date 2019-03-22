@@ -4,7 +4,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.LinkedHashSet;
-import java.util.Set;
 
 @ApiModel(value = "ValinnanVaiheDTO", description = "Valinnan vaihe")
 public class ValinnanVaiheJonoillaDTO extends ValinnanVaiheCreateDTO {
@@ -15,7 +14,7 @@ public class ValinnanVaiheJonoillaDTO extends ValinnanVaiheCreateDTO {
     @ApiModelProperty(value = "Onko valinnan vaihe peritty")
     private Boolean inheritance;
 
-    @ApiModelProperty(value = "Valinnan vaiheen valintatapajonot")
+    @ApiModelProperty(value = "Valinnan vaiheen valintatapajonot prioriteettijärjestyksessä")
     private LinkedHashSet<ValintatapajonoDTO> jonot = new LinkedHashSet<>();
 
     public String getOid() {
@@ -34,7 +33,7 @@ public class ValinnanVaiheJonoillaDTO extends ValinnanVaiheCreateDTO {
         this.inheritance = inheritance;
     }
 
-    public Set<ValintatapajonoDTO> getJonot() {
+    public LinkedHashSet<ValintatapajonoDTO> getJonot() {
         return jonot;
     }
 
