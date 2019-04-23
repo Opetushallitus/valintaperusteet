@@ -3,7 +3,7 @@
 	<parent>
         <groupId>fi.vm.sade.valintaperusteet</groupId>
         <artifactId>valintaperusteet</artifactId>
-		<version>5.2-SNAPSHOT</version>
+		<version>5.3-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
 	<artifactId>valintaperusteet-domain</artifactId>
@@ -24,6 +24,10 @@
 		<dependency>
 			<groupId>javax.validation</groupId>
 			<artifactId>validation-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.annotation</groupId>
+			<artifactId>javax.annotation-api</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>commons-lang</groupId>
