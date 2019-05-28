@@ -163,6 +163,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
   def getSyotetytArvot: Map[String, SyotettyArvo] = Map[String, SyotettyArvo](syotetytArvot.toList: _*)
   def getFunktioTulokset: Map[String, FunktioTulos] = Map[String, FunktioTulos](funktioTulokset.toList: _*)
 
+
   def laske(laskettava: Lukuarvofunktio): Tulos[BigDecimal] = {
     laskeLukuarvo(laskettava)
   }
@@ -509,23 +510,27 @@ private class Laskin private(private val hakukohde: Hakukohde,
     }
 
     def haeMerkkijonoJaKonvertoiLukuarvoksi(konvertteri: Konvertteri[String, BigDecimal], oletusarvo: Option[BigDecimal], valintaperusteviite: Valintaperuste, kentat: Kentat): (Option[BigDecimal], Seq[Tila], Historia)  = {
+      if (kentat.isEmpty && oletusarvo.isDefined) {
+        val tila: Tila = if (valintaperusteviite.pakollinen) new Hylattytila else new Hyvaksyttavissatila
+        (oletusarvo, List(tila), Historia("Hae merkkijono ja konvertoi lukuarvoksi", oletusarvo, List(tila), None, Some(Map("oletusarvo" -> oletusarvo))))
+      } else {
+        konvertteri match {
+          case a: Arvokonvertteri[_, _] => {
+            val (konv, virheet) = konversioToArvokonversio(a.konversioMap, kentat, hakukohde)
+            if (konv.isEmpty) {
+              (None, virheet, Historia("Hae merkkijono ja konvertoi lukuarvoksi", None, virheet, None, None))
+            } else {
+              val (tulos, tila) = haeValintaperuste[BigDecimal](valintaperusteviite, kentat,
+                s => suoritaKonvertointi[String, BigDecimal]((Some(s), new Hyvaksyttavissatila), konv.get.asInstanceOf[Arvokonvertteri[String, BigDecimal]]), oletusarvo)
 
-      konvertteri match {
-        case a: Arvokonvertteri[_, _] => {
-          val (konv, virheet) = konversioToArvokonversio(a.konversioMap, kentat, hakukohde)
-          if (konv.isEmpty) {
-            (None, virheet, Historia("Hae merkkijono ja konvertoi lukuarvoksi", None, virheet, None, None))
-          } else {
+              (tulos, tila, Historia("Hae merkkijono ja konvertoi lukuarvoksi", tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
+            }
+          }
+          case _ => {
             val (tulos, tila) = haeValintaperuste[BigDecimal](valintaperusteviite, kentat,
-              s => suoritaKonvertointi[String, BigDecimal]((Some(s), new Hyvaksyttavissatila), konv.get.asInstanceOf[Arvokonvertteri[String, BigDecimal]]), oletusarvo)
-
+              s => suoritaKonvertointi[String, BigDecimal]((Some(s), new Hyvaksyttavissatila), konvertteri), oletusarvo)
             (tulos, tila, Historia("Hae merkkijono ja konvertoi lukuarvoksi", tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
           }
-        }
-        case _ => {
-          val (tulos, tila) = haeValintaperuste[BigDecimal](valintaperusteviite, kentat,
-            s => suoritaKonvertointi[String, BigDecimal]((Some(s), new Hyvaksyttavissatila), konvertteri), oletusarvo)
-          (tulos, tila, Historia("Hae merkkijono ja konvertoi lukuarvoksi", tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
         }
       }
     }
