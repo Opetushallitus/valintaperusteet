@@ -27,8 +27,8 @@ public class VtsRestClient {
 
     @Autowired
     public VtsRestClient(ValintaperusteetUrlProperties valintaperusteetUrlProperties) {
-
-        restClient = new CachingRestClient("valintaperusteet-service");
+        String callerId = "1.2.246.562.10.00000000001.valintaperusteet.valintaperusteet-service";
+        restClient = new CachingRestClient(callerId);
 
         restClient.setCasService(casService);
         restClient.setWebCasUrl(casCallbackurl);
