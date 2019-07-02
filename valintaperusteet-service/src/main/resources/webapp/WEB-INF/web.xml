@@ -52,7 +52,7 @@
 	<!-- Health Check -->
 	<servlet>
 		<servlet-name>healthcheck</servlet-name>
-		<servlet-class>fi.vm.sade.generic.healthcheck.SpringAwareHealthCheckServlet</servlet-class>
+		<servlet-class>fi.vm.sade.javautils.healthcheck.SpringAwareHealthCheckServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>healthcheck</servlet-name>

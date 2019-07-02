@@ -1,6 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.util;
 
-import fi.vm.sade.generic.rest.CachingRestClient;
+import fi.vm.sade.javautils.legacy_caching_rest_client.CachingRestClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
