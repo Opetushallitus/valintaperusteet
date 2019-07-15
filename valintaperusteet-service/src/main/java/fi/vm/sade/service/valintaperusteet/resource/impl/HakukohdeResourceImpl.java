@@ -52,9 +52,9 @@ import fi.vm.sade.service.valintaperusteet.service.exception.HakukohdeViiteEiOle
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaOidTyhjaException;
 import fi.vm.sade.service.valintaperusteet.util.JononPrioriteettiAsettaja;
 import fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit;
-import fi.vm.sade.sharedutils.AuditLog;
-import fi.vm.sade.sharedutils.ValintaResource;
-import fi.vm.sade.sharedutils.ValintaperusteetOperation;
+import fi.vm.sade.valinta.sharedutils.AuditLog;
+import fi.vm.sade.valinta.sharedutils.ValintaResource;
+import fi.vm.sade.valinta.sharedutils.ValintaperusteetOperation;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
