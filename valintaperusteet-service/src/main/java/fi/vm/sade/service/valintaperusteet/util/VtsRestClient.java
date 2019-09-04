@@ -1,6 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.util;
 
-import fi.vm.sade.generic.rest.CachingRestClient;
+import fi.vm.sade.javautils.legacy_caching_rest_client.CachingRestClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -27,8 +27,8 @@ public class VtsRestClient {
 
     @Autowired
     public VtsRestClient(ValintaperusteetUrlProperties valintaperusteetUrlProperties) {
-
-        restClient = new CachingRestClient("valintaperusteet-service");
+        String callerId = "1.2.246.562.10.00000000001.valintaperusteet.valintaperusteet-service";
+        restClient = new CachingRestClient(callerId);
 
         restClient.setCasService(casService);
         restClient.setWebCasUrl(casCallbackurl);

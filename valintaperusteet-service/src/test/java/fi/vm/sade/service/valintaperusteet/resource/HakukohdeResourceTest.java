@@ -14,7 +14,7 @@ import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestE
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.resource.impl.HakukohdeResourceImpl;
 import fi.vm.sade.service.valintaperusteet.util.TestUtil;
-import fi.vm.sade.sharedutils.FakeAuthenticationInitialiser;
+import fi.vm.sade.valinta.sharedutils.FakeAuthenticationInitialiser;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -2,7 +2,7 @@ package fi.vm.sade.service.valintaperusteet.util;
 
 import fi.vm.sade.auditlog.ApplicationType;
 import fi.vm.sade.auditlog.Audit;
-import fi.vm.sade.sharedutils.AuditLogger;
+import fi.vm.sade.valinta.sharedutils.AuditLogger;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.Collection;

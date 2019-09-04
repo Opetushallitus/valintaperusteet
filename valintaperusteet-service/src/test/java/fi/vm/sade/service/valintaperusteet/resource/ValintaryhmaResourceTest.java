@@ -8,7 +8,7 @@ import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.resource.impl.ValintaryhmaResourceImpl;
-import fi.vm.sade.sharedutils.FakeAuthenticationInitialiser;
+import fi.vm.sade.valinta.sharedutils.FakeAuthenticationInitialiser;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
