@@ -519,6 +519,15 @@ object Laskentadomainkonvertteri {
 
         NimettyLukuarvo(s"YO-kokeen pisteet (${valintaperusteviitteet.head.tunniste})", arvosana, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku = omaopintopolku)
 
+      case Funktionimi.HAEAMMATILLINENARVOSANA => {
+        val arvosana = HaeAmmatillinenArvosana(
+          Some(BigDecimal("0.0")),
+          valintaperusteviitteet.head,
+          omaopintopolku = omaopintopolku)
+
+        NimettyLukuarvo("Ammatillinen arvosana", arvosana, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku = omaopintopolku)
+      }
+
       case _ => sys.error(s"Could not calculate funktio ${funktionimi.name()}")
     }
   }
