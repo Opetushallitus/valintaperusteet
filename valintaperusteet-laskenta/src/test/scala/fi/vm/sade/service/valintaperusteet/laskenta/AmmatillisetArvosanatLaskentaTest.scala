@@ -13,8 +13,18 @@ import scala.collection.JavaConversions._
 
 class AmmatillisetArvosanatLaskentaTest extends FunSuite {
 
+  val hakukohde = new Hakukohde("123", new util.HashMap[String, String])
+
+  val kentat = new util.HashMap[String, String](){{
+    put("ammatillinen-tutkinto.yhteiset-tutkinnon-osat", "3.0")
+  }}
+  val suoritukset = new util.HashMap[String, util.List[util.Map[String, String]]]
+  val hakemus = TestHakemus("", Nil, kentat.toMap, suoritukset)
+
   test("Tutkinnon yhteisten tutkinnon osien arvosanat") {
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeAmmatillinenArvosanaKutsu())
+    val (tulos, _) = Laskin.laske(hakukohde, hakemus, lasku)
+    assert(BigDecimal(tulos.get) == BigDecimal("3.0"))
   }
 
   def createHaeAmmatillinenArvosanaKutsu(): Funktiokutsu = {
