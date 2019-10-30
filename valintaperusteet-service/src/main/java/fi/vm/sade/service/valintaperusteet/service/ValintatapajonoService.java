@@ -15,6 +15,8 @@ public interface ValintatapajonoService {
 
     Valintatapajono readByOid(String oid);
 
+    List<Valintatapajono> readByOids(List<String> oids);
+
     List<Valintatapajono> findAll();
 
     Valintatapajono lisaaValintatapajonoValinnanVaiheelle(String valinnanVaiheOid, ValintatapajonoCreateDTO jono, String edellinenValintatapajonoOid);

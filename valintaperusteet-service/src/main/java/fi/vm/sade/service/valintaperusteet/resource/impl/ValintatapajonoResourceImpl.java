@@ -51,6 +51,7 @@ import javax.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 @Path("valintatapajono")
@@ -94,6 +95,16 @@ public class ValintatapajonoResourceImpl {
     @ApiOperation(value = "Hakee valintatapajonon OID:n perusteella", response = ValintatapajonoDTO.class)
     public ValintatapajonoDTO readByOid(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
         return modelMapper.map(valintatapajonoService.readByOid(oid), ValintatapajonoDTO.class);
+    }
+
+    @POST
+    @Path("/")
+    @Produces(MediaType.APPLICATION_JSON)
+    @PreAuthorize(READ_UPDATE_CRUD)
+    @ApiOperation(value = "Hakee valintatapajonojen tiedot OID-listan perusteella", response = ValintatapajonoDTO.class)
+    public List<ValintatapajonoDTO> readByOids(@ApiParam(value = "Oidit, joita vastaavien jonojen tiedot halutaan", required = true) List<String> oids) {
+        return valintatapajonoService.readByOids(oids).stream()
+                .map(jono -> modelMapper.map(jono, ValintatapajonoDTO.class)).collect(Collectors.toList());
     }
 
     @GET
