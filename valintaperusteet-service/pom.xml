@@ -14,6 +14,7 @@
     <packaging>jar</packaging>
 
     <properties>
+        <valintaperusteet-service.mainClass>fi.vm.sade.service.valintaperusteet.ValintaperusteetJetty</valintaperusteet-service.mainClass>
         <skipDbDiagramGenerate>false</skipDbDiagramGenerate>
     </properties>
 
@@ -434,7 +435,7 @@
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <manifestEntries>
-                                        <Main-Class>fi.vm.sade.service.valintaperusteet.ValintaperusteetJetty</Main-Class>
+                                        <Main-Class>${valintaperusteet-service.mainClass}</Main-Class>
                                     </manifestEntries>
                                 </transformer>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
@@ -452,6 +453,24 @@
                 </executions>
             </plugin>
         </plugins>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <configuration>
+                        <mainClass>${valintaperusteet-service.mainClass}</mainClass>
+                        <systemProperties>
+                            <systemProperty>
+                                <key>user.home</key>
+                                <value>${env.VALINTAPERUSTEET_SERVICE_USER_HOME}</value>
+                            </systemProperty>
+                        </systemProperties>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
     <pluginRepositories>
         <pluginRepository>
