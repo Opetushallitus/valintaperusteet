@@ -21,9 +21,16 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
+import play.api.libs.json.JsArray;
+import play.api.libs.json.JsValue;
+import scala.collection.Seq$;
+import scala.collection.immutable.Nil;
+import scala.collection.immutable.Nil$;
+import scala.collection.immutable.Seq;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 

@@ -4,6 +4,7 @@ import java.lang.{Integer => JInteger}
 import java.util.{List => JList, Map => JMap}
 
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus.Kentat
+import play.api.libs.json.{JsArray, JsValue}
 
 import scala.collection.JavaConversions._
 import scala.collection.JavaConverters._
@@ -11,10 +12,17 @@ import scala.collection.JavaConverters._
 class Hakemus(val oid: String,
               val hakutoiveet: JMap[JInteger, Hakutoive],
               jkentat: JMap[String, String],
-              jmetatiedot: JMap[String, JList[JMap[String, String]]]) {
-
+              jmetatiedot: JMap[String, JList[JMap[String, String]]],
+              koskiOpiskeluoikeudet: JsValue) {
   val kentat: Kentat = jkentat.toMap
   val metatiedot: Map[String, List[Kentat]] = jmetatiedot.toMap.mapValues(_.toList.map(_.toMap))
+
+  def this(oid: String,
+    hakutoiveet: JMap[JInteger, Hakutoive],
+    jkentat: JMap[String, String],
+    jmetatiedot: JMap[String, JList[JMap[String, String]]]) {
+    this(oid, hakutoiveet, jkentat, jmetatiedot, JsArray())
+  }
 
   def onkoHakutoivePrioriteetilla(hakukohde: String, prioriteetti: Int, ryhmaOid: Option[String] = None): Boolean = {
     def hakutoiveKuuluuRyhmaan: Hakutoive => Boolean = {
