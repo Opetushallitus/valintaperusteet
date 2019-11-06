@@ -15,7 +15,7 @@
 
     <bean id="modelMapper" class="fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper"/>
 
-    <bean id="actorSystem" class="akka.actor.ActorSystem" factory-method="create" destroy-method="shutdown" scope="singleton">
+    <bean id="actorSystem" class="akka.actor.ActorSystem" factory-method="create" destroy-method="terminate" scope="singleton">
         <constructor-arg value="valintaperusteetActorSystem" />
     </bean>
 

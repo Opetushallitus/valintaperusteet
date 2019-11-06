@@ -14,9 +14,7 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
 object JsonFormats {
-  import JsonHelpers.enumFormat
-  import JsonHelpers.arrayMapWrites
-  import JsonHelpers.arrayMapReads
+  import JsonHelpers.{arrayMapWrites, enumFormat}
 
   // Enumit
   implicit def funktiotyyppiFormat = enumFormat(Funktiotyyppi)
@@ -88,7 +86,7 @@ object JsonFormats {
   implicit def mapReadsKonvertteriNimiKonvertteriKuvaus: Reads[Map[Konvertterinimi, KonvertteriTyyppi]] = new Reads[Map[Konvertterinimi, KonvertteriTyyppi]] {
     def reads(json: JsValue): JsResult[Map[Konvertterinimi, KonvertteriTyyppi]] = {
       val map = json.as[List[JsObject]].foldLeft(Map[Konvertterinimi, KonvertteriTyyppi](Konvertterinimi.withName("ARVOVALIKONVERTTERI") -> Arvovalikonvertterikuvaus))((s,a) => {
-        val tyyppi: JsValue = json \ "tyyppi"
+        val tyyppi: JsLookupResult = json \ "tyyppi"
         tyyppi.as[String] match {
           case "ARVOKONVERTTERI" => {
             val arvotyyppi = (json \ "arvotyyppi").as[String]
@@ -131,7 +129,22 @@ object JsonFormats {
     (__ \ "jsuoritukset").write[JMap[String, JList[JMap[String, String]]]]
     ) (unlift(Hakemus.unapply))
 
-  //Histroia
+  implicit val mapReads: Reads[Map[String, Option[Any]]] = (jv: JsValue) =>
+    JsSuccess(jv match {
+      case jsObject: JsObject => mapJsObjectToLooseMap(jsObject)
+      case x => throw new UnsupportedOperationException(s"Don't know how to deserialise '$x' of type ${x.getClass} to Map")
+    })
+
+  private def mapJsObjectToLooseMap(jsObject: JsObject): Map[String, Option[Any]] = {
+    jsObject.value.mapValues {
+      case JsNull => None
+      case s: JsString => Some(s.value)
+      case i: JsNumber => Some(i.value)
+      case x => throw new UnsupportedOperationException(s"Don't know how to deserialise '$x'")
+    }.asInstanceOf[Map[String, Option[Any]]]
+  }
+
+  //Historia
   implicit def historiaReads: Reads[Historia] = (
     (__ \ "funktio").read[String] and
     (__ \ "tulos").readNullable[Any] and

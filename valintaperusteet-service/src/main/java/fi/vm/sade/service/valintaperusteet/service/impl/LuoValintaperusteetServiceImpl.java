@@ -1,30 +1,12 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.Charset;
-import java.util.*;
+import static fi.vm.sade.service.valintaperusteet.service.impl.actors.creators.SpringExtension.SpringExtProvider;
 
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.PoisonPill;
 import akka.routing.Broadcast;
-import akka.routing.RoundRobinRouter;
-import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
-import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.LuoValintaperuste;
-import fi.vm.sade.service.valintaperusteet.service.impl.generator.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ResourceLoaderAware;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
-
+import akka.routing.RoundRobinPool;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriDTO;
 import fi.vm.sade.service.valintaperusteet.dto.KoodiDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheCreateDTO;
@@ -32,6 +14,7 @@ import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
+import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
@@ -45,8 +28,34 @@ import fi.vm.sade.service.valintaperusteet.service.ValintakoeService;
 import fi.vm.sade.service.valintaperusteet.service.ValintakoekoodiService;
 import fi.vm.sade.service.valintaperusteet.service.ValintaryhmaService;
 import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
+import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.LuoValintaperuste;
+import fi.vm.sade.service.valintaperusteet.service.impl.generator.LukionPkAineet;
+import fi.vm.sade.service.valintaperusteet.service.impl.generator.LukionValintaperusteet;
+import fi.vm.sade.service.valintaperusteet.service.impl.generator.PkAineet;
+import fi.vm.sade.service.valintaperusteet.service.impl.generator.PkJaYoPohjaiset;
+import fi.vm.sade.service.valintaperusteet.service.impl.generator.PkPohjaiset;
+import fi.vm.sade.service.valintaperusteet.service.impl.generator.YhteisetKaavat;
+import fi.vm.sade.service.valintaperusteet.service.impl.generator.YoAineet;
+import fi.vm.sade.service.valintaperusteet.service.impl.generator.YoPohjaiset;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ResourceLoaderAware;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
-import static fi.vm.sade.service.valintaperusteet.service.impl.actors.creators.SpringExtension.SpringExtProvider;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Component
 public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetService, ResourceLoaderAware {
@@ -1134,7 +1143,7 @@ public class LuoValintaperusteetServiceImpl implements LuoValintaperusteetServic
             SpringExtProvider.get(actorSystem).initialize(applicationContext);
 
             ActorRef master = actorSystem.actorOf(
-                    SpringExtProvider.get(actorSystem).props("LuoValintaperusteetActorBean").withRouter(new RoundRobinRouter(10)), "AmmatillinenRouter");
+                    SpringExtProvider.get(actorSystem).props("LuoValintaperusteetActorBean").withRouter(new RoundRobinPool(10)), "AmmatillinenRouter");
 
             while ((line = reader.readLine()) != null) {
                 String[] splitted = line.split(CSV_DELIMITER);

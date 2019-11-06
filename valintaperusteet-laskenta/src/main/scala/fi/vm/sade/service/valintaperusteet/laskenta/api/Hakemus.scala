@@ -14,7 +14,7 @@ class Hakemus(val oid: String,
               jkentat: JMap[String, String],
               jmetatiedot: JMap[String, JList[JMap[String, String]]],
               koskiOpiskeluoikeudet: JsValue) {
-  val kentat: Kentat = jkentat.toMap
+  val kentat: Kentat = jkentat.asScala.toSeq.toMap
   val metatiedot: Map[String, List[Kentat]] = jmetatiedot.toMap.mapValues(_.toList.map(_.toMap))
 
   def this(oid: String,
@@ -63,7 +63,11 @@ object Hakemus {
   }
 
   def unapply(h: Hakemus): Option[(String, JMap[JInteger, Hakutoive], JMap[String, String], JMap[String, JList[JMap[String, String]]])] = {
-    Some((h.oid, h.hakutoiveet, mapAsJavaMap(h.kentat), mapAsJavaMap(h.metatiedot.mapValues(list => seqAsJavaList(list.map(mapAsJavaMap))))))
+    val javaMetatiedot: JMap[String, JList[JMap[String, String]]] = h.metatiedot.
+      mapValues(list =>
+        list.map(_.asJava).asJava).
+      asJava
+    Some((h.oid, h.hakutoiveet, h.kentat.asJava, javaMetatiedot))
   }
 }
 
@@ -75,6 +79,6 @@ object Hakutoive {
     new Hakutoive(oid, ryhmat)
   }
 
-  def unapply(h: Hakutoive): Option[(String, JList[String])] = Some(h.hakukohdeOid, seqAsJavaList(h.hakukohdeRyhmat))
+  def unapply(h: Hakutoive): Option[(String, JList[String])] = Some(h.hakukohdeOid, h.hakukohdeRyhmat)
 
 }

@@ -57,8 +57,8 @@
         </dependency>
         <dependency>
             <groupId>org.scalatest</groupId>
-            <artifactId>scalatest_2.11</artifactId>
-            <version>2.2.2</version>
+            <artifactId>scalatest_2.12</artifactId>
+            <version>3.0.2</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -70,27 +70,27 @@
         </dependency>
         <dependency>
             <groupId>com.typesafe.play</groupId>
-            <artifactId>play-json_2.11</artifactId>
-            <version>2.4.0-M1</version>
+            <artifactId>play-json_2.12</artifactId>
+            <version>2.7.4</version>
         </dependency>
         <dependency>
             <groupId>io.circe</groupId>
-            <artifactId>circe-core_2.11</artifactId>
+            <artifactId>circe-core_2.12</artifactId>
             <version>${circe.version}</version>
         </dependency>
         <dependency>
             <groupId>io.circe</groupId>
-            <artifactId>circe-generic_2.11</artifactId>
+            <artifactId>circe-generic_2.12</artifactId>
             <version>${circe.version}</version>
         </dependency>
         <dependency>
             <groupId>io.circe</groupId>
-            <artifactId>circe-parser_2.11</artifactId>
+            <artifactId>circe-parser_2.12</artifactId>
             <version>${circe.version}</version>
         </dependency>
         <dependency>
             <groupId>io.circe</groupId>
-            <artifactId>circe-optics_2.11</artifactId>
+            <artifactId>circe-optics_2.12</artifactId>
             <version>${circe.version}</version>
         </dependency>
     </dependencies>
