@@ -14,7 +14,7 @@ class Hakemus(val oid: String,
               val hakutoiveet: JMap[JInteger, Hakutoive],
               jkentat: JMap[String, String],
               jmetatiedot: JMap[String, JList[JMap[String, String]]],
-              koskiOpiskeluoikeudet: Json) {
+              val koskiOpiskeluoikeudet: Json) {
   val kentat: Kentat = jkentat.asScala.toSeq.toMap
   val metatiedot: Map[String, List[Kentat]] = jmetatiedot.toMap.mapValues(_.toList.map(_.toMap))
 
