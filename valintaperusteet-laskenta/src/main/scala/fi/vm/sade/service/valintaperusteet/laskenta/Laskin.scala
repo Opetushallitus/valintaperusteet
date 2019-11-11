@@ -11,10 +11,11 @@ import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus.Kentat
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Tila.Tilatyyppi
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
 import fi.vm.sade.service.valintaperusteet.laskenta.api.{Hakemus, Hakukohde, Laskentatulos, FunktioTulos => FTulos, SyotettyArvo => SArvo}
+import io.circe.optics.JsonPath
 import org.slf4j.LoggerFactory
 import play.api.libs.json._
 
-import scala.collection.JavaConversions
+import scala.collection.{JavaConversions, immutable}
 import scala.collection.JavaConversions._
 import scala.collection.mutable.ListBuffer
 
@@ -66,6 +67,30 @@ object Laskin {
                              hakemus: Hakemus,
                              kaikkiHakemukset: Option[JCollection[Hakemus]],
                              laskettava: Lukuarvofunktio): Laskentatulos[JBigDecimal] = {
+
+    if (LOG.isDebugEnabled && hakemus.koskiOpiskeluoikeudet.hcursor.values.getOrElse(Nil).nonEmpty) {
+      // TODO: Tämä on vain proof of concept, jonka voi poistaa
+      val _suoritustenModulienTunnisteet = JsonPath.root.each.
+        suoritukset.each.
+        koulutusmoduuli.
+        tunniste.
+        nimi.
+        fi.
+        string
+      val osasuoritustenModulienTunnisteet = JsonPath.root.each.
+        suoritukset.each.
+        osasuoritukset.each.
+        koulutusmoduuli.
+        tunniste.
+        nimi.
+        fi.
+        string
+
+      val kaikkiModulienTunnisteet: immutable.Seq[String] = _suoritustenModulienTunnisteet.getAll(hakemus.koskiOpiskeluoikeudet) ++
+        osasuoritustenModulienTunnisteet.getAll(hakemus.koskiOpiskeluoikeudet)
+
+      LOG.debug(s"hakemuksella ${hakemus.oid} on Koski-opiskeluoikeuksia: $kaikkiModulienTunnisteet")
+    }
 
     val laskin = if(kaikkiHakemukset.isDefined) new Laskin(hakukohde, hakemus, kaikkiHakemukset.get.toSet) else new Laskin(hakukohde, hakemus)
 
