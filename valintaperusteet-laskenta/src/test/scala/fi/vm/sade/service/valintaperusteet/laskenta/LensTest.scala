@@ -1,5 +1,9 @@
-import io.circe.Json, io.circe.parser
+import java.time.format.DateTimeFormatter
+
+import io.circe.Json
+import io.circe.parser
 import io.circe.optics.JsonPath
+
 import scala.io.Source
 
 object LensTest {
@@ -11,6 +15,7 @@ object LensTest {
 
   def main(args: Array[String]): Unit = {
     val json = loadJson("koski-opiskeluoikeudet.json")
+    val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
     // Opiskeluoikeudet etsivä linssi
     val _opiskeluoikeudet = JsonPath.root.each.json
@@ -32,29 +37,48 @@ object LensTest {
     val _koulutusTyypinKoodiarvo = _koulutusmoduuli.koulutustyyppi.koodiarvo.string
     val _koulutusTyypinNimiFi = _koulutusmoduuli.koulutustyyppi.nimi.fi.string
 
+    val _vahvistusPvm = JsonPath.root.vahvistus.päivä.string
+
     // Osasuorituksen rakennetta purkavat linssit
     val _osasuorituksenKoulutusmoduuli = JsonPath.root.koulutusmoduuli
     val _osasuorituksenKoodiarvo = _osasuorituksenKoulutusmoduuli.tunniste.koodiarvo.string
     val _osasuorituksenNimiFi = _osasuorituksenKoulutusmoduuli.tunniste.nimi.fi.string
 
+    val suorituksenSallitutKoodit = Set(1, 4, 26)
+
     _opiskeluoikeudet.getAll(json).foreach(opiskeluoikeus => {
       val opiskeluoikeudenTyyppi = _opiskeluoikeudenTyyppi.getOption(opiskeluoikeus).orNull
       val valmistumisTila = _valmistumisTila.getAll(opiskeluoikeus)
+
       val onkoValmistunut: Boolean = valmistumisTila.contains("valmistunut")
+      val onkoAmmatillinenOpiskeluOikeus = opiskeluoikeudenTyyppi == "ammatillinenkoulutus"
+
       println("Opiskeluoikeuden tyyppi: %s".format(opiskeluoikeudenTyyppi))
       println("Valmistumistila: %s".format(valmistumisTila))
       println("Onko valmistunut: %s".format(onkoValmistunut))
+      println("Onko ammatillinen opiskeluoikeus: %s".format(onkoAmmatillinenOpiskeluOikeus))
 
-      _suoritukset.getAll(opiskeluoikeus).foreach(suoritus => {
+      val tulos = _suoritukset.getAll(opiskeluoikeus).map(suoritus => {
         val koodiarvo = _koodiarvo.getOption(suoritus).orNull
         val lyhytNimiFi = _lyhytNimiFi.getOption(suoritus).orNull
         val koulutusTyypinNimiFi = _koulutusTyypinNimiFi.getOption(suoritus).orNull
-        val koulutusTyypinKoodiarvo = _koulutusTyypinKoodiarvo.getOption(suoritus).orNull
+        val vahvistusPvm = _vahvistusPvm.getOption(suoritus) match {
+          case Some(dateString) => Some(dateFormat.parse(dateString))
+          case None => None
+        }
+
+        val koulutusTyypinKoodiarvo = _koulutusTyypinKoodiarvo.getOption(suoritus) match {
+          case Some(s) => s.toInt
+          case None => -1
+        }
+        val onkoSallitunTyyppinenSuoritus = suorituksenSallitutKoodit.contains(koulutusTyypinKoodiarvo)
 
         println("Koodiarvo: %s".format(koodiarvo))
+        println("Onko sallitun tyyppinen suoritus: %s".format(onkoSallitunTyyppinenSuoritus))
         println("Nimi: %s".format(lyhytNimiFi))
         println("Koulutustyypin nimi: %s".format(koulutusTyypinNimiFi))
         println("Koulutustyypin koodiarvo: %s".format(koulutusTyypinKoodiarvo))
+        println("Vahvistus pvm: %s".format(vahvistusPvm))
 
         println("Osasuoritukset")
         _osasuoritukset.getAll(suoritus).foreach(osasuoritus => {
