@@ -3,6 +3,7 @@ package fi.vm.sade.kaava
 import java.lang.Boolean
 import java.math.BigDecimal
 import java.util
+import java.util.Collections
 
 import fi.vm.sade.kaava.LaskentaTestUtil.{Syoteparametri, TestHakemus, _}
 import fi.vm.sade.service.valintaperusteet.dto.model.{Funktionimi, Osallistuminen, Valintaperustelahde}
@@ -11,16 +12,16 @@ import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.VirheMetatieto.Virh
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
 import fi.vm.sade.service.valintaperusteet.laskenta.api.{Hakemus, Hakukohde, Hakutoive, Laskentatulos}
 import fi.vm.sade.service.valintaperusteet.model.TekstiRyhma
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 
 /**
  * User: kwuoti
  * Date: 4.2.2013
  * Time: 14.13
  */
-class LaskentaIntegraatioTest extends FunSuite {
+class LaskentaIntegraatioTest extends AnyFunSuite {
 
   val luku25 = Funktiokutsu(
     nimi = Funktionimi.LUKUARVO,
@@ -1383,7 +1384,7 @@ class LaskentaIntegraatioTest extends FunSuite {
       ))
 
     val hakukohde = new Hakukohde("oid1", new util.HashMap[String, String])
-    val hakemus = TestHakemusWithRyhmaOids("", List("oid2", "oid3", "oid1"), List(List("1.2.3.5"), List("1.2.3.5"), List("1.2.3.4")), Map[String, String](), mapAsJavaMap(Map()))
+    val hakemus = TestHakemusWithRyhmaOids("", List("oid2", "oid3", "oid1"), List(List("1.2.3.5"), List("1.2.3.5"), List("1.2.3.4")), Map[String, String](), Collections.emptyMap())
 
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
@@ -1404,7 +1405,7 @@ class LaskentaIntegraatioTest extends FunSuite {
       ))
 
     val hakukohde = new Hakukohde("oid1", new util.HashMap[String, String])
-    val hakemus = TestHakemusWithRyhmaOids("", List("oid2", "oid3", "oid1"), List(List("1.2.3.4"), List("1.2.3.5"), List("1.2.3.4")), Map[String, String](), mapAsJavaMap(Map()))
+    val hakemus = TestHakemusWithRyhmaOids("", List("oid2", "oid3", "oid1"), List(List("1.2.3.4"), List("1.2.3.5"), List("1.2.3.4")), Map[String, String](), Collections.emptyMap())
 
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
@@ -1425,7 +1426,7 @@ class LaskentaIntegraatioTest extends FunSuite {
       ))
 
     val hakukohde = new Hakukohde("oid1", new util.HashMap[String, String])
-    val hakemus = TestHakemusWithRyhmaOids("", List("oid2", "oid1", "oid3"), List(List(), List("1.2.3.4"), List("1.2.3.5")), Map[String, String](), mapAsJavaMap(Map()))
+    val hakemus = TestHakemusWithRyhmaOids("", List("oid2", "oid1", "oid3"), List(List(), List("1.2.3.4"), List("1.2.3.5")), Map[String, String](), Collections.emptyMap())
 
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
@@ -1446,7 +1447,7 @@ class LaskentaIntegraatioTest extends FunSuite {
       ))
 
     val hakukohde = new Hakukohde("oid1", new util.HashMap[String, String])
-    val hakemus = TestHakemusWithRyhmaOids("", List("oid2", "oid1", "oid3"), List(List(), List(), List("1.2.3.5")), Map[String, String](), mapAsJavaMap(Map()))
+    val hakemus = TestHakemusWithRyhmaOids("", List("oid2", "oid1", "oid3"), List(List(), List(), List("1.2.3.5")), Map[String, String](), Collections.emptyMap())
 
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
@@ -1653,7 +1654,7 @@ class LaskentaIntegraatioTest extends FunSuite {
 
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
 
-    val tulokset: List[Laskentatulos[Boolean]] = hakemukset.map(h => Laskin.suoritaValintalaskenta(hakukohde, h, hakemukset, lasku))
+    val tulokset: List[Laskentatulos[Boolean]] = hakemukset.map(h => Laskin.suoritaValintalaskenta(hakukohde, h, hakemukset.asJava, lasku))
 
     for (i <- 0 until tulokset.size) {
       val tulos = tulokset(i)
@@ -1843,12 +1844,12 @@ class LaskentaIntegraatioTest extends FunSuite {
         tunniste = "HI",
         onPakollinen = true)))
 
-    val arvosanat =  Map[String, java.util.List[java.util.Map[String, String]]](
+    val arvosanat: Map[String, util.List[util.Map[String, String]]] =  Map[String, java.util.List[java.util.Map[String, String]]](
       ("HI" -> util.Arrays.asList(Map(
         "PISTEET" -> "15"
-      )))
+      ).asJava))
     )
-    val hakemus = TestHakemus("", Nil, Map(), arvosanat)
+    val hakemus = TestHakemus("", Nil, Map(), arvosanat.asJava)
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
 
     val tulos = Laskin.suoritaValintakoelaskenta(hakukohde, hakemus, lasku)
@@ -2002,7 +2003,7 @@ class LaskentaIntegraatioTest extends FunSuite {
       valintaperustetunniste = List(ValintaperusteViite(false, tunniste, Valintaperustelahde.HAKUKOHTEEN_ARVO)))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
-    val (tulos, tila) = Laskin.laske(new Hakukohde("hakukohdeOid", Map(tunniste -> "100.0")), tyhjaHakemus, lasku)
+    val (tulos, tila) = Laskin.laske(new Hakukohde("hakukohdeOid", Map(tunniste -> "100.0").asJava), tyhjaHakemus, lasku)
     assert(tulos.get.equals(new BigDecimal("100.0")))
     assertTilaHyvaksyttavissa(tila)
   }
@@ -2015,7 +2016,7 @@ class LaskentaIntegraatioTest extends FunSuite {
       valintaperustetunniste = List(ValintaperusteViite(false, tunniste, Valintaperustelahde.HAKUKOHTEEN_ARVO)))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
-    val (tulos, tila) = Laskin.laske(new Hakukohde("hakukohdeOid", Map("toinen tunniste" -> "100.0")), tyhjaHakemus, lasku)
+    val (tulos, tila) = Laskin.laske(new Hakukohde("hakukohdeOid", Map("toinen tunniste" -> "100.0").asJava), tyhjaHakemus, lasku)
     assertTulosTyhja(tulos)
     assertTilaHyvaksyttavissa(tila)
   }
@@ -2044,7 +2045,7 @@ class LaskentaIntegraatioTest extends FunSuite {
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val tulokset = hakemukset.map {
       h =>
-        Laskin.suoritaValintalaskenta(hakukohde, h, asJavaCollection(hakemukset), lasku)
+        Laskin.suoritaValintalaskenta(hakukohde, h, hakemukset.asJavaCollection, lasku)
     }
 
     assert(tulokset.size == 4)
@@ -2087,7 +2088,7 @@ class LaskentaIntegraatioTest extends FunSuite {
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val tulokset = hakemukset.map {
       h =>
-        Laskin.suoritaValintalaskenta(hakukohde, h, asJavaCollection(hakemukset), lasku)
+        Laskin.suoritaValintalaskenta(hakukohde, h, hakemukset.asJavaCollection, lasku)
     }
 
     assert(tulokset.size == 4)
@@ -2134,7 +2135,7 @@ class LaskentaIntegraatioTest extends FunSuite {
               arvo = "30.0")))))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
-    val tulos = Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, List(), lasku)
+    val tulos = Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, Collections.emptyList(), lasku)
     assert(tulos.getTulos.compareTo(new BigDecimal("18.5714")) == 0)
     assertTilaHyvaksyttavissa(tulos.getTila)
   }
@@ -2145,10 +2146,14 @@ class LaskentaIntegraatioTest extends FunSuite {
       valintaperustetunniste = List(ValintaperusteViite(false, "hakukohteenTunniste", Valintaperustelahde.HAKUKOHTEEN_ARVO, true)))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
-    val hakukohde = new Hakukohde("hakukohdeOid", Map("hakukohteenTunniste" -> "hakemuksenTunniste"))
-    val hakemus = new Hakemus("oid", Map[java.lang.Integer, Hakutoive](), Map("hakemuksenTunniste" -> "100.0"), Map[String, java.util.List[java.util.Map[String, String]]]())
+    val hakukohde = new Hakukohde("hakukohdeOid", Map("hakukohteenTunniste" -> "hakemuksenTunniste").asJava)
+    val hakemus = new Hakemus(
+      "oid",
+      Map[java.lang.Integer, Hakutoive]().asJava,
+      Map("hakemuksenTunniste" -> "100.0").asJava,
+      Map[String, java.util.List[java.util.Map[String, String]]]().asJava)
 
-    val tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemus, List(hakemus), lasku)
+    val tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemus, Collections.singletonList(hakemus), lasku)
     assert(tulos.getTulos.compareTo(new BigDecimal("100.0")) == 0)
     assertTilaHyvaksyttavissa(tulos.getTila)
   }
@@ -2202,17 +2207,17 @@ class LaskentaIntegraatioTest extends FunSuite {
       tallennaTulos = true)
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
-    val tulos = Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, List(), lasku)
+    val tulos = Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, Collections.emptyList(), lasku)
 
-    assert(tulos.getFunktioTulokset.contains("painotettu"))
+    assert(tulos.getFunktioTulokset.asScala.contains("painotettu"))
     val painotettu = tulos.getFunktioTulokset.get("painotettu")
     assert(painotettu.getArvo.equals("18.5714"))
 
-    assert(tulos.getFunktioTulokset.contains("tunniste1"))
+    assert(tulos.getFunktioTulokset.asScala.contains("tunniste1"))
     val tunniste1 = tulos.getFunktioTulokset.get("tunniste1")
     assert(tunniste1.getArvo.equals("10.0"))
 
-    assert(tulos.getFunktioTulokset.contains("tunniste2"))
+    assert(tulos.getFunktioTulokset.asScala.contains("tunniste2"))
     val tunniste2 = tulos.getFunktioTulokset.get("tunniste2")
     assert(tunniste2.getArvo.equals("30.0"))
 
@@ -2234,13 +2239,13 @@ class LaskentaIntegraatioTest extends FunSuite {
               Syoteparametri("totuusarvo", "true")))))
 
     val laskut = Laskentadomainkonvertteri.muodostaTotuusarvolasku(lista)
-    val tulokset = Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, List(), laskut)
+    val tulokset = Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, Collections.emptyList(), laskut)
 
-    assert(tulokset.getFunktioTulokset.contains("totuusarvoTrue"))
+    assert(tulokset.getFunktioTulokset.asScala.contains("totuusarvoTrue"))
     val totuusarvoTrue = tulokset.getFunktioTulokset.get("totuusarvoTrue")
     assert(totuusarvoTrue.getArvo.equals("true"))
 
-    assert(tulokset.getFunktioTulokset.contains("totuusarvoFalse"))
+    assert(tulokset.getFunktioTulokset.asScala.contains("totuusarvoFalse"))
     val totuusarvoFalse = tulokset.getFunktioTulokset.get("totuusarvoFalse")
     assert(totuusarvoFalse.getArvo.equals("false"))
 

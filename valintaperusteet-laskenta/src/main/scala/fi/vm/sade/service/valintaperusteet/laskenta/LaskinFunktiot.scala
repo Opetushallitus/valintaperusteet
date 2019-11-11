@@ -1,15 +1,13 @@
 package fi.vm.sade.service.valintaperusteet.laskenta
 
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.{Lukuarvovalikonversio, _}
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus.Kentat
+import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakukohde
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
-import fi.vm.sade.service.valintaperusteet.laskenta.api.{Hakukohde, Hakemus}
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta._
-import scala.Some
-import scala.Tuple2
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonversio
-import scala.util.Try
-import scala.collection.JavaConversions
 import fi.vm.sade.service.valintaperusteet.model.TekstiRyhma
+
+import scala.jdk.CollectionConverters._
+import scala.util.Try
 
 trait LaskinFunktiot {
 
@@ -24,7 +22,7 @@ trait LaskinFunktiot {
   }
 
   protected def suomenkielinenHylkaysperusteMap(teksti: String) = {
-    JavaConversions.mapAsJavaMap(Map("FI" -> teksti))
+    Map("FI" -> teksti).asJava
   }
 
   protected def suoritaKonvertointi[S, T](tulos: Tuple2[Option[S], Tila],

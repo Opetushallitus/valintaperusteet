@@ -6,20 +6,20 @@ import fi.vm.sade.kaava.LaskentaTestUtil.TestHakemus
 import fi.vm.sade.kaava.Laskentadomainkonvertteri
 import fi.vm.sade.service.valintaperusteet.dto.model.{Funktionimi, Valintaperustelahde}
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakukohde
-import fi.vm.sade.service.valintaperusteet.model.{Funktiokutsu, ValintaperusteViite, _}
-import org.scalatest._
+import fi.vm.sade.service.valintaperusteet.model.{Funktiokutsu, ValintaperusteViite}
+import org.scalatest.funsuite.AnyFunSuite
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 
-class AmmatillisetArvosanatLaskentaTest extends FunSuite {
+class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
 
   val hakukohde = new Hakukohde("123", new util.HashMap[String, String])
 
-  val kentat = new util.HashMap[String, String](){{
+  val kentat: util.HashMap[String, String] = new util.HashMap[String, String](){{
     put("ammatillinen-tutkinto.yhteiset-tutkinnon-osat", "3.0")
   }}
   val suoritukset = new util.HashMap[String, util.List[util.Map[String, String]]]
-  val hakemus = TestHakemus("", Nil, kentat.toMap, suoritukset)
+  val hakemus = TestHakemus("", Nil, kentat.asScala.toMap, suoritukset)
 
   test("Tutkinnon yhteisten tutkinnon osien arvosanat") {
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeAmmatillinenArvosanaKutsu())

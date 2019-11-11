@@ -7,8 +7,8 @@ import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus.Kentat
 import io.circe.Json
 import io.circe.syntax.EncoderOps
 
-import scala.collection.JavaConversions._
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
+
 
 class Hakemus(val oid: String,
               val hakutoiveet: JMap[JInteger, Hakutoive],
@@ -16,7 +16,7 @@ class Hakemus(val oid: String,
               jmetatiedot: JMap[String, JList[JMap[String, String]]],
               val koskiOpiskeluoikeudet: Json) {
   val kentat: Kentat = jkentat.asScala.toSeq.toMap
-  val metatiedot: Map[String, List[Kentat]] = jmetatiedot.toMap.mapValues(_.toList.map(_.toMap))
+  val metatiedot: Map[String, List[Kentat]] = jmetatiedot.asScala.toMap.mapValues(_.asScala.toList.map(_.asScala.toMap)).toMap
 
   def this(oid: String,
     hakutoiveet: JMap[JInteger, Hakutoive],
@@ -43,7 +43,7 @@ class Hakemus(val oid: String,
   }
 
   def onkoHakukelpoinen(hakukohdeOid: String): Boolean = {
-    val key = jkentat.keySet().filter(k => k.startsWith("preference") && k.endsWith("-Koulutus-id"))
+    val key = jkentat.keySet().asScala.filter(k => k.startsWith("preference") && k.endsWith("-Koulutus-id"))
       .find(k => jkentat.get(k) == hakukohdeOid)
     val result = key match {
       case Some(k) =>
@@ -64,10 +64,11 @@ object Hakemus {
   }
 
   def unapply(h: Hakemus): Option[(String, JMap[JInteger, Hakutoive], JMap[String, String], JMap[String, JList[JMap[String, String]]])] = {
-    val javaMetatiedot: JMap[String, JList[JMap[String, String]]] = h.metatiedot.
-      mapValues(list =>
-        list.map(_.asJava).asJava).
-      asJava
+    val mapatytMetatiedot: Map[String, JList[JMap[String, String]]] = h.metatiedot.view.mapValues { kenttalista =>
+      val value: Seq[JMap[String, String]] = kenttalista.map(_.asJava)
+      value.asJava
+    }.toMap
+    val javaMetatiedot: JMap[String, JList[JMap[String, String]]] = mapatytMetatiedot.asJava
     Some((h.oid, h.hakutoiveet, h.kentat.asJava, javaMetatiedot))
   }
 }

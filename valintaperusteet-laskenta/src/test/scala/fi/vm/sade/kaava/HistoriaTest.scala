@@ -1,14 +1,12 @@
 package fi.vm.sade.kaava
 
-import org.scalatest.FunSuite
-
+import fi.vm.sade.service.valintaperusteet.laskenta.Historia
 import fi.vm.sade.service.valintaperusteet.laskenta.JsonFormats._
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
-import scala.Some
-import fi.vm.sade.service.valintaperusteet.laskenta.Historia
+import org.scalatest.funsuite.AnyFunSuite
 
 
-class HistoriaTest extends FunSuite {
+class HistoriaTest extends AnyFunSuite {
 
   test("historiaJsonMuunnos") {
     val FUNKTIO1 = "DEMOGRAFIA"
@@ -33,5 +31,4 @@ class HistoriaTest extends FunSuite {
   test("historiaLaskentaRekursio") {
 
   }
-
 }

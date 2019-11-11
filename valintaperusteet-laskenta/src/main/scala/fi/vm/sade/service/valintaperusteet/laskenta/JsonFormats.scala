@@ -141,7 +141,7 @@ object JsonFormats {
       case s: JsString => Some(s.value)
       case i: JsNumber => Some(i.value)
       case x => throw new UnsupportedOperationException(s"Don't know how to deserialise '$x'")
-    }.asInstanceOf[Map[String, Option[Any]]]
+    }.toMap.asInstanceOf[Map[String, Option[Any]]]
   }
 
   //Historia

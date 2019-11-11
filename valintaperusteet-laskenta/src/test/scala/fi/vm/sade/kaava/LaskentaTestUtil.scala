@@ -1,12 +1,13 @@
 package fi.vm.sade.kaava
 
+import java.util.Collections
+
 import fi.vm.sade.service.valintaperusteet.dto.model.{Funktionimi, Valintaperustelahde}
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
 import fi.vm.sade.service.valintaperusteet.laskenta.api.{Hakemus, Hakutoive}
 import fi.vm.sade.service.valintaperusteet.model._
 
-import scala.collection.JavaConversions
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 
 /**
  * User: kwuoti
@@ -75,11 +76,11 @@ object LaskentaTestUtil {
         arg = Funktioargumentti(funktiokutsu, child, i)
       } yield arg
 
-      funktiokutsu.setFunktioargumentit(setAsJavaSet(fargs.toSet))
-      funktiokutsu.setSyoteparametrit(setAsJavaSet(syoteparametrit.toSet))
-      funktiokutsu.setArvokonvertteriparametrit(setAsJavaSet(arvokonvertterit.toSet))
-      funktiokutsu.setArvovalikonvertteriparametrit(setAsJavaSet(arvovalikonvertterit.toSet))
-      funktiokutsu.setValintaperusteviitteet(setAsJavaSet(valintaperustetunniste.toSet))
+      funktiokutsu.setFunktioargumentit(fargs.toSet.asJava)
+      funktiokutsu.setSyoteparametrit(syoteparametrit.toSet.asJava)
+      funktiokutsu.setArvokonvertteriparametrit(arvokonvertterit.toSet.asJava)
+      funktiokutsu.setArvovalikonvertteriparametrit(arvovalikonvertterit.toSet.asJava)
+      funktiokutsu.setValintaperusteviitteet(valintaperustetunniste.toSet.asJava)
 
       funktiokutsu
     }
@@ -142,14 +143,17 @@ object LaskentaTestUtil {
     def apply(oid: String, hakutoiveet: List[String], ryhmaoidit: List[List[String]], kentat: Map[String, String], suoritukset: java.util.Map[String, java.util.List[java.util.Map[String, String]]]) = {
       val hakutoiveetMap: Map[java.lang.Integer, Hakutoive] = (for {
         prio <- 1 to hakutoiveet.size
-      } yield (new java.lang.Integer(prio), new Hakutoive(hakutoiveet(prio - 1), ryhmaoidit(prio - 1)))).toMap
+      } yield (new java.lang.Integer(prio), new Hakutoive(hakutoiveet(prio - 1), ryhmaoidit(prio - 1).asJava))).toMap
 
-      new Hakemus(oid, mapAsJavaMap(hakutoiveetMap), mapAsJavaMap(kentat), suoritukset)
+      new Hakemus(oid, hakutoiveetMap.asJava, kentat.asJava, suoritukset)
     }
   }
 
   object TestHakemus {
-    def apply(oid: String, hakutoiveet: List[String], kentat: Map[String, String], suoritukset: java.util.Map[String, java.util.List[java.util.Map[String, String]]] = mapAsJavaMap(Map())) = {
+    def apply(oid: String,
+              hakutoiveet: List[String],
+              kentat: Map[String, String],
+              suoritukset: java.util.Map[String, java.util.List[java.util.Map[String, String]]] = Collections.emptyMap()): Hakemus = {
       val ryhmaoidit = hakutoiveet.map(_ => List())
       TestHakemusWithRyhmaOids(oid, hakutoiveet, ryhmaoidit, kentat, suoritukset)
     }
@@ -168,7 +172,6 @@ object LaskentaTestUtil {
   }
 
   def suomenkielinenHylkaysperusteMap(teksti: String) = {
-    JavaConversions.mapAsJavaMap(Map("FI" -> teksti))
+    Map("FI" -> teksti).asJava
   }
-
 }

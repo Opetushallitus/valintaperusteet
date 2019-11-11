@@ -1,20 +1,19 @@
 package fi.vm.sade.kaava
 
-import org.scalatest.FunSuite
-import fi.vm.sade.kaava.LaskentaTestUtil._
-import fi.vm.sade.service.valintaperusteet.model.{TekstiRyhma, Funktioargumentti}
-import fi.vm.sade.kaava.LaskentaTestUtil.Funktiokutsu
-import java.math.BigDecimal
-import fi.vm.sade.service.valintaperusteet.service.validointi.virhe.{Validointivirhe, Virhetyyppi}
 import java.util
+
+import fi.vm.sade.kaava.LaskentaTestUtil.{Funktiokutsu, _}
 import fi.vm.sade.service.valintaperusteet.dto.model.{Funktionimi, Valintaperustelahde}
+import fi.vm.sade.service.valintaperusteet.model.{Funktioargumentti, TekstiRyhma}
+import fi.vm.sade.service.valintaperusteet.service.validointi.virhe.{Validointivirhe, Virhetyyppi}
+import org.scalatest.funsuite.AnyFunSuite
 
 /**
  * User: kwuoti
  * Date: 25.1.2013
  * Time: 14.57
  */
-class LaskentakaavavalidaattoriTest extends FunSuite {
+class LaskentakaavavalidaattoriTest extends AnyFunSuite {
 
   val validiLukuarvo1 = Funktiokutsu(
     nimi = Funktionimi.LUKUARVO,

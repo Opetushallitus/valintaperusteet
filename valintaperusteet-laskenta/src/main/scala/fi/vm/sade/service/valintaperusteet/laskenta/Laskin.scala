@@ -15,9 +15,9 @@ import io.circe.optics.JsonPath
 import org.slf4j.LoggerFactory
 import play.api.libs.json._
 
-import scala.collection.{JavaConversions, immutable}
-import scala.collection.JavaConversions._
+import scala.collection.immutable
 import scala.collection.mutable.ListBuffer
+import scala.jdk.CollectionConverters._
 
 private case class Tulos[T](tulos: Option[T], tila: Tila, historia: Historia)
 
@@ -92,13 +92,13 @@ object Laskin {
       LOG.debug(s"hakemuksella ${hakemus.oid} on Koski-opiskeluoikeuksia: $kaikkiModulienTunnisteet")
     }
 
-    val laskin = if(kaikkiHakemukset.isDefined) new Laskin(hakukohde, hakemus, kaikkiHakemukset.get.toSet) else new Laskin(hakukohde, hakemus)
+    val laskin = if(kaikkiHakemukset.isDefined) new Laskin(hakukohde, hakemus, kaikkiHakemukset.get.asScala.toSet) else new Laskin(hakukohde, hakemus)
 
     laskin.laske(laskettava) match {
       case Tulos(tulos, tila, historia) => {
         new Laskentatulos[JBigDecimal](tila, if (tulos.isEmpty) null else tulos.get.underlying,
           String.valueOf(Json.toJson(wrapHistoria(hakemus, historia))),
-          wrapSyotetytArvot(laskin.getSyotetytArvot), wrapFunktioTulokset(laskin.getFunktioTulokset))
+          wrapSyotetytArvot(laskin.getSyotetytArvot).asJava, wrapFunktioTulokset(laskin.getFunktioTulokset).asJava)
       }
     }
 
@@ -109,13 +109,13 @@ object Laskin {
                              kaikkiHakemukset: Option[JCollection[Hakemus]],
                              laskettava: Totuusarvofunktio): Laskentatulos[JBoolean] = {
 
-    val laskin = if(kaikkiHakemukset.isDefined) new Laskin(hakukohde, hakemus, kaikkiHakemukset.get.toSet) else new Laskin(hakukohde, hakemus)
+    val laskin = if(kaikkiHakemukset.isDefined) new Laskin(hakukohde, hakemus, kaikkiHakemukset.get.asScala.toSet) else new Laskin(hakukohde, hakemus)
 
     laskin.laske(laskettava) match {
       case Tulos(tulos, tila, historia) => {
         new Laskentatulos[JBoolean](tila, if (tulos.isEmpty) null else Boolean.box(tulos.get),
           String.valueOf(Json.toJson(wrapHistoria(hakemus, historia))),
-          wrapSyotetytArvot(laskin.getSyotetytArvot), wrapFunktioTulokset(laskin.getFunktioTulokset))
+          wrapSyotetytArvot(laskin.getSyotetytArvot).asJava, wrapFunktioTulokset(laskin.getFunktioTulokset).asJava)
       }
     }
   }
@@ -162,7 +162,9 @@ object Laskin {
   }
 
   private def wrapHistoria(hakemus: Hakemus, historia: Historia) = {
-    val v: Map[String, Option[Any]] = hakemus.kentat.map(f => (f._1 -> Some(f._2))) ++ hakemus.metatiedot.map(f => (f._1 -> Some(f._2)))
+    val hakemuksenKenttienArvot: Seq[(String, Option[Any])] = hakemus.kentat.toSeq.map(f => f._1 -> Some(f._2))
+    val hakemuksenMetatietojenArvot: Map[String, Option[Any]] = hakemus.metatiedot.toSeq.map(f => f._1 -> Some(f._2)).toMap
+    val v: Map[String, Option[Any]] = (hakemuksenKenttienArvot ++ hakemuksenMetatietojenArvot).toMap
 
     val name = s"Laskenta hakemukselle (${hakemus.oid})"
     Historia(name, historia.tulos, historia.tilat, Some(List(historia)), Some(v))
@@ -199,7 +201,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
   }
 
   private def haeValintaperuste[T](valintaperusteviite: Valintaperuste, kentat: Kentat,
-                                   konv: (String => Tuple2[Option[T], List[Tila]]),
+                                   konv: String => Tuple2[Option[T], List[Tila]],
                                    oletusarvo: Option[T]): Tuple2[Option[T], List[Tila]] = {
     def haeValintaperusteenArvoHakemukselta(tunniste: String, pakollinen: Boolean) = {
       val (valintaperuste, tila) = haeValintaperuste(tunniste, pakollinen, kentat)
@@ -218,7 +220,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
     // Jos kyseessä on syötettävä valintaperuste, pitää ensin tsekata osallistumistieto
     valintaperusteviite match {
       case SyotettavaValintaperuste(tunniste, pakollinen, osallistuminenTunniste, kuvaus, kuvaukset, vaatiiOsallistumisen, syotettavavissaKaikille, tyypinKoodiUri, tilastoidaan, ammatillisenKielikoeSpecialHandling) => {
-        val (osallistuminen, osallistumistila) = hakemus.kentat.get(osallistuminenTunniste) match {
+        val (osallistuminen, osallistumistila: Tila) = hakemus.kentat.get(osallistuminenTunniste) match {
           case Some(osallistuiArvo) => {
             try {
               (Osallistuminen.valueOf(osallistuiArvo), new Hyvaksyttavissatila)
@@ -235,21 +237,21 @@ private class Laskin private(private val hakukohde: Hakukohde,
           (osallistuminenTunniste == "kielikoe_fi-OSALLISTUMINEN" || osallistuminenTunniste == "kielikoe_sv-OSALLISTUMINEN")
         val overrideAmmatillisenKielikoeOsallistuminenToShowCorrectOsallistuminenForExistingResultInSure = checkingAmmatillisenKielikoeOsallistuminenFromHakemus && osallistuminen == Osallistuminen.OSALLISTUI
 
-        val (arvo: Option[String], konvertoitu: Option[T], tilat) = if (pakollinen && vaatiiOsallistumisen && Osallistuminen.EI_OSALLISTUNUT == osallistuminen)
-          (None, None, List(osallistumistila,
+        val (arvo: Option[String], konvertoitu: Option[T], tilat: List[Tila]) = if (pakollinen && vaatiiOsallistumisen && Osallistuminen.EI_OSALLISTUNUT == osallistuminen)
+          (None, None, List[Tila](osallistumistila,
             new Hylattytila(tekstiryhmaToMap(kuvaukset),
               new EiOsallistunutHylkays(tunniste))))
         else if (pakollinen && Osallistuminen.MERKITSEMATTA == osallistuminen)
-          (None, None, List(osallistumistila, new Virhetila(suomenkielinenHylkaysperusteMap(s"Pakollisen syötettävän kentän arvo on merkitsemättä (tunniste $tunniste)"),
+          (None, None, List[Tila](osallistumistila, new Virhetila(suomenkielinenHylkaysperusteMap(s"Pakollisen syötettävän kentän arvo on merkitsemättä (tunniste $tunniste)"),
             new SyotettavaArvoMerkitsemattaVirhe(tunniste))))
         else {
-          val (arvo, konvertoitu, tilat) = haeValintaperusteenArvoHakemukselta(tunniste, pakollinen)
+          val (arvo, konvertoitu, tilat: Seq[Tila]) = haeValintaperusteenArvoHakemukselta(tunniste, pakollinen)
           val (osallistumislaskennassaKaytettavaArvo, osallistumislaskennassaKaytettavaLaskennallinenArvo) = if (overrideAmmatillisenKielikoeOsallistuminenToShowCorrectOsallistuminenForExistingResultInSure) {
             (Some("false"), Some(false).asInstanceOf[Some[T]])
           } else {
             (arvo, konvertoitu)
           }
-          (osallistumislaskennassaKaytettavaArvo, osallistumislaskennassaKaytettavaLaskennallinenArvo, osallistumistila :: tilat)
+          (osallistumislaskennassaKaytettavaArvo, osallistumislaskennassaKaytettavaLaskennallinenArvo, tilat.prepended(osallistumistila))
         }
 
         val osallistuminenValueToUse = if (overrideAmmatillisenKielikoeOsallistuminenToShowCorrectOsallistuminenForExistingResultInSure) {
@@ -262,14 +264,14 @@ private class Laskin private(private val hakukohde: Hakukohde,
         (konvertoitu, tilat)
       }
       case HakemuksenValintaperuste(tunniste, pakollinen) => {
-        val (_, konvertoitu, tilat) = haeValintaperusteenArvoHakemukselta(tunniste, pakollinen)
+        val (_, konvertoitu, tilat: List[Tila]) = haeValintaperusteenArvoHakemukselta(tunniste, pakollinen)
         (konvertoitu, tilat)
       }
       case HakukohteenValintaperuste(tunniste, pakollinen, epasuoraViittaus) => {
         hakukohde.valintaperusteet.get(tunniste).filter(!_.trim.isEmpty) match {
           case Some(arvo) => {
             if (epasuoraViittaus) {
-              val (_, konvertoitu, tilat) = haeValintaperusteenArvoHakemukselta(arvo, pakollinen)
+              val (_, konvertoitu, tilat: List[Tila]) = haeValintaperusteenArvoHakemukselta(arvo, pakollinen)
               (konvertoitu, tilat)
             } else konv(arvo)
           }
@@ -423,11 +425,11 @@ private class Laskin private(private val hakukohde: Hakukohde,
         } else {
           val ensisijaisetHakijat = kaikkiHakemukset.count(_.onkoHakutoivePrioriteetilla(hakukohde.hakukohdeOid, 1))
 
-          val omaArvo = hakemus.kentat.map(e => (e._1.toLowerCase -> e._2)).get(tunniste.toLowerCase)
+          val omaArvo = hakemus.kentat.toSeq.map(e => (e._1.toLowerCase -> e._2)).toMap.get(tunniste.toLowerCase)
           val tulos = Some(if (ensisijaisetHakijat == 0) false
           else {
             val samojenArvojenLkm = kaikkiHakemukset.count(h => h.onkoHakutoivePrioriteetilla(hakukohde.hakukohdeOid, 1) &&
-              h.kentat.map(e => (e._1.toLowerCase -> e._2)).get(tunniste.toLowerCase) == omaArvo)
+              h.kentat.toSeq.map(e => (e._1.toLowerCase -> e._2)).toMap.get(tunniste.toLowerCase) == omaArvo)
 
 
             val vertailuarvo = BigDecimal(samojenArvojenLkm).underlying.divide(BigDecimal(ensisijaisetHakijat).underlying, 4, RoundingMode.HALF_UP)
@@ -606,7 +608,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
           n <- nimittajaTulos.tulos
           o <- osoittajaTulos.tulos
         } yield {
-          if (n.intValue() == 0) (None, new Virhetila(suomenkielinenHylkaysperusteMap("Jako nollalla"), new JakoNollallaVirhe))
+          if (n.intValue == 0) (None, new Virhetila(suomenkielinenHylkaysperusteMap("Jako nollalla"), new JakoNollallaVirhe))
           else {
             (Some(BigDecimal(o.underlying.divide(n.underlying, 4, RoundingMode.HALF_UP))), new Hyvaksyttavissatila)
           }
@@ -777,7 +779,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
       case Hylkaa(f, hylkaysperustekuvaus, oid, tulosTunniste,_,_,_,_) => {
         laskeTotuusarvo(f) match {
           case Tulos(tulos, tila, historia) => {
-            val tila2 = tulos.map(b => if (b) new Hylattytila(JavaConversions.mapAsJavaMap(hylkaysperustekuvaus.getOrElse(Map.empty[String,String])),
+            val tila2 = tulos.map(b => if (b) new Hylattytila(hylkaysperustekuvaus.getOrElse(Map.empty[String,String]).asJava,
               new HylkaaFunktionSuorittamaHylkays)
             else new Hyvaksyttavissatila)
               .getOrElse(new Virhetila(suomenkielinenHylkaysperusteMap("Hylkäämisfunktion syöte on tyhjä. Hylkäystä ei voida tulkita."), new HylkaamistaEiVoidaTulkita))
@@ -793,11 +795,11 @@ private class Laskin private(private val hakukohde: Hakukohde,
             if(tulos.isEmpty && tila.getTilatyyppi.equals(Tilatyyppi.HYVAKSYTTAVISSA)) {
               val virheTila = new Virhetila(suomenkielinenHylkaysperusteMap("Hylkäämisfunktion syöte on tyhjä. Hylkäystä ei voida tulkita."), new HylkaamistaEiVoidaTulkita)
               (None, List(virheTila), Historia("Hylkää Arvovälillä", None, List(virheTila), Some(List(historia)), None))
-            } else if(arvovali isEmpty) {
+            } else if(arvovali.isEmpty) {
               val virheTila = new Virhetila(suomenkielinenHylkaysperusteMap("Arvovalin arvoja ei voida muuntaa lukuarvoiksi"), new HylkaamistaEiVoidaTulkita)
               (None, List(virheTila), Historia("Hylkää Arvovälillä", None, List(virheTila), Some(List(historia)), None))
             } else {
-              val arvovaliTila = tulos.map(arvo => if(onArvovalilla(arvo, (arvovali.get._1,arvovali.get._2), true, false)) new Hylattytila(JavaConversions.mapAsJavaMap(hylkaysperustekuvaus.getOrElse(Map.empty[String,String])),
+              val arvovaliTila = tulos.map(arvo => if(onArvovalilla(arvo, (arvovali.get._1,arvovali.get._2), true, false)) new Hylattytila(hylkaysperustekuvaus.getOrElse(Map.empty[String,String]).asJava,
                 new HylkaaFunktionSuorittamaHylkays) else new Hyvaksyttavissatila).getOrElse(new Hyvaksyttavissatila)
 
               val tilat = List(tila, arvovaliTila)
@@ -836,7 +838,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
                 }
                 case None => {
                   val tulokset = kaikkiHakemukset.map(h => {
-                    Option( Laskin.suoritaValintalaskenta(hakukohde, h, kaikkiHakemukset, skaalattava).getTulos)
+                    Option( Laskin.suoritaValintalaskenta(hakukohde, h, kaikkiHakemukset.asJava, skaalattava).getTulos)
                   }).filter(!_.isEmpty).map(_.get)
 
                   tulokset match {
@@ -862,8 +864,8 @@ private class Laskin private(private val hakukohde: Hakukohde,
       }
 
       case PainotettuKeskiarvo(oid, tulosTunniste,_,_,_,_, fs) => {
-        val tulokset = fs.map(p => Pair(laskeLukuarvo(p._1), laskeLukuarvo(p._2)))
-        val (tilat, historiat) = tulokset.reverse.foldLeft(Pair(List[Tila](), List[Historia]()))((lst, t) => Pair(t._1.tila :: t._2.tila :: lst._1, t._1.historia :: t._2.historia :: lst._2))
+        val tulokset = fs.map(p => Tuple2(laskeLukuarvo(p._1), laskeLukuarvo(p._2)))
+        val (tilat, historiat) = tulokset.reverse.foldLeft(Tuple2(List[Tila](), List[Historia]()))((lst, t) => Tuple2(t._1.tila :: t._2.tila :: lst._1, t._1.historia :: t._2.historia :: lst._2))
 
         val painokertointenSumma = tulokset.foldLeft(Laskin.ZERO) {
           (s, a) =>
@@ -879,7 +881,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
 
         val painotettuSumma = tulokset.foldLeft(Laskin.ZERO)((s, a) => s + a._1.tulos.getOrElse(Laskin.ONE) * a._2.tulos.getOrElse(Laskin.ZERO))
 
-        val painotettuKeskiarvo = if(painokertointenSumma.intValue() == 0) None else Some(BigDecimal(painotettuSumma.underlying.divide(painokertointenSumma.underlying, 4, RoundingMode.HALF_UP)))
+        val painotettuKeskiarvo = if(painokertointenSumma.intValue == 0) None else Some(BigDecimal(painotettuSumma.underlying.divide(painokertointenSumma.underlying, 4, RoundingMode.HALF_UP)))
 
         (painotettuKeskiarvo, tilat, Historia("Painotettu keskiarvo", painotettuKeskiarvo, tilat, Some(historiat), None))
       }
