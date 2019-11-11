@@ -10,10 +10,10 @@ object LensTest {
   }
 
   def main(args: Array[String]): Unit = {
-    val json = loadJson("opintotiedot-json.json")
-    val _foo = JsonPath.root.opiskeluoikeudet.each.oppilaitos.nimi.fi.string
-    val _bar = JsonPath.root.opiskeluoikeudet.each.suoritukset.each.koulutusmoduuli.tunniste.nimi.fi.string
-    val _baz = JsonPath.root.opiskeluoikeudet.each.suoritukset.each.osasuoritukset.each.koulutusmoduuli.tunniste.nimi.fi.string
+    val json = loadJson("koski-opiskeluoikeudet.json")
+    val _foo = JsonPath.root.each.oppilaitos.nimi.fi.string
+    val _bar = JsonPath.root.each.suoritukset.each.koulutusmoduuli.tunniste.nimi.fi.string
+    val _baz = JsonPath.root.each.suoritukset.each.osasuoritukset.each.koulutusmoduuli.tunniste.nimi.fi.string
 
     val oppilaitokset: List[String] = _foo.getAll(json)
     val koulutusmodulit: List[String] = _bar.getAll(json)
