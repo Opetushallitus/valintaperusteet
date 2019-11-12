@@ -125,7 +125,7 @@ object LensTest {
       println("Onko valmistunut: %s".format(onkoValmistunut))
       println("Onko ammatillinen opiskeluoikeus: %s".format(onkoAmmatillinenOpiskeluOikeus))
 
-      onkoAmmatillinenOpiskeluOikeus
+      onkoAmmatillinenOpiskeluOikeus && onkoValmistunut
     })
   }
 }
