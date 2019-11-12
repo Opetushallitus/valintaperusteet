@@ -24,9 +24,7 @@ object LensTest {
   }
 
   private def run(json: Json, sulkeutumisPäivämäärä: DateTime, opiskeluoikeudenHaluttuTyyppi: String, suorituksenSallitutKoodit: Set[Int], osasuorituksenSallitutKoodit: Set[String]): Unit = {
-    val valmiitTutkinnot: Seq[Json] = etsiValmiitTutkinnot(json, opiskeluoikeudenHaluttuTyyppi)
-
-    val yhteistenTutkinnonOsienArvosanat = valmiitTutkinnot
+    val yhteistenTutkinnonOsienArvosanat = etsiValmiitTutkinnot(json, opiskeluoikeudenHaluttuTyyppi)
       .flatMap(tutkinto => etsiValiditSuoritukset(tutkinto, sulkeutumisPäivämäärä, suorituksenSallitutKoodit))
       .map(suoritus => etsiYhteisetTutkinnonOsat(suoritus, sulkeutumisPäivämäärä, osasuorituksenSallitutKoodit))
 
@@ -41,20 +39,13 @@ object LensTest {
     val _osasuorituksenKoulutusmoduuli = JsonPath.root.koulutusmoduuli
     val _osasuorituksenKoodiarvo = _osasuorituksenKoulutusmoduuli.tunniste.koodiarvo.string
     val _osasuorituksenNimiFi = _osasuorituksenKoulutusmoduuli.tunniste.nimi.fi.string
-    val _osasuorituksenArviointi = JsonPath.root.arviointi.each.json
 
     _osasuoritukset.getAll(suoritus).filter(osasuoritus => {
       osasuorituksenSallitutKoodit.contains(_osasuorituksenKoodiarvo.getOption(osasuoritus).orNull)
     }).map(osasuoritus => {
       val osasuorituksenKoodiarvo = _osasuorituksenKoodiarvo.getOption(osasuoritus).orNull
       val osasuorituksenNimiFi = _osasuorituksenNimiFi.getOption(osasuoritus).orNull
-      val (_, osasuorituksenUusinHyväksyttyArvio): (String, String) = _osasuorituksenArviointi.getAll(osasuoritus)
-        .filter(arvio => JsonPath.root.hyväksytty.boolean.getOption(arvio).getOrElse(false))
-        .map(arvio => (
-          JsonPath.root.päivä.string.getOption(arvio).orNull,
-          JsonPath.root.arvosana.koodiarvo.string.getOption(arvio).orNull
-        )).sorted(Ordering.Tuple2(Ordering.String.reverse, Ordering.String))
-          .head
+      val osasuorituksenUusinHyväksyttyArvio: String = etsiUusinArvosana(osasuoritus)
 
       println("Osasuorituksen arvio: %s".format(osasuorituksenUusinHyväksyttyArvio))
       println("Osasuorituksen nimi: %s".format(osasuorituksenNimiFi))
@@ -62,6 +53,18 @@ object LensTest {
 
       (osasuorituksenKoodiarvo, osasuorituksenNimiFi, osasuorituksenUusinHyväksyttyArvio.toInt)
     })
+  }
+
+  private def etsiUusinArvosana(osasuoritus: Json) = {
+    val _osasuorituksenArviointi = JsonPath.root.arviointi.each.json
+    val (_, osasuorituksenUusinHyväksyttyArvio): (String, String) = _osasuorituksenArviointi.getAll(osasuoritus)
+      .filter(arvio => JsonPath.root.hyväksytty.boolean.getOption(arvio).getOrElse(false))
+      .map(arvio => (
+        JsonPath.root.päivä.string.getOption(arvio).orNull,
+        JsonPath.root.arvosana.koodiarvo.string.getOption(arvio).orNull
+      )).sorted(Ordering.Tuple2(Ordering.String.reverse, Ordering.String))
+      .head
+    osasuorituksenUusinHyväksyttyArvio
   }
 
   private def etsiValiditSuoritukset(tutkinto: Json, sulkeutumisPäivämäärä: DateTime, suorituksenSallitutKoodit: Set[Int]): List[Json] = {
