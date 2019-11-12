@@ -14,6 +14,7 @@
         <module>valintaperusteet-domain</module>
         <module>valintaperusteet-laskenta</module>
         <module>valintaperusteet-service</module>
+        <module>valintaperusteet-testing</module>
     </modules>
 
     <properties>
