@@ -518,8 +518,8 @@ object Laskentadomainkonvertteri {
 
         NimettyLukuarvo(s"YO-kokeen pisteet (${valintaperusteviitteet.head.tunniste})", arvosana, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku = omaopintopolku)
 
-      case Funktionimi.HAEAMMATILLINENARVOSANA => {
-        val arvosana = HaeAmmatillinenArvosana(
+      case Funktionimi.HAEAMMATILLINENYTOARVOSANA => {
+        val arvosana = HaeAmmatillinenYtoArvosana(
           Some(BigDecimal("0.0")),
           valintaperusteviitteet.head,
           omaopintopolku = omaopintopolku)

@@ -22,15 +22,15 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
   val hakemus = TestHakemus("", Nil, kentat.asScala.toMap, suoritukset)
 
   test("Tutkinnon yhteisten tutkinnon osien arvosanat") {
-    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeAmmatillinenArvosanaKutsu())
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeAmmatillinenYtoArvosanaKutsu())
     val (tulos, _) = Laskin.laske(hakukohde, hakemus, lasku)
     assert(BigDecimal(tulos.get) == BigDecimal("3.0"))
   }
 
-  def createHaeAmmatillinenArvosanaKutsu(): Funktiokutsu = {
+  def createHaeAmmatillinenYtoArvosanaKutsu(): Funktiokutsu = {
 
     val kutsu: Funktiokutsu = new Funktiokutsu
-    kutsu.setFunktionimi(Funktionimi.HAEAMMATILLINENARVOSANA)
+    kutsu.setFunktionimi(Funktionimi.HAEAMMATILLINENYTOARVOSANA)
 
     val viite: ValintaperusteViite = new ValintaperusteViite
     viite.setTunniste("ammatillinen-tutkinto.yhteiset-tutkinnon-osat")

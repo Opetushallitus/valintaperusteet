@@ -698,7 +698,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
 
       }
 
-      case HaeAmmatillinenArvosana(oletusarvo, valintaperusteviite, oid, tulosTunniste,_,_,_,_) => {
+      case HaeAmmatillinenYtoArvosana(oletusarvo, valintaperusteviite, oid, tulosTunniste,_,_,_,_) => {
         haeLukuarvo(None, oletusarvo, valintaperusteviite, hakemus.kentat)
       }
 
