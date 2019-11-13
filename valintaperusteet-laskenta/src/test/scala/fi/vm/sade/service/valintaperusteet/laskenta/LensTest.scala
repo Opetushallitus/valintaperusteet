@@ -17,7 +17,7 @@ object LensTest {
     val json = loadJson("koski-opiskeluoikeudet.json")
     val sulkeutumisPäivämäärä = DateTime.now()
     val suorituksenSallitutKoodit = Set(1, 4, 26)
-    val osasuorituksenSallitutKoodit = Set("101054")
+    val osasuorituksenSallitutKoodit = Set("101053", "101054", "101055")
 
 
     run(json, sulkeutumisPäivämäärä, "ammatillinenkoulutus", suorituksenSallitutKoodit, osasuorituksenSallitutKoodit)
