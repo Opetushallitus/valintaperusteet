@@ -6,6 +6,8 @@ import fi.vm.sade.service.valintaperusteet.dto.model.{Funktionimi, Valintaperust
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
 import fi.vm.sade.service.valintaperusteet.laskenta.api.{Hakemus, Hakutoive}
 import fi.vm.sade.service.valintaperusteet.model._
+import io.circe.Json
+import io.circe.syntax.EncoderOps
 
 import scala.jdk.CollectionConverters._
 
@@ -140,12 +142,17 @@ object LaskentaTestUtil {
   }
 
   object TestHakemusWithRyhmaOids {
-    def apply(oid: String, hakutoiveet: List[String], ryhmaoidit: List[List[String]], kentat: Map[String, String], suoritukset: java.util.Map[String, java.util.List[java.util.Map[String, String]]]) = {
+    def apply(oid: String,
+              hakutoiveet: List[String],
+              ryhmaoidit: List[List[String]],
+              kentat: Map[String, String],
+              suoritukset: java.util.Map[String, java.util.List[java.util.Map[String, String]]],
+              koskiopiskeluoikeudet: Json = List[Unit]().asJson) = {
       val hakutoiveetMap: Map[java.lang.Integer, Hakutoive] = (for {
         prio <- 1 to hakutoiveet.size
       } yield (new java.lang.Integer(prio), new Hakutoive(hakutoiveet(prio - 1), ryhmaoidit(prio - 1).asJava))).toMap
 
-      new Hakemus(oid, hakutoiveetMap.asJava, kentat.asJava, suoritukset)
+      new Hakemus(oid, hakutoiveetMap.asJava, kentat.asJava, suoritukset, koskiopiskeluoikeudet)
     }
   }
 
@@ -153,9 +160,10 @@ object LaskentaTestUtil {
     def apply(oid: String,
               hakutoiveet: List[String],
               kentat: Map[String, String],
-              suoritukset: java.util.Map[String, java.util.List[java.util.Map[String, String]]] = Collections.emptyMap()): Hakemus = {
+              suoritukset: java.util.Map[String, java.util.List[java.util.Map[String, String]]] = Collections.emptyMap(),
+              koskiopiskeluoikeudet: Json = List[Unit]().asJson): Hakemus = {
       val ryhmaoidit = hakutoiveet.map(_ => List())
-      TestHakemusWithRyhmaOids(oid, hakutoiveet, ryhmaoidit, kentat, suoritukset)
+      TestHakemusWithRyhmaOids(oid, hakutoiveet, ryhmaoidit, kentat, suoritukset, koskiopiskeluoikeudet)
     }
   }
 

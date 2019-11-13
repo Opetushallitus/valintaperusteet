@@ -1,36 +1,45 @@
 package fi.vm.sade.service.valintaperusteet.laskenta
 
+import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus
 import io.circe.Json
-import io.circe.parser
 import io.circe.optics.JsonPath
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
+import org.slf4j.{Logger, LoggerFactory}
 
-import scala.io.Source
+object KoskiLaskenta {
+  private val LOG: Logger = LoggerFactory.getLogger(KoskiLaskenta.getClass)
+  private val ammatillisenHuomioitavaOpiskeluoikeudenTyyppi: String = "ammatillinenkoulutus"
 
-object LensTest {
+  val ammatillisenHhuomioitavatKoulutustyypit: Set[AmmatillisenPerustutkinnonKoulutustyyppi] =
+    Set(AmmatillinenPerustutkinto, AmmatillinenReforminMukainenPerustutkinto, AmmatillinenPerustutkintoErityisopetuksena)
 
-  def loadJson(path: String): Json = {
-    val jsonFile: String = Source.fromResource(path).getLines.reduce(_ + _)
-    parser.parse(jsonFile).getOrElse(Json.Null)
+  def haeYtoArvosana(hakemus: Hakemus, valintaperusteviite: Laskenta.Valintaperuste, oletusarvo: Option[BigDecimal]): Option[BigDecimal] = {
+    if (hakemus.koskiOpiskeluoikeudet != null) {
+      haeYtoArvosana(hakemus.oid, hakemus.koskiOpiskeluoikeudet, valintaperusteviite.tunniste)
+    } else {
+      oletusarvo
+    }
   }
 
-  def main(args: Array[String]): Unit = {
-    val json = loadJson("koski-opiskeluoikeudet.json")
-    val sulkeutumisPäivämäärä = DateTime.now()
-    val suorituksenSallitutKoodit = Set(1, 4, 26)
-    val osasuorituksenSallitutKoodit = Set("101053", "101054", "101055")
+  private def haeYtoArvosana(hakemusOid: String, opiskeluoikeudet: Json, ytoKoodiArvo: String): Option[BigDecimal] = {
+    val sulkeutumisPaivamaara: DateTime = DateTime.now()
+    val suorituksenSallitutKoodit: Set[Int] = ammatillisenHhuomioitavatKoulutustyypit.map(_.koodiarvo)
 
+    val yhteistenTutkinnonOsienArvosanat: Seq[(String, String, Int)] = etsiValmiitTutkinnot(opiskeluoikeudet, ammatillisenHuomioitavaOpiskeluoikeudenTyyppi)
+      .flatMap(tutkinto => etsiValiditSuoritukset(tutkinto, sulkeutumisPaivamaara, suorituksenSallitutKoodit))
+      .flatMap(suoritus => etsiYhteisetTutkinnonOsat(suoritus, sulkeutumisPaivamaara, Set(ytoKoodiArvo)))
 
-    run(json, sulkeutumisPäivämäärä, "ammatillinenkoulutus", suorituksenSallitutKoodit, osasuorituksenSallitutKoodit)
-  }
+    if (yhteistenTutkinnonOsienArvosanat.size > 1) {
+      throw new UnsupportedOperationException(
+        s"Hakemukselle $hakemusOid löytyi useampi kuin yksi arvosana yhteiselle tutkinnon osalle '$ytoKoodiArvo': $yhteistenTutkinnonOsienArvosanat")
+    }
 
-  private def run(json: Json, sulkeutumisPäivämäärä: DateTime, opiskeluoikeudenHaluttuTyyppi: String, suorituksenSallitutKoodit: Set[Int], osasuorituksenSallitutKoodit: Set[String]): Unit = {
-    val yhteistenTutkinnonOsienArvosanat = etsiValmiitTutkinnot(json, opiskeluoikeudenHaluttuTyyppi)
-      .flatMap(tutkinto => etsiValiditSuoritukset(tutkinto, sulkeutumisPäivämäärä, suorituksenSallitutKoodit))
-      .map(suoritus => etsiYhteisetTutkinnonOsat(suoritus, sulkeutumisPäivämäärä, osasuorituksenSallitutKoodit))
+    if (yhteistenTutkinnonOsienArvosanat.nonEmpty) {
+      LOG.debug(s"Hakemukselle $hakemusOid löytyi yhteiselle tutkinnon osalle $ytoKoodiArvo arvosana $yhteistenTutkinnonOsienArvosanat")
+    }
 
-    yhteistenTutkinnonOsienArvosanat.foreach(arvosana => println("Arvosana: %s".format(arvosana)))
+    yhteistenTutkinnonOsienArvosanat.headOption.map(t => BigDecimal(t._3))
   }
 
   private def etsiYhteisetTutkinnonOsat(suoritus: Json, sulkeutumisPäivämäärä: DateTime, osasuorituksenSallitutKoodit: Set[String]): List[(String, String, Int)] = {
@@ -49,9 +58,9 @@ object LensTest {
       val osasuorituksenNimiFi = _osasuorituksenNimiFi.getOption(osasuoritus).orNull
       val osasuorituksenUusinHyväksyttyArvio: String = etsiUusinArvosana(osasuoritus)
 
-      println("Osasuorituksen arvio: %s".format(osasuorituksenUusinHyväksyttyArvio))
-      println("Osasuorituksen nimi: %s".format(osasuorituksenNimiFi))
-      println("Osasuorituksen koodiarvo: %s".format(osasuorituksenKoodiarvo))
+      LOG.debug("Osasuorituksen arvio: %s".format(osasuorituksenUusinHyväksyttyArvio))
+      LOG.debug("Osasuorituksen nimi: %s".format(osasuorituksenNimiFi))
+      LOG.debug("Osasuorituksen koodiarvo: %s".format(osasuorituksenKoodiarvo))
 
       (osasuorituksenKoodiarvo, osasuorituksenNimiFi, osasuorituksenUusinHyväksyttyArvio.toInt)
     })
@@ -99,12 +108,12 @@ object LensTest {
       }
       val onkoSallitunTyyppinenSuoritus = suorituksenSallitutKoodit.contains(koulutusTyypinKoodiarvo)
 
-      println("Koodiarvo: %s".format(koodiarvo))
-      println("Onko sallitun tyyppinen suoritus: %s".format(onkoSallitunTyyppinenSuoritus))
-      println("Nimi: %s".format(lyhytNimiFi))
-      println("Koulutustyypin nimi: %s".format(koulutusTyypinNimiFi))
-      println("Koulutustyypin koodiarvo: %s".format(koulutusTyypinKoodiarvo))
-      println("On vahvistettu rajapäivänä pvm: %s".format(vahvistettuRajapäivänä))
+      LOG.debug("Koodiarvo: %s".format(koodiarvo))
+      LOG.debug("Onko sallitun tyyppinen suoritus: %s".format(onkoSallitunTyyppinenSuoritus))
+      LOG.debug("Nimi: %s".format(lyhytNimiFi))
+      LOG.debug("Koulutustyypin nimi: %s".format(koulutusTyypinNimiFi))
+      LOG.debug("Koulutustyypin koodiarvo: %s".format(koulutusTyypinKoodiarvo))
+      LOG.debug("On vahvistettu rajapäivänä pvm: %s".format(vahvistettuRajapäivänä))
 
       onkoSallitunTyyppinenSuoritus && vahvistettuRajapäivänä
     })
@@ -125,12 +134,32 @@ object LensTest {
       val onkoValmistunut: Boolean = valmistumisTila.contains("valmistunut")
       val onkoAmmatillinenOpiskeluOikeus = opiskeluoikeudenTyyppi == opiskeluoikeudenHaluttuTyyppi
 
-      println("Opiskeluoikeuden tyyppi: %s".format(opiskeluoikeudenTyyppi))
-      println("Valmistumistila: %s".format(valmistumisTila))
-      println("Onko valmistunut: %s".format(onkoValmistunut))
-      println("Onko ammatillinen opiskeluoikeus: %s".format(onkoAmmatillinenOpiskeluOikeus))
+      LOG.debug("Opiskeluoikeuden tyyppi: %s".format(opiskeluoikeudenTyyppi))
+      LOG.debug("Valmistumistila: %s".format(valmistumisTila))
+      LOG.debug("Onko valmistunut: %s".format(onkoValmistunut))
+      LOG.debug("Onko ammatillinen opiskeluoikeus: %s".format(onkoAmmatillinenOpiskeluOikeus))
 
       onkoAmmatillinenOpiskeluOikeus && onkoValmistunut
     })
   }
+}
+
+sealed trait AmmatillisenPerustutkinnonKoulutustyyppi {
+  val koodiarvo: Int
+  val kuvaus: String
+}
+
+case object AmmatillinenPerustutkinto extends AmmatillisenPerustutkinnonKoulutustyyppi {
+  val koodiarvo: Int = 1
+  val kuvaus: String = "Ammatillinen perustutkinto"
+}
+
+case object AmmatillinenReforminMukainenPerustutkinto extends AmmatillisenPerustutkinnonKoulutustyyppi {
+  val koodiarvo: Int = 26
+  val kuvaus: String = "Ammatillinen perustutkinto (reformin mukainen)"
+}
+
+case object AmmatillinenPerustutkintoErityisopetuksena extends AmmatillisenPerustutkinnonKoulutustyyppi {
+  val koodiarvo: Int = 4
+  val kuvaus: String = "Ammatillinen perustutkinto erityisopetuksena"
 }

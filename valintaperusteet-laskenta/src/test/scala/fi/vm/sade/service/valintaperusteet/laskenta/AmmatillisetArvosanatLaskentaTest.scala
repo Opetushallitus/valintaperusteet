@@ -7,6 +7,7 @@ import fi.vm.sade.kaava.Laskentadomainkonvertteri
 import fi.vm.sade.service.valintaperusteet.dto.model.{Funktionimi, Valintaperustelahde}
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakukohde
 import fi.vm.sade.service.valintaperusteet.model.{Funktiokutsu, ValintaperusteViite}
+import io.circe.Json
 import org.scalatest.funsuite.AnyFunSuite
 
 import scala.jdk.CollectionConverters._
@@ -19,12 +20,15 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
     put("ammatillinen-tutkinto.yhteiset-tutkinnon-osat", "3.0")
   }}
   val suoritukset = new util.HashMap[String, util.List[util.Map[String, String]]]
-  val hakemus = TestHakemus("", Nil, kentat.asScala.toMap, suoritukset)
+
+  val koskiopiskeluoikeudet: Json = LensTest.loadJson("koski-opiskeluoikeudet.json")
+
+  val hakemus = TestHakemus("", Nil, kentat.asScala.toMap, suoritukset, koskiopiskeluoikeudet)
 
   test("Tutkinnon yhteisten tutkinnon osien arvosanat") {
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeAmmatillinenYtoArvosanaKutsu())
     val (tulos, _) = Laskin.laske(hakukohde, hakemus, lasku)
-    assert(BigDecimal(tulos.get) == BigDecimal("3.0"))
+    assert(BigDecimal(tulos.get) == BigDecimal("4.0"))
   }
 
   def createHaeAmmatillinenYtoArvosanaKutsu(): Funktiokutsu = {
@@ -33,7 +37,7 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
     kutsu.setFunktionimi(Funktionimi.HAEAMMATILLINENYTOARVOSANA)
 
     val viite: ValintaperusteViite = new ValintaperusteViite
-    viite.setTunniste("ammatillinen-tutkinto.yhteiset-tutkinnon-osat")
+    viite.setTunniste("101054")
     viite.setIndeksi(0)
     viite.setLahde(Valintaperustelahde.HAETTAVA_ARVO)
     viite.setEpasuoraViittaus(false) // TODO: pakollinen?
