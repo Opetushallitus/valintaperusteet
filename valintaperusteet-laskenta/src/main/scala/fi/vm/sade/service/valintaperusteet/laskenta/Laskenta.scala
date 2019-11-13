@@ -1,7 +1,5 @@
 package fi.vm.sade.service.valintaperusteet.laskenta
 
-import java.math.{BigDecimal => BigDec}
-
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
 import fi.vm.sade.service.valintaperusteet.model.{LokalisoituTeksti, TekstiRyhma}
 import org.apache.commons.lang.StringUtils
@@ -65,7 +63,7 @@ object Laskenta {
       konversiot.filter(arvo == _.arvo) match {
         case Nil => (None, new Virhetila(tekstiToMap(s"Arvo $arvo ei täsmää yhteenkään konvertterille määritettyyn arvoon"),
           new ArvokonvertointiVirhe(arvo.toString)))
-        case head :: tail => {
+        case head :: _ =>
           val paluuarvo = head.paluuarvo
           val tila = if (head.hylkaysperuste) {
             new Hylattytila(tekstiryhmaToMap(head.kuvaukset),
@@ -73,7 +71,6 @@ object Laskenta {
           } else new Hyvaksyttavissatila
 
           (Some(paluuarvo), tila)
-        }
       }
     }
   }
@@ -84,12 +81,12 @@ object Laskenta {
 
       val konversiot = konversioMap.map(konv => konv.asInstanceOf[Lukuarvovalikonversio])
 
-      konversiot.sortWith((a, b) => a.max > b.max)
-      .filter(konv =>arvo >= konv.min && arvo <= konv.max
-      ) match {
+      konversiot
+        .filter(konv => arvo >= konv.min && arvo <= konv.max
+        ).sortWith((a, b) => a.max > b.max) match {
         case Nil => (None, new Virhetila(tekstiToMap(s"Arvo $arvo ei täsmää yhteenkään konvertterille määritettyyn arvoväliin"),
           new ArvovalikonvertointiVirhe(arvo.underlying)))
-        case head :: tail => {
+        case head :: _ =>
           val paluuarvo = if (head.palautaHaettuArvo) arvo else head.paluuarvo
           val tila = if (head.hylkaysperuste) {
             new Hylattytila(tekstiryhmaToMap(head.kuvaukset),
@@ -100,7 +97,6 @@ object Laskenta {
           //val tila = new Hyvaksyttavissatila
 
           (Some(paluuarvo), tila)
-        }
       }
     }
   }
@@ -123,17 +119,12 @@ object Laskenta {
 
   sealed trait KoostavaFunktio[T] extends Funktio[T] {
     def fs: Seq[Funktio[_]]
-    require(fs.size > 0, "Number of function arguments must be greater than zero")
+    require(fs.nonEmpty, "Number of function arguments must be greater than zero")
   }
 
   object KoostavaFunktio {
     def unapply(k: KoostavaFunktio[_]): Option[Seq[Funktio[_]]] = Some(k.fs)
   }
-    // Scala 2.9 ratkasu
-//  abstract case class NParasta(n: Int, override val fs: Seq[Funktio[BigDecimal]])
-//    extends KoostavaFunktio[BigDecimal](fs) with Lukuarvofunktio {
-//    require(n <= fs.size, "Parameter n can't be greater than the number of function arguments")
-//  }
 
   sealed trait NParasta extends KoostavaFunktio[BigDecimal] with Lukuarvofunktio {
     def n: Int
@@ -167,7 +158,7 @@ object Laskenta {
     extends KoostavaFunktio[BigDecimal] with Lukuarvofunktio
 
   object Summa {
-    def apply(fs: Lukuarvofunktio*) = {
+    def apply(fs: Lukuarvofunktio*): Summa = {
       new Summa(fs.toArray.toSeq)
     }
   }
@@ -176,7 +167,7 @@ object Laskenta {
     extends NParasta with Lukuarvofunktio
 
   object SummaNParasta {
-    def apply(n: Int, fs: Lukuarvofunktio*) = {
+    def apply(n: Int, fs: Lukuarvofunktio*): SummaNParasta = {
       new SummaNParasta(n, fs.toArray.toSeq)
     }
   }
@@ -185,7 +176,7 @@ object Laskenta {
     extends NParasta with Lukuarvofunktio
 
   object TuloNParasta {
-    def apply(n: Int, fs: Lukuarvofunktio*) = {
+    def apply(n: Int, fs: Lukuarvofunktio*): TuloNParasta = {
       new TuloNParasta(n, fs.toArray.toSeq)
     }
   }
@@ -193,7 +184,7 @@ object Laskenta {
     extends NParasta with Lukuarvofunktio
 
   object KeskiarvoNParasta {
-    def apply(n: Int, fs: Lukuarvofunktio*) = {
+    def apply(n: Int, fs: Lukuarvofunktio*): KeskiarvoNParasta = {
       new KeskiarvoNParasta(n, fs.toArray.toSeq)
     }
   }
@@ -202,7 +193,7 @@ object Laskenta {
     extends KoostavaFunktio[BigDecimal] with Lukuarvofunktio
 
   object Keskiarvo {
-    def apply(fs: Lukuarvofunktio*) = {
+    def apply(fs: Lukuarvofunktio*): Keskiarvo = {
       new Keskiarvo(fs.toArray.toSeq)
     }
   }
@@ -211,22 +202,22 @@ object Laskenta {
     extends KoostavaFunktio[BigDecimal] with Lukuarvofunktio
 
   object Mediaani {
-    def apply(fs: Lukuarvofunktio*) = {
+    def apply(fs: Lukuarvofunktio*): Mediaani = {
       new Mediaani(fs.toArray.toSeq)
     }
   }
 
   case class Osamaara(osoittaja: Lukuarvofunktio, nimittaja: Lukuarvofunktio, oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false)
     extends Funktio[BigDecimal] with Lukuarvofunktio {
-    val f1 = osoittaja
-    val f2 = nimittaja
+    val f1: Lukuarvofunktio = osoittaja
+    val f2: Lukuarvofunktio = nimittaja
   }
 
   case class Minimi(fs: Seq[Lukuarvofunktio], oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false)
     extends KoostavaFunktio[BigDecimal] with Lukuarvofunktio
 
   object Minimi {
-    def apply(fs: Lukuarvofunktio*) = {
+    def apply(fs: Lukuarvofunktio*): Minimi = {
       new Minimi(fs.toArray.toSeq)
     }
   }
@@ -235,7 +226,7 @@ object Laskenta {
     extends KoostavaFunktio[BigDecimal] with Lukuarvofunktio
 
   object Maksimi {
-    def apply(fs: Lukuarvofunktio*) = {
+    def apply(fs: Lukuarvofunktio*): Maksimi = {
       new Maksimi(fs.toArray.toSeq)
     }
   }
@@ -244,7 +235,7 @@ object Laskenta {
     extends Ns with Lukuarvofunktio
 
   object NMinimi {
-    def apply(ns: Int, fs: Lukuarvofunktio*) = {
+    def apply(ns: Int, fs: Lukuarvofunktio*): NMinimi = {
       new NMinimi(ns, fs.toArray.toSeq)
     }
   }
@@ -253,7 +244,7 @@ object Laskenta {
     extends Ns with Lukuarvofunktio
 
   object NMaksimi {
-    def apply(ns: Int, fs: Lukuarvofunktio*) = {
+    def apply(ns: Int, fs: Lukuarvofunktio*): NMaksimi = {
       new NMaksimi(ns, fs.toArray.toSeq)
     }
   }
@@ -262,7 +253,7 @@ object Laskenta {
     extends KoostavaFunktio[BigDecimal] with Lukuarvofunktio
 
   object Tulo {
-    def apply(fs: Lukuarvofunktio*) = {
+    def apply(fs: Lukuarvofunktio*): Tulo = {
       new Tulo(fs.toArray.toSeq)
     }
   }
@@ -351,7 +342,7 @@ object Laskenta {
     extends KoostavaFunktio[Boolean] with Totuusarvofunktio
 
   object Ja {
-    def apply(fs: Totuusarvofunktio*) = {
+    def apply(fs: Totuusarvofunktio*): Ja = {
       new Ja(fs.toArray.toSeq)
     }
   }
@@ -360,7 +351,7 @@ object Laskenta {
     extends KoostavaFunktio[Boolean] with Totuusarvofunktio
 
   object Tai {
-    def apply(fs: Totuusarvofunktio*) = {
+    def apply(fs: Totuusarvofunktio*): Tai = {
       new Tai(fs.toArray.toSeq)
     }
   }
