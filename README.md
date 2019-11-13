@@ -17,5 +17,5 @@ voi käynnistää valintaperusteet-palvelun paikalliseen kehitysympäristöön. 
 hakemistosta `src/main/resources/oph-configuration` löytyvien pohjien mukaan muodostetut
 asetukset.
 
-Toinen vaihtoehto on käyttää luokkaa [ValintaperusteetJettyForTesting](valintaperusteet-testing/src/main/java/fi/vm/sade/service/valintaperusteet/ValintaperusteetJettyForTesting.java)
+Toinen vaihtoehto on käyttää luokkaa [ValintaperusteetJettyForLocalDev](valintaperusteet-testing/src/main/java/fi/vm/sade/service/valintaperusteet/ValintaperusteetJettyForLocalDev.java)
 suoraan IDEstä.
