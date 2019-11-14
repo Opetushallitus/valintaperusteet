@@ -100,6 +100,15 @@ object Laskentakaavavalidaattori {
       } else if (!validoiLaskettava && argumentti.getFunktiokutsuChild == null && argumentti.getLaskentakaavaChild == null) {
         new Validointivirhe(Virhetyyppi.FUNKTIOARGUMENTTIA_EI_MAARITELTY,
           s"Funktiokutsua tai laskentakaavaa ei ole määritelty funktiokutsun $nimi funktioargumentille, indeksi ${argumentti.getIndeksi}") :: accum
+      } else if (
+        argumentti.getFunktiokutsuChild != null && (
+          vaadittuArgumentti == null ||
+            vaadittuArgumentti.tyyppi == null ||
+            argumentti == null ||
+            argumentti.getFunktiokutsuChild.getFunktionimi == null ||
+            argumentti.getFunktiokutsuChild.getFunktionimi.getTyyppi == null)) {
+        new Validointivirhe(Virhetyyppi.VIRHEELLINEN_FUNKTIOARGUMENTIN_TYYPPI,
+          s"""Epäilyttäviä null-arvoja: vaadittuargumentti == '$vaadittuArgumentti', argumentti == '$argumentti'""") :: accum
       } else {
         if (argumentti.getFunktiokutsuChild != null
           && vaadittuArgumentti.tyyppi.toString != argumentti.getFunktiokutsuChild.getFunktionimi.getTyyppi.name()) {
