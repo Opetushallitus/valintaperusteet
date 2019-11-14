@@ -203,8 +203,8 @@ private class Laskin private(private val hakukohde: Hakukohde,
   }
 
   private def haeValintaperuste[T](valintaperusteviite: Valintaperuste, kentat: Kentat,
-                                   konv: String => Tuple2[Option[T], List[Tila]],
-                                   oletusarvo: Option[T]): Tuple2[Option[T], List[Tila]] = {
+                                   konv: String => (Option[T], List[Tila]),
+                                   oletusarvo: Option[T]): (Option[T], List[Tila]) = {
     def haeValintaperusteenArvoHakemukselta(tunniste: String, pakollinen: Boolean) = {
       val (valintaperuste, tila) = haeValintaperuste(tunniste, pakollinen, kentat)
 
@@ -305,7 +305,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
   private def laskeTotuusarvo(laskettava: Totuusarvofunktio): Tulos[Boolean] = {
 
     def muodostaKoostettuTulos(fs: Seq[Totuusarvofunktio], trans: Seq[Boolean] => Boolean) = {
-      val (tulokset, tilat, historiat) = fs.reverse.foldLeft((Nil, Nil, ListBuffer()): Tuple3[List[Option[Boolean]], List[Tila], ListBuffer[Historia]])((lst, f) => {
+      val (tulokset, tilat, historiat) = fs.reverse.foldLeft((Nil, Nil, ListBuffer()): (List[Option[Boolean]], List[Tila], ListBuffer[Historia]))((lst, f) => {
         laskeTotuusarvo(f) match {
           case Tulos(tulos, tila, historia) =>
             lst._3 += historia
@@ -338,7 +338,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
       (tulos, tilat, Historia("Vertailuntulos", tulos, tilat, Some(List(tulos1.historia, tulos2.historia)), None))
     }
 
-    val (laskettuTulos, tilat, hist): Tuple3[Option[Boolean], List[Tila], Historia] = laskettava match {
+    val (laskettuTulos, tilat, hist): (Option[Boolean], List[Tila], Historia) = laskettava match {
       case Ja(fs, oid, tulosTunniste,_,_,_,_) =>
         val (tulos, tilat, h) = muodostaKoostettuTulos(fs, lst => lst.forall(b => b))
         (tulos, tilat, Historia("Ja", tulos, tilat, h.historiat, None))
@@ -480,7 +480,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
     }
 
     def muodostaKoostettuTulos(fs: Seq[Lukuarvofunktio], trans: Seq[BigDecimal] => BigDecimal, ns: Option[Int] = None): (Option[BigDecimal], List[Tila], Historia) = {
-      val tulokset = fs.reverse.foldLeft((Nil, Nil, ListBuffer()): Tuple3[List[BigDecimal], List[Tila], ListBuffer[Historia]])((lst, f) => {
+      val tulokset = fs.reverse.foldLeft((Nil, Nil, ListBuffer()): (List[BigDecimal], List[Tila], ListBuffer[Historia]))((lst, f) => {
         laskeLukuarvo(f) match {
           case Tulos(tulos, tila, historia) =>
             lst._3 += historia
