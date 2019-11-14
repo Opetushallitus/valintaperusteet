@@ -31,6 +31,20 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
     assert(BigDecimal(tulos.get) == BigDecimal("4.0"))
   }
 
+  test("Tutkinnon yhteisten tutkinnon osien arvoasteikko") {
+    val lasku1 = Laskentadomainkonvertteri.muodostaTotuusarvolasku(
+      createOnkoAmmatillinenYtoArviointiAsteikkoKutsu("101054:arviointiasteikkoammatillinen15")
+    )
+    val (tulos1, _) = Laskin.laske(hakukohde, hakemus, lasku1)
+    assert(tulos1.get)
+
+    val lasku2 = Laskentadomainkonvertteri.muodostaTotuusarvolasku(
+      createOnkoAmmatillinenYtoArviointiAsteikkoKutsu("101054:arviointiasteikkoammatillinen18")
+    )
+    val (tulos2, _) = Laskin.laske(hakukohde, hakemus, lasku2)
+    assert(!tulos2.get)
+  }
+
   def createHaeAmmatillinenYtoArvosanaKutsu(): Funktiokutsu = {
 
     val kutsu: Funktiokutsu = new Funktiokutsu
@@ -48,4 +62,19 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
     kutsu
   }
 
+  def createOnkoAmmatillinenYtoArviointiAsteikkoKutsu(parametri: String): Funktiokutsu = {
+    val kutsu: Funktiokutsu = new Funktiokutsu
+    kutsu.setFunktionimi(Funktionimi.ONKOAMMATILLINENYTOARVIOINTIASTEIKKO)
+
+    val viite: ValintaperusteViite = new ValintaperusteViite
+    viite.setTunniste(parametri)
+    viite.setIndeksi(0)
+    viite.setLahde(Valintaperustelahde.HAETTAVA_ARVO)
+    viite.setEpasuoraViittaus(false) // TODO: pakollinen?
+    viite.setOnPakollinen(false) // TODO: pakollinen?
+
+    kutsu.getValintaperusteviitteet.add(viite)
+
+    kutsu
+  }
 }

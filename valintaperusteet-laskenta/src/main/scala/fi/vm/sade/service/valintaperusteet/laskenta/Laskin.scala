@@ -440,6 +440,11 @@ private class Laskin private(private val hakukohde: Hakukohde,
         val tulos = Some(arvo1 == arvo2)
         val tilat = tilat1 ::: tilat2
         (tulos, tilat, Historia("Valintaperusteyhtasuuruus", tulos, tilat, None, Some(Map("tunniste1" -> arvo1, "tunniste2" -> arvo2))))
+
+      case OnkoAmmatillinenYtoArviointiAsteikko(oletusarvo, valintaperusteviite, _, _,_,_,_,_) =>
+        val tulos: Option[Boolean] = KoskiLaskenta.onkoYtoArviointiAsteikko(hakemus, valintaperusteviite, oletusarvo)
+        val tilalista: List[Hyvaksyttavissatila] = List(new Hyvaksyttavissatila)
+        (tulos, tilalista, Historia("Tarkista ammatillisen yto:n arviointiasteikko", tulos, tilalista, None, Some(Map("oletusarvo" -> oletusarvo))))
     }
 
     if (!laskettava.tulosTunniste.isEmpty) {

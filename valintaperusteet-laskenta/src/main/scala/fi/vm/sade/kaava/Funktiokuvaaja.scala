@@ -159,6 +159,10 @@ object Funktiokuvaaja {
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
       valintaperusteparametri = List(Valintaperusteparametrikuvaus("tunniste", Syoteparametrityyppi.MERKKIJONO, kuvaus = "Tunniste")) // TODO: onko tämä pakollinen?
     ),
+    Funktionimi.ONKOAMMATILLINENYTOARVIOINTIASTEIKKO -> Funktiokuvaus(
+      tyyppi = Funktiotyyppi.TOTUUSARVOFUNKTIO,
+      valintaperusteparametri = List(Valintaperusteparametrikuvaus("tunniste:arviointiasteikko", Syoteparametrityyppi.MERKKIJONO, kuvaus = "Tunniste ja arviointiasteikon koodistoUri erotettuna kaksoispisteellä")) // TODO: onko tämä pakollinen?
+    ),
     Funktionimi.HAELUKUARVO -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
       syoteparametrit = List(

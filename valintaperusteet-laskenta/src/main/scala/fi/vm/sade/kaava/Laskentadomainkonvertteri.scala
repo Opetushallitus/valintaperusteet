@@ -527,6 +527,15 @@ object Laskentadomainkonvertteri {
         NimettyLukuarvo("Ammatillinen arvosana", arvosana, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku = omaopintopolku)
       }
 
+      case Funktionimi.ONKOAMMATILLINENYTOARVIOINTIASTEIKKO => {
+        val paluuarvo = OnkoAmmatillinenYtoArviointiAsteikko(
+          Some(false),
+          valintaperusteviitteet.head,
+          omaopintopolku = omaopintopolku)
+
+        NimettyTotuusarvo("Onko tutkinnon arvioinnissa käytetty annettua ammatillisen arviointiasteikkoa", paluuarvo, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku = omaopintopolku)
+      }
+
       case _ => sys.error(s"Could not calculate funktio ${funktionimi.name()}")
     }
   }

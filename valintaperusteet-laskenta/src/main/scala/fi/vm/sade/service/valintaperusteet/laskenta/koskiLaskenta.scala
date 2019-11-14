@@ -22,11 +22,33 @@ object KoskiLaskenta {
     }
   }
 
+  def onkoYtoArviointiAsteikko(hakemus: Hakemus, valintaperusteviite: Laskenta.Valintaperuste, oletusarvo: Option[Boolean]): Option[Boolean] = {
+    if (hakemus.koskiOpiskeluoikeudet != null) {
+      val parametrit: Array[String] = valintaperusteviite.tunniste.split(":")
+      assert(parametrit.length == 2)
+      val ytoKoodiArvo: String = parametrit(0)
+      val ammatillinenArviointiAsteikko: String = parametrit(1)
+      onkoYtoArviointiAsteikko(hakemus.oid, hakemus.koskiOpiskeluoikeudet, ytoKoodiArvo, ammatillinenArviointiAsteikko)
+    } else {
+      oletusarvo
+    }
+  }
+
   private def haeYtoArvosana(hakemusOid: String, opiskeluoikeudet: Json, ytoKoodiArvo: String): Option[BigDecimal] = {
+    haeAmmatillisenSuorituksenTiedot(hakemusOid, opiskeluoikeudet, ytoKoodiArvo)
+      .headOption.map(t => BigDecimal(t._3))
+  }
+
+  private def onkoYtoArviointiAsteikko(hakemusOid: String, opiskeluoikeudet: Json, ytoKoodiArvo: String, ammatillinenArviointiAsteikko: String): Option[Boolean] = {
+    haeAmmatillisenSuorituksenTiedot(hakemusOid, opiskeluoikeudet, ytoKoodiArvo)
+      .headOption.map(t => t._4 == ammatillinenArviointiAsteikko)
+  }
+
+  private def haeAmmatillisenSuorituksenTiedot(hakemusOid: String, opiskeluoikeudet: Json, ytoKoodiArvo: String) = {
     val sulkeutumisPaivamaara: DateTime = DateTime.now()
     val suorituksenSallitutKoodit: Set[Int] = ammatillisenHhuomioitavatKoulutustyypit.map(_.koodiarvo)
 
-    val yhteistenTutkinnonOsienArvosanat: Seq[(String, String, Int)] = etsiValmiitTutkinnot(opiskeluoikeudet, ammatillisenHuomioitavaOpiskeluoikeudenTyyppi)
+    val yhteistenTutkinnonOsienArvosanat = etsiValmiitTutkinnot(opiskeluoikeudet, ammatillisenHuomioitavaOpiskeluoikeudenTyyppi)
       .flatMap(tutkinto => etsiValiditSuoritukset(tutkinto, sulkeutumisPaivamaara, suorituksenSallitutKoodit))
       .flatMap(suoritus => etsiYhteisetTutkinnonOsat(suoritus, sulkeutumisPaivamaara, Set(ytoKoodiArvo)))
 
@@ -38,11 +60,10 @@ object KoskiLaskenta {
     if (yhteistenTutkinnonOsienArvosanat.nonEmpty) {
       LOG.debug(s"Hakemukselle $hakemusOid löytyi yhteiselle tutkinnon osalle $ytoKoodiArvo arvosana $yhteistenTutkinnonOsienArvosanat")
     }
-
-    yhteistenTutkinnonOsienArvosanat.headOption.map(t => BigDecimal(t._3))
+    yhteistenTutkinnonOsienArvosanat
   }
 
-  private def etsiYhteisetTutkinnonOsat(suoritus: Json, sulkeutumisPäivämäärä: DateTime, osasuorituksenSallitutKoodit: Set[String]): List[(String, String, Int)] = {
+  private def etsiYhteisetTutkinnonOsat(suoritus: Json, sulkeutumisPäivämäärä: DateTime, osasuorituksenSallitutKoodit: Set[String]): List[(String, String, Int, String)] = {
     // Suoritusten alla olevien osasuoritusten tietoja etsivä linssi
     val _osasuoritukset = JsonPath.root.osasuoritukset.each.json
 
@@ -56,26 +77,28 @@ object KoskiLaskenta {
     }).map(osasuoritus => {
       val osasuorituksenKoodiarvo = _osasuorituksenKoodiarvo.getOption(osasuoritus).orNull
       val osasuorituksenNimiFi = _osasuorituksenNimiFi.getOption(osasuoritus).orNull
-      val osasuorituksenUusinHyväksyttyArvio: String = etsiUusinArvosana(osasuoritus)
+      val (osasuorituksenUusinHyväksyttyArvio: String, osasuorituksenUusinArviointiAsteikko: String) = etsiUusinArvosanaJaArviointiAsteikko(osasuoritus)
 
       LOG.debug("Osasuorituksen arvio: %s".format(osasuorituksenUusinHyväksyttyArvio))
       LOG.debug("Osasuorituksen nimi: %s".format(osasuorituksenNimiFi))
       LOG.debug("Osasuorituksen koodiarvo: %s".format(osasuorituksenKoodiarvo))
 
-      (osasuorituksenKoodiarvo, osasuorituksenNimiFi, osasuorituksenUusinHyväksyttyArvio.toInt)
+      (osasuorituksenKoodiarvo, osasuorituksenNimiFi, osasuorituksenUusinHyväksyttyArvio.toInt, osasuorituksenUusinArviointiAsteikko)
     })
   }
 
-  private def etsiUusinArvosana(osasuoritus: Json) = {
+  private def etsiUusinArvosanaJaArviointiAsteikko(osasuoritus: Json) = {
     val _osasuorituksenArviointi = JsonPath.root.arviointi.each.json
-    val (_, osasuorituksenUusinHyväksyttyArvio): (String, String) = _osasuorituksenArviointi.getAll(osasuoritus)
-      .filter(arvio => JsonPath.root.hyväksytty.boolean.getOption(arvio).getOrElse(false))
-      .map(arvio => (
-        JsonPath.root.päivä.string.getOption(arvio).orNull,
-        JsonPath.root.arvosana.koodiarvo.string.getOption(arvio).orNull
-      )).sorted(Ordering.Tuple2(Ordering.String.reverse, Ordering.String))
-      .head
-    osasuorituksenUusinHyväksyttyArvio
+    val (_, osasuorituksenUusinHyväksyttyArvio, osasuorituksenUusinArviointiAsteikko): (String, String, String) =
+      _osasuorituksenArviointi.getAll(osasuoritus)
+        .filter(arvio => JsonPath.root.hyväksytty.boolean.getOption(arvio).getOrElse(false))
+        .map(arvio => (
+          JsonPath.root.päivä.string.getOption(arvio).orNull,
+          JsonPath.root.arvosana.koodiarvo.string.getOption(arvio).orNull,
+          JsonPath.root.arvosana.koodistoUri.string.getOption(arvio).orNull
+        )).sorted(Ordering.Tuple3(Ordering.String.reverse, Ordering.String, Ordering.String))
+        .head
+    (osasuorituksenUusinHyväksyttyArvio, osasuorituksenUusinArviointiAsteikko)
   }
 
   private def etsiValiditSuoritukset(tutkinto: Json, sulkeutumisPäivämäärä: DateTime, suorituksenSallitutKoodit: Set[Int]): List[Json] = {
