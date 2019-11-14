@@ -197,7 +197,6 @@ private class Laskin private(private val hakukohde: Hakukohde,
     laskeLukuarvo(laskettava)
   }
 
-
   def laske(laskettava: Totuusarvofunktio): Tulos[Boolean] = {
     laskeTotuusarvo(laskettava)
   }
@@ -272,14 +271,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
               (konvertoitu, tilat)
             } else konv(arvo)
           case None =>
-            val tila = if (epasuoraViittaus || pakollinen) new Virhetila(suomenkielinenHylkaysperusteMap(s"Hakukohteen valintaperustetta $tunniste ei ole määritelty"),
-              new HakukohteenValintaperusteMaarittelemattaVirhe(tunniste))
-            else new Hyvaksyttavissatila
-
-            val arvo = if (!oletusarvo.isEmpty) oletusarvo
-            else None
-
-            (arvo, List(tila))
+            päätteleTila(oletusarvo, tunniste, pakollinen, epasuoraViittaus)
         }
       case HakukohteenSyotettavaValintaperuste(tunniste, pakollinen, epasuoraViittaus, osallistumisenTunnistePostfix, kuvaus, kuvaukset, vaatiiOsallistumisen, syotettavissaKaikille, syotettavanarvontyyppiKoodiUri, tilastoidaan) =>
         hakukohde.valintaperusteet.get(tunniste).filter(!_.trim.isEmpty) match {
@@ -290,16 +282,20 @@ private class Laskin private(private val hakukohde: Hakukohde,
                 hakemus.kentat, konv, oletusarvo)
             } else konv(arvo)
           case None =>
-            val tila = if (epasuoraViittaus || pakollinen) new Virhetila(suomenkielinenHylkaysperusteMap(s"Hakukohteen valintaperustetta $tunniste ei ole määritelty"),
-              new HakukohteenValintaperusteMaarittelemattaVirhe(tunniste))
-            else new Hyvaksyttavissatila
-
-            val arvo = if (!oletusarvo.isEmpty) oletusarvo
-            else None
-
-            (arvo, List(tila))
+            päätteleTila(oletusarvo, tunniste, pakollinen, epasuoraViittaus)
         }
     }
+  }
+
+  private def päätteleTila[T](oletusarvo: Option[T], tunniste: String, pakollinen: Boolean, epasuoraViittaus: Boolean) = {
+    val tila = if (epasuoraViittaus || pakollinen) new Virhetila(suomenkielinenHylkaysperusteMap(s"Hakukohteen valintaperustetta $tunniste ei ole määritelty"),
+      new HakukohteenValintaperusteMaarittelemattaVirhe(tunniste))
+    else new Hyvaksyttavissatila
+
+    val arvo = if (oletusarvo.isDefined) oletusarvo
+    else None
+
+    (arvo, List(tila))
   }
 
   private def laskeTotuusarvo(laskettava: Totuusarvofunktio): Tulos[Boolean] = {
