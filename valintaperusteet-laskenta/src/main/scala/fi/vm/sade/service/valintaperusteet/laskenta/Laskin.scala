@@ -15,7 +15,6 @@ import io.circe.optics.JsonPath
 import org.slf4j.LoggerFactory
 import play.api.libs.json._
 
-import scala.collection.immutable
 import scala.collection.mutable.ListBuffer
 import scala.jdk.CollectionConverters._
 
@@ -312,7 +311,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
       val (tyhjat, eiTyhjat) = tulokset.partition(_.isEmpty)
 
       // jos yksikin laskennasta saaduista arvoista on tyhjä, koko funktion laskenta palauttaa tyhjän
-      val totuusarvo = if (!tyhjat.isEmpty) None else Some(trans(eiTyhjat.map(_.get)))
+      val totuusarvo = if (tyhjat.nonEmpty) None else Some(trans(eiTyhjat.map(_.get)))
       (totuusarvo, tilat, Historia("Koostettu tulos", totuusarvo, tilat, Some(historiat.toList), None))
     }
 
@@ -480,7 +479,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
         laskeLukuarvo(f) match {
           case Tulos(tulos, tila, historia) =>
             lst._3 += historia
-            (if (!tulos.isEmpty) tulos.get :: lst._1 else lst._1, tila :: lst._2, lst._3)
+            (if (tulos.isDefined) tulos.get :: lst._1 else lst._1, tila :: lst._2, lst._3)
         }
       })
 
@@ -578,7 +577,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
         (arvo, tilat, Historia("Osamäärä", arvo, tilat, Some(List(osoittajaTulos.historia, nimittajaTulos.historia)), None))
 
       case Tulo(fs, _, _,_,_,_,_) =>
-        val (tulos, tilat, h) = muodostaKoostettuTulos(fs, ds => ds.reduceLeft(_ * _))
+        val (tulos, tilat, h) = muodostaKoostettuTulos(fs, ds => ds.product)
         (tulos, tilat, Historia("Tulo", tulos, tilat, h.historiat, None))
 
       case Keskiarvo(fs, _, _,_,_,_,_) =>
@@ -665,7 +664,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
           case _ => (konvertteri, List())
         }
 
-        val vp = if(tayttyy) valintaperusteviite else HakemuksenValintaperuste("", false)
+        val vp = if(tayttyy) valintaperusteviite else HakemuksenValintaperuste("", pakollinen = false)
 
         val (tulos, tila) = haeValintaperuste[BigDecimal](vp, hakemus.kentat,
           s => suoritaOptionalKonvertointi[BigDecimal](string2bigDecimal(s, vp.tunniste),
@@ -729,7 +728,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
               val virheTila = new Virhetila(suomenkielinenHylkaysperusteMap("Arvovalin arvoja ei voida muuntaa lukuarvoiksi"), new HylkaamistaEiVoidaTulkita)
               (None, List(virheTila), Historia("Hylkää Arvovälillä", None, List(virheTila), Some(List(historia)), None))
             } else {
-              val arvovaliTila = tulos.map(arvo => if(onArvovalilla(arvo, (arvovali.get._1,arvovali.get._2), true, false)) new Hylattytila(hylkaysperustekuvaus.getOrElse(Map.empty[String,String]).asJava,
+              val arvovaliTila = tulos.map(arvo => if(onArvovalilla(arvo, (arvovali.get._1,arvovali.get._2), alarajaMukaan = true, ylarajaMukaan = false)) new Hylattytila(hylkaysperustekuvaus.getOrElse(Map.empty[String,String]).asJava,
                 new HylkaaFunktionSuorittamaHylkays) else new Hyvaksyttavissatila).getOrElse(new Hyvaksyttavissatila)
 
               val tilat = List(tila, arvovaliTila)
@@ -755,7 +754,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
             case Some(skaalattavaArvo) =>
               lahdeskaala match {
                 case Some((lahdeMin, lahdeMax)) =>
-                  if (!onArvovalilla(skaalattavaArvo, (lahdeMin, lahdeMax), true, true)) {
+                  if (!onArvovalilla(skaalattavaArvo, (lahdeMin, lahdeMax), alarajaMukaan = true, ylarajaMukaan = true)) {
                     (None, new Virhetila(suomenkielinenHylkaysperusteMap(s"Arvo ${skaalattavaArvo.toString} ei ole arvovälillä ${lahdeMin.toString} - ${lahdeMax.toString}"),
                       new SkaalattavaArvoEiOleLahdeskaalassaVirhe(skaalattavaArvo.underlying, lahdeMin.underlying, lahdeMax.underlying)))
                   } else {
@@ -765,7 +764,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
                 case None =>
                   val tulokset = kaikkiHakemukset.map(h => {
                     Option( Laskin.suoritaValintalaskenta(hakukohde, h, kaikkiHakemukset.asJava, skaalattava).getTulos)
-                  }).filter(!_.isEmpty).map(_.get)
+                  }).filter(_.isDefined).map(_.get)
 
                   tulokset match {
                     case _ if tulokset.size < 2 => (None, new Virhetila(suomenkielinenHylkaysperusteMap("Skaalauksen lähdeskaalaa ei voida määrittää laskennallisesti. " +
