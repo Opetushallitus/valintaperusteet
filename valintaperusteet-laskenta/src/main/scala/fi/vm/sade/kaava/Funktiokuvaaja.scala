@@ -157,7 +157,7 @@ object Funktiokuvaaja {
     ),
     Funktionimi.HAEAMMATILLINENYTOARVOSANA -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
-      valintaperusteparametri = List(Valintaperusteparametrikuvaus("tunniste", Syoteparametrityyppi.DESIMAALILUKU, kuvaus = "Tunniste")) // TODO: onko tämä pakollinen?
+      valintaperusteparametri = List(Valintaperusteparametrikuvaus("tunniste", Syoteparametrityyppi.MERKKIJONO, kuvaus = "Tunniste")) // TODO: onko tämä pakollinen?
     ),
     Funktionimi.HAELUKUARVO -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
