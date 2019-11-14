@@ -44,7 +44,7 @@ object KoskiLaskenta {
       .headOption.map(t => t._4 == ammatillinenArviointiAsteikko)
   }
 
-  private def haeAmmatillisenSuorituksenTiedot(hakemusOid: String, opiskeluoikeudet: Json, ytoKoodiArvo: String) = {
+  private def haeAmmatillisenSuorituksenTiedot(hakemusOid: String, opiskeluoikeudet: Json, ytoKoodiArvo: String): Seq[(String, String, Int, String)] = {
     val sulkeutumisPaivamaara: DateTime = DateTime.now()
     val suorituksenSallitutKoodit: Set[Int] = ammatillisenHhuomioitavatKoulutustyypit.map(_.koodiarvo)
 
