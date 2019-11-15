@@ -157,11 +157,11 @@ object Funktiokuvaaja {
     ),
     Funktionimi.HAEAMMATILLINENYTOARVOSANA -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
-      valintaperusteparametri = List(Valintaperusteparametrikuvaus("tunniste", Syoteparametrityyppi.MERKKIJONO, kuvaus = "Tunniste")) // TODO: onko tämä pakollinen?
+      valintaperusteparametri = List(Valintaperusteparametrikuvaus("tunniste", Syoteparametrityyppi.MERKKIJONO, kuvaus = "Tunniste"))
     ),
     Funktionimi.ONKOAMMATILLINENYTOARVIOINTIASTEIKKO -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.TOTUUSARVOFUNKTIO,
-      valintaperusteparametri = List(Valintaperusteparametrikuvaus("tunniste:arviointiasteikko", Syoteparametrityyppi.MERKKIJONO, kuvaus = "Tunniste ja arviointiasteikon koodistoUri erotettuna kaksoispisteellä")) // TODO: onko tämä pakollinen?
+      valintaperusteparametri = List(Valintaperusteparametrikuvaus("tunniste:arviointiasteikko", Syoteparametrityyppi.MERKKIJONO, kuvaus = "Tunniste ja arviointiasteikon koodistoUri erotettuna kaksoispisteellä"))
     ),
     Funktionimi.HAELUKUARVO -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
