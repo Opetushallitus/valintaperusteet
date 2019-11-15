@@ -135,25 +135,7 @@ object Laskentadomainkonvertteri {
         Ei(muunnaTotuusarvofunktioksi(lasketutArgumentit.head), omaopintopolku = omaopintopolku)
 
       case Funktionimi.HAELUKUARVO =>
-        val konvertteri = if (!arvokonvertteriparametrit.isEmpty) {
-          val konversioMap = arvokonvertteriparametrit.asScala.map(konv =>
-            ArvokonversioMerkkijonoilla[BigDecimal, BigDecimal](konv.getArvo, stringToBigDecimal(konv.getPaluuarvo),
-              konv.getHylkaysperuste, konv.getKuvaukset)).toList
-
-          Some(Arvokonvertteri[BigDecimal, BigDecimal](konversioMap))
-        } else if (!arvovalikonvertteriparametrit.isEmpty) {
-          val konversioMap = arvovalikonvertteriparametrit.asScala.map(konv => {
-            val paluuarvo = if (StringUtils.isNotBlank(konv.getPaluuarvo)) {
-              konv.getPaluuarvo
-            } else {
-              "0.0"
-            }
-            LukuarvovalikonversioMerkkijonoilla(konv.getMinValue(), konv.getMaxValue(), paluuarvo,
-              konv.getPalautaHaettuArvo, konv.getHylkaysperuste, konv.getKuvaukset)
-          }).toList
-
-          Some(Lukuarvovalikonvertteri(konversioMap))
-        } else None
+        val konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]] = luoLukuarvokovertteri(arvokonvertteriparametrit, arvovalikonvertteriparametrit)
 
         val oletusarvo = syoteparametrit.asScala.find(_.getAvain == "oletusarvo").filter(!_.getArvo.isEmpty)
           .map(p => parametriToBigDecimal(p))
@@ -161,26 +143,7 @@ object Laskentadomainkonvertteri {
         HaeLukuarvo(konvertteri, oletusarvo, valintaperusteviitteet.head, oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
 
       case Funktionimi.HAELUKUARVOEHDOLLA =>
-        val konvertteri = if (!arvokonvertteriparametrit.isEmpty) {
-          val konversioMap = arvokonvertteriparametrit.asScala.map(konv =>
-            ArvokonversioMerkkijonoilla[BigDecimal, BigDecimal](konv.getArvo, stringToBigDecimal(konv.getPaluuarvo),
-              konv.getHylkaysperuste, konv.getKuvaukset)).toList
-
-          Some(Arvokonvertteri[BigDecimal, BigDecimal](konversioMap))
-        } else if (!arvovalikonvertteriparametrit.isEmpty) {
-          val konversioMap = arvovalikonvertteriparametrit.asScala.map(konv => {
-            val paluuarvo = if (StringUtils.isNotBlank(konv.getPaluuarvo)) {
-              konv.getPaluuarvo
-            } else {
-              "0.0"
-            }
-            LukuarvovalikonversioMerkkijonoilla(konv.getMinValue(), konv.getMaxValue(), paluuarvo,
-              konv.getPalautaHaettuArvo, konv.getHylkaysperuste, konv.getKuvaukset)
-          }).toList
-
-          Some(Lukuarvovalikonvertteri(konversioMap))
-        } else None
-
+        val konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]] = luoLukuarvokovertteri(arvokonvertteriparametrit, arvovalikonvertteriparametrit)
 
         val oletusarvo = syoteparametrit.asScala.find(_.getAvain == "oletusarvo").filter(!_.getArvo.isEmpty)
           .map(p => parametriToBigDecimal(p))
@@ -479,25 +442,7 @@ object Laskentadomainkonvertteri {
 
 
       case Funktionimi.HAEOSAKOEARVOSANA =>
-        val konvertteri = if (!arvokonvertteriparametrit.isEmpty) {
-          val konversioMap = arvokonvertteriparametrit.asScala.map(konv =>
-            ArvokonversioMerkkijonoilla[BigDecimal, BigDecimal](konv.getArvo, stringToBigDecimal(konv.getPaluuarvo),
-              konv.getHylkaysperuste, konv.getKuvaukset)).toList
-
-          Some(Arvokonvertteri[BigDecimal, BigDecimal](konversioMap))
-        } else if (!arvovalikonvertteriparametrit.isEmpty) {
-          val konversioMap = arvovalikonvertteriparametrit.asScala.map(konv => {
-            val paluuarvo = if (StringUtils.isNotBlank(konv.getPaluuarvo)) {
-              konv.getPaluuarvo
-            } else {
-              "0.0"
-            }
-            LukuarvovalikonversioMerkkijonoilla(konv.getMinValue(), konv.getMaxValue(), paluuarvo,
-              konv.getPalautaHaettuArvo, konv.getHylkaysperuste, konv.getKuvaukset)
-          }).toList
-
-          Some(Lukuarvovalikonvertteri(konversioMap))
-        } else None
+        val konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]] = luoLukuarvokovertteri(arvokonvertteriparametrit, arvovalikonvertteriparametrit)
 
         val ehdot = yoehdot(syoteparametrit)
 
@@ -538,6 +483,29 @@ object Laskentadomainkonvertteri {
 
       case _ => sys.error(s"Could not calculate funktio ${funktionimi.name()}")
     }
+  }
+
+  private def luoLukuarvokovertteri(arvokonvertteriparametrit: JSet[Arvokonvertteriparametri],
+                                    arvovalikonvertteriparametrit: JSet[Arvovalikonvertteriparametri]): Option[Konvertteri[BigDecimal, BigDecimal]] = {
+    if (!arvokonvertteriparametrit.isEmpty) {
+      val konversioMap = arvokonvertteriparametrit.asScala.map(konv =>
+        ArvokonversioMerkkijonoilla[BigDecimal, BigDecimal](konv.getArvo, stringToBigDecimal(konv.getPaluuarvo),
+          konv.getHylkaysperuste, konv.getKuvaukset)).toList
+
+      Some(Arvokonvertteri[BigDecimal, BigDecimal](konversioMap))
+    } else if (!arvovalikonvertteriparametrit.isEmpty) {
+      val konversioMap = arvovalikonvertteriparametrit.asScala.map(konv => {
+        val paluuarvo = if (StringUtils.isNotBlank(konv.getPaluuarvo)) {
+          konv.getPaluuarvo
+        } else {
+          "0.0"
+        }
+        LukuarvovalikonversioMerkkijonoilla(konv.getMinValue(), konv.getMaxValue(), paluuarvo,
+          konv.getPalautaHaettuArvo, konv.getHylkaysperuste, konv.getKuvaukset)
+      }).toList
+
+      Some(Lukuarvovalikonvertteri(konversioMap))
+    } else None
   }
 
   def yoehdot(syoteparametrit: JSet[Syoteparametri]): YoEhdot = {
