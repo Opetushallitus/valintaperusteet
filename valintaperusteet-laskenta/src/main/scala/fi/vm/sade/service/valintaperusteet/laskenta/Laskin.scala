@@ -645,9 +645,20 @@ private class Laskin private(private val hakukohde: Hakukohde,
             }
         }
 
-      case HaeAmmatillinenYtoArvosana(oletusarvo, valintaperusteviite, _, _,_,_,_,_) =>
-        val tulos: Option[BigDecimal] = KoskiLaskenta.haeYtoArvosana(hakemus, valintaperusteviite, oletusarvo)
-        val tilalista: List[Hyvaksyttavissatila] = List(new Hyvaksyttavissatila)
+      case HaeAmmatillinenYtoArvosana(konvertteri, oletusarvo, valintaperusteviite, _, _,_,_,_,_) =>
+        val arvosanaKoskessa: Option[BigDecimal] = KoskiLaskenta.haeYtoArvosana(hakemus, valintaperusteviite, oletusarvo)
+
+        val (konv, tilatKonvertterinHausta) = konvertteri match {
+          case Some(l: Lukuarvovalikonvertteri) => konversioToLukuarvovalikonversio(l.konversioMap, hakemus.kentat, hakukohde)
+          case Some(a: Arvokonvertteri[_,_]) => konversioToArvokonversio[BigDecimal, BigDecimal](a.konversioMap, hakemus.kentat, hakukohde)
+          case _ => (konvertteri, List())
+        }
+
+        val (tulos, tilaKonvertoinnista): (Option[BigDecimal], Tila) = (for {
+          k <- konv
+          arvosana <- arvosanaKoskessa
+        } yield k.konvertoi(arvosana)).getOrElse((arvosanaKoskessa, new Hyvaksyttavissatila))
+        val tilalista: List[Tila] = tilaKonvertoinnista :: tilatKonvertterinHausta
         (tulos, tilalista, Historia("Hae ammatillisen yto:n arvosana", tulos, tilalista, None, Some(Map("oletusarvo" -> oletusarvo))))
 
       case HaeLukuarvo(konvertteri, oletusarvo, valintaperusteviite, _, _,_,_,_,_) =>

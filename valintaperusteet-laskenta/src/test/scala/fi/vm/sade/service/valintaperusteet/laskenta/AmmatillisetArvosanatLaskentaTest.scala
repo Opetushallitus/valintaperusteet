@@ -6,7 +6,7 @@ import fi.vm.sade.kaava.LaskentaTestUtil.TestHakemus
 import fi.vm.sade.kaava.Laskentadomainkonvertteri
 import fi.vm.sade.service.valintaperusteet.dto.model.{Funktionimi, Valintaperustelahde}
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakukohde
-import fi.vm.sade.service.valintaperusteet.model.{Funktiokutsu, ValintaperusteViite}
+import fi.vm.sade.service.valintaperusteet.model.{Arvokonvertteriparametri, Funktiokutsu, ValintaperusteViite}
 import io.circe.Json
 import org.scalatest.funsuite.AnyFunSuite
 
@@ -31,6 +31,17 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
     assert(BigDecimal(tulos.get) == BigDecimal("4.0"))
   }
 
+  test("Tutkinnon yhteisten tutkinnon osien arvosanoja voi konvertoida") {
+    val konvetteriParameteri = new Arvokonvertteriparametri
+    konvetteriParameteri.setArvo("4")
+    konvetteriParameteri.setPaluuarvo("15")
+    konvetteriParameteri.setHylkaysperuste(Boolean.box(false).toString)
+
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeAmmatillinenYtoArvosanaKutsu(Set(konvetteriParameteri)))
+    val (tulos, _) = Laskin.laske(hakukohde, hakemus, lasku)
+    assert(BigDecimal(tulos.get) == BigDecimal("15"))
+  }
+
   test("Tutkinnon yhteisten tutkinnon osien arvoasteikko") {
     val lasku1 = Laskentadomainkonvertteri.muodostaTotuusarvolasku(
       createOnkoAmmatillinenYtoArviointiAsteikkoKutsu("101054:arviointiasteikkoammatillinen15")
@@ -45,10 +56,11 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
     assert(!tulos2.get)
   }
 
-  def createHaeAmmatillinenYtoArvosanaKutsu(): Funktiokutsu = {
+  def createHaeAmmatillinenYtoArvosanaKutsu(konvertteriparametrit: Set[Arvokonvertteriparametri] = Set()): Funktiokutsu = {
 
     val kutsu: Funktiokutsu = new Funktiokutsu
     kutsu.setFunktionimi(Funktionimi.HAEAMMATILLINENYTOARVOSANA)
+    kutsu.setArvokonvertteriparametrit(konvertteriparametrit.asJava)
 
     val viite: ValintaperusteViite = new ValintaperusteViite
     viite.setTunniste("101054")

@@ -157,7 +157,13 @@ object Funktiokuvaaja {
     ),
     Funktionimi.HAEAMMATILLINENYTOARVOSANA -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
-      valintaperusteparametri = List(Valintaperusteparametrikuvaus("tunniste", Syoteparametrityyppi.MERKKIJONO, kuvaus = "Tunniste"))
+      valintaperusteparametri = List(Valintaperusteparametrikuvaus("tunniste", Syoteparametrityyppi.MERKKIJONO, kuvaus = "Tunniste")),
+      konvertteri = Some(
+        Konvertterikuvaus(
+          pakollinen = false,
+          konvertteriTyypit = Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.DESIMAALILUKU),
+            ARVOVALIKONVERTTERI -> Arvovalikonvertterikuvaus)
+        ))
     ),
     Funktionimi.ONKOAMMATILLINENYTOARVIOINTIASTEIKKO -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.TOTUUSARVOFUNKTIO,

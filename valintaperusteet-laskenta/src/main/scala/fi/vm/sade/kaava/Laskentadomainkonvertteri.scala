@@ -464,7 +464,9 @@ object Laskentadomainkonvertteri {
         NimettyLukuarvo(s"YO-kokeen pisteet (${valintaperusteviitteet.head.tunniste})", arvosana, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku = omaopintopolku)
 
       case Funktionimi.HAEAMMATILLINENYTOARVOSANA => {
+        val konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]] = luoLukuarvokovertteri(arvokonvertteriparametrit, arvovalikonvertteriparametrit)
         val arvosana = HaeAmmatillinenYtoArvosana(
+          konvertteri,
           Some(BigDecimal("0.0")),
           valintaperusteviitteet.head,
           omaopintopolku = omaopintopolku)
