@@ -7,18 +7,18 @@
     <parent>
         <groupId>fi.vm.sade.valintaperusteet</groupId>
         <artifactId>valintaperusteet</artifactId>
-        <version>5.7-VTKU-98-scala_2.12-SNAPSHOT</version>
+        <version>5.8-VTKU-98-SNAPSHOT</version>
     </parent>
 
     <groupId>fi.vm.sade.valintaperusteet</groupId>
     <artifactId>valintaperusteet-testing</artifactId>
-    <version>5.7-VTKU-98-scala_2.12-SNAPSHOT</version>
+    <version>5.8-VTKU-98-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
             <groupId>fi.vm.sade.valintaperusteet</groupId>
             <artifactId>valintaperusteet-service</artifactId>
-            <version>5.7-VTKU-98-scala_2.12-SNAPSHOT</version>
+            <version>5.8-VTKU-98-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>
