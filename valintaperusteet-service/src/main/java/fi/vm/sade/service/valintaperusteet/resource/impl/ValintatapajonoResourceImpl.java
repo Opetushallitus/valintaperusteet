@@ -36,15 +36,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -103,6 +95,10 @@ public class ValintatapajonoResourceImpl {
     @PreAuthorize(READ_UPDATE_CRUD)
     @ApiOperation(value = "Hakee valintatapajonojen tiedot OID-listan perusteella", response = ValintatapajonoDTO.class)
     public List<ValintatapajonoDTO> readByOids(@ApiParam(value = "Oidit, joita vastaavien jonojen tiedot halutaan", required = true) List<String> oids) {
+        if (oids.size() > 5000) {
+            LOGGER.warn("Valintatapajonojen tiedot called with more than 5000 jonoOids.");
+            throw new BadRequestException("Valintatapajonojen tiedot called with more than 5000 jonoOids.");
+        }
         return valintatapajonoService.readByOids(oids).stream()
                 .map(jono -> modelMapper.map(jono, ValintatapajonoDTO.class)).collect(Collectors.toList());
     }
