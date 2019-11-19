@@ -483,6 +483,19 @@ object Laskentadomainkonvertteri {
         NimettyTotuusarvo("Onko tutkinnon arvioinnissa käytetty annettua ammatillisen arviointiasteikkoa", paluuarvo, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku = omaopintopolku)
       }
 
+      case Funktionimi.HAEAMMATILLINENYTOARVIOINTIASTEIKKO => {
+        val konversioMap = arvokonvertteriparametrit.asScala.map(konv =>
+          ArvokonversioMerkkijonoilla[String, BigDecimal](konv.getArvo, stringToBigDecimal(konv.getPaluuarvo), konv.getHylkaysperuste, konv.getKuvaukset)).toList
+
+        val funktio = HaeAmmatillinenYtoArviointiAsteikko(
+          Arvokonvertteri[String, BigDecimal](konversioMap),
+          Some(BigDecimal("0")),
+          valintaperusteviitteet.head,
+          omaopintopolku = omaopintopolku)
+
+        NimettyLukuarvo("Ammatillisen yto:n arviointiasteikko", funktio, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku = omaopintopolku)
+      }
+
       case _ => sys.error(s"Could not calculate funktio ${funktionimi.name()}")
     }
   }

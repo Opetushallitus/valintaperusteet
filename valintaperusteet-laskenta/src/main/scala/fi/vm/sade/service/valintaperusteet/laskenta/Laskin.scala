@@ -636,6 +636,21 @@ private class Laskin private(private val hakukohde: Hakukohde,
         val tilalista: List[Tila] = tilaKonvertoinnista :: tilatKonvertterinHausta
         (tulos, tilalista, Historia("Hae ammatillisen yto:n arvosana", tulos, tilalista, None, Some(Map("oletusarvo" -> oletusarvo))))
 
+      case HaeAmmatillinenYtoArviointiAsteikko(konvertteri, oletusarvo, valintaperusteviite, _, _,_,_,_,_) =>
+        val asteikonKoodiKoskessa: Option[String] = KoskiLaskenta.haeYtoArviointiasteikko(hakemus, valintaperusteviite)
+
+        val (konv: Option[Arvokonvertteri[String, BigDecimal]], tilatKonvertterinHausta) = konvertteri match {
+          case a: Arvokonvertteri[_, _] => konversioToArvokonversio[String, BigDecimal](a.konversioMap, hakemus.kentat, hakukohde)
+          case x => throw new IllegalArgumentException(s"Odotettiin arvokonvertteria mutta saatiin $x")
+        }
+
+        val (tulos, tilaKonvertoinnista): (Option[BigDecimal], Tila) = (for {
+          k <- konv
+          arvosana <- asteikonKoodiKoskessa
+        } yield k.konvertoi(arvosana)).getOrElse((oletusarvo, new Hyvaksyttavissatila))
+        val tilalista: List[Tila] = tilaKonvertoinnista :: tilatKonvertterinHausta
+        (tulos, tilalista, Historia("Hae ammatillisen yto:n arviointiasteikko", tulos, tilalista, None, Some(Map("oletusarvo" -> oletusarvo))))
+
       case HaeLukuarvo(konvertteri, oletusarvo, valintaperusteviite, _, _,_,_,_,_) =>
         haeLukuarvo(konvertteri, oletusarvo, valintaperusteviite, hakemus.kentat)
 

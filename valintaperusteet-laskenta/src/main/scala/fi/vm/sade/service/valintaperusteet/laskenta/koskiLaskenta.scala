@@ -34,6 +34,11 @@ object KoskiLaskenta {
     }
   }
 
+  def haeYtoArviointiasteikko(hakemus: Hakemus, valintaperusteviite: Laskenta.Valintaperuste): Option[String] = {
+    haeAmmatillisenSuorituksenTiedot(hakemus.oid, hakemus.koskiOpiskeluoikeudet, valintaperusteviite.tunniste)
+      .headOption.map(_._4)
+  }
+
   private def haeYtoArvosana(hakemusOid: String, opiskeluoikeudet: Json, ytoKoodiArvo: String): Option[BigDecimal] = {
     haeAmmatillisenSuorituksenTiedot(hakemusOid, opiskeluoikeudet, ytoKoodiArvo)
       .headOption.map(t => BigDecimal(t._3))

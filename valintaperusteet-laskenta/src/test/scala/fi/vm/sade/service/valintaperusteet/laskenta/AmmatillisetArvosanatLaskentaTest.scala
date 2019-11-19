@@ -56,6 +56,14 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
     assert(!tulos2.get)
   }
 
+  test("Tutkinnon yhteisten tutkinnon osien arvoasteikko lukuarvona") {
+    val lasku1 = Laskentadomainkonvertteri.muodostaLukuarvolasku(
+      createAmmatillinenYtoArviointiAsteikkoKutsu("101054")
+    )
+    val (tulos1, _) = Laskin.laske(hakukohde, hakemus, lasku1)
+    assert(tulos1.contains(new java.math.BigDecimal(5)))
+  }
+
   def createHaeAmmatillinenYtoArvosanaKutsu(konvertteriparametrit: Set[Arvokonvertteriparametri] = Set()): Funktiokutsu = {
 
     val kutsu: Funktiokutsu = new Funktiokutsu
@@ -87,6 +95,28 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
 
     kutsu.getValintaperusteviitteet.add(viite)
 
+    kutsu
+  }
+
+  def createAmmatillinenYtoArviointiAsteikkoKutsu(parametri: String): Funktiokutsu = {
+    val kutsu: Funktiokutsu = new Funktiokutsu
+    kutsu.setFunktionimi(Funktionimi.HAEAMMATILLINENYTOARVIOINTIASTEIKKO)
+
+    val viite: ValintaperusteViite = new ValintaperusteViite
+    viite.setTunniste(parametri)
+    viite.setIndeksi(0)
+    viite.setLahde(Valintaperustelahde.HAETTAVA_ARVO)
+    viite.setEpasuoraViittaus(false)
+    viite.setOnPakollinen(false)
+
+    kutsu.getValintaperusteviitteet.add(viite)
+
+    val konvetteriParameteri = new Arvokonvertteriparametri
+    konvetteriParameteri.setArvo("arviointiasteikkoammatillinen15")
+    konvetteriParameteri.setPaluuarvo("5")
+    konvetteriParameteri.setHylkaysperuste(Boolean.box(false).toString)
+
+    kutsu.setArvokonvertteriparametrit(Set(konvetteriParameteri).asJava)
     kutsu
   }
 }
