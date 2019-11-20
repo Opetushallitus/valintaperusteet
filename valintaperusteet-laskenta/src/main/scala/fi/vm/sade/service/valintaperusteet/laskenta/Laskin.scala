@@ -1,16 +1,91 @@
 package fi.vm.sade.service.valintaperusteet.laskenta
 
 import java.lang.{Boolean => JBoolean}
-import java.math.{RoundingMode, BigDecimal => JBigDecimal}
+import java.math.RoundingMode
+import java.math.{BigDecimal => JBigDecimal}
 import java.util.{Collection => JCollection}
 
 import fi.vm.sade.service.valintaperusteet.dto.model.Osallistuminen
-import fi.vm.sade.service.valintaperusteet.laskenta.JsonFormats._
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.{Demografia, Ei, HaeLukuarvo, HaeMerkkijonoJaKonvertoiLukuarvoksi, HaeMerkkijonoJaKonvertoiTotuusarvoksi, HaeMerkkijonoJaVertaaYhtasuuruus, HaeTotuusarvo, HakukohteenValintaperuste, Hakutoive, Jos, KonvertoiLukuarvo, Lukuarvo, Negaatio, NimettyLukuarvo, NimettyTotuusarvo, Osamaara, Pienempi, PienempiTaiYhtasuuri, Pyoristys, Suurempi, SuurempiTaiYhtasuuri, SyotettavaValintaperuste, Totuusarvo, Yhtasuuri, _}
+import fi.vm.sade.service.valintaperusteet.laskenta.JsonFormats.historiaWrites
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonvertteri
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Demografia
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Ei
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeAmmatillinenYtoArviointiAsteikko
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeAmmatillinenYtoArvosana
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeLukuarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeLukuarvoEhdolla
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaKonvertoiLukuarvoksi
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaKonvertoiTotuusarvoksi
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaVertaaYhtasuuruus
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeTotuusarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeTotuusarvoJaKonvertoiLukuarvoksi
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeYoArvosana
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeYoPisteet
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakemuksenValintaperuste
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Hakukelpoisuus
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakukohteenSyotettavaValintaperuste
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakukohteenValintaperuste
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Hakutoive
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakutoiveRyhmassa
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Hylkaa
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HylkaaArvovalilla
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Ja
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Jos
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Keskiarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.KeskiarvoNParasta
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.KonvertoiLukuarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Konvertteri
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonvertteri
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Maksimi
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Mediaani
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Minimi
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.NMaksimi
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.NMinimi
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Negaatio
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.NimettyLukuarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.NimettyTotuusarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.OnkoAmmatillinenYtoArviointiAsteikko
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Osamaara
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.PainotettuKeskiarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Pienempi
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.PienempiTaiYhtasuuri
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Pyoristys
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Skaalaus
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Summa
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.SummaNParasta
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Suurempi
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.SuurempiTaiYhtasuuri
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.SyotettavaValintaperuste
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Tai
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Totuusarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Tulo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.TuloNParasta
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Valintaperuste
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Valintaperusteyhtasuuruus
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Yhtasuuri
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.YoEhdot
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.tekstiryhmaToMap
+import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus.Kentat
+import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakukohde
+import fi.vm.sade.service.valintaperusteet.laskenta.api.Laskentatulos
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.EiOsallistunutHylkays
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.HakukohteenValintaperusteMaarittelemattaVirhe
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Hylattytila
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.HylkaaFunktionSuorittamaHylkays
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.HylkaamistaEiVoidaTulkita
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Hyvaksyttavissatila
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.JakoNollallaVirhe
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.OsallistumistietoaEiVoidaTulkitaVirhe
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.SkaalattavaArvoEiOleLahdeskaalassaVirhe
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.SyotettavaArvoMerkitsemattaVirhe
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Tila
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Tila.Tilatyyppi
-import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
-import fi.vm.sade.service.valintaperusteet.laskenta.api.{Hakemus, Hakukohde, Laskentatulos, FunktioTulos => FTulos, SyotettyArvo => SArvo}
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.TuloksiaLiianVahanLahdeskaalanMaarittamiseenVirhe
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Virhetila
+import fi.vm.sade.service.valintaperusteet.laskenta.api.{FunktioTulos => FTulos}
+import fi.vm.sade.service.valintaperusteet.laskenta.api.{SyotettyArvo => SArvo}
 import org.slf4j.LoggerFactory
 import play.api.libs.json._
 

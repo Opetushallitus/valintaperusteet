@@ -1,7 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.laskenta
 
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
-import fi.vm.sade.service.valintaperusteet.model.{LokalisoituTeksti, TekstiRyhma}
+import fi.vm.sade.service.valintaperusteet.model.LokalisoituTeksti
+import fi.vm.sade.service.valintaperusteet.model.TekstiRyhma
 import org.apache.commons.lang.StringUtils
 
 import scala.jdk.CollectionConverters._

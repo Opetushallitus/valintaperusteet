@@ -1,9 +1,24 @@
 package fi.vm.sade.service.valintaperusteet.laskenta
 
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.{Lukuarvovalikonversio, _}
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonversio
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.ArvokonversioMerkkijonoilla
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonvertteri
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Konversio
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Konvertteri
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonversio
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.LukuarvovalikonversioMerkkijonoilla
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonvertteri
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus.Kentat
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakukohde
-import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.ArvokonvertointiVirhe
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Hylattytila
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Hyvaksyttavissatila
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.PakollinenValintaperusteHylkays
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Tila
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.ValintaperustettaEiVoidaTulkitaLukuarvoksiVirhe
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.ValintaperustettaEiVoidaTulkitaTotuusarvoksiVirhe
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.VirheellinenLaskentamoodiVirhe
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Virhetila
 import fi.vm.sade.service.valintaperusteet.model.TekstiRyhma
 
 import scala.jdk.CollectionConverters._
