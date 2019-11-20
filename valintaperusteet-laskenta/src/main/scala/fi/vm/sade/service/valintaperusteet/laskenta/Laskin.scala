@@ -77,8 +77,11 @@ object Laskin {
   }
 
   private def createLaskin(hakukohde: Hakukohde, hakemus: Hakemus, kaikkiHakemukset: Option[JCollection[Hakemus]]): Laskin = {
-    val laskin = if (kaikkiHakemukset.isDefined) new Laskin(hakukohde, hakemus, kaikkiHakemukset.get.asScala.toSet) else new Laskin(hakukohde, hakemus)
-    laskin
+    if (kaikkiHakemukset.isDefined) {
+      new Laskin(hakukohde, hakemus, kaikkiHakemukset.get.asScala.toSet)
+    } else {
+      new Laskin(hakukohde, hakemus)
+    }
   }
 
   protected def suoritaValintalaskentaTotuusarvofunktiolla(hakukohde: Hakukohde,
