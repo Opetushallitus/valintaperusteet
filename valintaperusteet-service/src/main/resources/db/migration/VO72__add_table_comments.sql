@@ -47,15 +47,15 @@ COMMENT ON COLUMN funktiokutsu.oma_opintopolku IS 'Näytetäänkö tulos hakijal
 COMMENT ON TABLE hakijaryhma IS 'Hakijaryhmät';
 COMMENT ON COLUMN hakijaryhma.id IS 'Tunniste';
 COMMENT ON COLUMN hakijaryhma.version IS 'Versio';
-COMMENT ON COLUMN hakijaryhma.kiintio IS 'Hakijaryhmän paikkakiintiö';
+COMMENT ON COLUMN hakijaryhma.kiintio IS 'Hakijaryhmän paikkakiintiön koko';
 COMMENT ON COLUMN hakijaryhma.kuvaus IS 'Hakijaryhmän kuvaus';
 COMMENT ON COLUMN hakijaryhma.nimi IS 'Hakijaryhmän nimi';
 COMMENT ON COLUMN hakijaryhma.oid IS 'Hakijaryhmän oid';
 COMMENT ON COLUMN hakijaryhma.laskentakaava_id IS 'Käytettävän laskentakaavan id';
 COMMENT ON COLUMN hakijaryhma.valintaryhma_id IS 'Valintaryhmän id';
-COMMENT ON COLUMN hakijaryhma.tarkkakiintio IS 'Onko kiintiö tarkka';
+COMMENT ON COLUMN hakijaryhma.tarkkakiintio IS 'Onko kiintiön suuruus yläraja';
 COMMENT ON COLUMN hakijaryhma.kaytakaikki IS 'Käytetäänkö koko kiintiö';
-COMMENT ON COLUMN hakijaryhma.kaytetaan_ryhmaan_kuuluvia IS 'Käytetäänkö ryhmään kuuluvia';
+COMMENT ON COLUMN hakijaryhma.kaytetaan_ryhmaan_kuuluvia IS 'Käytetäänkö kaavan osoittamia henkilöitä vai sen joukon komplementtia';
 COMMENT ON COLUMN hakijaryhma.hakijaryhmatyyppikoodi_id IS 'Hakijaryhmän tyyppikoodin id';
 COMMENT ON COLUMN hakijaryhma.master_hakijaryhma_id IS 'Emohakijaryhmän id';
 COMMENT ON COLUMN hakijaryhma.edellinen_hakijaryhma_id IS 'Edellisen hakijaryhmän id';
@@ -71,10 +71,10 @@ COMMENT ON COLUMN hakijaryhma_jono.hakijaryhma_id IS 'Hakijaryhmän id';
 COMMENT ON COLUMN hakijaryhma_jono.master_hakijaryhma_jono_id IS 'Emohakijaryhmäjonon id';
 COMMENT ON COLUMN hakijaryhma_jono.valintatapajono_id IS 'Valintatapajonon id';
 COMMENT ON COLUMN hakijaryhma_jono.hakukohde_viite_id IS 'Hakukohdeviitteen id';
-COMMENT ON COLUMN hakijaryhma_jono.tarkkakiintio IS 'Onko kiintiö tarkka';
+COMMENT ON COLUMN hakijaryhma_jono.tarkkakiintio IS 'Onko kiintiön suuruus yläraja';
 COMMENT ON COLUMN hakijaryhma_jono.kaytakaikki IS 'Käytetäänkö koko kiintiö';
-COMMENT ON COLUMN hakijaryhma_jono.kiintio IS 'Hakijaryhmäjonon kiintiö';
-COMMENT ON COLUMN hakijaryhma_jono.kaytetaan_ryhmaan_kuuluvia IS 'Käytetäänkö ryhmään kuuluvia';
+COMMENT ON COLUMN hakijaryhma_jono.kiintio IS 'Hakijaryhmäjonon kiintiön koko';
+COMMENT ON COLUMN hakijaryhma_jono.kaytetaan_ryhmaan_kuuluvia IS 'Käytetäänkö kaavan osoittamia henkilöitä vai sen joukon komplementtia';
 COMMENT ON COLUMN hakijaryhma_jono.hakijaryhmatyyppikoodi_id IS 'Hakijaryhmän tyyppikoodin id';
 
 --Hakijaryhmatyyppikoodi
@@ -297,7 +297,7 @@ COMMENT ON COLUMN valintatapajono.varasijan_tayttojono_id IS 'Varasijojen täytt
 COMMENT ON COLUMN valintatapajono.varasijoja_kaytetaan_alkaen IS 'Mistä alkaen varasijoja käytetään';
 COMMENT ON COLUMN valintatapajono.varasijoja_taytetaan_asti IS 'Mihin asti varasijoja täytetään';
 COMMENT ON COLUMN valintatapajono.kaytetaan_valintalaskentaa IS 'Käytetäänkö jonossa valintalaskentaa';
-COMMENT ON COLUMN valintatapajono.kaikki_ehdon_tayttavat_hyvaksytaan IS 'Hyväksytäänkö kaikki ehdon täyttävät';
+COMMENT ON COLUMN valintatapajono.kaikki_ehdon_tayttavat_hyvaksytaan IS 'Hyväksytäänkö kaikki hyväksyttävissä olevat';
 COMMENT ON COLUMN valintatapajono.valisijoittelu IS 'Käytetäänkö välisijoittelua';
 COMMENT ON COLUMN valintatapajono.automaattinen_sijoitteluun_siirto IS 'Siirretäänkö jono automaattisesti sijoitteluun';
 COMMENT ON COLUMN valintatapajono.poistetaanko_hylatyt IS 'Poistetaanko hylätyt';
