@@ -436,8 +436,5 @@ object Laskenta {
                                        valintaperusteet: Tuple2[Valintaperuste, Valintaperuste]) extends Totuusarvofunktio
 
   case class HylkaaArvovalilla(f: Lukuarvofunktio, hylkaysperustekuvaus: Option[Map[String,String]] = None, oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false, arvovali: Tuple2[String, String])
-    extends Lukuarvofunktio {
-    // TODO: poista toteutus jollain aikavälillä. Ilmeisesti on ollut no-op since 2013
-    //require(arvovali._1 < arvovali._2, "Arvovälin minimin pitää olla pienempi kuin maksimi")
-  }
+    extends Lukuarvofunktio
 }
