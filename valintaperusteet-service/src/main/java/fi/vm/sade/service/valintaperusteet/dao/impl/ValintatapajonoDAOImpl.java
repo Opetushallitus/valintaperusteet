@@ -81,6 +81,23 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
     }
 
     @Override
+    public List<Valintatapajono> readByOids(List<String> oids) {
+        QValintatapajono jono = QValintatapajono.valintatapajono;
+        QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
+        QHakijaryhmaValintatapajono hakijaryhmaValintatapajono = QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
+        return from(jono)
+                .where(jono.oid.in(oids))
+                .leftJoin(jono.valinnanVaihe, valinnanVaihe).fetch()
+                .leftJoin(jono.masterValintatapajono).fetch()
+                .leftJoin(jono.edellinenValintatapajono).fetch()
+                .leftJoin(jono.varasijanTayttojono).fetch()
+                .leftJoin(jono.hakijaryhmat, hakijaryhmaValintatapajono).fetch()
+                .leftJoin(hakijaryhmaValintatapajono.hakijaryhma).fetch()
+                .leftJoin(valinnanVaihe.valintaryhma)
+                .list(jono);
+    }
+
+    @Override
     public List<Valintatapajono> haeKopiot(String oid) {
         QValintatapajono valintatapajono = QValintatapajono.valintatapajono;
         return from(valintatapajono).leftJoin(valintatapajono.valinnanVaihe).fetch()

@@ -275,6 +275,11 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
     }
 
     @Override
+    public List<Valintatapajono> readByOids(List<String> oids) {
+        return valintatapajonoDAO.readByOids(oids);
+    }
+
+    @Override
     public List<Valintatapajono> findAll() {
         return valintatapajonoDAO.findAll();
     }
