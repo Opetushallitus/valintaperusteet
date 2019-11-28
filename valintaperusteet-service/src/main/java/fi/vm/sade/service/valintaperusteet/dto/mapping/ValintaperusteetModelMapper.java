@@ -226,9 +226,14 @@ public class ValintaperusteetModelMapper extends ModelMapper {
         });
 
         this.addMappings(new PropertyMap<Valintatapajono, ValintatapajonoDTO>() {
+            // huom: prioriteetti jää tässä tyhjäksi yksittäiselle valintatapajonolle, jolloin
+            // se saa default-arvon eli 0. Prioriteetit lisätään vain mapList-metodissa alla.
+            // Asetetaan tässä arvoksi -1 sen merkiksi että kyseessä ei ole todellinen prioriteetti.
+
             @Override
             protected void configure() {
                 map().setTayttojono(source.getVarasijanTayttojono().getOid());
+                map().setPrioriteetti(-1);
             }
         });
 

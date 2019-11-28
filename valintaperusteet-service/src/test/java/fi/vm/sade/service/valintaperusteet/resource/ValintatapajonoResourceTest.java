@@ -205,14 +205,26 @@ public class ValintatapajonoResourceTest {
 
 
     @Test
-    public void testPrioriteettiOfSingleJonoIsAlwaysZero() throws Exception {
+    public void testPrioriteettiOfSingleJonoHasCustomDefault() throws Exception {
         ValintaperusteetModelMapper modelMapper = new ValintaperusteetModelMapper();
 
         List<String> allOids = resource.findAll().stream().map(ValintatapajonoDTO::getOid).collect(Collectors.toList());
         allOids.stream().forEach(oid -> {
             ValintatapajonoDTO dto = modelMapper.map(resource.readByOid(oid), ValintatapajonoDTO.class);
-            assertEquals(0, dto.getPrioriteetti());
+            assertEquals(-1, dto.getPrioriteetti());
         });
+    }
+
+    @Test
+    public void testPrioriteettiOfSeveralJonosInOrder() throws Exception {
+        ValintaperusteetModelMapper modelMapper = new ValintaperusteetModelMapper();
+
+        List<ValintatapajonoDTO> all = resource.findAll();
+
+        for (int i = 0; i < all.size(); i++) {
+            ValintatapajonoDTO dto = modelMapper.map(all.get(i), ValintatapajonoDTO.class);
+            assertEquals(i, dto.getPrioriteetti());
+        }
     }
 
 }
