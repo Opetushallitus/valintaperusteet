@@ -1,10 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
-import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriDTO;
-import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriInsertDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
+import fi.vm.sade.service.valintaperusteet.dto.*;
+import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.resource.impl.ValinnanVaiheResourceImpl;
@@ -35,6 +33,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.eq;
@@ -202,6 +202,19 @@ public class ValintatapajonoResourceTest {
         assertEquals("5", jarjesta.get(0).getOid());
         assertEquals("1", jarjesta.get(4).getOid());
     }
+
+
+    @Test
+    public void testPrioriteettiOfSingleJonoIsAlwaysZero() throws Exception {
+        ValintaperusteetModelMapper modelMapper = new ValintaperusteetModelMapper();
+
+        List<String> allOids = resource.findAll().stream().map(ValintatapajonoDTO::getOid).collect(Collectors.toList());
+        allOids.stream().forEach(oid -> {
+            ValintatapajonoDTO dto = modelMapper.map(resource.readByOid(oid), ValintatapajonoDTO.class);
+            assertEquals(0, dto.getPrioriteetti());
+        });
+    }
+
 }
 
 @Configuration
