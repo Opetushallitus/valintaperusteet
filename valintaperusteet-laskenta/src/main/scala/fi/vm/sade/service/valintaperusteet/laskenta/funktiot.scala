@@ -13,4 +13,9 @@ trait Funktio[T] {
 
 trait Lukuarvofunktio extends Funktio[BigDecimal]
 
+trait IteroitavaLukuarvofunktio[T <: IteraatioParametri] extends Lukuarvofunktio {
+  val iteraatioparametrinTyppi: Class[T]
+  def sovellaParametri(parametri: T): Lukuarvofunktio
+}
+
 trait Totuusarvofunktio extends Funktio[Boolean]

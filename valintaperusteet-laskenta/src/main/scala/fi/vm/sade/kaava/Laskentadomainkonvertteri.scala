@@ -4,15 +4,19 @@ import java.util.{Set => JSet}
 
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi
 import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde
+import fi.vm.sade.service.valintaperusteet.laskenta.AmmatillisenPerustutkinnonValitsija
 import fi.vm.sade.service.valintaperusteet.laskenta.Funktio
+import fi.vm.sade.service.valintaperusteet.laskenta.IteraatioParametri
+import fi.vm.sade.service.valintaperusteet.laskenta.IteroitavaLukuarvofunktio
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.ArvokonversioMerkkijonoilla
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonvertteri
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Demografia
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Ei
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeAmmatillinenYtoArviointiAsteikko
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeAmmatillinenYtoArvosana
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeUseanTutkinnonAmmatillinenYtoArvosana
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeLukuarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeLukuarvoEhdolla
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMaksimiAmmatillisistaTutkinnoista
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaKonvertoiLukuarvoksi
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaKonvertoiTotuusarvoksi
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaVertaaYhtasuuruus
@@ -143,6 +147,18 @@ object Laskentadomainkonvertteri {
     f match {
       case lf: Lukuarvofunktio => lf
       case _ => sys.error("Cannot cast funktio to Lukuarvofunktio")
+    }
+  }
+
+  private def muunnaIteroitavaksiLukuarvofunktioksi[T <: IteraatioParametri](parametrinTyyppi: Class[T],
+                                                                             f: Funktio[_]
+                                                                            ): IteroitavaLukuarvofunktio[T] = {
+    f match {
+      case lf: IteroitavaLukuarvofunktio[T] if lf.iteraatioparametrinTyppi == parametrinTyyppi => lf
+      case lf: IteroitavaLukuarvofunktio[_] =>
+        sys.error(s"Funktio $f has wrong parameter type ${lf.iteraatioparametrinTyppi} ; expected $parametrinTyyppi")
+      case nla: NimettyLukuarvo => muunnaIteroitavaksiLukuarvofunktioksi(parametrinTyyppi, nla.f)
+      case _ => sys.error(s"Cannot cast funktio $f to IteroitavaLukuarvofunktio[$parametrinTyyppi]")
     }
   }
 
@@ -533,7 +549,18 @@ object Laskentadomainkonvertteri {
 
       case Funktionimi.HAEAMMATILLINENYTOARVOSANA => {
         val konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]] = luoLukuarvokovertteri(arvokonvertteriparametrit, arvovalikonvertteriparametrit)
-        val arvosana = HaeAmmatillinenYtoArvosana(
+        val arvosana = HaeUseanTutkinnonAmmatillinenYtoArvosana(
+          konvertteri,
+          Some(BigDecimal("0.0")),
+          valintaperusteviitteet.head,
+          omaopintopolku = omaopintopolku)
+
+        NimettyLukuarvo("Ammatillinen arvosana", arvosana, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku = omaopintopolku)
+      }
+
+      case Funktionimi.HAEUSEANTUTKINNONAMMATILLINENYTOARVOSANA => {
+        val konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]] = luoLukuarvokovertteri(arvokonvertteriparametrit, arvovalikonvertteriparametrit)
+        val arvosana = HaeUseanTutkinnonAmmatillinenYtoArvosana(
           konvertteri,
           Some(BigDecimal("0.0")),
           valintaperusteviitteet.head,
@@ -553,6 +580,10 @@ object Laskentadomainkonvertteri {
           omaopintopolku = omaopintopolku)
 
         NimettyLukuarvo("Ammatillisen yto:n arviointiasteikko", funktio, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku = omaopintopolku)
+      }
+
+      case Funktionimi.HAEMAKSIMIAMMATILLISISTATUTKINNOISTA => {
+        HaeMaksimiAmmatillisistaTutkinnoista(lasketutArgumentit.map(muunnaIteroitavaksiLukuarvofunktioksi(classOf[AmmatillisenPerustutkinnonValitsija], _)), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
       }
 
       case _ => sys.error(s"Could not calculate funktio ${funktionimi.name()}")

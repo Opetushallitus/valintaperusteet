@@ -1,6 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.laskenta
 
 import java.util
+import java.util.Collections
 
 import fi.vm.sade.kaava.LaskentaTestUtil.TestHakemus
 import fi.vm.sade.kaava.Laskentadomainkonvertteri
@@ -8,6 +9,7 @@ import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi
 import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakukohde
 import fi.vm.sade.service.valintaperusteet.model.Arvokonvertteriparametri
+import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti
 import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu
 import fi.vm.sade.service.valintaperusteet.model.ValintaperusteViite
 import io.circe.Json
@@ -34,7 +36,8 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
 
   test("Tutkinnon yhteisten tutkinnon osien arvosanat") {
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeAmmatillinenYtoArvosanaKutsu())
-    val (tulos, _) = Laskin.laske(hakukohde, hakemus, lasku)
+    val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
+    System.out.println(s"tila: $tila")
     assert(BigDecimal(tulos.get) == BigDecimal("4.0"))
   }
 
@@ -59,8 +62,11 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
 
   def createHaeAmmatillinenYtoArvosanaKutsu(konvertteriparametrit: Set[Arvokonvertteriparametri] = Set()): Funktiokutsu = {
 
+    val juurikutsu: Funktiokutsu = new Funktiokutsu
+    juurikutsu.setFunktionimi(Funktionimi.HAEMAKSIMIAMMATILLISISTATUTKINNOISTA)
+
     val kutsu: Funktiokutsu = new Funktiokutsu
-    kutsu.setFunktionimi(Funktionimi.HAEAMMATILLINENYTOARVOSANA)
+    kutsu.setFunktionimi(Funktionimi.HAEUSEANTUTKINNONAMMATILLINENYTOARVOSANA)
     kutsu.setArvokonvertteriparametrit(konvertteriparametrit.asJava)
 
     val viite: ValintaperusteViite = new ValintaperusteViite
@@ -70,7 +76,11 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
 
     kutsu.getValintaperusteviitteet.add(viite)
 
-    kutsu
+    val funktioargumentti = new Funktioargumentti
+    funktioargumentti.setIndeksi(0)
+    funktioargumentti.setFunktiokutsuChild(kutsu)
+    juurikutsu.setFunktioargumentit(Collections.singleton(funktioargumentti))
+    juurikutsu
   }
 
   def createAmmatillinenYtoArviointiAsteikkoKutsu(parametri: String): Funktiokutsu = {

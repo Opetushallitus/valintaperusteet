@@ -12,8 +12,10 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Demografia
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Ei
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeAmmatillinenYtoArviointiAsteikko
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeAmmatillinenYtoArvosana
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeUseanTutkinnonAmmatillinenYtoArvosana
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeLukuarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeLukuarvoEhdolla
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMaksimiAmmatillisistaTutkinnoista
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaKonvertoiLukuarvoksi
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaKonvertoiTotuusarvoksi
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaVertaaYhtasuuruus
@@ -508,7 +510,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
     Tulos(laskettuTulos, palautettavaTila(tilat), hist)
   }
 
-  private def laskeLukuarvo(laskettava: Lukuarvofunktio): Tulos[BigDecimal] = {
+  private def laskeLukuarvo(laskettava: Lukuarvofunktio, iteraatioParametri: Option[IteraatioParametri] = None): Tulos[BigDecimal] = {
 
     def summa(vals: Seq[BigDecimal]): BigDecimal = vals.reduceLeft(_ + _)
     def tulo(vals: Seq[BigDecimal]): BigDecimal = vals.reduceLeft(_ * _)
@@ -537,6 +539,16 @@ private class Laskin private(private val hakukohde: Hakukohde,
 
       val lukuarvo = if (tulokset._1.isEmpty || (ns.isDefined && tulokset._1.size < ns.get)) None else Some(trans(tulokset._1))
       (lukuarvo, tulokset._2, Historia("Koostettu tulos", lukuarvo, tulokset._2, Some(tulokset._3.toList), None))
+    }
+
+    def muodostaTulosIteroimalla[T <: IteraatioParametri](value: Seq[IteroitavaLukuarvofunktio[T]],
+                                                          trans: Seq[BigDecimal] => BigDecimal,
+                                                          iteraatioParametrit: Seq[T]
+                                                         ): (Option[BigDecimal], List[Tila], Historia) = {
+      val lukuarvofunktiotIteraatiokierroksille: Seq[Lukuarvofunktio] = iteraatioParametrit.flatMap { iteraatioParametri =>
+        value.map(f => f.sovellaParametri(iteraatioParametri))
+      }
+      muodostaKoostettuTulos(lukuarvofunktiotIteraatiokierroksille, trans)
     }
 
     def haeLukuarvo(konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]], oletusarvo: Option[BigDecimal], valintaperusteviite: Valintaperuste, kentat: Kentat): (Option[BigDecimal], Seq[Tila], Historia)  = {
@@ -692,8 +704,8 @@ private class Laskin private(private val hakukohde: Hakukohde,
             }
         }
 
-      case HaeAmmatillinenYtoArvosana(konvertteri, oletusarvo, valintaperusteviite, _, _,_,_,_,_) =>
-        val arvosanaKoskessa: Option[BigDecimal] = KoskiLaskenta.haeYtoArvosana(hakemus, valintaperusteviite, oletusarvo)
+      case HaeAmmatillinenYtoArvosana(ammatillisenPerustutkinnonValitsija, konvertteri, oletusarvo, valintaperusteviite, _, _,_,_,_,_) =>
+        val arvosanaKoskessa: Option[BigDecimal] = KoskiLaskenta.haeYtoArvosana(ammatillisenPerustutkinnonValitsija, hakemus, valintaperusteviite, oletusarvo)
 
         val (konv, tilatKonvertterinHausta) = konvertteri match {
           case Some(l: Lukuarvovalikonvertteri) => konversioToLukuarvovalikonversio(l.konversioMap, hakemus.kentat, hakukohde)
@@ -707,6 +719,11 @@ private class Laskin private(private val hakukohde: Hakukohde,
         } yield k.konvertoi(arvosana)).getOrElse((arvosanaKoskessa, new Hyvaksyttavissatila))
         val tilalista: List[Tila] = tilaKonvertoinnista :: tilatKonvertterinHausta
         (tulos, tilalista, Historia("Hae ammatillisen yto:n arvosana", tulos, tilalista, None, Some(Map("oletusarvo" -> oletusarvo))))
+
+      case HaeUseanTutkinnonAmmatillinenYtoArvosana(konvertteri, oletusarvo, valintaperusteviite, _, _,_,_,_,_) =>
+        val tulos = Some(BigDecimal(-1.0))
+        val tilalista = Nil
+        (tulos, tilalista, Historia("Dummy: usean tutkinnon yton arvosana", tulos, tilalista, None, Some(Map("oletusarvo" -> oletusarvo))))
 
       case HaeAmmatillinenYtoArviointiAsteikko(konvertteri, oletusarvo, valintaperusteviite, _, _,_,_,_,_) =>
         val asteikonKoodiKoskessa: Option[String] = KoskiLaskenta.haeYtoArviointiasteikko(hakemus, valintaperusteviite)
@@ -722,6 +739,11 @@ private class Laskin private(private val hakukohde: Hakukohde,
         } yield k.konvertoi(arvosana)).getOrElse((oletusarvo, new Hyvaksyttavissatila))
         val tilalista: List[Tila] = tilaKonvertoinnista :: tilatKonvertterinHausta
         (tulos, tilalista, Historia("Hae ammatillisen yto:n arviointiasteikko", tulos, tilalista, None, Some(Map("oletusarvo" -> oletusarvo))))
+
+      case HaeMaksimiAmmatillisistaTutkinnoista(fs, _, _,_,_,_,_) =>
+        val tutkintojenMaara = KoskiLaskenta.laskeAmmatillisetTutkinnot(hakemus)
+        val (tulos, tilat, h) = muodostaTulosIteroimalla(fs, ds => ds.max, AmmatillisetPerustutkinnot(tutkintojenMaara).parametreiksi)
+        (tulos, tilat, Historia("Maksimi ammatillisista tutkinnoista", tulos, tilat, h.historiat, None))
 
       case HaeLukuarvo(konvertteri, oletusarvo, valintaperusteviite, _, _,_,_,_,_) =>
         haeLukuarvo(konvertteri, oletusarvo, valintaperusteviite, hakemus.kentat)

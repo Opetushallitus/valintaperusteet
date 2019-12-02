@@ -173,6 +173,20 @@ object Funktiokuvaaja {
           konvertteriTyypit = Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.MERKKIJONO))
         ))
     ),
+    Funktionimi.HAEUSEANTUTKINNONAMMATILLINENYTOARVOSANA -> Funktiokuvaus(
+      tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
+      valintaperusteparametri = List(Valintaperusteparametrikuvaus("yto-koodi", Syoteparametrityyppi.MERKKIJONO, kuvaus = "Yhteisen tutkinnon osan koodi")),
+      konvertteri = Some(
+        Konvertterikuvaus(
+          pakollinen = false,
+          konvertteriTyypit = Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.DESIMAALILUKU),
+            ARVOVALIKONVERTTERI -> Arvovalikonvertterikuvaus)
+        ))
+    ),
+    Funktionimi.HAEMAKSIMIAMMATILLISISTATUTKINNOISTA -> Funktiokuvaus(
+      tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
+      funktioargumentit = List(Funktioargumenttikuvaus("args", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.N))
+    ),
     Funktionimi.HAELUKUARVO -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
       syoteparametrit = List(
