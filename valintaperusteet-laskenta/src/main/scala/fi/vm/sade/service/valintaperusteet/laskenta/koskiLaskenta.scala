@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory
 object KoskiLaskenta {
   private val LOG: Logger = LoggerFactory.getLogger(KoskiLaskenta.getClass)
   private val ammatillisenHuomioitavaOpiskeluoikeudenTyyppi: String = "ammatillinenkoulutus"
+  private val ammatillisenSuorituksenTyyppi: String = "ammatillinentutkinto"
 
   val ammatillisenHhuomioitavatKoulutustyypit: Set[AmmatillisenPerustutkinnonKoulutustyyppi] =
     Set(AmmatillinenPerustutkinto, AmmatillinenReforminMukainenPerustutkinto, AmmatillinenPerustutkintoErityisopetuksena)
@@ -55,7 +56,7 @@ object KoskiLaskenta {
       val sulkeutumisPaivamaara: DateTime = DateTime.now()
       val suorituksenSallitutKoodit: Set[Int] = ammatillisenHhuomioitavatKoulutustyypit.map(_.koodiarvo)
 
-      val yhteistenTutkinnonOsienArvosanat = etsiValmiitTutkinnot(opiskeluoikeudet, ammatillisenHuomioitavaOpiskeluoikeudenTyyppi)
+      val yhteistenTutkinnonOsienArvosanat = etsiValmiitTutkinnot(opiskeluoikeudet, ammatillisenHuomioitavaOpiskeluoikeudenTyyppi, ammatillisenSuorituksenTyyppi)
         .flatMap(tutkinto => etsiValiditSuoritukset(tutkinto, sulkeutumisPaivamaara, suorituksenSallitutKoodit))
         .flatMap(suoritus => etsiYhteisetTutkinnonOsat(suoritus, sulkeutumisPaivamaara, Set(ytoKoodiArvo)))
 
@@ -155,24 +156,27 @@ object KoskiLaskenta {
     })
   }
 
-  private def etsiValmiitTutkinnot(json: Json, opiskeluoikeudenHaluttuTyyppi: String): Seq[Json] = {
+  private def etsiValmiitTutkinnot(json: Json, opiskeluoikeudenHaluttuTyyppi: String, suorituksenHaluttuTyyppi: String): Seq[Json] = {
     // Opiskeluoikeudet etsivä linssi
     val _opiskeluoikeudet = JsonPath.root.each.json
 
     // Opiskeluoikeuden tyypin etsivä linssi
     val _opiskeluoikeudenTyyppi = JsonPath.root.tyyppi.koodiarvo.string
     val _valmistumisTila = JsonPath.root.tila.opiskeluoikeusjaksot.each.tila.koodiarvo.string
+    val _suorituksenTyyppi = JsonPath.root.suoritukset.each.tyyppi.koodiarvo.string
 
     _opiskeluoikeudet.getAll(json).filter(opiskeluoikeus => {
       val opiskeluoikeudenTyyppi = _opiskeluoikeudenTyyppi.getOption(opiskeluoikeus).orNull
       val valmistumisTila = _valmistumisTila.getAll(opiskeluoikeus)
+      val suorituksenTyyppi = _suorituksenTyyppi.getAll(opiskeluoikeus)
 
       val onkoValmistunut: Boolean = valmistumisTila.contains("valmistunut")
-      val onkoAmmatillinenOpiskeluOikeus = opiskeluoikeudenTyyppi == opiskeluoikeudenHaluttuTyyppi
+      val onkoAmmatillinenOpiskeluOikeus = opiskeluoikeudenTyyppi == opiskeluoikeudenHaluttuTyyppi && suorituksenTyyppi.contains(suorituksenHaluttuTyyppi)
 
       LOG.debug("Opiskeluoikeuden tyyppi: %s".format(opiskeluoikeudenTyyppi))
       LOG.debug("Valmistumistila: %s".format(valmistumisTila))
       LOG.debug("Onko valmistunut: %s".format(onkoValmistunut))
+      LOG.debug("Suorituksen tyyppi: %s".format(suorituksenTyyppi))
       LOG.debug("Onko ammatillinen opiskeluoikeus: %s".format(onkoAmmatillinenOpiskeluOikeus))
 
       onkoAmmatillinenOpiskeluOikeus && onkoValmistunut
