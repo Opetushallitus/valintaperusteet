@@ -12,6 +12,7 @@ object KoskiLaskenta {
   private val LOG: Logger = LoggerFactory.getLogger(KoskiLaskenta.getClass)
   private val ammatillisenHuomioitavaOpiskeluoikeudenTyyppi: String = "ammatillinenkoulutus"
   private val ammatillisenSuorituksenTyyppi: String = "ammatillinentutkinto"
+  private val sallitutSuoritusTavat = Set("ops", "reformi")
 
   val ammatillisenHhuomioitavatKoulutustyypit: Set[AmmatillisenPerustutkinnonKoulutustyyppi] =
     Set(AmmatillinenPerustutkinto, AmmatillinenReforminMukainenPerustutkinto, AmmatillinenPerustutkintoErityisopetuksena)
@@ -129,11 +130,13 @@ object KoskiLaskenta {
     val _lyhytNimiFi = _koulutusmoduuli.tunniste.nimi.fi.string
     val _koulutusTyypinKoodiarvo = _koulutusmoduuli.koulutustyyppi.koodiarvo.string
     val _koulutusTyypinNimiFi = _koulutusmoduuli.koulutustyyppi.nimi.fi.string
+    val _suoritusTapa = JsonPath.root.suoritustapa.koodiarvo.string
 
     _suoritukset.getAll(tutkinto).filter(suoritus => {
       val koodiarvo = _koodiarvo.getOption(suoritus).orNull
       val lyhytNimiFi = _lyhytNimiFi.getOption(suoritus).orNull
       val koulutusTyypinNimiFi = _koulutusTyypinNimiFi.getOption(suoritus).orNull
+      val suoritusTapa = _suoritusTapa.getOption(suoritus).orNull
 
       val vahvistettuRajapäivänä = _vahvistusPvm.getOption(suoritus) match {
         case Some(dateString) => sulkeutumisPäivämäärä.isAfter(dateFormat.parseDateTime(dateString))
@@ -143,9 +146,12 @@ object KoskiLaskenta {
         case Some(s) => s.toInt
         case None => -1
       }
-      val onkoSallitunTyyppinenSuoritus = suorituksenSallitutKoodit.contains(koulutusTyypinKoodiarvo)
+      val onkoSallitunTyyppinenSuoritus =
+        suorituksenSallitutKoodit.contains(koulutusTyypinKoodiarvo) &&
+        sallitutSuoritusTavat.contains(suoritusTapa)
 
       LOG.debug("Koodiarvo: %s".format(koodiarvo))
+      LOG.debug("Suoritustapa: %s".format(suoritusTapa))
       LOG.debug("Onko sallitun tyyppinen suoritus: %s".format(onkoSallitunTyyppinenSuoritus))
       LOG.debug("Nimi: %s".format(lyhytNimiFi))
       LOG.debug("Koulutustyypin nimi: %s".format(koulutusTyypinNimiFi))
@@ -165,7 +171,6 @@ object KoskiLaskenta {
     val _valmistumisTila = JsonPath.root.tila.opiskeluoikeusjaksot.each.tila.koodiarvo.string
     val _suorituksenTyyppi = JsonPath.root.suoritukset.each.tyyppi.koodiarvo.string
     val _suoritusTapa = JsonPath.root.suoritukset.each.suoritustapa.koodiarvo.string
-    val sallitutSuoritusTavat = Set("ops", "reformi")
 
     _opiskeluoikeudet.getAll(json).filter(opiskeluoikeus => {
       val opiskeluoikeudenTyyppi = _opiskeluoikeudenTyyppi.getOption(opiskeluoikeus).orNull
