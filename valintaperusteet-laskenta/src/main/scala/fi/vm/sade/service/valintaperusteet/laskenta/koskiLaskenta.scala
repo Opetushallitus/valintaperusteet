@@ -164,17 +164,26 @@ object KoskiLaskenta {
     val _opiskeluoikeudenTyyppi = JsonPath.root.tyyppi.koodiarvo.string
     val _valmistumisTila = JsonPath.root.tila.opiskeluoikeusjaksot.each.tila.koodiarvo.string
     val _suorituksenTyyppi = JsonPath.root.suoritukset.each.tyyppi.koodiarvo.string
+    val _suoritusTapa = JsonPath.root.suoritukset.each.suoritustapa.koodiarvo.string
+    val sallitutSuoritusTavat = Set("ops", "reformi")
 
     _opiskeluoikeudet.getAll(json).filter(opiskeluoikeus => {
       val opiskeluoikeudenTyyppi = _opiskeluoikeudenTyyppi.getOption(opiskeluoikeus).orNull
       val valmistumisTila = _valmistumisTila.getAll(opiskeluoikeus)
       val suorituksenTyyppi = _suorituksenTyyppi.getAll(opiskeluoikeus)
+      val suoritusTapa = _suoritusTapa.getAll(opiskeluoikeus)
 
       val onkoValmistunut: Boolean = valmistumisTila.contains("valmistunut")
-      val onkoAmmatillinenOpiskeluOikeus = opiskeluoikeudenTyyppi == opiskeluoikeudenHaluttuTyyppi && suorituksenTyyppi.contains(suorituksenHaluttuTyyppi)
+      val onkoValidiSuoritusTapa = suoritusTapa.map(s => sallitutSuoritusTavat.contains(s)).exists(v => v)
+      val onkoAmmatillinenOpiskeluOikeus =
+        opiskeluoikeudenTyyppi == opiskeluoikeudenHaluttuTyyppi &&
+        suorituksenTyyppi.contains(suorituksenHaluttuTyyppi) &&
+        onkoValidiSuoritusTapa
 
       LOG.debug("Opiskeluoikeuden tyyppi: %s".format(opiskeluoikeudenTyyppi))
       LOG.debug("Valmistumistila: %s".format(valmistumisTila))
+      LOG.debug("Suoritustapa: %s".format(suoritusTapa))
+      LOG.debug("Onko validi suoritustapa: %s".format(onkoValidiSuoritusTapa))
       LOG.debug("Onko valmistunut: %s".format(onkoValmistunut))
       LOG.debug("Suorituksen tyyppi: %s".format(suorituksenTyyppi))
       LOG.debug("Onko ammatillinen opiskeluoikeus: %s".format(onkoAmmatillinenOpiskeluOikeus))
