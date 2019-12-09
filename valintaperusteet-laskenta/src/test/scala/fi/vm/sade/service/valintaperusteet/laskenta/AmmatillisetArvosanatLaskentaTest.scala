@@ -11,17 +11,24 @@ import fi.vm.sade.service.valintaperusteet.model.Arvokonvertteriparametri
 import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu
 import fi.vm.sade.service.valintaperusteet.model.ValintaperusteViite
 import io.circe.Json
+import io.circe.parser
 import org.scalatest.funsuite.AnyFunSuite
 
+import scala.io.Source
 import scala.jdk.CollectionConverters._
 
 class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
+
+  def loadJson(path: String): Json = {
+    val jsonFile: String = Source.fromResource(path).getLines.reduce(_ + _)
+    parser.parse(jsonFile).getOrElse(Json.Null)
+  }
 
   val hakukohde = new Hakukohde("123", new util.HashMap[String, String])
 
   val suoritukset = new util.HashMap[String, util.List[util.Map[String, String]]]
 
-  val koskiopiskeluoikeudet: Json = LensTest.loadJson("koski-opiskeluoikeudet.json")
+  val koskiopiskeluoikeudet: Json = loadJson("koski-opiskeluoikeudet.json")
 
   val hakemus = TestHakemus("", Nil, Map(), suoritukset, koskiopiskeluoikeudet)
 
@@ -42,20 +49,6 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
     assert(BigDecimal(tulos.get) == BigDecimal("15"))
   }
 
-  test("Tutkinnon yhteisten tutkinnon osien arvoasteikko") {
-    val lasku1 = Laskentadomainkonvertteri.muodostaTotuusarvolasku(
-      createOnkoAmmatillinenYtoArviointiAsteikkoKutsu("101054:arviointiasteikkoammatillinen15")
-    )
-    val (tulos1, _) = Laskin.laske(hakukohde, hakemus, lasku1)
-    assert(tulos1.get)
-
-    val lasku2 = Laskentadomainkonvertteri.muodostaTotuusarvolasku(
-      createOnkoAmmatillinenYtoArviointiAsteikkoKutsu("101054:arviointiasteikkoammatillinen18")
-    )
-    val (tulos2, _) = Laskin.laske(hakukohde, hakemus, lasku2)
-    assert(!tulos2.get)
-  }
-
   test("Tutkinnon yhteisten tutkinnon osien arvoasteikko lukuarvona") {
     val lasku1 = Laskentadomainkonvertteri.muodostaLukuarvolasku(
       createAmmatillinenYtoArviointiAsteikkoKutsu("101054")
@@ -72,20 +65,6 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
 
     val viite: ValintaperusteViite = new ValintaperusteViite
     viite.setTunniste("101054")
-    viite.setIndeksi(0)
-    viite.setLahde(Valintaperustelahde.HAETTAVA_ARVO)
-
-    kutsu.getValintaperusteviitteet.add(viite)
-
-    kutsu
-  }
-
-  def createOnkoAmmatillinenYtoArviointiAsteikkoKutsu(parametri: String): Funktiokutsu = {
-    val kutsu: Funktiokutsu = new Funktiokutsu
-    kutsu.setFunktionimi(Funktionimi.ONKOAMMATILLINENYTOARVIOINTIASTEIKKO)
-
-    val viite: ValintaperusteViite = new ValintaperusteViite
-    viite.setTunniste(parametri)
     viite.setIndeksi(0)
     viite.setLahde(Valintaperustelahde.HAETTAVA_ARVO)
 

@@ -25,18 +25,6 @@ object KoskiLaskenta {
     }
   }
 
-  def onkoYtoArviointiAsteikko(hakemus: Hakemus, valintaperusteviite: Laskenta.Valintaperuste, oletusarvo: Option[Boolean]): Option[Boolean] = {
-    if (hakemus.koskiOpiskeluoikeudet != null) {
-      val parametrit: Array[String] = valintaperusteviite.tunniste.split(":")
-      assert(parametrit.length == 2)
-      val ytoKoodiArvo: String = parametrit(0)
-      val ammatillinenArviointiAsteikko: String = parametrit(1)
-      onkoYtoArviointiAsteikko(hakemus.oid, hakemus.koskiOpiskeluoikeudet, ytoKoodiArvo, ammatillinenArviointiAsteikko)
-    } else {
-      oletusarvo
-    }
-  }
-
   def haeYtoArviointiasteikko(hakemus: Hakemus, valintaperusteviite: Laskenta.Valintaperuste): Option[String] = {
     haeAmmatillisenSuorituksenTiedot(hakemus.oid, hakemus.koskiOpiskeluoikeudet, valintaperusteviite.tunniste)
       .headOption.map(_._4)
@@ -45,11 +33,6 @@ object KoskiLaskenta {
   private def haeYtoArvosana(hakemusOid: String, opiskeluoikeudet: Json, ytoKoodiArvo: String): Option[BigDecimal] = {
     haeAmmatillisenSuorituksenTiedot(hakemusOid, opiskeluoikeudet, ytoKoodiArvo)
       .headOption.map(t => BigDecimal(t._3))
-  }
-
-  private def onkoYtoArviointiAsteikko(hakemusOid: String, opiskeluoikeudet: Json, ytoKoodiArvo: String, ammatillinenArviointiAsteikko: String): Option[Boolean] = {
-    haeAmmatillisenSuorituksenTiedot(hakemusOid, opiskeluoikeudet, ytoKoodiArvo)
-      .headOption.map(t => t._4 == ammatillinenArviointiAsteikko)
   }
 
   private def haeAmmatillisenSuorituksenTiedot(hakemusOid: String, opiskeluoikeudet: Json, ytoKoodiArvo: String): Seq[(String, String, Int, String)] = {

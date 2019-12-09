@@ -164,10 +164,6 @@ object Funktiokuvaaja {
             ARVOVALIKONVERTTERI -> Arvovalikonvertterikuvaus)
         ))
     ),
-    Funktionimi.ONKOAMMATILLINENYTOARVIOINTIASTEIKKO -> Funktiokuvaus(
-      tyyppi = Funktiotyyppi.TOTUUSARVOFUNKTIO,
-      valintaperusteparametri = List(Valintaperusteparametrikuvaus("tunniste:arviointiasteikko", Syoteparametrityyppi.MERKKIJONO, kuvaus = "Tunniste ja arviointiasteikon koodistoUri erotettuna kaksoispisteellä"))
-    ),
     Funktionimi.HAEAMMATILLINENYTOARVIOINTIASTEIKKO -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
       valintaperusteparametri = List(Valintaperusteparametrikuvaus("yto-koodi", Syoteparametrityyppi.MERKKIJONO, kuvaus = "Yhteisen tutkinnon osan koodi")),

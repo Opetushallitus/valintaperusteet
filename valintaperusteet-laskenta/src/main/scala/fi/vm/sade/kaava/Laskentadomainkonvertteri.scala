@@ -43,7 +43,6 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.NMinimi
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Negaatio
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.NimettyLukuarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.NimettyTotuusarvo
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.OnkoAmmatillinenYtoArviointiAsteikko
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Osamaara
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.PainotettuKeskiarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Pienempi
@@ -541,15 +540,6 @@ object Laskentadomainkonvertteri {
           omaopintopolku = omaopintopolku)
 
         NimettyLukuarvo("Ammatillinen arvosana", arvosana, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku = omaopintopolku)
-      }
-
-      case Funktionimi.ONKOAMMATILLINENYTOARVIOINTIASTEIKKO => {
-        val paluuarvo = OnkoAmmatillinenYtoArviointiAsteikko(
-          Some(false),
-          valintaperusteviitteet.head,
-          omaopintopolku = omaopintopolku)
-
-        NimettyTotuusarvo("Onko tutkinnon arvioinnissa käytetty annettua ammatillisen arviointiasteikkoa", paluuarvo, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku = omaopintopolku)
       }
 
       case Funktionimi.HAEAMMATILLINENYTOARVIOINTIASTEIKKO => {
