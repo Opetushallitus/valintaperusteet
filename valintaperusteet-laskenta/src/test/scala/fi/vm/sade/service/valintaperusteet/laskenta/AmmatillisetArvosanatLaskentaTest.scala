@@ -34,6 +34,7 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
   val koskiopiskeluoikeudetMontaTutkintoa: Json = loadJson("koski-monitutkinto.json")
 
   val hakemus = TestHakemus("", Nil, Map(), suoritukset, koskiopiskeluoikeudet)
+  val monenTutkinnonHakemus = TestHakemus("", Nil, Map(), suoritukset, koskiopiskeluoikeudetMontaTutkintoa)
 
   test("Tutkinnon yhteisten tutkinnon osien arvosanat") {
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeAmmatillinenYtoArvosanaKutsu())
@@ -61,10 +62,17 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
   }
 
   test("Tutkinnon yhteisten tutkinnon osien arvosanat, kun on useampi tutkinto") {
-    val hakemus2 = TestHakemus("", Nil, Map(), suoritukset, koskiopiskeluoikeudetMontaTutkintoa)
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeAmmatillinenYtoArvosanaKutsu())
-    val (tulos, _) = Laskin.laske(hakukohde, hakemus2, lasku)
+    val (tulos, _) = Laskin.laske(hakukohde, monenTutkinnonHakemus, lasku)
     assert(BigDecimal(tulos.get) == BigDecimal("2"))
+  }
+
+  test("Tutkinnon yhteisten tutkinnon osien arvoasteikko lukuarvona, kun on useampi tutkinto") {
+    val lasku1 = Laskentadomainkonvertteri.muodostaLukuarvolasku(
+      createAmmatillinenYtoArviointiAsteikkoKutsu("101054")
+    )
+    val (tulos1, _) = Laskin.laske(hakukohde, monenTutkinnonHakemus, lasku1)
+    assert(tulos1.contains(new java.math.BigDecimal(3)))
   }
 
   def createHaeAmmatillinenYtoArvosanaKutsu(konvertteriparametrit: Set[Arvokonvertteriparametri] = Set()): Funktiokutsu = {
@@ -94,12 +102,17 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
 
     kutsu.getValintaperusteviitteet.add(viite)
 
-    val konvetteriParameteri = new Arvokonvertteriparametri
-    konvetteriParameteri.setArvo("arviointiasteikkoammatillinen15")
-    konvetteriParameteri.setPaluuarvo("5")
-    konvetteriParameteri.setHylkaysperuste(Boolean.box(false).toString)
+    val konvetteriParameteri1_5 = new Arvokonvertteriparametri
+    konvetteriParameteri1_5.setArvo("arviointiasteikkoammatillinen15")
+    konvetteriParameteri1_5.setPaluuarvo("5")
+    konvetteriParameteri1_5.setHylkaysperuste(Boolean.box(false).toString)
 
-    kutsu.setArvokonvertteriparametrit(Set(konvetteriParameteri).asJava)
+    val konvetteriParameteri1_3 = new Arvokonvertteriparametri
+    konvetteriParameteri1_3.setArvo("arviointiasteikkoammatillinent1k3")
+    konvetteriParameteri1_3.setPaluuarvo("3")
+    konvetteriParameteri1_3.setHylkaysperuste(Boolean.box(false).toString)
+
+    kutsu.setArvokonvertteriparametrit(Set(konvetteriParameteri1_5, konvetteriParameteri1_3).asJava)
 
     createAmmatillistenTutkintojenIteroija(kutsu)
   }
