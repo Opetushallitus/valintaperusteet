@@ -318,14 +318,16 @@ object Laskenta {
     extends HaeArvo[BigDecimal] with Lukuarvofunktio {
 
     override val iteraatioParametrinTyyppi: Option[Class[_ <: IteraatioParametri]] = Some(classOf[AmmatillisenPerustutkinnonValitsija])
-
   }
 
   case class HaeAmmatillinenYtoArviointiAsteikko(konvertteri: Konvertteri[String, BigDecimal],
                                                  oletusarvo: Option[BigDecimal],
                                                  valintaperusteviite: Valintaperuste,
                                                  oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false)
-    extends HaeArvo[BigDecimal] with Lukuarvofunktio
+    extends HaeArvo[BigDecimal] with Lukuarvofunktio {
+
+    override val iteraatioParametrinTyyppi: Option[Class[_ <: IteraatioParametri]] = Some(classOf[AmmatillisenPerustutkinnonValitsija])
+  }
 
   case class HaeMerkkijonoJaKonvertoiLukuarvoksi(konvertteri: Konvertteri[String, BigDecimal],
                                                  oletusarvo: Option[BigDecimal],

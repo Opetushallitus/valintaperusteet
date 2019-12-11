@@ -709,7 +709,11 @@ private class Laskin private(private val hakukohde: Hakukohde,
               None
           }
 
-          val tulos: Tulos[BigDecimal] = laskeLukuarvo(f.kloonaa(tuloksetLukuarvoina).asInstanceOf[Lukuarvofunktio], None)
+          val tulos: Tulos[BigDecimal] = if (tuloksetLukuarvoina.nonEmpty) {
+            laskeLukuarvo(f.kloonaa(tuloksetLukuarvoina).asInstanceOf[Lukuarvofunktio], None)
+          } else {
+            Tulos(None, new Hyvaksyttavissatila, Historia("Ei löytynyt tietoja ammatillisista tutkinnoista", None, Nil, None, None))
+          }
 
           val tilalista = List(tulos.tila)
           val avaimet = Map(
@@ -719,12 +723,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
         }
 
       case f@HaeAmmatillinenYtoArvosana(konvertteri, oletusarvo, valintaperusteviite, _, _,_,_,_,_) =>
-        val tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija = iteraatioParametri match {
-          case Some(p: AmmatillisenPerustutkinnonValitsija) => p
-          case Some(x) => throw new IllegalArgumentException(s"Vääräntyyppinen iteraatioparametri $x ; piti olla ${classOf[AmmatillisenPerustutkinnonValitsija]}")
-          case None => throw new IllegalArgumentException(s"Ammatillisen perustutkinnon valitsija puuttuu. " +
-            s"Onhan funktiokutsun $f yläpuolella puussa ${classOf[IteroiAmmatillisetTutkinnot].getSimpleName} -kutsu?")
-        }
+        val tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija = ammatillisenTutkinnonValitsija(iteraatioParametri, f)
         val arvosanaKoskessa: Option[BigDecimal] = KoskiLaskenta.haeYtoArvosana(tutkinnonValitsija, hakemus, valintaperusteviite, oletusarvo)
 
         val (konv, tilatKonvertterinHausta) = konvertteri match {
@@ -740,8 +739,9 @@ private class Laskin private(private val hakukohde: Hakukohde,
         val tilalista: List[Tila] = tilaKonvertoinnista :: tilatKonvertterinHausta
         (tulos, tilalista, Historia("Hae ammatillisen yto:n arvosana", tulos, tilalista, None, Some(Map("oletusarvo" -> oletusarvo))))
 
-      case HaeAmmatillinenYtoArviointiAsteikko(konvertteri, oletusarvo, valintaperusteviite, _, _,_,_,_,_) =>
-        val asteikonKoodiKoskessa: Option[String] = KoskiLaskenta.haeYtoArviointiasteikko(hakemus, valintaperusteviite)
+      case f@HaeAmmatillinenYtoArviointiAsteikko(konvertteri, oletusarvo, valintaperusteviite, _, _,_,_,_,_) =>
+        val tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija = ammatillisenTutkinnonValitsija(iteraatioParametri, f)
+        val asteikonKoodiKoskessa: Option[String] = KoskiLaskenta.haeYtoArviointiasteikko(tutkinnonValitsija, hakemus, valintaperusteviite)
 
         val (konv: Option[Arvokonvertteri[String, BigDecimal]], tilatKonvertterinHausta) = konvertteri match {
           case a: Arvokonvertteri[_, _] => konversioToArvokonversio[String, BigDecimal](a.konversioMap, hakemus.kentat, hakukohde)
@@ -928,6 +928,15 @@ private class Laskin private(private val hakukohde: Hakukohde,
       funktioTulokset.update(laskettava.tulosTunniste, v)
     }
     Tulos(laskettuTulos, palautettavaTila(tilat), historia)
+  }
+
+  private def ammatillisenTutkinnonValitsija(iteraatioParametri: Option[IteraatioParametri], f: Funktio[_]): AmmatillisenPerustutkinnonValitsija = {
+    iteraatioParametri match {
+      case Some(p: AmmatillisenPerustutkinnonValitsija) => p
+      case Some(x) => throw new IllegalArgumentException(s"Vääräntyyppinen iteraatioparametri $x ; piti olla ${classOf[AmmatillisenPerustutkinnonValitsija]}")
+      case None => throw new IllegalArgumentException(s"Ammatillisen perustutkinnon valitsija puuttuu. " +
+        s"Onhan funktiokutsun $f yläpuolella puussa ${classOf[IteroiAmmatillisetTutkinnot].getSimpleName} -kutsu?")
+    }
   }
 }
 

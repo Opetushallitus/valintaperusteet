@@ -37,9 +37,16 @@ object KoskiLaskenta {
     }
   }
 
-  def haeYtoArviointiasteikko(hakemus: Hakemus, valintaperusteviite: Laskenta.Valintaperuste): Option[String] = {
-    haeAmmatillisenSuorituksenTiedot(hakemus.oid, hakemus.koskiOpiskeluoikeudet, valintaperusteviite.tunniste)
-      .headOption.map(_._4)
+  def haeYtoArviointiasteikko(ammatillisenPerustutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
+                              hakemus: Hakemus,
+                              valintaperusteviite: Laskenta.Valintaperuste
+                             ): Option[String] = {
+    if (hakemus.koskiOpiskeluoikeudet != null) {
+      haeAmmatillisenSuorituksenTiedot(hakemus.oid, hakemus.koskiOpiskeluoikeudet, ammatillisenPerustutkinnonValitsija, valintaperusteviite.tunniste)
+        .headOption.map(_._4)
+    } else {
+      None
+    }
   }
 
   private def haeYtoArvosana(ammatillisenPerustutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
@@ -48,12 +55,21 @@ object KoskiLaskenta {
                              ytoKoodiArvo: String
                             ): Option[BigDecimal] = {
 
-    val oikeaOpiskeluoikeus: Json = etsiValmiitTutkinnot(opiskeluoikeudet, ammatillisenHuomioitavaOpiskeluoikeudenTyyppi, ammatillisenSuorituksenTyyppi)(ammatillisenPerustutkinnonValitsija.tutkinnonIndeksi)
-    haeAmmatillisenSuorituksenTiedot(
+    val ammatillisenSuorituksenTiedot: scala.Seq[(String, String, Int, String)] = haeAmmatillisenSuorituksenTiedot(hakemusOid, opiskeluoikeudet, ammatillisenPerustutkinnonValitsija, ytoKoodiArvo)
+    ammatillisenSuorituksenTiedot.headOption.map(t => BigDecimal(t._3))
+  }
+
+  private def haeAmmatillisenSuorituksenTiedot(hakemusOid: String,
+                                               kaikkiOpiskeluoikeudet: Json,
+                                               ammatillisenPerustutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
+                                               ytoKoodiArvo: String
+                                              ): Seq[(String, String, Int, String)] = {
+    val oikeaOpiskeluoikeus: Json = etsiValmiitTutkinnot(kaikkiOpiskeluoikeudet, ammatillisenHuomioitavaOpiskeluoikeudenTyyppi, ammatillisenSuorituksenTyyppi)(ammatillisenPerustutkinnonValitsija.tutkinnonIndeksi)
+    val ammatillisenSuorituksenTiedot = haeAmmatillisenSuorituksenTiedot(
       hakemusOid,
       Json.arr(oikeaOpiskeluoikeus),
       ytoKoodiArvo)
-      .headOption.map(t => BigDecimal(t._3))
+    ammatillisenSuorituksenTiedot
   }
 
   private def haeAmmatillisenSuorituksenTiedot(hakemusOid: String, opiskeluoikeudet: Json, ytoKoodiArvo: String): Seq[(String, String, Int, String)] = {
