@@ -42,8 +42,11 @@ object KoskiLaskenta {
                               valintaperusteviite: Laskenta.Valintaperuste
                              ): Option[String] = {
     if (hakemus.koskiOpiskeluoikeudet != null) {
-      haeAmmatillisenSuorituksenTiedot(hakemus.oid, hakemus.koskiOpiskeluoikeudet, ammatillisenPerustutkinnonValitsija, valintaperusteviite.tunniste)
-        .headOption.map(_._4)
+      haeAmmatillisenSuorituksenTiedot(hakemus.oid, hakemus.koskiOpiskeluoikeudet, ammatillisenPerustutkinnonValitsija, valintaperusteviite.tunniste) match {
+        case Nil => None
+        case (osasuorituksenKoodiarvo, osasuorituksenNimiFi, osasuorituksenArvio, osasuorituksenArviointiAsteikko) :: Nil => Some(osasuorituksenArviointiAsteikko)
+        case xs => throw new IllegalArgumentException(s"Piti löytyä vain yksi suoritus valitsijalla $ammatillisenPerustutkinnonValitsija , mutta löytyi ${xs.size} : $xs")
+      }
     } else {
       None
     }
@@ -55,8 +58,11 @@ object KoskiLaskenta {
                              ytoKoodiArvo: String
                             ): Option[BigDecimal] = {
 
-    val ammatillisenSuorituksenTiedot: scala.Seq[(String, String, Int, String)] = haeAmmatillisenSuorituksenTiedot(hakemusOid, opiskeluoikeudet, ammatillisenPerustutkinnonValitsija, ytoKoodiArvo)
-    ammatillisenSuorituksenTiedot.headOption.map(t => BigDecimal(t._3))
+    haeAmmatillisenSuorituksenTiedot(hakemusOid, opiskeluoikeudet, ammatillisenPerustutkinnonValitsija, ytoKoodiArvo) match {
+      case Nil => None
+      case (osasuorituksenKoodiarvo, osasuorituksenNimiFi, osasuorituksenArvio, osasuorituksenArviointiAsteikko) :: Nil => Some(BigDecimal(osasuorituksenArvio))
+      case xs => throw new IllegalArgumentException(s"Piti löytyä vain yksi suoritus valitsijalla $ammatillisenPerustutkinnonValitsija , mutta löytyi ${xs.size} : $xs")
+    }
   }
 
   private def haeAmmatillisenSuorituksenTiedot(hakemusOid: String,
