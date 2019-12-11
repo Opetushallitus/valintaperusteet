@@ -717,11 +717,12 @@ private class Laskin private(private val hakukohde: Hakukohde,
           (tulos.tulos, tilalista, Historia("Iteroi ammatillisten perustutkintojen yli", tulos.tulos, tilalista, None, Some(avaimet)))
         }
 
-      case HaeAmmatillinenYtoArvosana(konvertteri, oletusarvo, valintaperusteviite, _, _,_,_,_,_) =>
+      case f@HaeAmmatillinenYtoArvosana(konvertteri, oletusarvo, valintaperusteviite, _, _,_,_,_,_) =>
         val tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija = iteraatioParametri match {
           case Some(p: AmmatillisenPerustutkinnonValitsija) => p
           case Some(x) => throw new IllegalArgumentException(s"Vääräntyyppinen iteraatioparametri $x ; piti olla ${classOf[AmmatillisenPerustutkinnonValitsija]}")
-          case None => throw new IllegalArgumentException("Ammatillisen perustutkinnon valitsija puuttuu")
+          case None => throw new IllegalArgumentException(s"Ammatillisen perustutkinnon valitsija puuttuu. " +
+            s"Onhan funktiokutsun $f yläpuolella puussa ${classOf[IteroiAmmatillisetTutkinnot].getSimpleName} -kutsu?")
         }
         val arvosanaKoskessa: Option[BigDecimal] = KoskiLaskenta.haeYtoArvosana(tutkinnonValitsija, hakemus, valintaperusteviite, oletusarvo)
 
