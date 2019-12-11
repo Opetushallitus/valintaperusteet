@@ -26,12 +26,15 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Hakutoive
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakutoiveRyhmassa
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Hylkaa
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HylkaaArvovalilla
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.IteroiAmmatillisetTutkinnot
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Ja
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Jos
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Keskiarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.KeskiarvoNParasta
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.KloonattavaFunktio
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.KonvertoiLukuarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Konvertteri
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.KoostavaFunktio
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.LukuarvovalikonversioMerkkijonoilla
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonvertteri
@@ -62,8 +65,8 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Valintaperuste
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Valintaperusteyhtasuuruus
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Yhtasuuri
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.YoEhdot
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.{HakukohteenValintaperuste => HkValintaperuste}
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.{HakukohteenSyotettavaValintaperuste => HksValintaperuste}
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.{HakukohteenValintaperuste => HkValintaperuste}
 import fi.vm.sade.service.valintaperusteet.laskenta.Lukuarvofunktio
 import fi.vm.sade.service.valintaperusteet.laskenta.Totuusarvofunktio
 import fi.vm.sade.service.valintaperusteet.model.Arvokonvertteriparametri
@@ -530,6 +533,12 @@ object Laskentadomainkonvertteri {
         }
 
         NimettyLukuarvo(s"YO-kokeen pisteet (${valintaperusteviitteet.head.tunniste})", arvosana, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku = omaopintopolku)
+
+      case Funktionimi.ITEROIAMMATILLISETTUTKINNOT =>
+        val koostavaLapsi: Lukuarvofunktio with KoostavaFunktio[BigDecimal] with KloonattavaFunktio[BigDecimal, Lukuarvofunktio, KoostavaFunktio[BigDecimal]] =
+          lasketutArgumentit.head.asInstanceOf[Lukuarvofunktio with KoostavaFunktio[BigDecimal] with KloonattavaFunktio[BigDecimal, Lukuarvofunktio, KoostavaFunktio[BigDecimal]]]
+
+        IteroiAmmatillisetTutkinnot(koostavaLapsi, oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
 
       case Funktionimi.HAEAMMATILLINENYTOARVOSANA => {
         val konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]] = luoLukuarvokovertteri(arvokonvertteriparametrit, arvovalikonvertteriparametrit)

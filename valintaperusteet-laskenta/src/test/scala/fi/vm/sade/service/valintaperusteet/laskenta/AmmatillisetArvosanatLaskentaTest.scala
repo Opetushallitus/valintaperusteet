@@ -1,6 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.laskenta
 
 import java.util
+import java.util.Collections
 
 import fi.vm.sade.kaava.LaskentaTestUtil.TestHakemus
 import fi.vm.sade.kaava.Laskentadomainkonvertteri
@@ -8,6 +9,7 @@ import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi
 import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakukohde
 import fi.vm.sade.service.valintaperusteet.model.Arvokonvertteriparametri
+import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti
 import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu
 import fi.vm.sade.service.valintaperusteet.model.ValintaperusteViite
 import io.circe.Json
@@ -29,6 +31,7 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
   val suoritukset = new util.HashMap[String, util.List[util.Map[String, String]]]
 
   val koskiopiskeluoikeudet: Json = loadJson("koski-opiskeluoikeudet.json")
+  val koskiopiskeluoikeudetMontaTutkintoa: Json = loadJson("koski-monitutkinto.json")
 
   val hakemus = TestHakemus("", Nil, Map(), suoritukset, koskiopiskeluoikeudet)
 
@@ -57,6 +60,13 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
     assert(tulos1.contains(new java.math.BigDecimal(5)))
   }
 
+  test("Tutkinnon yhteisten tutkinnon osien arvosanat, kun on useampi tutkinto") {
+    val hakemus2 = TestHakemus("", Nil, Map(), suoritukset, koskiopiskeluoikeudetMontaTutkintoa)
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeAmmatillinenYtoArvosanaKutsu())
+    val (tulos, _) = Laskin.laske(hakukohde, hakemus2, lasku)
+    assert(BigDecimal(tulos.get) == BigDecimal("2"))
+  }
+
   def createHaeAmmatillinenYtoArvosanaKutsu(konvertteriparametrit: Set[Arvokonvertteriparametri] = Set()): Funktiokutsu = {
 
     val kutsu: Funktiokutsu = new Funktiokutsu
@@ -70,7 +80,7 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
 
     kutsu.getValintaperusteviitteet.add(viite)
 
-    kutsu
+    createAmmatillistenTutkintojenIteroija(kutsu)
   }
 
   def createAmmatillinenYtoArviointiAsteikkoKutsu(parametri: String): Funktiokutsu = {
@@ -90,6 +100,26 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
     konvetteriParameteri.setHylkaysperuste(Boolean.box(false).toString)
 
     kutsu.setArvokonvertteriparametrit(Set(konvetteriParameteri).asJava)
-    kutsu
+
+    createAmmatillistenTutkintojenIteroija(kutsu)
+  }
+
+  private def createAmmatillistenTutkintojenIteroija(lapsi: Funktiokutsu): Funktiokutsu = {
+    val juurikutsu: Funktiokutsu =  new Funktiokutsu
+    juurikutsu.setFunktionimi(Funktionimi.ITEROIAMMATILLISETTUTKINNOT)
+
+    val maksimi: Funktiokutsu = new Funktiokutsu
+    maksimi.setFunktionimi(Funktionimi.MAKSIMI)
+
+    val maksiminArgumentti = new Funktioargumentti
+    maksiminArgumentti.setIndeksi(0)
+    maksiminArgumentti.setFunktiokutsuChild(lapsi)
+    maksimi.setFunktioargumentit(Collections.singleton(maksiminArgumentti))
+
+    val juurenArgumentti = new Funktioargumentti
+    juurenArgumentti.setIndeksi(0)
+    juurenArgumentti.setFunktiokutsuChild(maksimi)
+    juurikutsu.setFunktioargumentit(Collections.singleton(juurenArgumentti))
+    juurikutsu
   }
 }

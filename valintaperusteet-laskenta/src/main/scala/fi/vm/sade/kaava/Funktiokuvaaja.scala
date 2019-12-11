@@ -154,6 +154,10 @@ object Funktiokuvaaja {
       tyyppi = Funktiotyyppi.TOTUUSARVOFUNKTIO,
       funktioargumentit = List(Funktioargumenttikuvaus("f", Funktiotyyppi.TOTUUSARVOFUNKTIO))
     ),
+    Funktionimi.ITEROIAMMATILLISETTUTKINNOT -> Funktiokuvaus(
+      tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
+      funktioargumentit = List(Funktioargumenttikuvaus("iteroitava koostefunktio", Funktiotyyppi.LUKUARVOFUNKTIO)),
+    ),
     Funktionimi.HAEAMMATILLINENYTOARVOSANA -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
       valintaperusteparametri = List(Valintaperusteparametrikuvaus("tunniste", Syoteparametrityyppi.MERKKIJONO, kuvaus = "Tunniste")),

@@ -17,9 +17,21 @@ object KoskiLaskenta {
   val ammatillisenHhuomioitavatKoulutustyypit: Set[AmmatillisenPerustutkinnonKoulutustyyppi] =
     Set(AmmatillinenPerustutkinto, AmmatillinenReforminMukainenPerustutkinto, AmmatillinenPerustutkintoErityisopetuksena)
 
-  def haeYtoArvosana(hakemus: Hakemus, valintaperusteviite: Laskenta.Valintaperuste, oletusarvo: Option[BigDecimal]): Option[BigDecimal] = {
+  def laskeAmmatillisetTutkinnot(hakemus: Hakemus): Int = {
+    if (hakemus.koskiOpiskeluoikeudet == null) {
+      0
+    } else {
+      etsiValmiitTutkinnot(hakemus.koskiOpiskeluoikeudet, ammatillisenHuomioitavaOpiskeluoikeudenTyyppi, ammatillisenSuorituksenTyyppi).size
+    }
+  }
+
+  def haeYtoArvosana(ammatillisenPerustutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
+                     hakemus: Hakemus,
+                     valintaperusteviite: Laskenta.Valintaperuste,
+                     oletusarvo: Option[BigDecimal]
+                    ): Option[BigDecimal] = {
     if (hakemus.koskiOpiskeluoikeudet != null) {
-      haeYtoArvosana(hakemus.oid, hakemus.koskiOpiskeluoikeudet, valintaperusteviite.tunniste)
+      haeYtoArvosana(ammatillisenPerustutkinnonValitsija, hakemus.oid, hakemus.koskiOpiskeluoikeudet, valintaperusteviite.tunniste)
     } else {
       oletusarvo
     }
@@ -30,8 +42,17 @@ object KoskiLaskenta {
       .headOption.map(_._4)
   }
 
-  private def haeYtoArvosana(hakemusOid: String, opiskeluoikeudet: Json, ytoKoodiArvo: String): Option[BigDecimal] = {
-    haeAmmatillisenSuorituksenTiedot(hakemusOid, opiskeluoikeudet, ytoKoodiArvo)
+  private def haeYtoArvosana(ammatillisenPerustutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
+                             hakemusOid: String,
+                             opiskeluoikeudet: Json,
+                             ytoKoodiArvo: String
+                            ): Option[BigDecimal] = {
+
+    val oikeaOpiskeluoikeus: Json = etsiValmiitTutkinnot(opiskeluoikeudet, ammatillisenHuomioitavaOpiskeluoikeudenTyyppi, ammatillisenSuorituksenTyyppi)(ammatillisenPerustutkinnonValitsija.tutkinnonIndeksi)
+    haeAmmatillisenSuorituksenTiedot(
+      hakemusOid,
+      Json.arr(oikeaOpiskeluoikeus),
+      ytoKoodiArvo)
       .headOption.map(t => BigDecimal(t._3))
   }
 
