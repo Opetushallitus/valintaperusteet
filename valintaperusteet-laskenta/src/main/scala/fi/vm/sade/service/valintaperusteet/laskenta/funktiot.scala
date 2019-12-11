@@ -11,6 +11,8 @@ trait Funktio[T] {
   val omaopintopolku: Boolean
 }
 
-trait Lukuarvofunktio extends Funktio[BigDecimal]
+trait Lukuarvofunktio extends Funktio[BigDecimal] {
+  val iteraatioParametrinTyyppi: Option[Class[_ <: IteraatioParametri]] = None
+}
 
 trait Totuusarvofunktio extends Funktio[Boolean]
