@@ -697,6 +697,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
           throw new IllegalStateException(s"Ei voi iteroida iteraatioparametrilla ${iteraatioParametri.get} uudestaan ammatillisten tutkintojen yli")
         } else {
           val tutkintojenMaara = KoskiLaskenta.laskeAmmatillisetTutkinnot(hakemus)
+          Laskin.LOG.info(s"Hakemuksen ${hakemus.oid} hakijalle löytyi ${tutkintojenMaara} ammatillista perustutkintoa.")
 
           val iteraatioParametrit: Seq[AmmatillisenPerustutkinnonValitsija] = AmmatillisetPerustutkinnot(tutkintojenMaara).parametreiksi
 
