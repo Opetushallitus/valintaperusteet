@@ -539,7 +539,7 @@ object Laskentadomainkonvertteri {
           valintaperusteviitteet.head,
           omaopintopolku = omaopintopolku)
 
-        NimettyLukuarvo("Ammatillinen arvosana", arvosana, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku = omaopintopolku)
+        NimettyLukuarvo("Ammatillinen yto:n arvosana", arvosana, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku = omaopintopolku)
       }
 
       case Funktionimi.HAEAMMATILLINENYTOARVIOINTIASTEIKKO => {
