@@ -1,6 +1,6 @@
 package fi.vm.sade.kaava
 
-import org.scalatest._
+import org.scalatest.funsuite.AnyFunSuite
 
 /**
  *
@@ -8,7 +8,7 @@ import org.scalatest._
  * Date: 1/12/13
  * Time: 6:48 PM
  */
-class FunktiokuvausTest extends FunSuite {
+class FunktiokuvausTest extends AnyFunSuite {
 
   test("annaFunktiokuvaukset") {
     val kuvaukset = Funktiokuvaaja.annaFunktiokuvaukset

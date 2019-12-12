@@ -1,12 +1,11 @@
 package fi.vm.sade.service.valintaperusteet.laskenta
 
-import java.math.{BigDecimal => BigDec}
-
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
-import fi.vm.sade.service.valintaperusteet.model.{LokalisoituTeksti, TekstiRyhma}
+import fi.vm.sade.service.valintaperusteet.model.LokalisoituTeksti
+import fi.vm.sade.service.valintaperusteet.model.TekstiRyhma
 import org.apache.commons.lang.StringUtils
 
-import scala.collection.JavaConversions
+import scala.jdk.CollectionConverters._
 
 object Laskenta {
 
@@ -41,20 +40,20 @@ object Laskenta {
 
   def tekstiryhmaToMap(ryhma: TekstiRyhma): java.util.Map[String,String] = {
     if(ryhma != null && ryhma.getTekstit != null) {
-      val tekstit = JavaConversions.asScalaSet(ryhma.getTekstit)
+      val tekstit = ryhma.getTekstit.asScala.toSet
       val res = tekstit.foldLeft(Map.empty[String,String]){
         (result: Map[String,String],teksti: LokalisoituTeksti) => result + (teksti.getKieli.name -> teksti.getTeksti)
       }
-      JavaConversions.mapAsJavaMap(res)
+      res.asJava
     } else {
       val res = Map("FI" -> "Valintaperusteelle ei oltu määritelty hylkäysperustekuvauksia")
-      JavaConversions.mapAsJavaMap(res)
+      res.asJava
     }
   }
 
   def tekstiToMap(teksti: String): java.util.Map[String,String] = {
     val res = Map("FI" -> teksti)
-    JavaConversions.mapAsJavaMap(res)
+    res.asJava
   }
 
   case class Arvokonvertteri[S, T](konversioMap: Seq[Konversio]) extends Konvertteri[S, T] {
@@ -65,7 +64,7 @@ object Laskenta {
       konversiot.filter(arvo == _.arvo) match {
         case Nil => (None, new Virhetila(tekstiToMap(s"Arvo $arvo ei täsmää yhteenkään konvertterille määritettyyn arvoon"),
           new ArvokonvertointiVirhe(arvo.toString)))
-        case head :: tail => {
+        case head :: _ =>
           val paluuarvo = head.paluuarvo
           val tila = if (head.hylkaysperuste) {
             new Hylattytila(tekstiryhmaToMap(head.kuvaukset),
@@ -73,7 +72,6 @@ object Laskenta {
           } else new Hyvaksyttavissatila
 
           (Some(paluuarvo), tila)
-        }
       }
     }
   }
@@ -84,12 +82,12 @@ object Laskenta {
 
       val konversiot = konversioMap.map(konv => konv.asInstanceOf[Lukuarvovalikonversio])
 
-      konversiot.sortWith((a, b) => a.max > b.max)
-      .filter(konv =>arvo >= konv.min && arvo <= konv.max
-      ) match {
+      konversiot
+        .filter(konv => arvo >= konv.min && arvo <= konv.max
+        ).sortWith((a, b) => a.max > b.max) match {
         case Nil => (None, new Virhetila(tekstiToMap(s"Arvo $arvo ei täsmää yhteenkään konvertterille määritettyyn arvoväliin"),
           new ArvovalikonvertointiVirhe(arvo.underlying)))
-        case head :: tail => {
+        case head :: _ =>
           val paluuarvo = if (head.palautaHaettuArvo) arvo else head.paluuarvo
           val tila = if (head.hylkaysperuste) {
             new Hylattytila(tekstiryhmaToMap(head.kuvaukset),
@@ -100,7 +98,6 @@ object Laskenta {
           //val tila = new Hyvaksyttavissatila
 
           (Some(paluuarvo), tila)
-        }
       }
     }
   }
@@ -123,17 +120,12 @@ object Laskenta {
 
   sealed trait KoostavaFunktio[T] extends Funktio[T] {
     def fs: Seq[Funktio[_]]
-    require(fs.size > 0, "Number of function arguments must be greater than zero")
+    require(fs.nonEmpty, "Number of function arguments must be greater than zero")
   }
 
   object KoostavaFunktio {
     def unapply(k: KoostavaFunktio[_]): Option[Seq[Funktio[_]]] = Some(k.fs)
   }
-    // Scala 2.9 ratkasu
-//  abstract case class NParasta(n: Int, override val fs: Seq[Funktio[BigDecimal]])
-//    extends KoostavaFunktio[BigDecimal](fs) with Lukuarvofunktio {
-//    require(n <= fs.size, "Parameter n can't be greater than the number of function arguments")
-//  }
 
   sealed trait NParasta extends KoostavaFunktio[BigDecimal] with Lukuarvofunktio {
     def n: Int
@@ -167,8 +159,8 @@ object Laskenta {
     extends KoostavaFunktio[BigDecimal] with Lukuarvofunktio
 
   object Summa {
-    def apply(fs: Lukuarvofunktio*) = {
-      new Summa(fs.toSeq)
+    def apply(fs: Lukuarvofunktio*): Summa = {
+      new Summa(fs.toArray.toSeq)
     }
   }
 
@@ -176,8 +168,8 @@ object Laskenta {
     extends NParasta with Lukuarvofunktio
 
   object SummaNParasta {
-    def apply(n: Int, fs: Lukuarvofunktio*) = {
-      new SummaNParasta(n, fs.toSeq)
+    def apply(n: Int, fs: Lukuarvofunktio*): SummaNParasta = {
+      new SummaNParasta(n, fs.toArray.toSeq)
     }
   }
 
@@ -185,16 +177,16 @@ object Laskenta {
     extends NParasta with Lukuarvofunktio
 
   object TuloNParasta {
-    def apply(n: Int, fs: Lukuarvofunktio*) = {
-      new TuloNParasta(n, fs.toSeq)
+    def apply(n: Int, fs: Lukuarvofunktio*): TuloNParasta = {
+      new TuloNParasta(n, fs.toArray.toSeq)
     }
   }
   case class KeskiarvoNParasta(n: Int, fs: Seq[Lukuarvofunktio], oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false)
     extends NParasta with Lukuarvofunktio
 
   object KeskiarvoNParasta {
-    def apply(n: Int, fs: Lukuarvofunktio*) = {
-      new KeskiarvoNParasta(n, fs.toSeq)
+    def apply(n: Int, fs: Lukuarvofunktio*): KeskiarvoNParasta = {
+      new KeskiarvoNParasta(n, fs.toArray.toSeq)
     }
   }
 
@@ -202,8 +194,8 @@ object Laskenta {
     extends KoostavaFunktio[BigDecimal] with Lukuarvofunktio
 
   object Keskiarvo {
-    def apply(fs: Lukuarvofunktio*) = {
-      new Keskiarvo(fs.toSeq)
+    def apply(fs: Lukuarvofunktio*): Keskiarvo = {
+      new Keskiarvo(fs.toArray.toSeq)
     }
   }
 
@@ -211,23 +203,23 @@ object Laskenta {
     extends KoostavaFunktio[BigDecimal] with Lukuarvofunktio
 
   object Mediaani {
-    def apply(fs: Lukuarvofunktio*) = {
-      new Mediaani(fs.toSeq)
+    def apply(fs: Lukuarvofunktio*): Mediaani = {
+      new Mediaani(fs.toArray.toSeq)
     }
   }
 
   case class Osamaara(osoittaja: Lukuarvofunktio, nimittaja: Lukuarvofunktio, oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false)
     extends Funktio[BigDecimal] with Lukuarvofunktio {
-    val f1 = osoittaja
-    val f2 = nimittaja
+    val f1: Lukuarvofunktio = osoittaja
+    val f2: Lukuarvofunktio = nimittaja
   }
 
   case class Minimi(fs: Seq[Lukuarvofunktio], oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false)
     extends KoostavaFunktio[BigDecimal] with Lukuarvofunktio
 
   object Minimi {
-    def apply(fs: Lukuarvofunktio*) = {
-      new Minimi(fs.toSeq)
+    def apply(fs: Lukuarvofunktio*): Minimi = {
+      new Minimi(fs.toArray.toSeq)
     }
   }
 
@@ -235,8 +227,8 @@ object Laskenta {
     extends KoostavaFunktio[BigDecimal] with Lukuarvofunktio
 
   object Maksimi {
-    def apply(fs: Lukuarvofunktio*) = {
-      new Maksimi(fs.toSeq)
+    def apply(fs: Lukuarvofunktio*): Maksimi = {
+      new Maksimi(fs.toArray.toSeq)
     }
   }
 
@@ -244,8 +236,8 @@ object Laskenta {
     extends Ns with Lukuarvofunktio
 
   object NMinimi {
-    def apply(ns: Int, fs: Lukuarvofunktio*) = {
-      new NMinimi(ns, fs.toSeq)
+    def apply(ns: Int, fs: Lukuarvofunktio*): NMinimi = {
+      new NMinimi(ns, fs.toArray.toSeq)
     }
   }
 
@@ -253,8 +245,8 @@ object Laskenta {
     extends Ns with Lukuarvofunktio
 
   object NMaksimi {
-    def apply(ns: Int, fs: Lukuarvofunktio*) = {
-      new NMaksimi(ns, fs.toSeq)
+    def apply(ns: Int, fs: Lukuarvofunktio*): NMaksimi = {
+      new NMaksimi(ns, fs.toArray.toSeq)
     }
   }
 
@@ -262,8 +254,8 @@ object Laskenta {
     extends KoostavaFunktio[BigDecimal] with Lukuarvofunktio
 
   object Tulo {
-    def apply(fs: Lukuarvofunktio*) = {
-      new Tulo(fs.toSeq)
+    def apply(fs: Lukuarvofunktio*): Tulo = {
+      new Tulo(fs.toArray.toSeq)
     }
   }
 
@@ -301,6 +293,18 @@ object Laskenta {
                           ehdot: YoEhdot,
                           oletusarvo: Option[BigDecimal],
                           valintaperusteviite: Valintaperuste,oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false)
+    extends HaeArvo[BigDecimal] with Lukuarvofunktio
+
+  case class HaeAmmatillinenYtoArvosana(konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]],
+                                        oletusarvo: Option[BigDecimal],
+                                        valintaperusteviite: Valintaperuste,
+                                        oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false)
+    extends HaeArvo[BigDecimal] with Lukuarvofunktio
+
+  case class HaeAmmatillinenYtoArviointiAsteikko(konvertteri: Konvertteri[String, BigDecimal],
+                                                 oletusarvo: Option[BigDecimal],
+                                                 valintaperusteviite: Valintaperuste,
+                                                 oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false)
     extends HaeArvo[BigDecimal] with Lukuarvofunktio
 
   case class HaeMerkkijonoJaKonvertoiLukuarvoksi(konvertteri: Konvertteri[String, BigDecimal],
@@ -346,8 +350,8 @@ object Laskenta {
     extends KoostavaFunktio[Boolean] with Totuusarvofunktio
 
   object Ja {
-    def apply(fs: Totuusarvofunktio*) = {
-      new Ja(fs.toSeq)
+    def apply(fs: Totuusarvofunktio*): Ja = {
+      new Ja(fs.toArray.toSeq)
     }
   }
 
@@ -355,8 +359,8 @@ object Laskenta {
     extends KoostavaFunktio[Boolean] with Totuusarvofunktio
 
   object Tai {
-    def apply(fs: Totuusarvofunktio*) = {
-      new Tai(fs.toSeq)
+    def apply(fs: Totuusarvofunktio*): Tai = {
+      new Tai(fs.toArray.toSeq)
     }
   }
 
@@ -413,22 +417,19 @@ object Laskenta {
 
   case class Demografia(oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false, tunniste: String, prosenttiosuus: BigDecimal) extends Totuusarvofunktio
 
-  case class Skaalaus(oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false, skaalattava: Lukuarvofunktio, kohdeskaala: Pair[BigDecimal, BigDecimal],
-                      lahdeskaala: Option[Pair[BigDecimal, BigDecimal]]) extends Lukuarvofunktio {
+  case class Skaalaus(oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false, skaalattava: Lukuarvofunktio, kohdeskaala: Tuple2[BigDecimal, BigDecimal],
+                      lahdeskaala: Option[Tuple2[BigDecimal, BigDecimal]]) extends Lukuarvofunktio {
     require(kohdeskaala._1 < kohdeskaala._2, "Kohdeskaalan minimin pitää olla pienempi kuin maksimi")
     require(lahdeskaala.isEmpty || lahdeskaala.get._1 < lahdeskaala.get._2,
       "Lähdeskaalan minimin pitää olla pienempi kuin maksimi")
   }
 
-  case class PainotettuKeskiarvo(oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false, fs: Seq[Pair[Lukuarvofunktio, Lukuarvofunktio]]) extends Lukuarvofunktio {
-    require(fs.size > 0, "Parametreja pitää olla vähintään yksi")
+  case class PainotettuKeskiarvo(oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false, fs: Seq[Tuple2[Lukuarvofunktio, Lukuarvofunktio]]) extends Lukuarvofunktio {
+    require(fs.nonEmpty, "Parametreja pitää olla vähintään yksi")
   }
   case class Valintaperusteyhtasuuruus(oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false,
-                                       valintaperusteet: Pair[Valintaperuste, Valintaperuste]) extends Totuusarvofunktio
+                                       valintaperusteet: Tuple2[Valintaperuste, Valintaperuste]) extends Totuusarvofunktio
 
-  case class HylkaaArvovalilla(f: Lukuarvofunktio, hylkaysperustekuvaus: Option[Map[String,String]] = None, oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false, arvovali: Pair[String, String])
-    extends Lukuarvofunktio {
-    //require(arvovali._1 < arvovali._2, "Arvovälin minimin pitää olla pienempi kuin maksimi")
-  }
-
+  case class HylkaaArvovalilla(f: Lukuarvofunktio, hylkaysperustekuvaus: Option[Map[String,String]] = None, oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false, arvovali: Tuple2[String, String])
+    extends Lukuarvofunktio
 }

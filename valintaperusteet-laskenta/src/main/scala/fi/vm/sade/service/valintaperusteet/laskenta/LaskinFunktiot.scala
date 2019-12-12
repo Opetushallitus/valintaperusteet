@@ -1,15 +1,28 @@
 package fi.vm.sade.service.valintaperusteet.laskenta
 
-import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus.Kentat
-import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
-import fi.vm.sade.service.valintaperusteet.laskenta.api.{Hakukohde, Hakemus}
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta._
-import scala.Some
-import scala.Tuple2
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonversio
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.ArvokonversioMerkkijonoilla
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonvertteri
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Konversio
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Konvertteri
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonversio
-import scala.util.Try
-import scala.collection.JavaConversions
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.LukuarvovalikonversioMerkkijonoilla
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonvertteri
+import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus.Kentat
+import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakukohde
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.ArvokonvertointiVirhe
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Hylattytila
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Hyvaksyttavissatila
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.PakollinenValintaperusteHylkays
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Tila
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.ValintaperustettaEiVoidaTulkitaLukuarvoksiVirhe
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.ValintaperustettaEiVoidaTulkitaTotuusarvoksiVirhe
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.VirheellinenLaskentamoodiVirhe
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Virhetila
 import fi.vm.sade.service.valintaperusteet.model.TekstiRyhma
+
+import scala.jdk.CollectionConverters._
+import scala.util.Try
 
 trait LaskinFunktiot {
 
@@ -24,7 +37,7 @@ trait LaskinFunktiot {
   }
 
   protected def suomenkielinenHylkaysperusteMap(teksti: String) = {
-    JavaConversions.mapAsJavaMap(Map("FI" -> teksti))
+    Map("FI" -> teksti).asJava
   }
 
   protected def suoritaKonvertointi[S, T](tulos: Tuple2[Option[S], Tila],

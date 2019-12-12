@@ -1,9 +1,8 @@
 package fi.vm.sade.kaava
 
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi
-import play.api.libs.json.{JsArray, Json}
-
-import scala.Predef._
+import play.api.libs.json.JsArray
+import play.api.libs.json.Json
 
 object Funktiokuvaaja {
 
@@ -154,6 +153,25 @@ object Funktiokuvaaja {
     Funktionimi.EI -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.TOTUUSARVOFUNKTIO,
       funktioargumentit = List(Funktioargumenttikuvaus("f", Funktiotyyppi.TOTUUSARVOFUNKTIO))
+    ),
+    Funktionimi.HAEAMMATILLINENYTOARVOSANA -> Funktiokuvaus(
+      tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
+      valintaperusteparametri = List(Valintaperusteparametrikuvaus("tunniste", Syoteparametrityyppi.MERKKIJONO, kuvaus = "Tunniste")),
+      konvertteri = Some(
+        Konvertterikuvaus(
+          pakollinen = false,
+          konvertteriTyypit = Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.DESIMAALILUKU),
+            ARVOVALIKONVERTTERI -> Arvovalikonvertterikuvaus)
+        ))
+    ),
+    Funktionimi.HAEAMMATILLINENYTOARVIOINTIASTEIKKO -> Funktiokuvaus(
+      tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
+      valintaperusteparametri = List(Valintaperusteparametrikuvaus("yto-koodi", Syoteparametrityyppi.MERKKIJONO, kuvaus = "Yhteisen tutkinnon osan koodi")),
+      konvertteri = Some(
+        Konvertterikuvaus(
+          pakollinen = true,
+          konvertteriTyypit = Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.MERKKIJONO))
+        ))
     ),
     Funktionimi.HAELUKUARVO -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,

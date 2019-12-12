@@ -1,20 +1,20 @@
 package fi.vm.sade.service.valintaperusteet.service.impl.actors;
 
+import static fi.vm.sade.service.valintaperusteet.service.impl.actors.creators.SpringExtension.SpringExtProvider;
+
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Cancellable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
+import scala.concurrent.Await;
 import scala.concurrent.duration.Duration;
 import scala.concurrent.duration.FiniteDuration;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-
 import java.util.concurrent.TimeUnit;
-
-import static fi.vm.sade.service.valintaperusteet.service.impl.actors.creators.SpringExtension.SpringExtProvider;
 
 @Service
 public class ActorService {
@@ -40,8 +40,11 @@ public class ActorService {
 
     @PreDestroy
     public void tearDownActorSystem() {
-        actorSystem.shutdown();
-        actorSystem.awaitTermination();
+        try {
+            Await.result(actorSystem.terminate(), Duration.create(1, TimeUnit.MINUTES));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void initOrphanRemovalActor() {

@@ -5,7 +5,7 @@
     <parent>
         <groupId>fi.vm.sade.valintaperusteet</groupId>
         <artifactId>valintaperusteet</artifactId>
-        <version>5.6-SNAPSHOT</version>
+        <version>5.8-VTKU-98-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
 
@@ -57,8 +57,8 @@
         </dependency>
         <dependency>
             <groupId>org.scalatest</groupId>
-            <artifactId>scalatest_2.11</artifactId>
-            <version>2.2.2</version>
+            <artifactId>scalatest_2.13</artifactId>
+            <version>3.2.0-M1</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -68,10 +68,36 @@
                 </exclusion>
             </exclusions>
         </dependency>
+      <dependency>
+          <groupId>org.scalatest</groupId>
+          <artifactId>scalatest-funsuite_2.13</artifactId>
+          <version>3.2.0-M1</version>
+          <scope>test</scope>
+      </dependency>
         <dependency>
             <groupId>com.typesafe.play</groupId>
-            <artifactId>play-json_2.11</artifactId>
-            <version>2.4.0-M1</version>
+            <artifactId>play-json_2.13</artifactId>
+            <version>2.7.4</version>
+        </dependency>
+        <dependency>
+            <groupId>io.circe</groupId>
+            <artifactId>circe-core_2.13</artifactId>
+            <version>${circe.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.circe</groupId>
+            <artifactId>circe-generic_2.13</artifactId>
+            <version>${circe.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.circe</groupId>
+            <artifactId>circe-parser_2.13</artifactId>
+            <version>${circe.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.circe</groupId>
+            <artifactId>circe-optics_2.13</artifactId>
+            <version>${circe.version}</version>
         </dependency>
     </dependencies>
 
