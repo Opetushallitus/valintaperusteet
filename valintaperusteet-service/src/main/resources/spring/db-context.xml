@@ -26,6 +26,7 @@
             <map>
                 <entry key="hibernate.show_sql" value="${jpa.showSql}" />
                 <entry key="hibernate.hbm2ddl.auto" value="${jpa.schemaUpdate}" />
+                <entry key="hibernate.jdbc.lob.non_contextual_creation" value="true" />
             </map>
         </property>
     </bean>
