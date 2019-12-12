@@ -26,7 +26,7 @@
         <modelmapper.version>2.3.2</modelmapper.version>
         <spring.asm.version>3.1.4.RELEASE</spring.asm.version>
         <spring.version>4.3.22.RELEASE</spring.version>
-        <spring.security.version>4.2.11.RELEASE</spring.security.version>
+        <spring.security.version>5.2.1.RELEASE</spring.security.version>
         <swagger.version>1.5.16</swagger.version>
         <cxf.version>3.3.0</cxf.version>
         <circe.version>0.12.0</circe.version>
