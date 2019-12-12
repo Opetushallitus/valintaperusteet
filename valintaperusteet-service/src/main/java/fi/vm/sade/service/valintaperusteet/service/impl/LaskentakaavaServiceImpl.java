@@ -1,22 +1,56 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
+import static fi.vm.sade.service.valintaperusteet.service.impl.actors.creators.SpringExtension.SpringExtProvider;
+
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.PoisonPill;
 import akka.pattern.Patterns;
 import akka.util.Timeout;
-import com.google.common.collect.Lists;
 import fi.vm.sade.kaava.Laskentakaavavalidaattori;
-import fi.vm.sade.service.valintaperusteet.dao.*;
-import fi.vm.sade.service.valintaperusteet.dto.*;
+import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
+import fi.vm.sade.service.valintaperusteet.dao.GenericDAO;
+import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaDAO;
+import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
+import fi.vm.sade.service.valintaperusteet.dao.HakukohteenValintaperusteDAO;
+import fi.vm.sade.service.valintaperusteet.dao.JarjestyskriteeriDAO;
+import fi.vm.sade.service.valintaperusteet.dao.LaskentakaavaDAO;
+import fi.vm.sade.service.valintaperusteet.dao.SyotettavanarvontyyppiDAO;
+import fi.vm.sade.service.valintaperusteet.dao.ValintakoeDAO;
+import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
+import fi.vm.sade.service.valintaperusteet.dto.HakukohteenValintaperusteAvaimetDTO;
+import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaDTO;
+import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaSiirraDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi;
 import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
-import fi.vm.sade.service.valintaperusteet.model.*;
+import fi.vm.sade.service.valintaperusteet.model.Arvokonvertteriparametri;
+import fi.vm.sade.service.valintaperusteet.model.Arvovalikonvertteriparametri;
+import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti;
+import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
+import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
+import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
+import fi.vm.sade.service.valintaperusteet.model.HakukohteenValintaperuste;
+import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
+import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
+import fi.vm.sade.service.valintaperusteet.model.LokalisoituTeksti;
+import fi.vm.sade.service.valintaperusteet.model.Syoteparametri;
+import fi.vm.sade.service.valintaperusteet.model.Syotettavanarvontyyppi;
+import fi.vm.sade.service.valintaperusteet.model.TekstiRyhma;
+import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
+import fi.vm.sade.service.valintaperusteet.model.ValintaperusteViite;
+import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
-import fi.vm.sade.service.valintaperusteet.service.exception.*;
+import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuEiOleOlemassaException;
+import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuMuodostaaSilmukanException;
+import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuaEiVoidaKayttaaValintakoelaskennassaException;
+import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuaEiVoidaKayttaaValintalaskennassaException;
+import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaEiOleOlemassaException;
+import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaEiValidiException;
+import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaMuodostaaSilmukanException;
 import fi.vm.sade.service.valintaperusteet.service.impl.actors.ActorService;
-import fi.vm.sade.service.valintaperusteet.service.impl.actors.HaeValintaperusteetRekursiivisestiActorBean;
 import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.UusiHakukohteenValintaperusteRekursio;
 import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.UusiRekursio;
 import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.UusiValintaperusteRekursio;
@@ -31,12 +65,17 @@ import scala.concurrent.Await;
 import scala.concurrent.Future;
 import scala.concurrent.duration.Duration;
 
-import java.util.*;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-import static fi.vm.sade.service.valintaperusteet.service.impl.actors.creators.SpringExtension.SpringExtProvider;
 
 @Service
 @Transactional
