@@ -710,7 +710,16 @@ private class Laskin private(private val hakukohde: Hakukohde,
           }
 
           val tulos: Tulos[BigDecimal] = if (tuloksetLukuarvoina.nonEmpty) {
-            laskeLukuarvo(f.kloonaa(tuloksetLukuarvoina).asInstanceOf[Lukuarvofunktio], None)
+            try {
+              val iteroidutTuloksetKasittelevaKlooni = f.kloonaa(tuloksetLukuarvoina).asInstanceOf[Lukuarvofunktio]
+              laskeLukuarvo(iteroidutTuloksetKasittelevaKlooni, None)
+            } catch {
+              case e: ClassCastException => {
+                Laskin.LOG.error(s"${classOf[IteroiAmmatillisetTutkinnot].getSimpleName} -funktion funktioargumenttina tulee olla " +
+                  s"kloonattava koostava funktio, kuten maksimi, mutta oli $f", e)
+                throw e
+              }
+            }
           } else {
             Tulos(None, new Hyvaksyttavissatila, Historia("Ei löytynyt tietoja ammatillisista tutkinnoista", None, Nil, None, None))
           }
