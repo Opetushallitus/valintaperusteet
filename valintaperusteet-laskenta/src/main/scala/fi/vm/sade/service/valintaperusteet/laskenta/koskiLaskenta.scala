@@ -60,7 +60,10 @@ object KoskiLaskenta {
 
     haeAmmatillisenSuorituksenTiedot(hakemusOid, opiskeluoikeudet, ammatillisenPerustutkinnonValitsija, ytoKoodiArvo) match {
       case Nil => None
-      case (osasuorituksenKoodiarvo, osasuorituksenNimiFi, osasuorituksenArvio, osasuorituksenArviointiAsteikko) :: Nil => Some(BigDecimal(osasuorituksenArvio))
+      case (_, _, osasuorituksenArvio, _) :: Nil => osasuorituksenArvio match {
+        case Some(x) => Some(BigDecimal(x))
+        case None => None
+      }
       case xs => throw new IllegalArgumentException(s"Piti löytyä vain yksi suoritus valitsijalla $ammatillisenPerustutkinnonValitsija , mutta löytyi ${xs.size} : $xs")
     }
   }
@@ -69,7 +72,7 @@ object KoskiLaskenta {
                                                kaikkiOpiskeluoikeudet: Json,
                                                ammatillisenPerustutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
                                                ytoKoodiArvo: String
-                                              ): Seq[(String, String, Int, String)] = {
+                                              ): Seq[(String, String, Option[Int], String)] = {
     val oikeaOpiskeluoikeus: Json = etsiValmiitTutkinnot(kaikkiOpiskeluoikeudet, ammatillisenHuomioitavaOpiskeluoikeudenTyyppi, ammatillisenSuorituksenTyyppi)(ammatillisenPerustutkinnonValitsija.tutkinnonIndeksi)
     val ammatillisenSuorituksenTiedot = haeAmmatillisenSuorituksenTiedot(
       hakemusOid,
@@ -78,7 +81,7 @@ object KoskiLaskenta {
     ammatillisenSuorituksenTiedot
   }
 
-  private def haeAmmatillisenSuorituksenTiedot(hakemusOid: String, opiskeluoikeudet: Json, ytoKoodiArvo: String): Seq[(String, String, Int, String)] = {
+  private def haeAmmatillisenSuorituksenTiedot(hakemusOid: String, opiskeluoikeudet: Json, ytoKoodiArvo: String): Seq[(String, String, Option[Int], String)] = {
     try {
       val sulkeutumisPaivamaara: DateTime = DateTime.now()
       val suorituksenSallitutKoodit: Set[Int] = ammatillisenHhuomioitavatKoulutustyypit.map(_.koodiarvo)
@@ -104,7 +107,7 @@ object KoskiLaskenta {
     }
   }
 
-  private def etsiYhteisetTutkinnonOsat(suoritus: Json, sulkeutumisPäivämäärä: DateTime, osasuorituksenSallitutKoodit: Set[String]): List[(String, String, Int, String)] = {
+  private def etsiYhteisetTutkinnonOsat(suoritus: Json, sulkeutumisPäivämäärä: DateTime, osasuorituksenSallitutKoodit: Set[String]): List[(String, String, Option[Int], String)] = {
     // Suoritusten alla olevien osasuoritusten tietoja etsivä linssi
     val _osasuoritukset = JsonPath.root.osasuoritukset.each.json
 
@@ -124,7 +127,7 @@ object KoskiLaskenta {
       LOG.debug("Osasuorituksen nimi: %s".format(osasuorituksenNimiFi))
       LOG.debug("Osasuorituksen koodiarvo: %s".format(osasuorituksenKoodiarvo))
 
-      (osasuorituksenKoodiarvo, osasuorituksenNimiFi, osasuorituksenUusinHyväksyttyArvio.toInt, osasuorituksenUusinArviointiAsteikko)
+      (osasuorituksenKoodiarvo, osasuorituksenNimiFi, osasuorituksenUusinHyväksyttyArvio.toIntOption, osasuorituksenUusinArviointiAsteikko)
     })
   }
 
