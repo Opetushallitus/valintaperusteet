@@ -16,7 +16,7 @@ class HistoriaTest extends AnyFunSuite {
        "oletusarvo" -> None,
        "luku" -> Some("10.0")
     )
-    val historia = new Historia(FUNKTIO1, Some(16), List(new Hyvaksyttavissatila, new Virhetila(LaskentaTestUtil.suomenkielinenHylkaysperusteMap("virhe"), new OsallistumistietoaEiVoidaTulkitaVirhe("virhe")), new Hylattytila(LaskentaTestUtil.suomenkielinenHylkaysperusteMap("Hylky") , new Arvokonvertterihylkays("hylky"))), Some(List(new Historia(FUNKTIO2, Some(true), List(), None, None))), Some(avaimet))
+    val historia = Historia(FUNKTIO1, Some(16), List(new Hyvaksyttavissatila, new Virhetila(LaskentaTestUtil.suomenkielinenHylkaysperusteMap("virhe"), new OsallistumistietoaEiVoidaTulkitaVirhe("virhe")), new Hylattytila(LaskentaTestUtil.suomenkielinenHylkaysperusteMap("Hylky"), new Arvokonvertterihylkays("hylky"))), Some(List(Historia(FUNKTIO2, Some(true), List(), None, None))), Some(avaimet))
 
     val historiaAsJson = historiaWrites.writes(historia)
 
@@ -25,6 +25,6 @@ class HistoriaTest extends AnyFunSuite {
 
     assert(muunnos.funktio.equals(FUNKTIO1))
     assert(muunnos.historiat.nonEmpty)
-    assert(muunnos.historiat.get(0).funktio.equals(FUNKTIO2))
+    assert(muunnos.historiat.get.head.funktio.equals(FUNKTIO2))
   }
 }
