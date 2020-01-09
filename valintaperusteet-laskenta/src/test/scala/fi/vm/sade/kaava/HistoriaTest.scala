@@ -27,8 +27,4 @@ class HistoriaTest extends AnyFunSuite {
     assert(muunnos.historiat.nonEmpty)
     assert(muunnos.historiat.get(0).funktio.equals(FUNKTIO2))
   }
-
-  test("historiaLaskentaRekursio") {
-
-  }
 }
