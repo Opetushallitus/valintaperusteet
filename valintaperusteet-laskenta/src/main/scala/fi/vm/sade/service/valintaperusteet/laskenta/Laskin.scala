@@ -727,7 +727,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
           val tilalista = List(tulos.tila)
           val avaimet = Map(
             "ammatillisten perustutkintojen määrä" -> Some(tutkintojenMaara),
-            "ammatillisten perustutkintojen pisteet" -> Some(tuloksetLukuarvoina))
+            "ammatillisten perustutkintojen pisteet" -> Some(tuloksetLukuarvoina.map(l => l.tulosTekstiFi + ": " + l.d)))
           (tulos.tulos, tilalista, Historia("Iteroi ammatillisten perustutkintojen yli", tulos.tulos, tilalista, None, Some(avaimet)))
         }
 
