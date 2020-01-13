@@ -12,18 +12,18 @@ import scala.jdk.CollectionConverters._
 
 object Laskentakaavavalidaattori {
 
-  private def tryConvertString(s: String, f: (String => Unit)) = {
+  private def tryConvertString(s: String, f: String => Unit) = {
     try {
       f(s.replace(',', '.'))
       true
     } catch {
-      case e: Throwable => false
+      case _: Throwable => false
     }
   }
 
   private def muutaMerkkijonoParametrityypiksi(s: String,
     tyyppi: Syoteparametrityyppi.Syoteparametrityyppi) = {
-    val konv: (String => Unit) = tyyppi match {
+    val konv: String => Unit = tyyppi match {
       case Syoteparametrityyppi.DESIMAALILUKU => (mj: String) => new BigDecimal(mj.replace(',', '.'))
       case Syoteparametrityyppi.KOKONAISLUKU => (mj: String) => mj.toInt
       case Syoteparametrityyppi.TOTUUSARVO => (mj: String) => mj.toBoolean
@@ -43,8 +43,8 @@ object Laskentakaavavalidaattori {
       val nimi = funktiokutsu.getFunktionimi.name()
 
       def viesti(tyyppi: String) = {
-        (s"""Parametrin (avain ${annettuParametri.getAvain} arvoa ${annettuParametri.getArvo}
-           ei voida konvertoida $tyyppi-tyyppiseksi funktiolle $nimi""")
+        s"""Parametrin (avain ${annettuParametri.getAvain} arvoa ${annettuParametri.getArvo}
+           ei voida konvertoida $tyyppi-tyyppiseksi funktiolle $nimi"""
       }
 
       val virheviesti = vaadittuParametri.tyyppi match {
@@ -243,7 +243,7 @@ object Laskentakaavavalidaattori {
                 s"Konvertteriparametrin paluuarvo puuttuu funktiolle $nimi"))
             } else {
               val tarkistaPaluuarvonTyyppi = konv match {
-                case av: Arvovalikonvertteriparametri => false
+                case _: Arvovalikonvertteriparametri => false
                 case _ => true
               }
 
@@ -285,7 +285,7 @@ object Laskentakaavavalidaattori {
                 val paluuarvovirhe = validoiKonvertteriparametri(indeksi, head)
 
                 def virhe(tyyppi: String) = {
-                  (s"Arvokonvertterin arvoa ${head.getArvo} ei pystytty konvertoimaan ${tyyppi}-tyyppiseksi")
+                  s"Arvokonvertterin arvoa ${head.getArvo} ei pystytty konvertoimaan ${tyyppi}-tyyppiseksi"
                 }
 
                 val arvovirhe = if (StringUtils.isBlank(head.getArvo)) {
@@ -314,9 +314,8 @@ object Laskentakaavavalidaattori {
           }
 
           val annetutArvokonvertterit = funktiokutsu.getArvokonvertteriparametrit.asScala.toList
-          val annetutArvovalikonvertterit = funktiokutsu.getArvovalikonvertteriparametrit.asScala.toList
 
-          validoiArvokonvertteriparametritRekursiivisesti(0, annetutArvokonvertterit.toList, Nil)
+          validoiArvokonvertteriparametritRekursiivisesti(0, annetutArvokonvertterit, Nil)
         }
       }
     }
@@ -325,7 +324,7 @@ object Laskentakaavavalidaattori {
   def tarkistaFunktiokohtaisetRajoitteet(funktiokutsu: Funktiokutsu): List[Validointivirhe] = {
     def tarkistaN: List[Validointivirhe] = {
       funktiokutsu.getSyoteparametrit.asScala.filter(_.getAvain == "n").toList match {
-        case head :: tail if (tryConvertString(head.getArvo, _.toInt)) => {
+        case head :: _ if tryConvertString(head.getArvo, _.toInt) => {
           val n = head.getArvo.toInt
 
           if (n < 1) {
@@ -348,7 +347,7 @@ object Laskentakaavavalidaattori {
         Funktionimi.NMINIMI => tarkistaN
       case Funktionimi.DEMOGRAFIA => {
         funktiokutsu.getSyoteparametrit.asScala.filter(_.getAvain == "prosenttiosuus").toList match {
-          case head :: tail if (tryConvertString(head.getArvo, new BigDecimal(_))) => {
+          case head :: _ if tryConvertString(head.getArvo, new BigDecimal(_)) => {
             val prosenttiosuus = new BigDecimal(head.getArvo)
             if (prosenttiosuus.compareTo(BigDecimal.ZERO) != 1 || prosenttiosuus.compareTo(new BigDecimal("100.0")) == 1) {
               List(new Validointivirhe(Virhetyyppi.PROSENTTIOSUUS_EPAVALIDI,
@@ -360,7 +359,7 @@ object Laskentakaavavalidaattori {
       }
       case Funktionimi.PYORISTYS => {
         funktiokutsu.getSyoteparametrit.asScala.find(_.getAvain == "tarkkuus") match {
-          case Some(p) if (tryConvertString(p.getArvo, _.toInt)) => {
+          case Some(p) if tryConvertString(p.getArvo, _.toInt) => {
             val tarkkuus = p.getArvo.toInt
             if (tarkkuus < 0) {
               List(new Validointivirhe(Virhetyyppi.TARKKUUS_PIENEMPI_KUIN_NOLLA,
@@ -373,7 +372,7 @@ object Laskentakaavavalidaattori {
 
       case Funktionimi.SKAALAUS => {
         funktiokutsu.getSyoteparametrit.asScala.filter(_.getAvain == "kaytaLaskennallistaLahdeskaalaa").toList match {
-          case head :: tail if (tryConvertString(head.getArvo, _.toBoolean)) => {
+          case head :: _ if tryConvertString(head.getArvo, _.toBoolean) => {
             val kaytaLaskennallistaLahdeskaalaa = head.getArvo.toBoolean
 
             val kohdeskaalaMin = funktiokutsu.getSyoteparametrit.asScala.find(_.getAvain == "kohdeskaalaMin").map(sa => {
@@ -434,7 +433,7 @@ object Laskentakaavavalidaattori {
         tarkistaKonvertteri(funktiokutsu) ++
         tarkistaValintaperusteparametrit(funktiokutsu) ++
         tarkistaFunktioargumentit(funktiokutsu, validoiLaskettava) ++
-        tarkistaFunktiokohtaisetRajoitteet(funktiokutsu)).toList
+        tarkistaFunktiokohtaisetRajoitteet(funktiokutsu))
     }
 
     funktiokutsu.getFunktioargumentit.asScala.filter(_.getFunktiokutsuChild != null).foreach(fa => {
