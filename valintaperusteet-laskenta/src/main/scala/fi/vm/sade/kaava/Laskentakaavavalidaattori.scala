@@ -416,11 +416,11 @@ object Laskentakaavavalidaattori {
       List(new Validointivirhe(Virhetyyppi.FUNKTIONIMI_VIRHEELLINEN,
         s"Funktionimi ${funktiokutsu.getFunktionimi.name()} ei ole validi"));
     } else {
-      (tarkistaParametrit(funktiokutsu) ++
+      tarkistaParametrit(funktiokutsu) ++
         tarkistaKonvertteri(funktiokutsu) ++
         tarkistaValintaperusteparametrit(funktiokutsu) ++
         tarkistaFunktioargumentit(funktiokutsu, validoiLaskettava) ++
-        tarkistaFunktiokohtaisetRajoitteet(funktiokutsu))
+        tarkistaFunktiokohtaisetRajoitteet(funktiokutsu)
     }
 
     funktiokutsu.getFunktioargumentit.asScala.filter(_.getFunktiokutsuChild != null).foreach(fa => {
