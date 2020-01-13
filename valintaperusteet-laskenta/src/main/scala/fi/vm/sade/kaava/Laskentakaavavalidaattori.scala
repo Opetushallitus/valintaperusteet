@@ -281,7 +281,7 @@ object Laskentakaavavalidaattori {
                 val paluuarvovirhe = validoiKonvertteriparametri(indeksi, head)
 
                 def virhe(tyyppi: String) = {
-                  s"Arvokonvertterin arvoa ${head.getArvo} ei pystytty konvertoimaan ${tyyppi}-tyyppiseksi"
+                  s"Arvokonvertterin arvoa ${head.getArvo} ei pystytty konvertoimaan $tyyppi-tyyppiseksi"
                 }
 
                 val arvovirhe = if (StringUtils.isBlank(head.getArvo)) {
