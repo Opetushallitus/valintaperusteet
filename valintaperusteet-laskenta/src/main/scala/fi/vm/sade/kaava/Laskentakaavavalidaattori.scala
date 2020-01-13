@@ -158,9 +158,10 @@ object Laskentakaavavalidaattori {
           List(new Validointivirhe(Virhetyyppi.VAARA_MAARA_FUNKTIOARGUMENTTEJA,
             s"Väärä määrä funktioargumentteja funktiolle $nimi. Vaadittu: ${vaaditutArgumentit.size}, annettu: ${annetutArgumentit.size}"))
         } else {
+          @scala.annotation.tailrec
           def tarkistaFunktioargumentit(annetutArgumentit: List[Funktioargumentti],
-            vaaditutArgumentit: List[Funktiokuvaaja.Funktioargumenttikuvaus],
-            accum: List[Validointivirhe]): List[Validointivirhe] = {
+                                        vaaditutArgumentit: List[Funktiokuvaaja.Funktioargumenttikuvaus],
+                                        accum: List[Validointivirhe]): List[Validointivirhe] = {
             if (annetutArgumentit.nonEmpty) {
               tarkistaFunktioargumentit(annetutArgumentit.tail, vaaditutArgumentit.tail,
                 validoiFunktioargumentti(vaaditutArgumentit.head, annetutArgumentit.head, accum))
@@ -271,8 +272,9 @@ object Laskentakaavavalidaattori {
           }
 
           val arvokonvertterikuvaus = param.konvertteriTyypit(ARVOKONVERTTERI).asInstanceOf[Arvokonvertterikuvaus]
+          @scala.annotation.tailrec
           def validoiArvokonvertteriparametritRekursiivisesti(indeksi: Int, konvs: List[Arvokonvertteriparametri],
-            accum: List[Validointivirhe]): List[Validointivirhe] = {
+                                                              accum: List[Validointivirhe]): List[Validointivirhe] = {
             konvs match {
               case Nil => accum
               case head :: tail =>
