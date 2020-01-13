@@ -137,7 +137,7 @@ object Laskentakaavavalidaattori {
     val annetutArgumentit = LaskentaUtil.jarjestaFunktioargumentit(funktiokutsu.getFunktioargumentit)
     val vaaditutArgumentit = funktiokuvaus.funktioargumentit
 
-    if (vaaditutArgumentit.isEmpty && !annetutArgumentit.isEmpty) {
+    if (vaaditutArgumentit.isEmpty && annetutArgumentit.nonEmpty) {
       List(new Validointivirhe(Virhetyyppi.FUNKTIOKUTSU_EI_OTA_FUNKTIOARGUMENTTEJA,
         s"Funktio $nimi ei ota funktioargumentteja"))
     } else {
@@ -149,7 +149,7 @@ object Laskentakaavavalidaattori {
         } else funktiokutsu.getFunktioargumentit.asScala.foldLeft(List[Validointivirhe]())((l, a) => validoiFunktioargumentti(arg, a, l))
       } else if (vaaditutArgumentit.size == 1 && vaaditutArgumentit(0).kardinaliteetti == Kardinaliteetti.LISTA_PAREJA) {
         val arg = vaaditutArgumentit(0)
-        if (annetutArgumentit.size == 0 || annetutArgumentit.size % 2 != 0) {
+        if (annetutArgumentit.isEmpty || annetutArgumentit.size % 2 != 0) {
           List(new Validointivirhe(Virhetyyppi.VAARA_MAARA_FUNKTIOARGUMENTTEJA,
             s"Väärä määrä funktioargumentteja funktiolle $nimi. Vaadittu: parillinen määrä, annettu: ${annetutArgumentit.size}"))
         } else funktiokutsu.getFunktioargumentit.asScala.foldLeft(List[Validointivirhe]())((l, a) => validoiFunktioargumentti(arg, a, l))
@@ -161,7 +161,7 @@ object Laskentakaavavalidaattori {
           def tarkistaFunktioargumentit(annetutArgumentit: List[Funktioargumentti],
             vaaditutArgumentit: List[Funktiokuvaaja.Funktioargumenttikuvaus],
             accum: List[Validointivirhe]): List[Validointivirhe] = {
-            if (!annetutArgumentit.isEmpty) {
+            if (annetutArgumentit.nonEmpty) {
               tarkistaFunktioargumentit(annetutArgumentit.tail, vaaditutArgumentit.tail,
                 validoiFunktioargumentti(vaaditutArgumentit.head, annetutArgumentit.head, accum))
             } else accum
@@ -384,8 +384,8 @@ object Laskentakaavavalidaattori {
             })
 
             val virheet = List[Validointivirhe]()
-            ((if (!kohdeskaalaMin.isEmpty && !kohdeskaalaMin.get.isEmpty
-              && !kohdeskaalaMax.isEmpty && !kohdeskaalaMax.get.isEmpty
+            ((if (kohdeskaalaMin.isDefined && kohdeskaalaMin.get.isDefined
+              && kohdeskaalaMax.isDefined && kohdeskaalaMax.get.isDefined
               && kohdeskaalaMin.get.get.compareTo(kohdeskaalaMax.get.get) > 0) {
               Some(new Validointivirhe(Virhetyyppi.KOHDESKAALA_VIRHEELLINEN, "Kohdeskaalan minimin pitää olla pienempi kuin maksimi"))
             } else None) ++ (if (!kaytaLaskennallistaLahdeskaalaa) {
@@ -400,8 +400,8 @@ object Laskentakaavavalidaattori {
               if (lahdeskaalaMin.isEmpty || lahdeskaalaMax.isEmpty) {
                 Some(new Validointivirhe(Virhetyyppi.LAHDESKAALAA_EI_OLE_MAARITELTY,
                   "Skaalauksen lähdeskaalaa ei ole määritelty"))
-              } else if (!lahdeskaalaMin.isEmpty && !lahdeskaalaMin.get.isEmpty
-                && !lahdeskaalaMax.isEmpty && !lahdeskaalaMax.get.isEmpty
+              } else if (lahdeskaalaMin.isDefined && lahdeskaalaMin.get.isDefined
+                && lahdeskaalaMax.isDefined && lahdeskaalaMax.get.isDefined
                 && lahdeskaalaMin.get.get.compareTo(lahdeskaalaMax.get.get) > 0) {
                 Some(new Validointivirhe(Virhetyyppi.LAHDESKAALA_VIRHEELLINEN,
                   "Lähdeskaalan minimin pitää olla pienempi kuin maksimi"))
