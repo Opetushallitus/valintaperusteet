@@ -404,11 +404,11 @@ object Laskentakaavavalidaattori {
   }
 
   def validoiMallinnettuKaava(funktiokutsu: Funktiokutsu): Funktiokutsu = {
-    validoiKaava(funktiokutsu, false)
+    validoiKaava(funktiokutsu, validoiLaskettava = false)
   }
 
   def validoiLaskettavaKaava(funktiokutsu: Funktiokutsu): Funktiokutsu = {
-    validoiKaava(funktiokutsu, true)
+    validoiKaava(funktiokutsu, validoiLaskettava = true)
   }
 
   private def validoiKaava(funktiokutsu: Funktiokutsu, validoiLaskettava: Boolean): Funktiokutsu = {
