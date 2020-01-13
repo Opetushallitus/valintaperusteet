@@ -1,11 +1,12 @@
 package fi.vm.sade.kaava
 
+import java.math.BigDecimal
+
+import fi.vm.sade.kaava.Funktiokuvaaja._
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi
 import fi.vm.sade.service.valintaperusteet.model._
-import Funktiokuvaaja._
 import fi.vm.sade.service.valintaperusteet.service.validointi.virhe._
 import org.apache.commons.lang.StringUtils
-import fi.vm.sade.service.valintaperusteet.dto.model.{Funktionimi, Funktiotyyppi}
-import java.math.BigDecimal
 
 import scala.jdk.CollectionConverters._
 
