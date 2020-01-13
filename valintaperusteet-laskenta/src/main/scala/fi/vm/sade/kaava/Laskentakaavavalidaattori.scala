@@ -414,7 +414,7 @@ object Laskentakaavavalidaattori {
   private def validoiKaava(funktiokutsu: Funktiokutsu, validoiLaskettava: Boolean): Funktiokutsu = {
     val virheet = if (fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi.EI_VALIDI == funktiokutsu.getFunktionimi.getTyyppi) {
       List(new Validointivirhe(Virhetyyppi.FUNKTIONIMI_VIRHEELLINEN,
-        s"Funktionimi ${funktiokutsu.getFunktionimi.name()} ei ole validi"));
+        s"Funktionimi ${funktiokutsu.getFunktionimi.name()} ei ole validi"))
     } else {
       tarkistaParametrit(funktiokutsu) ++
         tarkistaKonvertteri(funktiokutsu) ++
