@@ -72,4 +72,10 @@ public enum Funktionimi {
     public Set<Laskentamoodi> getLaskentamoodit() {
         return laskentamoodit;
     }
+
+    public static final Set<Funktionimi> ammatillistenArvosanojenFunktionimet = new HashSet<>();
+    static {
+        ammatillistenArvosanojenFunktionimet.add(HAEAMMATILLINENYTOARVIOINTIASTEIKKO);
+        ammatillistenArvosanojenFunktionimet.add(HAEAMMATILLINENYTOARVOSANA);
+    }
 }
