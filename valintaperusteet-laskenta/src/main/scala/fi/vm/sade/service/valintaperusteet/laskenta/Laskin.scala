@@ -5,6 +5,10 @@ import java.math.RoundingMode
 import java.math.{BigDecimal => JBigDecimal}
 import java.util.{Collection => JCollection}
 
+import fi.vm.sade.kaava.LaskentaUtil
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.HAEAMMATILLINENYTOARVIOINTIASTEIKKO
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.HAEAMMATILLINENYTOARVOSANA
 import fi.vm.sade.service.valintaperusteet.dto.model.Osallistuminen
 import fi.vm.sade.service.valintaperusteet.laskenta.JsonFormats.historiaWrites
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonvertteri
@@ -92,7 +96,7 @@ import play.api.libs.json._
 import scala.collection.mutable.ListBuffer
 import scala.jdk.CollectionConverters._
 
-private case class Tulos[T](tulos: Option[T], tila: Tila, historia: Historia)
+case class Tulos[T](tulos: Option[T], tila: Tila, historia: Historia)
 
 private case class SyotettyArvo(tunniste: String,
                                 arvo: Option[String],
@@ -703,7 +707,19 @@ private class Laskin private(private val hakukohde: Hakukohde,
 
           val kierrostenTulokset: Seq[(AmmatillisenPerustutkinnonValitsija, Tulos[BigDecimal])] = iteraatioParametrit.map(parametri => (parametri, laskeLukuarvo(f, Some(parametri))))
           val tuloksetLukuarvoina: Seq[Lukuarvo] = kierrostenTulokset.flatMap {
-            case (parametri, Tulos(Some(lukuarvo), _, _)) => Some(Lukuarvo(lukuarvo, tulosTekstiFi = s"Arvo parametrilla $parametri"))
+            case (parametri, Tulos(Some(lukuarvo), _, historia)) =>
+              Laskin.LOG.info(s"Hakemuksen ${hakemus.oid} ${IteroiAmmatillisetTutkinnot.getClass.getSimpleName}-laskennan historia: ${LaskentaUtil.prettyPrint(historia)}")
+              val ammatillisenHistorianTiivistelma: Seq[String] = historia.
+                flatten.
+                filter { h: Historia =>
+                  Funktionimi.ammatillistenArvosanojenFunktionimet.asScala.map(_.name()).contains(h.funktio)
+                }.
+                map { h =>
+                  s"${h.funktio} = ${h.tulos.getOrElse("-")}; avaimet: ${h.avaimet.getOrElse(Map()).map(x => (x._1, x._2.getOrElse("-")))}"
+                }
+
+
+              Some(Lukuarvo(lukuarvo, tulosTekstiFi = s"Arvo parametrilla '$parametri' == $lukuarvo, historia: $ammatillisenHistorianTiivistelma"))
             case (parametri, tulos) =>
               Laskin.LOG.debug(s"Tyhjä tulos $tulos funktiosta $f parametrilla $parametri")
               None
@@ -746,7 +762,17 @@ private class Laskin private(private val hakukohde: Hakukohde,
           arvosana <- arvosanaKoskessa
         } yield k.konvertoi(arvosana)).getOrElse((arvosanaKoskessa, new Hyvaksyttavissatila))
         val tilalista: List[Tila] = tilaKonvertoinnista :: tilatKonvertterinHausta
-        (tulos, tilalista, Historia("Hae ammatillisen yto:n arvosana", tulos, tilalista, None, Some(Map("oletusarvo" -> oletusarvo))))
+        val uusiHistoria = Historia(
+          HAEAMMATILLINENYTOARVOSANA.name(),
+          tulos,
+          tilalista,
+          None,
+          Some(Map(
+            "oletusarvo" -> oletusarvo,
+            "yto-koodiarvo" -> Some(valintaperusteviite.tunniste),
+            "lähdearvo" -> arvosanaKoskessa
+          )))
+        (tulos, tilalista, uusiHistoria)
 
       case f@HaeAmmatillinenYtoArviointiAsteikko(konvertteri, oletusarvo, valintaperusteviite, _, _,_,_,_,_) =>
         val tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija = ammatillisenTutkinnonValitsija(iteraatioParametri, f)
@@ -762,7 +788,17 @@ private class Laskin private(private val hakukohde: Hakukohde,
           arvosana <- asteikonKoodiKoskessa
         } yield k.konvertoi(arvosana)).getOrElse((oletusarvo, new Hyvaksyttavissatila))
         val tilalista: List[Tila] = tilaKonvertoinnista :: tilatKonvertterinHausta
-        (tulos, tilalista, Historia("Hae ammatillisen yto:n arviointiasteikko", tulos, tilalista, None, Some(Map("oletusarvo" -> oletusarvo))))
+        val uusiHistoria = Historia(
+          HAEAMMATILLINENYTOARVIOINTIASTEIKKO.name(),
+          tulos,
+          tilalista,
+          None,
+          Some(Map(
+            "oletusarvo" -> oletusarvo,
+            "yto-koodiarvo" -> Some(valintaperusteviite.tunniste),
+            "asteikon koodi" -> asteikonKoodiKoskessa
+          )))
+        (tulos, tilalista, uusiHistoria)
 
       case HaeLukuarvo(konvertteri, oletusarvo, valintaperusteviite, _, _,_,_,_,_) =>
         haeLukuarvo(konvertteri, oletusarvo, valintaperusteviite, hakemus.kentat)
