@@ -147,7 +147,7 @@ object Laskin {
 
     val laskin: Laskin = createLaskin(hakukohde, hakemus, kaikkiHakemukset)
 
-    laskin.laske(laskettava, None) match {
+    laskin.laske(laskettava, Map()) match {
       case Tulos(tulos, tila, historia) =>
         new Laskentatulos[JBigDecimal](tila, if (tulos.isEmpty) null else tulos.get.underlying,
           String.valueOf(Json.toJson(wrapHistoria(hakemus, historia))),
@@ -170,7 +170,7 @@ object Laskin {
 
     val laskin: Laskin = createLaskin(hakukohde, hakemus, kaikkiHakemukset)
 
-    laskin.laske(laskettava, None) match {
+    laskin.laske(laskettava, Map()) match {
       case Tulos(tulos, tila, historia) =>
         new Laskentatulos[JBoolean](tila, if (tulos.isEmpty) null else Boolean.box(tulos.get),
           String.valueOf(Json.toJson(wrapHistoria(hakemus, historia))),
@@ -209,13 +209,13 @@ object Laskin {
   }
 
   def laske(hakukohde: Hakukohde, hakemus: Hakemus, laskettava: Totuusarvofunktio): (Option[Boolean], Tila) = {
-    val tulos = new Laskin(hakukohde, hakemus).laskeTotuusarvo(laskettava, None)
+    val tulos = new Laskin(hakukohde, hakemus).laskeTotuusarvo(laskettava, Map())
     (tulos.tulos, tulos.tila)
   }
 
   def laske(hakukohde: Hakukohde, hakemus: Hakemus, laskettava: Lukuarvofunktio): (Option[JBigDecimal], Tila) = {
 
-    val tulos = new Laskin(hakukohde, hakemus).laskeLukuarvo(laskettava, None)
+    val tulos = new Laskin(hakukohde, hakemus).laskeLukuarvo(laskettava, Map())
     (tulos.tulos.map(_.underlying()), tulos.tila)
   }
 
@@ -249,12 +249,12 @@ private class Laskin private(private val hakukohde: Hakukohde,
   def getFunktioTulokset: Map[String, FunktioTulos] = Map[String, FunktioTulos](funktioTulokset.toList: _*)
 
 
-  def laske(laskettava: Lukuarvofunktio, iteraatioParametri: Option[IteraatioParametri]): Tulos[BigDecimal] = {
-    laskeLukuarvo(laskettava, iteraatioParametri)
+  def laske(laskettava: Lukuarvofunktio, iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri]): Tulos[BigDecimal] = {
+    laskeLukuarvo(laskettava, iteraatioParametrit)
   }
 
-  def laske(laskettava: Totuusarvofunktio, iteraatioParametri: Option[IteraatioParametri]): Tulos[Boolean] = {
-    laskeTotuusarvo(laskettava, iteraatioParametri)
+  def laske(laskettava: Totuusarvofunktio, iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri]): Tulos[Boolean] = {
+    laskeTotuusarvo(laskettava, iteraatioParametrit)
   }
 
   private def haeValintaperuste[T](valintaperusteviite: Valintaperuste, kentat: Kentat,
@@ -354,11 +354,11 @@ private class Laskin private(private val hakukohde: Hakukohde,
     (arvo, List(tila))
   }
 
-  private def laskeTotuusarvo(laskettava: Totuusarvofunktio, iteraatioParametri: Option[IteraatioParametri]): Tulos[Boolean] = {
+  private def laskeTotuusarvo(laskettava: Totuusarvofunktio, iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri]): Tulos[Boolean] = {
 
     def muodostaKoostettuTulos(fs: Seq[Totuusarvofunktio], trans: Seq[Boolean] => Boolean) = {
       val (tulokset, tilat, historiat) = fs.reverse.foldLeft((Nil, Nil, ListBuffer()): (List[Option[Boolean]], List[Tila], ListBuffer[Historia]))((lst, f) => {
-        laskeTotuusarvo(f, iteraatioParametri) match {
+        laskeTotuusarvo(f, iteraatioParametrit) match {
           case Tulos(tulos, tila, historia) =>
             lst._3 += historia
             (tulos :: lst._1, tila :: lst._2, lst._3)
@@ -373,14 +373,14 @@ private class Laskin private(private val hakukohde: Hakukohde,
     }
 
     def muodostaYksittainenTulos(f: Totuusarvofunktio, trans: Boolean => Boolean) = {
-      laskeTotuusarvo(f, iteraatioParametri) match {
+      laskeTotuusarvo(f, iteraatioParametrit) match {
         case Tulos(tulos, tila, historia) => (tulos.map(trans(_)), List(tila), historia)
       }
     }
 
-    def muodostaVertailunTulos(f1: Lukuarvofunktio, f2: Lukuarvofunktio, trans: (BigDecimal, BigDecimal) => Boolean, iteraatioParametri: Option[IteraatioParametri]) = {
-      val tulos1 = laskeLukuarvo(f1, iteraatioParametri)
-      val tulos2 = laskeLukuarvo(f2, iteraatioParametri)
+    def muodostaVertailunTulos(f1: Lukuarvofunktio, f2: Lukuarvofunktio, trans: (BigDecimal, BigDecimal) => Boolean, iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri]) = {
+      val tulos1 = laskeLukuarvo(f1, iteraatioParametrit)
+      val tulos2 = laskeLukuarvo(f2, iteraatioParametrit)
       val tulos = for {
         t1 <- tulos1.tulos
         t2 <- tulos2.tulos
@@ -403,19 +403,19 @@ private class Laskin private(private val hakukohde: Hakukohde,
         val tilat = List(new Hyvaksyttavissatila)
         (Some(b), tilat, Historia("Totuusarvo", Some(b), tilat, None, None))
       case Suurempi(f1, f2, _, _,_,_,_,_) =>
-        val (tulos, tilat, h) = muodostaVertailunTulos(f1, f2, (d1, d2) => d1 > d2, iteraatioParametri)
+        val (tulos, tilat, h) = muodostaVertailunTulos(f1, f2, (d1, d2) => d1 > d2, iteraatioParametrit)
         (tulos, tilat, Historia("Suurempi", tulos, tilat, Some(List(h)), None))
       case SuurempiTaiYhtasuuri(f1, f2, _, _,_,_,_,_) =>
-        val (tulos, tilat, h) = muodostaVertailunTulos(f1, f2, (d1, d2) => d1 >= d2, iteraatioParametri)
+        val (tulos, tilat, h) = muodostaVertailunTulos(f1, f2, (d1, d2) => d1 >= d2, iteraatioParametrit)
         (tulos, tilat, Historia("Suurempi tai yhtäsuuri", tulos, tilat, Some(List(h)), None))
       case Pienempi(f1, f2, _, _,_,_,_,_) =>
-        val (tulos, tilat, h) = muodostaVertailunTulos(f1, f2, (d1, d2) => d1 < d2, iteraatioParametri)
+        val (tulos, tilat, h) = muodostaVertailunTulos(f1, f2, (d1, d2) => d1 < d2, iteraatioParametrit)
         (tulos, tilat, Historia("Pienempi", tulos, tilat, Some(List(h)), None))
       case PienempiTaiYhtasuuri(f1, f2, _, _,_,_,_,_) =>
-        val (tulos, tilat, h) = muodostaVertailunTulos(f1, f2, (d1, d2) => d1 <= d2, iteraatioParametri)
+        val (tulos, tilat, h) = muodostaVertailunTulos(f1, f2, (d1, d2) => d1 <= d2, iteraatioParametrit)
         (tulos, tilat, Historia("Pienempi tai yhtäsuuri", tulos, tilat, Some(List(h)), None))
       case Yhtasuuri(f1, f2, _, _,_,_,_,_) =>
-        val (tulos, tilat, h) = muodostaVertailunTulos(f1, f2, (d1, d2) => d1 == d2, iteraatioParametri)
+        val (tulos, tilat, h) = muodostaVertailunTulos(f1, f2, (d1, d2) => d1 == d2, iteraatioParametrit)
         (tulos, tilat, Historia("Yhtäsuuri", tulos, tilat, Some(List(h)), None))
       case HaeTotuusarvo(konvertteri, oletusarvo, valintaperusteviite, _, _,_,_,_,_) =>
         val (konv, _) = konvertteri match {
@@ -512,13 +512,13 @@ private class Laskin private(private val hakukohde: Hakukohde,
     Tulos(laskettuTulos, palautettavaTila(tilat), hist)
   }
 
-  private def laskeLukuarvo(laskettava: Lukuarvofunktio, iteraatioParametri: Option[IteraatioParametri]): Tulos[BigDecimal] = {
+  private def laskeLukuarvo(laskettava: Lukuarvofunktio, iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri]): Tulos[BigDecimal] = {
 
     def summa(vals: Seq[BigDecimal]): BigDecimal = vals.reduceLeft(_ + _)
     def tulo(vals: Seq[BigDecimal]): BigDecimal = vals.reduceLeft(_ * _)
 
     def muodostaYksittainenTulos(f: Lukuarvofunktio, trans: BigDecimal => BigDecimal): (Option[BigDecimal], List[Tila], Historia) = {
-      laskeLukuarvo(f, iteraatioParametri) match {
+      laskeLukuarvo(f, iteraatioParametrit) match {
         case Tulos(tulos, tila, historia) => (tulos.map(trans(_)), List(tila), historia)
       }
     }
@@ -532,7 +532,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
 
     def muodostaKoostettuTulos(fs: Seq[Lukuarvofunktio], trans: Seq[BigDecimal] => BigDecimal, ns: Option[Int] = None): (Option[BigDecimal], List[Tila], Historia) = {
       val tulokset = fs.reverse.foldLeft((Nil, Nil, ListBuffer()): (List[BigDecimal], List[Tila], ListBuffer[Historia]))((lst, f) => {
-        laskeLukuarvo(f, iteraatioParametri) match {
+        laskeLukuarvo(f, iteraatioParametrit) match {
           case Tulos(tulos, tila, historia) =>
             lst._3 += historia
             (if (tulos.isDefined) tulos.get :: lst._1 else lst._1, tila :: lst._2, lst._3)
@@ -613,8 +613,8 @@ private class Laskin private(private val hakukohde: Hakukohde,
         (tulos, tilat, Historia("Tulo N-parasta", tulos, tilat, h.historiat, Some(Map("n" -> Some(n)))))
 
       case Osamaara(osoittaja, nimittaja, _, _,_,_,_,_) =>
-        val nimittajaTulos = laskeLukuarvo(nimittaja, iteraatioParametri)
-        val osoittajaTulos = laskeLukuarvo(osoittaja, iteraatioParametri)
+        val nimittajaTulos = laskeLukuarvo(nimittaja, iteraatioParametrit)
+        val osoittajaTulos = laskeLukuarvo(osoittaja, iteraatioParametrit)
 
         val (arvo, laskentatilat) = (for {
           n <- nimittajaTulos.tulos
@@ -671,9 +671,9 @@ private class Laskin private(private val hakukohde: Hakukohde,
         (tulos, tilat, Historia("Mediaani", tulos, tilat, h.historiat, None))
 
       case Jos(ehto, thenHaara, elseHaara, _, _,_,_,_,_) =>
-        val ehtoTulos = laskeTotuusarvo(ehto, iteraatioParametri)
-        val thenTulos = laskeLukuarvo(thenHaara, iteraatioParametri)
-        val elseTulos = laskeLukuarvo(elseHaara, iteraatioParametri)
+        val ehtoTulos = laskeTotuusarvo(ehto, iteraatioParametrit)
+        val thenTulos = laskeLukuarvo(thenHaara, iteraatioParametrit)
+        val elseTulos = laskeLukuarvo(elseHaara, iteraatioParametrit)
         //historiat :+ historia1 :+ historia2
         val (tulos, tilat) = ehdollinenTulos[Boolean, BigDecimal]((ehtoTulos.tulos, ehtoTulos.tila), (cond, tila) => {
           if (cond) (thenTulos.tulos, List(tila, thenTulos.tila)) else (elseTulos.tulos, List(tila, elseTulos.tila))
@@ -681,7 +681,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
         (tulos, tilat, Historia("Jos", tulos, tilat, Some(List(ehtoTulos.historia, thenTulos.historia, elseTulos.historia)), None))
 
       case KonvertoiLukuarvo(konvertteri, f, _, _,_,_,_,_) =>
-        laskeLukuarvo(f, iteraatioParametri) match {
+        laskeLukuarvo(f, iteraatioParametrit) match {
           case Tulos(tulos, tila, historia) =>
             val (konv, virheet) = konvertteri match {
               case l: Lukuarvovalikonvertteri => konversioToLukuarvovalikonversio(l.konversioMap,hakemus.kentat, hakukohde)
@@ -697,15 +697,17 @@ private class Laskin private(private val hakukohde: Hakukohde,
         }
 
       case IteroiAmmatillisetTutkinnot(f, _, _, _, _, _, _) =>
-        if (iteraatioParametri.exists(p => p.isInstanceOf[AmmatillisenPerustutkinnonValitsija])) {
-          throw new IllegalStateException(s"Ei voi iteroida iteraatioparametrilla ${iteraatioParametri.get} uudestaan ammatillisten tutkintojen yli")
+        val ammatillisenPerustutkinnonValitsija = iteraatioParametrit.get(classOf[AmmatillisenPerustutkinnonValitsija])
+        if (ammatillisenPerustutkinnonValitsija.exists(p => p.isInstanceOf[AmmatillisenPerustutkinnonValitsija])) {
+          throw new IllegalStateException(s"Ei voi iteroida iteraatioparametrilla $ammatillisenPerustutkinnonValitsija uudestaan ammatillisten tutkintojen yli")
         } else {
           val tutkintojenMaara = KoskiLaskenta.laskeAmmatillisetTutkinnot(hakemus)
           Laskin.LOG.info(s"Hakemuksen ${hakemus.oid} hakijalle löytyi ${tutkintojenMaara} ammatillista perustutkintoa.")
 
-          val iteraatioParametrit: Seq[AmmatillisenPerustutkinnonValitsija] = AmmatillisetPerustutkinnot(tutkintojenMaara).parametreiksi
+          val uudetParametrit: Seq[AmmatillisenPerustutkinnonValitsija] = AmmatillisetPerustutkinnot(tutkintojenMaara).parametreiksi
 
-          val kierrostenTulokset: Seq[(AmmatillisenPerustutkinnonValitsija, Tulos[BigDecimal])] = iteraatioParametrit.map(parametri => (parametri, laskeLukuarvo(f, Some(parametri))))
+          val kierrostenTulokset: Seq[(AmmatillisenPerustutkinnonValitsija, Tulos[BigDecimal])] = uudetParametrit.
+            map(parametri => (parametri, laskeLukuarvo(f, iteraatioParametrit ++ Map(classOf[AmmatillisenPerustutkinnonValitsija] -> parametri))))
           val tuloksetLukuarvoina: Seq[Lukuarvo] = kierrostenTulokset.flatMap {
             case (parametri, Tulos(Some(lukuarvo), _, historia)) =>
               Laskin.LOG.info(s"Hakemuksen ${hakemus.oid} ${IteroiAmmatillisetTutkinnot.getClass.getSimpleName}-laskennan historia: ${LaskentaUtil.prettyPrint(historia)}")
@@ -728,7 +730,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
           val tulos: Tulos[BigDecimal] = if (tuloksetLukuarvoina.nonEmpty) {
             try {
               val iteroidutTuloksetKasittelevaKlooni = f.kloonaa(tuloksetLukuarvoina).asInstanceOf[Lukuarvofunktio]
-              laskeLukuarvo(iteroidutTuloksetKasittelevaKlooni, None)
+              laskeLukuarvo(iteroidutTuloksetKasittelevaKlooni, Map())
             } catch {
               case e: ClassCastException => {
                 Laskin.LOG.error(s"${classOf[IteroiAmmatillisetTutkinnot].getSimpleName} -funktion funktioargumenttina tulee olla " +
@@ -748,7 +750,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
         }
 
       case f@HaeAmmatillinenYtoArvosana(konvertteri, oletusarvo, valintaperusteviite, _, _,_,_,_,_) =>
-        val tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija = ammatillisenTutkinnonValitsija(iteraatioParametri, f)
+        val tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija = ammatillisenTutkinnonValitsija(iteraatioParametrit, f)
         val arvosanaKoskessa: Option[BigDecimal] = KoskiLaskenta.haeYtoArvosana(tutkinnonValitsija, hakemus, valintaperusteviite, oletusarvo)
 
         val (konv, tilatKonvertterinHausta) = konvertteri match {
@@ -775,7 +777,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
         (tulos, tilalista, uusiHistoria)
 
       case f@HaeAmmatillinenYtoArviointiAsteikko(konvertteri, oletusarvo, valintaperusteviite, _, _,_,_,_,_) =>
-        val tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija = ammatillisenTutkinnonValitsija(iteraatioParametri, f)
+        val tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija = ammatillisenTutkinnonValitsija(iteraatioParametrit, f)
         val asteikonKoodiKoskessa: Option[String] = KoskiLaskenta.haeYtoArviointiasteikko(tutkinnonValitsija, hakemus, valintaperusteviite)
 
         val (konv: Option[Arvokonvertteri[String, BigDecimal]], tilatKonvertterinHausta) = konvertteri match {
@@ -863,7 +865,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
         val (tulos, tilat, h) = muodostaYksittainenTulos(f, d => d.setScale(tarkkuus, BigDecimal.RoundingMode.HALF_UP))
         (tulos, tilat, Historia("Pyöristys", tulos, tilat, Some(List(h)), Some(Map("tarkkuus" -> Some(tarkkuus)))))
       case Hylkaa(f, hylkaysperustekuvaus, _, _,_,_,_,_) =>
-        laskeTotuusarvo(f, iteraatioParametri) match {
+        laskeTotuusarvo(f, iteraatioParametrit) match {
           case Tulos(tulos, tila, historia) =>
             val tila2 = tulos.map(b => if (b) new Hylattytila(hylkaysperustekuvaus.getOrElse(Map.empty[String,String]).asJava,
               new HylkaaFunktionSuorittamaHylkays)
@@ -873,7 +875,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
             (None, tilat, Historia("Hylkää", None, tilat, Some(List(historia)), None))
         }
       case HylkaaArvovalilla(f, hylkaysperustekuvaus, _, _,_,_,_,_, (min,max)) =>
-        laske(f, iteraatioParametri) match {
+        laske(f, iteraatioParametrit) match {
           case Tulos(tulos, tila, historia) =>
             val arvovali = haeArvovali((min, max), hakukohde, hakemus.kentat)
             if(tulos.isEmpty && tila.getTilatyyppi.equals(Tilatyyppi.HYVAKSYTTAVISSA)) {
@@ -895,7 +897,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
           val moodi = laskentamoodi.toString
           moodiVirhe(s"Skaalaus-funktiota ei voida suorittaa laskentamoodissa $moodi", "Skaalaus", moodi)
         } else {
-          val tulos = laske(skaalattava, iteraatioParametri)
+          val tulos = laske(skaalattava, iteraatioParametrit)
 
           def skaalaa(skaalattavaArvo: BigDecimal,
                       kohdeskaala: (BigDecimal, BigDecimal),
@@ -940,7 +942,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
         }
 
       case PainotettuKeskiarvo(_, _,_,_,_,_, fs) =>
-        val tulokset = fs.map(p => Tuple2(laskeLukuarvo(p._1, iteraatioParametri), laskeLukuarvo(p._2, iteraatioParametri)))
+        val tulokset = fs.map(p => Tuple2(laskeLukuarvo(p._1, iteraatioParametrit), laskeLukuarvo(p._2, iteraatioParametrit)))
         val (tilat, historiat) = tulokset.reverse.foldLeft(Tuple2(List[Tila](), List[Historia]()))((lst, t) => Tuple2(t._1.tila :: t._2.tila :: lst._1, t._1.historia :: t._2.historia :: lst._2))
 
         val painokertointenSumma = tulokset.foldLeft(Laskin.ZERO) {
@@ -975,7 +977,8 @@ private class Laskin private(private val hakukohde: Hakukohde,
     Tulos(laskettuTulos, palautettavaTila(tilat), historia)
   }
 
-  private def ammatillisenTutkinnonValitsija(iteraatioParametri: Option[IteraatioParametri], f: Funktio[_]): AmmatillisenPerustutkinnonValitsija = {
+  private def ammatillisenTutkinnonValitsija(iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri], f: Funktio[_]): AmmatillisenPerustutkinnonValitsija = {
+    val iteraatioParametri = iteraatioParametrit.get(classOf[AmmatillisenPerustutkinnonValitsija])
     iteraatioParametri match {
       case Some(p: AmmatillisenPerustutkinnonValitsija) => p
       case Some(x) => throw new IllegalArgumentException(s"Vääräntyyppinen iteraatioparametri $x ; piti olla ${classOf[AmmatillisenPerustutkinnonValitsija]}")
