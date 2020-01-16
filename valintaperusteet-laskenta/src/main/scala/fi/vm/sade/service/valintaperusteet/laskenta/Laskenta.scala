@@ -127,8 +127,8 @@ object Laskenta {
     def unapply(k: KoostavaFunktio[_]): Option[Seq[Funktio[_]]] = Some(k.fs)
   }
 
-  trait KloonattavaFunktio[P, F <: Funktio[P], T <: Funktio[P]] extends KoostavaFunktio[P] {
-    def kloonaa(lapsifunktiot: Seq[F]): T
+  trait KloonattavaFunktio[P, A, T <: Funktio[P]] extends KoostavaFunktio[P] {
+    def kloonaa(argumentit: Seq[A]): T
   }
 
   sealed trait NParasta extends KoostavaFunktio[BigDecimal] with Lukuarvofunktio {
@@ -230,7 +230,7 @@ object Laskenta {
   case class Maksimi(fs: Seq[Lukuarvofunktio], oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false)
     extends KoostavaFunktio[BigDecimal] with Lukuarvofunktio with KloonattavaFunktio[BigDecimal, Lukuarvofunktio, KoostavaFunktio[BigDecimal]] {
 
-    override def kloonaa(lapsifunktiot: Seq[Lukuarvofunktio]): Maksimi = copy(fs = lapsifunktiot)
+    override def kloonaa(argumentit: Seq[Lukuarvofunktio]): Maksimi = copy(fs = argumentit)
   }
 
   object Maksimi {
