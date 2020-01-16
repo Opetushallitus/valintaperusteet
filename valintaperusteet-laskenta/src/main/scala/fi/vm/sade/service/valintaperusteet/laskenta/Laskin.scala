@@ -734,7 +734,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
             } catch {
               case e: ClassCastException => {
                 Laskin.LOG.error(s"${classOf[IteroiAmmatillisetTutkinnot].getSimpleName} -funktion funktioargumenttina tulee olla " +
-                  s"kloonattava koostava funktio, kuten maksimi, mutta oli $f", e)
+                  s"kloonattava funktio, kuten maksimi, mutta oli $f", e)
                 throw e
               }
             }
