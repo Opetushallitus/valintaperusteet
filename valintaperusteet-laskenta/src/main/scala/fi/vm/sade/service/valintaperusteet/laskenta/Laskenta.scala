@@ -446,9 +446,21 @@ object Laskenta {
       "Lähdeskaalan minimin pitää olla pienempi kuin maksimi")
   }
 
-  case class PainotettuKeskiarvo(oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false, fs: Seq[Tuple2[Lukuarvofunktio, Lukuarvofunktio]]) extends Lukuarvofunktio {
+  case class PainotettuKeskiarvo(oid: String = "",
+                                 tulosTunniste: String = "",
+                                 tulosTekstiFi: String = "",
+                                 tulosTekstiSv: String = "",
+                                 tulosTekstiEn: String = "",
+                                 omaopintopolku: Boolean = false,
+                                 fs: Seq[Tuple2[Lukuarvofunktio, Lukuarvofunktio]]
+                                ) extends Lukuarvofunktio with KloonattavaFunktio[BigDecimal, Tuple2[Lukuarvofunktio, Lukuarvofunktio], PainotettuKeskiarvo] {
     require(fs.nonEmpty, "Parametreja pitää olla vähintään yksi")
+
+    override def kloonaa(argumentit: Seq[(Lukuarvofunktio, Lukuarvofunktio)]): PainotettuKeskiarvo = {
+      copy(fs = argumentit)
+    }
   }
+
   case class Valintaperusteyhtasuuruus(oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false,
                                        valintaperusteet: Tuple2[Valintaperuste, Valintaperuste]) extends Totuusarvofunktio
 
