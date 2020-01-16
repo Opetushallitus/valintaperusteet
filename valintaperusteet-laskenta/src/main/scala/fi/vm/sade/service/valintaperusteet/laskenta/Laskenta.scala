@@ -127,7 +127,7 @@ object Laskenta {
     def unapply(k: KoostavaFunktio[_]): Option[Seq[Funktio[_]]] = Some(k.fs)
   }
 
-  trait KloonattavaFunktio[P, A, T <: Funktio[P]] extends KoostavaFunktio[P] {
+  trait KloonattavaFunktio[P, A, T <: Funktio[P]] {
     def kloonaa(argumentit: Seq[A]): T
   }
 
