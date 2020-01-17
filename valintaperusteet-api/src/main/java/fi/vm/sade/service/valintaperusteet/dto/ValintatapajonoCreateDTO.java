@@ -60,6 +60,9 @@ public class ValintatapajonoCreateDTO {
     @ApiModelProperty(value = "Varasijoja täytetään asti")
     private Date varasijojaTaytetaanAsti;
 
+    @ApiModelProperty(value = "Ei lasketa päivämäärän jälkeen")
+    private Date eiLasketaPaivamaaranJalkeen;
+
     @ApiModelProperty(value = "Käytetäänkö valintalaskentaa", required = true)
     private Boolean kaytetaanValintalaskentaa = true;
 
@@ -170,6 +173,14 @@ public class ValintatapajonoCreateDTO {
         this.varasijojaTaytetaanAsti = varasijojaTaytetaanAsti;
     }
 
+    public Date getEiLasketaPaivamaaranJalkeen() {
+        return eiLasketaPaivamaaranJalkeen;
+    }
+
+    public void setEiLasketaPaivamaaranJalkeen(Date eiLasketaPaivamaaranJalkeen) {
+        this.eiLasketaPaivamaaranJalkeen = eiLasketaPaivamaaranJalkeen;
+    }
+
     public Boolean getKaytetaanValintalaskentaa() {
         return kaytetaanValintalaskentaa;
     }
@@ -237,6 +248,7 @@ public class ValintatapajonoCreateDTO {
                 ", poistetaankoHylatyt=" + poistetaankoHylatyt +
                 ", varasijojaKaytetaanAlkaen=" + varasijojaKaytetaanAlkaen +
                 ", varasijojaTaytetaanAsti=" + varasijojaTaytetaanAsti +
+                ", eiLasketaPaivamaaranJalkeen=" + eiLasketaPaivamaaranJalkeen +
                 ", kaytetaanValintalaskentaa=" + kaytetaanValintalaskentaa +
                 ", tayttojono='" + tayttojono + '\'' +
                 '}';

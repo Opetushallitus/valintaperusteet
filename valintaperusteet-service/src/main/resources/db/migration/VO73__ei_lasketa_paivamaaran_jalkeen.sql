@@ -1,0 +1,1 @@
+alter table valintatapajono add column ei_lasketa_paivamaaran_jalkeen timestamp;

@@ -227,6 +227,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
             dto.setPrioriteetti(prioriteetti);
             dto.setSiirretaanSijoitteluun(valintatapajono.getSiirretaanSijoitteluun());
             dto.setTasasijasaanto(valintatapajono.getTasapistesaanto().name());
+            dto.setEiLasketaPaivamaaranJalkeen(valintatapajono.getEiLasketaPaivamaaranJalkeen());
             dto.setPoissaOlevaTaytto(valintatapajono.getPoissaOlevaTaytto());
             dto.setEiVarasijatayttoa(valintatapajono.getEiVarasijatayttoa());
             dto.setKaikkiEhdonTayttavatHyvaksytaan(valintatapajono.getKaikkiEhdonTayttavatHyvaksytaan());
