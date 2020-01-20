@@ -128,6 +128,7 @@ object Laskenta {
   }
 
   trait KloonattavaFunktio[P, A, T <: Funktio[P]] {
+    val argumentit: Seq[A]
     def kloonaa(argumentit: Seq[A]): T
   }
 
@@ -230,6 +231,8 @@ object Laskenta {
   case class Maksimi(fs: Seq[Lukuarvofunktio], oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false)
     extends KoostavaFunktio[BigDecimal] with Lukuarvofunktio with KloonattavaFunktio[BigDecimal, Lukuarvofunktio, KoostavaFunktio[BigDecimal]] {
 
+    override val argumentit: Seq[Lukuarvofunktio] = fs
+
     override def kloonaa(argumentit: Seq[Lukuarvofunktio]): Maksimi = copy(fs = argumentit)
   }
 
@@ -310,6 +313,14 @@ object Laskenta {
                                          tulosTekstiEn: String = "",
                                          omaopintopolku: Boolean = false
                                         ) extends Lukuarvofunktio
+  case class IteroiAmmatillisetTutkinnonOsat(f: Lukuarvofunktio with KloonattavaFunktio[BigDecimal, _, Funktio[BigDecimal]],
+                                             oid: String = "",
+                                             tulosTunniste: String = "",
+                                             tulosTekstiFi: String = "",
+                                             tulosTekstiSv: String = "",
+                                             tulosTekstiEn: String = "",
+                                             omaopintopolku: Boolean = false
+                                        ) extends Lukuarvofunktio
 
   case class HaeAmmatillinenYtoArvosana(konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]],
                                         oletusarvo: Option[BigDecimal],
@@ -327,6 +338,22 @@ object Laskenta {
     extends HaeArvo[BigDecimal] with Lukuarvofunktio {
 
     override val iteraatioParametrinTyyppi: Option[Class[_ <: IteraatioParametri]] = Some(classOf[AmmatillisenPerustutkinnonValitsija])
+  }
+
+  case class HaeAmmatillisenTutkinnonOsanLaajuus(konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]],
+                                                 oletusarvo: Option[BigDecimal],
+                                                 oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false)
+    extends Lukuarvofunktio {
+
+    override val iteraatioParametrinTyyppi: Option[Class[_ <: IteraatioParametri]] = Some(classOf[AmmatillisenTutkinnonOsanValitsija])
+  }
+
+  case class HaeAmmatillisenTutkinnonOsanArvosana(konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]],
+                                                  oletusarvo: Option[BigDecimal],
+                                                  oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false)
+    extends Lukuarvofunktio {
+
+    override val iteraatioParametrinTyyppi: Option[Class[_ <: IteraatioParametri]] = Some(classOf[AmmatillisenTutkinnonOsanValitsija])
   }
 
   case class HaeMerkkijonoJaKonvertoiLukuarvoksi(konvertteri: Konvertteri[String, BigDecimal],
@@ -455,6 +482,8 @@ object Laskenta {
                                  fs: Seq[Tuple2[Lukuarvofunktio, Lukuarvofunktio]]
                                 ) extends Lukuarvofunktio with KloonattavaFunktio[BigDecimal, Tuple2[Lukuarvofunktio, Lukuarvofunktio], PainotettuKeskiarvo] {
     require(fs.nonEmpty, "Parametreja pitää olla vähintään yksi")
+
+    override val argumentit: Seq[(Lukuarvofunktio, Lukuarvofunktio)] = fs
 
     override def kloonaa(argumentit: Seq[(Lukuarvofunktio, Lukuarvofunktio)]): PainotettuKeskiarvo = {
       copy(fs = argumentit)

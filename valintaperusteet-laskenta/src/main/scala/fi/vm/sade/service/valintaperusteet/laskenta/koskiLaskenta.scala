@@ -25,6 +25,10 @@ object KoskiLaskenta {
     }
   }
 
+  def laskeAmmatillisenTutkinnonOsat(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija, hakemus: Hakemus): Int = {
+    2 // TODO implement
+  }
+
   def haeYtoArvosana(ammatillisenPerustutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
                      hakemus: Hakemus,
                      valintaperusteviite: Laskenta.Valintaperuste,
@@ -50,6 +54,22 @@ object KoskiLaskenta {
     } else {
       None
     }
+  }
+
+  def haeAmmatillisenTutkinnonOsanLaajuus(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
+                                          osanValitsija: AmmatillisenTutkinnonOsanValitsija,
+                                          hakemus: Hakemus,
+                                          oletusarvo: Option[BigDecimal]
+                                     ): Option[BigDecimal] = {
+    Some(BigDecimal(5.0)) // TODO implement
+  }
+
+  def haeAmmatillisenTutkinnonOsanArvosana(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
+                                           osanValitsija: AmmatillisenTutkinnonOsanValitsija,
+                                           hakemus: Hakemus,
+                                           oletusarvo: Option[BigDecimal]
+                                      ): Option[BigDecimal] = {
+    Some(BigDecimal(3.0))  // TODO implement
   }
 
   private def haeYtoArvosana(ammatillisenPerustutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,

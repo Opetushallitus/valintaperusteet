@@ -158,6 +158,10 @@ object Funktiokuvaaja {
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
       funktioargumentit = List(Funktioargumenttikuvaus("iteroitava koostefunktio", Funktiotyyppi.LUKUARVOFUNKTIO)),
     ),
+    Funktionimi.ITEROIAMMATILLISETOSA_ALUEET -> Funktiokuvaus(
+      tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
+      funktioargumentit = List(Funktioargumenttikuvaus("iteroitava funktio", Funktiotyyppi.LUKUARVOFUNKTIO)),
+    ),
     Funktionimi.HAEAMMATILLINENYTOARVOSANA -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
       valintaperusteparametri = List(Valintaperusteparametrikuvaus("tunniste", Syoteparametrityyppi.MERKKIJONO, kuvaus = "Tunniste")),
@@ -175,6 +179,22 @@ object Funktiokuvaaja {
         Konvertterikuvaus(
           pakollinen = true,
           konvertteriTyypit = Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.MERKKIJONO))
+        ))
+    ),
+    Funktionimi.HAEAMMATILLISENOSANLAAJUUS -> Funktiokuvaus(
+      tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
+      konvertteri = Some(
+        Konvertterikuvaus(
+          pakollinen = false,
+          konvertteriTyypit = Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.DESIMAALILUKU))
+        ))
+    ),
+    Funktionimi.HAEAMMATILLISENOSANARVOSANA -> Funktiokuvaus(
+      tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
+      konvertteri = Some(
+        Konvertterikuvaus(
+          pakollinen = false,
+          konvertteriTyypit = Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.DESIMAALILUKU))
         ))
     ),
     Funktionimi.HAELUKUARVO -> Funktiokuvaus(

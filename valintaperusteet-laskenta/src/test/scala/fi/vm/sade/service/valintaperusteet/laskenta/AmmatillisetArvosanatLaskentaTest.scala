@@ -67,6 +67,12 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
     assert(BigDecimal(tulos.get) == BigDecimal("2"))
   }
 
+  test("Tutkinnon osien arvosanat, kun on useampi tutkinto") {
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createLaskeAmmatillisenTutkinnonOsatKutsu())
+    val (tulos, _) = Laskin.laske(hakukohde, monenTutkinnonHakemus, lasku)
+    assert(BigDecimal(tulos.get) == BigDecimal("3.0"))
+  }
+
   test("Tutkinnon yhteisten tutkinnon osien arvoasteikko lukuarvona, kun on useampi tutkinto") {
     val lasku1 = Laskentadomainkonvertteri.muodostaLukuarvolasku(
       createAmmatillinenYtoArviointiAsteikkoKutsu("101054")
@@ -89,6 +95,30 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
     kutsu.getValintaperusteviitteet.add(viite)
 
     createAmmatillistenTutkintojenIteroija(kutsu)
+  }
+
+  def createLaskeAmmatillisenTutkinnonOsatKutsu(konvertteriparametrit: Set[Arvokonvertteriparametri] = Set()): Funktiokutsu = {
+    val juurikutsu: Funktiokutsu =  new Funktiokutsu
+    juurikutsu.setFunktionimi(Funktionimi.ITEROIAMMATILLISETOSA_ALUEET)
+
+    val keskiarvokutsu: Funktiokutsu = new Funktiokutsu
+    keskiarvokutsu.setFunktionimi(Funktionimi.PAINOTETTUKESKIARVO)
+
+    val laajuuskutsu: Funktiokutsu = new Funktiokutsu
+    laajuuskutsu.setFunktionimi(Funktionimi.HAEAMMATILLISENOSANLAAJUUS)
+    laajuuskutsu.setArvokonvertteriparametrit(konvertteriparametrit.asJava)
+
+    val arvosanakutsu: Funktiokutsu = new Funktiokutsu
+    arvosanakutsu.setFunktionimi(Funktionimi.HAEAMMATILLISENOSANARVOSANA)
+    arvosanakutsu.setArvokonvertteriparametrit(konvertteriparametrit.asJava)
+
+    juurikutsu.setFunktioargumentit(Collections.singleton(luoFunktioargumentti(keskiarvokutsu, 0)))
+    keskiarvokutsu.setFunktioargumentit(Set(
+      luoFunktioargumentti(laajuuskutsu, 0),
+      luoFunktioargumentti(arvosanakutsu, 1)
+    ).asJava)
+
+    createAmmatillistenTutkintojenIteroija(juurikutsu)
   }
 
   def createAmmatillinenYtoArviointiAsteikkoKutsu(parametri: String): Funktiokutsu = {
@@ -124,15 +154,16 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
     val maksimi: Funktiokutsu = new Funktiokutsu
     maksimi.setFunktionimi(Funktionimi.MAKSIMI)
 
-    val maksiminArgumentti = new Funktioargumentti
-    maksiminArgumentti.setIndeksi(0)
-    maksiminArgumentti.setFunktiokutsuChild(lapsi)
-    maksimi.setFunktioargumentit(Collections.singleton(maksiminArgumentti))
+    maksimi.setFunktioargumentit(Collections.singleton(luoFunktioargumentti(lapsi, 0)))
 
-    val juurenArgumentti = new Funktioargumentti
-    juurenArgumentti.setIndeksi(0)
-    juurenArgumentti.setFunktiokutsuChild(maksimi)
-    juurikutsu.setFunktioargumentit(Collections.singleton(juurenArgumentti))
+    juurikutsu.setFunktioargumentit(Collections.singleton(luoFunktioargumentti(maksimi, 0)))
     juurikutsu
+  }
+
+  private def luoFunktioargumentti(kutsu: Funktiokutsu, argumentinIndeksi: Int): Funktioargumentti = {
+    val a = new Funktioargumentti
+    a.setIndeksi(argumentinIndeksi)
+    a.setFunktiokutsuChild(kutsu)
+    a
   }
 }

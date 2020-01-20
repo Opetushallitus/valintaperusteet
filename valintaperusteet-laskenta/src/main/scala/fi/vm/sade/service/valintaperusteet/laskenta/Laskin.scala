@@ -16,6 +16,8 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Demografia
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Ei
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeAmmatillinenYtoArviointiAsteikko
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeAmmatillinenYtoArvosana
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeAmmatillisenTutkinnonOsanArvosana
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeAmmatillisenTutkinnonOsanLaajuus
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeLukuarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeLukuarvoEhdolla
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaKonvertoiLukuarvoksi
@@ -33,11 +35,13 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Hakutoive
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakutoiveRyhmassa
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Hylkaa
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HylkaaArvovalilla
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.IteroiAmmatillisetTutkinnonOsat
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.IteroiAmmatillisetTutkinnot
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Ja
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Jos
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Keskiarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.KeskiarvoNParasta
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.KloonattavaFunktio
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.KonvertoiLukuarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Konvertteri
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvo
@@ -711,15 +715,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
           val tuloksetLukuarvoina: Seq[Lukuarvo] = kierrostenTulokset.flatMap {
             case (parametri, Tulos(Some(lukuarvo), _, historia)) =>
               Laskin.LOG.info(s"Hakemuksen ${hakemus.oid} ${IteroiAmmatillisetTutkinnot.getClass.getSimpleName}-laskennan historia: ${LaskentaUtil.prettyPrint(historia)}")
-              val ammatillisenHistorianTiivistelma: Seq[String] = historia.
-                flatten.
-                filter { h: Historia =>
-                  Funktionimi.ammatillistenArvosanojenFunktionimet.asScala.map(_.name()).contains(h.funktio)
-                }.
-                map { h =>
-                  s"${h.funktio} = ${h.tulos.getOrElse("-")}; avaimet: ${h.avaimet.getOrElse(Map()).map(x => (x._1, x._2.getOrElse("-")))}"
-                }
-
+              val ammatillisenHistorianTiivistelma: scala.Seq[_root_.scala.Predef.String] = historianTiivistelma(historia)
 
               Some(Lukuarvo(lukuarvo, tulosTekstiFi = s"Arvo parametrilla '$parametri' == $lukuarvo, historia: $ammatillisenHistorianTiivistelma"))
             case (parametri, tulos) =>
@@ -749,21 +745,79 @@ private class Laskin private(private val hakukohde: Hakukohde,
           (tulos.tulos, tilalista, Historia("Iteroi ammatillisten perustutkintojen yli", tulos.tulos, tilalista, None, Some(avaimet)))
         }
 
+      case f@IteroiAmmatillisetTutkinnonOsat(lapsiF, _, _, _, _, _, _) if lapsiF.argumentit.isInstanceOf[Seq[(Lukuarvofunktio, Lukuarvofunktio)]] =>
+        val lapsiFunktio = lapsiF.asInstanceOf[KloonattavaFunktio[BigDecimal, (Lukuarvofunktio, Lukuarvofunktio), _]]
+        if (lapsiFunktio.argumentit.length != 1) {
+          throw new IllegalStateException(s"Odotettiin täsmälleen yhtä paria argumentiksi ${classOf[IteroiAmmatillisetTutkinnonOsat].getSimpleName}-funktion lapselle," +
+            s"mutta löytyi ${lapsiFunktio.argumentit.length} . Funktio == $f , Lapsifunktio == $lapsiFunktio")
+        }
+        val tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija = ammatillisenTutkinnonValitsija(iteraatioParametrit, f)
+
+        val tutkinnonOsanValitsija = iteraatioParametrit.get(classOf[AmmatillisenTutkinnonOsanValitsija])
+        if (tutkinnonOsanValitsija.exists(p => p.isInstanceOf[AmmatillisenTutkinnonOsanValitsija])) {
+          throw new IllegalStateException(s"Ei voi iteroida iteraatioparametrilla $tutkinnonOsanValitsija uudestaan ammatillisen tutkinnon osien yli")
+        } else {
+          val osienMaara = KoskiLaskenta.laskeAmmatillisenTutkinnonOsat(tutkinnonValitsija, hakemus)
+          Laskin.LOG.info(s"Hakemuksen ${hakemus.oid} hakijan tutkinnolle ${tutkinnonValitsija} löytyi ${osienMaara} ammatillista perustutkinnon osaa.")
+
+          val uudetParametrit: Seq[AmmatillisenTutkinnonOsanValitsija] = AmmatillisenTutkinnonOsat(osienMaara).parametreiksi
+
+          val kierrostenTulokset: Seq[(AmmatillisenTutkinnonOsanValitsija, (Tulos[BigDecimal], Tulos[BigDecimal]))] = uudetParametrit.
+            map(parametri => {
+              val parametritLapsille = iteraatioParametrit ++ Map(classOf[AmmatillisenTutkinnonOsanValitsija] -> parametri)
+              val tulos1 = laskeLukuarvo(lapsiFunktio.argumentit.head._1, parametritLapsille)
+              val tulos2 = laskeLukuarvo(lapsiFunktio.argumentit.head._2, parametritLapsille)
+
+              (parametri, (tulos1, tulos2))
+            })
+          val tuloksetLukuarvoina: Seq[(Lukuarvo, Lukuarvo)] = kierrostenTulokset.flatMap {
+            case (parametri, (Tulos(Some(lukuarvo1), _, historia1), Tulos(Some(lukuarvo2), _, historia2))) =>
+              Laskin.LOG.info(s"Hakemuksen ${hakemus.oid} ${IteroiAmmatillisetTutkinnonOsat.getClass.getSimpleName}-laskennan historia1: ${LaskentaUtil.prettyPrint(historia1)}")
+              Laskin.LOG.info(s"Hakemuksen ${hakemus.oid} ${IteroiAmmatillisetTutkinnonOsat.getClass.getSimpleName}-laskennan historia2: ${LaskentaUtil.prettyPrint(historia2)}")
+
+              Some(
+                Lukuarvo(lukuarvo1, tulosTekstiFi = s"Arvo 1 parametrilla '$parametri' == $lukuarvo1, historia: ${historianTiivistelma(historia1)}"),
+                Lukuarvo(lukuarvo2, tulosTekstiFi = s"Arvo 2 parametrilla '$parametri' == $lukuarvo2, historia: ${historianTiivistelma(historia2)}"),
+              )
+            case (parametri, tulokset) =>
+              Laskin.LOG.debug(s"Tyhjiä tuloksia joukossa $tulokset funktiosta $lapsiFunktio parametrilla $parametri")
+              None
+          }
+
+          val tulos: Tulos[BigDecimal] = if (tuloksetLukuarvoina.nonEmpty) {
+            try {
+              val iteroidutTuloksetKasittelevaKlooni = lapsiFunktio.kloonaa(tuloksetLukuarvoina).asInstanceOf[Lukuarvofunktio]
+              laskeLukuarvo(iteroidutTuloksetKasittelevaKlooni, Map())
+            } catch {
+              case e: ClassCastException => {
+                Laskin.LOG.error(s"${classOf[IteroiAmmatillisetTutkinnot].getSimpleName} -funktion funktioargumenttina tulee olla " +
+                  s"kloonattava funktio, kuten maksimi, mutta oli $lapsiFunktio", e)
+                throw e
+              }
+            }
+          } else {
+            Tulos(None, new Hyvaksyttavissatila, Historia("Ei löytynyt tietoja ammatillisista tutkinnoista", None, Nil, None, None))
+          }
+
+          val tilalista = List(tulos.tila)
+          val avaimet = Map(
+            "ammatillisen perustutkinnon osien määrä" -> Some(osienMaara),
+            "ammatillisen perustutkinnon osien pisteet" -> Some(tuloksetLukuarvoina.map(l => s"${l._1.tulosTekstiFi} = ${l._1.d};${l._2.tulosTekstiFi} = ${l._2.d}")))
+          (tulos.tulos, tilalista, Historia("Iteroi ammatillisen perustutkinnon osien yli", tulos.tulos, tilalista, None, Some(avaimet)))
+        }
+
+      case f@IteroiAmmatillisetTutkinnonOsat(lapsiFunktio, _, _, _, _, _, _) =>
+        val virheilmoitus = s"${classOf[IteroiAmmatillisetTutkinnonOsat].getSimpleName} -funktion $f funktioargumentin $lapsiFunktio ottaman argumentin tyyppi on " +
+          s"${lapsiFunktio.argumentit.getClass} , jolle ei ole toteutettu käsittelyä"
+        Laskin.LOG.error(virheilmoitus)
+        throw new UnsupportedOperationException(virheilmoitus)
+
       case f@HaeAmmatillinenYtoArvosana(konvertteri, oletusarvo, valintaperusteviite, _, _,_,_,_,_) =>
         val tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija = ammatillisenTutkinnonValitsija(iteraatioParametrit, f)
         val arvosanaKoskessa: Option[BigDecimal] = KoskiLaskenta.haeYtoArvosana(tutkinnonValitsija, hakemus, valintaperusteviite, oletusarvo)
 
-        val (konv, tilatKonvertterinHausta) = konvertteri match {
-          case Some(l: Lukuarvovalikonvertteri) => konversioToLukuarvovalikonversio(l.konversioMap, hakemus.kentat, hakukohde)
-          case Some(a: Arvokonvertteri[_,_]) => konversioToArvokonversio[BigDecimal, BigDecimal](a.konversioMap, hakemus.kentat, hakukohde)
-          case _ => (konvertteri, List())
-        }
+        val (tulos, tilalista) = konvertoi(konvertteri, arvosanaKoskessa)
 
-        val (tulos, tilaKonvertoinnista): (Option[BigDecimal], Tila) = (for {
-          k <- konv
-          arvosana <- arvosanaKoskessa
-        } yield k.konvertoi(arvosana)).getOrElse((arvosanaKoskessa, new Hyvaksyttavissatila))
-        val tilalista: List[Tila] = tilaKonvertoinnista :: tilatKonvertterinHausta
         val uusiHistoria = Historia(
           HAEAMMATILLINENYTOARVOSANA.name(),
           tulos,
@@ -799,6 +853,42 @@ private class Laskin private(private val hakukohde: Hakukohde,
             "oletusarvo" -> oletusarvo,
             "yto-koodiarvo" -> Some(valintaperusteviite.tunniste),
             "asteikon koodi" -> asteikonKoodiKoskessa
+          )))
+        (tulos, tilalista, uusiHistoria)
+
+      case f@HaeAmmatillisenTutkinnonOsanLaajuus(konvertteri, oletusarvo, _, _,_,_,_,_) =>
+        val tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija = ammatillisenTutkinnonValitsija(iteraatioParametrit, f)
+        val tutkinnonOsanValitsija: AmmatillisenTutkinnonOsanValitsija = ammatillisenTutkinnonOsanValitsija(iteraatioParametrit, f)
+        val laajuusKoskessa: Option[BigDecimal] = KoskiLaskenta.haeAmmatillisenTutkinnonOsanLaajuus(tutkinnonValitsija, tutkinnonOsanValitsija, hakemus, oletusarvo)
+
+        val (tulos: Option[BigDecimal], tilalista: List[Tila]) = konvertoi(konvertteri, laajuusKoskessa)
+
+        val uusiHistoria = Historia(
+          Funktionimi.HAEAMMATILLISENOSANLAAJUUS.name(),
+          tulos,
+          tilalista,
+          None,
+          Some(Map(
+            "oletusarvo" -> oletusarvo,
+            "lähdearvo" -> laajuusKoskessa
+          )))
+        (tulos, tilalista, uusiHistoria)
+
+      case f@HaeAmmatillisenTutkinnonOsanArvosana(konvertteri, oletusarvo, _, _,_,_,_,_) =>
+        val tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija = ammatillisenTutkinnonValitsija(iteraatioParametrit, f)
+        val tutkinnonOsanValitsija: AmmatillisenTutkinnonOsanValitsija = ammatillisenTutkinnonOsanValitsija(iteraatioParametrit, f)
+        val arvosanaKoskessa: Option[BigDecimal] = KoskiLaskenta.haeAmmatillisenTutkinnonOsanArvosana(tutkinnonValitsija, tutkinnonOsanValitsija, hakemus, oletusarvo)
+
+        val (tulos: Option[BigDecimal], tilalista: List[Tila]) = konvertoi(konvertteri, arvosanaKoskessa)
+
+        val uusiHistoria = Historia(
+          Funktionimi.HAEAMMATILLISENOSANARVOSANA.name(),
+          tulos,
+          tilalista,
+          None,
+          Some(Map(
+            "oletusarvo" -> oletusarvo,
+            "lähdearvo" -> arvosanaKoskessa
           )))
         (tulos, tilalista, uusiHistoria)
 
@@ -977,13 +1067,52 @@ private class Laskin private(private val hakukohde: Hakukohde,
     Tulos(laskettuTulos, palautettavaTila(tilat), historia)
   }
 
+  private def konvertoi(konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]], arvoKoskessa: Option[BigDecimal]): (Option[BigDecimal], List[Tila]) = {
+    val (konv, tilatKonvertterinHausta) = konvertteri match {
+      case Some(l: Lukuarvovalikonvertteri) => konversioToLukuarvovalikonversio(l.konversioMap, hakemus.kentat, hakukohde)
+      case Some(a: Arvokonvertteri[_, _]) => konversioToArvokonversio[BigDecimal, BigDecimal](a.konversioMap, hakemus.kentat, hakukohde)
+      case _ => (konvertteri, List())
+    }
+
+    val (tulos, tilaKonvertoinnista): (Option[BigDecimal], Tila) = (for {
+      k <- konv
+      arvosana <- arvoKoskessa
+    } yield k.konvertoi(arvosana)).getOrElse((arvoKoskessa, new Hyvaksyttavissatila))
+    val tilalista: List[Tila] = tilaKonvertoinnista :: tilatKonvertterinHausta
+    (tulos, tilalista)
+  }
+
+  private def historianTiivistelma(historia: Historia): Seq[String] = {
+    val ammatillisenHistorianTiivistelma: Seq[String] = historia.
+      flatten.
+      filter { h: Historia =>
+        Funktionimi.ammatillistenArvosanojenFunktionimet.asScala.map(_.name()).contains(h.funktio)
+      }.
+      map { h =>
+        s"${h.funktio} = ${h.tulos.getOrElse("-")}; avaimet: ${h.avaimet.getOrElse(Map()).map(x => (x._1, x._2.getOrElse("-")))}"
+      }
+    ammatillisenHistorianTiivistelma
+  }
+
   private def ammatillisenTutkinnonValitsija(iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri], f: Funktio[_]): AmmatillisenPerustutkinnonValitsija = {
-    val iteraatioParametri = iteraatioParametrit.get(classOf[AmmatillisenPerustutkinnonValitsija])
+    haeIteraatioParametri(iteraatioParametrit, f, classOf[AmmatillisenPerustutkinnonValitsija], classOf[IteroiAmmatillisetTutkinnot])
+  }
+
+  private def ammatillisenTutkinnonOsanValitsija(iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri], f: Funktio[_]): AmmatillisenTutkinnonOsanValitsija = {
+    haeIteraatioParametri(iteraatioParametrit, f, classOf[AmmatillisenTutkinnonOsanValitsija], classOf[IteroiAmmatillisetTutkinnonOsat])
+  }
+
+  private def haeIteraatioParametri[T <: IteraatioParametri](iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri],
+                                                             f: Funktio[_],
+                                                             parametrinTyppi: Class[T],
+                                                             iterointifunktionTyyppi: Class[_ <: Funktio[_]]
+                                                            ): T = {
+    val iteraatioParametri = iteraatioParametrit.get(parametrinTyppi)
     iteraatioParametri match {
-      case Some(p: AmmatillisenPerustutkinnonValitsija) => p
-      case Some(x) => throw new IllegalArgumentException(s"Vääräntyyppinen iteraatioparametri $x ; piti olla ${classOf[AmmatillisenPerustutkinnonValitsija]}")
-      case None => throw new IllegalArgumentException(s"Ammatillisen perustutkinnon valitsija puuttuu. " +
-        s"Onhan funktiokutsun $f yläpuolella puussa ${classOf[IteroiAmmatillisetTutkinnot].getSimpleName} -kutsu?")
+      case Some(p) if p.getClass == parametrinTyppi => p.asInstanceOf[T]
+      case Some(x) => throw new IllegalArgumentException(s"Vääräntyyppinen iteraatioparametri $x ; piti olla $parametrinTyppi")
+      case None => throw new IllegalArgumentException(s"${parametrinTyppi.getName} puuttuu. " +
+        s"Onhan funktiokutsun $f yläpuolella puussa $iterointifunktionTyyppi -kutsu?")
     }
   }
 }

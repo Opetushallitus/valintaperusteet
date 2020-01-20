@@ -11,6 +11,8 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Demografia
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Ei
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeAmmatillinenYtoArviointiAsteikko
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeAmmatillinenYtoArvosana
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeAmmatillisenTutkinnonOsanArvosana
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeAmmatillisenTutkinnonOsanLaajuus
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeLukuarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeLukuarvoEhdolla
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaKonvertoiLukuarvoksi
@@ -26,6 +28,7 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Hakutoive
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakutoiveRyhmassa
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Hylkaa
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HylkaaArvovalilla
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.IteroiAmmatillisetTutkinnonOsat
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.IteroiAmmatillisetTutkinnot
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Ja
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Jos
@@ -540,6 +543,12 @@ object Laskentadomainkonvertteri {
 
         IteroiAmmatillisetTutkinnot(koostavaLapsi, oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
 
+      case Funktionimi.ITEROIAMMATILLISETOSA_ALUEET =>
+        val koostavaLapsi: Lukuarvofunktio with KloonattavaFunktio[BigDecimal, _, Funktio[BigDecimal]] =
+          lasketutArgumentit.head.asInstanceOf[Lukuarvofunktio with KloonattavaFunktio[BigDecimal, _, Funktio[BigDecimal]]]
+
+        IteroiAmmatillisetTutkinnonOsat(koostavaLapsi, oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
+
       case Funktionimi.HAEAMMATILLINENYTOARVOSANA => {
         val konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]] = luoLukuarvokovertteri(arvokonvertteriparametrit, arvovalikonvertteriparametrit)
         val arvosana = HaeAmmatillinenYtoArvosana(
@@ -562,6 +571,26 @@ object Laskentadomainkonvertteri {
           omaopintopolku = omaopintopolku)
 
         NimettyLukuarvo("Ammatillisen yto:n arviointiasteikko", funktio, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku = omaopintopolku)
+      }
+
+      case Funktionimi.HAEAMMATILLISENOSANLAAJUUS => {
+        val konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]] = luoLukuarvokovertteri(arvokonvertteriparametrit, arvovalikonvertteriparametrit)
+        val arvosana = HaeAmmatillisenTutkinnonOsanLaajuus(
+          konvertteri,
+          Some(BigDecimal("0.0")),
+          omaopintopolku = omaopintopolku)
+
+        NimettyLukuarvo("Ammatillisen tutkinnon osan laajuus", arvosana, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku = omaopintopolku)
+      }
+
+      case Funktionimi.HAEAMMATILLISENOSANARVOSANA => {
+        val konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]] = luoLukuarvokovertteri(arvokonvertteriparametrit, arvovalikonvertteriparametrit)
+        val arvosana = HaeAmmatillisenTutkinnonOsanArvosana(
+          konvertteri,
+          Some(BigDecimal("0.0")),
+          omaopintopolku = omaopintopolku)
+
+        NimettyLukuarvo("Ammatillisen tutkinnon osan arvosana", arvosana, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku = omaopintopolku)
       }
 
       case _ => sys.error(s"Could not calculate funktio ${funktionimi.name()}")
