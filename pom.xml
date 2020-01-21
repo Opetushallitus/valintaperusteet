@@ -4,7 +4,7 @@
 
     <groupId>fi.vm.sade.valintaperusteet</groupId>
     <artifactId>valintaperusteet</artifactId>
-    <version>5.8-SNAPSHOT</version>
+    <version>5.9-SNAPSHOT</version>
 
     <name>Valintaperusteet</name>
     <packaging>pom</packaging>
