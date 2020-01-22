@@ -41,23 +41,7 @@ object KoskiLaskenta {
   }
 
   def laskeAmmatillisenTutkinnonOsat(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija, hakemus: Hakemus): Int = {
-    if (hakemus.koskiOpiskeluoikeudet == null) {
-      0
-    } else {
-      val oikeaOpiskeluoikeus: Json = etsiValmiitTutkinnot(
-        hakemus.koskiOpiskeluoikeudet,
-        ammatillisenHuomioitavaOpiskeluoikeudenTyyppi,
-        ammatillisenSuorituksenTyyppi)(tutkinnonValitsija.tutkinnonIndeksi)
-
-      val suorituksenSallitutKoodit: Set[Int] = ammatillisenHhuomioitavatKoulutustyypit.map(_.koodiarvo)
-      val suoritukset = etsiValiditSuoritukset(oikeaOpiskeluoikeus, sulkeutumisPaivamaara, suorituksenSallitutKoodit)
-
-      val osasuoritusPredikaatti: Json => Boolean = osasuoritus => {
-        "ammatillisentutkinnonosa" == _osasuorituksenTyypinKoodiarvo.getOption(osasuoritus).orNull
-      }
-
-      suoritukset.flatMap(etsiOsasuoritukset(_, sulkeutumisPaivamaara, osasuoritusPredikaatti)).size
-    }
+    haeAmmatillisenTutkinnonOsat(tutkinnonValitsija, hakemus).size
   }
 
   def haeYtoArvosana(ammatillisenPerustutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
@@ -101,6 +85,26 @@ object KoskiLaskenta {
                                            oletusarvo: Option[BigDecimal]
                                       ): Option[BigDecimal] = {
     Some(BigDecimal(3.0))  // TODO implement
+  }
+
+  private def haeAmmatillisenTutkinnonOsat(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija, hakemus: Hakemus): List[(String, String, Option[Int], String, Option[BigDecimal])] = {
+    if (hakemus.koskiOpiskeluoikeudet == null) {
+      Nil
+    } else {
+      val oikeaOpiskeluoikeus: Json = etsiValmiitTutkinnot(
+        hakemus.koskiOpiskeluoikeudet,
+        ammatillisenHuomioitavaOpiskeluoikeudenTyyppi,
+        ammatillisenSuorituksenTyyppi)(tutkinnonValitsija.tutkinnonIndeksi)
+
+      val suorituksenSallitutKoodit: Set[Int] = ammatillisenHhuomioitavatKoulutustyypit.map(_.koodiarvo)
+      val suoritukset = etsiValiditSuoritukset(oikeaOpiskeluoikeus, sulkeutumisPaivamaara, suorituksenSallitutKoodit)
+
+      val osasuoritusPredikaatti: Json => Boolean = osasuoritus => {
+        "ammatillisentutkinnonosa" == _osasuorituksenTyypinKoodiarvo.getOption(osasuoritus).orNull
+      }
+
+      suoritukset.flatMap(etsiOsasuoritukset(_, sulkeutumisPaivamaara, osasuoritusPredikaatti))
+    }
   }
 
   private def haeYtoArvosana(ammatillisenPerustutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
