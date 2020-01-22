@@ -17,6 +17,21 @@ object KoskiLaskenta {
   val ammatillisenHhuomioitavatKoulutustyypit: Set[AmmatillisenPerustutkinnonKoulutustyyppi] =
     Set(AmmatillinenPerustutkinto, AmmatillinenReforminMukainenPerustutkinto, AmmatillinenPerustutkintoErityisopetuksena)
 
+  // Suoritusten alla olevien osasuoritusten tietoja etsivä linssi
+  private val _osasuoritukset = JsonPath.root.osasuoritukset.each.json
+
+  // Osasuorituksen rakennetta purkavat linssit
+  private val _osasuorituksenArviointi = JsonPath.root.arviointi.each.json
+  private val _osasuorituksenTyypinKoodiarvo = JsonPath.root.tyyppi.koodiarvo.string
+  private val _osasuorituksenKoulutusmoduuli = JsonPath.root.koulutusmoduuli
+  private val _osasuorituksenKoulutusmoduulinLaajuudenArvo = _osasuorituksenKoulutusmoduuli.laajuus.arvo.bigDecimal
+  private val _osasuorituksenKoulutusmoduulinTunnisteenKoodiarvo = _osasuorituksenKoulutusmoduuli.tunniste.koodiarvo.string
+  private val _osasuorituksenKoulutusmoduulinNimiFi = _osasuorituksenKoulutusmoduuli.tunniste.nimi.fi.string
+
+  private def sulkeutumisPaivamaara: DateTime = {
+    DateTime.now()  // TODO: Tee konfiguroitavaksi
+  }
+
   def laskeAmmatillisetTutkinnot(hakemus: Hakemus): Int = {
     if (hakemus.koskiOpiskeluoikeudet == null) {
       0
@@ -26,7 +41,23 @@ object KoskiLaskenta {
   }
 
   def laskeAmmatillisenTutkinnonOsat(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija, hakemus: Hakemus): Int = {
-    2 // TODO implement
+    if (hakemus.koskiOpiskeluoikeudet == null) {
+      0
+    } else {
+      val oikeaOpiskeluoikeus: Json = etsiValmiitTutkinnot(
+        hakemus.koskiOpiskeluoikeudet,
+        ammatillisenHuomioitavaOpiskeluoikeudenTyyppi,
+        ammatillisenSuorituksenTyyppi)(tutkinnonValitsija.tutkinnonIndeksi)
+
+      val suorituksenSallitutKoodit: Set[Int] = ammatillisenHhuomioitavatKoulutustyypit.map(_.koodiarvo)
+      val suoritukset = etsiValiditSuoritukset(oikeaOpiskeluoikeus, sulkeutumisPaivamaara, suorituksenSallitutKoodit)
+
+      val osasuoritusPredikaatti: Json => Boolean = osasuoritus => {
+        "ammatillisentutkinnonosa" == _osasuorituksenTyypinKoodiarvo.getOption(osasuoritus).orNull
+      }
+
+      suoritukset.flatMap(etsiOsasuoritukset(_, sulkeutumisPaivamaara, osasuoritusPredikaatti)).size
+    }
   }
 
   def haeYtoArvosana(ammatillisenPerustutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
@@ -103,11 +134,8 @@ object KoskiLaskenta {
 
   private def haeAmmatillisenSuorituksenTiedot(hakemusOid: String, opiskeluoikeudet: Json, ytoKoodiArvo: String): Seq[(String, String, Option[Int], String)] = {
     try {
-      val sulkeutumisPaivamaara: DateTime = DateTime.now()
-      val suorituksenSallitutKoodit: Set[Int] = ammatillisenHhuomioitavatKoulutustyypit.map(_.koodiarvo)
-
-      val yhteistenTutkinnonOsienArvosanat = etsiValmiitTutkinnot(opiskeluoikeudet, ammatillisenHuomioitavaOpiskeluoikeudenTyyppi, ammatillisenSuorituksenTyyppi)
-        .flatMap(tutkinto => etsiValiditSuoritukset(tutkinto, sulkeutumisPaivamaara, suorituksenSallitutKoodit))
+      val suoritukset = etsiAmmatillistenTutkintojenSuoritukset(opiskeluoikeudet)
+      val yhteistenTutkinnonOsienArvosanat = suoritukset
         .flatMap(suoritus => etsiYhteisetTutkinnonOsat(suoritus, sulkeutumisPaivamaara, Set(ytoKoodiArvo)))
 
       if (yhteistenTutkinnonOsienArvosanat.size > 1) {
@@ -127,42 +155,49 @@ object KoskiLaskenta {
     }
   }
 
+  private def etsiAmmatillistenTutkintojenSuoritukset(opiskeluoikeudet: Json): Seq[Json] = {
+    val suorituksenSallitutKoodit: Set[Int] = ammatillisenHhuomioitavatKoulutustyypit.map(_.koodiarvo)
+
+    etsiValmiitTutkinnot(opiskeluoikeudet, ammatillisenHuomioitavaOpiskeluoikeudenTyyppi, ammatillisenSuorituksenTyyppi)
+      .flatMap(tutkinto => etsiValiditSuoritukset(tutkinto, sulkeutumisPaivamaara, suorituksenSallitutKoodit))
+  }
+
   private def etsiYhteisetTutkinnonOsat(suoritus: Json, sulkeutumisPäivämäärä: DateTime, osasuorituksenSallitutKoodit: Set[String]): List[(String, String, Option[Int], String)] = {
-    // Suoritusten alla olevien osasuoritusten tietoja etsivä linssi
-    val _osasuoritukset = JsonPath.root.osasuoritukset.each.json
+    etsiOsasuoritukset(suoritus, sulkeutumisPäivämäärä, osasuoritus => {
+      osasuorituksenSallitutKoodit.contains(_osasuorituksenKoulutusmoduulinTunnisteenKoodiarvo.getOption(osasuoritus).orNull)
+    }).map(x => (x._1, x._2, x._3, x._4))
+  }
 
-    // Osasuorituksen rakennetta purkavat linssit
-    val _osasuorituksenKoulutusmoduuli = JsonPath.root.koulutusmoduuli
-    val _osasuorituksenKoodiarvo = _osasuorituksenKoulutusmoduuli.tunniste.koodiarvo.string
-    val _osasuorituksenNimiFi = _osasuorituksenKoulutusmoduuli.tunniste.nimi.fi.string
+  private def etsiOsasuoritukset(suoritus: Json,
+                                 sulkeutumisPäivämäärä: DateTime,
+                                 osasuoritusPredikaatti: Json => Boolean,
+                                ): List[(String, String, Option[Int], String, Option[BigDecimal])] = {
+    _osasuoritukset.getAll(suoritus).filter(osasuoritusPredikaatti).map(osasuoritus => {
+      val osasuorituksenKoodiarvo = _osasuorituksenKoulutusmoduulinTunnisteenKoodiarvo.getOption(osasuoritus).orNull
+      val osasuorituksenNimiFi = _osasuorituksenKoulutusmoduulinNimiFi.getOption(osasuoritus).orNull
+      val (uusinHyvaksyttyArvio: String, uusinLaajuus: BigDecimal, uusinArviointiAsteikko: String) = etsiUusinArvosanaLaajuusJaArviointiAsteikko(osasuoritus)
 
-    _osasuoritukset.getAll(suoritus).filter(osasuoritus => {
-      osasuorituksenSallitutKoodit.contains(_osasuorituksenKoodiarvo.getOption(osasuoritus).orNull)
-    }).map(osasuoritus => {
-      val osasuorituksenKoodiarvo = _osasuorituksenKoodiarvo.getOption(osasuoritus).orNull
-      val osasuorituksenNimiFi = _osasuorituksenNimiFi.getOption(osasuoritus).orNull
-      val (osasuorituksenUusinHyväksyttyArvio: String, osasuorituksenUusinArviointiAsteikko: String) = etsiUusinArvosanaJaArviointiAsteikko(osasuoritus)
-
-      LOG.debug("Osasuorituksen arvio: %s".format(osasuorituksenUusinHyväksyttyArvio))
+      LOG.debug("Osasuorituksen arvio: %s".format(uusinHyvaksyttyArvio))
+      LOG.debug("Osasuorituksen laajuus: %s".format(uusinLaajuus))
       LOG.debug("Osasuorituksen nimi: %s".format(osasuorituksenNimiFi))
       LOG.debug("Osasuorituksen koodiarvo: %s".format(osasuorituksenKoodiarvo))
 
-      (osasuorituksenKoodiarvo, osasuorituksenNimiFi, osasuorituksenUusinHyväksyttyArvio.toIntOption, osasuorituksenUusinArviointiAsteikko)
+      (osasuorituksenKoodiarvo, osasuorituksenNimiFi, uusinHyvaksyttyArvio.toIntOption, uusinArviointiAsteikko, Option(uusinLaajuus))
     })
   }
 
-  private def etsiUusinArvosanaJaArviointiAsteikko(osasuoritus: Json) = {
-    val _osasuorituksenArviointi = JsonPath.root.arviointi.each.json
-    val (_, osasuorituksenUusinHyväksyttyArvio, osasuorituksenUusinArviointiAsteikko): (String, String, String) =
+  private def etsiUusinArvosanaLaajuusJaArviointiAsteikko(osasuoritus: Json): (String, BigDecimal, String) = {
+    val (_, uusinHyvaksyttyArvio, uusinLaajuus, uusinArviointiAsteikko): (String, String, BigDecimal, String) =
       _osasuorituksenArviointi.getAll(osasuoritus)
         .filter(arvio => JsonPath.root.hyväksytty.boolean.getOption(arvio).getOrElse(false))
         .map(arvio => (
           JsonPath.root.päivä.string.getOption(arvio).orNull,
           JsonPath.root.arvosana.koodiarvo.string.getOption(arvio).orNull,
+          _osasuorituksenKoulutusmoduulinLaajuudenArvo.getOption(osasuoritus).orNull, // TODO lisää laajuuden yksikkö / estä muut kuin osp
           JsonPath.root.arvosana.koodistoUri.string.getOption(arvio).orNull
-        )).sorted(Ordering.Tuple3(Ordering.String.reverse, Ordering.String, Ordering.String))
+        )).sorted(Ordering.Tuple4(Ordering.String.reverse, Ordering.String, Ordering.BigDecimal, Ordering.String))
         .head
-    (osasuorituksenUusinHyväksyttyArvio, osasuorituksenUusinArviointiAsteikko)
+    (uusinHyvaksyttyArvio, uusinLaajuus, uusinArviointiAsteikko)
   }
 
   private def etsiValiditSuoritukset(tutkinto: Json, sulkeutumisPäivämäärä: DateTime, suorituksenSallitutKoodit: Set[Int]): List[Json] = {
