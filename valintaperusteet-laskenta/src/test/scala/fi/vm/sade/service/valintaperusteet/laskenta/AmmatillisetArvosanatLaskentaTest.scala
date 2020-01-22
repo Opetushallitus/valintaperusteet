@@ -70,7 +70,7 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
   test("Tutkinnon osien arvosanat, kun on useampi tutkinto") {
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createLaskeAmmatillisenTutkinnonOsatKutsu())
     val (tulos, _) = Laskin.laske(hakukohde, monenTutkinnonHakemus, lasku)
-    assert(BigDecimal(tulos.get) == BigDecimal("3.0"))
+    assert(BigDecimal(tulos.get) == BigDecimal("3.7027"))
   }
 
   test("Tutkinnon yhteisten tutkinnon osien arvoasteikko lukuarvona, kun on useampi tutkinto") {

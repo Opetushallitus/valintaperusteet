@@ -85,7 +85,8 @@ object KoskiLaskenta {
                                            hakemus: Hakemus,
                                            oletusarvo: Option[BigDecimal]
                                       ): Option[BigDecimal] = {
-    Some(BigDecimal(3.0))  // TODO implement
+    val osa: (String, String, Option[Int], String, Option[BigDecimal]) = haeAmmatillisenTutkinnonOsat(tutkinnonValitsija, hakemus)(osanValitsija.osanIndeksi)
+    osa._3.map(BigDecimal(_)).orElse(oletusarvo)
   }
 
   private def haeAmmatillisenTutkinnonOsat(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija, hakemus: Hakemus): List[(String, String, Option[Int], String, Option[BigDecimal])] = {
