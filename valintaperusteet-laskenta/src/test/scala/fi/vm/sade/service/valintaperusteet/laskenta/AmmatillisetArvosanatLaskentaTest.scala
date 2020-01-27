@@ -67,8 +67,8 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
     assert(BigDecimal(tulos.get) == BigDecimal("2"))
   }
 
-  test("Tutkinnon osien arvosanat, kun on useampi tutkinto") {
-    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createLaskeAmmatillisenTutkinnonOsatKutsu())
+  test("Tutkinnon osien laskettu keskiarvo, kun on useampi tutkinto") {
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createLaskeAmmatillisenTutkinnonOsienKeskiarvoKutsu())
     val (tulos, _) = Laskin.laske(hakukohde, monenTutkinnonHakemus, lasku)
     assert(BigDecimal(tulos.get) == BigDecimal("3.7027"))
   }
@@ -97,7 +97,7 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
     createAmmatillistenTutkintojenIteroija(kutsu)
   }
 
-  def createLaskeAmmatillisenTutkinnonOsatKutsu(konvertteriparametrit: Set[Arvokonvertteriparametri] = Set()): Funktiokutsu = {
+  def createLaskeAmmatillisenTutkinnonOsienKeskiarvoKutsu(konvertteriparametrit: Set[Arvokonvertteriparametri] = Set()): Funktiokutsu = {
     val juurikutsu: Funktiokutsu =  new Funktiokutsu
     juurikutsu.setFunktionimi(Funktionimi.ITEROIAMMATILLISETOSA_ALUEET)
 
