@@ -1,6 +1,9 @@
+
 package fi.vm.sade.service.valintaperusteet.laskenta
 
-import java.util
+import java.util.{List => JList}
+import java.util.{Map => JMap}
+import java.util.{HashMap => JHashMap}
 import java.util.Collections
 
 import fi.vm.sade.kaava.LaskentaTestUtil.TestHakemus
@@ -21,21 +24,13 @@ import scala.jdk.CollectionConverters._
 
 class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
 
-  def loadJson(path: String): Json = {
-    val jsonFile: String = Source.fromResource(path).getLines.reduce(_ + _)
-    parser.parse(jsonFile).getOrElse(Json.Null)
-  }
+  private val hakukohde: Hakukohde = new Hakukohde("123", new JHashMap[String, String])
 
-  val hakukohde = new Hakukohde("123", new util.HashMap[String, String])
+  private val suoritukset: JHashMap[String, JList[JMap[String, String]]] = new JHashMap[String, JList[JMap[String, String]]]
 
-  val suoritukset = new util.HashMap[String, util.List[util.Map[String, String]]]
-
-  val koskiopiskeluoikeudet: Json = loadJson("koski-opiskeluoikeudet.json")
-  val koskiopiskeluoikeudetMontaTutkintoa: Json = loadJson("koski-monitutkinto.json")
-
-  val hakemus = TestHakemus("", Nil, Map(), suoritukset, koskiopiskeluoikeudet)
-  val monenTutkinnonHakemus = TestHakemus("", Nil, Map(), suoritukset, koskiopiskeluoikeudetMontaTutkintoa)
-  val reforminMukainenHakemus = TestHakemus("", Nil, Map(), suoritukset, loadJson("koski-reforminmukainen-keskiarvon_kanssa.json"))
+  private val hakemus = TestHakemus("", Nil, Map(), suoritukset, loadJson("koski-opiskeluoikeudet.json"))
+  private val monenTutkinnonHakemus = TestHakemus("", Nil, Map(), suoritukset, loadJson("koski-monitutkinto.json"))
+  private val reforminMukainenHakemus = TestHakemus("", Nil, Map(), suoritukset, loadJson("koski-reforminmukainen-keskiarvon_kanssa.json"))
 
   test("Tutkinnon yhteisten tutkinnon osien arvosanat") {
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeAmmatillinenYtoArvosanaKutsu())
@@ -172,5 +167,10 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
     a.setIndeksi(argumentinIndeksi)
     a.setFunktiokutsuChild(kutsu)
     a
+  }
+
+  private def loadJson(path: String): Json = {
+    val jsonFile: String = Source.fromResource(path).getLines.reduce(_ + _)
+    parser.parse(jsonFile).getOrElse(Json.Null)
   }
 }
