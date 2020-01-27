@@ -274,20 +274,23 @@ object KoskiLaskenta {
     val _opiskeluoikeudenTyyppi = JsonPath.root.tyyppi.koodiarvo.string
     val _valmistumisTila = JsonPath.root.tila.opiskeluoikeusjaksot.each.tila.koodiarvo.string
     val _suorituksenTyyppi = JsonPath.root.suoritukset.each.tyyppi.koodiarvo.string
-    val _suoritusTapa = JsonPath.root.suoritukset.each.suoritustapa.koodiarvo.string
+    val _suoritustavanKoodiarvo = JsonPath.root.suoritukset.each.suoritustapa.koodiarvo.string
+    val _suoritustavanKoodistoUri = JsonPath.root.suoritukset.each.suoritustapa.koodistoUri.string
 
     _opiskeluoikeudet.getAll(json).filter(opiskeluoikeus => {
       val opiskeluoikeudenTyyppi = _opiskeluoikeudenTyyppi.getOption(opiskeluoikeus).orNull
       val valmistumisTila = _valmistumisTila.getAll(opiskeluoikeus)
       val suorituksenTyyppi = _suorituksenTyyppi.getAll(opiskeluoikeus)
-      val suoritusTapa = _suoritusTapa.getAll(opiskeluoikeus)
+      val suoritustavanKoodiarvo = _suoritustavanKoodiarvo.getAll(opiskeluoikeus)
+      val suoritustavanKoodistoUri = _suoritustavanKoodistoUri.getAll(opiskeluoikeus)
 
       if (suorituksenTyyppi.size > 1) { // muussa tapauksessa nämä tiedot pitää parsia jotenkin muuten kuin erillisiksi listoiksi, ettei sekoiteta eri suoritusten tietoja
         throw new IllegalStateException(s"Odotettiin täsmälleen yhtä suoritusta opiskeluoikeudelle")
       }
 
       val onkoValmistunut: Boolean = valmistumisTila.contains("valmistunut")
-      val onkoValidiSuoritusTapa = suoritusTapa.map(s => sallitutSuoritusTavat.contains(s)).exists(v => v)
+      val onkoValidiSuoritusTapa = suoritustavanKoodiarvo.map(s => sallitutSuoritusTavat.contains(s)).exists(v => v) &&
+        suoritustavanKoodistoUri.contains("ammatillisentutkinnonsuoritustapa")
       val onkoAmmatillinenOpiskeluOikeus =
         opiskeluoikeudenTyyppi == opiskeluoikeudenHaluttuTyyppi &&
         suorituksenTyyppi.contains(suorituksenHaluttuTyyppi) &&
@@ -295,7 +298,7 @@ object KoskiLaskenta {
 
       LOG.debug("Opiskeluoikeuden tyyppi: %s".format(opiskeluoikeudenTyyppi))
       LOG.debug("Valmistumistila: %s".format(valmistumisTila))
-      LOG.debug("Suoritustapa: %s".format(suoritusTapa))
+      LOG.debug("Suoritustapa: %s".format(suoritustavanKoodiarvo))
       LOG.debug("Onko validi suoritustapa: %s".format(onkoValidiSuoritusTapa))
       LOG.debug("Onko valmistunut: %s".format(onkoValmistunut))
       LOG.debug("Suorituksen tyyppi: %s".format(suorituksenTyyppi))
