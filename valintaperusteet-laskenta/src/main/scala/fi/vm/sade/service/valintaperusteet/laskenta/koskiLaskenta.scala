@@ -282,6 +282,10 @@ object KoskiLaskenta {
       val suorituksenTyyppi = _suorituksenTyyppi.getAll(opiskeluoikeus)
       val suoritusTapa = _suoritusTapa.getAll(opiskeluoikeus)
 
+      if (suorituksenTyyppi.size > 1) { // muussa tapauksessa nämä tiedot pitää parsia jotenkin muuten kuin erillisiksi listoiksi, ettei sekoiteta eri suoritusten tietoja
+        throw new IllegalStateException(s"Odotettiin täsmälleen yhtä suoritusta opiskeluoikeudelle")
+      }
+
       val onkoValmistunut: Boolean = valmistumisTila.contains("valmistunut")
       val onkoValidiSuoritusTapa = suoritusTapa.map(s => sallitutSuoritusTavat.contains(s)).exists(v => v)
       val onkoAmmatillinenOpiskeluOikeus =
