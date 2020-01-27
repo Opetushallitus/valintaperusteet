@@ -874,10 +874,10 @@ private class Laskin private(private val hakukohde: Hakukohde,
           )))
         (tulos, tilalista, uusiHistoria)
 
-      case f@HaeAmmatillisenTutkinnonOsanArvosana(konvertteri, oletusarvo, _, _,_,_,_,_) =>
+      case f@HaeAmmatillisenTutkinnonOsanArvosana(konvertteri, _, _,_,_,_,_) =>
         val tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija = ammatillisenTutkinnonValitsija(iteraatioParametrit, f)
         val tutkinnonOsanValitsija: AmmatillisenTutkinnonOsanValitsija = ammatillisenTutkinnonOsanValitsija(iteraatioParametrit, f)
-        val arvosanaKoskessa: Option[BigDecimal] = KoskiLaskenta.haeAmmatillisenTutkinnonOsanArvosana(tutkinnonValitsija, tutkinnonOsanValitsija, hakemus, oletusarvo)
+        val arvosanaKoskessa: Option[BigDecimal] = KoskiLaskenta.haeAmmatillisenTutkinnonOsanArvosana(tutkinnonValitsija, tutkinnonOsanValitsija, hakemus)
 
         val (tulos: Option[BigDecimal], tilalista: List[Tila]) = konvertoi(konvertteri, arvosanaKoskessa)
 
@@ -887,7 +887,6 @@ private class Laskin private(private val hakukohde: Hakukohde,
           tilalista,
           None,
           Some(Map(
-            "oletusarvo" -> oletusarvo,
             "lähdearvo" -> arvosanaKoskessa
           )))
         (tulos, tilalista, uusiHistoria)

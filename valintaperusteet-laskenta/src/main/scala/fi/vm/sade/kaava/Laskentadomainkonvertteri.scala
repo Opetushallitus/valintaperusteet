@@ -587,7 +587,6 @@ object Laskentadomainkonvertteri {
         val konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]] = luoLukuarvokovertteri(arvokonvertteriparametrit, arvovalikonvertteriparametrit)
         val arvosana = HaeAmmatillisenTutkinnonOsanArvosana(
           konvertteri,
-          Some(BigDecimal("0.0")),
           omaopintopolku = omaopintopolku)
 
         NimettyLukuarvo("Ammatillisen tutkinnon osan arvosana", arvosana, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku = omaopintopolku)

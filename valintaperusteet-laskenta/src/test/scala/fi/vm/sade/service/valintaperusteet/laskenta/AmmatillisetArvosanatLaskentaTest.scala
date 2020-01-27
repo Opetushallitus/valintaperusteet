@@ -71,13 +71,13 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
   test("Tutkinnon osien laskettu keskiarvo, kun on useampi tutkinto") {
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createLaskeAmmatillisenTutkinnonOsienKeskiarvoKutsu())
     val (tulos, _) = Laskin.laske(hakukohde, monenTutkinnonHakemus, lasku)
-    assert(BigDecimal(tulos.get) == BigDecimal("3.7027"))
+    assert(BigDecimal(tulos.get) == BigDecimal("4.5667"))
   }
 
   test("Tutkinnon osien laskettu keskiarvo reformin mukaisesta tutkinnosta") {
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createLaskeAmmatillisenTutkinnonOsienKeskiarvoKutsu())
     val (tulos, _) = Laskin.laske(hakukohde, reforminMukainenHakemus, lasku)
-    assert(BigDecimal(tulos.get) == BigDecimal("3.6667"))
+    assert(BigDecimal(tulos.get) == BigDecimal("4.5517"))
   }
 
   test("Tutkinnon yhteisten tutkinnon osien arvoasteikko lukuarvona, kun on useampi tutkinto") {
