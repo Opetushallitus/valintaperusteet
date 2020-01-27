@@ -83,6 +83,13 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
     assert(BigDecimal(tulos.get) == BigDecimal("4.5517"))
   }
 
+  test("Tutkinnon osien Koskeen tallennettu keskiarvo reformin mukaisesta tutkinnosta") {
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeAmmatillisenTutkinnonOsienKeskiarvoKutsu())
+    val (tulos, _) = Laskin.laske(hakukohde, reforminMukainenHakemus, lasku)
+    assert(BigDecimal(tulos.get) == BigDecimal("4.40"))
+  }
+
+
   def createHaeAmmatillinenYtoArvosanaKutsu(konvertteriparametrit: Set[Arvokonvertteriparametri] = Set()): Funktiokutsu = {
 
     val kutsu: Funktiokutsu = new Funktiokutsu
@@ -121,6 +128,12 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
     ).asJava)
 
     createAmmatillistenTutkintojenIteroija(juurikutsu)
+  }
+
+  def createHaeAmmatillisenTutkinnonOsienKeskiarvoKutsu(konvertteriparametrit: Set[Arvokonvertteriparametri] = Set()): Funktiokutsu = {
+    val kutsu: Funktiokutsu =  new Funktiokutsu
+    kutsu.setFunktionimi(Funktionimi.HAEAMMATILLISENTUTKINNONKESKIARVO)
+    createAmmatillistenTutkintojenIteroija(kutsu)
   }
 
   def createAmmatillinenYtoArviointiAsteikkoKutsu(parametri: String): Funktiokutsu = {

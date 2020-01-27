@@ -16,6 +16,7 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Demografia
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Ei
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeAmmatillinenYtoArviointiAsteikko
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeAmmatillinenYtoArvosana
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeAmmatillisenTutkinnonKeskiarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeAmmatillisenTutkinnonOsanArvosana
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeAmmatillisenTutkinnonOsanLaajuus
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeLukuarvo
@@ -888,6 +889,22 @@ private class Laskin private(private val hakukohde: Hakukohde,
           None,
           Some(Map(
             "lähdearvo" -> arvosanaKoskessa
+          )))
+        (tulos, tilalista, uusiHistoria)
+
+      case f@HaeAmmatillisenTutkinnonKeskiarvo(konvertteri, _, _,_,_,_,_) =>
+        val tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija = ammatillisenTutkinnonValitsija(iteraatioParametrit, f)
+        val keskiarvoKoskessa: Option[BigDecimal] = KoskiLaskenta.haeAmmatillisenTutkinnonKoskeenTallennettuKeskiarvo(tutkinnonValitsija, hakemus)
+
+        val (tulos: Option[BigDecimal], tilalista: List[Tila]) = konvertoi(konvertteri, keskiarvoKoskessa)
+
+        val uusiHistoria = Historia(
+          Funktionimi.HAEAMMATILLISENTUTKINNONKESKIARVO.name(),
+          tulos,
+          tilalista,
+          None,
+          Some(Map(
+            "lähdearvo" -> keskiarvoKoskessa
           )))
         (tulos, tilalista, uusiHistoria)
 

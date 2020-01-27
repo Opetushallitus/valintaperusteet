@@ -360,6 +360,18 @@ object Laskenta {
     override val iteraatioParametrinTyyppi: Option[Class[_ <: IteraatioParametri]] = Some(classOf[AmmatillisenTutkinnonOsanValitsija])
   }
 
+  case class HaeAmmatillisenTutkinnonKeskiarvo(konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]],
+                                                    oid: String = "",
+                                                    tulosTunniste: String = "",
+                                                    tulosTekstiFi: String = "",
+                                                    tulosTekstiSv: String = "",
+                                                    tulosTekstiEn: String = "",
+                                                    omaopintopolku: Boolean = false)
+    extends Lukuarvofunktio {
+
+    override val iteraatioParametrinTyyppi: Option[Class[_ <: IteraatioParametri]] = Some(classOf[AmmatillisenPerustutkinnonValitsija])
+  }
+
   case class HaeMerkkijonoJaKonvertoiLukuarvoksi(konvertteri: Konvertteri[String, BigDecimal],
                                                  oletusarvo: Option[BigDecimal],
                                                  valintaperusteviite: Valintaperuste,

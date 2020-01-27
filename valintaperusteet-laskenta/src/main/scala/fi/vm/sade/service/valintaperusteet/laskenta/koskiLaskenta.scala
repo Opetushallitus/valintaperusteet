@@ -88,6 +88,21 @@ object KoskiLaskenta {
     osa._3.map(BigDecimal(_))
   }
 
+  def haeAmmatillisenTutkinnonKoskeenTallennettuKeskiarvo(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija, hakemus: Hakemus): Option[BigDecimal] = {
+    if (hakemus.koskiOpiskeluoikeudet == null) {
+      None
+    } else {
+      val tutkinnot = etsiValmiitTutkinnot(hakemus.koskiOpiskeluoikeudet, ammatillisenHuomioitavaOpiskeluoikeudenTyyppi, ammatillisenSuorituksenTyyppi)
+      val suorituksenSallitutKoodit: Set[Int] = ammatillisenHhuomioitavatKoulutustyypit.map(_.koodiarvo)
+      val suoritukset = etsiValiditSuoritukset(tutkinnot(tutkinnonValitsija.tutkinnonIndeksi), sulkeutumisPaivamaara, suorituksenSallitutKoodit)
+      if (suoritukset.size > 1) {
+        throw new IllegalStateException(s"Odotettiin täsmälleen yhtä suoritusta hakemuksen ${hakemus.oid} " +
+          s"hakijan ammatillisella tutkinnolla ${tutkinnonValitsija.tutkinnonIndeksi} , mutta oli ${suoritukset.size}")
+      }
+      suoritukset.headOption.flatMap(x => JsonPath.root.keskiarvo.bigDecimal.getOption(x))
+    }
+  }
+
   private def haeAmmatillisenTutkinnonOsat(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija, hakemus: Hakemus): List[(String, String, Option[Int], String, Option[BigDecimal])] = {
     if (hakemus.koskiOpiskeluoikeudet == null) {
       Nil
