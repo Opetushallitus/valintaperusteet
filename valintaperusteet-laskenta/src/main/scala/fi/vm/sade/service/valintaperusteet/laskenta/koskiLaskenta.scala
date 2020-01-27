@@ -132,14 +132,14 @@ object KoskiLaskenta {
     val oikeaOpiskeluoikeus: Json = etsiValmiitTutkinnot(kaikkiOpiskeluoikeudet, ammatillisenHuomioitavaOpiskeluoikeudenTyyppi, ammatillisenSuorituksenTyyppi)(ammatillisenPerustutkinnonValitsija.tutkinnonIndeksi)
     val ammatillisenSuorituksenTiedot = haeAmmatillisenSuorituksenTiedot(
       hakemusOid,
-      Json.arr(oikeaOpiskeluoikeus),
+      oikeaOpiskeluoikeus,
       ytoKoodiArvo)
     ammatillisenSuorituksenTiedot
   }
 
-  private def haeAmmatillisenSuorituksenTiedot(hakemusOid: String, opiskeluoikeudet: Json, ytoKoodiArvo: String): Seq[(String, String, Option[Int], String)] = {
+  private def haeAmmatillisenSuorituksenTiedot(hakemusOid: String, opiskeluoikeus: Json, ytoKoodiArvo: String): Seq[(String, String, Option[Int], String)] = {
     try {
-      val suoritukset = etsiAmmatillistenTutkintojenSuoritukset(opiskeluoikeudet)
+      val suoritukset = etsiAmmatillistenTutkintojenSuoritukset(opiskeluoikeus)
       val yhteistenTutkinnonOsienArvosanat = suoritukset
         .flatMap(suoritus => etsiYhteisetTutkinnonOsat(suoritus, sulkeutumisPaivamaara, Set(ytoKoodiArvo)))
 
@@ -160,10 +160,10 @@ object KoskiLaskenta {
     }
   }
 
-  private def etsiAmmatillistenTutkintojenSuoritukset(opiskeluoikeudet: Json): Seq[Json] = {
+  private def etsiAmmatillistenTutkintojenSuoritukset(opiskeluoikeus: Json): Seq[Json] = {
     val suorituksenSallitutKoodit: Set[Int] = ammatillisenHhuomioitavatKoulutustyypit.map(_.koodiarvo)
 
-    etsiValmiitTutkinnot(opiskeluoikeudet, ammatillisenHuomioitavaOpiskeluoikeudenTyyppi, ammatillisenSuorituksenTyyppi)
+    etsiValmiitTutkinnot(Json.arr(opiskeluoikeus), ammatillisenHuomioitavaOpiskeluoikeudenTyyppi, ammatillisenSuorituksenTyyppi)
       .flatMap(tutkinto => etsiValiditSuoritukset(tutkinto, sulkeutumisPaivamaara, suorituksenSallitutKoodit))
   }
 
