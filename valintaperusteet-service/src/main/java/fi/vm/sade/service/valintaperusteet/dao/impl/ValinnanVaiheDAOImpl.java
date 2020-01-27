@@ -28,7 +28,9 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
     @Override
     public ValinnanVaihe readByOid(String oid) {
         QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
+        QValintatapajono valintatapaJono = QValintatapajono.valintatapajono;
         return from(valinnanVaihe)
+                .leftJoin(valinnanVaihe.jonot, valintatapaJono).fetch()
                 .leftJoin(valinnanVaihe.masterValinnanVaihe).fetch()
                 .leftJoin(valinnanVaihe.valintaryhma).fetch()
                 .leftJoin(valinnanVaihe.hakukohdeViite).fetch()
@@ -39,7 +41,9 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
     @Override
     public List<ValinnanVaihe> haeKopiot(String oid) {
         QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
+        QValintatapajono valintatapaJono = QValintatapajono.valintatapajono;
         return from(valinnanVaihe)
+                .leftJoin(valinnanVaihe.jonot, valintatapaJono).fetch()
                 .leftJoin(valinnanVaihe.masterValinnanVaihe).fetch()
                 .leftJoin(valinnanVaihe.valintaryhma).fetch()
                 .leftJoin(valinnanVaihe.hakukohdeViite).fetch()
@@ -50,15 +54,21 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
     @Override
     public List<ValinnanVaihe> readByOids(Set<String> oids) {
         QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
-        return from(valinnanVaihe).where(valinnanVaihe.oid.in(oids)).list(valinnanVaihe);
+        QValintatapajono valintatapaJono = QValintatapajono.valintatapajono;
+        return from(valinnanVaihe)
+                .leftJoin(valinnanVaihe.jonot, valintatapaJono).fetch()
+                .where(valinnanVaihe.oid.in(oids))
+                .list(valinnanVaihe);
     }
 
     @Override
     public ValinnanVaihe haeHakukohteenViimeinenValinnanVaihe(String hakukohdeOid) {
         QHakukohdeViite hakukohde = QHakukohdeViite.hakukohdeViite;
         QValinnanVaihe vv = QValinnanVaihe.valinnanVaihe;
+        QValintatapajono valintatapaJono = QValintatapajono.valintatapajono;
         ValinnanVaihe lastValinnanVaihe = from(hakukohde)
                 .leftJoin(hakukohde.valinnanvaiheet, vv)
+                .leftJoin(vv.jonot, valintatapaJono).fetch()
                 .where(vv.id.notIn(
                         subQuery()
                                 .from(vv)
@@ -99,8 +109,10 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
     public ValinnanVaihe haeValintaryhmanViimeinenValinnanVaihe(String oid) {
         QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
         QValinnanVaihe vv = QValinnanVaihe.valinnanVaihe;
+        QValintatapajono valintatapaJono = QValintatapajono.valintatapajono;
         ValinnanVaihe lastValinnanVaihe = from(valintaryhma)
                 .leftJoin(valintaryhma.valinnanvaiheet, vv)
+                .leftJoin(vv.jonot, valintatapaJono).fetch()
                 .where(vv.id.notIn(
                         subQuery()
                                 .from(vv)
@@ -117,8 +129,10 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
     public List<ValinnanVaihe> findByValintaryhma(String oid) {
         QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
         QValinnanVaihe vv = QValinnanVaihe.valinnanVaihe;
+        QValintatapajono valintatapaJono = QValintatapajono.valintatapajono;
         return from(valintaryhma)
                 .leftJoin(valintaryhma.valinnanvaiheet, vv)
+                .leftJoin(vv.jonot, valintatapaJono).fetch()
                 .leftJoin(vv.seuraavaValinnanVaihe).fetch()
                 .leftJoin(vv.masterValinnanVaihe).fetch()
                 .where(valintaryhma.oid.eq(oid))
@@ -129,8 +143,10 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
     public List<ValinnanVaihe> findByHakukohde(String oid) {
         QHakukohdeViite hakukohde = QHakukohdeViite.hakukohdeViite;
         QValinnanVaihe vv = QValinnanVaihe.valinnanVaihe;
+        QValintatapajono valintatapaJono = QValintatapajono.valintatapajono;
         return from(hakukohde)
                 .leftJoin(hakukohde.valinnanvaiheet, vv)
+                .leftJoin(vv.jonot, valintatapaJono).fetch()
                 .leftJoin(vv.seuraavaValinnanVaihe).fetch()
                 .leftJoin(vv.masterValinnanVaihe).fetch()
                 .where(hakukohde.oid.eq(oid))
