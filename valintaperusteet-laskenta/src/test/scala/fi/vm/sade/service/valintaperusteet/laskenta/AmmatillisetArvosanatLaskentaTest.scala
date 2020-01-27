@@ -63,6 +63,14 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
     assert(BigDecimal(tulos.get) == BigDecimal("2"))
   }
 
+  test("Tutkinnon yhteisten tutkinnon osien arvoasteikko lukuarvona, kun on useampi tutkinto") {
+    val lasku1 = Laskentadomainkonvertteri.muodostaLukuarvolasku(
+      createAmmatillinenYtoArviointiAsteikkoKutsu("101054")
+    )
+    val (tulos1, _) = Laskin.laske(hakukohde, monenTutkinnonHakemus, lasku1)
+    assert(tulos1.contains(new java.math.BigDecimal(3)))
+  }
+
   test("Tutkinnon osien laskettu keskiarvo, kun on useampi tutkinto") {
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createLaskeAmmatillisenTutkinnonOsienKeskiarvoKutsu())
     val (tulos, _) = Laskin.laske(hakukohde, monenTutkinnonHakemus, lasku)
@@ -73,14 +81,6 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createLaskeAmmatillisenTutkinnonOsienKeskiarvoKutsu())
     val (tulos, _) = Laskin.laske(hakukohde, reforminMukainenHakemus, lasku)
     assert(BigDecimal(tulos.get) == BigDecimal("4.5517"))
-  }
-
-  test("Tutkinnon yhteisten tutkinnon osien arvoasteikko lukuarvona, kun on useampi tutkinto") {
-    val lasku1 = Laskentadomainkonvertteri.muodostaLukuarvolasku(
-      createAmmatillinenYtoArviointiAsteikkoKutsu("101054")
-    )
-    val (tulos1, _) = Laskin.laske(hakukohde, monenTutkinnonHakemus, lasku1)
-    assert(tulos1.contains(new java.math.BigDecimal(3)))
   }
 
   def createHaeAmmatillinenYtoArvosanaKutsu(konvertteriparametrit: Set[Arvokonvertteriparametri] = Set()): Funktiokutsu = {
