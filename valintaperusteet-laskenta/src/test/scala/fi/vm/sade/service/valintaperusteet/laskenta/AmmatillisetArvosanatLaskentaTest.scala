@@ -35,6 +35,7 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
 
   val hakemus = TestHakemus("", Nil, Map(), suoritukset, koskiopiskeluoikeudet)
   val monenTutkinnonHakemus = TestHakemus("", Nil, Map(), suoritukset, koskiopiskeluoikeudetMontaTutkintoa)
+  val reforminMukainenHakemus = TestHakemus("", Nil, Map(), suoritukset, loadJson("koski-reforminmukainen-keskiarvon_kanssa.json"))
 
   test("Tutkinnon yhteisten tutkinnon osien arvosanat") {
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeAmmatillinenYtoArvosanaKutsu())
@@ -71,6 +72,12 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createLaskeAmmatillisenTutkinnonOsienKeskiarvoKutsu())
     val (tulos, _) = Laskin.laske(hakukohde, monenTutkinnonHakemus, lasku)
     assert(BigDecimal(tulos.get) == BigDecimal("3.7027"))
+  }
+
+  test("Tutkinnon osien laskettu keskiarvo reformin mukaisesta tutkinnosta") {
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createLaskeAmmatillisenTutkinnonOsienKeskiarvoKutsu())
+    val (tulos, _) = Laskin.laske(hakukohde, reforminMukainenHakemus, lasku)
+    assert(BigDecimal(tulos.get) == BigDecimal("3.6667"))
   }
 
   test("Tutkinnon yhteisten tutkinnon osien arvoasteikko lukuarvona, kun on useampi tutkinto") {
