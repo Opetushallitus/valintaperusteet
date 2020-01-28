@@ -298,9 +298,10 @@ object KoskiLaskenta {
     // Opiskeluoikeuden tyypin etsivä linssi
     val _opiskeluoikeudenTyyppi = JsonPath.root.tyyppi.koodiarvo.string
     val _valmistumisTila = JsonPath.root.tila.opiskeluoikeusjaksot.each.tila.koodiarvo.string
-    val _suorituksenTyyppi = JsonPath.root.suoritukset.each.tyyppi.koodiarvo.string
-    val _suoritustavanKoodiarvo = JsonPath.root.suoritukset.each.suoritustapa.koodiarvo.string
-    val _suoritustavanKoodistoUri = JsonPath.root.suoritukset.each.suoritustapa.koodistoUri.string
+    val _suoritukset = JsonPath.root.suoritukset.each
+    val _suorituksenTyyppi = _suoritukset.tyyppi.koodiarvo.string
+    val _suoritustavanKoodiarvo = _suoritukset.suoritustapa.koodiarvo.string
+    val _suoritustavanKoodistoUri = _suoritukset.suoritustapa.koodistoUri.string
 
     _opiskeluoikeudet.getAll(json).filter(opiskeluoikeus => {
       val opiskeluoikeudenTyyppi = _opiskeluoikeudenTyyppi.getOption(opiskeluoikeus).orNull
