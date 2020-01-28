@@ -205,6 +205,14 @@ object Funktiokuvaaja {
           konvertteriTyypit = Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.DESIMAALILUKU))
         ))
     ),
+    Funktionimi.HAEAMMATILLISENTUTKINNONSUORITUSTAPA -> Funktiokuvaus(
+      tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
+      konvertteri = Some(
+        Konvertterikuvaus(
+          pakollinen = true,
+          konvertteriTyypit = Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.MERKKIJONO))
+        ))
+    ),
     Funktionimi.HAELUKUARVO -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
       syoteparametrit = List(

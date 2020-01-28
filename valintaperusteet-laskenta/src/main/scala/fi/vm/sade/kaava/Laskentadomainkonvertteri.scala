@@ -14,6 +14,7 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeAmmatillinenYtoA
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeAmmatillisenTutkinnonKeskiarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeAmmatillisenTutkinnonOsanArvosana
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeAmmatillisenTutkinnonOsanLaajuus
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeAmmatillisenTutkinnonSuoritustapa
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeLukuarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeLukuarvoEhdolla
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaKonvertoiLukuarvoksi
@@ -600,6 +601,17 @@ object Laskentadomainkonvertteri {
           omaopintopolku = omaopintopolku)
 
         NimettyLukuarvo("Ammatillisen tutkinnon syötetty keskiarvo", arvosana, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku = omaopintopolku)
+      }
+
+      case Funktionimi.HAEAMMATILLISENTUTKINNONSUORITUSTAPA => {
+        val konversioMap = arvokonvertteriparametrit.asScala.map(konv =>
+          ArvokonversioMerkkijonoilla[String, BigDecimal](konv.getArvo, stringToBigDecimal(konv.getPaluuarvo), konv.getHylkaysperuste, konv.getKuvaukset)).toList
+        val suoritustapa = HaeAmmatillisenTutkinnonSuoritustapa(
+          Arvokonvertteri[String, BigDecimal](konversioMap),
+          oletusarvo = Some(BigDecimal(-1)),
+          omaopintopolku = omaopintopolku)
+
+        NimettyLukuarvo("Ammatillisen tutkinnon suoritustapa", suoritustapa, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku = omaopintopolku)
       }
 
       case _ => sys.error(s"Could not calculate funktio ${funktionimi.name()}")

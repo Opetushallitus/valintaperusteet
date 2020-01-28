@@ -19,6 +19,7 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeAmmatillinenYtoA
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeAmmatillisenTutkinnonKeskiarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeAmmatillisenTutkinnonOsanArvosana
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeAmmatillisenTutkinnonOsanLaajuus
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeAmmatillisenTutkinnonSuoritustapa
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeLukuarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeLukuarvoEhdolla
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaKonvertoiLukuarvoksi
@@ -905,6 +906,31 @@ private class Laskin private(private val hakukohde: Hakukohde,
           None,
           Some(Map(
             "lähdearvo" -> keskiarvoKoskessa
+          )))
+        (tulos, tilalista, uusiHistoria)
+
+      case f@HaeAmmatillisenTutkinnonSuoritustapa(konvertteri, oletusarvo, _, _,_,_,_,_) =>
+        val tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija = ammatillisenTutkinnonValitsija(iteraatioParametrit, f)
+        val suoritustapaKoskessa: Option[String] = KoskiLaskenta.haeAmmatillisenTutkinnonSuoritustapa(tutkinnonValitsija, hakemus)
+
+        val (konv: Option[Arvokonvertteri[String, BigDecimal]], tilatKonvertterinHausta) = konvertteri match {
+          case a: Arvokonvertteri[_, _] => konversioToArvokonversio[String, BigDecimal](a.konversioMap, hakemus.kentat, hakukohde)
+          case x => throw new IllegalArgumentException(s"Odotettiin arvokonvertteria mutta saatiin $x")
+        }
+
+        val (tulos, tilaKonvertoinnista): (Option[BigDecimal], Tila) = (for {
+          k <- konv
+          arvosana <- suoritustapaKoskessa
+        } yield k.konvertoi(arvosana)).getOrElse((oletusarvo, new Hyvaksyttavissatila))
+        val tilalista: List[Tila] = tilaKonvertoinnista :: tilatKonvertterinHausta
+        val uusiHistoria = Historia(
+          HAEAMMATILLINENYTOARVIOINTIASTEIKKO.name(),
+          tulos,
+          tilalista,
+          None,
+          Some(Map(
+            "oletusarvo" -> oletusarvo,
+            "asteikon koodi" -> suoritustapaKoskessa
           )))
         (tulos, tilalista, uusiHistoria)
 

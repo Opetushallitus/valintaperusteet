@@ -89,6 +89,31 @@ object KoskiLaskenta {
   }
 
   def haeAmmatillisenTutkinnonKoskeenTallennettuKeskiarvo(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija, hakemus: Hakemus): Option[BigDecimal] = {
+    haeArvoSuorituksista(
+      tutkinnonValitsija,
+      hakemus,
+      suoritukset => suoritukset.headOption.flatMap(JsonPath.root.keskiarvo.bigDecimal.getOption(_)))
+  }
+
+  def haeAmmatillisenTutkinnonSuoritustapa(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija, hakemus: Hakemus): Option[String] = {
+    val suoritustapa: Option[Json] = haeArvoSuorituksista(
+      tutkinnonValitsija,
+      hakemus,
+      suoritukset => suoritukset.headOption.flatMap(JsonPath.root.suoritustapa.json.getOption(_)))
+
+    suoritustapa.flatMap { s =>
+      if (JsonPath.root.koodistoUri.string.getOption(s).contains("ammatillisentutkinnonsuoritustapa")) {
+        JsonPath.root.koodiarvo.string.getOption(s)
+      } else {
+        None
+      }
+    }
+  }
+
+  private def haeArvoSuorituksista[T](tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
+                                   hakemus: Hakemus,
+                                   arvonHakija: List[Json] => Option[T]
+                                  ): Option[T] = {
     if (hakemus.koskiOpiskeluoikeudet == null) {
       None
     } else {
@@ -99,7 +124,7 @@ object KoskiLaskenta {
         throw new IllegalStateException(s"Odotettiin täsmälleen yhtä suoritusta hakemuksen ${hakemus.oid} " +
           s"hakijan ammatillisella tutkinnolla ${tutkinnonValitsija.tutkinnonIndeksi} , mutta oli ${suoritukset.size}")
       }
-      suoritukset.headOption.flatMap(x => JsonPath.root.keskiarvo.bigDecimal.getOption(x))
+      arvonHakija(suoritukset)
     }
   }
 

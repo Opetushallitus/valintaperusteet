@@ -15,7 +15,10 @@ import fi.vm.sade.service.valintaperusteet.model.Arvokonvertteriparametri
 import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti
 import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu
 import fi.vm.sade.service.valintaperusteet.model.ValintaperusteViite
+import io.circe.Decoder
 import io.circe.Json
+import io.circe.optics.JsonPath
+import io.circe.optics.JsonTraversalPath
 import io.circe.parser
 import org.scalatest.funsuite.AnyFunSuite
 
@@ -89,6 +92,18 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
     assert(BigDecimal(tulos.get) == BigDecimal("4.40"))
   }
 
+  test("Tutkinnon suoritustapa") {
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeAmmatillisenTutkinnonSuoritustapaKutsu())
+
+    val (tulos, _) = Laskin.laske(hakukohde, hakemus, lasku)
+    assert(BigDecimal(tulos.get) == BigDecimal("2015"))
+
+    val (reformitulos, _) = Laskin.laske(hakukohde, reforminMukainenHakemus, lasku)
+    assert(BigDecimal(reformitulos.get) == BigDecimal("2017"))
+
+    val (monenTutkinnonTulos, _) = Laskin.laske(hakukohde, monenTutkinnonHakemus, lasku)
+    assert(BigDecimal(monenTutkinnonTulos.get) == BigDecimal("2017"))
+  }
 
   def createHaeAmmatillinenYtoArvosanaKutsu(konvertteriparametrit: Set[Arvokonvertteriparametri] = Set()): Funktiokutsu = {
 
@@ -133,6 +148,25 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
   def createHaeAmmatillisenTutkinnonOsienKeskiarvoKutsu(konvertteriparametrit: Set[Arvokonvertteriparametri] = Set()): Funktiokutsu = {
     val kutsu: Funktiokutsu =  new Funktiokutsu
     kutsu.setFunktionimi(Funktionimi.HAEAMMATILLISENTUTKINNONKESKIARVO)
+    createAmmatillistenTutkintojenIteroija(kutsu)
+  }
+
+  def createHaeAmmatillisenTutkinnonSuoritustapaKutsu(): Funktiokutsu = {
+    val konvetteriParameteriOps = new Arvokonvertteriparametri
+    konvetteriParameteriOps.setArvo("ops")
+    konvetteriParameteriOps.setPaluuarvo("2015")
+    konvetteriParameteriOps.setHylkaysperuste(Boolean.box(false).toString)
+
+    val konvetteriParameteriReformi = new Arvokonvertteriparametri
+    konvetteriParameteriReformi.setArvo("reformi")
+    konvetteriParameteriReformi.setPaluuarvo("2017")
+    konvetteriParameteriReformi.setHylkaysperuste(Boolean.box(false).toString)
+
+    val konvertteriparametrit = Set(konvetteriParameteriOps, konvetteriParameteriReformi)
+
+    val kutsu: Funktiokutsu = new Funktiokutsu
+    kutsu.setArvokonvertteriparametrit(konvertteriparametrit.asJava)
+    kutsu.setFunktionimi(Funktionimi.HAEAMMATILLISENTUTKINNONSUORITUSTAPA)
     createAmmatillistenTutkintojenIteroija(kutsu)
   }
 
