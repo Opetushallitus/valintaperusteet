@@ -158,7 +158,7 @@ object Funktiokuvaaja {
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
       funktioargumentit = List(Funktioargumenttikuvaus("iteroitava koostefunktio", Funktiotyyppi.LUKUARVOFUNKTIO)),
     ),
-    Funktionimi.ITEROIAMMATILLISETOSA_ALUEET -> Funktiokuvaus(
+    Funktionimi.ITEROIAMMATILLISETOSAT -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
       funktioargumentit = List(Funktioargumenttikuvaus("iteroitava funktio", Funktiotyyppi.LUKUARVOFUNKTIO)),
     ),

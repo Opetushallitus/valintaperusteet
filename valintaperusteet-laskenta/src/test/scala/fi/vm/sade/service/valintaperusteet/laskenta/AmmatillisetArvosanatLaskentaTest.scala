@@ -123,7 +123,7 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
 
   def createLaskeAmmatillisenTutkinnonOsienKeskiarvoKutsu(konvertteriparametrit: Set[Arvokonvertteriparametri] = Set()): Funktiokutsu = {
     val juurikutsu: Funktiokutsu =  new Funktiokutsu
-    juurikutsu.setFunktionimi(Funktionimi.ITEROIAMMATILLISETOSA_ALUEET)
+    juurikutsu.setFunktionimi(Funktionimi.ITEROIAMMATILLISETOSAT)
 
     val keskiarvokutsu: Funktiokutsu = new Funktiokutsu
     keskiarvokutsu.setFunktionimi(Funktionimi.PAINOTETTUKESKIARVO)

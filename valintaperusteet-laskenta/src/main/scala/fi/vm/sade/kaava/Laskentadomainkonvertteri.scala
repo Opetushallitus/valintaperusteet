@@ -545,7 +545,7 @@ object Laskentadomainkonvertteri {
 
         IteroiAmmatillisetTutkinnot(koostavaLapsi, oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
 
-      case Funktionimi.ITEROIAMMATILLISETOSA_ALUEET =>
+      case Funktionimi.ITEROIAMMATILLISETOSAT =>
         val koostavaLapsi: Lukuarvofunktio with KloonattavaFunktio[BigDecimal, _, Funktio[BigDecimal]] =
           lasketutArgumentit.head.asInstanceOf[Lukuarvofunktio with KloonattavaFunktio[BigDecimal, _, Funktio[BigDecimal]]]
 
