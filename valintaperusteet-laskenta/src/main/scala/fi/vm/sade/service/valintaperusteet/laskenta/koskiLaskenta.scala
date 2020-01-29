@@ -36,7 +36,7 @@ object KoskiLaskenta {
     if (hakemus.koskiOpiskeluoikeudet == null) {
       0
     } else {
-      etsiValmiitTutkinnot(hakemus.koskiOpiskeluoikeudet, ammatillisenHuomioitavaOpiskeluoikeudenTyyppi, ammatillisenSuorituksenTyyppi).size
+      etsiValmiitTutkinnot(hakemus.koskiOpiskeluoikeudet, ammatillisenHuomioitavaOpiskeluoikeudenTyyppi, ammatillisenSuorituksenTyyppi, hakemus).size
     }
   }
 
@@ -50,7 +50,7 @@ object KoskiLaskenta {
                      oletusarvo: Option[BigDecimal]
                     ): Option[BigDecimal] = {
     if (hakemus.koskiOpiskeluoikeudet != null) {
-      haeYtoArvosana(ammatillisenPerustutkinnonValitsija, hakemus.oid, hakemus.koskiOpiskeluoikeudet, valintaperusteviite.tunniste)
+      haeYtoArvosana(ammatillisenPerustutkinnonValitsija, hakemus, hakemus.koskiOpiskeluoikeudet, valintaperusteviite.tunniste)
     } else {
       oletusarvo
     }
@@ -61,7 +61,7 @@ object KoskiLaskenta {
                               valintaperusteviite: Laskenta.Valintaperuste
                              ): Option[String] = {
     if (hakemus.koskiOpiskeluoikeudet != null) {
-      haeAmmatillisenSuorituksenTiedot(hakemus.oid, hakemus.koskiOpiskeluoikeudet, ammatillisenPerustutkinnonValitsija, valintaperusteviite.tunniste) match {
+      haeAmmatillisenSuorituksenTiedot(hakemus, hakemus.koskiOpiskeluoikeudet, ammatillisenPerustutkinnonValitsija, valintaperusteviite.tunniste) match {
         case Nil => None
         case (osasuorituksenKoodiarvo, osasuorituksenNimiFi, osasuorituksenArvio, osasuorituksenArviointiAsteikko) :: Nil => Some(osasuorituksenArviointiAsteikko)
         case xs => throw new IllegalArgumentException(s"Piti löytyä vain yksi suoritus valitsijalla $ammatillisenPerustutkinnonValitsija , mutta löytyi ${xs.size} : $xs")
@@ -117,7 +117,7 @@ object KoskiLaskenta {
     if (hakemus.koskiOpiskeluoikeudet == null) {
       None
     } else {
-      val tutkinnot = etsiValmiitTutkinnot(hakemus.koskiOpiskeluoikeudet, ammatillisenHuomioitavaOpiskeluoikeudenTyyppi, ammatillisenSuorituksenTyyppi)
+      val tutkinnot = etsiValmiitTutkinnot(hakemus.koskiOpiskeluoikeudet, ammatillisenHuomioitavaOpiskeluoikeudenTyyppi, ammatillisenSuorituksenTyyppi, hakemus)
       val suorituksenSallitutKoodit: Set[Int] = ammatillisenHhuomioitavatKoulutustyypit.map(_.koodiarvo)
       val suoritukset = etsiValiditSuoritukset(tutkinnot(tutkinnonValitsija.tutkinnonIndeksi), sulkeutumisPaivamaara, suorituksenSallitutKoodit)
       if (suoritukset.size > 1) {
@@ -133,9 +133,9 @@ object KoskiLaskenta {
       Nil
     } else {
       val oikeaOpiskeluoikeus: Json = etsiValmiitTutkinnot(
-        hakemus.koskiOpiskeluoikeudet,
-        ammatillisenHuomioitavaOpiskeluoikeudenTyyppi,
-        ammatillisenSuorituksenTyyppi)(tutkinnonValitsija.tutkinnonIndeksi)
+        json = hakemus.koskiOpiskeluoikeudet,
+        opiskeluoikeudenHaluttuTyyppi = ammatillisenHuomioitavaOpiskeluoikeudenTyyppi,
+        suorituksenHaluttuTyyppi = ammatillisenSuorituksenTyyppi, hakemus = hakemus)(tutkinnonValitsija.tutkinnonIndeksi)
 
       val suorituksenSallitutKoodit: Set[Int] = ammatillisenHhuomioitavatKoulutustyypit.map(_.koodiarvo)
       val suoritukset = etsiValiditSuoritukset(oikeaOpiskeluoikeus, sulkeutumisPaivamaara, suorituksenSallitutKoodit)
@@ -149,12 +149,12 @@ object KoskiLaskenta {
   }
 
   private def haeYtoArvosana(ammatillisenPerustutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
-                             hakemusOid: String,
+                             hakemus: Hakemus,
                              opiskeluoikeudet: Json,
                              ytoKoodiArvo: String
                             ): Option[BigDecimal] = {
 
-    haeAmmatillisenSuorituksenTiedot(hakemusOid, opiskeluoikeudet, ammatillisenPerustutkinnonValitsija, ytoKoodiArvo) match {
+    haeAmmatillisenSuorituksenTiedot(hakemus, opiskeluoikeudet, ammatillisenPerustutkinnonValitsija, ytoKoodiArvo) match {
       case Nil => None
       case (_, _, osasuorituksenArvio, _) :: Nil => osasuorituksenArvio match {
         case Some(x) => Some(BigDecimal(x))
@@ -164,22 +164,27 @@ object KoskiLaskenta {
     }
   }
 
-  private def haeAmmatillisenSuorituksenTiedot(hakemusOid: String,
+  private def haeAmmatillisenSuorituksenTiedot(hakemus: Hakemus,
                                                kaikkiOpiskeluoikeudet: Json,
                                                ammatillisenPerustutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
                                                ytoKoodiArvo: String
                                               ): Seq[(String, String, Option[Int], String)] = {
-    val oikeaOpiskeluoikeus: Json = etsiValmiitTutkinnot(kaikkiOpiskeluoikeudet, ammatillisenHuomioitavaOpiskeluoikeudenTyyppi, ammatillisenSuorituksenTyyppi)(ammatillisenPerustutkinnonValitsija.tutkinnonIndeksi)
+    val oikeaOpiskeluoikeus: Json = etsiValmiitTutkinnot(
+      kaikkiOpiskeluoikeudet,
+      opiskeluoikeudenHaluttuTyyppi = ammatillisenHuomioitavaOpiskeluoikeudenTyyppi,
+      suorituksenHaluttuTyyppi = ammatillisenSuorituksenTyyppi,
+      hakemus = hakemus)(ammatillisenPerustutkinnonValitsija.tutkinnonIndeksi)
     val ammatillisenSuorituksenTiedot = haeAmmatillisenSuorituksenTiedot(
-      hakemusOid,
+      hakemus,
       oikeaOpiskeluoikeus,
       ytoKoodiArvo)
     ammatillisenSuorituksenTiedot
   }
 
-  private def haeAmmatillisenSuorituksenTiedot(hakemusOid: String, opiskeluoikeus: Json, ytoKoodiArvo: String): Seq[(String, String, Option[Int], String)] = {
+  private def haeAmmatillisenSuorituksenTiedot(hakemus: Hakemus, opiskeluoikeus: Json, ytoKoodiArvo: String): Seq[(String, String, Option[Int], String)] = {
+    val hakemusOid = hakemus.oid
     try {
-      val suoritukset = etsiAmmatillistenTutkintojenSuoritukset(opiskeluoikeus)
+      val suoritukset = etsiAmmatillistenTutkintojenSuoritukset(opiskeluoikeus, hakemus)
       val yhteistenTutkinnonOsienArvosanat = suoritukset
         .flatMap(suoritus => etsiYhteisetTutkinnonOsat(suoritus, sulkeutumisPaivamaara, Set(ytoKoodiArvo)))
 
@@ -200,10 +205,10 @@ object KoskiLaskenta {
     }
   }
 
-  private def etsiAmmatillistenTutkintojenSuoritukset(opiskeluoikeus: Json): Seq[Json] = {
+  private def etsiAmmatillistenTutkintojenSuoritukset(opiskeluoikeus: Json, hakemus: Hakemus) = {
     val suorituksenSallitutKoodit: Set[Int] = ammatillisenHhuomioitavatKoulutustyypit.map(_.koodiarvo)
 
-    etsiValmiitTutkinnot(Json.arr(opiskeluoikeus), ammatillisenHuomioitavaOpiskeluoikeudenTyyppi, ammatillisenSuorituksenTyyppi)
+    etsiValmiitTutkinnot(Json.arr(opiskeluoikeus), ammatillisenHuomioitavaOpiskeluoikeudenTyyppi, ammatillisenSuorituksenTyyppi, hakemus)
       .flatMap(tutkinto => etsiValiditSuoritukset(tutkinto, sulkeutumisPaivamaara, suorituksenSallitutKoodit))
   }
 
@@ -291,7 +296,7 @@ object KoskiLaskenta {
     })
   }
 
-  private def etsiValmiitTutkinnot(json: Json, opiskeluoikeudenHaluttuTyyppi: String, suorituksenHaluttuTyyppi: String): Seq[Json] = {
+  private def etsiValmiitTutkinnot(json: Json, opiskeluoikeudenHaluttuTyyppi: String, suorituksenHaluttuTyyppi: String, hakemus: Hakemus) = {
     // Opiskeluoikeudet etsivä linssi
     val _opiskeluoikeudet = JsonPath.root.each.json
 
@@ -311,7 +316,7 @@ object KoskiLaskenta {
       val suoritustavanKoodistoUri = _suoritustavanKoodistoUri.getAll(opiskeluoikeus)
 
       if (suorituksenTyyppi.size > 1) { // muussa tapauksessa nämä tiedot pitää parsia jotenkin muuten kuin erillisiksi listoiksi, ettei sekoiteta eri suoritusten tietoja
-        throw new IllegalStateException(s"Odotettiin täsmälleen yhtä suoritusta opiskeluoikeudelle")
+        throw new IllegalStateException(s"Odotettiin täsmälleen yhtä suoritusta opiskeluoikeudelle, mutta oli ${suorituksenTyyppi.size} hakemuksen ${hakemus.oid} hakijalle.")
       }
 
       val onkoValmistunut: Boolean = valmistumisTila.contains("valmistunut")
