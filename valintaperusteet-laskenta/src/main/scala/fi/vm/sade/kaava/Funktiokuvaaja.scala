@@ -156,11 +156,11 @@ object Funktiokuvaaja {
     ),
     Funktionimi.ITEROIAMMATILLISETTUTKINNOT -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
-      funktioargumentit = List(Funktioargumenttikuvaus("iteroitava koostefunktio", Funktiotyyppi.LUKUARVOFUNKTIO)),
+      funktioargumentit = List(Funktioargumenttikuvaus("iteroitava koostefunktio", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.YKSI)),
     ),
     Funktionimi.ITEROIAMMATILLISETOSAT -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
-      funktioargumentit = List(Funktioargumenttikuvaus("iteroitava funktio", Funktiotyyppi.LUKUARVOFUNKTIO)),
+      funktioargumentit = List(Funktioargumenttikuvaus("iteroitava funktio", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.YKSI)),
     ),
     Funktionimi.HAEAMMATILLINENYTOARVOSANA -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
