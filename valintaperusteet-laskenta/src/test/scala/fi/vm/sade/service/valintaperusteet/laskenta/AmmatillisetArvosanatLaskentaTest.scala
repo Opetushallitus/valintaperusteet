@@ -1,10 +1,10 @@
 
 package fi.vm.sade.service.valintaperusteet.laskenta
 
+import java.util.Collections
+import java.util.{HashMap => JHashMap}
 import java.util.{List => JList}
 import java.util.{Map => JMap}
-import java.util.{HashMap => JHashMap}
-import java.util.Collections
 
 import fi.vm.sade.kaava.LaskentaTestUtil.TestHakemus
 import fi.vm.sade.kaava.Laskentadomainkonvertteri
@@ -15,10 +15,7 @@ import fi.vm.sade.service.valintaperusteet.model.Arvokonvertteriparametri
 import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti
 import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu
 import fi.vm.sade.service.valintaperusteet.model.ValintaperusteViite
-import io.circe.Decoder
 import io.circe.Json
-import io.circe.optics.JsonPath
-import io.circe.optics.JsonTraversalPath
 import io.circe.parser
 import org.scalatest.funsuite.AnyFunSuite
 
@@ -34,6 +31,7 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
   private val hakemus = TestHakemus("", Nil, Map(), suoritukset, loadJson("koski-opiskeluoikeudet.json"))
   private val monenTutkinnonHakemus = TestHakemus("", Nil, Map(), suoritukset, loadJson("koski-monitutkinto.json"))
   private val reforminMukainenHakemus = TestHakemus("", Nil, Map(), suoritukset, loadJson("koski-reforminmukainen-keskiarvon_kanssa.json"))
+  private val hakemusJossaOnVainSkipattaviaNayttoja = TestHakemus("", Nil, Map(), suoritukset, loadJson("koski-kaksiskipattavaatutkintoa.json"))
 
   test("Tutkinnon yhteisten tutkinnon osien arvosanat") {
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeAmmatillinenYtoArvosanaKutsu())
@@ -103,6 +101,13 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
 
     val (monenTutkinnonTulos, _) = Laskin.laske(hakukohde, monenTutkinnonHakemus, lasku)
     assert(BigDecimal(monenTutkinnonTulos.get) == BigDecimal("2017"))
+  }
+
+  test("Kaksi suoritusta sisältävä skipattava tutkinto toimii myös") {
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeAmmatillisenTutkinnonSuoritustapaKutsu())
+
+    val (tulos, _) = Laskin.laske(hakukohde, hakemusJossaOnVainSkipattaviaNayttoja, lasku)
+    assert(tulos == None)
   }
 
   def createHaeAmmatillinenYtoArvosanaKutsu(konvertteriparametrit: Set[Arvokonvertteriparametri] = Set()): Funktiokutsu = {

@@ -299,38 +299,41 @@ object KoskiLaskenta {
     val _opiskeluoikeudenTyyppi = JsonPath.root.tyyppi.koodiarvo.string
     val _valmistumisTila = JsonPath.root.tila.opiskeluoikeusjaksot.each.tila.koodiarvo.string
     val _suoritukset = JsonPath.root.suoritukset.each
-    val _suorituksenTyyppi = _suoritukset.tyyppi.koodiarvo.string
-    val _suoritustavanKoodiarvo = _suoritukset.suoritustapa.koodiarvo.string
-    val _suoritustavanKoodistoUri = _suoritukset.suoritustapa.koodistoUri.string
+    val _suorituksenTyyppi = JsonPath.root.tyyppi.koodiarvo.string
+    val _suoritustavanKoodiarvo = JsonPath.root.suoritustapa.koodiarvo.string
+    val _suoritustavanKoodistoUri = JsonPath.root.suoritustapa.koodistoUri.string
 
     _opiskeluoikeudet.getAll(json).filter(opiskeluoikeus => {
       val opiskeluoikeudenTyyppi = _opiskeluoikeudenTyyppi.getOption(opiskeluoikeus).orNull
       val valmistumisTila = _valmistumisTila.getAll(opiskeluoikeus)
-      val suorituksenTyyppi = _suorituksenTyyppi.getAll(opiskeluoikeus)
-      val suoritustavanKoodiarvo = _suoritustavanKoodiarvo.getAll(opiskeluoikeus)
-      val suoritustavanKoodistoUri = _suoritustavanKoodistoUri.getAll(opiskeluoikeus)
 
-      if (suorituksenTyyppi.size > 1) { // muussa tapauksessa nämä tiedot pitää parsia jotenkin muuten kuin erillisiksi listoiksi, ettei sekoiteta eri suoritusten tietoja
-        throw new IllegalStateException(s"Odotettiin täsmälleen yhtä suoritusta opiskeluoikeudelle, mutta oli ${suorituksenTyyppi.size} hakemuksen ${hakemus.oid} hakijalle.")
+      _suoritukset.json.getAll(opiskeluoikeus).exists { suoritus =>
+        val suorituksenTyyppi = _suorituksenTyyppi.getOption(suoritus)
+        val suoritustavanKoodiarvo = _suoritustavanKoodiarvo.getOption(suoritus)
+        val suoritustavanKoodistoUri = _suoritustavanKoodistoUri.getOption(suoritus)
+
+        if (suorituksenTyyppi.size > 1) { // Suoritukselta pitäisi löytyä vain yksi tyyppi; vaikuttaa bugilta.
+          throw new IllegalStateException(s"Odotettiin täsmälleen yhtä tyyppiä suoritukselle, mutta oli ${suorituksenTyyppi.size} hakemuksen ${hakemus.oid} hakijalle.")
+        }
+
+        val onkoValmistunut: Boolean = valmistumisTila.contains("valmistunut")
+        val onkoValidiSuoritusTapa = suoritustavanKoodiarvo.map(s => sallitutSuoritusTavat.contains(s)).exists(v => v) &&
+          suoritustavanKoodistoUri.contains("ammatillisentutkinnonsuoritustapa")
+        val onkoAmmatillinenOpiskeluOikeus =
+          opiskeluoikeudenTyyppi == opiskeluoikeudenHaluttuTyyppi &&
+            suorituksenTyyppi.contains(suorituksenHaluttuTyyppi) &&
+            onkoValidiSuoritusTapa
+
+        LOG.debug("Opiskeluoikeuden tyyppi: %s".format(opiskeluoikeudenTyyppi))
+        LOG.debug("Valmistumistila: %s".format(valmistumisTila))
+        LOG.debug("Suoritustapa: %s".format(suoritustavanKoodiarvo))
+        LOG.debug("Onko validi suoritustapa: %s".format(onkoValidiSuoritusTapa))
+        LOG.debug("Onko valmistunut: %s".format(onkoValmistunut))
+        LOG.debug("Suorituksen tyyppi: %s".format(suorituksenTyyppi))
+        LOG.debug("Onko ammatillinen opiskeluoikeus: %s".format(onkoAmmatillinenOpiskeluOikeus))
+
+        onkoAmmatillinenOpiskeluOikeus && onkoValmistunut
       }
-
-      val onkoValmistunut: Boolean = valmistumisTila.contains("valmistunut")
-      val onkoValidiSuoritusTapa = suoritustavanKoodiarvo.map(s => sallitutSuoritusTavat.contains(s)).exists(v => v) &&
-        suoritustavanKoodistoUri.contains("ammatillisentutkinnonsuoritustapa")
-      val onkoAmmatillinenOpiskeluOikeus =
-        opiskeluoikeudenTyyppi == opiskeluoikeudenHaluttuTyyppi &&
-        suorituksenTyyppi.contains(suorituksenHaluttuTyyppi) &&
-        onkoValidiSuoritusTapa
-
-      LOG.debug("Opiskeluoikeuden tyyppi: %s".format(opiskeluoikeudenTyyppi))
-      LOG.debug("Valmistumistila: %s".format(valmistumisTila))
-      LOG.debug("Suoritustapa: %s".format(suoritustavanKoodiarvo))
-      LOG.debug("Onko validi suoritustapa: %s".format(onkoValidiSuoritusTapa))
-      LOG.debug("Onko valmistunut: %s".format(onkoValmistunut))
-      LOG.debug("Suorituksen tyyppi: %s".format(suorituksenTyyppi))
-      LOG.debug("Onko ammatillinen opiskeluoikeus: %s".format(onkoAmmatillinenOpiskeluOikeus))
-
-      onkoAmmatillinenOpiskeluOikeus && onkoValmistunut
     })
   }
 }
