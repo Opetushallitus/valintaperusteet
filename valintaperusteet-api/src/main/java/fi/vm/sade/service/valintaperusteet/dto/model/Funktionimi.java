@@ -84,5 +84,7 @@ public enum Funktionimi {
         ammatillistenArvosanojenFunktionimet.add(HAEAMMATILLINENYTOARVOSANA);
         ammatillistenArvosanojenFunktionimet.add(HAEAMMATILLISENOSANLAAJUUS);
         ammatillistenArvosanojenFunktionimet.add(HAEAMMATILLISENOSANARVOSANA);
+        ammatillistenArvosanojenFunktionimet.add(HAEAMMATILLISENTUTKINNONSUORITUSTAPA);
+        ammatillistenArvosanojenFunktionimet.add(HAEAMMATILLISENTUTKINNONKESKIARVO);
     }
 }
