@@ -50,7 +50,7 @@ object KoskiLaskenta {
                      oletusarvo: Option[BigDecimal]
                     ): Option[BigDecimal] = {
     if (hakemus.koskiOpiskeluoikeudet != null) {
-      haeYtoArvosana(ammatillisenPerustutkinnonValitsija, hakemus, hakemus.koskiOpiskeluoikeudet, valintaperusteviite.tunniste)
+      haeYtoArvosana(ammatillisenPerustutkinnonValitsija, hakemus, valintaperusteviite.tunniste)
     } else {
       oletusarvo
     }
@@ -61,7 +61,7 @@ object KoskiLaskenta {
                               valintaperusteviite: Laskenta.Valintaperuste
                              ): Option[String] = {
     if (hakemus.koskiOpiskeluoikeudet != null) {
-      haeAmmatillisenSuorituksenTiedot(hakemus, hakemus.koskiOpiskeluoikeudet, ammatillisenPerustutkinnonValitsija, valintaperusteviite.tunniste) match {
+      haeAmmatillisenSuorituksenTiedot(hakemus, ammatillisenPerustutkinnonValitsija, valintaperusteviite.tunniste) match {
         case Nil => None
         case (osasuorituksenKoodiarvo, osasuorituksenNimiFi, osasuorituksenArvio, osasuorituksenArviointiAsteikko) :: Nil => Some(osasuorituksenArviointiAsteikko)
         case xs => throw new IllegalArgumentException(s"Piti löytyä vain yksi suoritus valitsijalla $ammatillisenPerustutkinnonValitsija , mutta löytyi ${xs.size} : $xs")
@@ -148,13 +148,9 @@ object KoskiLaskenta {
     }
   }
 
-  private def haeYtoArvosana(ammatillisenPerustutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
-                             hakemus: Hakemus,
-                             opiskeluoikeudet: Json,
-                             ytoKoodiArvo: String
-                            ): Option[BigDecimal] = {
+  private def haeYtoArvosana(ammatillisenPerustutkinnonValitsija: AmmatillisenPerustutkinnonValitsija, hakemus: Hakemus, ytoKoodiArvo: String) = {
 
-    haeAmmatillisenSuorituksenTiedot(hakemus, opiskeluoikeudet, ammatillisenPerustutkinnonValitsija, ytoKoodiArvo) match {
+    haeAmmatillisenSuorituksenTiedot(hakemus, ammatillisenPerustutkinnonValitsija, ytoKoodiArvo) match {
       case Nil => None
       case (_, _, osasuorituksenArvio, _) :: Nil => osasuorituksenArvio match {
         case Some(x) => Some(BigDecimal(x))
@@ -165,12 +161,11 @@ object KoskiLaskenta {
   }
 
   private def haeAmmatillisenSuorituksenTiedot(hakemus: Hakemus,
-                                               kaikkiOpiskeluoikeudet: Json,
                                                ammatillisenPerustutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
                                                ytoKoodiArvo: String
                                               ): Seq[(String, String, Option[Int], String)] = {
     val oikeaOpiskeluoikeus: Json = etsiValmiitTutkinnot(
-      kaikkiOpiskeluoikeudet,
+      hakemus.koskiOpiskeluoikeudet,
       opiskeluoikeudenHaluttuTyyppi = ammatillisenHuomioitavaOpiskeluoikeudenTyyppi,
       suorituksenHaluttuTyyppi = ammatillisenSuorituksenTyyppi,
       hakemus = hakemus)(ammatillisenPerustutkinnonValitsija.tutkinnonIndeksi)
