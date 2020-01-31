@@ -4,12 +4,12 @@ import java.lang.{Integer => JInteger}
 import java.math.{BigDecimal => JBigDecimal}
 import java.util.{List => JList, Map => JMap}
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import fi.vm.sade.kaava.Funktiokuvaaja.Konvertterinimi.Konvertterinimi
 import fi.vm.sade.kaava.Funktiokuvaaja.{Konvertterinimi, _}
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.{Hylattytila, Hyvaksyttavissatila, Tila, Virhetila}
 import fi.vm.sade.service.valintaperusteet.laskenta.api.{Hakemus, Hakutoive}
 import fi.vm.sade.service.valintaperusteet.model.JsonViews
+import org.codehaus.jackson.map.ObjectMapper
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 

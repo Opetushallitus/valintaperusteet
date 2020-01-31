@@ -21,6 +21,7 @@
         <hibernate.version>4.2.7.Final</hibernate.version>
         <httpcomponents.version>4.5.2</httpcomponents.version>
         <jackson2.version>2.10.1</jackson2.version>
+        <jackson.version>1.9.13</jackson.version>
         <jetty.version>9.4.15.v20190215</jetty.version>
         <modelmapper.version>2.3.2</modelmapper.version>
         <spring.asm.version>3.1.4.RELEASE</spring.asm.version>
