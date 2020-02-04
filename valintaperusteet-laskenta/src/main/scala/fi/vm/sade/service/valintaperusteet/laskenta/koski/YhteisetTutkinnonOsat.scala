@@ -21,7 +21,7 @@ object YhteisetTutkinnonOsat {
                               valintaperusteviite: Laskenta.Valintaperuste
                              ): Option[String] = {
     if (hakemus.koskiOpiskeluoikeudet != null) {
-      haeAmmatillisenSuorituksenTiedot(hakemus, ammatillisenPerustutkinnonValitsija, valintaperusteviite.tunniste) match {
+      haeYhteisenTutkinnonOsanTiedot(hakemus, ammatillisenPerustutkinnonValitsija, valintaperusteviite.tunniste) match {
         case Nil => None
         case o :: Nil => Some(o.uusinArviointiasteikko)
         case xs => throw new IllegalArgumentException(s"Piti löytyä vain yksi suoritus valitsijalla $ammatillisenPerustutkinnonValitsija , mutta löytyi ${xs.size} : $xs")
@@ -43,16 +43,16 @@ object YhteisetTutkinnonOsat {
     }
   }
 
-  private def haeAmmatillisenSuorituksenTiedot(hakemus: Hakemus,
-                                               ammatillisenPerustutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
-                                               ytoKoodiArvo: String
-                                              ): Seq[Osasuoritus] = {
+  private def haeYhteisenTutkinnonOsanTiedot(hakemus: Hakemus,
+                                             ammatillisenPerustutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
+                                             ytoKoodiArvo: String
+                                            ): Seq[Osasuoritus] = {
     val oikeaOpiskeluoikeus: Json = etsiValmiitTutkinnot(
       hakemus.koskiOpiskeluoikeudet,
       opiskeluoikeudenHaluttuTyyppi = ammatillisenHuomioitavaOpiskeluoikeudenTyyppi,
       suorituksenHaluttuTyyppi = ammatillisenSuorituksenTyyppi,
       hakemus = hakemus)(ammatillisenPerustutkinnonValitsija.tutkinnonIndeksi)
-    val ammatillisenSuorituksenTiedot = YhteisetTutkinnonOsat.haeAmmatillisenSuorituksenTiedot(
+    val ammatillisenSuorituksenTiedot = YhteisetTutkinnonOsat.haeYhteisenTutkinnonOsanTiedot(
       hakemus,
       oikeaOpiskeluoikeus,
       ytoKoodiArvo)
@@ -74,7 +74,7 @@ object YhteisetTutkinnonOsat {
 
   private def haeYtoArvosana(ammatillisenPerustutkinnonValitsija: AmmatillisenPerustutkinnonValitsija, hakemus: Hakemus, ytoKoodiArvo: String) = {
 
-    haeAmmatillisenSuorituksenTiedot(hakemus, ammatillisenPerustutkinnonValitsija, ytoKoodiArvo) match {
+    haeYhteisenTutkinnonOsanTiedot(hakemus, ammatillisenPerustutkinnonValitsija, ytoKoodiArvo) match {
       case Nil => None
       case o :: Nil => o.uusinHyvaksyttyArvio match {
         case Some(x) => Some(BigDecimal(x))
@@ -84,7 +84,7 @@ object YhteisetTutkinnonOsat {
     }
   }
 
-  private def haeAmmatillisenSuorituksenTiedot(hakemus: Hakemus, opiskeluoikeus: Json, ytoKoodiArvo: String): Seq[Osasuoritus] = {
+  private def haeYhteisenTutkinnonOsanTiedot(hakemus: Hakemus, opiskeluoikeus: Json, ytoKoodiArvo: String): Seq[Osasuoritus] = {
     val hakemusOid = hakemus.oid
     try {
       val suoritukset = etsiAmmatillistenTutkintojenSuoritukset(opiskeluoikeus, hakemus)
