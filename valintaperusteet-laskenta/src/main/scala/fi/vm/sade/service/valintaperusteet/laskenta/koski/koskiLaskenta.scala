@@ -135,9 +135,9 @@ object KoskiLaskenta {
   }
 
   def etsiOsasuoritukset(suoritus: Json,
-                                 sulkeutumisPäivämäärä: DateTime,
-                                 osasuoritusPredikaatti: Json => Boolean,
-                                ): List[Osasuoritus] = {
+                         sulkeutumisPäivämäärä: DateTime,
+                         osasuoritusPredikaatti: Json => Boolean,
+                        ): List[Osasuoritus] = {
     _osasuoritukset.getAll(suoritus).filter(osasuoritusPredikaatti).map(osasuoritus => {
       val osasuorituksenKoodiarvo = _osasuorituksenKoulutusmoduulinTunnisteenKoodiarvo.getOption(osasuoritus).orNull
       val osasuorituksenNimiFi = _osasuorituksenKoulutusmoduulinNimiFi.getOption(osasuoritus).orNull
