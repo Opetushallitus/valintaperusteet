@@ -39,10 +39,7 @@ object YhteisetTutkinnonOsat {
     if (hakemus.koskiOpiskeluoikeudet != null) {
       haeYhteisenTutkinnonOsanTiedot(hakemus, ammatillisenPerustutkinnonValitsija, valintaperusteviite.tunniste) match {
         case Nil => None
-        case o :: Nil => o.uusinHyvaksyttyArvio match {
-          case Some(x) => Some(BigDecimal(x))
-          case None => None
-        }
+        case o :: Nil => o.uusinHyvaksyttyArvio.map(BigDecimal(_))
         case xs => throw new IllegalArgumentException(s"Piti löytyä vain yksi suoritus valitsijalla $ammatillisenPerustutkinnonValitsija , mutta löytyi ${xs.size} : $xs")
       }
     } else {
