@@ -43,6 +43,21 @@ object YhteisetTutkinnonOsat {
     }
   }
 
+  private def haeYtoArvosana(ammatillisenPerustutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
+                             hakemus: Hakemus,
+                             ytoKoodiArvo: String
+                            ): Option[BigDecimal] = {
+
+    haeYhteisenTutkinnonOsanTiedot(hakemus, ammatillisenPerustutkinnonValitsija, ytoKoodiArvo) match {
+      case Nil => None
+      case o :: Nil => o.uusinHyvaksyttyArvio match {
+        case Some(x) => Some(BigDecimal(x))
+        case None => None
+      }
+      case xs => throw new IllegalArgumentException(s"Piti löytyä vain yksi suoritus valitsijalla $ammatillisenPerustutkinnonValitsija , mutta löytyi ${xs.size} : $xs")
+    }
+  }
+
   private def haeYhteisenTutkinnonOsanTiedot(hakemus: Hakemus,
                                              ammatillisenPerustutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
                                              ytoKoodiArvo: String
@@ -57,31 +72,6 @@ object YhteisetTutkinnonOsat {
       oikeaOpiskeluoikeus,
       ytoKoodiArvo)
     ammatillisenSuorituksenTiedot
-  }
-
-  private def etsiAmmatillistenTutkintojenSuoritukset(opiskeluoikeus: Json, hakemus: Hakemus) = {
-    val suorituksenSallitutKoodit: Set[Int] = ammatillisenHhuomioitavatKoulutustyypit.map(_.koodiarvo)
-
-    KoskiLaskenta.etsiValmiitTutkinnot(Json.arr(opiskeluoikeus), KoskiLaskenta.ammatillisenHuomioitavaOpiskeluoikeudenTyyppi, KoskiLaskenta.ammatillisenSuorituksenTyyppi, hakemus)
-      .flatMap(tutkinto => KoskiLaskenta.etsiValiditSuoritukset(tutkinto, KoskiLaskenta.sulkeutumisPaivamaara, suorituksenSallitutKoodit))
-  }
-
-  private def etsiYhteisetTutkinnonOsat(suoritus: Json, sulkeutumisPäivämäärä: DateTime, osasuorituksenSallitutKoodit: Set[String]): List[Osasuoritus] = {
-    KoskiLaskenta.etsiOsasuoritukset(suoritus, sulkeutumisPäivämäärä, osasuoritus => {
-      osasuorituksenSallitutKoodit.contains(KoskiLaskenta._osasuorituksenKoulutusmoduulinTunnisteenKoodiarvo.getOption(osasuoritus).orNull)
-    })
-  }
-
-  private def haeYtoArvosana(ammatillisenPerustutkinnonValitsija: AmmatillisenPerustutkinnonValitsija, hakemus: Hakemus, ytoKoodiArvo: String) = {
-
-    haeYhteisenTutkinnonOsanTiedot(hakemus, ammatillisenPerustutkinnonValitsija, ytoKoodiArvo) match {
-      case Nil => None
-      case o :: Nil => o.uusinHyvaksyttyArvio match {
-        case Some(x) => Some(BigDecimal(x))
-        case None => None
-      }
-      case xs => throw new IllegalArgumentException(s"Piti löytyä vain yksi suoritus valitsijalla $ammatillisenPerustutkinnonValitsija , mutta löytyi ${xs.size} : $xs")
-    }
   }
 
   private def haeYhteisenTutkinnonOsanTiedot(hakemus: Hakemus, opiskeluoikeus: Json, ytoKoodiArvo: String): Seq[Osasuoritus] = {
@@ -106,5 +96,18 @@ object YhteisetTutkinnonOsat {
         throw e
       }
     }
+  }
+
+  private def etsiYhteisetTutkinnonOsat(suoritus: Json, sulkeutumisPäivämäärä: DateTime, osasuorituksenSallitutKoodit: Set[String]): List[Osasuoritus] = {
+    KoskiLaskenta.etsiOsasuoritukset(suoritus, sulkeutumisPäivämäärä, osasuoritus => {
+      osasuorituksenSallitutKoodit.contains(KoskiLaskenta._osasuorituksenKoulutusmoduulinTunnisteenKoodiarvo.getOption(osasuoritus).orNull)
+    })
+  }
+
+  private def etsiAmmatillistenTutkintojenSuoritukset(opiskeluoikeus: Json, hakemus: Hakemus) = {
+    val suorituksenSallitutKoodit: Set[Int] = ammatillisenHhuomioitavatKoulutustyypit.map(_.koodiarvo)
+
+    KoskiLaskenta.etsiValmiitTutkinnot(Json.arr(opiskeluoikeus), KoskiLaskenta.ammatillisenHuomioitavaOpiskeluoikeudenTyyppi, KoskiLaskenta.ammatillisenSuorituksenTyyppi, hakemus)
+      .flatMap(tutkinto => KoskiLaskenta.etsiValiditSuoritukset(tutkinto, KoskiLaskenta.sulkeutumisPaivamaara, suorituksenSallitutKoodit))
   }
 }
