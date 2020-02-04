@@ -20,16 +20,13 @@ object YhteisetTutkinnonOsat {
                               hakemus: Hakemus,
                               valintaperusteviite: Laskenta.Valintaperuste
                              ): Option[String] = {
-    if (hakemus.koskiOpiskeluoikeudet != null) {
-      haeYhteisenTutkinnonOsanTiedot(hakemus, ammatillisenPerustutkinnonValitsija, valintaperusteviite.tunniste) match {
-        case Nil => None
-        case o :: Nil => Some(o.uusinArviointiasteikko)
-        case xs => throw new IllegalArgumentException(s"Piti löytyä vain yksi koodin ${valintaperusteviite.tunniste} yto " +
-          s"valitsijalla $ammatillisenPerustutkinnonValitsija , mutta löytyi ${xs.size} : $xs")
-      }
-    } else {
+    haeTietoYhteisestäTutkinnonosasta(
+      ammatillisenPerustutkinnonValitsija,
+      hakemus,
+      valintaperusteviite,
+      o => Some(o.uusinArviointiasteikko),
       None
-    }
+    )
   }
 
   def haeYtoArvosana(ammatillisenPerustutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
@@ -37,10 +34,25 @@ object YhteisetTutkinnonOsat {
                      valintaperusteviite: Laskenta.Valintaperuste,
                      oletusarvo: Option[BigDecimal]
                     ): Option[BigDecimal] = {
+    haeTietoYhteisestäTutkinnonosasta[BigDecimal](
+      ammatillisenPerustutkinnonValitsija,
+      hakemus,
+      valintaperusteviite,
+      o => o.uusinHyvaksyttyArvio.map(BigDecimal(_)),
+      oletusarvo
+    )
+  }
+
+  private def haeTietoYhteisestäTutkinnonosasta[T](ammatillisenPerustutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
+                                                   hakemus: Hakemus,
+                                                   valintaperusteviite: Laskenta.Valintaperuste,
+                                                   tiedonHakija: Osasuoritus => Option[T],
+                                                   oletusarvo: Option[T]
+                                                  ): Option[T] = {
     if (hakemus.koskiOpiskeluoikeudet != null) {
       haeYhteisenTutkinnonOsanTiedot(hakemus, ammatillisenPerustutkinnonValitsija, valintaperusteviite.tunniste) match {
         case Nil => None
-        case o :: Nil => o.uusinHyvaksyttyArvio.map(BigDecimal(_))
+        case o :: Nil => tiedonHakija.apply(o)
         case xs => throw new IllegalArgumentException(s"Piti löytyä vain yksi koodin ${valintaperusteviite.tunniste} yto " +
           s"valitsijalla $ammatillisenPerustutkinnonValitsija , mutta löytyi ${xs.size} : $xs")
       }
