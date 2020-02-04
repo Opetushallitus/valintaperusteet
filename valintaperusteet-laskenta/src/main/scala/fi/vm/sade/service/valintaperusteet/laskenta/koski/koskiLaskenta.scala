@@ -1,5 +1,8 @@
-package fi.vm.sade.service.valintaperusteet.laskenta
+package fi.vm.sade.service.valintaperusteet.laskenta.koski
 
+import fi.vm.sade.service.valintaperusteet.laskenta.AmmatillisenPerustutkinnonValitsija
+import fi.vm.sade.service.valintaperusteet.laskenta.AmmatillisenTutkinnonOsanValitsija
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus
 import io.circe.Json
 import io.circe.optics.JsonPath

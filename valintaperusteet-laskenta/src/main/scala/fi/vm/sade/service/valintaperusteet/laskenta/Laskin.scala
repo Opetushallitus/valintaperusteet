@@ -96,6 +96,7 @@ import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.TuloksiaLiianVahanL
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Virhetila
 import fi.vm.sade.service.valintaperusteet.laskenta.api.{FunktioTulos => FTulos}
 import fi.vm.sade.service.valintaperusteet.laskenta.api.{SyotettyArvo => SArvo}
+import fi.vm.sade.service.valintaperusteet.laskenta.koski.KoskiLaskenta
 import org.slf4j.LoggerFactory
 import play.api.libs.json._
 
