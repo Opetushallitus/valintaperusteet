@@ -52,16 +52,14 @@ object KoskiLaskenta {
                                           hakemus: Hakemus,
                                           oletusarvo: Option[BigDecimal]
                                      ): Option[BigDecimal] = {
-    val osa: (String, String, Option[Int], String, Option[BigDecimal]) = haeAmmatillisenTutkinnonOsat(tutkinnonValitsija, hakemus)(osanValitsija.osanIndeksi)
-    osa._5.orElse(oletusarvo)
+    haeAmmatillisenTutkinnonOsat(tutkinnonValitsija, hakemus)(osanValitsija.osanIndeksi).uusinLaajuus.orElse(oletusarvo)
   }
 
   def haeAmmatillisenTutkinnonOsanArvosana(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
                                            osanValitsija: AmmatillisenTutkinnonOsanValitsija,
                                            hakemus: Hakemus
                                       ): Option[BigDecimal] = {
-    val osa: (String, String, Option[Int], String, Option[BigDecimal]) = haeAmmatillisenTutkinnonOsat(tutkinnonValitsija, hakemus)(osanValitsija.osanIndeksi)
-    osa._3.map(BigDecimal(_))
+    haeAmmatillisenTutkinnonOsat(tutkinnonValitsija, hakemus)(osanValitsija.osanIndeksi).uusinHyvaksyttyArvio.map(BigDecimal(_))
   }
 
   def haeAmmatillisenTutkinnonKoskeenTallennettuKeskiarvo(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija, hakemus: Hakemus): Option[BigDecimal] = {
@@ -139,7 +137,7 @@ object KoskiLaskenta {
   def etsiOsasuoritukset(suoritus: Json,
                                  sulkeutumisPäivämäärä: DateTime,
                                  osasuoritusPredikaatti: Json => Boolean,
-                                ): List[(String, String, Option[Int], String, Option[BigDecimal])] = {
+                                ): List[Osasuoritus] = {
     _osasuoritukset.getAll(suoritus).filter(osasuoritusPredikaatti).map(osasuoritus => {
       val osasuorituksenKoodiarvo = _osasuorituksenKoulutusmoduulinTunnisteenKoodiarvo.getOption(osasuoritus).orNull
       val osasuorituksenNimiFi = _osasuorituksenKoulutusmoduulinNimiFi.getOption(osasuoritus).orNull
@@ -150,7 +148,7 @@ object KoskiLaskenta {
       LOG.debug("Osasuorituksen nimi: %s".format(osasuorituksenNimiFi))
       LOG.debug("Osasuorituksen koodiarvo: %s".format(osasuorituksenKoodiarvo))
 
-      (osasuorituksenKoodiarvo, osasuorituksenNimiFi, uusinHyvaksyttyArvio.toIntOption, uusinArviointiAsteikko, Option(uusinLaajuus))
+      Osasuoritus(osasuorituksenKoodiarvo, osasuorituksenNimiFi, uusinHyvaksyttyArvio.toIntOption, uusinArviointiAsteikko, Option(uusinLaajuus))
     })
   }
 
@@ -218,7 +216,7 @@ object KoskiLaskenta {
     }
   }
 
-  private def haeAmmatillisenTutkinnonOsat(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija, hakemus: Hakemus): List[(String, String, Option[Int], String, Option[BigDecimal])] = {
+  private def haeAmmatillisenTutkinnonOsat(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija, hakemus: Hakemus): List[Osasuoritus] = {
     if (hakemus.koskiOpiskeluoikeudet == null) {
       Nil
     } else {
@@ -273,3 +271,9 @@ case object AmmatillinenPerustutkintoErityisopetuksena extends AmmatillisenPerus
   val koodiarvo: Int = 4
   val kuvaus: String = "Ammatillinen perustutkinto erityisopetuksena"
 }
+
+case class Osasuoritus(koulutusmoduulinTunnisteenKoodiarvo: String,
+                       koulutusmoduulinNimiFi: String,
+                       uusinHyvaksyttyArvio: Option[Int],
+                       uusinArviointiasteikko: String,
+                       uusinLaajuus: Option[BigDecimal])

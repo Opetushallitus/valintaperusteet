@@ -23,7 +23,7 @@ object YhteisetTutkinnonOsat {
     if (hakemus.koskiOpiskeluoikeudet != null) {
       haeAmmatillisenSuorituksenTiedot(hakemus, ammatillisenPerustutkinnonValitsija, valintaperusteviite.tunniste) match {
         case Nil => None
-        case (osasuorituksenKoodiarvo, osasuorituksenNimiFi, osasuorituksenArvio, osasuorituksenArviointiAsteikko) :: Nil => Some(osasuorituksenArviointiAsteikko)
+        case o :: Nil => Some(o.uusinArviointiasteikko)
         case xs => throw new IllegalArgumentException(s"Piti löytyä vain yksi suoritus valitsijalla $ammatillisenPerustutkinnonValitsija , mutta löytyi ${xs.size} : $xs")
       }
     } else {
@@ -46,7 +46,7 @@ object YhteisetTutkinnonOsat {
   private def haeAmmatillisenSuorituksenTiedot(hakemus: Hakemus,
                                                ammatillisenPerustutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
                                                ytoKoodiArvo: String
-                                              ): Seq[(String, String, Option[Int], String)] = {
+                                              ): Seq[Osasuoritus] = {
     val oikeaOpiskeluoikeus: Json = etsiValmiitTutkinnot(
       hakemus.koskiOpiskeluoikeudet,
       opiskeluoikeudenHaluttuTyyppi = ammatillisenHuomioitavaOpiskeluoikeudenTyyppi,
@@ -66,17 +66,17 @@ object YhteisetTutkinnonOsat {
       .flatMap(tutkinto => KoskiLaskenta.etsiValiditSuoritukset(tutkinto, KoskiLaskenta.sulkeutumisPaivamaara, suorituksenSallitutKoodit))
   }
 
-  private def etsiYhteisetTutkinnonOsat(suoritus: Json, sulkeutumisPäivämäärä: DateTime, osasuorituksenSallitutKoodit: Set[String]): List[(String, String, Option[Int], String)] = {
+  private def etsiYhteisetTutkinnonOsat(suoritus: Json, sulkeutumisPäivämäärä: DateTime, osasuorituksenSallitutKoodit: Set[String]): List[Osasuoritus] = {
     KoskiLaskenta.etsiOsasuoritukset(suoritus, sulkeutumisPäivämäärä, osasuoritus => {
       osasuorituksenSallitutKoodit.contains(KoskiLaskenta._osasuorituksenKoulutusmoduulinTunnisteenKoodiarvo.getOption(osasuoritus).orNull)
-    }).map(x => (x._1, x._2, x._3, x._4))
+    })
   }
 
   private def haeYtoArvosana(ammatillisenPerustutkinnonValitsija: AmmatillisenPerustutkinnonValitsija, hakemus: Hakemus, ytoKoodiArvo: String) = {
 
     haeAmmatillisenSuorituksenTiedot(hakemus, ammatillisenPerustutkinnonValitsija, ytoKoodiArvo) match {
       case Nil => None
-      case (_, _, osasuorituksenArvio, _) :: Nil => osasuorituksenArvio match {
+      case o :: Nil => o.uusinHyvaksyttyArvio match {
         case Some(x) => Some(BigDecimal(x))
         case None => None
       }
@@ -84,11 +84,11 @@ object YhteisetTutkinnonOsat {
     }
   }
 
-  private def haeAmmatillisenSuorituksenTiedot(hakemus: Hakemus, opiskeluoikeus: Json, ytoKoodiArvo: String): Seq[(String, String, Option[Int], String)] = {
+  private def haeAmmatillisenSuorituksenTiedot(hakemus: Hakemus, opiskeluoikeus: Json, ytoKoodiArvo: String): Seq[Osasuoritus] = {
     val hakemusOid = hakemus.oid
     try {
       val suoritukset = etsiAmmatillistenTutkintojenSuoritukset(opiskeluoikeus, hakemus)
-      val yhteistenTutkinnonOsienArvosanat = suoritukset
+      val yhteistenTutkinnonOsienArvosanat: Seq[Osasuoritus] = suoritukset
         .flatMap(suoritus => etsiYhteisetTutkinnonOsat(suoritus, sulkeutumisPaivamaara, Set(ytoKoodiArvo)))
 
       if (yhteistenTutkinnonOsienArvosanat.size > 1) {
