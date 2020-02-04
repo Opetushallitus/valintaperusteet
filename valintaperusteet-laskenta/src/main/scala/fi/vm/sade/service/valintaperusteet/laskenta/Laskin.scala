@@ -97,6 +97,7 @@ import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Virhetila
 import fi.vm.sade.service.valintaperusteet.laskenta.api.{FunktioTulos => FTulos}
 import fi.vm.sade.service.valintaperusteet.laskenta.api.{SyotettyArvo => SArvo}
 import fi.vm.sade.service.valintaperusteet.laskenta.koski.KoskiLaskenta
+import fi.vm.sade.service.valintaperusteet.laskenta.koski.YhteisetTutkinnonOsat
 import org.slf4j.LoggerFactory
 import play.api.libs.json._
 
@@ -817,7 +818,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
 
       case f@HaeAmmatillinenYtoArvosana(konvertteri, oletusarvo, valintaperusteviite, _, _,_,_,_,_) =>
         val tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija = ammatillisenTutkinnonValitsija(iteraatioParametrit, f)
-        val arvosanaKoskessa: Option[BigDecimal] = KoskiLaskenta.haeYtoArvosana(tutkinnonValitsija, hakemus, valintaperusteviite, oletusarvo)
+        val arvosanaKoskessa: Option[BigDecimal] = YhteisetTutkinnonOsat.haeYtoArvosana(tutkinnonValitsija, hakemus, valintaperusteviite, oletusarvo)
 
         val (tulos, tilalista) = konvertoi(konvertteri, arvosanaKoskessa)
 
@@ -835,7 +836,7 @@ private class Laskin private(private val hakukohde: Hakukohde,
 
       case f@HaeAmmatillinenYtoArviointiAsteikko(konvertteri, oletusarvo, valintaperusteviite, _, _,_,_,_,_) =>
         val tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija = ammatillisenTutkinnonValitsija(iteraatioParametrit, f)
-        val asteikonKoodiKoskessa: Option[String] = KoskiLaskenta.haeYtoArviointiasteikko(tutkinnonValitsija, hakemus, valintaperusteviite)
+        val asteikonKoodiKoskessa: Option[String] = YhteisetTutkinnonOsat.haeYtoArviointiasteikko(tutkinnonValitsija, hakemus, valintaperusteviite)
 
         val (konv: Option[Arvokonvertteri[String, BigDecimal]], tilatKonvertterinHausta) = konvertteri match {
           case a: Arvokonvertteri[_, _] => konversioToArvokonversio[String, BigDecimal](a.konversioMap, hakemus.kentat, hakukohde)
