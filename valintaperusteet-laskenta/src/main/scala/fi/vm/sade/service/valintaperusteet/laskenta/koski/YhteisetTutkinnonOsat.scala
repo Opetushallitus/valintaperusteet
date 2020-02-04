@@ -37,24 +37,16 @@ object YhteisetTutkinnonOsat {
                      oletusarvo: Option[BigDecimal]
                     ): Option[BigDecimal] = {
     if (hakemus.koskiOpiskeluoikeudet != null) {
-      haeYtoArvosana(ammatillisenPerustutkinnonValitsija, hakemus, valintaperusteviite.tunniste)
+      haeYhteisenTutkinnonOsanTiedot(hakemus, ammatillisenPerustutkinnonValitsija, valintaperusteviite.tunniste) match {
+        case Nil => None
+        case o :: Nil => o.uusinHyvaksyttyArvio match {
+          case Some(x) => Some(BigDecimal(x))
+          case None => None
+        }
+        case xs => throw new IllegalArgumentException(s"Piti löytyä vain yksi suoritus valitsijalla $ammatillisenPerustutkinnonValitsija , mutta löytyi ${xs.size} : $xs")
+      }
     } else {
       oletusarvo
-    }
-  }
-
-  private def haeYtoArvosana(ammatillisenPerustutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
-                             hakemus: Hakemus,
-                             ytoKoodiArvo: String
-                            ): Option[BigDecimal] = {
-
-    haeYhteisenTutkinnonOsanTiedot(hakemus, ammatillisenPerustutkinnonValitsija, ytoKoodiArvo) match {
-      case Nil => None
-      case o :: Nil => o.uusinHyvaksyttyArvio match {
-        case Some(x) => Some(BigDecimal(x))
-        case None => None
-      }
-      case xs => throw new IllegalArgumentException(s"Piti löytyä vain yksi suoritus valitsijalla $ammatillisenPerustutkinnonValitsija , mutta löytyi ${xs.size} : $xs")
     }
   }
 
