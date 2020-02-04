@@ -24,7 +24,8 @@ object YhteisetTutkinnonOsat {
       haeYhteisenTutkinnonOsanTiedot(hakemus, ammatillisenPerustutkinnonValitsija, valintaperusteviite.tunniste) match {
         case Nil => None
         case o :: Nil => Some(o.uusinArviointiasteikko)
-        case xs => throw new IllegalArgumentException(s"Piti löytyä vain yksi suoritus valitsijalla $ammatillisenPerustutkinnonValitsija , mutta löytyi ${xs.size} : $xs")
+        case xs => throw new IllegalArgumentException(s"Piti löytyä vain yksi koodin ${valintaperusteviite.tunniste} yto " +
+          s"valitsijalla $ammatillisenPerustutkinnonValitsija , mutta löytyi ${xs.size} : $xs")
       }
     } else {
       None
@@ -40,7 +41,8 @@ object YhteisetTutkinnonOsat {
       haeYhteisenTutkinnonOsanTiedot(hakemus, ammatillisenPerustutkinnonValitsija, valintaperusteviite.tunniste) match {
         case Nil => None
         case o :: Nil => o.uusinHyvaksyttyArvio.map(BigDecimal(_))
-        case xs => throw new IllegalArgumentException(s"Piti löytyä vain yksi suoritus valitsijalla $ammatillisenPerustutkinnonValitsija , mutta löytyi ${xs.size} : $xs")
+        case xs => throw new IllegalArgumentException(s"Piti löytyä vain yksi koodin ${valintaperusteviite.tunniste} yto " +
+          s"valitsijalla $ammatillisenPerustutkinnonValitsija , mutta löytyi ${xs.size} : $xs")
       }
     } else {
       oletusarvo
