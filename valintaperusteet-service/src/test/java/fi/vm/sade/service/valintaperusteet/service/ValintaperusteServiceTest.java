@@ -74,6 +74,7 @@ public class ValintaperusteServiceTest {
         assertEquals(3, ValintaperusteetDTOs.get(0).getValinnanVaihe().getValintatapajono().get(0).getJarjestyskriteerit().size());
         assertEquals(1, ValintaperusteetDTOs.get(0).getValinnanVaihe().getValintatapajono().get(1).getPrioriteetti());
         assertEquals(1, ValintaperusteetDTOs.get(0).getValinnanVaihe().getValintatapajono().get(0).getJarjestyskriteerit().get(1).getPrioriteetti());
+        assertEquals("kaava1", ValintaperusteetDTOs.get(0).getValinnanVaihe().getValintatapajono().get(0).getJarjestyskriteerit().get(0).getNimi());
     }
 
     @Test

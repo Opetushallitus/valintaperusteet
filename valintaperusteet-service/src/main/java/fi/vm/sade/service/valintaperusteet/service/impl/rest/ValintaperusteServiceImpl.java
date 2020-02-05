@@ -254,6 +254,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
             jarjestyskriteeriDTO.setNimi(jarjestyskriteeri.getMetatiedot());
             Long start = System.currentTimeMillis();
             Laskentakaava laskentakaava = laskentakaavaService.haeLaskettavaKaava(jarjestyskriteeri.getLaskentakaava().getId(), Laskentamoodi.VALINTALASKENTA);
+            jarjestyskriteeriDTO.setNimi(laskentakaava.getNimi());
             if (LOG.isInfoEnabled()) {
                 LOG.info("haeLaskettavaKaava: " + jarjestyskriteeri.getLaskentakaava().getId() + ":" + (System.currentTimeMillis() - start));
             }
