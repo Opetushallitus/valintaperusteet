@@ -32,6 +32,7 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Hylkaa
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HylkaaArvovalilla
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.IteroiAmmatillisetTutkinnonOsat
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.IteroiAmmatillisetTutkinnot
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.IteroiAmmatillisenTutkinnonYtoOsaAlueet
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Ja
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Jos
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Keskiarvo
@@ -550,6 +551,12 @@ object Laskentadomainkonvertteri {
           lasketutArgumentit.head.asInstanceOf[Lukuarvofunktio with KloonattavaFunktio[BigDecimal, _, Funktio[BigDecimal]]]
 
         IteroiAmmatillisetTutkinnonOsat(koostavaLapsi, oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
+
+      case Funktionimi.ITEROIAMMATILLISETYTOOSAALUEET =>
+        val koostavaLapsi: Lukuarvofunktio with KloonattavaFunktio[BigDecimal, _, Funktio[BigDecimal]] =
+          lasketutArgumentit.head.asInstanceOf[Lukuarvofunktio with KloonattavaFunktio[BigDecimal, _, Funktio[BigDecimal]]]
+
+        IteroiAmmatillisenTutkinnonYtoOsaAlueet(koostavaLapsi, oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
 
       case Funktionimi.HAEAMMATILLINENYTOARVOSANA => {
         val konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]] = luoLukuarvokovertteri(arvokonvertteriparametrit, arvovalikonvertteriparametrit)

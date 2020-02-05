@@ -39,6 +39,7 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Hylkaa
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HylkaaArvovalilla
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.IteroiAmmatillisetTutkinnonOsat
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.IteroiAmmatillisetTutkinnot
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.IteroiAmmatillisenTutkinnonYtoOsaAlueet
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Ja
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Jos
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Keskiarvo
@@ -812,6 +813,12 @@ private class Laskin private(private val hakukohde: Hakukohde,
 
       case f@IteroiAmmatillisetTutkinnonOsat(lapsiFunktio, _, _, _, _, _, _) =>
         val virheilmoitus = s"${classOf[IteroiAmmatillisetTutkinnonOsat].getSimpleName} -funktion $f funktioargumentin $lapsiFunktio ottaman argumentin tyyppi on " +
+          s"${lapsiFunktio.argumentit.getClass} , jolle ei ole toteutettu käsittelyä"
+        Laskin.LOG.error(virheilmoitus)
+        throw new UnsupportedOperationException(virheilmoitus)
+
+      case f@IteroiAmmatillisenTutkinnonYtoOsaAlueet(lapsiFunktio, _, _, _, _, _, _) =>
+        val virheilmoitus = s"${classOf[IteroiAmmatillisenTutkinnonYtoOsaAlueet].getSimpleName} -funktion $f funktioargumentin $lapsiFunktio ottaman argumentin tyyppi on " +
           s"${lapsiFunktio.argumentit.getClass} , jolle ei ole toteutettu käsittelyä"
         Laskin.LOG.error(virheilmoitus)
         throw new UnsupportedOperationException(virheilmoitus)

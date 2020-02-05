@@ -162,6 +162,10 @@ object Funktiokuvaaja {
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
       funktioargumentit = List(Funktioargumenttikuvaus("iteroitava funktio", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.YKSI)),
     ),
+    Funktionimi.ITEROIAMMATILLISETYTOOSAALUEET -> Funktiokuvaus(
+      tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
+      funktioargumentit = List(Funktioargumenttikuvaus("iteroitava funktio", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.YKSI)),
+    ),
     Funktionimi.HAEAMMATILLINENYTOARVOSANA -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
       valintaperusteparametri = List(Valintaperusteparametrikuvaus("tunniste", Syoteparametrityyppi.MERKKIJONO, kuvaus = "Tunniste")),

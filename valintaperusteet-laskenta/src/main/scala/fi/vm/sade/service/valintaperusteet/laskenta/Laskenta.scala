@@ -313,6 +313,7 @@ object Laskenta {
                                          tulosTekstiEn: String = "",
                                          omaopintopolku: Boolean = false
                                         ) extends Lukuarvofunktio
+
   case class IteroiAmmatillisetTutkinnonOsat(f: Lukuarvofunktio with KloonattavaFunktio[BigDecimal, _, Funktio[BigDecimal]],
                                              oid: String = "",
                                              tulosTunniste: String = "",
@@ -321,6 +322,15 @@ object Laskenta {
                                              tulosTekstiEn: String = "",
                                              omaopintopolku: Boolean = false
                                         ) extends Lukuarvofunktio
+
+  case class IteroiAmmatillisenTutkinnonYtoOsaAlueet(f: Lukuarvofunktio with KloonattavaFunktio[BigDecimal, _, Funktio[BigDecimal]],
+                                                     oid: String = "",
+                                                     tulosTunniste: String = "",
+                                                     tulosTekstiFi: String = "",
+                                                     tulosTekstiSv: String = "",
+                                                     tulosTekstiEn: String = "",
+                                                     omaopintopolku: Boolean = false
+                                            ) extends Lukuarvofunktio
 
   case class HaeAmmatillinenYtoArvosana(konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]],
                                         oletusarvo: Option[BigDecimal],
