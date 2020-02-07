@@ -164,7 +164,24 @@ object Funktiokuvaaja {
     ),
     Funktionimi.ITEROIAMMATILLISETYTOOSAALUEET -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
+      valintaperusteparametri = List(Valintaperusteparametrikuvaus("yto-koodi", Syoteparametrityyppi.MERKKIJONO, kuvaus = "Yhteisen tutkinnon osan koodi")),
       funktioargumentit = List(Funktioargumenttikuvaus("iteroitava funktio", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.YKSI)),
+    ),
+    Funktionimi.HAEAMMATILLISENYTOOSAALUEENARVOSANA -> Funktiokuvaus(
+      tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
+      konvertteri = Some(
+        Konvertterikuvaus(
+          pakollinen = false,
+          konvertteriTyypit = Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.DESIMAALILUKU))
+        ))
+    ),
+    Funktionimi.HAEAMMATILLISENYTOOSAALUEENLAAJUUS -> Funktiokuvaus(
+      tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
+      konvertteri = Some(
+        Konvertterikuvaus(
+          pakollinen = false,
+          konvertteriTyypit = Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.DESIMAALILUKU))
+        ))
     ),
     Funktionimi.HAEAMMATILLINENYTOARVOSANA -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,

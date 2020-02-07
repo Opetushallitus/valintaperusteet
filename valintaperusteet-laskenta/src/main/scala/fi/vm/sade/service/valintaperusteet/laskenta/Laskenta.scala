@@ -1,8 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.laskenta
 
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
-import fi.vm.sade.service.valintaperusteet.model.LokalisoituTeksti
-import fi.vm.sade.service.valintaperusteet.model.TekstiRyhma
+import fi.vm.sade.service.valintaperusteet.model.{LokalisoituTeksti, TekstiRyhma, ValintaperusteViite}
 import org.apache.commons.lang.StringUtils
 
 import scala.jdk.CollectionConverters._
@@ -324,13 +323,27 @@ object Laskenta {
                                         ) extends Lukuarvofunktio
 
   case class IteroiAmmatillisenTutkinnonYtoOsaAlueet(f: Lukuarvofunktio with KloonattavaFunktio[BigDecimal, _, Funktio[BigDecimal]],
+                                                     valintaperusteviite: Valintaperuste,
                                                      oid: String = "",
-                                                     tulosTunniste: String = "",
-                                                     tulosTekstiFi: String = "",
-                                                     tulosTekstiSv: String = "",
-                                                     tulosTekstiEn: String = "",
-                                                     omaopintopolku: Boolean = false
-                                            ) extends Lukuarvofunktio
+                                                     tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false) extends Lukuarvofunktio
+
+  case class HaeAmmatillisenTutkinnonYtoOsaAlueenArvosana(konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]],
+                                                          oletusarvo: Option[BigDecimal],
+                                                          valintaperusteviite: Valintaperuste,
+                                                          oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false)
+    extends HaeArvo[BigDecimal] with Lukuarvofunktio {
+
+    override val iteraatioParametrinTyyppi: Option[Class[_ <: IteraatioParametri]] = Some(classOf[AmmatillisenPerustutkinnonValitsija])
+  }
+
+  case class HaeAmmatillisenTutkinnonYtoOsaAlueenLaajuus(konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]],
+                                                         oletusarvo: Option[BigDecimal],
+                                                         valintaperusteviite: Valintaperuste,
+                                                         oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false)
+    extends HaeArvo[BigDecimal] with Lukuarvofunktio {
+
+    override val iteraatioParametrinTyyppi: Option[Class[_ <: IteraatioParametri]] = Some(classOf[AmmatillisenPerustutkinnonValitsija])
+  }
 
   case class HaeAmmatillinenYtoArvosana(konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]],
                                         oletusarvo: Option[BigDecimal],

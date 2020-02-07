@@ -13,3 +13,9 @@ case class AmmatillisenTutkinnonOsanValitsija(osanIndeksi: Int) extends Iteraati
 case class AmmatillisenTutkinnonOsat(tutkinnonOsienMaara: Int) {
   def parametreiksi: Seq[AmmatillisenTutkinnonOsanValitsija] = 0.until(tutkinnonOsienMaara).map(AmmatillisenTutkinnonOsanValitsija)
 }
+
+case class AmmatillisenTutkinnonYtoOsaAlueenValitsija(ytoKoodi: String, osanIndeksi: Int) extends IteraatioParametri
+
+case class AmmatillisenTutkinnonYtoOsaAlueet(ytoKoodi: String, tutkinnonYtoOsaAlueidenMaara: Int) {
+  def parametreiksi: Seq[AmmatillisenTutkinnonYtoOsaAlueenValitsija] = 0.until(tutkinnonYtoOsaAlueidenMaara).map(i => AmmatillisenTutkinnonYtoOsaAlueenValitsija(ytoKoodi, i))
+}

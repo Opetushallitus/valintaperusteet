@@ -84,6 +84,12 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
     assert(BigDecimal(tulos.get) == BigDecimal("4.5517"))
   }
 
+  test("Tutkinnon yhteisten osien (YTO) osa-alueiden laskettu keskiarvo reformin mukaisesta tutkinnosta") {
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createLaskeAmmatillisenTutkinnonYtoOsaAlueidenKeskiarvo())
+    val (tulos, _) = Laskin.laske(hakukohde, reforminMukainenHakemus, lasku)
+    assert(BigDecimal(tulos.get) == BigDecimal("4.5517"))
+  }
+
   test("Tutkinnon osien Koskeen tallennettu keskiarvo reformin mukaisesta tutkinnosta") {
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeAmmatillisenTutkinnonOsienKeskiarvoKutsu())
     val (tulos, _) = Laskin.laske(hakukohde, reforminMukainenHakemus, lasku)
@@ -148,6 +154,37 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
     ).asJava)
 
     createAmmatillistenTutkintojenIteroija(juurikutsu)
+  }
+
+  def createLaskeAmmatillisenTutkinnonYtoOsaAlueidenKeskiarvo(konvertteriparametrit: Set[Arvokonvertteriparametri] = Set()): Funktiokutsu = {
+    val viite: ValintaperusteViite = new ValintaperusteViite
+    viite.setTunniste("101054")
+    viite.setIndeksi(0)
+    viite.setLahde(Valintaperustelahde.HAETTAVA_ARVO)
+
+    val juurikutsu: Funktiokutsu =  new Funktiokutsu
+    juurikutsu.setFunktionimi(Funktionimi.ITEROIAMMATILLISETYTOOSAALUEET)
+    juurikutsu.getValintaperusteviitteet().add(viite)
+
+    val keskiarvokutsu: Funktiokutsu = new Funktiokutsu
+    keskiarvokutsu.setFunktionimi(Funktionimi.PAINOTETTUKESKIARVO)
+
+    val laajuuskutsu: Funktiokutsu = new Funktiokutsu
+    laajuuskutsu.setFunktionimi(Funktionimi.HAEAMMATILLISENYTOOSAALUEENLAAJUUS)
+    laajuuskutsu.setArvokonvertteriparametrit(konvertteriparametrit.asJava)
+
+    val arvosanakutsu: Funktiokutsu = new Funktiokutsu
+    arvosanakutsu.setFunktionimi(Funktionimi.HAEAMMATILLISENYTOOSAALUEENARVOSANA)
+    arvosanakutsu.setArvokonvertteriparametrit(konvertteriparametrit.asJava)
+
+    juurikutsu.setFunktioargumentit(Collections.singleton(luoFunktioargumentti(keskiarvokutsu, 0)))
+    keskiarvokutsu.setFunktioargumentit(Set(
+      luoFunktioargumentti(laajuuskutsu, 0),
+      luoFunktioargumentti(arvosanakutsu, 1)
+    ).asJava)
+
+    createAmmatillistenTutkintojenIteroija(juurikutsu)
+
   }
 
   def createHaeAmmatillisenTutkinnonOsienKeskiarvoKutsu(konvertteriparametrit: Set[Arvokonvertteriparametri] = Set()): Funktiokutsu = {
