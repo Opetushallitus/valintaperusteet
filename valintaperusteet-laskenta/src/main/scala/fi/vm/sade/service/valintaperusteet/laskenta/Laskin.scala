@@ -39,9 +39,9 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Hakutoive
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakutoiveRyhmassa
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Hylkaa
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HylkaaArvovalilla
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.IteroiAmmatillisenTutkinnonYtoOsaAlueet
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.IteroiAmmatillisetTutkinnonOsat
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.IteroiAmmatillisetTutkinnot
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.IteroiAmmatillisenTutkinnonYtoOsaAlueet
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Ja
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Jos
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Keskiarvo
@@ -730,6 +730,20 @@ private class Laskin private(private val hakukohde: Hakukohde,
               None
           }
 
+          val ammatillistenFunktioidenTulostenTiivistelmat: Map[String, Option[Any]] = kierrostenTulokset.flatMap {
+            case (parametri, Tulos(Some(lukuarvo), _, historia)) =>
+              val tiivistelmat: Map[String, Option[Any]] = historia.
+                flatten.
+                filter { h: Historia =>
+                  Funktionimi.ammatillistenArvosanojenFunktionimet.asScala.map(_.name()).contains(h.funktio)
+                }.
+                map { h =>
+                  s"${h.funktio} = ${h.tulos.getOrElse("-")}" -> Some(s"avaimet: ${h.avaimet.getOrElse(Map()).map(x => (x._1, x._2.getOrElse("-")))}")
+                }.toMap
+              Map(s"Arvo parametrilla '$parametri'" -> Some(lukuarvo)) ++ tiivistelmat
+            case _ => Map()
+          }.toMap
+
           val tulos: Tulos[BigDecimal] = if (tuloksetLukuarvoina.nonEmpty) {
             try {
               val iteroidutTuloksetKasittelevaKlooni = f.kloonaa(tuloksetLukuarvoina).asInstanceOf[Lukuarvofunktio]
@@ -747,8 +761,8 @@ private class Laskin private(private val hakukohde: Hakukohde,
 
           val tilalista = List(tulos.tila)
           val avaimet = Map(
-            "ammatillisten perustutkintojen määrä" -> Some(tutkintojenMaara),
-            "ammatillisten perustutkintojen pisteet" -> Some(tuloksetLukuarvoina.map(l => l.tulosTekstiFi + ": " + l.d)))
+            "Ammatillisten perustutkintojen määrä" -> Some(tutkintojenMaara)) ++
+            ammatillistenFunktioidenTulostenTiivistelmat
           (tulos.tulos, tilalista, Historia("Iteroi ammatillisten perustutkintojen yli", tulos.tulos, tilalista, None, Some(avaimet)))
         }
 
