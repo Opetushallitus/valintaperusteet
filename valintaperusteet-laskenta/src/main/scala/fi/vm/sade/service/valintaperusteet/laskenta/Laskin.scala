@@ -832,11 +832,11 @@ private class Laskin private(private val hakukohde: Hakukohde,
           val osienMaara = KoskiLaskenta.laskeAmmatillisenTutkinnonYtoOsaAlueet(tutkinnonValitsija, hakemus)
           Laskin.LOG.info(s"Hakemuksen ${hakemus.oid} hakijan tutkinnolle ${tutkinnonValitsija} löytyi ${osienMaara} ammatillista perustutkinnon osaa.")
 
-          val uudetParametrit: Seq[AmmatillisenTutkinnonYtoOsaAlueenValitsija] = AmmatillisenTutkinnonYtoOsaAlueet(tutkinnonYtoOsaAlueenValitsija.ytoKoodi, osienMaara).parametreiksi
+          val uudetParametrit: Seq[AmmatillisenTutkinnonYtoOsaAlueenValitsija] = AmmatillisenTutkinnonYtoOsaAlueet(f.valintaperusteviite.tunniste, osienMaara).parametreiksi
 
-          val kierrostenTulokset: Seq[(AmmatillisenTutkinnonOsanValitsija, (Tulos[BigDecimal], Tulos[BigDecimal]))] = uudetParametrit.
+          val kierrostenTulokset: Seq[(AmmatillisenTutkinnonYtoOsaAlueenValitsija, (Tulos[BigDecimal], Tulos[BigDecimal]))] = uudetParametrit.
             map(parametri => {
-              val parametritLapsille = iteraatioParametrit ++ Map(classOf[AmmatillisenTutkinnonOsanValitsija] -> parametri)
+              val parametritLapsille = iteraatioParametrit ++ Map(classOf[AmmatillisenTutkinnonYtoOsaAlueenValitsija] -> parametri)
               val tulos1 = laskeLukuarvo(lapsiFunktio.argumentit.head._1, parametritLapsille)
               val tulos2 = laskeLukuarvo(lapsiFunktio.argumentit.head._2, parametritLapsille)
 
