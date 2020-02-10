@@ -327,20 +327,14 @@ object Laskenta {
                                                      oid: String = "",
                                                      tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false) extends Lukuarvofunktio
 
-  case class HaeAmmatillisenTutkinnonYtoOsaAlueenArvosana(konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]],
-                                                          oletusarvo: Option[BigDecimal],
-                                                          valintaperusteviite: Valintaperuste,
-                                                          oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false)
-    extends HaeArvo[BigDecimal] with Lukuarvofunktio {
+  case class HaeAmmatillisenTutkinnonYtoOsaAlueenArvosana(konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]], oletusarvo: Option[BigDecimal], oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false)
+    extends Lukuarvofunktio {
 
     override val iteraatioParametrinTyyppi: Option[Class[_ <: IteraatioParametri]] = Some(classOf[AmmatillisenPerustutkinnonValitsija])
   }
 
-  case class HaeAmmatillisenTutkinnonYtoOsaAlueenLaajuus(konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]],
-                                                         oletusarvo: Option[BigDecimal],
-                                                         valintaperusteviite: Valintaperuste,
-                                                         oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false)
-    extends HaeArvo[BigDecimal] with Lukuarvofunktio {
+  case class HaeAmmatillisenTutkinnonYtoOsaAlueenLaajuus(konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]], oletusarvo: Option[BigDecimal], oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false)
+    extends Lukuarvofunktio {
 
     override val iteraatioParametrinTyyppi: Option[Class[_ <: IteraatioParametri]] = Some(classOf[AmmatillisenPerustutkinnonValitsija])
   }

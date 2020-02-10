@@ -496,7 +496,6 @@ object Laskentadomainkonvertteri {
         val arvosana = HaeAmmatillisenTutkinnonYtoOsaAlueenArvosana(
           konvertteri,
           Some(BigDecimal("0.0")),
-          valintaperusteviitteet.head,
           omaopintopolku = omaopintopolku)
 
         NimettyLukuarvo("Ammatillisen tutkinnon YTO:n osa-alueen arvosana", arvosana, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku = omaopintopolku)
@@ -506,7 +505,6 @@ object Laskentadomainkonvertteri {
         val arvosana = HaeAmmatillisenTutkinnonYtoOsaAlueenLaajuus(
           konvertteri,
           Some(BigDecimal("0.0")),
-          valintaperusteviitteet.head,
           omaopintopolku = omaopintopolku)
 
         NimettyLukuarvo("Ammatillisen tutkinnon YTO:n osa-alueen arvosana", arvosana, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku = omaopintopolku)
