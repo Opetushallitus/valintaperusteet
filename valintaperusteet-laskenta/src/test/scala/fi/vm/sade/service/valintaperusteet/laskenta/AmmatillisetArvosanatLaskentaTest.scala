@@ -164,7 +164,7 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
 
     val juurikutsu: Funktiokutsu =  new Funktiokutsu
     juurikutsu.setFunktionimi(Funktionimi.ITEROIAMMATILLISETYTOOSAALUEET)
-    juurikutsu.getValintaperusteviitteet().add(viite)
+    juurikutsu.getValintaperusteviitteet.add(viite)
 
     val keskiarvokutsu: Funktiokutsu = new Funktiokutsu
     keskiarvokutsu.setFunktionimi(Funktionimi.PAINOTETTUKESKIARVO)
