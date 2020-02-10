@@ -20,6 +20,8 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeAmmatillisenTutk
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeAmmatillisenTutkinnonOsanArvosana
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeAmmatillisenTutkinnonOsanLaajuus
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeAmmatillisenTutkinnonSuoritustapa
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeAmmatillisenTutkinnonYtoOsaAlueenArvosana
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeAmmatillisenTutkinnonYtoOsaAlueenLaajuus
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeLukuarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeLukuarvoEhdolla
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaKonvertoiLukuarvoksi
@@ -957,6 +959,41 @@ private class Laskin private(private val hakukohde: Hakukohde,
           )))
         (tulos, tilalista, uusiHistoria)
 
+      case f@HaeAmmatillisenTutkinnonYtoOsaAlueenLaajuus(konvertteri, oletusarvo, _, _,_,_,_,_) =>
+        val tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija = ammatillisenTutkinnonValitsija(iteraatioParametrit, f)
+        val osaAlueenValitsija: AmmatillisenTutkinnonYtoOsaAlueenValitsija = ammatillisenYtonOsaAlueenValitsija(iteraatioParametrit, f)
+        val laajuusKoskessa: Option[BigDecimal] = KoskiLaskenta.haeAmmatillisenYtonOsaAlueenLaajuus(tutkinnonValitsija, osaAlueenValitsija, hakemus, oletusarvo)
+
+        val (tulos: Option[BigDecimal], tilalista: List[Tila]) = konvertoi(konvertteri, laajuusKoskessa)
+
+        val uusiHistoria = Historia(
+          Funktionimi.HAEAMMATILLISENYTOOSAALUEENLAAJUUS.name(),
+          tulos,
+          tilalista,
+          None,
+          Some(Map(
+            "oletusarvo" -> oletusarvo,
+            "lähdearvo" -> laajuusKoskessa
+          )))
+        (tulos, tilalista, uusiHistoria)
+
+      case f@HaeAmmatillisenTutkinnonYtoOsaAlueenArvosana(konvertteri, oletusarvo, _, _,_,_,_,_) =>
+        val tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija = ammatillisenTutkinnonValitsija(iteraatioParametrit, f)
+        val osaAlueenValitsija: AmmatillisenTutkinnonYtoOsaAlueenValitsija = ammatillisenYtonOsaAlueenValitsija(iteraatioParametrit, f)
+        val arvosanaKoskessa: Option[BigDecimal] = KoskiLaskenta.haeAmmatillisenYtonOsaAlueenArvosana(tutkinnonValitsija, osaAlueenValitsija, hakemus, oletusarvo)
+
+        val (tulos: Option[BigDecimal], tilalista: List[Tila]) = konvertoi(konvertteri, arvosanaKoskessa)
+
+        val uusiHistoria = Historia(
+          Funktionimi.HAEAMMATILLISENYTOOSAALUEENARVOSANA.name(),
+          tulos,
+          tilalista,
+          None,
+          Some(Map(
+            "lähdearvo" -> arvosanaKoskessa
+          )))
+        (tulos, tilalista, uusiHistoria)
+
       case f@HaeAmmatillisenTutkinnonKeskiarvo(konvertteri, _, _,_,_,_,_) =>
         val tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija = ammatillisenTutkinnonValitsija(iteraatioParametrit, f)
         val keskiarvoKoskessa: Option[BigDecimal] = KoskiLaskenta.haeAmmatillisenTutkinnonKoskeenTallennettuKeskiarvo(tutkinnonValitsija, hakemus)
@@ -1206,6 +1243,10 @@ private class Laskin private(private val hakukohde: Hakukohde,
 
   private def ammatillisenTutkinnonOsanValitsija(iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri], f: Funktio[_]): AmmatillisenTutkinnonOsanValitsija = {
     haeIteraatioParametri(iteraatioParametrit, f, classOf[AmmatillisenTutkinnonOsanValitsija], classOf[IteroiAmmatillisetTutkinnonOsat])
+  }
+
+  private def ammatillisenYtonOsaAlueenValitsija(iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri], f: Funktio[_]): AmmatillisenTutkinnonYtoOsaAlueenValitsija = {
+    haeIteraatioParametri(iteraatioParametrit, f, classOf[AmmatillisenTutkinnonYtoOsaAlueenValitsija], classOf[IteroiAmmatillisetTutkinnonOsat])
   }
 
   private def haeIteraatioParametri[T <: IteraatioParametri](iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri],

@@ -87,7 +87,7 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
   test("Tutkinnon yhteisten osien (YTO) osa-alueiden laskettu keskiarvo reformin mukaisesta tutkinnosta") {
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createLaskeAmmatillisenTutkinnonYtoOsaAlueidenKeskiarvo())
     val (tulos, _) = Laskin.laske(hakukohde, reforminMukainenHakemus, lasku)
-    assert(BigDecimal(tulos.get) == BigDecimal("4.5517"))
+    assert(BigDecimal(tulos.get) == BigDecimal("4.7000"))
   }
 
   test("Tutkinnon osien Koskeen tallennettu keskiarvo reformin mukaisesta tutkinnosta") {

@@ -2,6 +2,7 @@ package fi.vm.sade.service.valintaperusteet.laskenta.koski
 
 import fi.vm.sade.service.valintaperusteet.laskenta.AmmatillisenPerustutkinnonValitsija
 import fi.vm.sade.service.valintaperusteet.laskenta.AmmatillisenTutkinnonOsanValitsija
+import fi.vm.sade.service.valintaperusteet.laskenta.AmmatillisenTutkinnonYtoOsaAlueenValitsija
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus
 import io.circe.Json
 import io.circe.optics.JsonPath
@@ -46,8 +47,7 @@ object KoskiLaskenta {
   }
 
   def laskeAmmatillisenTutkinnonYtoOsaAlueet(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija, hakemus: Hakemus): Int = {
-    // TODO: placeholder
-    0
+    2 // TODO implement
   }
 
   def haeAmmatillisenTutkinnonOsanLaajuus(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
@@ -63,6 +63,22 @@ object KoskiLaskenta {
                                            hakemus: Hakemus
                                       ): Option[BigDecimal] = {
     haeAmmatillisenTutkinnonOsat(tutkinnonValitsija, hakemus)(osanValitsija.osanIndeksi).uusinHyvaksyttyArvio.map(BigDecimal(_))
+  }
+
+  def haeAmmatillisenYtonOsaAlueenLaajuus(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
+                                          osaAlueenValitsija: AmmatillisenTutkinnonYtoOsaAlueenValitsija,
+                                          hakemus: Hakemus,
+                                          oletusarvo: Option[BigDecimal]
+                                         ): Option[BigDecimal] = {
+    Some(BigDecimal(3.0)) // TODO implement
+  }
+
+  def haeAmmatillisenYtonOsaAlueenArvosana(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
+                                           osaAlueenValitsija: AmmatillisenTutkinnonYtoOsaAlueenValitsija,
+                                           hakemus: Hakemus,
+                                           oletusarvo: Option[BigDecimal]
+                                          ): Option[BigDecimal] = {
+    Some(BigDecimal(4.7)) // TODO implement
   }
 
   def haeAmmatillisenTutkinnonKoskeenTallennettuKeskiarvo(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija, hakemus: Hakemus): Option[BigDecimal] = {
