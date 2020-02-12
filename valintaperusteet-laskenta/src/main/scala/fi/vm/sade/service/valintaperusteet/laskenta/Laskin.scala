@@ -202,7 +202,7 @@ object Laskin {
 protected[laskenta] class Laskin private(val hakukohde: Hakukohde,
                              val hakemus: Hakemus,
                              val kaikkiHakemukset: Set[Hakemus],
-                             val laskentamoodi: Laskentamoodi.Laskentamoodi) extends LaskinFunktiot {
+                             val laskentamoodi: Laskentamoodi.Laskentamoodi) extends LaskinFunktiot with IteraatioParametriFunktiot {
 
   def this(hakukohde: Hakukohde, hakemus: Hakemus) {
     this(hakukohde, hakemus, Set(), Laskentamoodi.VALINTAKOELASKENTA)
@@ -519,7 +519,7 @@ protected[laskenta] class Laskin private(val hakukohde: Hakukohde,
           val tuloksetLukuarvoina: Seq[Lukuarvo] = kierrostenTulokset.flatMap {
             case (parametri, Tulos(Some(lukuarvo), _, historia)) =>
               Laskin.LOG.info(s"Hakemuksen ${hakemus.oid} ${IteroiAmmatillisetTutkinnot.getClass.getSimpleName}-laskennan historia: ${LaskentaUtil.prettyPrint(historia)}")
-              val ammatillisenHistorianTiivistelma: scala.Seq[_root_.scala.Predef.String] = historianTiivistelma(historia)
+              val ammatillisenHistorianTiivistelma: scala.Seq[_root_.scala.Predef.String] = tiivistelmaAmmatillisistaFunktioista(historia)
 
               Some(Lukuarvo(lukuarvo, tulosTekstiFi = s"Arvo parametrilla '$parametri' == $lukuarvo, historia: $ammatillisenHistorianTiivistelma"))
             case (parametri, tulos) =>
@@ -594,8 +594,8 @@ protected[laskenta] class Laskin private(val hakukohde: Hakukohde,
               Laskin.LOG.info(s"Hakemuksen ${hakemus.oid} ${IteroiAmmatillisetTutkinnonOsat.getClass.getSimpleName}-laskennan historia2: ${LaskentaUtil.prettyPrint(historia2)}")
 
               Some(
-                Lukuarvo(lukuarvo1, tulosTekstiFi = s"Arvo 1 parametrilla '$parametri' == $lukuarvo1, historia: ${historianTiivistelma(historia1)}"),
-                Lukuarvo(lukuarvo2, tulosTekstiFi = s"Arvo 2 parametrilla '$parametri' == $lukuarvo2, historia: ${historianTiivistelma(historia2)}"),
+                Lukuarvo(lukuarvo1, tulosTekstiFi = s"Arvo 1 parametrilla '$parametri' == $lukuarvo1, historia: ${tiivistelmaAmmatillisistaFunktioista(historia1)}"),
+                Lukuarvo(lukuarvo2, tulosTekstiFi = s"Arvo 2 parametrilla '$parametri' == $lukuarvo2, historia: ${tiivistelmaAmmatillisistaFunktioista(historia2)}"),
               )
             case (parametri, tulokset) =>
               Laskin.LOG.debug(s"Tyhjiä tuloksia joukossa $tulokset funktiosta $lapsiFunktio parametrilla $parametri")
@@ -661,8 +661,8 @@ protected[laskenta] class Laskin private(val hakukohde: Hakukohde,
               Laskin.LOG.info(s"Hakemuksen ${hakemus.oid} ${IteroiAmmatillisetTutkinnonOsat.getClass.getSimpleName}-laskennan historia2: ${LaskentaUtil.prettyPrint(historia2)}")
 
               Some(
-                Lukuarvo(lukuarvo1, tulosTekstiFi = s"Arvo 1 parametrilla '$parametri' == $lukuarvo1, historia: ${historianTiivistelma(historia1)}"),
-                Lukuarvo(lukuarvo2, tulosTekstiFi = s"Arvo 2 parametrilla '$parametri' == $lukuarvo2, historia: ${historianTiivistelma(historia2)}"),
+                Lukuarvo(lukuarvo1, tulosTekstiFi = s"Arvo 1 parametrilla '$parametri' == $lukuarvo1, historia: ${tiivistelmaAmmatillisistaFunktioista(historia1)}"),
+                Lukuarvo(lukuarvo2, tulosTekstiFi = s"Arvo 2 parametrilla '$parametri' == $lukuarvo2, historia: ${tiivistelmaAmmatillisistaFunktioista(historia2)}"),
               )
             case (parametri, tulokset) =>
               Laskin.LOG.debug(s"Tyhjiä tuloksia joukossa $tulokset funktiosta $lapsiFunktio parametrilla $parametri")
@@ -1021,42 +1021,8 @@ protected[laskenta] class Laskin private(val hakukohde: Hakukohde,
     Tulos(laskettuTulos, palautettavaTila(tilat), historia)
   }
 
-  private def historianTiivistelma(historia: Historia): Seq[String] = {
-    val ammatillisenHistorianTiivistelma: Seq[String] = historia.
-      flatten.
-      filter { h: Historia =>
-        Funktionimi.ammatillistenArvosanojenFunktionimet.asScala.map(_.name()).contains(h.funktio)
-      }.
-      map { h =>
-        s"${h.funktio} = ${h.tulos.getOrElse("-")}; avaimet: ${h.avaimet.getOrElse(Map()).map(x => (x._1, x._2.getOrElse("-")))}"
-      }
-    ammatillisenHistorianTiivistelma
-  }
-
-  private def ammatillisenTutkinnonValitsija(iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri], f: Funktio[_]): AmmatillisenPerustutkinnonValitsija = {
-    haeIteraatioParametri(iteraatioParametrit, f, classOf[AmmatillisenPerustutkinnonValitsija], classOf[IteroiAmmatillisetTutkinnot])
-  }
-
-  private def ammatillisenTutkinnonOsanValitsija(iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri], f: Funktio[_]): AmmatillisenTutkinnonOsanValitsija = {
-    haeIteraatioParametri(iteraatioParametrit, f, classOf[AmmatillisenTutkinnonOsanValitsija], classOf[IteroiAmmatillisetTutkinnonOsat])
-  }
-
-  private def ammatillisenYtonOsaAlueenValitsija(iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri], f: Funktio[_]): AmmatillisenTutkinnonYtoOsaAlueenValitsija = {
-    haeIteraatioParametri(iteraatioParametrit, f, classOf[AmmatillisenTutkinnonYtoOsaAlueenValitsija], classOf[IteroiAmmatillisetTutkinnonOsat])
-  }
-
-  private def haeIteraatioParametri[T <: IteraatioParametri](iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri],
-                                                             f: Funktio[_],
-                                                             parametrinTyppi: Class[T],
-                                                             iterointifunktionTyyppi: Class[_ <: Funktio[_]]
-                                                            ): T = {
-    val iteraatioParametri = iteraatioParametrit.get(parametrinTyppi)
-    iteraatioParametri match {
-      case Some(p) if p.getClass == parametrinTyppi => p.asInstanceOf[T]
-      case Some(x) => throw new IllegalArgumentException(s"Vääräntyyppinen iteraatioparametri $x ; piti olla $parametrinTyppi")
-      case None => throw new IllegalArgumentException(s"${parametrinTyppi.getName} puuttuu. " +
-        s"Onhan funktiokutsun $f yläpuolella puussa $iterointifunktionTyyppi -kutsu?")
-    }
+  private def tiivistelmaAmmatillisistaFunktioista(historia: Historia): Seq[String] = {
+    historianTiivistelma(historia, h => Funktionimi.ammatillistenArvosanojenFunktionimet.asScala.map(_.name).contains(h.funktio))
   }
 }
 
