@@ -24,7 +24,7 @@ trait AmmatillisetIterointiFunktiot {
       throw new IllegalStateException(s"Ei voi iteroida iteraatioparametrilla $ammatillisenPerustutkinnonValitsija uudestaan ammatillisten tutkintojen yli")
     } else {
       val tutkintojenMaara = KoskiLaskenta.laskeAmmatillisetTutkinnot(laskin.hakemus)
-      Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} hakijalle löytyi ${tutkintojenMaara} ammatillista perustutkintoa.")
+      Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} hakijalle löytyi $tutkintojenMaara ammatillista perustutkintoa.")
 
       val uudetParametrit: Seq[AmmatillisenPerustutkinnonValitsija] = AmmatillisetPerustutkinnot(tutkintojenMaara).parametreiksi
 
@@ -60,11 +60,10 @@ trait AmmatillisetIterointiFunktiot {
           val iteroidutTuloksetKasittelevaKlooni = f.kloonaa(tuloksetLukuarvoina).asInstanceOf[Lukuarvofunktio]
           laskeLukuarvo(iteroidutTuloksetKasittelevaKlooni, Map())
         } catch {
-          case e: ClassCastException => {
+          case e: ClassCastException =>
             Laskin.LOG.error(s"${classOf[IteroiAmmatillisetTutkinnot].getSimpleName} -funktion funktioargumenttina tulee olla " +
               s"kloonattava funktio, kuten maksimi, mutta oli $f", e)
             throw e
-          }
         }
       } else {
         Tulos(None, new Hyvaksyttavissatila, Historia("Ei löytynyt tietoja ammatillisista tutkinnoista", None, Nil, None, None))
@@ -94,7 +93,7 @@ trait AmmatillisetIterointiFunktiot {
       throw new IllegalStateException(s"Ei voi iteroida iteraatioparametrilla $tutkinnonOsanValitsija uudestaan ammatillisen tutkinnon osien yli")
     } else {
       val osienMaara = KoskiLaskenta.laskeAmmatillisenTutkinnonOsat(tutkinnonValitsija, laskin.hakemus)
-      Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} hakijan tutkinnolle ${tutkinnonValitsija} löytyi ${osienMaara} ammatillista perustutkinnon osaa.")
+      Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} hakijan tutkinnolle $tutkinnonValitsija löytyi $osienMaara ammatillista perustutkinnon osaa.")
 
       val uudetParametrit: Seq[AmmatillisenTutkinnonOsanValitsija] = AmmatillisenTutkinnonOsat(osienMaara).parametreiksi
 
@@ -125,11 +124,10 @@ trait AmmatillisetIterointiFunktiot {
           val iteroidutTuloksetKasittelevaKlooni = lapsiFunktio.kloonaa(tuloksetLukuarvoina).asInstanceOf[Lukuarvofunktio]
           laskeLukuarvo(iteroidutTuloksetKasittelevaKlooni, Map())
         } catch {
-          case e: ClassCastException => {
+          case e: ClassCastException =>
             Laskin.LOG.error(s"${classOf[IteroiAmmatillisetTutkinnonOsat].getSimpleName} -funktion funktioargumenttina tulee olla " +
               s"kloonattava funktio, kuten maksimi, mutta oli $lapsiFunktio", e)
             throw e
-          }
         }
       } else {
         Tulos(None, new Hyvaksyttavissatila, Historia("Ei löytynyt tietoja ammatillisista tutkinnoista", None, Nil, None, None))
@@ -159,7 +157,7 @@ trait AmmatillisetIterointiFunktiot {
       throw new IllegalStateException(s"Ei voi iteroida iteraatioparametrilla $tutkinnonYtoOsaAlueenValitsija uudestaan ammatillisen tutkinnon osien yli")
     } else {
       val osienMaara = KoskiLaskenta.laskeAmmatillisenTutkinnonYtoOsaAlueet(tutkinnonValitsija, laskin.hakemus)
-      Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} hakijan tutkinnolle ${tutkinnonValitsija} löytyi ${osienMaara} ammatillista perustutkinnon osaa.")
+      Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} hakijan tutkinnolle $tutkinnonValitsija löytyi $osienMaara ammatillista perustutkinnon osaa.")
 
       val uudetParametrit: Seq[AmmatillisenTutkinnonYtoOsaAlueenValitsija] = AmmatillisenTutkinnonYtoOsaAlueet(f.valintaperusteviite.tunniste, osienMaara).parametreiksi
 
@@ -190,11 +188,10 @@ trait AmmatillisetIterointiFunktiot {
           val iteroidutTuloksetKasittelevaKlooni = lapsiFunktio.kloonaa(tuloksetLukuarvoina).asInstanceOf[Lukuarvofunktio]
           laskeLukuarvo(iteroidutTuloksetKasittelevaKlooni, Map())
         } catch {
-          case e: ClassCastException => {
+          case e: ClassCastException =>
             Laskin.LOG.error(s"${classOf[IteroiAmmatillisenTutkinnonYtoOsaAlueet].getSimpleName} -funktion funktioargumenttina tulee olla " +
               s"kloonattava funktio, kuten maksimi, mutta oli $lapsiFunktio", e)
             throw e
-          }
         }
       } else {
         Tulos(None, new Hyvaksyttavissatila, Historia("Ei löytynyt tietoja ammatillisista tutkinnoista", None, Nil, None, None))
