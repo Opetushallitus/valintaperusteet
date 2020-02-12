@@ -75,8 +75,8 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
 
   protected[laskenta] def laskeLukuarvo(laskettava: Lukuarvofunktio, iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri]): Tulos[BigDecimal] = {
 
-    def summa(vals: Seq[BigDecimal]): BigDecimal = vals.reduceLeft(_ + _)
-    def tulo(vals: Seq[BigDecimal]): BigDecimal = vals.reduceLeft(_ * _)
+    def summa(vals: Seq[BigDecimal]): BigDecimal = vals.sum
+    def tulo(vals: Seq[BigDecimal]): BigDecimal = vals.product
 
     def muodostaYksittainenTulos(f: Lukuarvofunktio, trans: BigDecimal => BigDecimal): (Option[BigDecimal], List[Tila], Historia) = {
       laskeLukuarvo(f, iteraatioParametrit) match {
