@@ -89,32 +89,6 @@ import play.api.libs.json._
 import scala.collection.mutable.ListBuffer
 import scala.jdk.CollectionConverters._
 
-case class Tulos[T](tulos: Option[T], tila: Tila, historia: Historia)
-
-protected[laskenta] case class SyotettyArvo(tunniste: String,
-                                arvo: Option[String],
-                                laskennallinenArvo: Option[String],
-                                osallistuminen: Osallistuminen,
-                                syotettavanarvontyyppiKoodiUri: Option[String],
-                                tilastoidaan: Boolean
-                               )
-
-protected[laskenta] case class FunktioTulos(tunniste: String,
-                                arvo: String,
-                                nimiFi: String,
-                                nimiSv: String,
-                                nimiEn: String,
-                                omaopintopolku: Boolean
-                               )
-
-protected[laskenta] object Laskentamoodi extends Enumeration {
-  type Laskentamoodi = Value
-
-  val VALINTALASKENTA = Value("VALINTALASKENTA")
-  val VALINTAKOELASKENTA = Value("VALINTAKOELASKENTA")
-
-}
-
 object Laskin {
   val LOG = LoggerFactory.getLogger(classOf[Laskin])
 
