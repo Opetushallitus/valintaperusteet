@@ -76,7 +76,7 @@ object Laskin {
     val laskin: Laskin = createLaskin(hakukohde, hakemus, kaikkiHakemukset)
     val totuusarvoLaskin: TotuusarvoLaskin = new TotuusarvoLaskin(laskin)
 
-    totuusarvoLaskin.laske(laskettava, Map()) match {
+    totuusarvoLaskin.laskeTotuusarvo(laskettava, Map()) match {
       case Tulos(tulos, tila, historia) =>
         new Laskentatulos[JBoolean](tila, if (tulos.isEmpty) null else Boolean.box(tulos.get),
           String.valueOf(Json.toJson(wrapHistoria(hakemus, historia))),

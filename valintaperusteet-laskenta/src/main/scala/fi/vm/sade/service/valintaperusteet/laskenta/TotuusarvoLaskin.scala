@@ -29,10 +29,6 @@ import scala.collection.mutable.ListBuffer
 protected[laskenta] class TotuusarvoLaskin(private val laskin: Laskin) extends LaskinFunktiot {
   private val HUNDRED: BigDecimal = BigDecimal("100.0")
 
-  protected[laskenta] def laske(laskettava: Totuusarvofunktio, iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri]): Tulos[Boolean] = {
-    laskeTotuusarvo(laskettava, iteraatioParametrit)
-  }
-
   protected[laskenta] def laskeTotuusarvo(laskettava: Totuusarvofunktio, iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri]): Tulos[Boolean] = {
 
     def muodostaKoostettuTulos(fs: Seq[Totuusarvofunktio], trans: Seq[Boolean] => Boolean) = {
