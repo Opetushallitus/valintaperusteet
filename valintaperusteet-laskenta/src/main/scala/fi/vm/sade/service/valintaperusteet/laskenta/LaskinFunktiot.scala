@@ -43,7 +43,6 @@ trait LaskinFunktiot {
 
   protected def suoritaKonvertointi[S, T](tulos: Tuple2[Option[S], Tila],
                                         konvertteri: Konvertteri[S, T]) = {
-
     ehdollinenTulos[S, T](tulos, (t, tila) => {
       val (konvertoituTulos, konvertoituTila) = konvertteri.konvertoi(t)
       (konvertoituTulos, List(tila, konvertoituTila))
@@ -293,7 +292,6 @@ trait LaskinFunktiot {
         }
         case _ => None
       }
-
     }
 
     val konvertoidut = konversiot.map(konv => getLukuarvovaliKonversio(konv))
@@ -304,8 +302,6 @@ trait LaskinFunktiot {
       val konvertteri = Lukuarvovalikonvertteri(konvertoidut.map(k => k.get))
       (Some(konvertteri), List(new Hyvaksyttavissatila))
     }
-
-
   }
 
   def konversioToArvokonversio[S, T](konversiot: Seq[Konversio], kentat: Kentat, hakukohde: Hakukohde): (Option[Arvokonvertteri[S,T]], List[Tila]) = {
@@ -353,7 +349,6 @@ trait LaskinFunktiot {
         }
         case _ => None
       }
-
     }
 
     val konvertoidut = konversiot.map(konv => getArvoKonversio(konv))
@@ -364,8 +359,5 @@ trait LaskinFunktiot {
       val konvertteri = Arvokonvertteri[S,T](konvertoidut.map(k => k.get))
       (Some(konvertteri), List(new Hyvaksyttavissatila))
     }
-
-
   }
-
 }
