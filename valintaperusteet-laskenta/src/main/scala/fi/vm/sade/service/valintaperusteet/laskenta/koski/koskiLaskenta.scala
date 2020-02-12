@@ -47,7 +47,8 @@ object KoskiLaskenta {
   }
 
   def laskeAmmatillisenTutkinnonYtoOsaAlueet(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija, ytoKoodi: String, hakemus: Hakemus): Int = {
-    2 // TODO implement
+    2
+    //haeAmmatillisenTutkinnonYtoOsaalueet(tutkinnonValitsija, ytoKoodi, hakemus).size
   }
 
   def haeAmmatillisenTutkinnonOsanLaajuus(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
@@ -136,6 +137,25 @@ object KoskiLaskenta {
           s"hakijan ammatillisella tutkinnolla ${tutkinnonValitsija.tutkinnonIndeksi} , mutta oli ${suoritukset.size}")
       }
       arvonHakija(suoritukset)
+    }
+  }
+
+  private def haeAmmatillisenTutkinnonYtoOsaalueet(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija, ytoKoodi: String, hakemus: Hakemus): List[Osasuoritus] = {
+    if (hakemus.koskiOpiskeluoikeudet == null) {
+      Nil
+    } else {
+      val oikeaOpiskeluoikeus: Json = Tutkinnot.etsiValmiitTutkinnot(
+        json = hakemus.koskiOpiskeluoikeudet,
+        opiskeluoikeudenHaluttuTyyppi = ammatillisenHuomioitavaOpiskeluoikeudenTyyppi,
+        suorituksenHaluttuTyyppi = ammatillisenSuorituksenTyyppi, hakemus = hakemus)(tutkinnonValitsija.tutkinnonIndeksi)
+
+      val suoritukset = Tutkinnot.etsiValiditYtoOsaAlueet(oikeaOpiskeluoikeus, sulkeutumisPaivamaara, ytoKoodi)
+
+      val osasuoritusPredikaatti: Json => Boolean = osasuoritus => {
+        "ammatillisentutkinnonosa" == _osasuorituksenTyypinKoodiarvo.getOption(osasuoritus).orNull
+      }
+
+      suoritukset.flatMap(etsiOsasuoritukset(_, sulkeutumisPaivamaara, osasuoritusPredikaatti))
     }
   }
 
