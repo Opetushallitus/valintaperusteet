@@ -1,5 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.laskenta
 
+import java.util
+
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonversio
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.ArvokonversioMerkkijonoilla
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonvertteri
@@ -24,10 +26,11 @@ import fi.vm.sade.service.valintaperusteet.model.TekstiRyhma
 
 import scala.jdk.CollectionConverters._
 import scala.util.Try
+import scala.util.matching.Regex
 
 trait LaskinFunktiot {
 
-  val pattern = """\{\{([A-Za-z\d\-_]+)\.([A-Za-z\d\-_]+)\}\}""".r
+  val pattern: Regex = """\{\{([A-Za-z\d\-_]+)\.([A-Za-z\d\-_]+)\}\}""".r
 
   protected def ehdollinenTulos[A, B](tulos: (Option[A], Tila), f: (A, Tila) => Tuple2[Option[B], List[Tila]]): Tuple2[Option[B], List[Tila]] = {
     val (alkupTulos, alkupTila) = tulos
@@ -37,18 +40,17 @@ trait LaskinFunktiot {
     }
   }
 
-  protected def suomenkielinenHylkaysperusteMap(teksti: String) = {
+  protected def suomenkielinenHylkaysperusteMap(teksti: String): util.Map[String, String] = {
     Map("FI" -> teksti).asJava
   }
 
   protected def suoritaKonvertointi[S, T](tulos: Tuple2[Option[S], Tila],
-                                        konvertteri: Konvertteri[S, T]) = {
+                                          konvertteri: Konvertteri[S, T]
+                                         ): (Option[T], List[Tila]) = {
     ehdollinenTulos[S, T](tulos, (t, tila) => {
       val (konvertoituTulos, konvertoituTila) = konvertteri.konvertoi(t)
       (konvertoituTulos, List(tila, konvertoituTila))
     })
-
-
   }
 
   protected def konvertoi(konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]],
@@ -71,7 +73,8 @@ trait LaskinFunktiot {
   }
 
   protected def suoritaOptionalKonvertointi[T](tulos: Tuple2[Option[T], Tila],
-                                             konvertteri: Option[Konvertteri[T, T]]) = {
+                                               konvertteri: Option[Konvertteri[T, T]]
+                                              ): (Option[T], List[Tila]) = {
     ehdollinenTulos[T, T](tulos, (t, tila) => {
       konvertteri match {
         case Some(konv) => {
@@ -187,7 +190,10 @@ trait LaskinFunktiot {
     }
   }
 
-  protected def moodiVirhe(virheViesti: String, funktioNimi: String, moodi: String) = {
+  protected def moodiVirhe(virheViesti: String,
+                           funktioNimi: String,
+                           moodi: String
+                          ): (None.type, List[Virhetila], Historia) = {
     (None, List(new Virhetila(suomenkielinenHylkaysperusteMap(virheViesti), new VirheellinenLaskentamoodiVirhe(funktioNimi, moodi))),
       Historia(funktioNimi, None, List(), None, None))
   }
