@@ -212,7 +212,7 @@ trait AmmatillisetArvonHakuFunktiot {
     } yield k.konvertoi(arvosana)).getOrElse((oletusarvo, new Hyvaksyttavissatila))
     val tilalista: List[Tila] = tilaKonvertoinnista :: tilatKonvertterinHausta
     val uusiHistoria = Historia(
-      HAEAMMATILLINENYTOARVIOINTIASTEIKKO.name(),
+      Funktionimi.HAEAMMATILLISENTUTKINNONSUORITUSTAPA.name(),
       tulos,
       tilalista,
       None,
