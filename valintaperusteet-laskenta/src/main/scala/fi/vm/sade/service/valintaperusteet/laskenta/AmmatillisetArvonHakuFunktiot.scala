@@ -53,17 +53,8 @@ trait AmmatillisetArvonHakuFunktiot {
                                                     valintaperusteviite: Valintaperuste
                                                    ): (Option[BigDecimal], List[Tila], Historia) = {
     val asteikonKoodiKoskessa: Option[String] = YhteisetTutkinnonOsat.haeYtoArviointiasteikko(ammatillisenTutkinnonValitsija(iteraatioParametrit, f), laskin.hakemus, valintaperusteviite)
+    val (tulos: Option[BigDecimal], tilalista: List[Tila]) = konvertoiMerkkijono(konvertteri, oletusarvo, asteikonKoodiKoskessa)
 
-    val (konv: Option[Arvokonvertteri[String, BigDecimal]], tilatKonvertterinHausta) = konvertteri match {
-      case a: Arvokonvertteri[_, _] => konversioToArvokonversio[String, BigDecimal](a.konversioMap, laskin.hakemus.kentat, laskin.hakukohde)
-      case x => throw new IllegalArgumentException(s"Odotettiin arvokonvertteria mutta saatiin $x")
-    }
-
-    val (tulos, tilaKonvertoinnista): (Option[BigDecimal], Tila) = (for {
-      k <- konv
-      arvosana <- asteikonKoodiKoskessa
-    } yield k.konvertoi(arvosana)).getOrElse((oletusarvo, new Hyvaksyttavissatila))
-    val tilalista: List[Tila] = tilaKonvertoinnista :: tilatKonvertterinHausta
     val uusiHistoria = Historia(
       HAEAMMATILLINENYTOARVIOINTIASTEIKKO.name(),
       tulos,
@@ -201,16 +192,8 @@ trait AmmatillisetArvonHakuFunktiot {
                                                     ): (Option[BigDecimal], List[Tila], Historia) = {
     val suoritustapaKoskessa: Option[String] = KoskiLaskenta.haeAmmatillisenTutkinnonSuoritustapa(ammatillisenTutkinnonValitsija(iteraatioParametrit, f), laskin.hakemus)
 
-    val (konv: Option[Arvokonvertteri[String, BigDecimal]], tilatKonvertterinHausta) = konvertteri match {
-      case a: Arvokonvertteri[_, _] => konversioToArvokonversio[String, BigDecimal](a.konversioMap, laskin.hakemus.kentat, laskin.hakukohde)
-      case x => throw new IllegalArgumentException(s"Odotettiin arvokonvertteria mutta saatiin $x")
-    }
+    val (tulos: Option[BigDecimal], tilalista: List[Tila]) = konvertoiMerkkijono(konvertteri, oletusarvo, suoritustapaKoskessa)
 
-    val (tulos, tilaKonvertoinnista): (Option[BigDecimal], Tila) = (for {
-      k <- konv
-      arvosana <- suoritustapaKoskessa
-    } yield k.konvertoi(arvosana)).getOrElse((oletusarvo, new Hyvaksyttavissatila))
-    val tilalista: List[Tila] = tilaKonvertoinnista :: tilatKonvertterinHausta
     val uusiHistoria = Historia(
       Funktionimi.HAEAMMATILLISENTUTKINNONSUORITUSTAPA.name(),
       tulos,
@@ -221,5 +204,22 @@ trait AmmatillisetArvonHakuFunktiot {
         "asteikon koodi" -> suoritustapaKoskessa
       )))
     (tulos, tilalista, uusiHistoria)
+  }
+
+  private def konvertoiMerkkijono(konvertteri: Konvertteri[String, BigDecimal],
+                                  oletusarvo: Option[BigDecimal],
+                                  lahdearvo: Option[String]
+                                 ): (Option[BigDecimal], List[Tila]) = {
+    val (konv: Option[Arvokonvertteri[String, BigDecimal]], tilatKonvertterinHausta) = konvertteri match {
+      case a: Arvokonvertteri[_, _] => konversioToArvokonversio[String, BigDecimal](a.konversioMap, laskin.hakemus.kentat, laskin.hakukohde)
+      case x => throw new IllegalArgumentException(s"Odotettiin arvokonvertteria mutta saatiin $x")
+    }
+
+    val (tulos, tilaKonvertoinnista): (Option[BigDecimal], Tila) = (for {
+      k <- konv
+      tulosArvo <- lahdearvo
+    } yield k.konvertoi(tulosArvo)).getOrElse((oletusarvo, new Hyvaksyttavissatila))
+    val tilalista: List[Tila] = tilaKonvertoinnista :: tilatKonvertterinHausta
+    (tulos, tilalista)
   }
 }
