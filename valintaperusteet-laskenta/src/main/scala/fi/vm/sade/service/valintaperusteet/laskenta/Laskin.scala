@@ -52,7 +52,7 @@ object Laskin {
     val laskin: Laskin = createLaskin(hakukohde, hakemus, kaikkiHakemukset)
     val lukuarvoLaskin: LukuarvoLaskin = new LukuarvoLaskin(laskin)
 
-    lukuarvoLaskin.laske(laskettava, Map()) match {
+    lukuarvoLaskin.laskeLukuarvo(laskettava, Map()) match {
       case Tulos(tulos, tila, historia) =>
         new Laskentatulos[JBigDecimal](tila, if (tulos.isEmpty) null else tulos.get.underlying,
           String.valueOf(Json.toJson(wrapHistoria(hakemus, historia))),

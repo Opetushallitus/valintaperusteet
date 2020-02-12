@@ -74,10 +74,6 @@ protected[laskenta] class LukuarvoLaskin(private val laskin: Laskin) extends Las
   private val ONE: BigDecimal = BigDecimal("1.0")
   private val TWO: BigDecimal = BigDecimal("2.0")
 
-  def laske(laskettava: Lukuarvofunktio, iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri]): Tulos[BigDecimal] = {
-    laskeLukuarvo(laskettava, iteraatioParametrit)
-  }
-
   protected[laskenta] def laskeLukuarvo(laskettava: Lukuarvofunktio, iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri]): Tulos[BigDecimal] = {
 
     def summa(vals: Seq[BigDecimal]): BigDecimal = vals.reduceLeft(_ + _)
@@ -677,7 +673,7 @@ protected[laskenta] class LukuarvoLaskin(private val laskin: Laskin) extends Las
             (None, tilat, Historia("Hylkää", None, tilat, Some(List(historia)), None))
         }
       case HylkaaArvovalilla(f, hylkaysperustekuvaus, _, _,_,_,_,_, (min,max)) =>
-        laske(f, iteraatioParametrit) match {
+        laskeLukuarvo(f, iteraatioParametrit) match {
           case Tulos(tulos, tila, historia) =>
             val arvovali = haeArvovali((min, max), laskin.hakukohde, laskin.hakemus.kentat)
             if(tulos.isEmpty && tila.getTilatyyppi.equals(Tilatyyppi.HYVAKSYTTAVISSA)) {
@@ -699,7 +695,7 @@ protected[laskenta] class LukuarvoLaskin(private val laskin: Laskin) extends Las
           val moodi = laskin.laskentamoodi.toString
           moodiVirhe(s"Skaalaus-funktiota ei voida suorittaa laskentamoodissa $moodi", "Skaalaus", moodi)
         } else {
-          val tulos = laske(skaalattava, iteraatioParametrit)
+          val tulos = laskeLukuarvo(skaalattava, iteraatioParametrit)
 
           def skaalaa(skaalattavaArvo: BigDecimal,
                       kohdeskaala: (BigDecimal, BigDecimal),
