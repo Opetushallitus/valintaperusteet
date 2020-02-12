@@ -160,7 +160,7 @@ trait AmmatillisetIterointiFunktiot {
       throw new IllegalStateException(s"Ei voi iteroida iteraatioparametrilla $tutkinnonYtoOsaAlueenValitsija uudestaan ammatillisen tutkinnon osien yli")
     } else {
       val ytoKoodi = f.valintaperusteviite.tunniste
-      val ytonOsaAlueidenMaara = KoskiLaskenta.laskeAmmatillisenTutkinnonYtoOsaAlueet(tutkinnonValitsija, /* TODO : YTOn koodi ,*/ laskin.hakemus)
+      val ytonOsaAlueidenMaara = KoskiLaskenta.laskeAmmatillisenTutkinnonYtoOsaAlueet(tutkinnonValitsija, ytoKoodi, laskin.hakemus)
       Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} hakijan tutkinnon $tutkinnonValitsija YTOlle $ytoKoodi löytyi $ytonOsaAlueidenMaara YTOn osa-aluetta.")
 
       val uudetParametrit: Seq[AmmatillisenTutkinnonYtoOsaAlueenValitsija] = AmmatillisenTutkinnonYtoOsaAlueet(ytoKoodi, ytonOsaAlueidenMaara).parametreiksi

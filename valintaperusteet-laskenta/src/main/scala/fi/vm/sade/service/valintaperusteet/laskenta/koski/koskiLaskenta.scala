@@ -46,7 +46,7 @@ object KoskiLaskenta {
     haeAmmatillisenTutkinnonOsat(tutkinnonValitsija, hakemus).size
   }
 
-  def laskeAmmatillisenTutkinnonYtoOsaAlueet(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija, hakemus: Hakemus): Int = {
+  def laskeAmmatillisenTutkinnonYtoOsaAlueet(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija, ytoKoodi: String, hakemus: Hakemus): Int = {
     2 // TODO implement
   }
 
