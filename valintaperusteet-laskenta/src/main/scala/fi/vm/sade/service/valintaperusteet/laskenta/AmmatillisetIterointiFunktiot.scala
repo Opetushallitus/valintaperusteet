@@ -156,10 +156,11 @@ trait AmmatillisetIterointiFunktiot {
     if (tutkinnonYtoOsaAlueenValitsija.exists(p => p.isInstanceOf[AmmatillisenTutkinnonYtoOsaAlueenValitsija])) {
       throw new IllegalStateException(s"Ei voi iteroida iteraatioparametrilla $tutkinnonYtoOsaAlueenValitsija uudestaan ammatillisen tutkinnon osien yli")
     } else {
+      val ytoKoodi = f.valintaperusteviite.tunniste
       val ytonOsaAlueidenMaara = KoskiLaskenta.laskeAmmatillisenTutkinnonYtoOsaAlueet(tutkinnonValitsija, /* TODO : YTOn koodi ,*/ laskin.hakemus)
-      Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} hakijan tutkinnon $tutkinnonValitsija YTOlle ${f.valintaperusteviite.tunniste} löytyi $ytonOsaAlueidenMaara YTOn osa-aluetta.")
+      Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} hakijan tutkinnon $tutkinnonValitsija YTOlle $ytoKoodi löytyi $ytonOsaAlueidenMaara YTOn osa-aluetta.")
 
-      val uudetParametrit: Seq[AmmatillisenTutkinnonYtoOsaAlueenValitsija] = AmmatillisenTutkinnonYtoOsaAlueet(f.valintaperusteviite.tunniste, ytonOsaAlueidenMaara).parametreiksi
+      val uudetParametrit: Seq[AmmatillisenTutkinnonYtoOsaAlueenValitsija] = AmmatillisenTutkinnonYtoOsaAlueet(ytoKoodi, ytonOsaAlueidenMaara).parametreiksi
 
       val kierrostenTulokset: Seq[(AmmatillisenTutkinnonYtoOsaAlueenValitsija, (Tulos[BigDecimal], Tulos[BigDecimal]))] = uudetParametrit.
         map(parametri => {
@@ -194,14 +195,14 @@ trait AmmatillisetIterointiFunktiot {
             throw e
         }
       } else {
-        Tulos(None, new Hyvaksyttavissatila, Historia("Ei löytynyt tietoja ammatillisista tutkinnoista", None, Nil, None, None))
+        Tulos(None, new Hyvaksyttavissatila, Historia(s"Ei löytynyt pisteitä YTOlle $ytoKoodi", None, Nil, None, None))
       }
 
       val tilalista = List(tulos.tila)
       val avaimet = Map(
-        "ammatillisen perustutkinnon osien määrä" -> Some(ytonOsaAlueidenMaara),
-        "ammatillisen perustutkinnon osien pisteet" -> Some(tuloksetLukuarvoina.map(l => s"${l._1.tulosTekstiFi} = ${l._1.d};${l._2.tulosTekstiFi} = ${l._2.d}")))
-      (tulos.tulos, tilalista, Historia("Iteroi ammatillisen perustutkinnon osien yli", tulos.tulos, tilalista, None, Some(avaimet)))
+        s"ammatillisen perustutkinnon YTOn $ytoKoodi osa-alueiden määrä" -> Some(ytonOsaAlueidenMaara),
+        s"ammatillisen perustutkinnon YTOn $ytoKoodi pisteet" -> Some(tuloksetLukuarvoina.map(l => s"${l._1.tulosTekstiFi} = ${l._1.d};${l._2.tulosTekstiFi} = ${l._2.d}")))
+      (tulos.tulos, tilalista, Historia(Funktionimi.ITEROIAMMATILLISETYTOOSAALUEET.name(), tulos.tulos, tilalista, None, Some(avaimet)))
     }
   }
 }
