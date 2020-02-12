@@ -14,7 +14,6 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeAmmatillisenTutk
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeAmmatillisenTutkinnonYtoOsaAlueenLaajuus
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Konvertteri
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Valintaperuste
-import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Hyvaksyttavissatila
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Tila
 import fi.vm.sade.service.valintaperusteet.laskenta.koski.KoskiLaskenta
 import fi.vm.sade.service.valintaperusteet.laskenta.koski.YhteisetTutkinnonOsat
@@ -215,11 +214,6 @@ trait AmmatillisetArvonHakuFunktiot {
       case x => throw new IllegalArgumentException(s"Odotettiin arvokonvertteria mutta saatiin $x")
     }
 
-    val (tulos, tilaKonvertoinnista): (Option[BigDecimal], Tila) = (for {
-      k <- konv
-      tulosArvo <- lahdearvo
-    } yield k.konvertoi(tulosArvo)).getOrElse((oletusarvo, new Hyvaksyttavissatila))
-    val tilalista: List[Tila] = tilaKonvertoinnista :: tilatKonvertterinHausta
-    (tulos, tilalista)
+    koostaKonvertoituTulos[String](lahdearvo, oletusarvo, konv, tilatKonvertterinHausta)
   }
 }

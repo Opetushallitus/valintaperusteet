@@ -54,7 +54,7 @@ trait LaskinFunktiot {
   }
 
   protected def konvertoi(konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]],
-                          lahtoarvo: Option[BigDecimal],
+                          lahdearvo: Option[BigDecimal],
                           hakemus: Hakemus,
                           hakukohde: Hakukohde
                          ): (Option[BigDecimal], List[Tila]) = {
@@ -64,10 +64,18 @@ trait LaskinFunktiot {
       case _ => (konvertteri, List())
     }
 
+    koostaKonvertoituTulos[BigDecimal](lahdearvo, lahdearvo, konv, tilatKonvertterinHausta)
+  }
+
+  protected def koostaKonvertoituTulos[T](lahdearvo: Option[T],
+                                          oletusarvo: Option[BigDecimal],
+                                          konvertteri: Option[Konvertteri[T, BigDecimal]],
+                                          tilatKonvertterinHausta: scala.List[Tila]
+                                         ): (Option[BigDecimal], List[Tila]) = {
     val (tulos, tilaKonvertoinnista): (Option[BigDecimal], Tila) = (for {
-      k <- konv
-      palautettavaArvo <- lahtoarvo
-    } yield k.konvertoi(palautettavaArvo)).getOrElse((lahtoarvo, new Hyvaksyttavissatila))
+      k <- konvertteri
+      tulosArvo <- lahdearvo
+    } yield k.konvertoi(tulosArvo)).getOrElse((oletusarvo, new Hyvaksyttavissatila))
     val tilalista: List[Tila] = tilaKonvertoinnista :: tilatKonvertterinHausta
     (tulos, tilalista)
   }
