@@ -2,6 +2,9 @@ package fi.vm.sade.service.valintaperusteet.laskenta
 
 import fi.vm.sade.kaava.LaskentaUtil
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.ITEROIAMMATILLISETOSAT
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.ITEROIAMMATILLISETTUTKINNOT
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.ITEROIAMMATILLISETYTOOSAALUEET
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.IteroiAmmatillisenTutkinnonYtoOsaAlueet
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.IteroiAmmatillisetTutkinnonOsat
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.IteroiAmmatillisetTutkinnot
@@ -66,14 +69,14 @@ trait AmmatillisetIterointiFunktiot {
             throw e
         }
       } else {
-        Tulos(None, new Hyvaksyttavissatila, Historia("Ei löytynyt tietoja ammatillisista tutkinnoista", None, Nil, None, None))
+        Tulos(None, new Hyvaksyttavissatila, Historia(ITEROIAMMATILLISETTUTKINNOT.name(), None, Nil, None, None))
       }
 
       val tilalista = List(tulos.tila)
       val avaimet = Map(
         "Ammatillisten perustutkintojen määrä" -> Some(tutkintojenMaara)) ++
         ammatillistenFunktioidenTulostenTiivistelmat
-      (tulos.tulos, tilalista, Historia("Iteroi ammatillisten perustutkintojen yli", tulos.tulos, tilalista, None, Some(avaimet)))
+      (tulos.tulos, tilalista, Historia(ITEROIAMMATILLISETTUTKINNOT.name(), tulos.tulos, tilalista, None, Some(avaimet)))
     }
   }
 
@@ -130,14 +133,14 @@ trait AmmatillisetIterointiFunktiot {
             throw e
         }
       } else {
-        Tulos(None, new Hyvaksyttavissatila, Historia("Ei löytynyt tietoja ammatillisista tutkinnoista", None, Nil, None, None))
+        Tulos(None, new Hyvaksyttavissatila, Historia(ITEROIAMMATILLISETOSAT.name(), None, Nil, None, None))
       }
 
       val tilalista = List(tulos.tila)
       val avaimet = Map(
         "ammatillisen perustutkinnon osien määrä" -> Some(osienMaara),
         "ammatillisen perustutkinnon osien pisteet" -> Some(tuloksetLukuarvoina.map(l => s"${l._1.tulosTekstiFi} = ${l._1.d};${l._2.tulosTekstiFi} = ${l._2.d}")))
-      (tulos.tulos, tilalista, Historia("Iteroi ammatillisen perustutkinnon osien yli", tulos.tulos, tilalista, None, Some(avaimet)))
+      (tulos.tulos, tilalista, Historia(ITEROIAMMATILLISETOSAT.name(), tulos.tulos, tilalista, None, Some(avaimet)))
     }
   }
 
@@ -195,14 +198,14 @@ trait AmmatillisetIterointiFunktiot {
             throw e
         }
       } else {
-        Tulos(None, new Hyvaksyttavissatila, Historia(s"Ei löytynyt pisteitä YTOlle $ytoKoodi", None, Nil, None, None))
+        Tulos(None, new Hyvaksyttavissatila, Historia(ITEROIAMMATILLISETYTOOSAALUEET.name(), None, Nil, None, None))
       }
 
       val tilalista = List(tulos.tila)
       val avaimet = Map(
         s"ammatillisen perustutkinnon YTOn $ytoKoodi osa-alueiden määrä" -> Some(ytonOsaAlueidenMaara),
         s"ammatillisen perustutkinnon YTOn $ytoKoodi pisteet" -> Some(tuloksetLukuarvoina.map(l => s"${l._1.tulosTekstiFi} = ${l._1.d};${l._2.tulosTekstiFi} = ${l._2.d}")))
-      (tulos.tulos, tilalista, Historia(Funktionimi.ITEROIAMMATILLISETYTOOSAALUEET.name(), tulos.tulos, tilalista, None, Some(avaimet)))
+      (tulos.tulos, tilalista, Historia(ITEROIAMMATILLISETYTOOSAALUEET.name(), tulos.tulos, tilalista, None, Some(avaimet)))
     }
   }
 }
