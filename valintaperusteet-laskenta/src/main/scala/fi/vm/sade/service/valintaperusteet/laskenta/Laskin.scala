@@ -695,7 +695,7 @@ protected[laskenta] class Laskin private(val hakukohde: Hakukohde,
         val tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija = ammatillisenTutkinnonValitsija(iteraatioParametrit, f)
         val arvosanaKoskessa: Option[BigDecimal] = YhteisetTutkinnonOsat.haeYtoArvosana(tutkinnonValitsija, hakemus, valintaperusteviite, oletusarvo)
 
-        val (tulos, tilalista) = konvertoi(konvertteri, arvosanaKoskessa)
+        val (tulos, tilalista) = konvertoi(konvertteri, arvosanaKoskessa, hakemus, hakukohde)
 
         val uusiHistoria = Historia(
           HAEAMMATILLINENYTOARVOSANA.name(),
@@ -740,7 +740,7 @@ protected[laskenta] class Laskin private(val hakukohde: Hakukohde,
         val tutkinnonOsanValitsija: AmmatillisenTutkinnonOsanValitsija = ammatillisenTutkinnonOsanValitsija(iteraatioParametrit, f)
         val laajuusKoskessa: Option[BigDecimal] = KoskiLaskenta.haeAmmatillisenTutkinnonOsanLaajuus(tutkinnonValitsija, tutkinnonOsanValitsija, hakemus, oletusarvo)
 
-        val (tulos: Option[BigDecimal], tilalista: List[Tila]) = konvertoi(konvertteri, laajuusKoskessa)
+        val (tulos: Option[BigDecimal], tilalista: List[Tila]) = konvertoi(konvertteri, laajuusKoskessa, hakemus, hakukohde)
 
         val uusiHistoria = Historia(
           Funktionimi.HAEAMMATILLISENOSANLAAJUUS.name(),
@@ -758,7 +758,7 @@ protected[laskenta] class Laskin private(val hakukohde: Hakukohde,
         val tutkinnonOsanValitsija: AmmatillisenTutkinnonOsanValitsija = ammatillisenTutkinnonOsanValitsija(iteraatioParametrit, f)
         val arvosanaKoskessa: Option[BigDecimal] = KoskiLaskenta.haeAmmatillisenTutkinnonOsanArvosana(tutkinnonValitsija, tutkinnonOsanValitsija, hakemus)
 
-        val (tulos: Option[BigDecimal], tilalista: List[Tila]) = konvertoi(konvertteri, arvosanaKoskessa)
+        val (tulos: Option[BigDecimal], tilalista: List[Tila]) = konvertoi(konvertteri, arvosanaKoskessa, hakemus, hakukohde)
 
         val uusiHistoria = Historia(
           Funktionimi.HAEAMMATILLISENOSANARVOSANA.name(),
@@ -775,7 +775,7 @@ protected[laskenta] class Laskin private(val hakukohde: Hakukohde,
         val osaAlueenValitsija: AmmatillisenTutkinnonYtoOsaAlueenValitsija = ammatillisenYtonOsaAlueenValitsija(iteraatioParametrit, f)
         val laajuusKoskessa: Option[BigDecimal] = KoskiLaskenta.haeAmmatillisenYtonOsaAlueenLaajuus(tutkinnonValitsija, osaAlueenValitsija, hakemus, oletusarvo)
 
-        val (tulos: Option[BigDecimal], tilalista: List[Tila]) = konvertoi(konvertteri, laajuusKoskessa)
+        val (tulos: Option[BigDecimal], tilalista: List[Tila]) = konvertoi(konvertteri, laajuusKoskessa, hakemus, hakukohde)
 
         val uusiHistoria = Historia(
           Funktionimi.HAEAMMATILLISENYTOOSAALUEENLAAJUUS.name(),
@@ -793,7 +793,7 @@ protected[laskenta] class Laskin private(val hakukohde: Hakukohde,
         val osaAlueenValitsija: AmmatillisenTutkinnonYtoOsaAlueenValitsija = ammatillisenYtonOsaAlueenValitsija(iteraatioParametrit, f)
         val arvosanaKoskessa: Option[BigDecimal] = KoskiLaskenta.haeAmmatillisenYtonOsaAlueenArvosana(tutkinnonValitsija, osaAlueenValitsija, hakemus, oletusarvo)
 
-        val (tulos: Option[BigDecimal], tilalista: List[Tila]) = konvertoi(konvertteri, arvosanaKoskessa)
+        val (tulos: Option[BigDecimal], tilalista: List[Tila]) = konvertoi(konvertteri, arvosanaKoskessa, hakemus, hakukohde)
 
         val uusiHistoria = Historia(
           Funktionimi.HAEAMMATILLISENYTOOSAALUEENARVOSANA.name(),
@@ -809,7 +809,7 @@ protected[laskenta] class Laskin private(val hakukohde: Hakukohde,
         val tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija = ammatillisenTutkinnonValitsija(iteraatioParametrit, f)
         val keskiarvoKoskessa: Option[BigDecimal] = KoskiLaskenta.haeAmmatillisenTutkinnonKoskeenTallennettuKeskiarvo(tutkinnonValitsija, hakemus)
 
-        val (tulos: Option[BigDecimal], tilalista: List[Tila]) = konvertoi(konvertteri, keskiarvoKoskessa)
+        val (tulos: Option[BigDecimal], tilalista: List[Tila]) = konvertoi(konvertteri, keskiarvoKoskessa, hakemus, hakukohde)
 
         val uusiHistoria = Historia(
           Funktionimi.HAEAMMATILLISENTUTKINNONKESKIARVO.name(),
@@ -1019,21 +1019,6 @@ protected[laskenta] class Laskin private(val hakukohde: Hakukohde,
       funktioTulokset.update(laskettava.tulosTunniste, v)
     }
     Tulos(laskettuTulos, palautettavaTila(tilat), historia)
-  }
-
-  private def konvertoi(konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]], arvoKoskessa: Option[BigDecimal]): (Option[BigDecimal], List[Tila]) = {
-    val (konv, tilatKonvertterinHausta) = konvertteri match {
-      case Some(l: Lukuarvovalikonvertteri) => konversioToLukuarvovalikonversio(l.konversioMap, hakemus.kentat, hakukohde)
-      case Some(a: Arvokonvertteri[_, _]) => konversioToArvokonversio[BigDecimal, BigDecimal](a.konversioMap, hakemus.kentat, hakukohde)
-      case _ => (konvertteri, List())
-    }
-
-    val (tulos, tilaKonvertoinnista): (Option[BigDecimal], Tila) = (for {
-      k <- konv
-      arvosana <- arvoKoskessa
-    } yield k.konvertoi(arvosana)).getOrElse((arvoKoskessa, new Hyvaksyttavissatila))
-    val tilalista: List[Tila] = tilaKonvertoinnista :: tilatKonvertterinHausta
-    (tulos, tilalista)
   }
 
   private def historianTiivistelma(historia: Historia): Seq[String] = {

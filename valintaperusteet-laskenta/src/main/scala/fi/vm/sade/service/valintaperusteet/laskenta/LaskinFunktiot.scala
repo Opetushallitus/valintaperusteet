@@ -8,6 +8,7 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Konvertteri
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonversio
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.LukuarvovalikonversioMerkkijonoilla
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonvertteri
+import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus.Kentat
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakukohde
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.ArvokonvertointiVirhe
@@ -49,6 +50,25 @@ trait LaskinFunktiot {
     })
 
 
+  }
+
+  protected def konvertoi(konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]],
+                          lahtoarvo: Option[BigDecimal],
+                          hakemus: Hakemus,
+                          hakukohde: Hakukohde
+                         ): (Option[BigDecimal], List[Tila]) = {
+    val (konv, tilatKonvertterinHausta) = konvertteri match {
+      case Some(l: Lukuarvovalikonvertteri) => konversioToLukuarvovalikonversio(l.konversioMap, hakemus.kentat, hakukohde)
+      case Some(a: Arvokonvertteri[_, _]) => konversioToArvokonversio[BigDecimal, BigDecimal](a.konversioMap, hakemus.kentat, hakukohde)
+      case _ => (konvertteri, List())
+    }
+
+    val (tulos, tilaKonvertoinnista): (Option[BigDecimal], Tila) = (for {
+      k <- konv
+      palautettavaArvo <- lahtoarvo
+    } yield k.konvertoi(palautettavaArvo)).getOrElse((lahtoarvo, new Hyvaksyttavissatila))
+    val tilalista: List[Tila] = tilaKonvertoinnista :: tilatKonvertterinHausta
+    (tulos, tilalista)
   }
 
   protected def suoritaOptionalKonvertointi[T](tulos: Tuple2[Option[T], Tila],
