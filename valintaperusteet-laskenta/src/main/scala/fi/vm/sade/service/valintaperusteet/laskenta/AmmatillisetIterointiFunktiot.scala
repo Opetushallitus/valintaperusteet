@@ -156,10 +156,10 @@ trait AmmatillisetIterointiFunktiot {
     if (tutkinnonYtoOsaAlueenValitsija.exists(p => p.isInstanceOf[AmmatillisenTutkinnonYtoOsaAlueenValitsija])) {
       throw new IllegalStateException(s"Ei voi iteroida iteraatioparametrilla $tutkinnonYtoOsaAlueenValitsija uudestaan ammatillisen tutkinnon osien yli")
     } else {
-      val osienMaara = KoskiLaskenta.laskeAmmatillisenTutkinnonYtoOsaAlueet(tutkinnonValitsija, laskin.hakemus)
-      Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} hakijan tutkinnolle $tutkinnonValitsija löytyi $osienMaara ammatillista perustutkinnon osaa.")
+      val ytonOsaAlueidenMaara = KoskiLaskenta.laskeAmmatillisenTutkinnonYtoOsaAlueet(tutkinnonValitsija, /* TODO : YTOn koodi ,*/ laskin.hakemus)
+      Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} hakijan tutkinnon $tutkinnonValitsija YTOlle ${f.valintaperusteviite.tunniste} löytyi $ytonOsaAlueidenMaara YTOn osa-aluetta.")
 
-      val uudetParametrit: Seq[AmmatillisenTutkinnonYtoOsaAlueenValitsija] = AmmatillisenTutkinnonYtoOsaAlueet(f.valintaperusteviite.tunniste, osienMaara).parametreiksi
+      val uudetParametrit: Seq[AmmatillisenTutkinnonYtoOsaAlueenValitsija] = AmmatillisenTutkinnonYtoOsaAlueet(f.valintaperusteviite.tunniste, ytonOsaAlueidenMaara).parametreiksi
 
       val kierrostenTulokset: Seq[(AmmatillisenTutkinnonYtoOsaAlueenValitsija, (Tulos[BigDecimal], Tulos[BigDecimal]))] = uudetParametrit.
         map(parametri => {
@@ -199,7 +199,7 @@ trait AmmatillisetIterointiFunktiot {
 
       val tilalista = List(tulos.tila)
       val avaimet = Map(
-        "ammatillisen perustutkinnon osien määrä" -> Some(osienMaara),
+        "ammatillisen perustutkinnon osien määrä" -> Some(ytonOsaAlueidenMaara),
         "ammatillisen perustutkinnon osien pisteet" -> Some(tuloksetLukuarvoina.map(l => s"${l._1.tulosTekstiFi} = ${l._1.d};${l._2.tulosTekstiFi} = ${l._2.d}")))
       (tulos.tulos, tilalista, Historia("Iteroi ammatillisen perustutkinnon osien yli", tulos.tulos, tilalista, None, Some(avaimet)))
     }
