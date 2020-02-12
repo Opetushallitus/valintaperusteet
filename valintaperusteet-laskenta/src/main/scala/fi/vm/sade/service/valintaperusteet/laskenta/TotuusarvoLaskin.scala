@@ -56,8 +56,8 @@ protected[laskenta] class TotuusarvoLaskin(private val laskin: Laskin) extends L
     }
 
     def muodostaVertailunTulos(f1: Lukuarvofunktio, f2: Lukuarvofunktio, trans: (BigDecimal, BigDecimal) => Boolean, iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri]) = {
-      val tulos1 = laskin.laskeLukuarvo(f1, iteraatioParametrit)
-      val tulos2 = laskin.laskeLukuarvo(f2, iteraatioParametrit)
+      val tulos1 = new LukuarvoLaskin(laskin).laskeLukuarvo(f1, iteraatioParametrit)
+      val tulos2 = new LukuarvoLaskin(laskin).laskeLukuarvo(f2, iteraatioParametrit)
       val tulos = for {
         t1 <- tulos1.tulos
         t2 <- tulos2.tulos
