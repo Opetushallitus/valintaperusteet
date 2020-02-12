@@ -126,7 +126,7 @@ trait AmmatillisetIterointiFunktiot {
           laskeLukuarvo(iteroidutTuloksetKasittelevaKlooni, Map())
         } catch {
           case e: ClassCastException => {
-            Laskin.LOG.error(s"${classOf[IteroiAmmatillisetTutkinnot].getSimpleName} -funktion funktioargumenttina tulee olla " +
+            Laskin.LOG.error(s"${classOf[IteroiAmmatillisetTutkinnonOsat].getSimpleName} -funktion funktioargumenttina tulee olla " +
               s"kloonattava funktio, kuten maksimi, mutta oli $lapsiFunktio", e)
             throw e
           }
