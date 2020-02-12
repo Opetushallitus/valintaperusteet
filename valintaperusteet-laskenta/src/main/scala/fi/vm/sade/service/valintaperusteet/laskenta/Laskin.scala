@@ -34,8 +34,6 @@ import scala.jdk.CollectionConverters._
 object Laskin {
   val LOG = LoggerFactory.getLogger(classOf[Laskin])
 
-  protected[laskenta] val HUNDRED: BigDecimal = BigDecimal("100.0")
-
   private def wrapSyotetytArvot(sa: Map[String, SyotettyArvo]): Map[String, SArvo] = {
     sa.map(e => e._1 -> new SArvo(e._1, if (e._2.arvo.isEmpty) null else e._2.arvo.get,
       if (e._2.laskennallinenArvo.isEmpty) null else e._2.laskennallinenArvo.get, e._2.osallistuminen,

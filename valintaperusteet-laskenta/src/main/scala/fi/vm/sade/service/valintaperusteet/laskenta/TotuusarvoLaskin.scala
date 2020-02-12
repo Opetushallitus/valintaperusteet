@@ -27,6 +27,8 @@ import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Tila
 import scala.collection.mutable.ListBuffer
 
 protected[laskenta] class TotuusarvoLaskin(private val laskin: Laskin) extends LaskinFunktiot {
+  private val HUNDRED: BigDecimal = BigDecimal("100.0")
+
   protected[laskenta] def laske(laskettava: Totuusarvofunktio, iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri]): Tulos[Boolean] = {
     laskeTotuusarvo(laskettava, iteraatioParametrit)
   }
@@ -137,7 +139,7 @@ protected[laskenta] class TotuusarvoLaskin(private val laskin: Laskin) extends L
 
 
             val vertailuarvo = BigDecimal(samojenArvojenLkm).underlying.divide(BigDecimal(ensisijaisetHakijat).underlying, 4, RoundingMode.HALF_UP)
-            vertailuarvo.compareTo(prosenttiosuus.underlying.divide(Laskin.HUNDRED.underlying, 4, RoundingMode.HALF_UP)) != 1
+            vertailuarvo.compareTo(prosenttiosuus.underlying.divide(HUNDRED.underlying, 4, RoundingMode.HALF_UP)) != 1
           })
 
           val tila = new Hyvaksyttavissatila
