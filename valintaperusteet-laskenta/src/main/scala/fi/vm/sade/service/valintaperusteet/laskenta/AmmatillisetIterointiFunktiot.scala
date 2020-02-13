@@ -14,6 +14,7 @@ import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Hyvaksyttavissatila
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Tila
 import fi.vm.sade.service.valintaperusteet.laskenta.koski.KoskiLaskenta
 
+import scala.collection.immutable.ListMap
 import scala.jdk.CollectionConverters._
 
 trait AmmatillisetIterointiFunktiot {
@@ -44,7 +45,7 @@ trait AmmatillisetIterointiFunktiot {
           None
       }
 
-      val ammatillistenFunktioidenTulostenTiivistelmat: Map[String, Option[Any]] = kierrostenTulokset.flatMap {
+      val tiivistelmaLista = kierrostenTulokset.flatMap {
         case (parametri, Tulos(Some(lukuarvo), _, historia)) =>
           val tiivistelmat: Map[String, Option[Any]] = historia.
             flatten.
@@ -56,7 +57,8 @@ trait AmmatillisetIterointiFunktiot {
             }.toMap
           Map(s"Arvo parametrilla '$parametri'" -> Some(lukuarvo)) ++ tiivistelmat
         case _ => Map()
-      }.toMap
+      }
+      val ammatillistenFunktioidenTulostenTiivistelmat: ListMap[String, Option[Any]] = ListMap(tiivistelmaLista : _*)
 
       val tulos: Tulos[BigDecimal] = if (tuloksetLukuarvoina.nonEmpty) {
         try {
@@ -73,7 +75,7 @@ trait AmmatillisetIterointiFunktiot {
       }
 
       val tilalista = List(tulos.tila)
-      val avaimet = Map(
+      val avaimet = ListMap(
         "Ammatillisten perustutkintojen määrä" -> Some(tutkintojenMaara)) ++
         ammatillistenFunktioidenTulostenTiivistelmat
       (tulos.tulos, tilalista, Historia(ITEROIAMMATILLISETTUTKINNOT.name(), tulos.tulos, tilalista, None, Some(avaimet)))
