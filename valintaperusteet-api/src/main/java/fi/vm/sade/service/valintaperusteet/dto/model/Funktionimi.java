@@ -75,6 +75,10 @@ public enum Funktionimi {
         this.laskentamoodit = new HashSet<Laskentamoodi>(Arrays.asList(laskentamoodit));
     }
 
+    public String getKuvaus() {
+        return kuvaus;
+    }
+
     public Funktiotyyppi getTyyppi() {
         return this.tyyppi;
     }

@@ -50,7 +50,7 @@ trait AmmatillisetIterointiFunktiot {
           val tiivistelmat: Map[String, Option[Any]] = historia.
             flatten.
             filter { h: Historia =>
-              Funktionimi.ammatillistenArvosanojenFunktionimet.asScala.map(_.name()).contains(h.funktio)
+              Funktionimi.ammatillistenArvosanojenFunktionimet.asScala.exists(h.funktionimi.contains)
             }.
             map { h =>
               s"${h.funktio} = ${h.tulos.getOrElse("-")}" -> Some(s"avaimet: ${h.avaimet.getOrElse(Map()).map(x => (x._1, x._2.getOrElse("-")))}")
@@ -71,14 +71,14 @@ trait AmmatillisetIterointiFunktiot {
             throw e
         }
       } else {
-        Tulos(None, new Hyvaksyttavissatila, Historia(ITEROIAMMATILLISETTUTKINNOT.name(), None, Nil, None, None))
+        Tulos(None, new Hyvaksyttavissatila, Historia(ITEROIAMMATILLISETTUTKINNOT, None, Nil, None, None))
       }
 
       val tilalista = List(tulos.tila)
       val avaimet = ListMap(
         "Ammatillisten perustutkintojen määrä" -> Some(tutkintojenMaara)) ++
         ammatillistenFunktioidenTulostenTiivistelmat
-      (tulos.tulos, tilalista, Historia(ITEROIAMMATILLISETTUTKINNOT.name(), tulos.tulos, tilalista, None, Some(avaimet)))
+      (tulos.tulos, tilalista, Historia(ITEROIAMMATILLISETTUTKINNOT, tulos.tulos, tilalista, None, Some(avaimet)))
     }
   }
 
@@ -135,14 +135,14 @@ trait AmmatillisetIterointiFunktiot {
             throw e
         }
       } else {
-        Tulos(None, new Hyvaksyttavissatila, Historia(ITEROIAMMATILLISETOSAT.name(), None, Nil, None, None))
+        Tulos(None, new Hyvaksyttavissatila, Historia(ITEROIAMMATILLISETOSAT, None, Nil, None, None))
       }
 
       val tilalista = List(tulos.tila)
       val avaimet = Map(
         "ammatillisen perustutkinnon osien määrä" -> Some(osienMaara),
         "ammatillisen perustutkinnon osien pisteet" -> Some(tuloksetLukuarvoina.map(l => s"${l._1.tulosTekstiFi} = ${l._1.d};${l._2.tulosTekstiFi} = ${l._2.d}")))
-      (tulos.tulos, tilalista, Historia(ITEROIAMMATILLISETOSAT.name(), tulos.tulos, tilalista, None, Some(avaimet)))
+      (tulos.tulos, tilalista, Historia(ITEROIAMMATILLISETOSAT, tulos.tulos, tilalista, None, Some(avaimet)))
     }
   }
 
@@ -200,14 +200,14 @@ trait AmmatillisetIterointiFunktiot {
             throw e
         }
       } else {
-        Tulos(None, new Hyvaksyttavissatila, Historia(ITEROIAMMATILLISETYTOOSAALUEET.name(), None, Nil, None, None))
+        Tulos(None, new Hyvaksyttavissatila, Historia(ITEROIAMMATILLISETYTOOSAALUEET, None, Nil, None, None))
       }
 
       val tilalista = List(tulos.tila)
       val avaimet = Map(
         s"ammatillisen perustutkinnon YTOn $ytoKoodi osa-alueiden määrä" -> Some(ytonOsaAlueidenMaara),
         s"ammatillisen perustutkinnon YTOn $ytoKoodi pisteet" -> Some(tuloksetLukuarvoina.map(l => s"${l._1.tulosTekstiFi} = ${l._1.d};${l._2.tulosTekstiFi} = ${l._2.d}")))
-      (tulos.tulos, tilalista, Historia(ITEROIAMMATILLISETYTOOSAALUEET.name(), tulos.tulos, tilalista, None, Some(avaimet)))
+      (tulos.tulos, tilalista, Historia(ITEROIAMMATILLISETYTOOSAALUEET, tulos.tulos, tilalista, None, Some(avaimet)))
     }
   }
 }

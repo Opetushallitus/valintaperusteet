@@ -32,7 +32,7 @@ trait AmmatillisetArvonHakuFunktiot {
     val (tulos, tilalista) = konvertoi(konvertteri, arvosanaKoskessa, laskin.hakemus, laskin.hakukohde)
 
     val uusiHistoria = Historia(
-      HAEAMMATILLINENYTOARVOSANA.name(),
+      HAEAMMATILLINENYTOARVOSANA,
       tulos,
       tilalista,
       None,
@@ -55,7 +55,7 @@ trait AmmatillisetArvonHakuFunktiot {
     val (tulos: Option[BigDecimal], tilalista: List[Tila]) = konvertoiMerkkijono(konvertteri, oletusarvo, asteikonKoodiKoskessa)
 
     val uusiHistoria = Historia(
-      HAEAMMATILLINENYTOARVIOINTIASTEIKKO.name(),
+      HAEAMMATILLINENYTOARVIOINTIASTEIKKO,
       tulos,
       tilalista,
       None,
@@ -81,7 +81,7 @@ trait AmmatillisetArvonHakuFunktiot {
     val (tulos: Option[BigDecimal], tilalista: List[Tila]) = konvertoi(konvertteri, laajuusKoskessa, laskin.hakemus, laskin.hakukohde)
 
     val uusiHistoria = Historia(
-      Funktionimi.HAEAMMATILLISENOSANLAAJUUS.name(),
+      Funktionimi.HAEAMMATILLISENOSANLAAJUUS,
       tulos,
       tilalista,
       None,
@@ -104,7 +104,7 @@ trait AmmatillisetArvonHakuFunktiot {
     val (tulos: Option[BigDecimal], tilalista: List[Tila]) = konvertoi(konvertteri, arvosanaKoskessa, laskin.hakemus, laskin.hakukohde)
 
     val uusiHistoria = Historia(
-      Funktionimi.HAEAMMATILLISENOSANARVOSANA.name(),
+      Funktionimi.HAEAMMATILLISENOSANARVOSANA,
       tulos,
       tilalista,
       None,
@@ -128,7 +128,7 @@ trait AmmatillisetArvonHakuFunktiot {
     val (tulos: Option[BigDecimal], tilalista: List[Tila]) = konvertoi(konvertteri, laajuusKoskessa, laskin.hakemus, laskin.hakukohde)
 
     val uusiHistoria = Historia(
-      Funktionimi.HAEAMMATILLISENYTOOSAALUEENLAAJUUS.name(),
+      Funktionimi.HAEAMMATILLISENYTOOSAALUEENLAAJUUS,
       tulos,
       tilalista,
       None,
@@ -153,7 +153,7 @@ trait AmmatillisetArvonHakuFunktiot {
     val (tulos: Option[BigDecimal], tilalista: List[Tila]) = konvertoi(konvertteri, arvosanaKoskessa, laskin.hakemus, laskin.hakukohde)
 
     val uusiHistoria = Historia(
-      Funktionimi.HAEAMMATILLISENYTOOSAALUEENARVOSANA.name(),
+      Funktionimi.HAEAMMATILLISENYTOOSAALUEENARVOSANA,
       tulos,
       tilalista,
       None,
@@ -173,7 +173,7 @@ trait AmmatillisetArvonHakuFunktiot {
     val (tulos: Option[BigDecimal], tilalista: List[Tila]) = konvertoi(konvertteri, keskiarvoKoskessa, laskin.hakemus, laskin.hakukohde)
 
     val uusiHistoria = Historia(
-      Funktionimi.HAEAMMATILLISENTUTKINNONKESKIARVO.name(),
+      Funktionimi.HAEAMMATILLISENTUTKINNONKESKIARVO,
       tulos,
       tilalista,
       None,
@@ -194,7 +194,7 @@ trait AmmatillisetArvonHakuFunktiot {
     val (tulos: Option[BigDecimal], tilalista: List[Tila]) = konvertoiMerkkijono(konvertteri, oletusarvo, suoritustapaKoskessa)
 
     val uusiHistoria = Historia(
-      Funktionimi.HAEAMMATILLISENTUTKINNONSUORITUSTAPA.name(),
+      Funktionimi.HAEAMMATILLISENTUTKINNONSUORITUSTAPA,
       tulos,
       tilalista,
       None,

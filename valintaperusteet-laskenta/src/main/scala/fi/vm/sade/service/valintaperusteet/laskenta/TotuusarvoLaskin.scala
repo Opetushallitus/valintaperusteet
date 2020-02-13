@@ -2,6 +2,24 @@ package fi.vm.sade.service.valintaperusteet.laskenta
 
 import java.math.RoundingMode
 
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.DEMOGRAFIA
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.EI
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.HAEMERKKIJONOJAKONVERTOITOTUUSARVOKSI
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.HAEMERKKIJONOJAVERTAAYHTASUURUUS
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.HAETOTUUSARVO
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.HAKUKELPOISUUS
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.HAKUTOIVE
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.HAKUTOIVERYHMASSA
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.JA
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.NIMETTYTOTUUSARVO
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.PIENEMPI
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.PIENEMPITAIYHTASUURI
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.SUUREMPI
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.SUUREMPITAIYHTASUURI
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.TAI
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.TOTUUSARVO
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.VALINTAPERUSTEYHTASUURUUS
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.YHTASUURI
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonvertteri
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Demografia
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Ei
@@ -67,31 +85,31 @@ protected[laskenta] class TotuusarvoLaskin(private val laskin: Laskin) extends L
     val (laskettuTulos, tilat, hist): (Option[Boolean], List[Tila], Historia) = laskettava match {
       case Ja(fs, _, _,_,_,_,_) =>
         val (tulos, tilat, h) = muodostaKoostettuTulos(fs, lst => lst.forall(b => b))
-        (tulos, tilat, Historia("Ja", tulos, tilat, h.historiat, None))
+        (tulos, tilat, Historia(JA, tulos, tilat, h.historiat, None))
       case Tai(fs, _, _,_,_,_,_) =>
         val (tulos, tilat, h) = muodostaKoostettuTulos(fs, lst => lst.exists(b => b))
-        (tulos, tilat, Historia("Tai", tulos, tilat, h.historiat, None))
+        (tulos, tilat, Historia(TAI, tulos, tilat, h.historiat, None))
       case Ei(fk, _, _,_,_,_,_) =>
         val (tulos, tilat, h) = muodostaYksittainenTulos(fk, b => !b)
-        (tulos, tilat, Historia("Ei", tulos, tilat, Some(List(h)), None))
+        (tulos, tilat, Historia(EI, tulos, tilat, Some(List(h)), None))
       case Totuusarvo(b, _, _,_,_,_,_) =>
         val tilat = List(new Hyvaksyttavissatila)
-        (Some(b), tilat, Historia("Totuusarvo", Some(b), tilat, None, None))
+        (Some(b), tilat, Historia(TOTUUSARVO, Some(b), tilat, None, None))
       case Suurempi(f1, f2, _, _,_,_,_,_) =>
         val (tulos, tilat, h) = muodostaVertailunTulos(f1, f2, (d1, d2) => d1 > d2, iteraatioParametrit)
-        (tulos, tilat, Historia("Suurempi", tulos, tilat, Some(List(h)), None))
+        (tulos, tilat, Historia(SUUREMPI, tulos, tilat, Some(List(h)), None))
       case SuurempiTaiYhtasuuri(f1, f2, _, _,_,_,_,_) =>
         val (tulos, tilat, h) = muodostaVertailunTulos(f1, f2, (d1, d2) => d1 >= d2, iteraatioParametrit)
-        (tulos, tilat, Historia("Suurempi tai yhtäsuuri", tulos, tilat, Some(List(h)), None))
+        (tulos, tilat, Historia(SUUREMPITAIYHTASUURI, tulos, tilat, Some(List(h)), None))
       case Pienempi(f1, f2, _, _,_,_,_,_) =>
         val (tulos, tilat, h) = muodostaVertailunTulos(f1, f2, (d1, d2) => d1 < d2, iteraatioParametrit)
-        (tulos, tilat, Historia("Pienempi", tulos, tilat, Some(List(h)), None))
+        (tulos, tilat, Historia(PIENEMPI, tulos, tilat, Some(List(h)), None))
       case PienempiTaiYhtasuuri(f1, f2, _, _,_,_,_,_) =>
         val (tulos, tilat, h) = muodostaVertailunTulos(f1, f2, (d1, d2) => d1 <= d2, iteraatioParametrit)
-        (tulos, tilat, Historia("Pienempi tai yhtäsuuri", tulos, tilat, Some(List(h)), None))
+        (tulos, tilat, Historia(PIENEMPITAIYHTASUURI, tulos, tilat, Some(List(h)), None))
       case Yhtasuuri(f1, f2, _, _,_,_,_,_) =>
         val (tulos, tilat, h) = muodostaVertailunTulos(f1, f2, (d1, d2) => d1 == d2, iteraatioParametrit)
-        (tulos, tilat, Historia("Yhtäsuuri", tulos, tilat, Some(List(h)), None))
+        (tulos, tilat, Historia(YHTASUURI, tulos, tilat, Some(List(h)), None))
       case HaeTotuusarvo(konvertteri, oletusarvo, valintaperusteviite, _, _,_,_,_,_) =>
         val (konv, _) = konvertteri match {
           case Some(a: Arvokonvertteri[_,_]) => konversioToArvokonversio[Boolean, Boolean](a.konversioMap, laskin.hakemus.kentat, laskin.hakukohde)
@@ -100,25 +118,25 @@ protected[laskenta] class TotuusarvoLaskin(private val laskin: Laskin) extends L
         val (tulos, tila) = laskin.haeValintaperuste[Boolean](valintaperusteviite, laskin.hakemus.kentat,
           s => suoritaOptionalKonvertointi[Boolean](string2boolean(s, valintaperusteviite.tunniste),
             konv), oletusarvo)
-        (tulos, tila, Historia("Hae totuusarvo", tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
+        (tulos, tila, Historia(HAETOTUUSARVO, tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
       case NimettyTotuusarvo(nimi, f, _, _,_,_,_,_) =>
         val (tulos, tilat, h) = muodostaYksittainenTulos(f, b => b)
-        (tulos, tilat, Historia("Nimetty totuusarvo", tulos, tilat, Some(List(h)), Some(Map("nimi" -> Some(nimi)))))
+        (tulos, tilat, Historia(NIMETTYTOTUUSARVO, tulos, tilat, Some(List(h)), Some(Map("nimi" -> Some(nimi)))))
 
       case Hakutoive(n, _, _, _, _, _,_) =>
         val onko = Some(laskin.hakemus.onkoHakutoivePrioriteetilla(laskin.hakukohde.hakukohdeOid, n))
         val tilat = List(new Hyvaksyttavissatila)
-        (onko, tilat, Historia("Hakutoive", onko, tilat, None, Some(Map("prioriteetti" -> Some(n)))))
+        (onko, tilat, Historia(HAKUTOIVE, onko, tilat, None, Some(Map("prioriteetti" -> Some(n)))))
 
       case HakutoiveRyhmassa(n, ryhmaOid, _, _, _, _, _,_) =>
         val onko = Some(laskin.hakemus.onkoHakutoivePrioriteetilla(laskin.hakukohde.hakukohdeOid, n, Some(ryhmaOid)))
         val tilat = List(new Hyvaksyttavissatila)
-        (onko, tilat, Historia("HakutoiveRyhmassa", onko, tilat, None, Some(Map("prioriteetti" -> Some(n)))))
+        (onko, tilat, Historia(HAKUTOIVERYHMASSA, onko, tilat, None, Some(Map("prioriteetti" -> Some(n)))))
 
       case Hakukelpoisuus(_, _,_,_,_,_) =>
         val onko = Some(laskin.hakemus.onkoHakukelpoinen(laskin.hakukohde.hakukohdeOid))
         val tilat = List(new Hyvaksyttavissatila)
-        (onko, tilat, Historia("Hakukelpoisuus", onko, tilat, None, Some(Map("hakukohde" -> Some(laskin.hakukohde.hakukohdeOid)))))
+        (onko, tilat, Historia(HAKUKELPOISUUS, onko, tilat, None, Some(Map("hakukohde" -> Some(laskin.hakukohde.hakukohdeOid)))))
 
       case Demografia(_, _,_,_,_,_, tunniste, prosenttiosuus) =>
         if (laskin.laskentamoodi != Laskentamoodi.VALINTALASKENTA) {
@@ -139,7 +157,7 @@ protected[laskenta] class TotuusarvoLaskin(private val laskin: Laskin) extends L
           })
 
           val tila = new Hyvaksyttavissatila
-          (tulos, List(tila), Historia("Demografia", tulos, List(tila), None, Some(Map("avain" -> Some(tunniste), "valintaperuste" -> omaArvo))))
+          (tulos, List(tila), Historia(DEMOGRAFIA, tulos, List(tila), None, Some(Map("avain" -> Some(tunniste), "valintaperuste" -> omaArvo))))
         }
 
       case HaeMerkkijonoJaKonvertoiTotuusarvoksi(konvertteri, oletusarvo, valintaperusteviite, _, _,_,_,_,_) =>
@@ -147,22 +165,22 @@ protected[laskenta] class TotuusarvoLaskin(private val laskin: Laskin) extends L
           case a: Arvokonvertteri[_,_] =>
             val (konv, virheet) = konversioToArvokonversio(a.konversioMap, laskin.hakemus.kentat, laskin.hakukohde)
             if(konv.isEmpty) {
-              (None, virheet, Historia("Hae merkkijono ja konvertoi totuusarvoksi", None, virheet, None, None))
+              (None, virheet, Historia(HAEMERKKIJONOJAKONVERTOITOTUUSARVOKSI, None, virheet, None, None))
             } else {
               val (tulos, tila) = laskin.haeValintaperuste[Boolean](valintaperusteviite, laskin.hakemus.kentat,
                 s => suoritaKonvertointi[String, Boolean]((Some(s), new Hyvaksyttavissatila), konv.get.asInstanceOf[Arvokonvertteri[String,Boolean]]), oletusarvo)
-              (tulos, tila, Historia("Hae merkkijono ja konvertoi totuusarvoksi", tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
+              (tulos, tila, Historia(HAEMERKKIJONOJAKONVERTOITOTUUSARVOKSI, tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
             }
           case _ =>
             val (tulos, tila) = laskin.haeValintaperuste[Boolean](valintaperusteviite, laskin.hakemus.kentat,
               s => suoritaKonvertointi[String, Boolean]((Some(s), new Hyvaksyttavissatila), konvertteri), oletusarvo)
-            (tulos, tila, Historia("Hae merkkijono ja konvertoi totuusarvoksi", tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
+            (tulos, tila, Historia(HAEMERKKIJONOJAKONVERTOITOTUUSARVOKSI, tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
         }
 
       case HaeMerkkijonoJaVertaaYhtasuuruus(oletusarvo, valintaperusteviite, vertailtava, _, _,_,_,_,_) =>
         val (tulos, tila) = laskin.haeValintaperuste[Boolean](valintaperusteviite, laskin.hakemus.kentat,
           s => (Some(vertailtava.trim.equalsIgnoreCase(s.trim)), List(new Hyvaksyttavissatila)), oletusarvo)
-        (tulos, tila, Historia("Hae merkkijono ja vertaa yhtasuuruus", tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
+        (tulos, tila, Historia(HAEMERKKIJONOJAVERTAAYHTASUURUUS, tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo))))
 
       case Valintaperusteyhtasuuruus(_, _,_,_,_,_, (valintaperusteviite1, valintaperusteviite2)) =>
         val (arvo1, tilat1) = laskin.haeValintaperuste[String](valintaperusteviite1, laskin.hakemus.kentat, s => (Some(s.trim.toLowerCase), List(new Hyvaksyttavissatila)), None)
@@ -170,7 +188,7 @@ protected[laskenta] class TotuusarvoLaskin(private val laskin: Laskin) extends L
 
         val tulos = Some(arvo1 == arvo2)
         val tilat = tilat1 ::: tilat2
-        (tulos, tilat, Historia("Valintaperusteyhtasuuruus", tulos, tilat, None, Some(Map("tunniste1" -> arvo1, "tunniste2" -> arvo2))))
+        (tulos, tilat, Historia(VALINTAPERUSTEYHTASUURUUS, tulos, tilat, None, Some(Map("tunniste1" -> arvo1, "tunniste2" -> arvo2))))
     }
 
     if (!laskettava.tulosTunniste.isEmpty) {
