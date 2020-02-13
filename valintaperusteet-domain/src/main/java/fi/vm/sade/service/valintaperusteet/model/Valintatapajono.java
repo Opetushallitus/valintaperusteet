@@ -59,6 +59,9 @@ public class Valintatapajono extends BaseEntity implements LinkitettavaJaKopioit
     @Column(name = "varasijoja_taytetaan_asti")
     private Date varasijojaTaytetaanAsti;
 
+    @Column(name = "ei_lasketa_paivamaaran_jalkeen")
+    private Date eiLasketaPaivamaaranJalkeen;
+
     @Column(name = "poissa_oleva_taytto")
     private Boolean poissaOlevaTaytto = false;
 
@@ -245,6 +248,14 @@ public class Valintatapajono extends BaseEntity implements LinkitettavaJaKopioit
 
     public void setVarasijojaTaytetaanAsti(Date varasijojaTaytetaanAsti) {
         this.varasijojaTaytetaanAsti = varasijojaTaytetaanAsti;
+    }
+
+    public Date getEiLasketaPaivamaaranJalkeen() {
+        return eiLasketaPaivamaaranJalkeen;
+    }
+
+    public void setEiLasketaPaivamaaranJalkeen(Date eiLasketaPaivamaaranJalkeen) {
+        this.eiLasketaPaivamaaranJalkeen = eiLasketaPaivamaaranJalkeen;
     }
 
     public Boolean getKaytetaanValintalaskentaa() {

@@ -54,6 +54,7 @@ public class ValintatapajonoKopioija implements Kopioija<Valintatapajono> {
         }
         to.setVarasijojaKaytetaanAlkaen(from.getVarasijojaKaytetaanAlkaen());
         to.setVarasijojaTaytetaanAsti(from.getVarasijojaTaytetaanAsti());
+        to.setEiLasketaPaivamaaranJalkeen(from.getEiLasketaPaivamaaranJalkeen());
         if(from.getKaytetaanValintalaskentaa() != null) {
             to.setKaytetaanValintalaskentaa(from.getKaytetaanValintalaskentaa());
         }

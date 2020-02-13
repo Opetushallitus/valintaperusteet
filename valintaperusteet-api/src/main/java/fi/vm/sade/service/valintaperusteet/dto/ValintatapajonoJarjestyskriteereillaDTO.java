@@ -1,6 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ValintatapajonoJarjestyskriteereillaDTO implements Prioritized {
@@ -19,6 +20,8 @@ public class ValintatapajonoJarjestyskriteereillaDTO implements Prioritized {
     private Boolean siirretaanSijoitteluun = true;
 
     private String tasasijasaanto = "ARVONTA";
+
+    private Date eiLasketaPaivamaaranJalkeen;
 
     private List<ValintaperusteetJarjestyskriteeriDTO> jarjestyskriteerit = new ArrayList<ValintaperusteetJarjestyskriteeriDTO>();
 
@@ -99,6 +102,14 @@ public class ValintatapajonoJarjestyskriteereillaDTO implements Prioritized {
 
     public String getTasasijasaanto() {
         return tasasijasaanto;
+    }
+
+    public Date getEiLasketaPaivamaaranJalkeen() {
+        return eiLasketaPaivamaaranJalkeen;
+    }
+
+    public void setEiLasketaPaivamaaranJalkeen(Date eiLasketaPaivamaaranJalkeen) {
+        this.eiLasketaPaivamaaranJalkeen = eiLasketaPaivamaaranJalkeen;
     }
 
     public List<ValintaperusteetJarjestyskriteeriDTO> getJarjestyskriteerit() {
