@@ -233,7 +233,6 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
 
       case Jos(ehto, thenHaara, elseHaara, _, _, _, _, _, _) =>
         val ehtoTulos = new TotuusarvoLaskin(this.laskin).laskeTotuusarvo(ehto, iteraatioParametrit)
-        //historiat :+ historia1 :+ historia2
         val (tulos, tilat, historia) = ehdollinenTulos[Boolean, (Option[BigDecimal], List[Tila], Option[Historia])]((ehtoTulos.tulos, ehtoTulos.tila), (cond, tila) => {
           if (cond) {
             val thenTulos = laskeLukuarvo(thenHaara, iteraatioParametrit)
