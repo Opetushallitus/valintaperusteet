@@ -32,7 +32,9 @@ trait LaskinFunktiot {
 
   val pattern: Regex = """\{\{([A-Za-z\d\-_]+)\.([A-Za-z\d\-_]+)\}\}""".r
 
-  protected def ehdollinenTulos[A, B](tulos: (Option[A], Tila), f: (A, Tila) => (Option[B], List[Tila])): (Option[B], List[Tila]) = {
+  protected def ehdollinenTulos[A, B](tulos: (Option[A], Tila),
+                                      f: (A, Tila) => (Option[B], List[Tila])
+                                     ): (Option[B], List[Tila]) = {
     val (alkupTulos, alkupTila) = tulos
     alkupTulos match {
       case Some(t) => f(t, alkupTila)
