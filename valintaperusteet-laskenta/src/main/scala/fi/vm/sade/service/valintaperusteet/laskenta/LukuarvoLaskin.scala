@@ -231,15 +231,19 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
         })
         (tulos, tilat, Historia("Mediaani", tulos, tilat, h.historiat, None))
 
-      case Jos(ehto, thenHaara, elseHaara, _, _,_,_,_,_) =>
+      case Jos(ehto, thenHaara, elseHaara, _, _, _, _, _, _) =>
         val ehtoTulos = new TotuusarvoLaskin(this.laskin).laskeTotuusarvo(ehto, iteraatioParametrit)
-        val thenTulos = laskeLukuarvo(thenHaara, iteraatioParametrit)
-        val elseTulos = laskeLukuarvo(elseHaara, iteraatioParametrit)
         //historiat :+ historia1 :+ historia2
-        val (tulos, tilat) = ehdollinenTulos[Boolean, BigDecimal]((ehtoTulos.tulos, ehtoTulos.tila), (cond, tila) => {
-          if (cond) (thenTulos.tulos, List(tila, thenTulos.tila)) else (elseTulos.tulos, List(tila, elseTulos.tila))
-        })
-        (tulos, tilat, Historia("Jos", tulos, tilat, Some(List(ehtoTulos.historia, thenTulos.historia, elseTulos.historia)), None))
+        val (tulos, tilat, historia) = ehdollinenTulos[Boolean, (Option[BigDecimal], List[Tila], Option[Historia])]((ehtoTulos.tulos, ehtoTulos.tila), (cond, tila) => {
+          if (cond) {
+            val thenTulos = laskeLukuarvo(thenHaara, iteraatioParametrit)
+            (thenTulos.tulos, List(tila, thenTulos.tila), Some(thenTulos.historia))
+          } else {
+            val elseTulos = laskeLukuarvo(elseHaara, iteraatioParametrit)
+            (elseTulos.tulos, List(tila, elseTulos.tila), Some(elseTulos.historia))
+          }
+        }, (None, List(ehtoTulos.tila), None))
+        (tulos, tilat, Historia("Jos", tulos, tilat, Some(List(ehtoTulos.historia) ++ historia.toList), None))
 
       case KonvertoiLukuarvo(konvertteri, f, _, _,_,_,_,_) =>
         laskeLukuarvo(f, iteraatioParametrit) match {

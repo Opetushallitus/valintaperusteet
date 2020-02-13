@@ -35,10 +35,17 @@ trait LaskinFunktiot {
   protected def ehdollinenTulos[A, B](tulos: (Option[A], Tila),
                                       f: (A, Tila) => (Option[B], List[Tila])
                                      ): (Option[B], List[Tila]) = {
+    ehdollinenTulos[A, (Option[B], List[Tila])](tulos, f, (None, List(tulos._2)))
+  }
+
+  protected def ehdollinenTulos[A, R](tulos: (Option[A], Tila),
+                                      f: (A, Tila) => R,
+                                      oletusarvo: R
+                                     ): R = {
     val (alkupTulos, alkupTila) = tulos
     alkupTulos match {
       case Some(t) => f(t, alkupTila)
-      case None => (None, List(alkupTila))
+      case None => oletusarvo
     }
   }
 
