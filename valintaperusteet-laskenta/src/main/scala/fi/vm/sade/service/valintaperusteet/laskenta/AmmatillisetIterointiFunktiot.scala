@@ -213,7 +213,7 @@ trait AmmatillisetIterointiFunktiot {
 
   private def tallennetutTuloksetHistoriaaVarten: ListMap[String, Option[String]] = {
     val tuloksetSuomenkielistenNimienKanssa: List[(String, Option[String])] = laskin.funktioTulokset.toList.map {
-      case (_, ft) => (ft.nimiFi, Some(ft.arvo))
+      case (avain, ft) => (s"$avain : ${ft.nimiFi}", Some(ft.arvo))
     }
     ListMap(tuloksetSuomenkielistenNimienKanssa : _*)
   }

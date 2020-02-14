@@ -493,7 +493,13 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
         laskettava.tulosTekstiEn,
         laskettava.omaopintopolku
       )
-      laskin.funktioTulokset.update(laskettava.tulosTunniste, v)
+      val iteraatioParametriTiedot = if (iteraatioParametrit.nonEmpty) {
+        s" (${iteraatioParametrit.toList.map(_._2).mkString("/")})"
+      } else {
+        ""
+      }
+      val tulosTunnisteIteraatioParametrienKanssa = s"${laskettava.tulosTunniste}$iteraatioParametriTiedot"
+      laskin.funktioTulokset.update(tulosTunnisteIteraatioParametrienKanssa, v)
     }
     Tulos(laskettuTulos, palautettavaTila(tilat), historia)
   }
