@@ -89,6 +89,9 @@ public enum Funktionimi {
 
     public static final Set<Funktionimi> ammatillistenArvosanojenFunktionimet = new HashSet<>();
     static {
+        ammatillistenArvosanojenFunktionimet.add(ITEROIAMMATILLISETTUTKINNOT);
+        ammatillistenArvosanojenFunktionimet.add(ITEROIAMMATILLISETOSAT);
+        ammatillistenArvosanojenFunktionimet.add(ITEROIAMMATILLISETYTOOSAALUEET);
         ammatillistenArvosanojenFunktionimet.add(HAEAMMATILLINENYTOARVIOINTIASTEIKKO);
         ammatillistenArvosanojenFunktionimet.add(HAEAMMATILLINENYTOARVOSANA);
         ammatillistenArvosanojenFunktionimet.add(HAEAMMATILLISENOSANLAAJUUS);
