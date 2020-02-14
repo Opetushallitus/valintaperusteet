@@ -58,7 +58,7 @@ trait AmmatillisetIterointiFunktiot {
           Map(s"Arvo parametrilla '$parametri'" -> Some(lukuarvo)) ++ tiivistelmat
         case _ => Map()
       }
-      val ammatillistenFunktioidenTulostenTiivistelmat: ListMap[String, Option[Any]] = ListMap(tiivistelmaLista : _*)
+      val ammatillistenFunktioidenTulostenTiivistelmat: ListMap[String, Option[Any]] = tallennetutTuloksetHistoriaaVarten ++ ListMap(tiivistelmaLista : _*)
 
       val tulos: Tulos[BigDecimal] = if (tuloksetLukuarvoina.nonEmpty) {
         try {
@@ -209,5 +209,12 @@ trait AmmatillisetIterointiFunktiot {
         s"ammatillisen perustutkinnon YTOn $ytoKoodi pisteet" -> Some(tuloksetLukuarvoina.map(l => s"${l._1.tulosTekstiFi} = ${l._1.d};${l._2.tulosTekstiFi} = ${l._2.d}")))
       (tulos.tulos, tilalista, Historia(ITEROIAMMATILLISETYTOOSAALUEET, tulos.tulos, tilalista, None, Some(avaimet)))
     }
+  }
+
+  private def tallennetutTuloksetHistoriaaVarten: ListMap[String, Option[String]] = {
+    val tuloksetSuomenkielistenNimienKanssa: List[(String, Option[String])] = laskin.funktioTulokset.toList.map {
+      case (_, ft) => (ft.nimiFi, Some(ft.arvo))
+    }
+    ListMap(tuloksetSuomenkielistenNimienKanssa : _*)
   }
 }
