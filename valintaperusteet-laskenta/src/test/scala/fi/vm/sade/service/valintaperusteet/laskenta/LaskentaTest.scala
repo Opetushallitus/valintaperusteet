@@ -3,16 +3,55 @@ package fi.vm.sade.service.valintaperusteet.laskenta
 import java.util
 import java.util.Collections
 
-import fi.vm.sade.kaava.LaskentaTestUtil.{TestHakemus, _}
+import fi.vm.sade.kaava.LaskentaTestUtil.TestHakemus
+import fi.vm.sade.kaava.LaskentaTestUtil._
 import fi.vm.sade.kaava.Laskentadomainkonvertteri
-import fi.vm.sade.service.valintaperusteet.dto.model.{Funktionimi, Osallistuminen, Valintaperustelahde}
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.{Arvokonversio, ArvokonversioMerkkijonoilla, Arvokonvertteri, Demografia, HaeLukuarvo, HaeLukuarvoEhdolla, HaeMerkkijonoJaKonvertoiLukuarvoksi, HaeMerkkijonoJaVertaaYhtasuuruus, HaeTotuusarvo, HakemuksenValintaperuste, HakukohteenValintaperuste, HylkaaArvovalilla, Jos, KonvertoiLukuarvo, Lukuarvo, Lukuarvovalikonversio, LukuarvovalikonversioMerkkijonoilla, Lukuarvovalikonvertteri, PainotettuKeskiarvo, Skaalaus, Suurempi, SyotettavaValintaperuste, Totuusarvo, Valintaperusteyhtasuuruus, _}
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi
+import fi.vm.sade.service.valintaperusteet.dto.model.Osallistuminen
+import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonversio
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.ArvokonversioMerkkijonoilla
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonvertteri
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Demografia
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeLukuarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeLukuarvoEhdolla
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaKonvertoiLukuarvoksi
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeMerkkijonoJaVertaaYhtasuuruus
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeTotuusarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HaeTotuusarvoJaKonvertoiLukuarvoksi
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakemuksenValintaperuste
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakukohteenValintaperuste
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HylkaaArvovalilla
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Jos
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.KeskiarvoNParasta
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.KonvertoiLukuarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonversio
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.LukuarvovalikonversioMerkkijonoilla
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonvertteri
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Mediaani
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.NMaksimi
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.NMinimi
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.PainotettuKeskiarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Skaalaus
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Summa
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.SummaNParasta
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Suurempi
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.SyotettavaValintaperuste
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Totuusarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Valintaperusteyhtasuuruus
+import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus
+import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakukohde
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.HylattyMetatieto
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.HylattyMetatieto.Hylattymetatietotyyppi
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Tila.Tilatyyppi
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.VirheMetatieto.VirheMetatietotyyppi
-import fi.vm.sade.service.valintaperusteet.laskenta.api.{Hakemus, Hakukohde}
-import fi.vm.sade.service.valintaperusteet.model.{Funktiokutsu, Syoteparametri, ValintaperusteViite, _}
+import fi.vm.sade.service.valintaperusteet.model.Arvokonvertteriparametri
+import fi.vm.sade.service.valintaperusteet.model.Arvovalikonvertteriparametri
+import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu
+import fi.vm.sade.service.valintaperusteet.model.Syoteparametri
+import fi.vm.sade.service.valintaperusteet.model.TekstiRyhma
+import fi.vm.sade.service.valintaperusteet.model.ValintaperusteViite
 import org.scalatest.funsuite.AnyFunSuite
 
 import scala.jdk.CollectionConverters._
@@ -268,6 +307,17 @@ class LaskentaTest extends AnyFunSuite {
     val (tulos, _) = Laskin.laske(hakukohde, tyhjaHakemus, ifLause)
     assert(BigDecimal(tulos.get) == BigDecimal(500.0))
 
+  }
+
+  test("Laiska Jos") {
+    val toimivaHaara = Lukuarvo(BigDecimal(100))
+    val kaatuvaHaara = HaeLukuarvo(None, None, HakemuksenValintaperuste("jotain minkä hakeminen null-hakemukselta kaatuisi", false))
+
+    val tosiJos = Jos(Totuusarvo(true), toimivaHaara, kaatuvaHaara)
+    val epatosiJos = Jos(Totuusarvo(false), kaatuvaHaara, toimivaHaara)
+
+    assert(Laskin.laske(hakukohde, null, tosiJos)._1.contains(new java.math.BigDecimal(100)))
+    assert(Laskin.laske(hakukohde, null, epatosiJos)._1.contains(new java.math.BigDecimal(100)))
   }
 
   test("Totuusarvo") {
