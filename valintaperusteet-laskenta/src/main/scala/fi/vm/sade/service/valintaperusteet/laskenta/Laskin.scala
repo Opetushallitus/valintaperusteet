@@ -152,7 +152,7 @@ protected[laskenta] class Laskin private(val hakukohde: Hakukohde,
   }
 
   val syotetytArvot: scala.collection.mutable.Map[String, SyotettyArvo] = scala.collection.mutable.Map[String, SyotettyArvo]()
-  val funktioTulokset: scala.collection.mutable.Map[String, FunktioTulos] = scala.collection.mutable.Map[String, FunktioTulos]()
+  val funktioTulokset: scala.collection.mutable.LinkedHashMap[String, FunktioTulos] = scala.collection.mutable.LinkedHashMap[String, FunktioTulos]()
 
   def getSyotetytArvot: Map[String, SyotettyArvo] = Map[String, SyotettyArvo](syotetytArvot.toList: _*)
   def getFunktioTulokset: Map[String, FunktioTulos] = Map[String, FunktioTulos](funktioTulokset.toList: _*)
