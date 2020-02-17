@@ -1,7 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.laskenta
 
 import fi.vm.sade.kaava.LaskentaUtil
-import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.ITEROIAMMATILLISETOSAT
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.ITEROIAMMATILLISETTUTKINNOT
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.ITEROIAMMATILLISETYTOOSAALUEET
@@ -17,7 +16,6 @@ import fi.vm.sade.service.valintaperusteet.laskenta.koski.Osasuoritus
 import fi.vm.sade.service.valintaperusteet.laskenta.koski.Tutkinto
 
 import scala.collection.immutable.ListMap
-import scala.jdk.CollectionConverters._
 
 trait AmmatillisetIterointiFunktiot {
   this: LukuarvoLaskin =>
@@ -42,23 +40,15 @@ trait AmmatillisetIterointiFunktiot {
           Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} ${IteroiAmmatillisetTutkinnot.getClass.getSimpleName}-laskennan historia: ${LaskentaUtil.prettyPrint(historia)}")
           val ammatillisenHistorianTiivistelma: Seq[String] = tiivistelmaAmmatillisistaFunktioista(historia)
 
-          Some(Lukuarvo(lukuarvo, tulosTekstiFi = s"Arvo parametrilla '$parametri' == $lukuarvo, historia: $ammatillisenHistorianTiivistelma"))
+          Some(Lukuarvo(lukuarvo, tulosTekstiFi = s"Arvo parametrilla '${parametri.kuvaus}' == $lukuarvo, historia: $ammatillisenHistorianTiivistelma"))
         case (parametri, tulos) =>
           Laskin.LOG.debug(s"Tyhjä tulos $tulos funktiosta $f parametrilla $parametri")
           None
       }
 
       val tiivistelmaLista = kierrostenTulokset.flatMap {
-        case (parametri, Tulos(Some(lukuarvo), _, historia)) =>
-          val tiivistelmat: Map[String, Option[Any]] = historia.
-            flatten.
-            filter { h: Historia =>
-              Funktionimi.ammatillistenArvosanojenFunktionimet.asScala.exists(h.funktionimi.contains)
-            }.
-            map { h =>
-              s"${h.funktio} = ${h.tulos.getOrElse("-")}" -> Some(s"avaimet: ${h.avaimet.getOrElse(Map()).map(x => (x._1, x._2.getOrElse("-")))}")
-            }.toMap
-          Map(s"Arvo parametrilla '$parametri'" -> Some(lukuarvo)) ++ tiivistelmat
+        case (parametri, Tulos(Some(lukuarvo), _, _)) =>
+          Map(s"${classOf[IteroiAmmatillisetTutkinnot].getSimpleName} parametrilla ${parametri.lyhytKuvaus}" -> Some(lukuarvo))
         case _ => Map()
       }
       val ammatillistenFunktioidenTulostenTiivistelmat: ListMap[String, Option[Any]] = tallennetutTuloksetHistoriaaVarten ++ ListMap(tiivistelmaLista : _*)
