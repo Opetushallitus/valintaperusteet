@@ -85,7 +85,9 @@ import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Tila
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Tila.Tilatyyppi
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.TuloksiaLiianVahanLahdeskaalanMaarittamiseenVirhe
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Virhetila
+import org.apache.commons.lang3.StringUtils
 
+import scala.collection.immutable.ListMap
 import scala.collection.mutable.ListBuffer
 import scala.jdk.CollectionConverters._
 
@@ -379,8 +381,13 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
 
 
       case NimettyLukuarvo(nimi, f, _, _,_,_,_,_) =>
-        val (tulos, tilat, h) = muodostaYksittainenTulos(f, d => d)
-        (tulos, tilat, Historia(NIMETTYLUKUARVO, tulos, tilat, Some(List(h)), Some(Map("nimi" -> Some(nimi)))))
+        val (tulos, tilat, historia) = muodostaYksittainenTulos(f, d => d)
+        val avaimetTallennettavienTulostenHistorioista: ListMap[String, Option[Any]] = ListMap(historianTiivistelma(
+          historia,
+          _ => StringUtils.isNotBlank(f.tulosTunniste),
+          h => h.avaimet.getOrElse(Map[String, Option[Any]]().map(x => (x._1 + iteraatioParametriTiedotMerkkijono(iteraatioParametrit), x._2)))).flatten : _*)
+        val avaimet: ListMap[String, Option[Any]] = avaimetTallennettavienTulostenHistorioista ++ ListMap("nimi" -> Some(nimi))
+        (tulos, tilat, Historia(NIMETTYLUKUARVO, tulos, tilat, Some(List(historia)), Some(avaimet)))
 
       case Pyoristys(tarkkuus, f, _, _,_,_,_,_) =>
         val (tulos, tilat, h) = muodostaYksittainenTulos(f, d => d.setScale(tarkkuus, BigDecimal.RoundingMode.HALF_UP))
@@ -493,15 +500,19 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
         laskettava.tulosTekstiEn,
         laskettava.omaopintopolku
       )
-      val iteraatioParametriTiedot = if (iteraatioParametrit.nonEmpty) {
-        s" (${iteraatioParametrit.toList.map(_._2.lyhytKuvaus).mkString(" / ")})"
-      } else {
-        ""
-      }
+      val iteraatioParametriTiedot: String = iteraatioParametriTiedotMerkkijono(iteraatioParametrit)
       val tulosTunnisteIteraatioParametrienKanssa = s"${laskettava.tulosTunniste}$iteraatioParametriTiedot"
       laskin.funktioTulokset.update(tulosTunnisteIteraatioParametrienKanssa, v)
     }
     Tulos(laskettuTulos, palautettavaTila(tilat), historia)
+  }
+
+  private def iteraatioParametriTiedotMerkkijono(iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri]): String = {
+    if (iteraatioParametrit.nonEmpty) {
+      s" (${iteraatioParametrit.toList.map(_._2.lyhytKuvaus).mkString(" / ")})"
+    } else {
+      ""
+    }
   }
 
   protected def tiivistelmaAmmatillisistaFunktioista(historia: Historia): Seq[String] = {

@@ -5,12 +5,16 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.IteroiAmmatillisetT
 
 trait IteraatioParametriFunktiot {
   protected def historianTiivistelma(historia: Historia, otetaanMukaan: Historia => Boolean): Seq[String] = {
+    historianTiivistelma(historia, otetaanMukaan, { h =>
+      s"${h.funktio} = ${h.tulos.getOrElse("-")}; avaimet: ${h.avaimet.getOrElse(Map()).map(x => (x._1, x._2.getOrElse("-")))}"
+    })
+  }
+
+  protected def historianTiivistelma[R](historia: Historia, otetaanMukaan: Historia => Boolean, formatoi: Historia => R): Seq[R] = {
     historia.
       flatten.
       filter(otetaanMukaan).
-      map { h =>
-        s"${h.funktio} = ${h.tulos.getOrElse("-")}; avaimet: ${h.avaimet.getOrElse(Map()).map(x => (x._1, x._2.getOrElse("-")))}"
-      }
+      map(formatoi)
   }
 
   protected def ammatillisenTutkinnonValitsija(iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri], f: Funktio[_]): AmmatillisenPerustutkinnonValitsija = {
