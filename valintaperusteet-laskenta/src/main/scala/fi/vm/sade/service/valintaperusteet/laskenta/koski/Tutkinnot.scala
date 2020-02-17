@@ -3,6 +3,8 @@ package fi.vm.sade.service.valintaperusteet.laskenta.koski
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus
 import io.circe.Json
 import io.circe.optics.JsonPath
+import io.circe.optics.JsonTraversalPath
+import monocle.Optional
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import org.slf4j.Logger
@@ -16,15 +18,15 @@ object Tutkinnot {
 
   object TutkintoLinssit {
     // Suoritukset etsivä linssi
-    val suoritukset = JsonPath.root.suoritukset.each
-    val vahvistusPvm = JsonPath.root.vahvistus.päivä.string
+    val suoritukset: JsonTraversalPath = JsonPath.root.suoritukset.each
+    val vahvistusPvm: Optional[Json, String] = JsonPath.root.vahvistus.päivä.string
 
-    val koulutusmoduuli = JsonPath.root.koulutusmoduuli
-    val koodiarvo = koulutusmoduuli.tunniste.koodiarvo.string
-    val lyhytNimiFi = koulutusmoduuli.tunniste.nimi.fi.string
-    val koulutusTyypinKoodiarvo = koulutusmoduuli.koulutustyyppi.koodiarvo.string
-    val koulutusTyypinNimiFi = koulutusmoduuli.koulutustyyppi.nimi.fi.string
-    val suoritusTapa = JsonPath.root.suoritustapa.koodiarvo.string
+    val koulutusmoduuli: JsonPath = JsonPath.root.koulutusmoduuli
+    val koodiarvo: Optional[Json, String] = koulutusmoduuli.tunniste.koodiarvo.string
+    val lyhytNimiFi: Optional[Json, String] = koulutusmoduuli.tunniste.nimi.fi.string
+    val koulutusTyypinKoodiarvo: Optional[Json, String] = koulutusmoduuli.koulutustyyppi.koodiarvo.string
+    val koulutusTyypinNimiFi: Optional[Json, String] = koulutusmoduuli.koulutustyyppi.nimi.fi.string
+    val suoritusTapa: Optional[Json, String] = JsonPath.root.suoritustapa.koodiarvo.string
   }
 
 
