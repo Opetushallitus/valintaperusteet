@@ -146,8 +146,7 @@ trait AmmatillisetIterointiFunktiot {
       val tilalista = List(tulos.tila)
       val avaimet = Map(
         "ammatillisen perustutkinnon osien määrä" -> Some(osienMaara),
-        "ammatillisen perustutkinnon osat" -> Some(uudetParametrit.map(_.kuvaus).mkString("; ")),
-        "ammatillisen perustutkinnon osien pisteet" -> Some(tuloksetLukuarvoina.map(l => s"${l._1.tulosTekstiFi} = ${l._1.d};${l._2.tulosTekstiFi} = ${l._2.d}")))
+        "ammatillisen perustutkinnon osat" -> Some(uudetParametrit.map(_.kuvaus).mkString("; ")))
       (tulos.tulos, tilalista, Historia(ITEROIAMMATILLISETOSAT, tulos.tulos, tilalista, None, Some(avaimet)))
     }
   }
