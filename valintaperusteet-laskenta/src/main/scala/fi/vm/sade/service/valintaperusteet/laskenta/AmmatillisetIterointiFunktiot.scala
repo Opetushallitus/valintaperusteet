@@ -13,6 +13,7 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Hyvaksyttavissatila
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Tila
 import fi.vm.sade.service.valintaperusteet.laskenta.koski.KoskiLaskenta
+import fi.vm.sade.service.valintaperusteet.laskenta.koski.Osasuoritus
 import fi.vm.sade.service.valintaperusteet.laskenta.koski.Tutkinto
 
 import scala.collection.immutable.ListMap
@@ -100,10 +101,11 @@ trait AmmatillisetIterointiFunktiot {
     if (tutkinnonOsanValitsija.exists(p => p.isInstanceOf[AmmatillisenTutkinnonOsanValitsija])) {
       throw new IllegalStateException(s"Ei voi iteroida iteraatioparametrilla $tutkinnonOsanValitsija uudestaan ammatillisen tutkinnon osien yli")
     } else {
-      val osienMaara = KoskiLaskenta.laskeAmmatillisenTutkinnonOsat(tutkinnonValitsija, laskin.hakemus)
+      val tutkinnonOsat: Seq[Osasuoritus] = KoskiLaskenta.etsiAmmatillisenTutkinnonOsat(tutkinnonValitsija, laskin.hakemus)
+      val osienMaara = tutkinnonOsat.size
       Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} hakijan tutkinnolle $tutkinnonValitsija löytyi $osienMaara ammatillista perustutkinnon osaa.")
 
-      val uudetParametrit: Seq[AmmatillisenTutkinnonOsanValitsija] = AmmatillisenTutkinnonOsat(osienMaara).parametreiksi
+      val uudetParametrit: Seq[AmmatillisenTutkinnonOsanValitsija] = AmmatillisenTutkinnonOsat(tutkinnonOsat).parametreiksi
 
       val kierrostenTulokset: Seq[(AmmatillisenTutkinnonOsanValitsija, (Tulos[BigDecimal], Tulos[BigDecimal]))] = uudetParametrit.
         map(parametri => {
@@ -144,6 +146,7 @@ trait AmmatillisetIterointiFunktiot {
       val tilalista = List(tulos.tila)
       val avaimet = Map(
         "ammatillisen perustutkinnon osien määrä" -> Some(osienMaara),
+        "ammatillisen perustutkinnon osat" -> Some(uudetParametrit.map(_.kuvaus).mkString("; ")),
         "ammatillisen perustutkinnon osien pisteet" -> Some(tuloksetLukuarvoina.map(l => s"${l._1.tulosTekstiFi} = ${l._1.d};${l._2.tulosTekstiFi} = ${l._2.d}")))
       (tulos.tulos, tilalista, Historia(ITEROIAMMATILLISETOSAT, tulos.tulos, tilalista, None, Some(avaimet)))
     }

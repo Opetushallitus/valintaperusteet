@@ -51,8 +51,8 @@ object KoskiLaskenta {
     }
   }
 
-  def laskeAmmatillisenTutkinnonOsat(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija, hakemus: Hakemus): Int = {
-    haeAmmatillisenTutkinnonOsat(tutkinnonValitsija, hakemus).size
+  def etsiAmmatillisenTutkinnonOsat(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija, hakemus: Hakemus): Seq[Osasuoritus] = {
+    haeAmmatillisenTutkinnonOsat(tutkinnonValitsija, hakemus)
   }
 
   def laskeAmmatillisenTutkinnonYtoOsaAlueet(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija, ytoKoodi: String, hakemus: Hakemus): Int = {

@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.laskenta
 
+import fi.vm.sade.service.valintaperusteet.laskenta.koski.Osasuoritus
 import fi.vm.sade.service.valintaperusteet.laskenta.koski.Tutkinto
 
 sealed trait IteraatioParametri {
@@ -19,10 +20,15 @@ case class AmmatillisetPerustutkinnot(tutkinnot: Seq[Tutkinto]) {
   def parametreiksi: Seq[AmmatillisenPerustutkinnonValitsija] = tutkinnot.map(AmmatillisenPerustutkinnonValitsija)
 }
 
-case class AmmatillisenTutkinnonOsanValitsija(osanIndeksi: Int) extends IteraatioParametri
+case class AmmatillisenTutkinnonOsanValitsija(osasuoritus: Osasuoritus, indeksi: Int) extends IteraatioParametri {
+  val osanIndeksi: Int = indeksi
+  override val kuvaus: String = s"Osa ${indeksi + 1} " +
+    s"""(koulutusmoduuli ${osasuoritus.koulutusmoduulinTunnisteenKoodiarvo} "${osasuoritus.koulutusmoduulinNimiFi}")"""
+  override val lyhytKuvaus: String = s"${osasuoritus.koulutusmoduulinNimiFi}"
+}
 
-case class AmmatillisenTutkinnonOsat(tutkinnonOsienMaara: Int) {
-  def parametreiksi: Seq[AmmatillisenTutkinnonOsanValitsija] = 0.until(tutkinnonOsienMaara).map(AmmatillisenTutkinnonOsanValitsija)
+case class AmmatillisenTutkinnonOsat(tutkinnonOsat: Seq[Osasuoritus]) {
+  def parametreiksi: Seq[AmmatillisenTutkinnonOsanValitsija] = tutkinnonOsat.zipWithIndex.map(AmmatillisenTutkinnonOsanValitsija.tupled)
 }
 
 case class AmmatillisenTutkinnonYtoOsaAlueenValitsija(ytoKoodi: String, osanIndeksi: Int) extends IteraatioParametri
