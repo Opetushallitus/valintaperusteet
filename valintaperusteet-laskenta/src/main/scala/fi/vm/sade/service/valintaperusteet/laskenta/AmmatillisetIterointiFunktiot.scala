@@ -72,7 +72,7 @@ trait AmmatillisetIterointiFunktiot {
         "Ammatillisten perustutkintojen määrä" -> Some(tutkintojenMaara),
         "Ammatilliset perustutkinnot" -> Some(tutkintojenIterointiParametrit.map(_.kuvaus).mkString("; "))) ++
         ammatillistenFunktioidenTulostenTiivistelmat
-      (tulos.tulos, tilalista, Historia(ITEROIAMMATILLISETTUTKINNOT, tulos.tulos, tilalista, Some(kierrostenTulokset.map(_._2.historia).toList), Some(avaimet)))
+      (tulos.tulos, tilalista, Historia(ITEROIAMMATILLISETTUTKINNOT, tulos.tulos, tilalista, Some(kierrostenHistoriat(kierrostenTulokset)), Some(avaimet)))
     }
   }
 
@@ -137,7 +137,7 @@ trait AmmatillisetIterointiFunktiot {
       val avaimet = Map(
         "ammatillisen perustutkinnon osien määrä" -> Some(osienMaara),
         "ammatillisen perustutkinnon osat" -> Some(tutkinnonOsienIterointiParametrit.map(_.kuvaus).mkString("; ")))
-      (tulos.tulos, tilalista, Historia(ITEROIAMMATILLISETOSAT, tulos.tulos, tilalista, None, Some(avaimet)))
+      (tulos.tulos, tilalista, Historia(ITEROIAMMATILLISETOSAT, tulos.tulos, tilalista, Some(kierrostenHistoriatKahdelleParametrille(kierrostenTulokset)), Some(avaimet)))
     }
   }
 
@@ -211,5 +211,12 @@ trait AmmatillisetIterointiFunktiot {
       case (avain, ft) => (s"$avain : ${ft.nimiFi}", Some(ft.arvo))
     }
     ListMap(tuloksetSuomenkielistenNimienKanssa : _*)
+  }
+
+  private def kierrostenHistoriat(kierrostenTulokset: Seq[(IteraatioParametri, Tulos[_])]): List[Historia] = {
+    kierrostenTulokset.map(_._2.historia).toList
+  }
+  private def kierrostenHistoriatKahdelleParametrille(kierrostenTulokset: Seq[(IteraatioParametri, (Tulos[_], Tulos[_]))]): List[Historia] = {
+    kierrostenTulokset.flatMap(x => List(x._2._1.historia, x._2._1.historia)).toList
   }
 }
