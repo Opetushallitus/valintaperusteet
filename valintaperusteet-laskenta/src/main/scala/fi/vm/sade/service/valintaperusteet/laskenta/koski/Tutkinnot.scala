@@ -35,7 +35,6 @@ object Tutkinnot {
     val suoritusTapa: Optional[Json, String] = JsonPath.root.suoritustapa.koodiarvo.string
   }
 
-
   def etsiValmiitTutkinnot(json: Json,
                            opiskeluoikeudenHaluttuTyyppi: String,
                            suorituksenHaluttuTyyppi: String,
@@ -118,16 +117,6 @@ object Tutkinnot {
       LOG.debug("Koulutustyypin koodiarvo: %s".format(koulutusTyypinKoodiarvo))
       suorituksenSallitutKoodit.contains(koulutusTyypinKoodiarvo) &&
         sallitutSuoritusTavat.contains(suoritusTapa)
-    })
-  }
-
-  def etsiValiditYtoOsaAlueet(tutkinto: Json, sulkeutumisPäivämäärä: DateTime, ytoKoodi: String): List[Json] = {
-    etsiSuoritukset(tutkinto, sulkeutumisPäivämäärä, suoritus => {
-      val koodiarvo = TutkintoLinssit.koodiarvo.getOption(suoritus).orNull
-      val suoritusTapa = TutkintoLinssit.suoritusTapa.getOption(suoritus).orNull
-      koodiarvo == ytoKoodi && sallitutSuoritusTavat.contains(suoritusTapa)
-    }).map(suoritus => {
-      suoritus
     })
   }
 

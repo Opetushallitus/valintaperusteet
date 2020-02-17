@@ -50,7 +50,7 @@ object KoskiLaskenta {
 
   def laskeAmmatillisenTutkinnonYtoOsaAlueet(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija, ytoKoodi: String, hakemus: Hakemus): Int = {
     2
-    //haeAmmatillisenTutkinnonYtoOsaalueet(tutkinnonValitsija, ytoKoodi, hakemus).size
+    //haeAmmatillisenTutkinnonYtoOsaAlueet(tutkinnonValitsija, ytoKoodi, hakemus).size
   }
 
   def haeAmmatillisenTutkinnonOsanLaajuus(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
@@ -124,22 +124,19 @@ object KoskiLaskenta {
     }
   }
 
-  private def haeAmmatillisenTutkinnonYtoOsaalueet(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija, ytoKoodi: String, hakemus: Hakemus): List[Osasuoritus] = {
+  private def haeAmmatillisenTutkinnonYtoOsaAlueet(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija, ytoKoodi: String, hakemus: Hakemus): List[Osasuoritus] = {
     if (hakemus.koskiOpiskeluoikeudet == null) {
       Nil
     } else {
-      val oikeaOpiskeluoikeus: Json = Tutkinnot.etsiValmiitTutkinnot(
-        json = hakemus.koskiOpiskeluoikeudet,
-        opiskeluoikeudenHaluttuTyyppi = ammatillisenHuomioitavaOpiskeluoikeudenTyyppi,
-        suorituksenHaluttuTyyppi = ammatillisenSuorituksenTyyppi, hakemus = hakemus)(tutkinnonValitsija.tutkinnonIndeksi)
-
-      val suoritukset = Tutkinnot.etsiValiditYtoOsaAlueet(oikeaOpiskeluoikeus, sulkeutumisPaivamaara, ytoKoodi)
+      /*
+      val osaAlueet = OsaSuoritukset.etsiOsasuoritukset(hakemus, tutkinnonValitsija, ytoKoodi)
 
       val osasuoritusPredikaatti: Json => Boolean = osasuoritus => {
         "ammatillisentutkinnonosa" == _osasuorituksenTyypinKoodiarvo.getOption(osasuoritus).orNull
       }
 
-      //osaAlueet.flatMap(OsaSuoritukset.etsiOsasuoritukset(_, sulkeutumisPaivamaara, osasuoritusPredikaatti))
+      osaAlueet.flatMap(OsaSuoritukset.etsiOsasuoritukset(_, sulkeutumisPaivamaara, osasuoritusPredikaatti))
+       */
       Nil
     }
   }

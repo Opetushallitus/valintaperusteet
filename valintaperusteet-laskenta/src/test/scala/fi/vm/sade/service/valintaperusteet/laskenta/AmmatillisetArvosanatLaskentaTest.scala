@@ -158,7 +158,7 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
 
   def createLaskeAmmatillisenTutkinnonYtoOsaAlueidenKeskiarvo(konvertteriparametrit: Set[Arvokonvertteriparametri] = Set()): Funktiokutsu = {
     val viite: ValintaperusteViite = new ValintaperusteViite
-    viite.setTunniste("101054")
+    viite.setTunniste("400012")
     viite.setIndeksi(0)
     viite.setLahde(Valintaperustelahde.HAETTAVA_ARVO)
 

@@ -43,6 +43,25 @@ object YhteisetTutkinnonOsat {
     )
   }
 
+  def haeYtoOsaAlueet(ammatillisenPerustutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
+                      hakemus: Hakemus,
+                      valintaperusteviite: Laskenta.Valintaperuste,
+                      ytoKoodiArvo: String): Seq[Json] = {
+    if (hakemus.koskiOpiskeluoikeudet != null) {
+      val oikeaOpiskeluoikeus: Json = etsiValmiitTutkinnot(
+        hakemus.koskiOpiskeluoikeudet,
+        opiskeluoikeudenHaluttuTyyppi = ammatillisenHuomioitavaOpiskeluoikeudenTyyppi,
+        suorituksenHaluttuTyyppi = ammatillisenSuorituksenTyyppi,
+        hakemus = hakemus)(ammatillisenPerustutkinnonValitsija.tutkinnonIndeksi)
+      YhteisetTutkinnonOsat.haeYhteisenTutkinnonOsanOsaAlueet(
+        hakemus,
+        oikeaOpiskeluoikeus,
+        ytoKoodiArvo)
+    } else {
+      Seq[Json]()
+    }
+  }
+
   private def haeTietoYhteisestäTutkinnonosasta[T](ammatillisenPerustutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
                                                    hakemus: Hakemus,
                                                    valintaperusteviite: Laskenta.Valintaperuste,
@@ -64,7 +83,7 @@ object YhteisetTutkinnonOsat {
   private def haeYhteisenTutkinnonOsanTiedot(hakemus: Hakemus,
                                              ammatillisenPerustutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
                                              ytoKoodiArvo: String
-                                            ): Seq[Osasuoritus] = {
+                                             ): Seq[Osasuoritus] = {
     val oikeaOpiskeluoikeus: Json = etsiValmiitTutkinnot(
       hakemus.koskiOpiskeluoikeudet,
       opiskeluoikeudenHaluttuTyyppi = ammatillisenHuomioitavaOpiskeluoikeudenTyyppi,
@@ -101,9 +120,23 @@ object YhteisetTutkinnonOsat {
     }
   }
 
+  private def haeYhteisenTutkinnonOsanOsaAlueet(hakemus: Hakemus, opiskeluoikeus: Json, ytoKoodiArvo: String): Seq[Json] = {
+    val hakemusOid = hakemus.oid
+    try {
+      // val suoritukset = OsaSuoritukset.etsiOsasuorituksetJson(opiskeluoikeus, )
+
+      Nil
+    } catch {
+      case e: Exception => {
+        LOG.error(s"Virhe haettaessa ammatillisen suorituksen osa-alueiden tietoja hakemukselle $hakemusOid", e)
+        throw e
+      }
+    }
+  }
+
   private def etsiYhteisetTutkinnonOsat(suoritus: Json, sulkeutumisPäivämäärä: DateTime, osasuorituksenSallitutKoodit: Set[String]): List[Osasuoritus] = {
     OsaSuoritukset.etsiOsasuoritukset(suoritus, sulkeutumisPäivämäärä, osasuoritus => {
-      osasuorituksenSallitutKoodit.contains(KoskiLaskenta._osasuorituksenKoulutusmoduulinTunnisteenKoodiarvo.getOption(osasuoritus).orNull)
+      osasuorituksenSallitutKoodit.contains(OsaSuoritukset.OsaSuoritusLinssit.koulutusmoduulinTunnisteenKoodiarvo.getOption(osasuoritus).orNull)
     })
   }
 
