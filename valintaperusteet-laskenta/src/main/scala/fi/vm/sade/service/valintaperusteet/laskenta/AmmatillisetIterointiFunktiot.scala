@@ -105,9 +105,9 @@ trait AmmatillisetIterointiFunktiot {
       val osienMaara = tutkinnonOsat.size
       Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} hakijan tutkinnolle $tutkinnonValitsija löytyi $osienMaara ammatillista perustutkinnon osaa.")
 
-      val uudetParametrit: Seq[AmmatillisenTutkinnonOsanValitsija] = AmmatillisenTutkinnonOsat(tutkinnonOsat).parametreiksi
+      val tutkinnonOsienIterointiParametrit: Seq[AmmatillisenTutkinnonOsanValitsija] = AmmatillisenTutkinnonOsat(tutkinnonOsat).parametreiksi
 
-      val kierrostenTulokset: Seq[(AmmatillisenTutkinnonOsanValitsija, (Tulos[BigDecimal], Tulos[BigDecimal]))] = uudetParametrit.
+      val kierrostenTulokset: Seq[(AmmatillisenTutkinnonOsanValitsija, (Tulos[BigDecimal], Tulos[BigDecimal]))] = tutkinnonOsienIterointiParametrit.
         map(parametri => {
           val parametritLapsille = iteraatioParametrit ++ Map(classOf[AmmatillisenTutkinnonOsanValitsija] -> parametri)
           val tulos1 = laskeLukuarvo(lapsiFunktio.argumentit.head._1, parametritLapsille)
@@ -146,7 +146,7 @@ trait AmmatillisetIterointiFunktiot {
       val tilalista = List(tulos.tila)
       val avaimet = Map(
         "ammatillisen perustutkinnon osien määrä" -> Some(osienMaara),
-        "ammatillisen perustutkinnon osat" -> Some(uudetParametrit.map(_.kuvaus).mkString("; ")))
+        "ammatillisen perustutkinnon osat" -> Some(tutkinnonOsienIterointiParametrit.map(_.kuvaus).mkString("; ")))
       (tulos.tulos, tilalista, Historia(ITEROIAMMATILLISETOSAT, tulos.tulos, tilalista, None, Some(avaimet)))
     }
   }
