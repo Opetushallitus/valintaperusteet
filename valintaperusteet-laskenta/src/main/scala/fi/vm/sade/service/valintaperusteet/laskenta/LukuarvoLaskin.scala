@@ -385,7 +385,7 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
         val avaimetTallennettavienTulostenHistorioista: ListMap[String, Option[Any]] = ListMap(historianTiivistelma(
           historia,
           _ => StringUtils.isNotBlank(f.tulosTunniste),
-          h => h.avaimet.getOrElse(Map[String, Option[Any]]().map(x => (x._1 + iteraatioParametriTiedotMerkkijono(iteraatioParametrit), x._2)))).flatten : _*)
+          h => avaimetHistoriastaIteraatioparametrienKanssa(iteraatioParametrit, h)).flatten : _*)
         val avaimet: ListMap[String, Option[Any]] = avaimetTallennettavienTulostenHistorioista ++ ListMap("nimi" -> Some(nimi))
         (tulos, tilat, Historia(NIMETTYLUKUARVO, tulos, tilat, Some(List(historia)), Some(avaimet)))
 
@@ -505,6 +505,10 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
       laskin.funktioTulokset.update(tulosTunnisteIteraatioParametrienKanssa, v)
     }
     Tulos(laskettuTulos, palautettavaTila(tilat), historia)
+  }
+
+  private def avaimetHistoriastaIteraatioparametrienKanssa(iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri], h: Historia): Map[String, Option[Any]] = {
+    h.avaimet.getOrElse(Map[String, Option[Any]]().map(kv => (kv._1 + iteraatioParametriTiedotMerkkijono(iteraatioParametrit), kv._2)))
   }
 
   private def iteraatioParametriTiedotMerkkijono(iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri]): String = {
