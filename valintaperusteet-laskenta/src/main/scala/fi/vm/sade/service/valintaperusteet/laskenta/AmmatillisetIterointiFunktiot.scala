@@ -72,7 +72,7 @@ trait AmmatillisetIterointiFunktiot {
         "Ammatillisten perustutkintojen määrä" -> Some(tutkintojenMaara),
         "Ammatilliset perustutkinnot" -> Some(tutkintojenIterointiParametrit.map(_.kuvaus).mkString("; "))) ++
         ammatillistenFunktioidenTulostenTiivistelmat
-      (tulos.tulos, tilalista, Historia(ITEROIAMMATILLISETTUTKINNOT, tulos.tulos, tilalista, None, Some(avaimet)))
+      (tulos.tulos, tilalista, Historia(ITEROIAMMATILLISETTUTKINNOT, tulos.tulos, tilalista, Some(kierrostenTulokset.map(_._2.historia).toList), Some(avaimet)))
     }
   }
 
