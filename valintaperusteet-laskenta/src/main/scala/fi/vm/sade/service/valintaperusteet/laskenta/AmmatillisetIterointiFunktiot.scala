@@ -217,6 +217,6 @@ trait AmmatillisetIterointiFunktiot {
     kierrostenTulokset.map(_._2.historia).toList
   }
   private def kierrostenHistoriatKahdelleParametrille(kierrostenTulokset: Seq[(IteraatioParametri, (Tulos[_], Tulos[_]))]): List[Historia] = {
-    kierrostenTulokset.flatMap(x => List(x._2._1.historia, x._2._1.historia)).toList
+    kierrostenTulokset.flatMap(x => List(x._2._1.historia, x._2._2.historia)).toList
   }
 }
