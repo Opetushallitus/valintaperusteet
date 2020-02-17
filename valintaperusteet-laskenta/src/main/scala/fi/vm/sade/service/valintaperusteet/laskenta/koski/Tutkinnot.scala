@@ -17,6 +17,11 @@ object Tutkinnot {
   private val sallitutSuoritusTavat: Set[String] = Set("ops", "reformi")
 
   object TutkintoLinssit {
+    // Tutkinnon opiskeluoikeuden tiedot
+    val opiskeluoikeudenOid: Optional[Json, String] = JsonPath.root.oid.string
+    val opiskeluoikeudenVersio: Optional[Json, Int] = JsonPath.root.versionumero.int
+    val opiskeluoikeudenAikaleima: Optional[Json, String] = JsonPath.root.aikaleima.string
+
     // Suoritukset etsivä linssi
     val suoritukset: JsonTraversalPath = JsonPath.root.suoritukset.each
     val vahvistusPvm: Optional[Json, String] = JsonPath.root.vahvistus.päivä.string

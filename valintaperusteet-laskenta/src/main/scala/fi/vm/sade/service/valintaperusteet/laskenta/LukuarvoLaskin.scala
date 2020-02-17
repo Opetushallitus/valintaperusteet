@@ -494,7 +494,7 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
         laskettava.omaopintopolku
       )
       val iteraatioParametriTiedot = if (iteraatioParametrit.nonEmpty) {
-        s" (${iteraatioParametrit.toList.map(_._2).mkString("/")})"
+        s" (${iteraatioParametrit.toList.map(_._2.lyhytKuvaus).mkString("/")})"
       } else {
         ""
       }

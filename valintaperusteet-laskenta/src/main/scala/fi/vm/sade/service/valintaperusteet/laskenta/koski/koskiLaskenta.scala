@@ -4,6 +4,7 @@ import fi.vm.sade.service.valintaperusteet.laskenta.AmmatillisenPerustutkinnonVa
 import fi.vm.sade.service.valintaperusteet.laskenta.AmmatillisenTutkinnonOsanValitsija
 import fi.vm.sade.service.valintaperusteet.laskenta.AmmatillisenTutkinnonYtoOsaAlueenValitsija
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus
+import fi.vm.sade.service.valintaperusteet.laskenta.koski.Tutkinnot.TutkintoLinssit
 import io.circe.Json
 import io.circe.optics.JsonPath
 import monocle.Optional
@@ -34,11 +35,18 @@ object KoskiLaskenta {
     DateTime.now()  // TODO: Tee konfiguroitavaksi
   }
 
-  def laskeAmmatillisetTutkinnot(hakemus: Hakemus): Int = {
+  def etsiAmmatillisetTutkinnot(hakemus: Hakemus): Seq[Tutkinto] = {
     if (hakemus.koskiOpiskeluoikeudet == null) {
-      0
+      Nil
     } else {
-      Tutkinnot.etsiValmiitTutkinnot(hakemus.koskiOpiskeluoikeudet, ammatillisenHuomioitavaOpiskeluoikeudenTyyppi, ammatillisenSuorituksenTyyppi, hakemus).size
+      val tutkintoJsonit = Tutkinnot.etsiValmiitTutkinnot(hakemus.koskiOpiskeluoikeudet, ammatillisenHuomioitavaOpiskeluoikeudenTyyppi, ammatillisenSuorituksenTyyppi, hakemus)
+      tutkintoJsonit.zipWithIndex.map { case (tutkintoJson, indeksi) =>
+        Tutkinto(
+          indeksi,
+          TutkintoLinssit.opiskeluoikeudenOid.getOption(tutkintoJson).getOrElse("-"),
+          TutkintoLinssit.opiskeluoikeudenVersio.getOption(tutkintoJson).getOrElse(-1),
+          TutkintoLinssit.opiskeluoikeudenAikaleima.getOption(tutkintoJson).getOrElse("-"))
+      }
     }
   }
 
@@ -220,3 +228,5 @@ case class Osasuoritus(koulutusmoduulinTunnisteenKoodiarvo: String,
                        uusinHyvaksyttyArvio: Option[Int],
                        uusinArviointiasteikko: String,
                        uusinLaajuus: Option[BigDecimal])
+
+case class Tutkinto(indeksi: Int, opiskeluoikeudenOid: String, opiskeluoikeudenVersio: Int, opiskeluoikeudenAikaleima: String)

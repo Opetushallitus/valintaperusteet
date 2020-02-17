@@ -1,11 +1,21 @@
 package fi.vm.sade.service.valintaperusteet.laskenta
 
-sealed trait IteraatioParametri
+import fi.vm.sade.service.valintaperusteet.laskenta.koski.Tutkinto
 
-case class AmmatillisenPerustutkinnonValitsija(tutkinnonIndeksi: Int) extends IteraatioParametri
+sealed trait IteraatioParametri {
+  val kuvaus: String = toString
+  val lyhytKuvaus: String = toString
+}
 
-case class AmmatillisetPerustutkinnot(tutkintojenMaara: Int) {
-  def parametreiksi: Seq[AmmatillisenPerustutkinnonValitsija] = 0.until(tutkintojenMaara).map(AmmatillisenPerustutkinnonValitsija)
+case class AmmatillisenPerustutkinnonValitsija(tutkinto: Tutkinto) extends IteraatioParametri {
+  val tutkinnonIndeksi: Int = tutkinto.indeksi
+  override val kuvaus: String = s"Tutkinto ${tutkinto.indeksi + 1} " +
+    s"(opiskeluoikeus ${tutkinto.opiskeluoikeudenOid}, versio ${tutkinto.opiskeluoikeudenVersio}, aikaleima ${tutkinto.opiskeluoikeudenAikaleima})"
+  override val lyhytKuvaus: String = s"Tutkinto ${tutkinto.indeksi + 1}"
+}
+
+case class AmmatillisetPerustutkinnot(tutkinnot: Seq[Tutkinto]) {
+  def parametreiksi: Seq[AmmatillisenPerustutkinnonValitsija] = tutkinnot.map(AmmatillisenPerustutkinnonValitsija)
 }
 
 case class AmmatillisenTutkinnonOsanValitsija(osanIndeksi: Int) extends IteraatioParametri

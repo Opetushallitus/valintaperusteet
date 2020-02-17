@@ -13,6 +13,7 @@ import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Hyvaksyttavissatila
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Tila
 import fi.vm.sade.service.valintaperusteet.laskenta.koski.KoskiLaskenta
+import fi.vm.sade.service.valintaperusteet.laskenta.koski.Tutkinto
 
 import scala.collection.immutable.ListMap
 import scala.jdk.CollectionConverters._
@@ -27,12 +28,13 @@ trait AmmatillisetIterointiFunktiot {
     if (ammatillisenPerustutkinnonValitsija.exists(p => p.isInstanceOf[AmmatillisenPerustutkinnonValitsija])) {
       throw new IllegalStateException(s"Ei voi iteroida iteraatioparametrilla $ammatillisenPerustutkinnonValitsija uudestaan ammatillisten tutkintojen yli")
     } else {
-      val tutkintojenMaara = KoskiLaskenta.laskeAmmatillisetTutkinnot(laskin.hakemus)
+      val tutkinnot: Seq[Tutkinto] = KoskiLaskenta.etsiAmmatillisetTutkinnot(laskin.hakemus)
+      val tutkintojenMaara = tutkinnot.size
       Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} hakijalle löytyi $tutkintojenMaara ammatillista perustutkintoa.")
 
-      val uudetParametrit: Seq[AmmatillisenPerustutkinnonValitsija] = AmmatillisetPerustutkinnot(tutkintojenMaara).parametreiksi
+      val tutkintojenIterointiParametrit: Seq[AmmatillisenPerustutkinnonValitsija] = AmmatillisetPerustutkinnot(tutkinnot).parametreiksi
 
-      val kierrostenTulokset: Seq[(AmmatillisenPerustutkinnonValitsija, Tulos[BigDecimal])] = uudetParametrit.
+      val kierrostenTulokset: Seq[(AmmatillisenPerustutkinnonValitsija, Tulos[BigDecimal])] = tutkintojenIterointiParametrit.
         map(parametri => (parametri, laskeLukuarvo(f, iteraatioParametrit ++ Map(classOf[AmmatillisenPerustutkinnonValitsija] -> parametri))))
       val tuloksetLukuarvoina: Seq[Lukuarvo] = kierrostenTulokset.flatMap {
         case (parametri, Tulos(Some(lukuarvo), _, historia)) =>
@@ -76,7 +78,8 @@ trait AmmatillisetIterointiFunktiot {
 
       val tilalista = List(tulos.tila)
       val avaimet = ListMap(
-        "Ammatillisten perustutkintojen määrä" -> Some(tutkintojenMaara)) ++
+        "Ammatillisten perustutkintojen määrä" -> Some(tutkintojenMaara),
+        "Ammatilliset perustutkinnot" -> Some(tutkintojenIterointiParametrit.map(_.kuvaus).mkString("; "))) ++
         ammatillistenFunktioidenTulostenTiivistelmat
       (tulos.tulos, tilalista, Historia(ITEROIAMMATILLISETTUTKINNOT, tulos.tulos, tilalista, None, Some(avaimet)))
     }
