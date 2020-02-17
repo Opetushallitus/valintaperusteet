@@ -202,9 +202,10 @@ trait AmmatillisetArvonHakuFunktiot {
       tilalista,
       None,
       Some(Map(
-        s"ammatillisen tutkinnon ${perustutkinnonValitsija.kuvaus} suoritustavan oletusarvo" -> oletusarvo,
-        s"ammatillisen tutkinnon ${perustutkinnonValitsija.kuvaus} suoritustavan asteikon koodi" -> suoritustapaKoskessa,
-        s"ammatillisen tutkinnon ${perustutkinnonValitsija.kuvaus} suoritustavan tulos" -> tulos
+        s"Ammatillinen perustutkinto ${perustutkinnonValitsija.lyhytKuvaus}" -> Some(perustutkinnonValitsija.kuvaus),
+        s"${perustutkinnonValitsija.lyhytKuvaus} – suoritustavan oletusarvo" -> oletusarvo,
+        s"${perustutkinnonValitsija.lyhytKuvaus} – suoritustavan asteikon koodi" -> suoritustapaKoskessa,
+        s"${perustutkinnonValitsija.lyhytKuvaus} – suoritustavan tulos" -> tulos
       )))
     (tulos, tilalista, uusiHistoria)
   }
