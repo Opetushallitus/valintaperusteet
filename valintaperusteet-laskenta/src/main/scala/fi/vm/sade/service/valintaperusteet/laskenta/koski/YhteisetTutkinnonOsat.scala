@@ -102,7 +102,7 @@ object YhteisetTutkinnonOsat {
   }
 
   private def etsiYhteisetTutkinnonOsat(suoritus: Json, sulkeutumisPäivämäärä: DateTime, osasuorituksenSallitutKoodit: Set[String]): List[Osasuoritus] = {
-    KoskiLaskenta.etsiOsasuoritukset(suoritus, sulkeutumisPäivämäärä, osasuoritus => {
+    OsaSuoritukset.etsiOsasuoritukset(suoritus, sulkeutumisPäivämäärä, osasuoritus => {
       osasuorituksenSallitutKoodit.contains(KoskiLaskenta._osasuorituksenKoulutusmoduulinTunnisteenKoodiarvo.getOption(osasuoritus).orNull)
     })
   }
