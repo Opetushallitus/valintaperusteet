@@ -21,6 +21,7 @@ object Tutkinnot {
     val opiskeluoikeudenOid: Optional[Json, String] = JsonPath.root.oid.string
     val opiskeluoikeudenVersio: Optional[Json, Int] = JsonPath.root.versionumero.int
     val opiskeluoikeudenAikaleima: Optional[Json, String] = JsonPath.root.aikaleima.string
+    val opiskeluoikeudenOppilaitoksenSuomenkielinenNimi: Optional[Json, String] = JsonPath.root.oppilaitos.nimi.fi.string
 
     // Suoritukset etsivä linssi
     val suoritukset: JsonTraversalPath = JsonPath.root.suoritukset.each

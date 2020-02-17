@@ -45,7 +45,8 @@ object KoskiLaskenta {
           indeksi,
           TutkintoLinssit.opiskeluoikeudenOid.getOption(tutkintoJson).getOrElse("-"),
           TutkintoLinssit.opiskeluoikeudenVersio.getOption(tutkintoJson).getOrElse(-1),
-          TutkintoLinssit.opiskeluoikeudenAikaleima.getOption(tutkintoJson).getOrElse("-"))
+          TutkintoLinssit.opiskeluoikeudenAikaleima.getOption(tutkintoJson).getOrElse("-"),
+          TutkintoLinssit.opiskeluoikeudenOppilaitoksenSuomenkielinenNimi.getOption(tutkintoJson).getOrElse("-"))
       }
     }
   }
@@ -229,4 +230,4 @@ case class Osasuoritus(koulutusmoduulinTunnisteenKoodiarvo: String,
                        uusinArviointiasteikko: String,
                        uusinLaajuus: Option[BigDecimal])
 
-case class Tutkinto(indeksi: Int, opiskeluoikeudenOid: String, opiskeluoikeudenVersio: Int, opiskeluoikeudenAikaleima: String)
+case class Tutkinto(indeksi: Int, opiskeluoikeudenOid: String, opiskeluoikeudenVersio: Int, opiskeluoikeudenAikaleima: String, opiskeluoikeudenOppilaitoksenSuomenkielinenNimi: String)

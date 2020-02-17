@@ -10,7 +10,8 @@ sealed trait IteraatioParametri {
 case class AmmatillisenPerustutkinnonValitsija(tutkinto: Tutkinto) extends IteraatioParametri {
   val tutkinnonIndeksi: Int = tutkinto.indeksi
   override val kuvaus: String = s"Tutkinto ${tutkinto.indeksi + 1} " +
-    s"(opiskeluoikeus ${tutkinto.opiskeluoikeudenOid}, versio ${tutkinto.opiskeluoikeudenVersio}, aikaleima ${tutkinto.opiskeluoikeudenAikaleima})"
+    s"(opiskeluoikeus ${tutkinto.opiskeluoikeudenOid}, versio ${tutkinto.opiskeluoikeudenVersio}, " +
+    s"aikaleima ${tutkinto.opiskeluoikeudenAikaleima}, oppilaitos ${tutkinto.opiskeluoikeudenOppilaitoksenSuomenkielinenNimi})"
   override val lyhytKuvaus: String = s"Tutkinto ${tutkinto.indeksi + 1}"
 }
 
