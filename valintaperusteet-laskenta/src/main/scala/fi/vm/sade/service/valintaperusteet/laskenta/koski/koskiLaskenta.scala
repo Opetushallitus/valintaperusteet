@@ -1,5 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.laskenta.koski
 
+import scala.util.control.Exception._
+
 import fi.vm.sade.service.valintaperusteet.laskenta.AmmatillisenPerustutkinnonValitsija
 import fi.vm.sade.service.valintaperusteet.laskenta.AmmatillisenTutkinnonOsanValitsija
 import fi.vm.sade.service.valintaperusteet.laskenta.AmmatillisenTutkinnonYtoOsaAlueenValitsija
@@ -80,7 +82,9 @@ object KoskiLaskenta {
                                           hakemus: Hakemus,
                                           oletusarvo: Option[BigDecimal]
                                          ): Option[BigDecimal] = {
-    Some(BigDecimal(3.0)) // TODO implement
+    val (_, uusinLaajuus, _) = haeUusinArvosanaLaajuusJaArviointiAsteikkoValitsijoilla(tutkinnonValitsija, osaAlueenValitsija, hakemus)
+
+    uusinLaajuus
   }
 
   def haeAmmatillisenYtonOsaAlueenArvosana(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
@@ -88,7 +92,11 @@ object KoskiLaskenta {
                                            hakemus: Hakemus,
                                            oletusarvo: Option[BigDecimal]
                                           ): Option[BigDecimal] = {
-    Some(BigDecimal(4.7)) // TODO implement
+    haeUusinArvosanaLaajuusJaArviointiAsteikkoValitsijoilla(tutkinnonValitsija, osaAlueenValitsija, hakemus) match {
+      case (uusinArvosana, _, _) => {
+        catching(classOf[NumberFormatException]) opt BigDecimal(uusinArvosana)
+      }
+    }
   }
 
   def haeAmmatillisenTutkinnonKoskeenTallennettuKeskiarvo(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija, hakemus: Hakemus): Option[BigDecimal] = {
@@ -111,6 +119,17 @@ object KoskiLaskenta {
         None
       }
     }
+  }
+
+  private def haeUusinArvosanaLaajuusJaArviointiAsteikkoValitsijoilla(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
+                                                                      osaAlueenValitsija: AmmatillisenTutkinnonYtoOsaAlueenValitsija,
+                                                                      hakemus: Hakemus): (String, Option[BigDecimal], String) = {
+    val osaAlueet = YhteisetTutkinnonOsat.haeYtoOsaAlueet(tutkinnonValitsija, hakemus, osaAlueenValitsija.ytoKoodi)
+    if (osaAlueenValitsija.osanIndeksi >= osaAlueet.size) {
+      throw new IllegalStateException(s"Osa-alueen indeksointi yrittää käsitellä indeksiä ${osaAlueenValitsija.osanIndeksi} kun osa-alueita on vain ${osaAlueet.size} hakemuksella ${hakemus.oid}")
+    }
+
+    OsaSuoritukset.etsiUusinArvosanaLaajuusJaArviointiAsteikko(osaAlueet(osaAlueenValitsija.osanIndeksi))
   }
 
   private def haeArvoSuorituksista[T](tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
