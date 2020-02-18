@@ -88,7 +88,7 @@ object Tutkinnot {
     val dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd")
 
     TutkintoLinssit.suoritukset.json.getAll(tutkinto).filter(suoritus => {
-      val (koodiarvo: String, lyhytNimiFi: String, koulutusTyypinNimiFi: String) = tutkinnonPerusTiedot(suoritus)
+      val (koodiarvo: Option[String], lyhytNimiFi: Option[String], koulutusTyypinNimiFi: Option[String]) = tutkinnonPerusTiedot(suoritus)
 
       val vahvistettuRajapäivänä = TutkintoLinssit.vahvistusPvm.getOption(suoritus) match {
         case Some(dateString) => sulkeutumisPäivämäärä.isAfter(dateFormat.parseDateTime(dateString))
@@ -120,10 +120,10 @@ object Tutkinnot {
     })
   }
 
-  private def tutkinnonPerusTiedot(suoritus: Json) = {
-    val koodiarvo = TutkintoLinssit.koodiarvo.getOption(suoritus).orNull
-    val lyhytNimiFi = TutkintoLinssit.lyhytNimiFi.getOption(suoritus).orNull
-    val koulutusTyypinNimiFi = TutkintoLinssit.koulutusTyypinNimiFi.getOption(suoritus).orNull
+  private def tutkinnonPerusTiedot(suoritus: Json): (Option[String], Option[String], Option[String]) = {
+    val koodiarvo = TutkintoLinssit.koodiarvo.getOption(suoritus)
+    val lyhytNimiFi = TutkintoLinssit.lyhytNimiFi.getOption(suoritus)
+    val koulutusTyypinNimiFi = TutkintoLinssit.koulutusTyypinNimiFi.getOption(suoritus)
     (koodiarvo, lyhytNimiFi, koulutusTyypinNimiFi)
   }
 }
