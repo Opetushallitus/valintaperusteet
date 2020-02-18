@@ -202,7 +202,7 @@ trait AmmatillisetIterointiFunktiot {
       val avaimet = Map(
         s"ammatillisen perustutkinnon YTOn $ytoKoodi osa-alueiden määrä" -> Some(ytonOsaAlueidenMaara),
         s"ammatillisen perustutkinnon YTOn $ytoKoodi pisteet" -> Some(tuloksetLukuarvoina.map(l => s"${l._1.tulosTekstiFi} = ${l._1.d};${l._2.tulosTekstiFi} = ${l._2.d}")))
-      (tulos.tulos, tilalista, Historia(ITEROIAMMATILLISETYTOOSAALUEET, tulos.tulos, tilalista, None, Some(avaimet)))
+      (tulos.tulos, tilalista, Historia(ITEROIAMMATILLISETYTOOSAALUEET, tulos.tulos, tilalista, Some(kierrostenHistoriatKahdelleParametrille(kierrostenTulokset)), Some(avaimet)))
     }
   }
 
