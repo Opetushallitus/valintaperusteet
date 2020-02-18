@@ -7,7 +7,7 @@ import org.joda.time.DateTime
 import org.slf4j.{Logger, LoggerFactory}
 
 object OsaSuoritukset {
-  private val LOG: Logger = LoggerFactory.getLogger(KoskiLaskenta.getClass)
+  private val LOG: Logger = LoggerFactory.getLogger(OsaSuoritukset.getClass)
 
   // Osasuorituksen rakennetta purkavat linssit
   object OsaSuoritusLinssit {
