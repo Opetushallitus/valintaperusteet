@@ -82,7 +82,7 @@ object KoskiLaskenta {
                                           hakemus: Hakemus,
                                           oletusarvo: Option[BigDecimal]
                                          ): Option[BigDecimal] = {
-    val (_, uusinLaajuus, _) = haeUusinArvosanaLaajuusJaArviointiAsteikkoValitsijoilla(tutkinnonValitsija, osaAlueenValitsija, hakemus)
+    val (_, uusinLaajuus, _) = haeOsaAlueenUusinArvosanaLaajuusJaArviointiAsteikkoValitsijoilla(tutkinnonValitsija, osaAlueenValitsija, hakemus)
 
     uusinLaajuus
   }
@@ -92,7 +92,7 @@ object KoskiLaskenta {
                                            hakemus: Hakemus,
                                            oletusarvo: Option[BigDecimal]
                                           ): Option[BigDecimal] = {
-    haeUusinArvosanaLaajuusJaArviointiAsteikkoValitsijoilla(tutkinnonValitsija, osaAlueenValitsija, hakemus) match {
+    haeOsaAlueenUusinArvosanaLaajuusJaArviointiAsteikkoValitsijoilla(tutkinnonValitsija, osaAlueenValitsija, hakemus) match {
       case (uusinArvosana, _, _) => {
         catching(classOf[NumberFormatException]) opt BigDecimal(uusinArvosana)
       }
@@ -121,7 +121,7 @@ object KoskiLaskenta {
     }
   }
 
-  private def haeUusinArvosanaLaajuusJaArviointiAsteikkoValitsijoilla(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
+  private def haeOsaAlueenUusinArvosanaLaajuusJaArviointiAsteikkoValitsijoilla(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
                                                                       osaAlueenValitsija: AmmatillisenTutkinnonYtoOsaAlueenValitsija,
                                                                       hakemus: Hakemus): (String, Option[BigDecimal], String) = {
     val osaAlueet = YhteisetTutkinnonOsat.haeYtoOsaAlueet(tutkinnonValitsija, hakemus, osaAlueenValitsija.ytoKoodi)

@@ -10,6 +10,7 @@ import fi.vm.sade.service.valintaperusteet.laskenta.koski.KoskiLaskenta.sulkeutu
 import fi.vm.sade.service.valintaperusteet.laskenta.koski.Osasuoritus.OsaSuoritusLinssit
 import fi.vm.sade.service.valintaperusteet.laskenta.koski.Tutkinnot.etsiValmiitTutkinnot
 import io.circe.Json
+import io.circe.optics.JsonPath
 import org.joda.time.DateTime
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -54,6 +55,9 @@ object YhteisetTutkinnonOsat {
         suorituksenHaluttuTyyppi = ammatillisenSuorituksenTyyppi,
         hakemus = hakemus)(ammatillisenPerustutkinnonValitsija.tutkinnonIndeksi)
       YhteisetTutkinnonOsat.haeYhteisenTutkinnonOsanTiedot(hakemus, oikeaOpiskeluoikeus, ytoKoodiArvo)
+        .filter(osaAlue => {
+          !JsonPath.root.tyyppi.koodiarvo.json.getOption(osaAlue).contains("ammatillisentutkinnonosanosaalue")
+        })
         .flatMap(OsaSuoritusLinssit.osasuoritukset.getAll)
     } else {
       Seq[Json]()
