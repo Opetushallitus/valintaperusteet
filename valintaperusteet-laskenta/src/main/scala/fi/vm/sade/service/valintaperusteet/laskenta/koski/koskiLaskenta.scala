@@ -52,10 +52,6 @@ object KoskiLaskenta {
     haeAmmatillisenTutkinnonOsat(tutkinnonValitsija, hakemus)
   }
 
-  def laskeAmmatillisenTutkinnonYtoOsaAlueet(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija, ytoKoodi: String, hakemus: Hakemus): Int = {
-    haeAmmatillisenTutkinnonYtoOsaAlueet(tutkinnonValitsija, ytoKoodi, hakemus).size
-  }
-
   def haeAmmatillisenTutkinnonOsanLaajuus(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
                                           osanValitsija: AmmatillisenTutkinnonOsanValitsija,
                                           hakemus: Hakemus,
@@ -150,7 +146,7 @@ object KoskiLaskenta {
     }
   }
 
-  private def haeAmmatillisenTutkinnonYtoOsaAlueet(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija, ytoKoodiArvo: String, hakemus: Hakemus): Seq[Osasuoritus] = {
+  def haeAmmatillisenTutkinnonYtoOsaAlueet(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija, ytoKoodiArvo: String, hakemus: Hakemus): Seq[Osasuoritus] = {
     if (hakemus.koskiOpiskeluoikeudet == null) {
       Nil
     } else {

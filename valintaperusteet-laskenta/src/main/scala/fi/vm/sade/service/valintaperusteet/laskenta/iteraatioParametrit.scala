@@ -31,11 +31,13 @@ case class AmmatillisenTutkinnonOsat(tutkinnonOsat: Seq[Osasuoritus]) {
   def parametreiksi: Seq[AmmatillisenTutkinnonOsanValitsija] = tutkinnonOsat.zipWithIndex.map(AmmatillisenTutkinnonOsanValitsija.tupled)
 }
 
-case class AmmatillisenTutkinnonYtoOsaAlueenValitsija(ytoKoodi: String, osanIndeksi: Int) extends IteraatioParametri {
-  override val kuvaus: String = s"YTO:n ${ytoKoodi} osa-alue indeksillä ${osanIndeksi}"
-  override val lyhytKuvaus: String = s"YTO:n ${ytoKoodi} osa-alue indeksillä ${osanIndeksi}"
+case class AmmatillisenTutkinnonYtoOsaAlueenValitsija(ytoKoodi: String, osasuoritus: Osasuoritus, osanIndeksi: Int) extends IteraatioParametri {
+  override val kuvaus: String = s"YTO:n ${ytoKoodi} osa-alue indeksillä ${osanIndeksi}: ${osasuoritus.koulutusmoduulinNimiFi}"
+  override val lyhytKuvaus: String = s"${osasuoritus.koulutusmoduulinNimiFi}"
 }
 
-case class AmmatillisenTutkinnonYtoOsaAlueet(ytoKoodi: String, tutkinnonYtoOsaAlueidenMaara: Int) {
-  def parametreiksi: Seq[AmmatillisenTutkinnonYtoOsaAlueenValitsija] = 0.until(tutkinnonYtoOsaAlueidenMaara).map(i => AmmatillisenTutkinnonYtoOsaAlueenValitsija(ytoKoodi, i))
+case class AmmatillisenTutkinnonYtoOsaAlueet(ytoKoodi: String, tutkinnonOsaAlueet: Seq[Osasuoritus]) {
+  def parametreiksi: Seq[AmmatillisenTutkinnonYtoOsaAlueenValitsija] = tutkinnonOsaAlueet.zipWithIndex.map(
+    x => AmmatillisenTutkinnonYtoOsaAlueenValitsija(ytoKoodi, x._1, x._2)
+  )
 }
