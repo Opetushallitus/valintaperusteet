@@ -23,7 +23,7 @@ object OsaSuoritukset {
 
   def etsiOsasuorituksetJson(suoritus: Json, sulkeutumisPäivämäärä: DateTime, osasuoritusPredikaatti: Json => Boolean): List[Json] = {
     OsaSuoritusLinssit.osasuoritukset.getAll(suoritus).filter(osasuoritusPredikaatti).map(osasuoritus => {
-      val (osasuorituksenKoodiarvo: String, osasuorituksenNimiFi: String, uusinHyvaksyttyArvio: String, uusinLaajuus: BigDecimal, uusinArviointiAsteikko: String) = haeOsasuorituksenPerustiedot(osasuoritus)
+      val (osasuorituksenKoodiarvo: String, osasuorituksenNimiFi: String, uusinHyvaksyttyArvio: String, uusinLaajuus: Option[BigDecimal], uusinArviointiAsteikko: String) = haeOsasuorituksenPerustiedot(osasuoritus)
 
       LOG.debug("Osasuorituksen arvio: %s".format(uusinHyvaksyttyArvio))
       LOG.debug("Osasuorituksen arviointiasteikko: %s".format(uusinArviointiAsteikko))
@@ -38,7 +38,7 @@ object OsaSuoritukset {
   private def haeOsasuorituksenPerustiedot(osasuoritus: Json) = {
     val osasuorituksenKoodiarvo = OsaSuoritusLinssit.koulutusmoduulinTunnisteenKoodiarvo.getOption(osasuoritus).orNull
     val osasuorituksenNimiFi = OsaSuoritusLinssit.koulutusmoduulinNimiFi.getOption(osasuoritus).orNull
-    val (uusinHyvaksyttyArvio: String, uusinLaajuus: BigDecimal, uusinArviointiAsteikko: String) = etsiUusinArvosanaLaajuusJaArviointiAsteikko(osasuoritus)
+    val (uusinHyvaksyttyArvio: String, uusinLaajuus: Option[BigDecimal], uusinArviointiAsteikko: String) = etsiUusinArvosanaLaajuusJaArviointiAsteikko(osasuoritus)
     (osasuorituksenKoodiarvo, osasuorituksenNimiFi, uusinHyvaksyttyArvio, uusinLaajuus, uusinArviointiAsteikko)
   }
 
@@ -47,22 +47,22 @@ object OsaSuoritukset {
                          osasuoritusPredikaatti: Json => Boolean,
                         ): List[Osasuoritus] = {
     OsaSuoritukset.etsiOsasuorituksetJson(suoritus, sulkeutumisPäivämäärä, osasuoritusPredikaatti).map(osasuoritus => {
-      val (osasuorituksenKoodiarvo: String, osasuorituksenNimiFi: String, uusinHyvaksyttyArvio: String, uusinLaajuus: BigDecimal, uusinArviointiAsteikko: String) = haeOsasuorituksenPerustiedot(osasuoritus)
+      val (osasuorituksenKoodiarvo: String, osasuorituksenNimiFi: String, uusinHyvaksyttyArvio: String, uusinLaajuus: Option[BigDecimal], uusinArviointiAsteikko: String) = haeOsasuorituksenPerustiedot(osasuoritus)
 
-      Osasuoritus(osasuorituksenKoodiarvo, osasuorituksenNimiFi, uusinHyvaksyttyArvio.toIntOption, uusinArviointiAsteikko, Option(uusinLaajuus))
+      Osasuoritus(osasuorituksenKoodiarvo, osasuorituksenNimiFi, uusinHyvaksyttyArvio.toIntOption, uusinArviointiAsteikko, uusinLaajuus)
     })
   }
 
-  def etsiUusinArvosanaLaajuusJaArviointiAsteikko(osasuoritus: Json): (String, BigDecimal, String) = {
-    val (_, uusinHyvaksyttyArvio, uusinLaajuus, uusinArviointiAsteikko): (String, String, BigDecimal, String) =
+  def etsiUusinArvosanaLaajuusJaArviointiAsteikko(osasuoritus: Json): (String, Option[BigDecimal], String) = {
+    val (_, uusinHyvaksyttyArvio, uusinLaajuus, uusinArviointiAsteikko): (String, String, Option[BigDecimal], String) =
       OsaSuoritusLinssit.arviointi.getAll(osasuoritus)
         .filter(arvio => JsonPath.root.hyväksytty.boolean.getOption(arvio).getOrElse(false))
         .map(arvio => (
           JsonPath.root.päivä.string.getOption(arvio).orNull,
           JsonPath.root.arvosana.koodiarvo.string.getOption(arvio).orNull,
-          OsaSuoritusLinssit.koulutusmoduulinLaajuudenArvo.getOption(osasuoritus).orNull, // TODO lisää laajuuden yksikkö / estä muut kuin osp
+          OsaSuoritusLinssit.koulutusmoduulinLaajuudenArvo.getOption(osasuoritus), // TODO lisää laajuuden yksikkö / estä muut kuin osp
           JsonPath.root.arvosana.koodistoUri.string.getOption(arvio).orNull
-        )).sorted(Ordering.Tuple4(Ordering.String.reverse, Ordering.String, Ordering.BigDecimal, Ordering.String))
+        )).sorted(Ordering.Tuple4(Ordering.String.reverse, Ordering.String, Ordering.Option[BigDecimal], Ordering.String))
         .head
     (uusinHyvaksyttyArvio, uusinLaajuus, uusinArviointiAsteikko)
   }

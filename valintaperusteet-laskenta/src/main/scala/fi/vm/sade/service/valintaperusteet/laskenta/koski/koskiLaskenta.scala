@@ -13,6 +13,8 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 object KoskiLaskenta {
+  private val LOG: Logger = LoggerFactory.getLogger(KoskiLaskenta.getClass)
+
   val ammatillisenHuomioitavaOpiskeluoikeudenTyyppi: String = "ammatillinenkoulutus"
   val ammatillisenSuorituksenTyyppi: String = "ammatillinentutkinto"
 
@@ -58,7 +60,13 @@ object KoskiLaskenta {
                                           hakemus: Hakemus,
                                           oletusarvo: Option[BigDecimal]
                                      ): Option[BigDecimal] = {
-    haeAmmatillisenTutkinnonOsat(tutkinnonValitsija, hakemus)(osanValitsija.osanIndeksi).uusinLaajuus.orElse(oletusarvo)
+    val osasuoritus = haeAmmatillisenTutkinnonOsat(tutkinnonValitsija, hakemus)(osanValitsija.osanIndeksi)
+    osasuoritus.uusinLaajuus.orElse {
+      LOG.warn(s"Hakemuksen ${hakemus.oid} hakijan ammatillisen perustutkinnon ${tutkinnonValitsija.kuvaus} " +
+        s"tutkinnon osan ${osanValitsija.kuvaus} (${osasuoritus.koulutusmoduulinNimiFi}) " +
+        s"laajuus on tyhjä. Arvosana on ${osasuoritus.uusinHyvaksyttyArvio}")
+      oletusarvo
+    }
   }
 
   def haeAmmatillisenTutkinnonOsanArvosana(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
