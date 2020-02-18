@@ -115,7 +115,7 @@ trait AmmatillisetIterointiFunktiot {
             Lukuarvo(lukuarvo2, tulosTekstiFi = s"Arvo 2 parametrilla '$parametri' == $lukuarvo2, historia: ${tiivistelmaAmmatillisistaFunktioista(historia2)}"),
           )
         case (parametri, tulokset) =>
-          Laskin.LOG.debug(s"Tyhjiä tuloksia joukossa $tulokset funktiosta $lapsiFunktio parametrilla $parametri")
+          Laskin.LOG.debug(s"Tyhjiä tuloksia hakemusta ${laskin.hakemus.oid} laskettaessa joukossa $tulokset funktiosta $lapsiFunktio parametrilla $parametri")
           None
       }
 
