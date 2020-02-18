@@ -121,9 +121,11 @@ trait AmmatillisetArvonHakuFunktiot {
                                                             konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]],
                                                             oletusarvo: Option[BigDecimal]
                                                            ): (Option[BigDecimal], List[Tila], Historia) = {
+    val tutkinnonValitsija = ammatillisenTutkinnonValitsija(iteraatioParametrit, f)
+    val ytoOsaAlueenValitsija = ammatillisenYtonOsaAlueenValitsija(iteraatioParametrit, f)
     val laajuusKoskessa: Option[BigDecimal] = KoskiLaskenta.haeAmmatillisenYtonOsaAlueenLaajuus(
-      ammatillisenTutkinnonValitsija(iteraatioParametrit, f),
-      ammatillisenYtonOsaAlueenValitsija(iteraatioParametrit, f),
+      tutkinnonValitsija,
+      ytoOsaAlueenValitsija,
       laskin.hakemus,
       oletusarvo)
 
@@ -135,8 +137,7 @@ trait AmmatillisetArvonHakuFunktiot {
       tilalista,
       None,
       Some(Map(
-        "oletusarvo" -> oletusarvo,
-        "lähdearvo" -> laajuusKoskessa
+        s"""Ammatillisen perustutkinnon "${tutkinnonValitsija.lyhytKuvaus}" osan "${ytoOsaAlueenValitsija.lyhytKuvaus}" laajuus""" -> laajuusKoskessa,
       )))
     (tulos, tilalista, uusiHistoria)
   }
@@ -146,9 +147,11 @@ trait AmmatillisetArvonHakuFunktiot {
                                                              konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]],
                                                              oletusarvo: Option[BigDecimal]
                                                             ): (Option[BigDecimal], List[Tila], Historia) = {
+    val tutkinnonValitsija = ammatillisenTutkinnonValitsija(iteraatioParametrit, f)
+    val ytoOsaAlueenValitsija = ammatillisenYtonOsaAlueenValitsija(iteraatioParametrit, f)
     val arvosanaKoskessa: Option[BigDecimal] = KoskiLaskenta.haeAmmatillisenYtonOsaAlueenArvosana(
-      ammatillisenTutkinnonValitsija(iteraatioParametrit, f),
-      ammatillisenYtonOsaAlueenValitsija(iteraatioParametrit, f),
+      tutkinnonValitsija,
+      ytoOsaAlueenValitsija,
       laskin.hakemus,
       oletusarvo)
 
@@ -160,7 +163,7 @@ trait AmmatillisetArvonHakuFunktiot {
       tilalista,
       None,
       Some(Map(
-        "lähdearvo" -> arvosanaKoskessa
+        s"""Ammatillisen perustutkinnon "${tutkinnonValitsija.lyhytKuvaus}" osan "${ytoOsaAlueenValitsija.lyhytKuvaus}" arvosana""" -> arvosanaKoskessa,
       )))
     (tulos, tilalista, uusiHistoria)
   }
@@ -170,7 +173,8 @@ trait AmmatillisetArvonHakuFunktiot {
                                                   f: HaeAmmatillisenTutkinnonKeskiarvo,
                                                   konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]]
                                                  ): (Option[BigDecimal], List[Tila], Historia) = {
-    val keskiarvoKoskessa: Option[BigDecimal] = KoskiLaskenta.haeAmmatillisenTutkinnonKoskeenTallennettuKeskiarvo(ammatillisenTutkinnonValitsija(iteraatioParametrit, f), laskin.hakemus)
+    val tutkinnonValitsija = ammatillisenTutkinnonValitsija(iteraatioParametrit, f)
+    val keskiarvoKoskessa: Option[BigDecimal] = KoskiLaskenta.haeAmmatillisenTutkinnonKoskeenTallennettuKeskiarvo(tutkinnonValitsija, laskin.hakemus)
 
     val (tulos: Option[BigDecimal], tilalista: List[Tila]) = konvertoi(konvertteri, keskiarvoKoskessa, laskin.hakemus, laskin.hakukohde)
 
@@ -180,7 +184,7 @@ trait AmmatillisetArvonHakuFunktiot {
       tilalista,
       None,
       Some(Map(
-        "lähdearvo" -> keskiarvoKoskessa
+        s"""Ammatillisen perustutkinnon "${tutkinnonValitsija.lyhytKuvaus}" tallennettu keskiarvo""" -> keskiarvoKoskessa,
       )))
     (tulos, tilalista, uusiHistoria)
   }
