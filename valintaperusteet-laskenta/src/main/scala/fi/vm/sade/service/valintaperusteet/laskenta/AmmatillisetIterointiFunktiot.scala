@@ -172,8 +172,8 @@ trait AmmatillisetIterointiFunktiot {
         })
       val tuloksetLukuarvoina: Seq[(Lukuarvo, Lukuarvo)] = kierrostenTulokset.flatMap {
         case (parametri, (Tulos(Some(lukuarvo1), _, historia1), Tulos(Some(lukuarvo2), _, historia2))) =>
-          Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} ${IteroiAmmatillisenTutkinnonYtoOsaAlueet.getClass.getSimpleName}-laskennan historia1: ${LaskentaUtil.prettyPrint(historia1)}")
-          Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} ${IteroiAmmatillisenTutkinnonYtoOsaAlueet.getClass.getSimpleName}-laskennan historia2: ${LaskentaUtil.prettyPrint(historia2)}")
+          Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} ${IteroiAmmatillisenTutkinnonYtoOsaAlueet.getClass.getSimpleName}-laskennan historia1 YTOlle ${ytoKoodi}: ${LaskentaUtil.prettyPrint(historia1)}")
+          Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} ${IteroiAmmatillisenTutkinnonYtoOsaAlueet.getClass.getSimpleName}-laskennan historia2 YTOlle ${ytoKoodi}: ${LaskentaUtil.prettyPrint(historia2)}")
 
           Some(
             Lukuarvo(lukuarvo1, tulosTekstiFi = s"Arvo 1 parametrilla '$parametri' == $lukuarvo1, historia: ${tiivistelmaAmmatillisistaFunktioista(historia1)}"),
