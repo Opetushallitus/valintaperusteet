@@ -51,8 +51,7 @@ object KoskiLaskenta {
   }
 
   def laskeAmmatillisenTutkinnonYtoOsaAlueet(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija, ytoKoodi: String, hakemus: Hakemus): Int = {
-    2
-    //haeAmmatillisenTutkinnonYtoOsaAlueet(tutkinnonValitsija, ytoKoodi, hakemus).size
+    haeAmmatillisenTutkinnonYtoOsaAlueet(tutkinnonValitsija, ytoKoodi, hakemus).size
   }
 
   def haeAmmatillisenTutkinnonOsanLaajuus(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
@@ -132,20 +131,12 @@ object KoskiLaskenta {
     }
   }
 
-  private def haeAmmatillisenTutkinnonYtoOsaAlueet(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija, ytoKoodi: String, hakemus: Hakemus): List[Osasuoritus] = {
+  private def haeAmmatillisenTutkinnonYtoOsaAlueet(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija, ytoKoodiArvo: String, hakemus: Hakemus): Seq[Osasuoritus] = {
     if (hakemus.koskiOpiskeluoikeudet == null) {
       Nil
     } else {
-      /*
-      val osaAlueet = OsaSuoritukset.etsiOsasuoritukset(hakemus, tutkinnonValitsija, ytoKoodi)
-
-      val osasuoritusPredikaatti: Json => Boolean = osasuoritus => {
-        "ammatillisentutkinnonosa" == _osasuorituksenTyypinKoodiarvo.getOption(osasuoritus).orNull
-      }
-
-      osaAlueet.flatMap(OsaSuoritukset.etsiOsasuoritukset(_, sulkeutumisPaivamaara, osasuoritusPredikaatti))
-       */
-      Nil
+      YhteisetTutkinnonOsat.haeYtoOsaAlueet(tutkinnonValitsija, hakemus, ytoKoodiArvo)
+        .map(Osasuoritus(_))
     }
   }
 
@@ -166,10 +157,9 @@ object KoskiLaskenta {
       }
 
       suoritukset.flatMap(OsaSuoritukset.etsiOsasuoritukset(_, sulkeutumisPaivamaara, osasuoritusPredikaatti))
+        .map(Osasuoritus(_))
     }
   }
-
-
 }
 
 sealed trait AmmatillisenPerustutkinnonKoulutustyyppi {
@@ -192,10 +182,5 @@ case object AmmatillinenPerustutkintoErityisopetuksena extends AmmatillisenPerus
   val kuvaus: String = "Ammatillinen perustutkinto erityisopetuksena"
 }
 
-case class Osasuoritus(koulutusmoduulinTunnisteenKoodiarvo: String,
-                       koulutusmoduulinNimiFi: String,
-                       uusinHyvaksyttyArvio: Option[Int],
-                       uusinArviointiasteikko: String,
-                       uusinLaajuus: Option[BigDecimal])
 
 case class Tutkinto(indeksi: Int, opiskeluoikeudenOid: String, opiskeluoikeudenVersio: Int, opiskeluoikeudenAikaleima: String, opiskeluoikeudenOppilaitoksenSuomenkielinenNimi: String)

@@ -1,14 +1,19 @@
 package fi.vm.sade.service.valintaperusteet.laskenta.koski
 
+import fi.vm.sade.service.valintaperusteet.laskenta.koski.Osasuoritus.OsaSuoritusLinssit
 import io.circe.Json
 import io.circe.optics.JsonPath
 import monocle.Optional
 import org.joda.time.DateTime
 import org.slf4j.{Logger, LoggerFactory}
 
-object OsaSuoritukset {
-  private val LOG: Logger = LoggerFactory.getLogger(OsaSuoritukset.getClass)
+case class Osasuoritus(koulutusmoduulinTunnisteenKoodiarvo: String,
+                       koulutusmoduulinNimiFi: String,
+                       uusinHyvaksyttyArvio: Option[Int],
+                       uusinArviointiasteikko: String,
+                       uusinLaajuus: Option[BigDecimal])
 
+object Osasuoritus {
   // Osasuorituksen rakennetta purkavat linssit
   object OsaSuoritusLinssit {
     // Suoritusten alla olevien osasuoritusten tietoja etsivä linssi
@@ -21,36 +26,36 @@ object OsaSuoritukset {
     val koulutusmoduulinNimiFi = koulutusmoduuli.tunniste.nimi.fi.string
   }
 
-  def etsiOsasuorituksetJson(suoritus: Json, sulkeutumisPäivämäärä: DateTime, osasuoritusPredikaatti: Json => Boolean): List[Json] = {
-    OsaSuoritusLinssit.osasuoritukset.getAll(suoritus).filter(osasuoritusPredikaatti).map(osasuoritus => {
-      val (osasuorituksenKoodiarvo: String, osasuorituksenNimiFi: String, uusinHyvaksyttyArvio: String, uusinLaajuus: Option[BigDecimal], uusinArviointiAsteikko: String) = haeOsasuorituksenPerustiedot(osasuoritus)
-
-      LOG.debug("Osasuorituksen arvio: %s".format(uusinHyvaksyttyArvio))
-      LOG.debug("Osasuorituksen arviointiasteikko: %s".format(uusinArviointiAsteikko))
-      LOG.debug("Osasuorituksen laajuus: %s".format(uusinLaajuus))
-      LOG.debug("Osasuorituksen nimi: %s".format(osasuorituksenNimiFi))
-      LOG.debug("Osasuorituksen koodiarvo: %s".format(osasuorituksenKoodiarvo))
-
-      osasuoritus
-    })
+  def apply(json: Json): Osasuoritus = {
+    val (osasuorituksenKoodiarvo, osasuorituksenNimiFi, uusinHyvaksyttyArvio, uusinLaajuus, uusinArviointiAsteikko) = Osasuoritus.haePerustiedot(json)
+    Osasuoritus(osasuorituksenKoodiarvo, osasuorituksenNimiFi, uusinHyvaksyttyArvio.toIntOption, uusinArviointiAsteikko, uusinLaajuus)
   }
 
-  private def haeOsasuorituksenPerustiedot(osasuoritus: Json) = {
-    val osasuorituksenKoodiarvo = OsaSuoritusLinssit.koulutusmoduulinTunnisteenKoodiarvo.getOption(osasuoritus).orNull
-    val osasuorituksenNimiFi = OsaSuoritusLinssit.koulutusmoduulinNimiFi.getOption(osasuoritus).orNull
-    val (uusinHyvaksyttyArvio: String, uusinLaajuus: Option[BigDecimal], uusinArviointiAsteikko: String) = etsiUusinArvosanaLaajuusJaArviointiAsteikko(osasuoritus)
+  def haePerustiedot(json: Json): (String, String, String, Option[BigDecimal], String) = {
+    val osasuorituksenKoodiarvo = OsaSuoritusLinssit.koulutusmoduulinTunnisteenKoodiarvo.getOption(json).orNull
+    val osasuorituksenNimiFi = OsaSuoritusLinssit.koulutusmoduulinNimiFi.getOption(json).orNull
+    val (uusinHyvaksyttyArvio: String, uusinLaajuus: Option[BigDecimal], uusinArviointiAsteikko: String) = OsaSuoritukset.etsiUusinArvosanaLaajuusJaArviointiAsteikko(json)
     (osasuorituksenKoodiarvo, osasuorituksenNimiFi, uusinHyvaksyttyArvio, uusinLaajuus, uusinArviointiAsteikko)
   }
+}
 
-  def etsiOsasuoritukset(suoritus: Json,
-                         sulkeutumisPäivämäärä: DateTime,
-                         osasuoritusPredikaatti: Json => Boolean,
-                        ): List[Osasuoritus] = {
-    OsaSuoritukset.etsiOsasuorituksetJson(suoritus, sulkeutumisPäivämäärä, osasuoritusPredikaatti).map(osasuoritus => {
-      val (osasuorituksenKoodiarvo: String, osasuorituksenNimiFi: String, uusinHyvaksyttyArvio: String, uusinLaajuus: Option[BigDecimal], uusinArviointiAsteikko: String) = haeOsasuorituksenPerustiedot(osasuoritus)
+object OsaSuoritukset {
+  private val LOG: Logger = LoggerFactory.getLogger(OsaSuoritukset.getClass)
 
-      Osasuoritus(osasuorituksenKoodiarvo, osasuorituksenNimiFi, uusinHyvaksyttyArvio.toIntOption, uusinArviointiAsteikko, uusinLaajuus)
-    })
+  def etsiOsasuoritukset(suoritus: Json, sulkeutumisPäivämäärä: DateTime, osasuoritusPredikaatti: Json => Boolean): List[Json] = {
+    OsaSuoritusLinssit.osasuoritukset.getAll(suoritus).filter(osasuoritusPredikaatti).map(OsaSuoritukset.log)
+  }
+
+  private def log(json: Json): Json= {
+    val (osasuorituksenKoodiarvo, osasuorituksenNimiFi, uusinHyvaksyttyArvio, uusinLaajuus, uusinArviointiAsteikko) = Osasuoritus.haePerustiedot(json)
+
+    LOG.debug("Osasuorituksen arvio: %s".format(uusinHyvaksyttyArvio))
+    LOG.debug("Osasuorituksen arviointiasteikko: %s".format(uusinArviointiAsteikko))
+    LOG.debug("Osasuorituksen laajuus: %s".format(uusinLaajuus))
+    LOG.debug("Osasuorituksen nimi: %s".format(osasuorituksenNimiFi))
+    LOG.debug("Osasuorituksen koodiarvo: %s".format(osasuorituksenKoodiarvo))
+
+    json
   }
 
   def etsiUusinArvosanaLaajuusJaArviointiAsteikko(osasuoritus: Json): (String, Option[BigDecimal], String) = {
