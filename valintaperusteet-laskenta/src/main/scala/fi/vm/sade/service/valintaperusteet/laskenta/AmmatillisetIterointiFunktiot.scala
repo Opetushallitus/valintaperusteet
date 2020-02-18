@@ -201,8 +201,7 @@ trait AmmatillisetIterointiFunktiot {
       val tilalista = List(tulos.tila)
       val avaimet = Map(
         s"ammatillisen perustutkinnon ${tutkinnonValitsija.lyhytKuvaus} YTOn $ytoKoodi osa-alueiden määrä" -> Some(ytonOsaAlueidenMaara),
-        s"ammatillisen perustutkinnon ${tutkinnonValitsija.lyhytKuvaus} YTOn $ytoKoodi" -> Some(uudetParametrit.map(_.kuvaus).mkString("; ")),
-        s"ammatillisen perustutkinnon ${tutkinnonValitsija.lyhytKuvaus} YTOn $ytoKoodi pisteet" -> Some(tuloksetLukuarvoina.map(l => s"${l._1.tulosTekstiFi} = ${l._1.d};${l._2.tulosTekstiFi} = ${l._2.d}")))
+        s"ammatillisen perustutkinnon ${tutkinnonValitsija.lyhytKuvaus} YTOn $ytoKoodi" -> Some(uudetParametrit.map(_.kuvaus).mkString("; ")))
       (tulos.tulos, tilalista, Historia(ITEROIAMMATILLISETYTOOSAALUEET, tulos.tulos, tilalista, Some(kierrostenHistoriatKahdelleParametrille(kierrostenTulokset)), Some(avaimet)))
     }
   }
