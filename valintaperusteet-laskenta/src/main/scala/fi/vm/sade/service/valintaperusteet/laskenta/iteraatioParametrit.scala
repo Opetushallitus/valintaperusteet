@@ -32,7 +32,7 @@ case class AmmatillisenTutkinnonOsat(tutkinnonOsat: Seq[Osasuoritus]) {
 }
 
 case class AmmatillisenTutkinnonYtoOsaAlueenValitsija(ytoKoodi: String, osasuoritus: Osasuoritus, osanIndeksi: Int) extends IteraatioParametri {
-  override val kuvaus: String = s"YTO:n ${ytoKoodi} osa-alue indeksillä ${osanIndeksi}: ${osasuoritus.koulutusmoduulinNimiFi}"
+  override val kuvaus: String = s"YTO:n ${ytoKoodi} osa-alue ${osanIndeksi + 1}: ${osasuoritus.koulutusmoduulinNimiFi}"
   override val lyhytKuvaus: String = s"YTO:n ${ytoKoodi} osa-alue: ${osasuoritus.koulutusmoduulinNimiFi}"
 }
 
