@@ -7,7 +7,7 @@ import java.util.{List => JList}
 import java.util.{Map => JMap}
 
 import fi.vm.sade.kaava.LaskentaTestUtil.TestHakemus
-import fi.vm.sade.kaava.Laskentadomainkonvertteri
+import fi.vm.sade.kaava.{LaskentaTestUtil, Laskentadomainkonvertteri}
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi
 import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakukohde
@@ -117,43 +117,24 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
   }
 
   def createHaeAmmatillinenYtoArvosanaKutsu(konvertteriparametrit: Set[Arvokonvertteriparametri] = Set()): Funktiokutsu = {
-
-    val kutsu: Funktiokutsu = new Funktiokutsu
-    kutsu.setFunktionimi(Funktionimi.HAEAMMATILLINENYTOARVOSANA)
-    kutsu.setArvokonvertteriparametrit(konvertteriparametrit.asJava)
-
-    val viite: ValintaperusteViite = new ValintaperusteViite
-    viite.setTunniste("101054")
-    viite.setIndeksi(0)
-    viite.setLahde(Valintaperustelahde.HAETTAVA_ARVO)
-
-    kutsu.getValintaperusteviitteet.add(viite)
-
-    createAmmatillistenTutkintojenIteroija(kutsu)
+    createAmmatillistenTutkintojenIteroija(
+      LaskentaTestUtil.Funktiokutsu(
+        nimi = Funktionimi.HAEAMMATILLINENYTOARVOSANA,
+        valintaperustetunniste = List(
+          LaskentaTestUtil.ValintaperusteViite(onPakollinen = false, tunniste = "101054"))
+      ))
   }
 
-  def createLaskeAmmatillisenTutkinnonOsienKeskiarvoKutsu(konvertteriparametrit: Set[Arvokonvertteriparametri] = Set()): Funktiokutsu = {
-    val juurikutsu: Funktiokutsu =  new Funktiokutsu
-    juurikutsu.setFunktionimi(Funktionimi.ITEROIAMMATILLISETOSAT)
-
-    val keskiarvokutsu: Funktiokutsu = new Funktiokutsu
-    keskiarvokutsu.setFunktionimi(Funktionimi.PAINOTETTUKESKIARVO)
-
-    val laajuuskutsu: Funktiokutsu = new Funktiokutsu
-    laajuuskutsu.setFunktionimi(Funktionimi.HAEAMMATILLISENOSANLAAJUUS)
-    laajuuskutsu.setArvokonvertteriparametrit(konvertteriparametrit.asJava)
-
-    val arvosanakutsu: Funktiokutsu = new Funktiokutsu
-    arvosanakutsu.setFunktionimi(Funktionimi.HAEAMMATILLISENOSANARVOSANA)
-    arvosanakutsu.setArvokonvertteriparametrit(konvertteriparametrit.asJava)
-
-    juurikutsu.setFunktioargumentit(Collections.singleton(luoFunktioargumentti(keskiarvokutsu, 0)))
-    keskiarvokutsu.setFunktioargumentit(Set(
-      luoFunktioargumentti(laajuuskutsu, 0),
-      luoFunktioargumentti(arvosanakutsu, 1)
-    ).asJava)
-
-    createAmmatillistenTutkintojenIteroija(juurikutsu)
+  def createLaskeAmmatillisenTutkinnonOsienKeskiarvoKutsu(): Funktiokutsu = {
+    createAmmatillistenTutkintojenIteroija(
+      LaskentaTestUtil.Funktiokutsu(
+        nimi = Funktionimi.ITEROIAMMATILLISETOSAT,
+        funktioargumentit = List(
+          LaskentaTestUtil.Funktiokutsu(
+            nimi = Funktionimi.PAINOTETTUKESKIARVO,
+            funktioargumentit = List(
+              LaskentaTestUtil.Funktiokutsu(nimi = Funktionimi.HAEAMMATILLISENOSANLAAJUUS),
+              LaskentaTestUtil.Funktiokutsu(nimi = Funktionimi.HAEAMMATILLISENOSANARVOSANA))))))
   }
 
   def createLaskeAmmatillisenTutkinnonYtoOsaAlueidenKeskiarvo(konvertteriparametrit: Set[Arvokonvertteriparametri] = Set()): Funktiokutsu = {
