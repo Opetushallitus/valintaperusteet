@@ -117,6 +117,7 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
     createAmmatillistenTutkintojenIteroija(
       LaskentaTestUtil.Funktiokutsu(
         nimi = Funktionimi.HAEAMMATILLINENYTOARVOSANA,
+        arvokonvertterit = konvertteriparametrit.toSeq,
         valintaperustetunniste = List(
           LaskentaTestUtil.ValintaperusteViite(onPakollinen = false, tunniste = "101054"))
       ))
