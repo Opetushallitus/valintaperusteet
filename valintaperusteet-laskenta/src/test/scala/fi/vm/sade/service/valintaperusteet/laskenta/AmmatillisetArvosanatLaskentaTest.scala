@@ -11,10 +11,7 @@ import fi.vm.sade.kaava.{LaskentaTestUtil, Laskentadomainkonvertteri}
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi
 import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakukohde
-import fi.vm.sade.service.valintaperusteet.model.Arvokonvertteriparametri
-import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti
-import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu
-import fi.vm.sade.service.valintaperusteet.model.ValintaperusteViite
+import fi.vm.sade.service.valintaperusteet.model.{Arvokonvertteriparametri, Funktioargumentti, Funktiokutsu, TekstiRyhma, ValintaperusteViite}
 import io.circe.Json
 import io.circe.parser
 import org.scalatest.funsuite.AnyFunSuite
@@ -137,106 +134,55 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
               LaskentaTestUtil.Funktiokutsu(nimi = Funktionimi.HAEAMMATILLISENOSANARVOSANA))))))
   }
 
-  def createLaskeAmmatillisenTutkinnonYtoOsaAlueidenKeskiarvo(konvertteriparametrit: Set[Arvokonvertteriparametri] = Set()): Funktiokutsu = {
-    val viite: ValintaperusteViite = new ValintaperusteViite
-    viite.setTunniste("400012")
-    viite.setIndeksi(0)
-    viite.setLahde(Valintaperustelahde.HAETTAVA_ARVO)
-
-    val juurikutsu: Funktiokutsu =  new Funktiokutsu
-    juurikutsu.setFunktionimi(Funktionimi.ITEROIAMMATILLISETYTOOSAALUEET)
-    juurikutsu.getValintaperusteviitteet.add(viite)
-
-    val keskiarvokutsu: Funktiokutsu = new Funktiokutsu
-    keskiarvokutsu.setFunktionimi(Funktionimi.PAINOTETTUKESKIARVO)
-
-    val laajuuskutsu: Funktiokutsu = new Funktiokutsu
-    laajuuskutsu.setFunktionimi(Funktionimi.HAEAMMATILLISENYTOOSAALUEENLAAJUUS)
-    laajuuskutsu.setArvokonvertteriparametrit(konvertteriparametrit.asJava)
-
-    val arvosanakutsu: Funktiokutsu = new Funktiokutsu
-    arvosanakutsu.setFunktionimi(Funktionimi.HAEAMMATILLISENYTOOSAALUEENARVOSANA)
-    arvosanakutsu.setArvokonvertteriparametrit(konvertteriparametrit.asJava)
-
-    juurikutsu.setFunktioargumentit(Collections.singleton(luoFunktioargumentti(keskiarvokutsu, 0)))
-    keskiarvokutsu.setFunktioargumentit(Set(
-      luoFunktioargumentti(laajuuskutsu, 0),
-      luoFunktioargumentti(arvosanakutsu, 1)
-    ).asJava)
-
-    createAmmatillistenTutkintojenIteroija(juurikutsu)
-
+  def createLaskeAmmatillisenTutkinnonYtoOsaAlueidenKeskiarvo(): Funktiokutsu = {
+    createAmmatillistenTutkintojenIteroija(
+      LaskentaTestUtil.Funktiokutsu(
+        nimi = Funktionimi.ITEROIAMMATILLISETYTOOSAALUEET,
+        funktioargumentit = List(
+          LaskentaTestUtil.Funktiokutsu(
+            nimi = Funktionimi.PAINOTETTUKESKIARVO,
+            funktioargumentit = List(
+              LaskentaTestUtil.Funktiokutsu(nimi = Funktionimi.HAEAMMATILLISENYTOOSAALUEENLAAJUUS),
+              LaskentaTestUtil.Funktiokutsu(nimi = Funktionimi.HAEAMMATILLISENYTOOSAALUEENARVOSANA)
+            ))
+        ),
+        valintaperustetunniste = List(LaskentaTestUtil.ValintaperusteViite(onPakollinen = false, tunniste = "400012"))))
   }
 
-  def createHaeAmmatillisenTutkinnonOsienKeskiarvoKutsu(konvertteriparametrit: Set[Arvokonvertteriparametri] = Set()): Funktiokutsu = {
-    val kutsu: Funktiokutsu =  new Funktiokutsu
-    kutsu.setFunktionimi(Funktionimi.HAEAMMATILLISENTUTKINNONKESKIARVO)
-    createAmmatillistenTutkintojenIteroija(kutsu)
+  def createHaeAmmatillisenTutkinnonOsienKeskiarvoKutsu(): Funktiokutsu = {
+    createAmmatillistenTutkintojenIteroija(
+      LaskentaTestUtil.Funktiokutsu(nimi = Funktionimi.HAEAMMATILLISENTUTKINNONKESKIARVO)
+    )
   }
 
   def createHaeAmmatillisenTutkinnonSuoritustapaKutsu(): Funktiokutsu = {
-    val konvetteriParameteriOps = new Arvokonvertteriparametri
-    konvetteriParameteriOps.setArvo("ops")
-    konvetteriParameteriOps.setPaluuarvo("2015")
-    konvetteriParameteriOps.setHylkaysperuste(Boolean.box(false).toString)
-
-    val konvetteriParameteriReformi = new Arvokonvertteriparametri
-    konvetteriParameteriReformi.setArvo("reformi")
-    konvetteriParameteriReformi.setPaluuarvo("2017")
-    konvetteriParameteriReformi.setHylkaysperuste(Boolean.box(false).toString)
-
-    val konvertteriparametrit = Set(konvetteriParameteriOps, konvetteriParameteriReformi)
-
-    val kutsu: Funktiokutsu = new Funktiokutsu
-    kutsu.setArvokonvertteriparametrit(konvertteriparametrit.asJava)
-    kutsu.setFunktionimi(Funktionimi.HAEAMMATILLISENTUTKINNONSUORITUSTAPA)
-    createAmmatillistenTutkintojenIteroija(kutsu)
+    createAmmatillistenTutkintojenIteroija(
+      LaskentaTestUtil.Funktiokutsu(
+        nimi = Funktionimi.HAEAMMATILLISENTUTKINNONSUORITUSTAPA,
+        arvokonvertterit = List(
+          LaskentaTestUtil.Arvokonvertteriparametri(paluuarvo = "2015", arvo = "ops", hylkaysperuste = "false", new TekstiRyhma()),
+          LaskentaTestUtil.Arvokonvertteriparametri(paluuarvo = "2017", arvo = "reformi", hylkaysperuste = "false", new TekstiRyhma())
+        )))
   }
 
   def createAmmatillinenYtoArviointiAsteikkoKutsu(parametri: String): Funktiokutsu = {
-    val kutsu: Funktiokutsu = new Funktiokutsu
-    kutsu.setFunktionimi(Funktionimi.HAEAMMATILLINENYTOARVIOINTIASTEIKKO)
-
-    val viite: ValintaperusteViite = new ValintaperusteViite
-    viite.setTunniste(parametri)
-    viite.setIndeksi(0)
-    viite.setLahde(Valintaperustelahde.HAETTAVA_ARVO)
-
-    kutsu.getValintaperusteviitteet.add(viite)
-
-    val konvetteriParameteri1_5 = new Arvokonvertteriparametri
-    konvetteriParameteri1_5.setArvo("arviointiasteikkoammatillinen15")
-    konvetteriParameteri1_5.setPaluuarvo("5")
-    konvetteriParameteri1_5.setHylkaysperuste(Boolean.box(false).toString)
-
-    val konvetteriParameteri1_3 = new Arvokonvertteriparametri
-    konvetteriParameteri1_3.setArvo("arviointiasteikkoammatillinent1k3")
-    konvetteriParameteri1_3.setPaluuarvo("3")
-    konvetteriParameteri1_3.setHylkaysperuste(Boolean.box(false).toString)
-
-    kutsu.setArvokonvertteriparametrit(Set(konvetteriParameteri1_5, konvetteriParameteri1_3).asJava)
-
-    createAmmatillistenTutkintojenIteroija(kutsu)
+    createAmmatillistenTutkintojenIteroija(
+      LaskentaTestUtil.Funktiokutsu(
+        nimi = Funktionimi.HAEAMMATILLINENYTOARVIOINTIASTEIKKO,
+        valintaperustetunniste = List(LaskentaTestUtil.ValintaperusteViite(onPakollinen = false, tunniste = parametri)),
+        arvokonvertterit = List(
+          LaskentaTestUtil.Arvokonvertteriparametri(paluuarvo = "5", arvo = "arviointiasteikkoammatillinen15", hylkaysperuste = "false", new TekstiRyhma()),
+          LaskentaTestUtil.Arvokonvertteriparametri(paluuarvo = "3", arvo = "arviointiasteikkoammatillinent1k3", hylkaysperuste = "false", new TekstiRyhma())
+        )))
   }
 
-  private def createAmmatillistenTutkintojenIteroija(lapsi: Funktiokutsu): Funktiokutsu = {
-    val juurikutsu: Funktiokutsu =  new Funktiokutsu
-    juurikutsu.setFunktionimi(Funktionimi.ITEROIAMMATILLISETTUTKINNOT)
-
-    val maksimi: Funktiokutsu = new Funktiokutsu
-    maksimi.setFunktionimi(Funktionimi.MAKSIMI)
-
-    maksimi.setFunktioargumentit(Collections.singleton(luoFunktioargumentti(lapsi, 0)))
-
-    juurikutsu.setFunktioargumentit(Collections.singleton(luoFunktioargumentti(maksimi, 0)))
-    juurikutsu
-  }
-
-  private def luoFunktioargumentti(kutsu: Funktiokutsu, argumentinIndeksi: Int): Funktioargumentti = {
-    val a = new Funktioargumentti
-    a.setIndeksi(argumentinIndeksi)
-    a.setFunktiokutsuChild(kutsu)
-    a
+  def createAmmatillistenTutkintojenIteroija(lapsi: Funktiokutsu): Funktiokutsu = {
+    LaskentaTestUtil.Funktiokutsu(
+      nimi = Funktionimi.ITEROIAMMATILLISETTUTKINNOT,
+      funktioargumentit = List(
+        LaskentaTestUtil.Funktiokutsu(
+          nimi = Funktionimi.MAKSIMI,
+          funktioargumentit = List(lapsi))))
   }
 
   private def loadJson(path: String): Json = {
