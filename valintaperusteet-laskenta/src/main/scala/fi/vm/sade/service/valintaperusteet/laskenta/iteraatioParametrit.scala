@@ -41,3 +41,11 @@ case class AmmatillisenTutkinnonYtoOsaAlueet(ytoKoodi: String, tutkinnonOsaAluee
     x => AmmatillisenTutkinnonYtoOsaAlueenValitsija(ytoKoodi, x._1, x._2)
   )
 }
+
+case class LaskennanIteraatioParametrit(parametriListat: Map[Class[_ <: IteraatioParametri], Seq[IteraatioParametri]] = Map(),
+                                        ammatillisenPerustutkinnonValitsija: Option[AmmatillisenPerustutkinnonValitsija] = None,
+                                        ammatillisenTutkinnonOsanValitsija: Option[AmmatillisenTutkinnonOsanValitsija] = None,
+                                        ammatillisenTutkinnonYtoOsaAlueenValitsija: Option[AmmatillisenTutkinnonYtoOsaAlueenValitsija] = None) {
+  val asList: Seq[IteraatioParametri] = ammatillisenPerustutkinnonValitsija.toList ++ ammatillisenTutkinnonOsanValitsija.toList ++ ammatillisenTutkinnonYtoOsaAlueenValitsija.toList
+  val nonEmpty: Boolean = ammatillisenTutkinnonYtoOsaAlueenValitsija.isDefined || ammatillisenTutkinnonOsanValitsija.isDefined || ammatillisenTutkinnonYtoOsaAlueenValitsija.isDefined
+}

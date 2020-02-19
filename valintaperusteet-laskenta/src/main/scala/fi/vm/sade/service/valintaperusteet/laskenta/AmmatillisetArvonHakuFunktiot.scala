@@ -21,7 +21,7 @@ import fi.vm.sade.service.valintaperusteet.laskenta.koski.YhteisetTutkinnonOsat
 trait AmmatillisetArvonHakuFunktiot {
     this: LukuarvoLaskin =>
 
-  protected def haeAmmatillinenYtoArvosana(iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri],
+  protected def haeAmmatillinenYtoArvosana(iteraatioParametrit: LaskennanIteraatioParametrit,
                                            f: HaeAmmatillinenYtoArvosana,
                                            konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]],
                                            oletusarvo: Option[BigDecimal],
@@ -45,7 +45,7 @@ trait AmmatillisetArvonHakuFunktiot {
   }
 
 
-  protected def haeAmmatillinenYtoArviointiAsteikko(iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri],
+  protected def haeAmmatillinenYtoArviointiAsteikko(iteraatioParametrit: LaskennanIteraatioParametrit,
                                                     f: HaeAmmatillinenYtoArviointiAsteikko,
                                                     konvertteri: Konvertteri[String, BigDecimal],
                                                     oletusarvo: Option[BigDecimal],
@@ -66,7 +66,7 @@ trait AmmatillisetArvonHakuFunktiot {
     (tulos, tilalista, uusiHistoria)
   }
 
-  protected def haeAmmatillisenTutkinnonOsanLaajuus(iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri],
+  protected def haeAmmatillisenTutkinnonOsanLaajuus(iteraatioParametrit: LaskennanIteraatioParametrit,
                                                     f: HaeAmmatillisenTutkinnonOsanLaajuus,
                                                     konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]],
                                                     oletusarvo: Option[BigDecimal]
@@ -92,7 +92,7 @@ trait AmmatillisetArvonHakuFunktiot {
     (tulos, tilalista, uusiHistoria)
   }
 
-  protected def haeAmmatillisenTutkinnonOsanArvosana(iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri],
+  protected def haeAmmatillisenTutkinnonOsanArvosana(iteraatioParametrit: LaskennanIteraatioParametrit,
                                                      f: HaeAmmatillisenTutkinnonOsanArvosana,
                                                      konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]]
                                                     ): (Option[BigDecimal], List[Tila], Historia) = {
@@ -116,7 +116,7 @@ trait AmmatillisetArvonHakuFunktiot {
     (tulos, tilalista, uusiHistoria)
   }
 
-  protected def haeAmmatillisenTutkinnonYtoOsaAlueenLaajuus(iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri],
+  protected def haeAmmatillisenTutkinnonYtoOsaAlueenLaajuus(iteraatioParametrit: LaskennanIteraatioParametrit,
                                                             f: HaeAmmatillisenTutkinnonYtoOsaAlueenLaajuus,
                                                             konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]],
                                                             oletusarvo: Option[BigDecimal]
@@ -142,7 +142,7 @@ trait AmmatillisetArvonHakuFunktiot {
     (tulos, tilalista, uusiHistoria)
   }
 
-  protected def haeAmmatillisenTutkinnonYtoOsaAlueenArvosana(iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri],
+  protected def haeAmmatillisenTutkinnonYtoOsaAlueenArvosana(iteraatioParametrit: LaskennanIteraatioParametrit,
                                                              f: HaeAmmatillisenTutkinnonYtoOsaAlueenArvosana,
                                                              konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]],
                                                              oletusarvo: Option[BigDecimal]
@@ -169,7 +169,7 @@ trait AmmatillisetArvonHakuFunktiot {
   }
 
 
-  protected def haeAmmatillisenTutkinnonKeskiarvo(iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri],
+  protected def haeAmmatillisenTutkinnonKeskiarvo(iteraatioParametrit: LaskennanIteraatioParametrit,
                                                   f: HaeAmmatillisenTutkinnonKeskiarvo,
                                                   konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]]
                                                  ): (Option[BigDecimal], List[Tila], Historia) = {
@@ -190,7 +190,7 @@ trait AmmatillisetArvonHakuFunktiot {
   }
 
 
-  protected def haeAmmatillisenTutkinnonSuoritustapa(iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri],
+  protected def haeAmmatillisenTutkinnonSuoritustapa(iteraatioParametrit: LaskennanIteraatioParametrit,
                                                      f: HaeAmmatillisenTutkinnonSuoritustapa,
                                                      konvertteri: Konvertteri[String, BigDecimal],
                                                      oletusarvo: Option[BigDecimal]

@@ -20,12 +20,11 @@ import scala.collection.immutable.ListMap
 trait AmmatillisetIterointiFunktiot {
   this: LukuarvoLaskin =>
 
-  protected def iteroiAmmatillisetTutkinnot(iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri],
+  protected def iteroiAmmatillisetTutkinnot(iteraatioParametrit: LaskennanIteraatioParametrit,
                                             f: Lukuarvofunktio with Laskenta.KoostavaFunktio[BigDecimal] with KloonattavaFunktio[BigDecimal, Lukuarvofunktio, Laskenta.KoostavaFunktio[BigDecimal]]
                                            ): (Option[BigDecimal], List[Tila], Historia) = {
-    val ammatillisenPerustutkinnonValitsija = iteraatioParametrit.get(classOf[AmmatillisenPerustutkinnonValitsija])
-    if (ammatillisenPerustutkinnonValitsija.exists(p => p.isInstanceOf[AmmatillisenPerustutkinnonValitsija])) {
-      throw new IllegalStateException(s"Ei voi iteroida iteraatioparametrilla $ammatillisenPerustutkinnonValitsija uudestaan ammatillisten tutkintojen yli")
+    if (iteraatioParametrit.ammatillisenPerustutkinnonValitsija.isDefined) {
+      throw new IllegalStateException(s"Ei voi iteroida iteraatioparametrilla ${iteraatioParametrit.ammatillisenPerustutkinnonValitsija} uudestaan ammatillisten tutkintojen yli")
     } else {
       val tutkinnot: Seq[Tutkinto] = KoskiLaskenta.etsiAmmatillisetTutkinnot(laskin.hakemus)
       val tutkintojenMaara = tutkinnot.size
@@ -34,7 +33,7 @@ trait AmmatillisetIterointiFunktiot {
       val tutkintojenIterointiParametrit: Seq[AmmatillisenPerustutkinnonValitsija] = AmmatillisetPerustutkinnot(tutkinnot).parametreiksi
 
       val kierrostenTulokset: Seq[(AmmatillisenPerustutkinnonValitsija, Tulos[BigDecimal])] = tutkintojenIterointiParametrit.
-        map(parametri => (parametri, laskeLukuarvo(f, iteraatioParametrit ++ Map(classOf[AmmatillisenPerustutkinnonValitsija] -> parametri))))
+        map(parametri => (parametri, laskeLukuarvo(f, iteraatioParametrit.copy(ammatillisenPerustutkinnonValitsija = Some(parametri)))))
       val tuloksetLukuarvoina: Seq[Lukuarvo] = kierrostenTulokset.flatMap {
         case (parametri, Tulos(Some(lukuarvo), _, historia)) =>
           Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} ${IteroiAmmatillisetTutkinnot.getClass.getSimpleName}-laskennan historia: ${LaskentaUtil.prettyPrint(historia)}")
@@ -56,7 +55,7 @@ trait AmmatillisetIterointiFunktiot {
       val tulos: Tulos[BigDecimal] = if (tuloksetLukuarvoina.nonEmpty) {
         try {
           val iteroidutTuloksetKasittelevaKlooni = f.kloonaa(tuloksetLukuarvoina).asInstanceOf[Lukuarvofunktio]
-          laskeLukuarvo(iteroidutTuloksetKasittelevaKlooni, Map())
+          laskeLukuarvo(iteroidutTuloksetKasittelevaKlooni, LaskennanIteraatioParametrit())
         } catch {
           case e: ClassCastException =>
             Laskin.LOG.error(s"${classOf[IteroiAmmatillisetTutkinnot].getSimpleName} -funktion funktioargumenttina tulee olla " +
@@ -76,7 +75,7 @@ trait AmmatillisetIterointiFunktiot {
     }
   }
 
-  protected def iteroiAmmatillisetTutkinnonOsat(iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri],
+  protected def iteroiAmmatillisetTutkinnonOsat(iteraatioParametrit: LaskennanIteraatioParametrit,
                                                 f: IteroiAmmatillisetTutkinnonOsat,
                                                 lapsiF: Lukuarvofunktio with KloonattavaFunktio[BigDecimal, _, Funktio[BigDecimal]]
                                                ): (Option[BigDecimal], List[Tila], Historia) = {
@@ -87,9 +86,8 @@ trait AmmatillisetIterointiFunktiot {
     }
     val tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija = ammatillisenTutkinnonValitsija(iteraatioParametrit, f)
 
-    val tutkinnonOsanValitsija = iteraatioParametrit.get(classOf[AmmatillisenTutkinnonOsanValitsija])
-    if (tutkinnonOsanValitsija.exists(p => p.isInstanceOf[AmmatillisenTutkinnonOsanValitsija])) {
-      throw new IllegalStateException(s"Ei voi iteroida iteraatioparametrilla $tutkinnonOsanValitsija uudestaan ammatillisen tutkinnon osien yli")
+    if (iteraatioParametrit.ammatillisenTutkinnonOsanValitsija.isDefined) {
+      throw new IllegalStateException(s"Ei voi iteroida iteraatioparametrilla ${iteraatioParametrit.ammatillisenTutkinnonOsanValitsija} uudestaan ammatillisen tutkinnon osien yli")
     } else {
       val tutkinnonOsat: Seq[Osasuoritus] = KoskiLaskenta.etsiAmmatillisenTutkinnonOsat(tutkinnonValitsija, laskin.hakemus)
       val osienMaara = tutkinnonOsat.size
@@ -99,7 +97,7 @@ trait AmmatillisetIterointiFunktiot {
 
       val kierrostenTulokset: Seq[(AmmatillisenTutkinnonOsanValitsija, (Tulos[BigDecimal], Tulos[BigDecimal]))] = tutkinnonOsienIterointiParametrit.
         map(parametri => {
-          val parametritLapsille = iteraatioParametrit ++ Map(classOf[AmmatillisenTutkinnonOsanValitsija] -> parametri)
+          val parametritLapsille = iteraatioParametrit.copy(ammatillisenTutkinnonOsanValitsija = Some(parametri))
           val tulos1 = laskeLukuarvo(lapsiFunktio.argumentit.head._1, parametritLapsille)
           val tulos2 = laskeLukuarvo(lapsiFunktio.argumentit.head._2, parametritLapsille)
 
@@ -122,7 +120,7 @@ trait AmmatillisetIterointiFunktiot {
       val tulos: Tulos[BigDecimal] = if (tuloksetLukuarvoina.nonEmpty) {
         try {
           val iteroidutTuloksetKasittelevaKlooni = lapsiFunktio.kloonaa(tuloksetLukuarvoina).asInstanceOf[Lukuarvofunktio]
-          laskeLukuarvo(iteroidutTuloksetKasittelevaKlooni, Map())
+          laskeLukuarvo(iteroidutTuloksetKasittelevaKlooni, LaskennanIteraatioParametrit())
         } catch {
           case e: ClassCastException =>
             Laskin.LOG.error(s"${classOf[IteroiAmmatillisetTutkinnonOsat].getSimpleName} -funktion funktioargumenttina tulee olla " +
@@ -141,7 +139,7 @@ trait AmmatillisetIterointiFunktiot {
     }
   }
 
-  protected def iteroiAmmatillisenTutkinnonYtoOsaAlueet(iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri],
+  protected def iteroiAmmatillisenTutkinnonYtoOsaAlueet(iteraatioParametrit: LaskennanIteraatioParametrit,
                                                       f: IteroiAmmatillisenTutkinnonYtoOsaAlueet,
                                                       lapsiF: Lukuarvofunktio with KloonattavaFunktio[BigDecimal, _, Funktio[BigDecimal]]
                                                      ): (Option[BigDecimal], List[Tila], Historia) = {
@@ -152,9 +150,8 @@ trait AmmatillisetIterointiFunktiot {
     }
     val tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija = ammatillisenTutkinnonValitsija(iteraatioParametrit, f)
 
-    val tutkinnonYtoOsaAlueenValitsija = iteraatioParametrit.get(classOf[AmmatillisenTutkinnonYtoOsaAlueenValitsija])
-    if (tutkinnonYtoOsaAlueenValitsija.exists(p => p.isInstanceOf[AmmatillisenTutkinnonYtoOsaAlueenValitsija])) {
-      throw new IllegalStateException(s"Ei voi iteroida iteraatioparametrilla $tutkinnonYtoOsaAlueenValitsija uudestaan ammatillisen tutkinnon osien yli")
+    if (iteraatioParametrit.ammatillisenTutkinnonYtoOsaAlueenValitsija.isDefined) {
+      throw new IllegalStateException(s"Ei voi iteroida iteraatioparametrilla ${iteraatioParametrit.ammatillisenTutkinnonYtoOsaAlueenValitsija} uudestaan ammatillisen tutkinnon osien yli")
     } else {
       val ytoKoodi = f.valintaperusteviite.tunniste
       val ytoOsaAlueet = KoskiLaskenta.haeAmmatillisenTutkinnonYtoOsaAlueet(tutkinnonValitsija, ytoKoodi, laskin.hakemus)
@@ -165,7 +162,7 @@ trait AmmatillisetIterointiFunktiot {
 
       val kierrostenTulokset: Seq[(AmmatillisenTutkinnonYtoOsaAlueenValitsija, (Tulos[BigDecimal], Tulos[BigDecimal]))] = uudetParametrit.
         map(parametri => {
-          val parametritLapsille = iteraatioParametrit ++ Map(classOf[AmmatillisenTutkinnonYtoOsaAlueenValitsija] -> parametri)
+          val parametritLapsille = iteraatioParametrit.copy(ammatillisenTutkinnonYtoOsaAlueenValitsija = Some(parametri))
           val tulos1 = laskeLukuarvo(lapsiFunktio.argumentit.head._1, parametritLapsille)
           val tulos2 = laskeLukuarvo(lapsiFunktio.argumentit.head._2, parametritLapsille)
 
@@ -188,7 +185,7 @@ trait AmmatillisetIterointiFunktiot {
       val tulos: Tulos[BigDecimal] = if (tuloksetLukuarvoina.nonEmpty) {
         try {
           val iteroidutTuloksetKasittelevaKlooni = lapsiFunktio.kloonaa(tuloksetLukuarvoina).asInstanceOf[Lukuarvofunktio]
-          laskeLukuarvo(iteroidutTuloksetKasittelevaKlooni, Map())
+          laskeLukuarvo(iteroidutTuloksetKasittelevaKlooni, LaskennanIteraatioParametrit())
         } catch {
           case e: ClassCastException =>
             Laskin.LOG.error(s"${classOf[IteroiAmmatillisenTutkinnonYtoOsaAlueet].getSimpleName} -funktion funktioargumenttina tulee olla " +

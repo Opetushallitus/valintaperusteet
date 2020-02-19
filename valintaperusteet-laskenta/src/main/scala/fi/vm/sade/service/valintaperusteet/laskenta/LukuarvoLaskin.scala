@@ -101,7 +101,7 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
   private val ONE: BigDecimal = BigDecimal("1.0")
   private val TWO: BigDecimal = BigDecimal("2.0")
 
-  protected[laskenta] def laskeLukuarvo(laskettava: Lukuarvofunktio, iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri]): Tulos[BigDecimal] = {
+  protected[laskenta] def laskeLukuarvo(laskettava: Lukuarvofunktio, iteraatioParametrit: LaskennanIteraatioParametrit): Tulos[BigDecimal] = {
 
     def summa(vals: Seq[BigDecimal]): BigDecimal = vals.sum
     def tulo(vals: Seq[BigDecimal]): BigDecimal = vals.product
@@ -507,13 +507,13 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
     Tulos(laskettuTulos, palautettavaTila(tilat), historia)
   }
 
-  private def avaimetHistoriastaIteraatioparametrienKanssa(iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri], h: Historia): Map[String, Option[Any]] = {
+  private def avaimetHistoriastaIteraatioparametrienKanssa(iteraatioParametrit: LaskennanIteraatioParametrit, h: Historia): Map[String, Option[Any]] = {
     h.avaimet.getOrElse(Map[String, Option[Any]]().map(kv => (kv._1 + iteraatioParametriTiedotMerkkijono(iteraatioParametrit), kv._2)))
   }
 
-  private def iteraatioParametriTiedotMerkkijono(iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri]): String = {
+  private def iteraatioParametriTiedotMerkkijono(iteraatioParametrit: LaskennanIteraatioParametrit): String = {
     if (iteraatioParametrit.nonEmpty) {
-      s" (${iteraatioParametrit.toList.map(_._2.lyhytKuvaus).mkString(" / ")})"
+      s" (${iteraatioParametrit.asList.map(_.lyhytKuvaus).mkString(" / ")})"
     } else {
       ""
     }

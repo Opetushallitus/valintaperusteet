@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.laskenta
 
+import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.IteroiAmmatillisenTutkinnonYtoOsaAlueet
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.IteroiAmmatillisetTutkinnonOsat
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.IteroiAmmatillisetTutkinnot
 
@@ -17,24 +18,23 @@ trait IteraatioParametriFunktiot {
       map(formatoi)
   }
 
-  protected def ammatillisenTutkinnonValitsija(iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri], f: Funktio[_]): AmmatillisenPerustutkinnonValitsija = {
-    haeIteraatioParametri(iteraatioParametrit, f, classOf[AmmatillisenPerustutkinnonValitsija], classOf[IteroiAmmatillisetTutkinnot])
+  protected def ammatillisenTutkinnonValitsija(iteraatioParametrit: LaskennanIteraatioParametrit, f: Funktio[_]): AmmatillisenPerustutkinnonValitsija = {
+    palautaParametriTaiIlmoitaVirhe(f, classOf[AmmatillisenPerustutkinnonValitsija], classOf[IteroiAmmatillisetTutkinnot], iteraatioParametrit.ammatillisenPerustutkinnonValitsija)
   }
 
-  protected def ammatillisenTutkinnonOsanValitsija(iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri], f: Funktio[_]): AmmatillisenTutkinnonOsanValitsija = {
-    haeIteraatioParametri(iteraatioParametrit, f, classOf[AmmatillisenTutkinnonOsanValitsija], classOf[IteroiAmmatillisetTutkinnonOsat])
+  protected def ammatillisenTutkinnonOsanValitsija(iteraatioParametrit: LaskennanIteraatioParametrit, f: Funktio[_]): AmmatillisenTutkinnonOsanValitsija = {
+    palautaParametriTaiIlmoitaVirhe(f, classOf[AmmatillisenTutkinnonOsanValitsija], classOf[IteroiAmmatillisetTutkinnonOsat], iteraatioParametrit.ammatillisenTutkinnonOsanValitsija)
   }
 
-  protected def ammatillisenYtonOsaAlueenValitsija(iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri], f: Funktio[_]): AmmatillisenTutkinnonYtoOsaAlueenValitsija = {
-    haeIteraatioParametri(iteraatioParametrit, f, classOf[AmmatillisenTutkinnonYtoOsaAlueenValitsija], classOf[IteroiAmmatillisetTutkinnonOsat])
+  protected def ammatillisenYtonOsaAlueenValitsija(iteraatioParametrit: LaskennanIteraatioParametrit, f: Funktio[_]): AmmatillisenTutkinnonYtoOsaAlueenValitsija = {
+    palautaParametriTaiIlmoitaVirhe(f, classOf[AmmatillisenTutkinnonYtoOsaAlueenValitsija], classOf[IteroiAmmatillisenTutkinnonYtoOsaAlueet], iteraatioParametrit.ammatillisenTutkinnonYtoOsaAlueenValitsija)
   }
 
-  protected def haeIteraatioParametri[T <: IteraatioParametri](iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri],
-                                                             f: Funktio[_],
-                                                             parametrinTyppi: Class[T],
-                                                             iterointifunktionTyyppi: Class[_ <: Funktio[_]]
-                                                            ): T = {
-    val iteraatioParametri = iteraatioParametrit.get(parametrinTyppi)
+  private def palautaParametriTaiIlmoitaVirhe[T <: IteraatioParametri](f: Funktio[_],
+                                                                       parametrinTyppi: Class[T],
+                                                                       iterointifunktionTyyppi: Class[_ <: Funktio[_]],
+                                                                       iteraatioParametri: Option[IteraatioParametri]
+                                                                      ): T = {
     iteraatioParametri match {
       case Some(p) if p.getClass == parametrinTyppi => p.asInstanceOf[T]
       case Some(x) => throw new IllegalArgumentException(s"Vääräntyyppinen iteraatioparametri $x ; piti olla $parametrinTyppi")

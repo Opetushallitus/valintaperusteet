@@ -47,7 +47,7 @@ import scala.collection.mutable.ListBuffer
 protected[laskenta] class TotuusarvoLaskin(private val laskin: Laskin) extends LaskinFunktiot {
   private val HUNDRED: BigDecimal = BigDecimal("100.0")
 
-  protected[laskenta] def laskeTotuusarvo(laskettava: Totuusarvofunktio, iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri]): Tulos[Boolean] = {
+  protected[laskenta] def laskeTotuusarvo(laskettava: Totuusarvofunktio, iteraatioParametrit: LaskennanIteraatioParametrit): Tulos[Boolean] = {
 
     def muodostaKoostettuTulos(fs: Seq[Totuusarvofunktio], trans: Seq[Boolean] => Boolean) = {
       val (tulokset, tilat, historiat) = fs.reverse.foldLeft((Nil, Nil, ListBuffer()): (List[Option[Boolean]], List[Tila], ListBuffer[Historia]))((lst, f) => {
@@ -71,7 +71,7 @@ protected[laskenta] class TotuusarvoLaskin(private val laskin: Laskin) extends L
       }
     }
 
-    def muodostaVertailunTulos(f1: Lukuarvofunktio, f2: Lukuarvofunktio, trans: (BigDecimal, BigDecimal) => Boolean, iteraatioParametrit: Map[Class[_ <: IteraatioParametri], IteraatioParametri]) = {
+    def muodostaVertailunTulos(f1: Lukuarvofunktio, f2: Lukuarvofunktio, trans: (BigDecimal, BigDecimal) => Boolean, iteraatioParametrit: LaskennanIteraatioParametrit) = {
       val tulos1 = new LukuarvoLaskin(laskin).laskeLukuarvo(f1, iteraatioParametrit)
       val tulos2 = new LukuarvoLaskin(laskin).laskeLukuarvo(f2, iteraatioParametrit)
       val tulos = for {

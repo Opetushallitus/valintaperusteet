@@ -52,7 +52,7 @@ object Laskin {
     val laskin: Laskin = createLaskin(hakukohde, hakemus, kaikkiHakemukset)
     val lukuarvoLaskin: LukuarvoLaskin = new LukuarvoLaskin(laskin)
 
-    lukuarvoLaskin.laskeLukuarvo(laskettava, Map()) match {
+    lukuarvoLaskin.laskeLukuarvo(laskettava, LaskennanIteraatioParametrit()) match {
       case Tulos(tulos, tila, historia) =>
         new Laskentatulos[JBigDecimal](tila, if (tulos.isEmpty) null else tulos.get.underlying,
           String.valueOf(Json.toJson(wrapHistoria(hakemus, historia))),
@@ -76,7 +76,7 @@ object Laskin {
     val laskin: Laskin = createLaskin(hakukohde, hakemus, kaikkiHakemukset)
     val totuusarvoLaskin: TotuusarvoLaskin = new TotuusarvoLaskin(laskin)
 
-    totuusarvoLaskin.laskeTotuusarvo(laskettava, Map()) match {
+    totuusarvoLaskin.laskeTotuusarvo(laskettava, LaskennanIteraatioParametrit()) match {
       case Tulos(tulos, tila, historia) =>
         new Laskentatulos[JBoolean](tila, if (tulos.isEmpty) null else Boolean.box(tulos.get),
           String.valueOf(Json.toJson(wrapHistoria(hakemus, historia))),
@@ -117,14 +117,14 @@ object Laskin {
   def laske(hakukohde: Hakukohde, hakemus: Hakemus, laskettava: Totuusarvofunktio): (Option[Boolean], Tila) = {
     val laskin = new Laskin(hakukohde, hakemus)
     val totuusarvoLaskin = new TotuusarvoLaskin(laskin)
-    val tulos = totuusarvoLaskin.laskeTotuusarvo(laskettava, Map())
+    val tulos = totuusarvoLaskin.laskeTotuusarvo(laskettava, LaskennanIteraatioParametrit())
     (tulos.tulos, tulos.tila)
   }
 
   def laske(hakukohde: Hakukohde, hakemus: Hakemus, laskettava: Lukuarvofunktio): (Option[JBigDecimal], Tila) = {
     val laskin = new Laskin(hakukohde, hakemus)
     val lukuarvoLaskin = new LukuarvoLaskin(laskin)
-    val tulos = lukuarvoLaskin.laskeLukuarvo(laskettava, Map())
+    val tulos = lukuarvoLaskin.laskeLukuarvo(laskettava, LaskennanIteraatioParametrit())
     (tulos.tulos.map(_.underlying()), tulos.tila)
   }
 
