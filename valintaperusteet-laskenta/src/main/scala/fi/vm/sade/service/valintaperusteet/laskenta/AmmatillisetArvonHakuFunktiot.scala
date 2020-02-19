@@ -137,7 +137,7 @@ trait AmmatillisetArvonHakuFunktiot {
       tilalista,
       None,
       Some(Map(
-        s"""Ammatillisen perustutkinnon "${tutkinnonValitsija.lyhytKuvaus}" osan "${ytoOsaAlueenValitsija.lyhytKuvaus}" laajuus""" -> laajuusKoskessa,
+        s"""Ammatillisen perustutkinnon "${tutkinnonValitsija.lyhytKuvaus}" "${ytoOsaAlueenValitsija.lyhytKuvaus}" laajuus""" -> laajuusKoskessa,
       )))
     (tulos, tilalista, uusiHistoria)
   }
@@ -163,7 +163,7 @@ trait AmmatillisetArvonHakuFunktiot {
       tilalista,
       None,
       Some(Map(
-        s"""Ammatillisen perustutkinnon "${tutkinnonValitsija.lyhytKuvaus}" osan "${ytoOsaAlueenValitsija.lyhytKuvaus}" arvosana""" -> arvosanaKoskessa,
+        s"""Ammatillisen perustutkinnon "${tutkinnonValitsija.lyhytKuvaus}" "${ytoOsaAlueenValitsija.lyhytKuvaus}" arvosana""" -> arvosanaKoskessa,
       )))
     (tulos, tilalista, uusiHistoria)
   }
