@@ -46,6 +46,18 @@ case class LaskennanIteraatioParametrit(parametriListat: Map[Class[_ <: Iteraati
                                         ammatillisenPerustutkinnonValitsija: Option[AmmatillisenPerustutkinnonValitsija] = None,
                                         ammatillisenTutkinnonOsanValitsija: Option[AmmatillisenTutkinnonOsanValitsija] = None,
                                         ammatillisenTutkinnonYtoOsaAlueenValitsija: Option[AmmatillisenTutkinnonYtoOsaAlueenValitsija] = None) {
-  val asList: Seq[IteraatioParametri] = ammatillisenPerustutkinnonValitsija.toList ++ ammatillisenTutkinnonOsanValitsija.toList ++ ammatillisenTutkinnonYtoOsaAlueenValitsija.toList
   val nonEmpty: Boolean = ammatillisenTutkinnonYtoOsaAlueenValitsija.isDefined || ammatillisenTutkinnonOsanValitsija.isDefined || ammatillisenTutkinnonYtoOsaAlueenValitsija.isDefined
+  val asList: Seq[IteraatioParametri] = ammatillisenPerustutkinnonValitsija.toList ++ ammatillisenTutkinnonOsanValitsija.toList ++ ammatillisenTutkinnonYtoOsaAlueenValitsija.toList
+
+  def sisaltaa[T <: IteraatioParametri](parametrinTyyppi: Class[T]): Boolean = parametriListat.get(parametrinTyyppi).isDefined
+
+  def parametriLista[T <: IteraatioParametri](tyyppi: Class[T]): Seq[T] = parametriListat.getOrElse(tyyppi, Nil).asInstanceOf[Seq[T]]
+
+  def sidoAmmatillisenPerustutkinnonValitsija(parametri: AmmatillisenPerustutkinnonValitsija): LaskennanIteraatioParametrit = {
+    copy(ammatillisenPerustutkinnonValitsija = Some(parametri), parametriListat = listatIlman(classOf[AmmatillisenPerustutkinnonValitsija]))
+  }
+
+  private def listatIlman[T <: IteraatioParametri](poistettavaTyyppi: Class[T]): Map[Class[_ <: IteraatioParametri], Seq[IteraatioParametri]] = {
+    parametriListat.filter(kv => kv._1 != poistettavaTyyppi)
+  }
 }

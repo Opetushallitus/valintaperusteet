@@ -31,47 +31,18 @@ trait AmmatillisetIterointiFunktiot {
       Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} hakijalle löytyi $tutkintojenMaara ammatillista perustutkintoa.")
 
       val tutkintojenIterointiParametrit: Seq[AmmatillisenPerustutkinnonValitsija] = AmmatillisetPerustutkinnot(tutkinnot).parametreiksi
+      val uudetIteraatioParametrit = iteraatioParametrit.copy(parametriListat = iteraatioParametrit.parametriListat.updated(classOf[AmmatillisenPerustutkinnonValitsija], tutkintojenIterointiParametrit))
 
-      val kierrostenTulokset: Seq[(AmmatillisenPerustutkinnonValitsija, Tulos[BigDecimal])] = tutkintojenIterointiParametrit.
-        map(parametri => (parametri, laskeLukuarvo(f, iteraatioParametrit.copy(ammatillisenPerustutkinnonValitsija = Some(parametri)))))
-      val tuloksetLukuarvoina: Seq[Lukuarvo] = kierrostenTulokset.flatMap {
-        case (parametri, Tulos(Some(lukuarvo), _, historia)) =>
-          Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} ${IteroiAmmatillisetTutkinnot.getClass.getSimpleName}-laskennan historia: ${LaskentaUtil.prettyPrint(historia)}")
-          val ammatillisenHistorianTiivistelma: Seq[String] = tiivistelmaAmmatillisistaFunktioista(historia)
+      val tulos: Tulos[BigDecimal] = laskeLukuarvo(f, uudetIteraatioParametrit)
 
-          Some(Lukuarvo(lukuarvo, tulosTekstiFi = s"Arvo parametrilla '${parametri.kuvaus}' == $lukuarvo, historia: $ammatillisenHistorianTiivistelma"))
-        case (parametri, tulos) =>
-          Laskin.LOG.debug(s"Tyhjä tulos $tulos funktiosta $f parametrilla $parametri")
-          None
-      }
-
-      val tiivistelmaLista = kierrostenTulokset.flatMap {
-        case (parametri, Tulos(Some(lukuarvo), _, _)) =>
-          Map(s"${classOf[IteroiAmmatillisetTutkinnot].getSimpleName} parametrilla ${parametri.lyhytKuvaus}" -> Some(lukuarvo))
-        case _ => Map()
-      }
-      val ammatillistenFunktioidenTulostenTiivistelmat: ListMap[String, Option[Any]] = tallennetutTuloksetHistoriaaVarten ++ ListMap(tiivistelmaLista : _*)
-
-      val tulos: Tulos[BigDecimal] = if (tuloksetLukuarvoina.nonEmpty) {
-        try {
-          val iteroidutTuloksetKasittelevaKlooni = f.kloonaa(tuloksetLukuarvoina).asInstanceOf[Lukuarvofunktio]
-          laskeLukuarvo(iteroidutTuloksetKasittelevaKlooni, LaskennanIteraatioParametrit())
-        } catch {
-          case e: ClassCastException =>
-            Laskin.LOG.error(s"${classOf[IteroiAmmatillisetTutkinnot].getSimpleName} -funktion funktioargumenttina tulee olla " +
-              s"kloonattava funktio, kuten maksimi, mutta oli $f", e)
-            throw e
-        }
-      } else {
-        Tulos(None, new Hyvaksyttavissatila, Historia(ITEROIAMMATILLISETTUTKINNOT, None, Nil, None, None))
-      }
+      val ammatillistenFunktioidenTulostenTiivistelmat: ListMap[String, Option[Any]] = tallennetutTuloksetHistoriaaVarten
 
       val tilalista = List(tulos.tila)
       val avaimet = ListMap(
         "Ammatillisten perustutkintojen määrä" -> Some(tutkintojenMaara),
         "Ammatilliset perustutkinnot" -> Some(tutkintojenIterointiParametrit.map(_.kuvaus).mkString("; "))) ++
         ammatillistenFunktioidenTulostenTiivistelmat
-      (tulos.tulos, tilalista, Historia(ITEROIAMMATILLISETTUTKINNOT, tulos.tulos, tilalista, Some(kierrostenHistoriat(kierrostenTulokset)), Some(avaimet)))
+      (tulos.tulos, tilalista, Historia(ITEROIAMMATILLISETTUTKINNOT, tulos.tulos, tilalista, Some(List(tulos.historia)), Some(avaimet)))
     }
   }
 

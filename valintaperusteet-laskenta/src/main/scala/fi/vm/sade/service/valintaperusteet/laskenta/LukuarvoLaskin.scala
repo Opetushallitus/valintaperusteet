@@ -2,6 +2,7 @@ package fi.vm.sade.service.valintaperusteet.laskenta
 
 import java.math.RoundingMode
 
+import fi.vm.sade.kaava.LaskentaUtil
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.HAELUKUARVO
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.HAELUKUARVOEHDOLLA
@@ -9,6 +10,7 @@ import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.HAEMERKKIJONOJA
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.HAETOTUUSARVOJAKONVERTOILUKUARVOKSI
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.HYLKAA
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.HYLKAAARVOVALILLA
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.ITEROIAMMATILLISETTUTKINNOT
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.JOS
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.KESKIARVO
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.KESKIARVONPARASTA
@@ -238,6 +240,9 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
       case Minimi(fs, _, _,_,_,_,_) =>
         val (tulos, tilat, h) = muodostaKoostettuTulos(fs, ds => ds.min)
         (tulos, tilat, Historia(MINIMI, tulos, tilat, h.historiat, None))
+
+      case f@Maksimi(_, _, _,_,_,_,_) if iteraatioParametrit.sisaltaa(classOf[AmmatillisenPerustutkinnonValitsija]) =>
+        maksimiAmmatillisistaPerustutkinnoista(f, iteraatioParametrit)
 
       case Maksimi(fs, _, _,_,_,_,_) =>
         val (tulos, tilat, h) = muodostaKoostettuTulos(fs, ds => ds.max)
@@ -505,6 +510,38 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
       laskin.funktioTulokset.update(tulosTunnisteIteraatioParametrienKanssa, v)
     }
     Tulos(laskettuTulos, palautettavaTila(tilat), historia)
+  }
+
+  private def maksimiAmmatillisistaPerustutkinnoista(maksimi: Maksimi, iteraatioParametrit: LaskennanIteraatioParametrit) = {
+    val tutkintojenIterointiParametrit = iteraatioParametrit.parametriLista(classOf[AmmatillisenPerustutkinnonValitsija])
+
+    val kierrostenTulokset: Seq[(AmmatillisenPerustutkinnonValitsija, Tulos[BigDecimal])] = tutkintojenIterointiParametrit.
+      flatMap(parametri => {
+        maksimi.fs.map(lapsiFunktio => (parametri, laskeLukuarvo(lapsiFunktio, iteraatioParametrit.sidoAmmatillisenPerustutkinnonValitsija(parametri))))
+      })
+    val tuloksetLukuarvoina: Seq[Lukuarvo] = kierrostenTulokset.flatMap {
+      case (parametri, Tulos(Some(lukuarvo), _, historia)) =>
+        Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} ${Maksimi.getClass.getSimpleName}-laskennan historia: ${LaskentaUtil.prettyPrint(historia)}")
+        val ammatillisenHistorianTiivistelma: Seq[String] = tiivistelmaAmmatillisistaFunktioista(historia)
+        Some(Lukuarvo(lukuarvo, tulosTekstiFi = s"Arvo parametrilla '${parametri.kuvaus}' == $lukuarvo, historia: $ammatillisenHistorianTiivistelma"))
+      case (parametri, tulos) =>
+        Laskin.LOG.debug(s"Tyhjä tulos $tulos funktiosta $maksimi parametrilla $parametri")
+        None
+    }
+
+    val tulos: Tulos[BigDecimal] = if (tuloksetLukuarvoina.nonEmpty) {
+      val iteroidutTuloksetKasittelevaMaksimi = maksimi.copy(fs = tuloksetLukuarvoina)
+      laskeLukuarvo(iteroidutTuloksetKasittelevaMaksimi, LaskennanIteraatioParametrit())
+    } else {
+      Tulos(None, new Hyvaksyttavissatila, Historia(MAKSIMI, None, Nil, None, None))
+    }
+
+    val kierrostenHistoriat = kierrostenTulokset.map { case (_, t) => t.historia }.toList
+
+    val tilalista = List(tulos.tila)
+    val avaimet = ListMap(
+      s"Maksimi ${tutkintojenIterointiParametrit.size} ammatillisesta perustutkinnosta" -> tulos.tulos)
+    (tulos.tulos, tilalista, Historia(MAKSIMI, tulos.tulos, tilalista, Some(kierrostenHistoriat), Some(avaimet)))
   }
 
   private def avaimetHistoriastaIteraatioparametrienKanssa(iteraatioParametrit: LaskennanIteraatioParametrit, h: Historia): Map[String, Option[Any]] = {
