@@ -6,7 +6,6 @@ import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.ITEROIAMMATILLI
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.ITEROIAMMATILLISETYTOOSAALUEET
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.IteroiAmmatillisenTutkinnonYtoOsaAlueet
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.IteroiAmmatillisetTutkinnonOsat
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.IteroiAmmatillisetTutkinnot
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.KloonattavaFunktio
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Hyvaksyttavissatila
@@ -31,9 +30,13 @@ trait AmmatillisetIterointiFunktiot {
       Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} hakijalle löytyi $tutkintojenMaara ammatillista perustutkintoa.")
 
       val tutkintojenIterointiParametrit: Seq[AmmatillisenPerustutkinnonValitsija] = AmmatillisetPerustutkinnot(tutkinnot).parametreiksi
-      val uudetIteraatioParametrit = iteraatioParametrit.copy(parametriListat = iteraatioParametrit.parametriListat.updated(classOf[AmmatillisenPerustutkinnonValitsija], tutkintojenIterointiParametrit))
+      val uudetIteraatioParametrit = iteraatioParametrit.asetaAvoinParametrilista(classOf[AmmatillisenPerustutkinnonValitsija], tutkintojenIterointiParametrit)
 
-      val tulos: Tulos[BigDecimal] = laskeLukuarvo(f, uudetIteraatioParametrit)
+      val tulos: Tulos[BigDecimal] = if (tutkintojenIterointiParametrit.nonEmpty) {
+        laskeLukuarvo(f, uudetIteraatioParametrit)
+      } else {
+        Tulos(None, new Hyvaksyttavissatila, Historia(ITEROIAMMATILLISETTUTKINNOT, None, Nil, None, None))
+      }
 
       val ammatillistenFunktioidenTulostenTiivistelmat: ListMap[String, Option[Any]] = tallennetutTuloksetHistoriaaVarten
 

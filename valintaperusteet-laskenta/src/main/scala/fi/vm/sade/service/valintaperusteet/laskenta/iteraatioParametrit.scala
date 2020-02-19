@@ -49,12 +49,27 @@ case class LaskennanIteraatioParametrit(parametriListat: Map[Class[_ <: Iteraati
   val nonEmpty: Boolean = ammatillisenTutkinnonYtoOsaAlueenValitsija.isDefined || ammatillisenTutkinnonOsanValitsija.isDefined || ammatillisenTutkinnonYtoOsaAlueenValitsija.isDefined
   val asList: Seq[IteraatioParametri] = ammatillisenPerustutkinnonValitsija.toList ++ ammatillisenTutkinnonOsanValitsija.toList ++ ammatillisenTutkinnonYtoOsaAlueenValitsija.toList
 
-  def sisaltaa[T <: IteraatioParametri](parametrinTyyppi: Class[T]): Boolean = parametriListat.get(parametrinTyyppi).isDefined
+  def asetaAvoinParametrilista[T <: IteraatioParametri](tyyppi: Class[T], parametrit: Seq[T]): LaskennanIteraatioParametrit = {
+    copy(parametriListat = parametriListat.updated(tyyppi, parametrit))
+  }
 
-  def parametriLista[T <: IteraatioParametri](tyyppi: Class[T]): Seq[T] = parametriListat.getOrElse(tyyppi, Nil).asInstanceOf[Seq[T]]
+  def sisaltaaAvoimenParametrilistan: Boolean = parametriListat.exists(x => x._2.nonEmpty)
 
-  def sidoAmmatillisenPerustutkinnonValitsija(parametri: AmmatillisenPerustutkinnonValitsija): LaskennanIteraatioParametrit = {
-    copy(ammatillisenPerustutkinnonValitsija = Some(parametri), parametriListat = listatIlman(classOf[AmmatillisenPerustutkinnonValitsija]))
+  def avoinParametrilista: Seq[IteraatioParametri] = parametriListat.toSeq.filter(x => x._2.nonEmpty) match {
+    case (_, lista) :: Nil => lista
+    case Nil => throw new IllegalArgumentException(s"Ei löytynyt avointa parametrilistaa iteraatioparametreista $this")
+    case _ => throw new IllegalArgumentException(s"Löytyi useampi avoin parametrilista iteraatioparametreista $this")
+  }
+
+  def sido(parametri: IteraatioParametri): LaskennanIteraatioParametrit = {
+    parametri match {
+      case p: AmmatillisenPerustutkinnonValitsija =>
+        copy(ammatillisenPerustutkinnonValitsija = Some(p), parametriListat = listatIlman(classOf[AmmatillisenPerustutkinnonValitsija]))
+      case p: AmmatillisenTutkinnonOsanValitsija =>
+        copy(ammatillisenTutkinnonOsanValitsija = Some(p), parametriListat = listatIlman(classOf[AmmatillisenTutkinnonOsanValitsija]))
+      case p: AmmatillisenTutkinnonYtoOsaAlueenValitsija =>
+        copy(ammatillisenTutkinnonYtoOsaAlueenValitsija = Some(p), parametriListat = listatIlman(classOf[AmmatillisenTutkinnonYtoOsaAlueenValitsija]))
+    }
   }
 
   private def listatIlman[T <: IteraatioParametri](poistettavaTyyppi: Class[T]): Map[Class[_ <: IteraatioParametri], Seq[IteraatioParametri]] = {
