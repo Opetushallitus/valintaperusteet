@@ -1,13 +1,11 @@
 package fi.vm.sade.service.valintaperusteet.laskenta
 
-import fi.vm.sade.kaava.LaskentaUtil
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.ITEROIAMMATILLISETOSAT
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.ITEROIAMMATILLISETTUTKINNOT
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.ITEROIAMMATILLISETYTOOSAALUEET
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.IteroiAmmatillisenTutkinnonYtoOsaAlueet
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.IteroiAmmatillisetTutkinnonOsat
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.KloonattavaFunktio
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Hyvaksyttavissatila
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Tila
 import fi.vm.sade.service.valintaperusteet.laskenta.koski.KoskiLaskenta
@@ -104,40 +102,12 @@ trait AmmatillisetIterointiFunktiot {
 
       Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} hakijan tutkinnon $tutkinnonValitsija YTOlle $ytoKoodi löytyi ${ytoOsaAlueet.size} YTOn osa-aluetta.")
 
-      val uudetParametrit: Seq[AmmatillisenTutkinnonYtoOsaAlueenValitsija] = AmmatillisenTutkinnonYtoOsaAlueet(ytoKoodi, ytoOsaAlueet).parametreiksi
+      val ytoOsaAlueidenIteraatioParametrit: Seq[AmmatillisenTutkinnonYtoOsaAlueenValitsija] = AmmatillisenTutkinnonYtoOsaAlueet(ytoKoodi, ytoOsaAlueet).parametreiksi
 
-      val kierrostenTulokset: Seq[(AmmatillisenTutkinnonYtoOsaAlueenValitsija, (Tulos[BigDecimal], Tulos[BigDecimal]))] = uudetParametrit.
-        map(parametri => {
-          val parametritLapsille = iteraatioParametrit.copy(ammatillisenTutkinnonYtoOsaAlueenValitsija = Some(parametri))
-          val tulos1 = laskeLukuarvo(lapsiFunktio.argumentit.head._1, parametritLapsille)
-          val tulos2 = laskeLukuarvo(lapsiFunktio.argumentit.head._2, parametritLapsille)
+      val uudetIteraatioParametrit = iteraatioParametrit.asetaAvoinParametrilista(classOf[AmmatillisenTutkinnonYtoOsaAlueenValitsija], ytoOsaAlueidenIteraatioParametrit)
 
-          (parametri, (tulos1, tulos2))
-        })
-      val tuloksetLukuarvoina: Seq[(Lukuarvo, Lukuarvo)] = kierrostenTulokset.flatMap {
-        case (parametri, (Tulos(Some(lukuarvo1), _, historia1), Tulos(Some(lukuarvo2), _, historia2))) =>
-          Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} ${IteroiAmmatillisenTutkinnonYtoOsaAlueet.getClass.getSimpleName}-laskennan historia1 YTOlle ${ytoKoodi}: ${LaskentaUtil.prettyPrint(historia1)}")
-          Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} ${IteroiAmmatillisenTutkinnonYtoOsaAlueet.getClass.getSimpleName}-laskennan historia2 YTOlle ${ytoKoodi}: ${LaskentaUtil.prettyPrint(historia2)}")
-
-          Some(
-            Lukuarvo(lukuarvo1, tulosTekstiFi = s"Arvo 1 parametrilla '$parametri' == $lukuarvo1, historia: ${tiivistelmaAmmatillisistaFunktioista(historia1)}"),
-            Lukuarvo(lukuarvo2, tulosTekstiFi = s"Arvo 2 parametrilla '$parametri' == $lukuarvo2, historia: ${tiivistelmaAmmatillisistaFunktioista(historia2)}"),
-          )
-        case (parametri, tulokset) =>
-          Laskin.LOG.debug(s"Tyhjiä tuloksia hakemukselle ${laskin.hakemus.oid} joukossa $tulokset funktiosta $lapsiFunktio parametrilla $parametri")
-          None
-      }
-
-      val tulos: Tulos[BigDecimal] = if (tuloksetLukuarvoina.nonEmpty) {
-        try {
-          val iteroidutTuloksetKasittelevaKlooni = lapsiFunktio.kloonaa(tuloksetLukuarvoina).asInstanceOf[Lukuarvofunktio]
-          laskeLukuarvo(iteroidutTuloksetKasittelevaKlooni, LaskennanIteraatioParametrit())
-        } catch {
-          case e: ClassCastException =>
-            Laskin.LOG.error(s"${classOf[IteroiAmmatillisenTutkinnonYtoOsaAlueet].getSimpleName} -funktion funktioargumenttina tulee olla " +
-              s"kloonattava funktio, kuten maksimi, mutta oli $lapsiFunktio", e)
-            throw e
-        }
+      val tulos: Tulos[BigDecimal] = if (ytoOsaAlueidenIteraatioParametrit.nonEmpty) {
+        laskeLukuarvo(lapsiF, uudetIteraatioParametrit)
       } else {
         Tulos(None, new Hyvaksyttavissatila, Historia(ITEROIAMMATILLISETYTOOSAALUEET, None, Nil, None, None))
       }
@@ -145,8 +115,8 @@ trait AmmatillisetIterointiFunktiot {
       val tilalista = List(tulos.tila)
       val avaimet = Map(
         s"ammatillisen perustutkinnon ${tutkinnonValitsija.lyhytKuvaus} YTOn $ytoKoodi osa-alueiden määrä" -> Some(ytoOsaAlueet.size),
-        s"ammatillisen perustutkinnon ${tutkinnonValitsija.lyhytKuvaus} YTOn $ytoKoodi osa-alueet" -> Some(uudetParametrit.map(_.kuvaus).mkString("; ")))
-      (tulos.tulos, tilalista, Historia(ITEROIAMMATILLISETYTOOSAALUEET, tulos.tulos, tilalista, Some(kierrostenHistoriatKahdelleParametrille(kierrostenTulokset)), Some(avaimet)))
+        s"ammatillisen perustutkinnon ${tutkinnonValitsija.lyhytKuvaus} YTOn $ytoKoodi osa-alueet" -> Some(ytoOsaAlueidenIteraatioParametrit.map(_.kuvaus).mkString("; ")))
+      (tulos.tulos, tilalista, Historia(ITEROIAMMATILLISETYTOOSAALUEET, tulos.tulos, tilalista, Some(List(tulos.historia)), Some(avaimet)))
     }
   }
 
@@ -155,12 +125,5 @@ trait AmmatillisetIterointiFunktiot {
       case (avain, ft) => (s"$avain : ${ft.nimiFi}", Some(ft.arvo))
     }
     ListMap(tuloksetSuomenkielistenNimienKanssa : _*)
-  }
-
-  private def kierrostenHistoriat(kierrostenTulokset: Seq[(IteraatioParametri, Tulos[_])]): List[Historia] = {
-    kierrostenTulokset.map(_._2.historia).toList
-  }
-  private def kierrostenHistoriatKahdelleParametrille(kierrostenTulokset: Seq[(IteraatioParametri, (Tulos[_], Tulos[_]))]): List[Historia] = {
-    kierrostenTulokset.flatMap(x => List(x._2._1.historia, x._2._2.historia)).toList
   }
 }
