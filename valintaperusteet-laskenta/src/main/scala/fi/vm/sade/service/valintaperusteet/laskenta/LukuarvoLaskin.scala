@@ -473,6 +473,9 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
           (skaalauksenTulos, tilat, Historia(SKAALAUS, skaalauksenTulos, tilat, Some(List(tulos.historia)), None))
         }
 
+      case f@PainotettuKeskiarvo(_, _,_,_,_,_, _) if iteraatioParametrit.sisaltaaAvoimenParametrilistan =>
+        painotettuKeskiarvoIteroiden(f, iteraatioParametrit)
+
       case PainotettuKeskiarvo(_, _,_,_,_,_, fs) =>
         val tulokset = fs.map(p => Tuple2(laskeLukuarvo(p._1, iteraatioParametrit), laskeLukuarvo(p._2, iteraatioParametrit)))
         val (tilat, historiat) = tulokset.reverse.foldLeft(Tuple2(List[Tila](), List[Historia]()))((lst, t) => Tuple2(t._1.tila :: t._2.tila :: lst._1, t._1.historia :: t._2.historia :: lst._2))
@@ -541,6 +544,52 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
     val avaimet = ListMap(
       s"Maksimi ${parametrit.size} iteraatioparametrilla" -> tulos.tulos)
     (tulos.tulos, tilalista, Historia(MAKSIMI, tulos.tulos, tilalista, Some(kierrostenHistoriat), Some(avaimet)))
+  }
+
+  def painotettuKeskiarvoIteroiden(painotettuKeskiarvo: PainotettuKeskiarvo, iteraatioParametrit: LaskennanIteraatioParametrit): (Option[BigDecimal], List[Tila], Historia) = {
+    val parametrit = iteraatioParametrit.avoinParametrilista
+
+    val kierrostenTulokset: Seq[(IteraatioParametri, Tulos[BigDecimal], Tulos[BigDecimal])] = parametrit.
+      flatMap(parametri => {
+        painotettuKeskiarvo.fs.map(funktioPari => {
+          val (painokerroinFunktio, arvoFunktio) = funktioPari
+          val tulos1 = laskeLukuarvo(painokerroinFunktio, iteraatioParametrit.sido(parametri))
+          val tulos2 = laskeLukuarvo(arvoFunktio, iteraatioParametrit.sido(parametri))
+          (parametri, tulos1, tulos2)
+        })
+      })
+    val tuloksetLukuarvoina: Seq[(Lukuarvo, Lukuarvo)] = kierrostenTulokset.flatMap {
+      case (parametri, Tulos(Some(painokerroin), _, painokerroinHistoria), Tulos(Some(arvo), _, arvohistoria)) =>
+        Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} ${PainotettuKeskiarvo.getClass.getSimpleName}-laskennan painokertoimen historia: ${LaskentaUtil.prettyPrint(painokerroinHistoria)}")
+        Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} ${PainotettuKeskiarvo.getClass.getSimpleName}-laskennan arvon historia: ${LaskentaUtil.prettyPrint(arvohistoria)}")
+        val ammatillisenHistorianTiivistelma: Seq[String] = tiivistelmaAmmatillisistaFunktioista(painokerroinHistoria) ++ tiivistelmaAmmatillisistaFunktioista(arvohistoria)
+        val painokerroinLukuarvona = Lukuarvo(painokerroin, tulosTekstiFi = s"Painokerroin parametrilla '${parametri.kuvaus}' == $painokerroin, historia: $ammatillisenHistorianTiivistelma")
+        val arvoLukuarvona = Lukuarvo(arvo, tulosTekstiFi = s"Arvo parametrilla '${parametri.kuvaus}' == $arvo, historia: $ammatillisenHistorianTiivistelma")
+        Some((painokerroinLukuarvona, arvoLukuarvona))
+      case (parametri, Tulos(None, _, _), Tulos(Some(arvo), _, _)) =>
+        Laskin.LOG.debug(s"Tyhjä painokerroin, arvo $arvo funktiosta $painotettuKeskiarvo parametrilla ${parametri.kuvaus}")
+        None
+      case (parametri, Tulos(Some(painokerroin), _, _), Tulos(None, _, _)) =>
+        Laskin.LOG.debug(s"Tyhjä arvo, painokerroin $painokerroin funktiosta $painotettuKeskiarvo parametrilla ${parametri.kuvaus}")
+        None
+      case (parametri, Tulos(None, _, _), Tulos(None, _, _)) =>
+        Laskin.LOG.debug(s"Tyhjä arvo ja painokerroin funktiosta $painotettuKeskiarvo parametrilla ${parametri.kuvaus}")
+        None
+    }
+
+    val tulos: Tulos[BigDecimal] = if (tuloksetLukuarvoina.nonEmpty) {
+      val iteroidutTuloksetKasittelevaMaksimi = painotettuKeskiarvo.copy(fs = tuloksetLukuarvoina)
+      laskeLukuarvo(iteroidutTuloksetKasittelevaMaksimi, LaskennanIteraatioParametrit())
+    } else {
+      Tulos(None, new Hyvaksyttavissatila, Historia(PAINOTETTUKESKIARVO, None, Nil, None, None))
+    }
+
+    val kierrostenHistoriat = kierrostenTulokset.flatMap { case (_, painokerroin, arvo) => List(painokerroin.historia, arvo.historia) }.toList
+
+    val tilalista = List(tulos.tila)
+    val avaimet = ListMap(
+      s"Painotettu keskiarvo ${parametrit.size} iteraatioparametrilla" -> tulos.tulos)
+    (tulos.tulos, tilalista, Historia(PAINOTETTUKESKIARVO, tulos.tulos, tilalista, Some(kierrostenHistoriat), Some(avaimet)))
   }
 
   private def avaimetHistoriastaIteraatioparametrienKanssa(iteraatioParametrit: LaskennanIteraatioParametrit, h: Historia): Map[String, Option[Any]] = {
