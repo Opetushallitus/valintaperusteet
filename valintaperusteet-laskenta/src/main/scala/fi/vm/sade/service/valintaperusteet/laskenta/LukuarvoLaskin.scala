@@ -511,7 +511,7 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
     Tulos(laskettuTulos, palautettavaTila(tilat), historia)
   }
 
-  private def maksimiIteroiden(maksimi: Maksimi, iteraatioParametrit: LaskennanIteraatioParametrit) = {
+  private def maksimiIteroiden(maksimi: Maksimi, iteraatioParametrit: LaskennanIteraatioParametrit): (Option[BigDecimal], List[Tila], Historia) = {
     val parametrit = iteraatioParametrit.avoinParametrilista
 
     val kierrostenTulokset: Seq[(IteraatioParametri, Tulos[BigDecimal])] = parametrit.
