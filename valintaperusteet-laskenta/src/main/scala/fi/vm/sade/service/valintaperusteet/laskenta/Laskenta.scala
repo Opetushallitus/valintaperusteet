@@ -1,7 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.laskenta
 
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
-import fi.vm.sade.service.valintaperusteet.model.{LokalisoituTeksti, TekstiRyhma, ValintaperusteViite}
+import fi.vm.sade.service.valintaperusteet.model.LokalisoituTeksti
+import fi.vm.sade.service.valintaperusteet.model.TekstiRyhma
 import org.apache.commons.lang.StringUtils
 
 import scala.jdk.CollectionConverters._
@@ -126,11 +127,6 @@ object Laskenta {
     def unapply(k: KoostavaFunktio[_]): Option[Seq[Funktio[_]]] = Some(k.fs)
   }
 
-  trait KloonattavaFunktio[P, A, T <: Funktio[P]] {
-    val argumentit: Seq[A]
-    def kloonaa(argumentit: Seq[A]): T
-  }
-
   sealed trait NParasta extends KoostavaFunktio[BigDecimal] with Lukuarvofunktio {
     def n: Int
     override def fs: Seq[Funktio[BigDecimal]]
@@ -228,12 +224,7 @@ object Laskenta {
   }
 
   case class Maksimi(fs: Seq[Lukuarvofunktio], oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false)
-    extends KoostavaFunktio[BigDecimal] with Lukuarvofunktio with KloonattavaFunktio[BigDecimal, Lukuarvofunktio, KoostavaFunktio[BigDecimal]] {
-
-    override val argumentit: Seq[Lukuarvofunktio] = fs
-
-    override def kloonaa(argumentit: Seq[Lukuarvofunktio]): Maksimi = copy(fs = argumentit)
-  }
+    extends KoostavaFunktio[BigDecimal] with Lukuarvofunktio
 
   object Maksimi {
     def apply(fs: Lukuarvofunktio*): Maksimi = {
@@ -304,7 +295,7 @@ object Laskenta {
                           valintaperusteviite: Valintaperuste,oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false)
     extends HaeArvo[BigDecimal] with Lukuarvofunktio
 
-  case class IteroiAmmatillisetTutkinnot(f: Lukuarvofunktio with KoostavaFunktio[BigDecimal] with KloonattavaFunktio[BigDecimal, Lukuarvofunktio, KoostavaFunktio[BigDecimal]],
+  case class IteroiAmmatillisetTutkinnot(f: Lukuarvofunktio,
                                          oid: String = "",
                                          tulosTunniste: String = "",
                                          tulosTekstiFi: String = "",
@@ -313,7 +304,7 @@ object Laskenta {
                                          omaopintopolku: Boolean = false
                                         ) extends Lukuarvofunktio
 
-  case class IteroiAmmatillisetTutkinnonOsat(f: Lukuarvofunktio with KloonattavaFunktio[BigDecimal, _, Funktio[BigDecimal]],
+  case class IteroiAmmatillisetTutkinnonOsat(f: Lukuarvofunktio,
                                              oid: String = "",
                                              tulosTunniste: String = "",
                                              tulosTekstiFi: String = "",
@@ -322,7 +313,7 @@ object Laskenta {
                                              omaopintopolku: Boolean = false
                                         ) extends Lukuarvofunktio
 
-  case class IteroiAmmatillisenTutkinnonYtoOsaAlueet(f: Lukuarvofunktio with KloonattavaFunktio[BigDecimal, _, Funktio[BigDecimal]],
+  case class IteroiAmmatillisenTutkinnonYtoOsaAlueet(f: Lukuarvofunktio,
                                                      valintaperusteviite: Valintaperuste,
                                                      oid: String = "",
                                                      tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false) extends Lukuarvofunktio
@@ -526,14 +517,8 @@ object Laskenta {
                                  tulosTekstiEn: String = "",
                                  omaopintopolku: Boolean = false,
                                  fs: Seq[Tuple2[Lukuarvofunktio, Lukuarvofunktio]]
-                                ) extends Lukuarvofunktio with KloonattavaFunktio[BigDecimal, Tuple2[Lukuarvofunktio, Lukuarvofunktio], PainotettuKeskiarvo] {
+                                ) extends Lukuarvofunktio {
     require(fs.nonEmpty, "Parametreja pitää olla vähintään yksi")
-
-    override val argumentit: Seq[(Lukuarvofunktio, Lukuarvofunktio)] = fs
-
-    override def kloonaa(argumentit: Seq[(Lukuarvofunktio, Lukuarvofunktio)]): PainotettuKeskiarvo = {
-      copy(fs = argumentit)
-    }
   }
 
   case class Valintaperusteyhtasuuruus(oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false,

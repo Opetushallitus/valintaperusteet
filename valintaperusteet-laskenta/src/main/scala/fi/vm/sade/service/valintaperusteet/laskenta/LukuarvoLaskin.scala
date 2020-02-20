@@ -292,18 +292,12 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
             }
         }
 
-      case IteroiAmmatillisetTutkinnot(f, _, _, _, _, _, _) => iteroiAmmatillisetTutkinnot(iteraatioParametrit, f)
+      case f@IteroiAmmatillisetTutkinnot(_, _, _, _, _, _, _) => iteroiAmmatillisetTutkinnot(iteraatioParametrit, f)
 
-      case f@IteroiAmmatillisetTutkinnonOsat(lapsiF, _, _, _, _, _, _) if lapsiF.argumentit.isInstanceOf[Seq[(Lukuarvofunktio, Lukuarvofunktio)]] =>
-        iteroiAmmatillisetTutkinnonOsat(iteraatioParametrit, f, lapsiF)
+      case f@IteroiAmmatillisetTutkinnonOsat(_, _, _, _, _, _, _) =>
+        iteroiAmmatillisetTutkinnonOsat(iteraatioParametrit, f)
 
-      case f@IteroiAmmatillisetTutkinnonOsat(lapsiFunktio, _, _, _, _, _, _) =>
-        val virheilmoitus = s"${classOf[IteroiAmmatillisetTutkinnonOsat].getSimpleName} -funktion $f funktioargumentin $lapsiFunktio ottaman argumentin tyyppi on " +
-          s"${lapsiFunktio.argumentit.getClass} , jolle ei ole toteutettu käsittelyä"
-        Laskin.LOG.error(virheilmoitus)
-        throw new UnsupportedOperationException(virheilmoitus)
-
-      case f@IteroiAmmatillisenTutkinnonYtoOsaAlueet(lapsiF, _, _, _, _, _, _, _) => iteroiAmmatillisenTutkinnonYtoOsaAlueet(iteraatioParametrit, f, lapsiF)
+      case f@IteroiAmmatillisenTutkinnonYtoOsaAlueet(_, _, _, _, _, _, _, _) => iteroiAmmatillisenTutkinnonYtoOsaAlueet(iteraatioParametrit, f)
 
       case f@HaeAmmatillinenYtoArvosana(konvertteri, oletusarvo, valintaperusteviite, _, _,_,_,_,_) =>
         haeAmmatillinenYtoArvosana(iteraatioParametrit, f, konvertteri, oletusarvo, valintaperusteviite)
