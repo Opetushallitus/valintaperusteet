@@ -102,21 +102,19 @@ object YhteisetTutkinnonOsat {
     val hakemusOid = hakemus.oid
     try {
       val suoritukset = etsiAmmatillistenTutkintojenSuoritukset(opiskeluoikeus, hakemus)
-      val yhteistenTutkinnonOsienArvosanat = suoritukset
+      val ytoJsonit: Seq[Json] = suoritukset
         .flatMap(suoritus => etsiYhteisetTutkinnonOsat(suoritus, sulkeutumisPaivamaara, Set(ytoKoodiArvo)))
 
-      if (yhteistenTutkinnonOsienArvosanat.size > 1) {
+      if (ytoJsonit.size > 1) {
         throw new UnsupportedOperationException(
-          s"Hakemukselle $hakemusOid löytyi useampi kuin yksi arvosana yhteiselle tutkinnon osalle '$ytoKoodiArvo': $yhteistenTutkinnonOsienArvosanat")
+          s"Hakemuksen $hakemusOid hakijan opiskeluoikeudelle löytyi useampi kuin yksi osasuoritus" +
+            s" yhteiselle tutkinnon osalle '$ytoKoodiArvo': $ytoJsonit")
       }
 
-      if (yhteistenTutkinnonOsienArvosanat.nonEmpty) {
-        LOG.debug(s"Hakemukselle $hakemusOid löytyi yhteiselle tutkinnon osalle $ytoKoodiArvo arvosana $yhteistenTutkinnonOsienArvosanat")
-      }
-      yhteistenTutkinnonOsienArvosanat
+      ytoJsonit
     } catch {
       case e: Exception => {
-        LOG.error(s"Virhe haettaessa ammatillisen suorituksen tietoja hakemukselle $hakemusOid", e)
+        LOG.error(s"Virhe haettaessa ammatillisen perustutkinnon yhteisen tutkinnon osan tietoja hakemukselle $hakemusOid", e)
         throw e
       }
     }
