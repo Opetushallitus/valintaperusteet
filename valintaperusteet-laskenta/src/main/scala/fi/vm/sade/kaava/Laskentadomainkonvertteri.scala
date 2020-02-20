@@ -84,7 +84,7 @@ object Laskentadomainkonvertteri {
   private def muunnaLukuarvofunktioksi(f: Funktio[_]): Lukuarvofunktio = {
     f match {
       case lf: Lukuarvofunktio => lf
-      case _ => sys.error("Cannot cast funktio to Lukuarvofunktio")
+      case _ => sys.error(s"Cannot cast funktio $f to Lukuarvofunktio")
     }
   }
 
