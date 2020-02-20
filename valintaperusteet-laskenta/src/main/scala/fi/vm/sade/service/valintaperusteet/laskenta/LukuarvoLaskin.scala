@@ -2,7 +2,6 @@ package fi.vm.sade.service.valintaperusteet.laskenta
 
 import java.math.RoundingMode
 
-import fi.vm.sade.kaava.LaskentaUtil
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.HAELUKUARVO
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.HAELUKUARVOEHDOLLA
@@ -518,7 +517,6 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
       })
     val tuloksetLukuarvoina: Seq[Lukuarvo] = kierrostenTulokset.flatMap {
       case (parametri, Tulos(Some(lukuarvo), _, historia)) =>
-        Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} ${Maksimi.getClass.getSimpleName}-laskennan historia: ${LaskentaUtil.prettyPrint(historia)}")
         val ammatillisenHistorianTiivistelma: Seq[String] = tiivistelmaAmmatillisistaFunktioista(historia)
         Some(Lukuarvo(lukuarvo, tulosTekstiFi = s"Arvo parametrilla '${parametri.kuvaus}' == $lukuarvo, historia: $ammatillisenHistorianTiivistelma"))
       case (parametri, tulos) =>
@@ -555,8 +553,6 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
       })
     val tuloksetLukuarvoina: Seq[(Lukuarvo, Lukuarvo)] = kierrostenTulokset.flatMap {
       case (parametri, Tulos(Some(painokerroin), _, painokerroinHistoria), Tulos(Some(arvo), _, arvohistoria)) =>
-        Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} ${PainotettuKeskiarvo.getClass.getSimpleName}-laskennan painokertoimen historia: ${LaskentaUtil.prettyPrint(painokerroinHistoria)}")
-        Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} ${PainotettuKeskiarvo.getClass.getSimpleName}-laskennan arvon historia: ${LaskentaUtil.prettyPrint(arvohistoria)}")
         val ammatillisenHistorianTiivistelma: Seq[String] = tiivistelmaAmmatillisistaFunktioista(painokerroinHistoria) ++ tiivistelmaAmmatillisistaFunktioista(arvohistoria)
         val painokerroinLukuarvona = Lukuarvo(painokerroin, tulosTekstiFi = s"Painokerroin parametrilla '${parametri.kuvaus}' == $painokerroin, historia: $ammatillisenHistorianTiivistelma")
         val arvoLukuarvona = Lukuarvo(arvo, tulosTekstiFi = s"Arvo parametrilla '${parametri.kuvaus}' == $arvo, historia: $ammatillisenHistorianTiivistelma")

@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.laskenta
 
+import fi.vm.sade.kaava.LaskentaUtil
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.ITEROIAMMATILLISETOSAT
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.ITEROIAMMATILLISETTUTKINNOT
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.ITEROIAMMATILLISETYTOOSAALUEET
@@ -37,6 +38,8 @@ trait AmmatillisetIterointiFunktiot {
       }
 
       val ammatillistenFunktioidenTulostenTiivistelmat: ListMap[String, Option[Any]] = tallennetutTuloksetHistoriaaVarten
+
+      Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} ${classOf[IteroiAmmatillisetTutkinnot].getSimpleName}-laskennan historia: ${LaskentaUtil.prettyPrint(tulos.historia)}")
 
       val tilalista = List(tulos.tila)
       val avaimet = ListMap(
