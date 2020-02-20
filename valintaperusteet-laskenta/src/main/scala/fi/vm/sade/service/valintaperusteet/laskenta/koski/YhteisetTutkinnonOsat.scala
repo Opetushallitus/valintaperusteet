@@ -91,11 +91,10 @@ object YhteisetTutkinnonOsat {
       opiskeluoikeudenHaluttuTyyppi = ammatillisenHuomioitavaOpiskeluoikeudenTyyppi,
       suorituksenHaluttuTyyppi = ammatillisenSuorituksenTyyppi,
       hakemus = hakemus)(ammatillisenPerustutkinnonValitsija.tutkinnonIndeksi)
-    val ammatillisenSuorituksenTiedot = YhteisetTutkinnonOsat.haeYhteisenTutkinnonOsanTiedot(
+    YhteisetTutkinnonOsat.haeYhteisenTutkinnonOsanTiedot(
       hakemus,
       oikeaOpiskeluoikeus,
       ytoKoodiArvo)
-    ammatillisenSuorituksenTiedot
   }
 
   private def haeYhteisenTutkinnonOsanTiedot(hakemus: Hakemus, opiskeluoikeus: Json, ytoKoodiArvo: String): Seq[Json] = {
