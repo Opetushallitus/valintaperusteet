@@ -276,7 +276,7 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
         }, (None, List(ehtoTulos.tila), None))
         (tulos, tilat, Historia(JOS, tulos, tilat, Some(List(ehtoTulos.historia) ++ historia.toList), None))
 
-      case KonvertoiLukuarvo(konvertteri, f, _, _,_,_,_,_) =>
+      case KonvertoiLukuarvo(konvertteri, f, _, _,tulosTekstiFi,_,_,_) =>
         laskeLukuarvo(f, iteraatioParametrit) match {
           case Tulos(tulos, tila, historia) =>
             val (konv, virheet) = konvertteri match {
@@ -288,7 +288,8 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
               (None, virheet, Historia(KONVERTOILUKUARVO, None, virheet, Some(List(historia)), None))
             } else {
               val (tulos2, tilat2) = suoritaKonvertointi[BigDecimal, BigDecimal]((tulos, tila), konv.get)
-              (tulos2, tilat2, Historia(KONVERTOILUKUARVO, tulos2, tilat2, Some(List(historia)), None))
+              val avaimet: Map[String, Option[Any]] = Map("Kuvaus" -> Option(tulosTekstiFi), "Lähdearvo" -> tulos, "Konversion tulos" -> tulos2)
+              (tulos2, tilat2, Historia(KONVERTOILUKUARVO, tulos2, tilat2, Some(List(historia)), Some(avaimet)))
             }
         }
 
