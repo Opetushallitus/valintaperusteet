@@ -1,7 +1,6 @@
 
 package fi.vm.sade.service.valintaperusteet.laskenta
 
-import java.util.Collections
 import java.util.{HashMap => JHashMap}
 import java.util.{List => JList}
 import java.util.{Map => JMap}
@@ -9,15 +8,13 @@ import java.util.{Map => JMap}
 import fi.vm.sade.kaava.LaskentaTestUtil.TestHakemus
 import fi.vm.sade.kaava.{LaskentaTestUtil, Laskentadomainkonvertteri}
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi
-import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakukohde
-import fi.vm.sade.service.valintaperusteet.model.{Arvokonvertteriparametri, Funktioargumentti, Funktiokutsu, TekstiRyhma, ValintaperusteViite}
+import fi.vm.sade.service.valintaperusteet.model.{Arvokonvertteriparametri, Funktiokutsu, TekstiRyhma}
 import io.circe.Json
 import io.circe.parser
 import org.scalatest.funsuite.AnyFunSuite
 
 import scala.io.Source
-import scala.jdk.CollectionConverters._
 
 class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
 
@@ -201,67 +198,119 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
           LaskentaTestUtil.Arvokonvertteriparametri(paluuarvo = "2015", arvo = "ops", hylkaysperuste = "false", new TekstiRyhma()),
           LaskentaTestUtil.Arvokonvertteriparametri(paluuarvo = "2017", arvo = "reformi", hylkaysperuste = "false", new TekstiRyhma())))
 
-    val opsMallinenJuuri =
+    def lukuarvo(lukuarvo: String): Funktiokutsu = {
+      LaskentaTestUtil.Funktiokutsu(
+        nimi = Funktionimi.LUKUARVO,
+        syoteparametrit = List(LaskentaTestUtil.Syoteparametri("luku", lukuarvo))
+      )
+    }
+
+    def summa(argumentit: Funktiokutsu*) = {
       LaskentaTestUtil.Funktiokutsu(
         nimi = Funktionimi.SUMMA,
-        funktioargumentit = List(
-          LaskentaTestUtil.Funktiokutsu(
-            nimi = Funktionimi.SUMMA,
-            funktioargumentit = List(
-              LaskentaTestUtil.Funktiokutsu(
-                nimi = Funktionimi.MAKSIMI,
-                funktioargumentit = List(
-                  LaskentaTestUtil.Funktiokutsu(
-                    nimi = Funktionimi.MAKSIMI,
-                    funktioargumentit = List(
-                      LaskentaTestUtil.Funktiokutsu(
-                        nimi = Funktionimi.JOS,
-                        funktioargumentit = List(
-                          LaskentaTestUtil.Funktiokutsu(
-                            nimi = Funktionimi.YHTASUURI,
-                            funktioargumentit = List(
-                              createAmmatillinenYtoArviointiAsteikkoKutsu("101054"),
-                              lukuarvo("3"))
-                          ),
-                          createHaeAmmatillinenYtoArvosanaKutsu("101054"),
-                          LaskentaTestUtil.Funktiokutsu(
-                            nimi = Funktionimi.JOS,
-                            funktioargumentit = List(
-                              LaskentaTestUtil.Funktiokutsu(
-                                nimi = Funktionimi.YHTASUURI,
-                                funktioargumentit = List(
-                                  createAmmatillinenYtoArviointiAsteikkoKutsu("101054"),
-                                  lukuarvo("3"))
-                              ),
-                              createAmmatillinenYtoArviointiAsteikkoKutsu("101054"),
-                              lukuarvo("5"))
-                          ),
+        funktioargumentit = argumentit)
+    }
 
-                        ))
-                    ))
-                ))
-            ))
-        ))
+    def maksimi(argumentit: Funktiokutsu*): Funktiokutsu = {
+      LaskentaTestUtil.Funktiokutsu(
+        nimi = Funktionimi.MAKSIMI,
+        funktioargumentit = argumentit)
+    }
 
-    createAmmatillistenTutkintojenIteroija(
-      LaskentaTestUtil.Funktiokutsu(nimi = Funktionimi.JOS,
+    def jos(totuusarvo: Funktiokutsu, haara1: Funktiokutsu, haara2: Funktiokutsu): Funktiokutsu = {
+      LaskentaTestUtil.Funktiokutsu(
+        nimi = Funktionimi.JOS,
         funktioargumentit = List(
-          LaskentaTestUtil.Funktiokutsu(
-            nimi = Funktionimi.YHTASUURI,
-            funktioargumentit = List(haeAmmatillisenTutkinnonSuoritustapa, lukuarvo("2015"))
+          totuusarvo, haara1, haara2))
+    }
+
+    def yhtasuuri(haara1: Funktiokutsu, haara2: Funktiokutsu): Funktiokutsu = {
+      LaskentaTestUtil.Funktiokutsu(
+        nimi = Funktionimi.YHTASUURI,
+        funktioargumentit = List(haara1, haara2))
+    }
+
+    val opsMallinenJuuri =
+      summa(
+        // Ammatillisen ops-mallisen tutkinnon yhteisten tutkinnon osien pisteet
+        summa(
+
+          // Ammatillinen yto viestintä- ja vuorovaikutusosaaminen
+          maksimi(
+            jos(
+              yhtasuuri(createAmmatillinenYtoArviointiAsteikkoKutsu("101053"), lukuarvo("3")),
+              createHaeAmmatillinenYtoArvosanaKutsu("101053"),
+              jos(
+                yhtasuuri(createAmmatillinenYtoArviointiAsteikkoKutsu("101053"), lukuarvo("5")),
+                createHaeAmmatillinenYtoArvosanaKutsu("101053"),
+                lukuarvo("0")
+              )),
+            jos(
+              yhtasuuri(createAmmatillinenYtoArviointiAsteikkoKutsu("400012"), lukuarvo("3")),
+              createHaeAmmatillinenYtoArvosanaKutsu("400012"),
+              jos(
+                yhtasuuri(createAmmatillinenYtoArviointiAsteikkoKutsu("400012"), lukuarvo("5")),
+                createHaeAmmatillinenYtoArvosanaKutsu("400012"),
+                lukuarvo("0")
+              ))),
+
+          // Ammatillinen yto matemaattis-luonnontieteellinen osaaminen
+          maksimi(
+            jos(
+              yhtasuuri(createAmmatillinenYtoArviointiAsteikkoKutsu("101054"), lukuarvo("3")),
+              createHaeAmmatillinenYtoArvosanaKutsu("101054"),
+              jos(
+                yhtasuuri(createAmmatillinenYtoArviointiAsteikkoKutsu("101054"), lukuarvo("5")),
+                createHaeAmmatillinenYtoArvosanaKutsu("101054"),
+                lukuarvo("0")
+              )),
+            jos(
+              yhtasuuri(createAmmatillinenYtoArviointiAsteikkoKutsu("400013"), lukuarvo("3")),
+              createHaeAmmatillinenYtoArvosanaKutsu("400013"),
+              jos(
+                yhtasuuri(createAmmatillinenYtoArviointiAsteikkoKutsu("400013"), lukuarvo("5")),
+                createHaeAmmatillinenYtoArvosanaKutsu("400013"),
+                lukuarvo("0")
+              ))),
+
+
+          // Ammatillinen yto yhteiskunta -ja työelämäosaaminen
+          maksimi(
+            jos(
+              yhtasuuri(createAmmatillinenYtoArviointiAsteikkoKutsu("101055"), lukuarvo("3")),
+              createHaeAmmatillinenYtoArvosanaKutsu("101055"),
+              jos(
+                yhtasuuri(createAmmatillinenYtoArviointiAsteikkoKutsu("101055"), lukuarvo("5")),
+                createHaeAmmatillinenYtoArvosanaKutsu("101055"),
+                lukuarvo("0")
+              )),
+            jos(
+              yhtasuuri(createAmmatillinenYtoArviointiAsteikkoKutsu("400014"), lukuarvo("3")),
+              createHaeAmmatillinenYtoArvosanaKutsu("400014"),
+              jos(
+                yhtasuuri(createAmmatillinenYtoArviointiAsteikkoKutsu("400014"), lukuarvo("5")),
+                createHaeAmmatillinenYtoArvosanaKutsu("400014"),
+                lukuarvo("0"))))))
+
+    val reformiMallinenJuuri: Funktiokutsu = {
+      summa(
+        createHaeAmmatillisenTutkinnonOsienKeskiarvoKutsu(),
+        maksimi(
+          summa(
+            //
           ),
-          opsMallinenJuuri,
-          lukuarvo("2017")
+          summa(
+
+          )
         )
       )
-    )
-  }
+    }
 
-  private def lukuarvo(lukuarvo: String): Funktiokutsu = {
-    LaskentaTestUtil.Funktiokutsu(
-      nimi = Funktionimi.LUKUARVO,
-      syoteparametrit = List(LaskentaTestUtil.Syoteparametri("luku", lukuarvo))
-    )
+    createAmmatillistenTutkintojenIteroija(
+      jos(
+        yhtasuuri(haeAmmatillisenTutkinnonSuoritustapa, lukuarvo("2015")),
+        opsMallinenJuuri,
+        lukuarvo("2017")))
   }
 
   private def loadJson(path: String): Json = {
