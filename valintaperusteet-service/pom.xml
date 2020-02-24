@@ -453,24 +453,6 @@
                 </executions>
             </plugin>
         </plugins>
-
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>exec-maven-plugin</artifactId>
-                    <configuration>
-                        <mainClass>${valintaperusteet-service.mainClass}</mainClass>
-                        <systemProperties>
-                            <systemProperty>
-                                <key>user.home</key>
-                                <value>${env.VALINTAPERUSTEET_SERVICE_USER_HOME}</value>
-                            </systemProperty>
-                        </systemProperties>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
     </build>
     <pluginRepositories>
         <pluginRepository>
