@@ -57,7 +57,7 @@ trait AmmatillisetIterointiFunktiot {
     } else {
       val tutkinnonOsat: Seq[Osasuoritus] = KoskiLaskenta.etsiAmmatillisenTutkinnonOsat(tutkinnonValitsija, laskin.hakemus)
       val osienMaara = tutkinnonOsat.size
-      Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} hakijan tutkinnolle $tutkinnonValitsija löytyi $osienMaara ammatillista perustutkinnon osaa.")
+      Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} hakijan tutkinnolle ${tutkinnonValitsija.kuvaus} löytyi $osienMaara ammatillista perustutkinnon osaa.")
 
       val tutkinnonOsienIterointiParametrit: Seq[AmmatillisenTutkinnonOsanValitsija] = AmmatillisenTutkinnonOsat(tutkinnonOsat).parametreiksi
 
