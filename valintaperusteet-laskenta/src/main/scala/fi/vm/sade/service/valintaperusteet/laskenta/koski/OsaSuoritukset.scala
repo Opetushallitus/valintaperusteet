@@ -5,7 +5,6 @@ import io.circe.Json
 import io.circe.optics.JsonPath
 import monocle.Optional
 import org.joda.time.DateTime
-import org.slf4j.{Logger, LoggerFactory}
 
 case class Osasuoritus(koulutusmoduulinTunnisteenKoodiarvo: String,
                        koulutusmoduulinNimiFi: String,
@@ -40,22 +39,8 @@ object Osasuoritus {
 }
 
 object OsaSuoritukset {
-  private val LOG: Logger = LoggerFactory.getLogger(OsaSuoritukset.getClass)
-
   def etsiOsasuoritukset(suoritus: Json, sulkeutumisPäivämäärä: DateTime, osasuoritusPredikaatti: Json => Boolean): List[Json] = {
-    OsaSuoritusLinssit.osasuoritukset.getAll(suoritus).filter(osasuoritusPredikaatti).map(OsaSuoritukset.log)
-  }
-
-  private def log(json: Json): Json= {
-    val (osasuorituksenKoodiarvo, osasuorituksenNimiFi, uusinHyvaksyttyArvio, uusinLaajuus, uusinArviointiAsteikko) = Osasuoritus.haePerustiedot(json)
-
-    LOG.debug("Osasuorituksen arvio: %s".format(uusinHyvaksyttyArvio))
-    LOG.debug("Osasuorituksen arviointiasteikko: %s".format(uusinArviointiAsteikko))
-    LOG.debug("Osasuorituksen laajuus: %s".format(uusinLaajuus))
-    LOG.debug("Osasuorituksen nimi: %s".format(osasuorituksenNimiFi))
-    LOG.debug("Osasuorituksen koodiarvo: %s".format(osasuorituksenKoodiarvo))
-
-    json
+    OsaSuoritusLinssit.osasuoritukset.getAll(suoritus).filter(osasuoritusPredikaatti)
   }
 
   def etsiUusinArvosanaLaajuusJaArviointiAsteikko(osasuoritus: Json): (String, Option[BigDecimal], String) = {

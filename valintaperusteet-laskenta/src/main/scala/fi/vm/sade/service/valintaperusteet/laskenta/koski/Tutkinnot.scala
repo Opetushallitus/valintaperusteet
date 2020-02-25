@@ -7,13 +7,8 @@ import io.circe.optics.JsonTraversalPath
 import monocle.Optional
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 
 object Tutkinnot {
-
-  private val LOG: Logger = LoggerFactory.getLogger(Tutkinnot.getClass)
-
   private val sallitutSuoritusTavat: Set[String] = Set("ops", "reformi")
 
   object TutkintoLinssit {
@@ -71,14 +66,6 @@ object Tutkinnot {
             suorituksenTyyppi.contains(suorituksenHaluttuTyyppi) &&
             onkoValidiSuoritusTapa
 
-        LOG.debug("Opiskeluoikeuden tyyppi: %s".format(opiskeluoikeudenTyyppi))
-        LOG.debug("Valmistumistila: %s".format(valmistumisTila))
-        LOG.debug("Suoritustapa: %s".format(suoritustavanKoodiarvo))
-        LOG.debug("Onko validi suoritustapa: %s".format(onkoValidiSuoritusTapa))
-        LOG.debug("Onko valmistunut: %s".format(onkoValmistunut))
-        LOG.debug("Suorituksen tyyppi: %s".format(suorituksenTyyppi))
-        LOG.debug("Onko ammatillinen opiskeluoikeus: %s".format(onkoAmmatillinenOpiskeluOikeus))
-
         onkoAmmatillinenOpiskeluOikeus && onkoValmistunut
       }
     })
@@ -88,19 +75,11 @@ object Tutkinnot {
     val dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd")
 
     TutkintoLinssit.suoritukset.json.getAll(tutkinto).filter(suoritus => {
-      val (koodiarvo: Option[String], lyhytNimiFi: Option[String], koulutusTyypinNimiFi: Option[String]) = tutkinnonPerusTiedot(suoritus)
-
       val vahvistettuRajapäivänä = TutkintoLinssit.vahvistusPvm.getOption(suoritus) match {
         case Some(dateString) => sulkeutumisPäivämäärä.isAfter(dateFormat.parseDateTime(dateString))
         case None => false
       }
       val onkoSallitunTyyppinenSuoritus = suodatusPredikaatti(suoritus)
-
-      LOG.debug("Koodiarvo: %s".format(koodiarvo))
-      LOG.debug("Onko sallitun tyyppinen suoritus: %s".format(onkoSallitunTyyppinenSuoritus))
-      LOG.debug("Nimi: %s".format(lyhytNimiFi))
-      LOG.debug("Koulutustyypin nimi: %s".format(koulutusTyypinNimiFi))
-      LOG.debug("On vahvistettu rajapäivänä pvm: %s".format(vahvistettuRajapäivänä))
 
       onkoSallitunTyyppinenSuoritus && vahvistettuRajapäivänä
     })
@@ -113,8 +92,6 @@ object Tutkinnot {
         case Some(s) => s.toInt
         case None => -1
       }
-      LOG.debug("Suoritustapa: %s".format(suoritusTapa))
-      LOG.debug("Koulutustyypin koodiarvo: %s".format(koulutusTyypinKoodiarvo))
       suorituksenSallitutKoodit.contains(koulutusTyypinKoodiarvo) &&
         sallitutSuoritusTavat.contains(suoritusTapa)
     })
