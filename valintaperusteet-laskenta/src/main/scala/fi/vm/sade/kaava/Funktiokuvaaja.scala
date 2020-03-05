@@ -154,6 +154,35 @@ object Funktiokuvaaja {
       tyyppi = Funktiotyyppi.TOTUUSARVOFUNKTIO,
       funktioargumentit = List(Funktioargumenttikuvaus("f", Funktiotyyppi.TOTUUSARVOFUNKTIO))
     ),
+    Funktionimi.ITEROIAMMATILLISETTUTKINNOT -> Funktiokuvaus(
+      tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
+      funktioargumentit = List(Funktioargumenttikuvaus("iteroitava koostefunktio", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.YKSI)),
+    ),
+    Funktionimi.ITEROIAMMATILLISETOSAT -> Funktiokuvaus(
+      tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
+      funktioargumentit = List(Funktioargumenttikuvaus("iteroitava funktio", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.YKSI)),
+    ),
+    Funktionimi.ITEROIAMMATILLISETYTOOSAALUEET -> Funktiokuvaus(
+      tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
+      valintaperusteparametri = List(Valintaperusteparametrikuvaus("yto-koodi", Syoteparametrityyppi.MERKKIJONO, kuvaus = "Yhteisen tutkinnon osan koodi")),
+      funktioargumentit = List(Funktioargumenttikuvaus("iteroitava funktio", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.YKSI)),
+    ),
+    Funktionimi.HAEAMMATILLISENYTOOSAALUEENARVOSANA -> Funktiokuvaus(
+      tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
+      konvertteri = Some(
+        Konvertterikuvaus(
+          pakollinen = false,
+          konvertteriTyypit = Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.DESIMAALILUKU))
+        ))
+    ),
+    Funktionimi.HAEAMMATILLISENYTOOSAALUEENLAAJUUS -> Funktiokuvaus(
+      tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
+      konvertteri = Some(
+        Konvertterikuvaus(
+          pakollinen = false,
+          konvertteriTyypit = Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.DESIMAALILUKU))
+        ))
+    ),
     Funktionimi.HAEAMMATILLINENYTOARVOSANA -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
       valintaperusteparametri = List(Valintaperusteparametrikuvaus("tunniste", Syoteparametrityyppi.MERKKIJONO, kuvaus = "Tunniste")),
@@ -167,6 +196,38 @@ object Funktiokuvaaja {
     Funktionimi.HAEAMMATILLINENYTOARVIOINTIASTEIKKO -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
       valintaperusteparametri = List(Valintaperusteparametrikuvaus("yto-koodi", Syoteparametrityyppi.MERKKIJONO, kuvaus = "Yhteisen tutkinnon osan koodi")),
+      konvertteri = Some(
+        Konvertterikuvaus(
+          pakollinen = true,
+          konvertteriTyypit = Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.MERKKIJONO))
+        ))
+    ),
+    Funktionimi.HAEAMMATILLISENOSANLAAJUUS -> Funktiokuvaus(
+      tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
+      konvertteri = Some(
+        Konvertterikuvaus(
+          pakollinen = false,
+          konvertteriTyypit = Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.DESIMAALILUKU))
+        ))
+    ),
+    Funktionimi.HAEAMMATILLISENOSANARVOSANA -> Funktiokuvaus(
+      tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
+      konvertteri = Some(
+        Konvertterikuvaus(
+          pakollinen = false,
+          konvertteriTyypit = Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.DESIMAALILUKU))
+        ))
+    ),
+    Funktionimi.HAEAMMATILLISENTUTKINNONKESKIARVO -> Funktiokuvaus(
+      tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
+      konvertteri = Some(
+        Konvertterikuvaus(
+          pakollinen = false,
+          konvertteriTyypit = Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.DESIMAALILUKU))
+        ))
+    ),
+    Funktionimi.HAEAMMATILLISENTUTKINNONSUORITUSTAPA -> Funktiokuvaus(
+      tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
       konvertteri = Some(
         Konvertterikuvaus(
           pakollinen = true,

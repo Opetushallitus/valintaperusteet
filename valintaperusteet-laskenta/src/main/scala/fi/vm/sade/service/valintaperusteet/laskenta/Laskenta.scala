@@ -295,17 +295,103 @@ object Laskenta {
                           valintaperusteviite: Valintaperuste,oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false)
     extends HaeArvo[BigDecimal] with Lukuarvofunktio
 
+  case class IteroiAmmatillisetTutkinnot(f: Lukuarvofunktio,
+                                         oid: String = "",
+                                         tulosTunniste: String = "",
+                                         tulosTekstiFi: String = "",
+                                         tulosTekstiSv: String = "",
+                                         tulosTekstiEn: String = "",
+                                         omaopintopolku: Boolean = false
+                                        ) extends Lukuarvofunktio
+
+  case class IteroiAmmatillisetTutkinnonOsat(f: Lukuarvofunktio,
+                                             oid: String = "",
+                                             tulosTunniste: String = "",
+                                             tulosTekstiFi: String = "",
+                                             tulosTekstiSv: String = "",
+                                             tulosTekstiEn: String = "",
+                                             omaopintopolku: Boolean = false
+                                        ) extends Lukuarvofunktio
+
+  case class IteroiAmmatillisenTutkinnonYtoOsaAlueet(f: Lukuarvofunktio,
+                                                     valintaperusteviite: Valintaperuste,
+                                                     oid: String = "",
+                                                     tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false) extends Lukuarvofunktio
+
+  case class HaeAmmatillisenTutkinnonYtoOsaAlueenArvosana(konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]], oletusarvo: Option[BigDecimal], oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false)
+    extends Lukuarvofunktio {
+
+    override val iteraatioParametrinTyyppi: Option[Class[_ <: IteraatioParametri]] = Some(classOf[AmmatillisenPerustutkinnonValitsija])
+  }
+
+  case class HaeAmmatillisenTutkinnonYtoOsaAlueenLaajuus(konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]], oletusarvo: Option[BigDecimal], oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false)
+    extends Lukuarvofunktio {
+
+    override val iteraatioParametrinTyyppi: Option[Class[_ <: IteraatioParametri]] = Some(classOf[AmmatillisenPerustutkinnonValitsija])
+  }
+
   case class HaeAmmatillinenYtoArvosana(konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]],
                                         oletusarvo: Option[BigDecimal],
                                         valintaperusteviite: Valintaperuste,
                                         oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false)
-    extends HaeArvo[BigDecimal] with Lukuarvofunktio
+    extends HaeArvo[BigDecimal] with Lukuarvofunktio {
+
+    override val iteraatioParametrinTyyppi: Option[Class[_ <: IteraatioParametri]] = Some(classOf[AmmatillisenPerustutkinnonValitsija])
+  }
 
   case class HaeAmmatillinenYtoArviointiAsteikko(konvertteri: Konvertteri[String, BigDecimal],
                                                  oletusarvo: Option[BigDecimal],
                                                  valintaperusteviite: Valintaperuste,
                                                  oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false)
-    extends HaeArvo[BigDecimal] with Lukuarvofunktio
+    extends HaeArvo[BigDecimal] with Lukuarvofunktio {
+
+    override val iteraatioParametrinTyyppi: Option[Class[_ <: IteraatioParametri]] = Some(classOf[AmmatillisenPerustutkinnonValitsija])
+  }
+
+  case class HaeAmmatillisenTutkinnonOsanLaajuus(konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]],
+                                                 oletusarvo: Option[BigDecimal],
+                                                 oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false)
+    extends Lukuarvofunktio {
+
+    override val iteraatioParametrinTyyppi: Option[Class[_ <: IteraatioParametri]] = Some(classOf[AmmatillisenTutkinnonOsanValitsija])
+  }
+
+  case class HaeAmmatillisenTutkinnonOsanArvosana(konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]],
+                                                  oid: String = "",
+                                                  tulosTunniste: String = "",
+                                                  tulosTekstiFi: String = "",
+                                                  tulosTekstiSv: String = "",
+                                                  tulosTekstiEn: String = "",
+                                                  omaopintopolku: Boolean = false)
+    extends Lukuarvofunktio {
+
+    override val iteraatioParametrinTyyppi: Option[Class[_ <: IteraatioParametri]] = Some(classOf[AmmatillisenTutkinnonOsanValitsija])
+  }
+
+  case class HaeAmmatillisenTutkinnonKeskiarvo(konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]],
+                                                    oid: String = "",
+                                                    tulosTunniste: String = "",
+                                                    tulosTekstiFi: String = "",
+                                                    tulosTekstiSv: String = "",
+                                                    tulosTekstiEn: String = "",
+                                                    omaopintopolku: Boolean = false)
+    extends Lukuarvofunktio {
+
+    override val iteraatioParametrinTyyppi: Option[Class[_ <: IteraatioParametri]] = Some(classOf[AmmatillisenPerustutkinnonValitsija])
+  }
+
+  case class HaeAmmatillisenTutkinnonSuoritustapa(konvertteri: Konvertteri[String, BigDecimal],
+                                                  oletusarvo: Option[BigDecimal],
+                                                  oid: String = "",
+                                                  tulosTunniste: String = "",
+                                                  tulosTekstiFi: String = "",
+                                                  tulosTekstiSv: String = "",
+                                                  tulosTekstiEn: String = "",
+                                                  omaopintopolku: Boolean = false)
+    extends Lukuarvofunktio {
+
+    override val iteraatioParametrinTyyppi: Option[Class[_ <: IteraatioParametri]] = Some(classOf[AmmatillisenPerustutkinnonValitsija])
+  }
 
   case class HaeMerkkijonoJaKonvertoiLukuarvoksi(konvertteri: Konvertteri[String, BigDecimal],
                                                  oletusarvo: Option[BigDecimal],
@@ -424,9 +510,17 @@ object Laskenta {
       "Lähdeskaalan minimin pitää olla pienempi kuin maksimi")
   }
 
-  case class PainotettuKeskiarvo(oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false, fs: Seq[Tuple2[Lukuarvofunktio, Lukuarvofunktio]]) extends Lukuarvofunktio {
+  case class PainotettuKeskiarvo(oid: String = "",
+                                 tulosTunniste: String = "",
+                                 tulosTekstiFi: String = "",
+                                 tulosTekstiSv: String = "",
+                                 tulosTekstiEn: String = "",
+                                 omaopintopolku: Boolean = false,
+                                 fs: Seq[Tuple2[Lukuarvofunktio, Lukuarvofunktio]]
+                                ) extends Lukuarvofunktio {
     require(fs.nonEmpty, "Parametreja pitää olla vähintään yksi")
   }
+
   case class Valintaperusteyhtasuuruus(oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false,
                                        valintaperusteet: Tuple2[Valintaperuste, Valintaperuste]) extends Totuusarvofunktio
 

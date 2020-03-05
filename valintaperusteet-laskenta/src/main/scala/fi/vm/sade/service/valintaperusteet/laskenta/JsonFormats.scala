@@ -2,19 +2,26 @@ package fi.vm.sade.service.valintaperusteet.laskenta
 
 import java.lang.{Integer => JInteger}
 import java.math.{BigDecimal => JBigDecimal}
-import java.util.{List => JList, Map => JMap}
+import java.util.{Map => JMap}
+import java.util.{List => JList}
 
 import fi.vm.sade.kaava.Funktiokuvaaja.Konvertterinimi.Konvertterinimi
-import fi.vm.sade.kaava.Funktiokuvaaja.{Konvertterinimi, _}
-import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.{Hylattytila, Hyvaksyttavissatila, Tila, Virhetila}
-import fi.vm.sade.service.valintaperusteet.laskenta.api.{Hakemus, Hakutoive}
+import fi.vm.sade.kaava.Funktiokuvaaja.Konvertterinimi
+import fi.vm.sade.kaava.Funktiokuvaaja._
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Hylattytila
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Hyvaksyttavissatila
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Tila
+import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Virhetila
+import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus
+import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakutoive
 import fi.vm.sade.service.valintaperusteet.model.JsonViews
 import org.codehaus.jackson.map.ObjectMapper
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
 object JsonFormats {
-  import JsonHelpers.{arrayMapWrites, enumFormat}
+  import JsonHelpers.arrayMapWrites
+  import JsonHelpers.enumFormat
 
   // Enumit
   implicit def funktiotyyppiFormat = enumFormat(Funktiotyyppi)
@@ -151,7 +158,7 @@ object JsonFormats {
     (__ \ "tilat").read(Reads.list[Tila](tilaReads)) and
     (__ \ "historiat").lazyReadNullable(Reads.list[Historia](historiaReads)) and
     (__ \ "avaimet").readNullable[Map[String, Option[Any]]]
-  )(Historia)
+  )((funktio, tulos, tilat, historiat, avaimet) => Historia(funktio, None, tulos, tilat, historiat, avaimet))
 
   implicit def historiaWrites: Writes[Historia] = (
     (__ \ "funktio").write[String] and
@@ -159,7 +166,7 @@ object JsonFormats {
     (__ \ "tilat").write(Writes.traversableWrites[Tila](tilaWrites)) and
     (__ \ "historiat").lazyWriteNullable(Writes.traversableWrites[Historia](historiaWrites)) and
     (__ \ "avaimet").writeNullable[Map[String, Option[Any]]]
-    )(unlift(Historia.unapply))
+    )(h => (h.funktio, h.tulos, h.tilat, h.historiat, h.avaimet))
 
   //Tila
   implicit def tilaReads: Reads[Tila] = new Reads[Tila] {
