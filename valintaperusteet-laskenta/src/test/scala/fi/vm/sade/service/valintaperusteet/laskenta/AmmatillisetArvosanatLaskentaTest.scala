@@ -13,6 +13,7 @@ import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.JOS_LAISKA_PARA
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakukohde
 import fi.vm.sade.service.valintaperusteet.model.Syoteparametri
 import fi.vm.sade.service.valintaperusteet.model.Arvokonvertteriparametri
+import fi.vm.sade.service.valintaperusteet.model.Arvovalikonvertteriparametri
 import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu
 import fi.vm.sade.service.valintaperusteet.model.TekstiRyhma
 import io.circe.Json
@@ -239,6 +240,148 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
         funktioargumentit = List(haara1, haara2))
     }
 
+    def haeAmmatillisenTutkinnonTallennettuKeskiarvo(): Funktiokutsu = {
+      LaskentaTestUtil.Funktiokutsu(
+        nimi = Funktionimi.HAEAMMATILLISENTUTKINNONKESKIARVO,
+      )
+    }
+
+    def arvovali(min: String, max: String, arvo: String) = {
+      LaskentaTestUtil.Arvovalikonvertteriparametri(
+        paluuarvo = arvo,
+        min = min,
+        max = max,
+        palautaHaettuArvo = "false",
+        kuvaukset = new TekstiRyhma())
+    }
+
+    val ytoKeskiarvotPisteiksi = List(
+      arvovali("0", "1", "0"),
+      arvovali("1", "1.1", "0"),
+      arvovali("1.11", "1.17", "1"),
+      arvovali("1.17", "1.23", "2"),
+      arvovali("1.23", "1.30", "3"),
+      arvovali("1.30", "1.36", "4"),
+      arvovali("1.36", "1.42", "5"),
+      arvovali("1.42", "1.49", "6"),
+      arvovali("1.49", "1.55", "7"),
+      arvovali("1.55", "1.61", "8"),
+      arvovali("1.61", "1.67", "9"),
+      arvovali("1.67", "1.74", "10"),
+      arvovali("1.74", "1.80", "11"),
+      arvovali("1.80", "1.86", "12"),
+      arvovali("1.86", "1.93", "13"),
+      arvovali("1.93", "1.99", "14"),
+      arvovali("1.99", "2.05", "15"),
+      arvovali("2.05", "2.12", "16"),
+      arvovali("2.12", "2.18", "17"),
+      arvovali("2.18", "2.24", "18"),
+      arvovali("2.24", "2.30", "19"),
+      arvovali("2.30", "2.37", "20"),
+      arvovali("2.37", "2.43", "21"),
+      arvovali("2.43", "2.49", "22"),
+      arvovali("2.49", "2.54", "23"),
+      arvovali("2.54", "2.58", "24"),
+      arvovali("2.58", "2.63", "25"),
+      arvovali("2.63", "2.67", "26"),
+      arvovali("2.67", "2.71", "27"),
+      arvovali("2.71", "2.76", "28"),
+      arvovali("2.76", "2.80", "29"),
+      arvovali("2.80", "2.85", "30"),
+      arvovali("2.85", "2.89", "31"),
+      arvovali("2.89", "2.93", "32"),
+      arvovali("2.93", "2.98", "33"),
+      arvovali("2.98", "3.02", "34"),
+      arvovali("3.02", "3.07", "35"),
+      arvovali("3.07", "3.11", "36"),
+      arvovali("3.11", "3.15", "37"),
+      arvovali("3.15", "3.20", "38"),
+      arvovali("3.20", "3.24", "39"),
+      arvovali("3.24", "3.29", "40"),
+      arvovali("3.29", "3.33", "41"),
+      arvovali("3.33", "3.37", "42"),
+      arvovali("3.37", "3.42", "43"),
+      arvovali("3.42", "3.46", "44"),
+      arvovali("3.46", "3.50", "45"),
+      arvovali("3.50", "3.54", "46"),
+      arvovali("3.54", "3.57", "47"),
+      arvovali("3.57", "3.61", "48"),
+      arvovali("3.61", "3.65", "49"),
+      arvovali("3.65", "3.68", "50"),
+      arvovali("3.68", "3.72", "51"),
+      arvovali("3.72", "3.76", "52"),
+      arvovali("3.76", "3.79", "53"),
+      arvovali("3.79", "3.83", "54"),
+      arvovali("3.83", "3.87", "55"),
+      arvovali("3.87", "3.91", "56"),
+      arvovali("3.91", "3.94", "57"),
+      arvovali("3.94", "3.98", "58"),
+      arvovali("3.98", "4.02", "59"),
+      arvovali("4.02", "4.05", "60"),
+      arvovali("4.05", "4.09", "61"),
+      arvovali("4.09", "4.13", "62"),
+      arvovali("4.13", "4.16", "63"),
+      arvovali("4.16", "4.20", "64"),
+      arvovali("4.20", "4.24", "65"),
+      arvovali("4.24", "4.28", "66"),
+      arvovali("4.24", "4.28", "66"),
+      arvovali("4.28", "4.31", "67"),
+      arvovali("4.31", "4.35", "68"),
+      arvovali("4.35", "4.39", "69"),
+      arvovali("4.39", "4.42", "70"),
+      arvovali("4.42", "4.46", "71"),
+      arvovali("4.46", "4.49", "72"),
+      arvovali("4.49", "4.52", "73"),
+      arvovali("4.52", "4.55", "74"),
+      arvovali("4.55", "4.58", "75"),
+      arvovali("4.58", "4.61", "76"),
+      arvovali("4.61", "4.64", "77"),
+      arvovali("4.64", "4.67", "78"),
+      arvovali("4.67", "4.70", "79"),
+      arvovali("4.70", "4.73", "80"),
+      arvovali("4.73", "4.76", "81"),
+      arvovali("4.76", "4.79", "82"),
+      arvovali("4.79", "4.82", "83"),
+      arvovali("4.82", "4.85", "84"),
+      arvovali("4.85", "4.88", "85"),
+      arvovali("4.88", "4.91", "86"),
+      arvovali("4.91", "4.94", "87"),
+      arvovali("4.94", "4.97", "88"),
+      arvovali("4.97", "5", "89"),
+      arvovali("5", "5.1", "90")
+    )
+
+    def arvokonvertteriparametri(arvo: String, paluuarvo: String): Arvokonvertteriparametri = {
+      LaskentaTestUtil.Arvokonvertteriparametri(paluuarvo = paluuarvo, arvo = arvo, hylkaysperuste = "false", new TekstiRyhma()),
+    }
+
+    def konvertoiLukuarvo(arvovalikonvertterit: List[Arvovalikonvertteriparametri], sisafunktio: Funktiokutsu): Funktiokutsu = {
+      LaskentaTestUtil.Funktiokutsu(
+        nimi = Funktionimi.KONVERTOILUKUARVO,
+        funktioargumentit = List(sisafunktio),
+        arvovalikonvertterit = arvovalikonvertterit
+      )
+    }
+
+    def haeJaKonvertoiAmmatillinenYtoArvosana(parametri: String, arvovalikonvertterit: List[Arvokonvertteriparametri]) = {
+      LaskentaTestUtil.Funktiokutsu(
+        nimi = Funktionimi.HAEAMMATILLINENYTOARVOSANA,
+        arvokonvertterit = arvovalikonvertterit,
+        valintaperustetunniste = List(
+          LaskentaTestUtil.ValintaperusteViite(onPakollinen = false, tunniste = parametri))
+      )
+    }
+
+    def haeAmmatillinenYtoArviointiAsteikko(parametri: String): Funktiokutsu = {
+      LaskentaTestUtil.Funktiokutsu(
+        nimi = Funktionimi.HAEAMMATILLINENYTOARVIOINTIASTEIKKO,
+        valintaperustetunniste = List(LaskentaTestUtil.ValintaperusteViite(onPakollinen = false, tunniste = parametri)),
+        arvokonvertterit = List(
+          arvokonvertteriparametri("arviointiasteikkoammatillinen15", "5"),
+          arvokonvertteriparametri("arviointiasteikkoammatillinent1k3", "3"),
+        ))
+    }
+
     val opsMallinenJuuri =
       summa(
         // Ammatillisen ops-mallisen tutkinnon yhteisten tutkinnon osien pisteet
@@ -247,11 +390,19 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
           // Ammatillinen yto viestintä- ja vuorovaikutusosaaminen
           maksimi(
             jos(
-              yhtasuuri(createAmmatillinenYtoArviointiAsteikkoKutsu("101053"), lukuarvo("3")),
-              createHaeAmmatillinenYtoArvosanaKutsu("101053"),
+              yhtasuuri(haeAmmatillinenYtoArviointiAsteikko("101053"), lukuarvo("3")),
+              haeJaKonvertoiAmmatillinenYtoArvosana("101053", List(
+                arvokonvertteriparametri("1", "2"),
+                arvokonvertteriparametri("2", "13"),
+                arvokonvertteriparametri("3", "20"))
+              ),
               jos(
-                yhtasuuri(createAmmatillinenYtoArviointiAsteikkoKutsu("101053"), lukuarvo("5")),
-                createHaeAmmatillinenYtoArvosanaKutsu("101053"),
+                yhtasuuri(haeAmmatillinenYtoArviointiAsteikko("101053"), lukuarvo("5")),
+                haeJaKonvertoiAmmatillinenYtoArvosana("101053", List(
+                  arvokonvertteriparametri("1", "2"),
+                  arvokonvertteriparametri("2", "13"),
+                  arvokonvertteriparametri("3", "20")
+                )),
                 lukuarvo("0")
               )),
             jos(
@@ -306,7 +457,31 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
         createHaeAmmatillisenTutkinnonOsienKeskiarvoKutsu(),
         maksimi(
           summa(
-            //
+            // Ammatillisen tutkinnon yhteisten osien pisteet
+            konvertoiLukuarvo(
+              ytoKeskiarvotPisteiksi,
+              haeAmmatillisenTutkinnonTallennettuKeskiarvo()
+            ),
+            maksimi(
+              // OPS-pisteet
+              summa(
+                maksimi(
+                  jos(
+                    yhtasuuri(createAmmatillinenYtoArviointiAsteikkoKutsu("101053"), lukuarvo("3")),
+                    createHaeAmmatillinenYtoArvosanaKutsu("10153"),
+                    jos(
+                      yhtasuuri(createAmmatillinenYtoArviointiAsteikkoKutsu("101053"), lukuarvo("5")),
+                      createHaeAmmatillinenYtoArvosanaKutsu("101053"),
+                      lukuarvo("0")
+                    )
+                  )
+                )
+              ),
+
+              summa(
+
+              )
+            ),
           ),
           summa(
 
