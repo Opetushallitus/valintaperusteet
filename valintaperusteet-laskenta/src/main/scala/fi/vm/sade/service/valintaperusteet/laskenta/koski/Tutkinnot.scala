@@ -96,11 +96,4 @@ object Tutkinnot {
         sallitutSuoritusTavat.contains(suoritusTapa)
     })
   }
-
-  private def tutkinnonPerusTiedot(suoritus: Json): (Option[String], Option[String], Option[String]) = {
-    val koodiarvo = TutkintoLinssit.koodiarvo.getOption(suoritus)
-    val lyhytNimiFi = TutkintoLinssit.lyhytNimiFi.getOption(suoritus)
-    val koulutusTyypinNimiFi = TutkintoLinssit.koulutusTyypinNimiFi.getOption(suoritus)
-    (koodiarvo, lyhytNimiFi, koulutusTyypinNimiFi)
-  }
 }
