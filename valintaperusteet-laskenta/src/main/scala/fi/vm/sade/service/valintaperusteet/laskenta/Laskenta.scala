@@ -305,6 +305,7 @@ object Laskenta {
     extends HaeArvo[BigDecimal] with Lukuarvofunktio
 
   case class IteroiAmmatillisetTutkinnot(f: Lukuarvofunktio,
+                                         valintaperusteviite: Valintaperuste,
                                          oid: String = "",
                                          tulosTunniste: String = "",
                                          tulosTekstiFi: String = "",

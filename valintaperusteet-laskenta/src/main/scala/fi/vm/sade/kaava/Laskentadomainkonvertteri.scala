@@ -544,7 +544,15 @@ object Laskentadomainkonvertteri {
         NimettyLukuarvo(s"YO-kokeen pisteet (${valintaperusteviitteet.head.tunniste})", arvosana, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku = omaopintopolku)
 
       case Funktionimi.ITEROIAMMATILLISETTUTKINNOT =>
-        IteroiAmmatillisetTutkinnot(muunnaLukuarvofunktioksi(lasketutArgumentit.head), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
+        IteroiAmmatillisetTutkinnot(
+          muunnaLukuarvofunktioksi(lasketutArgumentit.head),
+          valintaperusteviitteet.headOption.getOrElse(HakemuksenValintaperuste("2020-06-01", pakollinen = true)),
+          oid,
+          tulosTunniste,
+          tulosTekstiFi,
+          tulosTekstiSv,
+          tulosTekstiEn,
+          omaopintopolku)
 
       case Funktionimi.ITEROIAMMATILLISETOSAT =>
         IteroiAmmatillisetTutkinnonOsat(muunnaLukuarvofunktioksi(lasketutArgumentit.head), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
