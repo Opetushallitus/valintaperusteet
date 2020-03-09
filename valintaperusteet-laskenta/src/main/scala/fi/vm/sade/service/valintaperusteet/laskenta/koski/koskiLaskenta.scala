@@ -1,7 +1,5 @@
 package fi.vm.sade.service.valintaperusteet.laskenta.koski
 
-import scala.util.control.Exception._
-
 import fi.vm.sade.service.valintaperusteet.laskenta.AmmatillisenPerustutkinnonValitsija
 import fi.vm.sade.service.valintaperusteet.laskenta.AmmatillisenTutkinnonOsanValitsija
 import fi.vm.sade.service.valintaperusteet.laskenta.AmmatillisenTutkinnonYtoOsaAlueenValitsija
@@ -10,9 +8,10 @@ import fi.vm.sade.service.valintaperusteet.laskenta.koski.Tutkinnot.TutkintoLins
 import io.circe.Json
 import io.circe.optics.JsonPath
 import monocle.Optional
-import org.joda.time.DateTime
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+
+import scala.util.control.Exception._
 
 object KoskiLaskenta {
   private val LOG: Logger = LoggerFactory.getLogger(KoskiLaskenta.getClass)
@@ -27,10 +26,6 @@ object KoskiLaskenta {
   private val _osasuorituksenTyypinKoodiarvo = JsonPath.root.tyyppi.koodiarvo.string
   private val _osasuorituksenKoulutusmoduuli = JsonPath.root.koulutusmoduuli
   val _osasuorituksenKoulutusmoduulinTunnisteenKoodiarvo: Optional[Json, String] = _osasuorituksenKoulutusmoduuli.tunniste.koodiarvo.string
-
-  def sulkeutumisPaivamaara: DateTime = {
-    DateTime.now()  // TODO: Tee konfiguroitavaksi
-  }
 
   def etsiAmmatillisetTutkinnot(hakemus: Hakemus): Seq[Tutkinto] = {
     if (hakemus.koskiOpiskeluoikeudet == null) {
@@ -137,7 +132,7 @@ object KoskiLaskenta {
     } else {
       val tutkinnot = Tutkinnot.etsiValmiitTutkinnot(hakemus.koskiOpiskeluoikeudet, ammatillisenHuomioitavaOpiskeluoikeudenTyyppi, ammatillisenSuorituksenTyyppi, hakemus)
       val suorituksenSallitutKoodit: Set[Int] = ammatillisenHhuomioitavatKoulutustyypit.map(_.koodiarvo)
-      val suoritukset = Tutkinnot.etsiValiditSuoritukset(tutkinnot(tutkinnonValitsija.tutkinnonIndeksi), sulkeutumisPaivamaara, suorituksenSallitutKoodit)
+      val suoritukset = Tutkinnot.etsiValiditSuoritukset(tutkinnot(tutkinnonValitsija.tutkinnonIndeksi), tutkinnonValitsija.valmistumisenTakarajaPvm, suorituksenSallitutKoodit)
       if (suoritukset.size > 1) {
         throw new IllegalStateException(s"Odotettiin täsmälleen yhtä suoritusta hakemuksen ${hakemus.oid} " +
           s"hakijan ammatillisella tutkinnolla ${tutkinnonValitsija.tutkinnonIndeksi} , mutta oli ${suoritukset.size}")
@@ -165,13 +160,13 @@ object KoskiLaskenta {
         suorituksenHaluttuTyyppi = ammatillisenSuorituksenTyyppi, hakemus = hakemus)(tutkinnonValitsija.tutkinnonIndeksi)
 
       val suorituksenSallitutKoodit: Set[Int] = ammatillisenHhuomioitavatKoulutustyypit.map(_.koodiarvo)
-      val suoritukset = Tutkinnot.etsiValiditSuoritukset(oikeaOpiskeluoikeus, sulkeutumisPaivamaara, suorituksenSallitutKoodit)
+      val suoritukset = Tutkinnot.etsiValiditSuoritukset(oikeaOpiskeluoikeus, tutkinnonValitsija.valmistumisenTakarajaPvm, suorituksenSallitutKoodit)
 
       val osasuoritusPredikaatti: Json => Boolean = osasuoritus => {
         "ammatillisentutkinnonosa" == _osasuorituksenTyypinKoodiarvo.getOption(osasuoritus).orNull
       }
 
-      suoritukset.flatMap(OsaSuoritukset.etsiOsasuoritukset(_, sulkeutumisPaivamaara, osasuoritusPredikaatti))
+      suoritukset.flatMap((suoritus: Json) => OsaSuoritukset.etsiOsasuoritukset(suoritus, osasuoritusPredikaatti))
         .map(Osasuoritus(_))
     }
   }

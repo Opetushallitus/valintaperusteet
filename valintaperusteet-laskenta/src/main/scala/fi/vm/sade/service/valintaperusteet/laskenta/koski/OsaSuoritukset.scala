@@ -4,7 +4,6 @@ import fi.vm.sade.service.valintaperusteet.laskenta.koski.Osasuoritus.OsaSuoritu
 import io.circe.Json
 import io.circe.optics.JsonPath
 import monocle.Optional
-import org.joda.time.DateTime
 
 case class Osasuoritus(koulutusmoduulinTunnisteenKoodiarvo: String,
                        koulutusmoduulinNimiFi: String,
@@ -39,7 +38,7 @@ object Osasuoritus {
 }
 
 object OsaSuoritukset {
-  def etsiOsasuoritukset(suoritus: Json, sulkeutumisPäivämäärä: DateTime, osasuoritusPredikaatti: Json => Boolean): List[Json] = {
+  def etsiOsasuoritukset(suoritus: Json, osasuoritusPredikaatti: Json => Boolean): List[Json] = {
     OsaSuoritusLinssit.osasuoritukset.getAll(suoritus).filter(osasuoritusPredikaatti)
   }
 

@@ -1,15 +1,17 @@
 package fi.vm.sade.service.valintaperusteet.laskenta.koski
 
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus
 import io.circe.Json
 import io.circe.optics.JsonPath
 import io.circe.optics.JsonTraversalPath
 import monocle.Optional
-import org.joda.time.DateTime
-import org.joda.time.format.DateTimeFormat
 
 object Tutkinnot {
   private val sallitutSuoritusTavat: Set[String] = Set("ops", "reformi")
+  private val koskiDateFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
   object TutkintoLinssit {
     // Tutkinnon opiskeluoikeuden tiedot
@@ -71,12 +73,10 @@ object Tutkinnot {
     })
   }
 
-  private def etsiSuoritukset(tutkinto: Json, sulkeutumisPäivämäärä: DateTime, suodatusPredikaatti: Json => Boolean): List[Json] = {
-    val dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd")
-
+  private def etsiSuoritukset(tutkinto: Json, valmistumisenTakarajaPvm: LocalDate, suodatusPredikaatti: Json => Boolean): List[Json] = {
     TutkintoLinssit.suoritukset.json.getAll(tutkinto).filter(suoritus => {
       val vahvistettuRajapäivänä = TutkintoLinssit.vahvistusPvm.getOption(suoritus) match {
-        case Some(dateString) => sulkeutumisPäivämäärä.isAfter(dateFormat.parseDateTime(dateString))
+        case Some(dateString) => !LocalDate.parse(dateString, koskiDateFormat).isAfter(valmistumisenTakarajaPvm)
         case None => false
       }
       val onkoSallitunTyyppinenSuoritus = suodatusPredikaatti(suoritus)
@@ -85,8 +85,8 @@ object Tutkinnot {
     })
   }
 
-  def etsiValiditSuoritukset(tutkinto: Json, sulkeutumisPäivämäärä: DateTime, suorituksenSallitutKoodit: Set[Int]): List[Json] = {
-    etsiSuoritukset(tutkinto, sulkeutumisPäivämäärä, suoritus => {
+  def etsiValiditSuoritukset(tutkinto: Json, valmistumisenTakarajaPvm: LocalDate, suorituksenSallitutKoodit: Set[Int]): List[Json] = {
+    etsiSuoritukset(tutkinto, valmistumisenTakarajaPvm, suoritus => {
       val suoritusTapa = TutkintoLinssit.suoritusTapa.getOption(suoritus).orNull
       val koulutusTyypinKoodiarvo = TutkintoLinssit.koulutusTyypinKoodiarvo.getOption(suoritus) match {
         case Some(s) => s.toInt
