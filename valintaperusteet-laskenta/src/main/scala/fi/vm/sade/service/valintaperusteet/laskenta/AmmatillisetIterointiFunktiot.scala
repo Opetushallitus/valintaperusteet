@@ -88,7 +88,7 @@ trait AmmatillisetIterointiFunktiot {
       val ytoKoodi = iterointiFunktio.valintaperusteviite.tunniste
       val ytoOsaAlueet = KoskiLaskenta.haeAmmatillisenTutkinnonYtoOsaAlueet(tutkinnonValitsija, ytoKoodi, laskin.hakemus)
 
-      Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} hakijan tutkinnon $tutkinnonValitsija YTOlle $ytoKoodi löytyi ${ytoOsaAlueet.size} YTOn osa-aluetta.")
+      Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} hakijan tutkinnon ${tutkinnonValitsija.lyhytKuvaus} YTOlle $ytoKoodi löytyi ${ytoOsaAlueet.size} YTOn osa-aluetta.")
 
       val ytoOsaAlueidenIteraatioParametrit: Seq[AmmatillisenTutkinnonYtoOsaAlueenValitsija] = AmmatillisenTutkinnonYtoOsaAlueet(ytoKoodi, ytoOsaAlueet).parametreiksi
 
