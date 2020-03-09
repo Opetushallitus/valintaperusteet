@@ -119,7 +119,6 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
   test("Testaa koko ammatillisten tutkintojen funktiohierarkia") {
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createAmmatillisenTutkintojenKokoHierarkia())
 
-    // TODO: Verifioi pistetulos
     val (tulos, _) = Laskin.laske(hakukohde, reforminMukainenHakemus, lasku)
     assert(BigDecimal(tulos.get) == BigDecimal("105"))
   }
