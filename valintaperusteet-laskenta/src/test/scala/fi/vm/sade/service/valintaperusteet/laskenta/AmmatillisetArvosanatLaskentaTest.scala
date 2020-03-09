@@ -119,8 +119,9 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
   test("Testaa koko ammatillisten tutkintojen funktiohierarkia") {
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createAmmatillisenTutkintojenKokoHierarkia())
 
+    // TODO: Verifioi pistetulos
     val (tulos, _) = Laskin.laske(hakukohde, reforminMukainenHakemus, lasku)
-    assert(BigDecimal(tulos.get) == BigDecimal("2017"))
+    assert(BigDecimal(tulos.get) == BigDecimal("105"))
   }
 
   def createHaeAmmatillinenYtoArvosanaKutsu(ytoKoodi: String, konvertteriparametrit: Set[Arvokonvertteriparametri] = Set()): Funktiokutsu = {
@@ -255,7 +256,7 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
         kuvaukset = new TekstiRyhma())
     }
 
-    val ytoKeskiarvotPisteiksi = List(
+    val keskiarvotPisteiksi = List(
       arvovali("0", "1", "0"),
       arvovali("1", "1.1", "0"),
       arvovali("1.11", "1.17", "1"),
@@ -351,6 +352,16 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
       arvovali("5", "5.1", "90")
     )
 
+    val ytonKeskiarvotPisteiksi = List(
+      arvovali("0", "1", "0"),
+      arvovali("1", "2", "1"),
+      arvovali("2", "3", "5"),
+      arvovali("3", "4", "10"),
+      arvovali("4", "5", "15"),
+      arvovali("5", "5.1", "20")
+    )
+
+
     def arvokonvertteriparametri(arvo: String, paluuarvo: String): Arvokonvertteriparametri = {
       LaskentaTestUtil.Arvokonvertteriparametri(paluuarvo = paluuarvo, arvo = arvo, hylkaysperuste = "false", new TekstiRyhma()),
     }
@@ -382,109 +393,106 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
         ))
     }
 
+    val opsYto1to3pisteytys = List(
+      arvokonvertteriparametri("1", "2"),
+      arvokonvertteriparametri("2", "13"),
+      arvokonvertteriparametri("3", "20")
+    )
+
+    val opsYto1to5pisteytys = List(
+      arvokonvertteriparametri("1", "2"),
+      arvokonvertteriparametri("2", "5"),
+      arvokonvertteriparametri("3", "10"),
+      arvokonvertteriparametri("4", "15"),
+      arvokonvertteriparametri("5", "20")
+    )
+
+    def haeYto(parametri1: String, parametri2: String): Funktiokutsu = {
+      maksimi(
+        jos(
+          yhtasuuri(haeAmmatillinenYtoArviointiAsteikko(parametri1), lukuarvo("3")),
+          haeJaKonvertoiAmmatillinenYtoArvosana(parametri1, opsYto1to3pisteytys),
+          jos(
+            yhtasuuri(haeAmmatillinenYtoArviointiAsteikko(parametri1), lukuarvo("5")),
+            haeJaKonvertoiAmmatillinenYtoArvosana(parametri1, opsYto1to5pisteytys),
+            lukuarvo("0")
+          )),
+        jos(
+          yhtasuuri(haeAmmatillinenYtoArviointiAsteikko(parametri2), lukuarvo("3")),
+          haeJaKonvertoiAmmatillinenYtoArvosana(parametri2, opsYto1to3pisteytys),
+          jos(
+            yhtasuuri(haeAmmatillinenYtoArviointiAsteikko(parametri2), lukuarvo("5")),
+            haeJaKonvertoiAmmatillinenYtoArvosana(parametri2, opsYto1to5pisteytys),
+            lukuarvo("0")
+          )
+        )
+      )
+    }
+
+    def iteroiYtoOsaAlueidenKeskiarvo(ytoKoodi: String): Funktiokutsu= {
+      LaskentaTestUtil.Funktiokutsu(
+        nimi = Funktionimi.ITEROIAMMATILLISETYTOOSAALUEET,
+        funktioargumentit = List(
+          LaskentaTestUtil.Funktiokutsu(
+            nimi = Funktionimi.PAINOTETTUKESKIARVO,
+            funktioargumentit = List(
+              LaskentaTestUtil.Funktiokutsu(nimi = Funktionimi.HAEAMMATILLISENYTOOSAALUEENLAAJUUS),
+              LaskentaTestUtil.Funktiokutsu(nimi = Funktionimi.HAEAMMATILLISENYTOOSAALUEENARVOSANA)
+            ))
+        ),
+        valintaperustetunniste = List(LaskentaTestUtil.ValintaperusteViite(onPakollinen = false, tunniste = ytoKoodi)))
+    }
+
     val opsMallinenJuuri =
       summa(
         // Ammatillisen ops-mallisen tutkinnon yhteisten tutkinnon osien pisteet
         summa(
-
           // Ammatillinen yto viestintä- ja vuorovaikutusosaaminen
-          maksimi(
-            jos(
-              yhtasuuri(haeAmmatillinenYtoArviointiAsteikko("101053"), lukuarvo("3")),
-              haeJaKonvertoiAmmatillinenYtoArvosana("101053", List(
-                arvokonvertteriparametri("1", "2"),
-                arvokonvertteriparametri("2", "13"),
-                arvokonvertteriparametri("3", "20"))
-              ),
-              jos(
-                yhtasuuri(haeAmmatillinenYtoArviointiAsteikko("101053"), lukuarvo("5")),
-                haeJaKonvertoiAmmatillinenYtoArvosana("101053", List(
-                  arvokonvertteriparametri("1", "2"),
-                  arvokonvertteriparametri("2", "13"),
-                  arvokonvertteriparametri("3", "20")
-                )),
-                lukuarvo("0")
-              )),
-            jos(
-              yhtasuuri(createAmmatillinenYtoArviointiAsteikkoKutsu("400012"), lukuarvo("3")),
-              createHaeAmmatillinenYtoArvosanaKutsu("400012"),
-              jos(
-                yhtasuuri(createAmmatillinenYtoArviointiAsteikkoKutsu("400012"), lukuarvo("5")),
-                createHaeAmmatillinenYtoArvosanaKutsu("400012"),
-                lukuarvo("0")
-              ))),
+          haeYto("101053", "400012"),
 
           // Ammatillinen yto matemaattis-luonnontieteellinen osaaminen
-          maksimi(
-            jos(
-              yhtasuuri(createAmmatillinenYtoArviointiAsteikkoKutsu("101054"), lukuarvo("3")),
-              createHaeAmmatillinenYtoArvosanaKutsu("101054"),
-              jos(
-                yhtasuuri(createAmmatillinenYtoArviointiAsteikkoKutsu("101054"), lukuarvo("5")),
-                createHaeAmmatillinenYtoArvosanaKutsu("101054"),
-                lukuarvo("0")
-              )),
-            jos(
-              yhtasuuri(createAmmatillinenYtoArviointiAsteikkoKutsu("400013"), lukuarvo("3")),
-              createHaeAmmatillinenYtoArvosanaKutsu("400013"),
-              jos(
-                yhtasuuri(createAmmatillinenYtoArviointiAsteikkoKutsu("400013"), lukuarvo("5")),
-                createHaeAmmatillinenYtoArvosanaKutsu("400013"),
-                lukuarvo("0")
-              ))),
-
+          haeYto("101054", "400013"),
 
           // Ammatillinen yto yhteiskunta -ja työelämäosaaminen
-          maksimi(
-            jos(
-              yhtasuuri(createAmmatillinenYtoArviointiAsteikkoKutsu("101055"), lukuarvo("3")),
-              createHaeAmmatillinenYtoArvosanaKutsu("101055"),
-              jos(
-                yhtasuuri(createAmmatillinenYtoArviointiAsteikkoKutsu("101055"), lukuarvo("5")),
-                createHaeAmmatillinenYtoArvosanaKutsu("101055"),
-                lukuarvo("0")
-              )),
-            jos(
-              yhtasuuri(createAmmatillinenYtoArviointiAsteikkoKutsu("400014"), lukuarvo("3")),
-              createHaeAmmatillinenYtoArvosanaKutsu("400014"),
-              jos(
-                yhtasuuri(createAmmatillinenYtoArviointiAsteikkoKutsu("400014"), lukuarvo("5")),
-                createHaeAmmatillinenYtoArvosanaKutsu("400014"),
-                lukuarvo("0"))))))
+          haeYto("101055", "400014")
+        )
+      )
 
     val reformiMallinenJuuri: Funktiokutsu = {
       summa(
-        createHaeAmmatillisenTutkinnonOsienKeskiarvoKutsu(),
         maksimi(
           summa(
-            // Ammatillisen tutkinnon yhteisten osien pisteet
+            // Ammatillisen tutkinnon osien pisteet
             konvertoiLukuarvo(
-              ytoKeskiarvotPisteiksi,
+              keskiarvotPisteiksi,
               haeAmmatillisenTutkinnonTallennettuKeskiarvo()
             ),
             maksimi(
-              // OPS-pisteet
               summa(
-                maksimi(
-                  jos(
-                    yhtasuuri(createAmmatillinenYtoArviointiAsteikkoKutsu("101053"), lukuarvo("3")),
-                    createHaeAmmatillinenYtoArvosanaKutsu("10153"),
-                    jos(
-                      yhtasuuri(createAmmatillinenYtoArviointiAsteikkoKutsu("101053"), lukuarvo("5")),
-                      createHaeAmmatillinenYtoArvosanaKutsu("101053"),
-                      lukuarvo("0")
-                    )
-                  )
-                )
+                // Ammatillinen yto viestintä- ja vuorovaikutusosaaminen
+                haeYto("101053", "400012"),
+
+                // Ammatillinen yto matemaattis-luonnontieteellinen osaaminen
+                haeYto("101054", "400013"),
+
+                // Ammatillinen yto yhteiskunta -ja työelämäosaaminen
+                haeYto("101055", "400014")
               ),
-
               summa(
-
+                konvertoiLukuarvo(
+                  ytonKeskiarvotPisteiksi,
+                  iteroiYtoOsaAlueidenKeskiarvo("400012")
+                ),
+                konvertoiLukuarvo(
+                  ytonKeskiarvotPisteiksi,
+                  iteroiYtoOsaAlueidenKeskiarvo("400013")
+                ),
+                konvertoiLukuarvo(
+                  ytonKeskiarvotPisteiksi,
+                  iteroiYtoOsaAlueidenKeskiarvo("400014")
+                )
               )
-            ),
-          ),
-          summa(
-
+            )
           )
         )
       )
@@ -494,7 +502,7 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
       jos(
         yhtasuuri(haeAmmatillisenTutkinnonSuoritustapa, lukuarvo("2015")),
         opsMallinenJuuri,
-        lukuarvo("2017")))
+        reformiMallinenJuuri))
   }
 
   private def loadJson(path: String): Json = {
