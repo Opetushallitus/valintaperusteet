@@ -299,7 +299,7 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
             }
         }
 
-      case f@IteroiAmmatillisetTutkinnot(_, _, _, _, _, _, _, _) => iteroiAmmatillisetTutkinnot(iteraatioParametrit, f)
+      case f@IteroiAmmatillisetTutkinnot(_, _, _, _, _, _, _, _, _) => iteroiAmmatillisetTutkinnot(iteraatioParametrit, f)
 
       case f@IteroiAmmatillisetTutkinnonOsat(_, _, _, _, _, _, _) =>
         iteroiAmmatillisetTutkinnonOsat(iteraatioParametrit, f)

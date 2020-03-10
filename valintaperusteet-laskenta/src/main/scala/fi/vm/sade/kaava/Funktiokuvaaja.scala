@@ -158,6 +158,17 @@ object Funktiokuvaaja {
     Funktionimi.ITEROIAMMATILLISETTUTKINNOT -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
       funktioargumentit = List(Funktioargumenttikuvaus("iteroitava koostefunktio", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.YKSI)),
+      syoteparametrit = List(
+        Syoteparametrikuvaus(
+          avain = Funktionimi.ITEROIAMMATILLISETTUTKINNOT_VALMISTUMIS_PARAMETRI,
+          tyyppi = Syoteparametrityyppi.MERKKIJONO,
+          pakollinen = false, // TODO: Tee pakolliseksi, kun kaikille olemassaoleville funktioille on syötetty parametrit.
+          kuvaus = "Valmistumisen takaraja (esim 1.6.2020)"),
+        Syoteparametrikuvaus(
+          avain = Funktionimi.ITEROIAMMATILLISETTUTKINNOT_LEIKKURIPVM_PARAMETRI,
+          tyyppi = Syoteparametrityyppi.MERKKIJONO,
+          pakollinen = false, // TODO: Tee pakolliseksi, kun kaikille olemassaoleville funktioille on syötetty parametrit.
+          kuvaus = "Tietojen tulee olla Koskessa viimeistään (esim 15.5.2020)")),
     ),
     Funktionimi.ITEROIAMMATILLISETOSAT -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,

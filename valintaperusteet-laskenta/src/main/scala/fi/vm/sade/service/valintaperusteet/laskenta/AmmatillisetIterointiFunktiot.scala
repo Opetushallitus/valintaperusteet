@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.laskenta
 
+import fi.vm.sade.kaava.LaskentaUtil.suomalainenPvmMuoto
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.ITEROIAMMATILLISETOSAT
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.ITEROIAMMATILLISETTUTKINNOT
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.ITEROIAMMATILLISETYTOOSAALUEET
@@ -40,6 +41,8 @@ trait AmmatillisetIterointiFunktiot {
 
       val tilalista = List(tulos.tila)
       val avaimet = ListMap(
+        "Valmistumisen takaraja" -> Some(suomalainenPvmMuoto.format(iterointiFunktio.valmistumisenTakaraja)),
+        "Tiedot tallennettu viimeistään" -> Some(suomalainenPvmMuoto.format(iterointiFunktio.datanAikaleimanLeikkuri)),
         "Ammatillisten perustutkintojen määrä" -> Some(tutkintojenMaara),
         "Ammatilliset perustutkinnot" -> Some(tutkintojenIterointiParametrit.map(_.kuvaus).mkString("; "))) ++
         ammatillistenFunktioidenTulostenTiivistelmat

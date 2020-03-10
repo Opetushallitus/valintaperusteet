@@ -8,13 +8,20 @@ import java.util.{Map => JMap}
 import fi.vm.sade.kaava.LaskentaTestUtil.TestHakemus
 import fi.vm.sade.kaava.LaskentaTestUtil
 import fi.vm.sade.kaava.Laskentadomainkonvertteri
+import fi.vm.sade.kaava.LaskentaTestUtil.TestHakemus
+import fi.vm.sade.kaava.LaskentaTestUtil
+import fi.vm.sade.kaava.Laskentadomainkonvertteri
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.JOS_LAISKA_PARAMETRI
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakukohde
-import fi.vm.sade.service.valintaperusteet.model.Syoteparametri
 import fi.vm.sade.service.valintaperusteet.model.Arvokonvertteriparametri
 import fi.vm.sade.service.valintaperusteet.model.Arvovalikonvertteriparametri
 import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu
+import fi.vm.sade.service.valintaperusteet.model.TekstiRyhma
+import fi.vm.sade.service.valintaperusteet.model.Arvokonvertteriparametri
+import fi.vm.sade.service.valintaperusteet.model.Arvovalikonvertteriparametri
+import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu
+import fi.vm.sade.service.valintaperusteet.model.Syoteparametri
 import fi.vm.sade.service.valintaperusteet.model.TekstiRyhma
 import io.circe.Json
 import io.circe.parser
@@ -193,7 +200,10 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
       funktioargumentit = List(
         LaskentaTestUtil.Funktiokutsu(
           nimi = Funktionimi.MAKSIMI,
-          funktioargumentit = List(lapsi))))
+          funktioargumentit = List(lapsi))),
+      syoteparametrit = List(
+        LaskentaTestUtil.Syoteparametri(Funktionimi.ITEROIAMMATILLISETTUTKINNOT_VALMISTUMIS_PARAMETRI, "2.6.2020"),
+        LaskentaTestUtil.Syoteparametri(Funktionimi.ITEROIAMMATILLISETTUTKINNOT_LEIKKURIPVM_PARAMETRI, "16.5.2020")))
   }
 
   def createAmmatillisenTutkintojenKokoHierarkia(): Funktiokutsu = {

@@ -1,5 +1,6 @@
 package fi.vm.sade.kaava
 
+import java.time.format.DateTimeFormatter
 import java.util.{Set => JSet}
 
 import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti
@@ -7,6 +8,7 @@ import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti
 import scala.jdk.CollectionConverters._
 
 object LaskentaUtil {
+  val suomalainenPvmMuoto: DateTimeFormatter = DateTimeFormatter.ofPattern("d.M.yyyy")
 
   def jarjestaFunktioargumentit(args: JSet[Funktioargumentti]): List[Funktioargumentti] = {
     args.asScala.toList.sortWith(_.getIndeksi < _.getIndeksi)

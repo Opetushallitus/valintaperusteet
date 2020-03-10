@@ -1,5 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.laskenta
 
+import java.time.LocalDate
+
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
 import fi.vm.sade.service.valintaperusteet.model.LokalisoituTeksti
 import fi.vm.sade.service.valintaperusteet.model.TekstiRyhma
@@ -304,8 +306,9 @@ object Laskenta {
                           valintaperusteviite: Valintaperuste,oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false)
     extends HaeArvo[BigDecimal] with Lukuarvofunktio
 
-  case class IteroiAmmatillisetTutkinnot(f: Lukuarvofunktio,
-                                         valintaperusteviite: Valintaperuste,
+  case class IteroiAmmatillisetTutkinnot(valmistumisenTakaraja: LocalDate,
+                                         datanAikaleimanLeikkuri: LocalDate,
+                                         f: Lukuarvofunktio,
                                          oid: String = "",
                                          tulosTunniste: String = "",
                                          tulosTekstiFi: String = "",
@@ -313,6 +316,11 @@ object Laskenta {
                                          tulosTekstiEn: String = "",
                                          omaopintopolku: Boolean = false
                                         ) extends Lukuarvofunktio
+
+  object IteroiAmmatillisetTutkinnot {
+    val VALMISTUMIS_PARAMETRI: String = "valmistumisenTakarajaPvm"
+    val LEIKKURIPVM_PARAMETRI: String = "koskessaViimeistaanPvm"
+  }
 
   case class IteroiAmmatillisetTutkinnonOsat(f: Lukuarvofunktio,
                                              oid: String = "",

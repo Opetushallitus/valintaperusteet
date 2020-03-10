@@ -1,8 +1,13 @@
 package fi.vm.sade.kaava
 
+import java.time.LocalDate
+import java.time.Month
 import java.util.{Set => JSet}
 
+import fi.vm.sade.kaava.LaskentaUtil.suomalainenPvmMuoto
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.ITEROIAMMATILLISETTUTKINNOT_LEIKKURIPVM_PARAMETRI
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.ITEROIAMMATILLISETTUTKINNOT_VALMISTUMIS_PARAMETRI
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.JOS_LAISKA_PARAMETRI
 import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde
 import fi.vm.sade.service.valintaperusteet.laskenta.Funktio
@@ -85,10 +90,13 @@ import fi.vm.sade.service.valintaperusteet.model.TekstiRyhma
 import fi.vm.sade.service.valintaperusteet.model.ValintaperusteViite
 import fi.vm.sade.service.valintaperusteet.service.validointi.virhe.LaskentakaavaEiOleValidiException
 import org.apache.commons.lang.StringUtils
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 import scala.jdk.CollectionConverters._
 
 object Laskentadomainkonvertteri {
+  val LOG: Logger = LoggerFactory.getLogger(getClass)
 
   private val YO = "YO"
   private val PK = "PK"
@@ -545,8 +553,9 @@ object Laskentadomainkonvertteri {
 
       case Funktionimi.ITEROIAMMATILLISETTUTKINNOT =>
         IteroiAmmatillisetTutkinnot(
+          muunnaParametriSuomalaisestaPaivamaarasta(ITEROIAMMATILLISETTUTKINNOT_VALMISTUMIS_PARAMETRI, syoteparametrit, LocalDate.of(2020, Month.JUNE, 1)),
+          muunnaParametriSuomalaisestaPaivamaarasta(ITEROIAMMATILLISETTUTKINNOT_LEIKKURIPVM_PARAMETRI, syoteparametrit, LocalDate.of(2020, Month.MAY, 15)),
           muunnaLukuarvofunktioksi(lasketutArgumentit.head),
-          valintaperusteviitteet.headOption.getOrElse(HakemuksenValintaperuste("2020-06-01", pakollinen = true)),
           oid,
           tulosTunniste,
           tulosTekstiFi,
@@ -687,5 +696,25 @@ object Laskentadomainkonvertteri {
       case _ => None
     }
     YoEhdot(alkuvuosi, loppuvuosi, alkulukukausi, loppulukukausi, vainValmistuneet, rooli)
+  }
+
+  private def muunnaParametriSuomalaisestaPaivamaarasta(parametrinAvain: String, syoteparametrit: JSet[Syoteparametri], oletusarvo: LocalDate): LocalDate = {
+    val p = syoteparametrit.asScala.find(_.getAvain == parametrinAvain)
+
+    p match {
+      case Some(parametri) =>
+        try {
+          LocalDate.parse(parametri.getArvo, suomalainenPvmMuoto)
+        } catch {
+          case e: Exception =>
+            val viesti: String = s"Ei pystytty tulkitsemaan suomalaista päivämäärää (esim '${suomalainenPvmMuoto.format(LocalDate.now())}' " +
+              s"syötteestä ${parametri.getArvo} funktion ${parametri.getFunktiokutsu.getFunktionimi} parametriksi '${parametri.getAvain}'. Käytetään oletusarvoa ${suomalainenPvmMuoto.format(oletusarvo)}"
+            LOG.error(viesti, e)
+            oletusarvo
+        }
+      case None =>
+        LOG.error(s"Funktiolle ei löytynyt arvoa parametrille '$parametrinAvain'. Käytetään oletusarvoa ${suomalainenPvmMuoto.format(oletusarvo)}")
+        oletusarvo
+    }
   }
 }
