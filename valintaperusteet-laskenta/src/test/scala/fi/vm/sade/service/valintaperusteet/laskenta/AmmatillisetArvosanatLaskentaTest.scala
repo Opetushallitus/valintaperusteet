@@ -126,8 +126,17 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
   test("Testaa koko ammatillisten tutkintojen funktiohierarkia") {
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createAmmatillisenTutkintojenKokoHierarkia())
 
-    val (tulos, _) = Laskin.laske(hakukohde, reforminMukainenHakemus, lasku)
-    assert(BigDecimal(tulos.get) == BigDecimal("105"))
+    val (tulos1, _) = Laskin.laske(hakukohde, reforminMukainenHakemus, lasku)
+    assert(BigDecimal(tulos1.get) == BigDecimal("105"))
+
+    val (tulos2, _) = Laskin.laske(hakukohde, hakemusJossaOnVainSkipattaviaNayttoja, lasku)
+    assert(tulos2 == None)
+
+    val (tulos3, _) = Laskin.laske(hakukohde, monenTutkinnonHakemus, lasku)
+    assert(BigDecimal(tulos3.get) == BigDecimal("45"))
+
+    val (tulos4, _) = Laskin.laske(hakukohde, hakemus, lasku)
+    assert(BigDecimal(tulos4.get) == BigDecimal("15"))
   }
 
   def createHaeAmmatillinenYtoArvosanaKutsu(ytoKoodi: String, konvertteriparametrit: Set[Arvokonvertteriparametri] = Set()): Funktiokutsu = {
@@ -207,7 +216,7 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
   }
 
   def createAmmatillisenTutkintojenKokoHierarkia(): Funktiokutsu = {
-    val haeAmmatillisenTutkinnonSuoritustapa =
+    def haeAmmatillisenTutkinnonSuoritustapa(): Funktiokutsu =
       LaskentaTestUtil.Funktiokutsu(
         nimi = Funktionimi.HAEAMMATILLISENTUTKINNONSUORITUSTAPA,
         arvokonvertterit = List(
@@ -361,7 +370,7 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
       arvovali("5", "5.1", "90")
     )
 
-    val ytonKeskiarvotPisteiksi = List(
+    val ytonKeskiarvotPisteiksi1to5Skaalalla = List(
       arvovali("0", "1", "0"),
       arvovali("1", "2", "1"),
       arvovali("2", "3", "5"),
@@ -471,7 +480,7 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
       summa(
         maksimi(
           summa(
-            // Ammatillisen tutkinnon osien pisteet
+            // Tallennettu ammatillisen tutkinnon keskiarvo
             konvertoiLukuarvo(
               keskiarvotPisteiksi,
               haeAmmatillisenTutkinnonTallennettuKeskiarvo()
@@ -489,15 +498,15 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
               ),
               summa(
                 konvertoiLukuarvo(
-                  ytonKeskiarvotPisteiksi,
+                  ytonKeskiarvotPisteiksi1to5Skaalalla,
                   iteroiYtoOsaAlueidenKeskiarvo("400012")
                 ),
                 konvertoiLukuarvo(
-                  ytonKeskiarvotPisteiksi,
+                  ytonKeskiarvotPisteiksi1to5Skaalalla,
                   iteroiYtoOsaAlueidenKeskiarvo("400013")
                 ),
                 konvertoiLukuarvo(
-                  ytonKeskiarvotPisteiksi,
+                  ytonKeskiarvotPisteiksi1to5Skaalalla,
                   iteroiYtoOsaAlueidenKeskiarvo("400014")
                 )
               )
