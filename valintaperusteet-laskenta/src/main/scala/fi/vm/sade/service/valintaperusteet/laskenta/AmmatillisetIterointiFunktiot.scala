@@ -24,7 +24,7 @@ trait AmmatillisetIterointiFunktiot {
     if (iteraatioParametrit.ammatillisenPerustutkinnonValitsija.isDefined) {
       throw new IllegalStateException(s"Ei voi iteroida iteraatioparametrilla ${iteraatioParametrit.ammatillisenPerustutkinnonValitsija} uudestaan ammatillisten tutkintojen yli")
     } else {
-      val tutkinnot: Seq[Tutkinto] = KoskiLaskenta.etsiAmmatillisetTutkinnot(laskin.hakemus)
+      val tutkinnot: Seq[Tutkinto] = KoskiLaskenta.etsiAmmatillisetTutkinnot(laskin.hakemus, iterointiFunktio.datanAikaleimanLeikkuri, iterointiFunktio.valmistumisenTakaraja)
       val tutkintojenMaara = tutkinnot.size
       Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} hakijalle löytyi $tutkintojenMaara ammatillista perustutkintoa.")
 

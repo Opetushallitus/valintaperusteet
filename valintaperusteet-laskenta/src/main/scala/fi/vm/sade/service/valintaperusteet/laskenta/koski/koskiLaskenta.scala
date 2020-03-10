@@ -1,5 +1,10 @@
 package fi.vm.sade.service.valintaperusteet.laskenta.koski
 
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+
+import fi.vm.sade.kaava.LaskentaUtil
 import fi.vm.sade.service.valintaperusteet.laskenta.AmmatillisenPerustutkinnonValitsija
 import fi.vm.sade.service.valintaperusteet.laskenta.AmmatillisenTutkinnonOsanValitsija
 import fi.vm.sade.service.valintaperusteet.laskenta.AmmatillisenTutkinnonYtoOsaAlueenValitsija
@@ -15,6 +20,7 @@ import scala.util.control.Exception._
 
 object KoskiLaskenta {
   private val LOG: Logger = LoggerFactory.getLogger(KoskiLaskenta.getClass)
+  private val opiskeluoikeudenAikaleimaFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
 
   val ammatillisenHuomioitavaOpiskeluoikeudenTyyppi: String = "ammatillinenkoulutus"
   val ammatillisenSuorituksenTyyppi: String = "ammatillinentutkinto"
@@ -27,18 +33,26 @@ object KoskiLaskenta {
   private val _osasuorituksenKoulutusmoduuli = JsonPath.root.koulutusmoduuli
   val _osasuorituksenKoulutusmoduulinTunnisteenKoodiarvo: Optional[Json, String] = _osasuorituksenKoulutusmoduuli.tunniste.koodiarvo.string
 
-  def etsiAmmatillisetTutkinnot(hakemus: Hakemus): Seq[Tutkinto] = {
+  def etsiAmmatillisetTutkinnot(hakemus: Hakemus, datanAikaleimanLeikkuri: LocalDate, valmitumisenTakaraja: LocalDate): Seq[Tutkinto] = {
     if (hakemus.koskiOpiskeluoikeudet == null) {
       Nil
     } else {
       val tutkintoJsonit = Tutkinnot.etsiValmiitTutkinnot(hakemus.koskiOpiskeluoikeudet, ammatillisenHuomioitavaOpiskeluoikeudenTyyppi, ammatillisenSuorituksenTyyppi, hakemus)
       tutkintoJsonit.zipWithIndex.map { case (tutkintoJson, indeksi) =>
-        Tutkinto(
+        val tutkinto = Tutkinto(
           indeksi,
           TutkintoLinssit.opiskeluoikeudenOid.getOption(tutkintoJson).getOrElse("-"),
           TutkintoLinssit.opiskeluoikeudenVersio.getOption(tutkintoJson).getOrElse(-1),
           TutkintoLinssit.opiskeluoikeudenAikaleima.getOption(tutkintoJson).getOrElse("-"),
           TutkintoLinssit.opiskeluoikeudenOppilaitoksenSuomenkielinenNimi.getOption(tutkintoJson).getOrElse("-"))
+        if (aikaleimaYlittaaLeikkuripaivan(datanAikaleimanLeikkuri, tutkinto)) {
+          val message = s"Hakemuksen ${hakemus.oid} opiskeluoikeuden ${tutkinto.opiskeluoikeudenOid} " +
+            s"version ${tutkinto.opiskeluoikeudenVersio} aikaleima ${tutkinto.opiskeluoikeudenAikaleima} " +
+            s"on datan leikkuripäivän ${LaskentaUtil.suomalainenPvmMuoto.format(datanAikaleimanLeikkuri)} jälkeen. Sen ei olisi pitänyt tulla mukaan laskentaan."
+          LOG.error(message)
+          // throw new IllegalArgumentException(message) // TODO: crash here
+        }
+        tutkinto
       }
     }
   }
@@ -110,6 +124,10 @@ object KoskiLaskenta {
         None
       }
     }
+  }
+
+  private def aikaleimaYlittaaLeikkuripaivan(datanAikaleimanLeikkuri: LocalDate, tutkinto: Tutkinto): Boolean = {
+    LocalDateTime.parse(tutkinto.opiskeluoikeudenAikaleima, opiskeluoikeudenAikaleimaFormat).isAfter(datanAikaleimanLeikkuri.plusDays(1).atStartOfDay())
   }
 
   private def haeOsaAlueenUusinArvosanaLaajuusJaArviointiAsteikkoValitsijoilla(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
