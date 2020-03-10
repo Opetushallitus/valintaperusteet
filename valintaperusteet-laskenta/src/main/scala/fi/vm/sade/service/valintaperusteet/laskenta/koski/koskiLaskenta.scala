@@ -33,11 +33,11 @@ object KoskiLaskenta {
   private val _osasuorituksenKoulutusmoduuli = JsonPath.root.koulutusmoduuli
   val _osasuorituksenKoulutusmoduulinTunnisteenKoodiarvo: Optional[Json, String] = _osasuorituksenKoulutusmoduuli.tunniste.koodiarvo.string
 
-  def etsiAmmatillisetTutkinnot(hakemus: Hakemus, datanAikaleimanLeikkuri: LocalDate, valmitumisenTakaraja: LocalDate): Seq[Tutkinto] = {
+  def etsiAmmatillisetTutkinnot(hakemus: Hakemus, datanAikaleimanLeikkuri: LocalDate, valmistumisenTakaraja: LocalDate): Seq[Tutkinto] = {
     if (hakemus.koskiOpiskeluoikeudet == null) {
       Nil
     } else {
-      val tutkintoJsonit = Tutkinnot.etsiValmiitTutkinnot(hakemus.koskiOpiskeluoikeudet, ammatillisenHuomioitavaOpiskeluoikeudenTyyppi, ammatillisenSuorituksenTyyppi, hakemus)
+      val tutkintoJsonit = Tutkinnot.etsiValmiitTutkinnot(valmistumisenTakaraja, hakemus.koskiOpiskeluoikeudet, ammatillisenHuomioitavaOpiskeluoikeudenTyyppi, ammatillisenSuorituksenTyyppi, hakemus)
       tutkintoJsonit.zipWithIndex.map { case (tutkintoJson, indeksi) =>
         val tutkinto = Tutkinto(
           indeksi,
@@ -148,7 +148,7 @@ object KoskiLaskenta {
     if (hakemus.koskiOpiskeluoikeudet == null) {
       None
     } else {
-      val tutkinnot = Tutkinnot.etsiValmiitTutkinnot(hakemus.koskiOpiskeluoikeudet, ammatillisenHuomioitavaOpiskeluoikeudenTyyppi, ammatillisenSuorituksenTyyppi, hakemus)
+      val tutkinnot = Tutkinnot.etsiValmiitTutkinnot(tutkinnonValitsija.valmistumisenTakarajaPvm, hakemus.koskiOpiskeluoikeudet, ammatillisenHuomioitavaOpiskeluoikeudenTyyppi, ammatillisenSuorituksenTyyppi, hakemus)
       val suorituksenSallitutKoodit: Set[Int] = ammatillisenHhuomioitavatKoulutustyypit.map(_.koodiarvo)
       val suoritukset = Tutkinnot.etsiValiditSuoritukset(tutkinnot(tutkinnonValitsija.tutkinnonIndeksi), tutkinnonValitsija.valmistumisenTakarajaPvm, suorituksenSallitutKoodit)
       if (suoritukset.size > 1) {
@@ -173,6 +173,7 @@ object KoskiLaskenta {
       Nil
     } else {
       val oikeaOpiskeluoikeus: Json = Tutkinnot.etsiValmiitTutkinnot(
+        tutkinnonValitsija.valmistumisenTakarajaPvm,
         json = hakemus.koskiOpiskeluoikeudet,
         opiskeluoikeudenHaluttuTyyppi = ammatillisenHuomioitavaOpiskeluoikeudenTyyppi,
         suorituksenHaluttuTyyppi = ammatillisenSuorituksenTyyppi, hakemus = hakemus)(tutkinnonValitsija.tutkinnonIndeksi)
