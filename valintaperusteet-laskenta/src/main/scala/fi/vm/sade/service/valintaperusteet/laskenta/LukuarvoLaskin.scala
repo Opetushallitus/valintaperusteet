@@ -262,18 +262,16 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
         })
         (tulos, tilat, Historia(MEDIAANI, tulos, tilat, h.historiat, None))
 
-      case Jos(ehto, thenHaara, elseHaara, _, _, _, _, _, _) =>
+      case Jos(laskeHaaratLaiskasti, ehto, thenHaara, elseHaara, _, _, _, _, _, _) =>
         val ehtoTulos = new TotuusarvoLaskin(this.laskin).laskeTotuusarvo(ehto, iteraatioParametrit)
-        val (tulos, tilat, historia) = ehdollinenTulos[Boolean, (Option[BigDecimal], List[Tila], Option[Historia])]((ehtoTulos.tulos, ehtoTulos.tila), (cond, tila) => {
+        val (tulos, tilat, historia) = ehdollinenTulos[Boolean, (Option[BigDecimal], List[Tila], List[Historia])]((ehtoTulos.tulos, ehtoTulos.tila), (cond, tila) => {
           if (cond) {
-            val thenTulos = laskeLukuarvo(thenHaara, iteraatioParametrit)
-            (thenTulos.tulos, List(tila, thenTulos.tila), Some(thenTulos.historia))
+            laskeTarvittavatJosTulokset(iteraatioParametrit, laskeHaaratLaiskasti, thenHaara, elseHaara, tila)
           } else {
-            val elseTulos = laskeLukuarvo(elseHaara, iteraatioParametrit)
-            (elseTulos.tulos, List(tila, elseTulos.tila), Some(elseTulos.historia))
+            laskeTarvittavatJosTulokset(iteraatioParametrit, laskeHaaratLaiskasti, elseHaara, thenHaara, tila)
           }
-        }, (None, List(ehtoTulos.tila), None))
-        (tulos, tilat, Historia(JOS, tulos, tilat, Some(List(ehtoTulos.historia) ++ historia.toList), None))
+        }, (None, List(ehtoTulos.tila), Nil))
+        (tulos, tilat, Historia(JOS, tulos, tilat, Some(List(ehtoTulos.historia) ++ historia), None))
 
       case KonvertoiLukuarvo(konvertteri, f, _, _,tulosTekstiFi,_,_,_) =>
         laskeLukuarvo(f, iteraatioParametrit) match {
@@ -537,6 +535,21 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
     val avaimet = ListMap(
       s"Maksimi ${parametrit.size} iteraatioparametrilla" -> tulos.tulos)
     (tulos.tulos, tilalista, Historia(MAKSIMI, tulos.tulos, tilalista, Some(kierrostenHistoriat), Some(avaimet)))
+  }
+
+  private def laskeTarvittavatJosTulokset(iteraatioParametrit: LaskennanIteraatioParametrit,
+                                          laskeHaaratLaiskasti: Boolean,
+                                          haaraJostaPalautetaanTulos: Lukuarvofunktio,
+                                          toinenHaara: Lukuarvofunktio, tila: Tila
+                                         ): (Option[BigDecimal], List[Tila], List[Historia]) = {
+    val palautettavaTulos = laskeLukuarvo(haaraJostaPalautetaanTulos, iteraatioParametrit)
+    val palautettavatHistoriat: List[Historia] = if (laskeHaaratLaiskasti) {
+      List(palautettavaTulos.historia)
+    } else {
+      val toisenHaaranTulos = laskeLukuarvo(toinenHaara, iteraatioParametrit)
+      List(palautettavaTulos.historia, toisenHaaranTulos.historia)
+    }
+    (palautettavaTulos.tulos, List(tila, palautettavaTulos.tila), palautettavatHistoriat)
   }
 
   def painotettuKeskiarvoIteroiden(painotettuKeskiarvo: PainotettuKeskiarvo, iteraatioParametrit: LaskennanIteraatioParametrit): (Option[BigDecimal], List[Tila], Historia) = {

@@ -259,7 +259,16 @@ object Laskenta {
     }
   }
 
-  case class Jos(ehto: Totuusarvofunktio, ifHaara: Lukuarvofunktio, elseHaara: Lukuarvofunktio, oid: String = "", tulosTunniste: String = "", tulosTekstiFi: String = "", tulosTekstiSv: String = "", tulosTekstiEn: String = "", omaopintopolku: Boolean = false)
+  case class Jos(laskeHaaratLaiskasti: Boolean,
+                 ehto: Totuusarvofunktio,
+                 ifHaara: Lukuarvofunktio,
+                 elseHaara: Lukuarvofunktio,
+                 oid: String = "",
+                 tulosTunniste: String = "",
+                 tulosTekstiFi: String = "",
+                 tulosTekstiSv: String = "",
+                 tulosTekstiEn: String = "",
+                 omaopintopolku: Boolean = false)
     extends Lukuarvofunktio
 
   sealed trait HaeArvo[T] extends Funktio[T] {

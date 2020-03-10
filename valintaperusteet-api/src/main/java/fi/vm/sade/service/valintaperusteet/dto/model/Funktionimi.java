@@ -64,6 +64,7 @@ public enum Funktionimi {
     HAEAMMATILLISENTUTKINNONKESKIARVO("Ammatillisen tutkinnon tallennettu keskiarvo", Funktiotyyppi.LUKUARVOFUNKTIO, Laskentamoodi.VALINTALASKENTA, Laskentamoodi.VALINTAKOELASKENTA),
     HAEAMMATILLISENTUTKINNONSUORITUSTAPA("Ammatillisen tutkinnon suoritustapa", Funktiotyyppi.LUKUARVOFUNKTIO, Laskentamoodi.VALINTALASKENTA, Laskentamoodi.VALINTAKOELASKENTA);
 
+    public static final String JOS_LAISKA_PARAMETRI = "laskeLaiskasti";
 
     private final String kuvaus;
     private Funktiotyyppi tyyppi;
