@@ -3,6 +3,7 @@ package fi.vm.sade.kaava
 import java.util.{Set => JSet}
 
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.JOS_LAISKA_PARAMETRI
 import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde
 import fi.vm.sade.service.valintaperusteet.laskenta.Funktio
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.ArvokonversioMerkkijonoilla
@@ -308,11 +309,13 @@ object Laskentadomainkonvertteri {
       case Funktionimi.JA =>
         Ja(lasketutArgumentit.map(muunnaTotuusarvofunktioksi(_)), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
 
-      case Funktionimi.JOS => Jos(
-        muunnaTotuusarvofunktioksi(lasketutArgumentit(0)),
-        muunnaLukuarvofunktioksi(lasketutArgumentit(1)),
-        muunnaLukuarvofunktioksi(lasketutArgumentit(2)),
-        oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku = omaopintopolku)
+      case Funktionimi.JOS =>
+        Jos(
+          syoteparametrit.asScala.find(_.getAvain == JOS_LAISKA_PARAMETRI).filter(p => StringUtils.isNotBlank(p.getArvo)).exists(parametriToBoolean),
+          muunnaTotuusarvofunktioksi(lasketutArgumentit(0)),
+          muunnaLukuarvofunktioksi(lasketutArgumentit(1)),
+          muunnaLukuarvofunktioksi(lasketutArgumentit(2)),
+          oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku = omaopintopolku)
 
       case Funktionimi.KESKIARVO =>
         Keskiarvo(lasketutArgumentit.map(muunnaLukuarvofunktioksi(_)), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
@@ -507,7 +510,7 @@ object Laskentadomainkonvertteri {
           omaopintopolku = omaopintopolku)
 
         val arvosana = if (ehdot.vainValmistuneet) {
-          Jos(HaeTotuusarvo(None, Some(false), HakemuksenValintaperuste(YO + TILA_SUFFIX, false), omaopintopolku = omaopintopolku),
+          Jos(laskeHaaratLaiskasti = false, HaeTotuusarvo(None, Some(false), HakemuksenValintaperuste(YO + TILA_SUFFIX, false), omaopintopolku = omaopintopolku),
             arvosanaFunktio,
             Lukuarvo(BigDecimal("0.0"), omaopintopolku = omaopintopolku),
             omaopintopolku = omaopintopolku)
@@ -531,7 +534,7 @@ object Laskentadomainkonvertteri {
           omaopintopolku = omaopintopolku)
 
         val arvosana = if (ehdot.vainValmistuneet) {
-          Jos(HaeTotuusarvo(None, Some(false), HakemuksenValintaperuste(YO + TILA_SUFFIX, false), omaopintopolku = omaopintopolku),
+          Jos(laskeHaaratLaiskasti = false, HaeTotuusarvo(None, Some(false), HakemuksenValintaperuste(YO + TILA_SUFFIX, false), omaopintopolku = omaopintopolku),
             arvosanaFunktio, Lukuarvo(BigDecimal("0.0"), omaopintopolku = omaopintopolku),
             omaopintopolku = omaopintopolku)
         } else {

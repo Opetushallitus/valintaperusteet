@@ -1,6 +1,7 @@
 package fi.vm.sade.kaava
 
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.JOS_LAISKA_PARAMETRI
 import play.api.libs.json.JsArray
 import play.api.libs.json.Json
 
@@ -400,7 +401,13 @@ object Funktiokuvaaja {
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
       funktioargumentit = List(Funktioargumenttikuvaus("ehto", Funktiotyyppi.TOTUUSARVOFUNKTIO),
         Funktioargumenttikuvaus("sitten", Funktiotyyppi.LUKUARVOFUNKTIO),
-        Funktioargumenttikuvaus("muuten", Funktiotyyppi.LUKUARVOFUNKTIO))
+        Funktioargumenttikuvaus("muuten", Funktiotyyppi.LUKUARVOFUNKTIO)),
+      syoteparametrit = List(
+        Syoteparametrikuvaus(
+          JOS_LAISKA_PARAMETRI,
+          Syoteparametrityyppi.CHECKBOX,
+          pakollinen = false,
+          kuvaus = "Lasketaanko vain se haara, jonka arvo lopulta palautetaan"))
     ),
     Funktionimi.KESKIARVO -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,

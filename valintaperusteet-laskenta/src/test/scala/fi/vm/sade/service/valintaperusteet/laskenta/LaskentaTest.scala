@@ -302,7 +302,7 @@ class LaskentaTest extends AnyFunSuite {
     val ifHaara = Lukuarvo(100.0)
     val elseHaara = Lukuarvo(500.0)
 
-    val ifLause = Jos(ehto, ifHaara, elseHaara)
+    val ifLause = Jos(laskeHaaratLaiskasti = false, ehto, ifHaara, elseHaara)
 
     val (tulos, _) = Laskin.laske(hakukohde, tyhjaHakemus, ifLause)
     assert(BigDecimal(tulos.get) == BigDecimal(500.0))
@@ -313,11 +313,22 @@ class LaskentaTest extends AnyFunSuite {
     val toimivaHaara = Lukuarvo(BigDecimal(100))
     val kaatuvaHaara = HaeLukuarvo(None, None, HakemuksenValintaperuste("jotain minkä hakeminen null-hakemukselta kaatuisi", false))
 
-    val tosiJos = Jos(Totuusarvo(true), toimivaHaara, kaatuvaHaara)
-    val epatosiJos = Jos(Totuusarvo(false), kaatuvaHaara, toimivaHaara)
+    val tosiJos = Jos(laskeHaaratLaiskasti = true, Totuusarvo(true), toimivaHaara, kaatuvaHaara)
+    val epatosiJos = Jos(laskeHaaratLaiskasti = true, Totuusarvo(false), kaatuvaHaara, toimivaHaara)
 
     assert(Laskin.laske(hakukohde, null, tosiJos)._1.contains(new java.math.BigDecimal(100)))
     assert(Laskin.laske(hakukohde, null, epatosiJos)._1.contains(new java.math.BigDecimal(100)))
+  }
+
+  test("Ahne Jos") {
+    val toimivaHaara = Lukuarvo(BigDecimal(100))
+    val kaatuvaHaara = HaeLukuarvo(None, None, HakemuksenValintaperuste("jotain minkä hakeminen null-hakemukselta kaatuisi", false))
+
+    val tosiJos = Jos(laskeHaaratLaiskasti = false, Totuusarvo(true), toimivaHaara, kaatuvaHaara)
+    val epatosiJos = Jos(laskeHaaratLaiskasti = false, Totuusarvo(false), kaatuvaHaara, toimivaHaara)
+
+    assertThrows[NullPointerException](Laskin.laske(hakukohde, null, tosiJos))
+    assertThrows[NullPointerException](Laskin.laske(hakukohde, null, epatosiJos))
   }
 
   test("Totuusarvo") {
@@ -689,6 +700,7 @@ class LaskentaTest extends AnyFunSuite {
           )
         ),
         Jos(
+          laskeHaaratLaiskasti = false,
           ehto = HaeMerkkijonoJaVertaaYhtasuuruus(
             oletusarvo = None,
             valintaperusteviite = SyotettavaValintaperuste(

@@ -6,10 +6,15 @@ import java.util.{List => JList}
 import java.util.{Map => JMap}
 
 import fi.vm.sade.kaava.LaskentaTestUtil.TestHakemus
-import fi.vm.sade.kaava.{LaskentaTestUtil, Laskentadomainkonvertteri}
+import fi.vm.sade.kaava.LaskentaTestUtil
+import fi.vm.sade.kaava.Laskentadomainkonvertteri
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.JOS_LAISKA_PARAMETRI
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakukohde
-import fi.vm.sade.service.valintaperusteet.model.{Arvokonvertteriparametri, Funktiokutsu, TekstiRyhma}
+import fi.vm.sade.service.valintaperusteet.model.Syoteparametri
+import fi.vm.sade.service.valintaperusteet.model.Arvokonvertteriparametri
+import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu
+import fi.vm.sade.service.valintaperusteet.model.TekstiRyhma
 import io.circe.Json
 import io.circe.parser
 import org.scalatest.funsuite.AnyFunSuite
@@ -218,10 +223,14 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
     }
 
     def jos(totuusarvo: Funktiokutsu, haara1: Funktiokutsu, haara2: Funktiokutsu): Funktiokutsu = {
+      val josLaiskaksi: Syoteparametri = new Syoteparametri()
+      josLaiskaksi.setAvain(JOS_LAISKA_PARAMETRI)
+      josLaiskaksi.setArvo(true.toString)
       LaskentaTestUtil.Funktiokutsu(
         nimi = Funktionimi.JOS,
         funktioargumentit = List(
-          totuusarvo, haara1, haara2))
+          totuusarvo, haara1, haara2),
+        syoteparametrit = List(josLaiskaksi))
     }
 
     def yhtasuuri(haara1: Funktiokutsu, haara2: Funktiokutsu): Funktiokutsu = {
