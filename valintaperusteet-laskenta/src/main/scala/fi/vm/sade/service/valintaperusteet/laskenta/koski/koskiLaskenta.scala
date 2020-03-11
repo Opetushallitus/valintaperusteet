@@ -44,7 +44,8 @@ object KoskiLaskenta {
           TutkintoLinssit.opiskeluoikeudenOid.getOption(tutkintoJson).getOrElse("-"),
           TutkintoLinssit.opiskeluoikeudenVersio.getOption(tutkintoJson).getOrElse(-1),
           TutkintoLinssit.opiskeluoikeudenAikaleima.getOption(tutkintoJson).getOrElse("-"),
-          TutkintoLinssit.opiskeluoikeudenOppilaitoksenSuomenkielinenNimi.getOption(tutkintoJson).getOrElse("-"))
+          TutkintoLinssit.opiskeluoikeudenOppilaitoksenSuomenkielinenNimi.getOption(tutkintoJson).getOrElse("-"),
+          TutkintoLinssit.suoritukset.json.getAll(tutkintoJson).headOption.flatMap(TutkintoLinssit.vahvistusPvm.getOption).getOrElse("-"))
         if (aikaleimaYlittaaLeikkuripaivan(datanAikaleimanLeikkuri, tutkinto)) {
           val message = s"Hakemuksen ${hakemus.oid} opiskeluoikeuden ${tutkinto.opiskeluoikeudenOid} " +
             s"version ${tutkinto.opiskeluoikeudenVersio} aikaleima ${tutkinto.opiskeluoikeudenAikaleima} " +
@@ -212,4 +213,9 @@ case object AmmatillinenPerustutkintoErityisopetuksena extends AmmatillisenPerus
 }
 
 
-case class Tutkinto(indeksi: Int, opiskeluoikeudenOid: String, opiskeluoikeudenVersio: Int, opiskeluoikeudenAikaleima: String, opiskeluoikeudenOppilaitoksenSuomenkielinenNimi: String)
+case class Tutkinto(indeksi: Int,
+                    opiskeluoikeudenOid: String,
+                    opiskeluoikeudenVersio: Int,
+                    opiskeluoikeudenAikaleima: String,
+                    opiskeluoikeudenOppilaitoksenSuomenkielinenNimi: String,
+                    vahvistusPvm: String)

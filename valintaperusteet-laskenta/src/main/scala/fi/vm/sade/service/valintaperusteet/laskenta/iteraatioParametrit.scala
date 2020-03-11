@@ -14,7 +14,8 @@ case class AmmatillisenPerustutkinnonValitsija(tutkinto: Tutkinto, valmistumisen
   val tutkinnonIndeksi: Int = tutkinto.indeksi
   override val kuvaus: String = s"Tutkinto ${tutkinto.indeksi + 1} " +
     s"(opiskeluoikeus ${tutkinto.opiskeluoikeudenOid}, versio ${tutkinto.opiskeluoikeudenVersio}, " +
-    s"aikaleima ${tutkinto.opiskeluoikeudenAikaleima}, oppilaitos ${tutkinto.opiskeluoikeudenOppilaitoksenSuomenkielinenNimi})"
+    s"aikaleima ${tutkinto.opiskeluoikeudenAikaleima}, oppilaitos ${tutkinto.opiskeluoikeudenOppilaitoksenSuomenkielinenNimi}, " +
+    s"vahvistusPvm ${tutkinto.vahvistusPvm})"
   override val lyhytKuvaus: String = s"Tutkinto ${tutkinto.indeksi + 1}"
 }
 
