@@ -1,23 +1,18 @@
 
 package fi.vm.sade.service.valintaperusteet.laskenta
 
+import java.time.LocalDate
 import java.util.{HashMap => JHashMap}
 import java.util.{List => JList}
 import java.util.{Map => JMap}
 
-import fi.vm.sade.kaava.LaskentaTestUtil.TestHakemus
 import fi.vm.sade.kaava.LaskentaTestUtil
-import fi.vm.sade.kaava.Laskentadomainkonvertteri
 import fi.vm.sade.kaava.LaskentaTestUtil.TestHakemus
-import fi.vm.sade.kaava.LaskentaTestUtil
+import fi.vm.sade.kaava.LaskentaUtil.suomalainenPvmMuoto
 import fi.vm.sade.kaava.Laskentadomainkonvertteri
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.JOS_LAISKA_PARAMETRI
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakukohde
-import fi.vm.sade.service.valintaperusteet.model.Arvokonvertteriparametri
-import fi.vm.sade.service.valintaperusteet.model.Arvovalikonvertteriparametri
-import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu
-import fi.vm.sade.service.valintaperusteet.model.TekstiRyhma
 import fi.vm.sade.service.valintaperusteet.model.Arvokonvertteriparametri
 import fi.vm.sade.service.valintaperusteet.model.Arvovalikonvertteriparametri
 import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu
@@ -139,6 +134,34 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
     assert(BigDecimal(tulos4.get) == BigDecimal("15"))
   }
 
+  test("Tutkintoa ei huomioida, jos sen päätason suorituksen vahvistuspäivämäärä on takarajapäivän jälkeen") {
+    val laskuPvmllaJoillaMolemmatTutkinnotSaadaanMukaan = Laskentadomainkonvertteri.muodostaLukuarvolasku(createAmmatillisenTutkintojenKokoHierarkia(
+      valmistumisenTakaraja = LocalDate.of(2019, 8, 30)))
+    val (tulosKunMolemmatTutkinnotOvatMukana, _) = Laskin.laske(hakukohde, monenTutkinnonHakemus, laskuPvmllaJoillaMolemmatTutkinnotSaadaanMukaan)
+    assert(BigDecimal(tulosKunMolemmatTutkinnotOvatMukana.get) == BigDecimal("45"))
+
+    val laskuPvmllaJollaToinenTutkintoJääPois = Laskentadomainkonvertteri.muodostaLukuarvolasku(createAmmatillisenTutkintojenKokoHierarkia(
+      valmistumisenTakaraja = LocalDate.of(2019, 8, 29)))
+    val (tulosJossaVainToinen, _) = Laskin.laske(hakukohde, monenTutkinnonHakemus, laskuPvmllaJollaToinenTutkintoJääPois)
+    assert(BigDecimal(tulosJossaVainToinen.get) == BigDecimal("39"))
+
+    val laskuPvmllaJollaKumpikinTutkintoJääPois = Laskentadomainkonvertteri.muodostaLukuarvolasku(createAmmatillisenTutkintojenKokoHierarkia(
+      valmistumisenTakaraja = LocalDate.of(2010, 1, 1)))
+    val (tyhjäTulos, _) = Laskin.laske(hakukohde, monenTutkinnonHakemus, laskuPvmllaJollaKumpikinTutkintoJääPois)
+    assert(tyhjäTulos.isEmpty)
+  }
+
+  test("Laskenta kaatuu, jos siihen tulee opiskeluoikeus, jonka aikaleima on leikkuripäivämäärän jälkeen") {
+    val laskuJossaLeikkuriPvmOnMolempienSuoritustenJälkeen = Laskentadomainkonvertteri.muodostaLukuarvolasku(createAmmatillisenTutkintojenKokoHierarkia(
+      dataKoskessaViimeistään = LocalDate.of(2019, 10, 8)))
+    val (tulosKunMolemmatTutkinnotOvatMukana, _) = Laskin.laske(hakukohde, monenTutkinnonHakemus, laskuJossaLeikkuriPvmOnMolempienSuoritustenJälkeen)
+    assert(BigDecimal(tulosKunMolemmatTutkinnotOvatMukana.get) == BigDecimal("45"))
+
+    val laskuJossaLeikkuriPvmOnEnnenToisenSuorituksenUusintaVersiota = Laskentadomainkonvertteri.muodostaLukuarvolasku(createAmmatillisenTutkintojenKokoHierarkia(
+      dataKoskessaViimeistään = LocalDate.of(2019, 10, 7)))
+    assertThrows[IllegalArgumentException](Laskin.laske(hakukohde, monenTutkinnonHakemus, laskuJossaLeikkuriPvmOnEnnenToisenSuorituksenUusintaVersiota))
+  }
+
   def createHaeAmmatillinenYtoArvosanaKutsu(ytoKoodi: String, konvertteriparametrit: Set[Arvokonvertteriparametri] = Set()): Funktiokutsu = {
     createAmmatillistenTutkintojenIteroija(
       LaskentaTestUtil.Funktiokutsu(
@@ -203,7 +226,10 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
         )))
   }
 
-  def createAmmatillistenTutkintojenIteroija(lapsi: Funktiokutsu): Funktiokutsu = {
+  def createAmmatillistenTutkintojenIteroija(lapsi: Funktiokutsu,
+                                             valmistumisenTakaraja: LocalDate = LocalDate.of(2020, 6, 2),
+                                             dataKoskessaViimeistään: LocalDate = LocalDate.of(2020, 5, 16)
+                                            ): Funktiokutsu = {
     LaskentaTestUtil.Funktiokutsu(
       nimi = Funktionimi.ITEROIAMMATILLISETTUTKINNOT,
       funktioargumentit = List(
@@ -211,11 +237,13 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
           nimi = Funktionimi.MAKSIMI,
           funktioargumentit = List(lapsi))),
       syoteparametrit = List(
-        LaskentaTestUtil.Syoteparametri(Funktionimi.ITEROIAMMATILLISETTUTKINNOT_VALMISTUMIS_PARAMETRI, "2.6.2020"),
-        LaskentaTestUtil.Syoteparametri(Funktionimi.ITEROIAMMATILLISETTUTKINNOT_LEIKKURIPVM_PARAMETRI, "16.5.2020")))
+        LaskentaTestUtil.Syoteparametri(Funktionimi.ITEROIAMMATILLISETTUTKINNOT_VALMISTUMIS_PARAMETRI, suomalainenPvmMuoto.format(valmistumisenTakaraja)),
+        LaskentaTestUtil.Syoteparametri(Funktionimi.ITEROIAMMATILLISETTUTKINNOT_LEIKKURIPVM_PARAMETRI, suomalainenPvmMuoto.format(dataKoskessaViimeistään))))
   }
 
-  def createAmmatillisenTutkintojenKokoHierarkia(): Funktiokutsu = {
+  def createAmmatillisenTutkintojenKokoHierarkia(valmistumisenTakaraja: LocalDate = LocalDate.of(2020, 6, 2),
+                                                 dataKoskessaViimeistään: LocalDate = LocalDate.of(2020, 5, 16)
+                                                ): Funktiokutsu = {
     def haeAmmatillisenTutkinnonSuoritustapa(): Funktiokutsu =
       LaskentaTestUtil.Funktiokutsu(
         nimi = Funktionimi.HAEAMMATILLISENTUTKINNONSUORITUSTAPA,
@@ -520,7 +548,9 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
       jos(
         yhtasuuri(haeAmmatillisenTutkinnonSuoritustapa, lukuarvo("2015")),
         opsMallinenJuuri,
-        reformiMallinenJuuri))
+        reformiMallinenJuuri),
+      valmistumisenTakaraja,
+      dataKoskessaViimeistään)
   }
 
   private def loadJson(path: String): Json = {
