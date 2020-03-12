@@ -549,7 +549,8 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
   private def laskeTarvittavatJosTulokset(iteraatioParametrit: LaskennanIteraatioParametrit,
                                           laskeHaaratLaiskasti: Boolean,
                                           haaraJostaPalautetaanTulos: Lukuarvofunktio,
-                                          toinenHaara: Lukuarvofunktio, tila: Tila
+                                          toinenHaara: Lukuarvofunktio,
+                                          tila: Tila
                                          ): (Option[BigDecimal], List[Tila], List[Historia]) = {
     val palautettavaTulos = laskeLukuarvo(haaraJostaPalautetaanTulos, iteraatioParametrit)
     val palautettavatHistoriat: List[Historia] = if (laskeHaaratLaiskasti) {
