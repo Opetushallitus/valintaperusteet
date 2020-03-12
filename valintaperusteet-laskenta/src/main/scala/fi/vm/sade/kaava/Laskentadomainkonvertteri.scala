@@ -547,8 +547,14 @@ object Laskentadomainkonvertteri {
 
       case Funktionimi.ITEROIAMMATILLISETTUTKINNOT =>
         IteroiAmmatillisetTutkinnot(
-          muunnaParametriSuomalaisestaPaivamaarasta(ITEROIAMMATILLISETTUTKINNOT_VALMISTUMIS_PARAMETRI, syoteparametrit, LocalDate.of(2020, Month.JUNE, 1)),
-          muunnaParametriSuomalaisestaPaivamaarasta(ITEROIAMMATILLISETTUTKINNOT_LEIKKURIPVM_PARAMETRI, syoteparametrit, LocalDate.of(2020, Month.MAY, 15)),
+          muunnaParametriSuomalaisestaPaivamaarasta(
+            ITEROIAMMATILLISETTUTKINNOT_VALMISTUMIS_PARAMETRI,
+            syoteparametrit,
+            LocalDate.of(2020, Month.JUNE, 1)), // TODO: Poista oletus, kun se on syötetty kaavoihin
+          muunnaParametriSuomalaisestaPaivamaarasta(
+            ITEROIAMMATILLISETTUTKINNOT_LEIKKURIPVM_PARAMETRI,
+            syoteparametrit,
+            LocalDate.of(2020, Month.MAY, 15)), // TODO: Poista oletus, kun se on syötetty kaavoihin
           muunnaLukuarvofunktioksi(lasketutArgumentit.head),
           oid,
           tulosTunniste,
