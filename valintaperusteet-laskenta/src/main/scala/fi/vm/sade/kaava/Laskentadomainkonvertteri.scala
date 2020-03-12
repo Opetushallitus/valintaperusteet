@@ -223,16 +223,14 @@ object Laskentadomainkonvertteri {
       case Funktionimi.HAELUKUARVO =>
         val konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]] = luoLukuarvokovertteri(arvokonvertteriparametrit, arvovalikonvertteriparametrit)
 
-        val oletusarvo = syoteparametrit.asScala.find(_.getAvain == "oletusarvo").filter(!_.getArvo.isEmpty)
-          .map(p => parametriToBigDecimal(p))
+        val oletusarvo = etsiOptionaalinenParametri(syoteparametrit, "oletusarvo").map(p => parametriToBigDecimal(p))
 
         HaeLukuarvo(konvertteri, oletusarvo, valintaperusteviitteet.head, oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
 
       case Funktionimi.HAELUKUARVOEHDOLLA =>
         val konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]] = luoLukuarvokovertteri(arvokonvertteriparametrit, arvovalikonvertteriparametrit)
 
-        val oletusarvo = syoteparametrit.asScala.find(_.getAvain == "oletusarvo").filter(!_.getArvo.isEmpty)
-          .map(p => parametriToBigDecimal(p))
+        val oletusarvo = etsiOptionaalinenParametri(syoteparametrit, "oletusarvo").map(p => parametriToBigDecimal(p))
 
         HaeLukuarvoEhdolla(konvertteri, oletusarvo, valintaperusteviitteet(0), valintaperusteviitteet(1), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
 
@@ -240,8 +238,7 @@ object Laskentadomainkonvertteri {
         val konversioMap = arvokonvertteriparametrit.asScala.map(konv =>
           ArvokonversioMerkkijonoilla[String, BigDecimal](konv.getArvo, stringToBigDecimal(konv.getPaluuarvo), konv.getHylkaysperuste, konv.getKuvaukset)).toList
 
-        val oletusarvo = syoteparametrit.asScala.find(_.getAvain == "oletusarvo").filter(!_.getArvo.isEmpty)
-          .map(p => parametriToBigDecimal(p))
+        val oletusarvo = etsiOptionaalinenParametri(syoteparametrit, "oletusarvo").map(p => parametriToBigDecimal(p))
 
         HaeMerkkijonoJaKonvertoiLukuarvoksi(
           Arvokonvertteri[String, BigDecimal](konversioMap),
@@ -253,7 +250,7 @@ object Laskentadomainkonvertteri {
         val konversioMap = arvokonvertteriparametrit.asScala.map(konv =>
           ArvokonversioMerkkijonoilla[Boolean, BigDecimal](konv.getArvo, stringToBigDecimal(konv.getPaluuarvo), konv.getHylkaysperuste, konv.getKuvaukset)).toList
 
-        val oletusarvo = syoteparametrit.asScala.find(_.getAvain == "oletusarvo").filter(!_.getArvo.isEmpty)
+        val oletusarvo = etsiOptionaalinenParametri(syoteparametrit, "oletusarvo")
           .map(p => parametriToBigDecimal(p))
 
         HaeTotuusarvoJaKonvertoiLukuarvoksi(
@@ -266,8 +263,7 @@ object Laskentadomainkonvertteri {
         val konversioMap = arvokonvertteriparametrit.asScala.map(konv =>
           ArvokonversioMerkkijonoilla[String, Boolean](konv.getArvo, konv.getPaluuarvo.toBoolean, konv.getHylkaysperuste, konv.getKuvaukset)).toList
 
-        val oletusarvo = syoteparametrit.asScala.filter(!_.getArvo.isEmpty).find(_.getAvain == "oletusarvo")
-          .map(p => parametriToBoolean(p))
+        val oletusarvo = etsiOptionaalinenBooleanParametri(syoteparametrit, "oletusarvo")
 
         HaeMerkkijonoJaKonvertoiTotuusarvoksi(
           Arvokonvertteri[String, Boolean](konversioMap),
@@ -276,8 +272,7 @@ object Laskentadomainkonvertteri {
           oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
 
       case Funktionimi.HAEMERKKIJONOJAVERTAAYHTASUURUUS =>
-        val oletusarvo = syoteparametrit.asScala.filter(!_.getArvo.isEmpty).find(_.getAvain == "oletusarvo")
-          .map(p => parametriToBoolean(p))
+        val oletusarvo = etsiOptionaalinenBooleanParametri(syoteparametrit, "oletusarvo")
 
         val vertailtava = getParametri("vertailtava", syoteparametrit).getArvo
 
@@ -293,8 +288,7 @@ object Laskentadomainkonvertteri {
           Some(Arvokonvertteri[Boolean, Boolean](konversioMap))
         } else None
 
-        val oletusarvo = syoteparametrit.asScala.filter(!_.getArvo.isEmpty).find(_.getAvain == "oletusarvo")
-          .map(p => parametriToBoolean(p))
+        val oletusarvo = etsiOptionaalinenBooleanParametri(syoteparametrit, "oletusarvo")
 
         HaeTotuusarvo(konvertteri, oletusarvo, valintaperusteviitteet.head, oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
 
@@ -319,7 +313,7 @@ object Laskentadomainkonvertteri {
 
       case Funktionimi.JOS =>
         Jos(
-          syoteparametrit.asScala.find(_.getAvain == JOS_LAISKA_PARAMETRI).filter(p => StringUtils.isNotBlank(p.getArvo)).exists(parametriToBoolean),
+          etsiOptionaalinenBooleanParametri(syoteparametrit, JOS_LAISKA_PARAMETRI).getOrElse(false),
           muunnaTotuusarvofunktioksi(lasketutArgumentit(0)),
           muunnaLukuarvofunktioksi(lasketutArgumentit(1)),
           muunnaLukuarvofunktioksi(lasketutArgumentit(2)),
@@ -678,36 +672,37 @@ object Laskentadomainkonvertteri {
   }
 
   def yoehdot(syoteparametrit: JSet[Syoteparametri]): YoEhdot = {
-    val alkuvuosi = etsiOptionaalinenParametri(syoteparametrit, "alkuvuosi").map(value => stringToBigDecimal(value.getArvo).intValue)
+    val alkuvuosi = etsiOptionaalinenIntParametri(syoteparametrit, "alkuvuosi")
 
-    val loppuvuosi = etsiOptionaalinenParametri(syoteparametrit, "loppuvuosi").map(value => stringToBigDecimal(value.getArvo).intValue)
+    val loppuvuosi = etsiOptionaalinenIntParametri(syoteparametrit, "loppuvuosi")
 
-    val alkulukukausi = etsiOptionaalinenParametri(syoteparametrit, "alkulukukausi").map(value => stringToBigDecimal(value.getArvo).intValue)
+    val alkulukukausi = etsiOptionaalinenIntParametri(syoteparametrit, "alkulukukausi")
 
-    val loppulukukausi = etsiOptionaalinenParametri(syoteparametrit, "loppulukukausi").map(value => stringToBigDecimal(value.getArvo).intValue)
+    val loppulukukausi = etsiOptionaalinenIntParametri(syoteparametrit, "loppulukukausi")
 
-    val vainValmistuneet = etsiOptionaalinenParametri(syoteparametrit, "valmistuneet") match {
-      case Some(sp: Syoteparametri) => parametriToBoolean(sp)
-      case _ => false
-    }
+    val vainValmistuneet = etsiOptionaalinenBooleanParametri(syoteparametrit, "valmistuneet").getOrElse(false)
 
-    val rooli = syoteparametrit.asScala.find(s => s.getAvain.equals("rooli") && !s.getArvo.isEmpty) match {
-      case Some(sp: Syoteparametri) => Some(sp.getArvo)
-      case _ => None
-    }
+    val rooli = etsiOptionaalinenParametri(syoteparametrit, "rooli").map(_.getArvo)
+
     YoEhdot(alkuvuosi, loppuvuosi, alkulukukausi, loppulukukausi, vainValmistuneet, rooli)
   }
 
-  private def etsiOptionaalinenParametri(syoteparametrit: JSet[Syoteparametri], parametrinAvain: String) = {
+  private def etsiOptionaalinenIntParametri(syoteparametrit: JSet[Syoteparametri], parametrinAvain: String): Option[Int] = {
+    etsiOptionaalinenParametri(syoteparametrit, parametrinAvain).map(p => stringToBigDecimal(p.getArvo).intValue)
+  }
+
+  private def etsiOptionaalinenBooleanParametri(syoteparametrit: JSet[Syoteparametri], parametrinAvain: String): Option[Boolean] = {
+    etsiOptionaalinenParametri(syoteparametrit, parametrinAvain).map(p => parametriToBoolean(p))
+  }
+
+  private def etsiOptionaalinenParametri(syoteparametrit: JSet[Syoteparametri], parametrinAvain: String): Option[Syoteparametri] = {
     syoteparametrit.asScala.find(s => {
       s.getAvain.equals(parametrinAvain) && !s.getArvo.isEmpty
     })
   }
 
   private def muunnaParametriSuomalaisestaPaivamaarasta(parametrinAvain: String, syoteparametrit: JSet[Syoteparametri], oletusarvo: LocalDate): LocalDate = {
-    val p = syoteparametrit.asScala.find(_.getAvain == parametrinAvain)
-
-    p match {
+    etsiOptionaalinenParametri(syoteparametrit, parametrinAvain) match {
       case Some(parametri) =>
         try {
           LocalDate.parse(parametri.getArvo, suomalainenPvmMuoto)
