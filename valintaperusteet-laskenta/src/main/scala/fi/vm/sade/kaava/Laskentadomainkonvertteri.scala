@@ -89,7 +89,7 @@ import fi.vm.sade.service.valintaperusteet.model.Syoteparametri
 import fi.vm.sade.service.valintaperusteet.model.TekstiRyhma
 import fi.vm.sade.service.valintaperusteet.model.ValintaperusteViite
 import fi.vm.sade.service.valintaperusteet.service.validointi.virhe.LaskentakaavaEiOleValidiException
-import org.apache.commons.lang.StringUtils
+import org.apache.commons.lang3.StringUtils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
