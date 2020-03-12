@@ -697,7 +697,7 @@ object Laskentadomainkonvertteri {
 
   private def etsiOptionaalinenParametri(syoteparametrit: JSet[Syoteparametri], parametrinAvain: String): Option[Syoteparametri] = {
     syoteparametrit.asScala.find(s => {
-      s.getAvain.equals(parametrinAvain) && !s.getArvo.isEmpty
+      s.getAvain.equals(parametrinAvain) && StringUtils.isNotBlank(s.getArvo)
     })
   }
 
