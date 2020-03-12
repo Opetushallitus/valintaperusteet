@@ -107,8 +107,8 @@ object Laskentadomainkonvertteri {
   private val KAUSI_SUFFIX = "_SUORITUSLUKUKAUSI"
   private val ROOLI_SUFFIX = "_ROOLI"
 
-  private def getParametri(avain: String, params: JSet[Syoteparametri]): Syoteparametri = {
-    params.asScala.filter(_.getAvain == avain).toList match {
+  private def getParametri(avain: String, params: Iterable[Syoteparametri]): Syoteparametri = {
+    params.filter(_.getAvain == avain).toList match {
       case Nil => sys.error(s"Could not find parameter matching the key $avain")
       case head :: tail => head
     }
@@ -214,7 +214,7 @@ object Laskentadomainkonvertteri {
 
     val arvokonvertteriparametrit = funktiokutsu.getArvokonvertteriparametrit
     val arvovalikonvertteriparametrit = funktiokutsu.getArvovalikonvertteriparametrit
-    val syoteparametrit = funktiokutsu.getSyoteparametrit
+    val syoteparametrit = funktiokutsu.getSyoteparametrit.asScala
 
     funktionimi match {
       case Funktionimi.EI =>
@@ -293,13 +293,13 @@ object Laskentadomainkonvertteri {
         HaeTotuusarvo(konvertteri, oletusarvo, valintaperusteviitteet.head, oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
 
       case Funktionimi.HYLKAA =>
-        val hylkaysperustekuvaus = syoteparametrit.asScala.filter(_.getAvain.startsWith("hylkaysperustekuvaus_")).foldLeft(Map.empty[String, String]) {
+        val hylkaysperustekuvaus = syoteparametrit.filter(_.getAvain.startsWith("hylkaysperustekuvaus_")).foldLeft(Map.empty[String, String]) {
           (result, kuvaus) => result + (kuvaus.getAvain.split("_")(1) -> kuvaus.getArvo)
         }
         Hylkaa(muunnaTotuusarvofunktioksi(lasketutArgumentit(0)), Some(hylkaysperustekuvaus), oid, tulosTunniste, tulosTekstiFi, tulosTekstiSv, tulosTekstiEn, omaopintopolku)
 
       case Funktionimi.HYLKAAARVOVALILLA =>
-        val hylkaysperustekuvaus = syoteparametrit.asScala.filter(_.getAvain.startsWith("hylkaysperustekuvaus_")).foldLeft(Map.empty[String, String]) {
+        val hylkaysperustekuvaus = syoteparametrit.filter(_.getAvain.startsWith("hylkaysperustekuvaus_")).foldLeft(Map.empty[String, String]) {
           (result, kuvaus) => result + (kuvaus.getAvain.split("_")(1) -> kuvaus.getArvo)
         }
 
@@ -488,7 +488,7 @@ object Laskentadomainkonvertteri {
       case Funktionimi.HAEYOARVOSANA =>
         List("A", "B", "C", "M", "E", "L", "I").foreach(
           arvosana => {
-            if (syoteparametrit.asScala.count(s => s.getAvain == arvosana) == 0) {
+            if (syoteparametrit.count(s => s.getAvain == arvosana) == 0) {
               val target = new Syoteparametri
               target.setArvo("0.0")
               target.setAvain(arvosana)
@@ -498,7 +498,7 @@ object Laskentadomainkonvertteri {
 
         )
 
-        val arvosanaKonvertterit = syoteparametrit.asScala.filter(s => s.getAvain.length == 1).map(
+        val arvosanaKonvertterit = syoteparametrit.filter(s => s.getAvain.length == 1).map(
           param => ArvokonversioMerkkijonoilla[String, BigDecimal](param.getAvain, stringToBigDecimal(param.getArvo), "false", new TekstiRyhma)
         ).toList
 
@@ -671,7 +671,7 @@ object Laskentadomainkonvertteri {
     } else None
   }
 
-  def yoehdot(syoteparametrit: JSet[Syoteparametri]): YoEhdot = {
+  def yoehdot(syoteparametrit: Iterable[Syoteparametri]): YoEhdot = {
     val alkuvuosi = etsiOptionaalinenIntParametri(syoteparametrit, "alkuvuosi")
 
     val loppuvuosi = etsiOptionaalinenIntParametri(syoteparametrit, "loppuvuosi")
@@ -687,21 +687,21 @@ object Laskentadomainkonvertteri {
     YoEhdot(alkuvuosi, loppuvuosi, alkulukukausi, loppulukukausi, vainValmistuneet, rooli)
   }
 
-  private def etsiOptionaalinenIntParametri(syoteparametrit: JSet[Syoteparametri], parametrinAvain: String): Option[Int] = {
+  private def etsiOptionaalinenIntParametri(syoteparametrit: Iterable[Syoteparametri], parametrinAvain: String): Option[Int] = {
     etsiOptionaalinenParametri(syoteparametrit, parametrinAvain).map(p => stringToBigDecimal(p.getArvo).intValue)
   }
 
-  private def etsiOptionaalinenBooleanParametri(syoteparametrit: JSet[Syoteparametri], parametrinAvain: String): Option[Boolean] = {
+  private def etsiOptionaalinenBooleanParametri(syoteparametrit: Iterable[Syoteparametri], parametrinAvain: String): Option[Boolean] = {
     etsiOptionaalinenParametri(syoteparametrit, parametrinAvain).map(p => parametriToBoolean(p))
   }
 
-  private def etsiOptionaalinenParametri(syoteparametrit: JSet[Syoteparametri], parametrinAvain: String): Option[Syoteparametri] = {
-    syoteparametrit.asScala.find(s => {
+  private def etsiOptionaalinenParametri(syoteparametrit: Iterable[Syoteparametri], parametrinAvain: String): Option[Syoteparametri] = {
+    syoteparametrit.find(s => {
       s.getAvain.equals(parametrinAvain) && StringUtils.isNotBlank(s.getArvo)
     })
   }
 
-  private def muunnaParametriSuomalaisestaPaivamaarasta(parametrinAvain: String, syoteparametrit: JSet[Syoteparametri], oletusarvo: LocalDate): LocalDate = {
+  private def muunnaParametriSuomalaisestaPaivamaarasta(parametrinAvain: String, syoteparametrit: Iterable[Syoteparametri], oletusarvo: LocalDate): LocalDate = {
     etsiOptionaalinenParametri(syoteparametrit, parametrinAvain) match {
       case Some(parametri) =>
         try {
