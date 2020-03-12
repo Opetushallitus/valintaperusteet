@@ -50,8 +50,7 @@ object KoskiLaskenta {
           val message = s"Hakemuksen ${hakemus.oid} opiskeluoikeuden ${tutkinto.opiskeluoikeudenOid} " +
             s"version ${tutkinto.opiskeluoikeudenVersio} aikaleima ${tutkinto.opiskeluoikeudenAikaleima} " +
             s"on datan leikkuripäivän ${LaskentaUtil.suomalainenPvmMuoto.format(datanAikaleimanLeikkuri)} jälkeen. Sen ei olisi pitänyt tulla mukaan laskentaan."
-          LOG.error(message)
-          // throw new IllegalArgumentException(message) // TODO: crash here
+          throw new IllegalArgumentException(message)
         }
         tutkinto
       }
