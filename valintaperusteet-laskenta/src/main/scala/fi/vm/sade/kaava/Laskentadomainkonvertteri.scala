@@ -678,15 +678,15 @@ object Laskentadomainkonvertteri {
   }
 
   def yoehdot(syoteparametrit: JSet[Syoteparametri]): YoEhdot = {
-    val alkuvuosi = syoteparametrit.asScala.find(s => s.getAvain.equals("alkuvuosi") && !s.getArvo.isEmpty).map(value => stringToBigDecimal(value.getArvo).intValue)
+    val alkuvuosi = etsiOptionaalinenParametri(syoteparametrit, "alkuvuosi").map(value => stringToBigDecimal(value.getArvo).intValue)
 
-    val loppuvuosi = syoteparametrit.asScala.find(s => s.getAvain.equals("loppuvuosi") && !s.getArvo.isEmpty).map(value => stringToBigDecimal(value.getArvo).intValue)
+    val loppuvuosi = etsiOptionaalinenParametri(syoteparametrit, "loppuvuosi").map(value => stringToBigDecimal(value.getArvo).intValue)
 
-    val alkulukukausi = syoteparametrit.asScala.find(s => s.getAvain.equals("alkulukukausi") && !s.getArvo.isEmpty).map(value => stringToBigDecimal(value.getArvo).intValue)
+    val alkulukukausi = etsiOptionaalinenParametri(syoteparametrit, "alkulukukausi").map(value => stringToBigDecimal(value.getArvo).intValue)
 
-    val loppulukukausi = syoteparametrit.asScala.find(s => s.getAvain.equals("loppulukukausi") && !s.getArvo.isEmpty).map(value => stringToBigDecimal(value.getArvo).intValue)
+    val loppulukukausi = etsiOptionaalinenParametri(syoteparametrit, "loppulukukausi").map(value => stringToBigDecimal(value.getArvo).intValue)
 
-    val vainValmistuneet = syoteparametrit.asScala.find(s => s.getAvain.equals("valmistuneet") && !s.getArvo.isEmpty) match {
+    val vainValmistuneet = etsiOptionaalinenParametri(syoteparametrit, "valmistuneet") match {
       case Some(sp: Syoteparametri) => parametriToBoolean(sp)
       case _ => false
     }
@@ -696,6 +696,12 @@ object Laskentadomainkonvertteri {
       case _ => None
     }
     YoEhdot(alkuvuosi, loppuvuosi, alkulukukausi, loppulukukausi, vainValmistuneet, rooli)
+  }
+
+  private def etsiOptionaalinenParametri(syoteparametrit: JSet[Syoteparametri], parametrinAvain: String) = {
+    syoteparametrit.asScala.find(s => {
+      s.getAvain.equals(parametrinAvain) && !s.getArvo.isEmpty
+    })
   }
 
   private def muunnaParametriSuomalaisestaPaivamaarasta(parametrinAvain: String, syoteparametrit: JSet[Syoteparametri], oletusarvo: LocalDate): LocalDate = {
