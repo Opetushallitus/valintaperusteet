@@ -10,7 +10,7 @@ sealed trait IteraatioParametri {
   val lyhytKuvaus: String = toString
 }
 
-case class AmmatillisenPerustutkinnonValitsija(tutkinto: Tutkinto, valmistumisenTakarajaPvm: LocalDate = LocalDate.of(2020, 6, 1)) extends IteraatioParametri {
+case class AmmatillisenPerustutkinnonValitsija(tutkinto: Tutkinto, valmistumisenTakarajaPvm: LocalDate) extends IteraatioParametri {
   val tutkinnonIndeksi: Int = tutkinto.indeksi
   override val kuvaus: String = s"Tutkinto ${tutkinto.indeksi + 1} " +
     s"(opiskeluoikeus ${tutkinto.opiskeluoikeudenOid}, versio ${tutkinto.opiskeluoikeudenVersio}, " +
@@ -19,8 +19,8 @@ case class AmmatillisenPerustutkinnonValitsija(tutkinto: Tutkinto, valmistumisen
   override val lyhytKuvaus: String = s"Tutkinto ${tutkinto.indeksi + 1}"
 }
 
-case class AmmatillisetPerustutkinnot(tutkinnot: Seq[Tutkinto]) {
-  def parametreiksi: Seq[AmmatillisenPerustutkinnonValitsija] = tutkinnot.map(AmmatillisenPerustutkinnonValitsija(_))
+case class AmmatillisetPerustutkinnot(tutkinnot: Seq[Tutkinto], valmistumisenTakaraja: LocalDate) {
+  def parametreiksi: Seq[AmmatillisenPerustutkinnonValitsija] = tutkinnot.map(AmmatillisenPerustutkinnonValitsija(_, valmistumisenTakaraja))
 }
 
 case class AmmatillisenTutkinnonOsanValitsija(osasuoritus: Osasuoritus, indeksi: Int) extends IteraatioParametri {
