@@ -16,7 +16,7 @@ object Tutkinnot {
   private val LOG: Logger = LoggerFactory.getLogger(Tutkinnot.getClass)
 
   private val sallitutSuoritusTavat: Set[String] = Set("ops", "reformi")
-  private val koskiDateFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+  val koskiDateFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
   object TutkintoLinssit {
     // Tutkinnon opiskeluoikeuden tiedot
@@ -37,7 +37,7 @@ object Tutkinnot {
     val suoritusTapa: Optional[Json, String] = JsonPath.root.suoritustapa.koodiarvo.string
   }
 
-  def etsiValmiitTutkinnot(valmistumisenTakaraja: LocalDate,
+  def etsiValmiitTutkinnot(valmistumisenTakaraja: Option[LocalDate],
                            json: Json,
                            opiskeluoikeudenHaluttuTyyppi: String,
                            suorituksenHaluttuTyyppi: String,
@@ -66,7 +66,7 @@ object Tutkinnot {
           throw new IllegalStateException(s"Odotettiin täsmälleen yhtä tyyppiä suoritukselle, mutta oli ${suorituksenTyyppi.size} hakemuksen ${hakemus.oid} hakijalle.")
         }
 
-        val onkoValmistunut: Boolean = valmistumisTila.contains("valmistunut") && vahvistettuRajapäiväänMennessä(valmistumisenTakaraja, suoritus)
+        val onkoValmistunut: Boolean = valmistumisTila.contains("valmistunut") && (valmistumisenTakaraja.forall(vahvistettuRajapäiväänMennessä(_, suoritus)))
         val onkoValidiSuoritusTapa = suoritustavanKoodiarvo.map(s => sallitutSuoritusTavat.contains(s)).exists(v => v) &&
           suoritustavanKoodistoUri.contains("ammatillisentutkinnonsuoritustapa")
         val onkoAmmatillinenOpiskeluOikeus =

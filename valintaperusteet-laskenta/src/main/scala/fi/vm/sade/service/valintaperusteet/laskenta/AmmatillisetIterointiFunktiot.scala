@@ -27,8 +27,12 @@ trait AmmatillisetIterointiFunktiot {
       val tutkinnot: Seq[Tutkinto] = KoskiLaskenta.etsiAmmatillisetTutkinnot(laskin.hakemus, iterointiFunktio.datanAikaleimanLeikkuri, iterointiFunktio.valmistumisenTakaraja)
       val tutkintojenMaara = tutkinnot.size
 
-      val tutkintojenIterointiParametrit: Seq[AmmatillisenPerustutkinnonValitsija] = AmmatillisetPerustutkinnot(tutkinnot, iterointiFunktio.valmistumisenTakaraja).parametreiksi
-      Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} hakijalle löytyi $tutkintojenMaara ammatillista perustutkintoa: ${tutkintojenIterointiParametrit.map(_.kuvaus)}.")
+      val tutkintojenIterointiParametrit: Seq[AmmatillisenPerustutkinnonValitsija] = AmmatillisetPerustutkinnot(
+        tutkinnot.filter(_.vahvistettuRajaPäiväänMennessä),
+        iterointiFunktio.valmistumisenTakaraja)
+        .parametreiksi
+      Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} hakijalle löytyi $tutkintojenMaara ammatillista perustutkintoa: $tutkinnot, " +
+        s"joista käytetään laskennassa ${tutkintojenIterointiParametrit.size}:  ${tutkintojenIterointiParametrit.map(_.kuvaus)}.")
       Laskin.LOG.info(s"${classOf[IteroiAmmatillisetTutkinnot].getSimpleName}-funktion parametrit: " +
         s"valmistumisenTakaraja = ${iterointiFunktio.valmistumisenTakaraja} , datanAikaleimanLeikkuri = ${iterointiFunktio.datanAikaleimanLeikkuri}")
       val uudetIteraatioParametrit = iteraatioParametrit.asetaAvoinParametrilista(classOf[AmmatillisenPerustutkinnonValitsija], tutkintojenIterointiParametrit)

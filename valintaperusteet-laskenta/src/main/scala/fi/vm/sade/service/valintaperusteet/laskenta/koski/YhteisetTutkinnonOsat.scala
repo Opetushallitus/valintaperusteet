@@ -50,7 +50,7 @@ object YhteisetTutkinnonOsat {
                       ytoKoodiArvo: String): Seq[Json] = {
     if (hakemus.koskiOpiskeluoikeudet != null) {
       val oikeaOpiskeluoikeus: Json = etsiValmiitTutkinnot(
-        ammatillisenPerustutkinnonValitsija.valmistumisenTakarajaPvm,
+        Some(ammatillisenPerustutkinnonValitsija.valmistumisenTakarajaPvm),
         hakemus.koskiOpiskeluoikeudet,
         opiskeluoikeudenHaluttuTyyppi = ammatillisenHuomioitavaOpiskeluoikeudenTyyppi,
         suorituksenHaluttuTyyppi = ammatillisenSuorituksenTyyppi,
@@ -88,7 +88,7 @@ object YhteisetTutkinnonOsat {
                                              ytoKoodiArvo: String
                                             ): Seq[Json] = {
     val oikeaOpiskeluoikeus: Json = etsiValmiitTutkinnot(
-      ammatillisenPerustutkinnonValitsija.valmistumisenTakarajaPvm,
+      Some(ammatillisenPerustutkinnonValitsija.valmistumisenTakarajaPvm),
       hakemus.koskiOpiskeluoikeudet,
       opiskeluoikeudenHaluttuTyyppi = ammatillisenHuomioitavaOpiskeluoikeudenTyyppi,
       suorituksenHaluttuTyyppi = ammatillisenSuorituksenTyyppi,
@@ -131,7 +131,12 @@ object YhteisetTutkinnonOsat {
   private def etsiAmmatillistenTutkintojenSuoritukset(valmistumisenTakarajaPvm: LocalDate, opiskeluoikeus: Json, hakemus: Hakemus) = {
     val suorituksenSallitutKoodit: Set[Int] = ammatillisenHhuomioitavatKoulutustyypit.map(_.koodiarvo)
 
-    Tutkinnot.etsiValmiitTutkinnot(valmistumisenTakarajaPvm, Json.arr(opiskeluoikeus), KoskiLaskenta.ammatillisenHuomioitavaOpiskeluoikeudenTyyppi, KoskiLaskenta.ammatillisenSuorituksenTyyppi, hakemus)
+    Tutkinnot.etsiValmiitTutkinnot(
+      Some(valmistumisenTakarajaPvm),
+      Json.arr(opiskeluoikeus),
+      KoskiLaskenta.ammatillisenHuomioitavaOpiskeluoikeudenTyyppi,
+      KoskiLaskenta.ammatillisenSuorituksenTyyppi,
+      hakemus)
       .flatMap(tutkinto => Tutkinnot.etsiValiditSuoritukset(tutkinto, valmistumisenTakarajaPvm, suorituksenSallitutKoodit))
   }
 }

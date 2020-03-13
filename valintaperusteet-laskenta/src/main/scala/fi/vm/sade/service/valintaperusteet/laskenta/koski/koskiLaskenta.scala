@@ -37,15 +37,22 @@ object KoskiLaskenta {
     if (hakemus.koskiOpiskeluoikeudet == null) {
       Nil
     } else {
-      val tutkintoJsonit = Tutkinnot.etsiValmiitTutkinnot(valmistumisenTakaraja, hakemus.koskiOpiskeluoikeudet, ammatillisenHuomioitavaOpiskeluoikeudenTyyppi, ammatillisenSuorituksenTyyppi, hakemus)
-      tutkintoJsonit.zipWithIndex.map { case (tutkintoJson, indeksi) =>
+      val tutkintoJsonitHuomioimattaValmistumisenTakarajaa = Tutkinnot.etsiValmiitTutkinnot(
+        valmistumisenTakaraja = None,
+        json = hakemus.koskiOpiskeluoikeudet,
+        opiskeluoikeudenHaluttuTyyppi = ammatillisenHuomioitavaOpiskeluoikeudenTyyppi,
+        suorituksenHaluttuTyyppi = ammatillisenSuorituksenTyyppi,
+        hakemus = hakemus)
+      tutkintoJsonitHuomioimattaValmistumisenTakarajaa.zipWithIndex.map { case (tutkintoJson, indeksi) =>
+        val päätasonSuoritus = TutkintoLinssit.suoritukset.json.getAll(tutkintoJson).headOption
         val tutkinto = Tutkinto(
           indeksi,
           TutkintoLinssit.opiskeluoikeudenOid.getOption(tutkintoJson).getOrElse("-"),
           TutkintoLinssit.opiskeluoikeudenVersio.getOption(tutkintoJson).getOrElse(-1),
           TutkintoLinssit.opiskeluoikeudenAikaleima.getOption(tutkintoJson).getOrElse("-"),
           TutkintoLinssit.opiskeluoikeudenOppilaitoksenSuomenkielinenNimi.getOption(tutkintoJson).getOrElse("-"),
-          TutkintoLinssit.suoritukset.json.getAll(tutkintoJson).headOption.flatMap(TutkintoLinssit.vahvistusPvm.getOption).getOrElse("-"))
+          päätasonSuoritus.flatMap(TutkintoLinssit.vahvistusPvm.getOption).getOrElse("-"),
+          päätasonSuoritus.exists(Tutkinnot.vahvistettuRajapäiväänMennessä(valmistumisenTakaraja, _)))
         if (aikaleimaYlittaaLeikkuripaivan(datanAikaleimanLeikkuri, tutkinto)) {
           val message = s"Hakemuksen ${hakemus.oid} opiskeluoikeuden ${tutkinto.opiskeluoikeudenOid} " +
             s"version ${tutkinto.opiskeluoikeudenVersio} aikaleima ${tutkinto.opiskeluoikeudenAikaleima} " +
@@ -148,7 +155,7 @@ object KoskiLaskenta {
     if (hakemus.koskiOpiskeluoikeudet == null) {
       None
     } else {
-      val tutkinnot = Tutkinnot.etsiValmiitTutkinnot(tutkinnonValitsija.valmistumisenTakarajaPvm, hakemus.koskiOpiskeluoikeudet, ammatillisenHuomioitavaOpiskeluoikeudenTyyppi, ammatillisenSuorituksenTyyppi, hakemus)
+      val tutkinnot = Tutkinnot.etsiValmiitTutkinnot(Some(tutkinnonValitsija.valmistumisenTakarajaPvm), hakemus.koskiOpiskeluoikeudet, ammatillisenHuomioitavaOpiskeluoikeudenTyyppi, ammatillisenSuorituksenTyyppi, hakemus)
       val suorituksenSallitutKoodit: Set[Int] = ammatillisenHhuomioitavatKoulutustyypit.map(_.koodiarvo)
       val suoritukset = Tutkinnot.etsiValiditSuoritukset(tutkinnot(tutkinnonValitsija.tutkinnonIndeksi), tutkinnonValitsija.valmistumisenTakarajaPvm, suorituksenSallitutKoodit)
       if (suoritukset.size > 1) {
@@ -173,7 +180,7 @@ object KoskiLaskenta {
       Nil
     } else {
       val oikeaOpiskeluoikeus: Json = Tutkinnot.etsiValmiitTutkinnot(
-        tutkinnonValitsija.valmistumisenTakarajaPvm,
+        Some(tutkinnonValitsija.valmistumisenTakarajaPvm),
         json = hakemus.koskiOpiskeluoikeudet,
         opiskeluoikeudenHaluttuTyyppi = ammatillisenHuomioitavaOpiskeluoikeudenTyyppi,
         suorituksenHaluttuTyyppi = ammatillisenSuorituksenTyyppi, hakemus = hakemus)(tutkinnonValitsija.tutkinnonIndeksi)
@@ -217,4 +224,5 @@ case class Tutkinto(indeksi: Int,
                     opiskeluoikeudenVersio: Int,
                     opiskeluoikeudenAikaleima: String,
                     opiskeluoikeudenOppilaitoksenSuomenkielinenNimi: String,
-                    vahvistusPvm: String)
+                    vahvistusPvm: String,
+                    vahvistettuRajaPäiväänMennessä: Boolean)
