@@ -3,6 +3,8 @@ package fi.vm.sade.service.valintaperusteet.laskenta.koski
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatterBuilder
+import java.time.temporal.ChronoField
 
 import fi.vm.sade.kaava.LaskentaUtil
 import fi.vm.sade.service.valintaperusteet.laskenta.AmmatillisenPerustutkinnonValitsija
@@ -20,7 +22,10 @@ import scala.util.control.Exception._
 
 object KoskiLaskenta {
   private val LOG: Logger = LoggerFactory.getLogger(KoskiLaskenta.getClass)
-  private val opiskeluoikeudenAikaleimaFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
+  private val opiskeluoikeudenAikaleimaFormat: DateTimeFormatter = new DateTimeFormatterBuilder().
+    appendPattern("yyyy-MM-dd'T'HH:mm:ss").
+    appendFraction(ChronoField.MICRO_OF_SECOND, 0, 6, true).
+    toFormatter()
 
   val ammatillisenHuomioitavaOpiskeluoikeudenTyyppi: String = "ammatillinenkoulutus"
   val ammatillisenSuorituksenTyyppi: String = "ammatillinentutkinto"
