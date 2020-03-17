@@ -99,9 +99,7 @@ object KoskiLaskenta {
                                           hakemus: Hakemus,
                                           oletusarvo: Option[BigDecimal]
                                          ): Option[BigDecimal] = {
-    val (_, uusinLaajuus, _) = haeOsaAlueenUusinArvosanaLaajuusJaArviointiAsteikkoValitsijoilla(tutkinnonValitsija, osaAlueenValitsija, hakemus)
-
-    uusinLaajuus
+    haeOsaAlueenUusinArvosanaLaajuusJaArviointiAsteikkoValitsijoilla(tutkinnonValitsija, osaAlueenValitsija, hakemus).flatMap(_._2)
   }
 
   def haeAmmatillisenYtonOsaAlueenArvosana(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
@@ -109,10 +107,9 @@ object KoskiLaskenta {
                                            hakemus: Hakemus,
                                            oletusarvo: Option[BigDecimal]
                                           ): Option[BigDecimal] = {
-    haeOsaAlueenUusinArvosanaLaajuusJaArviointiAsteikkoValitsijoilla(tutkinnonValitsija, osaAlueenValitsija, hakemus) match {
-      case (uusinArvosana, _, _) => {
+    haeOsaAlueenUusinArvosanaLaajuusJaArviointiAsteikkoValitsijoilla(tutkinnonValitsija, osaAlueenValitsija, hakemus).map(_._1).flatMap {
+      uusinArvosana =>
         catching(classOf[NumberFormatException]) opt BigDecimal(uusinArvosana)
-      }
     }
   }
 
@@ -144,7 +141,7 @@ object KoskiLaskenta {
 
   private def haeOsaAlueenUusinArvosanaLaajuusJaArviointiAsteikkoValitsijoilla(tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
                                                                       osaAlueenValitsija: AmmatillisenTutkinnonYtoOsaAlueenValitsija,
-                                                                      hakemus: Hakemus): (String, Option[BigDecimal], String) = {
+                                                                      hakemus: Hakemus): Option[(String, Option[BigDecimal], String)] = {
     val osaAlueet = YhteisetTutkinnonOsat.haeYtoOsaAlueet(tutkinnonValitsija, hakemus, osaAlueenValitsija.ytoKoodi)
     if (osaAlueenValitsija.osaAlueenIndeksi >= osaAlueet.size) {
       throw new IllegalStateException(s"Osa-alueen indeksointi yrittää käsitellä indeksiä ${osaAlueenValitsija.osaAlueenIndeksi} kun osa-alueita on vain ${osaAlueet.size} hakemuksella ${hakemus.oid}")

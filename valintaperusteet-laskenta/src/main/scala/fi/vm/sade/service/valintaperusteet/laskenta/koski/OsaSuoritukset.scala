@@ -32,7 +32,8 @@ object Osasuoritus {
   def haePerustiedot(json: Json): (String, String, String, Option[BigDecimal], String) = {
     val osasuorituksenKoodiarvo = OsaSuoritusLinssit.koulutusmoduulinTunnisteenKoodiarvo.getOption(json).orNull
     val osasuorituksenNimiFi = OsaSuoritusLinssit.koulutusmoduulinNimiFi.getOption(json).orNull
-    val (uusinHyvaksyttyArvio: String, uusinLaajuus: Option[BigDecimal], uusinArviointiAsteikko: String) = OsaSuoritukset.etsiUusinArvosanaLaajuusJaArviointiAsteikko(json)
+    val (uusinHyvaksyttyArvio: String, uusinLaajuus: Option[BigDecimal], uusinArviointiAsteikko: String) =
+      OsaSuoritukset.etsiUusinArvosanaLaajuusJaArviointiAsteikko(json).getOrElse(("-", None, "-"))
     (osasuorituksenKoodiarvo, osasuorituksenNimiFi, uusinHyvaksyttyArvio, uusinLaajuus, uusinArviointiAsteikko)
   }
 }
@@ -42,8 +43,7 @@ object OsaSuoritukset {
     OsaSuoritusLinssit.osasuoritukset.getAll(suoritus).filter(osasuoritusPredikaatti)
   }
 
-  def etsiUusinArvosanaLaajuusJaArviointiAsteikko(osasuoritus: Json): (String, Option[BigDecimal], String) = {
-    val (_, uusinHyvaksyttyArvio, uusinLaajuus, uusinArviointiAsteikko): (String, String, Option[BigDecimal], String) =
+  def etsiUusinArvosanaLaajuusJaArviointiAsteikko(osasuoritus: Json): Option[(String, Option[BigDecimal], String)] = {
       OsaSuoritusLinssit.arviointi.getAll(osasuoritus)
         .filter(arvio => JsonPath.root.hyväksytty.boolean.getOption(arvio).getOrElse(false))
         .map(arvio => (
@@ -52,7 +52,6 @@ object OsaSuoritukset {
           OsaSuoritusLinssit.koulutusmoduulinLaajuudenArvo.getOption(osasuoritus), // TODO lisää laajuuden yksikkö / estä muut kuin osp
           JsonPath.root.arvosana.koodistoUri.string.getOption(arvio).orNull
         )).sorted(Ordering.Tuple4(Ordering.String.reverse, Ordering.String, Ordering.Option[BigDecimal], Ordering.String))
-        .head
-    (uusinHyvaksyttyArvio, uusinLaajuus, uusinArviointiAsteikko)
+        .headOption.map(t => (t._2, t._3, t._4))
   }
 }
