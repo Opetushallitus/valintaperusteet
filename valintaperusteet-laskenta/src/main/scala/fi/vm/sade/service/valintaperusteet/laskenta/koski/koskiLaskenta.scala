@@ -146,11 +146,11 @@ object KoskiLaskenta {
                                                                       osaAlueenValitsija: AmmatillisenTutkinnonYtoOsaAlueenValitsija,
                                                                       hakemus: Hakemus): (String, Option[BigDecimal], String) = {
     val osaAlueet = YhteisetTutkinnonOsat.haeYtoOsaAlueet(tutkinnonValitsija, hakemus, osaAlueenValitsija.ytoKoodi)
-    if (osaAlueenValitsija.osanIndeksi >= osaAlueet.size) {
-      throw new IllegalStateException(s"Osa-alueen indeksointi yrittää käsitellä indeksiä ${osaAlueenValitsija.osanIndeksi} kun osa-alueita on vain ${osaAlueet.size} hakemuksella ${hakemus.oid}")
+    if (osaAlueenValitsija.osaAlueenIndeksi >= osaAlueet.size) {
+      throw new IllegalStateException(s"Osa-alueen indeksointi yrittää käsitellä indeksiä ${osaAlueenValitsija.osaAlueenIndeksi} kun osa-alueita on vain ${osaAlueet.size} hakemuksella ${hakemus.oid}")
     }
 
-    OsaSuoritukset.etsiUusinArvosanaLaajuusJaArviointiAsteikko(osaAlueet(osaAlueenValitsija.osanIndeksi))
+    OsaSuoritukset.etsiUusinArvosanaLaajuusJaArviointiAsteikko(osaAlueet(osaAlueenValitsija.osaAlueenIndeksi))
   }
 
   private def haeArvoSuorituksista[T](tutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
