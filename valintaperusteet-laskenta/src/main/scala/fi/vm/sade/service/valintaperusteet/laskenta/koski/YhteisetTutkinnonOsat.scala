@@ -124,7 +124,8 @@ object YhteisetTutkinnonOsat {
 
   private def etsiYhteisetTutkinnonOsat(suoritus: Json, osasuorituksenSallitutKoodit: Set[String]) = {
     OsaSuoritukset.etsiOsasuoritukset(suoritus, osasuoritus => {
-      osasuorituksenSallitutKoodit.contains(OsaSuoritusLinssit.koulutusmoduulinTunnisteenKoodiarvo.getOption(osasuoritus).orNull)
+      osasuorituksenSallitutKoodit.contains(OsaSuoritusLinssit.koulutusmoduulinTunnisteenKoodiarvo.getOption(osasuoritus).orNull) &&
+        OsaSuoritusLinssit.osasuorituksenTyypinKoodiarvo.getOption(osasuoritus).contains(Osasuoritus.tutkinnonOsanTyypinKoodiarvo)
     })
   }
 
