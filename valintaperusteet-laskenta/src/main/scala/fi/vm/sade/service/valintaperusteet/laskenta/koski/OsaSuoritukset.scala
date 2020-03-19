@@ -12,16 +12,22 @@ case class Osasuoritus(koulutusmoduulinTunnisteenKoodiarvo: String,
                        uusinLaajuus: Option[BigDecimal])
 
 object Osasuoritus {
+  val tutkinnonOsanTyypinKoodiarvo: String = "ammatillisentutkinnonosa"
+
   // Osasuorituksen rakennetta purkavat linssit
   object OsaSuoritusLinssit {
     // Suoritusten alla olevien osasuoritusten tietoja etsivä linssi
     val osasuoritukset = JsonPath.root.osasuoritukset.each.json
 
+    // Osasuorituksen rakennetta purkavat linssit
     val arviointi = JsonPath.root.arviointi.each.json
     val koulutusmoduuli = JsonPath.root.koulutusmoduuli
     val koulutusmoduulinLaajuudenArvo = koulutusmoduuli.laajuus.arvo.bigDecimal
     val koulutusmoduulinTunnisteenKoodiarvo: Optional[Json, String] = koulutusmoduuli.tunniste.koodiarvo.string
     val koulutusmoduulinNimiFi = koulutusmoduuli.tunniste.nimi.fi.string
+    val osasuorituksenTyypinKoodiarvo = JsonPath.root.tyyppi.koodiarvo.string
+    val osasuorituksenKoulutusmoduuli = JsonPath.root.koulutusmoduuli
+    val osasuorituksenKoulutusmoduulinTunnisteenKoodiarvo: Optional[Json, String] = osasuorituksenKoulutusmoduuli.tunniste.koodiarvo.string
   }
 
   def apply(json: Json): Osasuoritus = {

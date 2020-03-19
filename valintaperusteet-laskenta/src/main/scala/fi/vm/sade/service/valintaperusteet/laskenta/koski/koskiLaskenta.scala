@@ -11,10 +11,10 @@ import fi.vm.sade.service.valintaperusteet.laskenta.AmmatillisenPerustutkinnonVa
 import fi.vm.sade.service.valintaperusteet.laskenta.AmmatillisenTutkinnonOsanValitsija
 import fi.vm.sade.service.valintaperusteet.laskenta.AmmatillisenTutkinnonYtoOsaAlueenValitsija
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus
+import fi.vm.sade.service.valintaperusteet.laskenta.koski.Osasuoritus.OsaSuoritusLinssit
 import fi.vm.sade.service.valintaperusteet.laskenta.koski.Tutkinnot.TutkintoLinssit
 import io.circe.Json
 import io.circe.optics.JsonPath
-import monocle.Optional
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -32,11 +32,6 @@ object KoskiLaskenta {
 
   val ammatillisenHhuomioitavatKoulutustyypit: Set[AmmatillisenPerustutkinnonKoulutustyyppi] =
     Set(AmmatillinenPerustutkinto, AmmatillinenReforminMukainenPerustutkinto, AmmatillinenPerustutkintoErityisopetuksena)
-
-  // Osasuorituksen rakennetta purkavat linssit
-  private val _osasuorituksenTyypinKoodiarvo = JsonPath.root.tyyppi.koodiarvo.string
-  private val _osasuorituksenKoulutusmoduuli = JsonPath.root.koulutusmoduuli
-  val _osasuorituksenKoulutusmoduulinTunnisteenKoodiarvo: Optional[Json, String] = _osasuorituksenKoulutusmoduuli.tunniste.koodiarvo.string
 
   def etsiAmmatillisetTutkinnot(hakemus: Hakemus, datanAikaleimanLeikkuri: LocalDate, valmistumisenTakaraja: LocalDate): Seq[Tutkinto] = {
     if (hakemus.koskiOpiskeluoikeudet == null) {
@@ -191,7 +186,7 @@ object KoskiLaskenta {
       val suoritukset = Tutkinnot.etsiValiditSuoritukset(oikeaOpiskeluoikeus, tutkinnonValitsija.valmistumisenTakarajaPvm, suorituksenSallitutKoodit)
 
       val osasuoritusPredikaatti: Json => Boolean = osasuoritus => {
-        "ammatillisentutkinnonosa" == _osasuorituksenTyypinKoodiarvo.getOption(osasuoritus).orNull
+        Osasuoritus.tutkinnonOsanTyypinKoodiarvo == OsaSuoritusLinssit.osasuorituksenTyypinKoodiarvo.getOption(osasuoritus).orNull
       }
 
       suoritukset.flatMap((suoritus: Json) => OsaSuoritukset.etsiOsasuoritukset(suoritus, osasuoritusPredikaatti))
