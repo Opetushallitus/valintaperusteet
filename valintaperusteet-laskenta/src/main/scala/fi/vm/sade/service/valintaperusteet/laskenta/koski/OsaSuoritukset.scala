@@ -26,8 +26,6 @@ object Osasuoritus {
     val koulutusmoduulinTunnisteenKoodiarvo: Optional[Json, String] = koulutusmoduuli.tunniste.koodiarvo.string
     val koulutusmoduulinNimiFi = koulutusmoduuli.tunniste.nimi.fi.string
     val osasuorituksenTyypinKoodiarvo = JsonPath.root.tyyppi.koodiarvo.string
-    val osasuorituksenKoulutusmoduuli = JsonPath.root.koulutusmoduuli
-    val osasuorituksenKoulutusmoduulinTunnisteenKoodiarvo: Optional[Json, String] = osasuorituksenKoulutusmoduuli.tunniste.koodiarvo.string
   }
 
   def apply(json: Json): Osasuoritus = {
