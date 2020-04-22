@@ -51,6 +51,7 @@ import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakukohdeViiteEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaOidTyhjaException;
 import fi.vm.sade.service.valintaperusteet.util.JononPrioriteettiAsettaja;
+import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 import fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit;
 import fi.vm.sade.valinta.sharedutils.AuditLog;
 import fi.vm.sade.valinta.sharedutils.ValintaResource;
@@ -67,6 +68,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -269,29 +272,14 @@ public class HakukohdeResourceImpl {
     @ApiOperation(value = "Hakee hakukohteen valinnan vaiheet OID:n perusteella", response = ValinnanVaiheDTO.class)
     public List<ValinnanVaiheDTO> valinnanVaihesForHakukohde(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid,
                                                              @DefaultValue("false") @QueryParam("withValisijoitteluTieto") String withValisijoitteluTieto) {
-
-        List<ValinnanVaiheDTO> valinnanVaiheetDTO = modelMapper.mapList(valinnanVaiheService.findByHakukohde(oid), ValinnanVaiheDTO.class);
-
-        if (withValisijoitteluTieto.equalsIgnoreCase("true")) {
-
-            /*
-             * Fetch all the ValintatapaJono's for each ValinnanVaihe
-             * and check if any of the ValintatapaJono has Valisijoittelu.
-             * Sets hasValisijoittelu variable accordingly.
-             */
-            valinnanVaiheetDTO = valinnanVaiheetDTO.stream().map(vv -> {
-                if (valintatapajonoService.findJonoByValinnanvaihe(vv.getOid())
-                        .stream().anyMatch(Valintatapajono::getValisijoittelu)) {
-                    vv.setHasValisijoittelu(true);
-                } else {
-                    vv.setHasValisijoittelu(false);
-                }
-                return vv;
-            }).collect(Collectors.toList());
-
-        }
-
-        return valinnanVaiheetDTO;
+        return valinnanVaiheService.findByHakukohde(oid).stream().map(valinnanVaihe -> {
+            ValinnanVaiheDTO valinnanVaiheDTO = modelMapper.map(valinnanVaihe, ValinnanVaiheDTO.class);
+            valinnanVaiheDTO.setJonot(new HashSet<>(modelMapper.mapList(LinkitettavaJaKopioitavaUtil.jarjesta(valinnanVaihe.getJonot()), ValintatapajonoDTO.class)));
+            if (withValisijoitteluTieto.equalsIgnoreCase("true")) {
+                valinnanVaiheDTO.setHasValisijoittelu(valinnanVaihe.getJonot().stream().anyMatch(Valintatapajono::getValisijoittelu));
+            }
+            return valinnanVaiheDTO;
+        }).collect(Collectors.toList());
     }
 
     @POST
