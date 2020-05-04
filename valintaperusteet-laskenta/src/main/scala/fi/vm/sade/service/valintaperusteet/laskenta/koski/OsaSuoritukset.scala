@@ -4,7 +4,6 @@ import fi.vm.sade.service.valintaperusteet.laskenta.koski.Osasuoritus.OsaSuoritu
 import io.circe.Json
 import io.circe.optics.JsonPath
 import monocle.Optional
-import org.joda.time.DateTime
 
 case class Osasuoritus(koulutusmoduulinTunnisteenKoodiarvo: String,
                        koulutusmoduulinNimiFi: String,
@@ -13,16 +12,20 @@ case class Osasuoritus(koulutusmoduulinTunnisteenKoodiarvo: String,
                        uusinLaajuus: Option[BigDecimal])
 
 object Osasuoritus {
+  val tutkinnonOsanTyypinKoodiarvo: String = "ammatillisentutkinnonosa"
+
   // Osasuorituksen rakennetta purkavat linssit
   object OsaSuoritusLinssit {
     // Suoritusten alla olevien osasuoritusten tietoja etsivä linssi
     val osasuoritukset = JsonPath.root.osasuoritukset.each.json
 
+    // Osasuorituksen rakennetta purkavat linssit
     val arviointi = JsonPath.root.arviointi.each.json
     val koulutusmoduuli = JsonPath.root.koulutusmoduuli
     val koulutusmoduulinLaajuudenArvo = koulutusmoduuli.laajuus.arvo.bigDecimal
     val koulutusmoduulinTunnisteenKoodiarvo: Optional[Json, String] = koulutusmoduuli.tunniste.koodiarvo.string
     val koulutusmoduulinNimiFi = koulutusmoduuli.tunniste.nimi.fi.string
+    val osasuorituksenTyypinKoodiarvo = JsonPath.root.tyyppi.koodiarvo.string
   }
 
   def apply(json: Json): Osasuoritus = {
@@ -33,18 +36,18 @@ object Osasuoritus {
   def haePerustiedot(json: Json): (String, String, String, Option[BigDecimal], String) = {
     val osasuorituksenKoodiarvo = OsaSuoritusLinssit.koulutusmoduulinTunnisteenKoodiarvo.getOption(json).orNull
     val osasuorituksenNimiFi = OsaSuoritusLinssit.koulutusmoduulinNimiFi.getOption(json).orNull
-    val (uusinHyvaksyttyArvio: String, uusinLaajuus: Option[BigDecimal], uusinArviointiAsteikko: String) = OsaSuoritukset.etsiUusinArvosanaLaajuusJaArviointiAsteikko(json)
+    val (uusinHyvaksyttyArvio: String, uusinLaajuus: Option[BigDecimal], uusinArviointiAsteikko: String) =
+      OsaSuoritukset.etsiUusinArvosanaLaajuusJaArviointiAsteikko(json).getOrElse(("-", None, "-"))
     (osasuorituksenKoodiarvo, osasuorituksenNimiFi, uusinHyvaksyttyArvio, uusinLaajuus, uusinArviointiAsteikko)
   }
 }
 
 object OsaSuoritukset {
-  def etsiOsasuoritukset(suoritus: Json, sulkeutumisPäivämäärä: DateTime, osasuoritusPredikaatti: Json => Boolean): List[Json] = {
+  def etsiOsasuoritukset(suoritus: Json, osasuoritusPredikaatti: Json => Boolean): List[Json] = {
     OsaSuoritusLinssit.osasuoritukset.getAll(suoritus).filter(osasuoritusPredikaatti)
   }
 
-  def etsiUusinArvosanaLaajuusJaArviointiAsteikko(osasuoritus: Json): (String, Option[BigDecimal], String) = {
-    val (_, uusinHyvaksyttyArvio, uusinLaajuus, uusinArviointiAsteikko): (String, String, Option[BigDecimal], String) =
+  def etsiUusinArvosanaLaajuusJaArviointiAsteikko(osasuoritus: Json): Option[(String, Option[BigDecimal], String)] = {
       OsaSuoritusLinssit.arviointi.getAll(osasuoritus)
         .filter(arvio => JsonPath.root.hyväksytty.boolean.getOption(arvio).getOrElse(false))
         .map(arvio => (
@@ -53,7 +56,6 @@ object OsaSuoritukset {
           OsaSuoritusLinssit.koulutusmoduulinLaajuudenArvo.getOption(osasuoritus), // TODO lisää laajuuden yksikkö / estä muut kuin osp
           JsonPath.root.arvosana.koodistoUri.string.getOption(arvio).orNull
         )).sorted(Ordering.Tuple4(Ordering.String.reverse, Ordering.String, Ordering.Option[BigDecimal], Ordering.String))
-        .head
-    (uusinHyvaksyttyArvio, uusinLaajuus, uusinArviointiAsteikko)
+        .headOption.map(t => (t._2, t._3, t._4))
   }
 }

@@ -1,5 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.laskenta
 
+import java.time.LocalDate
+
 import fi.vm.sade.service.valintaperusteet.laskenta.koski.Osasuoritus
 import fi.vm.sade.service.valintaperusteet.laskenta.koski.Tutkinto
 
@@ -8,16 +10,17 @@ sealed trait IteraatioParametri {
   val lyhytKuvaus: String = toString
 }
 
-case class AmmatillisenPerustutkinnonValitsija(tutkinto: Tutkinto) extends IteraatioParametri {
+case class AmmatillisenPerustutkinnonValitsija(tutkinto: Tutkinto, valmistumisenTakarajaPvm: LocalDate) extends IteraatioParametri {
   val tutkinnonIndeksi: Int = tutkinto.indeksi
   override val kuvaus: String = s"Tutkinto ${tutkinto.indeksi + 1} " +
     s"(opiskeluoikeus ${tutkinto.opiskeluoikeudenOid}, versio ${tutkinto.opiskeluoikeudenVersio}, " +
-    s"aikaleima ${tutkinto.opiskeluoikeudenAikaleima}, oppilaitos ${tutkinto.opiskeluoikeudenOppilaitoksenSuomenkielinenNimi})"
+    s"aikaleima ${tutkinto.opiskeluoikeudenAikaleima}, oppilaitos ${tutkinto.opiskeluoikeudenOppilaitoksenSuomenkielinenNimi}, " +
+    s"vahvistusPvm ${tutkinto.vahvistusPvm})"
   override val lyhytKuvaus: String = s"Tutkinto ${tutkinto.indeksi + 1}"
 }
 
-case class AmmatillisetPerustutkinnot(tutkinnot: Seq[Tutkinto]) {
-  def parametreiksi: Seq[AmmatillisenPerustutkinnonValitsija] = tutkinnot.map(AmmatillisenPerustutkinnonValitsija)
+case class AmmatillisetPerustutkinnot(tutkinnot: Seq[Tutkinto], valmistumisenTakaraja: LocalDate) {
+  def parametreiksi: Seq[AmmatillisenPerustutkinnonValitsija] = tutkinnot.map(AmmatillisenPerustutkinnonValitsija(_, valmistumisenTakaraja))
 }
 
 case class AmmatillisenTutkinnonOsanValitsija(osasuoritus: Osasuoritus, indeksi: Int) extends IteraatioParametri {
@@ -31,9 +34,9 @@ case class AmmatillisenTutkinnonOsat(tutkinnonOsat: Seq[Osasuoritus]) {
   def parametreiksi: Seq[AmmatillisenTutkinnonOsanValitsija] = tutkinnonOsat.zipWithIndex.map(AmmatillisenTutkinnonOsanValitsija.tupled)
 }
 
-case class AmmatillisenTutkinnonYtoOsaAlueenValitsija(ytoKoodi: String, osasuoritus: Osasuoritus, osanIndeksi: Int) extends IteraatioParametri {
-  override val kuvaus: String = s"YTO:n ${ytoKoodi} osa-alue ${osanIndeksi + 1}: ${osasuoritus.koulutusmoduulinNimiFi}"
-  override val lyhytKuvaus: String = s"YTO:n ${ytoKoodi} osa-alue: ${osasuoritus.koulutusmoduulinNimiFi}"
+case class AmmatillisenTutkinnonYtoOsaAlueenValitsija(ytoKoodi: String, ytoOsaSuoritus: Osasuoritus, osaAlueenIndeksi: Int) extends IteraatioParametri {
+  override val kuvaus: String = s"YTO:n ${ytoKoodi} osa-alue ${osaAlueenIndeksi + 1}: ${ytoOsaSuoritus.koulutusmoduulinNimiFi}"
+  override val lyhytKuvaus: String = s"YTO:n ${ytoKoodi} osa-alue: ${ytoOsaSuoritus.koulutusmoduulinNimiFi}"
 }
 
 case class AmmatillisenTutkinnonYtoOsaAlueet(ytoKoodi: String, tutkinnonOsaAlueet: Seq[Osasuoritus]) {

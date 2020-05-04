@@ -299,12 +299,12 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
             }
         }
 
-      case f@IteroiAmmatillisetTutkinnot(_, _, _, _, _, _, _) => iteroiAmmatillisetTutkinnot(iteraatioParametrit, f)
+      case f: IteroiAmmatillisetTutkinnot => iteroiAmmatillisetTutkinnot(iteraatioParametrit, f)
 
-      case f@IteroiAmmatillisetTutkinnonOsat(_, _, _, _, _, _, _) =>
+      case f: IteroiAmmatillisetTutkinnonOsat =>
         iteroiAmmatillisetTutkinnonOsat(iteraatioParametrit, f)
 
-      case f@IteroiAmmatillisenTutkinnonYtoOsaAlueet(_, _, _, _, _, _, _, _) => iteroiAmmatillisenTutkinnonYtoOsaAlueet(iteraatioParametrit, f)
+      case f: IteroiAmmatillisenTutkinnonYtoOsaAlueet => iteroiAmmatillisenTutkinnonYtoOsaAlueet(iteraatioParametrit, f)
 
       case f@HaeAmmatillinenYtoArvosana(konvertteri, oletusarvo, valintaperusteviite, _, _,_,_,_,_) =>
         haeAmmatillinenYtoArvosana(iteraatioParametrit, f, konvertteri, oletusarvo, valintaperusteviite)
@@ -549,7 +549,8 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
   private def laskeTarvittavatJosTulokset(iteraatioParametrit: LaskennanIteraatioParametrit,
                                           laskeHaaratLaiskasti: Boolean,
                                           haaraJostaPalautetaanTulos: Lukuarvofunktio,
-                                          toinenHaara: Lukuarvofunktio, tila: Tila
+                                          toinenHaara: Lukuarvofunktio,
+                                          tila: Tila
                                          ): (Option[BigDecimal], List[Tila], List[Historia]) = {
     val palautettavaTulos = laskeLukuarvo(haaraJostaPalautetaanTulos, iteraatioParametrit)
     val palautettavatHistoriat: List[Historia] = if (laskeHaaratLaiskasti) {

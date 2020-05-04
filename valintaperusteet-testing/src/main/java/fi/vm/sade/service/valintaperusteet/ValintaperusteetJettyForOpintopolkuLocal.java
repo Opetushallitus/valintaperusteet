@@ -13,6 +13,11 @@ import java.time.Duration;
 
 import static fi.vm.sade.service.valintaperusteet.ValintaperusteetJetty.VALINTAPERUSTEET_SERVICE_CONTEXT;
 
+/**
+ * Huom: Jos haluat ajaa tätä luokkaa IDEstä, aseta sen työhakemistoksi projektin juurihakemisto.
+ *
+ * Normaali käyttö: https://github.com/Opetushallitus/local-environment
+ */
 public class ValintaperusteetJettyForOpintopolkuLocal extends OpintopolkuJetty {
     public final static int port = Integer.parseInt(System.getProperty("valintaperusteet-service.port", "8081"));
 

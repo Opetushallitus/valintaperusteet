@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.laskenta
 
+import fi.vm.sade.kaava.LaskentaUtil.suomalainenPvmMuoto
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.ITEROIAMMATILLISETOSAT
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.ITEROIAMMATILLISETTUTKINNOT
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.ITEROIAMMATILLISETYTOOSAALUEET
@@ -23,11 +24,17 @@ trait AmmatillisetIterointiFunktiot {
     if (iteraatioParametrit.ammatillisenPerustutkinnonValitsija.isDefined) {
       throw new IllegalStateException(s"Ei voi iteroida iteraatioparametrilla ${iteraatioParametrit.ammatillisenPerustutkinnonValitsija} uudestaan ammatillisten tutkintojen yli")
     } else {
-      val tutkinnot: Seq[Tutkinto] = KoskiLaskenta.etsiAmmatillisetTutkinnot(laskin.hakemus)
+      val tutkinnot: Seq[Tutkinto] = KoskiLaskenta.etsiAmmatillisetTutkinnot(laskin.hakemus, iterointiFunktio.datanAikaleimanLeikkuri, iterointiFunktio.valmistumisenTakaraja)
       val tutkintojenMaara = tutkinnot.size
-      Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} hakijalle löytyi $tutkintojenMaara ammatillista perustutkintoa.")
 
-      val tutkintojenIterointiParametrit: Seq[AmmatillisenPerustutkinnonValitsija] = AmmatillisetPerustutkinnot(tutkinnot).parametreiksi
+      val tutkintojenIterointiParametrit: Seq[AmmatillisenPerustutkinnonValitsija] = AmmatillisetPerustutkinnot(
+        tutkinnot.filter(_.vahvistettuRajaPäiväänMennessä),
+        iterointiFunktio.valmistumisenTakaraja)
+        .parametreiksi
+      Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} hakijalle löytyi $tutkintojenMaara ammatillista perustutkintoa: $tutkinnot, " +
+        s"joista käytetään laskennassa ${tutkintojenIterointiParametrit.size}:  ${tutkintojenIterointiParametrit.map(_.kuvaus)}.")
+      Laskin.LOG.info(s"${classOf[IteroiAmmatillisetTutkinnot].getSimpleName}-funktion parametrit: " +
+        s"valmistumisenTakaraja = ${iterointiFunktio.valmistumisenTakaraja} , datanAikaleimanLeikkuri = ${iterointiFunktio.datanAikaleimanLeikkuri}")
       val uudetIteraatioParametrit = iteraatioParametrit.asetaAvoinParametrilista(classOf[AmmatillisenPerustutkinnonValitsija], tutkintojenIterointiParametrit)
 
       val tulos: Tulos[BigDecimal] = if (tutkintojenIterointiParametrit.nonEmpty) {
@@ -40,6 +47,8 @@ trait AmmatillisetIterointiFunktiot {
 
       val tilalista = List(tulos.tila)
       val avaimet = ListMap(
+        "Valmistumisen takaraja" -> Some(suomalainenPvmMuoto.format(iterointiFunktio.valmistumisenTakaraja)),
+        "Tiedot tallennettu viimeistään" -> Some(suomalainenPvmMuoto.format(iterointiFunktio.datanAikaleimanLeikkuri)),
         "Ammatillisten perustutkintojen määrä" -> Some(tutkintojenMaara),
         "Ammatilliset perustutkinnot" -> Some(tutkintojenIterointiParametrit.map(_.kuvaus).mkString("; "))) ++
         ammatillistenFunktioidenTulostenTiivistelmat
@@ -88,7 +97,7 @@ trait AmmatillisetIterointiFunktiot {
       val ytoKoodi = iterointiFunktio.valintaperusteviite.tunniste
       val ytoOsaAlueet = KoskiLaskenta.haeAmmatillisenTutkinnonYtoOsaAlueet(tutkinnonValitsija, ytoKoodi, laskin.hakemus)
 
-      Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} hakijan tutkinnon $tutkinnonValitsija YTOlle $ytoKoodi löytyi ${ytoOsaAlueet.size} YTOn osa-aluetta.")
+      Laskin.LOG.info(s"Hakemuksen ${laskin.hakemus.oid} hakijan tutkinnon ${tutkinnonValitsija.lyhytKuvaus} YTOlle $ytoKoodi löytyi ${ytoOsaAlueet.size} YTOn osa-aluetta.")
 
       val ytoOsaAlueidenIteraatioParametrit: Seq[AmmatillisenTutkinnonYtoOsaAlueenValitsija] = AmmatillisenTutkinnonYtoOsaAlueet(ytoKoodi, ytoOsaAlueet).parametreiksi
 

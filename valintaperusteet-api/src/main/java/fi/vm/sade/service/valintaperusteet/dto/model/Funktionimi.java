@@ -70,6 +70,9 @@ public enum Funktionimi {
     private Funktiotyyppi tyyppi;
     private Set<Laskentamoodi> laskentamoodit;
 
+    public static final String ITEROIAMMATILLISETTUTKINNOT_VALMISTUMIS_PARAMETRI = "valmistumisenTakarajaPvm";
+    public static final String ITEROIAMMATILLISETTUTKINNOT_LEIKKURIPVM_PARAMETRI = "koskessaViimeistaanPvm";
+
     Funktionimi(String kuvaus, Funktiotyyppi tyyppi, Laskentamoodi... laskentamoodit) {
         this.kuvaus = kuvaus;
         this.tyyppi = tyyppi;
