@@ -123,6 +123,7 @@ object YhteisetTutkinnonOsat {
   }
 
   private def etsiYhteisetTutkinnonOsat(suoritus: Json, osasuorituksenSallitutKoodit: Set[String]) = {
+    // TODO : Tarkista, että koodisto on "tutkinnonosat", koska oppilaitos voi käyttää valtakunnallisia koodeja myös paikallisille tutkinnon osille.
     OsaSuoritukset.etsiOsasuoritukset(suoritus, osasuoritus => {
       osasuorituksenSallitutKoodit.contains(OsaSuoritusLinssit.koulutusmoduulinTunnisteenKoodiarvo.getOption(osasuoritus).orNull) &&
         OsaSuoritusLinssit.osasuorituksenTyypinKoodiarvo.getOption(osasuoritus).contains(Osasuoritus.tutkinnonOsanTyypinKoodiarvo)

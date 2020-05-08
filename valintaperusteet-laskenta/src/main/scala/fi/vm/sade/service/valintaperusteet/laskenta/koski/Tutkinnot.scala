@@ -62,7 +62,7 @@ object Tutkinnot {
         val suoritustavanKoodiarvo = _suoritustavanKoodiarvo.getOption(suoritus)
         val suoritustavanKoodistoUri = _suoritustavanKoodistoUri.getOption(suoritus)
 
-        if (suorituksenTyyppi.size > 1) { // Suoritukselta pitäisi löytyä vain yksi tyyppi; vaikuttaa bugilta.
+        if (suorituksenTyyppi.size > 1) { // Suoritukselta pitäisi löytyä vain yksi tyyppi; vaikuttaa bugilta. // TODO : Voisi olla turvallisempaa skipata vääräntyyppiset
           throw new IllegalStateException(s"Odotettiin täsmälleen yhtä tyyppiä suoritukselle, mutta oli ${suorituksenTyyppi.size} hakemuksen ${hakemus.oid} hakijalle.")
         }
 
@@ -92,6 +92,7 @@ object Tutkinnot {
       case Some(dateString) =>
         val valmistunutAjoissa = !LocalDate.parse(dateString, koskiDateFormat).isAfter(valmistumisenTakaraja)
         if (!valmistunutAjoissa) {
+          // TODO : Korjaa termi "vahvistumiseksi" valmistumisen sijaan (vika on monessa paikassa...)
           LOG.info(s"Suorituksen valmistumispäivämäärä $dateString on valmistumisen takarajan " +
             s"${LaskentaUtil.suomalainenPvmMuoto.format(valmistumisenTakaraja)} jälkeen, joten suoritusta ei huomioida.") // TODO tähän voisi kaivaa jotain lisätietoa suorituksesta
         }
