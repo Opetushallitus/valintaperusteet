@@ -371,7 +371,11 @@ public class ValintalaskentakoostepalveluResourceImpl {
     @ApiOperation(value = "Hakee oidit hakukohteille, jotka liittyvät valinnanvaiheeseen valintaryhmän kautta", response = ValinnanVaiheDTO.class)
     public Set<String> hakukohteet(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
         Set<String> valintaryhmaoids = valinnanVaiheService.getValintaryhmaOids(oid);
-        return valintaryhmaService.findHakukohdesRecursive(valintaryhmaoids);
+        LOG.info("Got {} valintaryhmaoids for valinnanvaihe {}", valintaryhmaoids.size(), oid);
+        Set<String> result = valintaryhmaService.findHakukohdesRecursive(valintaryhmaoids);
+        LOG.info("Got {} hakukohtees for valinnanvaihe {}", result.size(), oid);
+        LOG.info("Result: {}", result);
+        return result;
     }
 
     @GET
