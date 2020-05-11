@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>valintaperusteet</artifactId>
 		<groupId>fi.vm.sade.valintaperusteet</groupId>
-		<version>5.13-SNAPSHOT</version>
+		<version>5.14-VTKU-153-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
 	

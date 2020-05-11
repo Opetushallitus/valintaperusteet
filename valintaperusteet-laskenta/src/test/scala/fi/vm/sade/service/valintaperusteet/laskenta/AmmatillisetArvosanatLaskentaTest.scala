@@ -34,6 +34,7 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
   private val monenTutkinnonHakemus = TestHakemus("", Nil, Map(), suoritukset, loadJson("koski-monitutkinto.json"))
   private val reforminMukainenHakemus = TestHakemus("", Nil, Map(), suoritukset, loadJson("koski-reforminmukainen-keskiarvon_kanssa.json"))
   private val hakemusJossaOnVainSkipattaviaNayttoja = TestHakemus("", Nil, Map(), suoritukset, loadJson("koski-kaksiskipattavaatutkintoa.json"))
+  private val hakemusJossaOnSkipattavaNayttoJaHuomioitavaTutkinto = TestHakemus("", Nil, Map(), suoritukset, loadJson("koski-virheellinen_tapaus-skipattava_naytto_ja_reformi.json"))
   private val hakemusJossaOnYtonKoodiMyosOsaAlueella = TestHakemus("", Nil, Map(), suoritukset, loadJson("koski-yto-koodi_osa-alueella.json"))
 
   test("Tutkinnon yhteisten tutkinnon osien arvosanat") {
@@ -117,6 +118,13 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
 
     val (tulos, _) = Laskin.laske(hakukohde, hakemusJossaOnVainSkipattaviaNayttoja, lasku)
     assert(tulos == None)
+  }
+
+  test("Kaksi suoritusta sisältävä tutkinto, jossa on virheellisesti myös huomioitava suoritus, toimii myös") {
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeAmmatillisenTutkinnonSuoritustapaKutsu())
+
+    val (tulos, _) = Laskin.laske(hakukohde, hakemusJossaOnSkipattavaNayttoJaHuomioitavaTutkinto, lasku)
+    assert(BigDecimal(tulos.get) == BigDecimal("2017"))
   }
 
   test("Testaa koko ammatillisten tutkintojen funktiohierarkia") {

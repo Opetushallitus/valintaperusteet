@@ -57,25 +57,27 @@ object Tutkinnot {
       val opiskeluoikeudenTyyppi = _opiskeluoikeudenTyyppi.getOption(opiskeluoikeus).orNull
       val valmistumisTila = _valmistumisTila.getAll(opiskeluoikeus)
 
-      TutkintoLinssit.suoritukset.json.getAll(opiskeluoikeus).exists { suoritus =>
-        val suorituksenTyyppi = _suorituksenTyyppi.getOption(suoritus)
-        val suoritustavanKoodiarvo = _suoritustavanKoodiarvo.getOption(suoritus)
-        val suoritustavanKoodistoUri = _suoritustavanKoodistoUri.getOption(suoritus)
+      TutkintoLinssit.suoritukset.json.getAll(opiskeluoikeus).
+        filter(_suorituksenTyyppi.getOption(_).contains(KoskiLaskenta.ammatillisenSuorituksenTyyppi)).
+        exists { suoritus =>
+          val suorituksenTyyppi = _suorituksenTyyppi.getOption(suoritus)
+          val suoritustavanKoodiarvo = _suoritustavanKoodiarvo.getOption(suoritus)
+          val suoritustavanKoodistoUri = _suoritustavanKoodistoUri.getOption(suoritus)
 
-        if (suorituksenTyyppi.size > 1) { // Suoritukselta pitäisi löytyä vain yksi tyyppi; vaikuttaa bugilta. // TODO : Voisi olla turvallisempaa skipata vääräntyyppiset
-          throw new IllegalStateException(s"Odotettiin täsmälleen yhtä tyyppiä suoritukselle, mutta oli ${suorituksenTyyppi.size} hakemuksen ${hakemus.oid} hakijalle.")
+          if (suorituksenTyyppi.size > 1) { // Suoritukselta pitäisi löytyä vain yksi tyyppi; vaikuttaa bugilta.
+            throw new IllegalStateException(s"Odotettiin täsmälleen yhtä tyyppiä suoritukselle, mutta oli ${suorituksenTyyppi.size} hakemuksen ${hakemus.oid} hakijalle.")
+          }
+
+          val onkoValmistunut: Boolean = valmistumisTila.contains("valmistunut") && (valmistumisenTakaraja.forall(vahvistettuRajapäiväänMennessä(_, suoritus)))
+          val onkoValidiSuoritusTapa = suoritustavanKoodiarvo.map(s => sallitutSuoritusTavat.contains(s)).exists(v => v) &&
+            suoritustavanKoodistoUri.contains("ammatillisentutkinnonsuoritustapa")
+          val onkoAmmatillinenOpiskeluOikeus =
+            opiskeluoikeudenTyyppi == opiskeluoikeudenHaluttuTyyppi &&
+              suorituksenTyyppi.contains(suorituksenHaluttuTyyppi) &&
+              onkoValidiSuoritusTapa
+
+          onkoAmmatillinenOpiskeluOikeus && onkoValmistunut
         }
-
-        val onkoValmistunut: Boolean = valmistumisTila.contains("valmistunut") && (valmistumisenTakaraja.forall(vahvistettuRajapäiväänMennessä(_, suoritus)))
-        val onkoValidiSuoritusTapa = suoritustavanKoodiarvo.map(s => sallitutSuoritusTavat.contains(s)).exists(v => v) &&
-          suoritustavanKoodistoUri.contains("ammatillisentutkinnonsuoritustapa")
-        val onkoAmmatillinenOpiskeluOikeus =
-          opiskeluoikeudenTyyppi == opiskeluoikeudenHaluttuTyyppi &&
-            suorituksenTyyppi.contains(suorituksenHaluttuTyyppi) &&
-            onkoValidiSuoritusTapa
-
-        onkoAmmatillinenOpiskeluOikeus && onkoValmistunut
-      }
     })
   }
 
