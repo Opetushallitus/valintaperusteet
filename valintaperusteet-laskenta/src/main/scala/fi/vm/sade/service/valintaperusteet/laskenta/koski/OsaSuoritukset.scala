@@ -13,6 +13,7 @@ case class Osasuoritus(koulutusmoduulinTunnisteenKoodiarvo: String,
 
 object Osasuoritus {
   val tutkinnonOsanTyypinKoodiarvo: String = "ammatillisentutkinnonosa"
+  val ytojenKoulutusmoduulienTunnisteenKoodistoUri: String = "tutkinnonosat"
 
   // Osasuorituksen rakennetta purkavat linssit
   object OsaSuoritusLinssit {
@@ -24,6 +25,7 @@ object Osasuoritus {
     val koulutusmoduuli = JsonPath.root.koulutusmoduuli
     val koulutusmoduulinLaajuudenArvo = koulutusmoduuli.laajuus.arvo.bigDecimal
     val koulutusmoduulinTunnisteenKoodiarvo: Optional[Json, String] = koulutusmoduuli.tunniste.koodiarvo.string
+    val koulutusmoduulinTunnisteenKoodistoUri: Optional[Json, String] = koulutusmoduuli.tunniste.koodistoUri.string
     val koulutusmoduulinNimiFi = koulutusmoduuli.tunniste.nimi.fi.string
     val osasuorituksenTyypinKoodiarvo = JsonPath.root.tyyppi.koodiarvo.string
   }

@@ -1,0 +1,3840 @@
+[
+  {
+    "oid": "1.2.246.562.15.65230069505",
+    "versionumero": 12,
+    "aikaleima": "2020-01-21T22:03:19.848625",
+    "lähdejärjestelmänId": {
+      "id": "33102",
+      "lähdejärjestelmä": {
+        "koodiarvo": "primus",
+        "nimi": {
+          "fi": "primus"
+        },
+        "koodistoUri": "lahdejarjestelma",
+        "koodistoVersio": 1
+      }
+    },
+    "oppilaitos": {
+      "oid": "1.2.246.562.10.080498349384",
+      "oppilaitosnumero": {
+        "koodiarvo": "43249",
+        "nimi": {
+          "fi": "Nostokurkilan kauppaoppilaitos",
+          "sv": "Nostokurkilan kauppaoppilaitos",
+          "en": "Nostokurkilan kauppaoppilaitos"
+        },
+        "lyhytNimi": {
+          "fi": "Nostokurkilan kauppaoppilaitos",
+          "sv": "Nostokurkilan kauppaoppilaitos",
+          "en": "Nostokurkilan kauppaoppilaitos"
+        },
+        "koodistoUri": "oppilaitosnumero",
+        "koodistoVersio": 1
+      },
+      "nimi": {
+        "fi": "Nostokurkilan kauppaoppilaitos",
+        "sv": "Nostokurkilan kauppaoppilaitos",
+        "en": "Nostokurkilan kauppaoppilaitos"
+      },
+      "kotipaikka": {
+        "koodiarvo": "893",
+        "nimi": {
+          "fi": "Nostokurkila",
+          "sv": "Kranby"
+        },
+        "koodistoUri": "kunta",
+        "koodistoVersio": 2
+      }
+    },
+    "koulutustoimija": {
+      "oid": "1.2.246.562.10.4839784934",
+      "nimi": {
+        "fi": "Pohjois-Konilan koulutuskuntayhtymä"
+      },
+      "yTunnus": "2258225-9",
+      "kotipaikka": {
+        "koodiarvo": "987",
+        "nimi": {
+          "fi": "Pohjois-Konila",
+          "sv": "Pohjois-Konila"
+        },
+        "koodistoUri": "kunta",
+        "koodistoVersio": 2
+      }
+    },
+    "arvioituPäättymispäivä": "2019-05-29",
+    "ostettu": false,
+    "tila": {
+      "opiskeluoikeusjaksot": [
+        {
+          "alku": "2018-09-05",
+          "tila": {
+            "koodiarvo": "lasna",
+            "nimi": {
+              "fi": "Läsnä",
+              "sv": "Närvarande",
+              "en": "Present"
+            },
+            "koodistoUri": "koskiopiskeluoikeudentila",
+            "koodistoVersio": 1
+          },
+          "opintojenRahoitus": {
+            "koodiarvo": "1",
+            "nimi": {
+              "fi": "Valtionosuusrahoitteinen koulutus",
+              "sv": "Statsandelsfinansierad utbildning"
+            },
+            "koodistoUri": "opintojenrahoitus",
+            "koodistoVersio": 1
+          }
+        },
+        {
+          "alku": "2019-05-29",
+          "tila": {
+            "koodiarvo": "valmistunut",
+            "nimi": {
+              "fi": "Valmistunut",
+              "sv": "Utexaminerad",
+              "en": "Graduated"
+            },
+            "koodistoUri": "koskiopiskeluoikeudentila",
+            "koodistoVersio": 1
+          },
+          "opintojenRahoitus": {
+            "koodiarvo": "1",
+            "nimi": {
+              "fi": "Valtionosuusrahoitteinen koulutus",
+              "sv": "Statsandelsfinansierad utbildning"
+            },
+            "koodistoUri": "opintojenrahoitus",
+            "koodistoVersio": 1
+          }
+        }
+      ]
+    },
+    "suoritukset": [
+      {
+        "koulutusmoduuli": {
+          "tunniste": {
+            "koodiarvo": "331101",
+            "nimi": {
+              "fi": "Liiketoiminnan perustutkinto",
+              "sv": "Grundexamen i affärsverksamhet",
+              "en": "Vocational qualification in Business"
+            },
+            "lyhytNimi": {
+              "fi": "Liiketoiminnan pt",
+              "sv": "Grundexamen i affärsverksamhet",
+              "en": "Vocational qualification in Business"
+            },
+            "koodistoUri": "koulutus",
+            "koodistoVersio": 12
+          },
+          "perusteenDiaarinumero": "OPH-2697-2017",
+          "perusteenNimi": {
+            "fi": "Liiketoiminnan perustutkinto",
+            "sv": "Grundexamen i affärsverksamhet",
+            "en": "Vocational Qualification in Business"
+          },
+          "koulutustyyppi": {
+            "koodiarvo": "1",
+            "nimi": {
+              "fi": "Ammatillinen perustutkinto",
+              "sv": "Yrkesinriktad grundexamen",
+              "en": "Vocational upper secondary qualification"
+            },
+            "lyhytNimi": {
+              "fi": "Ammatillinen perustutkinto",
+              "sv": "Yrkesinriktad grundexamen"
+            },
+            "koodistoUri": "koulutustyyppi",
+            "koodistoVersio": 2
+          }
+        },
+        "suoritustapa": {
+          "koodiarvo": "reformi",
+          "nimi": {
+            "fi": "Reformin mukainen näyttö",
+            "sv": "Reform"
+          },
+          "lyhytNimi": {
+            "fi": "Reformi"
+          },
+          "koodistoUri": "ammatillisentutkinnonsuoritustapa",
+          "koodistoVersio": 1
+        },
+        "tutkintonimike": [
+          {
+            "koodiarvo": "10059",
+            "nimi": {
+              "fi": "Merkonomi",
+              "sv": "Merkonom",
+              "en": "Vocational Qualification in Business and Administration"
+            },
+            "lyhytNimi": {
+              "fi": "Merkonomi",
+              "sv": "Merkonom"
+            },
+            "koodistoUri": "tutkintonimikkeet",
+            "koodistoVersio": 2
+          }
+        ],
+        "toimipiste": {
+          "oid": "1.2.246.562.10.8743487438",
+          "nimi": {
+            "fi": "Nostokurkilan kauppaoppilaitos, Lolky"
+          },
+          "kotipaikka": {
+            "koodiarvo": "893",
+            "nimi": {
+              "fi": "Nostokurkila",
+              "sv": "Kranby"
+            },
+            "koodistoUri": "kunta",
+            "koodistoVersio": 2
+          }
+        },
+        "alkamispäivä": "2018-09-05",
+        "vahvistus": {
+          "päivä": "2019-05-29",
+          "paikkakunta": {
+            "koodiarvo": "893",
+            "nimi": {
+              "fi": "Nostokurkila",
+              "sv": "Kranby"
+            },
+            "koodistoUri": "kunta",
+            "koodistoVersio": 2
+          },
+          "myöntäjäOrganisaatio": {
+            "oid": "1.2.246.562.10.080498349384",
+            "oppilaitosnumero": {
+              "koodiarvo": "43249",
+              "nimi": {
+                "fi": "Nostokurkilan kauppaoppilaitos",
+                "sv": "Nostokurkilan kauppaoppilaitos",
+                "en": "Nostokurkilan kauppaoppilaitos"
+              },
+              "lyhytNimi": {
+                "fi": "Nostokurkilan kauppaoppilaitos",
+                "sv": "Nostokurkilan kauppaoppilaitos",
+                "en": "Nostokurkilan kauppaoppilaitos"
+              },
+              "koodistoUri": "oppilaitosnumero",
+              "koodistoVersio": 1
+            },
+            "nimi": {
+              "fi": "Nostokurkilan kauppaoppilaitos",
+              "sv": "Nostokurkilan kauppaoppilaitos",
+              "en": "Nostokurkilan kauppaoppilaitos"
+            },
+            "kotipaikka": {
+              "koodiarvo": "893",
+              "nimi": {
+                "fi": "Nostokurkila",
+                "sv": "Kranby"
+              },
+              "koodistoUri": "kunta",
+              "koodistoVersio": 2
+            }
+          },
+          "myöntäjäHenkilöt": [
+            {
+              "nimi": "Ren Faktori",
+              "titteli": {
+                "fi": "rehtori"
+              },
+              "organisaatio": {
+                "oid": "1.2.246.562.10.080498349384",
+                "oppilaitosnumero": {
+                  "koodiarvo": "43249",
+                  "nimi": {
+                    "fi": "Nostokurkilan kauppaoppilaitos",
+                    "sv": "Nostokurkilan kauppaoppilaitos",
+                    "en": "Nostokurkilan kauppaoppilaitos"
+                  },
+                  "lyhytNimi": {
+                    "fi": "Nostokurkilan kauppaoppilaitos",
+                    "sv": "Nostokurkilan kauppaoppilaitos",
+                    "en": "Nostokurkilan kauppaoppilaitos"
+                  },
+                  "koodistoUri": "oppilaitosnumero",
+                  "koodistoVersio": 1
+                },
+                "nimi": {
+                  "fi": "Nostokurkilan kauppaoppilaitos",
+                  "sv": "Nostokurkilan kauppaoppilaitos",
+                  "en": "Nostokurkilan kauppaoppilaitos"
+                },
+                "kotipaikka": {
+                  "koodiarvo": "893",
+                  "nimi": {
+                    "fi": "Nostokurkila",
+                    "sv": "Kranby"
+                  },
+                  "koodistoUri": "kunta",
+                  "koodistoVersio": 2
+                }
+              }
+            }
+          ]
+        },
+        "suorituskieli": {
+          "koodiarvo": "FI",
+          "nimi": {
+            "fi": "suomi",
+            "sv": "finska",
+            "en": "Finnish"
+          },
+          "lyhytNimi": {
+            "fi": "suomi",
+            "sv": "finska",
+            "en": "Finnish"
+          },
+          "koodistoUri": "kieli",
+          "koodistoVersio": 1
+        },
+        "osasuoritukset": [
+          {
+            "koulutusmoduuli": {
+              "tunniste": {
+                "koodiarvo": "106374",
+                "nimi": {
+                  "fi": "Asiakaspalvelu"
+                },
+                "lyhytNimi": {
+                  "fi": "Asiakaspalvelu"
+                },
+                "koodistoUri": "tutkinnonosat",
+                "koodistoVersio": 2
+              },
+              "pakollinen": true,
+              "laajuus": {
+                "arvo": 20,
+                "yksikkö": {
+                  "koodiarvo": "6",
+                  "nimi": {
+                    "fi": "osaamispistettä",
+                    "sv": "kompetenspoäng",
+                    "en": "ECVET competence points"
+                  },
+                  "lyhytNimi": {
+                    "fi": "osp",
+                    "sv": "kp",
+                    "en": "competence points"
+                  },
+                  "koodistoUri": "opintojenlaajuusyksikko",
+                  "koodistoVersio": 1
+                }
+              }
+            },
+            "tutkinnonOsanRyhmä": {
+              "koodiarvo": "1",
+              "nimi": {
+                "fi": "Ammatilliset tutkinnon osat",
+                "sv": "Yrkesinriktade examensdelar"
+              },
+              "koodistoUri": "ammatillisentutkinnonosanryhma",
+              "koodistoVersio": 1
+            },
+            "toimipiste": {
+              "oid": "1.2.246.562.10.8743487438",
+              "nimi": {
+                "fi": "Nostokurkilan kauppaoppilaitos, Lolky"
+              },
+              "kotipaikka": {
+                "koodiarvo": "893",
+                "nimi": {
+                  "fi": "Nostokurkila",
+                  "sv": "Kranby"
+                },
+                "koodistoUri": "kunta",
+                "koodistoVersio": 2
+              }
+            },
+            "arviointi": [
+              {
+                "arvosana": {
+                  "koodiarvo": "4",
+                  "nimi": {
+                    "fi": "4"
+                  },
+                  "lyhytNimi": {
+                    "fi": "4"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinen15",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2019-04-09",
+                "arvioitsijat": [
+                  {
+                    "nimi": "Examiner Frank"
+                  }
+                ],
+                "hyväksytty": true
+              }
+            ],
+            "vahvistus": {
+              "päivä": "2019-04-09",
+              "paikkakunta": {
+                "koodiarvo": "893",
+                "nimi": {
+                  "fi": "Nostokurkila",
+                  "sv": "Kranby"
+                },
+                "koodistoUri": "kunta",
+                "koodistoVersio": 2
+              },
+              "myöntäjäOrganisaatio": {
+                "oid": "1.2.246.562.10.080498349384",
+                "oppilaitosnumero": {
+                  "koodiarvo": "43249",
+                  "nimi": {
+                    "fi": "Nostokurkilan kauppaoppilaitos",
+                    "sv": "Nostokurkilan kauppaoppilaitos",
+                    "en": "Nostokurkilan kauppaoppilaitos"
+                  },
+                  "lyhytNimi": {
+                    "fi": "Nostokurkilan kauppaoppilaitos",
+                    "sv": "Nostokurkilan kauppaoppilaitos",
+                    "en": "Nostokurkilan kauppaoppilaitos"
+                  },
+                  "koodistoUri": "oppilaitosnumero",
+                  "koodistoVersio": 1
+                },
+                "nimi": {
+                  "fi": "Nostokurkilan kauppaoppilaitos",
+                  "sv": "Nostokurkilan kauppaoppilaitos",
+                  "en": "Nostokurkilan kauppaoppilaitos"
+                },
+                "kotipaikka": {
+                  "koodiarvo": "893",
+                  "nimi": {
+                    "fi": "Nostokurkila",
+                    "sv": "Kranby"
+                  },
+                  "koodistoUri": "kunta",
+                  "koodistoVersio": 2
+                }
+              },
+              "myöntäjäHenkilöt": [
+                {
+                  "nimi": "Ren Faktori",
+                  "titteli": {
+                    "fi": "rehtori"
+                  },
+                  "organisaatio": {
+                    "oid": "1.2.246.562.10.080498349384",
+                    "oppilaitosnumero": {
+                      "koodiarvo": "43249",
+                      "nimi": {
+                        "fi": "Nostokurkilan kauppaoppilaitos",
+                        "sv": "Nostokurkilan kauppaoppilaitos",
+                        "en": "Nostokurkilan kauppaoppilaitos"
+                      },
+                      "lyhytNimi": {
+                        "fi": "Nostokurkilan kauppaoppilaitos",
+                        "sv": "Nostokurkilan kauppaoppilaitos",
+                        "en": "Nostokurkilan kauppaoppilaitos"
+                      },
+                      "koodistoUri": "oppilaitosnumero",
+                      "koodistoVersio": 1
+                    },
+                    "nimi": {
+                      "fi": "Nostokurkilan kauppaoppilaitos",
+                      "sv": "Nostokurkilan kauppaoppilaitos",
+                      "en": "Nostokurkilan kauppaoppilaitos"
+                    },
+                    "kotipaikka": {
+                      "koodiarvo": "893",
+                      "nimi": {
+                        "fi": "Nostokurkila",
+                        "sv": "Kranby"
+                      },
+                      "koodistoUri": "kunta",
+                      "koodistoVersio": 2
+                    }
+                  }
+                }
+              ]
+            },
+            "suorituskieli": {
+              "koodiarvo": "FI",
+              "nimi": {
+                "fi": "suomi",
+                "sv": "finska",
+                "en": "Finnish"
+              },
+              "lyhytNimi": {
+                "fi": "suomi",
+                "sv": "finska",
+                "en": "Finnish"
+              },
+              "koodistoUri": "kieli",
+              "koodistoVersio": 1
+            },
+            "tyyppi": {
+              "koodiarvo": "ammatillisentutkinnonosa",
+              "nimi": {
+                "fi": "Ammatillisen tutkinnon osa",
+                "sv": "Yrkesexamensdel",
+                "en": "A vocational education qualification unit"
+              },
+              "koodistoUri": "suorituksentyyppi",
+              "koodistoVersio": 1
+            }
+          },
+          {
+            "koulutusmoduuli": {
+              "tunniste": {
+                "koodiarvo": "106390",
+                "nimi": {
+                  "fi": "Tuloksellinen toiminta"
+                },
+                "lyhytNimi": {
+                  "fi": "Tuloksellinen toiminta"
+                },
+                "koodistoUri": "tutkinnonosat",
+                "koodistoVersio": 2
+              },
+              "pakollinen": true,
+              "laajuus": {
+                "arvo": 20,
+                "yksikkö": {
+                  "koodiarvo": "6",
+                  "nimi": {
+                    "fi": "osaamispistettä",
+                    "sv": "kompetenspoäng",
+                    "en": "ECVET competence points"
+                  },
+                  "lyhytNimi": {
+                    "fi": "osp",
+                    "sv": "kp",
+                    "en": "competence points"
+                  },
+                  "koodistoUri": "opintojenlaajuusyksikko",
+                  "koodistoVersio": 1
+                }
+              }
+            },
+            "tutkinnonOsanRyhmä": {
+              "koodiarvo": "1",
+              "nimi": {
+                "fi": "Ammatilliset tutkinnon osat",
+                "sv": "Yrkesinriktade examensdelar"
+              },
+              "koodistoUri": "ammatillisentutkinnonosanryhma",
+              "koodistoVersio": 1
+            },
+            "toimipiste": {
+              "oid": "1.2.246.562.10.8743487438",
+              "nimi": {
+                "fi": "Nostokurkilan kauppaoppilaitos, Lolky"
+              },
+              "kotipaikka": {
+                "koodiarvo": "893",
+                "nimi": {
+                  "fi": "Nostokurkila",
+                  "sv": "Kranby"
+                },
+                "koodistoUri": "kunta",
+                "koodistoVersio": 2
+              }
+            },
+            "arviointi": [
+              {
+                "arvosana": {
+                  "koodiarvo": "5",
+                  "nimi": {
+                    "fi": "5"
+                  },
+                  "lyhytNimi": {
+                    "fi": "5"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinen15",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2019-04-08",
+                "arvioitsijat": [
+                  {
+                    "nimi": "Examiner Frank"
+                  }
+                ],
+                "hyväksytty": true
+              }
+            ],
+            "vahvistus": {
+              "päivä": "2019-04-08",
+              "paikkakunta": {
+                "koodiarvo": "893",
+                "nimi": {
+                  "fi": "Nostokurkila",
+                  "sv": "Kranby"
+                },
+                "koodistoUri": "kunta",
+                "koodistoVersio": 2
+              },
+              "myöntäjäOrganisaatio": {
+                "oid": "1.2.246.562.10.080498349384",
+                "oppilaitosnumero": {
+                  "koodiarvo": "43249",
+                  "nimi": {
+                    "fi": "Nostokurkilan kauppaoppilaitos",
+                    "sv": "Nostokurkilan kauppaoppilaitos",
+                    "en": "Nostokurkilan kauppaoppilaitos"
+                  },
+                  "lyhytNimi": {
+                    "fi": "Nostokurkilan kauppaoppilaitos",
+                    "sv": "Nostokurkilan kauppaoppilaitos",
+                    "en": "Nostokurkilan kauppaoppilaitos"
+                  },
+                  "koodistoUri": "oppilaitosnumero",
+                  "koodistoVersio": 1
+                },
+                "nimi": {
+                  "fi": "Nostokurkilan kauppaoppilaitos",
+                  "sv": "Nostokurkilan kauppaoppilaitos",
+                  "en": "Nostokurkilan kauppaoppilaitos"
+                },
+                "kotipaikka": {
+                  "koodiarvo": "893",
+                  "nimi": {
+                    "fi": "Nostokurkila",
+                    "sv": "Kranby"
+                  },
+                  "koodistoUri": "kunta",
+                  "koodistoVersio": 2
+                }
+              },
+              "myöntäjäHenkilöt": [
+                {
+                  "nimi": "Ren Faktori",
+                  "titteli": {
+                    "fi": "rehtori"
+                  },
+                  "organisaatio": {
+                    "oid": "1.2.246.562.10.080498349384",
+                    "oppilaitosnumero": {
+                      "koodiarvo": "43249",
+                      "nimi": {
+                        "fi": "Nostokurkilan kauppaoppilaitos",
+                        "sv": "Nostokurkilan kauppaoppilaitos",
+                        "en": "Nostokurkilan kauppaoppilaitos"
+                      },
+                      "lyhytNimi": {
+                        "fi": "Nostokurkilan kauppaoppilaitos",
+                        "sv": "Nostokurkilan kauppaoppilaitos",
+                        "en": "Nostokurkilan kauppaoppilaitos"
+                      },
+                      "koodistoUri": "oppilaitosnumero",
+                      "koodistoVersio": 1
+                    },
+                    "nimi": {
+                      "fi": "Nostokurkilan kauppaoppilaitos",
+                      "sv": "Nostokurkilan kauppaoppilaitos",
+                      "en": "Nostokurkilan kauppaoppilaitos"
+                    },
+                    "kotipaikka": {
+                      "koodiarvo": "893",
+                      "nimi": {
+                        "fi": "Nostokurkila",
+                        "sv": "Kranby"
+                      },
+                      "koodistoUri": "kunta",
+                      "koodistoVersio": 2
+                    }
+                  }
+                }
+              ]
+            },
+            "suorituskieli": {
+              "koodiarvo": "FI",
+              "nimi": {
+                "fi": "suomi",
+                "sv": "finska",
+                "en": "Finnish"
+              },
+              "lyhytNimi": {
+                "fi": "suomi",
+                "sv": "finska",
+                "en": "Finnish"
+              },
+              "koodistoUri": "kieli",
+              "koodistoVersio": 1
+            },
+            "näyttö": {
+              "suorituspaikka": {
+                "tunniste": {
+                  "koodiarvo": "2",
+                  "nimi": {
+                    "fi": "oppilaitos",
+                    "sv": "läroanstalt"
+                  },
+                  "koodistoUri": "ammatillisennaytonsuorituspaikka",
+                  "koodistoVersio": 1
+                },
+                "kuvaus": {
+                  "fi": "Nostokurkilan kauppaoppilaitos"
+                }
+              },
+              "työssäoppimisenYhteydessä": false,
+              "arviointi": {
+                "arvosana": {
+                  "koodiarvo": "5",
+                  "nimi": {
+                    "fi": "5"
+                  },
+                  "lyhytNimi": {
+                    "fi": "5"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinen15",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2019-04-08",
+                "arvioitsijat": [
+                  {
+                    "nimi": "Examiner Frank",
+                    "ntm": false
+                  }
+                ],
+                "arvioinnistaPäättäneet": [
+                  {
+                    "koodiarvo": "1",
+                    "nimi": {
+                      "fi": "Opettaja",
+                      "sv": "Lärare"
+                    },
+                    "koodistoUri": "ammatillisennaytonarvioinnistapaattaneet",
+                    "koodistoVersio": 1
+                  }
+                ],
+                "hyväksytty": true
+              },
+              "haluaaTodistuksen": false
+            },
+            "tyyppi": {
+              "koodiarvo": "ammatillisentutkinnonosa",
+              "nimi": {
+                "fi": "Ammatillisen tutkinnon osa",
+                "sv": "Yrkesexamensdel",
+                "en": "A vocational education qualification unit"
+              },
+              "koodistoUri": "suorituksentyyppi",
+              "koodistoVersio": 1
+            }
+          },
+          {
+            "koulutusmoduuli": {
+              "tunniste": {
+                "koodiarvo": "106391",
+                "nimi": {
+                  "fi": "Työyhteisössä toimiminen"
+                },
+                "lyhytNimi": {
+                  "fi": "Työyhteisössä toimiminen"
+                },
+                "koodistoUri": "tutkinnonosat",
+                "koodistoVersio": 2
+              },
+              "pakollinen": true,
+              "laajuus": {
+                "arvo": 15,
+                "yksikkö": {
+                  "koodiarvo": "6",
+                  "nimi": {
+                    "fi": "osaamispistettä",
+                    "sv": "kompetenspoäng",
+                    "en": "ECVET competence points"
+                  },
+                  "lyhytNimi": {
+                    "fi": "osp",
+                    "sv": "kp",
+                    "en": "competence points"
+                  },
+                  "koodistoUri": "opintojenlaajuusyksikko",
+                  "koodistoVersio": 1
+                }
+              }
+            },
+            "tutkinnonOsanRyhmä": {
+              "koodiarvo": "1",
+              "nimi": {
+                "fi": "Ammatilliset tutkinnon osat",
+                "sv": "Yrkesinriktade examensdelar"
+              },
+              "koodistoUri": "ammatillisentutkinnonosanryhma",
+              "koodistoVersio": 1
+            },
+            "toimipiste": {
+              "oid": "1.2.246.562.10.8743487438",
+              "nimi": {
+                "fi": "Nostokurkilan kauppaoppilaitos, Lolky"
+              },
+              "kotipaikka": {
+                "koodiarvo": "893",
+                "nimi": {
+                  "fi": "Nostokurkila",
+                  "sv": "Kranby"
+                },
+                "koodistoUri": "kunta",
+                "koodistoVersio": 2
+              }
+            },
+            "arviointi": [
+              {
+                "arvosana": {
+                  "koodiarvo": "4",
+                  "nimi": {
+                    "fi": "4"
+                  },
+                  "lyhytNimi": {
+                    "fi": "4"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinen15",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2019-04-08",
+                "arvioitsijat": [
+                  {
+                    "nimi": "Examiner Frank"
+                  }
+                ],
+                "hyväksytty": true
+              }
+            ],
+            "vahvistus": {
+              "päivä": "2019-04-08",
+              "paikkakunta": {
+                "koodiarvo": "893",
+                "nimi": {
+                  "fi": "Nostokurkila",
+                  "sv": "Kranby"
+                },
+                "koodistoUri": "kunta",
+                "koodistoVersio": 2
+              },
+              "myöntäjäOrganisaatio": {
+                "oid": "1.2.246.562.10.080498349384",
+                "oppilaitosnumero": {
+                  "koodiarvo": "43249",
+                  "nimi": {
+                    "fi": "Nostokurkilan kauppaoppilaitos",
+                    "sv": "Nostokurkilan kauppaoppilaitos",
+                    "en": "Nostokurkilan kauppaoppilaitos"
+                  },
+                  "lyhytNimi": {
+                    "fi": "Nostokurkilan kauppaoppilaitos",
+                    "sv": "Nostokurkilan kauppaoppilaitos",
+                    "en": "Nostokurkilan kauppaoppilaitos"
+                  },
+                  "koodistoUri": "oppilaitosnumero",
+                  "koodistoVersio": 1
+                },
+                "nimi": {
+                  "fi": "Nostokurkilan kauppaoppilaitos",
+                  "sv": "Nostokurkilan kauppaoppilaitos",
+                  "en": "Nostokurkilan kauppaoppilaitos"
+                },
+                "kotipaikka": {
+                  "koodiarvo": "893",
+                  "nimi": {
+                    "fi": "Nostokurkila",
+                    "sv": "Kranby"
+                  },
+                  "koodistoUri": "kunta",
+                  "koodistoVersio": 2
+                }
+              },
+              "myöntäjäHenkilöt": [
+                {
+                  "nimi": "Ren Faktori",
+                  "titteli": {
+                    "fi": "rehtori"
+                  },
+                  "organisaatio": {
+                    "oid": "1.2.246.562.10.080498349384",
+                    "oppilaitosnumero": {
+                      "koodiarvo": "43249",
+                      "nimi": {
+                        "fi": "Nostokurkilan kauppaoppilaitos",
+                        "sv": "Nostokurkilan kauppaoppilaitos",
+                        "en": "Nostokurkilan kauppaoppilaitos"
+                      },
+                      "lyhytNimi": {
+                        "fi": "Nostokurkilan kauppaoppilaitos",
+                        "sv": "Nostokurkilan kauppaoppilaitos",
+                        "en": "Nostokurkilan kauppaoppilaitos"
+                      },
+                      "koodistoUri": "oppilaitosnumero",
+                      "koodistoVersio": 1
+                    },
+                    "nimi": {
+                      "fi": "Nostokurkilan kauppaoppilaitos",
+                      "sv": "Nostokurkilan kauppaoppilaitos",
+                      "en": "Nostokurkilan kauppaoppilaitos"
+                    },
+                    "kotipaikka": {
+                      "koodiarvo": "893",
+                      "nimi": {
+                        "fi": "Nostokurkila",
+                        "sv": "Kranby"
+                      },
+                      "koodistoUri": "kunta",
+                      "koodistoVersio": 2
+                    }
+                  }
+                }
+              ]
+            },
+            "suorituskieli": {
+              "koodiarvo": "FI",
+              "nimi": {
+                "fi": "suomi",
+                "sv": "finska",
+                "en": "Finnish"
+              },
+              "lyhytNimi": {
+                "fi": "suomi",
+                "sv": "finska",
+                "en": "Finnish"
+              },
+              "koodistoUri": "kieli",
+              "koodistoVersio": 1
+            },
+            "tyyppi": {
+              "koodiarvo": "ammatillisentutkinnonosa",
+              "nimi": {
+                "fi": "Ammatillisen tutkinnon osa",
+                "sv": "Yrkesexamensdel",
+                "en": "A vocational education qualification unit"
+              },
+              "koodistoUri": "suorituksentyyppi",
+              "koodistoVersio": 1
+            }
+          },
+          {
+            "koulutusmoduuli": {
+              "tunniste": {
+                "koodiarvo": "106375",
+                "nimi": {
+                  "fi": "Asiakkuuksien hoitaminen"
+                },
+                "lyhytNimi": {
+                  "fi": "Asiakkuuksien hoitaminen"
+                },
+                "koodistoUri": "tutkinnonosat",
+                "koodistoVersio": 2
+              },
+              "pakollinen": false,
+              "laajuus": {
+                "arvo": 30,
+                "yksikkö": {
+                  "koodiarvo": "6",
+                  "nimi": {
+                    "fi": "osaamispistettä",
+                    "sv": "kompetenspoäng",
+                    "en": "ECVET competence points"
+                  },
+                  "lyhytNimi": {
+                    "fi": "osp",
+                    "sv": "kp",
+                    "en": "competence points"
+                  },
+                  "koodistoUri": "opintojenlaajuusyksikko",
+                  "koodistoVersio": 1
+                }
+              }
+            },
+            "tutkinnonOsanRyhmä": {
+              "koodiarvo": "1",
+              "nimi": {
+                "fi": "Ammatilliset tutkinnon osat",
+                "sv": "Yrkesinriktade examensdelar"
+              },
+              "koodistoUri": "ammatillisentutkinnonosanryhma",
+              "koodistoVersio": 1
+            },
+            "toimipiste": {
+              "oid": "1.2.246.562.10.8743487438",
+              "nimi": {
+                "fi": "Nostokurkilan kauppaoppilaitos, Lolky"
+              },
+              "kotipaikka": {
+                "koodiarvo": "893",
+                "nimi": {
+                  "fi": "Nostokurkila",
+                  "sv": "Kranby"
+                },
+                "koodistoUri": "kunta",
+                "koodistoVersio": 2
+              }
+            },
+            "arviointi": [
+              {
+                "arvosana": {
+                  "koodiarvo": "5",
+                  "nimi": {
+                    "fi": "5"
+                  },
+                  "lyhytNimi": {
+                    "fi": "5"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinen15",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2019-01-31",
+                "arvioitsijat": [
+                  {
+                    "nimi": "Professor Paul"
+                  }
+                ],
+                "hyväksytty": true
+              }
+            ],
+            "vahvistus": {
+              "päivä": "2019-01-31",
+              "paikkakunta": {
+                "koodiarvo": "893",
+                "nimi": {
+                  "fi": "Nostokurkila",
+                  "sv": "Kranby"
+                },
+                "koodistoUri": "kunta",
+                "koodistoVersio": 2
+              },
+              "myöntäjäOrganisaatio": {
+                "oid": "1.2.246.562.10.080498349384",
+                "oppilaitosnumero": {
+                  "koodiarvo": "43249",
+                  "nimi": {
+                    "fi": "Nostokurkilan kauppaoppilaitos",
+                    "sv": "Nostokurkilan kauppaoppilaitos",
+                    "en": "Nostokurkilan kauppaoppilaitos"
+                  },
+                  "lyhytNimi": {
+                    "fi": "Nostokurkilan kauppaoppilaitos",
+                    "sv": "Nostokurkilan kauppaoppilaitos",
+                    "en": "Nostokurkilan kauppaoppilaitos"
+                  },
+                  "koodistoUri": "oppilaitosnumero",
+                  "koodistoVersio": 1
+                },
+                "nimi": {
+                  "fi": "Nostokurkilan kauppaoppilaitos",
+                  "sv": "Nostokurkilan kauppaoppilaitos",
+                  "en": "Nostokurkilan kauppaoppilaitos"
+                },
+                "kotipaikka": {
+                  "koodiarvo": "893",
+                  "nimi": {
+                    "fi": "Nostokurkila",
+                    "sv": "Kranby"
+                  },
+                  "koodistoUri": "kunta",
+                  "koodistoVersio": 2
+                }
+              },
+              "myöntäjäHenkilöt": [
+                {
+                  "nimi": "Ren Faktori",
+                  "titteli": {
+                    "fi": "rehtori"
+                  },
+                  "organisaatio": {
+                    "oid": "1.2.246.562.10.080498349384",
+                    "oppilaitosnumero": {
+                      "koodiarvo": "43249",
+                      "nimi": {
+                        "fi": "Nostokurkilan kauppaoppilaitos",
+                        "sv": "Nostokurkilan kauppaoppilaitos",
+                        "en": "Nostokurkilan kauppaoppilaitos"
+                      },
+                      "lyhytNimi": {
+                        "fi": "Nostokurkilan kauppaoppilaitos",
+                        "sv": "Nostokurkilan kauppaoppilaitos",
+                        "en": "Nostokurkilan kauppaoppilaitos"
+                      },
+                      "koodistoUri": "oppilaitosnumero",
+                      "koodistoVersio": 1
+                    },
+                    "nimi": {
+                      "fi": "Nostokurkilan kauppaoppilaitos",
+                      "sv": "Nostokurkilan kauppaoppilaitos",
+                      "en": "Nostokurkilan kauppaoppilaitos"
+                    },
+                    "kotipaikka": {
+                      "koodiarvo": "893",
+                      "nimi": {
+                        "fi": "Nostokurkila",
+                        "sv": "Kranby"
+                      },
+                      "koodistoUri": "kunta",
+                      "koodistoVersio": 2
+                    }
+                  }
+                }
+              ]
+            },
+            "suorituskieli": {
+              "koodiarvo": "FI",
+              "nimi": {
+                "fi": "suomi",
+                "sv": "finska",
+                "en": "Finnish"
+              },
+              "lyhytNimi": {
+                "fi": "suomi",
+                "sv": "finska",
+                "en": "Finnish"
+              },
+              "koodistoUri": "kieli",
+              "koodistoVersio": 1
+            },
+            "tyyppi": {
+              "koodiarvo": "ammatillisentutkinnonosa",
+              "nimi": {
+                "fi": "Ammatillisen tutkinnon osa",
+                "sv": "Yrkesexamensdel",
+                "en": "A vocational education qualification unit"
+              },
+              "koodistoUri": "suorituksentyyppi",
+              "koodistoVersio": 1
+            }
+          },
+          {
+            "koulutusmoduuli": {
+              "tunniste": {
+                "koodiarvo": "106378",
+                "nimi": {
+                  "fi": "Kirjanpito"
+                },
+                "lyhytNimi": {
+                  "fi": "Kirjanpito"
+                },
+                "koodistoUri": "tutkinnonosat",
+                "koodistoVersio": 2
+              },
+              "pakollinen": false,
+              "laajuus": {
+                "arvo": 30,
+                "yksikkö": {
+                  "koodiarvo": "6",
+                  "nimi": {
+                    "fi": "osaamispistettä",
+                    "sv": "kompetenspoäng",
+                    "en": "ECVET competence points"
+                  },
+                  "lyhytNimi": {
+                    "fi": "osp",
+                    "sv": "kp",
+                    "en": "competence points"
+                  },
+                  "koodistoUri": "opintojenlaajuusyksikko",
+                  "koodistoVersio": 1
+                }
+              }
+            },
+            "tutkinnonOsanRyhmä": {
+              "koodiarvo": "1",
+              "nimi": {
+                "fi": "Ammatilliset tutkinnon osat",
+                "sv": "Yrkesinriktade examensdelar"
+              },
+              "koodistoUri": "ammatillisentutkinnonosanryhma",
+              "koodistoVersio": 1
+            },
+            "toimipiste": {
+              "oid": "1.2.246.562.10.8743487438",
+              "nimi": {
+                "fi": "Nostokurkilan kauppaoppilaitos, Lolky"
+              },
+              "kotipaikka": {
+                "koodiarvo": "893",
+                "nimi": {
+                  "fi": "Nostokurkila",
+                  "sv": "Kranby"
+                },
+                "koodistoUri": "kunta",
+                "koodistoVersio": 2
+              }
+            },
+            "arviointi": [
+              {
+                "arvosana": {
+                  "koodiarvo": "4",
+                  "nimi": {
+                    "fi": "4"
+                  },
+                  "lyhytNimi": {
+                    "fi": "4"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinen15",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2019-05-14",
+                "arvioitsijat": [
+                  {
+                    "nimi": "Examiner Frank"
+                  }
+                ],
+                "hyväksytty": true
+              }
+            ],
+            "vahvistus": {
+              "päivä": "2019-05-14",
+              "paikkakunta": {
+                "koodiarvo": "893",
+                "nimi": {
+                  "fi": "Nostokurkila",
+                  "sv": "Kranby"
+                },
+                "koodistoUri": "kunta",
+                "koodistoVersio": 2
+              },
+              "myöntäjäOrganisaatio": {
+                "oid": "1.2.246.562.10.080498349384",
+                "oppilaitosnumero": {
+                  "koodiarvo": "43249",
+                  "nimi": {
+                    "fi": "Nostokurkilan kauppaoppilaitos",
+                    "sv": "Nostokurkilan kauppaoppilaitos",
+                    "en": "Nostokurkilan kauppaoppilaitos"
+                  },
+                  "lyhytNimi": {
+                    "fi": "Nostokurkilan kauppaoppilaitos",
+                    "sv": "Nostokurkilan kauppaoppilaitos",
+                    "en": "Nostokurkilan kauppaoppilaitos"
+                  },
+                  "koodistoUri": "oppilaitosnumero",
+                  "koodistoVersio": 1
+                },
+                "nimi": {
+                  "fi": "Nostokurkilan kauppaoppilaitos",
+                  "sv": "Nostokurkilan kauppaoppilaitos",
+                  "en": "Nostokurkilan kauppaoppilaitos"
+                },
+                "kotipaikka": {
+                  "koodiarvo": "893",
+                  "nimi": {
+                    "fi": "Nostokurkila",
+                    "sv": "Kranby"
+                  },
+                  "koodistoUri": "kunta",
+                  "koodistoVersio": 2
+                }
+              },
+              "myöntäjäHenkilöt": [
+                {
+                  "nimi": "Ren Faktori",
+                  "titteli": {
+                    "fi": "rehtori"
+                  },
+                  "organisaatio": {
+                    "oid": "1.2.246.562.10.080498349384",
+                    "oppilaitosnumero": {
+                      "koodiarvo": "43249",
+                      "nimi": {
+                        "fi": "Nostokurkilan kauppaoppilaitos",
+                        "sv": "Nostokurkilan kauppaoppilaitos",
+                        "en": "Nostokurkilan kauppaoppilaitos"
+                      },
+                      "lyhytNimi": {
+                        "fi": "Nostokurkilan kauppaoppilaitos",
+                        "sv": "Nostokurkilan kauppaoppilaitos",
+                        "en": "Nostokurkilan kauppaoppilaitos"
+                      },
+                      "koodistoUri": "oppilaitosnumero",
+                      "koodistoVersio": 1
+                    },
+                    "nimi": {
+                      "fi": "Nostokurkilan kauppaoppilaitos",
+                      "sv": "Nostokurkilan kauppaoppilaitos",
+                      "en": "Nostokurkilan kauppaoppilaitos"
+                    },
+                    "kotipaikka": {
+                      "koodiarvo": "893",
+                      "nimi": {
+                        "fi": "Nostokurkila",
+                        "sv": "Kranby"
+                      },
+                      "koodistoUri": "kunta",
+                      "koodistoVersio": 2
+                    }
+                  }
+                }
+              ]
+            },
+            "suorituskieli": {
+              "koodiarvo": "FI",
+              "nimi": {
+                "fi": "suomi",
+                "sv": "finska",
+                "en": "Finnish"
+              },
+              "lyhytNimi": {
+                "fi": "suomi",
+                "sv": "finska",
+                "en": "Finnish"
+              },
+              "koodistoUri": "kieli",
+              "koodistoVersio": 1
+            },
+            "tyyppi": {
+              "koodiarvo": "ammatillisentutkinnonosa",
+              "nimi": {
+                "fi": "Ammatillisen tutkinnon osa",
+                "sv": "Yrkesexamensdel",
+                "en": "A vocational education qualification unit"
+              },
+              "koodistoUri": "suorituksentyyppi",
+              "koodistoVersio": 1
+            }
+          },
+          {
+            "koulutusmoduuli": {
+              "tunniste": {
+                "koodiarvo": "106384",
+                "nimi": {
+                  "fi": "Myynti"
+                },
+                "lyhytNimi": {
+                  "fi": "Myynti"
+                },
+                "koodistoUri": "tutkinnonosat",
+                "koodistoVersio": 2
+              },
+              "pakollinen": false,
+              "laajuus": {
+                "arvo": 30,
+                "yksikkö": {
+                  "koodiarvo": "6",
+                  "nimi": {
+                    "fi": "osaamispistettä",
+                    "sv": "kompetenspoäng",
+                    "en": "ECVET competence points"
+                  },
+                  "lyhytNimi": {
+                    "fi": "osp",
+                    "sv": "kp",
+                    "en": "competence points"
+                  },
+                  "koodistoUri": "opintojenlaajuusyksikko",
+                  "koodistoVersio": 1
+                }
+              }
+            },
+            "tutkinnonOsanRyhmä": {
+              "koodiarvo": "1",
+              "nimi": {
+                "fi": "Ammatilliset tutkinnon osat",
+                "sv": "Yrkesinriktade examensdelar"
+              },
+              "koodistoUri": "ammatillisentutkinnonosanryhma",
+              "koodistoVersio": 1
+            },
+            "toimipiste": {
+              "oid": "1.2.246.562.10.8743487438",
+              "nimi": {
+                "fi": "Nostokurkilan kauppaoppilaitos, Lolky"
+              },
+              "kotipaikka": {
+                "koodiarvo": "893",
+                "nimi": {
+                  "fi": "Nostokurkila",
+                  "sv": "Kranby"
+                },
+                "koodistoUri": "kunta",
+                "koodistoVersio": 2
+              }
+            },
+            "arviointi": [
+              {
+                "arvosana": {
+                  "koodiarvo": "5",
+                  "nimi": {
+                    "fi": "5"
+                  },
+                  "lyhytNimi": {
+                    "fi": "5"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinen15",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2019-03-05",
+                "arvioitsijat": [
+                  {
+                    "nimi": "Professor Paul"
+                  }
+                ],
+                "hyväksytty": true
+              }
+            ],
+            "vahvistus": {
+              "päivä": "2019-03-05",
+              "paikkakunta": {
+                "koodiarvo": "893",
+                "nimi": {
+                  "fi": "Nostokurkila",
+                  "sv": "Kranby"
+                },
+                "koodistoUri": "kunta",
+                "koodistoVersio": 2
+              },
+              "myöntäjäOrganisaatio": {
+                "oid": "1.2.246.562.10.080498349384",
+                "oppilaitosnumero": {
+                  "koodiarvo": "43249",
+                  "nimi": {
+                    "fi": "Nostokurkilan kauppaoppilaitos",
+                    "sv": "Nostokurkilan kauppaoppilaitos",
+                    "en": "Nostokurkilan kauppaoppilaitos"
+                  },
+                  "lyhytNimi": {
+                    "fi": "Nostokurkilan kauppaoppilaitos",
+                    "sv": "Nostokurkilan kauppaoppilaitos",
+                    "en": "Nostokurkilan kauppaoppilaitos"
+                  },
+                  "koodistoUri": "oppilaitosnumero",
+                  "koodistoVersio": 1
+                },
+                "nimi": {
+                  "fi": "Nostokurkilan kauppaoppilaitos",
+                  "sv": "Nostokurkilan kauppaoppilaitos",
+                  "en": "Nostokurkilan kauppaoppilaitos"
+                },
+                "kotipaikka": {
+                  "koodiarvo": "893",
+                  "nimi": {
+                    "fi": "Nostokurkila",
+                    "sv": "Kranby"
+                  },
+                  "koodistoUri": "kunta",
+                  "koodistoVersio": 2
+                }
+              },
+              "myöntäjäHenkilöt": [
+                {
+                  "nimi": "Ren Faktori",
+                  "titteli": {
+                    "fi": "rehtori"
+                  },
+                  "organisaatio": {
+                    "oid": "1.2.246.562.10.080498349384",
+                    "oppilaitosnumero": {
+                      "koodiarvo": "43249",
+                      "nimi": {
+                        "fi": "Nostokurkilan kauppaoppilaitos",
+                        "sv": "Nostokurkilan kauppaoppilaitos",
+                        "en": "Nostokurkilan kauppaoppilaitos"
+                      },
+                      "lyhytNimi": {
+                        "fi": "Nostokurkilan kauppaoppilaitos",
+                        "sv": "Nostokurkilan kauppaoppilaitos",
+                        "en": "Nostokurkilan kauppaoppilaitos"
+                      },
+                      "koodistoUri": "oppilaitosnumero",
+                      "koodistoVersio": 1
+                    },
+                    "nimi": {
+                      "fi": "Nostokurkilan kauppaoppilaitos",
+                      "sv": "Nostokurkilan kauppaoppilaitos",
+                      "en": "Nostokurkilan kauppaoppilaitos"
+                    },
+                    "kotipaikka": {
+                      "koodiarvo": "893",
+                      "nimi": {
+                        "fi": "Nostokurkila",
+                        "sv": "Kranby"
+                      },
+                      "koodistoUri": "kunta",
+                      "koodistoVersio": 2
+                    }
+                  }
+                }
+              ]
+            },
+            "suorituskieli": {
+              "koodiarvo": "FI",
+              "nimi": {
+                "fi": "suomi",
+                "sv": "finska",
+                "en": "Finnish"
+              },
+              "lyhytNimi": {
+                "fi": "suomi",
+                "sv": "finska",
+                "en": "Finnish"
+              },
+              "koodistoUri": "kieli",
+              "koodistoVersio": 1
+            },
+            "tyyppi": {
+              "koodiarvo": "ammatillisentutkinnonosa",
+              "nimi": {
+                "fi": "Ammatillisen tutkinnon osa",
+                "sv": "Yrkesexamensdel",
+                "en": "A vocational education qualification unit"
+              },
+              "koodistoUri": "suorituksentyyppi",
+              "koodistoVersio": 1
+            }
+          },
+          {
+            "koulutusmoduuli": {
+              "tunniste": {
+                "koodiarvo": "400012",
+                "nimi": {
+                  "fi": "Viestintä- ja vuorovaikutusosaaminen",
+                  "sv": "Kunnande i kommunikation och interaktion"
+                },
+                "lyhytNimi": {
+                  "fi": "Viestintä- ja vuorovaikutusosaaminen"
+                },
+                "koodistoUri": "tutkinnonosat",
+                "koodistoVersio": 2
+              },
+              "pakollinen": true,
+              "laajuus": {
+                "arvo": 14,
+                "yksikkö": {
+                  "koodiarvo": "6",
+                  "nimi": {
+                    "fi": "osaamispistettä",
+                    "sv": "kompetenspoäng",
+                    "en": "ECVET competence points"
+                  },
+                  "lyhytNimi": {
+                    "fi": "osp",
+                    "sv": "kp",
+                    "en": "competence points"
+                  },
+                  "koodistoUri": "opintojenlaajuusyksikko",
+                  "koodistoVersio": 1
+                }
+              }
+            },
+            "tutkinnonOsanRyhmä": {
+              "koodiarvo": "2",
+              "nimi": {
+                "fi": "Yhteiset tutkinnon osat",
+                "sv": "Gemensamma examensdelar"
+              },
+              "koodistoUri": "ammatillisentutkinnonosanryhma",
+              "koodistoVersio": 1
+            },
+            "toimipiste": {
+              "oid": "1.2.246.562.10.8743487438",
+              "nimi": {
+                "fi": "Nostokurkilan kauppaoppilaitos, Lolky"
+              },
+              "kotipaikka": {
+                "koodiarvo": "893",
+                "nimi": {
+                  "fi": "Nostokurkila",
+                  "sv": "Kranby"
+                },
+                "koodistoUri": "kunta",
+                "koodistoVersio": 2
+              }
+            },
+            "arviointi": [
+              {
+                "arvosana": {
+                  "koodiarvo": "Hyväksytty",
+                  "nimi": {
+                    "fi": "Hyväksytty",
+                    "sv": "Godkänd"
+                  },
+                  "lyhytNimi": {
+                    "fi": "Hyväksytty"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinenhyvaksyttyhylatty",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2019-04-09",
+                "arvioitsijat": [
+                  {
+                    "nimi": "Examiner Frank"
+                  }
+                ],
+                "hyväksytty": true
+              }
+            ],
+            "vahvistus": {
+              "päivä": "2019-04-09",
+              "paikkakunta": {
+                "koodiarvo": "893",
+                "nimi": {
+                  "fi": "Nostokurkila",
+                  "sv": "Kranby"
+                },
+                "koodistoUri": "kunta",
+                "koodistoVersio": 2
+              },
+              "myöntäjäOrganisaatio": {
+                "oid": "1.2.246.562.10.080498349384",
+                "oppilaitosnumero": {
+                  "koodiarvo": "43249",
+                  "nimi": {
+                    "fi": "Nostokurkilan kauppaoppilaitos",
+                    "sv": "Nostokurkilan kauppaoppilaitos",
+                    "en": "Nostokurkilan kauppaoppilaitos"
+                  },
+                  "lyhytNimi": {
+                    "fi": "Nostokurkilan kauppaoppilaitos",
+                    "sv": "Nostokurkilan kauppaoppilaitos",
+                    "en": "Nostokurkilan kauppaoppilaitos"
+                  },
+                  "koodistoUri": "oppilaitosnumero",
+                  "koodistoVersio": 1
+                },
+                "nimi": {
+                  "fi": "Nostokurkilan kauppaoppilaitos",
+                  "sv": "Nostokurkilan kauppaoppilaitos",
+                  "en": "Nostokurkilan kauppaoppilaitos"
+                },
+                "kotipaikka": {
+                  "koodiarvo": "893",
+                  "nimi": {
+                    "fi": "Nostokurkila",
+                    "sv": "Kranby"
+                  },
+                  "koodistoUri": "kunta",
+                  "koodistoVersio": 2
+                }
+              },
+              "myöntäjäHenkilöt": [
+                {
+                  "nimi": "Ren Faktori",
+                  "titteli": {
+                    "fi": "rehtori"
+                  },
+                  "organisaatio": {
+                    "oid": "1.2.246.562.10.080498349384",
+                    "oppilaitosnumero": {
+                      "koodiarvo": "43249",
+                      "nimi": {
+                        "fi": "Nostokurkilan kauppaoppilaitos",
+                        "sv": "Nostokurkilan kauppaoppilaitos",
+                        "en": "Nostokurkilan kauppaoppilaitos"
+                      },
+                      "lyhytNimi": {
+                        "fi": "Nostokurkilan kauppaoppilaitos",
+                        "sv": "Nostokurkilan kauppaoppilaitos",
+                        "en": "Nostokurkilan kauppaoppilaitos"
+                      },
+                      "koodistoUri": "oppilaitosnumero",
+                      "koodistoVersio": 1
+                    },
+                    "nimi": {
+                      "fi": "Nostokurkilan kauppaoppilaitos",
+                      "sv": "Nostokurkilan kauppaoppilaitos",
+                      "en": "Nostokurkilan kauppaoppilaitos"
+                    },
+                    "kotipaikka": {
+                      "koodiarvo": "893",
+                      "nimi": {
+                        "fi": "Nostokurkila",
+                        "sv": "Kranby"
+                      },
+                      "koodistoUri": "kunta",
+                      "koodistoVersio": 2
+                    }
+                  }
+                }
+              ]
+            },
+            "suorituskieli": {
+              "koodiarvo": "FI",
+              "nimi": {
+                "fi": "suomi",
+                "sv": "finska",
+                "en": "Finnish"
+              },
+              "lyhytNimi": {
+                "fi": "suomi",
+                "sv": "finska",
+                "en": "Finnish"
+              },
+              "koodistoUri": "kieli",
+              "koodistoVersio": 1
+            },
+            "osasuoritukset": [
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "VVAI",
+                    "nimi": {
+                      "fi": "Viestintä ja vuorovaikutus äidinkielellä",
+                      "sv": "Kommunikation och interaktion på modersmålet"
+                    },
+                    "lyhytNimi": {
+                      "fi": "viestintä ja vuorovaikutus äidinkielellä"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": {
+                    "arvo": 4,
+                    "yksikkö": {
+                      "koodiarvo": "6",
+                      "nimi": {
+                        "fi": "osaamispistettä",
+                        "sv": "kompetenspoäng",
+                        "en": "ECVET competence points"
+                      },
+                      "lyhytNimi": {
+                        "fi": "osp",
+                        "sv": "kp",
+                        "en": "competence points"
+                      },
+                      "koodistoUri": "opintojenlaajuusyksikko",
+                      "koodistoVersio": 1
+                    }
+                  }
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "4",
+                      "nimi": {
+                        "fi": "4"
+                      },
+                      "lyhytNimi": {
+                        "fi": "4"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2018-10-16",
+                    "arvioitsijat": [
+                      {
+                        "nimi": "Examiner Frank"
+                      }
+                    ],
+                    "hyväksytty": true
+                  }
+                ],
+                "tunnustettu": {
+                  "selite": {
+                    "fi": "Tutkinnon osaan on tunnustettu lukion opintoja (33/011/2003), Nostokurkilan normaalikoulun lukio."
+                  },
+                  "rahoituksenPiirissä": false
+                },
+                "lisätiedot": [
+                  {
+                    "tunniste": {
+                      "koodiarvo": "muu",
+                      "nimi": {
+                        "fi": "Muu lisätieto",
+                        "sv": "Annan tilläggsuppgift"
+                      },
+                      "koodistoUri": "ammatillisentutkinnonosanlisatieto",
+                      "koodistoVersio": 1
+                    },
+                    "kuvaus": {
+                      "fi": "Tutkinnon osaan on tunnustettu lukion opintoja (33/011/2003), Nostokurkilan normaalikoulun lukio."
+                    }
+                  }
+                ],
+                "suorituskieli": {
+                  "koodiarvo": "FI",
+                  "nimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "lyhytNimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "koodistoUri": "kieli",
+                  "koodistoVersio": 1
+                },
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "VVTK",
+                    "nimi": {
+                      "fi": "Viestintä ja vuorovaikutus toisella kotimaisella kielellä",
+                      "sv": "Kommunikation och interaktion på det andra inhemska språket"
+                    },
+                    "lyhytNimi": {
+                      "fi": "viestintä ja vuorovaikutus toisella kotimaisella kielellä"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": {
+                    "arvo": 1,
+                    "yksikkö": {
+                      "koodiarvo": "6",
+                      "nimi": {
+                        "fi": "osaamispistettä",
+                        "sv": "kompetenspoäng",
+                        "en": "ECVET competence points"
+                      },
+                      "lyhytNimi": {
+                        "fi": "osp",
+                        "sv": "kp",
+                        "en": "competence points"
+                      },
+                      "koodistoUri": "opintojenlaajuusyksikko",
+                      "koodistoVersio": 1
+                    }
+                  }
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "4",
+                      "nimi": {
+                        "fi": "4"
+                      },
+                      "lyhytNimi": {
+                        "fi": "4"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2018-10-16",
+                    "arvioitsijat": [
+                      {
+                        "nimi": "Examiner Frank"
+                      }
+                    ],
+                    "hyväksytty": true
+                  }
+                ],
+                "tunnustettu": {
+                  "selite": {
+                    "fi": "Tutkinnon osaan on tunnustettu lukion opintoja (33/011/2003), Nostokurkilan normaalikoulun lukio."
+                  },
+                  "rahoituksenPiirissä": false
+                },
+                "lisätiedot": [
+                  {
+                    "tunniste": {
+                      "koodiarvo": "muu",
+                      "nimi": {
+                        "fi": "Muu lisätieto",
+                        "sv": "Annan tilläggsuppgift"
+                      },
+                      "koodistoUri": "ammatillisentutkinnonosanlisatieto",
+                      "koodistoVersio": 1
+                    },
+                    "kuvaus": {
+                      "fi": "Tutkinnon osaan on tunnustettu lukion opintoja (33/011/2003), Nostokurkilan normaalikoulun lukio."
+                    }
+                  }
+                ],
+                "suorituskieli": {
+                  "koodiarvo": "FI",
+                  "nimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "lyhytNimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "koodistoUri": "kieli",
+                  "koodistoVersio": 1
+                },
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "VVVK",
+                    "nimi": {
+                      "fi": "Viestintä ja vuorovaikutus vieraalla kielellä",
+                      "sv": "Kommunikation och interaktion på ett främmande språk"
+                    },
+                    "lyhytNimi": {
+                      "fi": "viestintä ja vuorovaikutus vieraalla kielellä"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": {
+                    "arvo": 3,
+                    "yksikkö": {
+                      "koodiarvo": "6",
+                      "nimi": {
+                        "fi": "osaamispistettä",
+                        "sv": "kompetenspoäng",
+                        "en": "ECVET competence points"
+                      },
+                      "lyhytNimi": {
+                        "fi": "osp",
+                        "sv": "kp",
+                        "en": "competence points"
+                      },
+                      "koodistoUri": "opintojenlaajuusyksikko",
+                      "koodistoVersio": 1
+                    }
+                  }
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "2",
+                      "nimi": {
+                        "fi": "2"
+                      },
+                      "lyhytNimi": {
+                        "fi": "2"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2018-10-16",
+                    "arvioitsijat": [
+                      {
+                        "nimi": "Examiner Frank"
+                      }
+                    ],
+                    "hyväksytty": true
+                  }
+                ],
+                "tunnustettu": {
+                  "selite": {
+                    "fi": "Tutkinnon osaan on tunnustettu lukion opintoja (33/011/2003), Nostokurkilan normaalikoulun lukio."
+                  },
+                  "rahoituksenPiirissä": false
+                },
+                "lisätiedot": [
+                  {
+                    "tunniste": {
+                      "koodiarvo": "muu",
+                      "nimi": {
+                        "fi": "Muu lisätieto",
+                        "sv": "Annan tilläggsuppgift"
+                      },
+                      "koodistoUri": "ammatillisentutkinnonosanlisatieto",
+                      "koodistoVersio": 1
+                    },
+                    "kuvaus": {
+                      "fi": "Tutkinnon osaan on tunnustettu lukion opintoja (33/011/2003), Nostokurkilan normaalikoulun lukio."
+                    }
+                  }
+                ],
+                "suorituskieli": {
+                  "koodiarvo": "FI",
+                  "nimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "lyhytNimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "koodistoUri": "kieli",
+                  "koodistoVersio": 1
+                },
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "VVTD",
+                    "nimi": {
+                      "fi": "Toiminta digitaalisessa ympäristössä",
+                      "sv": "Verksamhet i den digitala miljön"
+                    },
+                    "lyhytNimi": {
+                      "fi": "toiminta digitaalisessa ympäristössä"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": {
+                    "arvo": 2,
+                    "yksikkö": {
+                      "koodiarvo": "6",
+                      "nimi": {
+                        "fi": "osaamispistettä",
+                        "sv": "kompetenspoäng",
+                        "en": "ECVET competence points"
+                      },
+                      "lyhytNimi": {
+                        "fi": "osp",
+                        "sv": "kp",
+                        "en": "competence points"
+                      },
+                      "koodistoUri": "opintojenlaajuusyksikko",
+                      "koodistoVersio": 1
+                    }
+                  }
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "5",
+                      "nimi": {
+                        "fi": "5"
+                      },
+                      "lyhytNimi": {
+                        "fi": "5"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-03-12",
+                    "arvioitsijat": [
+                      {
+                        "nimi": "Examiner Frank"
+                      }
+                    ],
+                    "hyväksytty": true
+                  }
+                ],
+                "suorituskieli": {
+                  "koodiarvo": "FI",
+                  "nimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "lyhytNimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "koodistoUri": "kieli",
+                  "koodistoVersio": 1
+                },
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "VVTL",
+                    "nimi": {
+                      "fi": "Taide ja luova ilmaisu",
+                      "sv": "Konst och kreativt uttryck"
+                    },
+                    "lyhytNimi": {
+                      "fi": "taide ja luova ilmaisu"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": {
+                    "arvo": 1,
+                    "yksikkö": {
+                      "koodiarvo": "6",
+                      "nimi": {
+                        "fi": "osaamispistettä",
+                        "sv": "kompetenspoäng",
+                        "en": "ECVET competence points"
+                      },
+                      "lyhytNimi": {
+                        "fi": "osp",
+                        "sv": "kp",
+                        "en": "competence points"
+                      },
+                      "koodistoUri": "opintojenlaajuusyksikko",
+                      "koodistoVersio": 1
+                    }
+                  }
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "5",
+                      "nimi": {
+                        "fi": "5"
+                      },
+                      "lyhytNimi": {
+                        "fi": "5"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-03-12",
+                    "arvioitsijat": [
+                      {
+                        "nimi": "Examiner Frank"
+                      }
+                    ],
+                    "hyväksytty": true
+                  }
+                ],
+                "tunnustettu": {
+                  "selite": {
+                    "fi": "Tutkinnon osaan on tunnustettu lukion opintoja (33/011/2003), Nostokurkilan normaalikoulun lukio."
+                  },
+                  "rahoituksenPiirissä": false
+                },
+                "lisätiedot": [
+                  {
+                    "tunniste": {
+                      "koodiarvo": "muu",
+                      "nimi": {
+                        "fi": "Muu lisätieto",
+                        "sv": "Annan tilläggsuppgift"
+                      },
+                      "koodistoUri": "ammatillisentutkinnonosanlisatieto",
+                      "koodistoVersio": 1
+                    },
+                    "kuvaus": {
+                      "fi": "Tutkinnon osaan on tunnustettu lukion opintoja (33/011/2003), Nostokurkilan normaalikoulun lukio."
+                    }
+                  }
+                ],
+                "suorituskieli": {
+                  "koodiarvo": "FI",
+                  "nimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "lyhytNimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "koodistoUri": "kieli",
+                  "koodistoVersio": 1
+                },
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "VVAI",
+                    "nimi": {
+                      "fi": "Viestintä ja vuorovaikutus äidinkielellä",
+                      "sv": "Kommunikation och interaktion på modersmålet"
+                    },
+                    "lyhytNimi": {
+                      "fi": "viestintä ja vuorovaikutus äidinkielellä"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": false,
+                  "laajuus": {
+                    "arvo": 3,
+                    "yksikkö": {
+                      "koodiarvo": "6",
+                      "nimi": {
+                        "fi": "osaamispistettä",
+                        "sv": "kompetenspoäng",
+                        "en": "ECVET competence points"
+                      },
+                      "lyhytNimi": {
+                        "fi": "osp",
+                        "sv": "kp",
+                        "en": "competence points"
+                      },
+                      "koodistoUri": "opintojenlaajuusyksikko",
+                      "koodistoVersio": 1
+                    }
+                  }
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "4",
+                      "nimi": {
+                        "fi": "4"
+                      },
+                      "lyhytNimi": {
+                        "fi": "4"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2018-10-16",
+                    "arvioitsijat": [
+                      {
+                        "nimi": "Examiner Frank"
+                      }
+                    ],
+                    "hyväksytty": true
+                  }
+                ],
+                "tunnustettu": {
+                  "selite": {
+                    "fi": "Tutkinnon osat on tunnustettu lukion oppimäärästä (33/011/2003), Nostokurkilan normaalikoulun lukio."
+                  },
+                  "rahoituksenPiirissä": false
+                },
+                "lisätiedot": [
+                  {
+                    "tunniste": {
+                      "koodiarvo": "muu",
+                      "nimi": {
+                        "fi": "Muu lisätieto",
+                        "sv": "Annan tilläggsuppgift"
+                      },
+                      "koodistoUri": "ammatillisentutkinnonosanlisatieto",
+                      "koodistoVersio": 1
+                    },
+                    "kuvaus": {
+                      "fi": "Tutkinnon osaan on tunnustettu lukion opintoja (33/011/2003), Nostokurkilan normaalikoulun lukio."
+                    }
+                  }
+                ],
+                "suorituskieli": {
+                  "koodiarvo": "FI",
+                  "nimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "lyhytNimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "koodistoUri": "kieli",
+                  "koodistoVersio": 1
+                },
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              }
+            ],
+            "tyyppi": {
+              "koodiarvo": "ammatillisentutkinnonosa",
+              "nimi": {
+                "fi": "Ammatillisen tutkinnon osa",
+                "sv": "Yrkesexamensdel",
+                "en": "A vocational education qualification unit"
+              },
+              "koodistoUri": "suorituksentyyppi",
+              "koodistoVersio": 1
+            }
+          },
+          {
+            "koulutusmoduuli": {
+              "tunniste": {
+                "koodiarvo": "400013",
+                "nimi": {
+                  "fi": "Matemaattis-luonnontieteellinen osaaminen",
+                  "sv": "Kunnande i matematik och naturvetenskap"
+                },
+                "lyhytNimi": {
+                  "fi": "Matemaattis-luonnontieteellinen osaaminen"
+                },
+                "koodistoUri": "tutkinnonosat",
+                "koodistoVersio": 2
+              },
+              "pakollinen": true,
+              "laajuus": {
+                "arvo": 9,
+                "yksikkö": {
+                  "koodiarvo": "6",
+                  "nimi": {
+                    "fi": "osaamispistettä",
+                    "sv": "kompetenspoäng",
+                    "en": "ECVET competence points"
+                  },
+                  "lyhytNimi": {
+                    "fi": "osp",
+                    "sv": "kp",
+                    "en": "competence points"
+                  },
+                  "koodistoUri": "opintojenlaajuusyksikko",
+                  "koodistoVersio": 1
+                }
+              }
+            },
+            "tutkinnonOsanRyhmä": {
+              "koodiarvo": "2",
+              "nimi": {
+                "fi": "Yhteiset tutkinnon osat",
+                "sv": "Gemensamma examensdelar"
+              },
+              "koodistoUri": "ammatillisentutkinnonosanryhma",
+              "koodistoVersio": 1
+            },
+            "toimipiste": {
+              "oid": "1.2.246.562.10.8743487438",
+              "nimi": {
+                "fi": "Nostokurkilan kauppaoppilaitos, Lolky"
+              },
+              "kotipaikka": {
+                "koodiarvo": "893",
+                "nimi": {
+                  "fi": "Nostokurkila",
+                  "sv": "Kranby"
+                },
+                "koodistoUri": "kunta",
+                "koodistoVersio": 2
+              }
+            },
+            "arviointi": [
+              {
+                "arvosana": {
+                  "koodiarvo": "Hyväksytty",
+                  "nimi": {
+                    "fi": "Hyväksytty",
+                    "sv": "Godkänd"
+                  },
+                  "lyhytNimi": {
+                    "fi": "Hyväksytty"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinenhyvaksyttyhylatty",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2019-04-08",
+                "arvioitsijat": [
+                  {
+                    "nimi": "Examiner Frank"
+                  }
+                ],
+                "hyväksytty": true
+              }
+            ],
+            "vahvistus": {
+              "päivä": "2019-04-08",
+              "paikkakunta": {
+                "koodiarvo": "893",
+                "nimi": {
+                  "fi": "Nostokurkila",
+                  "sv": "Kranby"
+                },
+                "koodistoUri": "kunta",
+                "koodistoVersio": 2
+              },
+              "myöntäjäOrganisaatio": {
+                "oid": "1.2.246.562.10.080498349384",
+                "oppilaitosnumero": {
+                  "koodiarvo": "43249",
+                  "nimi": {
+                    "fi": "Nostokurkilan kauppaoppilaitos",
+                    "sv": "Nostokurkilan kauppaoppilaitos",
+                    "en": "Nostokurkilan kauppaoppilaitos"
+                  },
+                  "lyhytNimi": {
+                    "fi": "Nostokurkilan kauppaoppilaitos",
+                    "sv": "Nostokurkilan kauppaoppilaitos",
+                    "en": "Nostokurkilan kauppaoppilaitos"
+                  },
+                  "koodistoUri": "oppilaitosnumero",
+                  "koodistoVersio": 1
+                },
+                "nimi": {
+                  "fi": "Nostokurkilan kauppaoppilaitos",
+                  "sv": "Nostokurkilan kauppaoppilaitos",
+                  "en": "Nostokurkilan kauppaoppilaitos"
+                },
+                "kotipaikka": {
+                  "koodiarvo": "893",
+                  "nimi": {
+                    "fi": "Nostokurkila",
+                    "sv": "Kranby"
+                  },
+                  "koodistoUri": "kunta",
+                  "koodistoVersio": 2
+                }
+              },
+              "myöntäjäHenkilöt": [
+                {
+                  "nimi": "Ren Faktori",
+                  "titteli": {
+                    "fi": "rehtori"
+                  },
+                  "organisaatio": {
+                    "oid": "1.2.246.562.10.080498349384",
+                    "oppilaitosnumero": {
+                      "koodiarvo": "43249",
+                      "nimi": {
+                        "fi": "Nostokurkilan kauppaoppilaitos",
+                        "sv": "Nostokurkilan kauppaoppilaitos",
+                        "en": "Nostokurkilan kauppaoppilaitos"
+                      },
+                      "lyhytNimi": {
+                        "fi": "Nostokurkilan kauppaoppilaitos",
+                        "sv": "Nostokurkilan kauppaoppilaitos",
+                        "en": "Nostokurkilan kauppaoppilaitos"
+                      },
+                      "koodistoUri": "oppilaitosnumero",
+                      "koodistoVersio": 1
+                    },
+                    "nimi": {
+                      "fi": "Nostokurkilan kauppaoppilaitos",
+                      "sv": "Nostokurkilan kauppaoppilaitos",
+                      "en": "Nostokurkilan kauppaoppilaitos"
+                    },
+                    "kotipaikka": {
+                      "koodiarvo": "893",
+                      "nimi": {
+                        "fi": "Nostokurkila",
+                        "sv": "Kranby"
+                      },
+                      "koodistoUri": "kunta",
+                      "koodistoVersio": 2
+                    }
+                  }
+                }
+              ]
+            },
+            "suorituskieli": {
+              "koodiarvo": "FI",
+              "nimi": {
+                "fi": "suomi",
+                "sv": "finska",
+                "en": "Finnish"
+              },
+              "lyhytNimi": {
+                "fi": "suomi",
+                "sv": "finska",
+                "en": "Finnish"
+              },
+              "koodistoUri": "kieli",
+              "koodistoVersio": 1
+            },
+            "osasuoritukset": [
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "MLMA",
+                    "nimi": {
+                      "fi": "Matematiikka ja matematiikan soveltaminen",
+                      "sv": "Matematik och tillämpad matematik"
+                    },
+                    "lyhytNimi": {
+                      "fi": "matematiikka ja matematiikan soveltaminen"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": {
+                    "arvo": 4,
+                    "yksikkö": {
+                      "koodiarvo": "6",
+                      "nimi": {
+                        "fi": "osaamispistettä",
+                        "sv": "kompetenspoäng",
+                        "en": "ECVET competence points"
+                      },
+                      "lyhytNimi": {
+                        "fi": "osp",
+                        "sv": "kp",
+                        "en": "competence points"
+                      },
+                      "koodistoUri": "opintojenlaajuusyksikko",
+                      "koodistoVersio": 1
+                    }
+                  }
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "3",
+                      "nimi": {
+                        "fi": "3"
+                      },
+                      "lyhytNimi": {
+                        "fi": "3"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2018-10-16",
+                    "arvioitsijat": [
+                      {
+                        "nimi": "Examiner Frank"
+                      }
+                    ],
+                    "hyväksytty": true
+                  }
+                ],
+                "tunnustettu": {
+                  "selite": {
+                    "fi": "Tutkinnon osaan on tunnustettu lukion opintoja (33/011/2003), Nostokurkilan normaalikoulun lukio."
+                  },
+                  "rahoituksenPiirissä": false
+                },
+                "lisätiedot": [
+                  {
+                    "tunniste": {
+                      "koodiarvo": "muu",
+                      "nimi": {
+                        "fi": "Muu lisätieto",
+                        "sv": "Annan tilläggsuppgift"
+                      },
+                      "koodistoUri": "ammatillisentutkinnonosanlisatieto",
+                      "koodistoVersio": 1
+                    },
+                    "kuvaus": {
+                      "fi": "Tutkinnon osaan on tunnustettu lukion opintoja (33/011/2003), Nostokurkilan normaalikoulun lukio."
+                    }
+                  }
+                ],
+                "suorituskieli": {
+                  "koodiarvo": "FI",
+                  "nimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "lyhytNimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "koodistoUri": "kieli",
+                  "koodistoVersio": 1
+                },
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "MLFK",
+                    "nimi": {
+                      "fi": "Fysikaaliset ja kemialliset ilmiöt ja niiden soveltaminen",
+                      "sv": "Fysikaliska och kemiska fenomen och tillämpning av dem"
+                    },
+                    "lyhytNimi": {
+                      "fi": "fysikaaliset ja kemialliset ilmiöt ja niiden soveltaminen"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": {
+                    "arvo": 2,
+                    "yksikkö": {
+                      "koodiarvo": "6",
+                      "nimi": {
+                        "fi": "osaamispistettä",
+                        "sv": "kompetenspoäng",
+                        "en": "ECVET competence points"
+                      },
+                      "lyhytNimi": {
+                        "fi": "osp",
+                        "sv": "kp",
+                        "en": "competence points"
+                      },
+                      "koodistoUri": "opintojenlaajuusyksikko",
+                      "koodistoVersio": 1
+                    }
+                  }
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "4",
+                      "nimi": {
+                        "fi": "4"
+                      },
+                      "lyhytNimi": {
+                        "fi": "4"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2018-10-16",
+                    "arvioitsijat": [
+                      {
+                        "nimi": "Examiner Frank"
+                      }
+                    ],
+                    "hyväksytty": true
+                  }
+                ],
+                "tunnustettu": {
+                  "selite": {
+                    "fi": "Tutkinnon osaan on tunnustettu lukion opintoja (33/011/2003), Nostokurkilan normaalikoulun lukio."
+                  },
+                  "rahoituksenPiirissä": false
+                },
+                "lisätiedot": [
+                  {
+                    "tunniste": {
+                      "koodiarvo": "muu",
+                      "nimi": {
+                        "fi": "Muu lisätieto",
+                        "sv": "Annan tilläggsuppgift"
+                      },
+                      "koodistoUri": "ammatillisentutkinnonosanlisatieto",
+                      "koodistoVersio": 1
+                    },
+                    "kuvaus": {
+                      "fi": "Tutkinnon osaan on tunnustettu lukion opintoja (33/011/2003), Nostokurkilan normaalikoulun lukio."
+                    }
+                  }
+                ],
+                "suorituskieli": {
+                  "koodiarvo": "FI",
+                  "nimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "lyhytNimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "koodistoUri": "kieli",
+                  "koodistoVersio": 1
+                },
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "MLMA",
+                    "nimi": {
+                      "fi": "Matematiikka ja matematiikan soveltaminen",
+                      "sv": "Matematik och tillämpad matematik"
+                    },
+                    "lyhytNimi": {
+                      "fi": "matematiikka ja matematiikan soveltaminen"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": false,
+                  "laajuus": {
+                    "arvo": 3,
+                    "yksikkö": {
+                      "koodiarvo": "6",
+                      "nimi": {
+                        "fi": "osaamispistettä",
+                        "sv": "kompetenspoäng",
+                        "en": "ECVET competence points"
+                      },
+                      "lyhytNimi": {
+                        "fi": "osp",
+                        "sv": "kp",
+                        "en": "competence points"
+                      },
+                      "koodistoUri": "opintojenlaajuusyksikko",
+                      "koodistoVersio": 1
+                    }
+                  }
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "3",
+                      "nimi": {
+                        "fi": "3"
+                      },
+                      "lyhytNimi": {
+                        "fi": "3"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2018-10-16",
+                    "arvioitsijat": [
+                      {
+                        "nimi": "Examiner Frank"
+                      }
+                    ],
+                    "hyväksytty": true
+                  }
+                ],
+                "tunnustettu": {
+                  "selite": {
+                    "fi": "Tutkinnon osat on tunnustettu lukion oppimäärästä (33/011/2003), Nostokurkilan normaalikoulun lukio."
+                  },
+                  "rahoituksenPiirissä": false
+                },
+                "lisätiedot": [
+                  {
+                    "tunniste": {
+                      "koodiarvo": "muu",
+                      "nimi": {
+                        "fi": "Muu lisätieto",
+                        "sv": "Annan tilläggsuppgift"
+                      },
+                      "koodistoUri": "ammatillisentutkinnonosanlisatieto",
+                      "koodistoVersio": 1
+                    },
+                    "kuvaus": {
+                      "fi": "Tutkinnon osaan on tunnustettu lukion opintoja (33/011/2003), Nostokurkilan normaalikoulun lukio."
+                    }
+                  }
+                ],
+                "suorituskieli": {
+                  "koodiarvo": "FI",
+                  "nimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "lyhytNimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "koodistoUri": "kieli",
+                  "koodistoVersio": 1
+                },
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              }
+            ],
+            "tyyppi": {
+              "koodiarvo": "ammatillisentutkinnonosa",
+              "nimi": {
+                "fi": "Ammatillisen tutkinnon osa",
+                "sv": "Yrkesexamensdel",
+                "en": "A vocational education qualification unit"
+              },
+              "koodistoUri": "suorituksentyyppi",
+              "koodistoVersio": 1
+            }
+          },
+          {
+            "koulutusmoduuli": {
+              "tunniste": {
+                "koodiarvo": "400013",
+                "nimi": {
+                  "fi": "Paikallinen tutkinnon osa, jolla sattuu vain olemaan sama koodi kuin valtakunnallisella YTOlla",
+                  "sv": "Lokalt saker"
+                },
+                "lyhytNimi": {
+                  "fi": "Paikallinen hämäysjuttu"
+                },
+                "koodistoUri": "jotain paikallista huuhaata",
+                "koodistoVersio": 1
+              },
+              "pakollinen": true,
+              "laajuus": {
+                "arvo": 9,
+                "yksikkö": {
+                  "koodiarvo": "6",
+                  "nimi": {
+                    "fi": "osaamispistettä",
+                    "sv": "kompetenspoäng",
+                    "en": "ECVET competence points"
+                  },
+                  "lyhytNimi": {
+                    "fi": "osp",
+                    "sv": "kp",
+                    "en": "competence points"
+                  },
+                  "koodistoUri": "opintojenlaajuusyksikko",
+                  "koodistoVersio": 1
+                }
+              }
+            },
+            "tutkinnonOsanRyhmä": {
+              "koodiarvo": "2",
+              "nimi": {
+                "fi": "Yhteiset tutkinnon osat",
+                "sv": "Gemensamma examensdelar"
+              },
+              "koodistoUri": "ammatillisentutkinnonosanryhma",
+              "koodistoVersio": 1
+            },
+            "toimipiste": {
+              "oid": "1.2.246.562.10.8743487438",
+              "nimi": {
+                "fi": "Nostokurkilan kauppaoppilaitos, Lolky"
+              },
+              "kotipaikka": {
+                "koodiarvo": "893",
+                "nimi": {
+                  "fi": "Nostokurkila",
+                  "sv": "Kranby"
+                },
+                "koodistoUri": "kunta",
+                "koodistoVersio": 2
+              }
+            },
+            "arviointi": [
+              {
+                "arvosana": {
+                  "koodiarvo": "3",
+                  "nimi": {
+                    "fi": "3"
+                  },
+                  "lyhytNimi": {
+                    "fi": "3"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinen15",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2018-10-16",
+                "arvioitsijat": [
+                  {
+                    "nimi": "Examiner Frank"
+                  }
+                ],
+                "hyväksytty": true
+              }
+            ],
+            "vahvistus": {
+              "päivä": "2019-04-08",
+              "paikkakunta": {
+                "koodiarvo": "893",
+                "nimi": {
+                  "fi": "Nostokurkila",
+                  "sv": "Kranby"
+                },
+                "koodistoUri": "kunta",
+                "koodistoVersio": 2
+              },
+              "myöntäjäOrganisaatio": {
+                "oid": "1.2.246.562.10.080498349384",
+                "oppilaitosnumero": {
+                  "koodiarvo": "43249",
+                  "nimi": {
+                    "fi": "Nostokurkilan kauppaoppilaitos",
+                    "sv": "Nostokurkilan kauppaoppilaitos",
+                    "en": "Nostokurkilan kauppaoppilaitos"
+                  },
+                  "lyhytNimi": {
+                    "fi": "Nostokurkilan kauppaoppilaitos",
+                    "sv": "Nostokurkilan kauppaoppilaitos",
+                    "en": "Nostokurkilan kauppaoppilaitos"
+                  },
+                  "koodistoUri": "oppilaitosnumero",
+                  "koodistoVersio": 1
+                },
+                "nimi": {
+                  "fi": "Nostokurkilan kauppaoppilaitos",
+                  "sv": "Nostokurkilan kauppaoppilaitos",
+                  "en": "Nostokurkilan kauppaoppilaitos"
+                },
+                "kotipaikka": {
+                  "koodiarvo": "893",
+                  "nimi": {
+                    "fi": "Nostokurkila",
+                    "sv": "Kranby"
+                  },
+                  "koodistoUri": "kunta",
+                  "koodistoVersio": 2
+                }
+              },
+              "myöntäjäHenkilöt": [
+                {
+                  "nimi": "Ren Faktori",
+                  "titteli": {
+                    "fi": "rehtori"
+                  },
+                  "organisaatio": {
+                    "oid": "1.2.246.562.10.080498349384",
+                    "oppilaitosnumero": {
+                      "koodiarvo": "43249",
+                      "nimi": {
+                        "fi": "Nostokurkilan kauppaoppilaitos",
+                        "sv": "Nostokurkilan kauppaoppilaitos",
+                        "en": "Nostokurkilan kauppaoppilaitos"
+                      },
+                      "lyhytNimi": {
+                        "fi": "Nostokurkilan kauppaoppilaitos",
+                        "sv": "Nostokurkilan kauppaoppilaitos",
+                        "en": "Nostokurkilan kauppaoppilaitos"
+                      },
+                      "koodistoUri": "oppilaitosnumero",
+                      "koodistoVersio": 1
+                    },
+                    "nimi": {
+                      "fi": "Nostokurkilan kauppaoppilaitos",
+                      "sv": "Nostokurkilan kauppaoppilaitos",
+                      "en": "Nostokurkilan kauppaoppilaitos"
+                    },
+                    "kotipaikka": {
+                      "koodiarvo": "893",
+                      "nimi": {
+                        "fi": "Nostokurkila",
+                        "sv": "Kranby"
+                      },
+                      "koodistoUri": "kunta",
+                      "koodistoVersio": 2
+                    }
+                  }
+                }
+              ]
+            },
+            "suorituskieli": {
+              "koodiarvo": "FI",
+              "nimi": {
+                "fi": "suomi",
+                "sv": "finska",
+                "en": "Finnish"
+              },
+              "lyhytNimi": {
+                "fi": "suomi",
+                "sv": "finska",
+                "en": "Finnish"
+              },
+              "koodistoUri": "kieli",
+              "koodistoVersio": 1
+            },
+            "osasuoritukset": [],
+            "tyyppi": {
+              "koodiarvo": "ammatillisentutkinnonosa",
+              "nimi": {
+                "fi": "Ammatillisen tutkinnon osa",
+                "sv": "Yrkesexamensdel",
+                "en": "A vocational education qualification unit"
+              },
+              "koodistoUri": "suorituksentyyppi",
+              "koodistoVersio": 1
+            }
+          },
+          {
+            "koulutusmoduuli": {
+              "tunniste": {
+                "koodiarvo": "400014",
+                "nimi": {
+                  "fi": "Yhteiskunta- ja työelämäosaaminen",
+                  "sv": "Kunnande om samhälle och arbetsliv"
+                },
+                "lyhytNimi": {
+                  "fi": "Yhteiskunta- ja työelämäosaaminen"
+                },
+                "koodistoUri": "tutkinnonosat",
+                "koodistoVersio": 2
+              },
+              "pakollinen": true,
+              "laajuus": {
+                "arvo": 12,
+                "yksikkö": {
+                  "koodiarvo": "6",
+                  "nimi": {
+                    "fi": "osaamispistettä",
+                    "sv": "kompetenspoäng",
+                    "en": "ECVET competence points"
+                  },
+                  "lyhytNimi": {
+                    "fi": "osp",
+                    "sv": "kp",
+                    "en": "competence points"
+                  },
+                  "koodistoUri": "opintojenlaajuusyksikko",
+                  "koodistoVersio": 1
+                }
+              }
+            },
+            "tutkinnonOsanRyhmä": {
+              "koodiarvo": "2",
+              "nimi": {
+                "fi": "Yhteiset tutkinnon osat",
+                "sv": "Gemensamma examensdelar"
+              },
+              "koodistoUri": "ammatillisentutkinnonosanryhma",
+              "koodistoVersio": 1
+            },
+            "toimipiste": {
+              "oid": "1.2.246.562.10.8743487438",
+              "nimi": {
+                "fi": "Nostokurkilan kauppaoppilaitos, Lolky"
+              },
+              "kotipaikka": {
+                "koodiarvo": "893",
+                "nimi": {
+                  "fi": "Nostokurkila",
+                  "sv": "Kranby"
+                },
+                "koodistoUri": "kunta",
+                "koodistoVersio": 2
+              }
+            },
+            "arviointi": [
+              {
+                "arvosana": {
+                  "koodiarvo": "Hyväksytty",
+                  "nimi": {
+                    "fi": "Hyväksytty",
+                    "sv": "Godkänd"
+                  },
+                  "lyhytNimi": {
+                    "fi": "Hyväksytty"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinenhyvaksyttyhylatty",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2019-05-14",
+                "arvioitsijat": [
+                  {
+                    "nimi": "Examiner Frank"
+                  }
+                ],
+                "hyväksytty": true
+              }
+            ],
+            "vahvistus": {
+              "päivä": "2019-05-14",
+              "paikkakunta": {
+                "koodiarvo": "893",
+                "nimi": {
+                  "fi": "Nostokurkila",
+                  "sv": "Kranby"
+                },
+                "koodistoUri": "kunta",
+                "koodistoVersio": 2
+              },
+              "myöntäjäOrganisaatio": {
+                "oid": "1.2.246.562.10.080498349384",
+                "oppilaitosnumero": {
+                  "koodiarvo": "43249",
+                  "nimi": {
+                    "fi": "Nostokurkilan kauppaoppilaitos",
+                    "sv": "Nostokurkilan kauppaoppilaitos",
+                    "en": "Nostokurkilan kauppaoppilaitos"
+                  },
+                  "lyhytNimi": {
+                    "fi": "Nostokurkilan kauppaoppilaitos",
+                    "sv": "Nostokurkilan kauppaoppilaitos",
+                    "en": "Nostokurkilan kauppaoppilaitos"
+                  },
+                  "koodistoUri": "oppilaitosnumero",
+                  "koodistoVersio": 1
+                },
+                "nimi": {
+                  "fi": "Nostokurkilan kauppaoppilaitos",
+                  "sv": "Nostokurkilan kauppaoppilaitos",
+                  "en": "Nostokurkilan kauppaoppilaitos"
+                },
+                "kotipaikka": {
+                  "koodiarvo": "893",
+                  "nimi": {
+                    "fi": "Nostokurkila",
+                    "sv": "Kranby"
+                  },
+                  "koodistoUri": "kunta",
+                  "koodistoVersio": 2
+                }
+              },
+              "myöntäjäHenkilöt": [
+                {
+                  "nimi": "Ren Faktori",
+                  "titteli": {
+                    "fi": "rehtori"
+                  },
+                  "organisaatio": {
+                    "oid": "1.2.246.562.10.080498349384",
+                    "oppilaitosnumero": {
+                      "koodiarvo": "43249",
+                      "nimi": {
+                        "fi": "Nostokurkilan kauppaoppilaitos",
+                        "sv": "Nostokurkilan kauppaoppilaitos",
+                        "en": "Nostokurkilan kauppaoppilaitos"
+                      },
+                      "lyhytNimi": {
+                        "fi": "Nostokurkilan kauppaoppilaitos",
+                        "sv": "Nostokurkilan kauppaoppilaitos",
+                        "en": "Nostokurkilan kauppaoppilaitos"
+                      },
+                      "koodistoUri": "oppilaitosnumero",
+                      "koodistoVersio": 1
+                    },
+                    "nimi": {
+                      "fi": "Nostokurkilan kauppaoppilaitos",
+                      "sv": "Nostokurkilan kauppaoppilaitos",
+                      "en": "Nostokurkilan kauppaoppilaitos"
+                    },
+                    "kotipaikka": {
+                      "koodiarvo": "893",
+                      "nimi": {
+                        "fi": "Nostokurkila",
+                        "sv": "Kranby"
+                      },
+                      "koodistoUri": "kunta",
+                      "koodistoVersio": 2
+                    }
+                  }
+                }
+              ]
+            },
+            "suorituskieli": {
+              "koodiarvo": "FI",
+              "nimi": {
+                "fi": "suomi",
+                "sv": "finska",
+                "en": "Finnish"
+              },
+              "lyhytNimi": {
+                "fi": "suomi",
+                "sv": "finska",
+                "en": "Finnish"
+              },
+              "koodistoUri": "kieli",
+              "koodistoVersio": 1
+            },
+            "osasuoritukset": [
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "YTYK",
+                    "nimi": {
+                      "fi": "Yhteiskunnassa ja kansalaisena toimiminen",
+                      "sv": "Att verka i samhället och som medborgare"
+                    },
+                    "lyhytNimi": {
+                      "fi": "yhteiskunnassa ja kansalaisena toimiminen"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": {
+                    "arvo": 2,
+                    "yksikkö": {
+                      "koodiarvo": "6",
+                      "nimi": {
+                        "fi": "osaamispistettä",
+                        "sv": "kompetenspoäng",
+                        "en": "ECVET competence points"
+                      },
+                      "lyhytNimi": {
+                        "fi": "osp",
+                        "sv": "kp",
+                        "en": "competence points"
+                      },
+                      "koodistoUri": "opintojenlaajuusyksikko",
+                      "koodistoVersio": 1
+                    }
+                  }
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "5",
+                      "nimi": {
+                        "fi": "5"
+                      },
+                      "lyhytNimi": {
+                        "fi": "5"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2018-10-16",
+                    "arvioitsijat": [
+                      {
+                        "nimi": "Examiner Frank"
+                      }
+                    ],
+                    "hyväksytty": true
+                  }
+                ],
+                "tunnustettu": {
+                  "selite": {
+                    "fi": "Tutkinnon osaan on tunnustettu lukion opintoja (33/011/2003), Nostokurkilan normaalikoulun lukio."
+                  },
+                  "rahoituksenPiirissä": false
+                },
+                "lisätiedot": [
+                  {
+                    "tunniste": {
+                      "koodiarvo": "muu",
+                      "nimi": {
+                        "fi": "Muu lisätieto",
+                        "sv": "Annan tilläggsuppgift"
+                      },
+                      "koodistoUri": "ammatillisentutkinnonosanlisatieto",
+                      "koodistoVersio": 1
+                    },
+                    "kuvaus": {
+                      "fi": "Tutkinnon osaan on tunnustettu lukion opintoja (33/011/2003), Nostokurkilan normaalikoulun lukio."
+                    }
+                  }
+                ],
+                "suorituskieli": {
+                  "koodiarvo": "FI",
+                  "nimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "lyhytNimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "koodistoUri": "kieli",
+                  "koodistoVersio": 1
+                },
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "YTTT",
+                    "nimi": {
+                      "fi": "Työelämässä toimiminen",
+                      "sv": "Att verka i arbetslivet"
+                    },
+                    "lyhytNimi": {
+                      "fi": "työelämässä toimiminen"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": {
+                    "arvo": 2,
+                    "yksikkö": {
+                      "koodiarvo": "6",
+                      "nimi": {
+                        "fi": "osaamispistettä",
+                        "sv": "kompetenspoäng",
+                        "en": "ECVET competence points"
+                      },
+                      "lyhytNimi": {
+                        "fi": "osp",
+                        "sv": "kp",
+                        "en": "competence points"
+                      },
+                      "koodistoUri": "opintojenlaajuusyksikko",
+                      "koodistoVersio": 1
+                    }
+                  }
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "5",
+                      "nimi": {
+                        "fi": "5"
+                      },
+                      "lyhytNimi": {
+                        "fi": "5"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-04-08",
+                    "arvioitsijat": [
+                      {
+                        "nimi": "Examiner Frank"
+                      }
+                    ],
+                    "hyväksytty": true
+                  }
+                ],
+                "suorituskieli": {
+                  "koodiarvo": "FI",
+                  "nimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "lyhytNimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "koodistoUri": "kieli",
+                  "koodistoVersio": 1
+                },
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "YTOU",
+                    "nimi": {
+                      "fi": "Opiskelu- ja urasuunnitteluvalmiudet",
+                      "sv": "Färdigheter i studie- och karriärplanering"
+                    },
+                    "lyhytNimi": {
+                      "fi": "opiskelu- ja urasuunnitteluvalmiudet"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": {
+                    "arvo": 1,
+                    "yksikkö": {
+                      "koodiarvo": "6",
+                      "nimi": {
+                        "fi": "osaamispistettä",
+                        "sv": "kompetenspoäng",
+                        "en": "ECVET competence points"
+                      },
+                      "lyhytNimi": {
+                        "fi": "osp",
+                        "sv": "kp",
+                        "en": "competence points"
+                      },
+                      "koodistoUri": "opintojenlaajuusyksikko",
+                      "koodistoVersio": 1
+                    }
+                  }
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "5",
+                      "nimi": {
+                        "fi": "5"
+                      },
+                      "lyhytNimi": {
+                        "fi": "5"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-05-14",
+                    "arvioitsijat": [
+                      {
+                        "nimi": "Examiner Frank"
+                      }
+                    ],
+                    "hyväksytty": true
+                  }
+                ],
+                "suorituskieli": {
+                  "koodiarvo": "FI",
+                  "nimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "lyhytNimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "koodistoUri": "kieli",
+                  "koodistoVersio": 1
+                },
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "YTYY",
+                    "nimi": {
+                      "fi": "Yrittäjyys ja yrittäjämäinen toiminta",
+                      "sv": "Företagsamhet och företagarinriktad verksamhet"
+                    },
+                    "lyhytNimi": {
+                      "fi": "yrittäjyys ja yrittäjämäinen toiminta"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": {
+                    "arvo": 1,
+                    "yksikkö": {
+                      "koodiarvo": "6",
+                      "nimi": {
+                        "fi": "osaamispistettä",
+                        "sv": "kompetenspoäng",
+                        "en": "ECVET competence points"
+                      },
+                      "lyhytNimi": {
+                        "fi": "osp",
+                        "sv": "kp",
+                        "en": "competence points"
+                      },
+                      "koodistoUri": "opintojenlaajuusyksikko",
+                      "koodistoVersio": 1
+                    }
+                  }
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "5",
+                      "nimi": {
+                        "fi": "5"
+                      },
+                      "lyhytNimi": {
+                        "fi": "5"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-04-08",
+                    "arvioitsijat": [
+                      {
+                        "nimi": "Examiner Frank"
+                      }
+                    ],
+                    "hyväksytty": true
+                  }
+                ],
+                "suorituskieli": {
+                  "koodiarvo": "FI",
+                  "nimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "lyhytNimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "koodistoUri": "kieli",
+                  "koodistoVersio": 1
+                },
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "YTTH",
+                    "nimi": {
+                      "fi": "Työkyvyn ja hyvinvoinnin ylläpitäminen",
+                      "sv": "Upprätthållande av arbetsförmågan och välbefinnandet"
+                    },
+                    "lyhytNimi": {
+                      "fi": "työkyvyn ja hyvinvoinnin ylläpitäminen"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": {
+                    "arvo": 2,
+                    "yksikkö": {
+                      "koodiarvo": "6",
+                      "nimi": {
+                        "fi": "osaamispistettä",
+                        "sv": "kompetenspoäng",
+                        "en": "ECVET competence points"
+                      },
+                      "lyhytNimi": {
+                        "fi": "osp",
+                        "sv": "kp",
+                        "en": "competence points"
+                      },
+                      "koodistoUri": "opintojenlaajuusyksikko",
+                      "koodistoVersio": 1
+                    }
+                  }
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "4",
+                      "nimi": {
+                        "fi": "4"
+                      },
+                      "lyhytNimi": {
+                        "fi": "4"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2018-10-16",
+                    "arvioitsijat": [
+                      {
+                        "nimi": "Examiner Frank"
+                      }
+                    ],
+                    "hyväksytty": true
+                  }
+                ],
+                "tunnustettu": {
+                  "selite": {
+                    "fi": "Tutkinnon osaan on tunnustettu lukion opintoja (33/011/2003), Nostokurkilan normaalikoulun lukio."
+                  },
+                  "rahoituksenPiirissä": false
+                },
+                "lisätiedot": [
+                  {
+                    "tunniste": {
+                      "koodiarvo": "muu",
+                      "nimi": {
+                        "fi": "Muu lisätieto",
+                        "sv": "Annan tilläggsuppgift"
+                      },
+                      "koodistoUri": "ammatillisentutkinnonosanlisatieto",
+                      "koodistoVersio": 1
+                    },
+                    "kuvaus": {
+                      "fi": "Tutkinnon osaan on tunnustettu lukion opintoja (33/011/2003), Nostokurkilan normaalikoulun lukio."
+                    }
+                  }
+                ],
+                "suorituskieli": {
+                  "koodiarvo": "FI",
+                  "nimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "lyhytNimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "koodistoUri": "kieli",
+                  "koodistoVersio": 1
+                },
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "YTKK",
+                    "nimi": {
+                      "fi": "Kestävän kehityksen edistäminen",
+                      "sv": "Främjande av hållbar utveckling"
+                    },
+                    "lyhytNimi": {
+                      "fi": "kestävän kehityksen edistäminen"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": {
+                    "arvo": 1,
+                    "yksikkö": {
+                      "koodiarvo": "6",
+                      "nimi": {
+                        "fi": "osaamispistettä",
+                        "sv": "kompetenspoäng",
+                        "en": "ECVET competence points"
+                      },
+                      "lyhytNimi": {
+                        "fi": "osp",
+                        "sv": "kp",
+                        "en": "competence points"
+                      },
+                      "koodistoUri": "opintojenlaajuusyksikko",
+                      "koodistoVersio": 1
+                    }
+                  }
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "5",
+                      "nimi": {
+                        "fi": "5"
+                      },
+                      "lyhytNimi": {
+                        "fi": "5"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-05-14",
+                    "arvioitsijat": [
+                      {
+                        "nimi": "Examiner Frank"
+                      }
+                    ],
+                    "hyväksytty": true
+                  }
+                ],
+                "suorituskieli": {
+                  "koodiarvo": "FI",
+                  "nimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "lyhytNimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "koodistoUri": "kieli",
+                  "koodistoVersio": 1
+                },
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "YTTH",
+                    "nimi": {
+                      "fi": "Työkyvyn ja hyvinvoinnin ylläpitäminen",
+                      "sv": "Upprätthållande av arbetsförmågan och välbefinnandet"
+                    },
+                    "lyhytNimi": {
+                      "fi": "työkyvyn ja hyvinvoinnin ylläpitäminen"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": false,
+                  "laajuus": {
+                    "arvo": 3,
+                    "yksikkö": {
+                      "koodiarvo": "6",
+                      "nimi": {
+                        "fi": "osaamispistettä",
+                        "sv": "kompetenspoäng",
+                        "en": "ECVET competence points"
+                      },
+                      "lyhytNimi": {
+                        "fi": "osp",
+                        "sv": "kp",
+                        "en": "competence points"
+                      },
+                      "koodistoUri": "opintojenlaajuusyksikko",
+                      "koodistoVersio": 1
+                    }
+                  }
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "5",
+                      "nimi": {
+                        "fi": "5"
+                      },
+                      "lyhytNimi": {
+                        "fi": "5"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2018-10-16",
+                    "arvioitsijat": [
+                      {
+                        "nimi": "Examiner Frank"
+                      }
+                    ],
+                    "hyväksytty": true
+                  }
+                ],
+                "tunnustettu": {
+                  "selite": {
+                    "fi": "Tutkinnon osat on tunnustettu lukion oppimäärästä (33/011/2003), Nostokurkilan normaalikoulun lukio."
+                  },
+                  "rahoituksenPiirissä": false
+                },
+                "lisätiedot": [
+                  {
+                    "tunniste": {
+                      "koodiarvo": "muu",
+                      "nimi": {
+                        "fi": "Muu lisätieto",
+                        "sv": "Annan tilläggsuppgift"
+                      },
+                      "koodistoUri": "ammatillisentutkinnonosanlisatieto",
+                      "koodistoVersio": 1
+                    },
+                    "kuvaus": {
+                      "fi": "Tutkinnon osaan on tunnustettu lukion opintoja (33/011/2003), Nostokurkilan normaalikoulun lukio."
+                    }
+                  }
+                ],
+                "suorituskieli": {
+                  "koodiarvo": "FI",
+                  "nimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "lyhytNimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "koodistoUri": "kieli",
+                  "koodistoVersio": 1
+                },
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              }
+            ],
+            "tyyppi": {
+              "koodiarvo": "ammatillisentutkinnonosa",
+              "nimi": {
+                "fi": "Ammatillisen tutkinnon osa",
+                "sv": "Yrkesexamensdel",
+                "en": "A vocational education qualification unit"
+              },
+              "koodistoUri": "suorituksentyyppi",
+              "koodistoVersio": 1
+            }
+          }
+        ],
+        "tyyppi": {
+          "koodiarvo": "ammatillinentutkinto",
+          "nimi": {
+            "fi": "Ammatillinen tutkinto",
+            "sv": "Yrkesinriktad examen",
+            "en": "Vocational education  qualification"
+          },
+          "koodistoUri": "suorituksentyyppi",
+          "koodistoVersio": 1
+        },
+        "keskiarvo": 4.40
+      }
+    ],
+    "lisätiedot": {
+      "oikeusMaksuttomaanAsuntolapaikkaan": false,
+      "henkilöstökoulutus": false,
+      "koulutusvienti": false
+    },
+    "tyyppi": {
+      "koodiarvo": "ammatillinenkoulutus",
+      "nimi": {
+        "fi": "Ammatillinen koulutus",
+        "sv": "Yrkesutbildning"
+      },
+      "lyhytNimi": {
+        "fi": "Ammatillinen koulutus"
+      },
+      "koodistoUri": "opiskeluoikeudentyyppi",
+      "koodistoVersio": 1
+    },
+    "alkamispäivä": "2018-09-05",
+    "päättymispäivä": "2019-05-29"
+  }
+]
