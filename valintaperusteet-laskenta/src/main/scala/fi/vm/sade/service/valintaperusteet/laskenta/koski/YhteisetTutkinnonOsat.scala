@@ -145,6 +145,6 @@ object YhteisetTutkinnonOsat {
       KoskiLaskenta.ammatillisenHuomioitavaOpiskeluoikeudenTyyppi,
       KoskiLaskenta.ammatillisenSuorituksenTyyppi,
       hakemus)
-      .flatMap(tutkinto => Tutkinnot.etsiValiditSuoritukset(tutkinto, valmistumisenTakarajaPvm, suorituksenSallitutKoodit))
+      .flatMap(tutkinto => Tutkinnot.etsiValiditSuoritukset(tutkinto, valmistumisenTakarajaPvm, suorituksenSallitutKoodit, hakemus))
   }
 }

@@ -30,13 +30,13 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
 
   private val suoritukset: JHashMap[String, JList[JMap[String, String]]] = new JHashMap[String, JList[JMap[String, String]]]
 
-  private val hakemus = TestHakemus("", Nil, Map(), suoritukset, loadJson("koski-opiskeluoikeudet.json"))
-  private val monenTutkinnonHakemus = TestHakemus("", Nil, Map(), suoritukset, loadJson("koski-monitutkinto.json"))
-  private val reforminMukainenHakemus = TestHakemus("", Nil, Map(), suoritukset, loadJson("koski-reforminmukainen-keskiarvon_kanssa.json"))
-  private val hakemusJossaOnVainSkipattaviaNayttoja = TestHakemus("", Nil, Map(), suoritukset, loadJson("koski-kaksiskipattavaatutkintoa.json"))
-  private val hakemusJossaOnSkipattavaNayttoJaHuomioitavaTutkinto = TestHakemus("", Nil, Map(), suoritukset, loadJson("koski-virheellinen_tapaus-skipattava_naytto_ja_reformi.json"))
-  private val hakemusJossaOnYtonKoodiMyosOsaAlueella = TestHakemus("", Nil, Map(), suoritukset, loadJson("koski-yto-koodi_osa-alueella.json"))
-  private val hakemusJossaOnYtonKoodiPaikallisellaTutkinnonOsalla = TestHakemus("", Nil, Map(), suoritukset, loadJson("koski-reforminmukainen-jossa_ytokoodi_paikallisella_tutkinnonosalla.json"))
+  private val hakemus = TestHakemus("1.2.3.4", Nil, Map(), suoritukset, loadJson("koski-opiskeluoikeudet.json"))
+  private val monenTutkinnonHakemus = TestHakemus("5.6.7.8", Nil, Map(), suoritukset, loadJson("koski-monitutkinto.json"))
+  private val reforminMukainenHakemus = TestHakemus("2.3.4.5", Nil, Map(), suoritukset, loadJson("koski-reforminmukainen-keskiarvon_kanssa.json"))
+  private val hakemusJossaOnVainSkipattaviaNayttoja = TestHakemus("3.4.5.6", Nil, Map(), suoritukset, loadJson("koski-kaksiskipattavaatutkintoa.json"))
+  private val hakemusJossaOnSkipattavaNayttoJaHuomioitavaTutkinto = TestHakemus("4.5.6.7", Nil, Map(), suoritukset, loadJson("koski-virheellinen_tapaus-skipattava_naytto_ja_reformi.json"))
+  private val hakemusJossaOnYtonKoodiMyosOsaAlueella = TestHakemus("6.7.8.9", Nil, Map(), suoritukset, loadJson("koski-yto-koodi_osa-alueella.json"))
+  private val hakemusJossaOnYtonKoodiPaikallisellaTutkinnonOsalla = TestHakemus("7.8.9.0", Nil, Map(), suoritukset, loadJson("koski-reforminmukainen-jossa_ytokoodi_paikallisella_tutkinnonosalla.json"))
 
   test("Tutkinnon yhteisten tutkinnon osien arvosanat") {
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeAmmatillinenYtoArvosanaKutsu("101054"))

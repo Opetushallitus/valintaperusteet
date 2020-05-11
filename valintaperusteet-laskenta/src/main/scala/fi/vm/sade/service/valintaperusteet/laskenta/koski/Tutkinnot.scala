@@ -68,7 +68,7 @@ object Tutkinnot {
             throw new IllegalStateException(s"Odotettiin täsmälleen yhtä tyyppiä suoritukselle, mutta oli ${suorituksenTyyppi.size} hakemuksen ${hakemus.oid} hakijalle.")
           }
 
-          val onkoValmistunut: Boolean = valmistumisTila.contains("valmistunut") && (valmistumisenTakaraja.forall(vahvistettuRajapäiväänMennessä(_, suoritus)))
+          val onkoValmistunut: Boolean = valmistumisTila.contains("valmistunut") && (valmistumisenTakaraja.forall(vahvistettuRajapäiväänMennessä(_, suoritus, hakemus)))
           val onkoValidiSuoritusTapa = suoritustavanKoodiarvo.map(s => sallitutSuoritusTavat.contains(s)).exists(v => v) &&
             suoritustavanKoodistoUri.contains("ammatillisentutkinnonsuoritustapa")
           val onkoAmmatillinenOpiskeluOikeus =
@@ -81,37 +81,48 @@ object Tutkinnot {
     })
   }
 
-  private def etsiSuoritukset(tutkinto: Json, valmistumisenTakarajaPvm: LocalDate, suodatusPredikaatti: Json => Boolean): List[Json] = {
+  private def etsiSuoritukset(tutkinto: Json,
+                              valmistumisenTakarajaPvm: LocalDate,
+                              suodatusPredikaatti: Json => Boolean,
+                              hakemus: Hakemus
+                             ): List[Json] = {
     TutkintoLinssit.suoritukset.json.getAll(tutkinto).filter(suoritus => {
       val onkoSallitunTyyppinenSuoritus = suodatusPredikaatti(suoritus)
 
-      onkoSallitunTyyppinenSuoritus && vahvistettuRajapäiväänMennessä(valmistumisenTakarajaPvm, suoritus)
+      onkoSallitunTyyppinenSuoritus && vahvistettuRajapäiväänMennessä(valmistumisenTakarajaPvm, suoritus, hakemus)
     })
   }
 
-  def vahvistettuRajapäiväänMennessä(valmistumisenTakaraja: LocalDate, päätasonSuoritus: Json): Boolean = {
+  def vahvistettuRajapäiväänMennessä(valmistumisenTakaraja: LocalDate, päätasonSuoritus: Json, hakemus: Hakemus): Boolean = {
     TutkintoLinssit.vahvistusPvm.getOption(päätasonSuoritus) match {
       case Some(dateString) =>
         val valmistunutAjoissa = !LocalDate.parse(dateString, koskiDateFormat).isAfter(valmistumisenTakaraja)
         if (!valmistunutAjoissa) {
-          // TODO : Korjaa termi "vahvistumiseksi" valmistumisen sijaan (vika on monessa paikassa...)
-          LOG.info(s"Suorituksen valmistumispäivämäärä $dateString on valmistumisen takarajan " +
-            s"${LaskentaUtil.suomalainenPvmMuoto.format(valmistumisenTakaraja)} jälkeen, joten suoritusta ei huomioida.") // TODO tähän voisi kaivaa jotain lisätietoa suorituksesta
+          LOG.info(s"Suorituksen vahvistuspäivä $dateString on valmistumisen takarajan " +
+            s"${LaskentaUtil.suomalainenPvmMuoto.format(valmistumisenTakaraja)} jälkeen, joten suoritusta ei huomioida. Hakemus: ${hakemus.oid}")
         }
         valmistunutAjoissa
       case None => false
     }
   }
 
-  def etsiValiditSuoritukset(tutkinto: Json, valmistumisenTakarajaPvm: LocalDate, suorituksenSallitutKoodit: Set[Int]): List[Json] = {
-    etsiSuoritukset(tutkinto, valmistumisenTakarajaPvm, suoritus => {
-      val suoritusTapa = TutkintoLinssit.suoritusTapa.getOption(suoritus).orNull
-      val koulutusTyypinKoodiarvo = TutkintoLinssit.koulutusTyypinKoodiarvo.getOption(suoritus) match {
-        case Some(s) => s.toInt
-        case None => -1
-      }
-      suorituksenSallitutKoodit.contains(koulutusTyypinKoodiarvo) &&
-        sallitutSuoritusTavat.contains(suoritusTapa)
-    })
+  def etsiValiditSuoritukset(tutkinto: Json,
+                             valmistumisenTakarajaPvm: LocalDate,
+                             suorituksenSallitutKoodit: Set[Int],
+                             hakemus: Hakemus
+                            ): List[Json] = {
+    etsiSuoritukset(
+      tutkinto,
+      valmistumisenTakarajaPvm,
+      suoritus => {
+        val suoritusTapa = TutkintoLinssit.suoritusTapa.getOption(suoritus).orNull
+        val koulutusTyypinKoodiarvo = TutkintoLinssit.koulutusTyypinKoodiarvo.getOption(suoritus) match {
+          case Some(s) => s.toInt
+          case None => -1
+        }
+        suorituksenSallitutKoodit.contains(koulutusTyypinKoodiarvo) &&
+          sallitutSuoritusTavat.contains(suoritusTapa)
+      },
+      hakemus)
   }
 }
