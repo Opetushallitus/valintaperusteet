@@ -20,10 +20,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -250,14 +249,23 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
         }
     }
 
+    ForkJoinPool threadPool = new ForkJoinPool(10);
+
     @Override
     public Set<String> findHakukohdesRecursive(Set<String> oids) {
-        Set<String> hakukohdeOids = Sets.newHashSet();
-        for (String oid : oids) {
-            addHakukohdeOids(oid, hakukohdeOids);
-            getChildrenRecursive(oid, hakukohdeOids);
+        try {
+            Set<String> hakukohdeOids = Sets.newConcurrentHashSet();
+            threadPool.submit(
+                    () -> oids.parallelStream().forEach(
+                            oid -> {
+                                addHakukohdeOids(oid, hakukohdeOids);
+                                getChildrenRecursive(oid, hakukohdeOids);
+                            }
+                    )).get(1800, TimeUnit.SECONDS);
+            return hakukohdeOids;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to find hakukohtees for oids " + oids, e);
         }
-        return hakukohdeOids;
     }
 
     private void getChildrenRecursive(String oid, Set<String> hakukohdeOids) {
