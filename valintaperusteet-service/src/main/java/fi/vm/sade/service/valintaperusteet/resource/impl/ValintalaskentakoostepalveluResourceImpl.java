@@ -378,11 +378,12 @@ public class ValintalaskentakoostepalveluResourceImpl {
             }
             return res;
         } else {
+            long start = System.currentTimeMillis();
             Set<String> valintaryhmaoids = valinnanVaiheService.getValintaryhmaOids(oid);
-            LOG.info("Got {} valintaryhmaoids for valinnanvaihe {}", valintaryhmaoids.size(), oid);
+            LOG.info("Got {} valintaryhmaoids for valinnanvaihe {}, time passed {} ms", valintaryhmaoids.size(), oid, System.currentTimeMillis() - start);
             Set<String> result = valintaryhmaService.findHakukohdesRecursive(valintaryhmaoids);
-            LOG.info("Got {} hakukohtees for valinnanvaihe {}", result.size(), oid);
-            LOG.info("Result: {}", result);
+            LOG.info("Got {} hakukohtees for valinnanvaihe {}, time passed {} ms", result.size(), oid, System.currentTimeMillis() - start);
+            LOG.info("Result for valinnanvaihe {}: {}", oid, result);
             return result;
         }
     }
