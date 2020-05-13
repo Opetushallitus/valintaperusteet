@@ -69,7 +69,6 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
 
     public List<ValinnanVaihe> readChildrenByOid(String oid) {
         List<ValinnanVaihe> res = valinnanVaiheDAO.readChildVaihees(oid);
-        LOGGER.info("Löydettiin {} lapsivaihetta valinnanvaiheelle {}", res.size(), oid);
         return res;
     }
 
