@@ -9,6 +9,8 @@ import java.util.Set;
 public interface ValinnanVaiheDAO extends JpaDAO<ValinnanVaihe, Long> {
     ValinnanVaihe readByOid(String oid);
 
+    List<ValinnanVaihe> readChildVaihees(String oid);
+
     List<ValinnanVaihe> findByHakukohde(String oid);
 
     ValinnanVaihe haeValintaryhmanViimeinenValinnanVaihe(String oid);

@@ -67,6 +67,12 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
         return haeVaiheOidilla(oid);
     }
 
+    public List<ValinnanVaihe> readChildrenByOid(String oid) {
+        List<ValinnanVaihe> res = valinnanVaiheDAO.readChildVaihees(oid);
+        LOGGER.info("Löydettiin {} lapsivaihetta valinnanvaiheelle {}", res.size(), oid);
+        return res;
+    }
+
     @Override
     public List<ValinnanVaihe> findByHakukohde(String oid) {
         List<ValinnanVaihe> byHakukohde = valinnanVaiheDAO.findByHakukohde(oid);
@@ -384,7 +390,7 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
         return valinnanVaiheDAO.kuuluuSijoitteluun(oid);
     }
 
-    @Override
+    /*@Override
     public Set<String> getValintaryhmaOids(String oid) {
         Set<String> res = Sets.newHashSet();
         getValintaryhmaOids(readByOid(oid), res);
@@ -399,6 +405,22 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
         for (ValinnanVaihe child: valinnanvaihe.getKopioValinnanVaiheet()) {
             getValintaryhmaOids(child, res);
         }
+    }*/
+
+    @Override
+    public Set<String> getValintaryhmaOids(String oid) {
+        Set<String> res = Sets.newHashSet();
+        handleVaiheRecur(readByOid(oid), res);
+        return res;
+    }
+
+    private void handleVaiheRecur(ValinnanVaihe valinnanVaihe, Set<String> res) {
+        if(valinnanVaihe.getAktiivinen() && valinnanVaihe.getValintaryhma() != null)
+            res.add(valinnanVaihe.getValintaryhma().getOid());
+        List<ValinnanVaihe> childvaihees = readChildrenByOid(valinnanVaihe.getOid());
+        childvaihees.forEach(
+                lapsi -> handleVaiheRecur(lapsi, res)
+        );
     }
 
 

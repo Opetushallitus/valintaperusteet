@@ -39,6 +39,14 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
     }
 
     @Override
+    public List<ValinnanVaihe> readChildVaihees(String oid) {
+        QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
+        return from(valinnanVaihe)
+                .where(valinnanVaihe.masterValinnanVaihe.oid.eq(oid))
+                .list(valinnanVaihe);
+    }
+
+    @Override
     public List<ValinnanVaihe> haeKopiot(String oid) {
         QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
         QValintatapajono valintatapaJono = QValintatapajono.valintatapajono;
