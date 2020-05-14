@@ -370,22 +370,29 @@ public class ValintalaskentakoostepalveluResourceImpl {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("valinnanvaihe/{oid}/hakukohteet")
     @ApiOperation(value = "Hakee oidit hakukohteille, jotka liittyvät valinnanvaiheeseen valintaryhmän kautta", response = ValinnanVaiheDTO.class)
-    public Set<String> hakukohteet(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
+    public Response hakukohteet(@ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
+        Set<String> result;
         if ("12345".equals(oid)) {
             Set<String> res = Sets.newHashSet();
             for (int i = 1800; i<3600; i++) {
                 res.add("1.2.246.562.20.5897933"+i);
             }
-            return res;
+            result = res;
         } else {
             long start = System.currentTimeMillis();
             Set<String> valintaryhmaoids = valinnanVaiheService.getValintaryhmaOids(oid);
             LOG.info("Got {} valintaryhmaoids for valinnanvaihe {}, time passed {} ms", valintaryhmaoids.size(), oid, System.currentTimeMillis() - start);
-            Set<String> result = valintaryhmaService.findHakukohdesRecursive(valintaryhmaoids);
-            LOG.info("Got {} hakukohtees for valinnanvaihe {}, time passed {} ms", result.size(), oid, System.currentTimeMillis() - start);
-            LOG.info("Result for valinnanvaihe {}: {}", oid, result);
-            return result;
+            Set<String> res = valintaryhmaService.findHakukohdesRecursive(valintaryhmaoids);
+            LOG.info("Got {} hakukohtees for valinnanvaihe {}, time passed {} ms", res.size(), oid, System.currentTimeMillis() - start);
+            LOG.info("Result for valinnanvaihe {}: {}", oid, res);
+            //return result;
+            result = res;
         }
+        return Response
+                .status(Response.Status.OK)
+                .entity(result)
+                .header("Transfer-Encoding", "identity")
+                .build();
     }
 
     @GET
