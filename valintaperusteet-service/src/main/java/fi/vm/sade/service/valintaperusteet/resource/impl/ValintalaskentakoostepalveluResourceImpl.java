@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StopWatch;
+import play.api.libs.json.Json;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -388,10 +389,12 @@ public class ValintalaskentakoostepalveluResourceImpl {
             //return result;
             result = res;
         }
+        int contentLength = result.toString().getBytes().length;
+        LOG.info("Setting content length to {} for valinnanvaihe {}", contentLength, oid);
         return Response
                 .status(Response.Status.OK)
-                .entity(result)
-                .header("Transfer-Encoding", "identity")
+                .entity(result.toString())
+                .header("Content-Length", contentLength)
                 .build();
     }
 
