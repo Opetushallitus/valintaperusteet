@@ -64,10 +64,6 @@ object Tutkinnot {
           val suoritustavanKoodiarvo = _suoritustavanKoodiarvo.getOption(suoritus)
           val suoritustavanKoodistoUri = _suoritustavanKoodistoUri.getOption(suoritus)
 
-          if (suorituksenTyyppi.size > 1) { // Suoritukselta pitäisi löytyä vain yksi tyyppi; vaikuttaa bugilta.
-            throw new IllegalStateException(s"Odotettiin täsmälleen yhtä tyyppiä suoritukselle, mutta oli ${suorituksenTyyppi.size} hakemuksen ${hakemus.oid} hakijalle.")
-          }
-
           val onkoValmistunut: Boolean = valmistumisTila.contains("valmistunut") && (valmistumisenTakaraja.forall(vahvistettuRajapäiväänMennessä(_, suoritus, hakemus)))
           val onkoValidiSuoritusTapa = suoritustavanKoodiarvo.map(s => sallitutSuoritusTavat.contains(s)).exists(v => v) &&
             suoritustavanKoodistoUri.contains("ammatillisentutkinnonsuoritustapa")
