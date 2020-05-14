@@ -30,11 +30,13 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
 
   private val suoritukset: JHashMap[String, JList[JMap[String, String]]] = new JHashMap[String, JList[JMap[String, String]]]
 
-  private val hakemus = TestHakemus("", Nil, Map(), suoritukset, loadJson("koski-opiskeluoikeudet.json"))
-  private val monenTutkinnonHakemus = TestHakemus("", Nil, Map(), suoritukset, loadJson("koski-monitutkinto.json"))
-  private val reforminMukainenHakemus = TestHakemus("", Nil, Map(), suoritukset, loadJson("koski-reforminmukainen-keskiarvon_kanssa.json"))
-  private val hakemusJossaOnVainSkipattaviaNayttoja = TestHakemus("", Nil, Map(), suoritukset, loadJson("koski-kaksiskipattavaatutkintoa.json"))
-  private val hakemusJossaOnYtonKoodiMyosOsaAlueella = TestHakemus("", Nil, Map(), suoritukset, loadJson("koski-yto-koodi_osa-alueella.json"))
+  private val hakemus = TestHakemus("1.2.3.4", Nil, Map(), suoritukset, loadJson("koski-opiskeluoikeudet.json"))
+  private val monenTutkinnonHakemus = TestHakemus("5.6.7.8", Nil, Map(), suoritukset, loadJson("koski-monitutkinto.json"))
+  private val reforminMukainenHakemus = TestHakemus("2.3.4.5", Nil, Map(), suoritukset, loadJson("koski-reforminmukainen-keskiarvon_kanssa.json"))
+  private val hakemusJossaOnVainSkipattaviaNayttoja = TestHakemus("3.4.5.6", Nil, Map(), suoritukset, loadJson("koski-kaksiskipattavaatutkintoa.json"))
+  private val hakemusJossaOnSkipattavaNayttoJaHuomioitavaTutkinto = TestHakemus("4.5.6.7", Nil, Map(), suoritukset, loadJson("koski-virheellinen_tapaus-skipattava_naytto_ja_reformi.json"))
+  private val hakemusJossaOnYtonKoodiMyosOsaAlueella = TestHakemus("6.7.8.9", Nil, Map(), suoritukset, loadJson("koski-yto-koodi_osa-alueella.json"))
+  private val hakemusJossaOnYtonKoodiPaikallisellaTutkinnonOsalla = TestHakemus("7.8.9.0", Nil, Map(), suoritukset, loadJson("koski-reforminmukainen-jossa_ytokoodi_paikallisella_tutkinnonosalla.json"))
 
   test("Tutkinnon yhteisten tutkinnon osien arvosanat") {
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeAmmatillinenYtoArvosanaKutsu("101054"))
@@ -119,6 +121,13 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
     assert(tulos == None)
   }
 
+  test("Kaksi suoritusta sisältävä tutkinto, jossa on virheellisesti myös huomioitava suoritus, toimii myös") {
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeAmmatillisenTutkinnonSuoritustapaKutsu())
+
+    val (tulos, _) = Laskin.laske(hakukohde, hakemusJossaOnSkipattavaNayttoJaHuomioitavaTutkinto, lasku)
+    assert(BigDecimal(tulos.get) == BigDecimal("2017"))
+  }
+
   test("Testaa koko ammatillisten tutkintojen funktiohierarkia") {
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createAmmatillisenTutkintojenKokoHierarkia())
 
@@ -179,6 +188,14 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createLaskeAmmatillisenTutkinnonYtoOsaAlueidenKeskiarvo("400014"))
     val (tulos, _) = Laskin.laske(hakukohde, hakemusJossaOnYtonKoodiMyosOsaAlueella, lasku)
     assert(tulos.isEmpty)
+  }
+
+  test("Jos yhteisen tutkinnon osan koodi esiintyy paikallisella tutkinnon osalla, jonka koulutusmoduulin tyypin koodiarvo ei ole tutkinonosa-koodistossa, se jätetään huomioimatta") {
+    val ytoKeskiarvoLasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(
+      createLaskeAmmatillisenTutkinnonYtoOsaAlueidenKeskiarvo("400013")
+    )
+    val (arviointiasteikkoTulos, _) = Laskin.laske(hakukohde, hakemusJossaOnYtonKoodiPaikallisellaTutkinnonOsalla, ytoKeskiarvoLasku)
+    assert(arviointiasteikkoTulos.contains(new java.math.BigDecimal("3.2222")))
   }
 
   def createHaeAmmatillinenYtoArvosanaKutsu(ytoKoodi: String, konvertteriparametrit: Set[Arvokonvertteriparametri] = Set()): Funktiokutsu = {

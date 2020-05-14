@@ -52,7 +52,7 @@ object KoskiLaskenta {
           TutkintoLinssit.opiskeluoikeudenAikaleima.getOption(tutkintoJson).getOrElse("-"),
           TutkintoLinssit.opiskeluoikeudenOppilaitoksenSuomenkielinenNimi.getOption(tutkintoJson).getOrElse("-"),
           päätasonSuoritus.flatMap(TutkintoLinssit.vahvistusPvm.getOption).getOrElse("-"),
-          päätasonSuoritus.exists(Tutkinnot.vahvistettuRajapäiväänMennessä(valmistumisenTakaraja, _)))
+          päätasonSuoritus.exists(Tutkinnot.vahvistettuRajapäiväänMennessä(valmistumisenTakaraja, _, hakemus)))
         if (aikaleimaYlittaaLeikkuripaivan(datanAikaleimanLeikkuri, tutkinto)) {
           val message = s"Hakemuksen ${hakemus.oid} opiskeluoikeuden ${tutkinto.opiskeluoikeudenOid} " +
             s"version ${tutkinto.opiskeluoikeudenVersio} aikaleima ${tutkinto.opiskeluoikeudenAikaleima} " +
@@ -154,7 +154,7 @@ object KoskiLaskenta {
     } else {
       val tutkinnot = Tutkinnot.etsiValmiitTutkinnot(Some(tutkinnonValitsija.valmistumisenTakarajaPvm), hakemus.koskiOpiskeluoikeudet, ammatillisenHuomioitavaOpiskeluoikeudenTyyppi, ammatillisenSuorituksenTyyppi, hakemus)
       val suorituksenSallitutKoodit: Set[Int] = ammatillisenHhuomioitavatKoulutustyypit.map(_.koodiarvo)
-      val suoritukset = Tutkinnot.etsiValiditSuoritukset(tutkinnot(tutkinnonValitsija.tutkinnonIndeksi), tutkinnonValitsija.valmistumisenTakarajaPvm, suorituksenSallitutKoodit)
+      val suoritukset = Tutkinnot.etsiValiditSuoritukset(tutkinnot(tutkinnonValitsija.tutkinnonIndeksi), tutkinnonValitsija.valmistumisenTakarajaPvm, suorituksenSallitutKoodit, hakemus)
       if (suoritukset.size > 1) {
         throw new IllegalStateException(s"Odotettiin täsmälleen yhtä suoritusta hakemuksen ${hakemus.oid} " +
           s"hakijan ammatillisella tutkinnolla ${tutkinnonValitsija.tutkinnonIndeksi} , mutta oli ${suoritukset.size}")
@@ -183,7 +183,7 @@ object KoskiLaskenta {
         suorituksenHaluttuTyyppi = ammatillisenSuorituksenTyyppi, hakemus = hakemus)(tutkinnonValitsija.tutkinnonIndeksi)
 
       val suorituksenSallitutKoodit: Set[Int] = ammatillisenHhuomioitavatKoulutustyypit.map(_.koodiarvo)
-      val suoritukset = Tutkinnot.etsiValiditSuoritukset(oikeaOpiskeluoikeus, tutkinnonValitsija.valmistumisenTakarajaPvm, suorituksenSallitutKoodit)
+      val suoritukset = Tutkinnot.etsiValiditSuoritukset(oikeaOpiskeluoikeus, tutkinnonValitsija.valmistumisenTakarajaPvm, suorituksenSallitutKoodit, hakemus)
 
       val osasuoritusPredikaatti: Json => Boolean = osasuoritus => {
         Osasuoritus.tutkinnonOsanTyypinKoodiarvo == OsaSuoritusLinssit.osasuorituksenTyypinKoodiarvo.getOption(osasuoritus).orNull

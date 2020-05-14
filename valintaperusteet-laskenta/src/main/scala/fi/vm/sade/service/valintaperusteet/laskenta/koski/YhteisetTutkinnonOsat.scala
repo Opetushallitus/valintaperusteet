@@ -9,6 +9,11 @@ import fi.vm.sade.service.valintaperusteet.laskenta.koski.KoskiLaskenta.ammatill
 import fi.vm.sade.service.valintaperusteet.laskenta.koski.KoskiLaskenta.ammatillisenHuomioitavaOpiskeluoikeudenTyyppi
 import fi.vm.sade.service.valintaperusteet.laskenta.koski.KoskiLaskenta.ammatillisenSuorituksenTyyppi
 import fi.vm.sade.service.valintaperusteet.laskenta.koski.Osasuoritus.OsaSuoritusLinssit
+import fi.vm.sade.service.valintaperusteet.laskenta.koski.Osasuoritus.OsaSuoritusLinssit.koulutusmoduulinTunnisteenKoodiarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.koski.Osasuoritus.OsaSuoritusLinssit.koulutusmoduulinTunnisteenKoodistoUri
+import fi.vm.sade.service.valintaperusteet.laskenta.koski.Osasuoritus.OsaSuoritusLinssit.osasuorituksenTyypinKoodiarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.koski.Osasuoritus.tutkinnonOsanTyypinKoodiarvo
+import fi.vm.sade.service.valintaperusteet.laskenta.koski.Osasuoritus.ytojenKoulutusmoduulienTunnisteenKoodistoUri
 import fi.vm.sade.service.valintaperusteet.laskenta.koski.Tutkinnot.etsiValmiitTutkinnot
 import io.circe.Json
 import io.circe.optics.JsonPath
@@ -123,10 +128,11 @@ object YhteisetTutkinnonOsat {
   }
 
   private def etsiYhteisetTutkinnonOsat(suoritus: Json, osasuorituksenSallitutKoodit: Set[String]) = {
-    // TODO : Tarkista, että koodisto on "tutkinnonosat", koska oppilaitos voi käyttää valtakunnallisia koodeja myös paikallisille tutkinnon osille.
     OsaSuoritukset.etsiOsasuoritukset(suoritus, osasuoritus => {
-      osasuorituksenSallitutKoodit.contains(OsaSuoritusLinssit.koulutusmoduulinTunnisteenKoodiarvo.getOption(osasuoritus).orNull) &&
-        OsaSuoritusLinssit.osasuorituksenTyypinKoodiarvo.getOption(osasuoritus).contains(Osasuoritus.tutkinnonOsanTyypinKoodiarvo)
+      osasuorituksenSallitutKoodit.contains(
+        koulutusmoduulinTunnisteenKoodiarvo.getOption(osasuoritus).orNull) &&
+        koulutusmoduulinTunnisteenKoodistoUri.getOption(osasuoritus).contains(ytojenKoulutusmoduulienTunnisteenKoodistoUri) &&
+        osasuorituksenTyypinKoodiarvo.getOption(osasuoritus).contains(tutkinnonOsanTyypinKoodiarvo)
     })
   }
 
@@ -139,6 +145,6 @@ object YhteisetTutkinnonOsat {
       KoskiLaskenta.ammatillisenHuomioitavaOpiskeluoikeudenTyyppi,
       KoskiLaskenta.ammatillisenSuorituksenTyyppi,
       hakemus)
-      .flatMap(tutkinto => Tutkinnot.etsiValiditSuoritukset(tutkinto, valmistumisenTakarajaPvm, suorituksenSallitutKoodit))
+      .flatMap(tutkinto => Tutkinnot.etsiValiditSuoritukset(tutkinto, valmistumisenTakarajaPvm, suorituksenSallitutKoodit, hakemus))
   }
 }
