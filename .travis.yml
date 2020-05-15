@@ -46,11 +46,6 @@ deploy:
   on:
     branch: master
 - provider: script
-  script: mvn deploy -pl fi.vm.sade.valintaperusteet:valintaperusteet,valintaperusteet-domain,valintaperusteet-api,valintaperusteet-laskenta -DskipTests --settings ci-tools/common/maven-settings.xml
-  skip_cleanup: true
-  on:
-    branch: VTKU-157__laskenta_kaatuu_kahden_amm_tutkinnon_kanssa
-- provider: script
   script: ./ci-tools/build/upload-image.sh $ARTIFACT_NAME
   on:
     all_branches: true
