@@ -301,6 +301,16 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
                 LOGGER.error(String.format("Virhe tarkistaessa onko valintatapajonolle %s suoritettu sijoitteluajoa", oid), e);
             }
         }
+
+        //jonon arvoa "eiLasketaPaivamaaranJalkeen" ei saa muokata ilman rekisterinpitäjän oikeuksia jos se on jo menneisyydessä.
+        Date oldEiLasketaJalkeen = managedObject.getEiLasketaPaivamaaranJalkeen();
+        Date newEiLasketaJalkeen = konvertoitu.getEiLasketaPaivamaaranJalkeen();
+        if(!isOPH() && oldEiLasketaJalkeen != null && oldEiLasketaJalkeen.before(new Date(System.currentTimeMillis()))) {
+            LOGGER.warn("Yritettiin päivittää jonon {} eiLasketaPaivamaaranJalkeen-arvoa {} -> {} ilman rekisterinpitäjän oikeuksia." +
+                    " Pidetään vanha arvo.", oid, oldEiLasketaJalkeen, newEiLasketaJalkeen);
+            konvertoitu.setEiLasketaPaivamaaranJalkeen(managedObject.getEiLasketaPaivamaaranJalkeen());
+        }
+
         checkTyyppiPakollisuus(dto);
         if (dto.getTayttojono() != null) {
             Valintatapajono tayttoJono = valintatapajonoDAO.readByOid(dto.getTayttojono());
