@@ -32,6 +32,7 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
 
   private val hakemus = TestHakemus("1.2.3.4", Nil, Map(), suoritukset, loadJson("koski-opiskeluoikeudet.json"))
   private val monenTutkinnonHakemus = TestHakemus("5.6.7.8", Nil, Map(), suoritukset, loadJson("koski-monitutkinto.json"))
+  private val hakemusJossaValmisJaTulevaisuudessaValmisTutkinto = TestHakemus("0.2.4.6", Nil, Map(), suoritukset, loadJson("koski-kaksi_tutkintoa_toinen_vahvistettu_tulevaisuudessa.json"))
   private val reforminMukainenHakemus = TestHakemus("2.3.4.5", Nil, Map(), suoritukset, loadJson("koski-reforminmukainen-keskiarvon_kanssa.json"))
   private val hakemusJossaOnVainSkipattaviaNayttoja = TestHakemus("3.4.5.6", Nil, Map(), suoritukset, loadJson("koski-kaksiskipattavaatutkintoa.json"))
   private val hakemusJossaOnSkipattavaNayttoJaHuomioitavaTutkinto = TestHakemus("4.5.6.7", Nil, Map(), suoritukset, loadJson("koski-virheellinen_tapaus-skipattava_naytto_ja_reformi.json"))
@@ -128,6 +129,13 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
     assert(BigDecimal(tulos.get) == BigDecimal("2017"))
   }
 
+  test("Tutkinnon suoritustapa, kun on yksi valmis ja toinen tulevaisuudessa valmistuva tutkinto") {
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeAmmatillisenTutkinnonSuoritustapaKutsu(valmistumisenTakaraja = LocalDate.of(2020, 6, 3)))
+
+    val (tulevaisuudessaVahvistettavaJaJoVahvistettuTutkintoTulos, _) = Laskin.laske(hakukohde, hakemusJossaValmisJaTulevaisuudessaValmisTutkinto, lasku)
+    assert(BigDecimal(tulevaisuudessaVahvistettavaJaJoVahvistettuTutkintoTulos.get) == BigDecimal("2017"))
+  }
+
   test("Testaa koko ammatillisten tutkintojen funktiohierarkia") {
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createAmmatillisenTutkintojenKokoHierarkia())
 
@@ -142,6 +150,23 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
 
     val (tulos4, _) = Laskin.laske(hakukohde, hakemus, lasku)
     assert(BigDecimal(tulos4.get) == BigDecimal("15"))
+  }
+
+  test("Kaksi tutkintoa joista toinen on vahvistettu rajapäivän jälkeen toimivat") {
+    val laskuHeinäkuun2019Datalla = Laskentadomainkonvertteri.muodostaLukuarvolasku(
+      createAmmatillisenTutkintojenKokoHierarkia(valmistumisenTakaraja = LocalDate.of(2019, 7, 31)))
+    val laskuKesäkuun2020Datalla = Laskentadomainkonvertteri.muodostaLukuarvolasku(
+      createAmmatillisenTutkintojenKokoHierarkia(valmistumisenTakaraja = LocalDate.of(2020, 6, 30)))
+
+    val (tulos1_2019_heinäkuu, _) = Laskin.laske(hakukohde, monenTutkinnonHakemus, laskuHeinäkuun2019Datalla)
+    assert(BigDecimal(tulos1_2019_heinäkuu.get) == BigDecimal("39"))
+    val (tulos1_2020_kesäkuu, _) = Laskin.laske(hakukohde, monenTutkinnonHakemus, laskuKesäkuun2020Datalla)
+    assert(BigDecimal(tulos1_2020_kesäkuu.get) == BigDecimal("45"))
+
+    val (tulos2_2019_heinäkuu, _) = Laskin.laske(hakukohde, hakemusJossaValmisJaTulevaisuudessaValmisTutkinto, laskuHeinäkuun2019Datalla)
+    assert(tulos2_2019_heinäkuu.isEmpty)
+    val (tulos2_2020_kesäkuu, _) = Laskin.laske(hakukohde, hakemusJossaValmisJaTulevaisuudessaValmisTutkinto, laskuKesäkuun2020Datalla)
+    assert(BigDecimal(tulos2_2020_kesäkuu.get) == BigDecimal("108"))
   }
 
   test("Tutkintoa ei huomioida, jos sen päätason suorituksen vahvistuspäivämäärä on takarajapäivän jälkeen") {
@@ -241,9 +266,9 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
     )
   }
 
-  def createHaeAmmatillisenTutkinnonSuoritustapaKutsu(): Funktiokutsu = {
-    createAmmatillistenTutkintojenIteroija(
-      LaskentaTestUtil.Funktiokutsu(
+  def createHaeAmmatillisenTutkinnonSuoritustapaKutsu(valmistumisenTakaraja: LocalDate = LocalDate.of(2020, 6, 2)): Funktiokutsu = {
+    createAmmatillistenTutkintojenIteroija(valmistumisenTakaraja = valmistumisenTakaraja,
+      lapsi = LaskentaTestUtil.Funktiokutsu(
         nimi = Funktionimi.HAEAMMATILLISENTUTKINNONSUORITUSTAPA,
         arvokonvertterit = List(
           LaskentaTestUtil.Arvokonvertteriparametri(paluuarvo = "2015", arvo = "ops", hylkaysperuste = "false", new TekstiRyhma()),
