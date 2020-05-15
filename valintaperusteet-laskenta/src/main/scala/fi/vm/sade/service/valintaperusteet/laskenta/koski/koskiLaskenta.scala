@@ -33,6 +33,13 @@ object KoskiLaskenta {
   val ammatillisenHhuomioitavatKoulutustyypit: Set[AmmatillisenPerustutkinnonKoulutustyyppi] =
     Set(AmmatillinenPerustutkinto, AmmatillinenReforminMukainenPerustutkinto, AmmatillinenPerustutkintoErityisopetuksena)
 
+  private val päätasonSuorituksenVahvistusPvm: Json => String = tutkintoJson => {
+    val pvmTarpeeksiKaukanaTulevaisuudessaJottaIlmanVahvistusPvmääOlevatTutkinnotMenevätViimeisiksi = "9999-12-31"
+    TutkintoLinssit.suoritukset.json.getAll(tutkintoJson).
+      headOption.flatMap(TutkintoLinssit.vahvistusPvm.getOption).
+      getOrElse(pvmTarpeeksiKaukanaTulevaisuudessaJottaIlmanVahvistusPvmääOlevatTutkinnotMenevätViimeisiksi)
+  }
+
   def etsiAmmatillisetTutkinnot(hakemus: Hakemus, datanAikaleimanLeikkuri: LocalDate, valmistumisenTakaraja: LocalDate): Seq[Tutkinto] = {
     if (hakemus.koskiOpiskeluoikeudet == null) {
       Nil
@@ -43,7 +50,9 @@ object KoskiLaskenta {
         opiskeluoikeudenHaluttuTyyppi = ammatillisenHuomioitavaOpiskeluoikeudenTyyppi,
         suorituksenHaluttuTyyppi = ammatillisenSuorituksenTyyppi,
         hakemus = hakemus)
-      tutkintoJsonitHuomioimattaValmistumisenTakarajaa.zipWithIndex.map { case (tutkintoJson, indeksi) =>
+      tutkintoJsonitHuomioimattaValmistumisenTakarajaa.
+        sortBy(päätasonSuorituksenVahvistusPvm). // TODO : Olisi fiksua siirtyä yksilöimään tutkinnot esim oidin eikä indeksin perusteella.
+        zipWithIndex.map { case (tutkintoJson, indeksi) =>
         val päätasonSuoritus = TutkintoLinssit.suoritukset.json.getAll(tutkintoJson).headOption
         val tutkinto = Tutkinto(
           indeksi,

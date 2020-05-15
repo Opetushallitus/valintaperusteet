@@ -1,0 +1,4054 @@
+[
+  {
+    "oid": "1.2.246.562.15.4763894763",
+    "versionumero": 8,
+    "aikaleima": "2020-04-23T15:32:33.360205",
+    "lähdejärjestelmänId": {
+      "id": "473844",
+      "lähdejärjestelmä": {
+        "koodiarvo": "primus",
+        "nimi": {
+          "fi": "primus"
+        },
+        "koodistoUri": "lahdejarjestelma",
+        "koodistoVersio": 1
+      }
+    },
+    "oppilaitos": {
+      "oid": "1.2.246.562.10.43837448383",
+      "oppilaitosnumero": {
+        "koodiarvo": "32342",
+        "nimi": {
+          "fi": "Haapakorsun oppilaitos",
+          "sv": "Haapakorsun oppilaitos",
+          "en": "Haapakorsun oppilaitos"
+        },
+        "lyhytNimi": {
+          "fi": "Haapakorsun oppilaitos",
+          "sv": "Haapakorsun oppilaitos",
+          "en": "Haapakorsun oppilaitos"
+        },
+        "koodistoUri": "oppilaitosnumero",
+        "koodistoVersio": 1
+      },
+      "nimi": {
+        "fi": "Haapakorsun oppilaitos",
+        "sv": "Haapakorsun oppilaitos",
+        "en": "Haapakorsun oppilaitos"
+      },
+      "kotipaikka": {
+        "koodiarvo": "323",
+        "nimi": {
+          "fi": "Haapakorsu",
+          "sv": "Haapakorsu"
+        },
+        "koodistoUri": "kunta",
+        "koodistoVersio": 2
+      }
+    },
+    "koulutustoimija": {
+      "oid": "1.2.246.562.10.48442622063",
+      "nimi": {
+        "fi": "Haapakorsun koulutuskuntayhtymä Korsula"
+      },
+      "yTunnus": "4287328-1",
+      "kotipaikka": {
+        "koodiarvo": "323",
+        "nimi": {
+          "fi": "Haapakorsu",
+          "sv": "Haapakorsu"
+        },
+        "koodistoUri": "kunta",
+        "koodistoVersio": 2
+      }
+    },
+    "arvioituPäättymispäivä": "2019-12-31",
+    "ostettu": false,
+    "tila": {
+      "opiskeluoikeusjaksot": [
+        {
+          "alku": "2018-02-26",
+          "tila": {
+            "koodiarvo": "lasna",
+            "nimi": {
+              "fi": "Läsnä",
+              "sv": "Närvarande",
+              "en": "Present"
+            },
+            "koodistoUri": "koskiopiskeluoikeudentila",
+            "koodistoVersio": 1
+          },
+          "opintojenRahoitus": {
+            "koodiarvo": "1",
+            "nimi": {
+              "fi": "Valtionosuusrahoitteinen koulutus",
+              "sv": "Statsandelsfinansierad utbildning"
+            },
+            "koodistoUri": "opintojenrahoitus",
+            "koodistoVersio": 1
+          }
+        },
+        {
+          "alku": "2020-12-19",
+          "tila": {
+            "koodiarvo": "valmistunut",
+            "nimi": {
+              "fi": "Valmistunut",
+              "sv": "Utexaminerad",
+              "en": "Graduated"
+            },
+            "koodistoUri": "koskiopiskeluoikeudentila",
+            "koodistoVersio": 1
+          },
+          "opintojenRahoitus": {
+            "koodiarvo": "1",
+            "nimi": {
+              "fi": "Valtionosuusrahoitteinen koulutus",
+              "sv": "Statsandelsfinansierad utbildning"
+            },
+            "koodistoUri": "opintojenrahoitus",
+            "koodistoVersio": 1
+          }
+        }
+      ]
+    },
+    "suoritukset": [
+      {
+        "koulutusmoduuli": {
+          "tunniste": {
+            "koodiarvo": "352903",
+            "nimi": {
+              "fi": "Teknisen suunnittelun perustutkinto",
+              "sv": "Grundexamen i teknisk planering",
+              "en": "Vocational qualification in Technical Design"
+            },
+            "lyhytNimi": {
+              "fi": "Teknisen suunnittelun perustutkinto",
+              "sv": "Grundexamen i teknisk planering",
+              "en": "Vocational qualification in Technical Design"
+            },
+            "koodistoUri": "koulutus",
+            "koodistoVersio": 12
+          },
+          "perusteenDiaarinumero": "OPH-2534-2017",
+          "perusteenNimi": {
+            "fi": "Teknisen suunnittelun perustutkinto",
+            "sv": "Grundexamen i teknisk planering",
+            "en": "Vocational Qualification in Technical Design"
+          },
+          "koulutustyyppi": {
+            "koodiarvo": "1",
+            "nimi": {
+              "fi": "Ammatillinen perustutkinto",
+              "sv": "Yrkesinriktad grundexamen",
+              "en": "Vocational upper secondary qualification"
+            },
+            "lyhytNimi": {
+              "fi": "Ammatillinen perustutkinto",
+              "sv": "Yrkesinriktad grundexamen"
+            },
+            "koodistoUri": "koulutustyyppi",
+            "koodistoVersio": 2
+          }
+        },
+        "suoritustapa": {
+          "koodiarvo": "reformi",
+          "nimi": {
+            "fi": "Reformin mukainen näyttö",
+            "sv": "Reform"
+          },
+          "lyhytNimi": {
+            "fi": "Reformi"
+          },
+          "koodistoUri": "ammatillisentutkinnonsuoritustapa",
+          "koodistoVersio": 1
+        },
+        "toimipiste": {
+          "oid": "1.2.246.562.10.43837448383",
+          "oppilaitosnumero": {
+            "koodiarvo": "32342",
+            "nimi": {
+              "fi": "Haapakorsun oppilaitos",
+              "sv": "Haapakorsun oppilaitos",
+              "en": "Haapakorsun oppilaitos"
+            },
+            "lyhytNimi": {
+              "fi": "Haapakorsun oppilaitos",
+              "sv": "Haapakorsun oppilaitos",
+              "en": "Haapakorsun oppilaitos"
+            },
+            "koodistoUri": "oppilaitosnumero",
+            "koodistoVersio": 1
+          },
+          "nimi": {
+            "fi": "Haapakorsun oppilaitos",
+            "sv": "Haapakorsun oppilaitos",
+            "en": "Haapakorsun oppilaitos"
+          },
+          "kotipaikka": {
+            "koodiarvo": "323",
+            "nimi": {
+              "fi": "Haapakorsu",
+              "sv": "Haapakorsu"
+            },
+            "koodistoUri": "kunta",
+            "koodistoVersio": 2
+          }
+        },
+        "alkamispäivä": "2018-02-26",
+        "vahvistus": {
+          "päivä": "2020-12-19",
+          "paikkakunta": {
+            "koodiarvo": "323",
+            "nimi": {
+              "fi": "Haapakorsu",
+              "sv": "Haapakorsu"
+            },
+            "koodistoUri": "kunta",
+            "koodistoVersio": 2
+          },
+          "myöntäjäOrganisaatio": {
+            "oid": "1.2.246.562.10.43837448383",
+            "oppilaitosnumero": {
+              "koodiarvo": "32342",
+              "nimi": {
+                "fi": "Haapakorsun oppilaitos",
+                "sv": "Haapakorsun oppilaitos",
+                "en": "Haapakorsun oppilaitos"
+              },
+              "lyhytNimi": {
+                "fi": "Haapakorsun oppilaitos",
+                "sv": "Haapakorsun oppilaitos",
+                "en": "Haapakorsun oppilaitos"
+              },
+              "koodistoUri": "oppilaitosnumero",
+              "koodistoVersio": 1
+            },
+            "nimi": {
+              "fi": "Haapakorsun oppilaitos",
+              "sv": "Haapakorsun oppilaitos",
+              "en": "Haapakorsun oppilaitos"
+            },
+            "kotipaikka": {
+              "koodiarvo": "323",
+              "nimi": {
+                "fi": "Haapakorsu",
+                "sv": "Haapakorsu"
+              },
+              "koodistoUri": "kunta",
+              "koodistoVersio": 2
+            }
+          },
+          "myöntäjäHenkilöt": [
+            {
+              "nimi": "Teacher Tobias",
+              "titteli": {
+                "fi": "rehtori"
+              },
+              "organisaatio": {
+                "oid": "1.2.246.562.10.43837448383",
+                "oppilaitosnumero": {
+                  "koodiarvo": "32342",
+                  "nimi": {
+                    "fi": "Haapakorsun oppilaitos",
+                    "sv": "Haapakorsun oppilaitos",
+                    "en": "Haapakorsun oppilaitos"
+                  },
+                  "lyhytNimi": {
+                    "fi": "Haapakorsun oppilaitos",
+                    "sv": "Haapakorsun oppilaitos",
+                    "en": "Haapakorsun oppilaitos"
+                  },
+                  "koodistoUri": "oppilaitosnumero",
+                  "koodistoVersio": 1
+                },
+                "nimi": {
+                  "fi": "Haapakorsun oppilaitos",
+                  "sv": "Haapakorsun oppilaitos",
+                  "en": "Haapakorsun oppilaitos"
+                },
+                "kotipaikka": {
+                  "koodiarvo": "323",
+                  "nimi": {
+                    "fi": "Haapakorsu",
+                    "sv": "Haapakorsu"
+                  },
+                  "koodistoUri": "kunta",
+                  "koodistoVersio": 2
+                }
+              }
+            }
+          ]
+        },
+        "suorituskieli": {
+          "koodiarvo": "FI",
+          "nimi": {
+            "fi": "suomi",
+            "sv": "finska",
+            "en": "Finnish"
+          },
+          "lyhytNimi": {
+            "fi": "suomi",
+            "sv": "finska",
+            "en": "Finnish"
+          },
+          "koodistoUri": "kieli",
+          "koodistoVersio": 1
+        },
+        "järjestämismuodot": [
+          {
+            "alku": "2018-02-26",
+            "loppu": "2019-12-31",
+            "järjestämismuoto": {
+              "tunniste": {
+                "koodiarvo": "20",
+                "nimi": {
+                  "fi": "Koulutuksen järjestäminen oppisopimuskoulutuksena",
+                  "sv": "Att ordna utbildningen som läroavtalsutbildning"
+                },
+                "koodistoUri": "jarjestamismuoto",
+                "koodistoVersio": 1
+              },
+              "oppisopimus": {
+                "työnantaja": {
+                  "nimi": {
+                    "fi": "Oy Harjoittelumesta Ab"
+                  },
+                  "yTunnus": "4244343-2"
+                }
+              }
+            }
+          }
+        ],
+        "osaamisenHankkimistavat": [
+          {
+            "alku": "2018-02-24",
+            "loppu": "2019-12-30",
+            "osaamisenHankkimistapa": {
+              "tunniste": {
+                "koodiarvo": "oppisopimus",
+                "nimi": {
+                  "fi": "Oppisopimus",
+                  "sv": "Läroavtalsutbildning"
+                },
+                "koodistoUri": "osaamisenhankkimistapa",
+                "koodistoVersio": 1
+              },
+              "oppisopimus": {
+                "työnantaja": {
+                  "nimi": {
+                    "fi": "Oy Harjoittelumesta Ab"
+                  },
+                  "yTunnus": "4244343-2"
+                }
+              }
+            }
+          }
+        ],
+        "osasuoritukset": [],
+        "tyyppi": {
+          "koodiarvo": "ammatillinentutkinto",
+          "nimi": {
+            "fi": "Ammatillinen tutkinto",
+            "sv": "Yrkesinriktad examen",
+            "en": "Vocational education  qualification"
+          },
+          "koodistoUri": "suorituksentyyppi",
+          "koodistoVersio": 1
+        }
+      }
+    ],
+    "lisätiedot": {
+      "oikeusMaksuttomaanAsuntolapaikkaan": false,
+      "henkilöstökoulutus": false,
+      "koulutusvienti": false
+    },
+    "tyyppi": {
+      "koodiarvo": "ammatillinenkoulutus",
+      "nimi": {
+        "fi": "Ammatillinen koulutus",
+        "sv": "Yrkesutbildning"
+      },
+      "lyhytNimi": {
+        "fi": "Ammatillinen koulutus"
+      },
+      "koodistoUri": "opiskeluoikeudentyyppi",
+      "koodistoVersio": 1
+    },
+    "alkamispäivä": "2018-02-26",
+    "päättymispäivä": "2020-12-19"
+  },
+  {
+    "oid": "1.2.246.562.15.47384784383",
+    "versionumero": 13,
+    "aikaleima": "2020-04-29T10:13:51.529566",
+    "lähdejärjestelmänId": {
+      "id": "87436",
+      "lähdejärjestelmä": {
+        "koodiarvo": "primus",
+        "nimi": {
+          "fi": "primus"
+        },
+        "koodistoUri": "lahdejarjestelma",
+        "koodistoVersio": 1
+      }
+    },
+    "oppilaitos": {
+      "oid": "1.2.246.562.10.43434434344",
+      "oppilaitosnumero": {
+        "koodiarvo": "43433",
+        "nimi": {
+          "fi": "Kuusikoulutus Oy",
+          "sv": "Kuusikoulutus Oy",
+          "en": "Kuusikoulutus Oy"
+        },
+        "lyhytNimi": {
+          "fi": "Kuusikoulutus Oy",
+          "sv": "Kuusikoulutus Oy",
+          "en": "Kuusikoulutus Oy"
+        },
+        "koodistoUri": "oppilaitosnumero",
+        "koodistoVersio": 1
+      },
+      "nimi": {
+        "fi": "Kuusikoulutus Oy",
+        "sv": "Kuusikoulutus Oy",
+        "en": "Kuusikoulutus Oy"
+      },
+      "kotipaikka": {
+        "koodiarvo": "434",
+        "nimi": {
+          "fi": "Kuusiaava",
+          "sv": "Trädgräns"
+        },
+        "koodistoUri": "kunta",
+        "koodistoVersio": 2
+      }
+    },
+    "koulutustoimija": {
+      "oid": "1.2.246.562.10.33076507145",
+      "nimi": {
+        "fi": "Kuusikoulutus Oy"
+      },
+      "yTunnus": "2250205-2",
+      "kotipaikka": {
+        "koodiarvo": "434",
+        "nimi": {
+          "fi": "Kuusiaava",
+          "sv": "Trädgräns"
+        },
+        "koodistoUri": "kunta",
+        "koodistoVersio": 2
+      }
+    },
+    "sisältyyOpiskeluoikeuteen": {
+      "oppilaitos": {
+        "oid": "1.2.246.562.10.43837448383",
+        "oppilaitosnumero": {
+          "koodiarvo": "32342",
+          "nimi": {
+            "fi": "Haapakorsun oppilaitos",
+            "sv": "Haapakorsun oppilaitos",
+            "en": "Haapakorsun oppilaitos"
+          },
+          "lyhytNimi": {
+            "fi": "Haapakorsun oppilaitos",
+            "sv": "Haapakorsun oppilaitos",
+            "en": "Haapakorsun oppilaitos"
+          },
+          "koodistoUri": "oppilaitosnumero",
+          "koodistoVersio": 1
+        },
+        "nimi": {
+          "fi": "Haapakorsun oppilaitos",
+          "sv": "Haapakorsun oppilaitos",
+          "en": "Haapakorsun oppilaitos"
+        },
+        "kotipaikka": {
+          "koodiarvo": "323",
+          "nimi": {
+            "fi": "Haapakorsu",
+            "sv": "Haapakorsu"
+          },
+          "koodistoUri": "kunta",
+          "koodistoVersio": 2
+        }
+      },
+      "oid": "1.2.246.562.15.42458517937"
+    },
+    "arvioituPäättymispäivä": "2019-12-31",
+    "ostettu": false,
+    "tila": {
+      "opiskeluoikeusjaksot": [
+        {
+          "alku": "2018-02-26",
+          "tila": {
+            "koodiarvo": "lasna",
+            "nimi": {
+              "fi": "Läsnä",
+              "sv": "Närvarande",
+              "en": "Present"
+            },
+            "koodistoUri": "koskiopiskeluoikeudentila",
+            "koodistoVersio": 1
+          },
+          "opintojenRahoitus": {
+            "koodiarvo": "6",
+            "nimi": {
+              "fi": "Muuta kautta rahoitettu",
+              "sv": "Finansierad på annat sätt"
+            },
+            "koodistoUri": "opintojenrahoitus",
+            "koodistoVersio": 1
+          }
+        },
+        {
+          "alku": "2019-12-19",
+          "tila": {
+            "koodiarvo": "valmistunut",
+            "nimi": {
+              "fi": "Valmistunut",
+              "sv": "Utexaminerad",
+              "en": "Graduated"
+            },
+            "koodistoUri": "koskiopiskeluoikeudentila",
+            "koodistoVersio": 1
+          },
+          "opintojenRahoitus": {
+            "koodiarvo": "6",
+            "nimi": {
+              "fi": "Muuta kautta rahoitettu",
+              "sv": "Finansierad på annat sätt"
+            },
+            "koodistoUri": "opintojenrahoitus",
+            "koodistoVersio": 1
+          }
+        }
+      ]
+    },
+    "suoritukset": [
+      {
+        "koulutusmoduuli": {
+          "tunniste": {
+            "koodiarvo": "352903",
+            "nimi": {
+              "fi": "Teknisen suunnittelun perustutkinto",
+              "sv": "Grundexamen i teknisk planering",
+              "en": "Vocational qualification in Technical Design"
+            },
+            "lyhytNimi": {
+              "fi": "Teknisen suunnittelun perustutkinto",
+              "sv": "Grundexamen i teknisk planering",
+              "en": "Vocational qualification in Technical Design"
+            },
+            "koodistoUri": "koulutus",
+            "koodistoVersio": 12
+          },
+          "perusteenDiaarinumero": "OPH-2534-2017",
+          "perusteenNimi": {
+            "fi": "Teknisen suunnittelun perustutkinto",
+            "sv": "Grundexamen i teknisk planering",
+            "en": "Vocational Qualification in Technical Design"
+          },
+          "koulutustyyppi": {
+            "koodiarvo": "1",
+            "nimi": {
+              "fi": "Ammatillinen perustutkinto",
+              "sv": "Yrkesinriktad grundexamen",
+              "en": "Vocational upper secondary qualification"
+            },
+            "lyhytNimi": {
+              "fi": "Ammatillinen perustutkinto",
+              "sv": "Yrkesinriktad grundexamen"
+            },
+            "koodistoUri": "koulutustyyppi",
+            "koodistoVersio": 2
+          }
+        },
+        "suoritustapa": {
+          "koodiarvo": "reformi",
+          "nimi": {
+            "fi": "Reformin mukainen näyttö",
+            "sv": "Reform"
+          },
+          "lyhytNimi": {
+            "fi": "Reformi"
+          },
+          "koodistoUri": "ammatillisentutkinnonsuoritustapa",
+          "koodistoVersio": 1
+        },
+        "tutkintonimike": [
+          {
+            "koodiarvo": "10058",
+            "nimi": {
+              "fi": "Suunnitteluassistentti",
+              "sv": "Planeringsassistent"
+            },
+            "lyhytNimi": {
+              "fi": "Suunnitteluassistentti",
+              "sv": "Planeringsassistent"
+            },
+            "koodistoUri": "tutkintonimikkeet",
+            "koodistoVersio": 2
+          }
+        ],
+        "toimipiste": {
+          "oid": "1.2.246.562.10.49159480752",
+          "nimi": {
+            "fi": "Kuusikoulutus Oy, Kuusiaava, Käpykuja 3-5"
+          },
+          "kotipaikka": {
+            "koodiarvo": "434",
+            "nimi": {
+              "fi": "Kuusiaava",
+              "sv": "Trädgräns"
+            },
+            "koodistoUri": "kunta",
+            "koodistoVersio": 2
+          }
+        },
+        "alkamispäivä": "2018-02-26",
+        "vahvistus": {
+          "päivä": "2019-12-19",
+          "paikkakunta": {
+            "koodiarvo": "434",
+            "nimi": {
+              "fi": "Kuusiaava",
+              "sv": "Trädgräns"
+            },
+            "koodistoUri": "kunta",
+            "koodistoVersio": 2
+          },
+          "myöntäjäOrganisaatio": {
+            "oid": "1.2.246.562.10.43434434344",
+            "oppilaitosnumero": {
+              "koodiarvo": "43433",
+              "nimi": {
+                "fi": "Kuusikoulutus Oy",
+                "sv": "Kuusikoulutus Oy",
+                "en": "Kuusikoulutus Oy"
+              },
+              "lyhytNimi": {
+                "fi": "Kuusikoulutus Oy",
+                "sv": "Kuusikoulutus Oy",
+                "en": "Kuusikoulutus Oy"
+              },
+              "koodistoUri": "oppilaitosnumero",
+              "koodistoVersio": 1
+            },
+            "nimi": {
+              "fi": "Kuusikoulutus Oy",
+              "sv": "Kuusikoulutus Oy",
+              "en": "Kuusikoulutus Oy"
+            },
+            "kotipaikka": {
+              "koodiarvo": "434",
+              "nimi": {
+                "fi": "Kuusiaava",
+                "sv": "Trädgräns"
+              },
+              "koodistoUri": "kunta",
+              "koodistoVersio": 2
+            }
+          },
+          "myöntäjäHenkilöt": [
+            {
+              "nimi": "Rector Roger",
+              "titteli": {
+                "fi": "rehtori"
+              },
+              "organisaatio": {
+                "oid": "1.2.246.562.10.43434434344",
+                "oppilaitosnumero": {
+                  "koodiarvo": "43433",
+                  "nimi": {
+                    "fi": "Kuusikoulutus Oy",
+                    "sv": "Kuusikoulutus Oy",
+                    "en": "Kuusikoulutus Oy"
+                  },
+                  "lyhytNimi": {
+                    "fi": "Kuusikoulutus Oy",
+                    "sv": "Kuusikoulutus Oy",
+                    "en": "Kuusikoulutus Oy"
+                  },
+                  "koodistoUri": "oppilaitosnumero",
+                  "koodistoVersio": 1
+                },
+                "nimi": {
+                  "fi": "Kuusikoulutus Oy",
+                  "sv": "Kuusikoulutus Oy",
+                  "en": "Kuusikoulutus Oy"
+                },
+                "kotipaikka": {
+                  "koodiarvo": "434",
+                  "nimi": {
+                    "fi": "Kuusiaava",
+                    "sv": "Trädgräns"
+                  },
+                  "koodistoUri": "kunta",
+                  "koodistoVersio": 2
+                }
+              }
+            }
+          ]
+        },
+        "suorituskieli": {
+          "koodiarvo": "FI",
+          "nimi": {
+            "fi": "suomi",
+            "sv": "finska",
+            "en": "Finnish"
+          },
+          "lyhytNimi": {
+            "fi": "suomi",
+            "sv": "finska",
+            "en": "Finnish"
+          },
+          "koodistoUri": "kieli",
+          "koodistoVersio": 1
+        },
+        "osasuoritukset": [
+          {
+            "koulutusmoduuli": {
+              "tunniste": {
+                "koodiarvo": "105845",
+                "nimi": {
+                  "fi": "Suunnitteluprojektissa toimiminen"
+                },
+                "lyhytNimi": {
+                  "fi": "Suunnitteluprojektissa toimiminen"
+                },
+                "koodistoUri": "tutkinnonosat",
+                "koodistoVersio": 2
+              },
+              "pakollinen": true,
+              "laajuus": {
+                "arvo": 45,
+                "yksikkö": {
+                  "koodiarvo": "6",
+                  "nimi": {
+                    "fi": "osaamispistettä",
+                    "sv": "kompetenspoäng",
+                    "en": "ECVET competence points"
+                  },
+                  "lyhytNimi": {
+                    "fi": "osp",
+                    "sv": "kp",
+                    "en": "competence points"
+                  },
+                  "koodistoUri": "opintojenlaajuusyksikko",
+                  "koodistoVersio": 1
+                }
+              }
+            },
+            "tutkinnonOsanRyhmä": {
+              "koodiarvo": "1",
+              "nimi": {
+                "fi": "Ammatilliset tutkinnon osat",
+                "sv": "Yrkesinriktade examensdelar"
+              },
+              "koodistoUri": "ammatillisentutkinnonosanryhma",
+              "koodistoVersio": 1
+            },
+            "toimipiste": {
+              "oid": "1.2.246.562.10.49159480752",
+              "nimi": {
+                "fi": "Kuusikoulutus Oy, Kuusiaava, Käpykuja 3-5"
+              },
+              "kotipaikka": {
+                "koodiarvo": "434",
+                "nimi": {
+                  "fi": "Kuusiaava",
+                  "sv": "Trädgräns"
+                },
+                "koodistoUri": "kunta",
+                "koodistoVersio": 2
+              }
+            },
+            "arviointi": [
+              {
+                "arvosana": {
+                  "koodiarvo": "4",
+                  "nimi": {
+                    "fi": "4"
+                  },
+                  "lyhytNimi": {
+                    "fi": "4"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinen15",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2019-12-16",
+                "arvioitsijat": [
+                  {
+                    "nimi": "Oppivainen Frank"
+                  }
+                ],
+                "hyväksytty": true
+              }
+            ],
+            "vahvistus": {
+              "päivä": "2019-12-16",
+              "paikkakunta": {
+                "koodiarvo": "434",
+                "nimi": {
+                  "fi": "Kuusiaava",
+                  "sv": "Trädgräns"
+                },
+                "koodistoUri": "kunta",
+                "koodistoVersio": 2
+              },
+              "myöntäjäOrganisaatio": {
+                "oid": "1.2.246.562.10.43434434344",
+                "oppilaitosnumero": {
+                  "koodiarvo": "43433",
+                  "nimi": {
+                    "fi": "Kuusikoulutus Oy",
+                    "sv": "Kuusikoulutus Oy",
+                    "en": "Kuusikoulutus Oy"
+                  },
+                  "lyhytNimi": {
+                    "fi": "Kuusikoulutus Oy",
+                    "sv": "Kuusikoulutus Oy",
+                    "en": "Kuusikoulutus Oy"
+                  },
+                  "koodistoUri": "oppilaitosnumero",
+                  "koodistoVersio": 1
+                },
+                "nimi": {
+                  "fi": "Kuusikoulutus Oy",
+                  "sv": "Kuusikoulutus Oy",
+                  "en": "Kuusikoulutus Oy"
+                },
+                "kotipaikka": {
+                  "koodiarvo": "434",
+                  "nimi": {
+                    "fi": "Kuusiaava",
+                    "sv": "Trädgräns"
+                  },
+                  "koodistoUri": "kunta",
+                  "koodistoVersio": 2
+                }
+              },
+              "myöntäjäHenkilöt": [
+                {
+                  "nimi": "Rector Roger",
+                  "titteli": {
+                    "fi": "rehtori"
+                  },
+                  "organisaatio": {
+                    "oid": "1.2.246.562.10.43434434344",
+                    "oppilaitosnumero": {
+                      "koodiarvo": "43433",
+                      "nimi": {
+                        "fi": "Kuusikoulutus Oy",
+                        "sv": "Kuusikoulutus Oy",
+                        "en": "Kuusikoulutus Oy"
+                      },
+                      "lyhytNimi": {
+                        "fi": "Kuusikoulutus Oy",
+                        "sv": "Kuusikoulutus Oy",
+                        "en": "Kuusikoulutus Oy"
+                      },
+                      "koodistoUri": "oppilaitosnumero",
+                      "koodistoVersio": 1
+                    },
+                    "nimi": {
+                      "fi": "Kuusikoulutus Oy",
+                      "sv": "Kuusikoulutus Oy",
+                      "en": "Kuusikoulutus Oy"
+                    },
+                    "kotipaikka": {
+                      "koodiarvo": "434",
+                      "nimi": {
+                        "fi": "Kuusiaava",
+                        "sv": "Trädgräns"
+                      },
+                      "koodistoUri": "kunta",
+                      "koodistoVersio": 2
+                    }
+                  }
+                }
+              ]
+            },
+            "suorituskieli": {
+              "koodiarvo": "FI",
+              "nimi": {
+                "fi": "suomi",
+                "sv": "finska",
+                "en": "Finnish"
+              },
+              "lyhytNimi": {
+                "fi": "suomi",
+                "sv": "finska",
+                "en": "Finnish"
+              },
+              "koodistoUri": "kieli",
+              "koodistoVersio": 1
+            },
+            "näyttö": {
+              "kuvaus": {
+                "fi": "Useita Oy Harjoittelumesta Ab:n Haapakorsun norsutehtaalle tuotettuja innovatiivisia projekteja."
+              },
+              "suorituspaikka": {
+                "tunniste": {
+                  "koodiarvo": "1",
+                  "nimi": {
+                    "fi": "työpaikka",
+                    "sv": "arbetsplats"
+                  },
+                  "koodistoUri": "ammatillisennaytonsuorituspaikka",
+                  "koodistoVersio": 1
+                },
+                "kuvaus": {
+                  "fi": "Oy Harjoittelumesta Ab, Haapakorsu"
+                }
+              },
+              "suoritusaika": {
+                "alku": "2019-06-03",
+                "loppu": "2019-12-16"
+              },
+              "työssäoppimisenYhteydessä": false,
+              "arviointi": {
+                "arvosana": {
+                  "koodiarvo": "3",
+                  "nimi": {
+                    "fi": "3"
+                  },
+                  "lyhytNimi": {
+                    "fi": "3"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinen15",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2019-12-16",
+                "arvioitsijat": [
+                  {
+                    "nimi": "Oppivainen Frank",
+                    "ntm": true
+                  },
+                  {
+                    "nimi": "Esimerkki Erik",
+                    "ntm": false
+                  }
+                ],
+                "arvioinnistaPäättäneet": [
+                  {
+                    "koodiarvo": "1",
+                    "nimi": {
+                      "fi": "Opettaja",
+                      "sv": "Lärare"
+                    },
+                    "koodistoUri": "ammatillisennaytonarvioinnistapaattaneet",
+                    "koodistoVersio": 1
+                  },
+                  {
+                    "koodiarvo": "3",
+                    "nimi": {
+                      "fi": "Työnantaja/Työelämän edustaja",
+                      "sv": "Arbetsgivare/Företrädare för arbetslivet"
+                    },
+                    "koodistoUri": "ammatillisennaytonarvioinnistapaattaneet",
+                    "koodistoVersio": 1
+                  }
+                ],
+                "hyväksytty": true
+              },
+              "haluaaTodistuksen": false
+            },
+            "tyyppi": {
+              "koodiarvo": "ammatillisentutkinnonosa",
+              "nimi": {
+                "fi": "Ammatillisen tutkinnon osa",
+                "sv": "Yrkesexamensdel",
+                "en": "A vocational education qualification unit"
+              },
+              "koodistoUri": "suorituksentyyppi",
+              "koodistoVersio": 1
+            }
+          },
+          {
+            "koulutusmoduuli": {
+              "tunniste": {
+                "koodiarvo": "105847",
+                "nimi": {
+                  "fi": "Teollisuuden suunnittelussa toimiminen"
+                },
+                "lyhytNimi": {
+                  "fi": "Teollisuuden suunnittelussa toimiminen"
+                },
+                "koodistoUri": "tutkinnonosat",
+                "koodistoVersio": 2
+              },
+              "pakollinen": false,
+              "laajuus": {
+                "arvo": 45,
+                "yksikkö": {
+                  "koodiarvo": "6",
+                  "nimi": {
+                    "fi": "osaamispistettä",
+                    "sv": "kompetenspoäng",
+                    "en": "ECVET competence points"
+                  },
+                  "lyhytNimi": {
+                    "fi": "osp",
+                    "sv": "kp",
+                    "en": "competence points"
+                  },
+                  "koodistoUri": "opintojenlaajuusyksikko",
+                  "koodistoVersio": 1
+                }
+              }
+            },
+            "tutkinnonOsanRyhmä": {
+              "koodiarvo": "1",
+              "nimi": {
+                "fi": "Ammatilliset tutkinnon osat",
+                "sv": "Yrkesinriktade examensdelar"
+              },
+              "koodistoUri": "ammatillisentutkinnonosanryhma",
+              "koodistoVersio": 1
+            },
+            "toimipiste": {
+              "oid": "1.2.246.562.10.49159480752",
+              "nimi": {
+                "fi": "Kuusikoulutus Oy, Kuusiaava, Käpykuja 3-5"
+              },
+              "kotipaikka": {
+                "koodiarvo": "434",
+                "nimi": {
+                  "fi": "Kuusiaava",
+                  "sv": "Trädgräns"
+                },
+                "koodistoUri": "kunta",
+                "koodistoVersio": 2
+              }
+            },
+            "arviointi": [
+              {
+                "arvosana": {
+                  "koodiarvo": "2",
+                  "nimi": {
+                    "fi": "2"
+                  },
+                  "lyhytNimi": {
+                    "fi": "2"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinen15",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2019-12-16",
+                "arvioitsijat": [
+                  {
+                    "nimi": "Oppivainen Frank"
+                  }
+                ],
+                "hyväksytty": true
+              }
+            ],
+            "vahvistus": {
+              "päivä": "2019-12-16",
+              "paikkakunta": {
+                "koodiarvo": "434",
+                "nimi": {
+                  "fi": "Kuusiaava",
+                  "sv": "Trädgräns"
+                },
+                "koodistoUri": "kunta",
+                "koodistoVersio": 2
+              },
+              "myöntäjäOrganisaatio": {
+                "oid": "1.2.246.562.10.43434434344",
+                "oppilaitosnumero": {
+                  "koodiarvo": "43433",
+                  "nimi": {
+                    "fi": "Kuusikoulutus Oy",
+                    "sv": "Kuusikoulutus Oy",
+                    "en": "Kuusikoulutus Oy"
+                  },
+                  "lyhytNimi": {
+                    "fi": "Kuusikoulutus Oy",
+                    "sv": "Kuusikoulutus Oy",
+                    "en": "Kuusikoulutus Oy"
+                  },
+                  "koodistoUri": "oppilaitosnumero",
+                  "koodistoVersio": 1
+                },
+                "nimi": {
+                  "fi": "Kuusikoulutus Oy",
+                  "sv": "Kuusikoulutus Oy",
+                  "en": "Kuusikoulutus Oy"
+                },
+                "kotipaikka": {
+                  "koodiarvo": "434",
+                  "nimi": {
+                    "fi": "Kuusiaava",
+                    "sv": "Trädgräns"
+                  },
+                  "koodistoUri": "kunta",
+                  "koodistoVersio": 2
+                }
+              },
+              "myöntäjäHenkilöt": [
+                {
+                  "nimi": "Rector Roger",
+                  "titteli": {
+                    "fi": "rehtori"
+                  },
+                  "organisaatio": {
+                    "oid": "1.2.246.562.10.43434434344",
+                    "oppilaitosnumero": {
+                      "koodiarvo": "43433",
+                      "nimi": {
+                        "fi": "Kuusikoulutus Oy",
+                        "sv": "Kuusikoulutus Oy",
+                        "en": "Kuusikoulutus Oy"
+                      },
+                      "lyhytNimi": {
+                        "fi": "Kuusikoulutus Oy",
+                        "sv": "Kuusikoulutus Oy",
+                        "en": "Kuusikoulutus Oy"
+                      },
+                      "koodistoUri": "oppilaitosnumero",
+                      "koodistoVersio": 1
+                    },
+                    "nimi": {
+                      "fi": "Kuusikoulutus Oy",
+                      "sv": "Kuusikoulutus Oy",
+                      "en": "Kuusikoulutus Oy"
+                    },
+                    "kotipaikka": {
+                      "koodiarvo": "434",
+                      "nimi": {
+                        "fi": "Kuusiaava",
+                        "sv": "Trädgräns"
+                      },
+                      "koodistoUri": "kunta",
+                      "koodistoVersio": 2
+                    }
+                  }
+                }
+              ]
+            },
+            "suorituskieli": {
+              "koodiarvo": "FI",
+              "nimi": {
+                "fi": "suomi",
+                "sv": "finska",
+                "en": "Finnish"
+              },
+              "lyhytNimi": {
+                "fi": "suomi",
+                "sv": "finska",
+                "en": "Finnish"
+              },
+              "koodistoUri": "kieli",
+              "koodistoVersio": 1
+            },
+            "näyttö": {
+              "kuvaus": {
+                "fi": "Hyvää duunia kaikin puolin."
+              },
+              "suorituspaikka": {
+                "tunniste": {
+                  "koodiarvo": "1",
+                  "nimi": {
+                    "fi": "työpaikka",
+                    "sv": "arbetsplats"
+                  },
+                  "koodistoUri": "ammatillisennaytonsuorituspaikka",
+                  "koodistoVersio": 1
+                },
+                "kuvaus": {
+                  "fi": "Oy Harjoittelumesta Ab, Haapakorsu"
+                }
+              },
+              "suoritusaika": {
+                "alku": "2019-07-01",
+                "loppu": "2019-12-16"
+              },
+              "työssäoppimisenYhteydessä": false,
+              "arviointi": {
+                "arvosana": {
+                  "koodiarvo": "5",
+                  "nimi": {
+                    "fi": "5"
+                  },
+                  "lyhytNimi": {
+                    "fi": "5"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinen15",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2019-12-16",
+                "arvioitsijat": [
+                  {
+                    "nimi": "Oppivainen Frank",
+                    "ntm": true
+                  },
+                  {
+                    "nimi": "Esimerkki Erik",
+                    "ntm": false
+                  }
+                ],
+                "arvioinnistaPäättäneet": [
+                  {
+                    "koodiarvo": "1",
+                    "nimi": {
+                      "fi": "Opettaja",
+                      "sv": "Lärare"
+                    },
+                    "koodistoUri": "ammatillisennaytonarvioinnistapaattaneet",
+                    "koodistoVersio": 1
+                  },
+                  {
+                    "koodiarvo": "3",
+                    "nimi": {
+                      "fi": "Työnantaja/Työelämän edustaja",
+                      "sv": "Arbetsgivare/Företrädare för arbetslivet"
+                    },
+                    "koodistoUri": "ammatillisennaytonarvioinnistapaattaneet",
+                    "koodistoVersio": 1
+                  }
+                ],
+                "hyväksytty": true
+              },
+              "haluaaTodistuksen": false
+            },
+            "tyyppi": {
+              "koodiarvo": "ammatillisentutkinnonosa",
+              "nimi": {
+                "fi": "Ammatillisen tutkinnon osa",
+                "sv": "Yrkesexamensdel",
+                "en": "A vocational education qualification unit"
+              },
+              "koodistoUri": "suorituksentyyppi",
+              "koodistoVersio": 1
+            }
+          },
+          {
+            "koulutusmoduuli": {
+              "tunniste": {
+                "koodiarvo": "105857",
+                "nimi": {
+                  "fi": "3D-skannaaminen ja pistepilvien hyödyntäminen"
+                },
+                "lyhytNimi": {
+                  "fi": "3D-skannaaminen ja pistepilvien hyödyntäminen"
+                },
+                "koodistoUri": "tutkinnonosat",
+                "koodistoVersio": 2
+              },
+              "pakollinen": false,
+              "laajuus": {
+                "arvo": 15,
+                "yksikkö": {
+                  "koodiarvo": "6",
+                  "nimi": {
+                    "fi": "osaamispistettä",
+                    "sv": "kompetenspoäng",
+                    "en": "ECVET competence points"
+                  },
+                  "lyhytNimi": {
+                    "fi": "osp",
+                    "sv": "kp",
+                    "en": "competence points"
+                  },
+                  "koodistoUri": "opintojenlaajuusyksikko",
+                  "koodistoVersio": 1
+                }
+              }
+            },
+            "tutkinnonOsanRyhmä": {
+              "koodiarvo": "1",
+              "nimi": {
+                "fi": "Ammatilliset tutkinnon osat",
+                "sv": "Yrkesinriktade examensdelar"
+              },
+              "koodistoUri": "ammatillisentutkinnonosanryhma",
+              "koodistoVersio": 1
+            },
+            "toimipiste": {
+              "oid": "1.2.246.562.10.49159480752",
+              "nimi": {
+                "fi": "Kuusikoulutus Oy, Kuusiaava, Käpykuja 3-5"
+              },
+              "kotipaikka": {
+                "koodiarvo": "434",
+                "nimi": {
+                  "fi": "Kuusiaava",
+                  "sv": "Trädgräns"
+                },
+                "koodistoUri": "kunta",
+                "koodistoVersio": 2
+              }
+            },
+            "arviointi": [
+              {
+                "arvosana": {
+                  "koodiarvo": "5",
+                  "nimi": {
+                    "fi": "5"
+                  },
+                  "lyhytNimi": {
+                    "fi": "5"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinen15",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2019-12-16",
+                "arvioitsijat": [
+                  {
+                    "nimi": "Oppivainen Frank"
+                  }
+                ],
+                "hyväksytty": true
+              }
+            ],
+            "vahvistus": {
+              "päivä": "2019-12-16",
+              "paikkakunta": {
+                "koodiarvo": "434",
+                "nimi": {
+                  "fi": "Kuusiaava",
+                  "sv": "Trädgräns"
+                },
+                "koodistoUri": "kunta",
+                "koodistoVersio": 2
+              },
+              "myöntäjäOrganisaatio": {
+                "oid": "1.2.246.562.10.43434434344",
+                "oppilaitosnumero": {
+                  "koodiarvo": "43433",
+                  "nimi": {
+                    "fi": "Kuusikoulutus Oy",
+                    "sv": "Kuusikoulutus Oy",
+                    "en": "Kuusikoulutus Oy"
+                  },
+                  "lyhytNimi": {
+                    "fi": "Kuusikoulutus Oy",
+                    "sv": "Kuusikoulutus Oy",
+                    "en": "Kuusikoulutus Oy"
+                  },
+                  "koodistoUri": "oppilaitosnumero",
+                  "koodistoVersio": 1
+                },
+                "nimi": {
+                  "fi": "Kuusikoulutus Oy",
+                  "sv": "Kuusikoulutus Oy",
+                  "en": "Kuusikoulutus Oy"
+                },
+                "kotipaikka": {
+                  "koodiarvo": "434",
+                  "nimi": {
+                    "fi": "Kuusiaava",
+                    "sv": "Trädgräns"
+                  },
+                  "koodistoUri": "kunta",
+                  "koodistoVersio": 2
+                }
+              },
+              "myöntäjäHenkilöt": [
+                {
+                  "nimi": "Rector Roger",
+                  "titteli": {
+                    "fi": "rehtori"
+                  },
+                  "organisaatio": {
+                    "oid": "1.2.246.562.10.43434434344",
+                    "oppilaitosnumero": {
+                      "koodiarvo": "43433",
+                      "nimi": {
+                        "fi": "Kuusikoulutus Oy",
+                        "sv": "Kuusikoulutus Oy",
+                        "en": "Kuusikoulutus Oy"
+                      },
+                      "lyhytNimi": {
+                        "fi": "Kuusikoulutus Oy",
+                        "sv": "Kuusikoulutus Oy",
+                        "en": "Kuusikoulutus Oy"
+                      },
+                      "koodistoUri": "oppilaitosnumero",
+                      "koodistoVersio": 1
+                    },
+                    "nimi": {
+                      "fi": "Kuusikoulutus Oy",
+                      "sv": "Kuusikoulutus Oy",
+                      "en": "Kuusikoulutus Oy"
+                    },
+                    "kotipaikka": {
+                      "koodiarvo": "434",
+                      "nimi": {
+                        "fi": "Kuusiaava",
+                        "sv": "Trädgräns"
+                      },
+                      "koodistoUri": "kunta",
+                      "koodistoVersio": 2
+                    }
+                  }
+                }
+              ]
+            },
+            "suorituskieli": {
+              "koodiarvo": "FI",
+              "nimi": {
+                "fi": "suomi",
+                "sv": "finska",
+                "en": "Finnish"
+              },
+              "lyhytNimi": {
+                "fi": "suomi",
+                "sv": "finska",
+                "en": "Finnish"
+              },
+              "koodistoUri": "kieli",
+              "koodistoVersio": 1
+            },
+            "näyttö": {
+              "kuvaus": {
+                "fi": "3D-Skannaus varastorakennuksesta lujuuslaskentaa varten. Autodesk inventor ohjelmistolla teräsrakenne malli pistepilveen perustuen."
+              },
+              "suorituspaikka": {
+                "tunniste": {
+                  "koodiarvo": "1",
+                  "nimi": {
+                    "fi": "työpaikka",
+                    "sv": "arbetsplats"
+                  },
+                  "koodistoUri": "ammatillisennaytonsuorituspaikka",
+                  "koodistoVersio": 1
+                },
+                "kuvaus": {
+                  "fi": "Oy Harjoittelumesta Ab, Haapakorsu"
+                }
+              },
+              "suoritusaika": {
+                "alku": "2019-10-01",
+                "loppu": "2019-12-16"
+              },
+              "työssäoppimisenYhteydessä": false,
+              "arviointi": {
+                "arvosana": {
+                  "koodiarvo": "5",
+                  "nimi": {
+                    "fi": "5"
+                  },
+                  "lyhytNimi": {
+                    "fi": "5"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinen15",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2019-12-16",
+                "arvioitsijat": [
+                  {
+                    "nimi": "Oppivainen Frank",
+                    "ntm": true
+                  },
+                  {
+                    "nimi": "Esimerkki Erik",
+                    "ntm": false
+                  }
+                ],
+                "arvioinnistaPäättäneet": [
+                  {
+                    "koodiarvo": "1",
+                    "nimi": {
+                      "fi": "Opettaja",
+                      "sv": "Lärare"
+                    },
+                    "koodistoUri": "ammatillisennaytonarvioinnistapaattaneet",
+                    "koodistoVersio": 1
+                  },
+                  {
+                    "koodiarvo": "3",
+                    "nimi": {
+                      "fi": "Työnantaja/Työelämän edustaja",
+                      "sv": "Arbetsgivare/Företrädare för arbetslivet"
+                    },
+                    "koodistoUri": "ammatillisennaytonarvioinnistapaattaneet",
+                    "koodistoVersio": 1
+                  }
+                ],
+                "hyväksytty": true
+              },
+              "haluaaTodistuksen": false
+            },
+            "tyyppi": {
+              "koodiarvo": "ammatillisentutkinnonosa",
+              "nimi": {
+                "fi": "Ammatillisen tutkinnon osa",
+                "sv": "Yrkesexamensdel",
+                "en": "A vocational education qualification unit"
+              },
+              "koodistoUri": "suorituksentyyppi",
+              "koodistoVersio": 1
+            }
+          },
+          {
+            "koulutusmoduuli": {
+              "tunniste": {
+                "koodiarvo": "105858",
+                "nimi": {
+                  "fi": "3D-mallin muodostaminen ja tulostaminen"
+                },
+                "lyhytNimi": {
+                  "fi": "3D-mallin muodostaminen ja tulostaminen"
+                },
+                "koodistoUri": "tutkinnonosat",
+                "koodistoVersio": 2
+              },
+              "pakollinen": false,
+              "laajuus": {
+                "arvo": 15,
+                "yksikkö": {
+                  "koodiarvo": "6",
+                  "nimi": {
+                    "fi": "osaamispistettä",
+                    "sv": "kompetenspoäng",
+                    "en": "ECVET competence points"
+                  },
+                  "lyhytNimi": {
+                    "fi": "osp",
+                    "sv": "kp",
+                    "en": "competence points"
+                  },
+                  "koodistoUri": "opintojenlaajuusyksikko",
+                  "koodistoVersio": 1
+                }
+              }
+            },
+            "tutkinnonOsanRyhmä": {
+              "koodiarvo": "1",
+              "nimi": {
+                "fi": "Ammatilliset tutkinnon osat",
+                "sv": "Yrkesinriktade examensdelar"
+              },
+              "koodistoUri": "ammatillisentutkinnonosanryhma",
+              "koodistoVersio": 1
+            },
+            "toimipiste": {
+              "oid": "1.2.246.562.10.49159480752",
+              "nimi": {
+                "fi": "Kuusikoulutus Oy, Kuusiaava, Käpykuja 3-5"
+              },
+              "kotipaikka": {
+                "koodiarvo": "434",
+                "nimi": {
+                  "fi": "Kuusiaava",
+                  "sv": "Trädgräns"
+                },
+                "koodistoUri": "kunta",
+                "koodistoVersio": 2
+              }
+            },
+            "arviointi": [
+              {
+                "arvosana": {
+                  "koodiarvo": "4",
+                  "nimi": {
+                    "fi": "4"
+                  },
+                  "lyhytNimi": {
+                    "fi": "4"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinen15",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2019-12-16",
+                "arvioitsijat": [
+                  {
+                    "nimi": "Oppivainen Frank"
+                  }
+                ],
+                "hyväksytty": true
+              }
+            ],
+            "vahvistus": {
+              "päivä": "2019-12-16",
+              "paikkakunta": {
+                "koodiarvo": "434",
+                "nimi": {
+                  "fi": "Kuusiaava",
+                  "sv": "Trädgräns"
+                },
+                "koodistoUri": "kunta",
+                "koodistoVersio": 2
+              },
+              "myöntäjäOrganisaatio": {
+                "oid": "1.2.246.562.10.43434434344",
+                "oppilaitosnumero": {
+                  "koodiarvo": "43433",
+                  "nimi": {
+                    "fi": "Kuusikoulutus Oy",
+                    "sv": "Kuusikoulutus Oy",
+                    "en": "Kuusikoulutus Oy"
+                  },
+                  "lyhytNimi": {
+                    "fi": "Kuusikoulutus Oy",
+                    "sv": "Kuusikoulutus Oy",
+                    "en": "Kuusikoulutus Oy"
+                  },
+                  "koodistoUri": "oppilaitosnumero",
+                  "koodistoVersio": 1
+                },
+                "nimi": {
+                  "fi": "Kuusikoulutus Oy",
+                  "sv": "Kuusikoulutus Oy",
+                  "en": "Kuusikoulutus Oy"
+                },
+                "kotipaikka": {
+                  "koodiarvo": "434",
+                  "nimi": {
+                    "fi": "Kuusiaava",
+                    "sv": "Trädgräns"
+                  },
+                  "koodistoUri": "kunta",
+                  "koodistoVersio": 2
+                }
+              },
+              "myöntäjäHenkilöt": [
+                {
+                  "nimi": "Rector Roger",
+                  "titteli": {
+                    "fi": "rehtori"
+                  },
+                  "organisaatio": {
+                    "oid": "1.2.246.562.10.43434434344",
+                    "oppilaitosnumero": {
+                      "koodiarvo": "43433",
+                      "nimi": {
+                        "fi": "Kuusikoulutus Oy",
+                        "sv": "Kuusikoulutus Oy",
+                        "en": "Kuusikoulutus Oy"
+                      },
+                      "lyhytNimi": {
+                        "fi": "Kuusikoulutus Oy",
+                        "sv": "Kuusikoulutus Oy",
+                        "en": "Kuusikoulutus Oy"
+                      },
+                      "koodistoUri": "oppilaitosnumero",
+                      "koodistoVersio": 1
+                    },
+                    "nimi": {
+                      "fi": "Kuusikoulutus Oy",
+                      "sv": "Kuusikoulutus Oy",
+                      "en": "Kuusikoulutus Oy"
+                    },
+                    "kotipaikka": {
+                      "koodiarvo": "434",
+                      "nimi": {
+                        "fi": "Kuusiaava",
+                        "sv": "Trädgräns"
+                      },
+                      "koodistoUri": "kunta",
+                      "koodistoVersio": 2
+                    }
+                  }
+                }
+              ]
+            },
+            "suorituskieli": {
+              "koodiarvo": "FI",
+              "nimi": {
+                "fi": "suomi",
+                "sv": "finska",
+                "en": "Finnish"
+              },
+              "lyhytNimi": {
+                "fi": "suomi",
+                "sv": "finska",
+                "en": "Finnish"
+              },
+              "koodistoUri": "kieli",
+              "koodistoVersio": 1
+            },
+            "näyttö": {
+              "kuvaus": {
+                "fi": "3D -tulosteiden tekeminen"
+              },
+              "suorituspaikka": {
+                "tunniste": {
+                  "koodiarvo": "2",
+                  "nimi": {
+                    "fi": "oppilaitos",
+                    "sv": "läroanstalt"
+                  },
+                  "koodistoUri": "ammatillisennaytonsuorituspaikka",
+                  "koodistoVersio": 1
+                },
+                "kuvaus": {
+                  "fi": "Kuusikoulutus Oy, Käpykuja 3-5, Kuusiaava"
+                }
+              },
+              "suoritusaika": {
+                "alku": "2019-11-04",
+                "loppu": "2019-12-16"
+              },
+              "työssäoppimisenYhteydessä": false,
+              "arviointi": {
+                "arvosana": {
+                  "koodiarvo": "4",
+                  "nimi": {
+                    "fi": "4"
+                  },
+                  "lyhytNimi": {
+                    "fi": "4"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinen15",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2019-12-16",
+                "arvioitsijat": [
+                  {
+                    "nimi": "Oppivainen Frank",
+                    "ntm": true
+                  },
+                  {
+                    "nimi": "Teacher Tobias",
+                    "ntm": false
+                  }
+                ],
+                "arvioinnistaPäättäneet": [
+                  {
+                    "koodiarvo": "1",
+                    "nimi": {
+                      "fi": "Opettaja",
+                      "sv": "Lärare"
+                    },
+                    "koodistoUri": "ammatillisennaytonarvioinnistapaattaneet",
+                    "koodistoVersio": 1
+                  },
+                  {
+                    "koodiarvo": "3",
+                    "nimi": {
+                      "fi": "Työnantaja/Työelämän edustaja",
+                      "sv": "Arbetsgivare/Företrädare för arbetslivet"
+                    },
+                    "koodistoUri": "ammatillisennaytonarvioinnistapaattaneet",
+                    "koodistoVersio": 1
+                  }
+                ],
+                "hyväksytty": true
+              },
+              "haluaaTodistuksen": false
+            },
+            "tyyppi": {
+              "koodiarvo": "ammatillisentutkinnonosa",
+              "nimi": {
+                "fi": "Ammatillisen tutkinnon osa",
+                "sv": "Yrkesexamensdel",
+                "en": "A vocational education qualification unit"
+              },
+              "koodistoUri": "suorituksentyyppi",
+              "koodistoVersio": 1
+            }
+          },
+          {
+            "koulutusmoduuli": {
+              "tunniste": {
+                "koodiarvo": "105854",
+                "nimi": {
+                  "fi": "Tehdassuunnittelussa toimiminen"
+                },
+                "lyhytNimi": {
+                  "fi": "Tehdassuunnittelussa toimiminen"
+                },
+                "koodistoUri": "tutkinnonosat",
+                "koodistoVersio": 2
+              },
+              "pakollinen": false,
+              "laajuus": {
+                "arvo": 30,
+                "yksikkö": {
+                  "koodiarvo": "6",
+                  "nimi": {
+                    "fi": "osaamispistettä",
+                    "sv": "kompetenspoäng",
+                    "en": "ECVET competence points"
+                  },
+                  "lyhytNimi": {
+                    "fi": "osp",
+                    "sv": "kp",
+                    "en": "competence points"
+                  },
+                  "koodistoUri": "opintojenlaajuusyksikko",
+                  "koodistoVersio": 1
+                }
+              }
+            },
+            "tutkinnonOsanRyhmä": {
+              "koodiarvo": "1",
+              "nimi": {
+                "fi": "Ammatilliset tutkinnon osat",
+                "sv": "Yrkesinriktade examensdelar"
+              },
+              "koodistoUri": "ammatillisentutkinnonosanryhma",
+              "koodistoVersio": 1
+            },
+            "toimipiste": {
+              "oid": "1.2.246.562.10.49159480752",
+              "nimi": {
+                "fi": "Kuusikoulutus Oy, Kuusiaava, Käpykuja 3-5"
+              },
+              "kotipaikka": {
+                "koodiarvo": "434",
+                "nimi": {
+                  "fi": "Kuusiaava",
+                  "sv": "Trädgräns"
+                },
+                "koodistoUri": "kunta",
+                "koodistoVersio": 2
+              }
+            },
+            "arviointi": [
+              {
+                "arvosana": {
+                  "koodiarvo": "5",
+                  "nimi": {
+                    "fi": "5"
+                  },
+                  "lyhytNimi": {
+                    "fi": "5"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinen15",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2019-12-16",
+                "arvioitsijat": [
+                  {
+                    "nimi": "Oppivainen Frank"
+                  }
+                ],
+                "hyväksytty": true
+              }
+            ],
+            "vahvistus": {
+              "päivä": "2019-12-16",
+              "paikkakunta": {
+                "koodiarvo": "434",
+                "nimi": {
+                  "fi": "Kuusiaava",
+                  "sv": "Trädgräns"
+                },
+                "koodistoUri": "kunta",
+                "koodistoVersio": 2
+              },
+              "myöntäjäOrganisaatio": {
+                "oid": "1.2.246.562.10.43434434344",
+                "oppilaitosnumero": {
+                  "koodiarvo": "43433",
+                  "nimi": {
+                    "fi": "Kuusikoulutus Oy",
+                    "sv": "Kuusikoulutus Oy",
+                    "en": "Kuusikoulutus Oy"
+                  },
+                  "lyhytNimi": {
+                    "fi": "Kuusikoulutus Oy",
+                    "sv": "Kuusikoulutus Oy",
+                    "en": "Kuusikoulutus Oy"
+                  },
+                  "koodistoUri": "oppilaitosnumero",
+                  "koodistoVersio": 1
+                },
+                "nimi": {
+                  "fi": "Kuusikoulutus Oy",
+                  "sv": "Kuusikoulutus Oy",
+                  "en": "Kuusikoulutus Oy"
+                },
+                "kotipaikka": {
+                  "koodiarvo": "434",
+                  "nimi": {
+                    "fi": "Kuusiaava",
+                    "sv": "Trädgräns"
+                  },
+                  "koodistoUri": "kunta",
+                  "koodistoVersio": 2
+                }
+              },
+              "myöntäjäHenkilöt": [
+                {
+                  "nimi": "Rector Roger",
+                  "titteli": {
+                    "fi": "rehtori"
+                  },
+                  "organisaatio": {
+                    "oid": "1.2.246.562.10.43434434344",
+                    "oppilaitosnumero": {
+                      "koodiarvo": "43433",
+                      "nimi": {
+                        "fi": "Kuusikoulutus Oy",
+                        "sv": "Kuusikoulutus Oy",
+                        "en": "Kuusikoulutus Oy"
+                      },
+                      "lyhytNimi": {
+                        "fi": "Kuusikoulutus Oy",
+                        "sv": "Kuusikoulutus Oy",
+                        "en": "Kuusikoulutus Oy"
+                      },
+                      "koodistoUri": "oppilaitosnumero",
+                      "koodistoVersio": 1
+                    },
+                    "nimi": {
+                      "fi": "Kuusikoulutus Oy",
+                      "sv": "Kuusikoulutus Oy",
+                      "en": "Kuusikoulutus Oy"
+                    },
+                    "kotipaikka": {
+                      "koodiarvo": "434",
+                      "nimi": {
+                        "fi": "Kuusiaava",
+                        "sv": "Trädgräns"
+                      },
+                      "koodistoUri": "kunta",
+                      "koodistoVersio": 2
+                    }
+                  }
+                }
+              ]
+            },
+            "suorituskieli": {
+              "koodiarvo": "FI",
+              "nimi": {
+                "fi": "suomi",
+                "sv": "finska",
+                "en": "Finnish"
+              },
+              "lyhytNimi": {
+                "fi": "suomi",
+                "sv": "finska",
+                "en": "Finnish"
+              },
+              "koodistoUri": "kieli",
+              "koodistoVersio": 1
+            },
+            "näyttö": {
+              "kuvaus": {
+                "fi": "Teknisiä hommia Oy Harjoittelumesta Ab:ssa."
+              },
+              "suorituspaikka": {
+                "tunniste": {
+                  "koodiarvo": "1",
+                  "nimi": {
+                    "fi": "työpaikka",
+                    "sv": "arbetsplats"
+                  },
+                  "koodistoUri": "ammatillisennaytonsuorituspaikka",
+                  "koodistoVersio": 1
+                },
+                "kuvaus": {
+                  "fi": "Oy Harjoittelumesta Ab, Haapakorsu"
+                }
+              },
+              "suoritusaika": {
+                "alku": "2019-08-05",
+                "loppu": "2019-12-16"
+              },
+              "työssäoppimisenYhteydessä": false,
+              "arviointi": {
+                "arvosana": {
+                  "koodiarvo": "5",
+                  "nimi": {
+                    "fi": "5"
+                  },
+                  "lyhytNimi": {
+                    "fi": "5"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinen15",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2019-12-16",
+                "arvioitsijat": [
+                  {
+                    "nimi": "Oppivainen Frank",
+                    "ntm": true
+                  },
+                  {
+                    "nimi": "Esimerkki Erik",
+                    "ntm": false
+                  }
+                ],
+                "arvioinnistaPäättäneet": [
+                  {
+                    "koodiarvo": "1",
+                    "nimi": {
+                      "fi": "Opettaja",
+                      "sv": "Lärare"
+                    },
+                    "koodistoUri": "ammatillisennaytonarvioinnistapaattaneet",
+                    "koodistoVersio": 1
+                  },
+                  {
+                    "koodiarvo": "3",
+                    "nimi": {
+                      "fi": "Työnantaja/Työelämän edustaja",
+                      "sv": "Arbetsgivare/Företrädare för arbetslivet"
+                    },
+                    "koodistoUri": "ammatillisennaytonarvioinnistapaattaneet",
+                    "koodistoVersio": 1
+                  }
+                ],
+                "hyväksytty": true
+              },
+              "haluaaTodistuksen": false
+            },
+            "tyyppi": {
+              "koodiarvo": "ammatillisentutkinnonosa",
+              "nimi": {
+                "fi": "Ammatillisen tutkinnon osa",
+                "sv": "Yrkesexamensdel",
+                "en": "A vocational education qualification unit"
+              },
+              "koodistoUri": "suorituksentyyppi",
+              "koodistoVersio": 1
+            }
+          },
+          {
+            "koulutusmoduuli": {
+              "tunniste": {
+                "koodiarvo": "400012",
+                "nimi": {
+                  "fi": "Viestintä- ja vuorovaikutusosaaminen",
+                  "sv": "Kunnande i kommunikation och interaktion"
+                },
+                "lyhytNimi": {
+                  "fi": "Viestintä- ja vuorovaikutusosaaminen"
+                },
+                "koodistoUri": "tutkinnonosat",
+                "koodistoVersio": 2
+              },
+              "pakollinen": false,
+              "laajuus": {
+                "arvo": 17,
+                "yksikkö": {
+                  "koodiarvo": "6",
+                  "nimi": {
+                    "fi": "osaamispistettä",
+                    "sv": "kompetenspoäng",
+                    "en": "ECVET competence points"
+                  },
+                  "lyhytNimi": {
+                    "fi": "osp",
+                    "sv": "kp",
+                    "en": "competence points"
+                  },
+                  "koodistoUri": "opintojenlaajuusyksikko",
+                  "koodistoVersio": 1
+                }
+              }
+            },
+            "tutkinnonOsanRyhmä": {
+              "koodiarvo": "2",
+              "nimi": {
+                "fi": "Yhteiset tutkinnon osat",
+                "sv": "Gemensamma examensdelar"
+              },
+              "koodistoUri": "ammatillisentutkinnonosanryhma",
+              "koodistoVersio": 1
+            },
+            "toimipiste": {
+              "oid": "1.2.246.562.10.49159480752",
+              "nimi": {
+                "fi": "Kuusikoulutus Oy, Kuusiaava, Käpykuja 3-5"
+              },
+              "kotipaikka": {
+                "koodiarvo": "434",
+                "nimi": {
+                  "fi": "Kuusiaava",
+                  "sv": "Trädgräns"
+                },
+                "koodistoUri": "kunta",
+                "koodistoVersio": 2
+              }
+            },
+            "arviointi": [
+              {
+                "arvosana": {
+                  "koodiarvo": "Hyväksytty",
+                  "nimi": {
+                    "fi": "Hyväksytty",
+                    "sv": "Godkänd"
+                  },
+                  "lyhytNimi": {
+                    "fi": "Hyväksytty"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinenhyvaksyttyhylatty",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2019-12-19",
+                "arvioitsijat": [
+                  {
+                    "nimi": "Teacher Tobias"
+                  }
+                ],
+                "hyväksytty": true
+              }
+            ],
+            "vahvistus": {
+              "päivä": "2019-12-19",
+              "paikkakunta": {
+                "koodiarvo": "434",
+                "nimi": {
+                  "fi": "Kuusiaava",
+                  "sv": "Trädgräns"
+                },
+                "koodistoUri": "kunta",
+                "koodistoVersio": 2
+              },
+              "myöntäjäOrganisaatio": {
+                "oid": "1.2.246.562.10.43434434344",
+                "oppilaitosnumero": {
+                  "koodiarvo": "43433",
+                  "nimi": {
+                    "fi": "Kuusikoulutus Oy",
+                    "sv": "Kuusikoulutus Oy",
+                    "en": "Kuusikoulutus Oy"
+                  },
+                  "lyhytNimi": {
+                    "fi": "Kuusikoulutus Oy",
+                    "sv": "Kuusikoulutus Oy",
+                    "en": "Kuusikoulutus Oy"
+                  },
+                  "koodistoUri": "oppilaitosnumero",
+                  "koodistoVersio": 1
+                },
+                "nimi": {
+                  "fi": "Kuusikoulutus Oy",
+                  "sv": "Kuusikoulutus Oy",
+                  "en": "Kuusikoulutus Oy"
+                },
+                "kotipaikka": {
+                  "koodiarvo": "434",
+                  "nimi": {
+                    "fi": "Kuusiaava",
+                    "sv": "Trädgräns"
+                  },
+                  "koodistoUri": "kunta",
+                  "koodistoVersio": 2
+                }
+              },
+              "myöntäjäHenkilöt": [
+                {
+                  "nimi": "Rector Roger",
+                  "titteli": {
+                    "fi": "rehtori"
+                  },
+                  "organisaatio": {
+                    "oid": "1.2.246.562.10.43434434344",
+                    "oppilaitosnumero": {
+                      "koodiarvo": "43433",
+                      "nimi": {
+                        "fi": "Kuusikoulutus Oy",
+                        "sv": "Kuusikoulutus Oy",
+                        "en": "Kuusikoulutus Oy"
+                      },
+                      "lyhytNimi": {
+                        "fi": "Kuusikoulutus Oy",
+                        "sv": "Kuusikoulutus Oy",
+                        "en": "Kuusikoulutus Oy"
+                      },
+                      "koodistoUri": "oppilaitosnumero",
+                      "koodistoVersio": 1
+                    },
+                    "nimi": {
+                      "fi": "Kuusikoulutus Oy",
+                      "sv": "Kuusikoulutus Oy",
+                      "en": "Kuusikoulutus Oy"
+                    },
+                    "kotipaikka": {
+                      "koodiarvo": "434",
+                      "nimi": {
+                        "fi": "Kuusiaava",
+                        "sv": "Trädgräns"
+                      },
+                      "koodistoUri": "kunta",
+                      "koodistoVersio": 2
+                    }
+                  }
+                }
+              ]
+            },
+            "suorituskieli": {
+              "koodiarvo": "FI",
+              "nimi": {
+                "fi": "suomi",
+                "sv": "finska",
+                "en": "Finnish"
+              },
+              "lyhytNimi": {
+                "fi": "suomi",
+                "sv": "finska",
+                "en": "Finnish"
+              },
+              "koodistoUri": "kieli",
+              "koodistoVersio": 1
+            },
+            "osasuoritukset": [
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "VVAI",
+                    "nimi": {
+                      "fi": "Viestintä ja vuorovaikutus äidinkielellä",
+                      "sv": "Kommunikation och interaktion på modersmålet"
+                    },
+                    "lyhytNimi": {
+                      "fi": "viestintä ja vuorovaikutus äidinkielellä"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": {
+                    "arvo": 4,
+                    "yksikkö": {
+                      "koodiarvo": "6",
+                      "nimi": {
+                        "fi": "osaamispistettä",
+                        "sv": "kompetenspoäng",
+                        "en": "ECVET competence points"
+                      },
+                      "lyhytNimi": {
+                        "fi": "osp",
+                        "sv": "kp",
+                        "en": "competence points"
+                      },
+                      "koodistoUri": "opintojenlaajuusyksikko",
+                      "koodistoVersio": 1
+                    }
+                  }
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "3",
+                      "nimi": {
+                        "fi": "3"
+                      },
+                      "lyhytNimi": {
+                        "fi": "3"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-10-05",
+                    "hyväksytty": true
+                  }
+                ],
+                "tunnustettu": {
+                  "selite": {
+                    "fi": "Tutkinnon osan osa-alue on tunnustettu Sähkö- ja automaatiotekniikan perustutkinnosta (11.06.2009, 23/011/2009)."
+                  },
+                  "rahoituksenPiirissä": false
+                },
+                "suorituskieli": {
+                  "koodiarvo": "FI",
+                  "nimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "lyhytNimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "koodistoUri": "kieli",
+                  "koodistoVersio": 1
+                },
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "VVAI",
+                    "nimi": {
+                      "fi": "Viestintä ja vuorovaikutus äidinkielellä",
+                      "sv": "Kommunikation och interaktion på modersmålet"
+                    },
+                    "lyhytNimi": {
+                      "fi": "viestintä ja vuorovaikutus äidinkielellä"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": false,
+                  "laajuus": {
+                    "arvo": 2,
+                    "yksikkö": {
+                      "koodiarvo": "6",
+                      "nimi": {
+                        "fi": "osaamispistettä",
+                        "sv": "kompetenspoäng",
+                        "en": "ECVET competence points"
+                      },
+                      "lyhytNimi": {
+                        "fi": "osp",
+                        "sv": "kp",
+                        "en": "competence points"
+                      },
+                      "koodistoUri": "opintojenlaajuusyksikko",
+                      "koodistoVersio": 1
+                    }
+                  }
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "3",
+                      "nimi": {
+                        "fi": "3"
+                      },
+                      "lyhytNimi": {
+                        "fi": "3"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-10-05",
+                    "hyväksytty": true
+                  }
+                ],
+                "tunnustettu": {
+                  "selite": {
+                    "fi": "Tutkinnon osan osa-alue on tunnustettu Sähkö- ja automaatiotekniikan perustutkinnosta (11.06.2009, 23/011/2009)."
+                  },
+                  "rahoituksenPiirissä": false
+                },
+                "suorituskieli": {
+                  "koodiarvo": "FI",
+                  "nimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "lyhytNimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "koodistoUri": "kieli",
+                  "koodistoVersio": 1
+                },
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "VVTK",
+                    "nimi": {
+                      "fi": "Viestintä ja vuorovaikutus toisella kotimaisella kielellä",
+                      "sv": "Kommunikation och interaktion på det andra inhemska språket"
+                    },
+                    "lyhytNimi": {
+                      "fi": "viestintä ja vuorovaikutus toisella kotimaisella kielellä"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "kieli": {
+                    "koodiarvo": "SV",
+                    "nimi": {
+                      "fi": "ruotsi",
+                      "sv": "svenska",
+                      "en": "Swedish"
+                    },
+                    "lyhytNimi": {
+                      "fi": "ruotsi",
+                      "sv": "svenska",
+                      "en": "Swedish"
+                    },
+                    "koodistoUri": "kielivalikoima",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": {
+                    "arvo": 1,
+                    "yksikkö": {
+                      "koodiarvo": "6",
+                      "nimi": {
+                        "fi": "osaamispistettä",
+                        "sv": "kompetenspoäng",
+                        "en": "ECVET competence points"
+                      },
+                      "lyhytNimi": {
+                        "fi": "osp",
+                        "sv": "kp",
+                        "en": "competence points"
+                      },
+                      "koodistoUri": "opintojenlaajuusyksikko",
+                      "koodistoVersio": 1
+                    }
+                  }
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "3",
+                      "nimi": {
+                        "fi": "3"
+                      },
+                      "lyhytNimi": {
+                        "fi": "3"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-10-05",
+                    "hyväksytty": true
+                  }
+                ],
+                "tunnustettu": {
+                  "selite": {
+                    "fi": "Tutkinnon osan osa-alue on tunnustettu Sähkö- ja automaatiotekniikan perustutkinnosta (11.06.2009, 23/011/2009)."
+                  },
+                  "rahoituksenPiirissä": false
+                },
+                "suorituskieli": {
+                  "koodiarvo": "FI",
+                  "nimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "lyhytNimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "koodistoUri": "kieli",
+                  "koodistoVersio": 1
+                },
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "VVVK",
+                    "nimi": {
+                      "fi": "Viestintä ja vuorovaikutus vieraalla kielellä",
+                      "sv": "Kommunikation och interaktion på ett främmande språk"
+                    },
+                    "lyhytNimi": {
+                      "fi": "viestintä ja vuorovaikutus vieraalla kielellä"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "kieli": {
+                    "koodiarvo": "EN",
+                    "nimi": {
+                      "fi": "englanti",
+                      "sv": "engelska",
+                      "en": "English"
+                    },
+                    "lyhytNimi": {
+                      "fi": "englanti",
+                      "sv": "engelska",
+                      "en": "English"
+                    },
+                    "koodistoUri": "kielivalikoima",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": {
+                    "arvo": 3,
+                    "yksikkö": {
+                      "koodiarvo": "6",
+                      "nimi": {
+                        "fi": "osaamispistettä",
+                        "sv": "kompetenspoäng",
+                        "en": "ECVET competence points"
+                      },
+                      "lyhytNimi": {
+                        "fi": "osp",
+                        "sv": "kp",
+                        "en": "competence points"
+                      },
+                      "koodistoUri": "opintojenlaajuusyksikko",
+                      "koodistoVersio": 1
+                    }
+                  }
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "5",
+                      "nimi": {
+                        "fi": "5"
+                      },
+                      "lyhytNimi": {
+                        "fi": "5"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-10-05",
+                    "hyväksytty": true
+                  }
+                ],
+                "tunnustettu": {
+                  "selite": {
+                    "fi": "Tutkinnon osan osa-alue on tunnustettu Sähkö- ja automaatiotekniikan perustutkinnosta (11.06.2009, 23/011/2009)."
+                  },
+                  "rahoituksenPiirissä": false
+                },
+                "suorituskieli": {
+                  "koodiarvo": "FI",
+                  "nimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "lyhytNimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "koodistoUri": "kieli",
+                  "koodistoVersio": 1
+                },
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "VVTD",
+                    "nimi": {
+                      "fi": "Toiminta digitaalisessa ympäristössä",
+                      "sv": "Verksamhet i den digitala miljön"
+                    },
+                    "lyhytNimi": {
+                      "fi": "toiminta digitaalisessa ympäristössä"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": {
+                    "arvo": 2,
+                    "yksikkö": {
+                      "koodiarvo": "6",
+                      "nimi": {
+                        "fi": "osaamispistettä",
+                        "sv": "kompetenspoäng",
+                        "en": "ECVET competence points"
+                      },
+                      "lyhytNimi": {
+                        "fi": "osp",
+                        "sv": "kp",
+                        "en": "competence points"
+                      },
+                      "koodistoUri": "opintojenlaajuusyksikko",
+                      "koodistoVersio": 1
+                    }
+                  }
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "2",
+                      "nimi": {
+                        "fi": "2"
+                      },
+                      "lyhytNimi": {
+                        "fi": "2"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-12-19",
+                    "arvioitsijat": [
+                      {
+                        "nimi": "Teacher Tobias"
+                      }
+                    ],
+                    "hyväksytty": true
+                  }
+                ],
+                "suorituskieli": {
+                  "koodiarvo": "FI",
+                  "nimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "lyhytNimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "koodistoUri": "kieli",
+                  "koodistoVersio": 1
+                },
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "VVTL",
+                    "nimi": {
+                      "fi": "Taide ja luova ilmaisu",
+                      "sv": "Konst och kreativt uttryck"
+                    },
+                    "lyhytNimi": {
+                      "fi": "taide ja luova ilmaisu"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": {
+                    "arvo": 1,
+                    "yksikkö": {
+                      "koodiarvo": "6",
+                      "nimi": {
+                        "fi": "osaamispistettä",
+                        "sv": "kompetenspoäng",
+                        "en": "ECVET competence points"
+                      },
+                      "lyhytNimi": {
+                        "fi": "osp",
+                        "sv": "kp",
+                        "en": "competence points"
+                      },
+                      "koodistoUri": "opintojenlaajuusyksikko",
+                      "koodistoVersio": 1
+                    }
+                  }
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "5",
+                      "nimi": {
+                        "fi": "5"
+                      },
+                      "lyhytNimi": {
+                        "fi": "5"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-10-05",
+                    "hyväksytty": true
+                  }
+                ],
+                "tunnustettu": {
+                  "selite": {
+                    "fi": "Tutkinnon osan osa-alue on tunnustettu Sähkö- ja automaatiotekniikan perustutkinnosta (11.06.2009, 23/011/2009)."
+                  },
+                  "rahoituksenPiirissä": false
+                },
+                "suorituskieli": {
+                  "koodiarvo": "FI",
+                  "nimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "lyhytNimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "koodistoUri": "kieli",
+                  "koodistoVersio": 1
+                },
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "VVTL",
+                    "nimi": {
+                      "fi": "Taide ja luova ilmaisu",
+                      "sv": "Konst och kreativt uttryck"
+                    },
+                    "lyhytNimi": {
+                      "fi": "taide ja luova ilmaisu"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": false,
+                  "laajuus": {
+                    "arvo": 4,
+                    "yksikkö": {
+                      "koodiarvo": "6",
+                      "nimi": {
+                        "fi": "osaamispistettä",
+                        "sv": "kompetenspoäng",
+                        "en": "ECVET competence points"
+                      },
+                      "lyhytNimi": {
+                        "fi": "osp",
+                        "sv": "kp",
+                        "en": "competence points"
+                      },
+                      "koodistoUri": "opintojenlaajuusyksikko",
+                      "koodistoVersio": 1
+                    }
+                  }
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "3",
+                      "nimi": {
+                        "fi": "3"
+                      },
+                      "lyhytNimi": {
+                        "fi": "3"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-10-05",
+                    "hyväksytty": true
+                  }
+                ],
+                "tunnustettu": {
+                  "selite": {
+                    "fi": "Tutkinnon osan osa-alue on tunnustettu Sähkö- ja automaatiotekniikan perustutkinnosta (11.06.2009, 23/011/2009)."
+                  },
+                  "rahoituksenPiirissä": false
+                },
+                "suorituskieli": {
+                  "koodiarvo": "FI",
+                  "nimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "lyhytNimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "koodistoUri": "kieli",
+                  "koodistoVersio": 1
+                },
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              }
+            ],
+            "tyyppi": {
+              "koodiarvo": "ammatillisentutkinnonosa",
+              "nimi": {
+                "fi": "Ammatillisen tutkinnon osa",
+                "sv": "Yrkesexamensdel",
+                "en": "A vocational education qualification unit"
+              },
+              "koodistoUri": "suorituksentyyppi",
+              "koodistoVersio": 1
+            }
+          },
+          {
+            "koulutusmoduuli": {
+              "tunniste": {
+                "koodiarvo": "400013",
+                "nimi": {
+                  "fi": "Matemaattis-luonnontieteellinen osaaminen",
+                  "sv": "Kunnande i matematik och naturvetenskap"
+                },
+                "lyhytNimi": {
+                  "fi": "Matemaattis-luonnontieteellinen osaaminen"
+                },
+                "koodistoUri": "tutkinnonosat",
+                "koodistoVersio": 2
+              },
+              "pakollinen": false,
+              "laajuus": {
+                "arvo": 8,
+                "yksikkö": {
+                  "koodiarvo": "6",
+                  "nimi": {
+                    "fi": "osaamispistettä",
+                    "sv": "kompetenspoäng",
+                    "en": "ECVET competence points"
+                  },
+                  "lyhytNimi": {
+                    "fi": "osp",
+                    "sv": "kp",
+                    "en": "competence points"
+                  },
+                  "koodistoUri": "opintojenlaajuusyksikko",
+                  "koodistoVersio": 1
+                }
+              }
+            },
+            "tutkinnonOsanRyhmä": {
+              "koodiarvo": "2",
+              "nimi": {
+                "fi": "Yhteiset tutkinnon osat",
+                "sv": "Gemensamma examensdelar"
+              },
+              "koodistoUri": "ammatillisentutkinnonosanryhma",
+              "koodistoVersio": 1
+            },
+            "toimipiste": {
+              "oid": "1.2.246.562.10.49159480752",
+              "nimi": {
+                "fi": "Kuusikoulutus Oy, Kuusiaava, Käpykuja 3-5"
+              },
+              "kotipaikka": {
+                "koodiarvo": "434",
+                "nimi": {
+                  "fi": "Kuusiaava",
+                  "sv": "Trädgräns"
+                },
+                "koodistoUri": "kunta",
+                "koodistoVersio": 2
+              }
+            },
+            "arviointi": [
+              {
+                "arvosana": {
+                  "koodiarvo": "Hyväksytty",
+                  "nimi": {
+                    "fi": "Hyväksytty",
+                    "sv": "Godkänd"
+                  },
+                  "lyhytNimi": {
+                    "fi": "Hyväksytty"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinenhyvaksyttyhylatty",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2019-12-19",
+                "arvioitsijat": [
+                  {
+                    "nimi": "Teacher Tobias"
+                  }
+                ],
+                "hyväksytty": true
+              }
+            ],
+            "vahvistus": {
+              "päivä": "2019-12-19",
+              "paikkakunta": {
+                "koodiarvo": "434",
+                "nimi": {
+                  "fi": "Kuusiaava",
+                  "sv": "Trädgräns"
+                },
+                "koodistoUri": "kunta",
+                "koodistoVersio": 2
+              },
+              "myöntäjäOrganisaatio": {
+                "oid": "1.2.246.562.10.43434434344",
+                "oppilaitosnumero": {
+                  "koodiarvo": "43433",
+                  "nimi": {
+                    "fi": "Kuusikoulutus Oy",
+                    "sv": "Kuusikoulutus Oy",
+                    "en": "Kuusikoulutus Oy"
+                  },
+                  "lyhytNimi": {
+                    "fi": "Kuusikoulutus Oy",
+                    "sv": "Kuusikoulutus Oy",
+                    "en": "Kuusikoulutus Oy"
+                  },
+                  "koodistoUri": "oppilaitosnumero",
+                  "koodistoVersio": 1
+                },
+                "nimi": {
+                  "fi": "Kuusikoulutus Oy",
+                  "sv": "Kuusikoulutus Oy",
+                  "en": "Kuusikoulutus Oy"
+                },
+                "kotipaikka": {
+                  "koodiarvo": "434",
+                  "nimi": {
+                    "fi": "Kuusiaava",
+                    "sv": "Trädgräns"
+                  },
+                  "koodistoUri": "kunta",
+                  "koodistoVersio": 2
+                }
+              },
+              "myöntäjäHenkilöt": [
+                {
+                  "nimi": "Rector Roger",
+                  "titteli": {
+                    "fi": "rehtori"
+                  },
+                  "organisaatio": {
+                    "oid": "1.2.246.562.10.43434434344",
+                    "oppilaitosnumero": {
+                      "koodiarvo": "43433",
+                      "nimi": {
+                        "fi": "Kuusikoulutus Oy",
+                        "sv": "Kuusikoulutus Oy",
+                        "en": "Kuusikoulutus Oy"
+                      },
+                      "lyhytNimi": {
+                        "fi": "Kuusikoulutus Oy",
+                        "sv": "Kuusikoulutus Oy",
+                        "en": "Kuusikoulutus Oy"
+                      },
+                      "koodistoUri": "oppilaitosnumero",
+                      "koodistoVersio": 1
+                    },
+                    "nimi": {
+                      "fi": "Kuusikoulutus Oy",
+                      "sv": "Kuusikoulutus Oy",
+                      "en": "Kuusikoulutus Oy"
+                    },
+                    "kotipaikka": {
+                      "koodiarvo": "434",
+                      "nimi": {
+                        "fi": "Kuusiaava",
+                        "sv": "Trädgräns"
+                      },
+                      "koodistoUri": "kunta",
+                      "koodistoVersio": 2
+                    }
+                  }
+                }
+              ]
+            },
+            "suorituskieli": {
+              "koodiarvo": "FI",
+              "nimi": {
+                "fi": "suomi",
+                "sv": "finska",
+                "en": "Finnish"
+              },
+              "lyhytNimi": {
+                "fi": "suomi",
+                "sv": "finska",
+                "en": "Finnish"
+              },
+              "koodistoUri": "kieli",
+              "koodistoVersio": 1
+            },
+            "osasuoritukset": [
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "MLMA",
+                    "nimi": {
+                      "fi": "Matematiikka ja matematiikan soveltaminen",
+                      "sv": "Matematik och tillämpad matematik"
+                    },
+                    "lyhytNimi": {
+                      "fi": "matematiikka ja matematiikan soveltaminen"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": {
+                    "arvo": 4,
+                    "yksikkö": {
+                      "koodiarvo": "6",
+                      "nimi": {
+                        "fi": "osaamispistettä",
+                        "sv": "kompetenspoäng",
+                        "en": "ECVET competence points"
+                      },
+                      "lyhytNimi": {
+                        "fi": "osp",
+                        "sv": "kp",
+                        "en": "competence points"
+                      },
+                      "koodistoUri": "opintojenlaajuusyksikko",
+                      "koodistoVersio": 1
+                    }
+                  }
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "3",
+                      "nimi": {
+                        "fi": "3"
+                      },
+                      "lyhytNimi": {
+                        "fi": "3"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-10-05",
+                    "hyväksytty": true
+                  }
+                ],
+                "tunnustettu": {
+                  "selite": {
+                    "fi": "Tutkinnon osan osa-alue on tunnustettu Sähkö- ja automaatiotekniikan perustutkinnosta (11.06.2009, 23/011/2009)."
+                  },
+                  "rahoituksenPiirissä": false
+                },
+                "suorituskieli": {
+                  "koodiarvo": "FI",
+                  "nimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "lyhytNimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "koodistoUri": "kieli",
+                  "koodistoVersio": 1
+                },
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "MLFK",
+                    "nimi": {
+                      "fi": "Fysikaaliset ja kemialliset ilmiöt ja niiden soveltaminen",
+                      "sv": "Fysikaliska och kemiska fenomen och tillämpning av dem"
+                    },
+                    "lyhytNimi": {
+                      "fi": "fysikaaliset ja kemialliset ilmiöt ja niiden soveltaminen"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": {
+                    "arvo": 2,
+                    "yksikkö": {
+                      "koodiarvo": "6",
+                      "nimi": {
+                        "fi": "osaamispistettä",
+                        "sv": "kompetenspoäng",
+                        "en": "ECVET competence points"
+                      },
+                      "lyhytNimi": {
+                        "fi": "osp",
+                        "sv": "kp",
+                        "en": "competence points"
+                      },
+                      "koodistoUri": "opintojenlaajuusyksikko",
+                      "koodistoVersio": 1
+                    }
+                  }
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "3",
+                      "nimi": {
+                        "fi": "3"
+                      },
+                      "lyhytNimi": {
+                        "fi": "3"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-10-05",
+                    "hyväksytty": true
+                  }
+                ],
+                "tunnustettu": {
+                  "selite": {
+                    "fi": "Tutkinnon osan osa-alue on tunnustettu Sähkö- ja automaatiotekniikan perustutkinnosta (11.06.2009, 23/011/2009)."
+                  },
+                  "rahoituksenPiirissä": false
+                },
+                "suorituskieli": {
+                  "koodiarvo": "FI",
+                  "nimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "lyhytNimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "koodistoUri": "kieli",
+                  "koodistoVersio": 1
+                },
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "MLFK",
+                    "nimi": {
+                      "fi": "Fysikaaliset ja kemialliset ilmiöt ja niiden soveltaminen",
+                      "sv": "Fysikaliska och kemiska fenomen och tillämpning av dem"
+                    },
+                    "lyhytNimi": {
+                      "fi": "fysikaaliset ja kemialliset ilmiöt ja niiden soveltaminen"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": false,
+                  "laajuus": {
+                    "arvo": 2,
+                    "yksikkö": {
+                      "koodiarvo": "6",
+                      "nimi": {
+                        "fi": "osaamispistettä",
+                        "sv": "kompetenspoäng",
+                        "en": "ECVET competence points"
+                      },
+                      "lyhytNimi": {
+                        "fi": "osp",
+                        "sv": "kp",
+                        "en": "competence points"
+                      },
+                      "koodistoUri": "opintojenlaajuusyksikko",
+                      "koodistoVersio": 1
+                    }
+                  }
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "3",
+                      "nimi": {
+                        "fi": "3"
+                      },
+                      "lyhytNimi": {
+                        "fi": "3"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-10-05",
+                    "hyväksytty": true
+                  }
+                ],
+                "tunnustettu": {
+                  "selite": {
+                    "fi": "Tutkinnon osan osa-alue on tunnustettu Sähkö- ja automaatiotekniikan perustutkinnosta (11.06.2009, 23/011/2009)."
+                  },
+                  "rahoituksenPiirissä": false
+                },
+                "suorituskieli": {
+                  "koodiarvo": "FI",
+                  "nimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "lyhytNimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "koodistoUri": "kieli",
+                  "koodistoVersio": 1
+                },
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              }
+            ],
+            "tyyppi": {
+              "koodiarvo": "ammatillisentutkinnonosa",
+              "nimi": {
+                "fi": "Ammatillisen tutkinnon osa",
+                "sv": "Yrkesexamensdel",
+                "en": "A vocational education qualification unit"
+              },
+              "koodistoUri": "suorituksentyyppi",
+              "koodistoVersio": 1
+            }
+          },
+          {
+            "koulutusmoduuli": {
+              "tunniste": {
+                "koodiarvo": "400014",
+                "nimi": {
+                  "fi": "Yhteiskunta- ja työelämäosaaminen",
+                  "sv": "Kunnande om samhälle och arbetsliv"
+                },
+                "lyhytNimi": {
+                  "fi": "Yhteiskunta- ja työelämäosaaminen"
+                },
+                "koodistoUri": "tutkinnonosat",
+                "koodistoVersio": 2
+              },
+              "pakollinen": false,
+              "laajuus": {
+                "arvo": 10,
+                "yksikkö": {
+                  "koodiarvo": "6",
+                  "nimi": {
+                    "fi": "osaamispistettä",
+                    "sv": "kompetenspoäng",
+                    "en": "ECVET competence points"
+                  },
+                  "lyhytNimi": {
+                    "fi": "osp",
+                    "sv": "kp",
+                    "en": "competence points"
+                  },
+                  "koodistoUri": "opintojenlaajuusyksikko",
+                  "koodistoVersio": 1
+                }
+              }
+            },
+            "tutkinnonOsanRyhmä": {
+              "koodiarvo": "2",
+              "nimi": {
+                "fi": "Yhteiset tutkinnon osat",
+                "sv": "Gemensamma examensdelar"
+              },
+              "koodistoUri": "ammatillisentutkinnonosanryhma",
+              "koodistoVersio": 1
+            },
+            "toimipiste": {
+              "oid": "1.2.246.562.10.49159480752",
+              "nimi": {
+                "fi": "Kuusikoulutus Oy, Kuusiaava, Käpykuja 3-5"
+              },
+              "kotipaikka": {
+                "koodiarvo": "434",
+                "nimi": {
+                  "fi": "Kuusiaava",
+                  "sv": "Trädgräns"
+                },
+                "koodistoUri": "kunta",
+                "koodistoVersio": 2
+              }
+            },
+            "arviointi": [
+              {
+                "arvosana": {
+                  "koodiarvo": "Hyväksytty",
+                  "nimi": {
+                    "fi": "Hyväksytty",
+                    "sv": "Godkänd"
+                  },
+                  "lyhytNimi": {
+                    "fi": "Hyväksytty"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinenhyvaksyttyhylatty",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2019-12-19",
+                "arvioitsijat": [
+                  {
+                    "nimi": "Teacher Tobias"
+                  }
+                ],
+                "hyväksytty": true
+              }
+            ],
+            "vahvistus": {
+              "päivä": "2019-12-19",
+              "paikkakunta": {
+                "koodiarvo": "434",
+                "nimi": {
+                  "fi": "Kuusiaava",
+                  "sv": "Trädgräns"
+                },
+                "koodistoUri": "kunta",
+                "koodistoVersio": 2
+              },
+              "myöntäjäOrganisaatio": {
+                "oid": "1.2.246.562.10.43434434344",
+                "oppilaitosnumero": {
+                  "koodiarvo": "43433",
+                  "nimi": {
+                    "fi": "Kuusikoulutus Oy",
+                    "sv": "Kuusikoulutus Oy",
+                    "en": "Kuusikoulutus Oy"
+                  },
+                  "lyhytNimi": {
+                    "fi": "Kuusikoulutus Oy",
+                    "sv": "Kuusikoulutus Oy",
+                    "en": "Kuusikoulutus Oy"
+                  },
+                  "koodistoUri": "oppilaitosnumero",
+                  "koodistoVersio": 1
+                },
+                "nimi": {
+                  "fi": "Kuusikoulutus Oy",
+                  "sv": "Kuusikoulutus Oy",
+                  "en": "Kuusikoulutus Oy"
+                },
+                "kotipaikka": {
+                  "koodiarvo": "434",
+                  "nimi": {
+                    "fi": "Kuusiaava",
+                    "sv": "Trädgräns"
+                  },
+                  "koodistoUri": "kunta",
+                  "koodistoVersio": 2
+                }
+              },
+              "myöntäjäHenkilöt": [
+                {
+                  "nimi": "Rector Roger",
+                  "titteli": {
+                    "fi": "rehtori"
+                  },
+                  "organisaatio": {
+                    "oid": "1.2.246.562.10.43434434344",
+                    "oppilaitosnumero": {
+                      "koodiarvo": "43433",
+                      "nimi": {
+                        "fi": "Kuusikoulutus Oy",
+                        "sv": "Kuusikoulutus Oy",
+                        "en": "Kuusikoulutus Oy"
+                      },
+                      "lyhytNimi": {
+                        "fi": "Kuusikoulutus Oy",
+                        "sv": "Kuusikoulutus Oy",
+                        "en": "Kuusikoulutus Oy"
+                      },
+                      "koodistoUri": "oppilaitosnumero",
+                      "koodistoVersio": 1
+                    },
+                    "nimi": {
+                      "fi": "Kuusikoulutus Oy",
+                      "sv": "Kuusikoulutus Oy",
+                      "en": "Kuusikoulutus Oy"
+                    },
+                    "kotipaikka": {
+                      "koodiarvo": "434",
+                      "nimi": {
+                        "fi": "Kuusiaava",
+                        "sv": "Trädgräns"
+                      },
+                      "koodistoUri": "kunta",
+                      "koodistoVersio": 2
+                    }
+                  }
+                }
+              ]
+            },
+            "suorituskieli": {
+              "koodiarvo": "FI",
+              "nimi": {
+                "fi": "suomi",
+                "sv": "finska",
+                "en": "Finnish"
+              },
+              "lyhytNimi": {
+                "fi": "suomi",
+                "sv": "finska",
+                "en": "Finnish"
+              },
+              "koodistoUri": "kieli",
+              "koodistoVersio": 1
+            },
+            "osasuoritukset": [
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "YTYK",
+                    "nimi": {
+                      "fi": "Yhteiskunnassa ja kansalaisena toimiminen",
+                      "sv": "Att verka i samhället och som medborgare"
+                    },
+                    "lyhytNimi": {
+                      "fi": "yhteiskunnassa ja kansalaisena toimiminen"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": {
+                    "arvo": 2,
+                    "yksikkö": {
+                      "koodiarvo": "6",
+                      "nimi": {
+                        "fi": "osaamispistettä",
+                        "sv": "kompetenspoäng",
+                        "en": "ECVET competence points"
+                      },
+                      "lyhytNimi": {
+                        "fi": "osp",
+                        "sv": "kp",
+                        "en": "competence points"
+                      },
+                      "koodistoUri": "opintojenlaajuusyksikko",
+                      "koodistoVersio": 1
+                    }
+                  }
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "3",
+                      "nimi": {
+                        "fi": "3"
+                      },
+                      "lyhytNimi": {
+                        "fi": "3"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-12-19",
+                    "arvioitsijat": [
+                      {
+                        "nimi": "Teacher Tobias"
+                      }
+                    ],
+                    "hyväksytty": true
+                  }
+                ],
+                "suorituskieli": {
+                  "koodiarvo": "FI",
+                  "nimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "lyhytNimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "koodistoUri": "kieli",
+                  "koodistoVersio": 1
+                },
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "YTTT",
+                    "nimi": {
+                      "fi": "Työelämässä toimiminen",
+                      "sv": "Att verka i arbetslivet"
+                    },
+                    "lyhytNimi": {
+                      "fi": "työelämässä toimiminen"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": {
+                    "arvo": 2,
+                    "yksikkö": {
+                      "koodiarvo": "6",
+                      "nimi": {
+                        "fi": "osaamispistettä",
+                        "sv": "kompetenspoäng",
+                        "en": "ECVET competence points"
+                      },
+                      "lyhytNimi": {
+                        "fi": "osp",
+                        "sv": "kp",
+                        "en": "competence points"
+                      },
+                      "koodistoUri": "opintojenlaajuusyksikko",
+                      "koodistoVersio": 1
+                    }
+                  }
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "4",
+                      "nimi": {
+                        "fi": "4"
+                      },
+                      "lyhytNimi": {
+                        "fi": "4"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-12-19",
+                    "arvioitsijat": [
+                      {
+                        "nimi": "Teacher Tobias"
+                      }
+                    ],
+                    "hyväksytty": true
+                  }
+                ],
+                "suorituskieli": {
+                  "koodiarvo": "FI",
+                  "nimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "lyhytNimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "koodistoUri": "kieli",
+                  "koodistoVersio": 1
+                },
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "YTOU",
+                    "nimi": {
+                      "fi": "Opiskelu- ja urasuunnitteluvalmiudet",
+                      "sv": "Färdigheter i studie- och karriärplanering"
+                    },
+                    "lyhytNimi": {
+                      "fi": "opiskelu- ja urasuunnitteluvalmiudet"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": {
+                    "arvo": 1,
+                    "yksikkö": {
+                      "koodiarvo": "6",
+                      "nimi": {
+                        "fi": "osaamispistettä",
+                        "sv": "kompetenspoäng",
+                        "en": "ECVET competence points"
+                      },
+                      "lyhytNimi": {
+                        "fi": "osp",
+                        "sv": "kp",
+                        "en": "competence points"
+                      },
+                      "koodistoUri": "opintojenlaajuusyksikko",
+                      "koodistoVersio": 1
+                    }
+                  }
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "4",
+                      "nimi": {
+                        "fi": "4"
+                      },
+                      "lyhytNimi": {
+                        "fi": "4"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-12-03",
+                    "arvioitsijat": [
+                      {
+                        "nimi": "Teacher Tobias"
+                      }
+                    ],
+                    "hyväksytty": true
+                  }
+                ],
+                "suorituskieli": {
+                  "koodiarvo": "FI",
+                  "nimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "lyhytNimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "koodistoUri": "kieli",
+                  "koodistoVersio": 1
+                },
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "YTYY",
+                    "nimi": {
+                      "fi": "Yrittäjyys ja yrittäjämäinen toiminta",
+                      "sv": "Företagsamhet och företagarinriktad verksamhet"
+                    },
+                    "lyhytNimi": {
+                      "fi": "yrittäjyys ja yrittäjämäinen toiminta"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": {
+                    "arvo": 1,
+                    "yksikkö": {
+                      "koodiarvo": "6",
+                      "nimi": {
+                        "fi": "osaamispistettä",
+                        "sv": "kompetenspoäng",
+                        "en": "ECVET competence points"
+                      },
+                      "lyhytNimi": {
+                        "fi": "osp",
+                        "sv": "kp",
+                        "en": "competence points"
+                      },
+                      "koodistoUri": "opintojenlaajuusyksikko",
+                      "koodistoVersio": 1
+                    }
+                  }
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "5",
+                      "nimi": {
+                        "fi": "5"
+                      },
+                      "lyhytNimi": {
+                        "fi": "5"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-12-02",
+                    "arvioitsijat": [
+                      {
+                        "nimi": "Teacher Tobias"
+                      }
+                    ],
+                    "hyväksytty": true
+                  }
+                ],
+                "suorituskieli": {
+                  "koodiarvo": "FI",
+                  "nimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "lyhytNimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "koodistoUri": "kieli",
+                  "koodistoVersio": 1
+                },
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "TYT",
+                    "nimi": {
+                      "fi": "Työkyvyn ylläpitäminen, liikunta ja terveystieto",
+                      "sv": "Upprätthållande av arbetsförmåga, gymnastik och hälsokunskap"
+                    },
+                    "lyhytNimi": {
+                      "fi": "Työkyvyn ylläpitäminen, liikunta ja terveystieto"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": {
+                    "arvo": 2,
+                    "yksikkö": {
+                      "koodiarvo": "6",
+                      "nimi": {
+                        "fi": "osaamispistettä",
+                        "sv": "kompetenspoäng",
+                        "en": "ECVET competence points"
+                      },
+                      "lyhytNimi": {
+                        "fi": "osp",
+                        "sv": "kp",
+                        "en": "competence points"
+                      },
+                      "koodistoUri": "opintojenlaajuusyksikko",
+                      "koodistoVersio": 1
+                    }
+                  }
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "2",
+                      "nimi": {
+                        "fi": "2"
+                      },
+                      "lyhytNimi": {
+                        "fi": "2"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-10-05",
+                    "hyväksytty": true
+                  }
+                ],
+                "tunnustettu": {
+                  "selite": {
+                    "fi": "Tutkinnon osan osa-alue on tunnustettu Sähkö- ja automaatiotekniikan perustutkinnosta (11.06.2009, 23/011/2009)."
+                  },
+                  "rahoituksenPiirissä": false
+                },
+                "suorituskieli": {
+                  "koodiarvo": "FI",
+                  "nimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "lyhytNimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "koodistoUri": "kieli",
+                  "koodistoVersio": 1
+                },
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "TYT",
+                    "nimi": {
+                      "fi": "Työkyvyn ylläpitäminen, liikunta ja terveystieto",
+                      "sv": "Upprätthållande av arbetsförmåga, gymnastik och hälsokunskap"
+                    },
+                    "lyhytNimi": {
+                      "fi": "Työkyvyn ylläpitäminen, liikunta ja terveystieto"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": false,
+                  "laajuus": {
+                    "arvo": 1,
+                    "yksikkö": {
+                      "koodiarvo": "6",
+                      "nimi": {
+                        "fi": "osaamispistettä",
+                        "sv": "kompetenspoäng",
+                        "en": "ECVET competence points"
+                      },
+                      "lyhytNimi": {
+                        "fi": "osp",
+                        "sv": "kp",
+                        "en": "competence points"
+                      },
+                      "koodistoUri": "opintojenlaajuusyksikko",
+                      "koodistoVersio": 1
+                    }
+                  }
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "2",
+                      "nimi": {
+                        "fi": "2"
+                      },
+                      "lyhytNimi": {
+                        "fi": "2"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-10-05",
+                    "hyväksytty": true
+                  }
+                ],
+                "tunnustettu": {
+                  "selite": {
+                    "fi": "Tutkinnon osan osa-alue on tunnustettu Sähkö- ja automaatiotekniikan perustutkinnosta (11.06.2009, 23/011/2009)."
+                  },
+                  "rahoituksenPiirissä": false
+                },
+                "suorituskieli": {
+                  "koodiarvo": "FI",
+                  "nimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "lyhytNimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "koodistoUri": "kieli",
+                  "koodistoVersio": 1
+                },
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "YTKK",
+                    "nimi": {
+                      "fi": "Kestävän kehityksen edistäminen",
+                      "sv": "Främjande av hållbar utveckling"
+                    },
+                    "lyhytNimi": {
+                      "fi": "kestävän kehityksen edistäminen"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": {
+                    "arvo": 1,
+                    "yksikkö": {
+                      "koodiarvo": "6",
+                      "nimi": {
+                        "fi": "osaamispistettä",
+                        "sv": "kompetenspoäng",
+                        "en": "ECVET competence points"
+                      },
+                      "lyhytNimi": {
+                        "fi": "osp",
+                        "sv": "kp",
+                        "en": "competence points"
+                      },
+                      "koodistoUri": "opintojenlaajuusyksikko",
+                      "koodistoVersio": 1
+                    }
+                  }
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "3",
+                      "nimi": {
+                        "fi": "3"
+                      },
+                      "lyhytNimi": {
+                        "fi": "3"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-11-19",
+                    "arvioitsijat": [
+                      {
+                        "nimi": "Teacher Tobias"
+                      }
+                    ],
+                    "hyväksytty": true
+                  }
+                ],
+                "suorituskieli": {
+                  "koodiarvo": "FI",
+                  "nimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "lyhytNimi": {
+                    "fi": "suomi",
+                    "sv": "finska",
+                    "en": "Finnish"
+                  },
+                  "koodistoUri": "kieli",
+                  "koodistoVersio": 1
+                },
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              }
+            ],
+            "tyyppi": {
+              "koodiarvo": "ammatillisentutkinnonosa",
+              "nimi": {
+                "fi": "Ammatillisen tutkinnon osa",
+                "sv": "Yrkesexamensdel",
+                "en": "A vocational education qualification unit"
+              },
+              "koodistoUri": "suorituksentyyppi",
+              "koodistoVersio": 1
+            }
+          }
+        ],
+        "tyyppi": {
+          "koodiarvo": "ammatillinentutkinto",
+          "nimi": {
+            "fi": "Ammatillinen tutkinto",
+            "sv": "Yrkesinriktad examen",
+            "en": "Vocational education  qualification"
+          },
+          "koodistoUri": "suorituksentyyppi",
+          "koodistoVersio": 1
+        },
+        "keskiarvo": 4.66
+      }
+    ],
+    "lisätiedot": {
+      "oikeusMaksuttomaanAsuntolapaikkaan": false,
+      "henkilöstökoulutus": false,
+      "koulutusvienti": false
+    },
+    "tyyppi": {
+      "koodiarvo": "ammatillinenkoulutus",
+      "nimi": {
+        "fi": "Ammatillinen koulutus",
+        "sv": "Yrkesutbildning"
+      },
+      "lyhytNimi": {
+        "fi": "Ammatillinen koulutus"
+      },
+      "koodistoUri": "opiskeluoikeudentyyppi",
+      "koodistoVersio": 1
+    },
+    "alkamispäivä": "2018-02-26",
+    "päättymispäivä": "2019-12-19"
+  }
+]
