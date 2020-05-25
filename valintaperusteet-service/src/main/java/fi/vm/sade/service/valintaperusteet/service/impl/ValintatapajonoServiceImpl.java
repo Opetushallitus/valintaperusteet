@@ -288,16 +288,16 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
 
     @Override
     public Valintatapajono update(String oid, ValintatapajonoCreateDTO dto) {
-        Valintatapajono managedObject = haeValintatapajono(oid);
-        Valintatapajono konvertoitu = modelMapper.map(dto, Valintatapajono.class);
+        Valintatapajono nykyinenValintatapajono = haeValintatapajono(oid);
+        Valintatapajono tallennettavaValintatapajono = modelMapper.map(dto, Valintatapajono.class);
 
         //we must allow registry managers to set siirretaanSijoitteluun to any value at all times
         if(!isOPH()) {
             try {
                 if(vtsRestClient.isJonoSijoiteltu(oid)) {
-                    konvertoitu.setSiirretaanSijoitteluun(true);
+                    tallennettavaValintatapajono.setSiirretaanSijoitteluun(true);
                     dto.setSiirretaanSijoitteluun(true);
-                    managedObject.setSiirretaanSijoitteluun(true);
+                    nykyinenValintatapajono.setSiirretaanSijoitteluun(true);
                 }
             } catch (IOException e) {
                 LOGGER.error(String.format("Virhe tarkistaessa onko valintatapajonolle %s suoritettu sijoitteluajoa", oid), e);
@@ -305,25 +305,25 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
         }
 
         //jonon arvoa "eiLasketaPaivamaaranJalkeen" ei saa muokata ilman rekisterinpitäjän oikeuksia jos se on jo menneisyydessä.
-        Date oldEiLasketaJalkeen = managedObject.getEiLasketaPaivamaaranJalkeen();
-        Date newEiLasketaJalkeen = konvertoitu.getEiLasketaPaivamaaranJalkeen();
+        Date oldEiLasketaJalkeen = nykyinenValintatapajono.getEiLasketaPaivamaaranJalkeen();
+        Date newEiLasketaJalkeen = tallennettavaValintatapajono.getEiLasketaPaivamaaranJalkeen();
         if(!isOPH() && oldEiLasketaJalkeen != null) {
             LocalDate oldValueDate = oldEiLasketaJalkeen.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             if (oldValueDate.isBefore(LocalDate.now())) {
                 LOGGER.warn("Yritettiin päivittää jonon {} eiLasketaPaivamaaranJalkeen-arvoa {} ({}) -> {} ilman rekisterinpitäjän oikeuksia." +
                         " Pidetään vanha arvo.", oid, oldEiLasketaJalkeen, oldValueDate, newEiLasketaJalkeen);
-                konvertoitu.setEiLasketaPaivamaaranJalkeen(managedObject.getEiLasketaPaivamaaranJalkeen());
+                tallennettavaValintatapajono.setEiLasketaPaivamaaranJalkeen(nykyinenValintatapajono.getEiLasketaPaivamaaranJalkeen());
             }
         }
 
         checkTyyppiPakollisuus(dto);
         if (dto.getTayttojono() != null) {
             Valintatapajono tayttoJono = valintatapajonoDAO.readByOid(dto.getTayttojono());
-            konvertoitu.setVarasijanTayttojono(tayttoJono);
+            tallennettavaValintatapajono.setVarasijanTayttojono(tayttoJono);
         } else {
-            konvertoitu.setVarasijanTayttojono(null);
+            tallennettavaValintatapajono.setVarasijanTayttojono(null);
         }
-        return LinkitettavaJaKopioitavaUtil.paivita(managedObject, konvertoitu, kopioija);
+        return LinkitettavaJaKopioitavaUtil.paivita(nykyinenValintatapajono, tallennettavaValintatapajono, kopioija);
     }
 
     @Override
