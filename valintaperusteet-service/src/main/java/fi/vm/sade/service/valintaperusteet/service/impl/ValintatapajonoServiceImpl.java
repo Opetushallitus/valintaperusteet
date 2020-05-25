@@ -24,6 +24,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -305,10 +307,13 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
         //jonon arvoa "eiLasketaPaivamaaranJalkeen" ei saa muokata ilman rekisterinpitäjän oikeuksia jos se on jo menneisyydessä.
         Date oldEiLasketaJalkeen = managedObject.getEiLasketaPaivamaaranJalkeen();
         Date newEiLasketaJalkeen = konvertoitu.getEiLasketaPaivamaaranJalkeen();
-        if(!isOPH() && oldEiLasketaJalkeen != null && oldEiLasketaJalkeen.before(new Date(System.currentTimeMillis()))) {
-            LOGGER.warn("Yritettiin päivittää jonon {} eiLasketaPaivamaaranJalkeen-arvoa {} -> {} ilman rekisterinpitäjän oikeuksia." +
-                    " Pidetään vanha arvo.", oid, oldEiLasketaJalkeen, newEiLasketaJalkeen);
-            konvertoitu.setEiLasketaPaivamaaranJalkeen(managedObject.getEiLasketaPaivamaaranJalkeen());
+        if(!isOPH() && oldEiLasketaJalkeen != null) {
+            LocalDate oldValueDate = oldEiLasketaJalkeen.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            if (oldValueDate.isBefore(LocalDate.now())) {
+                LOGGER.warn("Yritettiin päivittää jonon {} eiLasketaPaivamaaranJalkeen-arvoa {} ({}) -> {} ilman rekisterinpitäjän oikeuksia." +
+                        " Pidetään vanha arvo.", oid, oldEiLasketaJalkeen, oldValueDate, newEiLasketaJalkeen);
+                konvertoitu.setEiLasketaPaivamaaranJalkeen(managedObject.getEiLasketaPaivamaaranJalkeen());
+            }
         }
 
         checkTyyppiPakollisuus(dto);
