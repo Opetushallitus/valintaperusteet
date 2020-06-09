@@ -45,95 +45,75 @@ public class HakijaryhmaValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Hakija
     @Override
     public List<HakijaryhmaValintatapajono> findByValintatapajono(String oid) {
         QHakijaryhmaValintatapajono hv = QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
-
         QHakijaryhma h = QHakijaryhma.hakijaryhma;
         QValintatapajono v = QValintatapajono.valintatapajono;
 
-        if (from(hv)
-                .leftJoin(hv.valintatapajono, v).fetch()
+        return from(hv)
+                .join(hv.valintatapajono, v).fetch()
+                .leftJoin(hv.hakijaryhma, h).fetch()
+                .leftJoin(h.jonot).fetch()
                 .leftJoin(v.hakijaryhmat).fetch()
-                .where(hv.valintatapajono.oid.eq(oid)).exists()) {
-            return from(hv).where(hv.valintatapajono.oid.eq(oid))
-                    .leftJoin(hv.hakijaryhma, h).fetch()
-                    .leftJoin(h.jonot).fetch()
-                    .leftJoin(hv.valintatapajono, v).fetch()
-                    .leftJoin(v.hakijaryhmat).fetch()
-                    .leftJoin(v.valinnanVaihe).fetch()
-                    .leftJoin(hv.master).fetch()
-                    .leftJoin(hv.edellinen).fetch()
-                    .leftJoin(hv.hakijaryhmatyyppikoodi).fetch()
-                    .listDistinct(hv);
-        }
-        return Lists.newArrayList();
+                .leftJoin(v.valinnanVaihe).fetch()
+                .leftJoin(hv.master).fetch()
+                .leftJoin(hv.edellinen).fetch()
+                .leftJoin(hv.hakijaryhmatyyppikoodi).fetch()
+                .where(v.oid.eq(oid))
+                .listDistinct(hv);
     }
 
     @Override
     public List<HakijaryhmaValintatapajono> findByValintatapajonos(List<String> oids) {
         QHakijaryhmaValintatapajono hv = QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
-
         QHakijaryhma h = QHakijaryhma.hakijaryhma;
         QValintatapajono v = QValintatapajono.valintatapajono;
 
-        if (from(hv)
-                .leftJoin(hv.valintatapajono, v).fetch()
+        return from(hv)
+                .join(hv.valintatapajono, v).fetch()
+                .leftJoin(hv.hakijaryhma, h).fetch()
+                .leftJoin(h.jonot).fetch()
                 .leftJoin(v.hakijaryhmat).fetch()
-                .where(hv.valintatapajono.oid.in(oids)).exists()) {
-            return from(hv).where(hv.valintatapajono.oid.in(oids))
-                    .leftJoin(hv.hakijaryhma, h).fetch()
-                    .leftJoin(h.jonot).fetch()
-                    .leftJoin(hv.valintatapajono, v).fetch()
-                    .leftJoin(v.hakijaryhmat).fetch()
-                    .leftJoin(v.valinnanVaihe).fetch()
-                    .leftJoin(hv.master).fetch()
-                    .leftJoin(hv.edellinen).fetch()
-                    .leftJoin(hv.hakijaryhmatyyppikoodi).fetch()
-                    .listDistinct(hv);
-        }
-        return Lists.newArrayList();
+                .leftJoin(v.valinnanVaihe).fetch()
+                .leftJoin(hv.master).fetch()
+                .leftJoin(hv.edellinen).fetch()
+                .leftJoin(hv.hakijaryhmatyyppikoodi).fetch()
+                .where(v.oid.in(oids))
+                .listDistinct(hv);
     }
 
     @Override
     public List<HakijaryhmaValintatapajono> findByHakukohde(String oid) {
         QHakijaryhmaValintatapajono hv = QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
-
         QHakijaryhma h = QHakijaryhma.hakijaryhma;
         QHakukohdeViite v = QHakukohdeViite.hakukohdeViite;
 
-        if (from(hv).join(hv.hakukohdeViite, v).fetch()
-                .where(v.oid.eq(oid)).exists()) {
-            return from(hv).where(hv.hakukohdeViite.oid.eq(oid))
-                    .leftJoin(hv.hakijaryhma, h).fetch()
-                    .leftJoin(h.jonot).fetch()
-                    .leftJoin(hv.hakukohdeViite, v).fetch()
-                    .leftJoin(v.hakijaryhmat).fetch()
-                    .leftJoin(hv.master).fetch()
-                    .leftJoin(hv.edellinen).fetch()
-                    .leftJoin(hv.hakijaryhmatyyppikoodi).fetch()
-                    .listDistinct(hv);
-        }
-        return Lists.newArrayList();
+        return from(hv)
+                .join(hv.hakukohdeViite, v).fetch()
+                .leftJoin(hv.hakijaryhma, h).fetch()
+                .leftJoin(h.jonot).fetch()
+                .leftJoin(v.hakijaryhmat).fetch()
+                .leftJoin(hv.master).fetch()
+                .leftJoin(hv.edellinen).fetch()
+                .leftJoin(hv.hakijaryhmatyyppikoodi).fetch()
+                .where(v.oid.eq(oid))
+                .listDistinct(hv);
     }
 
     @Override
     public List<HakijaryhmaValintatapajono> findByHakukohteet(Collection<String> oids) {
         QHakijaryhmaValintatapajono hv = QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
-
         QHakijaryhma h = QHakijaryhma.hakijaryhma;
         QHakukohdeViite v = QHakukohdeViite.hakukohdeViite;
 
-        if (from(hv).leftJoin(hv.hakukohdeViite, v).fetch()
-                .where(hv.hakukohdeViite.oid.in(oids)).exists()) {
-            return from(hv).where(hv.hakukohdeViite.oid.in(oids))
-                    .leftJoin(hv.hakijaryhma, h).fetch()
-                    .leftJoin(h.jonot).fetch()
-                    .leftJoin(hv.hakukohdeViite, v).fetch()
-                    .leftJoin(v.hakijaryhmat).fetch()
-                    .leftJoin(hv.master).fetch()
-                    .leftJoin(hv.edellinen).fetch()
-                    .leftJoin(hv.hakijaryhmatyyppikoodi).fetch()
-                    .listDistinct(hv);
-        }
-        return Lists.newArrayList();
+        return from(hv)
+                .join(hv.hakukohdeViite, v).fetch()
+                .leftJoin(hv.hakijaryhma, h).fetch()
+                .leftJoin(h.jonot).fetch()
+                .leftJoin(v.hakijaryhmat).fetch()
+                .leftJoin(hv.master).fetch()
+                .leftJoin(hv.edellinen).fetch()
+                .leftJoin(hv.hakijaryhmatyyppikoodi).fetch()
+                .where(v.oid.in(oids))
+                .listDistinct(hv);
     }
 
     @Override
