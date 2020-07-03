@@ -24,8 +24,14 @@ public class JarjestyskriteeriDAOImpl extends AbstractJpaDAOImpl<Jarjestyskritee
     @Override
     public List<Jarjestyskriteeri> findByJono(String oid) {
         QJarjestyskriteeri jk = QJarjestyskriteeri.jarjestyskriteeri;
-        return from(jk).leftJoin(jk.edellinen).fetch().leftJoin(jk.master).fetch().leftJoin(jk.laskentakaava).fetch()
-                .leftJoin(jk.valintatapajono).fetch().where(jk.valintatapajono.oid.eq(oid)).list(jk);
+        QValintatapajono j = QValintatapajono.valintatapajono;
+        return from(jk)
+                .join(jk.valintatapajono, j).fetch()
+                .leftJoin(jk.edellinen).fetch()
+                .leftJoin(jk.master).fetch()
+                .leftJoin(jk.laskentakaava).fetch()
+                .where(j.oid.eq(oid))
+                .list(jk);
     }
 
     @Override
@@ -34,10 +40,14 @@ public class JarjestyskriteeriDAOImpl extends AbstractJpaDAOImpl<Jarjestyskritee
         QValintatapajono vtj = QValintatapajono.valintatapajono;
         QValinnanVaihe vv = QValinnanVaihe.valinnanVaihe;
         QValintaryhma vr = QValintaryhma.valintaryhma;
-        QHakukohdeViite hkv1 = new QHakukohdeViite("hkv1");
-        return from(jk).leftJoin(jk.valintatapajono, vtj).leftJoin(vtj.valinnanVaihe, vv)
-                .leftJoin(vv.hakukohdeViite, hkv1).leftJoin(vv.valintaryhma, vr).where(hkv1.oid.eq(oid)).distinct()
-                .list(jk);
+        QHakukohdeViite hkv = QHakukohdeViite.hakukohdeViite;
+        return from(jk)
+                .join(jk.valintatapajono, vtj)
+                .join(vtj.valinnanVaihe, vv)
+                .join(vv.hakukohdeViite, hkv)
+                .leftJoin(vv.valintaryhma, vr)
+                .where(hkv.oid.eq(oid))
+                .listDistinct(jk);
     }
 
     @Override
@@ -59,9 +69,10 @@ public class JarjestyskriteeriDAOImpl extends AbstractJpaDAOImpl<Jarjestyskritee
     @Override
     public List<Jarjestyskriteeri> findByLaskentakaava(long id) {
         QJarjestyskriteeri jk = QJarjestyskriteeri.jarjestyskriteeri;
+        QLaskentakaava lk = QLaskentakaava.laskentakaava;
         return from(jk)
-                .leftJoin(jk.laskentakaava)
-                .where(jk.laskentakaava.id.eq(id))
+                .join(jk.laskentakaava, lk)
+                .where(lk.id.eq(id))
                 .list(jk);
     }
 

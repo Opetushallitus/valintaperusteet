@@ -45,13 +45,11 @@ public class HakijaryhmaValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Hakija
     @Override
     public List<HakijaryhmaValintatapajono> findByValintatapajono(String oid) {
         QHakijaryhmaValintatapajono hv = QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
-        QHakijaryhma h = QHakijaryhma.hakijaryhma;
         QValintatapajono v = QValintatapajono.valintatapajono;
 
         return from(hv)
                 .join(hv.valintatapajono, v).fetch()
-                .leftJoin(hv.hakijaryhma, h).fetch()
-                .leftJoin(h.jonot).fetch()
+                .leftJoin(hv.hakijaryhma).fetch()
                 .leftJoin(v.hakijaryhmat).fetch()
                 .leftJoin(v.valinnanVaihe).fetch()
                 .leftJoin(hv.master).fetch()
@@ -83,13 +81,11 @@ public class HakijaryhmaValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Hakija
     @Override
     public List<HakijaryhmaValintatapajono> findByHakukohde(String oid) {
         QHakijaryhmaValintatapajono hv = QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
-        QHakijaryhma h = QHakijaryhma.hakijaryhma;
         QHakukohdeViite v = QHakukohdeViite.hakukohdeViite;
 
         return from(hv)
                 .join(hv.hakukohdeViite, v).fetch()
-                .leftJoin(hv.hakijaryhma, h).fetch()
-                .leftJoin(h.jonot).fetch()
+                .leftJoin(hv.hakijaryhma).fetch()
                 .leftJoin(v.hakijaryhmat).fetch()
                 .leftJoin(hv.master).fetch()
                 .leftJoin(hv.edellinen).fetch()
