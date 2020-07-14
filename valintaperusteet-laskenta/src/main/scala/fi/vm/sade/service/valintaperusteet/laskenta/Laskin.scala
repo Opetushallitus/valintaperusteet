@@ -6,12 +6,12 @@ import java.util.{Collection => JCollection}
 
 import fi.vm.sade.service.valintaperusteet.dto.model.Osallistuminen
 import fi.vm.sade.service.valintaperusteet.laskenta.JsonFormats.historiaWrites
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakemuksenValintaperuste
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakukohteenSyotettavaValintaperuste
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.HakukohteenValintaperuste
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.SyotettavaValintaperuste
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Valintaperuste
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.tekstiryhmaToMap
+import fi.vm.sade.service.valintaperusteet.laskenta.LaskentaDomain.HakemuksenValintaperuste
+import fi.vm.sade.service.valintaperusteet.laskenta.LaskentaDomain.HakukohteenSyotettavaValintaperuste
+import fi.vm.sade.service.valintaperusteet.laskenta.LaskentaDomain.HakukohteenValintaperuste
+import fi.vm.sade.service.valintaperusteet.laskenta.LaskentaDomain.SyotettavaValintaperuste
+import fi.vm.sade.service.valintaperusteet.laskenta.LaskentaDomain.Valintaperuste
+import fi.vm.sade.service.valintaperusteet.laskenta.LaskentaDomain.tekstiryhmaToMap
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus.Kentat
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakukohde

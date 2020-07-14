@@ -9,7 +9,7 @@ import org.apache.commons.lang.StringUtils
 
 import scala.jdk.CollectionConverters._
 
-object Laskenta {
+object LaskentaDomain {
 
   trait Valintaperuste {
     val tunniste: String

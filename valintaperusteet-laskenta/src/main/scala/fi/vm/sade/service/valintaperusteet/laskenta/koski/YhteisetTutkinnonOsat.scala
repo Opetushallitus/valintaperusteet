@@ -3,7 +3,7 @@ package fi.vm.sade.service.valintaperusteet.laskenta.koski
 import java.time.LocalDate
 
 import fi.vm.sade.service.valintaperusteet.laskenta.AmmatillisenPerustutkinnonValitsija
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta
+import fi.vm.sade.service.valintaperusteet.laskenta.LaskentaDomain
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus
 import fi.vm.sade.service.valintaperusteet.laskenta.koski.KoskiLaskenta.ammatillisenHhuomioitavatKoulutustyypit
 import fi.vm.sade.service.valintaperusteet.laskenta.koski.KoskiLaskenta.ammatillisenHuomioitavaOpiskeluoikeudenTyyppi
@@ -25,7 +25,7 @@ object YhteisetTutkinnonOsat {
 
   def haeYtoArviointiasteikko(ammatillisenPerustutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
                               hakemus: Hakemus,
-                              valintaperusteviite: Laskenta.Valintaperuste
+                              valintaperusteviite: LaskentaDomain.Valintaperuste
                              ): Option[String] = {
     haeTietoYhteisestäTutkinnonosasta(
       ammatillisenPerustutkinnonValitsija,
@@ -38,7 +38,7 @@ object YhteisetTutkinnonOsat {
 
   def haeYtoArvosana(ammatillisenPerustutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
                      hakemus: Hakemus,
-                     valintaperusteviite: Laskenta.Valintaperuste,
+                     valintaperusteviite: LaskentaDomain.Valintaperuste,
                      oletusarvo: Option[BigDecimal]
                     ): Option[BigDecimal] = {
     haeTietoYhteisestäTutkinnonosasta[BigDecimal](
@@ -72,7 +72,7 @@ object YhteisetTutkinnonOsat {
 
   private def haeTietoYhteisestäTutkinnonosasta[T](ammatillisenPerustutkinnonValitsija: AmmatillisenPerustutkinnonValitsija,
                                                    hakemus: Hakemus,
-                                                   valintaperusteviite: Laskenta.Valintaperuste,
+                                                   valintaperusteviite: LaskentaDomain.Valintaperuste,
                                                    tiedonHakija: Osasuoritus => Option[T],
                                                    oletusarvo: Option[T]
                                                   ): Option[T] = {

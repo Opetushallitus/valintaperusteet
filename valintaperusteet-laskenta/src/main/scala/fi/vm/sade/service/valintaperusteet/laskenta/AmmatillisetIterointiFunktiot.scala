@@ -4,9 +4,9 @@ import fi.vm.sade.kaava.LaskentaUtil.suomalainenPvmMuoto
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.ITEROIAMMATILLISETOSAT
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.ITEROIAMMATILLISETTUTKINNOT
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.ITEROIAMMATILLISETYTOOSAALUEET
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.IteroiAmmatillisenTutkinnonYtoOsaAlueet
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.IteroiAmmatillisetTutkinnonOsat
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.IteroiAmmatillisetTutkinnot
+import fi.vm.sade.service.valintaperusteet.laskenta.LaskentaDomain.IteroiAmmatillisenTutkinnonYtoOsaAlueet
+import fi.vm.sade.service.valintaperusteet.laskenta.LaskentaDomain.IteroiAmmatillisetTutkinnonOsat
+import fi.vm.sade.service.valintaperusteet.laskenta.LaskentaDomain.IteroiAmmatillisetTutkinnot
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Hyvaksyttavissatila
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Tila
 import fi.vm.sade.service.valintaperusteet.laskenta.koski.KoskiLaskenta

@@ -2,14 +2,14 @@ package fi.vm.sade.service.valintaperusteet.laskenta
 
 import java.util
 
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonversio
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.ArvokonversioMerkkijonoilla
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Arvokonvertteri
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Konversio
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Konvertteri
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonversio
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.LukuarvovalikonversioMerkkijonoilla
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.Lukuarvovalikonvertteri
+import fi.vm.sade.service.valintaperusteet.laskenta.LaskentaDomain.Arvokonversio
+import fi.vm.sade.service.valintaperusteet.laskenta.LaskentaDomain.ArvokonversioMerkkijonoilla
+import fi.vm.sade.service.valintaperusteet.laskenta.LaskentaDomain.Arvokonvertteri
+import fi.vm.sade.service.valintaperusteet.laskenta.LaskentaDomain.Konversio
+import fi.vm.sade.service.valintaperusteet.laskenta.LaskentaDomain.Konvertteri
+import fi.vm.sade.service.valintaperusteet.laskenta.LaskentaDomain.Lukuarvovalikonversio
+import fi.vm.sade.service.valintaperusteet.laskenta.LaskentaDomain.LukuarvovalikonversioMerkkijonoilla
+import fi.vm.sade.service.valintaperusteet.laskenta.LaskentaDomain.Lukuarvovalikonvertteri
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus.Kentat
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakukohde

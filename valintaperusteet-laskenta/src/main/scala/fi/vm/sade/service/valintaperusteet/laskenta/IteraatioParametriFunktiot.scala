@@ -1,8 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.laskenta
 
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.IteroiAmmatillisenTutkinnonYtoOsaAlueet
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.IteroiAmmatillisetTutkinnonOsat
-import fi.vm.sade.service.valintaperusteet.laskenta.Laskenta.IteroiAmmatillisetTutkinnot
+import fi.vm.sade.service.valintaperusteet.laskenta.LaskentaDomain.IteroiAmmatillisenTutkinnonYtoOsaAlueet
+import fi.vm.sade.service.valintaperusteet.laskenta.LaskentaDomain.IteroiAmmatillisetTutkinnonOsat
+import fi.vm.sade.service.valintaperusteet.laskenta.LaskentaDomain.IteroiAmmatillisetTutkinnot
 
 trait IteraatioParametriFunktiot {
   protected def historianTiivistelma(historia: Historia, otetaanMukaan: Historia => Boolean): Seq[String] = {
