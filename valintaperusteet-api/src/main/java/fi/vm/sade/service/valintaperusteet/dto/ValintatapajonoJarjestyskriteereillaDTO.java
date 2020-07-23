@@ -5,174 +5,174 @@ import java.util.Date;
 import java.util.List;
 
 public class ValintatapajonoJarjestyskriteereillaDTO implements Prioritized {
-    private Integer aloituspaikat;
+  private Integer aloituspaikat;
 
-    private String kuvaus;
+  private String kuvaus;
 
-    private String tyyppi;
+  private String tyyppi;
 
-    private String nimi;
+  private String nimi;
 
-    private String oid;
+  private String oid;
 
-    private int prioriteetti;
+  private int prioriteetti;
 
-    private Boolean siirretaanSijoitteluun = true;
+  private Boolean siirretaanSijoitteluun = true;
 
-    private String tasasijasaanto = "ARVONTA";
+  private String tasasijasaanto = "ARVONTA";
 
-    private Date eiLasketaPaivamaaranJalkeen;
+  private Date eiLasketaPaivamaaranJalkeen;
 
-    private List<ValintaperusteetJarjestyskriteeriDTO> jarjestyskriteerit = new ArrayList<ValintaperusteetJarjestyskriteeriDTO>();
+  private List<ValintaperusteetJarjestyskriteeriDTO> jarjestyskriteerit =
+      new ArrayList<ValintaperusteetJarjestyskriteeriDTO>();
 
-    private boolean eiVarasijatayttoa;
+  private boolean eiVarasijatayttoa;
 
-    private Boolean poissaOlevaTaytto = false;
+  private Boolean poissaOlevaTaytto = false;
 
-    private Boolean kaikkiEhdonTayttavatHyvaksytaan = false;
+  private Boolean kaikkiEhdonTayttavatHyvaksytaan = false;
 
-    private Boolean kaytetaanValintalaskentaa = true;
+  private Boolean kaytetaanValintalaskentaa = true;
 
-    private Boolean valmisSijoiteltavaksi = true;
+  private Boolean valmisSijoiteltavaksi = true;
 
-    private Boolean valisijoittelu = false;
+  private Boolean valisijoittelu = false;
 
-    private boolean poistetaankoHylatyt = false;
+  private boolean poistetaankoHylatyt = false;
 
-    public void setAloituspaikat(Integer aloituspaikat) {
-        this.aloituspaikat = aloituspaikat;
-    }
+  public void setAloituspaikat(Integer aloituspaikat) {
+    this.aloituspaikat = aloituspaikat;
+  }
 
-    public Integer getAloituspaikat() {
-        return aloituspaikat;
-    }
+  public Integer getAloituspaikat() {
+    return aloituspaikat;
+  }
 
-    public void setKuvaus(String kuvaus) {
-        this.kuvaus = kuvaus;
-    }
+  public void setKuvaus(String kuvaus) {
+    this.kuvaus = kuvaus;
+  }
 
-    public String getKuvaus() {
-        return kuvaus;
-    }
+  public String getKuvaus() {
+    return kuvaus;
+  }
 
-    public String getTyyppi() {
-        return tyyppi;
-    }
+  public String getTyyppi() {
+    return tyyppi;
+  }
 
-    public void setTyyppi(String tyyppi) {
-        this.tyyppi = tyyppi;
-    }
+  public void setTyyppi(String tyyppi) {
+    this.tyyppi = tyyppi;
+  }
 
-    public void setNimi(String nimi) {
-        this.nimi = nimi;
-    }
+  public void setNimi(String nimi) {
+    this.nimi = nimi;
+  }
 
-    public String getNimi() {
-        return nimi;
-    }
+  public String getNimi() {
+    return nimi;
+  }
 
+  public void setOid(String oid) {
+    this.oid = oid;
+  }
 
-    public void setOid(String oid) {
-        this.oid = oid;
-    }
+  public String getOid() {
+    return oid;
+  }
 
-    public String getOid() {
-        return oid;
-    }
+  public void setPrioriteetti(int prioriteetti) {
+    this.prioriteetti = prioriteetti;
+  }
 
-    public void setPrioriteetti(int prioriteetti) {
-        this.prioriteetti = prioriteetti;
-    }
+  public int getPrioriteetti() {
+    return prioriteetti;
+  }
 
-    public int getPrioriteetti() {
-        return prioriteetti;
-    }
+  public void setSiirretaanSijoitteluun(Boolean siirretaanSijoitteluun) {
+    this.siirretaanSijoitteluun = siirretaanSijoitteluun;
+  }
 
-    public void setSiirretaanSijoitteluun(Boolean siirretaanSijoitteluun) {
-        this.siirretaanSijoitteluun = siirretaanSijoitteluun;
-    }
+  public Boolean getSiirretaanSijoitteluun() {
+    return siirretaanSijoitteluun;
+  }
 
-    public Boolean getSiirretaanSijoitteluun() {
-        return siirretaanSijoitteluun;
-    }
+  public void setTasasijasaanto(String tasasijasaanto) {
+    this.tasasijasaanto = tasasijasaanto;
+  }
 
-    public void setTasasijasaanto(String tasasijasaanto) {
-        this.tasasijasaanto = tasasijasaanto;
-    }
+  public String getTasasijasaanto() {
+    return tasasijasaanto;
+  }
 
-    public String getTasasijasaanto() {
-        return tasasijasaanto;
-    }
+  public Date getEiLasketaPaivamaaranJalkeen() {
+    return eiLasketaPaivamaaranJalkeen;
+  }
 
-    public Date getEiLasketaPaivamaaranJalkeen() {
-        return eiLasketaPaivamaaranJalkeen;
-    }
+  public void setEiLasketaPaivamaaranJalkeen(Date eiLasketaPaivamaaranJalkeen) {
+    this.eiLasketaPaivamaaranJalkeen = eiLasketaPaivamaaranJalkeen;
+  }
 
-    public void setEiLasketaPaivamaaranJalkeen(Date eiLasketaPaivamaaranJalkeen) {
-        this.eiLasketaPaivamaaranJalkeen = eiLasketaPaivamaaranJalkeen;
-    }
+  public List<ValintaperusteetJarjestyskriteeriDTO> getJarjestyskriteerit() {
+    return jarjestyskriteerit;
+  }
 
-    public List<ValintaperusteetJarjestyskriteeriDTO> getJarjestyskriteerit() {
-        return jarjestyskriteerit;
-    }
+  public void setJarjestyskriteerit(List<ValintaperusteetJarjestyskriteeriDTO> jarjestyskriteerit) {
+    this.jarjestyskriteerit = jarjestyskriteerit;
+  }
 
-    public void setJarjestyskriteerit(List<ValintaperusteetJarjestyskriteeriDTO> jarjestyskriteerit) {
-        this.jarjestyskriteerit = jarjestyskriteerit;
-    }
+  public boolean getEiVarasijatayttoa() {
+    return eiVarasijatayttoa;
+  }
 
-    public boolean getEiVarasijatayttoa() {
-        return eiVarasijatayttoa;
-    }
+  public void setEiVarasijatayttoa(boolean eiVarasijatayttoa) {
+    this.eiVarasijatayttoa = eiVarasijatayttoa;
+  }
 
-    public void setEiVarasijatayttoa(boolean eiVarasijatayttoa) {
-        this.eiVarasijatayttoa = eiVarasijatayttoa;
-    }
+  public Boolean getPoissaOlevaTaytto() {
+    return poissaOlevaTaytto;
+  }
 
-    public Boolean getPoissaOlevaTaytto() {
-        return poissaOlevaTaytto;
-    }
+  public void setPoissaOlevaTaytto(Boolean poissaOlevaTaytto) {
+    this.poissaOlevaTaytto = poissaOlevaTaytto;
+  }
 
-    public void setPoissaOlevaTaytto(Boolean poissaOlevaTaytto) {
-        this.poissaOlevaTaytto = poissaOlevaTaytto;
-    }
+  public Boolean getKaikkiEhdonTayttavatHyvaksytaan() {
+    return kaikkiEhdonTayttavatHyvaksytaan;
+  }
 
-    public Boolean getKaikkiEhdonTayttavatHyvaksytaan() {
-        return kaikkiEhdonTayttavatHyvaksytaan;
-    }
+  public void setKaikkiEhdonTayttavatHyvaksytaan(Boolean kaikkiEhdonTayttavatHyvaksytaan) {
+    this.kaikkiEhdonTayttavatHyvaksytaan = kaikkiEhdonTayttavatHyvaksytaan;
+  }
 
-    public void setKaikkiEhdonTayttavatHyvaksytaan(Boolean kaikkiEhdonTayttavatHyvaksytaan) {
-        this.kaikkiEhdonTayttavatHyvaksytaan = kaikkiEhdonTayttavatHyvaksytaan;
-    }
+  public Boolean getKaytetaanValintalaskentaa() {
+    return kaytetaanValintalaskentaa;
+  }
 
-    public Boolean getKaytetaanValintalaskentaa() {
-        return kaytetaanValintalaskentaa;
-    }
+  public void setKaytetaanValintalaskentaa(Boolean kaytetaanValintalaskentaa) {
+    this.kaytetaanValintalaskentaa = kaytetaanValintalaskentaa;
+  }
 
-    public void setKaytetaanValintalaskentaa(Boolean kaytetaanValintalaskentaa) {
-        this.kaytetaanValintalaskentaa = kaytetaanValintalaskentaa;
-    }
+  public Boolean getValmisSijoiteltavaksi() {
+    return valmisSijoiteltavaksi;
+  }
 
-    public Boolean getValmisSijoiteltavaksi() {
-        return valmisSijoiteltavaksi;
-    }
+  public void setValmisSijoiteltavaksi(Boolean valmisSijoiteltavaksi) {
+    this.valmisSijoiteltavaksi = valmisSijoiteltavaksi;
+  }
 
-    public void setValmisSijoiteltavaksi(Boolean valmisSijoiteltavaksi) {
-        this.valmisSijoiteltavaksi = valmisSijoiteltavaksi;
-    }
+  public Boolean getValisijoittelu() {
+    return valisijoittelu;
+  }
 
-    public Boolean getValisijoittelu() {
-        return valisijoittelu;
-    }
+  public void setValisijoittelu(Boolean valisijoittelu) {
+    this.valisijoittelu = valisijoittelu;
+  }
 
-    public void setValisijoittelu(Boolean valisijoittelu) {
-        this.valisijoittelu = valisijoittelu;
-    }
+  public boolean isPoistetaankoHylatyt() {
+    return poistetaankoHylatyt;
+  }
 
-    public boolean isPoistetaankoHylatyt() {
-        return poistetaankoHylatyt;
-    }
-
-    public void setPoistetaankoHylatyt(boolean poistetaankoHylatyt) {
-        this.poistetaankoHylatyt = poistetaankoHylatyt;
-    }
+  public void setPoistetaankoHylatyt(boolean poistetaankoHylatyt) {
+    this.poistetaankoHylatyt = poistetaankoHylatyt;
+  }
 }

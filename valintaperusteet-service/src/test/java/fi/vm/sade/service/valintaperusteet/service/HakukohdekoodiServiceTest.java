@@ -15,6 +15,9 @@ import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestE
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.Hakukohdekoodi;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,172 +27,170 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-/**
- * User: wuoti
- * Date: 16.5.2013
- * Time: 12.11
- */
+/** User: wuoti Date: 16.5.2013 Time: 12.11 */
 @ContextConfiguration(locations = "classpath:test-context.xml")
-@TestExecutionListeners(listeners = {ValinnatJTACleanInsertTestExecutionListener.class,
-        DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class })
+@TestExecutionListeners(
+    listeners = {
+      ValinnatJTACleanInsertTestExecutionListener.class,
+      DependencyInjectionTestExecutionListener.class,
+      DirtiesContextTestExecutionListener.class
+    })
 @RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data.xml")
 public class HakukohdekoodiServiceTest {
 
-    @Autowired
-    private HakukohdekoodiService hakukohdekoodiService;
+  @Autowired private HakukohdekoodiService hakukohdekoodiService;
 
-    @Autowired
-    private HakukohdekoodiDAO hakukohdekoodiDAO;
+  @Autowired private HakukohdekoodiDAO hakukohdekoodiDAO;
 
-    @Autowired
-    private ValintaryhmaService valintaryhmaService;
+  @Autowired private ValintaryhmaService valintaryhmaService;
 
-    @Autowired
-    private ValintaryhmaDAO valintaryhmaDAO;
+  @Autowired private ValintaryhmaDAO valintaryhmaDAO;
 
-    @Autowired
-    private HakukohdeViiteDAO hakukohdeViiteDAO;
+  @Autowired private HakukohdeViiteDAO hakukohdeViiteDAO;
 
-    private KoodiDTO luoHakukohdekoodi(String uri, String arvo, String nimi) {
-        KoodiDTO koodi = new KoodiDTO();
-        koodi.setUri(uri);
-        koodi.setArvo(arvo);
-        koodi.setNimiFi(nimi);
-        koodi.setNimiSv(nimi);
-        koodi.setNimiEn(nimi);
+  private KoodiDTO luoHakukohdekoodi(String uri, String arvo, String nimi) {
+    KoodiDTO koodi = new KoodiDTO();
+    koodi.setUri(uri);
+    koodi.setArvo(arvo);
+    koodi.setNimiFi(nimi);
+    koodi.setNimiSv(nimi);
+    koodi.setNimiEn(nimi);
 
-        return koodi;
-    }
+    return koodi;
+  }
 
-    @Test
-    public void testLisaaHakukohdekoodiValintaryhmalle() {
-        final String valintaryhmaOid = "oid43";
-        final String hakukohdekoodiUri = "eiolevielaolemassa";
+  @Test
+  public void testLisaaHakukohdekoodiValintaryhmalle() {
+    final String valintaryhmaOid = "oid43";
+    final String hakukohdekoodiUri = "eiolevielaolemassa";
 
-        KoodiDTO koodi = luoHakukohdekoodi(hakukohdekoodiUri, hakukohdekoodiUri, hakukohdekoodiUri);
+    KoodiDTO koodi = luoHakukohdekoodi(hakukohdekoodiUri, hakukohdekoodiUri, hakukohdekoodiUri);
 
-        assertNull(hakukohdekoodiDAO.readByUri(hakukohdekoodiUri));
-        hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(valintaryhmaOid, koodi);
+    assertNull(hakukohdekoodiDAO.readByUri(hakukohdekoodiUri));
+    hakukohdekoodiService.lisaaHakukohdekoodiValintaryhmalle(valintaryhmaOid, koodi);
 
-        Hakukohdekoodi haettu = hakukohdekoodiDAO.readByUri(hakukohdekoodiUri);
-        List<Valintaryhma> valintaryhmas = valintaryhmaDAO.readByHakukohdekoodiUri(hakukohdekoodiUri);
-        assertEquals(1, valintaryhmas.size());
-        assertEquals(valintaryhmaOid, valintaryhmas.get(0).getOid());
-    }
+    Hakukohdekoodi haettu = hakukohdekoodiDAO.readByUri(hakukohdekoodiUri);
+    List<Valintaryhma> valintaryhmas = valintaryhmaDAO.readByHakukohdekoodiUri(hakukohdekoodiUri);
+    assertEquals(1, valintaryhmas.size());
+    assertEquals(valintaryhmaOid, valintaryhmas.get(0).getOid());
+  }
 
-
-    private boolean tarkastaEttaValintaryhmallaOnKaikkiHakukohdekoodit(Valintaryhma valintaryhma,
-                                                                       String... hakukohdekoodiUrit) {
-        outer:
-        for (String uri : hakukohdekoodiUrit) {
-            for (Hakukohdekoodi k : valintaryhma.getHakukohdekoodit()) {
-                if (uri.equals(k.getUri())) {
-                    continue outer;
-                }
-            }
-            return false;
+  private boolean tarkastaEttaValintaryhmallaOnKaikkiHakukohdekoodit(
+      Valintaryhma valintaryhma, String... hakukohdekoodiUrit) {
+    outer:
+    for (String uri : hakukohdekoodiUrit) {
+      for (Hakukohdekoodi k : valintaryhma.getHakukohdekoodit()) {
+        if (uri.equals(k.getUri())) {
+          continue outer;
         }
-
-        return true;
+      }
+      return false;
     }
 
-    @Test
-    public void testPaivitaValintaryhmanHakukohdekoodit() {
-        final String valintaryhmaOid = "oid51";
-        final String[] hakukohdekoodiUritAluksi = new String[]{"hakukohdekoodiuri16", "hakukohdekoodiuri17"};
-        final String[] hakukohdekoodiUritLopuksi = new String[]{"hakukohdekoodiuri16", "hakukohdekoodiuri18",
-                "aivanuusi"};
+    return true;
+  }
 
-        Valintaryhma valintaryhma = valintaryhmaService.readByOid(valintaryhmaOid);
-        assertTrue(tarkastaEttaValintaryhmallaOnKaikkiHakukohdekoodit(valintaryhma, hakukohdekoodiUritAluksi));
+  @Test
+  public void testPaivitaValintaryhmanHakukohdekoodit() {
+    final String valintaryhmaOid = "oid51";
+    final String[] hakukohdekoodiUritAluksi =
+        new String[] {"hakukohdekoodiuri16", "hakukohdekoodiuri17"};
+    final String[] hakukohdekoodiUritLopuksi =
+        new String[] {"hakukohdekoodiuri16", "hakukohdekoodiuri18", "aivanuusi"};
 
-        Set<KoodiDTO> paivitys = new HashSet<KoodiDTO>();
+    Valintaryhma valintaryhma = valintaryhmaService.readByOid(valintaryhmaOid);
+    assertTrue(
+        tarkastaEttaValintaryhmallaOnKaikkiHakukohdekoodit(valintaryhma, hakukohdekoodiUritAluksi));
 
-        for (String uri : hakukohdekoodiUritLopuksi) {
-            paivitys.add(luoHakukohdekoodi(uri, uri, uri));
-        }
+    Set<KoodiDTO> paivitys = new HashSet<KoodiDTO>();
 
-        hakukohdekoodiService.updateValintaryhmaHakukohdekoodit(valintaryhmaOid, paivitys);
-
-        valintaryhma = valintaryhmaService.readByOid(valintaryhmaOid);
-        assertTrue(tarkastaEttaValintaryhmallaOnKaikkiHakukohdekoodit(valintaryhma, hakukohdekoodiUritLopuksi));
+    for (String uri : hakukohdekoodiUritLopuksi) {
+      paivitys.add(luoHakukohdekoodi(uri, uri, uri));
     }
 
-    @Test
-    public void testLisaaUusiHakukohdekoodiHakukohteelle() {
-        final String hakukohdeOid = "oid15";
-        final String hakukohdekoodiUri = "eiolevielaolemassa";
+    hakukohdekoodiService.updateValintaryhmaHakukohdekoodit(valintaryhmaOid, paivitys);
 
-        KoodiDTO koodi = luoHakukohdekoodi(hakukohdekoodiUri, hakukohdekoodiUri, hakukohdekoodiUri);
+    valintaryhma = valintaryhmaService.readByOid(valintaryhmaOid);
+    assertTrue(
+        tarkastaEttaValintaryhmallaOnKaikkiHakukohdekoodit(
+            valintaryhma, hakukohdekoodiUritLopuksi));
+  }
 
-        assertNull(hakukohdekoodiDAO.readByUri(hakukohdekoodiUri));
-        assertNull(hakukohdekoodiDAO.findByHakukohdeOid(hakukohdeOid));
-        hakukohdekoodiService.lisaaHakukohdekoodiHakukohde(hakukohdeOid, koodi);
+  @Test
+  public void testLisaaUusiHakukohdekoodiHakukohteelle() {
+    final String hakukohdeOid = "oid15";
+    final String hakukohdekoodiUri = "eiolevielaolemassa";
 
-        Hakukohdekoodi haettu = hakukohdekoodiDAO.readByUri(hakukohdekoodiUri);
+    KoodiDTO koodi = luoHakukohdekoodi(hakukohdekoodiUri, hakukohdekoodiUri, hakukohdekoodiUri);
 
-        List<HakukohdeViite> hakukohdeViites = hakukohdeViiteDAO.readByHakukohdekoodiUri(hakukohdekoodiUri);
-        assertEquals(1, hakukohdeViites.size());
-        assertEquals(hakukohdeOid, hakukohdeViites.get(0).getOid());
-    }
+    assertNull(hakukohdekoodiDAO.readByUri(hakukohdekoodiUri));
+    assertNull(hakukohdekoodiDAO.findByHakukohdeOid(hakukohdeOid));
+    hakukohdekoodiService.lisaaHakukohdekoodiHakukohde(hakukohdeOid, koodi);
 
-    @Test
-    public void testLisaaOlemassaOlevaHakukohdekoodiHakukohteelle() {
-        final String hakukohdeOid = "oid15";
-        final String hakukohdekoodiUri = "hakukohdekoodiuri8";
+    Hakukohdekoodi haettu = hakukohdekoodiDAO.readByUri(hakukohdekoodiUri);
 
-        KoodiDTO koodi = luoHakukohdekoodi(hakukohdekoodiUri, hakukohdekoodiUri, hakukohdekoodiUri);
+    List<HakukohdeViite> hakukohdeViites =
+        hakukohdeViiteDAO.readByHakukohdekoodiUri(hakukohdekoodiUri);
+    assertEquals(1, hakukohdeViites.size());
+    assertEquals(hakukohdeOid, hakukohdeViites.get(0).getOid());
+  }
 
-        Hakukohdekoodi haettu = hakukohdekoodiDAO.readByUri(hakukohdekoodiUri);
-        assertNotNull(haettu);
-        assertEquals(0, hakukohdeViiteDAO.readByHakukohdekoodiUri(hakukohdekoodiUri).size());
+  @Test
+  public void testLisaaOlemassaOlevaHakukohdekoodiHakukohteelle() {
+    final String hakukohdeOid = "oid15";
+    final String hakukohdekoodiUri = "hakukohdekoodiuri8";
 
-        hakukohdekoodiService.lisaaHakukohdekoodiHakukohde(hakukohdeOid, koodi);
+    KoodiDTO koodi = luoHakukohdekoodi(hakukohdekoodiUri, hakukohdekoodiUri, hakukohdekoodiUri);
 
-        List<HakukohdeViite> hakukohdeViites = hakukohdeViiteDAO.readByHakukohdekoodiUri(hakukohdekoodiUri);
-        assertEquals(1, hakukohdeViites.size());
-        assertEquals(hakukohdeOid, hakukohdeViites.get(0).getOid());
-    }
+    Hakukohdekoodi haettu = hakukohdekoodiDAO.readByUri(hakukohdekoodiUri);
+    assertNotNull(haettu);
+    assertEquals(0, hakukohdeViiteDAO.readByHakukohdekoodiUri(hakukohdekoodiUri).size());
 
-    @Test
-    public void testVaihdaHakukohteenHakukohdekoodia() {
-        final String hakukohdeOid = "oid16";
-        final String hakukohdekoodiUri = "hakukohdekoodiuri10";
+    hakukohdekoodiService.lisaaHakukohdekoodiHakukohde(hakukohdeOid, koodi);
 
-        KoodiDTO koodi = luoHakukohdekoodi(hakukohdekoodiUri, hakukohdekoodiUri, hakukohdekoodiUri);
+    List<HakukohdeViite> hakukohdeViites =
+        hakukohdeViiteDAO.readByHakukohdekoodiUri(hakukohdekoodiUri);
+    assertEquals(1, hakukohdeViites.size());
+    assertEquals(hakukohdeOid, hakukohdeViites.get(0).getOid());
+  }
 
-        assertNotNull(hakukohdekoodiDAO.readByUri(hakukohdekoodiUri));
-        Hakukohdekoodi vanhaKoodi = hakukohdekoodiDAO.findByHakukohdeOid(hakukohdeOid);
-        assertNotNull(vanhaKoodi);
-        assertFalse(hakukohdekoodiUri.equals(vanhaKoodi.getUri()));
+  @Test
+  public void testVaihdaHakukohteenHakukohdekoodia() {
+    final String hakukohdeOid = "oid16";
+    final String hakukohdekoodiUri = "hakukohdekoodiuri10";
 
-        hakukohdekoodiService.updateHakukohdeHakukohdekoodi(hakukohdeOid, koodi);
+    KoodiDTO koodi = luoHakukohdekoodi(hakukohdekoodiUri, hakukohdekoodiUri, hakukohdekoodiUri);
 
-        List<HakukohdeViite> hakukohdeViites = hakukohdeViiteDAO.readByHakukohdekoodiUri(hakukohdekoodiUri);
-        assertEquals(1, hakukohdeViites.size());
-        assertEquals(hakukohdeOid, hakukohdeViites.get(0).getOid());
+    assertNotNull(hakukohdekoodiDAO.readByUri(hakukohdekoodiUri));
+    Hakukohdekoodi vanhaKoodi = hakukohdekoodiDAO.findByHakukohdeOid(hakukohdeOid);
+    assertNotNull(vanhaKoodi);
+    assertFalse(hakukohdekoodiUri.equals(vanhaKoodi.getUri()));
 
-        assertEquals(0, hakukohdeViiteDAO.readByHakukohdekoodiUri(vanhaKoodi.getUri()).size());
-    }
+    hakukohdekoodiService.updateHakukohdeHakukohdekoodi(hakukohdeOid, koodi);
 
-    @Test
-    public void testUpdateHakukohdeUusiHakukohdekoodi() {
-        final String hakukohdeOid = "oid15";
-        final String hakukohdekoodiUri = "eiolevielaolemassa";
+    List<HakukohdeViite> hakukohdeViites =
+        hakukohdeViiteDAO.readByHakukohdekoodiUri(hakukohdekoodiUri);
+    assertEquals(1, hakukohdeViites.size());
+    assertEquals(hakukohdeOid, hakukohdeViites.get(0).getOid());
 
-        KoodiDTO koodi = luoHakukohdekoodi(hakukohdekoodiUri, hakukohdekoodiUri, hakukohdekoodiUri);
+    assertEquals(0, hakukohdeViiteDAO.readByHakukohdekoodiUri(vanhaKoodi.getUri()).size());
+  }
 
-        assertNull(hakukohdekoodiDAO.readByUri(hakukohdekoodiUri));
-        assertNull(hakukohdekoodiDAO.findByHakukohdeOid(hakukohdeOid));
-        hakukohdekoodiService.updateHakukohdeHakukohdekoodi(hakukohdeOid, koodi);
+  @Test
+  public void testUpdateHakukohdeUusiHakukohdekoodi() {
+    final String hakukohdeOid = "oid15";
+    final String hakukohdekoodiUri = "eiolevielaolemassa";
 
-        List<HakukohdeViite> hakukohdeViites = hakukohdeViiteDAO.readByHakukohdekoodiUri(hakukohdekoodiUri);
-        assertEquals(1, hakukohdeViites.size());
-        assertEquals(hakukohdeOid, hakukohdeViites.get(0).getOid());
-    }
+    KoodiDTO koodi = luoHakukohdekoodi(hakukohdekoodiUri, hakukohdekoodiUri, hakukohdekoodiUri);
+
+    assertNull(hakukohdekoodiDAO.readByUri(hakukohdekoodiUri));
+    assertNull(hakukohdekoodiDAO.findByHakukohdeOid(hakukohdeOid));
+    hakukohdekoodiService.updateHakukohdeHakukohdekoodi(hakukohdeOid, koodi);
+
+    List<HakukohdeViite> hakukohdeViites =
+        hakukohdeViiteDAO.readByHakukohdekoodiUri(hakukohdekoodiUri);
+    assertEquals(1, hakukohdeViites.size());
+    assertEquals(hakukohdeOid, hakukohdeViites.get(0).getOid());
+  }
 }

@@ -7,5 +7,4 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "hakukohdekoodi")
 @Cacheable(true)
-public class Hakukohdekoodi extends Koodi {
-}
+public class Hakukohdekoodi extends Koodi {}

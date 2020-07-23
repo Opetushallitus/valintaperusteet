@@ -1,5 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
+import static org.junit.Assert.assertEquals;
+
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dao.JarjestyskriteeriDAO;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriCreateDTO;
@@ -12,6 +14,10 @@ import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.resource.impl.JarjestyskriteeriResourceImpl;
 import fi.vm.sade.service.valintaperusteet.util.TestUtil;
 import fi.vm.sade.valinta.sharedutils.FakeAuthenticationInitialiser;
+import java.util.Arrays;
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,92 +30,83 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.util.Arrays;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-
 /**
- * Created with IntelliJ IDEA.
- * User: jukais
- * Date: 4.2.2013
- * Time: 15.20
- * To change this template use File | Settings | File Templates.
+ * Created with IntelliJ IDEA. User: jukais Date: 4.2.2013 Time: 15.20 To change this template use
+ * File | Settings | File Templates.
  */
 @ContextConfiguration(locations = "classpath:test-context.xml")
-@TestExecutionListeners(listeners = {ValinnatJTACleanInsertTestExecutionListener.class,
-        DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class })
+@TestExecutionListeners(
+    listeners = {
+      ValinnatJTACleanInsertTestExecutionListener.class,
+      DependencyInjectionTestExecutionListener.class,
+      DirtiesContextTestExecutionListener.class
+    })
 @RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data.xml")
 public class JarjestyskriteeriResourceTest {
 
-    private JarjestyskriteeriResourceImpl resource = new JarjestyskriteeriResourceImpl();
-    private TestUtil testUtil = new TestUtil(this.getClass());
+  private JarjestyskriteeriResourceImpl resource = new JarjestyskriteeriResourceImpl();
+  private TestUtil testUtil = new TestUtil(this.getClass());
 
-    @Autowired
-    private ApplicationContext applicationContext;
+  @Autowired private ApplicationContext applicationContext;
 
-    @Autowired
-    private JarjestyskriteeriDAO jarjestyskriteeriDAO;
+  @Autowired private JarjestyskriteeriDAO jarjestyskriteeriDAO;
 
-    @Autowired
-    private ValintaperusteetModelMapper modelMapper;
+  @Autowired private ValintaperusteetModelMapper modelMapper;
 
-    @Before
-    public void setUp() {
-        FakeAuthenticationInitialiser.fakeAuthentication();
-        applicationContext.getAutowireCapableBeanFactory().autowireBean(resource);
-    }
+  @Before
+  public void setUp() {
+    FakeAuthenticationInitialiser.fakeAuthentication();
+    applicationContext.getAutowireCapableBeanFactory().autowireBean(resource);
+  }
 
-    @Test
-    public void testUpdate() throws Exception {
-        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-        Mockito.when(request.getSession(false)).thenReturn(session);
+  @Test
+  public void testUpdate() throws Exception {
+    HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+    HttpSession session = Mockito.mock(HttpSession.class);
+    Mockito.when(request.getSession(false)).thenReturn(session);
 
-        JarjestyskriteeriDTO jk = resource.readByOid("1");
+    JarjestyskriteeriDTO jk = resource.readByOid("1");
 
-//        assertEquals(1, (int)jk.getPrioriteetti());
-//        jk.setPrioriteetti(100);
-        JarjestyskriteeriInsertDTO comb = new JarjestyskriteeriInsertDTO();
-        JarjestyskriteeriCreateDTO update = new JarjestyskriteeriCreateDTO();
-        update.setMetatiedot("metatiedot");
-        comb.setJarjestyskriteeri(update);
-        comb.setLaskentakaavaId(jk.getLaskentakaavaId());
+    //        assertEquals(1, (int)jk.getPrioriteetti());
+    //        jk.setPrioriteetti(100);
+    JarjestyskriteeriInsertDTO comb = new JarjestyskriteeriInsertDTO();
+    JarjestyskriteeriCreateDTO update = new JarjestyskriteeriCreateDTO();
+    update.setMetatiedot("metatiedot");
+    comb.setJarjestyskriteeri(update);
+    comb.setLaskentakaavaId(jk.getLaskentakaavaId());
 
-        resource.update("1", comb, request);
+    resource.update("1", comb, request);
 
-        jk = resource.readByOid("1");
-//        assertEquals(100, (int)jk.getPrioriteetti());
+    jk = resource.readByOid("1");
+    //        assertEquals(100, (int)jk.getPrioriteetti());
 
-        testUtil.lazyCheck(JsonViews.Basic.class, jk);
-    }
+    testUtil.lazyCheck(JsonViews.Basic.class, jk);
+  }
 
-    @Test
-    public void testRemove() throws Exception {
-        Jarjestyskriteeri jk = jarjestyskriteeriDAO.readByOid("1");
-//        assertEquals(1, (int)jk.getPrioriteetti());
+  @Test
+  public void testRemove() throws Exception {
+    Jarjestyskriteeri jk = jarjestyskriteeriDAO.readByOid("1");
+    //        assertEquals(1, (int)jk.getPrioriteetti());
 
-        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-        Mockito.when(request.getSession(false)).thenReturn(session);
+    HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+    HttpSession session = Mockito.mock(HttpSession.class);
+    Mockito.when(request.getSession(false)).thenReturn(session);
 
-        resource.delete("1", request);
-        jk = jarjestyskriteeriDAO.readByOid("1");
-        assertEquals(null, jk);
-    }
+    resource.delete("1", request);
+    jk = jarjestyskriteeriDAO.readByOid("1");
+    assertEquals(null, jk);
+  }
 
-    @Test
-    public void testJarjesta() throws Exception {
-        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-        Mockito.when(request.getSession(false)).thenReturn(session);
+  @Test
+  public void testJarjesta() throws Exception {
+    HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+    HttpSession session = Mockito.mock(HttpSession.class);
+    Mockito.when(request.getSession(false)).thenReturn(session);
 
-        String[] uusiJarjestys = {"3203", "3202", "3201"};
-        List<JarjestyskriteeriDTO> jarjestetty = resource.jarjesta(Arrays.asList(uusiJarjestys), request);
-        testUtil.lazyCheck(JsonViews.Basic.class, jarjestetty);
-    }
-
+    String[] uusiJarjestys = {"3203", "3202", "3201"};
+    List<JarjestyskriteeriDTO> jarjestetty =
+        resource.jarjesta(Arrays.asList(uusiJarjestys), request);
+    testUtil.lazyCheck(JsonViews.Basic.class, jarjestetty);
+  }
 }

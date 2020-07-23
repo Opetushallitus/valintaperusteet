@@ -3,125 +3,129 @@ package fi.vm.sade.service.valintaperusteet.dto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(value = "HakijaryhmaValintatapajonoDTO", description = "Hakijaryhmän liittyminen valintatapajonoon")
+@ApiModel(
+    value = "HakijaryhmaValintatapajonoDTO",
+    description = "Hakijaryhmän liittyminen valintatapajonoon")
 public class HakijaryhmaValintatapajonoDTO implements Prioritized {
 
-    @ApiModelProperty(value = "OID", required = true)
-    private String oid;
+  @ApiModelProperty(value = "OID", required = true)
+  private String oid;
 
-    @ApiModelProperty(value = "Nimi")
-    private String nimi;
+  @ApiModelProperty(value = "Nimi")
+  private String nimi;
 
-    @ApiModelProperty(value = "Kuvaus")
-    private String kuvaus;
+  @ApiModelProperty(value = "Kuvaus")
+  private String kuvaus;
 
-    @ApiModelProperty(value = "Kiintio", required = true)
-    private int kiintio;
+  @ApiModelProperty(value = "Kiintio", required = true)
+  private int kiintio;
 
-    @ApiModelProperty(value = "Kayta kaikki", required = true)
-    private boolean kaytaKaikki;
+  @ApiModelProperty(value = "Kayta kaikki", required = true)
+  private boolean kaytaKaikki;
 
-    @ApiModelProperty(value = "Tarkka kiintio", required = true)
-    private boolean tarkkaKiintio;
+  @ApiModelProperty(value = "Tarkka kiintio", required = true)
+  private boolean tarkkaKiintio;
 
-    @ApiModelProperty(value = "Käytetäänkö hakijaryhmään kuuluvia", required = true)
-    private boolean kaytetaanRyhmaanKuuluvia;
+  @ApiModelProperty(value = "Käytetäänkö hakijaryhmään kuuluvia", required = true)
+  private boolean kaytetaanRyhmaanKuuluvia;
 
-    @ApiModelProperty(value = "Aktiivinen", required = true)
-    private Boolean aktiivinen;
+  @ApiModelProperty(value = "Aktiivinen", required = true)
+  private Boolean aktiivinen;
 
-    @ApiModelProperty(value = "Prioriteetti", required = true)
-    private int prioriteetti;
+  @ApiModelProperty(value = "Prioriteetti", required = true)
+  private int prioriteetti;
 
-    @ApiModelProperty(value = "Master haikjaryhmän OID", required = false)
-    private String masterOid;
+  @ApiModelProperty(value = "Master haikjaryhmän OID", required = false)
+  private String masterOid;
 
-    @ApiModelProperty(value = "Hakijaryhmatyyppikoodi")
-    private KoodiDTO hakijaryhmatyyppikoodi = null;
+  @ApiModelProperty(value = "Hakijaryhmatyyppikoodi")
+  private KoodiDTO hakijaryhmatyyppikoodi = null;
 
-    public Boolean getAktiivinen() {
-        return aktiivinen;
-    }
+  public Boolean getAktiivinen() {
+    return aktiivinen;
+  }
 
-    public void setAktiivinen(Boolean aktiivinen) {
-        this.aktiivinen = aktiivinen;
-    }
+  public void setAktiivinen(Boolean aktiivinen) {
+    this.aktiivinen = aktiivinen;
+  }
 
-    public int getKiintio() {
-        return kiintio;
-    }
+  public int getKiintio() {
+    return kiintio;
+  }
 
-    public void setKiintio(int kiintio) {
-        this.kiintio = kiintio;
-    }
+  public void setKiintio(int kiintio) {
+    this.kiintio = kiintio;
+  }
 
-    public boolean isKaytaKaikki() {
-        return kaytaKaikki;
-    }
+  public boolean isKaytaKaikki() {
+    return kaytaKaikki;
+  }
 
-    public void setKaytaKaikki(boolean kaytaKaikki) {
-        this.kaytaKaikki = kaytaKaikki;
-    }
+  public void setKaytaKaikki(boolean kaytaKaikki) {
+    this.kaytaKaikki = kaytaKaikki;
+  }
 
-    public boolean isTarkkaKiintio() {
-        return tarkkaKiintio;
-    }
+  public boolean isTarkkaKiintio() {
+    return tarkkaKiintio;
+  }
 
-    public void setTarkkaKiintio(boolean tarkkaKiintio) {
-        this.tarkkaKiintio = tarkkaKiintio;
-    }
+  public void setTarkkaKiintio(boolean tarkkaKiintio) {
+    this.tarkkaKiintio = tarkkaKiintio;
+  }
 
-    public String getNimi() {
-        return nimi;
-    }
+  public String getNimi() {
+    return nimi;
+  }
 
-    public void setNimi(String nimi) {
-        this.nimi = nimi;
-    }
+  public void setNimi(String nimi) {
+    this.nimi = nimi;
+  }
 
-    public String getKuvaus() {
-        return kuvaus;
-    }
+  public String getKuvaus() {
+    return kuvaus;
+  }
 
-    public void setKuvaus(String kuvaus) {
-        this.kuvaus = kuvaus;
-    }
+  public void setKuvaus(String kuvaus) {
+    this.kuvaus = kuvaus;
+  }
 
-    public String getOid() {
-        return oid;
-    }
+  public String getOid() {
+    return oid;
+  }
 
-    public void setOid(String oid) {
-        this.oid = oid;
-    }
+  public void setOid(String oid) {
+    this.oid = oid;
+  }
 
-    public String getMasterOid() {
-        return masterOid;
-    }
+  public String getMasterOid() {
+    return masterOid;
+  }
 
-    public void setMasterOid(String masterOid) {
-        this.masterOid = masterOid;
-    }
+  public void setMasterOid(String masterOid) {
+    this.masterOid = masterOid;
+  }
 
-    public boolean isKaytetaanRyhmaanKuuluvia() {
-        return kaytetaanRyhmaanKuuluvia;
-    }
+  public boolean isKaytetaanRyhmaanKuuluvia() {
+    return kaytetaanRyhmaanKuuluvia;
+  }
 
-    public void setKaytetaanRyhmaanKuuluvia(boolean kaytetaanRyhmaanKuuluvia) {
-        this.kaytetaanRyhmaanKuuluvia = kaytetaanRyhmaanKuuluvia;
-    }
+  public void setKaytetaanRyhmaanKuuluvia(boolean kaytetaanRyhmaanKuuluvia) {
+    this.kaytetaanRyhmaanKuuluvia = kaytetaanRyhmaanKuuluvia;
+  }
 
-    public int getPrioriteetti() {
-        return prioriteetti;
-    }
+  public int getPrioriteetti() {
+    return prioriteetti;
+  }
 
-    public void setPrioriteetti(int prioriteetti) {
-        this.prioriteetti = prioriteetti;
-    }
+  public void setPrioriteetti(int prioriteetti) {
+    this.prioriteetti = prioriteetti;
+  }
 
-    public KoodiDTO getHakijaryhmatyyppikoodi(){ return hakijaryhmatyyppikoodi; }
+  public KoodiDTO getHakijaryhmatyyppikoodi() {
+    return hakijaryhmatyyppikoodi;
+  }
 
-    public void setHakijaryhmatyyppikoodi(KoodiDTO hakijaryhmatyyppikoodi){
-        this.hakijaryhmatyyppikoodi = hakijaryhmatyyppikoodi;
-    }
+  public void setHakijaryhmatyyppikoodi(KoodiDTO hakijaryhmatyyppikoodi) {
+    this.hakijaryhmatyyppikoodi = hakijaryhmatyyppikoodi;
+  }
 }

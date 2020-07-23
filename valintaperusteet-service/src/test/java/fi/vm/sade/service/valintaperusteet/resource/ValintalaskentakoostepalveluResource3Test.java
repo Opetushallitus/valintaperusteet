@@ -20,21 +20,21 @@ import fi.vm.sade.service.valintaperusteet.service.ValintakoeService;
 import fi.vm.sade.service.valintaperusteet.service.ValintaperusteService;
 import fi.vm.sade.service.valintaperusteet.service.ValintaryhmaService;
 import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 @RunWith(JUnit4.class)
 public class ValintalaskentakoostepalveluResource3Test {
-    @Test
-    public void testJonojenPrioriteetitIsollaDatalla() {
-        String hakukohdeOid = "hakukohdeOid";
-        HakukohdeService hakukohdeService = mock(HakukohdeService.class);
-        ValintalaskentakoostepalveluResourceImpl resource = new ValintalaskentakoostepalveluResourceImpl(
+  @Test
+  public void testJonojenPrioriteetitIsollaDatalla() {
+    String hakukohdeOid = "hakukohdeOid";
+    HakukohdeService hakukohdeService = mock(HakukohdeService.class);
+    ValintalaskentakoostepalveluResourceImpl resource =
+        new ValintalaskentakoostepalveluResourceImpl(
             mock(ValintaperusteService.class),
             mock(HakijaryhmaValintatapajonoService.class),
             mock(ValinnanVaiheService.class),
@@ -45,19 +45,20 @@ public class ValintalaskentakoostepalveluResource3Test {
             hakukohdeService,
             mock(ValintakoeService.class));
 
-        ValinnanVaihe valinnanVaihe = new ValinnanVaihe();
-        LinkedHashSet<Valintatapajono> valintatapajonot = new LinkedHashSet<>();
-        for (int i = 0; i < 1000; i++) {
-            Valintatapajono jono = new Valintatapajono();
-            jono.setKaytetaanValintalaskentaa(false);
-            jono.setOid(Integer.toString(i));
-            valintatapajonot.add(jono);
-        }
-        valinnanVaihe.setJonot(valintatapajonot);
-        when(hakukohdeService.ilmanLaskentaa(hakukohdeOid)).thenReturn(Collections.singletonList(valinnanVaihe));
-
-        Set<ValintatapajonoDTO> jonoDtos = resource.ilmanLaskentaa(hakukohdeOid).get(0).getJonot();
-        assertThat(jonoDtos, hasSize(greaterThan(1)));
-        jonoDtos.forEach(j -> assertEquals(j.getOid(), Integer.toString(j.getPrioriteetti())));
+    ValinnanVaihe valinnanVaihe = new ValinnanVaihe();
+    LinkedHashSet<Valintatapajono> valintatapajonot = new LinkedHashSet<>();
+    for (int i = 0; i < 1000; i++) {
+      Valintatapajono jono = new Valintatapajono();
+      jono.setKaytetaanValintalaskentaa(false);
+      jono.setOid(Integer.toString(i));
+      valintatapajonot.add(jono);
     }
+    valinnanVaihe.setJonot(valintatapajonot);
+    when(hakukohdeService.ilmanLaskentaa(hakukohdeOid))
+        .thenReturn(Collections.singletonList(valinnanVaihe));
+
+    Set<ValintatapajonoDTO> jonoDtos = resource.ilmanLaskentaa(hakukohdeOid).get(0).getJonot();
+    assertThat(jonoDtos, hasSize(greaterThan(1)));
+    jonoDtos.forEach(j -> assertEquals(j.getOid(), Integer.toString(j.getPrioriteetti())));
+  }
 }

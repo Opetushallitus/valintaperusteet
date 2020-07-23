@@ -6,14 +6,14 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "LaskentakaavaCreateDTO", description = "Laskentakaava")
 public class LaskentakaavaCreateDTO extends AbstractLaskentakaavaDTO {
 
-    @ApiModelProperty(value = "Nimi", required = true)
-    private FunktiokutsuDTO funktiokutsu;
+  @ApiModelProperty(value = "Nimi", required = true)
+  private FunktiokutsuDTO funktiokutsu;
 
-    public FunktiokutsuDTO getFunktiokutsu() {
-        return funktiokutsu;
-    }
+  public FunktiokutsuDTO getFunktiokutsu() {
+    return funktiokutsu;
+  }
 
-    public void setFunktiokutsu(FunktiokutsuDTO funktiokutsu) {
-        this.funktiokutsu = funktiokutsu;
-    }
+  public void setFunktiokutsu(FunktiokutsuDTO funktiokutsu) {
+    this.funktiokutsu = funktiokutsu;
+  }
 }

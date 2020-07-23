@@ -4,25 +4,29 @@ import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriCreateDTO;
 import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import fi.vm.sade.service.valintaperusteet.util.JuureenKopiointiCache;
-
 import java.util.List;
 
 public interface JarjestyskriteeriService {
-    List<Jarjestyskriteeri> findJarjestyskriteeriByJono(String oid);
+  List<Jarjestyskriteeri> findJarjestyskriteeriByJono(String oid);
 
-    List<Jarjestyskriteeri> findByHakukohde(String oid);
+  List<Jarjestyskriteeri> findByHakukohde(String oid);
 
-    void deleteByOid(String oid);
+  void deleteByOid(String oid);
 
-    Jarjestyskriteeri readByOid(String oid);
+  Jarjestyskriteeri readByOid(String oid);
 
-    Jarjestyskriteeri lisaaJarjestyskriteeriValintatapajonolle(String valintatapajonoOid, JarjestyskriteeriCreateDTO jarjestyskriteeri, String edellinenValintatapajonoOid, Long laskentakaavaOid);
+  Jarjestyskriteeri lisaaJarjestyskriteeriValintatapajonolle(
+      String valintatapajonoOid,
+      JarjestyskriteeriCreateDTO jarjestyskriteeri,
+      String edellinenValintatapajonoOid,
+      Long laskentakaavaOid);
 
-    List<Jarjestyskriteeri> jarjestaKriteerit(List<String> oids);
+  List<Jarjestyskriteeri> jarjestaKriteerit(List<String> oids);
 
-    void kopioiJarjestyskriteeritMasterValintatapajonoltaKopiolle(Valintatapajono lisatty, Valintatapajono master, JuureenKopiointiCache kopiointiCache);
+  void kopioiJarjestyskriteeritMasterValintatapajonoltaKopiolle(
+      Valintatapajono lisatty, Valintatapajono master, JuureenKopiointiCache kopiointiCache);
 
-    Jarjestyskriteeri update(String oid, JarjestyskriteeriCreateDTO incoming, Long laskentakaavaId);
+  Jarjestyskriteeri update(String oid, JarjestyskriteeriCreateDTO incoming, Long laskentakaavaId);
 
-    void delete(Jarjestyskriteeri jarjestyskriteeri);
+  void delete(Jarjestyskriteeri jarjestyskriteeri);
 }

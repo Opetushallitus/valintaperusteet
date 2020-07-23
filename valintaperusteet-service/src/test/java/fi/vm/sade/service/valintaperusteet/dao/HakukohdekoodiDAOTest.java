@@ -17,37 +17,35 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * User: wuoti
- * Date: 8.5.2013
- * Time: 14.14
- */
+/** User: wuoti Date: 8.5.2013 Time: 14.14 */
 @ContextConfiguration(locations = "classpath:test-context.xml")
-@TestExecutionListeners(listeners = {
-        DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
-        ValinnatJTACleanInsertTestExecutionListener.class})
+@TestExecutionListeners(
+    listeners = {
+      DependencyInjectionTestExecutionListener.class,
+      DirtiesContextTestExecutionListener.class,
+      ValinnatJTACleanInsertTestExecutionListener.class
+    })
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
 @DataSetLocation("classpath:test-data.xml")
 public class HakukohdekoodiDAOTest {
 
-    @Autowired
-    private HakukohdekoodiDAO hakukohdekoodiDAO;
+  @Autowired private HakukohdekoodiDAO hakukohdekoodiDAO;
 
-    @Test
-    public void testFindByKoodiUri() {
-        final String koodiUri = "hakukohdekoodiuri1";
-        Hakukohdekoodi koodi = hakukohdekoodiDAO.readByUri(koodiUri);
+  @Test
+  public void testFindByKoodiUri() {
+    final String koodiUri = "hakukohdekoodiuri1";
+    Hakukohdekoodi koodi = hakukohdekoodiDAO.readByUri(koodiUri);
 
-        assertEquals(koodiUri, koodi.getUri());
-        assertNull(hakukohdekoodiDAO.readByUri("not-exists"));
-    }
+    assertEquals(koodiUri, koodi.getUri());
+    assertNull(hakukohdekoodiDAO.readByUri("not-exists"));
+  }
 
-    @Test
-    public void testFindByHakukohdeOid() {
-        final String hakukohdeOid = "oid12";
-        Hakukohdekoodi hakukohdekoodi = hakukohdekoodiDAO.findByHakukohdeOid(hakukohdeOid);
-        assertNotNull(hakukohdekoodi);
-        assertNull(hakukohdekoodiDAO.findByHakukohdeOid("not exists"));
-    }
+  @Test
+  public void testFindByHakukohdeOid() {
+    final String hakukohdeOid = "oid12";
+    Hakukohdekoodi hakukohdekoodi = hakukohdekoodiDAO.findByHakukohdeOid(hakukohdeOid);
+    assertNotNull(hakukohdekoodi);
+    assertNull(hakukohdekoodiDAO.findByHakukohdeOid("not exists"));
+  }
 }

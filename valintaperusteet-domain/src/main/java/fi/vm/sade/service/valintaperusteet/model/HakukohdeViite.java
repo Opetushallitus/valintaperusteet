@@ -1,174 +1,181 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
-import javax.persistence.*;
 import java.util.*;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "hakukohde_viite")
 @Cacheable(true)
 public class HakukohdeViite extends BaseEntity {
 
-    @Column(name = "hakuoid", nullable = false)
-    private String hakuoid;
+  @Column(name = "hakuoid", nullable = false)
+  private String hakuoid;
 
-    @Column(name = "oid", unique = true, nullable = false)
-    private String oid;
+  @Column(name = "oid", unique = true, nullable = false)
+  private String oid;
 
-    @Column(name = "tarjoajaOid")
-    private String tarjoajaOid;
+  @Column(name = "tarjoajaOid")
+  private String tarjoajaOid;
 
-    @Column(name = "nimi")
-    private String nimi;
+  @Column(name = "nimi")
+  private String nimi;
 
-    @Column(name = "tila")
-    private String tila;
+  @Column(name = "tila")
+  private String tila;
 
-    @Column(name = "manuaalisesti_siirretty")
-    private Boolean manuaalisestiSiirretty = false;
+  @Column(name = "manuaalisesti_siirretty")
+  private Boolean manuaalisestiSiirretty = false;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    private Valintaryhma valintaryhma;
+  @ManyToOne(fetch = FetchType.LAZY, optional = true)
+  private Valintaryhma valintaryhma;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "hakukohdeViite")
-    private Set<ValinnanVaihe> valinnanvaiheet = new HashSet<ValinnanVaihe>();
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "hakukohdeViite")
+  private Set<ValinnanVaihe> valinnanvaiheet = new HashSet<ValinnanVaihe>();
 
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "hakukohde")
+  private Set<Laskentakaava> laskentakaava = new HashSet<Laskentakaava>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "hakukohde")
-    private Set<Laskentakaava> laskentakaava = new HashSet<Laskentakaava>();
+  @JoinColumn(name = "hakukohdekoodi_id", nullable = true)
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Hakukohdekoodi hakukohdekoodi;
 
-    @JoinColumn(name = "hakukohdekoodi_id", nullable = true)
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Hakukohdekoodi hakukohdekoodi;
+  @JoinTable(
+      name = "hakukohde_viite_valintakoekoodi",
+      joinColumns =
+          @JoinColumn(
+              name = "hakukohde_viite_id",
+              referencedColumnName = BaseEntity.ID_COLUMN_NAME),
+      inverseJoinColumns =
+          @JoinColumn(
+              name = "valintakoekoodi_id",
+              referencedColumnName = BaseEntity.ID_COLUMN_NAME))
+  @ManyToMany(fetch = FetchType.LAZY)
+  private List<Valintakoekoodi> valintakokeet = new ArrayList<Valintakoekoodi>();
 
-    @JoinTable(name = "hakukohde_viite_valintakoekoodi",
-            joinColumns = @JoinColumn(name = "hakukohde_viite_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME),
-            inverseJoinColumns = @JoinColumn(name = "valintakoekoodi_id", referencedColumnName = BaseEntity.ID_COLUMN_NAME))
-    @ManyToMany(fetch = FetchType.LAZY)
-    private List<Valintakoekoodi> valintakokeet = new ArrayList<Valintakoekoodi>();
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "hakukohde", cascade = CascadeType.ALL)
+  @MapKeyColumn(name = "tunniste")
+  private Map<String, HakukohteenValintaperuste> hakukohteenValintaperusteet =
+      new HashMap<String, HakukohteenValintaperuste>();
 
+  @OneToMany(mappedBy = "hakukohdeViite", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+  private Set<HakijaryhmaValintatapajono> hakijaryhmat = new HashSet<HakijaryhmaValintatapajono>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "hakukohde", cascade = CascadeType.ALL)
-    @MapKeyColumn(name = "tunniste")
-    private Map<String, HakukohteenValintaperuste> hakukohteenValintaperusteet = new HashMap<String, HakukohteenValintaperuste>();
+  public String getHakuoid() {
+    return hakuoid;
+  }
 
-    @OneToMany(mappedBy = "hakukohdeViite", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private Set<HakijaryhmaValintatapajono> hakijaryhmat = new HashSet<HakijaryhmaValintatapajono>();
+  public void setHakuoid(String hakuoid) {
+    this.hakuoid = hakuoid;
+  }
 
-    public String getHakuoid() {
-        return hakuoid;
-    }
+  public String getOid() {
+    return oid;
+  }
 
-    public void setHakuoid(String hakuoid) {
-        this.hakuoid = hakuoid;
-    }
+  public void setOid(String oid) {
+    this.oid = oid;
+  }
 
-    public String getOid() {
-        return oid;
-    }
+  public String getNimi() {
+    return nimi;
+  }
 
-    public void setOid(String oid) {
-        this.oid = oid;
-    }
+  public void setNimi(String nimi) {
+    this.nimi = nimi;
+  }
 
-    public String getNimi() {
-        return nimi;
-    }
+  public Boolean getManuaalisestiSiirretty() {
+    return manuaalisestiSiirretty;
+  }
 
-    public void setNimi(String nimi) {
-        this.nimi = nimi;
-    }
+  public void setManuaalisestiSiirretty(Boolean manuaalisestiSiirretty) {
+    this.manuaalisestiSiirretty = manuaalisestiSiirretty;
+  }
 
-    public Boolean getManuaalisestiSiirretty() {
-        return manuaalisestiSiirretty;
-    }
+  public Valintaryhma getValintaryhma() {
+    return valintaryhma;
+  }
 
-    public void setManuaalisestiSiirretty(Boolean manuaalisestiSiirretty) {
-        this.manuaalisestiSiirretty = manuaalisestiSiirretty;
-    }
+  public void setValintaryhma(Valintaryhma valintaryhma) {
+    this.valintaryhma = valintaryhma;
+  }
 
-    public Valintaryhma getValintaryhma() {
-        return valintaryhma;
-    }
+  public Set<ValinnanVaihe> getValinnanvaiheet() {
+    return valinnanvaiheet;
+  }
 
-    public void setValintaryhma(Valintaryhma valintaryhma) {
-        this.valintaryhma = valintaryhma;
-    }
+  public void setValinnanvaiheet(Set<ValinnanVaihe> valinnanvaiheet) {
+    this.valinnanvaiheet = valinnanvaiheet;
+  }
 
-    public Set<ValinnanVaihe> getValinnanvaiheet() {
-        return valinnanvaiheet;
-    }
+  public Set<Laskentakaava> getLaskentakaava() {
+    return laskentakaava;
+  }
 
-    public void setValinnanvaiheet(Set<ValinnanVaihe> valinnanvaiheet) {
-        this.valinnanvaiheet = valinnanvaiheet;
-    }
+  public void setLaskentakaava(Set<Laskentakaava> laskentakaava) {
+    this.laskentakaava = laskentakaava;
+  }
 
-    public Set<Laskentakaava> getLaskentakaava() {
-        return laskentakaava;
-    }
+  private String getValintaryhmaOid() {
+    return valintaryhma != null ? valintaryhma.getOid() : "";
+  }
 
-    public void setLaskentakaava(Set<Laskentakaava> laskentakaava) {
-        this.laskentakaava = laskentakaava;
-    }
+  public void addValinnanVaihe(ValinnanVaihe valinnanVaihe) {
+    valinnanVaihe.setHakukohdeViite(this);
+    this.getValinnanvaiheet().add(valinnanVaihe);
+  }
 
-    private String getValintaryhmaOid() {
-        return valintaryhma != null ? valintaryhma.getOid() : "";
-    }
+  public Hakukohdekoodi getHakukohdekoodi() {
+    return hakukohdekoodi;
+  }
 
-    public void addValinnanVaihe(ValinnanVaihe valinnanVaihe) {
-        valinnanVaihe.setHakukohdeViite(this);
-        this.getValinnanvaiheet().add(valinnanVaihe);
-    }
+  public void setHakukohdekoodi(Hakukohdekoodi hakukohdekoodi) {
+    this.hakukohdekoodi = hakukohdekoodi;
+  }
 
-    public Hakukohdekoodi getHakukohdekoodi() {
-        return hakukohdekoodi;
-    }
+  public List<Valintakoekoodi> getValintakokeet() {
+    return valintakokeet;
+  }
 
-    public void setHakukohdekoodi(Hakukohdekoodi hakukohdekoodi) {
-        this.hakukohdekoodi = hakukohdekoodi;
-    }
+  public void setValintakokeet(List<Valintakoekoodi> valintakokeet) {
+    this.valintakokeet = valintakokeet;
+  }
 
-    public List<Valintakoekoodi> getValintakokeet() {
-        return valintakokeet;
-    }
+  public String getTarjoajaOid() {
+    return tarjoajaOid;
+  }
 
-    public void setValintakokeet(List<Valintakoekoodi> valintakokeet) {
-        this.valintakokeet = valintakokeet;
-    }
+  public void setTarjoajaOid(String tarjoajaOid) {
+    this.tarjoajaOid = tarjoajaOid;
+  }
 
-    public String getTarjoajaOid() {
-        return tarjoajaOid;
-    }
+  public String getTila() {
+    return tila;
+  }
 
-    public void setTarjoajaOid(String tarjoajaOid) {
-        this.tarjoajaOid = tarjoajaOid;
-    }
+  public void setTila(String tila) {
+    this.tila = tila;
+  }
 
-    public String getTila() {
-        return tila;
-    }
+  public Map<String, HakukohteenValintaperuste> getHakukohteenValintaperusteet() {
+    return hakukohteenValintaperusteet;
+  }
 
-    public void setTila(String tila) {
-        this.tila = tila;
-    }
+  public void setHakukohteenValintaperusteet(
+      Map<String, HakukohteenValintaperuste> hakukohteenValintaperusteet) {
+    this.hakukohteenValintaperusteet = hakukohteenValintaperusteet;
+  }
 
-    public Map<String, HakukohteenValintaperuste> getHakukohteenValintaperusteet() {
-        return hakukohteenValintaperusteet;
-    }
+  public Set<HakijaryhmaValintatapajono> getHakijaryhmat() {
+    return hakijaryhmat;
+  }
 
-    public void setHakukohteenValintaperusteet(Map<String, HakukohteenValintaperuste> hakukohteenValintaperusteet) {
-        this.hakukohteenValintaperusteet = hakukohteenValintaperusteet;
-    }
+  public void setHakijaryhmat(Set<HakijaryhmaValintatapajono> hakijaryhmat) {
+    this.hakijaryhmat = hakijaryhmat;
+  }
 
-    public Set<HakijaryhmaValintatapajono> getHakijaryhmat() {
-        return hakijaryhmat;
-    }
-
-    public void setHakijaryhmat(Set<HakijaryhmaValintatapajono> hakijaryhmat) {
-        this.hakijaryhmat = hakijaryhmat;
-    }
-
-    public void addHakijaryhma(HakijaryhmaValintatapajono kopio) {
-        kopio.setHakukohdeViite(this);
-        this.getHakijaryhmat().add(kopio);
-    }
+  public void addHakijaryhma(HakijaryhmaValintatapajono kopio) {
+    kopio.setHakukohdeViite(this);
+    this.getHakijaryhmat().add(kopio);
+  }
 }

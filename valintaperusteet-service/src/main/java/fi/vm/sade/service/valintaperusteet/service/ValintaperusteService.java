@@ -4,22 +4,17 @@ import fi.vm.sade.service.valintaperusteet.dto.HakukohdeImportDTO;
 import fi.vm.sade.service.valintaperusteet.dto.HakuparametritDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteetDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
-import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
-import org.springframework.security.access.prepost.PreAuthorize;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD;
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
-
 public interface ValintaperusteService {
-    List<ValintatapajonoDTO> haeValintatapajonotSijoittelulle(String hakukohdeOid);
+  List<ValintatapajonoDTO> haeValintatapajonotSijoittelulle(String hakukohdeOid);
 
-    Map<String, List<ValintatapajonoDTO>> haeValintatapajonotSijoittelulle(Collection<String> hakukohdeOids);
+  Map<String, List<ValintatapajonoDTO>> haeValintatapajonotSijoittelulle(
+      Collection<String> hakukohdeOids);
 
-    List<ValintaperusteetDTO> haeValintaperusteet(List<HakuparametritDTO> hakuparametrit);
+  List<ValintaperusteetDTO> haeValintaperusteet(List<HakuparametritDTO> hakuparametrit);
 
-    void tuoHakukohde(HakukohdeImportDTO hakukohde);
+  void tuoHakukohde(HakukohdeImportDTO hakukohde);
 }

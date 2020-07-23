@@ -7,7 +7,4 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "syotettavanarvonkoodi")
 @Cacheable(true)
-public class Syotettavanarvontyyppi extends Koodi{
-
-
-}
+public class Syotettavanarvontyyppi extends Koodi {}

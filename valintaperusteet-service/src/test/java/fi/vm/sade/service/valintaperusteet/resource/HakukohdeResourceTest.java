@@ -1,6 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
 import static junit.framework.TestCase.fail;
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -15,6 +16,11 @@ import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.resource.impl.HakukohdeResourceImpl;
 import fi.vm.sade.service.valintaperusteet.util.TestUtil;
 import fi.vm.sade.valinta.sharedutils.FakeAuthenticationInitialiser;
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,253 +33,246 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
-import javax.ws.rs.WebApplicationException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.ws.rs.core.Response;
-import java.util.List;
-
-import static org.junit.Assert.*;
-
-/**
- * User: jukais Date: 16.1.2013 Time: 14.15
- */
+/** User: jukais Date: 16.1.2013 Time: 14.15 */
 @ContextConfiguration(locations = "classpath:test-context.xml")
-@TestExecutionListeners(listeners = { ValinnatJTACleanInsertTestExecutionListener.class,
-        DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class })
+@TestExecutionListeners(
+    listeners = {
+      ValinnatJTACleanInsertTestExecutionListener.class,
+      DependencyInjectionTestExecutionListener.class,
+      DirtiesContextTestExecutionListener.class
+    })
 @RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data.xml")
 public class HakukohdeResourceTest {
-    private HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-    private HttpSession session = Mockito.mock(HttpSession.class);
+  private HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+  private HttpSession session = Mockito.mock(HttpSession.class);
 
-    private HakukohdeResourceImpl hakukohdeResource = new HakukohdeResourceImpl();
-    private TestUtil testUtil = new TestUtil(HakukohdeResourceTest.class);
+  private HakukohdeResourceImpl hakukohdeResource = new HakukohdeResourceImpl();
+  private TestUtil testUtil = new TestUtil(HakukohdeResourceTest.class);
 
-    private ObjectMapper mapper = new ObjectMapperProvider().getContext(HakukohdeResourceImpl.class);
+  private ObjectMapper mapper = new ObjectMapperProvider().getContext(HakukohdeResourceImpl.class);
 
-    @Autowired
-    private ApplicationContext applicationContext;
+  @Autowired private ApplicationContext applicationContext;
 
-    @Autowired
-    ValinnanVaiheDAO valinnanVaiheDao;
+  @Autowired ValinnanVaiheDAO valinnanVaiheDao;
 
-    @Before
-    public void setUp() {
-        applicationContext.getAutowireCapableBeanFactory().autowireBean(hakukohdeResource);
-        FakeAuthenticationInitialiser.fakeAuthentication();
+  @Before
+  public void setUp() {
+    applicationContext.getAutowireCapableBeanFactory().autowireBean(hakukohdeResource);
+    FakeAuthenticationInitialiser.fakeAuthentication();
+  }
+
+  @Test
+  public void testFindByOid() throws Exception {
+    HakukohdeViiteDTO vroid1 = hakukohdeResource.queryFull("oid1");
+    assertEquals("haku1", vroid1.getNimi());
+    testUtil.lazyCheck(JsonViews.Basic.class, vroid1);
+  }
+
+  @Test
+  public void testFindAll() throws Exception {
+    List<HakukohdeViiteDTO> hakukohdeViites = hakukohdeResource.query(false);
+    assertEquals(32, hakukohdeViites.size());
+    testUtil.lazyCheck(JsonViews.Basic.class, hakukohdeViites);
+  }
+
+  @Test
+  public void testFindRoot() throws Exception {
+    List<HakukohdeViiteDTO> hakukohdeViites = hakukohdeResource.query(true);
+    assertEquals(17, hakukohdeViites.size());
+    testUtil.lazyCheck(JsonViews.Basic.class, hakukohdeViites);
+  }
+
+  @Test
+  public void testInsertNull() {
+    HakukohdeViiteDTO valintaryhma = new HakukohdeViiteDTO();
+    Response insert = hakukohdeResource.insert(new HakukohdeInsertDTO(valintaryhma, null), request);
+    assertEquals(500, insert.getStatus());
+  }
+
+  @Test
+  public void testInsert() throws Exception {
+    Mockito.when(request.getSession(false)).thenReturn(session);
+    HakukohdeViiteCreateDTO hakukohdeDTO = new HakukohdeViiteDTO();
+    hakukohdeDTO.setNimi("Uusi valintaryhmä");
+    hakukohdeDTO.setOid("uusi oid");
+    hakukohdeDTO.setHakuoid("hakuoid");
+
+    Response insert =
+        hakukohdeResource.insert(new HakukohdeInsertDTO(hakukohdeDTO, "oid1"), request);
+    assertEquals(201, insert.getStatus());
+
+    testUtil.lazyCheck(JsonViews.Basic.class, insert.getEntity());
+  }
+
+  @Test
+  public void testInsertRoot() throws Exception {
+    Mockito.when(request.getSession(false)).thenReturn(session);
+    HakukohdeViiteDTO hakukohdeDto = new HakukohdeViiteDTO();
+    hakukohdeDto.setNimi("Uusi valintaryhmä");
+    hakukohdeDto.setOid("uusi oid");
+    hakukohdeDto.setHakuoid("hakuoid");
+
+    Response insert = hakukohdeResource.insert(new HakukohdeInsertDTO(hakukohdeDto, null), request);
+    assertEquals(201, insert.getStatus());
+
+    testUtil.lazyCheck(JsonViews.Basic.class, insert.getEntity());
+  }
+
+  @Test
+  public void testInsertDuplicate() throws Exception {
+    HakukohdeViiteDTO hakukohde = new HakukohdeViiteDTO();
+    hakukohde.setNimi("Uusi valintaryhmä");
+    hakukohde.setOid("oid1");
+    Response insert = hakukohdeResource.insert(new HakukohdeInsertDTO(hakukohde, null), request);
+    assertEquals(500, insert.getStatus());
+    testUtil.lazyCheck(JsonViews.Basic.class, insert.getEntity());
+  }
+
+  @Test
+  public void getValintakoesForHakukohdeReturns404IfViiteNotFound() {
+    try {
+      hakukohdeResource.valintakoesForHakukohde("IMAGINARY_HAKUKOHDE_OID");
+      fail("Should not reach here. Expected to throw exception");
+    } catch (WebApplicationException e) {
+      assertEquals("HakukohdeViite (IMAGINARY_HAKUKOHDE_OID) ei ole olemassa.", e.getMessage());
+      assertEquals(404, e.getResponse().getStatus());
     }
+  }
 
-    @Test
-    public void testFindByOid() throws Exception {
-        HakukohdeViiteDTO vroid1 = hakukohdeResource.queryFull("oid1");
-        assertEquals("haku1", vroid1.getNimi());
-        testUtil.lazyCheck(JsonViews.Basic.class, vroid1);
-    }
+  @Test
+  public void testUpdate() throws Exception {
+    HakukohdeViiteDTO hkv = hakukohdeResource.queryFull("oid1");
+    hkv.setNimi("muokattu");
 
-    @Test
-    public void testFindAll() throws Exception {
-        List<HakukohdeViiteDTO> hakukohdeViites = hakukohdeResource.query(false);
-        assertEquals(32, hakukohdeViites.size());
-        testUtil.lazyCheck(JsonViews.Basic.class, hakukohdeViites);
-    }
+    ObjectMapper mapper = testUtil.getObjectMapper();
 
-    @Test
-    public void testFindRoot() throws Exception {
-        List<HakukohdeViiteDTO> hakukohdeViites = hakukohdeResource.query(true);
-        assertEquals(17, hakukohdeViites.size());
-        testUtil.lazyCheck(JsonViews.Basic.class, hakukohdeViites);
-    }
+    final String json = mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(hkv);
+    HakukohdeViiteCreateDTO fromJson = mapper.readValue(json, HakukohdeViiteCreateDTO.class);
 
-    @Test
-    public void testInsertNull() {
-        HakukohdeViiteDTO valintaryhma = new HakukohdeViiteDTO();
-        Response insert = hakukohdeResource.insert(new HakukohdeInsertDTO(valintaryhma, null), request);
-        assertEquals(500, insert.getStatus());
+    hakukohdeResource.update(hkv.getOid(), fromJson, request);
 
-    }
+    hkv = hakukohdeResource.queryFull("oid1");
+    assertEquals("muokattu", hkv.getNimi());
+    testUtil.lazyCheck(JsonViews.Basic.class, hkv);
+  }
 
-    @Test
-    public void testInsert() throws Exception {
-        Mockito.when(request.getSession(false)).thenReturn(session);
-        HakukohdeViiteCreateDTO hakukohdeDTO = new HakukohdeViiteDTO();
-        hakukohdeDTO.setNimi("Uusi valintaryhmä");
-        hakukohdeDTO.setOid("uusi oid");
-        hakukohdeDTO.setHakuoid("hakuoid");
+  @Test
+  public void testValinnanVaihesForHakukohde() throws Exception {
+    List<ValinnanVaiheDTO> valinnanVaihes =
+        hakukohdeResource.valinnanVaihesForHakukohde("oid6", "false");
+    assertEquals(3, valinnanVaihes.size());
+    testUtil.lazyCheck(JsonViews.Basic.class, valinnanVaihes);
+  }
 
-        Response insert = hakukohdeResource.insert(new HakukohdeInsertDTO(hakukohdeDTO, "oid1"), request);
-        assertEquals(201, insert.getStatus());
+  @Test
+  public void testValinnanVaihesForHakukohdeWithValisijoittelutieto() throws Exception {
+    List<ValinnanVaiheDTO> valinnanVaihes =
+        hakukohdeResource.valinnanVaihesForHakukohde("oid6", "true");
+    assertEquals(3, valinnanVaihes.size());
+    assertTrue(valinnanVaihes.get(0).getHasValisijoittelu());
+    assertFalse(valinnanVaihes.get(1).getHasValisijoittelu());
+    assertFalse(valinnanVaihes.get(2).getHasValisijoittelu());
+    testUtil.lazyCheck(JsonViews.Basic.class, valinnanVaihes);
+  }
 
-        testUtil.lazyCheck(JsonViews.Basic.class, insert.getEntity());
-    }
+  @Test
+  public void testFindLaskentakaavatByHakukohde() throws Exception {
+    List<JarjestyskriteeriDTO> laskentaKaavat = hakukohdeResource.findLaskentaKaavat("oid6");
+    assertEquals(3, laskentaKaavat.size());
+    testUtil.lazyCheck(JsonViews.Basic.class, laskentaKaavat);
+  }
 
-    @Test
-    public void testInsertRoot() throws Exception {
-        Mockito.when(request.getSession(false)).thenReturn(session);
-        HakukohdeViiteDTO hakukohdeDto = new HakukohdeViiteDTO();
-        hakukohdeDto.setNimi("Uusi valintaryhmä");
-        hakukohdeDto.setOid("uusi oid");
-        hakukohdeDto.setHakuoid("hakuoid");
+  @Test
+  public void testFindAvaimet() throws Exception {
+    List<ValintaperusteDTO> valintaperusteet = hakukohdeResource.findAvaimet("oid17");
+    assertEquals(2, valintaperusteet.size());
 
-        Response insert = hakukohdeResource.insert(new HakukohdeInsertDTO(hakukohdeDto, null), request);
-        assertEquals(201, insert.getStatus());
+    mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(valintaperusteet);
+  }
 
-        testUtil.lazyCheck(JsonViews.Basic.class, insert.getEntity());
-    }
+  @Test
+  public void testInsertValinnanVaihe() {
+    Mockito.when(request.getSession(false)).thenReturn(session);
+    ValinnanVaiheCreateDTO valinnanVaihe = new ValinnanVaiheCreateDTO();
 
-    @Test
-    public void testInsertDuplicate() throws Exception {
-        HakukohdeViiteDTO hakukohde = new HakukohdeViiteDTO();
-        hakukohde.setNimi("Uusi valintaryhmä");
-        hakukohde.setOid("oid1");
-        Response insert = hakukohdeResource.insert(new HakukohdeInsertDTO(hakukohde, null), request);
-        assertEquals(500, insert.getStatus());
-        testUtil.lazyCheck(JsonViews.Basic.class, insert.getEntity());
-    }
+    valinnanVaihe.setNimi("uusi");
+    valinnanVaihe.setAktiivinen(true);
+    valinnanVaihe.setValinnanVaiheTyyppi(
+        fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi.TAVALLINEN);
 
-    @Test
-    public void getValintakoesForHakukohdeReturns404IfViiteNotFound() {
-        try {
-            hakukohdeResource.valintakoesForHakukohde("IMAGINARY_HAKUKOHDE_OID");
-            fail("Should not reach here. Expected to throw exception");
-        } catch (WebApplicationException e) {
-            assertEquals("HakukohdeViite (IMAGINARY_HAKUKOHDE_OID) ei ole olemassa.", e.getMessage());
-            assertEquals(404, e.getResponse().getStatus());
-        }
-    }
+    Response response = hakukohdeResource.insertValinnanvaihe("oid1", null, valinnanVaihe, request);
+    assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
+    ValinnanVaiheDTO vv = (ValinnanVaiheDTO) response.getEntity();
 
-    @Test
-    public void testUpdate() throws Exception {
-        HakukohdeViiteDTO hkv = hakukohdeResource.queryFull("oid1");
-        hkv.setNimi("muokattu");
+    valinnanVaihe = new ValinnanVaiheCreateDTO();
+    valinnanVaihe.setNimi("uusi");
+    valinnanVaihe.setAktiivinen(true);
+    valinnanVaihe.setValinnanVaiheTyyppi(
+        fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi.TAVALLINEN);
 
-        ObjectMapper mapper = testUtil.getObjectMapper();
+    response = hakukohdeResource.insertValinnanvaihe("oid1", vv.getOid(), valinnanVaihe, request);
+    assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
+  }
 
-        final String json = mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(hkv);
-        HakukohdeViiteCreateDTO fromJson = mapper.readValue(json, HakukohdeViiteCreateDTO.class);
+  @Test
+  public void testKuuluuSijoitteluun() {
+    boolean oid;
+    oid = hakukohdeResource.kuuluuSijoitteluun("3401").get("sijoitteluun");
+    assertEquals(false, oid);
 
-        hakukohdeResource.update(hkv.getOid(), fromJson, request);
+    oid = hakukohdeResource.kuuluuSijoitteluun("3501").get("sijoitteluun");
+    assertEquals(false, oid);
 
-        hkv = hakukohdeResource.queryFull("oid1");
-        assertEquals("muokattu", hkv.getNimi());
-        testUtil.lazyCheck(JsonViews.Basic.class, hkv);
-    }
+    oid = hakukohdeResource.kuuluuSijoitteluun("3601").get("sijoitteluun");
+    assertEquals(true, oid);
 
-    @Test
-    public void testValinnanVaihesForHakukohde() throws Exception {
-        List<ValinnanVaiheDTO> valinnanVaihes = hakukohdeResource.valinnanVaihesForHakukohde("oid6", "false");
-        assertEquals(3, valinnanVaihes.size());
-        testUtil.lazyCheck(JsonViews.Basic.class, valinnanVaihes);
+    oid = hakukohdeResource.kuuluuSijoitteluun("3701").get("sijoitteluun");
+    assertEquals(false, oid);
+  }
 
-    }
+  @Test
+  public void testInsertAndUpdateHakukohdekoodi() {
+    Mockito.when(request.getSession(false)).thenReturn(session);
+    final String URI = "uri";
+    final String ARVO = "arvo";
+    KoodiDTO hakukohdekoodi = new KoodiDTO();
+    hakukohdekoodi.setUri(URI);
+    hakukohdekoodi.setArvo(ARVO);
+    Response response = hakukohdeResource.insertHakukohdekoodi("oid1", hakukohdekoodi, request);
+    assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
 
-    @Test
-    public void testValinnanVaihesForHakukohdeWithValisijoittelutieto() throws Exception {
-        List<ValinnanVaiheDTO> valinnanVaihes = hakukohdeResource.valinnanVaihesForHakukohde("oid6", "true");
-        assertEquals(3, valinnanVaihes.size());
-        assertTrue(valinnanVaihes.get(0).getHasValisijoittelu());
-        assertFalse(valinnanVaihes.get(1).getHasValisijoittelu());
-        assertFalse(valinnanVaihes.get(2).getHasValisijoittelu());
-        testUtil.lazyCheck(JsonViews.Basic.class, valinnanVaihes);
-    }
+    HakukohdeViiteDTO oid1 = hakukohdeResource.queryFull("oid1");
+    KoodiDTO hakukohdekoodi1 = oid1.getHakukohdekoodi();
+    assertEquals(ARVO, hakukohdekoodi1.getArvo());
+    assertEquals(URI, hakukohdekoodi1.getUri());
 
-    @Test
-    public void testFindLaskentakaavatByHakukohde() throws Exception {
-        List<JarjestyskriteeriDTO> laskentaKaavat = hakukohdeResource.findLaskentaKaavat("oid6");
-        assertEquals(3, laskentaKaavat.size());
-        testUtil.lazyCheck(JsonViews.Basic.class, laskentaKaavat);
-    }
+    // update
+    final String URI2 = "uri2";
 
-    @Test
-    public void testFindAvaimet() throws Exception {
-        List<ValintaperusteDTO> valintaperusteet = hakukohdeResource.findAvaimet("oid17");
-        assertEquals(2, valintaperusteet.size());
+    KoodiDTO uusikoodi = new KoodiDTO();
+    uusikoodi.setUri(URI2);
+    uusikoodi.setArvo(ARVO);
 
-        mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(valintaperusteet);
-    }
+    response = hakukohdeResource.updateHakukohdekoodi("oid1", uusikoodi, request);
+    assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
 
-    @Test
-    public void testInsertValinnanVaihe() {
-        Mockito.when(request.getSession(false)).thenReturn(session);
-        ValinnanVaiheCreateDTO valinnanVaihe = new ValinnanVaiheCreateDTO();
+    oid1 = hakukohdeResource.queryFull("oid1");
+    assertEquals(ARVO, oid1.getHakukohdekoodi().getArvo());
+    assertEquals(URI2, oid1.getHakukohdekoodi().getUri());
+  }
 
-        valinnanVaihe.setNimi("uusi");
-        valinnanVaihe.setAktiivinen(true);
-        valinnanVaihe
-                .setValinnanVaiheTyyppi(fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi.TAVALLINEN);
+  @Test
+  public void testSiirraHakukohdeValintaryhmaan() {
+    Mockito.when(request.getSession(false)).thenReturn(session);
+    final String valintaryhmaOid = "oid54";
+    final String hakukohdeOid = "oid18";
 
-        Response response = hakukohdeResource.insertValinnanvaihe("oid1", null, valinnanVaihe, request);
-        assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
-        ValinnanVaiheDTO vv = (ValinnanVaiheDTO) response.getEntity();
+    Response response =
+        hakukohdeResource.siirraHakukohdeValintaryhmaan(hakukohdeOid, valintaryhmaOid, request);
+    assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
 
-        valinnanVaihe = new ValinnanVaiheCreateDTO();
-        valinnanVaihe.setNimi("uusi");
-        valinnanVaihe.setAktiivinen(true);
-        valinnanVaihe
-                .setValinnanVaiheTyyppi(fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi.TAVALLINEN);
-
-        response = hakukohdeResource.insertValinnanvaihe("oid1", vv.getOid(), valinnanVaihe, request);
-        assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
-
-    }
-
-    @Test
-    public void testKuuluuSijoitteluun() {
-        boolean oid;
-        oid = hakukohdeResource.kuuluuSijoitteluun("3401").get("sijoitteluun");
-        assertEquals(false, oid);
-
-        oid = hakukohdeResource.kuuluuSijoitteluun("3501").get("sijoitteluun");
-        assertEquals(false, oid);
-
-        oid = hakukohdeResource.kuuluuSijoitteluun("3601").get("sijoitteluun");
-        assertEquals(true, oid);
-
-        oid = hakukohdeResource.kuuluuSijoitteluun("3701").get("sijoitteluun");
-        assertEquals(false, oid);
-    }
-
-    @Test
-    public void testInsertAndUpdateHakukohdekoodi() {
-        Mockito.when(request.getSession(false)).thenReturn(session);
-        final String URI = "uri";
-        final String ARVO = "arvo";
-        KoodiDTO hakukohdekoodi = new KoodiDTO();
-        hakukohdekoodi.setUri(URI);
-        hakukohdekoodi.setArvo(ARVO);
-        Response response = hakukohdeResource.insertHakukohdekoodi("oid1", hakukohdekoodi, request);
-        assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
-
-        HakukohdeViiteDTO oid1 = hakukohdeResource.queryFull("oid1");
-        KoodiDTO hakukohdekoodi1 = oid1.getHakukohdekoodi();
-        assertEquals(ARVO, hakukohdekoodi1.getArvo());
-        assertEquals(URI, hakukohdekoodi1.getUri());
-
-        // update
-        final String URI2 = "uri2";
-
-        KoodiDTO uusikoodi = new KoodiDTO();
-        uusikoodi.setUri(URI2);
-        uusikoodi.setArvo(ARVO);
-
-        response = hakukohdeResource.updateHakukohdekoodi("oid1", uusikoodi, request);
-        assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
-
-        oid1 = hakukohdeResource.queryFull("oid1");
-        assertEquals(ARVO, oid1.getHakukohdekoodi().getArvo());
-        assertEquals(URI2, oid1.getHakukohdekoodi().getUri());
-    }
-
-    @Test
-    public void testSiirraHakukohdeValintaryhmaan() {
-        Mockito.when(request.getSession(false)).thenReturn(session);
-        final String valintaryhmaOid = "oid54";
-        final String hakukohdeOid = "oid18";
-
-        Response response = hakukohdeResource.siirraHakukohdeValintaryhmaan(hakukohdeOid, valintaryhmaOid, request);
-        assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
-
-        HakukohdeViiteDTO hakukohde = (HakukohdeViiteDTO) response.getEntity();
-        assertEquals(valintaryhmaOid, hakukohde.getValintaryhmaOid());
-    }
+    HakukohdeViiteDTO hakukohde = (HakukohdeViiteDTO) response.getEntity();
+    assertEquals(valintaryhmaOid, hakukohde.getValintaryhmaOid());
+  }
 }

@@ -6,33 +6,30 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "FunktioargumenttiDTO", description = "Funktioargumentti")
 public class FunktioargumenttiDTO implements Comparable<FunktioargumenttiDTO> {
 
+  @ApiModelProperty(value = "Funktioargumentin lapsi (funktiokutsu tai laskentakaava)")
+  private FunktioargumentinLapsiDTO lapsi;
 
-    @ApiModelProperty(value = "Funktioargumentin lapsi (funktiokutsu tai laskentakaava)")
-    private FunktioargumentinLapsiDTO lapsi;
+  @ApiModelProperty(value = "Indeksi", required = true)
+  private Integer indeksi;
 
+  public Integer getIndeksi() {
+    return indeksi;
+  }
 
-    @ApiModelProperty(value = "Indeksi", required = true)
-    private Integer indeksi;
+  public void setIndeksi(Integer indeksi) {
+    this.indeksi = indeksi;
+  }
 
+  @Override
+  public int compareTo(FunktioargumenttiDTO o) {
+    return indeksi - o.indeksi;
+  }
 
-    public Integer getIndeksi() {
-        return indeksi;
-    }
+  public FunktioargumentinLapsiDTO getLapsi() {
+    return lapsi;
+  }
 
-    public void setIndeksi(Integer indeksi) {
-        this.indeksi = indeksi;
-    }
-
-    @Override
-    public int compareTo(FunktioargumenttiDTO o) {
-        return indeksi - o.indeksi;
-    }
-
-    public FunktioargumentinLapsiDTO getLapsi() {
-        return lapsi;
-    }
-
-    public void setLapsi(FunktioargumentinLapsiDTO lapsi) {
-        this.lapsi = lapsi;
-    }
+  public void setLapsi(FunktioargumentinLapsiDTO lapsi) {
+    this.lapsi = lapsi;
+  }
 }

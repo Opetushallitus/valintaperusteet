@@ -2,8 +2,7 @@ package fi.vm.sade.service.valintaperusteet.dto;
 
 public interface Prioritized {
 
-    int getPrioriteetti();
+  int getPrioriteetti();
 
-    void setPrioriteetti(int prioriteetti);
-
+  void setPrioriteetti(int prioriteetti);
 }

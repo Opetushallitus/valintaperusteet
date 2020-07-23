@@ -1,5 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
+import static org.junit.Assert.*;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
@@ -13,6 +15,14 @@ import fi.vm.sade.service.valintaperusteet.resource.impl.HakukohdeResourceImpl;
 import fi.vm.sade.service.valintaperusteet.resource.impl.ValinnanVaiheResourceImpl;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheEiOleOlemassaException;
 import fi.vm.sade.valinta.sharedutils.FakeAuthenticationInitialiser;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,281 +36,270 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import static org.junit.Assert.*;
-
-/**
- * User: tommiha Date: 1/23/13 Time: 1:03 PM
- */
+/** User: tommiha Date: 1/23/13 Time: 1:03 PM */
 @ContextConfiguration(locations = "classpath:test-context.xml")
-@TestExecutionListeners(listeners = { ValinnatJTACleanInsertTestExecutionListener.class,
-        DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class })
+@TestExecutionListeners(
+    listeners = {
+      ValinnatJTACleanInsertTestExecutionListener.class,
+      DependencyInjectionTestExecutionListener.class,
+      DirtiesContextTestExecutionListener.class
+    })
 @RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data.xml")
 public class ValinnanVaiheResourceTest {
 
-    private ObjectMapper mapper = new ObjectMapperProvider().getContext(ValinnanVaiheResourceImpl.class);
-    private ValinnanVaiheResourceImpl vaiheResource = new ValinnanVaiheResourceImpl();
-    private HakukohdeResourceImpl hakuResource = new HakukohdeResourceImpl();
+  private ObjectMapper mapper =
+      new ObjectMapperProvider().getContext(ValinnanVaiheResourceImpl.class);
+  private ValinnanVaiheResourceImpl vaiheResource = new ValinnanVaiheResourceImpl();
+  private HakukohdeResourceImpl hakuResource = new HakukohdeResourceImpl();
 
-    @Autowired
-    private ApplicationContext applicationContext;
+  @Autowired private ApplicationContext applicationContext;
 
-    @Before
-    public void setUp() {
-        applicationContext.getAutowireCapableBeanFactory().autowireBean(vaiheResource);
-        applicationContext.getAutowireCapableBeanFactory().autowireBean(hakuResource);
-        FakeAuthenticationInitialiser.fakeAuthentication();
+  @Before
+  public void setUp() {
+    applicationContext.getAutowireCapableBeanFactory().autowireBean(vaiheResource);
+    applicationContext.getAutowireCapableBeanFactory().autowireBean(hakuResource);
+    FakeAuthenticationInitialiser.fakeAuthentication();
+  }
+
+  @After
+  public void tearDown() {}
+
+  @Test
+  public void testRead() throws IOException {
+    ValinnanVaiheDTO vaihe = vaiheResource.read("1");
+    mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(vaihe);
+  }
+
+  @Test
+  public void testQuery() throws IOException {
+    List<ValintatapajonoDTO> jonos = vaiheResource.listJonos("1");
+
+    mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(jonos);
+  }
+
+  @Test
+  public void testUpdate() throws IOException {
+    HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+    HttpSession session = Mockito.mock(HttpSession.class);
+    Mockito.when(request.getSession(false)).thenReturn(session);
+
+    ValinnanVaiheDTO vaihe = vaiheResource.read("1");
+
+    ValinnanVaiheDTO vaihe1 = vaiheResource.update(vaihe.getOid(), vaihe, request);
+    mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(vaihe1);
+  }
+
+  @Test
+  public void testInsertValintatapajono() {
+    HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+    HttpSession session = Mockito.mock(HttpSession.class);
+    Mockito.when(request.getSession(false)).thenReturn(session);
+
+    ValintatapajonoDTO jono = new ValintatapajonoDTO();
+    Response insert = vaiheResource.addJonoToValinnanVaihe("1", jono, request);
+    assertEquals(500, insert.getStatus());
+
+    jono = newJono();
+    insert = vaiheResource.addJonoToValinnanVaihe("1", jono, request);
+    assertEquals(201, insert.getStatus());
+  }
+
+  @Test
+  public void testInsertValintakoe() {
+    HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+    HttpSession session = Mockito.mock(HttpSession.class);
+    Mockito.when(request.getSession(false)).thenReturn(session);
+
+    final String valinnanVaiheOid = "83";
+    final Long laskentakaavaId = 101L;
+
+    ValintakoeDTO valintakoe = new ValintakoeDTO();
+    valintakoe.setTunniste("tunniste");
+    valintakoe.setNimi("nimi");
+    valintakoe.setAktiivinen(true);
+    valintakoe.setLaskentakaavaId(laskentakaavaId);
+    valintakoe.setLahetetaankoKoekutsut(true);
+    valintakoe.setKutsutaankoKaikki(false);
+    valintakoe.setKutsunKohde(Koekutsu.YLIN_TOIVE);
+
+    Response response =
+        vaiheResource.addValintakoeToValinnanVaihe(valinnanVaiheOid, valintakoe, request);
+    assertEquals(201, response.getStatus());
+  }
+
+  @Test
+  public void testInsertValintakoeWithExistingTunniste() {
+    HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+
+    final String valinnanVaiheOid = "83";
+    final Long laskentakaavaId = 101L;
+
+    ValintakoeDTO valintakoe = new ValintakoeDTO();
+    valintakoe.setTunniste("valintakoetunniste2");
+    valintakoe.setNimi("nimi");
+    valintakoe.setAktiivinen(true);
+    valintakoe.setLaskentakaavaId(laskentakaavaId);
+    valintakoe.setLahetetaankoKoekutsut(true);
+    valintakoe.setKutsutaankoKaikki(false);
+    valintakoe.setKutsunKohde(Koekutsu.YLIN_TOIVE);
+
+    Response response =
+        vaiheResource.addValintakoeToValinnanVaihe(valinnanVaiheOid, valintakoe, request);
+    assertEquals(500, response.getStatus());
+  }
+
+  @Test
+  public void testDelete() {
+    HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+    HttpSession session = Mockito.mock(HttpSession.class);
+    Mockito.when(request.getSession(false)).thenReturn(session);
+    Response delete = vaiheResource.delete("4", request);
+    assertEquals(Response.Status.ACCEPTED.getStatusCode(), delete.getStatus());
+  }
+
+  @Test
+  public void testDeleteOidNotFound() {
+    boolean caughtOne = false;
+    HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+
+    try {
+      vaiheResource.delete("", request);
+    } catch (WebApplicationException e) {
+      caughtOne = true;
+      assertEquals(404, e.getResponse().getStatus());
     }
 
-    @After
-    public void tearDown() {
+    assertTrue(caughtOne);
+  }
+
+  @Test
+  public void testDeleteInherited() {
+    HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+    HttpSession session = Mockito.mock(HttpSession.class);
+    Mockito.when(request.getSession(false)).thenReturn(session);
+    ValinnanVaiheDTO read = vaiheResource.read("32");
+
+    assertNotNull(read);
+    Response delete = vaiheResource.delete("32", request);
+    assertEquals(Response.Status.ACCEPTED.getStatusCode(), delete.getStatus());
+
+    try {
+      ValinnanVaiheDTO read1 = vaiheResource.read("32");
+      assertNull(read1);
+    } catch (ValinnanVaiheEiOleOlemassaException e) {
 
     }
+  }
 
-    @Test
-    public void testRead() throws IOException {
-        ValinnanVaiheDTO vaihe = vaiheResource.read("1");
-        mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(vaihe);
-    }
+  @Test
+  public void testChildrenAreDeleted() {
+    HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+    HttpSession session = Mockito.mock(HttpSession.class);
+    Mockito.when(request.getSession(false)).thenReturn(session);
 
-    @Test
-    public void testQuery() throws IOException {
-        List<ValintatapajonoDTO> jonos = vaiheResource.listJonos("1");
+    ValinnanVaiheDTO read = vaiheResource.read("79");
 
-        mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(jonos);
-    }
+    assertNotNull(read);
+    // objekti on peritty
+    Response delete = vaiheResource.delete("75", request);
+    assertEquals(Response.Status.ACCEPTED.getStatusCode(), delete.getStatus());
 
-    @Test
-    public void testUpdate() throws IOException {
-        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-        Mockito.when(request.getSession(false)).thenReturn(session);
-
-        ValinnanVaiheDTO vaihe = vaiheResource.read("1");
-
-        ValinnanVaiheDTO vaihe1 = vaiheResource.update(vaihe.getOid(), vaihe, request);
-        mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(vaihe1);
-    }
-
-    @Test
-    public void testInsertValintatapajono() {
-        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-        Mockito.when(request.getSession(false)).thenReturn(session);
-
-        ValintatapajonoDTO jono = new ValintatapajonoDTO();
-        Response insert = vaiheResource.addJonoToValinnanVaihe("1", jono, request);
-        assertEquals(500, insert.getStatus());
-
-        jono = newJono();
-        insert = vaiheResource.addJonoToValinnanVaihe("1", jono, request);
-        assertEquals(201, insert.getStatus());
-    }
-
-    @Test
-    public void testInsertValintakoe() {
-        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-        Mockito.when(request.getSession(false)).thenReturn(session);
-
-        final String valinnanVaiheOid = "83";
-        final Long laskentakaavaId = 101L;
-
-        ValintakoeDTO valintakoe = new ValintakoeDTO();
-        valintakoe.setTunniste("tunniste");
-        valintakoe.setNimi("nimi");
-        valintakoe.setAktiivinen(true);
-        valintakoe.setLaskentakaavaId(laskentakaavaId);
-        valintakoe.setLahetetaankoKoekutsut(true);
-        valintakoe.setKutsutaankoKaikki(false);
-        valintakoe.setKutsunKohde(Koekutsu.YLIN_TOIVE);
-
-        Response response = vaiheResource.addValintakoeToValinnanVaihe(valinnanVaiheOid, valintakoe, request);
-        assertEquals(201, response.getStatus());
+    try {
+      ValinnanVaiheDTO read1 = vaiheResource.read("79");
+      assertNull(read1);
+    } catch (ValinnanVaiheEiOleOlemassaException e) {
 
     }
+  }
 
-    @Test
-    public void testInsertValintakoeWithExistingTunniste() {
-        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+  @Test
+  public void testJarjesta() {
+    HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+    HttpSession session = Mockito.mock(HttpSession.class);
+    Mockito.when(request.getSession(false)).thenReturn(session);
 
-        final String valinnanVaiheOid = "83";
-        final Long laskentakaavaId = 101L;
+    List<ValinnanVaiheDTO> valinnanVaiheList =
+        hakuResource.valinnanVaihesForHakukohde("oid6", "false");
+    List<String> oids = new ArrayList<String>();
 
-        ValintakoeDTO valintakoe = new ValintakoeDTO();
-        valintakoe.setTunniste("valintakoetunniste2");
-        valintakoe.setNimi("nimi");
-        valintakoe.setAktiivinen(true);
-        valintakoe.setLaskentakaavaId(laskentakaavaId);
-        valintakoe.setLahetetaankoKoekutsut(true);
-        valintakoe.setKutsutaankoKaikki(false);
-        valintakoe.setKutsunKohde(Koekutsu.YLIN_TOIVE);
-
-        Response response = vaiheResource.addValintakoeToValinnanVaihe(valinnanVaiheOid, valintakoe, request);
-        assertEquals(500, response.getStatus());
-
+    for (ValinnanVaiheDTO valinnanVaihe : valinnanVaiheList) {
+      oids.add(valinnanVaihe.getOid());
     }
 
-    @Test
-    public void testDelete() {
-        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-        Mockito.when(request.getSession(false)).thenReturn(session);
-        Response delete = vaiheResource.delete("4", request);
-        assertEquals(Response.Status.ACCEPTED.getStatusCode(), delete.getStatus());
-    }
+    assertEquals("4", oids.get(0));
+    assertEquals("6", oids.get(2));
+    Collections.reverse(oids);
+    List<ValinnanVaiheDTO> jarjesta = vaiheResource.jarjesta(oids, request);
+    assertEquals("6", jarjesta.get(0).getOid());
+    assertEquals("4", jarjesta.get(2).getOid());
+    jarjesta = hakuResource.valinnanVaihesForHakukohde("oid6", "false");
+    assertEquals("6", jarjesta.get(0).getOid());
+    assertEquals("4", jarjesta.get(2).getOid());
+  }
 
-    @Test
-    public void testDeleteOidNotFound() {
-        boolean caughtOne = false;
-        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+  @Test(expected = RuntimeException.class)
+  public void testJarjestaEriHakuvaiheita() {
+    HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
 
-        try {
-            vaiheResource.delete("", request);
-        } catch (WebApplicationException e) {
-            caughtOne = true;
-            assertEquals(404, e.getResponse().getStatus());
-        }
+    List<String> oids = new ArrayList<String>();
 
-        assertTrue(caughtOne);
-    }
+    oids.add("4");
+    oids.add("5");
+    oids.add("6");
 
-    @Test
-    public void testDeleteInherited() {
-        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-        Mockito.when(request.getSession(false)).thenReturn(session);
-        ValinnanVaiheDTO read = vaiheResource.read("32");
+    oids.add("1");
 
-        assertNotNull(read);
-        Response delete = vaiheResource.delete("32", request);
-        assertEquals(Response.Status.ACCEPTED.getStatusCode(), delete.getStatus());
+    vaiheResource.jarjesta(oids, request);
+  }
 
-        try {
-            ValinnanVaiheDTO read1 = vaiheResource.read("32");
-            assertNull(read1);
-        } catch (ValinnanVaiheEiOleOlemassaException e) {
+  private ValintatapajonoDTO newJono() {
+    ValintatapajonoDTO jono = new ValintatapajonoDTO();
+    jono.setNimi("Uusi valintaryhmä");
+    jono.setOid("oid123");
+    jono.setAloituspaikat(1);
+    jono.setSiirretaanSijoitteluun(false);
+    jono.setTasapistesaanto(fi.vm.sade.service.valintaperusteet.dto.model.Tasapistesaanto.ARVONTA);
+    jono.setAktiivinen(true);
+    jono.setautomaattinenSijoitteluunSiirto(true);
+    jono.setValisijoittelu(false);
+    return jono;
+  }
 
-        }
-    }
+  @Test
+  public void testKuuluuSijoitteluun() {
+    boolean oid;
+    oid = vaiheResource.kuuluuSijoitteluun("3401").get("sijoitteluun");
+    assertEquals(false, oid);
 
-    @Test
-    public void testChildrenAreDeleted() {
-        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-        Mockito.when(request.getSession(false)).thenReturn(session);
+    oid = vaiheResource.kuuluuSijoitteluun("3501").get("sijoitteluun");
+    assertEquals(false, oid);
 
-        ValinnanVaiheDTO read = vaiheResource.read("79");
+    oid = vaiheResource.kuuluuSijoitteluun("3601").get("sijoitteluun");
+    assertEquals(true, oid);
 
-        assertNotNull(read);
-        // objekti on peritty
-        Response delete = vaiheResource.delete("75", request);
-        assertEquals(Response.Status.ACCEPTED.getStatusCode(), delete.getStatus());
+    oid = vaiheResource.kuuluuSijoitteluun("3701").get("sijoitteluun");
+    assertEquals(false, oid);
+  }
 
-        try {
-            ValinnanVaiheDTO read1 = vaiheResource.read("79");
-            assertNull(read1);
-        } catch (ValinnanVaiheEiOleOlemassaException e) {
+  @Test
+  public void testListValintakokeet() throws IOException {
+    final String valintaryhmaOid = "83";
 
-        }
-    }
+    List<ValintakoeDTO> kokeet = vaiheResource.listValintakokeet(valintaryhmaOid);
 
-    @Test
-    public void testJarjesta() {
-        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-        Mockito.when(request.getSession(false)).thenReturn(session);
+    String json = mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(kokeet);
+    System.out.println("JSON: " + json);
 
-        List<ValinnanVaiheDTO> valinnanVaiheList = hakuResource.valinnanVaihesForHakukohde("oid6", "false");
-        List<String> oids = new ArrayList<String>();
+    assertEquals(5, kokeet.size());
+    assertEquals(4, kokeet.stream().filter(vk -> vk.getPeritty() == false).count());
+    assertEquals(1, kokeet.stream().filter(vk -> vk.getPeritty() == true).count());
+  }
 
-        for (ValinnanVaiheDTO valinnanVaihe : valinnanVaiheList) {
-            oids.add(valinnanVaihe.getOid());
-        }
-
-        assertEquals("4", oids.get(0));
-        assertEquals("6", oids.get(2));
-        Collections.reverse(oids);
-        List<ValinnanVaiheDTO> jarjesta = vaiheResource.jarjesta(oids, request);
-        assertEquals("6", jarjesta.get(0).getOid());
-        assertEquals("4", jarjesta.get(2).getOid());
-        jarjesta = hakuResource.valinnanVaihesForHakukohde("oid6", "false");
-        assertEquals("6", jarjesta.get(0).getOid());
-        assertEquals("4", jarjesta.get(2).getOid());
-    }
-
-    @Test(expected = RuntimeException.class)
-    public void testJarjestaEriHakuvaiheita() {
-        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-
-        List<String> oids = new ArrayList<String>();
-
-        oids.add("4");
-        oids.add("5");
-        oids.add("6");
-
-        oids.add("1");
-
-        vaiheResource.jarjesta(oids, request);
-    }
-
-    private ValintatapajonoDTO newJono() {
-        ValintatapajonoDTO jono = new ValintatapajonoDTO();
-        jono.setNimi("Uusi valintaryhmä");
-        jono.setOid("oid123");
-        jono.setAloituspaikat(1);
-        jono.setSiirretaanSijoitteluun(false);
-        jono.setTasapistesaanto(fi.vm.sade.service.valintaperusteet.dto.model.Tasapistesaanto.ARVONTA);
-        jono.setAktiivinen(true);
-        jono.setautomaattinenSijoitteluunSiirto(true);
-        jono.setValisijoittelu(false);
-        return jono;
-    }
-
-    @Test
-    public void testKuuluuSijoitteluun() {
-        boolean oid;
-        oid = vaiheResource.kuuluuSijoitteluun("3401").get("sijoitteluun");
-        assertEquals(false, oid);
-
-        oid = vaiheResource.kuuluuSijoitteluun("3501").get("sijoitteluun");
-        assertEquals(false, oid);
-
-        oid = vaiheResource.kuuluuSijoitteluun("3601").get("sijoitteluun");
-        assertEquals(true, oid);
-
-        oid = vaiheResource.kuuluuSijoitteluun("3701").get("sijoitteluun");
-        assertEquals(false, oid);
-    }
-
-    @Test
-    public void testListValintakokeet() throws IOException {
-        final String valintaryhmaOid = "83";
-
-        List<ValintakoeDTO> kokeet = vaiheResource.listValintakokeet(valintaryhmaOid);
-
-        String json = mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(kokeet);
-        System.out.println("JSON: " + json);
-
-        assertEquals(5, kokeet.size());
-        assertEquals(4, kokeet.stream().filter(vk -> vk.getPeritty() == false).count());
-        assertEquals(1, kokeet.stream().filter(vk -> vk.getPeritty() == true).count());
-
-    }
-
-    @Test
-    public void testListValintakokeetShouldBeEmpty() {
-        final String valinnanVaiheOid = "85";
-        List<ValintakoeDTO> kokeet = vaiheResource.listValintakokeet(valinnanVaiheOid);
-        assertEquals(0, kokeet.size());
-    }
+  @Test
+  public void testListValintakokeetShouldBeEmpty() {
+    final String valinnanVaiheOid = "85";
+    List<ValintakoeDTO> kokeet = vaiheResource.listValintakokeet(valinnanVaiheOid);
+    assertEquals(0, kokeet.size());
+  }
 }

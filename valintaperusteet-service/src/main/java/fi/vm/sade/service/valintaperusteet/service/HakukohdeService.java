@@ -1,37 +1,35 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
 import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteCreateDTO;
-import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
-import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
-
 import java.util.List;
 
 public interface HakukohdeService {
-    List<HakukohdeViite> findAll();
+  List<HakukohdeViite> findAll();
 
-    List<HakukohdeViite> haunHakukohteet(String hakuOid);
+  List<HakukohdeViite> haunHakukohteet(String hakuOid);
 
-    HakukohdeViite readByOid(String oid);
+  HakukohdeViite readByOid(String oid);
 
-    List<HakukohdeViite> readByOids(List<String> oids);
+  List<HakukohdeViite> readByOids(List<String> oids);
 
-    List<HakukohdeViite> findRoot();
+  List<HakukohdeViite> findRoot();
 
-    List<HakukohdeViite> findByValintaryhmaOid(String oid);
+  List<HakukohdeViite> findByValintaryhmaOid(String oid);
 
-    HakukohdeViite update(String oid, HakukohdeViiteCreateDTO incoming) throws Exception;
+  HakukohdeViite update(String oid, HakukohdeViiteCreateDTO incoming) throws Exception;
 
-    boolean kuuluuSijoitteluun(String oid);
+  boolean kuuluuSijoitteluun(String oid);
 
-    List<ValinnanVaihe> ilmanLaskentaa(String oid);
+  List<ValinnanVaihe> ilmanLaskentaa(String oid);
 
-    List<ValinnanVaihe> vaiheetJaJonot(String oid);
+  List<ValinnanVaihe> vaiheetJaJonot(String oid);
 
-    void deleteByOid(String oid);
+  void deleteByOid(String oid);
 
-    HakukohdeViite siirraHakukohdeValintaryhmaan(String hakukohdeOid, String valintaryhmaOid, boolean siirretaanManuaalisesti);
+  HakukohdeViite siirraHakukohdeValintaryhmaan(
+      String hakukohdeOid, String valintaryhmaOid, boolean siirretaanManuaalisesti);
 
-    HakukohdeViite insert(HakukohdeViiteCreateDTO hakukohde, String valintaryhmaOid);
+  HakukohdeViite insert(HakukohdeViiteCreateDTO hakukohde, String valintaryhmaOid);
 }

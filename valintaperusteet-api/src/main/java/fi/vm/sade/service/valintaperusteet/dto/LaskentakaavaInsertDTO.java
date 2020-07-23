@@ -6,45 +6,45 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "LaskentakaavaInsertDTO", description = "Laskentakaava")
 public class LaskentakaavaInsertDTO {
 
-    public LaskentakaavaInsertDTO() {
-    }
+  public LaskentakaavaInsertDTO() {}
 
-    public LaskentakaavaInsertDTO(LaskentakaavaCreateDTO laskentakaava, String hakukohdeOid, String valintaryhmaOid) {
-        this.laskentakaava = laskentakaava;
-        this.hakukohdeOid = hakukohdeOid;
-        this.valintaryhmaOid = valintaryhmaOid;
-    }
+  public LaskentakaavaInsertDTO(
+      LaskentakaavaCreateDTO laskentakaava, String hakukohdeOid, String valintaryhmaOid) {
+    this.laskentakaava = laskentakaava;
+    this.hakukohdeOid = hakukohdeOid;
+    this.valintaryhmaOid = valintaryhmaOid;
+  }
 
-    @ApiModelProperty(value = "Laskentakaava", required = true)
-    private LaskentakaavaCreateDTO laskentakaava;
+  @ApiModelProperty(value = "Laskentakaava", required = true)
+  private LaskentakaavaCreateDTO laskentakaava;
 
-    @ApiModelProperty(value = "Hakukohde OID, jolle laskentakaava lisätään")
-    private String hakukohdeOid;
+  @ApiModelProperty(value = "Hakukohde OID, jolle laskentakaava lisätään")
+  private String hakukohdeOid;
 
-    @ApiModelProperty(value = "Valintaryhmä OID, jolle laskentakaava lisätään")
-    private String valintaryhmaOid;
+  @ApiModelProperty(value = "Valintaryhmä OID, jolle laskentakaava lisätään")
+  private String valintaryhmaOid;
 
-    public LaskentakaavaCreateDTO getLaskentakaava() {
-        return laskentakaava;
-    }
+  public LaskentakaavaCreateDTO getLaskentakaava() {
+    return laskentakaava;
+  }
 
-    public void setLaskentakaava(LaskentakaavaCreateDTO laskentakaava) {
-        this.laskentakaava = laskentakaava;
-    }
+  public void setLaskentakaava(LaskentakaavaCreateDTO laskentakaava) {
+    this.laskentakaava = laskentakaava;
+  }
 
-    public String getHakukohdeOid() {
-        return hakukohdeOid;
-    }
+  public String getHakukohdeOid() {
+    return hakukohdeOid;
+  }
 
-    public void setHakukohdeOid(String hakukohdeOid) {
-        this.hakukohdeOid = hakukohdeOid;
-    }
+  public void setHakukohdeOid(String hakukohdeOid) {
+    this.hakukohdeOid = hakukohdeOid;
+  }
 
-    public String getValintaryhmaOid() {
-        return valintaryhmaOid;
-    }
+  public String getValintaryhmaOid() {
+    return valintaryhmaOid;
+  }
 
-    public void setValintaryhmaOid(String valintaryhmaOid) {
-        this.valintaryhmaOid = valintaryhmaOid;
-    }
+  public void setValintaryhmaOid(String valintaryhmaOid) {
+    this.valintaryhmaOid = valintaryhmaOid;
+  }
 }

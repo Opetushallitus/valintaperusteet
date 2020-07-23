@@ -1,32 +1,31 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
+import fi.vm.sade.service.valintaperusteet.dto.model.Kieli;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import fi.vm.sade.service.valintaperusteet.dto.model.Kieli;
 
 @ApiModel(value = "KuvausDTO", description = "Kuvaus")
 public class KuvausDTO {
 
-    @ApiModelProperty(value = "Kuvauksen kieli", required = true)
-    private Kieli kieli;
+  @ApiModelProperty(value = "Kuvauksen kieli", required = true)
+  private Kieli kieli;
 
-    @ApiModelProperty(value = "Teksti", required = true)
-    private String teksti;
+  @ApiModelProperty(value = "Teksti", required = true)
+  private String teksti;
 
+  public Kieli getKieli() {
+    return kieli;
+  }
 
-    public Kieli getKieli() {
-        return kieli;
-    }
+  public void setKieli(Kieli kieli) {
+    this.kieli = kieli;
+  }
 
-    public void setKieli(Kieli kieli) {
-        this.kieli = kieli;
-    }
+  public String getTeksti() {
+    return teksti;
+  }
 
-    public String getTeksti() {
-        return teksti;
-    }
-
-    public void setTeksti(String teksti) {
-        this.teksti = teksti;
-    }
+  public void setTeksti(String teksti) {
+    this.teksti = teksti;
+  }
 }
