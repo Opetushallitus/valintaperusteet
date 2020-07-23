@@ -4,24 +4,24 @@ import java.util.Map;
 
 public class Virhetila extends Tila {
 
-    public Virhetila(Map<String, String> kuvaus, VirheMetatieto metatieto) {
-        super(Tilatyyppi.VIRHE);
-        this.kuvaus = kuvaus;
-        this.metatieto = metatieto;
-    }
+  public Virhetila(Map<String, String> kuvaus, VirheMetatieto metatieto) {
+    super(Tilatyyppi.VIRHE);
+    this.kuvaus = kuvaus;
+    this.metatieto = metatieto;
+  }
 
-    public Virhetila() {
-        super(Tilatyyppi.VIRHE);
-    }
+  public Virhetila() {
+    super(Tilatyyppi.VIRHE);
+  }
 
-    private Map<String, String> kuvaus;
-    private VirheMetatieto metatieto;
+  private Map<String, String> kuvaus;
+  private VirheMetatieto metatieto;
 
-    public Map<String, String> getKuvaus() {
-        return kuvaus;
-    }
+  public Map<String, String> getKuvaus() {
+    return kuvaus;
+  }
 
-    public VirheMetatieto getMetatieto() {
-        return metatieto;
-    }
+  public VirheMetatieto getMetatieto() {
+    return metatieto;
+  }
 }

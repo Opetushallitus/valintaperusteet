@@ -6,17 +6,18 @@ import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import fi.vm.sade.service.valintaperusteet.service.ValintaryhmaService;
 
 public class HakukohdekoodiHandler extends KoodiHandler<Hakukohdekoodi> {
-    public HakukohdekoodiHandler(ValintaryhmaService valintaryhmaService, HakukohdekoodiDAO koodiDAO) {
-        super(valintaryhmaService, koodiDAO);
-    }
+  public HakukohdekoodiHandler(
+      ValintaryhmaService valintaryhmaService, HakukohdekoodiDAO koodiDAO) {
+    super(valintaryhmaService, koodiDAO);
+  }
 
-    @Override
-    protected void clearValintaryhmaKoodis(Valintaryhma valintaryhma) {
-        valintaryhma.getHakukohdekoodit().clear();
-    }
+  @Override
+  protected void clearValintaryhmaKoodis(Valintaryhma valintaryhma) {
+    valintaryhma.getHakukohdekoodit().clear();
+  }
 
-    @Override
-    protected void addKoodiToValintaryhma(Valintaryhma valintaryhma, Hakukohdekoodi koodi) {
-        valintaryhma.getHakukohdekoodit().add(koodi);
-    }
+  @Override
+  protected void addKoodiToValintaryhma(Valintaryhma valintaryhma, Hakukohdekoodi koodi) {
+    valintaryhma.getHakukohdekoodit().add(koodi);
+  }
 }

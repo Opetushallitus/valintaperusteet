@@ -1,187 +1,188 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
-import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "hakijaryhma_jono")
 @Cacheable(true)
-public class HakijaryhmaValintatapajono extends BaseEntity implements LinkitettavaJaKopioitava<HakijaryhmaValintatapajono, Set<HakijaryhmaValintatapajono>> {
+public class HakijaryhmaValintatapajono extends BaseEntity
+    implements LinkitettavaJaKopioitava<
+        HakijaryhmaValintatapajono, Set<HakijaryhmaValintatapajono>> {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    @Column(name = "oid", nullable = false, unique = true)
-    private String oid;
+  @Column(name = "oid", nullable = false, unique = true)
+  private String oid;
 
-    @Column(name = "kiintio", nullable = false)
-    private int kiintio;
+  @Column(name = "kiintio", nullable = false)
+  private int kiintio;
 
-    @Column(name = "kaytakaikki")
-    private boolean kaytaKaikki;
+  @Column(name = "kaytakaikki")
+  private boolean kaytaKaikki;
 
-    @Column(name = "tarkkakiintio")
-    private boolean tarkkaKiintio;
+  @Column(name = "tarkkakiintio")
+  private boolean tarkkaKiintio;
 
-    @Column(name = "kaytetaan_ryhmaan_kuuluvia")
-    private boolean kaytetaanRyhmaanKuuluvia;
+  @Column(name = "kaytetaan_ryhmaan_kuuluvia")
+  private boolean kaytetaanRyhmaanKuuluvia;
 
+  @JoinColumn(name = "hakijaryhma_id", nullable = false)
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Hakijaryhma hakijaryhma;
 
-    @JoinColumn(name = "hakijaryhma_id", nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Hakijaryhma hakijaryhma;
+  @JoinColumn(name = "valintatapajono_id")
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Valintatapajono valintatapajono;
 
-    @JoinColumn(name = "valintatapajono_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Valintatapajono valintatapajono;
+  @JoinColumn(name = "hakukohde_viite_id")
+  @ManyToOne(fetch = FetchType.LAZY)
+  private HakukohdeViite hakukohdeViite;
 
-    @JoinColumn(name = "hakukohde_viite_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private HakukohdeViite hakukohdeViite;
+  @Column(name = "aktiivinen", nullable = false)
+  private Boolean aktiivinen;
 
-    @Column(name = "aktiivinen", nullable = false)
-    private Boolean aktiivinen;
+  @JoinColumn(name = "edellinen_hakijaryhma_jono_id")
+  @OneToOne(fetch = FetchType.LAZY)
+  private HakijaryhmaValintatapajono edellinen;
 
-    @JoinColumn(name = "edellinen_hakijaryhma_jono_id")
-    @OneToOne(fetch = FetchType.LAZY)
-    private HakijaryhmaValintatapajono edellinen;
+  @OneToOne(fetch = FetchType.LAZY, mappedBy = "edellinen")
+  private HakijaryhmaValintatapajono seuraava;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "edellinen")
-    private HakijaryhmaValintatapajono seuraava;
+  @JoinColumn(name = "master_hakijaryhma_jono_id")
+  @ManyToOne(fetch = FetchType.LAZY)
+  private HakijaryhmaValintatapajono master;
 
-    @JoinColumn(name = "master_hakijaryhma_jono_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private HakijaryhmaValintatapajono master;
+  @JoinColumn(name = "hakijaryhmatyyppikoodi_id")
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Hakijaryhmatyyppikoodi hakijaryhmatyyppikoodi;
 
-    @JoinColumn(name = "hakijaryhmatyyppikoodi_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Hakijaryhmatyyppikoodi hakijaryhmatyyppikoodi;
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "master", cascade = CascadeType.REMOVE)
+  private Set<HakijaryhmaValintatapajono> kopiot = new HashSet<HakijaryhmaValintatapajono>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "master", cascade = CascadeType.REMOVE)
-    private Set<HakijaryhmaValintatapajono> kopiot = new HashSet<HakijaryhmaValintatapajono>();
+  public Hakijaryhma getHakijaryhma() {
+    return hakijaryhma;
+  }
 
-    public Hakijaryhma getHakijaryhma() {
-        return hakijaryhma;
-    }
+  public void setHakijaryhma(Hakijaryhma hakijaryhma) {
+    this.hakijaryhma = hakijaryhma;
+  }
 
-    public void setHakijaryhma(Hakijaryhma hakijaryhma) {
-        this.hakijaryhma = hakijaryhma;
-    }
+  public Valintatapajono getValintatapajono() {
+    return valintatapajono;
+  }
 
-    public Valintatapajono getValintatapajono() {
-        return valintatapajono;
-    }
+  public void setValintatapajono(Valintatapajono valintatapajono) {
+    this.valintatapajono = valintatapajono;
+  }
 
-    public void setValintatapajono(Valintatapajono valintatapajono) {
-        this.valintatapajono = valintatapajono;
-    }
+  public String getOid() {
+    return oid;
+  }
 
-    public String getOid() {
-        return oid;
-    }
+  public void setOid(String oid) {
+    this.oid = oid;
+  }
 
-    public void setOid(String oid) {
-        this.oid = oid;
-    }
+  public Boolean getAktiivinen() {
+    return aktiivinen;
+  }
 
-    public Boolean getAktiivinen() {
-        return aktiivinen;
-    }
+  public void setAktiivinen(Boolean aktiivinen) {
+    this.aktiivinen = aktiivinen;
+  }
 
-    public void setAktiivinen(Boolean aktiivinen) {
-        this.aktiivinen = aktiivinen;
-    }
+  @Override
+  public HakijaryhmaValintatapajono getEdellinen() {
+    return edellinen;
+  }
 
-    @Override
-    public HakijaryhmaValintatapajono getEdellinen() {
-        return edellinen;
-    }
+  @Override
+  public void setEdellinen(HakijaryhmaValintatapajono edellinen) {
+    this.edellinen = edellinen;
+  }
 
-    @Override
-    public void setEdellinen(HakijaryhmaValintatapajono edellinen) {
-        this.edellinen = edellinen;
-    }
+  @Override
+  public HakijaryhmaValintatapajono getSeuraava() {
+    return seuraava;
+  }
 
-    @Override
-    public HakijaryhmaValintatapajono getSeuraava() {
-        return seuraava;
-    }
+  @Override
+  public void setSeuraava(HakijaryhmaValintatapajono seuraava) {
+    this.seuraava = seuraava;
+  }
 
-    @Override
-    public void setSeuraava(HakijaryhmaValintatapajono seuraava) {
-        this.seuraava = seuraava;
-    }
+  @Override
+  public HakijaryhmaValintatapajono getMaster() {
+    return master;
+  }
 
-    @Override
-    public HakijaryhmaValintatapajono getMaster() {
-        return master;
-    }
+  @Override
+  public void setMaster(HakijaryhmaValintatapajono master) {
+    this.master = master;
+  }
 
-    @Override
-    public void setMaster(HakijaryhmaValintatapajono master) {
-        this.master = master;
-    }
+  @Override
+  public Set<HakijaryhmaValintatapajono> getKopiot() {
+    return kopiot;
+  }
 
-    @Override
-    public Set<HakijaryhmaValintatapajono> getKopiot() {
-        return kopiot;
-    }
+  @Override
+  public void setKopiot(Set<HakijaryhmaValintatapajono> kopiot) {
+    this.kopiot = kopiot;
+  }
 
-    @Override
-    public void setKopiot(Set<HakijaryhmaValintatapajono> kopiot) {
-        this.kopiot = kopiot;
-    }
+  @Transient
+  public Boolean getInheritance() {
+    return getMaster() != null;
+  }
 
-    @Transient
-    public Boolean getInheritance() {
-        return getMaster() != null;
-    }
+  public HakukohdeViite getHakukohdeViite() {
+    return hakukohdeViite;
+  }
 
-    public HakukohdeViite getHakukohdeViite() {
-        return hakukohdeViite;
-    }
+  public void setHakukohdeViite(HakukohdeViite hakukohdeViite) {
+    this.hakukohdeViite = hakukohdeViite;
+  }
 
-    public void setHakukohdeViite(HakukohdeViite hakukohdeViite) {
-        this.hakukohdeViite = hakukohdeViite;
-    }
+  public int getKiintio() {
+    return kiintio;
+  }
 
-    public int getKiintio() {
-        return kiintio;
-    }
+  public void setKiintio(int kiintio) {
+    this.kiintio = kiintio;
+  }
 
-    public void setKiintio(int kiintio) {
-        this.kiintio = kiintio;
-    }
+  public boolean isKaytaKaikki() {
+    return kaytaKaikki;
+  }
 
-    public boolean isKaytaKaikki() {
-        return kaytaKaikki;
-    }
+  public void setKaytaKaikki(boolean kaytaKaikki) {
+    this.kaytaKaikki = kaytaKaikki;
+  }
 
-    public void setKaytaKaikki(boolean kaytaKaikki) {
-        this.kaytaKaikki = kaytaKaikki;
-    }
+  public boolean isTarkkaKiintio() {
+    return tarkkaKiintio;
+  }
 
-    public boolean isTarkkaKiintio() {
-        return tarkkaKiintio;
-    }
+  public void setTarkkaKiintio(boolean tarkkaKiintio) {
+    this.tarkkaKiintio = tarkkaKiintio;
+  }
 
-    public void setTarkkaKiintio(boolean tarkkaKiintio) {
-        this.tarkkaKiintio = tarkkaKiintio;
-    }
+  public boolean isKaytetaanRyhmaanKuuluvia() {
+    return kaytetaanRyhmaanKuuluvia;
+  }
 
-    public boolean isKaytetaanRyhmaanKuuluvia() {
-        return kaytetaanRyhmaanKuuluvia;
-    }
+  public void setKaytetaanRyhmaanKuuluvia(boolean kaytetaanRyhmaanKuuluvia) {
+    this.kaytetaanRyhmaanKuuluvia = kaytetaanRyhmaanKuuluvia;
+  }
 
-    public void setKaytetaanRyhmaanKuuluvia(boolean kaytetaanRyhmaanKuuluvia) {
-        this.kaytetaanRyhmaanKuuluvia = kaytetaanRyhmaanKuuluvia;
-    }
+  public Hakijaryhmatyyppikoodi getHakijaryhmatyyppikoodi() {
+    return hakijaryhmatyyppikoodi;
+  }
 
-    public Hakijaryhmatyyppikoodi getHakijaryhmatyyppikoodi() {
-        return hakijaryhmatyyppikoodi;
-    }
-
-    public void setHakijaryhmatyyppikoodi(Hakijaryhmatyyppikoodi hakijaryhmatyyppikoodi) {
-        this.hakijaryhmatyyppikoodi = hakijaryhmatyyppikoodi;
-    }
+  public void setHakijaryhmatyyppikoodi(Hakijaryhmatyyppikoodi hakijaryhmatyyppikoodi) {
+    this.hakijaryhmatyyppikoodi = hakijaryhmatyyppikoodi;
+  }
 }

@@ -1,131 +1,126 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
 import io.swagger.annotations.ApiModel;
-
 import java.util.ArrayList;
-import java.util.List;
 import java.util.List;
 
 @ApiModel(value = "HakukohdeImportDTO", description = "Hakukohteen lisääminen")
 public class HakukohdeImportDTO {
-    private String hakukohdeOid;
-    private HakukohdekoodiDTO hakukohdekoodi;
-    private String tarjoajaOid;
-    private int valinnanAloituspaikat;
-    private List<MonikielinenTekstiDTO> tarjoajaNimi = new ArrayList<MonikielinenTekstiDTO>();
-    private List<MonikielinenTekstiDTO> hakukohdeNimi = new ArrayList<MonikielinenTekstiDTO>();
-    private List<MonikielinenTekstiDTO> hakuKausi = new ArrayList<MonikielinenTekstiDTO>();
-    private String hakuVuosi;
-    private String hakuOid;
-    private String tila;
-    private List<HakukohteenValintakoeDTO> valintakoe = new ArrayList<HakukohteenValintakoeDTO>();
-    private List<AvainArvoDTO> valintaperuste = new ArrayList<AvainArvoDTO>();
-    private String haunkohdejoukkoUri;
+  private String hakukohdeOid;
+  private HakukohdekoodiDTO hakukohdekoodi;
+  private String tarjoajaOid;
+  private int valinnanAloituspaikat;
+  private List<MonikielinenTekstiDTO> tarjoajaNimi = new ArrayList<MonikielinenTekstiDTO>();
+  private List<MonikielinenTekstiDTO> hakukohdeNimi = new ArrayList<MonikielinenTekstiDTO>();
+  private List<MonikielinenTekstiDTO> hakuKausi = new ArrayList<MonikielinenTekstiDTO>();
+  private String hakuVuosi;
+  private String hakuOid;
+  private String tila;
+  private List<HakukohteenValintakoeDTO> valintakoe = new ArrayList<HakukohteenValintakoeDTO>();
+  private List<AvainArvoDTO> valintaperuste = new ArrayList<AvainArvoDTO>();
+  private String haunkohdejoukkoUri;
 
-    public String getHakukohdeOid() {
-        return hakukohdeOid;
-    }
+  public String getHakukohdeOid() {
+    return hakukohdeOid;
+  }
 
-    public void setHakukohdeOid(String hakukohdeOid) {
-        this.hakukohdeOid = hakukohdeOid;
-    }
+  public void setHakukohdeOid(String hakukohdeOid) {
+    this.hakukohdeOid = hakukohdeOid;
+  }
 
+  public HakukohdekoodiDTO getHakukohdekoodi() {
+    return hakukohdekoodi;
+  }
 
-    public HakukohdekoodiDTO getHakukohdekoodi() {
-        return hakukohdekoodi;
-    }
+  public void setHakukohdekoodi(HakukohdekoodiDTO hakukohdekoodi) {
+    this.hakukohdekoodi = hakukohdekoodi;
+  }
 
-    public void setHakukohdekoodi(HakukohdekoodiDTO hakukohdekoodi) {
-        this.hakukohdekoodi = hakukohdekoodi;
-    }
+  public String getTarjoajaOid() {
+    return tarjoajaOid;
+  }
 
-    public String getTarjoajaOid() {
-        return tarjoajaOid;
-    }
+  public void setTarjoajaOid(String tarjoajaOid) {
+    this.tarjoajaOid = tarjoajaOid;
+  }
 
-    public void setTarjoajaOid(String tarjoajaOid) {
-        this.tarjoajaOid = tarjoajaOid;
-    }
+  public int getValinnanAloituspaikat() {
+    return valinnanAloituspaikat;
+  }
 
-    public int getValinnanAloituspaikat() {
-        return valinnanAloituspaikat;
-    }
+  public void setValinnanAloituspaikat(int valinnanAloituspaikat) {
+    this.valinnanAloituspaikat = valinnanAloituspaikat;
+  }
 
-    public void setValinnanAloituspaikat(int valinnanAloituspaikat) {
-        this.valinnanAloituspaikat = valinnanAloituspaikat;
-    }
+  public List<MonikielinenTekstiDTO> getTarjoajaNimi() {
+    return tarjoajaNimi;
+  }
 
+  public void setTarjoajaNimi(List<MonikielinenTekstiDTO> tarjoajaNimi) {
+    this.tarjoajaNimi = tarjoajaNimi;
+  }
 
-    public List<MonikielinenTekstiDTO> getTarjoajaNimi() {
-        return tarjoajaNimi;
-    }
+  public List<MonikielinenTekstiDTO> getHakukohdeNimi() {
+    return hakukohdeNimi;
+  }
 
-    public void setTarjoajaNimi(List<MonikielinenTekstiDTO> tarjoajaNimi) {
-        this.tarjoajaNimi = tarjoajaNimi;
-    }
+  public void setHakukohdeNimi(List<MonikielinenTekstiDTO> hakukohdeNimi) {
+    this.hakukohdeNimi = hakukohdeNimi;
+  }
 
-    public List<MonikielinenTekstiDTO> getHakukohdeNimi() {
-        return hakukohdeNimi;
-    }
+  public List<MonikielinenTekstiDTO> getHakuKausi() {
+    return hakuKausi;
+  }
 
-    public void setHakukohdeNimi(List<MonikielinenTekstiDTO> hakukohdeNimi) {
-        this.hakukohdeNimi = hakukohdeNimi;
-    }
+  public void setHakuKausi(List<MonikielinenTekstiDTO> hakuKausi) {
+    this.hakuKausi = hakuKausi;
+  }
 
-    public List<MonikielinenTekstiDTO> getHakuKausi() {
-        return hakuKausi;
-    }
+  public String getHakuVuosi() {
+    return hakuVuosi;
+  }
 
-    public void setHakuKausi(List<MonikielinenTekstiDTO> hakuKausi) {
-        this.hakuKausi = hakuKausi;
-    }
+  public void setHakuVuosi(String hakuVuosi) {
+    this.hakuVuosi = hakuVuosi;
+  }
 
+  public String getHakuOid() {
+    return hakuOid;
+  }
 
-    public String getHakuVuosi() {
-        return hakuVuosi;
-    }
+  public void setHakuOid(String hakuOid) {
+    this.hakuOid = hakuOid;
+  }
 
-    public void setHakuVuosi(String hakuVuosi) {
-        this.hakuVuosi = hakuVuosi;
-    }
+  public String getTila() {
+    return tila;
+  }
 
-    public String getHakuOid() {
-        return hakuOid;
-    }
+  public void setTila(String tila) {
+    this.tila = tila;
+  }
 
-    public void setHakuOid(String hakuOid) {
-        this.hakuOid = hakuOid;
-    }
+  public List<HakukohteenValintakoeDTO> getValintakoe() {
+    return valintakoe;
+  }
 
-    public String getTila() {
-        return tila;
-    }
+  public void setValintakoe(List<HakukohteenValintakoeDTO> valintakoe) {
+    this.valintakoe = valintakoe;
+  }
 
-    public void setTila(String tila) {
-        this.tila = tila;
-    }
+  public List<AvainArvoDTO> getValintaperuste() {
+    return valintaperuste;
+  }
 
-    public List<HakukohteenValintakoeDTO> getValintakoe() {
-        return valintakoe;
-    }
+  public void setValintaperuste(List<AvainArvoDTO> valintaperuste) {
+    this.valintaperuste = valintaperuste;
+  }
 
-    public void setValintakoe(List<HakukohteenValintakoeDTO> valintakoe) {
-        this.valintakoe = valintakoe;
-    }
+  public String getHaunkohdejoukkoUri() {
+    return haunkohdejoukkoUri;
+  }
 
-    public List<AvainArvoDTO> getValintaperuste() {
-        return valintaperuste;
-    }
-
-    public void setValintaperuste(List<AvainArvoDTO> valintaperuste) {
-        this.valintaperuste = valintaperuste;
-    }
-
-    public String getHaunkohdejoukkoUri() {
-        return haunkohdejoukkoUri;
-    }
-
-    public void setHaunkohdejoukkoUri(String haunkohdejoukkoUri) {
-        this.haunkohdejoukkoUri = haunkohdejoukkoUri;
-    }
+  public void setHaunkohdejoukkoUri(String haunkohdejoukkoUri) {
+    this.haunkohdejoukkoUri = haunkohdejoukkoUri;
+  }
 }

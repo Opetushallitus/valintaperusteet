@@ -4,34 +4,37 @@ import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoCreateDTO;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import fi.vm.sade.service.valintaperusteet.util.JuureenKopiointiCache;
-
 import java.util.List;
 import java.util.Map;
 
 public interface ValintatapajonoService {
-    List<Valintatapajono> findJonoByValinnanvaihe(String oid);
+  List<Valintatapajono> findJonoByValinnanvaihe(String oid);
 
-    Map<String, List<String>> findKopiot(List<String> oidit);
+  Map<String, List<String>> findKopiot(List<String> oidit);
 
-    Valintatapajono readByOid(String oid);
+  Valintatapajono readByOid(String oid);
 
-    List<Valintatapajono> readByOids(List<String> oids);
+  List<Valintatapajono> readByOids(List<String> oids);
 
-    List<Valintatapajono> findAll();
+  List<Valintatapajono> findAll();
 
-    Valintatapajono lisaaValintatapajonoValinnanVaiheelle(String valinnanVaiheOid, ValintatapajonoCreateDTO jono, String edellinenValintatapajonoOid);
+  Valintatapajono lisaaValintatapajonoValinnanVaiheelle(
+      String valinnanVaiheOid, ValintatapajonoCreateDTO jono, String edellinenValintatapajonoOid);
 
-    void deleteByOid(String oid);
+  void deleteByOid(String oid);
 
-    List<Valintatapajono> jarjestaValintatapajonot(List<String> valintatapajonoOidit);
+  List<Valintatapajono> jarjestaValintatapajonot(List<String> valintatapajonoOidit);
 
-    void kopioiValintatapajonotMasterValinnanVaiheeltaKopiolle(ValinnanVaihe valinnanVaihe, ValinnanVaihe masterValinnanVaihe, JuureenKopiointiCache kopiointiCache);
+  void kopioiValintatapajonotMasterValinnanVaiheeltaKopiolle(
+      ValinnanVaihe valinnanVaihe,
+      ValinnanVaihe masterValinnanVaihe,
+      JuureenKopiointiCache kopiointiCache);
 
-    Valintatapajono update(String oid, ValintatapajonoCreateDTO jono);
+  Valintatapajono update(String oid, ValintatapajonoCreateDTO jono);
 
-    void delete(Valintatapajono valintatapajono);
+  void delete(Valintatapajono valintatapajono);
 
-    Boolean readAutomaattinenSijoitteluunSiirto(String oid);
+  Boolean readAutomaattinenSijoitteluunSiirto(String oid);
 
-    Valintatapajono updateAutomaattinenSijoitteluunSiirto(String oid, Boolean value);
+  Valintatapajono updateAutomaattinenSijoitteluunSiirto(String oid, Boolean value);
 }

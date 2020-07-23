@@ -7,7 +7,7 @@ import javax.ws.rs.core.Response;
 @Path("luovalintaperusteet")
 public interface LuoValintaperusteetResource {
 
-    @GET
-    @Path("luo")
-    Response luo();
+  @GET
+  @Path("luo")
+  Response luo();
 }

@@ -4,28 +4,31 @@ import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaSiirraDTO;
 import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
 import fi.vm.sade.service.valintaperusteet.util.JuureenKopiointiCache;
-
 import java.util.List;
 import java.util.Optional;
 
 public interface HakijaryhmaService {
-    void deleteByOid(String oid, boolean skipInheritedCheck);
+  void deleteByOid(String oid, boolean skipInheritedCheck);
 
-    List<Hakijaryhma> findByHakukohde(String oid);
+  List<Hakijaryhma> findByHakukohde(String oid);
 
-    List<Hakijaryhma> findByValintaryhma(String oid);
+  List<Hakijaryhma> findByValintaryhma(String oid);
 
-    Hakijaryhma readByOid(String oid);
+  Hakijaryhma readByOid(String oid);
 
-    void liitaHakijaryhmaValintatapajonolle(String valintatapajonoOid, String hakijaryhmaOid);
+  void liitaHakijaryhmaValintatapajonolle(String valintatapajonoOid, String hakijaryhmaOid);
 
-    Hakijaryhma lisaaHakijaryhmaValintaryhmalle(String valintaryhmaOid, HakijaryhmaCreateDTO hakijaryhma);
+  Hakijaryhma lisaaHakijaryhmaValintaryhmalle(
+      String valintaryhmaOid, HakijaryhmaCreateDTO hakijaryhma);
 
-    Hakijaryhma update(String oid, HakijaryhmaCreateDTO entity);
+  Hakijaryhma update(String oid, HakijaryhmaCreateDTO entity);
 
-    Optional<Hakijaryhma> siirra(HakijaryhmaSiirraDTO dto);
+  Optional<Hakijaryhma> siirra(HakijaryhmaSiirraDTO dto);
 
-    void kopioiHakijaryhmatMasterValintaryhmalta(String parentValintaryhmaOid, String childValintaryhmaoid, JuureenKopiointiCache kopiointiCache);
+  void kopioiHakijaryhmatMasterValintaryhmalta(
+      String parentValintaryhmaOid,
+      String childValintaryhmaoid,
+      JuureenKopiointiCache kopiointiCache);
 
-    List<Hakijaryhma> jarjestaHakijaryhmat(List<String> oids);
+  List<Hakijaryhma> jarjestaHakijaryhmat(List<String> oids);
 }

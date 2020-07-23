@@ -1,5 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
+import static org.junit.Assert.*;
+
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
@@ -10,6 +12,8 @@ import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
 import fi.vm.sade.service.valintaperusteet.resource.impl.ValintakoeResourceImpl;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintakoettaEiVoiLisataException;
 import fi.vm.sade.service.valintaperusteet.util.TestUtil;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,156 +26,144 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import static org.junit.Assert.*;
-
-/**
- * User: kwuoti
- * Date: 15.4.2013
- * Time: 18.17
- */
+/** User: kwuoti Date: 15.4.2013 Time: 18.17 */
 @ContextConfiguration(locations = "classpath:test-context.xml")
-@TestExecutionListeners(listeners = {ValinnatJTACleanInsertTestExecutionListener.class,
-        DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class })
+@TestExecutionListeners(
+    listeners = {
+      ValinnatJTACleanInsertTestExecutionListener.class,
+      DependencyInjectionTestExecutionListener.class,
+      DirtiesContextTestExecutionListener.class
+    })
 @RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data.xml")
 public class ValintakoeResourceTest {
 
-    private ValintakoeResourceImpl valintakoeResource = new ValintakoeResourceImpl();
-    private TestUtil testUtil = new TestUtil(this.getClass());
-    private ValintaperusteetModelMapper modelMapper = new ValintaperusteetModelMapper();
+  private ValintakoeResourceImpl valintakoeResource = new ValintakoeResourceImpl();
+  private TestUtil testUtil = new TestUtil(this.getClass());
+  private ValintaperusteetModelMapper modelMapper = new ValintaperusteetModelMapper();
 
+  @Autowired private ApplicationContext applicationContext;
 
-    @Autowired
-    private ApplicationContext applicationContext;
+  @Before
+  public void setUp() {
+    applicationContext.getAutowireCapableBeanFactory().autowireBean(valintakoeResource);
+  }
 
+  @Test
+  public void testReadByOid() throws Exception {
+    final String oid = "oid1";
+    ValintakoeDTO valintakoe = valintakoeResource.readByOid(oid);
+    testUtil.lazyCheck(JsonViews.Basic.class, valintakoe);
+  }
 
-    @Before
-    public void setUp() {
-        applicationContext.getAutowireCapableBeanFactory().autowireBean(valintakoeResource);
-    }
+  @Test
+  public void testUpdate() {
+    HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+    HttpSession session = Mockito.mock(HttpSession.class);
+    Mockito.when(request.getSession(false)).thenReturn(session);
 
-    @Test
-    public void testReadByOid() throws Exception {
-        final String oid = "oid1";
-        ValintakoeDTO valintakoe = valintakoeResource.readByOid(oid);
-        testUtil.lazyCheck(JsonViews.Basic.class, valintakoe);
-    }
+    final String oid = "oid1";
+    final Long laskentakaavaId = 102L;
 
-    @Test
-    public void testUpdate() {
-        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-        Mockito.when(request.getSession(false)).thenReturn(session);
+    ValintakoeDTO saved = valintakoeResource.readByOid(oid);
 
-        final String oid = "oid1";
-        final Long laskentakaavaId = 102L;
+    ValintakoeDTO koe = new ValintakoeDTO();
+    koe.setKuvaus("uusi kuvaus");
+    koe.setNimi("uusi nimi");
+    koe.setTunniste("uusi tunniste");
+    koe.setLaskentakaavaId(laskentakaavaId);
+    koe.setKutsunKohde(Koekutsu.YLIN_TOIVE);
 
-        ValintakoeDTO saved = valintakoeResource.readByOid(oid);
+    assertFalse(saved.getNimi().equals(koe.getNimi()));
+    assertFalse(saved.getKuvaus().equals(koe.getKuvaus()));
+    assertFalse(saved.getTunniste().equals(koe.getTunniste()));
+    assertFalse(saved.getLaskentakaavaId().equals(koe.getLaskentakaavaId()));
 
-        ValintakoeDTO koe = new ValintakoeDTO();
-        koe.setKuvaus("uusi kuvaus");
-        koe.setNimi("uusi nimi");
-        koe.setTunniste("uusi tunniste");
-        koe.setLaskentakaavaId(laskentakaavaId);
-        koe.setKutsunKohde(Koekutsu.YLIN_TOIVE);
+    valintakoeResource.update(oid, koe, request);
 
-        assertFalse(saved.getNimi().equals(koe.getNimi()));
-        assertFalse(saved.getKuvaus().equals(koe.getKuvaus()));
-        assertFalse(saved.getTunniste().equals(koe.getTunniste()));
-        assertFalse(saved.getLaskentakaavaId().equals(koe.getLaskentakaavaId()));
+    saved = valintakoeResource.readByOid(oid);
 
-        valintakoeResource.update(oid, koe, request);
+    assertEquals(koe.getKuvaus(), saved.getKuvaus());
+    assertEquals(koe.getNimi(), saved.getNimi());
+    assertEquals(koe.getTunniste(), saved.getTunniste());
+    assertEquals(koe.getLaskentakaavaId(), saved.getLaskentakaavaId());
+  }
 
-        saved = valintakoeResource.readByOid(oid);
+  @Test
+  public void testUpdateSetLaskentakaavaNull() {
+    HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+    HttpSession session = Mockito.mock(HttpSession.class);
+    Mockito.when(request.getSession(false)).thenReturn(session);
 
-        assertEquals(koe.getKuvaus(), saved.getKuvaus());
-        assertEquals(koe.getNimi(), saved.getNimi());
-        assertEquals(koe.getTunniste(), saved.getTunniste());
-        assertEquals(koe.getLaskentakaavaId(), saved.getLaskentakaavaId());
+    final String oid = "oid1";
+    ValintakoeDTO saved = valintakoeResource.readByOid(oid);
 
-    }
+    ValintakoeDTO koe = new ValintakoeDTO();
+    koe.setKuvaus("uusi kuvaus");
+    koe.setNimi("uusi nimi");
+    koe.setTunniste("uusi tunniste");
+    koe.setLaskentakaavaId(null);
+    koe.setKutsunKohde(Koekutsu.YLIN_TOIVE);
 
-    @Test
-    public void testUpdateSetLaskentakaavaNull() {
-        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-        Mockito.when(request.getSession(false)).thenReturn(session);
+    assertFalse(saved.getNimi().equals(koe.getNimi()));
+    assertFalse(saved.getKuvaus().equals(koe.getKuvaus()));
+    assertFalse(saved.getTunniste().equals(koe.getTunniste()));
+    assertNotNull(saved.getLaskentakaavaId());
 
-        final String oid = "oid1";
-        ValintakoeDTO saved = valintakoeResource.readByOid(oid);
+    valintakoeResource.update(oid, koe, request);
 
-        ValintakoeDTO koe = new ValintakoeDTO();
-        koe.setKuvaus("uusi kuvaus");
-        koe.setNimi("uusi nimi");
-        koe.setTunniste("uusi tunniste");
-        koe.setLaskentakaavaId(null);
-        koe.setKutsunKohde(Koekutsu.YLIN_TOIVE);
+    saved = valintakoeResource.readByOid(oid);
 
-        assertFalse(saved.getNimi().equals(koe.getNimi()));
-        assertFalse(saved.getKuvaus().equals(koe.getKuvaus()));
-        assertFalse(saved.getTunniste().equals(koe.getTunniste()));
-        assertNotNull(saved.getLaskentakaavaId());
+    assertEquals(koe.getKuvaus(), saved.getKuvaus());
+    assertEquals(koe.getNimi(), saved.getNimi());
+    assertEquals(koe.getTunniste(), saved.getTunniste());
+    assertNull(saved.getLaskentakaavaId());
+  }
 
-        valintakoeResource.update(oid, koe, request);
+  @Test
+  public void testMappings() {
+    Valintakoe koe = new Valintakoe();
+    koe.setAktiivinen(true);
+    koe.setKutsunKohde(Koekutsu.YLIN_TOIVE);
+    koe.setKutsunKohdeAvain("jeppis");
+    koe.setKutsutaankoKaikki(true);
+    koe.setLahetetaankoKoekutsut(false);
+    koe.setNimi("Koe");
+    koe.setOid("KoeOid");
+    koe.setTunniste("KoeTunniste");
 
-        saved = valintakoeResource.readByOid(oid);
+    ValintakoeDTO ylinToive = modelMapper.map(koe, ValintakoeDTO.class);
+    assertTrue(ylinToive.getAktiivinen());
+    assertEquals(ylinToive.getKutsunKohde(), Koekutsu.YLIN_TOIVE);
+    assertEquals(ylinToive.getKutsunKohdeAvain(), "jeppis");
+    assertTrue(ylinToive.getKutsutaankoKaikki());
+    assertFalse(ylinToive.getLahetetaankoKoekutsut());
+    assertEquals(ylinToive.getNimi(), "Koe");
+    assertEquals(ylinToive.getOid(), "KoeOid");
+    assertEquals(ylinToive.getTunniste(), "KoeTunniste");
 
-        assertEquals(koe.getKuvaus(), saved.getKuvaus());
-        assertEquals(koe.getNimi(), saved.getNimi());
-        assertEquals(koe.getTunniste(), saved.getTunniste());
-        assertNull(saved.getLaskentakaavaId());
-    }
+    koe.setKutsunKohde(Koekutsu.HAKIJAN_VALINTA);
 
-    @Test
-    public void testMappings() {
-        Valintakoe koe = new Valintakoe();
-        koe.setAktiivinen(true);
-        koe.setKutsunKohde(Koekutsu.YLIN_TOIVE);
-        koe.setKutsunKohdeAvain("jeppis");
-        koe.setKutsutaankoKaikki(true);
-        koe.setLahetetaankoKoekutsut(false);
-        koe.setNimi("Koe");
-        koe.setOid("KoeOid");
-        koe.setTunniste("KoeTunniste");
+    ValintakoeDTO hakijanValinta = modelMapper.map(koe, ValintakoeDTO.class);
+    assertTrue(hakijanValinta.getAktiivinen());
+    assertEquals(hakijanValinta.getKutsunKohde(), Koekutsu.HAKIJAN_VALINTA);
+    assertEquals(hakijanValinta.getKutsunKohdeAvain(), "jeppis");
+    assertFalse(hakijanValinta.getKutsutaankoKaikki());
+    assertFalse(hakijanValinta.getLahetetaankoKoekutsut());
+    assertEquals(hakijanValinta.getNimi(), "Koe");
+    assertEquals(hakijanValinta.getOid(), "KoeOid");
+    assertEquals(hakijanValinta.getTunniste(), "KoeTunniste");
+  }
 
-        ValintakoeDTO ylinToive = modelMapper.map(koe, ValintakoeDTO.class);
-        assertTrue(ylinToive.getAktiivinen());
-        assertEquals(ylinToive.getKutsunKohde(), Koekutsu.YLIN_TOIVE);
-        assertEquals(ylinToive.getKutsunKohdeAvain(), "jeppis");
-        assertTrue(ylinToive.getKutsutaankoKaikki());
-        assertFalse(ylinToive.getLahetetaankoKoekutsut());
-        assertEquals(ylinToive.getNimi(), "Koe");
-        assertEquals(ylinToive.getOid(), "KoeOid");
-        assertEquals(ylinToive.getTunniste(), "KoeTunniste");
+  @Test(expected = ValintakoettaEiVoiLisataException.class)
+  public void testUpdateValintakoeWithExistingTunniste() {
+    HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
 
-        koe.setKutsunKohde(Koekutsu.HAKIJAN_VALINTA);
+    final String oid = "oid1";
+    ValintakoeDTO valintakoe = valintakoeResource.readByOid(oid);
 
-        ValintakoeDTO hakijanValinta = modelMapper.map(koe, ValintakoeDTO.class);
-        assertTrue(hakijanValinta.getAktiivinen());
-        assertEquals(hakijanValinta.getKutsunKohde(), Koekutsu.HAKIJAN_VALINTA);
-        assertEquals(hakijanValinta.getKutsunKohdeAvain(), "jeppis");
-        assertFalse(hakijanValinta.getKutsutaankoKaikki());
-        assertFalse(hakijanValinta.getLahetetaankoKoekutsut());
-        assertEquals(hakijanValinta.getNimi(), "Koe");
-        assertEquals(hakijanValinta.getOid(), "KoeOid");
-        assertEquals(hakijanValinta.getTunniste(), "KoeTunniste");
-    }
+    valintakoe.setTunniste("valintakoetunniste2");
 
-    @Test(expected = ValintakoettaEiVoiLisataException.class)
-    public void testUpdateValintakoeWithExistingTunniste() {
-        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-
-
-        final String oid = "oid1";
-        ValintakoeDTO valintakoe = valintakoeResource.readByOid(oid);
-
-        valintakoe.setTunniste("valintakoetunniste2");
-
-        valintakoeResource.update(oid, valintakoe, request);
-
-    }
-
+    valintakoeResource.update(oid, valintakoe, request);
+  }
 }

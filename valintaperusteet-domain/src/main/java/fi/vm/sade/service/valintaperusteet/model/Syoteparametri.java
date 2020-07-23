@@ -6,37 +6,37 @@ import javax.persistence.*;
 @Table(name = "syoteparametri")
 @Cacheable(true)
 public class Syoteparametri extends BaseEntity {
-    @Column(name = "avain", nullable = false)
-    private String avain;
+  @Column(name = "avain", nullable = false)
+  private String avain;
 
-    @Column(name = "arvo", nullable = false)
-    private String arvo;
+  @Column(name = "arvo", nullable = false)
+  private String arvo;
 
-    @JoinColumn(name = "funktiokutsu_id", nullable = false)
-    @ManyToOne(optional = false)
-    private Funktiokutsu funktiokutsu;
+  @JoinColumn(name = "funktiokutsu_id", nullable = false)
+  @ManyToOne(optional = false)
+  private Funktiokutsu funktiokutsu;
 
-    public String getAvain() {
-        return avain;
-    }
+  public String getAvain() {
+    return avain;
+  }
 
-    public void setAvain(String avain) {
-        this.avain = avain;
-    }
+  public void setAvain(String avain) {
+    this.avain = avain;
+  }
 
-    public String getArvo() {
-        return arvo;
-    }
+  public String getArvo() {
+    return arvo;
+  }
 
-    public void setArvo(String arvo) {
-        this.arvo = arvo;
-    }
+  public void setArvo(String arvo) {
+    this.arvo = arvo;
+  }
 
-    public Funktiokutsu getFunktiokutsu() {
-        return funktiokutsu;
-    }
+  public Funktiokutsu getFunktiokutsu() {
+    return funktiokutsu;
+  }
 
-    public void setFunktiokutsu(Funktiokutsu funktiokutsu) {
-        this.funktiokutsu = funktiokutsu;
-    }
+  public void setFunktiokutsu(Funktiokutsu funktiokutsu) {
+    this.funktiokutsu = funktiokutsu;
+  }
 }
