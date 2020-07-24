@@ -5,10 +5,9 @@ import io.circe.optics.JsonPath
 import io.circe.optics.JsonTraversalPath
 import org.scalatest.funsuite.AnyFunSuite
 
-
 /**
- * Idea talteen, josko tätä voisi hyödyntää JSONien käsittelyssä.
- */
+  * Idea talteen, josko tätä voisi hyödyntää JSONien käsittelyssä.
+  */
 class DynamicLensTest extends AnyFunSuite {
   private val inputJson =
     """
@@ -38,18 +37,40 @@ class DynamicLensTest extends AnyFunSuite {
   test("JSONia voi purkaa dynaamisesti") {
     val json: Json = io.circe.parser.parse(inputJson) match {
       case Right(json) => json
-      case Left(e) => throw e
+      case Left(e)     => throw e
     }
 
-    assert(haeJsonistaDynaamisesti(JsonPath.root.each, "tutkinto.keskiarvo").as[BigDecimal].getAll(json).head == BigDecimal(8.0))
-    assert(haeJsonistaDynaamisesti(JsonPath.root.each, "tutkinto.arvosanat.[].matematiikka.arvosana").as[BigDecimal].getAll(json).head == BigDecimal(6))
-    assert(haeJsonistaDynaamisesti(JsonPath.root.each, "tutkinto.arvosanat.[].fysiikka.arvosana").as[BigDecimal].getAll(json).head == BigDecimal(10))
+    assert(
+      haeJsonistaDynaamisesti(JsonPath.root.each, "tutkinto.keskiarvo")
+        .as[BigDecimal]
+        .getAll(json)
+        .head == BigDecimal(8.0)
+    )
+    assert(
+      haeJsonistaDynaamisesti(JsonPath.root.each, "tutkinto.arvosanat.[].matematiikka.arvosana")
+        .as[BigDecimal]
+        .getAll(json)
+        .head == BigDecimal(6)
+    )
+    assert(
+      haeJsonistaDynaamisesti(JsonPath.root.each, "tutkinto.arvosanat.[].fysiikka.arvosana")
+        .as[BigDecimal]
+        .getAll(json)
+        .head == BigDecimal(10)
+    )
   }
 
-  private def haeJsonistaDynaamisesti(juuri: JsonTraversalPath, polku: String): JsonTraversalPath = {
-    polku.split('.').foldLeft[JsonTraversalPath](juuri)((jsonTraversalPath, askel) => askel match {
-      case "[]" => jsonTraversalPath.each
-      case p => jsonTraversalPath.selectDynamic(p)
-    })
+  private def haeJsonistaDynaamisesti(
+    juuri: JsonTraversalPath,
+    polku: String
+  ): JsonTraversalPath = {
+    polku
+      .split('.')
+      .foldLeft[JsonTraversalPath](juuri)((jsonTraversalPath, askel) =>
+        askel match {
+          case "[]" => jsonTraversalPath.each
+          case p    => jsonTraversalPath.selectDynamic(p)
+        }
+      )
   }
 }

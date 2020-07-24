@@ -1,51 +1,52 @@
 sudo: required
 
-language: java
-
-jdk:
-- openjdk8
-
 services:
-- docker
+  - docker
 
 cache:
   directories:
-  - $HOME/.m2
+    - $HOME/.m2
 
 env:
   global:
-  # ARTIFACTORY_USERNAME
-  - secure: "hE3+vf3C8KtaufDJ9GgFlhBj31apTsuLrTU5lN7+8GUtahyoLXJENve8O0OonuqTeXPg5VJ2//ZT6qrlUj93ikqT5ChLNpndw/2GOSLazsTKSZFX4t2wE7rQwXWQiXfOtA5klbXhczySbjbCP53ZooYkc/3z9/Vy3L61hv73mgNJtgJWNVKzwRAy+rhRoVNSdT0I+YTjcRGB2FyxDlsRHA38DWWZtScddndODFx5gBJ9NrB0nayrMAykVd7spB1w1e/cbw/ozSTy+FTazdhN4xepWrJRT7wSNNHV/8qERNQdnIZ4+Ar7uPxt/YLryInraVaAnuzFfHF3z5kjquE0ZI85o9LBU+mBmJz1b0vCRyz+FdUcl+RFRnQGtET8r714h8t+sTCTivADmrfWE3K0fuSPn1ggFAcW96Tdz/TSvnkbsG9pb+g1HXcp9ZpAdScurvKNSEN3GNW9aCz9ztW/GVVjx8pg8eQNj5VifOnyUAIr6niW2quSsp3eBq//bTze+LOHP/3swCHLfa7YGn5mhOtruQfHMbjoraYEmaToYtYbM9iMEko25W9Arojb/Bs331NH9+IRgYu7ahMbN9i2djTobuoQJOEl9v4jP7XbKd++WazagdpIV0SmQELpC6upx1xJeHjE2FJJBbV6FkjXeNi264ccXpcJZ5ny6C/O2UY="
-  # ARTIFACTORY_PASSWORD
-  - secure: "mdYTXi+u3JwcXVhAARfWcrjNgk81SZBREIs1a0xengVQOjRQPiXgZA1bkJ19busfF66snB0vFW8aY9jbKfV6vx3+K35IM0GBqk8fIMkI66SzP2vGd2vM3N27s9hswjBwr8a3w3DKW2ekZNzr+ft8NEhuod7jO8U3/GWV7wHW6zz50psIOS0mQ4PTjk3Zu+m0zF+ckR4SvBS3QsZEn8GBmYors0X8Jukjg3wM5DcKzzkHCDiWEdFiAaj2kPICJKLp8kdVScKJq69oYa0ylYFu33UQfRwZdzPmGFmBNyr8MFWPh30q9ab1mbaPPl2XRr+KeApGhAnueKBK99JQNGlX2XaU2WZY8AEvLZw/XgQFgGhMz9j9KMzNt7f6tb7eKNr6ogNRebDFLyrkBXOaYxsG3VHsSxXx80pZEr4IHjr5d9cpVq5e4V3edX5Z8o0TWrQo9k2fGAQZbdbpbu3CMunPbm6YgI6xvnwmTJgsR1ZCwr9IsoxGcRn7qX8OK/nkR7CRqiWrRx8x0nqkZSP++MYcyxSkGuMeh1ep+n1tNbrEtGaggO2cUy1h9HMe6XuhsQVGF8CkTMhdASSa5JptYmYzEa1cwhH6qPRNKYxwVxe2cJMmoohEde0aGxZbGL+/Ikny5wwmiq8Kc7Ajpfdx9l8ZaLJhyTI93s+vqnvBFrXG/Z8="
-  # AWS_ACCESS_KEY_ID
-  - secure: "UeXKAU3nFScc4v0CONPOFCgv1+IDoBac74WRDyBDD2bkhzIcsdGDeimEzZdzBvwHmEX2BonigMUysfFDcgVoed1pDFEZPCKkcVg1EJNUsrRUaQlV0p+GsMeEMKt1sWF6cYiaAICZO8NQdxrsLoMqfXTrNPA/H0xm5867pGIgb1YlmW/vGuTr7y98X1Cjh3q0svmfVfWjMkleMgj/5eIl33lyLr0wt82N8pnNaLamCBzRZINIKZDA1oXgubT8B4SEz2CP04TWVtQIu7CXUA39CXBruvnJLoMAid3v0BJhsIqSXwZMd6CA2fclmkrOqfgUsqp9JmQEnAEiQG5LUyBMjAWmb0NE52njAmWcL+eRAkmRR3eYCMeeYyovVE9v7B/2FX2iLXmVr0Z6Bofaqw2U0w3T9qfCIFCMVPmJXTuUaZBvnosERRGlBdWoPocS5Ol1sQr7iX+figzWoZAeJvHetqII8OxRXPi09LPnDCay3yqIZp4JiCqEE0jSTkhZ6GEjhrtBzjRkBy1VhjKstSC2qXMSfbzd1Ubh2a2i0AKFJdj2Q5ii5UXboGqFjI+HdeGHBWCwfbweDNkt5qSsSix+EzrD5z9AtdZ7bTAVr9UUvXulkHimObE0JuVgmpEPD5eXmOS8u5ppi8WUiX2ImPzNkTn8suXFW5L+rm+GUb4ZmDE="
-  # AWS_SECRET_ACCESS_KEY
-  - secure: "iU4lhqNrrGNVdNJdelP6vuI6iApUHb622bc2HC7EOuZvedG3RdDkj2Uud5+LRiUqxQG57EPJR042qLHI6MxCFnrh4pL9f1liedhdG5y4Fpcdco2xhp9f30EiFuNVs9u5QIwwO+G8/Ck7Ul+DRQDFaMub3XfSFt7EPJTVgw6J3ArdGxe1RPwCZJ2fQ1MUZ43UDhLe0mvkLXwMrbhAjeBVME7RpjWRW2q1GxMuVs62f/Hx1M4GkdvIRQw68B1hHuZRS71QRQ7Ru/svRIOq4MKP5olparLZ+ZUDHx/CHyxjZ2KhBepeeyC6qvH54EpyS08Syxn4Jk/3DsHn+BRZXxO7FsHFq4f7S1Mq9F2xMpDE/JmkbNwwFyXLcwcJSW2wCgRUBmvFetq0fMctLZNGPh/nFkKN8+Nk+VpjSDgUu5I3zhWBHvY6vK0KuDyUHdjJSNi1Nu4iqNVYFVH/eUHKsF0gweAqGh3mu0VmKvSqccho8qIF4BOUtYfJOJj7EncJMuAWRRsrUaCuYKNBNLbu6NUDoQww9nH9ft0tvgvsRh6oVHFYSs/XLlESw958OCozr9fDh/IMkWZiIhhxwnyIyvIbaVbNMcpiQMXj2dODeidFUwhDcgfEHdeIXbN2A/2gbxGnlG32Vh87ilYQ8v62KNa6bMdNjsEtunj/8uUnUk2AIJ0="
+    # ARTIFACTORY_USERNAME
+    - secure: "hE3+vf3C8KtaufDJ9GgFlhBj31apTsuLrTU5lN7+8GUtahyoLXJENve8O0OonuqTeXPg5VJ2//ZT6qrlUj93ikqT5ChLNpndw/2GOSLazsTKSZFX4t2wE7rQwXWQiXfOtA5klbXhczySbjbCP53ZooYkc/3z9/Vy3L61hv73mgNJtgJWNVKzwRAy+rhRoVNSdT0I+YTjcRGB2FyxDlsRHA38DWWZtScddndODFx5gBJ9NrB0nayrMAykVd7spB1w1e/cbw/ozSTy+FTazdhN4xepWrJRT7wSNNHV/8qERNQdnIZ4+Ar7uPxt/YLryInraVaAnuzFfHF3z5kjquE0ZI85o9LBU+mBmJz1b0vCRyz+FdUcl+RFRnQGtET8r714h8t+sTCTivADmrfWE3K0fuSPn1ggFAcW96Tdz/TSvnkbsG9pb+g1HXcp9ZpAdScurvKNSEN3GNW9aCz9ztW/GVVjx8pg8eQNj5VifOnyUAIr6niW2quSsp3eBq//bTze+LOHP/3swCHLfa7YGn5mhOtruQfHMbjoraYEmaToYtYbM9iMEko25W9Arojb/Bs331NH9+IRgYu7ahMbN9i2djTobuoQJOEl9v4jP7XbKd++WazagdpIV0SmQELpC6upx1xJeHjE2FJJBbV6FkjXeNi264ccXpcJZ5ny6C/O2UY="
+    # ARTIFACTORY_PASSWORD
+    - secure: "mdYTXi+u3JwcXVhAARfWcrjNgk81SZBREIs1a0xengVQOjRQPiXgZA1bkJ19busfF66snB0vFW8aY9jbKfV6vx3+K35IM0GBqk8fIMkI66SzP2vGd2vM3N27s9hswjBwr8a3w3DKW2ekZNzr+ft8NEhuod7jO8U3/GWV7wHW6zz50psIOS0mQ4PTjk3Zu+m0zF+ckR4SvBS3QsZEn8GBmYors0X8Jukjg3wM5DcKzzkHCDiWEdFiAaj2kPICJKLp8kdVScKJq69oYa0ylYFu33UQfRwZdzPmGFmBNyr8MFWPh30q9ab1mbaPPl2XRr+KeApGhAnueKBK99JQNGlX2XaU2WZY8AEvLZw/XgQFgGhMz9j9KMzNt7f6tb7eKNr6ogNRebDFLyrkBXOaYxsG3VHsSxXx80pZEr4IHjr5d9cpVq5e4V3edX5Z8o0TWrQo9k2fGAQZbdbpbu3CMunPbm6YgI6xvnwmTJgsR1ZCwr9IsoxGcRn7qX8OK/nkR7CRqiWrRx8x0nqkZSP++MYcyxSkGuMeh1ep+n1tNbrEtGaggO2cUy1h9HMe6XuhsQVGF8CkTMhdASSa5JptYmYzEa1cwhH6qPRNKYxwVxe2cJMmoohEde0aGxZbGL+/Ikny5wwmiq8Kc7Ajpfdx9l8ZaLJhyTI93s+vqnvBFrXG/Z8="
+    # AWS_ACCESS_KEY_ID
+    - secure: "UeXKAU3nFScc4v0CONPOFCgv1+IDoBac74WRDyBDD2bkhzIcsdGDeimEzZdzBvwHmEX2BonigMUysfFDcgVoed1pDFEZPCKkcVg1EJNUsrRUaQlV0p+GsMeEMKt1sWF6cYiaAICZO8NQdxrsLoMqfXTrNPA/H0xm5867pGIgb1YlmW/vGuTr7y98X1Cjh3q0svmfVfWjMkleMgj/5eIl33lyLr0wt82N8pnNaLamCBzRZINIKZDA1oXgubT8B4SEz2CP04TWVtQIu7CXUA39CXBruvnJLoMAid3v0BJhsIqSXwZMd6CA2fclmkrOqfgUsqp9JmQEnAEiQG5LUyBMjAWmb0NE52njAmWcL+eRAkmRR3eYCMeeYyovVE9v7B/2FX2iLXmVr0Z6Bofaqw2U0w3T9qfCIFCMVPmJXTuUaZBvnosERRGlBdWoPocS5Ol1sQr7iX+figzWoZAeJvHetqII8OxRXPi09LPnDCay3yqIZp4JiCqEE0jSTkhZ6GEjhrtBzjRkBy1VhjKstSC2qXMSfbzd1Ubh2a2i0AKFJdj2Q5ii5UXboGqFjI+HdeGHBWCwfbweDNkt5qSsSix+EzrD5z9AtdZ7bTAVr9UUvXulkHimObE0JuVgmpEPD5eXmOS8u5ppi8WUiX2ImPzNkTn8suXFW5L+rm+GUb4ZmDE="
+    # AWS_SECRET_ACCESS_KEY
+    - secure: "iU4lhqNrrGNVdNJdelP6vuI6iApUHb622bc2HC7EOuZvedG3RdDkj2Uud5+LRiUqxQG57EPJR042qLHI6MxCFnrh4pL9f1liedhdG5y4Fpcdco2xhp9f30EiFuNVs9u5QIwwO+G8/Ck7Ul+DRQDFaMub3XfSFt7EPJTVgw6J3ArdGxe1RPwCZJ2fQ1MUZ43UDhLe0mvkLXwMrbhAjeBVME7RpjWRW2q1GxMuVs62f/Hx1M4GkdvIRQw68B1hHuZRS71QRQ7Ru/svRIOq4MKP5olparLZ+ZUDHx/CHyxjZ2KhBepeeyC6qvH54EpyS08Syxn4Jk/3DsHn+BRZXxO7FsHFq4f7S1Mq9F2xMpDE/JmkbNwwFyXLcwcJSW2wCgRUBmvFetq0fMctLZNGPh/nFkKN8+Nk+VpjSDgUu5I3zhWBHvY6vK0KuDyUHdjJSNi1Nu4iqNVYFVH/eUHKsF0gweAqGh3mu0VmKvSqccho8qIF4BOUtYfJOJj7EncJMuAWRRsrUaCuYKNBNLbu6NUDoQww9nH9ft0tvgvsRh6oVHFYSs/XLlESw958OCozr9fDh/IMkWZiIhhxwnyIyvIbaVbNMcpiQMXj2dODeidFUwhDcgfEHdeIXbN2A/2gbxGnlG32Vh87ilYQ8v62KNa6bMdNjsEtunj/8uUnUk2AIJ0="
 
-install:
-- git clone https://github.com/Opetushallitus/ci-tools.git
-- source ci-tools/common/setup-tools.sh
-- sudo sh -c "printf '\n%s penaali.hard.ware.fi\n' $(dig +short artifactory.opintopolku.fi|head -n1) >> /etc/hosts"
-- export ARTIFACT_NAME="valintaperusteet-service"
+jobs:
+  include:
+    - language: java
+      jdk: openjdk8
+      install:
+        - git clone https://github.com/Opetushallitus/ci-tools.git
+        - source ci-tools/common/setup-tools.sh
+        - sudo sh -c "printf '\n%s penaali.hard.ware.fi\n' $(dig +short artifactory.opintopolku.fi|head -n1) >> /etc/hosts"
+        - export ARTIFACT_NAME="valintaperusteet-service"
+      script:
+        - mvn clean install -B -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER}
 
-script:
-- mvn clean install -B -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER}
+        - mv valintaperusteet-service/target/valintaperusteet-service-*allinone.jar $DOCKER_BUILD_DIR/artifact/${ARTIFACT_NAME}.jar
+        - cp -vr src/main/resources/oph-configuration $DOCKER_BUILD_DIR/config/
 
-- mv valintaperusteet-service/target/valintaperusteet-service-*allinone.jar $DOCKER_BUILD_DIR/artifact/${ARTIFACT_NAME}.jar
-- cp -vr src/main/resources/oph-configuration $DOCKER_BUILD_DIR/config/
-
-- export BASE_IMAGE="baseimage-fatjar-openjdk8:master"
-- ./ci-tools/common/pull-image.sh
-- ./ci-tools/build/build-fatjar.sh $ARTIFACT_NAME
-
-deploy:
-- provider: script
-  script: mvn deploy -pl fi.vm.sade.valintaperusteet:valintaperusteet,valintaperusteet-domain,valintaperusteet-api,valintaperusteet-laskenta -DskipTests --settings ci-tools/common/maven-settings.xml
-  skip_cleanup: true
-  on:
-    branch: master
-- provider: script
-  script: ./ci-tools/build/upload-image.sh $ARTIFACT_NAME
-  on:
-    all_branches: true
+        - export BASE_IMAGE="baseimage-fatjar-openjdk8:master"
+        - ./ci-tools/common/pull-image.sh
+        - ./ci-tools/build/build-fatjar.sh $ARTIFACT_NAME
+      deploy:
+        - provider: script
+          script: mvn deploy -pl fi.vm.sade.valintaperusteet:valintaperusteet,valintaperusteet-domain,valintaperusteet-api,valintaperusteet-laskenta -DskipTests --settings ci-tools/common/maven-settings.xml
+          skip_cleanup: true
+          on:
+            branch: master
+        - provider: script
+          script: ./ci-tools/build/upload-image.sh $ARTIFACT_NAME
+          on:
+            all_branches: true
+    - language: java
+      jdk: openjdk11
+      script:
+        - mvn spotless:check

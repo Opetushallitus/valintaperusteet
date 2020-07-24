@@ -12,29 +12,34 @@ import io.circe.syntax.EncoderOps
 import scala.jdk.CollectionConverters._
 
 /**
- * User: kwuoti
- * Date: 4.2.2013
- * Time: 14.16
- */
+  * User: kwuoti
+  * Date: 4.2.2013
+  * Time: 14.16
+  */
 object LaskentaTestUtil {
 
   def assertTulosTyhja(tulos: Option[_]) = {
     assert(tulos match {
       case None => true
-      case _ => false
+      case _    => false
     })
   }
 
   def assertTilaHyvaksyttavissa(tila: Tila): Unit = {
     assert(tila match {
       case _: Hyvaksyttavissatila => true
-      case _ => false
+      case _                      => false
     })
   }
 
-  def assertTilaHylatty(tila: Tila, hylattymeta: HylattyMetatieto.Hylattymetatietotyyppi, kuvaus: Option[String] = None): Unit = {
+  def assertTilaHylatty(
+    tila: Tila,
+    hylattymeta: HylattyMetatieto.Hylattymetatietotyyppi,
+    kuvaus: Option[String] = None
+  ): Unit = {
     assert(tila match {
-      case h: Hylattytila => hylattymeta == h.getMetatieto.getMetatietotyyppi && (kuvaus.isEmpty || kuvaus.get == h.getKuvaus)
+      case h: Hylattytila =>
+        hylattymeta == h.getMetatieto.getMetatietotyyppi && (kuvaus.isEmpty || kuvaus.get == h.getKuvaus)
       case _ => false
     })
   }
@@ -42,7 +47,7 @@ object LaskentaTestUtil {
   def assertTilaVirhe(tila: Tila, virhemeta: VirheMetatieto.VirheMetatietotyyppi): Unit = {
     assert(tila match {
       case v: Virhetila => virhemeta == v.getMetatieto.getMetatietotyyppi
-      case _ => false
+      case _            => false
     })
   }
 
@@ -50,7 +55,7 @@ object LaskentaTestUtil {
     def apply(parent: Funktiokutsu, child: FunktionArgumentti, indeksi: Int) = {
       val arg = new Funktioargumentti
       child match {
-        case fk: Funktiokutsu => arg.setFunktiokutsuChild(fk)
+        case fk: Funktiokutsu  => arg.setFunktiokutsuChild(fk)
         case lk: Laskentakaava => arg.setLaskentakaavaChild(lk)
       }
       arg.setIndeksi(indeksi)
@@ -61,11 +66,17 @@ object LaskentaTestUtil {
   }
 
   object Funktiokutsu {
-    def apply(nimi: Funktionimi, funktioargumentit: Seq[FunktionArgumentti] = Nil, syoteparametrit: Seq[Syoteparametri] = Nil,
+    def apply(
+      nimi: Funktionimi,
+      funktioargumentit: Seq[FunktionArgumentti] = Nil,
+      syoteparametrit: Seq[Syoteparametri] = Nil,
       arvokonvertterit: Seq[Arvokonvertteriparametri] = Nil,
       arvovalikonvertterit: Seq[Arvovalikonvertteriparametri] = Nil,
       valintaperustetunniste: Seq[ValintaperusteViite] = Nil,
-      tulosTunniste: String = "", tallennaTulos: Boolean = false, tulosTekstiFi: String = "") = {
+      tulosTunniste: String = "",
+      tallennaTulos: Boolean = false,
+      tulosTekstiFi: String = ""
+    ) = {
       val funktiokutsu = new Funktiokutsu
       funktiokutsu.setFunktionimi(nimi)
       funktiokutsu.setTallennaTulos(tallennaTulos)
@@ -110,7 +121,14 @@ object LaskentaTestUtil {
   }
 
   object Arvovalikonvertteriparametri {
-    def apply(paluuarvo: String = "", min: String, max: String, palautaHaettuArvo: String = null, hylkaysperuste: String = "false", kuvaukset: TekstiRyhma) = {
+    def apply(
+      paluuarvo: String = "",
+      min: String,
+      max: String,
+      palautaHaettuArvo: String = null,
+      hylkaysperuste: String = "false",
+      kuvaukset: TekstiRyhma
+    ) = {
       val konv = new Arvovalikonvertteriparametri
       konv.setMaxValue(max)
       konv.setMinValue(min)
@@ -124,11 +142,13 @@ object LaskentaTestUtil {
   }
 
   object ValintaperusteViite {
-    def apply(onPakollinen: java.lang.Boolean,
+    def apply(
+      onPakollinen: java.lang.Boolean,
       tunniste: String,
       lahde: Valintaperustelahde = Valintaperustelahde.HAETTAVA_ARVO,
       epasuoraViittaus: Boolean = false,
-      indeksi: Int = 1) = {
+      indeksi: Int = 1
+    ) = {
       val viite = new ValintaperusteViite
       viite.setKuvaus("")
       viite.setLahde(lahde)
@@ -142,33 +162,53 @@ object LaskentaTestUtil {
   }
 
   object TestHakemusWithRyhmaOids {
-    def apply(oid: String,
-              hakutoiveet: List[String],
-              ryhmaoidit: List[List[String]],
-              kentat: Map[String, String],
-              suoritukset: java.util.Map[String, java.util.List[java.util.Map[String, String]]],
-              koskiopiskeluoikeudet: Json = List[Unit]().asJson) = {
+    def apply(
+      oid: String,
+      hakutoiveet: List[String],
+      ryhmaoidit: List[List[String]],
+      kentat: Map[String, String],
+      suoritukset: java.util.Map[String, java.util.List[java.util.Map[String, String]]],
+      koskiopiskeluoikeudet: Json = List[Unit]().asJson
+    ) = {
       val hakutoiveetMap: Map[java.lang.Integer, Hakutoive] = (for {
         prio <- 1 to hakutoiveet.size
-      } yield (new java.lang.Integer(prio), new Hakutoive(hakutoiveet(prio - 1), ryhmaoidit(prio - 1).asJava))).toMap
+      } yield (
+        new java.lang.Integer(prio),
+        new Hakutoive(hakutoiveet(prio - 1), ryhmaoidit(prio - 1).asJava)
+      )).toMap
 
       new Hakemus(oid, hakutoiveetMap.asJava, kentat.asJava, suoritukset, koskiopiskeluoikeudet)
     }
   }
 
   object TestHakemus {
-    def apply(oid: String,
-              hakutoiveet: List[String],
-              kentat: Map[String, String],
-              suoritukset: java.util.Map[String, java.util.List[java.util.Map[String, String]]] = Collections.emptyMap(),
-              koskiopiskeluoikeudet: Json = List[Unit]().asJson): Hakemus = {
+    def apply(
+      oid: String,
+      hakutoiveet: List[String],
+      kentat: Map[String, String],
+      suoritukset: java.util.Map[String, java.util.List[java.util.Map[String, String]]] =
+        Collections.emptyMap(),
+      koskiopiskeluoikeudet: Json = List[Unit]().asJson
+    ): Hakemus = {
       val ryhmaoidit = hakutoiveet.map(_ => List())
-      TestHakemusWithRyhmaOids(oid, hakutoiveet, ryhmaoidit, kentat, suoritukset, koskiopiskeluoikeudet)
+      TestHakemusWithRyhmaOids(
+        oid,
+        hakutoiveet,
+        ryhmaoidit,
+        kentat,
+        suoritukset,
+        koskiopiskeluoikeudet
+      )
     }
   }
 
   object Laskentakaava {
-    def apply(funktiokutsu: Funktiokutsu, nimi: String, onLuonnos: java.lang.Boolean, kuvaus: String = "") = {
+    def apply(
+      funktiokutsu: Funktiokutsu,
+      nimi: String,
+      onLuonnos: java.lang.Boolean,
+      kuvaus: String = ""
+    ) = {
       val kaava = new Laskentakaava
       kaava.setFunktiokutsu(funktiokutsu)
       kaava.setTyyppi(funktiokutsu.getFunktionimi.getTyyppi)

@@ -503,7 +503,8 @@ public class ValintalaskentakoostepalveluResourceImpl {
             hakukohdeOid -> {
               HakuparametritDTO hakuparametrit = new HakuparametritDTO();
               hakuparametrit.setHakukohdeOid(hakukohdeOid);
-              return valintaperusteService.haeValintaperusteet(Arrays.asList(hakuparametrit))
+              return valintaperusteService
+                  .haeValintaperusteet(Arrays.asList(hakuparametrit))
                   .stream();
             })
         .collect(Collectors.toList());

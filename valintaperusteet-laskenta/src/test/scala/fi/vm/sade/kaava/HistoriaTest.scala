@@ -5,7 +5,6 @@ import fi.vm.sade.service.valintaperusteet.laskenta.JsonFormats._
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
 import org.scalatest.funsuite.AnyFunSuite
 
-
 class HistoriaTest extends AnyFunSuite {
 
   test("historiaJsonMuunnos") {
@@ -13,16 +12,27 @@ class HistoriaTest extends AnyFunSuite {
     val FUNKTIO2 = "SUMMA"
 
     val avaimet = Map(
-       "oletusarvo" -> None,
-       "luku" -> Some("10.0")
+      "oletusarvo" -> None,
+      "luku" -> Some("10.0")
     )
     val tilat: List[Tila] = List(
       new Hyvaksyttavissatila,
-      new Virhetila(LaskentaTestUtil.suomenkielinenHylkaysperusteMap("virhe"),
-        new OsallistumistietoaEiVoidaTulkitaVirhe("virhe")),
-      new Hylattytila(LaskentaTestUtil.suomenkielinenHylkaysperusteMap("Hylky"),
-        new Arvokonvertterihylkays("hylky")))
-    val historia = Historia(FUNKTIO1, Some(16), tilat, Some(List(Historia(FUNKTIO2, Some(true), List(), None, None))), Some(avaimet))
+      new Virhetila(
+        LaskentaTestUtil.suomenkielinenHylkaysperusteMap("virhe"),
+        new OsallistumistietoaEiVoidaTulkitaVirhe("virhe")
+      ),
+      new Hylattytila(
+        LaskentaTestUtil.suomenkielinenHylkaysperusteMap("Hylky"),
+        new Arvokonvertterihylkays("hylky")
+      )
+    )
+    val historia = Historia(
+      FUNKTIO1,
+      Some(16),
+      tilat,
+      Some(List(Historia(FUNKTIO2, Some(true), List(), None, None))),
+      Some(avaimet)
+    )
 
     val historiaAsJson = historiaWrites.writes(historia)
 

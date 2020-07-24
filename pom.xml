@@ -37,7 +37,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <git-code-format-maven-plugin.version>2.5</git-code-format-maven-plugin.version>
         <maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
 
         <valinta-sharedutils.version>5.6-SNAPSHOT</valinta-sharedutils.version>
@@ -339,67 +338,67 @@
                 <version>3.1.0</version>
             </dependency>
             <!-- Spring -->
-             <dependency>
-                 <groupId>org.springframework</groupId>
-                 <artifactId>spring-web</artifactId>
-                 <version>${spring.version}</version>
-                 <exclusions>
-                     <exclusion>
-                         <artifactId>commons-logging</artifactId>
-                         <groupId>commons-logging</groupId>
-                     </exclusion>
-                 </exclusions>
-             </dependency>
-             <dependency>
-                 <groupId>org.springframework</groupId>
-                 <artifactId>spring-core</artifactId>
-                 <version>${spring.version}</version>
-             </dependency>
-             <dependency>
-                 <groupId>org.springframework</groupId>
-                 <artifactId>spring-context-support</artifactId>
-                 <version>${spring.version}</version>
-             </dependency>
-             <dependency>
-                 <groupId>org.springframework</groupId>
-                 <artifactId>spring-webmvc</artifactId>
-                 <version>${spring.version}</version>
-             </dependency>
-             <dependency>
-                 <groupId>org.springframework</groupId>
-                 <artifactId>spring-context</artifactId>
-                 <version>${spring.version}</version>
-             </dependency>
-             <dependency>
-                 <groupId>org.springframework</groupId>
-                 <artifactId>spring-aop</artifactId>
-                 <version>${spring.version}</version>
-             </dependency>
-             <dependency>
-                 <groupId>org.springframework</groupId>
-                 <artifactId>spring-beans</artifactId>
-                 <version>${spring.version}</version>
-             </dependency>
-             <dependency>
-                 <groupId>org.springframework</groupId>
-                 <artifactId>spring-tx</artifactId>
-                 <version>${spring.version}</version>
-             </dependency>
-             <dependency>
-                 <groupId>org.springframework</groupId>
-                 <artifactId>spring-orm</artifactId>
-                 <version>${spring.version}</version>
-             </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-web</artifactId>
+                <version>${spring.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>commons-logging</artifactId>
+                        <groupId>commons-logging</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context-support</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-webmvc</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-aop</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-beans</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-tx</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-orm</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-jdbc</artifactId>
                 <version>${spring.version}</version>
             </dependency>
-             <dependency>
-                 <groupId>org.springframework</groupId>
-                 <artifactId>spring-expression</artifactId>
-                 <version>${spring.version}</version>
-             </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-expression</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-test</artifactId>
@@ -407,45 +406,45 @@
                 <scope>test</scope>
             </dependency>
 
-             <!-- spring security -->
-             <dependency>
-                 <groupId>org.springframework.security</groupId>
-                 <artifactId>spring-security-core</artifactId>
-                 <version>${spring.security.version}</version>
-             </dependency>
-             <dependency>
-                 <groupId>org.springframework.security</groupId>
-                 <artifactId>spring-security-config</artifactId>
-                 <version>${spring.security.version}</version>
-             </dependency>
-             <dependency>
-                 <groupId>org.springframework.security</groupId>
-                 <artifactId>spring-security-web</artifactId>
-                 <version>${spring.security.version}</version>
-             </dependency>
+            <!-- spring security -->
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-core</artifactId>
+                <version>${spring.security.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-config</artifactId>
+                <version>${spring.security.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-web</artifactId>
+                <version>${spring.security.version}</version>
+            </dependency>
 
-             <dependency>
-                 <groupId>org.springframework.security</groupId>
-                 <artifactId>spring-security-aspects</artifactId>
-                 <version>${spring.security.version}</version>
-                 <exclusions>
-                     <exclusion>
-                         <groupId>org.springframework</groupId>
-                         <artifactId>*</artifactId>
-                     </exclusion>
-                 </exclusions>
-             </dependency>
-             <dependency>
-                 <groupId>org.springframework.security</groupId>
-                 <artifactId>spring-security-cas</artifactId>
-                 <version>${spring.security.version}</version>
-                 <exclusions>
-                     <exclusion>
-                         <artifactId>commons-logging</artifactId>
-                         <groupId>commons-logging</groupId>
-                     </exclusion>
-                 </exclusions>
-             </dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-aspects</artifactId>
+                <version>${spring.security.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-cas</artifactId>
+                <version>${spring.security.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>commons-logging</artifactId>
+                        <groupId>commons-logging</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-test</artifactId>
@@ -540,23 +539,23 @@
         </resources>
         <plugins>
             <plugin>
-                <groupId>com.cosium.code</groupId>
-                <artifactId>git-code-format-maven-plugin</artifactId>
-                <version>${git-code-format-maven-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>install-formatter-hook</id>
-                        <goals>
-                            <goal>install-hooks</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>validate-code-format</id>
-                        <goals>
-                            <goal>validate-code-format</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+                <version>2.0.1</version>
+                <configuration>
+                    <java>
+                        <googleJavaFormat>
+                            <version>1.8</version>
+                            <style>GOOGLE</style>
+                        </googleJavaFormat>
+                    </java>
+                    <scala>
+                        <scalafmt>
+                            <version>2.6.4</version>
+                            <file>${maven.multiModuleProjectDirectory}/.scalafmt.conf</file>
+                        </scalafmt>
+                    </scala>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -595,9 +594,9 @@ buildTtime=${maven.build.timestamp}
                 <version>3.8.0</version>
                 <inherited>true</inherited>
                 <configuration>
-                  <source>1.8</source>
-                  <target>1.8</target>
-                  <debug>false</debug>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <debug>false</debug>
                 </configuration>
             </plugin>
             <plugin>

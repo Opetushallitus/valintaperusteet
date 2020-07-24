@@ -23,7 +23,8 @@ object Tutkinnot {
     val opiskeluoikeudenOid: Optional[Json, String] = JsonPath.root.oid.string
     val opiskeluoikeudenVersio: Optional[Json, Int] = JsonPath.root.versionumero.int
     val opiskeluoikeudenAikaleima: Optional[Json, String] = JsonPath.root.aikaleima.string
-    val opiskeluoikeudenOppilaitoksenSuomenkielinenNimi: Optional[Json, String] = JsonPath.root.oppilaitos.nimi.fi.string
+    val opiskeluoikeudenOppilaitoksenSuomenkielinenNimi: Optional[Json, String] =
+      JsonPath.root.oppilaitos.nimi.fi.string
 
     // Suoritukset etsivä linssi
     val suoritukset: JsonTraversalPath = JsonPath.root.suoritukset.each
@@ -32,17 +33,19 @@ object Tutkinnot {
     val koulutusmoduuli: JsonPath = JsonPath.root.koulutusmoduuli
     val koodiarvo: Optional[Json, String] = koulutusmoduuli.tunniste.koodiarvo.string
     val lyhytNimiFi: Optional[Json, String] = koulutusmoduuli.tunniste.nimi.fi.string
-    val koulutusTyypinKoodiarvo: Optional[Json, String] = koulutusmoduuli.koulutustyyppi.koodiarvo.string
+    val koulutusTyypinKoodiarvo: Optional[Json, String] =
+      koulutusmoduuli.koulutustyyppi.koodiarvo.string
     val koulutusTyypinNimiFi: Optional[Json, String] = koulutusmoduuli.koulutustyyppi.nimi.fi.string
     val suoritusTapa: Optional[Json, String] = JsonPath.root.suoritustapa.koodiarvo.string
   }
 
-  def etsiValmiitTutkinnot(valmistumisenTakaraja: Option[LocalDate],
-                           json: Json,
-                           opiskeluoikeudenHaluttuTyyppi: String,
-                           suorituksenHaluttuTyyppi: String,
-                           hakemus: Hakemus
-                          ): Seq[Json] = {
+  def etsiValmiitTutkinnot(
+    valmistumisenTakaraja: Option[LocalDate],
+    json: Json,
+    opiskeluoikeudenHaluttuTyyppi: String,
+    suorituksenHaluttuTyyppi: String,
+    hakemus: Hakemus
+  ): Seq[Json] = {
     // Opiskeluoikeudet etsivä linssi
     val _opiskeluoikeudet = JsonPath.root.each.json
 
@@ -53,72 +56,97 @@ object Tutkinnot {
     val _suoritustavanKoodiarvo = JsonPath.root.suoritustapa.koodiarvo.string
     val _suoritustavanKoodistoUri = JsonPath.root.suoritustapa.koodistoUri.string
 
-    _opiskeluoikeudet.getAll(json).filter(opiskeluoikeus => {
-      val opiskeluoikeudenTyyppi = _opiskeluoikeudenTyyppi.getOption(opiskeluoikeus).orNull
-      val valmistumisTila = _valmistumisTila.getAll(opiskeluoikeus)
+    _opiskeluoikeudet
+      .getAll(json)
+      .filter(opiskeluoikeus => {
+        val opiskeluoikeudenTyyppi = _opiskeluoikeudenTyyppi.getOption(opiskeluoikeus).orNull
+        val valmistumisTila = _valmistumisTila.getAll(opiskeluoikeus)
 
-      TutkintoLinssit.suoritukset.json.getAll(opiskeluoikeus).
-        filter(_suorituksenTyyppi.getOption(_).contains(KoskiLaskenta.ammatillisenSuorituksenTyyppi)).
-        exists { suoritus =>
-          val suorituksenTyyppi = _suorituksenTyyppi.getOption(suoritus)
-          val suoritustavanKoodiarvo = _suoritustavanKoodiarvo.getOption(suoritus)
-          val suoritustavanKoodistoUri = _suoritustavanKoodistoUri.getOption(suoritus)
+        TutkintoLinssit.suoritukset.json
+          .getAll(opiskeluoikeus)
+          .filter(
+            _suorituksenTyyppi.getOption(_).contains(KoskiLaskenta.ammatillisenSuorituksenTyyppi)
+          )
+          .exists { suoritus =>
+            val suorituksenTyyppi = _suorituksenTyyppi.getOption(suoritus)
+            val suoritustavanKoodiarvo = _suoritustavanKoodiarvo.getOption(suoritus)
+            val suoritustavanKoodistoUri = _suoritustavanKoodistoUri.getOption(suoritus)
 
-          val onkoValmistunut: Boolean = valmistumisTila.contains("valmistunut") && (valmistumisenTakaraja.forall(vahvistettuRajapäiväänMennessä(_, suoritus, hakemus)))
-          val onkoValidiSuoritusTapa = suoritustavanKoodiarvo.map(s => sallitutSuoritusTavat.contains(s)).exists(v => v) &&
-            suoritustavanKoodistoUri.contains("ammatillisentutkinnonsuoritustapa")
-          val onkoAmmatillinenOpiskeluOikeus =
-            opiskeluoikeudenTyyppi == opiskeluoikeudenHaluttuTyyppi &&
-              suorituksenTyyppi.contains(suorituksenHaluttuTyyppi) &&
-              onkoValidiSuoritusTapa
+            val onkoValmistunut: Boolean =
+              valmistumisTila.contains("valmistunut") && (valmistumisenTakaraja
+                .forall(vahvistettuRajapäiväänMennessä(_, suoritus, hakemus)))
+            val onkoValidiSuoritusTapa =
+              suoritustavanKoodiarvo.map(s => sallitutSuoritusTavat.contains(s)).exists(v => v) &&
+                suoritustavanKoodistoUri.contains("ammatillisentutkinnonsuoritustapa")
+            val onkoAmmatillinenOpiskeluOikeus =
+              opiskeluoikeudenTyyppi == opiskeluoikeudenHaluttuTyyppi &&
+                suorituksenTyyppi.contains(suorituksenHaluttuTyyppi) &&
+                onkoValidiSuoritusTapa
 
-          onkoAmmatillinenOpiskeluOikeus && onkoValmistunut
-        }
-    })
+            onkoAmmatillinenOpiskeluOikeus && onkoValmistunut
+          }
+      })
   }
 
-  private def etsiSuoritukset(tutkinto: Json,
-                              valmistumisenTakarajaPvm: LocalDate,
-                              suodatusPredikaatti: Json => Boolean,
-                              hakemus: Hakemus
-                             ): List[Json] = {
-    TutkintoLinssit.suoritukset.json.getAll(tutkinto).filter(suoritus => {
-      val onkoSallitunTyyppinenSuoritus = suodatusPredikaatti(suoritus)
+  private def etsiSuoritukset(
+    tutkinto: Json,
+    valmistumisenTakarajaPvm: LocalDate,
+    suodatusPredikaatti: Json => Boolean,
+    hakemus: Hakemus
+  ): List[Json] = {
+    TutkintoLinssit.suoritukset.json
+      .getAll(tutkinto)
+      .filter(suoritus => {
+        val onkoSallitunTyyppinenSuoritus = suodatusPredikaatti(suoritus)
 
-      onkoSallitunTyyppinenSuoritus && vahvistettuRajapäiväänMennessä(valmistumisenTakarajaPvm, suoritus, hakemus)
-    })
+        onkoSallitunTyyppinenSuoritus && vahvistettuRajapäiväänMennessä(
+          valmistumisenTakarajaPvm,
+          suoritus,
+          hakemus
+        )
+      })
   }
 
-  def vahvistettuRajapäiväänMennessä(valmistumisenTakaraja: LocalDate, päätasonSuoritus: Json, hakemus: Hakemus): Boolean = {
+  def vahvistettuRajapäiväänMennessä(
+    valmistumisenTakaraja: LocalDate,
+    päätasonSuoritus: Json,
+    hakemus: Hakemus
+  ): Boolean = {
     TutkintoLinssit.vahvistusPvm.getOption(päätasonSuoritus) match {
       case Some(dateString) =>
-        val valmistunutAjoissa = !LocalDate.parse(dateString, koskiDateFormat).isAfter(valmistumisenTakaraja)
+        val valmistunutAjoissa =
+          !LocalDate.parse(dateString, koskiDateFormat).isAfter(valmistumisenTakaraja)
         if (!valmistunutAjoissa) {
-          LOG.info(s"Suorituksen vahvistuspäivä $dateString on valmistumisen takarajan " +
-            s"${LaskentaUtil.suomalainenPvmMuoto.format(valmistumisenTakaraja)} jälkeen, joten suoritusta ei huomioida. Hakemus: ${hakemus.oid}")
+          LOG.info(
+            s"Suorituksen vahvistuspäivä $dateString on valmistumisen takarajan " +
+              s"${LaskentaUtil.suomalainenPvmMuoto.format(valmistumisenTakaraja)} jälkeen, joten suoritusta ei huomioida. Hakemus: ${hakemus.oid}"
+          )
         }
         valmistunutAjoissa
       case None => false
     }
   }
 
-  def etsiValiditSuoritukset(tutkinto: Json,
-                             valmistumisenTakarajaPvm: LocalDate,
-                             suorituksenSallitutKoodit: Set[Int],
-                             hakemus: Hakemus
-                            ): List[Json] = {
+  def etsiValiditSuoritukset(
+    tutkinto: Json,
+    valmistumisenTakarajaPvm: LocalDate,
+    suorituksenSallitutKoodit: Set[Int],
+    hakemus: Hakemus
+  ): List[Json] = {
     etsiSuoritukset(
       tutkinto,
       valmistumisenTakarajaPvm,
       suoritus => {
         val suoritusTapa = TutkintoLinssit.suoritusTapa.getOption(suoritus).orNull
-        val koulutusTyypinKoodiarvo = TutkintoLinssit.koulutusTyypinKoodiarvo.getOption(suoritus) match {
-          case Some(s) => s.toInt
-          case None => -1
-        }
+        val koulutusTyypinKoodiarvo =
+          TutkintoLinssit.koulutusTyypinKoodiarvo.getOption(suoritus) match {
+            case Some(s) => s.toInt
+            case None    => -1
+          }
         suorituksenSallitutKoodit.contains(koulutusTyypinKoodiarvo) &&
-          sallitutSuoritusTavat.contains(suoritusTapa)
+        sallitutSuoritusTavat.contains(suoritusTapa)
       },
-      hakemus)
+      hakemus
+    )
   }
 }

@@ -391,9 +391,7 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
 
   private Map<String, HakukohteenValintaperuste> lisaaValintaperusteet(
       HakukohdeImportDTO importData, HakukohdeViite hakukohde) {
-    return importData
-        .getValintaperuste()
-        .parallelStream()
+    return importData.getValintaperuste().parallelStream()
         .map(
             a -> {
               HakukohteenValintaperuste peruste = new HakukohteenValintaperuste();

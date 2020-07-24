@@ -54,31 +54,46 @@ object Funktiokuvaaja {
     override val nimi = ARVOVALIKONVERTTERI
   }
 
-  case class Arvokonvertterikuvaus(arvotyyppi: Syoteparametrityyppi,
-                                   arvojoukko: Array[(String,String)] = Array.empty[(String,String)]) extends KonvertteriTyyppi {
+  case class Arvokonvertterikuvaus(
+    arvotyyppi: Syoteparametrityyppi,
+    arvojoukko: Array[(String, String)] = Array.empty[(String, String)]
+  ) extends KonvertteriTyyppi {
     override val nimi = ARVOKONVERTTERI
   }
 
-  case class Konvertterikuvaus(pakollinen: Boolean,
-                               konvertteriTyypit: Map[Konvertterinimi.Konvertterinimi, KonvertteriTyyppi])
+  case class Konvertterikuvaus(
+    pakollinen: Boolean,
+    konvertteriTyypit: Map[Konvertterinimi.Konvertterinimi, KonvertteriTyyppi]
+  )
 
-  case class Valintaperusteparametrikuvaus(nimi: String, tyyppi: Syoteparametrityyppi, arvojoukko: Array[(String,String)] = Array.empty[(String,String)], kuvaus: String = "")
+  case class Valintaperusteparametrikuvaus(
+    nimi: String,
+    tyyppi: Syoteparametrityyppi,
+    arvojoukko: Array[(String, String)] = Array.empty[(String, String)],
+    kuvaus: String = ""
+  )
 
-  case class Syoteparametrikuvaus(avain: String,
-                                  tyyppi: Syoteparametrityyppi,
-                                  pakollinen: Boolean = true,
-                                  arvojoukko: Array[(String,String)] = Array.empty[(String,String)],
-                                  kuvaus: String = "")
+  case class Syoteparametrikuvaus(
+    avain: String,
+    tyyppi: Syoteparametrityyppi,
+    pakollinen: Boolean = true,
+    arvojoukko: Array[(String, String)] = Array.empty[(String, String)],
+    kuvaus: String = ""
+  )
 
-  case class Funktioargumenttikuvaus(nimi: String, tyyppi: Funktiotyyppi,
-                                     kardinaliteetti: Kardinaliteetti = Kardinaliteetti.YKSI)
+  case class Funktioargumenttikuvaus(
+    nimi: String,
+    tyyppi: Funktiotyyppi,
+    kardinaliteetti: Kardinaliteetti = Kardinaliteetti.YKSI
+  )
 
-
-  case class Funktiokuvaus(tyyppi: Funktiotyyppi,
-                           funktioargumentit: Seq[Funktioargumenttikuvaus] = Nil,
-                           syoteparametrit: Seq[Syoteparametrikuvaus] = Nil,
-                           valintaperusteparametri: Seq[Valintaperusteparametrikuvaus] = Nil,
-                           konvertteri: Option[Konvertterikuvaus] = None)
+  case class Funktiokuvaus(
+    tyyppi: Funktiotyyppi,
+    funktioargumentit: Seq[Funktioargumenttikuvaus] = Nil,
+    syoteparametrit: Seq[Syoteparametrikuvaus] = Nil,
+    valintaperusteparametri: Seq[Valintaperusteparametrikuvaus] = Nil,
+    konvertteri: Option[Konvertterikuvaus] = None
+  )
 
   def annaFunktiokuvauksetAsJson = {
 
@@ -92,7 +107,6 @@ object Funktiokuvaaja {
   def annaFunktiokuvaukset = {
     funktiokuvaukset
   }
-
 
   def annaFunktiokuvaus(nimi: String): (Funktionimi, Funktiokuvaus) = {
     Funktionimi.values().filter(_.name() == nimi.toUpperCase()).toList match {
@@ -119,16 +133,25 @@ object Funktiokuvaaja {
 
     val fk = kutsu._2
 
-    val argumentit = if (fk.funktioargumentit.isEmpty) Json.obj()
-    else Json.obj("funktioargumentit" ->
-      fk.funktioargumentit.map(Json.toJson(_)))
+    val argumentit =
+      if (fk.funktioargumentit.isEmpty) Json.obj()
+      else
+        Json.obj(
+          "funktioargumentit" ->
+            fk.funktioargumentit.map(Json.toJson(_))
+        )
 
-    val parametrit = if (fk.syoteparametrit.isEmpty) Json.obj()
-    else Json.obj("syoteparametrit" ->
-      fk.syoteparametrit.map(Json.toJson(_)))
+    val parametrit =
+      if (fk.syoteparametrit.isEmpty) Json.obj()
+      else
+        Json.obj(
+          "syoteparametrit" ->
+            fk.syoteparametrit.map(Json.toJson(_))
+        )
 
-    val valintaperuste = if (fk.valintaperusteparametri.isEmpty) Json.obj()
-    else Json.obj("valintaperusteviitteet" -> fk.valintaperusteparametri.map(Json.toJson(_)))
+    val valintaperuste =
+      if (fk.valintaperusteparametri.isEmpty) Json.obj()
+      else Json.obj("valintaperusteviitteet" -> fk.valintaperusteparametri.map(Json.toJson(_)))
 
     val konvertteri = fk.konvertteri match {
       case Some(konv) => Json.obj("konvertteri" -> Json.toJson(konv))
@@ -136,10 +159,10 @@ object Funktiokuvaaja {
       case None => Json.obj()
     }
 
-
     Json.obj(
       "nimi" -> kutsu._1.name(),
-      "tyyppi" -> fk.tyyppi.toString) ++ argumentit ++ parametrit ++ valintaperuste ++ konvertteri
+      "tyyppi" -> fk.tyyppi.toString
+    ) ++ argumentit ++ parametrit ++ valintaperuste ++ konvertteri
 
   }
 
@@ -157,227 +180,493 @@ object Funktiokuvaaja {
     ),
     Funktionimi.ITEROIAMMATILLISETTUTKINNOT -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
-      funktioargumentit = List(Funktioargumenttikuvaus("iteroitava koostefunktio", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.YKSI)),
+      funktioargumentit = List(
+        Funktioargumenttikuvaus(
+          "iteroitava koostefunktio",
+          Funktiotyyppi.LUKUARVOFUNKTIO,
+          Kardinaliteetti.YKSI
+        )
+      ),
       syoteparametrit = List(
         Syoteparametrikuvaus(
           avain = Funktionimi.ITEROIAMMATILLISETTUTKINNOT_VALMISTUMIS_PARAMETRI,
           tyyppi = Syoteparametrityyppi.MERKKIJONO,
-          pakollinen = false, // TODO: Tee pakolliseksi, kun kaikille olemassaoleville funktioille on syötetty parametrit.
-          kuvaus = "Valmistumisen takaraja (esim 1.6.2020)"),
+          pakollinen =
+            false, // TODO: Tee pakolliseksi, kun kaikille olemassaoleville funktioille on syötetty parametrit.
+          kuvaus = "Valmistumisen takaraja (esim 1.6.2020)"
+        ),
         Syoteparametrikuvaus(
           avain = Funktionimi.ITEROIAMMATILLISETTUTKINNOT_LEIKKURIPVM_PARAMETRI,
           tyyppi = Syoteparametrityyppi.MERKKIJONO,
-          pakollinen = false, // TODO: Tee pakolliseksi, kun kaikille olemassaoleville funktioille on syötetty parametrit.
-          kuvaus = "Tietojen tulee olla Koskessa viimeistään (esim 15.5.2020)")),
+          pakollinen =
+            false, // TODO: Tee pakolliseksi, kun kaikille olemassaoleville funktioille on syötetty parametrit.
+          kuvaus = "Tietojen tulee olla Koskessa viimeistään (esim 15.5.2020)"
+        )
+      )
     ),
     Funktionimi.ITEROIAMMATILLISETOSAT -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
-      funktioargumentit = List(Funktioargumenttikuvaus("iteroitava funktio", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.YKSI)),
+      funktioargumentit = List(
+        Funktioargumenttikuvaus(
+          "iteroitava funktio",
+          Funktiotyyppi.LUKUARVOFUNKTIO,
+          Kardinaliteetti.YKSI
+        )
+      )
     ),
     Funktionimi.ITEROIAMMATILLISETYTOOSAALUEET -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
-      valintaperusteparametri = List(Valintaperusteparametrikuvaus("yto-koodi", Syoteparametrityyppi.MERKKIJONO, kuvaus = "Yhteisen tutkinnon osan koodi")),
-      funktioargumentit = List(Funktioargumenttikuvaus("iteroitava funktio", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.YKSI)),
+      valintaperusteparametri = List(
+        Valintaperusteparametrikuvaus(
+          "yto-koodi",
+          Syoteparametrityyppi.MERKKIJONO,
+          kuvaus = "Yhteisen tutkinnon osan koodi"
+        )
+      ),
+      funktioargumentit = List(
+        Funktioargumenttikuvaus(
+          "iteroitava funktio",
+          Funktiotyyppi.LUKUARVOFUNKTIO,
+          Kardinaliteetti.YKSI
+        )
+      )
     ),
     Funktionimi.HAEAMMATILLISENYTOOSAALUEENARVOSANA -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
       konvertteri = Some(
         Konvertterikuvaus(
           pakollinen = false,
-          konvertteriTyypit = Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.DESIMAALILUKU))
-        ))
+          konvertteriTyypit =
+            Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.DESIMAALILUKU))
+        )
+      )
     ),
     Funktionimi.HAEAMMATILLISENYTOOSAALUEENLAAJUUS -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
       konvertteri = Some(
         Konvertterikuvaus(
           pakollinen = false,
-          konvertteriTyypit = Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.DESIMAALILUKU))
-        ))
+          konvertteriTyypit =
+            Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.DESIMAALILUKU))
+        )
+      )
     ),
     Funktionimi.HAEAMMATILLINENYTOARVOSANA -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
-      valintaperusteparametri = List(Valintaperusteparametrikuvaus("tunniste", Syoteparametrityyppi.MERKKIJONO, kuvaus = "Tunniste")),
+      valintaperusteparametri = List(
+        Valintaperusteparametrikuvaus(
+          "tunniste",
+          Syoteparametrityyppi.MERKKIJONO,
+          kuvaus = "Tunniste"
+        )
+      ),
       konvertteri = Some(
         Konvertterikuvaus(
           pakollinen = false,
-          konvertteriTyypit = Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.DESIMAALILUKU),
-            ARVOVALIKONVERTTERI -> Arvovalikonvertterikuvaus)
-        ))
+          konvertteriTyypit = Map(
+            ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.DESIMAALILUKU),
+            ARVOVALIKONVERTTERI -> Arvovalikonvertterikuvaus
+          )
+        )
+      )
     ),
     Funktionimi.HAEAMMATILLINENYTOARVIOINTIASTEIKKO -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
-      valintaperusteparametri = List(Valintaperusteparametrikuvaus("yto-koodi", Syoteparametrityyppi.MERKKIJONO, kuvaus = "Yhteisen tutkinnon osan koodi")),
+      valintaperusteparametri = List(
+        Valintaperusteparametrikuvaus(
+          "yto-koodi",
+          Syoteparametrityyppi.MERKKIJONO,
+          kuvaus = "Yhteisen tutkinnon osan koodi"
+        )
+      ),
       konvertteri = Some(
         Konvertterikuvaus(
           pakollinen = true,
-          konvertteriTyypit = Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.MERKKIJONO))
-        ))
+          konvertteriTyypit =
+            Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.MERKKIJONO))
+        )
+      )
     ),
     Funktionimi.HAEAMMATILLISENOSANLAAJUUS -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
       konvertteri = Some(
         Konvertterikuvaus(
           pakollinen = false,
-          konvertteriTyypit = Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.DESIMAALILUKU))
-        ))
+          konvertteriTyypit =
+            Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.DESIMAALILUKU))
+        )
+      )
     ),
     Funktionimi.HAEAMMATILLISENOSANARVOSANA -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
       konvertteri = Some(
         Konvertterikuvaus(
           pakollinen = false,
-          konvertteriTyypit = Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.DESIMAALILUKU))
-        ))
+          konvertteriTyypit =
+            Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.DESIMAALILUKU))
+        )
+      )
     ),
     Funktionimi.HAEAMMATILLISENTUTKINNONKESKIARVO -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
       konvertteri = Some(
         Konvertterikuvaus(
           pakollinen = false,
-          konvertteriTyypit = Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.DESIMAALILUKU))
-        ))
+          konvertteriTyypit =
+            Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.DESIMAALILUKU))
+        )
+      )
     ),
     Funktionimi.HAEAMMATILLISENTUTKINNONSUORITUSTAPA -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
       konvertteri = Some(
         Konvertterikuvaus(
           pakollinen = true,
-          konvertteriTyypit = Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.MERKKIJONO))
-        ))
+          konvertteriTyypit =
+            Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.MERKKIJONO))
+        )
+      )
     ),
     Funktionimi.HAELUKUARVO -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
       syoteparametrit = List(
-        Syoteparametrikuvaus(avain = "oletusarvo", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = false)
+        Syoteparametrikuvaus(
+          avain = "oletusarvo",
+          tyyppi = Syoteparametrityyppi.DESIMAALILUKU,
+          pakollinen = false
+        )
       ),
-      valintaperusteparametri = List(Valintaperusteparametrikuvaus("tunniste", Syoteparametrityyppi.DESIMAALILUKU, kuvaus = "Tunniste")),
+      valintaperusteparametri = List(
+        Valintaperusteparametrikuvaus(
+          "tunniste",
+          Syoteparametrityyppi.DESIMAALILUKU,
+          kuvaus = "Tunniste"
+        )
+      ),
       konvertteri = Some(
         Konvertterikuvaus(
           pakollinen = false,
-          konvertteriTyypit = Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.DESIMAALILUKU),
-            ARVOVALIKONVERTTERI -> Arvovalikonvertterikuvaus)
-        ))
+          konvertteriTyypit = Map(
+            ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.DESIMAALILUKU),
+            ARVOVALIKONVERTTERI -> Arvovalikonvertterikuvaus
+          )
+        )
+      )
     ),
     Funktionimi.HAELUKUARVOEHDOLLA -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
       syoteparametrit = List(
-        Syoteparametrikuvaus(avain = "oletusarvo", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = false)
+        Syoteparametrikuvaus(
+          avain = "oletusarvo",
+          tyyppi = Syoteparametrityyppi.DESIMAALILUKU,
+          pakollinen = false
+        )
       ),
       valintaperusteparametri = List(
-        Valintaperusteparametrikuvaus("tunniste", Syoteparametrityyppi.DESIMAALILUKU, kuvaus = "Tunniste"),
+        Valintaperusteparametrikuvaus(
+          "tunniste",
+          Syoteparametrityyppi.DESIMAALILUKU,
+          kuvaus = "Tunniste"
+        ),
         Valintaperusteparametrikuvaus("ehto", Syoteparametrityyppi.MERKKIJONO, kuvaus = "Ehto")
       ),
       konvertteri = Some(
         Konvertterikuvaus(
           pakollinen = false,
-          konvertteriTyypit = Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.DESIMAALILUKU),
-            ARVOVALIKONVERTTERI -> Arvovalikonvertterikuvaus)
-        ))
+          konvertteriTyypit = Map(
+            ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.DESIMAALILUKU),
+            ARVOVALIKONVERTTERI -> Arvovalikonvertterikuvaus
+          )
+        )
+      )
     ),
     Funktionimi.HAEYOARVOSANA -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
       syoteparametrit = List(
-        Syoteparametrikuvaus(avain = "alkuvuosi", tyyppi = Syoteparametrityyppi.KOKONAISLUKU, pakollinen = false, kuvaus = "Alkaen (vuosi)"),
-        Syoteparametrikuvaus(avain = "alkulukukausi", tyyppi = Syoteparametrityyppi.ARVOJOUKKO, pakollinen = false, arvojoukko = Arvojoukot.LUKUKAUDET, kuvaus = "Alkaen (lukukausi)"),
-        Syoteparametrikuvaus(avain = "loppuvuosi", tyyppi = Syoteparametrityyppi.KOKONAISLUKU, pakollinen = false, kuvaus = "Päättyen (vuosi)"),
-        Syoteparametrikuvaus(avain = "loppulukukausi", tyyppi = Syoteparametrityyppi.ARVOJOUKKO, pakollinen = false, arvojoukko = Arvojoukot.LUKUKAUDET, kuvaus = "Päättyen (lukukausi)"),
-        Syoteparametrikuvaus(avain = "rooli", tyyppi = Syoteparametrityyppi.ARVOJOUKKO, pakollinen = false, arvojoukko = Arvojoukot.KOEROOLIT, kuvaus = "Rooli"),
-        Syoteparametrikuvaus(avain = "I", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = true, kuvaus = "Arvosana I"),
-        Syoteparametrikuvaus(avain = "A", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = true, kuvaus = "Arvosana A"),
-        Syoteparametrikuvaus(avain = "B", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = true, kuvaus = "Arvosana B"),
-        Syoteparametrikuvaus(avain = "C", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = true, kuvaus = "Arvosana C"),
-        Syoteparametrikuvaus(avain = "M", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = true, kuvaus = "Arvosana M"),
-        Syoteparametrikuvaus(avain = "E", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = true, kuvaus = "Arvosana E"),
-        Syoteparametrikuvaus(avain = "L", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = true, kuvaus = "Arvosana L"),
-        Syoteparametrikuvaus(avain = "valmistuneet", tyyppi = Syoteparametrityyppi.CHECKBOX, pakollinen = false, kuvaus = "Vain valmistuneet huomioidaan")
+        Syoteparametrikuvaus(
+          avain = "alkuvuosi",
+          tyyppi = Syoteparametrityyppi.KOKONAISLUKU,
+          pakollinen = false,
+          kuvaus = "Alkaen (vuosi)"
+        ),
+        Syoteparametrikuvaus(
+          avain = "alkulukukausi",
+          tyyppi = Syoteparametrityyppi.ARVOJOUKKO,
+          pakollinen = false,
+          arvojoukko = Arvojoukot.LUKUKAUDET,
+          kuvaus = "Alkaen (lukukausi)"
+        ),
+        Syoteparametrikuvaus(
+          avain = "loppuvuosi",
+          tyyppi = Syoteparametrityyppi.KOKONAISLUKU,
+          pakollinen = false,
+          kuvaus = "Päättyen (vuosi)"
+        ),
+        Syoteparametrikuvaus(
+          avain = "loppulukukausi",
+          tyyppi = Syoteparametrityyppi.ARVOJOUKKO,
+          pakollinen = false,
+          arvojoukko = Arvojoukot.LUKUKAUDET,
+          kuvaus = "Päättyen (lukukausi)"
+        ),
+        Syoteparametrikuvaus(
+          avain = "rooli",
+          tyyppi = Syoteparametrityyppi.ARVOJOUKKO,
+          pakollinen = false,
+          arvojoukko = Arvojoukot.KOEROOLIT,
+          kuvaus = "Rooli"
+        ),
+        Syoteparametrikuvaus(
+          avain = "I",
+          tyyppi = Syoteparametrityyppi.DESIMAALILUKU,
+          pakollinen = true,
+          kuvaus = "Arvosana I"
+        ),
+        Syoteparametrikuvaus(
+          avain = "A",
+          tyyppi = Syoteparametrityyppi.DESIMAALILUKU,
+          pakollinen = true,
+          kuvaus = "Arvosana A"
+        ),
+        Syoteparametrikuvaus(
+          avain = "B",
+          tyyppi = Syoteparametrityyppi.DESIMAALILUKU,
+          pakollinen = true,
+          kuvaus = "Arvosana B"
+        ),
+        Syoteparametrikuvaus(
+          avain = "C",
+          tyyppi = Syoteparametrityyppi.DESIMAALILUKU,
+          pakollinen = true,
+          kuvaus = "Arvosana C"
+        ),
+        Syoteparametrikuvaus(
+          avain = "M",
+          tyyppi = Syoteparametrityyppi.DESIMAALILUKU,
+          pakollinen = true,
+          kuvaus = "Arvosana M"
+        ),
+        Syoteparametrikuvaus(
+          avain = "E",
+          tyyppi = Syoteparametrityyppi.DESIMAALILUKU,
+          pakollinen = true,
+          kuvaus = "Arvosana E"
+        ),
+        Syoteparametrikuvaus(
+          avain = "L",
+          tyyppi = Syoteparametrityyppi.DESIMAALILUKU,
+          pakollinen = true,
+          kuvaus = "Arvosana L"
+        ),
+        Syoteparametrikuvaus(
+          avain = "valmistuneet",
+          tyyppi = Syoteparametrityyppi.CHECKBOX,
+          pakollinen = false,
+          kuvaus = "Vain valmistuneet huomioidaan"
+        )
       ),
-      valintaperusteparametri = List(Valintaperusteparametrikuvaus("oppiaine", tyyppi = Syoteparametrityyppi.ARVOJOUKKO, arvojoukko = Arvojoukot.YO_OPPIAINEET, kuvaus = "Oppiaine"))
+      valintaperusteparametri = List(
+        Valintaperusteparametrikuvaus(
+          "oppiaine",
+          tyyppi = Syoteparametrityyppi.ARVOJOUKKO,
+          arvojoukko = Arvojoukot.YO_OPPIAINEET,
+          kuvaus = "Oppiaine"
+        )
+      )
     ),
     Funktionimi.HAEOSAKOEARVOSANA -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
       syoteparametrit = List(
-        Syoteparametrikuvaus(avain = "alkuvuosi", tyyppi = Syoteparametrityyppi.KOKONAISLUKU, pakollinen = false, kuvaus = "Alkaen (vuosi)"),
-        Syoteparametrikuvaus(avain = "alkulukukausi", tyyppi = Syoteparametrityyppi.ARVOJOUKKO, pakollinen = false, arvojoukko = Arvojoukot.LUKUKAUDET, kuvaus = "Alkaen (lukukausi)"),
-        Syoteparametrikuvaus(avain = "loppuvuosi", tyyppi = Syoteparametrityyppi.KOKONAISLUKU, pakollinen = false, kuvaus = "Päättyen (vuosi)"),
-        Syoteparametrikuvaus(avain = "loppulukukausi", tyyppi = Syoteparametrityyppi.ARVOJOUKKO, pakollinen = false, arvojoukko = Arvojoukot.LUKUKAUDET, kuvaus = "Päättyen (lukukausi)"),
-        Syoteparametrikuvaus(avain = "rooli", tyyppi = Syoteparametrityyppi.ARVOJOUKKO, pakollinen = false, arvojoukko = Arvojoukot.KOEROOLIT, kuvaus = "Rooli"),
-        Syoteparametrikuvaus(avain = "valmistuneet", tyyppi = Syoteparametrityyppi.CHECKBOX, pakollinen = false, kuvaus = "Vain valmistuneet huomioidaan")
+        Syoteparametrikuvaus(
+          avain = "alkuvuosi",
+          tyyppi = Syoteparametrityyppi.KOKONAISLUKU,
+          pakollinen = false,
+          kuvaus = "Alkaen (vuosi)"
+        ),
+        Syoteparametrikuvaus(
+          avain = "alkulukukausi",
+          tyyppi = Syoteparametrityyppi.ARVOJOUKKO,
+          pakollinen = false,
+          arvojoukko = Arvojoukot.LUKUKAUDET,
+          kuvaus = "Alkaen (lukukausi)"
+        ),
+        Syoteparametrikuvaus(
+          avain = "loppuvuosi",
+          tyyppi = Syoteparametrityyppi.KOKONAISLUKU,
+          pakollinen = false,
+          kuvaus = "Päättyen (vuosi)"
+        ),
+        Syoteparametrikuvaus(
+          avain = "loppulukukausi",
+          tyyppi = Syoteparametrityyppi.ARVOJOUKKO,
+          pakollinen = false,
+          arvojoukko = Arvojoukot.LUKUKAUDET,
+          kuvaus = "Päättyen (lukukausi)"
+        ),
+        Syoteparametrikuvaus(
+          avain = "rooli",
+          tyyppi = Syoteparametrityyppi.ARVOJOUKKO,
+          pakollinen = false,
+          arvojoukko = Arvojoukot.KOEROOLIT,
+          kuvaus = "Rooli"
+        ),
+        Syoteparametrikuvaus(
+          avain = "valmistuneet",
+          tyyppi = Syoteparametrityyppi.CHECKBOX,
+          pakollinen = false,
+          kuvaus = "Vain valmistuneet huomioidaan"
+        )
       ),
-      valintaperusteparametri = List(Valintaperusteparametrikuvaus("oppiaine", tyyppi = Syoteparametrityyppi.ARVOJOUKKO, arvojoukko = Arvojoukot.OSAKOKEET, kuvaus = "YO-koe")),
+      valintaperusteparametri = List(
+        Valintaperusteparametrikuvaus(
+          "oppiaine",
+          tyyppi = Syoteparametrityyppi.ARVOJOUKKO,
+          arvojoukko = Arvojoukot.OSAKOKEET,
+          kuvaus = "YO-koe"
+        )
+      ),
       konvertteri = Some(
         Konvertterikuvaus(
           pakollinen = false,
-          konvertteriTyypit = Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.DESIMAALILUKU),
-            ARVOVALIKONVERTTERI -> Arvovalikonvertterikuvaus)
-        ))
+          konvertteriTyypit = Map(
+            ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.DESIMAALILUKU),
+            ARVOVALIKONVERTTERI -> Arvovalikonvertterikuvaus
+          )
+        )
+      )
     ),
     Funktionimi.HAEMERKKIJONOJAKONVERTOILUKUARVOKSI -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
       syoteparametrit = List(
-        Syoteparametrikuvaus(avain = "oletusarvo", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = false)
+        Syoteparametrikuvaus(
+          avain = "oletusarvo",
+          tyyppi = Syoteparametrityyppi.DESIMAALILUKU,
+          pakollinen = false
+        )
       ),
-      valintaperusteparametri = List(Valintaperusteparametrikuvaus("tunniste", Syoteparametrityyppi.MERKKIJONO, kuvaus = "Tunniste")),
+      valintaperusteparametri = List(
+        Valintaperusteparametrikuvaus(
+          "tunniste",
+          Syoteparametrityyppi.MERKKIJONO,
+          kuvaus = "Tunniste"
+        )
+      ),
       konvertteri = Some(
         Konvertterikuvaus(
           pakollinen = true,
-          konvertteriTyypit = Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.MERKKIJONO))
-        ))
+          konvertteriTyypit =
+            Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.MERKKIJONO))
+        )
+      )
     ),
     Funktionimi.HAETOTUUSARVOJAKONVERTOILUKUARVOKSI -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
       syoteparametrit = List(
-        Syoteparametrikuvaus(avain = "oletusarvo", tyyppi = Syoteparametrityyppi.DESIMAALILUKU, pakollinen = false)
+        Syoteparametrikuvaus(
+          avain = "oletusarvo",
+          tyyppi = Syoteparametrityyppi.DESIMAALILUKU,
+          pakollinen = false
+        )
       ),
-      valintaperusteparametri = List(Valintaperusteparametrikuvaus("tunniste", Syoteparametrityyppi.MERKKIJONO, kuvaus = "Tunniste")),
+      valintaperusteparametri = List(
+        Valintaperusteparametrikuvaus(
+          "tunniste",
+          Syoteparametrityyppi.MERKKIJONO,
+          kuvaus = "Tunniste"
+        )
+      ),
       konvertteri = Some(
         Konvertterikuvaus(
           pakollinen = true,
-          konvertteriTyypit = Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.ARVOJOUKKO, Arvojoukot.TOTUUSARVOT))
-        ))
+          konvertteriTyypit = Map(
+            ARVOKONVERTTERI -> Arvokonvertterikuvaus(
+              Syoteparametrityyppi.ARVOJOUKKO,
+              Arvojoukot.TOTUUSARVOT
+            )
+          )
+        )
+      )
     ),
     Funktionimi.HAEMERKKIJONOJAKONVERTOITOTUUSARVOKSI -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.TOTUUSARVOFUNKTIO,
       syoteparametrit = List(
-        Syoteparametrikuvaus(avain = "oletusarvo", tyyppi = Syoteparametrityyppi.TOTUUSARVO, pakollinen = false)
+        Syoteparametrikuvaus(
+          avain = "oletusarvo",
+          tyyppi = Syoteparametrityyppi.TOTUUSARVO,
+          pakollinen = false
+        )
       ),
-      valintaperusteparametri = List(Valintaperusteparametrikuvaus("tunniste", Syoteparametrityyppi.MERKKIJONO, kuvaus = "Tunniste")),
+      valintaperusteparametri = List(
+        Valintaperusteparametrikuvaus(
+          "tunniste",
+          Syoteparametrityyppi.MERKKIJONO,
+          kuvaus = "Tunniste"
+        )
+      ),
       konvertteri = Some(
         Konvertterikuvaus(
           pakollinen = true,
-          konvertteriTyypit = Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.MERKKIJONO))
-        ))
+          konvertteriTyypit =
+            Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.MERKKIJONO))
+        )
+      )
     ),
     Funktionimi.HAEMERKKIJONOJAVERTAAYHTASUURUUS -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.TOTUUSARVOFUNKTIO,
       syoteparametrit = List(
-        Syoteparametrikuvaus(avain = "oletusarvo", tyyppi = Syoteparametrityyppi.TOTUUSARVO, pakollinen = false),
-        Syoteparametrikuvaus(avain = "vertailtava", tyyppi = Syoteparametrityyppi.MERKKIJONO, pakollinen = true)
+        Syoteparametrikuvaus(
+          avain = "oletusarvo",
+          tyyppi = Syoteparametrityyppi.TOTUUSARVO,
+          pakollinen = false
+        ),
+        Syoteparametrikuvaus(
+          avain = "vertailtava",
+          tyyppi = Syoteparametrityyppi.MERKKIJONO,
+          pakollinen = true
+        )
       ),
-      valintaperusteparametri = List(Valintaperusteparametrikuvaus("tunniste", Syoteparametrityyppi.MERKKIJONO, kuvaus = "Tunniste"))
+      valintaperusteparametri = List(
+        Valintaperusteparametrikuvaus(
+          "tunniste",
+          Syoteparametrityyppi.MERKKIJONO,
+          kuvaus = "Tunniste"
+        )
+      )
     ),
     Funktionimi.HAETOTUUSARVO -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.TOTUUSARVOFUNKTIO,
       syoteparametrit = List(
-        Syoteparametrikuvaus(avain = "oletusarvo", tyyppi = Syoteparametrityyppi.TOTUUSARVO, pakollinen = false)
+        Syoteparametrikuvaus(
+          avain = "oletusarvo",
+          tyyppi = Syoteparametrityyppi.TOTUUSARVO,
+          pakollinen = false
+        )
       ),
-      valintaperusteparametri = List(Valintaperusteparametrikuvaus("tunniste", Syoteparametrityyppi.TOTUUSARVO, kuvaus = "Tunniste")),
+      valintaperusteparametri = List(
+        Valintaperusteparametrikuvaus(
+          "tunniste",
+          Syoteparametrityyppi.TOTUUSARVO,
+          kuvaus = "Tunniste"
+        )
+      ),
       konvertteri = Some(
         Konvertterikuvaus(
           pakollinen = false,
-          konvertteriTyypit = Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.TOTUUSARVO))
-        ))
+          konvertteriTyypit =
+            Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.TOTUUSARVO))
+        )
+      )
     ),
     Funktionimi.HAKUTOIVE -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.TOTUUSARVOFUNKTIO,
-      syoteparametrit = List(
-        Syoteparametrikuvaus("n", Syoteparametrityyppi.KOKONAISLUKU))
+      syoteparametrit = List(Syoteparametrikuvaus("n", Syoteparametrityyppi.KOKONAISLUKU))
     ),
     Funktionimi.HAKUTOIVERYHMASSA -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.TOTUUSARVOFUNKTIO,
       syoteparametrit = List(
         Syoteparametrikuvaus("n", Syoteparametrityyppi.KOKONAISLUKU),
-        Syoteparametrikuvaus("ryhmaoid", Syoteparametrityyppi.MERKKIJONO))
+        Syoteparametrikuvaus("ryhmaoid", Syoteparametrityyppi.MERKKIJONO)
+      )
     ),
     Funktionimi.HAKUKELPOISUUS -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.TOTUUSARVOFUNKTIO
@@ -387,9 +676,23 @@ object Funktiokuvaaja {
       funktioargumentit = List(
         Funktioargumenttikuvaus("f", Funktiotyyppi.TOTUUSARVOFUNKTIO, Kardinaliteetti.YKSI)
       ),
-      syoteparametrit = List(Syoteparametrikuvaus(avain = "hylkaysperustekuvaus_FI", tyyppi = Syoteparametrityyppi.MERKKIJONO, pakollinen = false),
-        Syoteparametrikuvaus(avain = "hylkaysperustekuvaus_SV", tyyppi = Syoteparametrityyppi.MERKKIJONO, pakollinen = false),
-        Syoteparametrikuvaus(avain = "hylkaysperustekuvaus_EN", tyyppi = Syoteparametrityyppi.MERKKIJONO, pakollinen = false))
+      syoteparametrit = List(
+        Syoteparametrikuvaus(
+          avain = "hylkaysperustekuvaus_FI",
+          tyyppi = Syoteparametrityyppi.MERKKIJONO,
+          pakollinen = false
+        ),
+        Syoteparametrikuvaus(
+          avain = "hylkaysperustekuvaus_SV",
+          tyyppi = Syoteparametrityyppi.MERKKIJONO,
+          pakollinen = false
+        ),
+        Syoteparametrikuvaus(
+          avain = "hylkaysperustekuvaus_EN",
+          tyyppi = Syoteparametrityyppi.MERKKIJONO,
+          pakollinen = false
+        )
+      )
     ),
     Funktionimi.HYLKAAARVOVALILLA -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
@@ -397,36 +700,55 @@ object Funktiokuvaaja {
         Funktioargumenttikuvaus("f", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.YKSI)
       ),
       syoteparametrit = List(
-        Syoteparametrikuvaus(avain = "hylkaysperustekuvaus_FI", tyyppi = Syoteparametrityyppi.MERKKIJONO, pakollinen = false),
-        Syoteparametrikuvaus(avain = "hylkaysperustekuvaus_SV", tyyppi = Syoteparametrityyppi.MERKKIJONO, pakollinen = false),
-        Syoteparametrikuvaus(avain = "hylkaysperustekuvaus_EN", tyyppi = Syoteparametrityyppi.MERKKIJONO, pakollinen = false),
+        Syoteparametrikuvaus(
+          avain = "hylkaysperustekuvaus_FI",
+          tyyppi = Syoteparametrityyppi.MERKKIJONO,
+          pakollinen = false
+        ),
+        Syoteparametrikuvaus(
+          avain = "hylkaysperustekuvaus_SV",
+          tyyppi = Syoteparametrityyppi.MERKKIJONO,
+          pakollinen = false
+        ),
+        Syoteparametrikuvaus(
+          avain = "hylkaysperustekuvaus_EN",
+          tyyppi = Syoteparametrityyppi.MERKKIJONO,
+          pakollinen = false
+        ),
         Syoteparametrikuvaus("arvovaliMin", Syoteparametrityyppi.MERKKIJONO, pakollinen = true),
         Syoteparametrikuvaus("arvovaliMax", Syoteparametrityyppi.MERKKIJONO, pakollinen = true)
       )
     ),
     Funktionimi.JA -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.TOTUUSARVOFUNKTIO,
-      funktioargumentit = List(Funktioargumenttikuvaus("args", Funktiotyyppi.TOTUUSARVOFUNKTIO, Kardinaliteetti.N))
+      funktioargumentit =
+        List(Funktioargumenttikuvaus("args", Funktiotyyppi.TOTUUSARVOFUNKTIO, Kardinaliteetti.N))
     ),
     Funktionimi.JOS -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
-      funktioargumentit = List(Funktioargumenttikuvaus("ehto", Funktiotyyppi.TOTUUSARVOFUNKTIO),
+      funktioargumentit = List(
+        Funktioargumenttikuvaus("ehto", Funktiotyyppi.TOTUUSARVOFUNKTIO),
         Funktioargumenttikuvaus("sitten", Funktiotyyppi.LUKUARVOFUNKTIO),
-        Funktioargumenttikuvaus("muuten", Funktiotyyppi.LUKUARVOFUNKTIO)),
+        Funktioargumenttikuvaus("muuten", Funktiotyyppi.LUKUARVOFUNKTIO)
+      ),
       syoteparametrit = List(
         Syoteparametrikuvaus(
           JOS_LAISKA_PARAMETRI,
           Syoteparametrityyppi.CHECKBOX,
           pakollinen = false,
-          kuvaus = "Lasketaanko vain se haara, jonka arvo lopulta palautetaan"))
+          kuvaus = "Lasketaanko vain se haara, jonka arvo lopulta palautetaan"
+        )
+      )
     ),
     Funktionimi.KESKIARVO -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
-      funktioargumentit = List(Funktioargumenttikuvaus("args", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.N))
+      funktioargumentit =
+        List(Funktioargumenttikuvaus("args", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.N))
     ),
     Funktionimi.KESKIARVONPARASTA -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
-      funktioargumentit = List(Funktioargumenttikuvaus("args", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.N)),
+      funktioargumentit =
+        List(Funktioargumenttikuvaus("args", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.N)),
       syoteparametrit = List(Syoteparametrikuvaus("n", Syoteparametrityyppi.KOKONAISLUKU))
     ),
     Funktionimi.KONVERTOILUKUARVO -> Funktiokuvaus(
@@ -435,26 +757,31 @@ object Funktiokuvaaja {
       konvertteri = Some(
         Konvertterikuvaus(
           pakollinen = true,
-          konvertteriTyypit = Map(ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.DESIMAALILUKU),
-            ARVOVALIKONVERTTERI -> Arvovalikonvertterikuvaus)
-        ))
+          konvertteriTyypit = Map(
+            ARVOKONVERTTERI -> Arvokonvertterikuvaus(Syoteparametrityyppi.DESIMAALILUKU),
+            ARVOVALIKONVERTTERI -> Arvovalikonvertterikuvaus
+          )
+        )
+      )
     ),
     Funktionimi.LUKUARVO -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
       syoteparametrit = List(Syoteparametrikuvaus("luku", Syoteparametrityyppi.DESIMAALILUKU))
-    )
-    ,
+    ),
     Funktionimi.MAKSIMI -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
-      funktioargumentit = List(Funktioargumenttikuvaus("args", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.N))
+      funktioargumentit =
+        List(Funktioargumenttikuvaus("args", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.N))
     ),
     Funktionimi.MEDIAANI -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
-      funktioargumentit = List(Funktioargumenttikuvaus("args", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.N))
+      funktioargumentit =
+        List(Funktioargumenttikuvaus("args", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.N))
     ),
     Funktionimi.MINIMI -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
-      funktioargumentit = List(Funktioargumenttikuvaus("args", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.N))
+      funktioargumentit =
+        List(Funktioargumenttikuvaus("args", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.N))
     ),
     Funktionimi.NEGAATIO -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
@@ -472,34 +799,43 @@ object Funktiokuvaaja {
     ),
     Funktionimi.NMAKSIMI -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
-      funktioargumentit = List(Funktioargumenttikuvaus("args", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.N)),
+      funktioargumentit =
+        List(Funktioargumenttikuvaus("args", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.N)),
       syoteparametrit = List(Syoteparametrikuvaus("n", Syoteparametrityyppi.KOKONAISLUKU))
     ),
     Funktionimi.NMINIMI -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
-      funktioargumentit = List(Funktioargumenttikuvaus("args", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.N)),
+      funktioargumentit =
+        List(Funktioargumenttikuvaus("args", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.N)),
       syoteparametrit = List(Syoteparametrikuvaus("n", Syoteparametrityyppi.KOKONAISLUKU))
     ),
     Funktionimi.OSAMAARA -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
-      funktioargumentit = List(Funktioargumenttikuvaus("osoittaja", Funktiotyyppi.LUKUARVOFUNKTIO),
-        Funktioargumenttikuvaus("nimittaja", Funktiotyyppi.LUKUARVOFUNKTIO))
+      funktioargumentit = List(
+        Funktioargumenttikuvaus("osoittaja", Funktiotyyppi.LUKUARVOFUNKTIO),
+        Funktioargumenttikuvaus("nimittaja", Funktiotyyppi.LUKUARVOFUNKTIO)
+      )
     ),
     Funktionimi.PAINOTETTUKESKIARVO -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
-      funktioargumentit = List(Funktioargumenttikuvaus("args", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.LISTA_PAREJA))
+      funktioargumentit = List(
+        Funktioargumenttikuvaus("args", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.LISTA_PAREJA)
+      )
     ),
     Funktionimi.PIENEMPI -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.TOTUUSARVOFUNKTIO,
-      funktioargumentit = List(Funktioargumenttikuvaus("vasenOperandi", Funktiotyyppi.LUKUARVOFUNKTIO),
-        Funktioargumenttikuvaus("oikeaOperandi", Funktiotyyppi.LUKUARVOFUNKTIO))
+      funktioargumentit = List(
+        Funktioargumenttikuvaus("vasenOperandi", Funktiotyyppi.LUKUARVOFUNKTIO),
+        Funktioargumenttikuvaus("oikeaOperandi", Funktiotyyppi.LUKUARVOFUNKTIO)
+      )
     ),
     Funktionimi.PIENEMPITAIYHTASUURI -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.TOTUUSARVOFUNKTIO,
-      funktioargumentit = List(Funktioargumenttikuvaus("vasenOperandi", Funktiotyyppi.LUKUARVOFUNKTIO),
-        Funktioargumenttikuvaus("oikeaOperandi", Funktiotyyppi.LUKUARVOFUNKTIO))
+      funktioargumentit = List(
+        Funktioargumenttikuvaus("vasenOperandi", Funktiotyyppi.LUKUARVOFUNKTIO),
+        Funktioargumenttikuvaus("oikeaOperandi", Funktiotyyppi.LUKUARVOFUNKTIO)
+      )
     ),
-
     Funktionimi.PYORISTYS -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
       funktioargumentit = List(Funktioargumenttikuvaus("f", Funktiotyyppi.LUKUARVOFUNKTIO)),
@@ -507,42 +843,71 @@ object Funktiokuvaaja {
     ),
     Funktionimi.SKAALAUS -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
-      funktioargumentit = List(Funktioargumenttikuvaus("f", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.YKSI)),
+      funktioargumentit =
+        List(Funktioargumenttikuvaus("f", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.YKSI)),
       syoteparametrit = List(
-        Syoteparametrikuvaus("kohdeskaalaMin", Syoteparametrityyppi.DESIMAALILUKU, pakollinen = true),
-        Syoteparametrikuvaus("kohdeskaalaMax", Syoteparametrityyppi.DESIMAALILUKU, pakollinen = true),
-        Syoteparametrikuvaus("lahdeskaalaMin", Syoteparametrityyppi.DESIMAALILUKU, pakollinen = false),
-        Syoteparametrikuvaus("lahdeskaalaMax", Syoteparametrityyppi.DESIMAALILUKU, pakollinen = false),
-        Syoteparametrikuvaus("kaytaLaskennallistaLahdeskaalaa", Syoteparametrityyppi.TOTUUSARVO, pakollinen = true)
+        Syoteparametrikuvaus(
+          "kohdeskaalaMin",
+          Syoteparametrityyppi.DESIMAALILUKU,
+          pakollinen = true
+        ),
+        Syoteparametrikuvaus(
+          "kohdeskaalaMax",
+          Syoteparametrityyppi.DESIMAALILUKU,
+          pakollinen = true
+        ),
+        Syoteparametrikuvaus(
+          "lahdeskaalaMin",
+          Syoteparametrityyppi.DESIMAALILUKU,
+          pakollinen = false
+        ),
+        Syoteparametrikuvaus(
+          "lahdeskaalaMax",
+          Syoteparametrityyppi.DESIMAALILUKU,
+          pakollinen = false
+        ),
+        Syoteparametrikuvaus(
+          "kaytaLaskennallistaLahdeskaalaa",
+          Syoteparametrityyppi.TOTUUSARVO,
+          pakollinen = true
+        )
       )
     ),
     Funktionimi.SUMMA -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
-      funktioargumentit = List(Funktioargumenttikuvaus("args", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.N))
+      funktioargumentit =
+        List(Funktioargumenttikuvaus("args", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.N))
     ),
     Funktionimi.SUMMANPARASTA -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
-      funktioargumentit = List(Funktioargumenttikuvaus("args", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.N)),
+      funktioargumentit =
+        List(Funktioargumenttikuvaus("args", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.N)),
       syoteparametrit = List(Syoteparametrikuvaus("n", Syoteparametrityyppi.KOKONAISLUKU))
     ),
     Funktionimi.TULONPARASTA -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
-      funktioargumentit = List(Funktioargumenttikuvaus("args", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.N)),
+      funktioargumentit =
+        List(Funktioargumenttikuvaus("args", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.N)),
       syoteparametrit = List(Syoteparametrikuvaus("n", Syoteparametrityyppi.KOKONAISLUKU))
     ),
     Funktionimi.SUUREMPI -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.TOTUUSARVOFUNKTIO,
-      funktioargumentit = List(Funktioargumenttikuvaus("vasenOperandi", Funktiotyyppi.LUKUARVOFUNKTIO),
-        Funktioargumenttikuvaus("oikeaOperandi", Funktiotyyppi.LUKUARVOFUNKTIO))
+      funktioargumentit = List(
+        Funktioargumenttikuvaus("vasenOperandi", Funktiotyyppi.LUKUARVOFUNKTIO),
+        Funktioargumenttikuvaus("oikeaOperandi", Funktiotyyppi.LUKUARVOFUNKTIO)
+      )
     ),
     Funktionimi.SUUREMPITAIYHTASUURI -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.TOTUUSARVOFUNKTIO,
-      funktioargumentit = List(Funktioargumenttikuvaus("vasenOperandi", Funktiotyyppi.LUKUARVOFUNKTIO),
-        Funktioargumenttikuvaus("oikeaOperandi", Funktiotyyppi.LUKUARVOFUNKTIO))
+      funktioargumentit = List(
+        Funktioargumenttikuvaus("vasenOperandi", Funktiotyyppi.LUKUARVOFUNKTIO),
+        Funktioargumenttikuvaus("oikeaOperandi", Funktiotyyppi.LUKUARVOFUNKTIO)
+      )
     ),
     Funktionimi.TAI -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.TOTUUSARVOFUNKTIO,
-      funktioargumentit = List(Funktioargumenttikuvaus("args", Funktiotyyppi.TOTUUSARVOFUNKTIO, Kardinaliteetti.N))
+      funktioargumentit =
+        List(Funktioargumenttikuvaus("args", Funktiotyyppi.TOTUUSARVOFUNKTIO, Kardinaliteetti.N))
     ),
     Funktionimi.TOTUUSARVO -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.TOTUUSARVOFUNKTIO,
@@ -550,18 +915,29 @@ object Funktiokuvaaja {
     ),
     Funktionimi.TULO -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.LUKUARVOFUNKTIO,
-      funktioargumentit = List(Funktioargumenttikuvaus("args", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.N))
+      funktioargumentit =
+        List(Funktioargumenttikuvaus("args", Funktiotyyppi.LUKUARVOFUNKTIO, Kardinaliteetti.N))
     ),
     Funktionimi.YHTASUURI -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.TOTUUSARVOFUNKTIO,
-      funktioargumentit = List(Funktioargumenttikuvaus("vasenOperandi", Funktiotyyppi.LUKUARVOFUNKTIO),
-        Funktioargumenttikuvaus("oikeaOperandi", Funktiotyyppi.LUKUARVOFUNKTIO))
+      funktioargumentit = List(
+        Funktioargumenttikuvaus("vasenOperandi", Funktiotyyppi.LUKUARVOFUNKTIO),
+        Funktioargumenttikuvaus("oikeaOperandi", Funktiotyyppi.LUKUARVOFUNKTIO)
+      )
     ),
     Funktionimi.VALINTAPERUSTEYHTASUURUUS -> Funktiokuvaus(
       tyyppi = Funktiotyyppi.TOTUUSARVOFUNKTIO,
       valintaperusteparametri = List(
-        Valintaperusteparametrikuvaus(nimi = "tunniste1", tyyppi = MERKKIJONO, kuvaus = "Ensimmäinen valintaperuste"),
-        Valintaperusteparametrikuvaus(nimi = "tunniste2", tyyppi = MERKKIJONO, kuvaus = "Toinen valintaperuste")
+        Valintaperusteparametrikuvaus(
+          nimi = "tunniste1",
+          tyyppi = MERKKIJONO,
+          kuvaus = "Ensimmäinen valintaperuste"
+        ),
+        Valintaperusteparametrikuvaus(
+          nimi = "tunniste2",
+          tyyppi = MERKKIJONO,
+          kuvaus = "Toinen valintaperuste"
+        )
       )
     )
   )

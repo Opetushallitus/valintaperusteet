@@ -112,9 +112,7 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
             }
             LOGGER.info("Haetaan master jonon {} kopiot", master.getOid());
             List<String> kopiot =
-                valintatapajonoDAO
-                    .haeKopiotValisijoittelulle(master.getOid())
-                    .parallelStream()
+                valintatapajonoDAO.haeKopiotValisijoittelulle(master.getOid()).parallelStream()
                     .map(
                         j -> {
                           LOGGER.info("löydettiin kopio {}", j.getOid());
