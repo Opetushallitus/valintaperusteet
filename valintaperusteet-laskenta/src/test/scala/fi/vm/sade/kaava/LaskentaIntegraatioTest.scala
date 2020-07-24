@@ -6,69 +6,72 @@ import java.util
 import java.util.Collections
 
 import fi.vm.sade.kaava.LaskentaTestUtil.{Syoteparametri, TestHakemus, _}
-import fi.vm.sade.service.valintaperusteet.dto.model.{Funktionimi, Osallistuminen, Valintaperustelahde}
+import fi.vm.sade.service.valintaperusteet.dto.model.{
+  Funktionimi,
+  Osallistuminen,
+  Valintaperustelahde
+}
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskin
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.VirheMetatieto.VirheMetatietotyyppi
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
-import fi.vm.sade.service.valintaperusteet.laskenta.api.{Hakemus, Hakukohde, Hakutoive, Laskentatulos}
+import fi.vm.sade.service.valintaperusteet.laskenta.api.{
+  Hakemus,
+  Hakukohde,
+  Hakutoive,
+  Laskentatulos
+}
 import fi.vm.sade.service.valintaperusteet.model.TekstiRyhma
 import org.scalatest.funsuite.AnyFunSuite
 
 import scala.jdk.CollectionConverters._
 
 /**
- * User: kwuoti
- * Date: 4.2.2013
- * Time: 14.13
- */
+  * User: kwuoti
+  * Date: 4.2.2013
+  * Time: 14.13
+  */
 class LaskentaIntegraatioTest extends AnyFunSuite {
 
   val luku25 = Funktiokutsu(
     nimi = Funktionimi.LUKUARVO,
-    syoteparametrit = List(
-      Syoteparametri("luku", "25,0")))
+    syoteparametrit = List(Syoteparametri("luku", "25,0"))
+  )
 
   val luku50 = Funktiokutsu(
     nimi = Funktionimi.LUKUARVO,
-    syoteparametrit = List(
-      Syoteparametri("luku", "50.0")))
+    syoteparametrit = List(Syoteparametri("luku", "50.0"))
+  )
 
   val luku45 = Funktiokutsu(
     nimi = Funktionimi.LUKUARVO,
-    syoteparametrit = List(
-      Syoteparametri("luku", "45.0")))
+    syoteparametrit = List(Syoteparametri("luku", "45.0"))
+  )
 
   val luku100 = Funktiokutsu(
     nimi = Funktionimi.LUKUARVO,
-    syoteparametrit = List(
-      Syoteparametri("luku", "100.0")))
+    syoteparametrit = List(Syoteparametri("luku", "100.0"))
+  )
 
-  val luku0 = Funktiokutsu(
-    nimi = Funktionimi.LUKUARVO,
-    syoteparametrit = List(
-      Syoteparametri("luku", "0.0")))
+  val luku0 =
+    Funktiokutsu(nimi = Funktionimi.LUKUARVO, syoteparametrit = List(Syoteparametri("luku", "0.0")))
 
   val luku3_335 = Funktiokutsu(
     nimi = Funktionimi.LUKUARVO,
-    syoteparametrit = List(
-      Syoteparametri("luku", "3.335")))
+    syoteparametrit = List(Syoteparametri("luku", "3.335"))
+  )
 
   val totuusarvoTrue = Funktiokutsu(
     nimi = Funktionimi.TOTUUSARVO,
-    syoteparametrit = List(
-      Syoteparametri("totuusarvo", "true")))
+    syoteparametrit = List(Syoteparametri("totuusarvo", "true"))
+  )
 
   val totuusarvoFalse = Funktiokutsu(
     nimi = Funktionimi.TOTUUSARVO,
-    syoteparametrit = List(
-      Syoteparametri("totuusarvo", "false")))
+    syoteparametrit = List(Syoteparametri("totuusarvo", "false"))
+  )
 
-  val summa = Funktiokutsu(
-    nimi = Funktionimi.SUMMA,
-    funktioargumentit = List(
-      luku25,
-      luku50,
-      luku45))
+  val summa =
+    Funktiokutsu(nimi = Funktionimi.SUMMA, funktioargumentit = List(luku25, luku50, luku45))
 
   val konvertoiLukuarvoLukuarvoksi = Funktiokutsu(
     nimi = Funktionimi.KONVERTOILUKUARVO,
@@ -78,48 +81,42 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
         paluuarvo = "1.0",
         arvo = "10.0",
         hylkaysperuste = "false",
-        kuvaukset = new TekstiRyhma()),
+        kuvaukset = new TekstiRyhma()
+      ),
       Arvokonvertteriparametri(
         paluuarvo = "2.0",
         arvo = "15.0",
         hylkaysperuste = "false",
-        kuvaukset = new TekstiRyhma()),
+        kuvaukset = new TekstiRyhma()
+      ),
       Arvokonvertteriparametri(
         paluuarvo = "3.0",
         arvo = "20.0",
         hylkaysperuste = "false",
-        kuvaukset = new TekstiRyhma()),
+        kuvaukset = new TekstiRyhma()
+      ),
       Arvokonvertteriparametri(
         paluuarvo = "4.0",
         arvo = "25.0",
         hylkaysperuste = "false",
-        kuvaukset = new TekstiRyhma()),
+        kuvaukset = new TekstiRyhma()
+      ),
       Arvokonvertteriparametri(
         paluuarvo = "5.0",
         arvo = "30.0",
         hylkaysperuste = "false",
-        kuvaukset = new TekstiRyhma())))
+        kuvaukset = new TekstiRyhma()
+      )
+    )
+  )
 
-  val maksimi = Funktiokutsu(
-    nimi = Funktionimi.MAKSIMI,
-    funktioargumentit = List(
-      luku25,
-      luku50,
-      luku45))
+  val maksimi =
+    Funktiokutsu(nimi = Funktionimi.MAKSIMI, funktioargumentit = List(luku25, luku50, luku45))
 
-  val minimi = Funktiokutsu(
-    nimi = Funktionimi.MINIMI,
-    funktioargumentit = List(
-      luku25,
-      luku50,
-      luku45))
+  val minimi =
+    Funktiokutsu(nimi = Funktionimi.MINIMI, funktioargumentit = List(luku25, luku50, luku45))
 
-  val tulo = Funktiokutsu(
-    nimi = Funktionimi.TULO,
-    funktioargumentit = List(
-      luku25,
-      luku50,
-      luku45))
+  val tulo = Funktiokutsu(nimi = Funktionimi.TULO, funktioargumentit = List(luku25, luku50, luku45))
 
   val konvertoiLukuarvovaliLukuarvoksi = Funktiokutsu(
     nimi = Funktionimi.KONVERTOILUKUARVO,
@@ -131,205 +128,129 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
         max = "10.0",
         palautaHaettuArvo = "false",
         hylkaysperuste = "false",
-        kuvaukset = new TekstiRyhma()),
+        kuvaukset = new TekstiRyhma()
+      ),
       Arvovalikonvertteriparametri(
         paluuarvo = "3.0",
         min = "10.0",
         max = "20.0",
         palautaHaettuArvo = "false",
         hylkaysperuste = "false",
-        kuvaukset = new TekstiRyhma()),
+        kuvaukset = new TekstiRyhma()
+      ),
       Arvovalikonvertteriparametri(
         paluuarvo = "3.0",
         min = "20.0",
         max = "30.0",
         palautaHaettuArvo = "false",
         hylkaysperuste = "false",
-        kuvaukset = new TekstiRyhma()),
+        kuvaukset = new TekstiRyhma()
+      ),
       Arvovalikonvertteriparametri(
         paluuarvo = "4.0",
         min = "30.0",
         max = "40.0",
         palautaHaettuArvo = "false",
         hylkaysperuste = "false",
-        kuvaukset = new TekstiRyhma())))
+        kuvaukset = new TekstiRyhma()
+      )
+    )
+  )
 
-  val keskiarvo = Funktiokutsu(
-    nimi = Funktionimi.KESKIARVO,
-    funktioargumentit = List(
-      luku25,
-      luku50,
-      luku45))
+  val keskiarvo =
+    Funktiokutsu(nimi = Funktionimi.KESKIARVO, funktioargumentit = List(luku25, luku50, luku45))
 
   val mediaaniParillinenMaara = Funktiokutsu(
     nimi = Funktionimi.MEDIAANI,
-    funktioargumentit = List(
-      luku25,
-      luku100,
-      luku50,
-      luku45))
+    funktioargumentit = List(luku25, luku100, luku50, luku45)
+  )
 
-  val mediaaniParitonMaara = Funktiokutsu(
-    nimi = Funktionimi.MEDIAANI,
-    funktioargumentit = List(
-      luku25,
-      luku100,
-      luku45))
+  val mediaaniParitonMaara =
+    Funktiokutsu(nimi = Funktionimi.MEDIAANI, funktioargumentit = List(luku25, luku100, luku45))
 
   val keskiarvoNParasta = Funktiokutsu(
     nimi = Funktionimi.KESKIARVONPARASTA,
-    syoteparametrit = List(
-      Syoteparametri(
-        avain = "n",
-        arvo = "2")),
-    funktioargumentit = List(
-      luku25,
-      luku100,
-      luku45,
-      luku50))
+    syoteparametrit = List(Syoteparametri(avain = "n", arvo = "2")),
+    funktioargumentit = List(luku25, luku100, luku45, luku50)
+  )
 
   val summaNParasta = Funktiokutsu(
     nimi = Funktionimi.SUMMANPARASTA,
-    syoteparametrit = List(
-      Syoteparametri(
-        avain = "n",
-        arvo = "3")),
-    funktioargumentit = List(
-      luku25,
-      luku100,
-      luku45,
-      luku50))
+    syoteparametrit = List(Syoteparametri(avain = "n", arvo = "3")),
+    funktioargumentit = List(luku25, luku100, luku45, luku50)
+  )
 
   val nMaksimi = Funktiokutsu(
     nimi = Funktionimi.NMAKSIMI,
-    syoteparametrit = List(
-      Syoteparametri(
-        avain = "n",
-        arvo = "3")),
-    funktioargumentit = List(
-      luku25,
-      luku100,
-      luku45,
-      luku50))
+    syoteparametrit = List(Syoteparametri(avain = "n", arvo = "3")),
+    funktioargumentit = List(luku25, luku100, luku45, luku50)
+  )
 
   val nMinimi = Funktiokutsu(
     nimi = Funktionimi.NMINIMI,
-    syoteparametrit = List(
-      Syoteparametri(
-        avain = "n",
-        arvo = "3")),
-    funktioargumentit = List(
-      luku25,
-      luku100,
-      luku45,
-      luku50))
+    syoteparametrit = List(Syoteparametri(avain = "n", arvo = "3")),
+    funktioargumentit = List(luku25, luku100, luku45, luku50)
+  )
 
-  val osamaara = Funktiokutsu(
-    nimi = Funktionimi.OSAMAARA,
-    funktioargumentit = List(
-      luku100,
-      luku50))
+  val osamaara =
+    Funktiokutsu(nimi = Funktionimi.OSAMAARA, funktioargumentit = List(luku100, luku50))
 
-  val osamaaraByZero = Funktiokutsu(
-    nimi = Funktionimi.OSAMAARA,
-    funktioargumentit = List(
-      luku100,
-      luku0))
+  val osamaaraByZero =
+    Funktiokutsu(nimi = Funktionimi.OSAMAARA, funktioargumentit = List(luku100, luku0))
 
-  val suurempiTrue = Funktiokutsu(
-    nimi = Funktionimi.SUUREMPI,
-    funktioargumentit = List(
-      luku100,
-      luku50))
+  val suurempiTrue =
+    Funktiokutsu(nimi = Funktionimi.SUUREMPI, funktioargumentit = List(luku100, luku50))
 
-  val suurempiFalse = Funktiokutsu(
-    nimi = Funktionimi.SUUREMPI,
-    funktioargumentit = List(
-      luku25,
-      luku50))
+  val suurempiFalse =
+    Funktiokutsu(nimi = Funktionimi.SUUREMPI, funktioargumentit = List(luku25, luku50))
 
-  val suurempiTaiYhtasuuriTrue = Funktiokutsu(
-    nimi = Funktionimi.SUUREMPITAIYHTASUURI,
-    funktioargumentit = List(
-      luku25,
-      luku25))
+  val suurempiTaiYhtasuuriTrue =
+    Funktiokutsu(nimi = Funktionimi.SUUREMPITAIYHTASUURI, funktioargumentit = List(luku25, luku25))
 
-  val suurempiTaiYhtasuuriFalse = Funktiokutsu(
-    nimi = Funktionimi.SUUREMPITAIYHTASUURI,
-    funktioargumentit = List(
-      luku0,
-      luku25))
+  val suurempiTaiYhtasuuriFalse =
+    Funktiokutsu(nimi = Funktionimi.SUUREMPITAIYHTASUURI, funktioargumentit = List(luku0, luku25))
 
-  val pienempiTrue = Funktiokutsu(
-    nimi = Funktionimi.PIENEMPI,
-    funktioargumentit = List(
-      luku0,
-      luku25))
+  val pienempiTrue =
+    Funktiokutsu(nimi = Funktionimi.PIENEMPI, funktioargumentit = List(luku0, luku25))
 
-  val pienempiFalse = Funktiokutsu(
-    nimi = Funktionimi.PIENEMPI,
-    funktioargumentit = List(
-      luku50,
-      luku25))
+  val pienempiFalse =
+    Funktiokutsu(nimi = Funktionimi.PIENEMPI, funktioargumentit = List(luku50, luku25))
 
-  val pienempiTaiYhtasuuriTrue = Funktiokutsu(
-    nimi = Funktionimi.PIENEMPITAIYHTASUURI,
-    funktioargumentit = List(
-      luku25,
-      luku25))
+  val pienempiTaiYhtasuuriTrue =
+    Funktiokutsu(nimi = Funktionimi.PIENEMPITAIYHTASUURI, funktioargumentit = List(luku25, luku25))
 
-  val pienempiTaiYhtasuuriFalse = Funktiokutsu(
-    nimi = Funktionimi.PIENEMPITAIYHTASUURI,
-    funktioargumentit = List(
-      luku100,
-      luku50))
+  val pienempiTaiYhtasuuriFalse =
+    Funktiokutsu(nimi = Funktionimi.PIENEMPITAIYHTASUURI, funktioargumentit = List(luku100, luku50))
 
-  val yhtasuuriTrue = Funktiokutsu(
-    nimi = Funktionimi.YHTASUURI,
-    funktioargumentit = List(
-      luku25,
-      luku25))
+  val yhtasuuriTrue =
+    Funktiokutsu(nimi = Funktionimi.YHTASUURI, funktioargumentit = List(luku25, luku25))
 
-  val yhtasuuriFalse = Funktiokutsu(
-    nimi = Funktionimi.YHTASUURI,
-    funktioargumentit = List(
-      luku25,
-      luku0))
+  val yhtasuuriFalse =
+    Funktiokutsu(nimi = Funktionimi.YHTASUURI, funktioargumentit = List(luku25, luku0))
 
-  val ei = Funktiokutsu(
-    nimi = Funktionimi.EI,
-    funktioargumentit = List(
-      totuusarvoFalse))
+  val ei = Funktiokutsu(nimi = Funktionimi.EI, funktioargumentit = List(totuusarvoFalse))
 
   val nimettyTotuusarvo = Funktiokutsu(
     nimi = Funktionimi.NIMETTYTOTUUSARVO,
-    syoteparametrit = List(
-      Syoteparametri(
-        avain = "nimi",
-        arvo = "tässä on true arvo")),
-    funktioargumentit = List(
-      totuusarvoTrue))
+    syoteparametrit = List(Syoteparametri(avain = "nimi", arvo = "tässä on true arvo")),
+    funktioargumentit = List(totuusarvoTrue)
+  )
 
   val nimettyLukuarvo = Funktiokutsu(
     nimi = Funktionimi.NIMETTYLUKUARVO,
-    syoteparametrit = List(
-      Syoteparametri(
-        avain = "nimi",
-        arvo = "tässä on lukuarvo 25")),
-    funktioargumentit = List(
-      luku25))
+    syoteparametrit = List(Syoteparametri(avain = "nimi", arvo = "tässä on lukuarvo 25")),
+    funktioargumentit = List(luku25)
+  )
 
   val haeLukuarvo = Funktiokutsu(
     nimi = Funktionimi.HAELUKUARVO,
-    valintaperustetunniste = List(ValintaperusteViite(
-      onPakollinen = false,
-      tunniste = "tunniste")))
+    valintaperustetunniste = List(ValintaperusteViite(onPakollinen = false, tunniste = "tunniste"))
+  )
 
   val haeTotuusarvo = Funktiokutsu(
     nimi = Funktionimi.HAETOTUUSARVO,
-    valintaperustetunniste = List(ValintaperusteViite(
-      onPakollinen = false,
-      tunniste = "tunniste")))
+    valintaperustetunniste = List(ValintaperusteViite(onPakollinen = false, tunniste = "tunniste"))
+  )
 
   val hakukohde = new Hakukohde("123", new util.HashMap[String, String])
   val tyhjaHakemus = TestHakemus("", Nil, Map[String, String]())
@@ -467,24 +388,18 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
     val lista = List(
       Funktiokutsu(
         nimi = Funktionimi.JA,
-        funktioargumentit = List(
-          totuusarvoTrue,
-          totuusarvoFalse)),
+        funktioargumentit = List(totuusarvoTrue, totuusarvoFalse)
+      ),
       Funktiokutsu(
         nimi = Funktionimi.JA,
-        funktioargumentit = List(
-          totuusarvoFalse,
-          totuusarvoTrue)),
+        funktioargumentit = List(totuusarvoFalse, totuusarvoTrue)
+      ),
+      Funktiokutsu(nimi = Funktionimi.JA, funktioargumentit = List(totuusarvoTrue, totuusarvoTrue)),
       Funktiokutsu(
         nimi = Funktionimi.JA,
-        funktioargumentit = List(
-          totuusarvoTrue,
-          totuusarvoTrue)),
-      Funktiokutsu(
-        nimi = Funktionimi.JA,
-        funktioargumentit = List(
-          totuusarvoFalse,
-          totuusarvoFalse)))
+        funktioargumentit = List(totuusarvoFalse, totuusarvoFalse)
+      )
+    )
 
     val laskut = lista.map(Laskentadomainkonvertteri.muodostaTotuusarvolasku(_))
     val tulokset = laskut.map(Laskin.laske(hakukohde, tyhjaHakemus, _))
@@ -500,24 +415,21 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
     val lista = List(
       Funktiokutsu(
         nimi = Funktionimi.TAI,
-        funktioargumentit = List(
-          totuusarvoTrue,
-          totuusarvoFalse)),
+        funktioargumentit = List(totuusarvoTrue, totuusarvoFalse)
+      ),
       Funktiokutsu(
         nimi = Funktionimi.TAI,
-        funktioargumentit = List(
-          totuusarvoFalse,
-          totuusarvoTrue)),
+        funktioargumentit = List(totuusarvoFalse, totuusarvoTrue)
+      ),
       Funktiokutsu(
         nimi = Funktionimi.TAI,
-        funktioargumentit = List(
-          totuusarvoTrue,
-          totuusarvoTrue)),
+        funktioargumentit = List(totuusarvoTrue, totuusarvoTrue)
+      ),
       Funktiokutsu(
         nimi = Funktionimi.TAI,
-        funktioargumentit = List(
-          totuusarvoFalse,
-          totuusarvoFalse)))
+        funktioargumentit = List(totuusarvoFalse, totuusarvoFalse)
+      )
+    )
 
     val laskut = lista.map(Laskentadomainkonvertteri.muodostaTotuusarvolasku(_))
     val tulokset = laskut.map(Laskin.laske(hakukohde, tyhjaHakemus, _))
@@ -530,9 +442,7 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   }
 
   test("negaatio") {
-    val funktiokutsu = Funktiokutsu(
-      nimi = Funktionimi.NEGAATIO,
-      funktioargumentit = List(luku25))
+    val funktiokutsu = Funktiokutsu(nimi = Funktionimi.NEGAATIO, funktioargumentit = List(luku25))
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
     assert(tulos.get.compareTo(new BigDecimal("-25.0")) == 0)
@@ -559,10 +469,8 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   test("jos true") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.JOS,
-      funktioargumentit = List(
-        totuusarvoTrue,
-        luku100,
-        luku50))
+      funktioargumentit = List(totuusarvoTrue, luku100, luku50)
+    )
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -573,10 +481,8 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   test("jos false") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.JOS,
-      funktioargumentit = List(
-        totuusarvoFalse,
-        luku100,
-        luku50))
+      funktioargumentit = List(totuusarvoFalse, luku100, luku50)
+    )
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -673,8 +579,7 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   }
 
   test("tyhja") {
-    val funktiokutsu = Funktiokutsu(
-      nimi = Funktionimi.TYHJA)
+    val funktiokutsu = Funktiokutsu(nimi = Funktionimi.TYHJA)
     intercept[RuntimeException] {
       Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
     }
@@ -704,7 +609,9 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
           paluuarvo = "5.0",
           arvo = "25.0",
           hylkaysperuste = "false",
-          kuvaukset = new TekstiRyhma())),
+          kuvaukset = new TekstiRyhma()
+        )
+      ),
       arvovalikonvertterit = List(
         Arvovalikonvertteriparametri(
           paluuarvo = "10.0",
@@ -712,10 +619,12 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
           max = "30.0",
           palautaHaettuArvo = "false",
           hylkaysperuste = "false",
-          kuvaukset = new TekstiRyhma())),
-      valintaperustetunniste = List(ValintaperusteViite(
-        onPakollinen = true,
-        tunniste = "joku_tunniste")))
+          kuvaukset = new TekstiRyhma()
+        )
+      ),
+      valintaperustetunniste =
+        List(ValintaperusteViite(onPakollinen = true, tunniste = "joku_tunniste"))
+    )
 
     val hakemus = TestHakemus("", Nil, Map("joku_tunniste" -> "25.0"))
 
@@ -733,10 +642,12 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
           paluuarvo = "5.0",
           arvo = "25.0",
           hylkaysperuste = "false",
-          kuvaukset = new TekstiRyhma())),
-      valintaperustetunniste = List(ValintaperusteViite(
-        onPakollinen = true,
-        tunniste = "joku_tunniste")))
+          kuvaukset = new TekstiRyhma()
+        )
+      ),
+      valintaperustetunniste =
+        List(ValintaperusteViite(onPakollinen = true, tunniste = "joku_tunniste"))
+    )
     val hakemus = TestHakemus("", Nil, Map("joku_tunniste" -> "25.0"))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
@@ -755,10 +666,12 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
           max = "30.0",
           palautaHaettuArvo = "false",
           hylkaysperuste = "false",
-          kuvaukset = new TekstiRyhma())),
-      valintaperustetunniste = List(ValintaperusteViite(
-        onPakollinen = true,
-        tunniste = "joku_tunniste")))
+          kuvaukset = new TekstiRyhma()
+        )
+      ),
+      valintaperustetunniste =
+        List(ValintaperusteViite(onPakollinen = true, tunniste = "joku_tunniste"))
+    )
     val hakemus = TestHakemus("", Nil, Map("joku_tunniste" -> "25.0"))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
@@ -770,9 +683,9 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   test("haeTotuusarvo") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAETOTUUSARVO,
-      valintaperustetunniste = List(ValintaperusteViite(
-        onPakollinen = true,
-        tunniste = "joku_tunniste")))
+      valintaperustetunniste =
+        List(ValintaperusteViite(onPakollinen = true, tunniste = "joku_tunniste"))
+    )
 
     val hakemus = TestHakemus("", Nil, Map("joku_tunniste" -> "true"))
 
@@ -785,15 +698,17 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   test("haeTotuusarvo konvertterilla") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAETOTUUSARVO,
-      valintaperustetunniste = List(ValintaperusteViite(
-        onPakollinen = true,
-        tunniste = "joku_tunniste")),
+      valintaperustetunniste =
+        List(ValintaperusteViite(onPakollinen = true, tunniste = "joku_tunniste")),
       arvokonvertterit = List(
         Arvokonvertteriparametri(
           paluuarvo = "true",
           arvo = "false",
           hylkaysperuste = "false",
-          kuvaukset = new TekstiRyhma())))
+          kuvaukset = new TekstiRyhma()
+        )
+      )
+    )
 
     val hakemus = TestHakemus("", Nil, Map("joku_tunniste" -> "false"))
 
@@ -806,15 +721,17 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   test("haeTotuusarvo hylkaa konvertterilla") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAETOTUUSARVO,
-      valintaperustetunniste = List(ValintaperusteViite(
-        onPakollinen = true,
-        tunniste = "joku_tunniste")),
+      valintaperustetunniste =
+        List(ValintaperusteViite(onPakollinen = true, tunniste = "joku_tunniste")),
       arvokonvertterit = List(
         Arvokonvertteriparametri(
           paluuarvo = "true",
           arvo = "false",
           hylkaysperuste = "true",
-          kuvaukset = new TekstiRyhma())))
+          kuvaukset = new TekstiRyhma()
+        )
+      )
+    )
     val hakemus = TestHakemus("", Nil, Map("joku_tunniste" -> "false"))
 
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
@@ -826,15 +743,17 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   test("haeMerkkijono") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAEMERKKIJONOJAKONVERTOILUKUARVOKSI,
-      valintaperustetunniste = List(ValintaperusteViite(
-        onPakollinen = true,
-        tunniste = "joku_tunniste")),
+      valintaperustetunniste =
+        List(ValintaperusteViite(onPakollinen = true, tunniste = "joku_tunniste")),
       arvokonvertterit = List(
         Arvokonvertteriparametri(
           paluuarvo = "10.0",
           arvo = "puuppa",
           hylkaysperuste = "false",
-          kuvaukset = new TekstiRyhma())))
+          kuvaukset = new TekstiRyhma()
+        )
+      )
+    )
 
     val hakemus = TestHakemus("", Nil, Map("joku_tunniste" -> "puuppa"))
 
@@ -847,19 +766,22 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   test("konvertoilukuarvo hylkaa arvolla") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.KONVERTOILUKUARVO,
-      funktioargumentit = List(
-        luku25),
+      funktioargumentit = List(luku25),
       arvokonvertterit = List(
         Arvokonvertteriparametri(
           paluuarvo = "5.0",
           arvo = "25.0",
           hylkaysperuste = "true",
-          kuvaukset = new TekstiRyhma()),
+          kuvaukset = new TekstiRyhma()
+        ),
         Arvokonvertteriparametri(
           paluuarvo = "10.0",
           arvo = "50.0",
           hylkaysperuste = "false",
-          kuvaukset = new TekstiRyhma())))
+          kuvaukset = new TekstiRyhma()
+        )
+      )
+    )
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -870,33 +792,39 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   test("haeLukuarvo hylkaa kun arvoa ei ole") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAELUKUARVO,
-      valintaperustetunniste = List(ValintaperusteViite(
-        onPakollinen = true,
-        tunniste = "joku_tunniste")))
+      valintaperustetunniste =
+        List(ValintaperusteViite(onPakollinen = true, tunniste = "joku_tunniste"))
+    )
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
     assertTulosTyhja(tulos)
-    assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.PAKOLLINEN_VALINTAPERUSTE_HYLKAYS)
+    assertTilaHylatty(
+      tila,
+      HylattyMetatieto.Hylattymetatietotyyppi.PAKOLLINEN_VALINTAPERUSTE_HYLKAYS
+    )
   }
 
   test("haeLukuarvo hylkaa arvolla") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAELUKUARVO,
-      valintaperustetunniste = List(ValintaperusteViite(
-        onPakollinen = true,
-        tunniste = "joku_tunniste")),
+      valintaperustetunniste =
+        List(ValintaperusteViite(onPakollinen = true, tunniste = "joku_tunniste")),
       arvokonvertterit = List(
         Arvokonvertteriparametri(
           paluuarvo = "5.0",
           arvo = "10.0",
           hylkaysperuste = "true",
-          kuvaukset = new TekstiRyhma()),
+          kuvaukset = new TekstiRyhma()
+        ),
         Arvokonvertteriparametri(
           paluuarvo = "15.0",
           arvo = "5.0",
           hylkaysperuste = "false",
-          kuvaukset = new TekstiRyhma())))
+          kuvaukset = new TekstiRyhma()
+        )
+      )
+    )
     val hakemus = TestHakemus("", Nil, Map("joku_tunniste" -> "10.0"))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
@@ -908,53 +836,65 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   test("haeLukuarvo ei konvertoi arvoa jota ei ole") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAELUKUARVO,
-      valintaperustetunniste = List(ValintaperusteViite(
-        onPakollinen = true,
-        tunniste = "joku_tunniste")),
+      valintaperustetunniste =
+        List(ValintaperusteViite(onPakollinen = true, tunniste = "joku_tunniste")),
       arvokonvertterit = List(
         Arvokonvertteriparametri(
           paluuarvo = "5.0",
           arvo = "0.0",
           hylkaysperuste = "false",
-          kuvaukset = new TekstiRyhma())))
+          kuvaukset = new TekstiRyhma()
+        )
+      )
+    )
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
     assertTulosTyhja(tulos)
-    assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.PAKOLLINEN_VALINTAPERUSTE_HYLKAYS)
+    assertTilaHylatty(
+      tila,
+      HylattyMetatieto.Hylattymetatietotyyppi.PAKOLLINEN_VALINTAPERUSTE_HYLKAYS
+    )
   }
 
   test("haeMerkkijono hylkaa kun arvoa ei ole") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAEMERKKIJONOJAKONVERTOILUKUARVOKSI,
-      valintaperustetunniste = List(ValintaperusteViite(
-        onPakollinen = true,
-        tunniste = "joku_tunniste")),
+      valintaperustetunniste =
+        List(ValintaperusteViite(onPakollinen = true, tunniste = "joku_tunniste")),
       arvokonvertterit = List(
         Arvokonvertteriparametri(
           paluuarvo = "10.0",
           arvo = "puuppa",
           hylkaysperuste = "false",
-          kuvaukset = new TekstiRyhma())))
+          kuvaukset = new TekstiRyhma()
+        )
+      )
+    )
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
     assertTulosTyhja(tulos)
-    assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.PAKOLLINEN_VALINTAPERUSTE_HYLKAYS)
+    assertTilaHylatty(
+      tila,
+      HylattyMetatieto.Hylattymetatietotyyppi.PAKOLLINEN_VALINTAPERUSTE_HYLKAYS
+    )
   }
 
   test("haeMerkkijono hylkaa arvolla") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAEMERKKIJONOJAKONVERTOILUKUARVOKSI,
-      valintaperustetunniste = List(ValintaperusteViite(
-        onPakollinen = true,
-        tunniste = "joku_tunniste")),
+      valintaperustetunniste =
+        List(ValintaperusteViite(onPakollinen = true, tunniste = "joku_tunniste")),
       arvokonvertterit = List(
         Arvokonvertteriparametri(
           paluuarvo = "10.0",
           arvo = "puuppa",
           hylkaysperuste = "true",
-          kuvaukset = new TekstiRyhma())))
+          kuvaukset = new TekstiRyhma()
+        )
+      )
+    )
     val hakemus = TestHakemus("", Nil, Map("joku_tunniste" -> "puuppa"))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
@@ -966,23 +906,24 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   test("haeTotuusarvo hylkaa kun arvoa ei ole") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAETOTUUSARVO,
-      valintaperustetunniste = List(ValintaperusteViite(
-        onPakollinen = true,
-        tunniste = "joku_tunniste")))
+      valintaperustetunniste =
+        List(ValintaperusteViite(onPakollinen = true, tunniste = "joku_tunniste"))
+    )
 
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
     assertTulosTyhja(tulos)
-    assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.PAKOLLINEN_VALINTAPERUSTE_HYLKAYS)
+    assertTilaHylatty(
+      tila,
+      HylattyMetatieto.Hylattymetatietotyyppi.PAKOLLINEN_VALINTAPERUSTE_HYLKAYS
+    )
   }
 
   test("Keskiarvo, osa tyhjia arvoja") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.KESKIARVO,
-      funktioargumentit = List(
-        luku100,
-        luku50,
-        haeLukuarvo))
+      funktioargumentit = List(luku100, luku50, haeLukuarvo)
+    )
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -993,10 +934,8 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   test("Keskiarvo, kaikki tyhjia arvoja") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.KESKIARVO,
-      funktioargumentit = List(
-        haeLukuarvo,
-        haeLukuarvo,
-        haeLukuarvo))
+      funktioargumentit = List(haeLukuarvo, haeLukuarvo, haeLukuarvo)
+    )
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -1005,12 +944,8 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   }
 
   test("Summa, osa tyhjia arvoja") {
-    val funktiokutsu = Funktiokutsu(
-      nimi = Funktionimi.SUMMA,
-      funktioargumentit = List(
-        luku100,
-        luku50,
-        haeLukuarvo))
+    val funktiokutsu =
+      Funktiokutsu(nimi = Funktionimi.SUMMA, funktioargumentit = List(luku100, luku50, haeLukuarvo))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -1021,10 +956,8 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   test("Summa, kaikki tyhjia arvoja") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.SUMMA,
-      funktioargumentit = List(
-        haeLukuarvo,
-        haeLukuarvo,
-        haeLukuarvo))
+      funktioargumentit = List(haeLukuarvo, haeLukuarvo, haeLukuarvo)
+    )
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -1035,15 +968,9 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   test("KeskiarvoNParasta, osa tyhjia arvoja") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.KESKIARVONPARASTA,
-      funktioargumentit = List(
-        luku100,
-        luku50,
-        haeLukuarvo,
-        haeLukuarvo),
-      syoteparametrit = List(
-        Syoteparametri(
-          avain = "n",
-          arvo = "3")))
+      funktioargumentit = List(luku100, luku50, haeLukuarvo, haeLukuarvo),
+      syoteparametrit = List(Syoteparametri(avain = "n", arvo = "3"))
+    )
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -1054,15 +981,9 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   test("KeskiarvoNParasta, kaikki tyhjia arvoja") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.KESKIARVONPARASTA,
-      funktioargumentit = List(
-        haeLukuarvo,
-        haeLukuarvo,
-        haeLukuarvo,
-        haeLukuarvo),
-      syoteparametrit = List(
-        Syoteparametri(
-          avain = "n",
-          arvo = "3")))
+      funktioargumentit = List(haeLukuarvo, haeLukuarvo, haeLukuarvo, haeLukuarvo),
+      syoteparametrit = List(Syoteparametri(avain = "n", arvo = "3"))
+    )
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -1073,15 +994,9 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   test("NMinimi, osa tyhjia arvoja") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.NMINIMI,
-      funktioargumentit = List(
-        luku100,
-        luku50,
-        haeLukuarvo,
-        haeLukuarvo),
-      syoteparametrit = List(
-        Syoteparametri(
-          avain = "n",
-          arvo = "3")))
+      funktioargumentit = List(luku100, luku50, haeLukuarvo, haeLukuarvo),
+      syoteparametrit = List(Syoteparametri(avain = "n", arvo = "3"))
+    )
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -1093,15 +1008,9 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   test("NMinimi, kaikki tyhjia arvoja") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.NMINIMI,
-      funktioargumentit = List(
-        haeLukuarvo,
-        haeLukuarvo,
-        haeLukuarvo,
-        haeLukuarvo),
-      syoteparametrit = List(
-        Syoteparametri(
-          avain = "n",
-          arvo = "3")))
+      funktioargumentit = List(haeLukuarvo, haeLukuarvo, haeLukuarvo, haeLukuarvo),
+      syoteparametrit = List(Syoteparametri(avain = "n", arvo = "3"))
+    )
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -1112,15 +1021,9 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   test("NMaksimi, osa tyhjia arvoja") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.NMAKSIMI,
-      funktioargumentit = List(
-        luku100,
-        luku50,
-        haeLukuarvo,
-        haeLukuarvo),
-      syoteparametrit = List(
-        Syoteparametri(
-          avain = "n",
-          arvo = "3")))
+      funktioargumentit = List(luku100, luku50, haeLukuarvo, haeLukuarvo),
+      syoteparametrit = List(Syoteparametri(avain = "n", arvo = "3"))
+    )
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -1132,15 +1035,9 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   test("NMaksimi, kaikki tyhjia arvoja") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.NMAKSIMI,
-      funktioargumentit = List(
-        haeLukuarvo,
-        haeLukuarvo,
-        haeLukuarvo,
-        haeLukuarvo),
-      syoteparametrit = List(
-        Syoteparametri(
-          avain = "n",
-          arvo = "3")))
+      funktioargumentit = List(haeLukuarvo, haeLukuarvo, haeLukuarvo, haeLukuarvo),
+      syoteparametrit = List(Syoteparametri(avain = "n", arvo = "3"))
+    )
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -1151,15 +1048,9 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   test("SummaNParasta, osa tyhjia arvoja") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.SUMMANPARASTA,
-      funktioargumentit = List(
-        luku100,
-        luku50,
-        haeLukuarvo,
-        haeLukuarvo),
-      syoteparametrit = List(
-        Syoteparametri(
-          avain = "n",
-          arvo = "3")))
+      funktioargumentit = List(luku100, luku50, haeLukuarvo, haeLukuarvo),
+      syoteparametrit = List(Syoteparametri(avain = "n", arvo = "3"))
+    )
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -1170,15 +1061,9 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   test("SummaNParasta, kaikki tyhjia arvoja") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.SUMMANPARASTA,
-      funktioargumentit = List(
-        haeLukuarvo,
-        haeLukuarvo,
-        haeLukuarvo,
-        haeLukuarvo),
-      syoteparametrit = List(
-        Syoteparametri(
-          avain = "n",
-          arvo = "3")))
+      funktioargumentit = List(haeLukuarvo, haeLukuarvo, haeLukuarvo, haeLukuarvo),
+      syoteparametrit = List(Syoteparametri(avain = "n", arvo = "3"))
+    )
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -1189,15 +1074,9 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   test("TuloNParasta, osa tyhjia arvoja") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.TULONPARASTA,
-      funktioargumentit = List(
-        luku100,
-        luku50,
-        haeLukuarvo,
-        haeLukuarvo),
-      syoteparametrit = List(
-        Syoteparametri(
-          avain = "n",
-          arvo = "3")))
+      funktioargumentit = List(luku100, luku50, haeLukuarvo, haeLukuarvo),
+      syoteparametrit = List(Syoteparametri(avain = "n", arvo = "3"))
+    )
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
     assert(tulos.get.compareTo(new BigDecimal("5000")) == 0)
@@ -1207,15 +1086,9 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   test("TuloNParasta, kaikki tyhjia arvoja") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.TULONPARASTA,
-      funktioargumentit = List(
-        haeLukuarvo,
-        haeLukuarvo,
-        haeLukuarvo,
-        haeLukuarvo),
-      syoteparametrit = List(
-        Syoteparametri(
-          avain = "n",
-          arvo = "3")))
+      funktioargumentit = List(haeLukuarvo, haeLukuarvo, haeLukuarvo, haeLukuarvo),
+      syoteparametrit = List(Syoteparametri(avain = "n", arvo = "3"))
+    )
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -1224,12 +1097,8 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   }
 
   test("Jos, ehto tyhja") {
-    val funktiokutsu = Funktiokutsu(
-      nimi = Funktionimi.JOS,
-      funktioargumentit = List(
-        haeTotuusarvo,
-        luku25,
-        luku100))
+    val funktiokutsu =
+      Funktiokutsu(nimi = Funktionimi.JOS, funktioargumentit = List(haeTotuusarvo, luku25, luku100))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -1240,19 +1109,22 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   test("Konvertoilukuarvo, tyhja syote") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.KONVERTOILUKUARVO,
-      funktioargumentit = List(
-        haeLukuarvo),
+      funktioargumentit = List(haeLukuarvo),
       arvokonvertterit = List(
         Arvokonvertteriparametri(
           paluuarvo = "5.0",
           arvo = "25.0",
           hylkaysperuste = "true",
-          kuvaukset = new TekstiRyhma()),
+          kuvaukset = new TekstiRyhma()
+        ),
         Arvokonvertteriparametri(
           paluuarvo = "10.0",
           arvo = "50.0",
           hylkaysperuste = "false",
-          kuvaukset = new TekstiRyhma())))
+          kuvaukset = new TekstiRyhma()
+        )
+      )
+    )
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -1261,11 +1133,8 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   }
 
   test("Ja, osa tyhjia arvoja") {
-    val funktiokutsu = Funktiokutsu(
-      nimi = Funktionimi.JA,
-      funktioargumentit = List(
-        haeTotuusarvo,
-        totuusarvoTrue))
+    val funktiokutsu =
+      Funktiokutsu(nimi = Funktionimi.JA, funktioargumentit = List(haeTotuusarvo, totuusarvoTrue))
 
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -1274,11 +1143,8 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   }
 
   test("Tai, osa tyhjia arvoja") {
-    val funktiokutsu = Funktiokutsu(
-      nimi = Funktionimi.TAI,
-      funktioargumentit = List(
-        haeTotuusarvo,
-        totuusarvoTrue))
+    val funktiokutsu =
+      Funktiokutsu(nimi = Funktionimi.TAI, funktioargumentit = List(haeTotuusarvo, totuusarvoTrue))
 
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -1287,10 +1153,7 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   }
 
   test("Ei, tyhja arvo") {
-    val funktiokutsu = Funktiokutsu(
-      nimi = Funktionimi.EI,
-      funktioargumentit = List(
-        haeTotuusarvo))
+    val funktiokutsu = Funktiokutsu(nimi = Funktionimi.EI, funktioargumentit = List(haeTotuusarvo))
 
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -1299,11 +1162,8 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   }
 
   test("Suurempi kuin, eka tyhja arvo") {
-    val funktiokutsu = Funktiokutsu(
-      nimi = Funktionimi.SUUREMPI,
-      funktioargumentit = List(
-        haeLukuarvo,
-        luku50))
+    val funktiokutsu =
+      Funktiokutsu(nimi = Funktionimi.SUUREMPI, funktioargumentit = List(haeLukuarvo, luku50))
 
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -1312,11 +1172,8 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   }
 
   test("Suurempi kuin, toka tyhja arvo") {
-    val funktiokutsu = Funktiokutsu(
-      nimi = Funktionimi.SUUREMPI,
-      funktioargumentit = List(
-        luku50,
-        haeLukuarvo))
+    val funktiokutsu =
+      Funktiokutsu(nimi = Funktionimi.SUUREMPI, funktioargumentit = List(luku50, haeLukuarvo))
 
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -1325,10 +1182,8 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   }
 
   test("Negaatio, tyhja arvo") {
-    val funktiokutsu = Funktiokutsu(
-      nimi = Funktionimi.NEGAATIO,
-      funktioargumentit = List(
-        haeLukuarvo))
+    val funktiokutsu =
+      Funktiokutsu(nimi = Funktionimi.NEGAATIO, funktioargumentit = List(haeLukuarvo))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -1339,10 +1194,8 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   test("Hakutoive, true") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAKUTOIVE,
-      syoteparametrit = List(
-        Syoteparametri(
-          avain = "n",
-          arvo = "2")))
+      syoteparametrit = List(Syoteparametri(avain = "n", arvo = "2"))
+    )
 
     val hakukohde = new Hakukohde("oid1", new util.HashMap[String, String])
     val hakemus = TestHakemus("", List("oid2", "oid1", "oid3"), Map[String, String]())
@@ -1356,10 +1209,8 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   test("Hakutoive, false") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAKUTOIVE,
-      syoteparametrit = List(
-        Syoteparametri(
-          avain = "n",
-          arvo = "3")))
+      syoteparametrit = List(Syoteparametri(avain = "n", arvo = "3"))
+    )
 
     val hakukohde = new Hakukohde("oid1", new util.HashMap[String, String])
     val hakemus = TestHakemus("", List("oid2", "oid1", "oid3"), Map[String, String]())
@@ -1370,21 +1221,23 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
     assertTilaHyvaksyttavissa(tila)
   }
 
-
   test("Hakutoive ensimmainen ryhmassa, true") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAKUTOIVERYHMASSA,
       syoteparametrit = List(
-        Syoteparametri(
-          avain = "n",
-          arvo = "1"),
-        Syoteparametri(
-          avain = "ryhmaoid",
-          arvo = "1.2.3.4")
-      ))
+        Syoteparametri(avain = "n", arvo = "1"),
+        Syoteparametri(avain = "ryhmaoid", arvo = "1.2.3.4")
+      )
+    )
 
     val hakukohde = new Hakukohde("oid1", new util.HashMap[String, String])
-    val hakemus = TestHakemusWithRyhmaOids("", List("oid2", "oid3", "oid1"), List(List("1.2.3.5"), List("1.2.3.5"), List("1.2.3.4")), Map[String, String](), Collections.emptyMap())
+    val hakemus = TestHakemusWithRyhmaOids(
+      "",
+      List("oid2", "oid3", "oid1"),
+      List(List("1.2.3.5"), List("1.2.3.5"), List("1.2.3.4")),
+      Map[String, String](),
+      Collections.emptyMap()
+    )
 
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
@@ -1396,16 +1249,19 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAKUTOIVERYHMASSA,
       syoteparametrit = List(
-        Syoteparametri(
-          avain = "n",
-          arvo = "2"),
-        Syoteparametri(
-          avain = "ryhmaoid",
-          arvo = "1.2.3.4")
-      ))
+        Syoteparametri(avain = "n", arvo = "2"),
+        Syoteparametri(avain = "ryhmaoid", arvo = "1.2.3.4")
+      )
+    )
 
     val hakukohde = new Hakukohde("oid1", new util.HashMap[String, String])
-    val hakemus = TestHakemusWithRyhmaOids("", List("oid2", "oid3", "oid1"), List(List("1.2.3.4"), List("1.2.3.5"), List("1.2.3.4")), Map[String, String](), Collections.emptyMap())
+    val hakemus = TestHakemusWithRyhmaOids(
+      "",
+      List("oid2", "oid3", "oid1"),
+      List(List("1.2.3.4"), List("1.2.3.5"), List("1.2.3.4")),
+      Map[String, String](),
+      Collections.emptyMap()
+    )
 
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
@@ -1417,16 +1273,19 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAKUTOIVERYHMASSA,
       syoteparametrit = List(
-        Syoteparametri(
-          avain = "n",
-          arvo = "2"),
-        Syoteparametri(
-          avain = "ryhmaoid",
-          arvo = "1.2.3.5")
-      ))
+        Syoteparametri(avain = "n", arvo = "2"),
+        Syoteparametri(avain = "ryhmaoid", arvo = "1.2.3.5")
+      )
+    )
 
     val hakukohde = new Hakukohde("oid1", new util.HashMap[String, String])
-    val hakemus = TestHakemusWithRyhmaOids("", List("oid2", "oid1", "oid3"), List(List(), List("1.2.3.4"), List("1.2.3.5")), Map[String, String](), Collections.emptyMap())
+    val hakemus = TestHakemusWithRyhmaOids(
+      "",
+      List("oid2", "oid1", "oid3"),
+      List(List(), List("1.2.3.4"), List("1.2.3.5")),
+      Map[String, String](),
+      Collections.emptyMap()
+    )
 
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
@@ -1438,16 +1297,19 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAKUTOIVERYHMASSA,
       syoteparametrit = List(
-        Syoteparametri(
-          avain = "n",
-          arvo = "2"),
-        Syoteparametri(
-          avain = "ryhmaoid",
-          arvo = "1.2.3.5")
-      ))
+        Syoteparametri(avain = "n", arvo = "2"),
+        Syoteparametri(avain = "ryhmaoid", arvo = "1.2.3.5")
+      )
+    )
 
     val hakukohde = new Hakukohde("oid1", new util.HashMap[String, String])
-    val hakemus = TestHakemusWithRyhmaOids("", List("oid2", "oid1", "oid3"), List(List(), List(), List("1.2.3.5")), Map[String, String](), Collections.emptyMap())
+    val hakemus = TestHakemusWithRyhmaOids(
+      "",
+      List("oid2", "oid1", "oid3"),
+      List(List(), List(), List("1.2.3.5")),
+      Map[String, String](),
+      Collections.emptyMap()
+    )
 
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
@@ -1456,8 +1318,7 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   }
 
   test("Hakukelpoisuus") {
-    val funktiokutsu = Funktiokutsu(
-      nimi = Funktionimi.HAKUKELPOISUUS)
+    val funktiokutsu = Funktiokutsu(nimi = Funktionimi.HAKUKELPOISUUS)
 
     val hakukohde = new Hakukohde("oid1", new util.HashMap[String, String])
     val hakukohde2 = new Hakukohde("oid2", new util.HashMap[String, String])
@@ -1496,10 +1357,8 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   test("Hakutoive, ei tarpeeksi hakutoiveita") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAKUTOIVE,
-      syoteparametrit = List(
-        Syoteparametri(
-          avain = "n",
-          arvo = "5")))
+      syoteparametrit = List(Syoteparametri(avain = "n", arvo = "5"))
+    )
 
     val hakukohde = new Hakukohde("oid1", new util.HashMap[String, String])
     val hakemus = TestHakemus("", List("oid2", "oid1", "oid3"), Map[String, String]())
@@ -1513,52 +1372,50 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   test("Iso kaava") {
     val haeArvo1 = Funktiokutsu(
       nimi = Funktionimi.HAELUKUARVO,
-      valintaperustetunniste = List(ValintaperusteViite(
-        onPakollinen = true,
-        tunniste = "lukuarvotunniste1")))
+      valintaperustetunniste =
+        List(ValintaperusteViite(onPakollinen = true, tunniste = "lukuarvotunniste1"))
+    )
 
     val haeArvo2 = Funktiokutsu(
       nimi = Funktionimi.HAELUKUARVO,
-      valintaperustetunniste = List(ValintaperusteViite(
-        onPakollinen = false,
-        tunniste = "lukuarvotunniste2")),
+      valintaperustetunniste =
+        List(ValintaperusteViite(onPakollinen = false, tunniste = "lukuarvotunniste2")),
       arvokonvertterit = List(
         Arvokonvertteriparametri(
           paluuarvo = "100.0",
           arvo = "10.0",
           hylkaysperuste = "true",
-          kuvaukset = new TekstiRyhma())))
+          kuvaukset = new TekstiRyhma()
+        )
+      )
+    )
 
     val lukuarvo = Funktiokutsu(
       nimi = Funktionimi.LUKUARVO,
-      syoteparametrit = List(
-        Syoteparametri(
-          avain = "luku",
-          arvo = "50.0")))
+      syoteparametrit = List(Syoteparametri(avain = "luku", arvo = "50.0"))
+    )
 
-    val summa = Funktiokutsu(
-      nimi = Funktionimi.SUMMA,
-      funktioargumentit = List(
-        haeArvo1,
-        haeArvo2,
-        lukuarvo))
+    val summa =
+      Funktiokutsu(nimi = Funktionimi.SUMMA, funktioargumentit = List(haeArvo1, haeArvo2, lukuarvo))
 
     val hakemus = TestHakemus("", Nil, Map("lukuarvotunniste2" -> "10.0"))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(summa)
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
     assert(tulos.get.equals(new BigDecimal("150.0")))
-    assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.PAKOLLINEN_VALINTAPERUSTE_HYLKAYS)
+    assertTilaHylatty(
+      tila,
+      HylattyMetatieto.Hylattymetatietotyyppi.PAKOLLINEN_VALINTAPERUSTE_HYLKAYS
+    )
   }
 
   test("haeLukuarvo, oletusarvo") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAELUKUARVO,
-      valintaperustetunniste = List(ValintaperusteViite(
-        tunniste = "joku_tunniste",
-        onPakollinen = false)),
-      syoteparametrit = List(
-        Syoteparametri(avain = "oletusarvo", arvo = "100.0")))
+      valintaperustetunniste =
+        List(ValintaperusteViite(tunniste = "joku_tunniste", onPakollinen = false)),
+      syoteparametrit = List(Syoteparametri(avain = "oletusarvo", arvo = "100.0"))
+    )
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -1569,32 +1426,35 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   test("haeTotuusarvo, oletusarvo") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAETOTUUSARVO,
-      valintaperustetunniste = List(ValintaperusteViite(
-        tunniste = "joku_tunniste",
-        onPakollinen = true)),
-      syoteparametrit = List(
-        Syoteparametri(avain = "oletusarvo", arvo = "true")))
+      valintaperustetunniste =
+        List(ValintaperusteViite(tunniste = "joku_tunniste", onPakollinen = true)),
+      syoteparametrit = List(Syoteparametri(avain = "oletusarvo", arvo = "true"))
+    )
 
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
     assert(tulos.get == true)
-    assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.PAKOLLINEN_VALINTAPERUSTE_HYLKAYS)
+    assertTilaHylatty(
+      tila,
+      HylattyMetatieto.Hylattymetatietotyyppi.PAKOLLINEN_VALINTAPERUSTE_HYLKAYS
+    )
   }
 
   test("haeMerkkijonoJaKonvertoiLukuarvoksi, oletusarvo") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAEMERKKIJONOJAKONVERTOILUKUARVOKSI,
-      valintaperustetunniste = List(ValintaperusteViite(
-        tunniste = "joku_tunniste",
-        onPakollinen = false)),
-      syoteparametrit = List(
-        Syoteparametri(avain = "oletusarvo", arvo = "50.0")),
+      valintaperustetunniste =
+        List(ValintaperusteViite(tunniste = "joku_tunniste", onPakollinen = false)),
+      syoteparametrit = List(Syoteparametri(avain = "oletusarvo", arvo = "50.0")),
       arvokonvertterit = List(
         Arvokonvertteriparametri(
           paluuarvo = "66.0",
           arvo = "L",
           hylkaysperuste = "false",
-          kuvaukset = new TekstiRyhma())))
+          kuvaukset = new TekstiRyhma()
+        )
+      )
+    )
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -1605,25 +1465,29 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   test("haeMerkkijonoJaKonvertoiTotuusarvoksi") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAEMERKKIJONOJAKONVERTOITOTUUSARVOKSI,
-      valintaperustetunniste = List(ValintaperusteViite(
-        tunniste = "jokin_tunniste",
-        onPakollinen = false)),
+      valintaperustetunniste =
+        List(ValintaperusteViite(tunniste = "jokin_tunniste", onPakollinen = false)),
       arvokonvertterit = List(
         Arvokonvertteriparametri(
           paluuarvo = "false",
           arvo = "helsinki",
           hylkaysperuste = "false",
-          kuvaukset = new TekstiRyhma()),
+          kuvaukset = new TekstiRyhma()
+        ),
         Arvokonvertteriparametri(
           paluuarvo = "true",
           arvo = "turku",
           hylkaysperuste = "true",
-          kuvaukset = new TekstiRyhma()),
+          kuvaukset = new TekstiRyhma()
+        ),
         Arvokonvertteriparametri(
           paluuarvo = "false",
           arvo = "tampere",
           hylkaysperuste = "false",
-          kuvaukset = new TekstiRyhma())))
+          kuvaukset = new TekstiRyhma()
+        )
+      )
+    )
 
     val hakemus = TestHakemus("", Nil, Map("jokin_tunniste" -> "turku"))
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
@@ -1640,9 +1504,9 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   test("demografia") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.DEMOGRAFIA,
-      syoteparametrit = List(
-        Syoteparametri("tunniste", "sukupuoli"),
-        Syoteparametri("prosenttiosuus", "33.0")))
+      syoteparametrit =
+        List(Syoteparametri("tunniste", "sukupuoli"), Syoteparametri("prosenttiosuus", "33.0"))
+    )
 
     val hakukohde = new Hakukohde("1", new util.HashMap[String, String])
 
@@ -1650,11 +1514,13 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
       TestHakemus("1", List("1", "2", "3"), Map("sukupuoli" -> "mies")),
       TestHakemus("2", List("1", "2", "3"), Map("sukupuoli" -> "mies")),
       TestHakemus("3", List("1", "2", "3"), Map("sukupuoli" -> "mies")),
-      TestHakemus("4", List("1", "2", "3"), Map("sukupuoli" -> "nainen")))
+      TestHakemus("4", List("1", "2", "3"), Map("sukupuoli" -> "nainen"))
+    )
 
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
 
-    val tulokset: List[Laskentatulos[Boolean]] = hakemukset.map(h => Laskin.suoritaValintalaskenta(hakukohde, h, hakemukset.asJava, lasku))
+    val tulokset: List[Laskentatulos[Boolean]] =
+      hakemukset.map(h => Laskin.suoritaValintalaskenta(hakukohde, h, hakemukset.asJava, lasku))
 
     for (i <- 0 until tulokset.size) {
       val tulos = tulokset(i)
@@ -1666,9 +1532,9 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   test("demografia vaaralla moodilla") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.DEMOGRAFIA,
-      syoteparametrit = List(
-        Syoteparametri("tunniste", "sukupuoli"),
-        Syoteparametri("prosenttiosuus", "33.0")))
+      syoteparametrit =
+        List(Syoteparametri("tunniste", "sukupuoli"), Syoteparametri("prosenttiosuus", "33.0"))
+    )
 
     val hakukohde = new Hakukohde("1", new util.HashMap[String, String])
 
@@ -1684,8 +1550,8 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.PYORISTYS,
       funktioargumentit = List(luku3_335),
-      syoteparametrit = List(
-        Syoteparametri(avain = "tarkkuus", arvo = "2")))
+      syoteparametrit = List(Syoteparametri(avain = "tarkkuus", arvo = "2"))
+    )
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -1697,8 +1563,8 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.PYORISTYS,
       funktioargumentit = List(luku3_335),
-      syoteparametrit = List(
-        Syoteparametri(avain = "tarkkuus", arvo = "1")))
+      syoteparametrit = List(Syoteparametri(avain = "tarkkuus", arvo = "1"))
+    )
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -1709,13 +1575,10 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   test("hae merkkijono ja vertaa yhtasuuruus") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAEMERKKIJONOJAVERTAAYHTASUURUUS,
-      valintaperustetunniste = List(ValintaperusteViite(
-        tunniste = "aidinkieli",
-        onPakollinen = true)),
-      syoteparametrit = List(
-        Syoteparametri(
-          avain = "vertailtava",
-          arvo = "FI")))
+      valintaperustetunniste =
+        List(ValintaperusteViite(tunniste = "aidinkieli", onPakollinen = true)),
+      syoteparametrit = List(Syoteparametri(avain = "vertailtava", arvo = "FI"))
+    )
 
     val hakemus = TestHakemus("", Nil, Map("aidinkieli" -> "FI"))
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
@@ -1732,49 +1595,53 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   test("hae merkkijono ja vertaa yhtasuuruus pakollinen") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAEMERKKIJONOJAVERTAAYHTASUURUUS,
-      valintaperustetunniste = List(ValintaperusteViite(
-        tunniste = "aidinkieli",
-        onPakollinen = true)),
-      syoteparametrit = List(
-        Syoteparametri(
-          avain = "vertailtava",
-          arvo = "FI")))
+      valintaperustetunniste =
+        List(ValintaperusteViite(tunniste = "aidinkieli", onPakollinen = true)),
+      syoteparametrit = List(Syoteparametri(avain = "vertailtava", arvo = "FI"))
+    )
 
     val hakemus = tyhjaHakemus
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
     assertTulosTyhja(tulos)
-    assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.PAKOLLINEN_VALINTAPERUSTE_HYLKAYS)
+    assertTilaHylatty(
+      tila,
+      HylattyMetatieto.Hylattymetatietotyyppi.PAKOLLINEN_VALINTAPERUSTE_HYLKAYS
+    )
   }
 
   test("hae merkkijono ja vertaa yhtasuuruus oletusarvo") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAEMERKKIJONOJAVERTAAYHTASUURUUS,
-      valintaperustetunniste = List(ValintaperusteViite(
-        tunniste = "aidinkieli",
-        onPakollinen = true)),
+      valintaperustetunniste =
+        List(ValintaperusteViite(tunniste = "aidinkieli", onPakollinen = true)),
       syoteparametrit = List(
-        Syoteparametri(
-          avain = "vertailtava",
-          arvo = "FI"),
-        Syoteparametri(
-          avain = "oletusarvo",
-          arvo = "false")))
+        Syoteparametri(avain = "vertailtava", arvo = "FI"),
+        Syoteparametri(avain = "oletusarvo", arvo = "false")
+      )
+    )
 
     val hakemus = tyhjaHakemus
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
     assert(!tulos.get)
-    assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.PAKOLLINEN_VALINTAPERUSTE_HYLKAYS)
+    assertTilaHylatty(
+      tila,
+      HylattyMetatieto.Hylattymetatietotyyppi.PAKOLLINEN_VALINTAPERUSTE_HYLKAYS
+    )
   }
 
   test("syotettava arvo, osallistuminen puuttuu") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAELUKUARVO,
-      valintaperustetunniste = List(ValintaperusteViite(
-        tunniste = "tunniste",
-        onPakollinen = true,
-        lahde = Valintaperustelahde.SYOTETTAVA_ARVO)))
+      valintaperustetunniste = List(
+        ValintaperusteViite(
+          tunniste = "tunniste",
+          onPakollinen = true,
+          lahde = Valintaperustelahde.SYOTETTAVA_ARVO
+        )
+      )
+    )
 
     val hakemus = TestHakemus("", Nil, Map("tunniste" -> "10.0"))
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
@@ -1788,14 +1655,20 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
     val valintaperuste = ValintaperusteViite(
       tunniste = "tunniste",
       onPakollinen = true,
-      lahde = Valintaperustelahde.SYOTETTAVA_ARVO)
+      lahde = Valintaperustelahde.SYOTETTAVA_ARVO
+    )
 
-    val funktiokutsu = Funktiokutsu(
-      nimi = Funktionimi.HAELUKUARVO,
-      valintaperustetunniste = List(valintaperuste))
+    val funktiokutsu =
+      Funktiokutsu(nimi = Funktionimi.HAELUKUARVO, valintaperustetunniste = List(valintaperuste))
 
-    val hakemus = TestHakemus("", Nil, Map("tunniste" -> "10.0",
-      valintaperuste.getOsallistuminenTunniste -> Osallistuminen.EI_OSALLISTUNUT.name))
+    val hakemus = TestHakemus(
+      "",
+      Nil,
+      Map(
+        "tunniste" -> "10.0",
+        valintaperuste.getOsallistuminenTunniste -> Osallistuminen.EI_OSALLISTUNUT.name
+      )
+    )
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
 
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
@@ -1807,14 +1680,20 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
     val valintaperuste = ValintaperusteViite(
       tunniste = "tunniste",
       onPakollinen = true,
-      lahde = Valintaperustelahde.SYOTETTAVA_ARVO)
+      lahde = Valintaperustelahde.SYOTETTAVA_ARVO
+    )
 
-    val funktiokutsu = Funktiokutsu(
-      nimi = Funktionimi.HAELUKUARVO,
-      valintaperustetunniste = List(valintaperuste))
+    val funktiokutsu =
+      Funktiokutsu(nimi = Funktionimi.HAELUKUARVO, valintaperustetunniste = List(valintaperuste))
 
-    val hakemus = TestHakemus("", Nil, Map("tunniste" -> "10.0",
-      valintaperuste.getOsallistuminenTunniste -> Osallistuminen.OSALLISTUI.name))
+    val hakemus = TestHakemus(
+      "",
+      Nil,
+      Map(
+        "tunniste" -> "10.0",
+        valintaperuste.getOsallistuminenTunniste -> Osallistuminen.OSALLISTUI.name
+      )
+    )
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
 
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
@@ -1825,30 +1704,34 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   test("hae lukuarvo, hakemuksella tyhja arvo") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAELUKUARVO,
-      valintaperustetunniste = List(ValintaperusteViite(
-        tunniste = "tunniste",
-        onPakollinen = true)))
+      valintaperustetunniste = List(ValintaperusteViite(tunniste = "tunniste", onPakollinen = true))
+    )
 
     val hakemus = TestHakemus("", Nil, Map("tunniste" -> ""))
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
 
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
     assertTulosTyhja(tulos)
-    assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.PAKOLLINEN_VALINTAPERUSTE_HYLKAYS)
+    assertTilaHylatty(
+      tila,
+      HylattyMetatieto.Hylattymetatietotyyppi.PAKOLLINEN_VALINTAPERUSTE_HYLKAYS
+    )
   }
 
   test("hae yo koe, hakemuksella arvo") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAEOSAKOEARVOSANA,
-      valintaperustetunniste = List(ValintaperusteViite(
-        tunniste = "HI",
-        onPakollinen = true)))
-
-    val arvosanat: Map[String, util.List[util.Map[String, String]]] =  Map[String, java.util.List[java.util.Map[String, String]]](
-      ("HI" -> util.Arrays.asList(Map(
-        "PISTEET" -> "15"
-      ).asJava))
+      valintaperustetunniste = List(ValintaperusteViite(tunniste = "HI", onPakollinen = true))
     )
+
+    val arvosanat: Map[String, util.List[util.Map[String, String]]] =
+      Map[String, java.util.List[java.util.Map[String, String]]](
+        ("HI" -> util.Arrays.asList(
+          Map(
+            "PISTEET" -> "15"
+          ).asJava
+        ))
+      )
     val hakemus = TestHakemus("", Nil, Map(), arvosanat.asJava)
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
 
@@ -1861,62 +1744,63 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   test("hae lukuarvo, oletusarvo, hakemuksella tyhja arvo") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAELUKUARVO,
-      valintaperustetunniste = List(ValintaperusteViite(
-        tunniste = "tunniste",
-        onPakollinen = true)),
-      syoteparametrit = List(
-        Syoteparametri(
-          avain = "oletusarvo",
-          arvo = "5.0")))
+      valintaperustetunniste =
+        List(ValintaperusteViite(tunniste = "tunniste", onPakollinen = true)),
+      syoteparametrit = List(Syoteparametri(avain = "oletusarvo", arvo = "5.0"))
+    )
 
     val hakemus = TestHakemus("", Nil, Map("tunniste" -> ""))
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
 
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
     assert(tulos.get.equals(new BigDecimal("5.0")))
-    assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.PAKOLLINEN_VALINTAPERUSTE_HYLKAYS)
+    assertTilaHylatty(
+      tila,
+      HylattyMetatieto.Hylattymetatietotyyppi.PAKOLLINEN_VALINTAPERUSTE_HYLKAYS
+    )
   }
 
   test("hae totuusarvo, hakemuksella tyhja arvo") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAETOTUUSARVO,
-      valintaperustetunniste = List(ValintaperusteViite(
-        tunniste = "tunniste",
-        onPakollinen = true)))
+      valintaperustetunniste = List(ValintaperusteViite(tunniste = "tunniste", onPakollinen = true))
+    )
 
     val hakemus = TestHakemus("", Nil, Map("tunniste" -> ""))
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
 
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
     assertTulosTyhja(tulos)
-    assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.PAKOLLINEN_VALINTAPERUSTE_HYLKAYS)
+    assertTilaHylatty(
+      tila,
+      HylattyMetatieto.Hylattymetatietotyyppi.PAKOLLINEN_VALINTAPERUSTE_HYLKAYS
+    )
   }
 
   test("hae totuusarvo, oletusarvo, hakemuksella tyhja arvo") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAETOTUUSARVO,
-      valintaperustetunniste = List(ValintaperusteViite(
-        tunniste = "tunniste",
-        onPakollinen = true)),
-      syoteparametrit = List(
-        Syoteparametri(
-          avain = "oletusarvo",
-          arvo = "false")))
+      valintaperustetunniste =
+        List(ValintaperusteViite(tunniste = "tunniste", onPakollinen = true)),
+      syoteparametrit = List(Syoteparametri(avain = "oletusarvo", arvo = "false"))
+    )
 
     val hakemus = TestHakemus("", Nil, Map("tunniste" -> ""))
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
 
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, lasku)
     assert(!tulos.get)
-    assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.PAKOLLINEN_VALINTAPERUSTE_HYLKAYS)
+    assertTilaHylatty(
+      tila,
+      HylattyMetatieto.Hylattymetatietotyyppi.PAKOLLINEN_VALINTAPERUSTE_HYLKAYS
+    )
   }
 
   test("hae totuusarvo, epavalidi arvo") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAETOTUUSARVO,
-      valintaperustetunniste = List(ValintaperusteViite(
-        tunniste = "tunniste",
-        onPakollinen = true)))
+      valintaperustetunniste = List(ValintaperusteViite(tunniste = "tunniste", onPakollinen = true))
+    )
 
     val hakemus = TestHakemus("", Nil, Map("tunniste" -> "puuppa"))
     val lasku = Laskentadomainkonvertteri.muodostaTotuusarvolasku(funktiokutsu)
@@ -1929,9 +1813,8 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   test("hae lukuarvo, epavalidi arvo") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAELUKUARVO,
-      valintaperustetunniste = List(ValintaperusteViite(
-        tunniste = "tunniste",
-        onPakollinen = true)))
+      valintaperustetunniste = List(ValintaperusteViite(tunniste = "tunniste", onPakollinen = true))
+    )
 
     val hakemus = TestHakemus("", Nil, Map("tunniste" -> "puuppa"))
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
@@ -1942,20 +1825,21 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   }
 
   test("hylkaa, syote true") {
-    val funktiokutsu = Funktiokutsu(
-      nimi = Funktionimi.HYLKAA,
-      funktioargumentit = List(totuusarvoTrue))
+    val funktiokutsu =
+      Funktiokutsu(nimi = Funktionimi.HYLKAA, funktioargumentit = List(totuusarvoTrue))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
     assertTulosTyhja(tulos)
-    assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.HYLKAA_FUNKTION_SUORITTAMA_HYLKAYS)
+    assertTilaHylatty(
+      tila,
+      HylattyMetatieto.Hylattymetatietotyyppi.HYLKAA_FUNKTION_SUORITTAMA_HYLKAYS
+    )
   }
 
   test("hylkaa, syote false") {
-    val funktiokutsu = Funktiokutsu(
-      nimi = Funktionimi.HYLKAA,
-      funktioargumentit = List(totuusarvoFalse))
+    val funktiokutsu =
+      Funktiokutsu(nimi = Funktionimi.HYLKAA, funktioargumentit = List(totuusarvoFalse))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -1964,9 +1848,8 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   }
 
   test("hylkaa, syote tyhja") {
-    val funktiokutsu = Funktiokutsu(
-      nimi = Funktionimi.HYLKAA,
-      funktioargumentit = List(haeTotuusarvo))
+    val funktiokutsu =
+      Funktiokutsu(nimi = Funktionimi.HYLKAA, funktioargumentit = List(haeTotuusarvo))
 
     val lasku1 = Laskentadomainkonvertteri.muodostaTotuusarvolasku(haeTotuusarvo)
     val (tulos1, tila1) = Laskin.laske(hakukohde, tyhjaHakemus, lasku1)
@@ -1985,7 +1868,9 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HYLKAA,
       funktioargumentit = List(totuusarvoTrue),
-      syoteparametrit = List(Syoteparametri(avain = "hylkaysperustekuvaus_FI", arvo = hylkaysperustekuvaus)))
+      syoteparametrit =
+        List(Syoteparametri(avain = "hylkaysperustekuvaus_FI", arvo = hylkaysperustekuvaus))
+    )
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, lasku)
@@ -2000,10 +1885,16 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
 
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAELUKUARVO,
-      valintaperustetunniste = List(ValintaperusteViite(false, tunniste, Valintaperustelahde.HAKUKOHTEEN_ARVO)))
+      valintaperustetunniste =
+        List(ValintaperusteViite(false, tunniste, Valintaperustelahde.HAKUKOHTEEN_ARVO))
+    )
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
-    val (tulos, tila) = Laskin.laske(new Hakukohde("hakukohdeOid", Map(tunniste -> "100.0").asJava), tyhjaHakemus, lasku)
+    val (tulos, tila) = Laskin.laske(
+      new Hakukohde("hakukohdeOid", Map(tunniste -> "100.0").asJava),
+      tyhjaHakemus,
+      lasku
+    )
     assert(tulos.get.equals(new BigDecimal("100.0")))
     assertTilaHyvaksyttavissa(tila)
   }
@@ -2013,10 +1904,16 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
 
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAELUKUARVO,
-      valintaperustetunniste = List(ValintaperusteViite(false, tunniste, Valintaperustelahde.HAKUKOHTEEN_ARVO)))
+      valintaperustetunniste =
+        List(ValintaperusteViite(false, tunniste, Valintaperustelahde.HAKUKOHTEEN_ARVO))
+    )
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
-    val (tulos, tila) = Laskin.laske(new Hakukohde("hakukohdeOid", Map("toinen tunniste" -> "100.0").asJava), tyhjaHakemus, lasku)
+    val (tulos, tila) = Laskin.laske(
+      new Hakukohde("hakukohdeOid", Map("toinen tunniste" -> "100.0").asJava),
+      tyhjaHakemus,
+      lasku
+    )
     assertTulosTyhja(tulos)
     assertTilaHyvaksyttavissa(tila)
   }
@@ -2027,25 +1924,32 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
       funktioargumentit = List(
         Funktiokutsu(
           nimi = Funktionimi.HAELUKUARVO,
-          valintaperustetunniste = List(ValintaperusteViite(
-            tunniste = "tunniste1",
-            onPakollinen = false,
-            lahde = Valintaperustelahde.HAETTAVA_ARVO)))),
+          valintaperustetunniste = List(
+            ValintaperusteViite(
+              tunniste = "tunniste1",
+              onPakollinen = false,
+              lahde = Valintaperustelahde.HAETTAVA_ARVO
+            )
+          )
+        )
+      ),
       syoteparametrit = List(
         Syoteparametri(avain = "kohdeskaalaMin", arvo = "-25.0"),
         Syoteparametri(avain = "kohdeskaalaMax", arvo = "50.0"),
-        Syoteparametri(avain = "kaytaLaskennallistaLahdeskaalaa", arvo = "true")))
+        Syoteparametri(avain = "kaytaLaskennallistaLahdeskaalaa", arvo = "true")
+      )
+    )
 
     val hakemukset = List(
       TestHakemus("hakemusOid1", List[String](), Map("tunniste1" -> "-1000.0")),
       TestHakemus("hakemusOid2", List[String](), Map("tunniste1" -> "-500.0")),
       TestHakemus("hakemusOid3", List[String](), Map("tunniste1" -> "0.0")),
-      TestHakemus("hakemusOid4", List[String](), Map("tunniste1" -> "500.0")))
+      TestHakemus("hakemusOid4", List[String](), Map("tunniste1" -> "500.0"))
+    )
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
-    val tulokset = hakemukset.map {
-      h =>
-        Laskin.suoritaValintalaskenta(hakukohde, h, hakemukset.asJavaCollection, lasku)
+    val tulokset = hakemukset.map { h =>
+      Laskin.suoritaValintalaskenta(hakukohde, h, hakemukset.asJavaCollection, lasku)
     }
 
     assert(tulokset.size == 4)
@@ -2068,27 +1972,34 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
       funktioargumentit = List(
         Funktiokutsu(
           nimi = Funktionimi.HAELUKUARVO,
-          valintaperustetunniste = List(ValintaperusteViite(
-            tunniste = "tunniste1",
-            onPakollinen = false,
-            lahde = Valintaperustelahde.HAETTAVA_ARVO)))),
+          valintaperustetunniste = List(
+            ValintaperusteViite(
+              tunniste = "tunniste1",
+              onPakollinen = false,
+              lahde = Valintaperustelahde.HAETTAVA_ARVO
+            )
+          )
+        )
+      ),
       syoteparametrit = List(
         Syoteparametri(avain = "kohdeskaalaMin", arvo = "-100.0"),
         Syoteparametri(avain = "kohdeskaalaMax", arvo = "100.0"),
         Syoteparametri(avain = "lahdeskaalaMin", arvo = "-1000.0"),
         Syoteparametri(avain = "lahdeskaalaMax", arvo = "1000.0"),
-        Syoteparametri(avain = "kaytaLaskennallistaLahdeskaalaa", arvo = "false")))
+        Syoteparametri(avain = "kaytaLaskennallistaLahdeskaalaa", arvo = "false")
+      )
+    )
 
     val hakemukset = List(
       TestHakemus("hakemusOid1", List[String](), Map("tunniste1" -> "-750.0")),
       TestHakemus("hakemusOid2", List[String](), Map("tunniste1" -> "-250.0")),
       TestHakemus("hakemusOid3", List[String](), Map("tunniste1" -> "250.0")),
-      TestHakemus("hakemusOid4", List[String](), Map("tunniste1" -> "750.0")))
+      TestHakemus("hakemusOid4", List[String](), Map("tunniste1" -> "750.0"))
+    )
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
-    val tulokset = hakemukset.map {
-      h =>
-        Laskin.suoritaValintalaskenta(hakukohde, h, hakemukset.asJavaCollection, lasku)
+    val tulokset = hakemukset.map { h =>
+      Laskin.suoritaValintalaskenta(hakukohde, h, hakemukset.asJavaCollection, lasku)
     }
 
     assert(tulokset.size == 4)
@@ -2111,31 +2022,26 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
       funktioargumentit = List(
         Funktiokutsu( // Painokerroin 1
           nimi = Funktionimi.LUKUARVO,
-          syoteparametrit = List(
-            Syoteparametri(
-              avain = "luku",
-              arvo = "2.0"))),
+          syoteparametrit = List(Syoteparametri(avain = "luku", arvo = "2.0"))
+        ),
         Funktiokutsu( // Painotettava 1
           nimi = Funktionimi.LUKUARVO,
-          syoteparametrit = List(
-            Syoteparametri(
-              avain = "luku",
-              arvo = "10.0"))),
+          syoteparametrit = List(Syoteparametri(avain = "luku", arvo = "10.0"))
+        ),
         Funktiokutsu( // Painokerroin 2
           nimi = Funktionimi.LUKUARVO,
-          syoteparametrit = List(
-            Syoteparametri(
-              avain = "luku",
-              arvo = "1.5"))),
+          syoteparametrit = List(Syoteparametri(avain = "luku", arvo = "1.5"))
+        ),
         Funktiokutsu( // Painotettava 2
           nimi = Funktionimi.LUKUARVO,
-          syoteparametrit = List(
-            Syoteparametri(
-              avain = "luku",
-              arvo = "30.0")))))
+          syoteparametrit = List(Syoteparametri(avain = "luku", arvo = "30.0"))
+        )
+      )
+    )
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
-    val tulos = Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, Collections.emptyList(), lasku)
+    val tulos =
+      Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, Collections.emptyList(), lasku)
     assert(tulos.getTulos.compareTo(new BigDecimal("18.5714")) == 0)
     assertTilaHyvaksyttavissa(tulos.getTila)
   }
@@ -2143,17 +2049,28 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
   test("hae hakukohteen valintaperuste, epasuora viittaus") {
     val funktiokutsu = Funktiokutsu(
       nimi = Funktionimi.HAELUKUARVO,
-      valintaperustetunniste = List(ValintaperusteViite(false, "hakukohteenTunniste", Valintaperustelahde.HAKUKOHTEEN_ARVO, true)))
+      valintaperustetunniste = List(
+        ValintaperusteViite(
+          false,
+          "hakukohteenTunniste",
+          Valintaperustelahde.HAKUKOHTEEN_ARVO,
+          true
+        )
+      )
+    )
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
-    val hakukohde = new Hakukohde("hakukohdeOid", Map("hakukohteenTunniste" -> "hakemuksenTunniste").asJava)
+    val hakukohde =
+      new Hakukohde("hakukohdeOid", Map("hakukohteenTunniste" -> "hakemuksenTunniste").asJava)
     val hakemus = new Hakemus(
       "oid",
       Map[java.lang.Integer, Hakutoive]().asJava,
       Map("hakemuksenTunniste" -> "100.0").asJava,
-      Map[String, java.util.List[java.util.Map[String, String]]]().asJava)
+      Map[String, java.util.List[java.util.Map[String, String]]]().asJava
+    )
 
-    val tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemus, Collections.singletonList(hakemus), lasku)
+    val tulos =
+      Laskin.suoritaValintalaskenta(hakukohde, hakemus, Collections.singletonList(hakemus), lasku)
     assert(tulos.getTulos.compareTo(new BigDecimal("100.0")) == 0)
     assertTilaHyvaksyttavissa(tulos.getTila)
   }
@@ -2166,7 +2083,10 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
           onPakollinen = false,
           tunniste = "tunniste1",
           lahde = Valintaperustelahde.HAETTAVA_ARVO,
-          epasuoraViittaus = false)))
+          epasuoraViittaus = false
+        )
+      )
+    )
 
   }
 
@@ -2176,38 +2096,33 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
       funktioargumentit = List(
         Funktiokutsu( // Painokerroin 1
           nimi = Funktionimi.LUKUARVO,
-          syoteparametrit = List(
-            Syoteparametri(
-              avain = "luku",
-              arvo = "2.0"))),
+          syoteparametrit = List(Syoteparametri(avain = "luku", arvo = "2.0"))
+        ),
         Funktiokutsu( // Painotettava 1
           nimi = Funktionimi.LUKUARVO,
-          syoteparametrit = List(
-            Syoteparametri(
-              avain = "luku",
-              arvo = "10.0")),
+          syoteparametrit = List(Syoteparametri(avain = "luku", arvo = "10.0")),
           tulosTunniste = "tunniste1",
           tallennaTulos = true,
-          tulosTekstiFi = "tulosteksti"),
+          tulosTekstiFi = "tulosteksti"
+        ),
         Funktiokutsu( // Painokerroin 2
           nimi = Funktionimi.LUKUARVO,
-          syoteparametrit = List(
-            Syoteparametri(
-              avain = "luku",
-              arvo = "1.5"))),
+          syoteparametrit = List(Syoteparametri(avain = "luku", arvo = "1.5"))
+        ),
         Funktiokutsu( // Painotettava 2
           nimi = Funktionimi.LUKUARVO,
-          syoteparametrit = List(
-            Syoteparametri(
-              avain = "luku",
-              arvo = "30.0")),
+          syoteparametrit = List(Syoteparametri(avain = "luku", arvo = "30.0")),
           tulosTunniste = "tunniste2",
-          tallennaTulos = true)),
+          tallennaTulos = true
+        )
+      ),
       tulosTunniste = "painotettu",
-      tallennaTulos = true)
+      tallennaTulos = true
+    )
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(funktiokutsu)
-    val tulos = Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, Collections.emptyList(), lasku)
+    val tulos =
+      Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, Collections.emptyList(), lasku)
 
     assert(tulos.getFunktioTulokset.asScala.contains("painotettu"))
     val painotettu = tulos.getFunktioTulokset.get("painotettu")
@@ -2229,17 +2144,20 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
             nimi = Funktionimi.TOTUUSARVO,
             tulosTunniste = "totuusarvoFalse",
             tallennaTulos = true,
-            syoteparametrit = List(
-              Syoteparametri("totuusarvo", "false"))),
+            syoteparametrit = List(Syoteparametri("totuusarvo", "false"))
+          ),
           Funktiokutsu(
             nimi = Funktionimi.TOTUUSARVO,
             tulosTunniste = "totuusarvoTrue",
             tallennaTulos = true,
-            syoteparametrit = List(
-              Syoteparametri("totuusarvo", "true")))))
+            syoteparametrit = List(Syoteparametri("totuusarvo", "true"))
+          )
+        )
+      )
 
     val laskut = Laskentadomainkonvertteri.muodostaTotuusarvolasku(lista)
-    val tulokset = Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, Collections.emptyList(), laskut)
+    val tulokset =
+      Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, Collections.emptyList(), laskut)
 
     assert(tulokset.getFunktioTulokset.asScala.contains("totuusarvoTrue"))
     val totuusarvoTrue = tulokset.getFunktioTulokset.get("totuusarvoTrue")

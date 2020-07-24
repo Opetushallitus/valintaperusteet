@@ -58,126 +58,156 @@ import scala.jdk.CollectionConverters._
 import scala.math.BigDecimal._
 
 /**
- *
- * User: bleed
- * Date: 1/12/13
- * Time: 6:48 PM
- */
+  * User: bleed
+  * Date: 1/12/13
+  * Time: 6:48 PM
+  */
 class LaskentaTest extends AnyFunSuite {
 
   val tekstiRyhma = new TekstiRyhma()
 
   val hakukohde = new Hakukohde("123", new util.HashMap[String, String])
 
-  val mustacheMap = new util.HashMap[String, String](){{
-    put("minimi", "10")
-    put("maksimi", "20")
-    put("paluuArvo", "2")
-    put("palautaHaettuArvo", "false")
-    put("yksi", "1")
-    put("kymmenen", "10")
-    put("pakollinen", "false")
-    put("puuppa", "puuppa")
-    put("B22_EN_painokerroin", "2")
-    put("B22_oppiaine", "EN")
-    put("B22_arvosana", "8")
-    put("aA_-", "EN")
-    put("YO_TILA", "false")
-  }}
+  val mustacheMap = new util.HashMap[String, String]() {
+    {
+      put("minimi", "10")
+      put("maksimi", "20")
+      put("paluuArvo", "2")
+      put("palautaHaettuArvo", "false")
+      put("yksi", "1")
+      put("kymmenen", "10")
+      put("pakollinen", "false")
+      put("puuppa", "puuppa")
+      put("B22_EN_painokerroin", "2")
+      put("B22_oppiaine", "EN")
+      put("B22_arvosana", "8")
+      put("aA_-", "EN")
+      put("YO_TILA", "false")
+    }
+  }
 
-  val mustacheMapSA: util.List[util.Map[String,String]] = util.Arrays.asList(
-    new util.HashMap[String, String](){{
-      put("ARVO", "A")
-      put("SUORITUSVUOSI", "2012")
-      put("SUORITUSLUKUKAUSI", "1")
-      put("PISTEET", "15")
-    }},
-    new util.HashMap[String, String](){{
-      put("SUORITUSVUOSI", "2012")
-      put("SUORITUSLUKUKAUSI", "1")
-      put("PISTEET", "16")
-    }},
-    new util.HashMap[String, String](){{
-      put("ARVO", "M")
-      put("SUORITUSVUOSI", "2011")
-      put("SUORITUSLUKUKAUSI", "2")
-    }},
-    new util.HashMap[String, String](){{
+  val mustacheMapSA: util.List[util.Map[String, String]] = util.Arrays.asList(
+    new util.HashMap[String, String]() {
+      {
+        put("ARVO", "A")
+        put("SUORITUSVUOSI", "2012")
+        put("SUORITUSLUKUKAUSI", "1")
+        put("PISTEET", "15")
+      }
+    },
+    new util.HashMap[String, String]() {
+      {
+        put("SUORITUSVUOSI", "2012")
+        put("SUORITUSLUKUKAUSI", "1")
+        put("PISTEET", "16")
+      }
+    },
+    new util.HashMap[String, String]() {
+      {
+        put("ARVO", "M")
+        put("SUORITUSVUOSI", "2011")
+        put("SUORITUSLUKUKAUSI", "2")
+      }
+    },
+    new util.HashMap[String, String]() {
+      {
+        put("ARVO", "L")
+        put("PISTEET", "22")
+        put("SUORITUSVUOSI", "1999")
+        put("SUORITUSLUKUKAUSI", "1")
+      }
+    }
+  )
+
+  val mustacheMapEN: util.Map[String, String] = new util.HashMap[String, String]() {
+    {
       put("ARVO", "L")
-      put("PISTEET", "22")
-      put("SUORITUSVUOSI", "1999")
-      put("SUORITUSLUKUKAUSI", "1")
-    }}
-  )
-
-  val mustacheMapEN: util.Map[String,String] = new util.HashMap[String, String](){{
-    put("ARVO", "L")
-    put("PISTEET", "29")
-    put("SUORITUSVUOSI", "2012")
-    put("SUORITUSLUKUKAUSI", "1")
-  }}
-
-  val mustacheMapTT: util.Map[String,String] = new util.HashMap[String, String](){{
-    put("ARVO", "L")
-    put("PISTEET", "29")
-    put("SUORITUSVUOSI", "2012")
-    put("SUORITUSLUKUKAUSI", "2")
-  }}
-
-  val mustacheMapPS = new util.HashMap[String, String](){{
-    put("ARVO", "L")
-  }}
-
-  val mustacheMapREAALI = new util.HashMap[String, String](){{
-    put("ARVO", "X")
-    put("SUORITUSVUOSI", "jeppis")
-  }}
-
-  val mustacheMapHI = new util.HashMap[String, String](){{
-    put("ARVO", "G")
-    put("SUORITUSVUOSI", "2011")
-    put("SUORITUSLUKUKAUSI", "2")
-  }}
-
-  val mustacheMap01: util.List[util.Map[String,String]] = util.Arrays.asList(
-    new util.HashMap[String, String](){{
-      put("PISTEET", "13")
-      put("SUORITUSVUOSI", "2012")
-      put("SUORITUSLUKUKAUSI", "2")
-    }},
-    new util.HashMap[String, String](){{
-      put("SUORITUSVUOSI", "2012")
-      put("SUORITUSLUKUKAUSI", "2")
-    }},
-    new util.HashMap[String, String](){{
-      put("PISTEET", "13")
+      put("PISTEET", "29")
       put("SUORITUSVUOSI", "2012")
       put("SUORITUSLUKUKAUSI", "1")
-    }},
-    new util.HashMap[String, String](){{
-      put("PISTEET", "15")
+    }
+  }
+
+  val mustacheMapTT: util.Map[String, String] = new util.HashMap[String, String]() {
+    {
+      put("ARVO", "L")
+      put("PISTEET", "29")
+      put("SUORITUSVUOSI", "2012")
+      put("SUORITUSLUKUKAUSI", "2")
+    }
+  }
+
+  val mustacheMapPS = new util.HashMap[String, String]() {
+    {
+      put("ARVO", "L")
+    }
+  }
+
+  val mustacheMapREAALI = new util.HashMap[String, String]() {
+    {
+      put("ARVO", "X")
+      put("SUORITUSVUOSI", "jeppis")
+    }
+  }
+
+  val mustacheMapHI = new util.HashMap[String, String]() {
+    {
+      put("ARVO", "G")
       put("SUORITUSVUOSI", "2011")
       put("SUORITUSLUKUKAUSI", "2")
-    }},
-    new util.HashMap[String, String](){{
-      put("PISTEET", "22")
-      put("SUORITUSVUOSI", "2005")
-      put("SUORITUSLUKUKAUSI", "2")
-    }}
+    }
+  }
+
+  val mustacheMap01: util.List[util.Map[String, String]] = util.Arrays.asList(
+    new util.HashMap[String, String]() {
+      {
+        put("PISTEET", "13")
+        put("SUORITUSVUOSI", "2012")
+        put("SUORITUSLUKUKAUSI", "2")
+      }
+    },
+    new util.HashMap[String, String]() {
+      {
+        put("SUORITUSVUOSI", "2012")
+        put("SUORITUSLUKUKAUSI", "2")
+      }
+    },
+    new util.HashMap[String, String]() {
+      {
+        put("PISTEET", "13")
+        put("SUORITUSVUOSI", "2012")
+        put("SUORITUSLUKUKAUSI", "1")
+      }
+    },
+    new util.HashMap[String, String]() {
+      {
+        put("PISTEET", "15")
+        put("SUORITUSVUOSI", "2011")
+        put("SUORITUSLUKUKAUSI", "2")
+      }
+    },
+    new util.HashMap[String, String]() {
+      {
+        put("PISTEET", "22")
+        put("SUORITUSVUOSI", "2005")
+        put("SUORITUSLUKUKAUSI", "2")
+      }
+    }
   )
 
-  val suorituksetMustacheMap = new util.HashMap[String, util.List[util.Map[String, String]]]{{
-    put("SA", mustacheMapSA)
-    put("PS", util.Arrays.asList(mustacheMapPS))
-    put("REAALI", util.Arrays.asList(mustacheMapREAALI))
-    put("HI", util.Arrays.asList(mustacheMapHI))
-    put("01", mustacheMap01)
-    put("EN", util.Arrays.asList(mustacheMapEN))
-    put("TT", util.Arrays.asList(mustacheMapTT))
-  }}
+  val suorituksetMustacheMap = new util.HashMap[String, util.List[util.Map[String, String]]] {
+    {
+      put("SA", mustacheMapSA)
+      put("PS", util.Arrays.asList(mustacheMapPS))
+      put("REAALI", util.Arrays.asList(mustacheMapREAALI))
+      put("HI", util.Arrays.asList(mustacheMapHI))
+      put("01", mustacheMap01)
+      put("EN", util.Arrays.asList(mustacheMapEN))
+      put("TT", util.Arrays.asList(mustacheMapTT))
+    }
+  }
 
-
-    val hakukohdeMustache = new Hakukohde("1234", mustacheMap)
+  val hakukohdeMustache = new Hakukohde("1234", mustacheMap)
 
   val tyhjaHakemus = TestHakemus("", Nil, Map[String, String]())
 
@@ -189,13 +219,22 @@ class LaskentaTest extends AnyFunSuite {
   }
 
   test("Summa function sums two function values") {
-    val (tulos, _) = Laskin.laske(hakukohde, tyhjaHakemus, Summa(Lukuarvo(BigDecimal("5.0")), Lukuarvo(BigDecimal("6.0"))))
+    val (tulos, _) = Laskin.laske(
+      hakukohde,
+      tyhjaHakemus,
+      Summa(Lukuarvo(BigDecimal("5.0")), Lukuarvo(BigDecimal("6.0")))
+    )
     assert(BigDecimal(tulos.get) == BigDecimal("11.0"))
   }
 
   test("KonvertoiLukuarvolukuarvoksi") {
-    val arvokonvertteri = Arvokonvertteri[BigDecimal, BigDecimal](List(Arvokonversio(1, 10, false,tekstiRyhma),
-      Arvokonversio(BigDecimal("2.0"), BigDecimal("20.0"), false, tekstiRyhma), Arvokonversio(3, 30, false,tekstiRyhma)))
+    val arvokonvertteri = Arvokonvertteri[BigDecimal, BigDecimal](
+      List(
+        Arvokonversio(1, 10, false, tekstiRyhma),
+        Arvokonversio(BigDecimal("2.0"), BigDecimal("20.0"), false, tekstiRyhma),
+        Arvokonversio(3, 30, false, tekstiRyhma)
+      )
+    )
     val konvertoiLukuarvoLukuarvoksi = KonvertoiLukuarvo(arvokonvertteri, Lukuarvo(2))
 
     val (tulos, _) = Laskin.laske(hakukohde, tyhjaHakemus, konvertoiLukuarvoLukuarvoksi)
@@ -203,10 +242,18 @@ class LaskentaTest extends AnyFunSuite {
   }
 
   test("KonvertoiLukuarvolukuarvoksi Mustache-notaatio") {
-    val arvokonvertteri = Arvokonvertteri[BigDecimal, BigDecimal](List(
-      ArvokonversioMerkkijonoilla[BigDecimal, BigDecimal]("{{hakukohde.yksi}}", BigDecimal("10.0"), "{{hakemus.pakollinen}}",tekstiRyhma),
-      Arvokonversio(BigDecimal("2.0"), BigDecimal("20.0"), false,tekstiRyhma),
-      Arvokonversio(3, 30, false,tekstiRyhma)))
+    val arvokonvertteri = Arvokonvertteri[BigDecimal, BigDecimal](
+      List(
+        ArvokonversioMerkkijonoilla[BigDecimal, BigDecimal](
+          "{{hakukohde.yksi}}",
+          BigDecimal("10.0"),
+          "{{hakemus.pakollinen}}",
+          tekstiRyhma
+        ),
+        Arvokonversio(BigDecimal("2.0"), BigDecimal("20.0"), false, tekstiRyhma),
+        Arvokonversio(3, 30, false, tekstiRyhma)
+      )
+    )
     val konvertoiLukuarvoLukuarvoksi = KonvertoiLukuarvo(arvokonvertteri, Lukuarvo(2))
 
     val (tulos, _) = Laskin.laske(hakukohdeMustache, hakemusMustache, konvertoiLukuarvoLukuarvoksi)
@@ -214,27 +261,102 @@ class LaskentaTest extends AnyFunSuite {
   }
 
   test("KonvertoiLukuarvovaliLukuarvoksi") {
-    val konv = Lukuarvovalikonvertteri(List(Lukuarvovalikonversio(BigDecimal("1"), BigDecimal("10"), BigDecimal("1"), false, false,tekstiRyhma),
-      Lukuarvovalikonversio(BigDecimal("10"), BigDecimal("20"), BigDecimal("2"), false,false,tekstiRyhma),
-      Lukuarvovalikonversio(BigDecimal("20"), BigDecimal("30"), BigDecimal("3"), false,false,tekstiRyhma)))
+    val konv = Lukuarvovalikonvertteri(
+      List(
+        Lukuarvovalikonversio(
+          BigDecimal("1"),
+          BigDecimal("10"),
+          BigDecimal("1"),
+          false,
+          false,
+          tekstiRyhma
+        ),
+        Lukuarvovalikonversio(
+          BigDecimal("10"),
+          BigDecimal("20"),
+          BigDecimal("2"),
+          false,
+          false,
+          tekstiRyhma
+        ),
+        Lukuarvovalikonversio(
+          BigDecimal("20"),
+          BigDecimal("30"),
+          BigDecimal("3"),
+          false,
+          false,
+          tekstiRyhma
+        )
+      )
+    )
     val l = KonvertoiLukuarvo(konv, Lukuarvo(15))
     val (tulos, _) = Laskin.laske(hakukohde, tyhjaHakemus, l)
     assert(BigDecimal(tulos.get) == BigDecimal(2.0))
   }
 
   test("KonvertoiLukuarvovaliLukuarvoksi Mustache-notaatio") {
-    val konv = Lukuarvovalikonvertteri(List(LukuarvovalikonversioMerkkijonoilla("1", "10", "1", false.toString, false.toString, tekstiRyhma),
-      LukuarvovalikonversioMerkkijonoilla("{{hakukohde.minimi}}", "{{hakukohde.maksimi}}", "{{hakukohde.paluuArvo}}", "{{hakukohde.palautaHaettuArvo}}", false.toString, tekstiRyhma),
-      Lukuarvovalikonversio(BigDecimal("20"), BigDecimal("30"), BigDecimal("3"), false, false, tekstiRyhma)))
+    val konv = Lukuarvovalikonvertteri(
+      List(
+        LukuarvovalikonversioMerkkijonoilla(
+          "1",
+          "10",
+          "1",
+          false.toString,
+          false.toString,
+          tekstiRyhma
+        ),
+        LukuarvovalikonversioMerkkijonoilla(
+          "{{hakukohde.minimi}}",
+          "{{hakukohde.maksimi}}",
+          "{{hakukohde.paluuArvo}}",
+          "{{hakukohde.palautaHaettuArvo}}",
+          false.toString,
+          tekstiRyhma
+        ),
+        Lukuarvovalikonversio(
+          BigDecimal("20"),
+          BigDecimal("30"),
+          BigDecimal("3"),
+          false,
+          false,
+          tekstiRyhma
+        )
+      )
+    )
     val l = KonvertoiLukuarvo(konv, Lukuarvo(15))
     val (tulos, _) = Laskin.laske(hakukohdeMustache, tyhjaHakemus, l)
     assert(BigDecimal(tulos.get) == BigDecimal(2.0))
   }
 
   test("KonvertoiLukuarvovaliLukuarvoksi molemmat tavat") {
-    val konv = Lukuarvovalikonvertteri(List(LukuarvovalikonversioMerkkijonoilla("1", "10", "1", false.toString, false.toString, tekstiRyhma),
-      LukuarvovalikonversioMerkkijonoilla("{{hakukohde.minimi}}", "{{hakukohde.maksimi}}", "{{hakukohde.paluuArvo}}", "{{hakukohde.palautaHaettuArvo}}", false.toString, tekstiRyhma),
-      LukuarvovalikonversioMerkkijonoilla("20", "30", "3", false.toString, false.toString, tekstiRyhma)))
+    val konv = Lukuarvovalikonvertteri(
+      List(
+        LukuarvovalikonversioMerkkijonoilla(
+          "1",
+          "10",
+          "1",
+          false.toString,
+          false.toString,
+          tekstiRyhma
+        ),
+        LukuarvovalikonversioMerkkijonoilla(
+          "{{hakukohde.minimi}}",
+          "{{hakukohde.maksimi}}",
+          "{{hakukohde.paluuArvo}}",
+          "{{hakukohde.palautaHaettuArvo}}",
+          false.toString,
+          tekstiRyhma
+        ),
+        LukuarvovalikonversioMerkkijonoilla(
+          "20",
+          "30",
+          "3",
+          false.toString,
+          false.toString,
+          tekstiRyhma
+        )
+      )
+    )
     val l = KonvertoiLukuarvo(konv, Lukuarvo(15))
     val (tulos, _) = Laskin.laske(hakukohdeMustache, tyhjaHakemus, l)
     assert(BigDecimal(tulos.get) == BigDecimal(2.0))
@@ -253,7 +375,11 @@ class LaskentaTest extends AnyFunSuite {
   }
 
   test("KeskiarvoNParasta n > kuin arvojen lukumäärä") {
-    val luvut = List(Lukuarvo(4.0), Lukuarvo(6.0), HaeLukuarvo(None, None, HakemuksenValintaperuste("puuppa", false)))
+    val luvut = List(
+      Lukuarvo(4.0),
+      Lukuarvo(6.0),
+      HaeLukuarvo(None, None, HakemuksenValintaperuste("puuppa", false))
+    )
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, KeskiarvoNParasta(3, luvut: _*))
     assert(BigDecimal(tulos.get) == BigDecimal(5.0))
     //assertTulosTyhja(tulos)
@@ -266,7 +392,11 @@ class LaskentaTest extends AnyFunSuite {
   }
 
   test("NMinimi ei riittävästi arvoja") {
-    val luvut = List(HaeLukuarvo(None, None, HakemuksenValintaperuste("yksi", false)), HaeLukuarvo(None, None, HakemuksenValintaperuste("kaksi", false)), HaeLukuarvo(None, None, HakemuksenValintaperuste("kymmenen", false)))
+    val luvut = List(
+      HaeLukuarvo(None, None, HakemuksenValintaperuste("yksi", false)),
+      HaeLukuarvo(None, None, HakemuksenValintaperuste("kaksi", false)),
+      HaeLukuarvo(None, None, HakemuksenValintaperuste("kymmenen", false))
+    )
     val (tulos, _) = Laskin.laske(hakukohde, hakemusMustache, NMinimi(3, luvut: _*))
     assertTulosTyhja(tulos)
   }
@@ -278,7 +408,11 @@ class LaskentaTest extends AnyFunSuite {
   }
 
   test("NMaksimi ei riittävästi arvoja") {
-    val luvut = List(HaeLukuarvo(None, None, HakemuksenValintaperuste("yksi", false)), HaeLukuarvo(None, None, HakemuksenValintaperuste("kaksi", false)), HaeLukuarvo(None, None, HakemuksenValintaperuste("kymmenen", false)))
+    val luvut = List(
+      HaeLukuarvo(None, None, HakemuksenValintaperuste("yksi", false)),
+      HaeLukuarvo(None, None, HakemuksenValintaperuste("kaksi", false)),
+      HaeLukuarvo(None, None, HakemuksenValintaperuste("kymmenen", false))
+    )
     val (tulos, _) = Laskin.laske(hakukohde, hakemusMustache, NMaksimi(3, luvut: _*))
     assertTulosTyhja(tulos)
   }
@@ -311,7 +445,11 @@ class LaskentaTest extends AnyFunSuite {
 
   test("Laiska Jos") {
     val toimivaHaara = Lukuarvo(BigDecimal(100))
-    val kaatuvaHaara = HaeLukuarvo(None, None, HakemuksenValintaperuste("jotain minkä hakeminen null-hakemukselta kaatuisi", false))
+    val kaatuvaHaara = HaeLukuarvo(
+      None,
+      None,
+      HakemuksenValintaperuste("jotain minkä hakeminen null-hakemukselta kaatuisi", false)
+    )
 
     val tosiJos = Jos(laskeHaaratLaiskasti = true, Totuusarvo(true), toimivaHaara, kaatuvaHaara)
     val epatosiJos = Jos(laskeHaaratLaiskasti = true, Totuusarvo(false), kaatuvaHaara, toimivaHaara)
@@ -322,10 +460,15 @@ class LaskentaTest extends AnyFunSuite {
 
   test("Ahne Jos") {
     val toimivaHaara = Lukuarvo(BigDecimal(100))
-    val kaatuvaHaara = HaeLukuarvo(None, None, HakemuksenValintaperuste("jotain minkä hakeminen null-hakemukselta kaatuisi", false))
+    val kaatuvaHaara = HaeLukuarvo(
+      None,
+      None,
+      HakemuksenValintaperuste("jotain minkä hakeminen null-hakemukselta kaatuisi", false)
+    )
 
     val tosiJos = Jos(laskeHaaratLaiskasti = false, Totuusarvo(true), toimivaHaara, kaatuvaHaara)
-    val epatosiJos = Jos(laskeHaaratLaiskasti = false, Totuusarvo(false), kaatuvaHaara, toimivaHaara)
+    val epatosiJos =
+      Jos(laskeHaaratLaiskasti = false, Totuusarvo(false), kaatuvaHaara, toimivaHaara)
 
     assertThrows[NullPointerException](Laskin.laske(hakukohde, null, tosiJos))
     assertThrows[NullPointerException](Laskin.laske(hakukohde, null, epatosiJos))
@@ -344,41 +487,68 @@ class LaskentaTest extends AnyFunSuite {
   test("HaeLukuarvo") {
     val hakemus = TestHakemus("", Nil, Map("paattotodistus_ka" -> "8.7"))
 
-    val (tulos, _) = Laskin.laske(hakukohde, hakemus,
-      HaeLukuarvo(None, None, HakemuksenValintaperuste("paattotodistus_ka", false)))
+    val (tulos, _) = Laskin.laske(
+      hakukohde,
+      hakemus,
+      HaeLukuarvo(None, None, HakemuksenValintaperuste("paattotodistus_ka", false))
+    )
     assert(BigDecimal(tulos.get) == BigDecimal("8.7"))
   }
 
   test("HaeLukuarvoEhdolla") {
     val hakemus = hakemusMustache
 
-    val (tulos, _) = Laskin.laske(hakukohde, hakemus,
-      HaeLukuarvoEhdolla(None, None, HakemuksenValintaperuste("B22_arvosana", false),HakemuksenValintaperuste("{{B22_oppiaine.EN}}", false)))
+    val (tulos, _) = Laskin.laske(
+      hakukohde,
+      hakemus,
+      HaeLukuarvoEhdolla(
+        None,
+        None,
+        HakemuksenValintaperuste("B22_arvosana", false),
+        HakemuksenValintaperuste("{{B22_oppiaine.EN}}", false)
+      )
+    )
     assert(BigDecimal(tulos.get) == BigDecimal("8"))
   }
 
   test("HaeLukuarvoEhdolla - ehto ei täyty") {
     val hakemus = hakemusMustache
 
-    val (tulos, _) = Laskin.laske(hakukohde, hakemus,
-      HaeLukuarvoEhdolla(None, None, HakemuksenValintaperuste("B22_arvosana", false),HakemuksenValintaperuste("{{B22_oppiaine.DE}}", false)))
+    val (tulos, _) = Laskin.laske(
+      hakukohde,
+      hakemus,
+      HaeLukuarvoEhdolla(
+        None,
+        None,
+        HakemuksenValintaperuste("B22_arvosana", false),
+        HakemuksenValintaperuste("{{B22_oppiaine.DE}}", false)
+      )
+    )
     assert(tulos.isEmpty)
   }
 
   test("HaeTotuusarvo") {
     val hakemus = TestHakemus("", Nil, Map("onYlioppilas" -> "true"))
 
-    val (tulos, _) = Laskin.laske(hakukohde, hakemus,
-      HaeTotuusarvo(None, None, HakemuksenValintaperuste("onYlioppilas", false)))
+    val (tulos, _) = Laskin.laske(
+      hakukohde,
+      hakemus,
+      HaeTotuusarvo(None, None, HakemuksenValintaperuste("onYlioppilas", false))
+    )
     assert(tulos.get)
   }
 
   test("HaeMerkkijonoJaKonvertoiLukuarvoksi") {
     val hakemus = TestHakemus("", Nil, Map("AI_yo" -> "L"))
 
-    val konv = Arvokonvertteri[String, BigDecimal](List(Arvokonversio("puuppa", BigDecimal("20.0"), false,tekstiRyhma),
-      Arvokonversio("L", BigDecimal(10.0), false,tekstiRyhma)))
-    val f = HaeMerkkijonoJaKonvertoiLukuarvoksi(konv, None, HakemuksenValintaperuste("AI_yo", false))
+    val konv = Arvokonvertteri[String, BigDecimal](
+      List(
+        Arvokonversio("puuppa", BigDecimal("20.0"), false, tekstiRyhma),
+        Arvokonversio("L", BigDecimal(10.0), false, tekstiRyhma)
+      )
+    )
+    val f =
+      HaeMerkkijonoJaKonvertoiLukuarvoksi(konv, None, HakemuksenValintaperuste("AI_yo", false))
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, f)
     assert(BigDecimal(tulos.get) == BigDecimal("10.0"))
   }
@@ -386,9 +556,19 @@ class LaskentaTest extends AnyFunSuite {
   test("HaeMerkkijonoJaKonvertoiLukuarvoksi Mustache-notaatio") {
     val hakemus = TestHakemus("", Nil, Map("AI_yo" -> "L", "totuus-arvo" -> "false"))
 
-    val konv = Arvokonvertteri[String, BigDecimal](List(ArvokonversioMerkkijonoilla("{{hakukohde.puuppa}}", BigDecimal("20.0"), "{{hakemus.totuus-arvo}}",tekstiRyhma),
-      ArvokonversioMerkkijonoilla("{{hakemus.AI_yo}}", BigDecimal(10.0), "false",tekstiRyhma)))
-    val f = HaeMerkkijonoJaKonvertoiLukuarvoksi(konv, None, HakemuksenValintaperuste("AI_yo", false))
+    val konv = Arvokonvertteri[String, BigDecimal](
+      List(
+        ArvokonversioMerkkijonoilla(
+          "{{hakukohde.puuppa}}",
+          BigDecimal("20.0"),
+          "{{hakemus.totuus-arvo}}",
+          tekstiRyhma
+        ),
+        ArvokonversioMerkkijonoilla("{{hakemus.AI_yo}}", BigDecimal(10.0), "false", tekstiRyhma)
+      )
+    )
+    val f =
+      HaeMerkkijonoJaKonvertoiLukuarvoksi(konv, None, HakemuksenValintaperuste("AI_yo", false))
     val (tulos, tila) = Laskin.laske(hakukohdeMustache, hakemus, f)
     assert(BigDecimal(tulos.get) == BigDecimal("10.0"))
   }
@@ -396,11 +576,21 @@ class LaskentaTest extends AnyFunSuite {
   test("HaeTotuusarvoJaKonvertoiLukuarvoksi") {
     val hakemus = TestHakemus("", Nil, Map("kymppiluokka" -> "true", "ysiluokka" -> "jeppis"))
 
-    val konv = Arvokonvertteri[Boolean, BigDecimal](List(Arvokonversio(true, BigDecimal("1.0"), false ,tekstiRyhma),
-      Arvokonversio(false, BigDecimal(0.0), false, tekstiRyhma)))
-    val f = HaeTotuusarvoJaKonvertoiLukuarvoksi(konv, None, HakemuksenValintaperuste("kymppiluokka", false))
-    val f2 = HaeTotuusarvoJaKonvertoiLukuarvoksi(konv, None, HakemuksenValintaperuste("ysiluokka", false))
-    val f3 = HaeTotuusarvoJaKonvertoiLukuarvoksi(konv, None, HakemuksenValintaperuste("jepa", false))
+    val konv = Arvokonvertteri[Boolean, BigDecimal](
+      List(
+        Arvokonversio(true, BigDecimal("1.0"), false, tekstiRyhma),
+        Arvokonversio(false, BigDecimal(0.0), false, tekstiRyhma)
+      )
+    )
+    val f = HaeTotuusarvoJaKonvertoiLukuarvoksi(
+      konv,
+      None,
+      HakemuksenValintaperuste("kymppiluokka", false)
+    )
+    val f2 =
+      HaeTotuusarvoJaKonvertoiLukuarvoksi(konv, None, HakemuksenValintaperuste("ysiluokka", false))
+    val f3 =
+      HaeTotuusarvoJaKonvertoiLukuarvoksi(konv, None, HakemuksenValintaperuste("jepa", false))
 
     val (tulos, tila) = Laskin.laske(hakukohde, hakemus, f)
     assert(BigDecimal(tulos.get) == BigDecimal("1.0"))
@@ -417,27 +607,35 @@ class LaskentaTest extends AnyFunSuite {
 
   test("Demografia") {
     val hakemukset = List(
-      TestHakemus("hakemusoid1",
+      TestHakemus(
+        "hakemusoid1",
         List("hakutoiveoid1", "hakutoiveoid2", "hakutoiveoid3"),
-        Map("SUKUpuoli" -> "mies")),
-      TestHakemus("hakemusoid2",
+        Map("SUKUpuoli" -> "mies")
+      ),
+      TestHakemus(
+        "hakemusoid2",
         List("hakutoiveoid1", "hakutoiveoid2", "hakutoiveoid3"),
-        Map("SUKUPUOLI" -> "mies")),
-      TestHakemus("hakemusoid3",
+        Map("SUKUPUOLI" -> "mies")
+      ),
+      TestHakemus(
+        "hakemusoid3",
         List("hakutoiveoid1", "hakutoiveoid2", "hakutoiveoid3"),
-        Map("Sukupuoli" -> "mies")),
-      TestHakemus("hakemusoid4",
+        Map("Sukupuoli" -> "mies")
+      ),
+      TestHakemus(
+        "hakemusoid4",
         List("hakutoiveoid1", "hakutoiveoid2", "hakutoiveoid3"),
-        Map("sukupuoli" -> "nainen")),
-      TestHakemus("hakemusoid5",
-        List("hakutoiveoid1", "hakutoiveoid2", "hakutoiveoid3"),
-        Map()))
+        Map("sukupuoli" -> "nainen")
+      ),
+      TestHakemus("hakemusoid5", List("hakutoiveoid1", "hakutoiveoid2", "hakutoiveoid3"), Map())
+    )
 
     val hakukohde = new Hakukohde("hakutoiveoid1", new util.HashMap[String, String])
 
-    val funktio = Demografia("funktioid1", "","","","", false, "sukupuoli", BigDecimal("33.0"))
+    val funktio = Demografia("funktioid1", "", "", "", "", false, "sukupuoli", BigDecimal("33.0"))
 
-    val tulokset = hakemukset.map(h => Laskin.suoritaValintalaskenta(hakukohde, h, hakemukset.asJava, funktio))
+    val tulokset =
+      hakemukset.map(h => Laskin.suoritaValintalaskenta(hakukohde, h, hakemukset.asJava, funktio))
 
     assert(!tulokset(0).getTulos)
     assert(!tulokset(1).getTulos)
@@ -459,21 +657,27 @@ class LaskentaTest extends AnyFunSuite {
               palautaHaettuArvo = false.toString,
               paluuarvo = "1.0",
               hylkaysperuste = "false",
-              kuvaukset = tekstiRyhma),
+              kuvaukset = tekstiRyhma
+            ),
             LukuarvovalikonversioMerkkijonoilla(
               min = "5.0",
               max = "8.0",
               palautaHaettuArvo = false.toString,
               paluuarvo = "2.0",
               hylkaysperuste = "false",
-              kuvaukset = tekstiRyhma),
+              kuvaukset = tekstiRyhma
+            ),
             LukuarvovalikonversioMerkkijonoilla(
               min = "8.0",
               max = "10.0",
               palautaHaettuArvo = false.toString,
               paluuarvo = "3.0",
               hylkaysperuste = "false",
-              kuvaukset = tekstiRyhma))))
+              kuvaukset = tekstiRyhma
+            )
+          )
+        )
+      )
     }
 
     val konvertoiNolla = luoFunktio(Lukuarvo(BigDecimal("0.0")))
@@ -503,21 +707,27 @@ class LaskentaTest extends AnyFunSuite {
             palautaHaettuArvo = false.toString,
             paluuarvo = "1.0",
             hylkaysperuste = "false",
-            kuvaukset = tekstiRyhma),
+            kuvaukset = tekstiRyhma
+          ),
           LukuarvovalikonversioMerkkijonoilla(
             min = "5.0",
             max = "8.0",
             palautaHaettuArvo = false.toString,
             paluuarvo = "2.0",
             hylkaysperuste = "false",
-            kuvaukset = tekstiRyhma),
+            kuvaukset = tekstiRyhma
+          ),
           LukuarvovalikonversioMerkkijonoilla(
             min = "8.0",
             max = "10.0",
             palautaHaettuArvo = false.toString,
             paluuarvo = "3.0",
             hylkaysperuste = "false",
-            kuvaukset = tekstiRyhma))))
+            kuvaukset = tekstiRyhma
+          )
+        )
+      )
+    )
 
     val (tulos, tila) = Laskin.laske(hakukohde, tyhjaHakemus, f)
     assertTulosTyhja(tulos)
@@ -527,51 +737,130 @@ class LaskentaTest extends AnyFunSuite {
   test("Syotettava valintaperuste, osallistumistieto puuttuu") {
     val hakemus = TestHakemus("", Nil, Map("valintakoe" -> "8.7"))
 
-    val (tulos, tila) = Laskin.laske(hakukohde, hakemus,
-      HaeLukuarvo(None, None, SyotettavaValintaperuste("valintakoe", true, "valintakoe-OSALLISTUMINEN", "", new TekstiRyhma)))
+    val (tulos, tila) = Laskin.laske(
+      hakukohde,
+      hakemus,
+      HaeLukuarvo(
+        None,
+        None,
+        SyotettavaValintaperuste(
+          "valintakoe",
+          true,
+          "valintakoe-OSALLISTUMINEN",
+          "",
+          new TekstiRyhma
+        )
+      )
+    )
 
     assertTulosTyhja(tulos)
     assertTilaVirhe(tila, VirheMetatietotyyppi.SYOTETTAVA_ARVO_MERKITSEMATTA)
   }
 
   test("Syotettava valintaperuste, osallistumistieto EI_OSALLISTUNUT") {
-    val hakemus = TestHakemus("", Nil, Map("valintakoe" -> "8.7",
-      "valintakoe-OSALLISTUMINEN" -> Osallistuminen.EI_OSALLISTUNUT.name))
+    val hakemus = TestHakemus(
+      "",
+      Nil,
+      Map("valintakoe" -> "8.7", "valintakoe-OSALLISTUMINEN" -> Osallistuminen.EI_OSALLISTUNUT.name)
+    )
 
-    val (tulos, tila) = Laskin.laske(hakukohde, hakemus,
-      HaeLukuarvo(None, None, SyotettavaValintaperuste("valintakoe", true, "valintakoe-OSALLISTUMINEN", "", new TekstiRyhma)))
+    val (tulos, tila) = Laskin.laske(
+      hakukohde,
+      hakemus,
+      HaeLukuarvo(
+        None,
+        None,
+        SyotettavaValintaperuste(
+          "valintakoe",
+          true,
+          "valintakoe-OSALLISTUMINEN",
+          "",
+          new TekstiRyhma
+        )
+      )
+    )
 
     assertTulosTyhja(tulos)
     assertTilaHylatty(tila, HylattyMetatieto.Hylattymetatietotyyppi.EI_OSALLISTUNUT_HYLKAYS)
   }
 
   test("Syotettava valintaperuste, osallistumistieto EI_OSALLISTUNUT, vaatiiOsallistumisen false") {
-    val hakemus = TestHakemus("", Nil, Map("valintakoe" -> "8.7",
-      "valintakoe-OSALLISTUMINEN" -> Osallistuminen.EI_OSALLISTUNUT.name))
+    val hakemus = TestHakemus(
+      "",
+      Nil,
+      Map("valintakoe" -> "8.7", "valintakoe-OSALLISTUMINEN" -> Osallistuminen.EI_OSALLISTUNUT.name)
+    )
 
-    val (tulos, tila) = Laskin.laske(hakukohde, hakemus,
-      HaeLukuarvo(None, None, SyotettavaValintaperuste("valintakoe", true, "valintakoe-OSALLISTUMINEN", "", new TekstiRyhma, false, false)))
+    val (tulos, tila) = Laskin.laske(
+      hakukohde,
+      hakemus,
+      HaeLukuarvo(
+        None,
+        None,
+        SyotettavaValintaperuste(
+          "valintakoe",
+          true,
+          "valintakoe-OSALLISTUMINEN",
+          "",
+          new TekstiRyhma,
+          false,
+          false
+        )
+      )
+    )
 
     assertTilaHyvaksyttavissa(tila)
   }
 
   test("Syotettava valintaperuste, osallistumistieto OSALLISTUI") {
-    val hakemus = TestHakemus("", Nil, Map("valintakoe" -> "8.7",
-      "valintakoe-OSALLISTUMINEN" -> Osallistuminen.OSALLISTUI.name))
+    val hakemus = TestHakemus(
+      "",
+      Nil,
+      Map("valintakoe" -> "8.7", "valintakoe-OSALLISTUMINEN" -> Osallistuminen.OSALLISTUI.name)
+    )
 
-    val (tulos, tila) = Laskin.laske(hakukohde, hakemus,
-      HaeLukuarvo(None, None, SyotettavaValintaperuste("valintakoe", true, "valintakoe-OSALLISTUMINEN", "", new TekstiRyhma)))
+    val (tulos, tila) = Laskin.laske(
+      hakukohde,
+      hakemus,
+      HaeLukuarvo(
+        None,
+        None,
+        SyotettavaValintaperuste(
+          "valintakoe",
+          true,
+          "valintakoe-OSALLISTUMINEN",
+          "",
+          new TekstiRyhma
+        )
+      )
+    )
 
     assert(BigDecimal(tulos.get) == BigDecimal("8.7"))
     assertTilaHyvaksyttavissa(tila)
   }
 
   test("Syotettava valintaperuste, osallistumistietoa ei voida tulkita") {
-    val hakemus = TestHakemus("", Nil, Map("valintakoe" -> "8.7",
-      "valintakoe-OSALLISTUMINEN" -> "ehkaosallistui"))
+    val hakemus = TestHakemus(
+      "",
+      Nil,
+      Map("valintakoe" -> "8.7", "valintakoe-OSALLISTUMINEN" -> "ehkaosallistui")
+    )
 
-    val (tulos, tila) = Laskin.laske(hakukohde, hakemus,
-      HaeLukuarvo(None, None, SyotettavaValintaperuste("valintakoe", true, "valintakoe-OSALLISTUMINEN", "", new TekstiRyhma)))
+    val (tulos, tila) = Laskin.laske(
+      hakukohde,
+      hakemus,
+      HaeLukuarvo(
+        None,
+        None,
+        SyotettavaValintaperuste(
+          "valintakoe",
+          true,
+          "valintakoe-OSALLISTUMINEN",
+          "",
+          new TekstiRyhma
+        )
+      )
+    )
 
     assertTulosTyhja(tulos)
     assertTilaVirhe(tila, VirheMetatietotyyppi.OSALLISTUSMISTIETOA_EI_VOIDA_TULKITA)
@@ -581,28 +870,29 @@ class LaskentaTest extends AnyFunSuite {
     val hylkaavaHaeLukuarvo = new HaeLukuarvo(
       konvertteri = None,
       oletusarvo = Some(BigDecimal("10.0")),
-      valintaperusteviite = HakemuksenValintaperuste(
-        tunniste = "hylkaavaLukuarvo",
-        pakollinen = true))
+      valintaperusteviite =
+        HakemuksenValintaperuste(tunniste = "hylkaavaLukuarvo", pakollinen = true)
+    )
 
     val hyvaksyttavissaHaeLukuarvo = new HaeLukuarvo(
       konvertteri = None,
       oletusarvo = None,
-      valintaperusteviite = HakemuksenValintaperuste(
-        tunniste = "hyvaksyttavissaLukuarvo",
-        pakollinen = true))
+      valintaperusteviite =
+        HakemuksenValintaperuste(tunniste = "hyvaksyttavissaLukuarvo", pakollinen = true)
+    )
 
     val epavalidiLukuarvo = new HaeLukuarvo(
       konvertteri = None,
       oletusarvo = Some(BigDecimal("1000.0")),
-      valintaperusteviite = HakemuksenValintaperuste(
-        tunniste = "epavalidiLukuarvo",
-        pakollinen = true))
+      valintaperusteviite =
+        HakemuksenValintaperuste(tunniste = "epavalidiLukuarvo", pakollinen = true)
+    )
 
-    val hakemus = TestHakemus("", Nil,
-      Map(
-        "hyvaksyttavissaLukuarvo" -> "100.0",
-        "epavalidiLukuarvo" -> "satatuhatta"))
+    val hakemus = TestHakemus(
+      "",
+      Nil,
+      Map("hyvaksyttavissaLukuarvo" -> "100.0", "epavalidiLukuarvo" -> "satatuhatta")
+    )
 
     val (tulos1, tila1) = Laskin.laske(hakukohde, hakemus, hylkaavaHaeLukuarvo)
     assert(BigDecimal(tulos1.get) == BigDecimal("10.0"))
@@ -628,7 +918,8 @@ class LaskentaTest extends AnyFunSuite {
     val funktio = HaeLukuarvo(
       konvertteri = None,
       oletusarvo = None,
-      valintaperusteviite = HakukohteenValintaperuste(tunniste, false, false))
+      valintaperusteviite = HakukohteenValintaperuste(tunniste, false, false)
+    )
 
     val hakukohde = new Hakukohde("hakukohdeoid", Map(tunniste -> "100.0").asJava)
 
@@ -643,7 +934,8 @@ class LaskentaTest extends AnyFunSuite {
     val funktio = HaeLukuarvo(
       konvertteri = None,
       oletusarvo = None,
-      valintaperusteviite = HakukohteenValintaperuste(tunniste, true, false))
+      valintaperusteviite = HakukohteenValintaperuste(tunniste, true, false)
+    )
 
     val hakukohde = new Hakukohde("hakukohdeoid", Map("toinen tunniste" -> "100.0").asJava)
 
@@ -658,7 +950,8 @@ class LaskentaTest extends AnyFunSuite {
     val funktio = HaeLukuarvo(
       konvertteri = None,
       oletusarvo = None,
-      valintaperusteviite = HakukohteenValintaperuste(tunniste, false, false))
+      valintaperusteviite = HakukohteenValintaperuste(tunniste, false, false)
+    )
 
     val hakukohde = new Hakukohde("hakukohdeoid", Map("toinen tunniste" -> "100.0").asJava)
 
@@ -682,7 +975,14 @@ class LaskentaTest extends AnyFunSuite {
       Summa(
         HaeMerkkijonoJaKonvertoiLukuarvoksi(
           konvertteri = Arvokonvertteri[String, BigDecimal](
-            konversioMap = List(Arvokonversio[String, BigDecimal](arvo = "konvertoitava1", paluuarvo = BigDecimal("20.0"), hylkaysperuste = false, kuvaukset = tekstiRyhma))
+            konversioMap = List(
+              Arvokonversio[String, BigDecimal](
+                arvo = "konvertoitava1",
+                paluuarvo = BigDecimal("20.0"),
+                hylkaysperuste = false,
+                kuvaukset = tekstiRyhma
+              )
+            )
           ),
           oletusarvo = None,
           valintaperusteviite = SyotettavaValintaperuste(
@@ -690,7 +990,8 @@ class LaskentaTest extends AnyFunSuite {
             pakollinen = false,
             osallistuminenTunniste = "tunniste2-OSALLISTUMINEN",
             kuvaukset = new TekstiRyhma
-          )),
+          )
+        ),
         HaeLukuarvo(
           konvertteri = None,
           oletusarvo = None,
@@ -708,7 +1009,8 @@ class LaskentaTest extends AnyFunSuite {
               pakollinen = true,
               osallistuminenTunniste = "tunniste4-OSALLISTUMINEN",
               kuvaukset = new TekstiRyhma
-            ), vertailtava = "vertailtava4"
+            ),
+            vertailtava = "vertailtava4"
           ),
           ifHaara = Lukuarvo(BigDecimal("100.0")),
           elseHaara = Lukuarvo(BigDecimal("200.0"))
@@ -736,12 +1038,26 @@ class LaskentaTest extends AnyFunSuite {
       )
     )
 
-    val hakemus = TestHakemus("hakemusOid", List[String](), Map("tunniste1-OSALLISTUMINEN" -> Osallistuminen.OSALLISTUI.name(),
-      "tunniste2" -> "konvertoitava1", "tunniste2-OSALLISTUMINEN" -> Osallistuminen.OSALLISTUI.name(),
-      "tunniste3" -> "50.0", "tunniste4" -> "vertailtava-ei-sama", "tunniste4-OSALLISTUMINEN" -> Osallistuminen.OSALLISTUI.name(),
-      "tunniste5-OSALLISTUMINEN" -> Osallistuminen.EI_OSALLISTUNUT.name()))
+    val hakemus = TestHakemus(
+      "hakemusOid",
+      List[String](),
+      Map(
+        "tunniste1-OSALLISTUMINEN" -> Osallistuminen.OSALLISTUI.name(),
+        "tunniste2" -> "konvertoitava1",
+        "tunniste2-OSALLISTUMINEN" -> Osallistuminen.OSALLISTUI.name(),
+        "tunniste3" -> "50.0",
+        "tunniste4" -> "vertailtava-ei-sama",
+        "tunniste4-OSALLISTUMINEN" -> Osallistuminen.OSALLISTUI.name(),
+        "tunniste5-OSALLISTUMINEN" -> Osallistuminen.EI_OSALLISTUNUT.name()
+      )
+    )
 
-    val tulos = Laskin.suoritaValintalaskenta(new Hakukohde("hakukohdeOid", Collections.emptyMap()), hakemus, Nil.asJavaCollection, funktio)
+    val tulos = Laskin.suoritaValintalaskenta(
+      new Hakukohde("hakukohdeOid", Collections.emptyMap()),
+      hakemus,
+      Nil.asJavaCollection,
+      funktio
+    )
     assert(tulos.getTulos.equals(BigDecimal("276.0").underlying()))
     assertTilaVirhe(tulos.getTila, VirheMetatietotyyppi.SYOTETTAVA_ARVO_MERKITSEMATTA)
     assert(tulos.getSyotetytArvot.size == 5)
@@ -777,15 +1093,16 @@ class LaskentaTest extends AnyFunSuite {
     assert(arvo6.getOsallistuminen.equals(Osallistuminen.MERKITSEMATTA))
   }
 
-
   test("skaalaus, lahdeskaalaa ei annettu") {
     val funktiokutsu = Skaalaus(
-      skaalattava = HaeLukuarvo(konvertteri = None,
+      skaalattava = HaeLukuarvo(
+        konvertteri = None,
         oletusarvo = None,
-        valintaperusteviite = HakemuksenValintaperuste(tunniste = "tunniste1", pakollinen = true)),
+        valintaperusteviite = HakemuksenValintaperuste(tunniste = "tunniste1", pakollinen = true)
+      ),
       kohdeskaala = (BigDecimal("-1.0"), BigDecimal("2.0")),
-      lahdeskaala = None)
-
+      lahdeskaala = None
+    )
 
     val hakemukset = List(
       TestHakemus("hakemusOid1", List(), Map("tunniste1" -> "0.0")),
@@ -814,12 +1131,14 @@ class LaskentaTest extends AnyFunSuite {
 
   test("skaalaus, lahdeskaalaa annettu") {
     val funktiokutsu = Skaalaus(
-      skaalattava = HaeLukuarvo(konvertteri = None,
+      skaalattava = HaeLukuarvo(
+        konvertteri = None,
         oletusarvo = None,
-        valintaperusteviite = HakemuksenValintaperuste(tunniste = "tunniste1", pakollinen = true)),
+        valintaperusteviite = HakemuksenValintaperuste(tunniste = "tunniste1", pakollinen = true)
+      ),
       kohdeskaala = (BigDecimal("-1.0"), BigDecimal("2.0")),
-      lahdeskaala = Some((BigDecimal("-1000.0"), BigDecimal("9000.0"))))
-
+      lahdeskaala = Some((BigDecimal("-1000.0"), BigDecimal("9000.0")))
+    )
 
     val hakemukset = List(
       TestHakemus("hakemusOid1", List(), Map("tunniste1" -> "0.0")),
@@ -848,65 +1167,80 @@ class LaskentaTest extends AnyFunSuite {
 
   test("skaalaus, hakemuksia liian vahan") {
     val funktiokutsu = Skaalaus(
-      skaalattava = HaeLukuarvo(konvertteri = None,
+      skaalattava = HaeLukuarvo(
+        konvertteri = None,
         oletusarvo = None,
-        valintaperusteviite = HakemuksenValintaperuste(tunniste = "tunniste1", pakollinen = true)),
+        valintaperusteviite = HakemuksenValintaperuste(tunniste = "tunniste1", pakollinen = true)
+      ),
       kohdeskaala = (BigDecimal("-1.0"), BigDecimal("2.0")),
-      lahdeskaala = None)
-
+      lahdeskaala = None
+    )
 
     val hakemukset = List(
       TestHakemus("hakemusOid1", List(), Map("tunniste1" -> "0.0"))
     )
 
-    val tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemukset(0), hakemukset.asJava, funktiokutsu)
+    val tulos =
+      Laskin.suoritaValintalaskenta(hakukohde, hakemukset(0), hakemukset.asJava, funktiokutsu)
     assert(Option(tulos.getTulos).isEmpty)
-    assertTilaVirhe(tulos.getTila, VirheMetatietotyyppi.TULOKSIA_LIIAN_VAHAN_LAHDESKAALAN_MAARITTAMISEEN)
+    assertTilaVirhe(
+      tulos.getTila,
+      VirheMetatietotyyppi.TULOKSIA_LIIAN_VAHAN_LAHDESKAALAN_MAARITTAMISEEN
+    )
   }
 
   test("skaalaus, lahdeskaalaa ei voida maarittaa") {
     val funktiokutsu = Skaalaus(
-      skaalattava = HaeLukuarvo(konvertteri = None,
+      skaalattava = HaeLukuarvo(
+        konvertteri = None,
         oletusarvo = None,
-        valintaperusteviite = HakemuksenValintaperuste(tunniste = "tunniste1", pakollinen = true)),
+        valintaperusteviite = HakemuksenValintaperuste(tunniste = "tunniste1", pakollinen = true)
+      ),
       kohdeskaala = (BigDecimal("-1.0"), BigDecimal("2.0")),
-      lahdeskaala = None)
-
+      lahdeskaala = None
+    )
 
     val hakemukset = List(
       TestHakemus("hakemusOid1", List(), Map("tunniste1" -> "10.0")),
       TestHakemus("hakemusOid2", List(), Map("tunniste1" -> "10.0"))
     )
 
-    val tulokset = hakemukset.map(h => Laskin.suoritaValintalaskenta(hakukohde, h, hakemukset.asJava, funktiokutsu))
+    val tulokset = hakemukset.map(h =>
+      Laskin.suoritaValintalaskenta(hakukohde, h, hakemukset.asJava, funktiokutsu)
+    )
     assert(tulokset.size == 2)
-    tulokset.foreach {
-      t =>
-        assert(Option(t.getTulos).isEmpty)
-        assertTilaVirhe(t.getTila, VirheMetatietotyyppi.TULOKSIA_LIIAN_VAHAN_LAHDESKAALAN_MAARITTAMISEEN)
+    tulokset.foreach { t =>
+      assert(Option(t.getTulos).isEmpty)
+      assertTilaVirhe(
+        t.getTila,
+        VirheMetatietotyyppi.TULOKSIA_LIIAN_VAHAN_LAHDESKAALAN_MAARITTAMISEEN
+      )
     }
   }
 
   test("skaalaus, skaalattava arvo ei ole lahdeskaalassa") {
     val funktiokutsu = Skaalaus(
-      skaalattava = HaeLukuarvo(konvertteri = None,
+      skaalattava = HaeLukuarvo(
+        konvertteri = None,
         oletusarvo = None,
-        valintaperusteviite = HakemuksenValintaperuste(tunniste = "tunniste1", pakollinen = true)),
+        valintaperusteviite = HakemuksenValintaperuste(tunniste = "tunniste1", pakollinen = true)
+      ),
       kohdeskaala = (BigDecimal("-1.0"), BigDecimal("2.0")),
-      lahdeskaala = Some((BigDecimal("-125.0"), BigDecimal("375.0"))))
-
+      lahdeskaala = Some((BigDecimal("-125.0"), BigDecimal("375.0")))
+    )
 
     val hakemukset = List(
       TestHakemus("hakemusOid1", List(), Map("tunniste1" -> "375.1")),
       TestHakemus("hakemusOid2", List(), Map("tunniste1" -> "-125.0001"))
     )
 
-    val tulokset = hakemukset.map(h => Laskin.suoritaValintalaskenta(hakukohde, h, hakemukset.asJava, funktiokutsu))
+    val tulokset = hakemukset.map(h =>
+      Laskin.suoritaValintalaskenta(hakukohde, h, hakemukset.asJava, funktiokutsu)
+    )
     assert(tulokset.size == 2)
-    tulokset.foreach {
-      t =>
-        assert(Option(t.getTulos).isEmpty)
-        assertTilaVirhe(t.getTila, VirheMetatietotyyppi.SKAALATTAVA_ARVO_EI_OLE_LAHDESKAALASSA)
+    tulokset.foreach { t =>
+      assert(Option(t.getTulos).isEmpty)
+      assertTilaVirhe(t.getTila, VirheMetatietotyyppi.SKAALATTAVA_ARVO_EI_OLE_LAHDESKAALASSA)
     }
   }
 
@@ -939,7 +1273,9 @@ class LaskentaTest extends AnyFunSuite {
       TestHakemus("hakemusOid3", List(), Map("tunniste1" -> "500.0"))
     )
 
-    val tulokset = hakemukset.map(h => Laskin.suoritaValintalaskenta(hakukohde, h, hakemukset.asJava, funktiokutsu))
+    val tulokset = hakemukset.map(h =>
+      Laskin.suoritaValintalaskenta(hakukohde, h, hakemukset.asJava, funktiokutsu)
+    )
     assert(tulokset.size == 3)
 
     assert(tulokset(0).getTulos.equals(BigDecimal("4.0").underlying))
@@ -959,24 +1295,33 @@ class LaskentaTest extends AnyFunSuite {
     )
 
     val hakemukset = List(
-      TestHakemus("hakemusoid1",
+      TestHakemus(
+        "hakemusoid1",
         List("hakutoiveoid1", "hakutoiveoid2", "hakutoiveoid3"),
-        Map("tunniste1" -> "arvo")),
-      TestHakemus("hakemusoid2",
+        Map("tunniste1" -> "arvo")
+      ),
+      TestHakemus(
+        "hakemusoid2",
         List("hakutoiveoid1", "hakutoiveoid2", "hakutoiveoid3"),
-        Map("tunniste1" -> "arvo")),
-      TestHakemus("hakemusoid3",
+        Map("tunniste1" -> "arvo")
+      ),
+      TestHakemus(
+        "hakemusoid3",
         List("hakutoiveoid1", "hakutoiveoid2", "hakutoiveoid3"),
-        Map("tunniste1" -> "arvo")),
-      TestHakemus("hakemusoid4",
+        Map("tunniste1" -> "arvo")
+      ),
+      TestHakemus(
+        "hakemusoid4",
         List("hakutoiveoid1", "hakutoiveoid2", "hakutoiveoid3"),
-        Map("tunniste1" -> "arvo")),
-      TestHakemus("hakemusoid5",
-        List("hakutoiveoid1", "hakutoiveoid2", "hakutoiveoid3"),
-        Map()))
+        Map("tunniste1" -> "arvo")
+      ),
+      TestHakemus("hakemusoid5", List("hakutoiveoid1", "hakutoiveoid2", "hakutoiveoid3"), Map())
+    )
 
     val hakukohde = new Hakukohde("ei-kenellakaan", new util.HashMap[String, String])
-    val tulokset = hakemukset.map(h => Laskin.suoritaValintalaskenta(hakukohde, h, hakemukset.asJava, funktiokutsu))
+    val tulokset = hakemukset.map(h =>
+      Laskin.suoritaValintalaskenta(hakukohde, h, hakemukset.asJava, funktiokutsu)
+    )
 
     assert(!tulokset(0).getTulos)
     assert(!tulokset(1).getTulos)
@@ -999,7 +1344,8 @@ class LaskentaTest extends AnyFunSuite {
       )
     )
 
-    val tulos = Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, Nil.asJavaCollection, funktiokutsu)
+    val tulos =
+      Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, Nil.asJavaCollection, funktiokutsu)
     assert(tulos.getTulos.compareTo(BigDecimal("58.0").underlying) == 0)
     assertTilaHyvaksyttavissa(tulos.getTila)
   }
@@ -1017,15 +1363,14 @@ class LaskentaTest extends AnyFunSuite {
             konvertteri = None,
             oletusarvo = None,
             valintaperusteviite =
-              HakemuksenValintaperuste(
-                tunniste = "tunniste1",
-                pakollinen = false)
+              HakemuksenValintaperuste(tunniste = "tunniste1", pakollinen = false)
           )
         )
       )
     )
 
-    val tulos = Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, Nil.asJavaCollection, funktiokutsu)
+    val tulos =
+      Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, Nil.asJavaCollection, funktiokutsu)
     assert(tulos.getTulos.compareTo(BigDecimal("30.0").underlying) == 0)
     assertTilaHyvaksyttavissa(tulos.getTila)
   }
@@ -1042,16 +1387,15 @@ class LaskentaTest extends AnyFunSuite {
             konvertteri = None,
             oletusarvo = None,
             valintaperusteviite =
-              HakemuksenValintaperuste(
-                tunniste = "tunniste1",
-                pakollinen = false)
+              HakemuksenValintaperuste(tunniste = "tunniste1", pakollinen = false)
           ),
           Lukuarvo(BigDecimal("60.0"))
         )
       )
     )
 
-    val tulos = Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, Nil.asJavaCollection, funktiokutsu)
+    val tulos =
+      Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, Nil.asJavaCollection, funktiokutsu)
     assert(tulos.getTulos.compareTo(BigDecimal("42.0").underlying) == 0)
     assertTilaHyvaksyttavissa(tulos.getTila)
   }
@@ -1068,23 +1412,20 @@ class LaskentaTest extends AnyFunSuite {
             konvertteri = None,
             oletusarvo = None,
             valintaperusteviite =
-              HakemuksenValintaperuste(
-                tunniste = "tunniste1",
-                pakollinen = false)
+              HakemuksenValintaperuste(tunniste = "tunniste1", pakollinen = false)
           ),
           HaeLukuarvo(
             konvertteri = None,
             oletusarvo = None,
             valintaperusteviite =
-              HakemuksenValintaperuste(
-                tunniste = "tunniste2",
-                pakollinen = false)
+              HakemuksenValintaperuste(tunniste = "tunniste2", pakollinen = false)
           )
         )
       )
     )
 
-    val tulos = Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, Nil.asJavaCollection, funktiokutsu)
+    val tulos =
+      Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, Nil.asJavaCollection, funktiokutsu)
     assert(tulos.getTulos.compareTo(BigDecimal("30.0").underlying) == 0)
     assertTilaHyvaksyttavissa(tulos.getTila)
   }
@@ -1097,23 +1438,20 @@ class LaskentaTest extends AnyFunSuite {
             konvertteri = None,
             oletusarvo = None,
             valintaperusteviite =
-              HakemuksenValintaperuste(
-                tunniste = "tunniste1",
-                pakollinen = false)
+              HakemuksenValintaperuste(tunniste = "tunniste1", pakollinen = false)
           ),
           HaeLukuarvo(
             konvertteri = None,
             oletusarvo = None,
             valintaperusteviite =
-              HakemuksenValintaperuste(
-                tunniste = "tunniste2",
-                pakollinen = false)
+              HakemuksenValintaperuste(tunniste = "tunniste2", pakollinen = false)
           )
         )
       )
     )
 
-    val tulos = Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, Nil.asJavaCollection, funktiokutsu)
+    val tulos =
+      Laskin.suoritaValintalaskenta(hakukohde, tyhjaHakemus, Nil.asJavaCollection, funktiokutsu)
     assert(Option(tulos.getTulos).isEmpty)
     assertTilaHyvaksyttavissa(tulos.getTila)
   }
@@ -1130,9 +1468,19 @@ class LaskentaTest extends AnyFunSuite {
     )
 
     val hakukohde = new Hakukohde("oid1", Map("hakukohteentunniste" -> "hakemuksentunniste").asJava)
-    val hakemus = new Hakemus("oid1", Collections.emptyMap(), Map("hakemuksentunniste" -> "100.0").asJava, Collections.emptyMap())
+    val hakemus = new Hakemus(
+      "oid1",
+      Collections.emptyMap(),
+      Map("hakemuksentunniste" -> "100.0").asJava,
+      Collections.emptyMap()
+    )
 
-    val tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemus, List(hakemus).asJavaCollection, funktiokutsu)
+    val tulos = Laskin.suoritaValintalaskenta(
+      hakukohde,
+      hakemus,
+      List(hakemus).asJavaCollection,
+      funktiokutsu
+    )
     assert(tulos.getTulos.compareTo(BigDecimal("100.0").underlying) == 0)
     assertTilaHyvaksyttavissa(tulos.getTila)
   }
@@ -1149,9 +1497,15 @@ class LaskentaTest extends AnyFunSuite {
     )
 
     val hakukohde = new Hakukohde("oid1", Map("hakukohteentunniste" -> "hakemuksentunniste").asJava)
-    val hakemus = new Hakemus("oid1", Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap())
+    val hakemus =
+      new Hakemus("oid1", Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap())
 
-    val tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemus, List(hakemus).asJavaCollection, funktiokutsu)
+    val tulos = Laskin.suoritaValintalaskenta(
+      hakukohde,
+      hakemus,
+      List(hakemus).asJavaCollection,
+      funktiokutsu
+    )
     assert(tulos.getTulos.compareTo(BigDecimal("100.0").underlying) == 0)
     assertTilaHylatty(tulos.getTila, Hylattymetatietotyyppi.PAKOLLINEN_VALINTAPERUSTE_HYLKAYS)
   }
@@ -1168,11 +1522,24 @@ class LaskentaTest extends AnyFunSuite {
     )
 
     val hakukohde = new Hakukohde("oid1", Map[String, String]().asJava)
-    val hakemus = new Hakemus("oid1", Collections.emptyMap(), Map("hakemuksentunniste" -> "500.0").asJava, Collections.emptyMap())
+    val hakemus = new Hakemus(
+      "oid1",
+      Collections.emptyMap(),
+      Map("hakemuksentunniste" -> "500.0").asJava,
+      Collections.emptyMap()
+    )
 
-    val tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemus, List(hakemus).asJavaCollection, funktiokutsu)
+    val tulos = Laskin.suoritaValintalaskenta(
+      hakukohde,
+      hakemus,
+      List(hakemus).asJavaCollection,
+      funktiokutsu
+    )
     assert(tulos.getTulos.compareTo(BigDecimal("100.0").underlying) == 0)
-    assertTilaVirhe(tulos.getTila, VirheMetatietotyyppi.HAKUKOHTEEN_VALINTAPERUSTE_MAARITTELEMATTA_VIRHE)
+    assertTilaVirhe(
+      tulos.getTila,
+      VirheMetatietotyyppi.HAKUKOHTEEN_VALINTAPERUSTE_MAARITTELEMATTA_VIRHE
+    )
   }
 
   test("epasuora viittaus hakemuksen arvoon, ei oletusarvoa, ei pakollinen") {
@@ -1187,9 +1554,15 @@ class LaskentaTest extends AnyFunSuite {
     )
 
     val hakukohde = new Hakukohde("oid1", Map("hakukohteentunniste" -> "hakemuksentunniste").asJava)
-    val hakemus = new Hakemus("oid1", Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap())
+    val hakemus =
+      new Hakemus("oid1", Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap())
 
-    val tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemus, List(hakemus).asJavaCollection, funktiokutsu)
+    val tulos = Laskin.suoritaValintalaskenta(
+      hakukohde,
+      hakemus,
+      List(hakemus).asJavaCollection,
+      funktiokutsu
+    )
     assert(Option(tulos.getTulos).isEmpty)
     assertTilaHyvaksyttavissa(tulos.getTila)
   }
@@ -1203,15 +1576,24 @@ class LaskentaTest extends AnyFunSuite {
           pakollinen = true,
           epasuoraViittaus = false
         ),
-        HakemuksenValintaperuste(
-          tunniste = "hakemuksentunniste",
-          pakollinen = true))
+        HakemuksenValintaperuste(tunniste = "hakemuksentunniste", pakollinen = true)
+      )
     )
 
     val hakukohde = new Hakukohde("oid1", Map("hakukohteentunniste" -> "arvo").asJava)
-    val hakemus = new Hakemus("oid1", Collections.emptyMap(), Map("hakemuksentunniste" -> "arvo").asJava, Collections.emptyMap())
+    val hakemus = new Hakemus(
+      "oid1",
+      Collections.emptyMap(),
+      Map("hakemuksentunniste" -> "arvo").asJava,
+      Collections.emptyMap()
+    )
 
-    val tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemus, List(hakemus).asJavaCollection, funktiokutsu)
+    val tulos = Laskin.suoritaValintalaskenta(
+      hakukohde,
+      hakemus,
+      List(hakemus).asJavaCollection,
+      funktiokutsu
+    )
     assert(tulos.getTulos)
     assertTilaHyvaksyttavissa(tulos.getTila)
   }
@@ -1225,15 +1607,24 @@ class LaskentaTest extends AnyFunSuite {
           pakollinen = true,
           epasuoraViittaus = false
         ),
-        HakemuksenValintaperuste(
-          tunniste = "hakemuksentunniste",
-          pakollinen = true))
+        HakemuksenValintaperuste(tunniste = "hakemuksentunniste", pakollinen = true)
+      )
     )
 
     val hakukohde = new Hakukohde("oid1", Map("hakukohteentunniste" -> "hakukohteenarvo").asJava)
-    val hakemus = new Hakemus("oid1", Collections.emptyMap(), Map("hakemuksentunniste" -> "hakemuksenarvo").asJava, Collections.emptyMap())
+    val hakemus = new Hakemus(
+      "oid1",
+      Collections.emptyMap(),
+      Map("hakemuksentunniste" -> "hakemuksenarvo").asJava,
+      Collections.emptyMap()
+    )
 
-    val tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemus, List(hakemus).asJavaCollection, funktiokutsu)
+    val tulos = Laskin.suoritaValintalaskenta(
+      hakukohde,
+      hakemus,
+      List(hakemus).asJavaCollection,
+      funktiokutsu
+    )
     assert(!tulos.getTulos)
     assertTilaHyvaksyttavissa(tulos.getTila)
   }
@@ -1247,15 +1638,20 @@ class LaskentaTest extends AnyFunSuite {
           pakollinen = false,
           epasuoraViittaus = false
         ),
-        HakemuksenValintaperuste(
-          tunniste = "hakemuksentunniste",
-          pakollinen = false))
+        HakemuksenValintaperuste(tunniste = "hakemuksentunniste", pakollinen = false)
+      )
     )
 
     val hakukohde = new Hakukohde("oid1", Collections.emptyMap())
-    val hakemus = new Hakemus("oid1", Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap())
+    val hakemus =
+      new Hakemus("oid1", Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap())
 
-    val tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemus, List(hakemus).asJavaCollection, funktiokutsu)
+    val tulos = Laskin.suoritaValintalaskenta(
+      hakukohde,
+      hakemus,
+      List(hakemus).asJavaCollection,
+      funktiokutsu
+    )
     assert(tulos.getTulos)
     assertTilaHyvaksyttavissa(tulos.getTila)
   }
@@ -1269,15 +1665,20 @@ class LaskentaTest extends AnyFunSuite {
           pakollinen = false,
           epasuoraViittaus = false
         ),
-        HakemuksenValintaperuste(
-          tunniste = "hakemuksentunniste",
-          pakollinen = true))
+        HakemuksenValintaperuste(tunniste = "hakemuksentunniste", pakollinen = true)
+      )
     )
 
     val hakukohde = new Hakukohde("oid1", Collections.emptyMap())
-    val hakemus = new Hakemus("oid1", Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap())
+    val hakemus =
+      new Hakemus("oid1", Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap())
 
-    val tulos = Laskin.suoritaValintalaskenta(hakukohde, hakemus, List(hakemus).asJavaCollection, funktiokutsu)
+    val tulos = Laskin.suoritaValintalaskenta(
+      hakukohde,
+      hakemus,
+      List(hakemus).asJavaCollection,
+      funktiokutsu
+    )
     assert(tulos.getTulos)
     assertTilaHylatty(tulos.getTila, Hylattymetatietotyyppi.PAKOLLINEN_VALINTAPERUSTE_HYLKAYS)
   }
@@ -1332,7 +1733,12 @@ class LaskentaTest extends AnyFunSuite {
     assertTilaHyvaksyttavissa(yliTila)
   }
 
-  private def createHaeYoArvosanaKutsu(aine: String, pakollinen: Boolean = false, alkukausi: String = "1", loppukausi: String = "2"): Funktiokutsu = {
+  private def createHaeYoArvosanaKutsu(
+    aine: String,
+    pakollinen: Boolean = false,
+    alkukausi: String = "1",
+    loppukausi: String = "2"
+  ): Funktiokutsu = {
 
     val viite: ValintaperusteViite = new ValintaperusteViite
     viite.setTunniste(aine)
@@ -1404,48 +1810,66 @@ class LaskentaTest extends AnyFunSuite {
     kutsu
   }
 
-  test("HaeYoArvosana: aine, jolla useita suorituksia valitaan se, joka osuu hakuehtoihin ja jolla on paras validi arvo, jota vastaavat pisteet palautetaan") {
+  test(
+    "HaeYoArvosana: aine, jolla useita suorituksia valitaan se, joka osuu hakuehtoihin ja jolla on paras validi arvo, jota vastaavat pisteet palautetaan"
+  ) {
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeYoArvosanaKutsu("SA"))
     val (tulos, _) = Laskin.laske(hakukohde, hakemusMustache, lasku)
     assert(BigDecimal(tulos.get) == BigDecimal("3"))
   }
 
-  test("HaeYoArvosana: suoritus, jolla validi arvo, mutta ei vuotta ja kautta filtteröidään pois -> palauttaa hyväksyttävissä & 0 pistettä, jos ei pakollinen") {
-    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeYoArvosanaKutsu("PS", false))
+  test(
+    "HaeYoArvosana: suoritus, jolla validi arvo, mutta ei vuotta ja kautta filtteröidään pois -> palauttaa hyväksyttävissä & 0 pistettä, jos ei pakollinen"
+  ) {
+    val lasku =
+      Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeYoArvosanaKutsu("PS", false))
     val (tulos, tila) = Laskin.laske(hakukohde, hakemusMustache, lasku)
     assert(BigDecimal(tulos.get) == BigDecimal("0.0"))
     assert(tila.getTilatyyppi == Tilatyyppi.HYVAKSYTTAVISSA)
   }
 
-  test("HaeYoArvosana: suoritus, jolla validi arvo, mutta ei vuotta ja kautta filtteröidään pois -> palauttaa hylätty &  0 pistettä, jos pakollinen") {
-    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeYoArvosanaKutsu("PS", true))
+  test(
+    "HaeYoArvosana: suoritus, jolla validi arvo, mutta ei vuotta ja kautta filtteröidään pois -> palauttaa hylätty &  0 pistettä, jos pakollinen"
+  ) {
+    val lasku =
+      Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeYoArvosanaKutsu("PS", true))
     val (tulos, tila) = Laskin.laske(hakukohde, hakemusMustache, lasku)
     assert(BigDecimal(tulos.get) == BigDecimal("0.0"))
     assert(tila.getTilatyyppi == Tilatyyppi.HYLATTY)
   }
 
-  test("HaeYoArvosana: suoritus, jolla epävalidit kausitiedot filtteröidään pois, mutta on hyväksyttävissä, jos ei pakollinen") {
-    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeYoArvosanaKutsu("REAALI", false))
+  test(
+    "HaeYoArvosana: suoritus, jolla epävalidit kausitiedot filtteröidään pois, mutta on hyväksyttävissä, jos ei pakollinen"
+  ) {
+    val lasku =
+      Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeYoArvosanaKutsu("REAALI", false))
     val (tulos, tila) = Laskin.laske(hakukohde, hakemusMustache, lasku)
     assert(BigDecimal(tulos.get) == BigDecimal("0.0"))
     assert(tila.getTilatyyppi == Tilatyyppi.HYVAKSYTTAVISSA)
   }
 
-  test("HaeYoArvosana: suoritus, jolla epävalidit kausitiedot filtteröidään pois ja tulee hylatty, jos pakollinen") {
-    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeYoArvosanaKutsu("REAALI", true))
+  test(
+    "HaeYoArvosana: suoritus, jolla epävalidit kausitiedot filtteröidään pois ja tulee hylatty, jos pakollinen"
+  ) {
+    val lasku =
+      Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeYoArvosanaKutsu("REAALI", true))
     val (tulos, tila) = Laskin.laske(hakukohde, hakemusMustache, lasku)
     assert(BigDecimal(tulos.get) == BigDecimal("0.0"))
     assert(tila.getTilatyyppi == Tilatyyppi.HYLATTY)
   }
 
-  test("HaeYoArvosana: suoritus, jolla validit kausitiedot, mutta epävalidi arvo palauttaa virheen") {
+  test(
+    "HaeYoArvosana: suoritus, jolla validit kausitiedot, mutta epävalidi arvo palauttaa virheen"
+  ) {
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeYoArvosanaKutsu("HI"))
     val (tulos, tila) = Laskin.laske(hakukohde, hakemusMustache, lasku)
     assert(tulos.isEmpty)
     assert(tila.getTilatyyppi == Tilatyyppi.VIRHE)
   }
 
-  test("HaeYoArvosana: myös ei valmistuneelle palautetaan arvosanaa vastaavat pisteet, jos parametri valmistuneet=false") {
+  test(
+    "HaeYoArvosana: myös ei valmistuneelle palautetaan arvosanaa vastaavat pisteet, jos parametri valmistuneet=false"
+  ) {
     val kutsu = createHaeYoArvosanaKutsu("SA")
 
     val syoteparametriValmistuneet = new Syoteparametri
@@ -1487,7 +1911,10 @@ class LaskentaTest extends AnyFunSuite {
     assert(BigDecimal(tulos.get) == BigDecimal("5"))
   }
 
-  private def createHaeOsakoeArvosanaKutsu(aine: String, pakollinen: Boolean = false): Funktiokutsu = {
+  private def createHaeOsakoeArvosanaKutsu(
+    aine: String,
+    pakollinen: Boolean = false
+  ): Funktiokutsu = {
     val kutsu: Funktiokutsu = new Funktiokutsu
     kutsu.setFunktionimi(Funktionimi.HAEOSAKOEARVOSANA)
 
@@ -1523,7 +1950,9 @@ class LaskentaTest extends AnyFunSuite {
     kutsu
   }
 
-  test("HaeOsakoeArvosana - ilman konverttereita, palauttaa parhaan validin ja hakuehtoihin osuvan suorituksen pisteet") {
+  test(
+    "HaeOsakoeArvosana - ilman konverttereita, palauttaa parhaan validin ja hakuehtoihin osuvan suorituksen pisteet"
+  ) {
     val kutsu: Funktiokutsu = createHaeOsakoeArvosanaKutsu("01")
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(kutsu)
 
@@ -1532,7 +1961,9 @@ class LaskentaTest extends AnyFunSuite {
     assert(tila.getTilatyyppi == Tilatyyppi.HYVAKSYTTAVISSA)
   }
 
-  test("HaeOsakoeArvosana, palauttaa myös ei kooostetun aineen parhaan validin ja hakuehtoihin osuvan suorituksen pisteet") {
+  test(
+    "HaeOsakoeArvosana, palauttaa myös ei kooostetun aineen parhaan validin ja hakuehtoihin osuvan suorituksen pisteet"
+  ) {
     val kutsu: Funktiokutsu = createHaeOsakoeArvosanaKutsu("SA")
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(kutsu)
 
@@ -1541,7 +1972,9 @@ class LaskentaTest extends AnyFunSuite {
     assert(tila.getTilatyyppi == Tilatyyppi.HYVAKSYTTAVISSA)
   }
 
-  test("HaeOsakoeArvosana, palauttaa myös ei 0 pistetta ja hyvaksyttavissa jos ei pisteitä ja ei pakollinen") {
+  test(
+    "HaeOsakoeArvosana, palauttaa myös ei 0 pistetta ja hyvaksyttavissa jos ei pisteitä ja ei pakollinen"
+  ) {
     val kutsu: Funktiokutsu = createHaeOsakoeArvosanaKutsu("HI", false)
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(kutsu)
 
@@ -1559,7 +1992,9 @@ class LaskentaTest extends AnyFunSuite {
     assert(tila.getTilatyyppi == Tilatyyppi.HYLATTY)
   }
 
-  test("HaeOsakoeArvosana - Arvokonvertterilla, palauttaa parhaan validin ja hakuehtoihin osuvan suorituksen pisteitä vastaavan arvon") {
+  test(
+    "HaeOsakoeArvosana - Arvokonvertterilla, palauttaa parhaan validin ja hakuehtoihin osuvan suorituksen pisteitä vastaavan arvon"
+  ) {
 
     val kutsu: Funktiokutsu = createHaeOsakoeArvosanaKutsu("01")
     val konv1 = new Arvokonvertteriparametri
@@ -1575,7 +2010,9 @@ class LaskentaTest extends AnyFunSuite {
 
   }
 
-  test("HaeOsakoeArvosana - Arvovälikonvertterilla, palauttaa parhaan validin ja hakuehtoihin osuvan suorituksen pisteitä vastaavan arvon") {
+  test(
+    "HaeOsakoeArvosana - Arvovälikonvertterilla, palauttaa parhaan validin ja hakuehtoihin osuvan suorituksen pisteitä vastaavan arvon"
+  ) {
 
     val kutsu: Funktiokutsu = createHaeOsakoeArvosanaKutsu("01")
     val konv1 = new Arvovalikonvertteriparametri

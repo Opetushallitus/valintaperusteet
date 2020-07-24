@@ -18,13 +18,18 @@ object LaskentaUtil {
     pprint(x).toString()
   }
 
-  private def pprint(obj: Any, depth: Int = 0, paramName: Option[String] = None, acc: StringBuilder = new StringBuilder("")): StringBuilder = {
+  private def pprint(
+    obj: Any,
+    depth: Int = 0,
+    paramName: Option[String] = None,
+    acc: StringBuilder = new StringBuilder("")
+  ): StringBuilder = {
     val indent = "  " * depth
     val prettyName = paramName.fold("")(x => s"$x: ")
     val ptype = obj match {
       case _: Iterable[Any] => ""
-      case obj: Product => obj.productPrefix
-      case _ => obj.toString
+      case obj: Product     => obj.productPrefix
+      case _                => obj.toString
     }
 
     acc.append(s"$indent$prettyName$ptype")
@@ -34,7 +39,10 @@ object LaskentaUtil {
         seq.foreach(pprint(_, depth + 1, acc = acc.append("\n")))
       case obj: Product =>
         (obj.productIterator zip obj.productElementNames)
-          .foreach { case (subObj, paramName) => pprint(subObj, depth + 1, Some(paramName), acc = acc.append("\n")) }
+          .foreach {
+            case (subObj, paramName) =>
+              pprint(subObj, depth + 1, Some(paramName), acc = acc.append("\n"))
+          }
       case _ =>
     }
     acc

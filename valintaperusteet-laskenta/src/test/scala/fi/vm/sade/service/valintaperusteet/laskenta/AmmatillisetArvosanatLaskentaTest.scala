@@ -1,4 +1,3 @@
-
 package fi.vm.sade.service.valintaperusteet.laskenta
 
 import java.time.LocalDate
@@ -28,19 +27,55 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
 
   private val hakukohde: Hakukohde = new Hakukohde("123", new JHashMap[String, String])
 
-  private val suoritukset: JHashMap[String, JList[JMap[String, String]]] = new JHashMap[String, JList[JMap[String, String]]]
+  private val suoritukset: JHashMap[String, JList[JMap[String, String]]] =
+    new JHashMap[String, JList[JMap[String, String]]]
 
-  private val hakemus = TestHakemus("1.2.3.4", Nil, Map(), suoritukset, loadJson("koski-opiskeluoikeudet.json"))
-  private val monenTutkinnonHakemus = TestHakemus("5.6.7.8", Nil, Map(), suoritukset, loadJson("koski-monitutkinto.json"))
-  private val hakemusJossaValmisJaTulevaisuudessaValmisTutkinto = TestHakemus("0.2.4.6", Nil, Map(), suoritukset, loadJson("koski-kaksi_tutkintoa_toinen_vahvistettu_tulevaisuudessa.json"))
-  private val reforminMukainenHakemus = TestHakemus("2.3.4.5", Nil, Map(), suoritukset, loadJson("koski-reforminmukainen-keskiarvon_kanssa.json"))
-  private val hakemusJossaOnVainSkipattaviaNayttoja = TestHakemus("3.4.5.6", Nil, Map(), suoritukset, loadJson("koski-kaksiskipattavaatutkintoa.json"))
-  private val hakemusJossaOnSkipattavaNayttoJaHuomioitavaTutkinto = TestHakemus("4.5.6.7", Nil, Map(), suoritukset, loadJson("koski-virheellinen_tapaus-skipattava_naytto_ja_reformi.json"))
-  private val hakemusJossaOnYtonKoodiMyosOsaAlueella = TestHakemus("6.7.8.9", Nil, Map(), suoritukset, loadJson("koski-yto-koodi_osa-alueella.json"))
-  private val hakemusJossaOnYtonKoodiPaikallisellaTutkinnonOsalla = TestHakemus("7.8.9.0", Nil, Map(), suoritukset, loadJson("koski-reforminmukainen-jossa_ytokoodi_paikallisella_tutkinnonosalla.json"))
+  private val hakemus =
+    TestHakemus("1.2.3.4", Nil, Map(), suoritukset, loadJson("koski-opiskeluoikeudet.json"))
+  private val monenTutkinnonHakemus =
+    TestHakemus("5.6.7.8", Nil, Map(), suoritukset, loadJson("koski-monitutkinto.json"))
+  private val hakemusJossaValmisJaTulevaisuudessaValmisTutkinto = TestHakemus(
+    "0.2.4.6",
+    Nil,
+    Map(),
+    suoritukset,
+    loadJson("koski-kaksi_tutkintoa_toinen_vahvistettu_tulevaisuudessa.json")
+  )
+  private val reforminMukainenHakemus = TestHakemus(
+    "2.3.4.5",
+    Nil,
+    Map(),
+    suoritukset,
+    loadJson("koski-reforminmukainen-keskiarvon_kanssa.json")
+  )
+  private val hakemusJossaOnVainSkipattaviaNayttoja = TestHakemus(
+    "3.4.5.6",
+    Nil,
+    Map(),
+    suoritukset,
+    loadJson("koski-kaksiskipattavaatutkintoa.json")
+  )
+  private val hakemusJossaOnSkipattavaNayttoJaHuomioitavaTutkinto = TestHakemus(
+    "4.5.6.7",
+    Nil,
+    Map(),
+    suoritukset,
+    loadJson("koski-virheellinen_tapaus-skipattava_naytto_ja_reformi.json")
+  )
+  private val hakemusJossaOnYtonKoodiMyosOsaAlueella =
+    TestHakemus("6.7.8.9", Nil, Map(), suoritukset, loadJson("koski-yto-koodi_osa-alueella.json"))
+  private val hakemusJossaOnYtonKoodiPaikallisellaTutkinnonOsalla = TestHakemus(
+    "7.8.9.0",
+    Nil,
+    Map(),
+    suoritukset,
+    loadJson("koski-reforminmukainen-jossa_ytokoodi_paikallisella_tutkinnonosalla.json")
+  )
 
   test("Tutkinnon yhteisten tutkinnon osien arvosanat") {
-    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeAmmatillinenYtoArvosanaKutsu("101054"))
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(
+      createHaeAmmatillinenYtoArvosanaKutsu("101054")
+    )
     val (tulos, _) = Laskin.laske(hakukohde, hakemus, lasku)
     assert(BigDecimal(tulos.get) == BigDecimal("4.0"))
   }
@@ -51,7 +86,12 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
     konvertteriParametrit.setPaluuarvo("15")
     konvertteriParametrit.setHylkaysperuste(Boolean.box(false).toString)
 
-    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeAmmatillinenYtoArvosanaKutsu("101054", konvertteriparametrit = Set(konvertteriParametrit)))
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(
+      createHaeAmmatillinenYtoArvosanaKutsu(
+        "101054",
+        konvertteriparametrit = Set(konvertteriParametrit)
+      )
+    )
     val (tulos, _) = Laskin.laske(hakukohde, hakemus, lasku)
     assert(BigDecimal(tulos.get) == BigDecimal("15"))
   }
@@ -65,7 +105,9 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
   }
 
   test("Tutkinnon yhteisten tutkinnon osien arvosanat, kun on useampi tutkinto") {
-    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeAmmatillinenYtoArvosanaKutsu("101054"))
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(
+      createHaeAmmatillinenYtoArvosanaKutsu("101054")
+    )
     val (tulos, _) = Laskin.laske(hakukohde, monenTutkinnonHakemus, lasku)
     assert(BigDecimal(tulos.get) == BigDecimal("2"))
   }
@@ -79,31 +121,43 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
   }
 
   test("Tutkinnon osien laskettu keskiarvo, kun on useampi tutkinto") {
-    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createLaskeAmmatillisenTutkinnonOsienKeskiarvoKutsu())
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(
+      createLaskeAmmatillisenTutkinnonOsienKeskiarvoKutsu()
+    )
     val (tulos, _) = Laskin.laske(hakukohde, monenTutkinnonHakemus, lasku)
     assert(BigDecimal(tulos.get) == BigDecimal("4.5667"))
   }
 
   test("Tutkinnon osien laskettu keskiarvo reformin mukaisesta tutkinnosta") {
-    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createLaskeAmmatillisenTutkinnonOsienKeskiarvoKutsu())
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(
+      createLaskeAmmatillisenTutkinnonOsienKeskiarvoKutsu()
+    )
     val (tulos, _) = Laskin.laske(hakukohde, reforminMukainenHakemus, lasku)
     assert(BigDecimal(tulos.get) == BigDecimal("4.5517"))
   }
 
-  test("Tutkinnon yhteisten osien osa-alueiden (YTO) laskettu keskiarvo reformin mukaisesta tutkinnosta") {
-    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createLaskeAmmatillisenTutkinnonYtoOsaAlueidenKeskiarvo("400012"))
+  test(
+    "Tutkinnon yhteisten osien osa-alueiden (YTO) laskettu keskiarvo reformin mukaisesta tutkinnosta"
+  ) {
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(
+      createLaskeAmmatillisenTutkinnonYtoOsaAlueidenKeskiarvo("400012")
+    )
     val (tulos, _) = Laskin.laske(hakukohde, reforminMukainenHakemus, lasku)
     assert(BigDecimal(tulos.get) == BigDecimal("3.7857"))
   }
 
   test("Tutkinnon osien Koskeen tallennettu keskiarvo reformin mukaisesta tutkinnosta") {
-    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeAmmatillisenTutkinnonOsienKeskiarvoKutsu())
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(
+      createHaeAmmatillisenTutkinnonOsienKeskiarvoKutsu()
+    )
     val (tulos, _) = Laskin.laske(hakukohde, reforminMukainenHakemus, lasku)
     assert(BigDecimal(tulos.get) == BigDecimal("4.40"))
   }
 
   test("Tutkinnon suoritustapa") {
-    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeAmmatillisenTutkinnonSuoritustapaKutsu())
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(
+      createHaeAmmatillisenTutkinnonSuoritustapaKutsu()
+    )
 
     val (tulos, _) = Laskin.laske(hakukohde, hakemus, lasku)
     assert(BigDecimal(tulos.get) == BigDecimal("2015"))
@@ -116,28 +170,43 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
   }
 
   test("Kaksi suoritusta sisältävä skipattava tutkinto toimii myös") {
-    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeAmmatillisenTutkinnonSuoritustapaKutsu())
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(
+      createHaeAmmatillisenTutkinnonSuoritustapaKutsu()
+    )
 
     val (tulos, _) = Laskin.laske(hakukohde, hakemusJossaOnVainSkipattaviaNayttoja, lasku)
     assert(tulos == None)
   }
 
-  test("Kaksi suoritusta sisältävä tutkinto, jossa on virheellisesti myös huomioitava suoritus, toimii myös") {
-    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeAmmatillisenTutkinnonSuoritustapaKutsu())
+  test(
+    "Kaksi suoritusta sisältävä tutkinto, jossa on virheellisesti myös huomioitava suoritus, toimii myös"
+  ) {
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(
+      createHaeAmmatillisenTutkinnonSuoritustapaKutsu()
+    )
 
-    val (tulos, _) = Laskin.laske(hakukohde, hakemusJossaOnSkipattavaNayttoJaHuomioitavaTutkinto, lasku)
+    val (tulos, _) =
+      Laskin.laske(hakukohde, hakemusJossaOnSkipattavaNayttoJaHuomioitavaTutkinto, lasku)
     assert(BigDecimal(tulos.get) == BigDecimal("2017"))
   }
 
   test("Tutkinnon suoritustapa, kun on yksi valmis ja toinen tulevaisuudessa valmistuva tutkinto") {
-    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createHaeAmmatillisenTutkinnonSuoritustapaKutsu(valmistumisenTakaraja = LocalDate.of(2020, 6, 3)))
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(
+      createHaeAmmatillisenTutkinnonSuoritustapaKutsu(valmistumisenTakaraja =
+        LocalDate.of(2020, 6, 3)
+      )
+    )
 
-    val (tulevaisuudessaVahvistettavaJaJoVahvistettuTutkintoTulos, _) = Laskin.laske(hakukohde, hakemusJossaValmisJaTulevaisuudessaValmisTutkinto, lasku)
-    assert(BigDecimal(tulevaisuudessaVahvistettavaJaJoVahvistettuTutkintoTulos.get) == BigDecimal("2017"))
+    val (tulevaisuudessaVahvistettavaJaJoVahvistettuTutkintoTulos, _) =
+      Laskin.laske(hakukohde, hakemusJossaValmisJaTulevaisuudessaValmisTutkinto, lasku)
+    assert(
+      BigDecimal(tulevaisuudessaVahvistettavaJaJoVahvistettuTutkintoTulos.get) == BigDecimal("2017")
+    )
   }
 
   test("Testaa koko ammatillisten tutkintojen funktiohierarkia") {
-    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createAmmatillisenTutkintojenKokoHierarkia())
+    val lasku =
+      Laskentadomainkonvertteri.muodostaLukuarvolasku(createAmmatillisenTutkintojenKokoHierarkia())
 
     val (tulos1, _) = Laskin.laske(hakukohde, reforminMukainenHakemus, lasku)
     assert(BigDecimal(tulos1.get) == BigDecimal("105"))
@@ -154,83 +223,145 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
 
   test("Kaksi tutkintoa joista toinen on vahvistettu rajapäivän jälkeen toimivat") {
     val laskuHeinäkuun2019Datalla = Laskentadomainkonvertteri.muodostaLukuarvolasku(
-      createAmmatillisenTutkintojenKokoHierarkia(valmistumisenTakaraja = LocalDate.of(2019, 7, 31)))
+      createAmmatillisenTutkintojenKokoHierarkia(valmistumisenTakaraja = LocalDate.of(2019, 7, 31))
+    )
     val laskuKesäkuun2020Datalla = Laskentadomainkonvertteri.muodostaLukuarvolasku(
-      createAmmatillisenTutkintojenKokoHierarkia(valmistumisenTakaraja = LocalDate.of(2020, 6, 30)))
+      createAmmatillisenTutkintojenKokoHierarkia(valmistumisenTakaraja = LocalDate.of(2020, 6, 30))
+    )
 
-    val (tulos1_2019_heinäkuu, _) = Laskin.laske(hakukohde, monenTutkinnonHakemus, laskuHeinäkuun2019Datalla)
+    val (tulos1_2019_heinäkuu, _) =
+      Laskin.laske(hakukohde, monenTutkinnonHakemus, laskuHeinäkuun2019Datalla)
     assert(BigDecimal(tulos1_2019_heinäkuu.get) == BigDecimal("39"))
-    val (tulos1_2020_kesäkuu, _) = Laskin.laske(hakukohde, monenTutkinnonHakemus, laskuKesäkuun2020Datalla)
+    val (tulos1_2020_kesäkuu, _) =
+      Laskin.laske(hakukohde, monenTutkinnonHakemus, laskuKesäkuun2020Datalla)
     assert(BigDecimal(tulos1_2020_kesäkuu.get) == BigDecimal("45"))
 
-    val (tulos2_2019_heinäkuu, _) = Laskin.laske(hakukohde, hakemusJossaValmisJaTulevaisuudessaValmisTutkinto, laskuHeinäkuun2019Datalla)
+    val (tulos2_2019_heinäkuu, _) = Laskin.laske(
+      hakukohde,
+      hakemusJossaValmisJaTulevaisuudessaValmisTutkinto,
+      laskuHeinäkuun2019Datalla
+    )
     assert(tulos2_2019_heinäkuu.isEmpty)
-    val (tulos2_2020_kesäkuu, _) = Laskin.laske(hakukohde, hakemusJossaValmisJaTulevaisuudessaValmisTutkinto, laskuKesäkuun2020Datalla)
+    val (tulos2_2020_kesäkuu, _) = Laskin.laske(
+      hakukohde,
+      hakemusJossaValmisJaTulevaisuudessaValmisTutkinto,
+      laskuKesäkuun2020Datalla
+    )
     assert(BigDecimal(tulos2_2020_kesäkuu.get) == BigDecimal("108"))
   }
 
-  test("Tutkintoa ei huomioida, jos sen päätason suorituksen vahvistuspäivämäärä on takarajapäivän jälkeen") {
-    val laskuPvmllaJoillaMolemmatTutkinnotSaadaanMukaan = Laskentadomainkonvertteri.muodostaLukuarvolasku(createAmmatillisenTutkintojenKokoHierarkia(
-      valmistumisenTakaraja = LocalDate.of(2019, 8, 30)))
-    val (tulosKunMolemmatTutkinnotOvatMukana, _) = Laskin.laske(hakukohde, monenTutkinnonHakemus, laskuPvmllaJoillaMolemmatTutkinnotSaadaanMukaan)
+  test(
+    "Tutkintoa ei huomioida, jos sen päätason suorituksen vahvistuspäivämäärä on takarajapäivän jälkeen"
+  ) {
+    val laskuPvmllaJoillaMolemmatTutkinnotSaadaanMukaan =
+      Laskentadomainkonvertteri.muodostaLukuarvolasku(
+        createAmmatillisenTutkintojenKokoHierarkia(
+          valmistumisenTakaraja = LocalDate.of(2019, 8, 30)
+        )
+      )
+    val (tulosKunMolemmatTutkinnotOvatMukana, _) = Laskin.laske(
+      hakukohde,
+      monenTutkinnonHakemus,
+      laskuPvmllaJoillaMolemmatTutkinnotSaadaanMukaan
+    )
     assert(BigDecimal(tulosKunMolemmatTutkinnotOvatMukana.get) == BigDecimal("45"))
 
-    val laskuPvmllaJollaToinenTutkintoJääPois = Laskentadomainkonvertteri.muodostaLukuarvolasku(createAmmatillisenTutkintojenKokoHierarkia(
-      valmistumisenTakaraja = LocalDate.of(2019, 8, 29)))
-    val (tulosJossaVainToinen, _) = Laskin.laske(hakukohde, monenTutkinnonHakemus, laskuPvmllaJollaToinenTutkintoJääPois)
+    val laskuPvmllaJollaToinenTutkintoJääPois = Laskentadomainkonvertteri.muodostaLukuarvolasku(
+      createAmmatillisenTutkintojenKokoHierarkia(valmistumisenTakaraja = LocalDate.of(2019, 8, 29))
+    )
+    val (tulosJossaVainToinen, _) =
+      Laskin.laske(hakukohde, monenTutkinnonHakemus, laskuPvmllaJollaToinenTutkintoJääPois)
     assert(BigDecimal(tulosJossaVainToinen.get) == BigDecimal("39"))
 
-    val laskuPvmllaJollaKumpikinTutkintoJääPois = Laskentadomainkonvertteri.muodostaLukuarvolasku(createAmmatillisenTutkintojenKokoHierarkia(
-      valmistumisenTakaraja = LocalDate.of(2010, 1, 1)))
-    val (tyhjäTulos, _) = Laskin.laske(hakukohde, monenTutkinnonHakemus, laskuPvmllaJollaKumpikinTutkintoJääPois)
+    val laskuPvmllaJollaKumpikinTutkintoJääPois = Laskentadomainkonvertteri.muodostaLukuarvolasku(
+      createAmmatillisenTutkintojenKokoHierarkia(valmistumisenTakaraja = LocalDate.of(2010, 1, 1))
+    )
+    val (tyhjäTulos, _) =
+      Laskin.laske(hakukohde, monenTutkinnonHakemus, laskuPvmllaJollaKumpikinTutkintoJääPois)
     assert(tyhjäTulos.isEmpty)
   }
 
-  test("Laskenta kaatuu, jos siihen tulee opiskeluoikeus, jonka aikaleima on leikkuripäivämäärän jälkeen") {
-    val laskuJossaLeikkuriPvmOnMolempienSuoritustenJälkeen = Laskentadomainkonvertteri.muodostaLukuarvolasku(createAmmatillisenTutkintojenKokoHierarkia(
-      dataKoskessaViimeistään = LocalDate.of(2019, 10, 8)))
-    val (tulosKunMolemmatTutkinnotOvatMukana, _) = Laskin.laske(hakukohde, monenTutkinnonHakemus, laskuJossaLeikkuriPvmOnMolempienSuoritustenJälkeen)
+  test(
+    "Laskenta kaatuu, jos siihen tulee opiskeluoikeus, jonka aikaleima on leikkuripäivämäärän jälkeen"
+  ) {
+    val laskuJossaLeikkuriPvmOnMolempienSuoritustenJälkeen =
+      Laskentadomainkonvertteri.muodostaLukuarvolasku(
+        createAmmatillisenTutkintojenKokoHierarkia(
+          dataKoskessaViimeistään = LocalDate.of(2019, 10, 8)
+        )
+      )
+    val (tulosKunMolemmatTutkinnotOvatMukana, _) = Laskin.laske(
+      hakukohde,
+      monenTutkinnonHakemus,
+      laskuJossaLeikkuriPvmOnMolempienSuoritustenJälkeen
+    )
     assert(BigDecimal(tulosKunMolemmatTutkinnotOvatMukana.get) == BigDecimal("45"))
 
-    val laskuJossaLeikkuriPvmOnEnnenToisenSuorituksenUusintaVersiota = Laskentadomainkonvertteri.muodostaLukuarvolasku(createAmmatillisenTutkintojenKokoHierarkia(
-      dataKoskessaViimeistään = LocalDate.of(2019, 10, 7)))
-    assertThrows[IllegalArgumentException](Laskin.laske(hakukohde, monenTutkinnonHakemus, laskuJossaLeikkuriPvmOnEnnenToisenSuorituksenUusintaVersiota))
+    val laskuJossaLeikkuriPvmOnEnnenToisenSuorituksenUusintaVersiota =
+      Laskentadomainkonvertteri.muodostaLukuarvolasku(
+        createAmmatillisenTutkintojenKokoHierarkia(
+          dataKoskessaViimeistään = LocalDate.of(2019, 10, 7)
+        )
+      )
+    assertThrows[IllegalArgumentException](
+      Laskin.laske(
+        hakukohde,
+        monenTutkinnonHakemus,
+        laskuJossaLeikkuriPvmOnEnnenToisenSuorituksenUusintaVersiota
+      )
+    )
   }
 
-  test("Jos yhteisen tutkinnon osan koodi esiintyy tutkinnon osan osa-alueella, se jätetään huomioimatta") {
+  test(
+    "Jos yhteisen tutkinnon osan koodi esiintyy tutkinnon osan osa-alueella, se jätetään huomioimatta"
+  ) {
     val arviointiasteikkoLasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(
       createAmmatillinenYtoArviointiAsteikkoKutsu("400014")
     )
-    val (arviointiasteikkoTulos, _) = Laskin.laske(hakukohde, hakemusJossaOnYtonKoodiMyosOsaAlueella, arviointiasteikkoLasku)
+    val (arviointiasteikkoTulos, _) =
+      Laskin.laske(hakukohde, hakemusJossaOnYtonKoodiMyosOsaAlueella, arviointiasteikkoLasku)
     assert(arviointiasteikkoTulos.contains(new java.math.BigDecimal(5)))
 
     val arvosanaLasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(
       createHaeAmmatillinenYtoArvosanaKutsu("400014")
     )
-    val (arvosanaTulos, _) = Laskin.laske(hakukohde, hakemusJossaOnYtonKoodiMyosOsaAlueella, arvosanaLasku)
+    val (arvosanaTulos, _) =
+      Laskin.laske(hakukohde, hakemusJossaOnYtonKoodiMyosOsaAlueella, arvosanaLasku)
     assert(arvosanaTulos.isEmpty)
 
-    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(createLaskeAmmatillisenTutkinnonYtoOsaAlueidenKeskiarvo("400014"))
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(
+      createLaskeAmmatillisenTutkinnonYtoOsaAlueidenKeskiarvo("400014")
+    )
     val (tulos, _) = Laskin.laske(hakukohde, hakemusJossaOnYtonKoodiMyosOsaAlueella, lasku)
     assert(tulos.isEmpty)
   }
 
-  test("Jos yhteisen tutkinnon osan koodi esiintyy paikallisella tutkinnon osalla, jonka koulutusmoduulin tyypin koodiarvo ei ole tutkinonosa-koodistossa, se jätetään huomioimatta") {
+  test(
+    "Jos yhteisen tutkinnon osan koodi esiintyy paikallisella tutkinnon osalla, jonka koulutusmoduulin tyypin koodiarvo ei ole tutkinonosa-koodistossa, se jätetään huomioimatta"
+  ) {
     val ytoKeskiarvoLasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(
       createLaskeAmmatillisenTutkinnonYtoOsaAlueidenKeskiarvo("400013")
     )
-    val (arviointiasteikkoTulos, _) = Laskin.laske(hakukohde, hakemusJossaOnYtonKoodiPaikallisellaTutkinnonOsalla, ytoKeskiarvoLasku)
+    val (arviointiasteikkoTulos, _) = Laskin.laske(
+      hakukohde,
+      hakemusJossaOnYtonKoodiPaikallisellaTutkinnonOsalla,
+      ytoKeskiarvoLasku
+    )
     assert(arviointiasteikkoTulos.contains(new java.math.BigDecimal("3.2222")))
   }
 
-  def createHaeAmmatillinenYtoArvosanaKutsu(ytoKoodi: String, konvertteriparametrit: Set[Arvokonvertteriparametri] = Set()): Funktiokutsu = {
+  def createHaeAmmatillinenYtoArvosanaKutsu(
+    ytoKoodi: String,
+    konvertteriparametrit: Set[Arvokonvertteriparametri] = Set()
+  ): Funktiokutsu = {
     createAmmatillistenTutkintojenIteroija(
       LaskentaTestUtil.Funktiokutsu(
         nimi = Funktionimi.HAEAMMATILLINENYTOARVOSANA,
         arvokonvertterit = konvertteriparametrit.toSeq,
-        valintaperustetunniste = List(
-          LaskentaTestUtil.ValintaperusteViite(onPakollinen = false, tunniste = ytoKoodi))
-      ))
+        valintaperustetunniste =
+          List(LaskentaTestUtil.ValintaperusteViite(onPakollinen = false, tunniste = ytoKoodi))
+      )
+    )
   }
 
   def createLaskeAmmatillisenTutkinnonOsienKeskiarvoKutsu(): Funktiokutsu = {
@@ -242,10 +373,17 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
             nimi = Funktionimi.PAINOTETTUKESKIARVO,
             funktioargumentit = List(
               LaskentaTestUtil.Funktiokutsu(nimi = Funktionimi.HAEAMMATILLISENOSANLAAJUUS),
-              LaskentaTestUtil.Funktiokutsu(nimi = Funktionimi.HAEAMMATILLISENOSANARVOSANA))))))
+              LaskentaTestUtil.Funktiokutsu(nimi = Funktionimi.HAEAMMATILLISENOSANARVOSANA)
+            )
+          )
+        )
+      )
+    )
   }
 
-  def createLaskeAmmatillisenTutkinnonYtoOsaAlueidenKeskiarvo(ytonKoulutusmoduulinKoodi: String): Funktiokutsu = {
+  def createLaskeAmmatillisenTutkinnonYtoOsaAlueidenKeskiarvo(
+    ytonKoulutusmoduulinKoodi: String
+  ): Funktiokutsu = {
     createAmmatillistenTutkintojenIteroija(
       LaskentaTestUtil.Funktiokutsu(
         nimi = Funktionimi.ITEROIAMMATILLISETYTOOSAALUEET,
@@ -255,9 +393,17 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
             funktioargumentit = List(
               LaskentaTestUtil.Funktiokutsu(nimi = Funktionimi.HAEAMMATILLISENYTOOSAALUEENLAAJUUS),
               LaskentaTestUtil.Funktiokutsu(nimi = Funktionimi.HAEAMMATILLISENYTOOSAALUEENARVOSANA)
-            ))
+            )
+          )
         ),
-        valintaperustetunniste = List(LaskentaTestUtil.ValintaperusteViite(onPakollinen = false, tunniste = ytonKoulutusmoduulinKoodi))))
+        valintaperustetunniste = List(
+          LaskentaTestUtil.ValintaperusteViite(
+            onPakollinen = false,
+            tunniste = ytonKoulutusmoduulinKoodi
+          )
+        )
+      )
+    )
   }
 
   def createHaeAmmatillisenTutkinnonOsienKeskiarvoKutsu(): Funktiokutsu = {
@@ -266,51 +412,100 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
     )
   }
 
-  def createHaeAmmatillisenTutkinnonSuoritustapaKutsu(valmistumisenTakaraja: LocalDate = LocalDate.of(2020, 6, 2)): Funktiokutsu = {
-    createAmmatillistenTutkintojenIteroija(valmistumisenTakaraja = valmistumisenTakaraja,
+  def createHaeAmmatillisenTutkinnonSuoritustapaKutsu(
+    valmistumisenTakaraja: LocalDate = LocalDate.of(2020, 6, 2)
+  ): Funktiokutsu = {
+    createAmmatillistenTutkintojenIteroija(
+      valmistumisenTakaraja = valmistumisenTakaraja,
       lapsi = LaskentaTestUtil.Funktiokutsu(
         nimi = Funktionimi.HAEAMMATILLISENTUTKINNONSUORITUSTAPA,
         arvokonvertterit = List(
-          LaskentaTestUtil.Arvokonvertteriparametri(paluuarvo = "2015", arvo = "ops", hylkaysperuste = "false", new TekstiRyhma()),
-          LaskentaTestUtil.Arvokonvertteriparametri(paluuarvo = "2017", arvo = "reformi", hylkaysperuste = "false", new TekstiRyhma())
-        )))
+          LaskentaTestUtil.Arvokonvertteriparametri(
+            paluuarvo = "2015",
+            arvo = "ops",
+            hylkaysperuste = "false",
+            new TekstiRyhma()
+          ),
+          LaskentaTestUtil.Arvokonvertteriparametri(
+            paluuarvo = "2017",
+            arvo = "reformi",
+            hylkaysperuste = "false",
+            new TekstiRyhma()
+          )
+        )
+      )
+    )
   }
 
   def createAmmatillinenYtoArviointiAsteikkoKutsu(parametri: String): Funktiokutsu = {
     createAmmatillistenTutkintojenIteroija(
       LaskentaTestUtil.Funktiokutsu(
         nimi = Funktionimi.HAEAMMATILLINENYTOARVIOINTIASTEIKKO,
-        valintaperustetunniste = List(LaskentaTestUtil.ValintaperusteViite(onPakollinen = false, tunniste = parametri)),
+        valintaperustetunniste =
+          List(LaskentaTestUtil.ValintaperusteViite(onPakollinen = false, tunniste = parametri)),
         arvokonvertterit = List(
-          LaskentaTestUtil.Arvokonvertteriparametri(paluuarvo = "5", arvo = "arviointiasteikkoammatillinen15", hylkaysperuste = "false", new TekstiRyhma()),
-          LaskentaTestUtil.Arvokonvertteriparametri(paluuarvo = "3", arvo = "arviointiasteikkoammatillinent1k3", hylkaysperuste = "false", new TekstiRyhma())
-        )))
+          LaskentaTestUtil.Arvokonvertteriparametri(
+            paluuarvo = "5",
+            arvo = "arviointiasteikkoammatillinen15",
+            hylkaysperuste = "false",
+            new TekstiRyhma()
+          ),
+          LaskentaTestUtil.Arvokonvertteriparametri(
+            paluuarvo = "3",
+            arvo = "arviointiasteikkoammatillinent1k3",
+            hylkaysperuste = "false",
+            new TekstiRyhma()
+          )
+        )
+      )
+    )
   }
 
-  def createAmmatillistenTutkintojenIteroija(lapsi: Funktiokutsu,
-                                             valmistumisenTakaraja: LocalDate = LocalDate.of(2020, 6, 2),
-                                             dataKoskessaViimeistään: LocalDate = LocalDate.of(2020, 5, 16)
-                                            ): Funktiokutsu = {
+  def createAmmatillistenTutkintojenIteroija(
+    lapsi: Funktiokutsu,
+    valmistumisenTakaraja: LocalDate = LocalDate.of(2020, 6, 2),
+    dataKoskessaViimeistään: LocalDate = LocalDate.of(2020, 5, 16)
+  ): Funktiokutsu = {
     LaskentaTestUtil.Funktiokutsu(
       nimi = Funktionimi.ITEROIAMMATILLISETTUTKINNOT,
       funktioargumentit = List(
-        LaskentaTestUtil.Funktiokutsu(
-          nimi = Funktionimi.MAKSIMI,
-          funktioargumentit = List(lapsi))),
+        LaskentaTestUtil.Funktiokutsu(nimi = Funktionimi.MAKSIMI, funktioargumentit = List(lapsi))
+      ),
       syoteparametrit = List(
-        LaskentaTestUtil.Syoteparametri(Funktionimi.ITEROIAMMATILLISETTUTKINNOT_VALMISTUMIS_PARAMETRI, suomalainenPvmMuoto.format(valmistumisenTakaraja)),
-        LaskentaTestUtil.Syoteparametri(Funktionimi.ITEROIAMMATILLISETTUTKINNOT_LEIKKURIPVM_PARAMETRI, suomalainenPvmMuoto.format(dataKoskessaViimeistään))))
+        LaskentaTestUtil.Syoteparametri(
+          Funktionimi.ITEROIAMMATILLISETTUTKINNOT_VALMISTUMIS_PARAMETRI,
+          suomalainenPvmMuoto.format(valmistumisenTakaraja)
+        ),
+        LaskentaTestUtil.Syoteparametri(
+          Funktionimi.ITEROIAMMATILLISETTUTKINNOT_LEIKKURIPVM_PARAMETRI,
+          suomalainenPvmMuoto.format(dataKoskessaViimeistään)
+        )
+      )
+    )
   }
 
-  def createAmmatillisenTutkintojenKokoHierarkia(valmistumisenTakaraja: LocalDate = LocalDate.of(2020, 6, 2),
-                                                 dataKoskessaViimeistään: LocalDate = LocalDate.of(2020, 5, 16)
-                                                ): Funktiokutsu = {
+  def createAmmatillisenTutkintojenKokoHierarkia(
+    valmistumisenTakaraja: LocalDate = LocalDate.of(2020, 6, 2),
+    dataKoskessaViimeistään: LocalDate = LocalDate.of(2020, 5, 16)
+  ): Funktiokutsu = {
     def haeAmmatillisenTutkinnonSuoritustapa(): Funktiokutsu =
       LaskentaTestUtil.Funktiokutsu(
         nimi = Funktionimi.HAEAMMATILLISENTUTKINNONSUORITUSTAPA,
         arvokonvertterit = List(
-          LaskentaTestUtil.Arvokonvertteriparametri(paluuarvo = "2015", arvo = "ops", hylkaysperuste = "false", new TekstiRyhma()),
-          LaskentaTestUtil.Arvokonvertteriparametri(paluuarvo = "2017", arvo = "reformi", hylkaysperuste = "false", new TekstiRyhma())))
+          LaskentaTestUtil.Arvokonvertteriparametri(
+            paluuarvo = "2015",
+            arvo = "ops",
+            hylkaysperuste = "false",
+            new TekstiRyhma()
+          ),
+          LaskentaTestUtil.Arvokonvertteriparametri(
+            paluuarvo = "2017",
+            arvo = "reformi",
+            hylkaysperuste = "false",
+            new TekstiRyhma()
+          )
+        )
+      )
 
     def lukuarvo(lukuarvo: String): Funktiokutsu = {
       LaskentaTestUtil.Funktiokutsu(
@@ -320,15 +515,11 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
     }
 
     def summa(argumentit: Funktiokutsu*) = {
-      LaskentaTestUtil.Funktiokutsu(
-        nimi = Funktionimi.SUMMA,
-        funktioargumentit = argumentit)
+      LaskentaTestUtil.Funktiokutsu(nimi = Funktionimi.SUMMA, funktioargumentit = argumentit)
     }
 
     def maksimi(argumentit: Funktiokutsu*): Funktiokutsu = {
-      LaskentaTestUtil.Funktiokutsu(
-        nimi = Funktionimi.MAKSIMI,
-        funktioargumentit = argumentit)
+      LaskentaTestUtil.Funktiokutsu(nimi = Funktionimi.MAKSIMI, funktioargumentit = argumentit)
     }
 
     def jos(totuusarvo: Funktiokutsu, haara1: Funktiokutsu, haara2: Funktiokutsu): Funktiokutsu = {
@@ -337,20 +528,21 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
       josLaiskaksi.setArvo(true.toString)
       LaskentaTestUtil.Funktiokutsu(
         nimi = Funktionimi.JOS,
-        funktioargumentit = List(
-          totuusarvo, haara1, haara2),
-        syoteparametrit = List(josLaiskaksi))
+        funktioargumentit = List(totuusarvo, haara1, haara2),
+        syoteparametrit = List(josLaiskaksi)
+      )
     }
 
     def yhtasuuri(haara1: Funktiokutsu, haara2: Funktiokutsu): Funktiokutsu = {
       LaskentaTestUtil.Funktiokutsu(
         nimi = Funktionimi.YHTASUURI,
-        funktioargumentit = List(haara1, haara2))
+        funktioargumentit = List(haara1, haara2)
+      )
     }
 
     def haeAmmatillisenTutkinnonTallennettuKeskiarvo(): Funktiokutsu = {
       LaskentaTestUtil.Funktiokutsu(
-        nimi = Funktionimi.HAEAMMATILLISENTUTKINNONKESKIARVO,
+        nimi = Funktionimi.HAEAMMATILLISENTUTKINNONKESKIARVO
       )
     }
 
@@ -360,7 +552,8 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
         min = min,
         max = max,
         palautaHaettuArvo = "false",
-        kuvaukset = new TekstiRyhma())
+        kuvaukset = new TekstiRyhma()
+      )
     }
 
     val keskiarvotPisteiksi = List(
@@ -468,12 +661,19 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
       arvovali("5", "5.1", "20")
     )
 
-
     def arvokonvertteriparametri(arvo: String, paluuarvo: String): Arvokonvertteriparametri = {
-      LaskentaTestUtil.Arvokonvertteriparametri(paluuarvo = paluuarvo, arvo = arvo, hylkaysperuste = "false", new TekstiRyhma()),
+      LaskentaTestUtil.Arvokonvertteriparametri(
+        paluuarvo = paluuarvo,
+        arvo = arvo,
+        hylkaysperuste = "false",
+        new TekstiRyhma()
+      ),
     }
 
-    def konvertoiLukuarvo(arvovalikonvertterit: List[Arvovalikonvertteriparametri], sisafunktio: Funktiokutsu): Funktiokutsu = {
+    def konvertoiLukuarvo(
+      arvovalikonvertterit: List[Arvovalikonvertteriparametri],
+      sisafunktio: Funktiokutsu
+    ): Funktiokutsu = {
       LaskentaTestUtil.Funktiokutsu(
         nimi = Funktionimi.KONVERTOILUKUARVO,
         funktioargumentit = List(sisafunktio),
@@ -481,23 +681,28 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
       )
     }
 
-    def haeJaKonvertoiAmmatillinenYtoArvosana(parametri: String, arvovalikonvertterit: List[Arvokonvertteriparametri]) = {
+    def haeJaKonvertoiAmmatillinenYtoArvosana(
+      parametri: String,
+      arvovalikonvertterit: List[Arvokonvertteriparametri]
+    ) = {
       LaskentaTestUtil.Funktiokutsu(
         nimi = Funktionimi.HAEAMMATILLINENYTOARVOSANA,
         arvokonvertterit = arvovalikonvertterit,
-        valintaperustetunniste = List(
-          LaskentaTestUtil.ValintaperusteViite(onPakollinen = false, tunniste = parametri))
+        valintaperustetunniste =
+          List(LaskentaTestUtil.ValintaperusteViite(onPakollinen = false, tunniste = parametri))
       )
     }
 
     def haeAmmatillinenYtoArviointiAsteikko(parametri: String): Funktiokutsu = {
       LaskentaTestUtil.Funktiokutsu(
         nimi = Funktionimi.HAEAMMATILLINENYTOARVIOINTIASTEIKKO,
-        valintaperustetunniste = List(LaskentaTestUtil.ValintaperusteViite(onPakollinen = false, tunniste = parametri)),
+        valintaperustetunniste =
+          List(LaskentaTestUtil.ValintaperusteViite(onPakollinen = false, tunniste = parametri)),
         arvokonvertterit = List(
           arvokonvertteriparametri("arviointiasteikkoammatillinen15", "5"),
-          arvokonvertteriparametri("arviointiasteikkoammatillinent1k3", "3"),
-        ))
+          arvokonvertteriparametri("arviointiasteikkoammatillinent1k3", "3")
+        )
+      )
     }
 
     val opsYto1to3pisteytys = List(
@@ -523,7 +728,8 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
             yhtasuuri(haeAmmatillinenYtoArviointiAsteikko(parametri1), lukuarvo("5")),
             haeJaKonvertoiAmmatillinenYtoArvosana(parametri1, opsYto1to5pisteytys),
             lukuarvo("0")
-          )),
+          )
+        ),
         jos(
           yhtasuuri(haeAmmatillinenYtoArviointiAsteikko(parametri2), lukuarvo("3")),
           haeJaKonvertoiAmmatillinenYtoArvosana(parametri2, opsYto1to3pisteytys),
@@ -536,7 +742,7 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
       )
     }
 
-    def iteroiYtoOsaAlueidenKeskiarvo(ytoKoodi: String): Funktiokutsu= {
+    def iteroiYtoOsaAlueidenKeskiarvo(ytoKoodi: String): Funktiokutsu = {
       LaskentaTestUtil.Funktiokutsu(
         nimi = Funktionimi.ITEROIAMMATILLISETYTOOSAALUEET,
         funktioargumentit = List(
@@ -545,9 +751,12 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
             funktioargumentit = List(
               LaskentaTestUtil.Funktiokutsu(nimi = Funktionimi.HAEAMMATILLISENYTOOSAALUEENLAAJUUS),
               LaskentaTestUtil.Funktiokutsu(nimi = Funktionimi.HAEAMMATILLISENYTOOSAALUEENARVOSANA)
-            ))
+            )
+          )
         ),
-        valintaperustetunniste = List(LaskentaTestUtil.ValintaperusteViite(onPakollinen = false, tunniste = ytoKoodi)))
+        valintaperustetunniste =
+          List(LaskentaTestUtil.ValintaperusteViite(onPakollinen = false, tunniste = ytoKoodi))
+      )
     }
 
     val opsMallinenJuuri =
@@ -556,10 +765,8 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
         summa(
           // Ammatillinen yto viestintä- ja vuorovaikutusosaaminen
           haeYto("101053", "400012"),
-
           // Ammatillinen yto matemaattis-luonnontieteellinen osaaminen
           haeYto("101054", "400013"),
-
           // Ammatillinen yto yhteiskunta -ja työelämäosaaminen
           haeYto("101055", "400014")
         )
@@ -578,10 +785,8 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
               summa(
                 // Ammatillinen yto viestintä- ja vuorovaikutusosaaminen
                 haeYto("101053", "400012"),
-
                 // Ammatillinen yto matemaattis-luonnontieteellinen osaaminen
                 haeYto("101054", "400013"),
-
                 // Ammatillinen yto yhteiskunta -ja työelämäosaaminen
                 haeYto("101055", "400014")
               ),
@@ -609,9 +814,11 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
       jos(
         yhtasuuri(haeAmmatillisenTutkinnonSuoritustapa, lukuarvo("2015")),
         opsMallinenJuuri,
-        reformiMallinenJuuri),
+        reformiMallinenJuuri
+      ),
       valmistumisenTakaraja,
-      dataKoskessaViimeistään)
+      dataKoskessaViimeistään
+    )
   }
 
   private def loadJson(path: String): Json = {

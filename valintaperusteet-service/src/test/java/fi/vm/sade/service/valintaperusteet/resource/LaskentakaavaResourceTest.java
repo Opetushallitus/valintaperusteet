@@ -229,7 +229,8 @@ public class LaskentakaavaResourceTest {
     funktiokutsu.getSyoteparametrit().add(new SyoteparametriDTO("nimi", name));
     laskentakaava.setFunktiokutsu(funktiokutsu);
     return serializeAndDeserialize(laskentakaava);
-  };
+  }
+  ;
 
   private LaskentakaavaDTO kaavaFromResponse(final Response insertResponse) {
     return (LaskentakaavaDTO) insertResponse.getEntity();

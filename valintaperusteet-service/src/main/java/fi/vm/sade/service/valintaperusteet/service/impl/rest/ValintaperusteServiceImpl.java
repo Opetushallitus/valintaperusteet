@@ -209,10 +209,7 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
     valintaperusteetDTO
         .getHakukohteenValintaperuste()
         .addAll(
-            hakukohde
-                .getHakukohteenValintaperusteet()
-                .values()
-                .parallelStream()
+            hakukohde.getHakukohteenValintaperusteet().values().parallelStream()
                 .map(
                     vp -> {
                       HakukohteenValintaperusteDTO vpDTO = new HakukohteenValintaperusteDTO();

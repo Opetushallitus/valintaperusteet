@@ -9,31 +9,40 @@ import io.circe.syntax.EncoderOps
 
 import scala.jdk.CollectionConverters._
 
-
-class Hakemus(val oid: String,
-              val hakutoiveet: JMap[JInteger, Hakutoive],
-              jkentat: JMap[String, String],
-              jmetatiedot: JMap[String, JList[JMap[String, String]]],
-              val koskiOpiskeluoikeudet: Json) {
+class Hakemus(
+  val oid: String,
+  val hakutoiveet: JMap[JInteger, Hakutoive],
+  jkentat: JMap[String, String],
+  jmetatiedot: JMap[String, JList[JMap[String, String]]],
+  val koskiOpiskeluoikeudet: Json
+) {
   val kentat: Kentat = jkentat.asScala.toSeq.toMap
-  val metatiedot: Map[String, List[Kentat]] = jmetatiedot.asScala.toMap.mapValues(_.asScala.toList.map(_.asScala.toMap)).toMap
+  val metatiedot: Map[String, List[Kentat]] =
+    jmetatiedot.asScala.toMap.mapValues(_.asScala.toList.map(_.asScala.toMap)).toMap
 
-  def this(oid: String,
+  def this(
+    oid: String,
     hakutoiveet: JMap[JInteger, Hakutoive],
     jkentat: JMap[String, String],
-    jmetatiedot: JMap[String, JList[JMap[String, String]]]) {
+    jmetatiedot: JMap[String, JList[JMap[String, String]]]
+  ) {
     this(oid, hakutoiveet, jkentat, jmetatiedot, List[Unit]().asJson)
   }
 
-  def onkoHakutoivePrioriteetilla(hakukohde: String, prioriteetti: Int, ryhmaOid: Option[String] = None): Boolean = {
+  def onkoHakutoivePrioriteetilla(
+    hakukohde: String,
+    prioriteetti: Int,
+    ryhmaOid: Option[String] = None
+  ): Boolean = {
     def hakutoiveKuuluuRyhmaan: Hakutoive => Boolean = {
       _.hakukohdeRyhmat.contains(ryhmaOid.get)
     }
 
-    if(ryhmaOid.isDefined) {
+    if (ryhmaOid.isDefined) {
       // Hakutoive on hakukohderyhmansä N:s hakutoive lomakkeella
       hakutoiveet.asScala.values
-        .filter(hakutoiveKuuluuRyhmaan).toList
+        .filter(hakutoiveKuuluuRyhmaan)
+        .toList
         .lift(prioriteetti - 1)
         .exists(_.hakukohdeOid == hakukohde)
     } else {
@@ -43,12 +52,19 @@ class Hakemus(val oid: String,
   }
 
   def onkoHakukelpoinen(hakukohdeOid: String): Boolean = {
-    val key = jkentat.keySet().asScala.filter(k => k.startsWith("preference") && k.endsWith("-Koulutus-id"))
+    val key = jkentat
+      .keySet()
+      .asScala
+      .filter(k => k.startsWith("preference") && k.endsWith("-Koulutus-id"))
       .find(k => jkentat.get(k) == hakukohdeOid)
     val result = key match {
       case Some(k) =>
-        val status = kentat.getOrElse(s"$k-eligibility", "ELIGIBLE") //jkentat.getOrDefault(s"$k-eligibility", "ELIGIBLE")
-        if(status != "INELIGIBLE") true else false
+        val status =
+          kentat.getOrElse(
+            s"$k-eligibility",
+            "ELIGIBLE"
+          ) //jkentat.getOrDefault(s"$k-eligibility", "ELIGIBLE")
+        if (status != "INELIGIBLE") true else false
       case _ => false
     }
     result
@@ -59,14 +75,27 @@ object Hakemus {
 
   type Kentat = Map[String, String]
 
-  def apply(oid: String, hakutoiveet: JMap[JInteger, Hakutoive], jkentat: JMap[String, String], jmetatiedot: JMap[String, JList[JMap[String, String]]]): Hakemus = {
+  def apply(
+    oid: String,
+    hakutoiveet: JMap[JInteger, Hakutoive],
+    jkentat: JMap[String, String],
+    jmetatiedot: JMap[String, JList[JMap[String, String]]]
+  ): Hakemus = {
     new Hakemus(oid, hakutoiveet, jkentat, jmetatiedot)
   }
 
-  def unapply(h: Hakemus): Option[(String, JMap[JInteger, Hakutoive], JMap[String, String], JMap[String, JList[JMap[String, String]]])] = {
-    val mapatytMetatiedot: Map[String, JList[JMap[String, String]]] = h.metatiedot.view.mapValues { kenttalista =>
-      val value: Seq[JMap[String, String]] = kenttalista.map(_.asJava)
-      value.asJava
+  def unapply(h: Hakemus): Option[
+    (
+      String,
+      JMap[JInteger, Hakutoive],
+      JMap[String, String],
+      JMap[String, JList[JMap[String, String]]]
+    )
+  ] = {
+    val mapatytMetatiedot: Map[String, JList[JMap[String, String]]] = h.metatiedot.view.mapValues {
+      kenttalista =>
+        val value: Seq[JMap[String, String]] = kenttalista.map(_.asJava)
+        value.asJava
     }.toMap
     val javaMetatiedot: JMap[String, JList[JMap[String, String]]] = mapatytMetatiedot.asJava
     Some((h.oid, h.hakutoiveet, h.kentat.asJava, javaMetatiedot))
@@ -81,6 +110,7 @@ object Hakutoive {
     new Hakutoive(oid, ryhmat)
   }
 
-  def unapply(h: Hakutoive): Option[(String, JList[String])] = Some(h.hakukohdeOid, h.hakukohdeRyhmat)
+  def unapply(h: Hakutoive): Option[(String, JList[String])] =
+    Some(h.hakukohdeOid, h.hakukohdeRyhmat)
 
 }
