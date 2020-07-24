@@ -85,7 +85,7 @@ public class ValintatapajonoResourceTest {
   public void testFindAll() throws Exception {
     List<ValintatapajonoDTO> jonos = resource.findAll();
 
-    assertEquals(73, jonos.size());
+    assertEquals(76, jonos.size());
     testUtil.lazyCheck(JsonViews.Basic.class, jonos);
   }
 
