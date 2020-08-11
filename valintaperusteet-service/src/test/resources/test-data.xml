@@ -580,14 +580,12 @@
     <valintaryhma_valintakoekoodi valintaryhma_id="47" valintakoekoodi_id="14"/>
     <valintaryhma_valintakoekoodi valintaryhma_id="48" valintakoekoodi_id="14"/>
     <valintaryhma_valintakoekoodi valintaryhma_id="49" valintakoekoodi_id="14"/>
-    <valintaryhma_valintakoekoodi valintaryhma_id="49" valintakoekoodi_id="14"/>
     <valintaryhma_valintakoekoodi valintaryhma_id="51" valintakoekoodi_id="14"/>
     <valintaryhma_valintakoekoodi valintaryhma_id="55" valintakoekoodi_id="14"/>
     <hakukohde_viite_valintakoekoodi hakukohde_viite_id="18" valintakoekoodi_id="14"/>
     <hakukohde_viite_valintakoekoodi hakukohde_viite_id="19" valintakoekoodi_id="14"/>
 
     <valintakoekoodi id="15" version="0" uri="valintakoeuri2"/>
-    <valintaryhma_valintakoekoodi valintaryhma_id="51" valintakoekoodi_id="15"/>
     <valintaryhma_valintakoekoodi valintaryhma_id="51" valintakoekoodi_id="15"/>
 
     <valintakoekoodi id="16" version="0" uri="valintakoeuri3"/>
@@ -1161,13 +1159,13 @@
                      ei_varasijatayttoa="false" kaikki_ehdon_tayttavat_hyvaksytaan="false" valisijoittelu="false" automaattinen_sijoitteluun_siirto="true"/>
 
     <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="16" version="1"
-                     oid="16" edellinen_valintatapajono_id="15" aloituspaikat="11" poistetaanko_hylatyt="false"
+                     oid="16" aloituspaikat="11" poistetaanko_hylatyt="false"
                      nimi="haku 2 valinnanvaihe 2 jono1" kuvaus="kuvaus" tasapistesaanto="ARVONTA"
                      siirretaan_sijoitteluun="true" valinnan_vaihe_id="8" aktiivinen="true" ei_varasijatayttoa="false"
                      kaikki_ehdon_tayttavat_hyvaksytaan="false" valisijoittelu="false" automaattinen_sijoitteluun_siirto="true"/>
 
     <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="17" version="1"
-                     oid="17" edellinen_valintatapajono_id="16" aloituspaikat="12" poistetaanko_hylatyt="false"
+                     oid="17" aloituspaikat="12" poistetaanko_hylatyt="false"
                      nimi="haku 2 valinnanvaihe 3 jono1" kuvaus="kuvaus" tasapistesaanto="ARVONTA"
                      siirretaan_sijoitteluun="true" valinnan_vaihe_id="9" aktiivinen="true" ei_varasijatayttoa="false"
                      kaikki_ehdon_tayttavat_hyvaksytaan="false" valisijoittelu="false" automaattinen_sijoitteluun_siirto="true"/>
@@ -1601,11 +1599,13 @@
                      ei_varasijatayttoa="false" valisijoittelu="false" automaattinen_sijoitteluun_siirto="true"/>
 
     <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="3402" version="0"
+                     edellinen_valintatapajono_id="3401"
                      aktiivinen="false" aloituspaikat="20" nimi="VR1 VAIHE1 JONO1" oid="3402" poistetaanko_hylatyt="false"
                      siirretaan_sijoitteluun="true" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3401"
                      ei_varasijatayttoa="false" valisijoittelu="false" automaattinen_sijoitteluun_siirto="true"/>
 
     <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="3403" version="0"
+                     edellinen_valintatapajono_id="3402"
                      aktiivinen="false" aloituspaikat="20" nimi="VR1 VAIHE1 JONO1" oid="3403" poistetaanko_hylatyt="false"
                      siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3401"
                      ei_varasijatayttoa="false" valisijoittelu="false" automaattinen_sijoitteluun_siirto="true"/>
@@ -1644,16 +1644,19 @@
                      ei_varasijatayttoa="false" valisijoittelu="false" automaattinen_sijoitteluun_siirto="true"/>
 
     <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="3702" version="0"
+                     edellinen_valintatapajono_id="3701"
                      aktiivinen="false" aloituspaikat="20" nimi="VR1 VAIHE1 JONO1" oid="3702" poistetaanko_hylatyt="false"
                      siirretaan_sijoitteluun="true" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3701"
                      ei_varasijatayttoa="false" valisijoittelu="false" automaattinen_sijoitteluun_siirto="true"/>
 
     <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="3703" version="0"
+                     edellinen_valintatapajono_id="3702"
                      aktiivinen="false" aloituspaikat="20" nimi="VR1 VAIHE1 JONO1" oid="3703" poistetaanko_hylatyt="false"
                      siirretaan_sijoitteluun="false" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3701"
                      ei_varasijatayttoa="false" valisijoittelu="false" automaattinen_sijoitteluun_siirto="true"/>
 
     <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="3704" version="0"
+                     edellinen_valintatapajono_id="3703"
                      aktiivinen="true" aloituspaikat="20" nimi="VR1 VAIHE1 JONO1" oid="3704" poistetaanko_hylatyt="false"
                      siirretaan_sijoitteluun="true" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3701"
                      ei_varasijatayttoa="false" valisijoittelu="false" automaattinen_sijoitteluun_siirto="true"/>
