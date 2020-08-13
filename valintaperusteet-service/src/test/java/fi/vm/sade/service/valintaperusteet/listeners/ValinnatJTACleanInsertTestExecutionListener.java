@@ -21,6 +21,8 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 /** Created by kjsaila on 26/06/14. */
 public class ValinnatJTACleanInsertTestExecutionListener
     extends TransactionalTestExecutionListener {
+  private static DatabaseSequenceFilter ALL_TABLES_FILTER;
+
   public void beforeTestMethod(TestContext testContext) throws Exception {
     super.beforeTestMethod(testContext);
 
@@ -54,8 +56,11 @@ public class ValinnatJTACleanInsertTestExecutionListener
       SessionImpl session = (SessionImpl) entityManager.getDelegate();
       Connection jdbcConn = session.connection();
       IDatabaseConnection con = new DatabaseConnection(jdbcConn);
+      if (ALL_TABLES_FILTER == null) {
+        ALL_TABLES_FILTER = new DatabaseSequenceFilter(con);
+      }
       new TransactionOperation(DatabaseOperation.CLEAN_INSERT)
-          .execute(con, new FilteredDataSet(new DatabaseSequenceFilter(con), replacementDataSet));
+          .execute(con, new FilteredDataSet(ALL_TABLES_FILTER, replacementDataSet));
       con.close();
     }
   }
