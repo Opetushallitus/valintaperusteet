@@ -633,6 +633,15 @@ buildTtime=${maven.build.timestamp}
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M5</version>
+                <configuration>
+                    <!-- skips surefire tests without skipping failsafe tests.
+                             Property value seems to magically default to false -->
+                    <skipTests>${skip.surefire.tests}</skipTests>
+                </configuration>
+            </plugin>
         </plugins>
         <pluginManagement>
             <plugins>
