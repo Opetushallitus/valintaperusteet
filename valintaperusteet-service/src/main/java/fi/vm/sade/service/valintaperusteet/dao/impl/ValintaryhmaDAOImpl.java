@@ -80,11 +80,10 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long>
             .fetch()
             .leftJoin(valintaryhma.organisaatiot)
             .fetch()
+            .leftJoin(valintaryhma.valintakoekoodit)
+            .fetch()
             .where(valintaryhma.oid.eq(oid))
             .singleResult(valintaryhma);
-    if (vr != null) {
-      vr.getValintakoekoodit().size();
-    }
     return vr;
   }
 

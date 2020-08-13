@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -633,10 +634,9 @@ public class HakukohdeImportServiceTest {
       // &&
       // HakukohdeImportServiceImpl.Kieli.FI.getUri().equals(valintaryhma1.getOpetuskielikoodit().iterator().next().getUri()));
 
-      List<Valintakoekoodi> valintakoekoodit = valintaryhma1.getValintakoekoodit();
-      assertEquals(2, valintakoekoodit.size());
-      assertEquals(valintakoekoodit.get(0).getUri(), OLETUS_VALINTAKOEURI);
-      assertEquals(valintakoekoodit.get(1).getUri(), OLETUS_VALINTAKOEURI);
+      Set<Valintakoekoodi> valintakoekoodit = valintaryhma1.getValintakoekoodit();
+      assertEquals(1, valintakoekoodit.size());
+      assertEquals(valintakoekoodit.iterator().next().getUri(), OLETUS_VALINTAKOEURI);
     }
 
     HakukohdeImportDTO importData = luoHakukohdeImportDTO(hakukohdeOid, hakuOid, hakukohdekoodiUri);

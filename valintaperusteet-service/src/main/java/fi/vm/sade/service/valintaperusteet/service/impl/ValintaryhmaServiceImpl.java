@@ -213,13 +213,11 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
   }
 
   private void copyValintakoekoodit(Valintaryhma source, Valintaryhma target) {
-    List<Valintakoekoodi> sourceKoodit = valintakoekoodiDAO.findByValintaryhma(source.getOid());
+    Set<Valintakoekoodi> sourceKoodit = valintakoekoodiDAO.findByValintaryhma(source.getOid());
     if (sourceKoodit != null) {
-      sourceKoodit.stream()
-          .forEach(
-              sourceKoodi -> {
-                target.getValintakoekoodit().add(sourceKoodi);
-              });
+      for (Valintakoekoodi sourceKoodi : sourceKoodit) {
+        target.getValintakoekoodit().add(sourceKoodi);
+      }
     }
   }
 
