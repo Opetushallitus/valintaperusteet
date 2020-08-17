@@ -22,21 +22,30 @@
         </property>
     </bean>
 
-    <!-- BoneCP configuration -->
-    <bean id="mainDataSource" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
-        <property name="driverClass" value="org.postgresql.Driver" />
-        <property name="jdbcUrl" value="jdbc:postgresql://localhost:#{systemProperties['testikannanPortti'] ?: 4320}/valintaperusteet_tests" />
-        <property name="username" value="valintaperusteet_tests"/>
-        <property name="password" value="testikannan_salasana"/>
-        <property name="idleConnectionTestPeriod" value="3000"/>
-        <property name="idleMaxAge" value="3000"/>
-        <property name="maxConnectionsPerPartition" value="100"/>
-        <property name="minConnectionsPerPartition" value="2"/>
-        <property name="partitionCount" value="3"/>
-        <property name="acquireIncrement" value="10"/>
-        <property name="statementsCacheSize" value="50"/>
-        <property name="releaseHelperThreads" value="20"/>
+    <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+        <property name="poolName" value="springHikariCP" />
+        <property name="connectionTestQuery" value="SELECT 1" />
+        <property name="dataSourceClassName" value="org.postgresql.ds.PGSimpleDataSource" />
+        <property name="maximumPoolSize" value="10" />
+        <property name="connectionTimeout" value="3000" />
+        <property name="maxLifetime" value="3000"/>
+        <property name="leakDetectionThreshold" value="3000" />
+        <property name="registerMbeans" value="false" />
+
+        <property name="dataSourceProperties">
+            <props>
+                <prop key="url">jdbc:postgresql://localhost:#{systemProperties['testikannanPortti'] ?: 4320}/valintaperusteet_tests</prop>
+                <prop key="user">valintaperusteet_tests</prop>
+                <prop key="password">testikannan_salasana</prop>
+            </props>
+        </property>
     </bean>
+
+    <!-- HikariCP configuration -->
+    <bean id="mainDataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+        <constructor-arg ref="hikariConfig" />
+    </bean>
+
 
     <!-- Add EntityManagerFactory (required by jta) support -->
     <bean id="emf" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
