@@ -24,10 +24,10 @@
 
     <!-- BoneCP configuration -->
     <bean id="mainDataSource" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
-        <property name="driverClass" value="org.hsqldb.jdbcDriver" />
-        <property name="jdbcUrl" value="jdbc:hsqldb:file:target/valintaperusteet-test-db;hsqldb.tx=mvcc" />
-        <property name="username" value="sa"/>
-        <property name="password" value=""/>
+        <property name="driverClass" value="org.postgresql.Driver" />
+        <property name="jdbcUrl" value="jdbc:postgresql://localhost:#{systemProperties['testikannanPortti'] ?: 4320}/valintaperusteet_tests" />
+        <property name="username" value="valintaperusteet_tests"/>
+        <property name="password" value="testikannan_salasana"/>
         <property name="idleConnectionTestPeriod" value="3000"/>
         <property name="idleMaxAge" value="3000"/>
         <property name="maxConnectionsPerPartition" value="100"/>

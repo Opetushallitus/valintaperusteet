@@ -10,7 +10,6 @@ import static org.junit.Assert.assertTrue;
 import fi.vm.sade.kaava.Funktiokuvaaja;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
-import fi.vm.sade.service.valintaperusteet.dao.GenericDAO;
 import fi.vm.sade.service.valintaperusteet.dto.FunktioargumentinLapsiDTO;
 import fi.vm.sade.service.valintaperusteet.dto.FunktioargumenttiDTO;
 import fi.vm.sade.service.valintaperusteet.dto.FunktiokutsuDTO;
@@ -39,8 +38,6 @@ import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuaEiVoid
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaMuodostaaSilmukanException;
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -49,7 +46,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,8 +66,6 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 @RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data.xml")
 public class LaskentakaavaServiceTest {
-
-  @Autowired private GenericDAO genericDAO;
 
   @Autowired private LaskentakaavaService laskentakaavaService;
 
@@ -97,19 +91,6 @@ public class LaskentakaavaServiceTest {
   }
 
   private static final double DELTA = 0.000000000000001d;
-
-  @Before
-  public void initialize() {
-    try {
-      Class.forName("org.hsqldb.jdbcDriver");
-      Connection conn = DriverManager.getConnection("jdbc:hsqldb:mem:valintaperusteet", "sa", "");
-      conn.createStatement().executeUpdate("SET DATABASE TRANSACTION CONTROL MVCC");
-      conn.commit();
-      conn.close();
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-  }
 
   @Test
   public void testHaeKaava() {
