@@ -667,7 +667,7 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
         arvo = arvo,
         hylkaysperuste = "false",
         new TekstiRyhma()
-      ),
+      )
     }
 
     def konvertoiLukuarvo(
