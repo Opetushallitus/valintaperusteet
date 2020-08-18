@@ -1,14 +1,30 @@
 package fi.vm.sade.service.valintaperusteet.service.impl.actors;
 
-import akka.actor.*;
+import akka.actor.UntypedAbstractActor;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
-import fi.vm.sade.service.valintaperusteet.dto.*;
+import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriDTO;
+import fi.vm.sade.service.valintaperusteet.dto.KoodiDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi;
 import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
-import fi.vm.sade.service.valintaperusteet.model.*;
-import fi.vm.sade.service.valintaperusteet.service.*;
+import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
+import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
+import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
+import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
+import fi.vm.sade.service.valintaperusteet.service.HakukohdekoodiService;
+import fi.vm.sade.service.valintaperusteet.service.JarjestyskriteeriService;
+import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
+import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
+import fi.vm.sade.service.valintaperusteet.service.ValintakoeService;
+import fi.vm.sade.service.valintaperusteet.service.ValintakoekoodiService;
+import fi.vm.sade.service.valintaperusteet.service.ValintaryhmaService;
+import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
 import fi.vm.sade.service.valintaperusteet.service.impl.LuoValintaperusteetServiceImpl;
 import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.LuoValintaperuste;
 import fi.vm.sade.service.valintaperusteet.service.impl.generator.PkJaYoPohjaiset;
@@ -23,7 +39,7 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 @Named("LuoValintaperusteetActorBean")
 @Component
 @org.springframework.context.annotation.Scope(value = "prototype")
-public class LuoValintaperusteetActorBean extends UntypedActor {
+public class LuoValintaperusteetActorBean extends UntypedAbstractActor {
   LoggingAdapter log = Logging.getLogger(getContext().system(), this);
 
   @Autowired private LaskentakaavaService laskentakaavaService;

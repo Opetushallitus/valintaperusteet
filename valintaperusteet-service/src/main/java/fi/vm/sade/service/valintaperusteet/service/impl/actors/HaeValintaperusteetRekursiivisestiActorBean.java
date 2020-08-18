@@ -5,7 +5,7 @@ import static fi.vm.sade.service.valintaperusteet.service.impl.actors.creators.S
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Status;
-import akka.actor.UntypedActor;
+import akka.actor.UntypedAbstractActor;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
 import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
@@ -33,7 +33,7 @@ import org.springframework.stereotype.Component;
 @Named("HaeValintaperusteetRekursiivisestiActorBean")
 @Component
 @org.springframework.context.annotation.Scope(value = "prototype")
-public class HaeValintaperusteetRekursiivisestiActorBean extends UntypedActor {
+public class HaeValintaperusteetRekursiivisestiActorBean extends UntypedAbstractActor {
   LoggingAdapter log = Logging.getLogger(getContext().system(), this);
 
   private int funktiokutsuLapset = 0;

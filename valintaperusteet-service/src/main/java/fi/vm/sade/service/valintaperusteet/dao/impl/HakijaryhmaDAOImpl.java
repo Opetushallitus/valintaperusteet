@@ -1,7 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.dao.impl;
 
+import com.mysema.query.jpa.JPASubQuery;
 import com.mysema.query.jpa.impl.JPAQuery;
-import com.mysema.query.jpa.impl.JPASubQuery;
 import com.mysema.query.types.EntityPath;
 import fi.vm.sade.service.valintaperusteet.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaDAO;
@@ -59,7 +59,8 @@ public class HakijaryhmaDAOImpl extends AbstractJpaDAOImpl<Hakijaryhma, Long>
         .fetch()
         .leftJoin(hakijaryhma.hakijaryhmatyyppikoodi)
         .fetch()
-        .listDistinct(hakijaryhma);
+        .distinct()
+        .list(hakijaryhma);
   }
 
   @Override
@@ -76,7 +77,8 @@ public class HakijaryhmaDAOImpl extends AbstractJpaDAOImpl<Hakijaryhma, Long>
         .fetch()
         .leftJoin(hakijaryhma.hakijaryhmatyyppikoodi)
         .fetch()
-        .listDistinct(hakijaryhma);
+        .distinct()
+        .list(hakijaryhma);
   }
 
   @Override

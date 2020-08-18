@@ -1,5 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.listeners;
 
+import static org.dbunit.database.DatabaseConfig.FEATURE_ALLOW_EMPTY_FIELDS;
+
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import java.sql.Connection;
 import java.util.Collections;
@@ -59,6 +61,7 @@ public class ValinnatJTACleanInsertTestExecutionListener
       SessionImpl session = (SessionImpl) entityManager.getDelegate();
       Connection jdbcConn = session.connection();
       IDatabaseConnection con = new DatabaseConnection(jdbcConn);
+      con.getConfig().setProperty(FEATURE_ALLOW_EMPTY_FIELDS, true);
       if (ALL_TABLES_FILTER == null) {
         ALL_TABLES_FILTER = new DatabaseSequenceFilter(con);
       }

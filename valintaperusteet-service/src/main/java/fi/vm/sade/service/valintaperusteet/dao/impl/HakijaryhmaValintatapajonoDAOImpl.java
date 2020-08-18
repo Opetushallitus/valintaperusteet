@@ -1,11 +1,15 @@
 package fi.vm.sade.service.valintaperusteet.dao.impl;
 
+import com.mysema.query.jpa.JPASubQuery;
 import com.mysema.query.jpa.impl.JPAQuery;
-import com.mysema.query.jpa.impl.JPASubQuery;
 import com.mysema.query.types.EntityPath;
 import fi.vm.sade.service.valintaperusteet.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaValintatapajonoDAO;
-import fi.vm.sade.service.valintaperusteet.model.*;
+import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
+import fi.vm.sade.service.valintaperusteet.model.QHakijaryhma;
+import fi.vm.sade.service.valintaperusteet.model.QHakijaryhmaValintatapajono;
+import fi.vm.sade.service.valintaperusteet.model.QHakukohdeViite;
+import fi.vm.sade.service.valintaperusteet.model.QValintatapajono;
 import java.util.Collection;
 import java.util.List;
 import org.springframework.stereotype.Repository;
@@ -71,7 +75,8 @@ public class HakijaryhmaValintatapajonoDAOImpl
         .leftJoin(hv.hakijaryhmatyyppikoodi)
         .fetch()
         .where(v.oid.eq(oid))
-        .listDistinct(hv);
+        .distinct()
+        .list(hv);
   }
 
   @Override
@@ -98,7 +103,8 @@ public class HakijaryhmaValintatapajonoDAOImpl
         .leftJoin(hv.hakijaryhmatyyppikoodi)
         .fetch()
         .where(v.oid.in(oids))
-        .listDistinct(hv);
+        .distinct()
+        .list(hv);
   }
 
   @Override
@@ -120,7 +126,8 @@ public class HakijaryhmaValintatapajonoDAOImpl
         .leftJoin(hv.hakijaryhmatyyppikoodi)
         .fetch()
         .where(v.oid.eq(oid))
-        .listDistinct(hv);
+        .distinct()
+        .list(hv);
   }
 
   @Override
@@ -145,7 +152,8 @@ public class HakijaryhmaValintatapajonoDAOImpl
         .leftJoin(hv.hakijaryhmatyyppikoodi)
         .fetch()
         .where(v.oid.in(oids))
-        .listDistinct(hv);
+        .distinct()
+        .list(hv);
   }
 
   @Override
