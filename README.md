@@ -28,6 +28,8 @@ Jos haluat ajaa tietokantaa käyttäviä testejä erikseen IDEstä, käynnistä 
 
 ``mvn -pl valintaperusteet-service/pom.xml -Dtestikannan.portti=4320 docker:start``
 
+Jos porttia ei anneta, docker-maven-plugin arpoo vapaan portin.
+
 Testi-PostgreSQL:n sammuttaminen hoituu samaan tapaan `mvn -pl valintaperusteet-service/pom.xml docker:stop`.
 
 Huom: pelkkä `mvn test` jättää testikannan käyntiin. Se näkyy `docker ps`:llä.
