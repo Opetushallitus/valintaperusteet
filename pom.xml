@@ -655,6 +655,11 @@ buildTtime=${maven.build.timestamp}
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>3.0.0-M5</version>
                 </plugin>
+                <plugin>
+                    <groupId>io.fabric8</groupId>
+                    <artifactId>docker-maven-plugin</artifactId>
+                    <version>0.33.0</version>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
@@ -800,6 +805,13 @@ buildTtime=${maven.build.timestamp}
                             <groupId>org.codehaus.mojo</groupId>
                             <artifactId>exec-maven-plugin</artifactId>
                             <version>${plugin.exec-maven-plugin.version}</version>
+                            <configuration>
+                                <skip>true</skip>
+                            </configuration>
+                        </plugin>
+                        <plugin>
+                            <groupId>io.fabric8</groupId>
+                            <artifactId>docker-maven-plugin</artifactId>
                             <configuration>
                                 <skip>true</skip>
                             </configuration>
