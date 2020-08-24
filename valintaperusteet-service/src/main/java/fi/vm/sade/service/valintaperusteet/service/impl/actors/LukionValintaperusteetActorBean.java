@@ -1,11 +1,11 @@
 package fi.vm.sade.service.valintaperusteet.service.impl.actors;
 
-import akka.actor.UntypedActor;
+import akka.actor.UntypedAbstractActor;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
-import fi.vm.sade.service.valintaperusteet.dto.*;
-import fi.vm.sade.service.valintaperusteet.model.*;
-import fi.vm.sade.service.valintaperusteet.service.*;
+import fi.vm.sade.service.valintaperusteet.dto.KoodiDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaDTO;
+import fi.vm.sade.service.valintaperusteet.service.HakukohdekoodiService;
 import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.LukionValintaperuste;
 import javax.inject.Named;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 @Named("LukionValintaperusteetActorBean")
 @Component
 @org.springframework.context.annotation.Scope(value = "prototype")
-public class LukionValintaperusteetActorBean extends UntypedActor {
+public class LukionValintaperusteetActorBean extends UntypedAbstractActor {
   LoggingAdapter log = Logging.getLogger(getContext().system(), this);
 
   @Autowired private HakukohdekoodiService hakukohdekoodiService;

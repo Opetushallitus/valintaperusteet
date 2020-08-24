@@ -1,9 +1,9 @@
 package fi.vm.sade.service.valintaperusteet.dao.impl;
 
 import com.google.common.collect.Sets;
+import com.mysema.query.jpa.JPASubQuery;
 import com.mysema.query.jpa.impl.JPADeleteClause;
 import com.mysema.query.jpa.impl.JPAQuery;
-import com.mysema.query.jpa.impl.JPASubQuery;
 import com.mysema.query.types.EntityPath;
 import fi.vm.sade.service.valintaperusteet.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
@@ -24,7 +24,12 @@ import fi.vm.sade.service.valintaperusteet.model.QTekstiRyhma;
 import fi.vm.sade.service.valintaperusteet.model.QValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.QValintaperusteViite;
 import fi.vm.sade.service.valintaperusteet.model.QValintatapajono;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -224,8 +229,8 @@ public class FunktiokutsuDAOImpl extends AbstractJpaDAOImpl<Funktiokutsu, Long>
         .list(hakukohde.oid, funktiokutsu)
         .forEach(
             r -> {
-              String rHakukohdeOid = (String) r[0];
-              Funktiokutsu rFunktiokutsu = (Funktiokutsu) r[1];
+              String rHakukohdeOid = r.get(0, String.class);
+              Funktiokutsu rFunktiokutsu = r.get(1, Funktiokutsu.class);
               if (!result.containsKey(rHakukohdeOid)) {
                 result.put(rHakukohdeOid, new ArrayList<>());
               }

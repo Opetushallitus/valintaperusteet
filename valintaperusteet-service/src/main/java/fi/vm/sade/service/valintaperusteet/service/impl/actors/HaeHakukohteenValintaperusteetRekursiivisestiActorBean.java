@@ -2,13 +2,20 @@ package fi.vm.sade.service.valintaperusteet.service.impl.actors;
 
 import static fi.vm.sade.service.valintaperusteet.service.impl.actors.creators.SpringExtension.SpringExtProvider;
 
-import akka.actor.*;
+import akka.actor.ActorRef;
+import akka.actor.ActorSystem;
+import akka.actor.Status;
+import akka.actor.UntypedAbstractActor;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
 import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
 import fi.vm.sade.service.valintaperusteet.dto.HakukohteenValintaperusteAvaimetDTO;
 import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
-import fi.vm.sade.service.valintaperusteet.model.*;
+import fi.vm.sade.service.valintaperusteet.model.Arvokonvertteriparametri;
+import fi.vm.sade.service.valintaperusteet.model.Arvovalikonvertteriparametri;
+import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti;
+import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
+import fi.vm.sade.service.valintaperusteet.model.ValintaperusteViite;
 import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.UusiHakukohteenValintaperusteRekursio;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +31,7 @@ import org.springframework.stereotype.Component;
 @Named("HaeHakukohteenValintaperusteetRekursiivisestiActorBean")
 @Component
 @org.springframework.context.annotation.Scope(value = "prototype")
-public class HaeHakukohteenValintaperusteetRekursiivisestiActorBean extends UntypedActor {
+public class HaeHakukohteenValintaperusteetRekursiivisestiActorBean extends UntypedAbstractActor {
 
   LoggingAdapter log = Logging.getLogger(getContext().system(), this);
 

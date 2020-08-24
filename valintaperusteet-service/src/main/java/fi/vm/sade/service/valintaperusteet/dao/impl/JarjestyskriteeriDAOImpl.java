@@ -1,11 +1,17 @@
 package fi.vm.sade.service.valintaperusteet.dao.impl;
 
+import com.mysema.query.jpa.JPASubQuery;
 import com.mysema.query.jpa.impl.JPAQuery;
-import com.mysema.query.jpa.impl.JPASubQuery;
 import com.mysema.query.types.EntityPath;
 import fi.vm.sade.service.valintaperusteet.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.JarjestyskriteeriDAO;
-import fi.vm.sade.service.valintaperusteet.model.*;
+import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
+import fi.vm.sade.service.valintaperusteet.model.QHakukohdeViite;
+import fi.vm.sade.service.valintaperusteet.model.QJarjestyskriteeri;
+import fi.vm.sade.service.valintaperusteet.model.QLaskentakaava;
+import fi.vm.sade.service.valintaperusteet.model.QValinnanVaihe;
+import fi.vm.sade.service.valintaperusteet.model.QValintaryhma;
+import fi.vm.sade.service.valintaperusteet.model.QValintatapajono;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 
@@ -51,7 +57,8 @@ public class JarjestyskriteeriDAOImpl extends AbstractJpaDAOImpl<Jarjestyskritee
         .join(vv.hakukohdeViite, hkv)
         .leftJoin(vv.valintaryhma, vr)
         .where(hkv.oid.eq(oid))
-        .listDistinct(jk);
+        .distinct()
+        .list(jk);
   }
 
   @Override

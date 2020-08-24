@@ -85,7 +85,8 @@ public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Lo
         .leftJoin(hakukohdeViite.hakukohteenValintaperusteet)
         .fetch()
         .where(hakukohdeViite.oid.in(oids))
-        .listDistinct(hakukohdeViite);
+        .distinct()
+        .list(hakukohdeViite);
   }
 
   @Override

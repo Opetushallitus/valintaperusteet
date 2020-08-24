@@ -30,14 +30,11 @@ import fi.vm.sade.service.valintaperusteet.service.impl.generator.YoAineet;
 import fi.vm.sade.service.valintaperusteet.service.impl.generator.YoPohjaiset;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -64,19 +61,6 @@ public class LuoValintaperusteetServiceTest {
   @Autowired private LaskentaService laskentaService;
 
   @Autowired private ValintaryhmaDAO valintaryhmaDAO;
-
-  @Before
-  public void initialize() {
-    try {
-      Class.forName("org.hsqldb.jdbcDriver");
-      Connection conn = DriverManager.getConnection("jdbc:hsqldb:mem:valintaperusteet", "sa", "");
-      conn.createStatement().executeUpdate("SET DATABASE TRANSACTION CONTROL MVCC");
-      conn.commit();
-      conn.close();
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-  }
 
   @Test
   @Ignore

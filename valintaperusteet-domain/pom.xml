@@ -3,7 +3,7 @@
 	<parent>
         <groupId>fi.vm.sade.valintaperusteet</groupId>
         <artifactId>valintaperusteet</artifactId>
-		<version>5.15-SNAPSHOT</version>
+		<version>5.16-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
 	<artifactId>valintaperusteet-domain</artifactId>

@@ -5,7 +5,7 @@
     <parent>
         <groupId>fi.vm.sade.valintaperusteet</groupId>
         <artifactId>valintaperusteet</artifactId>
-        <version>5.15-SNAPSHOT</version>
+        <version>5.16-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
 
@@ -58,7 +58,7 @@
         <dependency>
             <groupId>org.scalatest</groupId>
             <artifactId>scalatest_2.13</artifactId>
-            <version>3.2.0-M1</version>
+            <version>3.3.0-SNAP2</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -71,13 +71,13 @@
       <dependency>
           <groupId>org.scalatest</groupId>
           <artifactId>scalatest-funsuite_2.13</artifactId>
-          <version>3.2.0-M1</version>
+          <version>3.3.0-SNAP2</version>
           <scope>test</scope>
       </dependency>
         <dependency>
             <groupId>com.typesafe.play</groupId>
             <artifactId>play-json_2.13</artifactId>
-            <version>2.7.4</version>
+            <version>2.9.0</version>
         </dependency>
         <dependency>
             <groupId>io.circe</groupId>

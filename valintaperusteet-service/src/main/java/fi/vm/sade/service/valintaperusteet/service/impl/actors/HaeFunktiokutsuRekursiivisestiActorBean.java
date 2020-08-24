@@ -2,7 +2,10 @@ package fi.vm.sade.service.valintaperusteet.service.impl.actors;
 
 import static fi.vm.sade.service.valintaperusteet.service.impl.actors.creators.SpringExtension.SpringExtProvider;
 
-import akka.actor.*;
+import akka.actor.ActorRef;
+import akka.actor.ActorSystem;
+import akka.actor.Status;
+import akka.actor.UntypedAbstractActor;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
 import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
@@ -11,7 +14,9 @@ import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
 import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuMuodostaaSilmukanException;
 import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.UusiRekursio;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 import javax.inject.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,7 +24,7 @@ import org.springframework.stereotype.Component;
 @Named("HaeFunktiokutsuRekursiivisestiActorBean")
 @Component
 @org.springframework.context.annotation.Scope(value = "prototype")
-public class HaeFunktiokutsuRekursiivisestiActorBean extends UntypedActor {
+public class HaeFunktiokutsuRekursiivisestiActorBean extends UntypedAbstractActor {
   LoggingAdapter log = Logging.getLogger(getContext().system(), this);
 
   private int funktiokutsuLapset = 0;
