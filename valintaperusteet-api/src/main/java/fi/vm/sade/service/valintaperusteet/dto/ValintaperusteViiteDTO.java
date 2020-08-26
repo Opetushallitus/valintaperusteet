@@ -45,6 +45,32 @@ public class ValintaperusteViiteDTO implements Comparable<ValintaperusteViiteDTO
   @ApiModelProperty(value = "Tilastoidaan", required = false)
   private boolean tilastoidaan;
 
+  public ValintaperusteViiteDTO() { }
+
+  public ValintaperusteViiteDTO(String tunniste,
+                                String kuvaus,
+                                Valintaperustelahde lahde,
+                                Boolean onPakollinen,
+                                Boolean epasuoraViittaus,
+                                Integer indeksi,
+                                Boolean vaatiiOsallistumisen,
+                                Boolean syotettavissaKaikille,
+                                TekstiRyhmaDTO kuvaukset,
+                                KoodiDTO syotettavanarvontyyppi,
+                                boolean tilastoidaan) {
+    this.tunniste = tunniste;
+    this.kuvaus = kuvaus;
+    this.lahde = lahde;
+    this.onPakollinen = onPakollinen;
+    this.epasuoraViittaus = epasuoraViittaus;
+    this.indeksi = indeksi;
+    this.vaatiiOsallistumisen = vaatiiOsallistumisen;
+    this.syotettavissaKaikille = syotettavissaKaikille;
+    this.kuvaukset = kuvaukset;
+    this.syotettavanarvontyyppi = syotettavanarvontyyppi;
+    this.tilastoidaan = tilastoidaan;
+  }
+
   public String getTunniste() {
     return tunniste;
   }

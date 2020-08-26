@@ -1,7 +1,9 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriInsertDTO;
 import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
+import fi.vm.sade.service.valintaperusteet.model.LaskentakaavaId;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import fi.vm.sade.service.valintaperusteet.util.JuureenKopiointiCache;
 import java.util.List;
@@ -17,16 +19,14 @@ public interface JarjestyskriteeriService {
 
   Jarjestyskriteeri lisaaJarjestyskriteeriValintatapajonolle(
       String valintatapajonoOid,
-      JarjestyskriteeriCreateDTO jarjestyskriteeri,
-      String edellinenValintatapajonoOid,
-      Long laskentakaavaOid);
+      JarjestyskriteeriInsertDTO jarjestyskriteeri);
 
   List<Jarjestyskriteeri> jarjestaKriteerit(List<String> oids);
 
   void kopioiJarjestyskriteeritMasterValintatapajonoltaKopiolle(
       Valintatapajono lisatty, Valintatapajono master, JuureenKopiointiCache kopiointiCache);
 
-  Jarjestyskriteeri update(String oid, JarjestyskriteeriCreateDTO incoming, Long laskentakaavaId);
+  Jarjestyskriteeri update(String oid, JarjestyskriteeriInsertDTO dto);
 
   void delete(Jarjestyskriteeri jarjestyskriteeri);
 }

@@ -49,11 +49,6 @@ public interface LaskentakaavaResource {
       @QueryParam("tyyppi") Funktiotyyppi tyyppi);
 
   @POST
-  @Path("/validoi")
-  @Produces(MediaType.APPLICATION_JSON)
-  LaskentakaavaDTO validoi(LaskentakaavaDTO laskentakaava);
-
-  @POST
   @Path("/{id}")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)

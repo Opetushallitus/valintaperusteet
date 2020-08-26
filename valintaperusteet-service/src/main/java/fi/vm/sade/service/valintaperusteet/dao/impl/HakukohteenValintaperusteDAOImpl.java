@@ -31,17 +31,4 @@ public class HakukohteenValintaperusteDAOImpl
     }
     return from(vp).where(vp.hakukohde.eq(viite)).list(vp);
   }
-
-  @Override
-  public List<HakukohteenValintaperuste> haeHakukohteidenValintaperusteet(
-      List<String> hakukohdeOidit) {
-    QHakukohdeViite hk = QHakukohdeViite.hakukohdeViite;
-    QHakukohteenValintaperuste vp = QHakukohteenValintaperuste.hakukohteenValintaperuste;
-    List<HakukohdeViite> viite =
-        from(hk).where(hk.oid.in(hakukohdeOidit)).listResults(hk).getResults();
-    if (viite == null || viite.isEmpty()) {
-      return new ArrayList<>();
-    }
-    return from(vp).where(vp.hakukohde.in(viite)).list(vp);
-  }
 }

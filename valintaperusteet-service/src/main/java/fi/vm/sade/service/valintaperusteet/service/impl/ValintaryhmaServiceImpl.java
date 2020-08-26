@@ -56,6 +56,11 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
   }
 
   @Override
+  public Valintaryhma read(ValintaryhmaId id) {
+    return valintaryhmaDAO.read(id.id);
+  }
+
+  @Override
   public Valintaryhma readByOid(String oid) {
     return haeValintaryhma(oid);
   }
@@ -162,7 +167,6 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
     copy.setVastuuorganisaatio(source.getVastuuorganisaatio());
     copy.setKohdejoukko(source.getKohdejoukko());
     Valintaryhma inserted = valintaryhmaDAO.insert(copy);
-    copyLaskentakaavat(source, inserted, kopiointiCache);
     if (kopiointiCache == null) {
       hakijaryhmaService.kopioiHakijaryhmatMasterValintaryhmalta(
           parent.getOid(), inserted.getOid(), null);
@@ -187,21 +191,6 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
         parent,
         inserted);
     return inserted;
-  }
-
-  private void copyLaskentakaavat(
-      Valintaryhma source, Valintaryhma target, JuureenKopiointiCache kopiointiCache) {
-    source
-        .getLaskentakaava()
-        .forEach(
-            sourceKaava -> {
-              Laskentakaava copied =
-                  laskentakaavaService.kopioiJosEiJoKopioitu(
-                      sourceKaava, sourceKaava.getHakukohde(), target);
-              if (kopiointiCache != null) {
-                kopiointiCache.kopioidutLaskentakaavat.put(sourceKaava.getId(), copied);
-              }
-            });
   }
 
   private void copyHakukohdekoodit(Valintaryhma source, Valintaryhma target) {
@@ -258,16 +247,7 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
 
   @Override
   public void delete(String oid) {
-    Optional<Valintaryhma> managedObject = Optional.ofNullable(haeValintaryhma(oid));
-    if (managedObject.isPresent()) {
-      for (ValinnanVaihe valinnanVaihe : managedObject.get().getValinnanvaiheet()) {
-        valinnanVaiheService.delete(valinnanVaihe);
-      }
-      for (Laskentakaava laskentakaava : managedObject.get().getLaskentakaava()) {
-        laskentakaavaDAO.remove(laskentakaava);
-      }
-      valintaryhmaDAO.remove(managedObject.get());
-    }
+    valintaryhmaDAO.remove(haeValintaryhma(oid));
   }
 
   @Override

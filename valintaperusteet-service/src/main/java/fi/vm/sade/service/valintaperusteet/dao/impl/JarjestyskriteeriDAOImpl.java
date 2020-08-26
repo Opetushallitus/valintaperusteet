@@ -8,7 +8,6 @@ import fi.vm.sade.service.valintaperusteet.dao.JarjestyskriteeriDAO;
 import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
 import fi.vm.sade.service.valintaperusteet.model.QHakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.QJarjestyskriteeri;
-import fi.vm.sade.service.valintaperusteet.model.QLaskentakaava;
 import fi.vm.sade.service.valintaperusteet.model.QValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.QValintaryhma;
 import fi.vm.sade.service.valintaperusteet.model.QValintatapajono;
@@ -37,8 +36,6 @@ public class JarjestyskriteeriDAOImpl extends AbstractJpaDAOImpl<Jarjestyskritee
         .leftJoin(jk.edellinen)
         .fetch()
         .leftJoin(jk.master)
-        .fetch()
-        .leftJoin(jk.laskentakaava)
         .fetch()
         .where(j.oid.eq(oid))
         .list(jk);
@@ -79,12 +76,5 @@ public class JarjestyskriteeriDAOImpl extends AbstractJpaDAOImpl<Jarjestyskritee
                 .notIn(subQuery().from(jk).where(jk.edellinen.isNotNull()).list(jk.edellinen.id))
                 .and(jono.oid.eq(valintatapajonoOid)))
         .singleResult(jk);
-  }
-
-  @Override
-  public List<Jarjestyskriteeri> findByLaskentakaava(long id) {
-    QJarjestyskriteeri jk = QJarjestyskriteeri.jarjestyskriteeri;
-    QLaskentakaava lk = QLaskentakaava.laskentakaava;
-    return from(jk).join(jk.laskentakaava, lk).where(lk.id.eq(id)).list(jk);
   }
 }

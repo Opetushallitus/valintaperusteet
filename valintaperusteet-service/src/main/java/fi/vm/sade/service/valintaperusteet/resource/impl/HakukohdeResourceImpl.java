@@ -68,6 +68,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -577,10 +578,13 @@ public class HakukohdeResourceImpl {
       response = ValintaperusteDTO.class)
   public List<HakukohdeJaValintaperusteDTO> findHakukohteidenAvaimet(
       @ApiParam(value = "Hakukohteiden OIDit", required = true) List<String> hakukohdeOidit) {
-    return laskentakaavaService.findAvaimetForHakukohteet(hakukohdeOidit).entrySet().stream()
-        .map(entry -> new HakukohdeJaValintaperusteDTO(entry.getKey(), entry.getValue()))
-        .filter(r -> !r.getValintaperusteDTO().isEmpty())
-        .collect(Collectors.toList());
+    return hakukohdeOidit.stream()
+            .map(hakukohdeOid -> new HakukohdeJaValintaperusteDTO(
+                    hakukohdeOid,
+                    laskentakaavaService.findAvaimetForHakukohde(hakukohdeOid)
+            ))
+            .filter(r -> !r.getValintaperusteDTO().isEmpty())
+            .collect(Collectors.toList());
   }
 
   @GET

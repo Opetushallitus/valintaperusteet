@@ -1,19 +1,20 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HakukohteenValintaperusteAvaimetDTO {
-  private List<String> tunnisteet;
+  private List<String> tunnisteet = new ArrayList<>();
 
-  private List<String> minimit;
+  private List<String> minimit = new ArrayList<>();
 
-  private List<String> maksimit;
+  private List<String> maksimit = new ArrayList<>();
 
-  private List<String> palautaHaettutArvot;
+  private List<String> palautaHaettutArvot = new ArrayList<>();
 
-  private List<String> arvot;
+  private List<String> arvot = new ArrayList<>();
 
-  private List<String> hylkaysperusteet;
+  private List<String> hylkaysperusteet = new ArrayList<>();
 
   public List<String> getTunnisteet() {
     return tunnisteet;

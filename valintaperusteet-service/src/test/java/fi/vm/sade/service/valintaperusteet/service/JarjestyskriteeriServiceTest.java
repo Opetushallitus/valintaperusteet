@@ -10,6 +10,7 @@ import fi.vm.sade.service.valintaperusteet.dao.LaskentakaavaDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
 import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriInsertDTO;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
@@ -46,8 +47,6 @@ public class JarjestyskriteeriServiceTest {
 
   @Autowired private ValintatapajonoDAO valintatapajonoDAO;
 
-  @Autowired private LaskentakaavaDAO laskentakaavaDAO;
-
   @Test(expected = RuntimeException.class)
   public void testLisaaJarjestyskriteeriLuonnosLaskentakaava() {
     final String valintatapajonoOid = "1059";
@@ -55,8 +54,10 @@ public class JarjestyskriteeriServiceTest {
 
     JarjestyskriteeriCreateDTO jarjestyskriteeri = new JarjestyskriteeriCreateDTO();
     jarjestyskriteeri.setMetatiedot("jotain metaa");
-    jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(
-        valintatapajonoOid, jarjestyskriteeri, null, laskentakaavaId);
+    JarjestyskriteeriInsertDTO dto = new JarjestyskriteeriInsertDTO();
+    dto.setJarjestyskriteeri(jarjestyskriteeri);
+    dto.setLaskentakaavaId(laskentakaavaId);
+    jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(valintatapajonoOid, dto);
   }
 
   @Test
@@ -67,9 +68,11 @@ public class JarjestyskriteeriServiceTest {
     JarjestyskriteeriCreateDTO jarjestyskriteeri = new JarjestyskriteeriCreateDTO();
     jarjestyskriteeri.setMetatiedot("jotain metaa");
     jarjestyskriteeri.setAktiivinen(true);
+    JarjestyskriteeriInsertDTO dto = new JarjestyskriteeriInsertDTO();
+    dto.setJarjestyskriteeri(jarjestyskriteeri);
+    dto.setLaskentakaavaId(laskentakaavaId);
     Jarjestyskriteeri lisatty =
-        jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(
-            valintatapajonoOid, jarjestyskriteeri, null, laskentakaavaId);
+            jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(valintatapajonoOid, dto);
 
     assertNotNull(jarjestyskriteeriService.readByOid(lisatty.getOid()));
   }
@@ -109,7 +112,10 @@ public class JarjestyskriteeriServiceTest {
     JarjestyskriteeriCreateDTO jk = new JarjestyskriteeriCreateDTO();
     jk.setAktiivinen(false);
     jk.setMetatiedot("Update");
-    jarjestyskriteeriService.update("3201", jk, 1L);
+    JarjestyskriteeriInsertDTO dto = new JarjestyskriteeriInsertDTO();
+    dto.setJarjestyskriteeri(jk);
+    dto.setLaskentakaavaId(1L);
+    jarjestyskriteeriService.update("3201", dto);
 
     jarjestyskriteeri = jarjestyskriteeriService.readByOid("3201");
     assertEquals(false, jarjestyskriteeri.getAktiivinen().booleanValue());
@@ -140,10 +146,12 @@ public class JarjestyskriteeriServiceTest {
     JarjestyskriteeriCreateDTO uusiJK = new JarjestyskriteeriCreateDTO();
     uusiJK.setAktiivinen(true);
     uusiJK.setMetatiedot("uusi kuvaus");
+    JarjestyskriteeriInsertDTO dto = new JarjestyskriteeriInsertDTO();
+    dto.setJarjestyskriteeri(uusiJK);
+    dto.setLaskentakaavaId(1L);
 
     Jarjestyskriteeri lisatty =
-        jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(
-            valintatapajonoOid, uusiJK, null, 1L);
+        jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(valintatapajonoOid, dto);
 
     {
       // Lopputilanne
@@ -201,10 +209,12 @@ public class JarjestyskriteeriServiceTest {
     JarjestyskriteeriCreateDTO uusiJK = new JarjestyskriteeriCreateDTO();
     uusiJK.setAktiivinen(true);
     uusiJK.setMetatiedot("uusi kuvaus");
+    JarjestyskriteeriInsertDTO dto = new JarjestyskriteeriInsertDTO();
+    dto.setJarjestyskriteeri(uusiJK);
+    dto.setLaskentakaavaId(1L);
 
     Jarjestyskriteeri lisatty =
-        jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(
-            valintatapajonoOid, uusiJK, "3101", 1L);
+        jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(valintatapajonoOid, dto);
 
     {
       // Lopputilanne
@@ -254,9 +264,11 @@ public class JarjestyskriteeriServiceTest {
     uusiJK = new JarjestyskriteeriCreateDTO();
     uusiJK.setAktiivinen(true);
     uusiJK.setMetatiedot("uusi kuvaus");
+    dto = new JarjestyskriteeriInsertDTO();
+    dto.setJarjestyskriteeri(uusiJK);
+    dto.setLaskentakaavaId(1L);
     lisatty =
-        jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(
-            valintatapajonoOid, uusiJK, "3110", 1L);
+        jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(valintatapajonoOid, dto);
 
     {
       // Lopputilanne
@@ -304,9 +316,11 @@ public class JarjestyskriteeriServiceTest {
     uusiJK = new JarjestyskriteeriCreateDTO();
     uusiJK.setAktiivinen(true);
     uusiJK.setMetatiedot("uusi kuvaus");
+    dto = new JarjestyskriteeriInsertDTO();
+    dto.setJarjestyskriteeri(uusiJK);
+    dto.setLaskentakaavaId(1L);
     lisatty =
-        jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(
-            valintatapajonoOid, uusiJK, "3108", 1L);
+        jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(valintatapajonoOid, dto);
 
     {
       // Lopputilanne

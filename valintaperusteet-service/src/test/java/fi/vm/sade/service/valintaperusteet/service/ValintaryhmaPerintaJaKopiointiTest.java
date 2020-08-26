@@ -42,6 +42,8 @@ public class ValintaryhmaPerintaJaKopiointiTest {
 
   @Autowired private ValintaperusteService valintaperusteService;
 
+  @Autowired private LaskentakaavaService laskentakaavaService;
+
   @Test
   public void testMasterTayttojononMuutos() {
     final Valintatapajono paivitettava = valintatapajonoService.readByOid("2");
@@ -109,11 +111,11 @@ public class ValintaryhmaPerintaJaKopiointiTest {
     assertEquals("oid2 kopio", valintaryhma.getNimi());
     assertEquals("oid1", valintaryhma.getYlavalintaryhma().getOid());
 
-    Set<Laskentakaava> laskentakaavat = valintaryhma.getLaskentakaava();
+    List<Laskentakaava> laskentakaavat = laskentakaavaService.findKaavas(true, valintaryhma.getOid(), null, null);
     assertEquals(1L, laskentakaavat.size());
     Laskentakaava laskentakaava = laskentakaavat.iterator().next();
     assertEquals("Ammatillinen koulutus, lisäpiste", laskentakaava.getNimi());
-    assertNotEquals(2L, laskentakaava.getId().longValue());
+    assertNotEquals(2L, laskentakaava.getId().id);
     valintaryhma.getValinnanvaiheet().stream()
         .forEach(
             v -> {
@@ -127,10 +129,13 @@ public class ValintaryhmaPerintaJaKopiointiTest {
                         assertNull(j.getVarasijanTayttojono());
                         if (j.getNimi().equals("Jono 2")) {
                           assertEquals(1, j.getJarjestyskriteerit().size());
+                          Jarjestyskriteeri jarjestyskriteeri = j.getJarjestyskriteerit().iterator().next();
                           Laskentakaava kaava =
-                              j.getJarjestyskriteerit().iterator().next().getLaskentakaava();
+                              laskentakaavaService.haeMallinnettuKaava(
+                                      new LaskentakaavaId(jarjestyskriteeri.getLaskentakaavaId())
+                              );
                           assertEquals("Ammatillinen koulutus, lisäpiste", kaava.getNimi());
-                          assertNotEquals(2L, kaava.getId().longValue());
+                          assertNotEquals(2L, kaava.getId().id);
                           assertEquals(laskentakaava.getId(), kaava.getId());
                         }
                       });
@@ -141,11 +146,11 @@ public class ValintaryhmaPerintaJaKopiointiTest {
     assertEquals("Valintaryhma 3", kopioituAlivalintaryhma.getNimi());
     assertNotEquals("oid3", kopioituAlivalintaryhma.getOid());
 
-    Set<Laskentakaava> aliLaskentakaavat = kopioituAlivalintaryhma.getLaskentakaava();
+    List<Laskentakaava> aliLaskentakaavat = laskentakaavaService.findKaavas(true, kopioituAlivalintaryhma.getOid(), null, null);
     assertEquals(1L, aliLaskentakaavat.size());
     assertEquals(
         "Ammatillinen koulutus, lisäpiste2", aliLaskentakaavat.iterator().next().getNimi());
-    assertNotEquals(3L, aliLaskentakaavat.iterator().next().getId().longValue());
+    assertNotEquals(3L, aliLaskentakaavat.iterator().next().getId().id);
   }
 
   @Test
@@ -165,11 +170,11 @@ public class ValintaryhmaPerintaJaKopiointiTest {
     assertEquals("Hakijaryhma 1", kopioituHakijaryhma.getNimi());
     assertNotEquals("oid1", kopioituHakijaryhma.getOid());
 
-    Set<Laskentakaava> laskentakaavat = valintaryhma.getLaskentakaava();
+    List<Laskentakaava> laskentakaavat = laskentakaavaService.findKaavas(true, valintaryhma.getOid(), null, null);
     assertEquals(1L, laskentakaavat.size());
     Laskentakaava laskentakaava = laskentakaavat.iterator().next();
     assertEquals("Ammatillinen koulutus, lisäpiste", laskentakaava.getNimi());
-    assertNotEquals(2L, laskentakaava.getId().longValue());
+    assertNotEquals(2L, laskentakaava.getId().id);
     valintaryhma.getValinnanvaiheet().stream()
         .forEach(
             v -> {
@@ -183,10 +188,12 @@ public class ValintaryhmaPerintaJaKopiointiTest {
                         assertNull(j.getVarasijanTayttojono());
                         if (j.getNimi().equals("Jono 2")) {
                           assertEquals(1, j.getJarjestyskriteerit().size());
-                          Laskentakaava kaava =
-                              j.getJarjestyskriteerit().iterator().next().getLaskentakaava();
+                          Jarjestyskriteeri jarjestyskriteeri = j.getJarjestyskriteerit().iterator().next();
+                          Laskentakaava kaava = laskentakaavaService.haeMallinnettuKaava(
+                                  new LaskentakaavaId(jarjestyskriteeri.getLaskentakaavaId())
+                          );
                           assertEquals("Ammatillinen koulutus, lisäpiste", kaava.getNimi());
-                          assertNotEquals(2L, kaava.getId().longValue());
+                          assertNotEquals(2L, kaava.getId().id);
                           assertEquals(laskentakaava.getId(), kaava.getId());
                           assertEquals(1, j.getHakijaryhmat().size());
                           HakijaryhmaValintatapajono jononRyhma =
@@ -203,11 +210,11 @@ public class ValintaryhmaPerintaJaKopiointiTest {
     assertEquals("Valintaryhma 4", kopioituAlivalintaryhma.getNimi());
     assertNotEquals("oid4", kopioituAlivalintaryhma.getOid());
 
-    Set<Laskentakaava> aliLaskentakaavat = kopioituAlivalintaryhma.getLaskentakaava();
+    List<Laskentakaava> aliLaskentakaavat = laskentakaavaService.findKaavas(true, kopioituAlivalintaryhma.getOid(), null, null);
     assertEquals(1L, aliLaskentakaavat.size());
     assertEquals(
         "Ammatillinen koulutus, lisäpiste3", aliLaskentakaavat.iterator().next().getNimi());
-    assertNotEquals(4L, aliLaskentakaavat.iterator().next().getId().longValue());
+    assertNotEquals(4L, aliLaskentakaavat.iterator().next().getId().id);
   }
 
   @Test
@@ -217,7 +224,7 @@ public class ValintaryhmaPerintaJaKopiointiTest {
     assertEquals("oid3 kopio", valintaryhma.getNimi());
     assertEquals("oid1", valintaryhma.getYlavalintaryhma().getOid());
 
-    Set<Laskentakaava> laskentakaavat = valintaryhma.getLaskentakaava();
+    List<Laskentakaava> laskentakaavat = laskentakaavaService.findKaavas(true, valintaryhma.getOid(), null, null);
     assertEquals(2L, laskentakaavat.size());
     valintaryhma.getValinnanvaiheet().stream()
         .forEach(
@@ -232,10 +239,12 @@ public class ValintaryhmaPerintaJaKopiointiTest {
                         assertNull(j.getVarasijanTayttojono());
                         if (j.getNimi().equals("Jono 2")) {
                           assertEquals(1, j.getJarjestyskriteerit().size());
-                          Laskentakaava kaava =
-                              j.getJarjestyskriteerit().iterator().next().getLaskentakaava();
+                          Jarjestyskriteeri jarjestyskriteeri = j.getJarjestyskriteerit().iterator().next();
+                          Laskentakaava kaava = laskentakaavaService.haeMallinnettuKaava(
+                                  new LaskentakaavaId(jarjestyskriteeri.getLaskentakaavaId())
+                          );
                           assertEquals("Ammatillinen koulutus, lisäpiste", kaava.getNimi());
-                          assertNotEquals(2L, kaava.getId().longValue());
+                          assertNotEquals(2L, kaava.getId().id);
                         }
                       });
             });

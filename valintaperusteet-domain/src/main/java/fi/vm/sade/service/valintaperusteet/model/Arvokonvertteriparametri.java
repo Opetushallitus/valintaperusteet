@@ -1,42 +1,67 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
-import javax.persistence.*;
+import java.util.Objects;
 
-@Entity
-@Table(name = "arvokonvertteriparametri")
-@Cacheable(true)
-public class Arvokonvertteriparametri extends Konvertteriparametri {
-  @Column(name = "arvo")
+public class Arvokonvertteriparametri implements Konvertteriparametri {
+  private ArvokonvertteriparametriId id;
+
+  private long version;
+
+  private String paluuarvo;
+
   private String arvo;
 
-  @Column(name = "hylkaysperuste", nullable = false)
   private String hylkaysperuste;
 
-  @JoinColumn(name = "tekstiryhma_id", nullable = true)
-  @ManyToOne(fetch = FetchType.LAZY, optional = true)
   private TekstiRyhma kuvaukset;
+
+  public Arvokonvertteriparametri(ArvokonvertteriparametriId id,
+                                  long version,
+                                  String paluuarvo,
+                                  String arvo,
+                                  String hylkaysperuste,
+                                  TekstiRyhma kuvaukset) {
+    Objects.requireNonNull(hylkaysperuste, "hylkaysperuste tulee olla asetettu");
+    this.id = id;
+    this.version = version;
+    this.paluuarvo = paluuarvo;
+    this.arvo = arvo;
+    this.hylkaysperuste = hylkaysperuste;
+    this.kuvaukset = kuvaukset;
+  }
+
+  public ArvokonvertteriparametriId getId() {
+    return id;
+  }
+
+  public String getPaluuarvo() {
+    return paluuarvo;
+  }
 
   public String getArvo() {
     return arvo;
-  }
-
-  public void setArvo(String arvo) {
-    this.arvo = arvo;
   }
 
   public String getHylkaysperuste() {
     return hylkaysperuste;
   }
 
-  public void setHylkaysperuste(String hylkaysperuste) {
-    this.hylkaysperuste = hylkaysperuste;
-  }
-
   public TekstiRyhma getKuvaukset() {
     return kuvaukset;
   }
 
-  public void setKuvaukset(TekstiRyhma kuvaukset) {
-    this.kuvaukset = kuvaukset;
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    Arvokonvertteriparametri that = (Arvokonvertteriparametri) o;
+
+    return id.equals(that.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return id.hashCode();
   }
 }

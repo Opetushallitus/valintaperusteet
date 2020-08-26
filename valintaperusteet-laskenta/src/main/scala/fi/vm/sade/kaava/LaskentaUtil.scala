@@ -10,10 +10,6 @@ import scala.jdk.CollectionConverters._
 object LaskentaUtil {
   val suomalainenPvmMuoto: DateTimeFormatter = DateTimeFormatter.ofPattern("d.M.yyyy")
 
-  def jarjestaFunktioargumentit(args: JSet[Funktioargumentti]): List[Funktioargumentti] = {
-    args.asScala.toList.sortWith(_.getIndeksi < _.getIndeksi)
-  }
-
   def prettyPrint(x: Any): String = {
     pprint(x).toString()
   }

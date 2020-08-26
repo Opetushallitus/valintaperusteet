@@ -8,7 +8,10 @@ import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaSiirraDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
 import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
+import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
+import fi.vm.sade.service.valintaperusteet.model.LaskentakaavaId;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
+import fi.vm.sade.service.valintaperusteet.model.ValintaryhmaId;
 import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaService;
 import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaValintatapajonoService;
 import fi.vm.sade.service.valintaperusteet.service.HakijaryhmatyyppikoodiService;
@@ -27,6 +30,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -159,8 +163,11 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
     hakijaryhma.setKaytaKaikki(dto.isKaytaKaikki());
     hakijaryhma.setTarkkaKiintio(dto.isTarkkaKiintio());
     hakijaryhma.setKaytetaanRyhmaanKuuluvia(dto.isKaytetaanRyhmaanKuuluvia());
-    hakijaryhma.setLaskentakaava(
-        laskentakaavaService.haeMallinnettuKaava(hakijaryhma.getLaskentakaavaId()));
+    hakijaryhma.setLaskentakaavaId(
+            laskentakaavaService.haeMallinnettuKaava(
+                    new LaskentakaavaId(hakijaryhma.getLaskentakaavaId())
+            ).getId().id
+    );
     if (dto.getHakijaryhmatyyppikoodi() != null) {
       hakijaryhma.setHakijaryhmatyyppikoodi(
           hakijaryhmatyyppikoodiService.getOrCreateHakijaryhmatyyppikoodi(
@@ -285,17 +292,11 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
     kopio.setKiintio(hakijaryhma.getKiintio());
     kopio.setKuvaus(hakijaryhma.getKuvaus());
     kopio.setKaytaKaikki(hakijaryhma.isKaytaKaikki());
-    if (kopiointiCache != null
-        && kopiointiCache.kopioidutLaskentakaavat.containsKey(hakijaryhma.getLaskentakaavaId())) {
-      kopio.setLaskentakaava(
-          kopiointiCache.kopioidutLaskentakaavat.get(hakijaryhma.getLaskentakaavaId()));
-    } else {
-      kopio.setLaskentakaava(
-          laskentakaavaService
-              .haeLaskentakaavaTaiSenKopioVanhemmilta(
-                  hakijaryhma.getLaskentakaavaId(), kohdeValintaryhma)
-              .orElse(hakijaryhma.getLaskentakaava()));
-    }
+    kopio.setLaskentakaavaId(laskentakaavaService.kopioiJosEiJoKopioitu(
+            new LaskentakaavaId(hakijaryhma.getLaskentakaavaId()),
+            new ValintaryhmaId(kohdeValintaryhma.getId()),
+            kopiointiCache.kopioidutLaskentakaavat
+    ).id);
     kopio.setHakijaryhmatyyppikoodi(hakijaryhma.getHakijaryhmatyyppikoodi());
     kopio.setNimi(hakijaryhma.getNimi());
     kopio.setTarkkaKiintio(hakijaryhma.isTarkkaKiintio());
@@ -315,8 +316,11 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
     managedObject.setNimi(dto.getNimi());
     managedObject.setTarkkaKiintio(dto.isTarkkaKiintio());
     managedObject.setKaytetaanRyhmaanKuuluvia(dto.isKaytetaanRyhmaanKuuluvia());
-    managedObject.setLaskentakaava(
-        laskentakaavaService.haeMallinnettuKaava(dto.getLaskentakaavaId()));
+    managedObject.setLaskentakaavaId(
+        laskentakaavaService.haeMallinnettuKaava(
+                new LaskentakaavaId(dto.getLaskentakaavaId())
+        ).getId().id
+    );
     if (dto.getHakijaryhmatyyppikoodi() != null) {
       managedObject.setHakijaryhmatyyppikoodi(
           hakijaryhmatyyppikoodiService.getOrCreateHakijaryhmatyyppikoodi(

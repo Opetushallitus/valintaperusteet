@@ -36,7 +36,7 @@ public class ValintakoeKopioija implements Kopioija<Valintakoe> {
     }
     to.setKutsunKohde(from.getKutsunKohde());
     to.setKutsuttavienMaara(from.getKutsuttavienMaara());
-    to.setLaskentakaava(from.getLaskentakaava());
+    to.setLaskentakaavaId(from.getLaskentakaavaId());
   }
 
   @Override
@@ -45,11 +45,11 @@ public class ValintakoeKopioija implements Kopioija<Valintakoe> {
     if (kopio.getAktiivinen().equals(alkuperainenMaster.getAktiivinen())) {
       kopio.setAktiivinen(paivitettyMaster.getAktiivinen());
     }
-    if ((kopio.getLaskentakaava() == null && alkuperainenMaster.getLaskentakaava() == null)
-        || (kopio.getLaskentakaava() != null
-            && alkuperainenMaster.getLaskentakaava() != null
-            && kopio.getLaskentakaava().equals(alkuperainenMaster.getLaskentakaava()))) {
-      kopio.setLaskentakaava(paivitettyMaster.getLaskentakaava());
+    if ((kopio.getLaskentakaavaId() == null && alkuperainenMaster.getLaskentakaavaId() == null)
+        || (kopio.getLaskentakaavaId() != null
+            && alkuperainenMaster.getLaskentakaavaId() != null
+            && kopio.getLaskentakaavaId().equals(alkuperainenMaster.getLaskentakaavaId()))) {
+      kopio.setLaskentakaavaId(paivitettyMaster.getLaskentakaavaId());
     }
     kopio.setNimi(paivitettyMaster.getNimi());
     kopio.setKuvaus(paivitettyMaster.getKuvaus());

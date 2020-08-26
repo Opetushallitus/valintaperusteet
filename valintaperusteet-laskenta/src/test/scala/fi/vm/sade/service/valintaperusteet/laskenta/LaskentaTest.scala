@@ -46,12 +46,7 @@ import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.HylattyMetatieto
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.HylattyMetatieto.Hylattymetatietotyyppi
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Tila.Tilatyyppi
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.VirheMetatieto.VirheMetatietotyyppi
-import fi.vm.sade.service.valintaperusteet.model.Arvokonvertteriparametri
-import fi.vm.sade.service.valintaperusteet.model.Arvovalikonvertteriparametri
-import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu
-import fi.vm.sade.service.valintaperusteet.model.Syoteparametri
-import fi.vm.sade.service.valintaperusteet.model.TekstiRyhma
-import fi.vm.sade.service.valintaperusteet.model.ValintaperusteViite
+import fi.vm.sade.service.valintaperusteet.model.{Arvokonvertteriparametri, Arvovalikonvertteriparametri, Funktioargumentti, Funktiokutsu, LokalisoituTeksti, Syoteparametri, TekstiRyhma, ValintaperusteViite}
 import org.scalatest.funsuite.AnyFunSuite
 
 import scala.jdk.CollectionConverters._
@@ -64,7 +59,7 @@ import scala.math.BigDecimal._
   */
 class LaskentaTest extends AnyFunSuite {
 
-  val tekstiRyhma = new TekstiRyhma()
+  val tekstiRyhma = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
 
   val hakukohde = new Hakukohde("123", new util.HashMap[String, String])
 
@@ -748,7 +743,7 @@ class LaskentaTest extends AnyFunSuite {
           true,
           "valintakoe-OSALLISTUMINEN",
           "",
-          new TekstiRyhma
+          new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
         )
       )
     )
@@ -775,7 +770,7 @@ class LaskentaTest extends AnyFunSuite {
           true,
           "valintakoe-OSALLISTUMINEN",
           "",
-          new TekstiRyhma
+          new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
         )
       )
     )
@@ -802,7 +797,7 @@ class LaskentaTest extends AnyFunSuite {
           true,
           "valintakoe-OSALLISTUMINEN",
           "",
-          new TekstiRyhma,
+          new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]()),
           false,
           false
         )
@@ -830,7 +825,7 @@ class LaskentaTest extends AnyFunSuite {
           true,
           "valintakoe-OSALLISTUMINEN",
           "",
-          new TekstiRyhma
+          new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
         )
       )
     )
@@ -857,7 +852,7 @@ class LaskentaTest extends AnyFunSuite {
           true,
           "valintakoe-OSALLISTUMINEN",
           "",
-          new TekstiRyhma
+          new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
         )
       )
     )
@@ -969,7 +964,7 @@ class LaskentaTest extends AnyFunSuite {
           tunniste = "tunniste1",
           pakollinen = false,
           osallistuminenTunniste = "tunniste1-OSALLISTUMINEN",
-          kuvaukset = new TekstiRyhma
+          kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
         )
       ),
       Summa(
@@ -989,7 +984,7 @@ class LaskentaTest extends AnyFunSuite {
             tunniste = "tunniste2",
             pakollinen = false,
             osallistuminenTunniste = "tunniste2-OSALLISTUMINEN",
-            kuvaukset = new TekstiRyhma
+            kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
           )
         ),
         HaeLukuarvo(
@@ -1008,7 +1003,7 @@ class LaskentaTest extends AnyFunSuite {
               tunniste = "tunniste4",
               pakollinen = true,
               osallistuminenTunniste = "tunniste4-OSALLISTUMINEN",
-              kuvaukset = new TekstiRyhma
+              kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
             ),
             vertailtava = "vertailtava4"
           ),
@@ -1023,7 +1018,7 @@ class LaskentaTest extends AnyFunSuite {
           tunniste = "tunniste5",
           pakollinen = false,
           osallistuminenTunniste = "tunniste5-OSALLISTUMINEN",
-          kuvaukset = new TekstiRyhma
+          kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
         )
       ),
       HaeLukuarvo(
@@ -1033,7 +1028,7 @@ class LaskentaTest extends AnyFunSuite {
           tunniste = "tunniste6",
           pakollinen = true,
           osallistuminenTunniste = "tunniste6-OSALLISTUMINEN",
-          kuvaukset = new TekstiRyhma
+          kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
         )
       )
     )
@@ -1740,74 +1735,109 @@ class LaskentaTest extends AnyFunSuite {
     loppukausi: String = "2"
   ): Funktiokutsu = {
 
-    val viite: ValintaperusteViite = new ValintaperusteViite
-    viite.setTunniste(aine)
-    viite.setIndeksi(0)
-    viite.setLahde(Valintaperustelahde.HAETTAVA_ARVO)
-    viite.setEpasuoraViittaus(false)
-    viite.setOnPakollinen(pakollinen)
+    val viite = new ValintaperusteViite(
+      null,
+      0,
+      aine,
+      "",
+      Valintaperustelahde.HAETTAVA_ARVO,
+      pakollinen,
+      false,
+      0,
+      new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]()),
+      true,
+      true,
+      null,
+      false
+    )
 
-    val kutsu: Funktiokutsu = new Funktiokutsu
-    kutsu.setFunktionimi(Funktionimi.HAEYOARVOSANA)
+    val valintaperusteviitteet = new util.LinkedList[ValintaperusteViite]()
+    valintaperusteviitteet.add(viite)
 
-    kutsu.getValintaperusteviitteet.add(viite)
+    val syoteparametrit = new util.HashSet[Syoteparametri]()
 
-    val syoteparametri: Syoteparametri = new Syoteparametri
-    syoteparametri.setAvain("M")
-    syoteparametri.setArvo("3")
-
-    val syoteparametri2: Syoteparametri = new Syoteparametri
-    syoteparametri2.setAvain("A")
-    syoteparametri2.setArvo("5")
-
-    val syoteparametri7: Syoteparametri = new Syoteparametri
-    syoteparametri7.setAvain("B")
-    syoteparametri7.setArvo("5")
-
-    val syoteparametri8: Syoteparametri = new Syoteparametri
-    syoteparametri8.setAvain("C")
-    syoteparametri8.setArvo("5")
-
-    val syoteparametri9: Syoteparametri = new Syoteparametri
-    syoteparametri9.setAvain("I")
-    syoteparametri9.setArvo("0")
-
-    val syoteparametri10: Syoteparametri = new Syoteparametri
-    syoteparametri10.setAvain("E")
-    syoteparametri10.setArvo("5")
-
-    val syoteparametri11: Syoteparametri = new Syoteparametri
-    syoteparametri11.setAvain("L")
-    syoteparametri11.setArvo("5")
-
-    val syoteparametri3: Syoteparametri = new Syoteparametri
-    syoteparametri3.setAvain("alkuvuosi")
-    syoteparametri3.setArvo("2010")
-
-    val syoteparametri4: Syoteparametri = new Syoteparametri
-    syoteparametri4.setAvain("loppuvuosi")
-    syoteparametri4.setArvo("2014")
-
-    val syoteparametri5: Syoteparametri = new Syoteparametri
-    syoteparametri5.setAvain("alkulukukausi")
-    syoteparametri5.setArvo(alkukausi)
-
-    val syoteparametri6: Syoteparametri = new Syoteparametri
-    syoteparametri6.setAvain("loppulukukausi")
-    syoteparametri6.setArvo(loppukausi)
-
-    kutsu.getSyoteparametrit.add(syoteparametri)
-    kutsu.getSyoteparametrit.add(syoteparametri2)
-    kutsu.getSyoteparametrit.add(syoteparametri3)
-    kutsu.getSyoteparametrit.add(syoteparametri4)
-    kutsu.getSyoteparametrit.add(syoteparametri5)
-    kutsu.getSyoteparametrit.add(syoteparametri6)
-    kutsu.getSyoteparametrit.add(syoteparametri7)
-    kutsu.getSyoteparametrit.add(syoteparametri8)
-    kutsu.getSyoteparametrit.add(syoteparametri9)
-    kutsu.getSyoteparametrit.add(syoteparametri10)
-    kutsu.getSyoteparametrit.add(syoteparametri11)
-    kutsu
+    syoteparametrit.add(new Syoteparametri(
+      null,
+      0,
+      "M",
+      "3"
+    ))
+    syoteparametrit.add(new Syoteparametri(
+      null,
+      0,
+      "A",
+      "5"
+    ))
+    syoteparametrit.add(new Syoteparametri(
+      null,
+      0,
+      "alkuvuosi",
+      "2010"
+    ))
+    syoteparametrit.add(new Syoteparametri(
+      null,
+      0,
+      "loppuvuosi",
+      "2014"
+    ))
+    syoteparametrit.add(new Syoteparametri(
+      null,
+      0,
+      "alkulukukausi",
+      alkukausi
+    ))
+    syoteparametrit.add(new Syoteparametri(
+      null,
+      0,
+      "loppulukukausi",
+      loppukausi
+    ))
+    syoteparametrit.add(new Syoteparametri(
+      null,
+      0,
+      "B",
+      "5"
+    ))
+    syoteparametrit.add(new Syoteparametri(
+      null,
+      0,
+      "C",
+      "5"
+    ))
+    syoteparametrit.add(new Syoteparametri(
+      null,
+      0,
+      "I",
+      "0"
+    ))
+    syoteparametrit.add(new Syoteparametri(
+      null,
+      0,
+      "E",
+      "5"
+    ))
+    syoteparametrit.add(new Syoteparametri(
+      null,
+      0,
+      "L",
+      "5"
+    ))
+    new Funktiokutsu(
+      null,
+      0,
+      Funktionimi.HAEYOARVOSANA,
+      "",
+      "",
+      null,
+      null,
+      false,
+      false,
+      new util.HashSet[Arvokonvertteriparametri](),
+      new util.LinkedList[Arvovalikonvertteriparametri](),
+      syoteparametrit,
+      new util.LinkedList[Funktioargumentti](),
+      valintaperusteviitteet
+    )
   }
 
   test(
@@ -1872,10 +1902,12 @@ class LaskentaTest extends AnyFunSuite {
   ) {
     val kutsu = createHaeYoArvosanaKutsu("SA")
 
-    val syoteparametriValmistuneet = new Syoteparametri
-    syoteparametriValmistuneet.setAvain("valmistuneet")
-    syoteparametriValmistuneet.setArvo("false")
-    kutsu.getSyoteparametrit.add(syoteparametriValmistuneet)
+    kutsu.getSyoteparametrit.add(new Syoteparametri(
+      null,
+      0,
+      "valmistuneet",
+      "false"
+    ))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(kutsu)
     val (tulos, _) = Laskin.laske(hakukohde, hakemusMustache, lasku)
@@ -1885,10 +1917,12 @@ class LaskentaTest extends AnyFunSuite {
   test("HaeYoArvosana: ei valmistuneelle palautetaan 0 pistettä, jos parametri valmistuneet=true") {
     val kutsu = createHaeYoArvosanaKutsu("SA")
 
-    val syoteparametriValmistuneet = new Syoteparametri
-    syoteparametriValmistuneet.setAvain("valmistuneet")
-    syoteparametriValmistuneet.setArvo("true")
-    kutsu.getSyoteparametrit.add(syoteparametriValmistuneet)
+    kutsu.getSyoteparametrit.add(new Syoteparametri(
+      null,
+      0,
+      "valmistuneet",
+      "true"
+    ))
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(kutsu)
     val (tulos, _) = Laskin.laske(hakukohde, hakemusMustache, lasku)
@@ -1915,39 +1949,67 @@ class LaskentaTest extends AnyFunSuite {
     aine: String,
     pakollinen: Boolean = false
   ): Funktiokutsu = {
-    val kutsu: Funktiokutsu = new Funktiokutsu
-    kutsu.setFunktionimi(Funktionimi.HAEOSAKOEARVOSANA)
+    val viite = new ValintaperusteViite(
+      null,
+      0,
+      aine,
+      "",
+      Valintaperustelahde.HAETTAVA_ARVO,
+      pakollinen,
+      false,
+      0,
+      new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]()),
+      true,
+      true,
+      null,
+      false
+    )
 
-    val viite: ValintaperusteViite = new ValintaperusteViite
-    viite.setTunniste(aine)
-    viite.setIndeksi(0)
-    viite.setLahde(Valintaperustelahde.HAETTAVA_ARVO)
-    viite.setEpasuoraViittaus(false)
-    viite.setOnPakollinen(pakollinen)
+    val valintaperusteviitteet = new util.LinkedList[ValintaperusteViite]()
+    valintaperusteviitteet.add(viite)
 
-    kutsu.getValintaperusteviitteet.add(viite)
+    val syoteparametrit = new util.HashSet[Syoteparametri]()
 
-    val syoteparametri3: Syoteparametri = new Syoteparametri
-    syoteparametri3.setAvain("alkuvuosi")
-    syoteparametri3.setArvo("2010")
-
-    val syoteparametri4: Syoteparametri = new Syoteparametri
-    syoteparametri4.setAvain("loppuvuosi")
-    syoteparametri4.setArvo("2014")
-
-    val syoteparametri5: Syoteparametri = new Syoteparametri
-    syoteparametri5.setAvain("alkulukukausi")
-    syoteparametri5.setArvo("1")
-
-    val syoteparametri6: Syoteparametri = new Syoteparametri
-    syoteparametri6.setAvain("loppulukukausi")
-    syoteparametri6.setArvo("2")
-
-    kutsu.getSyoteparametrit.add(syoteparametri3)
-    kutsu.getSyoteparametrit.add(syoteparametri4)
-    kutsu.getSyoteparametrit.add(syoteparametri5)
-    kutsu.getSyoteparametrit.add(syoteparametri6)
-    kutsu
+    syoteparametrit.add(new Syoteparametri(
+      null,
+      0,
+      "alkuvuosi",
+      "2010"
+    ))
+    syoteparametrit.add(new Syoteparametri(
+      null,
+      0,
+      "loppuvuosi",
+      "2014"
+    ))
+    syoteparametrit.add(new Syoteparametri(
+      null,
+      0,
+      "alkulukukausi",
+      "1"
+    ))
+    syoteparametrit.add(new Syoteparametri(
+      null,
+      0,
+      "loppulukukausi",
+      "2"
+    ))
+    new Funktiokutsu(
+      null,
+      0,
+      Funktionimi.HAEOSAKOEARVOSANA,
+      "",
+      "",
+      null,
+      null,
+      false,
+      false,
+      new util.HashSet[Arvokonvertteriparametri](),
+      new util.LinkedList[Arvovalikonvertteriparametri](),
+      syoteparametrit,
+      new util.LinkedList[Funktioargumentti](),
+      valintaperusteviitteet
+    )
   }
 
   test(
@@ -1997,11 +2059,14 @@ class LaskentaTest extends AnyFunSuite {
   ) {
 
     val kutsu: Funktiokutsu = createHaeOsakoeArvosanaKutsu("01")
-    val konv1 = new Arvokonvertteriparametri
-    konv1.setArvo("15")
-    konv1.setPaluuarvo("5.0")
-    konv1.setHylkaysperuste("false")
-    kutsu.getArvokonvertteriparametrit.add(konv1)
+    kutsu.getArvokonvertteriparametrit.add(new Arvokonvertteriparametri(
+      null,
+      0,
+      "5.0",
+      "15",
+      "false",
+      new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
+    ))
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(kutsu)
 
     val (tulos, tila) = Laskin.laske(hakukohde, hakemusMustache, lasku)
@@ -2015,13 +2080,16 @@ class LaskentaTest extends AnyFunSuite {
   ) {
 
     val kutsu: Funktiokutsu = createHaeOsakoeArvosanaKutsu("01")
-    val konv1 = new Arvovalikonvertteriparametri
-    konv1.setPalautaHaettuArvo("false")
-    konv1.setMinValue("12")
-    konv1.setMaxValue("17")
-    konv1.setPaluuarvo("5.0")
-    konv1.setHylkaysperuste("false")
-    kutsu.getArvovalikonvertteriparametrit.add(konv1)
+    kutsu.getArvovalikonvertteriparametrit.add(new Arvovalikonvertteriparametri(
+      null,
+      0,
+      "5.0",
+      "12",
+      "17",
+      "false",
+      "false",
+      new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
+    ))
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(kutsu)
 
     val (tulos, tila) = Laskin.laske(hakukohde, hakemusMustache, lasku)

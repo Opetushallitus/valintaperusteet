@@ -1,5 +1,6 @@
 package fi.vm.sade.kaava
 
+import java.util
 import java.util.Collections
 
 import fi.vm.sade.service.valintaperusteet.dto.model.{Funktionimi, Valintaperustelahde}
@@ -52,16 +53,21 @@ object LaskentaTestUtil {
   }
 
   object Funktioargumentti {
-    def apply(parent: Funktiokutsu, child: FunktionArgumentti, indeksi: Int) = {
-      val arg = new Funktioargumentti
-      child match {
-        case fk: Funktiokutsu  => arg.setFunktiokutsuChild(fk)
-        case lk: Laskentakaava => arg.setLaskentakaavaChild(lk)
-      }
-      arg.setIndeksi(indeksi)
-      arg.setParent(parent)
-
-      arg
+    def apply(child: FunktionArgumentti, indeksi: Int) = child match {
+      case fk: Funktiokutsu  => new Funktioargumentti(
+        null,
+        0,
+        fk,
+        null,
+        indeksi
+      )
+      case lk: Laskentakaava => new Funktioargumentti(
+        null,
+        0,
+        lk.getFunktiokutsu,
+        lk,
+        indeksi
+      )
     }
   }
 
@@ -77,46 +83,51 @@ object LaskentaTestUtil {
       tallennaTulos: Boolean = false,
       tulosTekstiFi: String = ""
     ) = {
-      val funktiokutsu = new Funktiokutsu
-      funktiokutsu.setFunktionimi(nimi)
-      funktiokutsu.setTallennaTulos(tallennaTulos)
-      funktiokutsu.setTulosTunniste(tulosTunniste)
-      funktiokutsu.setTulosTekstiFi(tulosTekstiFi)
-
       val fargs = for {
         i <- 1 to funktioargumentit.size
         child = funktioargumentit(i - 1)
-        arg = Funktioargumentti(funktiokutsu, child, i)
+        arg = Funktioargumentti(child, i)
       } yield arg
-
-      funktiokutsu.setFunktioargumentit(fargs.toSet.asJava)
-      funktiokutsu.setSyoteparametrit(syoteparametrit.toSet.asJava)
-      funktiokutsu.setArvokonvertteriparametrit(arvokonvertterit.toSet.asJava)
-      funktiokutsu.setArvovalikonvertteriparametrit(arvovalikonvertterit.toSet.asJava)
-      funktiokutsu.setValintaperusteviitteet(valintaperustetunniste.toSet.asJava)
-
-      funktiokutsu
+      new Funktiokutsu(
+        null,
+        0,
+        nimi,
+        tulosTunniste,
+        tulosTekstiFi,
+        null,
+        null,
+        tallennaTulos,
+        false,
+        arvokonvertterit.toSet.asJava,
+        arvovalikonvertterit.toList.asJava,
+        syoteparametrit.toSet.asJava,
+        fargs.toList.asJava,
+        valintaperustetunniste.toList.asJava
+      )
     }
   }
 
   object Syoteparametri {
     def apply(avain: String, arvo: String) = {
-      val syoteparametri = new Syoteparametri
-      syoteparametri.setArvo(arvo)
-      syoteparametri.setAvain(avain)
-
-      syoteparametri
+      new Syoteparametri(
+        null,
+        0,
+        avain,
+        arvo
+      )
     }
   }
 
   object Arvokonvertteriparametri {
     def apply(paluuarvo: String, arvo: String, hylkaysperuste: String, kuvaukset: TekstiRyhma) = {
-      val konv = new Arvokonvertteriparametri
-      konv.setArvo(arvo)
-      konv.setHylkaysperuste(hylkaysperuste)
-      konv.setPaluuarvo(paluuarvo)
-      konv.setKuvaukset(kuvaukset)
-      konv
+      new Arvokonvertteriparametri(
+        null,
+        0,
+        paluuarvo,
+        arvo,
+        hylkaysperuste,
+        kuvaukset
+      )
     }
   }
 
@@ -129,15 +140,16 @@ object LaskentaTestUtil {
       hylkaysperuste: String = "false",
       kuvaukset: TekstiRyhma
     ) = {
-      val konv = new Arvovalikonvertteriparametri
-      konv.setMaxValue(max)
-      konv.setMinValue(min)
-      konv.setPaluuarvo(paluuarvo)
-      konv.setPalautaHaettuArvo(palautaHaettuArvo)
-      konv.setHylkaysperuste(hylkaysperuste)
-      konv.setKuvaukset(kuvaukset)
-
-      konv
+      new Arvovalikonvertteriparametri(
+        null,
+        0,
+        paluuarvo,
+        min,
+        max,
+        palautaHaettuArvo,
+        hylkaysperuste,
+        kuvaukset
+      )
     }
   }
 
@@ -149,15 +161,21 @@ object LaskentaTestUtil {
       epasuoraViittaus: Boolean = false,
       indeksi: Int = 1
     ) = {
-      val viite = new ValintaperusteViite
-      viite.setKuvaus("")
-      viite.setLahde(lahde)
-      viite.setOnPakollinen(onPakollinen)
-      viite.setTunniste(tunniste)
-      viite.setEpasuoraViittaus(epasuoraViittaus)
-      viite.setIndeksi(indeksi)
-
-      viite
+      new ValintaperusteViite(
+        null,
+        0,
+        tunniste,
+        "",
+        lahde,
+        onPakollinen,
+        epasuoraViittaus,
+        indeksi,
+        new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]()),
+        true,
+        true,
+        null,
+        false
+      )
     }
   }
 
@@ -209,13 +227,17 @@ object LaskentaTestUtil {
       onLuonnos: java.lang.Boolean,
       kuvaus: String = ""
     ) = {
-      val kaava = new Laskentakaava
-      kaava.setFunktiokutsu(funktiokutsu)
-      kaava.setTyyppi(funktiokutsu.getFunktionimi.getTyyppi)
-      kaava.setKuvaus(kuvaus)
-      kaava.setOnLuonnos(onLuonnos)
-
-      kaava
+      new Laskentakaava(
+        null,
+        0,
+        onLuonnos,
+        nimi,
+        kuvaus,
+        null,
+        null,
+        null,
+        funktiokutsu
+      )
     }
   }
 

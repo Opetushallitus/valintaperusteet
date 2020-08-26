@@ -37,8 +37,6 @@ public class HakijaryhmaDAOImpl extends AbstractJpaDAOImpl<Hakijaryhma, Long>
             .fetch()
             .leftJoin(hakijaryhma.valintaryhma)
             .fetch()
-            .leftJoin(hakijaryhma.laskentakaava)
-            .fetch()
             .leftJoin(hakijaryhma.hakijaryhmatyyppikoodi)
             .fetch()
             .singleResult(hakijaryhma);
@@ -54,8 +52,6 @@ public class HakijaryhmaDAOImpl extends AbstractJpaDAOImpl<Hakijaryhma, Long>
         .leftJoin(hakijaryhma.jonot)
         .fetch()
         .leftJoin(hakijaryhma.valintaryhma)
-        .fetch()
-        .leftJoin(hakijaryhma.laskentakaava)
         .fetch()
         .leftJoin(hakijaryhma.hakijaryhmatyyppikoodi)
         .fetch()
@@ -73,8 +69,6 @@ public class HakijaryhmaDAOImpl extends AbstractJpaDAOImpl<Hakijaryhma, Long>
         .fetch()
         .leftJoin(hakijaryhma.valintaryhma)
         .fetch()
-        .leftJoin(hakijaryhma.laskentakaava)
-        .fetch()
         .leftJoin(hakijaryhma.hakijaryhmatyyppikoodi)
         .fetch()
         .distinct()
@@ -88,8 +82,6 @@ public class HakijaryhmaDAOImpl extends AbstractJpaDAOImpl<Hakijaryhma, Long>
     return from(valintaryhma)
         .leftJoin(valintaryhma.hakijaryhmat, hakijaryhma)
         .leftJoin(hakijaryhma.valintaryhma)
-        .fetch()
-        .leftJoin(hakijaryhma.laskentakaava)
         .fetch()
         .leftJoin(hakijaryhma.hakijaryhmatyyppikoodi)
         .fetch()
@@ -111,14 +103,5 @@ public class HakijaryhmaDAOImpl extends AbstractJpaDAOImpl<Hakijaryhma, Long>
             .where(valintaryhma.oid.eq(valintaryhmaOid))
             .singleResult(hakijaryhma);
     return lastValinnanVaihe;
-  }
-
-  @Override
-  public List<Hakijaryhma> findByLaskentakaava(long id) {
-    QHakijaryhma hakijaryhma = QHakijaryhma.hakijaryhma;
-    return from(hakijaryhma)
-        .leftJoin(hakijaryhma.laskentakaava)
-        .where(hakijaryhma.laskentakaava.id.eq(id))
-        .list(hakijaryhma);
   }
 }

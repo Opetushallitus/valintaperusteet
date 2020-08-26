@@ -2,6 +2,7 @@ package fi.vm.sade.service.valintaperusteet.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
@@ -103,15 +104,13 @@ public class ValintakoeServiceTest {
       assertEquals(vrValinnanVaihekokeet.get(1).getKuvaus(), valintakoe.getKuvaus());
       assertEquals(vrValinnanVaihekokeet.get(1).getNimi(), valintakoe.getNimi());
       assertEquals(vrValinnanVaihekokeet.get(1).getTunniste(), valintakoe.getTunniste());
-      assertEquals(
-          vrValinnanVaihekokeet.get(1).getLaskentakaava().getId(), valintakoe.getLaskentakaavaId());
+      assertEquals(vrValinnanVaihekokeet.get(1).getLaskentakaavaId(), valintakoe.getLaskentakaavaId());
 
       assertEquals(hkValinnanVaiheKokeet.get(1).getAktiivinen(), valintakoe.getAktiivinen());
       assertEquals(hkValinnanVaiheKokeet.get(1).getKuvaus(), valintakoe.getKuvaus());
       assertEquals(hkValinnanVaiheKokeet.get(1).getNimi(), valintakoe.getNimi());
       assertEquals(hkValinnanVaiheKokeet.get(1).getTunniste(), valintakoe.getTunniste());
-      assertEquals(
-          hkValinnanVaiheKokeet.get(1).getLaskentakaava().getId(), valintakoe.getLaskentakaavaId());
+      assertEquals(hkValinnanVaiheKokeet.get(1).getLaskentakaavaId(), valintakoe.getLaskentakaavaId());
     }
   }
 
@@ -156,11 +155,11 @@ public class ValintakoeServiceTest {
     update.setKutsunKohde(Koekutsu.YLIN_TOIVE);
 
     Valintakoe managed = valintakoeService.readByOid(valintakoeOid);
-    assertFalse(managed.getAktiivinen().equals(update.getAktiivinen()));
-    assertFalse(managed.getKuvaus().equals(update.getKuvaus()));
-    assertFalse(managed.getNimi().equals(update.getNimi()));
-    assertFalse(managed.getTunniste().equals(update.getTunniste()));
-    assertFalse(managed.getLaskentakaava().getId().equals(update.getLaskentakaavaId()));
+    assertNotEquals(managed.getAktiivinen(), update.getAktiivinen());
+    assertNotEquals(managed.getKuvaus(), update.getKuvaus());
+    assertNotEquals(managed.getNimi(), update.getNimi());
+    assertNotEquals(managed.getTunniste(), update.getTunniste());
+    assertNotEquals(managed.getLaskentakaavaId(), update.getLaskentakaavaId());
 
     valintakoeService.update(valintakoeOid, update);
 
@@ -169,14 +168,14 @@ public class ValintakoeServiceTest {
     assertEquals(update.getKuvaus(), managed.getKuvaus());
     assertEquals(update.getNimi(), managed.getNimi());
     assertEquals(update.getTunniste(), managed.getTunniste());
-    assertEquals(update.getLaskentakaavaId(), managed.getLaskentakaava().getId());
+    assertEquals(update.getLaskentakaavaId(), managed.getLaskentakaavaId());
 
     Valintakoe kopio = valintakoeService.readByOid("oid9");
     assertEquals(update.getAktiivinen(), kopio.getAktiivinen());
     assertEquals(update.getKuvaus(), kopio.getKuvaus());
     assertEquals(update.getNimi(), kopio.getNimi());
     assertEquals(update.getTunniste(), kopio.getTunniste());
-    assertEquals(update.getLaskentakaavaId(), kopio.getLaskentakaava().getId());
+    assertEquals(update.getLaskentakaavaId(), kopio.getLaskentakaavaId());
   }
 
   @Test(expected = FunktiokutsuaEiVoidaKayttaaValintakoelaskennassaException.class)

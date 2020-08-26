@@ -1,73 +1,61 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
-import javax.persistence.*;
-import javax.validation.constraints.Min;
+public class Funktioargumentti implements Comparable<Funktioargumentti> {
+  private FunktioargumenttiId id;
 
-@Entity
-@Table(name = "funktioargumentti")
-@Cacheable(true)
-public class Funktioargumentti extends BaseEntity implements Comparable<Funktioargumentti> {
+  private long version;
 
-  @JoinColumn(name = "funktiokutsuparent_id", nullable = false)
-  @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
-  private Funktiokutsu parent;
-
-  @JoinColumn(name = "funktiokutsuchild_id", nullable = true)
-  @ManyToOne(cascade = CascadeType.PERSIST)
   private Funktiokutsu funktiokutsuChild;
 
-  @JoinColumn(name = "laskentakaavachild_id", nullable = true)
-  @ManyToOne(cascade = CascadeType.PERSIST)
   private Laskentakaava laskentakaavaChild;
 
-  @Min(1)
-  @Column(name = "indeksi", nullable = false)
-  private Integer indeksi;
+  private int indeksi;
 
-  @Transient private Funktiokutsu laajennettuKaava;
-
-  public Funktiokutsu getParent() {
-    return parent;
+  public Funktioargumentti(FunktioargumenttiId id,
+                           long version,
+                           Funktiokutsu funktiokutsuChild,
+                           Laskentakaava laskentakaavaChild,
+                           int indeksi) {
+    this.id = id;
+    this.version = version;
+    this.funktiokutsuChild = funktiokutsuChild;
+    this.laskentakaavaChild = laskentakaavaChild;
+    this.indeksi = indeksi;
   }
 
-  public void setParent(Funktiokutsu parent) {
-    this.parent = parent;
+  public FunktioargumenttiId getId() {
+    return id;
   }
 
   public Funktiokutsu getFunktiokutsuChild() {
     return funktiokutsuChild;
   }
 
-  public void setFunktiokutsuChild(Funktiokutsu funktiokutsuChild) {
-    this.funktiokutsuChild = funktiokutsuChild;
-  }
-
   public Laskentakaava getLaskentakaavaChild() {
     return laskentakaavaChild;
   }
 
-  public void setLaskentakaavaChild(Laskentakaava laskentakaavaChild) {
-    this.laskentakaavaChild = laskentakaavaChild;
-  }
-
-  public Integer getIndeksi() {
+  public int getIndeksi() {
     return indeksi;
-  }
-
-  public void setIndeksi(Integer indeksi) {
-    this.indeksi = indeksi;
-  }
-
-  public Funktiokutsu getLaajennettuKaava() {
-    return laajennettuKaava;
-  }
-
-  public void setLaajennettuKaava(Funktiokutsu laajennettuKaava) {
-    this.laajennettuKaava = laajennettuKaava;
   }
 
   @Override
   public int compareTo(Funktioargumentti o) {
     return indeksi - o.indeksi;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    Funktioargumentti that = (Funktioargumentti) o;
+
+    return id.equals(that.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return id.hashCode();
   }
 }

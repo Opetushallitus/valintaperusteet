@@ -15,6 +15,16 @@ public class ValintaperusteetFunktioargumenttiDTO
 
   private Long id;
 
+  public ValintaperusteetFunktioargumenttiDTO() { }
+
+  public ValintaperusteetFunktioargumenttiDTO(Long id,
+                                              ValintaperusteetFunktiokutsuDTO funktiokutsu,
+                                              Integer indeksi) {
+    this.id = id;
+    this.funktiokutsu = funktiokutsu;
+    this.indeksi = indeksi;
+  }
+
   public Integer getIndeksi() {
     return indeksi;
   }

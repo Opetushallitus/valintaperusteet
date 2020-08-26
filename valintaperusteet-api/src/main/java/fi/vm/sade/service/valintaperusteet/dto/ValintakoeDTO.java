@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
+import fi.vm.sade.service.valintaperusteet.dto.model.Koekutsu;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -17,6 +18,38 @@ public class ValintakoeDTO extends ValintakoeCreateDTO {
 
   @ApiModelProperty(value = "Peritty", required = false)
   private Boolean peritty;
+
+  public ValintakoeDTO() { }
+
+  public ValintakoeDTO(String tunniste,
+                       Long laskentakaavaId,
+                       String nimi,
+                       String kuvaus,
+                       Boolean aktiivinen,
+                       Boolean lahetetaankoKoekutsut,
+                       Boolean kutsutaankoKaikki,
+                       Integer kutsuttavienMaara,
+                       Koekutsu kutsunKohde,
+                       String kutsunKohdeAvain,
+                       String oid,
+                       FunktiokutsuDTO funktiokutsu) {
+    super(
+            tunniste,
+            laskentakaavaId,
+            nimi,
+            kuvaus,
+            aktiivinen,
+            lahetetaankoKoekutsut,
+            kutsutaankoKaikki,
+            kutsuttavienMaara,
+            kutsunKohde,
+            kutsunKohdeAvain
+    );
+    this.oid = oid;
+    this.selvitettyTunniste = tunniste;
+    this.funktiokutsu = funktiokutsu;
+    this.peritty = null;
+  }
 
   public String getSelvitettyTunniste() {
     return selvitettyTunniste;

@@ -18,6 +18,7 @@ import fi.vm.sade.service.valintaperusteet.dto.FunktiokutsuDTO;
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.KoodiDTO;
 import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaInsertDTO;
 import fi.vm.sade.service.valintaperusteet.dto.SyoteparametriDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeCreateDTO;
@@ -30,9 +31,11 @@ import fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
 import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
+import fi.vm.sade.service.valintaperusteet.model.LaskentakaavaId;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
+import fi.vm.sade.service.valintaperusteet.model.ValintaryhmaId;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 import java.util.List;
@@ -246,11 +249,9 @@ public class ValintaryhmaServiceTest {
         addValinnanvaihe(originalRoot, "valintakoe", true, ValinnanVaiheTyyppi.VALINTAKOE);
     // create Laskentakaavas to be paired with various entities
     Laskentakaava originalValintakoeKaava =
-        laskentakaavaService.insert(
-            createLaskentakaava("valintakoekaava"), null, originalRoot.getOid());
+        laskentakaavaService.insert(createLaskentakaava("valintakoekaava", originalRoot));
     Laskentakaava originalHakijaryhmaKaava =
-        laskentakaavaService.insert(
-            createLaskentakaava("hakijaryhmäkaava"), null, originalRoot.getOid());
+        laskentakaavaService.insert(createLaskentakaava("hakijaryhmäkaava", originalRoot));
     // add hakijaryhma to original root
     Hakijaryhma originalHakijaryhma =
         hakijaryhmaService.lisaaHakijaryhmaValintaryhmalle(
@@ -264,7 +265,7 @@ public class ValintaryhmaServiceTest {
     valintakoe.setKutsutaankoKaikki(true);
     valintakoe.setLahetetaankoKoekutsut(true);
     valintakoe.setTunniste("ID");
-    valintakoe.setLaskentakaavaId(originalValintakoeKaava.getId());
+    valintakoe.setLaskentakaavaId(originalValintakoeKaava.getId().id);
     valintakoeService.lisaaValintakoeValinnanVaiheelle(examVV.getOid(), valintakoe);
 
     // create original child VR
@@ -327,7 +328,7 @@ public class ValintaryhmaServiceTest {
     // create original root VR with single hakijaryhma
     Valintaryhma rootVR = valintaryhmaService.insert(createValintaryhma("parent"));
     Laskentakaava rootLK =
-        laskentakaavaService.insert(createLaskentakaava("hakijaryhmäkaava"), null, rootVR.getOid());
+        laskentakaavaService.insert(createLaskentakaava("hakijaryhmäkaava", rootVR));
     Hakijaryhma rootHR =
         hakijaryhmaService.lisaaHakijaryhmaValintaryhmalle(
             rootVR.getOid(),
@@ -382,8 +383,8 @@ public class ValintaryhmaServiceTest {
         copiedHakijaryhma.getValintaryhma().getOid());
     assertEquals(
         "Copied Hakijaryhma's Laskentakaava should be owned by copied root",
-        copiedRoot.getOid(),
-        copiedHakijaryhma.getLaskentakaava().getValintaryhma().getOid());
+        new ValintaryhmaId(copiedRoot.getId()),
+        laskentakaavaService.haeMallinnettuKaava(new LaskentakaavaId(copiedHakijaryhma.getLaskentakaavaId())).getValintaryhmaId());
   }
 
   private static void assertValinnanvaiheRootLinking(
@@ -446,7 +447,7 @@ public class ValintaryhmaServiceTest {
     // Hibernate Session here
     Set<Long> vrIds =
         laskentakaavaService.findKaavas(true, valintaryhma.getOid(), null, null).stream()
-            .map(Laskentakaava::getId)
+            .map(lk -> lk.getId().id)
             .collect(Collectors.toSet());
     kokeet.forEach(
         (koe) -> {
@@ -488,17 +489,23 @@ public class ValintaryhmaServiceTest {
       Laskentakaava laskentakaava, String nimi, Optional<KoodiDTO> hakijaryhmatyyppikoodi) {
     HakijaryhmaCreateDTO hakijaryhma = new HakijaryhmaCreateDTO();
     hakijaryhma.setNimi(nimi);
-    hakijaryhma.setLaskentakaavaId(laskentakaava.getId());
+    hakijaryhma.setLaskentakaavaId(laskentakaava.getId().id);
     hakijaryhmatyyppikoodi.ifPresent(hakijaryhma::setHakijaryhmatyyppikoodi);
     return hakijaryhma;
   }
 
-  private LaskentakaavaCreateDTO createLaskentakaava(String nimi) {
-    LaskentakaavaCreateDTO laskentakaava = new LaskentakaavaCreateDTO();
-    laskentakaava.setNimi(nimi);
-    laskentakaava.setFunktiokutsu(createFunktiokutsu());
-    laskentakaava.setOnLuonnos(true);
-    return laskentakaava;
+  private LaskentakaavaInsertDTO createLaskentakaava(String nimi, Valintaryhma valintaryhma) {
+    FunktiokutsuDTO funktiokutsu = createFunktiokutsu();
+    return new LaskentakaavaInsertDTO(
+            new LaskentakaavaCreateDTO(
+                    true,
+                    nimi,
+                    "kuvaus",
+                    funktiokutsu
+            ),
+            null,
+            valintaryhma.getOid()
+    );
   }
 
   private FunktiokutsuDTO createFunktiokutsu() {

@@ -2,24 +2,50 @@ package fi.vm.sade.service.valintaperusteet.service.impl.rest;
 
 import com.google.common.collect.Lists;
 import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
-import fi.vm.sade.service.valintaperusteet.dto.*;
+import fi.vm.sade.service.valintaperusteet.dto.HakukohdeImportDTO;
+import fi.vm.sade.service.valintaperusteet.dto.HakukohteenValintaperusteDTO;
+import fi.vm.sade.service.valintaperusteet.dto.HakuparametritDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteetDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteetJarjestyskriteeriDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteetValinnanVaiheDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoJarjestyskriteereillaDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
 import fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi;
-import fi.vm.sade.service.valintaperusteet.model.*;
-import fi.vm.sade.service.valintaperusteet.service.*;
+import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
+import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
+import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
+import fi.vm.sade.service.valintaperusteet.model.LaskentakaavaId;
+import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
+import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
+import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
+import fi.vm.sade.service.valintaperusteet.service.HakukohdeImportService;
+import fi.vm.sade.service.valintaperusteet.service.HakukohdeService;
+import fi.vm.sade.service.valintaperusteet.service.JarjestyskriteeriService;
+import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
+import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
+import fi.vm.sade.service.valintaperusteet.service.ValintakoeService;
+import fi.vm.sade.service.valintaperusteet.service.ValintaperusteService;
+import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakukohdeViiteEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakuparametritOnTyhjaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheEpaaktiivinenException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheJarjestyslukuOutOfBoundsException;
-import fi.vm.sade.service.valintaperusteet.service.impl.util.ValintaperusteServiceUtil;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
-import java.util.*;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class ValintaperusteServiceImpl implements ValintaperusteService {
@@ -222,28 +248,21 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
   }
 
   private List<ValintakoeDTO> convertValintakokeet(ValinnanVaihe valinnanVaihe) {
-    List<Valintakoe> valintakokeet =
-        valintakoeService.findValintakoeByValinnanVaihe(valinnanVaihe.getOid());
-    List<ValintakoeDTO> valintakoeDTOs = new ArrayList<ValintakoeDTO>();
-    for (Valintakoe koe : valintakokeet) {
-      if (koe.getAktiivinen()) {
-        ValintakoeDTO dto = modelMapper.map(koe, ValintakoeDTO.class);
-        FunktiokutsuDTO converted = null;
-        if (koe.ainaPakollinen()) {
-          converted =
-              modelMapper.map(
-                  ValintaperusteServiceUtil.getAinaPakollinenFunktiokutsu(), FunktiokutsuDTO.class);
-        } else {
-          Laskentakaava laskentakaava =
-              laskentakaavaService.haeLaskettavaKaava(
-                  koe.getLaskentakaava().getId(), Laskentamoodi.VALINTAKOELASKENTA);
-          converted = modelMapper.map(laskentakaava.getFunktiokutsu(), FunktiokutsuDTO.class);
-        }
-        dto.setFunktiokutsu(converted);
-        valintakoeDTOs.add(dto);
-      }
-    }
-    return valintakoeDTOs;
+    return valintakoeService.findValintakoeByValinnanVaihe(valinnanVaihe.getOid()).stream()
+            .filter(Valintakoe::getAktiivinen)
+            .map(koe -> {
+              if (koe.ainaPakollinen()) {
+                return modelMapper.ainaPakollinenvkToDto(koe);
+              } else {
+                Laskentakaava laskentakaava =
+                        laskentakaavaService.haeLaskettavaKaava(
+                                new LaskentakaavaId(koe.getLaskentakaavaId()),
+                                Laskentamoodi.VALINTAKOELASKENTA
+                        );
+                return modelMapper.vkToDto(koe, laskentakaava);
+              }
+            })
+            .collect(Collectors.toList());
   }
 
   private List<ValintatapajonoJarjestyskriteereillaDTO> convertJonot(ValinnanVaihe valinnanVaihe) {
@@ -283,41 +302,18 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
       Valintatapajono valintatapajono) {
     List<Jarjestyskriteeri> jarjestyskriteeris =
         jarjestyskriteeriService.findJarjestyskriteeriByJono(valintatapajono.getOid());
-    List<ValintaperusteetJarjestyskriteeriDTO> jarjestyskriteerit =
-        new ArrayList<ValintaperusteetJarjestyskriteeriDTO>();
+    List<ValintaperusteetJarjestyskriteeriDTO> jarjestyskriteerit = new ArrayList<>();
     for (int prioriteetti = 0; prioriteetti < jarjestyskriteeris.size(); prioriteetti++) {
       Jarjestyskriteeri jarjestyskriteeri = jarjestyskriteeris.get(prioriteetti);
       if (!jarjestyskriteeri.getAktiivinen()) continue;
-      ValintaperusteetJarjestyskriteeriDTO jarjestyskriteeriDTO =
-          modelMapper.map(jarjestyskriteeri, ValintaperusteetJarjestyskriteeriDTO.class);
-      jarjestyskriteeriDTO.setPrioriteetti(prioriteetti);
-      jarjestyskriteeriDTO.setNimi(jarjestyskriteeri.getMetatiedot());
-      Long start = System.currentTimeMillis();
-      Laskentakaava laskentakaava =
-          laskentakaavaService.haeLaskettavaKaava(
-              jarjestyskriteeri.getLaskentakaava().getId(), Laskentamoodi.VALINTALASKENTA);
-      jarjestyskriteeriDTO.setNimi(laskentakaava.getNimi());
-      if (LOG.isInfoEnabled()) {
-        LOG.info(
-            "haeLaskettavaKaava: "
-                + jarjestyskriteeri.getLaskentakaava().getId()
-                + ":"
-                + (System.currentTimeMillis() - start));
-      }
-      // Asetetaan laskentakaavan nimi ensimmäisen funktiokutsun nimeksi
-      laskentakaava
-          .getFunktiokutsu()
-          .getSyoteparametrit()
-          .forEach(
-              s -> {
-                if (s.getAvain().equals("nimi")) {
-                  s.setArvo(laskentakaava.getNimi());
-                }
-              });
-      ValintaperusteetFunktiokutsuDTO convert =
-          modelMapper.map(laskentakaava.getFunktiokutsu(), ValintaperusteetFunktiokutsuDTO.class);
-      jarjestyskriteeriDTO.setFunktiokutsu(convert);
-      jarjestyskriteerit.add(jarjestyskriteeriDTO);
+      jarjestyskriteerit.add(modelMapper.jkToValintaperusteDto(
+              jarjestyskriteeri,
+              prioriteetti,
+              laskentakaavaService.haeLaskettavaKaava(
+                      new LaskentakaavaId(jarjestyskriteeri.getLaskentakaavaId()),
+                      Laskentamoodi.VALINTALASKENTA
+              )
+      ));
     }
     return jarjestyskriteerit;
   }

@@ -152,14 +152,12 @@ object Laskentakaavavalidaattori {
         } else if (argumentti.getLaskentakaavaChild != null) {
           val vv =
             if (
-              vaadittuArgumentti.tyyppi.toString != argumentti.getLaskentakaavaChild.getTyyppi
-                .name()
+              vaadittuArgumentti.tyyppi.toString != argumentti.getLaskentakaavaChild.getFunktiokutsu.getFunktionimi.getTyyppi.name()
             ) {
               new Validointivirhe(
                 Virhetyyppi.VIRHEELLINEN_FUNKTIOARGUMENTIN_TYYPPI,
                 s"""Funktion $nimi funktioargumentti on väärää tyyppiä.
-              Vaadittu: ${vaadittuArgumentti.tyyppi.toString}, annettu: ${argumentti.getLaskentakaavaChild.getTyyppi
-                  .name()}"""
+              Vaadittu: ${vaadittuArgumentti.tyyppi.toString}, annettu: ${argumentti.getLaskentakaavaChild.getFunktiokutsu.getFunktionimi.getTyyppi.name()}"""
               ) :: accum
             } else accum
 
@@ -174,8 +172,7 @@ object Laskentakaavavalidaattori {
       }
     }
 
-    val annetutArgumentit =
-      LaskentaUtil.jarjestaFunktioargumentit(funktiokutsu.getFunktioargumentit)
+    val annetutArgumentit = funktiokutsu.getFunktioargumentit.asScala.toList
     val vaaditutArgumentit = funktiokuvaus.funktioargumentit
 
     if (vaaditutArgumentit.isEmpty && annetutArgumentit.nonEmpty) {

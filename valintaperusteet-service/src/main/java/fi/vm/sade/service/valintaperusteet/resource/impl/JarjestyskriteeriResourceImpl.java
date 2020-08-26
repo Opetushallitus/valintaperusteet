@@ -11,6 +11,7 @@ import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriDTO;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriInsertDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
+import fi.vm.sade.service.valintaperusteet.model.LaskentakaavaId;
 import fi.vm.sade.service.valintaperusteet.resource.JarjestyskriteeriResource;
 import fi.vm.sade.service.valintaperusteet.service.JarjestyskriteeriService;
 import fi.vm.sade.service.valintaperusteet.service.exception.JarjestyskriteeriEiOleOlemassaException;
@@ -86,8 +87,7 @@ public class JarjestyskriteeriResourceImpl implements JarjestyskriteeriResource 
           modelMapper.map(jarjestyskriteeriService.readByOid(oid), JarjestyskriteeriDTO.class);
       JarjestyskriteeriDTO update =
           modelMapper.map(
-              jarjestyskriteeriService.update(
-                  oid, jk.getJarjestyskriteeri(), jk.getLaskentakaavaId()),
+              jarjestyskriteeriService.update(oid, jk),
               JarjestyskriteeriDTO.class);
       AuditLog.log(
           ValintaperusteetAudit.AUDIT,

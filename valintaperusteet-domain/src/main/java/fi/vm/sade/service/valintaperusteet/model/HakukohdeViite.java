@@ -32,9 +32,6 @@ public class HakukohdeViite extends BaseEntity {
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "hakukohdeViite")
   private Set<ValinnanVaihe> valinnanvaiheet = new HashSet<ValinnanVaihe>();
 
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "hakukohde")
-  private Set<Laskentakaava> laskentakaava = new HashSet<Laskentakaava>();
-
   @JoinColumn(name = "hakukohdekoodi_id", nullable = true)
   @ManyToOne(fetch = FetchType.LAZY)
   private Hakukohdekoodi hakukohdekoodi;
@@ -106,14 +103,6 @@ public class HakukohdeViite extends BaseEntity {
 
   public void setValinnanvaiheet(Set<ValinnanVaihe> valinnanvaiheet) {
     this.valinnanvaiheet = valinnanvaiheet;
-  }
-
-  public Set<Laskentakaava> getLaskentakaava() {
-    return laskentakaava;
-  }
-
-  public void setLaskentakaava(Set<Laskentakaava> laskentakaava) {
-    this.laskentakaava = laskentakaava;
   }
 
   private String getValintaryhmaOid() {

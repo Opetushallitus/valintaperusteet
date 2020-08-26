@@ -2,11 +2,14 @@ package fi.vm.sade.service.valintaperusteet.dto.mapping;
 
 import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.model.*;
+import fi.vm.sade.service.valintaperusteet.dto.model.Virhetyyppi;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.model.Abstraktivalidointivirhe;
 import fi.vm.sade.service.valintaperusteet.service.validointi.virhe.*;
-import fi.vm.sade.service.valintaperusteet.service.validointi.virhe.Virhetyyppi;
+
 import java.util.*;
+import java.util.stream.Collectors;
+
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
@@ -20,204 +23,6 @@ public class ValintaperusteetModelMapper extends ModelMapper {
 
   public ValintaperusteetModelMapper() {
     super();
-
-    // Validointivirheet
-    final Converter<List<ValidointivirheDTO>, List<Abstraktivalidointivirhe>> virheListConverter =
-        new Converter<List<ValidointivirheDTO>, List<Abstraktivalidointivirhe>>() {
-          public List<Abstraktivalidointivirhe> convert(
-              MappingContext<List<ValidointivirheDTO>, List<Abstraktivalidointivirhe>> context) {
-            List<Abstraktivalidointivirhe> result = new ArrayList<Abstraktivalidointivirhe>();
-            for (int i = 0; i < context.getSource().size(); i++) {
-              ValidointivirheDTO dto = context.getSource().get(i);
-              Validointivirhe virhe =
-                  new Validointivirhe(
-                      Virhetyyppi.valueOf(dto.getVirhetyyppi().name()), dto.getVirheviesti());
-              result.add(virhe);
-            }
-            return result;
-          }
-        };
-
-    final Converter<Set<ValintaperusteViite>, List<ValintaperusteViiteDTO>>
-        valintaperusteViiteToDtoConverter =
-            new Converter<Set<ValintaperusteViite>, List<ValintaperusteViiteDTO>>() {
-              public List<ValintaperusteViiteDTO> convert(
-                  MappingContext<Set<ValintaperusteViite>, List<ValintaperusteViiteDTO>> context) {
-                List<ValintaperusteViiteDTO> result = new LinkedList<ValintaperusteViiteDTO>();
-                for (ValintaperusteViite arg : context.getSource()) {
-                  ValintaperusteViiteDTO dto = map(arg, ValintaperusteViiteDTO.class);
-                  result.add(dto);
-                }
-                return result;
-              }
-            };
-
-    final Converter<List<ValintaperusteViiteDTO>, Set<ValintaperusteViite>>
-        dtoToValintaperusteViiteConverter =
-            new Converter<List<ValintaperusteViiteDTO>, Set<ValintaperusteViite>>() {
-              public Set<ValintaperusteViite> convert(
-                  MappingContext<List<ValintaperusteViiteDTO>, Set<ValintaperusteViite>> context) {
-                Set<ValintaperusteViite> result = new TreeSet<ValintaperusteViite>();
-                for (int i = 0; i < context.getSource().size(); i++) {
-                  ValintaperusteViiteDTO arg = context.getSource().get(i);
-                  arg.setIndeksi(i + 1);
-                  ValintaperusteViite viite = map(arg, ValintaperusteViite.class);
-                  if ((viite.getEpasuoraViittaus() == null || !viite.getEpasuoraViittaus())
-                      && Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO.equals(viite.getLahde())) {
-                    LOG.info(
-                        String.format(
-                            "Pakotetaan epasuoraViittaus arvoon true, koska viitteen %d lähde on %s",
-                            viite.getId(), Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO));
-                    viite.setEpasuoraViittaus(true);
-                  }
-                  viite.setIndeksi(arg.getIndeksi());
-                  result.add(viite);
-                }
-                return result;
-              }
-            };
-
-    final Converter<Set<Arvovalikonvertteriparametri>, List<ArvovalikonvertteriparametriDTO>>
-        arvovalikonvertteriparametriToDtoConverter =
-            new Converter<
-                Set<Arvovalikonvertteriparametri>, List<ArvovalikonvertteriparametriDTO>>() {
-              public List<ArvovalikonvertteriparametriDTO> convert(
-                  MappingContext<
-                          Set<Arvovalikonvertteriparametri>, List<ArvovalikonvertteriparametriDTO>>
-                      context) {
-                Set<ArvovalikonvertteriparametriDTO> resultSet = new TreeSet<>();
-                for (Arvovalikonvertteriparametri a : context.getSource()) {
-                  resultSet.add(map(a, ArvovalikonvertteriparametriDTO.class));
-                }
-                List<ArvovalikonvertteriparametriDTO> result = new LinkedList<>();
-                result.addAll(resultSet);
-                return result;
-              }
-            };
-
-    final Converter<List<ArvovalikonvertteriparametriDTO>, Set<Arvovalikonvertteriparametri>>
-        dtoToArvovalikonvertteriparametriConverter =
-            new Converter<
-                List<ArvovalikonvertteriparametriDTO>, Set<Arvovalikonvertteriparametri>>() {
-              public Set<Arvovalikonvertteriparametri> convert(
-                  MappingContext<
-                          List<ArvovalikonvertteriparametriDTO>, Set<Arvovalikonvertteriparametri>>
-                      context) {
-                Set<Arvovalikonvertteriparametri> result = new TreeSet<>();
-                result.addAll(mapList(context.getSource(), Arvovalikonvertteriparametri.class));
-                return result;
-              }
-            };
-
-    final Converter<List<FunktioargumenttiDTO>, Set<Funktioargumentti>>
-        dtoToFunktioargumenttiConverter =
-            new Converter<List<FunktioargumenttiDTO>, Set<Funktioargumentti>>() {
-              public Set<Funktioargumentti> convert(
-                  MappingContext<List<FunktioargumenttiDTO>, Set<Funktioargumentti>> context) {
-                Set<Funktioargumentti> result = new TreeSet<Funktioargumentti>();
-                for (int i = 0; i < context.getSource().size(); i++) {
-                  FunktioargumenttiDTO arg = context.getSource().get(i);
-                  arg.setIndeksi(i + 1);
-                  Funktioargumentti funktioargumentti = new Funktioargumentti();
-                  if (arg.getLapsi() != null
-                      && arg.getLapsi()
-                          .getLapsityyppi()
-                          .equals(FunktioargumentinLapsiDTO.FUNKTIOKUTSUTYYPPI)) {
-                    asetaIndeksitRekursiivisesti(arg.getLapsi());
-                    FunktiokutsuDTO dto = map(arg.getLapsi(), FunktiokutsuDTO.class);
-                    Funktiokutsu kutsu = convertFromDto(dto);
-                    funktioargumentti.setFunktiokutsuChild(kutsu);
-                  }
-                  if (arg.getLapsi() != null
-                      && arg.getLapsi()
-                          .getLapsityyppi()
-                          .equals(FunktioargumentinLapsiDTO.LASKENTAKAAVATYYPPI)) {
-                    LaskentakaavaListDTO dto = map(arg.getLapsi(), LaskentakaavaListDTO.class);
-                    Laskentakaava kaava = convertFromDto(dto);
-                    funktioargumentti.setLaskentakaavaChild(kaava);
-                  }
-                  funktioargumentti.setIndeksi(arg.getIndeksi());
-                  result.add(funktioargumentti);
-                }
-                return result;
-              }
-            };
-
-    final Converter<Set<Funktioargumentti>, List<FunktioargumenttiDTO>>
-        funktioargumenttiToDtoConverter =
-            new Converter<Set<Funktioargumentti>, List<FunktioargumenttiDTO>>() {
-              public List<FunktioargumenttiDTO> convert(
-                  MappingContext<Set<Funktioargumentti>, List<FunktioargumenttiDTO>> context) {
-                List<FunktioargumenttiDTO> result = new LinkedList<FunktioargumenttiDTO>();
-                for (Funktioargumentti arg : context.getSource()) {
-                  FunktioargumenttiDTO dto = new FunktioargumenttiDTO();
-                  if (arg.getFunktiokutsuChild() != null) {
-                    FunktioargumentinLapsiDTO lapsi =
-                        asetaFunktioArgumenttiLapsetRekursiivisesti(arg.getFunktiokutsuChild());
-                    lapsi.setLapsityyppi(FunktioargumentinLapsiDTO.FUNKTIOKUTSUTYYPPI);
-                    lapsi.setFunktionimi(arg.getFunktiokutsuChild().getFunktionimi());
-                    dto.setLapsi(lapsi);
-                  }
-                  if (arg.getLaskentakaavaChild() != null) {
-                    FunktioargumentinLapsiDTO lapsi =
-                        map(arg.getLaskentakaavaChild(), FunktioargumentinLapsiDTO.class);
-                    lapsi.setLapsityyppi(FunktioargumentinLapsiDTO.LASKENTAKAAVATYYPPI);
-                    lapsi.setTyyppi(arg.getLaskentakaavaChild().getTyyppi());
-                    dto.setLapsi(lapsi);
-                  }
-                  dto.setIndeksi(arg.getIndeksi());
-                  result.add(dto);
-                }
-
-                return result;
-              }
-            };
-
-    final Converter<Set<Funktioargumentti>, Set<ValintaperusteetFunktioargumenttiDTO>>
-        funktioargumenttiToValintaperusteetDtoConverter =
-            new Converter<Set<Funktioargumentti>, Set<ValintaperusteetFunktioargumenttiDTO>>() {
-              public Set<ValintaperusteetFunktioargumenttiDTO> convert(
-                  MappingContext<Set<Funktioargumentti>, Set<ValintaperusteetFunktioargumenttiDTO>>
-                      context) {
-                Set<ValintaperusteetFunktioargumenttiDTO> result =
-                    new HashSet<ValintaperusteetFunktioargumenttiDTO>();
-                for (Funktioargumentti arg : context.getSource()) {
-                  ValintaperusteetFunktioargumenttiDTO dto =
-                      new ValintaperusteetFunktioargumenttiDTO();
-                  if (arg.getFunktiokutsuChild() != null) {
-                    dto.setFunktiokutsu(
-                        map(arg.getFunktiokutsuChild(), ValintaperusteetFunktiokutsuDTO.class));
-                  } else if (arg.getLaskentakaavaChild() != null) {
-                    dto.setFunktiokutsu(
-                        map(
-                            arg.getLaskentakaavaChild().getFunktiokutsu(),
-                            ValintaperusteetFunktiokutsuDTO.class));
-                  }
-                  dto.setIndeksi(arg.getIndeksi());
-                  dto.setId(arg.getId());
-                  result.add(dto);
-                }
-                return result;
-              }
-            };
-
-    final Converter<Set<ValintaperusteetFunktioargumenttiDTO>, Set<Funktioargumentti>>
-        valintaperusteetDtoFunktioargumenttiToConverter =
-            new Converter<Set<ValintaperusteetFunktioargumenttiDTO>, Set<Funktioargumentti>>() {
-              public Set<Funktioargumentti> convert(
-                  MappingContext<Set<ValintaperusteetFunktioargumenttiDTO>, Set<Funktioargumentti>>
-                      context) {
-                Set<Funktioargumentti> result = new HashSet<Funktioargumentti>();
-                for (ValintaperusteetFunktioargumenttiDTO dto : context.getSource()) {
-                  Funktioargumentti arg = new Funktioargumentti();
-                  arg.setFunktiokutsuChild(map(dto.getFunktiokutsu(), Funktiokutsu.class));
-                  arg.setIndeksi(dto.getIndeksi());
-                  arg.setId(dto.getId());
-                  result.add(arg);
-                }
-                return result;
-              }
-            };
 
     final Converter<Valintakoe, Boolean> valintakoeKutsutaankoKaikkiConverter =
         new Converter<Valintakoe, Boolean>() {
@@ -270,14 +75,14 @@ public class ValintaperusteetModelMapper extends ModelMapper {
         new PropertyMap<Valintakoe, ValintakoeDTO>() {
           @Override
           protected void configure() {
-            map().setLaskentakaavaId(source.getLaskentakaava().getId());
+            map().setLaskentakaavaId(source.getLaskentakaavaId());
           }
         });
     this.addMappings(
         new PropertyMap<Jarjestyskriteeri, JarjestyskriteeriDTO>() {
           @Override
           protected void configure() {
-            map().setLaskentakaavaId(source.getLaskentakaava().getId());
+            map().setLaskentakaavaId(source.getLaskentakaavaId());
           }
         });
 
@@ -323,162 +128,276 @@ public class ValintaperusteetModelMapper extends ModelMapper {
             map().setTayttojono(source.getVarasijanTayttojono().getOid());
           }
         });
-
-    this.addMappings(
-        new PropertyMap<Jarjestyskriteeri, ValintaperusteetJarjestyskriteeriDTO>() {
-          @Override
-          protected void configure() {
-            map().setNimi(source.getMetatiedot());
-          }
-        });
-    this.addMappings(
-        new PropertyMap<ValintaperusteetJarjestyskriteeriDTO, Jarjestyskriteeri>() {
-          @Override
-          protected void configure() {
-            map().setMetatiedot(source.getNimi());
-          }
-        });
-
-    this.addMappings(
-        new PropertyMap<Laskentakaava, FunktioargumentinLapsiDTO>() {
-          @Override
-          protected void configure() {
-            map().setLapsityyppi(FunktioargumentinLapsiDTO.LASKENTAKAAVATYYPPI);
-          }
-        });
-
-    this.addMappings(
-        new PropertyMap<Valintakoe, ValintakoeDTO>() {
-          @Override
-          protected void configure() {
-            using(valintakoeKutsutaankoKaikkiConverter).map(source).setKutsutaankoKaikki(null);
-            using(valintakoePerittyConverter).map(source).setPeritty(null);
-          }
-        });
-
-    this.addMappings(
-        new PropertyMap<Funktiokutsu, FunktioargumentinLapsiDTO>() {
-          @Override
-          protected void configure() {
-            map().setLapsityyppi(FunktioargumentinLapsiDTO.FUNKTIOKUTSUTYYPPI);
-            using(arvovalikonvertteriparametriToDtoConverter)
-                .map(source.getArvovalikonvertteriparametrit())
-                .setArvovalikonvertteriparametrit(null);
-          }
-        });
-
-    this.addMappings(
-        new PropertyMap<FunktioargumentinLapsiDTO, Funktiokutsu>() {
-          @Override
-          protected void configure() {
-            using(virheListConverter).map(source.getValidointivirheet()).setValidointivirheet(null);
-            using(dtoToArvovalikonvertteriparametriConverter)
-                .map(source.getArvovalikonvertteriparametrit())
-                .setArvovalikonvertteriparametrit(null);
-          }
-        });
-
-    this.addMappings(
-        new PropertyMap<Funktiokutsu, FunktiokutsuDTO>() {
-          @Override
-          protected void configure() {
-            using(funktioargumenttiToDtoConverter)
-                .map(source.getFunktioargumentit())
-                .setFunktioargumentit(null);
-            using(valintaperusteViiteToDtoConverter)
-                .map(source.getValintaperusteviitteet())
-                .setValintaperusteviitteet(null);
-            using(arvovalikonvertteriparametriToDtoConverter)
-                .map(source.getArvovalikonvertteriparametrit())
-                .setArvovalikonvertteriparametrit(null);
-          }
-        });
-
-    this.addMappings(
-        new PropertyMap<FunktiokutsuDTO, Funktiokutsu>() {
-          @Override
-          protected void configure() {
-            using(dtoToFunktioargumenttiConverter)
-                .map(source.getFunktioargumentit())
-                .setFunktioargumentit(null);
-            using(virheListConverter).map(source.getValidointivirheet()).setValidointivirheet(null);
-            using(dtoToValintaperusteViiteConverter)
-                .map(source.getValintaperusteviitteet())
-                .setValintaperusteviitteet(null);
-            using(dtoToArvovalikonvertteriparametriConverter)
-                .map(source.getArvovalikonvertteriparametrit())
-                .setArvovalikonvertteriparametrit(null);
-          }
-        });
-
-    this.addMappings(
-        new PropertyMap<Funktiokutsu, ValintaperusteetFunktiokutsuDTO>() {
-          @Override
-          protected void configure() {
-            using(funktioargumenttiToValintaperusteetDtoConverter)
-                .map(source.getFunktioargumentit())
-                .setFunktioargumentit(null);
-          }
-        });
-
-    this.addMappings(
-        new PropertyMap<ValintaperusteetFunktiokutsuDTO, Funktiokutsu>() {
-          @Override
-          protected void configure() {
-            using(valintaperusteetDtoFunktioargumenttiToConverter)
-                .map(source.getFunktioargumentit())
-                .setFunktioargumentit(null);
-          }
-        });
   }
 
-  public Funktiokutsu convertFromDto(FunktiokutsuDTO dto) {
-    return map(dto, Funktiokutsu.class);
+  private LokalisoituTekstiDTO ltToDto(LokalisoituTeksti lt) {
+      return new LokalisoituTekstiDTO(
+              lt.getKieli(),
+              lt.getTeksti()
+      );
   }
 
-  public Laskentakaava convertFromDto(LaskentakaavaListDTO dto) {
-    return map(dto, Laskentakaava.class);
+  private TekstiRyhmaDTO trToDto(TekstiRyhma tr) {
+      return new TekstiRyhmaDTO(tr.getTekstit().stream().map(this::ltToDto).collect(Collectors.toSet()));
   }
 
-  public FunktioargumentinLapsiDTO asetaFunktioArgumenttiLapsetRekursiivisesti(Funktiokutsu kutsu) {
-    FunktioargumentinLapsiDTO parent = map(kutsu, FunktioargumentinLapsiDTO.class);
-    List<FunktioargumenttiDTO> result = new LinkedList<FunktioargumenttiDTO>();
-    for (Funktioargumentti arg : kutsu.getFunktioargumentit()) {
-      FunktioargumenttiDTO dto = new FunktioargumenttiDTO();
-      dto.setIndeksi(arg.getIndeksi());
-      if (arg.getFunktiokutsuChild() != null) {
-        FunktioargumentinLapsiDTO lapsi =
-            asetaFunktioArgumenttiLapsetRekursiivisesti(arg.getFunktiokutsuChild());
-        lapsi.setLapsityyppi(FunktioargumentinLapsiDTO.FUNKTIOKUTSUTYYPPI);
-        lapsi.setTyyppi(arg.getFunktiokutsuChild().getFunktionimi().getTyyppi());
-        dto.setLapsi(lapsi);
+  private ArvokonvertteriparametriDTO akpToDto(Arvokonvertteriparametri akp) {
+      return new ArvokonvertteriparametriDTO(
+              akp.getPaluuarvo(),
+              akp.getArvo(),
+              akp.getHylkaysperuste(),
+              trToDto(akp.getKuvaukset())
+      );
+  }
+
+  private ArvovalikonvertteriparametriDTO avkpToDto(Arvovalikonvertteriparametri avpk) {
+      return new ArvovalikonvertteriparametriDTO(
+              avpk.getPaluuarvo(),
+              avpk.getMinValue(),
+              avpk.getMaxValue(),
+              avpk.getPalautaHaettuArvo(),
+              avpk.getHylkaysperuste(),
+              trToDto(avpk.getKuvaukset())
+      );
+  }
+
+  private SyoteparametriDTO spToDto(Syoteparametri sp) {
+      return new SyoteparametriDTO(
+              sp.getAvain(),
+              sp.getArvo()
+      );
+  }
+
+  private FunktioargumenttiDTO faToDto(Funktioargumentti fa) {
+      if (fa.getFunktiokutsuChild() == null) {
+          Laskentakaava laskentakaava = fa.getLaskentakaavaChild();
+          return new FunktioargumenttiDTO(
+                  new FunktioargumentinLapsiDTO(
+                          laskentakaava.getOnLuonnos(),
+                          laskentakaava.getNimi(),
+                          laskentakaava.getKuvaus(),
+                          laskentakaava.getFunktiokutsu().getFunktionimi().getTyyppi(),
+                          laskentakaava.getId().id
+                  ),
+                  fa.getIndeksi()
+          );
+      } else {
+          return new FunktioargumenttiDTO(
+                  new FunktioargumentinLapsiDTO(fkToDto(fa.getFunktiokutsuChild())),
+                  fa.getIndeksi()
+          );
       }
-      if (arg.getLaskentakaavaChild() != null) {
-        FunktioargumentinLapsiDTO lapsi =
-            map(arg.getLaskentakaavaChild(), FunktioargumentinLapsiDTO.class);
-        lapsi.setLapsityyppi(FunktioargumentinLapsiDTO.LASKENTAKAAVATYYPPI);
-        lapsi.setTyyppi(arg.getLaskentakaavaChild().getTyyppi());
-        dto.setLapsi(lapsi);
-      }
-      result.add(dto);
-    }
-    parent.setFunktioargumentit(result);
-    parent.setLapsityyppi(FunktioargumentinLapsiDTO.FUNKTIOKUTSUTYYPPI);
-    parent.setTyyppi(kutsu.getFunktionimi().getTyyppi());
-    return parent;
   }
 
-  public Funktiokutsu asetaIndeksitRekursiivisesti(FunktioargumentinLapsiDTO kutsu) {
-    for (int i = 0; i < kutsu.getFunktioargumentit().size(); i++) {
-      FunktioargumenttiDTO arg = kutsu.getFunktioargumentit().get(i);
-      arg.setIndeksi(i + 1);
-      if (arg.getLapsi() != null
-          && arg.getLapsi().getLapsityyppi().equals(FunktioargumentinLapsiDTO.FUNKTIOKUTSUTYYPPI)) {
-        asetaIndeksitRekursiivisesti(arg.getLapsi());
+  private KoodiDTO satToDto(Syotettavanarvontyyppi sat) {
+      return new KoodiDTO(
+              sat.getUri(),
+              sat.getNimiFi(),
+              sat.getNimiSv(),
+              sat.getNimiEn(),
+              sat.getArvo()
+      );
+  }
+
+  private ValintaperusteViiteDTO vpvToDto(ValintaperusteViite vpv) {
+      return new ValintaperusteViiteDTO(
+              vpv.getTunniste(),
+              vpv.getKuvaus(),
+              vpv.getLahde(),
+              vpv.isOnPakollinen(),
+              vpv.isEpasuoraViittaus(),
+              vpv.getIndeksi(),
+              vpv.isVaatiiOsallistumisen(),
+              vpv.isSyotettavissaKaikille(),
+              trToDto(vpv.getKuvaukset()),
+              vpv.getSyotettavanarvontyyppi() == null ? null : satToDto(vpv.getSyotettavanarvontyyppi()),
+              vpv.isTilastoidaan()
+      );
+  }
+
+  private ValidointivirheDTO avvToDto(Abstraktivalidointivirhe virhe) {
+      if (!(virhe instanceof Validointivirhe)) {
+          throw new RuntimeException("Tuntematon virhetyyppi " + virhe.getClass().getName());
       }
-    }
-    Funktiokutsu funktiokutsu = map(kutsu, Funktiokutsu.class);
-    return funktiokutsu;
+      Validointivirhe validointivirhe = (Validointivirhe) virhe;
+      return new ValidointivirheDTO(
+              Virhetyyppi.valueOf(validointivirhe.getVirhetyyppi().name()),
+              validointivirhe.getVirheviesti()
+      );
+  }
+
+  public FunktiokutsuDTO fkToDto(Funktiokutsu funktiokutsu) {
+    return new FunktiokutsuDTO(
+            funktiokutsu.getFunktionimi(),
+            funktiokutsu.getTulosTunniste(),
+            funktiokutsu.getTulosTekstiFi(),
+            funktiokutsu.getTulosTekstiSv(),
+            funktiokutsu.getTulosTekstiEn(),
+            funktiokutsu.isTallennaTulos(),
+            funktiokutsu.isOmaopintopolku(),
+            funktiokutsu.getArvokonvertteriparametrit().stream()
+                    .map(this::akpToDto)
+                    .collect(Collectors.toSet()),
+            funktiokutsu.getArvovalikonvertteriparametrit().stream()
+                    .sorted()
+                    .map(this::avkpToDto)
+                    .collect(Collectors.toList()),
+            funktiokutsu.getSyoteparametrit().stream()
+                    .map(this::spToDto)
+                    .collect(Collectors.toSet()),
+            funktiokutsu.getFunktioargumentit().stream()
+                    .sorted()
+                    .map(this::faToDto)
+                    .collect(Collectors.toList()),
+            funktiokutsu.getValintaperusteviitteet().stream()
+                    .sorted()
+                    .map(this::vpvToDto)
+                    .collect(Collectors.toList()),
+            funktiokutsu.getValidointivirheet() == null ?
+                    null :
+                    funktiokutsu.getValidointivirheet().stream()
+                            .map(this::avvToDto)
+                            .collect(Collectors.toList())
+    );
+  }
+
+  public LaskentakaavaDTO lkToDto(Laskentakaava lk) {
+      return new LaskentakaavaDTO(
+              lk.getId().id,
+              lk.getOnLuonnos(),
+              lk.getNimi(),
+              lk.getKuvaus(),
+              fkToDto(lk.getFunktiokutsu())
+      );
+  }
+
+  public LaskentakaavaCreateDTO lkToCreateDto(Laskentakaava lk) {
+      return new LaskentakaavaCreateDTO(
+              lk.getOnLuonnos(),
+              lk.getNimi(),
+              lk.getKuvaus(),
+              fkToDto(lk.getFunktiokutsu())
+      );
+  }
+
+  public LaskentakaavaListDTO lkToListDto(Laskentakaava lk) {
+      return new LaskentakaavaListDTO(
+              lk.getId().id,
+              lk.getOnLuonnos(),
+              lk.getNimi(),
+              lk.getKuvaus(),
+              lk.getFunktiokutsu().getFunktionimi().getTyyppi()
+      );
+  }
+
+  private ValintaperusteetFunktioargumenttiDTO faToValintaperusteDto(Funktioargumentti funktioargumentti) {
+      return new ValintaperusteetFunktioargumenttiDTO(
+              funktioargumentti.getId().id,
+              this.fkToValintaperusteDto(
+                      funktioargumentti.getFunktiokutsuChild() == null ?
+                              funktioargumentti.getLaskentakaavaChild().getFunktiokutsu() :
+                              funktioargumentti.getFunktiokutsuChild()
+              ),
+              funktioargumentti.getIndeksi()
+      );
+  }
+
+  public ValintaperusteetFunktiokutsuDTO fkToValintaperusteDto(Funktiokutsu funktiokutsu) {
+      return new ValintaperusteetFunktiokutsuDTO(
+              funktiokutsu.getId().id,
+              funktiokutsu.getFunktionimi(),
+              funktiokutsu.getTulosTunniste(),
+              funktiokutsu.getTulosTekstiFi(),
+              funktiokutsu.getTulosTekstiSv(),
+              funktiokutsu.getTulosTekstiEn(),
+              funktiokutsu.isTallennaTulos(),
+              funktiokutsu.isOmaopintopolku(),
+              funktiokutsu.getArvokonvertteriparametrit().stream()
+                      .map(this::akpToDto)
+                      .collect(Collectors.toSet()),
+              funktiokutsu.getArvovalikonvertteriparametrit().stream()
+                      .map(this::avkpToDto)
+                      .collect(Collectors.toSet()),
+              funktiokutsu.getSyoteparametrit().stream()
+                      .map(this::spToDto)
+                      .collect(Collectors.toSet()),
+              funktiokutsu.getFunktioargumentit().stream()
+                      .map(this::faToValintaperusteDto)
+                      .collect(Collectors.toSet()),
+              funktiokutsu.getValintaperusteviitteet().stream()
+                      .map(this::vpvToDto)
+                      .collect(Collectors.toSet())
+      );
+  }
+
+  public ValintaperusteetJarjestyskriteeriDTO jkToValintaperusteDto(Jarjestyskriteeri jarjestyskriteeri,
+                                                                    int prioriteetti,
+                                                                    Laskentakaava laskentakaava) {
+      if (laskentakaava.getId().id != jarjestyskriteeri.getLaskentakaavaId()) {
+          throw new IllegalArgumentException("Annettu laskentakaava ei ole annetun järjestyskriteerin käytössä");
+      }
+      return new ValintaperusteetJarjestyskriteeriDTO(
+              laskentakaava.getNimi(),
+              prioriteetti,
+              fkToValintaperusteDto(laskentakaava.getFunktiokutsu())
+      );
+  }
+
+  public ValintakoeDTO vkToDto(Valintakoe valintakoe,
+                               Laskentakaava laskentakaava) {
+      if (laskentakaava.getId().id != valintakoe.getLaskentakaavaId()) {
+          throw new IllegalArgumentException("Annettu laskentakaava ei ole annetun valintakokeen käytössä");
+      }
+      return new ValintakoeDTO(
+              valintakoe.getTunniste(),
+              valintakoe.getLaskentakaavaId(),
+              valintakoe.getNimi(),
+              valintakoe.getKuvaus(),
+              valintakoe.getAktiivinen(),
+              valintakoe.getLahetetaankoKoekutsut(),
+              valintakoe.getKutsutaankoKaikki(),
+              valintakoe.getKutsuttavienMaara(),
+              valintakoe.getKutsunKohde(),
+              valintakoe.getKutsunKohdeAvain(),
+              valintakoe.getOid(),
+              fkToDto(laskentakaava.getFunktiokutsu())
+      );
+  }
+
+  public ValintakoeDTO ainaPakollinenvkToDto(Valintakoe valintakoe) {
+      Set<SyoteparametriDTO> syoteparametrit = new HashSet<>();
+      syoteparametrit.add(new SyoteparametriDTO(
+              "totuusarvo",
+              "true"
+      ));
+      return new ValintakoeDTO(
+              valintakoe.getTunniste(),
+              valintakoe.getLaskentakaavaId(),
+              valintakoe.getNimi(),
+              valintakoe.getKuvaus(),
+              valintakoe.getAktiivinen(),
+              valintakoe.getLahetetaankoKoekutsut(),
+              valintakoe.getKutsutaankoKaikki(),
+              valintakoe.getKutsuttavienMaara(),
+              valintakoe.getKutsunKohde(),
+              valintakoe.getKutsunKohdeAvain(),
+              valintakoe.getOid(),
+              new FunktiokutsuDTO(
+                      Funktionimi.TOTUUSARVO,
+                      "",
+                      "",
+                      "",
+                      "",
+                      false,
+                      false,
+                      new HashSet<>(),
+                      new ArrayList<>(),
+                      syoteparametrit,
+                      new ArrayList<>(),
+                      new ArrayList<>(),
+                      null
+              )
+      );
   }
 
   /**

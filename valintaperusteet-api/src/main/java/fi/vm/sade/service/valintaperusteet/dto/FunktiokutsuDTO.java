@@ -55,6 +55,52 @@ public class FunktiokutsuDTO {
   @ApiModelProperty(value = "Validointivirheet")
   private List<ValidointivirheDTO> validointivirheet = new ArrayList<ValidointivirheDTO>();
 
+  public FunktiokutsuDTO() { }
+
+  public FunktiokutsuDTO(Funktionimi funktionimi,
+                         String tulosTunniste,
+                         String tulosTekstiFi,
+                         String tulosTekstiSv,
+                         String tulosTekstiEn,
+                         Boolean tallennaTulos,
+                         boolean omaopintopolku,
+                         Set<ArvokonvertteriparametriDTO> arvokonvertteriparametrit,
+                         List<ArvovalikonvertteriparametriDTO> arvovalikonvertteriparametrit,
+                         Set<SyoteparametriDTO> syoteparametrit,
+                         List<FunktioargumenttiDTO> funktioargumentit,
+                         List<ValintaperusteViiteDTO> valintaperusteviitteet,
+                         List<ValidointivirheDTO> validointivirheet) {
+    this.funktionimi = funktionimi;
+    this.tulosTunniste = tulosTunniste;
+    this.tulosTekstiFi = tulosTekstiFi;
+    this.tulosTekstiSv = tulosTekstiSv;
+    this.tulosTekstiEn = tulosTekstiEn;
+    this.tallennaTulos = tallennaTulos;
+    this.omaopintopolku = omaopintopolku;
+    this.arvokonvertteriparametrit = arvokonvertteriparametrit;
+    this.arvovalikonvertteriparametrit = arvovalikonvertteriparametrit;
+    this.syoteparametrit = syoteparametrit;
+    this.funktioargumentit = funktioargumentit;
+    this.valintaperusteviitteet = valintaperusteviitteet;
+    this.validointivirheet = validointivirheet;
+  }
+
+  public FunktiokutsuDTO(FunktioargumentinLapsiDTO lapsi) {
+    this.funktionimi = lapsi.getFunktionimi();
+    this.tulosTunniste = lapsi.getTulosTunniste();
+    this.tulosTekstiFi = lapsi.getTulosTekstiFi();
+    this.tulosTekstiSv = lapsi.getTulosTekstiSv();
+    this.tulosTekstiEn = lapsi.getTulosTekstiEn();
+    this.tallennaTulos = lapsi.getTallennaTulos();
+    this.omaopintopolku = lapsi.getOmaopintopolku();
+    this.arvokonvertteriparametrit = lapsi.getArvokonvertteriparametrit();
+    this.arvovalikonvertteriparametrit = lapsi.getArvovalikonvertteriparametrit();
+    this.syoteparametrit = lapsi.getSyoteparametrit();
+    this.funktioargumentit = lapsi.getFunktioargumentit();
+    this.valintaperusteviitteet = lapsi.getValintaperusteviitteet();
+    this.validointivirheet = lapsi.getValidointivirheet();
+  }
+
   public Funktionimi getFunktionimi() {
     return funktionimi;
   }

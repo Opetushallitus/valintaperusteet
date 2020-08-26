@@ -404,9 +404,6 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
       edellinen.setSeuraavaValinnanVaihe(kopio);
     }
     ValinnanVaihe lisatty = valinnanVaiheDAO.insert(kopio);
-    if (kopiointiCache != null) {
-      kopiointiCache.kopioidutValinnanVaiheet.put(master.getId(), lisatty);
-    }
     valintatapajonoService.kopioiValintatapajonotMasterValinnanVaiheeltaKopiolle(
         lisatty, master, kopiointiCache);
     valintakoeService.kopioiValintakokeetMasterValinnanVaiheeltaKopiolle(

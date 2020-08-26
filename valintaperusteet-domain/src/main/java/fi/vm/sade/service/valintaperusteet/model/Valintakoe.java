@@ -34,9 +34,8 @@ public class Valintakoe extends BaseEntity implements Kopioitava<Valintakoe, Set
   @Column(name = "kutsuttavien_maara")
   private Integer kutsuttavienMaara;
 
-  @JoinColumn(name = "laskentakaava_id", nullable = true)
-  @ManyToOne(fetch = FetchType.LAZY, optional = true)
-  private Laskentakaava laskentakaava;
+  @Column(name = "laskentakaava_id", nullable = true)
+  private Long laskentakaavaId;
 
   @JoinColumn(name = "valinnan_vaihe_id", nullable = false)
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -104,14 +103,6 @@ public class Valintakoe extends BaseEntity implements Kopioitava<Valintakoe, Set
     this.aktiivinen = aktiivinen;
   }
 
-  public Laskentakaava getLaskentakaava() {
-    return laskentakaava;
-  }
-
-  public void setLaskentakaava(Laskentakaava laskentakaava) {
-    this.laskentakaava = laskentakaava;
-  }
-
   public ValinnanVaihe getValinnanVaihe() {
     return valinnanVaihe;
   }
@@ -138,12 +129,15 @@ public class Valintakoe extends BaseEntity implements Kopioitava<Valintakoe, Set
 
   @Transient
   public boolean ainaPakollinen() {
-    return laskentakaava == null;
+    return laskentakaavaId == null;
   }
 
-  @Transient
   public Long getLaskentakaavaId() {
-    return laskentakaava != null ? laskentakaava.getId() : null;
+    return this.laskentakaavaId;
+  }
+
+  public void setLaskentakaavaId(Long laskentakaavaId) {
+    this.laskentakaavaId = laskentakaavaId;
   }
 
   @Transient

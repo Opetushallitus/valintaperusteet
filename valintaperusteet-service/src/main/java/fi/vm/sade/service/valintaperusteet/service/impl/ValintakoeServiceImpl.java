@@ -1,36 +1,32 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
-import fi.vm.sade.service.valintaperusteet.dao.LaskentakaavaDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintakoeDAO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
 import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
 import fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi;
-import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti;
-import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
-import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
+import fi.vm.sade.service.valintaperusteet.model.LaskentakaavaId;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
+import fi.vm.sade.service.valintaperusteet.model.ValintaryhmaId;
 import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
 import fi.vm.sade.service.valintaperusteet.service.OidService;
 import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
 import fi.vm.sade.service.valintaperusteet.service.ValintakoeService;
-import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuaEiVoidaKayttaaValintakoelaskennassaException;
-import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintakoettaEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintakoettaEiVoiLisataException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintakoettaEiVoiPoistaaException;
 import fi.vm.sade.service.valintaperusteet.util.JuureenKopiointiCache;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 import fi.vm.sade.service.valintaperusteet.util.ValintakoeKopioija;
-import fi.vm.sade.service.valintaperusteet.util.ValintakoeUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @Service
@@ -38,8 +34,6 @@ public class ValintakoeServiceImpl implements ValintakoeService {
   @Autowired private ValintakoeDAO valintakoeDAO;
 
   @Autowired private ValinnanVaiheService valinnanVaiheService;
-
-  @Autowired private LaskentakaavaDAO laskentakaavaDAO;
 
   @Autowired private OidService oidService;
 
@@ -159,61 +153,25 @@ public class ValintakoeServiceImpl implements ValintakoeService {
       valintakoe.setKutsunKohdeAvain(koe.getKutsunKohdeAvain());
     }
     if (koe.getLaskentakaavaId() != null) {
-      valintakoe.setLaskentakaava(haeLaskentakaavaValintakokeelle(koe.getLaskentakaavaId()));
+      LaskentakaavaId id = new LaskentakaavaId(koe.getLaskentakaavaId());
+      laskentakaavaService.haeLaskettavaKaava(id, Laskentamoodi.VALINTAKOELASKENTA);
+      valintakoe.setLaskentakaavaId(id.id);
     }
     Valintakoe lisatty = valintakoeDAO.insert(valintakoe);
     for (ValinnanVaihe kopio : valinnanVaihe.getKopiot()) {
-      lisaaValinnanVaiheelleKopioMasterValintakokeesta(kopio, lisatty, null);
+      lisaaValinnanVaiheelleKopioMasterValintakokeesta(kopio, lisatty);
     }
     return lisatty;
   }
 
   private void lisaaValinnanVaiheelleKopioMasterValintakokeesta(
       ValinnanVaihe valinnanVaihe,
-      Valintakoe masterValintakoe,
-      JuureenKopiointiCache kopiointiCache) {
-    Valintakoe kopio = ValintakoeUtil.teeKopioMasterista(masterValintakoe, kopiointiCache);
-    kopio.setValinnanVaihe(valinnanVaihe);
-    kopio.setOid(oidService.haeValintakoeOid());
+      Valintakoe masterValintakoe) {
+    Valintakoe kopio = teeKopioMasterista(masterValintakoe, valinnanVaihe, null);
     Valintakoe lisatty = valintakoeDAO.insert(kopio);
     for (ValinnanVaihe vaihekopio : valinnanVaihe.getKopioValinnanVaiheet()) {
-      lisaaValinnanVaiheelleKopioMasterValintakokeesta(vaihekopio, lisatty, kopiointiCache);
+      lisaaValinnanVaiheelleKopioMasterValintakokeesta(vaihekopio, lisatty);
     }
-  }
-
-  private void validoiFunktiokutsuValintakoettaVarten(Funktiokutsu funktiokutsu) {
-    if (funktiokutsu != null) {
-      if (!funktiokutsu
-          .getFunktionimi()
-          .getLaskentamoodit()
-          .contains(Laskentamoodi.VALINTAKOELASKENTA)) {
-        throw new FunktiokutsuaEiVoidaKayttaaValintakoelaskennassaException(
-            "Funktiokutsua "
-                + funktiokutsu.getFunktionimi().name()
-                + ", id "
-                + funktiokutsu.getId()
-                + " ei voida käyttää valintakoelaskennassa.",
-            funktiokutsu.getId(),
-            funktiokutsu.getFunktionimi());
-      }
-      for (Funktioargumentti arg : funktiokutsu.getFunktioargumentit()) {
-        if (arg.getFunktiokutsuChild() != null) {
-          validoiFunktiokutsuValintakoettaVarten(arg.getFunktiokutsuChild());
-        } else if (arg.getLaskentakaavaChild() != null) {
-          validoiFunktiokutsuValintakoettaVarten(arg.getLaskentakaavaChild().getFunktiokutsu());
-        }
-      }
-    }
-  }
-
-  private Laskentakaava haeLaskentakaavaValintakokeelle(Long laskentakaavaId) {
-    Laskentakaava laskentakaava = laskentakaavaDAO.getLaskentakaava(laskentakaavaId);
-    if (laskentakaava == null) {
-      throw new LaskentakaavaEiOleOlemassaException(
-          "Laskentakaavaa (" + laskentakaavaId + ") ei ole " + "olemassa", laskentakaavaId);
-    }
-    validoiFunktiokutsuValintakoettaVarten(laskentakaava.getFunktiokutsu());
-    return laskentakaava;
   }
 
   @Override
@@ -240,12 +198,10 @@ public class ValintakoeServiceImpl implements ValintakoeService {
     if (valintakoe.getKutsunKohdeAvain() != null && !valintakoe.getKutsunKohdeAvain().isEmpty()) {
       incoming.setKutsunKohdeAvain(valintakoe.getKutsunKohdeAvain());
     }
-    Long laskentakaavaOid = valintakoe.getLaskentakaavaId();
-    if (laskentakaavaOid != null) {
-      Laskentakaava laskentakaava = haeLaskentakaavaValintakokeelle(laskentakaavaOid);
-      incoming.setLaskentakaava(laskentakaava);
-    } else {
-      incoming.setLaskentakaava(null);
+    if (valintakoe.getLaskentakaavaId() != null) {
+      LaskentakaavaId id = new LaskentakaavaId(valintakoe.getLaskentakaavaId());
+      laskentakaavaService.haeLaskettavaKaava(id, Laskentamoodi.VALINTAKOELASKENTA);
+      incoming.setLaskentakaavaId(id.id);
     }
     return LinkitettavaJaKopioitavaUtil.paivita(managedObject, incoming, kopioija);
   }
@@ -257,13 +213,54 @@ public class ValintakoeServiceImpl implements ValintakoeService {
       JuureenKopiointiCache kopiointiCache) {
     List<Valintakoe> kokeet = valintakoeDAO.findByValinnanVaihe(masterValinnanVaihe.getOid());
     for (Valintakoe master : kokeet) {
-      Valintakoe kopio = ValintakoeUtil.teeKopioMasterista(master, kopiointiCache);
-      kopio.setOid(oidService.haeValintakoeOid());
-      valinnanVaihe.addValintakoe(kopio);
+      Valintakoe kopio = teeKopioMasterista(master, valinnanVaihe, kopiointiCache);
       Valintakoe lisatty = valintakoeDAO.insert(kopio);
       if (kopiointiCache != null) {
         kopiointiCache.kopioidutValintakokeet.put(master.getId(), lisatty);
       }
     }
+  }
+
+  private Valintakoe teeKopioMasterista(Valintakoe master,
+                                        ValinnanVaihe valinnanVaihe,
+                                        JuureenKopiointiCache kopiointiCache) {
+    Valintakoe kopio = new Valintakoe();
+    valinnanVaihe.addValintakoe(kopio);
+    kopio.setOid(oidService.haeValintakoeOid());
+    kopio.setAktiivinen(master.getAktiivinen());
+    kopio.setKuvaus(master.getKuvaus());
+    if (kopiointiCache == null) {
+      kopio.setMaster(master);
+      kopio.setLaskentakaavaId(master.getLaskentakaavaId());
+    } else {
+      if (master.getMaster() != null) {
+        Valintakoe kopioituMaster =
+                kopiointiCache.kopioidutValintakokeet.get(master.getMaster().getId());
+        if (kopioituMaster == null) {
+          throw new IllegalStateException(
+                  "Ei löydetty lähdekokeen "
+                          + master
+                          + " masterille "
+                          + master.getMaster()
+                          + " kopiota");
+        }
+        kopio.setMaster(kopioituMaster);
+      }
+      if (master.getLaskentakaavaId() != null) {
+        kopio.setLaskentakaavaId(laskentakaavaService.kopioiJosEiJoKopioitu(
+                new LaskentakaavaId(master.getLaskentakaavaId()),
+                new ValintaryhmaId(valinnanVaihe.getValintaryhma().getId()),
+                kopiointiCache.kopioidutLaskentakaavat
+        ).id);
+      }
+    }
+    kopio.setNimi(master.getNimi());
+    kopio.setTunniste(master.getTunniste());
+    kopio.setKutsunKohdeAvain(master.getKutsunKohdeAvain());
+    kopio.setLahetetaankoKoekutsut(master.getLahetetaankoKoekutsut());
+    kopio.setKutsutaankoKaikki(master.getKutsutaankoKaikki());
+    kopio.setKutsuttavienMaara(master.getKutsuttavienMaara());
+    kopio.setKutsunKohde(master.getKutsunKohde());
+    return kopio;
   }
 }

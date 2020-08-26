@@ -14,7 +14,7 @@ public class SyoteparametriDTO {
 
   public SyoteparametriDTO() {}
 
-  public SyoteparametriDTO(final String avain, final String arvo) {
+  public SyoteparametriDTO(String avain, String arvo) {
     this.avain = avain;
     this.arvo = arvo;
   }

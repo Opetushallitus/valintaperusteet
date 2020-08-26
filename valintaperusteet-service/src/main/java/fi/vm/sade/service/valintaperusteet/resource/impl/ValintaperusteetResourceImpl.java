@@ -8,6 +8,7 @@ import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapp
 import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
 import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
 import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
+import fi.vm.sade.service.valintaperusteet.model.LaskentakaavaId;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import fi.vm.sade.service.valintaperusteet.resource.ValintaperusteetResource;
@@ -113,23 +114,12 @@ public class ValintaperusteetResourceImpl implements ValintaperusteetResource {
     List<ValintaperusteetHakijaryhmaDTO> result = new ArrayList<>();
     for (int i = 0; i < hakukohteenRyhmat.size(); i++) {
       HakijaryhmaValintatapajono original = hakukohteenRyhmat.get(i);
-      Laskentakaava laskentakaava =
-          laskentakaavaService.haeLaskettavaKaava(
-              original.getHakijaryhma().getLaskentakaava().getId(), Laskentamoodi.VALINTALASKENTA);
-      ValintaperusteetHakijaryhmaDTO dto =
-          modelMapper.map(original, ValintaperusteetHakijaryhmaDTO.class);
-      // Asetetaan laskentakaavan nimi ensimmäisen funktiokutsun nimeksi
-      laskentakaava
-          .getFunktiokutsu()
-          .getSyoteparametrit()
-          .forEach(
-              s -> {
-                if (s.getAvain().equals("nimi")) {
-                  s.setArvo(laskentakaava.getNimi());
-                }
-              });
-      dto.setFunktiokutsu(
-          modelMapper.map(laskentakaava.getFunktiokutsu(), ValintaperusteetFunktiokutsuDTO.class));
+      Laskentakaava laskentakaava = laskentakaavaService.haeLaskettavaKaava(
+              new LaskentakaavaId(original.getHakijaryhma().getLaskentakaavaId()),
+              Laskentamoodi.VALINTALASKENTA
+      );
+      ValintaperusteetHakijaryhmaDTO dto = modelMapper.map(original, ValintaperusteetHakijaryhmaDTO.class);
+      dto.setFunktiokutsu(modelMapper.fkToValintaperusteDto(laskentakaava.getFunktiokutsu()));
       dto.setNimi(original.getHakijaryhma().getNimi());
       dto.setKuvaus(original.getHakijaryhma().getKuvaus());
       dto.setPrioriteetti(i);

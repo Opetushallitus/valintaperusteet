@@ -12,6 +12,13 @@ public class FunktioargumenttiDTO implements Comparable<FunktioargumenttiDTO> {
   @ApiModelProperty(value = "Indeksi", required = true)
   private Integer indeksi;
 
+  public FunktioargumenttiDTO () { }
+
+  public FunktioargumenttiDTO(FunktioargumentinLapsiDTO lapsi, Integer indeksi) {
+    this.lapsi = lapsi;
+    this.indeksi = indeksi;
+  }
+
   public Integer getIndeksi() {
     return indeksi;
   }

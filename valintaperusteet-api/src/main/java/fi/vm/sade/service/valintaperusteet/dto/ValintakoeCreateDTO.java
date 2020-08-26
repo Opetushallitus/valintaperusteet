@@ -37,6 +37,30 @@ public class ValintakoeCreateDTO {
   @ApiModelProperty(value = "Avain, josta kutsun kohde haetaan", required = false)
   private String kutsunKohdeAvain;
 
+  public ValintakoeCreateDTO() { }
+
+  public ValintakoeCreateDTO(String tunniste,
+                             Long laskentakaavaId,
+                             String nimi,
+                             String kuvaus,
+                             Boolean aktiivinen,
+                             Boolean lahetetaankoKoekutsut,
+                             Boolean kutsutaankoKaikki,
+                             Integer kutsuttavienMaara,
+                             Koekutsu kutsunKohde,
+                             String kutsunKohdeAvain) {
+    this.tunniste = tunniste;
+    this.laskentakaavaId = laskentakaavaId;
+    this.nimi = nimi;
+    this.kuvaus = kuvaus;
+    this.aktiivinen = aktiivinen;
+    this.lahetetaankoKoekutsut = lahetetaankoKoekutsut;
+    this.kutsutaankoKaikki = kutsutaankoKaikki;
+    this.kutsuttavienMaara = kutsuttavienMaara;
+    this.kutsunKohde = kutsunKohde;
+    this.kutsunKohdeAvain = kutsunKohdeAvain;
+  }
+
   public String getTunniste() {
     return tunniste;
   }

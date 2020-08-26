@@ -1,20 +1,14 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 import fi.vm.sade.kaava.Funktiokuvaaja;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
-import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
+import fi.vm.sade.service.valintaperusteet.dto.ArvokonvertteriparametriDTO;
 import fi.vm.sade.service.valintaperusteet.dto.FunktioargumentinLapsiDTO;
 import fi.vm.sade.service.valintaperusteet.dto.FunktioargumenttiDTO;
 import fi.vm.sade.service.valintaperusteet.dto.FunktiokutsuDTO;
 import fi.vm.sade.service.valintaperusteet.dto.HakukohteenValintaperusteAvaimetDTO;
 import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaInsertDTO;
 import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaListDTO;
 import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaSiirraDTO;
 import fi.vm.sade.service.valintaperusteet.dto.SyoteparametriDTO;
@@ -25,27 +19,16 @@ import fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi;
 import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
 import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
-import fi.vm.sade.service.valintaperusteet.model.Arvokonvertteriparametri;
 import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti;
 import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
-import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
+import fi.vm.sade.service.valintaperusteet.model.HakukohdeViiteId;
 import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
+import fi.vm.sade.service.valintaperusteet.model.LaskentakaavaId;
 import fi.vm.sade.service.valintaperusteet.model.Syoteparametri;
 import fi.vm.sade.service.valintaperusteet.model.ValintaperusteViite;
-import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
-import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuMuodostaaSilmukanException;
 import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuaEiVoidaKayttaaValintakoelaskennassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaMuodostaaSilmukanException;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +37,20 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /** User: kwuoti Date: 21.1.2013 Time: 9.42 */
 @ContextConfiguration(locations = "classpath:test-context.xml")
@@ -66,42 +63,22 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 @RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data.xml")
 public class LaskentakaavaServiceTest {
-
   @Autowired private LaskentakaavaService laskentakaavaService;
 
-  @Autowired private FunktiokutsuDAO funktiokutsuDAO;
-
   @Autowired private ValintaperusteetModelMapper modelMapper;
-
-  private static final FunktioArgumenttiComparator comparator = new FunktioArgumenttiComparator();
-
-  private static class FunktioArgumenttiComparator implements Comparator<Funktioargumentti> {
-
-    @Override
-    public int compare(Funktioargumentti o1, Funktioargumentti o2) {
-      return o1.getIndeksi().compareTo(o2.getIndeksi());
-    }
-  }
-
-  private static List<Funktioargumentti> argsSorted(Set<Funktioargumentti> set) {
-    List<Funktioargumentti> args = new ArrayList<Funktioargumentti>(set);
-    Collections.sort(args, comparator);
-
-    return args;
-  }
 
   private static final double DELTA = 0.000000000000001d;
 
   @Test
   public void testHaeKaava() {
-    final Long id = 204L;
+    LaskentakaavaId id = new LaskentakaavaId(204);
     Laskentakaava laskentakaava = laskentakaavaService.haeMallinnettuKaava(id);
     Funktiokutsu maksimi204L = laskentakaava.getFunktiokutsu();
     assertEquals(
         fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.MAKSIMI,
         maksimi204L.getFunktionimi());
     assertEquals(2, maksimi204L.getFunktioargumentit().size());
-    List<Funktioargumentti> maksimi204Largs = argsSorted(maksimi204L.getFunktioargumentit());
+    List<Funktioargumentti> maksimi204Largs = maksimi204L.getFunktioargumentit();
 
     Funktiokutsu summa203L = maksimi204Largs.get(0).getFunktiokutsuChild();
     Funktiokutsu luku6L = maksimi204Largs.get(1).getFunktiokutsuChild();
@@ -111,7 +88,7 @@ public class LaskentakaavaServiceTest {
     assertEquals(3, summa203L.getFunktioargumentit().size());
     assertEquals(0, luku6L.getFunktioargumentit().size());
 
-    List<Funktioargumentti> summa203Largs = argsSorted(summa203L.getFunktioargumentit());
+    List<Funktioargumentti> summa203Largs = summa203L.getFunktioargumentit();
 
     Funktiokutsu summa201L = summa203Largs.get(0).getFunktiokutsuChild();
     Funktiokutsu tulo202L = summa203Largs.get(1).getFunktiokutsuChild();
@@ -125,8 +102,8 @@ public class LaskentakaavaServiceTest {
     assertEquals(2, tulo202L.getFunktioargumentit().size());
     assertEquals(0, luku5L.getFunktioargumentit().size());
 
-    List<Funktioargumentti> summa201Largs = argsSorted(summa201L.getFunktioargumentit());
-    List<Funktioargumentti> tulo202LLargs = argsSorted(tulo202L.getFunktioargumentit());
+    List<Funktioargumentti> summa201Largs = summa201L.getFunktioargumentit();
+    List<Funktioargumentti> tulo202LLargs = tulo202L.getFunktioargumentit();
 
     Funktiokutsu luku1L = summa201Largs.get(0).getFunktiokutsuChild();
     Funktiokutsu luku2L = summa201Largs.get(1).getFunktiokutsuChild();
@@ -156,11 +133,11 @@ public class LaskentakaavaServiceTest {
 
   @Test
   public void testHaeSyotettavanarvontyyppi() {
-    final Long id = 420L;
+    LaskentakaavaId id = new LaskentakaavaId(420);
     Laskentakaava laskentakaava = laskentakaavaService.haeMallinnettuKaava(id);
     Funktiokutsu haelukuarvo204L = laskentakaava.getFunktiokutsu();
     ValintaperusteViite viite = haelukuarvo204L.getValintaperusteviitteet().iterator().next();
-    assertTrue(viite.getTilastoidaan());
+    assertTrue(viite.isTilastoidaan());
     assertEquals("syotettavanarvontyypit_valintakoe", viite.getSyotettavanarvontyyppi().getUri());
   }
 
@@ -188,12 +165,10 @@ public class LaskentakaavaServiceTest {
     funktiokutsu.setTallennaTulos(false);
 
     for (int i = 0; i < args.length; ++i) {
-      FunktioargumentinLapsiDTO f = modelMapper.map(args[i], FunktioargumentinLapsiDTO.class);
-      FunktioargumenttiDTO arg = new FunktioargumenttiDTO();
-      arg.setLapsi(f);
-      arg.setIndeksi(i + 1);
-      funktiokutsu.getFunktioargumentit().add(arg);
-      f.setLapsityyppi(FunktioargumentinLapsiDTO.FUNKTIOKUTSUTYYPPI);
+      funktiokutsu.getFunktioargumentit().add(new FunktioargumenttiDTO(
+              new FunktioargumentinLapsiDTO(args[i]),
+              i + 1
+      ));
     }
 
     return funktiokutsu;
@@ -207,7 +182,7 @@ public class LaskentakaavaServiceTest {
     laskentakaava.setFunktiokutsu(
         createSumma(createLukuarvo(5.0), createLukuarvo(10.0), createLukuarvo(100.0)));
 
-    Laskentakaava tallennettu = laskentakaavaService.insert(laskentakaava, null, null);
+    Laskentakaava tallennettu = laskentakaavaService.insert(new LaskentakaavaInsertDTO(laskentakaava, null, "oid2"));
 
     Laskentakaava haettu = laskentakaavaService.haeMallinnettuKaava(tallennettu.getId());
     assertFalse(haettu.getOnLuonnos());
@@ -219,9 +194,19 @@ public class LaskentakaavaServiceTest {
     }
   }
 
+  private double luku(FunktioargumentinLapsiDTO lukufunktio) {
+    if (!Funktionimi.LUKUARVO.equals(lukufunktio.getFunktionimi())
+            || lukufunktio.getSyoteparametrit().size() != 1) {
+      throw new RuntimeException("Illegal lukuarvo");
+    }
+
+    SyoteparametriDTO syoteparametri = lukufunktio.getSyoteparametrit().iterator().next();
+    return Double.parseDouble(syoteparametri.getArvo());
+  }
+
   private double luku(Funktiokutsu lukufunktio) {
     if (!Funktionimi.LUKUARVO.equals(lukufunktio.getFunktionimi())
-        || lukufunktio.getSyoteparametrit().size() != 1) {
+            || lukufunktio.getSyoteparametrit().size() != 1) {
       throw new RuntimeException("Illegal lukuarvo");
     }
 
@@ -231,24 +216,22 @@ public class LaskentakaavaServiceTest {
 
   @Test
   public void testUpdate() {
-    final Long id = 500L;
+    LaskentakaavaId id = new LaskentakaavaId(500);
 
     final double uusiLukuarvo = 8.0;
     Laskentakaava paivitetty = null;
     {
-      Laskentakaava laskentakaava = laskentakaavaService.haeMallinnettuKaava(id);
+      LaskentakaavaCreateDTO laskentakaava = modelMapper.lkToCreateDto(laskentakaavaService.haeMallinnettuKaava(id));
 
-      assertTrue(laskentakaavaService.onkoKaavaValidi(laskentakaava));
-
-      Funktiokutsu summa500L = laskentakaava.getFunktiokutsu();
+      FunktiokutsuDTO summa500L = laskentakaava.getFunktiokutsu();
       assertEquals(Funktionimi.SUMMA, summa500L.getFunktionimi());
       assertEquals(4, summa500L.getFunktioargumentit().size());
 
-      List<Funktioargumentti> summa500Largs = argsSorted(summa500L.getFunktioargumentit());
-      Funktiokutsu luku501L = summa500Largs.get(0).getFunktiokutsuChild();
-      Funktiokutsu luku502L = summa500Largs.get(1).getFunktiokutsuChild();
-      Funktiokutsu summa503L = summa500Largs.get(2).getFunktiokutsuChild();
-      Funktiokutsu summa506L = summa500Largs.get(3).getFunktiokutsuChild();
+      List<FunktioargumenttiDTO> summa500Largs = summa500L.getFunktioargumentit();
+      FunktioargumentinLapsiDTO luku501L = summa500Largs.get(0).getLapsi();
+      FunktioargumentinLapsiDTO luku502L = summa500Largs.get(1).getLapsi();
+      FunktioargumentinLapsiDTO summa503L = summa500Largs.get(2).getLapsi();
+      FunktioargumentinLapsiDTO summa506L = summa500Largs.get(3).getLapsi();
 
       assertEquals(Funktionimi.LUKUARVO, luku501L.getFunktionimi());
       assertEquals(10.0, luku(luku501L), DELTA);
@@ -259,10 +242,9 @@ public class LaskentakaavaServiceTest {
       assertEquals(Funktionimi.SUMMA, summa506L.getFunktionimi());
       assertEquals(2, summa506L.getFunktioargumentit().size());
 
-      List<Funktioargumentti> summa503Largs = argsSorted(summa503L.getFunktioargumentit());
-      Funktiokutsu haeMerkkijonoJaKonvertoiLukuarvoksi504L =
-          summa503Largs.get(0).getFunktiokutsuChild();
-      Funktiokutsu luku505L = summa503Largs.get(1).getFunktiokutsuChild();
+      List<FunktioargumenttiDTO> summa503Largs = summa503L.getFunktioargumentit();
+      FunktioargumentinLapsiDTO haeMerkkijonoJaKonvertoiLukuarvoksi504L = summa503Largs.get(0).getLapsi();
+      FunktioargumentinLapsiDTO luku505L = summa503Largs.get(1).getLapsi();
 
       assertEquals(
           Funktionimi.HAEMERKKIJONOJAKONVERTOILUKUARVOKSI,
@@ -272,9 +254,9 @@ public class LaskentakaavaServiceTest {
       assertEquals(
           5, haeMerkkijonoJaKonvertoiLukuarvoksi504L.getArvokonvertteriparametrit().size());
 
-      List<Funktioargumentti> summa506Largs = argsSorted(summa506L.getFunktioargumentit());
-      Funktiokutsu luku7L = summa506Largs.get(0).getFunktiokutsuChild();
-      Funktiokutsu luku8L = summa506Largs.get(1).getFunktiokutsuChild();
+      List<FunktioargumenttiDTO> summa506Largs = summa506L.getFunktioargumentit();
+      FunktioargumentinLapsiDTO luku7L = summa506Largs.get(0).getLapsi();
+      FunktioargumentinLapsiDTO luku8L = summa506Largs.get(1).getLapsi();
       assertEquals(Funktionimi.LUKUARVO, luku7L.getFunktionimi());
       assertEquals(Funktionimi.LUKUARVO, luku8L.getFunktionimi());
       assertEquals(7.0, luku(luku7L), DELTA);
@@ -282,57 +264,36 @@ public class LaskentakaavaServiceTest {
 
       // Tehdään päivityksiä laskentakaavaan. Lisätään olemassa oleva luku
       // jälkimmäiseen summa-operaatioon.
-      Funktioargumentti uusiFunktioargumentti = new Funktioargumentti();
-      uusiFunktioargumentti.setFunktiokutsuChild(luku501L);
-      uusiFunktioargumentti.setIndeksi(3);
-      summa503L.getFunktioargumentit().add(uusiFunktioargumentti);
+      summa503L.getFunktioargumentit().add(new FunktioargumenttiDTO(luku501L, 3));
 
       // Vaihdetaan luvun arvo
-      Syoteparametri lukuparam = luku501L.getSyoteparametrit().iterator().next();
+      SyoteparametriDTO lukuparam = luku501L.getSyoteparametrit().iterator().next();
       lukuparam.setArvo(String.valueOf(uusiLukuarvo));
 
       // Rakennetaan ensimmäiselle summa-operaatiolle uudet argumentit
       // siten, että jälkimmäinen luku ja viimeinen
       // summa-operaatio poistetaan argumenttilistasta
       summa500L.getFunktioargumentit().clear();
-
-      Funktioargumentti summa500L1arg = new Funktioargumentti();
-      summa500L1arg.setFunktiokutsuChild(luku501L);
-      summa500L1arg.setIndeksi(1);
-      Funktioargumentti summa500L2arg = new Funktioargumentti();
-      summa500L2arg.setFunktiokutsuChild(summa503L);
-      summa500L2arg.setIndeksi(2);
-
-      summa500L.getFunktioargumentit().add(summa500L1arg);
-      summa500L.getFunktioargumentit().add(summa500L2arg);
+      summa500L.getFunktioargumentit().add(new FunktioargumenttiDTO(luku501L, 1));
+      summa500L.getFunktioargumentit().add(new FunktioargumenttiDTO(summa503L, 2));
 
       assertFalse(summa500L.getTallennaTulos());
       summa500L.setTallennaTulos(true);
 
       // Poistetaan vielä yksi konvertteriparametri konvertointifunktiosta
-      Arvokonvertteriparametri param =
+      ArvokonvertteriparametriDTO param =
           haeMerkkijonoJaKonvertoiLukuarvoksi504L.getArvokonvertteriparametrit().iterator().next();
       haeMerkkijonoJaKonvertoiLukuarvoksi504L.getArvokonvertteriparametrit().remove(param);
 
-      assertNotNull(funktiokutsuDAO.getFunktiokutsu(502L));
-      assertNotNull(funktiokutsuDAO.getFunktiokutsu(506L));
-      assertNotNull(funktiokutsuDAO.getFunktiokutsu(7L));
-      assertNotNull(funktiokutsuDAO.getFunktiokutsu(8L));
-      LaskentakaavaCreateDTO dto = modelMapper.map(laskentakaava, LaskentakaavaCreateDTO.class);
-      paivitetty = laskentakaavaService.update(laskentakaava.getId(), dto);
-      // Akka hoitaa poiston
-      //            assertNull(funktiokutsuDAO.getFunktiokutsu(502L));
-      //            assertNull(funktiokutsuDAO.getFunktiokutsu(506L));
-      assertNotNull(funktiokutsuDAO.getFunktiokutsu(7L));
-      assertNotNull(funktiokutsuDAO.getFunktiokutsu(8L));
-      assertTrue(paivitetty.getFunktiokutsu().getTallennaTulos());
+      paivitetty = laskentakaavaService.update(id, laskentakaava).getRight();
+      assertTrue(paivitetty.getFunktiokutsu().isTallennaTulos());
     }
 
     Funktiokutsu summa500Lp = paivitetty.getFunktiokutsu();
     assertEquals(Funktionimi.SUMMA, summa500Lp.getFunktionimi());
     assertEquals(2, summa500Lp.getFunktioargumentit().size());
 
-    List<Funktioargumentti> summa500Lpargs = argsSorted(summa500Lp.getFunktioargumentit());
+    List<Funktioargumentti> summa500Lpargs = summa500Lp.getFunktioargumentit();
     Funktiokutsu luku501Lp = summa500Lpargs.get(0).getFunktiokutsuChild();
     Funktiokutsu summa503Lp = summa500Lpargs.get(1).getFunktiokutsuChild();
 
@@ -341,7 +302,7 @@ public class LaskentakaavaServiceTest {
     assertEquals(Funktionimi.SUMMA, summa503Lp.getFunktionimi());
     assertEquals(3, summa503Lp.getFunktioargumentit().size());
 
-    List<Funktioargumentti> summa503Lpargs = argsSorted(summa503Lp.getFunktioargumentit());
+    List<Funktioargumentti> summa503Lpargs = summa503Lp.getFunktioargumentit();
     Funktiokutsu haeMerkkijonoJaKonvertoiLukuarvoksi504Lp =
         summa503Lpargs.get(0).getFunktiokutsuChild();
     Funktiokutsu luku505Lp = summa503Lpargs.get(1).getFunktiokutsuChild();
@@ -360,11 +321,10 @@ public class LaskentakaavaServiceTest {
     FunktiokutsuDTO nimetty = new FunktiokutsuDTO();
     nimetty.setTallennaTulos(false);
 
-    FunktioargumenttiDTO arg = new FunktioargumenttiDTO();
-    FunktioargumentinLapsiDTO lapsiDTO = modelMapper.map(child, FunktioargumentinLapsiDTO.class);
-    lapsiDTO.setLapsityyppi(FunktioargumentinLapsiDTO.FUNKTIOKUTSUTYYPPI);
-    arg.setLapsi(lapsiDTO);
-    arg.setIndeksi(1);
+    FunktioargumenttiDTO arg = new FunktioargumenttiDTO(
+            new FunktioargumentinLapsiDTO(child),
+            1
+    );
     nimetty.getFunktioargumentit().add(arg);
 
     if (Funktiotyyppi.LUKUARVOFUNKTIO.equals(child.getFunktionimi().getTyyppi())) {
@@ -385,36 +345,20 @@ public class LaskentakaavaServiceTest {
 
   @Test
   public void lisaaKaavaJokaViittaaToiseenKaavaan() {
+    Laskentakaava viitattuKaava = laskentakaavaService.haeMallinnettuKaava(new LaskentakaavaId(206));
 
-    final Long tallennettuKaavaId = 206L;
-    Laskentakaava tallennettu = null;
-    {
-      LaskentakaavaListDTO tallennettuKaava =
-          modelMapper.map(
-              laskentakaavaService.haeMallinnettuKaava(tallennettuKaavaId),
-              LaskentakaavaListDTO.class);
+    FunktiokutsuDTO funktiokutsu = createSumma(createLukuarvo(1.0), createLukuarvo(2.0));
+    funktiokutsu.getFunktioargumentit().add(new FunktioargumenttiDTO(
+            new FunktioargumentinLapsiDTO(modelMapper.lkToListDto(viitattuKaava)),
+            funktiokutsu.getFunktioargumentit().size() + 1
+    ));
 
-      FunktiokutsuDTO summa = createSumma(createLukuarvo(1.0), createLukuarvo(2.0));
-      FunktioargumenttiDTO kaavaArg = new FunktioargumenttiDTO();
-      FunktioargumentinLapsiDTO lapsiDTO =
-          modelMapper.map(tallennettuKaava, FunktioargumentinLapsiDTO.class);
-      lapsiDTO.setLapsityyppi(FunktioargumentinLapsiDTO.LASKENTAKAAVATYYPPI);
-      kaavaArg.setLapsi(lapsiDTO);
-      kaavaArg.setIndeksi(summa.getFunktioargumentit().size() + 1);
-      summa.getFunktioargumentit().add(kaavaArg);
-
-      final String nimi = "kaavasummaus";
-
-      FunktiokutsuDTO nimettyFunktiokutsu = nimettyFunktiokutsu(nimi, summa);
-
-      LaskentakaavaCreateDTO laskentakaava = new LaskentakaavaCreateDTO();
-      laskentakaava.setNimi(nimi);
-      laskentakaava.setFunktiokutsu(nimettyFunktiokutsu);
-      laskentakaava.setKuvaus("");
-      laskentakaava.setOnLuonnos(false);
-
-      tallennettu = laskentakaavaService.insert(laskentakaava, null, null);
-    }
+    Laskentakaava tallennettu = laskentakaavaService.insert(new LaskentakaavaInsertDTO(new LaskentakaavaCreateDTO(
+            false,
+            "kaavasummaus",
+            "",
+            nimettyFunktiokutsu("kaavasummaus", funktiokutsu)
+    ), null, "oid2"));
 
     Laskentakaava haettu = laskentakaavaService.haeMallinnettuKaava(tallennettu.getId());
 
@@ -429,77 +373,19 @@ public class LaskentakaavaServiceTest {
     assertEquals(Funktionimi.SUMMA, summa.getFunktionimi());
     assertEquals(3, summa.getFunktioargumentit().size());
 
-    List<Funktioargumentti> summaArgs = argsSorted(summa.getFunktioargumentit());
+    List<Funktioargumentti> summaArgs = summa.getFunktioargumentit();
     assertNotNull(summaArgs.get(0).getFunktiokutsuChild());
     assertNotNull(summaArgs.get(1).getFunktiokutsuChild());
     assertNotNull(summaArgs.get(2).getLaskentakaavaChild());
 
     assertEquals(Funktionimi.LUKUARVO, summaArgs.get(0).getFunktiokutsuChild().getFunktionimi());
     assertEquals(Funktionimi.LUKUARVO, summaArgs.get(1).getFunktiokutsuChild().getFunktionimi());
-    assertEquals(
-        laskentakaavaService.haeMallinnettuKaava(tallennettuKaavaId),
-        summaArgs.get(2).getLaskentakaavaChild());
-  }
-
-  @Test
-  public void testHaeLaskettavaKaava() throws FunktiokutsuMuodostaaSilmukanException {
-
-    final Long tulo = 512L;
-    {
-      Funktiokutsu funktiokutsu = laskentakaavaService.haeMallinnettuFunktiokutsu(tulo);
-      assertEquals(tulo, funktiokutsu.getId());
-      assertEquals(Funktionimi.TULO, funktiokutsu.getFunktionimi());
-      assertEquals(2, funktiokutsu.getFunktioargumentit().size());
-
-      List<Funktioargumentti> args = argsSorted(funktiokutsu.getFunktioargumentit());
-      assertNotNull(args.get(0).getLaskentakaavaChild());
-      assertNull(args.get(0).getFunktiokutsuChild());
-
-      assertNotNull(args.get(1).getFunktiokutsuChild());
-      assertNull(args.get(1).getLaskentakaavaChild());
-    }
-
-    {
-      final Long laskentakaavaId = 510L;
-
-      Laskentakaava laskentakaava =
-          laskentakaavaService.haeLaskettavaKaava(laskentakaavaId, Laskentamoodi.VALINTALASKENTA);
-      Funktiokutsu nimetty513L = laskentakaava.getFunktiokutsu();
-
-      assertEquals(Funktionimi.NIMETTYLUKUARVO, nimetty513L.getFunktionimi());
-      assertEquals(1, nimetty513L.getFunktioargumentit().size());
-
-      Funktiokutsu tulo512L =
-          argsSorted(nimetty513L.getFunktioargumentit()).get(0).getFunktiokutsuChild();
-      assertEquals(tulo, tulo512L.getId());
-      assertEquals(Funktionimi.TULO, tulo512L.getFunktionimi());
-      assertEquals(2, tulo512L.getFunktioargumentit().size());
-
-      List<Funktioargumentti> tulo512Largs = argsSorted(tulo512L.getFunktioargumentit());
-      Funktiokutsu nimetty510L = tulo512Largs.get(0).getLaajennettuKaava();
-      Funktiokutsu luku511L = tulo512Largs.get(1).getFunktiokutsuChild();
-
-      assertEquals(Funktionimi.NIMETTYLUKUARVO, nimetty510L.getFunktionimi());
-      assertEquals(Funktionimi.LUKUARVO, luku511L.getFunktionimi());
-
-      assertEquals(1, nimetty510L.getFunktioargumentit().size());
-      Funktiokutsu summa507L =
-          argsSorted(nimetty510L.getFunktioargumentit()).get(0).getFunktiokutsuChild();
-      assertEquals(Funktionimi.SUMMA, summa507L.getFunktionimi());
-
-      assertEquals(2, summa507L.getFunktioargumentit().size());
-      List<Funktioargumentti> summa507Largs = argsSorted(summa507L.getFunktioargumentit());
-      Funktiokutsu luku508L = summa507Largs.get(0).getFunktiokutsuChild();
-      Funktiokutsu luku509L = summa507Largs.get(1).getFunktiokutsuChild();
-
-      assertEquals(Funktionimi.LUKUARVO, luku508L.getFunktionimi());
-      assertEquals(Funktionimi.LUKUARVO, luku509L.getFunktionimi());
-    }
+    assertEquals(viitattuKaava, summaArgs.get(2).getLaskentakaavaChild());
   }
 
   @Test
   public void haeMallinnettuLaskentakaava() {
-    final Long laskentakaavaId = 510L;
+    LaskentakaavaId laskentakaavaId = new LaskentakaavaId(510);
 
     Laskentakaava laskentakaava =
         laskentakaavaService.haeLaskettavaKaava(laskentakaavaId, Laskentamoodi.VALINTALASKENTA);
@@ -508,47 +394,24 @@ public class LaskentakaavaServiceTest {
     assertEquals(Funktionimi.NIMETTYLUKUARVO, nimetty513L.getFunktionimi());
     assertEquals(1, nimetty513L.getFunktioargumentit().size());
 
-    Funktiokutsu tulo512L =
-        argsSorted(nimetty513L.getFunktioargumentit()).get(0).getFunktiokutsuChild();
+    Funktiokutsu tulo512L = nimetty513L.getFunktioargumentit().get(0).getFunktiokutsuChild();
     assertEquals(Funktionimi.TULO, tulo512L.getFunktionimi());
     assertEquals(2, tulo512L.getFunktioargumentit().size());
 
-    List<Funktioargumentti> tulo512Largs = argsSorted(tulo512L.getFunktioargumentit());
+    List<Funktioargumentti> tulo512Largs = tulo512L.getFunktioargumentit();
     Laskentakaava laskentakaava509L = tulo512Largs.get(0).getLaskentakaavaChild();
     Funktiokutsu luku511L = tulo512Largs.get(1).getFunktiokutsuChild();
 
-    assertEquals(Funktiotyyppi.LUKUARVOFUNKTIO, laskentakaava509L.getTyyppi());
+    assertEquals(Funktiotyyppi.LUKUARVOFUNKTIO, laskentakaava509L.getFunktiokutsu().getFunktionimi().getTyyppi());
     assertEquals(Funktionimi.LUKUARVO, luku511L.getFunktionimi());
   }
 
   @Test
   public void testFindAvaimetForHakukohde() {
-    for (int i = 0; i < 10; i++) {
-      List<ValintaperusteDTO> valintaperusteet =
-          laskentakaavaService.findAvaimetForHakukohde("oid17");
-      assertSyotettavaArvoHakukohde17(valintaperusteet);
-    }
-  }
-
-  @Test
-  public void testFindAvaimetForHakukohteet() {
-    Map<String, List<ValintaperusteDTO>> valintaperusteet =
-        laskentakaavaService.findAvaimetForHakukohteet(Arrays.asList("oid17"));
-    assertEquals(1, valintaperusteet.size());
-    assertSyotettavaArvoHakukohde17(valintaperusteet.get("oid17"));
-  }
-
-  private void assertSyotettavaArvoHakukohde17(List<ValintaperusteDTO> valintaperusteet) {
+    List<ValintaperusteDTO> valintaperusteet = laskentakaavaService.findAvaimetForHakukohde("oid17");
     assertEquals(2, valintaperusteet.size());
 
-    Collections.sort(
-        valintaperusteet,
-        new Comparator<ValintaperusteDTO>() {
-          @Override
-          public int compare(ValintaperusteDTO o1, ValintaperusteDTO o2) {
-            return o1.getTunniste().compareTo(o2.getTunniste());
-          }
-        });
+    valintaperusteet.sort(Comparator.comparing(ValintaperusteDTO::getTunniste));
 
     assertEquals("valintaperuste1", valintaperusteet.get(0).getTunniste());
     assertEquals("valintaperuste2", valintaperusteet.get(1).getTunniste());
@@ -579,14 +442,14 @@ public class LaskentakaavaServiceTest {
     assertEquals(1, valintaperusteet.getPalautaHaettutArvot().size());
   }
 
-  @Test
+  @Test(expected = LaskentakaavaMuodostaaSilmukanException.class)
   public void testItseensaViittaavaKaava() {
     // Kaava 415 viittaa kaavaan 414. Asetetaan kaava 414 viittaamaan
     // takaisin kaavaan 415, jolloin saadaan
     // silmukka muodostettua.
 
-    final Long alakaavaId = 414L;
-    final Long ylakaavaId = 415L;
+    LaskentakaavaId alakaavaId = new LaskentakaavaId(414);
+    LaskentakaavaId ylakaavaId = new LaskentakaavaId(415);
 
     {
       Laskentakaava ylakaava =
@@ -596,7 +459,7 @@ public class LaskentakaavaServiceTest {
       Funktiokutsu ylaFunktiokutsu = ylakaava.getFunktiokutsu();
       assertEquals(2, ylaFunktiokutsu.getFunktioargumentit().size());
 
-      List<Funktioargumentti> ylafunktioArgs = argsSorted(ylaFunktiokutsu.getFunktioargumentit());
+      List<Funktioargumentti> ylafunktioArgs = ylaFunktiokutsu.getFunktioargumentit();
       assertNotNull(ylafunktioArgs.get(1).getLaskentakaavaChild());
       assertEquals(alakaavaId, ylafunktioArgs.get(1).getLaskentakaavaChild().getId());
     }
@@ -608,43 +471,38 @@ public class LaskentakaavaServiceTest {
       Funktiokutsu alaFunktiokutsu = alakaava.getFunktiokutsu();
       assertEquals(2, alaFunktiokutsu.getFunktioargumentit().size());
 
-      List<Funktioargumentti> alafunktioArgs = argsSorted(alaFunktiokutsu.getFunktioargumentit());
+      List<Funktioargumentti> alafunktioArgs = alaFunktiokutsu.getFunktioargumentit();
       assertNull(alafunktioArgs.get(0).getLaskentakaavaChild());
       assertNull(alafunktioArgs.get(1).getLaskentakaavaChild());
     }
 
-    Laskentakaava alakaava =
-        laskentakaavaService.haeLaskettavaKaava(alakaavaId, Laskentamoodi.VALINTALASKENTA);
+    LaskentakaavaCreateDTO alakaava = modelMapper.lkToCreateDto(
+            laskentakaavaService.haeLaskettavaKaava(alakaavaId, Laskentamoodi.VALINTALASKENTA));
 
-    Laskentakaava laskentakaavaViite = new Laskentakaava();
-    laskentakaavaViite.setId(ylakaavaId);
-    laskentakaavaViite.setTyyppi(Funktiotyyppi.LUKUARVOFUNKTIO);
-    laskentakaavaViite.setOnLuonnos(false);
-
-    Funktioargumentti arg = new Funktioargumentti();
+    FunktioargumenttiDTO arg = new FunktioargumenttiDTO();
     arg.setIndeksi(3);
-    arg.setLaskentakaavaChild(laskentakaavaViite);
+    arg.setLapsi(new FunktioargumentinLapsiDTO(
+            false,
+            "nimi",
+            "kuvaus",
+            Funktiotyyppi.LUKUARVOFUNKTIO,
+            ylakaavaId.id
+    ));
 
     alakaava.getFunktiokutsu().getFunktioargumentit().add(arg);
 
-    boolean caught = false;
     try {
-      laskentakaavaService.update(
-          alakaavaId, modelMapper.map(alakaava, LaskentakaavaCreateDTO.class));
+      laskentakaavaService.update(alakaavaId, alakaava);
     } catch (LaskentakaavaMuodostaaSilmukanException e) {
-      caught = true;
-
-      assertEquals(e.getFunktiokutsuId().longValue(), 701L);
-      assertEquals(e.getParentLaskentakaavaId(), alakaavaId);
-      assertEquals(e.getViitattuLaskentakaavaId(), alakaavaId);
+      assertEquals(e.id, alakaavaId);
+      assertEquals(e.takaisinViittaavanId, ylakaavaId);
+      throw e;
     }
-
-    assertTrue(caught);
   }
 
   @Test(expected = FunktiokutsuaEiVoidaKayttaaValintakoelaskennassaException.class)
   public void testHaeLaskettavaKaavaVaarallaMoodilla() {
-    final Long laskentakaavaId = 417L;
+    LaskentakaavaId laskentakaavaId = new LaskentakaavaId(417);
     laskentakaavaService.haeLaskettavaKaava(laskentakaavaId, Laskentamoodi.VALINTAKOELASKENTA);
   }
 
@@ -656,7 +514,7 @@ public class LaskentakaavaServiceTest {
     laskentakaava.setFunktiokutsu(
         createSumma(createLukuarvo(5.0), createLukuarvo(10.0), createLukuarvo(100.0)));
 
-    Laskentakaava tallennettu = laskentakaavaService.insert(laskentakaava, null, "oid1");
+    Laskentakaava tallennettu = laskentakaavaService.insert(new LaskentakaavaInsertDTO(laskentakaava, null, "oid1"));
 
     Laskentakaava haettu = laskentakaavaService.haeMallinnettuKaava(tallennettu.getId());
     assertFalse(haettu.getOnLuonnos());
@@ -667,11 +525,17 @@ public class LaskentakaavaServiceTest {
       assertEquals(Funktionimi.LUKUARVO, fa.getFunktiokutsuChild().getFunktionimi());
     }
 
-    LaskentakaavaSiirraDTO siirrettava = modelMapper.map(tallennettu, LaskentakaavaSiirraDTO.class);
-    siirrettava.setUusinimi("UusiNimi");
-    siirrettava.setValintaryhmaOid("oid2");
+    LaskentakaavaSiirraDTO siirrettava = new LaskentakaavaSiirraDTO(
+            tallennettu.getOnLuonnos(),
+            tallennettu.getNimi(),
+            tallennettu.getKuvaus(),
+            modelMapper.fkToDto(tallennettu.getFunktiokutsu()),
+            "UusiNimi",
+            "oid2",
+            null
+    );
 
-    Laskentakaava siirretty = laskentakaavaService.siirra(siirrettava).get();
+    Laskentakaava siirretty = laskentakaavaService.siirra(siirrettava);
 
     assertFalse(siirretty.getOnLuonnos());
     assertEquals(Funktionimi.SUMMA, siirretty.getFunktiokutsu().getFunktionimi());
@@ -682,15 +546,15 @@ public class LaskentakaavaServiceTest {
     }
 
     assertEquals("UusiNimi", siirretty.getNimi());
-    assertEquals("oid2", siirretty.getValintaryhma().getOid());
+    assertEquals(2, siirretty.getValintaryhmaId().id);
     assertNotEquals(haettu.getId(), siirretty.getId());
   }
 
   @Test
   public void testSiirraAliKaavallinen() {
 
-    final Long alakaavaId = 414L;
-    final Long ylakaavaId = 415L;
+    LaskentakaavaId alakaavaId = new LaskentakaavaId(414);
+    LaskentakaavaId ylakaavaId = new LaskentakaavaId(415);
 
     final Laskentakaava vanhaYlakaava = laskentakaavaService.haeMallinnettuKaava(ylakaavaId);
     assertEquals(2, vanhaYlakaava.getFunktiokutsu().getFunktioargumentit().size());
@@ -702,20 +566,24 @@ public class LaskentakaavaServiceTest {
             .getLaskentakaavaChild();
     assertEquals(alakaavaId, vanhaAlikaava.getId());
 
-    LaskentakaavaSiirraDTO siirrettava =
-        modelMapper.map(vanhaYlakaava, LaskentakaavaSiirraDTO.class);
+    LaskentakaavaSiirraDTO siirrettava = new LaskentakaavaSiirraDTO(
+            vanhaYlakaava.getOnLuonnos(),
+            vanhaYlakaava.getNimi(),
+            vanhaYlakaava.getKuvaus(),
+            modelMapper.fkToDto(vanhaYlakaava.getFunktiokutsu()),
+            ylakaavaId.id + " kopio",
+            "oid2",
+            null
+    );
 
-    siirrettava.setUusinimi(ylakaavaId + " kopio");
-    siirrettava.setValintaryhmaOid("oid2");
-
-    Laskentakaava siirretty = laskentakaavaService.siirra(siirrettava).get();
+    Laskentakaava siirretty = laskentakaavaService.siirra(siirrettava);
 
     assertFalse(siirretty.getOnLuonnos());
     assertEquals(Funktionimi.SUMMA, siirretty.getFunktiokutsu().getFunktionimi());
     assertEquals(2, siirretty.getFunktiokutsu().getFunktioargumentit().size());
 
     assertEquals("415 kopio", siirretty.getNimi());
-    assertEquals("oid2", siirretty.getValintaryhma().getOid());
+    assertEquals(2, siirretty.getValintaryhmaId().id);
     assertNotEquals(vanhaYlakaava.getId(), siirretty.getId());
 
     Laskentakaava siirrettyAlikaava =
@@ -726,10 +594,10 @@ public class LaskentakaavaServiceTest {
             .getLaskentakaavaChild();
     assertNotEquals(vanhaAlikaava.getId(), siirrettyAlikaava.getId());
     assertEquals("summakaava414", siirrettyAlikaava.getNimi());
-    assertEquals("oid2", siirrettyAlikaava.getValintaryhma().getOid());
+    assertEquals(2, siirrettyAlikaava.getValintaryhmaId().id);
   }
 
-  @Test
+  @Test(expected = IllegalArgumentException.class)
   public void testSiirraValintaRyhmaaEiLoydy() {
     LaskentakaavaCreateDTO laskentakaava = new LaskentakaavaCreateDTO();
     laskentakaava.setNimi("kaava3342");
@@ -737,7 +605,7 @@ public class LaskentakaavaServiceTest {
     laskentakaava.setFunktiokutsu(
         createSumma(createLukuarvo(5.0), createLukuarvo(10.0), createLukuarvo(100.0)));
 
-    Laskentakaava tallennettu = laskentakaavaService.insert(laskentakaava, null, "oid1");
+    Laskentakaava tallennettu = laskentakaavaService.insert(new LaskentakaavaInsertDTO(laskentakaava, null, "oid1"));
 
     Laskentakaava haettu = laskentakaavaService.haeMallinnettuKaava(tallennettu.getId());
     assertFalse(haettu.getOnLuonnos());
@@ -748,46 +616,44 @@ public class LaskentakaavaServiceTest {
       assertEquals(Funktionimi.LUKUARVO, fa.getFunktiokutsuChild().getFunktionimi());
     }
 
-    LaskentakaavaSiirraDTO siirrettava = modelMapper.map(tallennettu, LaskentakaavaSiirraDTO.class);
-    siirrettava.setUusinimi("UusiNimi");
-    siirrettava.setValintaryhmaOid("jeppis");
+    LaskentakaavaSiirraDTO siirrettava = new LaskentakaavaSiirraDTO(
+            tallennettu.getOnLuonnos(),
+            tallennettu.getNimi(),
+            tallennettu.getKuvaus(),
+            modelMapper.fkToDto(tallennettu.getFunktiokutsu()),
+            "UusiNimi",
+            "jeppis",
+            null
+    );
 
-    Optional<Laskentakaava> siirretty = laskentakaavaService.siirra(siirrettava);
-
-    assertFalse(siirretty.isPresent());
+    laskentakaavaService.siirra(siirrettava);
   }
 
   @Test(expected = LaskentakaavaEiOleOlemassaException.class)
   public void testPoistaKaava() {
-    final Long id = 204L;
+    LaskentakaavaId id = new LaskentakaavaId(204);
     Laskentakaava laskentakaava = laskentakaavaService.haeMallinnettuKaava(id);
     Funktiokutsu maksimi204L = laskentakaava.getFunktiokutsu();
-    assertEquals(
-        fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.MAKSIMI,
-        maksimi204L.getFunktionimi());
+    assertEquals(Funktionimi.MAKSIMI, maksimi204L.getFunktionimi());
     assertEquals(2, maksimi204L.getFunktioargumentit().size());
     laskentakaavaService.poista(id);
-    laskentakaava = laskentakaavaService.haeMallinnettuKaava(id);
+    laskentakaavaService.haeMallinnettuKaava(id);
   }
 
   @Test
   public void poistaKaavaJohonToinenKaavaViittaa() {
 
-    final Long tallennettuKaavaId = 206L;
+    LaskentakaavaId tallennettuKaavaId = new LaskentakaavaId(206);
     Laskentakaava tallennettu = null;
     {
       LaskentakaavaListDTO tallennettuKaava =
-          modelMapper.map(
-              laskentakaavaService.haeMallinnettuKaava(tallennettuKaavaId),
-              LaskentakaavaListDTO.class);
+              modelMapper.lkToListDto(laskentakaavaService.haeMallinnettuKaava(tallennettuKaavaId));
 
       FunktiokutsuDTO summa = createSumma(createLukuarvo(1.0), createLukuarvo(2.0));
-      FunktioargumenttiDTO kaavaArg = new FunktioargumenttiDTO();
-      FunktioargumentinLapsiDTO lapsiDTO =
-          modelMapper.map(tallennettuKaava, FunktioargumentinLapsiDTO.class);
-      lapsiDTO.setLapsityyppi(FunktioargumentinLapsiDTO.LASKENTAKAAVATYYPPI);
-      kaavaArg.setLapsi(lapsiDTO);
-      kaavaArg.setIndeksi(summa.getFunktioargumentit().size() + 1);
+      FunktioargumenttiDTO kaavaArg = new FunktioargumenttiDTO(
+              new FunktioargumentinLapsiDTO(tallennettuKaava),
+              summa.getFunktioargumentit().size() + 1
+      );
       summa.getFunktioargumentit().add(kaavaArg);
 
       final String nimi = "kaavasummaus";
@@ -800,7 +666,7 @@ public class LaskentakaavaServiceTest {
       laskentakaava.setKuvaus("");
       laskentakaava.setOnLuonnos(false);
 
-      tallennettu = laskentakaavaService.insert(laskentakaava, null, null);
+      tallennettu = laskentakaavaService.insert(new LaskentakaavaInsertDTO(laskentakaava, null, "oid2"));
     }
 
     Laskentakaava haettu = laskentakaavaService.haeMallinnettuKaava(tallennettu.getId());
@@ -816,7 +682,7 @@ public class LaskentakaavaServiceTest {
     assertEquals(Funktionimi.SUMMA, summa.getFunktionimi());
     assertEquals(3, summa.getFunktioargumentit().size());
 
-    List<Funktioargumentti> summaArgs = argsSorted(summa.getFunktioargumentit());
+    List<Funktioargumentti> summaArgs = summa.getFunktioargumentit();
     assertNotNull(summaArgs.get(0).getFunktiokutsuChild());
     assertNotNull(summaArgs.get(1).getFunktiokutsuChild());
     assertNotNull(summaArgs.get(2).getLaskentakaavaChild());
@@ -834,19 +700,36 @@ public class LaskentakaavaServiceTest {
   // BUG-1313
   @Test
   public void laskentakaavaPeriytyyOikein() {
-    final Long id = 204L;
-    Laskentakaava l = laskentakaavaService.haeMallinnettuKaava(id);
-    Valintaryhma v1 = new Valintaryhma();
-    Valintaryhma v2 = new Valintaryhma();
-    Valintaryhma v3 = new Valintaryhma();
-    HakukohdeViite h = new HakukohdeViite();
-    h.setValintaryhma(v3);
-    v1.getLaskentakaava().add(l);
-    v2.setYlavalintaryhma(v1);
-    v3.setYlavalintaryhma(v2);
-    Optional<Laskentakaava> res =
-        laskentakaavaService.haeLaskentakaavaTaiSenKopioVanhemmilta(l.getId(), h);
-    assertTrue(res.isPresent());
-    assertEquals(l, res.get());
+    Set<SyoteparametriDTO> syoteparametrit = new HashSet<>();
+    syoteparametrit.add(new SyoteparametriDTO(
+            "totuusarvo",
+            "true"
+    ));
+    LaskentakaavaId id = laskentakaavaService.insert(new LaskentakaavaInsertDTO(
+            new LaskentakaavaCreateDTO(
+                    false,
+                    "nimi",
+                    "kuvaus",
+                    new FunktiokutsuDTO(
+                            Funktionimi.TOTUUSARVO,
+                            "tunniste",
+                            "fi",
+                            "sv",
+                            "en",
+                            false,
+                            false,
+                            new HashSet<>(),
+                            new ArrayList<>(),
+                            syoteparametrit,
+                            new ArrayList<>(),
+                            new ArrayList<>(),
+                            new ArrayList<>()
+                    )
+            ),
+            null,
+            "oid8"
+    )).getId();
+
+    assertEquals(id, laskentakaavaService.kopioiJosEiJoKopioitu(id, new HakukohdeViiteId(8)));
   }
 }

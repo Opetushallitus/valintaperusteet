@@ -1,9 +1,5 @@
 package fi.vm.sade.service.valintaperusteet.resource.impl;
 
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD;
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
-import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
-
 import fi.vm.sade.auditlog.Changes;
 import fi.vm.sade.kaava.Funktiokuvaaja;
 import fi.vm.sade.service.valintaperusteet.dto.HakuViiteDTO;
@@ -15,11 +11,12 @@ import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaSiirraDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaPlainDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
+import fi.vm.sade.service.valintaperusteet.model.LaskentakaavaId;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import fi.vm.sade.service.valintaperusteet.resource.LaskentakaavaResource;
 import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
+import fi.vm.sade.service.valintaperusteet.service.ValintaryhmaService;
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaEiValidiException;
-import fi.vm.sade.service.valintaperusteet.service.impl.actors.ActorService;
 import fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit;
 import fi.vm.sade.valinta.sharedutils.AuditLog;
 import fi.vm.sade.valinta.sharedutils.ValintaResource;
@@ -27,8 +24,13 @@ import fi.vm.sade.valinta.sharedutils.ValintaperusteetOperation;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import java.util.List;
-import java.util.Optional;
+import org.apache.commons.lang3.tuple.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Component;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -43,11 +45,12 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Component;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.CRUD;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
 
 @Component
 @Path("laskentakaava")
@@ -58,9 +61,9 @@ import org.springframework.stereotype.Component;
 public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
   @Autowired private LaskentakaavaService laskentakaavaService;
 
-  @Autowired private ValintaperusteetModelMapper modelMapper;
+  @Autowired private ValintaryhmaService valintaryhmaService;
 
-  @Autowired private ActorService actorService;
+  @Autowired private ValintaperusteetModelMapper modelMapper;
 
   private static final Logger LOGGER = LoggerFactory.getLogger(LaskentakaavaResourceImpl.class);
 
@@ -79,7 +82,6 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
   @PreAuthorize(READ_UPDATE_CRUD)
   @ApiOperation(value = "Tyhjentää laskentakaavat välimuistista")
   public String tyhjennaCache() {
-    laskentakaavaService.tyhjennaCache();
     return "cache tyhjennetty";
   }
 
@@ -104,20 +106,11 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
           @DefaultValue("true")
           @QueryParam("funktiopuu")
           Boolean funktiopuu) {
-    if (funktiopuu) {
-      LaskentakaavaDTO mapped =
-          modelMapper.map(laskentakaavaService.haeMallinnettuKaava(id), LaskentakaavaDTO.class);
-      return mapped;
-    } else {
-      Optional<Laskentakaava> kaava = laskentakaavaService.pelkkaKaava(id);
-      return kaava
-          .map(
-              k -> {
-                k.setFunktiokutsu(null);
-                return modelMapper.map(k, LaskentakaavaDTO.class);
-              })
-          .orElse(new LaskentakaavaDTO());
+    LaskentakaavaDTO mapped = modelMapper.lkToDto(laskentakaavaService.haeMallinnettuKaava(new LaskentakaavaId(id)));
+    if (!funktiopuu) {
+      mapped.setFunktiokutsu(null);
     }
+    return mapped;
   }
 
   @Override
@@ -155,22 +148,9 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
           String hakukohdeOid,
       @ApiParam(value = "Haettavien laskentakaavojen tyyppi") @QueryParam("tyyppi")
           fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi tyyppi) {
-    return modelMapper.mapList(
-        laskentakaavaService.findKaavas(all, valintaryhmaOid, hakukohdeOid, tyyppi),
-        LaskentakaavaListDTO.class);
-  }
-
-  @POST
-  @Path("/validoi")
-  @Produces(MediaType.APPLICATION_JSON)
-  @PreAuthorize(READ_UPDATE_CRUD)
-  @ApiOperation(
-      value = "Validoi parametrina annetun laskentakaavan",
-      response = LaskentakaavaDTO.class)
-  public LaskentakaavaDTO validoi(
-      @ApiParam(value = "Validoitava laskentakaava", required = true)
-          LaskentakaavaDTO laskentakaava) {
-    return modelMapper.map(laskentakaavaService.validoi(laskentakaava), LaskentakaavaDTO.class);
+    return laskentakaavaService.findKaavas(all, valintaryhmaOid, hakukohdeOid, tyyppi).stream()
+            .map(modelMapper::lkToListDto)
+            .collect(Collectors.toList());
   }
 
   @POST
@@ -185,12 +165,10 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
       @ApiParam(value = "Päivitettävän laskentakaavan uudet tiedot", required = true)
           LaskentakaavaCreateDTO laskentakaava,
       @Context HttpServletRequest request) {
-    LaskentakaavaDTO afterUpdate = null;
     try {
-      LaskentakaavaDTO beforeUpdate =
-          modelMapper.map(laskentakaavaService.haeMallinnettuKaava(id), LaskentakaavaDTO.class);
-      afterUpdate =
-          modelMapper.map(laskentakaavaService.update(id, laskentakaava), LaskentakaavaDTO.class);
+      Pair<Laskentakaava, Laskentakaava> r = laskentakaavaService.update(new LaskentakaavaId(id), laskentakaava);
+      LaskentakaavaDTO beforeUpdate = modelMapper.lkToDto(r.getLeft());
+      LaskentakaavaDTO afterUpdate = modelMapper.lkToDto(r.getRight());
       AuditLog.log(
           ValintaperusteetAudit.AUDIT,
           AuditLog.getUser(request),
@@ -198,12 +176,10 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
           ValintaResource.LASKENTAKAAVA,
           afterUpdate.getId().toString(),
           Changes.updatedDto(afterUpdate, beforeUpdate));
-      // Kaava päivitetty, poistetaan orvot
-      actorService.runOnce();
       return Response.status(Response.Status.OK).entity(afterUpdate).build();
     } catch (LaskentakaavaEiValidiException e) {
       LOGGER.error("Laskentakaava ei ole validi!", e);
-      return Response.status(Response.Status.BAD_REQUEST).entity(afterUpdate).build();
+      return Response.status(Response.Status.BAD_REQUEST).entity(laskentakaava).build();
     } catch (Exception e) {
       LOGGER.error("Virhe päivitettäessä laskentakaavaa.", e);
       return Response.status(Response.Status.BAD_REQUEST).build();
@@ -219,17 +195,8 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
       @ApiParam(value = "Lisättävä laskentakaava", required = true)
           LaskentakaavaInsertDTO laskentakaava,
       @Context HttpServletRequest request) {
-    LaskentakaavaDTO inserted = null;
     try {
-      inserted =
-          Optional.ofNullable(
-                  modelMapper.map(
-                      laskentakaavaService.insert(
-                          laskentakaava.getLaskentakaava(),
-                          laskentakaava.getHakukohdeOid(),
-                          laskentakaava.getValintaryhmaOid()),
-                      LaskentakaavaDTO.class))
-              .orElse(new LaskentakaavaDTO());
+      LaskentakaavaDTO inserted = modelMapper.lkToDto(laskentakaavaService.insert(laskentakaava));
       AuditLog.log(
           ValintaperusteetAudit.AUDIT,
           AuditLog.getUser(request),
@@ -240,7 +207,9 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
       return Response.status(Response.Status.CREATED).entity(inserted).build();
     } catch (LaskentakaavaEiValidiException e) {
       LOGGER.error("Laskentakaava ei ole validi.", e);
-      return Response.status(Response.Status.BAD_REQUEST).entity(inserted).build();
+      return Response.status(Response.Status.BAD_REQUEST)
+              .entity(modelMapper.lkToDto(e.getValidoituLaskentakaava()))
+              .build();
     } catch (Exception e) {
       LOGGER.error("Virhe tallennettaessa laskentakaavaa.", e);
       return Response.status(Response.Status.BAD_REQUEST).build();
@@ -253,22 +222,21 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public Response siirra(LaskentakaavaSiirraDTO dto, @Context HttpServletRequest request) {
-    Optional<Laskentakaava> siirretty = laskentakaavaService.siirra(dto);
-    return siirretty
-        .map(
-            kaava -> {
-              AuditLog.log(
-                  ValintaperusteetAudit.AUDIT,
-                  AuditLog.getUser(request),
-                  ValintaperusteetOperation.LASKENTAKAAVA_SIIRTO,
-                  ValintaResource.LASKENTAKAAVA,
-                  Long.toString(kaava.getId()),
-                  Changes.addedDto(modelMapper.map(kaava, LaskentakaavaDTO.class)));
-              return Response.status(Response.Status.ACCEPTED)
-                  .entity(modelMapper.map(kaava, LaskentakaavaDTO.class))
-                  .build();
-            })
-        .orElse(Response.status(Response.Status.NOT_FOUND).build());
+    try {
+      LaskentakaavaDTO siirretty = modelMapper.lkToDto(laskentakaavaService.siirra(dto));
+      AuditLog.log(
+              ValintaperusteetAudit.AUDIT,
+              AuditLog.getUser(request),
+              ValintaperusteetOperation.LASKENTAKAAVA_SIIRTO,
+              ValintaResource.LASKENTAKAAVA,
+              Long.toString(siirretty.getId()),
+              Changes.addedDto(siirretty));
+      return Response.status(Response.Status.ACCEPTED)
+              .entity(siirretty)
+              .build();
+    } catch (IllegalArgumentException e) {
+        return Response.status(Response.Status.BAD_REQUEST).build();
+    }
   }
 
   @GET
@@ -277,14 +245,17 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public Response valintaryhma(@PathParam("id") Long id) {
-    Optional<Valintaryhma> ryhma = laskentakaavaService.valintaryhma(id);
-    return ryhma
-        .map(
-            r ->
-                Response.status(Response.Status.ACCEPTED)
-                    .entity(modelMapper.map(r, ValintaryhmaPlainDTO.class))
-                    .build())
-        .orElse(Response.status(Response.Status.NOT_FOUND).build());
+    Laskentakaava laskentakaava = laskentakaavaService.haeMallinnettuKaava(new LaskentakaavaId(id));
+    if (laskentakaava == null) {
+      return Response.status(Response.Status.NOT_FOUND).build();
+    }
+    Valintaryhma ryhma = valintaryhmaService.read(laskentakaava.getValintaryhmaId());
+    if (ryhma == null) {
+      return Response.status(Response.Status.NOT_FOUND).build();
+    }
+    return Response.status(Response.Status.ACCEPTED)
+            .entity(modelMapper.map(ryhma, ValintaryhmaPlainDTO.class))
+            .build();
   }
 
   @DELETE
@@ -293,7 +264,7 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public Response poista(@PathParam("id") Long id, @Context HttpServletRequest request) {
-    boolean poistettu = laskentakaavaService.poista(id);
+    boolean poistettu = laskentakaavaService.poista(new LaskentakaavaId(id));
     AuditLog.log(
         ValintaperusteetAudit.AUDIT,
         AuditLog.getUser(request),
@@ -302,8 +273,6 @@ public class LaskentakaavaResourceImpl implements LaskentakaavaResource {
         id.toString(),
         Changes.EMPTY);
     if (poistettu) {
-      // Kaava poistettu, poistetaan orvot
-      actorService.runOnce();
       return Response.status(Response.Status.ACCEPTED).build();
     } else {
       return Response.status(Response.Status.FORBIDDEN).build();

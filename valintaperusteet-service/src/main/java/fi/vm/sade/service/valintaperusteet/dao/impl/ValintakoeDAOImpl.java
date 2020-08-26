@@ -22,8 +22,6 @@ public class ValintakoeDAOImpl extends AbstractJpaDAOImpl<Valintakoe, Long>
     QValintakoe valintakoe = QValintakoe.valintakoe;
     return from(valinnanVaihe)
         .innerJoin(valinnanVaihe.valintakokeet, valintakoe)
-        .leftJoin(valintakoe.laskentakaava)
-        .fetch()
         .leftJoin(valintakoe.masterValintakoe)
         .fetch()
         .where(valinnanVaihe.oid.eq(valinnanVaiheOid))
@@ -35,8 +33,6 @@ public class ValintakoeDAOImpl extends AbstractJpaDAOImpl<Valintakoe, Long>
   public Valintakoe readByOid(String oid) {
     QValintakoe valintakoe = QValintakoe.valintakoe;
     return from(valintakoe)
-        .leftJoin(valintakoe.laskentakaava)
-        .fetch()
         .leftJoin(valintakoe.masterValintakoe)
         .fetch()
         .where(valintakoe.oid.eq(oid))
@@ -47,8 +43,6 @@ public class ValintakoeDAOImpl extends AbstractJpaDAOImpl<Valintakoe, Long>
   public List<Valintakoe> readByOids(Collection<String> oids) {
     QValintakoe valintakoe = QValintakoe.valintakoe;
     return from(valintakoe)
-        .leftJoin(valintakoe.laskentakaava)
-        .fetch()
         .leftJoin(valintakoe.masterValintakoe)
         .fetch()
         .where(valintakoe.oid.in(oids))
@@ -60,22 +54,11 @@ public class ValintakoeDAOImpl extends AbstractJpaDAOImpl<Valintakoe, Long>
   public List<Valintakoe> readByTunnisteet(Collection<String> tunnisteet) {
     QValintakoe valintakoe = QValintakoe.valintakoe;
     return from(valintakoe)
-        .leftJoin(valintakoe.laskentakaava)
-        .fetch()
         .leftJoin(valintakoe.masterValintakoe)
         .fetch()
         .where(valintakoe.tunniste.in(tunnisteet))
         .listResults(valintakoe)
         .getResults();
-  }
-
-  @Override
-  public List<Valintakoe> findByLaskentakaava(long id) {
-    QValintakoe valintakoe = QValintakoe.valintakoe;
-    return from(valintakoe)
-        .leftJoin(valintakoe.laskentakaava)
-        .where(valintakoe.laskentakaava.id.eq(id))
-        .list(valintakoe);
   }
 
   protected JPAQuery from(EntityPath<?>... o) {

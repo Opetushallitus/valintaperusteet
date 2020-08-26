@@ -6,6 +6,13 @@ public class ValidointivirheDTO {
 
   private String virheviesti;
 
+  public ValidointivirheDTO() { }
+
+  public ValidointivirheDTO(Virhetyyppi virhetyyppi, String virheviesti) {
+    this.virhetyyppi = virhetyyppi;
+    this.virheviesti = virheviesti;
+  }
+
   public Virhetyyppi getVirhetyyppi() {
     return virhetyyppi;
   }

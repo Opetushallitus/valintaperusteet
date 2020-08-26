@@ -6,21 +6,12 @@ import java.util
 import java.util.Collections
 
 import fi.vm.sade.kaava.LaskentaTestUtil.{Syoteparametri, TestHakemus, _}
-import fi.vm.sade.service.valintaperusteet.dto.model.{
-  Funktionimi,
-  Osallistuminen,
-  Valintaperustelahde
-}
+import fi.vm.sade.service.valintaperusteet.dto.model.{Funktionimi, Osallistuminen, Valintaperustelahde}
 import fi.vm.sade.service.valintaperusteet.laskenta.Laskin
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.VirheMetatieto.VirheMetatietotyyppi
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila._
-import fi.vm.sade.service.valintaperusteet.laskenta.api.{
-  Hakemus,
-  Hakukohde,
-  Hakutoive,
-  Laskentatulos
-}
-import fi.vm.sade.service.valintaperusteet.model.TekstiRyhma
+import fi.vm.sade.service.valintaperusteet.laskenta.api.{Hakemus, Hakukohde, Hakutoive, Laskentatulos}
+import fi.vm.sade.service.valintaperusteet.model.{LokalisoituTeksti, TekstiRyhma}
 import org.scalatest.funsuite.AnyFunSuite
 
 import scala.jdk.CollectionConverters._
@@ -81,31 +72,31 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
         paluuarvo = "1.0",
         arvo = "10.0",
         hylkaysperuste = "false",
-        kuvaukset = new TekstiRyhma()
+        kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
       ),
       Arvokonvertteriparametri(
         paluuarvo = "2.0",
         arvo = "15.0",
         hylkaysperuste = "false",
-        kuvaukset = new TekstiRyhma()
+        kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
       ),
       Arvokonvertteriparametri(
         paluuarvo = "3.0",
         arvo = "20.0",
         hylkaysperuste = "false",
-        kuvaukset = new TekstiRyhma()
+        kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
       ),
       Arvokonvertteriparametri(
         paluuarvo = "4.0",
         arvo = "25.0",
         hylkaysperuste = "false",
-        kuvaukset = new TekstiRyhma()
+        kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
       ),
       Arvokonvertteriparametri(
         paluuarvo = "5.0",
         arvo = "30.0",
         hylkaysperuste = "false",
-        kuvaukset = new TekstiRyhma()
+        kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
       )
     )
   )
@@ -128,7 +119,7 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
         max = "10.0",
         palautaHaettuArvo = "false",
         hylkaysperuste = "false",
-        kuvaukset = new TekstiRyhma()
+        kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
       ),
       Arvovalikonvertteriparametri(
         paluuarvo = "3.0",
@@ -136,7 +127,7 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
         max = "20.0",
         palautaHaettuArvo = "false",
         hylkaysperuste = "false",
-        kuvaukset = new TekstiRyhma()
+        kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
       ),
       Arvovalikonvertteriparametri(
         paluuarvo = "3.0",
@@ -144,7 +135,7 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
         max = "30.0",
         palautaHaettuArvo = "false",
         hylkaysperuste = "false",
-        kuvaukset = new TekstiRyhma()
+        kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
       ),
       Arvovalikonvertteriparametri(
         paluuarvo = "4.0",
@@ -152,7 +143,7 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
         max = "40.0",
         palautaHaettuArvo = "false",
         hylkaysperuste = "false",
-        kuvaukset = new TekstiRyhma()
+        kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
       )
     )
   )
@@ -609,7 +600,7 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
           paluuarvo = "5.0",
           arvo = "25.0",
           hylkaysperuste = "false",
-          kuvaukset = new TekstiRyhma()
+          kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
         )
       ),
       arvovalikonvertterit = List(
@@ -619,7 +610,7 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
           max = "30.0",
           palautaHaettuArvo = "false",
           hylkaysperuste = "false",
-          kuvaukset = new TekstiRyhma()
+          kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
         )
       ),
       valintaperustetunniste =
@@ -642,7 +633,7 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
           paluuarvo = "5.0",
           arvo = "25.0",
           hylkaysperuste = "false",
-          kuvaukset = new TekstiRyhma()
+          kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
         )
       ),
       valintaperustetunniste =
@@ -666,7 +657,7 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
           max = "30.0",
           palautaHaettuArvo = "false",
           hylkaysperuste = "false",
-          kuvaukset = new TekstiRyhma()
+          kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
         )
       ),
       valintaperustetunniste =
@@ -705,7 +696,7 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
           paluuarvo = "true",
           arvo = "false",
           hylkaysperuste = "false",
-          kuvaukset = new TekstiRyhma()
+          kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
         )
       )
     )
@@ -728,7 +719,7 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
           paluuarvo = "true",
           arvo = "false",
           hylkaysperuste = "true",
-          kuvaukset = new TekstiRyhma()
+          kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
         )
       )
     )
@@ -750,7 +741,7 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
           paluuarvo = "10.0",
           arvo = "puuppa",
           hylkaysperuste = "false",
-          kuvaukset = new TekstiRyhma()
+          kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
         )
       )
     )
@@ -772,13 +763,13 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
           paluuarvo = "5.0",
           arvo = "25.0",
           hylkaysperuste = "true",
-          kuvaukset = new TekstiRyhma()
+          kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
         ),
         Arvokonvertteriparametri(
           paluuarvo = "10.0",
           arvo = "50.0",
           hylkaysperuste = "false",
-          kuvaukset = new TekstiRyhma()
+          kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
         )
       )
     )
@@ -815,13 +806,13 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
           paluuarvo = "5.0",
           arvo = "10.0",
           hylkaysperuste = "true",
-          kuvaukset = new TekstiRyhma()
+          kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
         ),
         Arvokonvertteriparametri(
           paluuarvo = "15.0",
           arvo = "5.0",
           hylkaysperuste = "false",
-          kuvaukset = new TekstiRyhma()
+          kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
         )
       )
     )
@@ -843,7 +834,7 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
           paluuarvo = "5.0",
           arvo = "0.0",
           hylkaysperuste = "false",
-          kuvaukset = new TekstiRyhma()
+          kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
         )
       )
     )
@@ -867,7 +858,7 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
           paluuarvo = "10.0",
           arvo = "puuppa",
           hylkaysperuste = "false",
-          kuvaukset = new TekstiRyhma()
+          kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
         )
       )
     )
@@ -891,7 +882,7 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
           paluuarvo = "10.0",
           arvo = "puuppa",
           hylkaysperuste = "true",
-          kuvaukset = new TekstiRyhma()
+          kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
         )
       )
     )
@@ -1115,13 +1106,13 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
           paluuarvo = "5.0",
           arvo = "25.0",
           hylkaysperuste = "true",
-          kuvaukset = new TekstiRyhma()
+          kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
         ),
         Arvokonvertteriparametri(
           paluuarvo = "10.0",
           arvo = "50.0",
           hylkaysperuste = "false",
-          kuvaukset = new TekstiRyhma()
+          kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
         )
       )
     )
@@ -1385,7 +1376,7 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
           paluuarvo = "100.0",
           arvo = "10.0",
           hylkaysperuste = "true",
-          kuvaukset = new TekstiRyhma()
+          kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
         )
       )
     )
@@ -1451,7 +1442,7 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
           paluuarvo = "66.0",
           arvo = "L",
           hylkaysperuste = "false",
-          kuvaukset = new TekstiRyhma()
+          kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
         )
       )
     )
@@ -1472,19 +1463,19 @@ class LaskentaIntegraatioTest extends AnyFunSuite {
           paluuarvo = "false",
           arvo = "helsinki",
           hylkaysperuste = "false",
-          kuvaukset = new TekstiRyhma()
+          kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
         ),
         Arvokonvertteriparametri(
           paluuarvo = "true",
           arvo = "turku",
           hylkaysperuste = "true",
-          kuvaukset = new TekstiRyhma()
+          kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
         ),
         Arvokonvertteriparametri(
           paluuarvo = "false",
           arvo = "tampere",
           hylkaysperuste = "false",
-          kuvaukset = new TekstiRyhma()
+          kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
         )
       )
     )

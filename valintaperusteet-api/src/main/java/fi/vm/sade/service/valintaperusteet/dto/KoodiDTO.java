@@ -21,6 +21,20 @@ public class KoodiDTO {
   @ApiModelProperty(value = "Koodin arvo")
   private String arvo;
 
+  public KoodiDTO() { }
+
+  public KoodiDTO(String uri,
+                  String nimiFi,
+                  String nimiSv,
+                  String nimiEn,
+                  String arvo) {
+    this.uri = uri;
+    this.nimiFi = nimiFi;
+    this.nimiSv = nimiSv;
+    this.nimiEn = nimiEn;
+    this.arvo = arvo;
+  }
+
   public String getUri() {
     return uri;
   }

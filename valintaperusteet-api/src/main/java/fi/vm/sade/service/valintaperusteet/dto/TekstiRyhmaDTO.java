@@ -18,4 +18,10 @@ public class TekstiRyhmaDTO {
   public void setTekstit(Set<LokalisoituTekstiDTO> tekstit) {
     this.tekstit = tekstit;
   }
+
+  public TekstiRyhmaDTO() { }
+
+  public TekstiRyhmaDTO(Set<LokalisoituTekstiDTO> tekstit) {
+    this.tekstit = tekstit;
+  }
 }

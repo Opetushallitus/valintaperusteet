@@ -36,9 +36,8 @@ public class Hakijaryhma extends BaseEntity
   @ManyToOne(fetch = FetchType.LAZY)
   private Valintaryhma valintaryhma;
 
-  @JoinColumn(name = "laskentakaava_id", nullable = false)
-  @ManyToOne(optional = false)
-  private Laskentakaava laskentakaava;
+  @Column(name = "laskentakaava_id", nullable = false)
+  private Long laskentakaavaId;
 
   @JoinColumn(name = "hakijaryhmatyyppikoodi_id")
   @ManyToOne(fetch = FetchType.LAZY)
@@ -122,14 +121,6 @@ public class Hakijaryhma extends BaseEntity
     this.valintaryhma = valintaryhma;
   }
 
-  public Laskentakaava getLaskentakaava() {
-    return laskentakaava;
-  }
-
-  public void setLaskentakaava(Laskentakaava laskentakaava) {
-    this.laskentakaava = laskentakaava;
-  }
-
   public Hakijaryhmatyyppikoodi getHakijaryhmatyyppikoodi() {
     return hakijaryhmatyyppikoodi;
   }
@@ -170,15 +161,12 @@ public class Hakijaryhma extends BaseEntity
     this.kopioHakijaryhmat = kopioHakijaryhmat;
   }
 
-  @Transient
   public Long getLaskentakaavaId() {
-    return laskentakaava.getId();
+    return laskentakaavaId;
   }
 
-  @Transient
   public void setLaskentakaavaId(Long id) {
-    laskentakaava = new Laskentakaava();
-    laskentakaava.setId(id);
+    this.laskentakaavaId = id;
   }
 
   public List<String> getValintatapajonoIds() {

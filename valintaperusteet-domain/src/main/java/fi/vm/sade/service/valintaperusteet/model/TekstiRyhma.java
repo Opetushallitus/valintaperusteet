@@ -1,24 +1,41 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
-import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.*;
 
-@Entity
-@Table(name = "tekstiryhma")
-@Cacheable(true)
-public class TekstiRyhma extends BaseEntity {
-  @OneToMany(
-      fetch = FetchType.LAZY,
-      mappedBy = "ryhma",
-      cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-  private Set<LokalisoituTeksti> tekstit = new HashSet<LokalisoituTeksti>();
+public class TekstiRyhma {
+
+  private TekstiRyhmaId id;
+
+  private long version;
+
+  private Set<LokalisoituTeksti> tekstit;
+
+  public TekstiRyhma(TekstiRyhmaId id, long version, Set<LokalisoituTeksti> tekstit) {
+    this.id = id;
+    this.version = version;
+    this.tekstit = tekstit;
+  }
+
+  public TekstiRyhmaId getId() {
+    return id;
+  }
 
   public Set<LokalisoituTeksti> getTekstit() {
     return tekstit;
   }
 
-  public void setTekstit(Set<LokalisoituTeksti> tekstit) {
-    this.tekstit = tekstit;
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    TekstiRyhma that = (TekstiRyhma) o;
+
+    return id.equals(that.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return id.hashCode();
   }
 }

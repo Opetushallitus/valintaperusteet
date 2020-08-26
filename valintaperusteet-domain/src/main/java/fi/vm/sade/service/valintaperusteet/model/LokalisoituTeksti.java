@@ -1,47 +1,59 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
+import fi.vm.sade.service.valintaperusteet.dto.LokalisoituTekstiDTO;
 import fi.vm.sade.service.valintaperusteet.dto.model.Kieli;
-import javax.persistence.*;
 
-@Entity
-@Table(name = "lokalisoitu_teksti")
-@Cacheable(true)
-public class LokalisoituTeksti extends BaseEntity {
+public class LokalisoituTeksti {
+  private LokalisoituTekstiId id;
 
-  private static final long serialVersionUID = 1L;
+  private long version;
 
-  @Column(name = "teksti", nullable = false)
   private String teksti;
 
-  @Enumerated(EnumType.STRING)
-  @Column(name = "kieli", nullable = false)
   private Kieli kieli;
 
-  @JoinColumn(name = "tekstiryhma_id", nullable = false)
-  @ManyToOne(fetch = FetchType.LAZY, optional = false)
-  private TekstiRyhma ryhma;
+  public LokalisoituTeksti(LokalisoituTekstiId id,
+                           long version,
+                           String teksti,
+                           Kieli kieli) {
+    this.id = id;
+    this.version = version;
+    this.teksti = teksti;
+    this.kieli = kieli;
+  }
+
+  public LokalisoituTeksti(LokalisoituTekstiId id,
+                           LokalisoituTekstiDTO dto) {
+    this.id = id;
+    this.version = 0;
+    this.teksti = dto.getTeksti();
+    this.kieli = dto.getKieli();
+  }
+
+  public LokalisoituTekstiId getId() {
+    return id;
+  }
 
   public String getTeksti() {
     return teksti;
-  }
-
-  public void setTeksti(String teksti) {
-    this.teksti = teksti;
   }
 
   public Kieli getKieli() {
     return kieli;
   }
 
-  public void setKieli(Kieli kieli) {
-    this.kieli = kieli;
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    LokalisoituTeksti that = (LokalisoituTeksti) o;
+
+    return id.equals(that.id);
   }
 
-  public TekstiRyhma getRyhma() {
-    return ryhma;
-  }
-
-  public void setRyhma(TekstiRyhma ryhma) {
-    this.ryhma = ryhma;
+  @Override
+  public int hashCode() {
+    return id.hashCode();
   }
 }

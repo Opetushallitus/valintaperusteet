@@ -76,50 +76,14 @@ public class LaskentakaavaResourceTest {
   }
 
   private Response insert(final LaskentakaavaCreateDTO kaava) {
-    return laskentakaavaResource.insert(new LaskentakaavaInsertDTO(kaava, null, null), request);
-  }
-
-  @Test
-  public void testValidoi() throws Exception {
-    LaskentakaavaDTO laskentakaava = new LaskentakaavaDTO();
-    laskentakaava.setOnLuonnos(false);
-    FunktiokutsuDTO kutsu =
-        createSumma(createLukuarvo("viisi"), createLukuarvo("10.0"), createLukuarvo("100.0"));
-
-    LokalisoituTekstiDTO kuvaus = new LokalisoituTekstiDTO();
-    kuvaus.setKieli(Kieli.FI);
-    kuvaus.setTeksti("Teksti");
-
-    TekstiRyhmaDTO ryhma = new TekstiRyhmaDTO();
-    ryhma.getTekstit().add(kuvaus);
-
-    ArvokonvertteriparametriDTO ak = new ArvokonvertteriparametriDTO();
-    ak.setArvo("2");
-    ak.setPaluuarvo("1");
-    ak.setHylkaysperuste("true");
-    ak.setKuvaukset(ryhma);
-
-    kutsu.getArvokonvertteriparametrit().add(ak);
-
-    laskentakaava.setFunktiokutsu(kutsu);
-
-    final String json = mapper.writeValueAsString(laskentakaava);
-    LaskentakaavaDTO fromJson = mapper.readValue(json, LaskentakaavaDTO.class);
-
-    LaskentakaavaDTO validoitu = laskentakaavaResource.validoi(fromJson);
-
-    String validoituJson = mapper.writeValueAsString(validoitu);
-
-    LaskentakaavaDTO validoituFromJson = mapper.readValue(validoituJson, LaskentakaavaDTO.class);
-
-    Laskentakaava validoituFromDTO = modelMapper.map(validoituFromJson, Laskentakaava.class);
+    return laskentakaavaResource.insert(new LaskentakaavaInsertDTO(kaava, null, "oid8"), request);
   }
 
   @Test
   public void testFindAll() {
     List<LaskentakaavaListDTO> kaavat = laskentakaavaResource.kaavat(false, null, null, null);
 
-    assertEquals(26, kaavat.size());
+    assertEquals(25, kaavat.size());
 
     for (LaskentakaavaListDTO lk : kaavat) {
       assertFalse(lk.getOnLuonnos());
@@ -183,16 +147,23 @@ public class LaskentakaavaResourceTest {
   public void testSiirra() throws Exception {
     Mockito.when(request.getSession(false)).thenReturn(session);
     final LaskentakaavaDTO inserted = kaavaFromResponse(insert(newLaskentakaava("kaava1")));
-    LaskentakaavaSiirraDTO siirrettava = modelMapper.map(inserted, LaskentakaavaSiirraDTO.class);
-    siirrettava.setUusinimi("UusiNimi");
-    siirrettava.setValintaryhmaOid("oid2");
+    LaskentakaavaSiirraDTO siirrettava = new LaskentakaavaSiirraDTO(
+            inserted.getOnLuonnos(),
+            inserted.getNimi(),
+            inserted.getKuvaus(),
+            inserted.getFunktiokutsu(),
+            "UusiNimi",
+            "oid2",
+            null
+    );
     final LaskentakaavaDTO siirretty =
         kaavaFromResponse(laskentakaavaResource.siirra(siirrettava, request));
     tarkistaFunktiokutsunNimi(siirretty);
     tarkistaFunktiokutsunNimi(laskentakaavaResource.kaava(siirretty.getId(), true));
-    final List<LaskentakaavaListDTO> kaavatUudellaValintaryhmalla =
-        laskentakaavaResource.kaavat(false, "oid2", null, null);
-    assertEquals(1, kaavatUudellaValintaryhmalla.size());
+    assertTrue(
+            laskentakaavaResource.kaavat(false, "oid2", null, null).stream()
+                    .anyMatch(lkDto -> lkDto.getId().equals(siirretty.getId()))
+    );
   }
 
   private void tarkistaFunktiokutsunNimi(final LaskentakaavaDTO kaava) {
@@ -210,7 +181,7 @@ public class LaskentakaavaResourceTest {
             null,
             null,
             fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi.TOTUUSARVOFUNKTIO);
-    assertEquals(4, kaavat.size());
+    assertEquals(3, kaavat.size());
 
     for (LaskentakaavaListDTO kaava : kaavat) {
       assertEquals(

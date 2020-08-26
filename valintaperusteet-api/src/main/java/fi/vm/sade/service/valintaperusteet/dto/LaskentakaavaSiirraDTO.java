@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
+import fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -16,6 +17,19 @@ public class LaskentakaavaSiirraDTO extends LaskentakaavaCreateDTO {
 
   @ApiModelProperty(value = "Hakukohde OID, jolle laskentakaava lisätään")
   private String hakukohdeOid;
+
+  public LaskentakaavaSiirraDTO(Boolean onLuonnos,
+                                String nimi,
+                                String kuvaus,
+                                FunktiokutsuDTO funktiokutsu,
+                                String uusinimi,
+                                String valintaryhmaOid,
+                                String hakukohdeOid) {
+    super(onLuonnos, nimi, kuvaus, funktiokutsu);
+    this.uusinimi = uusinimi;
+    this.valintaryhmaOid = valintaryhmaOid;
+    this.hakukohdeOid = hakukohdeOid;
+  }
 
   public String getValintaryhmaOid() {
     return valintaryhmaOid;

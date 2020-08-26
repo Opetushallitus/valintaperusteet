@@ -50,6 +50,36 @@ public class ValintaperusteetFunktiokutsuDTO {
 
   private Long id;
 
+  public ValintaperusteetFunktiokutsuDTO() { }
+
+  public ValintaperusteetFunktiokutsuDTO(Long id,
+                                         Funktionimi funktionimi,
+                                         String tulosTunniste,
+                                         String tulosTekstiFi,
+                                         String tulosTekstiSv,
+                                         String tulosTekstiEn,
+                                         Boolean tallennaTulos,
+                                         boolean omaopintopolku,
+                                         Set<ArvokonvertteriparametriDTO> arvokonvertteriparametrit,
+                                         Set<ArvovalikonvertteriparametriDTO> arvovalikonvertteriparametrit,
+                                         Set<SyoteparametriDTO> syoteparametrit,
+                                         Set<ValintaperusteetFunktioargumenttiDTO> funktioargumentit,
+                                         Set<ValintaperusteViiteDTO> valintaperusteviitteet) {
+    this.id = id;
+    this.funktionimi = funktionimi;
+    this.tulosTunniste = tulosTunniste;
+    this.tulosTekstiFi = tulosTekstiFi;
+    this.tulosTekstiSv = tulosTekstiSv;
+    this.tulosTekstiEn = tulosTekstiEn;
+    this.tallennaTulos = tallennaTulos;
+    this.omaopintopolku = omaopintopolku;
+    this.arvokonvertteriparametrit = arvokonvertteriparametrit;
+    this.arvovalikonvertteriparametrit = arvovalikonvertteriparametrit;
+    this.syoteparametrit = syoteparametrit;
+    this.funktioargumentit = funktioargumentit;
+    this.valintaperusteviitteet = valintaperusteviitteet;
+  }
+
   public Funktionimi getFunktionimi() {
     return funktionimi;
   }

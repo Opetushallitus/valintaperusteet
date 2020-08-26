@@ -16,8 +16,8 @@ public class JarjestyskriteeriKopioija implements Kopioija<Jarjestyskriteeri> {
     if (from.getAktiivinen() != null) {
       to.setAktiivinen(from.getAktiivinen());
     }
-    if (from.getLaskentakaava() != null) {
-      to.setLaskentakaava(from.getLaskentakaava());
+    if (from.getLaskentakaavaId() != null) {
+      to.setLaskentakaavaId(from.getLaskentakaavaId());
     }
     if (StringUtils.isNotEmpty(from.getMetatiedot())) {
       to.setMetatiedot(from.getMetatiedot());
@@ -32,8 +32,8 @@ public class JarjestyskriteeriKopioija implements Kopioija<Jarjestyskriteeri> {
     if (kopio.getAktiivinen().equals(alkuperainenMaster.getAktiivinen())) {
       kopio.setAktiivinen(paivitettyMaster.getAktiivinen());
     }
-    if (kopio.getLaskentakaava().equals(alkuperainenMaster.getLaskentakaava())) {
-      kopio.setLaskentakaava(paivitettyMaster.getLaskentakaava());
+    if (kopio.getLaskentakaavaId().equals(alkuperainenMaster.getLaskentakaavaId())) {
+      kopio.setLaskentakaavaId(paivitettyMaster.getLaskentakaavaId());
     }
     kopio.setMetatiedot(paivitettyMaster.getMetatiedot());
   }

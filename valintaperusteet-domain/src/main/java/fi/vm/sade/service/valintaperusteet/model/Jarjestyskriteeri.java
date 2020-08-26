@@ -18,9 +18,8 @@ public class Jarjestyskriteeri extends BaseEntity
   @ManyToOne(optional = false)
   private Valintatapajono valintatapajono;
 
-  @JoinColumn(name = "laskentakaava_id", nullable = false)
-  @ManyToOne(optional = false)
-  private Laskentakaava laskentakaava;
+  @Column(name = "laskentakaava_id", nullable = false)
+  private Long laskentakaavaId;
 
   @Column(name = "metatiedot")
   private String metatiedot;
@@ -50,14 +49,6 @@ public class Jarjestyskriteeri extends BaseEntity
     this.valintatapajono = valintatapajono;
   }
 
-  public Laskentakaava getLaskentakaava() {
-    return laskentakaava;
-  }
-
-  public void setLaskentakaava(Laskentakaava laskentakaava) {
-    this.laskentakaava = laskentakaava;
-  }
-
   public String getMetatiedot() {
     return metatiedot;
   }
@@ -75,7 +66,11 @@ public class Jarjestyskriteeri extends BaseEntity
   }
 
   public Long getLaskentakaavaId() {
-    return laskentakaava.getId();
+    return laskentakaavaId;
+  }
+
+  public void setLaskentakaavaId(Long laskentakaavaId) {
+    this.laskentakaavaId = laskentakaavaId;
   }
 
   public String getValintatapajonoId() {

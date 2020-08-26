@@ -18,6 +18,18 @@ public class ArvokonvertteriparametriDTO {
   @ApiModelProperty(value = "Hylkäysperusteen kuvaukset")
   private TekstiRyhmaDTO kuvaukset = new TekstiRyhmaDTO();
 
+  public ArvokonvertteriparametriDTO() { }
+
+  public ArvokonvertteriparametriDTO(String paluuarvo,
+                                     String arvo,
+                                     String hylkaysperuste,
+                                     TekstiRyhmaDTO kuvaukset) {
+    this.paluuarvo = paluuarvo;
+    this.arvo = arvo;
+    this.hylkaysperuste = hylkaysperuste;
+    this.kuvaukset = kuvaukset;
+  }
+
   public String getPaluuarvo() {
     return paluuarvo;
   }

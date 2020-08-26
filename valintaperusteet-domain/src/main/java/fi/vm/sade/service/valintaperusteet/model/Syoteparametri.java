@@ -1,42 +1,51 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
-import javax.persistence.*;
+import java.util.Objects;
 
-@Entity
-@Table(name = "syoteparametri")
-@Cacheable(true)
-public class Syoteparametri extends BaseEntity {
-  @Column(name = "avain", nullable = false)
+public class Syoteparametri {
+  private SyoteparametriId id;
+
+  private long version;
+
   private String avain;
 
-  @Column(name = "arvo", nullable = false)
   private String arvo;
 
-  @JoinColumn(name = "funktiokutsu_id", nullable = false)
-  @ManyToOne(optional = false)
-  private Funktiokutsu funktiokutsu;
+  public Syoteparametri(SyoteparametriId id,
+                        long version,
+                        String avain,
+                        String arvo) {
+    Objects.requireNonNull(arvo, "arvo tulee olla asetettu");
+    this.id = id;
+    this.version = version;
+    this.avain = avain;
+    this.arvo = arvo;
+  }
+
+  public SyoteparametriId getId() {
+    return id;
+  }
 
   public String getAvain() {
     return avain;
-  }
-
-  public void setAvain(String avain) {
-    this.avain = avain;
   }
 
   public String getArvo() {
     return arvo;
   }
 
-  public void setArvo(String arvo) {
-    this.arvo = arvo;
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    Syoteparametri that = (Syoteparametri) o;
+
+    return id.equals(that.id);
   }
 
-  public Funktiokutsu getFunktiokutsu() {
-    return funktiokutsu;
-  }
-
-  public void setFunktiokutsu(Funktiokutsu funktiokutsu) {
-    this.funktiokutsu = funktiokutsu;
+  @Override
+  public int hashCode() {
+    return id.hashCode();
   }
 }

@@ -32,8 +32,6 @@ public class HakukohdeServiceImpl implements HakukohdeService {
 
   @Autowired private LaskentakaavaService laskentakaavaService;
 
-  @Autowired private LaskentakaavaDAO laskentakaavaDAO;
-
   @Autowired private OidService oidService;
 
   @Autowired private ValintaperusteetModelMapper modelMapper;
@@ -158,6 +156,7 @@ public class HakukohdeServiceImpl implements HakukohdeService {
   }
 
   @Override
+  @Transactional
   public HakukohdeViite siirraHakukohdeValintaryhmaan(
       String hakukohdeOid, String valintaryhmaOid, boolean siirretaanManuaalisesti) {
     HakukohdeViite hakukohdeViite = haeHakukohdeViite(hakukohdeOid);
@@ -177,15 +176,9 @@ public class HakukohdeServiceImpl implements HakukohdeService {
       for (ValinnanVaihe vv : valinnanVaiheet) {
         vv.setHakukohdeViite(null);
       }
-      List<Laskentakaava> kaavat =
-          laskentakaavaService.findKaavas(true, null, hakukohdeViite.getOid(), null);
       // Poistetaan hakukohteen kaavoilta viittaus vanhaan hakukohteeseen
-      kaavat.stream()
-          .forEach(
-              kaava -> {
-                kaava.setHakukohde(null);
-                laskentakaavaDAO.update(kaava);
-              });
+      List<LaskentakaavaId> kaavat =
+              laskentakaavaService.irrotaHakukohteesta(new HakukohdeViiteId(hakukohdeViite.getId()));
       // Poistetaan vanha hakukohde
       deleteByOid(hakukohdeOid);
       // Luodaan uusi hakukohde
@@ -194,12 +187,8 @@ public class HakukohdeServiceImpl implements HakukohdeService {
               modelMapper.map(hakukohdeViite, HakukohdeViiteCreateDTO.class),
               valintaryhma != null ? valintaryhma.getOid() : null);
       // Lisätään kaavat takaisin uudelleen luodulle hakukohteelle
-      kaavat.stream()
-          .forEach(
-              kaava -> {
-                kaava.setHakukohde(lisatty);
-                laskentakaavaDAO.update(kaava);
-              });
+      laskentakaavaService.liitaHakukohteeseen(new HakukohdeViiteId(lisatty.getId()), kaavat);
+
       lisatty.setManuaalisestiSiirretty(siirretaanManuaalisesti);
       if (hakukohdeViite.getHakukohdekoodi() != null) {
         Hakukohdekoodi koodi = hakukohdeViite.getHakukohdekoodi();

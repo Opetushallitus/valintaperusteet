@@ -258,8 +258,7 @@ public class ValintatapajonoResourceImpl {
       @Context HttpServletRequest request) {
     JarjestyskriteeriDTO insert =
         modelMapper.map(
-            jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(
-                valintatapajonoOid, jk.getJarjestyskriteeri(), null, jk.getLaskentakaavaId()),
+            jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(valintatapajonoOid, jk),
             JarjestyskriteeriDTO.class);
     AuditLog.log(
         AUDIT,

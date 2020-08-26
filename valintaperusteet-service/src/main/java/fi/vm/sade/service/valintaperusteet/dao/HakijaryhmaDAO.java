@@ -13,6 +13,4 @@ public interface HakijaryhmaDAO extends JpaDAO<Hakijaryhma, Long> {
   List<Hakijaryhma> findByValintaryhma(String oid);
 
   Hakijaryhma haeValintaryhmanViimeinenHakijaryhma(String valintaryhmaOid);
-
-  List<Hakijaryhma> findByLaskentakaava(long id);
 }

@@ -1,136 +1,121 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
 import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
-import javax.persistence.*;
 
-@Table(
-    name = "valintaperuste_viite",
-    uniqueConstraints =
-        @UniqueConstraint(
-            name = "UK_valintaperuste_viite_001",
-            columnNames = {"funktiokutsu_id", "indeksi"}))
-@Entity
-@Cacheable(true)
-public class ValintaperusteViite extends BaseEntity implements Comparable<ValintaperusteViite> {
-  private static final long serialVersionUID = 1L;
-
+public class ValintaperusteViite implements Comparable<ValintaperusteViite> {
   public static final String OSALLISTUMINEN_POSTFIX = "-OSALLISTUMINEN";
 
-  @Column(name = "tunniste", nullable = false)
+  private ValintaperusteViiteId id;
+
+  private long version;
+
   private String tunniste;
 
-  @Column(name = "kuvaus")
   private String kuvaus;
 
-  @Enumerated(EnumType.STRING)
-  @Column(name = "lahde", nullable = false)
   private Valintaperustelahde lahde;
 
-  @JoinColumn(name = "funktiokutsu_id", nullable = false)
-  @ManyToOne(optional = false)
-  private Funktiokutsu funktiokutsu;
-
-  @Column(name = "on_pakollinen", nullable = false)
-  private Boolean onPakollinen;
+  private boolean onPakollinen;
 
   // Jos valintaperusteen lähde on hakukohde, voidaan epäsuoralla
   // viittauksella hakea
   // hakukohteelta tunniste, jolla viitataan hakemuksen arvoon
-  @Column(name = "epasuora_viittaus", nullable = true)
-  private Boolean epasuoraViittaus;
+  private boolean epasuoraViittaus;
 
-  @Column(name = "indeksi", nullable = false)
-  private Integer indeksi;
+  private int indeksi;
 
-  @JoinColumn(name = "tekstiryhma_id", nullable = true)
-  @ManyToOne(fetch = FetchType.LAZY, optional = true)
   private TekstiRyhma kuvaukset;
 
-  // VT-854 mahdollistetaan syötettävien arvojen pistesyöttö ilman laskentaa
-  @Column(name = "vaatii_osallistumisen", nullable = false)
-  private Boolean vaatiiOsallistumisen = true;
+  private boolean vaatiiOsallistumisen;
 
-  @Column(name = "syotettavissa_kaikille", nullable = false)
-  private Boolean syotettavissaKaikille = true;
+  private boolean syotettavissaKaikille;
 
-  @JoinColumn(name = "syotettavanarvontyyppi_id", nullable = true)
-  @ManyToOne(fetch = FetchType.EAGER, optional = true)
   private Syotettavanarvontyyppi syotettavanarvontyyppi;
 
-  @Column(name = "tilastoidaan", nullable = true)
-  private Boolean tilastoidaan = false;
+  private boolean tilastoidaan;
+
+  public ValintaperusteViite(ValintaperusteViiteId id,
+                             long version,
+                             String tunniste,
+                             String kuvaus,
+                             Valintaperustelahde lahde,
+                             boolean onPakollinen,
+                             boolean epasuoraViittaus,
+                             int indeksi,
+                             TekstiRyhma kuvaukset,
+                             boolean vaatiiOsallistumisen,
+                             boolean syotettavissaKaikille,
+                             Syotettavanarvontyyppi syotettavanarvontyyppi,
+                             boolean tilastoidaan) {
+    this.id = id;
+    this.version = version;
+    this.tunniste = tunniste;
+    this.kuvaus = kuvaus;
+    this.lahde = lahde;
+    this.onPakollinen = onPakollinen;
+    this.epasuoraViittaus = epasuoraViittaus;
+    this.indeksi = indeksi;
+    this.kuvaukset = kuvaukset;
+    this.vaatiiOsallistumisen = vaatiiOsallistumisen;
+    this.syotettavissaKaikille = syotettavissaKaikille;
+    this.syotettavanarvontyyppi = syotettavanarvontyyppi;
+    this.tilastoidaan = tilastoidaan;
+  }
+
+  public ValintaperusteViiteId getId() {
+    return id;
+  }
 
   public String getTunniste() {
     return tunniste;
-  }
-
-  public void setTunniste(String tunniste) {
-    this.tunniste = tunniste;
   }
 
   public String getKuvaus() {
     return kuvaus;
   }
 
-  public void setKuvaus(String kuvaus) {
-    this.kuvaus = kuvaus;
-  }
-
   public Valintaperustelahde getLahde() {
     return lahde;
   }
 
-  public void setLahde(Valintaperustelahde lahde) {
-    this.lahde = lahde;
-  }
-
-  public Funktiokutsu getFunktiokutsu() {
-    return funktiokutsu;
-  }
-
-  public void setFunktiokutsu(Funktiokutsu funktiokutsu) {
-    this.funktiokutsu = funktiokutsu;
-  }
-
-  public Boolean getOnPakollinen() {
+  public boolean isOnPakollinen() {
     return onPakollinen;
   }
 
-  public void setOnPakollinen(Boolean onPakollinen) {
-    this.onPakollinen = onPakollinen;
-  }
-
-  public Boolean getEpasuoraViittaus() {
+  public boolean isEpasuoraViittaus() {
     return epasuoraViittaus;
   }
 
-  public void setEpasuoraViittaus(boolean epasuoraViittaus) {
-    this.epasuoraViittaus = epasuoraViittaus;
-  }
-
-  public Integer getIndeksi() {
+  public int getIndeksi() {
     return indeksi;
   }
 
-  public void setIndeksi(Integer indeksi) {
-    this.indeksi = indeksi;
+  public TekstiRyhma getKuvaukset() {
+    return kuvaukset;
   }
 
-  @Transient
-  public String getOsallistuminenTunniste() {
-    String osallistuminenTunniste = null;
+  public boolean isVaatiiOsallistumisen() {
+    return vaatiiOsallistumisen;
+  }
 
-    switch (lahde) {
-      case SYOTETTAVA_ARVO:
-        if (tunniste != null) {
-          osallistuminenTunniste = tunniste + OSALLISTUMINEN_POSTFIX;
-        }
-        break;
-      default:
-        break;
+  public boolean isSyotettavissaKaikille() {
+    return syotettavissaKaikille;
+  }
+
+  public Syotettavanarvontyyppi getSyotettavanarvontyyppi() {
+    return syotettavanarvontyyppi;
+  }
+
+  public boolean isTilastoidaan() {
+    return tilastoidaan;
+  }
+
+  public String getOsallistuminenTunniste() {
+    if (lahde == Valintaperustelahde.SYOTETTAVA_ARVO && tunniste != null) {
+      return tunniste + OSALLISTUMINEN_POSTFIX;
     }
 
-    return osallistuminenTunniste;
+    return null;
   }
 
   @Override
@@ -138,43 +123,18 @@ public class ValintaperusteViite extends BaseEntity implements Comparable<Valint
     return indeksi - o.indeksi;
   }
 
-  public TekstiRyhma getKuvaukset() {
-    return kuvaukset;
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    ValintaperusteViite that = (ValintaperusteViite) o;
+
+    return id.equals(that.id);
   }
 
-  public void setKuvaukset(TekstiRyhma kuvaukset) {
-    this.kuvaukset = kuvaukset;
-  }
-
-  public Boolean getVaatiiOsallistumisen() {
-    return vaatiiOsallistumisen;
-  }
-
-  public void setVaatiiOsallistumisen(Boolean vaatiiOsallistumisen) {
-    this.vaatiiOsallistumisen = vaatiiOsallistumisen;
-  }
-
-  public Boolean getSyotettavissaKaikille() {
-    return syotettavissaKaikille;
-  }
-
-  public void setSyotettavissaKaikille(Boolean syotettavissaKaikille) {
-    this.syotettavissaKaikille = syotettavissaKaikille;
-  }
-
-  public Syotettavanarvontyyppi getSyotettavanarvontyyppi() {
-    return syotettavanarvontyyppi;
-  }
-
-  public void setSyotettavanarvontyyppi(Syotettavanarvontyyppi syotettavanarvontyyppi) {
-    this.syotettavanarvontyyppi = syotettavanarvontyyppi;
-  }
-
-  public Boolean getTilastoidaan() {
-    return tilastoidaan;
-  }
-
-  public void setTilastoidaan(boolean tilastoidaan) {
-    this.tilastoidaan = tilastoidaan;
+  @Override
+  public int hashCode() {
+    return id.hashCode();
   }
 }

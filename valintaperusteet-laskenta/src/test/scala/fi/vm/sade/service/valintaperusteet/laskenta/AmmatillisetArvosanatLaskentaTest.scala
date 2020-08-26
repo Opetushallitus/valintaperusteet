@@ -1,6 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.laskenta
 
 import java.time.LocalDate
+import java.util
 import java.util.{HashMap => JHashMap}
 import java.util.{List => JList}
 import java.util.{Map => JMap}
@@ -12,11 +13,7 @@ import fi.vm.sade.kaava.Laskentadomainkonvertteri
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi.JOS_LAISKA_PARAMETRI
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakukohde
-import fi.vm.sade.service.valintaperusteet.model.Arvokonvertteriparametri
-import fi.vm.sade.service.valintaperusteet.model.Arvovalikonvertteriparametri
-import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu
-import fi.vm.sade.service.valintaperusteet.model.Syoteparametri
-import fi.vm.sade.service.valintaperusteet.model.TekstiRyhma
+import fi.vm.sade.service.valintaperusteet.model.{Arvokonvertteriparametri, Arvovalikonvertteriparametri, Funktiokutsu, LokalisoituTeksti, Syoteparametri, TekstiRyhma}
 import io.circe.Json
 import io.circe.parser
 import org.scalatest.funsuite.AnyFunSuite
@@ -81,10 +78,14 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
   }
 
   test("Tutkinnon yhteisten tutkinnon osien arvosanoja voi konvertoida") {
-    val konvertteriParametrit = new Arvokonvertteriparametri
-    konvertteriParametrit.setArvo("4")
-    konvertteriParametrit.setPaluuarvo("15")
-    konvertteriParametrit.setHylkaysperuste(Boolean.box(false).toString)
+    val konvertteriParametrit = new Arvokonvertteriparametri(
+      null,
+      0,
+      "15",
+      "4",
+      "false",
+      new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
+    )
 
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(
       createHaeAmmatillinenYtoArvosanaKutsu(
@@ -424,13 +425,13 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
             paluuarvo = "2015",
             arvo = "ops",
             hylkaysperuste = "false",
-            new TekstiRyhma()
+            new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
           ),
           LaskentaTestUtil.Arvokonvertteriparametri(
             paluuarvo = "2017",
             arvo = "reformi",
             hylkaysperuste = "false",
-            new TekstiRyhma()
+            new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
           )
         )
       )
@@ -448,13 +449,13 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
             paluuarvo = "5",
             arvo = "arviointiasteikkoammatillinen15",
             hylkaysperuste = "false",
-            new TekstiRyhma()
+            new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
           ),
           LaskentaTestUtil.Arvokonvertteriparametri(
             paluuarvo = "3",
             arvo = "arviointiasteikkoammatillinent1k3",
             hylkaysperuste = "false",
-            new TekstiRyhma()
+            new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
           )
         )
       )
@@ -496,13 +497,13 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
             paluuarvo = "2015",
             arvo = "ops",
             hylkaysperuste = "false",
-            new TekstiRyhma()
+            new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
           ),
           LaskentaTestUtil.Arvokonvertteriparametri(
             paluuarvo = "2017",
             arvo = "reformi",
             hylkaysperuste = "false",
-            new TekstiRyhma()
+            new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
           )
         )
       )
@@ -523,9 +524,12 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
     }
 
     def jos(totuusarvo: Funktiokutsu, haara1: Funktiokutsu, haara2: Funktiokutsu): Funktiokutsu = {
-      val josLaiskaksi: Syoteparametri = new Syoteparametri()
-      josLaiskaksi.setAvain(JOS_LAISKA_PARAMETRI)
-      josLaiskaksi.setArvo(true.toString)
+      val josLaiskaksi: Syoteparametri = new Syoteparametri(
+        null,
+        0,
+        JOS_LAISKA_PARAMETRI,
+        "true"
+      )
       LaskentaTestUtil.Funktiokutsu(
         nimi = Funktionimi.JOS,
         funktioargumentit = List(totuusarvo, haara1, haara2),
@@ -552,7 +556,7 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
         min = min,
         max = max,
         palautaHaettuArvo = "false",
-        kuvaukset = new TekstiRyhma()
+        kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
       )
     }
 
@@ -666,7 +670,7 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
         paluuarvo = paluuarvo,
         arvo = arvo,
         hylkaysperuste = "false",
-        new TekstiRyhma()
+        new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
       )
     }
 

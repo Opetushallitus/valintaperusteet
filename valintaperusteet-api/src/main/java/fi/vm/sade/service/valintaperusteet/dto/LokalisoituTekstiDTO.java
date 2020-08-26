@@ -28,4 +28,11 @@ public class LokalisoituTekstiDTO {
   public void setTeksti(String teksti) {
     this.teksti = teksti;
   }
+
+  public LokalisoituTekstiDTO() { }
+
+  public LokalisoituTekstiDTO(Kieli kieli, String teksti) {
+    this.kieli = kieli;
+    this.teksti = teksti;
+  }
 }

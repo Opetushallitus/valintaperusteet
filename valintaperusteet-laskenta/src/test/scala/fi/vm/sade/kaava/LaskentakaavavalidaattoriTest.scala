@@ -4,7 +4,16 @@ import java.util
 
 import fi.vm.sade.kaava.LaskentaTestUtil.{Funktiokutsu, _}
 import fi.vm.sade.service.valintaperusteet.dto.model.{Funktionimi, Valintaperustelahde}
-import fi.vm.sade.service.valintaperusteet.model.{Funktioargumentti, TekstiRyhma}
+import fi.vm.sade.service.valintaperusteet.model.{
+  Arvokonvertteriparametri => JArvokonvertteriparametri,
+  Arvovalikonvertteriparametri => JArvovalikonvertteriparametri,
+  Funktioargumentti,
+  Funktiokutsu => JFunktiokutsu,
+  LokalisoituTeksti,
+  Syoteparametri => JSyoteparametri,
+  TekstiRyhma,
+  ValintaperusteViite => JValintaperusteViite
+}
 import fi.vm.sade.service.valintaperusteet.service.validointi.virhe.{Validointivirhe, Virhetyyppi}
 import org.scalatest.funsuite.AnyFunSuite
 
@@ -65,7 +74,7 @@ class LaskentakaavavalidaattoriTest extends AnyFunSuite {
         max = "101.0",
         palautaHaettuArvo = "false",
         hylkaysperuste = "false",
-        kuvaukset = new TekstiRyhma()
+        kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
       ),
       Arvovalikonvertteriparametri(
         paluuarvo = "50.0",
@@ -73,7 +82,7 @@ class LaskentakaavavalidaattoriTest extends AnyFunSuite {
         max = "350.0",
         palautaHaettuArvo = "false",
         hylkaysperuste = "false",
-        kuvaukset = new TekstiRyhma()
+        kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
       )
     )
   )
@@ -87,14 +96,14 @@ class LaskentakaavavalidaattoriTest extends AnyFunSuite {
         max = "101.0",
         palautaHaettuArvo = "true",
         hylkaysperuste = "false",
-        kuvaukset = new TekstiRyhma()
+        kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
       ),
       Arvovalikonvertteriparametri(
         min = "101.0",
         max = "350.0",
         palautaHaettuArvo = "true",
         hylkaysperuste = "false",
-        kuvaukset = new TekstiRyhma()
+        kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
       )
     )
   )
@@ -107,13 +116,13 @@ class LaskentakaavavalidaattoriTest extends AnyFunSuite {
         paluuarvo = "5.0",
         arvo = "100.0",
         hylkaysperuste = "false",
-        kuvaukset = new TekstiRyhma()
+        kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
       ),
       Arvokonvertteriparametri(
         paluuarvo = "10.0",
         arvo = "200.0",
         hylkaysperuste = "false",
-        kuvaukset = new TekstiRyhma()
+        kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
       )
     )
   )
@@ -380,13 +389,13 @@ class LaskentakaavavalidaattoriTest extends AnyFunSuite {
           paluuarvo = "40",
           arvo = "kymmenen",
           hylkaysperuste = "false",
-          kuvaukset = new TekstiRyhma()
+          kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
         ),
         Arvokonvertteriparametri(
           paluuarvo = "50.0",
           arvo = "100.0",
           hylkaysperuste = "false",
-          kuvaukset = new TekstiRyhma()
+          kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
         )
       )
     )
@@ -409,13 +418,13 @@ class LaskentakaavavalidaattoriTest extends AnyFunSuite {
           paluuarvo = "",
           arvo = "",
           hylkaysperuste = "false",
-          kuvaukset = new TekstiRyhma()
+          kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
         ),
         Arvokonvertteriparametri(
           paluuarvo = "50",
           arvo = "",
           hylkaysperuste = "false",
-          kuvaukset = new TekstiRyhma()
+          kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
         )
       )
     )
@@ -463,8 +472,8 @@ class LaskentakaavavalidaattoriTest extends AnyFunSuite {
       valintaperustetunniste =
         List(ValintaperusteViite(onPakollinen = true, tunniste = "paasykoepisteet")),
       arvokonvertterit = List(
-        Arvokonvertteriparametri("10.0", "23.0", "false", new TekstiRyhma()),
-        Arvokonvertteriparametri("5.0", "13.0", "false", new TekstiRyhma())
+        Arvokonvertteriparametri("10.0", "23.0", "false", new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())),
+        Arvokonvertteriparametri("5.0", "13.0", "false", new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]()))
       )
     )
 
@@ -484,7 +493,7 @@ class LaskentakaavavalidaattoriTest extends AnyFunSuite {
           max = "10.0",
           palautaHaettuArvo = "true",
           hylkaysperuste = "false",
-          kuvaukset = new TekstiRyhma()
+          kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
         ),
         Arvovalikonvertteriparametri(
           min = "10.0",
@@ -492,7 +501,7 @@ class LaskentakaavavalidaattoriTest extends AnyFunSuite {
           paluuarvo = "100.0",
           palautaHaettuArvo = "false",
           hylkaysperuste = "false",
-          kuvaukset = new TekstiRyhma()
+          kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
         )
       )
     )
@@ -573,7 +582,7 @@ class LaskentakaavavalidaattoriTest extends AnyFunSuite {
           paluuarvo = "10.0",
           arvo = "L",
           hylkaysperuste = "false",
-          kuvaukset = new TekstiRyhma()
+          kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
         )
       )
     )
@@ -598,7 +607,7 @@ class LaskentakaavavalidaattoriTest extends AnyFunSuite {
           paluuarvo = "10.0",
           arvo = "L",
           hylkaysperuste = "false",
-          kuvaukset = new TekstiRyhma()
+          kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
         )
       )
     )
@@ -636,7 +645,7 @@ class LaskentakaavavalidaattoriTest extends AnyFunSuite {
           paluuarvo = "true",
           arvo = "L",
           hylkaysperuste = "false",
-          kuvaukset = new TekstiRyhma()
+          kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
         )
       )
     )
@@ -661,7 +670,7 @@ class LaskentakaavavalidaattoriTest extends AnyFunSuite {
           paluuarvo = "true",
           arvo = "L",
           hylkaysperuste = "false",
-          kuvaukset = new TekstiRyhma()
+          kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
         )
       )
     )
@@ -716,7 +725,7 @@ class LaskentakaavavalidaattoriTest extends AnyFunSuite {
           paluuarvo = "5.0",
           arvo = "10.0",
           hylkaysperuste = "true",
-          kuvaukset = new TekstiRyhma()
+          kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
         )
       ),
       arvovalikonvertterit = List(
@@ -726,7 +735,7 @@ class LaskentakaavavalidaattoriTest extends AnyFunSuite {
           max = "100.0",
           palautaHaettuArvo = "false",
           hylkaysperuste = "false",
-          kuvaukset = new TekstiRyhma()
+          kuvaukset = new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
         )
       ),
       valintaperustetunniste =
@@ -801,25 +810,45 @@ class LaskentakaavavalidaattoriTest extends AnyFunSuite {
   }
 
   test("Funktiokutsu with argument null values") {
-    val funktiokutsu = Funktiokutsu(nimi = Funktionimi.SUMMA)
+    val fargs = new util.LinkedList[Funktioargumentti]()
+    fargs.add(new Funktioargumentti(
+      null,
+      0,
+      validiLukuarvo1,
+      null,
+      1
+    ))
+    fargs.add(new Funktioargumentti(
+      null,
+      0,
+      validiLukuarvo1,
+      null,
+      2
+    ))
+    fargs.add(new Funktioargumentti(
+      null,
+      0,
+      null,
+      null,
+      3
+    ))
 
-    val fargs = new util.HashSet[Funktioargumentti]()
-    val fa1 = new Funktioargumentti
-    fa1.setFunktiokutsuChild(validiLukuarvo1)
-    fa1.setIndeksi(1)
-
-    val fa2 = new Funktioargumentti
-    fa2.setFunktiokutsuChild(validiLukuarvo1)
-    fa2.setIndeksi(2)
-
-    val fa3 = new Funktioargumentti
-    fa3.setIndeksi(3)
-
-    fargs.add(fa1)
-    fargs.add(fa2)
-    fargs.add(fa3)
-
-    funktiokutsu.setFunktioargumentit(fargs)
+    val funktiokutsu = new JFunktiokutsu(
+      null,
+      0,
+      Funktionimi.SUMMA,
+      "",
+      "",
+      null,
+      null,
+      false,
+      false,
+      new util.HashSet[JArvokonvertteriparametri](),
+      new util.LinkedList[JArvovalikonvertteriparametri](),
+      new util.HashSet[JSyoteparametri](),
+      fargs,
+      new util.LinkedList[JValintaperusteViite]()
+    )
 
     val validationMessages1 =
       Laskentakaavavalidaattori.validoiLaskettavaKaava(funktiokutsu).getValidointivirheet

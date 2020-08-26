@@ -8,6 +8,7 @@ import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapp
 import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
 import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
+import fi.vm.sade.service.valintaperusteet.model.LaskentakaavaId;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaValintatapajonoService;
 import fi.vm.sade.service.valintaperusteet.service.HakijaryhmatyyppikoodiService;
@@ -103,8 +104,9 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
     hakijaryhma.setKaytaKaikki(dto.isKaytaKaikki());
     hakijaryhma.setTarkkaKiintio(dto.isTarkkaKiintio());
     hakijaryhma.setKaytetaanRyhmaanKuuluvia(dto.isKaytetaanRyhmaanKuuluvia());
-    hakijaryhma.setLaskentakaava(
-        laskentakaavaService.haeMallinnettuKaava(dto.getLaskentakaavaId()));
+    hakijaryhma.setLaskentakaavaId(
+        laskentakaavaService.haeMallinnettuKaava(new LaskentakaavaId(dto.getLaskentakaavaId())).getId().id
+    );
     hakijaryhma.setHakijaryhmatyyppikoodi(
         hakijaryhmatyyppikoodiService.getOrCreateHakijaryhmatyyppikoodi(
             dto.getHakijaryhmatyyppikoodi()));
@@ -196,8 +198,9 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
     hakijaryhma.setKaytaKaikki(dto.isKaytaKaikki());
     hakijaryhma.setTarkkaKiintio(dto.isTarkkaKiintio());
     hakijaryhma.setKaytetaanRyhmaanKuuluvia(dto.isKaytetaanRyhmaanKuuluvia());
-    hakijaryhma.setLaskentakaava(
-        laskentakaavaService.haeMallinnettuKaava(dto.getLaskentakaavaId()));
+    hakijaryhma.setLaskentakaavaId(
+        laskentakaavaService.haeMallinnettuKaava(new LaskentakaavaId(dto.getLaskentakaavaId())).getId().id
+    );
     hakijaryhma.setHakijaryhmatyyppikoodi(
         hakijaryhmatyyppikoodiService.getOrCreateHakijaryhmatyyppikoodi(
             dto.getHakijaryhmatyyppikoodi()));

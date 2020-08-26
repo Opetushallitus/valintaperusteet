@@ -79,6 +79,51 @@ public class FunktioargumentinLapsiDTO {
   @ApiModelProperty(value = "Näytetäänkö oppijan henkilökohtaisessa palvelussa")
   private boolean omaopintopolku = false;
 
+  public FunktioargumentinLapsiDTO() { }
+
+  public FunktioargumentinLapsiDTO(Boolean onLuonnos,
+                                   String nimi,
+                                   String kuvaus,
+                                   Funktiotyyppi tyyppi,
+                                   Long id) {
+    this.onLuonnos = onLuonnos;
+    this.nimi = nimi;
+    this.kuvaus = kuvaus;
+    this.tyyppi = tyyppi;
+    this.id = id;
+    this.lapsityyppi = LASKENTAKAAVATYYPPI;
+  }
+
+  public FunktioargumentinLapsiDTO(FunktiokutsuDTO dto) {
+    this.funktionimi = dto.getFunktionimi();
+    this.arvokonvertteriparametrit = dto.getArvokonvertteriparametrit();
+    this.arvovalikonvertteriparametrit = dto.getArvovalikonvertteriparametrit();
+    this.syoteparametrit = dto.getSyoteparametrit();
+    this.funktioargumentit = dto.getFunktioargumentit();
+    this.valintaperusteviitteet = dto.getValintaperusteviitteet();
+    this.validointivirheet = dto.getValidointivirheet();
+    this.onLuonnos = null;
+    this.nimi = null;
+    this.kuvaus = null;
+    this.tyyppi = null;
+    this.id = null;
+    this.lapsityyppi = FUNKTIOKUTSUTYYPPI;
+    this.tulosTunniste = dto.getTulosTunniste();
+    this.tulosTekstiFi = dto.getTulosTekstiFi();
+    this.tulosTekstiSv = dto.getTulosTekstiSv();
+    this.tulosTekstiEn = dto.getTulosTekstiEn();
+  }
+
+  public FunktioargumentinLapsiDTO(LaskentakaavaListDTO dto) {
+    this(
+            dto.getOnLuonnos(),
+            dto.getNimi(),
+            dto.getKuvaus(),
+            dto.getTyyppi(),
+            dto.getId()
+    );
+  }
+
   public String getTulosTunniste() {
     return tulosTunniste;
   }

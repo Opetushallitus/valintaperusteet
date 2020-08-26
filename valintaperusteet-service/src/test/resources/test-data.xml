@@ -83,7 +83,8 @@
     <syoteparametri id="206" version="0" avain="nimi" arvo="summafunktio206" funktiokutsu_id="206"/>
 
     <laskentakaava id="206" version="0" nimi="kaava206" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO"
-                   funktiokutsu_id="206"/>
+                   funktiokutsu_id="206"
+                   valintaryhmaviite="2"/>
 
     <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="301" version="0" funktionimi="KONVERTOILUKUARVO"/>
     <funktioargumentti id="301" version="0" funktiokutsuparent_id="301" funktiokutsuchild_id="1" indeksi="1"/>
@@ -115,16 +116,19 @@
 
     <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="403" version="0" funktionimi="HAELUKUARVO"/>
     <valintaperuste_viite id="403" version="0" tunniste="t1" kuvaus="t1" lahde="SYOTETTAVA_ARVO" funktiokutsu_id="403"
-                          on_pakollinen="true" indeksi="1" vaatii_osallistumisen="true" syotettavissa_kaikille="false"/>
+                          on_pakollinen="true" indeksi="1" vaatii_osallistumisen="true" syotettavissa_kaikille="false"
+                          tekstiryhma_id="1"/>
 
     <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="404" version="0" funktionimi="HAELUKUARVO"/>
     <valintaperuste_viite id="404" version="0" tunniste="t2" kuvaus="t1" lahde="SYOTETTAVA_ARVO" funktiokutsu_id="404"
-                          on_pakollinen="true" indeksi="1" vaatii_osallistumisen="true" syotettavissa_kaikille="false"/>
+                          on_pakollinen="true" indeksi="1" vaatii_osallistumisen="true" syotettavissa_kaikille="false"
+                          tekstiryhma_id="1"/>
 
     <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="405" version="0" funktionimi="HAELUKUARVO"/>
     <valintaperuste_viite id="405" version="0" tunniste="aidinkieli" kuvaus="aidinkieli" lahde="SYOTETTAVA_ARVO"
                           funktiokutsu_id="405" on_pakollinen="true" indeksi="1" vaatii_osallistumisen="true"
-                          syotettavissa_kaikille="false"/>
+                          syotettavissa_kaikille="false"
+                          tekstiryhma_id="1"/>
 
     <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="506" version="0" funktionimi="SUMMA"/>
     <funktioargumentti id="506" version="0" funktiokutsuparent_id="506" funktiokutsuchild_id="7" indeksi="1"/>
@@ -143,17 +147,23 @@
 
     <valintaperuste_viite id="504" version="0" tunniste="matematiikka_yo" kuvaus="matematiikan yo-arvosana"
                           lahde="SYOTETTAVA_ARVO" on_pakollinen="true" funktiokutsu_id="504" indeksi="1"
-                          vaatii_osallistumisen="true" syotettavissa_kaikille="false"/>
+                          vaatii_osallistumisen="true" syotettavissa_kaikille="false"
+                          tekstiryhma_id="1"/>
     <arvokonvertteriparametri id="504" version="0" arvo="L" paluuarvo="10.0" hylkaysperuste="false"
-                              funktiokutsu_id="504"/>
+                              funktiokutsu_id="504"
+                              tekstiryhma_id="1"/>
     <arvokonvertteriparametri id="505" version="0" arvo="E" paluuarvo="9.0" hylkaysperuste="false"
-                              funktiokutsu_id="504"/>
+                              funktiokutsu_id="504"
+                              tekstiryhma_id="1"/>
     <arvokonvertteriparametri id="506" version="0" arvo="M" paluuarvo="8.0" hylkaysperuste="false"
-                              funktiokutsu_id="504"/>
+                              funktiokutsu_id="504"
+                              tekstiryhma_id="1"/>
     <arvokonvertteriparametri id="507" version="0" arvo="C" paluuarvo="7.0" hylkaysperuste="false"
-                              funktiokutsu_id="504"/>
+                              funktiokutsu_id="504"
+                              tekstiryhma_id="1"/>
     <arvokonvertteriparametri id="508" version="0" arvo="B" paluuarvo="6.0" hylkaysperuste="false"
-                              funktiokutsu_id="504"/>
+                              funktiokutsu_id="504"
+                              tekstiryhma_id="1"/>
 
     <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="505" version="0" funktionimi="LUKUARVO"/>
     <syoteparametri id="505" version="0" avain="luku" arvo="6.0" funktiokutsu_id="505"/>
@@ -188,7 +198,8 @@
     <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="514" version="0" funktionimi="HAELUKUARVO"/>
     <valintaperuste_viite id="514" version="0" lahde="SYOTETTAVA_ARVO" tunniste="valintaperuste1" kuvaus="kuvaus"
                           on_pakollinen="true" funktiokutsu_id="514" indeksi="1" vaatii_osallistumisen="true"
-                          syotettavissa_kaikille="false" tilastoidaan="true" syotettavanarvontyyppi_id="1"/>
+                          syotettavissa_kaikille="false" tilastoidaan="true" syotettavanarvontyyppi_id="1"
+                          tekstiryhma_id="1"/>
     <arvokonvertteriparametri id="514" version="0" arvo="arvo1" paluuarvo="10.0" hylkaysperuste="false"
                               funktiokutsu_id="514"/>
     <arvokonvertteriparametri id="515" version="0" arvo="arvo2" paluuarvo="9.0" hylkaysperuste="false"
@@ -215,7 +226,8 @@
     <valintaperuste_viite id="600" version="0" lahde="HAKUKOHTEEN_SYOTETTAVA_ARVO" tunniste="hakukohteentunniste"
                           kuvaus="kuvaus"
                           on_pakollinen="true" epasuora_viittaus="true" funktiokutsu_id="600" indeksi="1"
-                          vaatii_osallistumisen="true" syotettavissa_kaikille="false"/>
+                          vaatii_osallistumisen="true" syotettavissa_kaikille="false"
+                          tekstiryhma_id="1"/>
     <arvovalikonvertteriparametri id="600" version="0" minvalue="{{hakukohde.minimiarvo}}" maxvalue="10.0"
                                   palauta_haettu_arvo="false"
                                   paluuarvo="1.0" funktiokutsu_id="600" hylkaysperuste="false"/>
@@ -305,7 +317,8 @@
     <valintaperuste_viite id="601" version="0" lahde="HAKUKOHTEEN_ARVO" tunniste="{{hakukohde.paasykoe_tunniste}}"
                           kuvaus="kuvaus"
                           on_pakollinen="true" funktiokutsu_id="708" indeksi="1" vaatii_osallistumisen="true"
-                          syotettavissa_kaikille="false"/>
+                          syotettavissa_kaikille="false"
+                          tekstiryhma_id="1"/>
     <funktioargumentti id="709" version="0" funktiokutsuparent_id="708" funktiokutsuchild_id="1" indeksi="1"/>
 
     <tekstiryhma id="1" version="0" />
@@ -336,7 +349,8 @@
     <valintaperuste_viite id="602" version="0" lahde="HAKUKOHTEEN_SYOTETTAVA_ARVO"
                           tunniste="{{hakukohde.paasykoe_tunniste}}" kuvaus="kuvaus"
                           on_pakollinen="true" funktiokutsu_id="709" indeksi="1" vaatii_osallistumisen="true"
-                          syotettavissa_kaikille="false"/>
+                          syotettavissa_kaikille="false"
+                          tekstiryhma_id="1"/>
     <arvovalikonvertteriparametri id="603" version="0" minvalue="{{hakukohde.paasykoe_min}}" maxvalue="3.0"
                                   paluuarvo="50.0"
                                   palauta_haettu_arvo="{{hakukohde.avk1_pha}}" funktiokutsu_id="709" hylkaysperuste="false"/>
@@ -348,7 +362,7 @@
                                   palauta_haettu_arvo="true" funktiokutsu_id="709" hylkaysperuste="false"/>
 
     <laskentakaava id="419" version="0" funktiokutsu_id="709" nimi="jeppis2" on_luonnos="false"
-                   tyyppi="TOTUUSARVOFUNKTIO"/>
+                   tyyppi="LUKUARVOFUNKTIO"/>
 
 
     <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="710" version="0" funktionimi="HAELUKUARVO"/>
@@ -358,7 +372,8 @@
     <syotettavanarvonkoodi id="1" version="0" arvo="valintakoe" uri="syotettavanarvontyypit_valintakoe"/>
     <valintaperuste_viite id="603" version="0" tunniste="sat" kuvaus="syotettavan arvon tyyppi" lahde="SYOTETTAVA_ARVO"
                           funktiokutsu_id="710" on_pakollinen="false" indeksi="1" vaatii_osallistumisen="true"
-                          syotettavissa_kaikille="false" syotettavanarvontyyppi_id="1" tilastoidaan="true"/>
+                          syotettavissa_kaikille="false" syotettavanarvontyyppi_id="1" tilastoidaan="true"
+                          tekstiryhma_id="1"/>
 
 
 

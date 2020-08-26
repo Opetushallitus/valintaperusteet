@@ -22,7 +22,7 @@ import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.ValintaperustettaEi
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.ValintaperustettaEiVoidaTulkitaTotuusarvoksiVirhe
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.VirheellinenLaskentamoodiVirhe
 import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Virhetila
-import fi.vm.sade.service.valintaperusteet.model.TekstiRyhma
+import fi.vm.sade.service.valintaperusteet.model.{LokalisoituTeksti, TekstiRyhma}
 
 import scala.jdk.CollectionConverters._
 import scala.util.Try
@@ -382,7 +382,7 @@ trait LaskinFunktiot {
               Some(h: Boolean),
               Some(null)
             ) =>
-          Some(Lukuarvovalikonversio(min, max, p, ph, h, new TekstiRyhma()))
+          Some(Lukuarvovalikonversio(min, max, p, ph, h, new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())))
         case _ => None
       }
     }
@@ -443,7 +443,7 @@ trait LaskinFunktiot {
         case (Some(arvo: Any), Some(paluuarvo: Any), Some(h: Boolean), Some(k: TekstiRyhma)) =>
           Some(Arvokonversio(arvo, paluuarvo, h, k))
         case (Some(arvo: Any), Some(paluuarvo: Any), Some(h: Boolean), Some(null)) =>
-          Some(Arvokonversio(arvo, paluuarvo, h, new TekstiRyhma()))
+          Some(Arvokonversio(arvo, paluuarvo, h, new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())))
         case _ => None
       }
     }

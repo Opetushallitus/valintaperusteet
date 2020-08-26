@@ -2,7 +2,8 @@ package fi.vm.sade.kaava
 
 import java.time.LocalDate
 import java.time.Month
-import java.util.{Set => JSet}
+import java.util
+import java.util.{List => JList, Set => JSet}
 
 import fi.vm.sade.kaava.LaskentaUtil.suomalainenPvmMuoto
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi
@@ -77,21 +78,11 @@ import fi.vm.sade.service.valintaperusteet.laskenta.LaskentaDomain.Valintaperust
 import fi.vm.sade.service.valintaperusteet.laskenta.LaskentaDomain.Valintaperusteyhtasuuruus
 import fi.vm.sade.service.valintaperusteet.laskenta.LaskentaDomain.Yhtasuuri
 import fi.vm.sade.service.valintaperusteet.laskenta.LaskentaDomain.YoEhdot
-import fi.vm.sade.service.valintaperusteet.laskenta.LaskentaDomain.{
-  HakukohteenSyotettavaValintaperuste => HksValintaperuste
-}
-import fi.vm.sade.service.valintaperusteet.laskenta.LaskentaDomain.{
-  HakukohteenValintaperuste => HkValintaperuste
-}
+import fi.vm.sade.service.valintaperusteet.laskenta.LaskentaDomain.{HakukohteenSyotettavaValintaperuste => HksValintaperuste}
+import fi.vm.sade.service.valintaperusteet.laskenta.LaskentaDomain.{HakukohteenValintaperuste => HkValintaperuste}
 import fi.vm.sade.service.valintaperusteet.laskenta.Lukuarvofunktio
 import fi.vm.sade.service.valintaperusteet.laskenta.Totuusarvofunktio
-import fi.vm.sade.service.valintaperusteet.model.Arvokonvertteriparametri
-import fi.vm.sade.service.valintaperusteet.model.Arvovalikonvertteriparametri
-import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti
-import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu
-import fi.vm.sade.service.valintaperusteet.model.Syoteparametri
-import fi.vm.sade.service.valintaperusteet.model.TekstiRyhma
-import fi.vm.sade.service.valintaperusteet.model.ValintaperusteViite
+import fi.vm.sade.service.valintaperusteet.model.{Arvokonvertteriparametri, Arvovalikonvertteriparametri, Funktioargumentti, Funktiokutsu, LokalisoituTeksti, Syoteparametri, TekstiRyhma, ValintaperusteViite}
 import fi.vm.sade.service.valintaperusteet.service.validointi.virhe.LaskentakaavaEiOleValidiException
 import org.apache.commons.lang3.StringUtils
 import org.slf4j.Logger
@@ -187,37 +178,37 @@ object Laskentadomainkonvertteri {
   private def luoValintaperusteviite(valintaperuste: ValintaperusteViite): Valintaperuste = {
     valintaperuste.getLahde match {
       case Valintaperustelahde.HAETTAVA_ARVO =>
-        HakemuksenValintaperuste(valintaperuste.getTunniste, valintaperuste.getOnPakollinen)
+        HakemuksenValintaperuste(valintaperuste.getTunniste, valintaperuste.isOnPakollinen)
       case Valintaperustelahde.HAKUKOHTEEN_ARVO =>
         HkValintaperuste(
           valintaperuste.getTunniste,
-          valintaperuste.getOnPakollinen,
-          Option(valintaperuste.getEpasuoraViittaus).map(Boolean2boolean(_)).getOrElse(false)
+          valintaperuste.isOnPakollinen,
+          Option(valintaperuste.isEpasuoraViittaus).map(Boolean2boolean(_)).getOrElse(false)
         )
       case Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO =>
         HksValintaperuste(
           valintaperuste.getTunniste,
-          valintaperuste.getOnPakollinen,
-          Option(valintaperuste.getEpasuoraViittaus).map(Boolean2boolean(_)).getOrElse(false),
+          valintaperuste.isOnPakollinen,
+          Option(valintaperuste.isEpasuoraViittaus).map(Boolean2boolean(_)).getOrElse(false),
           ValintaperusteViite.OSALLISTUMINEN_POSTFIX,
           valintaperuste.getKuvaus,
           valintaperuste.getKuvaukset,
-          valintaperuste.getVaatiiOsallistumisen,
-          valintaperuste.getSyotettavissaKaikille,
+          valintaperuste.isVaatiiOsallistumisen,
+          valintaperuste.isSyotettavissaKaikille,
           Option(valintaperuste.getSyotettavanarvontyyppi).map(_.getUri),
-          valintaperuste.getTilastoidaan
+          valintaperuste.isTilastoidaan
         )
       case Valintaperustelahde.SYOTETTAVA_ARVO =>
         SyotettavaValintaperuste(
           valintaperuste.getTunniste,
-          valintaperuste.getOnPakollinen,
+          valintaperuste.isOnPakollinen,
           valintaperuste.getOsallistuminenTunniste,
           valintaperuste.getKuvaus,
           valintaperuste.getKuvaukset,
-          valintaperuste.getVaatiiOsallistumisen,
-          valintaperuste.getSyotettavissaKaikille,
+          valintaperuste.isVaatiiOsallistumisen,
+          valintaperuste.isSyotettavissaKaikille,
           Option(valintaperuste.getSyotettavanarvontyyppi).map(_.getUri),
-          valintaperuste.getTilastoidaan
+          valintaperuste.isTilastoidaan
         )
     }
   }
@@ -230,8 +221,7 @@ object Laskentadomainkonvertteri {
       )
     }
 
-    val jarjestetytArgumentit: List[Funktioargumentti] =
-      LaskentaUtil.jarjestaFunktioargumentit(funktiokutsu.getFunktioargumentit)
+    val jarjestetytArgumentit: List[Funktioargumentti] = funktiokutsu.getFunktioargumentit.asScala.toList
     val lasketutArgumentit: List[Funktio[_]] =
       jarjestetytArgumentit.map((arg: Funktioargumentti) => muodostaLasku(arg.getFunktiokutsuChild))
 
@@ -240,7 +230,7 @@ object Laskentadomainkonvertteri {
     val oid = if (funktiokutsu.getId != null) funktiokutsu.getId.toString else ""
     val funktionimi = funktiokutsu.getFunktionimi
     val tulosTunniste =
-      if (java.lang.Boolean.TRUE.equals(funktiokutsu.getTallennaTulos))
+      if (java.lang.Boolean.TRUE.equals(funktiokutsu.isTallennaTulos))
         funktiokutsu.getTulosTunniste()
       else ""
     val tulosTekstiFi =
@@ -250,8 +240,8 @@ object Laskentadomainkonvertteri {
     val tulosTekstiEn =
       if (funktiokutsu.getTulosTekstiEn != null) funktiokutsu.getTulosTekstiEn else ""
     val omaopintopolku: Boolean =
-      if (java.lang.Boolean.TRUE.equals(funktiokutsu.getOmaopintopolku))
-        funktiokutsu.getOmaopintopolku
+      if (java.lang.Boolean.TRUE.equals(funktiokutsu.isOmaopintopolku))
+        funktiokutsu.isOmaopintopolku
       else false
 
     val valintaperusteviitteet = funktiokutsu.getValintaperusteviitteet.asScala.toList
@@ -957,10 +947,12 @@ object Laskentadomainkonvertteri {
       case Funktionimi.HAEYOARVOSANA =>
         List("A", "B", "C", "M", "E", "L", "I").foreach(arvosana => {
           if (syoteparametrit.count(s => s.getAvain == arvosana) == 0) {
-            val target = new Syoteparametri
-            target.setArvo("0.0")
-            target.setAvain(arvosana)
-            syoteparametrit.add(target)
+            syoteparametrit.add(new Syoteparametri(
+              null,
+              0,
+              arvosana,
+              "0.0"
+            ))
           }
         })
 
@@ -971,7 +963,7 @@ object Laskentadomainkonvertteri {
               param.getAvain,
               stringToBigDecimal(param.getArvo),
               "false",
-              new TekstiRyhma
+              new TekstiRyhma(null, 0, new util.HashSet[LokalisoituTeksti]())
             )
           )
           .toList
@@ -1057,13 +1049,13 @@ object Laskentadomainkonvertteri {
       case Funktionimi.ITEROIAMMATILLISETTUTKINNOT =>
         IteroiAmmatillisetTutkinnot(
           muunnaParametriSuomalaisestaPaivamaarasta(
+            funktiokutsu,
             ITEROIAMMATILLISETTUTKINNOT_VALMISTUMIS_PARAMETRI,
-            syoteparametrit,
             LocalDate.of(2020, Month.JUNE, 1)
           ), // TODO: Poista oletus, kun se on syötetty kaavoihin
           muunnaParametriSuomalaisestaPaivamaarasta(
+            funktiokutsu,
             ITEROIAMMATILLISETTUTKINNOT_LEIKKURIPVM_PARAMETRI,
-            syoteparametrit,
             LocalDate.of(2020, Month.MAY, 15)
           ), // TODO: Poista oletus, kun se on syötetty kaavoihin
           muunnaLukuarvofunktioksi(lasketutArgumentit.head),
@@ -1275,7 +1267,7 @@ object Laskentadomainkonvertteri {
 
   private def luoLukuarvokovertteri(
     arvokonvertteriparametrit: JSet[Arvokonvertteriparametri],
-    arvovalikonvertteriparametrit: JSet[Arvovalikonvertteriparametri]
+    arvovalikonvertteriparametrit: JList[Arvovalikonvertteriparametri]
   ): Option[Konvertteri[BigDecimal, BigDecimal]] = {
     if (!arvokonvertteriparametrit.isEmpty) {
       val konversioMap = arvokonvertteriparametrit.asScala
@@ -1356,11 +1348,11 @@ object Laskentadomainkonvertteri {
   }
 
   private def muunnaParametriSuomalaisestaPaivamaarasta(
+    funktiokutsu: Funktiokutsu,
     parametrinAvain: String,
-    syoteparametrit: Iterable[Syoteparametri],
     oletusarvo: LocalDate
   ): LocalDate = {
-    etsiOptionaalinenParametri(syoteparametrit, parametrinAvain) match {
+    etsiOptionaalinenParametri(funktiokutsu.getSyoteparametrit.asScala, parametrinAvain) match {
       case Some(parametri) =>
         try {
           LocalDate.parse(parametri.getArvo, suomalainenPvmMuoto)
@@ -1368,7 +1360,7 @@ object Laskentadomainkonvertteri {
           case e: Exception =>
             val viesti: String = s"Ei pystytty tulkitsemaan suomalaista päivämäärää (esim '${suomalainenPvmMuoto
               .format(LocalDate.now())}' " +
-              s"syötteestä ${parametri.getArvo} funktion ${parametri.getFunktiokutsu.getFunktionimi} parametriksi '${parametri.getAvain}'. Käytetään oletusarvoa ${suomalainenPvmMuoto
+              s"syötteestä ${parametri.getArvo} funktion ${funktiokutsu.getFunktionimi} parametriksi '${parametri.getAvain}'. Käytetään oletusarvoa ${suomalainenPvmMuoto
                 .format(oletusarvo)}"
             LOG.error(viesti, e)
             oletusarvo

@@ -1,23 +1,18 @@
 package fi.vm.sade.service.valintaperusteet.dao;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-
-import com.mysema.query.Tuple;
 import fi.vm.sade.kaava.Funktiokuvaaja;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
+import fi.vm.sade.service.valintaperusteet.dto.FunktioargumentinLapsiDTO;
+import fi.vm.sade.service.valintaperusteet.dto.FunktioargumenttiDTO;
+import fi.vm.sade.service.valintaperusteet.dto.FunktiokutsuDTO;
+import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.SyoteparametriDTO;
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi;
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti;
-import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
 import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
-import fi.vm.sade.service.valintaperusteet.model.QHakukohdeViite;
-import fi.vm.sade.service.valintaperusteet.model.QLaskentakaava;
-import fi.vm.sade.service.valintaperusteet.model.QValinnanVaihe;
-import fi.vm.sade.service.valintaperusteet.model.Syoteparametri;
-import java.util.ArrayList;
-import java.util.List;
+import fi.vm.sade.service.valintaperusteet.model.LaskentakaavaId;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +23,11 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
 
-/** User: kwuoti Date: 28.1.2013 Time: 10.17 */
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
 @ContextConfiguration(locations = "classpath:test-context.xml")
 @TestExecutionListeners(
     listeners = {
@@ -45,83 +44,38 @@ public class LaskentakaavaDAOTest {
 
   @Test
   public void testGetLaskentakaava() {
-    final Long id = 204L;
+    LaskentakaavaId id = new LaskentakaavaId(204);
 
-    Laskentakaava laskentakaava = laskentakaavaDAO.getLaskentakaava(id);
+    Laskentakaava laskentakaava = laskentakaavaDAO.read(id);
     assertEquals(id, laskentakaava.getId());
     assertEquals(Funktionimi.MAKSIMI, laskentakaava.getFunktiokutsu().getFunktionimi());
   }
 
-  private Funktiokutsu createLukuarvo(Double luku) {
-    final Funktionimi nimi = Funktionimi.LUKUARVO;
-
-    final Funktiokuvaaja.Funktiokuvaus funktiokuvaus = Funktiokuvaaja.annaFunktiokuvaus(nimi)._2();
-
-    Funktiokutsu funktiokutsu = new Funktiokutsu();
-    funktiokutsu.setFunktionimi(Funktionimi.LUKUARVO);
-
-    Syoteparametri syoteparametri = new Syoteparametri();
-    syoteparametri.setAvain(funktiokuvaus.syoteparametrit().head().avain());
-    syoteparametri.setArvo(luku.toString());
-    syoteparametri.setFunktiokutsu(funktiokutsu);
-
-    funktiokutsu.getSyoteparametrit().add(syoteparametri);
-
-    return funktiokutsu;
-  }
-
-  private Funktiokutsu createSumma(Funktiokutsu... args) {
-    Funktiokutsu funktiokutsu = new Funktiokutsu();
-    funktiokutsu.setFunktionimi(Funktionimi.SUMMA);
-
-    for (int i = 0; i < args.length; ++i) {
-      Funktiokutsu f = args[i];
-      Funktioargumentti arg = new Funktioargumentti();
-      arg.setFunktiokutsuChild(f);
-      arg.setParent(funktiokutsu);
-      arg.setIndeksi(i + 1);
-      funktiokutsu.getFunktioargumentit().add(arg);
-    }
-
-    return funktiokutsu;
-  }
-
   @Test
   public void testInsert() {
-    Laskentakaava laskentakaava = new Laskentakaava();
-    laskentakaava.setNimi("kaava123");
-    laskentakaava.setOnLuonnos(false);
-    laskentakaava.setFunktiokutsu(
-        createSumma(createLukuarvo(5.0), createLukuarvo(10.0), createLukuarvo(100.0)));
-
-    Laskentakaava tallennettu = laskentakaavaDAO.insert(laskentakaava);
-
-    Laskentakaava haettu = laskentakaavaDAO.getLaskentakaava(tallennettu.getId());
+    LaskentakaavaCreateDTO dto = new LaskentakaavaCreateDTO();
+    dto.setNimi("kaava123");
+    dto.setOnLuonnos(false);
+    dto.setFunktiokutsu(createSumma(
+            createLukuarvo(5.0),
+            createLukuarvo(10.0),
+            createLukuarvo(100.0)
+    ));
+    Laskentakaava tallennettu = laskentakaavaDAO.insert(dto, null, null, null);
+    Laskentakaava haettu = laskentakaavaDAO.read(tallennettu.getId());
+    assertFalse(tallennettu.getOnLuonnos());
     assertFalse(haettu.getOnLuonnos());
+    assertEquals(Funktionimi.SUMMA, tallennettu.getFunktiokutsu().getFunktionimi());
     assertEquals(Funktionimi.SUMMA, haettu.getFunktiokutsu().getFunktionimi());
+    assertEquals(3, tallennettu.getFunktiokutsu().getFunktioargumentit().size());
     assertEquals(3, haettu.getFunktiokutsu().getFunktioargumentit().size());
 
+    for (Funktioargumentti fa : tallennettu.getFunktiokutsu().getFunktioargumentit()) {
+      assertEquals(Funktionimi.LUKUARVO, fa.getFunktiokutsuChild().getFunktionimi());
+    }
     for (Funktioargumentti fa : haettu.getFunktiokutsu().getFunktioargumentit()) {
       assertEquals(Funktionimi.LUKUARVO, fa.getFunktiokutsuChild().getFunktionimi());
     }
-  }
-
-  @Test
-  public void testFindAvaimet() throws Exception {
-    ArrayList<String> oids = new ArrayList<String>();
-    oids.add("oid1");
-    oids.add("3201");
-    oids.add("oid6");
-    List<Tuple> avaimet = laskentakaavaDAO.findLaskentakaavatByHakukohde(oids);
-    for (Tuple tuple : avaimet) {
-      System.out.println(
-          tuple.get(QHakukohdeViite.hakukohdeViite.oid)
-              + ":"
-              + tuple.get(QValinnanVaihe.valinnanVaihe.oid));
-      System.out.println(tuple.get(QLaskentakaava.laskentakaava));
-    }
-
-    assertEquals(7, avaimet.size());
   }
 
   @Test
@@ -149,5 +103,33 @@ public class LaskentakaavaDAOTest {
     assertEquals(23, kaavas.size());
     kaavas = laskentakaavaDAO.findKaavas(true, null, null, Funktiotyyppi.TOTUUSARVOFUNKTIO);
     assertEquals(4, kaavas.size());
+  }
+
+  private FunktiokutsuDTO createLukuarvo(double luku) {
+    Funktiokuvaaja.Funktiokuvaus funktiokuvaus = Funktiokuvaaja.annaFunktiokuvaus(Funktionimi.LUKUARVO)._2();
+    FunktiokutsuDTO funktiokutsu = new FunktiokutsuDTO();
+    funktiokutsu.setFunktionimi(Funktionimi.LUKUARVO);
+    SyoteparametriDTO syoteparametri = new SyoteparametriDTO();
+    syoteparametri.setAvain(funktiokuvaus.syoteparametrit().head().avain());
+    syoteparametri.setArvo(Double.toString(luku));
+
+    funktiokutsu.getSyoteparametrit().add(syoteparametri);
+
+    return funktiokutsu;
+  }
+
+  private FunktiokutsuDTO createSumma(FunktiokutsuDTO... args) {
+    FunktiokutsuDTO funktiokutsu = new FunktiokutsuDTO();
+    funktiokutsu.setFunktionimi(Funktionimi.SUMMA);
+
+    for (int i = 0; i < args.length; ++i) {
+      FunktioargumenttiDTO arg = new FunktioargumenttiDTO();
+      FunktioargumentinLapsiDTO lapsi = new FunktioargumentinLapsiDTO(args[i]);
+      arg.setLapsi(lapsi);
+      arg.setIndeksi(i + 1);
+      funktiokutsu.getFunktioargumentit().add(arg);
+    }
+
+    return funktiokutsu;
   }
 }

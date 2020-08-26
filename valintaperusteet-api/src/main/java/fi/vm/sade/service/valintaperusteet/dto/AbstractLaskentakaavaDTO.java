@@ -19,6 +19,18 @@ public abstract class AbstractLaskentakaavaDTO {
   @ApiModelProperty(value = "Laskentakaavan tyyppi", required = true)
   private fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi tyyppi;
 
+  protected AbstractLaskentakaavaDTO() { }
+
+  protected AbstractLaskentakaavaDTO(Boolean onLuonnos,
+                                     String nimi,
+                                     String kuvaus,
+                                     Funktiotyyppi tyyppi) {
+    this.onLuonnos = onLuonnos;
+    this.nimi = nimi;
+    this.kuvaus = kuvaus;
+    this.tyyppi = tyyppi;
+  }
+
   public Boolean getOnLuonnos() {
     return onLuonnos;
   }

@@ -14,6 +14,16 @@ public class ValintaperusteetJarjestyskriteeriDTO implements Prioritized {
   @ApiModelProperty(value = "Funktiokutsu", required = false)
   private ValintaperusteetFunktiokutsuDTO funktiokutsu;
 
+  public ValintaperusteetJarjestyskriteeriDTO() { }
+
+  public ValintaperusteetJarjestyskriteeriDTO(String nimi,
+                                              int prioriteetti,
+                                              ValintaperusteetFunktiokutsuDTO funktiokutsu) {
+    this.nimi = nimi;
+    this.prioriteetti = prioriteetti;
+    this.funktiokutsu = funktiokutsu;
+  }
+
   public String getNimi() {
     return nimi;
   }

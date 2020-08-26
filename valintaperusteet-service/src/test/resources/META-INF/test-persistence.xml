@@ -7,8 +7,6 @@
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
         <non-jta-data-source>mainDataSource</non-jta-data-source>
 
-        <class>fi.vm.sade.service.valintaperusteet.model.Funktiokutsu</class>
-        <class>fi.vm.sade.service.valintaperusteet.model.Funktioargumentti</class>
         <class>fi.vm.sade.service.valintaperusteet.model.Hakijaryhma</class>
         <class>fi.vm.sade.service.valintaperusteet.model.Hakijaryhmatyyppikoodi</class>
         <class>fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono</class>
@@ -17,22 +15,13 @@
         <class>fi.vm.sade.service.valintaperusteet.model.Valintatapajono</class>
         <class>fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri</class>
         <class>fi.vm.sade.service.valintaperusteet.model.Koodi</class>
-        <class>fi.vm.sade.service.valintaperusteet.model.Konvertteriparametri</class>
         <class>fi.vm.sade.service.valintaperusteet.model.Hakukohdekoodi</class>
         <class>fi.vm.sade.service.valintaperusteet.model.Valintakoekoodi</class>
-        <class>fi.vm.sade.service.valintaperusteet.model.Arvokonvertteriparametri</class>
-        <class>fi.vm.sade.service.valintaperusteet.model.Arvovalikonvertteriparametri</class>
-        <class>fi.vm.sade.service.valintaperusteet.model.Laskentakaava</class>
-        <class>fi.vm.sade.service.valintaperusteet.model.Syoteparametri</class>
         <class>fi.vm.sade.service.valintaperusteet.model.Tulos</class>
         <class>fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe</class>
         <class>fi.vm.sade.service.valintaperusteet.model.Valintakoe</class>
-        <class>fi.vm.sade.service.valintaperusteet.model.ValintaperusteViite</class>
         <class>fi.vm.sade.service.valintaperusteet.model.Valintaryhma</class>
         <class>fi.vm.sade.service.valintaperusteet.model.Organisaatio</class>
-        <class>fi.vm.sade.service.valintaperusteet.model.LokalisoituTeksti</class>
-        <class>fi.vm.sade.service.valintaperusteet.model.TekstiRyhma</class>
-        <class>fi.vm.sade.service.valintaperusteet.model.Syotettavanarvontyyppi</class>
         <shared-cache-mode>NONE</shared-cache-mode>
 
         <properties>
