@@ -92,7 +92,7 @@ public class HakijaryhmaDAOImpl extends AbstractJpaDAOImpl<Hakijaryhma, Long>
         .fetch()
         .leftJoin(hakijaryhma.hakijaryhmatyyppikoodi)
         .fetch()
-        .leftJoin(hakijaryhma.seuraavaHakijaryhma)
+        .leftJoin(hakijaryhma.edellinenHakijaryhma)
         .fetch()
         .leftJoin(hakijaryhma.masterHakijaryhma)
         .fetch()
