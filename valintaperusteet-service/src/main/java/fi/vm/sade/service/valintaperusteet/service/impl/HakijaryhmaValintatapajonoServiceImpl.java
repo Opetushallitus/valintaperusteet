@@ -67,9 +67,7 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
 
   @Override
   public List<HakijaryhmaValintatapajono> findHakijaryhmaByJono(String oid) {
-    List<HakijaryhmaValintatapajono> byJono =
-        hakijaryhmaValintatapajonoDAO.findByValintatapajono(oid);
-    return LinkitettavaJaKopioitavaUtil.jarjesta(byJono);
+    return hakijaryhmaValintatapajonoDAO.findByValintatapajono(oid);
   }
 
   @Override
@@ -135,8 +133,7 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
       JuureenKopiointiCache kopiointiCache) {
 
     List<HakijaryhmaValintatapajono> jonot =
-        LinkitettavaJaKopioitavaUtil.jarjesta(
-            hakijaryhmaValintatapajonoDAO.findByValintatapajono(lahdeValintatapajono.getOid()));
+        hakijaryhmaValintatapajonoDAO.findByValintatapajono(lahdeValintatapajono.getOid());
     if (!jonot.isEmpty()) {
       kopioiRekusiivisestiHakijaryhmaValintatapajonot(
           kohdeValintatapajono, jonot.iterator().next(), kopiointiCache);
@@ -171,8 +168,7 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
     kopio.setValintatapajono(valintatapajono);
     kopio.setOid(oidService.haeValintatapajonoHakijaryhmaOid());
     List<HakijaryhmaValintatapajono> jonot =
-        LinkitettavaJaKopioitavaUtil.jarjesta(
-            hakijaryhmaValintatapajonoDAO.findByValintatapajono(valintatapajono.getOid()));
+        hakijaryhmaValintatapajonoDAO.findByValintatapajono(valintatapajono.getOid());
     HakijaryhmaValintatapajono edellinen =
         LinkitettavaJaKopioitavaUtil.haeMasterinEdellistaVastaava(edellinenMaster, jonot);
     kopio.setEdellinen(edellinen);

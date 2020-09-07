@@ -60,24 +60,25 @@ public class HakijaryhmaValintatapajonoDAOImpl
     QHakijaryhmaValintatapajono hv = QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
     QValintatapajono v = QValintatapajono.valintatapajono;
 
-    return from(hv)
-        .join(hv.valintatapajono, v)
-        .fetch()
-        .leftJoin(hv.hakijaryhma)
-        .fetch()
-        .leftJoin(v.hakijaryhmat)
-        .fetch()
-        .leftJoin(v.valinnanVaihe)
-        .fetch()
-        .leftJoin(hv.master)
-        .fetch()
-        .leftJoin(hv.edellinen)
-        .fetch()
-        .leftJoin(hv.hakijaryhmatyyppikoodi)
-        .fetch()
-        .where(v.oid.eq(oid))
-        .distinct()
-        .list(hv);
+    return LinkitettavaJaKopioitavaUtil.jarjesta(
+        from(hv)
+            .join(hv.valintatapajono, v)
+            .fetch()
+            .leftJoin(hv.hakijaryhma)
+            .fetch()
+            .leftJoin(v.hakijaryhmat)
+            .fetch()
+            .leftJoin(v.valinnanVaihe)
+            .fetch()
+            .leftJoin(hv.master)
+            .fetch()
+            .leftJoin(hv.edellinen)
+            .fetch()
+            .leftJoin(hv.hakijaryhmatyyppikoodi)
+            .fetch()
+            .where(v.oid.eq(oid))
+            .distinct()
+            .list(hv));
   }
 
   @Override
