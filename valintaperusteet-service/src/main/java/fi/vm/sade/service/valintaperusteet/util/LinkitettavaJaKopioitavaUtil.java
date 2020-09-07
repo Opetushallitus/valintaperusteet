@@ -85,27 +85,23 @@ public abstract class LinkitettavaJaKopioitavaUtil {
     return map;
   }
 
-  public static <T extends Linkitettava> List<T> jarjesta(Collection<T> linkitettavat) {
-    List<T> jarjestetty = new ArrayList<T>();
-    T linkitettava = null;
-    // Haetaan linkitetyn listan ensimmäinen elementti
+  private static <T extends Linkitettava<T>> T seuraava(Iterable<T> linkitettavat, T edellinen) {
     for (T t : linkitettavat) {
-      // Oheinen checki on syystä, että querydsl-palauttaa kyselyssä collectionin, joka sisältää
-      // null-elementin
-      if (t != null) {
-        // Ensimmäisen elementin edellinen on null
-        if (t.getEdellinen() == null) {
-          linkitettava = t;
-          break;
-        }
+      if (Objects.equals(t.getEdellinen(), edellinen)) {
+        return t;
       }
     }
-    // Loopataan ensimmäisestä elementistä alkaen ja tungetaan kaikki uuteen listaan
-    while (linkitettava != null) {
-      jarjestetty.add(linkitettava);
-      linkitettava = (T) linkitettava.getSeuraava();
+    return null;
+  }
+
+  public static <T extends Linkitettava<T>> List<T> jarjesta(Iterable<T> linkitettavat) {
+    ArrayList<T> jarjestetyt = new ArrayList<>();
+    T edellinen = seuraava(linkitettavat, null);
+    while (edellinen != null) {
+      jarjestetyt.add(edellinen);
+      edellinen = seuraava(linkitettavat, edellinen);
     }
-    return jarjestetty;
+    return jarjestetyt;
   }
 
   public static <T extends Linkitettava> void asetaSeuraava(T edellinen, T seuraava) {
