@@ -23,9 +23,7 @@ import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaOidTyh
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintaryhmaEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.util.JuureenKopiointiCache;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -200,22 +198,13 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
     String ensimmainen = hakijaryhmaOidit.get(0);
     Hakijaryhma hakijaryhma = haeHakijaryhma(ensimmainen);
     if (hakijaryhma.getValintaryhma() != null) {
-      return jarjestaHakijaryhmat(hakijaryhma.getValintaryhma(), hakijaryhmaOidit);
+      return LinkitettavaJaKopioitavaUtil.jarjestaUudelleen(
+          hakijaryhmaDAO.findByValintaryhma(hakijaryhma.getValintaryhma().getOid()),
+          hakijaryhmaOidit);
     } else {
       throw new ValintaryhmaEiOleOlemassaException(
           "Hakijaryhmällä " + ensimmainen + " ei ole valintaryhmää");
     }
-  }
-
-  private List<Hakijaryhma> jarjestaHakijaryhmat(
-      Valintaryhma valintaryhma, List<String> hakijaryhmaOidit) {
-    LinkedHashMap<String, Hakijaryhma> alkuperainenJarjestys =
-        LinkitettavaJaKopioitavaUtil.teeMappiOidienMukaan(
-            hakijaryhmaDAO.findByValintaryhma(valintaryhma.getOid()));
-    LinkedHashMap<String, Hakijaryhma> jarjestetty =
-        LinkitettavaJaKopioitavaUtil.jarjestaOidListanMukaan(
-            alkuperainenJarjestys, hakijaryhmaOidit);
-    return new ArrayList<>(jarjestetty.values());
   }
 
   private void lisaaValintaryhmalleKopioMasterHakijaryhmasta(

@@ -438,16 +438,14 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
 
   private List<Valintatapajono> jarjestaValintatapajonot(
       ValinnanVaihe vaihe, List<String> valintatapajonoOidit) {
-    LinkedHashMap<String, Valintatapajono> alkuperainenJarjestys =
-        LinkitettavaJaKopioitavaUtil.teeMappiOidienMukaan(
-            valintatapajonoDAO.findByValinnanVaihe(vaihe.getOid()));
-    LinkedHashMap<String, Valintatapajono> jarjestetty =
-        LinkitettavaJaKopioitavaUtil.jarjestaOidListanMukaan(
-            alkuperainenJarjestys, valintatapajonoOidit);
+    List<Valintatapajono> jarjestetty =
+        LinkitettavaJaKopioitavaUtil.jarjestaUudelleen(
+            valintatapajonoDAO.findByValinnanVaihe(vaihe.getOid()), valintatapajonoOidit);
     for (ValinnanVaihe kopio : vaihe.getKopiot()) {
-      jarjestaKopioValinnanVaiheenValintatapajonot(kopio, jarjestetty);
+      jarjestaKopioValinnanVaiheenValintatapajonot(
+          kopio, LinkitettavaJaKopioitavaUtil.teeMappiOidienMukaan(jarjestetty));
     }
-    return new ArrayList<>(jarjestetty.values());
+    return jarjestetty;
   }
 
   private void jarjestaKopioValinnanVaiheenValintatapajonot(

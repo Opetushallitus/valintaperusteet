@@ -24,9 +24,7 @@ import fi.vm.sade.service.valintaperusteet.util.HakijaryhmaValintatapajonoKopioi
 import fi.vm.sade.service.valintaperusteet.util.HakijaryhmaValintatapajonoUtil;
 import fi.vm.sade.service.valintaperusteet.util.JuureenKopiointiCache;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -297,20 +295,12 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
       throw new HakijaryhmaValintatapajonoOidListaOnTyhjaException(
           "Valintatapajonojen OID-lista on tyhjä");
     }
-    HakijaryhmaValintatapajono ensimmainen =
-        haeHakijaryhmaValintatapajono(hakijaryhmajonoOidit.get(0));
-    return jarjestaHakijaryhmajono(ensimmainen.getHakukohdeViite(), hakijaryhmajonoOidit);
-  }
-
-  private List<HakijaryhmaValintatapajono> jarjestaHakijaryhmajono(
-      HakukohdeViite viite, List<String> hakijaryhmajonoOidit) {
-    LinkedHashMap<String, HakijaryhmaValintatapajono> alkuperainenJarjestys =
-        LinkitettavaJaKopioitavaUtil.teeMappiOidienMukaan(
-            hakijaryhmaValintatapajonoDAO.findByHakukohde(viite.getOid()));
-    LinkedHashMap<String, HakijaryhmaValintatapajono> jarjestetty =
-        LinkitettavaJaKopioitavaUtil.jarjestaOidListanMukaan(
-            alkuperainenJarjestys, hakijaryhmajonoOidit);
-    return new ArrayList<>(jarjestetty.values());
+    return LinkitettavaJaKopioitavaUtil.jarjestaUudelleen(
+        hakijaryhmaValintatapajonoDAO.findByHakukohde(
+            haeHakijaryhmaValintatapajono(hakijaryhmajonoOidit.get(0))
+                .getHakukohdeViite()
+                .getOid()),
+        hakijaryhmajonoOidit);
   }
 
   private void delete(HakijaryhmaValintatapajono entity) {

@@ -270,19 +270,10 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
     if (valinnanVaihe.getValintaryhma() != null) {
       return jarjestaValinnanVaiheet(valinnanVaihe.getValintaryhma(), valinnanVaiheOidit);
     } else {
-      return jarjestaValinnanVaiheet(valinnanVaihe.getHakukohdeViite(), valinnanVaiheOidit);
+      return LinkitettavaJaKopioitavaUtil.jarjestaUudelleen(
+          valinnanVaiheDAO.findByHakukohde(valinnanVaihe.getHakukohdeViite().getOid()),
+          valinnanVaiheOidit);
     }
-  }
-
-  private List<ValinnanVaihe> jarjestaValinnanVaiheet(
-      HakukohdeViite hakukohde, List<String> valinnanVaiheOidit) {
-    LinkedHashMap<String, ValinnanVaihe> alkuperainenJarjestys =
-        LinkitettavaJaKopioitavaUtil.teeMappiOidienMukaan(
-            valinnanVaiheDAO.findByHakukohde(hakukohde.getOid()));
-    LinkedHashMap<String, ValinnanVaihe> jarjestetty =
-        LinkitettavaJaKopioitavaUtil.jarjestaOidListanMukaan(
-            alkuperainenJarjestys, valinnanVaiheOidit);
-    return new ArrayList<>(jarjestetty.values());
   }
 
   private void jarjestaAlavalintaryhmanValnnanVaiheet(
@@ -325,23 +316,22 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
 
   private List<ValinnanVaihe> jarjestaValinnanVaiheet(
       Valintaryhma valintaryhma, List<String> valinnanVaiheOidit) {
-    LinkedHashMap<String, ValinnanVaihe> alkuperainenJarjestys =
-        LinkitettavaJaKopioitavaUtil.teeMappiOidienMukaan(
-            valinnanVaiheDAO.findByValintaryhma(valintaryhma.getOid()));
-    LinkedHashMap<String, ValinnanVaihe> jarjestetty =
-        LinkitettavaJaKopioitavaUtil.jarjestaOidListanMukaan(
-            alkuperainenJarjestys, valinnanVaiheOidit);
+    List<ValinnanVaihe> jarjestetty =
+        LinkitettavaJaKopioitavaUtil.jarjestaUudelleen(
+            valinnanVaiheDAO.findByValintaryhma(valintaryhma.getOid()), valinnanVaiheOidit);
     List<Valintaryhma> alavalintaryhmat =
         valintaryhmaService.findValintaryhmasByParentOid(valintaryhma.getOid());
     for (Valintaryhma alavalintaryhma : alavalintaryhmat) {
-      jarjestaAlavalintaryhmanValnnanVaiheet(alavalintaryhma, jarjestetty);
+      jarjestaAlavalintaryhmanValnnanVaiheet(
+          alavalintaryhma, LinkitettavaJaKopioitavaUtil.teeMappiOidienMukaan(jarjestetty));
     }
     List<HakukohdeViite> hakukohteet =
         hakukohdeService.findByValintaryhmaOid(valintaryhma.getOid());
     for (HakukohdeViite hakukohde : hakukohteet) {
-      jarjestaHakukohteenValinnanVaiheet(hakukohde, jarjestetty);
+      jarjestaHakukohteenValinnanVaiheet(
+          hakukohde, LinkitettavaJaKopioitavaUtil.teeMappiOidienMukaan(jarjestetty));
     }
-    return new ArrayList<>(jarjestetty.values());
+    return jarjestetty;
   }
 
   public List<ValinnanVaihe> findByValintaryhma(String oid) {

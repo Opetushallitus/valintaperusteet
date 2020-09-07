@@ -114,29 +114,36 @@ public abstract class LinkitettavaJaKopioitavaUtil {
     }
   }
 
-  private static void tarkistaOidListaSisaltaaKaikkiAnnetut(
-      Collection<String> annetutOidit, Collection<String> kaikkiOidit) {
-    if (!annetutOidit.containsAll(kaikkiOidit)) {
-      throw new RuntimeException("OID-lista ei ole täydellinen.");
-    }
-  }
-
-  public static <T extends Linkitettava> LinkedHashMap<String, T> jarjestaOidListanMukaan(
-      LinkedHashMap<String, T> jarjestettavat, List<String> uusiJarjestys) {
-    tarkistaOidListaSisaltaaKaikkiAnnetut(uusiJarjestys, jarjestettavat.keySet());
-    T edellinen = null;
-    LinkedHashMap<String, T> jarjestetty = new LinkedHashMap<String, T>();
+  public static <T extends Linkitettava<T>> List<T> jarjestaUudelleen(
+      List<T> jarjestettavat, List<String> uusiJarjestys) {
+    LinkedList<T> kaanteinenJarjestys = new LinkedList<>();
     for (String oid : uusiJarjestys) {
-      T t = jarjestettavat.get(oid);
-      if (edellinen != null) {
-        edellinen.setSeuraava(t);
-      }
-      t.setEdellinen(edellinen);
-      jarjestetty.put(t.getOid(), t);
-      edellinen = t;
+      kaanteinenJarjestys.push(
+          jarjestettavat.stream()
+              .filter(t -> t.getOid().equals(oid))
+              .findFirst()
+              .orElseThrow(
+                  () -> new RuntimeException("Uusi järjestys sisältää ylimääräisiä alkioita")));
     }
-    edellinen.setSeuraava(null);
-    return jarjestetty;
+    if (kaanteinenJarjestys.size() != jarjestettavat.size()) {
+      throw new RuntimeException("Uusi järjestys ei ole täydellinen");
+    }
+
+    kaanteinenJarjestys.stream()
+        .reduce(
+            (seuraava, edellinen) -> {
+              seuraava.setEdellinen(edellinen);
+              edellinen.setSeuraava(seuraava);
+              return edellinen;
+            })
+        .ifPresent(
+            ensimmainen -> {
+              kaanteinenJarjestys.peek().setSeuraava(null);
+              ensimmainen.setEdellinen(null);
+            });
+
+    Collections.reverse(kaanteinenJarjestys);
+    return kaanteinenJarjestys;
   }
 
   private static <T extends Kopioitava> void paivitaKopio(
