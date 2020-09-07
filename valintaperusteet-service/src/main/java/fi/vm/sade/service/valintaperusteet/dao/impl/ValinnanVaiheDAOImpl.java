@@ -164,7 +164,7 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
         .fetch()
         .leftJoin(vv.jonot, valintatapaJono)
         .fetch()
-        .leftJoin(vv.seuraavaValinnanVaihe)
+        .leftJoin(vv.edellinenValinnanVaihe)
         .fetch()
         .leftJoin(vv.masterValinnanVaihe)
         .fetch()
