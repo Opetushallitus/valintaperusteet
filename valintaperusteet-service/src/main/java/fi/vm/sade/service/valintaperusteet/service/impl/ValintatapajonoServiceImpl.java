@@ -86,7 +86,7 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
 
   @Override
   public List<Valintatapajono> findJonoByValinnanvaihe(String oid) {
-    return LinkitettavaJaKopioitavaUtil.jarjesta(valintatapajonoDAO.findByValinnanVaihe(oid));
+    return valintatapajonoDAO.findByValinnanVaihe(oid);
   }
 
   @Override
@@ -197,9 +197,7 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
     Valintatapajono kopio = ValintatapajonoUtil.teeKopioMasterista(masterValintatapajono, null);
     kopio.setValinnanVaihe(valinnanVaihe);
     kopio.setOid(oidService.haeValintatapajonoOid());
-    List<Valintatapajono> jonot =
-        LinkitettavaJaKopioitavaUtil.jarjesta(
-            valintatapajonoDAO.findByValinnanVaihe(valinnanVaihe.getOid()));
+    List<Valintatapajono> jonot = valintatapajonoDAO.findByValinnanVaihe(valinnanVaihe.getOid());
     Valintatapajono edellinenValintatapajono =
         LinkitettavaJaKopioitavaUtil.haeMasterinEdellistaVastaava(
             edellinenMasterValintatapajono, jonot);
@@ -442,8 +440,7 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
       ValinnanVaihe vaihe, List<String> valintatapajonoOidit) {
     LinkedHashMap<String, Valintatapajono> alkuperainenJarjestys =
         LinkitettavaJaKopioitavaUtil.teeMappiOidienMukaan(
-            LinkitettavaJaKopioitavaUtil.jarjesta(
-                valintatapajonoDAO.findByValinnanVaihe(vaihe.getOid())));
+            valintatapajonoDAO.findByValinnanVaihe(vaihe.getOid()));
     LinkedHashMap<String, Valintatapajono> jarjestetty =
         LinkitettavaJaKopioitavaUtil.jarjestaOidListanMukaan(
             alkuperainenJarjestys, valintatapajonoOidit);
@@ -457,8 +454,7 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
       ValinnanVaihe vaihe, LinkedHashMap<String, Valintatapajono> uusiMasterJarjestys) {
     LinkedHashMap<String, Valintatapajono> alkuperainenJarjestys =
         LinkitettavaJaKopioitavaUtil.teeMappiOidienMukaan(
-            LinkitettavaJaKopioitavaUtil.jarjesta(
-                valintatapajonoDAO.findByValinnanVaihe(vaihe.getOid())));
+            valintatapajonoDAO.findByValinnanVaihe(vaihe.getOid()));
     LinkedHashMap<String, Valintatapajono> jarjestetty =
         LinkitettavaJaKopioitavaUtil.jarjestaKopiotMasterJarjestyksenMukaan(
             alkuperainenJarjestys, uusiMasterJarjestys);

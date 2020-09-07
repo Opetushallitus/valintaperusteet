@@ -34,7 +34,6 @@ import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
-import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -132,11 +131,9 @@ public class ValintaryhmaServiceTest {
       ValinnanVaihe vaihe81L = vr33Lvaiheet.get(1);
 
       List<Valintatapajono> vaihe80Ljonot =
-          LinkitettavaJaKopioitavaUtil.jarjesta(
-              valintatapajonoDAO.findByValinnanVaihe(vaihe80L.getOid()));
+          valintatapajonoDAO.findByValinnanVaihe(vaihe80L.getOid());
       List<Valintatapajono> vaihe81Ljonot =
-          LinkitettavaJaKopioitavaUtil.jarjesta(
-              valintatapajonoDAO.findByValinnanVaihe(vaihe81L.getOid()));
+          valintatapajonoDAO.findByValinnanVaihe(vaihe81L.getOid());
 
       assertEquals(2, vaihe80Ljonot.size());
       assertEquals(1, vaihe81Ljonot.size());
@@ -158,11 +155,9 @@ public class ValintaryhmaServiceTest {
       ValinnanVaihe vaihe81L = vr33Lvaiheet.get(1);
 
       List<Valintatapajono> vaihe80Ljonot =
-          LinkitettavaJaKopioitavaUtil.jarjesta(
-              valintatapajonoDAO.findByValinnanVaihe(vaihe80L.getOid()));
+          valintatapajonoDAO.findByValinnanVaihe(vaihe80L.getOid());
       List<Valintatapajono> vaihe81Ljonot =
-          LinkitettavaJaKopioitavaUtil.jarjesta(
-              valintatapajonoDAO.findByValinnanVaihe(vaihe81L.getOid()));
+          valintatapajonoDAO.findByValinnanVaihe(vaihe81L.getOid());
 
       assertEquals(2, vaihe80Ljonot.size());
       assertEquals(1, vaihe81Ljonot.size());
@@ -176,11 +171,9 @@ public class ValintaryhmaServiceTest {
       ValinnanVaihe uusiVaihe2 = uusiVaiheet.get(1);
 
       List<Valintatapajono> uusiVaihe1jonot =
-          LinkitettavaJaKopioitavaUtil.jarjesta(
-              valintatapajonoDAO.findByValinnanVaihe(uusiVaihe1.getOid()));
+          valintatapajonoDAO.findByValinnanVaihe(uusiVaihe1.getOid());
       List<Valintatapajono> uusiVaihe2jonot =
-          LinkitettavaJaKopioitavaUtil.jarjesta(
-              valintatapajonoDAO.findByValinnanVaihe(uusiVaihe2.getOid()));
+          valintatapajonoDAO.findByValinnanVaihe(uusiVaihe2.getOid());
 
       assertEquals(2, uusiVaihe1jonot.size());
       assertEquals(1, uusiVaihe2jonot.size());

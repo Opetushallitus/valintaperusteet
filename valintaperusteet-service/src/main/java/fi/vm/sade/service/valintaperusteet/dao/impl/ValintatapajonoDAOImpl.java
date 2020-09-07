@@ -36,25 +36,26 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
     QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
     QValintatapajono jono = QValintatapajono.valintatapajono;
     QHakijaryhmaValintatapajono hv = QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
-    return from(jono)
-        .join(jono.valinnanVaihe, valinnanVaihe)
-        .fetch()
-        .leftJoin(valinnanVaihe.valintaryhma)
-        .leftJoin(jono.edellinenValintatapajono)
-        .fetch()
-        .leftJoin(jono.masterValintatapajono)
-        .fetch()
-        .leftJoin(jono.varasijanTayttojono)
-        .fetch()
-        .leftJoin(jono.hakijaryhmat, hv)
-        .fetch()
-        .leftJoin(hv.hakijaryhma)
-        .fetch()
-        .leftJoin(jono.valinnanVaihe)
-        .fetch()
-        .where(valinnanVaihe.oid.eq(oid))
-        .distinct()
-        .list(jono);
+    return LinkitettavaJaKopioitavaUtil.jarjesta(
+        from(jono)
+            .join(jono.valinnanVaihe, valinnanVaihe)
+            .fetch()
+            .leftJoin(valinnanVaihe.valintaryhma)
+            .leftJoin(jono.edellinenValintatapajono)
+            .fetch()
+            .leftJoin(jono.masterValintatapajono)
+            .fetch()
+            .leftJoin(jono.varasijanTayttojono)
+            .fetch()
+            .leftJoin(jono.hakijaryhmat, hv)
+            .fetch()
+            .leftJoin(hv.hakijaryhma)
+            .fetch()
+            .leftJoin(jono.valinnanVaihe)
+            .fetch()
+            .where(valinnanVaihe.oid.eq(oid))
+            .distinct()
+            .list(jono));
   }
 
   @Override
