@@ -143,8 +143,9 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
     QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
     QValinnanVaihe vv = QValinnanVaihe.valinnanVaihe;
     QValintatapajono valintatapaJono = QValintatapajono.valintatapajono;
-    return from(valintaryhma)
-        .leftJoin(valintaryhma.valinnanvaiheet, vv)
+    return from(vv)
+        .join(vv.valintaryhma, valintaryhma)
+        .fetch()
         .leftJoin(vv.jonot, valintatapaJono)
         .fetch()
         .leftJoin(vv.seuraavaValinnanVaihe)
@@ -152,6 +153,7 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
         .leftJoin(vv.masterValinnanVaihe)
         .fetch()
         .where(valintaryhma.oid.eq(oid))
+        .distinct()
         .list(vv);
   }
 

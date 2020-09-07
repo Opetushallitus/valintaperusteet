@@ -49,7 +49,7 @@ public class ValinnanVaiheDAOTest {
 
   @Test
   public void testFindByValintaryhma() {
-    List<ValinnanVaihe> oid1 = valinnanVaiheDAO.findByValintaryhma("oid2");
+    List<ValinnanVaihe> oid1 = valinnanVaiheDAO.findByValintaryhma("oid1");
     assertEquals(1, oid1.size());
   }
 
