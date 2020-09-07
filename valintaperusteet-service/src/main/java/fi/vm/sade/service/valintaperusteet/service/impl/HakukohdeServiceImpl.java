@@ -11,6 +11,7 @@ import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakukohdeViiteEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -134,7 +135,8 @@ public class HakukohdeServiceImpl implements HakukohdeService {
     // Järjestetään jonot vaiheiden sisällä
     for (ValinnanVaihe valinnanVaihe : valinnanVaiheetIlmanlaskentaa) {
       valinnanVaiheDAO.detach(valinnanVaihe);
-      valinnanVaihe.setJonot(LinkitettavaJaKopioitavaUtil.jarjestaSet(valinnanVaihe.getJonot()));
+      valinnanVaihe.setJonot(
+          new LinkedHashSet<>(LinkitettavaJaKopioitavaUtil.jarjesta(valinnanVaihe.getJonot())));
     }
     return valinnanVaiheetIlmanlaskentaa;
   }
