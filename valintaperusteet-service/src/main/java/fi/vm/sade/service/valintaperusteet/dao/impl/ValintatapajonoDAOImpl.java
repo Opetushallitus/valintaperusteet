@@ -36,8 +36,9 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
     QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
     QValintatapajono jono = QValintatapajono.valintatapajono;
     QHakijaryhmaValintatapajono hv = QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
-    return from(valinnanVaihe)
-        .leftJoin(valinnanVaihe.jonot, jono)
+    return from(jono)
+        .join(jono.valinnanVaihe, valinnanVaihe)
+        .fetch()
         .leftJoin(valinnanVaihe.valintaryhma)
         .leftJoin(jono.edellinenValintatapajono)
         .fetch()
@@ -51,8 +52,8 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
         .fetch()
         .leftJoin(jono.valinnanVaihe)
         .fetch()
-        .distinct()
         .where(valinnanVaihe.oid.eq(oid))
+        .distinct()
         .list(jono);
   }
 
