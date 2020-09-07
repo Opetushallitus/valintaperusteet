@@ -10,6 +10,7 @@ import fi.vm.sade.service.valintaperusteet.model.QHakijaryhma;
 import fi.vm.sade.service.valintaperusteet.model.QHakijaryhmaValintatapajono;
 import fi.vm.sade.service.valintaperusteet.model.QHakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.QValintatapajono;
+import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 import java.util.Collection;
 import java.util.List;
 import org.springframework.stereotype.Repository;
@@ -112,22 +113,23 @@ public class HakijaryhmaValintatapajonoDAOImpl
     QHakijaryhmaValintatapajono hv = QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
     QHakukohdeViite v = QHakukohdeViite.hakukohdeViite;
 
-    return from(hv)
-        .join(hv.hakukohdeViite, v)
-        .fetch()
-        .leftJoin(hv.hakijaryhma)
-        .fetch()
-        .leftJoin(v.hakijaryhmat)
-        .fetch()
-        .leftJoin(hv.master)
-        .fetch()
-        .leftJoin(hv.edellinen)
-        .fetch()
-        .leftJoin(hv.hakijaryhmatyyppikoodi)
-        .fetch()
-        .where(v.oid.eq(oid))
-        .distinct()
-        .list(hv);
+    return LinkitettavaJaKopioitavaUtil.jarjesta(
+        from(hv)
+            .join(hv.hakukohdeViite, v)
+            .fetch()
+            .leftJoin(hv.hakijaryhma)
+            .fetch()
+            .leftJoin(v.hakijaryhmat)
+            .fetch()
+            .leftJoin(hv.master)
+            .fetch()
+            .leftJoin(hv.edellinen)
+            .fetch()
+            .leftJoin(hv.hakijaryhmatyyppikoodi)
+            .fetch()
+            .where(v.oid.eq(oid))
+            .distinct()
+            .list(hv));
   }
 
   @Override

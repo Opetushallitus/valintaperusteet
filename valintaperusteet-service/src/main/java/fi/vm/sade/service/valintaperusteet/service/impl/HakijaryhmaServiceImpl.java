@@ -114,11 +114,7 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
 
   @Override
   public List<Hakijaryhma> findByHakukohde(String oid) {
-    List<HakijaryhmaValintatapajono> byHakukohde =
-        hakijaryhmaValintatapajonoDAO.findByHakukohde(oid);
-    List<HakijaryhmaValintatapajono> jarjestetty =
-        LinkitettavaJaKopioitavaUtil.jarjesta(byHakukohde);
-    return jarjestetty.stream()
+    return hakijaryhmaValintatapajonoDAO.findByHakukohde(oid).stream()
         .map(HakijaryhmaValintatapajono::getHakijaryhma)
         .collect(Collectors.toList());
   }

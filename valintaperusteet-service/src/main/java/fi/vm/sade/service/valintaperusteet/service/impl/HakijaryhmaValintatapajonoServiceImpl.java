@@ -292,9 +292,7 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
 
   @Override
   public List<HakijaryhmaValintatapajono> findByHakukohde(String oid) {
-    List<HakijaryhmaValintatapajono> byHakukohde =
-        hakijaryhmaValintatapajonoDAO.findByHakukohde(oid);
-    return LinkitettavaJaKopioitavaUtil.jarjesta(byHakukohde);
+    return hakijaryhmaValintatapajonoDAO.findByHakukohde(oid);
   }
 
   @Override
@@ -312,8 +310,7 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
       HakukohdeViite viite, List<String> hakijaryhmajonoOidit) {
     LinkedHashMap<String, HakijaryhmaValintatapajono> alkuperainenJarjestys =
         LinkitettavaJaKopioitavaUtil.teeMappiOidienMukaan(
-            LinkitettavaJaKopioitavaUtil.jarjesta(
-                hakijaryhmaValintatapajonoDAO.findByHakukohde(viite.getOid())));
+            hakijaryhmaValintatapajonoDAO.findByHakukohde(viite.getOid()));
     LinkedHashMap<String, HakijaryhmaValintatapajono> jarjestetty =
         LinkitettavaJaKopioitavaUtil.jarjestaOidListanMukaan(
             alkuperainenJarjestys, hakijaryhmajonoOidit);
