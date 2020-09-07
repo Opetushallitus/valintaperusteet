@@ -120,8 +120,7 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
 
   @Override
   public List<Hakijaryhma> findByValintaryhma(String oid) {
-    List<Hakijaryhma> valintaryhma = hakijaryhmaDAO.findByValintaryhma(oid);
-    return LinkitettavaJaKopioitavaUtil.jarjesta(valintaryhma);
+    return hakijaryhmaDAO.findByValintaryhma(oid);
   }
 
   @Override
@@ -212,8 +211,7 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
       Valintaryhma valintaryhma, List<String> hakijaryhmaOidit) {
     LinkedHashMap<String, Hakijaryhma> alkuperainenJarjestys =
         LinkitettavaJaKopioitavaUtil.teeMappiOidienMukaan(
-            LinkitettavaJaKopioitavaUtil.jarjesta(
-                hakijaryhmaDAO.findByValintaryhma(valintaryhma.getOid())));
+            hakijaryhmaDAO.findByValintaryhma(valintaryhma.getOid()));
     LinkedHashMap<String, Hakijaryhma> jarjestetty =
         LinkitettavaJaKopioitavaUtil.jarjestaOidListanMukaan(
             alkuperainenJarjestys, hakijaryhmaOidit);
@@ -227,9 +225,7 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
       JuureenKopiointiCache kopiointiCache) {
     Hakijaryhma kopio = luoKopioHakijaryhmasta(valintaryhma, masterHakijaryhma, kopiointiCache);
     kopio.setValintaryhma(valintaryhma);
-    List<Hakijaryhma> ryhmat =
-        LinkitettavaJaKopioitavaUtil.jarjesta(
-            hakijaryhmaDAO.findByValintaryhma(valintaryhma.getOid()));
+    List<Hakijaryhma> ryhmat = hakijaryhmaDAO.findByValintaryhma(valintaryhma.getOid());
     Hakijaryhma lisatty = lisaaKopio(kopio, edellinenHakijaryhma, ryhmat);
     valintaryhma.getHakijaryhmat().add(lisatty);
     if (kopiointiCache != null) {
@@ -253,12 +249,11 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
 
   private Hakijaryhma lisaaKopio(
       Hakijaryhma kopio, Hakijaryhma edellinenMasterHakijaryhma, List<Hakijaryhma> ryhmat) {
-    List<Hakijaryhma> jarjestetty = LinkitettavaJaKopioitavaUtil.jarjesta(ryhmat);
     Hakijaryhma edellinenHakijaryhma =
         LinkitettavaJaKopioitavaUtil.haeMasterinEdellistaVastaava(
-            edellinenMasterHakijaryhma, jarjestetty);
+            edellinenMasterHakijaryhma, ryhmat);
     if (edellinenHakijaryhma == null && !ryhmat.isEmpty()) {
-      edellinenHakijaryhma = jarjestetty.get(jarjestetty.size() - 1);
+      edellinenHakijaryhma = ryhmat.get(ryhmat.size() - 1);
     }
     kopio.setEdellinenHakijaryhma(edellinenHakijaryhma);
     Hakijaryhma lisatty = hakijaryhmaDAO.insert(kopio);

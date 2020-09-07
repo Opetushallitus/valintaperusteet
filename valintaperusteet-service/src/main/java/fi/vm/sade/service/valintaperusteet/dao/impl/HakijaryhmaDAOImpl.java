@@ -6,6 +6,7 @@ import com.mysema.query.types.EntityPath;
 import fi.vm.sade.service.valintaperusteet.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.model.*;
+import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 
@@ -85,20 +86,21 @@ public class HakijaryhmaDAOImpl extends AbstractJpaDAOImpl<Hakijaryhma, Long>
   public List<Hakijaryhma> findByValintaryhma(String oid) {
     QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
     QHakijaryhma hakijaryhma = QHakijaryhma.hakijaryhma;
-    return from(hakijaryhma)
-        .join(hakijaryhma.valintaryhma, valintaryhma)
-        .fetch()
-        .leftJoin(hakijaryhma.laskentakaava)
-        .fetch()
-        .leftJoin(hakijaryhma.hakijaryhmatyyppikoodi)
-        .fetch()
-        .leftJoin(hakijaryhma.edellinenHakijaryhma)
-        .fetch()
-        .leftJoin(hakijaryhma.masterHakijaryhma)
-        .fetch()
-        .where(valintaryhma.oid.eq(oid))
-        .distinct()
-        .list(hakijaryhma);
+    return LinkitettavaJaKopioitavaUtil.jarjesta(
+        from(hakijaryhma)
+            .join(hakijaryhma.valintaryhma, valintaryhma)
+            .fetch()
+            .leftJoin(hakijaryhma.laskentakaava)
+            .fetch()
+            .leftJoin(hakijaryhma.hakijaryhmatyyppikoodi)
+            .fetch()
+            .leftJoin(hakijaryhma.edellinenHakijaryhma)
+            .fetch()
+            .leftJoin(hakijaryhma.masterHakijaryhma)
+            .fetch()
+            .where(valintaryhma.oid.eq(oid))
+            .distinct()
+            .list(hakijaryhma));
   }
 
   @Override
