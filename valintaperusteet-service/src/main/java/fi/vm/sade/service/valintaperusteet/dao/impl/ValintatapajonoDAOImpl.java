@@ -195,14 +195,11 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
             .list(jono);
 
     // BUG-255 poistetaan jonoista väärin tallentuneet täyttöjonot
-    List<Long> ids = jonot.stream().map(j -> j.getId()).collect(Collectors.toList());
-    jonot.forEach(
-        j -> {
-          if (j.getVarasijanTayttojono() != null
-              && !ids.contains(j.getVarasijanTayttojono().getId())) {
-            j.setVarasijanTayttojono(null);
-          }
-        });
+    for (Valintatapajono j : jonot) {
+      if (j.getVarasijanTayttojono() != null && !jonot.contains(j.getVarasijanTayttojono())) {
+        j.setVarasijanTayttojono(null);
+      }
+    }
 
     return jonot;
   }
