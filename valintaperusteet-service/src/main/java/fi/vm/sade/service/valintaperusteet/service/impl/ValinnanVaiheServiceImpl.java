@@ -60,8 +60,7 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
 
   @Override
   public List<ValinnanVaihe> findByHakukohde(String oid) {
-    List<ValinnanVaihe> byHakukohde = valinnanVaiheDAO.findByHakukohde(oid);
-    return LinkitettavaJaKopioitavaUtil.jarjesta(byHakukohde);
+    return valinnanVaiheDAO.findByHakukohde(oid);
   }
 
   private ValinnanVaihe lisaaKopio(
@@ -84,8 +83,7 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
     ValinnanVaihe kopio = ValinnanVaiheUtil.teeKopioMasterista(masterValinnanVaihe, null);
     kopio.setHakukohdeViite(hakukohde);
     kopio.setOid(oidService.haeValinnanVaiheOid());
-    List<ValinnanVaihe> vaiheet =
-        LinkitettavaJaKopioitavaUtil.jarjesta(valinnanVaiheDAO.findByHakukohde(hakukohde.getOid()));
+    List<ValinnanVaihe> vaiheet = valinnanVaiheDAO.findByHakukohde(hakukohde.getOid());
     lisaaKopio(kopio, edellinenMasterValinnanVaihe, vaiheet);
   }
 
@@ -282,8 +280,7 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
       HakukohdeViite hakukohde, List<String> valinnanVaiheOidit) {
     LinkedHashMap<String, ValinnanVaihe> alkuperainenJarjestys =
         LinkitettavaJaKopioitavaUtil.teeMappiOidienMukaan(
-            LinkitettavaJaKopioitavaUtil.jarjesta(
-                valinnanVaiheDAO.findByHakukohde(hakukohde.getOid())));
+            valinnanVaiheDAO.findByHakukohde(hakukohde.getOid()));
     LinkedHashMap<String, ValinnanVaihe> jarjestetty =
         LinkitettavaJaKopioitavaUtil.jarjestaOidListanMukaan(
             alkuperainenJarjestys, valinnanVaiheOidit);
@@ -324,8 +321,7 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
       HakukohdeViite hakukohde, LinkedHashMap<String, ValinnanVaihe> uusiMasterJarjestys) {
     LinkedHashMap<String, ValinnanVaihe> alkuperainenJarjestys =
         LinkitettavaJaKopioitavaUtil.teeMappiOidienMukaan(
-            LinkitettavaJaKopioitavaUtil.jarjesta(
-                valinnanVaiheDAO.findByHakukohde(hakukohde.getOid())));
+            valinnanVaiheDAO.findByHakukohde(hakukohde.getOid()));
     LinkitettavaJaKopioitavaUtil.jarjestaKopiotMasterJarjestyksenMukaan(
         alkuperainenJarjestys, uusiMasterJarjestys);
   }

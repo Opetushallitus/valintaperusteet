@@ -6,6 +6,7 @@ import com.mysema.query.types.EntityPath;
 import fi.vm.sade.service.valintaperusteet.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.model.*;
+import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -159,18 +160,19 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
     QHakukohdeViite hakukohde = QHakukohdeViite.hakukohdeViite;
     QValinnanVaihe vv = QValinnanVaihe.valinnanVaihe;
     QValintatapajono valintatapaJono = QValintatapajono.valintatapajono;
-    return from(vv)
-        .join(vv.hakukohdeViite, hakukohde)
-        .fetch()
-        .leftJoin(vv.jonot, valintatapaJono)
-        .fetch()
-        .leftJoin(vv.edellinenValinnanVaihe)
-        .fetch()
-        .leftJoin(vv.masterValinnanVaihe)
-        .fetch()
-        .where(hakukohde.oid.eq(oid))
-        .distinct()
-        .list(vv);
+    return LinkitettavaJaKopioitavaUtil.jarjesta(
+        from(vv)
+            .join(vv.hakukohdeViite, hakukohde)
+            .fetch()
+            .leftJoin(vv.jonot, valintatapaJono)
+            .fetch()
+            .leftJoin(vv.edellinenValinnanVaihe)
+            .fetch()
+            .leftJoin(vv.masterValinnanVaihe)
+            .fetch()
+            .where(hakukohde.oid.eq(oid))
+            .distinct()
+            .list(vv));
   }
 
   @Override

@@ -108,8 +108,7 @@ public class HakukohdeServiceTest {
     }
     {
       assertNotNull(hakukohdeService.readByOid(lisatty.getOid()));
-      List<ValinnanVaihe> uusiVaiheet =
-          LinkitettavaJaKopioitavaUtil.jarjesta(valinnanVaiheDAO.findByHakukohde(lisatty.getOid()));
+      List<ValinnanVaihe> uusiVaiheet = valinnanVaiheDAO.findByHakukohde(lisatty.getOid());
 
       assertEquals(2, uusiVaiheet.size());
       ValinnanVaihe uusiVaihe1 = uusiVaiheet.get(0);
@@ -163,8 +162,7 @@ public class HakukohdeServiceTest {
       assertEquals(valintaryhmaOidEnnen, hakukohde.getValintaryhma().getOid());
       assertNull(hakukohde.getManuaalisestiSiirretty());
 
-      List<ValinnanVaihe> vaiheet =
-          LinkitettavaJaKopioitavaUtil.jarjesta(valinnanVaiheDAO.findByHakukohde(hakukohdeOid));
+      List<ValinnanVaihe> vaiheet = valinnanVaiheDAO.findByHakukohde(hakukohdeOid);
       assertEquals(2, vaiheet.size());
       assertEquals("104", vaiheet.get(0).getOid());
       assertEquals("105", vaiheet.get(1).getOid());
@@ -192,8 +190,7 @@ public class HakukohdeServiceTest {
       assertEquals(valintaryhmaOidLopuksi, hakukohde.getValintaryhma().getOid());
       assertTrue(hakukohde.getManuaalisestiSiirretty());
 
-      List<ValinnanVaihe> vaiheet =
-          LinkitettavaJaKopioitavaUtil.jarjesta(valinnanVaiheDAO.findByHakukohde(hakukohdeOid));
+      List<ValinnanVaihe> vaiheet = valinnanVaiheDAO.findByHakukohde(hakukohdeOid);
       assertEquals(2, vaiheet.size());
       assertNotNull(vaiheet.get(0).getMasterValinnanVaihe());
       assertEquals("103", vaiheet.get(0).getMasterValinnanVaihe().getOid());
@@ -232,8 +229,7 @@ public class HakukohdeServiceTest {
       assertNull(hakukohde.getValintaryhma());
       assertNull(hakukohde.getManuaalisestiSiirretty());
 
-      List<ValinnanVaihe> vaiheet =
-          LinkitettavaJaKopioitavaUtil.jarjesta(valinnanVaiheDAO.findByHakukohde(hakukohdeOid));
+      List<ValinnanVaihe> vaiheet = valinnanVaiheDAO.findByHakukohde(hakukohdeOid);
       assertEquals(1, vaiheet.size());
       assertEquals("106", vaiheet.get(0).getOid());
       assertNull(vaiheet.get(0).getMasterValinnanVaihe());
@@ -256,8 +252,7 @@ public class HakukohdeServiceTest {
       assertEquals(valintaryhmaOidLopuksi, hakukohde.getValintaryhma().getOid());
       assertTrue(hakukohde.getManuaalisestiSiirretty());
 
-      List<ValinnanVaihe> vaiheet =
-          LinkitettavaJaKopioitavaUtil.jarjesta(valinnanVaiheDAO.findByHakukohde(hakukohdeOid));
+      List<ValinnanVaihe> vaiheet = valinnanVaiheDAO.findByHakukohde(hakukohdeOid);
       assertEquals(2, vaiheet.size());
       assertNotNull(vaiheet.get(0).getMasterValinnanVaihe());
       assertEquals("103", vaiheet.get(0).getMasterValinnanVaihe().getOid());
@@ -289,8 +284,7 @@ public class HakukohdeServiceTest {
       assertEquals(valintaryhmaOidEnnen, hakukohde.getValintaryhma().getOid());
       assertNull(hakukohde.getManuaalisestiSiirretty());
 
-      List<ValinnanVaihe> vaiheet =
-          LinkitettavaJaKopioitavaUtil.jarjesta(valinnanVaiheDAO.findByHakukohde(hakukohdeOid));
+      List<ValinnanVaihe> vaiheet = valinnanVaiheDAO.findByHakukohde(hakukohdeOid);
       assertEquals(2, vaiheet.size());
       assertEquals("104", vaiheet.get(0).getOid());
       assertEquals("105", vaiheet.get(1).getOid());
@@ -310,8 +304,7 @@ public class HakukohdeServiceTest {
       assertNull(hakukohde.getValintaryhma());
       assertTrue(hakukohde.getManuaalisestiSiirretty());
 
-      List<ValinnanVaihe> vaiheet =
-          LinkitettavaJaKopioitavaUtil.jarjesta(valinnanVaiheDAO.findByHakukohde(hakukohdeOid));
+      List<ValinnanVaihe> vaiheet = valinnanVaiheDAO.findByHakukohde(hakukohdeOid);
       assertEquals(1, vaiheet.size());
       assertEquals("105", vaiheet.get(0).getOid());
       assertNull(vaiheet.get(0).getMasterValinnanVaihe());
@@ -336,8 +329,7 @@ public class HakukohdeServiceTest {
       assertEquals(valintaryhmaOid, hakukohde.getValintaryhma().getOid());
       assertNull(hakukohde.getManuaalisestiSiirretty());
 
-      List<ValinnanVaihe> vaiheet =
-          LinkitettavaJaKopioitavaUtil.jarjesta(valinnanVaiheDAO.findByHakukohde(hakukohdeOid));
+      List<ValinnanVaihe> vaiheet = valinnanVaiheDAO.findByHakukohde(hakukohdeOid);
       assertEquals(2, vaiheet.size());
       assertEquals("104", vaiheet.get(0).getOid());
       assertEquals("105", vaiheet.get(1).getOid());
@@ -357,8 +349,7 @@ public class HakukohdeServiceTest {
       assertEquals(valintaryhmaOid, hakukohde.getValintaryhma().getOid());
       assertTrue(hakukohde.getManuaalisestiSiirretty());
 
-      List<ValinnanVaihe> vaiheet =
-          LinkitettavaJaKopioitavaUtil.jarjesta(valinnanVaiheDAO.findByHakukohde(hakukohdeOid));
+      List<ValinnanVaihe> vaiheet = valinnanVaiheDAO.findByHakukohde(hakukohdeOid);
       assertEquals(2, vaiheet.size());
       assertEquals("104", vaiheet.get(0).getOid());
       assertEquals("105", vaiheet.get(1).getOid());
