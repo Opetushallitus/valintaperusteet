@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -188,13 +187,10 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
       JuureenKopiointiCache kopiointiCache) {
     Valintaryhma childValintaryhma = valintaryhmaService.readByOid(childValintaryhmaoid);
     List<Hakijaryhma> byValintaryhma = hakijaryhmaDAO.findByValintaryhma(parentValintaryhmaOid);
-    byValintaryhma.stream()
-        .filter(Objects::nonNull)
-        .forEach(
-            parentHakijaryhma -> {
-              lisaaValintaryhmalleKopioMasterHakijaryhmasta(
-                  childValintaryhma, parentHakijaryhma, parentHakijaryhma, kopiointiCache);
-            });
+    for (Hakijaryhma parentHakijaryhma : byValintaryhma) {
+      lisaaValintaryhmalleKopioMasterHakijaryhmasta(
+          childValintaryhma, parentHakijaryhma, parentHakijaryhma, kopiointiCache);
+    }
   }
 
   @Override

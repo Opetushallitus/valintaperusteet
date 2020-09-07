@@ -85,9 +85,8 @@ public class HakijaryhmaDAOImpl extends AbstractJpaDAOImpl<Hakijaryhma, Long>
   public List<Hakijaryhma> findByValintaryhma(String oid) {
     QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
     QHakijaryhma hakijaryhma = QHakijaryhma.hakijaryhma;
-    return from(valintaryhma)
-        .leftJoin(valintaryhma.hakijaryhmat, hakijaryhma)
-        .leftJoin(hakijaryhma.valintaryhma)
+    return from(hakijaryhma)
+        .join(hakijaryhma.valintaryhma, valintaryhma)
         .fetch()
         .leftJoin(hakijaryhma.laskentakaava)
         .fetch()
@@ -98,6 +97,7 @@ public class HakijaryhmaDAOImpl extends AbstractJpaDAOImpl<Hakijaryhma, Long>
         .leftJoin(hakijaryhma.masterHakijaryhma)
         .fetch()
         .where(valintaryhma.oid.eq(oid))
+        .distinct()
         .list(hakijaryhma);
   }
 
