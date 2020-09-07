@@ -95,9 +95,7 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
     ValinnanVaihe kopio = ValinnanVaiheUtil.teeKopioMasterista(masterValinnanVaihe, null);
     kopio.setValintaryhma(valintaryhma);
     kopio.setOid(oidService.haeValinnanVaiheOid());
-    List<ValinnanVaihe> vaiheet =
-        LinkitettavaJaKopioitavaUtil.jarjesta(
-            valinnanVaiheDAO.findByValintaryhma(valintaryhma.getOid()));
+    List<ValinnanVaihe> vaiheet = valinnanVaiheDAO.findByValintaryhma(valintaryhma.getOid());
     ValinnanVaihe lisatty = lisaaKopio(kopio, edellinenMasterValinnanVaihe, vaiheet);
     List<Valintaryhma> alavalintaryhmat =
         valintaryhmaService.findValintaryhmasByParentOid(valintaryhma.getOid());
@@ -292,8 +290,7 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
     try {
       LinkedHashMap<String, ValinnanVaihe> alkuperainenJarjestys =
           LinkitettavaJaKopioitavaUtil.teeMappiOidienMukaan(
-              LinkitettavaJaKopioitavaUtil.jarjesta(
-                  valinnanVaiheDAO.findByValintaryhma(valintaryhma.getOid())));
+              valinnanVaiheDAO.findByValintaryhma(valintaryhma.getOid()));
       LinkedHashMap<String, ValinnanVaihe> jarjestetty =
           LinkitettavaJaKopioitavaUtil.jarjestaKopiotMasterJarjestyksenMukaan(
               alkuperainenJarjestys, uusiMasterJarjestys);
@@ -330,8 +327,7 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
       Valintaryhma valintaryhma, List<String> valinnanVaiheOidit) {
     LinkedHashMap<String, ValinnanVaihe> alkuperainenJarjestys =
         LinkitettavaJaKopioitavaUtil.teeMappiOidienMukaan(
-            LinkitettavaJaKopioitavaUtil.jarjesta(
-                valinnanVaiheDAO.findByValintaryhma(valintaryhma.getOid())));
+            valinnanVaiheDAO.findByValintaryhma(valintaryhma.getOid()));
     LinkedHashMap<String, ValinnanVaihe> jarjestetty =
         LinkitettavaJaKopioitavaUtil.jarjestaOidListanMukaan(
             alkuperainenJarjestys, valinnanVaiheOidit);
@@ -349,7 +345,7 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
   }
 
   public List<ValinnanVaihe> findByValintaryhma(String oid) {
-    return LinkitettavaJaKopioitavaUtil.jarjesta(valinnanVaiheDAO.findByValintaryhma(oid));
+    return valinnanVaiheDAO.findByValintaryhma(oid);
   }
 
   private ValinnanVaihe kopioiValinnanVaiheetRekursiivisesti(

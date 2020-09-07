@@ -61,8 +61,7 @@ public class HakukohdeServiceTest {
     final String parentOid = "oid33";
     {
       assertNotNull(valintaryhmaService.readByOid(parentOid));
-      List<ValinnanVaihe> vr33Lvaiheet =
-          LinkitettavaJaKopioitavaUtil.jarjesta(valinnanVaiheDAO.findByValintaryhma(parentOid));
+      List<ValinnanVaihe> vr33Lvaiheet = valinnanVaiheDAO.findByValintaryhma(parentOid);
 
       assertEquals(2, vr33Lvaiheet.size());
       ValinnanVaihe vaihe80L = vr33Lvaiheet.get(0);
@@ -89,8 +88,7 @@ public class HakukohdeServiceTest {
 
     {
       assertNotNull(valintaryhmaService.readByOid(parentOid));
-      List<ValinnanVaihe> vr33Lvaiheet =
-          LinkitettavaJaKopioitavaUtil.jarjesta(valinnanVaiheDAO.findByValintaryhma(parentOid));
+      List<ValinnanVaihe> vr33Lvaiheet = valinnanVaiheDAO.findByValintaryhma(parentOid);
 
       assertEquals(2, vr33Lvaiheet.size());
       ValinnanVaihe vaihe80L = vr33Lvaiheet.get(0);

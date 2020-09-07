@@ -89,9 +89,7 @@ public class ValintaryhmaServiceTest {
     uusiValintaryhma.setNimi("uusi valintaryhma");
 
     Valintaryhma lisatty = valintaryhmaService.insert(uusiValintaryhma, parentOid);
-    List<ValinnanVaihe> valinnanVaiheet =
-        LinkitettavaJaKopioitavaUtil.jarjesta(
-            valinnanVaiheDAO.findByValintaryhma(lisatty.getOid()));
+    List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheDAO.findByValintaryhma(lisatty.getOid());
     assertEquals(valinnanVaiheetLkm, valinnanVaiheet.size());
 
     assertEquals(10L, valinnanVaiheet.get(0).getMasterValinnanVaihe().getId().longValue());
@@ -127,8 +125,7 @@ public class ValintaryhmaServiceTest {
     final String parentOid = "oid33";
     {
       assertNotNull(valintaryhmaService.readByOid(parentOid));
-      List<ValinnanVaihe> vr33Lvaiheet =
-          LinkitettavaJaKopioitavaUtil.jarjesta(valinnanVaiheDAO.findByValintaryhma(parentOid));
+      List<ValinnanVaihe> vr33Lvaiheet = valinnanVaiheDAO.findByValintaryhma(parentOid);
 
       assertEquals(2, vr33Lvaiheet.size());
       ValinnanVaihe vaihe80L = vr33Lvaiheet.get(0);
@@ -154,8 +151,7 @@ public class ValintaryhmaServiceTest {
 
     {
       assertNotNull(valintaryhmaService.readByOid(parentOid));
-      List<ValinnanVaihe> vr33Lvaiheet =
-          LinkitettavaJaKopioitavaUtil.jarjesta(valinnanVaiheDAO.findByValintaryhma(parentOid));
+      List<ValinnanVaihe> vr33Lvaiheet = valinnanVaiheDAO.findByValintaryhma(parentOid);
 
       assertEquals(2, vr33Lvaiheet.size());
       ValinnanVaihe vaihe80L = vr33Lvaiheet.get(0);
@@ -173,9 +169,7 @@ public class ValintaryhmaServiceTest {
     }
     {
       assertNotNull(valintaryhmaService.readByOid(lisatty.getOid()));
-      List<ValinnanVaihe> uusiVaiheet =
-          LinkitettavaJaKopioitavaUtil.jarjesta(
-              valinnanVaiheDAO.findByValintaryhma(lisatty.getOid()));
+      List<ValinnanVaihe> uusiVaiheet = valinnanVaiheDAO.findByValintaryhma(lisatty.getOid());
 
       assertEquals(2, uusiVaiheet.size());
       ValinnanVaihe uusiVaihe1 = uusiVaiheet.get(0);
