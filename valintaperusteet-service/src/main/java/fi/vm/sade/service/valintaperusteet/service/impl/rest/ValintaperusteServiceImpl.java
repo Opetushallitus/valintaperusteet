@@ -13,7 +13,6 @@ import fi.vm.sade.service.valintaperusteet.service.exception.HakuparametritOnTyh
 import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheEpaaktiivinenException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheJarjestyslukuOutOfBoundsException;
 import fi.vm.sade.service.valintaperusteet.service.impl.util.ValintaperusteServiceUtil;
-import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -65,7 +64,6 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
                 h -> {
                   List<Valintatapajono> valintatapajonot =
                       valintatapajonoDAO.haeValintatapajonotSijoittelulle(h);
-                  valintatapajonot = LinkitettavaJaKopioitavaUtil.jarjesta(valintatapajonot);
                   valintatapajonot =
                       valintatapajonot.stream()
                           .filter(jono -> jono.getSiirretaanSijoitteluun())

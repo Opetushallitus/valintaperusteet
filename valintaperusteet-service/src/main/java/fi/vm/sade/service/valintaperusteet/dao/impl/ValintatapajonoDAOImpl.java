@@ -186,13 +186,16 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
 
     // Haetaan löydetyn valinnan vaiheen kaikki jonot
     List<Valintatapajono> jonot =
-        from(jono)
-            .leftJoin(jono.valinnanVaihe, vv)
-            .leftJoin(jono.varasijanTayttojono)
-            .fetch()
-            .where(vv.oid.eq(lastValinnanVaihe.getOid()))
-            .distinct()
-            .list(jono);
+        LinkitettavaJaKopioitavaUtil.jarjesta(
+            from(jono)
+                .join(jono.valinnanVaihe, vv)
+                .leftJoin(jono.edellinenValintatapajono)
+                .fetch()
+                .leftJoin(jono.varasijanTayttojono)
+                .fetch()
+                .where(vv.oid.eq(lastValinnanVaihe.getOid()))
+                .distinct()
+                .list(jono));
 
     // BUG-255 poistetaan jonoista väärin tallentuneet täyttöjonot
     for (Valintatapajono j : jonot) {
