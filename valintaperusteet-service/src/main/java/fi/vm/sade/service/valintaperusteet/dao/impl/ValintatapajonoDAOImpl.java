@@ -173,8 +173,8 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
     // Etsitään hakukohteen viimeinen aktiivinen valinnan vaihe
     List<ValinnanVaihe> valinnanVaiheet =
         LinkitettavaJaKopioitavaUtil.jarjesta(
-            from(hakukohde)
-                .leftJoin(hakukohde.valinnanvaiheet, vv)
+            from(vv)
+                .join(vv.hakukohdeViite, hakukohde)
                 .where((hakukohde.oid.eq(hakukohdeOid)))
                 .list(vv));
 
