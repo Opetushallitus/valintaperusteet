@@ -214,24 +214,20 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
   }
 
   private List<Jarjestyskriteeri> jarjestaKriteerit(Valintatapajono jono, List<String> oids) {
-    List<Jarjestyskriteeri> alkuperainenJarjestys = jarjestyskriteeriDAO.findByJono(jono.getOid());
     List<Jarjestyskriteeri> jarjestetty =
-        LinkitettavaJaKopioitavaUtil.jarjestaUudelleen(alkuperainenJarjestys, oids);
+        LinkitettavaJaKopioitavaUtil.jarjestaUudelleen(
+            jarjestyskriteeriDAO.findByJono(jono.getOid()), oids);
     for (Valintatapajono kopio : jono.getKopiot()) {
-      jarjestaKopioValintatapajononKriteerit(
-          kopio, LinkitettavaJaKopioitavaUtil.teeMappiOidienMukaan(jarjestetty));
+      jarjestaKopioValintatapajononKriteerit(kopio, jarjestetty);
     }
     return jarjestetty;
   }
 
   private void jarjestaKopioValintatapajononKriteerit(
-      Valintatapajono jono, LinkedHashMap<String, Jarjestyskriteeri> uusiMasterJarjestys) {
-    LinkedHashMap<String, Jarjestyskriteeri> alkuperainenJarjestys =
-        LinkitettavaJaKopioitavaUtil.teeMappiOidienMukaan(
-            jarjestyskriteeriDAO.findByJono(jono.getOid()));
-    LinkedHashMap<String, Jarjestyskriteeri> jarjestetty =
-        LinkitettavaJaKopioitavaUtil.jarjestaKopiotMasterJarjestyksenMukaan(
-            alkuperainenJarjestys, uusiMasterJarjestys);
+      Valintatapajono jono, List<Jarjestyskriteeri> uusiMasterJarjestys) {
+    List<Jarjestyskriteeri> jarjestetty =
+        LinkitettavaJaKopioitavaUtil.jarjestaUudelleenMasterJarjestyksenMukaan(
+            jarjestyskriteeriDAO.findByJono(jono.getOid()), uusiMasterJarjestys);
     for (Valintatapajono kopio : jono.getKopiot()) {
       jarjestaKopioValintatapajononKriteerit(kopio, jarjestetty);
     }

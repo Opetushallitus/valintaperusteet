@@ -442,20 +442,16 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
         LinkitettavaJaKopioitavaUtil.jarjestaUudelleen(
             valintatapajonoDAO.findByValinnanVaihe(vaihe.getOid()), valintatapajonoOidit);
     for (ValinnanVaihe kopio : vaihe.getKopiot()) {
-      jarjestaKopioValinnanVaiheenValintatapajonot(
-          kopio, LinkitettavaJaKopioitavaUtil.teeMappiOidienMukaan(jarjestetty));
+      jarjestaKopioValinnanVaiheenValintatapajonot(kopio, jarjestetty);
     }
     return jarjestetty;
   }
 
   private void jarjestaKopioValinnanVaiheenValintatapajonot(
-      ValinnanVaihe vaihe, LinkedHashMap<String, Valintatapajono> uusiMasterJarjestys) {
-    LinkedHashMap<String, Valintatapajono> alkuperainenJarjestys =
-        LinkitettavaJaKopioitavaUtil.teeMappiOidienMukaan(
-            valintatapajonoDAO.findByValinnanVaihe(vaihe.getOid()));
-    LinkedHashMap<String, Valintatapajono> jarjestetty =
-        LinkitettavaJaKopioitavaUtil.jarjestaKopiotMasterJarjestyksenMukaan(
-            alkuperainenJarjestys, uusiMasterJarjestys);
+      ValinnanVaihe vaihe, List<Valintatapajono> uusiMasterJarjestys) {
+    List<Valintatapajono> jarjestetty =
+        LinkitettavaJaKopioitavaUtil.jarjestaUudelleenMasterJarjestyksenMukaan(
+            valintatapajonoDAO.findByValinnanVaihe(vaihe.getOid()), uusiMasterJarjestys);
     for (ValinnanVaihe kopio : vaihe.getKopiot()) {
       jarjestaKopioValinnanVaiheenValintatapajonot(kopio, jarjestetty);
     }

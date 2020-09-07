@@ -4,6 +4,7 @@ import fi.vm.sade.service.valintaperusteet.model.Kopioitava;
 import fi.vm.sade.service.valintaperusteet.model.Linkitettava;
 import fi.vm.sade.service.valintaperusteet.model.LinkitettavaJaKopioitava;
 import java.util.*;
+import java.util.function.Predicate;
 
 public abstract class LinkitettavaJaKopioitavaUtil {
 
@@ -21,68 +22,84 @@ public abstract class LinkitettavaJaKopioitavaUtil {
     return edellinen;
   }
 
-  public static <T extends LinkitettavaJaKopioitava>
-      LinkedHashMap<String, T> teeMappiMasterienOidinMukaan(Collection<T> lista) {
-    LinkedHashMap<String, T> map = new LinkedHashMap<String, T>();
-    for (T t : lista) {
-      if (t.getMaster() != null) {
-        map.put(t.getMaster().getOid(), t);
+  private static <T> Iterable<T> takeWhile(Predicate<T> p, Iterable<T> iterable) {
+    return () -> {
+      Iterator<T> i = iterable.iterator();
+      if (!i.hasNext()) {
+        return i;
       }
-    }
-    return map;
+      return new Iterator<T>() {
+        private T next = i.next();
+        private boolean hasNext = p.test(this.next);
+
+        @Override
+        public boolean hasNext() {
+          return hasNext;
+        }
+
+        @Override
+        public T next() {
+          if (hasNext) {
+            T current = this.next;
+            if (i.hasNext()) {
+              this.next = i.next();
+              this.hasNext = p.test(this.next);
+            } else {
+              this.hasNext = false;
+            }
+            return current;
+          }
+          throw new NoSuchElementException("");
+        }
+      };
+    };
   }
 
-  public static <T extends LinkitettavaJaKopioitava>
-      LinkedHashMap<String, T> jarjestaKopiotMasterJarjestyksenMukaan(
-          LinkedHashMap<String, T> jarjestettavatKopiot,
-          LinkedHashMap<String, T> uusiMasterJarjestys) {
-    Iterator<Map.Entry<String, T>> i = jarjestettavatKopiot.entrySet().iterator();
-    T edellinen = null;
-    LinkedHashMap<String, T> jarjestetty = new LinkedHashMap<String, T>();
-    // Jos ensimmäiset eivät ole kopioita (ts. ne on määritelty suoraan
-    // käsiteltävälle masterille) lisätään ne uuden järjestyksen ensimmäiseksi
-    while (i.hasNext()) {
-      T t = i.next().getValue();
-      if (t.getMaster() == null) {
-        edellinen = t;
-        jarjestetty.put(t.getOid(), t);
-      } else {
-        break;
-      }
-    }
-    LinkedHashMap<String, T> masterienOidinMukaan =
-        teeMappiMasterienOidinMukaan(jarjestettavatKopiot.values());
-    for (String masterOid : uusiMasterJarjestys.keySet()) {
-      T t = masterienOidinMukaan.get(masterOid);
-      if (t == null) {
-        continue;
-      }
+  private static <T> Iterable<T> dropWhile(Predicate<T> p, Iterable<T> iterable) {
+    return () -> {
+      Iterator<T> i = iterable.iterator();
+      while (i.hasNext()) {
+        T t = i.next();
+        if (!p.test(t)) {
+          return new Iterator<T>() {
+            boolean first = true;
 
-      if (edellinen != null) {
-        edellinen.setSeuraava(t);
+            @Override
+            public boolean hasNext() {
+              return first || i.hasNext();
+            }
+
+            @Override
+            public T next() {
+              if (first) {
+                first = false;
+                return t;
+              }
+              return i.next();
+            }
+          };
+        }
       }
-      t.setEdellinen(edellinen);
-      jarjestetty.put(t.getOid(), t);
-      edellinen = t;
-      // Käydään läpi kaikki seuraavat, jotka eivät ole kopioita
-      // ylemmän tason objekteista. Nämä ovat jo valmiiksi oikeassa järjestyksessä eikä niitä
-      // tarvitse järjestää.
-      while (edellinen.getSeuraava() != null && edellinen.getSeuraava().getMaster() == null) {
-        edellinen = (T) edellinen.getSeuraava();
-        jarjestetty.put(edellinen.getOid(), edellinen);
-      }
-    }
-    edellinen.setSeuraava(null);
-    return jarjestetty;
+      return i;
+    };
   }
 
-  public static <T extends LinkitettavaJaKopioitava> LinkedHashMap<String, T> teeMappiOidienMukaan(
-      Collection<T> list) {
-    LinkedHashMap<String, T> map = new LinkedHashMap<String, T>();
-    for (T t : list) {
-      map.put(t.getOid(), t);
+  public static <C extends Collection<T>, T extends LinkitettavaJaKopioitava<T, C>>
+      List<T> jarjestaUudelleenMasterJarjestyksenMukaan(
+          List<T> jarjestettavat, List<T> uusiMasterJarjestys) {
+    LinkedList<String> uusiJarjestys = new LinkedList<>();
+    for (T t : takeWhile(t -> t.getMaster() == null, jarjestettavat)) {
+      uusiJarjestys.add(t.getOid());
     }
-    return map;
+    for (T master : uusiMasterJarjestys) {
+      for (T t :
+          takeWhile(
+              t -> t.getMaster() == null || master.equals(t.getMaster()),
+              dropWhile(t -> !master.equals(t.getMaster()), jarjestettavat))) {
+        uusiJarjestys.add(t.getOid());
+      }
+    }
+    return jarjestaUudelleen(jarjestettavat, uusiJarjestys);
   }
 
   private static <T extends Linkitettava<T>> T seuraava(Iterable<T> linkitettavat, T edellinen) {
