@@ -12,6 +12,7 @@ import fi.vm.sade.service.valintaperusteet.model.QLaskentakaava;
 import fi.vm.sade.service.valintaperusteet.model.QValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.QValintaryhma;
 import fi.vm.sade.service.valintaperusteet.model.QValintatapajono;
+import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 
@@ -31,17 +32,18 @@ public class JarjestyskriteeriDAOImpl extends AbstractJpaDAOImpl<Jarjestyskritee
   public List<Jarjestyskriteeri> findByJono(String oid) {
     QJarjestyskriteeri jk = QJarjestyskriteeri.jarjestyskriteeri;
     QValintatapajono j = QValintatapajono.valintatapajono;
-    return from(jk)
-        .join(jk.valintatapajono, j)
-        .fetch()
-        .leftJoin(jk.edellinen)
-        .fetch()
-        .leftJoin(jk.master)
-        .fetch()
-        .leftJoin(jk.laskentakaava)
-        .fetch()
-        .where(j.oid.eq(oid))
-        .list(jk);
+    return LinkitettavaJaKopioitavaUtil.jarjesta(
+        from(jk)
+            .join(jk.valintatapajono, j)
+            .fetch()
+            .leftJoin(jk.edellinen)
+            .fetch()
+            .leftJoin(jk.master)
+            .fetch()
+            .leftJoin(jk.laskentakaava)
+            .fetch()
+            .where(j.oid.eq(oid))
+            .list(jk));
   }
 
   @Override

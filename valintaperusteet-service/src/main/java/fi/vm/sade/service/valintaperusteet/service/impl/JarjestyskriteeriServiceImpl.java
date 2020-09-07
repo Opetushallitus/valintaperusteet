@@ -100,7 +100,7 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
 
   @Override
   public List<Jarjestyskriteeri> findJarjestyskriteeriByJono(String oid) {
-    return LinkitettavaJaKopioitavaUtil.jarjesta(jarjestyskriteeriDAO.findByJono(oid));
+    return jarjestyskriteeriDAO.findByJono(oid);
   }
 
   @Override
@@ -151,9 +151,7 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
         teeKopioMasterista(valintatapajono, masterJarjestyskriteeri, laskentakaava, null);
     kopio.setValintatapajono(valintatapajono);
     kopio.setOid(oidService.haeJarjestyskriteeriOid());
-    List<Jarjestyskriteeri> jonot =
-        LinkitettavaJaKopioitavaUtil.jarjesta(
-            jarjestyskriteeriDAO.findByJono(valintatapajono.getOid()));
+    List<Jarjestyskriteeri> jonot = jarjestyskriteeriDAO.findByJono(valintatapajono.getOid());
     Jarjestyskriteeri edellinenJarjestyskriteeri =
         LinkitettavaJaKopioitavaUtil.haeMasterinEdellistaVastaava(
             edellinenMasterJarjestyskriteeri, jonot);
@@ -218,7 +216,7 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
   private List<Jarjestyskriteeri> jarjestaKriteerit(Valintatapajono jono, List<String> oids) {
     LinkedHashMap<String, Jarjestyskriteeri> alkuperainenJarjestys =
         LinkitettavaJaKopioitavaUtil.teeMappiOidienMukaan(
-            LinkitettavaJaKopioitavaUtil.jarjesta(jarjestyskriteeriDAO.findByJono(jono.getOid())));
+            jarjestyskriteeriDAO.findByJono(jono.getOid()));
     LinkedHashMap<String, Jarjestyskriteeri> jarjestetty =
         LinkitettavaJaKopioitavaUtil.jarjestaOidListanMukaan(alkuperainenJarjestys, oids);
     for (Valintatapajono kopio : jono.getKopiot()) {
@@ -231,7 +229,7 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
       Valintatapajono jono, LinkedHashMap<String, Jarjestyskriteeri> uusiMasterJarjestys) {
     LinkedHashMap<String, Jarjestyskriteeri> alkuperainenJarjestys =
         LinkitettavaJaKopioitavaUtil.teeMappiOidienMukaan(
-            LinkitettavaJaKopioitavaUtil.jarjesta(jarjestyskriteeriDAO.findByJono(jono.getOid())));
+            jarjestyskriteeriDAO.findByJono(jono.getOid()));
     LinkedHashMap<String, Jarjestyskriteeri> jarjestetty =
         LinkitettavaJaKopioitavaUtil.jarjestaKopiotMasterJarjestyksenMukaan(
             alkuperainenJarjestys, uusiMasterJarjestys);
