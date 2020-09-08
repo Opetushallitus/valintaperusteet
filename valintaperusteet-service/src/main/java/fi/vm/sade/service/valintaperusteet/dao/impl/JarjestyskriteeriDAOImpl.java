@@ -108,13 +108,14 @@ public class JarjestyskriteeriDAOImpl extends AbstractJpaDAOImpl<Jarjestyskritee
   @Override
   public List<Jarjestyskriteeri> jarjestaUudelleen(
       Valintatapajono jono, List<String> uusiJarjestys) {
-    return LinkitettavaJaKopioitavaUtil.jarjestaUudelleen(findByJono(jono), uusiJarjestys);
+    return LinkitettavaJaKopioitavaUtil.jarjestaUudelleen(
+        getEntityManager(), findByJono(jono), uusiJarjestys);
   }
 
   @Override
   public List<Jarjestyskriteeri> jarjestaUudelleenMasterJarjestyksenMukaan(
       Valintatapajono jono, List<Jarjestyskriteeri> uusiMasterJarjestys) {
     return LinkitettavaJaKopioitavaUtil.jarjestaUudelleenMasterJarjestyksenMukaan(
-        findByJono(jono), uusiMasterJarjestys);
+        getEntityManager(), findByJono(jono), uusiMasterJarjestys);
   }
 }

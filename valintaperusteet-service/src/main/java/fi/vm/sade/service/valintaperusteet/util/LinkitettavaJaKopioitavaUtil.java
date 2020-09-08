@@ -5,6 +5,7 @@ import fi.vm.sade.service.valintaperusteet.model.Linkitettava;
 import fi.vm.sade.service.valintaperusteet.model.LinkitettavaJaKopioitava;
 import java.util.*;
 import java.util.function.Predicate;
+import javax.persistence.EntityManager;
 
 public abstract class LinkitettavaJaKopioitavaUtil {
 
@@ -86,7 +87,7 @@ public abstract class LinkitettavaJaKopioitavaUtil {
 
   public static <C extends Collection<T>, T extends LinkitettavaJaKopioitava<T, C>>
       List<T> jarjestaUudelleenMasterJarjestyksenMukaan(
-          List<T> jarjestettavat, List<T> uusiMasterJarjestys) {
+          EntityManager entityManager, List<T> jarjestettavat, List<T> uusiMasterJarjestys) {
     jarjestettavat = jarjesta(jarjestettavat);
     LinkedList<String> uusiJarjestys = new LinkedList<>();
     for (T t : takeWhile(t -> t.getMaster() == null, jarjestettavat)) {
@@ -100,7 +101,7 @@ public abstract class LinkitettavaJaKopioitavaUtil {
         uusiJarjestys.add(t.getOid());
       }
     }
-    return jarjestaUudelleen(jarjestettavat, uusiJarjestys);
+    return jarjestaUudelleen(entityManager, jarjestettavat, uusiJarjestys);
   }
 
   private static <T extends Linkitettava<T>> T seuraava(Iterable<T> linkitettavat, T edellinen) {
@@ -133,7 +134,7 @@ public abstract class LinkitettavaJaKopioitavaUtil {
   }
 
   public static <T extends Linkitettava<T>> List<T> jarjestaUudelleen(
-      List<T> jarjestettavat, List<String> uusiJarjestys) {
+      EntityManager entityManager, List<T> jarjestettavat, List<String> uusiJarjestys) {
     LinkedList<T> kaanteinenJarjestys = new LinkedList<>();
     for (String oid : uusiJarjestys) {
       kaanteinenJarjestys.push(
@@ -152,6 +153,7 @@ public abstract class LinkitettavaJaKopioitavaUtil {
             (seuraava, edellinen) -> {
               seuraava.setEdellinen(edellinen);
               edellinen.setSeuraava(seuraava);
+              entityManager.flush();
               return edellinen;
             })
         .ifPresent(

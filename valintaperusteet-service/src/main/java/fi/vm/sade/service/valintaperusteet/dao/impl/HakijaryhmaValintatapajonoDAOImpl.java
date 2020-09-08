@@ -211,6 +211,7 @@ public class HakijaryhmaValintatapajonoDAOImpl
     QHakijaryhmaValintatapajono hakijaryhmaValintatapajono =
         QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
     return LinkitettavaJaKopioitavaUtil.jarjestaUudelleen(
+        getEntityManager(),
         from(hakijaryhmaValintatapajono)
             .leftJoin(hakijaryhmaValintatapajono.hakijaryhma)
             .fetch()

@@ -181,14 +181,14 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
   public List<Valintatapajono> jarjestaUudelleen(
       ValinnanVaihe valinnanVaihe, List<String> uusiJarjestys) {
     return LinkitettavaJaKopioitavaUtil.jarjestaUudelleen(
-        findByValinnanVaihe(valinnanVaihe), uusiJarjestys);
+        getEntityManager(), findByValinnanVaihe(valinnanVaihe), uusiJarjestys);
   }
 
   @Override
   public List<Valintatapajono> jarjestaUudelleenMasterJarjestyksenMukaan(
       ValinnanVaihe valinnanVaihe, List<Valintatapajono> uusiMasterJarjestys) {
     return LinkitettavaJaKopioitavaUtil.jarjestaUudelleenMasterJarjestyksenMukaan(
-        findByValinnanVaihe(valinnanVaihe), uusiMasterJarjestys);
+        getEntityManager(), findByValinnanVaihe(valinnanVaihe), uusiMasterJarjestys);
   }
 
   @Override

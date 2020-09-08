@@ -129,6 +129,7 @@ public class HakijaryhmaDAOImpl extends AbstractJpaDAOImpl<Hakijaryhma, Long>
       Valintaryhma valintaryhma, List<String> uusiJarjestys) {
     QHakijaryhma hakijaryhma = QHakijaryhma.hakijaryhma;
     return LinkitettavaJaKopioitavaUtil.jarjestaUudelleen(
+        getEntityManager(),
         from(hakijaryhma)
             .leftJoin(hakijaryhma.laskentakaava)
             .fetch()

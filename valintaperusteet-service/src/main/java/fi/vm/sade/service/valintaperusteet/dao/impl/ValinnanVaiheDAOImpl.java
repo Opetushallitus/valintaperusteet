@@ -257,27 +257,27 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
   public List<ValinnanVaihe> jarjestaUudelleen(
       HakukohdeViite hakukohdeViite, List<String> uusiJarjestys) {
     return LinkitettavaJaKopioitavaUtil.jarjestaUudelleen(
-        findByHakukohdeViite(hakukohdeViite), uusiJarjestys);
+        getEntityManager(), findByHakukohdeViite(hakukohdeViite), uusiJarjestys);
   }
 
   @Override
   public List<ValinnanVaihe> jarjestaUudelleen(
       Valintaryhma valintaryhma, List<String> uusiJarjestys) {
     return LinkitettavaJaKopioitavaUtil.jarjestaUudelleen(
-        findByValintaryhma(valintaryhma), uusiJarjestys);
+        getEntityManager(), findByValintaryhma(valintaryhma), uusiJarjestys);
   }
 
   @Override
   public List<ValinnanVaihe> jarjestaUudelleenMasterJarjestyksenMukaan(
       HakukohdeViite hakukohdeViite, List<ValinnanVaihe> uusiMasterJarjestys) {
     return LinkitettavaJaKopioitavaUtil.jarjestaUudelleenMasterJarjestyksenMukaan(
-        findByHakukohdeViite(hakukohdeViite), uusiMasterJarjestys);
+        getEntityManager(), findByHakukohdeViite(hakukohdeViite), uusiMasterJarjestys);
   }
 
   @Override
   public List<ValinnanVaihe> jarjestaUudelleenMasterJarjestyksenMukaan(
       Valintaryhma valintaryhma, List<ValinnanVaihe> uusiMasterJarjestys) {
     return LinkitettavaJaKopioitavaUtil.jarjestaUudelleenMasterJarjestyksenMukaan(
-        findByValintaryhma(valintaryhma), uusiMasterJarjestys);
+        getEntityManager(), findByValintaryhma(valintaryhma), uusiMasterJarjestys);
   }
 }
