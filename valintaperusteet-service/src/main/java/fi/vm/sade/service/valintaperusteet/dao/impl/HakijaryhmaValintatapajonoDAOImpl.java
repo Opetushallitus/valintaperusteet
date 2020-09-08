@@ -6,6 +6,7 @@ import com.mysema.query.types.EntityPath;
 import fi.vm.sade.service.valintaperusteet.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaValintatapajonoDAO;
 import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
+import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.QHakijaryhma;
 import fi.vm.sade.service.valintaperusteet.model.QHakijaryhmaValintatapajono;
 import fi.vm.sade.service.valintaperusteet.model.QHakukohdeViite;
@@ -202,5 +203,26 @@ public class HakijaryhmaValintatapajonoDAOImpl
                         .list(hakijaryhmajono.edellinen.id))
                 .and(valintatapajono.oid.eq(valintatapajonoOid)))
         .singleResult(hakijaryhmajono);
+  }
+
+  @Override
+  public List<HakijaryhmaValintatapajono> jarjestaUudelleen(
+      HakukohdeViite hakukohdeViite, List<String> uusiJarjestys) {
+    QHakijaryhmaValintatapajono hakijaryhmaValintatapajono =
+        QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
+    return LinkitettavaJaKopioitavaUtil.jarjestaUudelleen(
+        from(hakijaryhmaValintatapajono)
+            .leftJoin(hakijaryhmaValintatapajono.hakijaryhma)
+            .fetch()
+            .leftJoin(hakijaryhmaValintatapajono.master)
+            .fetch()
+            .leftJoin(hakijaryhmaValintatapajono.edellinen)
+            .fetch()
+            .leftJoin(hakijaryhmaValintatapajono.hakijaryhmatyyppikoodi)
+            .fetch()
+            .where(hakijaryhmaValintatapajono.hakukohdeViite.id.eq(hakukohdeViite.getId()))
+            .distinct()
+            .list(hakijaryhmaValintatapajono),
+        uusiJarjestys);
   }
 }

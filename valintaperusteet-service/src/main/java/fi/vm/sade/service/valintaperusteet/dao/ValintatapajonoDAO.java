@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.dao;
 
+import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import java.util.List;
 
@@ -21,4 +22,9 @@ public interface ValintatapajonoDAO extends JpaDAO<Valintatapajono, Long> {
   List<Valintatapajono> haeKopiotValisijoittelulle(String oid);
 
   List<Valintatapajono> ilmanLaskentaaOlevatHakukohteelle(String hakukohdeOid);
+
+  List<Valintatapajono> jarjestaUudelleen(ValinnanVaihe valinnanVaihe, List<String> uusiJarjestys);
+
+  List<Valintatapajono> jarjestaUudelleenMasterJarjestyksenMukaan(
+      ValinnanVaihe valinnanVaihe, List<Valintatapajono> uusiMasterJarjestys);
 }

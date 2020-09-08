@@ -163,6 +163,34 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
         .list(jono);
   }
 
+  private List<Valintatapajono> findByValinnanVaihe(ValinnanVaihe valinnanVaihe) {
+    QValintatapajono valintatapajono = QValintatapajono.valintatapajono;
+    return from(valintatapajono)
+        .leftJoin(valintatapajono.edellinenValintatapajono)
+        .fetch()
+        .leftJoin(valintatapajono.masterValintatapajono)
+        .fetch()
+        .leftJoin(valintatapajono.varasijanTayttojono)
+        .fetch()
+        .where(valintatapajono.valinnanVaihe.id.eq(valinnanVaihe.getId()))
+        .distinct()
+        .list(valintatapajono);
+  }
+
+  @Override
+  public List<Valintatapajono> jarjestaUudelleen(
+      ValinnanVaihe valinnanVaihe, List<String> uusiJarjestys) {
+    return LinkitettavaJaKopioitavaUtil.jarjestaUudelleen(
+        findByValinnanVaihe(valinnanVaihe), uusiJarjestys);
+  }
+
+  @Override
+  public List<Valintatapajono> jarjestaUudelleenMasterJarjestyksenMukaan(
+      ValinnanVaihe valinnanVaihe, List<Valintatapajono> uusiMasterJarjestys) {
+    return LinkitettavaJaKopioitavaUtil.jarjestaUudelleenMasterJarjestyksenMukaan(
+        findByValinnanVaihe(valinnanVaihe), uusiMasterJarjestys);
+  }
+
   @Override
   public List<Valintatapajono> haeValintatapajonotSijoittelulle(String hakukohdeOid) {
 

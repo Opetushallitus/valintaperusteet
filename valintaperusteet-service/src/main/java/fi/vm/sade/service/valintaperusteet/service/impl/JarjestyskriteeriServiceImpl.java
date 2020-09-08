@@ -214,9 +214,7 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
   }
 
   private List<Jarjestyskriteeri> jarjestaKriteerit(Valintatapajono jono, List<String> oids) {
-    List<Jarjestyskriteeri> jarjestetty =
-        LinkitettavaJaKopioitavaUtil.jarjestaUudelleen(
-            jarjestyskriteeriDAO.findByJono(jono.getOid()), oids);
+    List<Jarjestyskriteeri> jarjestetty = jarjestyskriteeriDAO.jarjestaUudelleen(jono, oids);
     for (Valintatapajono kopio : jono.getKopiot()) {
       jarjestaKopioValintatapajononKriteerit(kopio, jarjestetty);
     }
@@ -226,8 +224,7 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
   private void jarjestaKopioValintatapajononKriteerit(
       Valintatapajono jono, List<Jarjestyskriteeri> uusiMasterJarjestys) {
     List<Jarjestyskriteeri> jarjestetty =
-        LinkitettavaJaKopioitavaUtil.jarjestaUudelleenMasterJarjestyksenMukaan(
-            jarjestyskriteeriDAO.findByJono(jono.getOid()), uusiMasterJarjestys);
+        jarjestyskriteeriDAO.jarjestaUudelleenMasterJarjestyksenMukaan(jono, uusiMasterJarjestys);
     for (Valintatapajono kopio : jono.getKopiot()) {
       jarjestaKopioValintatapajononKriteerit(kopio, jarjestetty);
     }

@@ -87,6 +87,7 @@ public abstract class LinkitettavaJaKopioitavaUtil {
   public static <C extends Collection<T>, T extends LinkitettavaJaKopioitava<T, C>>
       List<T> jarjestaUudelleenMasterJarjestyksenMukaan(
           List<T> jarjestettavat, List<T> uusiMasterJarjestys) {
+    jarjestettavat = jarjesta(jarjestettavat);
     LinkedList<String> uusiJarjestys = new LinkedList<>();
     for (T t : takeWhile(t -> t.getMaster() == null, jarjestettavat)) {
       uusiJarjestys.add(t.getOid());

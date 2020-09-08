@@ -1,6 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.dao;
 
 import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
+import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import java.util.List;
 
 public interface JarjestyskriteeriDAO extends JpaDAO<Jarjestyskriteeri, Long> {
@@ -19,4 +20,9 @@ public interface JarjestyskriteeriDAO extends JpaDAO<Jarjestyskriteeri, Long> {
   Jarjestyskriteeri haeValintatapajononViimeinenJarjestyskriteeri(String valintatapajonoOid);
 
   List<Jarjestyskriteeri> findByLaskentakaava(long id);
+
+  List<Jarjestyskriteeri> jarjestaUudelleen(Valintatapajono jono, List<String> uusiJarjestys);
+
+  List<Jarjestyskriteeri> jarjestaUudelleenMasterJarjestyksenMukaan(
+      Valintatapajono jono, List<Jarjestyskriteeri> uusiMasterJarjestys);
 }

@@ -12,6 +12,7 @@ import fi.vm.sade.service.valintaperusteet.model.QLaskentakaava;
 import fi.vm.sade.service.valintaperusteet.model.QValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.QValintaryhma;
 import fi.vm.sade.service.valintaperusteet.model.QValintatapajono;
+import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 import java.util.List;
 import org.springframework.stereotype.Repository;
@@ -88,5 +89,32 @@ public class JarjestyskriteeriDAOImpl extends AbstractJpaDAOImpl<Jarjestyskritee
     QJarjestyskriteeri jk = QJarjestyskriteeri.jarjestyskriteeri;
     QLaskentakaava lk = QLaskentakaava.laskentakaava;
     return from(jk).join(jk.laskentakaava, lk).where(lk.id.eq(id)).list(jk);
+  }
+
+  private List<Jarjestyskriteeri> findByJono(Valintatapajono jono) {
+    QJarjestyskriteeri jarjestyskriteeri = QJarjestyskriteeri.jarjestyskriteeri;
+    return from(jarjestyskriteeri)
+        .leftJoin(jarjestyskriteeri.edellinen)
+        .fetch()
+        .leftJoin(jarjestyskriteeri.master)
+        .fetch()
+        .leftJoin(jarjestyskriteeri.laskentakaava)
+        .fetch()
+        .where(jarjestyskriteeri.valintatapajono.id.eq(jono.getId()))
+        .distinct()
+        .list(jarjestyskriteeri);
+  }
+
+  @Override
+  public List<Jarjestyskriteeri> jarjestaUudelleen(
+      Valintatapajono jono, List<String> uusiJarjestys) {
+    return LinkitettavaJaKopioitavaUtil.jarjestaUudelleen(findByJono(jono), uusiJarjestys);
+  }
+
+  @Override
+  public List<Jarjestyskriteeri> jarjestaUudelleenMasterJarjestyksenMukaan(
+      Valintatapajono jono, List<Jarjestyskriteeri> uusiMasterJarjestys) {
+    return LinkitettavaJaKopioitavaUtil.jarjestaUudelleenMasterJarjestyksenMukaan(
+        findByJono(jono), uusiMasterJarjestys);
   }
 }

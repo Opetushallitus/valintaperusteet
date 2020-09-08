@@ -224,4 +224,60 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
         .distinct()
         .list(vv);
   }
+
+  private List<ValinnanVaihe> findByHakukohdeViite(HakukohdeViite hakukohdeViite) {
+    QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
+    return from(valinnanVaihe)
+        .leftJoin(valinnanVaihe.jonot)
+        .fetch()
+        .leftJoin(valinnanVaihe.edellinenValinnanVaihe)
+        .fetch()
+        .leftJoin(valinnanVaihe.masterValinnanVaihe)
+        .fetch()
+        .where(valinnanVaihe.hakukohdeViite.id.eq(hakukohdeViite.getId()))
+        .distinct()
+        .list(valinnanVaihe);
+  }
+
+  private List<ValinnanVaihe> findByValintaryhma(Valintaryhma valintaryhma) {
+    QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
+    return from(valinnanVaihe)
+        .leftJoin(valinnanVaihe.jonot)
+        .fetch()
+        .leftJoin(valinnanVaihe.edellinenValinnanVaihe)
+        .fetch()
+        .leftJoin(valinnanVaihe.masterValinnanVaihe)
+        .fetch()
+        .where(valinnanVaihe.valintaryhma.id.eq(valintaryhma.getId()))
+        .distinct()
+        .list(valinnanVaihe);
+  }
+
+  @Override
+  public List<ValinnanVaihe> jarjestaUudelleen(
+      HakukohdeViite hakukohdeViite, List<String> uusiJarjestys) {
+    return LinkitettavaJaKopioitavaUtil.jarjestaUudelleen(
+        findByHakukohdeViite(hakukohdeViite), uusiJarjestys);
+  }
+
+  @Override
+  public List<ValinnanVaihe> jarjestaUudelleen(
+      Valintaryhma valintaryhma, List<String> uusiJarjestys) {
+    return LinkitettavaJaKopioitavaUtil.jarjestaUudelleen(
+        findByValintaryhma(valintaryhma), uusiJarjestys);
+  }
+
+  @Override
+  public List<ValinnanVaihe> jarjestaUudelleenMasterJarjestyksenMukaan(
+      HakukohdeViite hakukohdeViite, List<ValinnanVaihe> uusiMasterJarjestys) {
+    return LinkitettavaJaKopioitavaUtil.jarjestaUudelleenMasterJarjestyksenMukaan(
+        findByHakukohdeViite(hakukohdeViite), uusiMasterJarjestys);
+  }
+
+  @Override
+  public List<ValinnanVaihe> jarjestaUudelleenMasterJarjestyksenMukaan(
+      Valintaryhma valintaryhma, List<ValinnanVaihe> uusiMasterJarjestys) {
+    return LinkitettavaJaKopioitavaUtil.jarjestaUudelleenMasterJarjestyksenMukaan(
+        findByValintaryhma(valintaryhma), uusiMasterJarjestys);
+  }
 }

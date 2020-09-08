@@ -295,11 +295,8 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
       throw new HakijaryhmaValintatapajonoOidListaOnTyhjaException(
           "Valintatapajonojen OID-lista on tyhjä");
     }
-    return LinkitettavaJaKopioitavaUtil.jarjestaUudelleen(
-        hakijaryhmaValintatapajonoDAO.findByHakukohde(
-            haeHakijaryhmaValintatapajono(hakijaryhmajonoOidit.get(0))
-                .getHakukohdeViite()
-                .getOid()),
+    return hakijaryhmaValintatapajonoDAO.jarjestaUudelleen(
+        haeHakijaryhmaValintatapajono(hakijaryhmajonoOidit.get(0)).getHakukohdeViite(),
         hakijaryhmajonoOidit);
   }
 

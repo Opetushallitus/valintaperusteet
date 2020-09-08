@@ -123,4 +123,24 @@ public class HakijaryhmaDAOImpl extends AbstractJpaDAOImpl<Hakijaryhma, Long>
         .where(hakijaryhma.laskentakaava.id.eq(id))
         .list(hakijaryhma);
   }
+
+  @Override
+  public List<Hakijaryhma> jarjestaUudelleen(
+      Valintaryhma valintaryhma, List<String> uusiJarjestys) {
+    QHakijaryhma hakijaryhma = QHakijaryhma.hakijaryhma;
+    return LinkitettavaJaKopioitavaUtil.jarjestaUudelleen(
+        from(hakijaryhma)
+            .leftJoin(hakijaryhma.laskentakaava)
+            .fetch()
+            .leftJoin(hakijaryhma.hakijaryhmatyyppikoodi)
+            .fetch()
+            .leftJoin(hakijaryhma.edellinenHakijaryhma)
+            .fetch()
+            .leftJoin(hakijaryhma.masterHakijaryhma)
+            .fetch()
+            .where(hakijaryhma.valintaryhma.id.eq(valintaryhma.getId()))
+            .distinct()
+            .list(hakijaryhma),
+        uusiJarjestys);
+  }
 }

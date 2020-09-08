@@ -198,9 +198,7 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
     String ensimmainen = hakijaryhmaOidit.get(0);
     Hakijaryhma hakijaryhma = haeHakijaryhma(ensimmainen);
     if (hakijaryhma.getValintaryhma() != null) {
-      return LinkitettavaJaKopioitavaUtil.jarjestaUudelleen(
-          hakijaryhmaDAO.findByValintaryhma(hakijaryhma.getValintaryhma().getOid()),
-          hakijaryhmaOidit);
+      return hakijaryhmaDAO.jarjestaUudelleen(hakijaryhma.getValintaryhma(), hakijaryhmaOidit);
     } else {
       throw new ValintaryhmaEiOleOlemassaException(
           "Hakijaryhmällä " + ensimmainen + " ei ole valintaryhmää");
