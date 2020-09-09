@@ -29,7 +29,7 @@ public class Hakijaryhma extends BaseEntity
   @Column(name = "kaytetaan_ryhmaan_kuuluvia")
   private boolean kaytetaanRyhmaanKuuluvia = true;
 
-  @OneToMany(mappedBy = "hakijaryhma", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+  @OneToMany(mappedBy = "hakijaryhma", fetch = FetchType.LAZY)
   private Set<HakijaryhmaValintatapajono> jonot = new HashSet<>();
 
   @JoinColumn(name = "valintaryhma_id")

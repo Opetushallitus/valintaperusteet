@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.List;
 
 public interface HakijaryhmaValintatapajonoService {
-  void deleteByOid(String oid);
+  HakijaryhmaValintatapajonoDTO delete(String hakijaryhmaValintatapajonoOid);
 
   List<HakijaryhmaValintatapajono> findHakijaryhmaByJono(String oid);
 

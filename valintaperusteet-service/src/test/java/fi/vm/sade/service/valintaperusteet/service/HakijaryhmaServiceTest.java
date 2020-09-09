@@ -359,10 +359,10 @@ public class HakijaryhmaServiceTest {
   @Test
   public void testHakijaryhmaValintatapajonoPeriytyminen() {
     // Poistetaan vanhat liitokset
-    hakijaryhmaValintatapajonoService.deleteByOid("hr1_vtj1");
-    hakijaryhmaValintatapajonoService.deleteByOid("hr3_vtj5");
-    hakijaryhmaValintatapajonoService.deleteByOid("hr4_vtj2");
-    hakijaryhmaValintatapajonoService.deleteByOid("hr5_vtj6");
+    hakijaryhmaValintatapajonoService.delete("hr1_vtj1");
+    hakijaryhmaValintatapajonoService.delete("hr3_vtj5");
+    hakijaryhmaValintatapajonoService.delete("hr4_vtj2");
+    hakijaryhmaValintatapajonoService.delete("hr5_vtj6");
 
     HakukohdeViiteDTO viite = new HakukohdeViiteDTO();
     viite.setHakuoid("temp");

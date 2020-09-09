@@ -92,18 +92,14 @@ public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValint
       @ApiParam(value = "OID", required = true) @PathParam("oid") String oid,
       @Context HttpServletRequest request) {
     try {
-      HakijaryhmaValintatapajonoDTO hakijaryhmaValintatapajonoDTO =
-          modelMapper.map(
-              hakijaryhmaValintatapajonoService.readByOid(oid),
-              HakijaryhmaValintatapajonoDTO.class);
-      hakijaryhmaValintatapajonoService.deleteByOid(oid);
+      HakijaryhmaValintatapajonoDTO dto = hakijaryhmaValintatapajonoService.delete(oid);
       AuditLog.log(
           ValintaperusteetAudit.AUDIT,
           AuditLog.getUser(request),
           ValintaperusteetOperation.HAKIJARYHMA_VALINTATAPAJONO_LIITOS_POISTO,
           ValintaResource.HAKIJARYHMA_VALINTATAPAJONO,
           oid,
-          Changes.deleteDto(hakijaryhmaValintatapajonoDTO));
+          Changes.deleteDto(dto));
       return Response.status(Response.Status.OK).build();
     } catch (HakijaryhmaaEiVoiPoistaaException e) {
       throw new WebApplicationException(e, Response.Status.FORBIDDEN);

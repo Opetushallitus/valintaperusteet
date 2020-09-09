@@ -95,15 +95,6 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
       hakijaryhmaDAO.update(seuraava);
     }
 
-    if (hakijaryhma.getJonot() != null) {
-      hakijaryhma
-          .getJonot()
-          .forEach(
-              j -> {
-                hakijaryhmaValintatapajonoService.deleteByOid(j.getOid());
-              });
-    }
-    hakijaryhma.setJonot(null);
     hakijaryhmaDAO.remove(hakijaryhma);
   }
 

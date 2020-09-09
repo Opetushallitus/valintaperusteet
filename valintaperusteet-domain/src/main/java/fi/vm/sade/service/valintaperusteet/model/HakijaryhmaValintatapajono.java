@@ -58,7 +58,7 @@ public class HakijaryhmaValintatapajono extends BaseEntity
   @ManyToOne(fetch = FetchType.LAZY)
   private Hakijaryhmatyyppikoodi hakijaryhmatyyppikoodi;
 
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "master", cascade = CascadeType.REMOVE)
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "master")
   private Set<HakijaryhmaValintatapajono> kopiot = new HashSet<HakijaryhmaValintatapajono>();
 
   public Hakijaryhma getHakijaryhma() {
@@ -94,41 +94,49 @@ public class HakijaryhmaValintatapajono extends BaseEntity
   }
 
   @Override
+  @Transient
   public HakijaryhmaValintatapajono getEdellinen() {
     return edellinen;
   }
 
   @Override
+  @Transient
   public void setEdellinen(HakijaryhmaValintatapajono edellinen) {
     this.edellinen = edellinen;
   }
 
   @Override
+  @Transient
   public HakijaryhmaValintatapajono getSeuraava() {
     return seuraava;
   }
 
   @Override
+  @Transient
   public void setSeuraava(HakijaryhmaValintatapajono seuraava) {
     this.seuraava = seuraava;
   }
 
   @Override
+  @Transient
   public HakijaryhmaValintatapajono getMaster() {
     return master;
   }
 
   @Override
+  @Transient
   public void setMaster(HakijaryhmaValintatapajono master) {
     this.master = master;
   }
 
   @Override
+  @Transient
   public Set<HakijaryhmaValintatapajono> getKopiot() {
     return kopiot;
   }
 
   @Override
+  @Transient
   public void setKopiot(Set<HakijaryhmaValintatapajono> kopiot) {
     this.kopiot = kopiot;
   }

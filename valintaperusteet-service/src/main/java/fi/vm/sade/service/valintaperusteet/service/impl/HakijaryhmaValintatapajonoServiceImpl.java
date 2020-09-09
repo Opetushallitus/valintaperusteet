@@ -213,13 +213,16 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
   }
 
   @Override
-  public void deleteByOid(String oid) {
+  public HakijaryhmaValintatapajonoDTO delete(String hakijaryhmaValintatapajonoOid) {
     HakijaryhmaValintatapajono hakijaryhmaValintatapajono =
-        hakijaryhmaValintatapajonoDAO.readByOid(oid);
+        haeHakijaryhmaValintatapajono(hakijaryhmaValintatapajonoOid);
     if (hakijaryhmaValintatapajono.getMaster() != null) {
-      throw new HakijaryhmaaEiVoiPoistaaException("hakijaryhma on peritty.");
+      throw new HakijaryhmaaEiVoiPoistaaException("HakijaryhmaValintatapajono on peritty.");
     }
-    delete(hakijaryhmaValintatapajono);
+    HakijaryhmaValintatapajonoDTO dto =
+        modelMapper.map(hakijaryhmaValintatapajono, HakijaryhmaValintatapajonoDTO.class);
+    hakijaryhmaValintatapajonoDAO.delete(hakijaryhmaValintatapajono);
+    return dto;
   }
 
   // CRUD
@@ -298,16 +301,5 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
     return hakijaryhmaValintatapajonoDAO.jarjestaUudelleen(
         haeHakijaryhmaValintatapajono(hakijaryhmajonoOidit.get(0)).getHakukohdeViite(),
         hakijaryhmajonoOidit);
-  }
-
-  private void delete(HakijaryhmaValintatapajono entity) {
-    for (HakijaryhmaValintatapajono hakijaryhma : entity.getKopiot()) {
-      delete(hakijaryhma);
-    }
-    if (entity.getSeuraava() != null) {
-      HakijaryhmaValintatapajono seuraava = entity.getSeuraava();
-      seuraava.setEdellinen(entity.getEdellinen());
-    }
-    hakijaryhmaValintatapajonoDAO.remove(entity);
   }
 }

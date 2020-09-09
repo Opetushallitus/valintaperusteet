@@ -14,6 +14,7 @@ import fi.vm.sade.service.valintaperusteet.model.QValintatapajono;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 import java.util.Collection;
 import java.util.List;
+import javax.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -225,5 +226,32 @@ public class HakijaryhmaValintatapajonoDAOImpl
             .distinct()
             .list(hakijaryhmaValintatapajono),
         uusiJarjestys);
+  }
+
+  @Override
+  public void delete(HakijaryhmaValintatapajono hakijaryhmaValintatapajono) {
+    for (HakijaryhmaValintatapajono kopio : hakijaryhmaValintatapajono.getKopiot()) {
+      delete(kopio);
+    }
+    EntityManager entityManager = getEntityManager();
+
+    QHakijaryhmaValintatapajono seuraava = QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
+    HakijaryhmaValintatapajono seuraavaHakijaryhmaValintatapajono =
+        from(seuraava)
+            .where(seuraava.edellinen.id.eq(hakijaryhmaValintatapajono.getId()))
+            .singleResult(seuraava);
+
+    if (seuraavaHakijaryhmaValintatapajono != null) {
+      HakijaryhmaValintatapajono edellinen = hakijaryhmaValintatapajono.getEdellinen();
+
+      if (hakijaryhmaValintatapajono.getEdellinen() == null) {
+        hakijaryhmaValintatapajono.setEdellinen(hakijaryhmaValintatapajono);
+        entityManager.flush();
+      }
+
+      seuraavaHakijaryhmaValintatapajono.setEdellinen(edellinen);
+    }
+
+    entityManager.remove(hakijaryhmaValintatapajono);
   }
 }

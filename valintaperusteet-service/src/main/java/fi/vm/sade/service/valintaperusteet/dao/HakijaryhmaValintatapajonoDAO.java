@@ -22,4 +22,6 @@ public interface HakijaryhmaValintatapajonoDAO extends JpaDAO<HakijaryhmaValinta
 
   List<HakijaryhmaValintatapajono> jarjestaUudelleen(
       HakukohdeViite hakukohdeViite, List<String> uusiJarjestys);
+
+  void delete(HakijaryhmaValintatapajono hakijaryhmaValintatapajono);
 }

@@ -57,7 +57,7 @@ public class HakukohdeViite extends BaseEntity {
   private Map<String, HakukohteenValintaperuste> hakukohteenValintaperusteet =
       new HashMap<String, HakukohteenValintaperuste>();
 
-  @OneToMany(mappedBy = "hakukohdeViite", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+  @OneToMany(mappedBy = "hakukohdeViite", fetch = FetchType.LAZY)
   private Set<HakijaryhmaValintatapajono> hakijaryhmat = new HashSet<HakijaryhmaValintatapajono>();
 
   public String getHakuoid() {
