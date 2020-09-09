@@ -99,7 +99,7 @@ public class HakijaryhmaServiceTest {
     Hakijaryhma hakijaryhma = hakijaryhmaService.readByOid(oid);
     assertNotNull(hakijaryhma);
 
-    hakijaryhmaService.deleteByOid(oid, true);
+    hakijaryhmaService.deleteByOid(oid);
 
     try {
       hakijaryhmaService.readByOid(oid);
@@ -359,10 +359,10 @@ public class HakijaryhmaServiceTest {
   @Test
   public void testHakijaryhmaValintatapajonoPeriytyminen() {
     // Poistetaan vanhat liitokset
-    hakijaryhmaValintatapajonoService.deleteByOid("hr1_vtj1", true);
-    hakijaryhmaValintatapajonoService.deleteByOid("hr3_vtj5", true);
-    hakijaryhmaValintatapajonoService.deleteByOid("hr4_vtj2", true);
-    hakijaryhmaValintatapajonoService.deleteByOid("hr5_vtj6", true);
+    hakijaryhmaValintatapajonoService.deleteByOid("hr1_vtj1");
+    hakijaryhmaValintatapajonoService.deleteByOid("hr3_vtj5");
+    hakijaryhmaValintatapajonoService.deleteByOid("hr4_vtj2");
+    hakijaryhmaValintatapajonoService.deleteByOid("hr5_vtj6");
 
     HakukohdeViiteDTO viite = new HakukohdeViiteDTO();
     viite.setHakuoid("temp");

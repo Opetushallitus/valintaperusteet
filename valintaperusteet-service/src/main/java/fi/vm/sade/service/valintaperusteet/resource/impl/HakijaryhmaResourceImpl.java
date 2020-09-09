@@ -134,7 +134,7 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
     try {
       HakijaryhmaDTO hakijaryhmaDTO =
           modelMapper.map(hakijaryhmaService.readByOid(oid), HakijaryhmaDTO.class);
-      hakijaryhmaService.deleteByOid(oid, false);
+      hakijaryhmaService.deleteByOid(oid);
       AuditLog.log(
           ValintaperusteetAudit.AUDIT,
           AuditLog.getUser(request),

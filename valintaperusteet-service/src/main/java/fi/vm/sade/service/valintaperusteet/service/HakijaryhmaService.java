@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface HakijaryhmaService {
-  void deleteByOid(String oid, boolean skipInheritedCheck);
+  void deleteByOid(String oid);
 
   List<Hakijaryhma> findByHakukohde(String oid);
 

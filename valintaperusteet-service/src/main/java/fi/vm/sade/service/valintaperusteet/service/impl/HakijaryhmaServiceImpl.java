@@ -69,15 +69,13 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
   }
 
   @Override
-  public void deleteByOid(String oid, boolean skipInheritedCheck) {
+  public void deleteByOid(String oid) {
     Hakijaryhma hakijaryhma = haeHakijaryhma(oid);
-    deleteHakijaryhma(hakijaryhma, skipInheritedCheck);
+    deleteHakijaryhma(hakijaryhma);
   }
 
-  private void deleteHakijaryhma(Hakijaryhma hakijaryhma, boolean skipInheritedCheck) {
-    hakijaryhma
-        .getKopioHakijaryhmat()
-        .forEach(kopio -> deleteByOid(kopio.getOid(), skipInheritedCheck));
+  private void deleteHakijaryhma(Hakijaryhma hakijaryhma) {
+    hakijaryhma.getKopioHakijaryhmat().forEach(kopio -> deleteByOid(kopio.getOid()));
     hakijaryhma.setKopioHakijaryhmat(new HashSet<>());
 
     Hakijaryhma seuraava = hakijaryhma.getSeuraava();
@@ -102,7 +100,7 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
           .getJonot()
           .forEach(
               j -> {
-                hakijaryhmaValintatapajonoService.deleteByOid(j.getOid(), skipInheritedCheck);
+                hakijaryhmaValintatapajonoService.deleteByOid(j.getOid());
               });
     }
     hakijaryhma.setJonot(null);

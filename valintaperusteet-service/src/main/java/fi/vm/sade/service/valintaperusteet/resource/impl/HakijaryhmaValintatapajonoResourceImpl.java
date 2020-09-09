@@ -96,7 +96,7 @@ public class HakijaryhmaValintatapajonoResourceImpl implements HakijaryhmaValint
           modelMapper.map(
               hakijaryhmaValintatapajonoService.readByOid(oid),
               HakijaryhmaValintatapajonoDTO.class);
-      hakijaryhmaValintatapajonoService.deleteByOid(oid, false);
+      hakijaryhmaValintatapajonoService.deleteByOid(oid);
       AuditLog.log(
           ValintaperusteetAudit.AUDIT,
           AuditLog.getUser(request),

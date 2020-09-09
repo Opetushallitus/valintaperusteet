@@ -213,10 +213,10 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
   }
 
   @Override
-  public void deleteByOid(String oid, boolean skipInheritedCheck) {
+  public void deleteByOid(String oid) {
     HakijaryhmaValintatapajono hakijaryhmaValintatapajono =
         hakijaryhmaValintatapajonoDAO.readByOid(oid);
-    if (!skipInheritedCheck && hakijaryhmaValintatapajono.getMaster() != null) {
+    if (hakijaryhmaValintatapajono.getMaster() != null) {
       throw new HakijaryhmaaEiVoiPoistaaException("hakijaryhma on peritty.");
     }
     delete(hakijaryhmaValintatapajono);
