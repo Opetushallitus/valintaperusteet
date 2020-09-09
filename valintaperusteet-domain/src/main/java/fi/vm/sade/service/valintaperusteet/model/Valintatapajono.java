@@ -98,7 +98,7 @@ public class Valintatapajono extends BaseEntity
   @OneToMany(mappedBy = "valintatapajono", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   private Set<HakijaryhmaValintatapajono> hakijaryhmat = new HashSet<HakijaryhmaValintatapajono>();
 
-  @OneToMany(mappedBy = "valintatapajono", cascade = CascadeType.REMOVE)
+  @OneToMany(mappedBy = "valintatapajono")
   private Set<Jarjestyskriteeri> jarjestyskriteerit = new HashSet<Jarjestyskriteeri>();
 
   public Integer getAloituspaikat() {

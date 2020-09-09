@@ -25,4 +25,6 @@ public interface JarjestyskriteeriDAO extends JpaDAO<Jarjestyskriteeri, Long> {
 
   List<Jarjestyskriteeri> jarjestaUudelleenMasterJarjestyksenMukaan(
       Valintatapajono jono, List<Jarjestyskriteeri> uusiMasterJarjestys);
+
+  void delete(Jarjestyskriteeri jarjestyskriteeri);
 }

@@ -3,6 +3,7 @@ package fi.vm.sade.service.valintaperusteet.service.impl;
 import fi.vm.sade.service.valintaperusteet.dao.JarjestyskriteeriDAO;
 import fi.vm.sade.service.valintaperusteet.dao.LaskentakaavaDAO;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
 import fi.vm.sade.service.valintaperusteet.model.*;
@@ -231,45 +232,14 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
   }
 
   @Override
-  public void deleteByOid(String oid) {
-    Jarjestyskriteeri jarjestyskriteeri = haeJarjestyskriteeri(oid);
+  public JarjestyskriteeriDTO delete(String jarjestyskriteeriOid) {
+    Jarjestyskriteeri jarjestyskriteeri = haeJarjestyskriteeri(jarjestyskriteeriOid);
     if (jarjestyskriteeri.getMaster() != null) {
       throw new JarjestyskriteeriaEiVoiPoistaaException("Jarjestyskriteeri on peritty.");
     }
-    delete(jarjestyskriteeri);
-  }
-
-  @Override
-  public void delete(Jarjestyskriteeri jarjestyskriteeri) {
-    for (Jarjestyskriteeri jk : jarjestyskriteeri.getKopiot()) {
-      delete(jk);
-    }
-    jarjestyskriteeri.setKopiot(new HashSet<Jarjestyskriteeri>());
-
-    Jarjestyskriteeri edellinen = jarjestyskriteeri.getEdellinen();
-    Jarjestyskriteeri seuraava = jarjestyskriteeri.getSeuraava();
-
-    if (edellinen != null) {
-      edellinen.setSeuraava(null);
-      jarjestyskriteeriDAO.update(edellinen);
-    }
-
-    jarjestyskriteeri.setEdellinen(null);
-    jarjestyskriteeri.setSeuraava(null);
-    jarjestyskriteeriDAO.update(jarjestyskriteeri);
-
-    if (seuraava != null) {
-      seuraava.setEdellinen(edellinen);
-      jarjestyskriteeriDAO.update(seuraava);
-
-      if (edellinen != null) {
-        edellinen.setSeuraava(seuraava);
-        jarjestyskriteeriDAO.update(edellinen);
-      }
-    }
-
-    jarjestyskriteeri = jarjestyskriteeriDAO.readByOid(jarjestyskriteeri.getOid());
-    jarjestyskriteeriDAO.remove(jarjestyskriteeri);
+    JarjestyskriteeriDTO dto = modelMapper.map(jarjestyskriteeri, JarjestyskriteeriDTO.class);
+    jarjestyskriteeriDAO.delete(jarjestyskriteeri);
+    return dto;
   }
 
   @Override

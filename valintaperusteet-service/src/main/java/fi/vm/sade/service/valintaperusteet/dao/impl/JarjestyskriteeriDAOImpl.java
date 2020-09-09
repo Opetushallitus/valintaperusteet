@@ -15,6 +15,7 @@ import fi.vm.sade.service.valintaperusteet.model.QValintatapajono;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 import java.util.List;
+import javax.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -117,5 +118,32 @@ public class JarjestyskriteeriDAOImpl extends AbstractJpaDAOImpl<Jarjestyskritee
       Valintatapajono jono, List<Jarjestyskriteeri> uusiMasterJarjestys) {
     return LinkitettavaJaKopioitavaUtil.jarjestaUudelleenMasterJarjestyksenMukaan(
         getEntityManager(), findByJono(jono), uusiMasterJarjestys);
+  }
+
+  @Override
+  public void delete(Jarjestyskriteeri jarjestyskriteeri) {
+    for (Jarjestyskriteeri kopio : jarjestyskriteeri.getKopiot()) {
+      delete(kopio);
+    }
+    EntityManager entityManager = getEntityManager();
+
+    QJarjestyskriteeri seuraava = QJarjestyskriteeri.jarjestyskriteeri;
+    Jarjestyskriteeri seuraavaJarjestyskriteeri =
+        from(seuraava)
+            .where(seuraava.edellinen.id.eq(jarjestyskriteeri.getId()))
+            .singleResult(seuraava);
+
+    if (seuraavaJarjestyskriteeri != null) {
+      Jarjestyskriteeri edellinen = jarjestyskriteeri.getEdellinen();
+
+      if (jarjestyskriteeri.getEdellinen() == null) {
+        jarjestyskriteeri.setEdellinen(jarjestyskriteeri);
+        entityManager.flush();
+      }
+
+      seuraavaJarjestyskriteeri.setEdellinen(edellinen);
+    }
+
+    entityManager.remove(jarjestyskriteeri);
   }
 }

@@ -289,16 +289,7 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
         valintatapajonoDAO.update(edellinen);
       }
     }
-    if (valintatapajono.getJarjestyskriteerit() != null) {
-      for (Jarjestyskriteeri jarjestyskriteeri : valintatapajono.getJarjestyskriteerit()) {
-        jarjestyskriteeriService.delete(jarjestyskriteeri);
-      }
-    }
-    valintatapajono = valintatapajonoDAO.readByOid(valintatapajono.getOid());
-    if (valintatapajono != null) {
-      valintatapajono.setJarjestyskriteerit(null);
-      valintatapajonoDAO.remove(valintatapajono);
-    }
+    valintatapajonoDAO.remove(valintatapajono);
   }
 
   @Override
