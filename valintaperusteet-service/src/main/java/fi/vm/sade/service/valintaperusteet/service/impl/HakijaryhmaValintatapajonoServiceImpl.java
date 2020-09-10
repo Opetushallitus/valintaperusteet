@@ -223,8 +223,13 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
     }
     HakijaryhmaValintatapajonoDTO dto =
         modelMapper.map(hakijaryhmaValintatapajono, HakijaryhmaValintatapajonoDTO.class);
-    hakijaryhmaValintatapajonoDAO.delete(hakijaryhmaValintatapajono);
+    delete(hakijaryhmaValintatapajono);
     return dto;
+  }
+
+  @Override
+  public void delete(HakijaryhmaValintatapajono hakijaryhmaValintatapajono) {
+    hakijaryhmaValintatapajonoDAO.delete(hakijaryhmaValintatapajono);
   }
 
   // CRUD

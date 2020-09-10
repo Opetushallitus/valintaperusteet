@@ -12,6 +12,8 @@ import java.util.List;
 public interface HakijaryhmaValintatapajonoService {
   HakijaryhmaValintatapajonoDTO delete(String hakijaryhmaValintatapajonoOid);
 
+  void delete(HakijaryhmaValintatapajono hakijaryhmaValintatapajono);
+
   List<HakijaryhmaValintatapajono> findHakijaryhmaByJono(String oid);
 
   List<HakijaryhmaValintatapajono> findHakijaryhmaByJonos(List<String> oid);

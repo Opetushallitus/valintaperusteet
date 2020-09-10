@@ -17,7 +17,6 @@ import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
-import fi.vm.sade.service.valintaperusteet.service.exception.HakukohdeViiteEiOleOlemassaException;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
@@ -126,17 +125,6 @@ public class HakukohdeServiceTest {
 
     HakukohdeViite lisatty = hakukohdeService.insert(uusiHakukohde, null);
     assertNotNull(hakukohdeService.readByOid(lisatty.getOid()));
-  }
-
-  @Test(expected = HakukohdeViiteEiOleOlemassaException.class)
-  public void testDeleteByOid() {
-    final String hakukohdeOid = "oid12";
-    hakukohdeService.readByOid(hakukohdeOid);
-
-    assertEquals(2, valinnanVaiheDAO.findByHakukohde(hakukohdeOid).size());
-    assertNotNull(hakukohdekoodiDAO.findByHakukohdeOid(hakukohdeOid));
-    hakukohdeService.deleteByOid(hakukohdeOid);
-    hakukohdeService.readByOid(hakukohdeOid);
   }
 
   @Test
