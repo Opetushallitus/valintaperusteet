@@ -8,6 +8,7 @@ import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 import java.util.List;
+import javax.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -143,5 +144,33 @@ public class HakijaryhmaDAOImpl extends AbstractJpaDAOImpl<Hakijaryhma, Long>
             .distinct()
             .list(hakijaryhma),
         uusiJarjestys);
+  }
+
+  @Override
+  public void delete(Hakijaryhma hakijaryhma) {
+    for (Hakijaryhma kopio : hakijaryhma.getKopiot()) {
+      delete(kopio);
+    }
+
+    EntityManager entityManager = getEntityManager();
+
+    QHakijaryhma seuraava = QHakijaryhma.hakijaryhma;
+    Hakijaryhma seuraavaHakijaryhma =
+        from(seuraava)
+            .where(seuraava.edellinenHakijaryhma.id.eq(hakijaryhma.getId()))
+            .singleResult(seuraava);
+
+    if (seuraavaHakijaryhma != null) {
+      Hakijaryhma edellinen = hakijaryhma.getEdellinen();
+
+      if (hakijaryhma.getEdellinen() == null) {
+        hakijaryhma.setEdellinen(hakijaryhma);
+        entityManager.flush();
+      }
+
+      seuraavaHakijaryhma.setEdellinen(edellinen);
+    }
+
+    entityManager.remove(hakijaryhma);
   }
 }

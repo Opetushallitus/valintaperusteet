@@ -132,16 +132,14 @@ public class HakijaryhmaResourceImpl implements HakijaryhmaResource {
           String oid,
       @Context HttpServletRequest request) {
     try {
-      HakijaryhmaDTO hakijaryhmaDTO =
-          modelMapper.map(hakijaryhmaService.readByOid(oid), HakijaryhmaDTO.class);
-      hakijaryhmaService.deleteByOid(oid);
+      HakijaryhmaDTO dto = hakijaryhmaService.delete(oid);
       AuditLog.log(
           ValintaperusteetAudit.AUDIT,
           AuditLog.getUser(request),
           ValintaperusteetOperation.HAKIJARYHMA_POISTO,
           ValintaResource.HAKIJARYHMA,
           oid,
-          Changes.deleteDto(hakijaryhmaDTO));
+          Changes.deleteDto(dto));
       return Response.status(Response.Status.ACCEPTED).build();
     } catch (HakijaryhmaaEiVoiPoistaaException e) {
       throw new WebApplicationException(e, Response.Status.FORBIDDEN);

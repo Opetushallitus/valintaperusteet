@@ -4,6 +4,7 @@ import fi.vm.sade.service.valintaperusteet.dao.GenericDAO;
 import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaValintatapajonoDAO;
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaDTO;
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaSiirraDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
@@ -23,7 +24,6 @@ import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaOidTyh
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintaryhmaEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.util.JuureenKopiointiCache;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -69,33 +69,11 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
   }
 
   @Override
-  public void deleteByOid(String oid) {
-    Hakijaryhma hakijaryhma = haeHakijaryhma(oid);
-    deleteHakijaryhma(hakijaryhma);
-  }
-
-  private void deleteHakijaryhma(Hakijaryhma hakijaryhma) {
-    hakijaryhma.getKopioHakijaryhmat().forEach(kopio -> deleteByOid(kopio.getOid()));
-    hakijaryhma.setKopioHakijaryhmat(new HashSet<>());
-
-    Hakijaryhma seuraava = hakijaryhma.getSeuraava();
-    Hakijaryhma edellinen = hakijaryhma.getEdellinen();
-
-    if (edellinen != null) {
-      edellinen.setSeuraava(seuraava);
-      hakijaryhmaDAO.update(edellinen);
-    }
-
-    hakijaryhma.setEdellinen(null);
-    hakijaryhma.setSeuraava(null);
-    hakijaryhmaDAO.update(hakijaryhma);
-
-    if (seuraava != null) {
-      seuraava.setEdellinen(edellinen);
-      hakijaryhmaDAO.update(seuraava);
-    }
-
-    hakijaryhmaDAO.remove(hakijaryhma);
+  public HakijaryhmaDTO delete(String hakijaryhmaOid) {
+    Hakijaryhma hakijaryhma = haeHakijaryhma(hakijaryhmaOid);
+    HakijaryhmaDTO dto = modelMapper.map(hakijaryhma, HakijaryhmaDTO.class);
+    hakijaryhmaDAO.delete(hakijaryhma);
+    return dto;
   }
 
   @Override
@@ -300,16 +278,5 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
       return Optional.empty();
     }
     return Optional.ofNullable(lisaaHakijaryhmaValintaryhmalle(ryhma.get().getOid(), dto));
-  }
-
-  public void deleteHakijaryhmaValintatajono(HakijaryhmaValintatapajono entity) {
-    for (HakijaryhmaValintatapajono hakijaryhma : entity.getKopiot()) {
-      deleteHakijaryhmaValintatajono(hakijaryhma);
-    }
-    if (entity.getSeuraava() != null) {
-      HakijaryhmaValintatapajono seuraava = entity.getSeuraava();
-      seuraava.setEdellinen(entity.getEdellinen());
-    }
-    hakijaryhmaValintatapajonoDAO.remove(entity);
   }
 }

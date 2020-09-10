@@ -2,8 +2,7 @@ package fi.vm.sade.service.valintaperusteet.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThrows;
 
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaDAO;
@@ -94,19 +93,9 @@ public class HakijaryhmaServiceTest {
 
   @Test
   public void testDelete() {
-    final String oid = "hr1";
-
-    Hakijaryhma hakijaryhma = hakijaryhmaService.readByOid(oid);
-    assertNotNull(hakijaryhma);
-
-    hakijaryhmaService.deleteByOid(oid);
-
-    try {
-      hakijaryhmaService.readByOid(oid);
-      assertTrue(false);
-    } catch (HakijaryhmaEiOleOlemassaException e) {
-      assertTrue(true);
-    }
+    String oid = "hr1";
+    hakijaryhmaService.delete(oid);
+    assertThrows(HakijaryhmaEiOleOlemassaException.class, () -> hakijaryhmaService.readByOid(oid));
   }
 
   @Test

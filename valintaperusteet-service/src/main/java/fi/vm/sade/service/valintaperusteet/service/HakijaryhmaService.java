@@ -1,6 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaDTO;
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaSiirraDTO;
 import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
 import fi.vm.sade.service.valintaperusteet.util.JuureenKopiointiCache;
@@ -8,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface HakijaryhmaService {
-  void deleteByOid(String oid);
+  HakijaryhmaDTO delete(String hakijaryhmaOid);
 
   List<Hakijaryhma> findByHakukohde(String oid);
 
