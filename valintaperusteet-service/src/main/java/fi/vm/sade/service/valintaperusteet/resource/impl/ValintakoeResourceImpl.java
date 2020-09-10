@@ -98,15 +98,14 @@ public class ValintakoeResourceImpl implements ValintakoeResource {
   public Response delete(
       @ApiParam(value = "OID", required = true) @PathParam("oid") String oid,
       @Context HttpServletRequest request) {
-    ValintakoeDTO old = modelMapper.map(valintakoeService.readByOid(oid), ValintakoeDTO.class);
-    valintakoeService.deleteByOid(oid);
+    ValintakoeDTO dto = valintakoeService.delete(oid);
     AuditLog.log(
         AUDIT,
         AuditLog.getUser(request),
         ValintaperusteetOperation.VALINTAKOE_POISTO,
         ValintaResource.VALINTAKOE,
         oid,
-        Changes.deleteDto(old));
+        Changes.deleteDto(dto));
     return Response.status(Response.Status.ACCEPTED).build();
   }
 }

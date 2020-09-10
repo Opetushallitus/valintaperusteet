@@ -242,16 +242,7 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
         valinnanVaiheDAO.update(edellinen);
       }
     }
-    if (valinnanVaihe.getValintakokeet() != null) {
-      for (Valintakoe valintakoe : valinnanVaihe.getValintakokeet()) {
-        valintakoeDAO.remove(valintakoe);
-      }
-    }
-    valinnanVaihe = valinnanVaiheDAO.readByOid(valinnanVaihe.getOid());
-    if (valinnanVaihe != null) {
-      valinnanVaihe.setValintakokeet(null);
-      valinnanVaiheDAO.remove(valinnanVaihe);
-    }
+    valinnanVaiheDAO.remove(valinnanVaihe);
   }
 
   @Override
