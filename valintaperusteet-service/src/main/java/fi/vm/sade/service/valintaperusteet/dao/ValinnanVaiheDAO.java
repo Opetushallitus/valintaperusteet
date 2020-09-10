@@ -41,5 +41,7 @@ public interface ValinnanVaiheDAO extends JpaDAO<ValinnanVaihe, Long> {
   List<ValinnanVaihe> jarjestaUudelleenMasterJarjestyksenMukaan(
       Valintaryhma valintaryhma, List<ValinnanVaihe> uusiMasterJarjestys);
 
+  ValinnanVaihe insert(ValinnanVaihe uusi);
+
   void delete(ValinnanVaihe valinnanVaihe);
 }

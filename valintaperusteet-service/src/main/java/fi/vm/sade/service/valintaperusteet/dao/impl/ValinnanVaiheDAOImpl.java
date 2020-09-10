@@ -283,6 +283,35 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
   }
 
   @Override
+  public ValinnanVaihe insert(ValinnanVaihe uusi) {
+    QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
+    ValinnanVaihe seuraava =
+        from(valinnanVaihe)
+            .where(
+                (uusi.getValintaryhma() == null
+                        ? valinnanVaihe.hakukohdeViite.id.eq(uusi.getHakukohdeViite().getId())
+                        : valinnanVaihe.valintaryhma.id.eq(uusi.getValintaryhma().getId()))
+                    .and(
+                        uusi.getEdellinen() == null
+                            ? valinnanVaihe.edellinenValinnanVaihe.isNull()
+                            : valinnanVaihe.edellinenValinnanVaihe.id.eq(
+                                uusi.getEdellinen().getId())))
+            .singleResult(valinnanVaihe);
+    if (seuraava != null && uusi.getEdellinen() == null) {
+      seuraava.setEdellinen(seuraava);
+      getEntityManager().flush();
+    }
+
+    getEntityManager().persist(uusi);
+
+    if (seuraava != null) {
+      seuraava.setEdellinen(uusi);
+    }
+
+    return uusi;
+  }
+
+  @Override
   public void delete(ValinnanVaihe valinnanVaihe) {
     for (ValinnanVaihe kopio : valinnanVaihe.getKopiot()) {
       delete(kopio);
