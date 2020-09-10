@@ -152,12 +152,7 @@ public class HakukohdeServiceImpl implements HakukohdeService {
 
   @Override
   public void deleteByOid(String oid) {
-    HakukohdeViite hakukohde = haeHakukohdeViite(oid);
-    List<ValinnanVaihe> vaiheet = valinnanVaiheService.findByHakukohde(hakukohde.getOid());
-    for (ValinnanVaihe vv : vaiheet) {
-      valinnanVaiheService.delete(vv);
-    }
-    hakukohdeViiteDAO.remove(hakukohde);
+    hakukohdeViiteDAO.remove(haeHakukohdeViite(oid));
     // Hakukohteiden tuonti saattaa feilata ilman flushausta, jos hakukohde siirretään uuden
     // valintaryhmän alle
     hakukohdeViiteDAO.flush();
@@ -328,7 +323,7 @@ public class HakukohdeServiceImpl implements HakukohdeService {
     // Poistetaan kaikki periytyvät valinnan vaiheet
     for (ValinnanVaihe vv : valinnanVaiheet) {
       if (vv.getMasterValinnanVaihe() != null) {
-        valinnanVaiheService.deleteByOid(vv.getOid());
+        valinnanVaiheService.delete(vv);
       }
     }
   }

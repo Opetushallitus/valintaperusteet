@@ -4,6 +4,7 @@ import com.google.common.collect.Sets;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintakoeDAO;
 import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.*;
@@ -206,43 +207,16 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
   }
 
   @Override
-  public void deleteByOid(String oid) {
-    ValinnanVaihe valinnanVaihe = haeVaiheOidilla(oid);
-    removeValinnanvaihe(valinnanVaihe);
+  public ValinnanVaiheDTO delete(String valinnanVaiheOid) {
+    ValinnanVaihe valinnanVaihe = haeVaiheOidilla(valinnanVaiheOid);
+    ValinnanVaiheDTO dto = modelMapper.map(valinnanVaihe, ValinnanVaiheDTO.class);
+    delete(valinnanVaihe);
+    return dto;
   }
 
   @Override
   public void delete(ValinnanVaihe valinnanVaihe) {
-    removeValinnanvaihe(valinnanVaihe);
-  }
-
-  private void removeValinnanvaihe(ValinnanVaihe valinnanVaihe) {
-    for (ValinnanVaihe vaihe : valinnanVaihe.getKopioValinnanVaiheet()) {
-      removeValinnanvaihe(vaihe);
-    }
-    valinnanVaihe.setKopioValinnanvaiheet(new HashSet<ValinnanVaihe>());
-
-    ValinnanVaihe seuraava = valinnanVaihe.getSeuraava();
-    ValinnanVaihe edellinen = valinnanVaihe.getEdellinen();
-
-    if (edellinen != null) {
-      edellinen.setSeuraava(null);
-      valinnanVaiheDAO.update(edellinen);
-    }
-
-    valinnanVaihe.setEdellinen(null);
-    valinnanVaihe.setSeuraava(null);
-    valinnanVaiheDAO.update(valinnanVaihe);
-
-    if (seuraava != null) {
-      seuraava.setEdellinen(edellinen);
-      valinnanVaiheDAO.update(seuraava);
-      if (edellinen != null) {
-        edellinen.setSeuraava(seuraava);
-        valinnanVaiheDAO.update(edellinen);
-      }
-    }
-    valinnanVaiheDAO.remove(valinnanVaihe);
+    valinnanVaiheDAO.delete(valinnanVaihe);
   }
 
   @Override

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -279,5 +280,33 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
       Valintaryhma valintaryhma, List<ValinnanVaihe> uusiMasterJarjestys) {
     return LinkitettavaJaKopioitavaUtil.jarjestaUudelleenMasterJarjestyksenMukaan(
         getEntityManager(), findByValintaryhma(valintaryhma), uusiMasterJarjestys);
+  }
+
+  @Override
+  public void delete(ValinnanVaihe valinnanVaihe) {
+    for (ValinnanVaihe kopio : valinnanVaihe.getKopiot()) {
+      delete(kopio);
+    }
+
+    EntityManager entityManager = getEntityManager();
+
+    QValinnanVaihe seuraava = QValinnanVaihe.valinnanVaihe;
+    ValinnanVaihe seuraavaValinnanVaihe =
+        from(seuraava)
+            .where(seuraava.edellinenValinnanVaihe.id.eq(valinnanVaihe.getId()))
+            .singleResult(seuraava);
+
+    if (seuraavaValinnanVaihe != null) {
+      ValinnanVaihe edellinen = valinnanVaihe.getEdellinen();
+
+      if (valinnanVaihe.getEdellinen() == null) {
+        valinnanVaihe.setEdellinen(valinnanVaihe);
+        entityManager.flush();
+      }
+
+      seuraavaValinnanVaihe.setEdellinen(edellinen);
+    }
+
+    entityManager.remove(valinnanVaihe);
   }
 }
