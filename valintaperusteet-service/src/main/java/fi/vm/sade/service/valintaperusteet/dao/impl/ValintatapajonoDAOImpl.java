@@ -14,6 +14,7 @@ import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -189,6 +190,34 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
       ValinnanVaihe valinnanVaihe, List<Valintatapajono> uusiMasterJarjestys) {
     return LinkitettavaJaKopioitavaUtil.jarjestaUudelleenMasterJarjestyksenMukaan(
         getEntityManager(), findByValinnanVaihe(valinnanVaihe), uusiMasterJarjestys);
+  }
+
+  @Override
+  public void delete(Valintatapajono valintatapajono) {
+    for (Valintatapajono kopio : valintatapajono.getKopiot()) {
+      delete(kopio);
+    }
+
+    EntityManager entityManager = getEntityManager();
+
+    QValintatapajono seuraava = QValintatapajono.valintatapajono;
+    Valintatapajono seuraavaValintatapajono =
+        from(seuraava)
+            .where(seuraava.edellinenValintatapajono.id.eq(valintatapajono.getId()))
+            .singleResult(seuraava);
+
+    if (seuraavaValintatapajono != null) {
+      Valintatapajono edellinen = valintatapajono.getEdellinen();
+
+      if (valintatapajono.getEdellinen() == null) {
+        valintatapajono.setEdellinen(valintatapajono);
+        entityManager.flush();
+      }
+
+      seuraavaValintatapajono.setEdellinen(edellinen);
+    }
+
+    entityManager.remove(valintatapajono);
   }
 
   @Override

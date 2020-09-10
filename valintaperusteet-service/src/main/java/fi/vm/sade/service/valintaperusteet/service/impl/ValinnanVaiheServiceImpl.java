@@ -242,11 +242,6 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
         valinnanVaiheDAO.update(edellinen);
       }
     }
-    if (valinnanVaihe.getJonot() != null) {
-      for (Valintatapajono valintatapajono : valinnanVaihe.getJonot()) {
-        valintatapajonoService.delete(valintatapajono);
-      }
-    }
     if (valinnanVaihe.getValintakokeet() != null) {
       for (Valintakoe valintakoe : valinnanVaihe.getValintakokeet()) {
         valintakoeDAO.remove(valintakoe);
@@ -254,7 +249,6 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
     }
     valinnanVaihe = valinnanVaiheDAO.readByOid(valinnanVaihe.getOid());
     if (valinnanVaihe != null) {
-      valinnanVaihe.setJonot(null);
       valinnanVaihe.setValintakokeet(null);
       valinnanVaiheDAO.remove(valinnanVaihe);
     }

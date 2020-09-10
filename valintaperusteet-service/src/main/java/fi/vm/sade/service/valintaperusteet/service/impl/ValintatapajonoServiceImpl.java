@@ -3,6 +3,7 @@ package fi.vm.sade.service.valintaperusteet.service.impl;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.*;
@@ -257,39 +258,11 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
   }
 
   @Override
-  public void deleteByOid(String oid) {
+  public ValintatapajonoDTO delete(String oid) {
     Valintatapajono valintatapajono = haeValintatapajono(oid);
-    delete(valintatapajono);
-  }
-
-  @Override
-  public void delete(Valintatapajono valintatapajono) {
-    for (Valintatapajono valintatapajono1 : valintatapajono.getKopiot()) {
-      delete(valintatapajono1);
-    }
-    valintatapajono.setKopiot(new HashSet<Valintatapajono>());
-
-    Valintatapajono edellinen = valintatapajono.getEdellinen();
-    Valintatapajono seuraava = valintatapajono.getSeuraava();
-
-    if (edellinen != null) {
-      edellinen.setSeuraava(null);
-      valintatapajonoDAO.update(edellinen);
-    }
-
-    valintatapajono.setEdellinen(null);
-    valintatapajono.setSeuraava(null);
-    valintatapajonoDAO.update(valintatapajono);
-
-    if (seuraava != null) {
-      seuraava.setEdellinen(edellinen);
-      valintatapajonoDAO.update(seuraava);
-      if (edellinen != null) {
-        edellinen.setSeuraava(seuraava);
-        valintatapajonoDAO.update(edellinen);
-      }
-    }
-    valintatapajonoDAO.remove(valintatapajono);
+    ValintatapajonoDTO dto = modelMapper.map(valintatapajono, ValintatapajonoDTO.class);
+    valintatapajonoDAO.delete(valintatapajono);
+    return dto;
   }
 
   @Override
