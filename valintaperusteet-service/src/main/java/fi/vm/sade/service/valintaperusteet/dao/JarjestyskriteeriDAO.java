@@ -27,4 +27,6 @@ public interface JarjestyskriteeriDAO extends JpaDAO<Jarjestyskriteeri, Long> {
       Valintatapajono jono, List<Jarjestyskriteeri> uusiMasterJarjestys);
 
   void delete(Jarjestyskriteeri jarjestyskriteeri);
+
+  Jarjestyskriteeri insert(Jarjestyskriteeri uusi);
 }

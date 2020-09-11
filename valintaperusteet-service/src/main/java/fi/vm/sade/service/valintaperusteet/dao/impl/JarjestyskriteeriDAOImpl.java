@@ -146,4 +146,33 @@ public class JarjestyskriteeriDAOImpl extends AbstractJpaDAOImpl<Jarjestyskritee
 
     entityManager.remove(jarjestyskriteeri);
   }
+
+  @Override
+  public Jarjestyskriteeri insert(Jarjestyskriteeri uusi) {
+    QJarjestyskriteeri jarjestyskriteeri = QJarjestyskriteeri.jarjestyskriteeri;
+    Jarjestyskriteeri seuraava =
+        from(jarjestyskriteeri)
+            .where(
+                jarjestyskriteeri
+                    .valintatapajono
+                    .id
+                    .eq(uusi.getValintatapajono().getId())
+                    .and(
+                        uusi.getEdellinen() == null
+                            ? jarjestyskriteeri.edellinen.isNull()
+                            : jarjestyskriteeri.edellinen.id.eq(uusi.getEdellinen().getId())))
+            .singleResult(jarjestyskriteeri);
+    if (seuraava != null && uusi.getEdellinen() == null) {
+      seuraava.setEdellinen(seuraava);
+      getEntityManager().flush();
+    }
+
+    getEntityManager().persist(uusi);
+
+    if (seuraava != null) {
+      seuraava.setEdellinen(uusi);
+    }
+
+    return uusi;
+  }
 }

@@ -252,33 +252,18 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
       Valintatapajono valintatapajono,
       Valintatapajono masterValintatapajono,
       JuureenKopiointiCache kopiointiCache) {
-    Jarjestyskriteeri jk =
-        jarjestyskriteeriDAO.haeValintatapajononViimeinenJarjestyskriteeri(
-            masterValintatapajono.getOid());
-    kopioiJarjestyskriteeritRekursiivisesti(valintatapajono, jk, kopiointiCache);
-  }
-
-  private Jarjestyskriteeri kopioiJarjestyskriteeritRekursiivisesti(
-      Valintatapajono valintatapajono,
-      Jarjestyskriteeri master,
-      JuureenKopiointiCache kopiointiCache) {
-    if (master == null) {
-      return null;
+    List<Jarjestyskriteeri> jarjestyskriteerit =
+        jarjestyskriteeriDAO.findByJono(masterValintatapajono.getOid());
+    Collections.reverse(jarjestyskriteerit);
+    for (Jarjestyskriteeri jarjestyskriteeri : jarjestyskriteerit) {
+      Jarjestyskriteeri kopio =
+          teeKopioMasterista(valintatapajono, jarjestyskriteeri, kopiointiCache);
+      kopio.setOid(oidService.haeJarjestyskriteeriOid());
+      valintatapajono.addJarjestyskriteeri(kopio);
+      Jarjestyskriteeri lisatty = jarjestyskriteeriDAO.insert(kopio);
+      if (kopiointiCache != null) {
+        kopiointiCache.kopioidutJarjestyskriteerit.put(jarjestyskriteeri.getId(), lisatty);
+      }
     }
-    Jarjestyskriteeri kopio = teeKopioMasterista(valintatapajono, master, kopiointiCache);
-    kopio.setOid(oidService.haeJarjestyskriteeriOid());
-    valintatapajono.addJarjestyskriteeri(kopio);
-    Jarjestyskriteeri edellinen =
-        kopioiJarjestyskriteeritRekursiivisesti(
-            valintatapajono, master.getEdellinen(), kopiointiCache);
-    if (edellinen != null) {
-      kopio.setEdellinen(edellinen);
-      edellinen.setSeuraava(kopio);
-    }
-    Jarjestyskriteeri lisatty = jarjestyskriteeriDAO.insert(kopio);
-    if (kopiointiCache != null) {
-      kopiointiCache.kopioidutJarjestyskriteerit.put(master.getId(), lisatty);
-    }
-    return lisatty;
   }
 }
