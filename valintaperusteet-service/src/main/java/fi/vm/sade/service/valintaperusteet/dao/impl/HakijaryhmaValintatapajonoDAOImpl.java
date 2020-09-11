@@ -166,20 +166,19 @@ public class HakijaryhmaValintatapajonoDAOImpl
     QHakukohdeViite hakukohde = QHakukohdeViite.hakukohdeViite;
     QHakijaryhmaValintatapajono hakijaryhmajono =
         QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
-    QHakijaryhma h = QHakijaryhma.hakijaryhma;
+    QHakijaryhmaValintatapajono seuraava = QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
 
-    return from(hakukohde)
-        .leftJoin(hakukohde.hakijaryhmat, hakijaryhmajono)
-        .leftJoin(hakijaryhmajono.hakijaryhma, h)
+    return from(hakijaryhmajono)
+        .join(hakijaryhmajono.hakukohdeViite, hakukohde)
         .where(
-            hakijaryhmajono
-                .id
-                .notIn(
+            hakukohde
+                .oid
+                .eq(hakukohdeOid)
+                .and(
                     subQuery()
-                        .from(hakijaryhmajono)
-                        .where(hakijaryhmajono.edellinen.isNotNull())
-                        .list(hakijaryhmajono.edellinen.id))
-                .and(hakukohde.oid.eq(hakukohdeOid)))
+                        .from(seuraava)
+                        .where(seuraava.edellinen.id.eq(hakijaryhmajono.id))
+                        .notExists()))
         .singleResult(hakijaryhmajono);
   }
 
@@ -189,20 +188,19 @@ public class HakijaryhmaValintatapajonoDAOImpl
     QValintatapajono valintatapajono = QValintatapajono.valintatapajono;
     QHakijaryhmaValintatapajono hakijaryhmajono =
         QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
-    QHakijaryhma h = QHakijaryhma.hakijaryhma;
+    QHakijaryhmaValintatapajono seuraava = QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
 
-    return from(valintatapajono)
-        .leftJoin(valintatapajono.hakijaryhmat, hakijaryhmajono)
-        .leftJoin(hakijaryhmajono.hakijaryhma, h)
+    return from(hakijaryhmajono)
+        .join(hakijaryhmajono.valintatapajono, valintatapajono)
         .where(
-            hakijaryhmajono
-                .id
-                .notIn(
+            valintatapajono
+                .oid
+                .eq(valintatapajonoOid)
+                .and(
                     subQuery()
-                        .from(hakijaryhmajono)
-                        .where(hakijaryhmajono.edellinen.isNotNull())
-                        .list(hakijaryhmajono.edellinen.id))
-                .and(valintatapajono.oid.eq(valintatapajonoOid)))
+                        .from(seuraava)
+                        .where(seuraava.edellinen.id.eq(hakijaryhmajono.id))
+                        .notExists()))
         .singleResult(hakijaryhmajono);
   }
 
