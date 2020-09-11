@@ -382,9 +382,9 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
     Valintatapajono lisatty = valintatapajonoDAO.insert(kopio);
     if (kopiointiCache != null) {
       kopiointiCache.kopioidutValintapajonot.put(master.getId(), lisatty);
-      hakijaryhmaValintatapajonoService.kopioiValintatapajononHakijaryhmaValintatapajonot(
-          master, kopio, kopiointiCache);
     }
+    hakijaryhmaValintatapajonoService.kopioiValintatapajononHakijaryhmaValintatapajonot(
+        master, kopio, kopiointiCache);
     jarjestyskriteeriService.kopioiJarjestyskriteeritMasterValintatapajonoltaKopiolle(
         lisatty, master, kopiointiCache);
     return lisatty;

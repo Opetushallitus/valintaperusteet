@@ -148,7 +148,9 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
     kopio.setOid(oidService.haeValintatapajonoHakijaryhmaOid());
     HakijaryhmaValintatapajono lisatty = hakijaryhmaValintatapajonoDAO.insert(kopio);
     kohdeValintatapajono.getHakijaryhmat().add(lisatty);
-    kopiointiCache.kopioidutHakijaryhmaValintapajonot.put(kopioitava.getId(), lisatty);
+    if (kopiointiCache != null) {
+      kopiointiCache.kopioidutHakijaryhmaValintapajonot.put(kopioitava.getId(), lisatty);
+    }
     if (kopioitava.getSeuraava() != null) {
       kopio.setSeuraava(
           kopioiRekusiivisestiHakijaryhmaValintatapajonot(
