@@ -123,16 +123,6 @@ public abstract class LinkitettavaJaKopioitavaUtil {
     return jarjestetyt;
   }
 
-  public static <T extends Linkitettava> void asetaSeuraava(T edellinen, T seuraava) {
-    seuraava.setEdellinen(edellinen);
-    if (edellinen != null) {
-      if (edellinen.getSeuraava() != null) {
-        edellinen.getSeuraava().setEdellinen(seuraava);
-      }
-      edellinen.setSeuraava(seuraava);
-    }
-  }
-
   public static <T extends Linkitettava<T>> List<T> jarjestaUudelleen(
       EntityManager entityManager, List<T> jarjestettavat, List<String> uusiJarjestys) {
     LinkedList<T> kaanteinenJarjestys = new LinkedList<>();

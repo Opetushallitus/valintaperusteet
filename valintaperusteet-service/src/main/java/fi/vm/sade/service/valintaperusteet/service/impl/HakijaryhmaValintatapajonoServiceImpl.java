@@ -118,7 +118,6 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
     jono.setKaytetaanRyhmaanKuuluvia(hakijaryhma.isKaytetaanRyhmaanKuuluvia());
     jono.setHakijaryhmatyyppikoodi(hakijaryhma.getHakijaryhmatyyppikoodi());
     hakijaryhmaValintatapajonoDAO.insert(jono);
-    LinkitettavaJaKopioitavaUtil.asetaSeuraava(edellinenHakijaryhma, jono);
     for (Valintatapajono kopio : valintatapajono.getKopioValintatapajonot()) {
       lisaaValintatapajonolleKopioMasterHakijaryhmasta(kopio, jono, edellinenHakijaryhma);
     }
@@ -160,7 +159,6 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
         LinkitettavaJaKopioitavaUtil.haeMasterinEdellistaVastaava(edellinenMaster, jonot);
     kopio.setEdellinen(edellinen);
     HakijaryhmaValintatapajono lisatty = hakijaryhmaValintatapajonoDAO.insert(kopio);
-    LinkitettavaJaKopioitavaUtil.asetaSeuraava(edellinen, lisatty);
     for (Valintatapajono jonokopio : valintatapajono.getKopioValintatapajonot()) {
       lisaaValintatapajonolleKopioMasterHakijaryhmasta(jonokopio, lisatty, lisatty.getEdellinen());
     }
@@ -197,7 +195,6 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
     jono.setKaytetaanRyhmaanKuuluvia(hakijaryhma.isKaytetaanRyhmaanKuuluvia());
     jono.setHakijaryhmatyyppikoodi(hakijaryhma.getHakijaryhmatyyppikoodi());
     hakijaryhmaValintatapajonoDAO.insert(jono);
-    LinkitettavaJaKopioitavaUtil.asetaSeuraava(edellinenHakijaryhma, jono);
     return lisatty;
   }
 
@@ -254,7 +251,6 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
     jono.setKaytetaanRyhmaanKuuluvia(hakijaryhma.isKaytetaanRyhmaanKuuluvia());
     jono.setHakijaryhmatyyppikoodi(hakijaryhma.getHakijaryhmatyyppikoodi());
     hakijaryhmaValintatapajonoDAO.insert(jono);
-    LinkitettavaJaKopioitavaUtil.asetaSeuraava(edellinenHakijaryhma, jono);
     for (Valintatapajono kopio : valintatapajono.getKopioValintatapajonot()) {
       lisaaValintatapajonolleKopioMasterHakijaryhmasta(kopio, jono, edellinenHakijaryhma);
     }
@@ -278,7 +274,6 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
     jono.setKaytetaanRyhmaanKuuluvia(hakijaryhma.isKaytetaanRyhmaanKuuluvia());
     jono.setHakijaryhmatyyppikoodi(hakijaryhma.getHakijaryhmatyyppikoodi());
     hakijaryhmaValintatapajonoDAO.insert(jono);
-    LinkitettavaJaKopioitavaUtil.asetaSeuraava(edellinenHakijaryhma, jono);
   }
 
   @Override

@@ -127,7 +127,6 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
     }
     hakijaryhma.setEdellinenHakijaryhma(edellinenHakijaryhma);
     Hakijaryhma lisatty = hakijaryhmaDAO.insert(hakijaryhma);
-    LinkitettavaJaKopioitavaUtil.asetaSeuraava(edellinenHakijaryhma, lisatty);
     valintaryhma.getHakukohdeViitteet().stream()
         .forEach(
             hk -> {
@@ -211,7 +210,6 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
     }
     kopio.setEdellinenHakijaryhma(edellinenHakijaryhma);
     Hakijaryhma lisatty = hakijaryhmaDAO.insert(kopio);
-    LinkitettavaJaKopioitavaUtil.asetaSeuraava(edellinenHakijaryhma, lisatty);
     return kopio;
   }
 

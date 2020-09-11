@@ -73,7 +73,6 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
             edellinenMasterValinnanVaihe, vaiheet);
     kopio.setEdellinenValinnanVaihe(edellinenValinnanVaihe);
     ValinnanVaihe lisatty = valinnanVaiheDAO.insert(kopio);
-    LinkitettavaJaKopioitavaUtil.asetaSeuraava(edellinenValinnanVaihe, lisatty);
     return kopio;
   }
 
@@ -133,7 +132,6 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
     valinnanVaihe.setValintaryhma(valintaryhma);
     valinnanVaihe.setEdellinenValinnanVaihe(edellinenValinnanVaihe);
     ValinnanVaihe lisatty = valinnanVaiheDAO.insert(valinnanVaihe);
-    LinkitettavaJaKopioitavaUtil.asetaSeuraava(edellinenValinnanVaihe, lisatty);
     List<Valintaryhma> alaValintaryhmat =
         valintaryhmaService.findValintaryhmasByParentOid(valintaryhmaOid);
     for (Valintaryhma alavalintaryhma : alaValintaryhmat) {
@@ -163,7 +161,6 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
     valinnanVaihe.setHakukohdeViite(hakukohde);
     valinnanVaihe.setEdellinenValinnanVaihe(edellinenValinnanVaihe);
     ValinnanVaihe lisatty = valinnanVaiheDAO.insert(valinnanVaihe);
-    LinkitettavaJaKopioitavaUtil.asetaSeuraava(edellinenValinnanVaihe, lisatty);
     return lisatty;
   }
 

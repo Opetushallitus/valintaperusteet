@@ -135,7 +135,6 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
     jarjestyskriteeri.setValintatapajono(valintatapajono);
     jarjestyskriteeri.setEdellinen(edellinenJarjestyskriteeri);
     Jarjestyskriteeri lisatty = jarjestyskriteeriDAO.insert(jarjestyskriteeri);
-    LinkitettavaJaKopioitavaUtil.asetaSeuraava(edellinenJarjestyskriteeri, lisatty);
     for (Valintatapajono kopio : valintatapajono.getKopiot()) {
       lisaaValintatapajonolleKopioMasterJarjestyskriteerista(
           kopio, lisatty, lisatty.getLaskentakaava(), edellinenJarjestyskriteeri);
@@ -158,7 +157,6 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
             edellinenMasterJarjestyskriteeri, jonot);
     kopio.setEdellinen(edellinenJarjestyskriteeri);
     Jarjestyskriteeri lisatty = jarjestyskriteeriDAO.insert(kopio);
-    LinkitettavaJaKopioitavaUtil.asetaSeuraava(edellinenJarjestyskriteeri, lisatty);
     for (Valintatapajono jonokopio : valintatapajono.getKopiot()) {
       lisaaValintatapajonolleKopioMasterJarjestyskriteerista(
           jonokopio, lisatty, laskentakaava, lisatty.getEdellinen());

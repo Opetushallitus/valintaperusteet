@@ -173,4 +173,36 @@ public class HakijaryhmaDAOImpl extends AbstractJpaDAOImpl<Hakijaryhma, Long>
 
     entityManager.remove(hakijaryhma);
   }
+
+  @Override
+  public Hakijaryhma insert(Hakijaryhma uusi) {
+    QHakijaryhma hakijaryhma = QHakijaryhma.hakijaryhma;
+    Hakijaryhma seuraava =
+        uusi.getValintaryhma() == null
+            ? null
+            : from(hakijaryhma)
+                .where(
+                    hakijaryhma
+                        .valintaryhma
+                        .id
+                        .eq(uusi.getValintaryhma().getId())
+                        .and(
+                            uusi.getEdellinen() == null
+                                ? hakijaryhma.edellinenHakijaryhma.isNull()
+                                : hakijaryhma.edellinenHakijaryhma.id.eq(
+                                    uusi.getEdellinen().getId())))
+                .singleResult(hakijaryhma);
+    if (seuraava != null && uusi.getEdellinen() == null) {
+      seuraava.setEdellinen(seuraava);
+      getEntityManager().flush();
+    }
+
+    getEntityManager().persist(uusi);
+
+    if (seuraava != null) {
+      seuraava.setEdellinen(uusi);
+    }
+
+    return uusi;
+  }
 }

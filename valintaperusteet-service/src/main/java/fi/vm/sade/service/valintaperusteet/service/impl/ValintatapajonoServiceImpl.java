@@ -204,7 +204,6 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
             edellinenMasterValintatapajono, jonot);
     kopio.setEdellinenValintatapajono(edellinenValintatapajono);
     Valintatapajono lisatty = valintatapajonoDAO.insert(kopio);
-    LinkitettavaJaKopioitavaUtil.asetaSeuraava(edellinenValintatapajono, lisatty);
     for (ValinnanVaihe vaihekopio : valinnanVaihe.getKopioValinnanVaiheet()) {
       lisaaValinnanVaiheelleKopioMasterValintatapajonosta(
           vaihekopio, lisatty, lisatty.getEdellinenValintatapajono());
@@ -239,7 +238,6 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
       jono.setVarasijanTayttojono(tayttoJono);
     }
     Valintatapajono lisatty = valintatapajonoDAO.insert(jono);
-    LinkitettavaJaKopioitavaUtil.asetaSeuraava(edellinenValintatapajono, lisatty);
     for (ValinnanVaihe kopio : valinnanVaihe.getKopioValinnanVaiheet()) {
       lisaaValinnanVaiheelleKopioMasterValintatapajonosta(kopio, lisatty, edellinenValintatapajono);
     }

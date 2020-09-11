@@ -20,4 +20,6 @@ public interface HakijaryhmaDAO extends JpaDAO<Hakijaryhma, Long> {
   List<Hakijaryhma> jarjestaUudelleen(Valintaryhma valintaryhma, List<String> uusiJarjestys);
 
   void delete(Hakijaryhma hakijaryhma);
+
+  Hakijaryhma insert(Hakijaryhma uusi);
 }
