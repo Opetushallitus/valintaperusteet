@@ -252,4 +252,36 @@ public class HakijaryhmaValintatapajonoDAOImpl
 
     entityManager.remove(hakijaryhmaValintatapajono);
   }
+
+  @Override
+  public HakijaryhmaValintatapajono insert(HakijaryhmaValintatapajono uusi) {
+    QHakijaryhmaValintatapajono hakijaryhmaValintatapajono =
+        QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
+    HakijaryhmaValintatapajono seuraava =
+        from(hakijaryhmaValintatapajono)
+            .where(
+                (uusi.getHakukohdeViite() == null
+                        ? hakijaryhmaValintatapajono.valintatapajono.id.eq(
+                            uusi.getValintatapajono().getId())
+                        : hakijaryhmaValintatapajono.hakukohdeViite.id.eq(
+                            uusi.getHakukohdeViite().getId()))
+                    .and(
+                        uusi.getEdellinen() == null
+                            ? hakijaryhmaValintatapajono.edellinen.isNull()
+                            : hakijaryhmaValintatapajono.edellinen.id.eq(
+                                uusi.getEdellinen().getId())))
+            .singleResult(hakijaryhmaValintatapajono);
+    if (seuraava != null && uusi.getEdellinen() == null) {
+      seuraava.setEdellinen(seuraava);
+      getEntityManager().flush();
+    }
+
+    getEntityManager().persist(uusi);
+
+    if (seuraava != null) {
+      seuraava.setEdellinen(uusi);
+    }
+
+    return uusi;
+  }
 }

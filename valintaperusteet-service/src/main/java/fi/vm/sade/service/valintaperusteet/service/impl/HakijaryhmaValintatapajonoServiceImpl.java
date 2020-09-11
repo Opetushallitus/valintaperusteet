@@ -25,6 +25,7 @@ import fi.vm.sade.service.valintaperusteet.util.HakijaryhmaValintatapajonoUtil;
 import fi.vm.sade.service.valintaperusteet.util.JuureenKopiointiCache;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -129,34 +130,20 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
       Valintatapajono lahdeValintatapajono,
       Valintatapajono kohdeValintatapajono,
       JuureenKopiointiCache kopiointiCache) {
-
     List<HakijaryhmaValintatapajono> jonot =
         hakijaryhmaValintatapajonoDAO.findByValintatapajono(lahdeValintatapajono.getOid());
-    if (!jonot.isEmpty()) {
-      kopioiRekusiivisestiHakijaryhmaValintatapajonot(
-          kohdeValintatapajono, jonot.iterator().next(), kopiointiCache);
+    Collections.reverse(jonot);
+    for (HakijaryhmaValintatapajono jono : jonot) {
+      HakijaryhmaValintatapajono kopio =
+          HakijaryhmaValintatapajonoUtil.teeKopioMasterista(jono, kopiointiCache);
+      kopio.setValintatapajono(kohdeValintatapajono);
+      kopio.setOid(oidService.haeValintatapajonoHakijaryhmaOid());
+      HakijaryhmaValintatapajono lisatty = hakijaryhmaValintatapajonoDAO.insert(kopio);
+      kohdeValintatapajono.getHakijaryhmat().add(lisatty);
+      if (kopiointiCache != null) {
+        kopiointiCache.kopioidutHakijaryhmaValintapajonot.put(jono.getId(), lisatty);
+      }
     }
-  }
-
-  private HakijaryhmaValintatapajono kopioiRekusiivisestiHakijaryhmaValintatapajonot(
-      Valintatapajono kohdeValintatapajono,
-      HakijaryhmaValintatapajono kopioitava,
-      JuureenKopiointiCache kopiointiCache) {
-    HakijaryhmaValintatapajono kopio =
-        HakijaryhmaValintatapajonoUtil.teeKopioMasterista(kopioitava, kopiointiCache);
-    kopio.setValintatapajono(kohdeValintatapajono);
-    kopio.setOid(oidService.haeValintatapajonoHakijaryhmaOid());
-    HakijaryhmaValintatapajono lisatty = hakijaryhmaValintatapajonoDAO.insert(kopio);
-    kohdeValintatapajono.getHakijaryhmat().add(lisatty);
-    if (kopiointiCache != null) {
-      kopiointiCache.kopioidutHakijaryhmaValintapajonot.put(kopioitava.getId(), lisatty);
-    }
-    if (kopioitava.getSeuraava() != null) {
-      kopio.setSeuraava(
-          kopioiRekusiivisestiHakijaryhmaValintatapajonot(
-              kohdeValintatapajono, kopioitava.getSeuraava(), kopiointiCache));
-    }
-    return lisatty;
   }
 
   private void lisaaValintatapajonolleKopioMasterHakijaryhmasta(
