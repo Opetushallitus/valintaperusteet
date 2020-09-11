@@ -29,4 +29,6 @@ public interface ValintatapajonoDAO extends JpaDAO<Valintatapajono, Long> {
       ValinnanVaihe valinnanVaihe, List<Valintatapajono> uusiMasterJarjestys);
 
   void delete(Valintatapajono valintatapajono);
+
+  Valintatapajono insert(Valintatapajono uusi);
 }

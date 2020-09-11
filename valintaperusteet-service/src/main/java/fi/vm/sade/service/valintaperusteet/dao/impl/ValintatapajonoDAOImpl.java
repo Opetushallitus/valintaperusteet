@@ -296,8 +296,32 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
   }
 
   @Override
-  public Valintatapajono insert(Valintatapajono entity) {
-    Valintatapajono insert = super.insert(entity);
-    return insert;
+  public Valintatapajono insert(Valintatapajono uusi) {
+    QValintatapajono valintatapajono = QValintatapajono.valintatapajono;
+    Valintatapajono seuraava =
+        from(valintatapajono)
+            .where(
+                valintatapajono
+                    .valinnanVaihe
+                    .id
+                    .eq(uusi.getValinnanVaihe().getId())
+                    .and(
+                        uusi.getEdellinen() == null
+                            ? valintatapajono.edellinenValintatapajono.isNull()
+                            : valintatapajono.edellinenValintatapajono.id.eq(
+                                uusi.getEdellinen().getId())))
+            .singleResult(valintatapajono);
+    if (seuraava != null && uusi.getEdellinen() == null) {
+      seuraava.setEdellinen(seuraava);
+      getEntityManager().flush();
+    }
+
+    getEntityManager().persist(uusi);
+
+    if (seuraava != null) {
+      seuraava.setEdellinen(uusi);
+    }
+
+    return uusi;
   }
 }
