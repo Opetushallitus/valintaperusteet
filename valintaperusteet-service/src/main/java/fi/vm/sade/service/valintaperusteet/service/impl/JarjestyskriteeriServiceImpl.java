@@ -152,10 +152,8 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
     kopio.setValintatapajono(valintatapajono);
     kopio.setOid(oidService.haeJarjestyskriteeriOid());
     List<Jarjestyskriteeri> jonot = jarjestyskriteeriDAO.findByJono(valintatapajono.getOid());
-    Jarjestyskriteeri edellinenJarjestyskriteeri =
-        LinkitettavaJaKopioitavaUtil.haeMasterinEdellistaVastaava(
-            edellinenMasterJarjestyskriteeri, jonot);
-    kopio.setEdellinen(edellinenJarjestyskriteeri);
+    kopio.setEdellinen(
+        LinkitettavaJaKopioitavaUtil.kopioTaiViimeinen(edellinenMasterJarjestyskriteeri, jonot));
     Jarjestyskriteeri lisatty = jarjestyskriteeriDAO.insert(kopio);
     for (Valintatapajono jonokopio : valintatapajono.getKopiot()) {
       lisaaValintatapajonolleKopioMasterJarjestyskriteerista(

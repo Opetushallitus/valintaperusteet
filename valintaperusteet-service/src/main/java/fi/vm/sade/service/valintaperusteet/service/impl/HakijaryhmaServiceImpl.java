@@ -179,7 +179,9 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
     Hakijaryhma kopio = luoKopioHakijaryhmasta(valintaryhma, masterHakijaryhma, kopiointiCache);
     kopio.setValintaryhma(valintaryhma);
     List<Hakijaryhma> ryhmat = hakijaryhmaDAO.findByValintaryhma(valintaryhma.getOid());
-    Hakijaryhma lisatty = lisaaKopio(kopio, edellinenHakijaryhma, ryhmat);
+    kopio.setEdellinenHakijaryhma(
+        LinkitettavaJaKopioitavaUtil.kopioTaiViimeinen(edellinenHakijaryhma, ryhmat));
+    Hakijaryhma lisatty = hakijaryhmaDAO.insert(kopio);
     valintaryhma.getHakijaryhmat().add(lisatty);
     if (kopiointiCache != null) {
       kopiointiCache.kopioidutHakijaryhmat.put(masterHakijaryhma.getId(), lisatty);
@@ -198,19 +200,6 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
               hakijaryhmaValintatapajonoService.liitaHakijaryhmaHakukohteelle(
                   hk.getOid(), lisatty.getOid());
             });
-  }
-
-  private Hakijaryhma lisaaKopio(
-      Hakijaryhma kopio, Hakijaryhma edellinenMasterHakijaryhma, List<Hakijaryhma> ryhmat) {
-    Hakijaryhma edellinenHakijaryhma =
-        LinkitettavaJaKopioitavaUtil.haeMasterinEdellistaVastaava(
-            edellinenMasterHakijaryhma, ryhmat);
-    if (edellinenHakijaryhma == null && !ryhmat.isEmpty()) {
-      edellinenHakijaryhma = ryhmat.get(ryhmat.size() - 1);
-    }
-    kopio.setEdellinenHakijaryhma(edellinenHakijaryhma);
-    Hakijaryhma lisatty = hakijaryhmaDAO.insert(kopio);
-    return kopio;
   }
 
   private Hakijaryhma luoKopioHakijaryhmasta(

@@ -64,18 +64,6 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
     return valinnanVaiheDAO.findByHakukohde(oid);
   }
 
-  private ValinnanVaihe lisaaKopio(
-      ValinnanVaihe kopio,
-      ValinnanVaihe edellinenMasterValinnanVaihe,
-      List<ValinnanVaihe> vaiheet) {
-    ValinnanVaihe edellinenValinnanVaihe =
-        LinkitettavaJaKopioitavaUtil.haeMasterinEdellistaVastaava(
-            edellinenMasterValinnanVaihe, vaiheet);
-    kopio.setEdellinenValinnanVaihe(edellinenValinnanVaihe);
-    ValinnanVaihe lisatty = valinnanVaiheDAO.insert(kopio);
-    return kopio;
-  }
-
   private void lisaaHakukohteelleKopioMasterValinnanVaiheesta(
       HakukohdeViite hakukohde,
       ValinnanVaihe masterValinnanVaihe,
@@ -84,7 +72,9 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
     kopio.setHakukohdeViite(hakukohde);
     kopio.setOid(oidService.haeValinnanVaiheOid());
     List<ValinnanVaihe> vaiheet = valinnanVaiheDAO.findByHakukohde(hakukohde.getOid());
-    lisaaKopio(kopio, edellinenMasterValinnanVaihe, vaiheet);
+    kopio.setEdellinenValinnanVaihe(
+        LinkitettavaJaKopioitavaUtil.kopioTaiViimeinen(edellinenMasterValinnanVaihe, vaiheet));
+    valinnanVaiheDAO.insert(kopio);
   }
 
   private void lisaaValintaryhmalleKopioMasterValinnanVaiheesta(
@@ -96,7 +86,9 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
     kopio.setValintaryhma(valintaryhma);
     kopio.setOid(oidService.haeValinnanVaiheOid());
     List<ValinnanVaihe> vaiheet = valinnanVaiheDAO.findByValintaryhma(valintaryhma.getOid());
-    ValinnanVaihe lisatty = lisaaKopio(kopio, edellinenMasterValinnanVaihe, vaiheet);
+    kopio.setEdellinenValinnanVaihe(
+        LinkitettavaJaKopioitavaUtil.kopioTaiViimeinen(edellinenMasterValinnanVaihe, vaiheet));
+    ValinnanVaihe lisatty = valinnanVaiheDAO.insert(kopio);
     List<Valintaryhma> alavalintaryhmat =
         valintaryhmaService.findValintaryhmasByParentOid(valintaryhma.getOid());
     for (Valintaryhma alavalintaryhma : alavalintaryhmat) {

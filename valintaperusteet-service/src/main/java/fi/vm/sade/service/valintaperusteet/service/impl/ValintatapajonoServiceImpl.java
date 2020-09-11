@@ -199,10 +199,8 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
     kopio.setValinnanVaihe(valinnanVaihe);
     kopio.setOid(oidService.haeValintatapajonoOid());
     List<Valintatapajono> jonot = valintatapajonoDAO.findByValinnanVaihe(valinnanVaihe.getOid());
-    Valintatapajono edellinenValintatapajono =
-        LinkitettavaJaKopioitavaUtil.haeMasterinEdellistaVastaava(
-            edellinenMasterValintatapajono, jonot);
-    kopio.setEdellinenValintatapajono(edellinenValintatapajono);
+    kopio.setEdellinenValintatapajono(
+        LinkitettavaJaKopioitavaUtil.kopioTaiViimeinen(edellinenMasterValintatapajono, jonot));
     Valintatapajono lisatty = valintatapajonoDAO.insert(kopio);
     for (ValinnanVaihe vaihekopio : valinnanVaihe.getKopioValinnanVaiheet()) {
       lisaaValinnanVaiheelleKopioMasterValintatapajonosta(

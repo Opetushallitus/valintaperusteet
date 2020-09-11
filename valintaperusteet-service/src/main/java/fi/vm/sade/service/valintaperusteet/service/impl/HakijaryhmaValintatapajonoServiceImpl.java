@@ -155,9 +155,7 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
     kopio.setOid(oidService.haeValintatapajonoHakijaryhmaOid());
     List<HakijaryhmaValintatapajono> jonot =
         hakijaryhmaValintatapajonoDAO.findByValintatapajono(valintatapajono.getOid());
-    HakijaryhmaValintatapajono edellinen =
-        LinkitettavaJaKopioitavaUtil.haeMasterinEdellistaVastaava(edellinenMaster, jonot);
-    kopio.setEdellinen(edellinen);
+    kopio.setEdellinen(LinkitettavaJaKopioitavaUtil.kopioTaiViimeinen(edellinenMaster, jonot));
     HakijaryhmaValintatapajono lisatty = hakijaryhmaValintatapajonoDAO.insert(kopio);
     for (Valintatapajono jonokopio : valintatapajono.getKopioValintatapajonot()) {
       lisaaValintatapajonolleKopioMasterHakijaryhmasta(jonokopio, lisatty, lisatty.getEdellinen());

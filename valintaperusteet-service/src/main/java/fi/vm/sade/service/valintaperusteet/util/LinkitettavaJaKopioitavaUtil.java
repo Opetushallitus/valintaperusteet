@@ -9,18 +9,20 @@ import javax.persistence.EntityManager;
 
 public abstract class LinkitettavaJaKopioitavaUtil {
 
-  public static <T extends LinkitettavaJaKopioitava> T haeMasterinEdellistaVastaava(
-      T edellinenMaster, List<T> lista) {
-    T edellinen = null;
+  public static <C extends Collection<T>, T extends LinkitettavaJaKopioitava<T, C>>
+      T kopioTaiViimeinen(T master, List<T> lista) {
+    if (lista.isEmpty()) {
+      return null;
+    }
+    if (master == null) {
+      return lista.get(lista.size() - 1);
+    }
     for (T t : lista) {
-      if (t == null
-          || edellinenMaster == null
-          || (t.getMaster() != null && t.getMaster().equals(edellinenMaster))) {
-        edellinen = t;
-        break;
+      if (master.equals(t.getMaster())) {
+        return t;
       }
     }
-    return edellinen;
+    return lista.get(lista.size() - 1);
   }
 
   private static <T> Iterable<T> takeWhile(Predicate<T> p, Iterable<T> iterable) {
