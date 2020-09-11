@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Table(name = "jarjestyskriteeri")
 @Cacheable(true)
 public class Jarjestyskriteeri extends BaseEntity
-    implements LinkitettavaJaKopioitava<Jarjestyskriteeri, Set<Jarjestyskriteeri>> {
+    implements Linkitettava<Jarjestyskriteeri>, Kopioitava<Jarjestyskriteeri> {
   private static final long serialVersionUID = 1L;
 
   @Column(name = "oid", nullable = false, unique = true)
@@ -114,10 +114,5 @@ public class Jarjestyskriteeri extends BaseEntity
   @Override
   public Set<Jarjestyskriteeri> getKopiot() {
     return kopiot;
-  }
-
-  @Override
-  public void setKopiot(Set<Jarjestyskriteeri> kopiot) {
-    this.kopiot = kopiot;
   }
 }

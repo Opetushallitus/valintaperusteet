@@ -21,7 +21,7 @@ import javax.persistence.Transient;
 @Table(name = "valinnan_vaihe")
 @Cacheable(true)
 public class ValinnanVaihe extends BaseEntity
-    implements LinkitettavaJaKopioitava<ValinnanVaihe, Set<ValinnanVaihe>> {
+    implements Linkitettava<ValinnanVaihe>, Kopioitava<ValinnanVaihe> {
   private static final long serialVersionUID = 1L;
 
   @Column(name = "oid", nullable = false, unique = true)
@@ -188,12 +188,6 @@ public class ValinnanVaihe extends BaseEntity
   @Override
   public ValinnanVaihe getMaster() {
     return getMasterValinnanVaihe();
-  }
-
-  @Transient
-  @Override
-  public void setKopiot(Set<ValinnanVaihe> kopiot) {
-    setKopioValinnanvaiheet(kopiot);
   }
 
   @Transient

@@ -2,15 +2,14 @@ package fi.vm.sade.service.valintaperusteet.util;
 
 import fi.vm.sade.service.valintaperusteet.model.Kopioitava;
 import fi.vm.sade.service.valintaperusteet.model.Linkitettava;
-import fi.vm.sade.service.valintaperusteet.model.LinkitettavaJaKopioitava;
 import java.util.*;
 import java.util.function.Predicate;
 import javax.persistence.EntityManager;
 
 public abstract class LinkitettavaJaKopioitavaUtil {
 
-  public static <C extends Collection<T>, T extends LinkitettavaJaKopioitava<T, C>>
-      T kopioTaiViimeinen(T master, List<T> lista) {
+  public static <T extends Linkitettava<T> & Kopioitava<T>> T kopioTaiViimeinen(
+      T master, List<T> lista) {
     if (lista.isEmpty()) {
       return null;
     }
@@ -87,7 +86,7 @@ public abstract class LinkitettavaJaKopioitavaUtil {
     };
   }
 
-  public static <C extends Collection<T>, T extends LinkitettavaJaKopioitava<T, C>>
+  public static <T extends Linkitettava<T> & Kopioitava<T>>
       List<T> jarjestaUudelleenMasterJarjestyksenMukaan(
           EntityManager entityManager, List<T> jarjestettavat, List<T> uusiMasterJarjestys) {
     jarjestettavat = jarjesta(jarjestettavat);
@@ -153,24 +152,24 @@ public abstract class LinkitettavaJaKopioitavaUtil {
     return kaanteinenJarjestys;
   }
 
-  private static <T extends Kopioitava> void paivitaKopio(
+  private static <T extends Kopioitava<T>> void paivitaKopio(
       T t, T alkuperainenMaster, T paivitettyMaster, Kopioija<T> kopioija) {
     // Otetaan talteen alkuperäinen ja päivitetään tiedot kantaobjektiin masterilta
     T alkuperainen = kopioija.luoKlooni(t);
     kopioija.kopioiTiedotMasteriltaKopiolle(alkuperainenMaster, paivitettyMaster, t);
     // Päivitetään kopion kopiot rekursiivisesti
-    for (T kopio : (Collection<T>) t.getKopiot()) {
+    for (T kopio : t.getKopiot()) {
       paivitaKopio(kopio, alkuperainen, t, kopioija);
     }
   }
 
-  public static <T extends Kopioitava> T paivita(T managed, T incoming, Kopioija<T> kopioija) {
+  public static <T extends Kopioitava<T>> T paivita(T managed, T incoming, Kopioija<T> kopioija) {
     // Otetaan talteen alkuperainen
     T alkuperainen = kopioija.luoKlooni(managed);
     // Kopioidaan tiedot kantaan tallennettuun objektiin
     kopioija.kopioiTiedot(incoming, managed);
     // Päivitetään kopiot
-    for (T kopio : (Collection<T>) managed.getKopiot()) {
+    for (T kopio : managed.getKopiot()) {
       paivitaKopio(kopio, alkuperainen, managed, kopioija);
     }
     return managed;

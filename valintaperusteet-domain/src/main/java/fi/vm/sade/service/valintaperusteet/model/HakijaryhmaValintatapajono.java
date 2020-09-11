@@ -8,8 +8,7 @@ import javax.persistence.*;
 @Table(name = "hakijaryhma_jono")
 @Cacheable(true)
 public class HakijaryhmaValintatapajono extends BaseEntity
-    implements LinkitettavaJaKopioitava<
-        HakijaryhmaValintatapajono, Set<HakijaryhmaValintatapajono>> {
+    implements Linkitettava<HakijaryhmaValintatapajono>, Kopioitava<HakijaryhmaValintatapajono> {
 
   private static final long serialVersionUID = 1L;
 
@@ -118,12 +117,6 @@ public class HakijaryhmaValintatapajono extends BaseEntity
   @Transient
   public Set<HakijaryhmaValintatapajono> getKopiot() {
     return kopiot;
-  }
-
-  @Override
-  @Transient
-  public void setKopiot(Set<HakijaryhmaValintatapajono> kopiot) {
-    this.kopiot = kopiot;
   }
 
   @Transient

@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Table(name = "valintatapajono")
 @Cacheable(true)
 public class Valintatapajono extends BaseEntity
-    implements LinkitettavaJaKopioitava<Valintatapajono, Set<Valintatapajono>> {
+    implements Linkitettava<Valintatapajono>, Kopioitava<Valintatapajono> {
   private static final long serialVersionUID = 1L;
 
   @Column(name = "oid", nullable = false, unique = true)
@@ -301,12 +301,6 @@ public class Valintatapajono extends BaseEntity
   @Override
   public Valintatapajono getMaster() {
     return getMasterValintatapajono();
-  }
-
-  @Transient
-  @Override
-  public void setKopiot(Set<Valintatapajono> kopiot) {
-    setKopioValintatapajonot(kopiot);
   }
 
   @Transient

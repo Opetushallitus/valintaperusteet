@@ -7,7 +7,7 @@ import javax.persistence.*;
 @Table(name = "hakijaryhma")
 @Cacheable(true)
 public class Hakijaryhma extends BaseEntity
-    implements LinkitettavaJaKopioitava<Hakijaryhma, Set<Hakijaryhma>> {
+    implements Linkitettava<Hakijaryhma>, Kopioitava<Hakijaryhma> {
 
   private static final long serialVersionUID = 1L;
 
@@ -198,11 +198,6 @@ public class Hakijaryhma extends BaseEntity
   @Override
   public Hakijaryhma getMaster() {
     return getMasterHakijaryhma();
-  }
-
-  @Override
-  public void setKopiot(Set<Hakijaryhma> kopiot) {
-    setKopioHakijaryhmat(kopiot);
   }
 
   @Override

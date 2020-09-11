@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "valintakoe")
 @Cacheable(true)
-public class Valintakoe extends BaseEntity implements Kopioitava<Valintakoe, Set<Valintakoe>> {
+public class Valintakoe extends BaseEntity implements Kopioitava<Valintakoe> {
 
   @Column(name = "oid", nullable = false, unique = true)
   private String oid;
@@ -156,12 +156,6 @@ public class Valintakoe extends BaseEntity implements Kopioitava<Valintakoe, Set
   @Override
   public Valintakoe getMaster() {
     return this.masterValintakoe;
-  }
-
-  @Transient
-  @Override
-  public void setKopiot(Set<Valintakoe> kopiot) {
-    this.kopioValintakokeet = kopiot;
   }
 
   @Transient
