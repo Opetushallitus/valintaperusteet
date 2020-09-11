@@ -31,9 +31,6 @@ public class ValinnanVaihe extends BaseEntity
   @OneToOne(fetch = FetchType.LAZY)
   private ValinnanVaihe edellinenValinnanVaihe;
 
-  @OneToOne(fetch = FetchType.LAZY, mappedBy = "edellinenValinnanVaihe")
-  private ValinnanVaihe seuraavaValinnanVaihe;
-
   @Column(name = "nimi", nullable = false)
   private String nimi;
 
@@ -74,14 +71,6 @@ public class ValinnanVaihe extends BaseEntity
 
   public void setEdellinenValinnanVaihe(ValinnanVaihe edellinenValinnanVaihe) {
     this.edellinenValinnanVaihe = edellinenValinnanVaihe;
-  }
-
-  public ValinnanVaihe getSeuraavaValinnanVaihe() {
-    return seuraavaValinnanVaihe;
-  }
-
-  public void setSeuraavaValinnanVaihe(ValinnanVaihe seuraavaValinnanVaihe) {
-    this.seuraavaValinnanVaihe = seuraavaValinnanVaihe;
   }
 
   public String getNimi() {
@@ -180,20 +169,8 @@ public class ValinnanVaihe extends BaseEntity
 
   @Transient
   @Override
-  public ValinnanVaihe getSeuraava() {
-    return getSeuraavaValinnanVaihe();
-  }
-
-  @Transient
-  @Override
   public void setEdellinen(ValinnanVaihe edellinen) {
     setEdellinenValinnanVaihe(edellinen);
-  }
-
-  @Transient
-  @Override
-  public void setSeuraava(ValinnanVaihe seuraava) {
-    setSeuraavaValinnanVaihe(seuraava);
   }
 
   @Transient

@@ -142,15 +142,10 @@ public abstract class LinkitettavaJaKopioitavaUtil {
         .reduce(
             (seuraava, edellinen) -> {
               seuraava.setEdellinen(edellinen);
-              edellinen.setSeuraava(seuraava);
               entityManager.flush();
               return edellinen;
             })
-        .ifPresent(
-            ensimmainen -> {
-              kaanteinenJarjestys.peek().setSeuraava(null);
-              ensimmainen.setEdellinen(null);
-            });
+        .ifPresent(ensimmainen -> ensimmainen.setEdellinen(null));
 
     Collections.reverse(kaanteinenJarjestys);
     return kaanteinenJarjestys;

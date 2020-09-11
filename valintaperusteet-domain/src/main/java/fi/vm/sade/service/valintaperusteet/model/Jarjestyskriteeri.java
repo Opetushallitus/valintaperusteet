@@ -32,9 +32,6 @@ public class Jarjestyskriteeri extends BaseEntity
   @OneToOne(fetch = FetchType.LAZY)
   private Jarjestyskriteeri edellinen;
 
-  @OneToOne(fetch = FetchType.LAZY, mappedBy = "edellinen")
-  private Jarjestyskriteeri seuraava;
-
   @JoinColumn(name = "master_jarjestyskriteeri_id")
   @ManyToOne(fetch = FetchType.LAZY)
   private Jarjestyskriteeri master;
@@ -102,16 +99,6 @@ public class Jarjestyskriteeri extends BaseEntity
   @Override
   public void setEdellinen(Jarjestyskriteeri edellinen) {
     this.edellinen = edellinen;
-  }
-
-  @Override
-  public Jarjestyskriteeri getSeuraava() {
-    return seuraava;
-  }
-
-  @Override
-  public void setSeuraava(Jarjestyskriteeri seuraava) {
-    this.seuraava = seuraava;
   }
 
   @Override

@@ -52,9 +52,6 @@ public class Hakijaryhma extends BaseEntity
   @OneToOne(fetch = FetchType.LAZY)
   private Hakijaryhma edellinenHakijaryhma;
 
-  @OneToOne(fetch = FetchType.LAZY, mappedBy = "edellinenHakijaryhma")
-  private Hakijaryhma seuraavaHakijaryhma;
-
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "masterHakijaryhma")
   private Set<Hakijaryhma> kopioHakijaryhmat = new HashSet<>();
 
@@ -154,14 +151,6 @@ public class Hakijaryhma extends BaseEntity
     this.edellinenHakijaryhma = edellinenHakijaryhma;
   }
 
-  public Hakijaryhma getSeuraavaHakijaryhma() {
-    return seuraavaHakijaryhma;
-  }
-
-  public void setSeuraavaHakijaryhma(Hakijaryhma seuraavaHakijaryhma) {
-    this.seuraavaHakijaryhma = seuraavaHakijaryhma;
-  }
-
   public Set<Hakijaryhma> getKopioHakijaryhmat() {
     return kopioHakijaryhmat;
   }
@@ -227,17 +216,7 @@ public class Hakijaryhma extends BaseEntity
   }
 
   @Override
-  public Hakijaryhma getSeuraava() {
-    return getSeuraavaHakijaryhma();
-  }
-
-  @Override
   public void setEdellinen(Hakijaryhma edellinen) {
     setEdellinenHakijaryhma(edellinen);
-  }
-
-  @Override
-  public void setSeuraava(Hakijaryhma seuraava) {
-    setSeuraavaHakijaryhma(seuraava);
   }
 }

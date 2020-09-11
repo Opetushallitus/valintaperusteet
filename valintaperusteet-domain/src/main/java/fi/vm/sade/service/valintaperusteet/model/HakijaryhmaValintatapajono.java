@@ -47,9 +47,6 @@ public class HakijaryhmaValintatapajono extends BaseEntity
   @OneToOne(fetch = FetchType.LAZY)
   private HakijaryhmaValintatapajono edellinen;
 
-  @OneToOne(fetch = FetchType.LAZY, mappedBy = "edellinen")
-  private HakijaryhmaValintatapajono seuraava;
-
   @JoinColumn(name = "master_hakijaryhma_jono_id")
   @ManyToOne(fetch = FetchType.LAZY)
   private HakijaryhmaValintatapajono master;
@@ -103,18 +100,6 @@ public class HakijaryhmaValintatapajono extends BaseEntity
   @Transient
   public void setEdellinen(HakijaryhmaValintatapajono edellinen) {
     this.edellinen = edellinen;
-  }
-
-  @Override
-  @Transient
-  public HakijaryhmaValintatapajono getSeuraava() {
-    return seuraava;
-  }
-
-  @Override
-  @Transient
-  public void setSeuraava(HakijaryhmaValintatapajono seuraava) {
-    this.seuraava = seuraava;
   }
 
   @Override
