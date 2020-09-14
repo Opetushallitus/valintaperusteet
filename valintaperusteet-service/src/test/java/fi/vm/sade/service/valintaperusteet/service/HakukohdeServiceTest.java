@@ -171,6 +171,14 @@ public class HakukohdeServiceTest {
       assertNotNull(vaiheet.get(0).getMasterValinnanVaihe());
       assertNull(vaiheet.get(1).getMasterValinnanVaihe());
 
+      final List<Valintatapajono> vanhatValintatapajonot =
+          valintatapajonoDAO.findByValinnanVaihe("104");
+      assertEquals(2, vanhatValintatapajonot.size());
+      assertEquals("100", vanhatValintatapajonot.get(0).getOid());
+      assertNull(vanhatValintatapajonot.get(0).getMasterValintatapajono());
+      assertEquals("102", vanhatValintatapajonot.get(1).getOid());
+      assertEquals("101", vanhatValintatapajonot.get(1).getMasterValintatapajono().getOid());
+
       assertEquals(hakukohdekoodiUri, hakukohde.getHakukohdekoodi().getUri());
 
       assertEquals(1, hakukohde.getValintakokeet().size());
@@ -191,6 +199,11 @@ public class HakukohdeServiceTest {
       assertEquals("103", vaiheet.get(0).getMasterValinnanVaihe().getOid());
       assertEquals("105", vaiheet.get(1).getOid());
       assertNull(vaiheet.get(1).getMasterValinnanVaihe());
+
+      final List<Valintatapajono> uudetValintatapajonot =
+          valintatapajonoDAO.findByValinnanVaihe(vaiheet.get(0).getOid());
+      assertEquals(1, uudetValintatapajonot.size());
+      assertEquals("jono100", uudetValintatapajonot.get(0).getNimi());
 
       assertEquals(hakukohdekoodiUri, hakukohde.getHakukohdekoodi().getUri());
 

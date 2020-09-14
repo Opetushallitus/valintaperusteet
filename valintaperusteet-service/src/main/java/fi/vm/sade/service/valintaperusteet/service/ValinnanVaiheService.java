@@ -39,8 +39,6 @@ public interface ValinnanVaiheService {
 
   boolean kuuluuSijoitteluun(String oid);
 
-  void deleteByOid(String oid, boolean skipInheritedCheck);
-
   void delete(ValinnanVaihe valinnanVaihe);
 
   ValinnanVaihe update(String oid, ValinnanVaiheCreateDTO dto);

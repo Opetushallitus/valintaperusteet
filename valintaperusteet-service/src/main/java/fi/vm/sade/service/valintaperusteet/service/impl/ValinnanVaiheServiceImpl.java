@@ -211,11 +211,6 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
 
   @Override
   public void deleteByOid(String oid) {
-    deleteByOid(oid, false);
-  }
-
-  @Override
-  public void deleteByOid(String oid, boolean skipInheritedCheck) {
     ValinnanVaihe valinnanVaihe = haeVaiheOidilla(oid);
     removeValinnanvaihe(valinnanVaihe);
   }

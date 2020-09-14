@@ -995,6 +995,25 @@
                     nimi="hakukohde 18 valinnan vaihe 2" aktiivinen="true" kuvaus="kuvaus"
                     edellinen_valinnan_vaihe_id="104"/>
 
+    <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="100" version="1"
+                     oid="100" aloituspaikat="10" nimi="jono100" kuvaus="kuvaus" poistetaanko_hylatyt="false"
+                     tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="104" aktiivinen="true"
+                     ei_varasijatayttoa="false" kaikki_ehdon_tayttavat_hyvaksytaan="false" valisijoittelu="false" automaattinen_sijoitteluun_siirto="true"
+                     tyyppi="valintatapajono_kp"/>
+
+    <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="101" version="1"
+                     oid="101" aloituspaikat="10" nimi="jono101" kuvaus="kuvaus" poistetaanko_hylatyt="false"
+                     tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="102" aktiivinen="true"
+                     ei_varasijatayttoa="false" kaikki_ehdon_tayttavat_hyvaksytaan="false" valisijoittelu="false" automaattinen_sijoitteluun_siirto="true"
+                     tyyppi="valintatapajono_kp"/>
+
+    <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="102" version="1"
+                     oid="102" aloituspaikat="10" nimi="jono102" kuvaus="kuvaus" poistetaanko_hylatyt="false"
+                     tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="104" aktiivinen="true"
+                     ei_varasijatayttoa="false" kaikki_ehdon_tayttavat_hyvaksytaan="false" valisijoittelu="false" automaattinen_sijoitteluun_siirto="true"
+                     master_valintatapajono_id="101"
+                     tyyppi="valintatapajono_kp"/>
+
     <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="106" version="0" oid="106" hakukohde_viite_id="19"
                     nimi="hakukohde 19 valinnan vaihe 1" aktiivinen="true" kuvaus="kuvaus"/>
 
