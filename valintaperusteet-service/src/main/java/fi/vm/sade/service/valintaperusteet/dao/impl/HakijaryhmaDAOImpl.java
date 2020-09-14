@@ -48,42 +48,6 @@ public class HakijaryhmaDAOImpl extends AbstractJpaDAOImpl<Hakijaryhma, Long>
   }
 
   @Override
-  public List<Hakijaryhma> findByValintatapajono(String oid) {
-    QHakijaryhma hakijaryhma = QHakijaryhma.hakijaryhma;
-
-    return from(hakijaryhma)
-        .where(hakijaryhma.jonot.any().valintatapajono.oid.eq(oid))
-        .leftJoin(hakijaryhma.jonot)
-        .fetch()
-        .leftJoin(hakijaryhma.valintaryhma)
-        .fetch()
-        .leftJoin(hakijaryhma.laskentakaava)
-        .fetch()
-        .leftJoin(hakijaryhma.hakijaryhmatyyppikoodi)
-        .fetch()
-        .distinct()
-        .list(hakijaryhma);
-  }
-
-  @Override
-  public List<Hakijaryhma> findByHakukohde(String oid) {
-    QHakijaryhma hakijaryhma = QHakijaryhma.hakijaryhma;
-
-    return from(hakijaryhma)
-        .where(hakijaryhma.jonot.any().hakukohdeViite.oid.eq(oid))
-        .leftJoin(hakijaryhma.jonot)
-        .fetch()
-        .leftJoin(hakijaryhma.valintaryhma)
-        .fetch()
-        .leftJoin(hakijaryhma.laskentakaava)
-        .fetch()
-        .leftJoin(hakijaryhma.hakijaryhmatyyppikoodi)
-        .fetch()
-        .distinct()
-        .list(hakijaryhma);
-  }
-
-  @Override
   public List<Hakijaryhma> findByValintaryhma(String oid) {
     QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
     QHakijaryhma hakijaryhma = QHakijaryhma.hakijaryhma;
