@@ -5,10 +5,8 @@ import static org.junit.Assert.assertEquals;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -62,41 +60,35 @@ public class ValintaryhmaDAOTest {
 
   @Test
   public void testHaeHakukohdekoodinOpetuskielikoodienJaValintakoekoodienMukaan() {
-    final String valintaryhmaOid1 = "oid44";
-    final String valintaryhmaOid2 = "oid45";
-
-    final String[] valintakoekoodiUrit = new String[] {"koekoodi2"};
-    final String hakukohdekoodiUri = "hakukohdekoodiuri11";
-
     List<Valintaryhma> valintaryhmat =
         valintaryhmaDAO.haeHakukohdekoodinJaValintakoekoodienMukaan(
-            hakukohdekoodiUri, Arrays.asList(valintakoekoodiUrit));
+            "hakuoid50", "hakukohdekoodiuri11", Collections.singleton("koekoodi2"));
 
-    assertEquals(2, valintaryhmat.size());
-
-    Collections.sort(
-        valintaryhmat,
-        new Comparator<Valintaryhma>() {
-          @Override
-          public int compare(Valintaryhma o1, Valintaryhma o2) {
-            return o1.getOid().compareTo(o2.getOid());
-          }
-        });
-
-    assertEquals(valintaryhmaOid1, valintaryhmat.get(0).getOid());
-    assertEquals(valintaryhmaOid2, valintaryhmat.get(1).getOid());
+    assertEquals(1, valintaryhmat.size());
+    assertEquals("oid44", valintaryhmat.get(0).getOid());
   }
 
   @Test
   public void testHaeHakukohdekoodinOpetuskielikoodienJaValintakoekoodienMukaan2() {
-    final String hakukohdekoodiUri = "hakukohdekoodiuri15";
-
     List<Valintaryhma> valintaryhmat =
         valintaryhmaDAO.haeHakukohdekoodinJaValintakoekoodienMukaan(
-            hakukohdekoodiUri, new ArrayList<String>());
+            "hakuoid50", "hakukohdekoodiuri15", new HashSet<>());
 
     assertEquals(1, valintaryhmat.size());
     assertEquals("oid50", valintaryhmat.get(0).getOid());
+  }
+
+  @Test
+  public void testHaeHakukohdekoodinOpetuskielikoodienJaValintakoekoodienMukaan3() {
+    HashSet<String> valintakoekoodit = new HashSet<>();
+    valintakoekoodit.add("koekoodi1");
+    valintakoekoodit.add("koekoodi2");
+    List<Valintaryhma> valintaryhmat =
+        valintaryhmaDAO.haeHakukohdekoodinJaValintakoekoodienMukaan(
+            "hakuoid50", "hakukohdekoodiuri11", valintakoekoodit);
+
+    assertEquals(1, valintaryhmat.size());
+    assertEquals("oid45", valintaryhmat.get(0).getOid());
   }
 
   @Test
