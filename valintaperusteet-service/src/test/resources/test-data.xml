@@ -415,33 +415,33 @@
 
     <valintaryhma id="35" version="0" oid="oid35" nimi="Valintaryhma 35"/>
     <valintaryhma id="36" version="0" oid="oid36" nimi="Valintaryhma 36"/>
-    <valintaryhma id="37" version="0" oid="oid37" nimi="Valintaryhma 37"/>
+    <valintaryhma id="37" version="0" oid="oid37" hakuoid="uusiHakuOid" nimi="Valintaryhma 37"/>
 
     <valintaryhma id="38" version="0" oid="oid38" nimi="Valintaryhma 38"/>
 
     <valintaryhma id="39" version="0" oid="oid39" nimi="Valintaryhma 39"/>
 
-    <valintaryhma id="40" version="0" oid="oid40" nimi="Valintaryhma 40"/>
+    <valintaryhma id="40" version="0" oid="oid40" hakuoid="hakuoid4" nimi="Valintaryhma 40"/>
 
-    <valintaryhma id="41" version="0" oid="oid41" nimi="Valintaryhma 41"/>
+    <valintaryhma id="41" version="0" oid="oid41" hakuoid="hakuoid1" nimi="Valintaryhma 41"/>
 
     <valintaryhma id="42" version="0" oid="oid42" nimi="Valintaryhma 42"/>
 
     <valintaryhma id="43" version="0" oid="oid43" nimi="Valintaryhma 43"/>
 
-    <valintaryhma id="44" version="0" oid="oid44" nimi="Valintaryhma 44"/>
+    <valintaryhma id="44" version="0" oid="oid44" hakuoid="hakuoid50" nimi="Valintaryhma 44"/>
 
-    <valintaryhma id="45" version="0" oid="oid45" nimi="Valintaryhma 45"/>
+    <valintaryhma id="45" version="0" oid="oid45" hakuoid="hakuoid50" nimi="Valintaryhma 45"/>
 
-    <valintaryhma id="46" version="0" oid="oid46" nimi="Valintaryhma 46"/>
+    <valintaryhma id="46" version="0" oid="oid46" hakuoid="hakuoid2" nimi="Valintaryhma 46"/>
 
-    <valintaryhma id="47" version="0" oid="oid47" nimi="Valintaryhma 47"/>
+    <valintaryhma id="47" version="0" oid="oid47" hakuoid="hakuoid2" nimi="Valintaryhma 47"/>
 
-    <valintaryhma id="48" version="0" oid="oid48" nimi="Valintaryhma 48"/>
+    <valintaryhma id="48" version="0" oid="oid48" hakuoid="hakuoid3" nimi="Valintaryhma 48"/>
 
     <valintaryhma id="49" version="0" oid="oid49" nimi="Valintaryhma 49"/>
 
-    <valintaryhma id="50" version="0" oid="oid50" nimi="Valintaryhma 50"/>
+    <valintaryhma id="50" version="0" oid="oid50" hakuoid="hakuoid50" nimi="Valintaryhma 50"/>
 
     <valintaryhma id="51" version="0" oid="oid51" nimi="Valintaryhma 51"/>
 
