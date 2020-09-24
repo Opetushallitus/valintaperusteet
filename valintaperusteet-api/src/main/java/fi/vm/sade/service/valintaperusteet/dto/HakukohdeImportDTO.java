@@ -3,12 +3,14 @@ package fi.vm.sade.service.valintaperusteet.dto;
 import io.swagger.annotations.ApiModel;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @ApiModel(value = "HakukohdeImportDTO", description = "Hakukohteen lisääminen")
 public class HakukohdeImportDTO {
   private String hakukohdeOid;
   private HakukohdekoodiDTO hakukohdekoodi;
   private String tarjoajaOid;
+  private Set<String> tarjoajaOids;
   private int valinnanAloituspaikat;
   private List<MonikielinenTekstiDTO> tarjoajaNimi = new ArrayList<MonikielinenTekstiDTO>();
   private List<MonikielinenTekstiDTO> hakukohdeNimi = new ArrayList<MonikielinenTekstiDTO>();
@@ -42,6 +44,14 @@ public class HakukohdeImportDTO {
 
   public void setTarjoajaOid(String tarjoajaOid) {
     this.tarjoajaOid = tarjoajaOid;
+  }
+
+  public Set<String> getTarjoajaOids() {
+    return this.tarjoajaOids;
+  }
+
+  public void setTarjoajaOids(Set<String> tarjoajaOids) {
+    this.tarjoajaOids = tarjoajaOids;
   }
 
   public int getValinnanAloituspaikat() {
