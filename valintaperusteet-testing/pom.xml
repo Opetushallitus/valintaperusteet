@@ -7,18 +7,18 @@
     <parent>
         <groupId>fi.vm.sade.valintaperusteet</groupId>
         <artifactId>valintaperusteet</artifactId>
-        <version>5.16-SNAPSHOT</version>
+        <version>5.17-SNAPSHOT</version>
     </parent>
 
     <groupId>fi.vm.sade.valintaperusteet</groupId>
     <artifactId>valintaperusteet-testing</artifactId>
-    <version>5.16-SNAPSHOT</version>
+    <version>5.17-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
             <groupId>fi.vm.sade.valintaperusteet</groupId>
             <artifactId>valintaperusteet-service</artifactId>
-            <version>5.16-SNAPSHOT</version>
+            <version>5.17-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
