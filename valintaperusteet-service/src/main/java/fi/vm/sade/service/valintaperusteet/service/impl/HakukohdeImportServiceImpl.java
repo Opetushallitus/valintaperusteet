@@ -16,12 +16,11 @@ import fi.vm.sade.service.valintaperusteet.service.HakukohdeService;
 import fi.vm.sade.service.valintaperusteet.service.ValinnanVaiheService;
 import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -158,105 +157,48 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
   }
 
   private Valintaryhma selvitaValintaryhma(HakukohdeImportDTO importData) {
-    LOG.info("Yritetään selvittää hakukohteen {} valintaryhmä", importData.getHakukohdeOid());
-    // Lasketaan valintakokeiden esiintymiset importtidatalle
-    Map<String, Integer> valintakoekoodiUrit = new HashMap<String, Integer>();
-    for (HakukohteenValintakoeDTO valintakoe : importData.getValintakoe()) {
-      final String valintakoeUri = sanitizeKoodiUri(valintakoe.getTyyppiUri());
-      if (StringUtils.isNotBlank(valintakoeUri)) {
-        if (!valintakoekoodiUrit.containsKey(valintakoeUri)) {
-          valintakoekoodiUrit.put(valintakoeUri, 0);
-        }
-        Integer esiintymat = valintakoekoodiUrit.get(valintakoeUri) + 1;
-        valintakoekoodiUrit.put(valintakoeUri, esiintymat);
-      }
-    }
-    // Haetaan potentiaaliset valintaryhmät hakukohdekoodin,
-    // opetuskielikoodien ja valintakoekoodien mukaan
+    String hakukohdeOid = importData.getHakukohdeOid();
+    String hakuOid = importData.getHakuOid();
+    String hakukohdekoodi = sanitizeKoodiUri(importData.getHakukohdekoodi().getKoodiUri());
+    Set<String> valintakoekoodit =
+        importData.getValintakoe().stream()
+            .map(valintakoe -> sanitizeKoodiUri(valintakoe.getTyyppiUri()))
+            .filter(Objects::nonNull)
+            .collect(Collectors.toSet());
+
+    LOG.info("Yritetään selvittää hakukohteen {} valintaryhmä", hakukohdeOid);
+
     List<Valintaryhma> valintaryhmat =
         valintaryhmaDAO.haeHakukohdekoodinJaValintakoekoodienMukaan(
-            sanitizeKoodiUri(importData.getHakukohdekoodi().getKoodiUri()),
-            valintakoekoodiUrit.keySet());
-    LOG.info("Potentiaalisia valintaryhmiä {} kpl", valintaryhmat.size());
-    // Tarkistetaan valintaryhmät valintakoekoodien osalta.
-    Iterator<Valintaryhma> iterator = valintaryhmat.iterator();
-    while (iterator.hasNext()) {
-      Valintaryhma r = iterator.next();
-      Map<String, Integer> valintaryhmanValintakoekoodiUrit = new HashMap<String, Integer>();
-      Set<Valintakoekoodi> valintakoekoodit = valintakoekoodiDAO.findByValintaryhma(r.getOid());
-      // Lasketaan valintakoekoodien esiintymät valintaryhmässä
-      for (Valintakoekoodi k : valintakoekoodit) {
-        if (!valintaryhmanValintakoekoodiUrit.containsKey(k.getUri())) {
-          valintaryhmanValintakoekoodiUrit.put(k.getUri(), 0);
-        }
-        Integer esiintymat = valintaryhmanValintakoekoodiUrit.get(k.getUri()) + 1;
-        valintaryhmanValintakoekoodiUrit.put(k.getUri(), esiintymat);
-      }
-      if (!valintakoekoodiUrit.equals(valintaryhmanValintakoekoodiUrit)) {
-        iterator.remove();
-      }
-    }
-    LOG.info(
-        "Valintakoekoodifilterin jälkeen potentiaalisia valintaryhmiä {} kpl",
-        valintaryhmat.size());
-    // Filtteroinnin jälkeen pitäisi jäljellä olla toivottavasti enää yksi
-    // valintaryhmä. Jos valintaryhmiä on
-    // enemmän kuin yksi (eli valintaryhmien mallinnassa on ryssitty ja
-    // esim. sama hakukohdekoodi on usealla
-    // valintaryhmällä) tai jos valintaryhmiä on nolla kappaletta, lisätään
-    // importoitava hakukohde juureen (eli
-    // tämä metodi palauttaa nullin).
-    Valintaryhma valintaryhma = null;
-    if (valintaryhmat.size() == 1) {
-      String ryhmanHakuoid = valintaryhmat.get(0).getHakuoid();
-      if (!StringUtils.isBlank(ryhmanHakuoid) && !ryhmanHakuoid.equals(importData.getHakuOid())) {
-        LOG.info(
-            "Hakukohteelle ei pystytty määrittämään valintaryhmää. Potentiaalinen ryhmä löytyi, mutta haun oid ei täsmää.");
-      } else {
-        valintaryhma = valintaryhmat.get(0);
-        LOG.info("Hakukohteen tulisi olla valintaryhmän {} alla", valintaryhma.getOid());
-      }
-    } else if (valintaryhmat.size() > 1) {
-      List<Valintaryhma> filtered =
-          valintaryhmat.stream()
-              .filter(hakuoidFilter(importData.getHakuOid()))
-              .collect(Collectors.toList());
-      if (filtered.size() == 1) {
-        valintaryhma = filtered.get(0);
-        LOG.info("Hakukohteen tulisi olla valintaryhmän {} alla", valintaryhma.getOid());
-      } else {
-        // Testataan vielä hakuvuodella
-        final List<Valintaryhma> vuodenRyhmat =
-            valintaryhmat.stream()
-                .filter(
-                    v ->
-                        !StringUtils.isBlank(v.getHakuvuosi())
-                            && v.getHakuvuosi().equals(importData.getHakuVuosi()))
-                .collect(Collectors.toList());
-        if (vuodenRyhmat.size() == 1) {
-          valintaryhma = vuodenRyhmat.get(0);
-          LOG.info("Hakukohteen tulisi olla valintaryhmän {} alla", valintaryhma.getOid());
-        } else {
-          LOG.info(
-              "Hakukohteelle ei pystytty määrittämään valintaryhmää. Potentiaalisia valintaryhmiä on {} kpl. "
-                  + "Hakukohde lisätään juureen tai säilytetään vanhassa ryhmässä.",
-              valintaryhmat.size());
-        }
-      }
-    } else {
-      List<Valintaryhma> haunRyhmat = valintaryhmaDAO.readByHakuoid(importData.getHakuOid());
-      if (haunRyhmat.size() == 1) {
-        valintaryhma = haunRyhmat.get(0);
-        LOG.info("Hakukohteen tulisi olla valintaryhmän {} alla", valintaryhma.getOid());
-      } else {
-        LOG.info("Yhtään potentiaalista valintaryhmää ei löytynyt. Hakukohde lisätään juureen.");
-      }
-    }
-    return valintaryhma;
-  }
+            hakuOid, hakukohdekoodi, valintakoekoodit);
 
-  private Predicate<Valintaryhma> hakuoidFilter(String hakuoid) {
-    return v -> !StringUtils.isBlank(v.getHakuoid()) && v.getHakuoid().equals(hakuoid);
+    if (valintaryhmat.size() != 1) {
+      LOG.info(
+          "Haku {}, hakukohdekoodi {} ja valintakoekoodit {} eivät antaneet yksikäsitteistä valintaryhmää. Mahdolliset ryhmät {}.",
+          hakuOid,
+          hakukohdekoodi,
+          String.join(", ", valintakoekoodit),
+          valintaryhmat.stream().map(Valintaryhma::getOid).collect(Collectors.joining(", ")));
+      valintaryhmat = valintaryhmaDAO.readByHakuoid(hakuOid);
+    }
+
+    if (valintaryhmat.size() != 1) {
+      LOG.info(
+          "Haku {} ei antanut yksikäsitteistä valintaryhmää. Mahdolliset ryhmät {}.",
+          hakuOid,
+          valintaryhmat.stream().map(Valintaryhma::getOid).collect(Collectors.joining(", ")));
+      valintaryhmat = Collections.singletonList(null);
+    }
+
+    Valintaryhma valintaryhma = valintaryhmat.get(0);
+    if (valintaryhma == null) {
+      LOG.info("Hakukohteen {} tulisi olla juurivalintaryhmän alla.", hakukohdeOid);
+    } else {
+      LOG.info(
+          "Hakukohteen {} tulisi olla valintaryhmän {} alla.", hakukohdeOid, valintaryhma.getOid());
+    }
+
+    return valintaryhma;
   }
 
   @Override

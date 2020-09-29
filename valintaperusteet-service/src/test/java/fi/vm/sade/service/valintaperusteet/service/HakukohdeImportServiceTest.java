@@ -21,7 +21,6 @@ import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestE
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.Hakukohdekoodi;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
-import fi.vm.sade.service.valintaperusteet.model.Valintakoekoodi;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import fi.vm.sade.service.valintaperusteet.service.impl.HakukohdeImportServiceImpl;
@@ -29,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -269,7 +267,7 @@ public class HakukohdeImportServiceTest {
 
     final String valintaryhmaOidAluksi = "oid40";
 
-    final String hakuOid = "hakuoid1";
+    final String hakuOid = "hakuoid5";
     final String hakukohdeOid = "oid14";
     final String hakukohdekoodiUri = "hakukohdekoodiuri5";
     {
@@ -337,7 +335,7 @@ public class HakukohdeImportServiceTest {
     // oikean valintaryhmän alla
     final String valintaryhmaOidAluksi = "oid40";
 
-    final String hakuOid = "hakuoid1";
+    final String hakuOid = "hakuoid4";
     final String hakukohdeOid = "oid14";
     final String hakukohdekoodiUri = "hakukohdekoodiuri6";
     {
@@ -406,15 +404,15 @@ public class HakukohdeImportServiceTest {
   @Test
   public void testKaksiValintaryhmaaSamoillaKoodeilla() {
     // Kannassa on kaksi valintaryhmää samoilla hakukohdekoodeilla, samoilla
-    // opetuskielikoodeilla ja samoilla
-    // valintakoekooddeilla varustettuna. Uuden hakukohteen tulisi valua
+    // opetuskielikoodeilla, samoilla
+    // valintakoekooddeilla ja samoilla hakuoideilla. Uuden hakukohteen tulisi valua
     // juureen, koska
     // valintaryhmää ei voida yksilöidä.
 
     final String valintaryhmaOid1 = "oid46";
     final String valintaryhmaOid2 = "oid47";
 
-    final String hakuOid = "hakuoid1";
+    final String hakuOid = "hakuoid2";
     final String hakukohdeOid = "uusihakukohdeoid";
     final String hakukohdekoodiUri = "hakukohdekoodiuri12";
 
@@ -467,13 +465,13 @@ public class HakukohdeImportServiceTest {
       assertNull(hakukohde.getValintaryhma());
     }
 
-    // Lisätään toiselle valintaryhmälle hakuvuosi ja katsotaan että hakukohde putoaa oikeaan
+    // Poistetaan toiselta valintaryhmältä hakuoidi ja katsotaan että hakukohde putoaa oikeaan
     // ryhmään
     {
       Valintaryhma valintaryhma2 = valintaryhmaService.readByOid(valintaryhmaOid2);
       ValintaperusteetModelMapper mapper = new ValintaperusteetModelMapper();
       ValintaryhmaCreateDTO dto = mapper.map(valintaryhma2, ValintaryhmaCreateDTO.class);
-      dto.setHakuvuosi("2013");
+      dto.setHakuoid(null);
       valintaryhmaService.update(valintaryhmaOid2, dto);
     }
 
@@ -483,7 +481,7 @@ public class HakukohdeImportServiceTest {
       HakukohdeViite hakukohde = hakukohdeViiteDAO.readByOid(hakukohdeOid);
       assertFalse(hakukohde.getManuaalisestiSiirretty());
       assertNotNull(hakukohde);
-      assertEquals(valintaryhmaOid2, hakukohde.getValintaryhma().getOid());
+      assertEquals(valintaryhmaOid1, hakukohde.getValintaryhma().getOid());
     }
   }
 
@@ -491,7 +489,7 @@ public class HakukohdeImportServiceTest {
   public void testPaivitaAloituspaikkojenLkm() {
     final String valintaryhmaOid = "oid48";
 
-    final String hakuOid = "hakuoid1";
+    final String hakuOid = "hakuoid3";
     final String hakukohdeOid = "uusihakukohdeoid";
     final String hakukohdekoodiUri = "hakukohdekoodiuri13";
 
@@ -551,7 +549,7 @@ public class HakukohdeImportServiceTest {
   public void testKKAlaPaivitaAloituspaikkojenLkm() {
     final String valintaryhmaOid = "oid48";
 
-    final String hakuOid = "hakuoid1";
+    final String hakuOid = "hakuoid3";
     final String hakukohdeOid = "uusihakukohdeoid";
     final String hakukohdekoodiUri = "hakukohdekoodiuri13";
 
@@ -604,54 +602,6 @@ public class HakukohdeImportServiceTest {
       Valintatapajono jono = jonot.get(0);
       assertNotNull(jono.getMasterValintatapajono());
       assertFalse(aloituspaikat == jono.getAloituspaikat().intValue());
-    }
-  }
-
-  @Test
-  public void testMelkeinSopivaValintaryhma() {
-    // Kannassa on valintaryhmä joka täsmää melkein importoitavaan
-    // hakukohteeseen. Ainoa ero on, että sama
-    // valintakoekoodi on lisätty valintaryhmälle kaksi kertaa.
-
-    final String valintaryhmaOid = "oid49";
-
-    final String hakuOid = "hakuoid1";
-    final String hakukohdeOid = "uusihakukohdeoid";
-    final String hakukohdekoodiUri = "hakukohdekoodiuri14";
-
-    {
-      assertNull(hakukohdeViiteDAO.readByOid(hakukohdeOid));
-
-      Hakukohdekoodi koodi = hakukohdekoodiDAO.readByUri(hakukohdekoodiUri);
-      assertNotNull(koodi);
-      List<Valintaryhma> valintaryhmas = valintaryhmaDAO.readByHakukohdekoodiUri(hakukohdekoodiUri);
-
-      assertEquals(1, valintaryhmas.size());
-      assertEquals(valintaryhmaOid, valintaryhmas.get(0).getOid());
-
-      Valintaryhma valintaryhma1 = valintaryhmaService.readByOid(valintaryhmaOid);
-      // assertTrue(valintaryhma1.getOpetuskielikoodit().size() == 1
-      // &&
-      // HakukohdeImportServiceImpl.Kieli.FI.getUri().equals(valintaryhma1.getOpetuskielikoodit().iterator().next().getUri()));
-
-      Set<Valintakoekoodi> valintakoekoodit = valintaryhma1.getValintakoekoodit();
-      assertEquals(1, valintakoekoodit.size());
-      assertEquals(valintakoekoodit.iterator().next().getUri(), OLETUS_VALINTAKOEURI);
-    }
-
-    HakukohdeImportDTO importData = luoHakukohdeImportDTO(hakukohdeOid, hakuOid, hakukohdekoodiUri);
-    HakukohteenValintakoeDTO koe = new HakukohteenValintakoeDTO();
-    koe.setTyyppiUri("toinenkoodityyppiuri");
-    koe.setOid("toinenoid");
-    importData.getValintakoe().add(koe);
-
-    hakukohdeImportService.tuoHakukohde(importData);
-
-    {
-      HakukohdeViite hakukohde = hakukohdeViiteDAO.readByOid(hakukohdeOid);
-      assertFalse(hakukohde.getManuaalisestiSiirretty());
-      assertNotNull(hakukohde);
-      assertNull(hakukohde.getValintaryhma());
     }
   }
 
