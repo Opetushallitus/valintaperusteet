@@ -1,5 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.resource.impl;
 
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
+
 import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
@@ -20,12 +23,14 @@ import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StopWatch;
 
 @Component
 @Path("valintalaskentakoostepalvelu")
+@PreAuthorize("isAuthenticated()")
 public class ValintalaskentakoostepalveluResourceImpl {
   private static final Logger LOG =
       LoggerFactory.getLogger(ValintalaskentakoostepalveluResourceImpl.class);
@@ -64,6 +69,7 @@ public class ValintalaskentakoostepalveluResourceImpl {
   }
 
   @GET
+  @PreAuthorize(READ_UPDATE_CRUD)
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/valintatapajono/kopiot")
   public Map<String, List<String>> findKopiot(@QueryParam("oid") List<String> oid) {
@@ -76,6 +82,7 @@ public class ValintalaskentakoostepalveluResourceImpl {
   }
 
   @POST
+  @PreAuthorize(READ_UPDATE_CRUD)
   @Path("/valintatapajono")
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
@@ -90,6 +97,7 @@ public class ValintalaskentakoostepalveluResourceImpl {
   }
 
   @POST
+  @PreAuthorize(READ_UPDATE_CRUD)
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @Path("/haku")
@@ -142,6 +150,7 @@ public class ValintalaskentakoostepalveluResourceImpl {
   }
 
   @POST
+  @PreAuthorize(READ_UPDATE_CRUD)
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @Path("/haku/valintatapajono/hakijaryhmat")
@@ -220,6 +229,7 @@ public class ValintalaskentakoostepalveluResourceImpl {
 
   @Transactional
   @GET
+  @PreAuthorize(READ_UPDATE_CRUD)
   @Path("/{oid}/valintakoe")
   @Produces(MediaType.APPLICATION_JSON)
   @ApiOperation(
@@ -245,6 +255,7 @@ public class ValintalaskentakoostepalveluResourceImpl {
 
   @Transactional
   @POST
+  @PreAuthorize(READ_UPDATE_CRUD)
   @Path("tunniste/")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
@@ -255,6 +266,7 @@ public class ValintalaskentakoostepalveluResourceImpl {
   }
 
   @GET
+  @PreAuthorize(READ_UPDATE_CRUD)
   @Path("hakukohde/haku/{hakuOid}")
   @Produces(MediaType.APPLICATION_JSON)
   @ApiOperation(value = "Hakee haun hakukohteet", response = HakukohdeViiteDTO.class)
@@ -264,6 +276,7 @@ public class ValintalaskentakoostepalveluResourceImpl {
   }
 
   @GET
+  @PreAuthorize(READ_UPDATE_CRUD)
   @Path("hakukohde/{oid}/ilmanlaskentaa")
   @Produces(MediaType.APPLICATION_JSON)
   @ApiOperation(
@@ -278,6 +291,7 @@ public class ValintalaskentakoostepalveluResourceImpl {
   }
 
   @GET
+  @PreAuthorize(READ_UPDATE_CRUD)
   @Path("hakukohde/avaimet/{oid}")
   @Produces(MediaType.APPLICATION_JSON)
   @ApiOperation(value = "Hakee hakukohteen syötettävät tiedot", response = ValintaperusteDTO.class)
@@ -287,6 +301,7 @@ public class ValintalaskentakoostepalveluResourceImpl {
   }
 
   @POST
+  @PreAuthorize(READ_UPDATE_CRUD)
   @Path("hakukohde/avaimet")
   @Produces(MediaType.APPLICATION_JSON)
   @ApiOperation(value = "Hakee hakukohteen syötettävät tiedot", response = ValintaperusteDTO.class)
@@ -301,6 +316,7 @@ public class ValintalaskentakoostepalveluResourceImpl {
   }
 
   @POST
+  @PreAuthorize(READ_UPDATE_CRUD)
   @Path("hakukohde/valintakoe")
   @Produces(MediaType.APPLICATION_JSON)
   @ApiOperation(
@@ -343,6 +359,7 @@ public class ValintalaskentakoostepalveluResourceImpl {
   }
 
   @GET
+  @PreAuthorize(READ_UPDATE_CRUD)
   @Path("valintaperusteet/{hakukohdeOid}")
   @Produces(MediaType.APPLICATION_JSON)
   @ApiOperation(value = "Hakee valintaperusteet")
@@ -360,6 +377,7 @@ public class ValintalaskentakoostepalveluResourceImpl {
   }
 
   @POST
+  @PreAuthorize(READ_UPDATE_CRUD)
   @Path("valintaperusteet")
   @Produces(MediaType.APPLICATION_JSON)
   @ApiOperation(value = "Hakee valintaperusteet")
@@ -377,6 +395,7 @@ public class ValintalaskentakoostepalveluResourceImpl {
   }
 
   @POST
+  @PreAuthorize(UPDATE_CRUD)
   @Path("valintaperusteet/tuoHakukohde")
   @Consumes(MediaType.APPLICATION_JSON)
   @ApiOperation(value = "importoi hakukohde")
@@ -399,6 +418,7 @@ public class ValintalaskentakoostepalveluResourceImpl {
   }
 
   @GET
+  @PreAuthorize(READ_UPDATE_CRUD)
   @Path("valintaperusteet/hakijaryhma/{hakukohdeOid}")
   @Produces(MediaType.APPLICATION_JSON)
   public List<ValintaperusteetHakijaryhmaDTO> haeHakijaryhmat(
@@ -468,6 +488,7 @@ public class ValintalaskentakoostepalveluResourceImpl {
   }
 
   @GET
+  @PreAuthorize(READ_UPDATE_CRUD)
   @Path("hakukohde/{oid}/valinnanvaihe")
   @Produces(MediaType.APPLICATION_JSON)
   @ApiOperation(value = "Palauttaa valintatapajonot", response = ValintatapajonoDTO.class)
@@ -477,6 +498,7 @@ public class ValintalaskentakoostepalveluResourceImpl {
   }
 
   @GET
+  @PreAuthorize(READ_UPDATE_CRUD)
   @Produces(MediaType.APPLICATION_JSON)
   @Path("valinnanvaihe/{oid}/hakukohteet")
   @ApiOperation(
@@ -489,6 +511,7 @@ public class ValintalaskentakoostepalveluResourceImpl {
   }
 
   @GET
+  @PreAuthorize(READ_UPDATE_CRUD)
   @Produces(MediaType.APPLICATION_JSON)
   @Path("valinnanvaihe/{oid}/valintaperusteet")
   @ApiOperation(
@@ -511,6 +534,7 @@ public class ValintalaskentakoostepalveluResourceImpl {
   }
 
   @GET
+  @PreAuthorize(READ_UPDATE_CRUD)
   @Produces(MediaType.TEXT_PLAIN)
   @Path("valintaryhma/{oid}/vastuuorganisaatio")
   @ApiOperation(value = "Hakee valintaryhmän vastuuorganisaation oidin", response = String.class)
