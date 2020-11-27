@@ -124,7 +124,7 @@ public class ValintakoeServiceTest {
     Valintakoe kopio = valintakoeService.readByOid(kopioValintakoeOid);
     assertEquals(valintakoeOid, kopio.getMasterValintakoe().getOid());
 
-    valintakoeService.deleteByOid(valintakoeOid);
+    valintakoeService.delete(valintakoeOid);
 
     boolean caughtOne = false;
     try {

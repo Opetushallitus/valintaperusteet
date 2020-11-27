@@ -5,7 +5,7 @@ import static org.junit.Assert.assertEquals;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.model.Valintakoekoodi;
-import java.util.List;
+import java.util.Set;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +36,8 @@ public class ValintakoekoodiDAOTest {
     final String valintaryhmaOid = "oid49";
     final String valintakoekoodiUri = "valintakoeuri1";
 
-    List<Valintakoekoodi> koodit = valintakoekoodiDAO.findByValintaryhma(valintaryhmaOid);
-    assertEquals(2, koodit.size());
+    Set<Valintakoekoodi> koodit = valintakoekoodiDAO.findByValintaryhma(valintaryhmaOid);
+    assertEquals(1, koodit.size());
     for (Valintakoekoodi koodi : koodit) {
       assertEquals(valintakoekoodiUri, koodi.getUri());
     }

@@ -50,26 +50,6 @@ public class HakijaryhmaDAOTest {
   }
 
   @Test
-  public void testFindByHakukohde() {
-    final String HAKUKOHDE_OID = "1";
-
-    List<Hakijaryhma> byHakukohde = hakijaryhmaDAO.findByHakukohde(HAKUKOHDE_OID);
-
-    assertEquals(3, byHakukohde.size());
-  }
-
-  //    @Test
-  //    public void testHaeHakukohteenViimeinenHakijaryhma() {
-  //        final String HAKUKOHDE_OID = "1";
-  //        final String HAKIJARYHMA_OID = "hr4";
-  //
-  //        Hakijaryhma byHakukohde =
-  // hakijaryhmaDAO.haeHakukohteenViimeinenHakijaryhma(HAKUKOHDE_OID);
-  //
-  //        assertEquals(HAKIJARYHMA_OID, byHakukohde.getOid());
-  //    }
-
-  @Test
   public void testHaeValintaryhmanViimeinenHakijaryhma() {
     final String VALINTARYHMA_OID = "vr1";
     final String HAKIJARYHMA_OID = "hr1";
@@ -78,31 +58,5 @@ public class HakijaryhmaDAOTest {
         hakijaryhmaDAO.haeValintaryhmanViimeinenHakijaryhma(VALINTARYHMA_OID);
 
     assertEquals(HAKIJARYHMA_OID, byValintaryhma.getOid());
-  }
-
-  @Test
-  public void testHaeValintatapajonolla() {
-    final String VALINTATAPAJONO_OID_1 = "vtj1";
-    final String VALINTATAPAJONO_OID_2 = "vtj2";
-    final String VALINTATAPAJONO_OID_3 = "vtj3";
-    final String VALINTATAPAJONO_OID_4 = "vtj4";
-    final String VALINTATAPAJONO_OID_5 = "vtj5";
-
-    final int LIST_SIZE_1 = 1;
-    final int LIST_SIZE_2 = 2;
-    final int LIST_SIZE_3 = 0;
-    final int LIST_SIZE_4 = 0;
-    final int LIST_SIZE_5 = 1;
-
-    haeJono(VALINTATAPAJONO_OID_1, LIST_SIZE_1);
-    haeJono(VALINTATAPAJONO_OID_2, LIST_SIZE_2);
-    haeJono(VALINTATAPAJONO_OID_3, LIST_SIZE_3);
-    haeJono(VALINTATAPAJONO_OID_4, LIST_SIZE_4);
-    haeJono(VALINTATAPAJONO_OID_5, LIST_SIZE_5);
-  }
-
-  private void haeJono(String valintatapajonoOid, int listSize) {
-    List<Hakijaryhma> byValintatapajono = hakijaryhmaDAO.findByValintatapajono(valintatapajonoOid);
-    assertEquals(listSize, byValintatapajono.size());
   }
 }

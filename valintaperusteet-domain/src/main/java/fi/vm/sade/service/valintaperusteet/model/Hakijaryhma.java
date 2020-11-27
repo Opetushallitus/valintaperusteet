@@ -7,7 +7,7 @@ import javax.persistence.*;
 @Table(name = "hakijaryhma")
 @Cacheable(true)
 public class Hakijaryhma extends BaseEntity
-    implements LinkitettavaJaKopioitava<Hakijaryhma, Set<Hakijaryhma>> {
+    implements Linkitettava<Hakijaryhma>, Kopioitava<Hakijaryhma> {
 
   private static final long serialVersionUID = 1L;
 
@@ -29,7 +29,7 @@ public class Hakijaryhma extends BaseEntity
   @Column(name = "kaytetaan_ryhmaan_kuuluvia")
   private boolean kaytetaanRyhmaanKuuluvia = true;
 
-  @OneToMany(mappedBy = "hakijaryhma", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+  @OneToMany(mappedBy = "hakijaryhma", fetch = FetchType.LAZY)
   private Set<HakijaryhmaValintatapajono> jonot = new HashSet<>();
 
   @JoinColumn(name = "valintaryhma_id")
@@ -51,9 +51,6 @@ public class Hakijaryhma extends BaseEntity
   @JoinColumn(name = "edellinen_hakijaryhma_id")
   @OneToOne(fetch = FetchType.LAZY)
   private Hakijaryhma edellinenHakijaryhma;
-
-  @OneToOne(fetch = FetchType.LAZY, mappedBy = "edellinenHakijaryhma")
-  private Hakijaryhma seuraavaHakijaryhma;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "masterHakijaryhma")
   private Set<Hakijaryhma> kopioHakijaryhmat = new HashSet<>();
@@ -154,14 +151,6 @@ public class Hakijaryhma extends BaseEntity
     this.edellinenHakijaryhma = edellinenHakijaryhma;
   }
 
-  public Hakijaryhma getSeuraavaHakijaryhma() {
-    return seuraavaHakijaryhma;
-  }
-
-  public void setSeuraavaHakijaryhma(Hakijaryhma seuraavaHakijaryhma) {
-    this.seuraavaHakijaryhma = seuraavaHakijaryhma;
-  }
-
   public Set<Hakijaryhma> getKopioHakijaryhmat() {
     return kopioHakijaryhmat;
   }
@@ -212,11 +201,6 @@ public class Hakijaryhma extends BaseEntity
   }
 
   @Override
-  public void setKopiot(Set<Hakijaryhma> kopiot) {
-    setKopioHakijaryhmat(kopiot);
-  }
-
-  @Override
   public Set<Hakijaryhma> getKopiot() {
     return getKopioHakijaryhmat();
   }
@@ -227,17 +211,7 @@ public class Hakijaryhma extends BaseEntity
   }
 
   @Override
-  public Hakijaryhma getSeuraava() {
-    return getSeuraavaHakijaryhma();
-  }
-
-  @Override
   public void setEdellinen(Hakijaryhma edellinen) {
     setEdellinenHakijaryhma(edellinen);
-  }
-
-  @Override
-  public void setSeuraava(Hakijaryhma seuraava) {
-    setSeuraavaHakijaryhma(seuraava);
   }
 }

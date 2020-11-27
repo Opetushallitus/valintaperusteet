@@ -87,6 +87,8 @@ public class ValintaryhmaResourceTest {
   public void testInsert() throws Exception {
     ValintaryhmaCreateDTO valintaryhma = new ValintaryhmaCreateDTO();
     HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+    HttpSession session = Mockito.mock(HttpSession.class);
+    Mockito.when(request.getSession(false)).thenReturn(session);
 
     valintaryhma.setNimi("Uusi valintaryhmä");
     System.out.println(
@@ -100,6 +102,8 @@ public class ValintaryhmaResourceTest {
   public void testInsertParent() throws Exception {
     ValintaryhmaCreateDTO valintaryhma = new ValintaryhmaCreateDTO();
     HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+    HttpSession session = Mockito.mock(HttpSession.class);
+    Mockito.when(request.getSession(false)).thenReturn(session);
     valintaryhma.setNimi("Uusi valintaryhmä");
     System.out.println(
         mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(valintaryhma));
@@ -232,6 +236,8 @@ public class ValintaryhmaResourceTest {
     final String valintaryhmaOid = "oid52";
     final String valintakoekoodiUri = "uusivalintakoekoodiuri";
     HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+    HttpSession session = Mockito.mock(HttpSession.class);
+    Mockito.when(request.getSession(false)).thenReturn(session);
 
     KoodiDTO koodi = new KoodiDTO();
     koodi.setUri(valintakoekoodiUri);
@@ -245,15 +251,11 @@ public class ValintaryhmaResourceTest {
   @Test
   public void testPaivitaValintaryhmanValintakoekoodit() throws IOException {
     final String[] koeUrit =
-        new String[] {
-          "uusivalintakoekoodi",
-          "uusivalintakoekoodi",
-          "valintakoeuri1",
-          "valintakoeuri1",
-          "valintakoeuri2"
-        };
+        new String[] {"uusivalintakoekoodi", "valintakoeuri1", "valintakoeuri2"};
     final String valintaryhmaOid = "oid52";
     HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+    HttpSession session = Mockito.mock(HttpSession.class);
+    Mockito.when(request.getSession(false)).thenReturn(session);
 
     List<KoodiDTO> kokeet = new ArrayList<KoodiDTO>();
     for (String uri : koeUrit) {

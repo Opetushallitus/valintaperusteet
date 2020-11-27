@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.apache.commons.lang.StringUtils;
@@ -182,7 +183,7 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
     while (iterator.hasNext()) {
       Valintaryhma r = iterator.next();
       Map<String, Integer> valintaryhmanValintakoekoodiUrit = new HashMap<String, Integer>();
-      List<Valintakoekoodi> valintakoekoodit = valintakoekoodiDAO.findByValintaryhma(r.getOid());
+      Set<Valintakoekoodi> valintakoekoodit = valintakoekoodiDAO.findByValintaryhma(r.getOid());
       // Lasketaan valintakoekoodien esiintymät valintaryhmässä
       for (Valintakoekoodi k : valintakoekoodit) {
         if (!valintaryhmanValintakoekoodiUrit.containsKey(k.getUri())) {

@@ -237,16 +237,14 @@ public class ValinnanVaiheResourceImpl implements ValinnanVaiheResource {
       @ApiParam(value = "Valinnan vaiheen OID", required = true) @PathParam("oid") String oid,
       @Context HttpServletRequest request) {
     try {
-      ValinnanVaiheDTO old =
-          modelMapper.map(valinnanVaiheService.readByOid(oid), ValinnanVaiheDTO.class);
-      valinnanVaiheService.deleteByOid(oid);
+      ValinnanVaiheDTO dto = valinnanVaiheService.delete(oid);
       AuditLog.log(
           AUDIT,
           AuditLog.getUser(request),
           ValintaperusteetOperation.VALINNANVAIHE_POISTO,
           ValintaResource.VALINNANVAIHE,
           oid,
-          Changes.deleteDto(old));
+          Changes.deleteDto(dto));
       return Response.status(Response.Status.ACCEPTED).build();
     } catch (ValinnanVaiheEiOleOlemassaException e) {
       throw new WebApplicationException(e, Response.Status.NOT_FOUND);

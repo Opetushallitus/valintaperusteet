@@ -3,6 +3,7 @@ package fi.vm.sade.service.valintaperusteet.service.impl;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.*;
@@ -86,7 +87,7 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
 
   @Override
   public List<Valintatapajono> findJonoByValinnanvaihe(String oid) {
-    return LinkitettavaJaKopioitavaUtil.jarjesta(valintatapajonoDAO.findByValinnanVaihe(oid));
+    return valintatapajonoDAO.findByValinnanVaihe(oid);
   }
 
   @Override
@@ -197,15 +198,10 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
     Valintatapajono kopio = ValintatapajonoUtil.teeKopioMasterista(masterValintatapajono, null);
     kopio.setValinnanVaihe(valinnanVaihe);
     kopio.setOid(oidService.haeValintatapajonoOid());
-    List<Valintatapajono> jonot =
-        LinkitettavaJaKopioitavaUtil.jarjesta(
-            valintatapajonoDAO.findByValinnanVaihe(valinnanVaihe.getOid()));
-    Valintatapajono edellinenValintatapajono =
-        LinkitettavaJaKopioitavaUtil.haeMasterinEdellistaVastaava(
-            edellinenMasterValintatapajono, jonot);
-    kopio.setEdellinenValintatapajono(edellinenValintatapajono);
+    List<Valintatapajono> jonot = valintatapajonoDAO.findByValinnanVaihe(valinnanVaihe.getOid());
+    kopio.setEdellinenValintatapajono(
+        LinkitettavaJaKopioitavaUtil.kopioTaiViimeinen(edellinenMasterValintatapajono, jonot));
     Valintatapajono lisatty = valintatapajonoDAO.insert(kopio);
-    LinkitettavaJaKopioitavaUtil.asetaSeuraava(edellinenValintatapajono, lisatty);
     for (ValinnanVaihe vaihekopio : valinnanVaihe.getKopioValinnanVaiheet()) {
       lisaaValinnanVaiheelleKopioMasterValintatapajonosta(
           vaihekopio, lisatty, lisatty.getEdellinenValintatapajono());
@@ -240,7 +236,6 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
       jono.setVarasijanTayttojono(tayttoJono);
     }
     Valintatapajono lisatty = valintatapajonoDAO.insert(jono);
-    LinkitettavaJaKopioitavaUtil.asetaSeuraava(edellinenValintatapajono, lisatty);
     for (ValinnanVaihe kopio : valinnanVaihe.getKopioValinnanVaiheet()) {
       lisaaValinnanVaiheelleKopioMasterValintatapajonosta(kopio, lisatty, edellinenValintatapajono);
     }
@@ -259,48 +254,11 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
   }
 
   @Override
-  public void deleteByOid(String oid) {
+  public ValintatapajonoDTO delete(String oid) {
     Valintatapajono valintatapajono = haeValintatapajono(oid);
-    delete(valintatapajono);
-  }
-
-  @Override
-  public void delete(Valintatapajono valintatapajono) {
-    for (Valintatapajono valintatapajono1 : valintatapajono.getKopiot()) {
-      delete(valintatapajono1);
-    }
-    valintatapajono.setKopiot(new HashSet<Valintatapajono>());
-
-    Valintatapajono edellinen = valintatapajono.getEdellinen();
-    Valintatapajono seuraava = valintatapajono.getSeuraava();
-
-    if (edellinen != null) {
-      edellinen.setSeuraava(null);
-      valintatapajonoDAO.update(edellinen);
-    }
-
-    valintatapajono.setEdellinen(null);
-    valintatapajono.setSeuraava(null);
-    valintatapajonoDAO.update(valintatapajono);
-
-    if (seuraava != null) {
-      seuraava.setEdellinen(edellinen);
-      valintatapajonoDAO.update(seuraava);
-      if (edellinen != null) {
-        edellinen.setSeuraava(seuraava);
-        valintatapajonoDAO.update(edellinen);
-      }
-    }
-    if (valintatapajono.getJarjestyskriteerit() != null) {
-      for (Jarjestyskriteeri jarjestyskriteeri : valintatapajono.getJarjestyskriteerit()) {
-        jarjestyskriteeriService.delete(jarjestyskriteeri);
-      }
-    }
-    valintatapajono = valintatapajonoDAO.readByOid(valintatapajono.getOid());
-    if (valintatapajono != null) {
-      valintatapajono.setJarjestyskriteerit(null);
-      valintatapajonoDAO.remove(valintatapajono);
-    }
+    ValintatapajonoDTO dto = modelMapper.map(valintatapajono, ValintatapajonoDTO.class);
+    valintatapajonoDAO.delete(valintatapajono);
+    return dto;
   }
 
   @Override
@@ -401,67 +359,45 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
     return jarjestaValintatapajonot(ensimmainen.getValinnanVaihe(), valintatapajonoOidit);
   }
 
-  private Valintatapajono kopioiValintatapajonotRekursiivisesti(
-      ValinnanVaihe valinnanVaihe, Valintatapajono master, JuureenKopiointiCache kopiointiCache) {
-    if (master == null) {
-      return null;
-    }
-    Valintatapajono kopio = ValintatapajonoUtil.teeKopioMasterista(master, kopiointiCache);
-    kopio.setOid(oidService.haeValintatapajonoOid());
-    kopio.setValinnanVaihe(valinnanVaihe);
-    valinnanVaihe.addJono(kopio);
-    Valintatapajono edellinen =
-        kopioiValintatapajonotRekursiivisesti(
-            valinnanVaihe, master.getEdellinenValintatapajono(), kopiointiCache);
-    if (edellinen != null) {
-      kopio.setEdellinenValintatapajono(edellinen);
-      edellinen.setSeuraava(kopio);
-    }
-    Valintatapajono lisatty = valintatapajonoDAO.insert(kopio);
-    if (kopiointiCache != null) {
-      kopiointiCache.kopioidutValintapajonot.put(master.getId(), lisatty);
-      hakijaryhmaValintatapajonoService.kopioiValintatapajononHakijaryhmaValintatapajonot(
-          master, kopio, kopiointiCache);
-    }
-    jarjestyskriteeriService.kopioiJarjestyskriteeritMasterValintatapajonoltaKopiolle(
-        lisatty, master, kopiointiCache);
-    return lisatty;
-  }
-
   @Override
   public void kopioiValintatapajonotMasterValinnanVaiheeltaKopiolle(
       ValinnanVaihe valinnanVaihe,
       ValinnanVaihe masterValinnanVaihe,
       JuureenKopiointiCache kopiointiCache) {
-    Valintatapajono vv =
-        valintatapajonoDAO.haeValinnanVaiheenViimeinenValintatapajono(masterValinnanVaihe.getOid());
-    kopioiValintatapajonotRekursiivisesti(valinnanVaihe, vv, kopiointiCache);
+    List<Valintatapajono> valintatapajonot =
+        valintatapajonoDAO.findByValinnanVaihe(masterValinnanVaihe.getOid());
+    Collections.reverse(valintatapajonot);
+    for (Valintatapajono valintatapajono : valintatapajonot) {
+      Valintatapajono kopio =
+          ValintatapajonoUtil.teeKopioMasterista(valintatapajono, kopiointiCache);
+      kopio.setOid(oidService.haeValintatapajonoOid());
+      kopio.setValinnanVaihe(valinnanVaihe);
+      valinnanVaihe.addJono(kopio);
+      Valintatapajono lisatty = valintatapajonoDAO.insert(kopio);
+      if (kopiointiCache != null) {
+        kopiointiCache.kopioidutValintapajonot.put(valintatapajono.getId(), lisatty);
+      }
+      hakijaryhmaValintatapajonoService.kopioiValintatapajononHakijaryhmaValintatapajonot(
+          valintatapajono, kopio, kopiointiCache);
+      jarjestyskriteeriService.kopioiJarjestyskriteeritMasterValintatapajonoltaKopiolle(
+          lisatty, valintatapajono, kopiointiCache);
+    }
   }
 
   private List<Valintatapajono> jarjestaValintatapajonot(
       ValinnanVaihe vaihe, List<String> valintatapajonoOidit) {
-    LinkedHashMap<String, Valintatapajono> alkuperainenJarjestys =
-        LinkitettavaJaKopioitavaUtil.teeMappiOidienMukaan(
-            LinkitettavaJaKopioitavaUtil.jarjesta(
-                valintatapajonoDAO.findByValinnanVaihe(vaihe.getOid())));
-    LinkedHashMap<String, Valintatapajono> jarjestetty =
-        LinkitettavaJaKopioitavaUtil.jarjestaOidListanMukaan(
-            alkuperainenJarjestys, valintatapajonoOidit);
+    List<Valintatapajono> jarjestetty =
+        valintatapajonoDAO.jarjestaUudelleen(vaihe, valintatapajonoOidit);
     for (ValinnanVaihe kopio : vaihe.getKopiot()) {
       jarjestaKopioValinnanVaiheenValintatapajonot(kopio, jarjestetty);
     }
-    return new ArrayList<>(jarjestetty.values());
+    return jarjestetty;
   }
 
   private void jarjestaKopioValinnanVaiheenValintatapajonot(
-      ValinnanVaihe vaihe, LinkedHashMap<String, Valintatapajono> uusiMasterJarjestys) {
-    LinkedHashMap<String, Valintatapajono> alkuperainenJarjestys =
-        LinkitettavaJaKopioitavaUtil.teeMappiOidienMukaan(
-            LinkitettavaJaKopioitavaUtil.jarjesta(
-                valintatapajonoDAO.findByValinnanVaihe(vaihe.getOid())));
-    LinkedHashMap<String, Valintatapajono> jarjestetty =
-        LinkitettavaJaKopioitavaUtil.jarjestaKopiotMasterJarjestyksenMukaan(
-            alkuperainenJarjestys, uusiMasterJarjestys);
+      ValinnanVaihe vaihe, List<Valintatapajono> uusiMasterJarjestys) {
+    List<Valintatapajono> jarjestetty =
+        valintatapajonoDAO.jarjestaUudelleenMasterJarjestyksenMukaan(vaihe, uusiMasterJarjestys);
     for (ValinnanVaihe kopio : vaihe.getKopiot()) {
       jarjestaKopioValinnanVaiheenValintatapajonot(kopio, jarjestetty);
     }

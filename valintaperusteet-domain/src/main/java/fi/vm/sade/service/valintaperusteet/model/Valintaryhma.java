@@ -65,7 +65,7 @@ public class Valintaryhma extends BaseEntity {
               name = "valintakoekoodi_id",
               referencedColumnName = BaseEntity.ID_COLUMN_NAME))
   @ManyToMany(fetch = FetchType.LAZY)
-  private List<Valintakoekoodi> valintakoekoodit = new ArrayList<Valintakoekoodi>();
+  private Set<Valintakoekoodi> valintakoekoodit = new HashSet<>();
 
   @JoinTable(
       name = "valintaryhma_organisaatio",
@@ -166,11 +166,11 @@ public class Valintaryhma extends BaseEntity {
     this.hakukohdekoodit = hakukohdekoodit;
   }
 
-  public List<Valintakoekoodi> getValintakoekoodit() {
+  public Set<Valintakoekoodi> getValintakoekoodit() {
     return valintakoekoodit;
   }
 
-  public void setValintakoekoodit(List<Valintakoekoodi> valintakoekoodit) {
+  public void setValintakoekoodit(Set<Valintakoekoodi> valintakoekoodit) {
     this.valintakoekoodit = valintakoekoodit;
   }
 

@@ -1,6 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.dao;
 
 import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
+import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import java.util.Collection;
 import java.util.List;
 
@@ -18,4 +19,11 @@ public interface HakijaryhmaValintatapajonoDAO extends JpaDAO<HakijaryhmaValinta
   HakijaryhmaValintatapajono haeHakukohteenViimeinenHakijaryhma(String hakukohdeOid);
 
   HakijaryhmaValintatapajono haeValintatapajononViimeinenHakijaryhma(String valintatapajonoOid);
+
+  List<HakijaryhmaValintatapajono> jarjestaUudelleen(
+      HakukohdeViite hakukohdeViite, List<String> uusiJarjestys);
+
+  void delete(HakijaryhmaValintatapajono hakijaryhmaValintatapajono);
+
+  HakijaryhmaValintatapajono insert(HakijaryhmaValintatapajono uusi);
 }

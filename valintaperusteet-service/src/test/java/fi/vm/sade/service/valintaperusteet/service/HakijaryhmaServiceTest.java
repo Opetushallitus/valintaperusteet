@@ -2,8 +2,7 @@ package fi.vm.sade.service.valintaperusteet.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThrows;
 
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaDAO;
@@ -94,19 +93,9 @@ public class HakijaryhmaServiceTest {
 
   @Test
   public void testDelete() {
-    final String oid = "hr1";
-
-    Hakijaryhma hakijaryhma = hakijaryhmaService.readByOid(oid);
-    assertNotNull(hakijaryhma);
-
-    hakijaryhmaService.deleteByOid(oid, true);
-
-    try {
-      hakijaryhmaService.readByOid(oid);
-      assertTrue(false);
-    } catch (HakijaryhmaEiOleOlemassaException e) {
-      assertTrue(true);
-    }
+    String oid = "hr1";
+    hakijaryhmaService.delete(oid);
+    assertThrows(HakijaryhmaEiOleOlemassaException.class, () -> hakijaryhmaService.readByOid(oid));
   }
 
   @Test
@@ -359,10 +348,10 @@ public class HakijaryhmaServiceTest {
   @Test
   public void testHakijaryhmaValintatapajonoPeriytyminen() {
     // Poistetaan vanhat liitokset
-    hakijaryhmaValintatapajonoService.deleteByOid("hr1_vtj1", true);
-    hakijaryhmaValintatapajonoService.deleteByOid("hr3_vtj5", true);
-    hakijaryhmaValintatapajonoService.deleteByOid("hr4_vtj2", true);
-    hakijaryhmaValintatapajonoService.deleteByOid("hr5_vtj6", true);
+    hakijaryhmaValintatapajonoService.delete("hr1_vtj1");
+    hakijaryhmaValintatapajonoService.delete("hr3_vtj5");
+    hakijaryhmaValintatapajonoService.delete("hr4_vtj2");
+    hakijaryhmaValintatapajonoService.delete("hr5_vtj6");
 
     HakukohdeViiteDTO viite = new HakukohdeViiteDTO();
     viite.setHakuoid("temp");

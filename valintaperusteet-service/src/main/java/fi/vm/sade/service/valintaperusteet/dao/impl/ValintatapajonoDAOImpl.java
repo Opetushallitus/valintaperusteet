@@ -14,6 +14,7 @@ import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -36,24 +37,26 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
     QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
     QValintatapajono jono = QValintatapajono.valintatapajono;
     QHakijaryhmaValintatapajono hv = QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
-    return from(valinnanVaihe)
-        .leftJoin(valinnanVaihe.jonot, jono)
-        .leftJoin(valinnanVaihe.valintaryhma)
-        .leftJoin(jono.edellinenValintatapajono)
-        .fetch()
-        .leftJoin(jono.masterValintatapajono)
-        .fetch()
-        .leftJoin(jono.varasijanTayttojono)
-        .fetch()
-        .leftJoin(jono.hakijaryhmat, hv)
-        .fetch()
-        .leftJoin(hv.hakijaryhma)
-        .fetch()
-        .leftJoin(jono.valinnanVaihe)
-        .fetch()
-        .distinct()
-        .where(valinnanVaihe.oid.eq(oid))
-        .list(jono);
+    return LinkitettavaJaKopioitavaUtil.jarjesta(
+        from(jono)
+            .join(jono.valinnanVaihe, valinnanVaihe)
+            .fetch()
+            .leftJoin(valinnanVaihe.valintaryhma)
+            .leftJoin(jono.edellinenValintatapajono)
+            .fetch()
+            .leftJoin(jono.masterValintatapajono)
+            .fetch()
+            .leftJoin(jono.varasijanTayttojono)
+            .fetch()
+            .leftJoin(jono.hakijaryhmat, hv)
+            .fetch()
+            .leftJoin(hv.hakijaryhma)
+            .fetch()
+            .leftJoin(jono.valinnanVaihe)
+            .fetch()
+            .where(valinnanVaihe.oid.eq(oid))
+            .distinct()
+            .list(jono));
   }
 
   @Override
@@ -161,6 +164,62 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
         .list(jono);
   }
 
+  private List<Valintatapajono> findByValinnanVaihe(ValinnanVaihe valinnanVaihe) {
+    QValintatapajono valintatapajono = QValintatapajono.valintatapajono;
+    return from(valintatapajono)
+        .leftJoin(valintatapajono.edellinenValintatapajono)
+        .fetch()
+        .leftJoin(valintatapajono.masterValintatapajono)
+        .fetch()
+        .leftJoin(valintatapajono.varasijanTayttojono)
+        .fetch()
+        .where(valintatapajono.valinnanVaihe.id.eq(valinnanVaihe.getId()))
+        .distinct()
+        .list(valintatapajono);
+  }
+
+  @Override
+  public List<Valintatapajono> jarjestaUudelleen(
+      ValinnanVaihe valinnanVaihe, List<String> uusiJarjestys) {
+    return LinkitettavaJaKopioitavaUtil.jarjestaUudelleen(
+        getEntityManager(), findByValinnanVaihe(valinnanVaihe), uusiJarjestys);
+  }
+
+  @Override
+  public List<Valintatapajono> jarjestaUudelleenMasterJarjestyksenMukaan(
+      ValinnanVaihe valinnanVaihe, List<Valintatapajono> uusiMasterJarjestys) {
+    return LinkitettavaJaKopioitavaUtil.jarjestaUudelleenMasterJarjestyksenMukaan(
+        getEntityManager(), findByValinnanVaihe(valinnanVaihe), uusiMasterJarjestys);
+  }
+
+  @Override
+  public void delete(Valintatapajono valintatapajono) {
+    for (Valintatapajono kopio : valintatapajono.getKopiot()) {
+      delete(kopio);
+    }
+
+    EntityManager entityManager = getEntityManager();
+
+    QValintatapajono seuraava = QValintatapajono.valintatapajono;
+    Valintatapajono seuraavaValintatapajono =
+        from(seuraava)
+            .where(seuraava.edellinenValintatapajono.id.eq(valintatapajono.getId()))
+            .singleResult(seuraava);
+
+    if (seuraavaValintatapajono != null) {
+      Valintatapajono edellinen = valintatapajono.getEdellinen();
+
+      if (valintatapajono.getEdellinen() == null) {
+        valintatapajono.setEdellinen(valintatapajono);
+        entityManager.flush();
+      }
+
+      seuraavaValintatapajono.setEdellinen(edellinen);
+    }
+
+    entityManager.remove(valintatapajono);
+  }
+
   @Override
   public List<Valintatapajono> haeValintatapajonotSijoittelulle(String hakukohdeOid) {
 
@@ -171,8 +230,8 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
     // Etsitään hakukohteen viimeinen aktiivinen valinnan vaihe
     List<ValinnanVaihe> valinnanVaiheet =
         LinkitettavaJaKopioitavaUtil.jarjesta(
-            from(hakukohde)
-                .leftJoin(hakukohde.valinnanvaiheet, vv)
+            from(vv)
+                .join(vv.hakukohdeViite, hakukohde)
                 .where((hakukohde.oid.eq(hakukohdeOid)))
                 .list(vv));
 
@@ -184,23 +243,23 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
 
     // Haetaan löydetyn valinnan vaiheen kaikki jonot
     List<Valintatapajono> jonot =
-        from(jono)
-            .leftJoin(jono.valinnanVaihe, vv)
-            .leftJoin(jono.varasijanTayttojono)
-            .fetch()
-            .where(vv.oid.eq(lastValinnanVaihe.getOid()))
-            .distinct()
-            .list(jono);
+        LinkitettavaJaKopioitavaUtil.jarjesta(
+            from(jono)
+                .join(jono.valinnanVaihe, vv)
+                .leftJoin(jono.edellinenValintatapajono)
+                .fetch()
+                .leftJoin(jono.varasijanTayttojono)
+                .fetch()
+                .where(vv.oid.eq(lastValinnanVaihe.getOid()))
+                .distinct()
+                .list(jono));
 
     // BUG-255 poistetaan jonoista väärin tallentuneet täyttöjonot
-    List<Long> ids = jonot.stream().map(j -> j.getId()).collect(Collectors.toList());
-    jonot.forEach(
-        j -> {
-          if (j.getVarasijanTayttojono() != null
-              && !ids.contains(j.getVarasijanTayttojono().getId())) {
-            j.setVarasijanTayttojono(null);
-          }
-        });
+    for (Valintatapajono j : jonot) {
+      if (j.getVarasijanTayttojono() != null && !jonot.contains(j.getVarasijanTayttojono())) {
+        j.setVarasijanTayttojono(null);
+      }
+    }
 
     return jonot;
   }
@@ -237,8 +296,32 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
   }
 
   @Override
-  public Valintatapajono insert(Valintatapajono entity) {
-    Valintatapajono insert = super.insert(entity);
-    return insert;
+  public Valintatapajono insert(Valintatapajono uusi) {
+    QValintatapajono valintatapajono = QValintatapajono.valintatapajono;
+    Valintatapajono seuraava =
+        from(valintatapajono)
+            .where(
+                valintatapajono
+                    .valinnanVaihe
+                    .id
+                    .eq(uusi.getValinnanVaihe().getId())
+                    .and(
+                        uusi.getEdellinen() == null
+                            ? valintatapajono.edellinenValintatapajono.isNull()
+                            : valintatapajono.edellinenValintatapajono.id.eq(
+                                uusi.getEdellinen().getId())))
+            .singleResult(valintatapajono);
+    if (seuraava != null && uusi.getEdellinen() == null) {
+      seuraava.setEdellinen(seuraava);
+      getEntityManager().flush();
+    }
+
+    getEntityManager().persist(uusi);
+
+    if (seuraava != null) {
+      seuraava.setEdellinen(uusi);
+    }
+
+    return uusi;
   }
 }

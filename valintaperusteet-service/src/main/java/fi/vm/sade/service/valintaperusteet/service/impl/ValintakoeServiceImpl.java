@@ -4,6 +4,7 @@ import fi.vm.sade.service.valintaperusteet.dao.LaskentakaavaDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintakoeDAO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
+import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
 import fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi;
 import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti;
@@ -45,22 +46,26 @@ public class ValintakoeServiceImpl implements ValintakoeService {
 
   @Autowired private LaskentakaavaService laskentakaavaService;
 
+  @Autowired private ValintaperusteetModelMapper modelMapper;
+
   private static ValintakoeKopioija kopioija = new ValintakoeKopioija();
 
+  private void delete(Valintakoe valintakoe) {
+    for (Valintakoe kopio : valintakoe.getKopiot()) {
+      delete(kopio);
+    }
+    valintakoeDAO.remove(valintakoe);
+  }
+
   @Override
-  public void deleteByOid(String oid) {
-    Valintakoe valintakoe = haeValintakoeOidilla(oid);
+  public ValintakoeDTO delete(String valintakoeOid) {
+    Valintakoe valintakoe = haeValintakoeOidilla(valintakoeOid);
     if (valintakoe.getMaster() != null) {
       throw new ValintakoettaEiVoiPoistaaException("Valintakoe on peritty.");
     }
-    removeValintakoe(valintakoe);
-  }
-
-  private void removeValintakoe(Valintakoe valintakoe) {
-    for (Valintakoe koe : valintakoe.getKopiot()) {
-      removeValintakoe(koe);
-    }
-    valintakoeDAO.remove(valintakoe);
+    ValintakoeDTO dto = modelMapper.map(valintakoe, ValintakoeDTO.class);
+    delete(valintakoe);
+    return dto;
   }
 
   @Override

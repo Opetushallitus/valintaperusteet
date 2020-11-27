@@ -49,8 +49,8 @@ public class ValinnanVaiheDAOTest {
 
   @Test
   public void testFindByValintaryhma() {
-    List<ValinnanVaihe> oid1 = valinnanVaiheDAO.findByValintaryhma("oid2");
-    assertEquals(1, oid1.size());
+    List<ValinnanVaihe> oid1 = valinnanVaiheDAO.findByValintaryhma("oid1");
+    assertEquals(3, oid1.size());
   }
 
   @Test
