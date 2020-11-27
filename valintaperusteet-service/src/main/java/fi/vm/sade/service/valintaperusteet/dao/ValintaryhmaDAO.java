@@ -1,8 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.dao;
 
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
-import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 public interface ValintaryhmaDAO extends JpaDAO<Valintaryhma, Long> {
   List<Valintaryhma> findChildrenByParentOid(String oid);
@@ -19,7 +19,7 @@ public interface ValintaryhmaDAO extends JpaDAO<Valintaryhma, Long> {
   Valintaryhma findAllFetchAlavalintaryhmat(String oid);
 
   List<Valintaryhma> haeHakukohdekoodinJaValintakoekoodienMukaan(
-      String hakukohdekoodiUri, Collection<String> valintakoekoodiUrit);
+      String hakuOid, String hakukohdekoodiUri, Set<String> valintakoekoodiUrit);
 
   List<Valintaryhma> readByHakukohdekoodiUri(String koodiUri);
 
