@@ -1,5 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.resource.impl;
 
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
+import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
 import static fi.vm.sade.service.valintaperusteet.util.ValintaperusteetAudit.AUDIT;
 
 import fi.vm.sade.auditlog.Changes;
@@ -30,10 +32,12 @@ import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 @Component
 @Path("valintaperusteet")
+@PreAuthorize("isAuthenticated()")
 @Api(
     value = "/valintaperusteet",
     description = "Resurssi laskentakaavojen ja funktiokutsujen käsittelyyn")
@@ -54,6 +58,7 @@ public class ValintaperusteetResourceImpl implements ValintaperusteetResource {
   private static final Logger LOGGER = LoggerFactory.getLogger(ValintaperusteetResourceImpl.class);
 
   @GET
+  @PreAuthorize(READ_UPDATE_CRUD)
   @Path("/valintatapajono/{hakukohdeOid}")
   @Produces(MediaType.APPLICATION_JSON)
   @Override
@@ -64,6 +69,7 @@ public class ValintaperusteetResourceImpl implements ValintaperusteetResource {
   }
 
   @POST
+  @PreAuthorize(READ_UPDATE_CRUD)
   @Path("/valintatapajono")
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
@@ -75,6 +81,7 @@ public class ValintaperusteetResourceImpl implements ValintaperusteetResource {
   }
 
   @GET
+  @PreAuthorize(READ_UPDATE_CRUD)
   @Path("/{hakukohdeOid}")
   @Produces(MediaType.APPLICATION_JSON)
   @ApiOperation(value = "Hakee valintaperusteet")
@@ -144,6 +151,7 @@ public class ValintaperusteetResourceImpl implements ValintaperusteetResource {
   }
 
   @POST
+  @PreAuthorize(UPDATE_CRUD)
   @Path("tuoHakukohde")
   @Consumes(MediaType.APPLICATION_JSON)
   @ApiOperation(value = "importoi hakukohde")
@@ -166,6 +174,7 @@ public class ValintaperusteetResourceImpl implements ValintaperusteetResource {
   }
 
   @GET
+  @PreAuthorize(READ_UPDATE_CRUD)
   @Path("/{oid}/automaattinenSiirto")
   @Produces(MediaType.APPLICATION_JSON)
   public Boolean readAutomaattinenSijoitteluunSiirto(@PathParam("oid") String oid) {
@@ -173,6 +182,7 @@ public class ValintaperusteetResourceImpl implements ValintaperusteetResource {
   }
 
   @POST
+  @PreAuthorize(UPDATE_CRUD)
   @Path("/{oid}/automaattinenSiirto")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
