@@ -26,9 +26,7 @@ import fi.vm.sade.service.valintaperusteet.service.exception.ValintatapajonoaEiV
 import fi.vm.sade.valinta.sharedutils.AuditLog;
 import fi.vm.sade.valinta.sharedutils.ValintaResource;
 import fi.vm.sade.valinta.sharedutils.ValintaperusteetOperation;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,6 +79,7 @@ public class ValintatapajonoResourceImpl {
   @ApiOperation(
       value = "Hakee valintatapajonon OID:n perusteella",
       response = ValintatapajonoDTO.class)
+  @ApiResponses(@ApiResponse(code = 404, message = "Valintatapajonoa ei löydy"))
   public ValintatapajonoDTO readByOid(
       @ApiParam(value = "OID", required = true) @PathParam("oid") String oid) {
     return modelMapper.map(valintatapajonoService.readByOid(oid), ValintatapajonoDTO.class);
