@@ -1,6 +1,9 @@
 package fi.vm.sade.service.valintaperusteet.service.exception;
 
-public class ValintatapajonoEiOleOlemassaException extends RuntimeException {
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+
+public class ValintatapajonoEiOleOlemassaException extends WebApplicationException {
   private String valintatapajonoOid;
 
   public ValintatapajonoEiOleOlemassaException(String valintatapajonoOid) {
@@ -8,7 +11,7 @@ public class ValintatapajonoEiOleOlemassaException extends RuntimeException {
   }
 
   public ValintatapajonoEiOleOlemassaException(String message, String valintatapajonoOid) {
-    super(message);
+    super(message, Response.Status.NOT_FOUND);
     this.valintatapajonoOid = valintatapajonoOid;
   }
 
