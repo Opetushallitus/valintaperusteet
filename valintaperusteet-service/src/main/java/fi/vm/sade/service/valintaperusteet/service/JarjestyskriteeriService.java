@@ -1,6 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriDTO;
 import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import fi.vm.sade.service.valintaperusteet.util.JuureenKopiointiCache;
@@ -11,7 +12,7 @@ public interface JarjestyskriteeriService {
 
   List<Jarjestyskriteeri> findByHakukohde(String oid);
 
-  void deleteByOid(String oid);
+  JarjestyskriteeriDTO delete(String jarjestyskriteeriOid);
 
   Jarjestyskriteeri readByOid(String oid);
 
@@ -27,6 +28,4 @@ public interface JarjestyskriteeriService {
       Valintatapajono lisatty, Valintatapajono master, JuureenKopiointiCache kopiointiCache);
 
   Jarjestyskriteeri update(String oid, JarjestyskriteeriCreateDTO incoming, Long laskentakaavaId);
-
-  void delete(Jarjestyskriteeri jarjestyskriteeri);
 }

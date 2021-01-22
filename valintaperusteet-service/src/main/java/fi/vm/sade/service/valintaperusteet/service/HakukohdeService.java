@@ -26,8 +26,6 @@ public interface HakukohdeService {
 
   List<ValinnanVaihe> vaiheetJaJonot(String oid);
 
-  void deleteByOid(String oid);
-
   HakukohdeViite siirraHakukohdeValintaryhmaan(
       String hakukohdeOid, String valintaryhmaOid, boolean siirretaanManuaalisesti);
 

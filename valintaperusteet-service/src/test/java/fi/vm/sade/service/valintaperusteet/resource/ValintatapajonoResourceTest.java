@@ -114,12 +114,7 @@ public class ValintatapajonoResourceTest {
     assertNotNull(valintatapajono);
     Response delete = resource.delete("27", request);
     assertEquals(Response.Status.ACCEPTED.getStatusCode(), delete.getStatus());
-    try {
-      valintatapajono = resource.readByOid("27");
-      assertNull(valintatapajono);
-    } catch (ValintatapajonoEiOleOlemassaException e) {
-
-    }
+    assertThrows(ValintatapajonoEiOleOlemassaException.class, () -> resource.readByOid("27"));
   }
 
   @Test

@@ -1,28 +1,29 @@
 package fi.vm.sade.service.valintaperusteet.dao.impl;
 
-import com.mysema.query.BooleanBuilder;
 import com.mysema.query.jpa.impl.JPAQuery;
 import com.mysema.query.types.EntityPath;
 import com.mysema.query.types.expr.BooleanExpression;
 import fi.vm.sade.service.valintaperusteet.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.model.QHakukohdekoodi;
-import fi.vm.sade.service.valintaperusteet.model.QValintakoekoodi;
 import fi.vm.sade.service.valintaperusteet.model.QValintaryhma;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Set;
+import java.util.stream.Collectors;
+import javax.sql.DataSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long>
     implements ValintaryhmaDAO {
 
-  private static final Logger LOG = LoggerFactory.getLogger(ValintaryhmaDAOImpl.class);
+  @Autowired private DataSource dataSource;
 
   protected JPAQuery from(EntityPath<?>... o) {
     return new JPAQuery(getEntityManager()).from(o);
@@ -80,11 +81,10 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long>
             .fetch()
             .leftJoin(valintaryhma.organisaatiot)
             .fetch()
+            .leftJoin(valintaryhma.valintakoekoodit)
+            .fetch()
             .where(valintaryhma.oid.eq(oid))
             .singleResult(valintaryhma);
-    if (vr != null) {
-      vr.getValintakoekoodit().size();
-    }
     return vr;
   }
 
@@ -141,26 +141,55 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long>
 
   @Override
   public List<Valintaryhma> haeHakukohdekoodinJaValintakoekoodienMukaan(
-      String hakukohdekoodiUri, Collection<String> valintakoekoodiUrit) {
-    LOG.info(
-        "hakukohdekoodi: {}, valintakoekoodit: {}",
-        new Object[] {hakukohdekoodiUri, valintakoekoodiUrit});
-    QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
-    QHakukohdekoodi hakukohdekoodi = QHakukohdekoodi.hakukohdekoodi;
-    QValintakoekoodi valintakoekoodi = QValintakoekoodi.valintakoekoodi;
-    BooleanBuilder booleanBuilder = new BooleanBuilder();
-    booleanBuilder.and(hakukohdekoodi.uri.eq(hakukohdekoodiUri));
-    if (!valintakoekoodiUrit.isEmpty()) {
-      booleanBuilder.and(valintakoekoodi.uri.in(valintakoekoodiUrit));
-    }
-    return from(valintaryhma)
-        .join(valintaryhma.hakukohdekoodit, hakukohdekoodi)
-        .fetch()
-        .leftJoin(valintaryhma.valintakoekoodit, valintakoekoodi)
-        .fetch()
-        .where(booleanBuilder)
-        .distinct()
-        .list(valintaryhma);
+      String hakuOid, String hakukohdekoodiUri, Set<String> valintakoekoodiUrit) {
+    List<String> oids =
+        new NamedParameterJdbcTemplate(this.dataSource)
+            .queryForList(
+                ""
+                    + "with recursive haun_ryhmat(id) as (\n"
+                    + "    select id\n"
+                    + "    from valintaryhma\n"
+                    + "    where hakuoid = :haku_oid\n"
+                    + "    union all\n"
+                    + "    select vr.id\n"
+                    + "    from haun_ryhmat\n"
+                    + "    join valintaryhma as vr\n"
+                    + "        on vr.parent_id = haun_ryhmat.id"
+                    + ")\n"
+                    + "select \"oid\"\n"
+                    + "from valintaryhma as vr\n"
+                    + "join valintaryhma_hakukohdekoodi as vr_hkk\n"
+                    + "    on vr_hkk.valintaryhma_id = vr.id\n"
+                    + "join hakukohdekoodi as hkk\n"
+                    + "    on hkk.id = vr_hkk.hakukohdekoodi_id\n"
+                    + "where vr.id in (select id from haun_ryhmat) and\n"
+                    + "      hkk.uri = :hakukohdekoodi and\n"
+                    + (valintakoekoodiUrit.isEmpty()
+                        ? "      not exists (select uri\n"
+                            + "                  from valintakoekoodi as vkk\n"
+                            + "                  join valintaryhma_valintakoekoodi as vr_vkk\n"
+                            + "                      on vr_vkk.valintakoekoodi_id = vkk.id\n"
+                            + "                  where vr_vkk.valintaryhma_id = vr.id)"
+                        : "      not exists (select uri\n"
+                            + "                  from valintakoekoodi as vkk\n"
+                            + "                  join valintaryhma_valintakoekoodi as vr_vkk\n"
+                            + "                      on vr_vkk.valintakoekoodi_id = vkk.id\n"
+                            + "                  where vr_vkk.valintaryhma_id = vr.id and\n"
+                            + "                        vkk.uri not in (:valintakoekoodit)) and"
+                            + "      not exists (select uri\n"
+                            + "                  from unnest(array[:valintakoekoodit ]) as t(uri)\n"
+                            + "                  except\n"
+                            + "                  select uri\n"
+                            + "                  from valintakoekoodi as vkk\n"
+                            + "                  join valintaryhma_valintakoekoodi as vr_vkk\n"
+                            + "                      on vr_vkk.valintakoekoodi_id = vkk.id\n"
+                            + "                  where vr_vkk.valintaryhma_id = vr.id)"),
+                new MapSqlParameterSource()
+                    .addValue("haku_oid", hakuOid)
+                    .addValue("hakukohdekoodi", hakukohdekoodiUri)
+                    .addValue("valintakoekoodit", valintakoekoodiUrit),
+                String.class);
+    return oids.stream().map(this::readByOid).collect(Collectors.toList());
   }
 
   private Valintaryhma findParent(String oid) {

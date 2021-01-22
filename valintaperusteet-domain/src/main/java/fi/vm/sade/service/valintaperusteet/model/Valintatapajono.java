@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Table(name = "valintatapajono")
 @Cacheable(true)
 public class Valintatapajono extends BaseEntity
-    implements LinkitettavaJaKopioitava<Valintatapajono, Set<Valintatapajono>> {
+    implements Linkitettava<Valintatapajono>, Kopioitava<Valintatapajono> {
   private static final long serialVersionUID = 1L;
 
   @Column(name = "oid", nullable = false, unique = true)
@@ -81,9 +81,6 @@ public class Valintatapajono extends BaseEntity
   @OneToOne(fetch = FetchType.LAZY)
   private Valintatapajono edellinenValintatapajono;
 
-  @OneToOne(fetch = FetchType.LAZY, mappedBy = "edellinenValintatapajono")
-  private Valintatapajono seuraavaValintatapajono;
-
   @JoinColumn(name = "valinnan_vaihe_id", nullable = false)
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   private ValinnanVaihe valinnanVaihe;
@@ -95,10 +92,10 @@ public class Valintatapajono extends BaseEntity
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "masterValintatapajono")
   private Set<Valintatapajono> kopioValintatapajonot = new HashSet<Valintatapajono>();
 
-  @OneToMany(mappedBy = "valintatapajono", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+  @OneToMany(mappedBy = "valintatapajono", fetch = FetchType.LAZY)
   private Set<HakijaryhmaValintatapajono> hakijaryhmat = new HashSet<HakijaryhmaValintatapajono>();
 
-  @OneToMany(mappedBy = "valintatapajono", cascade = CascadeType.REMOVE)
+  @OneToMany(mappedBy = "valintatapajono")
   private Set<Jarjestyskriteeri> jarjestyskriteerit = new HashSet<Jarjestyskriteeri>();
 
   public Integer getAloituspaikat() {
@@ -163,14 +160,6 @@ public class Valintatapajono extends BaseEntity
 
   public void setEdellinenValintatapajono(Valintatapajono edellinenValintatapajono) {
     this.edellinenValintatapajono = edellinenValintatapajono;
-  }
-
-  public Valintatapajono getSeuraavaValintatapajono() {
-    return seuraavaValintatapajono;
-  }
-
-  public void setSeuraavaValintatapajono(Valintatapajono seuraavaValintatapajono) {
-    this.seuraavaValintatapajono = seuraavaValintatapajono;
   }
 
   public Valintatapajono getMasterValintatapajono() {
@@ -298,20 +287,8 @@ public class Valintatapajono extends BaseEntity
 
   @Transient
   @Override
-  public Valintatapajono getSeuraava() {
-    return getSeuraavaValintatapajono();
-  }
-
-  @Transient
-  @Override
   public void setEdellinen(Valintatapajono edellinen) {
     setEdellinenValintatapajono(edellinen);
-  }
-
-  @Transient
-  @Override
-  public void setSeuraava(Valintatapajono seuraava) {
-    setSeuraavaValintatapajono(seuraava);
   }
 
   @Transient
@@ -324,12 +301,6 @@ public class Valintatapajono extends BaseEntity
   @Override
   public Valintatapajono getMaster() {
     return getMasterValintatapajono();
-  }
-
-  @Transient
-  @Override
-  public void setKopiot(Set<Valintatapajono> kopiot) {
-    setKopioValintatapajonot(kopiot);
   }
 
   @Transient

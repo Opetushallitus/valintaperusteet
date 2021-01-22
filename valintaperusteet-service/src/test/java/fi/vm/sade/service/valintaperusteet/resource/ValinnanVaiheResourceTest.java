@@ -178,18 +178,10 @@ public class ValinnanVaiheResourceTest {
     HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
     HttpSession session = Mockito.mock(HttpSession.class);
     Mockito.when(request.getSession(false)).thenReturn(session);
-    ValinnanVaiheDTO read = vaiheResource.read("32");
 
-    assertNotNull(read);
     Response delete = vaiheResource.delete("32", request);
     assertEquals(Response.Status.ACCEPTED.getStatusCode(), delete.getStatus());
-
-    try {
-      ValinnanVaiheDTO read1 = vaiheResource.read("32");
-      assertNull(read1);
-    } catch (ValinnanVaiheEiOleOlemassaException e) {
-
-    }
+    assertThrows(ValinnanVaiheEiOleOlemassaException.class, () -> vaiheResource.read("32"));
   }
 
   @Test

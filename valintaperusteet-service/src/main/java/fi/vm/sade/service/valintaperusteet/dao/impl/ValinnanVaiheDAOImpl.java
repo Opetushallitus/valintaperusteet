@@ -6,10 +6,12 @@ import com.mysema.query.types.EntityPath;
 import fi.vm.sade.service.valintaperusteet.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.model.*;
+import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -142,16 +144,19 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
     QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
     QValinnanVaihe vv = QValinnanVaihe.valinnanVaihe;
     QValintatapajono valintatapaJono = QValintatapajono.valintatapajono;
-    return from(valintaryhma)
-        .leftJoin(valintaryhma.valinnanvaiheet, vv)
-        .leftJoin(vv.jonot, valintatapaJono)
-        .fetch()
-        .leftJoin(vv.seuraavaValinnanVaihe)
-        .fetch()
-        .leftJoin(vv.masterValinnanVaihe)
-        .fetch()
-        .where(valintaryhma.oid.eq(oid))
-        .list(vv);
+    return LinkitettavaJaKopioitavaUtil.jarjesta(
+        from(vv)
+            .join(vv.valintaryhma, valintaryhma)
+            .fetch()
+            .leftJoin(vv.jonot, valintatapaJono)
+            .fetch()
+            .leftJoin(vv.edellinenValinnanVaihe)
+            .fetch()
+            .leftJoin(vv.masterValinnanVaihe)
+            .fetch()
+            .where(valintaryhma.oid.eq(oid))
+            .distinct()
+            .list(vv));
   }
 
   @Override
@@ -159,16 +164,19 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
     QHakukohdeViite hakukohde = QHakukohdeViite.hakukohdeViite;
     QValinnanVaihe vv = QValinnanVaihe.valinnanVaihe;
     QValintatapajono valintatapaJono = QValintatapajono.valintatapajono;
-    return from(hakukohde)
-        .leftJoin(hakukohde.valinnanvaiheet, vv)
-        .leftJoin(vv.jonot, valintatapaJono)
-        .fetch()
-        .leftJoin(vv.seuraavaValinnanVaihe)
-        .fetch()
-        .leftJoin(vv.masterValinnanVaihe)
-        .fetch()
-        .where(hakukohde.oid.eq(oid))
-        .list(vv);
+    return LinkitettavaJaKopioitavaUtil.jarjesta(
+        from(vv)
+            .join(vv.hakukohdeViite, hakukohde)
+            .fetch()
+            .leftJoin(vv.jonot, valintatapaJono)
+            .fetch()
+            .leftJoin(vv.edellinenValinnanVaihe)
+            .fetch()
+            .leftJoin(vv.masterValinnanVaihe)
+            .fetch()
+            .where(hakukohde.oid.eq(oid))
+            .distinct()
+            .list(vv));
   }
 
   @Override
@@ -216,5 +224,118 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
         .where(vv.hakukohdeViite.eq(h))
         .distinct()
         .list(vv);
+  }
+
+  private List<ValinnanVaihe> findByHakukohdeViite(HakukohdeViite hakukohdeViite) {
+    QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
+    return from(valinnanVaihe)
+        .leftJoin(valinnanVaihe.jonot)
+        .fetch()
+        .leftJoin(valinnanVaihe.edellinenValinnanVaihe)
+        .fetch()
+        .leftJoin(valinnanVaihe.masterValinnanVaihe)
+        .fetch()
+        .where(valinnanVaihe.hakukohdeViite.id.eq(hakukohdeViite.getId()))
+        .distinct()
+        .list(valinnanVaihe);
+  }
+
+  private List<ValinnanVaihe> findByValintaryhma(Valintaryhma valintaryhma) {
+    QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
+    return from(valinnanVaihe)
+        .leftJoin(valinnanVaihe.jonot)
+        .fetch()
+        .leftJoin(valinnanVaihe.edellinenValinnanVaihe)
+        .fetch()
+        .leftJoin(valinnanVaihe.masterValinnanVaihe)
+        .fetch()
+        .where(valinnanVaihe.valintaryhma.id.eq(valintaryhma.getId()))
+        .distinct()
+        .list(valinnanVaihe);
+  }
+
+  @Override
+  public List<ValinnanVaihe> jarjestaUudelleen(
+      HakukohdeViite hakukohdeViite, List<String> uusiJarjestys) {
+    return LinkitettavaJaKopioitavaUtil.jarjestaUudelleen(
+        getEntityManager(), findByHakukohdeViite(hakukohdeViite), uusiJarjestys);
+  }
+
+  @Override
+  public List<ValinnanVaihe> jarjestaUudelleen(
+      Valintaryhma valintaryhma, List<String> uusiJarjestys) {
+    return LinkitettavaJaKopioitavaUtil.jarjestaUudelleen(
+        getEntityManager(), findByValintaryhma(valintaryhma), uusiJarjestys);
+  }
+
+  @Override
+  public List<ValinnanVaihe> jarjestaUudelleenMasterJarjestyksenMukaan(
+      HakukohdeViite hakukohdeViite, List<ValinnanVaihe> uusiMasterJarjestys) {
+    return LinkitettavaJaKopioitavaUtil.jarjestaUudelleenMasterJarjestyksenMukaan(
+        getEntityManager(), findByHakukohdeViite(hakukohdeViite), uusiMasterJarjestys);
+  }
+
+  @Override
+  public List<ValinnanVaihe> jarjestaUudelleenMasterJarjestyksenMukaan(
+      Valintaryhma valintaryhma, List<ValinnanVaihe> uusiMasterJarjestys) {
+    return LinkitettavaJaKopioitavaUtil.jarjestaUudelleenMasterJarjestyksenMukaan(
+        getEntityManager(), findByValintaryhma(valintaryhma), uusiMasterJarjestys);
+  }
+
+  @Override
+  public ValinnanVaihe insert(ValinnanVaihe uusi) {
+    QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
+    ValinnanVaihe seuraava =
+        from(valinnanVaihe)
+            .where(
+                (uusi.getValintaryhma() == null
+                        ? valinnanVaihe.hakukohdeViite.id.eq(uusi.getHakukohdeViite().getId())
+                        : valinnanVaihe.valintaryhma.id.eq(uusi.getValintaryhma().getId()))
+                    .and(
+                        uusi.getEdellinen() == null
+                            ? valinnanVaihe.edellinenValinnanVaihe.isNull()
+                            : valinnanVaihe.edellinenValinnanVaihe.id.eq(
+                                uusi.getEdellinen().getId())))
+            .singleResult(valinnanVaihe);
+    if (seuraava != null && uusi.getEdellinen() == null) {
+      seuraava.setEdellinen(seuraava);
+      getEntityManager().flush();
+    }
+
+    getEntityManager().persist(uusi);
+
+    if (seuraava != null) {
+      seuraava.setEdellinen(uusi);
+    }
+
+    return uusi;
+  }
+
+  @Override
+  public void delete(ValinnanVaihe valinnanVaihe) {
+    for (ValinnanVaihe kopio : valinnanVaihe.getKopiot()) {
+      delete(kopio);
+    }
+
+    EntityManager entityManager = getEntityManager();
+
+    QValinnanVaihe seuraava = QValinnanVaihe.valinnanVaihe;
+    ValinnanVaihe seuraavaValinnanVaihe =
+        from(seuraava)
+            .where(seuraava.edellinenValinnanVaihe.id.eq(valinnanVaihe.getId()))
+            .singleResult(seuraava);
+
+    if (seuraavaValinnanVaihe != null) {
+      ValinnanVaihe edellinen = valinnanVaihe.getEdellinen();
+
+      if (valinnanVaihe.getEdellinen() == null) {
+        valinnanVaihe.setEdellinen(valinnanVaihe);
+        entityManager.flush();
+      }
+
+      seuraavaValinnanVaihe.setEdellinen(edellinen);
+    }
+
+    entityManager.remove(valinnanVaihe);
   }
 }

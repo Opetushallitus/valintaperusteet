@@ -213,13 +213,11 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
   }
 
   private void copyValintakoekoodit(Valintaryhma source, Valintaryhma target) {
-    List<Valintakoekoodi> sourceKoodit = valintakoekoodiDAO.findByValintaryhma(source.getOid());
+    Set<Valintakoekoodi> sourceKoodit = valintakoekoodiDAO.findByValintaryhma(source.getOid());
     if (sourceKoodit != null) {
-      sourceKoodit.stream()
-          .forEach(
-              sourceKoodi -> {
-                target.getValintakoekoodit().add(sourceKoodi);
-              });
+      for (Valintakoekoodi sourceKoodi : sourceKoodit) {
+        target.getValintakoekoodit().add(sourceKoodi);
+      }
     }
   }
 
@@ -260,9 +258,6 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
   public void delete(String oid) {
     Optional<Valintaryhma> managedObject = Optional.ofNullable(haeValintaryhma(oid));
     if (managedObject.isPresent()) {
-      for (ValinnanVaihe valinnanVaihe : managedObject.get().getValinnanvaiheet()) {
-        valinnanVaiheService.delete(valinnanVaihe);
-      }
       for (Laskentakaava laskentakaava : managedObject.get().getLaskentakaava()) {
         laskentakaavaDAO.remove(laskentakaava);
       }

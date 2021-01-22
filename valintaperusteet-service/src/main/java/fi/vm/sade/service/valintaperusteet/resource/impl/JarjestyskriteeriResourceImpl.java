@@ -114,16 +114,14 @@ public class JarjestyskriteeriResourceImpl implements JarjestyskriteeriResource 
       @ApiParam(value = "OID", required = true) @PathParam("oid") String oid,
       @Context HttpServletRequest request) {
     try {
-      JarjestyskriteeriDTO old =
-          modelMapper.map(jarjestyskriteeriService.readByOid(oid), JarjestyskriteeriDTO.class);
-      jarjestyskriteeriService.deleteByOid(oid);
+      JarjestyskriteeriDTO dto = jarjestyskriteeriService.delete(oid);
       AuditLog.log(
           ValintaperusteetAudit.AUDIT,
           AuditLog.getUser(request),
           ValintaperusteetOperation.JARJESTYSKRITEERI_POISTO,
           ValintaResource.JARJESTYSKRITEERIT,
           oid,
-          Changes.deleteDto(old));
+          Changes.deleteDto(dto));
       return Response.status(Response.Status.ACCEPTED).build();
     } catch (JarjestyskriteeriaEiVoiPoistaaException e) {
       throw new WebApplicationException(e, Response.Status.FORBIDDEN);

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,17 +87,10 @@ public class ValintakoekoodiServiceTest {
     assertNull(valintakoekoodiDAO.readByUri(opetuskielikoodiUri));
     valintakoekoodiService.lisaaValintakoekoodiValintaryhmalle(valintaryhmaOid, koodi);
     valintakoekoodiService.lisaaValintakoekoodiValintaryhmalle(valintaryhmaOid, koodi);
-
-    valintaryhma = valintaryhmaService.readByOid(valintaryhmaOid);
-    assertEquals(2, valintaryhma.getValintakoekoodit().size());
-
-    for (Valintakoekoodi k : valintaryhma.getValintakoekoodit()) {
-      assertEquals(opetuskielikoodiUri, k.getUri());
-    }
   }
 
   private boolean tarkastaEttaValintaryhmallaOnKaikkiOpetuskielikoodit(
-      List<Valintakoekoodi> valintakoekoodit, Map<String, Integer> urit) {
+      Set<Valintakoekoodi> valintakoekoodit, Map<String, Integer> urit) {
 
     Map<String, Integer> valintaryhmanKoodit = new HashMap<String, Integer>();
 
@@ -157,12 +151,12 @@ public class ValintakoekoodiServiceTest {
     final String valintaryhmaOid = "oid51";
 
     Map<String, Integer> valintakoekooditAluksi =
-        luoUriMap(luoUri("valintakoeuri1", 1), luoUri("valintakoeuri2", 2));
+        luoUriMap(luoUri("valintakoeuri1", 1), luoUri("valintakoeuri2", 1));
     Map<String, Integer> valintakoekooditLopuksi =
-        luoUriMap(luoUri("valintakoeuri1", 1), luoUri("valintakoeuri3", 2), luoUri("aivanuusi", 5));
+        luoUriMap(luoUri("valintakoeuri1", 1), luoUri("valintakoeuri3", 1), luoUri("aivanuusi", 1));
 
     Valintaryhma valintaryhma = valintaryhmaService.readByOid(valintaryhmaOid);
-    List<Valintakoekoodi> valintaryhmanValintakoekoodit =
+    Set<Valintakoekoodi> valintaryhmanValintakoekoodit =
         valintakoekoodiDAO.findByValintaryhma(valintaryhmaOid);
     assertTrue(
         tarkastaEttaValintaryhmallaOnKaikkiOpetuskielikoodit(

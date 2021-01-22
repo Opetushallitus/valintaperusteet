@@ -94,7 +94,7 @@ public class ValinnanVaiheServiceTest {
         fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi.VALINTAKOE,
         valinnanVaihe.getValinnanVaiheTyyppi());
 
-    valinnanVaiheService.deleteByOid(valinnanVaiheOid);
+    valinnanVaiheService.delete(valinnanVaiheOid);
   }
 
   @Test

@@ -1,6 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
 import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import fi.vm.sade.service.valintaperusteet.util.JuureenKopiointiCache;
@@ -21,7 +22,7 @@ public interface ValintatapajonoService {
   Valintatapajono lisaaValintatapajonoValinnanVaiheelle(
       String valinnanVaiheOid, ValintatapajonoCreateDTO jono, String edellinenValintatapajonoOid);
 
-  void deleteByOid(String oid);
+  ValintatapajonoDTO delete(String valintatapajonoOid);
 
   List<Valintatapajono> jarjestaValintatapajonot(List<String> valintatapajonoOidit);
 
@@ -31,8 +32,6 @@ public interface ValintatapajonoService {
       JuureenKopiointiCache kopiointiCache);
 
   Valintatapajono update(String oid, ValintatapajonoCreateDTO jono);
-
-  void delete(Valintatapajono valintatapajono);
 
   Boolean readAutomaattinenSijoitteluunSiirto(String oid);
 
