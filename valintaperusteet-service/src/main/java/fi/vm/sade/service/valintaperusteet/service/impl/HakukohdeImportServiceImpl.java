@@ -166,7 +166,12 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
             .filter(Objects::nonNull)
             .collect(Collectors.toSet());
 
-    LOG.info("Yritetään selvittää hakukohteen {} valintaryhmä", hakukohdeOid);
+    LOG.info(
+        "Yritetään selvittää haun {} hakukohteen {} valintaryhmä hakukohdekoodilla {} ja valintakoekoodeilla {}",
+        hakuOid,
+        hakukohdeOid,
+        hakukohdekoodi,
+        valintakoekoodit);
 
     List<Valintaryhma> valintaryhmat =
         valintaryhmaDAO.haeHakukohdekoodinJaValintakoekoodienMukaan(
