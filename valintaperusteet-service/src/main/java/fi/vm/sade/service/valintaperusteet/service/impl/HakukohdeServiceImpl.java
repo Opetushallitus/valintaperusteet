@@ -11,10 +11,13 @@ import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakukohdeViiteEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -134,7 +137,8 @@ public class HakukohdeServiceImpl implements HakukohdeService {
     // Järjestetään jonot vaiheiden sisällä
     for (ValinnanVaihe valinnanVaihe : valinnanVaiheetIlmanlaskentaa) {
       valinnanVaiheDAO.detach(valinnanVaihe);
-      valinnanVaihe.setJonot(LinkitettavaJaKopioitavaUtil.jarjestaSet(valinnanVaihe.getJonot()));
+      valinnanVaihe.setJonot(
+          new LinkedHashSet<>(LinkitettavaJaKopioitavaUtil.jarjesta(valinnanVaihe.getJonot())));
     }
     return valinnanVaiheetIlmanlaskentaa;
   }
@@ -148,17 +152,49 @@ public class HakukohdeServiceImpl implements HakukohdeService {
     return vaiheet;
   }
 
-  @Override
-  public void deleteByOid(String oid) {
-    HakukohdeViite hakukohde = haeHakukohdeViite(oid);
-    List<ValinnanVaihe> vaiheet = valinnanVaiheService.findByHakukohde(hakukohde.getOid());
-    for (ValinnanVaihe vv : vaiheet) {
-      valinnanVaiheService.delete(vv);
+  private ValintatapajonoCreateDTO vtjToCreateDto(Valintatapajono valintatapajono) {
+    ValintatapajonoCreateDTO dto = new ValintatapajonoCreateDTO();
+    dto.setAloituspaikat(valintatapajono.getAloituspaikat());
+    dto.setNimi(valintatapajono.getNimi());
+    dto.setKuvaus(valintatapajono.getKuvaus());
+    dto.setTyyppi(valintatapajono.getTyyppi());
+    dto.setSiirretaanSijoitteluun(valintatapajono.getSiirretaanSijoitteluun());
+    dto.setTasapistesaanto(valintatapajono.getTasapistesaanto());
+    dto.setAktiivinen(valintatapajono.getAktiivinen());
+    dto.setValisijoittelu(valintatapajono.getValisijoittelu());
+    dto.setautomaattinenSijoitteluunSiirto(valintatapajono.getautomaattinenSijoitteluunSiirto());
+    dto.setEiVarasijatayttoa(valintatapajono.getEiVarasijatayttoa());
+    dto.setKaikkiEhdonTayttavatHyvaksytaan(valintatapajono.getKaikkiEhdonTayttavatHyvaksytaan());
+    dto.setVarasijat(valintatapajono.getVarasijat());
+    dto.setPoissaOlevaTaytto(valintatapajono.getPoissaOlevaTaytto());
+    dto.setPoistetaankoHylatyt(valintatapajono.isPoistetaankoHylatyt());
+    dto.setVarasijojaKaytetaanAlkaen(valintatapajono.getVarasijojaKaytetaanAlkaen());
+    dto.setVarasijojaTaytetaanAsti(valintatapajono.getVarasijojaTaytetaanAsti());
+    dto.setEiLasketaPaivamaaranJalkeen(valintatapajono.getEiLasketaPaivamaaranJalkeen());
+    dto.setKaytetaanValintalaskentaa(valintatapajono.getKaytetaanValintalaskentaa());
+    dto.setTayttojono(
+        valintatapajono.getVarasijanTayttojono() != null
+            ? valintatapajono.getVarasijanTayttojono().getOid()
+            : null);
+    return dto;
+  }
+
+  private List<Pair<Integer, ValintatapajonoCreateDTO>> haeHakukohteenSiirrettavatValintatapajonot(
+      List<ValinnanVaihe> vanhatValinnanVaiheet) {
+    int suhteellinenIndeksi = 0;
+    List<Pair<Integer, ValintatapajonoCreateDTO>> siirrettavatValintatapajonot = new LinkedList<>();
+    for (ValinnanVaihe valinnanVaihe : vanhatValinnanVaiheet) {
+      if (valinnanVaihe.getMaster() != null) {
+        for (Valintatapajono valintatapajono : valinnanVaihe.getJonot()) {
+          if (valintatapajono.getMaster() == null) {
+            siirrettavatValintatapajonot.add(
+                Pair.of(suhteellinenIndeksi, vtjToCreateDto(valintatapajono)));
+          }
+        }
+        suhteellinenIndeksi++;
+      }
     }
-    hakukohdeViiteDAO.remove(hakukohde);
-    // Hakukohteiden tuonti saattaa feilata ilman flushausta, jos hakukohde siirretään uuden
-    // valintaryhmän alle
-    hakukohdeViiteDAO.flush();
+    return siirrettavatValintatapajonot;
   }
 
   @Override
@@ -169,165 +205,48 @@ public class HakukohdeServiceImpl implements HakukohdeService {
     if (StringUtils.isNotBlank(valintaryhmaOid)) {
       valintaryhma = valintaryhmaService.readByOid(valintaryhmaOid);
     }
-    if ((valintaryhma != null ^ hakukohdeViite.getValintaryhma() != null)
-        || (valintaryhma != null
-            && hakukohdeViite.getValintaryhma() != null
-            && !valintaryhma.getOid().equals(hakukohdeViite.getValintaryhma().getOid()))) {
-      final List<Indexed<Valintatapajono>> siirrettavatHakukohteenValintatapajonot =
-          haeHakukohteenSiirrettavatValintatapajonot(hakukohdeViite);
-      poistaHakukohteenPeriytyvatValinnanVaiheetJaHakijaryhmat(hakukohdeOid);
-      List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheService.findByHakukohde(hakukohdeOid);
-      // Käydään läpi kaikki ei-periytyvät valinnan vaiheet ja asetetaan hakukohdeviittaus
-      // tilapäisesti
-      // nulliksi
-      for (ValinnanVaihe vv : valinnanVaiheet) {
-        vv.setHakukohdeViite(null);
-      }
-      List<Laskentakaava> kaavat =
-          laskentakaavaService.findKaavas(true, null, hakukohdeViite.getOid(), null);
-      // Poistetaan hakukohteen kaavoilta viittaus vanhaan hakukohteeseen
-      kaavat.stream()
-          .forEach(
-              kaava -> {
-                kaava.setHakukohde(null);
-                laskentakaavaDAO.update(kaava);
-              });
-      // Poistetaan vanha hakukohde
-      deleteByOid(hakukohdeOid);
-      // Luodaan uusi hakukohde
-      HakukohdeViite lisatty =
-          insert(
-              modelMapper.map(hakukohdeViite, HakukohdeViiteCreateDTO.class),
-              valintaryhma != null ? valintaryhma.getOid() : null);
-      // Lisätään kaavat takaisin uudelleen luodulle hakukohteelle
-      kaavat.stream()
-          .forEach(
-              kaava -> {
-                kaava.setHakukohde(lisatty);
-                laskentakaavaDAO.update(kaava);
-              });
-      lisatty.setManuaalisestiSiirretty(siirretaanManuaalisesti);
-      if (hakukohdeViite.getHakukohdekoodi() != null) {
-        Hakukohdekoodi koodi = hakukohdeViite.getHakukohdekoodi();
-        lisatty.setHakukohdekoodi(koodi);
-      }
-      lisatty.getValintakokeet().addAll(hakukohdeViite.getValintakokeet());
-      for (String key : hakukohdeViite.getHakukohteenValintaperusteet().keySet()) {
-        HakukohteenValintaperuste peruste =
-            hakukohdeViite.getHakukohteenValintaperusteet().get(key);
-        HakukohteenValintaperuste lisattava = new HakukohteenValintaperuste();
-        lisattava.setArvo(peruste.getArvo());
-        lisattava.setKuvaus(peruste.getKuvaus());
-        lisattava.setTunniste(peruste.getTunniste());
-        lisattava.setHakukohde(lisatty);
-        lisatty.getHakukohteenValintaperusteet().put(key, lisattava);
-      }
-      ValinnanVaihe viimeinenValinnanVaihe =
-          valinnanVaiheDAO.haeHakukohteenViimeinenValinnanVaihe(hakukohdeOid);
-      if (!valinnanVaiheet.isEmpty()) {
-        valinnanVaiheet.get(0).setEdellinen(viimeinenValinnanVaihe);
-        if (viimeinenValinnanVaihe != null) {
-          viimeinenValinnanVaihe.setSeuraava(valinnanVaiheet.get(0));
-        }
-        // Asetetaan hakukohteen omat valinnan vaiheet viittaamaan taas uuteen hakukohteeseen
-        for (ValinnanVaihe vv : valinnanVaiheet) {
-          vv.setHakukohdeViite(lisatty);
-          lisatty.getValinnanvaiheet().add(vv);
+
+    hakukohdeViite.setManuaalisestiSiirretty(siirretaanManuaalisesti);
+
+    if (!Objects.equals(valintaryhma, hakukohdeViite.getValintaryhma())) {
+      List<ValinnanVaihe> vanhatValinnanVaiheet =
+          valinnanVaiheService.findByHakukohde(hakukohdeOid);
+      List<Pair<Integer, ValintatapajonoCreateDTO>> siirrettavatValintatapajonot =
+          haeHakukohteenSiirrettavatValintatapajonot(vanhatValinnanVaiheet);
+      for (ValinnanVaihe valinnanVaihe : vanhatValinnanVaiheet) {
+        if (valinnanVaihe.getMaster() != null) {
+          valinnanVaiheService.delete(valinnanVaihe);
         }
       }
-      if (hakukohteenSiirrettavatValintatapajonotVoidaanSiirtaa(hakukohdeViite, lisatty)) {
-        siirrettavatHakukohteenValintatapajonot.forEach(
-            indexed -> siirraHakukohteenValintatapajono(indexed.value, lisatty, indexed.idx));
+
+      for (HakijaryhmaValintatapajono hakijaryhmaValintatapajono :
+          hakijaryhmaValintatapajonoService.findByHakukohde(hakukohdeOid)) {
+        if (hakijaryhmaValintatapajono.getHakijaryhma().getValintaryhma() != null) {
+          hakijaryhmaValintatapajonoService.delete(hakijaryhmaValintatapajono);
+        }
       }
-      return lisatty;
-    } else {
-      hakukohdeViite.setManuaalisestiSiirretty(siirretaanManuaalisesti);
-      return hakukohdeViite;
-    }
-  }
 
-  private void siirraHakukohteenValintatapajono(
-      Valintatapajono vanhaValintatapajono,
-      HakukohdeViite uusiHakukohde,
-      int valinnanvaiheenIndeksi) {
-    final ValinnanVaihe uusiValinnanvaihe =
-        LinkitettavaJaKopioitavaUtil.jarjesta(uusiHakukohde.getValinnanvaiheet())
-            .get(valinnanvaiheenIndeksi);
+      hakukohdeViite.setValintaryhma(valintaryhma);
 
-    ValintatapajonoCreateDTO uusiValintatapajono = new ValintatapajonoCreateDTO();
-    uusiValintatapajono.setAloituspaikat(vanhaValintatapajono.getAloituspaikat());
-    uusiValintatapajono.setNimi(vanhaValintatapajono.getNimi());
-    uusiValintatapajono.setKuvaus(vanhaValintatapajono.getKuvaus());
-    uusiValintatapajono.setTyyppi(vanhaValintatapajono.getTyyppi());
-    uusiValintatapajono.setSiirretaanSijoitteluun(vanhaValintatapajono.getSiirretaanSijoitteluun());
-    uusiValintatapajono.setTasapistesaanto(vanhaValintatapajono.getTasapistesaanto());
-    uusiValintatapajono.setAktiivinen(vanhaValintatapajono.getAktiivinen());
-    uusiValintatapajono.setValisijoittelu(vanhaValintatapajono.getValisijoittelu());
-    uusiValintatapajono.setautomaattinenSijoitteluunSiirto(
-        vanhaValintatapajono.getautomaattinenSijoitteluunSiirto());
-    uusiValintatapajono.setEiVarasijatayttoa(vanhaValintatapajono.getEiVarasijatayttoa());
-    uusiValintatapajono.setKaikkiEhdonTayttavatHyvaksytaan(
-        vanhaValintatapajono.getKaikkiEhdonTayttavatHyvaksytaan());
-    uusiValintatapajono.setVarasijat(vanhaValintatapajono.getVarasijat());
-    uusiValintatapajono.setPoissaOlevaTaytto(vanhaValintatapajono.getPoissaOlevaTaytto());
-    uusiValintatapajono.setPoistetaankoHylatyt(vanhaValintatapajono.isPoistetaankoHylatyt());
-    uusiValintatapajono.setVarasijojaKaytetaanAlkaen(
-        vanhaValintatapajono.getVarasijojaKaytetaanAlkaen());
-    uusiValintatapajono.setVarasijojaTaytetaanAsti(
-        vanhaValintatapajono.getVarasijojaTaytetaanAsti());
-    uusiValintatapajono.setEiLasketaPaivamaaranJalkeen(
-        vanhaValintatapajono.getEiLasketaPaivamaaranJalkeen());
-    uusiValintatapajono.setKaytetaanValintalaskentaa(
-        vanhaValintatapajono.getKaytetaanValintalaskentaa());
-    uusiValintatapajono.setTayttojono(
-        vanhaValintatapajono.getVarasijanTayttojono() != null
-            ? vanhaValintatapajono.getVarasijanTayttojono().getOid()
-            : null);
+      if (valintaryhma != null) {
+        valinnanVaiheService.kopioiValinnanVaiheetParentilta(hakukohdeViite, valintaryhma, null);
 
-    valintatapajonoService.lisaaValintatapajonoValinnanVaiheelle(
-        uusiValinnanvaihe.getOid(), uusiValintatapajono, null);
-  }
+        List<ValinnanVaihe> uudetValinnanVaiheet =
+            valinnanVaiheService.findByHakukohde(hakukohdeOid);
+        if (vanhatValinnanVaiheet.size() == uudetValinnanVaiheet.size()) {
+          for (Pair<Integer, ValintatapajonoCreateDTO> p : siirrettavatValintatapajonot) {
+            valintatapajonoService.lisaaValintatapajonoValinnanVaiheelle(
+                uudetValinnanVaiheet.get(p.getLeft()).getOid(), p.getRight(), null);
+          }
+        }
 
-  private boolean hakukohteenSiirrettavatValintatapajonotVoidaanSiirtaa(
-      HakukohdeViite vanhaHakukohde, HakukohdeViite uusiHakukohde) {
-    return vanhaHakukohde.getValinnanvaiheet().size() == uusiHakukohde.getValinnanvaiheet().size();
-  }
-
-  private static class Indexed<T> {
-    public final int idx;
-    public final T value;
-
-    public Indexed(int idx, T value) {
-      this.idx = idx;
-      this.value = value;
-    }
-  }
-
-  private List<Indexed<Valintatapajono>> haeHakukohteenSiirrettavatValintatapajonot(
-      HakukohdeViite vanhaHakukohde) {
-    final List<ValinnanVaihe> valinnanvaiheet =
-        LinkitettavaJaKopioitavaUtil.jarjesta(vanhaHakukohde.getValinnanvaiheet());
-    return IntStream.range(0, valinnanvaiheet.size())
-        .mapToObj(idx -> new Indexed<ValinnanVaihe>(idx, valinnanvaiheet.get(idx)))
-        .flatMap(
-            indexed ->
-                indexed.value.getJonot().stream()
-                    .filter(
-                        vanhaValintatapajono ->
-                            vanhaValintatapajono.getMasterValintatapajono() == null)
-                    .map(
-                        vanhaValintatapajono ->
-                            new Indexed<Valintatapajono>(indexed.idx, vanhaValintatapajono)))
-        .collect(Collectors.toList());
-  }
-
-  private void poistaHakukohteenPeriytyvatValinnanVaiheetJaHakijaryhmat(String hakukohdeOid) {
-    List<ValinnanVaihe> valinnanVaiheet = valinnanVaiheService.findByHakukohde(hakukohdeOid);
-    // Poistetaan kaikki periytyvät valinnan vaiheet
-    for (ValinnanVaihe vv : valinnanVaiheet) {
-      if (vv.getMasterValinnanVaihe() != null) {
-        valinnanVaiheService.deleteByOid(vv.getOid());
+        for (Hakijaryhma hakijaryhma : valintaryhma.getHakijaryhmat()) {
+          hakijaryhmaValintatapajonoService.liitaHakijaryhmaHakukohteelle(
+              hakukohdeOid, hakijaryhma.getOid());
+        }
       }
     }
+
+    return haeHakukohdeViite(hakukohdeOid);
   }
 }

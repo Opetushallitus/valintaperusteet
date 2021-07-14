@@ -1,6 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
 import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheCreateDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheDTO;
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
@@ -23,7 +24,7 @@ public interface ValinnanVaiheService {
   ValinnanVaihe lisaaValinnanVaiheHakukohteelle(
       String hakukohdeOid, ValinnanVaiheCreateDTO valinnanVaihe, String edellinenValinnanVaiheOid);
 
-  void deleteByOid(String oid);
+  ValinnanVaiheDTO delete(String valinnanVaiheOid);
 
   List<ValinnanVaihe> jarjestaValinnanVaiheet(List<String> valinnanVaiheOidit);
 

@@ -3,7 +3,7 @@ package fi.vm.sade.service.valintaperusteet.service;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThrows;
 
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dao.LaskentakaavaDAO;
@@ -479,21 +479,12 @@ public class JarjestyskriteeriServiceTest {
     assertNotNull(jarjestyskriteeriService.readByOid("3201"));
     assertNotNull(jarjestyskriteeriService.readByOid("3212"));
 
-    jarjestyskriteeriService.deleteByOid("3201");
+    jarjestyskriteeriService.delete("3201");
 
-    try {
-      assertNull(jarjestyskriteeriService.readByOid("3201"));
-    } catch (JarjestyskriteeriEiOleOlemassaException e) {
-    }
-    ;
-
+    assertThrows(
+        JarjestyskriteeriEiOleOlemassaException.class,
+        () -> jarjestyskriteeriService.readByOid("3201"));
     assertNotNull(jarjestyskriteeriService.readByOid("3212"));
-
-    try {
-      assertNull(jarjestyskriteeriService.readByOid("3201"));
-    } catch (JarjestyskriteeriEiOleOlemassaException e) {
-    }
-    ;
   }
 
   @Test

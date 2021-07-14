@@ -8,8 +8,10 @@ import fi.vm.sade.service.valintaperusteet.model.QValintakoekoodi;
 import fi.vm.sade.service.valintaperusteet.model.QValintaryhma;
 import fi.vm.sade.service.valintaperusteet.model.Valintakoekoodi;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -21,13 +23,14 @@ public class ValintakoekoodiDAOImpl extends AbstractJpaDAOImpl<Valintakoekoodi, 
   }
 
   @Override
-  public List<Valintakoekoodi> findByValintaryhma(String valintaryhmaOid) {
+  public Set<Valintakoekoodi> findByValintaryhma(String valintaryhmaOid) {
     QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
     QValintakoekoodi valintakoekoodi = QValintakoekoodi.valintakoekoodi;
-    return from(valintaryhma)
-        .innerJoin(valintaryhma.valintakoekoodit, valintakoekoodi)
-        .where(valintaryhma.oid.eq(valintaryhmaOid))
-        .list(valintakoekoodi);
+    return new HashSet<>(
+        from(valintaryhma)
+            .join(valintaryhma.valintakoekoodit, valintakoekoodi)
+            .where(valintaryhma.oid.eq(valintaryhmaOid))
+            .list(valintakoekoodi));
   }
 
   @Override

@@ -23,6 +23,7 @@ import fi.vm.sade.service.valintaperusteet.service.JarjestyskriteeriService;
 import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaOidTyhjaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintatapajonoaEiVoiLisataException;
+import fi.vm.sade.service.valintaperusteet.service.exception.ValintatapajonoaEiVoiPoistaaException;
 import fi.vm.sade.valinta.sharedutils.AuditLog;
 import fi.vm.sade.valinta.sharedutils.ValintaResource;
 import fi.vm.sade.valinta.sharedutils.ValintaperusteetOperation;
@@ -306,16 +307,18 @@ public class ValintatapajonoResourceImpl {
       @ApiParam(value = "Poistettavan valintatapajonon OID", required = true) @PathParam("oid")
           String oid,
       @Context HttpServletRequest request) {
-    ValintatapajonoDTO poistettu =
-        modelMapper.map(valintatapajonoService.readByOid(oid), ValintatapajonoDTO.class);
-    valintatapajonoService.deleteByOid(oid);
-    AuditLog.log(
-        AUDIT,
-        AuditLog.getUser(request),
-        ValintaperusteetOperation.VALINTATAPAJONO_POISTO,
-        ValintaResource.VALINTATAPAJONO,
-        oid,
-        Changes.deleteDto(poistettu));
-    return Response.status(Response.Status.ACCEPTED).build();
+    try {
+      ValintatapajonoDTO dto = valintatapajonoService.delete(oid);
+      AuditLog.log(
+          AUDIT,
+          AuditLog.getUser(request),
+          ValintaperusteetOperation.VALINTATAPAJONO_POISTO,
+          ValintaResource.VALINTATAPAJONO,
+          oid,
+          Changes.deleteDto(dto));
+      return Response.status(Response.Status.ACCEPTED).build();
+    } catch (ValintatapajonoaEiVoiPoistaaException e) {
+      return Response.status(Response.Status.BAD_REQUEST).build();
+    }
   }
 }

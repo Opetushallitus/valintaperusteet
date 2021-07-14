@@ -24,9 +24,8 @@ import fi.vm.sade.service.valintaperusteet.util.HakijaryhmaValintatapajonoKopioi
 import fi.vm.sade.service.valintaperusteet.util.HakijaryhmaValintatapajonoUtil;
 import fi.vm.sade.service.valintaperusteet.util.JuureenKopiointiCache;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedHashMap;
+import java.util.Collections;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -67,9 +66,7 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
 
   @Override
   public List<HakijaryhmaValintatapajono> findHakijaryhmaByJono(String oid) {
-    List<HakijaryhmaValintatapajono> byJono =
-        hakijaryhmaValintatapajonoDAO.findByValintatapajono(oid);
-    return LinkitettavaJaKopioitavaUtil.jarjesta(byJono);
+    return hakijaryhmaValintatapajonoDAO.findByValintatapajono(oid);
   }
 
   @Override
@@ -121,7 +118,6 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
     jono.setKaytetaanRyhmaanKuuluvia(hakijaryhma.isKaytetaanRyhmaanKuuluvia());
     jono.setHakijaryhmatyyppikoodi(hakijaryhma.getHakijaryhmatyyppikoodi());
     hakijaryhmaValintatapajonoDAO.insert(jono);
-    LinkitettavaJaKopioitavaUtil.asetaSeuraava(edellinenHakijaryhma, jono);
     for (Valintatapajono kopio : valintatapajono.getKopioValintatapajonot()) {
       lisaaValintatapajonolleKopioMasterHakijaryhmasta(kopio, jono, edellinenHakijaryhma);
     }
@@ -133,33 +129,20 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
       Valintatapajono lahdeValintatapajono,
       Valintatapajono kohdeValintatapajono,
       JuureenKopiointiCache kopiointiCache) {
-
     List<HakijaryhmaValintatapajono> jonot =
-        LinkitettavaJaKopioitavaUtil.jarjesta(
-            hakijaryhmaValintatapajonoDAO.findByValintatapajono(lahdeValintatapajono.getOid()));
-    if (!jonot.isEmpty()) {
-      kopioiRekusiivisestiHakijaryhmaValintatapajonot(
-          kohdeValintatapajono, jonot.iterator().next(), kopiointiCache);
+        hakijaryhmaValintatapajonoDAO.findByValintatapajono(lahdeValintatapajono.getOid());
+    Collections.reverse(jonot);
+    for (HakijaryhmaValintatapajono jono : jonot) {
+      HakijaryhmaValintatapajono kopio =
+          HakijaryhmaValintatapajonoUtil.teeKopioMasterista(jono, kopiointiCache);
+      kopio.setValintatapajono(kohdeValintatapajono);
+      kopio.setOid(oidService.haeValintatapajonoHakijaryhmaOid());
+      HakijaryhmaValintatapajono lisatty = hakijaryhmaValintatapajonoDAO.insert(kopio);
+      kohdeValintatapajono.getHakijaryhmat().add(lisatty);
+      if (kopiointiCache != null) {
+        kopiointiCache.kopioidutHakijaryhmaValintapajonot.put(jono.getId(), lisatty);
+      }
     }
-  }
-
-  private HakijaryhmaValintatapajono kopioiRekusiivisestiHakijaryhmaValintatapajonot(
-      Valintatapajono kohdeValintatapajono,
-      HakijaryhmaValintatapajono kopioitava,
-      JuureenKopiointiCache kopiointiCache) {
-    HakijaryhmaValintatapajono kopio =
-        HakijaryhmaValintatapajonoUtil.teeKopioMasterista(kopioitava, kopiointiCache);
-    kopio.setValintatapajono(kohdeValintatapajono);
-    kopio.setOid(oidService.haeValintatapajonoHakijaryhmaOid());
-    HakijaryhmaValintatapajono lisatty = hakijaryhmaValintatapajonoDAO.insert(kopio);
-    kohdeValintatapajono.getHakijaryhmat().add(lisatty);
-    kopiointiCache.kopioidutHakijaryhmaValintapajonot.put(kopioitava.getId(), lisatty);
-    if (kopioitava.getSeuraava() != null) {
-      kopio.setSeuraava(
-          kopioiRekusiivisestiHakijaryhmaValintatapajonot(
-              kohdeValintatapajono, kopioitava.getSeuraava(), kopiointiCache));
-    }
-    return lisatty;
   }
 
   private void lisaaValintatapajonolleKopioMasterHakijaryhmasta(
@@ -171,13 +154,9 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
     kopio.setValintatapajono(valintatapajono);
     kopio.setOid(oidService.haeValintatapajonoHakijaryhmaOid());
     List<HakijaryhmaValintatapajono> jonot =
-        LinkitettavaJaKopioitavaUtil.jarjesta(
-            hakijaryhmaValintatapajonoDAO.findByValintatapajono(valintatapajono.getOid()));
-    HakijaryhmaValintatapajono edellinen =
-        LinkitettavaJaKopioitavaUtil.haeMasterinEdellistaVastaava(edellinenMaster, jonot);
-    kopio.setEdellinen(edellinen);
+        hakijaryhmaValintatapajonoDAO.findByValintatapajono(valintatapajono.getOid());
+    kopio.setEdellinen(LinkitettavaJaKopioitavaUtil.kopioTaiViimeinen(edellinenMaster, jonot));
     HakijaryhmaValintatapajono lisatty = hakijaryhmaValintatapajonoDAO.insert(kopio);
-    LinkitettavaJaKopioitavaUtil.asetaSeuraava(edellinen, lisatty);
     for (Valintatapajono jonokopio : valintatapajono.getKopioValintatapajonot()) {
       lisaaValintatapajonolleKopioMasterHakijaryhmasta(jonokopio, lisatty, lisatty.getEdellinen());
     }
@@ -214,18 +193,25 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
     jono.setKaytetaanRyhmaanKuuluvia(hakijaryhma.isKaytetaanRyhmaanKuuluvia());
     jono.setHakijaryhmatyyppikoodi(hakijaryhma.getHakijaryhmatyyppikoodi());
     hakijaryhmaValintatapajonoDAO.insert(jono);
-    LinkitettavaJaKopioitavaUtil.asetaSeuraava(edellinenHakijaryhma, jono);
     return lisatty;
   }
 
   @Override
-  public void deleteByOid(String oid, boolean skipInheritedCheck) {
+  public HakijaryhmaValintatapajonoDTO delete(String hakijaryhmaValintatapajonoOid) {
     HakijaryhmaValintatapajono hakijaryhmaValintatapajono =
-        hakijaryhmaValintatapajonoDAO.readByOid(oid);
-    if (!skipInheritedCheck && hakijaryhmaValintatapajono.getMaster() != null) {
-      throw new HakijaryhmaaEiVoiPoistaaException("hakijaryhma on peritty.");
+        haeHakijaryhmaValintatapajono(hakijaryhmaValintatapajonoOid);
+    if (hakijaryhmaValintatapajono.getMaster() != null) {
+      throw new HakijaryhmaaEiVoiPoistaaException("HakijaryhmaValintatapajono on peritty.");
     }
+    HakijaryhmaValintatapajonoDTO dto =
+        modelMapper.map(hakijaryhmaValintatapajono, HakijaryhmaValintatapajonoDTO.class);
     delete(hakijaryhmaValintatapajono);
+    return dto;
+  }
+
+  @Override
+  public void delete(HakijaryhmaValintatapajono hakijaryhmaValintatapajono) {
+    hakijaryhmaValintatapajonoDAO.delete(hakijaryhmaValintatapajono);
   }
 
   // CRUD
@@ -263,7 +249,6 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
     jono.setKaytetaanRyhmaanKuuluvia(hakijaryhma.isKaytetaanRyhmaanKuuluvia());
     jono.setHakijaryhmatyyppikoodi(hakijaryhma.getHakijaryhmatyyppikoodi());
     hakijaryhmaValintatapajonoDAO.insert(jono);
-    LinkitettavaJaKopioitavaUtil.asetaSeuraava(edellinenHakijaryhma, jono);
     for (Valintatapajono kopio : valintatapajono.getKopioValintatapajonot()) {
       lisaaValintatapajonolleKopioMasterHakijaryhmasta(kopio, jono, edellinenHakijaryhma);
     }
@@ -287,14 +272,11 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
     jono.setKaytetaanRyhmaanKuuluvia(hakijaryhma.isKaytetaanRyhmaanKuuluvia());
     jono.setHakijaryhmatyyppikoodi(hakijaryhma.getHakijaryhmatyyppikoodi());
     hakijaryhmaValintatapajonoDAO.insert(jono);
-    LinkitettavaJaKopioitavaUtil.asetaSeuraava(edellinenHakijaryhma, jono);
   }
 
   @Override
   public List<HakijaryhmaValintatapajono> findByHakukohde(String oid) {
-    List<HakijaryhmaValintatapajono> byHakukohde =
-        hakijaryhmaValintatapajonoDAO.findByHakukohde(oid);
-    return LinkitettavaJaKopioitavaUtil.jarjesta(byHakukohde);
+    return hakijaryhmaValintatapajonoDAO.findByHakukohde(oid);
   }
 
   @Override
@@ -303,31 +285,8 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
       throw new HakijaryhmaValintatapajonoOidListaOnTyhjaException(
           "Valintatapajonojen OID-lista on tyhjä");
     }
-    HakijaryhmaValintatapajono ensimmainen =
-        haeHakijaryhmaValintatapajono(hakijaryhmajonoOidit.get(0));
-    return jarjestaHakijaryhmajono(ensimmainen.getHakukohdeViite(), hakijaryhmajonoOidit);
-  }
-
-  private List<HakijaryhmaValintatapajono> jarjestaHakijaryhmajono(
-      HakukohdeViite viite, List<String> hakijaryhmajonoOidit) {
-    LinkedHashMap<String, HakijaryhmaValintatapajono> alkuperainenJarjestys =
-        LinkitettavaJaKopioitavaUtil.teeMappiOidienMukaan(
-            LinkitettavaJaKopioitavaUtil.jarjesta(
-                hakijaryhmaValintatapajonoDAO.findByHakukohde(viite.getOid())));
-    LinkedHashMap<String, HakijaryhmaValintatapajono> jarjestetty =
-        LinkitettavaJaKopioitavaUtil.jarjestaOidListanMukaan(
-            alkuperainenJarjestys, hakijaryhmajonoOidit);
-    return new ArrayList<>(jarjestetty.values());
-  }
-
-  private void delete(HakijaryhmaValintatapajono entity) {
-    for (HakijaryhmaValintatapajono hakijaryhma : entity.getKopiot()) {
-      delete(hakijaryhma);
-    }
-    if (entity.getSeuraava() != null) {
-      HakijaryhmaValintatapajono seuraava = entity.getSeuraava();
-      seuraava.setEdellinen(entity.getEdellinen());
-    }
-    hakijaryhmaValintatapajonoDAO.remove(entity);
+    return hakijaryhmaValintatapajonoDAO.jarjestaUudelleen(
+        haeHakijaryhmaValintatapajono(hakijaryhmajonoOidit.get(0)).getHakukohdeViite(),
+        hakijaryhmajonoOidit);
   }
 }

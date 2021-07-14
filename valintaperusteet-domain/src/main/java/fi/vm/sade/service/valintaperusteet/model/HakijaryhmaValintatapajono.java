@@ -8,8 +8,7 @@ import javax.persistence.*;
 @Table(name = "hakijaryhma_jono")
 @Cacheable(true)
 public class HakijaryhmaValintatapajono extends BaseEntity
-    implements LinkitettavaJaKopioitava<
-        HakijaryhmaValintatapajono, Set<HakijaryhmaValintatapajono>> {
+    implements Linkitettava<HakijaryhmaValintatapajono>, Kopioitava<HakijaryhmaValintatapajono> {
 
   private static final long serialVersionUID = 1L;
 
@@ -47,9 +46,6 @@ public class HakijaryhmaValintatapajono extends BaseEntity
   @OneToOne(fetch = FetchType.LAZY)
   private HakijaryhmaValintatapajono edellinen;
 
-  @OneToOne(fetch = FetchType.LAZY, mappedBy = "edellinen")
-  private HakijaryhmaValintatapajono seuraava;
-
   @JoinColumn(name = "master_hakijaryhma_jono_id")
   @ManyToOne(fetch = FetchType.LAZY)
   private HakijaryhmaValintatapajono master;
@@ -58,7 +54,7 @@ public class HakijaryhmaValintatapajono extends BaseEntity
   @ManyToOne(fetch = FetchType.LAZY)
   private Hakijaryhmatyyppikoodi hakijaryhmatyyppikoodi;
 
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "master", cascade = CascadeType.REMOVE)
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "master")
   private Set<HakijaryhmaValintatapajono> kopiot = new HashSet<HakijaryhmaValintatapajono>();
 
   public Hakijaryhma getHakijaryhma() {
@@ -94,43 +90,33 @@ public class HakijaryhmaValintatapajono extends BaseEntity
   }
 
   @Override
+  @Transient
   public HakijaryhmaValintatapajono getEdellinen() {
     return edellinen;
   }
 
   @Override
+  @Transient
   public void setEdellinen(HakijaryhmaValintatapajono edellinen) {
     this.edellinen = edellinen;
   }
 
   @Override
-  public HakijaryhmaValintatapajono getSeuraava() {
-    return seuraava;
-  }
-
-  @Override
-  public void setSeuraava(HakijaryhmaValintatapajono seuraava) {
-    this.seuraava = seuraava;
-  }
-
-  @Override
+  @Transient
   public HakijaryhmaValintatapajono getMaster() {
     return master;
   }
 
   @Override
+  @Transient
   public void setMaster(HakijaryhmaValintatapajono master) {
     this.master = master;
   }
 
   @Override
+  @Transient
   public Set<HakijaryhmaValintatapajono> getKopiot() {
     return kopiot;
-  }
-
-  @Override
-  public void setKopiot(Set<HakijaryhmaValintatapajono> kopiot) {
-    this.kopiot = kopiot;
   }
 
   @Transient

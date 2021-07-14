@@ -24,9 +24,9 @@
         <hakijaryhma id="51" version="0" kiintio="20" kuvaus="" nimi="hakijaryhma 7" oid="hr7" laskentakaava_id="11" hakijaryhmatyyppikoodi_id="1" valintaryhma_id="80" kaytaKaikki="false" tarkkaKiintio="false" kaytetaan_ryhmaan_kuuluvia="true" edellinen_hakijaryhma_id="50"/>
 
         <hakijaryhma_jono id="31" version="0" aktiivinen="true" oid="hr1_vtj1" hakijaryhma_id="25" valintatapajono_id="5" kiintio="20" kaytaKaikki="false" tarkkaKiintio="false" kaytetaan_ryhmaan_kuuluvia="true"/>
-        <hakijaryhma_jono id="32" version="0" aktiivinen="true" oid="hr2_vtj2" hakijaryhma_id="26" master_hakijaryhma_jono_id="31" valintatapajono_id="6" hakukohde_viite_id="2" kiintio="20" kaytaKaikki="false" tarkkaKiintio="false" kaytetaan_ryhmaan_kuuluvia="true"/>
-        <hakijaryhma_jono id="36" version="0" aktiivinen="true" oid="hr3_vtj5" hakijaryhma_id="34" edellinen_hakijaryhma_jono_id="32" valintatapajono_id="35" hakukohde_viite_id="2" kiintio="20" kaytaKaikki="false" tarkkaKiintio="false" kaytetaan_ryhmaan_kuuluvia="true"/>
-        <hakijaryhma_jono id="38" version="0" aktiivinen="true" oid="hr4_vtj2" hakijaryhma_id="37" edellinen_hakijaryhma_jono_id="36" valintatapajono_id="6" hakukohde_viite_id="2" kiintio="20" kaytaKaikki="false" tarkkaKiintio="false" kaytetaan_ryhmaan_kuuluvia="true"/>
+        <hakijaryhma_jono id="32" version="0" aktiivinen="true" oid="hr2_vtj2" hakijaryhma_id="26" hakukohde_viite_id="2" kiintio="20" kaytaKaikki="false" tarkkaKiintio="false" kaytetaan_ryhmaan_kuuluvia="true"/>
+        <hakijaryhma_jono id="36" version="0" aktiivinen="true" oid="hr3_vtj5" hakijaryhma_id="34" edellinen_hakijaryhma_jono_id="32" hakukohde_viite_id="2" kiintio="20" kaytaKaikki="false" tarkkaKiintio="false" kaytetaan_ryhmaan_kuuluvia="true"/>
+        <hakijaryhma_jono id="38" version="0" aktiivinen="true" oid="hr4_vtj2" hakijaryhma_id="37" edellinen_hakijaryhma_jono_id="36" hakukohde_viite_id="2" kiintio="20" kaytaKaikki="false" tarkkaKiintio="false" kaytetaan_ryhmaan_kuuluvia="true"/>
         <hakijaryhma_jono id="44" version="0" aktiivinen="true" oid="hr5_vtj6" hakijaryhma_id="43" valintatapajono_id="41" kiintio="20" kaytaKaikki="false" tarkkaKiintio="false" kaytetaan_ryhmaan_kuuluvia="true"/>
 
         <hakukohde_viite id="2" version="0" hakuoid="1" nimi="valintaryhma1 - hakukohde1" oid="1" valintaryhma_id="1" manuaalisesti_siirretty="false"/>
