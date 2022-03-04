@@ -669,11 +669,18 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     List<Funktioargumentti> f = funktiokutsuDAO.findByLaskentakaavaChild(id);
     if (j.isEmpty() && h.isEmpty() && v.isEmpty() && f.isEmpty()) {
       Laskentakaava l = kaava.get();
-      l.getKopiot().forEach(k -> {
-        LOGGER.info(String.format("Poistettavan laskentakaavan %s %s kopio on %s %s"), l.getId(), l.getNimi(), k.getId(), k.getNimi());
-        k.setKopioLaskentakaavasta(null);
-        laskentakaavaDAO.update(k);
-      });
+      l.getKopiot()
+          .forEach(
+              k -> {
+                LOGGER.info(
+                    String.format("Poistettavan laskentakaavan %s %s kopio on %s %s"),
+                    l.getId(),
+                    l.getNimi(),
+                    k.getId(),
+                    k.getNimi());
+                k.setKopioLaskentakaavasta(null);
+                laskentakaavaDAO.update(k);
+              });
       poistaFunktiokutsu(l.getFunktiokutsu());
       l.setKopioLaskentakaavasta(null);
       laskentakaavaDAO.update(l);
