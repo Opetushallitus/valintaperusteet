@@ -1,8 +1,5 @@
 *.class
-# Required for gradle-wrapper.jar
-#*.jar
 *.war
-*.ear
 *.iml
 node_modules
 node
@@ -16,5 +13,4 @@ target
 bower_components
 .DS_Store
 .~lock*
-.java-version
 .opintopolku-local/

@@ -37,7 +37,13 @@ jobs:
       - uses: actions/cache@v2
         id: restore-build
         with:
-          path: target
+          path: |
+            target
+            valintaperusteet-api/target
+            valintaperusteet-domain/target
+            valintaperusteet-laskenta/target
+            valintaperusteet-service/target
+            valintaperusteet-testing/target
           key: ${{ github.sha }}
 
   deploy-container:
@@ -50,7 +56,13 @@ jobs:
       - uses: actions/cache@v2
         id: restore-build
         with:
-          path: target
+          path: |
+            target
+            valintaperusteet-api/target
+            valintaperusteet-domain/target
+            valintaperusteet-laskenta/target
+            valintaperusteet-service/target
+            valintaperusteet-testing/target
           key: ${{ github.sha }}
 
       - name: Build and deploy Docker container
@@ -79,7 +91,13 @@ jobs:
       - uses: actions/cache@v2
         id: restore-build
         with:
-          path: target
+          path: |
+            target
+            valintaperusteet-api/target
+            valintaperusteet-domain/target
+            valintaperusteet-laskenta/target
+            valintaperusteet-service/target
+            valintaperusteet-testing/target
           key: ${{ github.sha }}
 
       - name: Deploy jar library
