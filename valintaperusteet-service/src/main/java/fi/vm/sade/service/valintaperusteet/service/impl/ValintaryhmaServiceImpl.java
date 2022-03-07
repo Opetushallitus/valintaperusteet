@@ -258,9 +258,8 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
   public void delete(String oid) {
     Optional<Valintaryhma> managedObject = Optional.ofNullable(haeValintaryhma(oid));
     if (managedObject.isPresent()) {
-      for (Laskentakaava laskentakaava : managedObject.get().getLaskentakaava()) {
-        laskentakaavaDAO.remove(laskentakaava);
-      }
+      managedObject.get().getLaskentakaava().stream()
+          .forEach(lk -> laskentakaavaService.poista(lk.getId()));
       valintaryhmaDAO.remove(managedObject.get());
     }
   }
