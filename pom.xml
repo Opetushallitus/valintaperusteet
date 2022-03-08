@@ -588,12 +588,6 @@
                             <style>GOOGLE</style>
                         </googleJavaFormat>
                     </java>
-                    <scala>
-                        <scalafmt>
-                            <version>2.6.4</version>
-                            <file>${maven.multiModuleProjectDirectory}/.scalafmt.conf</file>
-                        </scalafmt>
-                    </scala>
                 </configuration>
                 <executions>
                     <execution>
