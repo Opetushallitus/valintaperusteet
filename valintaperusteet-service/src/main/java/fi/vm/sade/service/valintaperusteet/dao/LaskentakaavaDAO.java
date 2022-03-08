@@ -22,4 +22,6 @@ public interface LaskentakaavaDAO extends JpaDAO<Laskentakaava, Long> {
       String valintaryhmaOid,
       String hakukohdeOid,
       fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi tyyppi);
+
+  void flush();
 }

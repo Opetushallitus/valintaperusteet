@@ -680,9 +680,8 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
                 laskentakaavaDAO.update(k);
               });
       poistaFunktiokutsu(l.getFunktiokutsu());
-      // l.setKopioLaskentakaavasta(null);
-      // laskentakaavaDAO.update(l);
       laskentakaavaDAO.remove(l);
+      laskentakaavaDAO.flush();
       return true;
     } else {
       return false;
