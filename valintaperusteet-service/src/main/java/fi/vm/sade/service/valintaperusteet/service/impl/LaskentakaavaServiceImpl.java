@@ -673,11 +673,9 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
           .forEach(
               k -> {
                 LOGGER.info(
-                    String.format("Poistettavan laskentakaavan %s %s kopio on %s %s"),
-                    l.getId(),
-                    l.getNimi(),
-                    k.getId(),
-                    k.getNimi());
+                    String.format(
+                        "Poistettavan laskentakaavan %s %s kopio on %s %s",
+                        l.getId(), l.getNimi(), k.getId(), k.getNimi()));
                 k.setKopioLaskentakaavasta(null);
                 laskentakaavaDAO.update(k);
               });
