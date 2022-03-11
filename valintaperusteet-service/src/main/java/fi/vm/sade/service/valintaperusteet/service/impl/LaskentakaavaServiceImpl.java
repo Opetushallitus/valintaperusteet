@@ -661,18 +661,40 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
   public boolean poista(long id) {
     Optional<Laskentakaava> kaava = Optional.ofNullable(laskentakaavaDAO.getLaskentakaava(id));
     if (!kaava.isPresent()) {
+      LOGGER.info(String.format("Poistettavaa laskentakaavaa %s ei löytynyt", id));
       return false;
     }
+    LOGGER.info(
+        String.format(
+            "Yritetään poistaa laskentakaava %s %s", kaava.get().getId(), kaava.get().getNimi()));
     List<Jarjestyskriteeri> j = jarjestyskriteeriDAO.findByLaskentakaava(id);
     List<Hakijaryhma> h = hakijaryhmaDAO.findByLaskentakaava(id);
     List<Valintakoe> v = valintakoeDAO.findByLaskentakaava(id);
     List<Funktioargumentti> f = funktiokutsuDAO.findByLaskentakaavaChild(id);
     if (j.isEmpty() && h.isEmpty() && v.isEmpty() && f.isEmpty()) {
       Laskentakaava l = kaava.get();
+      l.getKopiot()
+          .forEach(
+              k -> {
+                LOGGER.info(
+                    String.format(
+                        "Poistettavan laskentakaavan %s %s kopio on %s %s",
+                        l.getId(), l.getNimi(), k.getId(), k.getNimi()));
+                k.setKopioLaskentakaavasta(null);
+                laskentakaavaDAO.update(k);
+              });
       poistaFunktiokutsu(l.getFunktiokutsu());
-      laskentakaavaDAO.remove(kaava.get());
+      laskentakaavaDAO.remove(l);
+      laskentakaavaDAO.flush();
+      LOGGER.info(
+          String.format(
+              "Laskentakaava %s %s on poistettu", kaava.get().getId(), kaava.get().getNimi()));
       return true;
     } else {
+      LOGGER.info(
+          String.format(
+              "Laskentakaavaa %s %s ei pystytty poistamaan",
+              kaava.get().getId(), kaava.get().getNimi()));
       return false;
     }
   }

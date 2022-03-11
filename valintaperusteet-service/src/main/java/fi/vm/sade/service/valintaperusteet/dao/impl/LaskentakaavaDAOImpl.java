@@ -88,4 +88,9 @@ public class LaskentakaavaDAOImpl extends AbstractJpaDAOImpl<Laskentakaava, Long
   protected JPAQuery from(EntityPath<?>... o) {
     return new JPAQuery(getEntityManager()).from(o);
   }
+
+  @Override
+  public void flush() {
+    getEntityManager().flush();
+  }
 }

@@ -256,11 +256,18 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
 
   @Override
   public void delete(String oid) {
+    LOGGER.info(String.format("Aloitetaan valintaryhmän %s poistaminen", oid));
     Optional<Valintaryhma> managedObject = Optional.ofNullable(haeValintaryhma(oid));
     if (managedObject.isPresent()) {
-      for (Laskentakaava laskentakaava : managedObject.get().getLaskentakaava()) {
-        laskentakaavaDAO.remove(laskentakaava);
-      }
+      LOGGER.info(
+          String.format(
+              "Poistetaan valintaryhmän %s %s laskentakaavat",
+              managedObject.get().getOid(), managedObject.get().getNimi()));
+      managedObject.get().getLaskentakaava().forEach(lk -> laskentakaavaService.poista(lk.getId()));
+      LOGGER.info(
+          String.format(
+              "Poistetaan valintaryhmä %s %s",
+              managedObject.get().getOid(), managedObject.get().getNimi()));
       valintaryhmaDAO.remove(managedObject.get());
     }
   }

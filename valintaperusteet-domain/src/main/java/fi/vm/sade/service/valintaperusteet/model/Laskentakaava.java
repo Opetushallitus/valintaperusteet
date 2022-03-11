@@ -50,6 +50,9 @@ public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
   @Enumerated(EnumType.STRING)
   private Funktiotyyppi tyyppi;
 
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "kopioLaskentakaavasta")
+  private Set<Laskentakaava> kopiot = new HashSet<>();
+
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "laskentakaava", cascade = CascadeType.PERSIST)
   private Set<Jarjestyskriteeri> jarjestyskriteerit = new HashSet<Jarjestyskriteeri>();
 
@@ -115,6 +118,14 @@ public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
 
   public void setJarjestyskriteerit(Set<Jarjestyskriteeri> jarjestyskriteerit) {
     this.jarjestyskriteerit = jarjestyskriteerit;
+  }
+
+  public Set<Laskentakaava> getKopiot() {
+    return kopiot;
+  }
+
+  public void setKopiot(Set<Laskentakaava> kopiot) {
+    this.kopiot = kopiot;
   }
 
   @Override
