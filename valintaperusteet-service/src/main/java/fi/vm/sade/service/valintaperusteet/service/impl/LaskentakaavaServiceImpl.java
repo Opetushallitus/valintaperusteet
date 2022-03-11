@@ -661,8 +661,12 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
   public boolean poista(long id) {
     Optional<Laskentakaava> kaava = Optional.ofNullable(laskentakaavaDAO.getLaskentakaava(id));
     if (!kaava.isPresent()) {
+      LOGGER.info(String.format("Poistettavaa laskentakaavaa %s ei löytynyt", id));
       return false;
     }
+    LOGGER.info(
+        String.format(
+            "Yritetään poistaa laskentakaava %s %s", kaava.get().getId(), kaava.get().getNimi()));
     List<Jarjestyskriteeri> j = jarjestyskriteeriDAO.findByLaskentakaava(id);
     List<Hakijaryhma> h = hakijaryhmaDAO.findByLaskentakaava(id);
     List<Valintakoe> v = valintakoeDAO.findByLaskentakaava(id);
@@ -682,8 +686,15 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
       poistaFunktiokutsu(l.getFunktiokutsu());
       laskentakaavaDAO.remove(l);
       laskentakaavaDAO.flush();
+      LOGGER.info(
+          String.format(
+              "Laskentakaava %s %s on poistettu", kaava.get().getId(), kaava.get().getNimi()));
       return true;
     } else {
+      LOGGER.info(
+          String.format(
+              "Laskentakaavaa %s %s ei pystytty poistamaan",
+              kaava.get().getId(), kaava.get().getNimi()));
       return false;
     }
   }
