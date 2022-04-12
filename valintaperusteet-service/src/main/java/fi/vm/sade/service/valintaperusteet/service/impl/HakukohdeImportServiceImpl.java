@@ -156,10 +156,19 @@ public class HakukohdeImportServiceImpl implements HakukohdeImportService {
     return uri.equals(KK_KOHDEJOUKKO);
   }
 
+  private String createHakukohteetKoodiUri(String koodiUri) {
+    if (koodiUri == null) return null;
+    String sanitizedKoodiuri = sanitizeKoodiUri(koodiUri);
+    if (!sanitizedKoodiuri.contains("_")) return sanitizedKoodiuri;
+    String hakukohteetKoodiUri =
+        "hakukohteet".concat(sanitizedKoodiuri.substring(sanitizedKoodiuri.indexOf("_")));
+    return hakukohteetKoodiUri;
+  }
+
   private Valintaryhma selvitaValintaryhma(HakukohdeImportDTO importData) {
     String hakukohdeOid = importData.getHakukohdeOid();
     String hakuOid = importData.getHakuOid();
-    String hakukohdekoodi = sanitizeKoodiUri(importData.getHakukohdekoodi().getKoodiUri());
+    String hakukohdekoodi = createHakukohteetKoodiUri(importData.getHakukohdekoodi().getKoodiUri());
     Set<String> valintakoekoodit =
         importData.getValintakoe().stream()
             .map(valintakoe -> sanitizeKoodiUri(valintakoe.getTyyppiUri()))
