@@ -12,6 +12,7 @@ import fi.vm.sade.service.valintaperusteet.model.QValintatapajono;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
@@ -237,6 +238,8 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
 
     List<ValinnanVaihe> aktiivisetValinnanVaiheet =
         valinnanVaiheet.stream().filter(ValinnanVaihe::getAktiivinen).collect(Collectors.toList());
+
+    if (aktiivisetValinnanVaiheet.isEmpty()) return Collections.emptyList();
 
     ValinnanVaihe lastValinnanVaihe =
         aktiivisetValinnanVaiheet.get(aktiivisetValinnanVaiheet.size() - 1);
