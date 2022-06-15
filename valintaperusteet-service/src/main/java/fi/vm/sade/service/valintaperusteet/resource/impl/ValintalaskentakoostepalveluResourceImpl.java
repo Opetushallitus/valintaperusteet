@@ -91,6 +91,9 @@ public class ValintalaskentakoostepalveluResourceImpl {
     long t0 = System.currentTimeMillis();
     try {
       return valintaperusteService.haeValintatapajonotSijoittelulle(hakukohdeOids);
+    } catch (Exception e) {
+      LOG.error("Hakukohteiden valintatapajonojen hakeminen epäonnistui.", e);
+      throw e;
     } finally {
       LOG.info("Valintatapajonojen haku kesti {}ms", (System.currentTimeMillis() - t0));
     }
