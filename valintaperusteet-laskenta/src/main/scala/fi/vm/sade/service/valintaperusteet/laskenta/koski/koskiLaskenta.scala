@@ -29,6 +29,7 @@ object KoskiLaskenta {
 
   val ammatillisenHuomioitavaOpiskeluoikeudenTyyppi: String = "ammatillinenkoulutus"
   val ammatillisenSuorituksenTyyppi: String = "ammatillinentutkinto"
+  val ammatillisenOsittaisenSuorituksenTyyppi: String = "ammatillinentutkintoosittainen"
 
   val ammatillisenHhuomioitavatKoulutustyypit: Set[AmmatillisenPerustutkinnonKoulutustyyppi] =
     Set(
@@ -62,6 +63,7 @@ object KoskiLaskenta {
         json = hakemus.koskiOpiskeluoikeudet,
         opiskeluoikeudenHaluttuTyyppi = ammatillisenHuomioitavaOpiskeluoikeudenTyyppi,
         suorituksenHaluttuTyyppi = ammatillisenSuorituksenTyyppi,
+        korotuksetSisältäväSuorituksenTyyppi = ammatillisenOsittaisenSuorituksenTyyppi,
         hakemus = hakemus
       )
       tutkintoJsonitHuomioimattaValmistumisenTakarajaa
@@ -233,6 +235,7 @@ object KoskiLaskenta {
         hakemus.koskiOpiskeluoikeudet,
         ammatillisenHuomioitavaOpiskeluoikeudenTyyppi,
         ammatillisenSuorituksenTyyppi,
+        ammatillisenOsittaisenSuorituksenTyyppi,
         hakemus
       )
       val suorituksenSallitutKoodit: Set[Int] =
@@ -275,10 +278,11 @@ object KoskiLaskenta {
       Nil
     } else {
       val oikeaOpiskeluoikeus: Json = Tutkinnot.etsiValmiitTutkinnot(
-        Some(tutkinnonValitsija.valmistumisenTakarajaPvm),
+        valmistumisenTakaraja = Some(tutkinnonValitsija.valmistumisenTakarajaPvm),
         json = hakemus.koskiOpiskeluoikeudet,
         opiskeluoikeudenHaluttuTyyppi = ammatillisenHuomioitavaOpiskeluoikeudenTyyppi,
         suorituksenHaluttuTyyppi = ammatillisenSuorituksenTyyppi,
+        korotuksetSisältäväSuorituksenTyyppi = ammatillisenOsittaisenSuorituksenTyyppi,
         hakemus = hakemus
       )(tutkinnonValitsija.tutkinnonIndeksi)
 

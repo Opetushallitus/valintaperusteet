@@ -4,7 +4,6 @@ import java.time.LocalDate
 import java.util.{HashMap => JHashMap}
 import java.util.{List => JList}
 import java.util.{Map => JMap}
-
 import fi.vm.sade.kaava.LaskentaTestUtil
 import fi.vm.sade.kaava.LaskentaTestUtil.TestHakemus
 import fi.vm.sade.kaava.LaskentaUtil.suomalainenPvmMuoto
@@ -18,6 +17,7 @@ import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu
 import fi.vm.sade.service.valintaperusteet.model.Syoteparametri
 import fi.vm.sade.service.valintaperusteet.model.TekstiRyhma
 import io.circe.Json
+import io.circe.optics.JsonPath
 import io.circe.parser
 import org.scalatest.funsuite.AnyFunSuite
 
@@ -40,6 +40,13 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
     Map(),
     suoritukset,
     loadJson("koski-kaksi_tutkintoa_toinen_vahvistettu_tulevaisuudessa.json")
+  )
+  private val hakemusJossaArvosanatJaKorotuksia = TestHakemus(
+    "9.2.4.1",
+    Nil,
+    Map(),
+    suoritukset,
+    loadJson("koski-arvosanat-ja-korotuksia.json")
   )
   private val reforminMukainenHakemus = TestHakemus(
     "2.3.4.5",
@@ -248,6 +255,20 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
       laskuKesäkuun2020Datalla
     )
     assert(BigDecimal(tulos2_2020_kesäkuu.get) == BigDecimal("108"))
+  }
+
+  test("Ammatillinen tutkinto arvosanoilla ja arvosanojen korotuksia") {
+    val (tulos, _) = Laskin.laske(
+      hakukohde,
+      hakemusJossaArvosanatJaKorotuksia,
+      Laskentadomainkonvertteri.muodostaLukuarvolasku(
+        createAmmatillisenTutkintojenKokoHierarkia(
+          valmistumisenTakaraja = LocalDate.of(2019, 7, 31),
+          dataKoskessaViimeistään = LocalDate.of(2019, 7, 31)
+        )
+      )
+    )
+    assert(BigDecimal(tulos.get) == BigDecimal("12"))
   }
 
   test(
