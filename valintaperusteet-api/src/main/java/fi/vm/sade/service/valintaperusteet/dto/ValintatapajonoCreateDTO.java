@@ -50,6 +50,9 @@ public class ValintatapajonoCreateDTO {
   @ApiModelProperty(value = "Kuinka monta päivää varasijoja täytetään", required = true)
   private Integer varasijaTayttoPaivat = 0;
 
+  @ApiModelProperty(value = "Merkitäänkö myöhästyneet vastaanottajat automaattisesti", required = true)
+  private Boolean merkitseMyohAuto = false;
+
   @ApiModelProperty(value = "Täytetäänkö poissaolevia", required = true)
   private Boolean poissaOlevaTaytto = false;
 
@@ -151,6 +154,14 @@ public class ValintatapajonoCreateDTO {
 
   public void setVarasijaTayttoPaivat(Integer varasijaTayttoPaivat) {
     this.varasijaTayttoPaivat = varasijaTayttoPaivat;
+  }
+
+  public Boolean getMerkitseMyohAuto() {
+    return merkitseMyohAuto;
+  }
+
+  public void setMerkitseMyohAuto(Boolean merkitseMyohAuto) {
+    this.merkitseMyohAuto = merkitseMyohAuto;
   }
 
   public Boolean getPoissaOlevaTaytto() {
@@ -262,6 +273,8 @@ public class ValintatapajonoCreateDTO {
         + varasijat
         + ", varasijaTayttoPaivat="
         + varasijaTayttoPaivat
+        + ", merkitseMyohAuto="
+        + merkitseMyohAuto
         + ", poissaOlevaTaytto="
         + poissaOlevaTaytto
         + ", poistetaankoHylatyt="

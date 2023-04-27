@@ -61,6 +61,9 @@ public class Valintatapajono extends BaseEntity
   @Column(name = "ei_lasketa_paivamaaran_jalkeen")
   private Date eiLasketaPaivamaaranJalkeen;
 
+  @Column(name = "merkitse_myoh_auto")
+  private Boolean merkitseMyohAuto = false;
+
   @Column(name = "poissa_oleva_taytto")
   private Boolean poissaOlevaTaytto = false;
 
@@ -252,6 +255,14 @@ public class Valintatapajono extends BaseEntity
 
   public void setKaytetaanValintalaskentaa(Boolean kaytetaanValintalaskentaa) {
     this.kaytetaanValintalaskentaa = kaytetaanValintalaskentaa;
+  }
+
+  public Boolean getMerkitseMyohAuto() {
+    return merkitseMyohAuto;
+  }
+
+  public void setMerkitseMyohAuto(Boolean merkitseMyohAuto) {
+    this.merkitseMyohAuto = merkitseMyohAuto;
   }
 
   public Boolean getPoissaOlevaTaytto() {
