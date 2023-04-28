@@ -50,7 +50,9 @@ public class ValintatapajonoCreateDTO {
   @ApiModelProperty(value = "Kuinka monta päivää varasijoja täytetään", required = true)
   private Integer varasijaTayttoPaivat = 0;
 
-  @ApiModelProperty(value = "Merkitäänkö myöhästyneet vastaanottajat automaattisesti", required = true)
+  @ApiModelProperty(
+      value = "Merkitäänkö myöhästyneet vastaanottajat automaattisesti",
+      required = true)
   private Boolean merkitseMyohAuto = false;
 
   @ApiModelProperty(value = "Täytetäänkö poissaolevia", required = true)
