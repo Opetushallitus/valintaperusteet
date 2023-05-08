@@ -48,6 +48,20 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
     suoritukset,
     loadJson("koski-arvosanat-ja-korotuksia.json")
   )
+  private val hakemusJossaArvosanatEiTäsmääviäKorotuksia = TestHakemus(
+    "9.2.4.1",
+    Nil,
+    Map(),
+    suoritukset,
+    loadJson("koski-arvosanat-ja-korotuksia-oid-ei-tasmaa.json")
+  )
+  private val hakemusJossaArvosanatEiValmiitaKorotuksia = TestHakemus(
+    "9.2.4.1",
+    Nil,
+    Map(),
+    suoritukset,
+    loadJson("koski-arvosanat-ja-ei-valmiita-korotuksia.json")
+  )
   private val reforminMukainenHakemus = TestHakemus(
     "2.3.4.5",
     Nil,
@@ -257,7 +271,7 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
     assert(BigDecimal(tulos2_2020_kesäkuu.get) == BigDecimal("108"))
   }
 
-  test("Ammatillinen tutkinto arvosanoilla ja arvosanojen korotuksia") {
+  test("Ammatillinen tutkinto suoritettu ja arvosanojen korotuksia") {
     val (tulos, _) = Laskin.laske(
       hakukohde,
       hakemusJossaArvosanatJaKorotuksia,
@@ -269,6 +283,48 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
       )
     )
     assert(BigDecimal(tulos.get) == BigDecimal("12"))
+  }
+
+  test("Ammatillinen tutkinto suoritettu ja arvosanojen korotukset toiseen opiskeluoikeuteen") {
+    val (tulos, _) = Laskin.laske(
+      hakukohde,
+      hakemusJossaArvosanatEiTäsmääviäKorotuksia,
+      Laskentadomainkonvertteri.muodostaLukuarvolasku(
+        createAmmatillisenTutkintojenKokoHierarkia(
+          valmistumisenTakaraja = LocalDate.of(2019, 7, 31),
+          dataKoskessaViimeistään = LocalDate.of(2019, 7, 31)
+        )
+      )
+    )
+    assert(BigDecimal(tulos.get) == BigDecimal("0"))
+  }
+
+  test("Ammatillinen tutkinto suoritettu ja korotukset ei valmiita") {
+    val (tulos, _) = Laskin.laske(
+      hakukohde,
+      hakemusJossaArvosanatEiValmiitaKorotuksia,
+      Laskentadomainkonvertteri.muodostaLukuarvolasku(
+        createAmmatillisenTutkintojenKokoHierarkia(
+          valmistumisenTakaraja = LocalDate.of(2019, 7, 31),
+          dataKoskessaViimeistään = LocalDate.of(2019, 7, 31)
+        )
+      )
+    )
+    assert(BigDecimal(tulos.get) == BigDecimal("0"))
+  }
+
+  test("Ammatillinen tutkinto suoritettu ja arvosanojen korotukset tulevasuudessa") {
+    val (tulos, _) = Laskin.laske(
+      hakukohde,
+      hakemusJossaArvosanatJaKorotuksia,
+      Laskentadomainkonvertteri.muodostaLukuarvolasku(
+        createAmmatillisenTutkintojenKokoHierarkia(
+          valmistumisenTakaraja = LocalDate.of(2019, 4, 30),
+          dataKoskessaViimeistään = LocalDate.of(2019, 4, 30)
+        )
+      )
+    )
+    assert(BigDecimal(tulos.get) == BigDecimal("0"))
   }
 
   test(
