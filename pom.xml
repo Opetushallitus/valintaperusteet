@@ -677,6 +677,25 @@ buildTtime=${maven.build.timestamp}
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
             </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.10</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
         <pluginManagement>
             <plugins>
@@ -750,7 +769,7 @@ buildTtime=${maven.build.timestamp}
                 <enabled>true</enabled>
             </snapshots>
             <id>oph-sade-artifactory-snapshots</id>
-            <url>https://artifactory.oph.ware.fi/artifactory/oph-sade-snapshot-local</url>
+            <url>https://artifactory.opintopolku.fi/artifactory/oph-sade-snapshot-local</url>
         </repository>
         <repository>
             <id>repository.jboss.org</id>
