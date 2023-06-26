@@ -3,7 +3,7 @@ package fi.vm.sade.service.valintaperusteet.dao;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-import com.mysema.query.Tuple;
+import com.querydsl.core.Tuple;
 import fi.vm.sade.kaava.Funktiokuvaaja;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi;

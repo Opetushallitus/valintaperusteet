@@ -1,7 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.dao.impl;
 
-import com.mysema.query.jpa.impl.JPAQuery;
-import com.mysema.query.types.EntityPath;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import fi.vm.sade.service.valintaperusteet.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmatyyppikoodiDAO;
 import fi.vm.sade.service.valintaperusteet.model.Hakijaryhmatyyppikoodi;
@@ -15,14 +14,14 @@ import org.springframework.stereotype.Repository;
 public class HakijaryhmatyyppikoodiDAOImpl extends AbstractJpaDAOImpl<Hakijaryhmatyyppikoodi, Long>
     implements HakijaryhmatyyppikoodiDAO {
 
-  protected JPAQuery from(EntityPath<?>... o) {
-    return new JPAQuery(getEntityManager()).from(o);
+  protected JPAQueryFactory queryFactory() {
+    return new JPAQueryFactory(getEntityManager());
   }
 
   @Override
   public Hakijaryhmatyyppikoodi readByUri(String koodiUri) {
     QHakijaryhmatyyppikoodi koodi = QHakijaryhmatyyppikoodi.hakijaryhmatyyppikoodi;
-    return from(koodi).where(koodi.uri.eq(koodiUri)).singleResult(koodi);
+    return queryFactory().selectFrom(koodi).where(koodi.uri.eq(koodiUri)).fetchFirst();
   }
 
   @Override
@@ -31,7 +30,7 @@ public class HakijaryhmatyyppikoodiDAOImpl extends AbstractJpaDAOImpl<Hakijaryhm
       return new ArrayList<Hakijaryhmatyyppikoodi>();
     }
     QHakijaryhmatyyppikoodi koodi = QHakijaryhmatyyppikoodi.hakijaryhmatyyppikoodi;
-    return from(koodi).where(koodi.uri.in(koodiUris)).list(koodi);
+    return queryFactory().selectFrom(koodi).where(koodi.uri.in(koodiUris)).fetch();
   }
 
   @Override

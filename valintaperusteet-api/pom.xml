@@ -4,8 +4,8 @@
 	<parent>
 		<artifactId>valintaperusteet</artifactId>
 		<groupId>fi.vm.sade.valintaperusteet</groupId>
-		<version>5.18-SNAPSHOT</version>
-		<relativePath>..</relativePath>
+		<version>6.0-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 	
 	<artifactId>valintaperusteet-api</artifactId>
@@ -34,15 +34,4 @@
             <artifactId>javax.servlet-api</artifactId>
         </dependency>
     </dependencies>
-	<build>
-        <plugins>
-          <plugin>
-              <artifactId>maven-compiler-plugin</artifactId>
-              <configuration>
-                <source>1.8</source>
-                <target>1.8</target>
-              </configuration>
-          </plugin>
-        </plugins>
-    </build>
 </project>

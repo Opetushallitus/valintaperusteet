@@ -1,8 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.dao.impl;
 
-import com.mysema.query.jpa.JPASubQuery;
-import com.mysema.query.jpa.impl.JPAQuery;
-import com.mysema.query.types.EntityPath;
+import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import fi.vm.sade.service.valintaperusteet.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.JarjestyskriteeriDAO;
 import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
@@ -22,12 +21,8 @@ import org.springframework.stereotype.Repository;
 public class JarjestyskriteeriDAOImpl extends AbstractJpaDAOImpl<Jarjestyskriteeri, Long>
     implements JarjestyskriteeriDAO {
 
-  protected JPAQuery from(EntityPath<?>... o) {
-    return new JPAQuery(getEntityManager()).from(o);
-  }
-
-  protected JPASubQuery subQuery() {
-    return new JPASubQuery();
+  protected JPAQueryFactory queryFactory() {
+    return new JPAQueryFactory(getEntityManager());
   }
 
   @Override
@@ -35,17 +30,18 @@ public class JarjestyskriteeriDAOImpl extends AbstractJpaDAOImpl<Jarjestyskritee
     QJarjestyskriteeri jk = QJarjestyskriteeri.jarjestyskriteeri;
     QValintatapajono j = QValintatapajono.valintatapajono;
     return LinkitettavaJaKopioitavaUtil.jarjesta(
-        from(jk)
+        queryFactory()
+            .selectFrom(jk)
             .join(jk.valintatapajono, j)
-            .fetch()
+            .fetchJoin()
             .leftJoin(jk.edellinen)
-            .fetch()
+            .fetchJoin()
             .leftJoin(jk.master)
-            .fetch()
+            .fetchJoin()
             .leftJoin(jk.laskentakaava)
-            .fetch()
+            .fetchJoin()
             .where(j.oid.eq(oid))
-            .list(jk));
+            .fetch());
   }
 
   @Override
@@ -55,20 +51,21 @@ public class JarjestyskriteeriDAOImpl extends AbstractJpaDAOImpl<Jarjestyskritee
     QValinnanVaihe vv = QValinnanVaihe.valinnanVaihe;
     QValintaryhma vr = QValintaryhma.valintaryhma;
     QHakukohdeViite hkv = QHakukohdeViite.hakukohdeViite;
-    return from(jk)
+    return queryFactory()
+        .selectFrom(jk)
         .join(jk.valintatapajono, vtj)
         .join(vtj.valinnanVaihe, vv)
         .join(vv.hakukohdeViite, hkv)
         .leftJoin(vv.valintaryhma, vr)
         .where(hkv.oid.eq(oid))
         .distinct()
-        .list(jk);
+        .fetch();
   }
 
   @Override
   public Jarjestyskriteeri readByOid(String oid) {
     QJarjestyskriteeri jk = QJarjestyskriteeri.jarjestyskriteeri;
-    return from(jk).where(jk.oid.eq(oid)).singleResult(jk);
+    return queryFactory().selectFrom(jk).where(jk.oid.eq(oid)).fetchFirst();
   }
 
   @Override
@@ -76,34 +73,38 @@ public class JarjestyskriteeriDAOImpl extends AbstractJpaDAOImpl<Jarjestyskritee
       String valintatapajonoOid) {
     QValintatapajono jono = QValintatapajono.valintatapajono;
     QJarjestyskriteeri jk = QJarjestyskriteeri.jarjestyskriteeri;
-    return from(jono)
+    return queryFactory()
+        .select(jk)
+        .from(jono)
         .leftJoin(jono.jarjestyskriteerit, jk)
         .where(
             jk.id
-                .notIn(subQuery().from(jk).where(jk.edellinen.isNotNull()).list(jk.edellinen.id))
+                .notIn(
+                    JPAExpressions.select(jk.edellinen.id).from(jk).where(jk.edellinen.isNotNull()))
                 .and(jono.oid.eq(valintatapajonoOid)))
-        .singleResult(jk);
+        .fetchFirst();
   }
 
   @Override
   public List<Jarjestyskriteeri> findByLaskentakaava(long id) {
     QJarjestyskriteeri jk = QJarjestyskriteeri.jarjestyskriteeri;
     QLaskentakaava lk = QLaskentakaava.laskentakaava;
-    return from(jk).join(jk.laskentakaava, lk).where(lk.id.eq(id)).list(jk);
+    return queryFactory().selectFrom(jk).join(jk.laskentakaava, lk).where(lk.id.eq(id)).fetch();
   }
 
   private List<Jarjestyskriteeri> findByJono(Valintatapajono jono) {
     QJarjestyskriteeri jarjestyskriteeri = QJarjestyskriteeri.jarjestyskriteeri;
-    return from(jarjestyskriteeri)
+    return queryFactory()
+        .selectFrom(jarjestyskriteeri)
         .leftJoin(jarjestyskriteeri.edellinen)
-        .fetch()
+        .fetchJoin()
         .leftJoin(jarjestyskriteeri.master)
-        .fetch()
+        .fetchJoin()
         .leftJoin(jarjestyskriteeri.laskentakaava)
-        .fetch()
+        .fetchJoin()
         .where(jarjestyskriteeri.valintatapajono.id.eq(jono.getId()))
         .distinct()
-        .list(jarjestyskriteeri);
+        .fetch();
   }
 
   @Override
@@ -129,9 +130,10 @@ public class JarjestyskriteeriDAOImpl extends AbstractJpaDAOImpl<Jarjestyskritee
 
     QJarjestyskriteeri seuraava = QJarjestyskriteeri.jarjestyskriteeri;
     Jarjestyskriteeri seuraavaJarjestyskriteeri =
-        from(seuraava)
+        queryFactory()
+            .selectFrom(seuraava)
             .where(seuraava.edellinen.id.eq(jarjestyskriteeri.getId()))
-            .singleResult(seuraava);
+            .fetchFirst();
 
     if (seuraavaJarjestyskriteeri != null) {
       Jarjestyskriteeri edellinen = jarjestyskriteeri.getEdellinen();
@@ -151,7 +153,8 @@ public class JarjestyskriteeriDAOImpl extends AbstractJpaDAOImpl<Jarjestyskritee
   public Jarjestyskriteeri insert(Jarjestyskriteeri uusi) {
     QJarjestyskriteeri jarjestyskriteeri = QJarjestyskriteeri.jarjestyskriteeri;
     Jarjestyskriteeri seuraava =
-        from(jarjestyskriteeri)
+        queryFactory()
+            .selectFrom(jarjestyskriteeri)
             .where(
                 jarjestyskriteeri
                     .valintatapajono
@@ -161,7 +164,7 @@ public class JarjestyskriteeriDAOImpl extends AbstractJpaDAOImpl<Jarjestyskritee
                         uusi.getEdellinen() == null
                             ? jarjestyskriteeri.edellinen.isNull()
                             : jarjestyskriteeri.edellinen.id.eq(uusi.getEdellinen().getId())))
-            .singleResult(jarjestyskriteeri);
+            .fetchFirst();
     if (seuraava != null && uusi.getEdellinen() == null) {
       seuraava.setEdellinen(seuraava);
       getEntityManager().flush();

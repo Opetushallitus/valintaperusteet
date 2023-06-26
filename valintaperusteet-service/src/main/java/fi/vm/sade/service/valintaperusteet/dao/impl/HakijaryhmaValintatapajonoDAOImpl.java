@@ -1,8 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.dao.impl;
 
-import com.mysema.query.jpa.JPASubQuery;
-import com.mysema.query.jpa.impl.JPAQuery;
-import com.mysema.query.types.EntityPath;
+import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import fi.vm.sade.service.valintaperusteet.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaValintatapajonoDAO;
 import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
@@ -21,12 +20,8 @@ import org.springframework.stereotype.Repository;
 public class HakijaryhmaValintatapajonoDAOImpl
     extends AbstractJpaDAOImpl<HakijaryhmaValintatapajono, Long>
     implements HakijaryhmaValintatapajonoDAO {
-  protected JPAQuery from(EntityPath<?>... o) {
-    return new JPAQuery(getEntityManager()).from(o);
-  }
-
-  private JPASubQuery subQuery() {
-    return new JPASubQuery();
+  protected JPAQueryFactory queryFactory() {
+    return new JPAQueryFactory(getEntityManager());
   }
 
   @Override
@@ -36,25 +31,26 @@ public class HakijaryhmaValintatapajonoDAOImpl
     QHakijaryhma h = QHakijaryhma.hakijaryhma;
     QValintatapajono v = QValintatapajono.valintatapajono;
 
-    return from(hv)
+    return queryFactory()
+        .selectFrom(hv)
         .where(hv.oid.eq(oid))
         .leftJoin(hv.hakijaryhma, h)
-        .fetch()
+        .fetchJoin()
         .leftJoin(h.jonot)
-        .fetch()
+        .fetchJoin()
         .leftJoin(hv.valintatapajono, v)
-        .fetch()
+        .fetchJoin()
         .leftJoin(v.hakijaryhmat)
-        .fetch()
+        .fetchJoin()
         .leftJoin(v.valinnanVaihe)
-        .fetch()
+        .fetchJoin()
         .leftJoin(hv.master)
-        .fetch()
+        .fetchJoin()
         .leftJoin(hv.edellinen)
-        .fetch()
+        .fetchJoin()
         .leftJoin(hv.hakijaryhmatyyppikoodi)
-        .fetch()
-        .singleResult(hv);
+        .fetchJoin()
+        .fetchFirst();
   }
 
   @Override
@@ -63,24 +59,25 @@ public class HakijaryhmaValintatapajonoDAOImpl
     QValintatapajono v = QValintatapajono.valintatapajono;
 
     return LinkitettavaJaKopioitavaUtil.jarjesta(
-        from(hv)
+        queryFactory()
+            .selectFrom(hv)
             .join(hv.valintatapajono, v)
-            .fetch()
+            .fetchJoin()
             .leftJoin(hv.hakijaryhma)
-            .fetch()
+            .fetchJoin()
             .leftJoin(v.hakijaryhmat)
-            .fetch()
+            .fetchJoin()
             .leftJoin(v.valinnanVaihe)
-            .fetch()
+            .fetchJoin()
             .leftJoin(hv.master)
-            .fetch()
+            .fetchJoin()
             .leftJoin(hv.edellinen)
-            .fetch()
+            .fetchJoin()
             .leftJoin(hv.hakijaryhmatyyppikoodi)
-            .fetch()
+            .fetchJoin()
             .where(v.oid.eq(oid))
             .distinct()
-            .list(hv));
+            .fetch());
   }
 
   @Override
@@ -89,26 +86,27 @@ public class HakijaryhmaValintatapajonoDAOImpl
     QHakijaryhma h = QHakijaryhma.hakijaryhma;
     QValintatapajono v = QValintatapajono.valintatapajono;
 
-    return from(hv)
+    return queryFactory()
+        .selectFrom(hv)
         .join(hv.valintatapajono, v)
-        .fetch()
+        .fetchJoin()
         .leftJoin(hv.hakijaryhma, h)
-        .fetch()
+        .fetchJoin()
         .leftJoin(h.jonot)
-        .fetch()
+        .fetchJoin()
         .leftJoin(v.hakijaryhmat)
-        .fetch()
+        .fetchJoin()
         .leftJoin(v.valinnanVaihe)
-        .fetch()
+        .fetchJoin()
         .leftJoin(hv.master)
-        .fetch()
+        .fetchJoin()
         .leftJoin(hv.edellinen)
-        .fetch()
+        .fetchJoin()
         .leftJoin(hv.hakijaryhmatyyppikoodi)
-        .fetch()
+        .fetchJoin()
         .where(v.oid.in(oids))
         .distinct()
-        .list(hv);
+        .fetch();
   }
 
   @Override
@@ -117,22 +115,23 @@ public class HakijaryhmaValintatapajonoDAOImpl
     QHakukohdeViite v = QHakukohdeViite.hakukohdeViite;
 
     return LinkitettavaJaKopioitavaUtil.jarjesta(
-        from(hv)
+        queryFactory()
+            .selectFrom(hv)
             .join(hv.hakukohdeViite, v)
-            .fetch()
+            .fetchJoin()
             .leftJoin(hv.hakijaryhma)
-            .fetch()
+            .fetchJoin()
             .leftJoin(v.hakijaryhmat)
-            .fetch()
+            .fetchJoin()
             .leftJoin(hv.master)
-            .fetch()
+            .fetchJoin()
             .leftJoin(hv.edellinen)
-            .fetch()
+            .fetchJoin()
             .leftJoin(hv.hakijaryhmatyyppikoodi)
-            .fetch()
+            .fetchJoin()
             .where(v.oid.eq(oid))
             .distinct()
-            .list(hv));
+            .fetch());
   }
 
   @Override
@@ -141,24 +140,25 @@ public class HakijaryhmaValintatapajonoDAOImpl
     QHakijaryhma h = QHakijaryhma.hakijaryhma;
     QHakukohdeViite v = QHakukohdeViite.hakukohdeViite;
 
-    return from(hv)
+    return queryFactory()
+        .selectFrom(hv)
         .join(hv.hakukohdeViite, v)
-        .fetch()
+        .fetchJoin()
         .leftJoin(hv.hakijaryhma, h)
-        .fetch()
+        .fetchJoin()
         .leftJoin(h.jonot)
-        .fetch()
+        .fetchJoin()
         .leftJoin(v.hakijaryhmat)
-        .fetch()
+        .fetchJoin()
         .leftJoin(hv.master)
-        .fetch()
+        .fetchJoin()
         .leftJoin(hv.edellinen)
-        .fetch()
+        .fetchJoin()
         .leftJoin(hv.hakijaryhmatyyppikoodi)
-        .fetch()
+        .fetchJoin()
         .where(v.oid.in(oids))
         .distinct()
-        .list(hv);
+        .fetch();
   }
 
   @Override
@@ -168,18 +168,18 @@ public class HakijaryhmaValintatapajonoDAOImpl
         QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
     QHakijaryhmaValintatapajono seuraava = QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
 
-    return from(hakijaryhmajono)
+    return queryFactory()
+        .selectFrom(hakijaryhmajono)
         .join(hakijaryhmajono.hakukohdeViite, hakukohde)
         .where(
             hakukohde
                 .oid
                 .eq(hakukohdeOid)
                 .and(
-                    subQuery()
-                        .from(seuraava)
+                    JPAExpressions.selectFrom(seuraava)
                         .where(seuraava.edellinen.id.eq(hakijaryhmajono.id))
                         .notExists()))
-        .singleResult(hakijaryhmajono);
+        .fetchFirst();
   }
 
   @Override
@@ -190,18 +190,18 @@ public class HakijaryhmaValintatapajonoDAOImpl
         QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
     QHakijaryhmaValintatapajono seuraava = QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
 
-    return from(hakijaryhmajono)
+    return queryFactory()
+        .selectFrom(hakijaryhmajono)
         .join(hakijaryhmajono.valintatapajono, valintatapajono)
         .where(
             valintatapajono
                 .oid
                 .eq(valintatapajonoOid)
                 .and(
-                    subQuery()
-                        .from(seuraava)
+                    JPAExpressions.selectFrom(seuraava)
                         .where(seuraava.edellinen.id.eq(hakijaryhmajono.id))
                         .notExists()))
-        .singleResult(hakijaryhmajono);
+        .fetchFirst();
   }
 
   @Override
@@ -211,18 +211,19 @@ public class HakijaryhmaValintatapajonoDAOImpl
         QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
     return LinkitettavaJaKopioitavaUtil.jarjestaUudelleen(
         getEntityManager(),
-        from(hakijaryhmaValintatapajono)
+        queryFactory()
+            .selectFrom(hakijaryhmaValintatapajono)
             .leftJoin(hakijaryhmaValintatapajono.hakijaryhma)
-            .fetch()
+            .fetchJoin()
             .leftJoin(hakijaryhmaValintatapajono.master)
-            .fetch()
+            .fetchJoin()
             .leftJoin(hakijaryhmaValintatapajono.edellinen)
-            .fetch()
+            .fetchJoin()
             .leftJoin(hakijaryhmaValintatapajono.hakijaryhmatyyppikoodi)
-            .fetch()
+            .fetchJoin()
             .where(hakijaryhmaValintatapajono.hakukohdeViite.id.eq(hakukohdeViite.getId()))
             .distinct()
-            .list(hakijaryhmaValintatapajono),
+            .fetch(),
         uusiJarjestys);
   }
 
@@ -235,9 +236,10 @@ public class HakijaryhmaValintatapajonoDAOImpl
 
     QHakijaryhmaValintatapajono seuraava = QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
     HakijaryhmaValintatapajono seuraavaHakijaryhmaValintatapajono =
-        from(seuraava)
+        queryFactory()
+            .selectFrom(seuraava)
             .where(seuraava.edellinen.id.eq(hakijaryhmaValintatapajono.getId()))
-            .singleResult(seuraava);
+            .fetchFirst();
 
     if (seuraavaHakijaryhmaValintatapajono != null) {
       HakijaryhmaValintatapajono edellinen = hakijaryhmaValintatapajono.getEdellinen();
@@ -258,7 +260,8 @@ public class HakijaryhmaValintatapajonoDAOImpl
     QHakijaryhmaValintatapajono hakijaryhmaValintatapajono =
         QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
     HakijaryhmaValintatapajono seuraava =
-        from(hakijaryhmaValintatapajono)
+        queryFactory()
+            .selectFrom(hakijaryhmaValintatapajono)
             .where(
                 (uusi.getHakukohdeViite() == null
                         ? hakijaryhmaValintatapajono.valintatapajono.id.eq(
@@ -270,7 +273,7 @@ public class HakijaryhmaValintatapajonoDAOImpl
                             ? hakijaryhmaValintatapajono.edellinen.isNull()
                             : hakijaryhmaValintatapajono.edellinen.id.eq(
                                 uusi.getEdellinen().getId())))
-            .singleResult(hakijaryhmaValintatapajono);
+            .fetchFirst();
     if (seuraava != null && uusi.getEdellinen() == null) {
       seuraava.setEdellinen(seuraava);
       getEntityManager().flush();

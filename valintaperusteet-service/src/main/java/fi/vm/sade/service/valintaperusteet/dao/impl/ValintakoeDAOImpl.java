@@ -1,8 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.dao.impl;
 
-import com.mysema.query.jpa.JPASubQuery;
-import com.mysema.query.jpa.impl.JPAQuery;
-import com.mysema.query.types.EntityPath;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import fi.vm.sade.service.valintaperusteet.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.ValintakoeDAO;
 import fi.vm.sade.service.valintaperusteet.model.QValinnanVaihe;
@@ -20,69 +18,69 @@ public class ValintakoeDAOImpl extends AbstractJpaDAOImpl<Valintakoe, Long>
   public List<Valintakoe> findByValinnanVaihe(String valinnanVaiheOid) {
     QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
     QValintakoe valintakoe = QValintakoe.valintakoe;
-    return from(valinnanVaihe)
+    return queryFactory()
+        .select(valintakoe)
+        .from(valinnanVaihe)
         .innerJoin(valinnanVaihe.valintakokeet, valintakoe)
         .leftJoin(valintakoe.laskentakaava)
-        .fetch()
+        .fetchJoin()
         .leftJoin(valintakoe.masterValintakoe)
-        .fetch()
+        .fetchJoin()
         .where(valinnanVaihe.oid.eq(valinnanVaiheOid))
         .distinct()
-        .list(valintakoe);
+        .fetch();
   }
 
   @Override
   public Valintakoe readByOid(String oid) {
     QValintakoe valintakoe = QValintakoe.valintakoe;
-    return from(valintakoe)
+    return queryFactory()
+        .selectFrom(valintakoe)
         .leftJoin(valintakoe.laskentakaava)
-        .fetch()
+        .fetchJoin()
         .leftJoin(valintakoe.masterValintakoe)
-        .fetch()
+        .fetchJoin()
         .where(valintakoe.oid.eq(oid))
-        .singleResult(valintakoe);
+        .fetchFirst();
   }
 
   @Override
   public List<Valintakoe> readByOids(Collection<String> oids) {
     QValintakoe valintakoe = QValintakoe.valintakoe;
-    return from(valintakoe)
+    return queryFactory()
+        .selectFrom(valintakoe)
         .leftJoin(valintakoe.laskentakaava)
-        .fetch()
+        .fetchJoin()
         .leftJoin(valintakoe.masterValintakoe)
-        .fetch()
+        .fetchJoin()
         .where(valintakoe.oid.in(oids))
-        .listResults(valintakoe)
-        .getResults();
+        .fetch();
   }
 
   @Override
   public List<Valintakoe> readByTunnisteet(Collection<String> tunnisteet) {
     QValintakoe valintakoe = QValintakoe.valintakoe;
-    return from(valintakoe)
+    return queryFactory()
+        .selectFrom(valintakoe)
         .leftJoin(valintakoe.laskentakaava)
-        .fetch()
+        .fetchJoin()
         .leftJoin(valintakoe.masterValintakoe)
-        .fetch()
+        .fetchJoin()
         .where(valintakoe.tunniste.in(tunnisteet))
-        .listResults(valintakoe)
-        .getResults();
+        .fetch();
   }
 
   @Override
   public List<Valintakoe> findByLaskentakaava(long id) {
     QValintakoe valintakoe = QValintakoe.valintakoe;
-    return from(valintakoe)
+    return queryFactory()
+        .selectFrom(valintakoe)
         .leftJoin(valintakoe.laskentakaava)
         .where(valintakoe.laskentakaava.id.eq(id))
-        .list(valintakoe);
+        .fetch();
   }
 
-  protected JPAQuery from(EntityPath<?>... o) {
-    return new JPAQuery(getEntityManager()).from(o);
-  }
-
-  protected JPASubQuery subQuery() {
-    return new JPASubQuery();
+  protected JPAQueryFactory queryFactory() {
+    return new JPAQueryFactory(getEntityManager());
   }
 }
