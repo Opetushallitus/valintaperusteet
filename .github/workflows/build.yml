@@ -8,7 +8,7 @@ on:
 
 jobs:
   test-and-build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
       - uses: actions/checkout@v2
@@ -51,7 +51,7 @@ jobs:
 
   deploy-container:
     needs: test-and-build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
       - uses: actions/checkout@v2
@@ -86,7 +86,7 @@ jobs:
 
   deploy-jar-library:
     needs: test-and-build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
       - uses: actions/checkout@v2
