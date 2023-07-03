@@ -166,6 +166,7 @@ public class HakukohdeServiceImpl implements HakukohdeService {
     dto.setEiVarasijatayttoa(valintatapajono.getEiVarasijatayttoa());
     dto.setKaikkiEhdonTayttavatHyvaksytaan(valintatapajono.getKaikkiEhdonTayttavatHyvaksytaan());
     dto.setVarasijat(valintatapajono.getVarasijat());
+    dto.setMerkitseMyohAuto(valintatapajono.getMerkitseMyohAuto());
     dto.setPoissaOlevaTaytto(valintatapajono.getPoissaOlevaTaytto());
     dto.setPoistetaankoHylatyt(valintatapajono.isPoistetaankoHylatyt());
     dto.setVarasijojaKaytetaanAlkaen(valintatapajono.getVarasijojaKaytetaanAlkaen());

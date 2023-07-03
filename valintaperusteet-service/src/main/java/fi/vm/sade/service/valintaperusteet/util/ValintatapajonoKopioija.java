@@ -44,6 +44,9 @@ public class ValintatapajonoKopioija implements Kopioija<Valintatapajono> {
     if (from.getKaikkiEhdonTayttavatHyvaksytaan() != null) {
       to.setKaikkiEhdonTayttavatHyvaksytaan(from.getKaikkiEhdonTayttavatHyvaksytaan());
     }
+    if (from.getMerkitseMyohAuto() != null) {
+      to.setMerkitseMyohAuto(from.getMerkitseMyohAuto());
+    }
     // VT-657
     to.setVarasijanTayttojono(from.getVarasijanTayttojono());
     if (from.getPoissaOlevaTaytto() != null) {
@@ -97,6 +100,9 @@ public class ValintatapajonoKopioija implements Kopioija<Valintatapajono> {
           paivitettyMaster.getKaikkiEhdonTayttavatHyvaksytaan());
     }
     kopio.setPoistetaankoHylatyt(paivitettyMaster.isPoistetaankoHylatyt());
+    if (kopio.getMerkitseMyohAuto().equals(alkuperainenMaster.getMerkitseMyohAuto())) {
+      kopio.setMerkitseMyohAuto(paivitettyMaster.getMerkitseMyohAuto());
+    }
     // VT-657
     // Pitää kopioida kopion kopio
     if (kopio.getPoissaOlevaTaytto().equals(alkuperainenMaster.getPoissaOlevaTaytto())) {

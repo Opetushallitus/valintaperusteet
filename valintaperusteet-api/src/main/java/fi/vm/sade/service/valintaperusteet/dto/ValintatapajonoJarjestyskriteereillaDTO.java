@@ -28,6 +28,8 @@ public class ValintatapajonoJarjestyskriteereillaDTO implements Prioritized {
 
   private boolean eiVarasijatayttoa;
 
+  private boolean merkitseMyohAuto = false;
+
   private Boolean poissaOlevaTaytto = false;
 
   private Boolean kaikkiEhdonTayttavatHyvaksytaan = false;
@@ -126,6 +128,14 @@ public class ValintatapajonoJarjestyskriteereillaDTO implements Prioritized {
 
   public void setEiVarasijatayttoa(boolean eiVarasijatayttoa) {
     this.eiVarasijatayttoa = eiVarasijatayttoa;
+  }
+
+  public Boolean getMerkitseMyohAuto() {
+    return merkitseMyohAuto;
+  }
+
+  public void setMerkitseMyohAuto(Boolean merkitseMyohAuto) {
+    this.merkitseMyohAuto = merkitseMyohAuto;
   }
 
   public Boolean getPoissaOlevaTaytto() {
