@@ -5,17 +5,16 @@ ja REST-APIt.
 
 ## Ajo paikallisesti
 
-Komennolla
+Komennoilla
 
 ``` bash
+mvn install
+mvn -pl valintaperusteet-service/pom.xml -Dtestikannan.portti=4320 docker:start
 cd valintaperusteet-service
-VALINTAPERUSTEET_SERVICE_USER_HOME=<polku hakemistoon oph-configuration> \
-  mvn install exec:java
+mvn -DskipTests -Dtestikannan.portti=4320 exec:java
 ```
 
-voi käynnistää valintaperusteet-palvelun paikalliseen kehitysympäristöön. Tätä varten tarvitaan
-hakemistosta `src/main/resources/oph-configuration` löytyvien pohjien mukaan muodostetut
-asetukset.
+voi käynnistää valintaperusteet-palvelun paikalliseen kehitysympäristöön.
 
 ## Testien ajaminen
 

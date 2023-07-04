@@ -11,7 +11,6 @@ import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
-import fi.vm.sade.service.valintaperusteet.resource.impl.ValintalaskentakoostepalveluResourceImpl;
 import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaValintatapajonoService;
 import fi.vm.sade.service.valintaperusteet.service.HakukohdeService;
 import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
@@ -33,8 +32,8 @@ public class ValintalaskentakoostepalveluResource3Test {
   public void testJonojenPrioriteetitIsollaDatalla() {
     String hakukohdeOid = "hakukohdeOid";
     HakukohdeService hakukohdeService = mock(HakukohdeService.class);
-    ValintalaskentakoostepalveluResourceImpl resource =
-        new ValintalaskentakoostepalveluResourceImpl(
+    ValintalaskentakoostepalveluResource resource =
+        new ValintalaskentakoostepalveluResource(
             mock(ValintaperusteService.class),
             mock(HakijaryhmaValintatapajonoService.class),
             mock(ValinnanVaiheService.class),

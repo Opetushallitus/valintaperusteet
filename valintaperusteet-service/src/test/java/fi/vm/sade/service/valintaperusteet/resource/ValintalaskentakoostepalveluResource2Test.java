@@ -2,45 +2,27 @@ package fi.vm.sade.service.valintaperusteet.resource;
 
 import static org.junit.Assert.assertEquals;
 
+import fi.vm.sade.service.valintaperusteet.WithSpringBoot;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaValintatapajonoDTO;
-import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
-import fi.vm.sade.service.valintaperusteet.resource.impl.HakukohdeResourceImpl;
-import fi.vm.sade.service.valintaperusteet.resource.impl.ValinnanVaiheResourceImpl;
-import fi.vm.sade.service.valintaperusteet.resource.impl.ValintalaskentakoostepalveluResourceImpl;
-import fi.vm.sade.service.valintaperusteet.resource.impl.ValintatapajonoResourceImpl;
 import fi.vm.sade.service.valintaperusteet.util.TestUtil;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
-import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
-@ContextConfiguration(locations = "classpath:test-context.xml")
-@TestExecutionListeners(
-    listeners = {
-      ValinnatJTACleanInsertTestExecutionListener.class,
-      DependencyInjectionTestExecutionListener.class,
-      DirtiesContextTestExecutionListener.class
-    })
-@RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data-hakijaryhma.xml")
-public class ValintalaskentakoostepalveluResource2Test {
+public class ValintalaskentakoostepalveluResource2Test extends WithSpringBoot {
 
-  private ValintatapajonoResourceImpl jonoResource = new ValintatapajonoResourceImpl();
-  private ValinnanVaiheResourceImpl vaiheResource = new ValinnanVaiheResourceImpl();
-  private ValintalaskentakoostepalveluResourceImpl valintalaskentakoostepalveluResource;
-  private HakukohdeResourceImpl hakukohdeResource = new HakukohdeResourceImpl();
+  private ValintatapajonoResource jonoResource = new ValintatapajonoResource();
+  private ValinnanVaiheResource vaiheResource = new ValinnanVaiheResource();
+  private ValintalaskentakoostepalveluResource valintalaskentakoostepalveluResource;
+  private HakukohdeResource hakukohdeResource = new HakukohdeResource();
 
   @Autowired private ApplicationContext applicationContext;
-  private TestUtil testUtil = new TestUtil(ValintatapajonoResourceImpl.class);
+  private TestUtil testUtil = new TestUtil(ValintatapajonoResource.class);
 
   @Before
   public void setUp() {
@@ -50,7 +32,7 @@ public class ValintalaskentakoostepalveluResource2Test {
     valintalaskentakoostepalveluResource =
         applicationContext
             .getAutowireCapableBeanFactory()
-            .getBean(ValintalaskentakoostepalveluResourceImpl.class);
+            .getBean(ValintalaskentakoostepalveluResource.class);
   }
 
   @Test

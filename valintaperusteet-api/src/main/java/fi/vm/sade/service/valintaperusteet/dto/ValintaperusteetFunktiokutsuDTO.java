@@ -1,50 +1,49 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.*;
 
-@ApiModel(value = "ValintaperusteetFunktiokutsuDTO", description = "Funktiokutsu")
+@Schema(name = "ValintaperusteetFunktiokutsuDTO", description = "Funktiokutsu")
 public class ValintaperusteetFunktiokutsuDTO {
 
-  @ApiModelProperty(value = "Funktion nimi", required = true)
+  @Schema(description = "Funktion nimi", required = true)
   private Funktionimi funktionimi;
 
-  @ApiModelProperty(value = "Tallennetun tuloksen tunniste")
+  @Schema(description = "Tallennetun tuloksen tunniste")
   private String tulosTunniste;
 
-  @ApiModelProperty(value = "Tallennetun tuloksen suomenkielinen teksti")
+  @Schema(description = "Tallennetun tuloksen suomenkielinen teksti")
   private String tulosTekstiFi;
 
-  @ApiModelProperty(value = "Tallennetun tuloksen ruotsinkielinen teksti")
+  @Schema(description = "Tallennetun tuloksen ruotsinkielinen teksti")
   private String tulosTekstiSv;
 
-  @ApiModelProperty(value = "Tallennetun tuloksen englanninkielinen teksti")
+  @Schema(description = "Tallennetun tuloksen englanninkielinen teksti")
   private String tulosTekstiEn;
 
-  @ApiModelProperty(value = "Tallennetaanko tulos", required = true)
+  @Schema(description = "Tallennetaanko tulos", required = true)
   private Boolean tallennaTulos;
 
-  @ApiModelProperty(value = "Näytetäänkö oppijan henkilokohtaisessa palvelussa")
+  @Schema(description = "Näytetäänkö oppijan henkilokohtaisessa palvelussa")
   private boolean omaopintopolku;
 
-  @ApiModelProperty(value = "Arvokonvertteriparametrit")
+  @Schema(description = "Arvokonvertteriparametrit")
   private Set<ArvokonvertteriparametriDTO> arvokonvertteriparametrit =
       new HashSet<ArvokonvertteriparametriDTO>();
 
-  @ApiModelProperty(value = "Arvovälikonvertteriparametrit")
+  @Schema(description = "Arvovälikonvertteriparametrit")
   private Set<ArvovalikonvertteriparametriDTO> arvovalikonvertteriparametrit =
       new HashSet<ArvovalikonvertteriparametriDTO>();
 
-  @ApiModelProperty(value = "Syöteparametrit")
+  @Schema(description = "Syöteparametrit")
   private Set<SyoteparametriDTO> syoteparametrit = new HashSet<SyoteparametriDTO>();
 
-  @ApiModelProperty(value = "Funktioargumentit")
+  @Schema(description = "Funktioargumentit")
   private Set<ValintaperusteetFunktioargumenttiDTO> funktioargumentit =
       new HashSet<ValintaperusteetFunktioargumenttiDTO>();
 
-  @ApiModelProperty(value = "Valintaperusteviitteet")
+  @Schema(description = "Valintaperusteviitteet")
   private Set<ValintaperusteViiteDTO> valintaperusteviitteet =
       new HashSet<ValintaperusteViiteDTO>();
 

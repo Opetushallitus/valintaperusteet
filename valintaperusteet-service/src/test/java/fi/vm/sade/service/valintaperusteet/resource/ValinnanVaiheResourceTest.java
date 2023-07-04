@@ -4,15 +4,13 @@ import static org.junit.Assert.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
+import fi.vm.sade.service.valintaperusteet.WithSpringBoot;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.dto.model.Koekutsu;
-import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
-import fi.vm.sade.service.valintaperusteet.resource.impl.HakukohdeResourceImpl;
-import fi.vm.sade.service.valintaperusteet.resource.impl.ValinnanVaiheResourceImpl;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheEiOleOlemassaException;
 import fi.vm.sade.valinta.sharedutils.FakeAuthenticationInitialiser;
 import java.io.IOException;
@@ -21,37 +19,23 @@ import java.util.Collections;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
-import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.server.ResponseStatusException;
 
 /** User: tommiha Date: 1/23/13 Time: 1:03 PM */
-@ContextConfiguration(locations = "classpath:test-context.xml")
-@TestExecutionListeners(
-    listeners = {
-      ValinnatJTACleanInsertTestExecutionListener.class,
-      DependencyInjectionTestExecutionListener.class,
-      DirtiesContextTestExecutionListener.class
-    })
-@RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data.xml")
-public class ValinnanVaiheResourceTest {
+public class ValinnanVaiheResourceTest extends WithSpringBoot {
 
-  private ObjectMapper mapper =
-      new ObjectMapperProvider().getContext(ValinnanVaiheResourceImpl.class);
-  private ValinnanVaiheResourceImpl vaiheResource = new ValinnanVaiheResourceImpl();
-  private HakukohdeResourceImpl hakuResource = new HakukohdeResourceImpl();
+  private ObjectMapper mapper = new ObjectMapperProvider().getContext(ValinnanVaiheResource.class);
+  private ValinnanVaiheResource vaiheResource = new ValinnanVaiheResource();
+  private HakukohdeResource hakuResource = new HakukohdeResource();
 
   @Autowired private ApplicationContext applicationContext;
 
@@ -97,12 +81,13 @@ public class ValinnanVaiheResourceTest {
     Mockito.when(request.getSession(false)).thenReturn(session);
 
     ValintatapajonoDTO jono = new ValintatapajonoDTO();
-    Response insert = vaiheResource.addJonoToValinnanVaihe("1", jono, request);
-    assertEquals(500, insert.getStatus());
+    ResponseEntity<ValintatapajonoDTO> insert =
+        vaiheResource.addJonoToValinnanVaihe("1", jono, request);
+    assertEquals(500, insert.getStatusCode().value());
 
     jono = newJono();
     insert = vaiheResource.addJonoToValinnanVaihe("1", jono, request);
-    assertEquals(201, insert.getStatus());
+    assertEquals(201, insert.getStatusCode().value());
   }
 
   @Test
@@ -123,9 +108,9 @@ public class ValinnanVaiheResourceTest {
     valintakoe.setKutsutaankoKaikki(false);
     valintakoe.setKutsunKohde(Koekutsu.YLIN_TOIVE);
 
-    Response response =
+    ResponseEntity<ValintakoeDTO> response =
         vaiheResource.addValintakoeToValinnanVaihe(valinnanVaiheOid, valintakoe, request);
-    assertEquals(201, response.getStatus());
+    assertEquals(201, response.getStatusCode().value());
   }
 
   @Test
@@ -144,9 +129,9 @@ public class ValinnanVaiheResourceTest {
     valintakoe.setKutsutaankoKaikki(false);
     valintakoe.setKutsunKohde(Koekutsu.YLIN_TOIVE);
 
-    Response response =
+    ResponseEntity<ValintakoeDTO> response =
         vaiheResource.addValintakoeToValinnanVaihe(valinnanVaiheOid, valintakoe, request);
-    assertEquals(500, response.getStatus());
+    assertEquals(500, response.getStatusCode().value());
   }
 
   @Test
@@ -154,8 +139,8 @@ public class ValinnanVaiheResourceTest {
     HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
     HttpSession session = Mockito.mock(HttpSession.class);
     Mockito.when(request.getSession(false)).thenReturn(session);
-    Response delete = vaiheResource.delete("4", request);
-    assertEquals(Response.Status.ACCEPTED.getStatusCode(), delete.getStatus());
+    ResponseEntity<Object> delete = vaiheResource.delete("4", request);
+    assertEquals(HttpStatus.ACCEPTED, delete.getStatusCode());
   }
 
   @Test
@@ -165,9 +150,9 @@ public class ValinnanVaiheResourceTest {
 
     try {
       vaiheResource.delete("", request);
-    } catch (WebApplicationException e) {
+    } catch (ResponseStatusException e) {
       caughtOne = true;
-      assertEquals(404, e.getResponse().getStatus());
+      assertEquals(404, e.getStatus().value());
     }
 
     assertTrue(caughtOne);
@@ -179,8 +164,8 @@ public class ValinnanVaiheResourceTest {
     HttpSession session = Mockito.mock(HttpSession.class);
     Mockito.when(request.getSession(false)).thenReturn(session);
 
-    Response delete = vaiheResource.delete("32", request);
-    assertEquals(Response.Status.ACCEPTED.getStatusCode(), delete.getStatus());
+    ResponseEntity<Object> delete = vaiheResource.delete("32", request);
+    assertEquals(HttpStatus.ACCEPTED, delete.getStatusCode());
     assertThrows(ValinnanVaiheEiOleOlemassaException.class, () -> vaiheResource.read("32"));
   }
 
@@ -194,8 +179,8 @@ public class ValinnanVaiheResourceTest {
 
     assertNotNull(read);
     // objekti on peritty
-    Response delete = vaiheResource.delete("75", request);
-    assertEquals(Response.Status.ACCEPTED.getStatusCode(), delete.getStatus());
+    ResponseEntity<Object> delete = vaiheResource.delete("75", request);
+    assertEquals(HttpStatus.ACCEPTED, delete.getStatusCode());
 
     try {
       ValinnanVaiheDTO read1 = vaiheResource.read("79");

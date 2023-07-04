@@ -1,20 +1,19 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-@ApiModel(value = "ValintaryhmaCreateDTO", description = "Valintaryhmä")
+@Schema(name = "ValintaryhmaCreateDTO", description = "Valintaryhmä")
 public class ValintaryhmaCreateDTO extends AbstractValintaryhmaDTO {
-  @ApiModelProperty(value = "Organisaatiot")
+  @Schema(description = "Organisaatiot")
   private Set<OrganisaatioDTO> organisaatiot = new HashSet<OrganisaatioDTO>();
 
-  @ApiModelProperty(value = "VastuuorganisaatioOid")
+  @Schema(description = "VastuuorganisaatioOid")
   private String vastuuorganisaatioOid;
 
-  @ApiModelProperty(value = "Viimeinen päivämäärä, jolloin valinta-ajon voi käynnistää")
+  @Schema(description = "Viimeinen päivämäärä, jolloin valinta-ajon voi käynnistää")
   private Date viimeinenKaynnistyspaiva;
 
   public Set<OrganisaatioDTO> getOrganisaatiot() {

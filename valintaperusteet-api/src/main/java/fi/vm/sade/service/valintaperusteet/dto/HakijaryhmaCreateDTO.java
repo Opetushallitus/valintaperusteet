@@ -1,32 +1,31 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(value = "HakijaryhmaDTO", description = "Hakijaryhmä")
+@Schema(name = "HakijaryhmaDTO", description = "Hakijaryhmä")
 public class HakijaryhmaCreateDTO {
-  @ApiModelProperty(value = "Nimi", required = true)
+  @Schema(description = "Nimi", required = true)
   private String nimi;
 
-  @ApiModelProperty(value = "Kuvaus")
+  @Schema(description = "Kuvaus")
   private String kuvaus;
 
-  @ApiModelProperty(value = "Kiintio", required = true)
+  @Schema(description = "Kiintio", required = true)
   private int kiintio;
 
-  @ApiModelProperty(value = "Laskentakaavan ID", required = true)
+  @Schema(description = "Laskentakaavan ID", required = true)
   private Long laskentakaavaId;
 
-  @ApiModelProperty(value = "Kayta kaikki")
+  @Schema(description = "Kayta kaikki")
   private boolean kaytaKaikki;
 
-  @ApiModelProperty(value = "Tarkka kiintio")
+  @Schema(description = "Tarkka kiintio")
   private boolean tarkkaKiintio;
 
-  @ApiModelProperty(value = "Käytetäänkö hakijaryhmään kuuluvia", required = true)
+  @Schema(description = "Käytetäänkö hakijaryhmään kuuluvia", required = true)
   private boolean kaytetaanRyhmaanKuuluvia;
 
-  @ApiModelProperty(value = "Hakijaryhmatyyppikoodi")
+  @Schema(description = "Hakijaryhmatyyppikoodi")
   private KoodiDTO hakijaryhmatyyppikoodi = null;
 
   public String getNimi() {

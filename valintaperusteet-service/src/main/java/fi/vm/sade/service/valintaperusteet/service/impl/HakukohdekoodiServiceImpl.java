@@ -12,6 +12,7 @@ import fi.vm.sade.service.valintaperusteet.service.impl.util.koodi.Hakukohdekood
 import java.util.ArrayList;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class HakukohdekoodiServiceImpl implements HakukohdekoodiService {
   @Autowired private HakukohdekoodiDAO hakukohdekoodiDAO;
 
-  @Autowired private ValintaryhmaService valintaryhmaService;
+  @Lazy @Autowired private ValintaryhmaService valintaryhmaService;
 
   @Autowired private HakukohdeService hakukohdeService;
 

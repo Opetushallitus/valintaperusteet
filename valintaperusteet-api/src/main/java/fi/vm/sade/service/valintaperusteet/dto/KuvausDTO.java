@@ -1,16 +1,15 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
 import fi.vm.sade.service.valintaperusteet.dto.model.Kieli;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(value = "KuvausDTO", description = "Kuvaus")
+@Schema(name = "KuvausDTO", description = "Kuvaus")
 public class KuvausDTO {
 
-  @ApiModelProperty(value = "Kuvauksen kieli", required = true)
+  @Schema(description = "Kuvauksen kieli", required = true)
   private Kieli kieli;
 
-  @ApiModelProperty(value = "Teksti", required = true)
+  @Schema(description = "Teksti", required = true)
   private String teksti;
 
   public Kieli getKieli() {

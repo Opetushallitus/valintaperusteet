@@ -1,21 +1,20 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(value = "service.valintaperusteet.dto.ValintakoeDTO", description = "Valintakoe")
+@Schema(name = "service.valintaperusteet.dto.ValintakoeDTO", description = "Valintakoe")
 public class ValintakoeDTO extends ValintakoeCreateDTO {
 
-  @ApiModelProperty(value = "OID", required = true)
+  @Schema(description = "OID", required = true)
   private String oid;
 
-  @ApiModelProperty(value = "Selvitetty tunniste", required = true)
+  @Schema(description = "Selvitetty tunniste", required = true)
   private String selvitettyTunniste;
 
-  @ApiModelProperty(value = "Funktiokutsu", required = false)
+  @Schema(description = "Funktiokutsu")
   private FunktiokutsuDTO funktiokutsu;
 
-  @ApiModelProperty(value = "Peritty", required = false)
+  @Schema(description = "Peritty")
   private Boolean peritty;
 
   public String getSelvitettyTunniste() {

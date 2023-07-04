@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,7 +43,7 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
 
   @Autowired private GenericDAO genericDAO;
 
-  @Autowired private ValintaryhmaService valintaryhmaService;
+  @Lazy @Autowired private ValintaryhmaService valintaryhmaService;
 
   @Autowired private HakukohdeService hakukohdeService;
 

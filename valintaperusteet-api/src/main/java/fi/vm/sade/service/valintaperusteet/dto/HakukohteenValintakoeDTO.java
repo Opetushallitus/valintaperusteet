@@ -1,8 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(value = "HakukohteenValintakoeDTO", description = "Hakukohteen valintakoe")
+@Schema(name = "HakukohteenValintakoeDTO", description = "Hakukohteen valintakoe")
 public class HakukohteenValintakoeDTO {
   private String tyyppiUri;
   private String oid;

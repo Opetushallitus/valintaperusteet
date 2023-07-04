@@ -1,44 +1,43 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(
-    value = "HakijaryhmaValintatapajonoDTO",
+@Schema(
+    name = "HakijaryhmaValintatapajonoDTO",
     description = "Hakijaryhmän liittyminen valintatapajonoon")
 public class HakijaryhmaValintatapajonoDTO implements Prioritized {
 
-  @ApiModelProperty(value = "OID", required = true)
+  @Schema(description = "OID", required = true)
   private String oid;
 
-  @ApiModelProperty(value = "Nimi")
+  @Schema(description = "Nimi")
   private String nimi;
 
-  @ApiModelProperty(value = "Kuvaus")
+  @Schema(description = "Kuvaus")
   private String kuvaus;
 
-  @ApiModelProperty(value = "Kiintio", required = true)
+  @Schema(description = "Kiintio", required = true)
   private int kiintio;
 
-  @ApiModelProperty(value = "Kayta kaikki", required = true)
+  @Schema(description = "Kayta kaikki", required = true)
   private boolean kaytaKaikki;
 
-  @ApiModelProperty(value = "Tarkka kiintio", required = true)
+  @Schema(description = "Tarkka kiintio", required = true)
   private boolean tarkkaKiintio;
 
-  @ApiModelProperty(value = "Käytetäänkö hakijaryhmään kuuluvia", required = true)
+  @Schema(description = "Käytetäänkö hakijaryhmään kuuluvia", required = true)
   private boolean kaytetaanRyhmaanKuuluvia;
 
-  @ApiModelProperty(value = "Aktiivinen", required = true)
+  @Schema(description = "Aktiivinen", required = true)
   private Boolean aktiivinen;
 
-  @ApiModelProperty(value = "Prioriteetti", required = true)
+  @Schema(description = "Prioriteetti", required = true)
   private int prioriteetti;
 
-  @ApiModelProperty(value = "Master haikjaryhmän OID", required = false)
+  @Schema(description = "Master haikjaryhmän OID")
   private String masterOid;
 
-  @ApiModelProperty(value = "Hakijaryhmatyyppikoodi")
+  @Schema(description = "Hakijaryhmatyyppikoodi")
   private KoodiDTO hakijaryhmatyyppikoodi = null;
 
   public Boolean getAktiivinen() {

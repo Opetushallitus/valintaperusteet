@@ -8,6 +8,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import fi.vm.sade.kaava.Funktiokuvaaja;
+import fi.vm.sade.service.valintaperusteet.WithSpringBoot;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
 import fi.vm.sade.service.valintaperusteet.dto.FunktioargumentinLapsiDTO;
@@ -24,7 +25,6 @@ import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi;
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi;
 import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
 import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
-import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.model.Arvokonvertteriparametri;
 import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti;
 import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
@@ -47,25 +47,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
-import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
 /** User: kwuoti Date: 21.1.2013 Time: 9.42 */
-@ContextConfiguration(locations = "classpath:test-context.xml")
-@TestExecutionListeners(
-    listeners = {
-      ValinnatJTACleanInsertTestExecutionListener.class,
-      DependencyInjectionTestExecutionListener.class,
-      DirtiesContextTestExecutionListener.class
-    })
-@RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data.xml")
-public class LaskentakaavaServiceTest {
+public class LaskentakaavaServiceTest extends WithSpringBoot {
 
   @Autowired private LaskentakaavaService laskentakaavaService;
 

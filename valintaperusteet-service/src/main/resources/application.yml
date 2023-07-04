@@ -1,0 +1,87 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+
+springdoc:
+  show-actuator: false
+  paths-to-match: /resources/**
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+
+management:
+  endpoints:
+    enabled-by-default: false
+  endpoint:
+    health:
+      enabled: true
+  metrics:
+    mongo:
+      command:
+        enabled: false
+      connectionpool:
+        enabled: false
+
+server:
+  servlet:
+    context-path: /valintaperusteet-service
+  port: 8080
+  tomcat:
+    threads:
+      max: 20
+
+host:
+  cas: virkailija.testiopintopolku.fi
+  virkailija: localhost:8080
+  host-alb: https://virkailija.testiopintopolku.fi
+  host-virkailija: virkailija.testiopintopolku.fi
+
+cas:
+  url: https://${host.cas}/cas
+  login: https://${host.cas}/cas/login
+
+cas-service:
+  send-renew: false
+  key: valintaperusteet-service
+  service: http://${host.virkailija}/valintaperusteet-service
+
+logging:
+  level:
+    root: info
+    org.springframework: warn
+    org.springframework.security: warn
+    org.springframework.boot.autoconfigure.security.AuthenticationManagerConfiguration: warn
+    fi.vm.sade.auditlog.Audit: info
+    fi.vm.sade.java_utils.security.OpintopolkuCasAuthenticationFilter: warn
+    org.apache.http.client.protocol.ResponseProcessCookies: error
+    org.springframework.web: info
+    org.hibernate: info
+    com.github.dockerjava: info
+
+jpa:
+  schema-update: validate
+  show-sql: false
+
+root:
+  organisaatio:
+    oid: 1.2.246.562.10.00000000001
+
+web:
+  url:
+    cas: https://${host.cas}/cas
+
+valintaperusteet:
+  uses-ssl-proxy: false
+  swagger:
+    basepath: /valintaperusteet-service/resources
+  postgresql:
+    url: jdbc:postgresql://localhost:${testikannan.portti:4320}/valintaperusteet_tests
+    user: valintaperusteet_tests
+    password: testikannan_salasana
+    maxactive: 10
+    maxwait: 3000
+    maxlifetimemillis: 60000
+    leakdetectionthresholdmillis: 1800000
+  valinta-tulos-service:
+    service-url: https://${host.host-virkailija}/valinta-tulos-service

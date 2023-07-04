@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,25 +28,25 @@ import org.springframework.transaction.annotation.Transactional;
 public class HakukohdeServiceImpl implements HakukohdeService {
   @Autowired private HakukohdeViiteDAO hakukohdeViiteDAO;
 
-  @Autowired private ValintaryhmaService valintaryhmaService;
+  @Lazy @Autowired private ValintaryhmaService valintaryhmaService;
 
-  @Autowired private ValinnanVaiheService valinnanVaiheService;
+  @Lazy @Autowired private ValinnanVaiheService valinnanVaiheService;
 
-  @Autowired private ValinnanVaiheDAO valinnanVaiheDAO;
+  @Lazy @Autowired private ValinnanVaiheDAO valinnanVaiheDAO;
 
-  @Autowired private HakijaryhmaService hakijaryhmaService;
+  @Lazy @Autowired private HakijaryhmaService hakijaryhmaService;
 
-  @Autowired private LaskentakaavaService laskentakaavaService;
+  @Lazy @Autowired private LaskentakaavaService laskentakaavaService;
 
-  @Autowired private LaskentakaavaDAO laskentakaavaDAO;
+  @Lazy @Autowired private LaskentakaavaDAO laskentakaavaDAO;
 
-  @Autowired private OidService oidService;
+  @Lazy @Autowired private OidService oidService;
 
-  @Autowired private ValintaperusteetModelMapper modelMapper;
+  @Lazy @Autowired private ValintaperusteetModelMapper modelMapper;
 
-  @Autowired private HakijaryhmaValintatapajonoService hakijaryhmaValintatapajonoService;
+  @Lazy @Autowired private HakijaryhmaValintatapajonoService hakijaryhmaValintatapajonoService;
 
-  @Autowired private ValintatapajonoService valintatapajonoService;
+  @Lazy @Autowired private ValintatapajonoService valintatapajonoService;
 
   @Override
   public List<HakukohdeViite> findAll() {

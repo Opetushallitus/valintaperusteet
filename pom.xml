@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.12</version>
+        <version>2.7.14</version>
     </parent>
 
     <groupId>fi.vm.sade.valintaperusteet</groupId>
@@ -25,15 +25,11 @@
     <properties>
         <hibernate.version>5.6.15.Final</hibernate.version>
         <httpcomponents.version>4.5.14</httpcomponents.version>
-        <jackson2.version>2.15.0</jackson2.version>
-        <jackson.version>1.9.13</jackson.version>
-        <jetty.version>9.4.31.v20200723</jetty.version>
-        <modelmapper.version>2.3.8</modelmapper.version>
-        <spring.boot.version>2.7.12</spring.boot.version>
-        <spring.version>5.3.27</spring.version>
-        <spring.security.version>5.8.3</spring.security.version>
-        <swagger.version>1.6.2</swagger.version>
-        <cxf.version>3.6.1</cxf.version>
+        <jackson2.version>2.15.2</jackson2.version>
+        <modelmapper.version>3.1.1</modelmapper.version>
+        <spring.boot.version>2.7.14</spring.boot.version>
+        <spring.version>5.3.29</spring.version>
+        <spring.security.version>5.7.10</spring.security.version>
         <circe.version>0.13.0</circe.version>
         <plugin.exec-maven-plugin.version>3.0.0</plugin.exec-maven-plugin.version>
 
@@ -53,15 +49,9 @@
                 <version>0.4.1-SNAPSHOT</version>
             </dependency>
             <dependency>
-                <groupId>io.swagger</groupId>
-                <artifactId>swagger-jaxrs</artifactId>
-                <version>${swagger.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <artifactId>jsr311-api</artifactId>
-                        <groupId>javax.ws.rs</groupId>
-                    </exclusion>
-                </exclusions>
+                <groupId>org.asynchttpclient</groupId>
+                <artifactId>async-http-client</artifactId>
+                <version>2.12.3</version>
             </dependency>
             <dependency>
                 <groupId>org.hibernate.javax.persistence</groupId>
@@ -87,6 +77,30 @@
                         <groupId>org.jasig.cas.client</groupId>
                         <artifactId>cas-client-core</artifactId>
                     </exclusion>
+                    <exclusion>
+                        <groupId>org.checkerframework</groupId>
+                        <artifactId>checker-qual</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>fi.vm.sade.java-utils</groupId>
+                        <artifactId>legacy-caching-rest-client</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.cxf</groupId>
+                        <artifactId>cxf-rt-frontend-jaxws</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.cxf</groupId>
+                        <artifactId>cxf-rt-rs-client</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.cxf</groupId>
+                        <artifactId>cxf-rt-transports-http</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>fi.vm.sade.java-utils</groupId>
+                        <artifactId>spring-aware-health-check-servlet</artifactId>
+                    </exclusion>
                 </exclusions>
             </dependency>
             <dependency>
@@ -100,6 +114,30 @@
                         <groupId>org.jasig.cas.client</groupId>
                         <artifactId>cas-client-core</artifactId>
                     </exclusion>
+                    <exclusion>
+                        <groupId>org.checkerframework</groupId>
+                        <artifactId>checker-qual</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>fi.vm.sade.java-utils</groupId>
+                        <artifactId>legacy-caching-rest-client</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.cxf</groupId>
+                        <artifactId>cxf-rt-frontend-jaxws</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.cxf</groupId>
+                        <artifactId>cxf-rt-rs-client</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.cxf</groupId>
+                        <artifactId>cxf-rt-transports-http</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>fi.vm.sade.java-utils</groupId>
+                        <artifactId>spring-aware-health-check-servlet</artifactId>
+                    </exclusion>
                 </exclusions>
             </dependency>
             <dependency>
@@ -109,14 +147,9 @@
             </dependency>
             <dependency>
                 <groupId>org.mockito</groupId>
-                <artifactId>mockito-all</artifactId>
-                <version>2.0.2-beta</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
-                <version>3.5.0</version>
+                <version>5.4.0</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.hamcrest</groupId>
@@ -131,39 +164,21 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>4.13</version>
+                <groupId>org.junit.vintage</groupId>
+                <artifactId>junit-vintage-engine</artifactId>
+                <version>5.9.3</version>
+                <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.hamcrest</groupId>
+                        <artifactId>hamcrest-core</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpcore</artifactId>
                 <version>4.4.13</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-core</artifactId>
-                <version>${cxf.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-rs-client</artifactId>
-                <version>${cxf.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-frontend-jaxws</artifactId>
-                <version>${cxf.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-frontend-jaxrs</artifactId>
-                <version>${cxf.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-transports-http</artifactId>
-                <version>${cxf.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.hibernate</groupId>
@@ -176,19 +191,14 @@
                 <version>6.2.5.Final</version>
             </dependency>
             <dependency>
-                <groupId>org.jboss.logging</groupId>
-                <artifactId>jboss-logging</artifactId>
-                <version>3.4.3.Final</version>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-access</artifactId>
+                <version>1.2.12</version>
             </dependency>
             <dependency>
-                <groupId>org.jboss.spec.javax.interceptor</groupId>
-                <artifactId>jboss-interceptors-api_1.1_spec</artifactId>
-                <version>1.0.1.Final</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.spec.javax.transaction</groupId>
-                <artifactId>jboss-transaction-api_1.1_spec</artifactId>
-                <version>1.0.1.Final</version>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>1.2.12</version>
             </dependency>
             <dependency>
                 <groupId>com.zaxxer</groupId>
@@ -208,16 +218,6 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-annotations</artifactId>
-                <version>${jackson2.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-rs-service-description-swagger</artifactId>
-                <version>${cxf.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.jaxrs</groupId>
-                <artifactId>jackson-jaxrs-json-provider</artifactId>
                 <version>${jackson2.version}</version>
             </dependency>
             <dependency>
@@ -289,11 +289,6 @@
                 <version>2.13.10</version>
             </dependency>
             <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-reload4j</artifactId>
-                <version>2.0.7</version>
-            </dependency>
-            <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>3.11</version>
@@ -325,11 +320,6 @@
                 <groupId>javax.validation</groupId>
                 <artifactId>validation-api</artifactId>
                 <version>2.0.1.Final</version>
-            </dependency>
-            <dependency>
-                <groupId>javax.ws.rs</groupId>
-                <artifactId>javax.ws.rs-api</artifactId>
-                <version>2.1.1</version>
             </dependency>
             <dependency>
                 <groupId>javax.servlet</groupId>
@@ -366,6 +356,18 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-autoconfigure</artifactId>
                 <version>${spring.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <version>${spring.boot.version}</version>
+                <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.ow2.asm</groupId>
+                        <artifactId>asm</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
@@ -482,11 +484,6 @@
             </dependency>
 
             <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-spring-boot-starter-jaxrs</artifactId>
-                <version>${cxf.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-ui</artifactId>
                 <version>1.7.0</version>
@@ -572,21 +569,6 @@
                 <version>1.1.1</version>
             </dependency>
             <dependency>
-                <groupId>org.jboss.spec.javax.servlet</groupId>
-                <artifactId>jboss-servlet-api_3.0_spec</artifactId>
-                <version>1.0.1.Final</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.spec.javax.rmi</groupId>
-                <artifactId>jboss-rmi-api_1.0_spec</artifactId>
-                <version>1.0.6.Final</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.spec.javax.el</groupId>
-                <artifactId>jboss-el-api_2.2_spec</artifactId>
-                <version>1.0.4.Final</version>
-            </dependency>
-            <dependency>
                 <groupId>xml-apis</groupId>
                 <artifactId>xml-apis</artifactId>
                 <version>1.3.04</version>
@@ -625,11 +607,11 @@
             <plugin>
                 <groupId>com.diffplug.spotless</groupId>
                 <artifactId>spotless-maven-plugin</artifactId>
-                <version>2.0.1</version>
+                <version>2.38.0</version>
                 <configuration>
                     <java>
                         <googleJavaFormat>
-                            <version>1.8</version>
+                            <version>1.17.0</version>
                             <style>GOOGLE</style>
                         </googleJavaFormat>
                     </java>
@@ -656,8 +638,8 @@
                         </goals>
                         <configuration>
                             <target>
-                                <echo message="writing ${project.build.outputDirectory}/webapp/buildversion.txt"/>
-                                <echo file="${project.build.outputDirectory}/webapp/buildversion.txt">
+                                <echo message="writing ${project.build.outputDirectory}/static/buildversion.txt"/>
+                                <echo file="${project.build.outputDirectory}/static/buildversion.txt">
                                     <![CDATA[artifactId=${project.artifactId}
 version=${project.version}
 buildNumber=${project.build}
@@ -667,7 +649,7 @@ buildTtime=${maven.build.timestamp}
 ]]>
                                 </echo>
                                 <loadfile property="buildversiontxt"
-                                          srcFile="${project.build.outputDirectory}/webapp/buildversion.txt"/>
+                                          srcFile="${project.build.outputDirectory}/static/buildversion.txt"/>
                                 <echo message="${buildversiontxt}"/>
                                 <echo file="target/mavenversion.txt">${project.version}</echo>
                             </target>
@@ -680,8 +662,8 @@ buildTtime=${maven.build.timestamp}
                 <version>3.11.0</version>
                 <inherited>true</inherited>
                 <configuration>
-                    <source>11</source>
-                    <target>11</target>
+                    <source>17</source>
+                    <target>17</target>
                     <debug>false</debug>
                 </configuration>
             </plugin>
@@ -720,30 +702,19 @@ buildTtime=${maven.build.timestamp}
                 </executions>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
             </plugin>
         </plugins>
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <groupId>org.eclipse.jetty</groupId>
-                    <artifactId>jetty-servlets</artifactId>
-                    <version>${jetty.version}</version>
-                    <configuration>
-                        <excludeGroupIds>org.javassist</excludeGroupIds>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.eclipse.jetty</groupId>
-                    <artifactId>jetty-maven-plugin</artifactId>
-                    <version>${jetty.version}</version>
-                </plugin>
-                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
                     <version>3.0.2</version>
                 </plugin>
                 <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>3.0.0-M5</version>
                 </plugin>

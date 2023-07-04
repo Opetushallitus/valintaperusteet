@@ -1,19 +1,16 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(
-    value = "service.valintaperusteet.dto.ValintatapajonoDTO",
-    description = "Valintatapajono")
+@Schema(name = "service.valintaperusteet.dto.ValintatapajonoDTO", description = "Valintatapajono")
 public class ValintatapajonoDTO extends ValintatapajonoCreateDTO implements Prioritized {
-  @ApiModelProperty(value = "OID", required = true)
+  @Schema(description = "OID", required = true)
   private String oid;
 
-  @ApiModelProperty(value = "Onko valintapajono peritty")
+  @Schema(description = "Onko valintapajono peritty")
   private Boolean inheritance;
 
-  @ApiModelProperty(value = "Valintapajonon prioriteetti")
+  @Schema(description = "Valintapajonon prioriteetti")
   private int prioriteetti;
 
   public String getOid() {

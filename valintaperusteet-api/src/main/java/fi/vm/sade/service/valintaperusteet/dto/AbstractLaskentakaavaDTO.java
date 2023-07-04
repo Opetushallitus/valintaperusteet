@@ -1,22 +1,21 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(value = "LaskentakaavaDTO", description = "Laskentakaava")
+@Schema(name = "LaskentakaavaDTO", description = "Laskentakaava")
 public abstract class AbstractLaskentakaavaDTO {
 
-  @ApiModelProperty(value = "Onko laskentakaava luonnos vai valmis", required = true)
+  @Schema(description = "Onko laskentakaava luonnos vai valmis", required = true)
   private Boolean onLuonnos;
 
-  @ApiModelProperty(value = "Nimi", required = true)
+  @Schema(description = "Nimi", required = true)
   private String nimi;
 
-  @ApiModelProperty(value = "Kuvaus")
+  @Schema(description = "Kuvaus")
   private String kuvaus;
 
-  @ApiModelProperty(value = "Laskentakaavan tyyppi", required = true)
+  @Schema(description = "Laskentakaavan tyyppi", required = true)
   private fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi tyyppi;
 
   public Boolean getOnLuonnos() {

@@ -2,52 +2,51 @@ package fi.vm.sade.service.valintaperusteet.dto;
 
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi;
 import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 
-@ApiModel(value = "ValintaperusteDTO", description = "Valintaperuste")
+@Schema(name = "ValintaperusteDTO", description = "Valintaperuste")
 public class ValintaperusteDTO {
 
-  @ApiModelProperty(value = "Tunniste")
+  @Schema(description = "Tunniste")
   private String tunniste;
 
-  @ApiModelProperty(value = "Kuvaus")
+  @Schema(description = "Kuvaus")
   private String kuvaus;
 
-  @ApiModelProperty(value = "Funktiotyyppi")
+  @Schema(description = "Funktiotyyppi")
   private Funktiotyyppi funktiotyyppi;
 
-  @ApiModelProperty(value = "Valintaperusteen lähde")
+  @Schema(description = "Valintaperusteen lähde")
   private Valintaperustelahde lahde;
 
-  @ApiModelProperty(
-      value =
+  @Schema(
+      description =
           "Onko valintaperuste pakollinen, eli laskenta merkitsee virheelliseksi hakemuksen millä ei ole arvoa tunnisteelle.")
   private boolean onPakollinen;
 
-  @ApiModelProperty(value = "Arvovälin minimi")
+  @Schema(description = "Arvovälin minimi")
   private String min;
 
-  @ApiModelProperty(value = "Arvovälin maksimi")
+  @Schema(description = "Arvovälin maksimi")
   private String max;
 
-  @ApiModelProperty(value = "Arvot")
+  @Schema(description = "Arvot")
   private List<String> arvot;
 
-  @ApiModelProperty(value = "Osallistumistunniste")
+  @Schema(description = "Osallistumistunniste")
   private String osallistuminenTunniste;
 
-  @ApiModelProperty(value = "Vaatiiko syötettävä arvo osallistumisen")
+  @Schema(description = "Vaatiiko syötettävä arvo osallistumisen")
   private Boolean vaatiiOsallistumisen = true;
 
-  @ApiModelProperty(value = "Voidaanko arvo syöttää kaikille vai vaan kutsutuille")
+  @Schema(description = "Voidaanko arvo syöttää kaikille vai vaan kutsutuille")
   private Boolean syotettavissaKaikille = true;
 
-  @ApiModelProperty(value = "Tilastoidaanko")
+  @Schema(description = "Tilastoidaanko")
   private Boolean tilastoidaan = null;
 
-  @ApiModelProperty(value = "Syötettävän arvon tyyppi")
+  @Schema(description = "Syötettävän arvon tyyppi")
   private KoodiDTO syötettavanArvonTyyppi = null;
 
   public Boolean getTilastoidaan() {

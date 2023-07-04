@@ -100,7 +100,8 @@ public class ValintatapajonoKopioija implements Kopioija<Valintatapajono> {
           paivitettyMaster.getKaikkiEhdonTayttavatHyvaksytaan());
     }
     kopio.setPoistetaankoHylatyt(paivitettyMaster.isPoistetaankoHylatyt());
-    if (kopio.getMerkitseMyohAuto().equals(alkuperainenMaster.getMerkitseMyohAuto())) {
+    if (kopio.getMerkitseMyohAuto() == null
+        || kopio.getMerkitseMyohAuto().equals(alkuperainenMaster.getMerkitseMyohAuto())) {
       kopio.setMerkitseMyohAuto(paivitettyMaster.getMerkitseMyohAuto());
     }
     // VT-657

@@ -135,7 +135,7 @@ public class ValintatapajonoJarjestyskriteereillaDTO implements Prioritized {
   }
 
   public void setMerkitseMyohAuto(Boolean merkitseMyohAuto) {
-    this.merkitseMyohAuto = merkitseMyohAuto;
+    this.merkitseMyohAuto = merkitseMyohAuto != null ? merkitseMyohAuto : false;
   }
 
   public Boolean getPoissaOlevaTaytto() {

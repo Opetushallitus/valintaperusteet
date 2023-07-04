@@ -50,6 +50,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ResourceLoaderAware;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.stereotype.Component;
@@ -64,7 +65,7 @@ public class LuoValintaperusteetServiceImpl
 
   @Autowired private LaskentakaavaService laskentakaavaService;
 
-  @Autowired private ValintaryhmaService valintaryhmaService;
+  @Lazy @Autowired private ValintaryhmaService valintaryhmaService;
 
   @Autowired private HakukohdekoodiService hakukohdekoodiService;
 

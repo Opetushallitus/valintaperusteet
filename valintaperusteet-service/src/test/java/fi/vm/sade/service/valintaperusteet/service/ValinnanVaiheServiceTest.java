@@ -5,12 +5,12 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 
+import fi.vm.sade.service.valintaperusteet.WithSpringBoot;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheCreateDTO;
-import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
@@ -21,28 +21,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
-import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
 /**
  * Created with IntelliJ IDEA. User: jukais Date: 16.1.2013 Time: 14.16 To change this template use
  * File | Settings | File Templates.
  */
-@ContextConfiguration(locations = "classpath:test-context.xml")
-@TestExecutionListeners(
-    listeners = {
-      ValinnatJTACleanInsertTestExecutionListener.class,
-      DependencyInjectionTestExecutionListener.class,
-      DirtiesContextTestExecutionListener.class
-    })
-@RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data.xml")
-public class ValinnanVaiheServiceTest {
+public class ValinnanVaiheServiceTest extends WithSpringBoot {
 
   @Autowired private HakukohdeViiteDAO hakukohdeViiteDAO;
 

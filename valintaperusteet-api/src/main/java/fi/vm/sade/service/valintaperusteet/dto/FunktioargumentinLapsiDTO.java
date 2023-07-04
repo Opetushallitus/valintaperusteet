@@ -3,80 +3,79 @@ package fi.vm.sade.service.valintaperusteet.dto;
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi;
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi;
 import fi.vm.sade.service.valintaperusteet.dto.model.ValidointivirheDTO;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-@ApiModel(
-    value = "FunktioargumentinLapsiDTO",
+@Schema(
+    name = "FunktioargumentinLapsiDTO",
     description = "DTO, joka kuvaa joko funktiokutsua tai laskentakaavaa")
 public class FunktioargumentinLapsiDTO {
 
   public static final String FUNKTIOKUTSUTYYPPI = "funktiokutsu";
   public static final String LASKENTAKAAVATYYPPI = "laskentakaava";
 
-  @ApiModelProperty(value = "Funktion nimi")
+  @Schema(description = "Funktion nimi")
   private Funktionimi funktionimi;
 
-  @ApiModelProperty(value = "Arvokonvertteriparametrit")
+  @Schema(description = "Arvokonvertteriparametrit")
   private Set<ArvokonvertteriparametriDTO> arvokonvertteriparametrit =
       new HashSet<ArvokonvertteriparametriDTO>();
 
-  @ApiModelProperty(value = "Arvovälikonvertteriparametrit")
+  @Schema(description = "Arvovälikonvertteriparametrit")
   private List<ArvovalikonvertteriparametriDTO> arvovalikonvertteriparametrit =
       new LinkedList<ArvovalikonvertteriparametriDTO>();
 
-  @ApiModelProperty(value = "Syöteparametrit")
+  @Schema(description = "Syöteparametrit")
   private Set<SyoteparametriDTO> syoteparametrit = new HashSet<SyoteparametriDTO>();
 
-  @ApiModelProperty(value = "Funktioargumentit")
+  @Schema(description = "Funktioargumentit")
   private List<FunktioargumenttiDTO> funktioargumentit = new LinkedList<FunktioargumenttiDTO>();
 
-  @ApiModelProperty(value = "Valintaperusteviitteet")
+  @Schema(description = "Valintaperusteviitteet")
   private List<ValintaperusteViiteDTO> valintaperusteviitteet =
       new ArrayList<ValintaperusteViiteDTO>();
 
-  @ApiModelProperty(value = "Validointivirheet")
+  @Schema(description = "Validointivirheet")
   private List<ValidointivirheDTO> validointivirheet = new ArrayList<ValidointivirheDTO>();
 
-  @ApiModelProperty(value = "Onko laskentakaava luonnos vai valmis")
+  @Schema(description = "Onko laskentakaava luonnos vai valmis")
   private Boolean onLuonnos;
 
-  @ApiModelProperty(value = "Nimi", required = true)
+  @Schema(description = "Nimi", required = true)
   private String nimi;
 
-  @ApiModelProperty(value = "Kuvaus")
+  @Schema(description = "Kuvaus")
   private String kuvaus;
 
-  @ApiModelProperty(value = "Laskentakaavan tyyppi")
+  @Schema(description = "Laskentakaavan tyyppi")
   private Funktiotyyppi tyyppi;
 
-  @ApiModelProperty(value = "ID")
+  @Schema(description = "ID")
   private Long id;
 
-  @ApiModelProperty(value = "Lapsen tyyppi")
+  @Schema(description = "Lapsen tyyppi")
   private String lapsityyppi;
 
-  @ApiModelProperty(value = "Tallennetun tuloksen tunniste")
+  @Schema(description = "Tallennetun tuloksen tunniste")
   private String tulosTunniste;
 
-  @ApiModelProperty(value = "Tallennetun tuloksen suomenkielinen teksti")
+  @Schema(description = "Tallennetun tuloksen suomenkielinen teksti")
   private String tulosTekstiFi;
 
-  @ApiModelProperty(value = "Tallennetun tuloksen ruotsinkielinen teksti")
+  @Schema(description = "Tallennetun tuloksen ruotsinkielinen teksti")
   private String tulosTekstiSv;
 
-  @ApiModelProperty(value = "Tallennetun tuloksen englanninkielinen teksti")
+  @Schema(description = "Tallennetun tuloksen englanninkielinen teksti")
   private String tulosTekstiEn;
 
-  @ApiModelProperty(value = "Tallennetaanko tulos", required = true)
+  @Schema(description = "Tallennetaanko tulos", required = true)
   private Boolean tallennaTulos;
 
-  @ApiModelProperty(value = "Näytetäänkö oppijan henkilökohtaisessa palvelussa")
+  @Schema(description = "Näytetäänkö oppijan henkilökohtaisessa palvelussa")
   private boolean omaopintopolku = false;
 
   public String getTulosTunniste() {

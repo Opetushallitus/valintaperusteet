@@ -1,21 +1,20 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(value = "ArvokonvertteriparametriDTO", description = "Arvokonvertteriparametri")
+@Schema(name = "ArvokonvertteriparametriDTO", description = "Arvokonvertteriparametri")
 public class ArvokonvertteriparametriDTO {
 
-  @ApiModelProperty(value = "Paluuarvo", required = true)
+  @Schema(description = "Paluuarvo", required = true)
   private String paluuarvo;
 
-  @ApiModelProperty(value = "Arvo", required = true)
+  @Schema(description = "Arvo", required = true)
   private String arvo;
 
-  @ApiModelProperty(value = "Hylkäysperuste")
+  @Schema(description = "Hylkäysperuste")
   private String hylkaysperuste;
 
-  @ApiModelProperty(value = "Hylkäysperusteen kuvaukset")
+  @Schema(description = "Hylkäysperusteen kuvaukset")
   private TekstiRyhmaDTO kuvaukset = new TekstiRyhmaDTO();
 
   public String getPaluuarvo() {

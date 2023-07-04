@@ -1,23 +1,22 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.HashSet;
 import java.util.Set;
 
-@ApiModel(value = "service.valintaperusteet.dto.ValinnanVaiheDTO", description = "Valinnan vaihe")
+@Schema(name = "service.valintaperusteet.dto.ValinnanVaiheDTO", description = "Valinnan vaihe")
 public class ValinnanVaiheDTO extends ValinnanVaiheCreateDTO {
 
-  @ApiModelProperty(value = "OID", required = true)
+  @Schema(description = "OID", required = true)
   private String oid;
 
-  @ApiModelProperty(value = "Onko valinnan vaihe peritty")
+  @Schema(description = "Onko valinnan vaihe peritty")
   private Boolean inheritance;
 
-  @ApiModelProperty(value = "Onko valinnanvaiheella välisijoittelua")
+  @Schema(description = "Onko valinnanvaiheella välisijoittelua")
   private Boolean hasValisijoittelu;
 
-  @ApiModelProperty(value = "Valinnanvaiheen valintatapajonot")
+  @Schema(description = "Valinnanvaiheen valintatapajonot")
   private Set<ValintatapajonoDTO> jonot = new HashSet<>();
 
   public String getOid() {

@@ -1,40 +1,39 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
 import fi.vm.sade.service.valintaperusteet.dto.model.Koekutsu;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(value = "ValintakoeCreateDTO", description = "Valintakoe")
+@Schema(name = "ValintakoeCreateDTO", description = "Valintakoe")
 public class ValintakoeCreateDTO {
 
-  @ApiModelProperty(value = "Tunniste", required = true)
+  @Schema(description = "Tunniste", required = true)
   private String tunniste;
 
-  @ApiModelProperty(value = "Laskentakaava ID", required = true)
+  @Schema(description = "Laskentakaava ID", required = true)
   private Long laskentakaavaId;
 
-  @ApiModelProperty(value = "Nimi", required = true)
+  @Schema(description = "Nimi", required = true)
   private String nimi;
 
-  @ApiModelProperty(value = "Kuvaus")
+  @Schema(description = "Kuvaus")
   private String kuvaus;
 
-  @ApiModelProperty(value = "Onko valintakoe aktiivinen", required = true)
+  @Schema(description = "Onko valintakoe aktiivinen", required = true)
   private Boolean aktiivinen;
 
-  @ApiModelProperty(value = "Lähetetäänkö koekutsut", required = true)
+  @Schema(description = "Lähetetäänkö koekutsut", required = true)
   private Boolean lahetetaankoKoekutsut;
 
-  @ApiModelProperty(value = "Kutsutaanko kaikki kokeeseen", required = true)
+  @Schema(description = "Kutsutaanko kaikki kokeeseen", required = true)
   private Boolean kutsutaankoKaikki;
 
-  @ApiModelProperty(value = "Kutsuttavien määrä")
+  @Schema(description = "Kutsuttavien määrä")
   private Integer kutsuttavienMaara;
 
-  @ApiModelProperty(value = "Minne koekutsu osoitetaan")
+  @Schema(description = "Minne koekutsu osoitetaan")
   private Koekutsu kutsunKohde;
 
-  @ApiModelProperty(value = "Avain, josta kutsun kohde haetaan", required = false)
+  @Schema(description = "Avain, josta kutsun kohde haetaan")
   private String kutsunKohdeAvain;
 
   public String getTunniste() {

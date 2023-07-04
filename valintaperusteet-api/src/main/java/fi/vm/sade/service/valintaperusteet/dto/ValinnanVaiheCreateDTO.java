@@ -1,22 +1,21 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
 import fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(value = "ValinnanVaiheCreateDTO", description = "Valinnan vaihe")
+@Schema(name = "ValinnanVaiheCreateDTO", description = "Valinnan vaihe")
 public class ValinnanVaiheCreateDTO {
 
-  @ApiModelProperty(value = "Nimi", required = true)
+  @Schema(description = "Nimi", required = true)
   private String nimi;
 
-  @ApiModelProperty(value = "Kuvaus")
+  @Schema(description = "Kuvaus")
   private String kuvaus;
 
-  @ApiModelProperty(value = "Aktiivinen", required = true)
+  @Schema(description = "Aktiivinen", required = true)
   private Boolean aktiivinen;
 
-  @ApiModelProperty(value = "Valinnan vaiheen tyyppi", required = true)
+  @Schema(description = "Valinnan vaiheen tyyppi", required = true)
   private ValinnanVaiheTyyppi valinnanVaiheTyyppi;
 
   public String getNimi() {

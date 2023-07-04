@@ -1,11 +1,11 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-@ApiModel(value = "HakukohdeImportDTO", description = "Hakukohteen lisääminen")
+@Schema(name = "HakukohdeImportDTO", description = "Hakukohteen lisääminen")
 public class HakukohdeImportDTO {
   private String hakukohdeOid;
   private HakukohdekoodiDTO hakukohdekoodi;

@@ -1,10 +1,10 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.List;
 
-@ApiModel(value = "ValintaperusteetValinnanVaiheDTO", description = "Valinnan vaihe")
+@Schema(name = "ValintaperusteetValinnanVaiheDTO", description = "Valinnan vaihe")
 public class ValintaperusteetValinnanVaiheDTO extends ValinnanVaiheDTO {
 
   private int valinnanVaiheJarjestysluku;

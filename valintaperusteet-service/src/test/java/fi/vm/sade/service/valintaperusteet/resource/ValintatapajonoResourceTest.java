@@ -1,76 +1,55 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
+import fi.vm.sade.service.valintaperusteet.WithSpringBoot;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
-import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
-import fi.vm.sade.service.valintaperusteet.resource.impl.ValinnanVaiheResourceImpl;
-import fi.vm.sade.service.valintaperusteet.resource.impl.ValintatapajonoResourceImpl;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintatapajonoEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.util.TestUtil;
-import fi.vm.sade.service.valintaperusteet.util.VtsRestClient;
-import java.io.IOException;
+import fi.vm.sade.valinta.sharedutils.FakeAuthenticationInitialiser;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.ws.rs.core.Response;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.ImportResource;
-import org.springframework.context.annotation.Primary;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
-import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 
 /**
  * Created with IntelliJ IDEA. User: jukais Date: 23.1.2013 Time: 10.58 To change this template use
  * File | Settings | File Templates.
  */
-@ContextConfiguration(classes = VtsRestClientConfig.class)
-@TestExecutionListeners(
-    listeners = {
-      ValinnatJTACleanInsertTestExecutionListener.class,
-      DependencyInjectionTestExecutionListener.class,
-      DirtiesContextTestExecutionListener.class
-    })
-@RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data.xml")
-public class ValintatapajonoResourceTest {
-  private ValintatapajonoResourceImpl resource = new ValintatapajonoResourceImpl();
-  private ValinnanVaiheResourceImpl vaiheResource = new ValinnanVaiheResourceImpl();
+@ActiveProfiles({"dev", "vtsConfig"})
+public class ValintatapajonoResourceTest extends WithSpringBoot {
+  private ValintatapajonoResource resource = new ValintatapajonoResource();
+  private ValinnanVaiheResource vaiheResource = new ValinnanVaiheResource();
 
   @Autowired private ApplicationContext applicationContext;
-  private TestUtil testUtil = new TestUtil(ValintatapajonoResourceImpl.class);
+  private TestUtil testUtil = new TestUtil(ValintatapajonoResource.class);
+  private HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+  private HttpSession session = Mockito.mock(HttpSession.class);
 
   @Before
   public void setUp() {
     applicationContext.getAutowireCapableBeanFactory().autowireBean(resource);
     applicationContext.getAutowireCapableBeanFactory().autowireBean(vaiheResource);
+    FakeAuthenticationInitialiser.fakeAuthentication();
+    Mockito.when(request.getSession(false)).thenReturn(session);
   }
 
   @Test
   public void testUpdate() throws Exception {
-    HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-    HttpSession session = Mockito.mock(HttpSession.class);
-    Mockito.when(request.getSession(false)).thenReturn(session);
-
     ValintatapajonoDTO jono = resource.readByOid("1");
     jono.setNimi("muokattu");
     jono.setTyyppi("valintatapajono_m");
@@ -99,30 +78,20 @@ public class ValintatapajonoResourceTest {
 
   @Test(expected = RuntimeException.class)
   public void testDeleteOidNotFound() {
-
-    HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
     resource.delete("", request);
   }
 
   @Test
   public void testDeleteInherited() {
-    HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-    HttpSession session = Mockito.mock(HttpSession.class);
-    Mockito.when(request.getSession(false)).thenReturn(session);
-
     ValintatapajonoDTO valintatapajono = resource.readByOid("27");
     assertNotNull(valintatapajono);
-    Response delete = resource.delete("27", request);
-    assertEquals(Response.Status.ACCEPTED.getStatusCode(), delete.getStatus());
+    ResponseEntity<Object> delete = resource.delete("27", request);
+    assertEquals(HttpStatus.ACCEPTED, delete.getStatusCode());
     assertThrows(ValintatapajonoEiOleOlemassaException.class, () -> resource.readByOid("27"));
   }
 
   @Test
   public void testChildrenAreDeleted() {
-    HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-    HttpSession session = Mockito.mock(HttpSession.class);
-    Mockito.when(request.getSession(false)).thenReturn(session);
-
     ValintatapajonoDTO valintatapajono = resource.readByOid("30");
     assertNotNull(valintatapajono);
     // objekti on peritty
@@ -137,20 +106,12 @@ public class ValintatapajonoResourceTest {
 
   @Test
   public void testDelete() {
-    HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-    HttpSession session = Mockito.mock(HttpSession.class);
-    Mockito.when(request.getSession(false)).thenReturn(session);
-
-    Response delete = resource.delete("12", request);
-    assertEquals(Response.Status.ACCEPTED.getStatusCode(), delete.getStatus());
+    ResponseEntity<Object> delete = resource.delete("12", request);
+    assertEquals(HttpStatus.ACCEPTED, delete.getStatusCode());
   }
 
   @Test
   public void testInsertJK() throws Exception {
-    HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-    HttpSession session = Mockito.mock(HttpSession.class);
-    Mockito.when(request.getSession(false)).thenReturn(session);
-
     JarjestyskriteeriCreateDTO jk = new JarjestyskriteeriCreateDTO();
     jk.setMetatiedot("mt1");
     jk.setAktiivinen(true);
@@ -158,20 +119,17 @@ public class ValintatapajonoResourceTest {
     JarjestyskriteeriInsertDTO comb = new JarjestyskriteeriInsertDTO();
     comb.setJarjestyskriteeri(jk);
     comb.setLaskentakaavaId(1L);
-    Response insert = resource.insertJarjestyskriteeri("1", comb, request);
-    assertEquals(Response.Status.ACCEPTED.getStatusCode(), insert.getStatus());
+    ResponseEntity<JarjestyskriteeriDTO> insert =
+        resource.insertJarjestyskriteeri("1", comb, request);
+    assertEquals(HttpStatus.ACCEPTED, insert.getStatusCode());
 
-    JarjestyskriteeriDTO entity = (JarjestyskriteeriDTO) insert.getEntity();
+    JarjestyskriteeriDTO entity = insert.getBody();
 
     testUtil.lazyCheck(JsonViews.Basic.class, entity, true);
   }
 
   @Test
   public void testJarjesta() {
-    HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-    HttpSession session = Mockito.mock(HttpSession.class);
-    Mockito.when(request.getSession(false)).thenReturn(session);
-
     List<ValintatapajonoDTO> valintatapajonoList = vaiheResource.listJonos("1");
     List<String> oids = new ArrayList<String>();
 
@@ -217,22 +175,5 @@ public class ValintatapajonoResourceTest {
       ValintatapajonoDTO dto = modelMapper.map(all.get(i), ValintatapajonoDTO.class);
       assertEquals(i, dto.getPrioriteetti());
     }
-  }
-}
-
-@Configuration
-@ImportResource(value = "classpath:test-context.xml")
-class VtsRestClientConfig {
-
-  @Bean
-  @Primary
-  VtsRestClient vtsRestClient() {
-    VtsRestClient mock = mock(VtsRestClient.class);
-    try {
-      when(mock.isJonoSijoiteltu(eq("26"))).thenReturn(true);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    return mock;
   }
 }

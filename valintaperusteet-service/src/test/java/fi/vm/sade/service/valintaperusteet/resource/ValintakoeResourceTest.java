@@ -2,51 +2,41 @@ package fi.vm.sade.service.valintaperusteet.resource;
 
 import static org.junit.Assert.*;
 
+import fi.vm.sade.service.valintaperusteet.WithSpringBoot;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.dto.model.Koekutsu;
-import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
-import fi.vm.sade.service.valintaperusteet.resource.impl.ValintakoeResourceImpl;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintakoettaEiVoiLisataException;
 import fi.vm.sade.service.valintaperusteet.util.TestUtil;
+import fi.vm.sade.valinta.sharedutils.FakeAuthenticationInitialiser;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
-import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
 /** User: kwuoti Date: 15.4.2013 Time: 18.17 */
-@ContextConfiguration(locations = "classpath:test-context.xml")
-@TestExecutionListeners(
-    listeners = {
-      ValinnatJTACleanInsertTestExecutionListener.class,
-      DependencyInjectionTestExecutionListener.class,
-      DirtiesContextTestExecutionListener.class
-    })
-@RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data.xml")
-public class ValintakoeResourceTest {
+public class ValintakoeResourceTest extends WithSpringBoot {
 
-  private ValintakoeResourceImpl valintakoeResource = new ValintakoeResourceImpl();
+  private ValintakoeResource valintakoeResource = new ValintakoeResource();
   private TestUtil testUtil = new TestUtil(this.getClass());
   private ValintaperusteetModelMapper modelMapper = new ValintaperusteetModelMapper();
+  private HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+  private HttpSession session = Mockito.mock(HttpSession.class);
 
   @Autowired private ApplicationContext applicationContext;
 
   @Before
   public void setUp() {
     applicationContext.getAutowireCapableBeanFactory().autowireBean(valintakoeResource);
+    FakeAuthenticationInitialiser.fakeAuthentication();
+    Mockito.when(request.getSession(false)).thenReturn(session);
   }
 
   @Test
@@ -58,10 +48,6 @@ public class ValintakoeResourceTest {
 
   @Test
   public void testUpdate() {
-    HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-    HttpSession session = Mockito.mock(HttpSession.class);
-    Mockito.when(request.getSession(false)).thenReturn(session);
-
     final String oid = "oid1";
     final Long laskentakaavaId = 102L;
 
@@ -91,10 +77,6 @@ public class ValintakoeResourceTest {
 
   @Test
   public void testUpdateSetLaskentakaavaNull() {
-    HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-    HttpSession session = Mockito.mock(HttpSession.class);
-    Mockito.when(request.getSession(false)).thenReturn(session);
-
     final String oid = "oid1";
     ValintakoeDTO saved = valintakoeResource.readByOid(oid);
 
@@ -157,8 +139,6 @@ public class ValintakoeResourceTest {
 
   @Test(expected = ValintakoettaEiVoiLisataException.class)
   public void testUpdateValintakoeWithExistingTunniste() {
-    HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-
     final String oid = "oid1";
     ValintakoeDTO valintakoe = valintakoeResource.readByOid(oid);
 

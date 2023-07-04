@@ -1,13 +1,13 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 public class LinkitettyHakijaryhmaValintatapajonoDTO extends HakijaryhmaValintatapajonoDTO {
 
-  @ApiModelProperty(value = "Valintatapajono OID", required = false)
+  @Schema(description = "Valintatapajono OID")
   private String valintatapajonoOid;
 
-  @ApiModelProperty(value = "Hakukohde OID", required = false)
+  @Schema(description = "Hakukohde OID")
   private String hakukohdeOid;
 
   public String getValintatapajonoOid() {

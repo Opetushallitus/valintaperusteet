@@ -1,10 +1,11 @@
 package fi.vm.sade.service.valintaperusteet.laskenta
 
+import com.fasterxml.jackson.databind.ObjectMapper
+
 import java.lang.{Integer => JInteger}
 import java.math.{BigDecimal => JBigDecimal}
 import java.util.{Map => JMap}
 import java.util.{List => JList}
-
 import fi.vm.sade.kaava.Funktiokuvaaja.Konvertterinimi.Konvertterinimi
 import fi.vm.sade.kaava.Funktiokuvaaja.Konvertterinimi
 import fi.vm.sade.kaava.Funktiokuvaaja._
@@ -15,7 +16,6 @@ import fi.vm.sade.service.valintaperusteet.laskenta.api.tila.Virhetila
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakutoive
 import fi.vm.sade.service.valintaperusteet.model.JsonViews
-import org.codehaus.jackson.map.ObjectMapper
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 

@@ -5,8 +5,12 @@ import fi.vm.sade.auditlog.Audit;
 import fi.vm.sade.valinta.sharedutils.AuditLogger;
 import java.util.Collection;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.stereotype.Component;
 
-/** @author Jussi Jartamo */
+/**
+ * @author Jussi Jartamo
+ */
+@Component
 public class ValintaperusteetAudit {
   public static final Audit AUDIT =
       new Audit(new AuditLogger(), "valintaperusteet-service", ApplicationType.VIRKAILIJA);
