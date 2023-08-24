@@ -1,8 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 import fi.vm.sade.service.valintaperusteet.WithSpringBoot;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
@@ -28,9 +26,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -53,7 +51,7 @@ public class HakijaryhmaServiceTest extends WithSpringBoot {
 
   private final KoodiDTO hakijaryhmatyyppikoodi = new KoodiDTO();
 
-  @Before
+  @BeforeEach
   public void setupTestData() {
     hakijaryhmatyyppikoodi.setUri("hakijaryhmatyyppikoodi_uri");
     hakijaryhmatyyppikoodi.setArvo("hakijaryhmätyyppi 1");
@@ -288,7 +286,7 @@ public class HakijaryhmaServiceTest extends WithSpringBoot {
    * @see ValintalaskentakoostepalveluResource
    */
   @Test
-  @Ignore
+  @Disabled
   public void testLiitaHakijaryhmaValintatapajonolle() {
     try {
       hakijaryhmaService.liitaHakijaryhmaValintatapajonolle("vtj1", "asdasd");

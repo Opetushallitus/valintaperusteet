@@ -1,6 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import fi.vm.sade.service.valintaperusteet.WithSpringBoot;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
@@ -15,7 +15,7 @@ import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintatapajonoaEiVoiLisataException;
 import java.util.*;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -543,8 +543,8 @@ public class ValintatapajonoServiceTest extends WithSpringBoot {
       fail("Sijoitteltava jono cannot be saved without type");
     } catch (Exception e) {
       assertTrue(
-          "Wrong type of exception " + e.toString(),
-          e instanceof ValintatapajonoaEiVoiLisataException);
+          e instanceof ValintatapajonoaEiVoiLisataException,
+          "Wrong type of exception " + e.toString());
     }
     uusiJono.setTyyppi("valintatapajono_kp");
 
@@ -565,8 +565,8 @@ public class ValintatapajonoServiceTest extends WithSpringBoot {
       fail("Sijoitteltava jono cannot be saved without type");
     } catch (Exception e) {
       assertTrue(
-          "Wrong type of exception " + e.toString(),
-          e instanceof ValintatapajonoaEiVoiLisataException);
+          e instanceof ValintatapajonoaEiVoiLisataException,
+          "Wrong type of exception " + e.toString());
     }
 
     uusiJono.setTyyppi("valintatapajono_m");
@@ -607,9 +607,9 @@ public class ValintatapajonoServiceTest extends WithSpringBoot {
 
     Valintatapajono update = valintatapajonoService.update(valintatapajonoOid, dto);
     assertEquals(
-        "Siirretaan sijoitteluun should remain true for jonos that have been ran through sijoittelu process",
         true,
-        update.getSiirretaanSijoitteluun());
+        update.getSiirretaanSijoitteluun(),
+        "Siirretaan sijoitteluun should remain true for jonos that have been ran through sijoittelu process");
   }
 
   @Test
@@ -625,10 +625,10 @@ public class ValintatapajonoServiceTest extends WithSpringBoot {
 
     try {
       valintatapajonoService.update(valintatapajonoOid, dto);
-      assertTrue("Sijoiteltu jono cannot be saved without type", false);
+      assertTrue(false, "Sijoiteltu jono cannot be saved without type");
     } catch (ValintatapajonoaEiVoiLisataException e) {
     } catch (Exception e) {
-      assertTrue("Wrong type of exception " + e.toString(), false);
+      assertTrue(false, "Wrong type of exception " + e.toString());
     }
   }
 
@@ -650,12 +650,12 @@ public class ValintatapajonoServiceTest extends WithSpringBoot {
 
     Valintatapajono update = valintatapajonoService.update(valintatapajonoOid, dto);
     assertEquals(
-        "Siirretaan sijoitteluun should remain false for jonos that have been ran through sijoittelu process IF update is done with oph user account",
         false,
-        update.getSiirretaanSijoitteluun());
+        update.getSiirretaanSijoitteluun(),
+        "Siirretaan sijoitteluun should remain false for jonos that have been ran through sijoittelu process IF update is done with oph user account");
   }
 
-  @Test(expected = ValintatapajonoaEiVoiLisataException.class)
+  @Test
   public void testLisaaValintatapajonoValintakoeValinnanVaiheelle() {
     final String valinnanVaiheOid = "82";
     ValinnanVaihe valinnanVaihe = valinnanVaiheDAO.readByOid(valinnanVaiheOid);
@@ -672,6 +672,10 @@ public class ValintatapajonoServiceTest extends WithSpringBoot {
     jono.setSiirretaanSijoitteluun(false);
     jono.setTasapistesaanto(fi.vm.sade.service.valintaperusteet.dto.model.Tasapistesaanto.ARVONTA);
 
-    valintatapajonoService.lisaaValintatapajonoValinnanVaiheelle(valinnanVaiheOid, jono, null);
+    assertThrows(
+        ValintatapajonoaEiVoiLisataException.class,
+        () ->
+            valintatapajonoService.lisaaValintatapajonoValinnanVaiheelle(
+                valinnanVaiheOid, jono, null));
   }
 }

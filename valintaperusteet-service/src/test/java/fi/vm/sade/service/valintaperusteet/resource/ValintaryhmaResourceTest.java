@@ -1,7 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
@@ -17,9 +17,8 @@ import java.util.List;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -37,7 +36,7 @@ public class ValintaryhmaResourceTest extends WithSpringBoot {
 
   @Autowired private ValinnanVaiheDAO valinnanVaiheDao;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     applicationContext.getAutowireCapableBeanFactory().autowireBean(valintaryhmaResource);
     FakeAuthenticationInitialiser.fakeAuthentication();
@@ -46,7 +45,7 @@ public class ValintaryhmaResourceTest extends WithSpringBoot {
   @Test
   public void testQueryFull() throws Exception {
     ValintaryhmaDTO valintaryhma = valintaryhmaResource.queryFull("oid1");
-    Assert.assertEquals("oid1", valintaryhma.getOid());
+    assertEquals("oid1", valintaryhma.getOid());
 
     mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(valintaryhma);
   }
@@ -54,8 +53,8 @@ public class ValintaryhmaResourceTest extends WithSpringBoot {
   @Test
   public void testSearch() throws Exception {
     List<ValintaryhmaDTO> valintaryhmas = valintaryhmaResource.search(true, null);
-    Assert.assertEquals(46, valintaryhmas.size());
-    Assert.assertEquals("oid1", valintaryhmas.get(0).getOid());
+    assertEquals(46, valintaryhmas.size());
+    assertEquals("oid1", valintaryhmas.get(0).getOid());
 
     mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(valintaryhmas);
   }
@@ -63,7 +62,7 @@ public class ValintaryhmaResourceTest extends WithSpringBoot {
   @Test
   public void testQueryChildren() throws Exception {
     List<ValintaryhmaDTO> valintaryhmas = valintaryhmaResource.queryChildren("oid1");
-    Assert.assertEquals(4, valintaryhmas.size());
+    assertEquals(4, valintaryhmas.size());
 
     mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(valintaryhmas);
   }

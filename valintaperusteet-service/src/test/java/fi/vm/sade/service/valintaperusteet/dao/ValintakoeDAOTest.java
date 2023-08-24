@@ -1,6 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.dao;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import fi.vm.sade.service.valintaperusteet.WithSpringBoot;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
@@ -8,7 +8,7 @@ import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 

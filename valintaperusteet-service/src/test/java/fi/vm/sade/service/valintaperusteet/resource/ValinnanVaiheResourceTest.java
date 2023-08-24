@@ -1,6 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
@@ -19,9 +19,9 @@ import java.util.Collections;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -39,14 +39,14 @@ public class ValinnanVaiheResourceTest extends WithSpringBoot {
 
   @Autowired private ApplicationContext applicationContext;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     applicationContext.getAutowireCapableBeanFactory().autowireBean(vaiheResource);
     applicationContext.getAutowireCapableBeanFactory().autowireBean(hakuResource);
     FakeAuthenticationInitialiser.fakeAuthentication();
   }
 
-  @After
+  @AfterEach
   public void tearDown() {}
 
   @Test
@@ -215,7 +215,7 @@ public class ValinnanVaiheResourceTest extends WithSpringBoot {
     assertEquals("4", jarjesta.get(2).getOid());
   }
 
-  @Test(expected = RuntimeException.class)
+  @Test
   public void testJarjestaEriHakuvaiheita() {
     HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
 
@@ -227,7 +227,7 @@ public class ValinnanVaiheResourceTest extends WithSpringBoot {
 
     oids.add("1");
 
-    vaiheResource.jarjesta(oids, request);
+    assertThrows(RuntimeException.class, () -> vaiheResource.jarjesta(oids, request));
   }
 
   private ValintatapajonoDTO newJono() {

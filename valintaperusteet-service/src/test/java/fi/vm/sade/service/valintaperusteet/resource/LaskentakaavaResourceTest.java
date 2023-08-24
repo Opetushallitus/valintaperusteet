@@ -1,6 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.kaava.Funktiokuvaaja;
@@ -18,8 +18,8 @@ import java.io.IOException;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -41,7 +41,7 @@ public class LaskentakaavaResourceTest extends WithSpringBoot {
 
   @Autowired private ApplicationContext applicationContext;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     applicationContext.getAutowireCapableBeanFactory().autowireBean(laskentakaavaResource);
     FakeAuthenticationInitialiser.fakeAuthentication();

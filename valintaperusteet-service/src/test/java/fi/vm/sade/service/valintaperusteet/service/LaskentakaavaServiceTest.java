@@ -1,11 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import fi.vm.sade.kaava.Funktiokuvaaja;
 import fi.vm.sade.service.valintaperusteet.WithSpringBoot;
@@ -46,7 +41,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /** User: kwuoti Date: 21.1.2013 Time: 9.42 */
@@ -628,10 +623,14 @@ public class LaskentakaavaServiceTest extends WithSpringBoot {
     assertTrue(caught);
   }
 
-  @Test(expected = FunktiokutsuaEiVoidaKayttaaValintakoelaskennassaException.class)
+  @Test
   public void testHaeLaskettavaKaavaVaarallaMoodilla() {
     final Long laskentakaavaId = 417L;
-    laskentakaavaService.haeLaskettavaKaava(laskentakaavaId, Laskentamoodi.VALINTAKOELASKENTA);
+    assertThrows(
+        FunktiokutsuaEiVoidaKayttaaValintakoelaskennassaException.class,
+        () ->
+            laskentakaavaService.haeLaskettavaKaava(
+                laskentakaavaId, Laskentamoodi.VALINTAKOELASKENTA));
   }
 
   @Test
@@ -743,7 +742,7 @@ public class LaskentakaavaServiceTest extends WithSpringBoot {
     assertFalse(siirretty.isPresent());
   }
 
-  @Test(expected = LaskentakaavaEiOleOlemassaException.class)
+  @Test
   public void testPoistaKaava() {
     final Long id = 204L;
     Laskentakaava laskentakaava = laskentakaavaService.haeMallinnettuKaava(id);
@@ -753,7 +752,9 @@ public class LaskentakaavaServiceTest extends WithSpringBoot {
         maksimi204L.getFunktionimi());
     assertEquals(2, maksimi204L.getFunktioargumentit().size());
     laskentakaavaService.poista(id);
-    laskentakaava = laskentakaavaService.haeMallinnettuKaava(id);
+    assertThrows(
+        LaskentakaavaEiOleOlemassaException.class,
+        () -> laskentakaavaService.haeMallinnettuKaava(id));
   }
 
   @Test

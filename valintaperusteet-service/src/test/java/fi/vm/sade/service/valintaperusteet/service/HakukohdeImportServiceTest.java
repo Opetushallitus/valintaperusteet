@@ -1,10 +1,10 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import fi.vm.sade.service.valintaperusteet.WithSpringBoot;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
@@ -28,8 +28,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /** User: wuoti Date: 8.5.2013 Time: 15.06 */
@@ -96,16 +95,16 @@ public class HakukohdeImportServiceTest extends WithSpringBoot {
     HakukohdeImportServiceImpl serviceImpl = new HakukohdeImportServiceImpl();
 
     final String uri1 = "http://koodinuri";
-    Assert.assertEquals(uri1, serviceImpl.sanitizeKoodiUri(uri1));
+    assertEquals(uri1, serviceImpl.sanitizeKoodiUri(uri1));
 
     final String uri2 = "http://koodinur2#1";
     final String uri2Expected = "http://koodinur2";
-    Assert.assertEquals(uri2Expected, serviceImpl.sanitizeKoodiUri(uri2));
+    assertEquals(uri2Expected, serviceImpl.sanitizeKoodiUri(uri2));
 
     final String uri3 = "http://koodinur3#1#5";
     final String uri3Expected = "http://koodinur3";
-    Assert.assertEquals(uri3Expected, serviceImpl.sanitizeKoodiUri(uri3));
-    Assert.assertNull(null);
+    assertEquals(uri3Expected, serviceImpl.sanitizeKoodiUri(uri3));
+    assertNull(null);
   }
 
   @Test

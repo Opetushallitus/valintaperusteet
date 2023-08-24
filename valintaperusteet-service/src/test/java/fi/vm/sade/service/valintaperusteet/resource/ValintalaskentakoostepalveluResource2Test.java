@@ -1,6 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import fi.vm.sade.service.valintaperusteet.WithSpringBoot;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
@@ -8,8 +8,8 @@ import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.util.TestUtil;
 import java.util.Arrays;
 import java.util.List;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
@@ -24,7 +24,7 @@ public class ValintalaskentakoostepalveluResource2Test extends WithSpringBoot {
   @Autowired private ApplicationContext applicationContext;
   private TestUtil testUtil = new TestUtil(ValintatapajonoResource.class);
 
-  @Before
+  @BeforeEach
   public void setUp() {
     applicationContext.getAutowireCapableBeanFactory().autowireBean(jonoResource);
     applicationContext.getAutowireCapableBeanFactory().autowireBean(vaiheResource);

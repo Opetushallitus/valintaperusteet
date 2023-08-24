@@ -1,9 +1,9 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
-import static junit.framework.TestCase.fail;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -19,8 +19,8 @@ import fi.vm.sade.valinta.sharedutils.FakeAuthenticationInitialiser;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -43,7 +43,7 @@ public class HakukohdeResourceTest extends WithSpringBoot {
 
   @Autowired ValinnanVaiheDAO valinnanVaiheDao;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     applicationContext.getAutowireCapableBeanFactory().autowireBean(hakukohdeResource);
     FakeAuthenticationInitialiser.fakeAuthentication();

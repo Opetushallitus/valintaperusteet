@@ -1,6 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import fi.vm.sade.service.valintaperusteet.WithSpringBoot;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
@@ -17,8 +17,8 @@ import java.util.Arrays;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -39,7 +39,7 @@ public class JarjestyskriteeriResourceTest extends WithSpringBoot {
 
   @Autowired private ValintaperusteetModelMapper modelMapper;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     FakeAuthenticationInitialiser.fakeAuthentication();
     applicationContext.getAutowireCapableBeanFactory().autowireBean(resource);

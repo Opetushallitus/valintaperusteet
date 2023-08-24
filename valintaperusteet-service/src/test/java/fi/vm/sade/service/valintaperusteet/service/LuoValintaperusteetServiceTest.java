@@ -1,9 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.google.common.collect.Lists;
 import fi.vm.sade.kaava.Laskentadomainkonvertteri;
@@ -35,8 +32,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /** User: kwuoti Date: 5.3.2013 Time: 16.02 */
@@ -49,7 +46,7 @@ public class LuoValintaperusteetServiceTest extends WithSpringBoot {
   @Autowired private ValintaryhmaDAO valintaryhmaDAO;
 
   @Test
-  @Ignore
+  @Disabled
   public void testLuo() throws IOException {
     luoValintaperusteetService.luo();
     int ryhmienMaara = valintaryhmaDAO.findAll().size();

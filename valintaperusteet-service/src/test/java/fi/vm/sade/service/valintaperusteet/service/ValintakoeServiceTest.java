@@ -1,8 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import fi.vm.sade.service.valintaperusteet.WithSpringBoot;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
@@ -15,7 +13,7 @@ import fi.vm.sade.service.valintaperusteet.service.exception.ValintakoettaEiOleO
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /** User: kwuoti Date: 15.4.2013 Time: 18.04 */
@@ -165,7 +163,7 @@ public class ValintakoeServiceTest extends WithSpringBoot {
     assertEquals(update.getLaskentakaavaId(), kopio.getLaskentakaava().getId());
   }
 
-  @Test(expected = FunktiokutsuaEiVoidaKayttaaValintakoelaskennassaException.class)
+  @Test
   public void testUpdateInvalidLaskentakaava() {
     final String valintakoeOid = "oid15";
 
@@ -176,6 +174,8 @@ public class ValintakoeServiceTest extends WithSpringBoot {
     update.setNimi("nimeäminen");
     update.setTunniste("uustunniste");
 
-    valintakoeService.update(valintakoeOid, update);
+    assertThrows(
+        FunktiokutsuaEiVoidaKayttaaValintakoelaskennassaException.class,
+        () -> valintakoeService.update(valintakoeOid, update));
   }
 }

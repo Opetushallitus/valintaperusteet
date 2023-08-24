@@ -1,8 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import fi.vm.sade.service.valintaperusteet.WithSpringBoot;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
@@ -18,7 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /** User: kwuoti Date: 22.1.2013 Time: 15.40 */
@@ -106,18 +104,18 @@ public class ValintaperusteServiceTest extends WithSpringBoot {
     assertEquals(1, ValintaperusteetDTOs.size());
   }
 
-  @Test(expected = RuntimeException.class)
+  @Test
   public void testHaeValintaperusteetEpakelvollaJarjestysluvulla() {
     List<HakuparametritDTO> params = new ArrayList<>();
     params.add(getHakuparametritDTO("oid6", -1));
-    valintaperusteService.haeValintaperusteet(params);
+    assertThrows(RuntimeException.class, () -> valintaperusteService.haeValintaperusteet(params));
   }
 
-  @Test(expected = RuntimeException.class)
+  @Test
   public void testHaeValintaperusteetLiianIsollaJarjestysluvulla() {
     List<HakuparametritDTO> params = new ArrayList<>();
     params.add(getHakuparametritDTO("oid6", 77));
-    valintaperusteService.haeValintaperusteet(params);
+    assertThrows(RuntimeException.class, () -> valintaperusteService.haeValintaperusteet(params));
   }
 
   @Test
@@ -131,9 +129,9 @@ public class ValintaperusteServiceTest extends WithSpringBoot {
     assertEquals(2, ValintaperusteetDTOs.size());
   }
 
-  @Test(expected = RuntimeException.class)
+  @Test
   public void testHaeValintaperusteetNullilla() {
-    valintaperusteService.haeValintaperusteet(null);
+    assertThrows(RuntimeException.class, () -> valintaperusteService.haeValintaperusteet(null));
   }
 
   @Test
@@ -183,7 +181,7 @@ public class ValintaperusteServiceTest extends WithSpringBoot {
     assertNotNull(vk.getTunniste());
   }
 
-  @Test(expected = RuntimeException.class)
+  @Test
   public void testHaeValintaperusteetMukanaEpaaktiivisiaVaiheita() {
     List<HakuparametritDTO> params = new ArrayList<>();
     params.add(getHakuparametritDTO("oid21", 0));
@@ -196,9 +194,9 @@ public class ValintaperusteServiceTest extends WithSpringBoot {
     vps = valintaperusteService.haeValintaperusteet(params);
     assertEquals(1, vps.size());
 
-    params = new ArrayList<>();
-    params.add(getHakuparametritDTO("oid21", 1));
-    valintaperusteService.haeValintaperusteet(params);
+    assertThrows(
+        RuntimeException.class,
+        () -> valintaperusteService.haeValintaperusteet(List.of(getHakuparametritDTO("oid21", 1))));
   }
 
   @Test

@@ -1,9 +1,9 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.FluentIterable;
@@ -39,7 +39,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.commons.lang.StringUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @DataSetLocation("classpath:test-data.xml")
@@ -212,7 +212,7 @@ public class ValintaryhmaServiceTest extends WithSpringBoot {
   public void kopioiValintaryhmaHierarkianTaydellisesti() throws Exception {
     // create original root VR
     Valintaryhma originalRoot = valintaryhmaService.insert(createValintaryhma("parent"));
-    assertNotNull("Parent ValintaRyhmä should be persisted at this point", originalRoot);
+    assertNotNull(originalRoot, "Parent ValintaRyhmä should be persisted at this point");
     // add valinnanvaihe to original root
     addValinnanvaihe(originalRoot, "tavallinen", true, ValinnanVaiheTyyppi.TAVALLINEN);
     ValinnanVaihe examVV =
@@ -243,7 +243,7 @@ public class ValintaryhmaServiceTest extends WithSpringBoot {
     // create original child VR
     Valintaryhma originalChild =
         valintaryhmaService.insert(createValintaryhma("child"), originalRoot.getOid());
-    assertNotNull("Child ValintaRyhmä should be persisted at this point", originalChild);
+    assertNotNull(originalChild, "Child ValintaRyhmä should be persisted at this point");
 
     // copy the original hierarchy
     Valintaryhma copiedRoot =
@@ -336,27 +336,27 @@ public class ValintaryhmaServiceTest extends WithSpringBoot {
     List<Hakijaryhma> hrs = hakijaryhmaService.findByValintaryhma(addedVR.getOid());
     // make sure there's only one HR as one would expect
     assertEquals(
-        "There should be exactly one Hakijaryhma for child B as it is added as child to parent, not child B",
         1,
-        hrs.size());
+        hrs.size(),
+        "There should be exactly one Hakijaryhma for child B as it is added as child to parent, not child B");
   }
 
   private void assertHakijaryhmaLinking(Valintaryhma copiedRoot) {
     List<Hakijaryhma> copiedHakijaryhmas =
         hakijaryhmaService.findByValintaryhma(copiedRoot.getOid());
     assertEquals(
-        "Copied Valintaryhma should have a single copied Hakijaryhma",
         1,
-        copiedHakijaryhmas.size());
+        copiedHakijaryhmas.size(),
+        "Copied Valintaryhma should have a single copied Hakijaryhma");
     Hakijaryhma copiedHakijaryhma = copiedHakijaryhmas.get(0);
     assertEquals(
-        "Copied Hakijaryhma should be owned by copied root",
         copiedRoot.getOid(),
-        copiedHakijaryhma.getValintaryhma().getOid());
+        copiedHakijaryhma.getValintaryhma().getOid(),
+        "Copied Hakijaryhma should be owned by copied root");
     assertEquals(
-        "Copied Hakijaryhma's Laskentakaava should be owned by copied root",
         copiedRoot.getOid(),
-        copiedHakijaryhma.getLaskentakaava().getValintaryhma().getOid());
+        copiedHakijaryhma.getLaskentakaava().getValintaryhma().getOid(),
+        "Copied Hakijaryhma's Laskentakaava should be owned by copied root");
   }
 
   private static void assertValinnanvaiheRootLinking(
@@ -367,8 +367,8 @@ public class ValintaryhmaServiceTest extends WithSpringBoot {
             .filter(Predicates.notNull())
             .toList();
     assertTrue(
-        "None of the ValinnanVaihe root entities should have any parent links!",
-        nonNullVVs.isEmpty());
+        nonNullVVs.isEmpty(),
+        "None of the ValinnanVaihe root entities should have any parent links!");
   }
 
   private static void assertValinnanvaiheChildLinking(
@@ -376,9 +376,9 @@ public class ValintaryhmaServiceTest extends WithSpringBoot {
     List<Long> rootIds = Lists.transform(rootVVs, ValinnanVaihe::getId);
     List<Long> childIds = Lists.transform(childVVs, (vk) -> vk.getMaster().getId());
     assertEquals(
-        "ValinnanVaihe hierarchy's master references from child to root are incorrect!",
         rootIds,
-        childIds);
+        childIds,
+        "ValinnanVaihe hierarchy's master references from child to root are incorrect!");
   }
 
   private static void assertValintakoeRootLinking(
@@ -389,7 +389,7 @@ public class ValintaryhmaServiceTest extends WithSpringBoot {
             .filter(Predicates.notNull())
             .toList();
     assertTrue(
-        "None of the ValintaKoe root entities should have any parent links!", nonNullVKs.isEmpty());
+        nonNullVKs.isEmpty(), "None of the ValintaKoe root entities should have any parent links!");
   }
 
   private static void assertValintakoeChildLinking(
@@ -397,9 +397,9 @@ public class ValintaryhmaServiceTest extends WithSpringBoot {
     List<Long> rootIds = Lists.transform(rootVKs, Valintakoe::getId);
     List<Long> childIds = Lists.transform(childVKs, (vk) -> vk.getMaster().getId());
     assertEquals(
-        "Valintakoe hierarchy's master references from child to root are incorrect!",
         rootIds,
-        childIds);
+        childIds,
+        "Valintakoe hierarchy's master references from child to root are incorrect!");
   }
 
   private List<ValinnanVaihe> findVVs(Valintaryhma vr) {
@@ -408,7 +408,7 @@ public class ValintaryhmaServiceTest extends WithSpringBoot {
 
   private Valintaryhma findChildFor(Valintaryhma vr) {
     List<Valintaryhma> children = valintaryhmaService.findValintaryhmasByParentOid(vr.getOid());
-    assertEquals("Valintaryhma should have exactly one child!", 1, children.size());
+    assertEquals(1, children.size(), "Valintaryhma should have exactly one child!");
     return children.get(0);
   }
 
@@ -424,20 +424,20 @@ public class ValintaryhmaServiceTest extends WithSpringBoot {
     kokeet.forEach(
         (koe) -> {
           assertNotNull(
+              koe.getLaskentakaavaId(),
               "Expected reference to laskentakaava in Valintakoe "
                   + koe.getId()
                   + "::"
                   + koe.getNimi()
-                  + " is missing",
-              koe.getLaskentakaavaId());
+                  + " is missing");
           assertTrue(
+              vrIds.contains(koe.getLaskentakaavaId()),
               "Valintaryhma "
                   + valintaryhma.getId()
                   + "::"
                   + valintaryhma.getNimi()
                   + " does not contain expected laskentakaava id "
-                  + koe.getLaskentakaavaId(),
-              vrIds.contains(koe.getLaskentakaavaId()));
+                  + koe.getLaskentakaavaId());
         });
   }
 

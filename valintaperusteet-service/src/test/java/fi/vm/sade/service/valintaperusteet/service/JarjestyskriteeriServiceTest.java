@@ -1,9 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 import fi.vm.sade.service.valintaperusteet.WithSpringBoot;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
@@ -16,7 +13,7 @@ import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
 import fi.vm.sade.service.valintaperusteet.service.exception.JarjestyskriteeriEiOleOlemassaException;
 import java.util.Arrays;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -34,15 +31,18 @@ public class JarjestyskriteeriServiceTest extends WithSpringBoot {
 
   @Autowired private LaskentakaavaDAO laskentakaavaDAO;
 
-  @Test(expected = RuntimeException.class)
+  @Test
   public void testLisaaJarjestyskriteeriLuonnosLaskentakaava() {
     final String valintatapajonoOid = "1059";
     final Long laskentakaavaId = 409L;
 
     JarjestyskriteeriCreateDTO jarjestyskriteeri = new JarjestyskriteeriCreateDTO();
     jarjestyskriteeri.setMetatiedot("jotain metaa");
-    jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(
-        valintatapajonoOid, jarjestyskriteeri, null, laskentakaavaId);
+    assertThrows(
+        RuntimeException.class,
+        () ->
+            jarjestyskriteeriService.lisaaJarjestyskriteeriValintatapajonolle(
+                valintatapajonoOid, jarjestyskriteeri, null, laskentakaavaId));
   }
 
   @Test

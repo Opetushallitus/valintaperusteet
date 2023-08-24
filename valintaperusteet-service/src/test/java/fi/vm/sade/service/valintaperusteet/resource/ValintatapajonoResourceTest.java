@@ -1,6 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import fi.vm.sade.service.valintaperusteet.WithSpringBoot;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -40,7 +40,7 @@ public class ValintatapajonoResourceTest extends WithSpringBoot {
   private HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
   private HttpSession session = Mockito.mock(HttpSession.class);
 
-  @Before
+  @BeforeEach
   public void setUp() {
     applicationContext.getAutowireCapableBeanFactory().autowireBean(resource);
     applicationContext.getAutowireCapableBeanFactory().autowireBean(vaiheResource);
@@ -76,9 +76,9 @@ public class ValintatapajonoResourceTest extends WithSpringBoot {
     assertEquals(3, jarjestyskriteeri.size());
   }
 
-  @Test(expected = RuntimeException.class)
+  @Test
   public void testDeleteOidNotFound() {
-    resource.delete("", request);
+    assertThrows(RuntimeException.class, () -> resource.delete("", request));
   }
 
   @Test

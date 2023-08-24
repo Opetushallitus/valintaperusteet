@@ -1,6 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import fi.vm.sade.service.valintaperusteet.WithSpringBoot;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
@@ -14,8 +14,8 @@ import fi.vm.sade.service.valintaperusteet.util.TestUtil;
 import fi.vm.sade.valinta.sharedutils.FakeAuthenticationInitialiser;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -32,7 +32,7 @@ public class ValintakoeResourceTest extends WithSpringBoot {
 
   @Autowired private ApplicationContext applicationContext;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     applicationContext.getAutowireCapableBeanFactory().autowireBean(valintakoeResource);
     FakeAuthenticationInitialiser.fakeAuthentication();
@@ -137,13 +137,15 @@ public class ValintakoeResourceTest extends WithSpringBoot {
     assertEquals(hakijanValinta.getTunniste(), "KoeTunniste");
   }
 
-  @Test(expected = ValintakoettaEiVoiLisataException.class)
+  @Test
   public void testUpdateValintakoeWithExistingTunniste() {
     final String oid = "oid1";
     ValintakoeDTO valintakoe = valintakoeResource.readByOid(oid);
 
     valintakoe.setTunniste("valintakoetunniste2");
 
-    valintakoeResource.update(oid, valintakoe, request);
+    assertThrows(
+        ValintakoettaEiVoiLisataException.class,
+        () -> valintakoeResource.update(oid, valintakoe, request));
   }
 }
