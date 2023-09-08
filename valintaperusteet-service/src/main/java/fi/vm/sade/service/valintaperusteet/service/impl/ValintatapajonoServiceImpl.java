@@ -11,7 +11,6 @@ import fi.vm.sade.service.valintaperusteet.service.exception.ValintatapajonoEiOl
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintatapajonoOidListaOnTyhjaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintatapajonoaEiVoiLisataException;
 import fi.vm.sade.service.valintaperusteet.util.*;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
@@ -58,8 +57,7 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
 
   private final VtsRestClient vtsRestClient;
 
-  @Value("${root.organisaatio.oid}")
-  private String rootOrgOid;
+  private final String rootOrgOid;
 
   @Autowired
   public ValintatapajonoServiceImpl(
@@ -72,6 +70,7 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
       @Lazy HakijaryhmaValintatapajonoService hakijaryhmaValintatapajonoService,
       @Lazy HakukohdeViiteDAO hakukohdeDao,
       @Lazy ValintaperusteetModelMapper modelMapper,
+      @Value("${root.organisaatio.oid}") final String rootOrgOid,
       VtsRestClient vtsRestClient) {
     this.valintatapajonoDAO = valintatapajonoDAO;
     this.valinnanVaiheService = valinnanVaiheService;
@@ -83,6 +82,7 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
     this.hakukohdeDao = hakukohdeDao;
     this.modelMapper = modelMapper;
     this.vtsRestClient = vtsRestClient;
+    this.rootOrgOid = rootOrgOid;
   }
 
   @Override
@@ -311,7 +311,7 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
           dto.setSiirretaanSijoitteluun(true);
           nykyinenValintatapajono.setSiirretaanSijoitteluun(true);
         }
-      } catch (IOException e) {
+      } catch (RuntimeException e) {
         LOGGER.error(
             String.format(
                 "Virhe tarkistaessa onko valintatapajonolle %s suoritettu sijoitteluajoa", oid),

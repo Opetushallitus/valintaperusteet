@@ -1,15 +1,14 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(value = "JarjestyskriteeriInsertDTO", description = "Jarjestyskriteeri ja laskentakaava")
+@Schema(name = "JarjestyskriteeriInsertDTO", description = "Jarjestyskriteeri ja laskentakaava")
 public class JarjestyskriteeriInsertDTO {
 
-  @ApiModelProperty(value = "Järjestyskriteeri", required = true)
+  @Schema(description = "Järjestyskriteeri", required = true)
   private JarjestyskriteeriCreateDTO jarjestyskriteeri;
 
-  @ApiModelProperty(value = "Laskentakaava ID", required = true)
+  @Schema(description = "Laskentakaava ID", required = true)
   private Long laskentakaavaId;
 
   public JarjestyskriteeriCreateDTO getJarjestyskriteeri() {

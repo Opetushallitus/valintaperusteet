@@ -1,15 +1,14 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(value = "JarjestyskriteeriCreateDTO", description = "Järjestyskriteeri")
+@Schema(name = "JarjestyskriteeriCreateDTO", description = "Järjestyskriteeri")
 public class JarjestyskriteeriCreateDTO {
 
-  @ApiModelProperty(value = "Metatiedot")
+  @Schema(description = "Metatiedot")
   private String metatiedot;
 
-  @ApiModelProperty(value = "Aktiivinen", required = true)
+  @Schema(description = "Aktiivinen", required = true)
   private Boolean aktiivinen;
 
   public String getMetatiedot() {

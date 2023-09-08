@@ -1,0 +1,49 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  profiles:
+    active: dev
+
+springdoc:
+  show-actuator: false
+  paths-to-match: /resources/**
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+
+management:
+  endpoints:
+    enabled-by-default: false
+  endpoint:
+    health:
+      enabled: true
+  metrics:
+    mongo:
+      command:
+        enabled: false
+      connectionpool:
+        enabled: false
+
+host:
+  host-cas: localhost
+  host-virkailija: localhost
+
+cas-service:
+  service: http://${host.host-virkailija}/valintaperusteet-service
+  callback: http://${host.host-virkailija}/valintaperusteet-service
+  send-renew: false
+  key: valintaperusteet-service
+
+jpa:
+  schema-update: validate
+  show-sql: false
+
+root:
+  organisaatio:
+    oid: 1.2.246.562.10.00000000001
+
+valintaperusteet:
+  uses-ssl-proxy: false
+  valinta-tulos-service:
+    service-url: http://localhost:8080/valinta-tulos-service

@@ -1,9 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(value = "HakukohdeInsertDTO", description = "Hakukohteen lisääminen")
+@Schema(name = "HakukohdeInsertDTO", description = "Hakukohteen lisääminen")
 public class HakukohdeInsertDTO {
 
   public HakukohdeInsertDTO() {}
@@ -13,10 +12,10 @@ public class HakukohdeInsertDTO {
     this.valintaryhmaOid = valintaryhmaOid;
   }
 
-  @ApiModelProperty(value = "Lisättävä hakukohde", required = true)
+  @Schema(description = "Lisättävä hakukohde", required = true)
   private HakukohdeViiteCreateDTO hakukohde;
 
-  @ApiModelProperty(value = "Valintaryhmä OID, johon hakukohde lisätään", required = true)
+  @Schema(description = "Valintaryhmä OID, johon hakukohde lisätään", required = true)
   private String valintaryhmaOid;
 
   public HakukohdeViiteCreateDTO getHakukohde() {

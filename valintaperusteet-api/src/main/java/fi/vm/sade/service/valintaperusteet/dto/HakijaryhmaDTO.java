@@ -1,14 +1,13 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(value = "HakijaryhmaDTO", description = "Hakijaryhmä")
+@Schema(name = "HakijaryhmaDTO", description = "Hakijaryhmä")
 public class HakijaryhmaDTO extends HakijaryhmaCreateDTO implements Prioritized {
-  @ApiModelProperty(value = "OID", required = true)
+  @Schema(description = "OID", required = true)
   private String oid;
 
-  @ApiModelProperty(value = "Hakijaryhmän prioriteetti")
+  @Schema(description = "Hakijaryhmän prioriteetti")
   private int prioriteetti;
 
   public String getOid() {

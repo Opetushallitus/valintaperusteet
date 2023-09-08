@@ -4,8 +4,8 @@
 	<parent>
 		<artifactId>valintaperusteet</artifactId>
 		<groupId>fi.vm.sade.valintaperusteet</groupId>
-		<version>5.18-SNAPSHOT</version>
-		<relativePath>..</relativePath>
+		<version>6.0-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 	
 	<artifactId>valintaperusteet-api</artifactId>
@@ -13,36 +13,13 @@
 	<packaging>jar</packaging>
 
 	<dependencies>
-		<dependency>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-annotations</artifactId>
-            <version>${swagger.version}</version>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-core-asl</artifactId>
-            <version>${jackson.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-          <groupId>javax.ws.rs</groupId>
-          <artifactId>javax.ws.rs-api</artifactId>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-webmvc-core</artifactId>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
         </dependency>
     </dependencies>
-	<build>
-        <plugins>
-          <plugin>
-              <artifactId>maven-compiler-plugin</artifactId>
-              <configuration>
-                <source>1.8</source>
-                <target>1.8</target>
-              </configuration>
-          </plugin>
-        </plugins>
-    </build>
 </project>

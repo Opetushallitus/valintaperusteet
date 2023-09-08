@@ -1,8 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.dao.impl;
 
-import com.mysema.query.jpa.JPASubQuery;
-import com.mysema.query.jpa.impl.JPAQuery;
-import com.mysema.query.types.EntityPath;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import fi.vm.sade.service.valintaperusteet.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.model.*;
@@ -14,12 +12,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class HakijaryhmaDAOImpl extends AbstractJpaDAOImpl<Hakijaryhma, Long>
     implements HakijaryhmaDAO {
-  protected JPAQuery from(EntityPath<?>... o) {
-    return new JPAQuery(getEntityManager()).from(o);
-  }
-
-  protected JPASubQuery subQuery() {
-    return new JPASubQuery();
+  protected JPAQueryFactory queryFactory() {
+    return new JPAQueryFactory(getEntityManager());
   }
 
   @Override
@@ -29,21 +23,22 @@ public class HakijaryhmaDAOImpl extends AbstractJpaDAOImpl<Hakijaryhma, Long>
         QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
 
     Hakijaryhma haettu =
-        from(hakijaryhma)
+        queryFactory()
+            .selectFrom(hakijaryhma)
             .where(hakijaryhma.oid.eq(oid))
             .leftJoin(hakijaryhma.jonot, hakijaryhmaValintatapajono)
-            .fetch()
+            .fetchJoin()
             .leftJoin(hakijaryhmaValintatapajono.valintatapajono)
-            .fetch()
+            .fetchJoin()
             .leftJoin(hakijaryhmaValintatapajono.hakukohdeViite)
-            .fetch()
+            .fetchJoin()
             .leftJoin(hakijaryhma.valintaryhma)
-            .fetch()
+            .fetchJoin()
             .leftJoin(hakijaryhma.laskentakaava)
-            .fetch()
+            .fetchJoin()
             .leftJoin(hakijaryhma.hakijaryhmatyyppikoodi)
-            .fetch()
-            .singleResult(hakijaryhma);
+            .fetchJoin()
+            .fetchFirst();
     return haettu;
   }
 
@@ -52,41 +47,43 @@ public class HakijaryhmaDAOImpl extends AbstractJpaDAOImpl<Hakijaryhma, Long>
     QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
     QHakijaryhma hakijaryhma = QHakijaryhma.hakijaryhma;
     return LinkitettavaJaKopioitavaUtil.jarjesta(
-        from(hakijaryhma)
+        queryFactory()
+            .selectFrom(hakijaryhma)
             .join(hakijaryhma.valintaryhma, valintaryhma)
-            .fetch()
+            .fetchJoin()
             .leftJoin(hakijaryhma.laskentakaava)
-            .fetch()
+            .fetchJoin()
             .leftJoin(hakijaryhma.hakijaryhmatyyppikoodi)
-            .fetch()
+            .fetchJoin()
             .leftJoin(hakijaryhma.edellinenHakijaryhma)
-            .fetch()
+            .fetchJoin()
             .leftJoin(hakijaryhma.masterHakijaryhma)
-            .fetch()
+            .fetchJoin()
             .where(valintaryhma.oid.eq(oid))
             .distinct()
-            .list(hakijaryhma));
+            .fetch());
   }
 
   @Override
   public Hakijaryhma haeValintaryhmanViimeinenHakijaryhma(String valintaryhmaOid) {
     QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
     QHakijaryhma hakijaryhma = QHakijaryhma.hakijaryhma;
-    Hakijaryhma lastValinnanVaihe =
-        from(valintaryhma)
-            .leftJoin(valintaryhma.hakijaryhmat, hakijaryhma)
-            .where(valintaryhma.oid.eq(valintaryhmaOid))
-            .singleResult(hakijaryhma);
-    return lastValinnanVaihe;
+    return queryFactory()
+        .select(hakijaryhma)
+        .from(valintaryhma)
+        .leftJoin(valintaryhma.hakijaryhmat, hakijaryhma)
+        .where(valintaryhma.oid.eq(valintaryhmaOid))
+        .fetchFirst();
   }
 
   @Override
   public List<Hakijaryhma> findByLaskentakaava(long id) {
     QHakijaryhma hakijaryhma = QHakijaryhma.hakijaryhma;
-    return from(hakijaryhma)
+    return queryFactory()
+        .selectFrom(hakijaryhma)
         .leftJoin(hakijaryhma.laskentakaava)
         .where(hakijaryhma.laskentakaava.id.eq(id))
-        .list(hakijaryhma);
+        .fetch();
   }
 
   @Override
@@ -95,18 +92,19 @@ public class HakijaryhmaDAOImpl extends AbstractJpaDAOImpl<Hakijaryhma, Long>
     QHakijaryhma hakijaryhma = QHakijaryhma.hakijaryhma;
     return LinkitettavaJaKopioitavaUtil.jarjestaUudelleen(
         getEntityManager(),
-        from(hakijaryhma)
+        queryFactory()
+            .selectFrom(hakijaryhma)
             .leftJoin(hakijaryhma.laskentakaava)
-            .fetch()
+            .fetchJoin()
             .leftJoin(hakijaryhma.hakijaryhmatyyppikoodi)
-            .fetch()
+            .fetchJoin()
             .leftJoin(hakijaryhma.edellinenHakijaryhma)
-            .fetch()
+            .fetchJoin()
             .leftJoin(hakijaryhma.masterHakijaryhma)
-            .fetch()
+            .fetchJoin()
             .where(hakijaryhma.valintaryhma.id.eq(valintaryhma.getId()))
             .distinct()
-            .list(hakijaryhma),
+            .fetch(),
         uusiJarjestys);
   }
 
@@ -120,9 +118,10 @@ public class HakijaryhmaDAOImpl extends AbstractJpaDAOImpl<Hakijaryhma, Long>
 
     QHakijaryhma seuraava = QHakijaryhma.hakijaryhma;
     Hakijaryhma seuraavaHakijaryhma =
-        from(seuraava)
+        queryFactory()
+            .selectFrom(seuraava)
             .where(seuraava.edellinenHakijaryhma.id.eq(hakijaryhma.getId()))
-            .singleResult(seuraava);
+            .fetchFirst();
 
     if (seuraavaHakijaryhma != null) {
       Hakijaryhma edellinen = hakijaryhma.getEdellinen();
@@ -144,7 +143,8 @@ public class HakijaryhmaDAOImpl extends AbstractJpaDAOImpl<Hakijaryhma, Long>
     Hakijaryhma seuraava =
         uusi.getValintaryhma() == null
             ? null
-            : from(hakijaryhma)
+            : queryFactory()
+                .selectFrom(hakijaryhma)
                 .where(
                     hakijaryhma
                         .valintaryhma
@@ -155,7 +155,7 @@ public class HakijaryhmaDAOImpl extends AbstractJpaDAOImpl<Hakijaryhma, Long>
                                 ? hakijaryhma.edellinenHakijaryhma.isNull()
                                 : hakijaryhma.edellinenHakijaryhma.id.eq(
                                     uusi.getEdellinen().getId())))
-                .singleResult(hakijaryhma);
+                .fetchFirst();
     if (seuraava != null && uusi.getEdellinen() == null) {
       seuraava.setEdellinen(seuraava);
       getEntityManager().flush();

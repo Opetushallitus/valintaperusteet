@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ValintakoeServiceImpl implements ValintakoeService {
   @Autowired private ValintakoeDAO valintakoeDAO;
 
-  @Autowired private ValinnanVaiheService valinnanVaiheService;
+  @Lazy @Autowired private ValinnanVaiheService valinnanVaiheService;
 
   @Autowired private LaskentakaavaDAO laskentakaavaDAO;
 

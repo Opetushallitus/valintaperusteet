@@ -1,15 +1,14 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(value = "HakijaryhmaDTO", description = "Hakijaryhmä")
+@Schema(name = "HakijaryhmaDTO", description = "Hakijaryhmä")
 public class HakijaryhmaSiirraDTO extends HakijaryhmaCreateDTO {
 
-  @ApiModelProperty(value = "Nimi")
+  @Schema(description = "Nimi")
   private String uusinimi;
 
-  @ApiModelProperty(value = "Valintaryhmä OID, jolle laskentakaava lisätään")
+  @Schema(description = "Valintaryhmä OID, jolle laskentakaava lisätään")
   private String valintaryhmaOid;
 
   public String getValintaryhmaOid() {

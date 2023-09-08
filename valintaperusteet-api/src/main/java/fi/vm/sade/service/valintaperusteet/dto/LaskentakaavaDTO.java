@@ -1,12 +1,11 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(value = "LaskentakaavaDTO", description = "Laskentakaava")
+@Schema(name = "LaskentakaavaDTO", description = "Laskentakaava")
 public class LaskentakaavaDTO extends LaskentakaavaCreateDTO {
 
-  @ApiModelProperty(value = "ID", required = true)
+  @Schema(description = "ID", required = true)
   private Long id;
 
   public Long getId() {

@@ -2,57 +2,56 @@ package fi.vm.sade.service.valintaperusteet.dto;
 
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi;
 import fi.vm.sade.service.valintaperusteet.dto.model.ValidointivirheDTO;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-@ApiModel(value = "FunktiokutsuDTO", description = "Funktiokutsu")
+@Schema(name = "FunktiokutsuDTO", description = "Funktiokutsu")
 public class FunktiokutsuDTO {
 
-  @ApiModelProperty(value = "Funktion nimi", required = true)
+  @Schema(description = "Funktion nimi", required = true)
   private Funktionimi funktionimi;
 
-  @ApiModelProperty(value = "Tallennetun tuloksen tunniste")
+  @Schema(description = "Tallennetun tuloksen tunniste")
   private String tulosTunniste;
 
-  @ApiModelProperty(value = "Tallennetun tuloksen suomenkielinen teksti")
+  @Schema(description = "Tallennetun tuloksen suomenkielinen teksti")
   private String tulosTekstiFi;
 
-  @ApiModelProperty(value = "Tallennetun tuloksen ruotsinkielinen teksti")
+  @Schema(description = "Tallennetun tuloksen ruotsinkielinen teksti")
   private String tulosTekstiSv;
 
-  @ApiModelProperty(value = "Tallennetun tuloksen englanninkielinen teksti")
+  @Schema(description = "Tallennetun tuloksen englanninkielinen teksti")
   private String tulosTekstiEn;
 
-  @ApiModelProperty(value = "Tallennetaanko tulos")
+  @Schema(description = "Tallennetaanko tulos")
   private Boolean tallennaTulos = false;
 
-  @ApiModelProperty(value = "Näytetäänkö oppijan henkilökohtaisessa palvelussa")
+  @Schema(description = "Näytetäänkö oppijan henkilökohtaisessa palvelussa")
   private boolean omaopintopolku = false;
 
-  @ApiModelProperty(value = "Arvokonvertteriparametrit")
+  @Schema(description = "Arvokonvertteriparametrit")
   private Set<ArvokonvertteriparametriDTO> arvokonvertteriparametrit =
       new HashSet<ArvokonvertteriparametriDTO>();
 
-  @ApiModelProperty(value = "Arvovälikonvertteriparametrit")
+  @Schema(description = "Arvovälikonvertteriparametrit")
   private List<ArvovalikonvertteriparametriDTO> arvovalikonvertteriparametrit =
       new LinkedList<ArvovalikonvertteriparametriDTO>();
 
-  @ApiModelProperty(value = "Syöteparametrit")
+  @Schema(description = "Syöteparametrit")
   private Set<SyoteparametriDTO> syoteparametrit = new HashSet<SyoteparametriDTO>();
 
-  @ApiModelProperty(value = "Funktioargumentit")
+  @Schema(description = "Funktioargumentit")
   private List<FunktioargumenttiDTO> funktioargumentit = new LinkedList<FunktioargumenttiDTO>();
 
-  @ApiModelProperty(value = "Valintaperusteviitteet")
+  @Schema(description = "Valintaperusteviitteet")
   private List<ValintaperusteViiteDTO> valintaperusteviitteet =
       new ArrayList<ValintaperusteViiteDTO>();
 
-  @ApiModelProperty(value = "Validointivirheet")
+  @Schema(description = "Validointivirheet")
   private List<ValidointivirheDTO> validointivirheet = new ArrayList<ValidointivirheDTO>();
 
   public Funktionimi getFunktionimi() {

@@ -1,44 +1,43 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(value = "ValintaperusteetHakijaryhmaDTO", description = "Hakijaryhmä")
+@Schema(name = "ValintaperusteetHakijaryhmaDTO", description = "Hakijaryhmä")
 public class ValintaperusteetHakijaryhmaDTO implements Prioritized {
-  @ApiModelProperty(value = "OID", required = true)
+  @Schema(description = "OID", required = true)
   private String oid;
 
-  @ApiModelProperty(value = "Nimi", required = true)
+  @Schema(description = "Nimi", required = true)
   private String nimi;
 
-  @ApiModelProperty(value = "Kuvaus")
+  @Schema(description = "Kuvaus")
   private String kuvaus;
 
-  @ApiModelProperty(value = "Kiintio", required = true)
+  @Schema(description = "Kiintio", required = true)
   private int kiintio;
 
-  @ApiModelProperty(value = "Hakijaryhmän prioriteetti", required = false)
+  @Schema(description = "Hakijaryhmän prioriteetti")
   private int prioriteetti;
 
-  @ApiModelProperty(value = "Funktiokutsu", required = false)
+  @Schema(description = "Funktiokutsu")
   private ValintaperusteetFunktiokutsuDTO funktiokutsu;
 
-  @ApiModelProperty(value = "Vain hakijaryhmään kuuluvat voivat tulla hyväksytyksi")
+  @Schema(description = "Vain hakijaryhmään kuuluvat voivat tulla hyväksytyksi")
   private boolean kaytaKaikki;
 
-  @ApiModelProperty(value = "Vain kiintiön verran voi tulla hyväksytyksi tästä hakijaryhmästä")
+  @Schema(description = "Vain kiintiön verran voi tulla hyväksytyksi tästä hakijaryhmästä")
   private boolean tarkkaKiintio;
 
-  @ApiModelProperty(value = "Käytetäänkö vain hakijaryhmään kuuluvia", required = true)
+  @Schema(description = "Käytetäänkö vain hakijaryhmään kuuluvia", required = true)
   private boolean kaytetaanRyhmaanKuuluvia;
 
-  @ApiModelProperty(value = "valintatapajonon OID", required = true)
+  @Schema(description = "valintatapajonon OID", required = true)
   private String valintatapajonoOid;
 
-  @ApiModelProperty(value = "hakukohteen OID", required = true)
+  @Schema(description = "hakukohteen OID", required = true)
   private String hakukohdeOid;
 
-  @ApiModelProperty(value = "Hakijaryhmän tyyppi koodi", required = false)
+  @Schema(description = "Hakijaryhmän tyyppi koodi")
   private KoodiDTO hakijaryhmatyyppikoodi;
 
   public String getNimi() {

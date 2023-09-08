@@ -1,10 +1,9 @@
 package fi.vm.sade.service.valintaperusteet.dao.impl;
 
-import com.mysema.query.BooleanBuilder;
-import com.mysema.query.Tuple;
-import com.mysema.query.jpa.impl.JPAQuery;
-import com.mysema.query.types.EntityPath;
-import com.mysema.query.types.QTuple;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.Tuple;
+import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import fi.vm.sade.service.valintaperusteet.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.LaskentakaavaDAO;
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi;
@@ -18,29 +17,27 @@ public class LaskentakaavaDAOImpl extends AbstractJpaDAOImpl<Laskentakaava, Long
   @Override
   public Laskentakaava getLaskentakaava(Long id) {
     QLaskentakaava lk = QLaskentakaava.laskentakaava;
-    Laskentakaava laskentakaava =
-        from(lk)
-            .setHint("org.hibernate.cacheable", Boolean.TRUE)
-            .where(lk.id.eq(id))
-            .distinct()
-            .singleResult(lk);
 
-    return laskentakaava;
+    return queryFactory()
+        .selectFrom(lk)
+        .setHint("org.hibernate.cacheable", Boolean.TRUE)
+        .where(lk.id.eq(id))
+        .distinct()
+        .fetchFirst();
   }
 
   @Override
   public Laskentakaava getLaskentakaavaValintaryhma(Long id) {
     QLaskentakaava lk = QLaskentakaava.laskentakaava;
     QValintaryhma v = QValintaryhma.valintaryhma;
-    Laskentakaava laskentakaava =
-        from(lk)
-            .leftJoin(lk.valintaryhma, v)
-            .fetch()
-            .where(lk.id.eq(id))
-            .distinct()
-            .singleResult(lk);
 
-    return laskentakaava;
+    return queryFactory()
+        .selectFrom(lk)
+        .leftJoin(lk.valintaryhma, v)
+        .fetchJoin()
+        .where(lk.id.eq(id))
+        .distinct()
+        .fetchFirst();
   }
 
   @Override
@@ -54,7 +51,9 @@ public class LaskentakaavaDAOImpl extends AbstractJpaDAOImpl<Laskentakaava, Long
     QValinnanVaihe vv = QValinnanVaihe.valinnanVaihe;
     QHakukohdeViite hkv1 = QHakukohdeViite.hakukohdeViite;
 
-    return from(lk)
+    return queryFactory()
+        .select(hkv1.oid, vv.oid, lk)
+        .from(lk)
         .setHint("org.hibernate.cacheable", Boolean.TRUE)
         .leftJoin(lk.jarjestyskriteerit, jk)
         .leftJoin(jk.valintatapajono, vtj)
@@ -62,14 +61,14 @@ public class LaskentakaavaDAOImpl extends AbstractJpaDAOImpl<Laskentakaava, Long
         .leftJoin(vv.hakukohdeViite, hkv1)
         .where(hkv1.oid.in(oids))
         .distinct()
-        .list(new QTuple(hkv1.oid, vv.oid, lk));
+        .fetch();
   }
 
   @Override
   public List<Laskentakaava> findKaavas(
       boolean all, String valintaryhmaOid, String hakukohdeOid, Funktiotyyppi tyyppi) {
     QLaskentakaava lk = QLaskentakaava.laskentakaava;
-    JPAQuery query = from(lk);
+    JPAQuery<Laskentakaava> query = queryFactory().selectFrom(lk);
     BooleanBuilder builder = new BooleanBuilder();
     if (!all) {
       builder.and(lk.onLuonnos.isFalse());
@@ -82,11 +81,11 @@ public class LaskentakaavaDAOImpl extends AbstractJpaDAOImpl<Laskentakaava, Long
     if (tyyppi != null) {
       builder.and(lk.tyyppi.eq(tyyppi));
     }
-    return query.setHint("org.hibernate.cacheable", Boolean.TRUE).where(builder).list(lk);
+    return query.setHint("org.hibernate.cacheable", Boolean.TRUE).where(builder).fetch();
   }
 
-  protected JPAQuery from(EntityPath<?>... o) {
-    return new JPAQuery(getEntityManager()).from(o);
+  protected JPAQueryFactory queryFactory() {
+    return new JPAQueryFactory(getEntityManager());
   }
 
   @Override

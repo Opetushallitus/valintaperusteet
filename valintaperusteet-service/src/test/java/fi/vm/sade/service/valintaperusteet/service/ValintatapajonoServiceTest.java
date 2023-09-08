@@ -1,10 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
 
+import fi.vm.sade.service.valintaperusteet.WithSpringBoot;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
@@ -16,11 +14,8 @@ import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestE
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintatapajonoaEiVoiLisataException;
-import fi.vm.sade.service.valintaperusteet.util.VtsRestClient;
-import java.io.IOException;
 import java.util.*;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +23,8 @@ import org.springframework.context.annotation.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
@@ -38,7 +32,8 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
  * Created with IntelliJ IDEA. User: jukais Date: 17.1.2013 Time: 15.14 To change this template use
  * File | Settings | File Templates.
  */
-@ContextConfiguration(classes = VtsRestClientConfig.class)
+@DataSetLocation("classpath:test-data.xml")
+@ActiveProfiles({"dev", "vtsConfig"})
 @TestExecutionListeners(
     listeners = {
       ValinnatJTACleanInsertTestExecutionListener.class,
@@ -46,9 +41,7 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
       DirtiesContextTestExecutionListener.class,
       WithSecurityContextTestExecutionListener.class
     })
-@RunWith(SpringJUnit4ClassRunner.class)
-@DataSetLocation("classpath:test-data.xml")
-public class ValintatapajonoServiceTest {
+public class ValintatapajonoServiceTest extends WithSpringBoot {
 
   @Autowired private ValintatapajonoService valintatapajonoService;
 
@@ -550,8 +543,8 @@ public class ValintatapajonoServiceTest {
       fail("Sijoitteltava jono cannot be saved without type");
     } catch (Exception e) {
       assertTrue(
-          "Wrong type of exception " + e.toString(),
-          e instanceof ValintatapajonoaEiVoiLisataException);
+          e instanceof ValintatapajonoaEiVoiLisataException,
+          "Wrong type of exception " + e.toString());
     }
     uusiJono.setTyyppi("valintatapajono_kp");
 
@@ -572,8 +565,8 @@ public class ValintatapajonoServiceTest {
       fail("Sijoitteltava jono cannot be saved without type");
     } catch (Exception e) {
       assertTrue(
-          "Wrong type of exception " + e.toString(),
-          e instanceof ValintatapajonoaEiVoiLisataException);
+          e instanceof ValintatapajonoaEiVoiLisataException,
+          "Wrong type of exception " + e.toString());
     }
 
     uusiJono.setTyyppi("valintatapajono_m");
@@ -614,9 +607,9 @@ public class ValintatapajonoServiceTest {
 
     Valintatapajono update = valintatapajonoService.update(valintatapajonoOid, dto);
     assertEquals(
-        "Siirretaan sijoitteluun should remain true for jonos that have been ran through sijoittelu process",
         true,
-        update.getSiirretaanSijoitteluun());
+        update.getSiirretaanSijoitteluun(),
+        "Siirretaan sijoitteluun should remain true for jonos that have been ran through sijoittelu process");
   }
 
   @Test
@@ -632,15 +625,17 @@ public class ValintatapajonoServiceTest {
 
     try {
       valintatapajonoService.update(valintatapajonoOid, dto);
-      assertTrue("Sijoiteltu jono cannot be saved without type", false);
+      assertTrue(false, "Sijoiteltu jono cannot be saved without type");
     } catch (ValintatapajonoaEiVoiLisataException e) {
     } catch (Exception e) {
-      assertTrue("Wrong type of exception " + e.toString(), false);
+      assertTrue(false, "Wrong type of exception " + e.toString());
     }
   }
 
   @Test
-  @WithMockUser(username = "admin", authorities = "${root.organisaatio.oid}")
+  @WithMockUser(
+      username = "admin",
+      authorities = "ROLE_APP_VALINTAPERUSTEET_CRUD_1.2.246.562.10.00000000001")
   public void testUpdateSijoiteltuJonoWithOPHUser() {
     final String valintatapajonoOid = "26";
     Valintatapajono jono26L = valintatapajonoService.readByOid(valintatapajonoOid);
@@ -655,12 +650,12 @@ public class ValintatapajonoServiceTest {
 
     Valintatapajono update = valintatapajonoService.update(valintatapajonoOid, dto);
     assertEquals(
-        "Siirretaan sijoitteluun should remain false for jonos that have been ran through sijoittelu process IF update is done with oph user account",
         false,
-        update.getSiirretaanSijoitteluun());
+        update.getSiirretaanSijoitteluun(),
+        "Siirretaan sijoitteluun should remain false for jonos that have been ran through sijoittelu process IF update is done with oph user account");
   }
 
-  @Test(expected = ValintatapajonoaEiVoiLisataException.class)
+  @Test
   public void testLisaaValintatapajonoValintakoeValinnanVaiheelle() {
     final String valinnanVaiheOid = "82";
     ValinnanVaihe valinnanVaihe = valinnanVaiheDAO.readByOid(valinnanVaiheOid);
@@ -677,23 +672,10 @@ public class ValintatapajonoServiceTest {
     jono.setSiirretaanSijoitteluun(false);
     jono.setTasapistesaanto(fi.vm.sade.service.valintaperusteet.dto.model.Tasapistesaanto.ARVONTA);
 
-    valintatapajonoService.lisaaValintatapajonoValinnanVaiheelle(valinnanVaiheOid, jono, null);
-  }
-}
-
-@Configuration
-@ImportResource(value = "classpath:test-context.xml")
-class VtsRestClientConfig {
-
-  @Bean
-  @Primary
-  VtsRestClient vtsRestClient() {
-    VtsRestClient mock = mock(VtsRestClient.class);
-    try {
-      when(mock.isJonoSijoiteltu(eq("26"))).thenReturn(true);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    return mock;
+    assertThrows(
+        ValintatapajonoaEiVoiLisataException.class,
+        () ->
+            valintatapajonoService.lisaaValintatapajonoValinnanVaiheelle(
+                valinnanVaiheOid, jono, null));
   }
 }

@@ -1,37 +1,34 @@
 package fi.vm.sade.service.valintaperusteet.dao.impl;
 
-import com.mysema.query.jpa.impl.JPAQuery;
-import com.mysema.query.types.EntityPath;
+import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import fi.vm.sade.service.valintaperusteet.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import java.util.List;
 import java.util.Optional;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Long>
     implements HakukohdeViiteDAO {
-  private static final Logger LOG = LoggerFactory.getLogger(HakukohdeViiteDAOImpl.class);
-
-  protected JPAQuery from(EntityPath<?>... o) {
-    return new JPAQuery(getEntityManager()).from(o);
+  protected JPAQueryFactory queryFactory() {
+    return new JPAQueryFactory(getEntityManager());
   }
 
   @Override
   public List<HakukohdeViite> findRoot() {
     QHakukohdeViite hakukohdeViite = QHakukohdeViite.hakukohdeViite;
     QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
-    return from(hakukohdeViite)
+    return queryFactory()
+        .selectFrom(hakukohdeViite)
         .leftJoin(hakukohdeViite.valintaryhma, valintaryhma)
-        .fetch()
+        .fetchJoin()
         .leftJoin(hakukohdeViite.hakukohdekoodi)
-        .fetch()
+        .fetchJoin()
         .where(valintaryhma.isNull())
-        .list(hakukohdeViite);
+        .fetch();
   }
 
   @Override
@@ -39,89 +36,96 @@ public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Lo
     QHakukohdeViite hakukohdeViite = QHakukohdeViite.hakukohdeViite;
     QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
 
-    return from(hakukohdeViite)
+    return queryFactory()
+        .selectFrom(hakukohdeViite)
         .leftJoin(hakukohdeViite.valintaryhma, valintaryhma)
-        .fetch()
+        .fetchJoin()
         .leftJoin(hakukohdeViite.hakukohdekoodi)
-        .fetch()
+        .fetchJoin()
         .where(hakukohdeViite.hakuoid.eq(hakuOid))
-        .list(hakukohdeViite);
+        .fetch();
   }
 
   @Override
   public List<HakukohdeViite> findAll() {
     QHakukohdeViite hakukohdeViite = QHakukohdeViite.hakukohdeViite;
     QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
-    return from(hakukohdeViite)
+    return queryFactory()
+        .selectFrom(hakukohdeViite)
         .leftJoin(hakukohdeViite.valintaryhma, valintaryhma)
-        .fetch()
+        .fetchJoin()
         .leftJoin(hakukohdeViite.hakukohdekoodi)
-        .fetch()
-        .list(hakukohdeViite);
+        .fetchJoin()
+        .fetch();
   }
 
   @Override
   public HakukohdeViite readByOid(String oid) {
     QHakukohdeViite hakukohdeViite = QHakukohdeViite.hakukohdeViite;
     QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
-    return from(hakukohdeViite)
+    return queryFactory()
+        .selectFrom(hakukohdeViite)
         .leftJoin(hakukohdeViite.valintaryhma, valintaryhma)
-        .fetch()
+        .fetchJoin()
         .leftJoin(hakukohdeViite.hakukohdekoodi)
-        .fetch()
+        .fetchJoin()
         .leftJoin(hakukohdeViite.valintakokeet)
-        .fetch()
+        .fetchJoin()
         .leftJoin(hakukohdeViite.hakukohteenValintaperusteet)
-        .fetch()
+        .fetchJoin()
         .where(hakukohdeViite.oid.eq(oid))
-        .singleResult(hakukohdeViite);
+        .fetchFirst();
   }
 
   @Override
   public List<HakukohdeViite> readByOids(List<String> oids) {
     QHakukohdeViite hakukohdeViite = QHakukohdeViite.hakukohdeViite;
     QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
-    return from(hakukohdeViite)
+    return queryFactory()
+        .selectFrom(hakukohdeViite)
         .leftJoin(hakukohdeViite.hakukohteenValintaperusteet)
-        .fetch()
+        .fetchJoin()
         .where(hakukohdeViite.oid.in(oids))
         .distinct()
-        .list(hakukohdeViite);
+        .fetch();
   }
 
   @Override
   public HakukohdeViite readForImport(String oid) {
     QHakukohdeViite hakukohdeViite = QHakukohdeViite.hakukohdeViite;
     QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
-    return from(hakukohdeViite)
+    return queryFactory()
+        .selectFrom(hakukohdeViite)
         .leftJoin(hakukohdeViite.valintaryhma, valintaryhma)
-        .fetch()
+        .fetchJoin()
         .where(hakukohdeViite.oid.eq(oid))
-        .singleResult(hakukohdeViite);
+        .fetchFirst();
   }
 
   @Override
   public List<HakukohdeViite> findByValintaryhmaOid(String oid) {
     QHakukohdeViite hakukohdeViite = QHakukohdeViite.hakukohdeViite;
     QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
-    return from(hakukohdeViite)
+    return queryFactory()
+        .selectFrom(hakukohdeViite)
         .leftJoin(hakukohdeViite.valintaryhma, valintaryhma)
-        .fetch()
+        .fetchJoin()
         .leftJoin(hakukohdeViite.hakukohdekoodi)
-        .fetch()
+        .fetchJoin()
         .where(valintaryhma.oid.eq(oid))
-        .list(hakukohdeViite);
+        .fetch();
   }
 
   @Override
   public List<HakukohdeViite> findByValintaryhmaOidForValisijoittelu(String oid) {
     QHakukohdeViite hakukohdeViite = QHakukohdeViite.hakukohdeViite;
-    return from(hakukohdeViite)
+    return queryFactory()
+        .selectFrom(hakukohdeViite)
         .leftJoin(hakukohdeViite.valintaryhma)
         .leftJoin(hakukohdeViite.hakukohdekoodi)
-        .fetch()
+        .fetchJoin()
         .where(hakukohdeViite.valintaryhma.oid.eq(oid))
-        .list(hakukohdeViite);
+        .fetch();
   }
 
   @Override
@@ -129,15 +133,22 @@ public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Lo
     QHakukohdeViite hakukohdeViite = QHakukohdeViite.hakukohdeViite;
     QValinnanVaihe vv = QValinnanVaihe.valinnanVaihe;
     QValintatapajono jono = QValintatapajono.valintatapajono;
-    return from(jono)
-        .leftJoin(jono.valinnanVaihe, vv)
-        .leftJoin(vv.hakukohdeViite, hakukohdeViite)
-        .where(
-            hakukohdeViite.oid.eq(oid),
-            vv.aktiivinen.eq(true),
-            jono.aktiivinen.eq(true),
-            jono.siirretaanSijoitteluun.eq(true))
-        .exists();
+    Long count =
+        queryFactory()
+            .select(jono.id.count())
+            .from(jono)
+            .leftJoin(jono.valinnanVaihe, vv)
+            .leftJoin(vv.hakukohdeViite, hakukohdeViite)
+            .where(
+                hakukohdeViite.oid.eq(oid),
+                vv.aktiivinen.eq(true),
+                jono.aktiivinen.eq(true),
+                jono.siirretaanSijoitteluun.eq(true))
+            .fetchFirst();
+    if (count == null) {
+      return false;
+    }
+    return count > 0L;
   }
 
   @Override
@@ -148,7 +159,8 @@ public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Lo
   @Override
   public List<HakukohdeViite> search(String hakuOid, List<String> tila, String searchString) {
     QHakukohdeViite hakukohdeViite = QHakukohdeViite.hakukohdeViite;
-    JPAQuery a = from(hakukohdeViite).leftJoin(hakukohdeViite.valintaryhma).fetch();
+    JPAQuery<HakukohdeViite> a =
+        queryFactory().selectFrom(hakukohdeViite).leftJoin(hakukohdeViite.valintaryhma).fetchJoin();
     if (StringUtils.isNotBlank(hakuOid)) {
       a.where(hakukohdeViite.hakuoid.eq(hakuOid));
     }
@@ -158,18 +170,19 @@ public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Lo
     if (StringUtils.isNotBlank(searchString)) {
       a.where(hakukohdeViite.nimi.containsIgnoreCase(searchString));
     }
-    return a.list(hakukohdeViite);
+    return a.fetch();
   }
 
   @Override
   public List<HakukohdeViite> readByHakukohdekoodiUri(String koodiUri) {
     QHakukohdekoodi koodi = QHakukohdekoodi.hakukohdekoodi;
     QHakukohdeViite hk = QHakukohdeViite.hakukohdeViite;
-    return from(hk)
+    return queryFactory()
+        .selectFrom(hk)
         .innerJoin(hk.hakukohdekoodi, koodi)
         .where(koodi.uri.eq(koodiUri))
         .distinct()
-        .list(hk);
+        .fetch();
   }
 
   @Override
@@ -177,7 +190,12 @@ public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Lo
     QHakukohdeViite hk = QHakukohdeViite.hakukohdeViite;
     final Optional<HakukohdeViite> hakukohdeViite =
         Optional.ofNullable(
-            from(hk).leftJoin(hk.valintaryhma).fetch().where(hk.oid.eq(oid)).singleResult(hk));
+            queryFactory()
+                .selectFrom(hk)
+                .leftJoin(hk.valintaryhma)
+                .fetchJoin()
+                .where(hk.oid.eq(oid))
+                .fetchFirst());
     return Optional.ofNullable(hakukohdeViite.orElse(new HakukohdeViite()).getValintaryhma());
   }
 }

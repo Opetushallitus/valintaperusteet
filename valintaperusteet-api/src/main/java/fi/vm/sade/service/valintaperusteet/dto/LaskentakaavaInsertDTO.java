@@ -1,9 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(value = "LaskentakaavaInsertDTO", description = "Laskentakaava")
+@Schema(name = "LaskentakaavaInsertDTO", description = "Laskentakaava")
 public class LaskentakaavaInsertDTO {
 
   public LaskentakaavaInsertDTO() {}
@@ -15,13 +14,13 @@ public class LaskentakaavaInsertDTO {
     this.valintaryhmaOid = valintaryhmaOid;
   }
 
-  @ApiModelProperty(value = "Laskentakaava", required = true)
+  @Schema(description = "Laskentakaava", required = true)
   private LaskentakaavaCreateDTO laskentakaava;
 
-  @ApiModelProperty(value = "Hakukohde OID, jolle laskentakaava lisätään")
+  @Schema(description = "Hakukohde OID, jolle laskentakaava lisätään")
   private String hakukohdeOid;
 
-  @ApiModelProperty(value = "Valintaryhmä OID, jolle laskentakaava lisätään")
+  @Schema(description = "Valintaryhmä OID, jolle laskentakaava lisätään")
   private String valintaryhmaOid;
 
   public LaskentakaavaCreateDTO getLaskentakaava() {

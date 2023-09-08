@@ -1,13 +1,11 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
+import fi.vm.sade.service.valintaperusteet.WithSpringBoot;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
 import fi.vm.sade.service.valintaperusteet.dto.model.Koekutsu;
-import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintakoe;
 import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuaEiVoidaKayttaaValintakoelaskennassaException;
@@ -15,26 +13,12 @@ import fi.vm.sade.service.valintaperusteet.service.exception.ValintakoettaEiOleO
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
-import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
 /** User: kwuoti Date: 15.4.2013 Time: 18.04 */
-@ContextConfiguration(locations = "classpath:test-context.xml")
-@TestExecutionListeners(
-    listeners = {
-      ValinnatJTACleanInsertTestExecutionListener.class,
-      DependencyInjectionTestExecutionListener.class,
-      DirtiesContextTestExecutionListener.class
-    })
-@RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data.xml")
-public class ValintakoeServiceTest {
+public class ValintakoeServiceTest extends WithSpringBoot {
 
   @Autowired private ValintakoeService valintakoeService;
 
@@ -179,7 +163,7 @@ public class ValintakoeServiceTest {
     assertEquals(update.getLaskentakaavaId(), kopio.getLaskentakaava().getId());
   }
 
-  @Test(expected = FunktiokutsuaEiVoidaKayttaaValintakoelaskennassaException.class)
+  @Test
   public void testUpdateInvalidLaskentakaava() {
     final String valintakoeOid = "oid15";
 
@@ -190,6 +174,8 @@ public class ValintakoeServiceTest {
     update.setNimi("nimeäminen");
     update.setTunniste("uustunniste");
 
-    valintakoeService.update(valintakoeOid, update);
+    assertThrows(
+        FunktiokutsuaEiVoidaKayttaaValintakoelaskennassaException.class,
+        () -> valintakoeService.update(valintakoeOid, update));
   }
 }

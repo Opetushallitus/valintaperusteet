@@ -31,6 +31,7 @@ import fi.vm.sade.service.valintaperusteet.service.impl.generator.PkJaYoPohjaise
 import java.util.List;
 import javax.inject.Named;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.TransactionStatus;
@@ -44,7 +45,7 @@ public class LuoValintaperusteetActorBean extends UntypedAbstractActor {
 
   @Autowired private LaskentakaavaService laskentakaavaService;
 
-  @Autowired private ValintaryhmaService valintaryhmaService;
+  @Lazy @Autowired private ValintaryhmaService valintaryhmaService;
 
   @Autowired private HakukohdekoodiService hakukohdekoodiService;
 

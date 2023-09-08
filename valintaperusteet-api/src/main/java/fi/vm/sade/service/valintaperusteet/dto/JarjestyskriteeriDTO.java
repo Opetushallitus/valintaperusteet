@@ -1,26 +1,25 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(value = "JarjestyskriteeriDTO", description = "Järjestyskriteeri")
+@Schema(name = "JarjestyskriteeriDTO", description = "Järjestyskriteeri")
 public class JarjestyskriteeriDTO extends JarjestyskriteeriCreateDTO implements Prioritized {
-  @ApiModelProperty(value = "OID", required = true)
+  @Schema(description = "OID", required = true)
   private String oid;
 
-  @ApiModelProperty(value = "Valintatapajono OID")
+  @Schema(description = "Valintatapajono OID")
   private String valintatapajonoOid;
 
-  @ApiModelProperty(value = "Onko järjestyskriteeri peritty")
+  @Schema(description = "Onko järjestyskriteeri peritty")
   private Boolean inheritance;
 
-  @ApiModelProperty(value = "Laskentakaava ID", required = true)
+  @Schema(description = "Laskentakaava ID", required = true)
   private Long laskentakaavaId;
 
-  @ApiModelProperty(value = "Järjestyskriteerin prioriteetti", required = false)
+  @Schema(description = "Järjestyskriteerin prioriteetti")
   private int prioriteetti;
 
-  @ApiModelProperty(value = "Funktiokutsu", required = false)
+  @Schema(description = "Funktiokutsu")
   private FunktiokutsuDTO funktiokutsu;
 
   public String getOid() {

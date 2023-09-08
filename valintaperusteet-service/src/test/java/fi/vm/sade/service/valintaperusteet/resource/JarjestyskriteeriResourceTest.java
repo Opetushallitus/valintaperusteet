@@ -1,51 +1,36 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import fi.vm.sade.service.valintaperusteet.WithSpringBoot;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dao.JarjestyskriteeriDAO;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriDTO;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriInsertDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
-import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
-import fi.vm.sade.service.valintaperusteet.resource.impl.JarjestyskriteeriResourceImpl;
 import fi.vm.sade.service.valintaperusteet.util.TestUtil;
 import fi.vm.sade.valinta.sharedutils.FakeAuthenticationInitialiser;
 import java.util.Arrays;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
-import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
 /**
  * Created with IntelliJ IDEA. User: jukais Date: 4.2.2013 Time: 15.20 To change this template use
  * File | Settings | File Templates.
  */
-@ContextConfiguration(locations = "classpath:test-context.xml")
-@TestExecutionListeners(
-    listeners = {
-      ValinnatJTACleanInsertTestExecutionListener.class,
-      DependencyInjectionTestExecutionListener.class,
-      DirtiesContextTestExecutionListener.class
-    })
-@RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data.xml")
-public class JarjestyskriteeriResourceTest {
+public class JarjestyskriteeriResourceTest extends WithSpringBoot {
 
-  private JarjestyskriteeriResourceImpl resource = new JarjestyskriteeriResourceImpl();
+  private JarjestyskriteeriResource resource = new JarjestyskriteeriResource();
   private TestUtil testUtil = new TestUtil(this.getClass());
 
   @Autowired private ApplicationContext applicationContext;
@@ -54,7 +39,7 @@ public class JarjestyskriteeriResourceTest {
 
   @Autowired private ValintaperusteetModelMapper modelMapper;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     FakeAuthenticationInitialiser.fakeAuthentication();
     applicationContext.getAutowireCapableBeanFactory().autowireBean(resource);

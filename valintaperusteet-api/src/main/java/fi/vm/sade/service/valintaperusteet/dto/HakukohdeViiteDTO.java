@@ -1,17 +1,16 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import org.codehaus.jackson.annotate.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(value = "HakukohdeViiteDTO", description = "Hakukohde")
+@Schema(name = "HakukohdeViiteDTO", description = "Hakukohde")
 public class HakukohdeViiteDTO extends HakukohdeViiteCreateDTO {
 
-  @ApiModelProperty(value = "Valintaryhmä OID")
+  @Schema(description = "Valintaryhmä OID")
   @JsonProperty(value = "valintaryhma_id")
   private String valintaryhmaOid;
 
-  @ApiModelProperty(value = "Hakukohdekoodi")
+  @Schema(description = "Hakukohdekoodi")
   private KoodiDTO hakukohdekoodi;
 
   public String getValintaryhmaOid() {

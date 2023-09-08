@@ -1,9 +1,9 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -11,7 +11,6 @@ import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
-import fi.vm.sade.service.valintaperusteet.resource.impl.ValintalaskentakoostepalveluResourceImpl;
 import fi.vm.sade.service.valintaperusteet.service.HakijaryhmaValintatapajonoService;
 import fi.vm.sade.service.valintaperusteet.service.HakukohdeService;
 import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
@@ -23,18 +22,15 @@ import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.Test;
 
-@RunWith(JUnit4.class)
 public class ValintalaskentakoostepalveluResource3Test {
   @Test
   public void testJonojenPrioriteetitIsollaDatalla() {
     String hakukohdeOid = "hakukohdeOid";
     HakukohdeService hakukohdeService = mock(HakukohdeService.class);
-    ValintalaskentakoostepalveluResourceImpl resource =
-        new ValintalaskentakoostepalveluResourceImpl(
+    ValintalaskentakoostepalveluResource resource =
+        new ValintalaskentakoostepalveluResource(
             mock(ValintaperusteService.class),
             mock(HakijaryhmaValintatapajonoService.class),
             mock(ValinnanVaiheService.class),

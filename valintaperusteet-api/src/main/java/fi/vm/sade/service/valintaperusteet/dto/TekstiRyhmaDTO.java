@@ -1,14 +1,13 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.HashSet;
 import java.util.Set;
 
-@ApiModel(value = "TekstiRyhmaDTO", description = "Tekstiryhmä")
+@Schema(name = "TekstiRyhmaDTO", description = "Tekstiryhmä")
 public class TekstiRyhmaDTO {
 
-  @ApiModelProperty(value = "Lokalisoidut tekstit", required = true)
+  @Schema(description = "Lokalisoidut tekstit", required = true)
   private Set<LokalisoituTekstiDTO> tekstit = new HashSet<LokalisoituTekstiDTO>();
 
   public Set<LokalisoituTekstiDTO> getTekstit() {

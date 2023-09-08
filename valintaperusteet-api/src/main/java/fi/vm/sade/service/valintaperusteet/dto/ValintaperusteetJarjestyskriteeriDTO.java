@@ -1,17 +1,16 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(value = "ValintaperusteetJarjestyskriteeriDTO", description = "Järjestyskriteeri")
+@Schema(name = "ValintaperusteetJarjestyskriteeriDTO", description = "Järjestyskriteeri")
 public class ValintaperusteetJarjestyskriteeriDTO implements Prioritized {
-  @ApiModelProperty(value = "nimi", required = true)
+  @Schema(description = "nimi", required = true)
   private String nimi;
 
-  @ApiModelProperty(value = "Järjestyskriteerin prioriteetti", required = false)
+  @Schema(description = "Järjestyskriteerin prioriteetti")
   private int prioriteetti;
 
-  @ApiModelProperty(value = "Funktiokutsu", required = false)
+  @Schema(description = "Funktiokutsu")
   private ValintaperusteetFunktiokutsuDTO funktiokutsu;
 
   public String getNimi() {

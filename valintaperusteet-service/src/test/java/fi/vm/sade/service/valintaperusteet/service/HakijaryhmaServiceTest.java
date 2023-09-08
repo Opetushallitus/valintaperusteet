@@ -1,9 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
+import fi.vm.sade.service.valintaperusteet.WithSpringBoot;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
@@ -14,11 +13,11 @@ import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteDTO;
 import fi.vm.sade.service.valintaperusteet.dto.KoodiDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
-import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.model.Hakijaryhma;
 import fi.vm.sade.service.valintaperusteet.model.HakijaryhmaValintatapajono;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
+import fi.vm.sade.service.valintaperusteet.resource.ValintalaskentakoostepalveluResource;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaEiKuuluValintatapajonolleException;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaValintatapajonoOnJoOlemassaException;
@@ -27,31 +26,17 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
-import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
 /**
  * Created with IntelliJ IDEA. User: jukais Date: 16.1.2013 Time: 14.16 To change this template use
  * File | Settings | File Templates.
  */
-@ContextConfiguration(locations = "classpath:test-context.xml")
-@TestExecutionListeners(
-    listeners = {
-      ValinnatJTACleanInsertTestExecutionListener.class,
-      DependencyInjectionTestExecutionListener.class,
-      DirtiesContextTestExecutionListener.class
-    })
-@RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data-hakijaryhma.xml")
-public class HakijaryhmaServiceTest {
+public class HakijaryhmaServiceTest extends WithSpringBoot {
   @Autowired private HakukohdeViiteDAO hakukohdeViiteDAO;
   @Autowired private ValintaryhmaDAO valintaryhmaDAO;
   @Autowired private HakijaryhmaService hakijaryhmaService;
@@ -66,7 +51,7 @@ public class HakijaryhmaServiceTest {
 
   private final KoodiDTO hakijaryhmatyyppikoodi = new KoodiDTO();
 
-  @Before
+  @BeforeEach
   public void setupTestData() {
     hakijaryhmatyyppikoodi.setUri("hakijaryhmatyyppikoodi_uri");
     hakijaryhmatyyppikoodi.setArvo("hakijaryhmätyyppi 1");
@@ -298,10 +283,10 @@ public class HakijaryhmaServiceTest {
    * repercussions in e.g. ValintalaskentakoostepalveluResourceImpl where
    * HakijaryhmaEiOleOlemassaException has special handling.
    *
-   * @see fi.vm.sade.service.valintaperusteet.resource.impl.ValintalaskentakoostepalveluResourceImpl
+   * @see ValintalaskentakoostepalveluResource
    */
   @Test
-  @Ignore
+  @Disabled
   public void testLiitaHakijaryhmaValintatapajonolle() {
     try {
       hakijaryhmaService.liitaHakijaryhmaValintatapajonolle("vtj1", "asdasd");

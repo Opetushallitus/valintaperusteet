@@ -1,12 +1,11 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(value = "HakuViiteDTO", description = "Haku")
+@Schema(name = "HakuViiteDTO", description = "Haku")
 public class HakuViiteDTO {
 
-  @ApiModelProperty(value = "Haku OID", required = true)
+  @Schema(description = "Haku OID", required = true)
   private String hakuoid;
 
   public String getHakuoid() {

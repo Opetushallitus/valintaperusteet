@@ -1,20 +1,19 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(value = "AbstractValintaryhmaDTO", description = "Valintaryhmä")
+@Schema(name = "AbstractValintaryhmaDTO", description = "Valintaryhmä")
 public abstract class AbstractValintaryhmaDTO {
-  @ApiModelProperty(value = "Nimi", required = true)
+  @Schema(description = "Nimi", required = true)
   private String nimi;
 
-  @ApiModelProperty(value = "Haun kohdejoukko", required = false)
+  @Schema(description = "Haun kohdejoukko")
   private String kohdejoukko;
 
-  @ApiModelProperty(value = "Haun oid", required = false)
+  @Schema(description = "Haun oid")
   private String hakuoid;
 
-  @ApiModelProperty(value = "Hakuvuosi", required = false)
+  @Schema(description = "Hakuvuosi")
   private String hakuvuosi;
 
   public String getNimi() {

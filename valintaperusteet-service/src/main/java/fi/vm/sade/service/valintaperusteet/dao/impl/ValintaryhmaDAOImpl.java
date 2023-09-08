@@ -1,8 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.dao.impl;
 
-import com.mysema.query.jpa.impl.JPAQuery;
-import com.mysema.query.types.EntityPath;
-import com.mysema.query.types.expr.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import fi.vm.sade.service.valintaperusteet.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.model.QHakukohdekoodi;
@@ -25,35 +23,33 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long>
 
   @Autowired private DataSource dataSource;
 
-  protected JPAQuery from(EntityPath<?>... o) {
-    return new JPAQuery(getEntityManager()).from(o);
+  protected JPAQueryFactory queryFactory() {
+    return new JPAQueryFactory(getEntityManager());
   }
 
   @Override
   public List<Valintaryhma> findChildrenByParentOid(String id) {
     QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
 
-    BooleanExpression eq = null;
-    if (id == null) {
-      eq = valintaryhma.ylavalintaryhma.isNull();
-    } else {
-      eq = valintaryhma.ylavalintaryhma.oid.eq(id);
-    }
-    return from(valintaryhma)
+    return queryFactory()
+        .selectFrom(valintaryhma)
         .leftJoin(valintaryhma.alavalintaryhmat)
-        .fetch()
+        .fetchJoin()
         .leftJoin(valintaryhma.hakukohdeViitteet)
-        .fetch()
+        .fetchJoin()
         .leftJoin(valintaryhma.hakukohdekoodit)
-        .fetch()
+        .fetchJoin()
         .leftJoin(valintaryhma.valintakoekoodit)
-        .fetch()
+        .fetchJoin()
         .leftJoin(valintaryhma.organisaatiot)
-        .fetch()
-        .where(eq)
+        .fetchJoin()
+        .where(
+            id == null
+                ? valintaryhma.ylavalintaryhma.isNull()
+                : valintaryhma.ylavalintaryhma.oid.eq(id))
         .distinct()
         .orderBy(valintaryhma.nimi.asc())
-        .list(valintaryhma);
+        .fetch();
   }
 
   @Override
@@ -62,30 +58,30 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long>
       return new ArrayList<>();
     }
     QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
-    return from(valintaryhma)
+    return queryFactory()
+        .selectFrom(valintaryhma)
         .where(valintaryhma.ylavalintaryhma.oid.eq(oid))
         .distinct()
-        .list(valintaryhma);
+        .fetch();
   }
 
   @Override
   public Valintaryhma readByOid(String oid) {
     QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
-    Valintaryhma vr =
-        from(valintaryhma)
-            .leftJoin(valintaryhma.alavalintaryhmat)
-            .fetch()
-            .leftJoin(valintaryhma.hakukohdeViitteet)
-            .fetch()
-            .leftJoin(valintaryhma.hakukohdekoodit)
-            .fetch()
-            .leftJoin(valintaryhma.organisaatiot)
-            .fetch()
-            .leftJoin(valintaryhma.valintakoekoodit)
-            .fetch()
-            .where(valintaryhma.oid.eq(oid))
-            .singleResult(valintaryhma);
-    return vr;
+    return queryFactory()
+        .selectFrom(valintaryhma)
+        .leftJoin(valintaryhma.alavalintaryhmat)
+        .fetchJoin()
+        .leftJoin(valintaryhma.hakukohdeViitteet)
+        .fetchJoin()
+        .leftJoin(valintaryhma.hakukohdekoodit)
+        .fetchJoin()
+        .leftJoin(valintaryhma.organisaatiot)
+        .fetchJoin()
+        .leftJoin(valintaryhma.valintakoekoodit)
+        .fetchJoin()
+        .where(valintaryhma.oid.eq(oid))
+        .fetchFirst();
   }
 
   @Override
@@ -106,37 +102,40 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long>
 
   private Valintaryhma readPlainByOid(String oid) {
     QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
-    return from(valintaryhma)
+    return queryFactory()
+        .selectFrom(valintaryhma)
         .leftJoin(valintaryhma.alavalintaryhmat)
-        .fetch()
+        .fetchJoin()
         .leftJoin(valintaryhma.ylavalintaryhma)
-        .fetch()
+        .fetchJoin()
         .where(valintaryhma.oid.eq(oid))
-        .singleResult(valintaryhma);
+        .fetchFirst();
   }
 
   @Override
   public List<Valintaryhma> findAllFetchAlavalintaryhmat() {
     QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
-    return from(valintaryhma)
+    return queryFactory()
+        .selectFrom(valintaryhma)
         .leftJoin(valintaryhma.alavalintaryhmat)
-        .fetch()
+        .fetchJoin()
         .leftJoin(valintaryhma.organisaatiot)
-        .fetch()
+        .fetchJoin()
         .distinct()
-        .list(valintaryhma);
+        .fetch();
   }
 
   @Override
   public Valintaryhma findAllFetchAlavalintaryhmat(String oid) {
     QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
-    return from(valintaryhma)
+    return queryFactory()
+        .selectFrom(valintaryhma)
         .leftJoin(valintaryhma.alavalintaryhmat)
-        .fetch()
+        .fetchJoin()
         .leftJoin(valintaryhma.organisaatiot)
-        .fetch()
+        .fetchJoin()
         .where(valintaryhma.oid.eq(oid))
-        .singleResult(valintaryhma);
+        .fetchFirst();
   }
 
   @Override
@@ -195,7 +194,7 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long>
   private Valintaryhma findParent(String oid) {
     QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
     Valintaryhma current =
-        from(valintaryhma).where(valintaryhma.oid.eq(oid)).singleResult(valintaryhma);
+        queryFactory().selectFrom(valintaryhma).where(valintaryhma.oid.eq(oid)).fetchFirst();
     return current.getYlavalintaryhma();
   }
 
@@ -203,17 +202,18 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long>
   public List<Valintaryhma> readByHakukohdekoodiUri(String koodiUri) {
     QHakukohdekoodi koodi = QHakukohdekoodi.hakukohdekoodi;
     QValintaryhma vr = QValintaryhma.valintaryhma;
-    return from(vr)
+    return queryFactory()
+        .selectFrom(vr)
         .innerJoin(vr.hakukohdekoodit, koodi)
         .where(koodi.uri.eq(koodiUri))
         .distinct()
-        .list(vr);
+        .fetch();
   }
 
   @Override
   public List<Valintaryhma> readByHakuoid(String hakuoid) {
     QValintaryhma vr = QValintaryhma.valintaryhma;
 
-    return from(vr).where(vr.hakuoid.eq(hakuoid)).distinct().list(vr);
+    return queryFactory().selectFrom(vr).where(vr.hakuoid.eq(hakuoid)).distinct().fetch();
   }
 }

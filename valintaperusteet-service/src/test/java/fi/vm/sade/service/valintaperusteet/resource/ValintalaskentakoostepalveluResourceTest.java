@@ -1,54 +1,34 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import fi.vm.sade.service.valintaperusteet.WithSpringBoot;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheJonoillaDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteetDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteetValinnanVaiheDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoJarjestyskriteereillaDTO;
-import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
-import fi.vm.sade.service.valintaperusteet.resource.impl.HakukohdeResourceImpl;
-import fi.vm.sade.service.valintaperusteet.resource.impl.ValinnanVaiheResourceImpl;
-import fi.vm.sade.service.valintaperusteet.resource.impl.ValintalaskentakoostepalveluResourceImpl;
-import fi.vm.sade.service.valintaperusteet.resource.impl.ValintatapajonoResourceImpl;
-import fi.vm.sade.service.valintaperusteet.util.TestUtil;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
-import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
-@ContextConfiguration(locations = "classpath:test-context.xml")
-@TestExecutionListeners(
-    listeners = {
-      ValinnatJTACleanInsertTestExecutionListener.class,
-      DependencyInjectionTestExecutionListener.class,
-      DirtiesContextTestExecutionListener.class
-    })
-@RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data.xml")
-public class ValintalaskentakoostepalveluResourceTest {
+public class ValintalaskentakoostepalveluResourceTest extends WithSpringBoot {
 
-  private ValintatapajonoResourceImpl jonoResource = new ValintatapajonoResourceImpl();
-  private ValinnanVaiheResourceImpl vaiheResource = new ValinnanVaiheResourceImpl();
-  private ValintalaskentakoostepalveluResourceImpl valintalaskentakoostepalveluResource;
-  private HakukohdeResourceImpl hakukohdeResource = new HakukohdeResourceImpl();
+  private ValintatapajonoResource jonoResource = new ValintatapajonoResource();
+  private ValinnanVaiheResource vaiheResource = new ValinnanVaiheResource();
+  private ValintalaskentakoostepalveluResource valintalaskentakoostepalveluResource;
+  private HakukohdeResource hakukohdeResource = new HakukohdeResource();
 
   @Autowired private ApplicationContext applicationContext;
-  private TestUtil testUtil = new TestUtil(ValintatapajonoResourceImpl.class);
 
-  @Before
+  @BeforeEach
   public void setUp() {
     applicationContext.getAutowireCapableBeanFactory().autowireBean(jonoResource);
     applicationContext.getAutowireCapableBeanFactory().autowireBean(vaiheResource);
@@ -56,7 +36,7 @@ public class ValintalaskentakoostepalveluResourceTest {
     valintalaskentakoostepalveluResource =
         applicationContext
             .getAutowireCapableBeanFactory()
-            .getBean(ValintalaskentakoostepalveluResourceImpl.class);
+            .getBean(ValintalaskentakoostepalveluResource.class);
   }
 
   @Test

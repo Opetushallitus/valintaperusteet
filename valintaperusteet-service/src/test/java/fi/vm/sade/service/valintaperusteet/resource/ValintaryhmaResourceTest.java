@@ -1,16 +1,15 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
+import fi.vm.sade.service.valintaperusteet.WithSpringBoot;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.dto.*;
-import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
-import fi.vm.sade.service.valintaperusteet.resource.impl.ValintaryhmaResourceImpl;
 import fi.vm.sade.valinta.sharedutils.FakeAuthenticationInitialiser;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,41 +17,26 @@ import java.util.List;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.ws.rs.core.Response;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
-import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 /** User: tommiha Date: 1/21/13 Time: 4:05 PM */
-@ContextConfiguration(locations = "classpath:test-context.xml")
-@TestExecutionListeners(
-    listeners = {
-      ValinnatJTACleanInsertTestExecutionListener.class,
-      DependencyInjectionTestExecutionListener.class,
-      DirtiesContextTestExecutionListener.class
-    })
-@RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data.xml")
-public class ValintaryhmaResourceTest {
+public class ValintaryhmaResourceTest extends WithSpringBoot {
 
-  private ValintaryhmaResourceImpl valintaryhmaResource = new ValintaryhmaResourceImpl();
-  private ObjectMapper mapper =
-      new ObjectMapperProvider().getContext(ValintaryhmaResourceImpl.class);
+  private ValintaryhmaResource valintaryhmaResource = new ValintaryhmaResource();
+  private ObjectMapper mapper = new ObjectMapperProvider().getContext(ValintaryhmaResource.class);
 
   @Autowired private ApplicationContext applicationContext;
 
   @Autowired private ValinnanVaiheDAO valinnanVaiheDao;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     applicationContext.getAutowireCapableBeanFactory().autowireBean(valintaryhmaResource);
     FakeAuthenticationInitialiser.fakeAuthentication();
@@ -61,7 +45,7 @@ public class ValintaryhmaResourceTest {
   @Test
   public void testQueryFull() throws Exception {
     ValintaryhmaDTO valintaryhma = valintaryhmaResource.queryFull("oid1");
-    Assert.assertEquals("oid1", valintaryhma.getOid());
+    assertEquals("oid1", valintaryhma.getOid());
 
     mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(valintaryhma);
   }
@@ -69,8 +53,8 @@ public class ValintaryhmaResourceTest {
   @Test
   public void testSearch() throws Exception {
     List<ValintaryhmaDTO> valintaryhmas = valintaryhmaResource.search(true, null);
-    Assert.assertEquals(46, valintaryhmas.size());
-    Assert.assertEquals("oid1", valintaryhmas.get(0).getOid());
+    assertEquals(46, valintaryhmas.size());
+    assertEquals("oid1", valintaryhmas.get(0).getOid());
 
     mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(valintaryhmas);
   }
@@ -78,7 +62,7 @@ public class ValintaryhmaResourceTest {
   @Test
   public void testQueryChildren() throws Exception {
     List<ValintaryhmaDTO> valintaryhmas = valintaryhmaResource.queryChildren("oid1");
-    Assert.assertEquals(4, valintaryhmas.size());
+    assertEquals(4, valintaryhmas.size());
 
     mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(valintaryhmas);
   }
@@ -137,10 +121,10 @@ public class ValintaryhmaResourceTest {
     HttpSession session = Mockito.mock(HttpSession.class);
     Mockito.when(request.getSession(false)).thenReturn(session);
 
-    Response response =
+    ResponseEntity<ValinnanVaiheDTO> response =
         valintaryhmaResource.insertValinnanvaihe("oid1", null, valinnanVaihe, request);
-    assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
-    ValinnanVaiheDTO vv = (ValinnanVaiheDTO) response.getEntity();
+    assertEquals(HttpStatus.CREATED, response.getStatusCode());
+    ValinnanVaiheDTO vv = response.getBody();
 
     valinnanVaihe = new ValinnanVaiheCreateDTO();
     valinnanVaihe.setNimi("uusi");
@@ -150,7 +134,7 @@ public class ValintaryhmaResourceTest {
 
     response =
         valintaryhmaResource.insertValinnanvaihe("oid1", vv.getOid(), valinnanVaihe, request);
-    assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
+    assertEquals(HttpStatus.CREATED, response.getStatusCode());
   }
 
   @Test
@@ -164,8 +148,9 @@ public class ValintaryhmaResourceTest {
     KoodiDTO hakukohdekoodi = new KoodiDTO();
     hakukohdekoodi.setUri(URI);
     hakukohdekoodi.setArvo(ARVO);
-    Response response = valintaryhmaResource.insertHakukohdekoodi("oid1", hakukohdekoodi, request);
-    assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
+    ResponseEntity<Object> response =
+        valintaryhmaResource.insertHakukohdekoodi("oid1", hakukohdekoodi, request);
+    assertEquals(HttpStatus.CREATED, response.getStatusCode());
 
     ValintaryhmaDTO oid1 = valintaryhmaResource.queryFull("oid1");
     boolean found = false;
@@ -189,8 +174,9 @@ public class ValintaryhmaResourceTest {
     KoodiDTO hakukohdekoodi = new KoodiDTO();
     hakukohdekoodi.setUri(URI);
     hakukohdekoodi.setArvo(ARVO);
-    Response response = valintaryhmaResource.insertHakukohdekoodi("oid1", hakukohdekoodi, request);
-    assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
+    ResponseEntity<Object> response =
+        valintaryhmaResource.insertHakukohdekoodi("oid1", hakukohdekoodi, request);
+    assertEquals(HttpStatus.CREATED, response.getStatusCode());
 
     Set<KoodiDTO> oid1 = valintaryhmaResource.queryFull("oid1").getHakukohdekoodit();
     for (int i = 0; i < 9; i++) {
@@ -218,13 +204,14 @@ public class ValintaryhmaResourceTest {
     KoodiDTO hakukohdekoodi = new KoodiDTO();
     hakukohdekoodi.setUri(URI);
     hakukohdekoodi.setArvo(ARVO);
-    Response response = valintaryhmaResource.insertHakukohdekoodi("oid1", hakukohdekoodi, request);
-    assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
+    ResponseEntity<Object> response =
+        valintaryhmaResource.insertHakukohdekoodi("oid1", hakukohdekoodi, request);
+    assertEquals(HttpStatus.CREATED, response.getStatusCode());
 
     Set<KoodiDTO> oid1 = null;
 
     response = valintaryhmaResource.updateHakukohdekoodi("oid1", oid1, request);
-    assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
+    assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
 
     oid1 = valintaryhmaResource.queryFull("oid1").getHakukohdekoodit();
 
@@ -266,7 +253,7 @@ public class ValintaryhmaResourceTest {
       kokeet.add(mapper.readValue(json, KoodiDTO.class));
     }
 
-    valintaryhmaResource.updateValintakoekoodi(valintaryhmaOid, kokeet, request).getEntity();
+    valintaryhmaResource.updateValintakoekoodi(valintaryhmaOid, kokeet, request);
 
     ValintaryhmaDTO paivitetty =
         mapper.readValue(
@@ -302,10 +289,11 @@ public class ValintaryhmaResourceTest {
     HttpSession session = Mockito.mock(HttpSession.class);
     Mockito.when(request.getSession(false)).thenReturn(session);
 
-    Response response = valintaryhmaResource.copyAsChild("oid_700", "oid_702", "Testi", request);
+    ResponseEntity<Object> response =
+        valintaryhmaResource.copyAsChild("oid_700", "oid_702", "Testi", request);
     ValintaryhmaDTO valintaryhmaDTO =
         mapper.readValue(
-            mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(response.getEntity()),
+            mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(response.getBody()),
             ValintaryhmaDTO.class);
     assertEquals(1, valintaryhmaDTO.getHakukohdekoodit().size());
     assertEquals(

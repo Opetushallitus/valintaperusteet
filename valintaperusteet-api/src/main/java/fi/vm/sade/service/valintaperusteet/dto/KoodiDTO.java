@@ -1,24 +1,23 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(value = "KoodiDTO", description = "Koodiston koodi")
+@Schema(name = "KoodiDTO", description = "Koodiston koodi")
 public class KoodiDTO {
 
-  @ApiModelProperty(value = "URI", required = true)
+  @Schema(description = "URI", required = true)
   private String uri;
 
-  @ApiModelProperty(value = "Suomenkielinen nimi")
+  @Schema(description = "Suomenkielinen nimi")
   private String nimiFi;
 
-  @ApiModelProperty(value = "Ruotsinkielinen nimi")
+  @Schema(description = "Ruotsinkielinen nimi")
   private String nimiSv;
 
-  @ApiModelProperty(value = "Englanninkielinen nimi")
+  @Schema(description = "Englanninkielinen nimi")
   private String nimiEn;
 
-  @ApiModelProperty(value = "Koodin arvo")
+  @Schema(description = "Koodin arvo")
   private String arvo;
 
   public String getUri() {

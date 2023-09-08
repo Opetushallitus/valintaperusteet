@@ -1,48 +1,45 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
 import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(value = "ValintaperusteViiteDTO", description = "Valintaperusteviite")
+@Schema(name = "ValintaperusteViiteDTO", description = "Valintaperusteviite")
 public class ValintaperusteViiteDTO implements Comparable<ValintaperusteViiteDTO> {
 
-  @ApiModelProperty(value = "tunniste", required = true)
+  @Schema(description = "tunniste", required = true)
   private String tunniste;
 
-  @ApiModelProperty(value = "Kuvaus")
+  @Schema(description = "Kuvaus")
   private String kuvaus;
 
-  @ApiModelProperty(value = "Valintaperusteen lähde", required = true)
+  @Schema(description = "Valintaperusteen lähde", required = true)
   private Valintaperustelahde lahde;
 
-  @ApiModelProperty(value = "Onko valintaperuste pakollinen", required = true)
+  @Schema(description = "Onko valintaperuste pakollinen", required = true)
   private Boolean onPakollinen;
 
   // Jos valintaperusteen lähde on hakukohde, voidaan epäsuoralla
   // viittauksella hakea
   // hakukohteelta tunniste, jolla viitataan hakemuksen arvoon
-  @ApiModelProperty(
-      value = "Viitataanko hakemuksen valintaperusteeseen epäsuorasti",
-      required = true)
+  @Schema(description = "Viitataanko hakemuksen valintaperusteeseen epäsuorasti", required = true)
   private Boolean epasuoraViittaus;
 
-  @ApiModelProperty(value = "Indeksi", required = true)
+  @Schema(description = "Indeksi", required = true)
   private Integer indeksi;
 
-  @ApiModelProperty(value = "Vaatii osallistumisen", required = true)
+  @Schema(description = "Vaatii osallistumisen", required = true)
   private Boolean vaatiiOsallistumisen = true;
 
-  @ApiModelProperty(value = "Syotettavissa kaikille", required = true)
+  @Schema(description = "Syotettavissa kaikille", required = true)
   private Boolean syotettavissaKaikille = true;
 
-  @ApiModelProperty(value = "Hylkäysperusteen kuvaukset")
+  @Schema(description = "Hylkäysperusteen kuvaukset")
   private TekstiRyhmaDTO kuvaukset = new TekstiRyhmaDTO();
 
-  @ApiModelProperty(value = "Syötettävän arvon tyyppi", required = false)
+  @Schema(description = "Syötettävän arvon tyyppi")
   private KoodiDTO syotettavanarvontyyppi;
 
-  @ApiModelProperty(value = "Tilastoidaan", required = false)
+  @Schema(description = "Tilastoidaan")
   private boolean tilastoidaan;
 
   public String getTunniste() {

@@ -1,27 +1,26 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@ApiModel(value = "ValintaryhmaDTO", description = "Valintaryhmä")
+@Schema(name = "ValintaryhmaDTO", description = "Valintaryhmä")
 public class ValintaryhmaDTO extends ValintaryhmaCreateDTO {
-  @ApiModelProperty(value = "OID", required = true)
+  @Schema(description = "OID", required = true)
   private String oid;
 
-  @ApiModelProperty(value = "Hakukohdekoodit")
+  @Schema(description = "Hakukohdekoodit")
   private Set<KoodiDTO> hakukohdekoodit = new HashSet<KoodiDTO>();
 
-  @ApiModelProperty(value = "Valintakoekoodit")
+  @Schema(description = "Valintakoekoodit")
   private List<KoodiDTO> valintakoekoodit = new ArrayList<KoodiDTO>();
 
-  @ApiModelProperty(value = "Onko valintaryhmällä lapsivalintaryhmiä")
+  @Schema(description = "Onko valintaryhmällä lapsivalintaryhmiä")
   private boolean lapsivalintaryhma;
 
-  @ApiModelProperty(value = "Onko valintaryhmällä lapsihakukohteita")
+  @Schema(description = "Onko valintaryhmällä lapsihakukohteita")
   private boolean lapsihakukohde;
 
   public String getOid() {

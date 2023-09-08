@@ -1,6 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.dao;
 
-import com.mysema.query.Tuple;
+import com.querydsl.core.Tuple;
 import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
 import java.util.List;
 

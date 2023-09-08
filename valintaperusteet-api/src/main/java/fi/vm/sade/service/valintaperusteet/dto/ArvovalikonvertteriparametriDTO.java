@@ -1,27 +1,26 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(value = "ArvovalikonvertteriparametriDTO", description = "Arvovälikonvertteriparametri")
+@Schema(name = "ArvovalikonvertteriparametriDTO", description = "Arvovälikonvertteriparametri")
 public class ArvovalikonvertteriparametriDTO
     implements Comparable<ArvovalikonvertteriparametriDTO> {
-  @ApiModelProperty(value = "Paluuarvo")
+  @Schema(description = "Paluuarvo")
   private String paluuarvo;
 
-  @ApiModelProperty(value = "Minimiarvo", required = true)
+  @Schema(description = "Minimiarvo", required = true)
   private String minValue;
 
-  @ApiModelProperty(value = "Maksimiarvo", required = true)
+  @Schema(description = "Maksimiarvo", required = true)
   private String maxValue;
 
-  @ApiModelProperty(value = "Palautetaanko haettu arvo")
+  @Schema(description = "Palautetaanko haettu arvo")
   private String palautaHaettuArvo;
 
-  @ApiModelProperty(value = "Hylkäysperuste")
+  @Schema(description = "Hylkäysperuste")
   private String hylkaysperuste;
 
-  @ApiModelProperty(value = "Hylkäysperusteen kuvaukset")
+  @Schema(description = "Hylkäysperusteen kuvaukset")
   private TekstiRyhmaDTO kuvaukset = new TekstiRyhmaDTO();
 
   public String getPaluuarvo() {

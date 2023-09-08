@@ -1,28 +1,13 @@
 package fi.vm.sade.service.valintaperusteet.service.exception;
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
-public class ValintatapajonoEiOleOlemassaException extends WebApplicationException {
-  private String valintatapajonoOid;
-
-  public ValintatapajonoEiOleOlemassaException(String valintatapajonoOid) {
-    this.valintatapajonoOid = valintatapajonoOid;
-  }
+public class ValintatapajonoEiOleOlemassaException extends ResponseStatusException {
+  private final String valintatapajonoOid;
 
   public ValintatapajonoEiOleOlemassaException(String message, String valintatapajonoOid) {
-    super(message, Response.Status.NOT_FOUND);
-    this.valintatapajonoOid = valintatapajonoOid;
-  }
-
-  public ValintatapajonoEiOleOlemassaException(
-      String message, Throwable cause, String valintatapajonoOid) {
-    super(message, cause);
-    this.valintatapajonoOid = valintatapajonoOid;
-  }
-
-  public ValintatapajonoEiOleOlemassaException(Throwable cause, String valintatapajonoOid) {
-    super(cause);
+    super(HttpStatus.NOT_FOUND, message);
     this.valintatapajonoOid = valintatapajonoOid;
   }
 }

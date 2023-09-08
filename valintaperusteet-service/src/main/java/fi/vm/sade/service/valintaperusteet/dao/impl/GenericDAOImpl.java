@@ -6,7 +6,9 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class GenericDAOImpl implements GenericDAO {
   @PersistenceContext private EntityManager entityManager;
 

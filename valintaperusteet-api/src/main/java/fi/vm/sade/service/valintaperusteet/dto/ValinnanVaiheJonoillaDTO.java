@@ -1,19 +1,18 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.LinkedHashSet;
 
-@ApiModel(value = "ValinnanVaiheDTO", description = "Valinnan vaihe")
+@Schema(name = "ValinnanVaiheDTO", description = "Valinnan vaihe")
 public class ValinnanVaiheJonoillaDTO extends ValinnanVaiheCreateDTO {
 
-  @ApiModelProperty(value = "OID", required = true)
+  @Schema(description = "OID", required = true)
   private String oid;
 
-  @ApiModelProperty(value = "Onko valinnan vaihe peritty")
+  @Schema(description = "Onko valinnan vaihe peritty")
   private Boolean inheritance;
 
-  @ApiModelProperty(value = "Valinnan vaiheen valintatapajonot prioriteettijärjestyksessä")
+  @Schema(description = "Valinnan vaiheen valintatapajonot prioriteettijärjestyksessä")
   private LinkedHashSet<ValintatapajonoDTO> jonot = new LinkedHashSet<>();
 
   public String getOid() {

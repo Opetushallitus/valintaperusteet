@@ -1,24 +1,23 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(value = "HakukohdeViiteCreateDTO", description = "Hakukohteen lisääminen")
+@Schema(name = "HakukohdeViiteCreateDTO", description = "Hakukohteen lisääminen")
 public class HakukohdeViiteCreateDTO {
 
-  @ApiModelProperty(value = "Nimi")
+  @Schema(description = "Nimi")
   private String nimi;
 
-  @ApiModelProperty(value = "Haku OID", required = true)
+  @Schema(description = "Haku OID", required = true)
   private String hakuoid;
 
-  @ApiModelProperty(value = "OID", required = true)
+  @Schema(description = "OID", required = true)
   private String oid;
 
-  @ApiModelProperty(value = "Tarjoaja OID")
+  @Schema(description = "Tarjoaja OID")
   private String tarjoajaOid;
 
-  @ApiModelProperty(value = "Tila")
+  @Schema(description = "Tila")
   private String tila;
 
   public String getNimi() {

@@ -1,8 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.dao.impl;
 
-import com.mysema.query.jpa.JPASubQuery;
-import com.mysema.query.jpa.impl.JPAQuery;
-import com.mysema.query.types.EntityPath;
+import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import fi.vm.sade.service.valintaperusteet.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.ValintatapajonoDAO;
 import fi.vm.sade.service.valintaperusteet.model.QHakijaryhmaValintatapajono;
@@ -15,22 +14,13 @@ import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, Long>
     implements ValintatapajonoDAO {
-
-  private static final Logger LOG = LoggerFactory.getLogger(ValintatapajonoDAOImpl.class);
-
-  protected JPAQuery from(EntityPath<?>... o) {
-    return new JPAQuery(getEntityManager()).from(o);
-  }
-
-  protected JPASubQuery subQuery() {
-    return new JPASubQuery();
+  protected JPAQueryFactory queryFactory() {
+    return new JPAQueryFactory(getEntityManager());
   }
 
   public List<Valintatapajono> findByValinnanVaihe(String oid) {
@@ -38,25 +28,26 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
     QValintatapajono jono = QValintatapajono.valintatapajono;
     QHakijaryhmaValintatapajono hv = QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
     return LinkitettavaJaKopioitavaUtil.jarjesta(
-        from(jono)
+        queryFactory()
+            .selectFrom(jono)
             .join(jono.valinnanVaihe, valinnanVaihe)
-            .fetch()
+            .fetchJoin()
             .leftJoin(valinnanVaihe.valintaryhma)
             .leftJoin(jono.edellinenValintatapajono)
-            .fetch()
+            .fetchJoin()
             .leftJoin(jono.masterValintatapajono)
-            .fetch()
+            .fetchJoin()
             .leftJoin(jono.varasijanTayttojono)
-            .fetch()
+            .fetchJoin()
             .leftJoin(jono.hakijaryhmat, hv)
-            .fetch()
+            .fetchJoin()
             .leftJoin(hv.hakijaryhma)
-            .fetch()
+            .fetchJoin()
             .leftJoin(jono.valinnanVaihe)
-            .fetch()
+            .fetchJoin()
             .where(valinnanVaihe.oid.eq(oid))
             .distinct()
-            .list(jono));
+            .fetch());
   }
 
   @Override
@@ -65,18 +56,19 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
     QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
     QHakijaryhmaValintatapajono hakijaryhmaValintatapajono =
         QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
-    return from(jono)
+    return queryFactory()
+        .selectFrom(jono)
         .leftJoin(jono.valinnanVaihe, valinnanVaihe)
-        .fetch()
+        .fetchJoin()
         .leftJoin(jono.hakijaryhmat, hakijaryhmaValintatapajono)
-        .fetch()
+        .fetchJoin()
         .leftJoin(jono.varasijanTayttojono)
-        .fetch()
+        .fetchJoin()
         .leftJoin(hakijaryhmaValintatapajono.hakijaryhma)
-        .fetch()
+        .fetchJoin()
         .leftJoin(valinnanVaihe.valintaryhma)
         .distinct()
-        .list(jono);
+        .fetch();
   }
 
   @Override
@@ -85,22 +77,23 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
     QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
     QHakijaryhmaValintatapajono hakijaryhmaValintatapajono =
         QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
-    return from(jono)
+    return queryFactory()
+        .selectFrom(jono)
         .where(jono.oid.eq(oid))
         .leftJoin(jono.valinnanVaihe, valinnanVaihe)
-        .fetch()
+        .fetchJoin()
         .leftJoin(jono.masterValintatapajono)
-        .fetch()
+        .fetchJoin()
         .leftJoin(jono.edellinenValintatapajono)
-        .fetch()
+        .fetchJoin()
         .leftJoin(jono.varasijanTayttojono)
-        .fetch()
+        .fetchJoin()
         .leftJoin(jono.hakijaryhmat, hakijaryhmaValintatapajono)
-        .fetch()
+        .fetchJoin()
         .leftJoin(hakijaryhmaValintatapajono.hakijaryhma)
-        .fetch()
+        .fetchJoin()
         .leftJoin(valinnanVaihe.valintaryhma)
-        .singleResult(jono);
+        .fetchFirst();
   }
 
   @Override
@@ -109,46 +102,49 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
     QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
     QHakijaryhmaValintatapajono hakijaryhmaValintatapajono =
         QHakijaryhmaValintatapajono.hakijaryhmaValintatapajono;
-    return from(jono)
+    return queryFactory()
+        .selectFrom(jono)
         .where(jono.oid.in(oids))
         .leftJoin(jono.valinnanVaihe, valinnanVaihe)
-        .fetch()
+        .fetchJoin()
         .leftJoin(jono.masterValintatapajono)
-        .fetch()
+        .fetchJoin()
         .leftJoin(jono.edellinenValintatapajono)
-        .fetch()
+        .fetchJoin()
         .leftJoin(jono.varasijanTayttojono)
-        .fetch()
+        .fetchJoin()
         .leftJoin(jono.hakijaryhmat, hakijaryhmaValintatapajono)
-        .fetch()
+        .fetchJoin()
         .leftJoin(hakijaryhmaValintatapajono.hakijaryhma)
-        .fetch()
+        .fetchJoin()
         .leftJoin(valinnanVaihe.valintaryhma)
-        .list(jono);
+        .fetch();
   }
 
   @Override
   public List<Valintatapajono> haeKopiot(String oid) {
     QValintatapajono valintatapajono = QValintatapajono.valintatapajono;
-    return from(valintatapajono)
+    return queryFactory()
+        .selectFrom(valintatapajono)
         .leftJoin(valintatapajono.valinnanVaihe)
-        .fetch()
+        .fetchJoin()
         .leftJoin(valintatapajono.masterValintatapajono)
-        .fetch()
+        .fetchJoin()
         .where(valintatapajono.masterValintatapajono.oid.eq(oid))
-        .list(valintatapajono);
+        .fetch();
   }
 
   @Override
   public List<Valintatapajono> haeKopiotValisijoittelulle(String oid) {
     QValintatapajono valintatapajono = QValintatapajono.valintatapajono;
-    return from(valintatapajono)
+    return queryFactory()
+        .selectFrom(valintatapajono)
         .leftJoin(valintatapajono.masterValintatapajono)
         .where(valintatapajono.masterValintatapajono.oid.eq(oid))
         .where(valintatapajono.aktiivinen.eq(Boolean.TRUE))
         .where(valintatapajono.valisijoittelu.eq(Boolean.TRUE))
         .distinct()
-        .list(valintatapajono);
+        .fetch();
   }
 
   @Override
@@ -156,26 +152,29 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
     QHakukohdeViite hakukohde = QHakukohdeViite.hakukohdeViite;
     QValinnanVaihe vv = QValinnanVaihe.valinnanVaihe;
     QValintatapajono jono = QValintatapajono.valintatapajono;
-    return from(hakukohde)
+    return queryFactory()
+        .select(jono)
+        .from(hakukohde)
         .leftJoin(hakukohde.valinnanvaiheet, vv)
         .leftJoin(vv.jonot, jono)
         .where(hakukohde.oid.eq(hakukohdeOid).and(jono.kaytetaanValintalaskentaa.isFalse()))
         .distinct()
-        .list(jono);
+        .fetch();
   }
 
   private List<Valintatapajono> findByValinnanVaihe(ValinnanVaihe valinnanVaihe) {
     QValintatapajono valintatapajono = QValintatapajono.valintatapajono;
-    return from(valintatapajono)
+    return queryFactory()
+        .selectFrom(valintatapajono)
         .leftJoin(valintatapajono.edellinenValintatapajono)
-        .fetch()
+        .fetchJoin()
         .leftJoin(valintatapajono.masterValintatapajono)
-        .fetch()
+        .fetchJoin()
         .leftJoin(valintatapajono.varasijanTayttojono)
-        .fetch()
+        .fetchJoin()
         .where(valintatapajono.valinnanVaihe.id.eq(valinnanVaihe.getId()))
         .distinct()
-        .list(valintatapajono);
+        .fetch();
   }
 
   @Override
@@ -202,9 +201,10 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
 
     QValintatapajono seuraava = QValintatapajono.valintatapajono;
     Valintatapajono seuraavaValintatapajono =
-        from(seuraava)
+        queryFactory()
+            .selectFrom(seuraava)
             .where(seuraava.edellinenValintatapajono.id.eq(valintatapajono.getId()))
-            .singleResult(seuraava);
+            .fetchFirst();
 
     if (seuraavaValintatapajono != null) {
       Valintatapajono edellinen = valintatapajono.getEdellinen();
@@ -230,10 +230,11 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
     // Etsitään hakukohteen viimeinen aktiivinen valinnan vaihe
     List<ValinnanVaihe> valinnanVaiheet =
         LinkitettavaJaKopioitavaUtil.jarjesta(
-            from(vv)
+            queryFactory()
+                .selectFrom(vv)
                 .join(vv.hakukohdeViite, hakukohde)
                 .where((hakukohde.oid.eq(hakukohdeOid)))
-                .list(vv));
+                .fetch());
 
     List<ValinnanVaihe> aktiivisetValinnanVaiheet =
         valinnanVaiheet.stream().filter(ValinnanVaihe::getAktiivinen).collect(Collectors.toList());
@@ -244,15 +245,16 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
     // Haetaan löydetyn valinnan vaiheen kaikki jonot
     List<Valintatapajono> jonot =
         LinkitettavaJaKopioitavaUtil.jarjesta(
-            from(jono)
+            queryFactory()
+                .selectFrom(jono)
                 .join(jono.valinnanVaihe, vv)
                 .leftJoin(jono.edellinenValintatapajono)
-                .fetch()
+                .fetchJoin()
                 .leftJoin(jono.varasijanTayttojono)
-                .fetch()
+                .fetchJoin()
                 .where(vv.oid.eq(lastValinnanVaihe.getOid()))
                 .distinct()
-                .list(jono));
+                .fetch());
 
     // BUG-255 poistetaan jonoista väärin tallentuneet täyttöjonot
     for (Valintatapajono j : jonot) {
@@ -269,37 +271,41 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
     QHakukohdeViite hakukohde = QHakukohdeViite.hakukohdeViite;
     QValinnanVaihe vv = QValinnanVaihe.valinnanVaihe;
     QValintatapajono jono = QValintatapajono.valintatapajono;
-    return from(hakukohde)
+    return queryFactory()
+        .select(jono)
+        .from(hakukohde)
         .leftJoin(hakukohde.valinnanvaiheet, vv)
         .leftJoin(vv.jonot, jono)
         .where(hakukohde.oid.eq(hakukohdeOid))
         .distinct()
-        .list(jono);
+        .fetch();
   }
 
   @Override
   public Valintatapajono haeValinnanVaiheenViimeinenValintatapajono(String valinnanVaiheOid) {
     QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
     QValintatapajono jono = QValintatapajono.valintatapajono;
-    return from(valinnanVaihe)
+    return queryFactory()
+        .select(jono)
+        .from(valinnanVaihe)
         .leftJoin(valinnanVaihe.jonot, jono)
         .leftJoin(valinnanVaihe.valintaryhma)
         .where(
             jono.id
                 .notIn(
-                    subQuery()
+                    JPAExpressions.select(jono.edellinenValintatapajono.id)
                         .from(jono)
-                        .where(jono.edellinenValintatapajono.isNotNull())
-                        .list(jono.edellinenValintatapajono.id))
+                        .where(jono.edellinenValintatapajono.isNotNull()))
                 .and(valinnanVaihe.oid.eq(valinnanVaiheOid)))
-        .singleResult(jono);
+        .fetchFirst();
   }
 
   @Override
   public Valintatapajono insert(Valintatapajono uusi) {
     QValintatapajono valintatapajono = QValintatapajono.valintatapajono;
     Valintatapajono seuraava =
-        from(valintatapajono)
+        queryFactory()
+            .selectFrom(valintatapajono)
             .where(
                 valintatapajono
                     .valinnanVaihe
@@ -310,7 +316,7 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
                             ? valintatapajono.edellinenValintatapajono.isNull()
                             : valintatapajono.edellinenValintatapajono.id.eq(
                                 uusi.getEdellinen().getId())))
-            .singleResult(valintatapajono);
+            .fetchFirst();
     if (seuraava != null && uusi.getEdellinen() == null) {
       seuraava.setEdellinen(seuraava);
       getEntityManager().flush();

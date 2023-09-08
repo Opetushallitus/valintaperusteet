@@ -1,6 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.listeners;
 
 import static org.dbunit.database.DatabaseConfig.FEATURE_ALLOW_EMPTY_FIELDS;
+import static org.dbunit.database.DatabaseConfig.PROPERTY_DATATYPE_FACTORY;
 
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import java.sql.Connection;
@@ -13,6 +14,7 @@ import org.dbunit.dataset.FilteredDataSet;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ReplacementDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
+import org.dbunit.ext.postgresql.PostgresqlDataTypeFactory;
 import org.dbunit.operation.DatabaseOperation;
 import org.dbunit.operation.TransactionOperation;
 import org.hibernate.internal.SessionImpl;
@@ -61,6 +63,7 @@ public class ValinnatJTACleanInsertTestExecutionListener
       SessionImpl session = (SessionImpl) entityManager.getDelegate();
       Connection jdbcConn = session.connection();
       IDatabaseConnection con = new DatabaseConnection(jdbcConn);
+      con.getConfig().setProperty(PROPERTY_DATATYPE_FACTORY, new PostgresqlDataTypeFactory());
       con.getConfig().setProperty(FEATURE_ALLOW_EMPTY_FIELDS, true);
       if (ALL_TABLES_FILTER == null) {
         ALL_TABLES_FILTER = new DatabaseSequenceFilter(con);

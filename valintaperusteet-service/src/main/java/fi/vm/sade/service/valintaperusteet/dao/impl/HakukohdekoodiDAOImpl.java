@@ -1,7 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.dao.impl;
 
-import com.mysema.query.jpa.impl.JPAQuery;
-import com.mysema.query.types.EntityPath;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import fi.vm.sade.service.valintaperusteet.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdekoodiDAO;
 import fi.vm.sade.service.valintaperusteet.model.Hakukohdekoodi;
@@ -16,33 +15,36 @@ import org.springframework.stereotype.Repository;
 public class HakukohdekoodiDAOImpl extends AbstractJpaDAOImpl<Hakukohdekoodi, Long>
     implements HakukohdekoodiDAO {
 
-  protected JPAQuery from(EntityPath<?>... o) {
-    return new JPAQuery(getEntityManager()).from(o);
+  protected JPAQueryFactory queryFactory() {
+    return new JPAQueryFactory(getEntityManager());
   }
 
   @Override
   public Hakukohdekoodi readByUri(String koodiUri) {
     QHakukohdekoodi koodi = QHakukohdekoodi.hakukohdekoodi;
-    return from(koodi).where(koodi.uri.eq(koodiUri)).singleResult(koodi);
+    return queryFactory().selectFrom(koodi).where(koodi.uri.eq(koodiUri)).fetchFirst();
   }
 
   @Override
   public Hakukohdekoodi findByHakukohdeOid(String hakukohdeOid) {
     QHakukohdeViite hakukohde = QHakukohdeViite.hakukohdeViite;
     QHakukohdekoodi hakukohdekoodi = QHakukohdekoodi.hakukohdekoodi;
-    return from(hakukohde)
+    return queryFactory()
+        .select(hakukohdekoodi)
+        .from(hakukohde)
         .innerJoin(hakukohde.hakukohdekoodi, hakukohdekoodi)
         .where(hakukohde.oid.eq(hakukohdeOid))
-        .singleResult(hakukohdekoodi);
+        .fetchFirst();
   }
 
   @Override
   public Hakukohdekoodi findByHakukohdeOidAndKoodiUri(String hakukohdeOid, String koodiUri) {
     QHakukohdekoodi koodi = QHakukohdekoodi.hakukohdekoodi;
     QHakukohdeViite hakukohde = QHakukohdeViite.hakukohdeViite;
-    return from(koodi)
+    return queryFactory()
+        .selectFrom(koodi)
         .where(koodi.uri.eq(koodiUri).and(hakukohde.oid.eq(hakukohdeOid)))
-        .singleResult(koodi);
+        .fetchFirst();
   }
 
   @Override
@@ -51,7 +53,7 @@ public class HakukohdekoodiDAOImpl extends AbstractJpaDAOImpl<Hakukohdekoodi, Lo
       return new ArrayList<Hakukohdekoodi>();
     }
     QHakukohdekoodi koodi = QHakukohdekoodi.hakukohdekoodi;
-    return from(koodi).where(koodi.uri.in(koodiUris)).list(koodi);
+    return queryFactory().selectFrom(koodi).where(koodi.uri.in(koodiUris)).fetch();
   }
 
   @Override

@@ -1,7 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.dao.impl;
 
-import com.mysema.query.jpa.impl.JPAQuery;
-import com.mysema.query.types.EntityPath;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import fi.vm.sade.service.valintaperusteet.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.ValintakoekoodiDAO;
 import fi.vm.sade.service.valintaperusteet.model.QValintakoekoodi;
@@ -18,8 +17,8 @@ import org.springframework.stereotype.Repository;
 public class ValintakoekoodiDAOImpl extends AbstractJpaDAOImpl<Valintakoekoodi, Long>
     implements ValintakoekoodiDAO {
 
-  protected JPAQuery from(EntityPath<?>... o) {
-    return new JPAQuery(getEntityManager()).from(o);
+  protected JPAQueryFactory queryFactory() {
+    return new JPAQueryFactory(getEntityManager());
   }
 
   @Override
@@ -27,25 +26,30 @@ public class ValintakoekoodiDAOImpl extends AbstractJpaDAOImpl<Valintakoekoodi, 
     QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
     QValintakoekoodi valintakoekoodi = QValintakoekoodi.valintakoekoodi;
     return new HashSet<>(
-        from(valintaryhma)
+        queryFactory()
+            .select(valintakoekoodi)
+            .from(valintaryhma)
             .join(valintaryhma.valintakoekoodit, valintakoekoodi)
             .where(valintaryhma.oid.eq(valintaryhmaOid))
-            .list(valintakoekoodi));
+            .fetch());
   }
 
   @Override
   public Valintakoekoodi readByUri(String uri) {
     QValintakoekoodi valintakoekoodi = QValintakoekoodi.valintakoekoodi;
-    return from(valintakoekoodi).where(valintakoekoodi.uri.eq(uri)).singleResult(valintakoekoodi);
+    return queryFactory()
+        .selectFrom(valintakoekoodi)
+        .where(valintakoekoodi.uri.eq(uri))
+        .fetchFirst();
   }
 
   @Override
   public List<Valintakoekoodi> findByUris(String[] koodiUris) {
     if (koodiUris == null || koodiUris.length == 0) {
-      return new ArrayList<Valintakoekoodi>();
+      return new ArrayList<>();
     }
     QValintakoekoodi koodi = QValintakoekoodi.valintakoekoodi;
-    return from(koodi).where(koodi.uri.in(koodiUris)).list(koodi);
+    return queryFactory().selectFrom(koodi).where(koodi.uri.in(koodiUris)).fetch();
   }
 
   @Override

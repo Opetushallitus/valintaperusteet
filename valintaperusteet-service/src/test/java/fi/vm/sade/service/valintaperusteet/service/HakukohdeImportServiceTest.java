@@ -1,11 +1,12 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import fi.vm.sade.service.valintaperusteet.WithSpringBoot;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdekoodiDAO;
@@ -17,7 +18,6 @@ import fi.vm.sade.service.valintaperusteet.dto.HakukohteenValintakoeDTO;
 import fi.vm.sade.service.valintaperusteet.dto.MonikielinenTekstiDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
-import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.Hakukohdekoodi;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
@@ -28,27 +28,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
-import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
 /** User: wuoti Date: 8.5.2013 Time: 15.06 */
-@ContextConfiguration(locations = "classpath:test-context.xml")
-@TestExecutionListeners(
-    listeners = {
-      ValinnatJTACleanInsertTestExecutionListener.class,
-      DependencyInjectionTestExecutionListener.class,
-      DirtiesContextTestExecutionListener.class
-    })
-@RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data.xml")
-public class HakukohdeImportServiceTest {
+public class HakukohdeImportServiceTest extends WithSpringBoot {
 
   @Autowired private HakukohdekoodiDAO hakukohdekoodiDAO;
 
@@ -110,16 +95,16 @@ public class HakukohdeImportServiceTest {
     HakukohdeImportServiceImpl serviceImpl = new HakukohdeImportServiceImpl();
 
     final String uri1 = "http://koodinuri";
-    Assert.assertEquals(uri1, serviceImpl.sanitizeKoodiUri(uri1));
+    assertEquals(uri1, serviceImpl.sanitizeKoodiUri(uri1));
 
     final String uri2 = "http://koodinur2#1";
     final String uri2Expected = "http://koodinur2";
-    Assert.assertEquals(uri2Expected, serviceImpl.sanitizeKoodiUri(uri2));
+    assertEquals(uri2Expected, serviceImpl.sanitizeKoodiUri(uri2));
 
     final String uri3 = "http://koodinur3#1#5";
     final String uri3Expected = "http://koodinur3";
-    Assert.assertEquals(uri3Expected, serviceImpl.sanitizeKoodiUri(uri3));
-    Assert.assertNull(null);
+    assertEquals(uri3Expected, serviceImpl.sanitizeKoodiUri(uri3));
+    assertNull(null);
   }
 
   @Test

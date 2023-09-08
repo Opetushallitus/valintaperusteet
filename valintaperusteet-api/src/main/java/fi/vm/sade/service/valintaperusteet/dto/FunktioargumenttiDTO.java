@@ -1,15 +1,14 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(value = "FunktioargumenttiDTO", description = "Funktioargumentti")
+@Schema(name = "FunktioargumenttiDTO", description = "Funktioargumentti")
 public class FunktioargumenttiDTO implements Comparable<FunktioargumenttiDTO> {
 
-  @ApiModelProperty(value = "Funktioargumentin lapsi (funktiokutsu tai laskentakaava)")
+  @Schema(description = "Funktioargumentin lapsi (funktiokutsu tai laskentakaava)")
   private FunktioargumentinLapsiDTO lapsi;
 
-  @ApiModelProperty(value = "Indeksi", required = true)
+  @Schema(description = "Indeksi", required = true)
   private Integer indeksi;
 
   public Integer getIndeksi() {

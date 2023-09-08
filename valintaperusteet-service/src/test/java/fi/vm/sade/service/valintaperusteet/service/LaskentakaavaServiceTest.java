@@ -1,13 +1,9 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import fi.vm.sade.kaava.Funktiokuvaaja;
+import fi.vm.sade.service.valintaperusteet.WithSpringBoot;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
 import fi.vm.sade.service.valintaperusteet.dto.FunktioargumentinLapsiDTO;
@@ -24,7 +20,6 @@ import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi;
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi;
 import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
 import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
-import fi.vm.sade.service.valintaperusteet.listeners.ValinnatJTACleanInsertTestExecutionListener;
 import fi.vm.sade.service.valintaperusteet.model.Arvokonvertteriparametri;
 import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti;
 import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
@@ -46,26 +41,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
-import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
 /** User: kwuoti Date: 21.1.2013 Time: 9.42 */
-@ContextConfiguration(locations = "classpath:test-context.xml")
-@TestExecutionListeners(
-    listeners = {
-      ValinnatJTACleanInsertTestExecutionListener.class,
-      DependencyInjectionTestExecutionListener.class,
-      DirtiesContextTestExecutionListener.class
-    })
-@RunWith(SpringJUnit4ClassRunner.class)
 @DataSetLocation("classpath:test-data.xml")
-public class LaskentakaavaServiceTest {
+public class LaskentakaavaServiceTest extends WithSpringBoot {
 
   @Autowired private LaskentakaavaService laskentakaavaService;
 
@@ -642,10 +623,14 @@ public class LaskentakaavaServiceTest {
     assertTrue(caught);
   }
 
-  @Test(expected = FunktiokutsuaEiVoidaKayttaaValintakoelaskennassaException.class)
+  @Test
   public void testHaeLaskettavaKaavaVaarallaMoodilla() {
     final Long laskentakaavaId = 417L;
-    laskentakaavaService.haeLaskettavaKaava(laskentakaavaId, Laskentamoodi.VALINTAKOELASKENTA);
+    assertThrows(
+        FunktiokutsuaEiVoidaKayttaaValintakoelaskennassaException.class,
+        () ->
+            laskentakaavaService.haeLaskettavaKaava(
+                laskentakaavaId, Laskentamoodi.VALINTAKOELASKENTA));
   }
 
   @Test
@@ -757,7 +742,7 @@ public class LaskentakaavaServiceTest {
     assertFalse(siirretty.isPresent());
   }
 
-  @Test(expected = LaskentakaavaEiOleOlemassaException.class)
+  @Test
   public void testPoistaKaava() {
     final Long id = 204L;
     Laskentakaava laskentakaava = laskentakaavaService.haeMallinnettuKaava(id);
@@ -767,7 +752,9 @@ public class LaskentakaavaServiceTest {
         maksimi204L.getFunktionimi());
     assertEquals(2, maksimi204L.getFunktioargumentit().size());
     laskentakaavaService.poista(id);
-    laskentakaava = laskentakaavaService.haeMallinnettuKaava(id);
+    assertThrows(
+        LaskentakaavaEiOleOlemassaException.class,
+        () -> laskentakaavaService.haeMallinnettuKaava(id));
   }
 
   @Test
