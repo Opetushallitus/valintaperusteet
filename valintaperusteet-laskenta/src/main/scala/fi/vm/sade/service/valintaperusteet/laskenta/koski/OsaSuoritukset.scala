@@ -3,7 +3,7 @@ package fi.vm.sade.service.valintaperusteet.laskenta.koski
 import fi.vm.sade.service.valintaperusteet.laskenta.koski.Osasuoritus.OsaSuoritusLinssit
 import io.circe.Json
 import io.circe.optics.JsonPath
-import monocle.Optional
+import monocle.{Optional, Traversal}
 
 case class Osasuoritus(
   koulutusmoduulinTunnisteenKoodiarvo: String,
@@ -20,18 +20,21 @@ object Osasuoritus {
   // Osasuorituksen rakennetta purkavat linssit
   object OsaSuoritusLinssit {
     // Suoritusten alla olevien osasuoritusten tietoja etsivä linssi
-    val osasuoritukset = JsonPath.root.osasuoritukset.each.json
+    val osasuoritukset: Traversal[Json, Json] = JsonPath.root.osasuoritukset.each.json
 
     // Osasuorituksen rakennetta purkavat linssit
-    val arviointi = JsonPath.root.arviointi.each.json
-    val koulutusmoduuli = JsonPath.root.koulutusmoduuli
-    val koulutusmoduulinLaajuudenArvo = koulutusmoduuli.laajuus.arvo.bigDecimal
+    val arviointi: Traversal[Json, Json] = JsonPath.root.arviointi.each.json
+    val arviointiKokoelma: Optional[Json, Vector[Json]] = JsonPath.root.arviointi.arr
+    val koulutusmoduuli: JsonPath = JsonPath.root.koulutusmoduuli
+    val koulutusmoduulinLaajuudenArvo: Optional[Json, BigDecimal] =
+      koulutusmoduuli.laajuus.arvo.bigDecimal
     val koulutusmoduulinTunnisteenKoodiarvo: Optional[Json, String] =
       koulutusmoduuli.tunniste.koodiarvo.string
     val koulutusmoduulinTunnisteenKoodistoUri: Optional[Json, String] =
       koulutusmoduuli.tunniste.koodistoUri.string
-    val koulutusmoduulinNimiFi = koulutusmoduuli.tunniste.nimi.fi.string
-    val osasuorituksenTyypinKoodiarvo = JsonPath.root.tyyppi.koodiarvo.string
+    val koulutusmoduulinNimiFi: Optional[Json, String] = koulutusmoduuli.tunniste.nimi.fi.string
+    val osasuorituksenTyypinKoodiarvo: Optional[Json, String] =
+      JsonPath.root.tyyppi.koodiarvo.string
   }
 
   def apply(json: Json): Osasuoritus = {
@@ -76,15 +79,37 @@ object OsaSuoritukset {
     OsaSuoritusLinssit.osasuoritukset.getAll(suoritus).filter(osasuoritusPredikaatti)
   }
 
+  // Arvosanojen spessuarvot, esiintyy ainakin kolmella ammatillisen arvioinnin asteikolla
+  val hylätty = "Hylätty"
+  val hyväksytty = "Hyväksytty"
+
+  def arvio(arvio: Json): Option[(String, String)] = {
+    (
+      JsonPath.root.arvosana.koodiarvo.string.getOption(arvio),
+      JsonPath.root.arvosana.koodistoUri.string.getOption(arvio)
+    ) match {
+      case (Some(arvosana), Some(asteikko)) => Some((arvosana, asteikko))
+      case (_, _)                           => None
+    }
+  }
+
+  def etsiUusinArvio(arviot: List[Json]): Option[Json] = {
+    arviot
+      .filter(arvio => JsonPath.root.hyväksytty.boolean.getOption(arvio).getOrElse(false))
+      .sortBy(JsonPath.root.päivä.string.getOption(_))(Ordering.Option[String].reverse)
+      .headOption
+  }
+
+  private def etsiUusinArvio(osasuoritus: Json): Option[Json] = {
+    etsiUusinArvio(OsaSuoritusLinssit.arviointi.getAll(osasuoritus))
+  }
+
   def etsiUusinArvosanaLaajuusJaArviointiAsteikko(
     osasuoritus: Json
   ): Option[(String, Option[BigDecimal], String)] = {
-    OsaSuoritusLinssit.arviointi
-      .getAll(osasuoritus)
-      .filter(arvio => JsonPath.root.hyväksytty.boolean.getOption(arvio).getOrElse(false))
+    etsiUusinArvio(osasuoritus)
       .map(arvio =>
         (
-          JsonPath.root.päivä.string.getOption(arvio).orNull,
           JsonPath.root.arvosana.koodiarvo.string.getOption(arvio).orNull,
           OsaSuoritusLinssit.koulutusmoduulinLaajuudenArvo.getOption(
             osasuoritus
@@ -92,15 +117,5 @@ object OsaSuoritukset {
           JsonPath.root.arvosana.koodistoUri.string.getOption(arvio).orNull
         )
       )
-      .sorted(
-        Ordering.Tuple4(
-          Ordering.String.reverse,
-          Ordering.String,
-          Ordering.Option[BigDecimal],
-          Ordering.String
-        )
-      )
-      .headOption
-      .map(t => (t._2, t._3, t._4))
   }
 }
