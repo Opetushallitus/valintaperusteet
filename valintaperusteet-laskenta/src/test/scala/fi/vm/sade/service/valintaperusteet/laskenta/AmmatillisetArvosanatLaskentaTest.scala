@@ -285,6 +285,28 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
     assert(BigDecimal(tulos.get) == BigDecimal("12"))
   }
 
+  test("Ammatillinen tutkinto suoritettu ja arvosanojen korotuksia - korotettu keskiarvo") {
+    val (tulos, _) = Laskin.laske(
+      hakukohde,
+      hakemusJossaArvosanatJaKorotuksia,
+      Laskentadomainkonvertteri.muodostaLukuarvolasku(
+        createHaeAmmatillisenTutkinnonOsienKeskiarvoKutsu()
+      )
+    )
+    assert(BigDecimal(tulos.get) == BigDecimal("1.800"))
+  }
+
+  test("Ammatillinen tutkinto suoritettu ja arvosanojen korotuksia - YTO:n keskiarvo") {
+    val (tulos, _) = Laskin.laske(
+      hakukohde,
+      hakemusJossaArvosanatJaKorotuksia,
+      Laskentadomainkonvertteri.muodostaLukuarvolasku(
+        createLaskeAmmatillisenTutkinnonYtoOsaAlueidenKeskiarvo("106727")
+      )
+    )
+    assert(BigDecimal(tulos.get) == BigDecimal("2.300"))
+  }
+
   test("Ammatillinen tutkinto suoritettu ja arvosanojen korotukset toiseen opiskeluoikeuteen") {
     val (tulos, _) = Laskin.laske(
       hakukohde,
@@ -318,13 +340,14 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
       hakukohde,
       hakemusJossaArvosanatJaKorotuksia,
       Laskentadomainkonvertteri.muodostaLukuarvolasku(
-        createAmmatillisenTutkintojenKokoHierarkia(
+        createAmmatillistenTutkintojenIteroija(
+          LaskentaTestUtil.Funktiokutsu(nimi = Funktionimi.HAEAMMATILLISENTUTKINNONKESKIARVO),
           valmistumisenTakaraja = LocalDate.of(2019, 4, 30),
           dataKoskessaViimeistään = LocalDate.of(2019, 4, 30)
         )
       )
     )
-    assert(BigDecimal(tulos.get) == BigDecimal("0"))
+    assert(BigDecimal(tulos.get) == BigDecimal("1.0"))
   }
 
   test(
