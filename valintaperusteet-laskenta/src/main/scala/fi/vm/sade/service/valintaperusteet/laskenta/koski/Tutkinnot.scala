@@ -253,6 +253,12 @@ object Tutkinnot {
       opiskeluoikeudenHaluttuTyyppi,
       hakemus
     )
+    if (suoritustenKorotukset.nonEmpty) {
+      LOG.info(
+        "Hakemuksen " + hakemus.oid + " suoritusten korotuksia " + suoritustenKorotukset.size + " kpl. " +
+          "Yhdistetään korotuksen varsinaiseen opiskeluoikeuden suoritukseen."
+      )
+    }
     muokkaaOsasuoritukset(
       suoritustenKorotukset,
       muokkaaSuoritus(
