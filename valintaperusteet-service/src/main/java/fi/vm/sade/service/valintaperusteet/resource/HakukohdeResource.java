@@ -527,7 +527,7 @@ public class HakukohdeResource {
       @Parameter(
               description =
                   "Edellisen valinnan vaiheen OID (jos valinnan vaihe halutaa lisätä tietyn vaiheen jälkeen, muussa tapauksessa uusi vaihe lisätään viimeiseksi)")
-          @RequestParam("edellinenValinnanVaiheOid")
+          @RequestParam(name = "edellinenValinnanVaiheOid", required = false)
           final String edellinenValinnanVaiheOid,
       @RequestBody final ValinnanVaiheCreateDTO valinnanVaihe,
       final HttpServletRequest request) {
