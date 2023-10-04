@@ -1,13 +1,15 @@
 package fi.vm.sade.service.valintaperusteet.laskenta.koski
 
 import java.time.LocalDate
-
 import fi.vm.sade.service.valintaperusteet.laskenta.AmmatillisenPerustutkinnonValitsija
 import fi.vm.sade.service.valintaperusteet.laskenta.LaskentaDomain
 import fi.vm.sade.service.valintaperusteet.laskenta.api.Hakemus
-import fi.vm.sade.service.valintaperusteet.laskenta.koski.KoskiLaskenta.ammatillisenHhuomioitavatKoulutustyypit
-import fi.vm.sade.service.valintaperusteet.laskenta.koski.KoskiLaskenta.ammatillisenHuomioitavaOpiskeluoikeudenTyyppi
-import fi.vm.sade.service.valintaperusteet.laskenta.koski.KoskiLaskenta.ammatillisenSuorituksenTyyppi
+import fi.vm.sade.service.valintaperusteet.laskenta.koski.KoskiLaskenta.{
+  ammatillisenHhuomioitavatKoulutustyypit,
+  ammatillisenHuomioitavaOpiskeluoikeudenTyyppi,
+  ammatillisenOsittaisenSuorituksenTyyppi,
+  ammatillisenSuorituksenTyyppi
+}
 import fi.vm.sade.service.valintaperusteet.laskenta.koski.Osasuoritus.OsaSuoritusLinssit
 import fi.vm.sade.service.valintaperusteet.laskenta.koski.Osasuoritus.OsaSuoritusLinssit.koulutusmoduulinTunnisteenKoodiarvo
 import fi.vm.sade.service.valintaperusteet.laskenta.koski.Osasuoritus.OsaSuoritusLinssit.koulutusmoduulinTunnisteenKoodistoUri
@@ -59,10 +61,11 @@ object YhteisetTutkinnonOsat {
   ): Seq[Json] = {
     if (hakemus.koskiOpiskeluoikeudet != null) {
       val oikeaOpiskeluoikeus: Json = etsiValmiitTutkinnot(
-        Some(ammatillisenPerustutkinnonValitsija.valmistumisenTakarajaPvm),
-        hakemus.koskiOpiskeluoikeudet,
+        valmistumisenTakaraja = Some(ammatillisenPerustutkinnonValitsija.valmistumisenTakarajaPvm),
+        json = hakemus.koskiOpiskeluoikeudet,
         opiskeluoikeudenHaluttuTyyppi = ammatillisenHuomioitavaOpiskeluoikeudenTyyppi,
         suorituksenHaluttuTyyppi = ammatillisenSuorituksenTyyppi,
+        korotuksetSisältäväSuorituksenTyyppi = ammatillisenOsittaisenSuorituksenTyyppi,
         hakemus = hakemus
       )(ammatillisenPerustutkinnonValitsija.tutkinnonIndeksi)
       YhteisetTutkinnonOsat
@@ -115,10 +118,11 @@ object YhteisetTutkinnonOsat {
     ytoKoodiArvo: String
   ): Seq[Json] = {
     val oikeaOpiskeluoikeus: Json = etsiValmiitTutkinnot(
-      Some(ammatillisenPerustutkinnonValitsija.valmistumisenTakarajaPvm),
-      hakemus.koskiOpiskeluoikeudet,
+      valmistumisenTakaraja = Some(ammatillisenPerustutkinnonValitsija.valmistumisenTakarajaPvm),
+      json = hakemus.koskiOpiskeluoikeudet,
       opiskeluoikeudenHaluttuTyyppi = ammatillisenHuomioitavaOpiskeluoikeudenTyyppi,
       suorituksenHaluttuTyyppi = ammatillisenSuorituksenTyyppi,
+      korotuksetSisältäväSuorituksenTyyppi = ammatillisenOsittaisenSuorituksenTyyppi,
       hakemus = hakemus
     )(ammatillisenPerustutkinnonValitsija.tutkinnonIndeksi)
     YhteisetTutkinnonOsat.haeYhteisenTutkinnonOsanTiedot(
@@ -195,6 +199,7 @@ object YhteisetTutkinnonOsat {
         Json.arr(opiskeluoikeus),
         KoskiLaskenta.ammatillisenHuomioitavaOpiskeluoikeudenTyyppi,
         KoskiLaskenta.ammatillisenSuorituksenTyyppi,
+        ammatillisenOsittaisenSuorituksenTyyppi,
         hakemus
       )
       .flatMap(tutkinto =>
