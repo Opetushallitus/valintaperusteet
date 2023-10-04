@@ -253,11 +253,6 @@ object Tutkinnot {
       opiskeluoikeudenHaluttuTyyppi,
       hakemus
     )
-    if (hakemus.oid == "1.2.246.562.11.00000000000001369031") {
-      LOG.info(
-        "Hakemuksen " + hakemus.oid + " suoritusten korotuksia " + suoritustenKorotukset.size + " kpl."
-      )
-    }
     muokkaaOsasuoritukset(
       suoritustenKorotukset,
       muokkaaSuoritus(
@@ -274,8 +269,8 @@ object Tutkinnot {
     suorituksenHaluttuTyyppi: String,
     korotuksetSisältäväSuorituksenTyyppi: String,
     hakemus: Hakemus
-  ): Seq[Json] = {
-    val opiskeluoikeudet = TutkintoLinssit.opiskeluoikeudet
+  ): Seq[Json] =
+    TutkintoLinssit.opiskeluoikeudet
       .getAll(json)
       .filter(opiskeluoikeus => {
         TutkintoLinssit.suoritukset.json
@@ -305,19 +300,6 @@ object Tutkinnot {
           opiskeluoikeus
         )
       )
-    if (hakemus.oid == "1.2.246.562.11.00000000000001369031")
-      LOG.info(
-        "Hakemukselle " + hakemus.oid + " löytyi " + opiskeluoikeudet.size + " kpl opiskeluoikeuksia. " +
-          "Keskiarvot: " +
-          opiskeluoikeudet.flatMap(
-            TutkintoLinssit.suoritukset.json
-              .getAll(_)
-              .map(TutkintoLinssit.keskiarvo.getOption)
-              .toString()
-          )
-      )
-    opiskeluoikeudet
-  }
 
   private def etsiSuoritukset(
     tutkinto: Json,
