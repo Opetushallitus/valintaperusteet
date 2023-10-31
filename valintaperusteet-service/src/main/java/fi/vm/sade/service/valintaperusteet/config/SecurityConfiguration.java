@@ -126,6 +126,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .permitAll()
         .requestMatchers(new AntPathRequestMatcher("/swagger-ui**"))
         .permitAll()
+        .requestMatchers(new AntPathRequestMatcher("/swagger**"))
+        .permitAll()
         .requestMatchers(new AntPathRequestMatcher("/v3/api-docs"))
         .permitAll()
         .requestMatchers(new AntPathRequestMatcher("/index.html"))
