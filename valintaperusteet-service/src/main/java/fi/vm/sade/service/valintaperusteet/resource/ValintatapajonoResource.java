@@ -37,7 +37,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.PathParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -292,7 +291,7 @@ public class ValintatapajonoResource {
   @PreAuthorize(CRUD)
   @Operation(summary = "Poistaa valintatapajonon OID:n perusteella")
   public ResponseEntity<Object> delete(
-      @Parameter(description = "Poistettavan valintatapajonon OID") @PathParam("oid")
+      @Parameter(description = "Poistettavan valintatapajonon OID") @PathVariable("oid")
           final String oid,
       final HttpServletRequest request) {
     try {
