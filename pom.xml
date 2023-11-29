@@ -30,7 +30,7 @@
         <spring.boot.version>2.7.14</spring.boot.version>
         <spring.version>5.3.29</spring.version>
         <spring.security.version>5.7.10</spring.security.version>
-        <circe.version>0.13.0</circe.version>
+        <circe.version>0.14.6</circe.version>
         <plugin.exec-maven-plugin.version>3.0.0</plugin.exec-maven-plugin.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -642,8 +642,7 @@ vcsRevision=${revision}
 buildTtime=${maven.build.timestamp}
 ]]>
                                 </echo>
-                                <loadfile property="buildversiontxt"
-                                          srcFile="${project.build.outputDirectory}/static/buildversion.txt"/>
+                                <loadfile property="buildversiontxt" srcFile="${project.build.outputDirectory}/static/buildversion.txt"/>
                                 <echo message="${buildversiontxt}"/>
                                 <echo file="target/mavenversion.txt">${project.version}</echo>
                             </target>
