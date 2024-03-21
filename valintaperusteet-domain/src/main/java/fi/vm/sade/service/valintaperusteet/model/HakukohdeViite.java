@@ -6,7 +6,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "hakukohde_viite")
 @Cacheable(true)
-public class HakukohdeViite extends BaseEntity {
+public class HakukohdeViite extends BaseEntityWithModifyTimestamp {
 
   @Column(name = "hakuoid", nullable = false)
   private String hakuoid;

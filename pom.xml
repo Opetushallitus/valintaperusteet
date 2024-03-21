@@ -577,6 +577,11 @@
                 <artifactId>httpclient-cache</artifactId>
                 <version>${httpcomponents.version}</version>
             </dependency>
+            <dependency>
+                <groupId>fi.vm.sade.dokumenttipalvelu</groupId>
+                <artifactId>dokumenttipalvelu</artifactId>
+                <version>6.12-SNAPSHOT</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

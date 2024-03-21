@@ -47,3 +47,8 @@ valintaperusteet:
   uses-ssl-proxy: false
   valinta-tulos-service:
     service-url: http://localhost:8080/valinta-tulos-service
+  siirtotiedosto:
+    awsregion: eu-west-1
+    s3bucket: opintopolku-hahtuva-siirtotiedostot
+    max-hakukohde-count-in-file: 10000
+

@@ -20,7 +20,7 @@ import javax.persistence.Transient;
 @Entity
 @Table(name = "valinnan_vaihe")
 @Cacheable(true)
-public class ValinnanVaihe extends BaseEntity
+public class ValinnanVaihe extends BaseEntityWithModifyTimestamp
     implements Linkitettava<ValinnanVaihe>, Kopioitava<ValinnanVaihe> {
   private static final long serialVersionUID = 1L;
 

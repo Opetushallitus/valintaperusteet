@@ -1,10 +1,12 @@
 package fi.vm.sade.service.valintaperusteet.dao.impl;
 
+import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import fi.vm.sade.service.valintaperusteet.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.model.*;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.apache.commons.lang.StringUtils;
@@ -197,5 +199,45 @@ public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Lo
                 .where(hk.oid.eq(oid))
                 .fetchFirst());
     return Optional.ofNullable(hakukohdeViite.orElse(new HakukohdeViite()).getValintaryhma());
+  }
+
+  @Override
+  public List<String> findNewOrChangedHakukohdeOids(
+      LocalDateTime startDatetime, LocalDateTime endDatetime) {
+    QHakukohdeViite hakukohde = QHakukohdeViite.hakukohdeViite;
+    QValinnanVaihe vv = QValinnanVaihe.valinnanVaihe;
+    QValintatapajono valintatapaJono = QValintatapajono.valintatapajono;
+    QJarjestyskriteeri jk = QJarjestyskriteeri.jarjestyskriteeri;
+    QValintakoe valintakoe = QValintakoe.valintakoe;
+    QHakukohteenValintaperuste hkv = QHakukohteenValintaperuste.hakukohteenValintaperuste;
+    Predicate whereCond =
+        startDatetime != null
+            ? hakukohde
+                .lastModified
+                .between(startDatetime, endDatetime)
+                .or(vv.lastModified.between(startDatetime, endDatetime))
+                .or(valintatapaJono.lastModified.between(startDatetime, endDatetime))
+                .or(jk.lastModified.between(startDatetime, endDatetime))
+                .or(valintakoe.lastModified.between(startDatetime, endDatetime))
+                .or(hkv.lastModified.between(startDatetime, endDatetime))
+            : hakukohde
+                .lastModified
+                .before(endDatetime)
+                .or(vv.lastModified.before(endDatetime))
+                .or(valintatapaJono.lastModified.before(endDatetime))
+                .or(jk.lastModified.before(endDatetime))
+                .or(valintakoe.lastModified.before(endDatetime))
+                .or(hkv.lastModified.before(endDatetime));
+
+    return queryFactory()
+        .selectDistinct(hakukohde.oid)
+        .from(hakukohde)
+        .leftJoin(hakukohde.valinnanvaiheet, vv)
+        .leftJoin(vv.jonot, valintatapaJono)
+        .leftJoin(valintatapaJono.jarjestyskriteerit, jk)
+        .leftJoin(vv.valintakokeet, valintakoe)
+        .leftJoin(hakukohde.hakukohteenValintaperusteet, hkv)
+        .where(whereCond)
+        .fetch();
   }
 }

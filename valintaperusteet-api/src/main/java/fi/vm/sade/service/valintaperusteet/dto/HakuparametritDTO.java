@@ -4,6 +4,8 @@ public class HakuparametritDTO {
   private String hakukohdeOid;
   private Integer valinnanVaiheJarjestysluku;
 
+  private boolean haetaankoLaskukaavat = true;
+
   public String getHakukohdeOid() {
     return hakukohdeOid;
   }
@@ -18,5 +20,13 @@ public class HakuparametritDTO {
 
   public void setValinnanVaiheJarjestysluku(Integer valinnanVaiheJarjestysluku) {
     this.valinnanVaiheJarjestysluku = valinnanVaiheJarjestysluku;
+  }
+
+  public boolean haetaankoLaskukaavat() {
+    return haetaankoLaskukaavat;
+  }
+
+  public void haetaankoLaskukaavat(boolean haetaankoLaskukaavat) {
+    this.haetaankoLaskukaavat = haetaankoLaskukaavat;
   }
 }
