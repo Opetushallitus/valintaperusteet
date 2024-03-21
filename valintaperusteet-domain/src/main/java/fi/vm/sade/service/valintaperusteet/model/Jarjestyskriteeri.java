@@ -7,7 +7,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "jarjestyskriteeri")
 @Cacheable(true)
-public class Jarjestyskriteeri extends BaseEntity
+public class Jarjestyskriteeri extends BaseEntityWithModifyTimestamp
     implements Linkitettava<Jarjestyskriteeri>, Kopioitava<Jarjestyskriteeri> {
   private static final long serialVersionUID = 1L;
 

@@ -10,7 +10,7 @@ import javax.persistence.*;
           name = "UK_hakukohteen_valintaperuste_01",
           columnNames = {"tunniste", "hakukohde_viite_id"})
     })
-public class HakukohteenValintaperuste extends BaseEntity {
+public class HakukohteenValintaperuste extends BaseEntityWithModifyTimestamp {
   @Column(name = "tunniste", nullable = false)
   private String tunniste;
 

@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "valintakoe")
 @Cacheable(true)
-public class Valintakoe extends BaseEntity implements Kopioitava<Valintakoe> {
+public class Valintakoe extends BaseEntityWithModifyTimestamp implements Kopioitava<Valintakoe> {
 
   @Column(name = "oid", nullable = false, unique = true)
   private String oid;
