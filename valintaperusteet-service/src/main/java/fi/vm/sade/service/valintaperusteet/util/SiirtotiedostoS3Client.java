@@ -27,9 +27,10 @@ public class SiirtotiedostoS3Client {
   public SiirtotiedostoS3Client(
       @Value("${valintaperusteet.siirtotiedosto.awsregion}") final String awsRegion,
       @Value("${valintaperusteet.siirtotiedosto.s3bucket}") final String s3Bucket,
+      @Value("${valintaperusteet.siirtotiedosto.s3-target-role-arn}") final String s3TargetRoleArn,
       @Value("${valintaperusteet.siirtotiedosto.max-hakukohde-count-in-file}")
           final int maxHakukohdeCountInFile) {
-    this.siirtotiedostoPalvelu = new SiirtotiedostoPalvelu(awsRegion, s3Bucket);
+    this.siirtotiedostoPalvelu = new SiirtotiedostoPalvelu(awsRegion, s3Bucket, s3TargetRoleArn);
     this.maxHakukohdeCountInFile = maxHakukohdeCountInFile;
   }
 

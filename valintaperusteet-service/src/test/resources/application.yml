@@ -50,5 +50,6 @@ valintaperusteet:
   siirtotiedosto:
     awsregion: eu-west-1
     s3bucket: opintopolku-hahtuva-siirtotiedostot
+    s3-target-role-arn: arn:aws:iam::xxxxxxxxxxxx:role/opintopolku-s3-cross-account-role
     max-hakukohde-count-in-file: 10000
 
