@@ -1,6 +1,5 @@
 package fi.vm.sade.service.valintaperusteet.dao.impl;
 
-import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import fi.vm.sade.service.valintaperusteet.dao.AbstractJpaDAOImpl;
@@ -201,43 +200,51 @@ public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Lo
     return Optional.ofNullable(hakukohdeViite.orElse(new HakukohdeViite()).getValintaryhma());
   }
 
-  @Override
-  public List<String> findNewOrChangedHakukohdeOids(
-      LocalDateTime startDatetime, LocalDateTime endDatetime) {
-    QHakukohdeViite hakukohde = QHakukohdeViite.hakukohdeViite;
-    QValinnanVaihe vv = QValinnanVaihe.valinnanVaihe;
-    QValintatapajono valintatapaJono = QValintatapajono.valintatapajono;
-    QJarjestyskriteeri jk = QJarjestyskriteeri.jarjestyskriteeri;
-    QValintakoe valintakoe = QValintakoe.valintakoe;
-    QHakukohteenValintaperuste hkv = QHakukohteenValintaperuste.hakukohteenValintaperuste;
-    Predicate whereCond =
-        startDatetime != null
-            ? hakukohde
-                .lastModified
-                .between(startDatetime, endDatetime)
-                .or(vv.lastModified.between(startDatetime, endDatetime))
-                .or(valintatapaJono.lastModified.between(startDatetime, endDatetime))
-                .or(jk.lastModified.between(startDatetime, endDatetime))
-                .or(valintakoe.lastModified.between(startDatetime, endDatetime))
-                .or(hkv.lastModified.between(startDatetime, endDatetime))
-            : hakukohde
-                .lastModified
-                .before(endDatetime)
-                .or(vv.lastModified.before(endDatetime))
-                .or(valintatapaJono.lastModified.before(endDatetime))
-                .or(jk.lastModified.before(endDatetime))
-                .or(valintakoe.lastModified.before(endDatetime))
-                .or(hkv.lastModified.before(endDatetime));
+  private String lastModified(
+      String tablePrefix, LocalDateTime startDatetime, LocalDateTime endDatetime) {
+    String lastModifiedField =
+        tablePrefix.isEmpty() ? "last_modified" : String.format("%s.last_modified", tablePrefix);
+    return startDatetime != null
+        ? String.format(" where %s between :startDatetime and :endDatetime", lastModifiedField)
+        : String.format(" where %s < :endDatetime", lastModifiedField);
+  }
 
-    return queryFactory()
-        .selectDistinct(hakukohde.oid)
-        .from(hakukohde)
-        .leftJoin(hakukohde.valinnanvaiheet, vv)
-        .leftJoin(vv.jonot, valintatapaJono)
-        .leftJoin(valintatapaJono.jarjestyskriteerit, jk)
-        .leftJoin(vv.valintakokeet, valintakoe)
-        .leftJoin(hakukohde.hakukohteenValintaperusteet, hkv)
-        .where(whereCond)
-        .fetch();
+  @Override
+  public List<String> findNewOrChangedHakukohdeOids(LocalDateTime start, LocalDateTime end) {
+    // JPA does not support unions :(
+    String sql =
+        "select hakukohde_oid from ("
+            + "select oid as hakukohde_oid from hakukohde_viite"
+            + lastModified("", start, end)
+            + " union "
+            + "select hv.oid as hakukohde_oid from hakukohde_viite hv"
+            + "  left join valinnan_vaihe vv on vv.hakukohde_viite_id = hv.id"
+            + lastModified("vv", start, end)
+            + " union "
+            + "select hv.oid as hakukohde_oid from hakukohde_viite hv"
+            + "  left join valinnan_vaihe vv on vv.hakukohde_viite_id = hv.id"
+            + "  left join valintatapajono vtj on vtj.valinnan_vaihe_id = vv.id"
+            + lastModified("vtj", start, end)
+            + " union "
+            + "select hv.oid as hakukohde_oid from hakukohde_viite hv"
+            + "  left join valinnan_vaihe vv on vv.hakukohde_viite_id = hv.id"
+            + "  left join valintatapajono vtj on vtj.valinnan_vaihe_id = vv.id"
+            + "  left join jarjestyskriteeri jk on jk.valintatapajono_id = vtj.id"
+            + lastModified("jk", start, end)
+            + " union "
+            + "select hv.oid as hakukohde_oid from hakukohde_viite hv"
+            + "  left join valinnan_vaihe vv on vv.hakukohde_viite_id = hv.id"
+            + "  left join valintakoe vk on vk.valinnan_vaihe_id = vv.id"
+            + lastModified("vk", start, end)
+            + " union "
+            + "select hv.oid as hakukohde_oid from hakukohde_viite hv left"
+            + "  join hakukohteen_valintaperuste hva on hva.hakukohde_viite_id = hv.id"
+            + lastModified("hva", start, end)
+            + ") hvs";
+
+    javax.persistence.Query query = getEntityManager().createNativeQuery(sql);
+    query = start != null ? query.setParameter("startDatetime", start) : query;
+    query = query.setParameter("endDatetime", end);
+    return (List<String>) query.getResultList();
   }
 }
