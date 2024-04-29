@@ -2,11 +2,14 @@ package fi.vm.sade.service.valintaperusteet.util;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
+import com.google.gson.stream.JsonWriter;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteetDTO;
 import fi.vm.sade.valinta.dokumenttipalvelu.SiirtotiedostoPalvelu;
 import fi.vm.sade.valinta.dokumenttipalvelu.dto.ObjectMetadata;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,20 +38,26 @@ public class SiirtotiedostoS3Client {
   }
 
   public String createSiirtotiedosto(List<ValintaperusteetDTO> data) {
-    try {
-      JsonArray jsonArray = new JsonArray(data.size());
-      data.forEach(item -> jsonArray.add(gson.toJsonTree(item)));
-      ObjectMetadata result =
-          siirtotiedostoPalvelu.saveSiirtotiedosto(
-              "valintaperusteet",
-              "hakukohde",
-              "",
-              new ByteArrayInputStream(jsonArray.toString().getBytes()),
-              2);
-      return result.key;
-    } catch (Exception e) {
-      logger.error("Siirtotiedoston luonti epäonnistui; ", e);
-      throw new RuntimeException(e);
+    try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+      try (OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream)) {
+        JsonWriter jsonWriter = new JsonWriter(outputStreamWriter);
+        jsonWriter.beginArray();
+        for (ValintaperusteetDTO dto : data) {
+          gson.toJson(gson.toJsonTree(dto), jsonWriter);
+        }
+        jsonWriter.endArray();
+        jsonWriter.close();
+
+        try (ByteArrayInputStream inputStream =
+            new ByteArrayInputStream(outputStream.toByteArray())) {
+          ObjectMetadata result =
+              siirtotiedostoPalvelu.saveSiirtotiedosto(
+                  "valintaperusteet", "hakukohde", "", inputStream, 2);
+          return result.key;
+        }
+      }
+    } catch (IOException ioe) {
+      throw new RuntimeException("Siirtotiedoston luonti epäonnistui; ", ioe);
     }
   }
 
