@@ -37,7 +37,8 @@ public class SiirtotiedostoS3Client {
     this.maxHakukohdeCountInFile = maxHakukohdeCountInFile;
   }
 
-  public String createSiirtotiedosto(List<ValintaperusteetDTO> data) {
+  public String createSiirtotiedosto(
+      List<ValintaperusteetDTO> data, String operationId, int operationSubId) {
     try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
       try (OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream)) {
         JsonWriter jsonWriter = new JsonWriter(outputStreamWriter);
@@ -52,7 +53,7 @@ public class SiirtotiedostoS3Client {
             new ByteArrayInputStream(outputStream.toByteArray())) {
           ObjectMetadata result =
               siirtotiedostoPalvelu.saveSiirtotiedosto(
-                  "valintaperusteet", "hakukohde", "", inputStream, 2);
+                  "valintaperusteet", "hakukohde", "", operationId, operationSubId, inputStream, 2);
           return result.key;
         }
       }

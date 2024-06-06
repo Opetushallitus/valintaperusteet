@@ -200,47 +200,58 @@ public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Lo
     return Optional.ofNullable(hakukohdeViite.orElse(new HakukohdeViite()).getValintaryhma());
   }
 
-  private String lastModified(
-      String tablePrefix, LocalDateTime startDatetime, LocalDateTime endDatetime) {
+  private String lastModified(String tablePrefix, LocalDateTime startDatetime) {
     String lastModifiedField =
         tablePrefix.isEmpty() ? "last_modified" : String.format("%s.last_modified", tablePrefix);
     return startDatetime != null
-        ? String.format(" where %s between :startDatetime and :endDatetime", lastModifiedField)
-        : String.format(" where %s < :endDatetime", lastModifiedField);
+        ? String.format(
+            " %s >= :startDatetime and %s < :endDatetime", lastModifiedField, lastModifiedField)
+        : String.format(" %s < :endDatetime", lastModifiedField);
   }
 
   @Override
   public List<String> findNewOrChangedHakukohdeOids(LocalDateTime start, LocalDateTime end) {
     // JPA does not support unions :(
     String sql =
-        "select hakukohde_oid from ("
-            + "select oid as hakukohde_oid from hakukohde_viite"
-            + lastModified("", start, end)
-            + " union "
-            + "select hv.oid as hakukohde_oid from hakukohde_viite hv"
-            + "  left join valinnan_vaihe vv on vv.hakukohde_viite_id = hv.id"
-            + lastModified("vv", start, end)
-            + " union "
-            + "select hv.oid as hakukohde_oid from hakukohde_viite hv"
-            + "  left join valinnan_vaihe vv on vv.hakukohde_viite_id = hv.id"
-            + "  left join valintatapajono vtj on vtj.valinnan_vaihe_id = vv.id"
-            + lastModified("vtj", start, end)
-            + " union "
-            + "select hv.oid as hakukohde_oid from hakukohde_viite hv"
-            + "  left join valinnan_vaihe vv on vv.hakukohde_viite_id = hv.id"
-            + "  left join valintatapajono vtj on vtj.valinnan_vaihe_id = vv.id"
-            + "  left join jarjestyskriteeri jk on jk.valintatapajono_id = vtj.id"
-            + lastModified("jk", start, end)
-            + " union "
-            + "select hv.oid as hakukohde_oid from hakukohde_viite hv"
-            + "  left join valinnan_vaihe vv on vv.hakukohde_viite_id = hv.id"
-            + "  left join valintakoe vk on vk.valinnan_vaihe_id = vv.id"
-            + lastModified("vk", start, end)
-            + " union "
-            + "select hv.oid as hakukohde_oid from hakukohde_viite hv left"
-            + "  join hakukohteen_valintaperuste hva on hva.hakukohde_viite_id = hv.id"
-            + lastModified("hva", start, end)
-            + ") hvs";
+        """
+      select hakukohde_oid from (
+        select oid as hakukohde_oid from hakukohde_viite
+        where %s
+                  union
+        select hv.oid as hakukohde_oid from hakukohde_viite hv
+          left join valinnan_vaihe vv on vv.hakukohde_viite_id = hv.id
+        where %s
+                  union
+        select hv.oid as hakukohde_oid from hakukohde_viite hv
+          left join valinnan_vaihe vv on vv.hakukohde_viite_id = hv.id
+          left join valintatapajono vtj on vtj.valinnan_vaihe_id = vv.id
+        where %s
+                  union
+        select hv.oid as hakukohde_oid from hakukohde_viite hv
+          left join valinnan_vaihe vv on vv.hakukohde_viite_id = hv.id
+          left join valintatapajono vtj on vtj.valinnan_vaihe_id = vv.id
+          left join jarjestyskriteeri jk on jk.valintatapajono_id = vtj.id
+        where %s
+                  union
+        select hv.oid as hakukohde_oid from hakukohde_viite hv
+          left join valinnan_vaihe vv on vv.hakukohde_viite_id = hv.id
+          left join valintakoe vk on vk.valinnan_vaihe_id = vv.id
+        where %s
+                  union
+        select hv.oid as hakukohde_oid from hakukohde_viite hv
+          left join hakukohteen_valintaperuste hva on hva.hakukohde_viite_id = hv.id
+        where %s
+      ) hvs
+      """;
+    sql =
+        String.format(
+            sql,
+            lastModified("", start),
+            lastModified("vv", start),
+            lastModified("vtj", start),
+            lastModified("jk", start),
+            lastModified("vk", start),
+            lastModified("hva", start));
 
     javax.persistence.Query query = getEntityManager().createNativeQuery(sql);
     query = start != null ? query.setParameter("startDatetime", start) : query;

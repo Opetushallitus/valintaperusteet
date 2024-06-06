@@ -4,7 +4,7 @@ import fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(name = "ValinnanVaiheCreateDTO", description = "Valinnan vaihe")
-public class ValinnanVaiheCreateDTO {
+public class ValinnanVaiheCreateDTO extends AbstractWithModifyTimestamp {
 
   @Schema(description = "Nimi", required = true)
   private String nimi;

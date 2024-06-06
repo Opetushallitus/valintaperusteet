@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class ValintatapajonoJarjestyskriteereillaDTO implements Prioritized {
+public class ValintatapajonoJarjestyskriteereillaDTO extends AbstractWithModifyTimestamp
+    implements Prioritized {
   private Integer aloituspaikat;
 
   private String kuvaus;

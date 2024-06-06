@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
+import static fi.vm.sade.service.valintaperusteet.dto.model.SiirtotiedostoConstants.*;
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.READ_UPDATE_CRUD;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -8,9 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,10 +28,6 @@ import org.springframework.web.bind.annotation.RestController;
     name = "/resources/siirtotiedosto",
     description = "Resurssi valintaperusteiden kirjoittamiseen raportoinnin siirtotiedostoihin")
 public class SiirtotiedostoResource {
-  private static final String DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
-  private static final ZoneId TIMEZONE = ZoneId.of("Europe/Helsinki");
-  private DateTimeFormatter dateTimeFormatter =
-      DateTimeFormatter.ofPattern(DATETIME_FORMAT).withZone(TIMEZONE);
 
   @Autowired private SiirtotiedostoService siirtotiedostoService;
 
@@ -40,7 +35,9 @@ public class SiirtotiedostoResource {
       String dateTimeStr, String fieldName, ZonedDateTime defaultDateTime) {
     try {
       ZonedDateTime dateTime =
-          isBlank(dateTimeStr) ? null : ZonedDateTime.parse(dateTimeStr, dateTimeFormatter);
+          isBlank(dateTimeStr)
+              ? null
+              : ZonedDateTime.parse(dateTimeStr, SIIRTOTIEDOSTO_DATETIME_FORMATTER);
       if (dateTime != null) {
         return dateTime.toLocalDateTime();
       } else if (defaultDateTime != null) {
@@ -51,7 +48,7 @@ public class SiirtotiedostoResource {
       throw new IllegalArgumentException(
           String.format(
               "Virheellinen arvo kentälle %s, vaadittu formaati: '%s'",
-              fieldName, DATETIME_FORMAT));
+              fieldName, SIIRTOTIEDOSTO_DATETIME_FORMAT));
     }
   }
 
@@ -64,7 +61,8 @@ public class SiirtotiedostoResource {
       @Parameter(description = "Alkuaika") @RequestParam(required = false) String startDatetime,
       @Parameter(description = "Loppuaika") @RequestParam(required = false) String endDatetime) {
     LocalDateTime start = parseDateTime(startDatetime, "Alkuaika", null);
-    LocalDateTime end = parseDateTime(endDatetime, "Loppuaika", ZonedDateTime.now(TIMEZONE));
+    LocalDateTime end =
+        parseDateTime(endDatetime, "Loppuaika", ZonedDateTime.now(SIIRTOTIEDOSTO_TIMEZONE));
     String response = siirtotiedostoService.createSiirtotiedostot(start, end);
     return new ResponseEntity<>(response, HttpStatus.OK);
   }

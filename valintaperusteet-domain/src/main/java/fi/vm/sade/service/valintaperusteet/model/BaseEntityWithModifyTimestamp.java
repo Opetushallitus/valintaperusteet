@@ -7,7 +7,7 @@ import javax.persistence.MappedSuperclass;
 @MappedSuperclass
 public class BaseEntityWithModifyTimestamp extends BaseEntity {
   @Column(name = "last_modified")
-  private LocalDateTime lastModified;
+  protected LocalDateTime lastModified;
 
   public LocalDateTime getLastModified() {
     return lastModified;
