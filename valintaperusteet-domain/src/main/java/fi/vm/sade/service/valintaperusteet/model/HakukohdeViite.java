@@ -3,10 +3,30 @@ package fi.vm.sade.service.valintaperusteet.model;
 import java.util.*;
 import javax.persistence.*;
 
+@NamedNativeQuery(
+    name = "poistetutHakukohdeviitteet",
+    query =
+        """
+  select distinct on (id) id, null as parentId, oid as tunniste from hakukohde_viite_history hvh
+    where upper(hvh.system_time) is not null and
+      upper(hvh.system_time) >= :startDateTime and
+      upper(hvh.system_time) <  :endDateTime and
+      not exists (select 1 from hakukohde_viite where id = hvh.id)""",
+    resultSetMapping = "poistetutResult")
+@SqlResultSetMapping(
+    name = "poistetutResult",
+    classes =
+        @ConstructorResult(
+            targetClass = Poistettu.class,
+            columns = {
+              @ColumnResult(name = "id", type = Long.class),
+              @ColumnResult(name = "parentId", type = Long.class),
+              @ColumnResult(name = "tunniste", type = String.class)
+            }))
 @Entity
 @Table(name = "hakukohde_viite")
 @Cacheable(true)
-public class HakukohdeViite extends BaseEntity {
+public class HakukohdeViite extends BaseEntityWithModifyTimestamp {
 
   @Column(name = "hakuoid", nullable = false)
   private String hakuoid;

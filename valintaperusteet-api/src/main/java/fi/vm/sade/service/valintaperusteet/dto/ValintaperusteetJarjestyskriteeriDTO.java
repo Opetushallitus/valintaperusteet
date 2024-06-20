@@ -3,7 +3,8 @@ package fi.vm.sade.service.valintaperusteet.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(name = "ValintaperusteetJarjestyskriteeriDTO", description = "Järjestyskriteeri")
-public class ValintaperusteetJarjestyskriteeriDTO implements Prioritized {
+public class ValintaperusteetJarjestyskriteeriDTO extends AbstractWithModifyTimestamp
+    implements Prioritized {
   @Schema(description = "nimi", required = true)
   private String nimi;
 

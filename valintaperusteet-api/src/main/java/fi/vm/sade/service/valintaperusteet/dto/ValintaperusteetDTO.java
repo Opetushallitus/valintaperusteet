@@ -3,7 +3,7 @@ package fi.vm.sade.service.valintaperusteet.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ValintaperusteetDTO {
+public class ValintaperusteetDTO extends AbstractWithModifyTimestamp {
   private String hakukohdeOid;
 
   private String hakuOid;

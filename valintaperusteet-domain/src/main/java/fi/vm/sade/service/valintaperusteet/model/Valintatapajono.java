@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "valintatapajono")
 @Cacheable(true)
-public class Valintatapajono extends BaseEntity
+public class Valintatapajono extends BaseEntityWithModifyTimestamp
     implements Linkitettava<Valintatapajono>, Kopioitava<Valintatapajono> {
   private static final long serialVersionUID = 1L;
 

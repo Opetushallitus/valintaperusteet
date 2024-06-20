@@ -2,6 +2,7 @@ package fi.vm.sade.service.valintaperusteet.dao;
 
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,4 +30,7 @@ public interface HakukohdeViiteDAO extends JpaDAO<HakukohdeViite, Long> {
   List<HakukohdeViite> readByHakukohdekoodiUri(String koodiUri);
 
   Optional<Valintaryhma> findValintaryhmaByHakukohdeOid(String oid);
+
+  List<String> findNewOrChangedHakukohdeOids(
+      LocalDateTime startDatetime, LocalDateTime endDatetime);
 }

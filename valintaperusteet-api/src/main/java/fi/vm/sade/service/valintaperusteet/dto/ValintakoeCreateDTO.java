@@ -4,7 +4,7 @@ import fi.vm.sade.service.valintaperusteet.dto.model.Koekutsu;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(name = "ValintakoeCreateDTO", description = "Valintakoe")
-public class ValintakoeCreateDTO {
+public class ValintakoeCreateDTO extends AbstractWithModifyTimestamp {
 
   @Schema(description = "Tunniste", required = true)
   private String tunniste;
