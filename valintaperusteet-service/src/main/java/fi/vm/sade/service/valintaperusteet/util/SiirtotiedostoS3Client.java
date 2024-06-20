@@ -3,7 +3,6 @@ package fi.vm.sade.service.valintaperusteet.util;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonWriter;
-import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteetDTO;
 import fi.vm.sade.valinta.dokumenttipalvelu.SiirtotiedostoPalvelu;
 import fi.vm.sade.valinta.dokumenttipalvelu.dto.ObjectMetadata;
 import java.io.ByteArrayInputStream;
@@ -37,13 +36,12 @@ public class SiirtotiedostoS3Client {
     this.maxHakukohdeCountInFile = maxHakukohdeCountInFile;
   }
 
-  public String createSiirtotiedosto(
-      List<ValintaperusteetDTO> data, String operationId, int operationSubId) {
+  public String createSiirtotiedosto(List<?> data, String operationId, int operationSubId) {
     try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
       try (OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream)) {
         JsonWriter jsonWriter = new JsonWriter(outputStreamWriter);
         jsonWriter.beginArray();
-        for (ValintaperusteetDTO dto : data) {
+        for (Object dto : data) {
           gson.toJson(gson.toJsonTree(dto), jsonWriter);
         }
         jsonWriter.endArray();

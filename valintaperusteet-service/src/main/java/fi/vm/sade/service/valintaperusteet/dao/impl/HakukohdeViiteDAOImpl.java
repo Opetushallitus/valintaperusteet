@@ -200,13 +200,11 @@ public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Lo
     return Optional.ofNullable(hakukohdeViite.orElse(new HakukohdeViite()).getValintaryhma());
   }
 
-  private String lastModified(String tablePrefix, LocalDateTime startDatetime) {
+  private String lastModified(String tablePrefix) {
     String lastModifiedField =
         tablePrefix.isEmpty() ? "last_modified" : String.format("%s.last_modified", tablePrefix);
-    return startDatetime != null
-        ? String.format(
-            " %s >= :startDatetime and %s < :endDatetime", lastModifiedField, lastModifiedField)
-        : String.format(" %s < :endDatetime", lastModifiedField);
+    return String.format(
+        " %s >= :startDatetime and %s < :endDatetime", lastModifiedField, lastModifiedField);
   }
 
   @Override
@@ -246,16 +244,15 @@ public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Lo
     sql =
         String.format(
             sql,
-            lastModified("", start),
-            lastModified("vv", start),
-            lastModified("vtj", start),
-            lastModified("jk", start),
-            lastModified("vk", start),
-            lastModified("hva", start));
+            lastModified(""),
+            lastModified("vv"),
+            lastModified("vtj"),
+            lastModified("jk"),
+            lastModified("vk"),
+            lastModified("hva"));
 
     javax.persistence.Query query = getEntityManager().createNativeQuery(sql);
-    query = start != null ? query.setParameter("startDatetime", start) : query;
-    query = query.setParameter("endDatetime", end);
+    query = query.setParameter("startDatetime", start).setParameter("endDatetime", end);
     return (List<String>) query.getResultList();
   }
 }
