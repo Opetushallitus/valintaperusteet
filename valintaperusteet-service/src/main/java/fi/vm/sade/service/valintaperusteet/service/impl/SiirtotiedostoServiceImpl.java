@@ -1,7 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.*;
 
 import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
@@ -47,19 +46,22 @@ public class SiirtotiedostoServiceImpl implements SiirtotiedostoService {
 
   public String createSiirtotiedostot(LocalDateTime startDatetime, LocalDateTime endDatetime) {
     List<String> oids = hakukohdeViiteDAO.findNewOrChangedHakukohdeOids(startDatetime, endDatetime);
-    Iterator<List<String>> partitionIterator =
-        Lists.partition(oids, siirtotiedostoS3Client.getMaxHakukohdeCountInFile()).iterator();
     List<String> siirtotiedostoKeys = new ArrayList<>();
     String operationId = UUID.randomUUID().toString();
-    while (partitionIterator.hasNext()) {
-      List<HakuparametritDTO> dtoList =
-          partitionIterator.next().stream().map(this::createDto).collect(toList());
-      List<ValintaperusteetDTO> valintaperusteet =
-          valintaperusteService.haeValintaperusteet(dtoList);
-      siirtotiedostoKeys.add(
-          siirtotiedostoS3Client.createSiirtotiedosto(
-              valintaperusteet, operationId, siirtotiedostoKeys.size() + 1));
+    if (!oids.isEmpty()) {
+      Iterator<List<String>> partitionIterator =
+          Lists.partition(oids, siirtotiedostoS3Client.getMaxHakukohdeCountInFile()).iterator();
+      while (partitionIterator.hasNext()) {
+        List<HakuparametritDTO> dtoList =
+            partitionIterator.next().stream().map(this::createDto).collect(toList());
+        List<ValintaperusteetDTO> valintaperusteet =
+            valintaperusteService.haeValintaperusteet(dtoList);
+        siirtotiedostoKeys.add(
+            siirtotiedostoS3Client.createSiirtotiedosto(
+                valintaperusteet, operationId, siirtotiedostoKeys.size() + 1));
+      }
     }
+
     PoistetutDTO poistetut = findPoistetut(startDatetime, endDatetime);
     if (!poistetut.getPoistetut().isEmpty()) {
       siirtotiedostoKeys.add(
@@ -73,6 +75,7 @@ public class SiirtotiedostoServiceImpl implements SiirtotiedostoService {
         siirtotiedostoKeys.size(),
         operationId);
 
+    // TODO Lisää poistettujen lukumäärä total -lukemaan
     JsonObject result = new JsonObject();
     JsonArray keyJson = new JsonArray();
     siirtotiedostoKeys.forEach(keyJson::add);
@@ -99,43 +102,85 @@ public class SiirtotiedostoServiceImpl implements SiirtotiedostoService {
 
     missingHakukohdeviiteIds.addAll(valinnanVaiheet.stream().map(Poistettu::getParentId).toList());
     missingHakukohdeviiteIds.addAll(valintaPerusteet.stream().map(Poistettu::getParentId).toList());
-    missingHakukohdeviiteIds.removeAll(hakukohdeViitteet.stream().map(Poistettu::getId).toList());
+    hakukohdeViitteet.stream()
+        .map(Poistettu::getId)
+        .toList()
+        .forEach(missingHakukohdeviiteIds::remove);
 
     missingValinnanvaiheIds.addAll(valintatapaJonot.stream().map(Poistettu::getParentId).toList());
     missingValinnanvaiheIds.addAll(valintaKokeet.stream().map(Poistettu::getParentId).toList());
-    missingValinnanvaiheIds.removeAll(valinnanVaiheet.stream().map(Poistettu::getId).toList());
+    valinnanVaiheet.stream()
+        .map(Poistettu::getId)
+        .toList()
+        .forEach(missingValinnanvaiheIds::remove);
 
-    List<Poistettu> additionalParentHakukohdeviitteet =
-        poistettuDAO.findHakukohdeviitteetFromHistory(missingHakukohdeviiteIds);
-    List<Poistettu> additionalParentValinnanvaiheet =
-        poistettuDAO.findValinnanvaiheetFromHistory(missingHakukohdeviiteIds);
+    Set<Long> poistetutHakukohdeviiteIdt =
+        hakukohdeViitteet.stream().map(Poistettu::getId).collect(toSet());
+    Set<Long> poistetutValinnanvaiheIdt =
+        valinnanVaiheet.stream().map(Poistettu::getId).collect(toSet());
 
-    Map<Long, String> hakukohdeViiteParents =
-        new HashMap<>(
-            hakukohdeViitteet.stream().collect(toMap(Poistettu::getId, Poistettu::getTunniste)));
-    hakukohdeViiteParents.putAll(
-        additionalParentHakukohdeviitteet.stream()
-            .collect(toMap(Poistettu::getId, Poistettu::getTunniste)));
+    // TODO puuttuvat parentit täytyy ainakin joissain tilanteissa hakea varsinaisista tauluista (ei historiasta)
+    hakukohdeViitteet.addAll(
+        poistettuDAO.findHakukohdeviitteetFromHistory(missingHakukohdeviiteIds));
+    valinnanVaiheet.addAll(poistettuDAO.findValinnanvaiheetFromHistory(missingValinnanvaiheIds));
 
-    Map<Long, String> valinnanvaiheParents =
-        new HashMap<>(
-            valinnanVaiheet.stream().collect(toMap(Poistettu::getId, Poistettu::getTunniste)));
-    valinnanvaiheParents.putAll(
-        additionalParentValinnanvaiheet.stream()
-            .collect(toMap(Poistettu::getId, Poistettu::getTunniste)));
-
-    // TODO Lisää dto:hon kaikki muut poistetut entiteetit parentteineen
     List<PoistetutDTO.HakukohdeViite> poistetutViitteet =
         hakukohdeViitteet.stream()
             .map(
                 viite -> {
                   PoistetutDTO.HakukohdeViite hakukohdeViite =
                       new PoistetutDTO.HakukohdeViite().setHakukohdeOid(viite.getTunniste());
+                  if (!poistetutHakukohdeviiteIdt.contains(viite.getId())) {
+                    // Valinnanvaiheet, hakukohdeviitteellä on vain yksi valinnanvaihe
+                    List<Poistettu> viiteChildren = findChildren(valinnanVaiheet, viite);
+                    if (!viiteChildren.isEmpty()) {
+                      Poistettu vaihe = viiteChildren.iterator().next();
+                      PoistetutDTO.ValinnanVaihe valinnanVaihe =
+                          new PoistetutDTO.ValinnanVaihe().setValinnanVaiheOid(vaihe.getTunniste());
+                      if (!poistetutValinnanvaiheIdt.contains(vaihe.getId())) {
+                        // Valintatapajonot
+                        List<Poistettu> vaiheChildren = findChildren(valintatapaJonot, vaihe);
+                        List<PoistetutDTO.PoistettuOid> jonot =
+                            vaiheChildren.stream()
+                                .map(
+                                    jono ->
+                                        new PoistetutDTO.PoistettuOid().setOid(jono.getTunniste()))
+                                .toList();
+                        // Valintakokeet
+                        vaiheChildren = findChildren(valintaKokeet, vaihe);
+                        List<PoistetutDTO.PoistettuOid> kokeet =
+                            vaiheChildren.stream()
+                                .map(
+                                    jono ->
+                                        new PoistetutDTO.PoistettuOid().setOid(jono.getTunniste()))
+                                .toList();
+                        valinnanVaihe.setValintatapajono(jonot);
+                        valinnanVaihe.setValintakoe(kokeet);
+                      }
+                      hakukohdeViite.setValinnanVaihe(valinnanVaihe);
+                    }
+                    // Valintaperusteet
+                    viiteChildren = findChildren(valintaPerusteet, viite);
+                    List<PoistetutDTO.Valintaperuste> perusteet =
+                        viiteChildren.stream()
+                            .map(
+                                peruste ->
+                                    new PoistetutDTO.Valintaperuste()
+                                        .setTunniste(peruste.getTunniste()))
+                            .toList();
+                    hakukohdeViite.setHakukohteenValintaperuste(perusteet);
+                  }
                   return hakukohdeViite;
                 })
             .toList();
     PoistetutDTO dto = new PoistetutDTO();
     dto.setPoistetut(poistetutViitteet);
     return dto;
+  }
+
+  private List<Poistettu> findChildren(List<Poistettu> allChildren, Poistettu parent) {
+    return allChildren.stream()
+        .filter(child -> Objects.equals(child.getParentId(), parent.getId()))
+        .toList();
   }
 }

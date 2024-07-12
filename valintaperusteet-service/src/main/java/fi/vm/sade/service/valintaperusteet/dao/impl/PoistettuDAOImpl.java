@@ -124,7 +124,7 @@ public class PoistettuDAOImpl implements PoistettuDAO {
         entityManager
             .createNativeQuery(
                 """
-        select distinct on (id) id, hakukohde_viite_id as parentId, hakuoid as tunniste from hakukohde_viite_history
+        select distinct on (id) id, hakukohde_viite_id as parentId, oid as tunniste from valinnan_vaihe_history
         where id in (:ids)
         """)
             .setParameter("ids", ids);

@@ -33,8 +33,9 @@ public class PoistetutDTO {
       return oid;
     }
 
-    public void setOid(String oid) {
+    public PoistettuOid setOid(String oid) {
       this.oid = oid;
+      return this;
     }
   }
 
@@ -45,8 +46,9 @@ public class PoistetutDTO {
       return tunniste;
     }
 
-    public void setTunniste(String tunniste) {
+    public Valintaperuste setTunniste(String tunniste) {
       this.tunniste = tunniste;
+      return this;
     }
   }
 
@@ -59,8 +61,9 @@ public class PoistetutDTO {
       return valinnanVaiheOid;
     }
 
-    public void setValinnanVaiheOid(String valinnanVaiheOid) {
+    public ValinnanVaihe setValinnanVaiheOid(String valinnanVaiheOid) {
       this.valinnanVaiheOid = valinnanVaiheOid;
+      return this;
     }
 
     public List<PoistettuOid> getValintatapajono() {
