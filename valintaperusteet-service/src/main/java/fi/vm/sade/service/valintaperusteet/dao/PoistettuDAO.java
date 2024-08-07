@@ -16,7 +16,11 @@ public interface PoistettuDAO {
 
   List<Poistettu> findPoistetutValintaperusteet(LocalDateTime start, LocalDateTime end);
 
-  List<Poistettu> findHakukohdeviitteetFromHistory(Collection<Long> ids);
+  List<Poistettu> findParentHakukohdeviitteet(Collection<Long> ids);
 
-  List<Poistettu> findValinnanvaiheetFromHistory(Collection<Long> ids);
+  List<Poistettu> findParentHakukohdeviitteetFromHistory(Collection<Long> ids);
+
+  List<Poistettu> findParentValinnanvaiheet(Collection<Long> ids);
+
+  List<Poistettu> findParentValinnanvaiheetFromHistory(Collection<Long> ids);
 }

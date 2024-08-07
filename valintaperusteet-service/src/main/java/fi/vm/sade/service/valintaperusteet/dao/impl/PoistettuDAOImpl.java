@@ -15,87 +15,62 @@ public class PoistettuDAOImpl implements PoistettuDAO {
 
   @Override
   public List<Poistettu> findPoistetutHakukohdeViitteet(LocalDateTime start, LocalDateTime end) {
-    Query query =
-        entityManager
-            .createNativeQuery(
-                """
-      select distinct on (id) id, null as parentId, oid as tunniste from hakukohde_viite_history hvh
-        where upper(hvh.system_time) is not null and
-          upper(hvh.system_time) >= :startDateTime and
-          upper(hvh.system_time) <  :endDateTime and
-          not exists (select 1 from hakukohde_viite where id = hvh.id)""")
-            .setParameter("startDateTime", start)
-            .setParameter("endDateTime", end);
-    @SuppressWarnings("unchecked")
-    List<Object[]> resultList = (List<Object[]>) query.getResultList();
-    return resultList.stream().map(Poistettu::new).collect(Collectors.toList());
+    return doFindPoistetut("hakukohde_viite", "hakukohde_viite_history", "null", "oid", start, end);
   }
 
   @Override
   public List<Poistettu> findPoistetutValinnanvaiheet(LocalDateTime start, LocalDateTime end) {
-    Query query =
-        entityManager
-            .createNativeQuery(
-                """
-      select distinct on (id) id, hakukohde_viite_id as parentId, oid as tunniste from valinnan_vaihe_history vvh
-        where upper(vvh.system_time) is not null and
-          upper(vvh.system_time) >= :startDateTime and
-          upper(vvh.system_time) <  :endDateTime and
-          not exists (select 1 from valinnan_vaihe where id = vvh.id)""")
-            .setParameter("startDateTime", start)
-            .setParameter("endDateTime", end);
-    @SuppressWarnings("unchecked")
-    List<Object[]> resultList = (List<Object[]>) query.getResultList();
-    return resultList.stream().map(Poistettu::new).collect(Collectors.toList());
+    return doFindPoistetut(
+        "valinnan_vaihe", "valinnan_vaihe_history", "hakukohde_viite_id", "oid", start, end);
   }
 
   @Override
   public List<Poistettu> findPoistetutValintatapajonot(LocalDateTime start, LocalDateTime end) {
-    Query query =
-        entityManager
-            .createNativeQuery(
-                """
-      select distinct on (id) id, valinnan_vaihe_id as parentId, oid as tunniste from valintatapajono_history vtjh
-        where upper(vtjh.system_time) is not null and
-          upper(vtjh.system_time) >= :startDateTime and
-          upper(vtjh.system_time) <  :endDateTime and
-          not exists (select 1 from valintatapajono where id = vtjh.id)""")
-            .setParameter("startDateTime", start)
-            .setParameter("endDateTime", end);
-    @SuppressWarnings("unchecked")
-    List<Object[]> resultList = (List<Object[]>) query.getResultList();
-    return resultList.stream().map(Poistettu::new).collect(Collectors.toList());
+    return doFindPoistetut(
+        "valintatapajono", "valintatapajono_history", "valinnan_vaihe_id", "oid", start, end);
   }
 
   @Override
   public List<Poistettu> findPoistetutValintakokeet(LocalDateTime start, LocalDateTime end) {
-    Query query =
-        entityManager
-            .createNativeQuery(
-                """
-      select distinct on (id) id, valinnan_vaihe_id as parentId, oid as tunniste from valintakoe_history vkh
-        where upper(vkh.system_time) is not null and
-          upper(vkh.system_time) >= :startDateTime and
-          upper(vkh.system_time) <  :endDateTime and
-          not exists (select 1 from valintakoe where id = vkh.id)""")
-            .setParameter("startDateTime", start)
-            .setParameter("endDateTime", end);
-    @SuppressWarnings("unchecked")
-    List<Object[]> resultList = (List<Object[]>) query.getResultList();
-    return resultList.stream().map(Poistettu::new).collect(Collectors.toList());
+    return doFindPoistetut(
+        "valintakoe", "valintakoe_history", "valinnan_vaihe_id", "tunniste", start, end);
   }
 
   @Override
   public List<Poistettu> findPoistetutValintaperusteet(LocalDateTime start, LocalDateTime end) {
+    return doFindPoistetut(
+        "hakukohteen_valintaperuste",
+        "hakukohteen_valintaperuste_history",
+        "hakukohde_viite_id",
+        "tunniste",
+        start,
+        end);
+  }
+
+  private List<Poistettu> doFindPoistetut(
+      String tableName,
+      String historyTableName,
+      String parentIdFieldName,
+      String tunnisteFieldName,
+      LocalDateTime start,
+      LocalDateTime end) {
+    String sqlTemplate =
+        """
+        select distinct on (id) id, %s as parentId, %s from %s hist
+          where upper(hist.system_time) is not null and
+            upper(hist.system_time) >= :startDateTime and
+            upper(hist.system_time) <  :endDateTime and
+            not exists (select 1 from %s where id = hist.id)""";
+    String tunnisteSelectPart =
+        "tunniste".equals(tunnisteFieldName)
+            ? "tunniste"
+            : String.format("%s as tunniste", tunnisteFieldName);
+    String sql =
+        String.format(
+            sqlTemplate, parentIdFieldName, tunnisteSelectPart, historyTableName, tableName);
     Query query =
         entityManager
-            .createNativeQuery(
-                """
-      select distinct on (id) id, hakukohde_viite_id as parentId, tunniste from hakukohteen_valintaperuste_history hkvh
-        where upper(hkvh.system_time) is not null and
-          upper(hkvh.system_time) >= :startDateTime and
-          upper(hkvh.system_time) <  :endDateTime and
-          not exists (select 1 from hakukohteen_valintaperuste where id = hkvh.id)""")
+            .createNativeQuery(sql)
             .setParameter("startDateTime", start)
             .setParameter("endDateTime", end);
     @SuppressWarnings("unchecked")
@@ -104,32 +79,38 @@ public class PoistettuDAOImpl implements PoistettuDAO {
   }
 
   @Override
-  public List<Poistettu> findHakukohdeviitteetFromHistory(Collection<Long> ids) {
-    Query query =
-        entityManager
-            .createNativeQuery(
-                """
-        select distinct on (id) id, null as parentId, hakuoid as tunniste from hakukohde_viite_history
-        where id in (:ids)
-        """)
-            .setParameter("ids", ids);
-    @SuppressWarnings("unchecked")
-    List<Object[]> resultList = (List<Object[]>) query.getResultList();
-    return resultList.stream().map(Poistettu::new).collect(Collectors.toList());
+  public List<Poistettu> findParentHakukohdeviitteet(Collection<Long> ids) {
+    return doFindParents("hakukohde_viite", "null", "hakuoid", ids);
   }
 
   @Override
-  public List<Poistettu> findValinnanvaiheetFromHistory(Collection<Long> ids) {
-    Query query =
-        entityManager
-            .createNativeQuery(
-                """
-        select distinct on (id) id, hakukohde_viite_id as parentId, oid as tunniste from valinnan_vaihe_history
-        where id in (:ids)
-        """)
-            .setParameter("ids", ids);
+  public List<Poistettu> findParentHakukohdeviitteetFromHistory(Collection<Long> ids) {
+    return doFindParents("hakukohde_viite_history", "null", "hakuoid", ids);
+  }
+
+  @Override
+  public List<Poistettu> findParentValinnanvaiheet(Collection<Long> ids) {
+    return doFindParents("valinnan_vaihe", "hakukohde_viite_id", "oid", ids);
+  }
+
+  @Override
+  public List<Poistettu> findParentValinnanvaiheetFromHistory(Collection<Long> ids) {
+    return doFindParents("valinnan_vaihe_history", "hakukohde_viite_id", "oid", ids);
+  }
+
+  private List<Poistettu> doFindParents(
+      String tableName, String parentIdFieldName, String tunnisteFieldName, Collection<Long> ids) {
+    String sqlTemplate =
+        """
+        select distinct on (id) id, %s as parentId, %s as tunniste from %s
+        where id in (:ids)""";
+    String sql = String.format(sqlTemplate, parentIdFieldName, tunnisteFieldName, tableName);
+    Query query = entityManager.createNativeQuery(sql).setParameter("ids", ids);
     @SuppressWarnings("unchecked")
     List<Object[]> resultList = (List<Object[]>) query.getResultList();
-    return resultList.stream().map(Poistettu::new).collect(Collectors.toList());
+    return resultList.stream()
+        .map(Poistettu::new)
+        .map(p -> p.setDeletedItself(false))
+        .collect(Collectors.toList());
   }
 }

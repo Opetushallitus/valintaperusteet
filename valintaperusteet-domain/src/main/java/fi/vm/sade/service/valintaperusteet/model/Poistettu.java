@@ -4,6 +4,7 @@ public class Poistettu {
   private Long id;
   private Long parentId;
   private String tunniste;
+  private boolean isDeletedItself = true;
 
   public Poistettu() {}
 
@@ -35,5 +36,14 @@ public class Poistettu {
 
   public void setTunniste(String tunniste) {
     this.tunniste = tunniste;
+  }
+
+  public boolean isDeletedItself() {
+    return isDeletedItself;
+  }
+
+  public Poistettu setDeletedItself(boolean deletedItself) {
+    isDeletedItself = deletedItself;
+    return this;
   }
 }

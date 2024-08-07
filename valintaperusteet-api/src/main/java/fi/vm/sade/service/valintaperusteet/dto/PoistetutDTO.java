@@ -1,7 +1,9 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 public class PoistetutDTO {
   private List<HakukohdeViite> poistetut = new ArrayList<>();
@@ -14,19 +16,54 @@ public class PoistetutDTO {
     this.poistetut = poistetut;
   }
 
-  public static class Poistettu {
-    protected boolean poistettu = true;
+  // Just for testing purposes
+  private long getPoistettuCount() {
+    long hakukohdeViiteCount =
+        poistetut.stream().filter(viite -> viite.isPoistettu() != null).count();
+    List<ValinnanVaihe> valinnanVaiheet =
+        poistetut.stream().map(HakukohdeViite::getValinnanVaihe).filter(Objects::nonNull).toList();
+    long valinnanVaiheCount =
+        valinnanVaiheet.stream().filter(vaihe -> vaihe.isPoistettu() != null).count();
+    long jonoCount =
+        valinnanVaiheet.stream()
+            .map(ValinnanVaihe::getValintatapajono)
+            .filter(Objects::nonNull)
+            .toList()
+            .stream()
+            .mapToLong(Collection::size)
+            .sum();
+    long koeCount =
+        valinnanVaiheet.stream()
+            .map(ValinnanVaihe::getValintakoe)
+            .filter(Objects::nonNull)
+            .toList()
+            .stream()
+            .mapToLong(Collection::size)
+            .sum();
+    long perusteCount =
+        poistetut.stream()
+            .map(HakukohdeViite::getHakukohteenValintaperuste)
+            .filter(Objects::nonNull)
+            .toList()
+            .stream()
+            .mapToLong(Collection::size)
+            .sum();
+    return hakukohdeViiteCount + valinnanVaiheCount + jonoCount + koeCount + perusteCount;
+  }
 
-    public boolean isPoistettu() {
+  public static class PoistettuItselfOrJustParent {
+    protected Boolean poistettu = Boolean.TRUE;
+
+    public Boolean isPoistettu() {
       return poistettu;
     }
 
-    public void setPoistettu(boolean poistettu) {
-      this.poistettu = poistettu;
+    public void setPoistettuItself(boolean poistettuItself) {
+      this.poistettu = poistettuItself ? Boolean.TRUE : null;
     }
   }
 
-  public static class PoistettuOid extends Poistettu {
+  public static class PoistettuOid extends PoistettuItselfOrJustParent {
     protected String oid;
 
     public String getOid() {
@@ -39,7 +76,7 @@ public class PoistetutDTO {
     }
   }
 
-  public static class Valintaperuste extends Poistettu {
+  public static class Valintaperuste extends PoistettuItselfOrJustParent {
     private String tunniste;
 
     public String getTunniste() {
@@ -52,7 +89,7 @@ public class PoistetutDTO {
     }
   }
 
-  public static class ValinnanVaihe extends Poistettu {
+  public static class ValinnanVaihe extends PoistettuItselfOrJustParent {
     private String valinnanVaiheOid;
     private List<PoistettuOid> valintatapajono;
     private List<PoistettuOid> valintakoe;
@@ -83,7 +120,7 @@ public class PoistetutDTO {
     }
   }
 
-  public static class HakukohdeViite extends Poistettu {
+  public static class HakukohdeViite extends PoistettuItselfOrJustParent {
     private String hakukohdeOid;
     private ValinnanVaihe valinnanVaihe;
     private List<Valintaperuste> hakukohteenValintaperuste;

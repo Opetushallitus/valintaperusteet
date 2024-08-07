@@ -4,10 +4,14 @@ alter table hakukohde_viite_history drop column if exists last_modified;
 alter table hakukohde_viite_history
     add column if not exists system_time tstzrange not null default tstzrange(now(), null, '[)');
 
+create index if not exists hakukohde_viite_history_systime_idx ON hakukohde_viite_history (upper(system_time));
+
 create table hakukohteen_valintaperuste_history (like hakukohteen_valintaperuste);
 alter table hakukohteen_valintaperuste_history drop column if exists last_modified;
 alter table hakukohteen_valintaperuste_history
     add column if not exists system_time tstzrange not null default tstzrange(now(), null, '[)');
+
+create index if not exists hakukohteen_valintaperuste_history_systime_idx ON hakukohteen_valintaperuste_history (upper(system_time));
 
 create table valintaperuste_viite_history (like valintaperuste_viite);
 alter table valintaperuste_viite_history drop column if exists last_modified;
@@ -24,10 +28,14 @@ alter table valinnan_vaihe_history drop column if exists last_modified;
 alter table valinnan_vaihe_history
     add column if not exists system_time tstzrange not null default tstzrange(now(), null, '[)');
 
+create index if not exists valinnan_vaihe_history_systime_idx ON valinnan_vaihe_history (upper(system_time));
+
 create table valintatapajono_history (like valintatapajono);
 alter table valintatapajono_history drop column if exists last_modified;
 alter table valintatapajono_history
     add column if not exists system_time tstzrange not null default tstzrange(now(), null, '[)');
+
+create index if not exists valintatapajono_history_systime_idx ON valintatapajono_history (upper(system_time));
 
 create table jarjestyskriteeri_history (like jarjestyskriteeri);
 alter table jarjestyskriteeri_history drop column if exists last_modified;
@@ -78,6 +86,9 @@ create table valintakoe_history (like valintakoe);
 alter table valintakoe_history drop column if exists last_modified;
 alter table valintakoe_history
     add column if not exists system_time tstzrange not null default tstzrange(now(), null, '[)');
+
+create index if not exists valintakoe_history_systime_idx ON valintakoe_history (upper(system_time));
+
 
 -- Historian päivitysfunktiot
 create or replace function update_hakukohde_viite_history() returns trigger
