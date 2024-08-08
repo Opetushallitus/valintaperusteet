@@ -1,88 +1,88 @@
 -- Historiataulut
-create table hakukohde_viite_history (like hakukohde_viite);
+create table if not exists hakukohde_viite_history (like hakukohde_viite);
 alter table hakukohde_viite_history drop column if exists last_modified;
 alter table hakukohde_viite_history
     add column if not exists system_time tstzrange not null default tstzrange(now(), null, '[)');
 
 create index if not exists hakukohde_viite_history_systime_idx ON hakukohde_viite_history (upper(system_time));
 
-create table hakukohteen_valintaperuste_history (like hakukohteen_valintaperuste);
+create table if not exists hakukohteen_valintaperuste_history (like hakukohteen_valintaperuste);
 alter table hakukohteen_valintaperuste_history drop column if exists last_modified;
 alter table hakukohteen_valintaperuste_history
     add column if not exists system_time tstzrange not null default tstzrange(now(), null, '[)');
 
 create index if not exists hakukohteen_valintaperuste_history_systime_idx ON hakukohteen_valintaperuste_history (upper(system_time));
 
-create table valintaperuste_viite_history (like valintaperuste_viite);
+create table if not exists valintaperuste_viite_history (like valintaperuste_viite);
 alter table valintaperuste_viite_history drop column if exists last_modified;
 alter table valintaperuste_viite_history
     add column if not exists system_time tstzrange not null default tstzrange(now(), null, '[)');
 
-create table syotettavanarvonkoodi_history (like syotettavanarvonkoodi);
+create table if not exists syotettavanarvonkoodi_history (like syotettavanarvonkoodi);
 alter table syotettavanarvonkoodi_history drop column if exists last_modified;
 alter table syotettavanarvonkoodi_history
     add column if not exists system_time tstzrange not null default tstzrange(now(), null, '[)');
 
-create table valinnan_vaihe_history (like valinnan_vaihe);
+create table if not exists valinnan_vaihe_history (like valinnan_vaihe);
 alter table valinnan_vaihe_history drop column if exists last_modified;
 alter table valinnan_vaihe_history
     add column if not exists system_time tstzrange not null default tstzrange(now(), null, '[)');
 
 create index if not exists valinnan_vaihe_history_systime_idx ON valinnan_vaihe_history (upper(system_time));
 
-create table valintatapajono_history (like valintatapajono);
+create table if not exists valintatapajono_history (like valintatapajono);
 alter table valintatapajono_history drop column if exists last_modified;
 alter table valintatapajono_history
     add column if not exists system_time tstzrange not null default tstzrange(now(), null, '[)');
 
 create index if not exists valintatapajono_history_systime_idx ON valintatapajono_history (upper(system_time));
 
-create table jarjestyskriteeri_history (like jarjestyskriteeri);
+create table if not exists jarjestyskriteeri_history (like jarjestyskriteeri);
 alter table jarjestyskriteeri_history drop column if exists last_modified;
 alter table jarjestyskriteeri_history
     add column if not exists system_time tstzrange not null default tstzrange(now(), null, '[)');
 
-create table laskentakaava_history (like laskentakaava);
+create table if not exists laskentakaava_history (like laskentakaava);
 alter table laskentakaava_history drop column if exists last_modified;
 alter table laskentakaava_history
     add column if not exists system_time tstzrange not null default tstzrange(now(), null, '[)');
 
-create table funktiokutsu_history (like funktiokutsu);
+create table if not exists funktiokutsu_history (like funktiokutsu);
 alter table funktiokutsu_history drop column if exists last_modified;
 alter table funktiokutsu_history
     add column if not exists system_time tstzrange not null default tstzrange(now(), null, '[)');
 
-create table funktioargumentti_history (like funktioargumentti);
+create table if not exists funktioargumentti_history (like funktioargumentti);
 alter table funktioargumentti_history drop column if exists last_modified;
 alter table funktioargumentti_history
     add column if not exists system_time tstzrange not null default tstzrange(now(), null, '[)');
 
-create table syoteparametri_history (like syoteparametri);
+create table if not exists syoteparametri_history (like syoteparametri);
 alter table syoteparametri_history drop column if exists last_modified;
 alter table syoteparametri_history
     add column if not exists system_time tstzrange not null default tstzrange(now(), null, '[)');
 
-create table arvokonvertteriparametri_history (like arvokonvertteriparametri);
+create table if not exists arvokonvertteriparametri_history (like arvokonvertteriparametri);
 alter table arvokonvertteriparametri_history drop column if exists last_modified;
 alter table arvokonvertteriparametri_history
     add column if not exists system_time tstzrange not null default tstzrange(now(), null, '[)');
 
-create table arvovalikonvertteriparametri_history (like arvovalikonvertteriparametri);
+create table if not exists arvovalikonvertteriparametri_history (like arvovalikonvertteriparametri);
 alter table arvovalikonvertteriparametri_history drop column if exists last_modified;
 alter table arvovalikonvertteriparametri_history
     add column if not exists system_time tstzrange not null default tstzrange(now(), null, '[)');
 
-create table tekstiryhma_history (like tekstiryhma);
+create table if not exists tekstiryhma_history (like tekstiryhma);
 alter table tekstiryhma_history drop column if exists last_modified;
 alter table tekstiryhma_history
     add column if not exists system_time tstzrange not null default tstzrange(now(), null, '[)');
 
-create table lokalisoitu_teksti_history (like lokalisoitu_teksti);
+create table if not exists lokalisoitu_teksti_history (like lokalisoitu_teksti);
 alter table lokalisoitu_teksti_history drop column if exists last_modified;
 alter table lokalisoitu_teksti_history
     add column if not exists system_time tstzrange not null default tstzrange(now(), null, '[)');
 
-create table valintakoe_history (like valintakoe);
+create table if not exists valintakoe_history (like valintakoe);
 alter table valintakoe_history drop column if exists last_modified;
 alter table valintakoe_history
     add column if not exists system_time tstzrange not null default tstzrange(now(), null, '[)');
