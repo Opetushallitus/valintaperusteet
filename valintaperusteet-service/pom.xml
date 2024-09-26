@@ -366,10 +366,13 @@
                 <artifactId>docker-maven-plugin</artifactId>
 
                 <configuration>
+                    <containerNamePattern>
+                        test-%n-%i
+                    </containerNamePattern>
                     <images>
                         <image>
                             <alias>valintaperusteet-testikanta</alias>
-                            <name>postgres:11</name>
+                            <name>postgres:14</name>
                             <run>
                                 <env>
                                     <POSTGRES_USER>valintaperusteet_tests</POSTGRES_USER>
