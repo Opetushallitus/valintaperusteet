@@ -36,7 +36,7 @@ public class SiirtotiedostoProsessiRepositoryImpl
   @Override
   public void persist(SiirtotiedostoProsessi sp) {
     System.out.println("Persisting: " + sp);
-    String infoStr = sp.getInfo() != null ? sp.getInfo().toString() : "{}";
+    String infoStr = sp.getInfo() != null ? sp.getInfo() : "{}";
     this.jdbcTemplate.update(
         "insert into siirtotiedosto (execution_uuid, window_start, window_end, run_start, run_end, info, success, error_message) "
             + "values (?::uuid, ?::timestamptz, ?::timestamptz, ?::timestamptz, ?::timestamptz, ?::jsonb, ?, ?)",

@@ -32,9 +32,10 @@ public class SiirtotiedostoAjastusService {
     logger.info("New process: {}", uusi);
 
     try {
-      siirtotiedostoServiceImpl.createSiirtotiedostot(LocalDateTime.now(), LocalDateTime.now());
-      // Todo, add entitycounts
+      String resultInfo =
+          siirtotiedostoServiceImpl.createSiirtotiedostot(LocalDateTime.now(), LocalDateTime.now());
       uusi.setSuccess(true);
+      uusi.setInfo(resultInfo);
       uusi.setRunEnd(OffsetDateTime.now());
       siirtotiedostoProsessiRepositoryImpl.persist(uusi);
     } catch (Exception e) {
@@ -44,7 +45,7 @@ public class SiirtotiedostoAjastusService {
           e);
       uusi.setErrorMessage(e.getMessage());
       uusi.setSuccess(false);
-      uusi.setInfo(null);
+      uusi.setInfo("{}");
       uusi.setRunEnd(OffsetDateTime.now());
       siirtotiedostoProsessiRepositoryImpl.persist(uusi);
     }

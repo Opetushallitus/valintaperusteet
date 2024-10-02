@@ -1,19 +1,13 @@
 package fi.vm.sade.service.valintaperusteet.ovara.ajastus;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.sql.Timestamp;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.UUID;
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Table;
-import org.hibernate.annotations.Type;
 
-@Entity
-@Table(name = "siirtotiedosto", schema = "public")
 public class SiirtotiedostoProsessi {
   @Id
   @Column(name = "execution_uuid")
@@ -32,8 +26,7 @@ public class SiirtotiedostoProsessi {
   private OffsetDateTime runEnd;
 
   @Column(name = "info")
-  @Type(type = "com.vladmihalcea.hibernate.type.json.JsonNodeBinaryType")
-  private JsonNode info;
+  private String info;
 
   @Column(name = "success")
   private Boolean success;
@@ -49,7 +42,7 @@ public class SiirtotiedostoProsessi {
       OffsetDateTime windodwEnd,
       OffsetDateTime runStart,
       OffsetDateTime runEnd,
-      JsonNode info,
+      String info,
       Boolean success,
       String errorMessage) {
     this.executionUuid = executionUuid;
@@ -72,12 +65,7 @@ public class SiirtotiedostoProsessi {
     this.windowEnd = ((Timestamp) result[2]).toInstant().atOffset(ZoneOffset.UTC);
     this.runStart = ((Timestamp) result[3]).toInstant().atOffset(ZoneOffset.UTC);
     this.runEnd = ((Timestamp) result[4]).toInstant().atOffset(ZoneOffset.UTC);
-    try {
-      this.info = mapper.readTree((String) result[5]);
-    } catch (Exception e) {
-      System.out.println("Ei saatu jsonia parsittua");
-      e.printStackTrace();
-    }
+    this.info = (String) result[5];
     this.success = (Boolean) result[6];
     this.errorMessage = (String) result[7];
   }
@@ -100,11 +88,11 @@ public class SiirtotiedostoProsessi {
     this.success = success;
   }
 
-  public JsonNode getInfo() {
+  public String getInfo() {
     return info;
   }
 
-  public void setInfo(JsonNode info) {
+  public void setInfo(String info) {
     this.info = info;
   }
 
