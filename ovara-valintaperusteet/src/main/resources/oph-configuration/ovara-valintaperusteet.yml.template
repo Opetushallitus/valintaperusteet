@@ -1,0 +1,45 @@
+#
+# TÄHÄN TIEDOSTOON EI SAA TALLENTAA YMPÄRISTÖKOHTAISIA ARVOJA MUUTOIN KUIN MUUTTUJINA!!!
+#
+# Tämä tiedosto toimii pohjana oph-configuration/common.properties tiedostolle,
+# joka asettaa tomcatin ympäristökohtaiset arvot.
+#
+
+host:
+  alb: {{host_alb}}
+  cas: {{host_cas}}
+  ilb: {{host_ilb}}
+  virkailija: {{host_virkailija}}
+  host-virkailija: {{host_virkailija}}
+  host-cas: {{host_cas}}
+  host-alb: {{host_alb}}
+
+cas-service:
+  service: https://${host.host-virkailija}/valintaperusteet-service
+
+server:
+  name: {{ansible_hostname}}
+
+user:
+  home:
+    conf: ${user.home}/oph-configuration
+
+valintaperusteet:
+  uses-ssl-proxy: true
+  swagger:
+    basepath: /valintaperusteet-service/resources
+  postgresql:
+    url: jdbc:postgresql://{{host_postgresql_valintaperusteet}}:{{port_postgresql}}/valintaperusteet?ApplicationName=valintaperusteet-service
+    user: {{postgres_app_user}}
+    password: {{host_postgresql_valintaperusteet_app_password}}
+    maxactive: {{host_postgresql_valintaperusteet_max_active}}
+    maxwait: {{host_postgresql_valintaperusteet_max_wait}}
+    maxlifetimemillis: 60000
+    leakdetectionthresholdmillis: 1800000
+  valinta-tulos-service:
+    service-url: https://${host.virkailija}/valinta-tulos-service
+  siirtotiedosto:
+    awsregion: {{valintaperusteet_siirtotiedosto_aws_region}}
+    s3bucket: {{valintaperusteet_siirtotiedosto_s3_bucket}}
+    s3-target-role-arn: {{valintaperusteet_siirtotiedosto_s3_target_role_arn}}
+    max-hakukohde-count-in-file: {{valintaperusteet_siirtotiedosto_max_hakukohde_count_in_file}}
