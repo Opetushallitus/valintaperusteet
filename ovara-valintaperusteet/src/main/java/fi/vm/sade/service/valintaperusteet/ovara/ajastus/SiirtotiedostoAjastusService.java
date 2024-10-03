@@ -29,6 +29,7 @@ public class SiirtotiedostoAjastusService {
     logger.info("Latest: {}", latest);
     SiirtotiedostoProsessi uusi = latest.createNewProcessBasedOnThis();
     logger.info("New process: {}", uusi);
+    siirtotiedostoProsessiRepositoryImpl.persist(uusi);
 
     try {
       String resultInfo =
