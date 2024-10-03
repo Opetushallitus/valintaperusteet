@@ -2,7 +2,6 @@ package fi.vm.sade.service.valintaperusteet.ovara.ajastus;
 
 import fi.vm.sade.service.valintaperusteet.ovara.ajastus.impl.SiirtotiedostoProsessiRepositoryImpl;
 import fi.vm.sade.service.valintaperusteet.service.impl.SiirtotiedostoServiceImpl;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +32,8 @@ public class SiirtotiedostoAjastusService {
 
     try {
       String resultInfo =
-          siirtotiedostoServiceImpl.createSiirtotiedostot(LocalDateTime.now(), LocalDateTime.now());
+          siirtotiedostoServiceImpl.createSiirtotiedostot(
+              uusi.getWindowStart().toLocalDateTime(), uusi.getWindowEnd().toLocalDateTime());
       uusi.setSuccess(true);
       uusi.setInfo(resultInfo);
       uusi.setRunEnd(OffsetDateTime.now());

@@ -45,6 +45,7 @@ public class SiirtotiedostoServiceImpl implements SiirtotiedostoService {
   }
 
   public String createSiirtotiedostot(LocalDateTime startDatetime, LocalDateTime endDatetime) {
+    logger.info("Creating siirtotiedostot for window {} - {}", startDatetime, endDatetime);
     List<String> oids = hakukohdeViiteDAO.findNewOrChangedHakukohdeOids(startDatetime, endDatetime);
     List<String> siirtotiedostoKeys = new ArrayList<>();
     String operationId = UUID.randomUUID().toString();
