@@ -1,12 +1,15 @@
 package fi.vm.sade.service.valintaperusteet.ovara.ajastus.impl;
 
 import fi.vm.sade.service.valintaperusteet.dao.AbstractJpaDAOImpl;
+import fi.vm.sade.service.valintaperusteet.ovara.ajastus.SiirtotiedostoAjastusService;
 import fi.vm.sade.service.valintaperusteet.ovara.ajastus.SiirtotiedostoProsessi;
 import fi.vm.sade.service.valintaperusteet.ovara.ajastus.SiirtotiedostoProsessiRepository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -15,8 +18,10 @@ import org.springframework.stereotype.Repository;
 public class SiirtotiedostoProsessiRepositoryImpl
     extends AbstractJpaDAOImpl<SiirtotiedostoProsessi, Long>
     implements SiirtotiedostoProsessiRepository {
-  @PersistenceContext private EntityManager entityManager;
 
+  private static final Logger logger = LoggerFactory.getLogger(SiirtotiedostoAjastusService.class);
+
+  @PersistenceContext private EntityManager entityManager;
   private final JdbcTemplate jdbcTemplate;
 
   public SiirtotiedostoProsessiRepositoryImpl(JdbcTemplate jdbcTemplate) {
@@ -35,7 +40,7 @@ public class SiirtotiedostoProsessiRepositoryImpl
 
   @Override
   public void persist(SiirtotiedostoProsessi sp) {
-    System.out.println("Persisting: " + sp);
+    logger.info("Persisting: {}", sp);
     String infoStr = sp.getInfo() != null ? sp.getInfo() : "{}";
     this.jdbcTemplate.update(
         "insert into siirtotiedosto (execution_uuid, window_start, window_end, run_start, run_end, info, success, error_message) "

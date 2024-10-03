@@ -56,10 +56,6 @@ public class SiirtotiedostoProsessi {
   }
 
   public SiirtotiedostoProsessi(Object[] result) {
-    System.out.println("Parsitaan prosessi");
-    for (int i = 0; i < result.length; i++) {
-      System.out.println(result[i]);
-    }
     this.executionUuid = (String) result[0];
     this.windowStart = ((Timestamp) result[1]).toInstant().atOffset(ZoneOffset.UTC);
     this.windowEnd = ((Timestamp) result[2]).toInstant().atOffset(ZoneOffset.UTC);
