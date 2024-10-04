@@ -44,13 +44,18 @@ public class SiirtotiedostoProsessiRepositoryImpl
     String infoStr = sp.getInfo() != null ? sp.getInfo() : "{}";
     this.jdbcTemplate.update(
         "insert into siirtotiedosto (execution_uuid, window_start, window_end, run_start, run_end, info, success, error_message) "
-            + "values (?::uuid, ?::timestamptz, ?::timestamptz, ?::timestamptz, ?::timestamptz, ?::jsonb, ?, ?)",
+            + "values (?::uuid, ?::timestamptz, ?::timestamptz, ?::timestamptz, ?::timestamptz, ?::jsonb, ?, ?) on conflict (execution_uuid) do update "
+            + "set run_end = ?::timestamptz, info = ?::jsonb, success = ?, error_message = ?",
         sp.getExecutionUuid(),
         sp.getWindowStart(),
         sp.getWindowEnd(),
         sp.getRunStart(),
         sp.getRunEnd(),
         infoStr,
+        sp.getSuccess(),
+        sp.getErrorMessage(),
+        sp.getRunEnd(),
+        sp.getInfo(),
         sp.getSuccess(),
         sp.getErrorMessage());
   }
