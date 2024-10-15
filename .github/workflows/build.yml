@@ -90,7 +90,7 @@ jobs:
           export ARTIFACT_NAME="ovara-valintaperusteet"
           mv ovara-valintaperusteet/target/ovara-valintaperusteet.jar $DOCKER_BUILD_DIR/artifact/${ARTIFACT_NAME}.jar
           cp -vr ovara-valintaperusteet/src/main/resources/oph-configuration $DOCKER_BUILD_DIR/config/
-          export BASE_IMAGE="baseimage-fatjar-openjdk17:OK-568b"
+          export BASE_IMAGE="baseimage-fatjar-openjdk17:master"
           ./ci-tools/common/pull-image.sh
           ./ci-tools/github-build/build-fatjar.sh $ARTIFACT_NAME
           ./ci-tools/github-build/upload-image.sh $ARTIFACT_NAME
