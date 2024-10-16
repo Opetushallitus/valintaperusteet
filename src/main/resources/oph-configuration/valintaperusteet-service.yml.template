@@ -38,3 +38,8 @@ valintaperusteet:
     leakdetectionthresholdmillis: 1800000
   valinta-tulos-service:
     service-url: https://${host.virkailija}/valinta-tulos-service
+  siirtotiedosto:
+    awsregion: {{valintaperusteet_siirtotiedosto_aws_region}}
+    s3bucket: {{valintaperusteet_siirtotiedosto_s3_bucket}}
+    s3-target-role-arn: {{valintaperusteet_siirtotiedosto_s3_target_role_arn}}
+    max-hakukohde-count-in-file: {{valintaperusteet_siirtotiedosto_max_hakukohde_count_in_file}}

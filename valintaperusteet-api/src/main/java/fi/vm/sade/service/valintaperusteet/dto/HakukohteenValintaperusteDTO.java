@@ -1,6 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.dto;
 
-public class HakukohteenValintaperusteDTO {
+public class HakukohteenValintaperusteDTO extends AbstractWithModifyTimestamp {
   private String tunniste;
   private String arvo;
 
