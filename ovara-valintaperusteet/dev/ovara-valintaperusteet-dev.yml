@@ -1,0 +1,31 @@
+host:
+  alb: virkailija.testiopintopolku.fi
+  cas: virkailija.testiopintopolku.fi
+  ilb: virkailija.testiopintopolku.fi
+  virkailija: virkailija.testiopintopolku.fi
+  host-virkailija: virkailija.testiopintopolku.fi
+  host-cas: virkailija.testiopintopolku.fi
+  host-alb: virkailija.testiopintopolku.fi
+
+server:
+  name: servername
+
+valintaperusteet:
+  uses-ssl-proxy: true
+  swagger:
+    basepath: /valintaperusteet-service/resources
+  postgresql:
+    url: jdbc:postgresql://localhost:5489/valintaperusteet?ApplicationName=valintaperusteet-service
+    user: app
+    password: test_pw
+    maxactive: 10
+    maxwait: 30f
+    maxlifetimemillis: 60000
+    leakdetectionthresholdmillis: 1800000
+  valinta-tulos-service:
+    service-url: https://${host.virkailija}/valinta-tulos-service
+  siirtotiedosto:
+    awsregion: "mock-region"
+    s3bucket: "mock-bucket"
+    s3-target-role-arn: "mock-role-arn"
+    max-hakukohde-count-in-file: 1000

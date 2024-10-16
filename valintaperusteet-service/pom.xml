@@ -366,10 +366,13 @@
                 <artifactId>docker-maven-plugin</artifactId>
 
                 <configuration>
+                    <containerNamePattern>
+                        test-%n-%i
+                    </containerNamePattern>
                     <images>
                         <image>
                             <alias>valintaperusteet-testikanta</alias>
-                            <name>postgres:11</name>
+                            <name>postgres:14</name>
                             <run>
                                 <env>
                                     <POSTGRES_USER>valintaperusteet_tests</POSTGRES_USER>
@@ -455,6 +458,14 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>repackage</id>
+                        <configuration>
+                            <classifier>exec</classifier>
+                        </configuration>
+                    </execution>
+                </executions>
                 <version>${spring.boot.version}</version>
             </plugin>
         </plugins>
