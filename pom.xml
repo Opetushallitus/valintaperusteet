@@ -28,7 +28,7 @@
         <httpcomponents.version>4.5.14</httpcomponents.version>
         <jackson2.version>2.15.2</jackson2.version>
         <modelmapper.version>3.1.1</modelmapper.version>
-        <spring.boot.version>2.7.14</spring.boot.version>
+        <spring.boot.version>3.2.7</spring.boot.version>
         <spring.version>5.3.29</spring.version>
         <spring.security.version>5.7.10</spring.security.version>
         <circe.version>0.13.0</circe.version>
@@ -653,8 +653,7 @@ vcsRevision=${revision}
 buildTtime=${maven.build.timestamp}
 ]]>
                                 </echo>
-                                <loadfile property="buildversiontxt"
-                                          srcFile="${project.build.outputDirectory}/static/buildversion.txt"/>
+                                <loadfile property="buildversiontxt" srcFile="${project.build.outputDirectory}/static/buildversion.txt"/>
                                 <echo message="${buildversiontxt}"/>
                                 <echo file="target/mavenversion.txt">${project.version}</echo>
                             </target>
