@@ -6,12 +6,12 @@
 
     <groupId>fi.vm.sade.valintaperusteet</groupId>
     <artifactId>ovara-valintaperusteet</artifactId>
-    <version>6.2-SNAPSHOT</version>
+    <version>6.3-SNAPSHOT</version>
 
     <parent>
         <artifactId>valintaperusteet</artifactId>
         <groupId>fi.vm.sade.valintaperusteet</groupId>
-        <version>6.2-SNAPSHOT</version>
+        <version>6.3-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -19,7 +19,7 @@
         <dependency>
             <groupId>fi.vm.sade.valintaperusteet</groupId>
             <artifactId>valintaperusteet-service</artifactId>
-            <version>6.2-SNAPSHOT</version>
+            <version>6.3-SNAPSHOT</version>
         </dependency>
 
         <!-- flyway -->

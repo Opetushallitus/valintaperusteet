@@ -67,48 +67,24 @@
     "tila": {
       "opiskeluoikeusjaksot": [
         {
-          "alku": "2018-02-26",
-          "tila": {
-            "koodiarvo": "lasna",
-            "nimi": {
-              "fi": "Läsnä",
-              "sv": "Närvarande",
-              "en": "Present"
-            },
-            "koodistoUri": "koskiopiskeluoikeudentila",
-            "koodistoVersio": 1
+          "koodiarvo": "lasna",
+          "nimi": {
+            "fi": "Läsnä",
+            "sv": "Närvarande",
+            "en": "Present"
           },
-          "opintojenRahoitus": {
-            "koodiarvo": "1",
-            "nimi": {
-              "fi": "Valtionosuusrahoitteinen koulutus",
-              "sv": "Statsandelsfinansierad utbildning"
-            },
-            "koodistoUri": "opintojenrahoitus",
-            "koodistoVersio": 1
-          }
+          "koodistoUri": "koskiopiskeluoikeudentila",
+          "koodistoVersio": 1
         },
         {
-          "alku": "2020-12-19",
-          "tila": {
-            "koodiarvo": "valmistunut",
-            "nimi": {
-              "fi": "Valmistunut",
-              "sv": "Utexaminerad",
-              "en": "Graduated"
-            },
-            "koodistoUri": "koskiopiskeluoikeudentila",
-            "koodistoVersio": 1
+          "koodiarvo": "valmistunut",
+          "nimi": {
+            "fi": "Valmistunut",
+            "sv": "Utexaminerad",
+            "en": "Graduated"
           },
-          "opintojenRahoitus": {
-            "koodiarvo": "1",
-            "nimi": {
-              "fi": "Valtionosuusrahoitteinen koulutus",
-              "sv": "Statsandelsfinansierad utbildning"
-            },
-            "koodistoUri": "opintojenrahoitus",
-            "koodistoVersio": 1
-          }
+          "koodistoUri": "koskiopiskeluoikeudentila",
+          "koodistoVersio": 1
         }
       ]
     },
@@ -481,48 +457,24 @@
     "tila": {
       "opiskeluoikeusjaksot": [
         {
-          "alku": "2018-02-26",
-          "tila": {
-            "koodiarvo": "lasna",
-            "nimi": {
-              "fi": "Läsnä",
-              "sv": "Närvarande",
-              "en": "Present"
-            },
-            "koodistoUri": "koskiopiskeluoikeudentila",
-            "koodistoVersio": 1
+          "koodiarvo": "lasna",
+          "nimi": {
+            "fi": "Läsnä",
+            "sv": "Närvarande",
+            "en": "Present"
           },
-          "opintojenRahoitus": {
-            "koodiarvo": "6",
-            "nimi": {
-              "fi": "Muuta kautta rahoitettu",
-              "sv": "Finansierad på annat sätt"
-            },
-            "koodistoUri": "opintojenrahoitus",
-            "koodistoVersio": 1
-          }
+          "koodistoUri": "koskiopiskeluoikeudentila",
+          "koodistoVersio": 1
         },
         {
-          "alku": "2019-12-19",
-          "tila": {
-            "koodiarvo": "valmistunut",
-            "nimi": {
-              "fi": "Valmistunut",
-              "sv": "Utexaminerad",
-              "en": "Graduated"
-            },
-            "koodistoUri": "koskiopiskeluoikeudentila",
-            "koodistoVersio": 1
+          "koodiarvo": "valmistunut",
+          "nimi": {
+            "fi": "Valmistunut",
+            "sv": "Utexaminerad",
+            "en": "Graduated"
           },
-          "opintojenRahoitus": {
-            "koodiarvo": "6",
-            "nimi": {
-              "fi": "Muuta kautta rahoitettu",
-              "sv": "Finansierad på annat sätt"
-            },
-            "koodistoUri": "opintojenrahoitus",
-            "koodistoVersio": 1
-          }
+          "koodistoUri": "koskiopiskeluoikeudentila",
+          "koodistoVersio": 1
         }
       ]
     },
