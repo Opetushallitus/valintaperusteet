@@ -11,7 +11,7 @@
 
     <groupId>fi.vm.sade.valintaperusteet</groupId>
     <artifactId>valintaperusteet</artifactId>
-    <version>7.1.1-SNAPSHOT</version>
+    <version>7.3-SNAPSHOT</version>
 
     <name>Valintaperusteet</name>
     <packaging>pom</packaging>

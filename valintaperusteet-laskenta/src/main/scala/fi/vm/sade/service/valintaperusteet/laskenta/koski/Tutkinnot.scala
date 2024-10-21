@@ -46,7 +46,7 @@ object Tutkinnot {
     val opiskeluoikeusOid: Optional[Json, String] = JsonPath.root.oid.string
     val opiskeluoikeudenTyyppi: Optional[Json, String] = JsonPath.root.tyyppi.koodiarvo.string
     val valmistumisTila: Traversal[Json, String] =
-      JsonPath.root.tila.opiskeluoikeusjaksot.each.tila.koodiarvo.string
+      JsonPath.root.tila.opiskeluoikeusjaksot.each.koodiarvo.string
     val korotettuOpiskeluoikeusOid: Optional[Json, String] =
       JsonPath.root.korotettuOpiskeluoikeusOid.string
     val suorituksenTyyppi: Optional[Json, String] = JsonPath.root.tyyppi.koodiarvo.string
