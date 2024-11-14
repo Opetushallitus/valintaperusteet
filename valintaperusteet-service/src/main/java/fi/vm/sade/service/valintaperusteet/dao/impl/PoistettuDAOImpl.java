@@ -5,6 +5,7 @@ import fi.vm.sade.service.valintaperusteet.model.Poistettu;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.persistence.*;
 import org.slf4j.Logger;
@@ -104,12 +105,13 @@ public class PoistettuDAOImpl implements PoistettuDAO {
   private List<Poistettu> doFindParents(
       String tableName, String parentIdFieldName, String tunnisteFieldName, Collection<Long> ids) {
     try {
+      Collection<Long> nonNullIds = ids.stream().filter(Objects::nonNull).toList();
       String sqlTemplate =
           """
               select distinct on (id) id, %s as parentId, %s as tunniste from %s
               where id in (:ids)""";
       String sql = String.format(sqlTemplate, parentIdFieldName, tunnisteFieldName, tableName);
-      Query query = entityManager.createNativeQuery(sql).setParameter("ids", ids);
+      Query query = entityManager.createNativeQuery(sql).setParameter("ids", nonNullIds);
       @SuppressWarnings("unchecked")
       List<Object[]> resultList = (List<Object[]>) query.getResultList();
       return resultList.stream()
