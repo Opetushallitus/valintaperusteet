@@ -9,7 +9,7 @@ import fi.vm.sade.valinta.sharedutils.AuditLog;
 import fi.vm.sade.valinta.sharedutils.ValintaResource;
 import fi.vm.sade.valinta.sharedutils.ValintaperusteetOperation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

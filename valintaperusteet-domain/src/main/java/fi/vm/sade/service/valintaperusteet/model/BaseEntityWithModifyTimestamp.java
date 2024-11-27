@@ -1,8 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
 public class BaseEntityWithModifyTimestamp extends BaseEntity {

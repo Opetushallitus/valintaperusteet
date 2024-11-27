@@ -4,9 +4,9 @@ import static org.dbunit.database.DatabaseConfig.FEATURE_ALLOW_EMPTY_FIELDS;
 import static org.dbunit.database.DatabaseConfig.PROPERTY_DATATYPE_FACTORY;
 
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
+import jakarta.persistence.EntityManager;
 import java.sql.Connection;
 import java.util.Collections;
-import javax.persistence.EntityManager;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.DatabaseSequenceFilter;
 import org.dbunit.database.IDatabaseConnection;

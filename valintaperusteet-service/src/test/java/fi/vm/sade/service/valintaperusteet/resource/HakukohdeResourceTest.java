@@ -16,9 +16,9 @@ import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.util.TestUtil;
 import fi.vm.sade.valinta.sharedutils.FakeAuthenticationInitialiser;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -125,7 +125,7 @@ public class HakukohdeResourceTest extends WithSpringBoot {
       fail("Should not reach here. Expected to throw exception");
     } catch (ResponseStatusException e) {
       assertEquals("HakukohdeViite (IMAGINARY_HAKUKOHDE_OID) ei ole olemassa.", e.getReason());
-      assertEquals(404, e.getStatus().value());
+      assertEquals(404, e.getStatusCode().value());
     }
   }
 

@@ -1,7 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
+import jakarta.persistence.*;
 import java.io.Serializable;
-import javax.persistence.*;
 
 @MappedSuperclass
 public class BaseEntity implements Serializable {

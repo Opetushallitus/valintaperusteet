@@ -1,7 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
 import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Table(
     name = "valintaperuste_viite",

@@ -6,11 +6,11 @@ import fi.vm.sade.service.valintaperusteet.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
+import jakarta.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
 
 @Repository

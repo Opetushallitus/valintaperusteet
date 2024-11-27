@@ -2,9 +2,9 @@ package fi.vm.sade.service.valintaperusteet.util;
 
 import fi.vm.sade.service.valintaperusteet.model.Kopioitava;
 import fi.vm.sade.service.valintaperusteet.model.Linkitettava;
+import jakarta.persistence.EntityManager;
 import java.util.*;
 import java.util.function.Predicate;
-import javax.persistence.EntityManager;
 
 public abstract class LinkitettavaJaKopioitavaUtil {
 

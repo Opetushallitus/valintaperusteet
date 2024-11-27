@@ -2,10 +2,10 @@ package fi.vm.sade.service.valintaperusteet.dao.impl;
 
 import fi.vm.sade.service.valintaperusteet.dao.GenericDAO;
 import fi.vm.sade.service.valintaperusteet.model.BaseEntity;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository

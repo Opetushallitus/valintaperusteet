@@ -1,7 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
 
 @MappedSuperclass
 public abstract class Koodi extends BaseEntity {

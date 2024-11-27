@@ -1,9 +1,9 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
 import fi.vm.sade.service.valintaperusteet.dto.model.Koekutsu;
+import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.*;
 
 @Entity
 @Table(name = "valintakoe")

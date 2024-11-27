@@ -1,7 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
 import fi.vm.sade.service.valintaperusteet.dto.model.Kieli;
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "lokalisoitu_teksti")

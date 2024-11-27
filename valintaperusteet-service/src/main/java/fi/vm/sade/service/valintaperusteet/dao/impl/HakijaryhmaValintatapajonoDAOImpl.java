@@ -11,9 +11,9 @@ import fi.vm.sade.service.valintaperusteet.model.QHakijaryhmaValintatapajono;
 import fi.vm.sade.service.valintaperusteet.model.QHakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.QValintatapajono;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
+import jakarta.persistence.EntityManager;
 import java.util.Collection;
 import java.util.List;
-import javax.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
 
 @Repository

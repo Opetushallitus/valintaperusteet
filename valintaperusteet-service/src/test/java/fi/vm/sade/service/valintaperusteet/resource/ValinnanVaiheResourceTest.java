@@ -13,12 +13,12 @@ import fi.vm.sade.service.valintaperusteet.dto.model.Koekutsu;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheEiOleOlemassaException;
 import fi.vm.sade.valinta.sharedutils.FakeAuthenticationInitialiser;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -152,7 +152,7 @@ public class ValinnanVaiheResourceTest extends WithSpringBoot {
       vaiheResource.delete("", request);
     } catch (ResponseStatusException e) {
       caughtOne = true;
-      assertEquals(404, e.getStatus().value());
+      assertEquals(404, e.getStatusCode().value());
     }
 
     assertTrue(caughtOne);

@@ -251,7 +251,7 @@ public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Lo
             lastModified("vk"),
             lastModified("hva"));
 
-    javax.persistence.Query query = getEntityManager().createNativeQuery(sql);
+    jakarta.persistence.Query query = getEntityManager().createNativeQuery(sql);
     query = query.setParameter("startDatetime", start).setParameter("endDatetime", end);
     return (List<String>) query.getResultList();
   }
