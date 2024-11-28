@@ -1,12 +1,12 @@
 package fi.vm.sade.service.valintaperusteet.ovara.ajastus;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.Column;
+import jakarta.persistence.Id;
 import java.sql.Timestamp;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.UUID;
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
 
 public class SiirtotiedostoProsessi {
   @Id

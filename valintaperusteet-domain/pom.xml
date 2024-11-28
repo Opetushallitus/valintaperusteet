@@ -67,10 +67,12 @@
 							<groupId>com.querydsl</groupId>
 							<artifactId>querydsl-apt</artifactId>
 							<classifier>jakarta</classifier>
+							<version>5.1.0</version>
 						</path>
 						<path>
 							<groupId>jakarta.persistence</groupId>
 							<artifactId>jakarta.persistence-api</artifactId>
+							<version>3.2.0</version>
 						</path>
 					</annotationProcessorPaths>
 					<compilerArgs>

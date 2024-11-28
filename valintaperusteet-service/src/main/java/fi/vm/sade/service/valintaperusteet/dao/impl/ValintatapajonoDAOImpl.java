@@ -43,8 +43,6 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
             .fetchJoin()
             .leftJoin(hv.hakijaryhma)
             .fetchJoin()
-            .leftJoin(jono.valinnanVaihe)
-            .fetchJoin()
             .where(valinnanVaihe.oid.eq(oid))
             .distinct()
             .fetch());

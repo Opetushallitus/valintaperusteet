@@ -11,7 +11,6 @@ import javax.sql.DataSource;
 import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
-import org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver;
 import org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -65,9 +64,9 @@ public class TestConfiguration {
 
   @Bean
   @DependsOn("flyway")
-  public LocalContainerEntityManagerFactoryBean emf(final DataSource dataSource) {
+  public LocalContainerEntityManagerFactoryBean entityManagerFactory(final DataSource dataSource) {
     final LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
-    emf.setLoadTimeWeaver(new InstrumentationLoadTimeWeaver());
+    // emf.setLoadTimeWeaver(new InstrumentationLoadTimeWeaver());
     emf.setDataSource(dataSource);
     emf.setJpaPropertyMap(
         Map.of(
