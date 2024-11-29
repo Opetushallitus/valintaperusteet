@@ -35,7 +35,7 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ github.token }}
-        run: mvn clean spotless:check package sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=opetushallitus -Dsonar.projectKey=Opetushallitus_valintaperusteet -B -Dbranch=${GITHUB_REF_NAME} -Drevision=${GITHUB_SHA} -DbuildNumber=${GITHUB_RUN_NUMBER}
+        run: mvn clean spotless:check package sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=opetushallitus -Dsonar.projectKey=Opetushallitus_valintaperusteet -B -Dbranch=${GITHUB_REF_NAME} -Drevision=${GITHUB_SHA} -DbuildNumber=${GITHUB_RUN_NUMBER} --settings settings.xml
 
       - uses: actions/cache@v4
         id: restore-build
@@ -129,4 +129,4 @@ jobs:
         run: |
           git clone https://github.com/Opetushallitus/ci-tools.git
           source ci-tools/common/setup-tools.sh
-          mvn deploy -B -pl fi.vm.sade.valintaperusteet:valintaperusteet,valintaperusteet-domain,valintaperusteet-api,valintaperusteet-laskenta -DskipTests --settings ci-tools/common/maven-settings.xml
+          mvn deploy -B -pl fi.vm.sade.valintaperusteet:valintaperusteet,valintaperusteet-domain,valintaperusteet-api,valintaperusteet-laskenta -DskipTests --settings settings.xml
