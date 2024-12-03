@@ -21,6 +21,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Profile("!dev")
@@ -117,25 +118,35 @@ public class SecurityConfiguration {
   @Bean
   public SecurityFilterChain filterChain(
       HttpSecurity http, CasAuthenticationFilter casAuthenticationFilter) throws Exception {
-    http.headers(headers -> headers.disable())
-        .csrf(csrf -> csrf.disable())
-        .authorizeRequests()
-        .requestMatchers(
-            "/buildversion.txt",
-            "/actuator/health",
-            "/v3/api-docs",
-            "/v3/api-docs/**",
-            "/swagger",
-            "/swagger/**",
-            "/swagger-ui/**",
-            "/swagger-ui.html",
-            "/webjars/swagger-ui/**",
-            "/index.html",
-            "/")
-        .permitAll()
-        .anyRequest()
-        .authenticated()
-        .and()
+    http.headers(AbstractHttpConfigurer::disable)
+        .csrf(AbstractHttpConfigurer::disable)
+        .authorizeHttpRequests(
+            (authorizeHttpRequests) ->
+                authorizeHttpRequests
+                    .requestMatchers("/buildversion.txt")
+                    .permitAll()
+                    .requestMatchers("/actuator/health")
+                    .permitAll()
+                    .requestMatchers("/v3/api-docs")
+                    .permitAll()
+                    .requestMatchers("/v3/api-docs/**")
+                    .permitAll()
+                    .requestMatchers("/swagger")
+                    .permitAll()
+                    .requestMatchers("/swagger**")
+                    .permitAll()
+                    .requestMatchers("/swagger-ui/**")
+                    .permitAll()
+                    .requestMatchers("/swagger-ui.html")
+                    .permitAll()
+                    .requestMatchers("/webjars/swagger-ui/**")
+                    .permitAll()
+                    .requestMatchers("/index.html")
+                    .permitAll()
+                    .requestMatchers("/")
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated())
         .addFilter(casAuthenticationFilter)
         .exceptionHandling(eh -> eh.authenticationEntryPoint(casAuthenticationEntryPoint()))
         .addFilterBefore(singleSignOutFilter(), CasAuthenticationFilter.class);
