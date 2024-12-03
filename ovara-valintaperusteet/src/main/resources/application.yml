@@ -8,6 +8,8 @@ springdoc:
   api-docs:
     enabled: true
   swagger-ui:
+    path: /swagger-ui
+    operationsSorter: alpha
     enabled: true
 
 management:

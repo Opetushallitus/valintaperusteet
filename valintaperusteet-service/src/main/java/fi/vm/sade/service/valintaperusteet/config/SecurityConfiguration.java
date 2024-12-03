@@ -23,6 +23,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 
 @Profile("!dev")
 @Configuration
@@ -118,6 +119,10 @@ public class SecurityConfiguration {
   @Bean
   public SecurityFilterChain filterChain(
       HttpSecurity http, CasAuthenticationFilter casAuthenticationFilter) throws Exception {
+
+    HttpSessionRequestCache requestCache = new HttpSessionRequestCache();
+    requestCache.setMatchingRequestParameterName(null);
+
     http.headers(AbstractHttpConfigurer::disable)
         .csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(
@@ -135,6 +140,8 @@ public class SecurityConfiguration {
                     .permitAll()
                     .requestMatchers("/swagger**")
                     .permitAll()
+                    .requestMatchers("/swagger-ui/index.html")
+                    .permitAll()
                     .requestMatchers("/swagger-ui/**")
                     .permitAll()
                     .requestMatchers("/swagger-ui.html")
@@ -149,7 +156,8 @@ public class SecurityConfiguration {
                     .authenticated())
         .addFilter(casAuthenticationFilter)
         .exceptionHandling(eh -> eh.authenticationEntryPoint(casAuthenticationEntryPoint()))
-        .addFilterBefore(singleSignOutFilter(), CasAuthenticationFilter.class);
+        .addFilterBefore(singleSignOutFilter(), CasAuthenticationFilter.class)
+        .requestCache(cache -> cache.requestCache(requestCache));
     return http.build();
   }
 }
