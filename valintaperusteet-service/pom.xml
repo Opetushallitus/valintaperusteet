@@ -115,8 +115,8 @@
 		</dependency>
         <!-- LOG -->
         <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-access</artifactId>
+            <groupId>ch.qos.logback.access</groupId>
+            <artifactId>tomcat</artifactId>
         </dependency>
 
         <!--Hibernate & related -->
