@@ -5,13 +5,17 @@ import fi.vm.sade.service.valintaperusteet.model.Poistettu;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.persistence.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class PoistettuDAOImpl implements PoistettuDAO {
   @PersistenceContext private EntityManager entityManager;
+  private static final Logger LOG = LoggerFactory.getLogger(PoistettuDAOImpl.class);
 
   @Override
   public List<Poistettu> findPoistetutHakukohdeViitteet(LocalDateTime start, LocalDateTime end) {
@@ -100,17 +104,29 @@ public class PoistettuDAOImpl implements PoistettuDAO {
 
   private List<Poistettu> doFindParents(
       String tableName, String parentIdFieldName, String tunnisteFieldName, Collection<Long> ids) {
-    String sqlTemplate =
-        """
-        select distinct on (id) id, %s as parentId, %s as tunniste from %s
-        where id in (:ids)""";
-    String sql = String.format(sqlTemplate, parentIdFieldName, tunnisteFieldName, tableName);
-    Query query = entityManager.createNativeQuery(sql).setParameter("ids", ids);
-    @SuppressWarnings("unchecked")
-    List<Object[]> resultList = (List<Object[]>) query.getResultList();
-    return resultList.stream()
-        .map(Poistettu::new)
-        .map(p -> p.setDeletedItself(false))
-        .collect(Collectors.toList());
+    try {
+      Collection<Long> nonNullIds = ids.stream().filter(Objects::nonNull).toList();
+      String sqlTemplate =
+          """
+              select distinct on (id) id, %s as parentId, %s as tunniste from %s
+              where id in (:ids)""";
+      String sql = String.format(sqlTemplate, parentIdFieldName, tunnisteFieldName, tableName);
+      Query query = entityManager.createNativeQuery(sql).setParameter("ids", nonNullIds);
+      @SuppressWarnings("unchecked")
+      List<Object[]> resultList = (List<Object[]>) query.getResultList();
+      return resultList.stream()
+          .map(Poistettu::new)
+          .map(p -> p.setDeletedItself(false))
+          .collect(Collectors.toList());
+    } catch (Exception e) {
+      LOG.error(
+          "Virhe haettaessa tietoja parametreille {}, {}, {}, {}:",
+          tableName,
+          parentIdFieldName,
+          tunnisteFieldName,
+          ids,
+          e);
+      throw e;
+    }
   }
 }

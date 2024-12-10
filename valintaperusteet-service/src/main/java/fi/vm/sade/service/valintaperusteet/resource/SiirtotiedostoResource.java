@@ -59,8 +59,12 @@ public class SiirtotiedostoResource {
       summary =
           "Luo siirtotiedostot annetulla aikavälillä luoduista / muutetuista valintaperusteista hakukohteittain")
   public ResponseEntity<String> createByTimeRange(
-      @Parameter(description = "Alkuaika") @RequestParam(required = false) String startDatetime,
-      @Parameter(description = "Loppuaika") @RequestParam(required = false) String endDatetime) {
+      @Parameter(description = "Alkuaika", example = "2024-08-01T00:00:00")
+          @RequestParam(required = false)
+          String startDatetime,
+      @Parameter(description = "Loppuaika", example = "2024-11-13T00:00:00")
+          @RequestParam(required = false)
+          String endDatetime) {
     LocalDateTime start =
         parseDateTime(
             startDatetime,
