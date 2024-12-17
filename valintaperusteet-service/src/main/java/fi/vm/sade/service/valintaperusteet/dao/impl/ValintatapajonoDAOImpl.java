@@ -11,9 +11,9 @@ import fi.vm.sade.service.valintaperusteet.model.QValintatapajono;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
+import jakarta.persistence.EntityManager;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -42,8 +42,6 @@ public class ValintatapajonoDAOImpl extends AbstractJpaDAOImpl<Valintatapajono, 
             .leftJoin(jono.hakijaryhmat, hv)
             .fetchJoin()
             .leftJoin(hv.hakijaryhma)
-            .fetchJoin()
-            .leftJoin(jono.valinnanVaihe)
             .fetchJoin()
             .where(valinnanVaihe.oid.eq(oid))
             .distinct()

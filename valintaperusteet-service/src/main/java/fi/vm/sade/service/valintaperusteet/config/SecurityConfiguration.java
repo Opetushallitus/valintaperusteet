@@ -2,9 +2,9 @@ package fi.vm.sade.service.valintaperusteet.config;
 
 import fi.vm.sade.java_utils.security.OpintopolkuCasAuthenticationFilter;
 import fi.vm.sade.javautils.kayttooikeusclient.OphUserDetailsServiceImpl;
-import org.jasig.cas.client.session.SingleSignOutFilter;
-import org.jasig.cas.client.validation.Cas20ProxyTicketValidator;
-import org.jasig.cas.client.validation.TicketValidator;
+import org.apereo.cas.client.session.SingleSignOutFilter;
+import org.apereo.cas.client.validation.Cas20ProxyTicketValidator;
+import org.apereo.cas.client.validation.TicketValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,19 +17,20 @@ import org.springframework.security.cas.ServiceProperties;
 import org.springframework.security.cas.authentication.CasAuthenticationProvider;
 import org.springframework.security.cas.web.CasAuthenticationEntryPoint;
 import org.springframework.security.cas.web.CasAuthenticationFilter;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 
 @Profile("!dev")
 @Configuration
 @Order(2)
 @EnableMethodSecurity
 @EnableWebSecurity
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class SecurityConfiguration {
   private static final Logger LOG = LoggerFactory.getLogger(SecurityConfiguration.class);
   private Environment environment;
 
@@ -80,10 +81,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   //
 
   @Bean
-  public CasAuthenticationFilter casAuthenticationFilter() throws Exception {
+  public CasAuthenticationFilter casAuthenticationFilter(
+      AuthenticationConfiguration authenticationConfiguration) throws Exception {
     OpintopolkuCasAuthenticationFilter casAuthenticationFilter =
         new OpintopolkuCasAuthenticationFilter(serviceProperties());
-    casAuthenticationFilter.setAuthenticationManager(authenticationManager());
+    casAuthenticationFilter.setAuthenticationManager(
+        authenticationConfiguration.getAuthenticationManager());
     casAuthenticationFilter.setFilterProcessesUrl("/j_spring_cas_security_check");
     return casAuthenticationFilter;
   }
@@ -113,43 +116,48 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     return casAuthenticationEntryPoint;
   }
 
-  @Override
-  protected void configure(HttpSecurity http) throws Exception {
-    http.headers()
-        .disable()
-        .csrf()
-        .disable()
-        .authorizeHttpRequests()
-        .antMatchers(
-            "/buildversion.txt",
-            "/actuator/health",
-            "/v3/api-docs",
-            "/v3/api-docs/**",
-            "/swagger",
-            "/swagger/**",
-            "/swagger-ui/**",
-            "/swagger-ui.html",
-            "/webjars/swagger-ui/**",
-            "/index.html",
-            "/")
-        .permitAll()
-        .anyRequest()
-        .authenticated()
-        .and()
-        .addFilter(casAuthenticationFilter())
-        .exceptionHandling()
-        .authenticationEntryPoint(casAuthenticationEntryPoint())
-        .and()
-        .addFilterBefore(singleSignOutFilter(), CasAuthenticationFilter.class);
-  }
+  @Bean
+  public SecurityFilterChain filterChain(
+      HttpSecurity http, CasAuthenticationFilter casAuthenticationFilter) throws Exception {
 
-  @Override
-  public void configure(WebSecurity web) throws Exception {
-    web.ignoring().antMatchers("/v3/api-docs/**", "/swagger-ui/**");
-  }
+    HttpSessionRequestCache requestCache = new HttpSessionRequestCache();
+    requestCache.setMatchingRequestParameterName(null);
 
-  @Override
-  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-    auth.authenticationProvider(casAuthenticationProvider());
+    http.headers(AbstractHttpConfigurer::disable)
+        .csrf(AbstractHttpConfigurer::disable)
+        .authorizeHttpRequests(
+            (authorizeHttpRequests) ->
+                authorizeHttpRequests
+                    .requestMatchers("/buildversion.txt")
+                    .permitAll()
+                    .requestMatchers("/actuator/health")
+                    .permitAll()
+                    .requestMatchers("/v3/api-docs")
+                    .permitAll()
+                    .requestMatchers("/v3/api-docs/**")
+                    .permitAll()
+                    .requestMatchers("/swagger")
+                    .permitAll()
+                    .requestMatchers("/swagger**")
+                    .permitAll()
+                    .requestMatchers("/swagger-ui/index.html")
+                    .permitAll()
+                    .requestMatchers("/swagger-ui/**")
+                    .permitAll()
+                    .requestMatchers("/swagger-ui.html")
+                    .permitAll()
+                    .requestMatchers("/webjars/swagger-ui/**")
+                    .permitAll()
+                    .requestMatchers("/index.html")
+                    .permitAll()
+                    .requestMatchers("/")
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated())
+        .addFilter(casAuthenticationFilter)
+        .exceptionHandling(eh -> eh.authenticationEntryPoint(casAuthenticationEntryPoint()))
+        .addFilterBefore(singleSignOutFilter(), CasAuthenticationFilter.class)
+        .requestCache(cache -> cache.requestCache(requestCache));
+    return http.build();
   }
 }

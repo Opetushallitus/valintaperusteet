@@ -4,9 +4,10 @@ import static org.dbunit.database.DatabaseConfig.FEATURE_ALLOW_EMPTY_FIELDS;
 import static org.dbunit.database.DatabaseConfig.PROPERTY_DATATYPE_FACTORY;
 
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
+import jakarta.persistence.EntityManager;
 import java.sql.Connection;
 import java.util.Collections;
-import javax.persistence.EntityManager;
+import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.DatabaseSequenceFilter;
 import org.dbunit.database.IDatabaseConnection;
@@ -17,7 +18,7 @@ import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.ext.postgresql.PostgresqlDataTypeFactory;
 import org.dbunit.operation.DatabaseOperation;
 import org.dbunit.operation.TransactionOperation;
-import org.hibernate.internal.SessionImpl;
+import org.hibernate.Session;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
@@ -60,20 +61,28 @@ public class ValinnatJTACleanInsertTestExecutionListener
               .getBean(org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.class);
 
       EntityManager entityManager = emf.getObject().createEntityManager();
-      SessionImpl session = (SessionImpl) entityManager.getDelegate();
-      Connection jdbcConn = session.connection();
-      IDatabaseConnection con = new DatabaseConnection(jdbcConn);
-      con.getConfig().setProperty(PROPERTY_DATATYPE_FACTORY, new PostgresqlDataTypeFactory());
-      con.getConfig().setProperty(FEATURE_ALLOW_EMPTY_FIELDS, true);
-      if (ALL_TABLES_FILTER == null) {
-        ALL_TABLES_FILTER = new DatabaseSequenceFilter(con);
-      }
 
-      kasvataSekvenssiaTormaystenEstamiseksi(jdbcConn);
+      Session session = entityManager.unwrap(Session.class);
+      session.doWork(
+          jdbcConn -> {
+            try {
+              IDatabaseConnection con = new DatabaseConnection(jdbcConn);
+              con.getConfig()
+                  .setProperty(PROPERTY_DATATYPE_FACTORY, new PostgresqlDataTypeFactory());
+              con.getConfig().setProperty(FEATURE_ALLOW_EMPTY_FIELDS, true);
+              if (ALL_TABLES_FILTER == null) {
+                ALL_TABLES_FILTER = new DatabaseSequenceFilter(con);
+              }
 
-      new TransactionOperation(DatabaseOperation.CLEAN_INSERT)
-          .execute(con, new FilteredDataSet(ALL_TABLES_FILTER, replacementDataSet));
-      con.close();
+              kasvataSekvenssiaTormaystenEstamiseksi(jdbcConn);
+
+              new TransactionOperation(DatabaseOperation.CLEAN_INSERT)
+                  .execute(con, new FilteredDataSet(ALL_TABLES_FILTER, replacementDataSet));
+              con.close();
+            } catch (DatabaseUnitException due) {
+              throw new RuntimeException(due);
+            }
+          });
     }
   }
 

@@ -2,9 +2,9 @@ package fi.vm.sade.service.valintaperusteet.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import jakarta.persistence.EntityManagerFactory;
 import java.util.Map;
 import java.util.Properties;
-import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Profile;
-import org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver;
 import org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -64,12 +63,12 @@ public class DatabaseConfiguration {
 
   @Bean
   @DependsOn("flyway")
-  public LocalContainerEntityManagerFactoryBean emf(
+  public LocalContainerEntityManagerFactoryBean entityManagerFactory(
       final DataSource dataSource,
       @Value("${jpa.show-sql}") final String showSql,
       @Value("${jpa.schema-update}") final String schemaUpdate) {
     final LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
-    emf.setLoadTimeWeaver(new InstrumentationLoadTimeWeaver());
+    // emf.setLoadTimeWeaver(new InstrumentationLoadTimeWeaver());
     emf.setDataSource(dataSource);
     emf.setJpaPropertyMap(
         Map.of(

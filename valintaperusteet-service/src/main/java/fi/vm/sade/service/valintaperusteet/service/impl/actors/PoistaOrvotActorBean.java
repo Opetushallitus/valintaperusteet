@@ -4,11 +4,9 @@ import akka.actor.UntypedAbstractActor;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
 import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
-import javax.inject.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Named("PoistaOrvotActorBean")
 @Component
 @org.springframework.context.annotation.Scope(value = "prototype")
 public class PoistaOrvotActorBean extends UntypedAbstractActor {

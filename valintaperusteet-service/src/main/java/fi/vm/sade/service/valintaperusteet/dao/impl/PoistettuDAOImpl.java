@@ -2,12 +2,12 @@ package fi.vm.sade.service.valintaperusteet.dao.impl;
 
 import fi.vm.sade.service.valintaperusteet.dao.PoistettuDAO;
 import fi.vm.sade.service.valintaperusteet.model.Poistettu;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import javax.persistence.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;

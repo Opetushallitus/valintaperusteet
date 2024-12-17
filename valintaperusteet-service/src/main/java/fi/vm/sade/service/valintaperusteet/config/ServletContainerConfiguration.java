@@ -15,8 +15,8 @@ public class ServletContainerConfiguration {
 
   /**
    * Konfiguraatio kun palvelua ajetaan HTTPS proxyn läpi. Käytännössä tämä muuttaa {@link
-   * javax.servlet.ServletRequest#getScheme()} palauttamaan `https` jolloin palvelun kautta luodut
-   * urlit muodostuvat oikein.
+   * jakarta.persistence.servlet.ServletRequest#getScheme()} palauttamaan `https` jolloin palvelun
+   * kautta luodut urlit muodostuvat oikein.
    *
    * <p>Aktivointi: `valintaperusteet.uses-ssl-proxy` arvoon `true`.
    *

@@ -114,6 +114,7 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
     Hakijaryhma edellinenHakijaryhma =
         hakijaryhmaDAO.haeValintaryhmanViimeinenHakijaryhma(valintaryhmaOid);
     Hakijaryhma hakijaryhma = modelMapper.map(dto, Hakijaryhma.class);
+    hakijaryhma.setId(null);
     hakijaryhma.setOid(oidService.haeHakijaryhmaOid());
     hakijaryhma.setValintaryhma(valintaryhma);
     hakijaryhma.setKaytaKaikki(dto.isKaytaKaikki());

@@ -1,8 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
-import javax.persistence.Cacheable;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import jakarta.persistence.Cacheable;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "syotettavanarvonkoodi")

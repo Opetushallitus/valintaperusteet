@@ -1,6 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @MappedSuperclass
 public abstract class Konvertteriparametri extends BaseEntity {

@@ -21,11 +21,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-  
 
-      - name: Set up JDK 17
+      - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
-          distribution: 'temurin'
+          java-version: '21'
+          distribution: 'corretto'
 
       - uses: szenius/set-timezone@v1.0
         with:
@@ -35,7 +35,7 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ github.token }}
-        run: mvn clean spotless:check package sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=opetushallitus -Dsonar.projectKey=Opetushallitus_valintaperusteet -B -Dbranch=${GITHUB_REF_NAME} -Drevision=${GITHUB_SHA} -DbuildNumber=${GITHUB_RUN_NUMBER}
+        run: mvn clean spotless:check package sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=opetushallitus -Dsonar.projectKey=Opetushallitus_valintaperusteet -B -Dbranch=${GITHUB_REF_NAME} -Drevision=${GITHUB_SHA} -DbuildNumber=${GITHUB_RUN_NUMBER} --settings settings.xml
 
       - uses: actions/cache@v4
         id: restore-build
@@ -80,7 +80,7 @@ jobs:
           export ARTIFACT_NAME="valintaperusteet-service"
           mv valintaperusteet-service/target/valintaperusteet-service-exec.jar $DOCKER_BUILD_DIR/artifact/${ARTIFACT_NAME}.jar
           cp -vr src/main/resources/oph-configuration $DOCKER_BUILD_DIR/config/
-          export BASE_IMAGE="baseimage-fatjar-openjdk17:master"
+          export BASE_IMAGE="baseimage-fatjar-openjdk21:master"
           ./ci-tools/common/pull-image.sh
           ./ci-tools/github-build/build-fatjar.sh $ARTIFACT_NAME
           ./ci-tools/github-build/upload-image.sh $ARTIFACT_NAME
@@ -90,7 +90,7 @@ jobs:
           export ARTIFACT_NAME="ovara-valintaperusteet"
           mv ovara-valintaperusteet/target/ovara-valintaperusteet.jar $DOCKER_BUILD_DIR/artifact/${ARTIFACT_NAME}.jar
           cp -vr ovara-valintaperusteet/src/main/resources/oph-configuration $DOCKER_BUILD_DIR/config/
-          export BASE_IMAGE="baseimage-fatjar-openjdk17:master"
+          export BASE_IMAGE="baseimage-fatjar-openjdk21:master"
           ./ci-tools/common/pull-image.sh
           ./ci-tools/github-build/build-fatjar.sh $ARTIFACT_NAME
           ./ci-tools/github-build/upload-image.sh $ARTIFACT_NAME
@@ -114,10 +114,10 @@ jobs:
             ovara-valintaperusteet/target
           key: ${{ github.sha }}
 
-      - name: Set up JDK 17
+      - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'temurin'
 
       - name: Deploy jar library
@@ -129,4 +129,4 @@ jobs:
         run: |
           git clone https://github.com/Opetushallitus/ci-tools.git
           source ci-tools/common/setup-tools.sh
-          mvn deploy -B -pl fi.vm.sade.valintaperusteet:valintaperusteet,valintaperusteet-domain,valintaperusteet-api,valintaperusteet-laskenta -DskipTests --settings ci-tools/common/maven-settings.xml
+          mvn deploy -B -pl fi.vm.sade.valintaperusteet:valintaperusteet,valintaperusteet-domain,valintaperusteet-api,valintaperusteet-laskenta -DskipTests --settings settings.xml

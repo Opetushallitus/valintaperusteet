@@ -1,7 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
-import javax.persistence.*;
-import javax.validation.constraints.Min;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 
 @Entity
 @Table(name = "funktioargumentti")

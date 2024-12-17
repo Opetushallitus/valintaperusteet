@@ -22,6 +22,7 @@ public class ValintatapajonoDAOTest extends WithSpringBoot {
   @Test
   public void testFindByValinnanvaihe() {
     List<Valintatapajono> jonot = valintatapajonoDAO.findByValinnanVaihe("1");
+    System.out.println(jonot.get(0).getValinnanVaihe());
     assertEquals(5, jonot.size());
   }
 }
