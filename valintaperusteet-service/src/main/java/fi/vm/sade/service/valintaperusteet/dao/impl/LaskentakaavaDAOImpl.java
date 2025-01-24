@@ -8,12 +8,21 @@ import fi.vm.sade.service.valintaperusteet.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.LaskentakaavaDAO;
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi;
 import fi.vm.sade.service.valintaperusteet.model.*;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class LaskentakaavaDAOImpl extends AbstractJpaDAOImpl<Laskentakaava, Long>
     implements LaskentakaavaDAO {
+
+  @Autowired EntityManager em;
+
   @Override
   public Laskentakaava getLaskentakaava(Long id) {
     QLaskentakaava lk = QLaskentakaava.laskentakaava;
@@ -91,5 +100,25 @@ public class LaskentakaavaDAOImpl extends AbstractJpaDAOImpl<Laskentakaava, Long
   @Override
   public void flush() {
     getEntityManager().flush();
+  }
+
+  @Override
+  @Transactional
+  public Optional<Long> migrateLaskentakaavat() {
+    QLaskentakaava lk = QLaskentakaava.laskentakaava;
+    Collection<Laskentakaava> laskentakaavat =
+        queryFactory()
+            .selectFrom(lk)
+            .where(lk.kaava.isNull())
+            .setLockMode(LockModeType.PESSIMISTIC_WRITE)
+            .setHint("jakarta.persistence.lock.timeout", -2)
+            .limit(1)
+            .fetch();
+    if (laskentakaavat.size() == 0) {
+      return Optional.empty();
+    }
+    laskentakaavat.forEach(kaava -> kaava.migrateKaava());
+
+    return Optional.of(laskentakaavat.iterator().next().getId());
   }
 }

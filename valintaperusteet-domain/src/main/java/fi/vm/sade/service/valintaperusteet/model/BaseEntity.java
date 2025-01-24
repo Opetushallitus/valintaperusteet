@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.io.Serializable;
 
@@ -13,6 +14,7 @@ public class BaseEntity implements Serializable {
   @Id
   @Column(name = ID_COLUMN_NAME, unique = true, nullable = false)
   @GeneratedValue
+  @JsonIgnore
   private Long id;
 
   @Version
