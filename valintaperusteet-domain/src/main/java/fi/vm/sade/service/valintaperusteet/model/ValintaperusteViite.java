@@ -1,5 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
 import jakarta.persistence.*;
 
@@ -28,6 +30,7 @@ public class ValintaperusteViite extends BaseEntity implements Comparable<Valint
 
   @JoinColumn(name = "funktiokutsu_id", nullable = false)
   @ManyToOne(optional = false)
+  @JsonBackReference
   private Funktiokutsu funktiokutsu;
 
   @Column(name = "on_pakollinen", nullable = false)
@@ -44,6 +47,7 @@ public class ValintaperusteViite extends BaseEntity implements Comparable<Valint
 
   @JoinColumn(name = "tekstiryhma_id", nullable = true)
   @ManyToOne(fetch = FetchType.LAZY, optional = true)
+  @JsonSerialize(using = TekstiRyhmaSerializer.class)
   private TekstiRyhma kuvaukset;
 
   // VT-854 mahdollistetaan syötettävien arvojen pistesyöttö ilman laskentaa
@@ -117,6 +121,7 @@ public class ValintaperusteViite extends BaseEntity implements Comparable<Valint
   }
 
   @Transient
+  @JsonBackReference
   public String getOsallistuminenTunniste() {
     String osallistuminenTunniste = null;
 

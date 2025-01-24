@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import fi.vm.sade.service.valintaperusteet.dto.model.Kieli;
 import jakarta.persistence.*;
 
@@ -19,6 +20,7 @@ public class LokalisoituTeksti extends BaseEntity {
 
   @JoinColumn(name = "tekstiryhma_id", nullable = false)
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JsonBackReference
   private TekstiRyhma ryhma;
 
   public String getTeksti() {

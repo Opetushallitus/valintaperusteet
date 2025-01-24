@@ -894,10 +894,14 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     Laskentakaava laskentakaava = haeLaskentakaava(id);
     if (laskentakaava != null) {
       laskentakaavaIds.add(laskentakaava.getId());
-      Funktiokutsu funktiokutsu =
-          haeFunktiokutsuRekursiivisesti(
-              laskentakaava.getFunktiokutsu().getId(), laajennaAlakaavat, laskentakaavaIds);
-      laskentakaava.setFunktiokutsu(funktiokutsu);
+
+      if (laskentakaava.getFunktiokutsu().getId() != null) {
+        Funktiokutsu funktiokutsu =
+            haeFunktiokutsuRekursiivisesti(
+                laskentakaava.getFunktiokutsu().getId(), laajennaAlakaavat, laskentakaavaIds);
+        laskentakaava.setFunktiokutsu(funktiokutsu);
+      }
+
       genericDAO.detach(laskentakaava);
     }
     return laskentakaava;
