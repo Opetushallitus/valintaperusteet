@@ -1,21 +1,13 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.*;
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi;
-import jakarta.persistence.Cacheable;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "laskentakaava")
@@ -55,6 +47,11 @@ public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "laskentakaava", cascade = CascadeType.PERSIST)
   private Set<Jarjestyskriteeri> jarjestyskriteerit = new HashSet<Jarjestyskriteeri>();
+
+  @JdbcTypeCode(SqlTypes.JSON)
+  @Column(name = "funktiokutsu", columnDefinition = "jsonb")
+  @Convert(converter = JsonNodeConverter.class)
+  private Funktiokutsu kaava;
 
   public Boolean getOnLuonnos() {
     return onLuonnos;
@@ -97,11 +94,15 @@ public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
   }
 
   public Funktiokutsu getFunktiokutsu() {
+    if (this.kaava != null) {
+      return this.kaava;
+    }
     return funktiokutsu;
   }
 
   public void setFunktiokutsu(Funktiokutsu funktiokutsu) {
     this.funktiokutsu = funktiokutsu;
+    this.kaava = funktiokutsu;
   }
 
   public Funktiotyyppi getTyyppi() {
@@ -126,6 +127,10 @@ public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
 
   public void setKopiot(Set<Laskentakaava> kopiot) {
     this.kopiot = kopiot;
+  }
+
+  public void migrateKaava() {
+    this.kaava = this.funktiokutsu;
   }
 
   @Override
@@ -162,5 +167,29 @@ public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
 
   public void setKopioLaskentakaavasta(Laskentakaava kopioLaskentakaavasta) {
     this.kopioLaskentakaavasta = kopioLaskentakaavasta;
+  }
+
+  @Converter(autoApply = true)
+  static class JsonNodeConverter implements AttributeConverter<Funktiokutsu, String> {
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    @Override
+    public String convertToDatabaseColumn(Funktiokutsu funktiokutsu) {
+      try {
+        return objectMapper.writeValueAsString(funktiokutsu);
+      } catch (JsonProcessingException e) {
+        throw new RuntimeException("Error while serializing JsonNode to JSON", e);
+      }
+    }
+
+    @Override
+    public Funktiokutsu convertToEntityAttribute(String dbData) {
+      try {
+        return dbData == null ? null : objectMapper.readValue(dbData, Funktiokutsu.class);
+      } catch (JsonProcessingException e) {
+        throw new RuntimeException("Error while deserializing JSON to JsonNode", e);
+      }
+    }
   }
 }
