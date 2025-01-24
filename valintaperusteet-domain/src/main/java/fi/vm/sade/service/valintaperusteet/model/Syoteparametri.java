@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -14,6 +15,7 @@ public class Syoteparametri extends BaseEntity {
 
   @JoinColumn(name = "funktiokutsu_id", nullable = false)
   @ManyToOne(optional = false)
+  @JsonBackReference
   private Funktiokutsu funktiokutsu;
 
   public String getAvain() {

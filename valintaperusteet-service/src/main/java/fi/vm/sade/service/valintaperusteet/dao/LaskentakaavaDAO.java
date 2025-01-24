@@ -3,6 +3,7 @@ package fi.vm.sade.service.valintaperusteet.dao;
 import com.querydsl.core.Tuple;
 import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
 import java.util.List;
+import java.util.Optional;
 
 public interface LaskentakaavaDAO extends JpaDAO<Laskentakaava, Long> {
   Laskentakaava getLaskentakaava(Long id);
@@ -22,6 +23,8 @@ public interface LaskentakaavaDAO extends JpaDAO<Laskentakaava, Long> {
       String valintaryhmaOid,
       String hakukohdeOid,
       fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi tyyppi);
+
+  Optional<Long> migrateNextLaskentakaava();
 
   void flush();
 }
