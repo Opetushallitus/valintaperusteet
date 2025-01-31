@@ -61,9 +61,8 @@ public class PoistettuDAOImpl implements PoistettuDAO {
     String sqlTemplate =
         """
         select distinct on (id) id, %s as parentId, %s from %s hist
-          where upper(hist.system_time) is not null and
-            upper(hist.system_time) >= :startDateTime and
-            upper(hist.system_time) <  :endDateTime and
+          where hist.update_time >= :startDateTime and
+            hist.update_time < :endDateTime and
             not exists (select 1 from %s where id = hist.id)""";
     String tunnisteSelectPart =
         "tunniste".equals(tunnisteFieldName)
