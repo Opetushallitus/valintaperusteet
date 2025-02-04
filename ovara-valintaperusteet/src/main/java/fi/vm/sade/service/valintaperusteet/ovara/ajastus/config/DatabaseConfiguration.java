@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Profile;
-import org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver;
 import org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -69,7 +68,7 @@ public class DatabaseConfiguration {
       @Value("${jpa.show-sql}") final String showSql,
       @Value("${jpa.schema-update}") final String schemaUpdate) {
     final LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
-    emf.setLoadTimeWeaver(new InstrumentationLoadTimeWeaver());
+    // emf.setLoadTimeWeaver(new InstrumentationLoadTimeWeaver());
     emf.setDataSource(dataSource);
     emf.setJpaPropertyMap(
         Map.of(
