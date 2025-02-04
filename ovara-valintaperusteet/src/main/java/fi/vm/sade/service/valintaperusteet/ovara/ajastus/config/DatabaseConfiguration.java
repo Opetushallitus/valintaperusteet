@@ -63,7 +63,7 @@ public class DatabaseConfiguration {
 
   @Bean
   @DependsOn("flyway")
-  public LocalContainerEntityManagerFactoryBean emf(
+  public LocalContainerEntityManagerFactoryBean entityManagerFactory(
       final DataSource dataSource,
       @Value("${jpa.show-sql}") final String showSql,
       @Value("${jpa.schema-update}") final String schemaUpdate) {
