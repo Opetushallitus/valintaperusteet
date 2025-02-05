@@ -9,7 +9,7 @@ import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.dao.PoistettuDAO;
 import fi.vm.sade.service.valintaperusteet.dto.HakuparametritDTO;
 import fi.vm.sade.service.valintaperusteet.dto.PoistetutDTO;
-import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteetDTO;
+import fi.vm.sade.service.valintaperusteet.dto.SiirtotiedostoValintaperusteetDTO;
 import fi.vm.sade.service.valintaperusteet.model.Poistettu;
 import fi.vm.sade.service.valintaperusteet.service.SiirtotiedostoService;
 import fi.vm.sade.service.valintaperusteet.service.ValintaperusteService;
@@ -50,13 +50,11 @@ public class SiirtotiedostoServiceImpl implements SiirtotiedostoService {
     List<String> siirtotiedostoKeys = new ArrayList<>();
     String operationId = UUID.randomUUID().toString();
     if (!oids.isEmpty()) {
-      Iterator<List<String>> partitionIterator =
-          Lists.partition(oids, siirtotiedostoS3Client.getMaxHakukohdeCountInFile()).iterator();
-      while (partitionIterator.hasNext()) {
-        List<HakuparametritDTO> dtoList =
-            partitionIterator.next().stream().map(this::createDto).collect(toList());
-        List<ValintaperusteetDTO> valintaperusteet =
-            valintaperusteService.haeValintaperusteet(dtoList);
+      for (List<String> strings :
+          Lists.partition(oids, siirtotiedostoS3Client.getMaxHakukohdeCountInFile())) {
+        List<HakuparametritDTO> dtoList = strings.stream().map(this::createDto).collect(toList());
+        List<SiirtotiedostoValintaperusteetDTO> valintaperusteet =
+            valintaperusteService.haeSiirtotiedostoValintaperusteet(dtoList);
         siirtotiedostoKeys.add(
             siirtotiedostoS3Client.createSiirtotiedosto(
                 valintaperusteet, operationId, siirtotiedostoKeys.size() + 1));
