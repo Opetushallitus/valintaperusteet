@@ -115,7 +115,8 @@ public class SiirtotiedostoServiceImpl implements SiirtotiedostoService {
 
     final AtomicInteger poistetutCount = new AtomicInteger(0);
 
-    List<List<Poistettu>> hakukohdeViiteChunks = Lists.partition(hakukohdeViitteet, siirtotiedostoS3Client.getMaxHakukohdeCountInFile());
+    List<List<Poistettu>> hakukohdeViiteChunks =
+        Lists.partition(hakukohdeViitteet, siirtotiedostoS3Client.getMaxHakukohdeCountInFile());
     hakukohdeViiteChunks.forEach(
         hakukohdeViiteChunk -> {
           List<PoistetutDTO.HakukohdeViite> poistetutViitteet =
