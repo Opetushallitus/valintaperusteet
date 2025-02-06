@@ -95,6 +95,14 @@ public class SiirtotiedostoServiceImpl implements SiirtotiedostoService {
     List<Poistettu> valintaPerusteet =
         poistettuDAO.findPoistetutValintaperusteet(startDatetime, endDatetime);
 
+    logger.info(
+        "Perustiedot haettu, poistettuja hakukohdeviitteitä {}, valinnanvaiheita {}, valintatapajonoja {}, valintakokeita {} ja valintaperusteita {} kpl.",
+        poistetutHakukohdeViitteet.size(),
+        poistetutValinnanvaiheet.size(),
+        valintatapaJonot.size(),
+        valintaKokeet.size(),
+        valintaPerusteet.size());
+
     List<Long> requiredParentValinnanvaiheIds =
         new ArrayList<>(valintatapaJonot.stream().map(Poistettu::getParentId).toList());
     requiredParentValinnanvaiheIds.addAll(
@@ -117,6 +125,10 @@ public class SiirtotiedostoServiceImpl implements SiirtotiedostoService {
 
     List<List<Poistettu>> hakukohdeViiteChunks =
         Lists.partition(hakukohdeViitteet, siirtotiedostoS3Client.getMaxHakukohdeCountInFile());
+    logger.info(
+        "Käsitellään {} hakukohdeviitettä {} palasessa.",
+        hakukohdeViitteet.size(),
+        hakukohdeViiteChunks.size());
     hakukohdeViiteChunks.forEach(
         hakukohdeViiteChunk -> {
           List<PoistetutDTO.HakukohdeViite> poistetutViitteet =
