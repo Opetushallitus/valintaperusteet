@@ -16,6 +16,7 @@ import fi.vm.sade.service.valintaperusteet.service.ValintaperusteService;
 import fi.vm.sade.service.valintaperusteet.util.SiirtotiedostoS3Client;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,16 +62,11 @@ public class SiirtotiedostoServiceImpl implements SiirtotiedostoService {
       }
     }
 
-    PoistetutDTO poistetut = findPoistetut(startDatetime, endDatetime);
-    if (!poistetut.getPoistetut().isEmpty()) {
-      siirtotiedostoKeys.add(
-          siirtotiedostoS3Client.createSiirtotiedosto(
-              poistetut.getPoistetut(), operationId, siirtotiedostoKeys.size() + 1));
-    }
+    int poistetutCount = findPoistetut(startDatetime, endDatetime, siirtotiedostoKeys, operationId);
 
     logger.info(
         "Kirjoitettiin yhteensä {} hakukohteen valintaperusteet {} siirtotiedostoon, operaatioId: {}",
-        oids.size() + poistetut.getPoistetut().size(),
+        oids.size() + poistetutCount,
         siirtotiedostoKeys.size(),
         operationId);
 
@@ -78,12 +74,16 @@ public class SiirtotiedostoServiceImpl implements SiirtotiedostoService {
     JsonArray keyJson = new JsonArray();
     siirtotiedostoKeys.forEach(keyJson::add);
     result.add("keys", keyJson);
-    result.addProperty("total", oids.size() + poistetut.getPoistetut().size());
+    result.addProperty("total", oids.size() + poistetutCount);
     result.addProperty("success", true);
     return result.toString();
   }
 
-  private PoistetutDTO findPoistetut(LocalDateTime startDatetime, LocalDateTime endDatetime) {
+  private int findPoistetut(
+      LocalDateTime startDatetime,
+      LocalDateTime endDatetime,
+      List<String> siirtotiedostoKeys,
+      String operationId) {
     List<Poistettu> poistetutHakukohdeViitteet =
         poistettuDAO.findPoistetutHakukohdeViitteet(startDatetime, endDatetime);
     List<Poistettu> poistetutValinnanvaiheet =
@@ -113,61 +113,77 @@ public class SiirtotiedostoServiceImpl implements SiirtotiedostoService {
             poistetutHakukohdeViitteet,
             requiredParentHakukohdeviiteIds);
 
-    List<PoistetutDTO.HakukohdeViite> poistetutViitteet =
-        hakukohdeViitteet.stream()
-            .map(
-                viite -> {
-                  PoistetutDTO.HakukohdeViite hakukohdeViite =
-                      new PoistetutDTO.HakukohdeViite().setHakukohdeOid(viite.getTunniste());
-                  hakukohdeViite.setPoistettuItself(viite.isDeletedItself());
-                  if (!viite.isDeletedItself()) {
-                    // Valinnanvaiheet, hakukohdeviitteellä on vain yksi valinnanvaihe
-                    List<Poistettu> viiteChildren = findChildren(valinnanVaiheet, viite);
-                    if (!viiteChildren.isEmpty()) {
-                      Poistettu vaihe = viiteChildren.iterator().next();
-                      PoistetutDTO.ValinnanVaihe valinnanVaihe =
-                          new PoistetutDTO.ValinnanVaihe().setValinnanVaiheOid(vaihe.getTunniste());
-                      valinnanVaihe.setPoistettuItself(vaihe.isDeletedItself());
-                      if (!vaihe.isDeletedItself()) {
-                        // Valintatapajonot
-                        List<Poistettu> vaiheChildren = findChildren(valintatapaJonot, vaihe);
-                        List<PoistetutDTO.PoistettuOid> jonot =
-                            vaiheChildren.stream()
-                                .map(
-                                    jono ->
-                                        new PoistetutDTO.PoistettuOid().setOid(jono.getTunniste()))
-                                .toList();
-                        // Valintakokeet
-                        vaiheChildren = findChildren(valintaKokeet, vaihe);
-                        List<PoistetutDTO.PoistettuOid> kokeet =
-                            vaiheChildren.stream()
-                                .map(
-                                    koe ->
-                                        new PoistetutDTO.PoistettuOid().setOid(koe.getTunniste()))
-                                .toList();
-                        valinnanVaihe.setValintatapajono(jonot.isEmpty() ? null : jonot);
-                        valinnanVaihe.setValintakoe(kokeet.isEmpty() ? null : kokeet);
-                      }
-                      hakukohdeViite.setValinnanVaihe(valinnanVaihe);
-                    }
-                    // Valintaperusteet
-                    viiteChildren = findChildren(valintaPerusteet, viite);
-                    List<PoistetutDTO.Valintaperuste> perusteet =
-                        viiteChildren.stream()
-                            .map(
-                                peruste ->
-                                    new PoistetutDTO.Valintaperuste()
-                                        .setTunniste(peruste.getTunniste()))
-                            .toList();
-                    hakukohdeViite.setHakukohteenValintaperuste(
-                        perusteet.isEmpty() ? null : perusteet);
-                  }
-                  return hakukohdeViite;
-                })
-            .toList();
-    PoistetutDTO dto = new PoistetutDTO();
-    dto.setPoistetut(poistetutViitteet);
-    return dto;
+    final AtomicInteger poistetutCount = new AtomicInteger(0);
+
+    List<List<Poistettu>> hakukohdeViiteChunks = Lists.partition(hakukohdeViitteet, siirtotiedostoS3Client.getMaxHakukohdeCountInFile());
+    hakukohdeViiteChunks.forEach(
+        hakukohdeViiteChunk -> {
+          List<PoistetutDTO.HakukohdeViite> poistetutViitteet =
+              hakukohdeViiteChunk.stream()
+                  .map(
+                      viite -> {
+                        PoistetutDTO.HakukohdeViite hakukohdeViite =
+                            new PoistetutDTO.HakukohdeViite().setHakukohdeOid(viite.getTunniste());
+                        hakukohdeViite.setPoistettuItself(viite.isDeletedItself());
+                        if (!viite.isDeletedItself()) {
+                          // Valinnanvaiheet, hakukohdeviitteellä on vain yksi valinnanvaihe
+                          List<Poistettu> viiteChildren = findChildren(valinnanVaiheet, viite);
+                          if (!viiteChildren.isEmpty()) {
+                            Poistettu vaihe = viiteChildren.iterator().next();
+                            PoistetutDTO.ValinnanVaihe valinnanVaihe =
+                                new PoistetutDTO.ValinnanVaihe()
+                                    .setValinnanVaiheOid(vaihe.getTunniste());
+                            valinnanVaihe.setPoistettuItself(vaihe.isDeletedItself());
+                            if (!vaihe.isDeletedItself()) {
+                              // Valintatapajonot
+                              List<Poistettu> vaiheChildren = findChildren(valintatapaJonot, vaihe);
+                              List<PoistetutDTO.PoistettuOid> jonot =
+                                  vaiheChildren.stream()
+                                      .map(
+                                          jono ->
+                                              new PoistetutDTO.PoistettuOid()
+                                                  .setOid(jono.getTunniste()))
+                                      .toList();
+                              // Valintakokeet
+                              vaiheChildren = findChildren(valintaKokeet, vaihe);
+                              List<PoistetutDTO.PoistettuOid> kokeet =
+                                  vaiheChildren.stream()
+                                      .map(
+                                          koe ->
+                                              new PoistetutDTO.PoistettuOid()
+                                                  .setOid(koe.getTunniste()))
+                                      .toList();
+                              valinnanVaihe.setValintatapajono(jonot.isEmpty() ? null : jonot);
+                              valinnanVaihe.setValintakoe(kokeet.isEmpty() ? null : kokeet);
+                            }
+                            hakukohdeViite.setValinnanVaihe(valinnanVaihe);
+                          }
+                          // Valintaperusteet
+                          viiteChildren = findChildren(valintaPerusteet, viite);
+                          List<PoistetutDTO.Valintaperuste> perusteet =
+                              viiteChildren.stream()
+                                  .map(
+                                      peruste ->
+                                          new PoistetutDTO.Valintaperuste()
+                                              .setTunniste(peruste.getTunniste()))
+                                  .toList();
+                          hakukohdeViite.setHakukohteenValintaperuste(
+                              perusteet.isEmpty() ? null : perusteet);
+                        }
+                        return hakukohdeViite;
+                      })
+                  .toList();
+          PoistetutDTO poistetut = new PoistetutDTO();
+          poistetut.setPoistetut(poistetutViitteet);
+          if (!poistetut.getPoistetut().isEmpty()) {
+            poistetutCount.addAndGet(poistetut.getPoistetut().size());
+            siirtotiedostoKeys.add(
+                siirtotiedostoS3Client.createSiirtotiedosto(
+                    poistetut.getPoistetut(), operationId, siirtotiedostoKeys.size() + 1));
+          }
+        });
+
+    return poistetutCount.get();
   }
 
   private List<Poistettu> findAllRequiredParents(
