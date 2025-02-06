@@ -35,20 +35,22 @@ public class SiirtotiedostoAjastusService {
       String resultInfo =
           siirtotiedostoServiceImpl.createSiirtotiedostot(
               uusi.getWindowStart().toLocalDateTime(), uusi.getWindowEnd().toLocalDateTime());
-      uusi.setSuccess(true);
       uusi.setInfo(resultInfo);
+      uusi.setSuccess(true);
+      uusi.setRunEnd(OffsetDateTime.now());
+      siirtotiedostoProsessiRepositoryImpl.persist(uusi);
     } catch (Exception e) {
       logger.error(
           "{} Tapahtui virhe muodostettaessa ajastettua siirtotiedostoa:",
           uusi.getExecutionUuid(),
           e);
-      uusi.setSuccess(false);
-      uusi.setErrorMessage(e.getMessage());
       uusi.setInfo("{}");
-    } finally {
+      uusi.setErrorMessage(e.getMessage());
+      uusi.setSuccess(false);
       uusi.setRunEnd(OffsetDateTime.now());
       siirtotiedostoProsessiRepositoryImpl.persist(uusi);
     }
+
     return "DONE";
   }
 }
