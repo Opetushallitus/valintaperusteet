@@ -1,7 +1,8 @@
 package fi.vm.sade.service.valintaperusteet.util;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import static fi.vm.sade.service.valintaperusteet.dto.model.SiirtotiedostoConstants.SIIRTOTIEDOSTO_DATETIME_FORMATTER;
+
+import com.google.gson.*;
 import com.google.gson.stream.JsonWriter;
 import fi.vm.sade.valinta.dokumenttipalvelu.SiirtotiedostoPalvelu;
 import fi.vm.sade.valinta.dokumenttipalvelu.dto.ObjectMetadata;
@@ -9,6 +10,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Type;
+import java.util.Date;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +23,18 @@ import org.springframework.stereotype.Component;
 public class SiirtotiedostoS3Client {
   private static final Logger logger =
       LoggerFactory.getLogger(SiirtotiedostoS3Client.class.getName());
-  private static final Gson gson = new GsonBuilder().create();
+
+  private static JsonSerializer<Date> dateJsonSerializer =
+      new JsonSerializer<Date>() {
+        @Override
+        public JsonElement serialize(Date src, Type typeOfSrc, JsonSerializationContext context) {
+          String dateStr = SIIRTOTIEDOSTO_DATETIME_FORMATTER.format(src.toInstant());
+          return src == null ? null : new JsonPrimitive(dateStr);
+        }
+      };
+
+  private static final Gson gson =
+      new GsonBuilder().registerTypeAdapter(Date.class, dateJsonSerializer).create();
 
   private final SiirtotiedostoPalvelu siirtotiedostoPalvelu;
   private final int maxHakukohdeCountInFile;
