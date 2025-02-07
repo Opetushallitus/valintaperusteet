@@ -3,13 +3,9 @@ package fi.vm.sade.service.valintaperusteet.util;
 import static fi.vm.sade.service.valintaperusteet.dto.model.SiirtotiedostoConstants.SIIRTOTIEDOSTO_DATETIME_FORMATTER;
 
 import com.google.gson.*;
-import com.google.gson.stream.JsonWriter;
 import fi.vm.sade.valinta.dokumenttipalvelu.SiirtotiedostoPalvelu;
 import fi.vm.sade.valinta.dokumenttipalvelu.dto.ObjectMetadata;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.List;
@@ -51,26 +47,22 @@ public class SiirtotiedostoS3Client {
   }
 
   public String createSiirtotiedosto(List<?> data, String operationId, int operationSubId) {
-    try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-      try (OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream)) {
-        JsonWriter jsonWriter = new JsonWriter(outputStreamWriter);
-        jsonWriter.beginArray();
-        for (Object dto : data) {
-          gson.toJson(gson.toJsonTree(dto), jsonWriter);
-        }
-        jsonWriter.endArray();
-        jsonWriter.close();
-
-        try (ByteArrayInputStream inputStream =
-            new ByteArrayInputStream(outputStream.toByteArray())) {
-          ObjectMetadata result =
-              siirtotiedostoPalvelu.saveSiirtotiedosto(
-                  "valintaperusteet", "hakukohde", "", operationId, operationSubId, inputStream, 2);
-          return result.key;
-        }
-      }
-    } catch (IOException ioe) {
-      throw new RuntimeException("Siirtotiedoston luonti epäonnistui; ", ioe);
+    try {
+      logger.info(
+          "{} {} Tallennetaan siirtotiedosto, koko {}", operationId, operationSubId, data.size());
+      ObjectMetadata result =
+          siirtotiedostoPalvelu.saveSiirtotiedosto(
+              "valintaperusteet",
+              "hakukohde",
+              "",
+              operationId,
+              operationSubId,
+              new ByteArrayInputStream(gson.toJson(data).getBytes()),
+              2);
+      return result.key;
+    } catch (Exception e) {
+      logger.error("Virhe tallennettaessa siirtotiedostoa:", e);
+      throw e;
     }
   }
 
