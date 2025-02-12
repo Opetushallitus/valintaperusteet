@@ -51,9 +51,14 @@ public class SiirtotiedostoServiceImpl implements SiirtotiedostoService {
     List<String> siirtotiedostoKeys = new ArrayList<>();
     String operationId = UUID.randomUUID().toString();
     if (!oids.isEmpty()) {
-      for (List<String> strings :
-          Lists.partition(oids, siirtotiedostoS3Client.getMaxHakukohdeCountInFile())) {
-        List<HakuparametritDTO> dtoList = strings.stream().map(this::createDto).collect(toList());
+      List<List<String>> partitioned =
+          Lists.partition(oids, siirtotiedostoS3Client.getMaxHakukohdeCountInFile());
+      logger.info(
+          "Käsitellään {} muuttuneen hakukohteen tiedot {} palassa.",
+          oids.size(),
+          partitioned.size());
+      for (List<String> oidBatch : partitioned) {
+        List<HakuparametritDTO> dtoList = oidBatch.stream().map(this::createDto).collect(toList());
         List<SiirtotiedostoValintaperusteetDTO> valintaperusteet =
             valintaperusteService.haeSiirtotiedostoValintaperusteet(dtoList);
         siirtotiedostoKeys.add(
