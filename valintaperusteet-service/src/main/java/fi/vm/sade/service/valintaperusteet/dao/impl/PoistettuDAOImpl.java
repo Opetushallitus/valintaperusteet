@@ -83,12 +83,12 @@ public class PoistettuDAOImpl implements PoistettuDAO {
 
   @Override
   public List<Poistettu> findParentHakukohdeviitteet(Collection<Long> ids) {
-    return doFindParents("hakukohde_viite", "null", "hakuoid", ids);
+    return doFindParents("hakukohde_viite", "null", "oid", ids);
   }
 
   @Override
   public List<Poistettu> findParentHakukohdeviitteetFromHistory(Collection<Long> ids) {
-    return doFindParents("hakukohde_viite_history", "null", "hakuoid", ids);
+    return doFindParents("hakukohde_viite_history", "null", "oid", ids);
   }
 
   @Override
