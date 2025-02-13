@@ -27,7 +27,7 @@ object Osasuoritus {
     val arviointiKokoelma: Optional[Json, Vector[Json]] = JsonPath.root.arviointi.arr
     val koulutusmoduuli: JsonPath = JsonPath.root.koulutusmoduuli
     val koulutusmoduulinLaajuudenArvo: Optional[Json, BigDecimal] =
-      koulutusmoduuli.laajuus.arvo.bigDecimal
+      koulutusmoduuli.laajuus.bigDecimal
     val koulutusmoduulinTunnisteenKoodiarvo: Optional[Json, String] =
       koulutusmoduuli.tunniste.koodiarvo.string
     val koulutusmoduulinTunnisteenKoodistoUri: Optional[Json, String] =
