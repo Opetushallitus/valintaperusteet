@@ -9,7 +9,7 @@
 
     <groupId>fi.vm.sade.valintaperusteet</groupId>
     <artifactId>valintaperusteet</artifactId>
-    <version>7.0-BRANCH-SNAPSHOT</version>
+    <version>7.1-BRANCH-SNAPSHOT</version>
 
     <name>Valintaperusteet</name>
     <packaging>pom</packaging>
