@@ -51,7 +51,7 @@ public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
   @JdbcTypeCode(SqlTypes.JSON)
   @Column(name = "funktiokutsu", columnDefinition = "jsonb")
   @Convert(converter = JsonNodeConverter.class)
-  private Funktiokutsu kaava;
+  private FunktiokutsuWrapper kaava;
 
   public Boolean getOnLuonnos() {
     return onLuonnos;
@@ -95,14 +95,14 @@ public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
 
   public Funktiokutsu getFunktiokutsu() {
     if (this.kaava != null) {
-      return this.kaava;
+      return this.kaava.getFunktiokutsu();
     }
     return funktiokutsu;
   }
 
   public void setFunktiokutsu(Funktiokutsu funktiokutsu) {
     this.funktiokutsu = funktiokutsu;
-    this.kaava = funktiokutsu;
+    this.kaava = new FunktiokutsuWrapper(funktiokutsu);
   }
 
   public Funktiotyyppi getTyyppi() {
@@ -130,7 +130,7 @@ public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
   }
 
   public void migrateKaava() {
-    this.kaava = this.funktiokutsu;
+    this.kaava = new FunktiokutsuWrapper(this.funktiokutsu);
   }
 
   @Override
@@ -161,6 +161,20 @@ public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
     }
   }
 
+  /* Hibernate kilahtaa (palauttaa hauista duplikaatteja) jos jsonb-kentässä oleva tyyppi on samalla entiteetti
+   *  joten käytetään wrapper-luokkaa */
+  public static class FunktiokutsuWrapper {
+    private Funktiokutsu funktiokutsu;
+
+    public FunktiokutsuWrapper(Funktiokutsu funktiokutsu) {
+      this.funktiokutsu = funktiokutsu;
+    }
+
+    public Funktiokutsu getFunktiokutsu() {
+      return this.funktiokutsu;
+    }
+  }
+
   public Laskentakaava getKopioLaskentakaavasta() {
     return kopioLaskentakaavasta;
   }
@@ -170,23 +184,25 @@ public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
   }
 
   @Converter(autoApply = true)
-  static class JsonNodeConverter implements AttributeConverter<Funktiokutsu, String> {
+  static class JsonNodeConverter implements AttributeConverter<FunktiokutsuWrapper, String> {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public String convertToDatabaseColumn(Funktiokutsu funktiokutsu) {
+    public String convertToDatabaseColumn(FunktiokutsuWrapper wrapper) {
       try {
-        return objectMapper.writeValueAsString(funktiokutsu);
+        return objectMapper.writeValueAsString(wrapper == null ? null : wrapper.getFunktiokutsu());
       } catch (JsonProcessingException e) {
         throw new RuntimeException("Error while serializing JsonNode to JSON", e);
       }
     }
 
     @Override
-    public Funktiokutsu convertToEntityAttribute(String dbData) {
+    public FunktiokutsuWrapper convertToEntityAttribute(String dbData) {
       try {
-        return dbData == null ? null : objectMapper.readValue(dbData, Funktiokutsu.class);
+        return dbData == null
+            ? null
+            : new FunktiokutsuWrapper(objectMapper.readValue(dbData, Funktiokutsu.class));
       } catch (JsonProcessingException e) {
         throw new RuntimeException("Error while deserializing JSON to JsonNode", e);
       }
