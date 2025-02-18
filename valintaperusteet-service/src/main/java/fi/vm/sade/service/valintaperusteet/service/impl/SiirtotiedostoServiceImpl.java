@@ -67,11 +67,13 @@ public class SiirtotiedostoServiceImpl implements SiirtotiedostoService {
       }
     }
 
-    int poistetutCount = findPoistetut(startDatetime, endDatetime, siirtotiedostoKeys, operationId);
+    // Todo, siivotaan pois Poistettuihin liittyvä logiikka
+    // int poistetutCount = findPoistetut(startDatetime, endDatetime, siirtotiedostoKeys,
+    // operationId);
 
     logger.info(
         "Kirjoitettiin yhteensä {} hakukohteen valintaperusteet {} siirtotiedostoon, operaatioId: {}",
-        oids.size() + poistetutCount,
+        oids.size(),
         siirtotiedostoKeys.size(),
         operationId);
 
@@ -79,7 +81,7 @@ public class SiirtotiedostoServiceImpl implements SiirtotiedostoService {
     JsonArray keyJson = new JsonArray();
     siirtotiedostoKeys.forEach(keyJson::add);
     result.add("keys", keyJson);
-    result.addProperty("total", oids.size() + poistetutCount);
+    result.addProperty("total", oids.size());
     result.addProperty("success", true);
     return result.toString();
   }
