@@ -207,6 +207,13 @@ public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Lo
         " %s >= :startDatetime and %s < :endDatetime", lastModifiedField, lastModifiedField);
   }
 
+  private String lastModifiedHistory(String tablePrefix) {
+    String lastModifiedField =
+        tablePrefix.isEmpty() ? "update_time" : String.format("%s.update_time", tablePrefix);
+    return String.format(
+        " %s >= :startDatetime and %s < :endDatetime", lastModifiedField, lastModifiedField);
+  }
+
   @Override
   public List<String> findNewOrChangedHakukohdeOids(LocalDateTime start, LocalDateTime end) {
     // JPA does not support unions :(
@@ -239,6 +246,33 @@ public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Lo
         select hv.oid as hakukohde_oid from hakukohde_viite hv
           left join hakukohteen_valintaperuste hva on hva.hakukohde_viite_id = hv.id
         where %s
+                  union
+        select oid as hakukohde_oid from hakukohde_viite_history
+        where %s
+                  union
+        select hv.oid as hakukohde_oid from hakukohde_viite hv
+          left join valinnan_vaihe_history vvh on vvh.hakukohde_viite_id = hv.id
+        where %s
+                  union
+        select hv.oid as hakukohde_oid from hakukohde_viite hv
+          left join valinnan_vaihe vv on vv.hakukohde_viite_id = hv.id
+          left join valintatapajono_history vtjh on vtjh.valinnan_vaihe_id = vv.id
+        where %s
+                  union
+        select hv.oid as hakukohde_oid from hakukohde_viite hv
+          left join valinnan_vaihe vv on vv.hakukohde_viite_id = hv.id
+          left join valintatapajono vtj on vtj.valinnan_vaihe_id = vv.id
+          left join jarjestyskriteeri_history jkh on jkh.valintatapajono_id = vtj.id
+        where %s
+                  union
+        select hv.oid as hakukohde_oid from hakukohde_viite hv
+          left join valinnan_vaihe vv on vv.hakukohde_viite_id = hv.id
+          left join valintakoe_history vkh on vkh.valinnan_vaihe_id = vv.id
+        where %s
+                  union
+        select hv.oid as hakukohde_oid from hakukohde_viite hv
+          left join hakukohteen_valintaperuste_history hvah on hvah.hakukohde_viite_id = hv.id
+        where %s
       ) hvs
       """;
     sql =
@@ -249,7 +283,13 @@ public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Lo
             lastModified("vtj"),
             lastModified("jk"),
             lastModified("vk"),
-            lastModified("hva"));
+            lastModified("hva"),
+            lastModifiedHistory(""),
+            lastModifiedHistory("vvh"),
+            lastModifiedHistory("vtjh"),
+            lastModifiedHistory("jkh"),
+            lastModifiedHistory("vkh"),
+            lastModifiedHistory("hvah"));
 
     jakarta.persistence.Query query = getEntityManager().createNativeQuery(sql);
     query = query.setParameter("startDatetime", start).setParameter("endDatetime", end);
