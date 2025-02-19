@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-// @Transactional .. do not change this, otherwise you risk doing lazy loading here
 public class PuuServiceImpl implements PuuService {
   @Autowired private ValintaryhmaDAO valintaryhmaDAO;
 
@@ -30,17 +29,18 @@ public class PuuServiceImpl implements PuuService {
       String valintaryhmaOid) {
     // fetch whole tree in a single query, is at least now faster than individually querying
     List<Valintaryhma> valintaryhmaList;
-    if (hakuOid != null && !hakuOid.isEmpty()) {
-      valintaryhmaList = Arrays.asList(valintaryhmaDAO.findByHakuOidFetchAlavalintaryhmat(hakuOid));
-    } else if (valintaryhmaOid != null && !valintaryhmaOid.isEmpty()) {
+    if (valintaryhmaOid != null && !valintaryhmaOid.isEmpty()) {
       valintaryhmaList =
-          Arrays.asList(valintaryhmaDAO.findAllFetchAlavalintaryhmat(valintaryhmaOid));
+          Collections.singletonList(valintaryhmaDAO.findAllFetchAlavalintaryhmat(valintaryhmaOid));
+    } else if (hakuOid != null && !hakuOid.isEmpty()) {
+      valintaryhmaList =
+          Collections.singletonList(valintaryhmaDAO.findByHakuOidFetchAlavalintaryhmat(hakuOid));
     } else {
       valintaryhmaList = valintaryhmaDAO.findAllFetchAlavalintaryhmat();
     }
-    List<ValintaperustePuuDTO> parentList = new ArrayList<ValintaperustePuuDTO>();
-    Map<Long, ValintaperustePuuDTO> dtoMap = new HashMap<Long, ValintaperustePuuDTO>();
-    List<Valintaryhma> parents = new ArrayList<Valintaryhma>();
+    List<ValintaperustePuuDTO> parentList = new ArrayList<>();
+    Map<Long, ValintaperustePuuDTO> dtoMap = new HashMap<>();
+    List<Valintaryhma> parents = new ArrayList<>();
     for (Valintaryhma valintaryhma : valintaryhmaList) {
       if (kohdejoukko.isEmpty()) {
         if (valintaryhma.getYlavalintaryhma() == null) {
