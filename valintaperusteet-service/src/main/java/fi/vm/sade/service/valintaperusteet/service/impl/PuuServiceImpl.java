@@ -30,7 +30,9 @@ public class PuuServiceImpl implements PuuService {
       String valintaryhmaOid) {
     // fetch whole tree in a single query, is at least now faster than individually querying
     List<Valintaryhma> valintaryhmaList;
-    if (valintaryhmaOid != null && !valintaryhmaOid.isEmpty()) {
+    if (hakuOid != null && !hakuOid.isEmpty()) {
+      valintaryhmaList = Arrays.asList(valintaryhmaDAO.findByHakuOidFetchAlavalintaryhmat(hakuOid));
+    } else if (valintaryhmaOid != null && !valintaryhmaOid.isEmpty()) {
       valintaryhmaList =
           Arrays.asList(valintaryhmaDAO.findAllFetchAlavalintaryhmat(valintaryhmaOid));
     } else {
@@ -99,6 +101,7 @@ public class PuuServiceImpl implements PuuService {
     valintaperustePuuDTO.setOid(valintaryhma.getOid());
     valintaperustePuuDTO.setKohdejoukko(valintaryhma.getKohdejoukko());
     valintaperustePuuDTO.setViimeinenKaynnistyspaiva(valintaryhma.getViimeinenKaynnistyspaiva());
+    valintaperustePuuDTO.setHakuOid(valintaryhma.getHakuoid());
     for (Organisaatio organisaatio : valintaryhma.getOrganisaatiot()) {
       valintaperustePuuDTO.getOrganisaatiot().add(convert(organisaatio));
     }
