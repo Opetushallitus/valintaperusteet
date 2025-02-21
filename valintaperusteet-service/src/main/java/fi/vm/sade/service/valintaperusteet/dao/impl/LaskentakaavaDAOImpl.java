@@ -98,6 +98,17 @@ public class LaskentakaavaDAOImpl extends AbstractJpaDAOImpl<Laskentakaava, Long
   }
 
   @Override
+  public boolean isReferencedByOtherLaskentakaavas(Long laskentakaavaId) {
+    return !getEntityManager()
+        .createNativeQuery(
+            "SELECT id FROM laskentakaava WHERE jsonb_path_query_array(funktiokutsu, 'strict $.**.laskentakaavaChild.id') @@ '$[*]=="
+                + laskentakaavaId.longValue()
+                + "';")
+        .getResultList()
+        .isEmpty();
+  }
+
+  @Override
   public void flush() {
     getEntityManager().flush();
   }
