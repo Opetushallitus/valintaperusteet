@@ -5,8 +5,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 public abstract class Konvertteriparametri extends BaseEntity {
   private String paluuarvo;
 
-  @JsonBackReference
-  private Funktiokutsu funktiokutsu;
+  @JsonBackReference private Funktiokutsu funktiokutsu;
 
   public String getPaluuarvo() {
     return paluuarvo;

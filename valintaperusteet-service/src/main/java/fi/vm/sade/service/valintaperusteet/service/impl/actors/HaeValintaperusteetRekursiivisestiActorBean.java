@@ -6,8 +6,6 @@ import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Status;
 import akka.actor.UntypedAbstractActor;
-import akka.event.Logging;
-import akka.event.LoggingAdapter;
 import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
 import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
@@ -27,6 +25,8 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import javax.inject.Named;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -34,7 +34,8 @@ import org.springframework.stereotype.Component;
 @Component
 @org.springframework.context.annotation.Scope(value = "prototype")
 public class HaeValintaperusteetRekursiivisestiActorBean extends UntypedAbstractActor {
-  LoggingAdapter log = Logging.getLogger(getContext().system(), this);
+  private static Logger LOG =
+      LoggerFactory.getLogger(HaeValintaperusteetRekursiivisestiActorBean.class);
 
   private int funktiokutsuLapset = 0;
 
@@ -50,7 +51,8 @@ public class HaeValintaperusteetRekursiivisestiActorBean extends UntypedAbstract
 
   public HaeValintaperusteetRekursiivisestiActorBean() {}
 
-  private String haeTunniste(String mustache, Map<String, String> hakukohteenValintaperusteet) {
+  private static String haeTunniste(
+      String mustache, Map<String, String> hakukohteenValintaperusteet) {
     final Matcher m = LaskentakaavaServiceImpl.pattern.matcher(mustache);
     String avain = null;
     while (m.find()) {
@@ -65,7 +67,10 @@ public class HaeValintaperusteetRekursiivisestiActorBean extends UntypedAbstract
     }
   }
 
-  private Funktiokutsu kasitteleLoppuun(Funktiokutsu funktiokutsu) {
+  public static Funktiokutsu kasitteleLoppuun(
+      Funktiokutsu funktiokutsu,
+      Map<String, ValintaperusteDTO> valintaperusteet,
+      Map<String, String> hakukohteenValintaperusteet) {
     for (ValintaperusteViite vp : funktiokutsu.getValintaperusteviitteet()) {
       if (Valintaperustelahde.SYOTETTAVA_ARVO.equals(vp.getLahde())
           || fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde
@@ -122,7 +127,7 @@ public class HaeValintaperusteetRekursiivisestiActorBean extends UntypedAbstract
                 min = current;
               }
             } catch (NumberFormatException e) {
-              log.error("Cannot convert min value {} to BigDecimal", av.getMinValue());
+              LOG.error("Cannot convert min value {} to BigDecimal", av.getMinValue());
             }
 
             try {
@@ -134,7 +139,7 @@ public class HaeValintaperusteetRekursiivisestiActorBean extends UntypedAbstract
                 max = current;
               }
             } catch (NumberFormatException e) {
-              log.error("Cannot convert max value {} to BigDecimal", av.getMaxValue());
+              LOG.error("Cannot convert max value {} to BigDecimal", av.getMaxValue());
             }
           }
           valintaperuste.setMin(min != null ? min.toString() : null);
@@ -160,7 +165,7 @@ public class HaeValintaperusteetRekursiivisestiActorBean extends UntypedAbstract
       }
       funktiokutsuLapset--;
       if (funktiokutsuLapset <= 0) {
-        original = kasitteleLoppuun(original);
+        original = kasitteleLoppuun(original, valintaperusteet, hakukohteenValintaperusteet);
         ActorRef par = getContext().parent();
         if (par.equals(actorParent)) {
           par.tell(original, getSelf());
@@ -174,7 +179,7 @@ public class HaeValintaperusteetRekursiivisestiActorBean extends UntypedAbstract
       UusiValintaperusteRekursio viesti = (UusiValintaperusteRekursio) message;
       original = funktiokutsuCache.get(viesti.getId());
       if (null == original) {
-        original = funktiokutsuDAO.getFunktiokutsunValintaperusteet(viesti.getId());
+        // original = funktiokutsuDAO.getFunktiokutsunValintaperusteet(viesti.getId());
         funktiokutsuCache.add(viesti.getId(), original);
       }
       valintaperusteet = viesti.getValintaperusteet();

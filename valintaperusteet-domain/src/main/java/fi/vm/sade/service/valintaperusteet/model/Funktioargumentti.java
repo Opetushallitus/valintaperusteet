@@ -14,8 +14,7 @@ import java.io.IOException;
 
 public class Funktioargumentti extends BaseEntity implements Comparable<Funktioargumentti> {
 
-  @JsonBackReference
-  private Funktiokutsu parent;
+  @JsonBackReference private Funktiokutsu parent;
 
   private Funktiokutsu funktiokutsuChild;
 
