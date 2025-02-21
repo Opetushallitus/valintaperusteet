@@ -139,7 +139,7 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long>
   }
 
   @Override
-  public Valintaryhma findByHakuOidFetchAlavalintaryhmat(String hakuOid) {
+  public List<Valintaryhma> findAllByHakuOidFetchAlavalintaryhmat(String hakuOid) {
     QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
     return queryFactory()
         .selectFrom(valintaryhma)
@@ -148,7 +148,8 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long>
         .leftJoin(valintaryhma.organisaatiot)
         .fetchJoin()
         .where(valintaryhma.hakuoid.eq(hakuOid))
-        .fetchFirst();
+        .distinct()
+        .fetch();
   }
 
   @Override
