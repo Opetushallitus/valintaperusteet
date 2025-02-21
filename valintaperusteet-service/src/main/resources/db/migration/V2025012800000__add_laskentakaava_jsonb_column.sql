@@ -1,6 +1,7 @@
 ALTER TABLE laskentakaava ADD COLUMN IF NOT EXISTS funktiokutsu jsonb;
 ALTER TABLE laskentakaava_history ADD COLUMN IF NOT EXISTS funktiokutsu jsonb;
 
+-- päivitetään laskentakaavataulun historian päivitys koska kenttä lisätty
 create or replace function update_laskentakaava_history() returns trigger
     language plpgsql
 as $$

@@ -26,5 +26,7 @@ public interface LaskentakaavaDAO extends JpaDAO<Laskentakaava, Long> {
 
   Optional<Long> migrateLaskentakaavat();
 
+  boolean isReferencedByOtherLaskentakaavas(Long laskentakaavaId);
+
   void flush();
 }
