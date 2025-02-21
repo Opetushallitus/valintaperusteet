@@ -6,9 +6,11 @@ import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.BeanSerializerModifier;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import fi.vm.sade.service.valintaperusteet.CollectionSerializer;
 import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
 import java.io.IOException;
 import java.util.*;
+import org.hibernate.collection.spi.PersistentSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,15 +23,13 @@ public class ObjectGraphUtil {
 
   static class Context<T> {
     public Collection<T> objects;
-    public Set<Object> visited;
+    public Map<Object, Object> visited;
     public Class<T> clazz;
-    public boolean hasCycles;
 
     public Context(Class<T> clazz) {
       this.objects = new ArrayList<>();
-      this.visited = new HashSet<>();
+      this.visited = new IdentityHashMap<>();
       this.clazz = clazz;
-      this.hasCycles = false;
     }
   }
 
@@ -48,14 +48,14 @@ public class ObjectGraphUtil {
               public void serialize(Object value, JsonGenerator gen, SerializerProvider provider)
                   throws IOException {
                 Context context = CONTEXT.get();
-                if (context.visited.contains(value)) {
-                  context.hasCycles = true;
+                if (context.visited.containsKey(value)) {
+                  provider.defaultSerializeNull(gen);
                   return;
                 }
                 try {
                   if (!value.getClass().getPackageName().startsWith("java.lang")) {
                     // jos ei primitiivinen arvo niin voi aiheuttaa syklejä
-                    context.visited.add(value);
+                    context.visited.put(value, value);
                   }
                   if (context.clazz.isAssignableFrom(value.getClass())) {
                     context.objects.add(value);
@@ -68,17 +68,19 @@ public class ObjectGraphUtil {
             };
           }
         });
+    module.addSerializer(PersistentSet.class, new CollectionSerializer());
     OBJECT_MAPPER.registerModule(module);
     OBJECT_MAPPER.configure(MapperFeature.USE_ANNOTATIONS, false);
+    OBJECT_MAPPER.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
   }
 
   /**
    * Hakee rekursiivisesti objektipuussa olevat halutun tyyppiset objektit.
    *
    * <p>Totetutuksesta: Jacksonin väärinkäyttö vaikutti olevan vähiten monimutkainen tapa tehdä
-   * asia. Nopealla katsauksella Javaan ei ole olemassa kirjastoa joka hoitaisi tämän.
+   * asia, mea culpa. Nopealla katsauksella Javaan ei ole olemassa kirjastoa joka hoitaisi tämän.
    *
-   * @param objectGraph objekti jonka puusta haetaan rekursiiviesti kaikki halutun tyyppiset
+   * @param objectGraph objekti josta lähtien haetaan rekursiivisesti kaikki halutun tyyppiset
    *     objektit
    * @param clazz haluttu objektityyppi
    * @return objektipuun kaikki määritellyn tyyppiset objektit, mukaanlukien juuri

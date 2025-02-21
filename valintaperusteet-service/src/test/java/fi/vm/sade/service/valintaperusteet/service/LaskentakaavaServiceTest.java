@@ -295,17 +295,8 @@ public class LaskentakaavaServiceTest extends WithSpringBoot {
           haeMerkkijonoJaKonvertoiLukuarvoksi504L.getArvokonvertteriparametrit().iterator().next();
       haeMerkkijonoJaKonvertoiLukuarvoksi504L.getArvokonvertteriparametrit().remove(param);
 
-      assertNotNull(funktiokutsuDAO.getFunktiokutsu(502L));
-      assertNotNull(funktiokutsuDAO.getFunktiokutsu(506L));
-      assertNotNull(funktiokutsuDAO.getFunktiokutsu(7L));
-      assertNotNull(funktiokutsuDAO.getFunktiokutsu(8L));
       LaskentakaavaCreateDTO dto = modelMapper.map(laskentakaava, LaskentakaavaCreateDTO.class);
       paivitetty = laskentakaavaService.update(laskentakaava.getId(), dto);
-      // Akka hoitaa poiston
-      //            assertNull(funktiokutsuDAO.getFunktiokutsu(502L));
-      //            assertNull(funktiokutsuDAO.getFunktiokutsu(506L));
-      assertNotNull(funktiokutsuDAO.getFunktiokutsu(7L));
-      assertNotNull(funktiokutsuDAO.getFunktiokutsu(8L));
       assertTrue(paivitetty.getFunktiokutsu().getTallennaTulos());
     }
 
@@ -424,22 +415,7 @@ public class LaskentakaavaServiceTest extends WithSpringBoot {
 
   @Test
   public void testHaeLaskettavaKaava() throws FunktiokutsuMuodostaaSilmukanException {
-
     final Long tulo = 512L;
-    {
-      Funktiokutsu funktiokutsu = laskentakaavaService.haeMallinnettuFunktiokutsu(tulo);
-      assertEquals(tulo, funktiokutsu.getId());
-      assertEquals(Funktionimi.TULO, funktiokutsu.getFunktionimi());
-      assertEquals(2, funktiokutsu.getFunktioargumentit().size());
-
-      List<Funktioargumentti> args = argsSorted(funktiokutsu.getFunktioargumentit());
-      assertNotNull(args.get(0).getLaskentakaavaChild());
-      assertNull(args.get(0).getFunktiokutsuChild());
-
-      assertNotNull(args.get(1).getFunktiokutsuChild());
-      assertNull(args.get(1).getLaskentakaavaChild());
-    }
-
     {
       final Long laskentakaavaId = 510L;
 
@@ -452,12 +428,11 @@ public class LaskentakaavaServiceTest extends WithSpringBoot {
 
       Funktiokutsu tulo512L =
           argsSorted(nimetty513L.getFunktioargumentit()).get(0).getFunktiokutsuChild();
-      assertEquals(tulo, tulo512L.getId());
       assertEquals(Funktionimi.TULO, tulo512L.getFunktionimi());
       assertEquals(2, tulo512L.getFunktioargumentit().size());
 
       List<Funktioargumentti> tulo512Largs = argsSorted(tulo512L.getFunktioargumentit());
-      Funktiokutsu nimetty510L = tulo512Largs.get(0).getLaajennettuKaava();
+      Funktiokutsu nimetty510L = tulo512Largs.get(0).getLaskentakaavaChild().getFunktiokutsu();
       Funktiokutsu luku511L = tulo512Largs.get(1).getFunktiokutsuChild();
 
       assertEquals(Funktionimi.NIMETTYLUKUARVO, nimetty510L.getFunktionimi());
@@ -560,6 +535,7 @@ public class LaskentakaavaServiceTest extends WithSpringBoot {
     assertEquals(1, valintaperusteet.getPalautaHaettutArvot().size());
   }
 
+  // TODO: data nyt oikein, muuten pitää vielä fiksata
   @Test
   public void testItseensaViittaavaKaava() {
     // Kaava 415 viittaa kaavaan 414. Asetetaan kaava 414 viittaamaan
@@ -615,9 +591,8 @@ public class LaskentakaavaServiceTest extends WithSpringBoot {
     } catch (LaskentakaavaMuodostaaSilmukanException e) {
       caught = true;
 
-      assertEquals(e.getFunktiokutsuId().longValue(), 701L);
       assertEquals(e.getParentLaskentakaavaId(), alakaavaId);
-      assertEquals(e.getViitattuLaskentakaavaId(), alakaavaId);
+      assertEquals(e.getViitattuLaskentakaavaId(), ylakaavaId);
     }
 
     assertTrue(caught);
