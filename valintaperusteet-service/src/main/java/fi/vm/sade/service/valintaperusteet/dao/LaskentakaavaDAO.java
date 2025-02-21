@@ -24,8 +24,6 @@ public interface LaskentakaavaDAO extends JpaDAO<Laskentakaava, Long> {
       String hakukohdeOid,
       fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi tyyppi);
 
-  Optional<Long> migrateLaskentakaavat();
-
   boolean isReferencedByOtherLaskentakaavas(Long laskentakaavaId);
 
   void flush();

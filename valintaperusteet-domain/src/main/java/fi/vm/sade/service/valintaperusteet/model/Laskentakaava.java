@@ -121,9 +121,6 @@ public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
     this.kopiot = kopiot;
   }
 
-  public void migrateKaava() {
-  }
-
   @Override
   public Long getId() {
     return super.getId();
