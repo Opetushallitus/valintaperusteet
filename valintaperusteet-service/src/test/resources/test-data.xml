@@ -14,300 +14,47 @@
     <!-- Valintaryhmä pitää luoda ensimmäisenä -->
     <valintaryhma id="1" version="0" oid="oid1" nimi="Valintaryhma 1" parent_id="[NULL]" />
 
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="1" version="0" funktionimi="LUKUARVO"/>
-    <syoteparametri id="1" version="0" avain="luku" arvo="5.0" funktiokutsu_id="1"/>
+    <laskentakaava id="101" version="0" on_luonnos="false" tyyppi="TOTUUSARVOFUNKTIO" nimi="kaava101" funktiokutsu="{&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;TOTUUSARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [{&quot;arvo&quot;: &quot;true&quot;, &quot;avain&quot;: &quot;totuusarvo&quot;, &quot;version&quot;: 0}], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}"/>
+    <laskentakaava id="102" version="0" on_luonnos="false" tyyppi="TOTUUSARVOFUNKTIO" nimi="kaava102" funktiokutsu="{&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;TOTUUSARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [{&quot;arvo&quot;: &quot;true&quot;, &quot;avain&quot;: &quot;totuusarvo&quot;, &quot;version&quot;: 0}], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}"/>
 
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="2" version="0" funktionimi="LUKUARVO"/>
-    <syoteparametri id="2" version="0" avain="luku" arvo="10.0" funktiokutsu_id="2"/>
+    <laskentakaava id="204" version="0" nimi="kaava204" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO" funktiokutsu="{&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;MAKSIMI&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [], &quot;funktioargumentit&quot;: [{&quot;indeksi&quot;: 1, &quot;version&quot;: 0, &quot;funktiokutsuChild&quot;: {&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;SUMMA&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [], &quot;funktioargumentit&quot;: [{&quot;indeksi&quot;: 1, &quot;version&quot;: 0, &quot;funktiokutsuChild&quot;: {&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;SUMMA&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [], &quot;funktioargumentit&quot;: [{&quot;indeksi&quot;: 1, &quot;version&quot;: 0, &quot;funktiokutsuChild&quot;: {&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;LUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [{&quot;arvo&quot;: &quot;5.0&quot;, &quot;avain&quot;: &quot;luku&quot;, &quot;version&quot;: 0}], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}}, {&quot;indeksi&quot;: 2, &quot;version&quot;: 0, &quot;funktiokutsuChild&quot;: {&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;LUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [{&quot;arvo&quot;: &quot;10.0&quot;, &quot;avain&quot;: &quot;luku&quot;, &quot;version&quot;: 0}], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}}, {&quot;indeksi&quot;: 3, &quot;version&quot;: 0, &quot;funktiokutsuChild&quot;: {&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;HAELUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [{&quot;lahde&quot;: &quot;SYOTETTAVA_ARVO&quot;, &quot;kuvaus&quot;: &quot;aidinkieli&quot;, &quot;indeksi&quot;: 1, &quot;version&quot;: 0, &quot;tunniste&quot;: &quot;aidinkieli&quot;, &quot;onPakollinen&quot;: true, &quot;vaatiiOsallistumisen&quot;: true, &quot;syotettavissaKaikille&quot;: false}], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}}], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}}, {&quot;indeksi&quot;: 2, &quot;version&quot;: 0, &quot;funktiokutsuChild&quot;: {&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;TULO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [], &quot;funktioargumentit&quot;: [{&quot;indeksi&quot;: 1, &quot;version&quot;: 0, &quot;funktiokutsuChild&quot;: {&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;LUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [{&quot;arvo&quot;: &quot;25.0&quot;, &quot;avain&quot;: &quot;luku&quot;, &quot;version&quot;: 0}], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}}, {&quot;indeksi&quot;: 2, &quot;version&quot;: 0, &quot;funktiokutsuChild&quot;: {&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;LUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [{&quot;arvo&quot;: &quot;2.0&quot;, &quot;avain&quot;: &quot;luku&quot;, &quot;version&quot;: 0}], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}}], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}}, {&quot;indeksi&quot;: 3, &quot;version&quot;: 0, &quot;funktiokutsuChild&quot;: {&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;LUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [{&quot;arvo&quot;: &quot;50.0&quot;, &quot;avain&quot;: &quot;luku&quot;, &quot;version&quot;: 0}], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}}], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}}, {&quot;indeksi&quot;: 2, &quot;version&quot;: 0, &quot;funktiokutsuChild&quot;: {&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;LUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [{&quot;arvo&quot;: &quot;100.0&quot;, &quot;avain&quot;: &quot;luku&quot;, &quot;version&quot;: 0}], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}}], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}"/>
+    <laskentakaava id="206" version="0" nimi="kaava206" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO" funktiokutsu="{&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;NIMETTYLUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [{&quot;arvo&quot;: &quot;kaava206&quot;, &quot;avain&quot;: &quot;nimi&quot;, &quot;version&quot;: 0}], &quot;funktioargumentit&quot;: [{&quot;indeksi&quot;: 1, &quot;version&quot;: 0, &quot;funktiokutsuChild&quot;: {&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;SUMMA&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [], &quot;funktioargumentit&quot;: [{&quot;indeksi&quot;: 1, &quot;version&quot;: 0, &quot;funktiokutsuChild&quot;: {&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;SUMMA&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [], &quot;funktioargumentit&quot;: [{&quot;indeksi&quot;: 1, &quot;version&quot;: 0, &quot;funktiokutsuChild&quot;: {&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;LUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [{&quot;arvo&quot;: &quot;5.0&quot;, &quot;avain&quot;: &quot;luku&quot;, &quot;version&quot;: 0}], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}}, {&quot;indeksi&quot;: 2, &quot;version&quot;: 0, &quot;funktiokutsuChild&quot;: {&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;LUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [{&quot;arvo&quot;: &quot;10.0&quot;, &quot;avain&quot;: &quot;luku&quot;, &quot;version&quot;: 0}], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}}, {&quot;indeksi&quot;: 3, &quot;version&quot;: 0, &quot;funktiokutsuChild&quot;: {&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;HAELUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [{&quot;lahde&quot;: &quot;SYOTETTAVA_ARVO&quot;, &quot;kuvaus&quot;: &quot;aidinkieli&quot;, &quot;indeksi&quot;: 1, &quot;version&quot;: 0, &quot;tunniste&quot;: &quot;aidinkieli&quot;, &quot;onPakollinen&quot;: true, &quot;vaatiiOsallistumisen&quot;: true, &quot;syotettavissaKaikille&quot;: false}], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}}], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}}, {&quot;indeksi&quot;: 2, &quot;version&quot;: 0, &quot;funktiokutsuChild&quot;: {&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;TULO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [], &quot;funktioargumentit&quot;: [{&quot;indeksi&quot;: 1, &quot;version&quot;: 0, &quot;funktiokutsuChild&quot;: {&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;LUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [{&quot;arvo&quot;: &quot;25.0&quot;, &quot;avain&quot;: &quot;luku&quot;, &quot;version&quot;: 0}], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}}, {&quot;indeksi&quot;: 2, &quot;version&quot;: 0, &quot;funktiokutsuChild&quot;: {&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;LUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [{&quot;arvo&quot;: &quot;2.0&quot;, &quot;avain&quot;: &quot;luku&quot;, &quot;version&quot;: 0}], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}}], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}, &quot;laskentakaavaChild&quot;: null}, {&quot;indeksi&quot;: 3, &quot;version&quot;: 0, &quot;funktiokutsuChild&quot;: {&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;LUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [{&quot;arvo&quot;: &quot;50.0&quot;, &quot;avain&quot;: &quot;luku&quot;, &quot;version&quot;: 0}], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}}], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}}], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}"/>
 
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="3" version="0" funktionimi="LUKUARVO"/>
-    <syoteparametri id="3" version="0" avain="luku" arvo="25.0" funktiokutsu_id="3"/>
+    <laskentakaava id="509" version="0" nimi="kaava509" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO" funktiokutsu="{&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;NIMETTYLUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [{&quot;arvo&quot;: &quot;kaava509&quot;, &quot;avain&quot;: &quot;nimi&quot;, &quot;version&quot;: 0}], &quot;funktioargumentit&quot;: [{&quot;indeksi&quot;: 1, &quot;version&quot;: 0, &quot;funktiokutsuChild&quot;: {&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;SUMMA&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [], &quot;funktioargumentit&quot;: [{&quot;indeksi&quot;: 1, &quot;version&quot;: 0, &quot;funktiokutsuChild&quot;: {&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;LUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [{&quot;arvo&quot;: &quot;5.0&quot;, &quot;avain&quot;: &quot;luku&quot;, &quot;version&quot;: 0}], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}}, {&quot;indeksi&quot;: 2, &quot;version&quot;: 0, &quot;funktiokutsuChild&quot;: {&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;LUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [{&quot;arvo&quot;: &quot;105.0&quot;, &quot;avain&quot;: &quot;luku&quot;, &quot;version&quot;: 0}], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}}], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}}], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}"/>'
 
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="4" version="0" funktionimi="LUKUARVO"/>
-    <syoteparametri id="4" version="0" avain="luku" arvo="2.0" funktiokutsu_id="4"/>
+    <laskentakaava id="514" version="0" nimi="kaava514" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO" funktiokutsu="{&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;HAELUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [{&quot;lahde&quot;: &quot;SYOTETTAVA_ARVO&quot;, &quot;kuvaus&quot;: &quot;kuvaus&quot;, &quot;indeksi&quot;: 1, &quot;version&quot;: 0, &quot;tunniste&quot;: &quot;valintaperuste1&quot;, &quot;onPakollinen&quot;: true, &quot;tilastoidaan&quot;: true, &quot;vaatiiOsallistumisen&quot;: true, &quot;syotettavissaKaikille&quot;: false, &quot;syotettavanarvontyyppi&quot;: {&quot;uri&quot;: &quot;syotettavanarvontyypit_valintakoe&quot;, &quot;arvo&quot;: &quot;valintakoe&quot;, &quot;version&quot;: 0}}], &quot;arvokonvertteriparametrit&quot;: [{&quot;arvo&quot;: &quot;arvo1&quot;, &quot;version&quot;: 0, &quot;paluuarvo&quot;: &quot;10.0&quot;, &quot;hylkaysperuste&quot;: &quot;false&quot;}, {&quot;arvo&quot;: &quot;arvo2&quot;, &quot;version&quot;: 0, &quot;paluuarvo&quot;: &quot;9.0&quot;, &quot;hylkaysperuste&quot;: &quot;false&quot;}, {&quot;arvo&quot;: &quot;arvo3&quot;, &quot;version&quot;: 0, &quot;paluuarvo&quot;: &quot;8.0&quot;, &quot;hylkaysperuste&quot;: &quot;false&quot;}, {&quot;arvo&quot;: &quot;arvo4&quot;, &quot;version&quot;: 0, &quot;paluuarvo&quot;: &quot;7.0&quot;, &quot;hylkaysperuste&quot;: &quot;false&quot;}, {&quot;arvo&quot;: &quot;arvo5&quot;, &quot;version&quot;: 0, &quot;paluuarvo&quot;: &quot;6.0&quot;, &quot;hylkaysperuste&quot;: &quot;false&quot;}], &quot;arvovalikonvertteriparametrit&quot;: []}"/>
 
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="5" version="0" funktionimi="LUKUARVO"/>
-    <syoteparametri id="5" version="0" avain="luku" arvo="50.0" funktiokutsu_id="5"/>
+    <laskentakaava id="520" version="0" nimi="kaava520" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO" funktiokutsu="{&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;SUMMA&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [], &quot;funktioargumentit&quot;: [{&quot;indeksi&quot;: 1, &quot;version&quot;: 0, &quot;laskentakaavaChild&quot;: {&quot;id&quot;: 514}}, {&quot;indeksi&quot;: 1, &quot;version&quot;: 0, &quot;funktiokutsuChild&quot;: {&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;LUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [{&quot;arvo&quot;: &quot;25.0&quot;, &quot;avain&quot;: &quot;luku&quot;, &quot;version&quot;: 0}], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}}], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}"/>
 
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="6" version="0" funktionimi="LUKUARVO"/>
-    <syoteparametri id="6" version="0" avain="luku" arvo="100.0" funktiokutsu_id="6"/>
+    <laskentakaava id="600" version="0" nimi="kaava600" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO" funktiokutsu="{&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;HAELUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [{&quot;lahde&quot;: &quot;HAKUKOHTEEN_SYOTETTAVA_ARVO&quot;, &quot;kuvaus&quot;: &quot;kuvaus&quot;, &quot;indeksi&quot;: 1, &quot;version&quot;: 0, &quot;tunniste&quot;: &quot;hakukohteentunniste&quot;, &quot;onPakollinen&quot;: true, &quot;epasuoraViittaus&quot;: true, &quot;vaatiiOsallistumisen&quot;: true, &quot;syotettavissaKaikille&quot;: false}], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: [{&quot;version&quot;: 0, &quot;maxValue&quot;: &quot;20.0&quot;, &quot;minValue&quot;: &quot;10.0&quot;, &quot;paluuarvo&quot;: &quot;2.0&quot;, &quot;hylkaysperuste&quot;: &quot;false&quot;, &quot;palautaHaettuArvo&quot;: &quot;false&quot;}, {&quot;version&quot;: 0, &quot;maxValue&quot;: &quot;{{hakukohde.maksimiarvo}}&quot;, &quot;minValue&quot;: &quot;20.0&quot;, &quot;paluuarvo&quot;: &quot;3.0&quot;, &quot;hylkaysperuste&quot;: &quot;false&quot;, &quot;palautaHaettuArvo&quot;: &quot;false&quot;}, {&quot;version&quot;: 0, &quot;maxValue&quot;: &quot;10.0&quot;, &quot;minValue&quot;: &quot;{{hakukohde.minimiarvo}}&quot;, &quot;paluuarvo&quot;: &quot;1.0&quot;, &quot;hylkaysperuste&quot;: &quot;false&quot;, &quot;palautaHaettuArvo&quot;: &quot;false&quot;}]}"/>
 
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="7" version="0" funktionimi="LUKUARVO"/>
-    <syoteparametri id="7" version="0" avain="luku" arvo="7.0" funktiokutsu_id="7"/>
+    <laskentakaava id="510" version="0" nimi="kaava510" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO" funktiokutsu="{&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;NIMETTYLUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [], &quot;funktioargumentit&quot;: [{&quot;indeksi&quot;: 1, &quot;version&quot;: 0, &quot;funktiokutsuChild&quot;: {&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;TULO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [], &quot;funktioargumentit&quot;: [{&quot;indeksi&quot;: 1, &quot;version&quot;: 0, &quot;laskentakaavaChild&quot;: {&quot;id&quot;: 509}}, {&quot;indeksi&quot;: 2, &quot;version&quot;: 0, &quot;funktiokutsuChild&quot;: {&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;LUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [{&quot;arvo&quot;: &quot;300.0&quot;, &quot;avain&quot;: &quot;luku&quot;, &quot;version&quot;: 0}], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}}], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}, &quot;laskentakaavaChild&quot;: null}], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}"/>
 
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="8" version="0" funktionimi="LUKUARVO"/>
-    <syoteparametri id="8" version="0" avain="luku" arvo="8.0" funktiokutsu_id="8"/>
+    <laskentakaava id="500" version="0" nimi="kaava500" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO" funktiokutsu="{&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;SUMMA&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [], &quot;funktioargumentit&quot;: [{&quot;indeksi&quot;: 1, &quot;version&quot;: 0, &quot;funktiokutsuChild&quot;: {&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;LUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [{&quot;arvo&quot;: &quot;10.0&quot;, &quot;avain&quot;: &quot;luku&quot;, &quot;version&quot;: 0}], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}}, {&quot;indeksi&quot;: 2, &quot;version&quot;: 0, &quot;funktiokutsuChild&quot;: {&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;LUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [{&quot;arvo&quot;: &quot;3.0&quot;, &quot;avain&quot;: &quot;luku&quot;, &quot;version&quot;: 0}], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}}, {&quot;indeksi&quot;: 3, &quot;version&quot;: 0, &quot;funktiokutsuChild&quot;: {&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;SUMMA&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [], &quot;funktioargumentit&quot;: [{&quot;indeksi&quot;: 1, &quot;version&quot;: 0, &quot;funktiokutsuChild&quot;: {&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;HAEMERKKIJONOJAKONVERTOILUKUARVOKSI&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [{&quot;lahde&quot;: &quot;SYOTETTAVA_ARVO&quot;, &quot;kuvaus&quot;: &quot;matematiikan yo-arvosana&quot;, &quot;indeksi&quot;: 1, &quot;version&quot;: 0, &quot;tunniste&quot;: &quot;matematiikka_yo&quot;, &quot;onPakollinen&quot;: true, &quot;vaatiiOsallistumisen&quot;: true, &quot;syotettavissaKaikille&quot;: false}], &quot;arvokonvertteriparametrit&quot;: [{&quot;arvo&quot;: &quot;L&quot;, &quot;version&quot;: 0, &quot;paluuarvo&quot;: &quot;10.0&quot;, &quot;hylkaysperuste&quot;: &quot;false&quot;}, {&quot;arvo&quot;: &quot;E&quot;, &quot;version&quot;: 0, &quot;paluuarvo&quot;: &quot;9.0&quot;, &quot;hylkaysperuste&quot;: &quot;false&quot;}, {&quot;arvo&quot;: &quot;M&quot;, &quot;version&quot;: 0, &quot;paluuarvo&quot;: &quot;8.0&quot;, &quot;hylkaysperuste&quot;: &quot;false&quot;}, {&quot;arvo&quot;: &quot;C&quot;, &quot;version&quot;: 0, &quot;paluuarvo&quot;: &quot;7.0&quot;, &quot;hylkaysperuste&quot;: &quot;false&quot;}, {&quot;arvo&quot;: &quot;B&quot;, &quot;version&quot;: 0, &quot;paluuarvo&quot;: &quot;6.0&quot;, &quot;hylkaysperuste&quot;: &quot;false&quot;}], &quot;arvovalikonvertteriparametrit&quot;: []}}, {&quot;indeksi&quot;: 2, &quot;version&quot;: 0, &quot;funktiokutsuChild&quot;: {&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;LUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [{&quot;arvo&quot;: &quot;6.0&quot;, &quot;avain&quot;: &quot;luku&quot;, &quot;version&quot;: 0}], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}}], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}}, {&quot;indeksi&quot;: 4, &quot;version&quot;: 0, &quot;funktiokutsuChild&quot;: {&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;SUMMA&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [], &quot;funktioargumentit&quot;: [{&quot;indeksi&quot;: 1, &quot;version&quot;: 0, &quot;funktiokutsuChild&quot;: {&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;LUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [{&quot;arvo&quot;: &quot;7.0&quot;, &quot;avain&quot;: &quot;luku&quot;, &quot;version&quot;: 0}], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}}, {&quot;indeksi&quot;: 2, &quot;version&quot;: 0, &quot;funktiokutsuChild&quot;: {&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;LUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [{&quot;arvo&quot;: &quot;8.0&quot;, &quot;avain&quot;: &quot;luku&quot;, &quot;version&quot;: 0}], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}}], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}}], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}"/>
 
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="9" version="0" funktionimi="LUKUARVO"/>
-    <syoteparametri id="9" version="0" avain="luku" arvo="9.0" funktiokutsu_id="9"/>
+    <laskentakaava id="405" version="0" nimi="kaava405" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO" funktiokutsu="{&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;KONVERTOILUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [], &quot;funktioargumentit&quot;: [{&quot;indeksi&quot;: 1, &quot;version&quot;: 0, &quot;funktiokutsuChild&quot;: {&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;HAELUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [{&quot;lahde&quot;: &quot;SYOTETTAVA_ARVO&quot;, &quot;kuvaus&quot;: &quot;t1&quot;, &quot;indeksi&quot;: 1, &quot;version&quot;: 0, &quot;tunniste&quot;: &quot;t1&quot;, &quot;onPakollinen&quot;: true, &quot;vaatiiOsallistumisen&quot;: true, &quot;syotettavissaKaikille&quot;: false}], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}}], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: [{&quot;version&quot;: 0, &quot;maxValue&quot;: &quot;3.0&quot;, &quot;minValue&quot;: &quot;1.0&quot;, &quot;paluuarvo&quot;: &quot;50.0&quot;, &quot;hylkaysperuste&quot;: &quot;false&quot;, &quot;palautaHaettuArvo&quot;: &quot;false&quot;}]}"/>
 
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="101" version="0" funktionimi="TOTUUSARVO"/>
-    <syoteparametri id="101" version="0" avain="totuusarvo" arvo="true" funktiokutsu_id="101"/>
+    <laskentakaava id="406" version="0" nimi="kaava406" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO" funktiokutsu="{&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;KONVERTOILUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [], &quot;funktioargumentit&quot;: [{&quot;indeksi&quot;: 1, &quot;version&quot;: 0, &quot;funktiokutsuChild&quot;: {&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;HAELUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [{&quot;lahde&quot;: &quot;SYOTETTAVA_ARVO&quot;, &quot;kuvaus&quot;: &quot;t1&quot;, &quot;indeksi&quot;: 1, &quot;version&quot;: 0, &quot;tunniste&quot;: &quot;t2&quot;, &quot;onPakollinen&quot;: true, &quot;vaatiiOsallistumisen&quot;: true, &quot;syotettavissaKaikille&quot;: false}], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}}], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: [{&quot;version&quot;: 0, &quot;maxValue&quot;: &quot;3.0&quot;, &quot;minValue&quot;: &quot;1.0&quot;, &quot;paluuarvo&quot;: &quot;50.0&quot;, &quot;hylkaysperuste&quot;: &quot;false&quot;, &quot;palautaHaettuArvo&quot;: &quot;false&quot;}]}"/>
 
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="102" version="0" funktionimi="TOTUUSARVO"/>
-    <syoteparametri id="102" version="0" avain="totuusarvo" arvo="true" funktiokutsu_id="102"/>
+    <laskentakaava id="407" version="0" nimi="kaava407" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO" funktiokutsu="{&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;LUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [{&quot;arvo&quot;: &quot;7.0&quot;, &quot;avain&quot;: &quot;luku&quot;, &quot;version&quot;: 0}], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}"/>
 
-    <laskentakaava id="101" version="0" on_luonnos="false" tyyppi="TOTUUSARVOFUNKTIO" nimi="kaava101"
-                   funktiokutsu_id="102"/>
-    <laskentakaava id="102" version="0" on_luonnos="false" tyyppi="TOTUUSARVOFUNKTIO" nimi="kaava102"
-                   funktiokutsu_id="102"/>
+    <laskentakaava id="408" version="0" nimi="kaava408" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO" funktiokutsu="{&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;LUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [{&quot;arvo&quot;: &quot;8.0&quot;, &quot;avain&quot;: &quot;luku&quot;, &quot;version&quot;: 0}], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}"/>
 
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="201" version="0" funktionimi="SUMMA"/>
-    <funktioargumentti id="201" version="0" funktiokutsuparent_id="201" laskentakaavachild_id="[NULL]"
-                       funktiokutsuchild_id="1" indeksi="1"/>
-    <funktioargumentti id="202" version="0" funktiokutsuparent_id="201" funktiokutsuchild_id="2" indeksi="2"/>
-    <funktioargumentti id="210" version="0" funktiokutsuparent_id="201" funktiokutsuchild_id="405" indeksi="3"/>
+    <laskentakaava id="409" version="0" nimi="kaava409" on_luonnos="true" tyyppi="LUKUARVOFUNKTIO" funktiokutsu="{&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;LUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [{&quot;arvo&quot;: &quot;9.0&quot;, &quot;avain&quot;: &quot;luku&quot;, &quot;version&quot;: 0}], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}"/>
 
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="202" version="0" funktionimi="TULO"/>
-    <funktioargumentti id="203" version="0" funktiokutsuparent_id="202" funktiokutsuchild_id="3" indeksi="1"/>
-    <funktioargumentti id="204" version="0" funktiokutsuparent_id="202" funktiokutsuchild_id="4" indeksi="2"/>
+    <laskentakaava id="410" version="0" nimi="kaava410" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO" funktiokutsu="{&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;LUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [{&quot;arvo&quot;: &quot;8.0&quot;, &quot;avain&quot;: &quot;luku&quot;, &quot;version&quot;: 0}], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}"/>
 
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="203" version="0" funktionimi="SUMMA"/>
-    <funktioargumentti id="205" version="0" funktiokutsuparent_id="203" funktiokutsuchild_id="201" indeksi="1"/>
-    <funktioargumentti id="206" version="0" funktiokutsuparent_id="203" funktiokutsuchild_id="202" indeksi="2"/>
-    <funktioargumentti id="207" version="0" funktiokutsuparent_id="203" funktiokutsuchild_id="5" indeksi="3"/>
+    <laskentakaava id="414" version="0" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO" nimi="summakaava414" funktiokutsu="{&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;SUMMA&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [], &quot;funktioargumentit&quot;: [{&quot;indeksi&quot;: 1, &quot;version&quot;: 0, &quot;funktiokutsuChild&quot;: {&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;LUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [{&quot;arvo&quot;: &quot;5.0&quot;, &quot;avain&quot;: &quot;luku&quot;, &quot;version&quot;: 0}], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}}, {&quot;indeksi&quot;: 2, &quot;version&quot;: 0, &quot;funktiokutsuChild&quot;: {&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;LUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [{&quot;arvo&quot;: &quot;10.0&quot;, &quot;avain&quot;: &quot;luku&quot;, &quot;version&quot;: 0}], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}, &quot;laskentakaavaChild&quot;: null}], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}"/>
 
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="204" version="0" funktionimi="MAKSIMI"/>
-    <funktioargumentti id="208" version="0" funktiokutsuparent_id="204" funktiokutsuchild_id="203" indeksi="1"/>
-    <funktioargumentti id="209" version="0" funktiokutsuparent_id="204" funktiokutsuchild_id="6" indeksi="2"/>
-    <laskentakaava id="204" version="0" nimi="kaava204" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO"
-                   funktiokutsu_id="204"/>
+    <laskentakaava id="415" version="0" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO" nimi="summakaava415" funktiokutsu="{&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;SUMMA&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [], &quot;funktioargumentit&quot;: [{&quot;indeksi&quot;: 1, &quot;version&quot;: 0, &quot;funktiokutsuChild&quot;: {&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;LUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [{&quot;arvo&quot;: &quot;5.0&quot;, &quot;avain&quot;: &quot;luku&quot;, &quot;version&quot;: 0}], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}, &quot;laskentakaavaChild&quot;: null}, {&quot;indeksi&quot;: 2, &quot;version&quot;: 0, &quot;laskentakaavaChild&quot;: {&quot;id&quot;: 414}}], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}"/>
 
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="205" version="0" funktionimi="SUMMA"/>
-    <funktioargumentti id="211" version="0" funktiokutsuparent_id="205" funktiokutsuchild_id="201" indeksi="1"/>
-    <funktioargumentti id="212" version="0" funktiokutsuparent_id="205" funktiokutsuchild_id="202" indeksi="2"/>
-    <funktioargumentti id="213" version="0" funktiokutsuparent_id="205" funktiokutsuchild_id="5" indeksi="3"/>
-
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="206" version="0" funktionimi="NIMETTYLUKUARVO"/>
-    <funktioargumentti id="214" version="0" funktiokutsuparent_id="206" funktiokutsuchild_id="205" indeksi="1"/>
-    <syoteparametri id="206" version="0" avain="nimi" arvo="summafunktio206" funktiokutsu_id="206"/>
-
-    <laskentakaava id="206" version="0" nimi="kaava206" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO"
-                   funktiokutsu_id="206"/>
-
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="301" version="0" funktionimi="KONVERTOILUKUARVO"/>
-    <funktioargumentti id="301" version="0" funktiokutsuparent_id="301" funktiokutsuchild_id="1" indeksi="1"/>
-    <arvokonvertteriparametri id="301" version="0" paluuarvo="10.0" arvo="4.0" hylkaysperuste="false"
-                              funktiokutsu_id="301"/>
-    <arvokonvertteriparametri id="302" version="0" paluuarvo="20.0" arvo="5.0" hylkaysperuste="false"
-                              funktiokutsu_id="301"/>
-    <arvokonvertteriparametri id="303" version="0" paluuarvo="30.0" arvo="6.0" hylkaysperuste="false"
-                              funktiokutsu_id="301"/>
-
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="302" version="0" funktionimi="KONVERTOILUKUARVO"/>
-    <funktioargumentti id="302" version="0" funktiokutsuparent_id="302" funktiokutsuchild_id="1" indeksi="1"/>
-    <arvovalikonvertteriparametri id="305" version="0" minvalue="1.0" maxvalue="3.0" paluuarvo="50.0"
-                                  palauta_haettu_arvo="false" funktiokutsu_id="302" hylkaysperuste="false"/>
-    <arvovalikonvertteriparametri id="304" version="0" minvalue="3.0" maxvalue="5.0" paluuarvo="40.0"
-                                  palauta_haettu_arvo="false" funktiokutsu_id="302" hylkaysperuste="false"/>
-    <arvovalikonvertteriparametri id="306" version="0" minvalue="5.0" maxvalue="7.0" paluuarvo="60.0"
-                                  palauta_haettu_arvo="false" funktiokutsu_id="302" hylkaysperuste="false"/>
-
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="401" version="0" funktionimi="KONVERTOILUKUARVO"/>
-    <funktioargumentti id="401" version="0" funktiokutsuparent_id="401" funktiokutsuchild_id="403" indeksi="1"/>
-    <arvovalikonvertteriparametri id="401" version="0" minvalue="1.0" maxvalue="3.0" paluuarvo="50.0"
-                                  palauta_haettu_arvo="false" funktiokutsu_id="401" hylkaysperuste="false"/>
-
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="402" version="0" funktionimi="KONVERTOILUKUARVO"/>
-    <funktioargumentti id="402" version="0" funktiokutsuparent_id="402" funktiokutsuchild_id="404" indeksi="1"/>
-    <arvovalikonvertteriparametri id="402" version="0" minvalue="1.0" maxvalue="3.0" paluuarvo="50.0"
-                                  palauta_haettu_arvo="false" funktiokutsu_id="402" hylkaysperuste="false"/>
-
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="403" version="0" funktionimi="HAELUKUARVO"/>
-    <valintaperuste_viite id="403" version="0" tunniste="t1" kuvaus="t1" lahde="SYOTETTAVA_ARVO" funktiokutsu_id="403"
-                          on_pakollinen="true" indeksi="1" vaatii_osallistumisen="true" syotettavissa_kaikille="false"/>
-
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="404" version="0" funktionimi="HAELUKUARVO"/>
-    <valintaperuste_viite id="404" version="0" tunniste="t2" kuvaus="t1" lahde="SYOTETTAVA_ARVO" funktiokutsu_id="404"
-                          on_pakollinen="true" indeksi="1" vaatii_osallistumisen="true" syotettavissa_kaikille="false"/>
-
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="405" version="0" funktionimi="HAELUKUARVO"/>
-    <valintaperuste_viite id="405" version="0" tunniste="aidinkieli" kuvaus="aidinkieli" lahde="SYOTETTAVA_ARVO"
-                          funktiokutsu_id="405" on_pakollinen="true" indeksi="1" vaatii_osallistumisen="true"
-                          syotettavissa_kaikille="false"/>
-
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="506" version="0" funktionimi="SUMMA"/>
-    <funktioargumentti id="506" version="0" funktiokutsuparent_id="506" funktiokutsuchild_id="7" indeksi="1"/>
-    <funktioargumentti id="507" version="0" funktiokutsuparent_id="506" funktiokutsuchild_id="8" indeksi="2"/>
-
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="500" version="0" funktionimi="SUMMA"/>
-
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="501" version="0" funktionimi="LUKUARVO"/>
-    <syoteparametri id="501" version="0" avain="luku" arvo="10.0" funktiokutsu_id="501"/>
-
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="502" version="0" funktionimi="LUKUARVO"/>
-    <syoteparametri id="502" version="0" avain="luku" arvo="3.0" funktiokutsu_id="502"/>
-
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="503" version="0" funktionimi="SUMMA"/>
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="504" version="0" funktionimi="HAEMERKKIJONOJAKONVERTOILUKUARVOKSI"/>
-
-    <valintaperuste_viite id="504" version="0" tunniste="matematiikka_yo" kuvaus="matematiikan yo-arvosana"
-                          lahde="SYOTETTAVA_ARVO" on_pakollinen="true" funktiokutsu_id="504" indeksi="1"
-                          vaatii_osallistumisen="true" syotettavissa_kaikille="false"/>
-    <arvokonvertteriparametri id="504" version="0" arvo="L" paluuarvo="10.0" hylkaysperuste="false"
-                              funktiokutsu_id="504"/>
-    <arvokonvertteriparametri id="505" version="0" arvo="E" paluuarvo="9.0" hylkaysperuste="false"
-                              funktiokutsu_id="504"/>
-    <arvokonvertteriparametri id="506" version="0" arvo="M" paluuarvo="8.0" hylkaysperuste="false"
-                              funktiokutsu_id="504"/>
-    <arvokonvertteriparametri id="507" version="0" arvo="C" paluuarvo="7.0" hylkaysperuste="false"
-                              funktiokutsu_id="504"/>
-    <arvokonvertteriparametri id="508" version="0" arvo="B" paluuarvo="6.0" hylkaysperuste="false"
-                              funktiokutsu_id="504"/>
-
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="505" version="0" funktionimi="LUKUARVO"/>
-    <syoteparametri id="505" version="0" avain="luku" arvo="6.0" funktiokutsu_id="505"/>
-
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="508" version="0" funktionimi="LUKUARVO"/>
-    <syoteparametri id="508" version="0" avain="luku" arvo="5.0" funktiokutsu_id="508"/>
-
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="509" version="0" funktionimi="LUKUARVO"/>
-    <syoteparametri id="509" version="0" avain="luku" arvo="105.0" funktiokutsu_id="509"/>
-
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="507" version="0" funktionimi="SUMMA"/>
-    <funktioargumentti id="509" version="0" funktiokutsuchild_id="508" funktiokutsuparent_id="507" indeksi="1"/>
-    <funktioargumentti id="510" version="0" funktiokutsuchild_id="509" funktiokutsuparent_id="507" indeksi="2"/>
-
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="510" version="0" funktionimi="NIMETTYLUKUARVO"/>
-    <syoteparametri id="510" version="0" avain="nimi" arvo="kaava509" funktiokutsu_id="510"/>
-    <funktioargumentti id="515" version="0" funktiokutsuchild_id="507" funktiokutsuparent_id="510" indeksi="1"/>
-
-    <laskentakaava id="509" version="0" nimi="kaava509" funktiokutsu_id="510" on_luonnos="false"
-                   tyyppi="LUKUARVOFUNKTIO"/>'
-
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="511" version="0" funktionimi="LUKUARVO"/>
-    <syoteparametri id="511" version="0" avain="luku" arvo="300.0" funktiokutsu_id="511"/>
-
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="512" version="0" funktionimi="TULO"/>
-    <funktioargumentti id="512" version="0" laskentakaavachild_id="509" funktiokutsuparent_id="512" indeksi="1"/>
-    <funktioargumentti id="513" version="0" funktiokutsuchild_id="511" funktiokutsuparent_id="512" indeksi="2"/>
-
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="513" version="0" funktionimi="NIMETTYLUKUARVO"/>
-    <funktioargumentti id="514" version="0" funktiokutsuchild_id="512" funktiokutsuparent_id="513" indeksi="1"/>
-
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="514" version="0" funktionimi="HAELUKUARVO"/>
-    <valintaperuste_viite id="514" version="0" lahde="SYOTETTAVA_ARVO" tunniste="valintaperuste1" kuvaus="kuvaus"
-                          on_pakollinen="true" funktiokutsu_id="514" indeksi="1" vaatii_osallistumisen="true"
-                          syotettavissa_kaikille="false" tilastoidaan="true" syotettavanarvontyyppi_id="1"/>
-    <arvokonvertteriparametri id="514" version="0" arvo="arvo1" paluuarvo="10.0" hylkaysperuste="false"
-                              funktiokutsu_id="514"/>
-    <arvokonvertteriparametri id="515" version="0" arvo="arvo2" paluuarvo="9.0" hylkaysperuste="false"
-                              funktiokutsu_id="514"/>
-    <arvokonvertteriparametri id="516" version="0" arvo="arvo3" paluuarvo="8.0" hylkaysperuste="false"
-                              funktiokutsu_id="514"/>
-    <arvokonvertteriparametri id="517" version="0" arvo="arvo4" paluuarvo="7.0" hylkaysperuste="false"
-                              funktiokutsu_id="514"/>
-    <arvokonvertteriparametri id="518" version="0" arvo="arvo5" paluuarvo="6.0" hylkaysperuste="false"
-                              funktiokutsu_id="514"/>
-
-    <laskentakaava id="514" version="0" nimi="kaava514" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO"
-                   funktiokutsu_id="514"/>
-
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="519" version="0" funktionimi="LUKUARVO"/>
-    <syoteparametri id="519" version="0" avain="luku" arvo="25.0" funktiokutsu_id="519"/>
-
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="520" version="0" funktionimi="SUMMA"/>
-    <funktioargumentti id="520" version="0" funktiokutsuparent_id="520" laskentakaavachild_id="514" indeksi="1"/>
-    <funktioargumentti id="521" version="0" funktiokutsuparent_id="520" funktiokutsuchild_id="519" indeksi="1"/>
-
-
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="600" version="0" funktionimi="HAELUKUARVO"/>
-    <valintaperuste_viite id="600" version="0" lahde="HAKUKOHTEEN_SYOTETTAVA_ARVO" tunniste="hakukohteentunniste"
-                          kuvaus="kuvaus"
-                          on_pakollinen="true" epasuora_viittaus="true" funktiokutsu_id="600" indeksi="1"
-                          vaatii_osallistumisen="true" syotettavissa_kaikille="false"/>
-    <arvovalikonvertteriparametri id="600" version="0" minvalue="{{hakukohde.minimiarvo}}" maxvalue="10.0"
-                                  palauta_haettu_arvo="false"
-                                  paluuarvo="1.0" funktiokutsu_id="600" hylkaysperuste="false"/>
-    <arvovalikonvertteriparametri id="601" version="0" minvalue="10.0" maxvalue="20.0" palauta_haettu_arvo="false"
-                                  paluuarvo="2.0" funktiokutsu_id="600" hylkaysperuste="false"/>
-    <arvovalikonvertteriparametri id="602" version="0" minvalue="20.0" maxvalue="{{hakukohde.maksimiarvo}}"
-                                  palauta_haettu_arvo="false"
-                                  paluuarvo="3.0" funktiokutsu_id="600" hylkaysperuste="false"/>
-
-    <laskentakaava id="520" version="0" nimi="kaava520" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO"
-                   funktiokutsu_id="520"/>
-    <laskentakaava id="600" version="0" nimi="kaava600" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO"
-                   funktiokutsu_id="600"/>
-
-    <laskentakaava id="510" version="0" nimi="kaava510" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO"
-                   funktiokutsu_id="513"/>
-
-    <funktioargumentti id="503" version="0" funktiokutsuparent_id="503" funktiokutsuchild_id="504" indeksi="1"/>
-    <funktioargumentti id="504" version="0" funktiokutsuparent_id="503" funktiokutsuchild_id="505" indeksi="2"/>
-
-    <funktioargumentti id="500" version="0" funktiokutsuparent_id="500" funktiokutsuchild_id="501" indeksi="1"/>
-    <funktioargumentti id="501" version="0" funktiokutsuparent_id="500" funktiokutsuchild_id="502" indeksi="2"/>
-    <funktioargumentti id="502" version="0" funktiokutsuparent_id="500" funktiokutsuchild_id="503" indeksi="3"/>
-    <funktioargumentti id="508" version="0" funktiokutsuparent_id="500" funktiokutsuchild_id="506" indeksi="4"/>
-
-    <laskentakaava id="500" version="0" nimi="kaava500" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO"
-                   funktiokutsu_id="500"/>
-
-    <laskentakaava id="405" version="0" nimi="kaava405" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO"
-                   funktiokutsu_id="401"/>
-    <laskentakaava id="406" version="0" nimi="kaava406" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO"
-                   funktiokutsu_id="402"/>
-
-    <laskentakaava id="407" version="0" nimi="kaava407" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO"
-                   funktiokutsu_id="7"/>
-    <laskentakaava id="408" version="0" nimi="kaava408" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO"
-                   funktiokutsu_id="8"/>
-    <laskentakaava id="409" version="0" nimi="kaava409" on_luonnos="true" tyyppi="LUKUARVOFUNKTIO" funktiokutsu_id="9"/>
-
-    <laskentakaava id="410" version="0" nimi="kaava410" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO"
-                   funktiokutsu_id="8"/>
-
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="700" version="0" funktionimi="SUMMA"/>
-    <funktioargumentti id="700" version="0" funktiokutsuparent_id="700" funktiokutsuchild_id="1" indeksi="1"/>
-    <funktioargumentti id="701" version="0" funktiokutsuparent_id="700" funktiokutsuchild_id="2" indeksi="2"/>
-
-    <laskentakaava id="414" version="0" funktiokutsu_id="700" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO"
-                   nimi="summakaava414"/>
-
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="701" version="0" funktionimi="SUMMA"/>
-    <funktioargumentti id="702" version="0" funktiokutsuparent_id="701" funktiokutsuchild_id="1" indeksi="1"/>
-    <funktioargumentti id="703" version="0" funktiokutsuparent_id="701" laskentakaavachild_id="414" indeksi="2"/>
-
-    <laskentakaava id="415" version="0" funktiokutsu_id="701" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO"
-                   nimi="summakaava415"/>
-
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="702" version="0" funktionimi="DEMOGRAFIA"/>
-    <syoteparametri id="704" version="0" avain="tunniste" arvo="puuppa" funktiokutsu_id="702"/>
-    <syoteparametri id="705" version="0" avain="prosenttiosuus" arvo="30.0" funktiokutsu_id="702"/>
-
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="703" version="0" funktionimi="LUKUARVO"/>
-    <syoteparametri id="706" version="0" avain="luku" arvo="10.0" funktiokutsu_id="703"/>
-
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="704" version="0" funktionimi="LUKUARVO"/>
-    <syoteparametri id="707" version="0" avain="luku" arvo="20.0" funktiokutsu_id="704"/>
-
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="705" version="0" funktionimi="JOS"/>
-    <funktioargumentti id="704" version="0" funktiokutsuparent_id="705" funktiokutsuchild_id="702" indeksi="1"/>
-    <funktioargumentti id="705" version="0" funktiokutsuparent_id="705" funktiokutsuchild_id="703" indeksi="2"/>
-    <funktioargumentti id="706" version="0" funktiokutsuparent_id="705" funktiokutsuchild_id="704" indeksi="3"/>
-
-    <laskentakaava id="416" version="0" funktiokutsu_id="705" nimi="puuppa" on_luonnos="false"
-                   tyyppi="LUKUARVOFUNKTIO"/>
+    <laskentakaava id="416" version="0" nimi="puuppa" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO" funktiokutsu="{&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;JOS&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [], &quot;funktioargumentit&quot;: [{&quot;indeksi&quot;: 1, &quot;version&quot;: 0, &quot;funktiokutsuChild&quot;: {&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;DEMOGRAFIA&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [{&quot;arvo&quot;: &quot;puuppa&quot;, &quot;avain&quot;: &quot;tunniste&quot;, &quot;version&quot;: 0}, {&quot;arvo&quot;: &quot;30.0&quot;, &quot;avain&quot;: &quot;prosenttiosuus&quot;, &quot;version&quot;: 0}], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}}, {&quot;indeksi&quot;: 2, &quot;version&quot;: 0, &quot;funktiokutsuChild&quot;: {&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;LUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [{&quot;arvo&quot;: &quot;10.0&quot;, &quot;avain&quot;: &quot;luku&quot;, &quot;version&quot;: 0}], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}}, {&quot;indeksi&quot;: 3, &quot;version&quot;: 0, &quot;funktiokutsuChild&quot;: {&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;LUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [{&quot;arvo&quot;: &quot;20.0&quot;, &quot;avain&quot;: &quot;luku&quot;, &quot;version&quot;: 0}], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}}], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}"/>
 
     <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="706" version="0" funktionimi="LUKUARVO"/>
-    <syoteparametri id="708" version="0" avain="luku" arvo="15.0" funktiokutsu_id="706"/>
 
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="707" version="0" funktionimi="SUUREMPI"/>
-    <funktioargumentti id="707" version="0" funktiokutsuparent_id="707" laskentakaavachild_id="416" indeksi="1"/>
-    <funktioargumentti id="708" version="0" funktiokutsuparent_id="707" funktiokutsuchild_id="706" indeksi="2"/>
+    <laskentakaava id="417" version="0" nimi="puuppa2" on_luonnos="false" tyyppi="TOTUUSARVOFUNKTIO" funktiokutsu="{&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;SUUREMPI&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [], &quot;funktioargumentit&quot;: [{&quot;indeksi&quot;: 1, &quot;version&quot;: 0, &quot;laskentakaavaChild&quot;: {&quot;id&quot;: 416}}, {&quot;indeksi&quot;: 2, &quot;version&quot;: 0, &quot;funktiokutsuChild&quot;: {&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;LUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [{&quot;arvo&quot;: &quot;15.0&quot;, &quot;avain&quot;: &quot;luku&quot;, &quot;version&quot;: 0}], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}}], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}"/>
 
-    <laskentakaava id="417" version="0" funktiokutsu_id="707" nimi="puuppa2" on_luonnos="false"
-                   tyyppi="TOTUUSARVOFUNKTIO"/>
-
-
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="708" version="0" funktionimi="KONVERTOILUKUARVO"/>
-    <valintaperuste_viite id="601" version="0" lahde="HAKUKOHTEEN_ARVO" tunniste="{{hakukohde.paasykoe_tunniste}}"
-                          kuvaus="kuvaus"
-                          on_pakollinen="true" funktiokutsu_id="708" indeksi="1" vaatii_osallistumisen="true"
-                          syotettavissa_kaikille="false"/>
-    <funktioargumentti id="709" version="0" funktiokutsuparent_id="708" funktiokutsuchild_id="1" indeksi="1"/>
-
+<!--
     <tekstiryhma id="1" version="0" />
     <tekstiryhma id="2" version="0" />
 
@@ -316,53 +63,15 @@
     <lokalisoitu_teksti id="3" teksti="Samma på svenska" kieli="SV" version="0" tekstiryhma_id="1" />
 
     <lokalisoitu_teksti id="4" teksti="Samma på svenska" kieli="SV" version="0" tekstiryhma_id="2" />
+-->
 
-    <arvokonvertteriparametri id="519" version="0" paluuarvo="10.0" arvo="{{hakukohde.av1_arvo}}"
-                              hylkaysperuste="{{hakukohde.av1_hp}}"
-                              funktiokutsu_id="708" tekstiryhma_id="2" />
-    <arvokonvertteriparametri id="520" version="0" paluuarvo="20.0" arvo="{{hakukohde.av2_arvo}}" hylkaysperuste="false"
-                              funktiokutsu_id="708" tekstiryhma_id="2" />
+    <laskentakaava id="418" version="0" nimi="jeppis" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO" funktiokutsu="{&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;KONVERTOILUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [{&quot;lahde&quot;: &quot;HAKUKOHTEEN_ARVO&quot;, &quot;kuvaus&quot;: &quot;kuvaus&quot;, &quot;indeksi&quot;: 1, &quot;version&quot;: 0, &quot;tunniste&quot;: &quot;{{hakukohde.paasykoe_tunniste}}&quot;, &quot;onPakollinen&quot;: true, &quot;vaatiiOsallistumisen&quot;: true, &quot;syotettavissaKaikille&quot;: false}], &quot;arvokonvertteriparametrit&quot;: [{&quot;arvo&quot;: &quot;{{hakukohde.av1_arvo}}&quot;, &quot;version&quot;: 0, &quot;kuvaukset&quot;: {&quot;id&quot;: 2, &quot;tekstit&quot;: [{&quot;kieli&quot;: &quot;SV&quot;, &quot;teksti&quot;: &quot;Samma på svenska&quot;, &quot;version&quot;: 0}], &quot;version&quot;: 0}, &quot;paluuarvo&quot;: &quot;10.0&quot;, &quot;hylkaysperuste&quot;: &quot;{{hakukohde.av1_hp}}&quot;}, {&quot;arvo&quot;: &quot;{{hakukohde.av2_arvo}}&quot;, &quot;version&quot;: 0, &quot;kuvaukset&quot;: {&quot;id&quot;: 2, &quot;tekstit&quot;: [{&quot;kieli&quot;: &quot;SV&quot;, &quot;teksti&quot;: &quot;Samma på svenska&quot;, &quot;version&quot;: 0}], &quot;version&quot;: 0}, &quot;paluuarvo&quot;: &quot;20.0&quot;, &quot;hylkaysperuste&quot;: &quot;false&quot;}, {&quot;arvo&quot;: &quot;6.0&quot;, &quot;version&quot;: 0, &quot;kuvaukset&quot;: {&quot;id&quot;: 1, &quot;tekstit&quot;: [{&quot;kieli&quot;: &quot;FI&quot;, &quot;teksti&quot;: &quot;Tämä on hylkäysperuste teksti&quot;, &quot;version&quot;: 0}, {&quot;kieli&quot;: &quot;EN&quot;, &quot;teksti&quot;: &quot;This is text&quot;, &quot;version&quot;: 0}, {&quot;kieli&quot;: &quot;SV&quot;, &quot;teksti&quot;: &quot;Samma på svenska&quot;, &quot;version&quot;: 0}], &quot;version&quot;: 0}, &quot;paluuarvo&quot;: &quot;30.0&quot;, &quot;hylkaysperuste&quot;: &quot;true&quot;}], &quot;arvovalikonvertteriparametrit&quot;: []}"/>
 
+    <laskentakaava id="419" version="0" nimi="jeppis2" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO" funktiokutsu="{&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;KONVERTOILUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [], &quot;funktioargumentit&quot;: [{&quot;indeksi&quot;: 1, &quot;version&quot;: 0, &quot;laskentakaavaChild&quot;: {&quot;id&quot;: 418}}], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [{&quot;lahde&quot;: &quot;HAKUKOHTEEN_SYOTETTAVA_ARVO&quot;, &quot;kuvaus&quot;: &quot;kuvaus&quot;, &quot;indeksi&quot;: 1, &quot;version&quot;: 0, &quot;tunniste&quot;: &quot;{{hakukohde.paasykoe_tunniste}}&quot;, &quot;onPakollinen&quot;: true, &quot;vaatiiOsallistumisen&quot;: true, &quot;syotettavissaKaikille&quot;: false}], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: [{&quot;version&quot;: 0, &quot;maxValue&quot;: &quot;{{hakukohde.lisanaytto_hylkays_max}}&quot;, &quot;minValue&quot;: &quot;{{hakukohde.lisanaytto_hylkays_min}}&quot;, &quot;paluuarvo&quot;: &quot;60.0&quot;, &quot;hylkaysperuste&quot;: &quot;false&quot;, &quot;palautaHaettuArvo&quot;: &quot;true&quot;}, {&quot;version&quot;: 0, &quot;maxValue&quot;: &quot;{{hakukohde.lisanaytto_max}}&quot;, &quot;minValue&quot;: &quot;{{hakukohde.lisanaytto_min}}&quot;, &quot;paluuarvo&quot;: &quot;40.0&quot;, &quot;hylkaysperuste&quot;: &quot;false&quot;, &quot;palautaHaettuArvo&quot;: &quot;false&quot;}, {&quot;version&quot;: 0, &quot;maxValue&quot;: &quot;3.0&quot;, &quot;minValue&quot;: &quot;{{hakukohde.paasykoe_min}}&quot;, &quot;paluuarvo&quot;: &quot;50.0&quot;, &quot;hylkaysperuste&quot;: &quot;false&quot;, &quot;palautaHaettuArvo&quot;: &quot;{{hakukohde.avk1_pha}}&quot;}]}"/>
 
-
-    <arvokonvertteriparametri id="521" version="0" paluuarvo="30.0" arvo="6.0" hylkaysperuste="true"
-                              funktiokutsu_id="708"  tekstiryhma_id="1" />
-
-    <laskentakaava id="418" version="0" funktiokutsu_id="708" nimi="jeppis" on_luonnos="false"
-                   tyyppi="LUKUARVOFUNKTIO" />
-
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="709" version="0" funktionimi="KONVERTOILUKUARVO"/>
-    <funktioargumentti id="710" version="0" funktiokutsuparent_id="709" laskentakaavachild_id="418" indeksi="1"/>
-    <valintaperuste_viite id="602" version="0" lahde="HAKUKOHTEEN_SYOTETTAVA_ARVO"
-                          tunniste="{{hakukohde.paasykoe_tunniste}}" kuvaus="kuvaus"
-                          on_pakollinen="true" funktiokutsu_id="709" indeksi="1" vaatii_osallistumisen="true"
-                          syotettavissa_kaikille="false"/>
-    <arvovalikonvertteriparametri id="603" version="0" minvalue="{{hakukohde.paasykoe_min}}" maxvalue="3.0"
-                                  paluuarvo="50.0"
-                                  palauta_haettu_arvo="{{hakukohde.avk1_pha}}" funktiokutsu_id="709" hylkaysperuste="false"/>
-    <arvovalikonvertteriparametri id="604" version="0" minvalue="{{hakukohde.lisanaytto_min}}"
-                                  maxvalue="{{hakukohde.lisanaytto_max}}" paluuarvo="40.0"
-                                  palauta_haettu_arvo="false" funktiokutsu_id="709" hylkaysperuste="false"/>
-    <arvovalikonvertteriparametri id="605" version="0" minvalue="{{hakukohde.lisanaytto_hylkays_min}}"
-                                  maxvalue="{{hakukohde.lisanaytto_hylkays_max}}" paluuarvo="60.0"
-                                  palauta_haettu_arvo="true" funktiokutsu_id="709" hylkaysperuste="false"/>
-
-    <laskentakaava id="419" version="0" funktiokutsu_id="709" nimi="jeppis2" on_luonnos="false"
-                   tyyppi="TOTUUSARVOFUNKTIO"/>
-
-
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="710" version="0" funktionimi="HAELUKUARVO"/>
-    <laskentakaava id="420" version="0" funktiokutsu_id="710" nimi="Syotettavaa arvoa" on_luonnos="false"
-                   tyyppi="LUKUARVOFUNKTIO"/>
+    <laskentakaava id="420" version="0" nimi="Syotettavaa arvoa" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO" funktiokutsu="{&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;HAELUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [{&quot;lahde&quot;: &quot;SYOTETTAVA_ARVO&quot;, &quot;kuvaus&quot;: &quot;syotettavan arvon tyyppi&quot;, &quot;indeksi&quot;: 1, &quot;version&quot;: 0, &quot;tunniste&quot;: &quot;sat&quot;, &quot;onPakollinen&quot;: false, &quot;tilastoidaan&quot;: true, &quot;vaatiiOsallistumisen&quot;: true, &quot;syotettavissaKaikille&quot;: false, &quot;syotettavanarvontyyppi&quot;: {&quot;uri&quot;: &quot;syotettavanarvontyypit_valintakoe&quot;, &quot;arvo&quot;: &quot;valintakoe&quot;, &quot;version&quot;: 0}}], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}"/>
 
     <syotettavanarvonkoodi id="1" version="0" arvo="valintakoe" uri="syotettavanarvontyypit_valintakoe"/>
-    <valintaperuste_viite id="603" version="0" tunniste="sat" kuvaus="syotettavan arvon tyyppi" lahde="SYOTETTAVA_ARVO"
-                          funktiokutsu_id="710" on_pakollinen="false" indeksi="1" vaatii_osallistumisen="true"
-                          syotettavissa_kaikille="false" syotettavanarvontyyppi_id="1" tilastoidaan="true"/>
-
-
-
-
 
     <!--
         Ensimmäisen valintaryhmän luonti on siirretty ensimmäiseksi, koska taulu pitää luoda ensimmäisenä.
@@ -595,7 +304,6 @@
 
     <valintakoekoodi id="18" version="0" uri="valintakoeuri18"/>
     <valintaryhma_valintakoekoodi valintaryhma_id="59" valintakoekoodi_id="18"/>
-
 
     <hakukohde_viite id="1" version="0" hakuoid="hakuoid1" oid="oid1" nimi="haku1" valintaryhma_id="1"
                      manuaalisesti_siirretty="[NULL]"/>
@@ -1391,10 +1099,10 @@
                      kuvaus="kuvaus" tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="115"
                      aktiivinen="true" ei_varasijatayttoa="false" kaikki_ehdon_tayttavat_hyvaksytaan="false" valisijoittelu="false" automaattinen_sijoitteluun_siirto="true"/>
 
-    <laskentakaava id="1" version="0" nimi="kaava1" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO" funktiokutsu_id="1"/>
-    <laskentakaava id="2" version="0" nimi="kaava2" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO" funktiokutsu_id="2"/>
-    <laskentakaava id="3" version="0" nimi="kaava3" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO" funktiokutsu_id="3"/>
-    <laskentakaava id="4" version="0" nimi="kaava4" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO" funktiokutsu_id="4"/>
+    <laskentakaava id="1" version="0" nimi="kaava1" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO" funktiokutsu="{&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;LUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: [], &quot;syoteparametrit&quot;: [{&quot;version&quot;: 0, &quot;avain&quot;: &quot;luku&quot;, &quot;arvo&quot;: &quot;5.0&quot;}], &quot;funktioargumentit&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;validointivirheet&quot;: []}"/>
+    <laskentakaava id="2" version="0" nimi="kaava2" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO" funktiokutsu="{&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;LUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [{&quot;arvo&quot;: &quot;10.0&quot;, &quot;avain&quot;: &quot;luku&quot;, &quot;version&quot;: 0}], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}"/>
+    <laskentakaava id="3" version="0" nimi="kaava3" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO" funktiokutsu="{&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;LUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [{&quot;arvo&quot;: &quot;25.0&quot;, &quot;avain&quot;: &quot;luku&quot;, &quot;version&quot;: 0}], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}"/>
+    <laskentakaava id="4" version="0" nimi="kaava4" on_luonnos="false" tyyppi="LUKUARVOFUNKTIO" funktiokutsu="{&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;LUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [{&quot;arvo&quot;: &quot;2.0&quot;, &quot;avain&quot;: &quot;luku&quot;, &quot;version&quot;: 0}], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}"/>
 
     <jarjestyskriteeri id="1" version="1" oid="1" valintatapajono_id="6" laskentakaava_id="1" metatiedot="metatiedot1"
                        aktiivinen="true" edellinen_jarjestyskriteeri_id="[NULL]" master_jarjestyskriteeri_id="[NULL]"/>
@@ -1708,23 +1416,13 @@
     <hakukohde_viite id="0000" version="0" hakuoid="hakuoid1" oid="0000" nimi="Hakukohde ilman valinnanvaiheita"/>
 
     <!-- Valintaryhmään liitetyt laskentakaavat -testien objektit -->
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="411" version="0" funktionimi="LUKUARVO"/>
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="412" version="0" funktionimi="LUKUARVO"/>
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="413" version="0" funktionimi="LUKUARVO"/>
-    <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="414" version="0" funktionimi="LUKUARVO"/>
+    <laskentakaava id="411" version="0" nimi="kaava411" on_luonnos="true" tyyppi="LUKUARVOFUNKTIO" valintaryhmaviite="1" funktiokutsu="{&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;LUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}"/>
+    <laskentakaava id="412" version="0" nimi="kaava412" on_luonnos="true" tyyppi="LUKUARVOFUNKTIO" valintaryhmaviite="1" funktiokutsu="{&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;LUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}"/>
+    <laskentakaava id="413" version="0" nimi="kaava413" on_luonnos="true" tyyppi="LUKUARVOFUNKTIO" valintaryhmaviite="1" funktiokutsu="{&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;LUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}"/>
 
-    <laskentakaava id="411" version="0" nimi="kaava411" on_luonnos="true" tyyppi="LUKUARVOFUNKTIO" funktiokutsu_id="411"
-                   valintaryhmaviite="1"/>
-    <laskentakaava id="412" version="0" nimi="kaava412" on_luonnos="true" tyyppi="LUKUARVOFUNKTIO" funktiokutsu_id="412"
-                   valintaryhmaviite="1"/>
-    <laskentakaava id="413" version="0" nimi="kaava413" on_luonnos="true" tyyppi="LUKUARVOFUNKTIO" funktiokutsu_id="413"
-                   valintaryhmaviite="1"/>
+    <laskentakaava id="998" version="0" nimi="kaava414" on_luonnos="true" tyyppi="LUKUARVOFUNKTIO" valintaryhmaviite="6" funktiokutsu="{&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;LUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}"/>
 
-    <laskentakaava id="998" version="0" nimi="kaava414" on_luonnos="true" tyyppi="LUKUARVOFUNKTIO" funktiokutsu_id="414"
-                   valintaryhmaviite="6"/>
-
-    <laskentakaava id="999" version="0" nimi="kaava999" on_luonnos="true" tyyppi="LUKUARVOFUNKTIO" funktiokutsu_id="413"
-                   hakukohdeviite="1"/>
+    <laskentakaava id="999" version="0" nimi="kaava999" on_luonnos="true" tyyppi="LUKUARVOFUNKTIO" hakukohdeviite="1" funktiokutsu="{&quot;version&quot;: 0, &quot;funktionimi&quot;: &quot;LUKUARVO&quot;, &quot;tallennaTulos&quot;: false, &quot;omaopintopolku&quot;: false, &quot;syoteparametrit&quot;: [], &quot;funktioargumentit&quot;: [], &quot;validointivirheet&quot;: [], &quot;valintaperusteviitteet&quot;: [], &quot;arvokonvertteriparametrit&quot;: [], &quot;arvovalikonvertteriparametrit&quot;: []}"/>
 
     <hakijaryhmatyyppikoodi id="1" version="0" uri="hakijaryhmantyypit_ensikertalaiset" arvo="hakijaryhmantyypit_ensikertalaiset" nimi_fi="hakijaryhmantyypit_ensikertalaiset"/>
 
