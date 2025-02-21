@@ -190,8 +190,6 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             "Laskentakaava ei ole validi",
             Laskentakaavavalidaattori.validoiMallinnettuKaava(entity));
       }
-      // Ajastetaan orpojen poisto jos ajastin jostain syystä kaatunut
-      actorService.runSchedulerIfNotRunning();
       return managed;
     } catch (FunktiokutsuMuodostaaSilmukanException e) {
       throw new LaskentakaavaMuodostaaSilmukanException(
