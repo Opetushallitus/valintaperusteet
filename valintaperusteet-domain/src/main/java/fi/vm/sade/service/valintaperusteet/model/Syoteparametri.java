@@ -7,8 +7,7 @@ public class Syoteparametri extends BaseEntity {
 
   private String arvo;
 
-  @JsonBackReference
-  private Funktiokutsu funktiokutsu;
+  @JsonBackReference private Funktiokutsu funktiokutsu;
 
   public String getAvain() {
     return avain;

@@ -46,7 +46,8 @@ public class HaeHakukohteenValintaperusteetRekursiivisestiActorBean extends Unty
 
   public HaeHakukohteenValintaperusteetRekursiivisestiActorBean() {}
 
-  private Funktiokutsu kasitteleLoppuun(Funktiokutsu funktiokutsu) {
+  public static Funktiokutsu kasitteleLoppuun(
+      Funktiokutsu funktiokutsu, HakukohteenValintaperusteAvaimetDTO valintaperusteet) {
     List<String> tunnisteet = new ArrayList<String>();
     List<String> arvot = new ArrayList<String>();
     List<String> hylkaysperusteet = new ArrayList<String>();
@@ -162,7 +163,7 @@ public class HaeHakukohteenValintaperusteetRekursiivisestiActorBean extends Unty
       }
       funktiokutsuLapset--;
       if (funktiokutsuLapset <= 0) {
-        original = kasitteleLoppuun(original);
+        original = kasitteleLoppuun(original, valintaperusteet);
         ActorRef par = getContext().parent();
         if (par.equals(actorParent)) {
           par.tell(original, getSelf());
@@ -175,7 +176,7 @@ public class HaeHakukohteenValintaperusteetRekursiivisestiActorBean extends Unty
       actorParent = sender();
       UusiHakukohteenValintaperusteRekursio viesti =
           (UusiHakukohteenValintaperusteRekursio) message;
-      original = funktiokutsuDAO.getFunktiokutsunValintaperusteet(viesti.getId());
+      // original = funktiokutsuDAO.getFunktiokutsunValintaperusteet(viesti.getId());
       valintaperusteet = viesti.getValintaperusteet();
       if (original.getFunktioargumentit() == null || original.getFunktioargumentit().size() == 0) {
         self().tell(original, getSelf());
