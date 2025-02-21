@@ -34,10 +34,6 @@ public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
   @JoinColumn(name = "hakukohdeviite", nullable = true, unique = false)
   private HakukohdeViite hakukohde;
 
-  @JoinColumn(name = "funktiokutsu_id", nullable = false, unique = false)
-  @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
-  private Funktiokutsu funktiokutsu;
-
   @Column(name = "tyyppi", nullable = false)
   @Enumerated(EnumType.STRING)
   private Funktiotyyppi tyyppi;
@@ -49,9 +45,9 @@ public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
   private Set<Jarjestyskriteeri> jarjestyskriteerit = new HashSet<Jarjestyskriteeri>();
 
   @JdbcTypeCode(SqlTypes.JSON)
-  @Column(name = "funktiokutsu", columnDefinition = "jsonb")
+  @Column(columnDefinition = "jsonb")
   @Convert(converter = JsonNodeConverter.class)
-  private FunktiokutsuWrapper kaava;
+  private FunktiokutsuWrapper funktiokutsu;
 
   public Boolean getOnLuonnos() {
     return onLuonnos;
@@ -94,15 +90,11 @@ public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
   }
 
   public Funktiokutsu getFunktiokutsu() {
-    if (this.kaava != null) {
-      return this.kaava.getFunktiokutsu();
-    }
-    return funktiokutsu;
+    return this.funktiokutsu == null ? null : this.funktiokutsu.getFunktiokutsu();
   }
 
   public void setFunktiokutsu(Funktiokutsu funktiokutsu) {
-    this.funktiokutsu = funktiokutsu;
-    this.kaava = new FunktiokutsuWrapper(funktiokutsu, true);
+    this.funktiokutsu = new FunktiokutsuWrapper(funktiokutsu, true);
   }
 
   public Funktiotyyppi getTyyppi() {
@@ -129,9 +121,7 @@ public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
     this.kopiot = kopiot;
   }
 
-  public void migrateKaava() {
-    this.kaava = new FunktiokutsuWrapper(this.funktiokutsu, true);
-  }
+  public void migrateKaava() {}
 
   @Override
   public Long getId() {
@@ -146,13 +136,13 @@ public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
   }
 
   private void updateTyyppi() {
-    if (funktiokutsu != null) {
-      tyyppi = funktiokutsu.getFunktionimi().getTyyppi();
+    if (this.getFunktiokutsu() != null) {
+      tyyppi = this.getFunktiokutsu().getFunktionimi().getTyyppi();
     }
   }
 
   private void korjaaFunktiokutsunNimi() {
-    if (funktiokutsu != null) {
+    if (this.getFunktiokutsu() != null) {
       for (Syoteparametri parametri : getFunktiokutsu().getSyoteparametrit()) {
         if (parametri.getAvain().equals("nimi")) {
           parametri.setArvo(getNimi());
@@ -161,8 +151,7 @@ public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
     }
   }
 
-  /* Hibernate kilahtaa (palauttaa hauista duplikaatteja) jos jsonb-kentässä oleva tyyppi on samalla entiteetti
-   *  joten käytetään wrapper-luokkaa, samalla voidaan tallentaa dirty-flagi */
+  /* Käytetään wrapper-luokkaa johon voidaan tallentaa dirty-flagi */
   public static class FunktiokutsuWrapper {
     private final Funktiokutsu funktiokutsu;
     private final boolean dirty;
@@ -194,10 +183,14 @@ public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    public JsonNodeConverter() {
+      this.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    }
+
     @Override
-    public String convertToDatabaseColumn(FunktiokutsuWrapper wrapper) {
+    public String convertToDatabaseColumn(FunktiokutsuWrapper funktiokutsu) {
       try {
-        return objectMapper.writeValueAsString(wrapper == null ? null : wrapper.getFunktiokutsu());
+        return objectMapper.writeValueAsString(funktiokutsu.getFunktiokutsu());
       } catch (JsonProcessingException e) {
         throw new RuntimeException("Error while serializing JsonNode to JSON", e);
       }
