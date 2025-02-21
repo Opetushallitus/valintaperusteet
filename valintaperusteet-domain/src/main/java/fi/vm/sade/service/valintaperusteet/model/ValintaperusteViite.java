@@ -3,65 +3,40 @@ package fi.vm.sade.service.valintaperusteet.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
-import jakarta.persistence.*;
 
-@Table(
-    name = "valintaperuste_viite",
-    uniqueConstraints =
-        @UniqueConstraint(
-            name = "UK_valintaperuste_viite_001",
-            columnNames = {"funktiokutsu_id", "indeksi"}))
-@Entity
-@Cacheable(true)
 public class ValintaperusteViite extends BaseEntity implements Comparable<ValintaperusteViite> {
   private static final long serialVersionUID = 1L;
 
   public static final String OSALLISTUMINEN_POSTFIX = "-OSALLISTUMINEN";
 
-  @Column(name = "tunniste", nullable = false)
   private String tunniste;
 
-  @Column(name = "kuvaus")
   private String kuvaus;
 
-  @Enumerated(EnumType.STRING)
-  @Column(name = "lahde", nullable = false)
   private Valintaperustelahde lahde;
 
-  @JoinColumn(name = "funktiokutsu_id", nullable = false)
-  @ManyToOne(optional = false)
   @JsonBackReference
   private Funktiokutsu funktiokutsu;
 
-  @Column(name = "on_pakollinen", nullable = false)
   private Boolean onPakollinen;
 
   // Jos valintaperusteen lähde on hakukohde, voidaan epäsuoralla
   // viittauksella hakea
   // hakukohteelta tunniste, jolla viitataan hakemuksen arvoon
-  @Column(name = "epasuora_viittaus", nullable = true)
   private Boolean epasuoraViittaus;
 
-  @Column(name = "indeksi", nullable = false)
   private Integer indeksi;
 
-  @JoinColumn(name = "tekstiryhma_id", nullable = true)
-  @ManyToOne(fetch = FetchType.LAZY, optional = true)
   @JsonSerialize(using = TekstiRyhmaSerializer.class)
   private TekstiRyhma kuvaukset;
 
   // VT-854 mahdollistetaan syötettävien arvojen pistesyöttö ilman laskentaa
-  @Column(name = "vaatii_osallistumisen", nullable = false)
   private Boolean vaatiiOsallistumisen = true;
 
-  @Column(name = "syotettavissa_kaikille", nullable = false)
   private Boolean syotettavissaKaikille = true;
 
-  @JoinColumn(name = "syotettavanarvontyyppi_id", nullable = true)
-  @ManyToOne(fetch = FetchType.EAGER, optional = true)
   private Syotettavanarvontyyppi syotettavanarvontyyppi;
 
-  @Column(name = "tilastoidaan", nullable = true)
   private Boolean tilastoidaan = false;
 
   public String getTunniste() {
@@ -120,7 +95,6 @@ public class ValintaperusteViite extends BaseEntity implements Comparable<Valint
     this.indeksi = indeksi;
   }
 
-  @Transient
   @JsonBackReference
   public String getOsallistuminenTunniste() {
     String osallistuminenTunniste = null;

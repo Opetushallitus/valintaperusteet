@@ -9,35 +9,22 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import java.io.IOException;
 
-@Entity
-@Table(name = "funktioargumentti")
-@Cacheable(true)
 public class Funktioargumentti extends BaseEntity implements Comparable<Funktioargumentti> {
 
-  @JoinColumn(name = "funktiokutsuparent_id", nullable = false)
-  @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
   @JsonBackReference
   private Funktiokutsu parent;
 
-  @JoinColumn(name = "funktiokutsuchild_id", nullable = true)
-  @ManyToOne(cascade = CascadeType.PERSIST)
   private Funktiokutsu funktiokutsuChild;
 
-  @JoinColumn(name = "laskentakaavachild_id", nullable = true)
-  @ManyToOne(cascade = CascadeType.PERSIST)
   @JsonSerialize(using = CustomLaskentakaavaSerializer.class)
   @JsonDeserialize(using = CustomLaskentakaavaDeserializer.class)
   private Laskentakaava laskentakaavaChild;
 
   @Min(1)
-  @Column(name = "indeksi", nullable = false)
   private Integer indeksi;
-
-  @Transient private Funktiokutsu laajennettuKaava;
 
   public Funktiokutsu getParent() {
     return parent;
@@ -69,14 +56,6 @@ public class Funktioargumentti extends BaseEntity implements Comparable<Funktioa
 
   public void setIndeksi(Integer indeksi) {
     this.indeksi = indeksi;
-  }
-
-  public Funktiokutsu getLaajennettuKaava() {
-    return laajennettuKaava;
-  }
-
-  public void setLaajennettuKaava(Funktiokutsu laajennettuKaava) {
-    this.laajennettuKaava = laajennettuKaava;
   }
 
   @Override
