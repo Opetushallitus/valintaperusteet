@@ -112,25 +112,4 @@ public class LaskentakaavaDAOImpl extends AbstractJpaDAOImpl<Laskentakaava, Long
   public void flush() {
     getEntityManager().flush();
   }
-
-  @Override
-  @Transactional
-  public Optional<Long> migrateNextLaskentakaava() {
-    QLaskentakaava lk = QLaskentakaava.laskentakaava;
-    Collection<Laskentakaava> laskentakaavat =
-        queryFactory()
-            .selectFrom(lk)
-            .where(lk.kaava.isNull())
-            // kaksi seuraavaa riviä on hibernaten tapa määritellä SKIP LOCKED (Oh joy)
-            .setLockMode(LockModeType.PESSIMISTIC_WRITE)
-            .setHint("jakarta.persistence.lock.timeout", -2)
-            .limit(1)
-            .fetch();
-    if (laskentakaavat.size() == 0) {
-      return Optional.empty();
-    }
-    laskentakaavat.forEach(kaava -> kaava.migrateKaava());
-
-    return Optional.of(laskentakaavat.iterator().next().getId());
-  }
 }
