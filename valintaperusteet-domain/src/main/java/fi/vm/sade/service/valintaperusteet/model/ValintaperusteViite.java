@@ -15,8 +15,7 @@ public class ValintaperusteViite extends BaseEntity implements Comparable<Valint
 
   private Valintaperustelahde lahde;
 
-  @JsonBackReference
-  private Funktiokutsu funktiokutsu;
+  @JsonBackReference private Funktiokutsu funktiokutsu;
 
   private Boolean onPakollinen;
 

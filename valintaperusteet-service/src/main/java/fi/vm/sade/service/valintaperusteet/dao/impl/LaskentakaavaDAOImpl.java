@@ -9,13 +9,9 @@ import fi.vm.sade.service.valintaperusteet.dao.LaskentakaavaDAO;
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.LockModeType;
-import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class LaskentakaavaDAOImpl extends AbstractJpaDAOImpl<Laskentakaava, Long>
