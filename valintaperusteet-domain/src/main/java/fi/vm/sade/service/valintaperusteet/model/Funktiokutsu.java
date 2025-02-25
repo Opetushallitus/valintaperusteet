@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktionimi;
 import java.util.*;
 
-public class Funktiokutsu extends BaseEntity implements FunktionArgumentti {
+public class Funktiokutsu implements FunktionArgumentti {
   private static final long serialVersionUID = 1L;
 
   private Funktionimi funktionimi;
@@ -85,11 +85,6 @@ public class Funktiokutsu extends BaseEntity implements FunktionArgumentti {
 
   public void setValintaperusteviitteet(Set<ValintaperusteViite> valintaperusteviitteet) {
     this.valintaperusteviitteet = valintaperusteviitteet;
-  }
-
-  @Override
-  public Long getId() {
-    return super.getId();
   }
 
   public List<Abstraktivalidointivirhe> getValidointivirheet() {

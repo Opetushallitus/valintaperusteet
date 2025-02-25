@@ -1,7 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.service.impl;
 
 import fi.vm.sade.kaava.Laskentakaavavalidaattori;
-import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
 import fi.vm.sade.service.valintaperusteet.dao.GenericDAO;
 import fi.vm.sade.service.valintaperusteet.dao.HakijaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
@@ -66,8 +65,6 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
   public static final Pattern pattern = Pattern.compile(r);
 
   @Autowired private GenericDAO genericDAO;
-
-  @Autowired private FunktiokutsuDAO funktiokutsuDAO;
 
   @Autowired private LaskentakaavaDAO laskentakaavaDAO;
 
@@ -191,30 +188,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
       Valintaryhma valintaryhma,
       Set<Long> laskentakaavaIds)
       throws FunktiokutsuMuodostaaSilmukanException {
-    Funktiokutsu managed = null;
-    if (!copy && incoming.getId() != null) {
-      managed = funktiokutsuDAO.read(incoming.getId());
-      for (Arvokonvertteriparametri p : managed.getArvokonvertteriparametrit()) {
-        genericDAO.remove(p);
-      }
-      for (Arvovalikonvertteriparametri p : managed.getArvovalikonvertteriparametrit()) {
-        genericDAO.remove(p);
-      }
-      for (Syoteparametri p : managed.getSyoteparametrit()) {
-        genericDAO.remove(p);
-      }
-      for (ValintaperusteViite vp : managed.getValintaperusteviitteet()) {
-        genericDAO.remove(vp);
-      }
-      managed.getFunktioargumentit().clear();
-      managed.getArvokonvertteriparametrit().clear();
-      managed.getArvovalikonvertteriparametrit().clear();
-      managed.getSyoteparametrit().clear();
-      managed.getValintaperusteviitteet().clear();
-      funktiokutsuDAO.flush();
-    } else {
-      managed = new Funktiokutsu();
-    }
+    Funktiokutsu managed = new Funktiokutsu();
     managed.setFunktionimi(incoming.getFunktionimi());
     managed.setTallennaTulos(incoming.getTallennaTulos());
     managed.setTulosTunniste(incoming.getTulosTunniste());
@@ -350,9 +324,6 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
         newVp.setKuvaukset(ryhma);
       }
       managed.getValintaperusteviitteet().add(newVp);
-    }
-    if (managed.getId() == null) {
-      // funktiokutsuDAO.insert(managed, false);
     }
     return managed;
   }
@@ -672,7 +643,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
   public List<ValintaperusteDTO> findAvaimetForHakukohde(String hakukohdeOid) {
     List<ValintaperusteDTO> result =
         convertToAvaimet(
-            funktiokutsuDAO.findFunktiokutsuByHakukohdeOid(hakukohdeOid),
+            laskentakaavaDAO.findFunktiokutsuByHakukohdeOid(hakukohdeOid),
             hakukohteenValintaperusteDAO.haeHakukohteenValintaperusteet(hakukohdeOid));
     return result;
   }
@@ -681,7 +652,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
   public Map<String, List<ValintaperusteDTO>> findAvaimetForHakukohteet(
       List<String> hakukohdeOidit) {
     Map<String, List<Funktiokutsu>> hakukohteidenFunktiokutsut =
-        funktiokutsuDAO.findFunktiokutsuByHakukohdeOids(hakukohdeOidit);
+        laskentakaavaDAO.findFunktiokutsuByHakukohdeOids(hakukohdeOidit);
     Map<String, List<HakukohteenValintaperuste>> hakukohteidenValintaperusteet =
         hakukohteenValintaperusteDAO.haeHakukohteidenValintaperusteet(hakukohdeOidit).stream()
             .collect(Collectors.groupingBy(vp -> vp.getHakukohde().getOid(), Collectors.toList()));
@@ -697,7 +668,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
 
   @Override
   public HakukohteenValintaperusteAvaimetDTO findHakukohteenAvaimet(String oid) {
-    List<Funktiokutsu> funktiokutsut = funktiokutsuDAO.findFunktiokutsuByHakukohdeOid(oid);
+    List<Funktiokutsu> funktiokutsut = laskentakaavaDAO.findFunktiokutsuByHakukohdeOid(oid);
     HakukohteenValintaperusteAvaimetDTO valintaperusteet =
         new HakukohteenValintaperusteAvaimetDTO();
     for (Funktiokutsu kutsu : funktiokutsut) {
@@ -801,19 +772,13 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
             throw new FunktiokutsuaEiVoidaKayttaaValintalaskennassaException(
                 "Funktiokutsua "
                     + funktiokutsu.getFunktionimi().name()
-                    + ", id "
-                    + funktiokutsu.getId()
                     + " ei voida käyttää valintalaskennassa.",
-                funktiokutsu.getId(),
                 funktiokutsu.getFunktionimi());
           case VALINTAKOELASKENTA:
             throw new FunktiokutsuaEiVoidaKayttaaValintakoelaskennassaException(
                 "Funktiokutsua "
                     + funktiokutsu.getFunktionimi().name()
-                    + ", id "
-                    + funktiokutsu.getId()
                     + " ei voida käyttää valintakoelaskennassa.",
-                funktiokutsu.getId(),
                 funktiokutsu.getFunktionimi());
         }
       }
