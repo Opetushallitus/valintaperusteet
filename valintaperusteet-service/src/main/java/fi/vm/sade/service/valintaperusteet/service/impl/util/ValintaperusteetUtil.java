@@ -1,55 +1,23 @@
-package fi.vm.sade.service.valintaperusteet.service.impl.actors;
+package fi.vm.sade.service.valintaperusteet.service.impl.util;
 
-import static fi.vm.sade.service.valintaperusteet.service.impl.actors.creators.SpringExtension.SpringExtProvider;
-
-import akka.actor.ActorRef;
-import akka.actor.ActorSystem;
-import akka.actor.Status;
-import akka.actor.UntypedAbstractActor;
-import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
 import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
 import fi.vm.sade.service.valintaperusteet.model.Arvokonvertteriparametri;
 import fi.vm.sade.service.valintaperusteet.model.Arvovalikonvertteriparametri;
-import fi.vm.sade.service.valintaperusteet.model.Funktioargumentti;
 import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
 import fi.vm.sade.service.valintaperusteet.model.ValintaperusteViite;
 import fi.vm.sade.service.valintaperusteet.service.impl.LaskentakaavaServiceImpl;
-import fi.vm.sade.service.valintaperusteet.service.impl.actors.messages.UusiValintaperusteRekursio;
-import fi.vm.sade.service.valintaperusteet.service.impl.util.FunktiokutsuCache;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.regex.Matcher;
-import javax.inject.Named;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Named("HaeValintaperusteetRekursiivisestiActorBean")
-@Component
-@org.springframework.context.annotation.Scope(value = "prototype")
-public class HaeValintaperusteetRekursiivisestiActorBean extends UntypedAbstractActor {
-  private static Logger LOG =
-      LoggerFactory.getLogger(HaeValintaperusteetRekursiivisestiActorBean.class);
-
-  private int funktiokutsuLapset = 0;
-
-  @Autowired private FunktiokutsuDAO funktiokutsuDAO;
-
-  private Funktiokutsu original;
-  private Map<String, ValintaperusteDTO> valintaperusteet;
-  private Map<String, String> hakukohteenValintaperusteet;
-
-  private ActorRef actorParent = null;
-
-  @Autowired private FunktiokutsuCache funktiokutsuCache;
-
-  public HaeValintaperusteetRekursiivisestiActorBean() {}
+public class ValintaperusteetUtil {
+  private static Logger LOG = LoggerFactory.getLogger(ValintaperusteetUtil.class);
 
   private static String haeTunniste(
       String mustache, Map<String, String> hakukohteenValintaperusteet) {
@@ -67,7 +35,7 @@ public class HaeValintaperusteetRekursiivisestiActorBean extends UntypedAbstract
     }
   }
 
-  public static Funktiokutsu kasitteleLoppuun(
+  public static Funktiokutsu haeAvaimet(
       Funktiokutsu funktiokutsu,
       Map<String, ValintaperusteDTO> valintaperusteet,
       Map<String, String> hakukohteenValintaperusteet) {
@@ -149,83 +117,5 @@ public class HaeValintaperusteetRekursiivisestiActorBean extends UntypedAbstract
       }
     }
     return funktiokutsu;
-  }
-
-  public void onReceive(Object message) {
-    if (message instanceof Funktiokutsu) {
-      Funktiokutsu response = (Funktiokutsu) message;
-      for (Funktioargumentti arg : original.getFunktioargumentit()) {
-        if (arg.getFunktiokutsuChild() != null
-            && arg.getFunktiokutsuChild().getId().equals(response.getId())) {
-          arg.setFunktiokutsuChild(response);
-        } else if (arg.getLaskentakaavaChild() != null
-            && arg.getLaskentakaavaChild().getFunktiokutsu() == null) {
-          arg.getLaskentakaavaChild().setFunktiokutsu(response);
-        }
-      }
-      funktiokutsuLapset--;
-      if (funktiokutsuLapset <= 0) {
-        original = kasitteleLoppuun(original, valintaperusteet, hakukohteenValintaperusteet);
-        ActorRef par = getContext().parent();
-        if (par.equals(actorParent)) {
-          par.tell(original, getSelf());
-        } else {
-          actorParent.tell(original, getSelf());
-        }
-        getContext().stop(self());
-      }
-    } else if (message instanceof UusiValintaperusteRekursio) {
-      actorParent = sender();
-      UusiValintaperusteRekursio viesti = (UusiValintaperusteRekursio) message;
-      original = funktiokutsuCache.get(viesti.getId());
-      if (null == original) {
-        // original = funktiokutsuDAO.getFunktiokutsunValintaperusteet(viesti.getId());
-        funktiokutsuCache.add(viesti.getId(), original);
-      }
-      valintaperusteet = viesti.getValintaperusteet();
-      hakukohteenValintaperusteet = viesti.getHakukohteenValintaperusteet();
-      if (original.getFunktioargumentit() == null || original.getFunktioargumentit().size() == 0) {
-        self().tell(original, getSelf());
-      } else {
-        funktiokutsuLapset = original.getFunktioargumentit().size();
-
-        for (Funktioargumentti arg : original.getFunktioargumentit()) {
-          ActorSystem system = getContext().system();
-          ActorRef child =
-              getContext()
-                  .actorOf(
-                      SpringExtProvider.get(system)
-                          .props("HaeValintaperusteetRekursiivisestiActorBean"),
-                      UUID.randomUUID().toString().replaceAll("-", ""));
-          if (arg.getFunktiokutsuChild() != null) {
-            child.tell(
-                new UusiValintaperusteRekursio(
-                    arg.getFunktiokutsuChild().getId(),
-                    viesti.getValintaperusteet(),
-                    viesti.getHakukohteenValintaperusteet()),
-                self());
-          } else if (arg.getLaskentakaavaChild() != null) {
-            child.tell(
-                new UusiValintaperusteRekursio(
-                    arg.getLaskentakaavaChild().getFunktiokutsu().getId(),
-                    viesti.getValintaperusteet(),
-                    viesti.getHakukohteenValintaperusteet()),
-                self());
-          }
-        }
-      }
-    } else if (message instanceof Exception) {
-      ActorRef par = getContext().parent();
-      if (par.equals(actorParent)) {
-        par.tell(message, ActorRef.noSender());
-      } else {
-        Throwable ex = (Throwable) message;
-        actorParent.tell(new Status.Failure(ex), ActorRef.noSender());
-      }
-      getContext().stop(self());
-    } else {
-      unhandled(message);
-      getContext().stop(getSelf());
-    }
   }
 }

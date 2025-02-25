@@ -42,10 +42,10 @@ import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaEiOleO
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaEiValidiException;
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaMuodostaaSilmukanException;
 import fi.vm.sade.service.valintaperusteet.service.impl.actors.ActorService;
-import fi.vm.sade.service.valintaperusteet.service.impl.actors.HaeHakukohteenValintaperusteetRekursiivisestiActorBean;
-import fi.vm.sade.service.valintaperusteet.service.impl.actors.HaeValintaperusteetRekursiivisestiActorBean;
+import fi.vm.sade.service.valintaperusteet.service.impl.util.HakukohteenValintaperusteetUtil;
 import fi.vm.sade.service.valintaperusteet.service.impl.util.LaskentakaavaCache;
 import fi.vm.sade.service.valintaperusteet.service.impl.util.ObjectGraphUtil;
+import fi.vm.sade.service.valintaperusteet.service.impl.util.ValintaperusteetUtil;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -631,8 +631,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
     Map<String, ValintaperusteDTO> valintaperusteet = new HashMap<>();
     for (Funktiokutsu kutsu : hakukohteenFunktiokutsut) {
       for (Funktiokutsu k : ObjectGraphUtil.extractObjectsOfType(kutsu, Funktiokutsu.class)) {
-        HaeValintaperusteetRekursiivisestiActorBean.kasitteleLoppuun(
-            k, valintaperusteet, hakukohteenValintaperusteet);
+        ValintaperusteetUtil.haeAvaimet(k, valintaperusteet, hakukohteenValintaperusteet);
       }
     }
     List<ValintaperusteDTO> result = new ArrayList<>(valintaperusteet.values());
@@ -673,8 +672,7 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
         new HakukohteenValintaperusteAvaimetDTO();
     for (Funktiokutsu kutsu : funktiokutsut) {
       for (Funktiokutsu k : ObjectGraphUtil.extractObjectsOfType(kutsu, Funktiokutsu.class)) {
-        HaeHakukohteenValintaperusteetRekursiivisestiActorBean.kasitteleLoppuun(
-            k, valintaperusteet);
+        HakukohteenValintaperusteetUtil.haeAvaimet(k, valintaperusteet);
       }
     }
     return valintaperusteet;
