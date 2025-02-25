@@ -136,4 +136,11 @@ public class LaskentakaavaDAOTest extends WithSpringBoot {
     kaavas = laskentakaavaDAO.findKaavas(true, null, null, Funktiotyyppi.TOTUUSARVOFUNKTIO);
     assertEquals(3, kaavas.size());
   }
+
+  @Test
+  public void testFindFunktiokutsuByHakukohdeOids() throws Exception {
+    List<Funktiokutsu> kaavat = laskentakaavaDAO.findFunktiokutsuByHakukohdeOid("oid17");
+    Thread.sleep(5000);
+    assertEquals(2, kaavat.size());
+  }
 }

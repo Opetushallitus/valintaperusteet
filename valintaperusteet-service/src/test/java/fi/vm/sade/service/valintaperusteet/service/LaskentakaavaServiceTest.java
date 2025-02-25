@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import fi.vm.sade.kaava.Funktiokuvaaja;
 import fi.vm.sade.service.valintaperusteet.WithSpringBoot;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
-import fi.vm.sade.service.valintaperusteet.dao.FunktiokutsuDAO;
 import fi.vm.sade.service.valintaperusteet.dto.FunktioargumentinLapsiDTO;
 import fi.vm.sade.service.valintaperusteet.dto.FunktioargumenttiDTO;
 import fi.vm.sade.service.valintaperusteet.dto.FunktiokutsuDTO;
@@ -49,8 +48,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class LaskentakaavaServiceTest extends WithSpringBoot {
 
   @Autowired private LaskentakaavaService laskentakaavaService;
-
-  @Autowired private FunktiokutsuDAO funktiokutsuDAO;
 
   @Autowired private ValintaperusteetModelMapper modelMapper;
 
