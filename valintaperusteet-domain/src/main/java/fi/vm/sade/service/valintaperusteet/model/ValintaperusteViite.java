@@ -1,10 +1,9 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import fi.vm.sade.service.valintaperusteet.dto.model.Valintaperustelahde;
 
-public class ValintaperusteViite extends BaseEntity implements Comparable<ValintaperusteViite> {
+public class ValintaperusteViite implements Comparable<ValintaperusteViite> {
   private static final long serialVersionUID = 1L;
 
   public static final String OSALLISTUMINEN_POSTFIX = "-OSALLISTUMINEN";
@@ -26,7 +25,6 @@ public class ValintaperusteViite extends BaseEntity implements Comparable<Valint
 
   private Integer indeksi;
 
-  @JsonSerialize(using = TekstiRyhmaSerializer.class)
   private TekstiRyhma kuvaukset;
 
   // VT-854 mahdollistetaan syötettävien arvojen pistesyöttö ilman laskentaa
