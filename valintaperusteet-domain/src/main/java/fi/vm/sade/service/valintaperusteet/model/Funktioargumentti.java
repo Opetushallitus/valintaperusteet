@@ -9,10 +9,9 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import jakarta.validation.constraints.Min;
 import java.io.IOException;
 
-public class Funktioargumentti extends BaseEntity implements Comparable<Funktioargumentti> {
+public class Funktioargumentti implements Comparable<Funktioargumentti> {
 
   @JsonBackReference private Funktiokutsu parent;
 
@@ -22,7 +21,6 @@ public class Funktioargumentti extends BaseEntity implements Comparable<Funktioa
   @JsonDeserialize(using = CustomLaskentakaavaDeserializer.class)
   private Laskentakaava laskentakaavaChild;
 
-  @Min(1)
   private Integer indeksi;
 
   public Funktiokutsu getParent() {

@@ -2,7 +2,7 @@ package fi.vm.sade.service.valintaperusteet.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-public abstract class Konvertteriparametri extends BaseEntity {
+public abstract class Konvertteriparametri {
   private String paluuarvo;
 
   @JsonBackReference private Funktiokutsu funktiokutsu;
