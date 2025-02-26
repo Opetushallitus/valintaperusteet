@@ -1,7 +1,5 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 public class Arvovalikonvertteriparametri extends Konvertteriparametri
     implements Comparable<Arvovalikonvertteriparametri> {
 
@@ -26,7 +24,6 @@ public class Arvovalikonvertteriparametri extends Konvertteriparametri
 
   private String hylkaysperuste;
 
-  @JsonSerialize(using = TekstiRyhmaSerializer.class)
   private TekstiRyhma kuvaukset;
 
   public String getMinValue() {

@@ -58,16 +58,26 @@ public class ValintaperusteetModelMapper extends ModelMapper {
               public Set<ValintaperusteViite> convert(
                   MappingContext<List<ValintaperusteViiteDTO>, Set<ValintaperusteViite>> context) {
                 Set<ValintaperusteViite> result = new TreeSet<ValintaperusteViite>();
+
+                int suurinIndeksi =
+                    context.getSource().stream()
+                        .filter(v -> v.getIndeksi() != null)
+                        .map(v -> v.getIndeksi())
+                        .max(Integer::compareTo)
+                        .orElse(0);
                 for (int i = 0; i < context.getSource().size(); i++) {
                   ValintaperusteViiteDTO arg = context.getSource().get(i);
-                  arg.setIndeksi(i + 1);
+                  if (arg.getIndeksi() == null) {
+                    // jos indeksiä ei määritelty niin lisätään listan loppuun
+                    arg.setIndeksi(++suurinIndeksi);
+                  }
                   ValintaperusteViite viite = map(arg, ValintaperusteViite.class);
                   if ((viite.getEpasuoraViittaus() == null || !viite.getEpasuoraViittaus())
                       && Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO.equals(viite.getLahde())) {
                     LOG.info(
                         String.format(
-                            "Pakotetaan epasuoraViittaus arvoon true, koska viitteen %d lähde on %s",
-                            viite.getId(), Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO));
+                            "Pakotetaan epasuoraViittaus arvoon true, koska viitteen lähde on %s",
+                            Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO));
                     viite.setEpasuoraViittaus(true);
                   }
                   viite.setIndeksi(arg.getIndeksi());
@@ -115,9 +125,19 @@ public class ValintaperusteetModelMapper extends ModelMapper {
               public Set<Funktioargumentti> convert(
                   MappingContext<List<FunktioargumenttiDTO>, Set<Funktioargumentti>> context) {
                 Set<Funktioargumentti> result = new TreeSet<Funktioargumentti>();
+
+                int suurinIndeksi =
+                    context.getSource().stream()
+                        .filter(v -> v.getIndeksi() != null)
+                        .map(v -> v.getIndeksi())
+                        .max(Integer::compareTo)
+                        .orElse(0);
                 for (int i = 0; i < context.getSource().size(); i++) {
                   FunktioargumenttiDTO arg = context.getSource().get(i);
-                  arg.setIndeksi(i + 1);
+                  if (arg.getIndeksi() == null) {
+                    // jos indeksi ei määritelty niin laitetaan listan loppuun
+                    arg.setIndeksi(++suurinIndeksi);
+                  }
                   Funktioargumentti funktioargumentti = new Funktioargumentti();
                   if (arg.getLapsi() != null
                       && arg.getLapsi()
@@ -194,7 +214,6 @@ public class ValintaperusteetModelMapper extends ModelMapper {
                             ValintaperusteetFunktiokutsuDTO.class));
                   }
                   dto.setIndeksi(arg.getIndeksi());
-                  dto.setId(arg.getId());
                   result.add(dto);
                 }
                 return result;
@@ -212,7 +231,6 @@ public class ValintaperusteetModelMapper extends ModelMapper {
                   Funktioargumentti arg = new Funktioargumentti();
                   arg.setFunktiokutsuChild(map(dto.getFunktiokutsu(), Funktiokutsu.class));
                   arg.setIndeksi(dto.getIndeksi());
-                  arg.setId(dto.getId());
                   result.add(arg);
                 }
                 return result;
@@ -469,9 +487,18 @@ public class ValintaperusteetModelMapper extends ModelMapper {
   }
 
   public Funktiokutsu asetaIndeksitRekursiivisesti(FunktioargumentinLapsiDTO kutsu) {
+    int suurinIndeksi =
+        kutsu.getFunktioargumentit().stream()
+            .filter(v -> v.getIndeksi() != null)
+            .map(v -> v.getIndeksi())
+            .max(Integer::compareTo)
+            .orElse(0);
     for (int i = 0; i < kutsu.getFunktioargumentit().size(); i++) {
       FunktioargumenttiDTO arg = kutsu.getFunktioargumentit().get(i);
-      arg.setIndeksi(i + 1);
+      if (arg.getIndeksi() == null) {
+        // jos indeksi ei määritelty niin laitetaan listan loppuun
+        arg.setIndeksi(++suurinIndeksi);
+      }
       if (arg.getLapsi() != null
           && arg.getLapsi().getLapsityyppi().equals(FunktioargumentinLapsiDTO.FUNKTIOKUTSUTYYPPI)) {
         asetaIndeksitRekursiivisesti(arg.getLapsi());
