@@ -12,8 +12,6 @@ public class ValintaperusteetFunktioargumenttiDTO
   @Schema(description = "Indeksi", required = true)
   private Integer indeksi;
 
-  private Long id;
-
   public Integer getIndeksi() {
     return indeksi;
   }
@@ -33,13 +31,5 @@ public class ValintaperusteetFunktioargumenttiDTO
 
   public void setFunktiokutsu(ValintaperusteetFunktiokutsuDTO funktiokutsu) {
     this.funktiokutsu = funktiokutsu;
-  }
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
   }
 }
