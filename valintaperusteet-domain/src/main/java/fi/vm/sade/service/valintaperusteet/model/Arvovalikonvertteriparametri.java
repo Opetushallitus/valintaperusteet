@@ -1,10 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
-import jakarta.persistence.*;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-@Entity
-@Table(name = "arvovalikonvertteriparametri")
-@Cacheable(true)
 public class Arvovalikonvertteriparametri extends Konvertteriparametri
     implements Comparable<Arvovalikonvertteriparametri> {
 
@@ -21,20 +18,15 @@ public class Arvovalikonvertteriparametri extends Konvertteriparametri
     return sb.toString();
   }
 
-  @Column(name = "minvalue", nullable = false)
   private String minValue;
 
-  @Column(name = "maxvalue", nullable = false)
   private String maxValue;
 
-  @Column(name = "palauta_haettu_arvo")
   private String palautaHaettuArvo;
 
-  @Column(name = "hylkaysperuste", nullable = false)
   private String hylkaysperuste;
 
-  @JoinColumn(name = "tekstiryhma_id", nullable = true)
-  @ManyToOne(fetch = FetchType.LAZY, optional = true)
+  @JsonSerialize(using = TekstiRyhmaSerializer.class)
   private TekstiRyhma kuvaukset;
 
   public String getMinValue() {

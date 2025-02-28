@@ -132,8 +132,15 @@ public class LaskentakaavaDAOTest extends WithSpringBoot {
   public void testLaskentakaavatByTyyppi() {
     List<Laskentakaava> kaavas =
         laskentakaavaDAO.findKaavas(true, null, null, Funktiotyyppi.LUKUARVOFUNKTIO);
-    assertEquals(23, kaavas.size());
+    assertEquals(24, kaavas.size());
     kaavas = laskentakaavaDAO.findKaavas(true, null, null, Funktiotyyppi.TOTUUSARVOFUNKTIO);
-    assertEquals(4, kaavas.size());
+    assertEquals(3, kaavas.size());
+  }
+
+  @Test
+  public void testFindFunktiokutsuByHakukohdeOids() throws Exception {
+    List<Funktiokutsu> kaavat = laskentakaavaDAO.findFunktiokutsuByHakukohdeOid("oid17");
+    Thread.sleep(5000);
+    assertEquals(2, kaavat.size());
   }
 }

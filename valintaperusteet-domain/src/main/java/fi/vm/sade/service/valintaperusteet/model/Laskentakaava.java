@@ -1,21 +1,13 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.*;
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi;
-import jakarta.persistence.Cacheable;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "laskentakaava")
@@ -42,10 +34,6 @@ public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
   @JoinColumn(name = "hakukohdeviite", nullable = true, unique = false)
   private HakukohdeViite hakukohde;
 
-  @JoinColumn(name = "funktiokutsu_id", nullable = false, unique = false)
-  @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
-  private Funktiokutsu funktiokutsu;
-
   @Column(name = "tyyppi", nullable = false)
   @Enumerated(EnumType.STRING)
   private Funktiotyyppi tyyppi;
@@ -55,6 +43,11 @@ public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "laskentakaava", cascade = CascadeType.PERSIST)
   private Set<Jarjestyskriteeri> jarjestyskriteerit = new HashSet<Jarjestyskriteeri>();
+
+  @JdbcTypeCode(SqlTypes.JSON)
+  @Column(columnDefinition = "jsonb")
+  @Convert(converter = JsonNodeConverter.class)
+  private Funktiokutsu funktiokutsu;
 
   public Boolean getOnLuonnos() {
     return onLuonnos;
@@ -97,7 +90,7 @@ public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
   }
 
   public Funktiokutsu getFunktiokutsu() {
-    return funktiokutsu;
+    return this.funktiokutsu;
   }
 
   public void setFunktiokutsu(Funktiokutsu funktiokutsu) {
@@ -141,13 +134,13 @@ public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
   }
 
   private void updateTyyppi() {
-    if (funktiokutsu != null) {
-      tyyppi = funktiokutsu.getFunktionimi().getTyyppi();
+    if (this.getFunktiokutsu() != null) {
+      tyyppi = this.getFunktiokutsu().getFunktionimi().getTyyppi();
     }
   }
 
   private void korjaaFunktiokutsunNimi() {
-    if (funktiokutsu != null) {
+    if (this.getFunktiokutsu() != null) {
       for (Syoteparametri parametri : getFunktiokutsu().getSyoteparametrit()) {
         if (parametri.getAvain().equals("nimi")) {
           parametri.setArvo(getNimi());
@@ -162,5 +155,33 @@ public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
 
   public void setKopioLaskentakaavasta(Laskentakaava kopioLaskentakaavasta) {
     this.kopioLaskentakaavasta = kopioLaskentakaavasta;
+  }
+
+  @Converter(autoApply = true)
+  static class JsonNodeConverter implements AttributeConverter<Funktiokutsu, String> {
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    public JsonNodeConverter() {
+      this.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    }
+
+    @Override
+    public String convertToDatabaseColumn(Funktiokutsu funktiokutsu) {
+      try {
+        return objectMapper.writeValueAsString(funktiokutsu);
+      } catch (JsonProcessingException e) {
+        throw new RuntimeException("Error while serializing JsonNode to JSON", e);
+      }
+    }
+
+    @Override
+    public Funktiokutsu convertToEntityAttribute(String dbData) {
+      try {
+        return dbData == null ? null : objectMapper.readValue(dbData, Funktiokutsu.class);
+      } catch (JsonProcessingException e) {
+        throw new RuntimeException("Error while deserializing JSON to JsonNode", e);
+      }
+    }
   }
 }
