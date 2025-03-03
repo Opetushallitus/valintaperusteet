@@ -12,7 +12,6 @@ import monocle.{Optional, Traversal}
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-import scala.Option.option2Iterable
 import scala.util.control.Exception.catching
 
 object Tutkinnot {
@@ -91,7 +90,8 @@ object Tutkinnot {
     korotuksetSisältäväSuorituksenTyyppi: String,
     valmistumisenTakaraja: Option[LocalDate],
     opiskeluoikeudenHaluttuTyyppi: String,
-    hakemus: Hakemus
+    hakemus: Hakemus,
+    hylkaaMukautettujaArvosanojaSisaltavatTutkinnot: Boolean
   ): List[Json] =
     TutkintoLinssit.opiskeluoikeudet
       .getAll(json)
@@ -103,9 +103,11 @@ object Tutkinnot {
         TutkintoLinssit.suoritukset.json
           .getAll(korotusOpiskeluoikeus)
           .filter(
-            TutkintoLinssit.suorituksenTyyppi
-              .getOption(_)
-              .contains(korotuksetSisältäväSuorituksenTyyppi)
+            haluttuSuoritusTyyppiJaMukautetutArvosanatOk(
+              _,
+              korotuksetSisältäväSuorituksenTyyppi,
+              hylkaaMukautettujaArvosanojaSisaltavatTutkinnot
+            )
           )
           .exists { suoritus =>
             val opiskeluoikeusOiditTäsmää =
@@ -242,7 +244,8 @@ object Tutkinnot {
     valmistumisenTakaraja: Option[LocalDate],
     opiskeluoikeudenHaluttuTyyppi: String,
     hakemus: Hakemus,
-    opiskeluoikeus: Json
+    opiskeluoikeus: Json,
+    hylkaaMukautettujaArvosanojaSisaltavatTutkinnot: Boolean
   ): Json = {
     val opiskeluoikeusOid = TutkintoLinssit.opiskeluoikeusOid.getOption(opiskeluoikeus)
     val suoritustenKorotukset = etsiTähänOpiskeluoikeuteenLiittyvätKorotussuoritukset(
@@ -251,7 +254,8 @@ object Tutkinnot {
       korotuksetSisältäväSuorituksenTyyppi,
       valmistumisenTakaraja,
       opiskeluoikeudenHaluttuTyyppi,
-      hakemus
+      hakemus,
+      hylkaaMukautettujaArvosanojaSisaltavatTutkinnot
     )
     muokkaaOsasuoritukset(
       suoritustenKorotukset,
@@ -262,13 +266,23 @@ object Tutkinnot {
     )
   }
 
+  private def haluttuSuoritusTyyppiJaMukautetutArvosanatOk(
+    suoritus: Json,
+    suorituksenHaluttuTyyppi: String,
+    hylkaaMukautettujaArvosanojaSisaltavatTutkinnot: Boolean
+  ) =
+    TutkintoLinssit.suorituksenTyyppi.getOption(suoritus).contains(suorituksenHaluttuTyyppi) &&
+      (!hylkaaMukautettujaArvosanojaSisaltavatTutkinnot || !OsaSuoritukset
+        .sisältävätMukautettujaArvosanoja(suoritus))
+
   def etsiValmiitTutkinnot(
     valmistumisenTakaraja: Option[LocalDate],
     json: Json,
     opiskeluoikeudenHaluttuTyyppi: String,
     suorituksenHaluttuTyyppi: String,
     korotuksetSisältäväSuorituksenTyyppi: String,
-    hakemus: Hakemus
+    hakemus: Hakemus,
+    hylkaaMukautettujaArvosanojaSisaltavatTutkinnot: Boolean
   ): Seq[Json] =
     TutkintoLinssit.opiskeluoikeudet
       .getAll(json)
@@ -276,7 +290,11 @@ object Tutkinnot {
         TutkintoLinssit.suoritukset.json
           .getAll(opiskeluoikeus)
           .filter(
-            TutkintoLinssit.suorituksenTyyppi.getOption(_).contains(suorituksenHaluttuTyyppi)
+            haluttuSuoritusTyyppiJaMukautetutArvosanatOk(
+              _,
+              suorituksenHaluttuTyyppi,
+              hylkaaMukautettujaArvosanojaSisaltavatTutkinnot
+            )
           )
           .exists { suoritus =>
             suoritusTäsmää(
@@ -297,7 +315,8 @@ object Tutkinnot {
           valmistumisenTakaraja,
           opiskeluoikeudenHaluttuTyyppi,
           hakemus,
-          opiskeluoikeus
+          opiskeluoikeus,
+          hylkaaMukautettujaArvosanojaSisaltavatTutkinnot
         )
       )
 
