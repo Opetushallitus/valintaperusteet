@@ -1,0 +1,2526 @@
+[
+  {
+    "oid": "1.2.246.562.15.70116425219",
+    "versionumero": 2,
+    "aikaleima": "2019-04-17T15:55:24.813937",
+    "oppilaitos": {
+      "oid": "1.2.246.562.10.52251087186",
+      "oppilaitosnumero": {
+        "koodiarvo": "10105",
+        "nimi": {
+          "fi": "Stadin ammatti- ja aikuisopisto",
+          "sv": "Stadin ammatti- ja aikuisopisto",
+          "en": "Stadin ammatti- ja aikuisopisto"
+        },
+        "lyhytNimi": {
+          "fi": "Stadin ammatti- ja aikuisopisto",
+          "sv": "Stadin ammatti- ja aikuisopisto",
+          "en": "Stadin ammatti- ja aikuisopisto"
+        },
+        "koodistoUri": "oppilaitosnumero",
+        "koodistoVersio": 1
+      },
+      "nimi": {
+        "fi": "Stadin ammatti- ja aikuisopisto",
+        "sv": "Stadin ammatti- ja aikuisopisto",
+        "en": "Stadin ammatti- ja aikuisopisto"
+      },
+      "kotipaikka": {
+        "koodiarvo": "091",
+        "nimi": {
+          "fi": "Helsinki",
+          "sv": "Helsingfors"
+        },
+        "koodistoUri": "kunta",
+        "koodistoVersio": 2
+      }
+    },
+    "koulutustoimija": {
+      "oid": "1.2.246.562.10.346830761110",
+      "nimi": {
+        "fi": "Helsingin kaupunki",
+        "sv": "Helsingin kaupunki",
+        "en": "Helsingin kaupunki"
+      },
+      "yTunnus": "0201256-6",
+      "kotipaikka": {
+        "koodiarvo": "091",
+        "nimi": {
+          "fi": "Helsinki",
+          "sv": "Helsingfors"
+        },
+        "koodistoUri": "kunta",
+        "koodistoVersio": 2
+      }
+    },
+    "ostettu": false,
+    "tila": {
+      "opiskeluoikeusjaksot": [
+        {
+          "koodiarvo": "lasna",
+          "nimi": {
+            "fi": "Läsnä",
+            "sv": "Närvarande",
+            "en": "Present"
+          },
+          "koodistoUri": "koskiopiskeluoikeudentila",
+          "koodistoVersio": 1
+        },
+        {
+          "koodiarvo": "valmistunut",
+          "nimi": {
+            "fi": "Valmistunut",
+            "sv": "Utexaminerad",
+            "en": "Graduated"
+          },
+          "koodistoUri": "koskiopiskeluoikeudentila",
+          "koodistoVersio": 1
+        }
+      ]
+    },
+    "suoritukset": [
+      {
+        "koulutusmoduuli": {
+          "tunniste": {
+            "koodiarvo": "351301",
+            "nimi": {
+              "fi": "Autoalan perustutkinto",
+              "sv": "Bilbranschen, grundexamen",
+              "en": "Vehicle Technology, Vocational Qualification"
+            },
+            "lyhytNimi": {
+              "fi": "Ajoneuvoalan perustutkinto",
+              "sv": "Grundexamen inom fordonsbranschen",
+              "en": "Vocational qualification in the Vehicle Sector"
+            },
+            "koodistoUri": "koulutus",
+            "koodistoVersio": 12
+          },
+          "perusteenDiaarinumero": "OPH-5410-2021",
+          "perusteenNimi": {
+            "fi": "Ajoneuvoalan perustutkinto",
+            "sv": "Grundexamen inom fordonsbranschen",
+            "en": "Vocational qualification in the motor vehicles sector"
+          },
+          "koulutustyyppi": {
+            "koodiarvo": "1",
+            "nimi": {
+              "fi": "Ammatillinen perustutkinto",
+              "sv": "Yrkesinriktad grundexamen",
+              "en": "Vocational upper secondary qualification"
+            },
+            "lyhytNimi": {
+              "fi": "Ammatillinen perustutkinto",
+              "sv": "Yrkesinriktad grundexamen"
+            },
+            "koodistoUri": "koulutustyyppi"
+          }
+        },
+        "suoritustapa": {
+          "koodiarvo": "reformi",
+          "nimi": {
+            "fi": "Reformin mukainen näyttö",
+            "sv": "Reform",
+            "en": "Reform"
+          },
+          "lyhytNimi": {
+            "fi": "Reformi"
+          },
+          "koodistoUri": "ammatillisentutkinnonsuoritustapa",
+          "koodistoVersio": 1
+        },
+        "osaamisala": [
+          {
+            "osaamisala": {
+              "koodiarvo": "1007",
+              "nimi": {
+                "fi": "Myynnin osaamisala",
+                "sv": "Kompetensområdet för försäljning"
+              },
+              "koodistoUri": "osaamisala",
+              "koodistoVersio": 3
+            }
+          }
+        ],
+        "vahvistus": {
+          "päivä": "2019-03-15",
+          "paikkakunta": {
+            "koodiarvo": "091",
+            "nimi": {
+              "fi": "Helsinki",
+              "sv": "Helsingfors"
+            },
+            "koodistoUri": "kunta",
+            "koodistoVersio": 2
+          },
+          "myöntäjäOrganisaatio": {
+            "oid": "1.2.246.562.10.52251087186",
+            "oppilaitosnumero": {
+              "koodiarvo": "10105",
+              "nimi": {
+                "fi": "Stadin ammatti- ja aikuisopisto",
+                "sv": "Stadin ammatti- ja aikuisopisto",
+                "en": "Stadin ammatti- ja aikuisopisto"
+              },
+              "lyhytNimi": {
+                "fi": "Stadin ammatti- ja aikuisopisto",
+                "sv": "Stadin ammatti- ja aikuisopisto",
+                "en": "Stadin ammatti- ja aikuisopisto"
+              },
+              "koodistoUri": "oppilaitosnumero",
+              "koodistoVersio": 1
+            },
+            "nimi": {
+              "fi": "Stadin ammatti- ja aikuisopisto",
+              "sv": "Stadin ammatti- ja aikuisopisto",
+              "en": "Stadin ammatti- ja aikuisopisto"
+            },
+            "kotipaikka": {
+              "koodiarvo": "091",
+              "nimi": {
+                "fi": "Helsinki",
+                "sv": "Helsingfors"
+              },
+              "koodistoUri": "kunta",
+              "koodistoVersio": 2
+            }
+          },
+          "myöntäjäHenkilöt": [
+            {
+              "nimi": "Repe Reksi",
+              "titteli": {
+                "fi": "Rehtori"
+              },
+              "organisaatio": {
+                "oid": "1.2.246.562.10.52251087186",
+                "oppilaitosnumero": {
+                  "koodiarvo": "10105",
+                  "nimi": {
+                    "fi": "Stadin ammatti- ja aikuisopisto",
+                    "sv": "Stadin ammatti- ja aikuisopisto",
+                    "en": "Stadin ammatti- ja aikuisopisto"
+                  },
+                  "lyhytNimi": {
+                    "fi": "Stadin ammatti- ja aikuisopisto",
+                    "sv": "Stadin ammatti- ja aikuisopisto",
+                    "en": "Stadin ammatti- ja aikuisopisto"
+                  },
+                  "koodistoUri": "oppilaitosnumero",
+                  "koodistoVersio": 1
+                },
+                "nimi": {
+                  "fi": "Stadin ammatti- ja aikuisopisto",
+                  "sv": "Stadin ammatti- ja aikuisopisto",
+                  "en": "Stadin ammatti- ja aikuisopisto"
+                },
+                "kotipaikka": {
+                  "koodiarvo": "091",
+                  "nimi": {
+                    "fi": "Helsinki",
+                    "sv": "Helsingfors"
+                  },
+                  "koodistoUri": "kunta",
+                  "koodistoVersio": 2
+                }
+              }
+            }
+          ]
+        },
+        "osasuoritukset": [
+          {
+            "koulutusmoduuli": {
+              "tunniste": {
+                "koodiarvo": "106915",
+                "nimi": {
+                  "fi": "Ajoneuvokaupan myyntitehtävissä toimiminen",
+                  "sv": "Arbete inom försäljning av fordon"
+                },
+                "koodistoUri": "tutkinnonosat",
+                "koodistoVersio": 2
+              },
+              "pakollinen": true,
+              "laajuus": 30.0
+            },
+            "arviointi": [
+              {
+                "arvosana": {
+                  "koodiarvo": "1",
+                  "nimi": {
+                    "fi": "1"
+                  },
+                  "lyhytNimi": {
+                    "fi": "1"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinen15",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2019-03-15",
+                "hyväksytty": true
+              }
+            ],
+            "keskiarvoSisältääMukautettujaArvosanoja": false,
+            "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
+            "tyyppi": {
+              "koodiarvo": "ammatillisentutkinnonosa",
+              "nimi": {
+                "fi": "Ammatillisen tutkinnon osa",
+                "sv": "Yrkesexamensdel",
+                "en": "A vocational education qualification unit"
+              },
+              "koodistoUri": "suorituksentyyppi",
+              "koodistoVersio": 1
+            }
+          },
+          {
+            "koulutusmoduuli": {
+              "tunniste": {
+                "koodiarvo": "106916",
+                "nimi": {
+                  "fi": "Tekninen neuvonta ja tuotetuntemus",
+                  "sv": "Teknisk rådgivning och produktkännedom"
+                },
+                "koodistoUri": "tutkinnonosat",
+                "koodistoVersio": 2
+              },
+              "pakollinen": true,
+              "laajuus": 20.0
+            },
+            "arviointi": [
+              {
+                "arvosana": {
+                  "koodiarvo": "1",
+                  "nimi": {
+                    "fi": "1"
+                  },
+                  "lyhytNimi": {
+                    "fi": "1"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinen15",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2019-03-15",
+                "hyväksytty": true
+              }
+            ],
+            "keskiarvoSisältääMukautettujaArvosanoja": false,
+            "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
+            "tyyppi": {
+              "koodiarvo": "ammatillisentutkinnonosa",
+              "nimi": {
+                "fi": "Ammatillisen tutkinnon osa",
+                "sv": "Yrkesexamensdel",
+                "en": "A vocational education qualification unit"
+              },
+              "koodistoUri": "suorituksentyyppi",
+              "koodistoVersio": 1
+            }
+          },
+          {
+            "koulutusmoduuli": {
+              "tunniste": {
+                "koodiarvo": "106917",
+                "nimi": {
+                  "fi": "Toimiminen ajoneuvoalan liiketoimintaympäristössä",
+                  "sv": "Arbete i en affärsmiljö inom fordonsbranschen"
+                },
+                "koodistoUri": "tutkinnonosat",
+                "koodistoVersio": 2
+              },
+              "pakollinen": true,
+              "laajuus": 20.0
+            },
+            "arviointi": [
+              {
+                "arvosana": {
+                  "koodiarvo": "1",
+                  "nimi": {
+                    "fi": "1"
+                  },
+                  "lyhytNimi": {
+                    "fi": "1"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinen15",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2019-03-15",
+                "hyväksytty": true
+              }
+            ],
+            "keskiarvoSisältääMukautettujaArvosanoja": false,
+            "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
+            "tyyppi": {
+              "koodiarvo": "ammatillisentutkinnonosa",
+              "nimi": {
+                "fi": "Ammatillisen tutkinnon osa",
+                "sv": "Yrkesexamensdel",
+                "en": "A vocational education qualification unit"
+              },
+              "koodistoUri": "suorituksentyyppi",
+              "koodistoVersio": 1
+            }
+          },
+          {
+            "koulutusmoduuli": {
+              "tunniste": {
+                "koodiarvo": "106918",
+                "nimi": {
+                  "fi": "Ajoneuvokaupan sidosryhmien kanssa toimiminen",
+                  "sv": "Samarbete med intressegrupper inom fordonshandel"
+                },
+                "koodistoUri": "tutkinnonosat",
+                "koodistoVersio": 2
+              },
+              "pakollinen": true,
+              "laajuus": 15.0
+            },
+            "arviointi": [
+              {
+                "arvosana": {
+                  "koodiarvo": "1",
+                  "nimi": {
+                    "fi": "1"
+                  },
+                  "lyhytNimi": {
+                    "fi": "1"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinen15",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2019-03-15",
+                "hyväksytty": true
+              }
+            ],
+            "keskiarvoSisältääMukautettujaArvosanoja": false,
+            "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
+            "tyyppi": {
+              "koodiarvo": "ammatillisentutkinnonosa",
+              "nimi": {
+                "fi": "Ammatillisen tutkinnon osa",
+                "sv": "Yrkesexamensdel",
+                "en": "A vocational education qualification unit"
+              },
+              "koodistoUri": "suorituksentyyppi",
+              "koodistoVersio": 1
+            }
+          },
+          {
+            "koulutusmoduuli": {
+              "tunniste": {
+                "koodiarvo": "106926",
+                "nimi": {
+                  "fi": "Rengas- ja vannemyyntityö",
+                  "sv": "Försäljning av däck och fälgar"
+                },
+                "koodistoUri": "tutkinnonosat",
+                "koodistoVersio": 2
+              },
+              "pakollinen": false,
+              "laajuus": 15.0
+            },
+            "arviointi": [
+              {
+                "arvosana": {
+                  "koodiarvo": "1",
+                  "nimi": {
+                    "fi": "1"
+                  },
+                  "lyhytNimi": {
+                    "fi": "1"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinen15",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2019-03-15",
+                "hyväksytty": true
+              }
+            ],
+            "tyyppi": {
+              "koodiarvo": "ammatillisentutkinnonosa",
+              "nimi": {
+                "fi": "Ammatillisen tutkinnon osa",
+                "sv": "Yrkesexamensdel",
+                "en": "A vocational education qualification unit"
+              },
+              "koodistoUri": "suorituksentyyppi",
+              "koodistoVersio": 1
+            }
+          },
+          {
+            "koulutusmoduuli": {
+              "tunniste": {
+                "koodiarvo": "106906",
+                "nimi": {
+                  "fi": "Kierrätysosien myyntitoiminnot",
+                  "sv": "Försäljning av återvinningsdelar"
+                },
+                "koodistoUri": "tutkinnonosat",
+                "koodistoVersio": 2
+              },
+              "pakollinen": false,
+              "laajuus": 15.0
+            },
+            "arviointi": [
+              {
+                "arvosana": {
+                  "koodiarvo": "1",
+                  "nimi": {
+                    "fi": "1"
+                  },
+                  "lyhytNimi": {
+                    "fi": "1"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinen15",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2019-03-15",
+                "hyväksytty": true
+              }
+            ],
+            "keskiarvoSisältääMukautettujaArvosanoja": false,
+            "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
+            "tyyppi": {
+              "koodiarvo": "ammatillisentutkinnonosa",
+              "nimi": {
+                "fi": "Ammatillisen tutkinnon osa",
+                "sv": "Yrkesexamensdel",
+                "en": "A vocational education qualification unit"
+              },
+              "koodistoUri": "suorituksentyyppi",
+              "koodistoVersio": 1
+            }
+          },
+          {
+            "koulutusmoduuli": {
+              "tunniste": {
+                "koodiarvo": "106946",
+                "nimi": {
+                  "fi": "Logistiikka-alan työympäristössä toimiminen",
+                  "sv": "Arbete i en arbetsmiljö inom logistikbranschen",
+                  "en": "Operating in the work environment of the logistics sector"
+                },
+                "koodistoUri": "tutkinnonosat",
+                "koodistoVersio": 2
+              },
+              "pakollinen": false,
+              "laajuus": 15.0
+            },
+            "tutkinto": {
+              "tunniste": {
+                "koodiarvo": "381408",
+                "nimi": {
+                  "fi": "Logistiikan perustutkinto",
+                  "sv": "Logistik, grundexamen",
+                  "en": "Logistics, Vocational Qualification"
+                },
+                "lyhytNimi": {
+                  "fi": "Logistiikan perustutk",
+                  "sv": "Grundexamen i logistik",
+                  "en": "Vocational qualification in Logistics"
+                },
+                "koodistoUri": "koulutus",
+                "koodistoVersio": 12
+              },
+              "perusteenDiaarinumero": "OPH-1807-2021"
+            },
+            "arviointi": [
+              {
+                "arvosana": {
+                  "koodiarvo": "1",
+                  "nimi": {
+                    "fi": "1"
+                  },
+                  "lyhytNimi": {
+                    "fi": "1"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinen15",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2019-03-15",
+                "hyväksytty": true
+              }
+            ],
+            "keskiarvoSisältääMukautettujaArvosanoja": false,
+            "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
+            "tyyppi": {
+              "koodiarvo": "ammatillisentutkinnonosa",
+              "nimi": {
+                "fi": "Ammatillisen tutkinnon osa",
+                "sv": "Yrkesexamensdel",
+                "en": "A vocational education qualification unit"
+              },
+              "koodistoUri": "suorituksentyyppi",
+              "koodistoVersio": 1
+            }
+          },
+          {
+            "koulutusmoduuli": {
+              "tunniste": {
+                "koodiarvo": "106932",
+                "nimi": {
+                  "fi": "Lasien vaihto ja kiveniskemän korjaus",
+                  "sv": "Byte av rutor och reparation av stenskott"
+                },
+                "koodistoUri": "tutkinnonosat",
+                "koodistoVersio": 2
+              },
+              "pakollinen": false,
+              "laajuus": 15.0
+            },
+            "arviointi": [
+              {
+                "arvosana": {
+                  "koodiarvo": "1",
+                  "nimi": {
+                    "fi": "1"
+                  },
+                  "lyhytNimi": {
+                    "fi": "1"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinen15",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2019-03-15",
+                "hyväksytty": true
+              }
+            ],
+            "keskiarvoSisältääMukautettujaArvosanoja": false,
+            "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
+            "tyyppi": {
+              "koodiarvo": "ammatillisentutkinnonosa",
+              "nimi": {
+                "fi": "Ammatillisen tutkinnon osa",
+                "sv": "Yrkesexamensdel",
+                "en": "A vocational education qualification unit"
+              },
+              "koodistoUri": "suorituksentyyppi",
+              "koodistoVersio": 1
+            }
+          },
+          {
+            "koulutusmoduuli": {
+              "tunniste": {
+                "koodiarvo": "106727",
+                "nimi": {
+                  "fi": "Viestintä- ja vuorovaikutusosaaminen",
+                  "sv": "Kunnande i kommunikation och interaktion",
+                  "en": "Communication and interaction competence"
+                },
+                "koodistoUri": "tutkinnonosat",
+                "koodistoVersio": 2
+              },
+              "pakollinen": true,
+              "laajuus": 20.0
+            },
+            "arviointi": [
+              {
+                "arvosana": {
+                  "koodiarvo": "Hyväksytty",
+                  "nimi": {
+                    "fi": "Hyväksytty",
+                    "sv": "Godkänd",
+                    "en": "Pass"
+                  },
+                  "lyhytNimi": {
+                    "fi": "Hyväksytty",
+                    "sv": "Godkänd"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinen15",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2019-03-15",
+                "hyväksytty": true
+              }
+            ],
+            "keskiarvoSisältääMukautettujaArvosanoja": false,
+            "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
+            "osasuoritukset": [
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "VVAI22",
+                    "nimi": {
+                      "fi": "Viestintä ja vuorovaikutus äidinkielellä",
+                      "sv": "Kommunikation och interaktion på modersmålet",
+                      "en": "Communication and interaction in mother tongue"
+                    },
+                    "lyhytNimi": {
+                      "fi": "Viestintä ja vuorovaikutus äidinkielellä",
+                      "sv": "Kommunikation och interaktion på modersmålet",
+                      "en": "Communication and interaction in mother tongue"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "kieli": {
+                    "koodiarvo": "FI",
+                    "nimi": {
+                      "fi": "suomi",
+                      "sv": "finska",
+                      "en": "Finnish"
+                    },
+                    "lyhytNimi": {
+                      "fi": "suomi",
+                      "sv": "finska",
+                      "en": "Finnish"
+                    },
+                    "koodistoUri": "kielivalikoima",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": 4.0
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "1",
+                      "nimi": {
+                        "fi": "1"
+                      },
+                      "lyhytNimi": {
+                        "fi": "1"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-03-15",
+                    "hyväksytty": true
+                  }
+                ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "VVAI22",
+                    "nimi": {
+                      "fi": "Viestintä ja vuorovaikutus äidinkielellä",
+                      "sv": "Kommunikation och interaktion på modersmålet",
+                      "en": "Communication and interaction in mother tongue"
+                    },
+                    "lyhytNimi": {
+                      "fi": "Viestintä ja vuorovaikutus äidinkielellä",
+                      "sv": "Kommunikation och interaktion på modersmålet",
+                      "en": "Communication and interaction in mother tongue"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "kieli": {
+                    "koodiarvo": "FI",
+                    "nimi": {
+                      "fi": "suomi",
+                      "sv": "finska",
+                      "en": "Finnish"
+                    },
+                    "lyhytNimi": {
+                      "fi": "suomi",
+                      "sv": "finska",
+                      "en": "Finnish"
+                    },
+                    "koodistoUri": "kielivalikoima",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": false,
+                  "laajuus": 3.0
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "1",
+                      "nimi": {
+                        "fi": "1"
+                      },
+                      "lyhytNimi": {
+                        "fi": "1"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-03-15",
+                    "hyväksytty": true
+                  }
+                ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "VVTK",
+                    "nimi": {
+                      "fi": "Viestintä ja vuorovaikutus toisella kotimaisella kielellä",
+                      "sv": "Kommunikation och interaktion på det andra inhemska språket",
+                      "en": "Communication and interaction in the second national language"
+                    },
+                    "lyhytNimi": {
+                      "fi": "Viestintä ja vuorovaikutus toisella kotimaisella kielellä",
+                      "sv": "Kommunikation och interaktion på det andra inhemska språket",
+                      "en": "Communication and interaction in the second national language"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "kieli": {
+                    "koodiarvo": "SV",
+                    "nimi": {
+                      "fi": "ruotsi",
+                      "sv": "svenska",
+                      "en": "Swedish"
+                    },
+                    "lyhytNimi": {
+                      "fi": "ruotsi",
+                      "sv": "svenska",
+                      "en": "Swedish"
+                    },
+                    "koodistoUri": "kielivalikoima",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": 1.0
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "1",
+                      "nimi": {
+                        "fi": "1"
+                      },
+                      "lyhytNimi": {
+                        "fi": "1"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-03-15",
+                    "hyväksytty": true
+                  }
+                ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "VVVK",
+                    "nimi": {
+                      "fi": "Viestintä ja vuorovaikutus vieraalla kielellä",
+                      "sv": "Kommunikation och interaktion på ett främmande språk",
+                      "en": "Communication and interaction in a foreign language"
+                    },
+                    "lyhytNimi": {
+                      "fi": "viestintä ja vuorovaikutus vieraalla kielellä",
+                      "sv": "Kommunikation och interaktion på ett främmande språk",
+                      "en": "Communication and interaction in a foreign language"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "kieli": {
+                    "koodiarvo": "EN",
+                    "nimi": {
+                      "fi": "englanti",
+                      "sv": "engelska",
+                      "en": "English"
+                    },
+                    "lyhytNimi": {
+                      "fi": "englanti",
+                      "sv": "engelska",
+                      "en": "English"
+                    },
+                    "koodistoUri": "kielivalikoima",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": 3.0
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "1",
+                      "nimi": {
+                        "fi": "1"
+                      },
+                      "lyhytNimi": {
+                        "fi": "1"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-03-15",
+                    "hyväksytty": true
+                  }
+                ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "VVTD",
+                    "nimi": {
+                      "fi": "Toiminta digitaalisessa ympäristössä",
+                      "sv": "Verksamhet i den digitala miljön",
+                      "en": "Operating in a digital environment"
+                    },
+                    "lyhytNimi": {
+                      "fi": "toiminta digitaalisessa ympäristössä",
+                      "sv": "Verksamhet i den digitala miljön",
+                      "en": "Operating in a digital environment"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": 2.0
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "1",
+                      "nimi": {
+                        "fi": "1"
+                      },
+                      "lyhytNimi": {
+                        "fi": "1"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-03-15",
+                    "hyväksytty": true
+                  }
+                ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "VVTL",
+                    "nimi": {
+                      "fi": "Taide ja luova ilmaisu",
+                      "sv": "Konst och kreativt uttryck",
+                      "en": "Art and creative expression"
+                    },
+                    "lyhytNimi": {
+                      "fi": "Taide ja luova ilmaisu",
+                      "sv": "Konst och kreativt uttryck",
+                      "en": "Art and creative expression"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": 1.0
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "1",
+                      "nimi": {
+                        "fi": "1"
+                      },
+                      "lyhytNimi": {
+                        "fi": "1"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-03-15",
+                    "hyväksytty": true
+                  }
+                ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "VVVK",
+                    "nimi": {
+                      "fi": "Viestintä ja vuorovaikutus vieraalla kielellä",
+                      "sv": "Kommunikation och interaktion på ett främmande språk",
+                      "en": "Communication and interaction in a foreign language"
+                    },
+                    "lyhytNimi": {
+                      "fi": "viestintä ja vuorovaikutus vieraalla kielellä",
+                      "sv": "Kommunikation och interaktion på ett främmande språk",
+                      "en": "Communication and interaction in a foreign language"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "kieli": {
+                    "koodiarvo": "EN",
+                    "nimi": {
+                      "fi": "englanti",
+                      "sv": "engelska",
+                      "en": "English"
+                    },
+                    "lyhytNimi": {
+                      "fi": "englanti",
+                      "sv": "engelska",
+                      "en": "English"
+                    },
+                    "koodistoUri": "kielivalikoima",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": false,
+                  "laajuus": 3.0
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "1",
+                      "nimi": {
+                        "fi": "1"
+                      },
+                      "lyhytNimi": {
+                        "fi": "1"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-03-15",
+                    "hyväksytty": true
+                  }
+                ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "Ruotsin kielikurssi",
+                    "nimi": {
+                      "fi": "Ruotsin kielikurssi"
+                    }
+                  },
+                  "kuvaus": {
+                    "fi": "Ruotsin kielikurssi valinnainen osuus"
+                  },
+                  "pakollinen": false,
+                  "laajuus": 3.0
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "1",
+                      "nimi": {
+                        "fi": "1"
+                      },
+                      "lyhytNimi": {
+                        "fi": "1"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-03-15",
+                    "hyväksytty": true
+                  }
+                ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              }
+            ],
+            "tyyppi": {
+              "koodiarvo": "ammatillisentutkinnonosa",
+              "nimi": {
+                "fi": "Ammatillisen tutkinnon osa",
+                "sv": "Yrkesexamensdel",
+                "en": "A vocational education qualification unit"
+              },
+              "koodistoUri": "suorituksentyyppi",
+              "koodistoVersio": 1
+            }
+          },
+          {
+            "koulutusmoduuli": {
+              "tunniste": {
+                "koodiarvo": "106728",
+                "nimi": {
+                  "fi": "Matemaattis-luonnontieteellinen osaaminen",
+                  "sv": "Kunnande i matematik och naturvetenskaper",
+                  "en": "Mathematics and science competence"
+                },
+                "koodistoUri": "tutkinnonosat",
+                "koodistoVersio": 2
+              },
+              "pakollinen": true,
+              "laajuus": 6.0
+            },
+            "arviointi": [
+              {
+                "arvosana": {
+                  "koodiarvo": "Hyväksytty",
+                  "nimi": {
+                    "fi": "Hyväksytty",
+                    "sv": "Godkänd",
+                    "en": "Pass"
+                  },
+                  "lyhytNimi": {
+                    "fi": "Hyväksytty",
+                    "sv": "Godkänd"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinen15",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2019-03-15",
+                "hyväksytty": true
+              }
+            ],
+            "keskiarvoSisältääMukautettujaArvosanoja": false,
+            "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
+            "osasuoritukset": [
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "MLMA",
+                    "nimi": {
+                      "fi": "Matematiikka ja matematiikan soveltaminen",
+                      "sv": "Matematik och tillämpad matematik",
+                      "en": "Mathematics and application of mathematics"
+                    },
+                    "lyhytNimi": {
+                      "fi": "Matematiikka ja matematiikan soveltaminen",
+                      "sv": "Matematik och tillämpad matematik",
+                      "en": "Mathematics and application of mathematics"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": 4.0
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "1",
+                      "nimi": {
+                        "fi": "1"
+                      },
+                      "lyhytNimi": {
+                        "fi": "1"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-03-15",
+                    "hyväksytty": true
+                  }
+                ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "MLFK",
+                    "nimi": {
+                      "fi": "Fysikaaliset ja kemialliset ilmiöt ja niiden soveltaminen",
+                      "sv": "Fysikaliska och kemiska fenomen och tillämpning av dem",
+                      "en": "Physical and chemical phenomena and their application"
+                    },
+                    "lyhytNimi": {
+                      "fi": "Fysikaaliset ja kemialliset ilmiöt ja niiden soveltaminen",
+                      "sv": "Fysikaliska och kemiska fenomen och tillämpning av dem",
+                      "en": "Physical and chemical phenomena and their application"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": 2.0
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "1",
+                      "nimi": {
+                        "fi": "1"
+                      },
+                      "lyhytNimi": {
+                        "fi": "1"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-03-15",
+                    "hyväksytty": true
+                  }
+                ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              }
+            ],
+            "tyyppi": {
+              "koodiarvo": "ammatillisentutkinnonosa",
+              "nimi": {
+                "fi": "Ammatillisen tutkinnon osa",
+                "sv": "Yrkesexamensdel",
+                "en": "A vocational education qualification unit"
+              },
+              "koodistoUri": "suorituksentyyppi",
+              "koodistoVersio": 1
+            }
+          },
+          {
+            "koulutusmoduuli": {
+              "tunniste": {
+                "koodiarvo": "106729",
+                "nimi": {
+                  "fi": "Yhteiskunta- ja työelämäosaaminen",
+                  "sv": "Kunnande om samhälle och arbetsliv",
+                  "en": "Citizenship and working life competence"
+                },
+                "koodistoUri": "tutkinnonosat",
+                "koodistoVersio": 2
+              },
+              "pakollinen": false,
+              "laajuus": 9.0
+            },
+            "arviointi": [
+              {
+                "arvosana": {
+                  "koodiarvo": "Hyväksytty",
+                  "nimi": {
+                    "fi": "Hyväksytty",
+                    "sv": "Godkänd",
+                    "en": "Pass"
+                  },
+                  "lyhytNimi": {
+                    "fi": "Hyväksytty",
+                    "sv": "Godkänd"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinen15",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2019-03-15",
+                "hyväksytty": true
+              }
+            ],
+            "keskiarvoSisältääMukautettujaArvosanoja": false,
+            "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
+            "osasuoritukset": [
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "YTYK",
+                    "nimi": {
+                      "fi": "Yhteiskunnassa ja kansalaisena toimiminen",
+                      "sv": "Att verka i samhället och som medborgare",
+                      "en": "Operating as a member of society and a citizen"
+                    },
+                    "lyhytNimi": {
+                      "fi": "yhteiskunnassa ja kansalaisena toimiminen",
+                      "sv": "Att verka i samhället och som medborgare",
+                      "en": "Operating as a member of society and a citizen"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": 2.0
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "1",
+                      "nimi": {
+                        "fi": "1"
+                      },
+                      "lyhytNimi": {
+                        "fi": "1"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-03-15",
+                    "hyväksytty": true
+                  }
+                ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "YTTT",
+                    "nimi": {
+                      "fi": "Työelämässä toimiminen",
+                      "sv": "Att verka i arbetslivet",
+                      "en": "Operating in the world of work"
+                    },
+                    "lyhytNimi": {
+                      "fi": "Työelämässä toimiminen",
+                      "sv": "Att verka i arbetslivet",
+                      "en": "Operating in the world of work"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": 2.0
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "1",
+                      "nimi": {
+                        "fi": "1"
+                      },
+                      "lyhytNimi": {
+                        "fi": "1"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-03-15",
+                    "hyväksytty": true
+                  }
+                ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "YTOU",
+                    "nimi": {
+                      "fi": "Opiskelu- ja urasuunnitteluvalmiudet",
+                      "sv": "Färdigheter i studie- och karriärplanering",
+                      "en": "Study and career planning capabilities"
+                    },
+                    "lyhytNimi": {
+                      "fi": "Opiskelu- ja urasuunnitteluvalmiudet",
+                      "sv": "Färdigheter i studie- och karriärplanering",
+                      "en": "Study and career planning capabilities"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": 1.0
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "1",
+                      "nimi": {
+                        "fi": "1"
+                      },
+                      "lyhytNimi": {
+                        "fi": "1"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-03-15",
+                    "hyväksytty": true
+                  }
+                ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "YTYY",
+                    "nimi": {
+                      "fi": "Yrittäjyys ja yrittäjämäinen toiminta",
+                      "sv": "Företagsamhet och företagarinriktad verksamhet",
+                      "en": "Entrepreneurship and entrepreneurial activities"
+                    },
+                    "lyhytNimi": {
+                      "fi": "Yrittäjyys ja yrittäjämäinen toiminta",
+                      "sv": "Företagsamhet och företagarinriktad verksamhet",
+                      "en": "Entrepreneurship and entrepreneurial activities"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": 1.0
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "1",
+                      "nimi": {
+                        "fi": "1"
+                      },
+                      "lyhytNimi": {
+                        "fi": "1"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-03-15",
+                    "hyväksytty": true
+                  }
+                ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "YTTH",
+                    "nimi": {
+                      "fi": "Työkyvyn ja hyvinvoinnin ylläpitäminen",
+                      "sv": "Upprätthållande av arbetsförmågan och välbefinnandet",
+                      "en": "Maintaining ability to work and wellbeing at work"
+                    },
+                    "lyhytNimi": {
+                      "fi": "työkyvyn ja hyvinvoinnin ylläpitäminen",
+                      "sv": "Upprätthållande av arbetsförmågan och välbefinnandet",
+                      "en": "Maintaining ability to work and wellbeing at work"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": 2.0
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "1",
+                      "nimi": {
+                        "fi": "1"
+                      },
+                      "lyhytNimi": {
+                        "fi": "1"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-03-15",
+                    "hyväksytty": true
+                  }
+                ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "YTKK",
+                    "nimi": {
+                      "fi": "Kestävän kehityksen edistäminen",
+                      "sv": "Främjande av hållbar utveckling",
+                      "en": "Promoting sustainable development"
+                    },
+                    "lyhytNimi": {
+                      "fi": "Kestävän kehityksen edistäminen",
+                      "sv": "Främjande av hållbar utveckling",
+                      "en": "Promoting sustainable development"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": 1.0
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "1",
+                      "nimi": {
+                        "fi": "1"
+                      },
+                      "lyhytNimi": {
+                        "fi": "1"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-03-15",
+                    "hyväksytty": true
+                  }
+                ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                }
+              }
+            ],
+            "tyyppi": {
+              "koodiarvo": "ammatillisentutkinnonosa",
+              "nimi": {
+                "fi": "Ammatillisen tutkinnon osa",
+                "sv": "Yrkesexamensdel",
+                "en": "A vocational education qualification unit"
+              },
+              "koodistoUri": "suorituksentyyppi",
+              "koodistoVersio": 1
+            }
+          }
+        ],
+        "tyyppi": {
+          "koodiarvo": "ammatillinentutkinto",
+          "nimi": {
+            "fi": "Ammatillinen tutkinto",
+            "sv": "Yrkesinriktad examen",
+            "en": "Vocational education  qualification"
+          },
+          "koodistoUri": "suorituksentyyppi",
+          "koodistoVersio": 1
+        },
+        "keskiarvo": 1.0
+      }
+    ],
+    "lisätiedot": {
+      "henkilöstökoulutus": false,
+      "koulutusvienti": false
+    },
+    "tyyppi": {
+      "koodiarvo": "ammatillinenkoulutus",
+      "nimi": {
+        "fi": "Ammatillinen koulutus",
+        "sv": "Yrkesutbildning",
+        "en": "Vocational education and training"
+      },
+      "lyhytNimi": {
+        "fi": "Ammatillinen koulutus"
+      },
+      "koodistoUri": "opiskeluoikeudentyyppi",
+      "koodistoVersio": 1
+    },
+    "alkamispäivä": "2022-03-15",
+    "päättymispäivä": "2019-03-15"
+  },
+  {
+    "oid": "1.2.246.562.15.11356096088",
+    "versionumero": 3,
+    "aikaleima": "2019-04-17T16:06:48.645157",
+    "oppilaitos": {
+      "oid": "1.2.246.562.10.51720121923",
+      "oppilaitosnumero": {
+        "koodiarvo": "10054",
+        "nimi": {
+          "fi": "Omnia",
+          "sv": "Omnia",
+          "en": "Omnia"
+        },
+        "lyhytNimi": {
+          "fi": "Omnia",
+          "sv": "Omnia",
+          "en": "Omnia"
+        },
+        "koodistoUri": "oppilaitosnumero",
+        "koodistoVersio": 1
+      },
+      "nimi": {
+        "fi": "Omnia",
+        "sv": "Omnia",
+        "en": "Omnia"
+      },
+      "kotipaikka": {
+        "koodiarvo": "049",
+        "nimi": {
+          "fi": "Espoo",
+          "sv": "Esbo"
+        },
+        "koodistoUri": "kunta",
+        "koodistoVersio": 2
+      }
+    },
+    "koulutustoimija": {
+      "oid": "1.2.246.562.10.53642770753",
+      "nimi": {
+        "fi": "Espoon seudun koulutuskuntayhtymä Omnia",
+        "sv": "Espoon seudun koulutuskuntayhtymä Omnia",
+        "en": "Espoon seudun koulutuskuntayhtymä Omnia"
+      },
+      "yTunnus": "0502454-6",
+      "kotipaikka": {
+        "koodiarvo": "049",
+        "nimi": {
+          "fi": "Espoo",
+          "sv": "Esbo"
+        },
+        "koodistoUri": "kunta",
+        "koodistoVersio": 2
+      }
+    },
+    "ostettu": false,
+    "tila": {
+      "opiskeluoikeusjaksot": [
+        {
+          "koodiarvo": "lasna",
+          "nimi": {
+            "fi": "Läsnä",
+            "sv": "Närvarande",
+            "en": "Present"
+          },
+          "koodistoUri": "koskiopiskeluoikeudentila",
+          "koodistoVersio": 1
+        },
+        {
+          "koodiarvo": "valmistunut",
+          "nimi": {
+            "fi": "Valmistunut",
+            "sv": "Utexaminerad",
+            "en": "Graduated"
+          },
+          "koodistoUri": "koskiopiskeluoikeudentila",
+          "koodistoVersio": 1
+        }
+      ]
+    },
+    "suoritukset": [
+      {
+        "koulutusmoduuli": {
+          "tunniste": {
+            "koodiarvo": "351301",
+            "nimi": {
+              "fi": "Autoalan perustutkinto",
+              "sv": "Bilbranschen, grundexamen",
+              "en": "Vehicle Technology, Vocational Qualification"
+            },
+            "lyhytNimi": {
+              "fi": "Ajoneuvoalan perustutkinto",
+              "sv": "Grundexamen inom fordonsbranschen",
+              "en": "Vocational qualification in the Vehicle Sector"
+            },
+            "koodistoUri": "koulutus",
+            "koodistoVersio": 12
+          },
+          "perusteenDiaarinumero": "OPH-5410-2021",
+          "perusteenNimi": {
+            "fi": "Ajoneuvoalan perustutkinto",
+            "sv": "Grundexamen inom fordonsbranschen",
+            "en": "Vocational qualification in the motor vehicles sector"
+          },
+          "koulutustyyppi": {
+            "koodiarvo": "1",
+            "nimi": {
+              "fi": "Ammatillinen perustutkinto",
+              "sv": "Yrkesinriktad grundexamen",
+              "en": "Vocational upper secondary qualification"
+            },
+            "lyhytNimi": {
+              "fi": "Ammatillinen perustutkinto",
+              "sv": "Yrkesinriktad grundexamen"
+            },
+            "koodistoUri": "koulutustyyppi"
+          }
+        },
+        "suoritustapa": {
+          "koodiarvo": "reformi",
+          "nimi": {
+            "fi": "Reformin mukainen näyttö",
+            "sv": "Reform",
+            "en": "Reform"
+          },
+          "lyhytNimi": {
+            "fi": "Reformi"
+          },
+          "koodistoUri": "ammatillisentutkinnonsuoritustapa",
+          "koodistoVersio": 1
+        },
+        "toinenTutkintonimike": false,
+        "toinenOsaamisala": false,
+        "alkamispäivä": "2019-07-17",
+        "vahvistus": {
+          "päivä": "2019-07-18",
+          "paikkakunta": {
+            "koodiarvo": "049",
+            "nimi": {
+              "fi": "Espoo",
+              "sv": "Esbo"
+            },
+            "koodistoUri": "kunta",
+            "koodistoVersio": 2
+          },
+          "myöntäjäOrganisaatio": {
+            "oid": "1.2.246.562.10.51720121923",
+            "oppilaitosnumero": {
+              "koodiarvo": "10054",
+              "nimi": {
+                "fi": "Omnia",
+                "sv": "Omnia",
+                "en": "Omnia"
+              },
+              "lyhytNimi": {
+                "fi": "Omnia",
+                "sv": "Omnia",
+                "en": "Omnia"
+              },
+              "koodistoUri": "oppilaitosnumero",
+              "koodistoVersio": 1
+            },
+            "nimi": {
+              "fi": "Omnia",
+              "sv": "Omnia",
+              "en": "Omnia"
+            },
+            "kotipaikka": {
+              "koodiarvo": "049",
+              "nimi": {
+                "fi": "Espoo",
+                "sv": "Esbo"
+              },
+              "koodistoUri": "kunta",
+              "koodistoVersio": 2
+            }
+          },
+          "myöntäjäHenkilöt": [
+            {
+              "nimi": "R",
+              "titteli": {
+                "fi": "R"
+              },
+              "organisaatio": {
+                "oid": "1.2.246.562.10.51720121923",
+                "oppilaitosnumero": {
+                  "koodiarvo": "10054",
+                  "nimi": {
+                    "fi": "Omnia",
+                    "sv": "Omnia",
+                    "en": "Omnia"
+                  },
+                  "lyhytNimi": {
+                    "fi": "Omnia",
+                    "sv": "Omnia",
+                    "en": "Omnia"
+                  },
+                  "koodistoUri": "oppilaitosnumero",
+                  "koodistoVersio": 1
+                },
+                "nimi": {
+                  "fi": "Omnia",
+                  "sv": "Omnia",
+                  "en": "Omnia"
+                },
+                "kotipaikka": {
+                  "koodiarvo": "049",
+                  "nimi": {
+                    "fi": "Espoo",
+                    "sv": "Esbo"
+                  },
+                  "koodistoUri": "kunta",
+                  "koodistoVersio": 2
+                }
+              }
+            }
+          ]
+        },
+        "suorituskieli": {
+          "koodiarvo": "FI",
+          "nimi": {
+            "fi": "suomi",
+            "sv": "finska",
+            "en": "Finnish"
+          },
+          "lyhytNimi": {
+            "fi": "suomi",
+            "sv": "finska",
+            "en": "Finnish"
+          },
+          "koodistoUri": "kieli",
+          "koodistoVersio": 1
+        },
+        "osasuoritukset": [
+          {
+            "koulutusmoduuli": {
+              "tunniste": {
+                "koodiarvo": "106727",
+                "nimi": {
+                  "fi": "Viestintä- ja vuorovaikutusosaaminen",
+                  "sv": "Kunnande i kommunikation och interaktion",
+                  "en": "Communication and interaction competence"
+                },
+                "koodistoUri": "tutkinnonosat",
+                "koodistoVersio": 2
+              },
+              "pakollinen": true,
+              "laajuus": 20.0
+            },
+            "arviointi": [
+              {
+                "arvosana": {
+                  "koodiarvo": "Hyväksytty",
+                  "nimi": {
+                    "fi": "Hyväksytty",
+                    "sv": "Godkänd",
+                    "en": "Pass"
+                  },
+                  "lyhytNimi": {
+                    "fi": "Hyväksytty",
+                    "sv": "Godkänd"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinen15",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2019-07-17",
+                "hyväksytty": true
+              }
+            ],
+            "keskiarvoSisältääMukautettujaArvosanoja": false,
+            "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
+            "osasuoritukset": [
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "VVAI22",
+                    "nimi": {
+                      "fi": "Viestintä ja vuorovaikutus äidinkielellä",
+                      "sv": "Kommunikation och interaktion på modersmålet",
+                      "en": "Communication and interaction in mother tongue"
+                    },
+                    "lyhytNimi": {
+                      "fi": "Viestintä ja vuorovaikutus äidinkielellä",
+                      "sv": "Kommunikation och interaktion på modersmålet",
+                      "en": "Communication and interaction in mother tongue"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "kieli": {
+                    "koodiarvo": "FI",
+                    "nimi": {
+                      "fi": "suomi",
+                      "sv": "finska",
+                      "en": "Finnish"
+                    },
+                    "lyhytNimi": {
+                      "fi": "suomi",
+                      "sv": "finska",
+                      "en": "Finnish"
+                    },
+                    "koodistoUri": "kielivalikoima",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": 4.0
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "2",
+                      "nimi": {
+                        "fi": "2"
+                      },
+                      "lyhytNimi": {
+                        "fi": "2"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-04-17",
+                    "hyväksytty": true
+                  }
+                ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                },
+                "korotettu": {
+                  "koodiarvo": "korotettu",
+                  "nimi": {
+                    "fi": "Korotettu suoritus",
+                    "sv": "Korotettu suoritus",
+                    "en": "Korotettu suoritus"
+                  },
+                  "koodistoUri": "ammatillisensuorituksenkorotus",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "VVAI22",
+                    "nimi": {
+                      "fi": "Viestintä ja vuorovaikutus äidinkielellä",
+                      "sv": "Kommunikation och interaktion på modersmålet",
+                      "en": "Communication and interaction in mother tongue"
+                    },
+                    "lyhytNimi": {
+                      "fi": "Viestintä ja vuorovaikutus äidinkielellä",
+                      "sv": "Kommunikation och interaktion på modersmålet",
+                      "en": "Communication and interaction in mother tongue"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "kieli": {
+                    "koodiarvo": "FI",
+                    "nimi": {
+                      "fi": "suomi",
+                      "sv": "finska",
+                      "en": "Finnish"
+                    },
+                    "lyhytNimi": {
+                      "fi": "suomi",
+                      "sv": "finska",
+                      "en": "Finnish"
+                    },
+                    "koodistoUri": "kielivalikoima",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": false,
+                  "laajuus": 3.0
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "2",
+                      "nimi": {
+                        "fi": "2"
+                      },
+                      "lyhytNimi": {
+                        "fi": "2"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-04-17",
+                    "hyväksytty": true
+                  }
+                ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                },
+                "korotettu": {
+                  "koodiarvo": "korotettu",
+                  "nimi": {
+                    "fi": "Korotettu suoritus",
+                    "sv": "Korotettu suoritus",
+                    "en": "Korotettu suoritus"
+                  },
+                  "koodistoUri": "ammatillisensuorituksenkorotus",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "VVTK",
+                    "nimi": {
+                      "fi": "Viestintä ja vuorovaikutus toisella kotimaisella kielellä",
+                      "sv": "Kommunikation och interaktion på det andra inhemska språket",
+                      "en": "Communication and interaction in the second national language"
+                    },
+                    "lyhytNimi": {
+                      "fi": "Viestintä ja vuorovaikutus toisella kotimaisella kielellä",
+                      "sv": "Kommunikation och interaktion på det andra inhemska språket",
+                      "en": "Communication and interaction in the second national language"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "kieli": {
+                    "koodiarvo": "SV",
+                    "nimi": {
+                      "fi": "ruotsi",
+                      "sv": "svenska",
+                      "en": "Swedish"
+                    },
+                    "lyhytNimi": {
+                      "fi": "ruotsi",
+                      "sv": "svenska",
+                      "en": "Swedish"
+                    },
+                    "koodistoUri": "kielivalikoima",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": 1.0
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "2",
+                      "nimi": {
+                        "fi": "2"
+                      },
+                      "lyhytNimi": {
+                        "fi": "2"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-04-17",
+                    "hyväksytty": true
+                  }
+                ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                },
+                "korotettu": {
+                  "koodiarvo": "korotettu",
+                  "nimi": {
+                    "fi": "Korotettu suoritus",
+                    "sv": "Korotettu suoritus",
+                    "en": "Korotettu suoritus"
+                  },
+                  "koodistoUri": "ammatillisensuorituksenkorotus",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "VVVK",
+                    "nimi": {
+                      "fi": "Viestintä ja vuorovaikutus vieraalla kielellä",
+                      "sv": "Kommunikation och interaktion på ett främmande språk",
+                      "en": "Communication and interaction in a foreign language"
+                    },
+                    "lyhytNimi": {
+                      "fi": "viestintä ja vuorovaikutus vieraalla kielellä",
+                      "sv": "Kommunikation och interaktion på ett främmande språk",
+                      "en": "Communication and interaction in a foreign language"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "kieli": {
+                    "koodiarvo": "EN",
+                    "nimi": {
+                      "fi": "englanti",
+                      "sv": "engelska",
+                      "en": "English"
+                    },
+                    "lyhytNimi": {
+                      "fi": "englanti",
+                      "sv": "engelska",
+                      "en": "English"
+                    },
+                    "koodistoUri": "kielivalikoima",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": 3.0
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "3",
+                      "nimi": {
+                        "fi": "3"
+                      },
+                      "lyhytNimi": {
+                        "fi": "3"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-04-17",
+                    "hyväksytty": true
+                  }
+                ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                },
+                "korotettu": {
+                  "koodiarvo": "korotettu",
+                  "nimi": {
+                    "fi": "Korotettu suoritus",
+                    "sv": "Korotettu suoritus",
+                    "en": "Korotettu suoritus"
+                  },
+                  "koodistoUri": "ammatillisensuorituksenkorotus",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "VVTD",
+                    "nimi": {
+                      "fi": "Toiminta digitaalisessa ympäristössä",
+                      "sv": "Verksamhet i den digitala miljön",
+                      "en": "Operating in a digital environment"
+                    },
+                    "lyhytNimi": {
+                      "fi": "toiminta digitaalisessa ympäristössä",
+                      "sv": "Verksamhet i den digitala miljön",
+                      "en": "Operating in a digital environment"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": 2.0
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "2",
+                      "nimi": {
+                        "fi": "2"
+                      },
+                      "lyhytNimi": {
+                        "fi": "2"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-04-17",
+                    "hyväksytty": true
+                  }
+                ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                },
+                "korotettu": {
+                  "koodiarvo": "korotettu",
+                  "nimi": {
+                    "fi": "Korotettu suoritus",
+                    "sv": "Korotettu suoritus",
+                    "en": "Korotettu suoritus"
+                  },
+                  "koodistoUri": "ammatillisensuorituksenkorotus",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "VVTL",
+                    "nimi": {
+                      "fi": "Taide ja luova ilmaisu",
+                      "sv": "Konst och kreativt uttryck",
+                      "en": "Art and creative expression"
+                    },
+                    "lyhytNimi": {
+                      "fi": "Taide ja luova ilmaisu",
+                      "sv": "Konst och kreativt uttryck",
+                      "en": "Art and creative expression"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": true,
+                  "laajuus": 1.0
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "2",
+                      "nimi": {
+                        "fi": "2"
+                      },
+                      "lyhytNimi": {
+                        "fi": "2"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-04-17",
+                    "hyväksytty": true
+                  }
+                ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                },
+                "korotettu": {
+                  "koodiarvo": "korotettu",
+                  "nimi": {
+                    "fi": "Korotettu suoritus",
+                    "sv": "Korotettu suoritus",
+                    "en": "Korotettu suoritus"
+                  },
+                  "koodistoUri": "ammatillisensuorituksenkorotus",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "VVVK",
+                    "nimi": {
+                      "fi": "Viestintä ja vuorovaikutus vieraalla kielellä",
+                      "sv": "Kommunikation och interaktion på ett främmande språk",
+                      "en": "Communication and interaction in a foreign language"
+                    },
+                    "lyhytNimi": {
+                      "fi": "viestintä ja vuorovaikutus vieraalla kielellä",
+                      "sv": "Kommunikation och interaktion på ett främmande språk",
+                      "en": "Communication and interaction in a foreign language"
+                    },
+                    "koodistoUri": "ammatillisenoppiaineet",
+                    "koodistoVersio": 1
+                  },
+                  "kieli": {
+                    "koodiarvo": "EN",
+                    "nimi": {
+                      "fi": "englanti",
+                      "sv": "engelska",
+                      "en": "English"
+                    },
+                    "lyhytNimi": {
+                      "fi": "englanti",
+                      "sv": "engelska",
+                      "en": "English"
+                    },
+                    "koodistoUri": "kielivalikoima",
+                    "koodistoVersio": 1
+                  },
+                  "pakollinen": false,
+                  "laajuus": 3.0
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "2",
+                      "nimi": {
+                        "fi": "2"
+                      },
+                      "lyhytNimi": {
+                        "fi": "2"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-04-17",
+                    "hyväksytty": true
+                  }
+                ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                },
+                "korotettu": {
+                  "koodiarvo": "korotettu",
+                  "nimi": {
+                    "fi": "Korotettu suoritus",
+                    "sv": "Korotettu suoritus",
+                    "en": "Korotettu suoritus"
+                  },
+                  "koodistoUri": "ammatillisensuorituksenkorotus",
+                  "koodistoVersio": 1
+                }
+              },
+              {
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "Ruotsin kielikurssi",
+                    "nimi": {
+                      "fi": "Ruotsin kielikurssi"
+                    }
+                  },
+                  "kuvaus": {
+                    "fi": "Ruotsin kielikurssi valinnainen osuus2"
+                  },
+                  "pakollinen": false,
+                  "laajuus": 3.0
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "2",
+                      "nimi": {
+                        "fi": "2"
+                      },
+                      "lyhytNimi": {
+                        "fi": "2"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinen15",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2019-04-17",
+                    "hyväksytty": true
+                  }
+                ],
+                "keskiarvoSisältääMukautettujaArvosanoja": true,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": true,
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosanosaalue",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osan osa-alue",
+                    "sv": "Delområde av en gemensam examendel",
+                    "en": "Section of vocational qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                },
+                "korotettu": {
+                  "koodiarvo": "korotettu",
+                  "nimi": {
+                    "fi": "Korotettu suoritus",
+                    "sv": "Korotettu suoritus",
+                    "en": "Korotettu suoritus"
+                  },
+                  "koodistoUri": "ammatillisensuorituksenkorotus",
+                  "koodistoVersio": 1
+                }
+              }
+            ],
+            "tyyppi": {
+              "koodiarvo": "ammatillisentutkinnonosa",
+              "nimi": {
+                "fi": "Ammatillisen tutkinnon osa",
+                "sv": "Yrkesexamensdel",
+                "en": "A vocational education qualification unit"
+              },
+              "koodistoUri": "suorituksentyyppi",
+              "koodistoVersio": 1
+            }
+          }
+        ],
+        "tyyppi": {
+          "koodiarvo": "ammatillinentutkintoosittainen",
+          "nimi": {
+            "fi": "Ammatillisen tutkinnon osa/osia",
+            "sv": "Examensdel/delar inom en yrkesinriktad examen",
+            "en": "Vocational education qualification unit/units"
+          },
+          "koodistoUri": "suorituksentyyppi",
+          "koodistoVersio": 1
+        },
+        "keskiarvo": 2.0,
+        "korotettuOpiskeluoikeusOid": "1.2.246.562.15.70116425219",
+        "korotettuKeskiarvo": 1.8
+      }
+    ],
+    "lisätiedot": {
+      "henkilöstökoulutus": false,
+      "koulutusvienti": false,
+      "maksuttomuus": [
+        {
+          "alku": "2019-07-17",
+          "maksuton": false
+        }
+      ]
+    },
+    "tyyppi": {
+      "koodiarvo": "ammatillinenkoulutus",
+      "nimi": {
+        "fi": "Ammatillinen koulutus",
+        "sv": "Yrkesutbildning",
+        "en": "Vocational education and training"
+      },
+      "lyhytNimi": {
+        "fi": "Ammatillinen koulutus"
+      },
+      "koodistoUri": "opiskeluoikeudentyyppi",
+      "koodistoVersio": 1
+    },
+    "alkamispäivä": "2019-07-17",
+    "päättymispäivä": "2019-07-18"
+  }
+]

@@ -29,23 +29,6 @@
         "koodistoVersio": 2
       }
     },
-    "koulutustoimija": {
-      "oid": "1.2.246.562.10.67019405611",
-      "nimi": {
-        "fi": "Kajaanin kaupunki"
-      },
-      "yTunnus": "0214958-9",
-      "kotipaikka": {
-        "koodiarvo": "205",
-        "nimi": {
-          "fi": "Kajaani",
-          "sv": "Kajana"
-        },
-        "koodistoUri": "kunta",
-        "koodistoVersio": 2
-      }
-    },
-    "ostettu": false,
     "tila": {
       "opiskeluoikeusjaksot": [
         {
@@ -122,32 +105,6 @@
           "koodistoUri": "ammatillisentutkinnonsuoritustapa",
           "koodistoVersio": 1
         },
-        "toimipiste": {
-          "oid": "1.2.246.562.10.62363571621",
-          "oppilaitosnumero": {
-            "koodiarvo": "10074",
-            "nimi": {
-              "fi": "Kainuun ammattiopisto"
-            },
-            "lyhytNimi": {
-              "fi": "Kainuun ammattiopisto"
-            },
-            "koodistoUri": "oppilaitosnumero",
-            "koodistoVersio": 1
-          },
-          "nimi": {
-            "fi": "Kainuun ammattiopisto"
-          },
-          "kotipaikka": {
-            "koodiarvo": "205",
-            "nimi": {
-              "fi": "Kajaani",
-              "sv": "Kajana"
-            },
-            "koodistoUri": "kunta",
-            "koodistoVersio": 2
-          }
-        },
         "vahvistus": {
           "päivä": "2019-02-22",
           "paikkakunta": {
@@ -220,21 +177,6 @@
             }
           ]
         },
-        "suorituskieli": {
-          "koodiarvo": "FI",
-          "nimi": {
-            "fi": "suomi",
-            "sv": "finska",
-            "en": "Finnish"
-          },
-          "lyhytNimi": {
-            "fi": "suomi",
-            "sv": "finska",
-            "en": "Finnish"
-          },
-          "koodistoUri": "kieli",
-          "koodistoVersio": 1
-        },
         "osasuoritukset": [
           {
             "koulutusmoduuli": {
@@ -254,15 +196,6 @@
               "pakollinen": false,
               "laajuus": 5.0
             },
-            "tutkinnonOsanRyhmä": {
-              "koodiarvo": "1",
-              "nimi": {
-                "fi": "Ammatilliset tutkinnon osat",
-                "sv": "Yrkesinriktade examensdelar"
-              },
-              "koodistoUri": "ammatillisentutkinnonosanryhma",
-              "koodistoVersio": 1
-            },
             "arviointi": [
               {
                 "arvosana": {
@@ -280,6 +213,8 @@
                 "hyväksytty": true
               }
             ],
+            "keskiarvoSisältääMukautettujaArvosanoja": false,
+            "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
             "tyyppi": {
               "koodiarvo": "ammatillisentutkinnonosa",
               "nimi": {
@@ -309,15 +244,6 @@
               "pakollinen": false,
               "laajuus": 5.0
             },
-            "tutkinnonOsanRyhmä": {
-              "koodiarvo": "2",
-              "nimi": {
-                "fi": "Yhteiset tutkinnon osat",
-                "sv": "Gemensamma examensdelar"
-              },
-              "koodistoUri": "ammatillisentutkinnonosanryhma",
-              "koodistoVersio": 1
-            },
             "arviointi": [
               {
                 "arvosana": {
@@ -335,6 +261,8 @@
                 "hyväksytty": true
               }
             ],
+            "keskiarvoSisältääMukautettujaArvosanoja": true,
+            "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
             "tyyppi": {
               "koodiarvo": "ammatillisentutkinnonosa",
               "nimi": {
@@ -364,15 +292,6 @@
               "pakollinen": false,
               "laajuus": 5.0
             },
-            "tutkinnonOsanRyhmä": {
-              "koodiarvo": "3",
-              "nimi": {
-                "fi": "Vapaasti valittavat tutkinnon osat",
-                "sv": "Fritt valbara examensdelar"
-              },
-              "koodistoUri": "ammatillisentutkinnonosanryhma",
-              "koodistoVersio": 1
-            },
             "arviointi": [
               {
                 "arvosana": {
@@ -390,6 +309,8 @@
                 "hyväksytty": true
               }
             ],
+            "keskiarvoSisältääMukautettujaArvosanoja": false,
+            "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
             "tyyppi": {
               "koodiarvo": "ammatillisentutkinnonosa",
               "nimi": {
@@ -425,8 +346,6 @@
       },
       "koodistoUri": "opiskeluoikeudentyyppi",
       "koodistoVersio": 1
-    },
-    "alkamispäivä": "2017-02-22",
-    "päättymispäivä": "2019-02-22"
+    }
   }
 ]
