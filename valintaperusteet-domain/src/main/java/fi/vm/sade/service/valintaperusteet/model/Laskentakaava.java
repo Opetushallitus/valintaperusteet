@@ -102,7 +102,7 @@ public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
 
   public void setFunktiokutsu(Funktiokutsu funktiokutsu) {
     this.funktiokutsu = funktiokutsu;
-    this.kaava = new FunktiokutsuWrapper(funktiokutsu);
+    this.kaava = new FunktiokutsuWrapper(funktiokutsu, true);
   }
 
   public Funktiotyyppi getTyyppi() {
@@ -130,7 +130,7 @@ public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
   }
 
   public void migrateKaava() {
-    this.kaava = new FunktiokutsuWrapper(this.funktiokutsu);
+    this.kaava = new FunktiokutsuWrapper(this.funktiokutsu, true);
   }
 
   @Override
@@ -162,16 +162,22 @@ public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
   }
 
   /* Hibernate kilahtaa (palauttaa hauista duplikaatteja) jos jsonb-kentässä oleva tyyppi on samalla entiteetti
-   *  joten käytetään wrapper-luokkaa */
+   *  joten käytetään wrapper-luokkaa, samalla voidaan tallentaa dirty-flagi */
   public static class FunktiokutsuWrapper {
-    private Funktiokutsu funktiokutsu;
+    private final Funktiokutsu funktiokutsu;
+    private final boolean dirty;
 
-    public FunktiokutsuWrapper(Funktiokutsu funktiokutsu) {
+    public FunktiokutsuWrapper(Funktiokutsu funktiokutsu, boolean dirty) {
       this.funktiokutsu = funktiokutsu;
+      this.dirty = dirty;
     }
 
     public Funktiokutsu getFunktiokutsu() {
       return this.funktiokutsu;
+    }
+
+    public boolean isDirty() {
+      return this.dirty;
     }
   }
 
@@ -202,7 +208,7 @@ public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
       try {
         return dbData == null
             ? null
-            : new FunktiokutsuWrapper(objectMapper.readValue(dbData, Funktiokutsu.class));
+            : new FunktiokutsuWrapper(objectMapper.readValue(dbData, Funktiokutsu.class), false);
       } catch (JsonProcessingException e) {
         throw new RuntimeException("Error while deserializing JSON to JsonNode", e);
       }
