@@ -23,4 +23,6 @@ public interface ValintaryhmaService {
   void delete(String oid);
 
   Set<String> findHakukohdesRecursive(Set<String> oids);
+
+  Boolean onkoHaullaValintaryhmia(String hakuOid);
 }
