@@ -67,13 +67,13 @@ public class ValintaryhmaResourceTest extends WithSpringBoot {
   }
 
   @Test
-  public void testHaullaEiOleValintaryhmia() throws Exception {
+  public void testHaullaEiOleValintaryhmia() {
     assertFalse(valintaryhmaResource.onkoHaullaValintaryhmia("oid1"));
   }
 
   @Test
-  public void testHaullaOnValintaryhmia() throws Exception {
-    assertFalse(valintaryhmaResource.onkoHaullaValintaryhmia("oid50"));
+  public void testHaullaOnValintaryhmia() {
+    assertTrue(valintaryhmaResource.onkoHaullaValintaryhmia("hakuoid50"));
   }
 
   @Test
