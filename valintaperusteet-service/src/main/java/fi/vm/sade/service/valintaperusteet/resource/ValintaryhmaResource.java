@@ -174,6 +174,15 @@ public class ValintaryhmaResource {
         valinnanVaiheService.findByValintaryhma(oid), ValinnanVaiheDTO.class);
   }
 
+  @GetMapping(
+      value = "/onko-haulla-valintaryhmia/{hakuOid}",
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize(READ_UPDATE_CRUD)
+  @Operation(summary = "Palauttaa tiedon onko haulla valintaryhmiä")
+  public Boolean onkoHaullaValintaryhmia(@PathVariable("hakuOid") final String hakuOid) {
+    return valintaryhmaService.onkoHaullaValintaryhmia(hakuOid);
+  }
+
   @PutMapping(
       value = "/{parentOid}/lapsi",
       produces = MediaType.APPLICATION_JSON_VALUE,

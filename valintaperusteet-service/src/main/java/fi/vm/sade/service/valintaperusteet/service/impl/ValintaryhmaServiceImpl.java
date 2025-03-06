@@ -283,6 +283,11 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
     return hakukohdeOids;
   }
 
+  @Override
+  public Boolean onkoHaullaValintaryhmia(String hakuOid) {
+    return !valintaryhmaDAO.readByHakuoid(hakuOid).isEmpty();
+  }
+
   private void getChildrenRecursive(String oid, Set<String> hakukohdeOids) {
     for (Valintaryhma child : findValintaryhmasByParentOid(oid)) {
       if (child.getLapsihakukohde()) {
