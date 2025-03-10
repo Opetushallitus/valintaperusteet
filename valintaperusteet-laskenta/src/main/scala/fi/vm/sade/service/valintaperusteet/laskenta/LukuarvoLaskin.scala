@@ -290,17 +290,17 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
 
     val (laskettuTulos: Option[BigDecimal], tilat: Seq[Tila], historia: Historia) =
       laskettava match {
-        case Lukuarvo(d, _, _, _, _, _, _) =>
+        case Lukuarvo(d, _, _, _, _, _) =>
           val tila = List(new Hyvaksyttavissatila)
           (Some(d), tila, Historia(LUKUARVO, Some(d), tila, None, None))
-        case Negaatio(n, _, _, _, _, _, _) =>
+        case Negaatio(n, _, _, _, _, _) =>
           val (tulos, tilat, h) = muodostaYksittainenTulos(n, d => -d)
           (tulos, tilat, Historia(NEGAATIO, tulos, tilat, Some(List(h)), None))
-        case Summa(fs, _, _, _, _, _, _) =>
+        case Summa(fs, _, _, _, _, _) =>
           val (tulos, tilat, h) = muodostaKoostettuTulos(fs, summa)
           (tulos, tilat, Historia(SUMMA, tulos, tilat, h.historiat, None))
 
-        case SummaNParasta(n, fs, _, _, _, _, _, _) =>
+        case SummaNParasta(n, fs, _, _, _, _, _) =>
           val (tulos, tilat, h) =
             muodostaKoostettuTulos(fs, ds => summa(ds.sortWith(_ > _).take(n)))
           (
@@ -309,7 +309,7 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
             Historia(SUMMANPARASTA, tulos, tilat, h.historiat, Some(Map("n" -> Some(n))))
           )
 
-        case TuloNParasta(n, fs, _, _, _, _, _, _) =>
+        case TuloNParasta(n, fs, _, _, _, _, _) =>
           val (tulos, tilat, h) = muodostaKoostettuTulos(fs, ds => tulo(ds.sortWith(_ > _).take(n)))
           (
             tulos,
@@ -317,7 +317,7 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
             Historia(TULONPARASTA, tulos, tilat, h.historiat, Some(Map("n" -> Some(n))))
           )
 
-        case Osamaara(osoittaja, nimittaja, _, _, _, _, _, _) =>
+        case Osamaara(osoittaja, nimittaja, _, _, _, _, _) =>
           val nimittajaTulos = laskeLukuarvo(nimittaja, iteraatioParametrit)
           val osoittajaTulos = laskeLukuarvo(osoittaja, iteraatioParametrit)
 
@@ -357,11 +357,11 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
             )
           )
 
-        case Tulo(fs, _, _, _, _, _, _) =>
+        case Tulo(fs, _, _, _, _, _) =>
           val (tulos, tilat, h) = muodostaKoostettuTulos(fs, ds => ds.product)
           (tulos, tilat, Historia(TULO, tulos, tilat, h.historiat, None))
 
-        case Keskiarvo(fs, _, _, _, _, _, _) =>
+        case Keskiarvo(fs, _, _, _, _, _) =>
           val (tulos, tilat, h) = muodostaKoostettuTulos(
             fs,
             ds =>
@@ -371,7 +371,7 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
           )
           (tulos, tilat, Historia(KESKIARVO, tulos, tilat, h.historiat, None))
 
-        case KeskiarvoNParasta(n, fs, _, _, _, _, _, _) =>
+        case KeskiarvoNParasta(n, fs, _, _, _, _, _) =>
           val (tulos, tilat, h) = muodostaKoostettuTulos(
             fs,
             ds => {
@@ -387,19 +387,18 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
             tilat,
             Historia(KESKIARVONPARASTA, tulos, tilat, h.historiat, Some(Map("n" -> Some(n))))
           )
-        case Minimi(fs, _, _, _, _, _, _) =>
+        case Minimi(fs, _, _, _, _, _) =>
           val (tulos, tilat, h) = muodostaKoostettuTulos(fs, ds => ds.min)
           (tulos, tilat, Historia(MINIMI, tulos, tilat, h.historiat, None))
 
-        case f @ Maksimi(_, _, _, _, _, _, _)
-            if iteraatioParametrit.sisaltaaAvoimenParametrilistan =>
+        case f @ Maksimi(_, _, _, _, _, _) if iteraatioParametrit.sisaltaaAvoimenParametrilistan =>
           maksimiIteroiden(f, iteraatioParametrit)
 
-        case Maksimi(fs, _, _, _, _, _, _) =>
+        case Maksimi(fs, _, _, _, _, _) =>
           val (tulos, tilat, h) = muodostaKoostettuTulos(fs, ds => ds.max)
           (tulos, tilat, Historia(MAKSIMI, tulos, tilat, h.historiat, None))
 
-        case NMinimi(ns, fs, _, _, _, _, _, _) =>
+        case NMinimi(ns, fs, _, _, _, _, _) =>
           val (tulos, tilat, h) = muodostaKoostettuTulos(
             fs,
             ds => ds.sortWith(_ < _)(scala.math.min(ns, ds.size) - 1),
@@ -407,7 +406,7 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
           )
           (tulos, tilat, Historia(NMINIMI, tulos, tilat, h.historiat, Some(Map("ns" -> Some(ns)))))
 
-        case NMaksimi(ns, fs, _, _, _, _, _, _) =>
+        case NMaksimi(ns, fs, _, _, _, _, _) =>
           val (tulos, tilat, h) = muodostaKoostettuTulos(
             fs,
             ds => ds.sortWith(_ > _)(scala.math.min(ns, ds.size) - 1),
@@ -415,7 +414,7 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
           )
           (tulos, tilat, Historia(NMAKSIMI, tulos, tilat, h.historiat, Some(Map("ns" -> Some(ns)))))
 
-        case Mediaani(fs, _, _, _, _, _, _) =>
+        case Mediaani(fs, _, _, _, _, _) =>
           val (tulos, tilat, h) = muodostaKoostettuTulos(
             fs,
             ds => {
@@ -435,7 +434,6 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
               ehto,
               thenHaara,
               elseHaara,
-              _,
               tulosTunniste,
               tulosTekstiFi,
               _,
@@ -489,7 +487,7 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
             Historia(JOS, tulos, tilat, Some(List(ehtoTulos.historia) ++ historia), avaimet)
           )
 
-        case KonvertoiLukuarvo(konvertteri, f, _, _, tulosTekstiFi, _, _, _) =>
+        case KonvertoiLukuarvo(konvertteri, f, _, tulosTekstiFi, _, _, _) =>
           laskeLukuarvo(f, iteraatioParametrit) match {
             case Tulos(tulos, tila, historia) =>
               val (konv, virheet) = konvertteri match {
@@ -545,7 +543,6 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
               _,
               _,
               _,
-              _,
               _
             ) =>
           haeAmmatillinenYtoArvosana(
@@ -564,7 +561,6 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
               _,
               _,
               _,
-              _,
               _
             ) =>
           haeAmmatillinenYtoArviointiAsteikko(
@@ -575,16 +571,15 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
             valintaperusteviite
           )
 
-        case f @ HaeAmmatillisenTutkinnonOsanLaajuus(konvertteri, oletusarvo, _, _, _, _, _, _) =>
+        case f @ HaeAmmatillisenTutkinnonOsanLaajuus(konvertteri, oletusarvo, _, _, _, _, _) =>
           haeAmmatillisenTutkinnonOsanLaajuus(iteraatioParametrit, f, konvertteri, oletusarvo)
 
-        case f @ HaeAmmatillisenTutkinnonOsanArvosana(konvertteri, _, _, _, _, _, _) =>
+        case f @ HaeAmmatillisenTutkinnonOsanArvosana(konvertteri, _, _, _, _, _) =>
           haeAmmatillisenTutkinnonOsanArvosana(iteraatioParametrit, f, konvertteri)
 
         case f @ HaeAmmatillisenTutkinnonYtoOsaAlueenLaajuus(
               konvertteri,
               oletusarvo,
-              _,
               _,
               _,
               _,
@@ -605,7 +600,6 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
               _,
               _,
               _,
-              _,
               _
             ) =>
           haeAmmatillisenTutkinnonYtoOsaAlueenArvosana(
@@ -615,16 +609,16 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
             oletusarvo
           )
 
-        case f @ HaeAmmatillisenTutkinnonKeskiarvo(konvertteri, _, _, _, _, _, _) =>
+        case f @ HaeAmmatillisenTutkinnonKeskiarvo(konvertteri, _, _, _, _, _) =>
           haeAmmatillisenTutkinnonKeskiarvo(iteraatioParametrit, f, konvertteri)
 
-        case f @ HaeAmmatillisenTutkinnonSuoritustapa(konvertteri, oletusarvo, _, _, _, _, _, _) =>
+        case f @ HaeAmmatillisenTutkinnonSuoritustapa(konvertteri, oletusarvo, _, _, _, _, _) =>
           haeAmmatillisenTutkinnonSuoritustapa(iteraatioParametrit, f, konvertteri, oletusarvo)
 
-        case HaeLukuarvo(konvertteri, oletusarvo, valintaperusteviite, _, _, _, _, _, _) =>
+        case HaeLukuarvo(konvertteri, oletusarvo, valintaperusteviite, _, _, _, _, _) =>
           haeLukuarvo(konvertteri, oletusarvo, valintaperusteviite, laskin.hakemus.kentat)
 
-        case HaeYoPisteet(konvertteri, ehdot, oletusarvo, valintaperusteviite, _, _, _, _, _, _) =>
+        case HaeYoPisteet(konvertteri, ehdot, oletusarvo, valintaperusteviite, _, _, _, _, _) =>
           val suoritukset = filteredSuoritusTiedot(valintaperusteviite, ehdot)
           val sortedValues = suoritukset.sortWith((kentat1, kentat2) =>
             string2integer(kentat1.get("PISTEET"), 0) > string2integer(kentat2.get("PISTEET"), 0)
@@ -641,7 +635,6 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
               oletusarvo,
               valintaperusteviite,
               ehto,
-              _,
               _,
               _,
               _,
@@ -689,7 +682,6 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
               _,
               _,
               _,
-              _,
               _
             ) =>
           haeMerkkijonoJaKonvertoiLukuarvoksi(
@@ -699,7 +691,7 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
             laskin.hakemus.kentat
           )
 
-        case HaeYoArvosana(konvertteri, ehdot, oletusarvo, valintaperusteviite, _, _, _, _, _, _) =>
+        case HaeYoArvosana(konvertteri, ehdot, oletusarvo, valintaperusteviite, _, _, _, _, _) =>
           val suoritukset = filteredSuoritusTiedot(valintaperusteviite, ehdot)
           val sortedValues = suoritukset.sortWith((kentat1, kentat2) =>
             ehdot.YO_ORDER.indexOf(kentat1.getOrElse("ARVO", "I")) < ehdot.YO_ORDER.indexOf(
@@ -717,7 +709,6 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
               konvertteri,
               oletusarvo,
               valintaperusteviite,
-              _,
               _,
               _,
               _,
@@ -782,7 +773,7 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
               )
           }
 
-        case NimettyLukuarvo(nimi, f, _, _, _, _, _, _) =>
+        case NimettyLukuarvo(nimi, f, _, _, _, _, _) =>
           val (tulos, tilat, historia) = muodostaYksittainenTulos(f, d => d)
           val avaimetTallennettavienTulostenHistorioista: ListMap[String, Option[Any]] = ListMap(
             historianTiivistelma(
@@ -799,7 +790,7 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
             Historia(NIMETTYLUKUARVO, tulos, tilat, Some(List(historia)), Some(avaimet))
           )
 
-        case Pyoristys(tarkkuus, f, _, _, _, _, _, _) =>
+        case Pyoristys(tarkkuus, f, _, _, _, _, _) =>
           val (tulos, tilat, h) =
             muodostaYksittainenTulos(f, d => d.setScale(tarkkuus, BigDecimal.RoundingMode.HALF_UP))
           (
@@ -813,7 +804,7 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
               Some(Map("tarkkuus" -> Some(tarkkuus)))
             )
           )
-        case Hylkaa(f, hylkaysperustekuvaus, _, _, _, _, _, _) =>
+        case Hylkaa(f, hylkaysperustekuvaus, _, _, _, _, _) =>
           new TotuusarvoLaskin(laskin).laskeTotuusarvo(f, iteraatioParametrit) match {
             case Tulos(tulos, tila, historia) =>
               val tila2 = tulos
@@ -836,7 +827,7 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
               val tilat = List(tila, tila2)
               (None, tilat, Historia(HYLKAA, None, tilat, Some(List(historia)), None))
           }
-        case HylkaaArvovalilla(f, hylkaysperustekuvaus, _, _, _, _, _, _, (min, max)) =>
+        case HylkaaArvovalilla(f, hylkaysperustekuvaus, _, _, _, _, _, (min, max)) =>
           laskeLukuarvo(f, iteraatioParametrit) match {
             case Tulos(tulos, tila, historia) =>
               val arvovali = haeArvovali((min, max), laskin.hakukohde, laskin.hakemus.kentat)
@@ -889,7 +880,7 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
                 )
               }
           }
-        case Skaalaus(_, _, _, _, _, _, skaalattava, (kohdeMin, kohdeMax), lahdeskaala) =>
+        case Skaalaus(_, _, _, _, _, skaalattava, (kohdeMin, kohdeMax), lahdeskaala) =>
           if (laskin.laskentamoodi != Laskentamoodi.VALINTALASKENTA) {
             val moodi = laskin.laskentamoodi.toString
             moodiVirhe(
@@ -997,11 +988,11 @@ protected[laskenta] class LukuarvoLaskin(protected val laskin: Laskin)
             )
           }
 
-        case f @ PainotettuKeskiarvo(_, _, _, _, _, _, _)
+        case f @ PainotettuKeskiarvo(_, _, _, _, _, _)
             if iteraatioParametrit.sisaltaaAvoimenParametrilistan =>
           painotettuKeskiarvoIteroiden(f, iteraatioParametrit)
 
-        case PainotettuKeskiarvo(_, _, _, _, _, _, fs) =>
+        case PainotettuKeskiarvo(_, _, _, _, _, fs) =>
           val tulokset = fs.map(p =>
             Tuple2(
               laskeLukuarvo(p._1, iteraatioParametrit),
