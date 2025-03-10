@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 
 @Entity
@@ -35,6 +36,7 @@ public class Arvovalikonvertteriparametri extends Konvertteriparametri
 
   @JoinColumn(name = "tekstiryhma_id", nullable = true)
   @ManyToOne(fetch = FetchType.LAZY, optional = true)
+  @JsonSerialize(using = TekstiRyhmaSerializer.class)
   private TekstiRyhma kuvaukset;
 
   public String getMinValue() {
