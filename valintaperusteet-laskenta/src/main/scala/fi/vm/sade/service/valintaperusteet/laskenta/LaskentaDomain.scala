@@ -185,7 +185,6 @@ object LaskentaDomain {
   case class KonvertoiLukuarvo(
     konvertteri: Konvertteri[BigDecimal, BigDecimal],
     f: Lukuarvofunktio,
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -225,7 +224,6 @@ object LaskentaDomain {
 
   case class Lukuarvo(
     d: BigDecimal,
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -235,7 +233,6 @@ object LaskentaDomain {
 
   case class Negaatio(
     f: Lukuarvofunktio,
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -246,7 +243,6 @@ object LaskentaDomain {
   case class Pyoristys(
     tarkkuus: Int,
     f: Lukuarvofunktio,
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -258,7 +254,6 @@ object LaskentaDomain {
 
   case class Summa(
     fs: Seq[Lukuarvofunktio],
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -276,7 +271,6 @@ object LaskentaDomain {
   case class SummaNParasta(
     n: Int,
     fs: Seq[Lukuarvofunktio],
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -294,7 +288,6 @@ object LaskentaDomain {
   case class TuloNParasta(
     n: Int,
     fs: Seq[Lukuarvofunktio],
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -311,7 +304,6 @@ object LaskentaDomain {
   case class KeskiarvoNParasta(
     n: Int,
     fs: Seq[Lukuarvofunktio],
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -328,7 +320,6 @@ object LaskentaDomain {
 
   case class Keskiarvo(
     fs: Seq[Lukuarvofunktio],
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -345,7 +336,6 @@ object LaskentaDomain {
 
   case class Mediaani(
     fs: Seq[Lukuarvofunktio],
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -363,7 +353,6 @@ object LaskentaDomain {
   case class Osamaara(
     osoittaja: Lukuarvofunktio,
     nimittaja: Lukuarvofunktio,
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -377,7 +366,6 @@ object LaskentaDomain {
 
   case class Minimi(
     fs: Seq[Lukuarvofunktio],
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -394,7 +382,6 @@ object LaskentaDomain {
 
   case class Maksimi(
     fs: Seq[Lukuarvofunktio],
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -412,7 +399,6 @@ object LaskentaDomain {
   case class NMinimi(
     ns: Int,
     fs: Seq[Lukuarvofunktio],
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -430,7 +416,6 @@ object LaskentaDomain {
   case class NMaksimi(
     ns: Int,
     fs: Seq[Lukuarvofunktio],
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -447,7 +432,6 @@ object LaskentaDomain {
 
   case class Tulo(
     fs: Seq[Lukuarvofunktio],
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -467,7 +451,6 @@ object LaskentaDomain {
     ehto: Totuusarvofunktio,
     ifHaara: Lukuarvofunktio,
     elseHaara: Lukuarvofunktio,
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -501,7 +484,6 @@ object LaskentaDomain {
     ehdot: YoEhdot,
     oletusarvo: Option[BigDecimal],
     valintaperusteviite: Valintaperuste,
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -515,7 +497,6 @@ object LaskentaDomain {
     ehdot: YoEhdot,
     oletusarvo: Option[BigDecimal],
     valintaperusteviite: Valintaperuste,
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -528,7 +509,6 @@ object LaskentaDomain {
     valmistumisenTakaraja: LocalDate,
     datanAikaleimanLeikkuri: LocalDate,
     f: Lukuarvofunktio,
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -543,7 +523,6 @@ object LaskentaDomain {
 
   case class IteroiAmmatillisetTutkinnonOsat(
     f: Lukuarvofunktio,
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -554,7 +533,6 @@ object LaskentaDomain {
   case class IteroiAmmatillisenTutkinnonYtoOsaAlueet(
     f: Lukuarvofunktio,
     valintaperusteviite: Valintaperuste,
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -565,7 +543,6 @@ object LaskentaDomain {
   case class HaeAmmatillisenTutkinnonYtoOsaAlueenArvosana(
     konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]],
     oletusarvo: Option[BigDecimal],
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -581,7 +558,6 @@ object LaskentaDomain {
   case class HaeAmmatillisenTutkinnonYtoOsaAlueenLaajuus(
     konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]],
     oletusarvo: Option[BigDecimal],
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -598,7 +574,6 @@ object LaskentaDomain {
     konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]],
     oletusarvo: Option[BigDecimal],
     valintaperusteviite: Valintaperuste,
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -616,7 +591,6 @@ object LaskentaDomain {
     konvertteri: Konvertteri[String, BigDecimal],
     oletusarvo: Option[BigDecimal],
     valintaperusteviite: Valintaperuste,
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -633,7 +607,6 @@ object LaskentaDomain {
   case class HaeAmmatillisenTutkinnonOsanLaajuus(
     konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]],
     oletusarvo: Option[BigDecimal],
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -648,7 +621,6 @@ object LaskentaDomain {
 
   case class HaeAmmatillisenTutkinnonOsanArvosana(
     konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]],
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -663,7 +635,6 @@ object LaskentaDomain {
 
   case class HaeAmmatillisenTutkinnonKeskiarvo(
     konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]],
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -679,7 +650,6 @@ object LaskentaDomain {
   case class HaeAmmatillisenTutkinnonSuoritustapa(
     konvertteri: Konvertteri[String, BigDecimal],
     oletusarvo: Option[BigDecimal],
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -696,7 +666,6 @@ object LaskentaDomain {
     konvertteri: Konvertteri[String, BigDecimal],
     oletusarvo: Option[BigDecimal],
     valintaperusteviite: Valintaperuste,
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -709,7 +678,6 @@ object LaskentaDomain {
     konvertteri: Konvertteri[Boolean, BigDecimal],
     oletusarvo: Option[BigDecimal],
     valintaperusteviite: Valintaperuste,
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -722,7 +690,6 @@ object LaskentaDomain {
     konvertteri: Konvertteri[String, Boolean],
     oletusarvo: Option[Boolean],
     valintaperusteviite: Valintaperuste,
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -735,7 +702,6 @@ object LaskentaDomain {
     konvertteri: Option[Konvertteri[Boolean, Boolean]],
     oletusarvo: Option[Boolean],
     valintaperusteviite: Valintaperuste,
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -748,7 +714,6 @@ object LaskentaDomain {
     konvertteri: Option[Konvertteri[BigDecimal, BigDecimal]],
     oletusarvo: Option[BigDecimal],
     valintaperusteviite: Valintaperuste,
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -762,7 +727,6 @@ object LaskentaDomain {
     oletusarvo: Option[BigDecimal],
     valintaperusteviite: Valintaperuste,
     ehto: Valintaperuste,
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -775,7 +739,6 @@ object LaskentaDomain {
     oletusarvo: Option[Boolean],
     valintaperusteviite: Valintaperuste,
     vertailtava: String,
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -787,7 +750,6 @@ object LaskentaDomain {
   // Boolean-funktiot
   case class Ja(
     fs: Seq[Totuusarvofunktio],
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -804,7 +766,6 @@ object LaskentaDomain {
 
   case class Tai(
     fs: Seq[Totuusarvofunktio],
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -821,7 +782,6 @@ object LaskentaDomain {
 
   case class Ei(
     f: Totuusarvofunktio,
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -832,7 +792,6 @@ object LaskentaDomain {
   case class Suurempi(
     f1: Lukuarvofunktio,
     f2: Lukuarvofunktio,
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -843,7 +802,6 @@ object LaskentaDomain {
   case class SuurempiTaiYhtasuuri(
     f1: Lukuarvofunktio,
     f2: Lukuarvofunktio,
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -854,7 +812,6 @@ object LaskentaDomain {
   case class Pienempi(
     f1: Lukuarvofunktio,
     f2: Lukuarvofunktio,
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -865,7 +822,6 @@ object LaskentaDomain {
   case class PienempiTaiYhtasuuri(
     f1: Lukuarvofunktio,
     f2: Lukuarvofunktio,
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -876,7 +832,6 @@ object LaskentaDomain {
   case class Yhtasuuri(
     f1: Lukuarvofunktio,
     f2: Lukuarvofunktio,
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -886,7 +841,6 @@ object LaskentaDomain {
 
   case class Totuusarvo(
     b: Boolean,
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -907,7 +861,6 @@ object LaskentaDomain {
   case class NimettyTotuusarvo(
     nimi: String,
     f: Totuusarvofunktio,
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -919,7 +872,6 @@ object LaskentaDomain {
   case class NimettyLukuarvo(
     nimi: String,
     f: Lukuarvofunktio,
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -930,7 +882,6 @@ object LaskentaDomain {
 
   case class Hakutoive(
     n: Int,
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -943,7 +894,6 @@ object LaskentaDomain {
   case class HakutoiveRyhmassa(
     n: Int,
     ryhmaOid: String,
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -955,7 +905,6 @@ object LaskentaDomain {
   }
 
   case class Hakukelpoisuus(
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -966,7 +915,6 @@ object LaskentaDomain {
   case class Hylkaa(
     f: Totuusarvofunktio,
     hylkaysperustekuvaus: Option[Map[String, String]] = None,
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -975,7 +923,6 @@ object LaskentaDomain {
   ) extends Lukuarvofunktio
 
   case class Demografia(
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -986,7 +933,6 @@ object LaskentaDomain {
   ) extends Totuusarvofunktio
 
   case class Skaalaus(
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -1007,7 +953,6 @@ object LaskentaDomain {
   }
 
   case class PainotettuKeskiarvo(
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -1019,7 +964,6 @@ object LaskentaDomain {
   }
 
   case class Valintaperusteyhtasuuruus(
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
@@ -1031,7 +975,6 @@ object LaskentaDomain {
   case class HylkaaArvovalilla(
     f: Lukuarvofunktio,
     hylkaysperustekuvaus: Option[Map[String, String]] = None,
-    oid: String = "",
     tulosTunniste: String = "",
     tulosTekstiFi: String = "",
     tulosTekstiSv: String = "",
