@@ -632,7 +632,7 @@ class LaskentaTest extends AnyFunSuite {
 
     val hakukohde = new Hakukohde("hakutoiveoid1", new util.HashMap[String, String])
 
-    val funktio = Demografia("funktioid1", "", "", "", "", false, "sukupuoli", BigDecimal("33.0"))
+    val funktio = Demografia("funktioid1", "", "", "", false, "sukupuoli", BigDecimal("33.0"))
 
     val tulokset =
       hakemukset.map(h => Laskin.suoritaValintalaskenta(hakukohde, h, hakemukset.asJava, funktio))
@@ -1569,7 +1569,6 @@ class LaskentaTest extends AnyFunSuite {
 
   test("valintaperusteyhtasuuruus palauttaa true jos arvot ovat yhtasuuret") {
     val funktiokutsu = Valintaperusteyhtasuuruus(
-      oid = "",
       valintaperusteet = Tuple2(
         HakukohteenValintaperuste(
           tunniste = "hakukohteentunniste",
@@ -1600,7 +1599,6 @@ class LaskentaTest extends AnyFunSuite {
 
   test("valintaperusteyhtasuuruus palauttaa false jos arvot ovat erisuuret") {
     val funktiokutsu = Valintaperusteyhtasuuruus(
-      oid = "",
       valintaperusteet = Tuple2(
         HakukohteenValintaperuste(
           tunniste = "hakukohteentunniste",
@@ -1631,7 +1629,6 @@ class LaskentaTest extends AnyFunSuite {
 
   test("valintaperusteyhtasuuruus, molemmat arvot tyhjia") {
     val funktiokutsu = Valintaperusteyhtasuuruus(
-      oid = "",
       valintaperusteet = Tuple2(
         HakukohteenValintaperuste(
           tunniste = "hakukohteentunniste",
@@ -1658,7 +1655,6 @@ class LaskentaTest extends AnyFunSuite {
 
   test("valintaperusteyhtasuuruus, molemmat arvot tyhjia, toinen pakollinen") {
     val funktiokutsu = Valintaperusteyhtasuuruus(
-      oid = "",
       valintaperusteet = Tuple2(
         HakukohteenValintaperuste(
           tunniste = "hakukohteentunniste",

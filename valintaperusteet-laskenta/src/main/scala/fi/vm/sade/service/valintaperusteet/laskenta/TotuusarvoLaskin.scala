@@ -101,39 +101,39 @@ protected[laskenta] class TotuusarvoLaskin(private val laskin: Laskin) extends L
     }
 
     val (laskettuTulos, tilat, hist): (Option[Boolean], List[Tila], Historia) = laskettava match {
-      case Ja(fs, _, _, _, _, _, _) =>
+      case Ja(fs, _, _, _, _, _) =>
         val (tulos, tilat, h) = muodostaKoostettuTulos(fs, lst => lst.forall(b => b))
         (tulos, tilat, Historia(JA, tulos, tilat, h.historiat, None))
-      case Tai(fs, _, _, _, _, _, _) =>
+      case Tai(fs, _, _, _, _, _) =>
         val (tulos, tilat, h) = muodostaKoostettuTulos(fs, lst => lst.exists(b => b))
         (tulos, tilat, Historia(TAI, tulos, tilat, h.historiat, None))
-      case Ei(fk, _, _, _, _, _, _) =>
+      case Ei(fk, _, _, _, _, _) =>
         val (tulos, tilat, h) = muodostaYksittainenTulos(fk, b => !b)
         (tulos, tilat, Historia(EI, tulos, tilat, Some(List(h)), None))
-      case Totuusarvo(b, _, _, _, _, _, _) =>
+      case Totuusarvo(b, _, _, _, _, _) =>
         val tilat = List(new Hyvaksyttavissatila)
         (Some(b), tilat, Historia(TOTUUSARVO, Some(b), tilat, None, None))
-      case Suurempi(f1, f2, _, _, _, _, _, _) =>
+      case Suurempi(f1, f2, _, _, _, _, _) =>
         val (tulos, tilat, h) =
           muodostaVertailunTulos(f1, f2, (d1, d2) => d1 > d2, iteraatioParametrit)
         (tulos, tilat, Historia(SUUREMPI, tulos, tilat, Some(List(h)), None))
-      case SuurempiTaiYhtasuuri(f1, f2, _, _, _, _, _, _) =>
+      case SuurempiTaiYhtasuuri(f1, f2, _, _, _, _, _) =>
         val (tulos, tilat, h) =
           muodostaVertailunTulos(f1, f2, (d1, d2) => d1 >= d2, iteraatioParametrit)
         (tulos, tilat, Historia(SUUREMPITAIYHTASUURI, tulos, tilat, Some(List(h)), None))
-      case Pienempi(f1, f2, _, _, _, _, _, _) =>
+      case Pienempi(f1, f2, _, _, _, _, _) =>
         val (tulos, tilat, h) =
           muodostaVertailunTulos(f1, f2, (d1, d2) => d1 < d2, iteraatioParametrit)
         (tulos, tilat, Historia(PIENEMPI, tulos, tilat, Some(List(h)), None))
-      case PienempiTaiYhtasuuri(f1, f2, _, _, _, _, _, _) =>
+      case PienempiTaiYhtasuuri(f1, f2, _, _, _, _, _) =>
         val (tulos, tilat, h) =
           muodostaVertailunTulos(f1, f2, (d1, d2) => d1 <= d2, iteraatioParametrit)
         (tulos, tilat, Historia(PIENEMPITAIYHTASUURI, tulos, tilat, Some(List(h)), None))
-      case Yhtasuuri(f1, f2, _, _, _, _, _, _) =>
+      case Yhtasuuri(f1, f2, _, _, _, _, _) =>
         val (tulos, tilat, h) =
           muodostaVertailunTulos(f1, f2, (d1, d2) => d1 == d2, iteraatioParametrit)
         (tulos, tilat, Historia(YHTASUURI, tulos, tilat, Some(List(h)), None))
-      case HaeTotuusarvo(konvertteri, oletusarvo, valintaperusteviite, _, _, _, _, _, _) =>
+      case HaeTotuusarvo(konvertteri, oletusarvo, valintaperusteviite, _, _, _, _, _) =>
         val (konv, _) = konvertteri match {
           case Some(a: Arvokonvertteri[_, _]) =>
             konversioToArvokonversio[Boolean, Boolean](
@@ -158,7 +158,7 @@ protected[laskenta] class TotuusarvoLaskin(private val laskin: Laskin) extends L
           tila,
           Historia(HAETOTUUSARVO, tulos, tila, None, Some(Map("oletusarvo" -> oletusarvo)))
         )
-      case NimettyTotuusarvo(nimi, f, _, _, _, _, _, _) =>
+      case NimettyTotuusarvo(nimi, f, _, _, _, _, _) =>
         val (tulos, tilat, h) = muodostaYksittainenTulos(f, b => b)
         (
           tulos,
@@ -166,14 +166,14 @@ protected[laskenta] class TotuusarvoLaskin(private val laskin: Laskin) extends L
           Historia(NIMETTYTOTUUSARVO, tulos, tilat, Some(List(h)), Some(Map("nimi" -> Some(nimi))))
         )
 
-      case Hakutoive(n, _, _, _, _, _, _) =>
+      case Hakutoive(n, _, _, _, _, _) =>
         val onko = Some(
           laskin.hakemus.onkoHakutoivePrioriteetilla(laskin.hakukohde.hakukohdeOid, n)
         )
         val tilat = List(new Hyvaksyttavissatila)
         (onko, tilat, Historia(HAKUTOIVE, onko, tilat, None, Some(Map("prioriteetti" -> Some(n)))))
 
-      case HakutoiveRyhmassa(n, ryhmaOid, _, _, _, _, _, _) =>
+      case HakutoiveRyhmassa(n, ryhmaOid, _, _, _, _, _) =>
         val onko = Some(
           laskin.hakemus
             .onkoHakutoivePrioriteetilla(laskin.hakukohde.hakukohdeOid, n, Some(ryhmaOid))
@@ -185,7 +185,7 @@ protected[laskenta] class TotuusarvoLaskin(private val laskin: Laskin) extends L
           Historia(HAKUTOIVERYHMASSA, onko, tilat, None, Some(Map("prioriteetti" -> Some(n))))
         )
 
-      case Hakukelpoisuus(_, _, _, _, _, _) =>
+      case Hakukelpoisuus(_, _, _, _, _) =>
         val onko = Some(laskin.hakemus.onkoHakukelpoinen(laskin.hakukohde.hakukohdeOid))
         val tilat = List(new Hyvaksyttavissatila)
         (
@@ -200,7 +200,7 @@ protected[laskenta] class TotuusarvoLaskin(private val laskin: Laskin) extends L
           )
         )
 
-      case Demografia(_, _, _, _, _, _, tunniste, prosenttiosuus) =>
+      case Demografia(_, _, _, _, _, tunniste, prosenttiosuus) =>
         if (laskin.laskentamoodi != Laskentamoodi.VALINTALASKENTA) {
           val moodi = laskin.laskentamoodi.toString
           moodiVirhe(
@@ -254,7 +254,6 @@ protected[laskenta] class TotuusarvoLaskin(private val laskin: Laskin) extends L
             konvertteri,
             oletusarvo,
             valintaperusteviite,
-            _,
             _,
             _,
             _,
@@ -326,7 +325,6 @@ protected[laskenta] class TotuusarvoLaskin(private val laskin: Laskin) extends L
             _,
             _,
             _,
-            _,
             _
           ) =>
         val (tulos, tila) = laskin.haeValintaperuste[Boolean](
@@ -348,7 +346,6 @@ protected[laskenta] class TotuusarvoLaskin(private val laskin: Laskin) extends L
         )
 
       case Valintaperusteyhtasuuruus(
-            _,
             _,
             _,
             _,

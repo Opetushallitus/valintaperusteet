@@ -118,7 +118,7 @@ object Laskentakaavavalidaattori {
       if (validoiLaskettava && argumentti.getFunktiokutsuChild == null) {
         new Validointivirhe(
           Virhetyyppi.FUNKTIOKUTSUA_EI_OLE_MAARITELTY_FUNKTIOARGUMENTILLE,
-          s"Funktiokutsua ei ole annettu funktiokutsun $nimi funktioargumentille, indeksi ${argumentti.getIndeksi}, id ${argumentti.getId}, funktio id: ${funktiokutsu.getId}"
+          s"Funktiokutsua ei ole annettu funktiokutsun $nimi funktioargumentille, indeksi ${argumentti.getIndeksi}"
         ) :: accum
       } else if (
         !validoiLaskettava && argumentti.getFunktiokutsuChild == null && argumentti.getLaskentakaavaChild == null
