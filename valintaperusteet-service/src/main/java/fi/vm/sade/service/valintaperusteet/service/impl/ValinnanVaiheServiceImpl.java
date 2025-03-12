@@ -224,7 +224,7 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
     }
   }
 
-  private void jarjestaAlavalintaryhmanValnnanVaiheet(
+  private void jarjestaAlavalintaryhmanValinnanVaiheet(
       Valintaryhma valintaryhma, List<ValinnanVaihe> uusiMasterJarjestys) {
     try {
       List<ValinnanVaihe> jarjestetty =
@@ -233,7 +233,7 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
       List<Valintaryhma> alavalintaryhmat =
           valintaryhmaService.findValintaryhmasByParentOid(valintaryhma.getOid());
       for (Valintaryhma alavalintaryhma : alavalintaryhmat) {
-        jarjestaAlavalintaryhmanValnnanVaiheet(alavalintaryhma, jarjestetty);
+        jarjestaAlavalintaryhmanValinnanVaiheet(alavalintaryhma, jarjestetty);
       }
       List<HakukohdeViite> hakukohteet =
           hakukohdeService.findByValintaryhmaOid(valintaryhma.getOid());
@@ -257,7 +257,7 @@ public class ValinnanVaiheServiceImpl implements ValinnanVaiheService {
     List<Valintaryhma> alavalintaryhmat =
         valintaryhmaService.findValintaryhmasByParentOid(valintaryhma.getOid());
     for (Valintaryhma alavalintaryhma : alavalintaryhmat) {
-      jarjestaAlavalintaryhmanValnnanVaiheet(alavalintaryhma, jarjestetty);
+      jarjestaAlavalintaryhmanValinnanVaiheet(alavalintaryhma, jarjestetty);
     }
     List<HakukohdeViite> hakukohteet =
         hakukohdeService.findByValintaryhmaOid(valintaryhma.getOid());
