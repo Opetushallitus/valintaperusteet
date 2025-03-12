@@ -194,7 +194,7 @@ public class LaskentakaavaResourceTest extends WithSpringBoot {
             null,
             null,
             fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi.TOTUUSARVOFUNKTIO);
-    assertEquals(4, kaavat.size());
+    assertEquals(3, kaavat.size());
 
     for (LaskentakaavaListDTO kaava : kaavat) {
       assertEquals(
