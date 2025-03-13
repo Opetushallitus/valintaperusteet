@@ -19,15 +19,9 @@ public interface ValinnanVaiheDAO extends JpaDAO<ValinnanVaihe, Long> {
 
   ValinnanVaihe haeHakukohteenViimeinenValinnanVaihe(String hakukohdeOid);
 
-  Set<String> findValinnanVaiheOidsByValintaryhma(String valintaryhmaOid);
-
-  Set<String> findValinnanVaiheOidsByHakukohde(String hakukohdeOid);
-
   List<ValinnanVaihe> haeKopiot(String oid);
 
   boolean kuuluuSijoitteluun(String oid);
-
-  List<ValinnanVaihe> ilmanLaskentaaOlevatHakukohteelle(String hakukohdeOid);
 
   List<ValinnanVaihe> valinnanVaiheetJaJonot(String hakukohdeOid);
 
