@@ -5,13 +5,11 @@ import fi.vm.sade.service.valintaperusteet.dao.LaskentakaavaDAO;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
-import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.JarjestyskriteeriService;
 import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
 import fi.vm.sade.service.valintaperusteet.service.OidService;
 import fi.vm.sade.service.valintaperusteet.service.ValintatapajonoService;
-import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuaEiVoidaKayttaaValintalaskennassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.JarjestyskriteeriEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.JarjestyskriteeriOidListaOnTyhjaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.JarjestyskriteeriaEiVoiPoistaaException;
@@ -50,32 +48,6 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
           "Järjestyskriteeri (" + oid + ") ei ole olemassa", oid);
     }
     return jarjestyskriteeri;
-  }
-
-  private void validoiFunktiokutsuJarjestyskriteeriaVarten(Funktiokutsu funktiokutsu) {
-    if (funktiokutsu != null) {
-      if (!funktiokutsu
-          .getFunktionimi()
-          .getLaskentamoodit()
-          .contains(Laskentamoodi.VALINTALASKENTA)) {
-        throw new FunktiokutsuaEiVoidaKayttaaValintalaskennassaException(
-            "Funktiokutsua "
-                + funktiokutsu.getFunktionimi().name()
-                + ", id "
-                + funktiokutsu.getId()
-                + " ei voida käyttää valintalaskennassa.",
-            funktiokutsu.getId(),
-            funktiokutsu.getFunktionimi());
-      }
-      for (Funktioargumentti arg : funktiokutsu.getFunktioargumentit()) {
-        if (arg.getFunktiokutsuChild() != null) {
-          validoiFunktiokutsuJarjestyskriteeriaVarten(arg.getFunktiokutsuChild());
-        } else if (arg.getLaskentakaavaChild() != null) {
-          validoiFunktiokutsuJarjestyskriteeriaVarten(
-              arg.getLaskentakaavaChild().getFunktiokutsu());
-        }
-      }
-    }
   }
 
   private void validoiLaskentakaavaJarjestyskriteeriaVarten(Laskentakaava laskentakaava) {

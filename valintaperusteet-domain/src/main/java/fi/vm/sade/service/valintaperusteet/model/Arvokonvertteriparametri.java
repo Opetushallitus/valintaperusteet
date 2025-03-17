@@ -1,19 +1,10 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
-import jakarta.persistence.*;
-
-@Entity
-@Table(name = "arvokonvertteriparametri")
-@Cacheable(true)
 public class Arvokonvertteriparametri extends Konvertteriparametri {
-  @Column(name = "arvo")
   private String arvo;
 
-  @Column(name = "hylkaysperuste", nullable = false)
   private String hylkaysperuste;
 
-  @JoinColumn(name = "tekstiryhma_id", nullable = true)
-  @ManyToOne(fetch = FetchType.LAZY, optional = true)
   private TekstiRyhma kuvaukset;
 
   public String getArvo() {
