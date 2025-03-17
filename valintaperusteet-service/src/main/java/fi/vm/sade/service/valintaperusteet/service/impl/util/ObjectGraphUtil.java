@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ser.BeanSerializerModifier;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import fi.vm.sade.service.valintaperusteet.CollectionSerializer;
 import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
+import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
 import java.io.IOException;
 import java.util.*;
 import org.hibernate.collection.spi.PersistentSet;
@@ -60,7 +61,16 @@ public class ObjectGraphUtil {
                   if (context.clazz.isAssignableFrom(value.getClass())) {
                     context.objects.add(value);
                   }
-                  serializer.serialize(value, gen, provider);
+
+                  if (value instanceof Laskentakaava) {
+                    // Serialisoidaan laskentakaavasta vain funktiokutsu, koska muuten saatetaan
+                    // päätyä latailemaan
+                    // hibernate-collectionien kautta paljon turhaa dataa
+                    OBJECT_MAPPER.writeValueAsString(((Laskentakaava) value).getFunktiokutsu());
+                    provider.defaultSerializeNull(gen);
+                  } else {
+                    serializer.serialize(value, gen, provider);
+                  }
                 } finally {
                   context.visited.remove(value);
                 }
@@ -86,14 +96,16 @@ public class ObjectGraphUtil {
    * @return objektipuun kaikki määritellyn tyyppiset objektit, mukaanlukien juuri
    */
   public static <T> Collection<T> extractObjectsOfType(Object objectGraph, Class<T> clazz) {
+    Context previous = CONTEXT.get();
     CONTEXT.set(new Context<>(clazz));
     try {
       OBJECT_MAPPER.writeValueAsString(objectGraph);
+      Collection<T> result = CONTEXT.get().objects;
+      return result;
     } catch (Exception ex) {
       throw new RuntimeException(ex);
+    } finally {
+      CONTEXT.set(previous);
     }
-    Collection<T> result = CONTEXT.get().objects;
-    CONTEXT.remove();
-    return result;
   }
 }
