@@ -415,11 +415,10 @@ public class HakukohdeResource {
     List<String> valintatapajonoOids =
         valinnanVaiheService.findByHakukohde(hakukohdeOid).stream()
             .map(ValinnanVaihe::getOid)
-            .map(
-                valinnanvaihe ->
-                    valintatapajonoService.findJonoByValinnanvaihe(valinnanvaihe).stream()
+            .flatMap(
+                valinnanvaiheOid ->
+                    valintatapajonoService.findJonoByValinnanvaihe(valinnanvaiheOid).stream()
                         .map(Valintatapajono::getOid))
-            .flatMap(oid -> oid)
             .collect(Collectors.toList());
 
     return valintatapajonoOids.isEmpty()
