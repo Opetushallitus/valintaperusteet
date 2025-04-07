@@ -14,6 +14,9 @@ import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheEpaakt
 import fi.vm.sade.service.valintaperusteet.service.exception.ValinnanVaiheJarjestyslukuOutOfBoundsException;
 import fi.vm.sade.service.valintaperusteet.service.impl.util.ValintaperusteServiceUtil;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -163,6 +166,122 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
       LOG.error("Valintaperusteiden haussa virhe!", e);
       throw new RuntimeException(e);
     }
+  }
+
+  @Override
+  public List<SiirtotiedostoValintaperusteetDTO> haeSiirtotiedostoValintaperusteet(
+      List<HakuparametritDTO> hakuparametrit) {
+    if (hakuparametrit == null) {
+      throw new HakuparametritOnTyhjaException("Hakuparametrit oli tyhjä.");
+    }
+    List<SiirtotiedostoValintaperusteetDTO> list = new ArrayList<>();
+    try {
+      Long start = System.currentTimeMillis();
+      LOG.info("Hakuparametrien lkm {}", hakuparametrit.size());
+      for (HakuparametritDTO param : hakuparametrit) {
+        LOG.info(
+            "Haetaan hakukohteen {}, valinnanvaihe {} valintaperusteet",
+            new Object[] {param.getHakukohdeOid(), param.getValinnanVaiheJarjestysluku()});
+        HakukohdeViite hakukohde = null;
+        try {
+          hakukohde = hakukohdeService.readByOid(param.getHakukohdeOid());
+        } catch (HakukohdeViiteEiOleOlemassaException e) {
+          LOG.warn(
+              "Hakukohdetta {} ei ole olemassa. Jätetään hakukohde huomioimatta.",
+              param.getHakukohdeOid());
+          continue;
+        }
+        Long startFind = System.currentTimeMillis();
+        List<ValinnanVaihe> valinnanVaiheList =
+            valinnanVaiheService.findByHakukohde(param.getHakukohdeOid());
+        if (LOG.isInfoEnabled()) {
+          LOG.info("findByHakukohde: " + (System.currentTimeMillis() - startFind));
+        }
+        Long startConvert = System.currentTimeMillis();
+        List<ValinnanVaihe> vaiheet =
+            valinnanVaiheList.stream()
+                .filter(ValinnanVaihe::getAktiivinen)
+                .collect(Collectors.toList());
+        SiirtotiedostoValintaperusteetDTO siirtotiedostoValintaperusteetDTO =
+            convertSiirtotiedostoValintaperusteet(vaiheet, hakukohde, param);
+        list.add(siirtotiedostoValintaperusteetDTO);
+        if (LOG.isInfoEnabled()) {
+          LOG.info("Convert: " + (System.currentTimeMillis() - startConvert));
+        }
+      }
+      if (LOG.isInfoEnabled()) {
+        LOG.info("haeValintaperusteet: " + (System.currentTimeMillis() - start));
+      }
+      LOG.info("Haettu {} kpl valintaperusteita", list.size());
+      return list;
+    } catch (Exception e) {
+      LOG.error("Valintaperusteiden haussa virhe!", e);
+      throw new RuntimeException(e);
+    }
+  }
+
+  private static <T> Consumer<T> withCounter(BiConsumer<Integer, T> consumer) {
+    AtomicInteger counter = new AtomicInteger(0);
+    return item -> consumer.accept(counter.getAndIncrement(), item);
+  }
+
+  private SiirtotiedostoValintaperusteetDTO convertSiirtotiedostoValintaperusteet(
+      List<ValinnanVaihe> valinnanVaiheet,
+      HakukohdeViite hakukohde,
+      HakuparametritDTO hakuParametrit) {
+    SiirtotiedostoValintaperusteetDTO valintaperusteetDTO = new SiirtotiedostoValintaperusteetDTO();
+    valintaperusteetDTO.setHakukohdeOid(hakukohde.getOid());
+    valintaperusteetDTO.setHakuOid(hakukohde.getHakuoid());
+    valintaperusteetDTO.setTarjoajaOid(hakukohde.getTarjoajaOid());
+    valintaperusteetDTO.setLastModifiedIfDesired(hakuParametrit, hakukohde.getLastModified());
+    List<ValintaperusteetValinnanVaiheDTO> valinnanVaiheDTOs = new ArrayList<>();
+    valinnanVaiheet.forEach(
+        withCounter(
+            (i, valinnanVaihe) -> {
+              ValintaperusteetValinnanVaiheDTO valinnanVaiheDTO =
+                  new ValintaperusteetValinnanVaiheDTO();
+              switch (valinnanVaihe.getValinnanVaiheTyyppi()) {
+                case TAVALLINEN:
+                  valinnanVaiheDTO
+                      .getValintatapajono()
+                      .addAll(convertJonot(valinnanVaihe, hakuParametrit));
+                  valinnanVaiheDTO.setValinnanVaiheTyyppi(ValinnanVaiheTyyppi.TAVALLINEN);
+                  break;
+                case VALINTAKOE:
+                  valinnanVaiheDTO
+                      .getValintakoe()
+                      .addAll(convertValintakokeet(valinnanVaihe, hakuParametrit));
+                  valinnanVaiheDTO.setValinnanVaiheTyyppi(ValinnanVaiheTyyppi.VALINTAKOE);
+                  break;
+                default:
+                  throw new UnsupportedOperationException(
+                      "Virheellinen valinnan vaiheen tyyppi. Ei pystytä käsittelemään");
+              }
+              valinnanVaiheDTO.setValinnanVaiheJarjestysluku(i);
+              valinnanVaiheDTO.setValinnanVaiheOid(valinnanVaihe.getOid());
+              valinnanVaiheDTO.setNimi(valinnanVaihe.getNimi());
+              valinnanVaiheDTO.setValinnanVaiheOid(valinnanVaihe.getOid());
+              valinnanVaiheDTO.setAktiivinen(valinnanVaihe.getAktiivinen());
+              valinnanVaiheDTO.setLastModifiedIfDesired(
+                  hakuParametrit, valinnanVaihe.getLastModified());
+              valinnanVaiheDTOs.add(valinnanVaiheDTO);
+            }));
+
+    valintaperusteetDTO.setValinnanVaiheet(valinnanVaiheDTOs);
+    valintaperusteetDTO
+        .getHakukohteenValintaperuste()
+        .addAll(
+            hakukohde.getHakukohteenValintaperusteet().values().parallelStream()
+                .map(
+                    vp -> {
+                      HakukohteenValintaperusteDTO vpDTO = new HakukohteenValintaperusteDTO();
+                      vpDTO.setTunniste(vp.getTunniste());
+                      vpDTO.setArvo(vp.getArvo());
+                      vpDTO.setLastModifiedIfDesired(hakuParametrit, vp.getLastModified());
+                      return vpDTO;
+                    })
+                .toList());
+    return valintaperusteetDTO;
   }
 
   private void addValintaperusteToValintaperusteList(
