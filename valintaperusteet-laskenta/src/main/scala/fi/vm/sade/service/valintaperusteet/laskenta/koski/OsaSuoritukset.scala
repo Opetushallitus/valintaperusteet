@@ -27,7 +27,7 @@ object Osasuoritus {
     val arviointiKokoelma: Optional[Json, Vector[Json]] = JsonPath.root.arviointi.arr
     val koulutusmoduuli: JsonPath = JsonPath.root.koulutusmoduuli
     val koulutusmoduulinLaajuudenArvo: Optional[Json, BigDecimal] =
-      koulutusmoduuli.laajuus.arvo.bigDecimal
+      koulutusmoduuli.laajuus.bigDecimal
     val koulutusmoduulinTunnisteenKoodiarvo: Optional[Json, String] =
       koulutusmoduuli.tunniste.koodiarvo.string
     val koulutusmoduulinTunnisteenKoodistoUri: Optional[Json, String] =
@@ -35,6 +35,11 @@ object Osasuoritus {
     val koulutusmoduulinNimiFi: Optional[Json, String] = koulutusmoduuli.tunniste.nimi.fi.string
     val osasuorituksenTyypinKoodiarvo: Optional[Json, String] =
       JsonPath.root.tyyppi.koodiarvo.string
+    val keskiarvoSisältääMukautettujaArvosanoja: Optional[Json, Boolean] =
+      JsonPath.root.keskiarvoSisältääMukautettujaArvosanoja.boolean
+    val korotettuKeskiarvoSisältääMukautettujaArvosanoja: Optional[Json, Boolean] =
+      JsonPath.root.korotettuKeskiarvoSisältääMukautettujaArvosanoja.boolean
+
   }
 
   def apply(json: Json): Osasuoritus = {
@@ -117,5 +122,19 @@ object OsaSuoritukset {
           JsonPath.root.arvosana.koodistoUri.string.getOption(arvio).orNull
         )
       )
+  }
+
+  def sisältävätMukautettujaArvosanoja(suoritus: Json): Boolean = {
+    OsaSuoritusLinssit.osasuoritukset
+      .getAll(suoritus)
+      .exists(osaSuoritus => {
+        OsaSuoritusLinssit.keskiarvoSisältääMukautettujaArvosanoja
+          .getOption(osaSuoritus)
+          .getOrElse(false) ||
+          OsaSuoritusLinssit.korotettuKeskiarvoSisältääMukautettujaArvosanoja
+            .getOption(osaSuoritus)
+            .getOrElse(false) ||
+          sisältävätMukautettujaArvosanoja(osaSuoritus)
+      })
   }
 }

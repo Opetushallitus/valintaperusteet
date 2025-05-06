@@ -142,38 +142,6 @@
             }
           }
         ],
-        "toimipiste": {
-          "oid": "1.2.246.562.10.52251087186",
-          "oppilaitosnumero": {
-            "koodiarvo": "10105",
-            "nimi": {
-              "fi": "Stadin ammatti- ja aikuisopisto",
-              "sv": "Stadin ammatti- ja aikuisopisto",
-              "en": "Stadin ammatti- ja aikuisopisto"
-            },
-            "lyhytNimi": {
-              "fi": "Stadin ammatti- ja aikuisopisto",
-              "sv": "Stadin ammatti- ja aikuisopisto",
-              "en": "Stadin ammatti- ja aikuisopisto"
-            },
-            "koodistoUri": "oppilaitosnumero",
-            "koodistoVersio": 1
-          },
-          "nimi": {
-            "fi": "Stadin ammatti- ja aikuisopisto",
-            "sv": "Stadin ammatti- ja aikuisopisto",
-            "en": "Stadin ammatti- ja aikuisopisto"
-          },
-          "kotipaikka": {
-            "koodiarvo": "091",
-            "nimi": {
-              "fi": "Helsinki",
-              "sv": "Helsingfors"
-            },
-            "koodistoUri": "kunta",
-            "koodistoVersio": 2
-          }
-        },
         "vahvistus": {
           "päivä": "2019-03-15",
           "paikkakunta": {
@@ -258,21 +226,6 @@
             }
           ]
         },
-        "suorituskieli": {
-          "koodiarvo": "FI",
-          "nimi": {
-            "fi": "suomi",
-            "sv": "finska",
-            "en": "Finnish"
-          },
-          "lyhytNimi": {
-            "fi": "suomi",
-            "sv": "finska",
-            "en": "Finnish"
-          },
-          "koodistoUri": "kieli",
-          "koodistoVersio": 1
-        },
         "osasuoritukset": [
           {
             "koulutusmoduuli": {
@@ -287,16 +240,6 @@
               },
               "pakollinen": true,
               "laajuus": 30.0
-            },
-            "tutkinnonOsanRyhmä": {
-              "koodiarvo": "1",
-              "nimi": {
-                "fi": "Ammatilliset tutkinnon osat",
-                "sv": "Yrkesinriktade examensdelar",
-                "en": "Vocational units"
-              },
-              "koodistoUri": "ammatillisentutkinnonosanryhma",
-              "koodistoVersio": 1
             },
             "arviointi": [
               {
@@ -315,6 +258,8 @@
                 "hyväksytty": true
               }
             ],
+            "keskiarvoSisältääMukautettujaArvosanoja": false,
+            "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
             "tyyppi": {
               "koodiarvo": "ammatillisentutkinnonosa",
               "nimi": {
@@ -340,16 +285,6 @@
               "pakollinen": true,
               "laajuus": 20.0
             },
-            "tutkinnonOsanRyhmä": {
-              "koodiarvo": "1",
-              "nimi": {
-                "fi": "Ammatilliset tutkinnon osat",
-                "sv": "Yrkesinriktade examensdelar",
-                "en": "Vocational units"
-              },
-              "koodistoUri": "ammatillisentutkinnonosanryhma",
-              "koodistoVersio": 1
-            },
             "arviointi": [
               {
                 "arvosana": {
@@ -367,6 +302,8 @@
                 "hyväksytty": true
               }
             ],
+            "keskiarvoSisältääMukautettujaArvosanoja": false,
+            "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
             "tyyppi": {
               "koodiarvo": "ammatillisentutkinnonosa",
               "nimi": {
@@ -392,16 +329,6 @@
               "pakollinen": true,
               "laajuus": 20.0
             },
-            "tutkinnonOsanRyhmä": {
-              "koodiarvo": "1",
-              "nimi": {
-                "fi": "Ammatilliset tutkinnon osat",
-                "sv": "Yrkesinriktade examensdelar",
-                "en": "Vocational units"
-              },
-              "koodistoUri": "ammatillisentutkinnonosanryhma",
-              "koodistoVersio": 1
-            },
             "arviointi": [
               {
                 "arvosana": {
@@ -419,6 +346,8 @@
                 "hyväksytty": true
               }
             ],
+            "keskiarvoSisältääMukautettujaArvosanoja": false,
+            "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
             "tyyppi": {
               "koodiarvo": "ammatillisentutkinnonosa",
               "nimi": {
@@ -444,16 +373,6 @@
               "pakollinen": true,
               "laajuus": 15.0
             },
-            "tutkinnonOsanRyhmä": {
-              "koodiarvo": "1",
-              "nimi": {
-                "fi": "Ammatilliset tutkinnon osat",
-                "sv": "Yrkesinriktade examensdelar",
-                "en": "Vocational units"
-              },
-              "koodistoUri": "ammatillisentutkinnonosanryhma",
-              "koodistoVersio": 1
-            },
             "arviointi": [
               {
                 "arvosana": {
@@ -471,6 +390,8 @@
                 "hyväksytty": true
               }
             ],
+            "keskiarvoSisältääMukautettujaArvosanoja": false,
+            "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
             "tyyppi": {
               "koodiarvo": "ammatillisentutkinnonosa",
               "nimi": {
@@ -495,16 +416,6 @@
               },
               "pakollinen": false,
               "laajuus": 15.0
-            },
-            "tutkinnonOsanRyhmä": {
-              "koodiarvo": "1",
-              "nimi": {
-                "fi": "Ammatilliset tutkinnon osat",
-                "sv": "Yrkesinriktade examensdelar",
-                "en": "Vocational units"
-              },
-              "koodistoUri": "ammatillisentutkinnonosanryhma",
-              "koodistoVersio": 1
             },
             "arviointi": [
               {
@@ -548,16 +459,6 @@
               "pakollinen": false,
               "laajuus": 15.0
             },
-            "tutkinnonOsanRyhmä": {
-              "koodiarvo": "1",
-              "nimi": {
-                "fi": "Ammatilliset tutkinnon osat",
-                "sv": "Yrkesinriktade examensdelar",
-                "en": "Vocational units"
-              },
-              "koodistoUri": "ammatillisentutkinnonosanryhma",
-              "koodistoVersio": 1
-            },
             "arviointi": [
               {
                 "arvosana": {
@@ -575,6 +476,8 @@
                 "hyväksytty": true
               }
             ],
+            "keskiarvoSisältääMukautettujaArvosanoja": false,
+            "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
             "tyyppi": {
               "koodiarvo": "ammatillisentutkinnonosa",
               "nimi": {
@@ -619,16 +522,6 @@
               },
               "perusteenDiaarinumero": "OPH-1807-2021"
             },
-            "tutkinnonOsanRyhmä": {
-              "koodiarvo": "1",
-              "nimi": {
-                "fi": "Ammatilliset tutkinnon osat",
-                "sv": "Yrkesinriktade examensdelar",
-                "en": "Vocational units"
-              },
-              "koodistoUri": "ammatillisentutkinnonosanryhma",
-              "koodistoVersio": 1
-            },
             "arviointi": [
               {
                 "arvosana": {
@@ -646,6 +539,8 @@
                 "hyväksytty": true
               }
             ],
+            "keskiarvoSisältääMukautettujaArvosanoja": false,
+            "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
             "tyyppi": {
               "koodiarvo": "ammatillisentutkinnonosa",
               "nimi": {
@@ -671,16 +566,6 @@
               "pakollinen": false,
               "laajuus": 15.0
             },
-            "tutkinnonOsanRyhmä": {
-              "koodiarvo": "1",
-              "nimi": {
-                "fi": "Ammatilliset tutkinnon osat",
-                "sv": "Yrkesinriktade examensdelar",
-                "en": "Vocational units"
-              },
-              "koodistoUri": "ammatillisentutkinnonosanryhma",
-              "koodistoVersio": 1
-            },
             "arviointi": [
               {
                 "arvosana": {
@@ -698,6 +583,8 @@
                 "hyväksytty": true
               }
             ],
+            "keskiarvoSisältääMukautettujaArvosanoja": false,
+            "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
             "tyyppi": {
               "koodiarvo": "ammatillisentutkinnonosa",
               "nimi": {
@@ -724,16 +611,6 @@
               "pakollinen": true,
               "laajuus": 20.0
             },
-            "tutkinnonOsanRyhmä": {
-              "koodiarvo": "2",
-              "nimi": {
-                "fi": "Yhteiset tutkinnon osat",
-                "sv": "Gemensamma examensdelar",
-                "en": "Common units"
-              },
-              "koodistoUri": "ammatillisentutkinnonosanryhma",
-              "koodistoVersio": 1
-            },
             "arviointi": [
               {
                 "arvosana": {
@@ -754,6 +631,8 @@
                 "hyväksytty": true
               }
             ],
+            "keskiarvoSisältääMukautettujaArvosanoja": false,
+            "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
             "osasuoritukset": [
               {
                 "koulutusmoduuli": {
@@ -807,6 +686,8 @@
                     "hyväksytty": true
                   }
                 ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
                 "tyyppi": {
                   "koodiarvo": "ammatillisentutkinnonosanosaalue",
                   "nimi": {
@@ -870,6 +751,8 @@
                     "hyväksytty": true
                   }
                 ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
                 "tyyppi": {
                   "koodiarvo": "ammatillisentutkinnonosanosaalue",
                   "nimi": {
@@ -933,6 +816,8 @@
                     "hyväksytty": true
                   }
                 ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
                 "tyyppi": {
                   "koodiarvo": "ammatillisentutkinnonosanosaalue",
                   "nimi": {
@@ -996,6 +881,8 @@
                     "hyväksytty": true
                   }
                 ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
                 "tyyppi": {
                   "koodiarvo": "ammatillisentutkinnonosanosaalue",
                   "nimi": {
@@ -1044,6 +931,8 @@
                     "hyväksytty": true
                   }
                 ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
                 "tyyppi": {
                   "koodiarvo": "ammatillisentutkinnonosanosaalue",
                   "nimi": {
@@ -1092,6 +981,8 @@
                     "hyväksytty": true
                   }
                 ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
                 "tyyppi": {
                   "koodiarvo": "ammatillisentutkinnonosanosaalue",
                   "nimi": {
@@ -1155,6 +1046,8 @@
                     "hyväksytty": true
                   }
                 ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
                 "tyyppi": {
                   "koodiarvo": "ammatillisentutkinnonosanosaalue",
                   "nimi": {
@@ -1197,6 +1090,8 @@
                     "hyväksytty": true
                   }
                 ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
                 "tyyppi": {
                   "koodiarvo": "ammatillisentutkinnonosanosaalue",
                   "nimi": {
@@ -1235,16 +1130,6 @@
               "pakollinen": true,
               "laajuus": 6.0
             },
-            "tutkinnonOsanRyhmä": {
-              "koodiarvo": "2",
-              "nimi": {
-                "fi": "Yhteiset tutkinnon osat",
-                "sv": "Gemensamma examensdelar",
-                "en": "Common units"
-              },
-              "koodistoUri": "ammatillisentutkinnonosanryhma",
-              "koodistoVersio": 1
-            },
             "arviointi": [
               {
                 "arvosana": {
@@ -1265,6 +1150,8 @@
                 "hyväksytty": true
               }
             ],
+            "keskiarvoSisältääMukautettujaArvosanoja": false,
+            "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
             "osasuoritukset": [
               {
                 "koulutusmoduuli": {
@@ -1303,6 +1190,8 @@
                     "hyväksytty": true
                   }
                 ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
                 "tyyppi": {
                   "koodiarvo": "ammatillisentutkinnonosanosaalue",
                   "nimi": {
@@ -1351,6 +1240,8 @@
                     "hyväksytty": true
                   }
                 ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
                 "tyyppi": {
                   "koodiarvo": "ammatillisentutkinnonosanosaalue",
                   "nimi": {
@@ -1389,16 +1280,6 @@
               "pakollinen": false,
               "laajuus": 9.0
             },
-            "tutkinnonOsanRyhmä": {
-              "koodiarvo": "2",
-              "nimi": {
-                "fi": "Yhteiset tutkinnon osat",
-                "sv": "Gemensamma examensdelar",
-                "en": "Common units"
-              },
-              "koodistoUri": "ammatillisentutkinnonosanryhma",
-              "koodistoVersio": 1
-            },
             "arviointi": [
               {
                 "arvosana": {
@@ -1419,6 +1300,8 @@
                 "hyväksytty": true
               }
             ],
+            "keskiarvoSisältääMukautettujaArvosanoja": false,
+            "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
             "osasuoritukset": [
               {
                 "koulutusmoduuli": {
@@ -1457,6 +1340,8 @@
                     "hyväksytty": true
                   }
                 ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
                 "tyyppi": {
                   "koodiarvo": "ammatillisentutkinnonosanosaalue",
                   "nimi": {
@@ -1505,6 +1390,8 @@
                     "hyväksytty": true
                   }
                 ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
                 "tyyppi": {
                   "koodiarvo": "ammatillisentutkinnonosanosaalue",
                   "nimi": {
@@ -1553,6 +1440,8 @@
                     "hyväksytty": true
                   }
                 ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
                 "tyyppi": {
                   "koodiarvo": "ammatillisentutkinnonosanosaalue",
                   "nimi": {
@@ -1601,6 +1490,8 @@
                     "hyväksytty": true
                   }
                 ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
                 "tyyppi": {
                   "koodiarvo": "ammatillisentutkinnonosanosaalue",
                   "nimi": {
@@ -1649,6 +1540,8 @@
                     "hyväksytty": true
                   }
                 ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
                 "tyyppi": {
                   "koodiarvo": "ammatillisentutkinnonosanosaalue",
                   "nimi": {
@@ -1697,6 +1590,8 @@
                     "hyväksytty": true
                   }
                 ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
                 "tyyppi": {
                   "koodiarvo": "ammatillisentutkinnonosanosaalue",
                   "nimi": {
@@ -1820,6 +1715,16 @@
           },
           "koodistoUri": "koskiopiskeluoikeudentila",
           "koodistoVersio": 1
+        },
+        {
+          "koodiarvo": "valmistunut",
+          "nimi": {
+            "fi": "Valmistunut",
+            "sv": "Utexaminerad",
+            "en": "Graduated"
+          },
+          "koodistoUri": "koskiopiskeluoikeudentila",
+          "koodistoVersio": 1
         }
       ]
     },
@@ -1876,38 +1781,6 @@
         },
         "toinenTutkintonimike": false,
         "toinenOsaamisala": false,
-        "toimipiste": {
-          "oid": "1.2.246.562.10.51720121923",
-          "oppilaitosnumero": {
-            "koodiarvo": "10054",
-            "nimi": {
-              "fi": "Omnia",
-              "sv": "Omnia",
-              "en": "Omnia"
-            },
-            "lyhytNimi": {
-              "fi": "Omnia",
-              "sv": "Omnia",
-              "en": "Omnia"
-            },
-            "koodistoUri": "oppilaitosnumero",
-            "koodistoVersio": 1
-          },
-          "nimi": {
-            "fi": "Omnia",
-            "sv": "Omnia",
-            "en": "Omnia"
-          },
-          "kotipaikka": {
-            "koodiarvo": "049",
-            "nimi": {
-              "fi": "Espoo",
-              "sv": "Esbo"
-            },
-            "koodistoUri": "kunta",
-            "koodistoVersio": 2
-          }
-        },
         "alkamispäivä": "2019-07-17",
         "vahvistus": {
           "päivä": "2019-07-18",
@@ -2024,16 +1897,6 @@
               "pakollinen": true,
               "laajuus": 20.0
             },
-            "tutkinnonOsanRyhmä": {
-              "koodiarvo": "2",
-              "nimi": {
-                "fi": "Yhteiset tutkinnon osat",
-                "sv": "Gemensamma examensdelar",
-                "en": "Common units"
-              },
-              "koodistoUri": "ammatillisentutkinnonosanryhma",
-              "koodistoVersio": 1
-            },
             "arviointi": [
               {
                 "arvosana": {
@@ -2054,6 +1917,8 @@
                 "hyväksytty": true
               }
             ],
+            "keskiarvoSisältääMukautettujaArvosanoja": false,
+            "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
             "osasuoritukset": [
               {
                 "koulutusmoduuli": {
@@ -2107,6 +1972,8 @@
                     "hyväksytty": true
                   }
                 ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
                 "tyyppi": {
                   "koodiarvo": "ammatillisentutkinnonosanosaalue",
                   "nimi": {
@@ -2180,6 +2047,8 @@
                     "hyväksytty": true
                   }
                 ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
                 "tyyppi": {
                   "koodiarvo": "ammatillisentutkinnonosanosaalue",
                   "nimi": {
@@ -2253,6 +2122,8 @@
                     "hyväksytty": true
                   }
                 ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
                 "tyyppi": {
                   "koodiarvo": "ammatillisentutkinnonosanosaalue",
                   "nimi": {
@@ -2326,6 +2197,8 @@
                     "hyväksytty": true
                   }
                 ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
                 "tyyppi": {
                   "koodiarvo": "ammatillisentutkinnonosanosaalue",
                   "nimi": {
@@ -2384,6 +2257,8 @@
                     "hyväksytty": true
                   }
                 ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
                 "tyyppi": {
                   "koodiarvo": "ammatillisentutkinnonosanosaalue",
                   "nimi": {
@@ -2442,6 +2317,8 @@
                     "hyväksytty": true
                   }
                 ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
                 "tyyppi": {
                   "koodiarvo": "ammatillisentutkinnonosanosaalue",
                   "nimi": {
@@ -2515,6 +2392,8 @@
                     "hyväksytty": true
                   }
                 ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
                 "tyyppi": {
                   "koodiarvo": "ammatillisentutkinnonosanosaalue",
                   "nimi": {
@@ -2567,6 +2446,8 @@
                     "hyväksytty": true
                   }
                 ],
+                "keskiarvoSisältääMukautettujaArvosanoja": true,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": true,
                 "tyyppi": {
                   "koodiarvo": "ammatillisentutkinnonosanosaalue",
                   "nimi": {

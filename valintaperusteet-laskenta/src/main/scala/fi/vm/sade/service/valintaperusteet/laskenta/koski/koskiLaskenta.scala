@@ -53,7 +53,8 @@ object KoskiLaskenta {
   def etsiAmmatillisetTutkinnot(
     hakemus: Hakemus,
     datanAikaleimanLeikkuri: LocalDate,
-    valmistumisenTakaraja: LocalDate
+    valmistumisenTakaraja: LocalDate,
+    hylkaaMukautettujaArvosanojaSisaltavatTutkinnot: Boolean
   ): Seq[Tutkinto] = {
     if (hakemus.koskiOpiskeluoikeudet == null) {
       Nil
@@ -64,7 +65,8 @@ object KoskiLaskenta {
         opiskeluoikeudenHaluttuTyyppi = ammatillisenHuomioitavaOpiskeluoikeudenTyyppi,
         suorituksenHaluttuTyyppi = ammatillisenSuorituksenTyyppi,
         korotuksetSisältäväSuorituksenTyyppi = ammatillisenOsittaisenSuorituksenTyyppi,
-        hakemus = hakemus
+        hakemus = hakemus,
+        hylkaaMukautettujaArvosanojaSisaltavatTutkinnot
       )
       tutkintoJsonitHuomioimattaValmistumisenTakarajaa
         .sortBy(päätasonSuorituksenVahvistusPvm)
@@ -236,7 +238,8 @@ object KoskiLaskenta {
         ammatillisenHuomioitavaOpiskeluoikeudenTyyppi,
         ammatillisenSuorituksenTyyppi,
         ammatillisenOsittaisenSuorituksenTyyppi,
-        hakemus
+        hakemus,
+        tutkinnonValitsija.hylkaaMukautettujaArvosanojaSisaltavatTutkinnot
       )
       val suorituksenSallitutKoodit: Set[Int] =
         ammatillisenHhuomioitavatKoulutustyypit.map(_.koodiarvo)
@@ -283,7 +286,8 @@ object KoskiLaskenta {
         opiskeluoikeudenHaluttuTyyppi = ammatillisenHuomioitavaOpiskeluoikeudenTyyppi,
         suorituksenHaluttuTyyppi = ammatillisenSuorituksenTyyppi,
         korotuksetSisältäväSuorituksenTyyppi = ammatillisenOsittaisenSuorituksenTyyppi,
-        hakemus = hakemus
+        hakemus = hakemus,
+        tutkinnonValitsija.hylkaaMukautettujaArvosanojaSisaltavatTutkinnot
       )(tutkinnonValitsija.tutkinnonIndeksi)
 
       val suorituksenSallitutKoodit: Set[Int] =
