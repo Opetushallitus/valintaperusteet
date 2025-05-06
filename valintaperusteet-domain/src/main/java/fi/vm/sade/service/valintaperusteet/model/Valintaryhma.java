@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import java.util.*;
 
@@ -26,6 +27,7 @@ public class Valintaryhma extends BaseEntity {
 
   @JoinColumn(name = "parent_id")
   @ManyToOne(fetch = FetchType.LAZY)
+  @JsonBackReference
   private Valintaryhma ylavalintaryhma;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "ylavalintaryhma")

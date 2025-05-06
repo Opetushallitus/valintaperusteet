@@ -7,6 +7,9 @@ import java.util.Map;
 import java.util.Properties;
 import javax.sql.DataSource;
 import org.flywaydb.core.Flyway;
+import org.hibernate.event.service.spi.EventListenerRegistry;
+import org.hibernate.event.spi.EventType;
+import org.hibernate.internal.SessionFactoryImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -80,6 +83,16 @@ public class DatabaseConfiguration {
 
   @Bean
   public JpaTransactionManager transactionManager(final EntityManagerFactory emf) {
+    // lisätty custom-kuuntelija entity-tallennukselle jotta voidaan käyttää
+    // funktiokutsuille kustomoitua dirty-chekkausta
+    SessionFactoryImpl sessionFactory = emf.unwrap(SessionFactoryImpl.class);
+    EventListenerRegistry registry =
+        sessionFactory.getServiceRegistry().getService(EventListenerRegistry.class);
+    registry.getEventListenerGroup(EventType.FLUSH_ENTITY).clearListeners();
+    registry
+        .getEventListenerGroup(EventType.FLUSH_ENTITY)
+        .appendListener(new CustomDefaultFlushEventEntityListener());
+
     final JpaTransactionManager manager = new JpaTransactionManager();
     manager.setEntityManagerFactory(emf);
     return manager;
