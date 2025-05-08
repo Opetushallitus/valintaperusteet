@@ -8,7 +8,6 @@ import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 import jakarta.persistence.EntityManager;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.springframework.stereotype.Repository;
@@ -74,49 +73,20 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
     QHakukohdeViite hakukohde = QHakukohdeViite.hakukohdeViite;
     QValinnanVaihe vv = QValinnanVaihe.valinnanVaihe;
     QValintatapajono valintatapaJono = QValintatapajono.valintatapajono;
-    ValinnanVaihe lastValinnanVaihe =
-        queryFactory()
-            .select(vv)
-            .from(hakukohde)
-            .leftJoin(hakukohde.valinnanvaiheet, vv)
-            .leftJoin(vv.jonot, valintatapaJono)
-            .fetchJoin()
-            .where(
-                vv.id
-                    .notIn(
-                        JPAExpressions.select(vv.edellinenValinnanVaihe.id)
-                            .from(vv)
-                            .where(vv.edellinenValinnanVaihe.isNotNull()))
-                    .and(hakukohde.oid.eq(hakukohdeOid)))
-            .fetchFirst();
-
-    return lastValinnanVaihe;
-  }
-
-  @Override
-  public Set<String> findValinnanVaiheOidsByValintaryhma(String valintaryhmaOid) {
-    QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
-    QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
-    return new HashSet<>(
-        queryFactory()
-            .select(valinnanVaihe.oid)
-            .from(valintaryhma)
-            .leftJoin(valintaryhma.valinnanvaiheet, valinnanVaihe)
-            .where(valintaryhma.oid.eq(valintaryhmaOid))
-            .fetch());
-  }
-
-  @Override
-  public Set<String> findValinnanVaiheOidsByHakukohde(String hakukohdeOid) {
-    QHakukohdeViite hakukohde = QHakukohdeViite.hakukohdeViite;
-    QValinnanVaihe valinnanVaihe = QValinnanVaihe.valinnanVaihe;
-    return new HashSet<>(
-        queryFactory()
-            .select(valinnanVaihe.oid)
-            .from(hakukohde)
-            .leftJoin(hakukohde.valinnanvaiheet, valinnanVaihe)
-            .where(hakukohde.oid.eq(hakukohdeOid))
-            .fetch());
+    return queryFactory()
+        .select(vv)
+        .from(hakukohde)
+        .leftJoin(hakukohde.valinnanvaiheet, vv)
+        .leftJoin(vv.jonot, valintatapaJono)
+        .fetchJoin()
+        .where(
+            vv.id
+                .notIn(
+                    JPAExpressions.select(vv.edellinenValinnanVaihe.id)
+                        .from(vv)
+                        .where(vv.edellinenValinnanVaihe.isNotNull()))
+                .and(hakukohde.oid.eq(hakukohdeOid)))
+        .fetchFirst();
   }
 
   @Override
@@ -124,23 +94,20 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
     QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
     QValinnanVaihe vv = QValinnanVaihe.valinnanVaihe;
     QValintatapajono valintatapaJono = QValintatapajono.valintatapajono;
-    ValinnanVaihe lastValinnanVaihe =
-        queryFactory()
-            .select(vv)
-            .from(valintaryhma)
-            .leftJoin(valintaryhma.valinnanvaiheet, vv)
-            .leftJoin(vv.jonot, valintatapaJono)
-            .fetchJoin()
-            .where(
-                vv.id
-                    .notIn(
-                        JPAExpressions.select(vv.edellinenValinnanVaihe.id)
-                            .from(vv)
-                            .where(vv.edellinenValinnanVaihe.isNotNull()))
-                    .and(valintaryhma.oid.eq(oid)))
-            .fetchFirst();
-
-    return lastValinnanVaihe;
+    return queryFactory()
+        .select(vv)
+        .from(valintaryhma)
+        .leftJoin(valintaryhma.valinnanvaiheet, vv)
+        .leftJoin(vv.jonot, valintatapaJono)
+        .fetchJoin()
+        .where(
+            vv.id
+                .notIn(
+                    JPAExpressions.select(vv.edellinenValinnanVaihe.id)
+                        .from(vv)
+                        .where(vv.edellinenValinnanVaihe.isNotNull()))
+                .and(valintaryhma.oid.eq(oid)))
+        .fetchFirst();
   }
 
   @Override
@@ -204,22 +171,6 @@ public class ValinnanVaiheDAOImpl extends AbstractJpaDAOImpl<ValinnanVaihe, Long
       return false;
     }
     return count > 0L;
-  }
-
-  @Override
-  public List<ValinnanVaihe> ilmanLaskentaaOlevatHakukohteelle(String hakukohdeOid) {
-    QHakukohdeViite hakukohde = QHakukohdeViite.hakukohdeViite;
-    QValinnanVaihe vv = QValinnanVaihe.valinnanVaihe;
-    QValintatapajono jono = QValintatapajono.valintatapajono;
-    return queryFactory()
-        .select(vv)
-        .from(hakukohde)
-        .leftJoin(hakukohde.valinnanvaiheet, vv)
-        .leftJoin(vv.jonot, jono)
-        .fetchJoin()
-        .where(hakukohde.oid.eq(hakukohdeOid).and(jono.kaytetaanValintalaskentaa.isFalse()))
-        .distinct()
-        .fetch();
   }
 
   @Override
