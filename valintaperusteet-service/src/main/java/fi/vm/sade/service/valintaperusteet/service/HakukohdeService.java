@@ -8,7 +8,7 @@ import java.util.List;
 public interface HakukohdeService {
   List<HakukohdeViite> findAll();
 
-  List<HakukohdeViite> haunHakukohteet(String hakuOid);
+  List<HakukohdeViite> haunHakukohteet(String hakuOid, Boolean vainValintakokeelliset);
 
   HakukohdeViite readByOid(String oid);
 

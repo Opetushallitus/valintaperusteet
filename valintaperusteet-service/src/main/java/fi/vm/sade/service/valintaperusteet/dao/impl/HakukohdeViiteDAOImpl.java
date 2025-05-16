@@ -33,7 +33,7 @@ public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Lo
   }
 
   @Override
-  public List<HakukohdeViite> haunHakukohteet(String hakuOid) {
+  public List<HakukohdeViite> haunHakukohteet(String hakuOid, Boolean vainValintakokeelliset) {
     QHakukohdeViite hakukohdeViite = QHakukohdeViite.hakukohdeViite;
     QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
 
@@ -43,7 +43,9 @@ public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Lo
         .fetchJoin()
         .leftJoin(hakukohdeViite.hakukohdekoodi)
         .fetchJoin()
-        .where(hakukohdeViite.hakuoid.eq(hakuOid))
+        .where(
+            hakukohdeViite.hakuoid.eq(hakuOid),
+            vainValintakokeelliset ? hakukohdeViite.valintakokeet.isNotEmpty() : null)
         .fetch();
   }
 
