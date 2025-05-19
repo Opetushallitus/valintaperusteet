@@ -115,7 +115,7 @@ jobs:
           cache: 'maven'
 
       - name: Deploy jar library
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/OY-5067-ignoroi-mukautetut-arvosanat'
         shell: bash
         env:
           ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}

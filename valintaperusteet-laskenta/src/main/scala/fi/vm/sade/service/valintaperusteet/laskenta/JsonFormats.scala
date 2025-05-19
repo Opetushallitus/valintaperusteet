@@ -1,6 +1,7 @@
 package fi.vm.sade.service.valintaperusteet.laskenta
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import fi.vm.sade.kaava.Funktiokuvaaja
 
 import java.lang.{Integer => JInteger}
 import java.math.{BigDecimal => JBigDecimal}
@@ -19,14 +20,19 @@ import fi.vm.sade.service.valintaperusteet.model.JsonViews
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
+import scala.language.implicitConversions
+
 object JsonFormats {
   import JsonHelpers.arrayMapWrites
   import JsonHelpers.enumFormat
 
   // Enumit
-  implicit def funktiotyyppiFormat = enumFormat(Funktiotyyppi)
-  implicit def syoteparametrityyppiFormat = enumFormat(Syoteparametrityyppi)
-  implicit def konvertterinimiFormat = enumFormat(Konvertterinimi)
+  implicit def funktiotyyppiFormat: Format[Funktiotyyppi.Value] =
+    enumFormat(Funktiotyyppi)
+  implicit def syoteparametrityyppiFormat: Format[Syoteparametrityyppi.Value] =
+    enumFormat(Syoteparametrityyppi)
+  implicit def konvertterinimiFormat: Format[Konvertterinimi.Value] =
+    enumFormat(Konvertterinimi)
 
   def kardinaliteettiReads[Kardinaliteetti <: Enumeration](
     enum: Kardinaliteetti
@@ -70,17 +76,22 @@ object JsonFormats {
     Format(kardinaliteettiReads(enum), kardinaliteettiWrites)
   }
 
-  implicit def kardinaliteettiFormat = kardinaliteettiFormatHelper(Kardinaliteetti)
+  implicit def kardinaliteettiFormat: Format[Kardinaliteetti.Value] =
+    kardinaliteettiFormatHelper(Kardinaliteetti)
 
   // Perus case classit
   //implicit def arvovalikonvertterikuvausFormat = Json.format[Arvovalikonvertterikuvaus]
-  implicit def arvokonvertterikuvausFormat = Json.format[Arvokonvertterikuvaus]
-  implicit def konvertterikuvausFormat = Json.format[Konvertterikuvaus]
+  implicit def arvokonvertterikuvausFormat: OFormat[Arvokonvertterikuvaus] =
+    Json.format[Arvokonvertterikuvaus]
+  implicit def konvertterikuvausFormat: OFormat[Konvertterikuvaus] = Json.format[Konvertterikuvaus]
 
-  implicit def valintaperusteparametrikuvausFormat = Json.format[Valintaperusteparametrikuvaus]
-  implicit def syoteparametrikuvausFormat = Json.format[Syoteparametrikuvaus]
-  implicit def funktioargumenttikuvausFormat = Json.format[Funktioargumenttikuvaus]
-  implicit def funktiokuvausFormat = Json.format[Funktiokuvaus]
+  implicit def valintaperusteparametrikuvausFormat: OFormat[Valintaperusteparametrikuvaus] =
+    Json.format[Valintaperusteparametrikuvaus]
+  implicit def syoteparametrikuvausFormat: OFormat[Syoteparametrikuvaus] =
+    Json.format[Syoteparametrikuvaus]
+  implicit def funktioargumenttikuvausFormat: OFormat[Funktioargumenttikuvaus] =
+    Json.format[Funktioargumenttikuvaus]
+  implicit def funktiokuvausFormat: OFormat[Funktiokuvaus] = Json.format[Funktiokuvaus]
 
   // Map[Konvertterinimi, KonvertteriTyyppi]
   implicit def mapWritesKonvertteriNimiKonvertteriKuvaus

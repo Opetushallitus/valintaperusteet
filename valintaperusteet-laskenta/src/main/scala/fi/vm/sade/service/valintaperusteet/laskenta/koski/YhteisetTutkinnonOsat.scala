@@ -66,14 +66,16 @@ object YhteisetTutkinnonOsat {
         opiskeluoikeudenHaluttuTyyppi = ammatillisenHuomioitavaOpiskeluoikeudenTyyppi,
         suorituksenHaluttuTyyppi = ammatillisenSuorituksenTyyppi,
         korotuksetSisältäväSuorituksenTyyppi = ammatillisenOsittaisenSuorituksenTyyppi,
-        hakemus = hakemus
+        hakemus = hakemus,
+        ammatillisenPerustutkinnonValitsija.hylkaaMukautettujaArvosanojaSisaltavatTutkinnot
       )(ammatillisenPerustutkinnonValitsija.tutkinnonIndeksi)
       YhteisetTutkinnonOsat
         .haeYhteisenTutkinnonOsanTiedot(
           ammatillisenPerustutkinnonValitsija.valmistumisenTakarajaPvm,
           hakemus,
           oikeaOpiskeluoikeus,
-          ytoKoodiArvo
+          ytoKoodiArvo,
+          ammatillisenPerustutkinnonValitsija.hylkaaMukautettujaArvosanojaSisaltavatTutkinnot
         )
         .filter(osaAlue => {
           !JsonPath.root.tyyppi.koodiarvo.json
@@ -123,13 +125,15 @@ object YhteisetTutkinnonOsat {
       opiskeluoikeudenHaluttuTyyppi = ammatillisenHuomioitavaOpiskeluoikeudenTyyppi,
       suorituksenHaluttuTyyppi = ammatillisenSuorituksenTyyppi,
       korotuksetSisältäväSuorituksenTyyppi = ammatillisenOsittaisenSuorituksenTyyppi,
-      hakemus = hakemus
+      hakemus = hakemus,
+      ammatillisenPerustutkinnonValitsija.hylkaaMukautettujaArvosanojaSisaltavatTutkinnot
     )(ammatillisenPerustutkinnonValitsija.tutkinnonIndeksi)
-    YhteisetTutkinnonOsat.haeYhteisenTutkinnonOsanTiedot(
+    haeYhteisenTutkinnonOsanTiedot(
       ammatillisenPerustutkinnonValitsija.valmistumisenTakarajaPvm,
       hakemus,
       oikeaOpiskeluoikeus,
-      ytoKoodiArvo
+      ytoKoodiArvo,
+      ammatillisenPerustutkinnonValitsija.hylkaaMukautettujaArvosanojaSisaltavatTutkinnot
     )
   }
 
@@ -137,12 +141,18 @@ object YhteisetTutkinnonOsat {
     valmistumisenTakarajaPvm: LocalDate,
     hakemus: Hakemus,
     opiskeluoikeus: Json,
-    ytoKoodiArvo: String
+    ytoKoodiArvo: String,
+    hylkaaMukautettujaArvosanojaSisaltavatTutkinnot: Boolean
   ): Seq[Json] = {
     val hakemusOid = hakemus.oid
     try {
       val suoritukset =
-        etsiAmmatillistenTutkintojenSuoritukset(valmistumisenTakarajaPvm, opiskeluoikeus, hakemus)
+        etsiAmmatillistenTutkintojenSuoritukset(
+          valmistumisenTakarajaPvm,
+          opiskeluoikeus,
+          hakemus,
+          hylkaaMukautettujaArvosanojaSisaltavatTutkinnot
+        )
       val ytoJsonit: Seq[Json] = suoritukset
         .flatMap(suoritus => etsiYhteisetTutkinnonOsat(suoritus, Set(ytoKoodiArvo)))
 
@@ -188,7 +198,8 @@ object YhteisetTutkinnonOsat {
   private def etsiAmmatillistenTutkintojenSuoritukset(
     valmistumisenTakarajaPvm: LocalDate,
     opiskeluoikeus: Json,
-    hakemus: Hakemus
+    hakemus: Hakemus,
+    hylkaaMukautettujaArvosanojaSisaltavatTutkinnot: Boolean
   ) = {
     val suorituksenSallitutKoodit: Set[Int] =
       ammatillisenHhuomioitavatKoulutustyypit.map(_.koodiarvo)
@@ -200,7 +211,8 @@ object YhteisetTutkinnonOsat {
         KoskiLaskenta.ammatillisenHuomioitavaOpiskeluoikeudenTyyppi,
         KoskiLaskenta.ammatillisenSuorituksenTyyppi,
         ammatillisenOsittaisenSuorituksenTyyppi,
-        hakemus
+        hakemus,
+        hylkaaMukautettujaArvosanojaSisaltavatTutkinnot
       )
       .flatMap(tutkinto =>
         Tutkinnot.etsiValiditSuoritukset(
