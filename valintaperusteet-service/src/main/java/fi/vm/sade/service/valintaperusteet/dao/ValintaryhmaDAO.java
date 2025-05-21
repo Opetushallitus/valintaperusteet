@@ -18,6 +18,8 @@ public interface ValintaryhmaDAO extends JpaDAO<Valintaryhma, Long> {
 
   Valintaryhma findAllFetchAlavalintaryhmat(String oid);
 
+  List<Valintaryhma> findAllByHakuOidFetchAlavalintaryhmat(String hakuOid);
+
   List<Valintaryhma> haeHakukohdekoodinJaValintakoekoodienMukaan(
       String hakuOid, String hakukohdekoodiUri, Set<String> valintakoekoodiUrit);
 

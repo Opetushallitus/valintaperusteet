@@ -1,7 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
@@ -65,6 +64,16 @@ public class ValintaryhmaResourceTest extends WithSpringBoot {
     assertEquals(4, valintaryhmas.size());
 
     mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(valintaryhmas);
+  }
+
+  @Test
+  public void testHaullaEiOleValintaryhmia() {
+    assertFalse(valintaryhmaResource.onkoHaullaValintaryhmia("oid1"));
+  }
+
+  @Test
+  public void testHaullaOnValintaryhmia() {
+    assertTrue(valintaryhmaResource.onkoHaullaValintaryhmia("hakuoid50"));
   }
 
   @Test
