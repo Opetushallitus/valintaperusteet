@@ -2,9 +2,6 @@ package fi.vm.sade.service.valintaperusteet.service.impl;
 
 import com.google.common.collect.Sets;
 import fi.vm.sade.service.valintaperusteet.dao.*;
-import fi.vm.sade.service.valintaperusteet.dao.LaskentakaavaDAO;
-import fi.vm.sade.service.valintaperusteet.dao.OrganisaatioDAO;
-import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
 import fi.vm.sade.service.valintaperusteet.dto.OrganisaatioDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaryhmaCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
