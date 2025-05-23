@@ -8,7 +8,10 @@ public class ValintakoeDTO extends ValintakoeCreateDTO {
   @Schema(description = "OID", required = true)
   private String oid;
 
-  @Schema(description = "Selvitetty tunniste", required = true)
+  @Schema(
+      description =
+          "Valintakokeen tunniste voi olla kaksois-aaltosulkeilla määritelty viittaus valintakokeen kenttään, josta selvitetty tunniste muodostetaan korvaamalla viittaus vastaavalla kentän arvolla.",
+      required = true)
   private String selvitettyTunniste;
 
   @Schema(description = "Funktiokutsu")

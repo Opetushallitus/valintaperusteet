@@ -3,7 +3,7 @@ package fi.vm.sade.service.valintaperusteet.ovara.ajastus;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
-import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.UUID;
@@ -57,10 +57,10 @@ public class SiirtotiedostoProsessi {
 
   public SiirtotiedostoProsessi(Object[] result) {
     this.executionUuid = (String) result[0];
-    this.windowStart = ((Timestamp) result[1]).toInstant().atOffset(ZoneOffset.UTC);
-    this.windowEnd = ((Timestamp) result[2]).toInstant().atOffset(ZoneOffset.UTC);
-    this.runStart = ((Timestamp) result[3]).toInstant().atOffset(ZoneOffset.UTC);
-    this.runEnd = ((Timestamp) result[4]).toInstant().atOffset(ZoneOffset.UTC);
+    this.windowStart = ((Instant) result[1]).atOffset(ZoneOffset.UTC);
+    this.windowEnd = ((Instant) result[2]).atOffset(ZoneOffset.UTC);
+    this.runStart = ((Instant) result[3]).atOffset(ZoneOffset.UTC);
+    this.runEnd = ((Instant) result[4]).atOffset(ZoneOffset.UTC);
     this.info = (String) result[5];
     this.success = (Boolean) result[6];
     this.errorMessage = (String) result[7];

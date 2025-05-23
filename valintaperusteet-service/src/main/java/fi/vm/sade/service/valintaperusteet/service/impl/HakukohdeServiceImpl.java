@@ -54,8 +54,8 @@ public class HakukohdeServiceImpl implements HakukohdeService {
   }
 
   @Override
-  public List<HakukohdeViite> haunHakukohteet(String hakuOid) {
-    return hakukohdeViiteDAO.haunHakukohteet(hakuOid);
+  public List<HakukohdeViite> haunHakukohteet(String hakuOid, Boolean vainValintakokeelliset) {
+    return hakukohdeViiteDAO.haunHakukohteet(hakuOid, vainValintakokeelliset);
   }
 
   @Override

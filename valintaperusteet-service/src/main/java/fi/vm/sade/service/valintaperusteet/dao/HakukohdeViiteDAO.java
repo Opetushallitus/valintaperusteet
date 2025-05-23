@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface HakukohdeViiteDAO extends JpaDAO<HakukohdeViite, Long> {
   List<HakukohdeViite> findRoot();
 
-  List<HakukohdeViite> haunHakukohteet(String hakuOid);
+  List<HakukohdeViite> haunHakukohteet(String hakuOid, Boolean vainValintakokeelliset);
 
   HakukohdeViite readByOid(String oid);
 

@@ -131,7 +131,8 @@ public class HakukohdeResource {
   @GetMapping(value = "/haku/{hakuOid}", produces = MediaType.APPLICATION_JSON_VALUE)
   public List<HakukohdeViiteDTO> haunHakukohteet(
       @PathVariable(value = "hakuOid") final String hakuOid) {
-    return modelMapper.mapList(hakukohdeService.haunHakukohteet(hakuOid), HakukohdeViiteDTO.class);
+    return modelMapper.mapList(
+        hakukohdeService.haunHakukohteet(hakuOid, false), HakukohdeViiteDTO.class);
   }
 
   @PreAuthorize(READ_UPDATE_CRUD)
@@ -415,11 +416,10 @@ public class HakukohdeResource {
     List<String> valintatapajonoOids =
         valinnanVaiheService.findByHakukohde(hakukohdeOid).stream()
             .map(ValinnanVaihe::getOid)
-            .map(
-                valinnanvaihe ->
-                    valintatapajonoService.findJonoByValinnanvaihe(valinnanvaihe).stream()
+            .flatMap(
+                valinnanvaiheOid ->
+                    valintatapajonoService.findJonoByValinnanvaihe(valinnanvaiheOid).stream()
                         .map(Valintatapajono::getOid))
-            .flatMap(oid -> oid)
             .collect(Collectors.toList());
 
     return valintatapajonoOids.isEmpty()
