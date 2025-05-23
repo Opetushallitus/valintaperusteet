@@ -19,6 +19,6 @@ public class HakukohdeViiteDAOTest extends WithSpringBoot {
   @Test
   public void testFindAll() {
     List<HakukohdeViite> hakukohdeViites = hakukohdeViiteDAO.findAll();
-    assertEquals(32, hakukohdeViites.size());
+    assertEquals(33, hakukohdeViites.size());
   }
 }

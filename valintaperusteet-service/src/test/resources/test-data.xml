@@ -997,6 +997,7 @@
                      oid="100" aloituspaikat="10" nimi="jono100" kuvaus="kuvaus" poistetaanko_hylatyt="false"
                      tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="104" aktiivinen="true"
                      ei_varasijatayttoa="false" kaikki_ehdon_tayttavat_hyvaksytaan="false" valisijoittelu="false" automaattinen_sijoitteluun_siirto="true"
+                     varasijoja_taytetaan_asti="2022-12-31 00:00:00"
                      tyyppi="valintatapajono_kp"/>
 
     <valintatapajono poissa_oleva_taytto="false" kaytetaan_valintalaskentaa="true" varasijat="0" id="101" version="1"
@@ -1010,6 +1011,7 @@
                      tasapistesaanto="ARVONTA" siirretaan_sijoitteluun="true" valinnan_vaihe_id="104" edellinen_valintatapajono_id="100" aktiivinen="true"
                      ei_varasijatayttoa="false" kaikki_ehdon_tayttavat_hyvaksytaan="false" valisijoittelu="false" automaattinen_sijoitteluun_siirto="true"
                      master_valintatapajono_id="101"
+                     varasijoja_taytetaan_asti="2023-01-20 00:00:00"
                      tyyppi="valintatapajono_kp"/>
 
     <valinnan_vaihe valinnan_vaihe_tyyppi="TAVALLINEN" id="106" version="0" oid="106" hakukohde_viite_id="19"
@@ -1702,6 +1704,8 @@
                      siirretaan_sijoitteluun="true" tasapistesaanto="YLITAYTTO" valinnan_vaihe_id="3801"
                      ei_varasijatayttoa="false" valisijoittelu="false" automaattinen_sijoitteluun_siirto="true"
                      edellinen_valintatapajono_id="3801"/>
+
+    <hakukohde_viite id="0000" version="0" hakuoid="hakuoid1" oid="0000" nimi="Hakukohde ilman valinnanvaiheita"/>
 
     <!-- Valintaryhmään liitetyt laskentakaavat -testien objektit -->
     <funktiokutsu tallenna_tulos="false" oma_opintopolku="false" id="411" version="0" funktionimi="LUKUARVO"/>

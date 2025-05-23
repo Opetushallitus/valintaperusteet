@@ -53,3 +53,6 @@ valintaperusteet:
     s3-target-role-arn: arn:aws:iam::xxxxxxxxxxxx:role/opintopolku-s3-cross-account-role
     max-hakukohde-count-in-file: 10000
 
+#logging:
+#  level:
+#    org.hibernate.SQL: DEBUG
