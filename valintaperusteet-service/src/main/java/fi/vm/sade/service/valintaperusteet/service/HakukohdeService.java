@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.service;
 
+import fi.vm.sade.service.valintaperusteet.dto.HakukohdeKoosteTietoDTO;
 import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteCreateDTO;
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
@@ -19,6 +20,8 @@ public interface HakukohdeService {
   List<HakukohdeViite> findByValintaryhmaOid(String oid);
 
   HakukohdeViite update(String oid, HakukohdeViiteCreateDTO incoming) throws Exception;
+
+  List<HakukohdeKoosteTietoDTO> haunHakukohdeTiedot(String hakuOid);
 
   boolean kuuluuSijoitteluun(String oid);
 

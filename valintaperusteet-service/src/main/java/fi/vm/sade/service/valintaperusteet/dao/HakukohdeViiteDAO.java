@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.dao;
 
+import fi.vm.sade.service.valintaperusteet.dto.HakukohdeKoosteTietoDTO;
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import java.time.LocalDateTime;
@@ -22,6 +23,8 @@ public interface HakukohdeViiteDAO extends JpaDAO<HakukohdeViite, Long> {
   List<HakukohdeViite> findByValintaryhmaOidForValisijoittelu(String oid);
 
   boolean kuuluuSijoitteluun(String oid);
+
+  List<HakukohdeKoosteTietoDTO> haunHakukohdeTiedot(String hakuOid);
 
   void flush();
 

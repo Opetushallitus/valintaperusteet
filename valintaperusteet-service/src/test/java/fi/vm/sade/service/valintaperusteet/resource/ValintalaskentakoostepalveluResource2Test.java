@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import fi.vm.sade.service.valintaperusteet.WithSpringBoot;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dto.HakijaryhmaValintatapajonoDTO;
-import fi.vm.sade.service.valintaperusteet.util.TestUtil;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,7 +21,6 @@ public class ValintalaskentakoostepalveluResource2Test extends WithSpringBoot {
   private HakukohdeResource hakukohdeResource = new HakukohdeResource();
 
   @Autowired private ApplicationContext applicationContext;
-  private TestUtil testUtil = new TestUtil(ValintatapajonoResource.class);
 
   @BeforeEach
   public void setUp() {

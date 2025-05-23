@@ -3,6 +3,7 @@ package fi.vm.sade.service.valintaperusteet.service.impl;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
 import fi.vm.sade.service.valintaperusteet.dao.LaskentakaavaDAO;
 import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
+import fi.vm.sade.service.valintaperusteet.dto.HakukohdeKoosteTietoDTO;
 import fi.vm.sade.service.valintaperusteet.dto.HakukohdeViiteCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
@@ -121,6 +122,11 @@ public class HakukohdeServiceImpl implements HakukohdeService {
   @Override
   public boolean kuuluuSijoitteluun(String oid) {
     return hakukohdeViiteDAO.kuuluuSijoitteluun(oid);
+  }
+
+  @Override
+  public List<HakukohdeKoosteTietoDTO> haunHakukohdeTiedot(String hakuOid) {
+    return hakukohdeViiteDAO.haunHakukohdeTiedot(hakuOid);
   }
 
   @Override
