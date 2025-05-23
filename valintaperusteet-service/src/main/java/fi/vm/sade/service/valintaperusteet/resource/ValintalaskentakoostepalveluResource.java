@@ -269,8 +269,13 @@ public class ValintalaskentakoostepalveluResource {
   @PreAuthorize(READ_UPDATE_CRUD)
   @GetMapping(value = "/hakukohde/haku/{hakuOid}", produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Hakee haun hakukohteet")
-  public List<HakukohdeViiteDTO> haunHakukohteet(@PathVariable("hakuOid") final String hakuOid) {
-    return modelMapper.mapList(hakukohdeService.haunHakukohteet(hakuOid), HakukohdeViiteDTO.class);
+  public List<HakukohdeViiteDTO> haunHakukohteet(
+      @PathVariable("hakuOid") final String hakuOid,
+      @RequestParam(value = "vainValintakokeelliset", required = false, defaultValue = "false")
+          final Boolean vainValintakokeelliset) {
+    List<HakukohdeViite> hakukohteet =
+        hakukohdeService.haunHakukohteet(hakuOid, vainValintakokeelliset);
+    return modelMapper.mapList(hakukohteet, HakukohdeViiteDTO.class);
   }
 
   @PreAuthorize(READ_UPDATE_CRUD)

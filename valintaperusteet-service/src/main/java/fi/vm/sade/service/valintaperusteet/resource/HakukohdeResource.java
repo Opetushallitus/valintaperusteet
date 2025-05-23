@@ -131,7 +131,8 @@ public class HakukohdeResource {
   @GetMapping(value = "/haku/{hakuOid}", produces = MediaType.APPLICATION_JSON_VALUE)
   public List<HakukohdeViiteDTO> haunHakukohteet(
       @PathVariable(value = "hakuOid") final String hakuOid) {
-    return modelMapper.mapList(hakukohdeService.haunHakukohteet(hakuOid), HakukohdeViiteDTO.class);
+    return modelMapper.mapList(
+        hakukohdeService.haunHakukohteet(hakuOid, false), HakukohdeViiteDTO.class);
   }
 
   @PreAuthorize(READ_UPDATE_CRUD)
