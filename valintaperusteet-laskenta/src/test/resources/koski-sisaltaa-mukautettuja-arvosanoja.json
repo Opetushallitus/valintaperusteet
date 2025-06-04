@@ -1,0 +1,1023 @@
+[
+  {
+    "tyyppi": {
+      "koodiarvo": "ammatillinenkoulutus",
+      "nimi": {
+        "fi": "Ammatillinen koulutus",
+        "sv": "Yrkesutbildning",
+        "en": "Vocational education and training"
+      },
+      "lyhytNimi": {
+        "fi": "Ammatillinen koulutus"
+      },
+      "koodistoUri": "opiskeluoikeudentyyppi",
+      "koodistoVersio": 1
+    },
+    "oid": "1.2.246.562.15.95793672551",
+    "versionumero": 5,
+    "aikaleima": "2020-05-01T17:22:03.776272",
+    "oppilaitos": {
+      "oid": "1.2.246.562.10.52251087186",
+      "oppilaitosnumero": {
+        "koodiarvo": "10105",
+        "nimi": {
+          "fi": "Stadin ammattiopisto",
+          "sv": "Stadin ammattiopisto",
+          "en": "Stadin ammattiopisto"
+        },
+        "lyhytNimi": {
+          "fi": "Stadin ammattiopisto",
+          "sv": "Stadin ammattiopisto",
+          "en": "Stadin ammattiopisto"
+        },
+        "koodistoUri": "oppilaitosnumero",
+        "koodistoVersio": 1
+      },
+      "nimi": {
+        "fi": "Stadin ammattiopisto",
+        "sv": "Stadin ammattiopisto",
+        "en": "Stadin ammattiopisto"
+      },
+      "kotipaikka": {
+        "koodiarvo": "091",
+        "nimi": {
+          "fi": "Helsinki",
+          "sv": "Helsingfors"
+        },
+        "koodistoUri": "kunta",
+        "koodistoVersio": 2
+      }
+    },
+    "tila": {
+      "opiskeluoikeusjaksot": [
+        {
+          "koodiarvo": "lasna",
+          "nimi": {
+            "fi": "Läsnä",
+            "sv": "Närvarande",
+            "en": "Present"
+          },
+          "koodistoUri": "koskiopiskeluoikeudentila",
+          "koodistoVersio": 1
+        },
+        {
+          "koodiarvo": "valmistunut",
+          "nimi": {
+            "fi": "Valmistunut",
+            "sv": "Utexaminerad",
+            "en": "Graduated"
+          },
+          "koodistoUri": "koskiopiskeluoikeudentila",
+          "koodistoVersio": 1
+        }
+      ]
+    },
+    "suoritukset": [
+      {
+        "tyyppi": {
+          "koodiarvo": "ammatillinentutkinto",
+          "nimi": {
+            "fi": "Ammatillinen tutkinto",
+            "sv": "Yrkesinriktad examen",
+            "en": "Vocational education  qualification"
+          },
+          "koodistoUri": "suorituksentyyppi",
+          "koodistoVersio": 1
+        },
+        "koulutusmoduuli": {
+          "tunniste": {
+            "koodiarvo": "351301",
+            "nimi": {
+              "fi": "Ajoneuvoalan perustutkinto",
+              "sv": "Grundexamen inom fordonsbranschen",
+              "en": "Vocational qualification in the Vehicle Sector"
+            },
+            "lyhytNimi": {
+              "fi": "Ajoneuvoalan perustutkinto",
+              "sv": "Grundexamen inom fordonsbranschen",
+              "en": "Vocational qualification in the Vehicle Sector"
+            },
+            "koodistoUri": "koulutus",
+            "koodistoVersio": 12
+          },
+          "koulutustyyppi": {
+            "koodiarvo": "1",
+            "nimi": {
+              "fi": "Ammatillinen perustutkinto",
+              "sv": "Yrkesinriktad grundexamen",
+              "en": "Vocational upper secondary qualification"
+            },
+            "lyhytNimi": {
+              "fi": "Ammatillinen perustutkinto",
+              "sv": "Yrkesinriktad grundexamen"
+            },
+            "koodistoUri": "koulutustyyppi",
+            "koodistoVersio": 2
+          }
+        },
+        "suoritustapa": {
+          "koodiarvo": "reformi",
+          "nimi": {
+            "fi": "Reformin mukainen näyttö",
+            "sv": "Kunnandet visas i yrkesprov (reformen)",
+            "en": "Reform"
+          },
+          "lyhytNimi": {
+            "fi": "Reformi",
+            "sv": "Kunnandet visas i yrkesprov (reformen)"
+          },
+          "koodistoUri": "ammatillisentutkinnonsuoritustapa",
+          "koodistoVersio": 1
+        },
+        "vahvistus": {
+          "päivä": "2020-05-01"
+        },
+        "keskiarvo": 4.3,
+        "osasuoritukset": [
+          {
+            "tyyppi": {
+              "koodiarvo": "ammatillisentutkinnonosa",
+              "nimi": {
+                "fi": "Ammatillisen tutkinnon osa",
+                "sv": "Yrkesexamensdel",
+                "en": "A vocational education qualification unit"
+              },
+              "koodistoUri": "suorituksentyyppi",
+              "koodistoVersio": 1
+            },
+            "koulutusmoduuli": {
+              "laajuus": 30,
+              "tunniste": {
+                "koodiarvo": "106918",
+                "nimi": {
+                  "fi": "Ajoneuvokaupan sidosryhmien kanssa toimiminen",
+                  "sv": "Samarbete med intressegrupper inom fordonshandel"
+                },
+                "koodistoUri": "tutkinnonosat",
+                "koodistoVersio": 2
+              }
+            },
+            "arviointi": [
+              {
+                "arvosana": {
+                  "koodiarvo": "4",
+                  "nimi": {
+                    "fi": "4"
+                  },
+                  "lyhytNimi": {
+                    "fi": "4"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinen15",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2020-03-01",
+                "hyväksytty": true
+              }
+            ],
+            "keskiarvoSisältääMukautettujaArvosanoja": false,
+            "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false
+          },
+          {
+            "tyyppi": {
+              "koodiarvo": "ammatillisentutkinnonosa",
+              "nimi": {
+                "fi": "Ammatillisen tutkinnon osa",
+                "sv": "Yrkesexamensdel",
+                "en": "A vocational education qualification unit"
+              },
+              "koodistoUri": "suorituksentyyppi",
+              "koodistoVersio": 1
+            },
+            "koulutusmoduuli": {
+              "laajuus": 30,
+              "tunniste": {
+                "koodiarvo": "106945",
+                "nimi": {
+                  "fi": "Ajoneuvon huoltotyöt",
+                  "sv": "Fordonsservice"
+                },
+                "koodistoUri": "tutkinnonosat",
+                "koodistoVersio": 2
+              }
+            },
+            "arviointi": [
+              {
+                "arvosana": {
+                  "koodiarvo": "3",
+                  "nimi": {
+                    "fi": "3"
+                  },
+                  "lyhytNimi": {
+                    "fi": "3"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinen15",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2020-03-01",
+                "hyväksytty": true
+              }
+            ],
+            "keskiarvoSisältääMukautettujaArvosanoja": false,
+            "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false
+          },
+          {
+            "tyyppi": {
+              "koodiarvo": "ammatillisentutkinnonosa",
+              "nimi": {
+                "fi": "Ammatillisen tutkinnon osa",
+                "sv": "Yrkesexamensdel",
+                "en": "A vocational education qualification unit"
+              },
+              "koodistoUri": "suorituksentyyppi",
+              "koodistoVersio": 1
+            },
+            "koulutusmoduuli": {
+              "laajuus": 85,
+              "tunniste": {
+                "koodiarvo": "106903",
+                "nimi": {
+                  "fi": "Ajoneuvon siistiminen",
+                  "sv": "Tvätt och städning av fordon"
+                },
+                "koodistoUri": "tutkinnonosat",
+                "koodistoVersio": 2
+              }
+            },
+            "arviointi": [
+              {
+                "arvosana": {
+                  "koodiarvo": "5",
+                  "nimi": {
+                    "fi": "5"
+                  },
+                  "lyhytNimi": {
+                    "fi": "5"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinen15",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2020-03-01",
+                "hyväksytty": true
+              }
+            ],
+            "keskiarvoSisältääMukautettujaArvosanoja": false,
+            "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false
+          },
+          {
+            "tyyppi": {
+              "koodiarvo": "ammatillisentutkinnonosa",
+              "nimi": {
+                "fi": "Ammatillisen tutkinnon osa",
+                "sv": "Yrkesexamensdel",
+                "en": "A vocational education qualification unit"
+              },
+              "koodistoUri": "suorituksentyyppi",
+              "koodistoVersio": 1
+            },
+            "koulutusmoduuli": {
+              "laajuus": 15,
+              "tunniste": {
+                "koodiarvo": "106728",
+                "nimi": {
+                  "fi": "Matemaattis-luonnontieteellinen osaaminen",
+                  "sv": "Kunnande i matematik och naturvetenskaper",
+                  "en": "Mathematics and science competence"
+                },
+                "koodistoUri": "tutkinnonosat",
+                "koodistoVersio": 2
+              }
+            },
+            "arviointi": [
+              {
+                "arvosana": {
+                  "koodiarvo": "Hyväksytty",
+                  "nimi": {
+                    "fi": "Hyväksytty",
+                    "sv": "Godkänd",
+                    "en": "Pass"
+                  },
+                  "lyhytNimi": {
+                    "fi": "Hyväksytty",
+                    "sv": "Godkänd"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinen15",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2020-03-01",
+                "hyväksytty": true
+              }
+            ],
+            "keskiarvoSisältääMukautettujaArvosanoja": false,
+            "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false
+          },
+          {
+            "tyyppi": {
+              "koodiarvo": "ammatillisentutkinnonosa",
+              "nimi": {
+                "fi": "Ammatillisen tutkinnon osa",
+                "sv": "Yrkesexamensdel",
+                "en": "A vocational education qualification unit"
+              },
+              "koodistoUri": "suorituksentyyppi",
+              "koodistoVersio": 1
+            },
+            "koulutusmoduuli": {
+              "laajuus": 10,
+              "tunniste": {
+                "koodiarvo": "106727",
+                "nimi": {
+                  "fi": "Viestintä- ja vuorovaikutusosaaminen",
+                  "sv": "Kunnande i kommunikation och interaktion (12 kp i svenskspråkig utbildning)",
+                  "en": "Communication and interaction competence"
+                },
+                "koodistoUri": "tutkinnonosat",
+                "koodistoVersio": 2
+              }
+            },
+            "arviointi": [
+              {
+                "arvosana": {
+                  "koodiarvo": "Hyväksytty",
+                  "nimi": {
+                    "fi": "Hyväksytty",
+                    "sv": "Godkänd",
+                    "en": "Pass"
+                  },
+                  "lyhytNimi": {
+                    "fi": "Hyväksytty",
+                    "sv": "Godkänd"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinen15",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2020-03-01",
+                "hyväksytty": true
+              }
+            ],
+            "keskiarvoSisältääMukautettujaArvosanoja": false,
+            "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false
+          },
+          {
+            "tyyppi": {
+              "koodiarvo": "ammatillisentutkinnonosa",
+              "nimi": {
+                "fi": "Ammatillisen tutkinnon osa",
+                "sv": "Yrkesexamensdel",
+                "en": "A vocational education qualification unit"
+              },
+              "koodistoUri": "suorituksentyyppi",
+              "koodistoVersio": 1
+            },
+            "koulutusmoduuli": {
+              "laajuus": 10,
+              "tunniste": {
+                "koodiarvo": "106729",
+                "nimi": {
+                  "fi": "Yhteiskunta- ja työelämäosaaminen",
+                  "sv": "Kunnande om samhälle och arbetsliv",
+                  "en": "Citizenship and working life competence"
+                },
+                "koodistoUri": "tutkinnonosat",
+                "koodistoVersio": 2
+              }
+            },
+            "arviointi": [
+              {
+                "arvosana": {
+                  "koodiarvo": "Hyväksytty",
+                  "nimi": {
+                    "fi": "Hyväksytty",
+                    "sv": "Godkänd",
+                    "en": "Pass"
+                  },
+                  "lyhytNimi": {
+                    "fi": "Hyväksytty",
+                    "sv": "Godkänd"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinen15",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2020-03-01",
+                "hyväksytty": true
+              }
+            ],
+            "keskiarvoSisältääMukautettujaArvosanoja": false,
+            "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "tyyppi": {
+      "koodiarvo": "ammatillinenkoulutus",
+      "nimi": {
+        "fi": "Ammatillinen koulutus",
+        "sv": "Yrkesutbildning",
+        "en": "Vocational education and training"
+      },
+      "lyhytNimi": {
+        "fi": "Ammatillinen koulutus"
+      },
+      "koodistoUri": "opiskeluoikeudentyyppi",
+      "koodistoVersio": 1
+    },
+    "oid": "1.2.246.562.15.70578565841",
+    "versionumero": 4,
+    "aikaleima": "2020-05-01T16:03:41.240820",
+    "oppilaitos": {
+      "oid": "1.2.246.562.10.45306788949",
+      "oppilaitosnumero": {
+        "koodiarvo": "02998",
+        "nimi": {
+          "fi": "Vamia",
+          "sv": "Vamia",
+          "en": "Vamia"
+        },
+        "lyhytNimi": {
+          "fi": "Vamia",
+          "sv": "Vamia",
+          "en": "Vamia"
+        },
+        "koodistoUri": "oppilaitosnumero",
+        "koodistoVersio": 1
+      },
+      "nimi": {
+        "fi": "Vamia",
+        "sv": "Vamia",
+        "en": "Vamia"
+      },
+      "kotipaikka": {
+        "koodiarvo": "905",
+        "nimi": {
+          "fi": "Vaasa",
+          "sv": "Vasa"
+        },
+        "koodistoUri": "kunta",
+        "koodistoVersio": 2
+      }
+    },
+    "tila": {
+      "opiskeluoikeusjaksot": [
+        {
+          "koodiarvo": "lasna",
+          "nimi": {
+            "fi": "Läsnä",
+            "sv": "Närvarande",
+            "en": "Present"
+          },
+          "koodistoUri": "koskiopiskeluoikeudentila",
+          "koodistoVersio": 1
+        },
+        {
+          "koodiarvo": "valmistunut",
+          "nimi": {
+            "fi": "Valmistunut",
+            "sv": "Utexaminerad",
+            "en": "Graduated"
+          },
+          "koodistoUri": "koskiopiskeluoikeudentila",
+          "koodistoVersio": 1
+        }
+      ]
+    },
+    "suoritukset": [
+      {
+        "tyyppi": {
+          "koodiarvo": "ammatillinentutkinto",
+          "nimi": {
+            "fi": "Ammatillinen tutkinto",
+            "sv": "Yrkesinriktad examen",
+            "en": "Vocational education  qualification"
+          },
+          "koodistoUri": "suorituksentyyppi",
+          "koodistoVersio": 1
+        },
+        "koulutusmoduuli": {
+          "tunniste": {
+            "koodiarvo": "352101",
+            "nimi": {
+              "fi": "Elintarvikealan perustutkinto",
+              "sv": "Grundexamen inom livsmedelsbranschen",
+              "en": "Vocational qualification in Food Production"
+            },
+            "lyhytNimi": {
+              "fi": "Elintarvikealan perustutk",
+              "sv": "Grundexamen inom livsmedelsbranschen",
+              "en": "Vocational qualification in Food Production"
+            },
+            "koodistoUri": "koulutus",
+            "koodistoVersio": 12
+          },
+          "koulutustyyppi": {
+            "koodiarvo": "1",
+            "nimi": {
+              "fi": "Ammatillinen perustutkinto",
+              "sv": "Yrkesinriktad grundexamen",
+              "en": "Vocational upper secondary qualification"
+            },
+            "lyhytNimi": {
+              "fi": "Ammatillinen perustutkinto",
+              "sv": "Yrkesinriktad grundexamen"
+            },
+            "koodistoUri": "koulutustyyppi",
+            "koodistoVersio": 2
+          }
+        },
+        "suoritustapa": {
+          "koodiarvo": "reformi",
+          "nimi": {
+            "fi": "Reformin mukainen näyttö",
+            "sv": "Kunnandet visas i yrkesprov (reformen)",
+            "en": "Reform"
+          },
+          "lyhytNimi": {
+            "fi": "Reformi",
+            "sv": "Kunnandet visas i yrkesprov (reformen)"
+          },
+          "koodistoUri": "ammatillisentutkinnonsuoritustapa",
+          "koodistoVersio": 1
+        },
+        "vahvistus": {
+          "päivä": "2020-05-01"
+        },
+        "osasuoritukset": [
+          {
+            "tyyppi": {
+              "koodiarvo": "ammatillisentutkinnonosa",
+              "nimi": {
+                "fi": "Ammatillisen tutkinnon osa",
+                "sv": "Yrkesexamensdel",
+                "en": "A vocational education qualification unit"
+              },
+              "koodistoUri": "suorituksentyyppi",
+              "koodistoVersio": 1
+            },
+            "koulutusmoduuli": {
+              "laajuus": 145.0,
+              "tunniste": {
+                "koodiarvo": "105617",
+                "nimi": {
+                  "fi": "Pakkaustoiminnot",
+                  "sv": "Förpackningsarbete"
+                },
+                "lyhytNimi": {
+                  "fi": "Pakkaustoiminnot",
+                  "sv": "Förpackningsarbete"
+                },
+                "koodistoUri": "tutkinnonosat",
+                "koodistoVersio": 2
+              }
+            },
+            "arviointi": [
+              {
+                "arvosana": {
+                  "koodiarvo": "5",
+                  "nimi": {
+                    "fi": "5"
+                  },
+                  "lyhytNimi": {
+                    "fi": "5"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinen15",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2020-04-01",
+                "hyväksytty": true
+              }
+            ],
+            "keskiarvoSisältääMukautettujaArvosanoja": false,
+            "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false
+          },
+          {
+            "tyyppi": {
+              "koodiarvo": "ammatillisentutkinnonosa",
+              "nimi": {
+                "fi": "Ammatillisen tutkinnon osa",
+                "sv": "Yrkesexamensdel",
+                "en": "A vocational education qualification unit"
+              },
+              "koodistoUri": "suorituksentyyppi",
+              "koodistoVersio": 1
+            },
+            "koulutusmoduuli": {
+              "laajuus": 10.0,
+              "tunniste": {
+                "koodiarvo": "400013",
+                "nimi": {
+                  "fi": "Matemaattis-luonnontieteellinen osaaminen",
+                  "sv": "Kunnande i matematik och naturvetenskap",
+                  "en": "Mathematics and science competence"
+                },
+                "lyhytNimi": {
+                  "fi": "Matemaattis-luonnontieteellinen osaaminen"
+                },
+                "koodistoUri": "tutkinnonosat",
+                "koodistoVersio": 2
+              }
+            },
+            "arviointi": [
+              {
+                "arvosana": {
+                  "koodiarvo": "5",
+                  "nimi": {
+                    "fi": "5"
+                  },
+                  "lyhytNimi": {
+                    "fi": "5"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinen15",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2020-04-01",
+                "hyväksytty": true
+              }
+            ],
+            "keskiarvoSisältääMukautettujaArvosanoja": true,
+            "korotettuKeskiarvoSisältääMukautettujaArvosanoja": true
+          },
+          {
+            "tyyppi": {
+              "koodiarvo": "ammatillisentutkinnonosa",
+              "nimi": {
+                "fi": "Ammatillisen tutkinnon osa",
+                "sv": "Yrkesexamensdel",
+                "en": "A vocational education qualification unit"
+              },
+              "koodistoUri": "suorituksentyyppi",
+              "koodistoVersio": 1
+            },
+            "koulutusmoduuli": {
+              "laajuus": 10.0,
+              "tunniste": {
+                "koodiarvo": "400012",
+                "nimi": {
+                  "fi": "Viestintä- ja vuorovaikutusosaaminen",
+                  "sv": "Kunnande i kommunikation och interaktion",
+                  "en": "Communication and interaction competence"
+                },
+                "lyhytNimi": {
+                  "fi": "Viestintä- ja vuorovaikutusosaaminen"
+                },
+                "koodistoUri": "tutkinnonosat",
+                "koodistoVersio": 2
+              }
+            },
+            "arviointi": [
+              {
+                "arvosana": {
+                  "koodiarvo": "2",
+                  "nimi": {
+                    "fi": "2"
+                  },
+                  "lyhytNimi": {
+                    "fi": "2"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinen15",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2020-04-01",
+                "hyväksytty": true
+              }
+            ],
+            "keskiarvoSisältääMukautettujaArvosanoja": false,
+            "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false
+          },
+          {
+            "tyyppi": {
+              "koodiarvo": "ammatillisentutkinnonosa",
+              "nimi": {
+                "fi": "Ammatillisen tutkinnon osa",
+                "sv": "Yrkesexamensdel",
+                "en": "A vocational education qualification unit"
+              },
+              "koodistoUri": "suorituksentyyppi",
+              "koodistoVersio": 1
+            },
+            "koulutusmoduuli": {
+              "laajuus": 15.0,
+              "tunniste": {
+                "koodiarvo": "400014",
+                "nimi": {
+                  "fi": "Yhteiskunta- ja työelämäosaaminen",
+                  "sv": "Kunnande om samhälle och arbetsliv",
+                  "en": "Citizenship and working life competence"
+                },
+                "lyhytNimi": {
+                  "fi": "Yhteiskunta- ja työelämäosaaminen"
+                },
+                "koodistoUri": "tutkinnonosat",
+                "koodistoVersio": 2
+              }
+            },
+            "arviointi": [
+              {
+                "arvosana": {
+                  "koodiarvo": "2",
+                  "nimi": {
+                    "fi": "2"
+                  },
+                  "lyhytNimi": {
+                    "fi": "2"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinen15",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2020-04-01",
+                "hyväksytty": true
+              }
+            ],
+            "keskiarvoSisältääMukautettujaArvosanoja": false,
+            "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "tyyppi": {
+      "koodiarvo": "ammatillinenkoulutus",
+      "nimi": {
+        "fi": "Ammatillinen koulutus",
+        "sv": "Yrkesutbildning",
+        "en": "Vocational education and training"
+      },
+      "lyhytNimi": {
+        "fi": "Ammatillinen koulutus"
+      },
+      "koodistoUri": "opiskeluoikeudentyyppi",
+      "koodistoVersio": 1
+    },
+    "oid": "1.2.246.562.15.98765432109",
+    "versionumero": 5,
+    "aikaleima": "2020-05-01T17:22:03.776272",
+    "oppilaitos": {
+      "oid": "1.2.246.562.10.52251087186",
+      "oppilaitosnumero": {
+        "koodiarvo": "10105",
+        "nimi": {
+          "fi": "Stadin ammattiopisto",
+          "sv": "Stadin ammattiopisto",
+          "en": "Stadin ammattiopisto"
+        },
+        "lyhytNimi": {
+          "fi": "Stadin ammattiopisto",
+          "sv": "Stadin ammattiopisto",
+          "en": "Stadin ammattiopisto"
+        },
+        "koodistoUri": "oppilaitosnumero",
+        "koodistoVersio": 1
+      },
+      "nimi": {
+        "fi": "Stadin ammattiopisto",
+        "sv": "Stadin ammattiopisto",
+        "en": "Stadin ammattiopisto"
+      },
+      "kotipaikka": {
+        "koodiarvo": "091",
+        "nimi": {
+          "fi": "Helsinki",
+          "sv": "Helsingfors"
+        },
+        "koodistoUri": "kunta",
+        "koodistoVersio": 2
+      }
+    },
+    "tila": {
+      "opiskeluoikeusjaksot": [
+        {
+          "koodiarvo": "lasna",
+          "nimi": {
+            "fi": "Läsnä",
+            "sv": "Närvarande",
+            "en": "Present"
+          },
+          "koodistoUri": "koskiopiskeluoikeudentila",
+          "koodistoVersio": 1
+        },
+        {
+          "koodiarvo": "valmistunut",
+          "nimi": {
+            "fi": "Valmistunut",
+            "sv": "Utexaminerad",
+            "en": "Graduated"
+          },
+          "koodistoUri": "koskiopiskeluoikeudentila",
+          "koodistoVersio": 1
+        }
+      ]
+    },
+    "suoritukset": [
+      {
+        "tyyppi": {
+          "koodiarvo": "ammatillinentutkinto",
+          "nimi": {
+            "fi": "Ammatillinen tutkinto",
+            "sv": "Yrkesinriktad examen",
+            "en": "Vocational education  qualification"
+          },
+          "koodistoUri": "suorituksentyyppi",
+          "koodistoVersio": 1
+        },
+        "koulutusmoduuli": {
+          "tunniste": {
+            "koodiarvo": "351407",
+            "nimi": {
+              "fi": "Sähkö- ja automaatioalan perustutkinto",
+              "sv": "Grundexamen inom el- och automationsbranschen",
+              "en": "Vocational qualification in Electrical Engineering and Automation Technology"
+            },
+            "lyhytNimi": {
+              "fi": "Sähkö- ja automaatioalan pt",
+              "sv": "Grundexamen inom el- och automationsbranschen",
+              "en": "Vocational qualification in Electrical Engineering and Automation Technology"
+            },
+            "koodistoUri": "koulutus",
+            "koodistoVersio": 12
+          },
+          "koulutustyyppi": {
+            "koodiarvo": "1",
+            "nimi": {
+              "fi": "Ammatillinen perustutkinto",
+              "sv": "Yrkesinriktad grundexamen",
+              "en": "Vocational upper secondary qualification"
+            },
+            "lyhytNimi": {
+              "fi": "Ammatillinen perustutkinto",
+              "sv": "Yrkesinriktad grundexamen"
+            },
+            "koodistoUri": "koulutustyyppi",
+            "koodistoVersio": 2
+          }
+        },
+        "suoritustapa": {
+          "koodiarvo": "reformi",
+          "nimi": {
+            "fi": "Reformin mukainen näyttö",
+            "sv": "Kunnandet visas i yrkesprov (reformen)",
+            "en": "Reform"
+          },
+          "lyhytNimi": {
+            "fi": "Reformi",
+            "sv": "Kunnandet visas i yrkesprov (reformen)"
+          },
+          "koodistoUri": "ammatillisentutkinnonsuoritustapa",
+          "koodistoVersio": 1
+        },
+        "vahvistus": {
+          "päivä": "2020-05-01"
+        },
+        "keskiarvo": 4.3,
+        "osasuoritukset": [
+          {
+            "tyyppi": {
+              "koodiarvo": "ammatillisentutkinnonosa",
+              "nimi": {
+                "fi": "Ammatillisen tutkinnon osa",
+                "sv": "Yrkesexamensdel",
+                "en": "A vocational education qualification unit"
+              },
+              "koodistoUri": "suorituksentyyppi",
+              "koodistoVersio": 1
+            },
+            "koulutusmoduuli": {
+              "laajuus": 15.0,
+              "tunniste": {
+                "koodiarvo": "100871",
+                "nimi": {
+                  "fi": "Sähkö- ja automaatiotekniikan perusosaaminen",
+                  "sv": "Basfärdigheter inom el- och automationsteknik"
+                },
+                "lyhytNimi": {
+                  "fi": "Sähkö- ja automaatiotekniikan perusosaaminen",
+                  "sv": "Basfärdigheter inom el- och automationsteknik"
+                },
+                "koodistoUri": "tutkinnonosat",
+                "koodistoVersio": 2
+              }
+            },
+            "arviointi": [
+              {
+                "arvosana": {
+                  "koodiarvo": "5",
+                  "nimi": {
+                    "fi": "kiitettävä",
+                    "sv": "berömlig",
+                    "en": "excellent"
+                  },
+                  "lyhytNimi": {
+                    "fi": "K3"
+                  },
+                  "koodistoUri": "arviointiasteikkoammatillinent1k3",
+                  "koodistoVersio": 1
+                },
+                "päivä": "2017-12-29",
+                "hyväksytty": true
+              }
+            ],
+            "keskiarvoSisältääMukautettujaArvosanoja": false,
+            "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
+            "osasuoritukset": [
+              {
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosa",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osa",
+                    "sv": "Yrkesexamensdel",
+                    "en": "A vocational education qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                },
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "100872",
+                    "nimi": {
+                      "fi": "Sähkö ja automaatioasennukset",
+                      "sv": "El- och automationsinstallationer"
+                    },
+                    "lyhytNimi": {
+                      "fi": "Sähkö ja automaatioasennukset",
+                      "sv": "El- och automationsinstallationer"
+                    },
+                    "koodistoUri": "tutkinnonosat",
+                    "koodistoVersio": 2
+                  }
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "3",
+                      "nimi": {
+                        "fi": "kiitettävä",
+                        "sv": "berömlig",
+                        "en": "excellent"
+                      },
+                      "lyhytNimi": {
+                        "fi": "K3"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinent1k3",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2017-12-29",
+                    "hyväksytty": true
+                  }
+                ],
+                "keskiarvoSisältääMukautettujaArvosanoja": true,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false
+              },
+              {
+                "tyyppi": {
+                  "koodiarvo": "ammatillisentutkinnonosa",
+                  "nimi": {
+                    "fi": "Ammatillisen tutkinnon osa",
+                    "sv": "Yrkesexamensdel",
+                    "en": "A vocational education qualification unit"
+                  },
+                  "koodistoUri": "suorituksentyyppi",
+                  "koodistoVersio": 1
+                },
+                "koulutusmoduuli": {
+                  "tunniste": {
+                    "koodiarvo": "100877",
+                    "nimi": {
+                      "fi": "Sähköverkostoasennukset (1 – 20 kV)",
+                      "sv": "Elnätsinstallationer (1 kV–20 kV)"
+                    },
+                    "lyhytNimi": {
+                      "fi": "Sähköverkostoasennukset (1 – 20 kV)",
+                      "sv": "Elnätsinstallationer (1 kV–20 kV)"
+                    },
+                    "koodistoUri": "tutkinnonosat",
+                    "koodistoVersio": 2
+                  }
+                },
+                "arviointi": [
+                  {
+                    "arvosana": {
+                      "koodiarvo": "3",
+                      "nimi": {
+                        "fi": "kiitettävä",
+                        "sv": "berömlig",
+                        "en": "excellent"
+                      },
+                      "lyhytNimi": {
+                        "fi": "K3"
+                      },
+                      "koodistoUri": "arviointiasteikkoammatillinent1k3",
+                      "koodistoVersio": 1
+                    },
+                    "päivä": "2017-12-29",
+                    "hyväksytty": true
+                  }
+                ],
+                "keskiarvoSisältääMukautettujaArvosanoja": false,
+                "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

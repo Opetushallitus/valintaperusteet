@@ -167,7 +167,12 @@ object Laskin {
   ): (Option[Boolean], Tila) = {
     val laskin = new Laskin(hakukohde, hakemus)
     val totuusarvoLaskin = new TotuusarvoLaskin(laskin)
-    val tulos = totuusarvoLaskin.laskeTotuusarvo(laskettava, LaskennanIteraatioParametrit())
+    val tulos = totuusarvoLaskin.laskeTotuusarvo(
+      laskettava,
+      LaskennanIteraatioParametrit(hylkaaMukautettujaArvosanojaSisaltavatTutkinnot =
+        hakukohde.korkeakouluhaku
+      )
+    )
     (tulos.tulos, tulos.tila)
   }
 
@@ -178,7 +183,12 @@ object Laskin {
   ): (Option[JBigDecimal], Tila) = {
     val laskin = new Laskin(hakukohde, hakemus)
     val lukuarvoLaskin = new LukuarvoLaskin(laskin)
-    val tulos = lukuarvoLaskin.laskeLukuarvo(laskettava, LaskennanIteraatioParametrit())
+    val tulos = lukuarvoLaskin.laskeLukuarvo(
+      laskettava,
+      LaskennanIteraatioParametrit(hylkaaMukautettujaArvosanojaSisaltavatTutkinnot =
+        hakukohde.korkeakouluhaku
+      )
+    )
     (tulos.tulos.map(_.underlying()), tulos.tila)
   }
 

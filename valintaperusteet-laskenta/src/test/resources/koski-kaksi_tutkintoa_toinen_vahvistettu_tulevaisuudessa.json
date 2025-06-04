@@ -67,48 +67,24 @@
     "tila": {
       "opiskeluoikeusjaksot": [
         {
-          "alku": "2018-02-26",
-          "tila": {
-            "koodiarvo": "lasna",
-            "nimi": {
-              "fi": "Läsnä",
-              "sv": "Närvarande",
-              "en": "Present"
-            },
-            "koodistoUri": "koskiopiskeluoikeudentila",
-            "koodistoVersio": 1
+          "koodiarvo": "lasna",
+          "nimi": {
+            "fi": "Läsnä",
+            "sv": "Närvarande",
+            "en": "Present"
           },
-          "opintojenRahoitus": {
-            "koodiarvo": "1",
-            "nimi": {
-              "fi": "Valtionosuusrahoitteinen koulutus",
-              "sv": "Statsandelsfinansierad utbildning"
-            },
-            "koodistoUri": "opintojenrahoitus",
-            "koodistoVersio": 1
-          }
+          "koodistoUri": "koskiopiskeluoikeudentila",
+          "koodistoVersio": 1
         },
         {
-          "alku": "2020-12-19",
-          "tila": {
-            "koodiarvo": "valmistunut",
-            "nimi": {
-              "fi": "Valmistunut",
-              "sv": "Utexaminerad",
-              "en": "Graduated"
-            },
-            "koodistoUri": "koskiopiskeluoikeudentila",
-            "koodistoVersio": 1
+          "koodiarvo": "valmistunut",
+          "nimi": {
+            "fi": "Valmistunut",
+            "sv": "Utexaminerad",
+            "en": "Graduated"
           },
-          "opintojenRahoitus": {
-            "koodiarvo": "1",
-            "nimi": {
-              "fi": "Valtionosuusrahoitteinen koulutus",
-              "sv": "Statsandelsfinansierad utbildning"
-            },
-            "koodistoUri": "opintojenrahoitus",
-            "koodistoVersio": 1
-          }
+          "koodistoUri": "koskiopiskeluoikeudentila",
+          "koodistoVersio": 1
         }
       ]
     },
@@ -481,48 +457,24 @@
     "tila": {
       "opiskeluoikeusjaksot": [
         {
-          "alku": "2018-02-26",
-          "tila": {
-            "koodiarvo": "lasna",
-            "nimi": {
-              "fi": "Läsnä",
-              "sv": "Närvarande",
-              "en": "Present"
-            },
-            "koodistoUri": "koskiopiskeluoikeudentila",
-            "koodistoVersio": 1
+          "koodiarvo": "lasna",
+          "nimi": {
+            "fi": "Läsnä",
+            "sv": "Närvarande",
+            "en": "Present"
           },
-          "opintojenRahoitus": {
-            "koodiarvo": "6",
-            "nimi": {
-              "fi": "Muuta kautta rahoitettu",
-              "sv": "Finansierad på annat sätt"
-            },
-            "koodistoUri": "opintojenrahoitus",
-            "koodistoVersio": 1
-          }
+          "koodistoUri": "koskiopiskeluoikeudentila",
+          "koodistoVersio": 1
         },
         {
-          "alku": "2019-12-19",
-          "tila": {
-            "koodiarvo": "valmistunut",
-            "nimi": {
-              "fi": "Valmistunut",
-              "sv": "Utexaminerad",
-              "en": "Graduated"
-            },
-            "koodistoUri": "koskiopiskeluoikeudentila",
-            "koodistoVersio": 1
+          "koodiarvo": "valmistunut",
+          "nimi": {
+            "fi": "Valmistunut",
+            "sv": "Utexaminerad",
+            "en": "Graduated"
           },
-          "opintojenRahoitus": {
-            "koodiarvo": "6",
-            "nimi": {
-              "fi": "Muuta kautta rahoitettu",
-              "sv": "Finansierad på annat sätt"
-            },
-            "koodistoUri": "opintojenrahoitus",
-            "koodistoVersio": 1
-          }
+          "koodistoUri": "koskiopiskeluoikeudentila",
+          "koodistoVersio": 1
         }
       ]
     },
@@ -722,24 +674,7 @@
                 "koodistoVersio": 2
               },
               "pakollinen": true,
-              "laajuus": {
-                "arvo": 45,
-                "yksikkö": {
-                  "koodiarvo": "6",
-                  "nimi": {
-                    "fi": "osaamispistettä",
-                    "sv": "kompetenspoäng",
-                    "en": "ECVET competence points"
-                  },
-                  "lyhytNimi": {
-                    "fi": "osp",
-                    "sv": "kp",
-                    "en": "competence points"
-                  },
-                  "koodistoUri": "opintojenlaajuusyksikko",
-                  "koodistoVersio": 1
-                }
-              }
+              "laajuus": 45
             },
             "tutkinnonOsanRyhmä": {
               "koodiarvo": "1",
@@ -981,24 +916,7 @@
                 "koodistoVersio": 2
               },
               "pakollinen": false,
-              "laajuus": {
-                "arvo": 45,
-                "yksikkö": {
-                  "koodiarvo": "6",
-                  "nimi": {
-                    "fi": "osaamispistettä",
-                    "sv": "kompetenspoäng",
-                    "en": "ECVET competence points"
-                  },
-                  "lyhytNimi": {
-                    "fi": "osp",
-                    "sv": "kp",
-                    "en": "competence points"
-                  },
-                  "koodistoUri": "opintojenlaajuusyksikko",
-                  "koodistoVersio": 1
-                }
-              }
+              "laajuus": 45
             },
             "tutkinnonOsanRyhmä": {
               "koodiarvo": "1",
@@ -1240,24 +1158,7 @@
                 "koodistoVersio": 2
               },
               "pakollinen": false,
-              "laajuus": {
-                "arvo": 15,
-                "yksikkö": {
-                  "koodiarvo": "6",
-                  "nimi": {
-                    "fi": "osaamispistettä",
-                    "sv": "kompetenspoäng",
-                    "en": "ECVET competence points"
-                  },
-                  "lyhytNimi": {
-                    "fi": "osp",
-                    "sv": "kp",
-                    "en": "competence points"
-                  },
-                  "koodistoUri": "opintojenlaajuusyksikko",
-                  "koodistoVersio": 1
-                }
-              }
+              "laajuus": 15
             },
             "tutkinnonOsanRyhmä": {
               "koodiarvo": "1",
@@ -1499,24 +1400,7 @@
                 "koodistoVersio": 2
               },
               "pakollinen": false,
-              "laajuus": {
-                "arvo": 15,
-                "yksikkö": {
-                  "koodiarvo": "6",
-                  "nimi": {
-                    "fi": "osaamispistettä",
-                    "sv": "kompetenspoäng",
-                    "en": "ECVET competence points"
-                  },
-                  "lyhytNimi": {
-                    "fi": "osp",
-                    "sv": "kp",
-                    "en": "competence points"
-                  },
-                  "koodistoUri": "opintojenlaajuusyksikko",
-                  "koodistoVersio": 1
-                }
-              }
+              "laajuus": 15
             },
             "tutkinnonOsanRyhmä": {
               "koodiarvo": "1",
@@ -1758,24 +1642,7 @@
                 "koodistoVersio": 2
               },
               "pakollinen": false,
-              "laajuus": {
-                "arvo": 30,
-                "yksikkö": {
-                  "koodiarvo": "6",
-                  "nimi": {
-                    "fi": "osaamispistettä",
-                    "sv": "kompetenspoäng",
-                    "en": "ECVET competence points"
-                  },
-                  "lyhytNimi": {
-                    "fi": "osp",
-                    "sv": "kp",
-                    "en": "competence points"
-                  },
-                  "koodistoUri": "opintojenlaajuusyksikko",
-                  "koodistoVersio": 1
-                }
-              }
+              "laajuus": 30
             },
             "tutkinnonOsanRyhmä": {
               "koodiarvo": "1",
@@ -2018,24 +1885,7 @@
                 "koodistoVersio": 2
               },
               "pakollinen": false,
-              "laajuus": {
-                "arvo": 17,
-                "yksikkö": {
-                  "koodiarvo": "6",
-                  "nimi": {
-                    "fi": "osaamispistettä",
-                    "sv": "kompetenspoäng",
-                    "en": "ECVET competence points"
-                  },
-                  "lyhytNimi": {
-                    "fi": "osp",
-                    "sv": "kp",
-                    "en": "competence points"
-                  },
-                  "koodistoUri": "opintojenlaajuusyksikko",
-                  "koodistoVersio": 1
-                }
-              }
+              "laajuus": 17
             },
             "tutkinnonOsanRyhmä": {
               "koodiarvo": "2",
@@ -2199,24 +2049,7 @@
                     "koodistoVersio": 1
                   },
                   "pakollinen": true,
-                  "laajuus": {
-                    "arvo": 4,
-                    "yksikkö": {
-                      "koodiarvo": "6",
-                      "nimi": {
-                        "fi": "osaamispistettä",
-                        "sv": "kompetenspoäng",
-                        "en": "ECVET competence points"
-                      },
-                      "lyhytNimi": {
-                        "fi": "osp",
-                        "sv": "kp",
-                        "en": "competence points"
-                      },
-                      "koodistoUri": "opintojenlaajuusyksikko",
-                      "koodistoVersio": 1
-                    }
-                  }
+                  "laajuus": 4
                 },
                 "arviointi": [
                   {
@@ -2282,24 +2115,7 @@
                     "koodistoVersio": 1
                   },
                   "pakollinen": false,
-                  "laajuus": {
-                    "arvo": 2,
-                    "yksikkö": {
-                      "koodiarvo": "6",
-                      "nimi": {
-                        "fi": "osaamispistettä",
-                        "sv": "kompetenspoäng",
-                        "en": "ECVET competence points"
-                      },
-                      "lyhytNimi": {
-                        "fi": "osp",
-                        "sv": "kp",
-                        "en": "competence points"
-                      },
-                      "koodistoUri": "opintojenlaajuusyksikko",
-                      "koodistoVersio": 1
-                    }
-                  }
+                  "laajuus": 2
                 },
                 "arviointi": [
                   {
@@ -2380,24 +2196,7 @@
                     "koodistoVersio": 1
                   },
                   "pakollinen": true,
-                  "laajuus": {
-                    "arvo": 1,
-                    "yksikkö": {
-                      "koodiarvo": "6",
-                      "nimi": {
-                        "fi": "osaamispistettä",
-                        "sv": "kompetenspoäng",
-                        "en": "ECVET competence points"
-                      },
-                      "lyhytNimi": {
-                        "fi": "osp",
-                        "sv": "kp",
-                        "en": "competence points"
-                      },
-                      "koodistoUri": "opintojenlaajuusyksikko",
-                      "koodistoVersio": 1
-                    }
-                  }
+                  "laajuus": 1
                 },
                 "arviointi": [
                   {
@@ -2478,24 +2277,7 @@
                     "koodistoVersio": 1
                   },
                   "pakollinen": true,
-                  "laajuus": {
-                    "arvo": 3,
-                    "yksikkö": {
-                      "koodiarvo": "6",
-                      "nimi": {
-                        "fi": "osaamispistettä",
-                        "sv": "kompetenspoäng",
-                        "en": "ECVET competence points"
-                      },
-                      "lyhytNimi": {
-                        "fi": "osp",
-                        "sv": "kp",
-                        "en": "competence points"
-                      },
-                      "koodistoUri": "opintojenlaajuusyksikko",
-                      "koodistoVersio": 1
-                    }
-                  }
+                  "laajuus": 3
                 },
                 "arviointi": [
                   {
@@ -2561,24 +2343,7 @@
                     "koodistoVersio": 1
                   },
                   "pakollinen": true,
-                  "laajuus": {
-                    "arvo": 2,
-                    "yksikkö": {
-                      "koodiarvo": "6",
-                      "nimi": {
-                        "fi": "osaamispistettä",
-                        "sv": "kompetenspoäng",
-                        "en": "ECVET competence points"
-                      },
-                      "lyhytNimi": {
-                        "fi": "osp",
-                        "sv": "kp",
-                        "en": "competence points"
-                      },
-                      "koodistoUri": "opintojenlaajuusyksikko",
-                      "koodistoVersio": 1
-                    }
-                  }
+                  "laajuus": 2
                 },
                 "arviointi": [
                   {
@@ -2643,24 +2408,7 @@
                     "koodistoVersio": 1
                   },
                   "pakollinen": true,
-                  "laajuus": {
-                    "arvo": 1,
-                    "yksikkö": {
-                      "koodiarvo": "6",
-                      "nimi": {
-                        "fi": "osaamispistettä",
-                        "sv": "kompetenspoäng",
-                        "en": "ECVET competence points"
-                      },
-                      "lyhytNimi": {
-                        "fi": "osp",
-                        "sv": "kp",
-                        "en": "competence points"
-                      },
-                      "koodistoUri": "opintojenlaajuusyksikko",
-                      "koodistoVersio": 1
-                    }
-                  }
+                  "laajuus": 1
                 },
                 "arviointi": [
                   {
@@ -2726,24 +2474,7 @@
                     "koodistoVersio": 1
                   },
                   "pakollinen": false,
-                  "laajuus": {
-                    "arvo": 4,
-                    "yksikkö": {
-                      "koodiarvo": "6",
-                      "nimi": {
-                        "fi": "osaamispistettä",
-                        "sv": "kompetenspoäng",
-                        "en": "ECVET competence points"
-                      },
-                      "lyhytNimi": {
-                        "fi": "osp",
-                        "sv": "kp",
-                        "en": "competence points"
-                      },
-                      "koodistoUri": "opintojenlaajuusyksikko",
-                      "koodistoVersio": 1
-                    }
-                  }
+                  "laajuus": 4
                 },
                 "arviointi": [
                   {
@@ -2821,24 +2552,7 @@
                 "koodistoVersio": 2
               },
               "pakollinen": false,
-              "laajuus": {
-                "arvo": 8,
-                "yksikkö": {
-                  "koodiarvo": "6",
-                  "nimi": {
-                    "fi": "osaamispistettä",
-                    "sv": "kompetenspoäng",
-                    "en": "ECVET competence points"
-                  },
-                  "lyhytNimi": {
-                    "fi": "osp",
-                    "sv": "kp",
-                    "en": "competence points"
-                  },
-                  "koodistoUri": "opintojenlaajuusyksikko",
-                  "koodistoVersio": 1
-                }
-              }
+              "laajuus": 8
             },
             "tutkinnonOsanRyhmä": {
               "koodiarvo": "2",
@@ -3002,24 +2716,7 @@
                     "koodistoVersio": 1
                   },
                   "pakollinen": true,
-                  "laajuus": {
-                    "arvo": 4,
-                    "yksikkö": {
-                      "koodiarvo": "6",
-                      "nimi": {
-                        "fi": "osaamispistettä",
-                        "sv": "kompetenspoäng",
-                        "en": "ECVET competence points"
-                      },
-                      "lyhytNimi": {
-                        "fi": "osp",
-                        "sv": "kp",
-                        "en": "competence points"
-                      },
-                      "koodistoUri": "opintojenlaajuusyksikko",
-                      "koodistoVersio": 1
-                    }
-                  }
+                  "laajuus": 4
                 },
                 "arviointi": [
                   {
@@ -3085,24 +2782,7 @@
                     "koodistoVersio": 1
                   },
                   "pakollinen": true,
-                  "laajuus": {
-                    "arvo": 2,
-                    "yksikkö": {
-                      "koodiarvo": "6",
-                      "nimi": {
-                        "fi": "osaamispistettä",
-                        "sv": "kompetenspoäng",
-                        "en": "ECVET competence points"
-                      },
-                      "lyhytNimi": {
-                        "fi": "osp",
-                        "sv": "kp",
-                        "en": "competence points"
-                      },
-                      "koodistoUri": "opintojenlaajuusyksikko",
-                      "koodistoVersio": 1
-                    }
-                  }
+                  "laajuus": 2
                 },
                 "arviointi": [
                   {
@@ -3168,24 +2848,7 @@
                     "koodistoVersio": 1
                   },
                   "pakollinen": false,
-                  "laajuus": {
-                    "arvo": 2,
-                    "yksikkö": {
-                      "koodiarvo": "6",
-                      "nimi": {
-                        "fi": "osaamispistettä",
-                        "sv": "kompetenspoäng",
-                        "en": "ECVET competence points"
-                      },
-                      "lyhytNimi": {
-                        "fi": "osp",
-                        "sv": "kp",
-                        "en": "competence points"
-                      },
-                      "koodistoUri": "opintojenlaajuusyksikko",
-                      "koodistoVersio": 1
-                    }
-                  }
+                  "laajuus": 2
                 },
                 "arviointi": [
                   {
@@ -3263,24 +2926,7 @@
                 "koodistoVersio": 2
               },
               "pakollinen": false,
-              "laajuus": {
-                "arvo": 10,
-                "yksikkö": {
-                  "koodiarvo": "6",
-                  "nimi": {
-                    "fi": "osaamispistettä",
-                    "sv": "kompetenspoäng",
-                    "en": "ECVET competence points"
-                  },
-                  "lyhytNimi": {
-                    "fi": "osp",
-                    "sv": "kp",
-                    "en": "competence points"
-                  },
-                  "koodistoUri": "opintojenlaajuusyksikko",
-                  "koodistoVersio": 1
-                }
-              }
+              "laajuus": 10
             },
             "tutkinnonOsanRyhmä": {
               "koodiarvo": "2",
@@ -3444,24 +3090,7 @@
                     "koodistoVersio": 1
                   },
                   "pakollinen": true,
-                  "laajuus": {
-                    "arvo": 2,
-                    "yksikkö": {
-                      "koodiarvo": "6",
-                      "nimi": {
-                        "fi": "osaamispistettä",
-                        "sv": "kompetenspoäng",
-                        "en": "ECVET competence points"
-                      },
-                      "lyhytNimi": {
-                        "fi": "osp",
-                        "sv": "kp",
-                        "en": "competence points"
-                      },
-                      "koodistoUri": "opintojenlaajuusyksikko",
-                      "koodistoVersio": 1
-                    }
-                  }
+                  "laajuus": 2
                 },
                 "arviointi": [
                   {
@@ -3526,24 +3155,7 @@
                     "koodistoVersio": 1
                   },
                   "pakollinen": true,
-                  "laajuus": {
-                    "arvo": 2,
-                    "yksikkö": {
-                      "koodiarvo": "6",
-                      "nimi": {
-                        "fi": "osaamispistettä",
-                        "sv": "kompetenspoäng",
-                        "en": "ECVET competence points"
-                      },
-                      "lyhytNimi": {
-                        "fi": "osp",
-                        "sv": "kp",
-                        "en": "competence points"
-                      },
-                      "koodistoUri": "opintojenlaajuusyksikko",
-                      "koodistoVersio": 1
-                    }
-                  }
+                  "laajuus": 2
                 },
                 "arviointi": [
                   {
@@ -3608,24 +3220,7 @@
                     "koodistoVersio": 1
                   },
                   "pakollinen": true,
-                  "laajuus": {
-                    "arvo": 1,
-                    "yksikkö": {
-                      "koodiarvo": "6",
-                      "nimi": {
-                        "fi": "osaamispistettä",
-                        "sv": "kompetenspoäng",
-                        "en": "ECVET competence points"
-                      },
-                      "lyhytNimi": {
-                        "fi": "osp",
-                        "sv": "kp",
-                        "en": "competence points"
-                      },
-                      "koodistoUri": "opintojenlaajuusyksikko",
-                      "koodistoVersio": 1
-                    }
-                  }
+                  "laajuus": 1
                 },
                 "arviointi": [
                   {
@@ -3690,24 +3285,7 @@
                     "koodistoVersio": 1
                   },
                   "pakollinen": true,
-                  "laajuus": {
-                    "arvo": 1,
-                    "yksikkö": {
-                      "koodiarvo": "6",
-                      "nimi": {
-                        "fi": "osaamispistettä",
-                        "sv": "kompetenspoäng",
-                        "en": "ECVET competence points"
-                      },
-                      "lyhytNimi": {
-                        "fi": "osp",
-                        "sv": "kp",
-                        "en": "competence points"
-                      },
-                      "koodistoUri": "opintojenlaajuusyksikko",
-                      "koodistoVersio": 1
-                    }
-                  }
+                  "laajuus": 1
                 },
                 "arviointi": [
                   {
@@ -3772,24 +3350,7 @@
                     "koodistoVersio": 1
                   },
                   "pakollinen": true,
-                  "laajuus": {
-                    "arvo": 2,
-                    "yksikkö": {
-                      "koodiarvo": "6",
-                      "nimi": {
-                        "fi": "osaamispistettä",
-                        "sv": "kompetenspoäng",
-                        "en": "ECVET competence points"
-                      },
-                      "lyhytNimi": {
-                        "fi": "osp",
-                        "sv": "kp",
-                        "en": "competence points"
-                      },
-                      "koodistoUri": "opintojenlaajuusyksikko",
-                      "koodistoVersio": 1
-                    }
-                  }
+                  "laajuus": 2
                 },
                 "arviointi": [
                   {
@@ -3855,24 +3416,7 @@
                     "koodistoVersio": 1
                   },
                   "pakollinen": false,
-                  "laajuus": {
-                    "arvo": 1,
-                    "yksikkö": {
-                      "koodiarvo": "6",
-                      "nimi": {
-                        "fi": "osaamispistettä",
-                        "sv": "kompetenspoäng",
-                        "en": "ECVET competence points"
-                      },
-                      "lyhytNimi": {
-                        "fi": "osp",
-                        "sv": "kp",
-                        "en": "competence points"
-                      },
-                      "koodistoUri": "opintojenlaajuusyksikko",
-                      "koodistoVersio": 1
-                    }
-                  }
+                  "laajuus": 1
                 },
                 "arviointi": [
                   {
@@ -3938,24 +3482,7 @@
                     "koodistoVersio": 1
                   },
                   "pakollinen": true,
-                  "laajuus": {
-                    "arvo": 1,
-                    "yksikkö": {
-                      "koodiarvo": "6",
-                      "nimi": {
-                        "fi": "osaamispistettä",
-                        "sv": "kompetenspoäng",
-                        "en": "ECVET competence points"
-                      },
-                      "lyhytNimi": {
-                        "fi": "osp",
-                        "sv": "kp",
-                        "en": "competence points"
-                      },
-                      "koodistoUri": "opintojenlaajuusyksikko",
-                      "koodistoVersio": 1
-                    }
-                  }
+                  "laajuus": 1
                 },
                 "arviointi": [
                   {

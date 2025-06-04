@@ -26,6 +26,7 @@ import scala.io.Source
 class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
 
   private val hakukohde: Hakukohde = new Hakukohde("123", new JHashMap[String, String])
+  private val kkhakukohde: Hakukohde = new Hakukohde("123", new JHashMap[String, String], true)
 
   private val suoritukset: JHashMap[String, JList[JMap[String, String]]] =
     new JHashMap[String, JList[JMap[String, String]]]
@@ -92,6 +93,22 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
     suoritukset,
     loadJson("koski-reforminmukainen-jossa_ytokoodi_paikallisella_tutkinnonosalla.json")
   )
+  private val hakemusJossaMukautettujaArvosanoja =
+    TestHakemus(
+      "6.6.6.6",
+      Nil,
+      Map(),
+      suoritukset,
+      loadJson("koski-sisaltaa-mukautettuja-arvosanoja.json")
+    )
+  private val hakemusJossaKorotuksiaMukautetuillaArvosanoilla =
+    TestHakemus(
+      "6.6.6.7",
+      Nil,
+      Map(),
+      suoritukset,
+      loadJson("koski-arvosanat-ja-korotuksia-mukautetuilla-arvosanoilla.json")
+    )
 
   test("Tutkinnon yhteisten tutkinnon osien arvosanat") {
     val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(
@@ -448,6 +465,26 @@ class AmmatillisetArvosanatLaskentaTest extends AnyFunSuite {
       ytoKeskiarvoLasku
     )
     assert(arviointiasteikkoTulos.contains(new java.math.BigDecimal("3.2222")))
+  }
+
+  test("Suoritukset joissa mukautettuja arvosanoja, jätetään huomioimatta korkekoulu hauissa") {
+    val lasku = Laskentadomainkonvertteri.muodostaLukuarvolasku(
+      createLaskeAmmatillisenTutkinnonOsienKeskiarvoKutsu()
+    )
+    val (tulos, _) = Laskin.laske(kkhakukohde, hakemusJossaMukautettujaArvosanoja, lasku)
+    assert(BigDecimal(tulos.get) == BigDecimal("4.3793"))
+  }
+
+  test("Arvosanojen korotukset mukautetuilla arvosanoilla jätetään huomioimatta") {
+    val (tulos, _) = Laskin.laske(
+      kkhakukohde,
+      hakemusJossaKorotuksiaMukautetuillaArvosanoilla,
+      Laskentadomainkonvertteri.muodostaLukuarvolasku(
+        createHaeAmmatillisenTutkinnonOsienKeskiarvoKutsu()
+      )
+    )
+    assert(BigDecimal(tulos.get) == BigDecimal("1.0"))
+
   }
 
   def createHaeAmmatillinenYtoArvosanaKutsu(
