@@ -4,6 +4,7 @@ import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.REA
 import static fi.vm.sade.service.valintaperusteet.roles.ValintaperusteetRole.UPDATE_CRUD;
 
 import fi.vm.sade.service.valintaperusteet.dto.*;
+import fi.vm.sade.service.valintaperusteet.dto.HakukohdeKoosteTietoDTO;
 import fi.vm.sade.service.valintaperusteet.dto.mapping.ValintaperusteetModelMapper;
 import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
 import fi.vm.sade.service.valintaperusteet.model.*;
@@ -276,6 +277,16 @@ public class ValintalaskentakoostepalveluResource {
     List<HakukohdeViite> hakukohteet =
         hakukohdeService.haunHakukohteet(hakuOid, vainValintakokeelliset);
     return modelMapper.mapList(hakukohteet, HakukohdeViiteDTO.class);
+  }
+
+  @PreAuthorize(READ_UPDATE_CRUD)
+  @GetMapping(
+      value = "/hakukohde/haku/{hakuOid}/koostetiedot",
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  @Operation(summary = "Hakee haun hakukohteiden koostettuja tietoja")
+  public List<HakukohdeKoosteTietoDTO> haunHakukohdeTiedot(
+      @PathVariable("hakuOid") final String hakuOid) {
+    return hakukohdeService.haunHakukohdeTiedot(hakuOid);
   }
 
   @PreAuthorize(READ_UPDATE_CRUD)

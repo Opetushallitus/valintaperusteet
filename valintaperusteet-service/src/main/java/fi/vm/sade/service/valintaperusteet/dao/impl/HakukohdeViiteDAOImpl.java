@@ -1,13 +1,16 @@
 package fi.vm.sade.service.valintaperusteet.dao.impl;
 
+import com.querydsl.core.Tuple;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.DateTimeExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import fi.vm.sade.service.valintaperusteet.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
+import fi.vm.sade.service.valintaperusteet.dto.HakukohdeKoosteTietoDTO;
 import fi.vm.sade.service.valintaperusteet.model.*;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Repository;
 
@@ -83,7 +86,6 @@ public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Lo
   @Override
   public List<HakukohdeViite> readByOids(List<String> oids) {
     QHakukohdeViite hakukohdeViite = QHakukohdeViite.hakukohdeViite;
-    QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
     return queryFactory()
         .selectFrom(hakukohdeViite)
         .leftJoin(hakukohdeViite.hakukohteenValintaperusteet)
@@ -129,6 +131,34 @@ public class HakukohdeViiteDAOImpl extends AbstractJpaDAOImpl<HakukohdeViite, Lo
         .fetchJoin()
         .where(hakukohdeViite.valintaryhma.oid.eq(oid))
         .fetch();
+  }
+
+  @Override
+  public List<HakukohdeKoosteTietoDTO> haunHakukohdeTiedot(String hakuOid) {
+    QHakukohdeViite hakukohdeViite = QHakukohdeViite.hakukohdeViite;
+    QValinnanVaihe vv = QValinnanVaihe.valinnanVaihe;
+    QValintatapajono jono = QValintatapajono.valintatapajono;
+    DateTimeExpression<Date> varasijatayttoPaattyy = jono.varasijojaTaytetaanAsti.max();
+    BooleanExpression hasValintakoe = hakukohdeViite.valintakokeet.size().max().gt(0);
+    List<Tuple> result =
+        queryFactory()
+            .query()
+            .select(hakukohdeViite.oid, varasijatayttoPaattyy, hasValintakoe)
+            .from(hakukohdeViite)
+            .leftJoin(hakukohdeViite.valinnanvaiheet, vv)
+            .on(vv.aktiivinen.eq(true))
+            .leftJoin(vv.jonot, jono)
+            .on(jono.aktiivinen.eq(true))
+            .where(hakukohdeViite.hakuoid.eq(hakuOid))
+            .groupBy(hakukohdeViite.oid)
+            .fetch();
+
+    return result.stream()
+        .map(
+            t ->
+                new HakukohdeKoosteTietoDTO(
+                    t.get(hakukohdeViite.oid), t.get(hasValintakoe), t.get(varasijatayttoPaattyy)))
+        .toList();
   }
 
   @Override

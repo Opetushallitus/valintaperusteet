@@ -11,7 +11,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.service.valintaperusteet.ObjectMapperProvider;
 import fi.vm.sade.service.valintaperusteet.WithSpringBoot;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
-import fi.vm.sade.service.valintaperusteet.dao.ValinnanVaiheDAO;
 import fi.vm.sade.service.valintaperusteet.dto.*;
 import fi.vm.sade.service.valintaperusteet.model.JsonViews;
 import fi.vm.sade.service.valintaperusteet.util.TestUtil;
@@ -41,8 +40,6 @@ public class HakukohdeResourceTest extends WithSpringBoot {
 
   @Autowired private ApplicationContext applicationContext;
 
-  @Autowired ValinnanVaiheDAO valinnanVaiheDao;
-
   @BeforeEach
   public void setUp() {
     applicationContext.getAutowireCapableBeanFactory().autowireBean(hakukohdeResource);
@@ -60,14 +57,14 @@ public class HakukohdeResourceTest extends WithSpringBoot {
   @Test
   public void testFindAll() throws Exception {
     List<HakukohdeViiteDTO> hakukohdeViites = hakukohdeResource.query(false);
-    assertEquals(32, hakukohdeViites.size());
+    assertEquals(33, hakukohdeViites.size());
     testUtil.lazyCheck(JsonViews.Basic.class, hakukohdeViites);
   }
 
   @Test
   public void testFindRoot() throws Exception {
     List<HakukohdeViiteDTO> hakukohdeViites = hakukohdeResource.query(true);
-    assertEquals(17, hakukohdeViites.size());
+    assertEquals(18, hakukohdeViites.size());
     testUtil.lazyCheck(JsonViews.Basic.class, hakukohdeViites);
   }
 

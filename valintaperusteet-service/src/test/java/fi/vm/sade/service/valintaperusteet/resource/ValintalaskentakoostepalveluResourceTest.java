@@ -1,18 +1,17 @@
 package fi.vm.sade.service.valintaperusteet.resource;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 import fi.vm.sade.service.valintaperusteet.WithSpringBoot;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
+import fi.vm.sade.service.valintaperusteet.dto.HakukohdeKoosteTietoDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheJonoillaDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteetDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteetValinnanVaiheDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoJarjestyskriteereillaDTO;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,5 +76,52 @@ public class ValintalaskentakoostepalveluResourceTest extends WithSpringBoot {
         assertEquals(prioriteetti, valintatapajonoDTO.getPrioriteetti());
       }
     }
+  }
+
+  @Test
+  public void testKoostetiedotPalauttaaOikeanMaaranEikaDuplikaattiHakukohteita() {
+    List<HakukohdeKoosteTietoDTO> tiedot =
+        valintalaskentakoostepalveluResource.haunHakukohdeTiedot("hakuoid1");
+    assertEquals(32, tiedot.size());
+
+    Set<String> hakukohdeOids =
+        tiedot.stream().map(t -> t.hakukohdeOid).collect(Collectors.toSet());
+    assertEquals(tiedot.size(), hakukohdeOids.size());
+  }
+
+  @Test
+  public void testKoostetiedotPalauttaaTiedonOnkoHaunHakukohteillaValintakoe() {
+    List<HakukohdeKoosteTietoDTO> tiedot =
+        valintalaskentakoostepalveluResource.haunHakukohdeTiedot("hakuoid1");
+
+    Set<String> withValintakoe =
+        tiedot.stream()
+            .filter(t -> t.hasValintakoe)
+            .map(t -> t.hakukohdeOid)
+            .collect(Collectors.toSet());
+
+    List<String> expectedWithValintakoe = Arrays.asList("oid17", "oid18", "oid19", "oid23");
+    assertEquals(expectedWithValintakoe.size(), withValintakoe.size());
+    assertTrue(withValintakoe.containsAll(expectedWithValintakoe));
+  }
+
+  @Test
+  public void testKoostetiedotPalautaaTiedonMilloinHakukohteenVarasijatayttoPaattyy() {
+    List<HakukohdeKoosteTietoDTO> tiedot =
+        valintalaskentakoostepalveluResource.haunHakukohdeTiedot("hakuoid1");
+
+    Set<String> varasijatayttoPaattyyNotNull =
+        tiedot.stream()
+            .filter(t -> t.varasijatayttoPaattyy != null)
+            .map(t -> t.hakukohdeOid)
+            .collect(Collectors.toSet());
+
+    assertEquals(1, varasijatayttoPaattyyNotNull.size());
+    assertTrue(varasijatayttoPaattyyNotNull.contains("oid18"));
+
+    HakukohdeKoosteTietoDTO tietoOid18 =
+        tiedot.stream().filter(t -> t.hakukohdeOid.equals("oid18")).findFirst().orElse(null);
+    assertNotNull(tietoOid18);
+    assertEquals("2023-01-20 00:00:00.0", tietoOid18.varasijatayttoPaattyy.toString());
   }
 }
