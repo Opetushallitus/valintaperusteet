@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+// @Transactional .. do not change this, otherwise you risk doing lazy loading here
 public class PuuServiceImpl implements PuuService {
   @Autowired private ValintaryhmaDAO valintaryhmaDAO;
 
@@ -31,15 +32,13 @@ public class PuuServiceImpl implements PuuService {
     List<Valintaryhma> valintaryhmaList;
     if (valintaryhmaOid != null && !valintaryhmaOid.isEmpty()) {
       valintaryhmaList =
-          Collections.singletonList(valintaryhmaDAO.findAllFetchAlavalintaryhmat(valintaryhmaOid));
-    } else if (hakuOid != null && !hakuOid.isEmpty()) {
-      valintaryhmaList = valintaryhmaDAO.findAllByHakuOidFetchAlavalintaryhmat(hakuOid);
+          Arrays.asList(valintaryhmaDAO.findAllFetchAlavalintaryhmat(valintaryhmaOid));
     } else {
       valintaryhmaList = valintaryhmaDAO.findAllFetchAlavalintaryhmat();
     }
-    List<ValintaperustePuuDTO> parentList = new ArrayList<>();
-    Map<Long, ValintaperustePuuDTO> dtoMap = new HashMap<>();
-    List<Valintaryhma> parents = new ArrayList<>();
+    List<ValintaperustePuuDTO> parentList = new ArrayList<ValintaperustePuuDTO>();
+    Map<Long, ValintaperustePuuDTO> dtoMap = new HashMap<Long, ValintaperustePuuDTO>();
+    List<Valintaryhma> parents = new ArrayList<Valintaryhma>();
     for (Valintaryhma valintaryhma : valintaryhmaList) {
       if (kohdejoukko.isEmpty()) {
         if (valintaryhma.getYlavalintaryhma() == null) {
@@ -100,7 +99,6 @@ public class PuuServiceImpl implements PuuService {
     valintaperustePuuDTO.setOid(valintaryhma.getOid());
     valintaperustePuuDTO.setKohdejoukko(valintaryhma.getKohdejoukko());
     valintaperustePuuDTO.setViimeinenKaynnistyspaiva(valintaryhma.getViimeinenKaynnistyspaiva());
-    valintaperustePuuDTO.setHakuOid(valintaryhma.getHakuoid());
     for (Organisaatio organisaatio : valintaryhma.getOrganisaatiot()) {
       valintaperustePuuDTO.getOrganisaatiot().add(convert(organisaatio));
     }
