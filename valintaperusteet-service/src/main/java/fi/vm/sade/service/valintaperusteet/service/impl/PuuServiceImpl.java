@@ -32,8 +32,8 @@ public class PuuServiceImpl implements PuuService {
     if (valintaryhmaOid != null && !valintaryhmaOid.isEmpty()) {
       valintaryhmaList =
           Collections.singletonList(valintaryhmaDAO.findAllFetchAlavalintaryhmat(valintaryhmaOid));
-    } else if (hakuOid != null && !hakuOid.isEmpty()) {
-      valintaryhmaList = valintaryhmaDAO.findAllByHakuOidFetchAlavalintaryhmat(hakuOid);
+      /*    } else if (hakuOid != null && !hakuOid.isEmpty()) {
+      valintaryhmaList = valintaryhmaDAO.findAllByHakuOidFetchAlavalintaryhmat(hakuOid);*/
     } else {
       valintaryhmaList = valintaryhmaDAO.findAllFetchAlavalintaryhmat();
     }
