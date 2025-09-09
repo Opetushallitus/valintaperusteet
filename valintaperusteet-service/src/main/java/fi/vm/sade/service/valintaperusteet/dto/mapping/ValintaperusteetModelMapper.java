@@ -59,18 +59,9 @@ public class ValintaperusteetModelMapper extends ModelMapper {
                   MappingContext<List<ValintaperusteViiteDTO>, Set<ValintaperusteViite>> context) {
                 Set<ValintaperusteViite> result = new TreeSet<ValintaperusteViite>();
 
-                int suurinIndeksi =
-                    context.getSource().stream()
-                        .filter(v -> v.getIndeksi() != null)
-                        .map(v -> v.getIndeksi())
-                        .max(Integer::compareTo)
-                        .orElse(0);
                 for (int i = 0; i < context.getSource().size(); i++) {
                   ValintaperusteViiteDTO arg = context.getSource().get(i);
-                  if (arg.getIndeksi() == null) {
-                    // jos indeksiä ei määritelty niin lisätään listan loppuun
-                    arg.setIndeksi(++suurinIndeksi);
-                  }
+                  arg.setIndeksi(i + 1);
                   ValintaperusteViite viite = map(arg, ValintaperusteViite.class);
                   if ((viite.getEpasuoraViittaus() == null || !viite.getEpasuoraViittaus())
                       && Valintaperustelahde.HAKUKOHTEEN_SYOTETTAVA_ARVO.equals(viite.getLahde())) {
@@ -487,18 +478,9 @@ public class ValintaperusteetModelMapper extends ModelMapper {
   }
 
   public Funktiokutsu asetaIndeksitRekursiivisesti(FunktioargumentinLapsiDTO kutsu) {
-    int suurinIndeksi =
-        kutsu.getFunktioargumentit().stream()
-            .filter(v -> v.getIndeksi() != null)
-            .map(v -> v.getIndeksi())
-            .max(Integer::compareTo)
-            .orElse(0);
     for (int i = 0; i < kutsu.getFunktioargumentit().size(); i++) {
       FunktioargumenttiDTO arg = kutsu.getFunktioargumentit().get(i);
-      if (arg.getIndeksi() == null) {
-        // jos indeksi ei määritelty niin laitetaan listan loppuun
-        arg.setIndeksi(++suurinIndeksi);
-      }
+      arg.setIndeksi(i + 1);
       if (arg.getLapsi() != null
           && arg.getLapsi().getLapsityyppi().equals(FunktioargumentinLapsiDTO.FUNKTIOKUTSUTYYPPI)) {
         asetaIndeksitRekursiivisesti(arg.getLapsi());
