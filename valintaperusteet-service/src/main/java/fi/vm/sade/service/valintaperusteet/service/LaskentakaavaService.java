@@ -6,11 +6,9 @@ import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaDTO;
 import fi.vm.sade.service.valintaperusteet.dto.LaskentakaavaSiirraDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
 import fi.vm.sade.service.valintaperusteet.dto.model.Laskentamoodi;
-import fi.vm.sade.service.valintaperusteet.model.Funktiokutsu;
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.Laskentakaava;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
-import fi.vm.sade.service.valintaperusteet.service.exception.FunktiokutsuMuodostaaSilmukanException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -23,8 +21,6 @@ public interface LaskentakaavaService {
   HakukohteenValintaperusteAvaimetDTO findHakukohteenAvaimet(String oid);
 
   Laskentakaava validoi(LaskentakaavaDTO laskentakaava);
-
-  Funktiokutsu haeMallinnettuFunktiokutsu(Long id) throws FunktiokutsuMuodostaaSilmukanException;
 
   boolean onkoKaavaValidi(Laskentakaava laskentakaava);
 
