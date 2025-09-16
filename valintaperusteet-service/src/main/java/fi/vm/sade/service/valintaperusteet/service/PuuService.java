@@ -11,4 +11,7 @@ public interface PuuService {
       boolean hakukohteet,
       String kohdejoukko,
       String valintaryhmaOid);
+
+  List<ValintaperustePuuDTO> searchByHaku(
+          String hakuOid);
 }

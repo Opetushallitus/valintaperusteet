@@ -152,6 +152,19 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long>
         .fetch();
   }
 
+  public List<Valintaryhma> findAllByHakukohteetWithoutHakuoidFetchAlavalintaryhmat(String hakuOid, List<String> hakukohdeOids) {
+    QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
+    return queryFactory()
+            .selectFrom(valintaryhma)
+            .leftJoin(valintaryhma.alavalintaryhmat)
+            .fetchJoin()
+            .leftJoin(valintaryhma.organisaatiot)
+            .fetchJoin()
+            .where(valintaryhma.hakuoid.eq(hakuOid))
+            .distinct()
+            .fetch();
+  }
+
   @Override
   public List<Valintaryhma> haeHakukohdekoodinJaValintakoekoodienMukaan(
       String hakuOid, String hakukohdekoodiUri, Set<String> valintakoekoodiUrit) {

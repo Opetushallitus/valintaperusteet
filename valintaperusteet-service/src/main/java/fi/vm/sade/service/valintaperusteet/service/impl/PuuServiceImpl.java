@@ -32,8 +32,6 @@ public class PuuServiceImpl implements PuuService {
     if (valintaryhmaOid != null && !valintaryhmaOid.isEmpty()) {
       valintaryhmaList =
           Collections.singletonList(valintaryhmaDAO.findAllFetchAlavalintaryhmat(valintaryhmaOid));
-      /*    } else if (hakuOid != null && !hakuOid.isEmpty()) {
-      valintaryhmaList = valintaryhmaDAO.findAllByHakuOidFetchAlavalintaryhmat(hakuOid);*/
     } else {
       valintaryhmaList = valintaryhmaDAO.findAllFetchAlavalintaryhmat();
     }
@@ -65,6 +63,45 @@ public class PuuServiceImpl implements PuuService {
       }
     }
     return parentList;
+  }
+
+  public List<ValintaperustePuuDTO> searchByHaku(
+          String hakuOid) {
+    List<Valintaryhma> valintaryhmaList = valintaryhmaDAO.findAllByHakuOidFetchAlavalintaryhmat(hakuOid);
+    List<HakukohdeViite> hakukohteet = hakukohdeViiteDAO.haunHakukohteet(hakuOid, false);
+    if (!hakukohteet.isEmpty()) {
+      List<Valintaryhma> kaikkiRyhmat = valintaryhmaDAO.findAllFetchAlavalintaryhmat();
+      valintaryhmaList.addAll(kaikkiRyhmat.stream()
+              .filter(r -> !r.getHakuoid().equals(hakuOid) && containsHakukohde(r, hakukohteet)).toList());
+    }
+    List<ValintaperustePuuDTO> parentList = new ArrayList<>();
+    Map<Long, ValintaperustePuuDTO> dtoMap = new HashMap<>();
+    List<Valintaryhma> parents = new ArrayList<>();
+    for (Valintaryhma valintaryhma : valintaryhmaList) {
+      if (valintaryhma.getYlavalintaryhma() == null) {
+        parents.add(valintaryhma);
+      } else {
+        if (valintaryhma.getYlavalintaryhma() == null
+                && (valintaryhma.getKohdejoukko() == null
+                || valintaryhma.getKohdejoukko().isEmpty())) {
+          parents.add(valintaryhma);
+        }
+      }
+    }
+    for (Valintaryhma valintaryhma : parents) {
+      ValintaperustePuuDTO dto = convert(valintaryhma, dtoMap);
+      parentList.add(dto);
+    }
+    List<HakukohdeViite> hakukohdeList = hakukohdeViiteDAO.search(hakuOid, new ArrayList<>(), "");
+    for (HakukohdeViite hakukohdeViite : hakukohdeList) {
+      attach(hakukohdeViite, dtoMap, parentList);
+    }
+    return parentList;
+  }
+
+  private boolean containsHakukohde(Valintaryhma ryhma, List<HakukohdeViite> hakukohteet) {
+    boolean intersects = ryhma.getHakukohdeViitteet().stream().anyMatch(hakukohteet::contains);
+    return intersects || ryhma.getAlavalintaryhmat().stream().anyMatch(ar -> containsHakukohde(ar, hakukohteet));
   }
 
   private void attach(
