@@ -73,7 +73,11 @@ public class PuuServiceImpl implements PuuService {
       List<Valintaryhma> kaikkiRyhmat = valintaryhmaDAO.findAllFetchAlavalintaryhmat();
       valintaryhmaList.addAll(
           kaikkiRyhmat.stream()
-              .filter(r -> !r.getHakuoid().equals(hakuOid) && containsHakukohde(r, hakukohteet))
+              .filter(
+                  r ->
+                      (r.getHakuoid() == null || !r.getHakuoid().equals(hakuOid))
+                          && containsHakukohde(r, hakukohteet))
+              .distinct()
               .toList());
     }
     List<ValintaperustePuuDTO> parentList = new ArrayList<>();
