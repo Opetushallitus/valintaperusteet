@@ -43,7 +43,7 @@ public class PuuResource {
   @PreAuthorize(READ_UPDATE_CRUD)
   @Operation(summary = "Hakee valintaryhmähierarkiat haulle")
   public List<ValintaperustePuuDTO> search(
-          @PathVariable(value = "hakuOid", required = false) final String hakuOid) {
+      @PathVariable(value = "hakuOid", required = false) final String hakuOid) {
     return puuService.searchByHaku(hakuOid);
   }
 }

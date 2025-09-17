@@ -65,14 +65,16 @@ public class PuuServiceImpl implements PuuService {
     return parentList;
   }
 
-  public List<ValintaperustePuuDTO> searchByHaku(
-          String hakuOid) {
-    List<Valintaryhma> valintaryhmaList = valintaryhmaDAO.findAllByHakuOidFetchAlavalintaryhmat(hakuOid);
+  public List<ValintaperustePuuDTO> searchByHaku(String hakuOid) {
+    List<Valintaryhma> valintaryhmaList =
+        valintaryhmaDAO.findAllByHakuOidFetchAlavalintaryhmat(hakuOid);
     List<HakukohdeViite> hakukohteet = hakukohdeViiteDAO.haunHakukohteet(hakuOid, false);
     if (!hakukohteet.isEmpty()) {
       List<Valintaryhma> kaikkiRyhmat = valintaryhmaDAO.findAllFetchAlavalintaryhmat();
-      valintaryhmaList.addAll(kaikkiRyhmat.stream()
-              .filter(r -> !r.getHakuoid().equals(hakuOid) && containsHakukohde(r, hakukohteet)).toList());
+      valintaryhmaList.addAll(
+          kaikkiRyhmat.stream()
+              .filter(r -> !r.getHakuoid().equals(hakuOid) && containsHakukohde(r, hakukohteet))
+              .toList());
     }
     List<ValintaperustePuuDTO> parentList = new ArrayList<>();
     Map<Long, ValintaperustePuuDTO> dtoMap = new HashMap<>();
@@ -82,8 +84,7 @@ public class PuuServiceImpl implements PuuService {
         parents.add(valintaryhma);
       } else {
         if (valintaryhma.getYlavalintaryhma() == null
-                && (valintaryhma.getKohdejoukko() == null
-                || valintaryhma.getKohdejoukko().isEmpty())) {
+            && (valintaryhma.getKohdejoukko() == null || valintaryhma.getKohdejoukko().isEmpty())) {
           parents.add(valintaryhma);
         }
       }
@@ -101,7 +102,8 @@ public class PuuServiceImpl implements PuuService {
 
   private boolean containsHakukohde(Valintaryhma ryhma, List<HakukohdeViite> hakukohteet) {
     boolean intersects = ryhma.getHakukohdeViitteet().stream().anyMatch(hakukohteet::contains);
-    return intersects || ryhma.getAlavalintaryhmat().stream().anyMatch(ar -> containsHakukohde(ar, hakukohteet));
+    return intersects
+        || ryhma.getAlavalintaryhmat().stream().anyMatch(ar -> containsHakukohde(ar, hakukohteet));
   }
 
   private void attach(

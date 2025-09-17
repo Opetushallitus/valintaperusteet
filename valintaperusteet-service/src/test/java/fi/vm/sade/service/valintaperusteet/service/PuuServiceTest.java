@@ -7,7 +7,6 @@ import fi.vm.sade.service.valintaperusteet.WithSpringBoot;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dto.*;
 import java.util.List;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -25,11 +24,10 @@ public class PuuServiceTest extends WithSpringBoot {
     assertTrue(puu.get(0).getAlavalintaryhmat().isEmpty());
   }
 
-  @Disabled
   @Test
   public void haeValintaryhmaPuuHaulla() {
     final String hakuOid = "uusiHakuOid";
-    List<ValintaperustePuuDTO> puu = puuService.search(hakuOid, List.of(), "", true, "", null);
+    List<ValintaperustePuuDTO> puu = puuService.searchByHaku(hakuOid);
     assertEquals(1, puu.size());
     assertEquals(puu.get(0).getHakuOid(), hakuOid);
     assertTrue(puu.get(0).getAlavalintaryhmat().isEmpty());
