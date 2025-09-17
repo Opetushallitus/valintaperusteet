@@ -29,50 +29,27 @@
         "koodistoVersio": 2
       }
     },
-    "koulutustoimija": {
-      "oid": "1.2.246.562.10.67019405611",
-      "nimi": {
-        "fi": "Kajaanin kaupunki"
-      },
-      "yTunnus": "0214958-9",
-      "kotipaikka": {
-        "koodiarvo": "205",
-        "nimi": {
-          "fi": "Kajaani",
-          "sv": "Kajana"
-        },
-        "koodistoUri": "kunta",
-        "koodistoVersio": 2
-      }
-    },
-    "ostettu": false,
     "tila": {
       "opiskeluoikeusjaksot": [
         {
-          "alku": "2017-02-22",
-          "tila": {
-            "koodiarvo": "lasna",
-            "nimi": {
-              "fi": "Läsnä",
-              "sv": "Närvarande",
-              "en": "Present"
-            },
-            "koodistoUri": "koskiopiskeluoikeudentila",
-            "koodistoVersio": 1
-          }
+          "koodiarvo": "lasna",
+          "nimi": {
+            "fi": "Läsnä",
+            "sv": "Närvarande",
+            "en": "Present"
+          },
+          "koodistoUri": "koskiopiskeluoikeudentila",
+          "koodistoVersio": 1
         },
         {
-          "alku": "2019-02-22",
-          "tila": {
-            "koodiarvo": "valmistunut",
-            "nimi": {
-              "fi": "Valmistunut",
-              "sv": "Utexaminerad",
-              "en": "Graduated"
-            },
-            "koodistoUri": "koskiopiskeluoikeudentila",
-            "koodistoVersio": 1
-          }
+          "koodiarvo": "valmistunut",
+          "nimi": {
+            "fi": "Valmistunut",
+            "sv": "Utexaminerad",
+            "en": "Graduated"
+          },
+          "koodistoUri": "koskiopiskeluoikeudentila",
+          "koodistoVersio": 1
         }
       ]
     },
@@ -127,32 +104,6 @@
           },
           "koodistoUri": "ammatillisentutkinnonsuoritustapa",
           "koodistoVersio": 1
-        },
-        "toimipiste": {
-          "oid": "1.2.246.562.10.62363571621",
-          "oppilaitosnumero": {
-            "koodiarvo": "10074",
-            "nimi": {
-              "fi": "Kainuun ammattiopisto"
-            },
-            "lyhytNimi": {
-              "fi": "Kainuun ammattiopisto"
-            },
-            "koodistoUri": "oppilaitosnumero",
-            "koodistoVersio": 1
-          },
-          "nimi": {
-            "fi": "Kainuun ammattiopisto"
-          },
-          "kotipaikka": {
-            "koodiarvo": "205",
-            "nimi": {
-              "fi": "Kajaani",
-              "sv": "Kajana"
-            },
-            "koodistoUri": "kunta",
-            "koodistoVersio": 2
-          }
         },
         "vahvistus": {
           "päivä": "2019-02-22",
@@ -226,21 +177,6 @@
             }
           ]
         },
-        "suorituskieli": {
-          "koodiarvo": "FI",
-          "nimi": {
-            "fi": "suomi",
-            "sv": "finska",
-            "en": "Finnish"
-          },
-          "lyhytNimi": {
-            "fi": "suomi",
-            "sv": "finska",
-            "en": "Finnish"
-          },
-          "koodistoUri": "kieli",
-          "koodistoVersio": 1
-        },
         "osasuoritukset": [
           {
             "koulutusmoduuli": {
@@ -258,33 +194,7 @@
                 "koodistoVersio": 2
               },
               "pakollinen": false,
-              "laajuus": {
-                "arvo": 5.0,
-                "yksikkö": {
-                  "koodiarvo": "6",
-                  "nimi": {
-                    "fi": "osaamispistettä",
-                    "sv": "kompetenspoäng",
-                    "en": "ECVET competence points"
-                  },
-                  "lyhytNimi": {
-                    "fi": "osp",
-                    "sv": "kp",
-                    "en": "competence points"
-                  },
-                  "koodistoUri": "opintojenlaajuusyksikko",
-                  "koodistoVersio": 1
-                }
-              }
-            },
-            "tutkinnonOsanRyhmä": {
-              "koodiarvo": "1",
-              "nimi": {
-                "fi": "Ammatilliset tutkinnon osat",
-                "sv": "Yrkesinriktade examensdelar"
-              },
-              "koodistoUri": "ammatillisentutkinnonosanryhma",
-              "koodistoVersio": 1
+              "laajuus": 5.0
             },
             "arviointi": [
               {
@@ -303,6 +213,8 @@
                 "hyväksytty": true
               }
             ],
+            "keskiarvoSisältääMukautettujaArvosanoja": false,
+            "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
             "tyyppi": {
               "koodiarvo": "ammatillisentutkinnonosa",
               "nimi": {
@@ -330,33 +242,7 @@
                 "koodistoVersio": 2
               },
               "pakollinen": false,
-              "laajuus": {
-                "arvo": 5.0,
-                "yksikkö": {
-                  "koodiarvo": "6",
-                  "nimi": {
-                    "fi": "osaamispistettä",
-                    "sv": "kompetenspoäng",
-                    "en": "ECVET competence points"
-                  },
-                  "lyhytNimi": {
-                    "fi": "osp",
-                    "sv": "kp",
-                    "en": "competence points"
-                  },
-                  "koodistoUri": "opintojenlaajuusyksikko",
-                  "koodistoVersio": 1
-                }
-              }
-            },
-            "tutkinnonOsanRyhmä": {
-              "koodiarvo": "2",
-              "nimi": {
-                "fi": "Yhteiset tutkinnon osat",
-                "sv": "Gemensamma examensdelar"
-              },
-              "koodistoUri": "ammatillisentutkinnonosanryhma",
-              "koodistoVersio": 1
+              "laajuus": 5.0
             },
             "arviointi": [
               {
@@ -375,6 +261,8 @@
                 "hyväksytty": true
               }
             ],
+            "keskiarvoSisältääMukautettujaArvosanoja": true,
+            "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
             "tyyppi": {
               "koodiarvo": "ammatillisentutkinnonosa",
               "nimi": {
@@ -402,33 +290,7 @@
                 "koodistoVersio": 2
               },
               "pakollinen": false,
-              "laajuus": {
-                "arvo": 5.0,
-                "yksikkö": {
-                  "koodiarvo": "6",
-                  "nimi": {
-                    "fi": "osaamispistettä",
-                    "sv": "kompetenspoäng",
-                    "en": "ECVET competence points"
-                  },
-                  "lyhytNimi": {
-                    "fi": "osp",
-                    "sv": "kp",
-                    "en": "competence points"
-                  },
-                  "koodistoUri": "opintojenlaajuusyksikko",
-                  "koodistoVersio": 1
-                }
-              }
-            },
-            "tutkinnonOsanRyhmä": {
-              "koodiarvo": "3",
-              "nimi": {
-                "fi": "Vapaasti valittavat tutkinnon osat",
-                "sv": "Fritt valbara examensdelar"
-              },
-              "koodistoUri": "ammatillisentutkinnonosanryhma",
-              "koodistoVersio": 1
+              "laajuus": 5.0
             },
             "arviointi": [
               {
@@ -447,6 +309,8 @@
                 "hyväksytty": true
               }
             ],
+            "keskiarvoSisältääMukautettujaArvosanoja": false,
+            "korotettuKeskiarvoSisältääMukautettujaArvosanoja": false,
             "tyyppi": {
               "koodiarvo": "ammatillisentutkinnonosa",
               "nimi": {
@@ -482,8 +346,6 @@
       },
       "koodistoUri": "opiskeluoikeudentyyppi",
       "koodistoVersio": 1
-    },
-    "alkamispäivä": "2017-02-22",
-    "päättymispäivä": "2019-02-22"
+    }
   }
 ]

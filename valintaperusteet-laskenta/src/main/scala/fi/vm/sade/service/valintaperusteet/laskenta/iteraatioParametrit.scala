@@ -12,7 +12,8 @@ sealed trait IteraatioParametri {
 
 case class AmmatillisenPerustutkinnonValitsija(
   tutkinto: Tutkinto,
-  valmistumisenTakarajaPvm: LocalDate
+  valmistumisenTakarajaPvm: LocalDate,
+  hylkaaMukautettujaArvosanojaSisaltavatTutkinnot: Boolean
 ) extends IteraatioParametri {
   val tutkinnonIndeksi: Int = tutkinto.indeksi
   override val kuvaus: String = s"Tutkinto ${tutkinto.indeksi + 1} " +
@@ -22,9 +23,19 @@ case class AmmatillisenPerustutkinnonValitsija(
   override val lyhytKuvaus: String = s"Tutkinto ${tutkinto.indeksi + 1}"
 }
 
-case class AmmatillisetPerustutkinnot(tutkinnot: Seq[Tutkinto], valmistumisenTakaraja: LocalDate) {
+case class AmmatillisetPerustutkinnot(
+  tutkinnot: Seq[Tutkinto],
+  valmistumisenTakaraja: LocalDate,
+  hylkaaMukautettujaArvosanojaSisaltavatTutkinnot: Boolean
+) {
   def parametreiksi: Seq[AmmatillisenPerustutkinnonValitsija] =
-    tutkinnot.map(AmmatillisenPerustutkinnonValitsija(_, valmistumisenTakaraja))
+    tutkinnot.map(
+      AmmatillisenPerustutkinnonValitsija(
+        _,
+        valmistumisenTakaraja,
+        hylkaaMukautettujaArvosanojaSisaltavatTutkinnot
+      )
+    )
 }
 
 case class AmmatillisenTutkinnonOsanValitsija(osasuoritus: Osasuoritus, indeksi: Int)
@@ -66,10 +77,11 @@ case class LaskennanIteraatioParametrit(
   ammatillisenPerustutkinnonValitsija: Option[AmmatillisenPerustutkinnonValitsija] = None,
   ammatillisenTutkinnonOsanValitsija: Option[AmmatillisenTutkinnonOsanValitsija] = None,
   ammatillisenTutkinnonYtoOsaAlueenValitsija: Option[AmmatillisenTutkinnonYtoOsaAlueenValitsija] =
-    None
+    None,
+  hylkaaMukautettujaArvosanojaSisaltavatTutkinnot: Boolean = false
 ) {
   val nonEmpty: Boolean =
-    ammatillisenTutkinnonYtoOsaAlueenValitsija.isDefined || ammatillisenTutkinnonOsanValitsija.isDefined || ammatillisenTutkinnonYtoOsaAlueenValitsija.isDefined
+    ammatillisenPerustutkinnonValitsija.isDefined || ammatillisenTutkinnonOsanValitsija.isDefined || ammatillisenTutkinnonYtoOsaAlueenValitsija.isDefined
   val asList: Seq[IteraatioParametri] =
     ammatillisenPerustutkinnonValitsija.toList ++ ammatillisenTutkinnonOsanValitsija.toList ++ ammatillisenTutkinnonYtoOsaAlueenValitsija.toList
 
