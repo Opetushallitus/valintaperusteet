@@ -57,7 +57,7 @@ public class HakukohdeResourceTest extends WithSpringBoot {
   @Test
   public void testFindAll() throws Exception {
     List<HakukohdeViiteDTO> hakukohdeViites = hakukohdeResource.query(false);
-    assertEquals(33, hakukohdeViites.size());
+    assertEquals(34, hakukohdeViites.size());
     testUtil.lazyCheck(JsonViews.Basic.class, hakukohdeViites);
   }
 

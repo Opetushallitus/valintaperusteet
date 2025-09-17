@@ -10,8 +10,10 @@ import fi.vm.sade.service.valintaperusteet.model.Organisaatio;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import fi.vm.sade.service.valintaperusteet.service.PuuService;
 import java.util.*;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PuuServiceImpl implements PuuService {
@@ -65,10 +67,13 @@ public class PuuServiceImpl implements PuuService {
     return parentList;
   }
 
+  @Transactional
   public List<ValintaperustePuuDTO> searchByHaku(String hakuOid) {
     List<Valintaryhma> valintaryhmaList =
         valintaryhmaDAO.findAllByHakuOidFetchAlavalintaryhmat(hakuOid);
-    List<HakukohdeViite> hakukohteet = hakukohdeViiteDAO.haunHakukohteet(hakuOid, false);
+    Map<String, HakukohdeViite> hakukohteet =
+        hakukohdeViiteDAO.haunHakukohteet(hakuOid, false).stream()
+            .collect(Collectors.toMap(HakukohdeViite::getOid, hv -> hv));
     if (!hakukohteet.isEmpty()) {
       List<Valintaryhma> kaikkiRyhmat = valintaryhmaDAO.findAllFetchAlavalintaryhmat();
       valintaryhmaList.addAll(
@@ -104,8 +109,9 @@ public class PuuServiceImpl implements PuuService {
     return parentList;
   }
 
-  private boolean containsHakukohde(Valintaryhma ryhma, List<HakukohdeViite> hakukohteet) {
-    boolean intersects = ryhma.getHakukohdeViitteet().stream().anyMatch(hakukohteet::contains);
+  private boolean containsHakukohde(Valintaryhma ryhma, Map<String, HakukohdeViite> hakukohteet) {
+    boolean intersects =
+        ryhma.getHakukohdeViitteet().stream().anyMatch(hv -> hakukohteet.get(hv.getOid()) != null);
     return intersects
         || ryhma.getAlavalintaryhmat().stream().anyMatch(ar -> containsHakukohde(ar, hakukohteet));
   }
