@@ -126,6 +126,20 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long>
   }
 
   @Override
+  public List<Valintaryhma> findAllWithoutHakuFetchAlavalintaryhmat() {
+    QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
+    return queryFactory()
+        .selectFrom(valintaryhma)
+        .leftJoin(valintaryhma.alavalintaryhmat)
+        .fetchJoin()
+        .leftJoin(valintaryhma.organisaatiot)
+        .fetchJoin()
+        .where(valintaryhma.hakuoid.isNull())
+        .distinct()
+        .fetch();
+  }
+
+  @Override
   public Valintaryhma findAllFetchAlavalintaryhmat(String oid) {
     QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
     return queryFactory()
@@ -147,22 +161,11 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long>
         .fetchJoin()
         .leftJoin(valintaryhma.organisaatiot)
         .fetchJoin()
-        .where(valintaryhma.hakuoid.eq(hakuOid))
-        .distinct()
-        .fetch();
-  }
-
-  public List<Valintaryhma> findAllByHakukohteetWithoutHakuoidFetchAlavalintaryhmat(
-      String hakuOid, List<String> hakukohdeOids) {
-    QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
-    return queryFactory()
-        .selectFrom(valintaryhma)
-        .leftJoin(valintaryhma.alavalintaryhmat)
-        .fetchJoin()
-        .leftJoin(valintaryhma.organisaatiot)
-        .fetchJoin()
-        .where(valintaryhma.hakuoid.eq(hakuOid))
-        .distinct()
+        .where(
+            valintaryhma
+                .hakuoid
+                .eq(hakuOid)
+                .or(valintaryhma.hakuoid.isNull().and(valintaryhma.ylavalintaryhma.isNull())))
         .fetch();
   }
 

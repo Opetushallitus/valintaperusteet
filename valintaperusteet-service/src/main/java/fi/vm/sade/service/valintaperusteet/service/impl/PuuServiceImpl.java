@@ -69,22 +69,19 @@ public class PuuServiceImpl implements PuuService {
 
   @Transactional
   public List<ValintaperustePuuDTO> searchByHaku(String hakuOid) {
-    List<Valintaryhma> valintaryhmaList =
+    List<Valintaryhma> haunRyhmaJaHauttomat =
         valintaryhmaDAO.findAllByHakuOidFetchAlavalintaryhmat(hakuOid);
+    List<HakukohdeViite> hakukohdeList = hakukohdeViiteDAO.haunHakukohteet(hakuOid, false);
     Map<String, HakukohdeViite> hakukohteet =
-        hakukohdeViiteDAO.haunHakukohteet(hakuOid, false).stream()
-            .collect(Collectors.toMap(HakukohdeViite::getOid, hv -> hv));
-    if (!hakukohteet.isEmpty()) {
-      List<Valintaryhma> kaikkiRyhmat = valintaryhmaDAO.findAllFetchAlavalintaryhmat();
-      valintaryhmaList.addAll(
-          kaikkiRyhmat.stream()
-              .filter(
-                  r ->
-                      (r.getHakuoid() == null || !r.getHakuoid().equals(hakuOid))
-                          && containsHakukohde(r, hakukohteet))
-              .distinct()
-              .toList());
-    }
+        hakukohdeList.stream().collect(Collectors.toMap(HakukohdeViite::getOid, hv -> hv));
+    List<Valintaryhma> valintaryhmaList =
+        haunRyhmaJaHauttomat.stream()
+            .filter(
+                r ->
+                    hakuOid.equals(r.getHakuoid())
+                        || (r.getHakuoid() == null && containsHakukohde(r, hakukohteet)))
+            .distinct()
+            .toList();
     List<ValintaperustePuuDTO> parentList = new ArrayList<>();
     Map<Long, ValintaperustePuuDTO> dtoMap = new HashMap<>();
     List<Valintaryhma> parents = new ArrayList<>();
@@ -102,7 +99,6 @@ public class PuuServiceImpl implements PuuService {
       ValintaperustePuuDTO dto = convert(valintaryhma, dtoMap);
       parentList.add(dto);
     }
-    List<HakukohdeViite> hakukohdeList = hakukohdeViiteDAO.search(hakuOid, new ArrayList<>(), "");
     for (HakukohdeViite hakukohdeViite : hakukohdeList) {
       attach(hakukohdeViite, dtoMap, parentList);
     }
