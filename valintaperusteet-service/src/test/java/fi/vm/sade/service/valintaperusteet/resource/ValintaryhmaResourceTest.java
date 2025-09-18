@@ -52,7 +52,7 @@ public class ValintaryhmaResourceTest extends WithSpringBoot {
   @Test
   public void testSearch() throws Exception {
     List<ValintaryhmaDTO> valintaryhmas = valintaryhmaResource.search(true, null);
-    assertEquals(46, valintaryhmas.size());
+    assertEquals(48, valintaryhmas.size());
     assertEquals("oid1", valintaryhmas.get(0).getOid());
 
     mapper.writerWithView(JsonViews.Basic.class).writeValueAsString(valintaryhmas);

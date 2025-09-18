@@ -22,7 +22,7 @@ public class ValintaryhmaDAOTest extends WithSpringBoot {
   @Test
   public void testFindValintaryhmaByNullParentOid() throws Exception {
     List<Valintaryhma> valintaryhmas = valintaryhmaDAO.findChildrenByParentOid(null);
-    assertEquals(46, valintaryhmas.size());
+    assertEquals(48, valintaryhmas.size());
   }
 
   @Test
