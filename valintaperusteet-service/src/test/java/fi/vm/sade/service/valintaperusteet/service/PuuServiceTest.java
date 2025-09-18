@@ -27,19 +27,10 @@ public class PuuServiceTest extends WithSpringBoot {
   @Test
   public void haeValintaryhmaPuuHaulla() {
     final String hakuOid = "uusiHakuOid";
-    List<ValintaperustePuuDTO> puu = puuService.searchByHaku(hakuOid);
+    List<ValintaperustePuuDTO> puu =
+        puuService.searchByHaku(hakuOid).stream().filter(p -> p.getHakuOid() != null).toList();
     assertEquals(1, puu.size());
     assertEquals(puu.get(0).getHakuOid(), hakuOid);
     assertTrue(puu.get(0).getAlavalintaryhmat().isEmpty());
-  }
-
-  @Test
-  public void haeValintaryhmaPuuHaullaSisaltaenHakukohteet() {
-    final String hakuOid = "hakuOidJollaOrpoHakukohde";
-    List<ValintaperustePuuDTO> puu = puuService.searchByHaku(hakuOid);
-    assertEquals(2, puu.size());
-    assertEquals(puu.get(0).getHakuOid(), hakuOid);
-    assertNull(puu.get(1).getHakuOid());
-    assertEquals(puu.get(1).getHakukohdeViitteet().size(), 1);
   }
 }

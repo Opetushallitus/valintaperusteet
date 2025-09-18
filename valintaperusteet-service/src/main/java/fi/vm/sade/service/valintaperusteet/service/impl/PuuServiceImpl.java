@@ -10,7 +10,6 @@ import fi.vm.sade.service.valintaperusteet.model.Organisaatio;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import fi.vm.sade.service.valintaperusteet.service.PuuService;
 import java.util.*;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,19 +68,9 @@ public class PuuServiceImpl implements PuuService {
 
   @Transactional
   public List<ValintaperustePuuDTO> searchByHaku(String hakuOid) {
-    List<Valintaryhma> haunRyhmaJaHauttomat =
-        valintaryhmaDAO.findAllByHakuOidFetchAlavalintaryhmat(hakuOid);
-    List<HakukohdeViite> hakukohdeList = hakukohdeViiteDAO.haunHakukohteet(hakuOid, false);
-    Map<String, HakukohdeViite> hakukohteet =
-        hakukohdeList.stream().collect(Collectors.toMap(HakukohdeViite::getOid, hv -> hv));
     List<Valintaryhma> valintaryhmaList =
-        haunRyhmaJaHauttomat.stream()
-            .filter(
-                r ->
-                    hakuOid.equals(r.getHakuoid())
-                        || (r.getHakuoid() == null && containsHakukohde(r, hakukohteet)))
-            .distinct()
-            .toList();
+        valintaryhmaDAO.findAllByHakuOidFetchAlavalintaryhmat(hakuOid);
+    List<HakukohdeViite> hakukohdeList = hakukohdeViiteDAO.search(hakuOid, null, "");
     List<ValintaperustePuuDTO> parentList = new ArrayList<>();
     Map<Long, ValintaperustePuuDTO> dtoMap = new HashMap<>();
     List<Valintaryhma> parents = new ArrayList<>();
