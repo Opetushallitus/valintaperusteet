@@ -60,8 +60,7 @@ public class SecurityConfiguration {
         environment.getProperty(
             "host.host-alb", environment.getRequiredProperty("host.host-virkailija"));
     CasAuthenticationProvider casAuthenticationProvider = new CasAuthenticationProvider();
-    casAuthenticationProvider.setUserDetailsService(
-        new OphUserDetailsServiceImpl(host, ConfigEnums.CALLER_ID.value()));
+    casAuthenticationProvider.setAuthenticationUserDetailsService(new OphUserDetailsServiceImpl());
     casAuthenticationProvider.setServiceProperties(serviceProperties());
     casAuthenticationProvider.setTicketValidator(ticketValidator());
     casAuthenticationProvider.setKey(environment.getRequiredProperty("cas-service.key"));
