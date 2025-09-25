@@ -7,6 +7,7 @@ import fi.vm.sade.service.valintaperusteet.model.Abstraktivalidointivirhe;
 import fi.vm.sade.service.valintaperusteet.service.validointi.virhe.*;
 import fi.vm.sade.service.valintaperusteet.service.validointi.virhe.Virhetyyppi;
 import java.util.*;
+import java.util.stream.Collectors;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
@@ -218,7 +219,10 @@ public class ValintaperusteetModelMapper extends ModelMapper {
                   dto.setIndeksi(arg.getIndeksi());
                   result.add(dto);
                 }
-                return result;
+                return result.stream()
+                    .sorted(
+                        Comparator.comparingInt(ValintaperusteetFunktioargumenttiDTO::getIndeksi))
+                    .collect(Collectors.toCollection(LinkedHashSet::new));
               }
             };
 
