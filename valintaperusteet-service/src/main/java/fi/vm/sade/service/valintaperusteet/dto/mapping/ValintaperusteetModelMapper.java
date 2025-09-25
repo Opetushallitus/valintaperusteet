@@ -169,7 +169,9 @@ public class ValintaperusteetModelMapper extends ModelMapper {
                   result.add(dto);
                 }
 
-                return result;
+                return result.stream()
+                    .sorted(Comparator.comparingInt(FunktioargumenttiDTO::getIndeksi))
+                    .toList();
               }
             };
 
