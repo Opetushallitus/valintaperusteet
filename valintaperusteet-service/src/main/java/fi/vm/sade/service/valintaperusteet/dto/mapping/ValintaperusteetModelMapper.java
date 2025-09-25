@@ -468,6 +468,8 @@ public class ValintaperusteetModelMapper extends ModelMapper {
       }
       result.add(dto);
     }
+    result =
+        result.stream().sorted(Comparator.comparingInt(FunktioargumenttiDTO::getIndeksi)).toList();
     parent.setFunktioargumentit(result);
     parent.setLapsityyppi(FunktioargumentinLapsiDTO.FUNKTIOKUTSUTYYPPI);
     parent.setTyyppi(kutsu.getFunktionimi().getTyyppi());
