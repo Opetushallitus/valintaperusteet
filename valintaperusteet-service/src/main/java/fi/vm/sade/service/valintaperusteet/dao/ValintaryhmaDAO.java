@@ -16,6 +16,8 @@ public interface ValintaryhmaDAO extends JpaDAO<Valintaryhma, Long> {
 
   List<Valintaryhma> findAllFetchAlavalintaryhmat();
 
+  List<Valintaryhma> findAllWithoutHakuFetchAlavalintaryhmat();
+
   Valintaryhma findAllFetchAlavalintaryhmat(String oid);
 
   List<Valintaryhma> findAllByHakuOidFetchAlavalintaryhmat(String hakuOid);
