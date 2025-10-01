@@ -77,6 +77,11 @@ public class ValintaryhmaResourceTest extends WithSpringBoot {
   }
 
   @Test
+  public void testValintaryhmattomallaHaullaJollaOnOrpoHakukohdeOnValintaryhmia() {
+    assertTrue(valintaryhmaResource.onkoHaullaValintaryhmia("hakuOidJollaOrpoHakukohde"));
+  }
+
+  @Test
   public void testInsert() throws Exception {
     ValintaryhmaCreateDTO valintaryhma = new ValintaryhmaCreateDTO();
     HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
