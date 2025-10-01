@@ -196,10 +196,7 @@ public class ValintakoeServiceImpl implements ValintakoeService {
         throw new FunktiokutsuaEiVoidaKayttaaValintakoelaskennassaException(
             "Funktiokutsua "
                 + funktiokutsu.getFunktionimi().name()
-                + ", id "
-                + funktiokutsu.getId()
                 + " ei voida käyttää valintakoelaskennassa.",
-            funktiokutsu.getId(),
             funktiokutsu.getFunktionimi());
       }
       for (Funktioargumentti arg : funktiokutsu.getFunktioargumentit()) {
