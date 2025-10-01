@@ -285,7 +285,7 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
 
   @Override
   public Boolean onkoHaullaValintaryhmia(String hakuOid) {
-    return !valintaryhmaDAO.readByHakuoid(hakuOid).isEmpty();
+    return !valintaryhmaDAO.haunJaHaunHakukohteenValintaryhmat(hakuOid).isEmpty();
   }
 
   private void getChildrenRecursive(String oid, Set<String> hakukohdeOids) {
