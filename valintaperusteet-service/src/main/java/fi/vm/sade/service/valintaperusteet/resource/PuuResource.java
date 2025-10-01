@@ -12,10 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/resources/puu")
@@ -40,5 +37,13 @@ public class PuuResource {
       @RequestParam(value = "valintaryhma", required = false, defaultValue = "")
           final String valintaryhma) {
     return puuService.search(hakuOid, tila, searchString, hakukohteet, kohdejoukko, valintaryhma);
+  }
+
+  @GetMapping(value = "/haku/{hakuOid}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize(READ_UPDATE_CRUD)
+  @Operation(summary = "Hakee valintaryhmähierarkiat haulle")
+  public List<ValintaperustePuuDTO> search(
+      @PathVariable(value = "hakuOid", required = false) final String hakuOid) {
+    return puuService.searchByHaku(hakuOid);
   }
 }

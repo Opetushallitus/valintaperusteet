@@ -170,6 +170,9 @@
 
     <valintaryhma id="59" version="0" oid="oid59" nimi="Valintaryhma 59"/>
 
+    <valintaryhma id="60" version="0" oid="oid60" hakuoid="hakuOidJollaOrpoHakukohde" nimi="Valintaryhma 60"/>
+
+    <valintaryhma id="61" version="0" oid="oid61" nimi="Valintaryhma 61"/>
 
     <hakukohdekoodi id="1" version="0" uri="hakukohdekoodiuri1" arvo="koodiarvo1"
                     nimi_fi="hakukohdekoodi1"
@@ -350,6 +353,8 @@
     <hakukohde_viite id="23" version="0" hakuoid="hakuoid1" oid="oid23" nimi="haku23" valintaryhma_id="59"
                      hakukohdekoodi_id="24"/>
     <hakukohde_viite_valintakoekoodi hakukohde_viite_id="23" valintakoekoodi_id="18"/>
+
+    <hakukohde_viite id="24" version="0" hakuoid="hakuOidJollaOrpoHakukohde" oid="oid24" nimi="hakukohde24" manuaalisesti_siirretty="false" valintaryhma_id="61"/>
 
     <hakukohteen_valintaperuste id="1" version="0" tunniste="tunniste1" arvo="arvo1" hakukohde_viite_id="22"/>
     <hakukohteen_valintaperuste id="2" version="0" tunniste="tunniste2" arvo="arvo2" hakukohde_viite_id="22"/>

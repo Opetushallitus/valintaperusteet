@@ -27,7 +27,8 @@ public class PuuServiceTest extends WithSpringBoot {
   @Test
   public void haeValintaryhmaPuuHaulla() {
     final String hakuOid = "uusiHakuOid";
-    List<ValintaperustePuuDTO> puu = puuService.search(hakuOid, List.of(), "", true, "", null);
+    List<ValintaperustePuuDTO> puu =
+        puuService.searchByHaku(hakuOid).stream().filter(p -> p.getHakuOid() != null).toList();
     assertEquals(1, puu.size());
     assertEquals(puu.get(0).getHakuOid(), hakuOid);
     assertTrue(puu.get(0).getAlavalintaryhmat().isEmpty());

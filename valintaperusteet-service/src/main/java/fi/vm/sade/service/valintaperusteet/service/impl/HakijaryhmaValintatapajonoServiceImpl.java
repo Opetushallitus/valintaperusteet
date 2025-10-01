@@ -94,6 +94,7 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
       throw new LaskentakaavaOidTyhjaException("LaskentakaavaOid oli tyhjä.");
     }
     Hakijaryhma hakijaryhma = modelMapper.map(dto, Hakijaryhma.class);
+    hakijaryhma.setId(null);
     Valintatapajono valintatapajono = valintapajonoService.readByOid(valintatapajonoOid);
     HakijaryhmaValintatapajono edellinenHakijaryhma =
         hakijaryhmaValintatapajonoDAO.haeValintatapajononViimeinenHakijaryhma(valintatapajonoOid);
