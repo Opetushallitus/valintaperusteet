@@ -3,6 +3,7 @@ package fi.vm.sade.service.valintaperusteet.dao.impl;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import fi.vm.sade.service.valintaperusteet.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
+import fi.vm.sade.service.valintaperusteet.model.QHakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.QHakukohdekoodi;
 import fi.vm.sade.service.valintaperusteet.model.QValintaryhma;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
@@ -222,13 +223,6 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long>
     return oids.stream().map(this::readByOid).collect(Collectors.toList());
   }
 
-  private Valintaryhma findParent(String oid) {
-    QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
-    Valintaryhma current =
-        queryFactory().selectFrom(valintaryhma).where(valintaryhma.oid.eq(oid)).fetchFirst();
-    return current.getYlavalintaryhma();
-  }
-
   @Override
   public List<Valintaryhma> readByHakukohdekoodiUri(String koodiUri) {
     QHakukohdekoodi koodi = QHakukohdekoodi.hakukohdekoodi;
@@ -246,5 +240,18 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long>
     QValintaryhma vr = QValintaryhma.valintaryhma;
 
     return queryFactory().selectFrom(vr).where(vr.hakuoid.eq(hakuoid)).distinct().fetch();
+  }
+
+  @Override
+  public List<Valintaryhma> haunJaHaunHakukohteenValintaryhmat(String hakuoid) {
+    QHakukohdeViite viite = QHakukohdeViite.hakukohdeViite;
+    QValintaryhma vr = QValintaryhma.valintaryhma;
+    return queryFactory()
+        .selectFrom(vr)
+        .leftJoin(vr.hakukohdeViitteet, viite)
+        .fetchJoin()
+        .where(vr.hakuoid.eq(hakuoid).or(viite.hakuoid.eq(hakuoid)))
+        .distinct()
+        .fetch();
   }
 }

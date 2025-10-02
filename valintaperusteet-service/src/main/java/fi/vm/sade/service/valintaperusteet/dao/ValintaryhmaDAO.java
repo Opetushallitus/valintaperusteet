@@ -28,4 +28,6 @@ public interface ValintaryhmaDAO extends JpaDAO<Valintaryhma, Long> {
   List<Valintaryhma> readByHakukohdekoodiUri(String koodiUri);
 
   List<Valintaryhma> readByHakuoid(String hakuoid);
+
+  List<Valintaryhma> haunJaHaunHakukohteenValintaryhmat(String hakuoid);
 }
