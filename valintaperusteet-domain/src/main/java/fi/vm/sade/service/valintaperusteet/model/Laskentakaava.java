@@ -1,21 +1,13 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.*;
 import fi.vm.sade.service.valintaperusteet.dto.model.Funktiotyyppi;
-import jakarta.persistence.Cacheable;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "laskentakaava")
@@ -55,6 +47,11 @@ public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "laskentakaava", cascade = CascadeType.PERSIST)
   private Set<Jarjestyskriteeri> jarjestyskriteerit = new HashSet<Jarjestyskriteeri>();
+
+  @JdbcTypeCode(SqlTypes.JSON)
+  @Column(name = "funktiokutsu", columnDefinition = "jsonb")
+  @Convert(converter = JsonNodeConverter.class)
+  private FunktiokutsuWrapper kaava;
 
   public Boolean getOnLuonnos() {
     return onLuonnos;
@@ -97,11 +94,15 @@ public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
   }
 
   public Funktiokutsu getFunktiokutsu() {
+    if (this.kaava != null) {
+      return this.kaava.getFunktiokutsu();
+    }
     return funktiokutsu;
   }
 
   public void setFunktiokutsu(Funktiokutsu funktiokutsu) {
     this.funktiokutsu = funktiokutsu;
+    this.kaava = new FunktiokutsuWrapper(funktiokutsu, true);
   }
 
   public Funktiotyyppi getTyyppi() {
@@ -126,6 +127,10 @@ public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
 
   public void setKopiot(Set<Laskentakaava> kopiot) {
     this.kopiot = kopiot;
+  }
+
+  public void migrateKaava() {
+    this.kaava = new FunktiokutsuWrapper(this.funktiokutsu, true);
   }
 
   @Override
@@ -156,11 +161,57 @@ public class Laskentakaava extends BaseEntity implements FunktionArgumentti {
     }
   }
 
+  /* Hibernate kilahtaa (palauttaa hauista duplikaatteja) jos jsonb-kentässä oleva tyyppi on samalla entiteetti
+   *  joten käytetään wrapper-luokkaa, samalla voidaan tallentaa dirty-flagi */
+  public static class FunktiokutsuWrapper {
+    private final Funktiokutsu funktiokutsu;
+    private final boolean dirty;
+
+    public FunktiokutsuWrapper(Funktiokutsu funktiokutsu, boolean dirty) {
+      this.funktiokutsu = funktiokutsu;
+      this.dirty = dirty;
+    }
+
+    public Funktiokutsu getFunktiokutsu() {
+      return this.funktiokutsu;
+    }
+
+    public boolean isDirty() {
+      return this.dirty;
+    }
+  }
+
   public Laskentakaava getKopioLaskentakaavasta() {
     return kopioLaskentakaavasta;
   }
 
   public void setKopioLaskentakaavasta(Laskentakaava kopioLaskentakaavasta) {
     this.kopioLaskentakaavasta = kopioLaskentakaavasta;
+  }
+
+  @Converter(autoApply = true)
+  static class JsonNodeConverter implements AttributeConverter<FunktiokutsuWrapper, String> {
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    @Override
+    public String convertToDatabaseColumn(FunktiokutsuWrapper wrapper) {
+      try {
+        return objectMapper.writeValueAsString(wrapper == null ? null : wrapper.getFunktiokutsu());
+      } catch (JsonProcessingException e) {
+        throw new RuntimeException("Error while serializing JsonNode to JSON", e);
+      }
+    }
+
+    @Override
+    public FunktiokutsuWrapper convertToEntityAttribute(String dbData) {
+      try {
+        return dbData == null
+            ? null
+            : new FunktiokutsuWrapper(objectMapper.readValue(dbData, Funktiokutsu.class), false);
+      } catch (JsonProcessingException e) {
+        throw new RuntimeException("Error while deserializing JSON to JsonNode", e);
+      }
+    }
   }
 }
