@@ -1,17 +1,11 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.persistence.*;
 
-@MappedSuperclass
-public abstract class Konvertteriparametri extends BaseEntity {
-  @Column(name = "paluuarvo")
+public abstract class Konvertteriparametri {
   private String paluuarvo;
 
-  @JoinColumn(name = "funktiokutsu_id", nullable = false)
-  @ManyToOne(fetch = FetchType.LAZY, optional = false)
-  @JsonBackReference
-  private Funktiokutsu funktiokutsu;
+  @JsonBackReference private Funktiokutsu funktiokutsu;
 
   public String getPaluuarvo() {
     return paluuarvo;

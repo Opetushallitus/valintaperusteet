@@ -237,7 +237,6 @@ object Laskentadomainkonvertteri {
 
     val funktiokuvaus = Funktiokuvaaja.annaFunktiokuvaus(funktiokutsu.getFunktionimi)._2
 
-    val oid = if (funktiokutsu.getId != null) funktiokutsu.getId.toString else ""
     val funktionimi = funktiokutsu.getFunktionimi
     val tulosTunniste =
       if (java.lang.Boolean.TRUE.equals(funktiokutsu.getTallennaTulos))
@@ -278,7 +277,6 @@ object Laskentadomainkonvertteri {
           konvertteri,
           oletusarvo,
           valintaperusteviitteet.head,
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -299,7 +297,6 @@ object Laskentadomainkonvertteri {
           oletusarvo,
           valintaperusteviitteet(0),
           valintaperusteviitteet(1),
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -327,7 +324,6 @@ object Laskentadomainkonvertteri {
           Arvokonvertteri[String, BigDecimal](konversioMap),
           oletusarvo,
           valintaperusteviitteet.head,
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -354,7 +350,6 @@ object Laskentadomainkonvertteri {
           Arvokonvertteri[Boolean, BigDecimal](konversioMap),
           oletusarvo,
           valintaperusteviitteet.head,
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -380,7 +375,6 @@ object Laskentadomainkonvertteri {
           Arvokonvertteri[String, Boolean](konversioMap),
           oletusarvo,
           valintaperusteviitteet.head,
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -397,7 +391,6 @@ object Laskentadomainkonvertteri {
           oletusarvo,
           valintaperusteviitteet.head,
           vertailtava,
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -427,7 +420,6 @@ object Laskentadomainkonvertteri {
           konvertteri,
           oletusarvo,
           valintaperusteviitteet.head,
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -444,7 +436,6 @@ object Laskentadomainkonvertteri {
         Hylkaa(
           muunnaTotuusarvofunktioksi(lasketutArgumentit(0)),
           Some(hylkaysperustekuvaus),
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -465,7 +456,6 @@ object Laskentadomainkonvertteri {
         HylkaaArvovalilla(
           muunnaLukuarvofunktioksi(lasketutArgumentit(0)),
           Some(hylkaysperustekuvaus),
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -477,7 +467,6 @@ object Laskentadomainkonvertteri {
       case Funktionimi.JA =>
         Ja(
           lasketutArgumentit.map(muunnaTotuusarvofunktioksi(_)),
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -491,7 +480,6 @@ object Laskentadomainkonvertteri {
           muunnaTotuusarvofunktioksi(lasketutArgumentit(0)),
           muunnaLukuarvofunktioksi(lasketutArgumentit(1)),
           muunnaLukuarvofunktioksi(lasketutArgumentit(2)),
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -502,7 +490,6 @@ object Laskentadomainkonvertteri {
       case Funktionimi.KESKIARVO =>
         Keskiarvo(
           lasketutArgumentit.map(muunnaLukuarvofunktioksi(_)),
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -515,7 +502,6 @@ object Laskentadomainkonvertteri {
         KeskiarvoNParasta(
           parametriToInteger(nParam),
           lasketutArgumentit.map(muunnaLukuarvofunktioksi(_)),
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -527,7 +513,6 @@ object Laskentadomainkonvertteri {
         val lukuParam = getParametri(funktiokuvaus.syoteparametrit.head.avain, syoteparametrit)
         Lukuarvo(
           parametriToBigDecimal(lukuParam),
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -569,7 +554,6 @@ object Laskentadomainkonvertteri {
         KonvertoiLukuarvo(
           konvertteri,
           muunnaLukuarvofunktioksi(lasketutArgumentit.head),
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -580,7 +564,6 @@ object Laskentadomainkonvertteri {
       case Funktionimi.MAKSIMI =>
         Maksimi(
           lasketutArgumentit.map(muunnaLukuarvofunktioksi(_)),
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -591,7 +574,6 @@ object Laskentadomainkonvertteri {
       case Funktionimi.MEDIAANI =>
         Mediaani(
           lasketutArgumentit.map(muunnaLukuarvofunktioksi(_)),
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -602,7 +584,6 @@ object Laskentadomainkonvertteri {
       case Funktionimi.MINIMI =>
         Minimi(
           lasketutArgumentit.map(muunnaLukuarvofunktioksi(_)),
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -613,7 +594,6 @@ object Laskentadomainkonvertteri {
       case Funktionimi.NEGAATIO =>
         Negaatio(
           muunnaLukuarvofunktioksi(lasketutArgumentit.head),
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -626,7 +606,6 @@ object Laskentadomainkonvertteri {
         NimettyLukuarvo(
           nimiParam.getArvo,
           muunnaLukuarvofunktioksi(lasketutArgumentit.head),
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -639,7 +618,6 @@ object Laskentadomainkonvertteri {
         NimettyTotuusarvo(
           nimiParam.getArvo,
           muunnaTotuusarvofunktioksi(lasketutArgumentit.head),
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -652,7 +630,6 @@ object Laskentadomainkonvertteri {
         NMaksimi(
           parametriToInteger(nParam),
           lasketutArgumentit.map(muunnaLukuarvofunktioksi(_)),
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -665,7 +642,6 @@ object Laskentadomainkonvertteri {
         NMinimi(
           parametriToInteger(nParam),
           lasketutArgumentit.map(muunnaLukuarvofunktioksi(_)),
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -677,7 +653,6 @@ object Laskentadomainkonvertteri {
         Osamaara(
           muunnaLukuarvofunktioksi(lasketutArgumentit(0)),
           muunnaLukuarvofunktioksi(lasketutArgumentit(1)),
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -701,7 +676,6 @@ object Laskentadomainkonvertteri {
         }
 
         PainotettuKeskiarvo(
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -714,7 +688,6 @@ object Laskentadomainkonvertteri {
         Pienempi(
           muunnaLukuarvofunktioksi(lasketutArgumentit(0)),
           muunnaLukuarvofunktioksi(lasketutArgumentit(1)),
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -726,7 +699,6 @@ object Laskentadomainkonvertteri {
         PienempiTaiYhtasuuri(
           muunnaLukuarvofunktioksi(lasketutArgumentit(0)),
           muunnaLukuarvofunktioksi(lasketutArgumentit(1)),
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -739,7 +711,6 @@ object Laskentadomainkonvertteri {
         Pyoristys(
           parametriToInteger(tarkkuus),
           muunnaLukuarvofunktioksi(lasketutArgumentit(0)),
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -766,7 +737,6 @@ object Laskentadomainkonvertteri {
         } else None
 
         Skaalaus(
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -781,7 +751,6 @@ object Laskentadomainkonvertteri {
       case Funktionimi.SUMMA =>
         Summa(
           lasketutArgumentit.map(muunnaLukuarvofunktioksi(_)),
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -794,7 +763,6 @@ object Laskentadomainkonvertteri {
         SummaNParasta(
           parametriToInteger(nParam),
           lasketutArgumentit.map(muunnaLukuarvofunktioksi(_)),
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -807,7 +775,6 @@ object Laskentadomainkonvertteri {
         TuloNParasta(
           parametriToInteger(nParam),
           lasketutArgumentit.map(muunnaLukuarvofunktioksi(_)),
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -819,7 +786,6 @@ object Laskentadomainkonvertteri {
         Suurempi(
           muunnaLukuarvofunktioksi(lasketutArgumentit(0)),
           muunnaLukuarvofunktioksi(lasketutArgumentit(1)),
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -831,7 +797,6 @@ object Laskentadomainkonvertteri {
         SuurempiTaiYhtasuuri(
           muunnaLukuarvofunktioksi(lasketutArgumentit(0)),
           muunnaLukuarvofunktioksi(lasketutArgumentit(1)),
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -842,7 +807,6 @@ object Laskentadomainkonvertteri {
       case Funktionimi.TAI =>
         Tai(
           lasketutArgumentit.map(muunnaTotuusarvofunktioksi(_)),
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -855,7 +819,6 @@ object Laskentadomainkonvertteri {
           getParametri(funktiokuvaus.syoteparametrit.head.avain, syoteparametrit)
         Totuusarvo(
           parametriToBoolean(totuusarvoParam),
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -867,7 +830,6 @@ object Laskentadomainkonvertteri {
       case Funktionimi.TULO =>
         Tulo(
           lasketutArgumentit.map(muunnaLukuarvofunktioksi(_)),
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -879,7 +841,6 @@ object Laskentadomainkonvertteri {
         Yhtasuuri(
           muunnaLukuarvofunktioksi(lasketutArgumentit(0)),
           muunnaLukuarvofunktioksi(lasketutArgumentit(1)),
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -891,7 +852,6 @@ object Laskentadomainkonvertteri {
         val nParam = getParametri(funktiokuvaus.syoteparametrit.head.avain, syoteparametrit)
         Hakutoive(
           parametriToInteger(nParam),
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -906,7 +866,6 @@ object Laskentadomainkonvertteri {
         HakutoiveRyhmassa(
           parametriToInteger(nParam),
           ryhmaOid,
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -917,7 +876,6 @@ object Laskentadomainkonvertteri {
 
       case Funktionimi.HAKUKELPOISUUS => {
         Hakukelpoisuus(
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -931,7 +889,6 @@ object Laskentadomainkonvertteri {
         val prosenttiosuus = getParametri("prosenttiosuus", syoteparametrit)
 
         Demografia(
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -944,7 +901,6 @@ object Laskentadomainkonvertteri {
 
       case Funktionimi.VALINTAPERUSTEYHTASUURUUS => {
         Valintaperusteyhtasuuruus(
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -1067,7 +1023,6 @@ object Laskentadomainkonvertteri {
             LocalDate.of(2020, Month.MAY, 15)
           ), // TODO: Poista oletus, kun se on syötetty kaavoihin
           muunnaLukuarvofunktioksi(lasketutArgumentit.head),
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -1078,7 +1033,6 @@ object Laskentadomainkonvertteri {
       case Funktionimi.ITEROIAMMATILLISETOSAT =>
         IteroiAmmatillisetTutkinnonOsat(
           muunnaLukuarvofunktioksi(lasketutArgumentit.head),
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,
@@ -1090,7 +1044,6 @@ object Laskentadomainkonvertteri {
         IteroiAmmatillisenTutkinnonYtoOsaAlueet(
           muunnaLukuarvofunktioksi(lasketutArgumentit.head),
           valintaperusteviitteet.head,
-          oid,
           tulosTunniste,
           tulosTekstiFi,
           tulosTekstiSv,

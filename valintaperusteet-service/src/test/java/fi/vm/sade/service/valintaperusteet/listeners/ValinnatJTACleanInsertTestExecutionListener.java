@@ -1,11 +1,13 @@
 package fi.vm.sade.service.valintaperusteet.listeners;
 
-import static org.dbunit.database.DatabaseConfig.FEATURE_ALLOW_EMPTY_FIELDS;
-import static org.dbunit.database.DatabaseConfig.PROPERTY_DATATYPE_FACTORY;
+import static org.dbunit.database.DatabaseConfig.*;
 
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import jakarta.persistence.EntityManager;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Types;
 import java.util.Collections;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.DatabaseConnection;
@@ -14,6 +16,10 @@ import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.FilteredDataSet;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ReplacementDataSet;
+import org.dbunit.dataset.datatype.DataType;
+import org.dbunit.dataset.datatype.DataTypeException;
+import org.dbunit.dataset.datatype.StringDataType;
+import org.dbunit.dataset.datatype.TypeCastException;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.ext.postgresql.PostgresqlDataTypeFactory;
 import org.dbunit.operation.DatabaseOperation;
@@ -68,7 +74,26 @@ public class ValinnatJTACleanInsertTestExecutionListener
             try {
               IDatabaseConnection con = new DatabaseConnection(jdbcConn);
               con.getConfig()
-                  .setProperty(PROPERTY_DATATYPE_FACTORY, new PostgresqlDataTypeFactory());
+                  .setProperty(
+                      PROPERTY_DATATYPE_FACTORY,
+                      new PostgresqlDataTypeFactory() {
+                        @Override
+                        public DataType createDataType(int sqlType, String sqlTypeName)
+                            throws DataTypeException {
+                          // Lisätään tuki jsonb-kentille
+                          if (sqlTypeName.equalsIgnoreCase("jsonb")) {
+                            return new StringDataType("jsonb", 1111) {
+                              @Override
+                              public void setSqlValue(
+                                  Object value, int column, PreparedStatement statement)
+                                  throws SQLException, TypeCastException {
+                                statement.setObject(column, value, Types.OTHER);
+                              }
+                            };
+                          }
+                          return super.createDataType(sqlType, sqlTypeName);
+                        }
+                      });
               con.getConfig().setProperty(FEATURE_ALLOW_EMPTY_FIELDS, true);
               if (ALL_TABLES_FILTER == null) {
                 ALL_TABLES_FILTER = new DatabaseSequenceFilter(con);

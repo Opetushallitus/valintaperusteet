@@ -155,8 +155,6 @@ public class LaskentakaavaResource {
           ValintaResource.LASKENTAKAAVA,
           afterUpdate.getId().toString(),
           Changes.updatedDto(afterUpdate, beforeUpdate));
-      // Kaava päivitetty, poistetaan orvot
-      actorService.runOnce();
       return ResponseEntity.ok(afterUpdate);
     } catch (LaskentakaavaEiValidiException e) {
       LOGGER.error("Laskentakaava ei ole validi!", e);
@@ -248,8 +246,6 @@ public class LaskentakaavaResource {
         id.toString(),
         Changes.EMPTY);
     if (poistettu) {
-      // Kaava poistettu, poistetaan orvot
-      actorService.runOnce();
       return ResponseEntity.accepted().build();
     } else {
       return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
