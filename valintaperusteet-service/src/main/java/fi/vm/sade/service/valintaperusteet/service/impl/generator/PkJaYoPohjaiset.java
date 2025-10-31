@@ -180,8 +180,8 @@ public class PkJaYoPohjaiset {
     return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
         GenericHelper.luoHylkaaArvovalilla(
             funktiokutsu,
-            "Hylätty pääsy- ja soveltuvuuskoetulos",
-            "Underkänd i inträdes- eller lämplighetsprov",
+            "Pääsykokeen alin hyväksyttävä pistemäärä ei ylity",
+            "Uppnår inte lägsta godkända poängantal för inträdesprov",
             "0.0",
             "1.0"),
         nimi);
@@ -198,8 +198,8 @@ public class PkJaYoPohjaiset {
     return GenericHelper.luoLaskentakaavaJaNimettyFunktio(
         GenericHelper.luoHylkaaArvovalilla(
             funktiokutsu,
-            "Hylätty pääsy- ja soveltuvuuskoetulos",
-            "Underkänd i inträdes- eller lämplighetsprov",
+            "Pääsykokeen alin hyväksyttävä pistemäärä ei ylity",
+            "Uppnår inte lägsta godkända poängantal för inträdesprov",
             "0.0",
             "1.0"),
         nimi);
