@@ -503,7 +503,7 @@ public class ValintaperusteetModelMapper extends ModelMapper {
             .orElse(0);
     for (int i = 0; i < kutsu.getFunktioargumentit().size(); i++) {
       FunktioargumenttiDTO arg = kutsu.getFunktioargumentit().get(i);
-      if (arg.getIndeksi() == null) {
+      if (arg.getIndeksi() == null || (arg.getIndeksi() == 0 && i > 0)) {
         // jos indeksi ei määritelty niin laitetaan listan loppuun
         arg.setIndeksi(++suurinIndeksi);
       }
