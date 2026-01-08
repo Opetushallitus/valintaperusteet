@@ -20,7 +20,7 @@ jobs:
           distribution: 'corretto'
           cache: 'maven'
 
-      - uses: szenius/set-timezone@v1.0
+      - uses: szenius/set-timezone@dd47655c84241eec2ffa0a855959c16c0920c3c4
         with:
           timezoneLinux: "Europe/Helsinki"
 
@@ -28,7 +28,7 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ github.token }}
-        run: mvn clean spotless:check package sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=opetushallitus -Dsonar.projectKey=Opetushallitus_valintaperusteet -B -Dbranch=${GITHUB_REF_NAME} -Drevision=${GITHUB_SHA} -DbuildNumber=${GITHUB_RUN_NUMBER} --settings settings.xml
+        run: mvn clean spotless:check package org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=opetushallitus -Dsonar.projectKey=Opetushallitus_valintaperusteet -B -Dbranch=${GITHUB_REF_NAME} -Drevision=${GITHUB_SHA} -DbuildNumber=${GITHUB_RUN_NUMBER} --settings settings.xml
 
       - uses: actions/cache@v4
         id: restore-build
