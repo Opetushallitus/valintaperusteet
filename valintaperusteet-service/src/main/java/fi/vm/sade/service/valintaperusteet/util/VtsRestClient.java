@@ -6,6 +6,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.reflect.TypeToken;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Map;
 import org.asynchttpclient.AsyncHttpClient;
@@ -43,8 +45,8 @@ public class VtsRestClient {
                       .setUrl(jonoUrl)
                       .setMethod("GET")
                       .addHeader("Accept", "application/json")
-                      .setRequestTimeout(120000)
-                      .setReadTimeout(120000)
+                      .setRequestTimeout(Duration.of(120000, ChronoUnit.MILLIS))
+                      .setReadTimeout(Duration.of(120000, ChronoUnit.MILLIS))
                       .build())
               .toCompletableFuture()
               .get();
