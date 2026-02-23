@@ -36,7 +36,6 @@
         <dependency>
             <groupId>fi.vm.sade.java-utils</groupId>
             <artifactId>java-properties</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.asynchttpclient</groupId>
@@ -177,15 +176,16 @@
             <artifactId>jakarta.ws.rs-api</artifactId>
         </dependency>
 
-
         <!-- TEST -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -195,15 +195,17 @@
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-core</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-library</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.dbunit</groupId>
             <artifactId>dbunit</artifactId>
-            <version>2.7.3</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
@@ -214,7 +216,6 @@
         <dependency>
             <groupId>fi.vm.sade.java-utils</groupId>
             <artifactId>opintopolku-user-details-service</artifactId>
-            <version>0.5.3-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -361,7 +362,7 @@
                         </configuration>
                     </execution>
                 </executions>
-                <version>${spring.boot.version}</version>
+                <version>${spring.boot.version.for.plugins}</version>
             </plugin>
         </plugins>
     </build>
