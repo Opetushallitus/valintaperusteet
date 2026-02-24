@@ -295,8 +295,9 @@ public class ValintalaskentakoostepalveluResource {
       produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Palauttaa valintatapajonot, jossa ei käytetä laskentaa")
   public List<ValinnanVaiheJonoillaDTO> ilmanLaskentaa(@PathVariable("oid") final String oid) {
+    final List<ValinnanVaihe> vaiheet = hakukohdeService.ilmanLaskentaa(oid);
     List<ValinnanVaiheJonoillaDTO> valinnanVaiheJonoillaDTOs =
-        modelMapper.mapList(hakukohdeService.ilmanLaskentaa(oid), ValinnanVaiheJonoillaDTO.class);
+        modelMapper.mapList(vaiheet, ValinnanVaiheJonoillaDTO.class);
     JononPrioriteettiAsettaja.filtteroiJonotIlmanLaskentaaJaAsetaPrioriteetit(
         valinnanVaiheJonoillaDTOs);
     return valinnanVaiheJonoillaDTOs;

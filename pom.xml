@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.10</version>
+        <version>4.0.3</version>
     </parent>
 
     <groupId>fi.vm.sade.valintaperusteet</groupId>
@@ -27,7 +27,7 @@
     <properties>
         <httpcomponents.version>4.5.14</httpcomponents.version>
         <jackson2.version>2.19.4</jackson2.version>
-        <spring.boot.version.for.plugins>3.5.10</spring.boot.version.for.plugins>
+        <spring.boot.version.for.plugins>4.0.3</spring.boot.version.for.plugins>
         <circe.version>0.14.15</circe.version>
         <plugin.exec-maven-plugin.version>3.0.0</plugin.exec-maven-plugin.version>
 
@@ -38,7 +38,7 @@
 
         <valinta-sharedutils.version>8.0-SNAPSHOT</valinta-sharedutils.version>
         <akka.version>2.6.21</akka.version>
-        <hibernate.version>6.5.3.Final</hibernate.version> <!-- 6.6-versio aiheutti virhettä: object
+        <hibernate.version>7.2.4.Final</hibernate.version> <!-- 6.6-versio aiheutti virhettä: object
         references an unsaved transient instance - save the transient instance before flushing -->
     </properties>
 
@@ -179,7 +179,7 @@
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-api</artifactId>
-                <version>5.14.2</version>
+                <version>6.0.3</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -303,7 +303,7 @@
             <dependency>
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-                <version>2.6.0</version>
+                <version>3.0.1</version>
             </dependency>
             <dependency>
                 <groupId>com.google.guava</groupId>
@@ -458,6 +458,15 @@
                 <groupId>org.typelevel</groupId>
                 <artifactId>cats-core_2.13</artifactId>
                 <version>2.13.0</version>
+            </dependency>
+
+            <!-- korjaa versiokonflikti kirjastojen
+             org.hibernate.orm:hibernate-core:6.5.3.Final ja
+             org.springframework.data:spring-data-jpa:4.0.3 välillä -->
+            <dependency>
+                <groupId>org.antlr</groupId>
+                <artifactId>antlr4-runtime</artifactId>
+                <version>4.13.2</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

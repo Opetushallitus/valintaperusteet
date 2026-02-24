@@ -28,11 +28,11 @@ public class HakijaryhmaValintatapajono extends BaseEntity
   private boolean kaytetaanRyhmaanKuuluvia;
 
   @JoinColumn(name = "hakijaryhma_id", nullable = false)
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
   private Hakijaryhma hakijaryhma;
 
   @JoinColumn(name = "valintatapajono_id")
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
   private Valintatapajono valintatapajono;
 
   @JoinColumn(name = "hakukohde_viite_id")
