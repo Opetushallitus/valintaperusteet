@@ -1,7 +1,18 @@
 package fi.vm.sade.service.valintaperusteet.model;
 
 import fi.vm.sade.service.valintaperusteet.dto.model.ValinnanVaiheTyyppi;
-import jakarta.persistence.*;
+import jakarta.persistence.Cacheable;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -17,7 +28,7 @@ public class ValinnanVaihe extends BaseEntityWithModifyTimestamp
   private String oid;
 
   @JoinColumn(name = "edellinen_valinnan_vaihe_id")
-  @ManyToOne(fetch = FetchType.LAZY)
+  @OneToOne(fetch = FetchType.LAZY)
   private ValinnanVaihe edellinenValinnanVaihe;
 
   @Column(name = "nimi", nullable = false)
@@ -36,7 +47,7 @@ public class ValinnanVaihe extends BaseEntityWithModifyTimestamp
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "masterValinnanVaihe")
   private Set<ValinnanVaihe> kopioValinnanVaiheet = new HashSet<ValinnanVaihe>();
 
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "valinnanVaihe", cascade = CascadeType.DETACH)
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "valinnanVaihe")
   private Set<Valintatapajono> jonot = new HashSet<Valintatapajono>();
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "valinnanVaihe")

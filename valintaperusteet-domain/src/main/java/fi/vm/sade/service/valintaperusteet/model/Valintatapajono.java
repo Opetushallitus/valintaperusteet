@@ -85,7 +85,7 @@ public class Valintatapajono extends BaseEntityWithModifyTimestamp
   private Valintatapajono edellinenValintatapajono;
 
   @JoinColumn(name = "valinnan_vaihe_id", nullable = false)
-  @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
   private ValinnanVaihe valinnanVaihe;
 
   @JoinColumn(name = "master_valintatapajono_id")

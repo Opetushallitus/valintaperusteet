@@ -26,7 +26,6 @@
 
     <properties>
         <httpcomponents.version>4.5.14</httpcomponents.version>
-        <jackson2.version>2.19.4</jackson2.version>
         <spring.boot.version.for.plugins>4.0.3</spring.boot.version.for.plugins>
         <circe.version>0.14.15</circe.version>
         <plugin.exec-maven-plugin.version>3.0.0</plugin.exec-maven-plugin.version>
@@ -38,7 +37,7 @@
 
         <valinta-sharedutils.version>8.0-SNAPSHOT</valinta-sharedutils.version>
         <akka.version>2.6.21</akka.version>
-        <hibernate.version>7.2.4.Final</hibernate.version> <!-- 6.6-versio aiheutti virhettä: object
+        <hibernate.version>6.5.3.Final</hibernate.version> <!-- 6.6-versio aiheutti virhettä: object
         references an unsaved transient instance - save the transient instance before flushing -->
     </properties>
 
@@ -196,36 +195,6 @@
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
                 <version>42.7.9</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-core</artifactId>
-                <version>${jackson2.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-annotations</artifactId>
-                <version>${jackson2.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-databind</artifactId>
-                <version>${jackson2.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.datatype</groupId>
-                <artifactId>jackson-datatype-jdk8</artifactId>
-                <version>${jackson2.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.datatype</groupId>
-                <artifactId>jackson-datatype-jsr310</artifactId>
-                <version>${jackson2.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.dataformat</groupId>
-                <artifactId>jackson-dataformat-yaml</artifactId>
-                <version>${jackson2.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.google.code.gson</groupId>

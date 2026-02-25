@@ -1,6 +1,9 @@
 spring:
   main:
     allow-bean-definition-overriding: true
+  http:
+    converters:
+      preferred-json-mapper: jackson2
 
 springdoc:
   show-actuator: false

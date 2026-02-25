@@ -71,6 +71,10 @@ public class Jarjestyskriteeri extends BaseEntityWithModifyTimestamp
     this.oid = oid;
   }
 
+  public Long getLaskentakaavaId() {
+    return laskentakaava.getId();
+  }
+
   public String getValintatapajonoId() {
     return valintatapajono.getOid();
   }

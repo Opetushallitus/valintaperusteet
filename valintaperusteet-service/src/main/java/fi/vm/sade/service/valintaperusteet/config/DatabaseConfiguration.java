@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
@@ -73,6 +74,7 @@ public class DatabaseConfiguration {
     final LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
     // emf.setLoadTimeWeaver(new InstrumentationLoadTimeWeaver());
     emf.setDataSource(dataSource);
+    emf.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
     emf.setJpaPropertyMap(
         Map.of(
             "hibernate.show_sql", showSql,

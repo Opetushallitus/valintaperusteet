@@ -687,9 +687,10 @@ public class HakukohdeResource {
       @RequestBody final String valintaryhmaOid,
       final HttpServletRequest request) {
     try {
-      final HakukohdeViite viite =
-          hakukohdeService.siirraHakukohdeValintaryhmaan(hakukohdeOid, valintaryhmaOid, true);
-      HakukohdeViiteDTO hakukohde = modelMapper.map(viite, HakukohdeViiteDTO.class);
+      HakukohdeViiteDTO hakukohde =
+          modelMapper.map(
+              hakukohdeService.siirraHakukohdeValintaryhmaan(hakukohdeOid, valintaryhmaOid, true),
+              HakukohdeViiteDTO.class);
       Map<String, String> additionalInfo =
           ImmutableMap.of("Uuden valintaryhman oid", valintaryhmaOid);
       AuditLog.log(

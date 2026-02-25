@@ -3,6 +3,9 @@ spring:
     allow-bean-definition-overriding: true
   profiles:
     active: dev
+  http:
+    converters:
+      preferred-json-mapper: jackson2
 
 springdoc:
   show-actuator: false

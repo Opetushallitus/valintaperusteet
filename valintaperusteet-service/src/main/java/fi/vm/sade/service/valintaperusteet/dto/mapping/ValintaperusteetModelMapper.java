@@ -12,7 +12,6 @@ import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.modelmapper.Provider;
-import org.modelmapper.convention.MatchingStrategies;
 import org.modelmapper.spi.MappingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -455,7 +454,6 @@ public class ValintaperusteetModelMapper extends ModelMapper {
                 .setFunktioargumentit(null);
           }
         });
-    this.getConfiguration().setMatchingStrategy(MatchingStrategies.STANDARD);
   }
 
   public Funktiokutsu convertFromDto(FunktiokutsuDTO dto) {
