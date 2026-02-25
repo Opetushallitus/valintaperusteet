@@ -23,6 +23,6 @@ public class ValintaperusteetConfiguration implements WebMvcConfigurer {
 
   @Override
   public void configurePathMatch(final PathMatchConfigurer configurer) {
-    configurer.setUseTrailingSlashMatch(true);
+    configurer.setPatternParser(null);
   }
 }
