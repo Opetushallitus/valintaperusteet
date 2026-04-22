@@ -3,11 +3,12 @@ package fi.vm.sade.service.valintaperusteet.service.impl;
 import static java.util.stream.Collectors.*;
 
 import com.google.common.collect.Lists;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
+import fi.vm.sade.service.valintaperusteet.dto.HakukohdeJaValintaperusteDTO;
 import fi.vm.sade.service.valintaperusteet.dto.HakuparametritDTO;
+import fi.vm.sade.service.valintaperusteet.dto.SiirtotiedostoResult;
 import fi.vm.sade.service.valintaperusteet.dto.SiirtotiedostoValintaperusteetDTO;
+import fi.vm.sade.service.valintaperusteet.service.LaskentakaavaService;
 import fi.vm.sade.service.valintaperusteet.service.SiirtotiedostoService;
 import fi.vm.sade.service.valintaperusteet.service.ValintaperusteService;
 import fi.vm.sade.service.valintaperusteet.util.SiirtotiedostoS3Client;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 public class SiirtotiedostoServiceImpl implements SiirtotiedostoService {
   @Autowired private HakukohdeViiteDAO hakukohdeViiteDAO;
   @Autowired private ValintaperusteService valintaperusteService;
+  @Autowired private LaskentakaavaService laskentakaavaService;
 
   private static final Logger logger =
       LoggerFactory.getLogger(ValinnanVaiheServiceImpl.class.getName());
@@ -40,7 +42,8 @@ public class SiirtotiedostoServiceImpl implements SiirtotiedostoService {
     return dto;
   }
 
-  public String createSiirtotiedostot(LocalDateTime startDatetime, LocalDateTime endDatetime) {
+  public SiirtotiedostoResult createSiirtotiedostot(
+      LocalDateTime startDatetime, LocalDateTime endDatetime) {
     logger.info("Creating siirtotiedostot for window {} - {}", startDatetime, endDatetime);
     List<String> oids = hakukohdeViiteDAO.findNewOrChangedHakukohdeOids(startDatetime, endDatetime);
     List<String> siirtotiedostoKeys = new ArrayList<>();
@@ -58,7 +61,7 @@ public class SiirtotiedostoServiceImpl implements SiirtotiedostoService {
             valintaperusteService.haeSiirtotiedostoValintaperusteet(dtoList);
         siirtotiedostoKeys.add(
             siirtotiedostoS3Client.createSiirtotiedosto(
-                valintaperusteet, operationId, siirtotiedostoKeys.size() + 1));
+                valintaperusteet, "hakukohde", operationId, siirtotiedostoKeys.size() + 1));
       }
     }
 
@@ -68,12 +71,43 @@ public class SiirtotiedostoServiceImpl implements SiirtotiedostoService {
         siirtotiedostoKeys.size(),
         operationId);
 
-    JsonObject result = new JsonObject();
-    JsonArray keyJson = new JsonArray();
-    siirtotiedostoKeys.forEach(keyJson::add);
-    result.add("keys", keyJson);
-    result.addProperty("total", oids.size());
-    result.addProperty("success", true);
-    return result.toString();
+    return new SiirtotiedostoResult(siirtotiedostoKeys, oids.size());
+  }
+
+  public SiirtotiedostoResult createSiirtotiedostotForAvaimet(
+      LocalDateTime startDatetime, LocalDateTime endDatetime) {
+    logger.info(
+        "Creating siirtotiedostot for avaimet for window {} - {}", startDatetime, endDatetime);
+
+    List<String> oids = hakukohdeViiteDAO.findNewOrChangedHakukohdeOids(startDatetime, endDatetime);
+    List<String> siirtotiedostoKeys = new ArrayList<>();
+    String operationId = UUID.randomUUID().toString();
+
+    if (!oids.isEmpty()) {
+      List<List<String>> partitioned =
+          Lists.partition(oids, siirtotiedostoS3Client.getMaxHakukohdeCountInFile());
+      logger.info(
+          "Käsitellään {} muuttuneen hakukohteen tiedot {} palassa.",
+          oids.size(),
+          partitioned.size());
+      for (List<String> oidBatch : partitioned) {
+        List<HakukohdeJaValintaperusteDTO> avaimet =
+            laskentakaavaService.findAvaimetForHakukohteet(oidBatch).entrySet().stream()
+                .map(entry -> new HakukohdeJaValintaperusteDTO(entry.getKey(), entry.getValue()))
+                .toList();
+
+        siirtotiedostoKeys.add(
+            siirtotiedostoS3Client.createSiirtotiedosto(
+                avaimet, "avaimet", operationId, siirtotiedostoKeys.size() + 1));
+      }
+    }
+
+    logger.info(
+        "Kirjoitettiin yhteensä {} hakukohteen avaimet {} siirtotiedostoon, operaatioId: {}",
+        oids.size(),
+        siirtotiedostoKeys.size(),
+        operationId);
+
+    return new SiirtotiedostoResult(siirtotiedostoKeys, oids.size());
   }
 }
