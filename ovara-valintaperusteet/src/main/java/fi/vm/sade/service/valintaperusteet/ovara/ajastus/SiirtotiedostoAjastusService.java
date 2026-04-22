@@ -1,7 +1,10 @@
 package fi.vm.sade.service.valintaperusteet.ovara.ajastus;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import fi.vm.sade.service.valintaperusteet.dto.SiirtotiedostoResult;
 import fi.vm.sade.service.valintaperusteet.ovara.ajastus.impl.SiirtotiedostoProsessiRepositoryImpl;
 import fi.vm.sade.service.valintaperusteet.service.impl.SiirtotiedostoServiceImpl;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,11 +19,15 @@ public class SiirtotiedostoAjastusService {
 
   private final SiirtotiedostoProsessiRepositoryImpl siirtotiedostoProsessiRepositoryImpl;
 
+  private final ObjectMapper objectMapper;
+
   public SiirtotiedostoAjastusService(
       SiirtotiedostoServiceImpl siirtotiedostoServiceImpl,
-      SiirtotiedostoProsessiRepositoryImpl siirtotiedostoProsessiRepositoryImpl) {
+      SiirtotiedostoProsessiRepositoryImpl siirtotiedostoProsessiRepositoryImpl,
+      ObjectMapper objectMapper) {
     this.siirtotiedostoServiceImpl = siirtotiedostoServiceImpl;
     this.siirtotiedostoProsessiRepositoryImpl = siirtotiedostoProsessiRepositoryImpl;
+    this.objectMapper = objectMapper;
   }
 
   public String createNextSiirtotiedosto() {
@@ -32,13 +39,16 @@ public class SiirtotiedostoAjastusService {
     siirtotiedostoProsessiRepositoryImpl.persist(uusi);
 
     try {
-      String resultInfo =
-          siirtotiedostoServiceImpl.createSiirtotiedostot(
-              uusi.getWindowStart().toLocalDateTime(), uusi.getWindowEnd().toLocalDateTime());
-      uusi.setInfo(resultInfo);
+      LocalDateTime start = uusi.getWindowStart().toLocalDateTime();
+      LocalDateTime end = uusi.getWindowEnd().toLocalDateTime();
+      SiirtotiedostoResult result = siirtotiedostoServiceImpl.createSiirtotiedostot(start, end);
+      SiirtotiedostoResult avaimetResult =
+          siirtotiedostoServiceImpl.createSiirtotiedostotForAvaimet(start, end);
+
+      uusi.setInfo(
+          objectMapper.writeValueAsString(
+              new SiirtotiedostoInfo(result.total(), avaimetResult.total())));
       uusi.setSuccess(true);
-      uusi.setRunEnd(OffsetDateTime.now());
-      siirtotiedostoProsessiRepositoryImpl.persist(uusi);
     } catch (Exception e) {
       logger.error(
           "{} Tapahtui virhe muodostettaessa ajastettua siirtotiedostoa:",
@@ -47,6 +57,7 @@ public class SiirtotiedostoAjastusService {
       uusi.setInfo("{}");
       uusi.setErrorMessage(e.getMessage());
       uusi.setSuccess(false);
+    } finally {
       uusi.setRunEnd(OffsetDateTime.now());
       siirtotiedostoProsessiRepositoryImpl.persist(uusi);
     }
