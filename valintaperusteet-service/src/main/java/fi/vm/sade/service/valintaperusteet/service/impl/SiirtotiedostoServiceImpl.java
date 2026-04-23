@@ -4,7 +4,7 @@ import static java.util.stream.Collectors.*;
 
 import com.google.common.collect.Lists;
 import fi.vm.sade.service.valintaperusteet.dao.HakukohdeViiteDAO;
-import fi.vm.sade.service.valintaperusteet.dto.HakukohteenValintaperusteAvaimetDTO;
+import fi.vm.sade.service.valintaperusteet.dto.HakukohdeJaValintaperusteDTO;
 import fi.vm.sade.service.valintaperusteet.dto.HakuparametritDTO;
 import fi.vm.sade.service.valintaperusteet.dto.SiirtotiedostoResult;
 import fi.vm.sade.service.valintaperusteet.dto.SiirtotiedostoValintaperusteetDTO;
@@ -91,8 +91,10 @@ public class SiirtotiedostoServiceImpl implements SiirtotiedostoService {
           oids.size(),
           partitioned.size());
       for (List<String> oidBatch : partitioned) {
-        List<HakukohteenValintaperusteAvaimetDTO> avaimet =
-            oidBatch.stream().map(laskentakaavaService::findHakukohteenAvaimet).toList();
+        List<HakukohdeJaValintaperusteDTO> avaimet =
+            laskentakaavaService.findAvaimetForHakukohteet(oidBatch).entrySet().stream()
+                .map(entry -> new HakukohdeJaValintaperusteDTO(entry.getKey(), entry.getValue()))
+                .toList();
 
         siirtotiedostoKeys.add(
             siirtotiedostoS3Client.createSiirtotiedosto(
