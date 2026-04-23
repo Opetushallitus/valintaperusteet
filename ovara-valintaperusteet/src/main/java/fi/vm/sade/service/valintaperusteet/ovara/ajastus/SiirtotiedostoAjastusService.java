@@ -6,6 +6,7 @@ import fi.vm.sade.service.valintaperusteet.ovara.ajastus.impl.SiirtotiedostoPros
 import fi.vm.sade.service.valintaperusteet.service.impl.SiirtotiedostoServiceImpl;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -42,8 +43,9 @@ public class SiirtotiedostoAjastusService {
       LocalDateTime start = uusi.getWindowStart().toLocalDateTime();
       LocalDateTime end = uusi.getWindowEnd().toLocalDateTime();
       SiirtotiedostoResult result = siirtotiedostoServiceImpl.createSiirtotiedostot(start, end);
-      SiirtotiedostoResult avaimetResult =
-          siirtotiedostoServiceImpl.createSiirtotiedostotForAvaimet(start, end);
+      SiirtotiedostoResult avaimetResult = new SiirtotiedostoResult(List.of(), 0);
+      // testataan ensin ilman ajastettuja luonteja
+      // siirtotiedostoServiceImpl.createSiirtotiedostotForAvaimet(start, end);
 
       uusi.setInfo(
           objectMapper.writeValueAsString(
