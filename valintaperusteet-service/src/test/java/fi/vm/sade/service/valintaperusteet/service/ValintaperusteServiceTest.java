@@ -6,12 +6,15 @@ import fi.vm.sade.service.valintaperusteet.WithSpringBoot;
 import fi.vm.sade.service.valintaperusteet.annotation.DataSetLocation;
 import fi.vm.sade.service.valintaperusteet.dto.HakukohteenValintaperusteDTO;
 import fi.vm.sade.service.valintaperusteet.dto.HakuparametritDTO;
+import fi.vm.sade.service.valintaperusteet.dto.SiirtotiedostoValintaperusteetDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintakoeDTO;
+import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteetDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintaperusteetValinnanVaiheDTO;
 import fi.vm.sade.service.valintaperusteet.dto.ValintatapajonoDTO;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -227,6 +230,47 @@ public class ValintaperusteServiceTest extends WithSpringBoot {
     assertEquals("110", vps.get(1).getValinnanVaihe().getValinnanVaiheOid());
     assertEquals(4, vps.get(0).getHakukohteenValintaperuste().size());
     assertEquals(4, vps.get(1).getHakukohteenValintaperuste().size());
+  }
+
+  @Test
+  public void testHaeSiirtotiedostoValintaperusteet() {
+    HakuparametritDTO param = new HakuparametritDTO();
+    param.setHakukohdeOid("oid17");
+
+    List<SiirtotiedostoValintaperusteetDTO> siirtotiedosto =
+        valintaperusteService.haeSiirtotiedostoValintaperusteet(List.of(param));
+
+    assertEquals(1, siirtotiedosto.size());
+    SiirtotiedostoValintaperusteetDTO dto = siirtotiedosto.get(0);
+
+    assertEquals("oid17", dto.getHakukohdeOid());
+    assertEquals("hakuoid1", dto.getHakuOid());
+
+    assertEquals(1, dto.getValinnanVaiheet().size());
+    assertEquals("100", dto.getValinnanVaiheet().get(0).getValinnanVaiheOid());
+
+    assertEquals(3, dto.getHakukohteenValintaperuste().size());
+
+    List<ValintaperusteDTO> avaimet =
+        dto.getAvaimet().stream()
+            .sorted(Comparator.comparing(ValintaperusteDTO::getTunniste))
+            .toList();
+    assertEquals(2, avaimet.size());
+    assertEquals("valintaperuste1", avaimet.get(0).getTunniste());
+    assertEquals("valintaperuste2", avaimet.get(1).getTunniste());
+    assertTrue(avaimet.get(0).getOsallistuminenTunniste().endsWith("-OSALLISTUMINEN"));
+    assertTrue(avaimet.get(1).getOsallistuminenTunniste().endsWith("-OSALLISTUMINEN"));
+  }
+
+  @Test
+  public void testHaeSiirtotiedostoValintaperusteetTuntematonHakukohde() {
+    HakuparametritDTO param = new HakuparametritDTO();
+    param.setHakukohdeOid("ei-ole-olemassa");
+
+    List<SiirtotiedostoValintaperusteetDTO> siirtotiedosto =
+        valintaperusteService.haeSiirtotiedostoValintaperusteet(List.of(param));
+
+    assertEquals(0, siirtotiedosto.size());
   }
 
   @Test
