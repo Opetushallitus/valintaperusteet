@@ -281,6 +281,8 @@ public class ValintaperusteServiceImpl implements ValintaperusteService {
                       return vpDTO;
                     })
                 .toList());
+    valintaperusteetDTO.setAvaimet(
+        laskentakaavaService.findAvaimetForHakukohde(hakukohde.getOid()));
     return valintaperusteetDTO;
   }
 

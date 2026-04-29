@@ -15,6 +15,8 @@ public class SiirtotiedostoValintaperusteetDTO extends AbstractWithModifyTimesta
   private List<HakukohteenValintaperusteDTO> hakukohteenValintaperuste =
       new ArrayList<HakukohteenValintaperusteDTO>();
 
+  private List<ValintaperusteDTO> avaimet = new ArrayList<>();
+
   public void setHakukohdeOid(String hakukohdeOid) {
     this.hakukohdeOid = hakukohdeOid;
   }
@@ -54,5 +56,13 @@ public class SiirtotiedostoValintaperusteetDTO extends AbstractWithModifyTimesta
   public void setHakukohteenValintaperuste(
       List<HakukohteenValintaperusteDTO> hakukohteenValintaperuste) {
     this.hakukohteenValintaperuste = hakukohteenValintaperuste;
+  }
+
+  public List<ValintaperusteDTO> getAvaimet() {
+    return avaimet;
+  }
+
+  public void setAvaimet(List<ValintaperusteDTO> avaimet) {
+    this.avaimet = avaimet;
   }
 }
