@@ -447,6 +447,13 @@
                 <artifactId>netty-codec-http2</artifactId>
                 <version>4.1.132.Final</version>
             </dependency>
+
+            <!-- Tietoturvahaavoittuvuuksien korjauksia -->
+            <dependency>
+                <groupId>org.apache.tomcat.embed</groupId>
+                <artifactId>tomcat-embed-core</artifactId>
+                <version>10.1.54</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
