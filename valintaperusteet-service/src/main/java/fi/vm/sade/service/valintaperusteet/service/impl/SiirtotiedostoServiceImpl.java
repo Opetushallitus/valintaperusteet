@@ -98,7 +98,7 @@ public class SiirtotiedostoServiceImpl implements SiirtotiedostoService {
 
         siirtotiedostoKeys.add(
             siirtotiedostoS3Client.createSiirtotiedosto(
-                avaimet, "avaimet", operationId, siirtotiedostoKeys.size() + 1));
+                avaimet, "avain", operationId, siirtotiedostoKeys.size() + 1));
       }
     }
 
