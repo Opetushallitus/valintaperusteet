@@ -46,14 +46,15 @@ public class SiirtotiedostoS3Client {
     this.maxHakukohdeCountInFile = maxHakukohdeCountInFile;
   }
 
-  public String createSiirtotiedosto(List<?> data, String operationId, int operationSubId) {
+  public String createSiirtotiedosto(
+      List<?> data, String datatype, String operationId, int operationSubId) {
     try {
       logger.info(
           "{} {} Tallennetaan siirtotiedosto, koko {}", operationId, operationSubId, data.size());
       ObjectMetadata result =
           siirtotiedostoPalvelu.saveSiirtotiedosto(
               "valintaperusteet",
-              "hakukohde",
+              datatype,
               "",
               operationId,
               operationSubId,
