@@ -6,12 +6,12 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.12</version>
+        <version>3.5.14</version>
     </parent>
 
     <groupId>fi.vm.sade.valintaperusteet</groupId>
     <artifactId>valintaperusteet</artifactId>
-    <version>8.0-SNAPSHOT</version>
+    <version>8.1-SNAPSHOT</version>
 
     <name>Valintaperusteet</name>
     <packaging>pom</packaging>
@@ -35,7 +35,7 @@
 
         <maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
 
-        <valinta-sharedutils.version>8.0-SNAPSHOT</valinta-sharedutils.version>
+        <valinta-sharedutils.version>8.1-SNAPSHOT</valinta-sharedutils.version>
         <akka.version>2.6.21</akka.version>
         <hibernate.version>6.5.3.Final</hibernate.version> <!-- 6.6-versio aiheutti virhettä: object
         references an unsaved transient instance - save the transient instance before flushing -->
@@ -91,7 +91,7 @@
             <dependency>
                 <groupId>org.asynchttpclient</groupId>
                 <artifactId>async-http-client</artifactId>
-                <version>3.0.7</version>
+                <version>3.0.10</version>
             </dependency>
             <dependency>
                 <groupId>org.flywaydb</groupId>
@@ -194,7 +194,7 @@
             <dependency>
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
-                <version>42.7.9</version>
+                <version>42.7.11</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson</groupId>
@@ -453,6 +453,13 @@
                 <groupId>org.apache.tomcat.embed</groupId>
                 <artifactId>tomcat-embed-core</artifactId>
                 <version>10.1.54</version>
+            </dependency>
+
+            <!-- valinta-sharedutils vs spring-security konfliktin korjaus -->
+            <dependency>
+                <groupId>org.apereo.cas.client</groupId>
+                <artifactId>cas-client-core</artifactId>
+                <version>4.1.1</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
