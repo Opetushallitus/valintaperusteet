@@ -128,11 +128,13 @@ jobs:
 
       - name: Rewrite artifact version with ticket id
         if: success() && env.DEV_BRANCH_DEPLOY != ''
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          CURRENT=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
+          CURRENT=$(mvn -q --settings settings.xml -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
           NEW="${CURRENT%-SNAPSHOT}-${DEV_BRANCH_DEPLOY}-SNAPSHOT"
           echo "Rewriting artefact version: $CURRENT -> $NEW"
-          mvn -B versions:set -DnewVersion="$NEW" -DgenerateBackupPoms=false -DprocessAllModules=true -DupdateMatchingVersions=true
+          mvn -B --settings settings.xml versions:set -DnewVersion="$NEW" -DgenerateBackupPoms=false -DprocessAllModules=true -DupdateMatchingVersions=true
 
       - name: Deploy jar library
         if: success() && (env.DEV_BRANCH_DEPLOY != '' || format('refs/heads/{0}', github.event.repository.default_branch) == github.ref)
