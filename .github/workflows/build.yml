@@ -1,5 +1,11 @@
 name: Valintaperusteet-service
 
+# Empty in main. Set to a ticket id (e.g. "OY-1234") on a dev branch
+# to deploy under version <base-version>-<TICKET>-SNAPSHOT.
+# MUST be empty before merging to main.
+env:
+  DEV_BRANCH_DEPLOY: 'OY-5771'
+
 on:
   workflow_dispatch:
   push:
@@ -93,6 +99,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Refuse dev-only configuration on main
+        if: env.DEV_BRANCH_DEPLOY != '' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+        run: |
+          echo "::error::DEV_BRANCH_DEPLOY is set to '${DEV_BRANCH_DEPLOY}' on main. Clear it before merging."
+          exit 1
+
       - uses: actions/checkout@v4
 
       - uses: actions/cache@v4
@@ -114,12 +126,21 @@ jobs:
           distribution: 'corretto'
           cache: 'maven'
 
+      - name: Rewrite artifact version with ticket id
+        if: success() && env.DEV_BRANCH_DEPLOY != ''
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          CURRENT=$(mvn -q --settings settings.xml -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
+          NEW="${CURRENT%-SNAPSHOT}-${DEV_BRANCH_DEPLOY}-SNAPSHOT"
+          echo "Rewriting artefact version: $CURRENT -> $NEW"
+          mvn -B --settings settings.xml versions:set -DnewVersion="$NEW" -DgenerateBackupPoms=false -DprocessAllModules=true -DupdateMatchingVersions=true
+
       - name: Deploy jar library
-        if: github.ref == 'refs/heads/master'
+        if: success() && (env.DEV_BRANCH_DEPLOY != '' || format('refs/heads/{0}', github.event.repository.default_branch) == github.ref)
         shell: bash
         env:
-          ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
-          ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git clone https://github.com/Opetushallitus/ci-tools.git
           source ci-tools/common/setup-tools.sh

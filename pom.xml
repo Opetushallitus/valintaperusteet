@@ -11,7 +11,7 @@
 
     <groupId>fi.vm.sade.valintaperusteet</groupId>
     <artifactId>valintaperusteet</artifactId>
-    <version>8.1-SNAPSHOT</version>
+    <version>8.2-SNAPSHOT</version>
 
     <name>Valintaperusteet</name>
     <packaging>pom</packaging>
@@ -35,7 +35,7 @@
 
         <maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
 
-        <valinta-sharedutils.version>8.1-SNAPSHOT</valinta-sharedutils.version>
+        <valinta-sharedutils.version>8.2-SNAPSHOT</valinta-sharedutils.version>
         <akka.version>2.6.21</akka.version>
         <hibernate.version>6.5.3.Final</hibernate.version> <!-- 6.6-versio aiheutti virhettä: object
         references an unsaved transient instance - save the transient instance before flushing -->
@@ -228,7 +228,7 @@
             <dependency>
                 <groupId>fi.vm.sade</groupId>
                 <artifactId>auditlogger</artifactId>
-                <version>8.3.0-SNAPSHOT</version>
+                <version>9.2.7-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.scala-lang</groupId>
@@ -624,44 +624,14 @@
             <name>Central Repository</name>
             <url>https://repo.maven.apache.org/maven2</url>
         </repository>
-        <repository>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-                <checksumPolicy>warn</checksumPolicy>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-                <updatePolicy>always</updatePolicy>
-                <checksumPolicy>warn</checksumPolicy>
-            </snapshots>
-            <id>oph-sade-artifactory-releases</id>
-            <name>oph-sade-artifactory-releases</name>
-            <url>https://artifactory.opintopolku.fi/artifactory/oph-sade-release-local</url>
-        </repository>
-        <repository>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <id>oph-sade-artifactory-snapshots</id>
-            <url>https://artifactory.opintopolku.fi/artifactory/oph-sade-snapshot-local</url>
-        </repository>
     </repositories>
 
     <distributionManagement>
         <repository>
-            <id>oph-sade-artifactory</id>
-            <name>oph-sade-artifactory-releases</name>
-            <url>https://artifactory.opintopolku.fi/artifactory/oph-sade-release-local</url>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/Opetushallitus/valintaperusteet</url>
         </repository>
-        <snapshotRepository>
-            <id>oph-sade-artifactory</id>
-            <name>oph-sade-artifactory-snapshots</name>
-            <url>https://artifactory.opintopolku.fi/artifactory/oph-sade-snapshot-local</url>
-        </snapshotRepository>
     </distributionManagement>
 
     <profiles>
