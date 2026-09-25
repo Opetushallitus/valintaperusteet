@@ -731,17 +731,34 @@ public class LaskentakaavaServiceImpl implements LaskentakaavaService {
   private Laskentakaava haeKokoLaskentakaavaJaTarkistaSilmukat(Long id, Set<Long> laskentakaavaIds)
       throws FunktiokutsuMuodostaaSilmukanException {
     Laskentakaava laskentakaava = haeLaskentakaava(id);
-    Collection<Laskentakaava> laskentakaavat =
-        ObjectGraphUtil.extractObjectsOfType(laskentakaava, Laskentakaava.class);
-    laskentakaavat.remove(laskentakaava);
-    if (laskentakaavat.stream()
-        .filter(k -> laskentakaavaIds.contains(k.getId()))
-        .findAny()
-        .isPresent()) {
+    Set<Long> viitatutLaskentakaavaIdt = new HashSet<>();
+    keraaViitatutLaskentakaavaIdt(laskentakaava.getFunktiokutsu(), viitatutLaskentakaavaIdt);
+    if (viitatutLaskentakaavaIdt.stream().anyMatch(laskentakaavaIds::contains)) {
       throw new FunktiokutsuMuodostaaSilmukanException(
           laskentakaava.getFunktiokutsu().getFunktionimi(), id);
     }
     return laskentakaava;
+  }
+
+  /**
+   * Kerää funktiokutsupuusta rekursiivisesti kaikkien viitattujen laskentakaavojen tunnisteet.
+   * Jokainen laskentakaava käydään läpi vain kerran, joten jaetut alikaavat eivät moninkertaista
+   * työtä.
+   */
+  private void keraaViitatutLaskentakaavaIdt(Funktiokutsu funktiokutsu, Set<Long> loydetyt) {
+    if (funktiokutsu == null) {
+      return;
+    }
+    for (Funktioargumentti argumentti : funktiokutsu.getFunktioargumentit()) {
+      if (argumentti.getFunktiokutsuChild() != null) {
+        keraaViitatutLaskentakaavaIdt(argumentti.getFunktiokutsuChild(), loydetyt);
+      } else if (argumentti.getLaskentakaavaChild() != null) {
+        Laskentakaava viitattu = argumentti.getLaskentakaavaChild();
+        if (loydetyt.add(viitattu.getId())) {
+          keraaViitatutLaskentakaavaIdt(viitattu.getFunktiokutsu(), loydetyt);
+        }
+      }
+    }
   }
 
   private Laskentakaava haeKokoLaskentakaava(Long id, boolean laajennaAlakaavat) {

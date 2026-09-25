@@ -135,12 +135,20 @@ public class JarjestyskriteeriServiceImpl implements JarjestyskriteeriService {
 
   private Jarjestyskriteeri teeKopioMasterista(
       Valintatapajono jono, Jarjestyskriteeri master, JuureenKopiointiCache kopiointiCache) {
-    Laskentakaava kopioiJosEiJoKopioitu =
-        laskentakaavaService.kopioiJosEiJoKopioitu(
-            master.getLaskentakaava(),
-            jono.getValinnanVaihe().getHakukohdeViite(),
-            jono.getValinnanVaihe().getValintaryhma());
-    return teeKopioMasterista(jono, master, kopioiJosEiJoKopioitu, kopiointiCache);
+    Laskentakaava kopioituKaava = null;
+    if (kopiointiCache != null && master.getLaskentakaava() != null) {
+      // Kaava on jo kopioitu tässä kopiointioperaatiossa, joten vältetään kallis
+      // haeLaskentakaavaTaiSenKopioVanhemmilta-skannaus koko esivanhempien ketjun yli.
+      kopioituKaava = kopiointiCache.kopioidutLaskentakaavat.get(master.getLaskentakaava().getId());
+    }
+    if (kopioituKaava == null) {
+      kopioituKaava =
+          laskentakaavaService.kopioiJosEiJoKopioitu(
+              master.getLaskentakaava(),
+              jono.getValinnanVaihe().getHakukohdeViite(),
+              jono.getValinnanVaihe().getValintaryhma());
+    }
+    return teeKopioMasterista(jono, master, kopioituKaava, kopiointiCache);
   }
 
   private Jarjestyskriteeri teeKopioMasterista(

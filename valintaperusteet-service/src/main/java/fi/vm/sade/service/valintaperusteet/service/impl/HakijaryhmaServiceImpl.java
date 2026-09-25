@@ -150,7 +150,7 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
       String parentValintaryhmaOid,
       String childValintaryhmaoid,
       JuureenKopiointiCache kopiointiCache) {
-    Valintaryhma childValintaryhma = valintaryhmaService.readByOid(childValintaryhmaoid);
+    Valintaryhma childValintaryhma = valintaryhmaService.readPlainByOid(childValintaryhmaoid);
     List<Hakijaryhma> byValintaryhma = hakijaryhmaDAO.findByValintaryhma(parentValintaryhmaOid);
     for (Hakijaryhma parentHakijaryhma : byValintaryhma) {
       lisaaValintaryhmalleKopioMasterHakijaryhmasta(
@@ -189,7 +189,7 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
       kopiointiCache.kopioidutHakijaryhmat.put(masterHakijaryhma.getId(), lisatty);
     }
     List<Valintaryhma> alavalintaryhmat =
-        valintaryhmaService.findValintaryhmasByParentOid(valintaryhma.getOid());
+        valintaryhmaService.findValintaryhmasByParentOidPlain(valintaryhma.getOid());
     alavalintaryhmat.forEach(
         alavalintaryhma -> {
           lisaaValintaryhmalleKopioMasterHakijaryhmasta(

@@ -63,6 +63,7 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long>
         .selectFrom(valintaryhma)
         .where(valintaryhma.ylavalintaryhma.oid.eq(oid))
         .distinct()
+        .orderBy(valintaryhma.nimi.asc())
         .fetch();
   }
 
@@ -101,7 +102,8 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long>
     return set;
   }
 
-  private Valintaryhma readPlainByOid(String oid) {
+  @Override
+  public Valintaryhma readPlainByOid(String oid) {
     QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
     return queryFactory()
         .selectFrom(valintaryhma)
