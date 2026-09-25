@@ -2,6 +2,7 @@ package fi.vm.sade.service.valintaperusteet.util;
 
 import static fi.vm.sade.valinta.sharedutils.http.HttpResource.CSRF_VALUE;
 import static org.asynchttpclient.Dsl.asyncHttpClient;
+import static org.asynchttpclient.Dsl.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -31,7 +32,7 @@ public class VtsRestClient {
               (JsonDeserializer<Date>)
                   (json, typeOfT, context) -> new Date(json.getAsJsonPrimitive().getAsLong()))
           .create();
-  private final AsyncHttpClient asyncHttpClient = asyncHttpClient();
+  private final AsyncHttpClient asyncHttpClient = asyncHttpClient(config().setHttp2Enabled(false));
   private final String serviceUrl;
   private final CasClient casClient;
 
