@@ -1,5 +1,6 @@
 package fi.vm.sade.service.valintaperusteet.dao.impl;
 
+import com.querydsl.core.types.CollectionExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import fi.vm.sade.service.valintaperusteet.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.service.valintaperusteet.dao.ValintaryhmaDAO;
@@ -8,6 +9,7 @@ import fi.vm.sade.service.valintaperusteet.model.QHakukohdekoodi;
 import fi.vm.sade.service.valintaperusteet.model.QValintaryhma;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -32,24 +34,48 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long>
   public List<Valintaryhma> findChildrenByParentOid(String id) {
     QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
 
-    return queryFactory()
+    List<Valintaryhma> lapset =
+        queryFactory()
+            .selectFrom(valintaryhma)
+            .where(
+                id == null
+                    ? valintaryhma.ylavalintaryhma.isNull()
+                    : valintaryhma.ylavalintaryhma.oid.eq(id))
+            .orderBy(valintaryhma.nimi.asc(), valintaryhma.id.asc())
+            .fetch();
+    return alustaKokoelmat(
+        lapset,
+        valintaryhma.alavalintaryhmat,
+        valintaryhma.hakukohdeViitteet,
+        valintaryhma.hakukohdekoodit,
+        valintaryhma.valintakoekoodit,
+        valintaryhma.organisaatiot);
+  }
+
+  /**
+   * Alustaa annetut valintaryhmien kokoelmat kukin omalla kyselyllään. Samaan kyselyyn niputettuina
+   * fetch joinit muodostaisivat karteesisen tulon, jolloin kannasta luettava rivimäärä on
+   * kokoelmien kokojen tulo eikä summa.
+   */
+  private List<Valintaryhma> alustaKokoelmat(
+      List<Valintaryhma> valintaryhmat, CollectionExpression<?, ?>... kokoelmat) {
+    if (valintaryhmat.isEmpty()) {
+      return valintaryhmat;
+    }
+    List<Long> idt = valintaryhmat.stream().map(Valintaryhma::getId).collect(Collectors.toList());
+    for (CollectionExpression<?, ?> kokoelma : kokoelmat) {
+      alustaKokoelma(idt, kokoelma);
+    }
+    return valintaryhmat;
+  }
+
+  private void alustaKokoelma(List<Long> idt, CollectionExpression<?, ?> kokoelma) {
+    QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
+    queryFactory()
         .selectFrom(valintaryhma)
-        .leftJoin(valintaryhma.alavalintaryhmat)
+        .leftJoin(kokoelma)
         .fetchJoin()
-        .leftJoin(valintaryhma.hakukohdeViitteet)
-        .fetchJoin()
-        .leftJoin(valintaryhma.hakukohdekoodit)
-        .fetchJoin()
-        .leftJoin(valintaryhma.valintakoekoodit)
-        .fetchJoin()
-        .leftJoin(valintaryhma.organisaatiot)
-        .fetchJoin()
-        .where(
-            id == null
-                ? valintaryhma.ylavalintaryhma.isNull()
-                : valintaryhma.ylavalintaryhma.oid.eq(id))
-        .distinct()
-        .orderBy(valintaryhma.nimi.asc())
+        .where(valintaryhma.id.in(idt))
         .fetch();
   }
 
@@ -63,27 +89,26 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long>
         .selectFrom(valintaryhma)
         .where(valintaryhma.ylavalintaryhma.oid.eq(oid))
         .distinct()
-        .orderBy(valintaryhma.nimi.asc())
+        .orderBy(valintaryhma.nimi.asc(), valintaryhma.id.asc())
         .fetch();
   }
 
   @Override
   public Valintaryhma readByOid(String oid) {
     QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
-    return queryFactory()
-        .selectFrom(valintaryhma)
-        .leftJoin(valintaryhma.alavalintaryhmat)
-        .fetchJoin()
-        .leftJoin(valintaryhma.hakukohdeViitteet)
-        .fetchJoin()
-        .leftJoin(valintaryhma.hakukohdekoodit)
-        .fetchJoin()
-        .leftJoin(valintaryhma.organisaatiot)
-        .fetchJoin()
-        .leftJoin(valintaryhma.valintakoekoodit)
-        .fetchJoin()
-        .where(valintaryhma.oid.eq(oid))
-        .fetchFirst();
+    Valintaryhma loydetty =
+        queryFactory().selectFrom(valintaryhma).where(valintaryhma.oid.eq(oid)).fetchFirst();
+    if (loydetty == null) {
+      return null;
+    }
+    alustaKokoelmat(
+        Collections.singletonList(loydetty),
+        valintaryhma.alavalintaryhmat,
+        valintaryhma.hakukohdeViitteet,
+        valintaryhma.hakukohdekoodit,
+        valintaryhma.valintakoekoodit,
+        valintaryhma.organisaatiot);
+    return loydetty;
   }
 
   @Override
@@ -118,58 +143,55 @@ public class ValintaryhmaDAOImpl extends AbstractJpaDAOImpl<Valintaryhma, Long>
   @Override
   public List<Valintaryhma> findAllFetchAlavalintaryhmat() {
     QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
-    return queryFactory()
-        .selectFrom(valintaryhma)
-        .leftJoin(valintaryhma.alavalintaryhmat)
-        .fetchJoin()
-        .leftJoin(valintaryhma.organisaatiot)
-        .fetchJoin()
-        .distinct()
-        .fetch();
+    List<Valintaryhma> valintaryhmat =
+        queryFactory().selectFrom(valintaryhma).orderBy(valintaryhma.id.asc()).fetch();
+    return alustaKokoelmat(
+        valintaryhmat, valintaryhma.alavalintaryhmat, valintaryhma.organisaatiot);
   }
 
   @Override
   public List<Valintaryhma> findAllWithoutHakuFetchAlavalintaryhmat() {
     QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
-    return queryFactory()
-        .selectFrom(valintaryhma)
-        .leftJoin(valintaryhma.alavalintaryhmat)
-        .fetchJoin()
-        .leftJoin(valintaryhma.organisaatiot)
-        .fetchJoin()
-        .where(valintaryhma.hakuoid.isNull())
-        .distinct()
-        .fetch();
+    List<Valintaryhma> valintaryhmat =
+        queryFactory()
+            .selectFrom(valintaryhma)
+            .where(valintaryhma.hakuoid.isNull())
+            .orderBy(valintaryhma.id.asc())
+            .fetch();
+    return alustaKokoelmat(
+        valintaryhmat, valintaryhma.alavalintaryhmat, valintaryhma.organisaatiot);
   }
 
   @Override
   public Valintaryhma findAllFetchAlavalintaryhmat(String oid) {
     QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
-    return queryFactory()
-        .selectFrom(valintaryhma)
-        .leftJoin(valintaryhma.alavalintaryhmat)
-        .fetchJoin()
-        .leftJoin(valintaryhma.organisaatiot)
-        .fetchJoin()
-        .where(valintaryhma.oid.eq(oid))
-        .fetchFirst();
+    Valintaryhma loydetty =
+        queryFactory().selectFrom(valintaryhma).where(valintaryhma.oid.eq(oid)).fetchFirst();
+    if (loydetty == null) {
+      return null;
+    }
+    alustaKokoelmat(
+        Collections.singletonList(loydetty),
+        valintaryhma.alavalintaryhmat,
+        valintaryhma.organisaatiot);
+    return loydetty;
   }
 
   @Override
   public List<Valintaryhma> findAllByHakuOidFetchAlavalintaryhmat(String hakuOid) {
     QValintaryhma valintaryhma = QValintaryhma.valintaryhma;
-    return queryFactory()
-        .selectFrom(valintaryhma)
-        .leftJoin(valintaryhma.alavalintaryhmat)
-        .fetchJoin()
-        .leftJoin(valintaryhma.organisaatiot)
-        .fetchJoin()
-        .where(
-            valintaryhma
-                .hakuoid
-                .eq(hakuOid)
-                .or(valintaryhma.hakuoid.isNull().and(valintaryhma.ylavalintaryhma.isNull())))
-        .fetch();
+    List<Valintaryhma> valintaryhmat =
+        queryFactory()
+            .selectFrom(valintaryhma)
+            .where(
+                valintaryhma
+                    .hakuoid
+                    .eq(hakuOid)
+                    .or(valintaryhma.hakuoid.isNull().and(valintaryhma.ylavalintaryhma.isNull())))
+            .orderBy(valintaryhma.id.asc())
+            .fetch();
+    return alustaKokoelmat(
+        valintaryhmat, valintaryhma.alavalintaryhmat, valintaryhma.organisaatiot);
   }
 
   @Override
