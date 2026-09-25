@@ -5,7 +5,6 @@ import fi.vm.sade.service.valintaperusteet.dto.ValinnanVaiheDTO;
 import fi.vm.sade.service.valintaperusteet.model.HakukohdeViite;
 import fi.vm.sade.service.valintaperusteet.model.ValinnanVaihe;
 import fi.vm.sade.service.valintaperusteet.model.Valintaryhma;
-import fi.vm.sade.service.valintaperusteet.util.JuureenKopiointiCache;
 import java.util.List;
 import java.util.Set;
 
@@ -28,15 +27,9 @@ public interface ValinnanVaiheService {
 
   List<ValinnanVaihe> jarjestaValinnanVaiheet(List<String> valinnanVaiheOidit);
 
-  void kopioiValinnanVaiheetParentilta(
-      Valintaryhma valintaryhma,
-      Valintaryhma parentValintaryhma,
-      JuureenKopiointiCache kopiointiCache);
+  void kopioiValinnanVaiheetParentilta(Valintaryhma valintaryhma, Valintaryhma parentValintaryhma);
 
-  void kopioiValinnanVaiheetParentilta(
-      HakukohdeViite hakukohde,
-      Valintaryhma parentValintaryhma,
-      JuureenKopiointiCache kopiointiCache);
+  void kopioiValinnanVaiheetParentilta(HakukohdeViite hakukohde, Valintaryhma parentValintaryhma);
 
   boolean kuuluuSijoitteluun(String oid);
 

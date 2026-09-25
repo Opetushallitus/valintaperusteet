@@ -17,8 +17,10 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 @DataSetLocation("classpath:test-data-perinta.xml")
+@Transactional
 @ActiveProfiles({"dev", "vtsConfig"})
 public class ValintaryhmaPerintaJaKopiointiTest extends WithSpringBoot {
 
