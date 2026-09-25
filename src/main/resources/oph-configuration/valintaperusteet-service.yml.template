@@ -38,6 +38,8 @@ valintaperusteet:
     leakdetectionthresholdmillis: 1800000
   valinta-tulos-service:
     service-url: https://${host.virkailija}/valinta-tulos-service
+    username: {{valintaperusteet_service_username_to_valinta_tulos_service}}
+    password: {{valintaperusteet_service_password_to_valinta_tulos_service}}
   siirtotiedosto:
     awsregion: {{aws_region}}
     s3bucket: {{ovara_siirtotiedosto_s3_bucket}}
