@@ -54,8 +54,23 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
   }
 
   @Override
+  public List<Valintaryhma> findValintaryhmasByParentOidPlain(String id) {
+    return valintaryhmaDAO.findChildrenByParentOidPlain(id);
+  }
+
+  @Override
   public Valintaryhma readByOid(String oid) {
     return haeValintaryhma(oid);
+  }
+
+  @Override
+  public Valintaryhma readPlainByOid(String oid) {
+    Valintaryhma valintaryhma = valintaryhmaDAO.readPlainByOid(oid);
+    if (valintaryhma == null) {
+      throw new ValintaryhmaEiOleOlemassaException(
+          "Valintaryhma (" + oid + ") ei ole olemassa.", oid);
+    }
+    return valintaryhma;
   }
 
   private Valintaryhma haeValintaryhma(String oid) {
@@ -172,7 +187,7 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
     }
     copyHakukohdekoodit(source, inserted);
     copyValintakoekoodit(source, inserted);
-    List<Valintaryhma> children = valintaryhmaDAO.findChildrenByParentOid(source.getOid());
+    List<Valintaryhma> children = valintaryhmaDAO.findChildrenByParentOidPlain(source.getOid());
     children.forEach(
         (child) -> {
           Valintaryhma copiedChild = copyAsChild(child, inserted, child.getNimi(), kopiointiCache);
@@ -230,7 +245,7 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
             parentOid);
       }
       // Tarkistetaan sisarusten nimet
-      List<Valintaryhma> children = valintaryhmaDAO.findChildrenByParentOid(parentOid);
+      List<Valintaryhma> children = valintaryhmaDAO.findChildrenByParentOidPlain(parentOid);
       if (children.stream().anyMatch(vr -> vr.getNimi().equals(name))) {
         throw new ValintaryhmaaEiVoidaKopioida(
             "Valintaryhmällä (" + parentOid + ") on jo \"" + name + "\" niminen lapsi",
