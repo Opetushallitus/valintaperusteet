@@ -106,7 +106,7 @@ public class HakukohdeServiceImpl implements HakukohdeService {
       lisatty.setValintaryhma(valintaryhma);
       lisatty = hakukohdeViiteDAO.insert(lisatty);
       String hakukohdeOid = lisatty.getOid();
-      valinnanVaiheService.kopioiValinnanVaiheetParentilta(lisatty, valintaryhma, null);
+      valinnanVaiheService.kopioiValinnanVaiheetParentilta(lisatty, valintaryhma);
       valintaryhma.getHakijaryhmat().stream()
           .forEach(
               hakijaryhma -> {
@@ -237,7 +237,7 @@ public class HakukohdeServiceImpl implements HakukohdeService {
       hakukohdeViite.setValintaryhma(valintaryhma);
 
       if (valintaryhma != null) {
-        valinnanVaiheService.kopioiValinnanVaiheetParentilta(hakukohdeViite, valintaryhma, null);
+        valinnanVaiheService.kopioiValinnanVaiheetParentilta(hakukohdeViite, valintaryhma);
 
         List<ValinnanVaihe> uudetValinnanVaiheet =
             valinnanVaiheService.findByHakukohde(hakukohdeOid);
