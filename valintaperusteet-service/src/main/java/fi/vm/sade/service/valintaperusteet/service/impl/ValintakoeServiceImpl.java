@@ -21,7 +21,6 @@ import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaEiOleO
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintakoettaEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintakoettaEiVoiLisataException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintakoettaEiVoiPoistaaException;
-import fi.vm.sade.service.valintaperusteet.util.JuureenKopiointiCache;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 import fi.vm.sade.service.valintaperusteet.util.ValintakoeKopioija;
 import fi.vm.sade.service.valintaperusteet.util.ValintakoeUtil;
@@ -169,21 +168,19 @@ public class ValintakoeServiceImpl implements ValintakoeService {
     }
     Valintakoe lisatty = valintakoeDAO.insert(valintakoe);
     for (ValinnanVaihe kopio : valinnanVaihe.getKopiot()) {
-      lisaaValinnanVaiheelleKopioMasterValintakokeesta(kopio, lisatty, null);
+      lisaaValinnanVaiheelleKopioMasterValintakokeesta(kopio, lisatty);
     }
     return lisatty;
   }
 
   private void lisaaValinnanVaiheelleKopioMasterValintakokeesta(
-      ValinnanVaihe valinnanVaihe,
-      Valintakoe masterValintakoe,
-      JuureenKopiointiCache kopiointiCache) {
-    Valintakoe kopio = ValintakoeUtil.teeKopioMasterista(masterValintakoe, kopiointiCache);
+      ValinnanVaihe valinnanVaihe, Valintakoe masterValintakoe) {
+    Valintakoe kopio = ValintakoeUtil.teeKopioMasterista(masterValintakoe);
     kopio.setValinnanVaihe(valinnanVaihe);
     kopio.setOid(oidService.haeValintakoeOid());
     Valintakoe lisatty = valintakoeDAO.insert(kopio);
     for (ValinnanVaihe vaihekopio : valinnanVaihe.getKopioValinnanVaiheet()) {
-      lisaaValinnanVaiheelleKopioMasterValintakokeesta(vaihekopio, lisatty, kopiointiCache);
+      lisaaValinnanVaiheelleKopioMasterValintakokeesta(vaihekopio, lisatty);
     }
   }
 
@@ -255,18 +252,13 @@ public class ValintakoeServiceImpl implements ValintakoeService {
 
   @Override
   public void kopioiValintakokeetMasterValinnanVaiheeltaKopiolle(
-      ValinnanVaihe valinnanVaihe,
-      ValinnanVaihe masterValinnanVaihe,
-      JuureenKopiointiCache kopiointiCache) {
+      ValinnanVaihe valinnanVaihe, ValinnanVaihe masterValinnanVaihe) {
     List<Valintakoe> kokeet = valintakoeDAO.findByValinnanVaihe(masterValinnanVaihe.getOid());
     for (Valintakoe master : kokeet) {
-      Valintakoe kopio = ValintakoeUtil.teeKopioMasterista(master, kopiointiCache);
+      Valintakoe kopio = ValintakoeUtil.teeKopioMasterista(master);
       kopio.setOid(oidService.haeValintakoeOid());
       valinnanVaihe.addValintakoe(kopio);
       Valintakoe lisatty = valintakoeDAO.insert(kopio);
-      if (kopiointiCache != null) {
-        kopiointiCache.kopioidutValintakokeet.put(master.getId(), lisatty);
-      }
     }
   }
 }

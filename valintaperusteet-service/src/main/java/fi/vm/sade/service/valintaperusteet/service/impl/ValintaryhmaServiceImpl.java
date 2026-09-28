@@ -9,7 +9,6 @@ import fi.vm.sade.service.valintaperusteet.model.*;
 import fi.vm.sade.service.valintaperusteet.service.*;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintaryhmaEiOleOlemassaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintaryhmaaEiVoidaKopioida;
-import fi.vm.sade.service.valintaperusteet.util.JuureenKopiointiCache;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -33,8 +32,6 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
 
   @Autowired private OrganisaatioDAO organisaatioDAO;
 
-  @Autowired private LaskentakaavaDAO laskentakaavaDAO;
-
   @Autowired private LaskentakaavaService laskentakaavaService;
 
   @Autowired private OidService oidService;
@@ -45,9 +42,7 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
 
   @Autowired private HakukohdeService hakukohdeService;
 
-  @Autowired private HakukohdekoodiDAO hakukohdekoodiDAO;
-
-  @Autowired private ValintakoekoodiDAO valintakoekoodiDAO;
+  @Autowired private ValintaryhmaKopiointiDAO valintaryhmaKopiointiDAO;
 
   public List<Valintaryhma> findValintaryhmasByParentOid(String id) {
     return valintaryhmaDAO.findChildrenByParentOid(id);
@@ -91,8 +86,8 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
     setOrganisaatiot(valintaryhma, dto);
     valintaryhma.setViimeinenKaynnistyspaiva(dto.getViimeinenKaynnistyspaiva());
     Valintaryhma inserted = valintaryhmaDAO.insert(valintaryhma);
-    valinnanVaiheService.kopioiValinnanVaiheetParentilta(inserted, parent, null);
-    hakijaryhmaService.kopioiHakijaryhmatMasterValintaryhmalta(parentOid, inserted.getOid(), null);
+    valinnanVaiheService.kopioiValinnanVaiheetParentilta(inserted, parent);
+    hakijaryhmaService.kopioiHakijaryhmatMasterValintaryhmalta(parentOid, inserted.getOid());
     return inserted;
   }
 
@@ -159,83 +154,7 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
         .anyMatch(vr -> vr.getOid().equals(parentOid));
   }
 
-  private Valintaryhma copyAsChild(
-      Valintaryhma source, Valintaryhma parent, String name, JuureenKopiointiCache kopiointiCache) {
-    if (parent == null && kopiointiCache == null) {
-      throw new IllegalArgumentException(
-          "Parent is required if want to copy valinnanvaiheet from it");
-    }
-    LOGGER.info(
-        "Kopioidaan valintaryhmä {} nimellä '{}' valintaryhmän {} alle", source, name, parent);
-    Valintaryhma copy = new Valintaryhma();
-    copy.setYlavalintaryhma(parent);
-    copy.setNimi(name);
-    copy.setOid(oidService.haeValintaryhmaOid());
-    copy.getOrganisaatiot().addAll(source.getOrganisaatiot());
-    copy.setVastuuorganisaatio(source.getVastuuorganisaatio());
-    copy.setKohdejoukko(source.getKohdejoukko());
-    Valintaryhma inserted = valintaryhmaDAO.insert(copy);
-    copyLaskentakaavat(source, inserted, kopiointiCache);
-    if (kopiointiCache == null) {
-      hakijaryhmaService.kopioiHakijaryhmatMasterValintaryhmalta(
-          parent.getOid(), inserted.getOid(), null);
-      valinnanVaiheService.kopioiValinnanVaiheetParentilta(inserted, parent, null);
-    } else {
-      hakijaryhmaService.kopioiHakijaryhmatMasterValintaryhmalta(
-          source.getOid(), inserted.getOid(), kopiointiCache);
-      valinnanVaiheService.kopioiValinnanVaiheetParentilta(inserted, source, kopiointiCache);
-    }
-    copyHakukohdekoodit(source, inserted);
-    copyValintakoekoodit(source, inserted);
-    List<Valintaryhma> children = valintaryhmaDAO.findChildrenByParentOidPlain(source.getOid());
-    children.forEach(
-        (child) -> {
-          Valintaryhma copiedChild = copyAsChild(child, inserted, child.getNimi(), kopiointiCache);
-          inserted.getAlavalintaryhmat().add(copiedChild);
-        });
-    LOGGER.info(
-        "Kopioitiin valintaryhmä {} nimellä '{}' valintaryhmän {} alle: {}",
-        source,
-        name,
-        parent,
-        inserted);
-    return inserted;
-  }
-
-  private void copyLaskentakaavat(
-      Valintaryhma source, Valintaryhma target, JuureenKopiointiCache kopiointiCache) {
-    source
-        .getLaskentakaava()
-        .forEach(
-            sourceKaava -> {
-              Laskentakaava copied =
-                  laskentakaavaService.kopioiJosEiJoKopioitu(
-                      sourceKaava, sourceKaava.getHakukohde(), target);
-              if (kopiointiCache != null) {
-                kopiointiCache.kopioidutLaskentakaavat.put(sourceKaava.getId(), copied);
-              }
-            });
-  }
-
-  private void copyHakukohdekoodit(Valintaryhma source, Valintaryhma target) {
-    source.getHakukohdekoodit().stream()
-        .forEach(
-            sourceKoodi -> {
-              target.getHakukohdekoodit().add(sourceKoodi);
-            });
-  }
-
-  private void copyValintakoekoodit(Valintaryhma source, Valintaryhma target) {
-    Set<Valintakoekoodi> sourceKoodit = valintakoekoodiDAO.findByValintaryhma(source.getOid());
-    if (sourceKoodit != null) {
-      for (Valintakoekoodi sourceKoodi : sourceKoodit) {
-        target.getValintakoekoodit().add(sourceKoodi);
-      }
-    }
-  }
-
   public Valintaryhma copyAsChild(String sourceOid, String parentOid, String name) {
-    Valintaryhma parent = null;
     if (parentOid != null) {
       // Tarkistetaan, että parent ei ole sourcen jälkeläinen
       if (isChildOf(parentOid, sourceOid)) {
@@ -252,11 +171,13 @@ public class ValintaryhmaServiceImpl implements ValintaryhmaService {
             sourceOid,
             parentOid);
       }
-      parent = valintaryhmaDAO.readByOid(parentOid);
     }
-    Valintaryhma source = valintaryhmaDAO.readByOid(sourceOid);
-    return copyAsChild(
-        source, parent, name, parentOid == null ? new JuureenKopiointiCache() : null);
+    haeValintaryhma(sourceOid);
+    String kopionOid =
+        parentOid == null
+            ? valintaryhmaKopiointiDAO.kopioiJuureen(sourceOid, name)
+            : valintaryhmaKopiointiDAO.kopioiVanhemmanAlle(sourceOid, parentOid, name);
+    return haeValintaryhma(kopionOid);
   }
 
   @Override

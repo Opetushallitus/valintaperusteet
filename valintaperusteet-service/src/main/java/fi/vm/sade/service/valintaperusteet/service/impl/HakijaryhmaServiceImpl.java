@@ -22,7 +22,6 @@ import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaEiOleOle
 import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaOidListaOnTyhjaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaOidTyhjaException;
 import fi.vm.sade.service.valintaperusteet.service.exception.ValintaryhmaEiOleOlemassaException;
-import fi.vm.sade.service.valintaperusteet.util.JuureenKopiointiCache;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 import java.util.List;
 import java.util.Optional;
@@ -139,22 +138,19 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
     List<Valintaryhma> alaValintaryhmat =
         valintaryhmaService.findValintaryhmasByParentOid(valintaryhmaOid);
     for (Valintaryhma alavalintaryhma : alaValintaryhmat) {
-      lisaaValintaryhmalleKopioMasterHakijaryhmasta(
-          alavalintaryhma, lisatty, edellinenHakijaryhma, null);
+      lisaaValintaryhmalleKopioMasterHakijaryhmasta(alavalintaryhma, lisatty, edellinenHakijaryhma);
     }
     return lisatty;
   }
 
   @Override
   public void kopioiHakijaryhmatMasterValintaryhmalta(
-      String parentValintaryhmaOid,
-      String childValintaryhmaoid,
-      JuureenKopiointiCache kopiointiCache) {
+      String parentValintaryhmaOid, String childValintaryhmaoid) {
     Valintaryhma childValintaryhma = valintaryhmaService.readPlainByOid(childValintaryhmaoid);
     List<Hakijaryhma> byValintaryhma = hakijaryhmaDAO.findByValintaryhma(parentValintaryhmaOid);
     for (Hakijaryhma parentHakijaryhma : byValintaryhma) {
       lisaaValintaryhmalleKopioMasterHakijaryhmasta(
-          childValintaryhma, parentHakijaryhma, parentHakijaryhma, kopiointiCache);
+          childValintaryhma, parentHakijaryhma, parentHakijaryhma);
     }
   }
 
@@ -174,26 +170,20 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
   }
 
   private void lisaaValintaryhmalleKopioMasterHakijaryhmasta(
-      Valintaryhma valintaryhma,
-      Hakijaryhma masterHakijaryhma,
-      Hakijaryhma edellinenHakijaryhma,
-      JuureenKopiointiCache kopiointiCache) {
-    Hakijaryhma kopio = luoKopioHakijaryhmasta(valintaryhma, masterHakijaryhma, kopiointiCache);
+      Valintaryhma valintaryhma, Hakijaryhma masterHakijaryhma, Hakijaryhma edellinenHakijaryhma) {
+    Hakijaryhma kopio = luoKopioHakijaryhmasta(valintaryhma, masterHakijaryhma);
     kopio.setValintaryhma(valintaryhma);
     List<Hakijaryhma> ryhmat = hakijaryhmaDAO.findByValintaryhma(valintaryhma.getOid());
     kopio.setEdellinenHakijaryhma(
         LinkitettavaJaKopioitavaUtil.kopioTaiViimeinen(edellinenHakijaryhma, ryhmat));
     Hakijaryhma lisatty = hakijaryhmaDAO.insert(kopio);
     valintaryhma.getHakijaryhmat().add(lisatty);
-    if (kopiointiCache != null) {
-      kopiointiCache.kopioidutHakijaryhmat.put(masterHakijaryhma.getId(), lisatty);
-    }
     List<Valintaryhma> alavalintaryhmat =
         valintaryhmaService.findValintaryhmasByParentOidPlain(valintaryhma.getOid());
     alavalintaryhmat.forEach(
         alavalintaryhma -> {
           lisaaValintaryhmalleKopioMasterHakijaryhmasta(
-              alavalintaryhma, lisatty, lisatty.getEdellinenHakijaryhma(), kopiointiCache);
+              alavalintaryhma, lisatty, lisatty.getEdellinenHakijaryhma());
         });
     valintaryhma
         .getHakukohdeViitteet()
@@ -205,9 +195,7 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
   }
 
   private Hakijaryhma luoKopioHakijaryhmasta(
-      Valintaryhma kohdeValintaryhma,
-      Hakijaryhma hakijaryhma,
-      JuureenKopiointiCache kopiointiCache) {
+      Valintaryhma kohdeValintaryhma, Hakijaryhma hakijaryhma) {
     Hakijaryhma kopio = new Hakijaryhma();
     kopio.setOid(oidService.haeHakijaryhmaOid());
     kopio.setMasterHakijaryhma(hakijaryhma);
@@ -215,17 +203,11 @@ public class HakijaryhmaServiceImpl implements HakijaryhmaService {
     kopio.setKiintio(hakijaryhma.getKiintio());
     kopio.setKuvaus(hakijaryhma.getKuvaus());
     kopio.setKaytaKaikki(hakijaryhma.isKaytaKaikki());
-    if (kopiointiCache != null
-        && kopiointiCache.kopioidutLaskentakaavat.containsKey(hakijaryhma.getLaskentakaavaId())) {
-      kopio.setLaskentakaava(
-          kopiointiCache.kopioidutLaskentakaavat.get(hakijaryhma.getLaskentakaavaId()));
-    } else {
-      kopio.setLaskentakaava(
-          laskentakaavaService
-              .haeLaskentakaavaTaiSenKopioVanhemmilta(
-                  hakijaryhma.getLaskentakaavaId(), kohdeValintaryhma)
-              .orElse(hakijaryhma.getLaskentakaava()));
-    }
+    kopio.setLaskentakaava(
+        laskentakaavaService
+            .haeLaskentakaavaTaiSenKopioVanhemmilta(
+                hakijaryhma.getLaskentakaavaId(), kohdeValintaryhma)
+            .orElse(hakijaryhma.getLaskentakaava()));
     kopio.setHakijaryhmatyyppikoodi(hakijaryhma.getHakijaryhmatyyppikoodi());
     kopio.setNimi(hakijaryhma.getNimi());
     kopio.setTarkkaKiintio(hakijaryhma.isTarkkaKiintio());
