@@ -195,7 +195,7 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
       ValinnanVaihe valinnanVaihe,
       Valintatapajono masterValintatapajono,
       Valintatapajono edellinenMasterValintatapajono) {
-    Valintatapajono kopio = ValintatapajonoUtil.teeKopioMasterista(masterValintatapajono, null);
+    Valintatapajono kopio = ValintatapajonoUtil.teeKopioMasterista(masterValintatapajono);
     kopio.setValinnanVaihe(valinnanVaihe);
     kopio.setOid(oidService.haeValintatapajonoOid());
     List<Valintatapajono> jonot = valintatapajonoDAO.findByValinnanVaihe(valinnanVaihe.getOid());
@@ -361,26 +361,20 @@ public class ValintatapajonoServiceImpl implements ValintatapajonoService {
 
   @Override
   public void kopioiValintatapajonotMasterValinnanVaiheeltaKopiolle(
-      ValinnanVaihe valinnanVaihe,
-      ValinnanVaihe masterValinnanVaihe,
-      JuureenKopiointiCache kopiointiCache) {
+      ValinnanVaihe valinnanVaihe, ValinnanVaihe masterValinnanVaihe) {
     List<Valintatapajono> valintatapajonot =
         valintatapajonoDAO.findByValinnanVaihe(masterValinnanVaihe.getOid());
     Collections.reverse(valintatapajonot);
     for (Valintatapajono valintatapajono : valintatapajonot) {
-      Valintatapajono kopio =
-          ValintatapajonoUtil.teeKopioMasterista(valintatapajono, kopiointiCache);
+      Valintatapajono kopio = ValintatapajonoUtil.teeKopioMasterista(valintatapajono);
       kopio.setOid(oidService.haeValintatapajonoOid());
       kopio.setValinnanVaihe(valinnanVaihe);
       valinnanVaihe.addJono(kopio);
       Valintatapajono lisatty = valintatapajonoDAO.insert(kopio);
-      if (kopiointiCache != null) {
-        kopiointiCache.kopioidutValintapajonot.put(valintatapajono.getId(), lisatty);
-      }
       hakijaryhmaValintatapajonoService.kopioiValintatapajononHakijaryhmaValintatapajonot(
-          valintatapajono, kopio, kopiointiCache);
+          valintatapajono, kopio);
       jarjestyskriteeriService.kopioiJarjestyskriteeritMasterValintatapajonoltaKopiolle(
-          lisatty, valintatapajono, kopiointiCache);
+          lisatty, valintatapajono);
     }
   }
 

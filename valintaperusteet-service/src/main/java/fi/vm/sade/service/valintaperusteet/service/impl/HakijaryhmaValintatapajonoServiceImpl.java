@@ -22,7 +22,6 @@ import fi.vm.sade.service.valintaperusteet.service.exception.HakijaryhmaaEiVoiPo
 import fi.vm.sade.service.valintaperusteet.service.exception.LaskentakaavaOidTyhjaException;
 import fi.vm.sade.service.valintaperusteet.util.HakijaryhmaValintatapajonoKopioija;
 import fi.vm.sade.service.valintaperusteet.util.HakijaryhmaValintatapajonoUtil;
-import fi.vm.sade.service.valintaperusteet.util.JuureenKopiointiCache;
 import fi.vm.sade.service.valintaperusteet.util.LinkitettavaJaKopioitavaUtil;
 import java.util.Collection;
 import java.util.Collections;
@@ -128,22 +127,16 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
 
   @Override
   public void kopioiValintatapajononHakijaryhmaValintatapajonot(
-      Valintatapajono lahdeValintatapajono,
-      Valintatapajono kohdeValintatapajono,
-      JuureenKopiointiCache kopiointiCache) {
+      Valintatapajono lahdeValintatapajono, Valintatapajono kohdeValintatapajono) {
     List<HakijaryhmaValintatapajono> jonot =
         hakijaryhmaValintatapajonoDAO.findByValintatapajono(lahdeValintatapajono.getOid());
     Collections.reverse(jonot);
     for (HakijaryhmaValintatapajono jono : jonot) {
-      HakijaryhmaValintatapajono kopio =
-          HakijaryhmaValintatapajonoUtil.teeKopioMasterista(jono, kopiointiCache);
+      HakijaryhmaValintatapajono kopio = HakijaryhmaValintatapajonoUtil.teeKopioMasterista(jono);
       kopio.setValintatapajono(kohdeValintatapajono);
       kopio.setOid(oidService.haeValintatapajonoHakijaryhmaOid());
       HakijaryhmaValintatapajono lisatty = hakijaryhmaValintatapajonoDAO.insert(kopio);
       kohdeValintatapajono.getHakijaryhmat().add(lisatty);
-      if (kopiointiCache != null) {
-        kopiointiCache.kopioidutHakijaryhmaValintapajonot.put(jono.getId(), lisatty);
-      }
     }
   }
 
@@ -151,8 +144,7 @@ public class HakijaryhmaValintatapajonoServiceImpl implements HakijaryhmaValinta
       Valintatapajono valintatapajono,
       HakijaryhmaValintatapajono master,
       HakijaryhmaValintatapajono edellinenMaster) {
-    HakijaryhmaValintatapajono kopio =
-        HakijaryhmaValintatapajonoUtil.teeKopioMasterista(master, null);
+    HakijaryhmaValintatapajono kopio = HakijaryhmaValintatapajonoUtil.teeKopioMasterista(master);
     kopio.setValintatapajono(valintatapajono);
     kopio.setOid(oidService.haeValintatapajonoHakijaryhmaOid());
     List<HakijaryhmaValintatapajono> jonot =

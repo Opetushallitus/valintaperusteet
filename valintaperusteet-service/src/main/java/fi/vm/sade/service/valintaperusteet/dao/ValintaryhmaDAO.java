@@ -11,6 +11,9 @@ public interface ValintaryhmaDAO extends JpaDAO<Valintaryhma, Long> {
 
   Valintaryhma readByOid(String oid);
 
+  /** Lukee valintaryhmän ilman raskaita fetch joineja. */
+  Valintaryhma readPlainByOid(String oid);
+
   /** Hakee valintaryhmähierarkian annetusta lapsesta ylöspäin. Lapsi tulee mukana. */
   List<Valintaryhma> readHierarchy(String childOid);
 

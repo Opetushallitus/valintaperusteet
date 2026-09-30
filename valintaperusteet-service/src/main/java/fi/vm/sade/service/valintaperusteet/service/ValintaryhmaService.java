@@ -8,7 +8,16 @@ import java.util.Set;
 public interface ValintaryhmaService {
   List<Valintaryhma> findValintaryhmasByParentOid(String oid);
 
+  /**
+   * Kuten {@link #findValintaryhmasByParentOid(String)}, mutta ilman raskaita fetch joineja.
+   * Käytetään kun lapsista tarvitaan vain itse valintaryhmä, ei sen kokoelmia.
+   */
+  List<Valintaryhma> findValintaryhmasByParentOidPlain(String oid);
+
   Valintaryhma readByOid(String oid);
+
+  /** Kuten {@link #readByOid(String)}, mutta ilman raskaita fetch joineja. */
+  Valintaryhma readPlainByOid(String oid);
 
   Valintaryhma insert(ValintaryhmaCreateDTO valintaryhma, String parentOid);
 

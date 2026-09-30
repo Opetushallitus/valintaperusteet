@@ -21,6 +21,7 @@ public class PuuServiceImpl implements PuuService {
   @Autowired private HakukohdeViiteDAO hakukohdeViiteDAO;
 
   @Override
+  @Transactional(readOnly = true)
   public List<ValintaperustePuuDTO> search(
       String hakuOid,
       List<String> tila,

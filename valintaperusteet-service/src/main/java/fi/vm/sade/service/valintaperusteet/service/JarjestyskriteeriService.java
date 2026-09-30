@@ -4,7 +4,6 @@ import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriCreateDTO;
 import fi.vm.sade.service.valintaperusteet.dto.JarjestyskriteeriDTO;
 import fi.vm.sade.service.valintaperusteet.model.Jarjestyskriteeri;
 import fi.vm.sade.service.valintaperusteet.model.Valintatapajono;
-import fi.vm.sade.service.valintaperusteet.util.JuureenKopiointiCache;
 import java.util.List;
 
 public interface JarjestyskriteeriService {
@@ -25,7 +24,7 @@ public interface JarjestyskriteeriService {
   List<Jarjestyskriteeri> jarjestaKriteerit(List<String> oids);
 
   void kopioiJarjestyskriteeritMasterValintatapajonoltaKopiolle(
-      Valintatapajono lisatty, Valintatapajono master, JuureenKopiointiCache kopiointiCache);
+      Valintatapajono lisatty, Valintatapajono master);
 
   Jarjestyskriteeri update(String oid, JarjestyskriteeriCreateDTO incoming, Long laskentakaavaId);
 }
