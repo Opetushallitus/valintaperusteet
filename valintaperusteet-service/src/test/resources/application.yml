@@ -26,8 +26,12 @@ management:
         enabled: false
 
 host:
+  cas: localhost
   host-cas: localhost
   host-virkailija: localhost
+
+cas:
+  url: https://${host.cas}/cas
 
 cas-service:
   service: http://${host.host-virkailija}/valintaperusteet-service
@@ -47,6 +51,8 @@ valintaperusteet:
   uses-ssl-proxy: false
   valinta-tulos-service:
     service-url: http://localhost:8080/valinta-tulos-service
+    username: test_vts_user
+    password: test_vts_password
   siirtotiedosto:
     awsregion: eu-west-1
     s3bucket: testi-siirtotiedostot
