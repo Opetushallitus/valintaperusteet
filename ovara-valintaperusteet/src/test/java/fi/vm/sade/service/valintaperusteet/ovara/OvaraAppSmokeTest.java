@@ -18,19 +18,36 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 /**
- * Käynnistää OvaraAppin Spring-kontekstin oikeaa Postgres-kantaa vasten (docker-maven-plugin), S3
+ * Käynnistää OvaraAppin Spring-kontekstin oikeaa Postgres-kantaa vasten (Testcontainers), S3
  * mockattuna. Koska OvaraApp on CommandLineRunner, kontekstin käynnistys ajaa saman
  * siirtotiedostojen muodostuksen kuin tuotannossa main-metodin kautta.
  */
+@Testcontainers
 @SpringBootTest(classes = OvaraApp.class, webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ActiveProfiles("ovara")
 public class OvaraAppSmokeTest {
 
   // Migraatiossa lisätyn ensimmäisen onnistuneen ajon aikaikkunan loppu
   private static final String ALKUPERAINEN_WINDOW_END = "2024-08-01T00:00:00Z";
+
+  @Container
+  private static final PostgreSQLContainer<?> POSTGRES =
+      new PostgreSQLContainer<>("postgres:15").withTmpFs(Map.of("/var/lib/postgresql/data", "rw"));
+
+  @DynamicPropertySource
+  static void tietokanta(DynamicPropertyRegistry registry) {
+    registry.add("valintaperusteet.postgresql.url", POSTGRES::getJdbcUrl);
+    registry.add("valintaperusteet.postgresql.user", POSTGRES::getUsername);
+    registry.add("valintaperusteet.postgresql.password", POSTGRES::getPassword);
+  }
 
   @MockitoBean(name = "siirtotiedostoS3Client")
   private SiirtotiedostoS3Client siirtotiedostoS3Client;

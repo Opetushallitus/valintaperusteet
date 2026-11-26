@@ -16,6 +16,8 @@ mvn -DskipTests -Dtestikannan.portti=4320 exec:java
 
 voi käynnistää valintaperusteet-palvelun paikalliseen kehitysympäristöön.
 
+Kanta sammutetaan komennolla `mvn -pl valintaperusteet-service/pom.xml docker:stop`.
+
 ## Koodin tyyli ja Git pre-commit hook
 
 Koodin tyyli tarkistetaan spotless-työkalulla. Tarkistuksen voi ajaa manuaalisesti kaikelle koodille komennolla:
@@ -50,14 +52,8 @@ Commitin yhteydessä spotless yrittää korjata tyylivirheet. Jos korjaaminen ei
 
 ## Testien ajaminen
 
-``mvn package``
+``mvn test``
 
-Jos haluat ajaa tietokantaa käyttäviä testejä erikseen IDEstä, käynnistä PostgreSQL niitä varten:
-
-``mvn -pl valintaperusteet-service/pom.xml -Dtestikannan.portti=4320 docker:start``
-
-Jos porttia ei anneta, docker-maven-plugin arpoo vapaan portin.
-
-Testi-PostgreSQL:n sammuttaminen hoituu samaan tapaan `mvn -pl valintaperusteet-service/pom.xml docker:stop`.
-
-Huom: pelkkä `mvn test` jättää testikannan käyntiin. Se näkyy `docker ps`:llä.
+Tietokantaa käyttävät testit käynnistävät PostgreSQL:n itse [Testcontainersilla](https://testcontainers.com/),
+joten ainoa vaatimus on käynnissä oleva Docker. Sama pätee testeihin, jotka ajetaan IDEstä.
+Testcontainers poistaa kontin, kun testiajo päättyy, myös silloin kun testit kaatuvat.
