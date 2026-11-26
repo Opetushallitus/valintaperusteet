@@ -26,6 +26,13 @@
             <artifactId>flyway-core</artifactId>
         </dependency>
 
+        <!-- TEST -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <properties>
@@ -36,6 +43,90 @@
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+
+                <configuration>
+                    <containerNamePattern>
+                        test-%n-%i
+                    </containerNamePattern>
+                    <images>
+                        <image>
+                            <alias>ovara-valintaperusteet-testikanta</alias>
+                            <name>postgres:15</name>
+                            <run>
+                                <env>
+                                    <POSTGRES_USER>valintaperusteet_tests</POSTGRES_USER>
+                                    <POSTGRES_PASSWORD>testikannan_salasana</POSTGRES_PASSWORD>
+                                </env>
+                                <ports>
+                                    <port>testikannan.portti:5432</port>
+                                </ports>
+                                <cmd>postgres -F</cmd>
+                                <tmpfs>
+                                  <mount>/var/lib/postgresql/data:size=10000m</mount>
+                                </tmpfs>
+                                <wait>
+                                    <log>database system is ready to accept connections</log>
+                                    <time>20000</time>
+                                </wait>
+                            </run>
+                        </image>
+                    </images>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>start-docker-for-tests</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>build</goal>
+                            <goal>start</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>stop-in-package</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>stop</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>stop-in-clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>stop</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <systemPropertyVariables>
+                      <testikannan.portti>${testikannan.portti}</testikannan.portti>
+                    </systemPropertyVariables>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>test-with-docker</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>default-test</id>
+                        <phase>none</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
