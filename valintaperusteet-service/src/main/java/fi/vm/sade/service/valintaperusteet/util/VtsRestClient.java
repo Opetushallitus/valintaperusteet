@@ -21,7 +21,6 @@ import org.asynchttpclient.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -37,12 +36,10 @@ public class VtsRestClient {
   private final String serviceUrl;
   private final CasClient casClient;
 
-  // Lazy, koska ovara-valintaperusteet käyttää tätä komponenttia välillisesti mutta ei kutsu VTS:ää
-  // eikä siksi määrittele ValintatulosCasClient-beania.
   @Autowired
   public VtsRestClient(
       @Value("${valintaperusteet.valinta-tulos-service.service-url}") final String serviceUrl,
-      @Qualifier("ValintatulosCasClient") @Lazy final CasClient casClient) {
+      @Qualifier("ValintatulosCasClient") final CasClient casClient) {
     this.serviceUrl = serviceUrl;
     this.casClient = casClient;
   }
