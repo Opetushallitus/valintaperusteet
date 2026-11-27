@@ -2,7 +2,9 @@ package fi.vm.sade.service.valintaperusteet.ovara.ajastus;
 
 import fi.vm.sade.service.valintaperusteet.ovara.ajastus.impl.SiirtotiedostoProsessiRepositoryImpl;
 import fi.vm.sade.service.valintaperusteet.service.impl.SiirtotiedostoServiceImpl;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -34,7 +36,7 @@ public class SiirtotiedostoAjastusService {
     try {
       String resultInfo =
           siirtotiedostoServiceImpl.createSiirtotiedostot(
-              uusi.getWindowStart().toLocalDateTime(), uusi.getWindowEnd().toLocalDateTime());
+              jvmAikavyohykkeessa(uusi.getWindowStart()), jvmAikavyohykkeessa(uusi.getWindowEnd()));
       uusi.setInfo(resultInfo);
       uusi.setSuccess(true);
       uusi.setRunEnd(OffsetDateTime.now());
@@ -52,5 +54,11 @@ public class SiirtotiedostoAjastusService {
     }
 
     return "DONE";
+  }
+
+  // Kanta tulkitsee LocalDateTime-parametrit JVM:n aikavyöhykkeessä (JDBC-ajuri asettaa istunnon
+  // vyöhykkeen), joten ikkunan rajat on muunnettava siihen eikä käytettävä niiden omaa offsetia.
+  private static LocalDateTime jvmAikavyohykkeessa(OffsetDateTime aika) {
+    return aika.atZoneSameInstant(ZoneId.systemDefault()).toLocalDateTime();
   }
 }

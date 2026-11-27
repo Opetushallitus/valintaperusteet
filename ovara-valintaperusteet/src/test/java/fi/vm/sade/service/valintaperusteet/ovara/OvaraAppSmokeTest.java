@@ -76,11 +76,15 @@ public class OvaraAppSmokeTest {
     when(siirtotiedostoS3Client.createSiirtotiedosto(anyList(), anyString(), anyInt()))
         .thenReturn("testi-avain");
 
-    String hakukohdeOid = "1.2.246.562.20.00000000000000099999";
+    // Edellisen ikkunan aikana muuttunut hakukohde ei saa tulla mukaan. Paljastaa
+    // aikavyöhykevirheet, joissa peräkkäiset ikkunat menevät päällekkäin tai eivät kohtaa.
+    // last_modified asettuu triggerillä now():ksi, joten järjestys määrää aikaleimat.
+    lisaaHakukohde(999998, "1.2.246.562.20.00000000000000099998");
     jdbcTemplate.update(
-        "insert into hakukohde_viite (id, version, hakuoid, nimi, oid, last_modified) "
-            + "values (999999, 0, '1.2.246.562.29.00000000000000099999', 'Smoke-testin hakukohde', ?, now())",
-        hakukohdeOid);
+        "insert into siirtotiedosto (execution_uuid, window_start, window_end, run_start, run_end, info, success) "
+            + "values ('6c1d7d8e-8f5a-4c55-9a33-6f1f2b7c0a01', now() - interval '1 day', now(), now(), now(), '{}', true)");
+    String hakukohdeOid = "1.2.246.562.20.00000000000000099999";
+    lisaaHakukohde(999999, hakukohdeOid);
 
     assertEquals("DONE", siirtotiedostoAjastusService.createNextSiirtotiedosto());
 
@@ -97,5 +101,13 @@ public class OvaraAppSmokeTest {
                 + "order by run_start desc limit 1");
     assertEquals(true, viimeisin.get("success"), "Virhe: " + viimeisin.get("error_message"));
     assertEquals("testi-avain", viimeisin.get("avain"));
+  }
+
+  private void lisaaHakukohde(long id, String oid) {
+    jdbcTemplate.update(
+        "insert into hakukohde_viite (id, version, hakuoid, nimi, oid) "
+            + "values (?, 0, '1.2.246.562.29.00000000000000099999', 'Smoke-testin hakukohde', ?)",
+        id,
+        oid);
   }
 }
