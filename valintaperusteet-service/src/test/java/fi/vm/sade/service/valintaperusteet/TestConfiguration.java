@@ -9,12 +9,12 @@ import java.util.Map;
 import java.util.Properties;
 import javax.sql.DataSource;
 import org.flywaydb.core.Flyway;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
 import org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.testcontainers.containers.PostgreSQLContainer;
 
 @Configuration
 @ComponentScan(basePackages = {"fi.vm.sade.service.valintaperusteet"})
@@ -26,10 +26,8 @@ public class TestConfiguration {
   }
 
   @Bean
-  public HikariConfig hikariConfig(
-      @Value(
-              "jdbc:postgresql://localhost:#{systemProperties['testikannanPortti'] ?: 4320}/valintaperusteet_tests")
-          final String url) {
+  public HikariConfig hikariConfig() {
+    final PostgreSQLContainer<?> postgres = TestDatabase.container();
     final HikariConfig config = new HikariConfig();
     config.setPoolName("springHikariCP");
     config.setConnectionTestQuery("SELECT 1");
@@ -40,9 +38,9 @@ public class TestConfiguration {
     config.setLeakDetectionThreshold(60000);
     config.setRegisterMbeans(false);
     final Properties dsProperties = new Properties();
-    dsProperties.setProperty("url", url);
-    dsProperties.setProperty("user", "valintaperusteet_tests");
-    dsProperties.setProperty("password", "testikannan_salasana");
+    dsProperties.setProperty("url", postgres.getJdbcUrl());
+    dsProperties.setProperty("user", postgres.getUsername());
+    dsProperties.setProperty("password", postgres.getPassword());
     config.setDataSourceProperties(dsProperties);
     return config;
   }

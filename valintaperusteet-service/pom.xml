@@ -216,6 +216,11 @@
             <artifactId>mockito-core</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>fi.vm.sade.java-utils</groupId>
@@ -261,6 +266,7 @@
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
+            <!-- Paikallista kehityskantaa varten (docker:start), testit käyttävät Testcontainersia -->
             <plugin>
                 <groupId>io.fabric8</groupId>
                 <artifactId>docker-maven-plugin</artifactId>
@@ -293,30 +299,6 @@
                         </image>
                     </images>
                 </configuration>
-                <executions>
-                    <execution>
-                        <id>start-docker-for-tests</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>build</goal>
-                            <goal>start</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>stop-in-package</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>stop</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>stop-in-clean</id>
-                        <phase>clean</phase>
-                        <goals>
-                            <goal>stop</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
 
             <plugin>
@@ -324,27 +306,8 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <argLine>--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</argLine>
-                    <systemPropertyVariables>
-                      <testikannanPortti>${testikannan.portti}</testikannanPortti>
-                    </systemPropertyVariables>
                     <skipAfterFailureCount>3</skipAfterFailureCount>
                 </configuration>
-                <executions>
-                    <execution>
-                        <id>test-with-docker</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>default-test</id>
-                        <phase>none</phase>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
 
             <plugin>
